@@ -195,18 +195,13 @@
     "item_type": "Item Type",
     "avg_price_3cards": "Average price of three trading cards: __price__",
     "mods": "Mods",
-    "export_wishlist": "Export wishlist",
-    "export_text": "Text",
-    "export_CSV": "CSV",
-    "export_JSON": "JSON",
-    "export_download": "Download file",
-    "export_clipboard": "Copy to clipboard",
-    "export_props": {
-        "name": "Title",
-        "appid": "Appid",
-        "type": "Type",
-        "release_string": "Release date",
-        "note": "Saved note"
+    "export": {
+        "wishlist": "Export wishlist",
+        "type": "Export type",
+        "format": "Text format",
+        "text": "Text",
+        "download": "Download",
+        "copy_clipboard": "Copy to clipboard"
     },
     "none": "None",
     "separator": "Separator",

@@ -3381,10 +3381,12 @@ let WishlistPageClass = (function(){
 
     WishlistPageClass.prototype.showExportModalDialog = function() {
 
+        let exportStr = Localization.str.export;
+
         ExtensionLayer.runInPageContext(`function() {
             let options = {};
             window.AS_WishlistExportModal = ShowConfirmDialog(
-                "${Localization.str.export_wishlist}",
+                "${exportStr.wishlist}",
                 "<div id='es_export_form'></div>",
                 "${Localization.str.save}",
                 "${Localization.str.cancel}"
@@ -3396,15 +3398,15 @@ let WishlistPageClass = (function(){
         HTML.inner(
             formNode,
             `<div class="es-wexport">
-                <h2>Export type:</h2>
+                <h2>${exportStr.type}</h2>
                 <div>
-                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${Localization.str.export_text}</label>
-                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> ${Localization.str.export_JSON}</label>
+                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${exportStr.text}</label>
+                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
                 </div>
             </div>
         
             <div class="es-wexport">
-                <h2>Text format</h2>
+                <h2>${exportStr.format}</h2>
                 <div>
                     <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
                     <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %note%</div>
@@ -3414,9 +3416,9 @@ let WishlistPageClass = (function(){
         let buttonsNode = formNode.closest(".newmodal_content").querySelector(".newmodal_buttons");
 
         HTML.inner(buttonsNode,
-            `<div id="as_export_download" class="btn_green_white_innerfade btn_medium"><span>Download</span></div>
-             <div id="as_export_copy" class="btn_green_white_innerfade btn_medium"><span>Copy to clipboard</span></div>
-             <div id="as_export_cancel" class="btn_grey_white_innerfade btn_medium"><span>Cancel</span></div>`);
+            `<div id="as_export_download" class="btn_green_white_innerfade btn_medium"><span>${exportStr.download}</span></div>
+             <div id="as_export_copy" class="btn_green_white_innerfade btn_medium"><span>${exportStr.copy_clipboard}</span></div>
+             <div id="as_export_cancel" class="btn_grey_white_innerfade btn_medium"><span>${Localization.str.cancel}</span></div>`);
 
         // events
 
@@ -3477,7 +3479,7 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addExportWishlistButton = function() {
-        HTML.afterEnd("div.wishlist_header h2", "<div id='es_export_wishlist'><div>" + Localization.str.export_wishlist + "</div></div>");
+        HTML.afterEnd("div.wishlist_header h2", "<div id='es_export_wishlist'><div>" + Localization.str.export.wishlist + "</div></div>");
 
         let that = this;
         document.querySelector("#es_export_wishlist").addEventListener("click", function() {

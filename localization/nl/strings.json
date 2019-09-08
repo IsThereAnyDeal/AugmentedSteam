@@ -201,18 +201,11 @@
     "item_type": "Itemtype",
     "avg_price_3cards": "Gemiddelde prijs van drie ruilkaarten: __price__",
     "mods": "Modificaties. ",
-    "export_wishlist": "Verlanglijst exporteren",
-    "export_text": "Tekst",
-    "export_CSV": "CSV",
-    "export_JSON": "JSON",
-    "export_download": "Download bestand",
-    "export_clipboard": "Kopieer naar klembord",
-    "export_props": {
-        "name": "Titel",
-        "appid": "Appid",
-        "type": "Type",
-        "release_string": "Releasedatum",
-        "note": "Opgeslagen notitie"
+    "export": {
+        "wishlist": "Verlanglijst exporteren",
+        "text": "Tekst",
+        "download": "Download",
+        "copy_clipboard": "Kopieer naar klembord"
     },
     "empty_wishlist": "Verlanglijst leegmaken",
     "empty_wishlist_confirm": "Weet u zeker dat u uw verlanglijstje leeg wilt maken?\nDit kan niet ongedaan gemaakt worden!",
