@@ -917,8 +917,14 @@ class AppPageClass extends StorePageClass {
             addedBtn.style.display = '';
         }
 
-        waitlistBtn.addEventListener("click", () => {
+        waitlistBtn.addEventListener("click", async () => {
             waitlisted = !waitlisted;
+            if (waitlisted) {
+                await Background.action("itad.addtowaitlist", this.appid);
+            } else {
+                // todo Remove from waitlist
+            }
+
             addBtn.style.display = waitlisted ? "none" : '';
             addedBtn.style.display = waitlisted ? '' : "none";
         });

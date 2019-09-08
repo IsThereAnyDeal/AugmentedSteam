@@ -199,14 +199,79 @@ class ITAD_Api extends Api {
         }
     }
 
-    static async sync() {
-        let { ownedApps, ownedPackages, wishlistedApps } = await IndexedDB.get("dynamicStore", ["ownedApps", "ownedPackages", "wishlisted"]);
-        let { lastOwnedApps, lastOwnedPackages, lastWishlistedApps } = await IndexedDB.get("itadSync", ["lastOwnedApps", "lastOwnedPackages", "lastWishlisted"]);
+    static async addToWaitlist(appids) {
+        if (!appids || (Array.isArray(appids) && !appids.length)) {
+            console.warn("Can't add nothing to ITAD waitlist");
+            return;
+        }
 
-        let baseJSON = {
+        let waitlistJSON = {
             "version": "02",
             "data": [],
+        };
+
+        if (Array.isArray(appids)) {
+            appids.forEach(appid => {
+                waitlistJSON.data.push({
+                    "gameid": ["steam", `app/${appid}`],
+                });
+            });
+        } else {
+            waitlistJSON.data[0] = {
+                "gameid": ["steam", `app/${appids}`],
+            }
         }
+
+        return ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, { "body": JSON.stringify(waitlistJSON) });
+    }
+
+    static async addToCollection(appids, subids) {
+        if (!appids || (Array.isArray(appids) && !appids.length) && (!subids || (Array.isArray(subids) && !subids.length))) {
+            console.warn("Can't add nothing to ITAD collection");
+            return;
+        }
+
+        let collectionJSON = {
+            "version": "02",
+            "data": [],
+        };
+
+        if (Array.isArray(appids)) {
+            appids.forEach(appid => {
+                collectionJSON.data.push({
+                    "gameid": ["steam", `app/${appid}`],
+                    "copies": [{ "type": "steam" }],
+                });
+            });
+        } else if (appids) {
+            collectionJSON.data[0] = {
+                "gameid": ["steam", `app/${appids}`],
+                "copies": [{ "type": "steam" }],
+            }
+        }
+
+        if (Array.isArray(subids)) {
+            subids.forEach(subid => {
+                collectionJSON.data.push({
+                    "gameid": ["steam", `sub/${subid}`],
+                    "copies": [{ "type": "steam" }],
+                });
+            });
+        } else if (subids) {
+            collectionJSON.data[0] = {
+                "gameid": ["steam", `sub/${subids}`],
+                "copies": [{ "type": "steam" }],
+            }
+        }
+
+        return ITAD_Api.postEndpoint("v01/collection/import/", { "access_token": ITAD_Api.accessToken }, { "body": JSON.stringify(collectionJSON) });
+    }
+
+    static async sync() {
+        let [{ ownedApps, ownedPackages, wishlistedApps }, { lastOwnedApps, lastOwnedPackages, lastWishlistedApps }] = await Promise.all([
+            IndexedDB.get("dynamicStore", ["ownedApps", "ownedPackages", "wishlisted"]),
+            IndexedDB.get("itadSync", ["lastOwnedApps", "lastOwnedPackages", "lastWishlisted"]),
+        ]);
 
         function removeDuplicates(from, other) {
             if (!from) return [];
@@ -219,37 +284,16 @@ class ITAD_Api extends Api {
         let newOwnedApps = removeDuplicates(ownedApps, lastOwnedApps);
         let newOwnedPackages = removeDuplicates(ownedPackages, lastOwnedPackages);
         if (newOwnedApps.length || newOwnedPackages.length) {
-            let collectionJSON = JSON.parse(JSON.stringify(baseJSON));
-            newOwnedApps.forEach(appid => {
-                collectionJSON.data.push({
-                    "gameid": ["steam", `app/${appid}`],
-                    "copies": [{ "type": "steam" }],
-                });
-            });
-
-            newOwnedPackages.forEach(subid => {
-                collectionJSON.data.push({
-                    "gameid": ["steam", `sub/${subid}`],
-                    "copies": [{ "type": "steam" }],
-                });
-            });
-
-            promises.push(this.postEndpoint("v01/collection/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(collectionJSON) })
+            promises.push(ITAD_Api.addToCollection(newOwnedApps, newOwnedPackages)
                 .then(() => IndexedDB.put("itadSync", [ownedApps, ownedPackages], ["lastOwnedApps", "lastOwnedPackages"], true)));
         }
 
         let newWishlistedApps = removeDuplicates(wishlistedApps, lastWishlistedApps);
         if (newWishlistedApps.length) {
-            let wailistJSON = JSON.parse(JSON.stringify(baseJSON));
-            newWishlistedApps.forEach(appid => {
-                wailistJSON.data.push({
-                    "gameid": ["steam", `app/${appid}`],
-                });
-            });
-
-            promises.push(this.postEndpoint("v01/waitlist/import/", { "access_token": this.accessToken }, { "body": JSON.stringify(wailistJSON) })
+            promises.push(ITAD_Api.addToWaitlist(newWishlistedApps)
                 .then(() => IndexedDB.put("itadSync", wishlistedApps, "lastWishlisted")));
         }
+
         return Promise.all(promises);
     }
 
@@ -1086,6 +1130,7 @@ let actionCallbacks = new Map([
 
     ["itad.authorize", ITAD_Api.authorize],
     ["itad.isconnected", ITAD_Api.isConnected],
+    ["itad.addtowaitlist", ITAD_Api.addToWaitlist],
 
     ["idb.get", IndexedDB.get],
     ["idb.getfromindex", IndexedDB.getFromIndex],
