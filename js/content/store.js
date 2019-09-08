@@ -2978,37 +2978,35 @@ let WishlistPageClass = (function(){
         let instance = this;
         userNotes = new UserNotes();
 
-        let exportProps = ["name", "appid", "type", "release_string", "note"];
-        this.exportModalTemplate = `
-            <div id="es_export_modal">
-                <div id="es_export_modal_content">
-                    <form id="es_export_form">
-                    <table>
-                        <tr>
-                            <td>Export type:</td>
-                            <td>
-                                <input type="radio" name="export_type" value="text" id="text" onclick="$J('#es_text_options').show(); $J('.es_sep').show()" checked> <label for="text" onclick="$J('#es_text_options').show(); $J('.es_sep').show()"> ${Localization.str.export_text}</label>
-                                &nbsp;
-                                <input type="radio" name="export_type" value="CSV" id="CSV" onclick="$J('#es_text_options').show(); $J('.es_sep').hide()"> <label for="CSV" onclick="$J('#es_text_options').show(); $J('.es_sep').hide()"> ${Localization.str.export_CSV}</label>
-                                &nbsp;
-                                <input type="radio" name="export_type" value="JSON" id="JSON" onclick="$J('#es_text_options').hide()"> <label for="JSON" onclick="$J('#es_text_options').hide()"> ${Localization.str.export_JSON}</label>
-                            </td>
-                        </tr>
-                        <tr id="es_text_options">
-                            <td>Text format:</td>
-                            <td>${buildExportModalOptions(exportProps)}</td>
-                        </tr>
-                        <tr>
-                            <td>Export method:</td>
-                            <td>
-                                <input type="radio" name="export_method" value="download" id="download" checked> <label for="download"> ${Localization.str.export_download}</label>
-                                &nbsp;
-                                <input type="radio" name="export_method" value="clipboard" id="clipboard"> <label for="clipboard"> ${Localization.str.export_clipboard}</label>
-                            </td>
-                        </tr>
-                    </table>
-                    </form>
-                </div>
+        this.exportModalTemplate =
+            `<div id="es_export_modal">
+                <form id="es_export_form">
+                    <div id="es_export_type" class="es_export_section">
+                        <h2>Export type</h2>
+                        <input type="radio" name="export_type" value="text" id="text" checked> <label for="text"> ${Localization.str.export_text}</label>
+                        &nbsp;
+                        <input type="radio" name="export_type" value="CSV" id="CSV"> <label for="CSV"> ${Localization.str.export_CSV}</label>
+                        &nbsp;
+                        <input type="radio" name="export_type" value="JSON" id="JSON"> <label for="JSON"> ${Localization.str.export_JSON}</label>
+                    </div>
+                    <div id="es_text_options" class="es_export_section">
+                        <h2>Text format</h2>
+                        <small>${Localization.str.available}: %name%, %appid%, %type%, %release_string%, %note%</small>
+                        <input type="text" name="export_text" value="%name%"></input>
+                    </div>
+                    <div id="es_csv_options" class="es_export_section" style="display: none;">
+                        <h2>CSV values</h2>
+                        <input type="checkbox" name="export_prop" value="name" id="name" checked> <label for="name"> ${Localization.str.export_props.name}</label>
+                        &nbsp;
+                        <input type="checkbox" name="export_prop" value="appid" id="appid"> <label for="appid"> ${Localization.str.export_props.appid}</label>
+                        &nbsp;
+                        <input type="checkbox" name="export_prop" value="type" id="type"> <label for="type"> ${Localization.str.export_props.type}</label>
+                        &nbsp;
+                        <input type="checkbox" name="export_prop" value="release_string" id="release_string"> <label for="release_string"> ${Localization.str.export_props.release_string}</label>
+                        &nbsp;
+                        <input type="checkbox" name="export_prop" value="note" id="note"> <label for="note"> ${Localization.str.export_props.note}</label>
+                    </div>
+                </form>
             </div>`;
 
         let myWishlist = isMyWishlist();
@@ -3095,21 +3093,6 @@ let WishlistPageClass = (function(){
         let myWishlistUrlRegex = new RegExp("^" + myWishlistUrl + "([/#]|$)");
         return myWishlistUrlRegex.test(window.location.href)
             || window.location.href.includes("/profiles/" + User.steamId);
-    }
-
-    function buildExportModalOptions(props) {
-        if (!props || props.length === 0) { return ""; }
-        return props.map((_, i) => {
-            let html = "<select id='prop" + i + "' name='prop" + i + "'><option value=''>" + Localization.str.none + "</option>";
-            props.forEach(prop => html += "<option value='" + prop + "'>" + Localization.str.export_props[prop] + "</option>");
-            html += "</select>";
-
-            if (i + 1 < props.length) {
-                html += "<input type='text' class='es_sep' id='sep" + i + "' name='sep" + i + "' placeholder='" + Localization.str.separator + "'>"
-            }
-
-            return html;
-        }).join("");
     }
 
     WishlistPageClass.prototype.highlightApps = async function(node) {
@@ -3259,16 +3242,17 @@ let WishlistPageClass = (function(){
             let Modal = ShowConfirmDialog(
                 "${Localization.str.export_wishlist}",
                 \`${this.exportModalTemplate}\`,
-                "${Localization.str.save}",
-                "${Localization.str.cancel}");
+                "<div id=download>${Localization.str.export_download}</div>",
+                "${Localization.str.cancel}",
+                "<div id=clipboard>${Localization.str.export_clipboard}</div>");
 
-            $J("#es_export_modal input[placeholder]").each(function() {
-                $J(this).attr('size', $J(this).attr('placeholder').length);
-            });
-
-            $J('#es_export_form').change(function() {
+            $J("#es_export_form").change(function() {
                 $J("#es_export_form").serializeArray().forEach((item) => options[item.name] = item.value);
             });
+
+            $J("#download").parent().click(function() { options.export_method = "download"; });
+            $J("#clipboard").parent().click(function() { options.export_method = "clipboard"; });
+            $J("#es_export_form").change();
 
             Modal.done(function() {
                 let data = { rgAllApps: g_Wishlist.rgAllApps, g_rgAppInfo, options };
