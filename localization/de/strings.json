@@ -73,6 +73,7 @@
     "spam_comment_show": "__num__ Spam-Kommentare wurden versteckt. Klick hier, um sie anzuzeigen.",
     "dlc": "Herunterladbare Inhalte",
     "add_to_wishlist": "Zur Wunschliste hinzufügen",
+    "add_to_waitlist": "Zur Waitlist hinzufügen",
     "language": "Sprache",
     "theworddefault": "Standard",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Mehr über Steam-Gutscheine erfahren</a>",
@@ -445,7 +446,8 @@
             "turkish": "Türkisch",
             "ukrainian": "Ukrainisch"
         },
-        "include_owned_elsewhere": "Integriere Spiele, die du woanders besitzt"
+        "include_owned_elsewhere": "Integriere Spiele, die du woanders besitzt",
+        "add_to_waitlist": "Zeige Schaltfläche \"Zur Waitlist hinzufügen\""
     },
     "ready": {
         "errormsg": "Fehler beim Laden von Augmented Steam-Daten",

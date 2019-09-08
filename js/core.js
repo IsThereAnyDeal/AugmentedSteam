@@ -610,6 +610,7 @@ SyncedStorage.defaults = {
     'profile_showcase_twitch_profileonly': false,
 
     'include_owned_elsewhere': true,
+    'add_to_waitlist': false,
 };
 
 

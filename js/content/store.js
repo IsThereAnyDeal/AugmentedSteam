@@ -565,6 +565,7 @@ class AppPageClass extends StorePageClass {
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
+        this.addWaitlistButton();
         this.addNewQueueButton();
         this.addFullscreenScreenshotView();
 
@@ -891,6 +892,36 @@ class AppPageClass extends StorePageClass {
             document.querySelector(".js-user-note-button").addEventListener("click", handler);
             document.querySelector("#esi-store-user-note").addEventListener("click", handler);
         }, err => console.error("Failed to add user notes!", err));
+    }
+
+    async addWaitlistButton() {
+        if (!SyncedStorage.get("add_to_waitlist") || !await Background.action("itad.isconnected")) return;
+
+        HTML.beforeBegin(".queue_btn_follow",
+            `<div class="queue_control_button queue_btn_waitlist">
+                <div class="btnv6_blue_hoverfade btn_medium queue_btn_inactive">
+                    <span>${Localization.str.add_to_waitlist}</span>
+                </div>
+                <div class="btnv6_blue_hoverfade btn_medium queue_btn_active" style="display: none;">
+                    <span><img src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected.png" border="0">${Localization.str.on_waitlist}</span>
+                </div>
+            </div>
+            <div style="position: relative; display: inline-block;"></div>`); // Creates space between waitlist and follow button
+
+        let waitlistBtn = document.querySelector(".queue_btn_waitlist");
+        let [addBtn, addedBtn] = waitlistBtn.children;
+        let waitlisted = false; // todo Add check when endpoint is updated
+
+        if (waitlisted) {
+            addBtn.style.display = "none";
+            addedBtn.style.display = '';
+        }
+
+        waitlistBtn.addEventListener("click", () => {
+            waitlisted = !waitlisted;
+            addBtn.style.display = waitlisted ? "none" : '';
+            addedBtn.style.display = waitlisted ? '' : "none";
+        });
     }
 
     addNewQueueButton() {
