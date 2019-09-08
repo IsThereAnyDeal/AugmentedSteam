@@ -257,16 +257,13 @@ class ITAD_Api extends Api {
         if (!result) return;
         let { games, typemap } = result;
         
-        let ownedElsewhere = {};
+        let collection = {};
         games.forEach(({ gameid, types }) => {
-            types = types.filter(type => type !== "steam");
-            if (!types.length) return;
-
             types = types.map(type => typemap[type]);
 
-            ownedElsewhere[gameid] = types;
+            collection[gameid] = types;
         });
-        return ownedElsewhere;
+        return collection;
     }
 }
 ITAD_Api.accessToken = null;
@@ -626,10 +623,11 @@ class Steam {
 
             if (ownedElsewhere) {
                 for (let storeId of Object.keys(ownedElsewhere)) {
-                    if (storeId.startsWith("app/")) {
-                        rgOwnedApps.push(GameId.trimStoreId(storeId));
-                    } else if (storeId.startsWith("sub/")) {
-                        rgOwnedPackages.push(GameId.trimStoreId(storeId));
+                    let id = GameId.trimStoreId(storeId);
+                    if (storeId.startsWith("app/") && !rgOwnedApps.includes(id)) {
+                        rgOwnedApps.push(id);
+                    } else if (storeId.startsWith("sub/") && !rgOwnedPackages.includes(id)) {
+                        rgOwnedPackages.push(id);
                     }
                 }
             }
