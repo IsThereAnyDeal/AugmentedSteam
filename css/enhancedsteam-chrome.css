@@ -1,40 +1,40 @@
 
 .steamdb_ico i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/steamdb_store.png');
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/steamdb_store.png");
 }
 .steamdb_ico:hover i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/steamdb_store_black.png');
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/steamdb_store_black.png");
 }
 
 .itad_ico i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/itad_small.png');
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/itad_small.png");
 }
 .itad_ico:hover i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/itad_small_black.png');
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/itad_small_black.png");
 }
 
 .steam_client_btn i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/icon-steamos.png'); /* //steamcdn-a.akamaihd.net/store/about/icon-steamos.svg */
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/icon-steamos.png"); /* //steamcdn-a.akamaihd.net/store/about/icon-steamos.svg */
 }
 
 .bartervg_ico i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/bartervg.png');
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/bartervg.png");
 }
 
 .pcgw_btn i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/pcgw.png');
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/pcgw.png");
 }
 
 .completionistme_btn i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/icon-completionistme.png');
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/icon-completionistme.png");
 }
 
 .protondb_btn i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/icon-protondb.png'); /* //www.protondb.com/images/protondb-logo.svg */
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/icon-protondb.png"); /* //www.protondb.com/images/protondb-logo.svg */
 }
 
 .cardexchange_btn i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/steamcardexchange.png');
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/steamcardexchange.png");
 }
 
 .es_slider_toggle i {
@@ -57,5 +57,9 @@
 }
 
 .es_regional_icon {
-  background-image: url("chrome-extension://__MSG_@@extension_id__/img/flags/world.png");
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/flags/world.png") !important;
+}
+
+.itad-pricing {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/itad.png");
 }

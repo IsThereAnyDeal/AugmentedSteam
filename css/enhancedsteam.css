@@ -282,20 +282,50 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #store_nav_search_term::-webkit-input-placeholder, #term::-webkit-input-placeholder {
   font-style: italic;
 }
-.es_lowest_price {
-  padding: 5px 0 5px 46px;
+
+.itad-pricing {
+  padding: 5px 5px 5px 42px;
   height: auto !important;
   border-bottom: 0;
-  background-image: none;
-  position: relative;
   font-size: 12px;
-  color: #626366;
+  color: #a8b2ba;
   background-color: rgba(0, 0, 0, 0.2);
+  background-repeat: no-repeat;
+  background-position: 5px center;
+  display: grid;
+  grid-template-columns: min-content auto min-content;
+  grid-column-gap: 10px;
+  white-space: nowrap;
+  line-height: 1.5;
+  align-items: baseline;
 }
+.itad-pricing__main {
+  white-space: normal;
+}
+.itad-pricing__cut {
+  color: #a4d007;
+  margin-left: 5px;
+}
+.itad-pricing__price {
+  font-size: 1.1em;
+  color: #acdbf5;
+}
+.itad-pricing__voucher {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+.itad-pricing__drm {
+  text-transform: uppercase;
+  color: #626366;
+}
+.itad-pricing__info {
+  text-align: right;
+}
+
 .wishlist_row {
   overflow: visible !important;
 }
-.wishlist_row .es_lowest_price {
+.wishlist_row .itad-pricing {
   color: white;
   width: 100%;
   position: absolute;
@@ -307,18 +337,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   box-sizing: border-box;
   transition: visibility, opacity 0.2s ease-in-out;
 }
-.wishlist_row:hover .es_lowest_price {
+.wishlist_row:hover .itad-pricing {
   visibility: visible;
   opacity: 1;
-}
-
-.es_lowest_price a {
-  color: #b0aeac;
-}
-
-.es_lowest_price .gift_icon {
-  left: 17px;
-  position: absolute;
 }
 
 .es_wishlist_add,

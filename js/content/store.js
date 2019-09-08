@@ -266,7 +266,7 @@ class StorePageClass {
             prices.bundleids.push(node.dataset['dsBundleid']);
         }
 
-        prices.priceCallback = function(type, id, html) {
+        prices.priceCallback = function(type, id, contentNode) {
             let node;
             let placement = "afterbegin";
             if (type === "sub") {
@@ -286,11 +286,7 @@ class StorePageClass {
                 }
             }
 
-            HTML.adjacent(node, placement, html);
-
-            let height = (document.querySelector("#es_price_"+id).offsetHeight - 20) / 2;
-            document.querySelector("#es_line_chart_"+id).style.top = height + "px";
-
+            node.insertAdjacentElement(placement, contentNode);
         };
 
         prices.bundleCallback = function(html) {
@@ -3155,7 +3151,7 @@ let WishlistPageClass = (function(){
                 if (hover.length) {
                     let activeEntry = hover[hover.length - 1].closest(".wishlist_row");
                     if (activeEntry) {
-                        let priceNode = activeEntry.querySelector(".es_lowest_price");
+                        let priceNode = activeEntry.querySelector(".itad-pricing");
                         if (priceNode) {
                             getNodesBelow(activeEntry).forEach(row => {
                                 row.style.top = parseInt(row.style.top, 10) + priceNode.getBoundingClientRect().height + "px";
@@ -3345,17 +3341,17 @@ let WishlistPageClass = (function(){
                 cachedPrices[appId] = new Promise(resolve => {
                     let prices = new Prices();
                     prices.appids = [appId];
-                    prices.priceCallback = (type, id, html) => {
-                        HTML.beforeEnd(node, html);
-                        let priceNode = node.querySelector(".es_lowest_price");
+                    prices.priceCallback = (type, id, contentNode) => {
+                        node.insertAdjacentElement("beforeend", contentNode);
+                        let priceNode = node.querySelector(".itad-pricing");
                         priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
                         resolve();
-                    }
+                    };
                     prices.load();
                 });
             }
             cachedPrices[appId].then(() => {
-                    let priceNodeHeight = node.querySelector(".es_lowest_price").getBoundingClientRect().height;
+                    let priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
                     getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) + priceNodeHeight + "px");
             });
         });
@@ -3364,7 +3360,7 @@ let WishlistPageClass = (function(){
             // When scrolling really fast, sometimes only this event is called without the invocation of the mouseenter event
             if (cachedPrices[appId]) {
                 cachedPrices[appId].then(() => {
-                    let priceNodeHeight = node.querySelector(".es_lowest_price").getBoundingClientRect().height;
+                    let priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
                     getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) - priceNodeHeight + "px");
                 });
             }
