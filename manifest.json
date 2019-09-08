@@ -49,7 +49,9 @@
         "*://store.steampowered.com/join/*",
         "*://store.steampowered.com/api/*",
         "*://support.steampowered.com/*",
-        "*://help.steampowered.com/*"
+        "*://help.steampowered.com/*",
+        "*://translation.steampowered.com/*",
+        "*://partner.steampowered.com/*"        
       ],
       "js": [
         "js/lib/DOMPurify/purify.js",
@@ -61,6 +63,7 @@
       ],
       "css": [
         "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css",
         "css/es_flags.css"
       ]
     },
@@ -70,6 +73,7 @@
       ],
       "exclude_matches": [
         "*://steamcommunity.com/login/*",
+        "*://steamcommunity.com/openid/*",
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
@@ -82,6 +86,7 @@
       ],
       "css": [
         "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css",
         "css/es_flags.css"
       ]
     },

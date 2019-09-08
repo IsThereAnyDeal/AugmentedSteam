@@ -365,7 +365,6 @@
         "saved_note": "Innstillinger lagret",
         "regional_hideworld": "Skjul klodeindikator",
         "show_astatslink": "Vis AStats-lenke på programsider",
-        "showclient": "Vis Steam-klient linker",
         "guest": "Gjenstander du har et gjestepass for",
         "show_steamchart_info": "Vis SteamCharts.com-informasjon",
         "show_steamspy_info": "Vis steamspy.com info",
@@ -380,7 +379,6 @@
         "steamdb": "Vis SteamDB-lenker",
         "hide_early_access": "Skjul Early Access-spill på hjemmesiden, lese- og søkesider",
         "reset_note": "Innstillinger tilbakestilt",
-        "html5video": "Vis videoer ved hjelp av HTML5 i stedet for Flash",
         "profiles_link_group_game": "Eksklusiv for spill",
         "friends_wishlist": "Gjenstander dine venner har satt på ønskelisten",
         "showspeechsearch": "Legg til stemmegjenkjenning i søkefelt",
@@ -453,7 +451,7 @@
     },
     "survey": {
         "performance_survey": "Ytelses undersøkelse",
-        "users": "__users__ brukere har utført ytelses undersøkelsen for dette spillet",
+        "users": "__users__ brukere har utført ytelses undersøkelsen for dette spillet.",
         "framerate": "Framerate",
         "framerate_response": "svarte at frameraten var",
         "framerate_30": "ligger på 30fps eller lavere",
@@ -467,7 +465,7 @@
         "satisfaction": "Ytelsestilfredshet etter GPU",
         "gs_y": "Har innebygde grafikkinnstillinger eller en grafikkmeny",
         "gs_n": "Har ikke innebygde grafikkinnstillinger eller en grafikkmeny",
-        "nobody": "Ingen har gjennomført ytelses undersøkelsen på dette spillet ennå",
+        "nobody": "Ingen har gjennomført ytelses undersøkelsen på dette spillet ennå.",
         "take": "Besvar undersøkelsen"
     },
     "select": {

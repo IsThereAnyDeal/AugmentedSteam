@@ -376,7 +376,6 @@
         "saved_note": "Zapisano zmiany",
         "regional_hideworld": "Ukrywaj ikonę globusa",
         "show_astatslink": "Wyświetlaj odnośniki do AStats na stronach aplikacji",
-        "showclient": "Wyświetlaj odnośniki do klienta Steam",
         "guest": "Tytuły przechowywane w formie klucza tymczasowego",
         "show_steamchart_info": "Wyświetlaj informacje z SteamCharts.com",
         "show_steamspy_info": "Wyświetlaj informacje z SteamSpy.com",
@@ -392,12 +391,10 @@
         "steamdb": "Wyświetlaj odnośniki do SteamDB",
         "hide_early_access": "Ukrywaj gry z wczesnym dostępem w wynikach wyszukiwania i na stronie głównej",
         "reset_note": "Zresetowano opcje",
-        "html5video": "Wyświetlaj filmy, korzystając z HTML5 zamiast Flasha",
         "profiles_link_group_game": "Gra na wyłączność",
         "friends_wishlist": "Tytuły z list życzeń znajomych",
         "showspeechsearch": "Włącz wyszukiwanie głosowe",
         "profile_link_images_color": "Kolorowe",
-        "hide_about_links": "Przycisk „Zainstaluj Steam” i link „O Steam”",
         "show_empty_wishlist": "Wyświetlaj przycisk „Wyczyść listę życzeń”",
         "show_user_notes": "Wyświetlaj notatki użytkownika na liście życzeń i stronach aplikacji",
         "inventory_nav_text": "Wyświetlaj zaawansowane opcje nawigacji po stronach ekwipunku",
@@ -474,7 +471,7 @@
     },
     "survey": {
         "performance_survey": "Badanie wydajności",
-        "users": "__users__ użytkowników ukończyło badanie wydajności tej gry",
+        "users": "__users__ użytkowników ukończyło badanie wydajności tej gry.",
         "framerate": "Liczba klatek na sekundę",
         "framerate_response": "ankietowanych odpowiedziało, że liczba klatek na sekundę była",
         "framerate_30": "stała (30 kl./s lub mniej)",
@@ -488,7 +485,7 @@
         "satisfaction": "Satysfakcja z wydajności GPU (wg producenta)",
         "gs_y": "Posiada wbudowane menu opcji graficznych",
         "gs_n": "Nie posiada wbudowanego menu opcji graficznych",
-        "nobody": "Jeszcze nikt nie podjął się badania wydajności tej gry",
+        "nobody": "Jeszcze nikt nie podjął się badania wydajności tej gry.",
         "take": "Weź udział w badaniu"
     },
     "select": {

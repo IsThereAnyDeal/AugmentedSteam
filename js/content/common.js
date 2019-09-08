@@ -324,11 +324,11 @@ let RequestData = (function(){
         });
     };
 
-    self.post = function(url, formData, settings) {
+    self.post = function(url, formData, settings, returnJSON) {
         return self.getHttp(url, Object.assign(settings || {}, {
             method: "POST",
             body: formData
-        }));
+        }), returnJSON);
     };
 
     self.getJson = function(url, settings) {
@@ -940,6 +940,7 @@ let EnhancedSteam = (function() {
         });
     };
 
+    // todo (MxtOUT) Add this back once proper error handling is implemented
     let loginWarningAdded = false;
     self.addLoginWarning = function(err) {
         if (!loginWarningAdded) {
@@ -951,10 +952,20 @@ let EnhancedSteam = (function() {
         Promise.reject(err);
     };
 
+    self.handleInstallSteamButton = function() {
+        let option = SyncedStorage.get("installsteam");
+        if (option === "hide") {
+            DOMHelper.remove("div.header_installsteam_btn");
+        } else if (option === "replace") {
+            let btn = document.querySelector("div.header_installsteam_btn > a");
+            btn.textContent = Localization.str.viewinclient;
+            btn.href =  `steam://openurl/${window.location.href}`;
+            btn.classList.add("es_steamclient_btn");
+        }
+    };
+
     self.removeAboutLinks = function() {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
-
-        DOMHelper.remove("div.header_installsteam_btn");
 
         if (User.isSignedIn) {
             DOMHelper.remove(".submenuitem[href^='https://store.steampowered.com/about/']");
@@ -968,6 +979,7 @@ let EnhancedSteam = (function() {
 
         let submenuUsername = document.querySelector(".supernav_container .submenu_username");
         HTML.afterEnd(submenuUsername.querySelector("a"), `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
+        HTML.afterEnd(submenuUsername.querySelector("a:nth-child(2)"), `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`)
         HTML.beforeEnd(submenuUsername, `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
     };
 
@@ -1018,7 +1030,12 @@ let EnhancedSteam = (function() {
         }
 
         accountNameNode.textContent = communityName;
-        document.title = document.title.replace(accountName, communityName);
+
+         // Don't replace title on user pages that aren't mine
+        let isUserPage = /.*(id|profiles)\/.+/g.test(location.pathname);
+        if (!isUserPage || location.pathname.includes(User.profilePath)) {
+            document.title = document.title.replace(accountName, communityName);
+        }
     };
 
     self.launchRandomButton = function() {
@@ -1350,7 +1367,7 @@ let Inventory = (function(){
             promises.push(Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)));
         }
         
-        _promise = Promise.all(promises).catch(EnhancedSteam.addLoginWarning);
+        _promise = Promise.all(promises);
         return _promise;
     };
 
@@ -1562,6 +1579,7 @@ let Highlights = (function(){
                 break;
             }
 
+            case node.classList.contains("info"):
             case node.classList.contains("spotlight_content"):
                 node = node.parentElement;
                 // don't break
@@ -1684,23 +1702,23 @@ let Highlights = (function(){
 
         // Batch all the document.ready appid lookups into one storefront call.
         let selectors = [
-            "div.tab_row",					                // Storefront rows
+            "div.tab_row",                                  // Storefront rows
             "div.dailydeal_ctn",
             ".store_main_capsule",                          // "Featured & Recommended"
-            "div.wishlistRow",				                // Wishlist rows
-            "a.game_area_dlc_row",			                // DLC on app pages
-            "a.small_cap",					                // Featured storefront items and "recommended" section on app pages
+            "div.wishlistRow",                              // Wishlist rows
+            "a.game_area_dlc_row",                          // DLC on app pages
+            "a.small_cap",                                  // Featured storefront items and "recommended" section on app pages
             "a.home_smallcap",
             ".home_content_item",                           // Small items under "Keep scrolling for more recommendations"
             ".home_content.single",                         // Big items under "Keep scrolling for more recommendations"
             ".home_area_spotlight",                         // "Special offers" big items
-            "a.search_result_row",			                // Search result rows
-            "a.match",						                // Search suggestions rows
+            "a.search_result_row",                          // Search result rows
+            "a.match",                                      // Search suggestions rows
             ".highlighted_app",                             // For example "Recently Recommended" on curators page
-            "a.cluster_capsule",			                // Carousel items
-            "div.recommendation_highlight",	                // Recommendation pages
+            "a.cluster_capsule",                            // Carousel items
+            "div.recommendation_highlight",                 // Recommendation pages
             "div.recommendation_carousel_item",             // Recommendation pages
-            "div.friendplaytime_game",		                // Recommendation pages
+            "div.friendplaytime_game",                      // Recommendation pages
             ".recommendation_row",                          // "Recent recommendations by friends"
             ".friendactivity_tab_row",                      // "Most played" and "Most wanted" tabs on recommendation pages
             ".friend_game_block",                           // "Friends recently bought"
@@ -1710,15 +1728,15 @@ let Highlights = (function(){
             "div.item_ctn",                                 // Curator list item
             ".store_capsule",                               // All sorts of items on almost every page
             ".home_marketing_message",                      // "Updates and offers"
-            "div.dlc_page_purchase_dlc",	                // DLC page rows
-            "div.sale_page_purchase_item",	                // Sale pages
-            "div.item",						                // Sale pages / featured pages
-            "div.home_area_spotlight",		                // Midweek and weekend deals
-            "div.browse_tag_game",			                // Tagged games
-            "div.similar_grid_item",		                // Items on the "Similarly tagged" pages
-            ".tab_item",					                // Items on new homepage
-            "a.special",					                // new homepage specials
-            "div.curated_app_item",			                // curated app items!
+            "div.dlc_page_purchase_dlc",                    // DLC page rows
+            "div.sale_page_purchase_item",                  // Sale pages
+            "div.item",                                     // Sale pages / featured pages
+            "div.home_area_spotlight",                      // Midweek and weekend deals
+            "div.browse_tag_game",                          // Tagged games
+            "div.similar_grid_item",                        // Items on the "Similarly tagged" pages
+            ".tab_item",                                    // Items on new homepage
+            "a.special",                                    // new homepage specials
+            "div.curated_app_item",                         // curated app items!
             ".hero_capsule",                                // Summer sale "Featured"
             ".sale_capsule"                                 // Summer sale general capsules
         ];
@@ -1811,7 +1829,7 @@ let Prices = (function(){
         this.subids = [];
         this.bundleids = [];
 
-        this.priceCallback = function(type, id, html) {};
+        this.priceCallback = function(type, id, node) {};
         this.bundleCallback = function(html) {};
 
         this._bundles = [];
@@ -1849,84 +1867,104 @@ let Prices = (function(){
         let type = a[0];
         let id = a[1];
 
-        let activates = "";
-        let line1 = "";
-        let line2 = "";
-        let line3 = "";
-        let html;
+        let node = document.createElement("div");
+        node.classList.add("itad-pricing");
+        node.id = "es_price_" + id;
 
-        // "Lowest Price"
+        let pricingStr = Localization.str.pricing;
+
+        let hasData = false;
+
+        // Current best
         if (info['price']) {
-            if (info['price']['drm'] === "steam" && info['price']['store'] !== "Steam") {
-                activates = `(<b>${Localization.str.activates}</b>)`;
-            }
-
-            let infoUrl = HTML.escape(info["urls"]["info"].toString());
-            let priceUrl = HTML.escape(info["price"]["url"].toString());
-            let store = HTML.escape(info["price"]["store"].toString());
+            hasData = true;
+            let priceData = info['price'];
 
             let lowest;
             let voucherStr = "";
-            if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
-                lowest = new Price(info['price']['price_voucher'], meta['currency']).inCurrency(Currency.customCurrency);
+            if (SyncedStorage.get("showlowestpricecoupon") && priceData.price_voucher) {
+                lowest = new Price(priceData.price_voucher, meta['currency']);
+
                 let voucher = HTML.escape(info['price']['voucher']);
-                voucherStr = Localization.str.after_coupon.replace("__voucher__", `<b>${voucher}</b>`);
+                voucherStr = pricingStr.with_voucher.replace("__voucher__", `<span class="itad-pricing__voucher">${voucher}</span>`);
             } else {
-                lowest = new Price(info['price']['price'], meta['currency']).inCurrency(Currency.customCurrency);
+                lowest = new Price(priceData.price, meta['currency']);
+            }
+            lowest = lowest.inCurrency(Currency.customCurrency);
+
+            let cutStr = "";
+            if (priceData.cut > 0) {
+                cutStr = ` <span class='itad-pricing__cut'>-${priceData.cut}%</span>`;
             }
 
+            let drmStr = "";
+            if (priceData.drm.length > 0 && priceData.store !== "Steam") {
+                drmStr = `<span class='itad-pricing__drm'>(${priceData.drm[0]})</span>`;
+            }
+
+            let priceUrl = HTML.escape(info["price"]["url"].toString());
+
             let prices = lowest.toString();
-            if (Currency.customCurrency != Currency.storeCurrency) {
+            if (Currency.customCurrency !== Currency.storeCurrency) {
                 let lowest_alt = lowest.inCurrency(Currency.storeCurrency);
                 prices += ` (${lowest_alt.toString()})`;
             }
+            let pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
 
-            let lowestStr = Localization.str.lowest_price_format
-                .replace("__price__", prices)
-                .replace("__store__", `<a href="${priceUrl}" target="_blank">${store}</a>`);
+            let storeStr = pricingStr.store.replace("__store__", HTML.escape(priceData.store));
 
-            let infoStr = `(<a href="${infoUrl}" target="_blank">${Localization.str.info}</a>)`;
+            HTML.beforeEnd(node, `<div>${pricingStr.lowest_price}</div>`);
+            HTML.beforeEnd(node, `<a href="${priceUrl}" class="itad-pricing__main" target="_blank">${pricesStr} ${cutStr} ${voucherStr} ${storeStr}&nbsp;${drmStr}</a>`);
 
-            line1 = `${Localization.str.lowest_price} ${lowestStr} ${voucherStr} ${activates} ${infoStr}`;
+            let infoUrl = HTML.escape(info["urls"]["info"]);
+            HTML.beforeEnd(node, `<a href="${infoUrl}" class="itad-pricing__info" target="_blank">${pricingStr.more}</a>`);
         }
 
-        // "Historical Low"
+        // Historical low
         if (info["lowest"]) {
-            let historical = new Price(info['lowest']['price'], meta['currency']).inCurrency(Currency.customCurrency);
+            hasData = true;
+            let lowestData = info.lowest;
+
+            let historical = new Price(lowestData.price, meta['currency']).inCurrency(Currency.customCurrency);
             let recorded = new Date(info["lowest"]["recorded"]*1000);
 
             let prices = historical.toString();
-            if (Currency.customCurrency != Currency.storeCurrency) {
+            if (Currency.customCurrency !== Currency.storeCurrency) {
                 let historical_alt = historical.inCurrency(Currency.storeCurrency);
                 prices += ` (${historical_alt.toString()})`;
             }
+            let pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
 
-            let historicalStr = Localization.str.historical_low_format
-                .replace("__price__", prices)
-                .replace("__store__", HTML.escape(info['lowest']['store']))
-                .replace("__date__", recorded.toLocaleDateString());
+            let cutStr = "";
+            if (lowestData.cut > 0) {
+                cutStr = ` <span class='itad-pricing__cut'>-${lowestData.cut}%</span>`;
+            }
 
-            let url = HTML.escape(info['urls']['history']);
+            let storeStr = pricingStr.store.replace("__store__", lowestData.store);
 
-            let infoStr2 = `(<a href="${url}" target="_blank">${Localization.str.info}</a>)`;
-            line2 = `${Localization.str.historical_low} ${historicalStr} ${infoStr2}`;
+            HTML.beforeEnd(node, `<div>${pricingStr.historical_low}</div>`);
+            HTML.beforeEnd(node, `<div>${pricesStr} ${cutStr} ${storeStr} ${recorded.toLocaleDateString()}</div>`);
+
+            let infoUrl = HTML.escape(info['urls']['history']);
+            HTML.beforeEnd(node, `<a href="${infoUrl}" class="itad-pricing__info" target="_blank">${pricingStr.history}</a>`);
         }
 
-        let chartImg = ExtensionLayer.getLocalUrl("img/line_chart.png");
-        html = `<div class='es_lowest_price' id='es_price_${id}'><div class='gift_icon' id='es_line_chart_${id}'><img src='${chartImg}'></div>`;
-
-        // "Number of times this game has been in a bundle"
+        // times bundled
         if (info["bundles"]["count"] > 0) {
-            line3 = Localization.str.bundle.bundle_count.replace("__count__", info['bundles']['count']);
+            hasData = true;
+            HTML.beforeEnd(node, `<div>${pricingStr.bundled}</div>`);
+
+            let bundledStr = pricingStr.bundle_count.replace("__count__", info['bundles']['count']);
+            HTML.beforeEnd(node, `<div>${bundledStr}</div>`);
+
             let bundlesUrl = HTML.escape(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
             if (typeof bundlesUrl === "string" && bundlesUrl.length > 0) {
-                line3 += ` (<a href="${bundlesUrl}" target="_blank">${Localization.str.info}</a>)`;
+                HTML.beforeEnd(node, `<a href="${bundlesUrl}" class="itad-pricing__info" target="_blank">${pricingStr.info}</a>`);
             }
         }
 
-        if (line1 || line2) {
-            let result = html + "<div>" + line1 + "</div><div>" + line2 + "</div>" + line3;
-            this.priceCallback(type, id, result);
+        if (hasData) {
+            this.priceCallback(type, id, node);
         }
     };
 
@@ -2097,6 +2135,7 @@ let Common = (function(){
         UpdateHandler.checkVersion(EnhancedSteam.clearCache);
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
+        EnhancedSteam.handleInstallSteamButton();
         EnhancedSteam.removeAboutLinks();
         EnhancedSteam.addHeaderLinks();
         EarlyAccess.showEarlyAccess();
@@ -2116,48 +2155,15 @@ let Common = (function(){
     return self;
 })();
 
-let Downloader = (function(){
+class Downloader {
 
-    let self = {};
-
-    self.download = async function(options) {
-        if (options.url && !options.url.startsWith("blob:") && !options.url.startsWith("data:")) {
-            options.url = await self.toDataURL(options.url).catch(console.error);
-        }
-
-        if (options.content) {
-            let blob = new Blob([ options.content ], {type : "text/plain;charset=UTF-8"});
-            options.url = URL.createObjectURL(blob);
-        }
-
-        let element = document.createElement("a");
-        element.setAttribute("href", options.url);
-        element.setAttribute("download", options.filename || "download");
-        element.style.display = "none";
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    };
-
-    self.toDataURL = function(url) {
-        return new Promise(function(resolve, reject) {
-            RequestData.getBlob(url, {credentials: "omit"})
-            .then(function(blob) {
-                let fr = new FileReader();
-                fr.onload = function() {
-                    resolve(this.result);
-                };
-                fr.onerror = reject;
-                fr.onabort = reject;
-                fr.readAsDataURL(blob);
-            })
-            .catch(reject);
-        });
-        
+    static download(content, filename) {
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(content);
+        a.download = filename;
+        a.click();
     }
-    
-    return self;
-})();
+}
 
 let Clipboard = (function(){
 
@@ -2340,6 +2346,35 @@ class MediaPage {
             for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
                 node.classList.toggle("es_expanded");
             }
+        }
+
+        let strip = document.querySelector("#highlight_strip");
+        if (!strip) { return; }
+
+        let lastScroll = Date.now();
+        strip.addEventListener("wheel", scrollStrip, false);
+        function scrollStrip(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            
+            if (Date.now() - lastScroll < 200) {
+                return;
+            } 
+    
+            lastScroll = Date.now();
+            let allElem = document.querySelectorAll(".highlight_strip_item");
+            let isScrollDown = ev.deltaY > 0;
+            let siblingProp = isScrollDown ? "nextSibling" : "previousSibling";
+            
+            let targetElem = document.querySelector(".highlight_strip_item.focus")[siblingProp];
+            while (!targetElem.classList || !targetElem.classList.contains("highlight_strip_item")) {
+                targetElem = targetElem[siblingProp];
+                if (!targetElem) {
+                    targetElem = allElem[isScrollDown ? 0 : allElem.length - 1];
+                }
+            }
+            
+            targetElem.click();
         }
     }
 }

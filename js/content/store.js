@@ -266,7 +266,7 @@ class StorePageClass {
             prices.bundleids.push(node.dataset['dsBundleid']);
         }
 
-        prices.priceCallback = function(type, id, html) {
+        prices.priceCallback = function(type, id, contentNode) {
             let node;
             let placement = "afterbegin";
             if (type === "sub") {
@@ -286,11 +286,7 @@ class StorePageClass {
                 }
             }
 
-            HTML.adjacent(node, placement, html);
-
-            let height = (document.querySelector("#es_price_"+id).offsetHeight - 20) / 2;
-            document.querySelector("#es_line_chart_"+id).style.top = height + "px";
-
+            node.insertAdjacentElement(placement, contentNode);
         };
 
         prices.bundleCallback = function(html) {
@@ -311,6 +307,7 @@ class StorePageClass {
 
     addLinks(type) {
         if (!SyncedStorage.get("showsteamdb")
+         && !SyncedStorage.get("showbarter")
          && !SyncedStorage.get("showitadlinks")) { return; }
 
         let gameid = null;
@@ -337,6 +334,15 @@ class StorePageClass {
         }
 
         if (!node) { return; }
+
+        if (SyncedStorage.get("showbartervg")) {
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "bartervg_ico",
+                    `https://barter.vg/steam/${type}/${gameid}`,
+                    Localization.str.view_on_website.replace("__website__", 'Barter.vg'))
+                );
+        }
 
         if (SyncedStorage.get("showsteamdb")) {
             HTML.afterBegin(node,
@@ -566,6 +572,7 @@ class AppPageClass extends StorePageClass {
         this.addWishlistRemove();
         this.addUserNote();
         this.addNewQueueButton();
+        this.addFullscreenScreenshotView();
 
         this.addCoupon();
         this.addPrices();
@@ -574,6 +581,7 @@ class AppPageClass extends StorePageClass {
         this.addDrmWarnings();
         this.addMetacriticUserScore();
         this.addOpenCritic();
+        this.displayViewInLibrary();
         this.displayPurchaseDate();
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
@@ -584,6 +592,7 @@ class AppPageClass extends StorePageClass {
 
         this.addHltb();
 
+        this.replaceDevPubLinks();
         this.moveUsefulLinks();
         this.addLinks("app");
         this.addTitleHighlight();
@@ -602,7 +611,7 @@ class AppPageClass extends StorePageClass {
 
         this.addReviewToggleButton();
         this.addHelpButton();
-
+        this.addSupport();
     }
 
     initHdPlayer() {
@@ -855,10 +864,7 @@ class AppPageClass extends StorePageClass {
             activeStyle = "";
         }
 
-        HTML.afterEnd(".queue_control_button.queue_btn_ignore",
-            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
-
-        HTML.afterEnd(".queue_control_button.queue_btn_ignore",
+        HTML.beforeBegin(".queue_actions_ctn > :last-child",
             ` <div class="queue_control_button js-user-note-button">
                 <div id="es_add_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${inactiveStyle}">
                     <span>${Localization.str.user_note.add}</span>
@@ -867,6 +873,9 @@ class AppPageClass extends StorePageClass {
                     <span>${Localization.str.user_note.update}</span>
                 </div>
             </div>`);
+
+        HTML.beforeEnd(".queue_actions_ctn",
+            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
 
         function toggleState(node, active) {
             let button = document.querySelector(".js-user-note-button");
@@ -910,6 +919,51 @@ class AppPageClass extends StorePageClass {
                 });
             });
         });
+    }
+
+    addFullscreenScreenshotView() {
+        function toggleFullScreen(event) {
+            if (!document.fullscreenElement) {
+                let element = event.target.closest(".screenshot_popup_modal_content");
+                element.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function initFSVButtons() {
+            let modalFooter = document.querySelector(".screenshot_popup_modal_footer");
+            let nextButton = modalFooter.querySelector(".next");
+            let nextButtonOffsetWidth = nextButton.offsetWidth;
+            if (nextButton.style.display === "none") {
+                nextButton.style.display = "";
+                nextButtonOffsetWidth = nextButton.offsetWidth;
+                nextButton.style.display = "none";
+            }
+            HTML.beforeEnd(modalFooter,
+                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_fullscreen_toggle" style="right: calc(${nextButtonOffsetWidth}px + 0.5em)"><i></i></div>`);
+            let fsvButton = modalFooter.querySelector(".es_screenshot_fullscreen_toggle");
+            fsvButton.addEventListener("click", toggleFullScreen);
+
+            let modalTitleLink = modalFooter.parentElement.querySelector(".screenshot_popup_modal_title > a");
+            HTML.beforeEnd(modalFooter,
+                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_download_btn" style="right: calc(${nextButtonOffsetWidth + fsvButton.offsetWidth}px + 1em)" title="${modalTitleLink.textContent.trim()}"><i></i></div>`);
+            let downloadButton = modalFooter.querySelector(".es_screenshot_download_btn");
+            downloadButton.addEventListener("click", () => {
+                modalTitleLink.click();
+            });
+        }
+
+        let observer = new MutationObserver(records => {
+            for (let record of records) {
+                for (let node of record.addedNodes) {
+                    if (node.classList.contains("screenshot_popup_modal")) {
+                        initFSVButtons();
+                    }
+                }
+            }
+        });
+        observer.observe(document.body, { childList: true });
     }
 
     getFirstSubid() {
@@ -1166,6 +1220,20 @@ class AppPageClass extends StorePageClass {
         document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName, Localization.str.review));
     }
 
+    displayViewInLibrary() {
+        if (!User.isSignedIn || !SyncedStorage.get("showviewinlibrary")) { return; }
+
+        let node = document.querySelector(".already_owned_actions");
+        if (!node) { return; }
+
+        HTML.afterBegin(node,
+            `<div class="game_area_already_owned_btn">
+                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${this.appid}">
+                    <span>${Localization.str.view_in_library}</span>
+                </a>
+            </div>`);
+    }
+
     displayPurchaseDate() {
         if (!SyncedStorage.get("purchase_dates")) { return; }
 
@@ -1363,6 +1431,79 @@ class AppPageClass extends StorePageClass {
         });
     }
 
+    replaceDevPubLinks() {
+        if (!this.isAppPage()) { return; }
+
+        let rows = document.querySelectorAll(".dev_row a");
+        for (let linkNode of rows) {
+            let homepageLink = new URL(linkNode.href);
+            if (homepageLink.pathname === "/search/") {
+                continue;
+            }
+
+            let name = linkNode.parentNode.id === "developers_list" ? "developer" : "publisher";
+            let value = linkNode.innerText;
+            linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
+            HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
+        }
+    }
+
+    async addSupport() {
+        if (!this.isAppPage() || this.isDlc()) { return; }
+
+        let cache = LocalStorage.get("support_info", null);
+        if (!cache || !cache.expiry || cache.expiry < Date.now()) {
+            cache = {
+                "data": {},
+                "expiry": Date.now() + (31*86400 * 1000) // 31 days
+            }
+        }
+
+        let appid = this.appid;
+        let supportInfo = cache[appid];
+        if (!supportInfo) {
+            let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
+            if (!response || !response[appid] || !response[appid].success) { return; }
+
+            supportInfo = response[appid].data.support_info;
+
+            cache['data'][appid] = supportInfo;
+            LocalStorage.set("support_info", cache);
+        }
+
+        let url = supportInfo.url;
+        let email = supportInfo.email;
+        if (!email && !url) { return; }
+
+        let support = "";
+        if (url) {
+            support += `<a href="${url}">${Localization.str.website}</a>`;
+        }
+
+        if (email) {
+            if (url) {
+                support += ", ";
+            }
+
+            // From https://emailregex.com/
+            let emailRegex =
+                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (emailRegex.test(email)) {
+                support += `<a href="mailto:${email}">${Localization.str.email}</a>`;
+            } else {
+                support += `<a href="${email}">${Localization.str.contact}</a>`;
+            }
+        }
+
+        let block = document.querySelector(".glance_ctn .user_reviews");
+        HTML.beforeEnd(block,
+            `<div class="release_date">
+                <div class="subtitle column">${Localization.str.support}:</div>
+                <div class="summary column" id="es_support_list">${support}</div>
+            </div>`);
+    }
+
     moveUsefulLinks() {
         if (!this.isAppPage()) { return; }
 
@@ -1379,16 +1520,6 @@ class AppPageClass extends StorePageClass {
 
     addLinks(type) {
         let linkNode = document.querySelector("#ReportAppBtn").parentNode;
-
-        if (SyncedStorage.get("showclient")) {
-            let cls = "steam_client_btn";
-            let url = "steam://url/StoreAppPage/" + this.appid;
-            let str = Localization.str.viewinclient;
-
-            HTML.afterBegin(linkNode,
-                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-        }
 
         if (SyncedStorage.get("showpcgw")) {
             let cls = "pcgw_btn";
@@ -1478,14 +1609,13 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("show_package_info")) { return; }
 
         let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            if (node.querySelector(".btn_packageinfo")) { continue; }
+        for (let node of nodes) {
+            if (node.querySelector(".btn_packageinfo")) return;
 
             let subid = node.querySelector("input[name=subid]").value;
-            if (!subid) { continue; }
+            if (!subid) return;
 
-            HTML.afterBegin(".game_purchase_action",
+            HTML.afterBegin(node.querySelector(".game_purchase_action"),
                 `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
                  <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
                  ${Localization.str.package_info}</span></a></div></div>`);
@@ -1495,7 +1625,7 @@ class AppPageClass extends StorePageClass {
     addSteamChart(result) {
         if (this.isDlc()) { return; }
         if (!SyncedStorage.get("show_steamchart_info")) { return; }
-	if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
+	    if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
 
         let appid = this.appid;
         let chart = result.charts.chart;
@@ -1567,7 +1697,7 @@ class AppPageClass extends StorePageClass {
         let html = "<div id='performance_survey' class='game_area_description'><h2>" + Localization.str.survey.performance_survey + "</h2>";
 
         if (survey.success) {
-            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + ".</p>";
+            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + "</p>";
             html += "<p><b>" + Localization.str.survey.framerate + "</b>: " + Math.round(survey["frp"]) + "% " + Localization.str.survey.framerate_response + " "
             switch (survey["fr"]) {
                 case "30": html += "<span style='color: #8f0e10;'>" + Localization.str.survey.framerate_30 + "</span>"; break;
@@ -1624,7 +1754,7 @@ class AppPageClass extends StorePageClass {
                 html += "</div>";
             }
         } else {
-            html += "<p>" + Localization.str.survey.nobody + ".</p>";
+            html += "<p>" + Localization.str.survey.nobody + "</p>";
         }
 
         if (document.querySelector(".game_area_already_owned") && document.querySelector(".hours_played")) {
@@ -1786,9 +1916,9 @@ class AppPageClass extends StorePageClass {
         let appid = this.communityAppid;
 
         Background.action('cards', { 'appid': appid, } )
-            .then(result => loadBadgeContent(".es_normal_badge_progress", result), EnhancedSteam.addLoginWarning);
+            .then(result => loadBadgeContent(".es_normal_badge_progress", result));
         Background.action('cards', { 'appid': appid, 'border': 1, } )
-            .then(result => loadBadgeContent(".es_foil_badge_progress", result), EnhancedSteam.addLoginWarning);
+            .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
         function loadBadgeContent(targetSelector, result) {
             let dummy = HTMLParser.htmlToDOM(result);
@@ -1895,7 +2025,7 @@ class AppPageClass extends StorePageClass {
             let node = document.querySelector("#es_ach_stats");
             HTML.inner(node, achieveBar)
 
-        }, EnhancedSteam.addLoginWarning);
+        });
     }
 
     customizeAppPage() {
@@ -1947,7 +2077,7 @@ class AppPageClass extends StorePageClass {
             .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
             .add("customerreviews", "#app_reviews_hash");
 
-        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
+        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop.workshop);
         if (morelikethis) customizer.add("morelikethis", "#recommended_block", morelikethis.textContent);
 
         customizer.build();
@@ -2319,7 +2449,7 @@ let SearchPageClass = (function(){
         if (search.substring(0,1) === "&") { search = "?" + search.substring(1, search.length); }
         if (search.substring(0,1) !== "?") { search = "?" + search; }
 
-        RequestData.getHttp("https://store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
+        RequestData.getHttp(`https://store.steampowered.com/search/results${search}&page=${searchPage}&snr=es`).then(result => {
             let dummy = HTMLParser.htmlToDOM(result);
 
             let addedDate = Date.now();
@@ -2328,14 +2458,10 @@ let SearchPageClass = (function(){
             let lastNode = document.querySelector(".search_result_row:last-child");
 
             // When you're not logged in, the constructed hover doesn't include friends info
-            let publicAttr = `,"public":1`;
-            if (User.isSignedIn) {
-                publicAttr = '';
-            }
+            let publicAttr = User.isSignedIn ? '' : `,"public":1`;
 
             let rows = dummy.querySelectorAll("a.search_result_row");
-            for (let i=0, len=rows.length; i<len; i++) {
-                let row = rows[i];
+            for (let row of rows) {
                 row.dataset.addedDate = addedDate;
                 lastNode.insertAdjacentElement("afterend", row);
                 lastNode = row;
@@ -2357,11 +2483,13 @@ let SearchPageClass = (function(){
             searchPage = searchPage + 1;
             processing = false;
 
-            ExtensionLayer.runInPageContext(function() {
+            ExtensionLayer.runInPageContext(() => {
                 let addedDate = document.querySelector('#search_result_container').dataset.lastAddDate;
-                GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + addedDate + '"]'));
+                GDynamicStore.DecorateDynamicItems(jQuery(`.search_result_row[data-added-date="${addedDate}"]`));
                 SetupTooltips( { tooltipCSSClass: 'store_tooltip'} );
             });
+
+            Highlights.highlightAndTag(rows);
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
@@ -3054,7 +3182,7 @@ let WishlistPageClass = (function(){
                 if (hover.length) {
                     let activeEntry = hover[hover.length - 1].closest(".wishlist_row");
                     if (activeEntry) {
-                        let priceNode = activeEntry.querySelector(".es_lowest_price");
+                        let priceNode = activeEntry.querySelector(".itad-pricing");
                         if (priceNode) {
                             getNodesBelow(activeEntry).forEach(row => {
                                 row.style.top = parseInt(row.style.top, 10) + priceNode.getBoundingClientRect().height + "px";
@@ -3067,13 +3195,12 @@ let WishlistPageClass = (function(){
 
         observer.observe(container, { 'childList': true, });
 
-        instance.addEmptyWishlistButton();
-
         let throbber = document.querySelector("#throbber");
         let wishlistLoaded = function() {
             if (throbber.style.display !== "none") { return; }
             instance.addStatsArea();
             instance.addExportWishlistButton();
+            instance.addEmptyWishlistButton();
             instance.addUserNotesHandlers();
             instance.addRemoveHandler();
         };
@@ -3191,10 +3318,11 @@ let WishlistPageClass = (function(){
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
         if (!isMyWishlist()) { return; }
+        if (!SyncedStorage.get("showemptywishlist")) { return; }
 
-        HTML.beforeEnd("div.wishlist_header", "<div id='es_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
+        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_empty_wishlist'>" + Localization.str.empty_wishlist + "</div>");
 
-        document.querySelector("#es_empty_wishlist div").addEventListener("click", function(e) {
+        document.querySelector("#es_empty_wishlist").addEventListener("click", function(e) {
             emptyWishlist();
         });
     };
@@ -3235,7 +3363,6 @@ let WishlistPageClass = (function(){
             });
         }, true);
     }
-
     WishlistPageClass.prototype.showExportModalDialog = function() {
         ExtensionLayer.runInPageContext(`function() {
             let options = {};
@@ -3245,7 +3372,6 @@ let WishlistPageClass = (function(){
                 "<div id=download>${Localization.str.export_download}</div>",
                 "${Localization.str.cancel}",
                 "<div id=clipboard>${Localization.str.export_clipboard}</div>");
-
             $J("#es_export_form").change(function() {
                 options.export_prop = [];
                 $J("#es_export_form").serializeArray().forEach(function(item) {
@@ -3256,7 +3382,6 @@ let WishlistPageClass = (function(){
                     }
                 });
             });
-
             $J("#download").parent().click(function() { options.export_method = "download"; });
             $J("#clipboard").parent().click(function() { options.export_method = "clipboard"; });
             $J("[name=export_type]").click(function(e) {
@@ -3278,7 +3403,6 @@ let WishlistPageClass = (function(){
                 }
             });
             $J("#es_export_form").change();
-
             Modal.done(function() {
                 let data = { rgAllApps: g_Wishlist.rgAllApps, g_rgAppInfo, options };
                 Messenger.postMessage("exportWishlist", data);
@@ -3380,17 +3504,17 @@ let WishlistPageClass = (function(){
                 cachedPrices[appId] = new Promise(resolve => {
                     let prices = new Prices();
                     prices.appids = [appId];
-                    prices.priceCallback = (type, id, html) => {
-                        HTML.beforeEnd(node, html);
-                        let priceNode = node.querySelector(".es_lowest_price");
+                    prices.priceCallback = (type, id, contentNode) => {
+                        node.insertAdjacentElement("beforeend", contentNode);
+                        let priceNode = node.querySelector(".itad-pricing");
                         priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
                         resolve();
-                    }
+                    };
                     prices.load();
                 });
             }
             cachedPrices[appId].then(() => {
-                    let priceNodeHeight = node.querySelector(".es_lowest_price").getBoundingClientRect().height;
+                    let priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
                     getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) + priceNodeHeight + "px");
             });
         });
@@ -3399,7 +3523,7 @@ let WishlistPageClass = (function(){
             // When scrolling really fast, sometimes only this event is called without the invocation of the mouseenter event
             if (cachedPrices[appId]) {
                 cachedPrices[appId].then(() => {
-                    let priceNodeHeight = node.querySelector(".es_lowest_price").getBoundingClientRect().height;
+                    let priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
                     getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) - priceNodeHeight + "px");
                 });
             }

@@ -298,7 +298,7 @@ let Options = (function(){
 
     function loadTranslation() {
         // When locale files are loaded changed text on page accordingly
-        Localization.then(() => {
+        return Localization.then(async () => {
             document.title = "Augmented Steam " + Localization.str.thewordoptions;
 
             // Localize elements with text
@@ -331,13 +331,35 @@ let Options = (function(){
                 }
             }
 
-            for (let lang in Localization.str.options.lang) {
-                let node = document.querySelector(".language." + lang);
-                if (node) {
-                    node.textContent = Localization.str.options.lang[lang] + ":";
-                }
+
+            let total = deepCount(Localization.str);
+            for (let lang of Object.keys(Localization.str.options.lang)) {
+                let code = Language.languages[lang];
+                let locale = await Localization.loadLocalization(code);
+                let count = deepCount(locale);
+                let percentage = 100 * count / total;
+
+                HTML.inner(
+                    document.querySelector(".lang-perc." + lang),
+                    `<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>`
+                );
             }
-        }).then(Sidebar.create);
+
+            function deepCount(obj) {
+                let cnt = 0;
+                for (let key in obj) {
+                    if (!Localization.str[key]) { // don't count "made up" translations
+                        continue;
+                    }
+                    if (typeof obj[key] === "object") {
+                        cnt += deepCount(obj[key]);
+                    } else {
+                        cnt += 1;
+                    }
+                }
+                return cnt;
+            }
+        });
     }
 
     let Region = (function() {
@@ -394,7 +416,7 @@ let Options = (function(){
                 });
                 break;
             }
-            case "false": {
+            case "none": {
                 icons.forEach(icon => icon.style.display = "none");
             }
         }
@@ -438,7 +460,7 @@ let Options = (function(){
         }
 
         let language = Language.getCurrentSteamLanguage();
-        if (language !== "schinese" && language !== "tchinese") {
+        if (language !== "schinese" || language !== "tchinese") {
             let n = document.getElementById('profile_steamrepcn');
             if (n) {
                 // Hide SteamRepCN option if language isn't Chinese
@@ -458,8 +480,7 @@ let Options = (function(){
             });
             changelogLoaded = true;
         }
-
-        loadTranslation();
+        
         loadProfileLinkImages();
         loadStores();
     }
@@ -471,6 +492,10 @@ let Options = (function(){
 
         for (let el of document.querySelectorAll(".country_parent")) {
             el.remove();
+        }
+
+        for (let el of document.querySelectorAll(".custom-link__close")) {
+            el.click();
         }
 
         SyncedStorage.then(loadOptions);
@@ -587,6 +612,7 @@ let Options = (function(){
         let Defaults = SyncedStorage.defaults;
 
         loadOptions();
+        loadTranslation().then(Sidebar.create);
 
         document.getElementById("profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
 

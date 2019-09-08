@@ -91,9 +91,10 @@ let ProfileData = (function(){
     return self;
 })();
 
-let SpamCommentHandler = (function(){
+let CommentHandler = (function(){
 
     let spamRegex = null;
+    let self = {};
 
     function toggleHiddenCommentsButton(threadNode, count) {
         threadNode.classList.add("esi_commentthread");
@@ -159,8 +160,6 @@ let SpamCommentHandler = (function(){
         }
     }
 
-    let self = {};
-
     self.hideSpamComments = function() {
         if (!SyncedStorage.get("hidespamcomments")) { return; }
 
@@ -181,6 +180,131 @@ let SpamCommentHandler = (function(){
             handleAllCommentThreads(latestFrame.document);
         });
         observer.observe(modalWait, {attributes: true});
+    };
+
+    function updateFavs(favs, emoticonPopup, favBox, favRemove, name) {
+        LocalStorage.set("fav_emoticons", favs);
+
+        if (name && favs.includes(name) && favs.length > 1) {
+            HTML.beforeEnd(favBox, buildEmoticonOption(name));
+            let node = favBox.querySelector(`[data-emoticon="${name}"]`);
+            finalizeFav(node, emoticonPopup, favRemove);
+        } else if (name && !favs.includes(name) && favs.length > 0) {
+            let node = favBox.querySelector(`[data-emoticon="${name}"]`);
+            if (!node) { return; }
+            node.parentNode.removeChild(node);             
+        } else {
+            let favsHtml = buildFavBox(favs);
+            HTML.inner(favBox, favsHtml);
+            favBox.querySelectorAll(".emoticon_option").forEach(node => {
+                finalizeFav(node, emoticonPopup, favRemove);
+            });
+        }
+    }
+
+    function finalizeFav(node, emoticonPopup, favRemove) {
+        node.draggable = true;
+        node.querySelector("img").draggable = false;
+        node.addEventListener("dragstart", (ev) => dragFavEmoticon(ev));
+        node.addEventListener("click", (ev) => clickFavEmoticon(ev, emoticonPopup, favRemove));
+    }
+
+    function dragFavEmoticon(ev) {
+        ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon);
+    }
+
+    function clickFavEmoticon(ev, emoticonPopup, favRemove) {
+        let name = ev.target.closest(".emoticon_option").dataset.emoticon;
+        let noFav = emoticonPopup.querySelector(`[data-emoticon=${name}]:not(.es_fav)`);
+        noFav.click();
+    }
+
+    function buildFavBox(favs=[]) {
+        let favsHtml;
+        if (!favs.length) {
+            favsHtml = Localization.str.fav_emoticons_dragging;
+        } else {
+            favsHtml = favs.map(fav => buildEmoticonOption(fav)).join("");
+        }
+        return favsHtml;
+    }
+
+    function buildEmoticonOption(name) {
+        return `<div class="emoticon_option es_fav" data-emoticon="${name}"><img src="https://steamcommunity-a.akamaihd.net/economy/emoticon/${name}" class="emoticon"></div>`;
+    }
+
+    self.addFavoriteEmoticons = function() {
+        let observer = new MutationObserver(() => {
+            let emoticonPopup = document.querySelector(".emoticon_popup:not(.es_emoticons)");
+            if (!emoticonPopup) { return; }
+
+            emoticonPopup.classList.add("es_emoticons");
+            emoticonPopup.style.maxWidth = "352px";
+            emoticonPopup.querySelectorAll(".emoticon_option").forEach(function(node) {
+                node.draggable = true;
+                node.querySelector("img").draggable = false;
+                node.addEventListener("dragstart", ev => ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon));
+            });
+            
+            let favs = LocalStorage.get("fav_emoticons", []);
+            HTML.afterBegin(emoticonPopup, 
+                `<div style="margin-bottom:10px;min-height:32px;line-height:32px;text-align:center;max-height:none;display:flex;" class="emoticon_popup_content">
+                    <div style="width:10%;background-image:url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);background-repeat:no-repeat;background-position:center center;" class="commentthread_entry_quotebox" id="es_fav_remove"></div>
+                    <div style="width:90%;" class="commentthread_entry_quotebox" id="es_fav_emoticons"></div>
+                </div>`);
+                
+            let favBox = emoticonPopup.querySelector("#es_fav_emoticons");
+            let favRemove = emoticonPopup.querySelector("#es_fav_remove");
+            updateFavs(favs, emoticonPopup, favBox, favRemove);
+
+            favBox.addEventListener("dragover", function(ev) {
+                ev.preventDefault();
+                favBox.style.backgroundColor = "black";
+            });
+
+            favBox.addEventListener("dragenter", function(ev) {
+                favBox.style.backgroundColor = "black";
+            });
+
+            favBox.addEventListener("dragleave", function(ev) {
+                favBox.style.backgroundColor = null;
+            });
+
+            favBox.addEventListener("drop", function(ev) {
+                ev.preventDefault();
+
+                favBox.style.backgroundColor = null;
+                let name = ev.dataTransfer.getData("emoticon");
+                if (favs.includes(name)) { return; }
+
+                favs.push(name);
+                updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+            });
+
+            favRemove.addEventListener("dragover", function(ev) {
+                ev.preventDefault();
+                favRemove.style.backgroundColor = "black";
+            });
+            
+            favRemove.addEventListener("dragenter", function(ev) {
+                favRemove.style.backgroundColor = "black";
+            });
+
+            favRemove.addEventListener("dragleave", function(ev) {
+                favRemove.style.backgroundColor = null;
+            });
+
+            favRemove.addEventListener("drop", function(ev) {
+                ev.preventDefault();
+
+                favRemove.style.backgroundColor = null;
+                let name = ev.dataTransfer.getData("emoticon");
+                favs = favs.filter(fav => fav !== name);
+                updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+            });
+        });
+
+        observer.observe(document.body, { childList: true });
     };
 
     return self;
@@ -289,7 +413,7 @@ let ProfileActivityPageClass = (function(){
         let observer = new MutationObserver(() => {
             that.highlightFriendsActivity();
             EarlyAccess.showEarlyAccess();
-            SpamCommentHandler.hideSpamComments();
+            CommentHandler.hideSpamComments();
         });
 
         observer.observe(document.querySelector("#blotter_content"), { subtree: true, childList: true });
@@ -330,7 +454,7 @@ let ProfileHomePageClass = (function(){
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
-        if (images !== false) {
+        if (images !== "none") {
             iconType = images === "color" ? "color" : "gray";
         }
 
@@ -410,14 +534,19 @@ let ProfileHomePageClass = (function(){
 
             let name =  HTML.escape(customLink.name);
             let link = "//" + HTML.escape(customUrl.replace("[ID]", steamId));
-            let icon = "//" + HTML.escape(customLink.icon);
+            let icon;
+            if (customLink.icon) {
+                icon = "//" + HTML.escape(customLink.icon);
+            } else {
+                iconType = "none";
+            }
 
             htmlstr +=
                 `<div class="es_profile_link profile_count_link">
                     <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
                     <span class="count_link_label">${name}</span>`;
                     if (iconType !== "none") {
-                        htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${icon});"></i>`;
+                        htmlstr += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url(${icon});"></i>`;
                     }
                     htmlstr += `</a>
                 </div>`;
@@ -1273,6 +1402,7 @@ let StatsPageClass = (function(){
         }
 
         this.addAchievementSort();
+        this.showEntireDescriptions();
     }
 
     let _nodes = {
@@ -1345,6 +1475,15 @@ let StatsPageClass = (function(){
             e.target.classList.remove("es_achievement_sort_link");
             sortBy("time", personal);
         });
+    };
+    
+
+    StatsPageClass.prototype.showEntireDescriptions = function() {
+        // .ellipsis is only added by Steam on personal stats pages
+        let nodes = document.querySelectorAll("h5.ellipsis");
+        for (let node of nodes) {
+            node.classList.remove("ellipsis");
+        }
     };
 
     return StatsPageClass;
@@ -3365,6 +3504,7 @@ let CommunityAppPageClass = (function(){
 
         this.addAppPageWishlist();
         this.addSteamDbLink();
+        this.addBartervgLink();
         this.addItadLink();
         AgeCheck.sendVerification();
 
@@ -3417,18 +3557,20 @@ let CommunityAppPageClass = (function(){
 
     CommunityAppPageClass.prototype.addSteamDbLink = function() {
         if (!SyncedStorage.get("showsteamdb")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; SteamDB</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;SteamDB</span></a>`);
     };
 
     CommunityAppPageClass.prototype.addItadLink = function() {
         if (!SyncedStorage.get("showitadlinks")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/line_chart.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; ITAD</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium itad_ico" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;ITAD</span></a>`);
+    };
+
+    CommunityAppPageClass.prototype.addBartervgLink = function() {
+        if (!SyncedStorage.get("showbartervg")) { return; }
+        HTML.beforeEnd(".apphub_OtherSiteInfo",
+            ` <a class="btnv6_blue_hoverfade btn_medium bartervg_ico" target="_blank" href="https://barter.vg/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;Barter.vg</span></a>`);
     };
 
     return CommunityAppPageClass;
@@ -3471,13 +3613,258 @@ let GuidesPageClass = (function(){
     return GuidesPageClass;
 })();
 
+let WorkshopPageClass = (function(){
 
-class WorkshopPageClass {
+    function WorkshopPageClass() {
+        this.loadLastState();
+        this.initAjaxBrowse();
+    }
+
+    WorkshopPageClass.prototype.loadLastState = function() {
+        let url = new URL(window.location.href);
+
+        if (url.searchParams && url.searchParams.has("browsesort")) {
+            LocalStorage.set("workshop_state", url.search);
+            return;
+        }
+
+        let search = LocalStorage.get("workshop_state");
+        url = new URL("https://steamcommunity.com/workshop/" + search);
+        let query = url.searchParams.get("browsesort");
+        this.changeTab(query);
+    };
+
+    WorkshopPageClass.prototype.initAjaxBrowse = function() {
+        ExtensionLayer.runInPageContext(function() {
+            $J(".browseOption").get().forEach(node => node.onclick = () => false);
+        });
+
+        document.querySelectorAll(".browseOption").forEach(tab => {
+            tab.addEventListener("click", () => {
+                let a = tab.querySelector("a[href]");
+                let url = new URL("https://steamcommunity.com/workshop/" + a.href);
+                let query = url.searchParams.get("browsesort");
+                LocalStorage.set("workshop_state", url.search);
+                window.history.pushState(null, null, url.search);
+                this.changeTab(query);
+            });
+        });
+    };
+
+    WorkshopPageClass.prototype.changeTab = async function(query, start=0, count=8) {
+        let tab = document.querySelector("." + query);
+        if (tab.hasAttribute("disabled")) { return; }
+
+        tab.setAttribute("disabled", "disabled");
+        
+        let image = document.querySelector(".browseOptionImage");
+        tab.parentNode.insertAdjacentElement("afterbegin", image);
+
+        document.querySelectorAll(".browseOption").forEach(tab => tab.classList.add("notSelected"));
+        tab.classList.remove("notSelected");
+
+        let container = document.querySelector("#workshop_appsRows");
+        HTML.inner(container, '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin: 170px auto;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div></div>');
+
+        let url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
+        let result = JSON.parse(await RequestData.getHttp(url));
+        HTML.inner(container, result.results_html);
+        tab.removeAttribute("disabled");
+
+        ExtensionLayer.runInPageContext(`function() {
+            g_oSearchResults.m_iCurrentPage = 0;
+            g_oSearchResults.m_strQuery = "${query}";
+            g_oSearchResults.m_cTotalCount = ${result.total_count};
+            g_oSearchResults.m_cPageSize = ${count};
+            g_oSearchResults.UpdatePagingDisplay();
+        }`);
+    };
+
+    return WorkshopPageClass;
+})();
+
+class SharedFilesPageClass {
     constructor() {
         new MediaPage().workshopPage();
         //media.initHdPlayer();
     }
 }
+
+let WorkshopBrowseClass = (function(){
+
+    function WorkshopBrowseClass() {
+        this.addSubscriberButtons();
+    }
+
+    WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
+        let appid = GameId.getAppidUriQuery(window.location.search);
+        if (!appid) { return; }
+        if (!document.querySelector(".workshopBrowsePagingInfo")) { return; }
+
+        let workshopStr = Localization.str.workshop;
+
+        let subscriberButtons = `
+            <div class="rightSectionTopTitle">${workshopStr.subscriptions}:</div>
+            <div id="es_subscriber_container" class="rightDetailsBlock">
+                <div style="position:relative;">
+                    <div class="browseOption mostrecent">
+                        <a class="es_subscriber" data-method="subscribe">${workshopStr.subscribe_all}</a>
+                    </div>
+                </div>
+                <div style="position:relative;">
+                    <div class="browseOption mostrecent">
+                        <a class="es_subscriber" data-method="unsubscribe">${workshopStr.unsubscribe_all}</a>
+                    </div>
+                </div>
+                <hr>
+            </div>`;
+
+        HTML.beforeBegin(".panel > .rightSectionTopTitle", subscriberButtons);
+
+        document.querySelector("#es_subscriber_container").addEventListener("click", event => {
+            let method = event.target.closest(".es_subscriber").dataset.method;
+            let total = parseInt(
+                document.querySelector(".workshopBrowsePagingInfo").textContent
+                    .replace(/\d+-\d+/g, "")
+                    .match(/\d+/g)[0]);
+
+            startSubscriber(method, total);
+        });
+
+        function startSubscriber(method, total) {
+            let completed = 0;
+            let failed = 0;
+
+            let statusTitle = workshopStr[method + "_all"];
+            let statusString = workshopStr[method + "_confirm"]
+                .replace("__count__", total);
+
+            ExtensionLayer.runInPageContext(`function(){
+                let prompt = ShowConfirmDialog("${statusTitle}", "${statusString}");
+                prompt.done(function(result) {
+                    if (result == "OK") {
+                        Messenger.postMessage("startSubscriber");
+                    }
+                });
+            }`);
+
+            function updateWaitDialog() {
+                let statusString = workshopStr[method + "_loading"]
+                    .replace("__i__", completed)
+                    .replace("__count__", total);
+
+                if (failed) {
+                    statusString += workshopStr.failed.replace("__n__", failed);
+                }
+
+                let modal = document.querySelector(".newmodal_content");
+                if (!modal) {
+                    let statusTitle = workshopStr[method + "_all"];
+                    ExtensionLayer.runInPageContext(`function() {
+                        if (window.dialog) {
+                            window.dialog.Dismiss();
+                        }
+                        
+                        window.dialog = ShowBlockingWaitDialog("${statusTitle}", "${statusString}");
+                    }`);
+                } else {
+                    modal.innerText = statusString;
+                }
+            }
+
+            function showResults() {
+                let statusTitle = workshopStr[method + "_all"];
+                let statusString = workshopStr.finished
+                    .replace("__success__", completed - failed)
+                    .replace("__fail__", failed);
+
+                ExtensionLayer.runInPageContext(`function() {
+                    if (window.dialog) {
+                        window.dialog.Dismiss();
+                    }
+                    
+                    window.dialog = ShowConfirmDialog("${statusTitle}", "${statusString}")
+                        .done(function(result) {
+                            if (result == "OK") {
+                                window.location.reload();
+                            }
+                        });
+                }`);
+            }
+
+            function changeSubscription(id) {
+                let formData = new FormData();
+                formData.append("sessionid", User.getSessionId());
+                formData.append("appid", appid);
+                formData.append("id", id);
+
+                return RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
+                    withCredentials: true
+                }, true)
+                .then(function(res) {
+                    if (!res || !res.success) {
+                        throw new Error("Bad response");
+                    }
+                })
+                .catch(function(err) {
+                    failed++;
+                    console.error(err);
+                })
+                .finally(function() {
+                    completed++;
+                    updateWaitDialog();
+                });
+            }
+
+            Messenger.addMessageListener("startSubscriber", async function() {
+                updateWaitDialog();
+
+                function canSkip(method, node) {
+                    if (method === "subscribe") {
+                        return node && node.style.display !== "none";
+                    }
+
+                    if (method === "unsubscribe") {
+                        return !node || node.style.display === "none";
+                    }
+
+                    return false;
+                }
+
+                let parser = new DOMParser();
+                let workshopItems = [];
+                for (let p = 1; p <= Math.ceil(total / 30); p++) {
+                    let url = new URL(window.location.href);
+                    url.searchParams.set("p", p);
+                    url.searchParams.set("numperpage", 30);
+    
+                    let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+                    if (!result) {
+                        console.error("Failed to request " + url.toString());
+                        continue;
+                    }
+
+                    let xmlDoc = parser.parseFromString(result, "text/html");
+                    for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
+                        let subNode = node.querySelector(".user_action_history_icon.subscribed");
+                        if (canSkip(method, subNode)) { continue; }
+                    
+                        node = node.querySelector(".workshopItemPreviewHolder");
+                        workshopItems.push(node.id.replace("sharedfile_", ""))
+                    }
+                }
+
+                total = workshopItems.length;
+                updateWaitDialog();
+    
+                Promise.all(workshopItems.map(id => changeSubscription(id)))
+                    .finally(showResults);
+            }, true)
+        }
+    };
+
+    return WorkshopBrowseClass;
+})();
 
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
@@ -3486,9 +3873,14 @@ class WorkshopPageClass {
     await Promise.all([Localization, User, Currency]);
 
     Common.init();
-    SpamCommentHandler.hideSpamComments();
+    CommentHandler.hideSpamComments();
+    CommentHandler.addFavoriteEmoticons();
 
     switch (true) {
+
+        case /^\/workshop\/?$/.test(path):
+            (new WorkshopPageClass());
+            break;
 
         case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
             (new ProfileActivityPageClass());
@@ -3547,12 +3939,16 @@ class WorkshopPageClass {
             break;
 
         case /^\/sharedfiles\/.*/.test(path):
-            (new WorkshopPageClass());
+            (new SharedFilesPageClass());
+            break;
+
+        case /^\/workshop\/browse/.test(path):
+            (new WorkshopBrowseClass());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):
             let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                .textContent.trim().replace(/\d/g, "");
+                .textContent.trim().replace(/[\d]+,?/g, "");
 
             ExtensionLayer.runInPageContext(`function() {
                 $J("#booster_game_selector option").each(function(index) {

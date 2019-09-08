@@ -365,7 +365,6 @@
         "saved_note": "Indstillinger gemt",
         "regional_hideworld": "Skjul globe indikator",
         "show_astatslink": "Vis AStats link på app sider",
-        "showclient": "Vis Steam klient links",
         "guest": "Elementer, du har et gæstepas til",
         "show_steamchart_info": "Vis SteamCharts.com info",
         "show_steamspy_info": "Vis oplysninger om steamspy.com",
@@ -380,7 +379,6 @@
         "steamdb": "Vis SteamDB links",
         "hide_early_access": "Skjul Tidlig Adgang spil på forside, gennemse og søgesider",
         "reset_note": "Indstillinger nulstillet",
-        "html5video": "Vis videoer med HTML5 i stedet for Flash ",
         "profiles_link_group_game": "Game exclusive",
         "friends_wishlist": "Genstande dine venner har i sin ønskeseddel",
         "showspeechsearch": "Indsæt tale input ind i søge boxen",
@@ -453,7 +451,7 @@
     },
     "survey": {
         "performance_survey": "Præstationsundersøgelse",
-        "users": "__users__ brugere har gennemført præstationsundersøgelsen for dette spil",
+        "users": "__users__ brugere har gennemført præstationsundersøgelsen for dette spil.",
         "framerate": "Framerate",
         "framerate_response": "svarede at frameraten var",
         "framerate_30": "fixed ved 30fps eller lavere",
@@ -467,7 +465,7 @@
         "satisfaction": "Ydeevne tilfredshed af GPU",
         "gs_y": "Har indbygget grafisk muligheder eller en grafik menu",
         "gs_n": "Har ikke indbygget grafik indstillinger eller en grafik menu",
-        "nobody": "Ingen har taget en performance-undersøgelse for dette spil endnu",
+        "nobody": "Ingen har taget en performance-undersøgelse for dette spil endnu.",
         "take": "Tag undersøgelsen"
     },
     "select": {
