@@ -23,21 +23,30 @@ class ITAD {
         }
     }
 
-    static authorize() {
+    static async authorize() {
         let sessionId = User.getSessionId();
         // Avoid predictable hash when string is empty
         if (sessionId) {
-            Background.action("itad.authorize", StringUtils.hashCode(sessionId)).then(
-                () => {
-                    let itadStatus = document.getElementById("es_itad_status");
-                    let itadDiv = itadStatus.parentElement;
+            try {
+                await Background.action("itad.authorize", StringUtils.hashCode(sessionId));
+            } catch(err) {
+                console.group();
+                console.error("Failed to authorize to ITAD");
+                console.error(err);
+                console.groupEnd();
+                return;
+            }
 
-                    itadStatus.textContent = '\u2713';
-                    itadDiv.classList.add("authorized");
-                    itadDiv.classList.remove("not_authorized");
-                    itadDiv.removeEventListener("click", ITAD.authorize);
-                }, err => console.error(err)
-            );
+            let itadStatus = document.getElementById("es_itad_status");
+            let itadDiv = itadStatus.parentElement;
+
+            itadStatus.textContent = '\u2713';
+            itadDiv.classList.add("authorized");
+            itadDiv.classList.remove("not_authorized");
+            itadDiv.removeEventListener("click", ITAD.authorize);
+            
+            return Background.action("itad.setupimport");
+            
         } else {
             console.error("Can't retrieve Session ID, unable to authorize app");
         }

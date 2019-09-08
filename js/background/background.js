@@ -183,8 +183,7 @@ class ITAD_Api extends Api {
             return false;
         }
         ITAD_Api.accessToken = lsEntry.token;
-        // todo Periodically sync
-        ITAD_Api.sync();
+        
         return true;
     }
 
@@ -223,7 +222,7 @@ class ITAD_Api extends Api {
     }
 
     static async addToCollection(appids, subids) {
-        if (!appids || (Array.isArray(appids) && !appids.length) && (!subids || (Array.isArray(subids) && !subids.length))) {
+        if ((!appids || (Array.isArray(appids) && !appids.length)) && (!subids || (Array.isArray(subids) && !subids.length))) {
             console.warn("Can't add nothing to ITAD collection");
             return;
         }
@@ -264,10 +263,39 @@ class ITAD_Api extends Api {
         return ITAD_Api.postEndpoint("v01/collection/import/", { "access_token": ITAD_Api.accessToken }, { "body": JSON.stringify(collectionJSON) });
     }
 
-    static async sync() {
-        let [{ ownedApps, ownedPackages, wishlistedApps }, { lastOwnedApps, lastOwnedPackages, lastWishlistedApps }] = await Promise.all([
-            IndexedDB.get("dynamicStore", ["ownedApps", "ownedPackages", "wishlisted"]),
-            IndexedDB.get("itadSync", ["lastOwnedApps", "lastOwnedPackages", "lastWishlisted"]),
+    static setupImport() {
+        browser.alarms.onAlarm.addListener(ITAD_Api.import);
+
+        let expiry = LocalStorage.get("nextItadImport");
+        let alarmInfo = { "periodInMinutes": 15 };
+
+        if (expiry && !IndexedDB.isExpired(expiry)) {
+            alarmInfo.when = expiry;
+        } else {
+            // Alarms are triggered at least one minute in the future
+            alarmInfo.delayInMinutes = 1;
+        }
+        browser.alarms.create("itadImport", alarmInfo);
+    }
+
+    static async import(alarm) {
+        if (alarm.name !== "itadImport") return;
+
+        let dsKeys = [];
+        let itadImportKeys = [];
+        if (SyncedStorage.get("itad_import_library")) {
+            dsKeys.push("ownedApps", "ownedPackages");
+            itadImportKeys.push("lastOwnedApps", "lastOwnedPackages");
+        }
+
+        if (SyncedStorage.get("itad_import_wishlist")) {
+            dsKeys.push("wishlisted");
+            itadImportKeys.push("lastWishlisted");
+        }
+
+        let result = await Promise.all([
+            IndexedDB.get("dynamicStore", dsKeys),
+            IndexedDB.get("itadImport", itadImportKeys),
         ]);
 
         function removeDuplicates(from, other) {
@@ -278,20 +306,27 @@ class ITAD_Api extends Api {
 
         let promises = [];
 
-        let newOwnedApps = removeDuplicates(ownedApps, lastOwnedApps);
-        let newOwnedPackages = removeDuplicates(ownedPackages, lastOwnedPackages);
-        if (newOwnedApps.length || newOwnedPackages.length) {
-            promises.push(ITAD_Api.addToCollection(newOwnedApps, newOwnedPackages)
-                .then(() => IndexedDB.put("itadSync", [ownedApps, ownedPackages], ["lastOwnedApps", "lastOwnedPackages"], true)));
+        if (SyncedStorage.get("itad_import_library")) {
+            let [{ ownedApps, ownedPackages }, { lastOwnedApps, lastOwnedPackages }] = result;
+            let newOwnedApps = removeDuplicates(ownedApps, lastOwnedApps);
+            let newOwnedPackages = removeDuplicates(ownedPackages, lastOwnedPackages);
+            if (newOwnedApps.length || newOwnedPackages.length) {
+                promises.push(ITAD_Api.addToCollection(newOwnedApps, newOwnedPackages)
+                    .then(() => IndexedDB.put("itadImport", [ownedApps, ownedPackages], ["lastOwnedApps", "lastOwnedPackages"], true)));
+            }
         }
 
-        let newWishlistedApps = removeDuplicates(wishlistedApps, lastWishlistedApps);
-        if (newWishlistedApps.length) {
-            promises.push(ITAD_Api.addToWaitlist(newWishlistedApps)
-                .then(() => IndexedDB.put("itadSync", wishlistedApps, "lastWishlisted")));
+        if (SyncedStorage.get("itad_import_wishlist")) {
+            let [{ wishlisted }, { lastWishlisted }] = result;
+            let newWishlisted = removeDuplicates(wishlisted, lastWishlisted);
+            if (newWishlisted.length) {
+                promises.push(ITAD_Api.addToWaitlist(newWishlisted)
+                    .then(() => IndexedDB.put("itadImport", wishlisted, "lastWishlisted")));
+            }
         }
-
-        return Promise.all(promises);
+        
+        await Promise.all(promises);
+        LocalStorage.set("nextItadImport", timestamp() + 15 * 60);
     }
 
     static filterCollection(result) {
@@ -733,7 +768,7 @@ class IndexedDB {
                             db.createObjectStore("notes");
                             db.createObjectStore("collection");
                             db.createObjectStore("waitlist");
-                            db.createObjectStore("itadSync").createIndex("id", '', { unique: false, multiEntry: true });
+                            db.createObjectStore("itadImport");
                             break;
                         }
                         default: {
@@ -1127,6 +1162,7 @@ let actionCallbacks = new Map([
 
     ["itad.authorize", ITAD_Api.authorize],
     ["itad.isconnected", ITAD_Api.isConnected],
+    ["itad.setupimport", ITAD_Api.setupImport],
     ["itad.addtowaitlist", ITAD_Api.addToWaitlist],
 
     ["idb.get", IndexedDB.get],
@@ -1162,3 +1198,10 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
         throw err;
     }
 });
+
+Promise.all([IndexedDB, SyncedStorage])
+.then(() => {
+    if (ITAD_Api.isConnected() && (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist"))) {
+        ITAD_Api.setupImport();
+    }
+})
