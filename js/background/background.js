@@ -151,9 +151,6 @@ AugmentedSteamApi._progressingRequests = new Map();
 class ITAD_Api extends Api {
 
     static async authorize(hash) {
-        let granted = await browser.permissions.request({ permissions: ["identity"] });
-        if (!granted) { throw new Error("Denied accessing identity API, can't authorize app"); }
-
         let url = await browser.identity.launchWebAuthFlow(
             {
                 url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=https://${browser.runtime.id}.chromiumapp.org/itad`,

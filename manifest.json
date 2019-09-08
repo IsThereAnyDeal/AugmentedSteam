@@ -15,12 +15,11 @@
   },
   "permissions": [
     "storage",
+    "identity",
+    "alarms",
     "*://*.steampowered.com/*",
     "*://steamcommunity.com/*",
     "*://*.isthereanydeal.com/"
-  ],
-  "optional_permissions": [
-    "identity"
   ],
   "web_accessible_resources": [
     "img/*.png",
