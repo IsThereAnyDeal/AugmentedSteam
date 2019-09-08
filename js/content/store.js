@@ -3336,6 +3336,7 @@ let WishlistPageClass = (function(){
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
         if (!isMyWishlist()) { return; }
+        if (!SyncedStorage.get("showemptywishlist")) { return; }
 
         HTML.beforeEnd("div.wishlist_header", "<div id='es_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
 

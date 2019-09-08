@@ -566,6 +566,7 @@ SyncedStorage.defaults = {
     'installsteam': "show",
     'openinnewtab': false,
     'keepssachecked': false,
+    'showemptywishlist': true,
     'showusernotes': true,
     'user_notes': {},
     'replaceaccountname': true,
