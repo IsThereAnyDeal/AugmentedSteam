@@ -3247,11 +3247,36 @@ let WishlistPageClass = (function(){
                 "<div id=clipboard>${Localization.str.export_clipboard}</div>");
 
             $J("#es_export_form").change(function() {
-                $J("#es_export_form").serializeArray().forEach((item) => options[item.name] = item.value);
+                options.export_prop = [];
+                $J("#es_export_form").serializeArray().forEach(function(item) {
+                    if (item.name === "export_prop") {
+                        options.export_prop = (options.export_prop || []).concat([item.value]);
+                    } else {
+                        options[item.name] = item.value;
+                    }
+                });
             });
 
             $J("#download").parent().click(function() { options.export_method = "download"; });
             $J("#clipboard").parent().click(function() { options.export_method = "clipboard"; });
+            $J("[name=export_type]").click(function(e) {
+                switch (e.target.id || e.target.for) {
+                    case "CSV":
+                        $J("#es_csv_options").show();
+                        $J("#es_text_options").hide();
+                        break;
+                    case "text":
+                        $J("#es_csv_options").hide();
+                        $J("#es_text_options").show();
+                        break;
+                    case "JSON":
+                        $J("#es_csv_options").hide();
+                        $J("#es_text_options").hide();
+                        break;
+                    default:
+                        break;
+                }
+            });
             $J("#es_export_form").change();
 
             Modal.done(function() {
@@ -3264,50 +3289,52 @@ let WishlistPageClass = (function(){
             let { rgAllApps, g_rgAppInfo, options } = data || {};
             if (!rgAllApps || !g_rgAppInfo || !options) { return; }
 
-            let toexport, filename;
+            let toexport = "";
+            let filename = "wishlist_export";
             let notes = SyncedStorage.get("user_notes") || {};
             let json = rgAllApps.map(appid => {
                 let appinfo = g_rgAppInfo[appid];
                 appinfo.appid = appid;
-                if (notes[appid]) {
-                    appinfo.note = notes[appid];
-                }
+                appinfo.note = notes[appid] || "";
                 return appinfo;
             });
 
-            if (options.export_type === "JSON") {
-                filename = "wishlist_export.json";
-                toexport = JSON.stringify(json, null, 4);
-                doExport(options.export_method, toexport, filename);
-                return;
+            switch (options.export_type) {
+                case "JSON":
+                    filename += ".json";
+                    toexport = JSON.stringify(json, null, 4);
+                    doExport(options.export_method, toexport, filename);
+                    break;
+                case "text":
+                    filename += ".txt";
+                    let vars = options.export_text.match(/%[a-z]+%/g);
+                    toexport = json.map(function(app) {
+                        let line = options.export_text + "";
+                        if (!vars) { return line };
+                        for (let v of vars) {
+                            let prop = v.slice(1, -1);
+                            line = line.replace(v, app[prop]);
+                        }
+                        return line;
+                    }).join("\n");
+                    doExport(options.export_method, toexport, filename);
+                    break;
+                case "CSV":
+                    filename += ".csv";
+                    let props = options.export_prop;
+                    console.log({props})
+                    toexport = json.map(function(app) {
+                        if (props.length === 0) { return "" };
+                        let line = [];
+                        for (let prop of props) {
+                            console.log({val: app[prop], app, prop})
+                            line.push(`"${app[prop].replace(/"/g, `""`)}"`)
+                        }
+                        return line.join(",");
+                    }).join("\n");
+                    doExport(options.export_method, toexport, filename);
+                    break;
             }
-
-            let props = [];
-            let seps = [];
-            for (let key in options) {
-                if (key.includes("prop")) {
-                    props[+key.replace("prop", "")] = options[key];
-                }
-                if (key.includes("sep")) {
-                    seps[+key.replace("sep", "")] = options[key];
-                }
-            }
-
-            filename = "wishlist_export." + (options.export_type === "CSV" ? "csv" : "txt");
-            toexport = json.map(app => {
-                let line = "";
-                for (let i = 0; i < props.length; i++) {
-                    if (props[i]) {
-                        let prop = app[props[i]] || "";
-                        line += (options.export_type === "CSV" ? `"${prop.replace(/"/g, `""`)}"` : prop);
-                    }
-                    if (i !== props.length - 1) {
-                        line += (options.export_type === "CSV" ? "," : seps[i] || "");
-                    }
-                }
-                return line;
-            }).join("\n");
-            doExport(options.export_method, toexport, filename);
         }, true);
 
         function doExport(method, content, filename) {
