@@ -296,7 +296,7 @@ CookieStorage.cache = new Map();
 let RequestData = (function(){
     let self = {};
 
-    self.getHttp = function(url, settings, returnJSON) {
+    self.getHttp = function(url, settings, responseType="text") {
         settings = settings || {};
         settings.method = settings.method || "GET";
         settings.credentials = settings.credentials || "include";
@@ -316,11 +316,7 @@ let RequestData = (function(){
 
             if (!response.ok) { throw new Error(`HTTP ${response.status} ${response.statusText} for ${response.url}`) }
 
-            if (returnJSON) {
-                return response.json();
-            } else {
-                return response.text();
-            }
+            return response[responseType]();
             
         }).catch(err => {
             ProgressBar.failed();
@@ -336,7 +332,11 @@ let RequestData = (function(){
     };
 
     self.getJson = function(url, settings) {
-        return self.getHttp(url, settings, true);
+        return self.getHttp(url, settings, "json");
+    };
+
+    self.getBlob = function(url, settings) {
+        return self.getHttp(url, settings, "blob");
     };
 
     return self;
@@ -2155,6 +2155,65 @@ let Common = (function(){
     return self;
 })();
 
+let Downloader = (function(){
+
+    let self = {};
+
+    self.download = async function(options) {
+        if (options.url && !options.url.startsWith("blob:") && !options.url.startsWith("data:")) {
+            options.url = await self.toDataURL(options.url).catch(console.error);
+        }
+
+        if (options.content) {
+            let blob = new Blob([ options.content ], {type : "text/plain;charset=UTF-8"});
+            options.url = URL.createObjectURL(blob);
+        }
+
+        let element = document.createElement("a");
+        element.setAttribute("href", options.url);
+        element.setAttribute("download", options.filename || "download");
+        element.style.display = "none";
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    };
+
+    self.toDataURL = function(url) {
+        return new Promise(function(resolve, reject) {
+            RequestData.getBlob(url, {credentials: "omit"})
+            .then(function(blob) {
+                let fr = new FileReader();
+                fr.onload = function() {
+                    resolve(this.result);
+                };
+                fr.onerror = reject;
+                fr.onabort = reject;
+                fr.readAsDataURL(blob);
+            })
+            .catch(reject);
+        });
+        
+    }
+    
+    return self;
+})();
+
+let Clipboard = (function(){
+
+    let self = {};
+
+    self.set = function(content) {
+        // Based on https://stackoverflow.com/a/12693636
+        document.oncopy = function(event) {
+            event.clipboardData.setData("Text", content);
+            event.preventDefault();
+        };
+        document.execCommand("Copy");
+        document.oncopy = undefined;
+    };
+
+    return self;
+})();
 
 class MediaPage {
 

@@ -1563,7 +1563,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Wishlist
- * add_empty_wishlist_buttons()
+ * addEmptyWishlistButton()
  **************************************/
 #es_empty_wishlist {
   flex-grow: 2;
@@ -1581,6 +1581,28 @@ input[type=checkbox].es_dlc_selection:checked + label {
   cursor: pointer;
   font-size: 15px;
   font-weight: bold;
+}
+
+/***************************************
+ * Wishlist
+ * addExportWishlistButton()
+ **************************************/
+#es_export_wishlist {
+	flex-grow:100;
+	align-self:center;
+	text-align:right;
+}
+#es_export_wishlist div {
+	width: auto;
+	display: inline-block;
+	padding: 10px;
+	border: 2px solid #fff !important;
+	border-radius: 3px;
+	color: #fff;
+	float: right;
+	cursor: pointer;
+	font-size: 15px;
+	font-weight: bold;
 }
 
 /***************************************

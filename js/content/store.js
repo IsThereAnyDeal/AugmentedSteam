@@ -3106,6 +3106,39 @@ let WishlistPageClass = (function(){
         let instance = this;
         userNotes = new UserNotes();
 
+        let exportProps = ["name", "appid", "type", "release_string", "note"];
+        this.exportModalTemplate = `
+            <div id="es_export_modal">
+                <div id="es_export_modal_content">
+                    <form id="es_export_form">
+                    <table>
+                        <tr>
+                            <td>Export type:</td>
+                            <td>
+                                <input type="radio" name="export_type" value="text" id="text" onclick="$J('#es_text_options').show(); $J('.es_sep').show()" checked> <label for="text" onclick="$J('#es_text_options').show(); $J('.es_sep').show()"> ${Localization.str.export_text}</label>
+                                &nbsp;
+                                <input type="radio" name="export_type" value="CSV" id="CSV" onclick="$J('#es_text_options').show(); $J('.es_sep').hide()"> <label for="CSV" onclick="$J('#es_text_options').show(); $J('.es_sep').hide()"> ${Localization.str.export_CSV}</label>
+                                &nbsp;
+                                <input type="radio" name="export_type" value="JSON" id="JSON" onclick="$J('#es_text_options').hide()"> <label for="JSON" onclick="$J('#es_text_options').hide()"> ${Localization.str.export_JSON}</label>
+                            </td>
+                        </tr>
+                        <tr id="es_text_options">
+                            <td>Text format:</td>
+                            <td>${buildExportModalOptions(exportProps)}</td>
+                        </tr>
+                        <tr>
+                            <td>Export method:</td>
+                            <td>
+                                <input type="radio" name="export_method" value="download" id="download" checked> <label for="download"> ${Localization.str.export_download}</label>
+                                &nbsp;
+                                <input type="radio" name="export_method" value="clipboard" id="clipboard"> <label for="clipboard"> ${Localization.str.export_clipboard}</label>
+                            </td>
+                        </tr>
+                    </table>
+                    </form>
+                </div>
+            </div>`;
+
         let myWishlist = isMyWishlist();
         let container = document.querySelector("#wishlist_ctn");
         let timeout = null, lastRequest = null;
@@ -3164,10 +3197,23 @@ let WishlistPageClass = (function(){
 
         observer.observe(container, { 'childList': true, });
 
-        this.addStatsArea();
-        this.addEmptyWishlistButton();
-        this.addUserNotesHandlers();
-        this.addRemoveHandler();
+        instance.addEmptyWishlistButton();
+
+        let throbber = document.querySelector("#throbber");
+        let wishlistLoaded = function() {
+            if (throbber.style.display !== "none") { return; }
+            instance.addStatsArea();
+            instance.addExportWishlistButton();
+            instance.addUserNotesHandlers();
+            instance.addRemoveHandler();
+        };
+        
+        if (throbber.style.display === "none") { 
+            wishlistLoaded();
+        } else {
+            observer = new MutationObserver(wishlistLoaded);
+            observer.observe(throbber, { "attributes": true });
+        }
     }
 
     function isMyWishlist() {
@@ -3177,6 +3223,21 @@ let WishlistPageClass = (function(){
         let myWishlistUrlRegex = new RegExp("^" + myWishlistUrl + "([/#]|$)");
         return myWishlistUrlRegex.test(window.location.href)
             || window.location.href.includes("/profiles/" + User.steamId);
+    }
+
+    function buildExportModalOptions(props) {
+        if (!props || props.length === 0) { return ""; }
+        return props.map((_, i) => {
+            let html = "<select id='prop" + i + "' name='prop" + i + "'><option value=''>" + Localization.str.none + "</option>";
+            props.forEach(prop => html += "<option value='" + prop + "'>" + Localization.str.export_props[prop] + "</option>");
+            html += "</select>";
+
+            if (i + 1 < props.length) {
+                html += "<input type='text' class='es_sep' id='sep" + i + "' name='sep" + i + "' placeholder='" + Localization.str.separator + "'>"
+            }
+
+            return html;
+        }).join("");
     }
 
     WishlistPageClass.prototype.highlightApps = async function(node) {
@@ -3275,7 +3336,6 @@ let WishlistPageClass = (function(){
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
         if (!isMyWishlist()) { return; }
-        if (!SyncedStorage.get("showemptywishlist")) { return; }
 
         HTML.beforeEnd("div.wishlist_header", "<div id='es_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
 
@@ -3318,8 +3378,104 @@ let WishlistPageClass = (function(){
                 DynamicStore.clear();
                 location.reload();
             });
-        }, true)
+        }, true);
     }
+
+    WishlistPageClass.prototype.showExportModalDialog = function() {
+        ExtensionLayer.runInPageContext(`function() {
+            let options = {};
+            let Modal = ShowConfirmDialog(
+                "${Localization.str.export_wishlist}",
+                \`${this.exportModalTemplate}\`,
+                "${Localization.str.save}",
+                "${Localization.str.cancel}");
+
+            $J("#es_export_modal input[placeholder]").each(function() {
+                $J(this).attr('size', $J(this).attr('placeholder').length);
+            });
+
+            $J('#es_export_form').change(function() {
+                $J("#es_export_form").serializeArray().forEach((item) => options[item.name] = item.value);
+            });
+
+            Modal.done(function() {
+                let data = { rgAllApps: g_Wishlist.rgAllApps, g_rgAppInfo, options };
+                Messenger.postMessage("exportWishlist", data);
+            });
+        }`);
+
+        Messenger.addMessageListener("exportWishlist", (data) => {
+            let { rgAllApps, g_rgAppInfo, options } = data || {};
+            if (!rgAllApps || !g_rgAppInfo || !options) { return; }
+
+            let toexport, filename;
+            let notes = SyncedStorage.get("user_notes") || {};
+            let json = rgAllApps.map(appid => {
+                let appinfo = g_rgAppInfo[appid];
+                appinfo.appid = appid;
+                if (notes[appid]) {
+                    appinfo.note = notes[appid];
+                }
+                return appinfo;
+            });
+
+            if (options.export_type === "JSON") {
+                filename = "wishlist_export.json";
+                toexport = JSON.stringify(json, null, 4);
+                doExport(options.export_method, toexport, filename);
+                return;
+            }
+
+            let props = [];
+            let seps = [];
+            for (let key in options) {
+                if (key.includes("prop")) {
+                    props[+key.replace("prop", "")] = options[key];
+                }
+                if (key.includes("sep")) {
+                    seps[+key.replace("sep", "")] = options[key];
+                }
+            }
+
+            filename = "wishlist_export." + (options.export_type === "CSV" ? "csv" : "txt");
+            toexport = json.map(app => {
+                let line = "";
+                for (let i = 0; i < props.length; i++) {
+                    if (props[i]) {
+                        let prop = app[props[i]] || "";
+                        line += (options.export_type === "CSV" ? `"${prop.replace(/"/g, `""`)}"` : prop);
+                    }
+                    if (i !== props.length - 1) {
+                        line += (options.export_type === "CSV" ? "," : seps[i] || "");
+                    }
+                }
+                return line;
+            }).join("\n");
+            doExport(options.export_method, toexport, filename);
+        }, true);
+
+        function doExport(method, content, filename) {
+            switch (method) {
+                case "clipboard":
+                    Clipboard.set(content)
+                    break;
+                case "download":
+                    Downloader.download({ content, filename });
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    WishlistPageClass.prototype.addExportWishlistButton = function() {
+        HTML.afterEnd("div.wishlist_header h2", "<div id='es_export_wishlist'><div>" + Localization.str.export_wishlist + "</div></div>");
+
+        let that = this;
+        document.querySelector("#es_export_wishlist").addEventListener("click", function() {
+            that.showExportModalDialog();
+        });
+    };
 
     function getNodesBelow(node) {
         let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
