@@ -291,7 +291,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
   color: #a8b2ba;
   background-color: rgba(0, 0, 0, 0.2);
   background-repeat: no-repeat;
-  background-position: 5px center;
+  background-position: 9px center;
+  background-size: 24px;
   display: grid;
   grid-template-columns: min-content auto min-content;
   grid-column-gap: 10px;
