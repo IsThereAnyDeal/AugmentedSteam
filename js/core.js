@@ -243,6 +243,10 @@ class UpdateHandler {
                 SyncedStorage.set("installsteam", "replace");
             }
 
+            if (SyncedStorage.has("showlanguagewarninglanguage")) {
+                SyncedStorage.set("showlanguagewarninglanguage", SyncedStorage.get("showlanguagewarninglanguage").toLowerCase());
+            }
+
             SyncedStorage.remove("html5video");
             SyncedStorage.remove("showclient");
         }
