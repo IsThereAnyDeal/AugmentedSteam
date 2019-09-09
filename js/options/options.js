@@ -334,6 +334,7 @@ let Options = (function(){
 
             let total = deepCount(Localization.str);
             for (let lang of Object.keys(Localization.str.options.lang)) {
+                if (lang === "english") continue;
                 let code = Language.languages[lang];
                 let locale = await Localization.loadLocalization(code);
                 let count = deepCount(locale);
