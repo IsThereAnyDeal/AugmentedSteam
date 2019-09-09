@@ -1878,9 +1878,7 @@ let Prices = (function(){
     Prices.prototype._processPrices = function(gameid, meta, info) {
         if (!this.priceCallback) { return; }
 
-        let a = gameid.split("/");
-        let type = a[0];
-        let id = a[1];
+        let [type, id] = gameid.split("/");
 
         let node = document.createElement("div");
         node.classList.add("itad-pricing");
@@ -1891,19 +1889,19 @@ let Prices = (function(){
         let hasData = false;
 
         // Current best
-        if (info['price']) {
+        if (info.price) {
             hasData = true;
-            let priceData = info['price'];
+            let priceData = info.price;
 
             let lowest;
             let voucherStr = "";
             if (SyncedStorage.get("showlowestpricecoupon") && priceData.price_voucher) {
-                lowest = new Price(priceData.price_voucher, meta['currency']);
+                lowest = new Price(priceData.price_voucher, meta.currency);
 
-                let voucher = HTML.escape(info['price']['voucher']);
+                let voucher = HTML.escape(info.price.voucher);
                 voucherStr = pricingStr.with_voucher.replace("__voucher__", `<span class="itad-pricing__voucher">${voucher}</span>`);
             } else {
-                lowest = new Price(priceData.price, meta['currency']);
+                lowest = new Price(priceData.price, meta.currency);
             }
             lowest = lowest.inCurrency(Currency.customCurrency);
 
@@ -1917,7 +1915,7 @@ let Prices = (function(){
                 drmStr = `<span class='itad-pricing__drm'>(${priceData.drm[0]})</span>`;
             }
 
-            let priceUrl = HTML.escape(info["price"]["url"].toString());
+            let priceUrl = HTML.escape(info.price.url.toString());
 
             let prices = lowest.toString();
             if (Currency.customCurrency !== Currency.storeCurrency) {
@@ -1927,21 +1925,19 @@ let Prices = (function(){
             let pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
 
             let storeStr = pricingStr.store.replace("__store__", HTML.escape(priceData.store));
+            let infoUrl = HTML.escape(info.urls.info);
 
-            HTML.beforeEnd(node, `<div>${pricingStr.lowest_price}</div>`);
+            HTML.beforeEnd(node, `<a href="${infoUrl}" target="_blank">${pricingStr.lowest_price}</a>`);
             HTML.beforeEnd(node, `<a href="${priceUrl}" class="itad-pricing__main" target="_blank">${pricesStr} ${cutStr} ${voucherStr} ${storeStr}&nbsp;${drmStr}</a>`);
-
-            let infoUrl = HTML.escape(info["urls"]["info"]);
-            HTML.beforeEnd(node, `<a href="${infoUrl}" class="itad-pricing__info" target="_blank">${pricingStr.more}</a>`);
         }
 
         // Historical low
-        if (info["lowest"]) {
+        if (info.lowest) {
             hasData = true;
             let lowestData = info.lowest;
 
-            let historical = new Price(lowestData.price, meta['currency']).inCurrency(Currency.customCurrency);
-            let recorded = new Date(info["lowest"]["recorded"]*1000);
+            let historical = new Price(lowestData.price, meta.currency).inCurrency(Currency.customCurrency);
+            let recorded = new Date(info.lowest.recorded * 1000);
 
             let prices = historical.toString();
             if (Currency.customCurrency !== Currency.storeCurrency) {
@@ -1956,26 +1952,24 @@ let Prices = (function(){
             }
 
             let storeStr = pricingStr.store.replace("__store__", lowestData.store);
+            let infoUrl = HTML.escape(info.urls.history);
 
-            HTML.beforeEnd(node, `<div>${pricingStr.historical_low}</div>`);
+            HTML.beforeEnd(node, `<a href="${infoUrl}" target="_blank">${pricingStr.historical_low}</div>`);
             HTML.beforeEnd(node, `<div>${pricesStr} ${cutStr} ${storeStr} ${recorded.toLocaleDateString()}</div>`);
-
-            let infoUrl = HTML.escape(info['urls']['history']);
-            HTML.beforeEnd(node, `<a href="${infoUrl}" class="itad-pricing__info" target="_blank">${pricingStr.history}</a>`);
         }
 
         // times bundled
-        if (info["bundles"]["count"] > 0) {
+        if (info.bundles.count > 0) {
             hasData = true;
-            HTML.beforeEnd(node, `<div>${pricingStr.bundled}</div>`);
 
-            let bundledStr = pricingStr.bundle_count.replace("__count__", info['bundles']['count']);
+            let bundlesUrl = HTML.escape(info.urls.bundles || info.urls.bundle_history);
+            
+            HTML.beforeEnd(node, `<a href="${bundlesUrl}" target="_blank">${pricingStr.bundled}</a>`);
+
+            let bundledStr = pricingStr.bundle_count.replace("__count__", info.bundles.count);
             HTML.beforeEnd(node, `<div>${bundledStr}</div>`);
 
-            let bundlesUrl = HTML.escape(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
-            if (typeof bundlesUrl === "string" && bundlesUrl.length > 0) {
-                HTML.beforeEnd(node, `<a href="${bundlesUrl}" class="itad-pricing__info" target="_blank">${pricingStr.info}</a>`);
-            }
+            
         }
 
         if (hasData) {
@@ -1985,16 +1979,16 @@ let Prices = (function(){
 
     Prices.prototype._processBundles = function(gameid, meta, info) {
         if (!this.bundleCallback) { return; }
-        if (info["bundles"]["live"].length == 0) { return; }
+        if (info.bundles.live.length == 0) { return; }
 
-        let length = info["bundles"]["live"].length;
+        let length = info.bundles.live.length;
         let purchase = "";
 
         for (let i = 0; i < length; i++) {
-            let bundle = info["bundles"]["live"][i];
+            let bundle = info.bundles.live[i];
             let endDate;
-            if (bundle["expiry"]) {
-                endDate = new Date(bundle["expiry"]*1000);
+            if (bundle.expiry) {
+                endDate = new Date(bundle.expiry * 1000);
             }
 
             let currentDate = new Date().getTime();
@@ -2040,7 +2034,7 @@ let Prices = (function(){
                 purchase += '<b>';
                 if (bundle.tiers.length > 1) {
                     let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    let tierPrice = new Price(tier.price, meta['currency']).inCurrency(Currency.customCurrency).toString();
+                    let tierPrice = new Price(tier.price, meta.currency).inCurrency(Currency.customCurrency).toString();
 
                     purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice).replace("__num__", tier.games.length);
                 } else {
@@ -2072,7 +2066,7 @@ let Prices = (function(){
             purchase += '\n<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
                 purchase += '<div class="game_purchase_price price" itemprop="price">';
-                    purchase += new Price(bundlePrice, meta['currency']).inCurrency(Currency.customCurrency).toString();
+                    purchase += new Price(bundlePrice, meta.currency).inCurrency(Currency.customCurrency).toString();
                 purchase += '</div>';
             }
 

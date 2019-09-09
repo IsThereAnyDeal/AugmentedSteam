@@ -294,7 +294,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
   background-position: 9px center;
   background-size: 24px;
   display: grid;
-  grid-template-columns: min-content auto min-content;
+  grid-template-columns: min-content auto;
   grid-column-gap: 10px;
   white-space: nowrap;
   line-height: 1.5;
@@ -318,9 +318,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .itad-pricing__drm {
   text-transform: uppercase;
   color: #626366;
-}
-.itad-pricing__info {
-  text-align: right;
 }
 
 .wishlist_row {
