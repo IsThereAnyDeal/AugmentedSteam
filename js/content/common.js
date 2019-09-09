@@ -923,8 +923,14 @@ let EnhancedSteam = (function() {
     self.addLanguageWarning = function() {
         if (!SyncedStorage.get("showlanguagewarning")) { return; }
 
-        let currentLanguage = Language.getCurrentSteamLanguage().toLowerCase();
-        let warningLanguage = SyncedStorage.get("showlanguagewarninglanguage").toLowerCase();
+        let currentLanguage = Language.getCurrentSteamLanguage();
+        if (!currentLanguage) return;
+        
+        if (!SyncedStorage.has("showlanguagewarninglanguage")) {
+            SyncedStorage.set("showlanguagewarninglanguage", currentLanguage);
+        }
+        
+        let warningLanguage = SyncedStorage.get("showlanguagewarninglanguage");
 
         if (currentLanguage === warningLanguage) { return; }
 
@@ -1307,7 +1313,7 @@ let EarlyAccess = (function(){
 
         let imageName = "img/overlay/early_access_banner_english.png";
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
-            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
+            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage() + ".png";
         }
         imageUrl = ExtensionLayer.getLocalUrl(imageName);
 

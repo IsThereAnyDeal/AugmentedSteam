@@ -572,7 +572,7 @@ SyncedStorage.defaults = {
     'replaceaccountname': true,
     'showfakeccwarning': true,
     'showlanguagewarning': true,
-    'showlanguagewarninglanguage': "English",
+    'showlanguagewarninglanguage': "english",
     'homepage_tab_selection': "remember",
     'homepage_tab_last': null,
     'send_age_info': true,
