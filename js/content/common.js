@@ -1728,7 +1728,7 @@ let Highlights = (function(){
             ".recommendation_row",                          // "Recent recommendations by friends"
             ".friendactivity_tab_row",                      // "Most played" and "Most wanted" tabs on recommendation pages
             ".friend_game_block",                           // "Friends recently bought"
-            "div.recommendation",                           // Curator pages and the new DLC pages
+            ".recommendation",                              // Curator pages and the new DLC pages
             ".curator_giant_capsule",
             "div.carousel_items.curator_featured > div",    // Carousel items on Curator pages
             "div.item_ctn",                                 // Curator list item
