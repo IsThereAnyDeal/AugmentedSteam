@@ -294,7 +294,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
   background-position: 9px center;
   background-size: 24px;
   display: grid;
-  grid-template-columns: min-content auto;
+  grid-template-columns: min-content min-content auto;
   grid-column-gap: 10px;
   white-space: nowrap;
   line-height: 1.5;
@@ -305,11 +305,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .itad-pricing__cut {
   color: #a4d007;
-  margin-left: 5px;
 }
 .itad-pricing__price {
   font-size: 1.1em;
   color: #acdbf5;
+  text-align: right;
 }
 .itad-pricing__voucher {
   font-weight: bold;
@@ -318,6 +318,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .itad-pricing__drm {
   text-transform: uppercase;
   color: #626366;
+}
+.itad-pricing__bundled {
+  grid-column: 2 / span 2
 }
 
 .wishlist_row {

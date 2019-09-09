@@ -1899,7 +1899,7 @@ let Prices = (function(){
                 lowest = new Price(priceData.price_voucher, meta.currency);
 
                 let voucher = HTML.escape(info.price.voucher);
-                voucherStr = ` ${pricingStr.with_voucher.replace("__voucher__", `<span class="itad-pricing__voucher">${voucher}</span>`)}`;
+                voucherStr = `${pricingStr.with_voucher.replace("__voucher__", `<span class="itad-pricing__voucher">${voucher}</span>`)} `;
             } else {
                 lowest = new Price(priceData.price, meta.currency);
             }
@@ -1907,7 +1907,7 @@ let Prices = (function(){
 
             let cutStr = '';
             if (priceData.cut > 0) {
-                cutStr = `<span class='itad-pricing__cut'>-${priceData.cut}%</span>`;
+                cutStr = `<span class='itad-pricing__cut'>-${priceData.cut}%</span> `;
             }
 
             let drmStr = '';
@@ -1928,7 +1928,8 @@ let Prices = (function(){
             let infoUrl = HTML.escape(info.urls.info);
 
             HTML.beforeEnd(node, `<a href="${infoUrl}" target="_blank">${pricingStr.lowest_price}</a>`);
-            HTML.beforeEnd(node, `<a href="${priceUrl}" class="itad-pricing__main" target="_blank">${pricesStr}${cutStr}${voucherStr} ${storeStr}&nbsp;${drmStr}</a>`);
+            HTML.beforeEnd(node, pricesStr);
+            HTML.beforeEnd(node, `<a href="${priceUrl}" class="itad-pricing__main" target="_blank">${cutStr}${voucherStr}${storeStr}&nbsp;${drmStr}</a>`);
         }
 
         // Historical low
@@ -1948,14 +1949,15 @@ let Prices = (function(){
 
             let cutStr = '';
             if (lowestData.cut > 0) {
-                cutStr = `<span class='itad-pricing__cut'>-${lowestData.cut}%</span>`;
+                cutStr = `<span class='itad-pricing__cut'>-${lowestData.cut}%</span> `;
             }
 
             let storeStr = pricingStr.store.replace("__store__", lowestData.store);
             let infoUrl = HTML.escape(info.urls.history);
 
             HTML.beforeEnd(node, `<a href="${infoUrl}" target="_blank">${pricingStr.historical_low}</div>`);
-            HTML.beforeEnd(node, `<div>${pricesStr}${cutStr} ${storeStr} ${recorded.toLocaleDateString()}</div>`);
+            HTML.beforeEnd(node, pricesStr);
+            HTML.beforeEnd(node, `<div class="itad-pricing__main">${cutStr}${storeStr} ${recorded.toLocaleDateString()}</div>`);
         }
 
         // times bundled
@@ -1967,7 +1969,7 @@ let Prices = (function(){
             HTML.beforeEnd(node, `<a href="${bundlesUrl}" target="_blank">${pricingStr.bundled}</a>`);
 
             let bundledStr = pricingStr.bundle_count.replace("__count__", info.bundles.count);
-            HTML.beforeEnd(node, `<div>${bundledStr}</div>`);            
+            HTML.beforeEnd(node, `<div class="itad-pricing__bundled">${bundledStr}</div>`);
         }
 
         if (hasData) {
