@@ -566,7 +566,7 @@ class AppPageClass extends StorePageClass {
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
         // Required for "Customize" button and YouTube / Steam tabs
-        DOMHelper.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
+        DOMHelper.insertHomeCSS();
         
         this.initHdPlayer();
         this.addWishlistRemove();
@@ -2507,7 +2507,7 @@ let SearchPageClass = (function(){
         if (!SyncedStorage.get("contscroll")) { return; }
 
         // Required for the loading wrapper
-        DOMHelper.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
+        DOMHelper.insertHomeCSS();
 
         let result_count;
         document.querySelector(".search_pagination_right").style.display = "none";

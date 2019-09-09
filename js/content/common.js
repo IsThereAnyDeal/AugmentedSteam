@@ -1184,6 +1184,15 @@ let DOMHelper = (function(){
         document.head.appendChild(stylesheet);
     }
 
+    self.insertHomeCSS = function() {
+        self.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
+        let headerCtn = document.querySelector("div#global_header .content");
+        if (headerCtn) {
+            // Fixes displaced header, see #190
+            headerCtn.style.right = 0;
+        }
+    }
+
     return self;
 })();
 
