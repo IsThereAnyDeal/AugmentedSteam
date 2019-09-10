@@ -334,6 +334,7 @@ let Options = (function(){
 
             let total = deepCount(Localization.str);
             for (let lang of Object.keys(Localization.str.options.lang)) {
+                if (lang === "english") continue;
                 let code = Language.languages[lang];
                 let locale = await Localization.loadLocalization(code);
                 let count = deepCount(locale);
@@ -416,7 +417,7 @@ let Options = (function(){
                 });
                 break;
             }
-            case "false": {
+            case "none": {
                 icons.forEach(icon => icon.style.display = "none");
             }
         }
@@ -483,7 +484,6 @@ let Options = (function(){
         
         loadProfileLinkImages();
         loadStores();
-        return loadTranslation();
     }
 
 
@@ -493,6 +493,10 @@ let Options = (function(){
 
         for (let el of document.querySelectorAll(".country_parent")) {
             el.remove();
+        }
+
+        for (let el of document.querySelectorAll(".custom-link__close")) {
+            el.click();
         }
 
         SyncedStorage.then(loadOptions);
@@ -608,7 +612,8 @@ let Options = (function(){
         await Promise.all([settings, currency]);
         let Defaults = SyncedStorage.defaults;
 
-        loadOptions().then(Sidebar.create);
+        loadOptions();
+        loadTranslation().then(Sidebar.create);
 
         document.getElementById("profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
 

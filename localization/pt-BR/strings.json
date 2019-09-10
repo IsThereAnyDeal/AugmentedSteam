@@ -380,7 +380,6 @@
         "show_astatslink": "Exibir link para o site AStats em páginas de aplicativos",
         "show_youtubegameplay": "Exibir vídeos de gameplay do YouTube em páginas de aplicativos",
         "show_youtubereviews": "Exibir vídeos de análise do YouTube em páginas de aplicativos",
-        "showclient": "Exibir links do cliente Steam",
         "guest": "Itens dos quais você possui um passe de convidado",
         "show_steamchart_info": "Exibir informações do site SteamCharts.com",
         "show_steamspy_info": "Exibir informações do site steamspy.com",
@@ -395,7 +394,6 @@
         "steamdb": "Exibir links para o site SteamDB",
         "hide_early_access": "Ocultar jogos com Acesso Antecipado na página inicial, de marcadores e de busca",
         "reset_note": "Opções redefinidas",
-        "html5video": "Exibir vídeos usando HTML5 em vez de Flash",
         "profiles_link_group_game": "Jogo exclusivo",
         "friends_wishlist": "Itens que os seus amigos desejam",
         "showspeechsearch": "Adicionar busca por voz em caixas de busca",
@@ -476,7 +474,7 @@
     },
     "survey": {
         "performance_survey": "Pesquisa de desempenho",
-        "users": "__users__ usuários responderam a pesquisa de desempenho deste jogo",
+        "users": "__users__ usuários responderam a pesquisa de desempenho deste jogo.",
         "framerate": "Taxa de quadros",
         "framerate_response": "respondeu que a taxa de quadros era",
         "framerate_30": "fixada a 30qps ou menor",
@@ -490,7 +488,7 @@
         "satisfaction": "Satisfação de desempenho por GPU",
         "gs_y": "Possui opções gráficas ou menu de gráficos embutidos",
         "gs_n": "Não possui opções gráficas ou menu de gráficos embutidos",
-        "nobody": "Ninguém respondeu a pesquisa de desempenho deste jogo",
+        "nobody": "Ninguém respondeu a pesquisa de desempenho deste jogo.",
         "take": "Responder a pesquisa"
     },
     "select": {

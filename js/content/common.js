@@ -333,7 +333,7 @@ CookieStorage.cache = new Map();
 let RequestData = (function(){
     let self = {};
 
-    self.getHttp = function(url, settings, returnJSON) {
+    self.getHttp = function(url, settings, responseType="text") {
         settings = settings || {};
         settings.method = settings.method || "GET";
         settings.credentials = settings.credentials || "include";
@@ -353,11 +353,7 @@ let RequestData = (function(){
 
             if (!response.ok) { throw new Error(`HTTP ${response.status} ${response.statusText} for ${response.url}`) }
 
-            if (returnJSON) {
-                return response.json();
-            } else {
-                return response.text();
-            }
+            return response[responseType]();
             
         }).catch(err => {
             ProgressBar.failed();
@@ -365,15 +361,19 @@ let RequestData = (function(){
         });
     };
 
-    self.post = function(url, formData, settings) {
+    self.post = function(url, formData, settings, returnJSON) {
         return self.getHttp(url, Object.assign(settings || {}, {
             method: "POST",
             body: formData
-        }));
+        }), returnJSON);
     };
 
     self.getJson = function(url, settings) {
-        return self.getHttp(url, settings, true);
+        return self.getHttp(url, settings, "json");
+    };
+
+    self.getBlob = function(url, settings) {
+        return self.getHttp(url, settings, "blob");
     };
 
     return self;
@@ -970,8 +970,14 @@ let EnhancedSteam = (function() {
     self.addLanguageWarning = function() {
         if (!SyncedStorage.get("showlanguagewarning")) { return; }
 
-        let currentLanguage = Language.getCurrentSteamLanguage().toLowerCase();
-        let warningLanguage = SyncedStorage.get("showlanguagewarninglanguage").toLowerCase();
+        let currentLanguage = Language.getCurrentSteamLanguage();
+        if (!currentLanguage) return;
+        
+        if (!SyncedStorage.has("showlanguagewarninglanguage")) {
+            SyncedStorage.set("showlanguagewarninglanguage", currentLanguage);
+        }
+        
+        let warningLanguage = SyncedStorage.get("showlanguagewarninglanguage");
 
         if (currentLanguage === warningLanguage) { return; }
 
@@ -987,6 +993,7 @@ let EnhancedSteam = (function() {
         });
     };
 
+    // todo (MxtOUT) Add this back once proper error handling is implemented
     let loginWarningAdded = false;
     self.addLoginWarning = function(err) {
         if (!loginWarningAdded) {
@@ -998,10 +1005,20 @@ let EnhancedSteam = (function() {
         Promise.reject(err);
     };
 
+    self.handleInstallSteamButton = function() {
+        let option = SyncedStorage.get("installsteam");
+        if (option === "hide") {
+            DOMHelper.remove("div.header_installsteam_btn");
+        } else if (option === "replace") {
+            let btn = document.querySelector("div.header_installsteam_btn > a");
+            btn.textContent = Localization.str.viewinclient;
+            btn.href =  `steam://openurl/${window.location.href}`;
+            btn.classList.add("es_steamclient_btn");
+        }
+    };
+
     self.removeAboutLinks = function() {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
-
-        DOMHelper.remove("div.header_installsteam_btn");
 
         if (User.isSignedIn) {
             DOMHelper.remove(".submenuitem[href^='https://store.steampowered.com/about/']");
@@ -1214,6 +1231,15 @@ let DOMHelper = (function(){
         document.head.appendChild(stylesheet);
     }
 
+    self.insertHomeCSS = function() {
+        self.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
+        let headerCtn = document.querySelector("div#global_header .content");
+        if (headerCtn) {
+            // Fixes displaced header, see #190
+            headerCtn.style.right = 0;
+        }
+    }
+
     return self;
 })();
 
@@ -1346,7 +1372,7 @@ let EarlyAccess = (function(){
 
         let imageName = "img/overlay/early_access_banner_english.png";
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
-            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage().toLowerCase() + ".png";
+            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage() + ".png";
         }
         imageUrl = ExtensionResources.getURL(imageName);
 
@@ -1759,7 +1785,7 @@ let Highlights = (function(){
             ".recommendation_row",                          // "Recent recommendations by friends"
             ".friendactivity_tab_row",                      // "Most played" and "Most wanted" tabs on recommendation pages
             ".friend_game_block",                           // "Friends recently bought"
-            "div.recommendation",                           // Curator pages and the new DLC pages
+            ".recommendation",                              // Curator pages and the new DLC pages
             ".curator_giant_capsule",
             "div.carousel_items.curator_featured > div",    // Carousel items on Curator pages
             "div.item_ctn",                                 // Curator list item
@@ -1883,7 +1909,7 @@ let Prices = (function(){
         this.subids = [];
         this.bundleids = [];
 
-        this.priceCallback = function(type, id, html) {};
+        this.priceCallback = function(type, id, node) {};
         this.bundleCallback = function(html) {};
 
         this._bundles = [];
@@ -1917,103 +1943,117 @@ let Prices = (function(){
     Prices.prototype._processPrices = async function(gameid, meta, info) {
         if (!this.priceCallback) { return; }
 
-        let a = gameid.split("/");
-        let type = a[0];
-        let id = a[1];
+        let [type, id] = gameid.split("/");
 
-        let activates = "";
-        let line1 = "";
-        let line2 = "";
-        let line3 = "";
-        let html;
+        let node = document.createElement("div");
+        node.classList.add("itad-pricing");
+        node.id = "es_price_" + id;
 
-        // "Lowest Price"
-        if (info['price']) {
-            if (info['price']['drm'] === "steam" && info['price']['store'] !== "Steam") {
-                activates = `(<b>${Localization.str.activates}</b>)`;
-            }
+        let pricingStr = Localization.str.pricing;
 
-            let infoUrl = HTML.escape(info["urls"]["info"].toString());
-            let priceUrl = HTML.escape(info["price"]["url"].toString());
-            let store = HTML.escape(info["price"]["store"].toString());
+        let hasData = false;
+
+        // Current best
+        if (info.price) {
+            hasData = true;
+            let priceData = info.price;
 
             let lowest;
-            let voucherStr = "";
-            if (SyncedStorage.get("showlowestpricecoupon") && info['price']['price_voucher']) {
-                lowest = await new Price(info['price']['price_voucher'], meta['currency']).inCurrency(Currency.customCurrency);
-                let voucher = HTML.escape(info['price']['voucher']);
-                voucherStr = Localization.str.after_coupon.replace("__voucher__", `<b>${voucher}</b>`);
+            let voucherStr = '';
+            if (SyncedStorage.get("showlowestpricecoupon") && priceData.price_voucher) {
+                lowest = new Price(priceData.price_voucher, meta.currency);
+
+                let voucher = HTML.escape(info.price.voucher);
+                voucherStr = `${pricingStr.with_voucher.replace("__voucher__", `<span class="itad-pricing__voucher">${voucher}</span>`)} `;
             } else {
-                lowest = await new Price(info['price']['price'], meta['currency']).inCurrency(Currency.customCurrency);
+                lowest = new Price(priceData.price, meta.currency);
             }
+            lowest = await lowest.inCurrency(Currency.customCurrency);
+
+            let cutStr = '';
+            if (priceData.cut > 0) {
+                cutStr = `<span class='itad-pricing__cut'>-${priceData.cut}%</span> `;
+            }
+
+            let drmStr = '';
+            if (priceData.drm.length > 0 && priceData.store !== "Steam") {
+                drmStr = `<span class='itad-pricing__drm'>(${priceData.drm[0]})</span>`;
+            }
+
+            let priceUrl = HTML.escape(info.price.url.toString());
 
             let prices = lowest.toString();
             if (Currency.customCurrency != Currency.storeCurrency) {
                 let lowest_alt = await lowest.inCurrency(Currency.storeCurrency);
                 prices += ` (${lowest_alt.toString()})`;
             }
+            let pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
 
-            let lowestStr = Localization.str.lowest_price_format
-                .replace("__price__", prices)
-                .replace("__store__", `<a href="${priceUrl}" target="_blank">${store}</a>`);
+            let storeStr = pricingStr.store.replace("__store__", HTML.escape(priceData.store));
+            let infoUrl = HTML.escape(info.urls.info);
 
-            let infoStr = `(<a href="${infoUrl}" target="_blank">${Localization.str.info}</a>)`;
-
-            line1 = `${Localization.str.lowest_price} ${lowestStr} ${voucherStr} ${activates} ${infoStr}`;
+            HTML.beforeEnd(node, `<a href="${infoUrl}" target="_blank">${pricingStr.lowest_price}</a>`);
+            HTML.beforeEnd(node, pricesStr);
+            HTML.beforeEnd(node, `<a href="${priceUrl}" class="itad-pricing__main" target="_blank">${cutStr}${voucherStr}${storeStr}&nbsp;${drmStr}</a>`);
         }
 
-        // "Historical Low"
-        if (info["lowest"]) {
-            let historical = await new Price(info['lowest']['price'], meta['currency']).inCurrency(Currency.customCurrency);
-            let recorded = new Date(info["lowest"]["recorded"]*1000);
+        // Historical low
+        if (info.lowest) {
+            hasData = true;
+            let lowestData = info.lowest;
+
+            let historical = await new Price(lowestData.price, meta.currency).inCurrency(Currency.customCurrency);
+            let recorded = new Date(info.lowest.recorded * 1000);
 
             let prices = historical.toString();
-            if (Currency.customCurrency != Currency.storeCurrency) {
+            if (Currency.customCurrency !== Currency.storeCurrency) {
                 let historical_alt = await historical.inCurrency(Currency.storeCurrency);
                 prices += ` (${historical_alt.toString()})`;
             }
+            let pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
 
-            let historicalStr = Localization.str.historical_low_format
-                .replace("__price__", prices)
-                .replace("__store__", HTML.escape(info['lowest']['store']))
-                .replace("__date__", recorded.toLocaleDateString());
-
-            let url = HTML.escape(info['urls']['history']);
-
-            let infoStr2 = `(<a href="${url}" target="_blank">${Localization.str.info}</a>)`;
-            line2 = `${Localization.str.historical_low} ${historicalStr} ${infoStr2}`;
-        }
-
-        let chartImg = ExtensionResources.getURL("img/line_chart.png");
-        html = `<div class='es_lowest_price' id='es_price_${id}'><div class='gift_icon' id='es_line_chart_${id}'><img src='${chartImg}'></div>`;
-
-        // "Number of times this game has been in a bundle"
-        if (info["bundles"]["count"] > 0) {
-            line3 = Localization.str.bundle.bundle_count.replace("__count__", info['bundles']['count']);
-            let bundlesUrl = HTML.escape(info["urls"]["bundles"] || info["urls"]["bundle_history"]);
-            if (typeof bundlesUrl === "string" && bundlesUrl.length > 0) {
-                line3 += ` (<a href="${bundlesUrl}" target="_blank">${Localization.str.info}</a>)`;
+            let cutStr = '';
+            if (lowestData.cut > 0) {
+                cutStr = `<span class='itad-pricing__cut'>-${lowestData.cut}%</span> `;
             }
+
+            let storeStr = pricingStr.store.replace("__store__", lowestData.store);
+            let infoUrl = HTML.escape(info.urls.history);
+
+            HTML.beforeEnd(node, `<a href="${infoUrl}" target="_blank">${pricingStr.historical_low}</div>`);
+            HTML.beforeEnd(node, pricesStr);
+            HTML.beforeEnd(node, `<div class="itad-pricing__main">${cutStr}${storeStr} ${recorded.toLocaleDateString()}</div>`);
         }
 
-        if (line1 || line2) {
-            let result = html + "<div>" + line1 + "</div><div>" + line2 + "</div>" + line3;
-            this.priceCallback(type, id, result);
+        // times bundled
+        if (info.bundles.count > 0) {
+            hasData = true;
+
+            let bundlesUrl = HTML.escape(info.urls.bundles || info.urls.bundle_history);
+            
+            HTML.beforeEnd(node, `<a href="${bundlesUrl}" target="_blank">${pricingStr.bundled}</a>`);
+
+            let bundledStr = pricingStr.bundle_count.replace("__count__", info.bundles.count);
+            HTML.beforeEnd(node, `<div class="itad-pricing__bundled">${bundledStr}</div>`);
+        }
+
+        if (hasData) {
+            this.priceCallback(type, id, node);
         }
     };
 
     Prices.prototype._processBundles = async function(meta, info) {
         if (!this.bundleCallback) { return; }
-        if (info["bundles"]["live"].length == 0) { return; }
+        if (info.bundles.live.length == 0) { return; }
 
-        let length = info["bundles"]["live"].length;
+        let length = info.bundles.live.length;
         let purchase = "";
 
         for (let i = 0; i < length; i++) {
-            let bundle = info["bundles"]["live"][i];
+            let bundle = info.bundles.live[i];
             let endDate;
-            if (bundle["expiry"]) {
-                endDate = new Date(bundle["expiry"]*1000);
+            if (bundle.expiry) {
+                endDate = new Date(bundle.expiry * 1000);
             }
 
             let currentDate = new Date().getTime();
@@ -2059,7 +2099,7 @@ let Prices = (function(){
                 purchase += '<b>';
                 if (bundle.tiers.length > 1) {
                     let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    let tierPrice = (await new Price(tier.price, meta['currency']).inCurrency(Currency.customCurrency)).toString();
+                    let tierPrice = (await new Price(tier.price, meta.currency).inCurrency(Currency.customCurrency)).toString();
 
                     purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice).replace("__num__", tier.games.length);
                 } else {
@@ -2091,7 +2131,7 @@ let Prices = (function(){
             purchase += '\n<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
                 purchase += '<div class="game_purchase_price price" itemprop="price">';
-                    purchase += (await new Price(bundlePrice, meta['currency']).inCurrency(Currency.customCurrency)).toString();
+                    purchase += (await new Price(bundlePrice, meta.currency).inCurrency(Currency.customCurrency)).toString();
                 purchase += '</div>';
             }
 
@@ -2172,6 +2212,7 @@ let Common = (function(){
         }
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
+        EnhancedSteam.handleInstallSteamButton();
         EnhancedSteam.removeAboutLinks();
         EnhancedSteam.addHeaderLinks();
         EarlyAccess.showEarlyAccess();
@@ -2191,6 +2232,32 @@ let Common = (function(){
     return self;
 })();
 
+class Downloader {
+
+    static download(content, filename) {
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(content);
+        a.download = filename;
+        a.click();
+    }
+}
+
+let Clipboard = (function(){
+
+    let self = {};
+
+    self.set = function(content) {
+        // Based on https://stackoverflow.com/a/12693636
+        document.oncopy = function(event) {
+            event.clipboardData.setData("Text", content);
+            event.preventDefault();
+        };
+        document.execCommand("Copy");
+        document.oncopy = undefined;
+    };
+
+    return self;
+})();
 
 class MediaPage {
 

@@ -250,7 +250,15 @@
                         </div>
                         <div class="option">
                             <input type="checkbox" id="hideaboutlinks" data-setting="hideaboutlinks">
-                            <label for="hideaboutlinks" data-locale-text="options.hide_about_links">Hide "Install Steam" button / "About" links</label>
+                            <label for="hideaboutlinks" data-locale-text="options.hide_about_links">Hide "About" links</label>
+                        </div>
+                        <div class="option">
+                            <label for="installsteam" data-locale-text="options.install_steam_button">"Install Steam" button</label>
+                            <select id="installsteam" data-setting="installsteam">
+                                <option value="show" data-locale-text="show">Show</option>
+                                <option value="hide" data-locale-text="hide">Hide</option>
+                                <option value="replace" data-locale-text="options.replace_view_client">Replace with "View in Client"</option>
+                            </select>
                         </div>
                     </div>
         
@@ -260,33 +268,33 @@
                             <input type="checkbox" id="showlanguagewarning" data-setting="showlanguagewarning">
                             <label for="showlanguagewarning" data-locale-text="options.show_languagewarning">Show warning if browsing in a language other than</label>
                             <select id="warning_language" data-setting="showlanguagewarninglanguage">
-                                <option value="English">English</option>
-                                <option value="Bulgarian">български</option>
-                                <option value="Czech">čeština</option>
-                                <option value="Danish">Dansk</option>
-                                <option value="Dutch">Nederlands</option>
-                                <option value="Finnish">Suomi</option>
-                                <option value="French">Français</option>
-                                <option value="Greek">Ελληνικά</option>
-                                <option value="German">Deutsch</option>
-                                <option value="Hungarian">Magyar</option>
-                                <option value="Italian">Italiano</option>
-                                <option value="Japanese">日本語</option>
-                                <option value="Koreana">한국어</option>
-                                <option value="Norwegian">Norsk</option>
-                                <option value="Polish">Polski</option>
-                                <option value="Portuguese">Português</option>
-                                <option value="Brazilian">Português-Brasil</option>
-                                <option value="Russian">Русский</option>
-                                <option value="Romanian">Română</option>
-                                <option value="Schinese">汉语（简体字）</option>
-                                <option value="Tchinese">漢語（繁體字）</option>
-                                <option value="Spanish">Español</option>
-                                <option value="Latam">Español Latinoamericano</option>
-                                <option value="Swedish">Svenska</option>
-                                <option value="Thai">ไทย</option>
-                                <option value="Turkish">Türkçe</option>
-                                <option value="Ukrainian">Українська</option>
+                                <option value="english">English</option>
+                                <option value="bulgarian">български</option>
+                                <option value="czech">čeština</option>
+                                <option value="danish">Dansk</option>
+                                <option value="dutch">Nederlands</option>
+                                <option value="finnish">Suomi</option>
+                                <option value="french">Français</option>
+                                <option value="greek">Ελληνικά</option>
+                                <option value="german">Deutsch</option>
+                                <option value="hungarian">Magyar</option>
+                                <option value="italian">Italiano</option>
+                                <option value="japanese">日本語</option>
+                                <option value="koreana">한국어</option>
+                                <option value="norwegian">Norsk</option>
+                                <option value="polish">Polski</option>
+                                <option value="portuguese">Português</option>
+                                <option value="brazilian">Português-Brasil</option>
+                                <option value="russian">Русский</option>
+                                <option value="romanian">Română</option>
+                                <option value="schinese">汉语（简体字）</option>
+                                <option value="tchinese">漢語（繁體字）</option>
+                                <option value="spanish">Español</option>
+                                <option value="latam">Español Latinoamericano</option>
+                                <option value="swedish">Svenska</option>
+                                <option value="thai">ไทย</option>
+                                <option value="turkish">Türkçe</option>
+                                <option value="ukrainian">Українська</option>
                             </select>
                         </div>
                     </div>
@@ -338,10 +346,6 @@
                             <label for="send_age_info" data-locale-text="options.send_age_info">Automatically send age verification when requested</label>
                         </div>
                         <div class="option">
-                            <input type="checkbox" id="html5video" data-setting="html5video">
-                            <label for="html5video" data-locale-text="options.html5video">Show videos using HTML5 instead of Flash</label>
-                        </div>
-                        <div class="option">
                             <input type="checkbox" id="contscroll" data-setting="contscroll">
                             <label for="contscroll" data-locale-text="options.contscroll">Enable continuous scrolling of search results</label>
                         </div>
@@ -354,8 +358,8 @@
                             <label for="openinnewtab" data-locale-text="options.openinnewtab">Open external links in a new tab</label>
                         </div>
                         <div class="option">
-                            <input type="checkbox" id="showclient" data-setting="showclient">
-                            <label for="showclient" data-locale-text="options.showclient">Show Steam Client links</label>
+                            <input type="checkbox" id="showviewinlibrary" data-setting="showviewinlibrary">
+                            <label for="showviewinlibrary" data-locale-text="options.show_view_in_library">Show "View in library" button for owned games</label>
                         </div>
                         <div class="option">
                             <input type="checkbox" id="show_package_info" data-setting="show_package_info">
@@ -423,6 +427,10 @@
                         <div class="option">
                             <input type="checkbox" id="showsteamdb" data-setting="showsteamdb">
                             <label for="showsteamdb" data-locale-text="options.steamdb">Show SteamDB links</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="showbartervg" data-setting="showbartervg">
+                            <label for="showbartervg" data-locale-text="options.showbartervg">Show Barter.vg links</label>
                         </div>
                         <div class="option">
                             <input type="checkbox" id="showastatslink" data-setting="showastatslink">
@@ -645,10 +653,20 @@
                             <select id="profile_link_images_dropdown" data-setting="show_profile_link_images">
                                 <option value="gray" id="profile_link_images_gray" data-locale-text="options.profile_link_images_gray">Grayscale</option>
                                 <option value="color" id="profile_link_images_color" data-locale-text="options.profile_link_images_color">Colored</option>
-                                <option value=false id="profile_link_images_none" data-locale-text="options.profile_link_images_none">None</option>
+                                <option value="none" id="profile_link_images_none" data-locale-text="options.profile_link_images_none">None</option>
                             </select>
                         </div>
                     </div>
+
+                    <div id="community_profile_section" class="content_section">
+                        <h2 data-locale-text="options.group">Group</h2>
+                        <h3 data-locale-text="options.group_links">Show group links to:</h3>
+                        <div class="option">
+                            <input type="checkbox" id="group_steamgifts" data-setting="group_steamgifts">
+                            <label for="group_steamgifts"><i class="es_sites_icons es_steamgifts_icon"></i>SteamGifts</label>
+                        </div>
+                    </div>
+
         
                     <div id="community_general_section" class="content_section">
                         <h2 data-locale-text="options.general">General</h2>
@@ -806,6 +824,11 @@
                     <td>CanNaJun, Daum, Hirano, LJreal, RaWouk, Rasin, [GF]meyoung, fivestar, sunk,
                         À Cookie Jar, 하얀군주
                     </td>
+                </tr>
+                <tr>
+                    <td class="lang-perc latam"></td>
+                    <td class="language latam">Latin American Spanish:</td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td class="lang-perc norwegian"></td>
