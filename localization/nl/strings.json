@@ -82,7 +82,7 @@
     "loading": "Laden...",
     "selling": "Verkopen...",
     "quick_sell": "Snel verkopen voor __amount__",
-    "quick_sell_desc": "Een prijsverschil van __modifier__ dan de laagste verkoopprijs momenteel op de Steam Communitymarkt",
+    "quick_sell_desc": "Een prijsverschil van __modifier__ vergeleken met de laagste verkoopprijs momenteel op de Steam Communitymarkt",
     "instant_sell": "Direct verkopen voor __amount__",
     "instant_sell_desc": "De hoogste aankooporderprijs momenteel op de Steam Communitymarkt",
     "starting_at": "Vanaf: __price__",
