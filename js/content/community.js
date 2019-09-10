@@ -1038,7 +1038,7 @@ let GroupHomePageClass = (function(){
         links.forEach(link => {
             if (!SyncedStorage.get("group_" + link.id)) { return; }
             htmlstr +=
-                `<div class="es_profile_link profile_count_link">
+                `<div class="es_profile_link profile_count_link weblink">
                     <a class="es_sites_icons es_${link.id}_icon es_${iconType}" href="${link.link}" target="_blank">
                         <span class="count_link_label">${link.name}</span>
                     </a>

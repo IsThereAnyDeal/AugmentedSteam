@@ -22,7 +22,7 @@
 				0 0 0 1px rgba(193, 193, 193, 0.17);
 	vertical-align: top;
 }
-.es_sites_icons.es_gray, .es_sites_icons .es_gray {
+.es_sites_icons.es_gray:after, .es_sites_icons .es_gray {
 	filter: grayscale(100%);
 }
 .es_sites_icons.es_steamrepcn_icon:after {
