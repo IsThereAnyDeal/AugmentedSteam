@@ -608,7 +608,7 @@ SyncedStorage.defaults = {
     'profile_astats': true,
     'profile_backpacktf': true,
     'profile_astatsnl': true,
-    'profile_permalink': true,
+    'profile_steamid': true,
     'profile_custom_link': [
         { 'enabled': true, 'name': "Google", 'url': "google.com/search?q=[ID]", 'icon': "www.google.com/images/branding/product/ico/googleg_lodp.ico", },
     ],
