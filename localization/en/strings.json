@@ -443,6 +443,8 @@
         "market": "Market",
         "inventory": "Inventory",
         "profile": "Profile",
+        "group": "Group",
+        "group_links": "Show group links to:",
         "show_languagewarning": "Show warning if browsing in a language other than",
         "homepage": "Homepage",
         "homepage_default_tab": "Default homepage tab",

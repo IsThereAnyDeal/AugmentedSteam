@@ -611,6 +611,7 @@ SyncedStorage.defaults = {
     'profile_custom_link': [
         { 'enabled': true, 'name': "Google", 'url': "google.com/search?q=[ID]", 'icon': "www.google.com/images/branding/product/ico/googleg_lodp.ico", },
     ],
+    'group_steamgifts': true,
     'steamcardexchange': true,
     'purchase_dates': true,
     'show_badge_progress': true,

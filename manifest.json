@@ -93,7 +93,8 @@
     {
       "matches": [
         "*://steamcommunity.com/id/*",
-        "*://steamcommunity.com/profiles/*"
+        "*://steamcommunity.com/profiles/*",
+        "*://steamcommunity.com/groups/*"
       ],
       "css": [
         "css/es_sites_links.css"
