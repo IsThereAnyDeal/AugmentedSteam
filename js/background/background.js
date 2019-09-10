@@ -681,44 +681,37 @@ SteamCommunity.params = { 'credentials': 'include', };
 
 
 class Steam {
-    // static _dynamicstore_promise = null;
     // static _supportedCurrencies = null;
     
     static async dynamicStore() {
-        if (Steam._dynamicstore_promise) return Steam._dynamicstore_promise;
-
-        Steam._dynamicstore_promise = Promise.all([
+        let [{ rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist }, ownedElsewhere] = await Promise.all([
             SteamStore.getEndpoint("/dynamicstore/userdata/"),
             SyncedStorage.get("include_owned_elsewhere") ? IndexedDB.getAll("collection", { "shop": "steam", "optional": "gameid,copy_type" }) : Promise.resolve(),
-        ])
-        .then(([{ rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist }, ownedElsewhere]) => {
-            if (!rgOwnedApps) {
-                throw new Error("Could not fetch DynamicStore UserData");
-            }
+        ]);
+        
+        if (!rgOwnedApps) {
+            throw new Error("Could not fetch DynamicStore UserData");
+        }
 
-            if (ownedElsewhere) {
-                for (let storeId of Object.keys(ownedElsewhere)) {
-                    let id = GameId.trimStoreId(storeId);
-                    if (storeId.startsWith("app/") && !rgOwnedApps.includes(id)) {
-                        rgOwnedApps.push(id);
-                    } else if (storeId.startsWith("sub/") && !rgOwnedPackages.includes(id)) {
-                        rgOwnedPackages.push(id);
-                    }
+        if (ownedElsewhere) {
+            for (let storeId of Object.keys(ownedElsewhere)) {
+                let id = GameId.trimStoreId(storeId);
+                if (storeId.startsWith("app/") && !rgOwnedApps.includes(id)) {
+                    rgOwnedApps.push(id);
+                } else if (storeId.startsWith("sub/") && !rgOwnedPackages.includes(id)) {
+                    rgOwnedPackages.push(id);
                 }
             }
+        }
 
-            let data = {
-                "ignored": Object.keys(rgIgnoredApps).map(key => Number(key)),
-                "ownedApps": rgOwnedApps,
-                "ownedPackages": rgOwnedPackages,
-                "wishlisted": rgWishlist,
-            };
-            
-            return IndexedDB.putCached("dynamicStore", Object.values(data), Object.keys(data), true);
-        })
-        .finally(() => Steam._dynamicstore_promise = null);
-
-        return Steam._dynamicstore_promise;
+        let data = {
+            "ignored": Object.keys(rgIgnoredApps).map(key => Number(key)),
+            "ownedApps": rgOwnedApps,
+            "ownedPackages": rgOwnedPackages,
+            "wishlisted": rgWishlist,
+        };
+        
+        return IndexedDB.putCached("dynamicStore", Object.values(data), Object.keys(data), true);
     }
     // dynamicstore keys are:
     // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
