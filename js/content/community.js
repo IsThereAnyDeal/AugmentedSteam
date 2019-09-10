@@ -882,15 +882,15 @@ let ProfileHomePageClass = (function(){
 let GroupHomePageClass = (function(){
 
     function GroupHomePageClass() {
-        this.addExtraLinks();
+        this.addGroupLinks();
     }
 
-    GroupHomePageClass.prototype.addExtraLinks = function() {
+    GroupHomePageClass.prototype.addGroupLinks = function() {
 
         let groupId = GroupID.getGroupId();
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
-        if (images !== false) {
+        if (images !== "none") {
             iconType = images === "color" ? "color" : "gray";
         }
 
@@ -921,7 +921,13 @@ let GroupHomePageClass = (function(){
         if (htmlstr) {
             let linksNode = (document.querySelector(".responsive_hidden > .rightbox")).parentNode;
             if (linksNode) {
-                HTML.afterEnd(linksNode,`<div class="rightbox_header"></div><div class="rightbox"><div class="content">${htmlstr}</div></div></div><div class="rightbox_footer"></div>`);
+                HTML.afterEnd(linksNode,
+                   `<div class="rightbox_header"></div>
+                    <div class="rightbox">
+                       <div class="content">${htmlstr}</div>
+                    </div>
+                    <div class="rightbox_footer"></div>`
+                );
             }
         }
 
