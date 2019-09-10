@@ -590,6 +590,7 @@ SyncedStorage.defaults = {
     'showachinstore': true,
     'showcomparelinks': false,
     'hideactivelistings': false,
+    'showlowestmarketprice': true,
     'hidespamcomments': false,
     'spamcommentregex': "[\\u2500-\\u25FF]",
     'wlbuttoncommunityapp': true,

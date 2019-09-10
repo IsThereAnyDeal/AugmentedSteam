@@ -353,6 +353,7 @@
         "metacritic": "Show Metacritic user scores",
         "opencritic": "Show Opencritic.com information",
         "hideactivelistings": "Hide all active listings on Market homepage by default",
+        "showlowestmarketprice": "Show the lowest market price for your listings",
         "clear": "Are you sure you wish to reset all options? This cannot be undone.",
         "profile_api_info": "Show user API link on profiles",
         "coupon": "Items with coupons",
