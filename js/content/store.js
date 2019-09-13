@@ -3404,13 +3404,18 @@ let WishlistPageClass = (function(){
                 </div>
             </div>
         
-            <div class="es-wexport">
+            <div class="es-wexport es-wexport__format">
                 <h2>${exportStr.format}</h2>
                 <div>
                     <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
                     <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %note%</div>
                 </div>
             </div>`);
+
+        let format = document.querySelector(".es-wexport__format");
+        for (let el of document.getElementsByName("es_wexport_type")) {
+            el.addEventListener("click", e => format.style.display = e.target.value === "json" ? "none" : '');
+        }
 
         let buttonsNode = formNode.closest(".newmodal_content").querySelector(".newmodal_buttons");
 
