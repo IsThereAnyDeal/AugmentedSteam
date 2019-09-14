@@ -64,7 +64,6 @@
       "css": [
         "css/enhancedsteam.css",
         "css/enhancedsteam-chrome.css",
-        "css/es_flags.css"
       ]
     },
     {
@@ -87,17 +86,6 @@
       "css": [
         "css/enhancedsteam.css",
         "css/enhancedsteam-chrome.css",
-        "css/es_flags.css"
-      ]
-    },
-    {
-      "matches": [
-        "*://steamcommunity.com/id/*",
-        "*://steamcommunity.com/profiles/*",
-        "*://steamcommunity.com/groups/*"
-      ],
-      "css": [
-        "css/es_sites_links.css"
       ]
     },
     {
