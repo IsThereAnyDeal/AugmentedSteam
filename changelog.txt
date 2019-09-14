@@ -20,6 +20,8 @@ Community
 - Added option to nickname any user, not just your friends
 - Added option to set your favorite emoticons in Community comment boxes
 - Always show full achievement description
+- Always show "View all comments" link in friends activity
+- Added tooltips to quick and instant sell inventory buttons
 - Added SteamGifts link to group pages
 - Fixed web chat link
 - Fixed profile icon links not respecting color/grayscale setting
