@@ -2250,14 +2250,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
   color: #ffffff;
 }
 
-.es_profile_link a {
-  display: inline-block;
-  margin-top: 10px;
-}
-.es_profile_link:first-child a {
-  margin-top: 0;
-}
-
 /***************************************
  * Users profiles
  * add_community_profile_links()
@@ -2810,12 +2802,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
   display: inline-flex;
   align-items: center;
 }
-.es_sites_icons:not(.es_none):after, .es_sites_custom_icon {
+
+.es_sites_icons:not(.es_none):before, .es_sites_custom_icon {
   content: "";
   display: inline-block;
   width: 16px;
   height: 16px;
-  margin: 0 4px;
+  margin: 0 5px 0 0;
   background-color: #222222;
   background-repeat: no-repeat;
   background-size: 16px !important;
@@ -2826,10 +2819,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   0 0 0 1px rgba(193, 193, 193, 0.17);
   vertical-align: top;
 }
-.es_sites_icons.es_gray:after, .es_sites_icons .es_gray {
+.es_sites_icons.es_gray:before, .es_sites_icons .es_gray {
   filter: grayscale(100%);
 }
-
 
 /**
  * Flags

@@ -362,6 +362,23 @@ let CommunityCommon = (function() {
         }
     };
 
+    self.makeProfileLink = function (id, link, name, iconType, iconUrl) {
+        let mainType = iconUrl ? "none" : iconType;
+        let result =
+            `<div class="es_profile_link profile_count_link">
+               <a class="es_sites_icons es_${id}_icon es_${mainType}" href="${link}" target="_blank">`;
+
+        if (iconType !== "none" && iconUrl) {
+            result += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url('${iconUrl}');"></i>`;
+        }
+
+        result += `<span class="count_link_label">${name}</span>
+                        <span class="profile_count_link_total">&nbsp;</span> <!-- Steam spacing -->
+                    </a>
+                </div>`;
+        return result;
+    }
+
     return self;
 })();
 
@@ -481,37 +498,37 @@ let ProfileHomePageClass = (function(){
         let links = [
             {
                 "id": "steamrep",
-                "link": `//steamrep.com/profiles/${steamId}`,
+                "link": `https://steamrep.com/profiles/${steamId}`,
                 "name": "SteamRep",
             },
             {
                 "id": "steamdbcalc",
-                "link": `//steamdb.info/calculator/?player=${steamId}`,
+                "link": `https://steamdb.info/calculator/?player=${steamId}`,
                 "name": "SteamDB",
             },
             {
                 "id": "steamgifts",
-                "link": `//www.steamgifts.com/go/user/${steamId}`,
+                "link": `https://www.steamgifts.com/go/user/${steamId}`,
                 "name": "SteamGifts",
             },
             {
                 "id": "steamtrades",
-                "link": `//www.steamtrades.com/user/${steamId}`,
+                "link": `https://www.steamtrades.com/user/${steamId}`,
                 "name": "SteamTrades",
             },
             {
                 "id": "astats",
-                "link": `//www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
+                "link": `https://www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
                 "name": "Achievement Stats",
             },
             {
                 "id": "backpacktf",
-                "link": `//backpack.tf/profiles/${steamId}`,
+                "link": `https://backpack.tf/profiles/${steamId}`,
                 "name": "Backpack.tf",
             },
             {
                 "id": "astatsnl",
-                "link": `//astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
+                "link": `https://astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
                 "name": "AStats.nl",
             }
         ];
@@ -529,17 +546,10 @@ let ProfileHomePageClass = (function(){
         // Build the links HTML
         let htmlstr = "";
 
-        links.forEach(link => {
-            if (!SyncedStorage.get("profile_" + link.id)) { return; }
-
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_${link.id}_icon es_${iconType}" href="${link.link}" target="_blank">
-                        <span class="count_link_label">${link.name}</span>
-                    </a>
-                </div>`;
-
-        });
+        for (let link of links) {
+            if (!SyncedStorage.get("profile_" + link.id)) { continue; }
+            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+        }
 
         // custom profile link
         for (let customLink of SyncedStorage.get('profile_custom_link')) {
@@ -561,15 +571,7 @@ let ProfileHomePageClass = (function(){
                 iconType = "none";
             }
 
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
-                    <span class="count_link_label">${name}</span>`;
-                    if (iconType !== "none") {
-                        htmlstr += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url(${icon});"></i>`;
-                    }
-                    htmlstr += `</a>
-                </div>`;
+            htmlstr += CommunityCommon.makeProfileLink("custom", link, name, iconType, icon);
         }
 
         // profile permalink
@@ -1026,7 +1028,7 @@ let GroupHomePageClass = (function(){
         let links = [
             {
                 "id": "steamgifts",
-                "link": `//www.steamgifts.com/go/group/${groupId}`,
+                "link": `https://www.steamgifts.com/go/group/${groupId}`,
                 "name": "SteamGifts",
             }
         ];
@@ -1035,16 +1037,10 @@ let GroupHomePageClass = (function(){
         // Build the links HTML
         let htmlstr = "";
 
-        links.forEach(link => {
-            if (!SyncedStorage.get("group_" + link.id)) { return; }
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link weblink">
-                    <a class="es_sites_icons es_${link.id}_icon es_${iconType}" href="${link.link}" target="_blank">
-                        <span class="count_link_label">${link.name}</span>
-                    </a>
-                </div>`;
-
-        });
+        for (let link of links) {
+            if (!SyncedStorage.get("group_" + link.id)) { continue; }
+            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+        }
 
         // Insert the links HMTL into the page
         if (htmlstr) {
