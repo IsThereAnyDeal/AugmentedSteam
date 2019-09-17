@@ -3046,40 +3046,44 @@ let SearchPageClass = (function(){
         let inputObserver = new MutationObserver(modifyLinks);
         inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
 
-        let contscrollObserver;
-        if (SyncedStorage.get("contscroll")) {
-            contscrollObserver = new MutationObserver(mutations => {
-                EarlyAccess.showEarlyAccess();
-                mutations.forEach(mutation => {
-                    Highlights.highlightAndTag(mutation.addedNodes);
-                    filtersChanged(mutation.addedNodes);
-                });
+        let removeObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                for (let node of mutation.addedNodes) {
+                    // Under certain circumstances the search result container will get removed and then added again, thus disconnecting the MutationObserver
+                    if (node.id === "search_result_container") {
+                        observeAjax(node.querySelectorAll(".search_result_row"));
+                        
+                        if (!SyncedStorage.get("contscroll")) {
+                            toggleFilter("price-above", "#es_notpriceabove");
+                            toggleFilter("reviews-below", "#es_noreviewsbelow");
+                            modifyLinks();
+                            filtersChanged();
+                        }
+                        ajaxObserver.observe(node.querySelector("#search_resultsRows"), {childList: true});
+                        break;
+                    }
+                }
             });
-            contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
+        });
+        removeObserver.observe(document.querySelector("#search_results"), { childList: true });
+
+        function observeAjax(addedNodes) {
+            EarlyAccess.showEarlyAccess();
+            
+            Highlights.highlightAndTag(addedNodes);
+            filtersChanged(addedNodes);
         }
 
-        Messenger.addMessageListener("ajaxCompleted", () => {
-            if (SyncedStorage.get("contscroll")) {
-                mutations.forEach(mutation => {
-                    for (let node of mutation.removedNodes) {
-                        // Under certain circumstances the search result container will get removed and then added again, thus disconnecting the MutationObserver
-                        if (node.id && node.id === "search_result_container") {
-                            contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
-                            break;
-                        }
-                    }
-                })
-            } else {
-                toggleFilter("price-above", "#es_notpriceabove");
-                toggleFilter("reviews-below", "#es_noreviewsbelow");
-                modifyLinks();
+        let ajaxObserver = new MutationObserver(mutations => {
+            let rows = [];
+            for (let mutation of mutations) {
+                rows = rows.concat(
+                    Array.from(mutation.addedNodes).filter(node => node.classList && node.classList.contains("search_result_row"))
+                );
             }
-
-            EarlyAccess.showEarlyAccess();
-
-            Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
-            filtersChanged();
-        }, false);
+            observeAjax(rows);
+        });
+        ajaxObserver.observe(document.querySelector("#search_resultsRows"), {childList: true});
     };
 
     return SearchPageClass;
