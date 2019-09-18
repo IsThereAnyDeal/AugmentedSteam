@@ -3182,12 +3182,12 @@ let WishlistPageClass = (function(){
         }
 
         observer.observe(container, { 'childList': true, });
+        instance.addExportWishlistButton();
 
         let throbber = document.querySelector("#throbber");
         let wishlistLoaded = function() {
             if (throbber.style.display !== "none") { return; }
             instance.addStatsArea();
-            instance.addExportWishlistButton();
             instance.addEmptyWishlistButton();
             instance.addUserNotesHandlers();
             instance.addRemoveHandler();
