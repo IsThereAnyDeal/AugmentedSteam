@@ -1471,6 +1471,19 @@ let Inventory = (function(){
 
 let Highlights = (function(){
 
+    // Attention, the sequence of these entries determines the precendence of the highlights!
+    // The later it appears in the array, the higher its precedence
+    let highlightTypes = [
+        "notinterested",
+        "waitlist",
+        "wishlist",
+        "collection",
+        "owned",
+        "coupon",
+        "inv_guestpass",
+        "inv_gift",
+    ]
+
     let self = {};
 
     let highlightCssLoaded = false;
@@ -1484,7 +1497,7 @@ let Highlights = (function(){
             tagCssLoaded = true;
 
             let tagCss = [];
-            ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
+            highlightTypes.forEach(name => {
                 let color = SyncedStorage.get(`tag_${name}_color`);
                 tagCss.push(`.es_tag_${name} { background-color: ${color}; }`);
             });
@@ -1608,7 +1621,7 @@ let Highlights = (function(){
 
             let hlCss = [];
 
-            ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift", "collection", "waitlist"].forEach(name => {
+            highlightTypes.forEach(name => {
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(
                    `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
