@@ -849,7 +849,7 @@ class AppPageClass extends StorePageClass {
         }
     }
 
-    addUserNote() {
+    async addUserNote() {
         if (!User.isSignedIn || !SyncedStorage.get("showusernotes")) { return; }
 
         let noteText = "";
@@ -858,47 +858,43 @@ class AppPageClass extends StorePageClass {
         let inactiveStyle = "";
         let activeStyle = "display:none;";
 
-        this.userNotes.exists(this.appid).then(async exists => {
-            if (exists) {
-                await this.userNotes.getNote(this.appid).then(note => {
-                    noteText = `"${note}"`;
-                });
-                cssClass = "";
+        if (await this.userNotes.exists(this.appid)) {
+            noteText = `"${await this.userNotes.getNote(this.appid)}"`;
+            cssClass = "";
 
-                inactiveStyle = "display:none;";
-                activeStyle = "";
-            }
+            inactiveStyle = "display:none;";
+            activeStyle = "";
+        }
 
-            HTML.beforeBegin(".queue_actions_ctn > :last-child",
-                `<div class="queue_control_button js-user-note-button">
-                    <div id="es_add_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${inactiveStyle}">
-                        <span>${Localization.str.user_note.add}</span>
-                    </div>
-                    <div id="es_update_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${activeStyle}">
-                        <span>${Localization.str.user_note.update}</span>
-                    </div>
-                </div>`);
+        HTML.beforeBegin(".queue_actions_ctn > :last-child",
+            `<div class="queue_control_button js-user-note-button">
+                <div id="es_add_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${inactiveStyle}">
+                    <span>${Localization.str.user_note.add}</span>
+                </div>
+                <div id="es_update_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${activeStyle}">
+                    <span>${Localization.str.user_note.update}</span>
+                </div>
+            </div>`);
 
-            if (noteText) {
-                HTML.beforeEnd(".queue_actions_ctn",
-                    `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
-            }
+        if (noteText) {
+            HTML.beforeEnd(".queue_actions_ctn",
+                `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
+        }
 
-            function toggleState(node, active) {
-                let button = document.querySelector(".js-user-note-button");
-                button.querySelector("#es_add_note").style.display = active ? "none" : null;
-                button.querySelector("#es_update_note").style.display = active ? null : "none";
+        function toggleState(node, active) {
+            let button = document.querySelector(".js-user-note-button");
+            button.querySelector("#es_add_note").style.display = active ? "none" : null;
+            button.querySelector("#es_update_note").style.display = active ? null : "none";
 
-                node.classList.toggle("esi-note--hidden", !active);
-            }
+            node.classList.toggle("esi-note--hidden", !active);
+        }
 
-            let handler = () => {
-                this.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, this.appid, "#esi-store-user-note", toggleState);
-            };
+        let handler = () => {
+            this.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, this.appid, "#esi-store-user-note", toggleState);
+        };
 
-            document.querySelector(".js-user-note-button").addEventListener("click", handler);
-            document.querySelector("#esi-store-user-note").addEventListener("click", handler);
-        }, err => console.error("Failed to add user notes!", err));
+        document.querySelector(".js-user-note-button").addEventListener("click", handler);
+        document.querySelector("#esi-store-user-note").addEventListener("click", handler);
     }
 
     async addWaitlistButton() {
@@ -3681,80 +3677,78 @@ class UserNotes {
             </div>`;
     }
 
-    showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
-        this.getNote(appid).then(note => {
-            // Partly copied from shared_global.js
-            ExtensionLayer.runInPageContext(`function() {
-                let deferred = new jQuery.Deferred();
-                let fnOK = () => deferred.resolve();
-        
-                let Modal = _BuildDialog(
-                    "${Localization.str.user_note.add_for_game.replace("__gamename__", appname)}",
-                    \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", note || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
-                    [], fnOK);
-                deferred.always(() => Modal.Dismiss());
-        
-                Modal.m_fnBackgroundClick = () => {
-                    Messenger.addMessageListener("noteSaved", () => Modal.Dismiss(), true);
-                    Messenger.postMessage("backgroundClick");
+    async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
+        // Partly copied from shared_global.js
+        ExtensionLayer.runInPageContext(`function() {
+            let deferred = new jQuery.Deferred();
+            let fnOK = () => deferred.resolve();
+    
+            let Modal = _BuildDialog(
+                "${Localization.str.user_note.add_for_game.replace("__gamename__", appname)}",
+                \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", await this.getNote(appid) || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
+                [], fnOK);
+            deferred.always(() => Modal.Dismiss());
+    
+            Modal.m_fnBackgroundClick = () => {
+                Messenger.addMessageListener("noteSaved", () => Modal.Dismiss(), true);
+                Messenger.postMessage("backgroundClick");
+            }
+    
+            Modal.Show();
+    
+            // attach the deferred's events to the modal
+            deferred.promise(Modal);
+    
+            let note_input = document.getElementById("es_note_input");
+            note_input.focus();
+            note_input.setSelectionRange(0, note_input.textLength);
+            note_input.addEventListener("keydown", e => {
+                if (e.key === "Enter") {
+                    $J(".es_note_modal_submit").click();
+                } else if (e.key === "Escape") {
+                    Modal.Dismiss();
                 }
-        
-                Modal.Show();
-        
-                // attach the deferred's events to the modal
-                deferred.promise(Modal);
-        
-                let note_input = document.getElementById("es_note_input");
-                note_input.focus();
-                note_input.setSelectionRange(0, note_input.textLength);
-                note_input.addEventListener("keydown", e => {
-                    if (e.key === "Enter") {
-                        $J(".es_note_modal_submit").click();
-                    } else if (e.key === "Escape") {
-                        Modal.Dismiss();
-                    }
-                });
-            }`);
+            });
+        }`);
 
-            document.addEventListener("click", clickListener);
+        document.addEventListener("click", clickListener);
 
-            Messenger.addMessageListener("backgroundClick", () => {
+        Messenger.addMessageListener("backgroundClick", () => {
+            onNoteUpdate.apply(null, saveNote());
+            Messenger.postMessage("noteSaved");
+        }, true);
+
+        function clickListener(e) {
+            if (e.target.closest(".es_note_modal_submit")) {
+                e.preventDefault();
                 onNoteUpdate.apply(null, saveNote());
-                Messenger.postMessage("noteSaved");
-            }, true);
-
-            function clickListener(e) {
-                if (e.target.closest(".es_note_modal_submit")) {
-                    e.preventDefault();
-                    onNoteUpdate.apply(null, saveNote());
-                    ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
-                }
-                else if (e.target.closest(".es_note_modal_close")) {
-                    ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
-                }
-                else {
-                    return;
-                }
-                document.removeEventListener("click", clickListener);
+                ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
             }
-
-            let saveNote = () => {
-                let modal = document.querySelector('#es_note_modal');
-                let appid = parseInt(modal.dataset.appid, 10);
-                let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
-                let node = document.querySelector(decodeURIComponent(modal.dataset.selector));
-                if (note.length !== 0) {
-                    this.setNote(appid, note);
-                    HTML.inner(node, `"${note}"`);
-                    return [node, true];
-                }
-                else {
-                    this.deleteNote(appid);
-                    node.textContent = Localization.str.user_note.add;
-                    return [node, false];
-                }
+            else if (e.target.closest(".es_note_modal_close")) {
+                ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
             }
-        });
+            else {
+                return;
+            }
+            document.removeEventListener("click", clickListener);
+        }
+
+        let saveNote = () => {
+            let modal = document.querySelector('#es_note_modal');
+            let appid = parseInt(modal.dataset.appid, 10);
+            let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
+            let node = document.querySelector(decodeURIComponent(modal.dataset.selector));
+            if (note.length !== 0) {
+                this.setNote(appid, note);
+                HTML.inner(node, `"${note}"`);
+                return [node, true];
+            }
+            else {
+                this.deleteNote(appid);
+                node.textContent = Localization.str.user_note.add;
+                return [node, false];
+            }
+        }
     }
     getNote(appid) {
         return Background.action("idb.get", "notes", appid);
