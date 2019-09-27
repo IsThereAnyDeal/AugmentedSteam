@@ -3601,14 +3601,14 @@ let WishlistPageClass = (function(){
         });
     };
 
-    WishlistPageClass.prototype.addUserNote =  function(node) {
+    WishlistPageClass.prototype.addUserNote = async function(node) {
         if (node.classList.contains("esi-has-note")) { return; }
 
-        let appid = node.dataset.appId;
+        let appid = Number(node.dataset.appId);
         let noteText;
         let cssClass;
-        if (userNotes.exists(appid)) {
-            noteText = `"${userNotes.getNote(appid)}"`;
+        if (await userNotes.exists(appid)) {
+            noteText = `"${await userNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.user_note.add;
@@ -3637,7 +3637,7 @@ let WishlistPageClass = (function(){
             if (!e.target.classList.contains("esi-note")) { return; }
 
             let row = e.target.closest(".wishlist_row");
-            let appid = row.dataset.appId;
+            let appid = Number(row.dataset.appId);
             userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note", stateHandler);
         });
     };
