@@ -171,48 +171,45 @@ class StorePageClass {
 
         let gfwl, uplay, securom, tages, stardock, rockstar, kalypso, denuvo, drm;
 
-        let text = "";
-        let nodes = document.querySelectorAll("#game_area_description, .game_area_sys_req, #game_area_legal, .game_details, .DRM_notice");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        let text = '';
+        for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details")) {
             text += node.innerHTML;
         }
 
         // Games for Windows Live detection
-        if (text.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
-        else if (text.toUpperCase().indexOf("GAMES FOR WINDOWS - LIVE") > 0) { gfwl = true; }
-        else if (text.indexOf("Online play requires log-in to Games For Windows") > 0) { gfwl = true; }
-        else if (text.indexOf("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") > 0) { gfwl = true; }
-        else if (text.indexOf("Multiplayer play and other LIVE features included at no charge") > 0) { gfwl = true; }
-        else if (text.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
+        if (text.toUpperCase().includes("GAMES FOR WINDOWS LIVE") ||
+        text.toUpperCase().includes("GAMES FOR WINDOWS - LIVE") ||
+        text.includes("Online play requires log-in to Games For Windows") ||
+        text.includes("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") ||
+        text.includes("Multiplayer play and other LIVE features included at no charge") ||
+        text.includes("www.gamesforwindows.com/live")) {
+            gfwl = true;
+        }
 
         // Ubisoft Uplay detection
-        if (text.toUpperCase().indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
-        else if (text.match(/\buplay/i) && !text.match(/\btuplaydinprosessori/i)) { uplay = true; }
+        if (text.includes("Uplay") || text.includes("Ubisoft Account")) { uplay = true; }
 
         // Securom detection
-        if (text.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }
+        if (text.includes("SecuROM")) { securom = true; }
 
         // Tages detection
-        if (text.match(/\btages\b/i)) { tages = true; }
-        else if (text.match(/angebote des tages/i)) { tages = false; }
-        else if (text.match(/\bsolidshield\b/i)) { tages = true; }
+        if ((text.match(/\btages\b/i) || text.match(/\bsolidshield\b/i)) && !text.match(/angebote des tages/i)) { tages = true; }
 
         // Stardock account detection
-        if (text.indexOf("Stardock account") > 0) { stardock = true; }
+        if (text.includes("Stardock account")) { stardock = true; }
 
         // Rockstar social club detection
-        if (text.indexOf("Rockstar Social Club") > 0) { rockstar = true; }
-        else if (text.indexOf("Rockstar Games Social Club") > 0) { rockstar = true; }
+        if (text.includes("Rockstar Social Club")) { rockstar = true; }
+        else if (text.includes("Rockstar Games Social Club")) { rockstar = true; }
 
         // Kalypso Launcher detection
-        if (text.indexOf("Requires a Kalypso account") > 0) { kalypso = true; }
+        if (text.includes("Requires a Kalypso account")) { kalypso = true; }
 
         // Denuvo Antitamper detection
         if (text.match(/\bdenuvo\b/i)) { denuvo = true; }
 
         // Detect other DRM
-        if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
+        if (text.includes("3rd-party DRM")) { drm = true; }
         else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
 
         let drmNames = [];
