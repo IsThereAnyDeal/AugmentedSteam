@@ -1621,12 +1621,15 @@ class AppPageClass extends StorePageClass {
     async addTitleHighlight() {
         await DynamicStore;
         
-        let [{ owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
+        let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
+            ITAD.getAppStatus(`app/${this.appid}`),
             DynamicStore.getAppStatus(`app/${this.appid}`),
             Inventory.getAppStatus(this.appid),
         ]);
         let title = document.querySelector(".apphub_AppName");
 
+        if (collected) Highlights.highlightCollection(title);
+        if (waitlisted) Highlights.highlightWaitlist(title);
         if (owned) Highlights.highlightOwned(title);
         if (guestPass) Highlights.highlightInvGuestpass(title);
         if (coupon) Highlights.highlightCoupon(title);
@@ -3250,10 +3253,14 @@ let WishlistPageClass = (function(){
 
         await DynamicStore;
 
-        let [{ owned, wishlisted, ignored }, { coupon, guestPass, gift }] = await Promise.all([
+        let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { coupon, guestPass, gift }] = await Promise.all([
+            ITAD.getAppStatus(`app/${node.dataset.appId}`),
             DynamicStore.getAppStatus(`app/${node.dataset.appId}`),
             Inventory.getAppStatus(Number(node.dataset.appId)),
         ]);
+
+        if (collected) Highlights.highlightCollection(node);
+        if (waitlisted) Highlights.highlightWaitlist(node);
 
         if (owned) {
             node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
@@ -3284,17 +3291,9 @@ let WishlistPageClass = (function(){
             }
         }
 
-        if (coupon && SyncedStorage.get("highlight_coupon")) {
-            Highlights.highlightCoupon(node);
-        }
-
-        if (guestPass && SyncedStorage.get("highlight_inv_guestpass")) {
-            Highlights.highlightInvGuestpass(node);
-        }
-
-        if (gift && SyncedStorage.get("highlight_inv_gift")) {
-            Highlights.highlightInvGift(node);
-        }
+        if (coupon) Highlights.highlightCoupon(node);
+        if (guestPass) Highlights.highlightInvGuestpass(node);
+        if (gift) Highlights.highlightInvGift(node);
     };
 
     WishlistPageClass.prototype.addStatsArea = function() {

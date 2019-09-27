@@ -18,7 +18,7 @@ class CacheStorage {
         return item.data;
     }
 
-    static set (key, value) {
+    static set(key, value) {
         localStorage.setItem('cache_' + key, JSON.stringify({ 'data': value, 'timestamp': window.timestamp(), }));
     }
 
@@ -464,6 +464,29 @@ class SteamStore extends Api {
 
         return IndexedDB.putCached("purchases", purchaseDates, keys, true);
     }
+
+    static async dynamicStore() {
+        let { rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist } = await SteamStore.getEndpoint("dynamicstore/userdata");
+        
+        let dynamicStore = {
+            "ignored": Object.keys(rgIgnoredApps).map(key => Number(key)),
+            "ownedApps": rgOwnedApps,
+            "ownedPackages": rgOwnedPackages,
+            "wishlisted": rgWishlist,
+        };
+        // dynamicstore keys are:
+        // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
+        // "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
+        // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
+        // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
+
+        return IndexedDB.putCached("dynamicStore", Object.values(dynamicStore), Object.keys(dynamicStore), true);
+    }
+    
+    static async clearDynamicStore() {
+        await IndexedDB.clear("dynamicStore");
+        Steam._dynamicstore_promise = null;
+    }
 }
 SteamStore.origin = "https://store.steampowered.com/";
 SteamStore.params = { 'credentials': 'include', };
@@ -681,48 +704,7 @@ SteamCommunity.params = { 'credentials': 'include', };
 
 
 class Steam {
-    // static _supportedCurrencies = null;
-    
-    static async dynamicStore() {
-        let [{ rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist }, ownedElsewhere] = await Promise.all([
-            SteamStore.getEndpoint("/dynamicstore/userdata/"),
-            SyncedStorage.get("include_owned_elsewhere") ? IndexedDB.getAll("collection", { "shop": "steam", "optional": "gameid,copy_type" }) : Promise.resolve(),
-        ]);
-        
-        if (!rgOwnedApps) {
-            throw new Error("Could not fetch DynamicStore UserData");
-        }
-
-        if (ownedElsewhere) {
-            for (let storeId of Object.keys(ownedElsewhere)) {
-                let id = GameId.trimStoreId(storeId);
-                if (storeId.startsWith("app/") && !rgOwnedApps.includes(id)) {
-                    rgOwnedApps.push(id);
-                } else if (storeId.startsWith("sub/") && !rgOwnedPackages.includes(id)) {
-                    rgOwnedPackages.push(id);
-                }
-            }
-        }
-
-        let data = {
-            "ignored": Object.keys(rgIgnoredApps).map(key => Number(key)),
-            "ownedApps": rgOwnedApps,
-            "ownedPackages": rgOwnedPackages,
-            "wishlisted": rgWishlist,
-        };
-        
-        return IndexedDB.putCached("dynamicStore", Object.values(data), Object.keys(data), true);
-    }
-    // dynamicstore keys are:
-    // "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
-    // "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
-    // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
-    // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
-
-    static async clearDynamicStore() {
-        await IndexedDB.clear("dynamicStore");
-        Steam._dynamicstore_promise = null;
-    }
+    // static _supportedCurrencies = null;    
 
     static fetchCurrencies() {
         // https://partner.steamgames.com/doc/store/pricing/currencies
@@ -1115,7 +1097,7 @@ IndexedDB.objStoreFetchFns = new Map([
     ["items", SteamCommunity.items],
     ["earlyAccessAppids", AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", "earlyAccessAppids", true, true)],
     ["purchases", SteamStore.purchaseDate],
-    ["dynamicStore", Steam.dynamicStore],
+    ["dynamicStore", SteamStore.dynamicStore],
     ["packages", SteamStore.fetchPackage],
     ["storePageData", AugmentedSteamApi.endpointFactoryCached("v01/storepagedata", "storePageData")],
     ["profiles", AugmentedSteamApi.endpointFactoryCached("v01/profile/profile", "profiles")],
@@ -1126,7 +1108,7 @@ IndexedDB.objStoreFetchFns = new Map([
 
 let actionCallbacks = new Map([
     ["wishlist.add", SteamStore.wishlistAdd],
-    ["dynamicstore.clear", Steam.clearDynamicStore],
+    ["dynamicstore.clear", SteamStore.clearDynamicStore],
     ["steam.currencies", Steam.currencies],
     
     ["cache.clear", IndexedDB.clear],

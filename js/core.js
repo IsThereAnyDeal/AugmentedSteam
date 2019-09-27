@@ -466,6 +466,8 @@ SyncedStorage.defaults = {
     'highlight_inv_gift_color': "#800040",
     'highlight_inv_guestpass_color': "#513c73",
     'highlight_notinterested_color': "#4f4f4f",
+    'highlight_collection_color': "#856d0e",
+    'highlight_waitlist_color': "#4c7521",
 
     'tag_owned_color': "#00b75b",
     'tag_wishlist_color': "#0383b4",
@@ -473,6 +475,8 @@ SyncedStorage.defaults = {
     'tag_inv_gift_color': "#b10059",
     'tag_inv_guestpass_color': "#65449a",
     'tag_notinterested_color': "#4f4f4f",
+    'tag_collection_color': "#856d0e",
+    'tag_waitlist_color': "#4c7521",
 
     'highlight_owned': true,
     'highlight_wishlist': true,
@@ -482,6 +486,8 @@ SyncedStorage.defaults = {
     'highlight_notinterested': false,
     'highlight_excludef2p': false,
     'highlight_notdiscounted': false,
+    'highlight_collection': true,
+    'highlight_waitlist': true,
 
     'tag_owned': false,
     'tag_wishlist': false,
@@ -489,6 +495,8 @@ SyncedStorage.defaults = {
     'tag_inv_gift': false,
     'tag_inv_guestpass': false,
     'tag_notinterested': true,
+    'tag_collection': false,
+    'tag_waitlist': false,
     'tag_short': false,
 
     'hide_owned': false,
@@ -635,7 +643,6 @@ SyncedStorage.defaults = {
 
     'itad_import_library': true,
     'itad_import_wishlist': false,
-    'include_owned_elsewhere': true,
     'add_to_waitlist': false,
 };
 

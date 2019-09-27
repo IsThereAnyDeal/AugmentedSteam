@@ -51,6 +51,45 @@ class ITAD {
             console.error("Can't retrieve Session ID, unable to authorize app");
         }
     }
+
+    static async getAppStatus(storeIds) {
+        let highlightCollection = SyncedStorage.get("highlight_collection");
+        let highlightWaitlist = SyncedStorage.get("highlight_waitlist");
+        if (!highlightCollection && !highlightWaitlist || !await Background.action("itad.isconnected")) return;
+
+        let multiple = Array.isArray(storeIds);
+        let promises = [];
+        
+        if (highlightCollection) {
+            promises.push(Background.action("idb.contains", "collection", storeIds, { "shop": "steam", "optional": "gameid,copy_type" }));
+        } else {
+            promises.push(Promise.resolve(multiple ? {} : false));
+        }
+        if (highlightWaitlist) {
+            promises.push(Promise.resolve(multiple ? {} : false));
+            // todo Waitlist endpoint
+        } else {
+            promises.push(Promise.resolve(multiple ? {} : false));
+        }
+
+        let [ inCollection, inWaitlist ] = await Promise.all(promises);
+
+        if (multiple) {
+            let result = {};
+            for (let id of Object.keys(inCollection)) {
+                result[id] = {
+                    "collected": inCollection[id],
+                    "waitlisted": inWaitlist[id],
+                }
+            }
+            return result;
+        } else {
+            return {
+                "collected": inCollection,
+                "waitlisted": inWaitlist,
+            }
+        }
+    }
 }
 
 class ProgressBar {
@@ -1569,7 +1608,7 @@ let Highlights = (function(){
 
             let hlCss = [];
 
-            ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
+            ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift", "collection", "waitlist"].forEach(name => {
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(
                    `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
@@ -1679,9 +1718,16 @@ let Highlights = (function(){
         highlightItem(node, "notinterested");
     };
 
+    self.highlightCollection = function(node) {
+        highlightItem(node, "collection");
+    };
+
+    self.highlightWaitlist = function(node) {
+        highlightItem(node, "waitlist");
+    };
+
     self.highlightAndTag = async function(nodes) {
 
-        let includeOtherGames = SyncedStorage.get("include_owned_elsewhere");
         let storeIdsMap = new Map();
 
         for (let node of nodes) {
@@ -1742,18 +1788,16 @@ let Highlights = (function(){
         let storeIds = Array.from(storeIdsMap.keys());
         let trimmedStoreIds = storeIds.map(id => GameId.trimStoreId(id));
 
-        let [ dsStatus, invStatus ] = await Promise.all([
-            includeOtherGames ? DynamicStore.getAppStatus(storeIds) : Promise.resolve(),
-            Inventory.getAppStatus(trimmedStoreIds)
+        let [ itadStatus, invStatus ] = await Promise.all([
+            ITAD.getAppStatus(storeIds),
+            Inventory.getAppStatus(trimmedStoreIds),
         ]);
         
         let it = trimmedStoreIds.values();
         for (let [storeid, nodes] of storeIdsMap) {
-            if (dsStatus) {
-                if (dsStatus[storeid].ignored) nodes.forEach(node => self.highlightNotInterested(node));
-                if (dsStatus[storeid].wishlisted) nodes.forEach(node => self.highlightWishlist(node));
-                if (dsStatus[storeid].owned) nodes.forEach(node => self.highlightOwned(node));
-            }
+            if (itadStatus[storeid].collected) nodes.forEach(node => self.highlightCollection(node));
+            if (itadStatus[storeid].waitlisted) nodes.forEach(node => self.highlightWaitlist(node));
+
             let trimmedId = it.next().value;
             if (invStatus[trimmedId].gift) nodes.forEach(node => self.highlightInvGift(node));
             if (invStatus[trimmedId].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));

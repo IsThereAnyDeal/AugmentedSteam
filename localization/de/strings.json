@@ -369,6 +369,8 @@
         "show_astatslink": "AStats-Link auf Anwendungsseiten anzeigen",
         "openinnewtab": "Externe Links in einem neuen Fenster öffen",
         "guest": "Spiele, die als Besucherpass in meinem Inventar liegen",
+        "collection": "Spiele, die in deiner ITAD Collection sind",
+        "waitlist": "Spiele, die in deiner ITAD Waitlist sind",
         "show_steamchart_info": "Informationen von SteamCharts.com anzeigen",
         "show_steamspy_info": "Steamspy.com-Infos anzeigen",
         "showallachievements": "Statistiken für Errungenschaften auf der \"Alle Spiele\"-Seite anzeigen",
@@ -441,7 +443,6 @@
             "turkish": "Türkisch",
             "ukrainian": "Ukrainisch"
         },
-        "include_owned_elsewhere": "Integriere Spiele, die du woanders besitzt",
         "add_to_waitlist": "Zeige Schaltfläche \"Zur Waitlist hinzufügen\""
     },
     "ready": {

@@ -416,6 +416,8 @@
         "showclient": "Show Steam Client links",
         "showbartervg": "Show Barter.vg links",
         "guest": "Items you have a guest pass for",
+        "collection": "Items in your ITAD collection",
+        "waitlist": "Items in your ITAD waitlist",
         "show_steamchart_info": "Show SteamCharts.com info",
         "show_steamspy_info": "Show steamspy.com info",
         "showallachievements": "Show achievement stats on \"All Games\" page",
@@ -502,7 +504,6 @@
         },
         "add_custom_link": "Add custom link",
         "auto_detect": "Auto-detect",
-        "include_owned_elsewhere": "Integrate games that you own elsewhere",
         "add_to_waitlist": "Show button \"Add to your waitlist\""
     },
     "ready": {
