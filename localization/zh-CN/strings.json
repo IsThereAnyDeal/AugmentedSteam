@@ -301,7 +301,7 @@
         "tier_includes": "__tier__（__price__）包括 __num__ 件物品",
         "tier": "等级 __num__",
         "header": "包含此游戏的捆绑包",
-        "info": "捆绑包信息",
+        "info": "捆绑包信息"
     },
     "charts": {
         "peakall": "历史峰值",

@@ -301,7 +301,7 @@
         "tier_includes": "__tier__（__price__）包含 __num__ 個項目",
         "tier": "第 __num__ 階",
         "header": "包含此遊戲的組包",
-        "info": "組包資訊",
+        "info": "組包資訊"
     },
     "charts": {
         "peakall": "歷史高峰",
