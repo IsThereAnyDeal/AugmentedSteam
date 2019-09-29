@@ -460,8 +460,8 @@ let Options = (function(){
             document.getElementById("regional_price_hideworld").style.display = "block";
         }
 
-        let language = Language.getCurrentSteamLanguage();
-        if (language !== "schinese" || language !== "tchinese") {
+        let language = SyncedStorage.get("language");
+        if (language !== "schinese" && language !== "tchinese") {
             let n = document.getElementById('profile_steamrepcn');
             if (n) {
                 // Hide SteamRepCN option if language isn't Chinese
