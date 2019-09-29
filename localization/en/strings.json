@@ -1,4 +1,5 @@
 {
+    "oneclickgoo": "1-Click Turn into Gems...",
     "view_in_library": "View in Library",
     "support": "Support",
     "email": "E-mail",
@@ -623,5 +624,7 @@
     "this_version": "This version",
     "original_authors": "Original authors",
     "acknowledgements": "Acknowledgments",
+    "other": "Other",
+    "images": "Images",
     "powered_by": "Powered by __link__"
 }
