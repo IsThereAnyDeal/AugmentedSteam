@@ -206,8 +206,8 @@
         "download": "Baixar",
         "copy_clipboard": "Copiar p/ área de transferência"
     },
-    "none": "None",
-    "separator": "Separator",
+    "none": "Nenhum",
+    "separator": "Separador",
     "empty_wishlist": "Esvaziar lista de desejos",
     "empty_wishlist_confirm": "Tem certeza de que deseja esvaziar a sua lista de desejos?\n\nIsso não pode ser desfeito!",
     "empty_wishlist_loading": "Esvaziando lista de desejos. Por favor, aguarde...",
@@ -435,7 +435,7 @@
         "hide_about_links": "Ocultar link \"Sobre\"",
         "show_view_in_library": "Exibir botão \"Ver na biblioteca\" em jogos possuídos",
         "install_steam_button": "Botão \"Instale o Steam\"",
-        "replace_view_client":  "Substituir por \"Ver no Cliente\"",
+        "replace_view_client":  "Substituir por \"Ver no cliente\"",
         "show_empty_wishlist": "Exibir botão \"Esvaziar lista de desejos\"",
         "show_user_notes": "Exibir observações na lista de desejos e na loja",
         "inventory_nav_text": "Exibir navegação avançada na página do inventário",
@@ -489,7 +489,7 @@
             "portuguese": "Português (Portugal)",
             "russian": "Russo",
             "romanian": "Romeno",
-            "schinese": "Chinês simplificado",
+            "schinese": "Chinês Simplificado",
             "spanish": "Espanhol (Espanha)",
             "latam": "Espanhol (América Latina)",
             "swedish": "Sueco",
@@ -600,7 +600,7 @@
     },
     "user_note": {
         "add": "Adicionar observação",
-        "update": "Atualizarobservação",
+        "update": "Atualizar observação",
         "add_prompt": "Insira a sua observação",
         "update_prompt": "Atualize a sua observação",
         "add_for_game": "Observação para __gamename__"
@@ -617,7 +617,7 @@
         "subscribe_loading": "Inscrevendo-se em __i__/__count__ itens, aguarde...",
         "unsubscribe_all": "Cancelar todas as inscrições",
         "unsubscribe_confirm": "Tem certeza de que deseja cancelar a inscrição de todos os __count__ itens correspondentes ao filtro?",
-        "unsubscribe_loading": "Cancelando inscrições em __i__/__count__ itens, aguarde...",
+        "unsubscribe_loading": "Cancelando inscrições de __i__/__count__ itens, aguarde...",
         "finished": "Pronto! Sucesso: __success__, falha: __fail__. Clique em OK para recarregar a página",
         "failed": "Falha: __n__"
     },
