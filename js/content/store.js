@@ -3510,8 +3510,8 @@ let WishlistPageClass = (function(){
     function getNodesBelow(node) {
         let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
 
-        // Limit the selection to the rows that are positioned below the row (including the row itself) where the price is being shown
-        return nodes.filter(row => parseInt(row.style.top, 10) >= parseInt(node.style.top, 10));
+        // Limit the selection to the rows that are positioned below the row (not including the row itself) where the price is being shown
+        return nodes.filter(row => parseInt(row.style.top, 10) > parseInt(node.style.top, 10));
     }
 
     WishlistPageClass.prototype.addPriceHandler = function(node) {
@@ -3530,7 +3530,7 @@ let WishlistPageClass = (function(){
                     prices.priceCallback = (type, id, contentNode) => {
                         node.insertAdjacentElement("beforeend", contentNode);
                         let priceNode = node.querySelector(".itad-pricing");
-                        priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
+                        priceNode.style.bottom = -priceNode.getBoundingClientRect().height + "px";
                         resolve();
                     };
                     prices.load();
