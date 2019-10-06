@@ -3179,13 +3179,13 @@ let WishlistPageClass = (function(){
         }
 
         observer.observe(container, { 'childList': true, });
-        instance.addExportWishlistButton();
 
-        function wishlistLoaded() {
-            instance.addStatsArea();
-            instance.addEmptyWishlistButton();
-            instance.addUserNotesHandlers();
-            instance.addRemoveHandler();
+        let wishlistLoaded = () => {
+            this.addStatsArea();
+            this.addEmptyWishlistButton();
+            this.addExportWishlistButton();
+            this.addUserNotesHandlers();
+            this.addRemoveHandler();
         };
         
         if (document.querySelector("#throbber").style.display === "none") {
