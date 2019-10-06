@@ -2357,8 +2357,13 @@ class MediaPage {
             }
         }
 
+        this._horizontalScrolling();
+    }
+
+    _horizontalScrolling() {
+
         let strip = document.querySelector("#highlight_strip");
-        if (!strip) { return; }
+        if (!strip || !SyncedStorage.get("horizontalmediascrolling")) { return; }
 
         let lastScroll = Date.now();
         strip.addEventListener("wheel", scrollStrip, false);

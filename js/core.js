@@ -581,6 +581,7 @@ SyncedStorage.defaults = {
     'homepage_tab_last': null,
     'send_age_info': true,
     'contscroll': true,
+    'horizontalmediascrolling': true,
     'showsupportinfo': true,
     'showdrm': true,
     'regional_hideworld': false,
