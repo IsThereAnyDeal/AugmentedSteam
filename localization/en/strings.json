@@ -368,6 +368,7 @@
         "regional_price_on": "Show regional price comparison",
         "cart": "Items in your cart",
         "friends_own": "Items your friends own",
+        "supportinfo": "Show support info on store pages",
         "drm": "Show 3rd-party DRM warnings",
         "profile_permalink": "Show permalink on profiles",
         "show_regionwarning": "Show warning if browsing in non-account region",

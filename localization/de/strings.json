@@ -327,6 +327,7 @@
         "regional_price_on": "Regionalen Preisvergleich anzeigen",
         "cart": "Spiele in deinem Warenkorb",
         "friends_own": "Titel, die deine Freunde besitzen",
+        "supportinfo": "Zeige Supportinfo auf Store-Seiten",
         "drm": "Warnung über DRMs von Dritten anzeigen",
         "profile_permalink": "Permalink in Profilen anzeigen",
         "show_regionwarning": "Warnung anzeigen, wenn ein regionaler Steam-Shop genutzt wird, der nicht dem Account entspricht",

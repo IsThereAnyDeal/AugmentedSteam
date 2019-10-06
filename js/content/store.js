@@ -1446,7 +1446,7 @@ class AppPageClass extends StorePageClass {
     }
 
     async addSupport() {
-        if (!this.isAppPage() || this.isDlc()) { return; }
+        if (!this.isAppPage() || this.isDlc() || !SyncedStorage.get("showsupportinfo")) { return; }
 
         let cache = LocalStorage.get("support_info", null);
         if (!cache || !cache.expiry || cache.expiry < Date.now()) {
