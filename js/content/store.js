@@ -7,14 +7,14 @@ class Customizer {
     }
 
     _textValue(node) {
-        if (!node) return null;
+        if (!node) return '';
         let str = "";
         for (node = node.firstChild; node; node = node.nextSibling) {
             if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName === "A")) { // Special case for Steam curators
                 str += node.textContent.trim();
             }
         }
-        return str || null;
+        return str;
     };
 
     _updateValue(name, value) {
