@@ -3181,20 +3181,26 @@ let WishlistPageClass = (function(){
         observer.observe(container, { 'childList': true, });
         instance.addExportWishlistButton();
 
-        let throbber = document.querySelector("#throbber");
-        let wishlistLoaded = function() {
-            if (throbber.style.display !== "none") { return; }
+        function wishlistLoaded() {
             instance.addStatsArea();
             instance.addEmptyWishlistButton();
             instance.addUserNotesHandlers();
             instance.addRemoveHandler();
         };
         
-        if (throbber.style.display === "none") { 
+        if (document.querySelector("#throbber").style.display === "none") {
             wishlistLoaded();
         } else {
-            observer = new MutationObserver(wishlistLoaded);
-            observer.observe(throbber, { "attributes": true });
+            Messenger.addMessageListener("wishlistLoaded", wishlistLoaded, true);
+
+            ExtensionLayer.runInPageContext(() => {
+                $J(document).ajaxSuccess((e, xhr, settings) => {
+                    let url = new URL(settings.url);
+                    if (url.origin + url.pathname === `${g_strWishlistBaseURL}wishlistdata/` && g_Wishlist.nPagesToLoad === g_Wishlist.nPagesLoaded) {
+                        Messenger.postMessage("wishlistLoaded");
+                    }
+                });
+            });
         }
     }
 
