@@ -1981,15 +1981,15 @@ let InventoryPageClass = (function(){
             });
         });
         
-        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info), false);
+        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info));
 
-        Messenger.addMessageListener("sendFee", info => {
-            let sellPrice = info.feeInfo.amount - info.feeInfo.fees;
+        Messenger.addMessageListener("sendFee", async ({ feeInfo, sessionID, global_id, contextID, assetID }) => {
+            let sellPrice = feeInfo.amount - feeInfo.fees;
             let formData = new FormData();
-            formData.append("sessionid", info.sessionID);
-            formData.append("appid", info.global_id);
-            formData.append("contextid", info.contextID);
-            formData.append("assetid", info.assetID);
+            formData.append("sessionid", sessionID);
+            formData.append("appid", global_id);
+            formData.append("contextid", contextID);
+            formData.append("assetid", assetID);
             formData.append("amount", 1);
             formData.append("price", sellPrice);
 
@@ -2001,17 +2001,15 @@ let InventoryPageClass = (function(){
             * referrer: window.location.origin + window.location.pathname
             */
 
-            RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {
-                withCredentials: true
-            }).then(() => {
-                document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
+            await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, { withCredentials: true });
 
-                let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
-                let node = document.querySelector("[id='" + id + "']");
-                node.classList.add("btn_disabled", "activeInfo");
-                node.style.pointerEvents = "none";
-            });
-        }, false);
+            document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
+
+            let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
+            let node = document.querySelector("[id='" + id + "']");
+            node.classList.add("btn_disabled", "activeInfo");
+            node.style.pointerEvents = "none";
+        });
     }
 
     function addInventoryGoToPage(){
@@ -3807,7 +3805,7 @@ let WorkshopBrowseClass = (function(){
             startSubscriber(method, total);
         });
 
-        function startSubscriber(method, total) {
+        async function startSubscriber(method, total) {
             let completed = 0;
             let failed = 0;
 
@@ -3892,7 +3890,7 @@ let WorkshopBrowseClass = (function(){
                 });
             }
 
-            Messenger.addMessageListener("startSubscriber", async function() {
+            Messenger.onMessage("startSubscriber").then(() => {
                 updateWaitDialog();
 
                 function canSkip(method, node) {
@@ -3933,9 +3931,9 @@ let WorkshopBrowseClass = (function(){
                 total = workshopItems.length;
                 updateWaitDialog();
     
-                Promise.all(workshopItems.map(id => changeSubscription(id)))
+                return Promise.all(workshopItems.map(id => changeSubscription(id)))
                     .finally(showResults);
-            }, true)
+            });            
         }
     };
 

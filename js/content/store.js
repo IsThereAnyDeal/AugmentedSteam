@@ -2741,8 +2741,9 @@ let SearchPageClass = (function(){
             </div>
         `);
 
-        Messenger.addMessageListener("filtersChanged", filtersChanged, false);
-        Messenger.addMessageListener("priceAbove", priceVal => {
+        Messenger.addMessageListener("filtersChanged", filtersChanged);
+
+        Messenger.onMessage("priceAbove").then(priceVal => {
             if (new RegExp(inputPattern.source.replace(',', '\\.')).test(priceVal)) {
                 if (currency.format.decimalSeparator === ',') {
                     priceVal = priceVal.replace('.', ',');
@@ -2752,11 +2753,11 @@ let SearchPageClass = (function(){
             } else {
                 console.warn("Failed to validate price %s from URL params!", priceVal);
             }
-        }, true);
-        Messenger.addMessageListener("reviewsBelow", reviewsVal => {
+        });
+        Messenger.onMessage("reviewsBelow").then(reviewsVal => {
             document.getElementById("es_noreviewsbelow_val").value = reviewsVal;
             Messenger.postMessage("reviewsValueChanged");
-        }, true);
+        });
 
         // TODO(tomas.fedor) Can we somehow simplify this monstrosity? E.g. update URL on our end?
         // Thrown together from sources of searchpage.js
@@ -2955,7 +2956,7 @@ let SearchPageClass = (function(){
                                         continue;
                                     }
                                     filter = $J(".tab_filter_control[data-value=price-above]");
-                                    Messenger.addMessageListener("priceValueChanged", () => filter.click(), true);
+                                    Messenger.onMessage("priceValueChanged").then(filter.click);
                                     Messenger.postMessage("priceAbove", priceValue);
                                     continue;
                                 } else if (filterValue.startsWith("reviews-below")) {
@@ -2965,7 +2966,7 @@ let SearchPageClass = (function(){
                                         continue;
                                     }
                                     filter = $J(".tab_filter_control[data-value=reviews-below]");
-                                    Messenger.addMessageListener("reviewsValueChanged", () => filter.click(), true);
+                                    Messenger.onMessage("reviewsValueChanged").then(filter.click);
                                     Messenger.postMessage("reviewsBelow", reviewsValue);
                                     continue;
                                 } else {
@@ -2978,8 +2979,8 @@ let SearchPageClass = (function(){
                     }
                 }
 
-                Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState), false);
-                Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState), false);
+                Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState));
+                Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState));
             });
         }`);
 
@@ -3191,7 +3192,7 @@ let WishlistPageClass = (function(){
         if (document.querySelector("#throbber").style.display === "none") {
             wishlistLoaded();
         } else {
-            Messenger.addMessageListener("wishlistLoaded", wishlistLoaded, true);
+            Messenger.onMessage("wishlistLoaded").then(wishlistLoaded);
 
             ExtensionLayer.runInPageContext(() => {
                 $J(document).ajaxSuccess((e, xhr, settings) => {
@@ -3344,7 +3345,7 @@ let WishlistPageClass = (function(){
             });
         }
 
-        Messenger.addMessageListener("emptyWishlist", () => {
+        Messenger.onMessage("emptyWishlist").then(() => {
             let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
             if (!wishlistData) { return; }
 
@@ -3352,7 +3353,7 @@ let WishlistPageClass = (function(){
                 DynamicStore.clear();
                 location.reload();
             });
-        }, true);
+        });
     }
 
     class WishlistExporter {
@@ -3470,7 +3471,7 @@ let WishlistPageClass = (function(){
 
         // handle messages
 
-        Messenger.addMessageListener("exportWishlist", (data) => {
+        Messenger.onMessage("exportWishlist").then(data => {
             let appInfo = data.appInfo;
             if (!appInfo) { return; }
             let type = data.type;
@@ -3478,7 +3479,7 @@ let WishlistPageClass = (function(){
             let format = decodeURIComponent(data.format);
 
             exportWishlist(appInfo, type, method, format);
-        }, true);
+        });
 
         function exportWishlist(appInfo, type, method, format) {
             let wishlist = new WishlistExporter(appInfo);
@@ -3609,7 +3610,7 @@ let WishlistPageClass = (function(){
             })
         );
 
-        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry), false);
+        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry));
     };
 
     return WishlistPageClass;
@@ -3652,7 +3653,7 @@ let UserNotes = (function(){
             deferred.always(() => Modal.Dismiss());
 
             Modal.m_fnBackgroundClick = () => {
-                Messenger.addMessageListener("noteSaved", () => Modal.Dismiss(), true);
+                Messenger.onMessenge("noteSaved").then(Modal.Dismiss);
                 Messenger.postMessage("backgroundClick");
             }
 
@@ -3675,10 +3676,10 @@ let UserNotes = (function(){
 
         document.addEventListener("click", clickListener);
 
-        Messenger.addMessageListener("backgroundClick", () => {
+        Messenger.onMessage("backgroundClick").then(() => {
             onNoteUpdate.apply(null, saveNote());
             Messenger.postMessage("noteSaved");
-        }, true);
+        });
 
         function clickListener(e) {
             if (e.target.closest(".es_note_modal_submit")) {
