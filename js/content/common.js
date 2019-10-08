@@ -2170,10 +2170,12 @@ let Common = (function(){
 class Downloader {
 
     static download(content, filename) {
-        let a = document.createElement('a');
+        let a = document.createElement("a");
         a.href = URL.createObjectURL(content);
         a.download = filename;
-        a.click();
+
+        // Explicitly dispatching the click event (instead of just a.click()) will make it work in FF
+        a.dispatchEvent(new MouseEvent("click"));
     }
 }
 
