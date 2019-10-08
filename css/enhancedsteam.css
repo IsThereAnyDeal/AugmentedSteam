@@ -2823,6 +2823,17 @@ input[type=checkbox].es_dlc_selection:checked + label {
   filter: grayscale(100%);
 }
 
+/***************************************
+ * addCustomTags() to community guides
+ * 
+ **************************************/
+.es_tag {
+	text-transform: capitalize;
+}
+.es_tag::placeholder {
+	text-transform: none;
+}
+
 /**
  * Flags
  */
@@ -3089,5 +3100,3 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_flag.es_flag_zm:before {background-position: -160px -165px}
 .es_flag.es_flag_zw:before {background-position: -176px -165px}
 .es_flag.es_flag_eu2:before {background-position: -192px -165px}
-
-
