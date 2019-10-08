@@ -331,6 +331,12 @@ let Options = (function(){
                 }
             }
 
+            for (let lang of Object.keys(Localization.str.options.lang)) {
+                let node = document.querySelector(".language." + lang);
+                if (node) {
+                    node.textContent = Localization.str.options.lang[lang] + ":";
+                }
+            }
 
             let total = deepCount(Localization.str);
             for (let lang of Object.keys(Localization.str.options.lang)) {
@@ -602,8 +608,7 @@ let Options = (function(){
                 el.value = currency;
                 el.innerText = currency;
                 select.appendChild(el);
-            })
-            ;
+            });
     }
 
     self.init = async function() {
