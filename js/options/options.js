@@ -327,15 +327,15 @@ let Options = (function(){
                 let lang = node.textContent;
                 let lang_trl = Localization.str.options.lang[node.value.toLowerCase()];
                 if (lang !== lang_trl) {
-                    node.textContent = lang + " (" + lang_trl + ")";
+                    node.textContent = `${lang} (${lang_trl})`;
                 }
             }
 
             let total = deepCount(Localization.str);
             for (let lang of Object.keys(Localization.str.options.lang)) {
-                let node = document.querySelector(".language." + lang);
+                let node = document.querySelector(`.language.${lang}`);
                 if (node) {
-                    node.textContent = Localization.str.options.lang[lang] + ":";
+                    node.textContent = `${Localization.str.options.lang[lang]}:`;
                 }
 
                 if (lang === "english") continue;
@@ -345,7 +345,7 @@ let Options = (function(){
                 let percentage = 100 * count / total;
 
                 HTML.inner(
-                    document.querySelector(".lang-perc." + lang),
+                    document.querySelector(`.lang-perc.${lang}`),
                     `<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>`
                 );
             }
