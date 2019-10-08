@@ -3890,7 +3890,7 @@ let WorkshopBrowseClass = (function(){
                 });
             }
 
-            Messenger.onMessage("startSubscriber").then(() => {
+            Messenger.onMessage("startSubscriber").then(async () => {
                 updateWaitDialog();
 
                 function canSkip(method, node) {
