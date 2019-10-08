@@ -695,9 +695,8 @@ class AppPageClass extends StorePageClass {
             playInHD = LocalStorage.get('playback_hd');
 
             function _addHDControl() {
-                // Add "HD" button and "sd-src" to the video and set definition
+                // Add "HD" button to the video
                 if (videoControl.dataset.hdSrc) {
-                    // videoControl.dataset.sdSrc = videoControl.src;
                     let node = videoControl.parentNode.querySelector('.time');
                     if (node) {
                         HTML.afterEnd(node, `<div class="es_hd_toggle"><span>HD</span></div>`);
