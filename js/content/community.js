@@ -1916,7 +1916,7 @@ let InventoryPageClass = (function(){
         restriction = parseInt(restriction);
         let isGift = assetType && /Gift/i.test(assetType);
         let isBooster = hashName && /Booster Pack/i.test(hashName);
-        let ownsInventory = User.isSignedIn() && (ownerSteamId === User.steamId);
+        let ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
 
         let hm;
         let appid = (hm = hashName.match(/^([0-9]+)-/)) ? hm[1] : null;
