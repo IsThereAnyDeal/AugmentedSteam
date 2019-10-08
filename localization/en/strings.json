@@ -403,6 +403,7 @@
         "library_f2p": "Show played free to play games and demos in library",
         "inventory_market_text": "Show Market price on inventory page",
         "send_age_info": "Automatically send age verification when requested",
+        "mp4video": "Force app store videos to be in MP4 format",
         "pcgw": "Show PCGamingWiki links",
         "completionistme": "Show Completionist.me links",
         "protondb": "Show ProtonDB links",

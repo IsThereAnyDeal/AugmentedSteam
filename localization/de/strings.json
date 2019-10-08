@@ -359,6 +359,7 @@
         "library_f2p": "Kostenlose Spiele und Demos die gespielt wurden in der Bibliothek anzeigen ",
         "inventory_market_text": "Marktpreise im Inventar anzeigen",
         "send_age_info": "Alter automatisch senden, wenn Altersbestätigung angefordert wird",
+        "mp4video": "Erzwinge das Abspielen von Videos auf Store-Seiten als MP4",
         "pcgw": "PCGamingWiki-Links anzeigen",
         "protondb": "ProtonDB-Links anzeigen",
         "store_steamcards": "SteamCardExchange-Links auf Store-Seiten zeigen",
