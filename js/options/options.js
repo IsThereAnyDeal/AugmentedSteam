@@ -327,20 +327,25 @@ let Options = (function(){
                 let lang = node.textContent;
                 let lang_trl = Localization.str.options.lang[node.value.toLowerCase()];
                 if (lang !== lang_trl) {
-                    node.textContent = lang + " (" + lang_trl + ")";
+                    node.textContent = `${lang} (${lang_trl})`;
                 }
             }
 
-
             let total = deepCount(Localization.str);
             for (let lang of Object.keys(Localization.str.options.lang)) {
+                let node = document.querySelector(`.language.${lang}`);
+                if (node) {
+                    node.textContent = `${Localization.str.options.lang[lang]}:`;
+                }
+
+                if (lang === "english") continue;
                 let code = Language.languages[lang];
                 let locale = await Localization.loadLocalization(code);
                 let count = deepCount(locale);
                 let percentage = 100 * count / total;
 
                 HTML.inner(
-                    document.querySelector(".lang-perc." + lang),
+                    document.querySelector(`.lang-perc.${lang}`),
                     `<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>`
                 );
             }
@@ -459,8 +464,8 @@ let Options = (function(){
             document.getElementById("regional_price_hideworld").style.display = "block";
         }
 
-        let language = Language.getCurrentSteamLanguage();
-        if (language !== "schinese" || language !== "tchinese") {
+        let language = SyncedStorage.get("language");
+        if (language !== "schinese" && language !== "tchinese") {
             let n = document.getElementById('profile_steamrepcn');
             if (n) {
                 // Hide SteamRepCN option if language isn't Chinese
@@ -483,7 +488,6 @@ let Options = (function(){
         
         loadProfileLinkImages();
         loadStores();
-        return loadTranslation();
     }
 
 
@@ -493,6 +497,10 @@ let Options = (function(){
 
         for (let el of document.querySelectorAll(".country_parent")) {
             el.remove();
+        }
+
+        for (let el of document.querySelectorAll(".custom-link__close")) {
+            el.click();
         }
 
         SyncedStorage.then(loadOptions);
@@ -598,8 +606,7 @@ let Options = (function(){
                 el.value = currency;
                 el.innerText = currency;
                 select.appendChild(el);
-            })
-            ;
+            });
     }
 
     self.init = async function() {
@@ -608,7 +615,8 @@ let Options = (function(){
         await Promise.all([settings, currency]);
         let Defaults = SyncedStorage.defaults;
 
-        loadOptions().then(Sidebar.create);
+        loadOptions();
+        loadTranslation().then(Sidebar.create);
 
         document.getElementById("profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
 

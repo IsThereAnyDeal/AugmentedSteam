@@ -24,6 +24,26 @@ let SteamId = (function(){
     return self;
 })();
 
+let GroupID = (function(){
+
+    let self = {};
+    let _groupId = null;
+
+    self.getGroupId = function() {
+        if (_groupId) { return _groupId; }
+
+        if (document.querySelector("#leave_group_form")) {
+            _groupId = document.querySelector("input[name=groupId]").value;
+        } else {
+            _groupId = document.querySelector(".joinchat_bg").getAttribute("onclick").split('\'')[1];
+        }
+
+        return _groupId;
+    };
+
+    return self;
+})();
+
 let ProfileData = (function(){
 
     let self = {};
@@ -342,6 +362,23 @@ let CommunityCommon = (function() {
         }
     };
 
+    self.makeProfileLink = function (id, link, name, iconType, iconUrl) {
+        let mainType = iconUrl ? "none" : iconType;
+        let result =
+            `<div class="es_profile_link profile_count_link">
+               <a class="es_sites_icons es_${id}_icon es_${mainType}" href="${link}" target="_blank">`;
+
+        if (iconType !== "none" && iconUrl) {
+            result += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url('${iconUrl}');"></i>`;
+        }
+
+        result += `<span class="count_link_label">${name}</span>
+                        <span class="profile_count_link_total">&nbsp;</span> <!-- Steam spacing -->
+                    </a>
+                </div>`;
+        return result;
+    }
+
     return self;
 })();
 
@@ -461,37 +498,37 @@ let ProfileHomePageClass = (function(){
         let links = [
             {
                 "id": "steamrep",
-                "link": `//steamrep.com/profiles/${steamId}`,
+                "link": `https://steamrep.com/profiles/${steamId}`,
                 "name": "SteamRep",
             },
             {
                 "id": "steamdbcalc",
-                "link": `//steamdb.info/calculator/?player=${steamId}`,
+                "link": `https://steamdb.info/calculator/?player=${steamId}`,
                 "name": "SteamDB",
             },
             {
                 "id": "steamgifts",
-                "link": `//www.steamgifts.com/go/user/${steamId}`,
+                "link": `https://www.steamgifts.com/go/user/${steamId}`,
                 "name": "SteamGifts",
             },
             {
                 "id": "steamtrades",
-                "link": `//www.steamtrades.com/user/${steamId}`,
+                "link": `https://www.steamtrades.com/user/${steamId}`,
                 "name": "SteamTrades",
             },
             {
                 "id": "astats",
-                "link": `//www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
+                "link": `https://www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
                 "name": "Achievement Stats",
             },
             {
                 "id": "backpacktf",
-                "link": `//backpack.tf/profiles/${steamId}`,
+                "link": `https://backpack.tf/profiles/${steamId}`,
                 "name": "Backpack.tf",
             },
             {
                 "id": "astatsnl",
-                "link": `//astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
+                "link": `https://astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
                 "name": "AStats.nl",
             }
         ];
@@ -509,17 +546,10 @@ let ProfileHomePageClass = (function(){
         // Build the links HTML
         let htmlstr = "";
 
-        links.forEach(link => {
-            if (!SyncedStorage.get("profile_" + link.id)) { return; }
-
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_${link.id}_icon es_${iconType}" href="${link.link}" target="_blank">
-                        <span class="count_link_label">${link.name}</span>
-                    </a>
-                </div>`;
-
-        });
+        for (let link of links) {
+            if (!SyncedStorage.get("profile_" + link.id)) { continue; }
+            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+        }
 
         // custom profile link
         for (let customLink of SyncedStorage.get('profile_custom_link')) {
@@ -541,15 +571,7 @@ let ProfileHomePageClass = (function(){
                 iconType = "none";
             }
 
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
-                    <span class="count_link_label">${name}</span>`;
-                    if (iconType !== "none") {
-                        htmlstr += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url(${icon});"></i>`;
-                    }
-                    htmlstr += `</a>
-                </div>`;
+            htmlstr += CommunityCommon.makeProfileLink("custom", link, name, iconType, icon);
         }
 
         // profile permalink
@@ -986,6 +1008,58 @@ let ProfileHomePageClass = (function(){
 
     return ProfileHomePageClass;
 })();
+
+
+let GroupHomePageClass = (function(){
+
+    function GroupHomePageClass() {
+        this.addGroupLinks();
+    }
+
+    GroupHomePageClass.prototype.addGroupLinks = function() {
+
+        let groupId = GroupID.getGroupId();
+        let iconType = "none";
+        let images = SyncedStorage.get("show_profile_link_images");
+        if (images !== "none") {
+            iconType = images === "color" ? "color" : "gray";
+        }
+
+        let links = [
+            {
+                "id": "steamgifts",
+                "link": `https://www.steamgifts.com/go/group/${groupId}`,
+                "name": "SteamGifts",
+            }
+        ];
+
+
+        // Build the links HTML
+        let htmlstr = "";
+
+        for (let link of links) {
+            if (!SyncedStorage.get("group_" + link.id)) { continue; }
+            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+        }
+
+        // Insert the links HMTL into the page
+        if (htmlstr) {
+            let linksNode = (document.querySelector(".responsive_hidden > .rightbox")).parentNode;
+            if (linksNode) {
+                HTML.afterEnd(linksNode,
+                   `<div class="rightbox_header"></div>
+                    <div class="rightbox">
+                       <div class="content">${htmlstr}</div>
+                    </div>
+                    <div class="rightbox_footer"></div>`
+                );
+            }
+        }
+
+    };
+    return GroupHomePageClass;
+})();
+
 
 let GamesPageClass = (function(){
 
@@ -1617,11 +1691,10 @@ let InventoryPageClass = (function(){
         if (quickGrind) { quickGrind.parentNode.remove(); }
 
         let scrapActions = document.querySelector("#iteminfo" + item + "_item_scrap_actions");
-        let turnWord = scrapActions.querySelector("a span").textContent;
 
         let divs = scrapActions.querySelectorAll("div");
         HTML.beforeBegin(divs[divs.length-1],
-            "<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>1-Click " + turnWord + "</span></div>");
+            `<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>${Localization.str.oneclickgoo}</span></div>`);
 
         // TODO: Add prompt?
         document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
@@ -1645,8 +1718,8 @@ let InventoryPageClass = (function(){
         });
     }
 
-    function makeMarketButton(id) {
-        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" style="display:none">
+    function makeMarketButton(id, tooltip) {
+        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" data-tooltip-text="${tooltip}" style="display:none">
                     <span class="item_market_action_button_edge item_market_action_button_left"></span>
                     <span class="item_market_action_button_contents"></span>
                     <span class="item_market_action_button_edge item_market_action_button_right"></span>
@@ -1685,8 +1758,11 @@ let InventoryPageClass = (function(){
             thisItem.classList.add("es-loading");
 
             // Add the links with no data, so we can bind actions to them, we add the data later
-            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId));
-            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId));
+            let diff = SyncedStorage.get("quickinv_diff");
+            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId, Localization.str.quick_sell_desc.replace("__modifier__", diff)));
+            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId, Localization.str.instant_sell_desc));
+
+            ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: "community_tooltip"} ));
 
             // Check if price is stored in data
             if (thisItem.classList.contains("es-price-loaded")) {
@@ -1705,7 +1781,7 @@ let InventoryPageClass = (function(){
                     let marketUrl = "https://steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + marketId;
                     let market = await RequestData.getJson(marketUrl);
 
-                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff"));
+                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(diff);
                     let priceLow = market.highest_buy_order / 100;
                     // priceHigh.currency == priceLow.currency == Currency.customCurrency, the arithmetic here is in walletCurrency
 
@@ -1905,15 +1981,15 @@ let InventoryPageClass = (function(){
             });
         });
         
-        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info), false);
+        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info));
 
-        Messenger.addMessageListener("sendFee", info => {
-            let sellPrice = info.feeInfo.amount - info.feeInfo.fees;
+        Messenger.addMessageListener("sendFee", async ({ feeInfo, sessionID, global_id, contextID, assetID }) => {
+            let sellPrice = feeInfo.amount - feeInfo.fees;
             let formData = new FormData();
-            formData.append("sessionid", info.sessionID);
-            formData.append("appid", info.global_id);
-            formData.append("contextid", info.contextID);
-            formData.append("assetid", info.assetID);
+            formData.append("sessionid", sessionID);
+            formData.append("appid", global_id);
+            formData.append("contextid", contextID);
+            formData.append("assetid", assetID);
             formData.append("amount", 1);
             formData.append("price", sellPrice);
 
@@ -1925,17 +2001,15 @@ let InventoryPageClass = (function(){
             * referrer: window.location.origin + window.location.pathname
             */
 
-            RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {
-                withCredentials: true
-            }).then(() => {
-                document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
+            await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, { withCredentials: true });
 
-                let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
-                let node = document.querySelector("[id='" + id + "']");
-                node.classList.add("btn_disabled", "activeInfo");
-                node.style.pointerEvents = "none";
-            });
-        }, false);
+            document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
+
+            let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
+            let node = document.querySelector("[id='" + id + "']");
+            node.classList.add("btn_disabled", "activeInfo");
+            node.style.pointerEvents = "none";
+        });
     }
 
     function addInventoryGoToPage(){
@@ -3206,7 +3280,7 @@ let MarketPageClass = (function(){
 
     // Show the lowest market price for items you're selling
     MarketPageClass.prototype.addLowestMarketPrice = function() {
-        if (!User.isSignedIn) { return; }
+        if (!User.isSignedIn || !SyncedStorage.get("showlowestmarketprice") || SyncedStorage.get("hideactivelistings")) { return; }
 
         let country = User.getCountry();
         let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
@@ -3504,6 +3578,7 @@ let CommunityAppPageClass = (function(){
 
         this.addAppPageWishlist();
         this.addSteamDbLink();
+        this.addBartervgLink();
         this.addItadLink();
         AgeCheck.sendVerification();
 
@@ -3556,18 +3631,20 @@ let CommunityAppPageClass = (function(){
 
     CommunityAppPageClass.prototype.addSteamDbLink = function() {
         if (!SyncedStorage.get("showsteamdb")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; SteamDB</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;SteamDB</span></a>`);
     };
 
     CommunityAppPageClass.prototype.addItadLink = function() {
         if (!SyncedStorage.get("showitadlinks")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/line_chart.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; ITAD</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium itad_ico" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;ITAD</span></a>`);
+    };
+
+    CommunityAppPageClass.prototype.addBartervgLink = function() {
+        if (!SyncedStorage.get("showbartervg")) { return; }
+        HTML.beforeEnd(".apphub_OtherSiteInfo",
+            ` <a class="btnv6_blue_hoverfade btn_medium bartervg_ico" target="_blank" href="https://barter.vg/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;Barter.vg</span></a>`);
     };
 
     return CommunityAppPageClass;
@@ -3610,8 +3687,77 @@ let GuidesPageClass = (function(){
     return GuidesPageClass;
 })();
 
+let WorkshopPageClass = (function(){
 
-class WorkshopPageClass {
+    function WorkshopPageClass() {
+        this.loadLastState();
+        this.initAjaxBrowse();
+    }
+
+    WorkshopPageClass.prototype.loadLastState = function() {
+        let url = new URL(window.location.href);
+
+        if (url.searchParams && url.searchParams.has("browsesort")) {
+            LocalStorage.set("workshop_state", url.search);
+            return;
+        }
+
+        let search = LocalStorage.get("workshop_state");
+        url = new URL("https://steamcommunity.com/workshop/" + search);
+        let query = url.searchParams.get("browsesort");
+        this.changeTab(query);
+    };
+
+    WorkshopPageClass.prototype.initAjaxBrowse = function() {
+        ExtensionLayer.runInPageContext(function() {
+            $J(".browseOption").get().forEach(node => node.onclick = () => false);
+        });
+
+        document.querySelectorAll(".browseOption").forEach(tab => {
+            tab.addEventListener("click", () => {
+                let a = tab.querySelector("a[href]");
+                let url = new URL("https://steamcommunity.com/workshop/" + a.href);
+                let query = url.searchParams.get("browsesort");
+                LocalStorage.set("workshop_state", url.search);
+                window.history.pushState(null, null, url.search);
+                this.changeTab(query);
+            });
+        });
+    };
+
+    WorkshopPageClass.prototype.changeTab = async function(query, start=0, count=8) {
+        let tab = document.querySelector("." + query);
+        if (tab.hasAttribute("disabled")) { return; }
+
+        tab.setAttribute("disabled", "disabled");
+        
+        let image = document.querySelector(".browseOptionImage");
+        tab.parentNode.insertAdjacentElement("afterbegin", image);
+
+        document.querySelectorAll(".browseOption").forEach(tab => tab.classList.add("notSelected"));
+        tab.classList.remove("notSelected");
+
+        let container = document.querySelector("#workshop_appsRows");
+        HTML.inner(container, '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin: 170px auto;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div></div>');
+
+        let url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
+        let result = JSON.parse(await RequestData.getHttp(url));
+        HTML.inner(container, result.results_html);
+        tab.removeAttribute("disabled");
+
+        ExtensionLayer.runInPageContext(`function() {
+            g_oSearchResults.m_iCurrentPage = 0;
+            g_oSearchResults.m_strQuery = "${query}";
+            g_oSearchResults.m_cTotalCount = ${result.total_count};
+            g_oSearchResults.m_cPageSize = ${count};
+            g_oSearchResults.UpdatePagingDisplay();
+        }`);
+    };
+
+    return WorkshopPageClass;
+})();
+
+class SharedFilesPageClass {
     constructor() {
         new MediaPage().workshopPage();
         //media.initHdPlayer();
@@ -3629,17 +3775,19 @@ let WorkshopBrowseClass = (function(){
         if (!appid) { return; }
         if (!document.querySelector(".workshopBrowsePagingInfo")) { return; }
 
+        let workshopStr = Localization.str.workshop;
+
         let subscriberButtons = `
-            <div class="rightSectionTopTitle">${Localization.str.subscriptions}:</div>
+            <div class="rightSectionTopTitle">${workshopStr.subscriptions}:</div>
             <div id="es_subscriber_container" class="rightDetailsBlock">
                 <div style="position:relative;">
                     <div class="browseOption mostrecent">
-                        <a class="es_subscriber" data-method="subscribe">${Localization.str.subscribe_all}</a>
+                        <a class="es_subscriber" data-method="subscribe">${workshopStr.subscribe_all}</a>
                     </div>
                 </div>
                 <div style="position:relative;">
                     <div class="browseOption mostrecent">
-                        <a class="es_subscriber" data-method="unsubscribe">${Localization.str.unsubscribe_all}</a>
+                        <a class="es_subscriber" data-method="unsubscribe">${workshopStr.unsubscribe_all}</a>
                     </div>
                 </div>
                 <hr>
@@ -3657,11 +3805,16 @@ let WorkshopBrowseClass = (function(){
             startSubscriber(method, total);
         });
 
-        function startSubscriber(method, total) {
-            let i = -1;
+        async function startSubscriber(method, total) {
+            let completed = 0;
+            let failed = 0;
+
+            let statusTitle = workshopStr[method + "_all"];
+            let statusString = workshopStr[method + "_confirm"]
+                .replace("__count__", total);
 
             ExtensionLayer.runInPageContext(`function(){
-                var prompt = ShowConfirmDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_confirm"].replace("__count__", total)}\`);
+                let prompt = ShowConfirmDialog("${statusTitle}", "${statusString}");
                 prompt.done(function(result) {
                     if (result == "OK") {
                         Messenger.postMessage("startSubscriber");
@@ -3670,53 +3823,117 @@ let WorkshopBrowseClass = (function(){
             }`);
 
             function updateWaitDialog() {
+                let statusString = workshopStr[method + "_loading"]
+                    .replace("__i__", completed)
+                    .replace("__count__", total);
+
+                if (failed) {
+                    statusString += workshopStr.failed.replace("__n__", failed);
+                }
+
+                let modal = document.querySelector(".newmodal_content");
+                if (!modal) {
+                    let statusTitle = workshopStr[method + "_all"];
+                    ExtensionLayer.runInPageContext(`function() {
+                        if (window.dialog) {
+                            window.dialog.Dismiss();
+                        }
+                        
+                        window.dialog = ShowBlockingWaitDialog("${statusTitle}", "${statusString}");
+                    }`);
+                } else {
+                    modal.innerText = statusString;
+                }
+            }
+
+            function showResults() {
+                let statusTitle = workshopStr[method + "_all"];
+                let statusString = workshopStr.finished
+                    .replace("__success__", completed - failed)
+                    .replace("__fail__", failed);
+
                 ExtensionLayer.runInPageContext(`function() {
                     if (window.dialog) {
                         window.dialog.Dismiss();
                     }
-
-                    window.dialog = ShowBlockingWaitDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_loading"].replace("__i__", ++i).replace("__count__", total)}\`);
-                }`)
+                    
+                    window.dialog = ShowConfirmDialog("${statusTitle}", "${statusString}")
+                        .done(function(result) {
+                            if (result == "OK") {
+                                window.location.reload();
+                            }
+                        });
+                }`);
             }
 
             function changeSubscription(id) {
-                return new Promise(function(resolve) {
-                    let formData = new FormData();
-                    formData.append("sessionid", User.getSessionId());
-                    formData.append("appid", appid);
-                    formData.append("id", id);
+                let formData = new FormData();
+                formData.append("sessionid", User.getSessionId());
+                formData.append("appid", appid);
+                formData.append("id", id);
 
-                    RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
-                        withCredentials: true
-                    }).then(function() {
-                        updateWaitDialog();
-                        resolve();
-                    });
+                return RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
+                    withCredentials: true
+                }, true)
+                .then(function(res) {
+                    if (!res || !res.success) {
+                        throw new Error("Bad response");
+                    }
+                })
+                .catch(function(err) {
+                    failed++;
+                    console.error(err);
+                })
+                .finally(function() {
+                    completed++;
+                    updateWaitDialog();
                 });
             }
 
-            Messenger.addMessageListener("startSubscriber", async function() {
+            Messenger.onMessage("startSubscriber").then(() => {
                 updateWaitDialog();
 
+                function canSkip(method, node) {
+                    if (method === "subscribe") {
+                        return node && node.style.display !== "none";
+                    }
+
+                    if (method === "unsubscribe") {
+                        return !node || node.style.display === "none";
+                    }
+
+                    return false;
+                }
+
+                let parser = new DOMParser();
                 let workshopItems = [];
                 for (let p = 1; p <= Math.ceil(total / 30); p++) {
                     let url = new URL(window.location.href);
                     url.searchParams.set("p", p);
                     url.searchParams.set("numperpage", 30);
     
-                    let result = await RequestData.getHttp(url.toString());
-                    let xmlDoc = new DOMParser().parseFromString(result, "text/html");
+                    let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+                    if (!result) {
+                        console.error("Failed to request " + url.toString());
+                        continue;
+                    }
 
-                    for (let node of xmlDoc.querySelectorAll(".workshopItemPreviewHolder")) {
+                    let xmlDoc = parser.parseFromString(result, "text/html");
+                    for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
+                        let subNode = node.querySelector(".user_action_history_icon.subscribed");
+                        if (canSkip(method, subNode)) { continue; }
+                    
+                        node = node.querySelector(".workshopItemPreviewHolder");
                         workshopItems.push(node.id.replace("sharedfile_", ""))
                     }
                 }
+
+                total = workshopItems.length;
+                updateWaitDialog();
     
-                Promise.all(
-                    workshopItems
-                        .map(id => changeSubscription(id)))
-                        .finally(() => { location.reload(); });
-            }, true)
+                return Promise.all(workshopItems.map(id => changeSubscription(id)))
+                    .finally(showResults);
+            });            
         }
     };
 
@@ -3831,6 +4048,10 @@ let EditGuidePageClass = (function(){
 
     switch (true) {
 
+        case /^\/workshop\/?$/.test(path):
+            (new WorkshopPageClass());
+            break;
+
         case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
             (new ProfileActivityPageClass());
             break;
@@ -3875,6 +4096,10 @@ let EditGuidePageClass = (function(){
             (new ProfileHomePageClass());
             break;
 
+        case /^\/groups\/[^\/]+\/?$/.test(path):
+            (new GroupHomePageClass());
+            break;
+
         case /^\/app\/[^\/]*\/guides/.test(path):
             (new GuidesPageClass());
             break;
@@ -3888,7 +4113,7 @@ let EditGuidePageClass = (function(){
             break;
 
         case /^\/sharedfiles\/filedetails\/?$/.test(path):
-            (new WorkshopPageClass());
+            (new SharedFilesPageClass());
             break;
 
         case /^\/workshop\/browse/.test(path):
