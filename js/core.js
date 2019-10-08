@@ -1,5 +1,5 @@
 const Info = {
-    'version': "1.2.1",
+    'version': "1.3.0",
 };
 
 /**
@@ -197,7 +197,9 @@ class UpdateHandler {
                 SyncedStorage.remove(oldkey);
             }
             SyncedStorage.set('customize_apppage', settings);
-        } else if (oldVersion.isSameOrBefore("0.9.5")) {
+        }
+        
+        if (oldVersion.isSameOrBefore("0.9.5")) {
             SyncedStorage.remove("version");
             SyncedStorage.remove("showesbg");
             SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
@@ -219,7 +221,9 @@ class UpdateHandler {
             }
             SyncedStorage.set("user_notes", SyncedStorage.get("wishlist_notes"));
             SyncedStorage.remove("wishlist_notes");
-        } else if (oldVersion.isSameOrBefore("0.9.7")) {
+        }
+        
+        if (oldVersion.isSameOrBefore("0.9.7")) {
             SyncedStorage.remove("hide_wishlist");
             SyncedStorage.remove("hide_cart");
             SyncedStorage.remove("hide_notdiscounted");
@@ -227,7 +231,25 @@ class UpdateHandler {
             SyncedStorage.remove("hide_negative");
             SyncedStorage.remove("hide_priceabove");
             SyncedStorage.remove("priceabove_value");
-        }    
+        }
+        
+        if (oldVersion.isSameOrBefore("1.2.1")) {
+            if (!SyncedStorage.get("show_profile_link_images")) {
+                SyncedStorage.set("show_profile_link_images", "none");
+            }
+
+            if (SyncedStorage.get("showclient")) {
+                SyncedStorage.set("showviewinlibrary", true);
+                SyncedStorage.set("installsteam", "replace");
+            }
+
+            if (SyncedStorage.has("showlanguagewarninglanguage")) {
+                SyncedStorage.set("showlanguagewarninglanguage", SyncedStorage.get("showlanguagewarninglanguage").toLowerCase());
+            }
+
+            SyncedStorage.remove("html5video");
+            SyncedStorage.remove("showclient");
+        }
     }
 }
 
@@ -490,10 +512,11 @@ SyncedStorage.defaults = {
     'showpcgw': true,
     'showcompletionistme': false,
     'showprotondb': false,
-    'showclient': true,
+    'showviewinlibrary': false,
     'showsteamcardexchange': false,
     'showitadlinks': true,
     'showsteamdb': true,
+    'showbartervg': false,
     'showastatslink': true,
     'showyoutubegameplay': true,
     'showyoutubereviews': true,
@@ -544,6 +567,7 @@ SyncedStorage.defaults = {
     'skip_got_steam': false,
 
     'hideaboutlinks': false,
+    'installsteam': "show",
     'openinnewtab': false,
     'keepssachecked': false,
     'showemptywishlist': true,
@@ -552,12 +576,14 @@ SyncedStorage.defaults = {
     'replaceaccountname': true,
     'showfakeccwarning': true,
     'showlanguagewarning': true,
-    'showlanguagewarninglanguage': "English",
+    'showlanguagewarninglanguage': "english",
     'homepage_tab_selection': "remember",
     'homepage_tab_last': null,
     'send_age_info': true,
     'mp4video': false,
     'contscroll': true,
+    'horizontalmediascrolling': true,
+    'showsupportinfo': true,
     'showdrm': true,
     'regional_hideworld': false,
     'showinvnav': true,
@@ -567,6 +593,7 @@ SyncedStorage.defaults = {
     'showachinstore': true,
     'showcomparelinks': false,
     'hideactivelistings': false,
+    'showlowestmarketprice': true,
     'hidespamcomments': false,
     'spamcommentregex': "[\\u2500-\\u25FF]",
     'wlbuttoncommunityapp': true,
@@ -588,6 +615,7 @@ SyncedStorage.defaults = {
     'profile_custom_link': [
         { 'enabled': true, 'name': "Google", 'url': "google.com/search?q=[ID]", 'icon': "www.google.com/images/branding/product/ico/googleg_lodp.ico", },
     ],
+    'group_steamgifts': true,
     'steamcardexchange': true,
     'purchase_dates': true,
     'show_badge_progress': true,

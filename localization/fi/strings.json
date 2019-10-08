@@ -365,7 +365,6 @@
         "saved_note": "Asetukset tallennettu",
         "regional_hideworld": "Piilota maapallo-kuvake",
         "show_astatslink": "Näytä AStats-linkki sovellussivuilla",
-        "showclient": "Näytä Steam linkit",
         "guest": "Tuotteet joihin sinulla on vierailulupa",
         "show_steamchart_info": "Näytä SteamCharts.com tilastot",
         "show_steamspy_info": "Näytä steamspy.com tiedot",
@@ -452,7 +451,7 @@
     },
     "survey": {
         "performance_survey": "Tehokkuustesti",
-        "users": "__users__ käyttäjää on suorittanut tehokkuustestin tälle pelille",
+        "users": "__users__ käyttäjää on suorittanut tehokkuustestin tälle pelille.",
         "framerate": "Ruudunpäivitys",
         "framerate_response": "vastasi että ruudunpäivitys oli",
         "framerate_30": "rajoitettu 30fps tai vähemmän",
@@ -466,7 +465,7 @@
         "satisfaction": "GPU performanssin tyydyttävyys",
         "gs_y": "Sisältää sisäänrakennetut grafiikkavalinnat tai grafiikkamenun",
         "gs_n": "Ei ole sisäänrakennettuja grafiikka-asetuksia tai grafiikkamenua",
-        "nobody": "Kukaan ei ole vielä täyttäny performanssikyselyä tälle pelille",
+        "nobody": "Kukaan ei ole vielä täyttäny performanssikyselyä tälle pelille.",
         "take": "Vastaa kyselyyn"
     },
     "select": {

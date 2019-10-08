@@ -674,7 +674,6 @@ class Steam {
 Steam._dynamicstore_promise = null;
 Steam._supportedCurrencies = null;
 
-
 let profileCacheKey = (params => `profile_${params.profile}`);
 let appCacheKey = (params => `app_${params.appid}`);
 let ratesCacheKey = (params => `rates_${params.to}`);

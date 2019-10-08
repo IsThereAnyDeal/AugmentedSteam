@@ -365,7 +365,6 @@
         "saved_note": "Opțiuni salvate",
         "regional_hideworld": "Ascunde indicatorul global",
         "show_astatslink": "Afișează link AStats pe paginile aplicațiilor",
-        "showclient": "Afișează un link de deschide în clientul de Steam",
         "guest": "Produse care le ai ca invitație",
         "show_steamchart_info": "Afișează informații SteamCharts.com",
         "show_steamspy_info": "Arată informații de pe steamspy.com",
@@ -452,7 +451,7 @@
     },
     "survey": {
         "performance_survey": "Sondaj de performanță",
-        "users": "__users__ utilizatori au finalizat sondajul de performanță pentru acest joc",
+        "users": "__users__ utilizatori au finalizat sondajul de performanță pentru acest joc.",
         "framerate": "Număr de cadre",
         "framerate_response": "au răspuns că numărul de cadre a fost",
         "framerate_30": "fixat la 30 de cadre pe secundă sau mai puțin",
@@ -466,7 +465,7 @@
         "satisfaction": "Performanța plăcilor video",
         "gs_y": "Are opțiuni grafice sau meniu pentru grafică încorporat",
         "gs_n": "Nu are opțiuni grafice sau un meniu pentru grafică",
-        "nobody": "Nimeni nu a participat încă în sondajul de performanță pentru acest joc",
+        "nobody": "Nimeni nu a participat încă în sondajul de performanță pentru acest joc.",
         "take": "Participă în sondaj"
     },
     "select": {

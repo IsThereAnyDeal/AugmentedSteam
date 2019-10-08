@@ -365,7 +365,6 @@
         "saved_note": "Nastavení uložena",
         "regional_hideworld": "Schovat indikátor země",
         "show_astatslink": "Ukázat odkaz na AStats na stránkách aplikací",
-        "showclient": "Zobrazit odkazy Steam klienta",
         "guest": "Položky, na které máte Guest Pass",
         "show_steamchart_info": "Ukázat informace ze SteamCharts.com",
         "show_steamspy_info": "Zobrazit steamspy.com info",
@@ -452,7 +451,7 @@
     },
     "survey": {
         "performance_survey": "Průzkum",
-        "users": "__users__ uživatelů podstoupilo průzkum pro tuto hru",
+        "users": "__users__ uživatelů podstoupilo průzkum pro tuto hru.",
         "framerate": "Snímková frekvence",
         "framerate_response": "odpovědělo že snímková frekvence byla",
         "framerate_30": "uzamčena na 30 FPS nebo méně",
@@ -466,7 +465,7 @@
         "satisfaction": "Poměr mezi grafickými kartami",
         "gs_y": "Má možnost nastavení grafiky",
         "gs_n": "Nemá možnost nastavení grafiky",
-        "nobody": "Nikdo dosud nevyplnil dotazník výkonu pro tuto hru",
+        "nobody": "Nikdo dosud nevyplnil dotazník výkonu pro tuto hru.",
         "take": "Vyplnit dotazník"
     },
     "select": {

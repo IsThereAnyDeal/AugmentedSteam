@@ -365,7 +365,6 @@
         "saved_note": "Inställningar sparad",
         "regional_hideworld": "Dölja globe indikator",
         "show_astatslink": "Vista AStats-länk på app-sidor",
-        "showclient": "Visa Steam-klient länkar",
         "guest": "Föremål som du har gästpass till",
         "show_steamchart_info": "Visa information ifrån SteamCharts.com",
         "show_steamspy_info": "Visa steamspy.com information",
@@ -452,7 +451,7 @@
     },
     "survey": {
         "performance_survey": "Prestationsundersökning",
-        "users": "__users__ användare har slutfört Prestationsundersökningen för detta spel",
+        "users": "__users__ användare har slutfört Prestationsundersökningen för detta spel.",
         "framerate": "Bildfrekvens",
         "framerate_response": "svarade att bildfrekvensen var",
         "framerate_30": "fast på 30fps eller lägre",
@@ -466,7 +465,7 @@
         "satisfaction": "Prestanda tillfredsställelse av GPU",
         "gs_y": "Har inbyggd grafik alternativ eller en grafik meny",
         "gs_n": "Har inte inbyggd grafik alternativ eller en grafik meny",
-        "nobody": "Ingen har tagit en Prestationsundersökning för detta spel ännu",
+        "nobody": "Ingen har tagit en Prestationsundersökning för detta spel ännu.",
         "take": "Ta Surveyn"
     },
     "select": {

@@ -1,6 +1,6 @@
 {
   "name": "Augmented Steam",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "Augments your Steam Experience",
   "icons": {
     "128": "img/es_128.png",
@@ -49,7 +49,9 @@
         "*://store.steampowered.com/join/*",
         "*://store.steampowered.com/api/*",
         "*://support.steampowered.com/*",
-        "*://help.steampowered.com/*"
+        "*://help.steampowered.com/*",
+        "*://translation.steampowered.com/*",
+        "*://partner.steampowered.com/*"        
       ],
       "js": [
         "js/lib/DOMPurify/purify.js",
@@ -61,7 +63,7 @@
       ],
       "css": [
         "css/enhancedsteam.css",
-        "css/es_flags.css"
+        "css/enhancedsteam-chrome.css"
       ]
     },
     {
@@ -70,6 +72,7 @@
       ],
       "exclude_matches": [
         "*://steamcommunity.com/login/*",
+        "*://steamcommunity.com/openid/*",
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
@@ -82,16 +85,7 @@
       ],
       "css": [
         "css/enhancedsteam.css",
-        "css/es_flags.css"
-      ]
-    },
-    {
-      "matches": [
-        "*://steamcommunity.com/id/*",
-        "*://steamcommunity.com/profiles/*"
-      ],
-      "css": [
-        "css/es_sites_links.css"
+        "css/enhancedsteam-chrome.css"
       ]
     },
     {

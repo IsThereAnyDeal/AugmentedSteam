@@ -7,14 +7,14 @@ class Customizer {
     }
 
     _textValue(node) {
-        if (!node) return null;
+        if (!node) return '';
         let str = "";
         for (node = node.firstChild; node; node = node.nextSibling) {
             if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName === "A")) { // Special case for Steam curators
                 str += node.textContent.trim();
             }
         }
-        return str || null;
+        return str;
     };
 
     _updateValue(name, value) {
@@ -171,48 +171,45 @@ class StorePageClass {
 
         let gfwl, uplay, securom, tages, stardock, rockstar, kalypso, denuvo, drm;
 
-        let text = "";
-        let nodes = document.querySelectorAll("#game_area_description, .game_area_sys_req, #game_area_legal, .game_details, .DRM_notice");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        let text = '';
+        for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details")) {
             text += node.innerHTML;
         }
 
         // Games for Windows Live detection
-        if (text.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
-        else if (text.toUpperCase().indexOf("GAMES FOR WINDOWS - LIVE") > 0) { gfwl = true; }
-        else if (text.indexOf("Online play requires log-in to Games For Windows") > 0) { gfwl = true; }
-        else if (text.indexOf("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") > 0) { gfwl = true; }
-        else if (text.indexOf("Multiplayer play and other LIVE features included at no charge") > 0) { gfwl = true; }
-        else if (text.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
+        if (text.toUpperCase().includes("GAMES FOR WINDOWS LIVE") ||
+        text.toUpperCase().includes("GAMES FOR WINDOWS - LIVE") ||
+        text.includes("Online play requires log-in to Games For Windows") ||
+        text.includes("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") ||
+        text.includes("Multiplayer play and other LIVE features included at no charge") ||
+        text.includes("www.gamesforwindows.com/live")) {
+            gfwl = true;
+        }
 
         // Ubisoft Uplay detection
-        if (text.toUpperCase().indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
-        else if (text.match(/\buplay/i) && !text.match(/\btuplaydinprosessori/i)) { uplay = true; }
+        if (text.includes("Uplay") || text.includes("Ubisoft Account")) { uplay = true; }
 
         // Securom detection
-        if (text.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }
+        if (text.includes("SecuROM")) { securom = true; }
 
         // Tages detection
-        if (text.match(/\btages\b/i)) { tages = true; }
-        else if (text.match(/angebote des tages/i)) { tages = false; }
-        else if (text.match(/\bsolidshield\b/i)) { tages = true; }
+        if ((text.match(/\btages\b/i) || text.match(/\bsolidshield\b/i)) && !text.match(/angebote des tages/i)) { tages = true; }
 
         // Stardock account detection
-        if (text.indexOf("Stardock account") > 0) { stardock = true; }
+        if (text.includes("Stardock account")) { stardock = true; }
 
         // Rockstar social club detection
-        if (text.indexOf("Rockstar Social Club") > 0) { rockstar = true; }
-        else if (text.indexOf("Rockstar Games Social Club") > 0) { rockstar = true; }
+        if (text.includes("Rockstar Social Club")) { rockstar = true; }
+        else if (text.includes("Rockstar Games Social Club")) { rockstar = true; }
 
         // Kalypso Launcher detection
-        if (text.indexOf("Requires a Kalypso account") > 0) { kalypso = true; }
+        if (text.includes("Requires a Kalypso account")) { kalypso = true; }
 
         // Denuvo Antitamper detection
         if (text.match(/\bdenuvo\b/i)) { denuvo = true; }
 
         // Detect other DRM
-        if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
+        if (text.includes("3rd-party DRM")) { drm = true; }
         else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
 
         let drmNames = [];
@@ -266,7 +263,7 @@ class StorePageClass {
             prices.bundleids.push(node.dataset['dsBundleid']);
         }
 
-        prices.priceCallback = function(type, id, html) {
+        prices.priceCallback = function(type, id, contentNode) {
             let node;
             let placement = "afterbegin";
             if (type === "sub") {
@@ -286,11 +283,7 @@ class StorePageClass {
                 }
             }
 
-            HTML.adjacent(node, placement, html);
-
-            let height = (document.querySelector("#es_price_"+id).offsetHeight - 20) / 2;
-            document.querySelector("#es_line_chart_"+id).style.top = height + "px";
-
+            node.insertAdjacentElement(placement, contentNode);
         };
 
         prices.bundleCallback = function(html) {
@@ -311,6 +304,7 @@ class StorePageClass {
 
     addLinks(type) {
         if (!SyncedStorage.get("showsteamdb")
+         && !SyncedStorage.get("showbarter")
          && !SyncedStorage.get("showitadlinks")) { return; }
 
         let gameid = null;
@@ -337,6 +331,15 @@ class StorePageClass {
         }
 
         if (!node) { return; }
+
+        if (SyncedStorage.get("showbartervg")) {
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "bartervg_ico",
+                    `https://barter.vg/steam/${type}/${gameid}`,
+                    Localization.str.view_on_website.replace("__website__", 'Barter.vg'))
+                );
+        }
 
         if (SyncedStorage.get("showsteamdb")) {
             HTML.afterBegin(node,
@@ -581,13 +584,14 @@ class AppPageClass extends StorePageClass {
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
         // Required for "Customize" button and YouTube / Steam tabs
-        DOMHelper.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
+        DOMHelper.insertHomeCSS();
         
         this.forceVideoMP4();
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
         this.addNewQueueButton();
+        this.addFullscreenScreenshotView();
 
         this.addCoupon();
         this.addPrices();
@@ -596,6 +600,7 @@ class AppPageClass extends StorePageClass {
         this.addDrmWarnings();
         this.addMetacriticUserScore();
         this.addOpenCritic();
+        this.displayViewInLibrary();
         this.displayPurchaseDate();
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
@@ -607,7 +612,6 @@ class AppPageClass extends StorePageClass {
         this.addHltb();
 
         this.replaceDevPubLinks();
-        this.addSupport();
         this.moveUsefulLinks();
         this.addLinks("app");
         this.addTitleHighlight();
@@ -626,7 +630,7 @@ class AppPageClass extends StorePageClass {
 
         this.addReviewToggleButton();
         this.addHelpButton();
-
+        this.addSupport();
     }
 
     initHdPlayer() {
@@ -880,10 +884,7 @@ class AppPageClass extends StorePageClass {
             activeStyle = "";
         }
 
-        HTML.afterEnd(".queue_control_button.queue_btn_ignore",
-            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
-
-        HTML.afterEnd(".queue_control_button.queue_btn_ignore",
+        HTML.beforeBegin(".queue_actions_ctn > :last-child",
             ` <div class="queue_control_button js-user-note-button">
                 <div id="es_add_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${inactiveStyle}">
                     <span>${Localization.str.user_note.add}</span>
@@ -892,6 +893,9 @@ class AppPageClass extends StorePageClass {
                     <span>${Localization.str.user_note.update}</span>
                 </div>
             </div>`);
+
+        HTML.beforeEnd(".queue_actions_ctn",
+            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
 
         function toggleState(node, active) {
             let button = document.querySelector(".js-user-note-button");
@@ -935,6 +939,51 @@ class AppPageClass extends StorePageClass {
                 });
             });
         });
+    }
+
+    addFullscreenScreenshotView() {
+        function toggleFullScreen(event) {
+            if (!document.fullscreenElement) {
+                let element = event.target.closest(".screenshot_popup_modal_content");
+                element.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function initFSVButtons() {
+            let modalFooter = document.querySelector(".screenshot_popup_modal_footer");
+            let nextButton = modalFooter.querySelector(".next");
+            let nextButtonOffsetWidth = nextButton.offsetWidth;
+            if (nextButton.style.display === "none") {
+                nextButton.style.display = "";
+                nextButtonOffsetWidth = nextButton.offsetWidth;
+                nextButton.style.display = "none";
+            }
+            HTML.beforeEnd(modalFooter,
+                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_fullscreen_toggle" style="right: calc(${nextButtonOffsetWidth}px + 0.5em)"><i></i></div>`);
+            let fsvButton = modalFooter.querySelector(".es_screenshot_fullscreen_toggle");
+            fsvButton.addEventListener("click", toggleFullScreen);
+
+            let modalTitleLink = modalFooter.parentElement.querySelector(".screenshot_popup_modal_title > a");
+            HTML.beforeEnd(modalFooter,
+                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_download_btn" style="right: calc(${nextButtonOffsetWidth + fsvButton.offsetWidth}px + 1em)" title="${modalTitleLink.textContent.trim()}"><i></i></div>`);
+            let downloadButton = modalFooter.querySelector(".es_screenshot_download_btn");
+            downloadButton.addEventListener("click", () => {
+                modalTitleLink.click();
+            });
+        }
+
+        let observer = new MutationObserver(records => {
+            for (let record of records) {
+                for (let node of record.addedNodes) {
+                    if (node.classList.contains("screenshot_popup_modal")) {
+                        initFSVButtons();
+                    }
+                }
+            }
+        });
+        observer.observe(document.body, { childList: true });
     }
 
     getFirstSubid() {
@@ -1191,6 +1240,20 @@ class AppPageClass extends StorePageClass {
         document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName, Localization.str.review));
     }
 
+    displayViewInLibrary() {
+        if (!User.isSignedIn || !SyncedStorage.get("showviewinlibrary")) { return; }
+
+        let node = document.querySelector(".already_owned_actions");
+        if (!node) { return; }
+
+        HTML.afterBegin(node,
+            `<div class="game_area_already_owned_btn">
+                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${this.appid}">
+                    <span>${Localization.str.view_in_library}</span>
+                </a>
+            </div>`);
+    }
+
     displayPurchaseDate() {
         if (!SyncedStorage.get("purchase_dates")) { return; }
 
@@ -1391,47 +1454,69 @@ class AppPageClass extends StorePageClass {
     replaceDevPubLinks() {
         if (!this.isAppPage()) { return; }
 
-        let rows = document.querySelectorAll(".dev_row");
-        for (let i=0, len=rows.length; i<len; i++) {
-            let linkNode = rows[i].querySelector("a");
+        let rows = document.querySelectorAll(".dev_row a");
+        for (let linkNode of rows) {
             let homepageLink = new URL(linkNode.href);
             if (homepageLink.pathname === "/search/") {
                 continue;
             }
 
-            let parts = homepageLink.pathname.split(`/`);
-            let searchLink = `https://store.steampowered.com/search/?${parts[1]}=${encodeURIComponent(parts[2])}`;
-            linkNode.href = searchLink;
+            let name = linkNode.parentNode.id === "developers_list" ? "developer" : "publisher";
+            let value = linkNode.innerText;
+            linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
             HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
         }
     }
 
     async addSupport() {
-        if (!this.isAppPage()) { return; }
-        if (this.isDlc()) { return; }
+        if (!this.isAppPage() || this.isDlc() || !SyncedStorage.get("showsupportinfo")) { return; }
+
+        let cache = LocalStorage.get("support_info", null);
+        if (!cache || !cache.expiry || cache.expiry < Date.now()) {
+            cache = {
+                "data": {},
+                "expiry": Date.now() + (31*86400 * 1000) // 31 days
+            }
+        }
 
         let appid = this.appid;
-        let response = await Background.action("appdetails", { "appids": appid, "filters": "support_info" })
-        if (!response || !response[appid] || !response[appid].success) { return; }
+        let supportInfo = cache[appid];
+        if (!supportInfo) {
+            let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
+            if (!response || !response[appid] || !response[appid].success) { return; }
 
-        let data = response[appid].data;
-        let url = data.support_info.url;
-        let email = data.support_info.email;
+            supportInfo = response[appid].data.support_info;
+
+            cache['data'][appid] = supportInfo;
+            LocalStorage.set("support_info", cache);
+        }
+
+        let url = supportInfo.url;
+        let email = supportInfo.email;
         if (!email && !url) { return; }
 
-        // From https://emailregex.com/
-        let email_regex =
-            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        let isEmail = (text) => email_regex.test(text);
+        let support = "";
+        if (url) {
+            support += `<a href="${url}">${Localization.str.website}</a>`;
+        }
+
+        if (email) {
+            if (url) {
+                support += ", ";
+            }
+
+            // From https://emailregex.com/
+            let emailRegex =
+                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (emailRegex.test(email)) {
+                support += `<a href="mailto:${email}">${Localization.str.email}</a>`;
+            } else {
+                support += `<a href="${email}">${Localization.str.contact}</a>`;
+            }
+        }
 
         let block = document.querySelector(".glance_ctn .user_reviews");
-        let support = ``;
-
-        if (url) { support += `<a href="${url}">${Localization.str.website}</a>`; }
-        if (url && email) { support += `, `; }
-        if (email && isEmail(email)) { support += `<a href="MAILTO:${email}">${Localization.str.email}</a>`; }
-        if (email && !isEmail(email)) { support += `<a href="${email}">${Localization.str.contact}</a>`; }
-
         HTML.beforeEnd(block,
             `<div class="release_date">
                 <div class="subtitle column">${Localization.str.support}:</div>
@@ -1455,16 +1540,6 @@ class AppPageClass extends StorePageClass {
 
     addLinks(type) {
         let linkNode = document.querySelector("#ReportAppBtn").parentNode;
-
-        if (SyncedStorage.get("showclient")) {
-            let cls = "steam_client_btn";
-            let url = "steam://url/StoreAppPage/" + this.appid;
-            let str = Localization.str.viewinclient;
-
-            HTML.afterBegin(linkNode,
-                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-        }
 
         if (SyncedStorage.get("showpcgw")) {
             let cls = "pcgw_btn";
@@ -1554,14 +1629,13 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("show_package_info")) { return; }
 
         let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            if (node.querySelector(".btn_packageinfo")) { continue; }
+        for (let node of nodes) {
+            if (node.querySelector(".btn_packageinfo")) return;
 
             let subid = node.querySelector("input[name=subid]").value;
-            if (!subid) { continue; }
+            if (!subid) return;
 
-            HTML.afterBegin(".game_purchase_action",
+            HTML.afterBegin(node.querySelector(".game_purchase_action"),
                 `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
                  <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
                  ${Localization.str.package_info}</span></a></div></div>`);
@@ -1571,7 +1645,7 @@ class AppPageClass extends StorePageClass {
     addSteamChart(result) {
         if (this.isDlc()) { return; }
         if (!SyncedStorage.get("show_steamchart_info")) { return; }
-	if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
+	    if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
 
         let appid = this.appid;
         let chart = result.charts.chart;
@@ -1643,7 +1717,7 @@ class AppPageClass extends StorePageClass {
         let html = "<div id='performance_survey' class='game_area_description'><h2>" + Localization.str.survey.performance_survey + "</h2>";
 
         if (survey.success) {
-            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + ".</p>";
+            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + "</p>";
             html += "<p><b>" + Localization.str.survey.framerate + "</b>: " + Math.round(survey["frp"]) + "% " + Localization.str.survey.framerate_response + " "
             switch (survey["fr"]) {
                 case "30": html += "<span style='color: #8f0e10;'>" + Localization.str.survey.framerate_30 + "</span>"; break;
@@ -1700,7 +1774,7 @@ class AppPageClass extends StorePageClass {
                 html += "</div>";
             }
         } else {
-            html += "<p>" + Localization.str.survey.nobody + ".</p>";
+            html += "<p>" + Localization.str.survey.nobody + "</p>";
         }
 
         if (document.querySelector(".game_area_already_owned") && document.querySelector(".hours_played")) {
@@ -1862,9 +1936,9 @@ class AppPageClass extends StorePageClass {
         let appid = this.communityAppid;
 
         Background.action('cards', { 'appid': appid, } )
-            .then(result => loadBadgeContent(".es_normal_badge_progress", result), EnhancedSteam.addLoginWarning);
+            .then(result => loadBadgeContent(".es_normal_badge_progress", result));
         Background.action('cards', { 'appid': appid, 'border': 1, } )
-            .then(result => loadBadgeContent(".es_foil_badge_progress", result), EnhancedSteam.addLoginWarning);
+            .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
         function loadBadgeContent(targetSelector, result) {
             let dummy = HTMLParser.htmlToDOM(result);
@@ -1971,7 +2045,7 @@ class AppPageClass extends StorePageClass {
             let node = document.querySelector("#es_ach_stats");
             HTML.inner(node, achieveBar)
 
-        }, EnhancedSteam.addLoginWarning);
+        });
     }
 
     customizeAppPage() {
@@ -2023,7 +2097,7 @@ class AppPageClass extends StorePageClass {
             .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
             .add("customerreviews", "#app_reviews_hash");
 
-        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
+        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop.workshop);
         if (morelikethis) customizer.add("morelikethis", "#recommended_block", morelikethis.textContent);
 
         customizer.build();
@@ -2395,7 +2469,7 @@ let SearchPageClass = (function(){
         if (search.substring(0,1) === "&") { search = "?" + search.substring(1, search.length); }
         if (search.substring(0,1) !== "?") { search = "?" + search; }
 
-        RequestData.getHttp("https://store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
+        RequestData.getHttp(`https://store.steampowered.com/search/results${search}&page=${searchPage}&snr=es`).then(result => {
             let dummy = HTMLParser.htmlToDOM(result);
 
             let addedDate = Date.now();
@@ -2404,14 +2478,10 @@ let SearchPageClass = (function(){
             let lastNode = document.querySelector(".search_result_row:last-child");
 
             // When you're not logged in, the constructed hover doesn't include friends info
-            let publicAttr = `,"public":1`;
-            if (User.isSignedIn) {
-                publicAttr = '';
-            }
+            let publicAttr = User.isSignedIn ? '' : `,"public":1`;
 
             let rows = dummy.querySelectorAll("a.search_result_row");
-            for (let i=0, len=rows.length; i<len; i++) {
-                let row = rows[i];
+            for (let row of rows) {
                 row.dataset.addedDate = addedDate;
                 lastNode.insertAdjacentElement("afterend", row);
                 lastNode = row;
@@ -2433,11 +2503,13 @@ let SearchPageClass = (function(){
             searchPage = searchPage + 1;
             processing = false;
 
-            ExtensionLayer.runInPageContext(function() {
+            ExtensionLayer.runInPageContext(() => {
                 let addedDate = document.querySelector('#search_result_container').dataset.lastAddDate;
-                GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + addedDate + '"]'));
+                GDynamicStore.DecorateDynamicItems(jQuery(`.search_result_row[data-added-date="${addedDate}"]`));
                 SetupTooltips( { tooltipCSSClass: 'store_tooltip'} );
             });
+
+            Highlights.highlightAndTag(rows);
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
@@ -2455,7 +2527,7 @@ let SearchPageClass = (function(){
         if (!SyncedStorage.get("contscroll")) { return; }
 
         // Required for the loading wrapper
-        DOMHelper.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
+        DOMHelper.insertHomeCSS();
 
         let result_count;
         document.querySelector(".search_pagination_right").style.display = "none";
@@ -2502,10 +2574,10 @@ let SearchPageClass = (function(){
             return tagsValue ? tagsValue.split(',') : [];
         }
 
-        for (let i=0, len=tarFilterDivs.length; i<len; i++) {
-            let val = tarFilterDivs[i];
+        let tags = getTags();
 
-            let item_checked = getTags().indexOf("-"+val.dataset.value) > -1 ? "checked" : "";
+        for (let val of tarFilterDivs) {
+            let item_checked = tags.indexOf(`-${val.dataset.value}`) > -1 ? "checked" : '';
 
             let excludeItem = HTMLParser.htmlToElement(
                 `<div class="tab_filter_control ${item_checked}" data-param="tags" data-value="-${val.dataset.value}" data-loc="${val.dataset.loc}">
@@ -2513,8 +2585,8 @@ let SearchPageClass = (function(){
                     <span class="tab_filter_control_label">${val.dataset.loc}</span>
                 </div>`);
 
-            excludeItem.addEventListener("click", function(e) {
-                let control = e.target.closest(".tab_filter_control")
+            excludeItem.addEventListener("click", e => {
+                let control = e.target.closest(".tab_filter_control");
 
                 let rgValues = getTags();
                 let value = String(control.dataset.value);
@@ -2534,8 +2606,7 @@ let SearchPageClass = (function(){
                 }
 
                 control.classList.toggle('checked');
-                document.querySelector("#tags").value = rgValues.join(',');
-                ExtensionLayer.runInPageContext(() => AjaxSearchResults());
+                filtersChanged();
             });
 
             excludeContainer.append(excludeItem);
@@ -2596,19 +2667,38 @@ let SearchPageClass = (function(){
         return Number(reviewsString) < reviewsBelow;
     }
 
+    function isTagExcluded(node, tags) {
+        if (!node.dataset.dsTagids) return false;
+        let nodeTags = JSON.parse(node.dataset.dsTagids);
+        return nodeTags.some(tag => tags.includes(tag));
+    }
+
     function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
+        let hideOwned = document.querySelector("#es_owned_games.checked");
+        let hideWishlisted = document.querySelector("#es_wishlist_games.checked");
+        let hideInCart = document.querySelector("#es_cart_games.checked");
+        let hideNotDiscounted = document.querySelector("#es_notdiscounted_games.checked");
+        let hideNotInterested = document.querySelector("#es_notinterested.checked");
+        let hideMixed = document.querySelector("#es_notmixed.checked");
+        let hideNegative = document.querySelector("#es_notnegative.checked");
+        let hidePriceAbove = document.querySelector("#es_notpriceabove.checked");
+        let hideReviewsBelow = document.querySelector("#es_noreviewsbelow.checked");
+
         let priceAbove = Number(document.querySelector("#es_notpriceabove_val").value.replace(',', '.'));
         let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
+        let hideTags = Array.from(document.querySelectorAll("#es_tagfilter_exclude_container > .checked")).map(tag => Math.abs(Number(tag.dataset.value)));
+
         for (let node of nodes) {
-            if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notdiscounted.checked") && !node.querySelector(".search_discount span")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notinterested.checked") && node.classList.contains("ds_ignored")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notpriceabove.checked") && isPriceAbove(node, priceAbove)) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_noreviewsbelow.checked") && isReviewsBelow(node, reviewsBelow)) { node.style.display = "none"; continue; }
+            if (hideOwned && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
+            if (hideWishlisted && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
+            if (hideInCart && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
+            if (hideNotDiscounted && !node.querySelector(".search_discount span")) { node.style.display = "none"; continue; }
+            if (hideNotInterested && node.classList.contains("ds_ignored")) { node.style.display = "none"; continue; }
+            if (hideMixed && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
+            if (hideNegative && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
+            if (hidePriceAbove && isPriceAbove(node, priceAbove)) { node.style.display = "none"; continue; }
+            if (hideReviewsBelow && isReviewsBelow(node, reviewsBelow)) { node.style.display = "none"; continue; }
+            if (hideTags.length && isTagExcluded(node, hideTags)) { node.style.display = "none"; continue; }
             node.style.display = "block";
         }
     }
@@ -2674,8 +2764,9 @@ let SearchPageClass = (function(){
             </div>
         `);
 
-        Messenger.addMessageListener("filtersChanged", filtersChanged, false);
-        Messenger.addMessageListener("priceAbove", priceVal => {
+        Messenger.addMessageListener("filtersChanged", filtersChanged);
+
+        Messenger.onMessage("priceAbove").then(priceVal => {
             if (new RegExp(inputPattern.source.replace(',', '\\.')).test(priceVal)) {
                 if (currency.format.decimalSeparator === ',') {
                     priceVal = priceVal.replace('.', ',');
@@ -2685,11 +2776,11 @@ let SearchPageClass = (function(){
             } else {
                 console.warn("Failed to validate price %s from URL params!", priceVal);
             }
-        }, true);
-        Messenger.addMessageListener("reviewsBelow", reviewsVal => {
+        });
+        Messenger.onMessage("reviewsBelow").then(reviewsVal => {
             document.getElementById("es_noreviewsbelow_val").value = reviewsVal;
             Messenger.postMessage("reviewsValueChanged");
-        }, true);
+        });
 
         // TODO(tomas.fedor) Can we somehow simplify this monstrosity? E.g. update URL on our end?
         // Thrown together from sources of searchpage.js
@@ -2697,10 +2788,7 @@ let SearchPageClass = (function(){
 
             GDynamicStore.OnReady(() => {
 
-                // Callback that will fire when the user browses through pages
-                ${!SyncedStorage.get("contscroll") ? `Ajax.Responders.register({ onComplete: () => Messenger.postMessage("ajaxCompleted") });` : ""}
-
-                // For each AS hide filter
+                // For each AS filter
                 $J(".tab_filter_control[id^='es_']").each(function() {
                     let $Control = $J(this);
                     $Control.click(() => updateURL($Control));
@@ -2891,7 +2979,7 @@ let SearchPageClass = (function(){
                                         continue;
                                     }
                                     filter = $J(".tab_filter_control[data-value=price-above]");
-                                    Messenger.addMessageListener("priceValueChanged", () => filter.click(), true);
+                                    Messenger.onMessage("priceValueChanged").then(filter.click);
                                     Messenger.postMessage("priceAbove", priceValue);
                                     continue;
                                 } else if (filterValue.startsWith("reviews-below")) {
@@ -2901,7 +2989,7 @@ let SearchPageClass = (function(){
                                         continue;
                                     }
                                     filter = $J(".tab_filter_control[data-value=reviews-below]");
-                                    Messenger.addMessageListener("reviewsValueChanged", () => filter.click(), true);
+                                    Messenger.onMessage("reviewsValueChanged").then(filter.click);
                                     Messenger.postMessage("reviewsBelow", reviewsValue);
                                     continue;
                                 } else {
@@ -2914,8 +3002,8 @@ let SearchPageClass = (function(){
                     }
                 }
 
-                Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState), false);
-                Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState), false);
+                Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState));
+                Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState));
             });
         }`);
 
@@ -2994,40 +3082,44 @@ let SearchPageClass = (function(){
         let inputObserver = new MutationObserver(modifyLinks);
         inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
 
-        let contscrollObserver;
-        if (SyncedStorage.get("contscroll")) {
-            contscrollObserver = new MutationObserver(mutations => {
-                EarlyAccess.showEarlyAccess();
-                mutations.forEach(mutation => {
-                    Highlights.highlightAndTag(mutation.addedNodes);
-                    filtersChanged(mutation.addedNodes);
-                });
+        let removeObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                for (let node of mutation.addedNodes) {
+                    // Under certain circumstances the search result container will get removed and then added again, thus disconnecting the MutationObserver
+                    if (node.id === "search_result_container") {
+                        observeAjax(node.querySelectorAll(".search_result_row"));
+                        
+                        if (!SyncedStorage.get("contscroll")) {
+                            toggleFilter("price-above", "#es_notpriceabove");
+                            toggleFilter("reviews-below", "#es_noreviewsbelow");
+                            modifyLinks();
+                            filtersChanged();
+                        }
+                        ajaxObserver.observe(node.querySelector("#search_resultsRows"), {childList: true});
+                        break;
+                    }
+                }
             });
-            contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
+        });
+        removeObserver.observe(document.querySelector("#search_results"), { childList: true });
+
+        function observeAjax(addedNodes) {
+            EarlyAccess.showEarlyAccess();
+            
+            Highlights.highlightAndTag(addedNodes);
+            filtersChanged(addedNodes);
         }
 
-        Messenger.addMessageListener("ajaxCompleted", () => {
-            if (SyncedStorage.get("contscroll")) {
-                mutations.forEach(mutation => {
-                    for (let node of mutation.removedNodes) {
-                        // Under certain circumstances the search result container will get removed and then added again, thus disconnecting the MutationObserver
-                        if (node.id && node.id === "search_result_container") {
-                            contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
-                            break;
-                        }
-                    }
-                })
-            } else {
-                toggleFilter("price-above", "#es_notpriceabove");
-                toggleFilter("reviews-below", "#es_noreviewsbelow");
-                modifyLinks();
+        let ajaxObserver = new MutationObserver(mutations => {
+            let rows = [];
+            for (let mutation of mutations) {
+                rows = rows.concat(
+                    Array.from(mutation.addedNodes).filter(node => node.classList && node.classList.contains("search_result_row"))
+                );
             }
-
-            EarlyAccess.showEarlyAccess();
-
-            Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
-            filtersChanged();
-        }, false);
+            observeAjax(rows);
+        });
+        ajaxObserver.observe(document.querySelector("#search_resultsRows"), {childList: true});
     };
 
     return SearchPageClass;
@@ -3099,7 +3191,7 @@ let WishlistPageClass = (function(){
                 if (hover.length) {
                     let activeEntry = hover[hover.length - 1].closest(".wishlist_row");
                     if (activeEntry) {
-                        let priceNode = activeEntry.querySelector(".es_lowest_price");
+                        let priceNode = activeEntry.querySelector(".itad-pricing");
                         if (priceNode) {
                             getNodesBelow(activeEntry).forEach(row => {
                                 row.style.top = parseInt(row.style.top, 10) + priceNode.getBoundingClientRect().height + "px";
@@ -3112,10 +3204,28 @@ let WishlistPageClass = (function(){
 
         observer.observe(container, { 'childList': true, });
 
-        this.addStatsArea();
-        this.addEmptyWishlistButton();
-        this.addUserNotesHandlers();
-        this.addRemoveHandler();
+        let wishlistLoaded = () => {
+            this.addStatsArea();
+            this.addEmptyWishlistButton();
+            this.addExportWishlistButton();
+            this.addUserNotesHandlers();
+            this.addRemoveHandler();
+        };
+        
+        if (document.querySelector("#throbber").style.display === "none") {
+            wishlistLoaded();
+        } else {
+            Messenger.onMessage("wishlistLoaded").then(wishlistLoaded);
+
+            ExtensionLayer.runInPageContext(() => {
+                $J(document).ajaxSuccess((e, xhr, settings) => {
+                    let url = new URL(settings.url);
+                    if (url.origin + url.pathname === `${g_strWishlistBaseURL}wishlistdata/` && g_Wishlist.nPagesToLoad === g_Wishlist.nPagesLoaded) {
+                        Messenger.postMessage("wishlistLoaded");
+                    }
+                });
+            });
+        }
     }
 
     function isMyWishlist() {
@@ -3225,9 +3335,9 @@ let WishlistPageClass = (function(){
         if (!isMyWishlist()) { return; }
         if (!SyncedStorage.get("showemptywishlist")) { return; }
 
-        HTML.beforeEnd("div.wishlist_header", "<div id='es_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
+        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_empty_wishlist'>" + Localization.str.empty_wishlist + "</div>");
 
-        document.querySelector("#es_empty_wishlist div").addEventListener("click", function(e) {
+        document.querySelector("#es_empty_wishlist").addEventListener("click", function(e) {
             emptyWishlist();
         });
     };
@@ -3258,7 +3368,7 @@ let WishlistPageClass = (function(){
             });
         }
 
-        Messenger.addMessageListener("emptyWishlist", () => {
+        Messenger.onMessage("emptyWishlist").then(() => {
             let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
             if (!wishlistData) { return; }
 
@@ -3266,14 +3376,172 @@ let WishlistPageClass = (function(){
                 DynamicStore.clear();
                 location.reload();
             });
-        }, true)
+        });
     }
+
+    class WishlistExporter {
+
+        constructor(appInfo) {
+            this.appInfo = appInfo;
+            this.notes = SyncedStorage.get("user_notes") || {};
+        }
+
+        toJson() {
+            let json = {
+                version: "02",
+                data: []
+            };
+
+            for (let [appid, data] of Object.entries(this.appInfo)) {
+                json.data.push({
+                    gameid: ["steam", "app/"+appid],
+                    title: data.name,
+                    url: `https://store.steampowered.com/app/${appid}/`,
+                    release_date: data.release_string,
+                    note: this.notes[appid] || null
+                });
+            }
+
+            return JSON.stringify(json, null, 4);
+        }
+
+        toText(format) {
+            let result = [];
+            for (let [appid, data] of Object.entries(this.appInfo)) {
+                result.push(
+                    format
+                        .replace("%appid%", appid)
+                        .replace("%id%", "app/"+appid)
+                        .replace("%url%", `https://store.steampowered.com/app/${appid}/`)
+                        .replace("%title%", data.name)
+                        .replace("%release_date%", data.release_string)
+                        .replace("%type%", data.type)
+                        .replace("%note%", this.notes[appid] || "")
+                );
+            }
+
+            return result.join("\n");
+        }
+    }
+
+    WishlistPageClass.prototype.showExportModalDialog = function() {
+
+        let exportStr = Localization.str.export;
+
+        ExtensionLayer.runInPageContext(`function() {
+            let options = {};
+            window.AS_WishlistExportModal = ShowConfirmDialog(
+                "${exportStr.wishlist}",
+                "<div id='es_export_form'></div>",
+                "${Localization.str.save}",
+                "${Localization.str.cancel}"
+            );
+        }`);
+
+        let formNode = document.querySelector("#es_export_form");
+
+        HTML.inner(
+            formNode,
+            `<div class="es-wexport">
+                <h2>${exportStr.type}</h2>
+                <div>
+                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${exportStr.text}</label>
+                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
+                </div>
+            </div>
+        
+            <div class="es-wexport es-wexport__format">
+                <h2>${exportStr.format}</h2>
+                <div>
+                    <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
+                    <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %note%</div>
+                </div>
+            </div>`);
+
+        let format = document.querySelector(".es-wexport__format");
+        for (let el of document.getElementsByName("es_wexport_type")) {
+            el.addEventListener("click", e => format.style.display = e.target.value === "json" ? "none" : '');
+        }
+
+        let buttonsNode = formNode.closest(".newmodal_content").querySelector(".newmodal_buttons");
+
+        HTML.inner(buttonsNode,
+            `<div id="as_export_download" class="btn_green_white_innerfade btn_medium"><span>${exportStr.download}</span></div>
+             <div id="as_export_copy" class="btn_green_white_innerfade btn_medium"><span>${exportStr.copy_clipboard}</span></div>
+             <div id="as_export_cancel" class="btn_grey_white_innerfade btn_medium"><span>${Localization.str.cancel}</span></div>`);
+
+        // events
+
+        function dismissModal() {
+            ExtensionLayer.runInPageContext(`function() { 
+                window.AS_WishlistExportModal.Dismiss();
+                window.AS_WishlistExportModal = null;
+            }`);
+        }
+
+        function handleExport(method) {
+            let type = document.querySelector("input[name='es_wexport_type']:checked").value;
+            let format = encodeURIComponent(document.querySelector("#es-wexport-format").value);
+            ExtensionLayer.runInPageContext(`function() { 
+                Messenger.postMessage("exportWishlist", {format: "${format}", method: "${method}", type: "${type}", appInfo: g_rgAppInfo});
+            }`);
+            dismissModal();
+        }
+
+        document.querySelector("#as_export_download").addEventListener("click", function() { handleExport("download"); });
+        document.querySelector("#as_export_copy").addEventListener("click", function() { handleExport("clipboard"); });
+        document.querySelector("#as_export_cancel").addEventListener("click", dismissModal);
+
+        // handle messages
+
+        Messenger.onMessage("exportWishlist").then(data => {
+            let appInfo = data.appInfo;
+            if (!appInfo) { return; }
+            let type = data.type;
+            let method = data.method;
+            let format = decodeURIComponent(data.format);
+
+            exportWishlist(appInfo, type, method, format);
+        });
+
+        function exportWishlist(appInfo, type, method, format) {
+            let wishlist = new WishlistExporter(appInfo);
+
+            let result = "";
+            let filename = "";
+            let filetype = "";
+            if (type === "json") {
+                result = wishlist.toJson();
+                filename = "wishlist.json";
+                filetype = "application/json";
+            } else if (type === "text" && format) {
+                result = wishlist.toText(format);
+                filename = "wishlist.txt";
+                filetype = "text/plain";
+            }
+
+            if (method === "clipboard") {
+                Clipboard.set(result);
+            } else if (method === "download") {
+                Downloader.download(new Blob([result], { type : filetype+";charset=UTF-8" }), filename);
+            }
+        }
+    };
+
+    WishlistPageClass.prototype.addExportWishlistButton = function() {
+        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_export_wishlist'><div>" + Localization.str.export.wishlist + "</div></div>");
+
+        let that = this;
+        document.querySelector("#es_export_wishlist").addEventListener("click", function() {
+            that.showExportModalDialog();
+        });
+    };
 
     function getNodesBelow(node) {
         let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
 
-        // Limit the selection to the rows that are positioned below the row (including the row itself) where the price is being shown
-        return nodes.filter(row => parseInt(row.style.top, 10) >= parseInt(node.style.top, 10));
+        // Limit the selection to the rows that are positioned below the row (not including the row itself) where the price is being shown
+        return nodes.filter(row => parseInt(row.style.top, 10) > parseInt(node.style.top, 10));
     }
 
     WishlistPageClass.prototype.addPriceHandler = function(node) {
@@ -3289,17 +3557,17 @@ let WishlistPageClass = (function(){
                 cachedPrices[appId] = new Promise(resolve => {
                     let prices = new Prices();
                     prices.appids = [appId];
-                    prices.priceCallback = (type, id, html) => {
-                        HTML.beforeEnd(node, html);
-                        let priceNode = node.querySelector(".es_lowest_price");
-                        priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
+                    prices.priceCallback = (type, id, contentNode) => {
+                        node.insertAdjacentElement("beforeend", contentNode);
+                        let priceNode = node.querySelector(".itad-pricing");
+                        priceNode.style.bottom = -priceNode.getBoundingClientRect().height + "px";
                         resolve();
-                    }
+                    };
                     prices.load();
                 });
             }
             cachedPrices[appId].then(() => {
-                    let priceNodeHeight = node.querySelector(".es_lowest_price").getBoundingClientRect().height;
+                    let priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
                     getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) + priceNodeHeight + "px");
             });
         });
@@ -3308,7 +3576,7 @@ let WishlistPageClass = (function(){
             // When scrolling really fast, sometimes only this event is called without the invocation of the mouseenter event
             if (cachedPrices[appId]) {
                 cachedPrices[appId].then(() => {
-                    let priceNodeHeight = node.querySelector(".es_lowest_price").getBoundingClientRect().height;
+                    let priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
                     getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) - priceNodeHeight + "px");
                 });
             }
@@ -3365,7 +3633,7 @@ let WishlistPageClass = (function(){
             })
         );
 
-        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry), false);
+        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry));
     };
 
     return WishlistPageClass;
@@ -3408,7 +3676,7 @@ let UserNotes = (function(){
             deferred.always(() => Modal.Dismiss());
 
             Modal.m_fnBackgroundClick = () => {
-                Messenger.addMessageListener("noteSaved", () => Modal.Dismiss(), true);
+                Messenger.onMessenge("noteSaved").then(Modal.Dismiss);
                 Messenger.postMessage("backgroundClick");
             }
 
@@ -3431,10 +3699,10 @@ let UserNotes = (function(){
 
         document.addEventListener("click", clickListener);
 
-        Messenger.addMessageListener("backgroundClick", () => {
+        Messenger.onMessage("backgroundClick").then(() => {
             onNoteUpdate.apply(null, saveNote());
             Messenger.postMessage("noteSaved");
-        }, true);
+        });
 
         function clickListener(e) {
             if (e.target.closest(".es_note_modal_submit")) {

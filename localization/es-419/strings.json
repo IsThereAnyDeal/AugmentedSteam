@@ -365,7 +365,6 @@
         "saved_note": "Se han guardado las opciones",
         "regional_hideworld": "Esconder globo indicador",
         "show_astatslink": "Mostrar enlace de AStat en páginas de aplicaciones",
-        "showclient": "Mostrar enlaces del cliente de Steam",
         "guest": "Artículos de los que posees un pase de invitado",
         "show_steamchart_info": "Mostrar información de SteamCharts.com",
         "show_steamspy_info": "Mostrar información de steamspy.com",
@@ -453,7 +452,7 @@
     },
     "survey": {
         "performance_survey": "Encuesta de rendimiento",
-        "users": "__users__ usuarios han completado la encuesta de rendimiento para este juego",
+        "users": "__users__ usuarios han completado la encuesta de rendimiento para este juego.",
         "framerate": "Framerate",
         "framerate_response": "han respondido que el framerate era",
         "framerate_30": "fijo a 30fps o menor",
@@ -467,7 +466,7 @@
         "satisfaction": "Satisfacción del rendimiento de la GPU",
         "gs_y": "Tiene opciones gráficas o menú de gráficos incorporado",
         "gs_n": "No tiene incorporado opciones gráficas o menú de gráficos",
-        "nobody": "Hasta el momento nadie ha hecho la encuesta de rendimiento para este juego",
+        "nobody": "Hasta el momento nadie ha hecho la encuesta de rendimiento para este juego.",
         "take": "Hacer la encuesta"
     },
     "select": {
