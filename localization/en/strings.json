@@ -1,4 +1,5 @@
 {
+    "mp4video": "Force app store videos to be in MP4 format",
     "oneclickgoo": "1-Click turn into Gems...",
     "view_in_library": "View in Library",
     "support": "Support",
@@ -139,8 +140,8 @@
     "notinterested": "Items marked not interested",
     "mixed_item": "Mixed rating items",
     "negative_item": "Negative rating items",
-    "price_above":"Items that cost more than",
-    "price_above_tooltip":"Enter zero for free items or items without price tags; leave this field empty to disable this feature",
+    "price_above": "Items that cost more than",
+    "price_above_tooltip": "Enter zero for free items or items without price tags; leave this field empty to disable this feature",
     "price_above_wrong_format": "Wrong format, expected input in the form of __pattern__",
     "reviews_below":"Items with less reviews than",
     "reviews_below_tooltip":"Enter zero for items without reviews; leave this field empty to disable this feature",
