@@ -331,15 +331,13 @@ let Options = (function(){
                 }
             }
 
+            let total = deepCount(Localization.str);
             for (let lang of Object.keys(Localization.str.options.lang)) {
                 let node = document.querySelector(".language." + lang);
                 if (node) {
                     node.textContent = Localization.str.options.lang[lang] + ":";
                 }
-            }
 
-            let total = deepCount(Localization.str);
-            for (let lang of Object.keys(Localization.str.options.lang)) {
                 if (lang === "english") continue;
                 let code = Language.languages[lang];
                 let locale = await Localization.loadLocalization(code);
