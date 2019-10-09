@@ -2313,8 +2313,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
- * MetaCritic User Scores
- * add_metacritic_userscore()
+ * Store app pages
+ * addMetacriticUserScore()
  **************************************/
 #game_area_userscore {
   margin-top: 6px;
@@ -2330,6 +2330,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
   font-size: 25px;
   text-align: center;
   float: left;
+  padding: 0 !important;
 }
 #game_area_userscore .score.high {
   background-color: #66cc33;
@@ -2365,8 +2366,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
- * OpenCritic User Scores
- * add_opencritic_userscore()
+ * Store app pages
+ * addOpenCritic()
  **************************************/
 #game_area_opencritic .score {
   width: 50px;
@@ -2377,18 +2378,19 @@ input[type=checkbox].es_dlc_selection:checked + label {
   font-size: 25px;
   text-align: center;
   float: left;
+  padding: 0 !important;
 }
 #game_area_opencritic .score.mighty {
-  background-color: rgb(252, 67, 10);
+  background-color: #fc430a;
 }
 #game_area_opencritic .score.strong {
-  background-color: rgb(158, 0, 180);
+  background-color: #9e00b4;
 }
 #game_area_opencritic .score.fair {
-  background-color: rgb(74, 161, 206);
+  background-color: #4aa1ce;
 }
 #game_area_opencritic .score.weak {
-  background-color: rgb(128, 176, 106);
+  background-color: #80b06a;
 }
 #game_area_opencritic .logo {
   background-repeat: no-repeat;
@@ -2415,7 +2417,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Store app pages
- * add_app_badge_progres()
+ * addBadgeProgress()
  **************************************/
 .es_badges_progress_block .es_cards_numbers {
   padding-top: 10px;
