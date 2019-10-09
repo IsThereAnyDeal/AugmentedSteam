@@ -1053,16 +1053,18 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("showoc")) { return; }
 
         this.data.then(result => {
-            if (!result || !result || !result.oc) { return; }
+            if (!result || !result.oc) { return; }
             let data = result.oc;
 
             if (!data.url) { return; }
 
-            let node = document.querySelector(".rightcol .responsive_apppage_reviewblock");
-            if (!node) {
-                node = document.querySelector("#ReportAppBtn").parentNode;
+            let node = document.querySelector("#game_area_metascore");
+            if (node) {
+                node = node.parentNode;
+            } else {
+                node = document.querySelector(".game_details");
             }
-            HTML.afterEnd(node.parentNode,  "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic'></div><div style='clear: both'></div></div>");
+            HTML.afterEnd(node, "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic'></div><div style='clear: both'></div></div>");
 
             let opencriticImg = ExtensionLayer.getLocalUrl("img/opencritic.png");
             let award = data.award || "NA";
