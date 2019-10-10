@@ -1129,7 +1129,6 @@ let actionCallbacks = new Map([
     ["dlcinfo", AugmentedSteamApi.endpointFactory("v01/dlcinfo")],
     ["storepagedata.expire", AugmentedSteamApi.expireStorePageData],
     ["prices", AugmentedSteamApi.endpointFactory("v01/prices")],
-    //["profile.clear", AugmentedSteamApi.clearEndpointCache(profilesMapper, "profiles")],
     ["profile.background", AugmentedSteamApi.endpointFactory("v01/profile/background/background")],
     ["profile.background.games", AugmentedSteamApi.endpointFactory("v01/profile/background/games")],
     ["twitch.stream", AugmentedSteamApi.endpointFactory("v01/twitch/stream")],
