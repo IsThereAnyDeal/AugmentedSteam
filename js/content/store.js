@@ -895,10 +895,8 @@ class AppPageClass extends StorePageClass {
                 </div>
             </div>`);
 
-        if (noteText) {
-            HTML.beforeEnd(".queue_actions_ctn",
-                `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
-        }
+        HTML.beforeEnd(".queue_actions_ctn",
+            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
 
         function toggleState(node, active) {
             let button = document.querySelector(".js-user-note-button");
