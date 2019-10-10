@@ -3205,8 +3205,8 @@ let WishlistPageClass = (function(){
 
         let wishlistLoaded = () => {
             this.addStatsArea();
-            this.addEmptyWishlistButton();
             this.addExportWishlistButton();
+            this.addEmptyWishlistButton();
             this.addUserNotesHandlers();
             this.addRemoveHandler();
         };
