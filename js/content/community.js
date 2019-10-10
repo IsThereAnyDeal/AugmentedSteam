@@ -54,7 +54,7 @@ let ProfileData = (function(){
         if (!_promise) {
             let steamId = SteamId.getSteamId();
 
-            _promise = Background.action('profile', { 'profile': steamId, } )
+            _promise = Background.action("idb.get", "profiles", steamId, { "profile": steamId })
                 .then(response => { _data = response; return _data; });
         }
         return _promise;
