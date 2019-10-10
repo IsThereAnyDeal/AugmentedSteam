@@ -103,7 +103,7 @@ let ProfileData = (function(){
 
     self.clearOwn = async function() {
         if (!User.isSignedIn) { return; }
-        await Background.action('profile.clear', { 'profile': User.steamId, });
+        await Background.action("idb.delete", "profiles", User.steamId);
         _promise = null;
         return self.promise();
     };
@@ -1218,21 +1218,20 @@ let GamesPageClass = (function(){
 let ProfileEditPageClass = (function(){
 
     function ProfileEditPageClass() {
-        let that = this;
         ProfileData.clearOwn().then(() => {
-            if (window.location.pathname.indexOf("/settings") < 0) {
-                that.addBackgroundSelection();
-                that.addStyleSelection();
+            if (!window.location.pathname.includes("/settings")) {
+                this.addBackgroundSelection();
+                this.addStyleSelection();
             }
         })
     }
 
     function showBgFormLoading() {
-        document.querySelector("#es_bg .es_loading").style.display="block";
+        document.querySelector("#es_bg .es_loading").style.display = "block";
     }
 
     function hideBgFormLoading() {
-        document.querySelector("#es_bg .es_loading").style.display="none";
+        document.querySelector("#es_bg .es_loading").style.display = "none";
     }
 
     function getGameSelectOptions(games) {
