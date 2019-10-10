@@ -7,14 +7,14 @@ class Customizer {
     }
 
     _textValue(node) {
-        if (!node) return null;
+        if (!node) return '';
         let str = "";
         for (node = node.firstChild; node; node = node.nextSibling) {
             if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName === "A")) { // Special case for Steam curators
                 str += node.textContent.trim();
             }
         }
-        return str || null;
+        return str;
     };
 
     _updateValue(name, value) {
@@ -171,48 +171,45 @@ class StorePageClass {
 
         let gfwl, uplay, securom, tages, stardock, rockstar, kalypso, denuvo, drm;
 
-        let text = "";
-        let nodes = document.querySelectorAll("#game_area_description, .game_area_sys_req, #game_area_legal, .game_details, .DRM_notice");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        let text = '';
+        for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details")) {
             text += node.innerHTML;
         }
 
         // Games for Windows Live detection
-        if (text.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
-        else if (text.toUpperCase().indexOf("GAMES FOR WINDOWS - LIVE") > 0) { gfwl = true; }
-        else if (text.indexOf("Online play requires log-in to Games For Windows") > 0) { gfwl = true; }
-        else if (text.indexOf("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") > 0) { gfwl = true; }
-        else if (text.indexOf("Multiplayer play and other LIVE features included at no charge") > 0) { gfwl = true; }
-        else if (text.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
+        if (text.toUpperCase().includes("GAMES FOR WINDOWS LIVE") ||
+        text.toUpperCase().includes("GAMES FOR WINDOWS - LIVE") ||
+        text.includes("Online play requires log-in to Games For Windows") ||
+        text.includes("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") ||
+        text.includes("Multiplayer play and other LIVE features included at no charge") ||
+        text.includes("www.gamesforwindows.com/live")) {
+            gfwl = true;
+        }
 
         // Ubisoft Uplay detection
-        if (text.toUpperCase().indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
-        else if (text.match(/\buplay/i) && !text.match(/\btuplaydinprosessori/i)) { uplay = true; }
+        if (text.includes("Uplay") || text.includes("Ubisoft Account")) { uplay = true; }
 
         // Securom detection
-        if (text.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }
+        if (text.includes("SecuROM")) { securom = true; }
 
         // Tages detection
-        if (text.match(/\btages\b/i)) { tages = true; }
-        else if (text.match(/angebote des tages/i)) { tages = false; }
-        else if (text.match(/\bsolidshield\b/i)) { tages = true; }
+        if ((text.match(/\btages\b/i) || text.match(/\bsolidshield\b/i)) && !text.match(/angebote des tages/i)) { tages = true; }
 
         // Stardock account detection
-        if (text.indexOf("Stardock account") > 0) { stardock = true; }
+        if (text.includes("Stardock account")) { stardock = true; }
 
         // Rockstar social club detection
-        if (text.indexOf("Rockstar Social Club") > 0) { rockstar = true; }
-        else if (text.indexOf("Rockstar Games Social Club") > 0) { rockstar = true; }
+        if (text.includes("Rockstar Social Club")) { rockstar = true; }
+        else if (text.includes("Rockstar Games Social Club")) { rockstar = true; }
 
         // Kalypso Launcher detection
-        if (text.indexOf("Requires a Kalypso account") > 0) { kalypso = true; }
+        if (text.includes("Requires a Kalypso account")) { kalypso = true; }
 
         // Denuvo Antitamper detection
         if (text.match(/\bdenuvo\b/i)) { denuvo = true; }
 
         // Detect other DRM
-        if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
+        if (text.includes("3rd-party DRM")) { drm = true; }
         else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
 
         let drmNames = [];
@@ -461,6 +458,27 @@ class StorePageClass {
             })
         });
     }
+
+    forceVideoMP4() {
+        if (!SyncedStorage.get("mp4video")) { return; }
+        let self = this;
+
+        document.querySelectorAll("[data-webm-source]").forEach(function(node) {
+            let mp4 = node.dataset.mp4Source;
+            let mp4hd = node.dataset.mp4HdSource;
+            if (!mp4 || !mp4hd) return;
+
+            node.dataset.webmSource = mp4;
+            node.dataset.webmHdSource = mp4hd;
+
+            let video = node.querySelector("video");
+            if (!video) { return; }
+
+            video.dataset.sdSrc = mp4;
+            video.dataset.hdSrc = mp4hd;
+            self.toggleVideoDefinition(video, false);
+        });
+    }
 }
 
 
@@ -568,6 +586,7 @@ class AppPageClass extends StorePageClass {
         // Required for "Customize" button and YouTube / Steam tabs
         DOMHelper.insertHomeCSS();
         
+        this.forceVideoMP4();
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
@@ -617,6 +636,7 @@ class AppPageClass extends StorePageClass {
     }
 
     initHdPlayer() {
+        let self = this;
         let movieNode = document.querySelector('div.highlight_movie');
         if (!movieNode) { return; }
 
@@ -650,11 +670,11 @@ class AppPageClass extends StorePageClass {
             ev.stopPropagation();
 
             let videoControl = ev.target.closest('div.highlight_movie').querySelector('video');
-            let playInHD = toggleVideoDefinition(videoControl);
+            let playInHD = self.toggleVideoDefinition(videoControl);
 
             for (let n of document.querySelectorAll('video.highlight_movie')) {
                 if (n === videoControl) continue;
-                toggleVideoDefinition(n, playInHD);
+                self.toggleVideoDefinition(n, playInHD);
             }
 
             LocalStorage.set('playback_hd', playInHD);
@@ -668,7 +688,7 @@ class AppPageClass extends StorePageClass {
             ev.currentTarget.removeEventListener('click', clickInitialHD, false);
             if (!ev.target.classList.contains('es_expanded')) return;
             for (let node of document.querySelectorAll('video.highlight_movie.es_video_sd')) {
-                toggleVideoDefinition(node, true);
+                self.toggleVideoDefinition(node, true);
             }
             LocalStorage.set('playback_hd', true);
         }
@@ -677,9 +697,8 @@ class AppPageClass extends StorePageClass {
             playInHD = LocalStorage.get('playback_hd');
 
             function _addHDControl() {
-                // Add "HD" button and "sd-src" to the video and set definition
+                // Add "HD" button to the video
                 if (videoControl.dataset.hdSrc) {
-                    videoControl.dataset.sdSrc = videoControl.src;
                     let node = videoControl.parentNode.querySelector('.time');
                     if (node) {
                         HTML.afterEnd(node, `<div class="es_hd_toggle"><span>HD</span></div>`);
@@ -700,7 +719,7 @@ class AppPageClass extends StorePageClass {
                 // Toggle fullscreen on video double click
                 videoControl.addEventListener('dblclick', (() => toggleFullscreen(videoControl)), false);
 
-                toggleVideoDefinition(videoControl, playInHD);
+                self.toggleVideoDefinition(videoControl, playInHD);
             }
             setTimeout(_addHDControl, 150);
             // prevents a bug in Chrome which causes videos to stop playing after changing the src
@@ -734,47 +753,47 @@ class AppPageClass extends StorePageClass {
                 Promise.resolve(response).catch(err => console.error(err));
             }
         }
+    }
 
-        function toggleVideoDefinition(videoControl, setHD) {
-            let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
-                videoIsHD = false,
-                loadedSrc = videoControl.classList.contains("es_loaded_src"),
-                playInHD = LocalStorage.get("playback_hd") || videoControl.classList.contains("es_video_hd");
+    toggleVideoDefinition(videoControl, setHD) {
+        let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
+            videoIsHD = false,
+            loadedSrc = videoControl.classList.contains("es_loaded_src"),
+            playInHD = LocalStorage.get("playback_hd") || videoControl.classList.contains("es_video_hd");
 
-            let videoPosition = videoControl.currentTime || 0,
-                videoPaused = videoControl.paused;
-            if (videoIsVisible) {
-                videoControl.preload = "metadata";
-                videoControl.addEventListener("loadedmetadata", onLoadedMetaData, false);
-            }
-            function onLoadedMetaData() {
-                this.currentTime = videoPosition;
-                if (!videoPaused && videoControl.play) {
-                    // if response is a promise, suppress any errors it throws
-                    Promise.resolve(videoControl.play()).catch(err => {});
-                }
-                videoControl.removeEventListener('loadedmetadata', onLoadedMetaData, false);
-            }
-
-            if ((!playInHD && typeof setHD === 'undefined') || setHD === true) {
-                videoIsHD = true;
-                videoControl.src = videoControl.dataset.hdSrc;
-            } else if (loadedSrc) {
-                videoControl.src = videoControl.dataset.sdSrc;
-            }
-
-            if (videoIsVisible && loadedSrc) {
-                videoControl.load();
-            }
-
-            videoControl.classList.add("es_loaded_src");
-            videoControl.classList.toggle("es_video_sd", !videoIsHD);
-            videoControl.classList.toggle("es_video_hd", videoIsHD);
-            videoControl.parentNode.classList.toggle("es_playback_sd", !videoIsHD);
-            videoControl.parentNode.classList.toggle("es_playback_hd", videoIsHD);
-
-            return videoIsHD;
+        let videoPosition = videoControl.currentTime || 0,
+            videoPaused = videoControl.paused;
+        if (videoIsVisible) {
+            videoControl.preload = "metadata";
+            videoControl.addEventListener("loadedmetadata", onLoadedMetaData, false);
         }
+        function onLoadedMetaData() {
+            this.currentTime = videoPosition;
+            if (!videoPaused && videoControl.play) {
+                // if response is a promise, suppress any errors it throws
+                Promise.resolve(videoControl.play()).catch(err => {});
+            }
+            videoControl.removeEventListener('loadedmetadata', onLoadedMetaData, false);
+        }
+
+        if ((!playInHD && typeof setHD === 'undefined') || setHD === true) {
+            videoIsHD = true;
+            videoControl.src = videoControl.dataset.hdSrc;
+        } else if (loadedSrc) {
+            videoControl.src = videoControl.dataset.sdSrc;
+        }
+
+        if (videoIsVisible && loadedSrc) {
+            videoControl.load();
+        }
+
+        videoControl.classList.add("es_loaded_src");
+        videoControl.classList.toggle("es_video_sd", !videoIsHD);
+        videoControl.classList.toggle("es_video_hd", videoIsHD);
+        videoControl.parentNode.classList.toggle("es_playback_sd", !videoIsHD);
+        videoControl.parentNode.classList.toggle("es_playback_hd", videoIsHD);
+
+        return videoIsHD;
     }
 
     storePageDataPromise() {
@@ -1498,7 +1517,7 @@ class AppPageClass extends StorePageClass {
     }
 
     async addSupport() {
-        if (!this.isAppPage() || this.isDlc()) { return; }
+        if (!this.isAppPage() || this.isDlc() || !SyncedStorage.get("showsupportinfo")) { return; }
 
         let cache = LocalStorage.get("support_info", null);
         if (!cache || !cache.expiry || cache.expiry < Date.now()) {
@@ -2603,10 +2622,10 @@ let SearchPageClass = (function(){
             return tagsValue ? tagsValue.split(',') : [];
         }
 
-        for (let i=0, len=tarFilterDivs.length; i<len; i++) {
-            let val = tarFilterDivs[i];
+        let tags = getTags();
 
-            let item_checked = getTags().indexOf("-"+val.dataset.value) > -1 ? "checked" : "";
+        for (let val of tarFilterDivs) {
+            let item_checked = tags.indexOf(`-${val.dataset.value}`) > -1 ? "checked" : '';
 
             let excludeItem = HTMLParser.htmlToElement(
                 `<div class="tab_filter_control ${item_checked}" data-param="tags" data-value="-${val.dataset.value}" data-loc="${val.dataset.loc}">
@@ -2614,8 +2633,8 @@ let SearchPageClass = (function(){
                     <span class="tab_filter_control_label">${val.dataset.loc}</span>
                 </div>`);
 
-            excludeItem.addEventListener("click", function(e) {
-                let control = e.target.closest(".tab_filter_control")
+            excludeItem.addEventListener("click", e => {
+                let control = e.target.closest(".tab_filter_control");
 
                 let rgValues = getTags();
                 let value = String(control.dataset.value);
@@ -2635,8 +2654,7 @@ let SearchPageClass = (function(){
                 }
 
                 control.classList.toggle('checked');
-                document.querySelector("#tags").value = rgValues.join(',');
-                ExtensionLayer.runInPageContext(() => AjaxSearchResults());
+                filtersChanged();
             });
 
             excludeContainer.append(excludeItem);
@@ -2697,19 +2715,38 @@ let SearchPageClass = (function(){
         return Number(reviewsString) < reviewsBelow;
     }
 
+    function isTagExcluded(node, tags) {
+        if (!node.dataset.dsTagids) return false;
+        let nodeTags = JSON.parse(node.dataset.dsTagids);
+        return nodeTags.some(tag => tags.includes(tag));
+    }
+
     function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
+        let hideOwned = document.querySelector("#es_owned_games.checked");
+        let hideWishlisted = document.querySelector("#es_wishlist_games.checked");
+        let hideInCart = document.querySelector("#es_cart_games.checked");
+        let hideNotDiscounted = document.querySelector("#es_notdiscounted_games.checked");
+        let hideNotInterested = document.querySelector("#es_notinterested.checked");
+        let hideMixed = document.querySelector("#es_notmixed.checked");
+        let hideNegative = document.querySelector("#es_notnegative.checked");
+        let hidePriceAbove = document.querySelector("#es_notpriceabove.checked");
+        let hideReviewsBelow = document.querySelector("#es_noreviewsbelow.checked");
+
         let priceAbove = Number(document.querySelector("#es_notpriceabove_val").value.replace(',', '.'));
         let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
+        let hideTags = Array.from(document.querySelectorAll("#es_tagfilter_exclude_container > .checked")).map(tag => Math.abs(Number(tag.dataset.value)));
+
         for (let node of nodes) {
-            if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notdiscounted.checked") && !node.querySelector(".search_discount span")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notinterested.checked") && node.classList.contains("ds_ignored")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notpriceabove.checked") && isPriceAbove(node, priceAbove)) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_noreviewsbelow.checked") && isReviewsBelow(node, reviewsBelow)) { node.style.display = "none"; continue; }
+            if (hideOwned && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
+            if (hideWishlisted && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
+            if (hideInCart && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
+            if (hideNotDiscounted && !node.querySelector(".search_discount span")) { node.style.display = "none"; continue; }
+            if (hideNotInterested && node.classList.contains("ds_ignored")) { node.style.display = "none"; continue; }
+            if (hideMixed && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
+            if (hideNegative && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
+            if (hidePriceAbove && isPriceAbove(node, priceAbove)) { node.style.display = "none"; continue; }
+            if (hideReviewsBelow && isReviewsBelow(node, reviewsBelow)) { node.style.display = "none"; continue; }
+            if (hideTags.length && isTagExcluded(node, hideTags)) { node.style.display = "none"; continue; }
             node.style.display = "block";
         }
     }
@@ -2775,8 +2812,9 @@ let SearchPageClass = (function(){
             </div>
         `);
 
-        Messenger.addMessageListener("filtersChanged", filtersChanged, false);
-        Messenger.addMessageListener("priceAbove", priceVal => {
+        Messenger.addMessageListener("filtersChanged", filtersChanged);
+
+        Messenger.onMessage("priceAbove").then(priceVal => {
             if (new RegExp(inputPattern.source.replace(',', '\\.')).test(priceVal)) {
                 if (currency.format.decimalSeparator === ',') {
                     priceVal = priceVal.replace('.', ',');
@@ -2786,11 +2824,11 @@ let SearchPageClass = (function(){
             } else {
                 console.warn("Failed to validate price %s from URL params!", priceVal);
             }
-        }, true);
-        Messenger.addMessageListener("reviewsBelow", reviewsVal => {
+        });
+        Messenger.onMessage("reviewsBelow").then(reviewsVal => {
             document.getElementById("es_noreviewsbelow_val").value = reviewsVal;
             Messenger.postMessage("reviewsValueChanged");
-        }, true);
+        });
 
         // TODO(tomas.fedor) Can we somehow simplify this monstrosity? E.g. update URL on our end?
         // Thrown together from sources of searchpage.js
@@ -2798,10 +2836,7 @@ let SearchPageClass = (function(){
 
             GDynamicStore.OnReady(() => {
 
-                // Callback that will fire when the user browses through pages
-                ${!SyncedStorage.get("contscroll") ? `Ajax.Responders.register({ onComplete: () => Messenger.postMessage("ajaxCompleted") });` : ""}
-
-                // For each AS hide filter
+                // For each AS filter
                 $J(".tab_filter_control[id^='es_']").each(function() {
                     let $Control = $J(this);
                     $Control.click(() => updateURL($Control));
@@ -2992,7 +3027,7 @@ let SearchPageClass = (function(){
                                         continue;
                                     }
                                     filter = $J(".tab_filter_control[data-value=price-above]");
-                                    Messenger.addMessageListener("priceValueChanged", () => filter.click(), true);
+                                    Messenger.onMessage("priceValueChanged").then(filter.click);
                                     Messenger.postMessage("priceAbove", priceValue);
                                     continue;
                                 } else if (filterValue.startsWith("reviews-below")) {
@@ -3002,7 +3037,7 @@ let SearchPageClass = (function(){
                                         continue;
                                     }
                                     filter = $J(".tab_filter_control[data-value=reviews-below]");
-                                    Messenger.addMessageListener("reviewsValueChanged", () => filter.click(), true);
+                                    Messenger.onMessage("reviewsValueChanged").then(filter.click);
                                     Messenger.postMessage("reviewsBelow", reviewsValue);
                                     continue;
                                 } else {
@@ -3015,8 +3050,8 @@ let SearchPageClass = (function(){
                     }
                 }
 
-                Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState), false);
-                Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState), false);
+                Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState));
+                Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState));
             });
         }`);
 
@@ -3095,40 +3130,44 @@ let SearchPageClass = (function(){
         let inputObserver = new MutationObserver(modifyLinks);
         inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
 
-        let contscrollObserver;
-        if (SyncedStorage.get("contscroll")) {
-            contscrollObserver = new MutationObserver(mutations => {
-                EarlyAccess.showEarlyAccess();
-                mutations.forEach(mutation => {
-                    Highlights.highlightAndTag(mutation.addedNodes);
-                    filtersChanged(mutation.addedNodes);
-                });
+        let removeObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                for (let node of mutation.addedNodes) {
+                    // Under certain circumstances the search result container will get removed and then added again, thus disconnecting the MutationObserver
+                    if (node.id === "search_result_container") {
+                        observeAjax(node.querySelectorAll(".search_result_row"));
+                        
+                        if (!SyncedStorage.get("contscroll")) {
+                            toggleFilter("price-above", "#es_notpriceabove");
+                            toggleFilter("reviews-below", "#es_noreviewsbelow");
+                            modifyLinks();
+                            filtersChanged();
+                        }
+                        ajaxObserver.observe(node.querySelector("#search_resultsRows"), {childList: true});
+                        break;
+                    }
+                }
             });
-            contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
+        });
+        removeObserver.observe(document.querySelector("#search_results"), { childList: true });
+
+        function observeAjax(addedNodes) {
+            EarlyAccess.showEarlyAccess();
+            
+            Highlights.highlightAndTag(addedNodes);
+            filtersChanged(addedNodes);
         }
 
-        Messenger.addMessageListener("ajaxCompleted", () => {
-            if (SyncedStorage.get("contscroll")) {
-                mutations.forEach(mutation => {
-                    for (let node of mutation.removedNodes) {
-                        // Under certain circumstances the search result container will get removed and then added again, thus disconnecting the MutationObserver
-                        if (node.id && node.id === "search_result_container") {
-                            contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
-                            break;
-                        }
-                    }
-                })
-            } else {
-                toggleFilter("price-above", "#es_notpriceabove");
-                toggleFilter("reviews-below", "#es_noreviewsbelow");
-                modifyLinks();
+        let ajaxObserver = new MutationObserver(mutations => {
+            let rows = [];
+            for (let mutation of mutations) {
+                rows = rows.concat(
+                    Array.from(mutation.addedNodes).filter(node => node.classList && node.classList.contains("search_result_row"))
+                );
             }
-
-            EarlyAccess.showEarlyAccess();
-
-            Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
-            filtersChanged();
-        }, false);
+            observeAjax(rows);
+        });
+        ajaxObserver.observe(document.querySelector("#search_resultsRows"), {childList: true});
     };
 
     return SearchPageClass;
@@ -3213,21 +3252,27 @@ let WishlistPageClass = (function(){
 
         observer.observe(container, { 'childList': true, });
 
-        let throbber = document.querySelector("#throbber");
-        let wishlistLoaded = function() {
-            if (throbber.style.display !== "none") { return; }
-            instance.addStatsArea();
-            instance.addExportWishlistButton();
-            instance.addEmptyWishlistButton();
-            instance.addUserNotesHandlers();
-            instance.addRemoveHandler();
+        let wishlistLoaded = () => {
+            this.addStatsArea();
+            this.addExportWishlistButton();
+            this.addEmptyWishlistButton();
+            this.addUserNotesHandlers();
+            this.addRemoveHandler();
         };
         
-        if (throbber.style.display === "none") { 
+        if (document.querySelector("#throbber").style.display === "none") {
             wishlistLoaded();
         } else {
-            observer = new MutationObserver(wishlistLoaded);
-            observer.observe(throbber, { "attributes": true });
+            Messenger.onMessage("wishlistLoaded").then(wishlistLoaded);
+
+            ExtensionLayer.runInPageContext(() => {
+                $J(document).ajaxSuccess((e, xhr, settings) => {
+                    let url = new URL(settings.url);
+                    if (url.origin + url.pathname === `${g_strWishlistBaseURL}wishlistdata/` && g_Wishlist.nPagesToLoad === g_Wishlist.nPagesLoaded) {
+                        Messenger.postMessage("wishlistLoaded");
+                    }
+                });
+            });
         }
     }
 
@@ -3391,7 +3436,7 @@ let WishlistPageClass = (function(){
             });
         }
 
-        Messenger.addMessageListener("emptyWishlist", () => {
+        Messenger.onMessage("emptyWishlist").then(() => {
             let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
             if (!wishlistData) { return; }
 
@@ -3399,7 +3444,7 @@ let WishlistPageClass = (function(){
                 DynamicStore.clear();
                 location.reload();
             });
-        }, true);
+        });
     }
 
     class WishlistExporter {
@@ -3446,83 +3491,69 @@ let WishlistPageClass = (function(){
             return result.join("\n");
         }
     }
+    WishlistExporter.method = Object.freeze({"download": Symbol("Download"), "copyToClipboard": Symbol("Copy to clipboard")});
 
-    WishlistPageClass.prototype.showExportModalDialog = function() {
+    /**
+     * Using Valve's CModal API here is very hard, since, when trying to copy data to the clipboard, it has to originate from
+     * a short-lived event handler for a user action.
+     * Since we'd use our Messenger class to pass information in between these two contexts, we would "outrange" this specific event
+     * handler, resulting in a denial of access to the clipboard function.
+     * This could be circumvented by adding the appropriate permissions, but doing so would prompt users to explicitly accept the changed
+     * permissions on an update.
+     * 
+     * If we don't use the Messenger, we'd have to move the whole handler part (including WishlistExporter) to
+     * the page context side.
+     * 
+     * Final solution is to query the action buttons of the dialog and adding some extra click handlers on the content script side.
+     * These handlers are using a capture, so that the dialog elements will still be existent at the time of the invocation.
+     */
+    WishlistPageClass.prototype.showExportModalDialog = function(appInfo) {
 
         let exportStr = Localization.str.export;
 
         ExtensionLayer.runInPageContext(`function() {
-            let options = {};
-            window.AS_WishlistExportModal = ShowConfirmDialog(
+            ShowConfirmDialog(
                 "${exportStr.wishlist}",
-                "<div id='es_export_form'></div>",
-                "${Localization.str.save}",
-                "${Localization.str.cancel}"
+                \`<div id='es_export_form'>
+                    <div class="es-wexport">
+                    <h2>${exportStr.type}</h2>
+                    <div>
+                        <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${exportStr.text}</label>
+                        <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
+                    </div>
+                    </div>
+                
+                    <div class="es-wexport es-wexport__format">
+                        <h2>${exportStr.format}</h2>
+                        <div>
+                            <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
+                            <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %note%</div>
+                        </div>
+                    </div>
+                </div>\`,
+                "${exportStr.download}",
+                null, // use default "Cancel"
+                "${exportStr.copy_clipboard}"
             );
         }`);
 
-        let formNode = document.querySelector("#es_export_form");
+        let [ dlBtn, copyBtn ] = document.querySelectorAll(".newmodal_buttons > .btn_medium");
 
-        HTML.inner(
-            formNode,
-            `<div class="es-wexport">
-                <h2>${exportStr.type}</h2>
-                <div>
-                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${exportStr.text}</label>
-                    <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
-                </div>
-            </div>
-        
-            <div class="es-wexport">
-                <h2>${exportStr.format}</h2>
-                <div>
-                    <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
-                    <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %note%</div>
-                </div>
-            </div>`);
+        dlBtn.classList.remove("btn_green_white_innerfade");
+        dlBtn.classList.add("btn_darkblue_white_innerfade");
 
-        let buttonsNode = formNode.closest(".newmodal_content").querySelector(".newmodal_buttons");
+        dlBtn.addEventListener("click", () => exportWishlist(WishlistExporter.method.download), true);
+        copyBtn.addEventListener("click", () => exportWishlist(WishlistExporter.method.copyToClipboard), true);
 
-        HTML.inner(buttonsNode,
-            `<div id="as_export_download" class="btn_green_white_innerfade btn_medium"><span>${exportStr.download}</span></div>
-             <div id="as_export_copy" class="btn_green_white_innerfade btn_medium"><span>${exportStr.copy_clipboard}</span></div>
-             <div id="as_export_cancel" class="btn_grey_white_innerfade btn_medium"><span>${Localization.str.cancel}</span></div>`);
-
-        // events
-
-        function dismissModal() {
-            ExtensionLayer.runInPageContext(`function() { 
-                window.AS_WishlistExportModal.Dismiss();
-                window.AS_WishlistExportModal = null;
-            }`);
+        let format = document.querySelector(".es-wexport__format");
+        for (let el of document.getElementsByName("es_wexport_type")) {
+            el.addEventListener("click", e => format.style.display = e.target.value === "json" ? "none" : '');
         }
 
-        function handleExport(method) {
+        function exportWishlist(method) {
             let type = document.querySelector("input[name='es_wexport_type']:checked").value;
-            let format = encodeURIComponent(document.querySelector("#es-wexport-format").value);
-            ExtensionLayer.runInPageContext(`function() { 
-                Messenger.postMessage("exportWishlist", {format: "${format}", method: "${method}", type: "${type}", appInfo: g_rgAppInfo});
-            }`);
-            dismissModal();
-        }
+            let format = document.querySelector("#es-wexport-format").value;
 
-        document.querySelector("#as_export_download").addEventListener("click", function() { handleExport("download"); });
-        document.querySelector("#as_export_copy").addEventListener("click", function() { handleExport("clipboard"); });
-        document.querySelector("#as_export_cancel").addEventListener("click", dismissModal);
-
-        // handle messages
-
-        Messenger.addMessageListener("exportWishlist", (data) => {
-            let appInfo = data.appInfo;
-            if (!appInfo) { return; }
-            let type = data.type;
-            let method = data.method;
-            let format = decodeURIComponent(data.format);
-
-            exportWishlist(appInfo, type, method, format);
-        }, true);
-
-        function exportWishlist(appInfo, type, method, format) {
             let wishlist = new WishlistExporter(appInfo);
 
             let result = "";
@@ -3538,10 +3569,10 @@ let WishlistPageClass = (function(){
                 filetype = "text/plain";
             }
 
-            if (method === "clipboard") {
+            if (method === WishlistExporter.method.copyToClipboard) {
                 Clipboard.set(result);
-            } else if (method === "download") {
-                Downloader.download(new Blob([result], { type : filetype+";charset=UTF-8" }), filename);
+            } else if (method === WishlistExporter.method.download) {
+                Downloader.download(new Blob([result], { type: `${filetype};charset=UTF-8` }), filename);
             }
         }
     };
@@ -3549,17 +3580,17 @@ let WishlistPageClass = (function(){
     WishlistPageClass.prototype.addExportWishlistButton = function() {
         HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_export_wishlist'><div>" + Localization.str.export.wishlist + "</div></div>");
 
-        let that = this;
-        document.querySelector("#es_export_wishlist").addEventListener("click", function() {
-            that.showExportModalDialog();
+        document.querySelector("#es_export_wishlist").addEventListener("click", () => {
+            Messenger.onMessage("appInfo").then(appInfo => this.showExportModalDialog(appInfo));
+            ExtensionLayer.runInPageContext(() => Messenger.postMessage("appInfo", g_rgAppInfo));
         });
     };
 
     function getNodesBelow(node) {
         let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
 
-        // Limit the selection to the rows that are positioned below the row (including the row itself) where the price is being shown
-        return nodes.filter(row => parseInt(row.style.top, 10) >= parseInt(node.style.top, 10));
+        // Limit the selection to the rows that are positioned below the row (not including the row itself) where the price is being shown
+        return nodes.filter(row => parseInt(row.style.top, 10) > parseInt(node.style.top, 10));
     }
 
     WishlistPageClass.prototype.addPriceHandler = function(node) {
@@ -3578,7 +3609,7 @@ let WishlistPageClass = (function(){
                     prices.priceCallback = (type, id, contentNode) => {
                         node.insertAdjacentElement("beforeend", contentNode);
                         let priceNode = node.querySelector(".itad-pricing");
-                        priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
+                        priceNode.style.bottom = -priceNode.getBoundingClientRect().height + "px";
                         resolve();
                     };
                     prices.load();
@@ -3651,7 +3682,7 @@ let WishlistPageClass = (function(){
             })
         );
 
-        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry), false);
+        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry));
     };
 
     return WishlistPageClass;
@@ -3690,7 +3721,7 @@ class UserNotes {
             deferred.always(() => Modal.Dismiss());
     
             Modal.m_fnBackgroundClick = () => {
-                Messenger.addMessageListener("noteSaved", () => Modal.Dismiss(), true);
+                Messenger.onMessenge("noteSaved").then(Modal.Dismiss);
                 Messenger.postMessage("backgroundClick");
             }
     
@@ -3713,10 +3744,10 @@ class UserNotes {
 
         document.addEventListener("click", clickListener);
 
-        Messenger.addMessageListener("backgroundClick", () => {
+        Messenger.onMessage("backgroundClick").then(() => {
             onNoteUpdate.apply(null, saveNote());
             Messenger.postMessage("noteSaved");
-        }, true);
+        });
 
         function clickListener(e) {
             if (e.target.closest(".es_note_modal_submit")) {

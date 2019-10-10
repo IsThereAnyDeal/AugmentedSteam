@@ -362,6 +362,23 @@ let CommunityCommon = (function() {
         }
     };
 
+    self.makeProfileLink = function (id, link, name, iconType, iconUrl) {
+        let mainType = iconUrl ? "none" : iconType;
+        let result =
+            `<div class="es_profile_link profile_count_link">
+               <a class="es_sites_icons es_${id}_icon es_${mainType}" href="${link}" target="_blank">`;
+
+        if (iconType !== "none" && iconUrl) {
+            result += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url('${iconUrl}');"></i>`;
+        }
+
+        result += `<span class="count_link_label">${name}</span>
+                        <span class="profile_count_link_total">&nbsp;</span> <!-- Steam spacing -->
+                    </a>
+                </div>`;
+        return result;
+    }
+
     return self;
 })();
 
@@ -468,37 +485,37 @@ let ProfileHomePageClass = (function(){
         let links = [
             {
                 "id": "steamrep",
-                "link": `//steamrep.com/profiles/${steamId}`,
+                "link": `https://steamrep.com/profiles/${steamId}`,
                 "name": "SteamRep",
             },
             {
                 "id": "steamdbcalc",
-                "link": `//steamdb.info/calculator/?player=${steamId}`,
+                "link": `https://steamdb.info/calculator/?player=${steamId}`,
                 "name": "SteamDB",
             },
             {
                 "id": "steamgifts",
-                "link": `//www.steamgifts.com/go/user/${steamId}`,
+                "link": `https://www.steamgifts.com/go/user/${steamId}`,
                 "name": "SteamGifts",
             },
             {
                 "id": "steamtrades",
-                "link": `//www.steamtrades.com/user/${steamId}`,
+                "link": `https://www.steamtrades.com/user/${steamId}`,
                 "name": "SteamTrades",
             },
             {
                 "id": "astats",
-                "link": `//www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
+                "link": `https://www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
                 "name": "Achievement Stats",
             },
             {
                 "id": "backpacktf",
-                "link": `//backpack.tf/profiles/${steamId}`,
+                "link": `https://backpack.tf/profiles/${steamId}`,
                 "name": "Backpack.tf",
             },
             {
                 "id": "astatsnl",
-                "link": `//astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
+                "link": `https://astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
                 "name": "AStats.nl",
             }
         ];
@@ -516,17 +533,10 @@ let ProfileHomePageClass = (function(){
         // Build the links HTML
         let htmlstr = "";
 
-        links.forEach(link => {
-            if (!SyncedStorage.get("profile_" + link.id)) { return; }
-
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_${link.id}_icon es_${iconType}" href="${link.link}" target="_blank">
-                        <span class="count_link_label">${link.name}</span>
-                    </a>
-                </div>`;
-
-        });
+        for (let link of links) {
+            if (!SyncedStorage.get("profile_" + link.id)) { continue; }
+            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+        }
 
         // custom profile link
         for (let customLink of SyncedStorage.get('profile_custom_link')) {
@@ -548,15 +558,7 @@ let ProfileHomePageClass = (function(){
                 iconType = "none";
             }
 
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
-                    <span class="count_link_label">${name}</span>`;
-                    if (iconType !== "none") {
-                        htmlstr += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url(${icon});"></i>`;
-                    }
-                    htmlstr += `</a>
-                </div>`;
+            htmlstr += CommunityCommon.makeProfileLink("custom", link, name, iconType, icon);
         }
 
         // profile permalink
@@ -1013,7 +1015,7 @@ let GroupHomePageClass = (function(){
         let links = [
             {
                 "id": "steamgifts",
-                "link": `//www.steamgifts.com/go/group/${groupId}`,
+                "link": `https://www.steamgifts.com/go/group/${groupId}`,
                 "name": "SteamGifts",
             }
         ];
@@ -1022,16 +1024,10 @@ let GroupHomePageClass = (function(){
         // Build the links HTML
         let htmlstr = "";
 
-        links.forEach(link => {
-            if (!SyncedStorage.get("group_" + link.id)) { return; }
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link weblink">
-                    <a class="es_sites_icons es_${link.id}_icon es_${iconType}" href="${link.link}" target="_blank">
-                        <span class="count_link_label">${link.name}</span>
-                    </a>
-                </div>`;
-
-        });
+        for (let link of links) {
+            if (!SyncedStorage.get("group_" + link.id)) { continue; }
+            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+        }
 
         // Insert the links HMTL into the page
         if (htmlstr) {
@@ -1681,11 +1677,10 @@ let InventoryPageClass = (function(){
         if (quickGrind) { quickGrind.parentNode.remove(); }
 
         let scrapActions = document.querySelector("#iteminfo" + item + "_item_scrap_actions");
-        let turnWord = scrapActions.querySelector("a span").textContent;
 
         let divs = scrapActions.querySelectorAll("div");
         HTML.beforeBegin(divs[divs.length-1],
-            "<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>1-Click " + turnWord + "</span></div>");
+            `<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>${Localization.str.oneclickgoo}</span></div>`);
 
         // TODO: Add prompt?
         document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
@@ -1709,8 +1704,8 @@ let InventoryPageClass = (function(){
         });
     }
 
-    function makeMarketButton(id) {
-        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" style="display:none">
+    function makeMarketButton(id, tooltip) {
+        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" data-tooltip-text="${tooltip}" style="display:none">
                     <span class="item_market_action_button_edge item_market_action_button_left"></span>
                     <span class="item_market_action_button_contents"></span>
                     <span class="item_market_action_button_edge item_market_action_button_right"></span>
@@ -1749,8 +1744,11 @@ let InventoryPageClass = (function(){
             thisItem.classList.add("es-loading");
 
             // Add the links with no data, so we can bind actions to them, we add the data later
-            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId));
-            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId));
+            let diff = SyncedStorage.get("quickinv_diff");
+            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId, Localization.str.quick_sell_desc.replace("__modifier__", diff)));
+            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId, Localization.str.instant_sell_desc));
+
+            ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: "community_tooltip"} ));
 
             // Check if price is stored in data
             if (thisItem.classList.contains("es-price-loaded")) {
@@ -1769,7 +1767,7 @@ let InventoryPageClass = (function(){
                     let marketUrl = "https://steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + marketId;
                     let market = await RequestData.getJson(marketUrl);
 
-                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff"));
+                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(diff);
                     let priceLow = market.highest_buy_order / 100;
                     // priceHigh.currency == priceLow.currency == Currency.customCurrency, the arithmetic here is in walletCurrency
 
@@ -1969,15 +1967,15 @@ let InventoryPageClass = (function(){
             });
         });
         
-        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info), false);
+        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info));
 
-        Messenger.addMessageListener("sendFee", info => {
-            let sellPrice = info.feeInfo.amount - info.feeInfo.fees;
+        Messenger.addMessageListener("sendFee", async ({ feeInfo, sessionID, global_id, contextID, assetID }) => {
+            let sellPrice = feeInfo.amount - feeInfo.fees;
             let formData = new FormData();
-            formData.append("sessionid", info.sessionID);
-            formData.append("appid", info.global_id);
-            formData.append("contextid", info.contextID);
-            formData.append("assetid", info.assetID);
+            formData.append("sessionid", sessionID);
+            formData.append("appid", global_id);
+            formData.append("contextid", contextID);
+            formData.append("assetid", assetID);
             formData.append("amount", 1);
             formData.append("price", sellPrice);
 
@@ -1989,17 +1987,15 @@ let InventoryPageClass = (function(){
             * referrer: window.location.origin + window.location.pathname
             */
 
-            RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {
-                withCredentials: true
-            }).then(() => {
-                document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
+            await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, { withCredentials: true });
 
-                let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
-                let node = document.querySelector("[id='" + id + "']");
-                node.classList.add("btn_disabled", "activeInfo");
-                node.style.pointerEvents = "none";
-            });
-        }, false);
+            document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
+
+            let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
+            let node = document.querySelector("[id='" + id + "']");
+            node.classList.add("btn_disabled", "activeInfo");
+            node.style.pointerEvents = "none";
+        });
     }
 
     function addInventoryGoToPage(){
@@ -3265,7 +3261,7 @@ let MarketPageClass = (function(){
 
     // Show the lowest market price for items you're selling
     MarketPageClass.prototype.addLowestMarketPrice = function() {
-        if (!User.isSignedIn) { return; }
+        if (!User.isSignedIn || !SyncedStorage.get("showlowestmarketprice") || SyncedStorage.get("hideactivelistings")) { return; }
 
         let country = User.getCountry();
         let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
@@ -3794,7 +3790,7 @@ let WorkshopBrowseClass = (function(){
             startSubscriber(method, total);
         });
 
-        function startSubscriber(method, total) {
+        async function startSubscriber(method, total) {
             let completed = 0;
             let failed = 0;
 
@@ -3879,7 +3875,7 @@ let WorkshopBrowseClass = (function(){
                 });
             }
 
-            Messenger.addMessageListener("startSubscriber", async function() {
+            Messenger.onMessage("startSubscriber").then(async () => {
                 updateWaitDialog();
 
                 function canSkip(method, node) {
@@ -3920,13 +3916,109 @@ let WorkshopBrowseClass = (function(){
                 total = workshopItems.length;
                 updateWaitDialog();
     
-                Promise.all(workshopItems.map(id => changeSubscription(id)))
+                return Promise.all(workshopItems.map(id => changeSubscription(id)))
                     .finally(showResults);
-            }, true)
+            });            
         }
     };
 
     return WorkshopBrowseClass;
+})();
+
+let EditGuidePageClass = (function(){
+
+    function EditGuidePageClass() {
+        this.allowMultipleLanguages();
+        this.addCustomTags();
+        this.rememberTags();
+    }
+
+    function addTag(name, checked=true) {
+        name = HTML.escape(name);
+        let attr = checked ? " checked" : "";
+        let tag = `<div><input type="checkbox" name="tags[]" value="${name}" class="inputTagsFilter"${attr}>${name}</div>`;
+        HTML.beforeBegin("#es_add_tag", tag);
+    }
+
+    EditGuidePageClass.prototype.allowMultipleLanguages = function() {
+        document.getElementsByName("tags[]").forEach(tag => tag.type = "checkbox");
+    };
+
+    EditGuidePageClass.prototype.addCustomTags = function() {
+        let langSection = document.querySelector("#checkboxgroup_1");
+        if (!langSection) { return; }
+
+        Messenger.addMessageListener("addtag", function(name) {
+            addTag(name, true);
+        });
+        
+        HTML.afterEnd(langSection,
+            `<div class="tag_category_container" id="checkboxgroup_2">
+                <div class="tag_category_desc">${Localization.str.custom_tags}</div>
+                <div><a style="margin-top: 8px;" class="btn_blue_white_innerfade btn_small_thin" id="es_add_tag">
+                    <span>${Localization.str.add_tag}</span>
+                </a></div>
+            </div>`);
+
+        ExtensionLayer.runInPageContext(`function() {
+            $J("#es_add_tag").on("click", () => {
+                let Modal = ShowConfirmDialog("${Localization.str.custom_tags}", \`<div class="commentthread_entry_quotebox"><textarea placeholder="${Localization.str.enter_tag}" class="commentthread_textarea es_tag" rows="1"></textarea></div>\`);
+                
+                let elem = $J(".es_tag");
+                let tag = elem.val();
+
+                function done() {
+                    if (tag.trim().length === 0) { return; }
+                    tag = tag[0].toUpperCase() + tag.slice(1);
+                    Messenger.postMessage("addtag", tag);
+                }
+
+                elem.on("keydown paste input", function(e) {
+                    tag = elem.val();
+                    if (e.key == "Enter") {
+                        Modal.Dismiss();
+                        done();
+                        return;
+                    }
+                });
+
+                Modal.done(done);
+            });
+        }`);
+    };
+
+    EditGuidePageClass.prototype.rememberTags = function() {
+        let submitBtn = document.querySelector("[href*=SubmitGuide]");
+        if (!submitBtn) { return; }
+
+        let params = new URLSearchParams(window.location.search);
+        let curId = params.get("id") || "recent";
+        let savedTags = LocalStorage.get("es_guide_tags", {});
+        if (!savedTags[curId]) {
+            savedTags[curId] = savedTags.recent || [];
+        }
+
+        for (let id in savedTags) {
+            for (let tag of savedTags[id]) {
+                let node = document.querySelector(`[name="tags[]"][value="${tag.replace(/"/g, "\\\"")}"]`);
+                if (node && curId == id) {
+                    node.checked = true;
+                } else if (!node) {
+                    addTag(tag, curId == id);
+                }
+            }
+        }
+
+        submitBtn.removeAttribute("href");
+        submitBtn.addEventListener("click", function() {
+            savedTags.recent = [];
+            savedTags[curId] = Array.from(document.querySelectorAll("[name='tags[]']:checked")).map(node => node.value);
+            LocalStorage.set("es_guide_tags", savedTags);
+            ExtensionLayer.runInPageContext(function() { SubmitGuide(); });
+        });
+    };
+
+    return EditGuidePageClass;
 })();
 
 (async function(){
@@ -4005,12 +4097,16 @@ let WorkshopBrowseClass = (function(){
             (new StatsPageClass());
             break;
 
-        case /^\/sharedfiles\/.*/.test(path):
+        case /^\/sharedfiles\/filedetails\/?$/.test(path):
             (new SharedFilesPageClass());
             break;
 
         case /^\/workshop\/browse/.test(path):
             (new WorkshopBrowseClass());
+            break;
+
+        case /^\/sharedfiles\/editguide\/?$/.test(path):
+            (new EditGuidePageClass());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):

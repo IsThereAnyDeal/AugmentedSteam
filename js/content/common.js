@@ -300,23 +300,35 @@ let ExtensionLayer = (function() {
 class Messenger {
     static postMessage(msgID, info) {
         window.postMessage({
-            type: "es_" + msgID,
+            type: `es_${msgID}`,
             information: info
         }, window.location.origin);
     }
 
-    static addMessageListener(msgID, fn, once) {
-        let callback = function(e) {
-            if (e.source !== window) { return; }
-            if (!e.data || !e.data.type) { return; }
-            if (e.data.type === "es_" + msgID) {
-                fn(e.data.information);
-                if (once) {
+    // Used for one-time events
+    static onMessage(msgID) {
+        return new Promise(resolve => {
+            let callback = function(e) {
+                if (e.source !== window) { return; }
+                if (!e.data || !e.data.type) { return; }
+                if (e.data.type === `es_${msgID}`) {
+                    resolve(e.data.information);
                     window.removeEventListener("message", callback);
                 }
+            };
+            window.addEventListener("message", callback);
+        });
+    }
+
+    // Used for setting up a listener that should be able to receive more than one callback
+    static addMessageListener(msgID, callback) {
+        window.addEventListener("message", e => {
+            if (e.source !== window) { return; }
+            if (!e.data || !e.data.type) { return; }
+            if (e.data.type === `es_${msgID}`) {
+                callback(e.data.information);
             }
-        };
-        window.addEventListener("message", callback);
+        });
     }
 }
 
@@ -713,31 +725,22 @@ let Currency = (function() {
         return null;
     }
 
-    function getCurrencyFromWallet() {
-        return new Promise((resolve, reject) => {
-            ExtensionLayer.runInPageContext(() =>
-                Messenger.postMessage("walletCurrency", typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null)
-            );
+    async function getCurrencyFromWallet() {
+        ExtensionLayer.runInPageContext(() =>
+            Messenger.postMessage("walletCurrency", typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null)
+        );
 
-            Messenger.addMessageListener("walletCurrency", walletCurrency => {
-                if (walletCurrency !== null) {
-                    resolve(Currency.currencyNumberToType(walletCurrency));
-                } else {
-                    reject();
-                }
-            }, true);
-        });
+        let walletCurrency = await Messenger.onMessage("walletCurrency");
+        if (walletCurrency !== null) {
+            return Currency.currencyNumberToType(walletCurrency);
+        }
     }
 
     async function getStoreCurrency() {
         let currency = getCurrencyFromDom();
 
         if (!currency) {
-            try {
-                currency = await getCurrencyFromWallet();
-            } catch (error) {
-                // no action
-            }
+            currency = await getCurrencyFromWallet();
         }
 
         if (!currency) {
@@ -1864,8 +1867,7 @@ let Highlights = (function(){
 
         parent = parent || document;
 
-        Messenger.addMessageListener("dynamicStoreReady", () => {
-
+        Messenger.onMessage("dynamicStoreReady").then(() => {
             self.highlightAndTag(parent.querySelectorAll(selector));
     
             let searchBoxContents = parent.getElementById("search_suggestion_contents");
@@ -1875,7 +1877,7 @@ let Highlights = (function(){
                 });
                 observer.observe(searchBoxContents, {childList: true});
             }
-        }, true);
+        });
 
         ExtensionLayer.runInPageContext(() => {
             GDynamicStore.OnReady(() => Messenger.postMessage("dynamicStoreReady"));
@@ -2292,10 +2294,12 @@ let Common = (function(){
 class Downloader {
 
     static download(content, filename) {
-        let a = document.createElement('a');
+        let a = document.createElement("a");
         a.href = URL.createObjectURL(content);
         a.download = filename;
-        a.click();
+
+        // Explicitly dispatching the click event (instead of just a.click()) will make it work in FF
+        a.dispatchEvent(new MouseEvent("click"));
     }
 }
 
@@ -2482,8 +2486,13 @@ class MediaPage {
             }
         }
 
+        this._horizontalScrolling();
+    }
+
+    _horizontalScrolling() {
+
         let strip = document.querySelector("#highlight_strip");
-        if (!strip) { return; }
+        if (!strip || !SyncedStorage.get("horizontalmediascrolling")) { return; }
 
         let lastScroll = Date.now();
         strip.addEventListener("wheel", scrollStrip, false);

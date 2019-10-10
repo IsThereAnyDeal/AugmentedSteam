@@ -2,9 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <link href="css/enhancedsteam.css" rel="stylesheet" type="text/css">
+    <link href="css/enhancedsteam-chrome.css" rel="stylesheet" type="text/css">
     <link href="css/options.css" rel="stylesheet" type="text/css">
-    <link href="css/es_flags.css" rel="stylesheet" type="text/css">
-    <link href="css/es_sites_links.css" rel="stylesheet" type="text/css">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>Options - Augmented Steam</title>
     <base target="_blank">
@@ -303,8 +302,8 @@
                                 <option value="brazilian">Português-Brasil</option>
                                 <option value="russian">Русский</option>
                                 <option value="romanian">Română</option>
-                                <option value="schinese">汉语（简体字）</option>
-                                <option value="tchinese">漢語（繁體字）</option>
+                                <option value="schinese">汉语</option>
+                                <option value="tchinese">漢語</option>
                                 <option value="spanish">Español</option>
                                 <option value="latam">Español Latinoamericano</option>
                                 <option value="swedish">Svenska</option>
@@ -362,8 +361,20 @@
                             <label for="send_age_info" data-locale-text="options.send_age_info">Automatically send age verification when requested</label>
                         </div>
                         <div class="option">
+                            <input type="checkbox" id="mp4video" data-setting="mp4video">
+                            <label for="mp4video" data-locale-text="options.mp4video">Force app store videos to be in MP4 format</label>
+                        </div>
+                        <div class="option">
                             <input type="checkbox" id="contscroll" data-setting="contscroll">
                             <label for="contscroll" data-locale-text="options.contscroll">Enable continuous scrolling of search results</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="horizontalmediascrolling" data-setting="horizontalmediascrolling">
+                            <label for="horizontalmediascrolling" data-locale-text="options.horizontalmediascrolling">Enable horizontal scrolling of media on app pages with scroll wheel</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="showsupportinfo" data-setting="showsupportinfo">
+                            <label for="showsupportinfo" data-locale-text="options.supportinfo">Show support info on store pages</label>
                         </div>
                         <div class="option">
                             <input type="checkbox" id="showdrm" data-setting="showdrm">
@@ -569,6 +580,10 @@
                         <div class="option">
                             <input type="checkbox" id="hideactivelistings" data-setting="hideactivelistings">
                             <label for="hideactivelistings" data-locale-text="options.hideactivelistings">Hide all active listings on Market homepage by default</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="showlowestmarketprice" data-setting="showlowestmarketprice">
+                            <label for="showlowestmarketprice" data-locale-text="options.showlowestmarketprice">slakjd</label>
                         </div>
                     </div>
         
@@ -902,13 +917,13 @@
                     <td class="lang-perc tchinese"></td>
                     <td class="language tchinese">Traditional Chinese:</td>
                     <td>Atraveller, JD OwO, Lex Song, MoDMeR, Mr. Error, NOKIA SE, Rasin, omylist,
-                        tonyli1357, 破曉之殤丶Revelation, Cattī Crūdēlēs, Gaz
+                        tonyli1357, 破曉之殤丶Revelation, Cattī Crūdēlēs, Gaz, candela97
                     </td>
                 </tr>
                 <tr>
                     <td class="lang-perc thai"></td>
                     <td class="language thai">Thai:</td>
-                    <td>Epicenter, Likecyber, Magnative, Radius, Rasin, [LPG] 7-elephant, candela97</td>
+                    <td>Epicenter, Likecyber, Magnative, Radius, Rasin, [LPG] 7-elephant</td>
                 </tr>
                 <tr>
                     <td class="lang-perc turkish"></td>
@@ -940,8 +955,8 @@
             </ul>
 
 
-            <h2>Other</h2>
-            <h3>Images</h3>
+            <h2 data-locale-text="other">Other</h2>
+            <h3 data-locale-text="images">Images</h3>
 
             <ul class="credits">
                 <li>"<a href="https://www.svgrepo.com/svg/5133/save">Save SVG Vector</a>" is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></li>

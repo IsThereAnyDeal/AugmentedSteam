@@ -1,5 +1,5 @@
 const Info = {
-    'version': "1.2.1",
+    'version': "1.3.0",
     'db_version': 1,
 };
 
@@ -597,7 +597,10 @@ SyncedStorage.defaults = {
     'homepage_tab_selection': "remember",
     'homepage_tab_last': null,
     'send_age_info': true,
+    'mp4video': false,
     'contscroll': true,
+    'horizontalmediascrolling': true,
+    'showsupportinfo': true,
     'showdrm': true,
     'regional_hideworld': false,
     'showinvnav': true,
@@ -607,6 +610,7 @@ SyncedStorage.defaults = {
     'showachinstore': true,
     'showcomparelinks': false,
     'hideactivelistings': false,
+    'showlowestmarketprice': true,
     'hidespamcomments': false,
     'spamcommentregex': "[\\u2500-\\u25FF]",
     'wlbuttoncommunityapp': true,
