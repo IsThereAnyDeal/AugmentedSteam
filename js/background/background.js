@@ -735,9 +735,9 @@ class IndexedDB {
                             db.createObjectStore("earlyAccessAppids");
                             db.createObjectStore("purchases");
                             db.createObjectStore("dynamicStore").createIndex("appid", '', { unique: false, multiEntry: true });
-                            db.createObjectStore("packages");
-                            db.createObjectStore("storePageData");
-                            db.createObjectStore("profiles");
+                            db.createObjectStore("packages").createIndex("expiry", "expiry");
+                            db.createObjectStore("storePageData").createIndex("expiry", "expiry");
+                            db.createObjectStore("profiles").createIndex("expiry", "expiry");
                             db.createObjectStore("rates");
                             db.createObjectStore("notes");
                             db.createObjectStore("collection");
@@ -1018,6 +1018,17 @@ class IndexedDB {
     }
 
     static async objStoreExpiryCheck(objectStoreName, params) {
+        // Remove old entries
+        if (IndexedDB.timestampedEntriesObjectStores.has(objectStoreName)) {
+            let cursor = await IndexedDB.db.transaction(objectStoreName, "readwrite").store.index("expiry")
+                .openCursor(IDBKeyRange.upperBound(window.timestamp() - IndexedDB.timestampedEntriesObjectStores.get(objectStoreName)));
+
+            while (cursor) {
+                await cursor.delete();
+                cursor = await cursor.continue();
+            }
+        }
+        
         if (!IndexedDB.timestampedObjectStores.has(objectStoreName)) return;
         
         let expiry = await IndexedDB.db.get(objectStoreName, "expiry");
@@ -1084,11 +1095,14 @@ IndexedDB.timestampedObjectStores = new Map([
     ["collection", 15 * 60],
     ["waitlist", 15 * 60],
 ]);
-IndexedDB.cacheObjectStores = new Map([...IndexedDB.timestampedObjectStores,
+
+IndexedDB.timestampedEntriesObjectStores = new Map([
     ["packages", 7 * 24 * 60 * 60],
     ["storePageData", 60 * 60],
     ["profiles", 24 * 60 * 60],
 ]);
+
+IndexedDB.cacheObjectStores = new Map([...IndexedDB.timestampedObjectStores, ...IndexedDB.timestampedEntriesObjectStores]);
 
 // Functions that are called when an object store (or one of its entries) has expired
 IndexedDB.objStoreFetchFns = new Map([
