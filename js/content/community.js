@@ -3666,21 +3666,28 @@ let GuidesPageClass = (function(){
     GuidesPageClass.prototype.removeGuidesLanguageFilter = function() {
         if (!SyncedStorage.get("removeguideslanguagefilter")) { return; }
 
-        let language = Language.getCurrentSteamLanguage();
-        let regex = new RegExp(language, "i");
         let nodes = document.querySelectorAll("#rightContents .browseOption");
         for (let node of nodes) {
             let onclick = node.getAttribute("onclick");
 
-            if (regex.test(onclick)) {
-                node.removeAttribute("onclick"); // remove onclick, we have link anyway, why do they do this?
-                // node.setAttribute("onclick", onclick.replace(/requiredtags[^&]+&?/, ""))
+            if (onclick) {
+                //node.removeAttribute("onclick");
+                node.setAttribute("onclick", onclick.replace(/requiredtags(%5B0?%5D|\[\])=[^&]+/, "requiredtags[]=-1"));
             }
 
             let linkNode = node.querySelector("a");
-            if (regex.test(linkNode.href)) {
-                linkNode.href = linkNode.href.replace(/requiredtags[^&]+&?/, "");
-            }
+            //linkNode.href = linkNode.href.replace(/&requiredtags[^&]+/, "");
+            linkNode.href = linkNode.href.replace(/requiredtags(%5B0?%5D|\[\])=[^&]+/, "requiredtags[]=-1");
+        }
+
+        nodes = document.querySelectorAll(".guides_home_view_all_link > a");
+        for (let node of nodes) {
+            node.href = node.href.replace(/[&]requiredtags[^&]+/, "");
+        }
+
+        nodes = document.querySelectorAll(".guide_home_category_selection");
+        for (let node of nodes) {
+            node.href = node.href.replace(/(requiredtags[^&]+).*/, "$1");
         }
     };
 
