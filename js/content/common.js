@@ -540,12 +540,12 @@ let CurrencyRegistry = (function() {
             return s.join("");
         }
         placeholder() {
-            if (this.format.decimalPlaces == 0 || this.format.hidePlacesWhenZero) {
-                return '0';
+            if (this.format.decimalPlaces === 0 || this.format.hidePlacesWhenZero) {
+                return "123";
             }
-            let placeholder = '0' + this.format.decimalSeparator;
+            let placeholder = "123" + this.format.decimalSeparator;
             for (let i = 0; i < this.format.decimalPlaces; ++i) {
-                placeholder += '0';
+                placeholder += 4 + i;
             }
             return placeholder;
         }
