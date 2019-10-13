@@ -2633,24 +2633,11 @@ let SearchPageClass = (function(){
     };
 
     function isPriceAbove(node, priceAbove) {
+        let priceValue = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(node.querySelector(".search_price").lastChild.textContent);
         
-        let priceValues = node.querySelector(".search_price").innerText.replace(/,/g, '.').trim().match(/^\d+\.\d*/gm);
-        let priceString;
-        
-        if (priceValues) {
-            // Discounted price
-            if (priceValues[1]) {
-                priceString = priceValues[1];
-            // Non-discounted
-            } else if (priceValues[0]) {
-                priceString = priceValues[0];
-            }
-        } else {
-            // App without price
-            return false;
-        }
+        if (!priceValue) { return false; } // App without price
 
-        return Number(priceString) > priceAbove;
+        return Number(priceValue) > priceAbove;
     }
 
     function isReviewsBelow(node, reviewsBelow) {
