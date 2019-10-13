@@ -3671,23 +3671,16 @@ let GuidesPageClass = (function(){
             let onclick = node.getAttribute("onclick");
 
             if (onclick) {
-                //node.removeAttribute("onclick");
-                node.setAttribute("onclick", onclick.replace(/requiredtags(%5B0?%5D|\[\])=[^&]+/, "requiredtags[]=-1"));
+                node.setAttribute("onclick", onclick.replace(/requiredtags[^&]+/, "requiredtags[]=-1"));
             }
 
             let linkNode = node.querySelector("a");
-            //linkNode.href = linkNode.href.replace(/&requiredtags[^&]+/, "");
-            linkNode.href = linkNode.href.replace(/requiredtags(%5B0?%5D|\[\])=[^&]+/, "requiredtags[]=-1");
+            linkNode.href = linkNode.href.replace(/requiredtags[^&]+/, "requiredtags[]=-1");
         }
 
-        nodes = document.querySelectorAll(".guides_home_view_all_link > a");
+        nodes = document.querySelectorAll(".guides_home_view_all_link > a, .guide_home_category_selection");
         for (let node of nodes) {
-            node.href = node.href.replace(/[&]requiredtags[^&]+/, "");
-        }
-
-        nodes = document.querySelectorAll(".guide_home_category_selection");
-        for (let node of nodes) {
-            node.href = node.href.replace(/(requiredtags[^&]+).*/, "$1");
+            node.href = node.href.replace(/&requiredtags[^&]+$/, "");
         }
     };
 
