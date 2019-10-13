@@ -3063,7 +3063,7 @@ let SearchPageClass = (function(){
                 } else {
                     params.delete("es_hide");
                 }
-                linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + params.toString();
+                linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + Array.from(params.entries(), ([key, val]) => `${key}=${val}`).join('&'); // Encoding is done by Steam, see #568
             }
         }
 
