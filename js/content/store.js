@@ -2683,7 +2683,7 @@ let SearchPageClass = (function(){
         let hidePriceAbove = document.querySelector("#es_notpriceabove.checked");
         let hideReviewsBelow = document.querySelector("#es_noreviewsbelow.checked");
 
-        let priceAbove = Number(document.querySelector("#es_notpriceabove_val").value.replace(',', '.'));
+        let priceAbove = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(document.querySelector("#es_notpriceabove_val").value);
         let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
         let hideTags = Array.from(document.querySelectorAll("#es_tagfilter_exclude_container > .checked")).map(tag => Math.abs(Number(tag.dataset.value)));
 
