@@ -3557,7 +3557,7 @@ let TabAreaObserver = (function(){
             break;
 
         case (/^\/checkout\/sendgift\/.*/.test(path) || (/^\/checkout\/?$/g.test(path) && /.*purchasetype=gift.*/g.test(search))):
-            Array.from(document.querySelectorAll(".friend_block")).forEach(block => {
+            document.querySelectorAll(".friend_block").forEach(block => {
                 block.querySelector("[name=friend_radio]").disabled = false;
                 block.classList.remove("disabled");
             });
