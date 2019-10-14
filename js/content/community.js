@@ -1523,6 +1523,8 @@ let StatsPageClass = (function(){
             let node = item[1];
             personal.insertAdjacentElement("beforeend", node);
         }
+
+        SyncedStorage.set("sortachievementsby", key);
     }
 
     StatsPageClass.prototype.addAchievementSort = function() {
@@ -1534,6 +1536,7 @@ let StatsPageClass = (function(){
                 ${Localization.str.sort_by}
                 <span id='achievement_sort_default'>${Localization.str.theworddefault}</span>
                 <span id='achievement_sort_date' class='es_achievement_sort_link'>${Localization.str.date_unlocked}</span>
+                <span id='achievement_sort_reverse' class='es_achievement_sort_link'>&#8693;</span>
             </div>`);
 
         addSortMetaData("default", personal.querySelectorAll(".achieveRow"));
@@ -1548,6 +1551,13 @@ let StatsPageClass = (function(){
             document.querySelector("#achievement_sort_default").classList.add("es_achievement_sort_link");
             e.target.classList.remove("es_achievement_sort_link");
             sortBy("time", personal);
+        });
+
+        document.querySelector("#achievement_sort_reverse").addEventListener("click", () => {
+            for (let key in _nodes) {
+                _nodes[key] = _nodes[key].reverse();
+            }
+            sortBy(SyncedStorage.get("sortachievementsby"), personal);
         });
     };
     
@@ -2850,7 +2860,7 @@ let FriendsThatPlayPageClass = (function(){
                     ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.theworddefault)}
                  </span> | <span id='es_playtime_sort' style='text-decoration: underline;cursor: pointer;'>
                     ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.playtime)}
-                </span>)`);
+                </span> | <span id='es_reverse_sort' style='text-decoration: underline;cursor: pointer;'>&#8693;</span>)`);
 
         memberList.querySelector(".profile_friends:nth-child(" + ((section*2)+2) + ")")
             .id = "es_friends_default";
@@ -2863,7 +2873,17 @@ let FriendsThatPlayPageClass = (function(){
         defaultNode.insertAdjacentElement("afterend", sorted);
         HTML.afterEnd(defaultNode, "<div style='clear: both'></div>");
 
+        let active = "default";
+        document.querySelector("#es_reverse_sort").addEventListener("click", function(e) {
+            let nodes = Array.from(document.querySelectorAll(`#es_friends_${active} .friendBlock`)).reverse();
+            let activeNode = document.querySelector(`#es_friends_${active}`);
+            for (let node of nodes) {
+                activeNode.append(node);
+            }
+        });
+
         document.querySelector("#es_playtime_sort").addEventListener("click", function(e) {
+            active = "playtime"
             document.querySelector("#es_playtime_sort").style.textDecoration = "none";
             document.querySelector("#es_default_sort").style.textDecoration = "underline";
             document.querySelector("#es_friends_default").style.display = "none";
@@ -2887,6 +2907,7 @@ let FriendsThatPlayPageClass = (function(){
         });
 
         document.querySelector("#es_default_sort").addEventListener("click", function(e) {
+            active = "default"
             document.querySelector("#es_default_sort").style.textDecoration = "none";
             document.querySelector("#es_playtime_sort").style.textDecoration = "underline";
             document.querySelector("#es_friends_playtime").style.display = "none";
@@ -2933,8 +2954,6 @@ let FriendsPageClass = (function(){
         });
 
         function sortFriends(sortBy) {
-            sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
-
             let options = document.querySelector("#friends_sort_options");
             let linkNode = options.querySelector("span[data-esi-sort='"+sortBy+"']");
             if (!linkNode.classList.contains("es_friends_sort_link")) { return; }
@@ -2942,6 +2961,14 @@ let FriendsPageClass = (function(){
             let nodes = options.querySelectorAll("span");
             for (let node of nodes) {
                 node.classList.toggle("es_friends_sort_link", node.dataset.esiSort !== sortBy);
+            }
+
+            if (sortBy === "reverse") {
+                for (let key in sorted) {
+                    sorted[key] = sorted[key].reverse();
+                }
+                sortFriends(SyncedStorage.get("sortfriendsby"));
+                return;
             }
 
             // Remove the current offline nodes
@@ -2962,6 +2989,7 @@ let FriendsPageClass = (function(){
                             ${Localization.str.sort_by}
                             <span data-esi-sort='default'>${Localization.str.theworddefault}</span>
                             <span data-esi-sort='lastonline' class="es_friends_sort_link">${Localization.str.lastonline}</span>
+                            <span data-esi-sort='reverse' class="es_friends_sort_link">&#8693;</span>
                           </div>`;
 
         HTML.beforeBegin("#manage_friends_control", sortOptions);
