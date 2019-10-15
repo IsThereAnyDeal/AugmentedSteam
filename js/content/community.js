@@ -2977,6 +2977,89 @@ let FriendsPageClass = (function(){
     return FriendsPageClass;
 })();
 
+let GroupsPageClass = (function(){
+
+    function GroupsPageClass() {
+        this.addSort();
+    }
+
+    GroupsPageClass.prototype.addSort = async function() {
+        let groups = document.querySelectorAll(".group_block");
+        if (groups.length === 0) { return; }
+
+        let sorted = { default: [], members: [], names: [] };
+
+        for (let node of groups) {
+            let name = node.querySelector(".groupTitle > a").textContent;
+            let membercount = parseInt(node.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
+            sorted.names.push([node, name]);
+            sorted.members.push([node, membercount]);
+            sorted.default.push([node]);
+        }
+
+        sorted.names.sort(function(a, b) {
+            a = a[1].toLowerCase();
+            b = b[1].toLowerCase();
+            if (a > b) { return -1; }
+            if (a < b) { return 1; }
+            return 0;
+        });
+
+        sorted.members.sort(function(a, b) {
+            return a[1] - b[1];
+        });
+
+        function sortGroups(sortBy) {
+            let options = document.querySelector("#friends_sort_options");
+            let linkNode = options.querySelector("span[data-esi-sort='"+sortBy+"']");
+            if (!linkNode.classList.contains("es_friends_sort_link")) { return; }
+
+            let nodes = options.querySelectorAll("span");
+            for (let node of nodes) {
+                node.classList.toggle("es_friends_sort_link", node.dataset.esiSort !== sortBy);
+            }
+
+            if (sortBy === "reverse") {
+                for (let key in sorted) {
+                    sorted[key] = sorted[key].reverse();
+                }
+                sortGroups(SyncedStorage.get("sortgroupsby") || "default");
+                return;
+            }
+
+            for (let node of document.querySelectorAll(".group_block")) {
+                node.remove();
+            }
+
+            let searchResults = document.querySelector("#search_results_empty");
+            for (let item of sorted[sortBy]) {
+                searchResults.insertAdjacentElement("afterend", item[0]);
+            }
+
+            SyncedStorage.set("sortgroupsby", sortBy);
+        }
+
+        let sortOptions = `<div id="friends_sort_options">
+                            ${Localization.str.sort_by}
+                            <span data-esi-sort="default">${Localization.str.theworddefault}</span>
+                            <span data-esi-sort="names" class="es_friends_sort_link">${Localization.str.name}</span>
+                            <span data-esi-sort="members" class="es_friends_sort_link">${Localization.str.members}</span>
+                            <span data-esi-sort="reverse" class="es_friends_sort_link">&#8693;</span>
+                          </div>`;
+
+        HTML.beforeBegin("#search_text_box", sortOptions);
+
+        document.querySelector("#friends_sort_options").addEventListener("click", function(e) {
+            if (!e.target.closest("[data-esi-sort]")) { return; }
+            sortGroups(e.target.dataset.esiSort);
+        });
+
+        sortGroups(SyncedStorage.get("sortgroupsby") || "default");
+    };
+
+    return GroupsPageClass;
+})();
+
 
 let MarketListingPageClass = (function(){
 
@@ -4078,6 +4161,10 @@ let EditGuidePageClass = (function(){
 
         case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
             (new FriendsPageClass());
+            break;
+
+        case /^\/(?:id|profiles)\/.+\/groups(?:[/#?]|$)/.test(path):
+            (new GroupsPageClass());
             break;
 
         case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
