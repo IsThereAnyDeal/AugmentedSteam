@@ -840,6 +840,18 @@ class HTMLParser {
     };
 }
 
+class StringUtils {
+
+    static clearSpecialSymbols(str) {
+        return str.replace(/[\u00AE\u00A9\u2122]/g, "");
+    }
+
+    // https://stackoverflow.com/a/6969486/7162651
+    static escapeRegExp(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    }
+}
+
 function sleep(duration) {
     return new Promise(function(resolve, reject) {
         setTimeout(function() { resolve(); }, duration);

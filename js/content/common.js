@@ -445,19 +445,6 @@ let User = (function(){
     return self;
 })();
 
-
-let StringUtils = (function(){
-
-    let self = {};
-
-    self.clearSpecialSymbols = function(string) {
-        return string.replace(/[\u00AE\u00A9\u2122]/g, "");
-    };
-
-    return self;
-})();
-
-
 let CurrencyRegistry = (function() {
     //   { "id": 1, "abbr": "USD", "symbol": "$", "hint": "United States Dollars", "multiplier": 100, "unit": 1, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": "$", "thousand": ",", "decimal": ".", "right": false } },
     class SteamCurrency {
@@ -540,28 +527,31 @@ let CurrencyRegistry = (function() {
             return s.join("");
         }
         placeholder() {
-            if (this.format.decimalPlaces === 0 || this.format.hidePlacesWhenZero) {
-                return "123";
+            let str = `1${this.format.groupSeparator}`;
+            let cur = 2;
+            for (let i = 0; i < this.format.groupSize; ++i, ++cur) {
+                str += cur;
             }
-            let placeholder = "123" + this.format.decimalSeparator;
-            for (let i = 0; i < this.format.decimalPlaces; ++i) {
-                placeholder += 4 + i;
+
+            if (this.format.decimalPlaces === 0) {
+                return str;
             }
-            return placeholder;
+
+            str += this.format.decimalSeparator;
+            for (let i = 0; i < this.format.decimalPlaces; ++i, ++cur) {
+                str += cur;
+            }
+            return str;
         }
         regExp() {
-            let regex = ["^("];
-            if (this.format.hidePlacesWhenZero) {
-                regex.push("0|[1-9]\\d*(");
-            } else {
-                regex.push("\\d*(");
-            }
-            regex.push(this.format.decimalSeparator.replace(".", "\\."));
+            let regex = `^(?:\\d{1,${this.format.groupSize}}(?:${StringUtils.escapeRegExp(this.format.groupSeparator)}\\d{${this.format.groupSize}})+|\\d*)`;
+
             if (this.format.decimalPlaces > 0) {
-                regex.push("\\d{0,", this.format.decimalPlaces, "}");
+                regex += `(?:${StringUtils.escapeRegExp(this.format.decimalSeparator)}\\d{0,${this.format.decimalPlaces}})?`;
             }
-            regex.push(")?)$")
-            return new RegExp(regex.join(""));
+            regex += '$';
+            
+            return new RegExp(regex);
         }
     }
 
