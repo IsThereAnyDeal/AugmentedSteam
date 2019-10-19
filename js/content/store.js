@@ -584,7 +584,7 @@ class AppPageClass extends StorePageClass {
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
         // Required for "Customize" button and YouTube / Steam tabs
-        DOMHelper.insertHomeCSS();
+        // DOMHelper.insertHomeCSS();
         
         this.forceVideoMP4();
         this.initHdPlayer();
