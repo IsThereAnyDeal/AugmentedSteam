@@ -582,9 +582,6 @@ class AppPageClass extends StorePageClass {
 
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
-
-        // Required for "Customize" button and YouTube / Steam tabs
-        // DOMHelper.insertHomeCSS();
         
         this.forceVideoMP4();
         this.initHdPlayer();
