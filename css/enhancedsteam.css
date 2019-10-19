@@ -1,3 +1,69 @@
+.home_actions_ctn {
+  float: right;
+}
+.home_btn {
+  display: inline-block;
+  background: rgba( 103, 193, 245, 0.2 );
+  color: #67c1f5;
+  border-radius: 1px;
+  font-size: 11px;
+  line-height: 20px;
+  padding: 0 8px;
+  margin-left: 4px;
+  cursor: pointer;
+}
+.home_btn.home_customize_btn {
+  position: relative;
+  z-index: 11;
+  margin-right: 2px;
+}
+.home_viewsettings_popup {
+  position: absolute;
+  color: #384959;
+  padding: 12px 11px;
+  width: 200px;
+  z-index: 10;
+  box-shadow: 0 0 12px #000000;
+  background: rgb(227,234,239);
+  background: -webkit-linear-gradient( top, #e3eaef 5%, #c7d5e0 95%);
+  background: linear-gradient( to bottom, #e3eaef 5%, #c7d5e0 95%);
+}
+.home_viewsettings_instructions {
+  margin-bottom: 12px;
+}
+.home_viewsettings_popup {
+  position: absolute;
+  color: #384959;
+  padding: 12px 11px;
+  width: 200px;
+  z-index: 10;
+  box-shadow: 0 0 12px #000000;
+  background: rgb(227,234,239);
+  background: -webkit-linear-gradient( top, #e3eaef 5%, #c7d5e0 95%);
+  background: linear-gradient( to bottom, #e3eaef 5%, #c7d5e0 95%);
+}
+.home_viewsettings_checkboxrow {
+  background: rgba( 0, 0, 0, 0.2 );
+  margin-bottom: 1px;
+  padding: 2px;
+  line-height: 14px;
+  color: #222d3d;
+  font-size: 10px;
+  cursor: pointer;
+}
+.home_viewsettings_checkbox.checked {
+  background-position: 0px 28px;
+}
+.home_viewsettings_checkbox {
+  float: left;
+  margin-right: 5px;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-image: url(/public/images/v6/customize_checkboxes.png);
+  background-position: 0px 0px;
+}
+
 .store_horizontal_minislider_ctn {
   position: relative;
   overflow: hidden;
