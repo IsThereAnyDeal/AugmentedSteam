@@ -169,48 +169,52 @@ class StorePageClass {
     addDrmWarnings() {
         if (!SyncedStorage.get("showdrm")) { return; }
 
-        let gfwl, uplay, securom, tages, stardock, rockstar, kalypso, denuvo, drm;
-
-        let text = '';
+        let text = "";
         for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details")) {
             text += node.innerHTML;
         }
+        let uppercased = text.toUpperCase();
 
         // Games for Windows Live detection
-        if (text.toUpperCase().includes("GAMES FOR WINDOWS LIVE") ||
-        text.toUpperCase().includes("GAMES FOR WINDOWS - LIVE") ||
-        text.includes("Online play requires log-in to Games For Windows") ||
-        text.includes("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") ||
-        text.includes("Multiplayer play and other LIVE features included at no charge") ||
-        text.includes("www.gamesforwindows.com/live")) {
-            gfwl = true;
-        }
+        let gfwl =
+               uppercased.includes("GAMES FOR WINDOWS LIVE")
+            || uppercased.includes("GAMES FOR WINDOWS - LIVE")
+            || text.includes("Online play requires log-in to Games For Windows")
+            || text.includes("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE")
+            || text.includes("Multiplayer play and other LIVE features included at no charge")
+            || text.includes("www.gamesforwindows.com/live");
 
         // Ubisoft Uplay detection
-        if (text.includes("Uplay") || text.includes("Ubisoft Account")) { uplay = true; }
+        let uplay =
+               text.includes("Uplay")
+            || text.includes("Ubisoft Account");
 
         // Securom detection
-        if (text.includes("SecuROM")) { securom = true; }
+        let securom = text.includes("SecuROM");
 
         // Tages detection
-        if ((text.match(/\btages\b/i) || text.match(/\bsolidshield\b/i)) && !text.match(/angebote des tages/i)) { tages = true; }
+        let tages =
+                text.match(/\b(tages|solidshield)\b/i)
+            && !text.match(/angebote des tages/i);
 
         // Stardock account detection
-        if (text.includes("Stardock account")) { stardock = true; }
+        let stardock = text.includes("Stardock account");
 
         // Rockstar social club detection
-        if (text.includes("Rockstar Social Club")) { rockstar = true; }
-        else if (text.includes("Rockstar Games Social Club")) { rockstar = true; }
+        let rockstar =
+               text.includes("Rockstar Social Club")
+            || text.includes("Rockstar Games Social Club");
 
         // Kalypso Launcher detection
-        if (text.includes("Requires a Kalypso account")) { kalypso = true; }
+        let kalypso = text.includes("Requires a Kalypso account");
 
         // Denuvo Antitamper detection
-        if (text.match(/\bdenuvo\b/i)) { denuvo = true; }
+        let denuvo = text.match(/\bdenuvo\b/i);
 
         // Detect other DRM
-        if (text.includes("3rd-party DRM")) { drm = true; }
-        else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
+        let drm =
+                text.includes("3rd-party DRM")
+            && !text.match(/No (3rd|third)[- ]party DRM/i);
 
         let drmNames = [];
         if (gfwl) { drmNames.push('Games for Windows Live'); }
