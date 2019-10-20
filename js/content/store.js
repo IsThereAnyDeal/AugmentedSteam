@@ -1844,10 +1844,13 @@ class AppPageClass extends StorePageClass {
              <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.select.wishlisted_dlc}</div>
              <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.select.none}</div>`);
 
+        let change = new Event("change", {"bubbles": true});
+
         document.querySelector("#unowned_dlc_check").addEventListener("click", function () {
             let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row:not(.ds_owned) input:not(:checked)");
             for (let i=0, len=nodes.length; i<len; i++) {
                 nodes[i].checked = true;
+                nodes[i].dispatchEvent(change);
             }
         });
 
@@ -1855,6 +1858,7 @@ class AppPageClass extends StorePageClass {
             let nodes = document.querySelectorAll(".game_area_dlc_section .ds_wishlist input:not(:checked)");
             for (let i=0, len=nodes.length; i<len; i++) {
                 nodes[i].checked = true;
+                nodes[i].dispatchEvent(change);
             }
         });
 
@@ -1862,11 +1866,12 @@ class AppPageClass extends StorePageClass {
             let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row input:checked");
             for (let i=0, len=nodes.length; i<len; i++) {
                 nodes[i].checked = false;
+                nodes[i].dispatchEvent(change);
             }
         });
 
         HTML.beforeEnd(".game_area_dlc_section .gradientbg",
-            "<a id='es_dlc_option_button'>" + Localization.str.thewordoptions + " ▾</a>");
+            "<a id='es_dlc_option_button'>" + Localization.str.thewordoptions + " ▼</a>");
 
         document.querySelector("#es_dlc_option_button").addEventListener("click", function() {
             document.querySelector("#es_dlc_option_panel")
@@ -1874,15 +1879,16 @@ class AppPageClass extends StorePageClass {
 
             let button = document.querySelector("#es_dlc_option_button");
 
-            button.textContent = (button.textContent.match("▾")
-                ? Localization.str.thewordoptions + " ▴"
-                : Localization.str.thewordoptions + " ▾");
+            button.textContent = (button.textContent.match("▼")
+                ? Localization.str.thewordoptions + " ▲"
+                : Localization.str.thewordoptions + " ▼");
         });
 
         document.querySelector(".game_area_dlc_section").addEventListener("change", function(e){
             if (!e.target.classList.contains("es_dlc_selection")) { return; }
 
             let cartNode = document.querySelector("#es_selected_cart");
+            cartNode.innerHTML = "";
 
             let inputAction = document.createElement("input");
             inputAction.type = "hidden";
