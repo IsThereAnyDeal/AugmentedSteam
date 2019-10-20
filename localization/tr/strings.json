@@ -306,7 +306,7 @@
         "tier_includes": "__tier__ (__price__) __num__ öğe içerir",
         "tier": "Aşama __num__",
         "header": "Bu oyunu içeren paketler",
-        "info": "Bundle Bilgisi",
+        "info": "Bundle Bilgisi"
     },
     "charts": {
         "peakall": "tüm zamanlardaki en yüksek zirve",
@@ -511,7 +511,7 @@
     "ready": {
         "errormsg": "Augmented Steam verilerini yüklerken hata oluştu",
         "loading": "Augmented Steam verileri yüklüyor...",
-        "ready": "Augmented Steam hazır"
+        "ready": "Augmented Steam hazır",
         "failed": "__amount__ istek başarısız oldu, lütfen tarayıcı konsoluna bakın"
     },
     "twitch": {
