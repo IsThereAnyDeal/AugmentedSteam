@@ -2,7 +2,7 @@ class CacheStorage {
     static isExpired (timestamp, ttl) {
         if (!timestamp) return true;
         if (typeof ttl != 'number' || ttl < 0) ttl = 0;
-        return timestamp + ttl <= window.timestamp();
+        return timestamp + ttl <= Timestamp.now();
     }
 
     static get(key, ttl, defaultValue) {
@@ -19,7 +19,7 @@ class CacheStorage {
     }
 
     static set(key, value) {
-        localStorage.setItem('cache_' + key, JSON.stringify({ 'data': value, 'timestamp': window.timestamp(), }));
+        localStorage.setItem('cache_' + key, JSON.stringify({ 'data': value, 'timestamp': Timestamp.now(), }));
     }
 
     static remove(key) {
@@ -170,14 +170,14 @@ class ITAD_Api extends Api {
 
         if (!accessToken || !expiresIn) { throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'"); }
             
-        LocalStorage.set("access_token", { token: accessToken, expiry: window.timestamp() + parseInt(expiresIn, 10) });
+        LocalStorage.set("access_token", { token: accessToken, expiry: Timestamp.now() + parseInt(expiresIn, 10) });
     }
 
     static isConnected() {
         let lsEntry = LocalStorage.get("access_token");
         if (!lsEntry) return false;
 
-        if (lsEntry.expiry <= window.timestamp()) {
+        if (lsEntry.expiry <= Timestamp.now()) {
             LocalStorage.remove("access_token");
             return false;
         }
@@ -768,7 +768,7 @@ class IndexedDB {
     static async put(objectStoreName, data, key, multiple, cached) {
         if (cached) {
             let ttl = IndexedDB.cacheObjectStores.get(objectStoreName);
-            let expiry = window.timestamp() + ttl;
+            let expiry = Timestamp.now() + ttl;
             if (IndexedDB.timestampedObjectStores.has(objectStoreName)) {
                 await IndexedDB.db.put(objectStoreName, expiry, "expiry");
             } else {
@@ -1014,14 +1014,14 @@ class IndexedDB {
     }
 
     static isExpired(expiry) {
-        return expiry <= window.timestamp();
+        return expiry <= Timestamp.now();
     }
 
     static async objStoreExpiryCheck(objectStoreName, params) {
         // Remove old entries
         if (IndexedDB.timestampedEntriesObjectStores.has(objectStoreName)) {
             let cursor = await IndexedDB.db.transaction(objectStoreName, "readwrite").store.index("expiry")
-                .openCursor(IDBKeyRange.upperBound(window.timestamp() - IndexedDB.timestampedEntriesObjectStores.get(objectStoreName)));
+                .openCursor(IDBKeyRange.upperBound(Timestamp.now() - IndexedDB.timestampedEntriesObjectStores.get(objectStoreName)));
 
             while (cursor) {
                 await cursor.delete();

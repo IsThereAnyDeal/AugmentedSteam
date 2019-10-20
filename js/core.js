@@ -891,13 +891,22 @@ function sleep(duration) {
     });
 }
 
-function timestamp() {
-    return Math.trunc(Date.now() / 1000);
+class Timestamp {
+
+    static now() {
+        return Math.trunc(Date.now() / 1000);
+    }
 }
 
-async function executionTime(fn, label) {
-    let start = performance.now();
-    await fn();
-    let end = performance.now();
-    console.debug("Took", end - start, "ms to execute", label);
+
+class Debug {
+
+    static async executionTime(fn, label) {
+        let start = performance.now();
+        await fn();
+        let end = performance.now();
+        console.debug("Took", end - start, "ms to execute", label);
+    }
 }
+
+
