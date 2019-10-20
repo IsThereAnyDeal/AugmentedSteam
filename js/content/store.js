@@ -392,14 +392,14 @@ class StorePageClass {
                 promises.push(promise);
             });
 
-            Promise.all(promises).then(result => {
+            Promise.all(promises).then(async () => {
 
                 let node = document.querySelector("input[name=subid][value='"+subid+"']")
                     .closest(".game_area_purchase_game_wrapper,#game_area_purchase,.sale_page_purchase_item")
                     .querySelector(".game_purchase_action");
 
                 let apiPrice = prices[User.getCountry().toLowerCase()];
-                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
+                let priceLocal = await new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
 
                 let pricingDiv = document.createElement("div");
                 pricingDiv.classList.add("es_regional_container");
@@ -409,13 +409,13 @@ class StorePageClass {
                     HTML.inner(pricingDiv, pricingDiv.innerHTML + '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>');
                 }
 
-                countries.forEach(country => {
+                countries.forEach(async country => {
                     let apiPrice = prices[country];
                     let html = "";
 
                     if (apiPrice) {
                         let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency);
-                        let priceUser = priceRegion.inCurrency(Currency.customCurrency);
+                        let priceUser = await priceRegion.inCurrency(Currency.customCurrency);
 
 
                         let percentageIndicator = "equal";
@@ -500,7 +500,7 @@ class SubPageClass extends StorePageClass {
     }
 
     subscriptionSavingsCheck() {
-        setTimeout(function() {
+        setTimeout(async () => {
             let notOwnedTotalPrice = 0;
 
             for (let node of document.querySelectorAll(".tab_item:not(.ds_owned)")) {
@@ -509,7 +509,7 @@ class SubPageClass extends StorePageClass {
                 if (priceNode) {
                     let priceContainer = priceNode.textContent.trim();
                     if (priceContainer) { 
-                        let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
+                        let price = await Price.parseFromString(priceContainer, Currency.storeCurrency);
                         if (price) {
                             notOwnedTotalPrice += price.value;
                             continue;
@@ -530,7 +530,7 @@ class SubPageClass extends StorePageClass {
 
             if (notOwnedTotalPrice !== null) {
                 let priceNodes = document.querySelectorAll(".package_totals_area .price");
-                let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
+                let packagePrice = await Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
                 if (!packagePrice) { return; }
 
                 notOwnedTotalPrice -= packagePrice.value;
@@ -558,7 +558,7 @@ class BundlePageClass extends StorePageClass {
     constructor(url) {
         super();
 
-        this.bundleid = GameId.getSubid(url);
+        this.bundleid = GameId.getBundleid(url);
 
         this.addDrmWarnings();
         this.addPrices();
@@ -594,6 +594,7 @@ class AppPageClass extends StorePageClass {
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
+        this.addWaitlistButton();
         this.addNewQueueButton();
         this.addFullscreenScreenshotView();
 
@@ -604,6 +605,7 @@ class AppPageClass extends StorePageClass {
         this.addDrmWarnings();
         this.addMetacriticUserScore();
         this.addOpenCritic();
+        this.addOwnedElsewhere();
         this.displayViewInLibrary();
         this.displayPurchaseDate();
         this.addYouTubeGameplay();
@@ -798,7 +800,7 @@ class AppPageClass extends StorePageClass {
         return videoIsHD;
     }
 
-    async storePageDataPromise() {
+    storePageDataPromise() {
         let apiparams = { 'appid': this.appid, };
         if (this.metalink) {
             apiparams.mcurl = this.metalink;
@@ -806,7 +808,7 @@ class AppPageClass extends StorePageClass {
         if (SyncedStorage.get("showoc")) {
             apiparams.oc = 1;
         }
-        return Background.action('storepagedata', apiparams);
+        return Background.action("idb.get", "storePageData", this.appid, apiparams);
     }
 
     /**
@@ -835,7 +837,7 @@ class AppPageClass extends StorePageClass {
 
         imgNode.classList.add("es-in-wl");
         HTML.beforeBegin(imgNode,
-            `<img class='es-remove-wl' src='${ExtensionLayer.getLocalUrl("img/remove.png")}' style='display:none' />
+            `<img class='es-remove-wl' src='${ExtensionResources.getURL("img/remove.png")}' style='display:none' />
              <img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
 
         successNode.addEventListener("click", function(e){
@@ -870,7 +872,7 @@ class AppPageClass extends StorePageClass {
         }
     }
 
-    addUserNote() {
+    async addUserNote() {
         if (!User.isSignedIn || !SyncedStorage.get("showusernotes")) { return; }
 
         let noteText = "";
@@ -879,8 +881,8 @@ class AppPageClass extends StorePageClass {
         let inactiveStyle = "";
         let activeStyle = "display:none;";
 
-        if (this.userNotes.exists(this.appid)) {
-            noteText = `"${this.userNotes.getNote(this.appid)}"`;
+        if (await this.userNotes.exists(this.appid)) {
+            noteText = `"${await this.userNotes.getNote(this.appid)}"`;
             cssClass = "";
 
             inactiveStyle = "display:none;";
@@ -888,7 +890,7 @@ class AppPageClass extends StorePageClass {
         }
 
         HTML.beforeBegin(".queue_actions_ctn > :last-child",
-            ` <div class="queue_control_button js-user-note-button">
+            `<div class="queue_control_button js-user-note-button">
                 <div id="es_add_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${inactiveStyle}">
                     <span>${Localization.str.user_note.add}</span>
                 </div>
@@ -908,14 +910,48 @@ class AppPageClass extends StorePageClass {
             node.classList.toggle("esi-note--hidden", !active);
         }
 
-        let that = this;
-
-        let handler = function() {
-            that.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, that.appid, "#esi-store-user-note", toggleState);
+        let handler = () => {
+            this.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, this.appid, "#esi-store-user-note", toggleState);
         };
 
         document.querySelector(".js-user-note-button").addEventListener("click", handler);
         document.querySelector("#esi-store-user-note").addEventListener("click", handler);
+    }
+
+    async addWaitlistButton() {
+        if (!SyncedStorage.get("add_to_waitlist") || !await Background.action("itad.isconnected")) return;
+
+        HTML.beforeBegin(".queue_btn_follow",
+            `<div class="queue_control_button queue_btn_waitlist">
+                <div class="btnv6_blue_hoverfade btn_medium queue_btn_inactive">
+                    <span>${Localization.str.add_to_waitlist}</span>
+                </div>
+                <div class="btnv6_blue_hoverfade btn_medium queue_btn_active" style="display: none;">
+                    <span><img src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected.png" border="0">${Localization.str.on_waitlist}</span>
+                </div>
+            </div>
+            <div style="position: relative; display: inline-block;"></div>`); // Creates space between waitlist and follow button
+
+        let waitlistBtn = document.querySelector(".queue_btn_waitlist");
+        let [addBtn, addedBtn] = waitlistBtn.children;
+        let waitlisted = false; // todo Add check when endpoint is updated
+
+        if (waitlisted) {
+            addBtn.style.display = "none";
+            addedBtn.style.display = '';
+        }
+
+        waitlistBtn.addEventListener("click", async () => {
+            waitlisted = !waitlisted;
+            if (waitlisted) {
+                await Background.action("itad.addtowaitlist", this.appid);
+            } else {
+                // todo Remove from waitlist
+            }
+
+            addBtn.style.display = waitlisted ? "none" : '';
+            addedBtn.style.display = waitlisted ? '' : "none";
+        });
     }
 
     addNewQueueButton() {
@@ -994,37 +1030,34 @@ class AppPageClass extends StorePageClass {
         return node && node.value;
     }
 
-    addCoupon() {
+    async addCoupon() {
         if (!SyncedStorage.get("show_coupon")) return;
-        let inst = this;
-        Inventory.then(() => {
+        
+        let coupon = await Inventory.getCoupon(this.appid);
+        if (!coupon) { return; }
 
-            let coupon = Inventory.getCoupon(inst.getFirstSubid());
-            if (!coupon) { return; }
+        let couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
 
-            let couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
-
-            HTML.beforeBegin("#game_area_purchase",
-                `<div class="early_access_header">
-                    <div class="heading">
-                        <h1 class="inset">${Localization.str.coupon_available}</h1>
-                        <h2 class="inset">${Localization.str.coupon_application_note}</h2>
-                        <p>${Localization.str.coupon_learn_more}</p>
-                    </div>
-                    <div class="devnotes">
-                        <div style="display:flex;padding-top:10px">
-                            <img src="http://cdn.steamcommunity.com/economy/image/${coupon.image_url}" style="width:96px;height:64px;"/>
-                            <div style="display:flex;flex-direction:column;margin-left:10px">
-                                <h1>${coupon.title}</h1>
-                                <div>${coupon.discount_note || ""}</div>
-                                <div style="color:#a75124">${couponDate}</div>
-                            </div>
+        HTML.beforeBegin("#game_area_purchase",
+            `<div class="early_access_header">
+                <div class="heading">
+                    <h1 class="inset">${Localization.str.coupon_available}</h1>
+                    <h2 class="inset">${Localization.str.coupon_application_note}</h2>
+                    <p>${Localization.str.coupon_learn_more}</p>
+                </div>
+                <div class="devnotes">
+                    <div style="display:flex;padding-top:10px">
+                        <img src="http://cdn.steamcommunity.com/economy/image/${coupon.image_url}" style="width:96px;height:64px;"/>
+                        <div style="display:flex;flex-direction:column;margin-left:10px">
+                            <h1>${coupon.title}</h1>
+                            <div>${coupon.discount_note || ""}</div>
+                            <div style="color:#a75124">${couponDate}</div>
                         </div>
                     </div>
-                </div>`);
+                </div>
+            </div>`);
 
-            // TODO show price in purchase box
-        });
+        // TODO show price in purchase box
     }
 
     addDlcInfo() {
@@ -1090,7 +1123,7 @@ class AppPageClass extends StorePageClass {
             }
             HTML.afterEnd(node.parentNode,  "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic' class='solo'></div><div style='clear: both'></div></div>");
 
-            let opencriticImg = ExtensionLayer.getLocalUrl("img/opencritic.png");
+            let opencriticImg = ExtensionResources.getURL("img/opencritic.png");
             let award = data.award || "NA";
 
             HTML.beforeEnd("#game_area_opencritic",
@@ -1272,6 +1305,20 @@ class AppPageClass extends StorePageClass {
         });
     }
 
+    addOwnedElsewhere() {
+        if (document.querySelector(".game_area_already_owned")) return;
+
+        Background.action("idb.get", "collection", `app/${this.appid}`, { "shop": "steam", "optional": "gameid,copy_type" }).then(result => {
+            if (!result) return;
+            
+            HTML.afterEnd(".queue_overflow_ctn",
+                `<div class="game_area_already_owned page_content">
+                    <div class="ds_owned_flag ds_flag">${Localization.str.library.in_library.toUpperCase()}&nbsp;&nbsp;</div>
+                    <div class="already_in_library">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", result.map(store => `<strong>${store}</strong>`).join(", "))}</div>
+                </div>`)
+        })
+    }
+
     addWidescreenCertification() {
         if (!SyncedStorage.get("showwsgf")) { return; }
         if (this.isDlc()) { return; }
@@ -1293,92 +1340,92 @@ class AppPageClass extends StorePageClass {
 
             switch (wsg) {
                 case "A":
-                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-gold.png");
+                    wsg_icon = ExtensionResources.getURL("img/wsgf/ws-gold.png");
                     wsg_text = Localization.str.wsgf.gold.replace(/__type__/g, "Widescreen");
                     break;
                 case "B":
-                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-silver.png");
+                    wsg_icon = ExtensionResources.getURL("img/wsgf/ws-silver.png");
                     wsg_text = Localization.str.wsgf.silver.replace(/__type__/g, "Widescreen");
                     break;
                 case "C":
-                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-limited.png");
+                    wsg_icon = ExtensionResources.getURL("img/wsgf/ws-limited.png");
                     wsg_text = Localization.str.wsgf.limited.replace(/__type__/g, "Widescreen");
                     break;
                 case "Incomplete":
-                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-incomplete.png");
+                    wsg_icon = ExtensionResources.getURL("img/wsgf/ws-incomplete.png");
                     wsg_text = Localization.str.wsgf.incomplete;
                     break;
                 case "Unsupported":
-                    wsg_icon = ExtensionLayer.getLocalUrl("img/wsgf/ws-unsupported.png");
+                    wsg_icon = ExtensionResources.getURL("img/wsgf/ws-unsupported.png");
                     wsg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Widescreen");
                     break;
             }
 
             switch (mmg) {
                 case "A":
-                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-gold.png");
+                    mmg_icon = ExtensionResources.getURL("img/wsgf/mm-gold.png");
                     mmg_text = Localization.str.wsgf.gold.replace(/__type__/g, "Multi-Monitor");
                     break;
                 case "B":
-                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-silver.png");
+                    mmg_icon = ExtensionResources.getURL("img/wsgf/mm-silver.png");
                     mmg_text = Localization.str.wsgf.silver.replace(/__type__/g, "Multi-Monitor");
                     break;
                 case "C":
-                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-limited.png");
+                    mmg_icon = ExtensionResources.getURL("img/wsgf/mm-limited.png");
                     mmg_text = Localization.str.wsgf.limited.replace(/__type__/g, "Multi-Monitor");
                     break;
                 case "Incomplete":
-                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-incomplete.png");
+                    mmg_icon = ExtensionResources.getURL("img/wsgf/mm-incomplete.png");
                     mmg_text = Localization.str.wsgf.incomplete;
                     break;
                 case "Unsupported":
-                    mmg_icon = ExtensionLayer.getLocalUrl("img/wsgf/mm-unsupported.png");
+                    mmg_icon = ExtensionResources.getURL("img/wsgf/mm-unsupported.png");
                     mmg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Multi-Monitor");
                     break;
             }
 
             switch (uws) {
                 case "A":
-                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-gold.png");
+                    uws_icon = ExtensionResources.getURL("img/wsgf/uw-gold.png");
                     uws_text = Localization.str.wsgf.gold.replace(/__type__/g, "Ultra-Widescreen");
                     break;
                 case "B":
-                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-silver.png");
+                    uws_icon = ExtensionResources.getURL("img/wsgf/uw-silver.png");
                     uws_text = Localization.str.wsgf.silver.replace(/__type__/g, "Ultra-Widescreen");
                     break;
                 case "C":
-                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-limited.png");
+                    uws_icon = ExtensionResources.getURL("img/wsgf/uw-limited.png");
                     uws_text = Localization.str.wsgf.limited.replace(/__type__/g, "Ultra-Widescreen");
                     break;
                 case "Incomplete":
-                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-incomplete.png");
+                    uws_icon = ExtensionResources.getURL("img/wsgf/uw-incomplete.png");
                     uws_text = Localization.str.wsgf.incomplete;
                     break;
                 case "Unsupported":
-                    uws_icon = ExtensionLayer.getLocalUrl("img/wsgf/uw-unsupported.png");
+                    uws_icon = ExtensionResources.getURL("img/wsgf/uw-unsupported.png");
                     uws_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Ultra-Widescreen");
                     break;
             }
 
             switch (fkg) {
                 case "A":
-                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-gold.png");
+                    fkg_icon = ExtensionResources.getURL("img/wsgf/4k-gold.png");
                     fkg_text = Localization.str.wsgf.gold.replace(/__type__/g, "4k UHD");
                     break;
                 case "B":
-                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-silver.png");
+                    fkg_icon = ExtensionResources.getURL("img/wsgf/4k-silver.png");
                     fkg_text = Localization.str.wsgf.silver.replace(/__type__/g, "4k UHD");
                     break;
                 case "C":
-                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-limited.png");
+                    fkg_icon = ExtensionResources.getURL("img/wsgf/4k-limited.png");
                     fkg_text = Localization.str.wsgf.limited.replace(/__type__/g, "4k UHD");
                     break;
                 case "Incomplete":
-                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-incomplete.png");
+                    fkg_icon = ExtensionResources.getURL("img/wsgf/4k-incomplete.png");
                     fkg_text = Localization.str.wsgf.incomplete;
                     break;
                 case "Unsupported":
-                    fkg_icon = ExtensionLayer.getLocalUrl("img/wsgf/4k-unsupported.png");
+                    fkg_icon = ExtensionResources.getURL("img/wsgf/4k-unsupported.png");
                     fkg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "4k UHD");
                     break;
             }
@@ -1448,7 +1495,7 @@ class AppPageClass extends StorePageClass {
             if (suggest) { // FIXME consequence of the above FIXME
                 suggest.addEventListener("click", function(){
                     LocalStorage.remove("storePageData_" + this.appid);
-                    Background.action('storepagedata.expire', { 'appid': this.appid, });
+                    Background.action('storepagedata.expire', this.appid);
                 });
             }
         });
@@ -1588,24 +1635,24 @@ class AppPageClass extends StorePageClass {
         super.addLinks(type);
     }
 
-    addTitleHighlight() {
-        Promise.all([DynamicStore, Inventory]).then(() => {
-            let title = document.querySelector(".apphub_AppName");
+    async addTitleHighlight() {
+        await DynamicStore;
+        
+        let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
+            ITAD.getAppStatus(`app/${this.appid}`),
+            DynamicStore.getAppStatus(`app/${this.appid}`),
+            Inventory.getAppStatus(this.appid),
+        ]);
+        let title = document.querySelector(".apphub_AppName");
 
-            if (DynamicStore.isOwned(this.appid)) {
-                Highlights.highlightOwned(title);
-            } else if (Inventory.hasGuestPass(this.appid)) {
-                Highlights.highlightInvGuestpass(title);
-            } else if (Inventory.getCouponByAppId(this.appid)) {
-                Highlights.highlightCoupon(title);
-            } else if (Inventory.hasGift(this.appid)) {
-                Highlights.highlightInvGift(title);
-            } else if (DynamicStore.isWishlisted(this.appid)) {
-                Highlights.highlightWishlist(title);
-            } else if (DynamicStore.isIgnored(this.appid)) {
-                Highlights.highlightNotInterested(title);
-            }
-        });
+        if (collected) Highlights.highlightCollection(title);
+        if (waitlisted) Highlights.highlightWaitlist(title);
+        if (owned) Highlights.highlightOwned(title);
+        if (guestPass) Highlights.highlightInvGuestpass(title);
+        if (coupon) Highlights.highlightCoupon(title);
+        if (gift) Highlights.highlightInvGift(title);
+        if (wishlisted) Highlights.highlightWishlist(title);
+        if (ignored) Highlights.highlightNotInterested(title);
     }
 
     addFamilySharingWarning() {
@@ -1831,7 +1878,7 @@ class AppPageClass extends StorePageClass {
 
                 HTML.afterBegin(
                     dlc.querySelector(".game_area_dlc_name"),
-                    "<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + value + "' value='" + value + "'><label for='es_select_dlc_" + value + "' style='background-image: url( " + ExtensionLayer.getLocalUrl("img/check_sheet.png") + ");'></label>");
+                    "<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + value + "' value='" + value + "'><label for='es_select_dlc_" + value + "' style='background-image: url( " + ExtensionResources.getURL("img/check_sheet.png") + ");'></label>");
             } else {
                 dlc.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
             }
@@ -2013,7 +2060,7 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("showastatslink")) { return; }
         if (!this.hasAchievements()) { return; }
 
-        let imgUrl = ExtensionLayer.getLocalUrl("img/ico/astatsnl.png");
+        let imgUrl = ExtensionResources.getURL("img/ico/astatsnl.png");
         let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + this.communityAppid;
 
         HTML.beforeEnd("#achievement_block",
@@ -2269,7 +2316,7 @@ let RegisterKeyPageClass = (function(){
                 }
                 keys.push(attempt);
 
-                let url = ExtensionLayer.getLocalUrl("img/questionmark.png");
+                let url = ExtensionResources.getURL("img/questionmark.png");
 
                 HTML.beforeEnd("#es_activate_results",
                     "<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + url + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "</div><div id='attempt_" + attempt + "_result' style='margin-left: 26px; margin-bottom: 10px; margin-top: -5px;'></div>");
@@ -2295,7 +2342,7 @@ let RegisterKeyPageClass = (function(){
                     let attempted = current_key;
                     let message = Localization.str.register.default;
                     if (data["success"] === 1) {
-                        document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/okay.png"));
+                        document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionResources.getURL("img/sr/okay.png"));
                         if (data["purchase_receipt_info"]["line_items"].length > 0) {
                             document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.register.success.replace("__gamename__", data["purchase_receipt_info"]["line_items"][0]["line_item_description"]);
                             document.querySelector("#attempt_" + attempted + "_result").style.display = "block";
@@ -2310,14 +2357,14 @@ let RegisterKeyPageClass = (function(){
                             case 50: message = Localization.str.register.wallet; break;
                             case 53: message = Localization.str.register.toomany; break;
                         }
-                        document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/banned.png"));
+                        document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionResources.getURL("img/sr/banned.png"));
                         document.querySelector("#attempt_" + attempted + "_result").textContent = message;
                         document.querySelector("#attempt_" + attempted + "_result").style.display="block";
                     }
 
                 }, () => {
                     let attempted = current_key;
-                    document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionLayer.getLocalUrl("img/sr/banned.png"));
+                    document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionResources.getURL("img/sr/banned.png"));
                     document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.error;
                     document.querySelector("#attempt_" + attempted + "_result").style.display = "block";
                 });
@@ -2369,7 +2416,7 @@ let FundsPageClass = (function(){
         this.addCustomMoneyAmount();
     }
 
-    FundsPageClass.prototype.addCustomMoneyAmount = function() {
+    FundsPageClass.prototype.addCustomMoneyAmount = async function() {
         let giftcard = document.querySelector(".giftcard_amounts");
 
         let newel = document.querySelector(giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game").cloneNode(true);
@@ -2391,7 +2438,7 @@ let FundsPageClass = (function(){
             );
         }
 
-        let currency = Price.parseFromString(price, Currency.storeCurrency);
+        let currency = await Price.parseFromString(price, Currency.storeCurrency);
 
         let inputel = newel.querySelector((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));
         HTML.inner(inputel, "<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>");
@@ -3236,27 +3283,47 @@ let WishlistPageClass = (function(){
 
         await DynamicStore;
 
-        let appid = Number(node.dataset.appId);
+        let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { coupon, guestPass, gift }] = await Promise.all([
+            ITAD.getAppStatus(`app/${node.dataset.appId}`),
+            DynamicStore.getAppStatus(`app/${node.dataset.appId}`),
+            Inventory.getAppStatus(Number(node.dataset.appId)),
+        ]);
 
-        if (DynamicStore.isOwned(appid)) {
+        if (collected) Highlights.highlightCollection(node);
+        if (waitlisted) Highlights.highlightWaitlist(node);
+
+        if (owned) {
             node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
             if (SyncedStorage.get("highlight_owned")) {
                 Highlights.highlightOwned(node);
             } else {
-                HTML.beforeEnd(node, '<div class="ds_flag ds_owned_flag">' + Localization.str.library.in_library.toUpperCase() + '&nbsp;&nbsp;</div>');
+                HTML.beforeEnd(node, `<div class="ds_flag ds_owned_flag">${Localization.str.library.in_library.toUpperCase()}&nbsp;&nbsp;</div>`);
             }
         }
 
-        if (DynamicStore.isWishlisted(appid)) {
+        if (wishlisted) {
             node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
 
             if (SyncedStorage.get("highlight_wishlist")) {
                 Highlights.highlightWishlist(node);
             } else {
-                HTML.beforeEnd(node,'<div class="ds_flag ds_owned_flag">' + Localization.str.on_wishlist.toUpperCase() + '&nbsp;&nbsp;</div>');
+                HTML.beforeEnd(node, `<div class="ds_flag ds_wishlist_flag">${Localization.str.on_wishlist.toUpperCase()}&nbsp;&nbsp;</div>`);
             }
         }
 
+        if (ignored) {
+            node.classList.add("ds_collapse_flag", "ds_flagged", "ds_ignored");
+
+            if (SyncedStorage.get("highlight_notinterested")) {
+                Highlights.highlightNotInterested(node);
+            } else {
+                HTML.beforeEnd(node, `<div class="ds_flag ds_ignored_flag">${Localization.str.ignored.toUpperCase()}&nbsp;&nbsp;</div>`);
+            }
+        }
+
+        if (coupon) Highlights.highlightCoupon(node);
+        if (guestPass) Highlights.highlightInvGuestpass(node);
+        if (gift) Highlights.highlightInvGift(node);
     };
 
     WishlistPageClass.prototype.addStatsArea = function() {
@@ -3554,14 +3621,14 @@ let WishlistPageClass = (function(){
         });
     };
 
-    WishlistPageClass.prototype.addUserNote =  function(node) {
+    WishlistPageClass.prototype.addUserNote = async function(node) {
         if (node.classList.contains("esi-has-note")) { return; }
 
-        let appid = node.dataset.appId;
+        let appid = Number(node.dataset.appId);
         let noteText;
         let cssClass;
-        if (userNotes.exists(appid)) {
-            noteText = `"${userNotes.getNote(appid)}"`;
+        if (await userNotes.exists(appid)) {
+            noteText = `"${await userNotes.getNote(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.user_note.add;
@@ -3590,7 +3657,7 @@ let WishlistPageClass = (function(){
             if (!e.target.classList.contains("esi-note")) { return; }
 
             let row = e.target.closest(".wishlist_row");
-            let appid = row.dataset.appId;
+            let appid = Number(row.dataset.appId);
             userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note", stateHandler);
         });
     };
@@ -3610,52 +3677,48 @@ let WishlistPageClass = (function(){
     return WishlistPageClass;
 })();
 
-let UserNotes = (function(){
-
-    function UserNotes() {
+class UserNotes {
+    constructor() {
         this.noteModalTemplate = `
-                <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
-                    <div id="es_note_modal_content">
-                        <div class="es_note_prompt newmodal_prompt_with_textarea gray_bevel fullwidth">
-                            <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
+            <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
+                <div id="es_note_modal_content">
+                    <div class="es_note_prompt newmodal_prompt_with_textarea gray_bevel fullwidth">
+                        <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
+                    </div>
+                    <div class="es_note_buttons" style="float: right">
+                        <div class="es_note_modal_submit btn_green_white_innerfade btn_medium">
+                            <span>${Localization.str.save}</span>
                         </div>
-                        <div class="es_note_buttons" style="float: right">
-                            <div class="es_note_modal_submit btn_green_white_innerfade btn_medium">
-                                <span>${Localization.str.save}</span>
-                            </div>
-                            <div class="es_note_modal_close btn_grey_white_innerfade btn_medium">
-                                <span>${Localization.str.cancel}</span>
-                            </div>
+                        <div class="es_note_modal_close btn_grey_white_innerfade btn_medium">
+                            <span>${Localization.str.cancel}</span>
                         </div>
                     </div>
-                </div>`;
-
-        this.notes = SyncedStorage.get("user_notes") || {};
+                </div>
+            </div>`;
     }
 
-    UserNotes.prototype.showModalDialog = function(appname, appid, nodeSelector, onNoteUpdate) {
-
+    async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
         // Partly copied from shared_global.js
         ExtensionLayer.runInPageContext(`function() {
             let deferred = new jQuery.Deferred();
             let fnOK = () => deferred.resolve();
-
+    
             let Modal = _BuildDialog(
                 "${Localization.str.user_note.add_for_game.replace("__gamename__", appname)}",
-                \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.notes[appid] || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
+                \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", await this.getNote(appid) || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
                 [], fnOK);
             deferred.always(() => Modal.Dismiss());
-
+    
             Modal.m_fnBackgroundClick = () => {
                 Messenger.onMessenge("noteSaved").then(Modal.Dismiss);
                 Messenger.postMessage("backgroundClick");
             }
-
+    
             Modal.Show();
-
+    
             // attach the deferred's events to the modal
             deferred.promise(Modal);
-
+    
             let note_input = document.getElementById("es_note_input");
             note_input.focus();
             note_input.setSelectionRange(0, note_input.textLength);
@@ -3680,54 +3743,46 @@ let UserNotes = (function(){
                 e.preventDefault();
                 onNoteUpdate.apply(null, saveNote());
                 ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
-            } else if (e.target.closest(".es_note_modal_close")) {
+            }
+            else if (e.target.closest(".es_note_modal_close")) {
                 ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
-            } else {
+            }
+            else {
                 return;
             }
             document.removeEventListener("click", clickListener);
         }
 
-        let that = this;
-        function saveNote() {
+        let saveNote = () => {
             let modal = document.querySelector('#es_note_modal');
-            let appid = modal.dataset.appid;
+            let appid = parseInt(modal.dataset.appid, 10);
             let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
             let node = document.querySelector(decodeURIComponent(modal.dataset.selector));
-
             if (note.length !== 0) {
-                that.setNote(appid, note);
+                this.setNote(appid, note);
                 HTML.inner(node, `"${note}"`);
                 return [node, true];
-            } else {
-                that.deleteNote(appid);
+            }
+            else {
+                this.deleteNote(appid);
                 node.textContent = Localization.str.user_note.add;
                 return [node, false];
             }
         }
-    };
-
-    UserNotes.prototype.getNote = function(appid) {
-        return this.notes[appid];
-    };
-
-    UserNotes.prototype.setNote = function(appid, note) {
-        this.notes[appid] = note;
-        SyncedStorage.set("user_notes", this.notes);
-    };
-
-    UserNotes.prototype.deleteNote = function(appid) {
-        delete this.notes[appid];
-        SyncedStorage.set("user_notes", this.notes);
-    };
-
-    UserNotes.prototype.exists = function(appid) {
-        return (this.notes[appid] && (this.notes[appid] !== ''));
-    };
-
-    return UserNotes;
-
-})();
+    }
+    getNote(appid) {
+        return Background.action("idb.get", "notes", appid);
+    }
+    setNote(appid, note) {
+        return Background.action("idb.put", "notes", note, appid);
+    }
+    deleteNote(appid) {
+        return Background.action("idb.delete", "notes", appid);
+    }
+    exists(appid) {
+        return Background.action("idb.contains", "notes", appid);
+    }
+}
 
 let TagPageClass = (function(){
 

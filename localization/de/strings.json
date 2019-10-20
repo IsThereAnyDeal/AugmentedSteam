@@ -76,6 +76,7 @@
     "spam_comment_show": "__num__ Spam-Kommentare wurden versteckt. Klick hier, um sie anzuzeigen.",
     "dlc": "Herunterladbare Inhalte",
     "add_to_wishlist": "Zur Wunschliste hinzufügen",
+    "add_to_waitlist": "Zur Waitlist hinzufügen",
     "language": "Sprache",
     "theworddefault": "Standard",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Mehr über Steam-Gutscheine erfahren</a>",
@@ -89,6 +90,7 @@
     "community": "Community",
     "dlc_data_header": "Details zu herunterladbaren Inhalten",
     "graphics": "Grafik",
+    "owned_elsewhere": "Sie besitzen __gametitle__ bereits auf __storelist__",
     "trading_cards": "Steam-Sammelkarten",
     "view_badge": "Abzeichen ansehen",
     "purchase_total": "Gesamtkosten:",
@@ -196,6 +198,7 @@
     "show_all_steam_releases": "Alle Steam-Veröffentlichungen anzeigen",
     "wishlist": "Wunschliste",
     "on_wishlist": "Auf der Wunschliste",
+    "ignored": "Ignoriert",
     "notdiscounted": "Spiele, die nicht im Angebot sind",
     "cancel": "Abbrechen",
     "wiki_article": "__pcgw__-Artikel anzeigen",
@@ -370,6 +373,8 @@
         "show_astatslink": "AStats-Link auf Anwendungsseiten anzeigen",
         "openinnewtab": "Externe Links in einem neuen Fenster öffen",
         "guest": "Spiele, die als Besucherpass in meinem Inventar liegen",
+        "collection": "Spiele, die in deiner ITAD Collection sind",
+        "waitlist": "Spiele, die in deiner ITAD Waitlist sind",
         "show_steamchart_info": "Informationen von SteamCharts.com anzeigen",
         "show_steamspy_info": "Steamspy.com-Infos anzeigen",
         "showallachievements": "Statistiken für Errungenschaften auf der \"Alle Spiele\"-Seite anzeigen",
@@ -441,7 +446,8 @@
             "thai": "Thai",
             "turkish": "Türkisch",
             "ukrainian": "Ukrainisch"
-        }
+        },
+        "add_to_waitlist": "Zeige Schaltfläche \"Zur Waitlist hinzufügen\""
     },
     "ready": {
         "errormsg": "Fehler beim Laden von Augmented Steam-Daten",
@@ -502,6 +508,7 @@
         "certifications": "WSGF-Breitbild-Zertifizierungen"
     },
     "itad": {
+        "import": "Importiere regelmäßig:",
         "option": "Menüoption zum Senden von Daten an IsThereAnyDeal.com anzeigen",
         "send_to_itad": "Spiele in deinem Besitz an IsThereAnyDeal senden",
         "sending": "Lade Spiele und Pakete in deinem Besitz und sende sie an IsThereAnyDeal.com"

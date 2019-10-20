@@ -81,6 +81,7 @@ class Localization {
             if (currentSteamLanguage !== storedSteamLanguage) {
                 storedSteamLanguage = currentSteamLanguage;
                 SyncedStorage.set("language", currentSteamLanguage);
+                Background.action("idb.clear", "purchases");
             }
         }
 
