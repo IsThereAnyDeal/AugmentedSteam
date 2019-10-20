@@ -1,3 +1,119 @@
+/* Required for "Customize" button and YouTube / Steam tabs */
+.home_actions_ctn {
+  float: right;
+}
+.home_btn {
+  display: inline-block;
+  background: rgba( 103, 193, 245, 0.2 );
+  color: #67c1f5;
+  border-radius: 1px;
+  font-size: 11px;
+  line-height: 20px;
+  padding: 0 8px;
+  margin-left: 4px;
+  cursor: pointer;
+}
+.home_btn.home_customize_btn {
+  position: relative;
+  z-index: 11;
+  margin-right: 2px;
+}
+.home_viewsettings_popup {
+  position: absolute;
+  color: #384959;
+  padding: 12px 11px;
+  width: 200px;
+  z-index: 10;
+  box-shadow: 0 0 12px #000000;
+  background: rgb(227,234,239);
+  background: -webkit-linear-gradient( top, #e3eaef 5%, #c7d5e0 95%);
+  background: linear-gradient( to bottom, #e3eaef 5%, #c7d5e0 95%);
+}
+.home_viewsettings_instructions {
+  margin-bottom: 12px;
+}
+.home_viewsettings_popup {
+  position: absolute;
+  color: #384959;
+  padding: 12px 11px;
+  width: 200px;
+  z-index: 10;
+  box-shadow: 0 0 12px #000000;
+  background: rgb(227,234,239);
+  background: -webkit-linear-gradient( top, #e3eaef 5%, #c7d5e0 95%);
+  background: linear-gradient( to bottom, #e3eaef 5%, #c7d5e0 95%);
+}
+.home_viewsettings_checkboxrow {
+  background: rgba( 0, 0, 0, 0.2 );
+  margin-bottom: 1px;
+  padding: 2px;
+  line-height: 14px;
+  color: #222d3d;
+  font-size: 10px;
+  cursor: pointer;
+}
+.home_viewsettings_checkbox.checked {
+  background-position: 0px 28px;
+}
+.home_viewsettings_checkbox {
+  float: left;
+  margin-right: 5px;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-image: url(/public/images/v6/customize_checkboxes.png);
+  background-position: 0px 0px;
+}
+
+.store_horizontal_minislider_ctn {
+  position: relative;
+  overflow: hidden;
+}
+.home_tab {
+  margin-top: 3px;
+  border: none;
+  display: inline-block;
+  margin-right: 0px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  font-size: 13px;
+  color: #2f89bc;
+  line-height: 24px;
+  cursor: pointer;
+  vertical-align: top;
+}
+.home_tabs_row {
+  position: relative;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.home_tab.active {
+  background: transparent;
+  margin-top: 0;
+  box-shadow: none;
+  padding: 1px;
+}
+.home_tab.active .tab_content {
+  border: none;
+  line-height: 29px;
+  font-size: 14px;
+  color: #ffffff;
+  background: #1a2737;
+  text-shadow: -1px -1px rgba( 0, 0, 0, 0.25 );
+  cursor: default;
+  margin-top: 0;
+  box-shadow: none;
+}
+.home_tab .tab_content {
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  font-size: 13px;
+  color: #4f94bc;
+  line-height: 24px;
+  padding: 0 10px;
+  cursor: pointer;
+  vertical-align: top;
+}
 
 .wishlistRow {
   border-radius: 4px;
