@@ -86,7 +86,7 @@
     "spam_comment_show": "__num__ spam comments hidden on this page.  Click here to show them.",
     "dlc": "Downloadable Content",
     "add_to_wishlist": "Add to your wishlist",
-    "add_to_waitlist": "Add to your waitlist",
+    "add_to_waitlist": "Add to your Waitlist",
     "language": "Language",
     "theworddefault": "Default",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Learn more</a> about Steam Coupons",
@@ -513,7 +513,7 @@
         },
         "add_custom_link": "Add custom link",
         "auto_detect": "Auto-detect",
-        "add_to_waitlist": "Show button \"Add to your waitlist\""
+        "add_to_waitlist": "Show button \"Add to your Waitlist\""
     },
     "ready": {
         "errormsg": "Error loading Augmented Steam data",
