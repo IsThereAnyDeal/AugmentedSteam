@@ -406,7 +406,7 @@ let ProfileActivityPageClass = (function(){
             for (let link of links) {
                 let appid = GameId.getAppid(link.href);
                 if (!appid || link.childElementCount > 1) { continue; }
-                if (link.childElementCount === 1 && link.children[0].tagName !== 'IMG') { continue; }
+                if (link.childElementCount === 1 && link.closest(".vote_header")) { continue; }
 
                 if (DynamicStore.isOwned(appid)) {
                     Highlights.highlightOwned(link);
