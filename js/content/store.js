@@ -169,48 +169,52 @@ class StorePageClass {
     addDrmWarnings() {
         if (!SyncedStorage.get("showdrm")) { return; }
 
-        let gfwl, uplay, securom, tages, stardock, rockstar, kalypso, denuvo, drm;
-
-        let text = '';
+        let text = "";
         for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details")) {
             text += node.innerHTML;
         }
+        let uppercased = text.toUpperCase();
 
         // Games for Windows Live detection
-        if (text.toUpperCase().includes("GAMES FOR WINDOWS LIVE") ||
-        text.toUpperCase().includes("GAMES FOR WINDOWS - LIVE") ||
-        text.includes("Online play requires log-in to Games For Windows") ||
-        text.includes("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") ||
-        text.includes("Multiplayer play and other LIVE features included at no charge") ||
-        text.includes("www.gamesforwindows.com/live")) {
-            gfwl = true;
-        }
+        let gfwl =
+               uppercased.includes("GAMES FOR WINDOWS LIVE")
+            || uppercased.includes("GAMES FOR WINDOWS - LIVE")
+            || text.includes("Online play requires log-in to Games For Windows")
+            || text.includes("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE")
+            || text.includes("Multiplayer play and other LIVE features included at no charge")
+            || text.includes("www.gamesforwindows.com/live");
 
         // Ubisoft Uplay detection
-        if (text.includes("Uplay") || text.includes("Ubisoft Account")) { uplay = true; }
+        let uplay =
+               text.includes("Uplay")
+            || text.includes("Ubisoft Account");
 
         // Securom detection
-        if (text.includes("SecuROM")) { securom = true; }
+        let securom = text.includes("SecuROM");
 
         // Tages detection
-        if ((text.match(/\btages\b/i) || text.match(/\bsolidshield\b/i)) && !text.match(/angebote des tages/i)) { tages = true; }
+        let tages =
+                text.match(/\b(tages|solidshield)\b/i)
+            && !text.match(/angebote des tages/i);
 
         // Stardock account detection
-        if (text.includes("Stardock account")) { stardock = true; }
+        let stardock = text.includes("Stardock account");
 
         // Rockstar social club detection
-        if (text.includes("Rockstar Social Club")) { rockstar = true; }
-        else if (text.includes("Rockstar Games Social Club")) { rockstar = true; }
+        let rockstar =
+               text.includes("Rockstar Social Club")
+            || text.includes("Rockstar Games Social Club");
 
         // Kalypso Launcher detection
-        if (text.includes("Requires a Kalypso account")) { kalypso = true; }
+        let kalypso = text.includes("Requires a Kalypso account");
 
         // Denuvo Antitamper detection
-        if (text.match(/\bdenuvo\b/i)) { denuvo = true; }
+        let denuvo = text.match(/\bdenuvo\b/i);
 
         // Detect other DRM
-        if (text.includes("3rd-party DRM")) { drm = true; }
-        else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
+        let drm =
+                text.includes("3rd-party DRM")
+            && !text.match(/No (3rd|third)[- ]party DRM/i);
 
         let drmNames = [];
         if (gfwl) { drmNames.push('Games for Windows Live'); }
@@ -2680,24 +2684,11 @@ let SearchPageClass = (function(){
     };
 
     function isPriceAbove(node, priceAbove) {
+        let priceValue = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(node.querySelector(".search_price").lastChild.textContent);
         
-        let priceValues = node.querySelector(".search_price").innerText.replace(/,/g, '.').trim().match(/^\d+\.\d*/gm);
-        let priceString;
-        
-        if (priceValues) {
-            // Discounted price
-            if (priceValues[1]) {
-                priceString = priceValues[1];
-            // Non-discounted
-            } else if (priceValues[0]) {
-                priceString = priceValues[0];
-            }
-        } else {
-            // App without price
-            return false;
-        }
+        if (!priceValue) { return false; } // App without price
 
-        return Number(priceString) > priceAbove;
+        return Number(priceValue) > priceAbove;
     }
 
     function isReviewsBelow(node, reviewsBelow) {
@@ -2730,7 +2721,7 @@ let SearchPageClass = (function(){
         let hidePriceAbove = document.querySelector("#es_notpriceabove.checked");
         let hideReviewsBelow = document.querySelector("#es_noreviewsbelow.checked");
 
-        let priceAbove = Number(document.querySelector("#es_notpriceabove_val").value.replace(',', '.'));
+        let priceAbove = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(document.querySelector("#es_notpriceabove_val").value);
         let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
         let hideTags = Array.from(document.querySelectorAll("#es_tagfilter_exclude_container > .checked")).map(tag => Math.abs(Number(tag.dataset.value)));
 
@@ -2793,7 +2784,7 @@ let SearchPageClass = (function(){
                         <div class="tab_filter_control_checkbox"></div>
                         <span class="tab_filter_control_label">${Localization.str.price_above}</span>
                         <div>
-                            <input type="text" id="es_notpriceabove_val" class="es_input" pattern="${inputPattern.source}" placeholder=${pricePlaceholder}>
+                            <input type="text" id="es_notpriceabove_val" class="es_input" pattern="${inputPattern.source}" placeholder="${pricePlaceholder}">
                         </div>
                     </div>
                     <div class="tab_filter_control" id="es_noreviewsbelow" data-param="es_hide" data-value="reviews-below" title="${Localization.str.reviews_below_tooltip}">
@@ -3110,7 +3101,7 @@ let SearchPageClass = (function(){
                 } else {
                     params.delete("es_hide");
                 }
-                linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + params.toString();
+                linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + Array.from(params.entries(), ([key, val]) => `${key}=${val}`).join('&'); // Encoding is done by Steam, see #568
             }
         }
 
