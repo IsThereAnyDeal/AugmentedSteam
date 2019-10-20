@@ -387,6 +387,19 @@
                             <input type="checkbox" id="skip_got_steam" data-setting="skip_got_steam">
                             <label for="skip_got_steam" data-locale-text="options.skip_got_steam">Skip the 'Got Steam?' window</label>
                         </div>
+                        <div class="parent_option option" data-dropdown-trigger="custom"> <!-- The data-dropdown-trigger attribute is meant to indicate that the sub option of this option only gets enabled when a specific value is chosen in the dropdown, rather than when the checkbox is changed. -->
+                            <input type="checkbox" id="redirect_removed" data-setting="redirect_removed" data-permissions="webRequest,webRequestBlocking"> <!-- The data-permissions attribute is meant to indicate which permissions need to be requested when saving this option in order for it to work. The permissions must be listed separated with a comma. -->
+                            <label for="redirect_removed" data-locale-text="options.redirect_removed">Redirect games that were removed from the store to</label>
+                            <select id="redirect_removed_to" data-setting="redirect_removed_to">
+                                <option value="community" data-locale-text="community">Community</option>
+                                <option value="steamdb">SteamDB</option>
+                                <option value="custom" data-locale-text="custom">Custom</option>
+                            </select>
+                        </div>
+                        <div class="sub_option">
+                          <label for="redirect_removed_custom" data-locale-text="options.custom_redirect">Custom Redirect</label>
+                          <input type="text" id="redirect_removed_custom" data-setting="redirect_removed_custom" class="textbox custom-link__input">
+                        </div>
                     </div>
         
                     <div id="store_thirdparty_section" class="content_section">

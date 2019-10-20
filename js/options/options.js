@@ -440,20 +440,33 @@ let Options = (function(){
             let setting = node.dataset.setting;
             let value = SyncedStorage.get(setting);
 
-            if (node.type && node.type === "checkbox") {
+            // If the node is a dropdown, check if the option has a sub option that gets triggered by it.
+            if (node.tagName === "SELECT") {
+                if (value) {
+                    node.value = value;
+                }
+
+                let parentOption = node.closest(".parent_option");
+                if (parentOption && parentOption.dataset.dropdownTrigger) {
+                    let disabled = value !== parentOption.dataset.dropdownTrigger;
+                    for (let nextSibling = parentOption.nextElementSibling; nextSibling && nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
+                        nextSibling.classList.toggle("disabled", disabled);
+                    }
+                }
+            } else if (node.type && node.type === "checkbox") {
                 node.checked = value;
 
                 let parentOption = node.closest(".parent_option");
-                if (parentOption) {
+                if (parentOption && !parentOption.dataset.dropdownTrigger) {
                     if (node.id === "stores_all") value = !value;
-                    for (let nextSibling = parentOption.nextElementSibling; nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
+                    for (let nextSibling = parentOption.nextElementSibling; nextSibling && nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
                         nextSibling.classList.toggle("disabled", !value);
                     }
                 }
             } else {
                 if (value) {
                     node.value = value;
-               }
+                }
             }
         }
 
@@ -538,6 +551,7 @@ let Options = (function(){
 
     function saveOption(option) {
         let value;
+        let permissions;
 
         if (option === "regional_countries") {
 
@@ -575,10 +589,26 @@ let Options = (function(){
             if (option === "quickinv_diff") {
                 value = parseFloat(value.trim()).toFixed(2);
             }
+
+            // Check if the option has permissions that need to be requested.
+            if (node.dataset.permissions) {
+                permissions = node.dataset.permissions.split(',');
+            }
         }
 
         SyncedStorage.set(option, value);
         SaveIndicator.show();
+
+        if (permissions) {
+            if (value) {
+                // If the option is being enabled, we must first request the permissions and then send the message to the background so that it can set up the listeners.
+                OptionalPermissions.request(permissions)
+                    .then(() => chrome.runtime.sendMessage({ action: 'permissions.added', params: { permissions, }, }));
+            } else {
+                // If the option is being disabled, we must first send the message to the background so that it can remove the listeners and then remove the permissions.
+                chrome.runtime.sendMessage({ action: 'permissions.removed', params: { permissions, }, }, () => OptionalPermissions.remove(permissions));
+            }
+        }
     }
 
     function changeFlag(node, selectnode) {
@@ -666,11 +696,21 @@ let Options = (function(){
         });
 
         document.querySelectorAll(".parent_option").forEach(parentOption => {
-            parentOption.querySelector("input").addEventListener("change", () => {
-                for (let nextSibling = parentOption.nextElementSibling; nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
-                    nextSibling.classList.toggle("disabled");
-                }
-            });
+            // Check if the option has a sub option that gets triggered by a dropdown.
+            if (parentOption.dataset.dropdownTrigger) {
+                parentOption.querySelector("select").addEventListener("change", event => {
+                    let disabled = event.currentTarget.value !== parentOption.dataset.dropdownTrigger;
+                    for (let nextSibling = parentOption.nextElementSibling; nextSibling && nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
+                        nextSibling.classList.toggle("disabled", disabled);
+                    }
+                });
+            } else {
+                parentOption.querySelector("input").addEventListener("change", () => {
+                    for (let nextSibling = parentOption.nextElementSibling; nextSibling && nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
+                        nextSibling.classList.toggle("disabled");
+                    }
+                });
+            }
         });
 
         document.getElementById("reset").addEventListener("click", clearSettings);

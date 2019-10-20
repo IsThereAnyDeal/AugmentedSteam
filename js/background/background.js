@@ -674,6 +674,72 @@ class Steam {
 Steam._dynamicstore_promise = null;
 Steam._supportedCurrencies = null;
 
+// When redirecting to Steam Community, if the game does not actually exist, onHeadersReceived would normally trigger an infinite redirection loop. To avoid that, we store the IDs of the requests that have already been redirected here.
+let webRequests = [];
+
+function onHeadersReceived(details) {
+    let response = {};
+
+    if (details.statusCode === 302 && webRequests.indexOf(details.requestId) < 0) {
+        let matches = details.url.match(/(app|sub)\/(\d+)/);
+
+        if (matches) {
+            let type = matches[1];
+            let id = matches[2];
+
+            switch (SyncedStorage.get('redirect_removed_to')) {
+                case 'community':
+                    response.redirectUrl = `https://steamcommunity.com/${type}/${id}`;
+                    break;
+                case 'steamdb':
+                    response.redirectUrl = `https://steamdb.info/${type}/${id}`;
+                    break;
+                case 'custom':
+                    response.redirectUrl = SyncedStorage.get('redirect_removed_custom')
+                        .replace(/\[TYPE]/, type)
+                        .replace(/\[ID]/, id);
+                    break;
+                default:
+                    break;
+            }
+
+            webRequests.push(details.requestId);
+        }
+    }
+
+    return response;
+}
+
+function addWebRequestListener() {
+    let filter = {
+        types: ['main_frame'], // Only requests triggered by the user through regular navigation.
+        urls: ['*://*.store.steampowered.com/app/*', '*://*.store.steampowered.com/sub/*'],
+    };
+    let extraInfoSpec = ['blocking'];
+
+    chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, filter, extraInfoSpec);
+}
+
+function removeWebRequestListener() {
+    chrome.webRequest.onHeadersReceived.removeListener(onHeadersReceived);
+}
+
+function hasWebRequestListener() {
+    return chrome.webRequest.onHeadersReceived.hasListener(onHeadersReceived);
+}
+
+function onPermissionsAdded(message) {
+    if (!!chrome.webRequest && !hasWebRequestListener()) {
+        addWebRequestListener();
+    }
+}
+
+function onPermissionsRemoved(message) {
+    if (!!chrome.webRequest && hasWebRequestListener()) {
+        removeWebRequestListener();
+    }
+}
+
 let profileCacheKey = (params => `profile_${params.profile}`);
 let appCacheKey = (params => `app_${params.appid}`);
 let ratesCacheKey = (params => `rates_${params.to}`);
@@ -717,6 +783,9 @@ let actionCallbacks = new Map([
     ['inventory.gifts', SteamCommunity.gifts], // #1
     ['inventory.community', SteamCommunity.items], // #6
 
+    ['permissions.added', onPermissionsAdded],
+    ['permissions.removed', onPermissionsRemoved],
+
     ['error.test', () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
 // new Map() for Map.prototype.get() in lieu of:
@@ -758,3 +827,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     // keep channel open until callback resolves
     return true;
 });
+
+if (!!chrome.webRequest) {
+    addWebRequestListener();
+}

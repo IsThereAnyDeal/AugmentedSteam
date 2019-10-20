@@ -566,6 +566,10 @@ SyncedStorage.defaults = {
     'show_itad_button': false,
     'skip_got_steam': false,
 
+    'redirect_removed': false,
+    'redirect_removed_to': 'community',
+    'redirect_removed_custom': 'https://steamcommunity.com/[TYPE]/[ID]',
+
     'hideaboutlinks': false,
     'installsteam': "show",
     'openinnewtab': false,
@@ -856,4 +860,25 @@ function sleep(duration) {
     return new Promise(function(resolve, reject) {
         setTimeout(function() { resolve(); }, duration);
     });
+}
+
+
+class OptionalPermissions {
+    static contains(permissions) {
+        return new Promise((resolve, reject) => {
+            chrome.permissions.contains({ permissions, }, result => { checkError(); resolve(result); });
+        });
+    }
+
+    static request(permissions) {
+        return new Promise((resolve, reject) => {
+            chrome.permissions.request({ permissions, }, granted => { checkError(); resolve(granted); });
+        });        
+    }
+
+    static remove(permissions) {
+        return new Promise((resolve, reject) => {
+            chrome.permissions.remove({ permissions, }, removed => { checkError(); resolve(removed); });
+        });        
+    }
 }
