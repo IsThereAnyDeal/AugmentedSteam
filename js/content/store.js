@@ -2045,13 +2045,15 @@ class AppPageClass extends StorePageClass {
     }
 
     customizeAppPage() {
-        HTML.afterBegin("#game_highlights .rightcol",
+        let nodes = document.querySelectorAll(".purchase_area_spacer");
+        HTML.beforeEnd(nodes[nodes.length-1],
             `<div id="es_customize_btn" class="home_actions_ctn">
                 <div class="home_btn home_customize_btn app_tag" style="z-index: 13; margin-top: 3px;">${Localization.str.customize}</div>
                 <div class="home_viewsettings_popup">
                     <div class="home_viewsettings_instructions" style="font-size: 12px;">${Localization.str.apppage_sections}</div>
                 </div>
-            </div>`);
+            </div>
+            <div style="clear: both;"></div>`);
 
         document.querySelector("#es_customize_btn").addEventListener("click", function(e) {
             e.target.classList.toggle("active");
