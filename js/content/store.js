@@ -619,6 +619,7 @@ class AppPageClass extends StorePageClass {
         this.addFamilySharingWarning();
         this.removeAboutLink();
 
+        this.addPackBreakdown();
         this.addPackageInfoButton();
         this.addStats().then(this.customizeAppPage);
 
@@ -2161,8 +2162,13 @@ class AppPageClass extends StorePageClass {
     addPackBreakdown() {
 
         function splitPack(node, ways) {
-            let price_text = node.querySelector(".discount_final_price").innerHTML;
-            if (price_text == null) { price_text = node.querySelector(".game_purchase_price").innerHTML; }
+            let price_text;
+            let priceNode = node.querySelector(".discount_final_price");
+            if (priceNode) {
+                price_text = priceNode.textContent;
+            } else {
+                price_text = node.querySelector(".game_purchase_price").textContent;
+            }
             if (price_text.match(/,\d\d(?!\d)/)) {
                 price_text = price_text.replace(",", ".");
             }
@@ -2178,32 +2184,30 @@ class AppPageClass extends StorePageClass {
         }
 
         let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-
+        nodes.forEach(node => {
             let title = node.querySelector("h1").textContent.trim();
             title = title.toLowerCase().replace(/-/g, ' ');
             if (!title || !title.includes('pack')) return;
             if (title.includes('pack') && title.includes('season')) return;
 
-            if (title.includes(' 2 pack') && !title.includes('bioshock')) { splitPack.call(node, 2); }
-            else if (title.includes(' two pack')) { splitPack.call(node, 2); }
-            else if (title.includes('tower wars friend pack')) { splitPack.call(node, 2); }
+            if (title.includes(' 2 pack') && !title.includes('bioshock')) { splitPack(node, 2); }
+            else if (title.includes(' two pack')) { splitPack(node, 2); }
+            else if (title.includes('tower wars friend pack')) { splitPack(node, 2); }
 
-            else if (title.includes(' 3 pack') && !title.includes('doom 3')) { splitPack.call(node, 3); }
-            else if (title.includes(' three pack')) { splitPack.call(node, 3); }
-            else if (title.includes('tower wars team pack')) { splitPack.call(node, 3); }
+            else if (title.includes(' 3 pack') && !title.includes('doom 3')) { splitPack(node, 3); }
+            else if (title.includes(' three pack')) { splitPack(node, 3); }
+            else if (title.includes('tower wars team pack')) { splitPack(node, 3); }
 
-            else if (title.includes(' 4 pack')) { splitPack.call(node, 4); }
-            else if (title.includes(' four pack')) { splitPack.call(node, 4); }
-            else if (title.includes(' clan pack')) { splitPack.call(node, 4); }
+            else if (title.includes(' 4 pack')) { splitPack(node, 4); }
+            else if (title.includes(' four pack')) { splitPack(node, 4); }
+            else if (title.includes(' clan pack')) { splitPack(node, 4); }
 
-            else if (title.includes(' 5 pack')) { splitPack.call(node, 5); }
-            else if (title.includes(' five pack')) { splitPack.call(node, 5); }
+            else if (title.includes(' 5 pack')) { splitPack(node, 5); }
+            else if (title.includes(' five pack')) { splitPack(node, 5); }
 
-            else if (title.includes(' 6 pack')) { splitPack.call(node, 6); }
-            else if (title.includes(' six pack')) { splitPack.call(node, 6); }
-        }
+            else if (title.includes(' 6 pack')) { splitPack(node, 6); }
+            else if (title.includes(' six pack')) { splitPack(node, 6); }
+        });
     }
 }
 
