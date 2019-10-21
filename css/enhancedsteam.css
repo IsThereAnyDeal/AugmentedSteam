@@ -358,6 +358,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 #es_dlc_option_button {
   float: right;
+  margin-right: 8px;
+  line-height: normal;
   text-decoration: none;
 }
 
