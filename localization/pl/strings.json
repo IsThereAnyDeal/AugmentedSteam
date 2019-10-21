@@ -532,7 +532,7 @@
         "nobody": "Jeszcze nikt nie podjął się badania wydajności tej gry.",
         "take": "Weź udział w badaniu"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Zaznacz DLC z listy życzeń",
         "none": "Odznacz wszystkie",
         "unowned_dlc": "Zaznacz nieposiadane DLC"

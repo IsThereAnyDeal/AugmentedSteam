@@ -468,7 +468,7 @@
         "nobody": "Ingen har tagit en Prestationsundersökning för detta spel ännu.",
         "take": "Ta Surveyn"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Välj önskelistade DLC",
         "none": "Välj inga",
         "unowned_dlc": "Välj icke ägda DLC"

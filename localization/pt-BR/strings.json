@@ -532,7 +532,7 @@
         "nobody": "Ninguém respondeu a pesquisa de desempenho deste jogo.",
         "take": "Responder a pesquisa"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Selecionar na lista de desejos",
         "none": "Selecionar nenhum",
         "unowned_dlc": "Selecionar ainda não comprados"

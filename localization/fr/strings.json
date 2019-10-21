@@ -468,7 +468,7 @@
         "nobody": "Personne n'a participé l'enquête de performance pour ce jeu.",
         "take": "Participer à l'enquête"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Sélectionner les DLC de la liste de souhaits",
         "none": "Sélectionner aucun",
         "unowned_dlc": "Sélectionner les DLC non-possédés"

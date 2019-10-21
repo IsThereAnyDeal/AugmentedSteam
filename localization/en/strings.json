@@ -538,7 +538,8 @@
         "nobody": "Nobody has taken a performance survey for this game yet.",
         "take": "Take The Survey"
     },
-    "select": {
+    "dlc_select": {
+        "select": "Select",
         "wishlisted_dlc": "Select Wishlisted DLC",
         "none": "Select None",
         "unowned_dlc": "Select Unowned DLC"

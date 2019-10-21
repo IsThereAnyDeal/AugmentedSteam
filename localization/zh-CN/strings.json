@@ -532,7 +532,7 @@
         "nobody": "尚未有人参与此游戏的性能调查。",
         "take": "参与调查"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "选择愿望单中的 DLC",
         "none": "全部取消选择",
         "unowned_dlc": "选择尚未拥有的 DLC"

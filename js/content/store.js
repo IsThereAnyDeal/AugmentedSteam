@@ -1837,9 +1837,9 @@ class AppPageClass extends StorePageClass {
         HTML.afterEnd(".game_area_dlc_section .gradientbg", "<div style='height: 28px; padding-left: 15px; display: none;' id='es_dlc_option_panel'></div>");
 
         HTML.afterBegin("#es_dlc_option_panel",
-            `<div class='es_dlc_option' id='unowned_dlc_check'>${Localization.str.select.unowned_dlc}</div>
-             <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.select.wishlisted_dlc}</div>
-             <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.select.none}</div>`);
+            `<div class='es_dlc_option' id='unowned_dlc_check'>${Localization.str.dlc_select.unowned_dlc}</div>
+             <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.dlc_select.wishlisted_dlc}</div>
+             <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.dlc_select.none}</div>`);
 
         let change = new Event("change", {"bubbles": true});
 
@@ -1868,7 +1868,7 @@ class AppPageClass extends StorePageClass {
         });
 
         HTML.beforeEnd(".game_area_dlc_section .gradientbg",
-            `<a id='es_dlc_option_button'>${Localization.str.thewordoptions} ▼</a>`);
+            `<a id='es_dlc_option_button'>${Localization.str.dlc_select.select} ▼</a>`);
 
         document.querySelector("#es_dlc_option_button").addEventListener("click", function() {
             document.querySelector("#es_dlc_option_panel")
@@ -1877,8 +1877,8 @@ class AppPageClass extends StorePageClass {
             let button = document.querySelector("#es_dlc_option_button");
 
             button.textContent = (button.textContent.match("▼")
-                ? `${Localization.str.thewordoptions} ▲`
-                : `${Localization.str.thewordoptions} ▼`);
+                ? `${Localization.str.dlc_select.select} ▲`
+                : `${Localization.str.dlc_select.select} ▼`);
         });
 
         document.querySelector(".game_area_dlc_section").addEventListener("change", function(e) {

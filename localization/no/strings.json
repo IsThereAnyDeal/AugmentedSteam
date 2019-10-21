@@ -468,7 +468,7 @@
         "nobody": "Ingen har gjennomført ytelses undersøkelsen på dette spillet ennå.",
         "take": "Besvar undersøkelsen"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Velg DLC på ønskelisten",
         "none": "Velg Ingen",
         "unowned_dlc": "Velg DLC som ikke eies"

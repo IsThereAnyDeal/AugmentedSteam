@@ -504,7 +504,7 @@
         "nobody": "Nog niemand heeft een prestatie enquete voor dit spel genomen.",
         "take": "Deelnemen aan de enquête"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Selecteer verlanglijst DLC",
         "none": "Selecteer Geen",
         "unowned_dlc": "Selecteer Onbeheerde DLC"
