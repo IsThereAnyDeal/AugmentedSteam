@@ -2162,6 +2162,8 @@ class AppPageClass extends StorePageClass {
     addPackBreakdown() {
 
         function splitPack(node, ways) {
+            if (node.querySelector(".btn_packageinfo")) { return; }
+
             let price_text;
             let priceNode = node.querySelector(".discount_final_price");
             if (priceNode) {
@@ -2190,11 +2192,11 @@ class AppPageClass extends StorePageClass {
             if (!title || !title.includes('pack')) return;
             if (title.includes('pack') && title.includes('season')) return;
 
-            if (title.includes(' 2 pack') && !title.includes('bioshock')) { splitPack(node, 2); }
+            if (title.includes(' 2 pack')) { splitPack(node, 2); }
             else if (title.includes(' two pack')) { splitPack(node, 2); }
             else if (title.includes('tower wars friend pack')) { splitPack(node, 2); }
 
-            else if (title.includes(' 3 pack') && !title.includes('doom 3')) { splitPack(node, 3); }
+            else if (title.includes(' 3 pack')) { splitPack(node, 3); }
             else if (title.includes(' three pack')) { splitPack(node, 3); }
             else if (title.includes('tower wars team pack')) { splitPack(node, 3); }
 
