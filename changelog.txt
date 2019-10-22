@@ -1,4 +1,15 @@
-﻿v1.3.0
+﻿v1.3.1
+------
+- Fixed large text in reviews
+- Added option to hide support info on store pages
+- Added option to disable horizontal media scrolling
+- Added option to force mp4 videos
+- Fixed wishlist export
+- Multiple Steam search fixes regarding filters
+- Localization updates
+
+
+v1.3.0
 ------
 Store
 - Added fullscreen screenshot browsing
