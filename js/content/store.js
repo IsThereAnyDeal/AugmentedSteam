@@ -1119,9 +1119,6 @@ class AppPageClass extends StorePageClass {
                                 <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
                             </div>
                         </div>`);
-
-                    if (!SyncedStorage.get("customize_apppage").reviews) {
-                        document.querySelector("#game_area_reviews").style.display = "none";
                     }
                 }
 
@@ -1229,9 +1226,6 @@ class AppPageClass extends StorePageClass {
                     <h2>${Localization.str.reviews}</h2>
                     <div id="es_youtube_reviews"></div>
                 </div>`);
-
-            if (!SyncedStorage.get("customize_apppage").reviews) {
-                document.querySelector("#game_area_reviews").style.display = "none";
             }
         } else {
             HTML.beforeEnd(reviewsNode, '<div id="es_youtube_reviews"></div>');
