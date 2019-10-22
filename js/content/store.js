@@ -2086,6 +2086,7 @@ class AppPageClass extends StorePageClass {
         let workshop = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
         let morelikethis = document.querySelector("#recommended_block h2");
 
+        setTimeout(() => {
         let customizer = new Customizer("customize_apppage");
         customizer
             .add("recommendedbycurators", ".steam_curators_block")
@@ -2096,7 +2097,7 @@ class AppPageClass extends StorePageClass {
             .add("steamchart", "#steam-charts")
             .add("surveys", "#performance_survey")
             .add("steamspy", "#steam-spy")
-            .add("sysreq", "[data-parent-of='.sys_req")
+            .add("sysreq", "[data-parent-of='.sys_req']")
             .add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal)
             .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
             .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
@@ -2107,6 +2108,7 @@ class AppPageClass extends StorePageClass {
 
         customizer.build();
         document.querySelector(".purchase_area_spacer").style.height = "auto";
+        }, 1000);
     }
 
     addReviewToggleButton() {
