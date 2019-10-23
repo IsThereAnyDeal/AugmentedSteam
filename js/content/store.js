@@ -1099,26 +1099,20 @@ class AppPageClass extends StorePageClass {
 
             // Add data to the review section in the left column, or create one if that block doesn't exist
             if (data.reviews.length > 0) {
-                let reviewsNode = document.querySelector("#game_area_reviews");
-                if (reviewsNode) {
-                    HTML.beforeBegin(reviewsNode.querySelector("p, div"), "<div id='es_opencritic_reviews'></div>");
+                let reviewsNode = document.getElementById("game_area_reviews");
+                let html = `<div id='es_opencritic_reviews'><div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div></div>`;
 
+                if (reviewsNode) {
                     let youTubeReviews = document.getElementById("es_youtube_reviews");
-                    let htmlString = `<div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>`;
 
                     if (youTubeReviews) {
-                        HTML.beforeBegin(youTubeReviews, htmlString);
+                        HTML.beforeBegin(youTubeReviews, html);
                     } else {
-                        HTML.beforeEnd(reviewsNode, htmlString);
+                        HTML.beforeEnd(reviewsNode, html);
                     }
                 } else {
                     HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
-                        `<div id='game_area_reviews' class='game_area_description'>
-                            <h2>${Localization.str.reviews}</h2>
-                            <div id='es_opencritic_reviews'>
-                                <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
-                            </div>
-                        </div>`);
+                        `<div id='game_area_reviews' class='game_area_description'><h2>${Localization.str.reviews}</h2>${html}</div>`);
 
                     if (!SyncedStorage.get("customize_apppage").reviews) {
                         document.querySelector("#game_area_reviews").style.display = "none";
