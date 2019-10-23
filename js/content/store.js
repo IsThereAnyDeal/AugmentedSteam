@@ -1109,7 +1109,7 @@ class AppPageClass extends StorePageClass {
                     if (youTubeReviews) {
                         HTML.beforeBegin(youTubeReviews, htmlString);
                     } else {
-                        HTML.beforeEnd(reviewsNode);
+                        HTML.beforeEnd(reviewsNode, htmlString);
                     }
                 } else {
                     HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
@@ -1129,7 +1129,7 @@ class AppPageClass extends StorePageClass {
                 for (let i=0, len=data.reviews.length; i<len; i++) {
                     let review = data.reviews[i];
                     let date = new Date(review.date);
-                    review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href='${review.rURL}' target='_blank' data-tooltip-text='${review.author}, ${date.toLocaleDateString()}'>${review.name}</a></p>`;
+                    review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href='${review.rUrl}' target='_blank' data-tooltip-text='${review.author}, ${date.toLocaleDateString()}'>${review.name}</a></p>`;
                 }
 
                 HTML.afterBegin("#es_opencritic_reviews", review_text);
