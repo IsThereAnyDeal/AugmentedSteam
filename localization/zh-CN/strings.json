@@ -1,4 +1,8 @@
 {
+    "custom_tags": "自定义标签",
+    "add_tag": "添加标签",
+    "enter_tag": "输入您要添加的自定义标签",
+    "oneclickgoo": "一键转换为宝石...",
     "view_in_library": "在库中查看",
     "support": "支持信息",
     "email": "E-mail",
@@ -57,8 +61,8 @@
     "total_time": "总时长",
     "dlc_suggest": "建议一个新类别",
     "badge_completion_cost": "完成徽章的花费：__cost__",
-    "loading": "载入中……",
-    "selling": "出售中……",
+    "loading": "载入中...",
+    "selling": "出售中...",
     "quick_sell": "以 __amount__ 快速出售",
     "quick_sell_desc": "与社区市场最低出售价相差 __modifier__ 的价格",
     "instant_sell": "以 __amount__ 立刻出售",
@@ -121,7 +125,7 @@
     "card_drops_remaining": "__drops__ 张剩余卡牌掉落",
     "badges_drops": "仍可获得卡牌的徽章",
     "using_language_return": "点击这里将 Steam 切换成__base__。",
-    "spam_comment_warn": "此处有恶龙……",
+    "spam_comment_warn": "此处有恶龙...",
     "guides": "指南",
     "buy_wishlist": "购买愿望单",
     "highlight": "高亮显示",
@@ -209,7 +213,7 @@
     "separator": "分隔符",
     "empty_wishlist": "清空愿望单",
     "empty_wishlist_confirm": "您确定要清空愿望单？\n\n此操作无法撤消！",
-    "empty_wishlist_loading": "正在清空愿望单，请稍候……",
+    "empty_wishlist_loading": "正在清空愿望单，请稍候...",
     "about": "关于",
     "never": "永不",
     "coupon_available": "您有优惠券可以使用！",
@@ -322,8 +326,8 @@
     "library": {
         "in_library": "在库中",
         "error_loading_library": "无法载入您的游戏库。",
-        "categories": "分类……",
-        "genres": "游戏类型……",
+        "categories": "分类...",
+        "genres": "游戏类型...",
         "private_profile": "在<a href='https://steamcommunity.com/my/edit/settings'>设置</a>中将您的个人资料更改为公开以使用此功能。"
     },
     "spy": {
@@ -367,6 +371,8 @@
         "regional_price_on": "显示区域价格比较",
         "cart": "购物车中的物品",
         "friends_own": "好友拥有的物品",
+        "horizontalmediascrolling": "为商店页面媒体启用鼠标滚轮水平滚动",
+        "supportinfo": "在商店页面显示支持信息",
         "drm": "显示第三方 DRM 警告",
         "profile_permalink": "在个人资料中显示永久链接",
         "show_regionwarning": "跨区浏览时显示警告",
@@ -399,6 +405,7 @@
         "library_f2p": "在库中显示玩过的免费游戏及试玩游戏",
         "inventory_market_text": "在库存页面显示市场价格",
         "send_age_info": "自动填写年龄验证",
+        "mp4video": "强制商店页面视频为 MP4 格式",
         "pcgw": "显示 PCGamingWiki 链接",
         "completionistme": "显示 Completionist.me 链接",
         "protondb": "显示 ProtonDB 链接",
@@ -411,7 +418,6 @@
         "show_youtubegameplay": "在商店页面显示 YouTube 实况视频",
         "show_youtubereviews": "在商店页面显示 YouTube 评测视频",
         "openinnewtab": "在新标签页打开外部链接",
-        "showclient": "显示 Steam 客户端链接",
         "showbartervg": "显示 Barter.vg 链接",
         "guest": "拥有玩家通行证的物品",
         "show_steamchart_info": "显示 SteamCharts.com 信息",
@@ -503,7 +509,7 @@
     },
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",
-        "loading": "Augmented Steam 数据载入中……",
+        "loading": "Augmented Steam 数据载入中...",
         "ready": "Augmented Steam 已就绪",
         "failed": "__amount__ 个请求发送失败，请打开浏览器开发者控制台以了解详情"
     },
@@ -533,6 +539,7 @@
         "take": "参与调查"
     },
     "dlc_select": {
+        "select": "选择",
         "wishlisted_dlc": "选择愿望单中的 DLC",
         "none": "全部取消选择",
         "unowned_dlc": "选择尚未拥有的 DLC"
@@ -614,15 +621,17 @@
         "subscriptions": "订阅",
         "subscribe_all": "全部订阅",
         "subscribe_confirm": "您确定要订阅 __count__ 个符合条件的创意工坊物品吗？",
-        "subscribe_loading": "正在订阅 __i__/__count__ 个创意工坊物品，请稍候……",
+        "subscribe_loading": "正在订阅 __i__/__count__ 个创意工坊物品，请稍候...",
         "unsubscribe_all": "全部取消订阅",
         "unsubscribe_confirm": "您确定要取消订阅 __count__ 个符合条件的创意工坊物品吗？",
-        "unsubscribe_loading": "正在取消订阅 __i__/__count__ 个创意工坊物品，请稍候……",
+        "unsubscribe_loading": "正在取消订阅 __i__/__count__ 个创意工坊物品，请稍候...",
         "finished": "已完成！__success__ 个成功，__fail__ 个失败。点击 OK 刷新页面。",
         "failed": "__n__ 个失败"
     },
     "this_version": "当前版本",
     "original_authors": "原版作者",
     "acknowledgements": "致谢",
+    "other": "其他",
+    "images": "图像",
     "powered_by": "数据来自 __link__"
 }
