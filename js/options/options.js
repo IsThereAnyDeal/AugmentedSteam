@@ -305,8 +305,11 @@ let Options = (function(){
             let nodes = document.querySelectorAll("[data-locale-text]");
             for (let node of nodes) {
                 let translation = Localization.getString(node.dataset.localeText);
+                if (node.dataset.localeText.startsWith("options.context_")) {
+                    translation = translation.replace("__query__", "...");
+                }
                 if (translation) {
-                    node.textContent = translation.replace("__query__", "...");
+                    node.textContent = translation;
                 } else {
                     console.warn(`Missing translation ${node.dataset.localeText}`);
                 }
