@@ -188,11 +188,7 @@ AugmentedSteamApi._earlyAccessAppIds_promise = null;
 
 
 class ContextMenu {
-    static init() {
-        if (!chrome.contextMenus) { return; }
-        ContextMenu.update();
-        chrome.contextMenus.onClicked.addListener(ContextMenu.onClick);
-    }
+    _listenerRegistered = false;
 
     static onClick(info) {
         switch (info.menuItemId) {
@@ -241,11 +237,15 @@ class ContextMenu {
     static update() {
         if (!chrome.contextMenus) { return; }
         chrome.contextMenus.removeAll(ContextMenu.build);
+        if (!this._listenerRegistered) {
+            chrome.contextMenus.onClicked.addListener(ContextMenu.onClick);
+            this._listenerRegistered = true;
+        }
     }
 }
 (async function() {
     await Localization;
-    ContextMenu.init();
+    ContextMenu.update();
 })();
 
 
