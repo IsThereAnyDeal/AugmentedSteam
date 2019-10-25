@@ -48,6 +48,7 @@
         "*://store.steampowered.com/login/*",
         "*://store.steampowered.com/join/*",
         "*://store.steampowered.com/api/*",
+        "*://api.steampowered.com/*",
         "*://support.steampowered.com/*",
         "*://help.steampowered.com/*",
         "*://translation.steampowered.com/*",
