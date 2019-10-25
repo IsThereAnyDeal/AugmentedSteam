@@ -539,7 +539,7 @@ let Options = (function(){
         saveOption(node.dataset.setting);
     }
 
-    function saveOption(option) {
+    async function saveOption(option) {
         let value;
 
         if (option === "regional_countries") {
@@ -564,6 +564,24 @@ let Options = (function(){
                 }
             }
 
+        } else if (option.startsWith("context_")) {
+            // todo replace promise once browser API support has been merged
+            try {
+                value = await new Promise((resolve, reject) => {
+                    chrome.permissions.request({
+                        permissions: ["contextMenus"]
+                    }, granted => {
+                        let node = document.querySelector(`[data-setting='${option}']`);
+                        if (!node) { reject(); }
+                        if (!granted) {
+                            node.checked = false;
+                            reject();
+                        }
+
+                        resolve(node.checked);
+                    });
+                });
+            } catch(err) { return; } // Don't save option
         } else {
 
             let node = document.querySelector("[data-setting='"+option+"']");
@@ -578,22 +596,6 @@ let Options = (function(){
             if (option === "quickinv_diff") {
                 value = parseFloat(value.trim()).toFixed(2);
             }
-        }
-
-        if (option.startsWith("context_")) {
-            chrome.permissions.request({
-                permissions: ["contextMenus"]
-            }, function(granted) {
-                if (!granted) {
-                    let node = document.querySelector("[data-setting='"+option+"']");
-                    if (!node) { return; }
-                    node.checked = false;
-                    return;
-                }
-                SyncedStorage.set(option, value);
-                SaveIndicator.show();
-            });
-            return;
         }
 
         SyncedStorage.set(option, value);
