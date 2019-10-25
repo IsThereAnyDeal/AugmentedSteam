@@ -197,22 +197,22 @@ class ContextMenu {
     static onClick(info) {
         switch (info.menuItemId) {
             case "context_steam_store":
-                chrome.tabs.create({url: "https://store.steampowered.com/search/?term=" + encodeURIComponent(info.selectionText)});
+                chrome.tabs.create({ url: `https://store.steampowered.com/search/?term=${encodeURIComponent(info.selectionText)}` });
                 break;
             case "context_steam_market":
-                chrome.tabs.create({url: "https://steamcommunity.com/market/search?q=" + encodeURIComponent(info.selectionText)});
+                chrome.tabs.create({ url: `https://steamcommunity.com/market/search?q=${encodeURIComponent(info.selectionText)}` });
                 break;
             case "context_itad":
-                chrome.tabs.create({url: "https://isthereanydeal.com/search/?q=" + encodeURIComponent(info.selectionText)});
+                chrome.tabs.create({ url: `https://isthereanydeal.com/search/?q=${encodeURIComponent(info.selectionText)}` });
                 break;
             case "context_bartervg":
-                chrome.tabs.create({url: "https://barter.vg/search?q=" + encodeURIComponent(info.selectionText.trim())});
+                chrome.tabs.create({ url: `https://barter.vg/search?q=${encodeURIComponent(info.selectionText.trim())}` });
                 break;
             case "context_steamdb":
-                chrome.tabs.create({url: "https://steamdb.info/search/?q=" + encodeURIComponent(info.selectionText)});
+                chrome.tabs.create({ url: `https://steamdb.info/search/?q=${encodeURIComponent(info.selectionText)}` });
                 break;
             case "context_steamdb_instant":
-                chrome.tabs.create({url: "https://steamdb.info/instantsearch/?query=" + encodeURIComponent(info.selectionText)});
+                chrome.tabs.create({ url: `https://steamdb.info/instantsearch/?query=${encodeURIComponent(info.selectionText)}` });
                 break;
             case "context_steam_keys":
                 let steamkeys = info.selectionText.match(/[A-NP-RTV-Z02-9]{5}(-[A-NP-RTV-Z02-9]{5}){2}/g);
@@ -220,8 +220,7 @@ class ContextMenu {
                     window.alert(Localization.str.options.no_keys_found);
                     return;
                 }
-                let param = steamkeys.length === 1 ? "key=" : "keys=";
-                chrome.tabs.create({url: "https://store.steampowered.com/account/registerkey?" + param + encodeURIComponent(steamkeys.join())});
+                steamkeys.forEach(steamkey => chrome.tabs.create({ url: `https://store.steampowered.com/account/registerkey?key=${encodeURIComponent(steamkey)}` }));
                 break;
         }
     }
