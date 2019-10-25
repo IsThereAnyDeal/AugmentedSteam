@@ -425,7 +425,7 @@ class SyncedStorage {
             for (let [key, { 'newValue': val, }] of Object.entries(changes)) {
                 that.cache[key] = val;
             }
-            if (typeof ContextMenu === "function") {
+            if (typeof ContextMenu === "function" && Object.keys(changes).some(key => key.startsWith("context_"))) {
                 ContextMenu.update();
             }
         }
