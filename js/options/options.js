@@ -305,6 +305,9 @@ let Options = (function(){
             let nodes = document.querySelectorAll("[data-locale-text]");
             for (let node of nodes) {
                 let translation = Localization.getString(node.dataset.localeText);
+                if (node.dataset.localeText.startsWith("options.context_")) {
+                    translation = translation.replace("__query__", "...");
+                }
                 if (translation) {
                     node.textContent = translation;
                 } else {
@@ -575,6 +578,22 @@ let Options = (function(){
             if (option === "quickinv_diff") {
                 value = parseFloat(value.trim()).toFixed(2);
             }
+        }
+
+        if (option.startsWith("context_")) {
+            chrome.permissions.request({
+                permissions: ["contextMenus"]
+            }, function(granted) {
+                if (!granted) {
+                    let node = document.querySelector("[data-setting='"+option+"']");
+                    if (!node) { return; }
+                    node.checked = false;
+                    return;
+                }
+                SyncedStorage.set(option, value);
+                SaveIndicator.show();
+            });
+            return;
         }
 
         SyncedStorage.set(option, value);

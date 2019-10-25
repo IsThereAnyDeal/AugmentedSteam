@@ -331,6 +331,15 @@
         "formatted_time": "__hours__ uren, __minutes__ minuten"
     },
     "options": {
+        "context_menu": "Contextmenu",
+        "context_steam_store": "Zoek de Steam Winkel naar '__query__'",
+        "context_steam_market": "Zoek de Steam Markt naar '__query__'",
+        "context_itad": "Zoek IsThereAnyDeal naar '__query__'",
+        "context_bartervg": "Zoek Barter.vg naar '__query__'",
+        "context_steamdb": "Zoek SteamDB naar '__query__'",
+        "context_steamdb_instant": "Gebruik Instant Search van SteamDB voor '__query__'",
+        "context_steam_keys": "Activeer steam product codes binnen de selectie",
+        "no_keys_found": "Geen steam product codes gevonden binnen de selectie!",
         "wsgf": "Laat WSGF (Widescreen) informatie zien",
         "version_show": "Toon wijzigingslogboek wanneer Augmented Steam bijgewerkt wordt",
         "steamcardexchange": "Toon SteamCardExchange links bij badges",

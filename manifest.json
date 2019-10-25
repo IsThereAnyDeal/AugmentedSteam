@@ -19,6 +19,9 @@
     "*://steamcommunity.com/*",
     "*://*.isthereanydeal.com/"
   ],
+  "optional_permissions": [
+    "contextMenus"
+  ],
   "web_accessible_resources": [
     "img/*.png",
     "img/*.gif",
@@ -116,6 +119,7 @@
   ],
   "background": {
     "scripts": [
+      "js/language.js",
       "js/lib/DOMPurify/purify.js",
       "js/config.js",
       "js/core.js",
