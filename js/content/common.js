@@ -63,7 +63,7 @@ class ITAD {
             promises.push(resolved, resolved);
         } else {
             if (highlightCollection) {
-                promises.push(Background.action("idb.contains", "collection", storeIds, { "shop": "steam", "optional": "gameid,copy_type" }));
+                promises.push(Background.action("itad.incollection", storeIds));
             } else {
                 promises.push(resolved);
             }
@@ -519,7 +519,7 @@ let User = (function(){
 
     self.getPurchaseDate = function(lang, appName) {
         appName = HTMLParser.clearSpecialSymbols(appName);
-        return Background.action("idb.get", "purchases", appName, lang);
+        return Background.action("purchases", appName, lang);
     };
 
     return self;
@@ -695,7 +695,7 @@ let Currency = (function() {
     self.customCurrency = null;
     self.storeCurrency = null;
 
-    let _params = {};
+    let _toCurrencies;
     let _promise = null;
 
     function getCurrencyFromDom() {
@@ -755,12 +755,10 @@ let Currency = (function() {
         return _promise = CurrencyRegistry
             .then(_getCurrency)
             .then(() => {
-                let target = [self.storeCurrency,];
+                _toCurrencies = [self.storeCurrency,];
                 if (self.customCurrency !== self.storeCurrency) {
-                    target.push(self.customCurrency);
+                    _toCurrencies.push(self.customCurrency);
                 }
-                // assert (Array.isArray(target) && target.length == target.filter(el => typeof el == 'string').length)
-                _params = { "to": target.sort().join(','), };
             })
             .catch(e => {
                 console.error("Failed to initialize Currency");
@@ -776,7 +774,7 @@ let Currency = (function() {
     self.getRate = async function(from, to) {
         if (from === to) { return 1; }
 
-        let rates = await Background.action("idb.get", "rates", from, _params);
+        let rates = await Background.action("rates", from, _toCurrencies);
         if (rates && rates[to]) {
             return rates[to];
         }
@@ -1290,7 +1288,7 @@ let EarlyAccess = (function(){
             if (appid) appidsMap.set(appid, node);
         });
 
-        let eaAppids = await Background.action("idb.contains", "earlyAccessAppids", Array.from(appidsMap.keys()).map(key => Number(key)));
+        let eaAppids = await Background.action("isea", Array.from(appidsMap.keys()).map(key => Number(key)));
 
         for (let [appid, node] of appidsMap) {
             if (!eaAppids[appid]) continue;
@@ -1418,10 +1416,10 @@ let Inventory = (function(){
     let self = {};
 
     self.getCoupon = function(appid) {
-        return Background.action("idb.getfromindex", "coupons", "appid", appid);
+        return Background.action("coupon", appid);
     };
 
-    self.getAppStatus = async function(appid) {
+    self.getAppStatus = async function(appids) {
         function getStatusObject(giftsAndPasses, hasCoupon) {
             return {
                 "gift": giftsAndPasses.includes("gifts"),
@@ -1431,13 +1429,13 @@ let Inventory = (function(){
         }
 
         let [ giftsAndPasses, coupons ] = await Promise.all([
-            Background.action("idb.getallfromindex", "giftsAndPasses", "appid", appid, true),
-            Background.action("idb.indexcontainskey", "coupons", "appid", appid),
+            Background.action("hasgiftsandpasses", appids),
+            Background.action("hascoupon", appids),
         ]);
-        if (Array.isArray(appid)) {
+        if (Array.isArray(appids)) {
             let results = {};
             
-            for (let id of appid.values()) {
+            for (let id of appids.values()) {
                 results[id] = getStatusObject(giftsAndPasses[id], coupons[id]);
             }
             
@@ -1446,8 +1444,8 @@ let Inventory = (function(){
         return getStatusObject(giftsAndPasses, coupons);
     };
 
-    self.hasInInventory6 = function(marketHash) {
-        return Background.action("idb.contains", "items", marketHash);
+    self.hasInInventory6 = function(marketHashes) {
+        return Background.action("hasItem", marketHashes);
     };
 
     return self;
@@ -1888,9 +1886,9 @@ let DynamicStore = (function(){
 
         if (multiple) {
             trimmedIds = storeId.map(id => GameId.trimStoreId(id));
-            promise = Background.action("idb.getallfromindex", "dynamicStore", "appid", trimmedIds, true);
+            promise = Background.action("dynamicstorestatus", trimmedIds);
         } else {
-            promise = Background.action("idb.getallfromindex", "dynamicStore", "appid", GameId.trimStoreId(storeId), true);
+            promise = Background.action("dynamicstorestatus", GameId.trimStoreId(storeId));
         }
 
         let statusList;

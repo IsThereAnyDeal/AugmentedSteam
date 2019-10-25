@@ -52,9 +52,7 @@ let ProfileData = (function(){
     let _promise = null;
     self.promise = async function() {
         if (!_promise) {
-            let steamId = SteamId.getSteamId();
-
-            _promise = Background.action("idb.get", "profiles", steamId, { "profile": steamId })
+            _promise = Background.action("profile", SteamId.getSteamId())
                 .then(response => { _data = response; return _data; });
         }
         return _promise;
@@ -103,7 +101,7 @@ let ProfileData = (function(){
 
     self.clearOwn = async function() {
         if (!User.isSignedIn) { return; }
-        await Background.action("idb.delete", "profiles", User.steamId);
+        await Background.action("clearownprofile", User.steamId);
         _promise = null;
         return self.promise();
     };

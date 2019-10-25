@@ -40,6 +40,13 @@ class CacheStorage {
     }
 }
 
+class AugmentedSteam {
+    static getUserNote(appid)       { return IndexedDB.get("notes", appid) }
+    static setUserNote(appid, note) { return IndexedDB.put("notes", note, appid) }
+    static deleteUserNote(appid)    { return IndexedDB.delete("notes", appid) }
+    static userNoteExists(appid)    { return IndexedDB.contains("notes", appid) }
+}
+
 class Api {
     // FF doesn't support static members
     // static origin; // this *must* be overridden
@@ -141,9 +148,19 @@ class AugmentedSteamApi extends Api {
             });
     }    
 
+    static storePageData(appid, metalink, showoc) { 
+        let params = { "appid": appid };
+        if (metalink)   params.mcurl = metalink;
+        if (showoc)     params.oc = 1;
+        return IndexedDB.get("storePageData", appid, params)
+    }
+
     static expireStorePageData(appid) {
         CacheStorage.remove(`app_${appid}`);
     }
+
+    static rates(from, to) { return IndexedDB.get("rates", from, { "to": to.sort().join(',') }) }
+    static isEA(appids) { return IndexedDB.contains("earlyAccessAppids", appids) }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();
@@ -340,6 +357,9 @@ class ITAD_Api extends Api {
         });
         return collection;
     }
+
+    static inCollection(storeIds) { return IndexedDB.contains("collection", storeIds, { "shop": "steam", "optional": "gameid,copy_type" }) }
+    static getFromCollection(storeId) { return IndexedDB.get("collection", storeId, { "shop": "steam", "optional": "gameid,copy_type" }) }
 }
 ITAD_Api.accessToken = null;
 ITAD_Api.clientId = "5fe78af07889f43a";
@@ -465,6 +485,9 @@ class SteamStore extends Api {
         return IndexedDB.putCached("purchases", purchaseDates, keys, true);
     }
 
+    static purchases(appName, lang) { return IndexedDB.get("purchases", appName, lang) }
+    static clearPurchases() { return IndexedDB.clear("purchases") }
+
     static async dynamicStore() {
         let { rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist } = await SteamStore.getEndpoint("dynamicstore/userdata");
         
@@ -482,6 +505,8 @@ class SteamStore extends Api {
 
         return IndexedDB.putCached("dynamicStore", Object.values(dynamicStore), Object.keys(dynamicStore), true);
     }
+
+    static dsStatus(ids) { return IndexedDB.getAllFromIndex("dynamicStore", "appid", ids, true) }
     
     static async clearDynamicStore() {
         await IndexedDB.clear("dynamicStore");
@@ -595,6 +620,10 @@ class SteamCommunity extends Api {
 
         return IndexedDB.putCached("coupons", Object.values(coupons), Object.keys(coupons).map(key => Number(key)), true);
     }
+
+    static getCoupon(appids) { return IndexedDB.getFromIndex("coupons", "appid", appids) }
+    static hasCoupon(appids) { return IndexedDB.indexContainsKey("coupons", "appid", appids) }
+
     static async giftsAndPasses() { // context#1, gifts and guest passes
         let gifts = [];
         let passes = [];
@@ -643,10 +672,14 @@ class SteamCommunity extends Api {
         return IndexedDB.putCached("giftsAndPasses", Object.values(data), Object.keys(data), true);
     }
 
+    static async hasGiftsAndPasses(appid) { return IndexedDB.getAllFromIndex("giftsAndPasses", "appid", appid, true) }
+
     static async items() { // context#6, community items
         // only used for market highlighting
         return IndexedDB.putCached("items", null, (await SteamCommunity.getInventory(6)).descriptions.map(item => item.market_hash_name), true);
     }
+
+    static hasItem(hashes) { return IndexedDB.contains("items", hashes) }
 
     /**
      * Invoked when the content script thinks the user is logged in
@@ -689,6 +722,9 @@ class SteamCommunity extends Api {
     static logout() {
         LocalStorage.remove("login");
     }
+
+    static getProfile(steamId) { IndexedDB.get("profiles", steamId, { "profile": steamId }) }
+    static clearOwn(steamId) { IndexedDB.delete("profiles", steamId) }
 
     static getPage(endpoint, query) {
         return this._fetchWithDefaults(endpoint, query, { method: 'GET' }).then(response => {
@@ -1125,10 +1161,18 @@ let actionCallbacks = new Map([
     ["dynamicstore.clear", SteamStore.clearDynamicStore],
     ["steam.currencies", Steam.currencies],
     
+    ["notes.get", AugmentedSteam.getUserNote],
+    ["notes.set", AugmentedSteam.setUserNote],
+    ["notes.delete", AugmentedSteam.deleteUserNote],
+    ["notes.exists", AugmentedSteam.userNoteExists],
+
     ["cache.clear", IndexedDB.clear],
     ["dlcinfo", AugmentedSteamApi.endpointFactory("v01/dlcinfo")],
+    ["storepagedata", AugmentedSteamApi.storePageData],
     ["storepagedata.expire", AugmentedSteamApi.expireStorePageData],
     ["prices", AugmentedSteamApi.endpointFactory("v01/prices")],
+    ["rates", AugmentedSteamApi.rates],
+    ["isea", AugmentedSteamApi.isEA],
     ["profile.background", AugmentedSteamApi.endpointFactory("v01/profile/background/background")],
     ["profile.background.games", AugmentedSteamApi.endpointFactory("v01/profile/background/games")],
     ["twitch.stream", AugmentedSteamApi.endpointFactory("v01/twitch/stream")],
@@ -1140,16 +1184,27 @@ let actionCallbacks = new Map([
     ["appuserdetails", SteamStore.endpointFactory("api/appuserdetails/")],
     ["currency", SteamStore.currency],
     ["sessionid", SteamStore.sessionId],
+    ["purchases", SteamStore.purchases],
+    ["clearpurchases", SteamStore.clearPurchases],
+    ["dynamicstorestatus", SteamStore.dsStatus],
 
     ["login", SteamCommunity.login],
     ["logout", SteamCommunity.logout],
     ["cards", SteamCommunity.cards],
     ["stats", SteamCommunity.stats],
+    ["coupon", SteamCommunity.getCoupon],
+    ["hasgiftsandpasses", SteamCommunity.hasGiftsAndPasses],
+    ["hascoupon", SteamCommunity.hasCoupon],
+    ["hasitem", SteamCommunity.hasItem],
+    ["profile", SteamCommunity.getProfile],
+    ["clearownprofile", SteamCommunity.clearOwn],
 
     ["itad.authorize", ITAD_Api.authorize],
     ["itad.isconnected", ITAD_Api.isConnected],
     ["itad.setupimport", ITAD_Api.setupImport],
     ["itad.addtowaitlist", ITAD_Api.addToWaitlist],
+    ["itad.incollection", ITAD_Api.inCollection],
+    ["itad.getfromcollection", ITAD_Api.getFromCollection],
 
     ["idb.get", IndexedDB.get],
     ["idb.getfromindex", IndexedDB.getFromIndex],

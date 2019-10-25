@@ -801,14 +801,7 @@ class AppPageClass extends StorePageClass {
     }
 
     storePageDataPromise() {
-        let apiparams = { 'appid': this.appid, };
-        if (this.metalink) {
-            apiparams.mcurl = this.metalink;
-        }
-        if (SyncedStorage.get("showoc")) {
-            apiparams.oc = 1;
-        }
-        return Background.action("idb.get", "storePageData", this.appid, apiparams);
+        return Background.action("storepagedata", this.appid, this.metalink, SyncedStorage.get("showoc"));
     }
 
     /**
@@ -882,7 +875,7 @@ class AppPageClass extends StorePageClass {
         let activeStyle = "display:none;";
 
         if (await this.userNotes.exists(this.appid)) {
-            noteText = `"${await this.userNotes.getNote(this.appid)}"`;
+            noteText = `"${await this.userNotes.get(this.appid)}"`;
             cssClass = "";
 
             inactiveStyle = "display:none;";
@@ -1308,7 +1301,7 @@ class AppPageClass extends StorePageClass {
     addOwnedElsewhere() {
         if (document.querySelector(".game_area_already_owned")) return;
 
-        Background.action("idb.get", "collection", `app/${this.appid}`, { "shop": "steam", "optional": "gameid,copy_type" }).then(result => {
+        Background.action("itad.getfromcollection", `app/${this.appid}`).then(result => {
             if (!result) return;
             
             HTML.afterEnd(".queue_overflow_ctn",
@@ -3705,7 +3698,7 @@ class UserNotes {
     
             let Modal = _BuildDialog(
                 "${Localization.str.user_note.add_for_game.replace("__gamename__", appname)}",
-                \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", await this.getNote(appid) || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
+                \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", await this.get(appid) || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
                 [], fnOK);
             deferred.always(() => Modal.Dismiss());
     
@@ -3759,29 +3752,21 @@ class UserNotes {
             let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
             let node = document.querySelector(decodeURIComponent(modal.dataset.selector));
             if (note.length !== 0) {
-                this.setNote(appid, note);
+                this.set(appid, note);
                 HTML.inner(node, `"${note}"`);
                 return [node, true];
             }
             else {
-                this.deleteNote(appid);
+                this.delete(appid);
                 node.textContent = Localization.str.user_note.add;
                 return [node, false];
             }
         }
     }
-    getNote(appid) {
-        return Background.action("idb.get", "notes", appid);
-    }
-    setNote(appid, note) {
-        return Background.action("idb.put", "notes", note, appid);
-    }
-    deleteNote(appid) {
-        return Background.action("idb.delete", "notes", appid);
-    }
-    exists(appid) {
-        return Background.action("idb.contains", "notes", appid);
-    }
+    get(appid)          { return Background.action("notes.get", appid) }
+    set(appid, note)    { return Background.action("notes.set", appid, note) }
+    delete(appid)       { return Background.action("notes.delete", appid) }
+    exists(appid)       { return Background.action("notes.exists", appid) }
 }
 
 let TagPageClass = (function(){
