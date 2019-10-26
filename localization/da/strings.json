@@ -468,7 +468,7 @@
         "nobody": "Ingen har taget en performance-undersøgelse for dette spil endnu.",
         "take": "Tag undersøgelsen"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Vælg ønskelistede DLC",
         "none": "Vælg intet",
         "unowned_dlc": "Vælg ikke-ejet DLC"

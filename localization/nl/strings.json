@@ -2,7 +2,6 @@
     "custom_tags": "Aangepaste Tags",
     "add_tag": "Voeg tag toe",
     "enter_tag": "Voer de aangepaste tag in die u wilt toevoegen",
-    "mp4video": "Forceer app videos in winkelpaginas in MP4 formaat",
     "view_in_library": "Bekijk in jouw Bibliotheek",
     "support": "Ondersteuning",
     "email": "E-mail",
@@ -332,6 +331,15 @@
         "formatted_time": "__hours__ uren, __minutes__ minuten"
     },
     "options": {
+        "context_menu": "Contextmenu",
+        "context_steam_store": "Zoek de Steam Winkel naar '__query__'",
+        "context_steam_market": "Zoek de Steam Markt naar '__query__'",
+        "context_itad": "Zoek IsThereAnyDeal naar '__query__'",
+        "context_bartervg": "Zoek Barter.vg naar '__query__'",
+        "context_steamdb": "Zoek SteamDB naar '__query__'",
+        "context_steamdb_instant": "Gebruik Instant Search van SteamDB voor '__query__'",
+        "context_steam_keys": "Activeer steam product codes binnen de selectie",
+        "no_keys_found": "Geen steam product codes gevonden binnen de selectie!",
         "wsgf": "Laat WSGF (Widescreen) informatie zien",
         "version_show": "Toon wijzigingslogboek wanneer Augmented Steam bijgewerkt wordt",
         "steamcardexchange": "Toon SteamCardExchange links bij badges",
@@ -392,6 +400,7 @@
         "library_f2p": "Toon gespeelde gratis om te spelen spellen en demos in bibliotheek",
         "inventory_market_text": "Toon Market prijs in inventory pagina",
         "send_age_info": "Verstuur automatisch leeftijd verificatie wanneer gevraagd",
+        "mp4video": "Forceer app videos in winkelpaginas in MP4 formaat",
         "pcgw": "Laat PCGamingWiki links zien",
         "store_steamcards": "Toon SteamCardExchange links op winkelpagina 's",
         "spamcommentregex": "Reguliere Expressie string:",
@@ -504,7 +513,7 @@
         "nobody": "Nog niemand heeft een prestatie enquete voor dit spel genomen.",
         "take": "Deelnemen aan de enquête"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Selecteer verlanglijst DLC",
         "none": "Selecteer Geen",
         "unowned_dlc": "Selecteer Onbeheerde DLC"

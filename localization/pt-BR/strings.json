@@ -1,4 +1,7 @@
 {
+    "custom_tags": "Marcadores personalzados",
+    "add_tag": "Adicionar marcador",
+    "enter_tag": "Insira o marcador personalizado que deseja adicionar",
     "oneclickgoo": "Transformar em gemas com 1 clique...",
     "view_in_library": "Ver na biblioteca",
     "support": "Suporte",
@@ -368,6 +371,8 @@
         "regional_price_on": "Exibir comparação de preços regionais",
         "cart": "Itens no seu carrinho",
         "friends_own": "Itens que os seus amigos possuem",
+        "horizontalmediascrolling": "Ativar rolagem horizontal de mídia em páginas de aplicativos",
+        "supportinfo": "Exibir informações de suporte na loja",
         "drm": "Exibir avisos para GDD/DRM de terceiros",
         "profile_permalink": "Exibir link permanente (permalink) em perfis",
         "show_regionwarning": "Exibir aviso caso esteja navegando pela loja em região que não seja da conta",
@@ -400,6 +405,7 @@
         "library_f2p": "Exibir jogos gratuitos para jogar e demonstrações já jogados na Biblioteca",
         "inventory_market_text": "Exibir preço do Mercado na página do inventário",
         "send_age_info": "Enviar verificação de idade automaticamente quando solicitado",
+        "mp4video": "Forçar vídeos em MP4 na loja",
         "pcgw": "Exibir links para o site PCGamingWiki",
         "completionistme": "Exibir links para o site Completionist.me",
         "protondb": "Exibir links para o site ProtonDB",
@@ -532,7 +538,7 @@
         "nobody": "Ninguém respondeu a pesquisa de desempenho deste jogo.",
         "take": "Responder a pesquisa"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Selecionar na lista de desejos",
         "none": "Selecionar nenhum",
         "unowned_dlc": "Selecionar ainda não comprados"
@@ -587,8 +593,8 @@
         "default": "Um erro inesperado ocorreu. O código de produto não foi ativado. Por favor, tente ativá-lo novamente daqui a 30 minutos."
     },
     "wl": {
-        "compute": "Clique para calcular a status",
-        "total_price": "valor atual",
+        "compute": "Clique para calcular as estatísticas",
+        "total_price": "preço atual",
         "in_wishlist": "na lista de desejos",
         "on_sale": "em promoção",
         "no_price": "sem preço"

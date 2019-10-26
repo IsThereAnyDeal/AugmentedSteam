@@ -469,7 +469,7 @@
         "nobody": "まだこのゲームはパフォーマンス調査されていません。",
         "take": "調査に協力する"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "ウィッシュリストに入っているDLCを選択",
         "none": "何も選択しない",
         "unowned_dlc": "未所有のDLCを選択"

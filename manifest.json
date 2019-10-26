@@ -1,6 +1,6 @@
 {
   "name": "Augmented Steam",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Augments your Steam Experience",
   "icons": {
     "128": "img/es_128.png",
@@ -20,6 +20,7 @@
     "*://*.isthereanydeal.com/"
   ],
   "optional_permissions": [
+    "contextMenus",
     "webRequest",
     "webRequestBlocking"
   ],
@@ -52,6 +53,7 @@
         "*://store.steampowered.com/login/*",
         "*://store.steampowered.com/join/*",
         "*://store.steampowered.com/api/*",
+        "*://api.steampowered.com/*",
         "*://support.steampowered.com/*",
         "*://help.steampowered.com/*",
         "*://translation.steampowered.com/*",
@@ -119,6 +121,7 @@
   ],
   "background": {
     "scripts": [
+      "js/language.js",
       "js/lib/DOMPurify/purify.js",
       "js/config.js",
       "js/core.js",

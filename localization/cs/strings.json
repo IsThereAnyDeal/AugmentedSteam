@@ -468,7 +468,7 @@
         "nobody": "Nikdo dosud nevyplnil dotazník výkonu pro tuto hru.",
         "take": "Vyplnit dotazník"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Vybrat DLC na Seznamu přání",
         "none": "Zrušit výběr",
         "unowned_dlc": "Vybrat nevlastněná DLC"

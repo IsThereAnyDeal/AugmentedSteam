@@ -1,5 +1,5 @@
 const Info = {
-    'version': "1.3.0",
+    'version': "1.3.1",
 };
 
 // Detect which browser the extension is running on.
@@ -438,6 +438,9 @@ class SyncedStorage {
             for (let [key, { 'newValue': val, }] of Object.entries(changes)) {
                 that.cache[key] = val;
             }
+            if (typeof ContextMenu === "function" && Object.keys(changes).some(key => key.startsWith("context_"))) {
+                ContextMenu.update();
+            }
         }
         chrome.storage.onChanged.addListener(onChange);
         let storage = await new Promise((resolve, reject) => that.adapter.get(null, result => resolve(result)));
@@ -623,6 +626,7 @@ SyncedStorage.defaults = {
     'profile_steamrepcn': true,
     'profile_steamgifts': true,
     'profile_steamtrades': true,
+    'profile_bartervg': true,
     'profile_steamrep': true,
     'profile_steamdbcalc': true,
     'profile_astats': true,
@@ -644,6 +648,14 @@ SyncedStorage.defaults = {
     'profile_showcase_twitch': true,
     'profile_showcase_own_twitch': false,
     'profile_showcase_twitch_profileonly': false,
+
+    'context_steam_store': false,
+    'context_steam_market': false,
+    'context_itad': false,
+    'context_bartervg': false,
+    'context_steamdb': false,
+    'context_steamdb_instant': false,
+    'context_steam_keys': false,
 };
 
 

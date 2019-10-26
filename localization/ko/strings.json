@@ -468,7 +468,7 @@
         "nobody": "아직 아무도 이 게임에 대한 성능조사를 하지 않았다.",
         "take": "설문 조사 참여"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "찜한 상품 목록의 DLC를 선택",
         "none": "선택된 항목 없음",
         "unowned_dlc": "소유하지 않은 DLC를 선택"

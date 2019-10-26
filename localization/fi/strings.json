@@ -468,7 +468,7 @@
         "nobody": "Kukaan ei ole vielä täyttäny performanssikyselyä tälle pelille.",
         "take": "Vastaa kyselyyn"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Valitse toivelistalla olevat lisäsisällöt",
         "none": "Tyhjennä valinta",
         "unowned_dlc": "Valitse lisäsisältö, jota en omista"

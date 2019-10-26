@@ -468,7 +468,7 @@
         "nobody": "Ainda ninguém completou o inquérito de desempenho para este jogo.",
         "take": "Faz o Inquérito"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Selecionar DLC na Lista de Desejos",
         "none": "Escolher nenhum",
         "unowned_dlc": "Selecionar DLC Não Adquirido"

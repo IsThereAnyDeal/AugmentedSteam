@@ -305,6 +305,9 @@ let Options = (function(){
             let nodes = document.querySelectorAll("[data-locale-text]");
             for (let node of nodes) {
                 let translation = Localization.getString(node.dataset.localeText);
+                if (node.dataset.localeText.startsWith("options.context_")) {
+                    translation = translation.replace("__query__", "...");
+                }
                 if (translation) {
                     node.textContent = translation;
                 } else {
@@ -549,7 +552,7 @@ let Options = (function(){
         saveOption(node.dataset.setting);
     }
 
-    function saveOption(option) {
+    async function saveOption(option) {
         let value;
         let permissions;
 
@@ -575,6 +578,24 @@ let Options = (function(){
                 }
             }
 
+        } else if (option.startsWith("context_")) {
+            // todo replace promise once browser API support has been merged
+            try {
+                value = await new Promise((resolve, reject) => {
+                    chrome.permissions.request({
+                        permissions: ["contextMenus"]
+                    }, granted => {
+                        let node = document.querySelector(`[data-setting='${option}']`);
+                        if (!node) { reject(); }
+                        if (!granted) {
+                            node.checked = false;
+                            reject();
+                        }
+
+                        resolve(node.checked);
+                    });
+                });
+            } catch(err) { return; } // Don't save option
         } else {
 
             let node = document.querySelector("[data-setting='"+option+"']");
