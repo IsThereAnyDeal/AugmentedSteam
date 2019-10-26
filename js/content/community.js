@@ -405,7 +405,7 @@ let ProfileActivityPageClass = (function(){
             return acc;
         }, []);
 
-        await Highlights.highlightAndTag(aNodes);
+        await Highlights.highlightAndTag(aNodes, false);
 
         if (!SyncedStorage.get("showcomparelinks")) { return; }
         blotterBlocks.forEach(blotter => {

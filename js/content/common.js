@@ -1724,7 +1724,16 @@ let Highlights = (function(){
         highlightItem(node, "waitlist");
     };
 
-    self.highlightAndTag = async function(nodes) {
+    /**
+     * Highlights and tags DOM nodes that are owned, wishlisted, ignored, collected, waitlisted
+     * or that the user has a gift, a guest pass or coupon for.
+     * 
+     * Additionally hides non-discounted titles if wished by the user.
+     * @param {NodeList} nodes      The nodes that should get highlighted
+     * @param {boolean} hasDsInfo   Whether or not the supplied nodes contain dynamic store info.
+     * @returns {Promise}           Resolved once the highlighting and tagging completed for the nodes
+     */
+    self.highlightAndTag = async function(nodes, hasDsInfo = true) {
 
         let storeIdsMap = new Map();
 
@@ -1766,18 +1775,20 @@ let Highlights = (function(){
                 }
             }
 
-            if (node.querySelector(".ds_owned_flag")) {
-                self.highlightOwned(nodeToHighlight);
+            if (hasDsInfo) {
+                if (node.querySelector(".ds_owned_flag")) {
+                    self.highlightOwned(nodeToHighlight);
+                }
+                
+                if (node.querySelector(".ds_wishlist_flag")) {
+                    self.highlightWishlist(nodeToHighlight);
+                }
+    
+                if (node.querySelector(".ds_ignored_flag")) {
+                    self.highlightNotInterested(nodeToHighlight);
+                }
             }
             
-            if (node.querySelector(".ds_wishlist_flag")) {
-                self.highlightWishlist(nodeToHighlight);
-            }
-
-            if (node.querySelector(".ds_ignored_flag")) {
-                self.highlightNotInterested(nodeToHighlight);
-            }
-
             if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
                 self.highlightNonDiscounts(nodeToHighlight);
             }
@@ -1786,13 +1797,20 @@ let Highlights = (function(){
         let storeIds = Array.from(storeIdsMap.keys());
         let trimmedStoreIds = storeIds.map(id => GameId.trimStoreId(id));
 
-        let [ itadStatus, invStatus ] = await Promise.all([
+        let [ dsStatus, itadStatus, invStatus ] = await Promise.all([
+            hasDsInfo ? Promise.resolve() : DynamicStore.getAppStatus(storeIds),
             ITAD.getAppStatus(storeIds),
             Inventory.getAppStatus(trimmedStoreIds),
         ]);
         
         let it = trimmedStoreIds.values();
         for (let [storeid, nodes] of storeIdsMap) {
+            if (dsStatus) {
+                if (dsStatus[storeid].owned) nodes.forEach(node => self.highlightOwned(node));
+                if (dsStatus[storeid].wishlisted) nodes.forEach(node => self.highlightWishlist(node));
+                if (dsStatus[storeid].ignored) nodes.forEach(node => self.highlightNotInterested(node));
+            }
+
             if (itadStatus[storeid].collected) nodes.forEach(node => self.highlightCollection(node));
             if (itadStatus[storeid].waitlisted) nodes.forEach(node => self.highlightWaitlist(node));
 
