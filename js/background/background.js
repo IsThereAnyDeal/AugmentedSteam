@@ -284,10 +284,15 @@ class ITAD_Api extends Api {
         return ITAD_Api.postEndpoint("v01/collection/import/", { "access_token": ITAD_Api.accessToken }, { "body": JSON.stringify(collectionJSON) });
     }
 
-    static async import() {
-        let expiry = LocalStorage.get("nextItadImport");
+    static async import(force) {
 
-        if (expiry && !IndexedDB.isExpired(expiry)) { return; }
+        if (force) {
+            await IndexedDB.clear("dynamicStore");
+        } else {
+            let lastImport = LocalStorage.get("lastItadImport");
+
+            if (lastImport && !IndexedDB.isExpired(lastImport + 12 * 60 * 60)) { return; }
+        }
 
         let dsKeys = [];
         let itadImportKeys = [];
@@ -334,8 +339,10 @@ class ITAD_Api extends Api {
         }
         
         await Promise.all(promises);
-        LocalStorage.set("nextItadImport", Timestamp.now() + 12 * 60 * 60);
+        LocalStorage.set("lastItadImport", Timestamp.now());
     }
+
+    static lastImport() { return LocalStorage.get("lastItadImport"); }
 
     static filterCollection(result) {
         if (!result) return;
@@ -1255,6 +1262,7 @@ let actionCallbacks = new Map([
     ["itad.authorize", ITAD_Api.authorize],
     ["itad.isconnected", ITAD_Api.isConnected],
     ["itad.import", ITAD_Api.import],
+    ["itad.lastimport", ITAD_Api.lastImport],
     ["itad.addtowaitlist", ITAD_Api.addToWaitlist],
     ["itad.incollection", ITAD_Api.inCollection],
     ["itad.getfromcollection", ITAD_Api.getFromCollection],

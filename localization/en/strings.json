@@ -587,6 +587,8 @@
     },
     "itad": {
         "import": "Periodically import:",
+        "last_import": "Last import",
+        "import_now": "Import now",
         "option": "Show menu option to sync data to IsThereAnyDeal.com",
         "send_to_itad": "Send owned games to IsThereAnyDeal",
         "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com"
