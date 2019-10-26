@@ -284,23 +284,10 @@ class ITAD_Api extends Api {
         return ITAD_Api.postEndpoint("v01/collection/import/", { "access_token": ITAD_Api.accessToken }, { "body": JSON.stringify(collectionJSON) });
     }
 
-    static setupImport() {
-        browser.alarms.onAlarm.addListener(ITAD_Api.import);
-
+    static async import() {
         let expiry = LocalStorage.get("nextItadImport");
-        let alarmInfo = { "periodInMinutes": 15 };
 
-        if (expiry && !IndexedDB.isExpired(expiry)) {
-            alarmInfo.when = expiry;
-        } else {
-            // Alarms are triggered at least one minute in the future
-            alarmInfo.delayInMinutes = 1;
-        }
-        browser.alarms.create("itadImport", alarmInfo);
-    }
-
-    static async import(alarm) {
-        if (alarm.name !== "itadImport") return;
+        if (expiry && !IndexedDB.isExpired(expiry)) { return; }
 
         let dsKeys = [];
         let itadImportKeys = [];
@@ -347,7 +334,7 @@ class ITAD_Api extends Api {
         }
         
         await Promise.all(promises);
-        LocalStorage.set("nextItadImport", timestamp() + 15 * 60);
+        LocalStorage.set("nextItadImport", Timestamp.now() + 12 * 60 * 60);
     }
 
     static filterCollection(result) {
@@ -1267,7 +1254,7 @@ let actionCallbacks = new Map([
 
     ["itad.authorize", ITAD_Api.authorize],
     ["itad.isconnected", ITAD_Api.isConnected],
-    ["itad.setupimport", ITAD_Api.setupImport],
+    ["itad.import", ITAD_Api.import],
     ["itad.addtowaitlist", ITAD_Api.addToWaitlist],
     ["itad.incollection", ITAD_Api.inCollection],
     ["itad.getfromcollection", ITAD_Api.getFromCollection],
@@ -1305,10 +1292,3 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
         throw err;
     }
 });
-
-Promise.all([IndexedDB, SyncedStorage])
-.then(() => {
-    if (ITAD_Api.isConnected() && (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist"))) {
-        ITAD_Api.setupImport();
-    }
-})

@@ -16,7 +16,6 @@
   "permissions": [
     "storage",
     "identity",
-    "alarms",
     "*://*.steampowered.com/*",
     "*://steamcommunity.com/*",
     "*://*.isthereanydeal.com/"

@@ -16,6 +16,9 @@ class ITAD {
         if (connected) {
             itadStatus.textContent = '\u2713';
             itadDiv.classList.add("authorized");
+            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
+                Background.action("itad.import");
+            }
         } else {
             itadStatus.textContent = Localization.str.sign_in;
             itadDiv.classList.add("not_authorized");
@@ -45,8 +48,9 @@ class ITAD {
             itadDiv.classList.remove("not_authorized");
             itadDiv.removeEventListener("click", ITAD.authorize);
             
-            return Background.action("itad.setupimport");
-            
+            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
+                Background.action("itad.import");
+            }
         } else {
             console.error("Can't retrieve Session ID, unable to authorize app");
         }
