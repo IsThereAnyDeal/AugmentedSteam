@@ -1873,8 +1873,6 @@ let DynamicStore = (function(){
     let _promise = null;
 
     self.clear = function() {
-        LocalStorage.remove("dynamicstore");
-        LocalStorage.remove("dynamicstore_update");
         return Background.action("dynamicstore.clear");
     };
 
