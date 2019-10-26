@@ -2185,8 +2185,7 @@ class AppPageClass extends StorePageClass {
                 </div>`);
         }
 
-        let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
-        nodes.forEach(node => {
+        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
             let title = node.querySelector("h1").textContent.trim();
             title = title.toLowerCase().replace(/-/g, ' ');
             if (!title || !title.includes('pack')) return;
@@ -2209,7 +2208,7 @@ class AppPageClass extends StorePageClass {
 
             else if (title.includes(' 6 pack')) { splitPack(node, 6); }
             else if (title.includes(' six pack')) { splitPack(node, 6); }
-        });
+        }
     }
 }
 
