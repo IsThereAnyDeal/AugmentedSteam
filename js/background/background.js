@@ -161,7 +161,7 @@ class AugmentedSteamApi extends Api {
     }
 
     static expireStorePageData(appid) {
-        CacheStorage.remove(`app_${appid}`);
+        return IndexedDB.delete("storePageData", `app_${appid}`);
     }
 
     static rates(to) { return IndexedDB.getAll("rates", { "to": to.sort().join(',') }) }
