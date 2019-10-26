@@ -5,7 +5,7 @@ class ITAD {
     static async create() {
         HTML.afterBegin("#global_action_menu",
             `<div id="es_itad">
-                <img id="es_itad_logo" src="${ExtensionResources.getURL("img/itad.png")}" height="24px">
+                <img id="es_itad_logo" src="${ExtensionResources.getURL("img/itad.png")}" height="20px">
                 <span id="es_itad_status"></span>
             </div>`);
 
