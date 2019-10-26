@@ -717,6 +717,10 @@ function addWebRequestListener() {
     };
     let extraInfoSpec = ['blocking'];
 
+    if (Info.browser === 'chrome') {
+        extraInfoSpec.push('extraHeaders'); // Required since Chrome v72.
+    }
+
     chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, filter, extraInfoSpec);
 }
 
