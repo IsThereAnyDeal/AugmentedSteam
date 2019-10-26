@@ -481,13 +481,14 @@ class SteamStore extends Api {
     }
 
     static async currency() {
-        let self = SteamStore;
-        let cache = CacheStorage.get('currency', 3600);
-        if (cache) return cache;
-        let currency = await self.currencyFromWallet();
-        if (!currency) { currency = await self.currencyFromApp(); }
+        let currency = CacheStorage.get("currency", 3600);
+        if (currency) return currency;
+
+        currency = await SteamStore.currencyFromWallet();
+        if (!currency) { currency = await SteamStore.currencyFromApp(); }
         if (!currency) { throw new Error("Could not retrieve store currency"); }
-        CacheStorage.set('currency', currency);
+
+        CacheStorage.set("currency", currency);
         return currency;
     }
 
@@ -820,7 +821,6 @@ class Steam {
         return self._supportedCurrencies;
     }
 }
-Steam._dynamicstore_promise = null;
 Steam._supportedCurrencies = null;
 
 class IndexedDB {
