@@ -695,7 +695,7 @@ let Currency = (function() {
     self.customCurrency = null;
     self.storeCurrency = null;
 
-    let _toCurrencies;
+    let _rates;
     let _promise = null;
 
     function getCurrencyFromDom() {
@@ -749,34 +749,35 @@ let Currency = (function() {
         }
     }
 
+    async function _getRates() {
+        let toCurrencies = [self.storeCurrency,];
+        if (self.customCurrency !== self.storeCurrency) {
+            toCurrencies.push(self.customCurrency);
+        }
+        _rates = await Background.action("rates", toCurrencies);
+    }
+
     // load user currency
     self.init = function() {
         if (_promise) { return _promise; }
         return _promise = CurrencyRegistry
             .then(_getCurrency)
-            .then(() => {
-                _toCurrencies = [self.storeCurrency,];
-                if (self.customCurrency !== self.storeCurrency) {
-                    _toCurrencies.push(self.customCurrency);
-                }
-            })
+            .then(_getRates)
             .catch(e => {
                 console.error("Failed to initialize Currency");
                 console.error(e);
             });
-            ;
     };
 
     self.then = function(onDone, onCatch) {
         return self.init().then(onDone, onCatch);
     };
 
-    self.getRate = async function(from, to) {
+    self.getRate = function(from, to) {
         if (from === to) { return 1; }
 
-        let rates = await Background.action("rates", from, _toCurrencies);
-        if (rates && rates[to]) {
-            return rates[to];
+        if (_rates[from] && _rates[from][to]) {
+            return _rates[from][to];
         }
 
         return null;
@@ -820,31 +821,31 @@ let Price = (function() {
 
     // Not currently in use
     // totalValue = totalValue.add(somePrice)
-    Price.prototype.add = async function(otherPrice) {
+    Price.prototype.add = function(otherPrice) {
         if (otherPrice.currency !== this.currency) {
-            otherPrice = await otherPrice.inCurrency(this.currency);
+            otherPrice = otherPrice.inCurrency(this.currency);
         }
         return new Price(this.value + otherPrice.value, this.currency);
     };
 
-    Price.prototype.inCurrency = async function(desiredCurrency) {
+    Price.prototype.inCurrency = function(desiredCurrency) {
         if (this.currency === desiredCurrency) {
             return new Price(this.value, this.currency);
         }
-        let rate = await Currency.getRate(this.currency, desiredCurrency);
+        let rate = Currency.getRate(this.currency, desiredCurrency);
         if (!rate) {
             throw `Could not establish conversion rate between ${this.currency} and ${desiredCurrency}`;
         }
         return new Price(this.value * rate, desiredCurrency);
     };
 
-    Price.parseFromString = async function(str, desiredCurrency) {
+    Price.parseFromString = function(str, desiredCurrency) {
         let currency = CurrencyRegistry.fromString(str);
         let value = currency.valueOf(str);
         if (value !== null) {
             value = new Price(value, currency.abbr);
             if (currency.abbr !== desiredCurrency) {
-                value = await value.inCurrency(desiredCurrency);
+                value = value.inCurrency(desiredCurrency);
             }
         }
         return value;
@@ -1978,7 +1979,7 @@ let Prices = (function(){
         return apiParams;
     };
 
-    Prices.prototype._processPrices = async function(gameid, meta, info) {
+    Prices.prototype._processPrices = function(gameid, meta, info) {
         if (!this.priceCallback) { return; }
 
         let [type, id] = gameid.split("/");
@@ -2006,7 +2007,7 @@ let Prices = (function(){
             } else {
                 lowest = new Price(priceData.price, meta.currency);
             }
-            lowest = await lowest.inCurrency(Currency.customCurrency);
+            lowest = lowest.inCurrency(Currency.customCurrency);
 
             let cutStr = '';
             if (priceData.cut > 0) {
@@ -2022,7 +2023,7 @@ let Prices = (function(){
 
             let prices = lowest.toString();
             if (Currency.customCurrency != Currency.storeCurrency) {
-                let lowest_alt = await lowest.inCurrency(Currency.storeCurrency);
+                let lowest_alt = lowest.inCurrency(Currency.storeCurrency);
                 prices += ` (${lowest_alt.toString()})`;
             }
             let pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
@@ -2040,12 +2041,12 @@ let Prices = (function(){
             hasData = true;
             let lowestData = info.lowest;
 
-            let historical = await new Price(lowestData.price, meta.currency).inCurrency(Currency.customCurrency);
+            let historical = new Price(lowestData.price, meta.currency).inCurrency(Currency.customCurrency);
             let recorded = new Date(info.lowest.recorded * 1000);
 
             let prices = historical.toString();
             if (Currency.customCurrency !== Currency.storeCurrency) {
-                let historical_alt = await historical.inCurrency(Currency.storeCurrency);
+                let historical_alt = historical.inCurrency(Currency.storeCurrency);
                 prices += ` (${historical_alt.toString()})`;
             }
             let pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
@@ -2080,7 +2081,7 @@ let Prices = (function(){
         }
     };
 
-    Prices.prototype._processBundles = async function(meta, info) {
+    Prices.prototype._processBundles = function(meta, info) {
         if (!this.bundleCallback) { return; }
         if (info.bundles.live.length == 0) { return; }
 
@@ -2137,7 +2138,7 @@ let Prices = (function(){
                 purchase += '<b>';
                 if (bundle.tiers.length > 1) {
                     let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    let tierPrice = (await new Price(tier.price, meta.currency).inCurrency(Currency.customCurrency)).toString();
+                    let tierPrice = (new Price(tier.price, meta.currency).inCurrency(Currency.customCurrency)).toString();
 
                     purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice).replace("__num__", tier.games.length);
                 } else {
@@ -2169,7 +2170,7 @@ let Prices = (function(){
             purchase += '\n<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
                 purchase += '<div class="game_purchase_price price" itemprop="price">';
-                    purchase += (await new Price(bundlePrice, meta.currency).inCurrency(Currency.customCurrency)).toString();
+                    purchase += (new Price(bundlePrice, meta.currency).inCurrency(Currency.customCurrency)).toString();
                 purchase += '</div>';
             }
 

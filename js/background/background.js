@@ -159,7 +159,7 @@ class AugmentedSteamApi extends Api {
         CacheStorage.remove(`app_${appid}`);
     }
 
-    static rates(from, to) { return IndexedDB.get("rates", from, { "to": to.sort().join(',') }) }
+    static rates(to) { return IndexedDB.getAll("rates", { "to": to.sort().join(',') }) }
     static isEA(appids) { return IndexedDB.contains("earlyAccessAppids", appids) }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;

@@ -392,14 +392,14 @@ class StorePageClass {
                 promises.push(promise);
             });
 
-            Promise.all(promises).then(async () => {
+            Promise.all(promises).then(() => {
 
                 let node = document.querySelector("input[name=subid][value='"+subid+"']")
                     .closest(".game_area_purchase_game_wrapper,#game_area_purchase,.sale_page_purchase_item")
                     .querySelector(".game_purchase_action");
 
                 let apiPrice = prices[User.getCountry().toLowerCase()];
-                let priceLocal = await new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
+                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
 
                 let pricingDiv = document.createElement("div");
                 pricingDiv.classList.add("es_regional_container");
@@ -409,13 +409,13 @@ class StorePageClass {
                     HTML.inner(pricingDiv, pricingDiv.innerHTML + '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>');
                 }
 
-                countries.forEach(async country => {
+                countries.forEach(country => {
                     let apiPrice = prices[country];
                     let html = "";
 
                     if (apiPrice) {
                         let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency);
-                        let priceUser = await priceRegion.inCurrency(Currency.customCurrency);
+                        let priceUser = priceRegion.inCurrency(Currency.customCurrency);
 
 
                         let percentageIndicator = "equal";
@@ -500,7 +500,7 @@ class SubPageClass extends StorePageClass {
     }
 
     subscriptionSavingsCheck() {
-        setTimeout(async () => {
+        setTimeout(() => {
             let notOwnedTotalPrice = 0;
 
             for (let node of document.querySelectorAll(".tab_item:not(.ds_owned)")) {
@@ -509,7 +509,7 @@ class SubPageClass extends StorePageClass {
                 if (priceNode) {
                     let priceContainer = priceNode.textContent.trim();
                     if (priceContainer) { 
-                        let price = await Price.parseFromString(priceContainer, Currency.storeCurrency);
+                        let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
                         if (price) {
                             notOwnedTotalPrice += price.value;
                             continue;
@@ -530,7 +530,7 @@ class SubPageClass extends StorePageClass {
 
             if (notOwnedTotalPrice !== null) {
                 let priceNodes = document.querySelectorAll(".package_totals_area .price");
-                let packagePrice = await Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
+                let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
                 if (!packagePrice) { return; }
 
                 notOwnedTotalPrice -= packagePrice.value;
