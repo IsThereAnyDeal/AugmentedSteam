@@ -538,7 +538,7 @@
         "nobody": "Hiç kimse henüz bu oyun için performans araştırmasını almamıştır.",
         "take": "Anketimize Katılın"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "İstek Listesindeki DLC'yi seç",
         "none": "Hiçbirini Seçme",
         "unowned_dlc": "Sahip olunmayan DLC Seç"

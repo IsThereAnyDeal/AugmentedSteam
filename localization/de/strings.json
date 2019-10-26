@@ -479,7 +479,8 @@
         "nobody": "Noch niemand hat die Leistungsumfrage für dieses Spiel abgeschlossen.",
         "take": "Nimm an der Umfrage teil"
     },
-    "select": {
+    "dlc_select": {
+        "select": "Auswählen",
         "wishlisted_dlc": "DLC von der Wunschliste auswählen",
         "none": "Keines Auswählen",
         "unowned_dlc": "DLC auswählen, den du noch nicht besitzt"

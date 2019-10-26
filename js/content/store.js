@@ -586,9 +586,6 @@ class AppPageClass extends StorePageClass {
 
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
-
-        // Required for "Customize" button and YouTube / Steam tabs
-        DOMHelper.insertHomeCSS();
         
         this.forceVideoMP4();
         this.initHdPlayer();
@@ -624,6 +621,7 @@ class AppPageClass extends StorePageClass {
         this.addFamilySharingWarning();
         this.removeAboutLink();
 
+        this.addPackBreakdown();
         this.addPackageInfoButton();
         this.addStats().then(this.customizeAppPage);
 
@@ -1847,10 +1845,10 @@ class AppPageClass extends StorePageClass {
         let expandedNode = document.querySelector("#game_area_dlc_expanded");
 
         if (expandedNode) {
-            HTML.afterEnd(expandedNode,  "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
+            HTML.afterEnd(expandedNode, `<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>${Localization.str.add_selected_dlc_to_cart}</span></a></div></div>`);
             HTML.afterEnd(".game_area_dlc_section", "<div style='clear: both;'></div>");
         } else {
-            HTML.afterEnd(".gameDlcBlocks", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
+            HTML.afterEnd(".gameDlcBlocks", `<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>${Localization.str.add_selected_dlc_to_cart}</span></a></div></div>`);
         }
 
         let form = document.createElement("form");
@@ -1861,7 +1859,7 @@ class AppPageClass extends StorePageClass {
 
         let button = document.querySelector("#es_selected_btn");
         button.insertAdjacentElement("beforebegin", form);
-        button.addEventListener("click", function(){
+        button.addEventListener("click", function() {
             document.querySelector("form[name=add_selected_dlc_to_cart]").submit();
         });
 
@@ -1871,7 +1869,7 @@ class AppPageClass extends StorePageClass {
 
                 HTML.afterBegin(
                     dlc.querySelector(".game_area_dlc_name"),
-                    "<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + value + "' value='" + value + "'><label for='es_select_dlc_" + value + "' style='background-image: url( " + ExtensionResources.getURL("img/check_sheet.png") + ");'></label>");
+                    `<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_${value}' value='${value}'><label for='es_select_dlc_${value}' style='background-image: url(${ExtensionResources.getURL("img/check_sheet.png")})'></label>`);
             } else {
                 dlc.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
             }
@@ -1880,33 +1878,38 @@ class AppPageClass extends StorePageClass {
         HTML.afterEnd(".game_area_dlc_section .gradientbg", "<div style='height: 28px; padding-left: 15px; display: none;' id='es_dlc_option_panel'></div>");
 
         HTML.afterBegin("#es_dlc_option_panel",
-            `<div class='es_dlc_option' id='unowned_dlc_check'>${Localization.str.select.unowned_dlc}</div>
-             <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.select.wishlisted_dlc}</div>
-             <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.select.none}</div>`);
+            `<div class='es_dlc_option' id='unowned_dlc_check'>${Localization.str.dlc_select.unowned_dlc}</div>
+             <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.dlc_select.wishlisted_dlc}</div>
+             <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.dlc_select.none}</div>`);
 
-        document.querySelector("#unowned_dlc_check").addEventListener("click", function () {
+        let change = new Event("change", {"bubbles": true});
+
+        document.querySelector("#unowned_dlc_check").addEventListener("click", function() {
             let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row:not(.ds_owned) input:not(:checked)");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                nodes[i].checked = true;
+            for (let node of nodes) {
+                node.checked = true;
+                node.dispatchEvent(change);
             }
         });
 
-        document.querySelector("#wl_dlc_check").addEventListener("click", function(){
+        document.querySelector("#wl_dlc_check").addEventListener("click", function() {
             let nodes = document.querySelectorAll(".game_area_dlc_section .ds_wishlist input:not(:checked)");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                nodes[i].checked = true;
+            for (let node of nodes) {
+                node.checked = true;
+                node.dispatchEvent(change);
             }
         });
 
-        document.querySelector("#no_dlc_check").addEventListener("click", function(){
+        document.querySelector("#no_dlc_check").addEventListener("click", function() {
             let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row input:checked");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                nodes[i].checked = false;
+            for (let node of nodes) {
+                node.checked = false;
+                node.dispatchEvent(change);
             }
         });
 
         HTML.beforeEnd(".game_area_dlc_section .gradientbg",
-            "<a id='es_dlc_option_button'>" + Localization.str.thewordoptions + " ▾</a>");
+            `<a id='es_dlc_option_button'>${Localization.str.dlc_select.select} ▼</a>`);
 
         document.querySelector("#es_dlc_option_button").addEventListener("click", function() {
             document.querySelector("#es_dlc_option_panel")
@@ -1914,15 +1917,16 @@ class AppPageClass extends StorePageClass {
 
             let button = document.querySelector("#es_dlc_option_button");
 
-            button.textContent = (button.textContent.match("▾")
-                ? Localization.str.thewordoptions + " ▴"
-                : Localization.str.thewordoptions + " ▾");
+            button.textContent = (button.textContent.match("▼")
+                ? `${Localization.str.dlc_select.select} ▲`
+                : `${Localization.str.dlc_select.select} ▼`);
         });
 
-        document.querySelector(".game_area_dlc_section").addEventListener("change", function(e){
+        document.querySelector(".game_area_dlc_section").addEventListener("change", function(e) {
             if (!e.target.classList.contains("es_dlc_selection")) { return; }
 
             let cartNode = document.querySelector("#es_selected_cart");
+            cartNode.innerHTML = "";
 
             let inputAction = document.createElement("input");
             inputAction.type = "hidden";
@@ -1938,15 +1942,14 @@ class AppPageClass extends StorePageClass {
             cartNode.appendChild(inputSessionId);
 
             let nodes = document.querySelectorAll(".es_dlc_selection:checked");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            for (let node of nodes) {
 
-                let input = document.createElement("input");
-                input.setAttribute("type", "hidden");
-                input.setAttribute("name", "subid[]");
-                input.setAttribute("value", node.value);
+                let inputSubId = document.createElement("input");
+                inputSubId.setAttribute("type", "hidden");
+                inputSubId.setAttribute("name", "subid[]");
+                inputSubId.setAttribute("value", node.value);
 
-                cartNode.insertAdjacentElement("beforeend", input);
+                cartNode.insertAdjacentElement("beforeend", inputSubId);
             }
 
             let button = document.querySelector("#es_selected_btn");
@@ -2095,9 +2098,9 @@ class AppPageClass extends StorePageClass {
         let nodes = document.querySelectorAll(".purchase_area_spacer");
         HTML.beforeEnd(nodes[nodes.length-1],
             `<div id="es_customize_btn" class="home_actions_ctn">
-                <div class="home_btn home_customize_btn" style="z-index: 13;">${ Localization.str.customize }</div>
+                <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
                 <div class='home_viewsettings_popup'>
-                    <div class='home_viewsettings_instructions' style='font-size: 12px;'>${ Localization.str.apppage_sections }</div>
+                    <div class="home_viewsettings_instructions" style="font-size: 12px;">${Localization.str.apppage_sections}</div>
                 </div>
             </div>
             <div style="clear: both;"></div>`);
@@ -2199,8 +2202,15 @@ class AppPageClass extends StorePageClass {
     addPackBreakdown() {
 
         function splitPack(node, ways) {
-            let price_text = node.querySelector(".discount_final_price").innerHTML;
-            if (price_text == null) { price_text = node.querySelector(".game_purchase_price").innerHTML; }
+            if (node.querySelector(".btn_packageinfo")) { return; }
+
+            let price_text;
+            let priceNode = node.querySelector(".discount_final_price");
+            if (priceNode) {
+                price_text = priceNode.textContent;
+            } else {
+                price_text = node.querySelector(".game_purchase_price").textContent;
+            }
             if (price_text.match(/,\d\d(?!\d)/)) {
                 price_text = price_text.replace(",", ".");
             }
@@ -2215,32 +2225,29 @@ class AppPageClass extends StorePageClass {
                 </div>`);
         }
 
-        let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-
+        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
             let title = node.querySelector("h1").textContent.trim();
             title = title.toLowerCase().replace(/-/g, ' ');
             if (!title || !title.includes('pack')) return;
             if (title.includes('pack') && title.includes('season')) return;
 
-            if (title.includes(' 2 pack') && !title.includes('bioshock')) { splitPack.call(node, 2); }
-            else if (title.includes(' two pack')) { splitPack.call(node, 2); }
-            else if (title.includes('tower wars friend pack')) { splitPack.call(node, 2); }
+            if (title.includes(' 2 pack')) { splitPack(node, 2); }
+            else if (title.includes(' two pack')) { splitPack(node, 2); }
+            else if (title.includes('tower wars friend pack')) { splitPack(node, 2); }
 
-            else if (title.includes(' 3 pack') && !title.includes('doom 3')) { splitPack.call(node, 3); }
-            else if (title.includes(' three pack')) { splitPack.call(node, 3); }
-            else if (title.includes('tower wars team pack')) { splitPack.call(node, 3); }
+            else if (title.includes(' 3 pack')) { splitPack(node, 3); }
+            else if (title.includes(' three pack')) { splitPack(node, 3); }
+            else if (title.includes('tower wars team pack')) { splitPack(node, 3); }
 
-            else if (title.includes(' 4 pack')) { splitPack.call(node, 4); }
-            else if (title.includes(' four pack')) { splitPack.call(node, 4); }
-            else if (title.includes(' clan pack')) { splitPack.call(node, 4); }
+            else if (title.includes(' 4 pack')) { splitPack(node, 4); }
+            else if (title.includes(' four pack')) { splitPack(node, 4); }
+            else if (title.includes(' clan pack')) { splitPack(node, 4); }
 
-            else if (title.includes(' 5 pack')) { splitPack.call(node, 5); }
-            else if (title.includes(' five pack')) { splitPack.call(node, 5); }
+            else if (title.includes(' 5 pack')) { splitPack(node, 5); }
+            else if (title.includes(' five pack')) { splitPack(node, 5); }
 
-            else if (title.includes(' 6 pack')) { splitPack.call(node, 6); }
-            else if (title.includes(' six pack')) { splitPack.call(node, 6); }
+            else if (title.includes(' 6 pack')) { splitPack(node, 6); }
+            else if (title.includes(' six pack')) { splitPack(node, 6); }
         }
     }
 }

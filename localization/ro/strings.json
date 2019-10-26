@@ -468,7 +468,7 @@
         "nobody": "Nimeni nu a participat încă în sondajul de performanță pentru acest joc.",
         "take": "Participă în sondaj"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Selectează DLC-uri dorite",
         "none": "Deselectează tot",
         "unowned_dlc": "Selectează DLC-uri neposedate"

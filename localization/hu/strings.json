@@ -468,7 +468,7 @@
         "nobody": "Még senki nem töltötte ki a teljesítmény kérdőívet ezzel a játékkal kapcsolatban.",
         "take": "Töltsd ki a kérdőívet"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Kívánságlistán szereplő DLC-k kiválasztása",
         "none": "Kiválasztás törlése",
         "unowned_dlc": "Nem birtokolt DLC-k kiválasztása"

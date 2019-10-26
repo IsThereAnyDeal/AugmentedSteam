@@ -38,6 +38,11 @@
 
 <div id="page">
     <div id="side_bar">
+        <div class="tab_row" data-block-sel="#maincontent_general">
+            <div class="category sidebar_entry">
+                <div data-locale-text="options.general">General</div>
+            </div>
+        </div>
         <div class="tab_row selected" data-block-sel="#maincontent_store">
             <div class="category sidebar_entry">
                 <div data-locale-text="store">Store</div>
@@ -73,6 +78,47 @@
 
     <div id="contentwrapper">
         <div class="content selected">
+
+            <!-- General -->
+            <div id="maincontent_general">
+                <h1 data-locale-text="options.general">General</h1>
+                <div class="settings">
+                    <div id="context_menu_section" class="content_section">
+                        <h2 data-locale-text="options.context_menu">Context Menu</h2>
+                        
+                        <div class="option">
+                            <input type="checkbox" id="context_steam_store" data-setting="context_steam_store">
+                            <label for="context_steam_store" data-locale-text="options.context_steam_store">Search Steam Store for '...'</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="context_steam_market" data-setting="context_steam_market">
+                            <label for="context_steam_market" data-locale-text="options.context_steam_market">Search Steam Market for '...'</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="context_itad" data-setting="context_itad">
+                            <label for="context_itad" data-locale-text="options.context_itad">Search IsThereAnyDeal for '...'</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="context_bartervg" data-setting="context_bartervg">
+                            <label for="context_bartervg" data-locale-text="options.context_bartervg">Search Barter.vg for '...'</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="context_steamdb" data-setting="context_steamdb">
+                            <label for="context_steamdb" data-locale-text="options.context_steamdb">Search SteamDB for '...'</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="context_steamdb_instant" data-setting="context_steamdb_instant">
+                            <label for="context_steamdb_instant" data-locale-text="options.context_steamdb_instant">Instant Search SteamDB for '...'</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="context_steam_keys" data-setting="context_steam_keys">
+                            <label for="context_steam_keys" data-locale-text="options.context_steam_keys">Activate steam keys within selection</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Store -->
             <div id="maincontent_store">
                 <h1 data-locale-text="store">Store</h1>
                 <div class="settings">
@@ -662,6 +708,10 @@
                         <div class="option">
                             <input type="checkbox" id="profile_steamtrades" data-setting="profile_steamtrades">
                             <label for="profile_steamtrades"><i class="es_sites_icons es_steamtrades_icon"></i>SteamTrades</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="profile_bartervg" data-setting="profile_bartervg">
+                            <label for="profile_bartervg"><i class="es_sites_icons es_bartervg_icon"></i>Barter.vg</label>
                         </div>
                         <div class="option">
                             <input type="checkbox" id="profile_astats" data-setting="profile_astats">

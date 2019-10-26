@@ -1,5 +1,5 @@
 const Info = {
-    'version': "1.3.0",
+    'version': "1.3.1",
     'db_version': 1,
 };
 
@@ -435,6 +435,9 @@ class SyncedStorage {
             for (let [key, { newValue: val, }] of Object.entries(changes)) {
                 this.cache[key] = val;
             }
+            if (typeof ContextMenu === "function" && Object.keys(changes).some(key => key.startsWith("context_"))) {
+                ContextMenu.update();
+            }
         });
 
         let storage = await this.adapter.get(null);
@@ -623,6 +626,7 @@ SyncedStorage.defaults = {
     'profile_steamrepcn': true,
     'profile_steamgifts': true,
     'profile_steamtrades': true,
+    'profile_bartervg': true,
     'profile_steamrep': true,
     'profile_steamdbcalc': true,
     'profile_astats': true,
@@ -648,6 +652,14 @@ SyncedStorage.defaults = {
     'itad_import_library': true,
     'itad_import_wishlist': false,
     'add_to_waitlist': false,
+    
+    'context_steam_store': false,
+    'context_steam_market': false,
+    'context_itad': false,
+    'context_bartervg': false,
+    'context_steamdb': false,
+    'context_steamdb_instant': false,
+    'context_steam_keys': false,
 };
 
 
