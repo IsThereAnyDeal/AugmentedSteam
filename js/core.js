@@ -251,6 +251,10 @@ class UpdateHandler {
             SyncedStorage.remove("html5video");
             SyncedStorage.remove("showclient");
         }
+
+        if (oldVersion.isSameOrBefore("1.3.1")) {
+            browser.runtime.sendMessage({ "action": "cache.clear" }) // todo Implement general background communication class
+        }
     }
 }
 
@@ -652,7 +656,7 @@ SyncedStorage.defaults = {
     'itad_import_library': true,
     'itad_import_wishlist': false,
     'add_to_waitlist': false,
-    
+
     'context_steam_store': false,
     'context_steam_market': false,
     'context_itad': false,

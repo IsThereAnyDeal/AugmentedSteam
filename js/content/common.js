@@ -969,8 +969,6 @@ let EnhancedSteam = (function() {
         localStorage.clear();
         SyncedStorage.remove("user_currency");
         SyncedStorage.remove("store_sessionid");
-        DynamicStore.clear();
-        Background.action('dynamicstore.clear');
         Background.action('cache.clear');
     };
 
