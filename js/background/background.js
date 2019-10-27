@@ -737,12 +737,12 @@ Steam._dynamicstore_promise = null;
 Steam._supportedCurrencies = null;
 
 // When redirecting to Steam Community, if the game does not actually exist, onHeadersReceived would normally trigger an infinite redirection loop. To avoid that, we store the IDs of the requests that have already been redirected here.
-let webRequests = [];
+let webRequests = new Set();
 
 function onHeadersReceived(details) {
     let response = {};
 
-    if (details.statusCode === 302 && webRequests.indexOf(details.requestId) < 0) {
+    if (details.statusCode === 302 && !webRequests.has(details.requestId)) {
         let matches = details.url.match(/(app|sub)\/(\d+)/);
 
         if (matches) {
@@ -765,8 +765,10 @@ function onHeadersReceived(details) {
                     break;
             }
 
-            webRequests.push(details.requestId);
+            webRequests.add(details.requestId);
         }
+    } else {
+        webRequests.delete(details.requestId);
     }
 
     return response;
