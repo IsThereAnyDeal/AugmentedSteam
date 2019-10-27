@@ -801,7 +801,7 @@ function removeWebRequestListeners() {
 }
 
 function hasWebRequestListeners() {
-    return chrome.webRequest.onHeadersReceived.hasListener(onHeadersReceived) && chrome.webRequest.onCompleted.hasListener(onHeadersReceived);
+    return chrome.webRequest.onHeadersReceived.hasListener(onHeadersReceived) && chrome.webRequest.onCompleted.hasListener(onRequestCompleted);
 }
 
 function onPermissionsAdded(message) {
