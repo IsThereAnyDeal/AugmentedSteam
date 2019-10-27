@@ -3106,14 +3106,13 @@ let MarketPageClass = (function(){
 
     }
 
-    // TODO cache data
     async function loadMarketStats() {
-
-        let purchaseTotal = 0;
-        let saleTotal = 0;
+        let { startListing, purchaseTotal, saleTotal } = LocalStorage.get("market_stats", { startListing: null, purchaseTotal: 0, saleTotal: 0 });
+        let curStartListing = null;
         let transactions = new Set();
+        let stop = false;
 
-        function updatePrices(dom) {
+        function updatePrices(dom, start) {
 
             let nodes = dom.querySelectorAll(".market_listing_row");
             for (let node of nodes) {
@@ -3127,6 +3126,11 @@ let MarketPageClass = (function(){
                 } else {
                     console.error('Could not find id of transaction', node);
                 }
+                // If reached cached data, then stop.
+                if (node.id === startListing) {
+                    stop = true;
+                    break;
+                }
                 let type = node.querySelector(".market_listing_gainorloss").textContent;
                 let isPurchase;
                 if (type.includes("+")) {
@@ -3135,6 +3139,9 @@ let MarketPageClass = (function(){
                     isPurchase = false;
                 } else {
                     continue;
+                }
+                if (!curStartListing && start === 0) {
+                    curStartListing = node.id;
                 }
 
                 let priceNode = node.querySelector(".market_listing_price");
@@ -3170,7 +3177,6 @@ let MarketPageClass = (function(){
         const pageSize = 500;
         let pages = -1;
         let currentPage = 0;
-        let currentCount = 0;
         let totalCount = null;
         let pageRequests = [];
         let failedRequests = 0;
@@ -3210,7 +3216,7 @@ let MarketPageClass = (function(){
 
         try {
             pageRequests.push({ 'start': 0, 'attempt': 0, 'lastAttempt': 0, });
-            while (pageRequests.length > 0) {
+            while (pageRequests.length > 0 && !stop) {
                 let t = await nextRequest();
                 if (pages < 0 && t > 0) {
                     totalCount = t;
@@ -3223,11 +3229,14 @@ let MarketPageClass = (function(){
                 progressNode.textContent = `${++currentPage}${failedRequests > 0 ? -failedRequests : ''}/${pages < 0 ? "?" : pages} (${transactions.size}/${totalCount})`;
             }
         } catch (err) {
+            failedRequests += 1;
             console.error(err);
         }
 
-        if (failedRequests == 0) {
+        if (failedRequests === 0) {
             progressNode.textContent = '';
+            startListing = curStartListing;
+            LocalStorage.set("market_stats", { startListing, purchaseTotal, saleTotal });
             return true;
         }
 
@@ -4147,4 +4156,3 @@ let EditGuidePageClass = (function(){
     EnhancedSteam.hideTrademarkSymbol(true);
 
 })();
-
