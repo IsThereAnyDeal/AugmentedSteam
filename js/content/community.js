@@ -3161,8 +3161,8 @@ let MarketPageClass = (function(){
             let saleTotalPrice = new Price(saleTotal, Currency.storeCurrency);
             HTML.inner(
                 "#es_market_summary",
-                `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
-                <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
+                `<div>${Localization.str.purchase_total} <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
+                <div>${Localization.str.sales_total} <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
                 <div>${netText}<span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
             );
         }
