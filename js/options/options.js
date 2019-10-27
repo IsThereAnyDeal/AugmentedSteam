@@ -451,7 +451,9 @@ let Options = (function(){
 
                 let parentOption = node.closest(".parent_option");
                 if (parentOption && parentOption.dataset.dropdownTrigger) {
-                    let disabled = value !== parentOption.dataset.dropdownTrigger;
+                    // Only enable the sub option if the checkbox is checked.
+                    let checkbox = parentOption.querySelector("input");
+                    let disabled = !checkbox.checked || value !== parentOption.dataset.dropdownTrigger;
                     for (let nextSibling = parentOption.nextElementSibling; nextSibling && nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
                         nextSibling.classList.toggle("disabled", disabled);
                     }
@@ -717,18 +719,29 @@ let Options = (function(){
         });
 
         document.querySelectorAll(".parent_option").forEach(parentOption => {
-            // Check if the option has a sub option that gets triggered by a dropdown.
-            if (parentOption.dataset.dropdownTrigger) {
-                parentOption.querySelector("select").addEventListener("change", event => {
-                    let disabled = event.currentTarget.value !== parentOption.dataset.dropdownTrigger;
+            let checkbox = parentOption.querySelector("input");
+            let dropdown = parentOption.querySelector("select");
+
+            checkbox.addEventListener("change", () => {
+                // If the option has a sub option that gets triggered by a dropdown, only enable it if the checkbox is checked.
+                if (parentOption.dataset.dropdownTrigger && dropdown) {
+                    let disabled = !checkbox.checked || dropdown.value !== parentOption.dataset.dropdownTrigger;
                     for (let nextSibling = parentOption.nextElementSibling; nextSibling && nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
                         nextSibling.classList.toggle("disabled", disabled);
                     }
-                });
-            } else {
-                parentOption.querySelector("input").addEventListener("change", () => {
+                } else {
                     for (let nextSibling = parentOption.nextElementSibling; nextSibling && nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
                         nextSibling.classList.toggle("disabled");
+                    }                    
+                }
+            });
+
+            // Check if the option has a sub option that gets triggered by a dropdown.
+            if (parentOption.dataset.dropdownTrigger && dropdown) {
+                dropdown.addEventListener("change", () => {
+                    let disabled = !checkbox.checked || dropdown.value !== parentOption.dataset.dropdownTrigger;
+                    for (let nextSibling = parentOption.nextElementSibling; nextSibling && nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
+                        nextSibling.classList.toggle("disabled", disabled);
                     }
                 });
             }
