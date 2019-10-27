@@ -3112,6 +3112,12 @@ let MarketPageClass = (function(){
         let transactions = new Set();
         let stop = false;
 
+        // If startListing is missing, reset cached data to avoid inaccurate results.
+        if (startListing === null && (purchaseTotal > 0 || saleTotal > 0)) {
+            purchaseTotal = 0;
+            saleTotal = 0;
+        }
+
         function updatePrices(dom, start) {
 
             let nodes = dom.querySelectorAll(".market_listing_row");
@@ -3126,11 +3132,6 @@ let MarketPageClass = (function(){
                 } else {
                     console.error('Could not find id of transaction', node);
                 }
-                // If reached cached data, then stop.
-                if (node.id === startListing) {
-                    stop = true;
-                    break;
-                }
                 let type = node.querySelector(".market_listing_gainorloss").textContent;
                 let isPurchase;
                 if (type.includes("+")) {
@@ -3142,6 +3143,11 @@ let MarketPageClass = (function(){
                 }
                 if (!curStartListing && start === 0) {
                     curStartListing = node.id;
+                }
+                // If reached cached data, then stop.
+                if (node.id === startListing) {
+                    stop = true;
+                    break;
                 }
 
                 let priceNode = node.querySelector(".market_listing_price");
@@ -3235,8 +3241,7 @@ let MarketPageClass = (function(){
 
         if (failedRequests === 0) {
             progressNode.textContent = '';
-            startListing = curStartListing;
-            LocalStorage.set("market_stats", { startListing, purchaseTotal, saleTotal });
+            LocalStorage.set("market_stats", { startListing: curStartListing, purchaseTotal, saleTotal });
             return true;
         }
 
