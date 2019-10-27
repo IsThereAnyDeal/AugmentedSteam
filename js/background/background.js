@@ -736,7 +736,7 @@ class Steam {
 Steam._dynamicstore_promise = null;
 Steam._supportedCurrencies = null;
 
-// When redirecting to Steam Community, if the game does not actually exist, onHeadersReceived would normally trigger an infinite redirection loop. To avoid that, we store the IDs of the requests that have already been redirected here.
+// When redirecting to Steam Community, if the game does not actually exist, onHeadersReceived would normally trigger an infinite redirection loop. To avoid that, we temporarily store the IDs of the requests that have already been redirected here.
 let webRequests = new Set();
 
 function onHeadersReceived(details) {
@@ -751,6 +751,7 @@ function onHeadersReceived(details) {
 
             switch (SyncedStorage.get('redirect_removed_to')) {
                 case 'community':
+                    webRequests.add(details.requestId);
                     response.redirectUrl = `https://steamcommunity.com/${type}/${id}`;
                     break;
                 case 'steamdb':
@@ -764,8 +765,6 @@ function onHeadersReceived(details) {
                 default:
                     break;
             }
-
-            webRequests.add(details.requestId);
         }
     } else {
         webRequests.delete(details.requestId);
@@ -774,37 +773,45 @@ function onHeadersReceived(details) {
     return response;
 }
 
-function addWebRequestListener() {
-    let filter = {
-        types: ['main_frame'], // Only requests triggered by the user through regular navigation.
-        urls: ['*://*.store.steampowered.com/app/*', '*://*.store.steampowered.com/sub/*'],
-    };
+function onRequestCompleted(details) {
+    webRequests.delete(details.requestId);
+}
+
+function addWebRequestListeners() {
     let extraInfoSpec = ['blocking'];
 
     if (Info.browser === 'chrome') {
         extraInfoSpec.push('extraHeaders'); // Required since Chrome v72.
     }
 
-    chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, filter, extraInfoSpec);
+    chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, {
+      types: ['main_frame'], // Only requests triggered by the user through regular navigation.
+      urls: ['*://*.store.steampowered.com/app/*', '*://*.store.steampowered.com/sub/*'],
+    }, extraInfoSpec);
+    chrome.webRequest.onCompleted.addListener(onRequestCompleted, {
+      types: ['main_frame'],
+      urls: ['*://*.steamcommunity.com/*'],
+    });
 }
 
-function removeWebRequestListener() {
+function removeWebRequestListeners() {
     chrome.webRequest.onHeadersReceived.removeListener(onHeadersReceived);
+    chrome.webRequest.onCompleted.removeListener(onRequestCompleted);
 }
 
-function hasWebRequestListener() {
-    return chrome.webRequest.onHeadersReceived.hasListener(onHeadersReceived);
+function hasWebRequestListeners() {
+    return chrome.webRequest.onHeadersReceived.hasListener(onHeadersReceived) && chrome.webRequest.onCompleted.hasListener(onHeadersReceived);
 }
 
 function onPermissionsAdded(message) {
-    if (!!chrome.webRequest && !hasWebRequestListener()) {
-        addWebRequestListener();
+    if (!!chrome.webRequest && !hasWebRequestListeners()) {
+        addWebRequestListeners();
     }
 }
 
 function onPermissionsRemoved(message) {
-    if (!!chrome.webRequest && hasWebRequestListener()) {
-        removeWebRequestListener();
+    if (!!chrome.webRequest && hasWebRequestListeners()) {
+        removeWebRequestListeners();
     }
 }
 
@@ -897,5 +904,5 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 });
 
 if (!!chrome.webRequest) {
-    addWebRequestListener();
+    addWebRequestListeners();
 }
