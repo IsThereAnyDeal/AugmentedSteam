@@ -3106,14 +3106,19 @@ let MarketPageClass = (function(){
 
     }
 
-    // TODO cache data
     async function loadMarketStats() {
-
-        let purchaseTotal = 0;
-        let saleTotal = 0;
+        let { startListing, purchaseTotal, saleTotal } = LocalStorage.get("market_stats", { startListing: null, purchaseTotal: 0, saleTotal: 0 });
+        let curStartListing = null;
         let transactions = new Set();
+        let stop = false;
 
-        function updatePrices(dom) {
+        // If startListing is missing, reset cached data to avoid inaccurate results.
+        if (startListing === null && (purchaseTotal > 0 || saleTotal > 0)) {
+            purchaseTotal = 0;
+            saleTotal = 0;
+        }
+
+        function updatePrices(dom, start) {
 
             let nodes = dom.querySelectorAll(".market_listing_row");
             for (let node of nodes) {
@@ -3135,6 +3140,14 @@ let MarketPageClass = (function(){
                     isPurchase = false;
                 } else {
                     continue;
+                }
+                if (!curStartListing && start === 0) {
+                    curStartListing = node.id;
+                }
+                // If reached cached data, then stop.
+                if (node.id === startListing) {
+                    stop = true;
+                    break;
                 }
 
                 let priceNode = node.querySelector(".market_listing_price");
@@ -3161,8 +3174,8 @@ let MarketPageClass = (function(){
             let saleTotalPrice = new Price(saleTotal, Currency.storeCurrency);
             HTML.inner(
                 "#es_market_summary",
-                `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
-                <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
+                `<div>${Localization.str.purchase_total} <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
+                <div>${Localization.str.sales_total} <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
                 <div>${netText}<span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
             );
         }
@@ -3170,7 +3183,6 @@ let MarketPageClass = (function(){
         const pageSize = 500;
         let pages = -1;
         let currentPage = 0;
-        let currentCount = 0;
         let totalCount = null;
         let pageRequests = [];
         let failedRequests = 0;
@@ -3210,7 +3222,7 @@ let MarketPageClass = (function(){
 
         try {
             pageRequests.push({ 'start': 0, 'attempt': 0, 'lastAttempt': 0, });
-            while (pageRequests.length > 0) {
+            while (pageRequests.length > 0 && !stop) {
                 let t = await nextRequest();
                 if (pages < 0 && t > 0) {
                     totalCount = t;
@@ -3223,15 +3235,17 @@ let MarketPageClass = (function(){
                 progressNode.textContent = `${++currentPage}${failedRequests > 0 ? -failedRequests : ''}/${pages < 0 ? "?" : pages} (${transactions.size}/${totalCount})`;
             }
         } catch (err) {
+            failedRequests += 1;
             console.error(err);
         }
 
-        if (failedRequests == 0) {
+        if (failedRequests === 0) {
             progressNode.textContent = '';
+            LocalStorage.set("market_stats", { startListing: curStartListing, purchaseTotal, saleTotal });
             return true;
         }
 
-        progressNode.textContent = `${failedRequests} request(s) failed. Retrieved ${transactions.size} of ${totalCount} transactions.`; // FIXME Localize
+        progressNode.textContent = Localization.str.transactionStatus.replace("__failed__", failedRequests).replace("__size__", transactions.size).replace("__total__", totalCount);
         return false;
     }
 
@@ -4147,4 +4161,3 @@ let EditGuidePageClass = (function(){
     EnhancedSteam.hideTrademarkSymbol(true);
 
 })();
-
