@@ -582,7 +582,7 @@ SyncedStorage.defaults = {
     'show_itad_button': false,
     'skip_got_steam': false,
 
-    'redirect_removed': false,
+    'redirect_removed': true,
     'redirect_removed_to': 'community',
     'redirect_removed_custom': 'https://steamcommunity.com/[TYPE]/[ID]',
 

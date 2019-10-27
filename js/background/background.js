@@ -805,15 +805,9 @@ function hasWebRequestListeners() {
 }
 
 function onPermissionsAdded(message) {
-    if (chrome.webRequest && !hasWebRequestListeners()) {
-        addWebRequestListeners();
-    }
 }
 
 function onPermissionsRemoved(message) {
-    if (chrome.webRequest && hasWebRequestListeners()) {
-        removeWebRequestListeners();
-    }
 }
 
 let profileCacheKey = (params => `profile_${params.profile}`);
@@ -904,6 +898,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     return true;
 });
 
-if (chrome.webRequest) {
+if (chrome.webRequest && !hasWebRequestListeners()) {
     addWebRequestListeners();
 }

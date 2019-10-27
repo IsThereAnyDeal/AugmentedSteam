@@ -15,14 +15,14 @@
   },
   "permissions": [
     "storage",
+    "webRequest",
+    "webRequestBlocking",
     "*://*.steampowered.com/*",
     "*://steamcommunity.com/*",
     "*://*.isthereanydeal.com/"
   ],
   "optional_permissions": [
-    "contextMenus",
-    "webRequest",
-    "webRequestBlocking"
+    "contextMenus"
   ],
   "web_accessible_resources": [
     "img/*.png",
