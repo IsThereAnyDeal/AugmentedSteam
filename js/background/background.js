@@ -751,9 +751,11 @@ function onHeadersReceived(details) {
 
             switch (SyncedStorage.get('redirect_removed_to')) {
                 case 'community':
-                    webRequests.add(details.requestId);
-                    response.redirectUrl = `https://steamcommunity.com/${type}/${id}`;
-                    break;
+                    if (type === 'app') {
+                      webRequests.add(details.requestId);
+                      response.redirectUrl = `https://steamcommunity.com/${type}/${id}`;
+                      break;
+                    }
                 case 'steamdb':
                     response.redirectUrl = `https://steamdb.info/${type}/${id}`;
                     break;
