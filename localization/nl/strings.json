@@ -1,4 +1,5 @@
 {
+    "transactionStatus": "__failed__ verzoek(en) gefaald. __size__ van de __total__ transacties ontvangen.",
     "custom_tags": "Aangepaste Tags",
     "add_tag": "Voeg tag toe",
     "enter_tag": "Voer de aangepaste tag in die u wilt toevoegen",

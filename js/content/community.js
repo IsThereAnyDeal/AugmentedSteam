@@ -3231,7 +3231,7 @@ let MarketPageClass = (function(){
             return true;
         }
 
-        progressNode.textContent = `${failedRequests} request(s) failed. Retrieved ${transactions.size} of ${totalCount} transactions.`; // FIXME Localize
+        progressNode.textContent = Localization.str.transactionStatus.replace("__failed__", failedRequests).replace("__size__", transactions.size).replace("__total__", totalCount);
         return false;
     }
 
