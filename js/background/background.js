@@ -751,6 +751,7 @@ function onHeadersReceived(details) {
 
             switch (SyncedStorage.get('redirect_removed_to')) {
                 case 'community':
+                    // Subs do not have a community page. In that case, we redirect to SteamDB instead.
                     if (type === 'app') {
                         webRequests.add(details.requestId);
                         response.redirectUrl = `https://steamcommunity.com/${type}/${id}`;
@@ -785,12 +786,12 @@ function addWebRequestListeners() {
     }
 
     chrome.webRequest.onHeadersReceived.addListener(onHeadersReceived, {
-      types: ['main_frame'], // Only requests triggered by the user through regular navigation.
-      urls: ['*://*.store.steampowered.com/app/*', '*://*.store.steampowered.com/sub/*'],
+        types: ['main_frame'], // Only requests triggered by the user through regular navigation.
+        urls: ['*://*.store.steampowered.com/app/*', '*://*.store.steampowered.com/sub/*'],
     }, extraInfoSpec);
     chrome.webRequest.onCompleted.addListener(onRequestCompleted, {
-      types: ['main_frame'],
-      urls: ['*://*.steamcommunity.com/*'],
+        types: ['main_frame'],
+        urls: ['*://*.steamcommunity.com/*'],
     });
 }
 
