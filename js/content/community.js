@@ -1020,6 +1020,7 @@ let GroupHomePageClass = (function(){
 
     function GroupHomePageClass() {
         this.addGroupLinks();
+        this.addFriendsInviteButton();
     }
 
     GroupHomePageClass.prototype.addGroupLinks = function() {
@@ -1063,6 +1064,22 @@ let GroupHomePageClass = (function(){
         }
 
     };
+
+    GroupHomePageClass.prototype.addFriendsInviteButton = function() {
+        if (!User.isSignedIn) { return; }
+
+        let button = document.getElementById("grouppage_join_area");
+        if (button) { return; }
+
+        let groupId = GroupID.getGroupId();
+        HTML.afterEnd("#join_group_form", 
+            `<div class="grouppage_join_area">
+                <a class="btn_blue_white_innerfade btn_medium" href="https://steamcommunity.com/my/friends/?invitegid=${groupId}">
+                    <span><img src="//steamcommunity-a.akamaihd.net/public/images/groups/icon_invitefriends.png">&nbsp; Invite Friends </span>
+                </a>
+            </div>`);
+    };
+    
     return GroupHomePageClass;
 })();
 
