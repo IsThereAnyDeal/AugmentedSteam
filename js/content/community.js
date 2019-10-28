@@ -2924,6 +2924,7 @@ let FriendsPageClass = (function(){
 
     function FriendsPageClass() {
         this.addSort();
+        this.addFriendsInviteButton();
     }
 
     FriendsPageClass.prototype.addSort = async function() {
@@ -2995,6 +2996,22 @@ let FriendsPageClass = (function(){
         });
 
         sortFriends(SyncedStorage.get("sortfriendsby"));
+    };
+
+    FriendsPageClass.prototype.addFriendsInviteButton = async function() {
+        let params = new URLSearchParams(window.location.search);
+        if (!params.has("invitegid")) { return; }
+
+        let groupId = params.get("invitegid");
+        HTML.afterBegin("#manage_friends > div:nth-child(2)", `<span class="manage_action btnv6_lightblue_blue btn_medium" id="invitetogroup"><span>Invite To Group</span></span>`);
+        ExtensionLayer.runInPageContext(`function(){
+            ToggleManageFriends();
+            $J("#invitetogroup").on("click", function() {
+                let groupId = "${groupId}";
+                let friends = GetCheckedAccounts("#search_results > .selectable.selected:visible");
+                InviteUserToGroup(null, groupId, friends);
+            });
+        }`);
     };
 
     return FriendsPageClass;
