@@ -1,4 +1,6 @@
 {
+    "invite_friends": "Invite Friends",
+    "invite_to_group": "Invite To Group",
     "transactionStatus": "__failed__ request(s) failed. Retrieved __size__ of __total__ transactions.",
     "custom_tags": "Custom Tags",
     "add_tag": "Add tag",

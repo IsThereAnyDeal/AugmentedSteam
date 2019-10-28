@@ -1075,7 +1075,7 @@ let GroupHomePageClass = (function(){
         HTML.afterEnd("#join_group_form", 
             `<div class="grouppage_join_area">
                 <a class="btn_blue_white_innerfade btn_medium" href="https://steamcommunity.com/my/friends/?invitegid=${groupId}">
-                    <span><img src="//steamcommunity-a.akamaihd.net/public/images/groups/icon_invitefriends.png">&nbsp; Invite Friends </span>
+                    <span><img src="//steamcommunity-a.akamaihd.net/public/images/groups/icon_invitefriends.png">&nbsp; ${Localization.str.invite_friends}</span>
                 </a>
             </div>`);
     };
@@ -3003,7 +3003,7 @@ let FriendsPageClass = (function(){
         if (!params.has("invitegid")) { return; }
 
         let groupId = params.get("invitegid");
-        HTML.afterBegin("#manage_friends > div:nth-child(2)", `<span class="manage_action btnv6_lightblue_blue btn_medium" id="invitetogroup"><span>Invite To Group</span></span>`);
+        HTML.afterBegin("#manage_friends > div:nth-child(2)", `<span class="manage_action btnv6_lightblue_blue btn_medium" id="invitetogroup"><span>${Localization.str.invite_to_group}</span></span>`);
         ExtensionLayer.runInPageContext(`function(){
             ToggleManageFriends();
             $J("#invitetogroup").on("click", function() {

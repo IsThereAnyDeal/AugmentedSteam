@@ -1,4 +1,6 @@
 {
+    "invite_friends": "Vrienden Uitnodigen",
+    "invite_to_group": "Naar Groep Uitnodigen",
     "transactionStatus": "__failed__ verzoek(en) gefaald. __size__ van de __total__ transacties ontvangen.",
     "custom_tags": "Aangepaste Tags",
     "add_tag": "Voeg tag toe",
