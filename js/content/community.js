@@ -1068,7 +1068,7 @@ let GroupHomePageClass = (function(){
     GroupHomePageClass.prototype.addFriendsInviteButton = function() {
         if (!User.isSignedIn) { return; }
 
-        let button = document.getElementById("grouppage_join_area");
+        let button = document.querySelector(".grouppage_join_area");
         if (button) { return; }
 
         let groupId = GroupID.getGroupId();
