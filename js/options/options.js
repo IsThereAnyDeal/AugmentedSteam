@@ -668,6 +668,11 @@ let Options = (function(){
             }
         });
 
+        document.getElementById("clear_countries").addEventListener("click", () => {
+            document.querySelectorAll(".regional_country").forEach(node => node.value = "");
+            saveOption("regional_countries");
+        });
+
         document.getElementById("reset_countries").addEventListener("click", loadDefaultCountries);
 
         document.getElementById("region_selects").addEventListener("change", e => {
