@@ -78,7 +78,7 @@ class CustomLinks {
         node = insertionPoint.insertAdjacentElement('beforebegin', node);
 
         node.addEventListener('change', CustomLinks.save);
-        node.querySelector('.custom-link__close')
+        node.querySelector('.custom-link__close[name="profile_custom_remove"]')
             .addEventListener('click', CustomLinks.remove, false);
     }
 
@@ -387,6 +387,7 @@ let Options = (function(){
             return `<div class="country_parent">
             <span class='es_flag ${countryClass}'></span>
             <select class='regional_country'>${options}</select>
+            <button type="button" name="profile_custom_remove" class="custom-link__close"></button>
             </div>`;
         }
 
@@ -671,6 +672,14 @@ let Options = (function(){
         document.getElementById("clear_countries").addEventListener("click", () => {
             document.querySelectorAll(".regional_country").forEach(node => node.value = "");
             saveOption("regional_countries");
+        });
+        
+        document.querySelectorAll(".country_parent .custom-link__close").forEach(node => {
+            node.addEventListener("click", e => {
+                let select = e.target.closest(".country_parent").querySelector(".regional_country");
+                select.value = "";
+                saveOption("regional_countries");
+            }, false);
         });
 
         document.getElementById("reset_countries").addEventListener("click", loadDefaultCountries);
