@@ -396,12 +396,22 @@ let Options = (function(){
             let countries = SyncedStorage.get("regional_countries");
             countries.forEach(country => {
                 HTML.beforeBegin(addAnotherWrapper, generateRegionSelect(country));
+                addAnotherWrapper.previousSibling.querySelector(".custom-link__close").addEventListener("click", e => {
+                    let select = e.target.closest(".country_parent").querySelector(".regional_country");
+                    select.value = "";
+                    saveOption("regional_countries");
+                }, false);
             });
         };
 
         self.addRegionSelector = function () {
             let addAnotherWrapper = document.querySelector("#add_another_region").parentNode;
             HTML.beforeBegin(addAnotherWrapper, generateRegionSelect());
+            addAnotherWrapper.previousSibling.querySelector(".custom-link__close").addEventListener("click", e => {
+                let select = e.target.closest(".country_parent").querySelector(".regional_country");
+                select.value = "";
+                saveOption("regional_countries");
+            }, false);
         };
 
         return self;
@@ -672,14 +682,6 @@ let Options = (function(){
         document.getElementById("clear_countries").addEventListener("click", () => {
             document.querySelectorAll(".regional_country").forEach(node => node.value = "");
             saveOption("regional_countries");
-        });
-        
-        document.querySelectorAll(".country_parent .custom-link__close").forEach(node => {
-            node.addEventListener("click", e => {
-                let select = e.target.closest(".country_parent").querySelector(".regional_country");
-                select.value = "";
-                saveOption("regional_countries");
-            }, false);
         });
 
         document.getElementById("reset_countries").addEventListener("click", loadDefaultCountries);
