@@ -2214,7 +2214,7 @@ class AppPageClass extends StorePageClass {
     addHorizontalScrolling() {
 
         let sliders = document.querySelectorAll(".store_autoslider");
-        if (sliders.length === 0 || !SyncedStorage.get("horizontalmediascrolling")) { return; }
+        if (sliders.length === 0 || !SyncedStorage.get("horizontalscrolling")) { return; }
 
         for (let slider of sliders) {
             let lastScroll = Date.now();

@@ -381,7 +381,7 @@
         "regional_price_on": "Show regional price comparison",
         "cart": "Items in your cart",
         "friends_own": "Items your friends own",
-        "horizontalmediascrolling": "Enable horizontal scrolling of media on app pages with scroll wheel",
+        "horizontalscrolling": "Enable horizontal scrolling on app pages with scroll wheel",
         "supportinfo": "Show support info on store pages",
         "drm": "Show 3rd-party DRM warnings",
         "profile_permalink": "Show permalink on profiles",

@@ -585,7 +585,7 @@ SyncedStorage.defaults = {
     'send_age_info': true,
     'mp4video': false,
     'contscroll': true,
-    'horizontalmediascrolling': true,
+    'horizontalscrolling': true,
     'showsupportinfo': true,
     'showdrm': true,
     'regional_hideworld': false,
