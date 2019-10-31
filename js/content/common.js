@@ -758,7 +758,7 @@ let Price = (function() {
         }
         let rate = Currency.getRate(this.currency, desiredCurrency);
         if (!rate) {
-            throw `Could not establish conversion rate between ${this.currency} and ${desiredCurrency}`;
+            throw new Error(`Could not establish conversion rate between ${this.currency} and ${desiredCurrency}`);
         }
         return new Price(this.value * rate, desiredCurrency);
     };

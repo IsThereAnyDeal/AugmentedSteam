@@ -399,7 +399,15 @@ class StorePageClass {
                     .querySelector(".game_purchase_action");
 
                 let apiPrice = prices[User.getCountry().toLowerCase()];
-                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
+                let priceLocal;
+                try {
+                    priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
+                } catch(err) {
+                    console.group("Regional pricing");
+                    console.error(err);
+                    console.warn("Can't show relative price differences to any other currencies");
+                    console.groupEnd();
+                }
 
                 let pricingDiv = document.createElement("div");
                 pricingDiv.classList.add("es_regional_container");
@@ -415,25 +423,38 @@ class StorePageClass {
 
                     if (apiPrice) {
                         let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency);
-                        let priceUser = priceRegion.inCurrency(Currency.customCurrency);
-
-
-                        let percentageIndicator = "equal";
-                        let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
-
-                        if (percentage < 0) {
-                            percentage = Math.abs(percentage);
-                            percentageIndicator = "lower";
-                        } else if (percentage > 0) {
-                            percentageIndicator = "higher";
+                        let priceUser;
+                        try {
+                            priceUser = priceRegion.inCurrency(Currency.customCurrency);
+                        } catch(err) {
+                            console.group("Regional pricing");
+                            console.error(err);
+                            console.warn(`Not able to show converted price and relative price differences for country code "%s"`, country.toUpperCase());
+                            console.groupEnd();
                         }
 
                         html =
                             `<div class="es_regional_price es_flag es_flag_${country}">
                                 ${priceRegion}
-                                <span class="es_regional_converted">(${priceUser})</span>
-                                <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>
-                            </div>`;
+                            `;
+
+                        if (priceLocal && priceUser) {
+                            let percentageIndicator = "equal";
+                            let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
+
+                            if (percentage < 0) {
+                                percentage = Math.abs(percentage);
+                                percentageIndicator = "lower";
+                            } else if (percentage > 0) {
+                                percentageIndicator = "higher";
+                            }
+
+                            html +=
+                                `<span class="es_regional_converted">(${priceUser})</span>
+                                <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>`
+                        }
+                        
+                        html += "</div>";
                     } else {
                         html =
                             `<div class="es_regional_price es_flag es_flag_${country}">
