@@ -898,7 +898,9 @@ let EnhancedSteam = (function() {
         function gotop() {
             let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
             let timer = setInterval(function () {
-                if (scrollHeight <= 0.1){
+                if (scrollHeight <= 0.2) {
+                    document.body.scrollTop = 0; // For Safari
+                    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
                     clearInterval(timer);
                 }
                 document.body.scrollTop = scrollHeight; // For Safari
