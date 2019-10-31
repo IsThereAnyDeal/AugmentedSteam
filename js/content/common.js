@@ -889,6 +889,30 @@ let EnhancedSteam = (function() {
 
     };
 
+    self.addBackToTop = function() {
+        HTML.afterBegin("body", `<div class="btn_darkblue_white_innerfade btn_medium_tall es_btt"><span>&#x2191;</span></div>`);
+        let node = document.querySelector(".es_btt");
+        node.onclick = gotop;
+        window.onscroll = scrolling;
+
+        function gotop() {
+            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
+            let timer = setInterval(function () {
+                if (scrollHeight <= 0.1){
+                    clearInterval(timer);
+                }
+                document.body.scrollTop = scrollHeight; // For Safari
+                document.documentElement.scrollTop = scrollHeight; // For Chrome, Firefox, IE and Opera
+                scrollHeight -= scrollHeight / 20;
+            }, 10);
+        }
+
+        function scrolling() {
+            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
+            node.style.opacity = Math.min(Math.max((scrollHeight - 200) / 800, 0), 1);
+        }
+    };
+
     self.clearCache = function() {
         localStorage.clear();
         SyncedStorage.remove("user_currency");
@@ -2135,6 +2159,7 @@ let Common = (function(){
         ProgressBar.create();
         ProgressBar.loading();
         UpdateHandler.checkVersion(EnhancedSteam.clearCache);
+        EnhancedSteam.addBackToTop();
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
         EnhancedSteam.handleInstallSteamButton();
