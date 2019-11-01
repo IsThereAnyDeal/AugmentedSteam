@@ -7,76 +7,16 @@ class ITAD {
             `<div id="es_itad">
                 <img id="es_itad_logo" src="${ExtensionResources.getURL("img/itad.png")}" height="20px">
                 <span id="es_itad_status"></span>
-                <div class="es-itad-hover">
-                    <div class="es-itad-hover__content"></div>
-                    <div class="es-itad-hover__arrow"></div>
-                </div>
             </div>`);
 
-        let itadDiv = document.querySelector("#es_itad");
-
-        let hover = document.querySelector(".es-itad-hover");
-        let content = document.querySelector(".es-itad-hover__content");
-        let lastImport;
-
-        itadDiv.addEventListener("mouseenter", async () => {
-            if (!lastImport) {
-                HTML.inner(content,
-                    `<p class="es-itad-hover__last-import"></p>
-                    <div class="es-itad-hover__import-now">
-                        <span class="es-itad-hover__import-now-text">${Localization.str.itad.import_now}</span>
-                        <div class="loader"></div>
-                        <span class="es-itad-hover__import-failed">&#10060;</span>
-                        <span class="es-itad-hover__import-success">&#10003;</span>
-                    </div>`);
-
-                let importDiv = document.querySelector(".es-itad-hover__import-now");
-                document.querySelector(".es-itad-hover__import-now-text").addEventListener("click", async () => {
-                    importDiv.classList.remove("es-itad-hover__import-now--failed", "es-itad-hover__import-now--success");
-                    importDiv.classList.add("es-itad-hover__import-now--loading");
-                    hover.style.display = "block";
-
-                    let timeout;
-
-                    try {
-                        await Background.action("itad.import", true);
-                        importDiv.classList.add("es-itad-hover__import-now--success");
-                        await updateLastImport();
-                        
-                        timeout = 1000;
-                    } catch(err) {
-                        importDiv.classList.add("es-itad-hover__import-now--failed");
-
-                        console.group();
-                        console.error("Failed to import to ITAD");
-                        console.error(err);
-                        console.groupEnd();
-
-                        timeout = 3000;
-                    } finally {
-                        setTimeout(() => hover.style.display = '', timeout);
-                        importDiv.classList.remove("es-itad-hover__import-now--loading");
-                    }
-                });
-
-                lastImport = document.querySelector(".es-itad-hover__last-import");
-            }
-
-            await updateLastImport();
-        });
-
-        async function updateLastImport() {
-            let timestamp = await Background.action("itad.lastimport");
-            HTML.inner(lastImport, `<i>${Localization.str.itad.last_import}</i>: ${timestamp ? new Date(timestamp * 1000).toLocaleString() : Localization.str.never}`);
-        }
-
         let connected = await Background.action("itad.isconnected");
-        
+        let itadDiv = document.querySelector("#es_itad");
         let itadStatus = itadDiv.querySelector("#es_itad_status");
         
         if (connected) {
             itadStatus.textContent = '\u2713';
             itadDiv.classList.add("authorized");
+            itadDiv.addEventListener("mouseenter", ITAD.onHover);
             if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
                 Background.action("itad.import");
             }
@@ -94,9 +34,9 @@ class ITAD {
             try {
                 await Background.action("itad.authorize", StringUtils.hashCode(sessionId));
             } catch(err) {
-                console.group();
-                console.error("Failed to authorize to ITAD");
+                console.group("ITAD authorization");
                 console.error(err);
+                console.error("Failed to authorize to ITAD");
                 console.groupEnd();
                 return;
             }
@@ -107,6 +47,7 @@ class ITAD {
             itadStatus.textContent = '\u2713';
             itadDiv.classList.add("authorized");
             itadDiv.classList.remove("not_authorized");
+            itadDiv.addEventListener("mouseenter", ITAD.onHover);
             itadDiv.removeEventListener("click", ITAD.authorize);
             
             if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
@@ -114,6 +55,62 @@ class ITAD {
             }
         } else {
             console.error("Can't retrieve Session ID, unable to authorize app");
+        }
+    }
+
+    static async onHover() {
+        if (!document.querySelector(".es-itad-hover")) {
+            HTML.afterEnd("#es_itad_status",
+                `<div class="es-itad-hover">
+                    <div class="es-itad-hover__content">
+                        <p class="es-itad-hover__last-import"></p>
+                        <div class="es-itad-hover__import-now">
+                            <span class="es-itad-hover__import-now-text">${Localization.str.itad.import_now}</span>
+                            <div class="loader"></div>
+                            <span class="es-itad-hover__import-failed">&#10060;</span>
+                            <span class="es-itad-hover__import-success">&#10003;</span>
+                        </div>
+                    </div>
+                    <div class="es-itad-hover__arrow"></div>
+                </div>`);
+
+            let hover = document.querySelector(".es-itad-hover");
+
+            let importDiv = document.querySelector(".es-itad-hover__import-now");
+            document.querySelector(".es-itad-hover__import-now-text").addEventListener("click", async () => {
+                importDiv.classList.remove("es-itad-hover__import-now--failed", "es-itad-hover__import-now--success");
+                importDiv.classList.add("es-itad-hover__import-now--loading");
+                hover.style.display = "block";
+
+                let timeout;
+
+                try {
+                    await Background.action("itad.import", true);
+                    importDiv.classList.add("es-itad-hover__import-now--success");
+                    await updateLastImport();
+                    
+                    timeout = 1000;
+                } catch(err) {
+                    importDiv.classList.add("es-itad-hover__import-now--failed");
+
+                    console.group("ITAD import");
+                    console.error(err);
+                    console.error("Failed to import to ITAD");
+                    console.groupEnd();
+
+                    timeout = 3000;
+                } finally {
+                    setTimeout(() => hover.style.display = '', timeout);
+                    importDiv.classList.remove("es-itad-hover__import-now--loading");
+                }
+            });
+        }
+
+        await updateLastImport();
+
+        async function updateLastImport() {
+            let timestamp = await Background.action("itad.lastimport");
+            HTML.inner(".es-itad-hover__last-import", `<i>${Localization.str.itad.last_import}</i>: ${timestamp ? new Date(timestamp * 1000).toLocaleString() : Localization.str.never}`);
         }
     }
 
