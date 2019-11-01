@@ -1303,9 +1303,9 @@ class AppPageClass extends StorePageClass {
             if (!result) return;
             
             HTML.afterEnd(".queue_overflow_ctn",
-                `<div class="game_area_already_owned page_content">
-                    <div class="ds_owned_flag ds_flag">${Localization.str.coll.in_collection.toUpperCase()}&nbsp;&nbsp;</div>
-                    <div class="already_in_library">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", result.map(store => `<strong>${store}</strong>`).join(", "))}</div>
+                `<div class="game_area_already_owned page_content" style="background-image: linear-gradient(to right, #856d0e 0%, #d1a906 100%);">
+                    <div class="ds_owned_flag ds_flag" style="background-color: #856d0e;">${Localization.str.coll.in_collection.toUpperCase()}&nbsp;&nbsp;</div>
+                    <div class="already_in_library" style="color: #ffe000;">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", result.map(store => `<strong>${store}</strong>`).join(", "))}</div>
                 </div>`)
         })
     }
