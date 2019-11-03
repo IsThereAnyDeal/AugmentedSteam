@@ -7,7 +7,7 @@ This is an extension repository, find [server repository here](https://github.co
 
 We are commited to continue it's development, after the [original extension](https://github.com/jshackles/Enhanced_Steam) has ended its life.
 
-Visit [extension's page](https://es.isthereanydeal.com/) or our [Discord channel](https://discord.gg/yn57q7f) for more info. 
+Visit [extension's page](https://es.isthereanydeal.com/), [steam group](https://steamcommunity.com/groups/augmentedsteam) or our [Discord channel](https://discord.gg/yn57q7f) for more info. 
 
 License
 -------

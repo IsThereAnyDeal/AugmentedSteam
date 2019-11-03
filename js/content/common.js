@@ -860,6 +860,7 @@ let EnhancedSteam = (function() {
                         <a class="popup_menu_item" target="_blank" href="https://es.isthereanydeal.com/">${Localization.str.website}</a>
                         <a class="popup_menu_item" target="_blank" href="https://isthereanydeal.com/">IsThereAnyDeal</a>
                         <a class="popup_menu_item" target="_blank" href="https://discord.gg/yn57q7f">Discord</a>
+                        <a class="popup_menu_item" target="_blank" href="https://steamcommunity.com/groups/augmentedsteam">${Localization.str.official_group}</a>
                     </div>
                 </div>
             </div>
