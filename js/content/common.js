@@ -892,13 +892,15 @@ let EnhancedSteam = (function() {
     self.addBackToTop = function() {
         HTML.afterBegin("body", `<div class="btn_darkblue_white_innerfade btn_medium_tall es_btt"><span>&#x2191;</span></div>`);
         let node = document.querySelector(".es_btt");
+        let prevScrollHeight, timer;
         node.onclick = gotop;
         window.onscroll = scrolling;
+        scrolling();
 
         function gotop() {
             let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
-            let timer = setInterval(function () {
-                if (scrollHeight <= 0.2) {
+            timer = setInterval(function() {
+                if (scrollHeight <= 1) {
                     document.body.scrollTop = 0; // For Safari
                     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
                     clearInterval(timer);
@@ -911,6 +913,10 @@ let EnhancedSteam = (function() {
 
         function scrolling() {
             let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
+            if (prevScrollHeight && prevScrollHeight < scrollHeight) {
+                clearInterval(timer);
+            }
+            prevScrollHeight = scrollHeight;
             node.style.opacity = Math.min(Math.max((scrollHeight - 200) / 800, 0), 1);
         }
     };
