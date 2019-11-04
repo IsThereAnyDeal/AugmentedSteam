@@ -1011,7 +1011,22 @@ class AppPageClass extends StorePageClass {
             document.querySelector("#add_to_wishlist_area_success span").lastChild.textContent = ` ${text}`;
         }
 
-        wishlistArea.querySelector("a").addEventListener("click", onWishlistHandler);
+        wishlistArea.querySelector("a").addEventListener("click", () => {
+            Messenger.onMessage("wishlistAdded").then(() => {
+                wishlisted = !wishlisted;
+                updateDiv();
+            });
+
+            ExtensionLayer.runInPageContext(() =>
+                $J(document).ajaxComplete(function handler(e, xhr, { url }) {
+                    if (url === "https://store.steampowered.com/api/addtowishlist") {
+                        Messenger.postMessage("wishlistAdded");
+                        $J(document).unbind("ajaxComplete", handler);
+                    }
+                })
+            );
+        });
+        
         wishlistSuccessArea.addEventListener("click", async () => {
             await this._removeFromWishlist();
             wishlisted = false;
@@ -1028,8 +1043,6 @@ class AppPageClass extends StorePageClass {
                 wishlisted = !wishlisted;
                 updateDiv();
             } else {
-                onWishlistHandler();
-
                 wishlistArea.querySelector("a").click();
             }
         });
@@ -1045,19 +1058,7 @@ class AppPageClass extends StorePageClass {
         });
 
         function onWishlistHandler() {
-            Messenger.onMessage("wishlistAdded").then(() => {
-                wishlisted = !wishlisted;
-                updateDiv();
-            });
-
-            ExtensionLayer.runInPageContext(() =>
-                $J(document).ajaxComplete(function handler(e, xhr, { url }) {
-                    if (url === "https://store.steampowered.com/api/addtowishlist") {
-                        Messenger.postMessage("wishlistAdded");
-                        $J(document).unbind("ajaxComplete", handler);
-                    }
-                })
-            );
+            
         }
     }
 
