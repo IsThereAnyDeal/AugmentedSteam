@@ -591,7 +591,7 @@ class AppPageClass extends StorePageClass {
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
-        this.addWaitlistButton();
+        this.addWaitlistDropdown();
         this.addNewQueueButton();
         this.addFullscreenScreenshotView();
 
@@ -807,7 +807,6 @@ class AppPageClass extends StorePageClass {
      */
     addWishlistRemove() {
         if (!User.isSignedIn) { return; }
-        let appid = this.appid;
 
         // there is no add to wishlist button and game is not purchased yet, add required nodes
         if (!document.querySelector("#add_to_wishlist_area") && !document.querySelector(".game_area_already_owned")) {
@@ -816,7 +815,7 @@ class AppPageClass extends StorePageClass {
 
             let wishlistArea = document.querySelector("#add_to_wishlist_area_success");
             DOMHelper.wrap(wishlistArea, firstButton);
-            HTML.beforeBegin(wishlistArea,  `<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist(${appid}, \\"add_to_wishlist_area\\", \\"add_to_wishlist_area_success\\", \\"add_to_wishlist_area_fail\\", \\"1_5_9__407\\" );'><span>${Localization.str.add_to_wishlist}</span></a></div>`);
+            HTML.beforeBegin(wishlistArea,  `<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist(${this.appid}, \\"add_to_wishlist_area\\", \\"add_to_wishlist_area_success\\", \\"add_to_wishlist_area_fail\\", \\"1_5_9__407\\" );'><span>${Localization.str.add_to_wishlist}</span></a></div>`);
             HTML.beforeBegin(wishlistArea, `<div id='add_to_wishlist_area_fail' style='display: none;'></div>`);
         }
 
@@ -831,18 +830,19 @@ class AppPageClass extends StorePageClass {
             `<img class='es-remove-wl' src='${ExtensionResources.getURL("img/remove.png")}' style='display:none' />
              <img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
 
-        successNode.addEventListener("click", function(e){
+        successNode.addEventListener("click", e => {
             e.preventDefault();
 
             let parent = successNode.parentNode;
             if (!parent.classList.contains("loading")) {
                 parent.classList.add("loading");
 
-                let formData = new FormData();
-                formData.append("sessionid", User.getSessionId());
-                formData.append("appid", appid)
+                let removeWaitlist = !!document.querySelector(".queue_btn_wishlist + .queue_btn_ignore_menu.owned_elsewhere");
 
-                RequestData.post("https://store.steampowered.com/api/removefromwishlist", formData, {withCredentials: true}).then(response => {
+                Promise.all([
+                    this._removeFromWishlist(),
+                    removeWaitlist ? Promise.resolve() : Promise.resolve(), // todo Remove from waitlist
+                ]).then(() => {
                     document.querySelector("#add_to_wishlist_area").style.display = "inline";
                     document.querySelector("#add_to_wishlist_area_success").style.display = "none";
 
@@ -861,6 +861,14 @@ class AppPageClass extends StorePageClass {
         for (let i=0, len=nodes.length; i<len; i++) {
             nodes[i].addEventListener("click", DynamicStore.clear);
         }
+    }
+
+    async _removeFromWishlist() {
+        let formData = new FormData();
+        formData.append("sessionid", User.getSessionId());
+        formData.append("appid", this.appid);
+
+        return RequestData.post("https://store.steampowered.com/api/removefromwishlist", formData, {withCredentials: true})
     }
 
     async addUserNote() {
@@ -909,40 +917,147 @@ class AppPageClass extends StorePageClass {
         document.querySelector("#esi-store-user-note").addEventListener("click", handler);
     }
 
-    async addWaitlistButton() {
-        if (!SyncedStorage.get("add_to_waitlist") || !await Background.action("itad.isconnected")) return;
+    async addWaitlistDropdown() {
+        if (!document.querySelector("#add_to_wishlist_area") || !await Background.action("itad.isconnected")) return;
 
-        HTML.beforeBegin(".queue_btn_follow",
-            `<div class="queue_control_button queue_btn_waitlist">
-                <div class="btnv6_blue_hoverfade btn_medium queue_btn_inactive">
-                    <span>${Localization.str.add_to_waitlist}</span>
+        // This node will be hidden behind the dropdown menu. Also, it's not really desirable when using dropdown menus to have a permanent div floating nearby
+        let notice = document.querySelector(".wishlist_added_temp_notice");
+        if (notice) notice.remove();
+
+        let wishlistDivs = document.querySelectorAll("#add_to_wishlist_area,#add_to_wishlist_area_success");
+        let [wishlistArea, wishlistSuccessArea] = wishlistDivs;
+
+        HTML.afterEnd(".queue_actions_ctn :first-child",
+            `<div style="position: relative; display: inline-block;">
+                <div class="queue_control_button queue_btn_wishlist"></div>
+            </div>`);
+
+        // Creating a common parent for #add_to_wishlist_area and #add_to_wishlist_area_success makes it easier to apply the dropdown menu
+        let wrapper = document.querySelector(".queue_btn_wishlist");
+        wishlistDivs.forEach(div => {
+            wrapper.appendChild(div);
+            let button = div.querySelector(".btnv6_blue_hoverfade");
+            button.style.borderTopRightRadius = 0;
+            button.style.borderBottomRightRadius = 0;
+        });
+
+        HTML.afterEnd(wrapper,
+            `<div class="queue_control_button queue_btn_ignore_menu" style="display: inline;">
+                <div class="queue_ignore_menu_arrow btn_medium">
+                    <span><img src="https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded.png"></span>
                 </div>
-                <div class="btnv6_blue_hoverfade btn_medium queue_btn_active" style="display: none;">
-                    <span><img src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected.png" border="0">${Localization.str.on_waitlist}</span>
+                <div class="queue_ignore_menu_flyout">
+                    <div class="queue_ignore_menu_flyout_content">
+                        <div class="queue_ignore_menu_option" id="queue_ignore_menu_option_not_interested">
+                            <div>
+                                <img class="queue_ignore_menu_option_image selected" src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected_bright.png">
+                                <img class="queue_ignore_menu_option_image unselected" src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_unselected_bright.png">
+                            </div>
+                            <div class="queue_ignore_menu_option_label">
+                                <div class="option_title">${Localization.str.wishlist} (${Localization.str.theworddefault})</div>
+                                <div class="option_subtitle">${Localization.str.add_to_wishlist}</div>
+                            </div>
+                        </div>
+                        <div class="queue_ignore_menu_option" id="queue_ignore_menu_option_owned_elsewhere">
+                            <div>
+                                <img class="queue_ignore_menu_option_image selected" src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected_bright.png">
+                                <img class="queue_ignore_menu_option_image unselected" src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_unselected_bright.png">
+                            </div>
+                            <div class="queue_ignore_menu_option_label">
+                                <div class="option_title">Waitlist</div>
+                                <div class="option_subtitle">${Localization.str.add_to_waitlist}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div style="position: relative; display: inline-block;"></div>`); // Creates space between waitlist and follow button
+            </div>`);
 
-        let waitlistBtn = document.querySelector(".queue_btn_waitlist");
-        let [addBtn, addedBtn] = waitlistBtn.children;
-        let waitlisted = false; // todo Add check when endpoint is updated
+        let wishlisted = document.querySelector("#add_to_wishlist_area").style.display === "none";
+        let waitlisted = false; // todo endpoint
 
-        if (waitlisted) {
-            addBtn.style.display = "none";
-            addedBtn.style.display = '';
+        let menuArrow = document.querySelector(".queue_ignore_menu_arrow");
+        let menu = document.querySelector(".queue_btn_ignore_menu");
+        let wishlistOption = document.querySelector("#queue_ignore_menu_option_not_interested");
+        let waitlistOption = document.querySelector("#queue_ignore_menu_option_owned_elsewhere");
+
+        if (wishlisted || waitlisted) menuArrow.classList.add("queue_btn_active");
+        if (wishlisted) menu.classList.add("not_interested");
+        if (waitlisted) menu.classList.add("owned_elsewhere");
+
+        function updateDiv() {
+            let oneActive = wishlisted || waitlisted;
+
+            menuArrow.classList.toggle("queue_btn_active", oneActive);
+            menuArrow.classList.toggle("queue_btn_inactive", !oneActive);
+
+            menu.classList.toggle("not_interested", wishlisted);
+            menu.classList.toggle("owned_elsewhere", waitlisted);
+
+            wishlistArea.style.display = oneActive ? "none" : '';
+            wishlistSuccessArea.style.display = oneActive ? '' : "none";
+
+            let text;
+            if (wishlisted && !waitlisted) {
+                text = Localization.str.on_wishlist;
+            } else if (!wishlisted && waitlisted) {
+                text = Localization.str.on_waitlist;
+            } else if (wishlisted && waitlisted) {
+                text = `${Localization.str.on_wishlist} & ${Localization.str.on_waitlist}`;
+            } else {
+                document.querySelector("#add_to_wishlist_area_success span").textContent = ` ${Localization.str.add_to_wishlist}`;
+                return;
+            }
+            
+            document.querySelector("#add_to_wishlist_area_success span").lastChild.textContent = ` ${text}`;
         }
 
-        waitlistBtn.addEventListener("click", async () => {
-            waitlisted = !waitlisted;
-            if (waitlisted) {
-                await Background.action("itad.addtowaitlist", this.appid);
-            } else {
-                // todo Remove from waitlist
-            }
+        wishlistArea.querySelector("a").addEventListener("click", onWishlistHandler);
+        wishlistSuccessArea.addEventListener("click", async () => {
+            await this._removeFromWishlist();
+            wishlisted = false;
 
-            addBtn.style.display = waitlisted ? "none" : '';
-            addedBtn.style.display = waitlisted ? '' : "none";
+            // todo remove from waitlist
+            waitlisted = false;
+
+            updateDiv();
         });
+
+        wishlistOption.addEventListener("click", async () => {
+            if (wishlisted) {
+                await this._removeFromWishlist();
+                wishlisted = !wishlisted;
+                updateDiv();
+            } else {
+                onWishlistHandler();
+
+                wishlistArea.querySelector("a").click();
+            }
+        });
+
+        waitlistOption.addEventListener("click", () => {
+            if (waitlisted) {
+                // todo remove from waitlist
+            } else {
+                // todo add to waitlist
+            }
+            waitlisted = !waitlisted;
+            updateDiv();
+        });
+
+        function onWishlistHandler() {
+            Messenger.onMessage("wishlistAdded").then(() => {
+                wishlisted = !wishlisted;
+                updateDiv();
+            });
+
+            ExtensionLayer.runInPageContext(() =>
+                $J(document).ajaxComplete((e, xhr, { url }) => {
+                    if (url === "https://store.steampowered.com/api/addtowishlist") {
+                        Messenger.postMessage("wishlistAdded");
+                    }
+                })
+            );
+        }
     }
 
     addNewQueueButton() {

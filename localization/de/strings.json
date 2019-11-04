@@ -447,7 +447,7 @@
             "turkish": "Türkisch",
             "ukrainian": "Ukrainisch"
         },
-        "add_to_waitlist": "Zeige Schaltfläche \"Zur Waitlist hinzufügen\""
+        "add_to_waitlist": "Füge Titel auf der Wunschliste automatisch zur Waitlist hinzu"
     },
     "ready": {
         "errormsg": "Fehler beim Laden von Augmented Steam-Daten",
