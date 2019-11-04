@@ -1051,9 +1051,10 @@ class AppPageClass extends StorePageClass {
             });
 
             ExtensionLayer.runInPageContext(() =>
-                $J(document).ajaxComplete((e, xhr, { url }) => {
+                $J(document).ajaxComplete(function handler(e, xhr, { url }) {
                     if (url === "https://store.steampowered.com/api/addtowishlist") {
                         Messenger.postMessage("wishlistAdded");
+                        $J(document).unbind("ajaxComplete", handler);
                     }
                 })
             );
