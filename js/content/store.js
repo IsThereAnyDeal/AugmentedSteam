@@ -813,11 +813,14 @@ class AppPageClass extends StorePageClass {
             let firstButton = document.querySelector(".queue_actions_ctn a.queue_btn_active");
             HTML.beforeEnd(firstButton, "<div id='add_to_wishlist_area_success' style='display: inline-block;'></div>");
 
-            let wishlistArea = document.querySelector("#add_to_wishlist_area_success");
-            DOMHelper.wrap(wishlistArea, firstButton);
-            HTML.beforeBegin(wishlistArea,  `<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist(${this.appid}, \\"add_to_wishlist_area\\", \\"add_to_wishlist_area_success\\", \\"add_to_wishlist_area_fail\\", \\"1_5_9__407\\" );'><span>${Localization.str.add_to_wishlist}</span></a></div>`);
-            HTML.beforeBegin(wishlistArea, `<div id='add_to_wishlist_area_fail' style='display: none;'></div>`);
+            let wlSuccessArea = document.querySelector("#add_to_wishlist_area_success");
+            DOMHelper.wrap(wlSuccessArea, firstButton);
+            HTML.beforeBegin(wlSuccessArea,  `<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist(${this.appid}, \\"add_to_wishlist_area\\", \\"add_to_wishlist_area_success\\", \\"add_to_wishlist_area_fail\\", \\"1_5_9__407\\" );'><span>${Localization.str.add_to_wishlist}</span></a></div>`);
+            HTML.beforeBegin(wlSuccessArea, `<div id='add_to_wishlist_area_fail' style='display: none;'></div>`);
         }
+
+        let addBtn = document.querySelector("#add_to_wishlist_area > a");
+        if (!addBtn.href) addBtn.href = `javascript:AddToWishlist( ${this.appid}, 'add_to_wishlist_area', 'add_to_wishlist_area_success', 'add_to_wishlist_area_fail', null, 'add_to_wishlist_area2' );`
 
         let successNode = document.querySelector("#add_to_wishlist_area_success");
         if (!successNode) { return; }
@@ -1026,7 +1029,7 @@ class AppPageClass extends StorePageClass {
                 })
             );
         });
-        
+
         wishlistSuccessArea.addEventListener("click", async () => {
             await this._removeFromWishlist();
             wishlisted = false;
