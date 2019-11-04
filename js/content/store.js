@@ -820,7 +820,7 @@ class AppPageClass extends StorePageClass {
         }
 
         let addBtn = document.querySelector("#add_to_wishlist_area > a");
-        if (!addBtn.href) addBtn.href = `javascript:AddToWishlist( ${this.appid}, 'add_to_wishlist_area', 'add_to_wishlist_area_success', 'add_to_wishlist_area_fail', null, 'add_to_wishlist_area2' );`
+        if (addBtn && !addBtn.href) addBtn.href = `javascript:AddToWishlist( ${this.appid}, 'add_to_wishlist_area', 'add_to_wishlist_area_success', 'add_to_wishlist_area_fail', null, 'add_to_wishlist_area2' );`
 
         let successNode = document.querySelector("#add_to_wishlist_area_success");
         if (!successNode) { return; }
