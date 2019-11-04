@@ -1004,7 +1004,7 @@ class AppPageClass extends StorePageClass {
             } else if (wishlisted && waitlisted) {
                 text = `${Localization.str.on_wishlist} & ${Localization.str.on_waitlist}`;
             } else {
-                document.querySelector("#add_to_wishlist_area_success span").textContent = ` ${Localization.str.add_to_wishlist}`;
+                document.querySelector("#add_to_wishlist_area span").textContent = ` ${Localization.str.add_to_wishlist}`;
                 return;
             }
             
