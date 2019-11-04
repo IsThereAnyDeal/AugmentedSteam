@@ -1,5 +1,5 @@
 {
-	"transactionStatus": "__failed__ istek başarısız. __size__/__total__ işlem getirilebildi.",
+    "transactionStatus": "__failed__ istek başarısız. __size__/__total__ işlem getirilebildi.",
     "custom_tags": "Özel Etiketler",
     "add_tag": "Etiket ekle",
     "enter_tag": "Eklemek istediğiniz özet etiketi girin",
@@ -341,7 +341,7 @@
         "formatted_time": "__hours__ saat, __minutes__ dakika"
     },
     "options": {
-	    "context_menu": "Bağlam Menüsü",
+        "context_menu": "Bağlam Menüsü",
         "context_steam_store": "'__query__' terimini Steam Mağazası'nda ara",
         "context_steam_market": "'__query__' terimini Steam Pazarı'nda ara",
         "context_itad": "'__query__' terimini IsThereAnyDeal'de ara",
