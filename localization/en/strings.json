@@ -1,4 +1,12 @@
 {
+    "date": "Date",
+    "rating": "Rating",
+    "helpful": "Helpful",
+    "funny": "Funny",
+    "length": "Length",
+    "visibility": "Visibility",
+    "processing": "Processing...",
+    "wait": "Please wait",
     "transactionStatus": "__failed__ request(s) failed. Retrieved __size__ of __total__ transactions.",
     "custom_tags": "Custom Tags",
     "add_tag": "Add tag",
