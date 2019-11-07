@@ -1,4 +1,12 @@
 {
+    "date": "Datum",
+    "rating": "Beoordeling",
+    "helpful": "Behulpzaam",
+    "funny": "Grappig",
+    "length": "Lengte",
+    "visibility": "Zichtbaarheid",
+    "processing": "Verwerken...",
+    "wait": "Astublieft wachten",
     "transactionStatus": "__failed__ verzoek(en) gefaald. __size__ van de __total__ transacties ontvangen.",
     "custom_tags": "Aangepaste Tags",
     "add_tag": "Voeg tag toe",
