@@ -1587,6 +1587,7 @@ let RecommendedPageClass = (function(){
         let curPage = params.get("p") || 1;
         let pagecnt = 10;
         let sorted = [];
+        let allowcache = true;
 
         let sortreviewsdate = (LocalStorage.get("sortreviewsdate") || {})[steamId];
         if (sortreviewsdate && Date.now() - sortreviewsdate < 60 * 60 * 1000) { // If exists & less 1h old, use cache
@@ -1648,6 +1649,7 @@ let RecommendedPageClass = (function(){
 
         function cacheData(sortBy) {
             SyncedStorage.set("sortreviewsby", sortBy);
+            if (!allowcache) { return; }
 
             let cache = [];
             for (let i = 0; i < sorted.length; i++) {
@@ -1659,13 +1661,18 @@ let RecommendedPageClass = (function(){
                 cache.push(review);
             }
 
-            let data = LocalStorage.get("sortreviewscache") || {};
-            data[steamId] = cache;
-            LocalStorage.set("sortreviewscache", data);
+            try {
+                let data = LocalStorage.get("sortreviewscache") || {};
+                data[steamId] = cache;
+                LocalStorage.set("sortreviewscache", data);
 
-            let sortreviewsdate = LocalStorage.get("sortreviewsdate") || {};
-            sortreviewsdate[steamId] = Date.now();
-            LocalStorage.set("sortreviewsdate", sortreviewsdate);
+                let sortreviewsdate = LocalStorage.get("sortreviewsdate") || {};
+                sortreviewsdate[steamId] = Date.now();
+                LocalStorage.set("sortreviewsdate", sortreviewsdate);
+            } catch (e) {
+                console.warn("Too many reviews to cache. It will retreive data on every page refresh.");
+                allowcache = false;
+            }
         }
 
         async function sortReviews(sortBy) {
@@ -1706,9 +1713,7 @@ let RecommendedPageClass = (function(){
             displayReviews();
         }
 
-        function displayReviews() {
-            if (sorted.length === 0) { return; }
-            
+        function displayReviews() {            
             for (let node of document.querySelectorAll(".review_box")) {
                 node.remove();
             }
@@ -1740,9 +1745,12 @@ let RecommendedPageClass = (function(){
             sortReviews(e.target.dataset.esiSort);
         });
 
-        let sortreviewsby = SyncedStorage.get("sortreviewsby") || "date";
+        let sortreviewsby = "date";
+        if (sorted.length > 0) {
+            sortreviewsby = SyncedStorage.get("sortreviewsby") || "date";
+            displayReviews();            
+        }
         document.querySelector(`[data-esi-sort="${sortreviewsby}"]`).classList.toggle("es_friends_sort_link", false);
-        displayReviews();
     };
 
     return RecommendedPageClass;
