@@ -1605,11 +1605,6 @@ let RecommendedPageClass = (function(){
 
             let parser = new DOMParser();
             for (let p = 1; p <= Math.ceil(numReviews / pagecnt); p++) {
-                if (p === curPage) { 
-                    extractData(document.body.querySelectorAll(".review_box"));
-                    continue;
-                }
-
                 let url = new URL(window.location.href);
                 url.searchParams.set("p", p);
 
