@@ -1,5 +1,5 @@
 const Info = {
-    'version': "1.2.1",
+    'version': "1.3.1",
 };
 
 /**
@@ -237,6 +237,18 @@ class UpdateHandler {
             if (!SyncedStorage.get("show_profile_link_images")) {
                 SyncedStorage.set("show_profile_link_images", "none");
             }
+
+            if (SyncedStorage.get("showclient")) {
+                SyncedStorage.set("showviewinlibrary", true);
+                SyncedStorage.set("installsteam", "replace");
+            }
+
+            if (SyncedStorage.has("showlanguagewarninglanguage")) {
+                SyncedStorage.set("showlanguagewarninglanguage", SyncedStorage.get("showlanguagewarninglanguage").toLowerCase());
+            }
+
+            SyncedStorage.remove("html5video");
+            SyncedStorage.remove("showclient");
         }
     }
 }
@@ -413,6 +425,9 @@ class SyncedStorage {
             for (let [key, { 'newValue': val, }] of Object.entries(changes)) {
                 that.cache[key] = val;
             }
+            if (typeof ContextMenu === "function" && Object.keys(changes).some(key => key.startsWith("context_"))) {
+                ContextMenu.update();
+            }
         }
         chrome.storage.onChanged.addListener(onChange);
         let storage = await new Promise((resolve, reject) => that.adapter.get(null, result => resolve(result)));
@@ -500,10 +515,11 @@ SyncedStorage.defaults = {
     'showpcgw': true,
     'showcompletionistme': false,
     'showprotondb': false,
-    'showclient': true,
+    'showviewinlibrary': false,
     'showsteamcardexchange': false,
     'showitadlinks': true,
     'showsteamdb': true,
+    'showbartervg': false,
     'showastatslink': true,
     'showyoutubegameplay': true,
     'showyoutubereviews': true,
@@ -554,6 +570,7 @@ SyncedStorage.defaults = {
     'skip_got_steam': false,
 
     'hideaboutlinks': false,
+    'installsteam': "show",
     'openinnewtab': false,
     'keepssachecked': false,
     'showemptywishlist': true,
@@ -562,12 +579,14 @@ SyncedStorage.defaults = {
     'replaceaccountname': true,
     'showfakeccwarning': true,
     'showlanguagewarning': true,
-    'showlanguagewarninglanguage': "English",
+    'showlanguagewarninglanguage': "english",
     'homepage_tab_selection': "remember",
     'homepage_tab_last': null,
     'send_age_info': true,
-    'html5video': true,
+    'mp4video': false,
     'contscroll': true,
+    'horizontalmediascrolling': true,
+    'showsupportinfo': true,
     'showdrm': true,
     'regional_hideworld': false,
     'showinvnav': true,
@@ -577,6 +596,7 @@ SyncedStorage.defaults = {
     'showachinstore': true,
     'showcomparelinks': false,
     'hideactivelistings': false,
+    'showlowestmarketprice': true,
     'hidespamcomments': false,
     'spamcommentregex': "[\\u2500-\\u25FF]",
     'wlbuttoncommunityapp': true,
@@ -589,6 +609,7 @@ SyncedStorage.defaults = {
     'profile_steamrepcn': true,
     'profile_steamgifts': true,
     'profile_steamtrades': true,
+    'profile_bartervg': true,
     'profile_steamrep': true,
     'profile_steamdbcalc': true,
     'profile_astats': true,
@@ -598,6 +619,7 @@ SyncedStorage.defaults = {
     'profile_custom_link': [
         { 'enabled': true, 'name': "Google", 'url': "google.com/search?q=[ID]", 'icon': "www.google.com/images/branding/product/ico/googleg_lodp.ico", },
     ],
+    'group_steamgifts': true,
     'steamcardexchange': true,
     'purchase_dates': true,
     'show_badge_progress': true,
@@ -609,6 +631,14 @@ SyncedStorage.defaults = {
     'profile_showcase_twitch': true,
     'profile_showcase_own_twitch': false,
     'profile_showcase_twitch_profileonly': false,
+
+    'context_steam_store': false,
+    'context_steam_market': false,
+    'context_itad': false,
+    'context_bartervg': false,
+    'context_steamdb': false,
+    'context_steamdb_instant': false,
+    'context_steam_keys': false,
 };
 
 
@@ -820,6 +850,18 @@ class HTMLParser {
             }
         }
     };
+}
+
+class StringUtils {
+
+    static clearSpecialSymbols(str) {
+        return str.replace(/[\u00AE\u00A9\u2122]/g, "");
+    }
+
+    // https://stackoverflow.com/a/6969486/7162651
+    static escapeRegExp(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    }
 }
 
 function sleep(duration) {

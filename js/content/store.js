@@ -7,14 +7,14 @@ class Customizer {
     }
 
     _textValue(node) {
-        if (!node) return null;
+        if (!node) return '';
         let str = "";
         for (node = node.firstChild; node; node = node.nextSibling) {
             if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName === "A")) { // Special case for Steam curators
                 str += node.textContent.trim();
             }
         }
-        return str || null;
+        return str;
     };
 
     _updateValue(name, value) {
@@ -169,51 +169,52 @@ class StorePageClass {
     addDrmWarnings() {
         if (!SyncedStorage.get("showdrm")) { return; }
 
-        let gfwl, uplay, securom, tages, stardock, rockstar, kalypso, denuvo, drm;
-
         let text = "";
-        let nodes = document.querySelectorAll("#game_area_description, .game_area_sys_req, #game_area_legal, .game_details, .DRM_notice");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details")) {
             text += node.innerHTML;
         }
+        let uppercased = text.toUpperCase();
 
         // Games for Windows Live detection
-        if (text.toUpperCase().indexOf("GAMES FOR WINDOWS LIVE") > 0) { gfwl = true; }
-        else if (text.toUpperCase().indexOf("GAMES FOR WINDOWS - LIVE") > 0) { gfwl = true; }
-        else if (text.indexOf("Online play requires log-in to Games For Windows") > 0) { gfwl = true; }
-        else if (text.indexOf("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE") > 0) { gfwl = true; }
-        else if (text.indexOf("Multiplayer play and other LIVE features included at no charge") > 0) { gfwl = true; }
-        else if (text.indexOf("www.gamesforwindows.com/live") > 0) { gfwl = true; }
+        let gfwl =
+               uppercased.includes("GAMES FOR WINDOWS LIVE")
+            || uppercased.includes("GAMES FOR WINDOWS - LIVE")
+            || text.includes("Online play requires log-in to Games For Windows")
+            || text.includes("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE")
+            || text.includes("Multiplayer play and other LIVE features included at no charge")
+            || text.includes("www.gamesforwindows.com/live");
 
         // Ubisoft Uplay detection
-        if (text.toUpperCase().indexOf("CREATION OF A UBISOFT ACCOUNT") > 0) { uplay = true; }
-        else if (text.match(/\buplay/i) && !text.match(/\btuplaydinprosessori/i)) { uplay = true; }
+        let uplay =
+               text.includes("Uplay")
+            || text.includes("Ubisoft Account");
 
         // Securom detection
-        if (text.toUpperCase().indexOf("SECUROM") > 0) { securom = true; }
+        let securom = text.includes("SecuROM");
 
         // Tages detection
-        if (text.match(/\btages\b/i)) { tages = true; }
-        else if (text.match(/angebote des tages/i)) { tages = false; }
-        else if (text.match(/\bsolidshield\b/i)) { tages = true; }
+        let tages =
+                text.match(/\b(tages|solidshield)\b/i)
+            && !text.match(/angebote des tages/i);
 
         // Stardock account detection
-        if (text.indexOf("Stardock account") > 0) { stardock = true; }
+        let stardock = text.includes("Stardock account");
 
         // Rockstar social club detection
-        if (text.indexOf("Rockstar Social Club") > 0) { rockstar = true; }
-        else if (text.indexOf("Rockstar Games Social Club") > 0) { rockstar = true; }
+        let rockstar =
+               text.includes("Rockstar Social Club")
+            || text.includes("Rockstar Games Social Club");
 
         // Kalypso Launcher detection
-        if (text.indexOf("Requires a Kalypso account") > 0) { kalypso = true; }
+        let kalypso = text.includes("Requires a Kalypso account");
 
         // Denuvo Antitamper detection
-        if (text.match(/\bdenuvo\b/i)) { denuvo = true; }
+        let denuvo = text.match(/\bdenuvo\b/i);
 
         // Detect other DRM
-        if (text.indexOf("3rd-party DRM") > 0) { drm = true; }
-        else if (text.match(/No (3rd|third)(-| )party DRM/i)) { drm = false; }
+        let drm =
+                text.includes("3rd-party DRM")
+            && !text.match(/No (3rd|third)[- ]party DRM/i);
 
         let drmNames = [];
         if (gfwl) { drmNames.push('Games for Windows Live'); }
@@ -266,7 +267,7 @@ class StorePageClass {
             prices.bundleids.push(node.dataset['dsBundleid']);
         }
 
-        prices.priceCallback = function(type, id, html) {
+        prices.priceCallback = function(type, id, contentNode) {
             let node;
             let placement = "afterbegin";
             if (type === "sub") {
@@ -286,11 +287,7 @@ class StorePageClass {
                 }
             }
 
-            HTML.adjacent(node, placement, html);
-
-            let height = (document.querySelector("#es_price_"+id).offsetHeight - 20) / 2;
-            document.querySelector("#es_line_chart_"+id).style.top = height + "px";
-
+            node.insertAdjacentElement(placement, contentNode);
         };
 
         prices.bundleCallback = function(html) {
@@ -311,6 +308,7 @@ class StorePageClass {
 
     addLinks(type) {
         if (!SyncedStorage.get("showsteamdb")
+         && !SyncedStorage.get("showbarter")
          && !SyncedStorage.get("showitadlinks")) { return; }
 
         let gameid = null;
@@ -337,6 +335,15 @@ class StorePageClass {
         }
 
         if (!node) { return; }
+
+        if (SyncedStorage.get("showbartervg")) {
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "bartervg_ico",
+                    `https://barter.vg/steam/${type}/${gameid}`,
+                    Localization.str.view_on_website.replace("__website__", 'Barter.vg'))
+                );
+        }
 
         if (SyncedStorage.get("showsteamdb")) {
             HTML.afterBegin(node,
@@ -392,7 +399,15 @@ class StorePageClass {
                     .querySelector(".game_purchase_action");
 
                 let apiPrice = prices[User.getCountry().toLowerCase()];
-                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
+                let priceLocal;
+                try {
+                    priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
+                } catch(err) {
+                    console.group("Regional pricing");
+                    console.error(err);
+                    console.warn("Can't show relative price differences to any other currencies");
+                    console.groupEnd();
+                }
 
                 let pricingDiv = document.createElement("div");
                 pricingDiv.classList.add("es_regional_container");
@@ -408,25 +423,38 @@ class StorePageClass {
 
                     if (apiPrice) {
                         let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency);
-                        let priceUser = priceRegion.inCurrency(Currency.customCurrency);
-
-
-                        let percentageIndicator = "equal";
-                        let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
-
-                        if (percentage < 0) {
-                            percentage = Math.abs(percentage);
-                            percentageIndicator = "lower";
-                        } else if (percentage > 0) {
-                            percentageIndicator = "higher";
+                        let priceUser;
+                        try {
+                            priceUser = priceRegion.inCurrency(Currency.customCurrency);
+                        } catch(err) {
+                            console.group("Regional pricing");
+                            console.error(err);
+                            console.warn(`Not able to show converted price and relative price differences for country code "%s"`, country.toUpperCase());
+                            console.groupEnd();
                         }
 
                         html =
                             `<div class="es_regional_price es_flag es_flag_${country}">
                                 ${priceRegion}
-                                <span class="es_regional_converted">(${priceUser})</span>
-                                <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>
-                            </div>`;
+                            `;
+
+                        if (priceLocal && priceUser) {
+                            let percentageIndicator = "equal";
+                            let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
+
+                            if (percentage < 0) {
+                                percentage = Math.abs(percentage);
+                                percentageIndicator = "lower";
+                            } else if (percentage > 0) {
+                                percentageIndicator = "higher";
+                            }
+
+                            html +=
+                                `<span class="es_regional_converted">(${priceUser})</span>
+                                <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>`
+                        }
+                        
+                        html += "</div>";
                     } else {
                         html =
                             `<div class="es_regional_price es_flag es_flag_${country}">
@@ -453,6 +481,27 @@ class StorePageClass {
                     }
                 }
             })
+        });
+    }
+
+    forceVideoMP4() {
+        if (!SyncedStorage.get("mp4video")) { return; }
+        let self = this;
+
+        document.querySelectorAll("[data-webm-source]").forEach(function(node) {
+            let mp4 = node.dataset.mp4Source;
+            let mp4hd = node.dataset.mp4HdSource;
+            if (!mp4 || !mp4hd) return;
+
+            node.dataset.webmSource = mp4;
+            node.dataset.webmHdSource = mp4hd;
+
+            let video = node.querySelector("video");
+            if (!video) { return; }
+
+            video.dataset.sdSrc = mp4;
+            video.dataset.hdSrc = mp4hd;
+            self.toggleVideoDefinition(video, false);
         });
     }
 }
@@ -558,10 +607,8 @@ class AppPageClass extends StorePageClass {
 
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
-
-        // Required for "Customize" button and YouTube / Steam tabs
-        DOMHelper.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
         
+        this.forceVideoMP4();
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
@@ -575,6 +622,7 @@ class AppPageClass extends StorePageClass {
         this.addDrmWarnings();
         this.addMetacriticUserScore();
         this.addOpenCritic();
+        this.displayViewInLibrary();
         this.displayPurchaseDate();
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
@@ -592,6 +640,7 @@ class AppPageClass extends StorePageClass {
         this.addFamilySharingWarning();
         this.removeAboutLink();
 
+        this.addPackBreakdown();
         this.addPackageInfoButton();
         this.addStats().then(this.customizeAppPage);
 
@@ -608,6 +657,7 @@ class AppPageClass extends StorePageClass {
     }
 
     initHdPlayer() {
+        let self = this;
         let movieNode = document.querySelector('div.highlight_movie');
         if (!movieNode) { return; }
 
@@ -641,11 +691,11 @@ class AppPageClass extends StorePageClass {
             ev.stopPropagation();
 
             let videoControl = ev.target.closest('div.highlight_movie').querySelector('video');
-            let playInHD = toggleVideoDefinition(videoControl);
+            let playInHD = self.toggleVideoDefinition(videoControl);
 
             for (let n of document.querySelectorAll('video.highlight_movie')) {
                 if (n === videoControl) continue;
-                toggleVideoDefinition(n, playInHD);
+                self.toggleVideoDefinition(n, playInHD);
             }
 
             LocalStorage.set('playback_hd', playInHD);
@@ -659,7 +709,7 @@ class AppPageClass extends StorePageClass {
             ev.currentTarget.removeEventListener('click', clickInitialHD, false);
             if (!ev.target.classList.contains('es_expanded')) return;
             for (let node of document.querySelectorAll('video.highlight_movie.es_video_sd')) {
-                toggleVideoDefinition(node, true);
+                self.toggleVideoDefinition(node, true);
             }
             LocalStorage.set('playback_hd', true);
         }
@@ -668,9 +718,8 @@ class AppPageClass extends StorePageClass {
             playInHD = LocalStorage.get('playback_hd');
 
             function _addHDControl() {
-                // Add "HD" button and "sd-src" to the video and set definition
+                // Add "HD" button to the video
                 if (videoControl.dataset.hdSrc) {
-                    videoControl.dataset.sdSrc = videoControl.src;
                     let node = videoControl.parentNode.querySelector('.time');
                     if (node) {
                         HTML.afterEnd(node, `<div class="es_hd_toggle"><span>HD</span></div>`);
@@ -691,7 +740,7 @@ class AppPageClass extends StorePageClass {
                 // Toggle fullscreen on video double click
                 videoControl.addEventListener('dblclick', (() => toggleFullscreen(videoControl)), false);
 
-                toggleVideoDefinition(videoControl, playInHD);
+                self.toggleVideoDefinition(videoControl, playInHD);
             }
             setTimeout(_addHDControl, 150);
             // prevents a bug in Chrome which causes videos to stop playing after changing the src
@@ -725,47 +774,47 @@ class AppPageClass extends StorePageClass {
                 Promise.resolve(response).catch(err => console.error(err));
             }
         }
+    }
 
-        function toggleVideoDefinition(videoControl, setHD) {
-            let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
-                videoIsHD = false,
-                loadedSrc = videoControl.classList.contains("es_loaded_src"),
-                playInHD = LocalStorage.get("playback_hd") || videoControl.classList.contains("es_video_hd");
+    toggleVideoDefinition(videoControl, setHD) {
+        let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
+            videoIsHD = false,
+            loadedSrc = videoControl.classList.contains("es_loaded_src"),
+            playInHD = LocalStorage.get("playback_hd") || videoControl.classList.contains("es_video_hd");
 
-            let videoPosition = videoControl.currentTime || 0,
-                videoPaused = videoControl.paused;
-            if (videoIsVisible) {
-                videoControl.preload = "metadata";
-                videoControl.addEventListener("loadedmetadata", onLoadedMetaData, false);
-            }
-            function onLoadedMetaData() {
-                this.currentTime = videoPosition;
-                if (!videoPaused && videoControl.play) {
-                    // if response is a promise, suppress any errors it throws
-                    Promise.resolve(videoControl.play()).catch(err => {});
-                }
-                videoControl.removeEventListener('loadedmetadata', onLoadedMetaData, false);
-            }
-
-            if ((!playInHD && typeof setHD === 'undefined') || setHD === true) {
-                videoIsHD = true;
-                videoControl.src = videoControl.dataset.hdSrc;
-            } else if (loadedSrc) {
-                videoControl.src = videoControl.dataset.sdSrc;
-            }
-
-            if (videoIsVisible && loadedSrc) {
-                videoControl.load();
-            }
-
-            videoControl.classList.add("es_loaded_src");
-            videoControl.classList.toggle("es_video_sd", !videoIsHD);
-            videoControl.classList.toggle("es_video_hd", videoIsHD);
-            videoControl.parentNode.classList.toggle("es_playback_sd", !videoIsHD);
-            videoControl.parentNode.classList.toggle("es_playback_hd", videoIsHD);
-
-            return videoIsHD;
+        let videoPosition = videoControl.currentTime || 0,
+            videoPaused = videoControl.paused;
+        if (videoIsVisible) {
+            videoControl.preload = "metadata";
+            videoControl.addEventListener("loadedmetadata", onLoadedMetaData, false);
         }
+        function onLoadedMetaData() {
+            this.currentTime = videoPosition;
+            if (!videoPaused && videoControl.play) {
+                // if response is a promise, suppress any errors it throws
+                Promise.resolve(videoControl.play()).catch(err => {});
+            }
+            videoControl.removeEventListener('loadedmetadata', onLoadedMetaData, false);
+        }
+
+        if ((!playInHD && typeof setHD === 'undefined') || setHD === true) {
+            videoIsHD = true;
+            videoControl.src = videoControl.dataset.hdSrc;
+        } else if (loadedSrc) {
+            videoControl.src = videoControl.dataset.sdSrc;
+        }
+
+        if (videoIsVisible && loadedSrc) {
+            videoControl.load();
+        }
+
+        videoControl.classList.add("es_loaded_src");
+        videoControl.classList.toggle("es_video_sd", !videoIsHD);
+        videoControl.classList.toggle("es_video_hd", videoIsHD);
+        videoControl.parentNode.classList.toggle("es_playback_sd", !videoIsHD);
+        videoControl.parentNode.classList.toggle("es_playback_hd", videoIsHD);
+
+        return videoIsHD;
     }
 
     async storePageDataPromise() {
@@ -1224,6 +1273,20 @@ class AppPageClass extends StorePageClass {
         document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName, Localization.str.review));
     }
 
+    displayViewInLibrary() {
+        if (!User.isSignedIn || !SyncedStorage.get("showviewinlibrary")) { return; }
+
+        let node = document.querySelector(".already_owned_actions");
+        if (!node) { return; }
+
+        HTML.afterBegin(node,
+            `<div class="game_area_already_owned_btn">
+                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${this.appid}">
+                    <span>${Localization.str.view_in_library}</span>
+                </a>
+            </div>`);
+    }
+
     displayPurchaseDate() {
         if (!SyncedStorage.get("purchase_dates")) { return; }
 
@@ -1431,21 +1494,36 @@ class AppPageClass extends StorePageClass {
                 continue;
             }
 
-            let parts = homepageLink.pathname.split(`/`);
-            linkNode.href = `https://store.steampowered.com/search/?${parts[1]}=${encodeURIComponent(parts[2])}`;
+            let name = linkNode.parentNode.id === "developers_list" ? "developer" : "publisher";
+            let value = linkNode.innerText;
+            linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
             HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
         }
     }
 
     async addSupport() {
-        if (!this.isAppPage()) { return; }
-        if (this.isDlc()) { return; }
+        if (!this.isAppPage() || this.isDlc() || !SyncedStorage.get("showsupportinfo")) { return; }
+
+        let cache = LocalStorage.get("support_info", null);
+        if (!cache || !cache.expiry || cache.expiry < Date.now()) {
+            cache = {
+                "data": {},
+                "expiry": Date.now() + (31*86400 * 1000) // 31 days
+            }
+        }
 
         let appid = this.appid;
-        let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
-        if (!response || !response[appid] || !response[appid].success) { return; }
+        let supportInfo = cache[appid];
+        if (!supportInfo) {
+            let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
+            if (!response || !response[appid] || !response[appid].success) { return; }
 
-        let supportInfo = response[appid].data.support_info;
+            supportInfo = response[appid].data.support_info;
+
+            cache['data'][appid] = supportInfo;
+            LocalStorage.set("support_info", cache);
+        }
+
         let url = supportInfo.url;
         let email = supportInfo.email;
         if (!email && !url) { return; }
@@ -1495,16 +1573,6 @@ class AppPageClass extends StorePageClass {
 
     addLinks(type) {
         let linkNode = document.querySelector("#ReportAppBtn").parentNode;
-
-        if (SyncedStorage.get("showclient")) {
-            let cls = "steam_client_btn";
-            let url = "steam://url/StoreAppPage/" + this.appid;
-            let str = Localization.str.viewinclient;
-
-            HTML.afterBegin(linkNode,
-                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
-        }
 
         if (SyncedStorage.get("showpcgw")) {
             let cls = "pcgw_btn";
@@ -1682,7 +1750,7 @@ class AppPageClass extends StorePageClass {
         let html = "<div id='performance_survey' class='game_area_description'><h2>" + Localization.str.survey.performance_survey + "</h2>";
 
         if (survey.success) {
-            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + ".</p>";
+            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + "</p>";
             html += "<p><b>" + Localization.str.survey.framerate + "</b>: " + Math.round(survey["frp"]) + "% " + Localization.str.survey.framerate_response + " "
             switch (survey["fr"]) {
                 case "30": html += "<span style='color: #8f0e10;'>" + Localization.str.survey.framerate_30 + "</span>"; break;
@@ -1739,7 +1807,7 @@ class AppPageClass extends StorePageClass {
                 html += "</div>";
             }
         } else {
-            html += "<p>" + Localization.str.survey.nobody + ".</p>";
+            html += "<p>" + Localization.str.survey.nobody + "</p>";
         }
 
         if (document.querySelector(".game_area_already_owned") && document.querySelector(".hours_played")) {
@@ -1769,10 +1837,10 @@ class AppPageClass extends StorePageClass {
         let expandedNode = document.querySelector("#game_area_dlc_expanded");
 
         if (expandedNode) {
-            HTML.afterEnd(expandedNode,  "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
+            HTML.afterEnd(expandedNode, `<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>${Localization.str.add_selected_dlc_to_cart}</span></a></div></div>`);
             HTML.afterEnd(".game_area_dlc_section", "<div style='clear: both;'></div>");
         } else {
-            HTML.afterEnd(".gameDlcBlocks", "<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>" + Localization.str.add_selected_dlc_to_cart + "</span></a></div></div>");
+            HTML.afterEnd(".gameDlcBlocks", `<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>${Localization.str.add_selected_dlc_to_cart}</span></a></div></div>`);
         }
 
         let form = document.createElement("form");
@@ -1783,7 +1851,7 @@ class AppPageClass extends StorePageClass {
 
         let button = document.querySelector("#es_selected_btn");
         button.insertAdjacentElement("beforebegin", form);
-        button.addEventListener("click", function(){
+        button.addEventListener("click", function() {
             document.querySelector("form[name=add_selected_dlc_to_cart]").submit();
         });
 
@@ -1793,7 +1861,7 @@ class AppPageClass extends StorePageClass {
 
                 HTML.afterBegin(
                     dlc.querySelector(".game_area_dlc_name"),
-                    "<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_" + value + "' value='" + value + "'><label for='es_select_dlc_" + value + "' style='background-image: url( " + ExtensionLayer.getLocalUrl("img/check_sheet.png") + ");'></label>");
+                    `<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_${value}' value='${value}'><label for='es_select_dlc_${value}' style='background-image: url(${ExtensionLayer.getLocalUrl("img/check_sheet.png")})'></label>`);
             } else {
                 dlc.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
             }
@@ -1802,33 +1870,38 @@ class AppPageClass extends StorePageClass {
         HTML.afterEnd(".game_area_dlc_section .gradientbg", "<div style='height: 28px; padding-left: 15px; display: none;' id='es_dlc_option_panel'></div>");
 
         HTML.afterBegin("#es_dlc_option_panel",
-            `<div class='es_dlc_option' id='unowned_dlc_check'>${Localization.str.select.unowned_dlc}</div>
-             <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.select.wishlisted_dlc}</div>
-             <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.select.none}</div>`);
+            `<div class='es_dlc_option' id='unowned_dlc_check'>${Localization.str.dlc_select.unowned_dlc}</div>
+             <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.dlc_select.wishlisted_dlc}</div>
+             <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.dlc_select.none}</div>`);
 
-        document.querySelector("#unowned_dlc_check").addEventListener("click", function () {
+        let change = new Event("change", {"bubbles": true});
+
+        document.querySelector("#unowned_dlc_check").addEventListener("click", function() {
             let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row:not(.ds_owned) input:not(:checked)");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                nodes[i].checked = true;
+            for (let node of nodes) {
+                node.checked = true;
+                node.dispatchEvent(change);
             }
         });
 
-        document.querySelector("#wl_dlc_check").addEventListener("click", function(){
+        document.querySelector("#wl_dlc_check").addEventListener("click", function() {
             let nodes = document.querySelectorAll(".game_area_dlc_section .ds_wishlist input:not(:checked)");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                nodes[i].checked = true;
+            for (let node of nodes) {
+                node.checked = true;
+                node.dispatchEvent(change);
             }
         });
 
-        document.querySelector("#no_dlc_check").addEventListener("click", function(){
+        document.querySelector("#no_dlc_check").addEventListener("click", function() {
             let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row input:checked");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                nodes[i].checked = false;
+            for (let node of nodes) {
+                node.checked = false;
+                node.dispatchEvent(change);
             }
         });
 
         HTML.beforeEnd(".game_area_dlc_section .gradientbg",
-            "<a id='es_dlc_option_button'>" + Localization.str.thewordoptions + " ▾</a>");
+            `<a id='es_dlc_option_button'>${Localization.str.dlc_select.select} ▼</a>`);
 
         document.querySelector("#es_dlc_option_button").addEventListener("click", function() {
             document.querySelector("#es_dlc_option_panel")
@@ -1836,15 +1909,16 @@ class AppPageClass extends StorePageClass {
 
             let button = document.querySelector("#es_dlc_option_button");
 
-            button.textContent = (button.textContent.match("▾")
-                ? Localization.str.thewordoptions + " ▴"
-                : Localization.str.thewordoptions + " ▾");
+            button.textContent = (button.textContent.match("▼")
+                ? `${Localization.str.dlc_select.select} ▲`
+                : `${Localization.str.dlc_select.select} ▼`);
         });
 
-        document.querySelector(".game_area_dlc_section").addEventListener("change", function(e){
+        document.querySelector(".game_area_dlc_section").addEventListener("change", function(e) {
             if (!e.target.classList.contains("es_dlc_selection")) { return; }
 
             let cartNode = document.querySelector("#es_selected_cart");
+            cartNode.innerHTML = "";
 
             let inputAction = document.createElement("input");
             inputAction.type = "hidden";
@@ -1860,15 +1934,14 @@ class AppPageClass extends StorePageClass {
             cartNode.appendChild(inputSessionId);
 
             let nodes = document.querySelectorAll(".es_dlc_selection:checked");
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            for (let node of nodes) {
 
-                let input = document.createElement("input");
-                input.setAttribute("type", "hidden");
-                input.setAttribute("name", "subid[]");
-                input.setAttribute("value", node.value);
+                let inputSubId = document.createElement("input");
+                inputSubId.setAttribute("type", "hidden");
+                inputSubId.setAttribute("name", "subid[]");
+                inputSubId.setAttribute("value", node.value);
 
-                cartNode.insertAdjacentElement("beforeend", input);
+                cartNode.insertAdjacentElement("beforeend", inputSubId);
             }
 
             let button = document.querySelector("#es_selected_btn");
@@ -1901,9 +1974,9 @@ class AppPageClass extends StorePageClass {
         let appid = this.communityAppid;
 
         Background.action('cards', { 'appid': appid, } )
-            .then(result => loadBadgeContent(".es_normal_badge_progress", result), EnhancedSteam.addLoginWarning);
+            .then(result => loadBadgeContent(".es_normal_badge_progress", result));
         Background.action('cards', { 'appid': appid, 'border': 1, } )
-            .then(result => loadBadgeContent(".es_foil_badge_progress", result), EnhancedSteam.addLoginWarning);
+            .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
         function loadBadgeContent(targetSelector, result) {
             let dummy = HTMLParser.htmlToDOM(result);
@@ -2010,16 +2083,16 @@ class AppPageClass extends StorePageClass {
             let node = document.querySelector("#es_ach_stats");
             HTML.inner(node, achieveBar)
 
-        }, EnhancedSteam.addLoginWarning);
+        });
     }
 
     customizeAppPage() {
         let nodes = document.querySelectorAll(".purchase_area_spacer");
         HTML.beforeEnd(nodes[nodes.length-1],
             `<div id="es_customize_btn" class="home_actions_ctn">
-                <div class="home_btn home_customize_btn" style="z-index: 13;">${ Localization.str.customize }</div>
+                <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
                 <div class='home_viewsettings_popup'>
-                    <div class='home_viewsettings_instructions' style='font-size: 12px;'>${ Localization.str.apppage_sections }</div>
+                    <div class="home_viewsettings_instructions" style="font-size: 12px;">${Localization.str.apppage_sections}</div>
                 </div>
             </div>
             <div style="clear: both;"></div>`);
@@ -2062,7 +2135,7 @@ class AppPageClass extends StorePageClass {
             .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
             .add("customerreviews", "#app_reviews_hash");
 
-        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop);
+        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop.workshop);
         if (morelikethis) customizer.add("morelikethis", "#recommended_block", morelikethis.textContent);
 
         customizer.build();
@@ -2121,8 +2194,15 @@ class AppPageClass extends StorePageClass {
     addPackBreakdown() {
 
         function splitPack(node, ways) {
-            let price_text = node.querySelector(".discount_final_price").innerHTML;
-            if (price_text == null) { price_text = node.querySelector(".game_purchase_price").innerHTML; }
+            if (node.querySelector(".btn_packageinfo")) { return; }
+
+            let price_text;
+            let priceNode = node.querySelector(".discount_final_price");
+            if (priceNode) {
+                price_text = priceNode.textContent;
+            } else {
+                price_text = node.querySelector(".game_purchase_price").textContent;
+            }
             if (price_text.match(/,\d\d(?!\d)/)) {
                 price_text = price_text.replace(",", ".");
             }
@@ -2137,32 +2217,29 @@ class AppPageClass extends StorePageClass {
                 </div>`);
         }
 
-        let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-
+        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
             let title = node.querySelector("h1").textContent.trim();
             title = title.toLowerCase().replace(/-/g, ' ');
             if (!title || !title.includes('pack')) return;
             if (title.includes('pack') && title.includes('season')) return;
 
-            if (title.includes(' 2 pack') && !title.includes('bioshock')) { splitPack.call(node, 2); }
-            else if (title.includes(' two pack')) { splitPack.call(node, 2); }
-            else if (title.includes('tower wars friend pack')) { splitPack.call(node, 2); }
+            if (title.includes(' 2 pack')) { splitPack(node, 2); }
+            else if (title.includes(' two pack')) { splitPack(node, 2); }
+            else if (title.includes('tower wars friend pack')) { splitPack(node, 2); }
 
-            else if (title.includes(' 3 pack') && !title.includes('doom 3')) { splitPack.call(node, 3); }
-            else if (title.includes(' three pack')) { splitPack.call(node, 3); }
-            else if (title.includes('tower wars team pack')) { splitPack.call(node, 3); }
+            else if (title.includes(' 3 pack')) { splitPack(node, 3); }
+            else if (title.includes(' three pack')) { splitPack(node, 3); }
+            else if (title.includes('tower wars team pack')) { splitPack(node, 3); }
 
-            else if (title.includes(' 4 pack')) { splitPack.call(node, 4); }
-            else if (title.includes(' four pack')) { splitPack.call(node, 4); }
-            else if (title.includes(' clan pack')) { splitPack.call(node, 4); }
+            else if (title.includes(' 4 pack')) { splitPack(node, 4); }
+            else if (title.includes(' four pack')) { splitPack(node, 4); }
+            else if (title.includes(' clan pack')) { splitPack(node, 4); }
 
-            else if (title.includes(' 5 pack')) { splitPack.call(node, 5); }
-            else if (title.includes(' five pack')) { splitPack.call(node, 5); }
+            else if (title.includes(' 5 pack')) { splitPack(node, 5); }
+            else if (title.includes(' five pack')) { splitPack(node, 5); }
 
-            else if (title.includes(' 6 pack')) { splitPack.call(node, 6); }
-            else if (title.includes(' six pack')) { splitPack.call(node, 6); }
+            else if (title.includes(' 6 pack')) { splitPack(node, 6); }
+            else if (title.includes(' six pack')) { splitPack(node, 6); }
         }
     }
 }
@@ -2434,7 +2511,7 @@ let SearchPageClass = (function(){
         if (search.substring(0,1) === "&") { search = "?" + search.substring(1, search.length); }
         if (search.substring(0,1) !== "?") { search = "?" + search; }
 
-        RequestData.getHttp("https://store.steampowered.com/search/results" + search + '&page=' + searchPage + '&snr=es').then(result => {
+        RequestData.getHttp(`https://store.steampowered.com/search/results${search}&page=${searchPage}&snr=es`).then(result => {
             let dummy = HTMLParser.htmlToDOM(result);
 
             let addedDate = Date.now();
@@ -2443,14 +2520,10 @@ let SearchPageClass = (function(){
             let lastNode = document.querySelector(".search_result_row:last-child");
 
             // When you're not logged in, the constructed hover doesn't include friends info
-            let publicAttr = `,"public":1`;
-            if (User.isSignedIn) {
-                publicAttr = '';
-            }
+            let publicAttr = User.isSignedIn ? '' : `,"public":1`;
 
             let rows = dummy.querySelectorAll("a.search_result_row");
-            for (let i=0, len=rows.length; i<len; i++) {
-                let row = rows[i];
+            for (let row of rows) {
                 row.dataset.addedDate = addedDate;
                 lastNode.insertAdjacentElement("afterend", row);
                 lastNode = row;
@@ -2472,11 +2545,13 @@ let SearchPageClass = (function(){
             searchPage = searchPage + 1;
             processing = false;
 
-            ExtensionLayer.runInPageContext(function() {
+            ExtensionLayer.runInPageContext(() => {
                 let addedDate = document.querySelector('#search_result_container').dataset.lastAddDate;
-                GDynamicStore.DecorateDynamicItems(jQuery('.search_result_row[data-added-date="' + addedDate + '"]'));
+                GDynamicStore.DecorateDynamicItems(jQuery(`.search_result_row[data-added-date="${addedDate}"]`));
                 SetupTooltips( { tooltipCSSClass: 'store_tooltip'} );
             });
+
+            Highlights.highlightAndTag(rows);
         }, () => {
             document.querySelector(".LoadingWrapper").remove();
             HTML.beforeBegin(".search_pagination:last-child",
@@ -2494,7 +2569,7 @@ let SearchPageClass = (function(){
         if (!SyncedStorage.get("contscroll")) { return; }
 
         // Required for the loading wrapper
-        DOMHelper.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
+        DOMHelper.insertHomeCSS();
 
         let result_count;
         document.querySelector(".search_pagination_right").style.display = "none";
@@ -2541,10 +2616,10 @@ let SearchPageClass = (function(){
             return tagsValue ? tagsValue.split(',') : [];
         }
 
-        for (let i=0, len=tarFilterDivs.length; i<len; i++) {
-            let val = tarFilterDivs[i];
+        let tags = getTags();
 
-            let item_checked = getTags().indexOf("-"+val.dataset.value) > -1 ? "checked" : "";
+        for (let val of tarFilterDivs) {
+            let item_checked = tags.indexOf(`-${val.dataset.value}`) > -1 ? "checked" : '';
 
             let excludeItem = HTMLParser.htmlToElement(
                 `<div class="tab_filter_control ${item_checked}" data-param="tags" data-value="-${val.dataset.value}" data-loc="${val.dataset.loc}">
@@ -2552,8 +2627,8 @@ let SearchPageClass = (function(){
                     <span class="tab_filter_control_label">${val.dataset.loc}</span>
                 </div>`);
 
-            excludeItem.addEventListener("click", function(e) {
-                let control = e.target.closest(".tab_filter_control")
+            excludeItem.addEventListener("click", e => {
+                let control = e.target.closest(".tab_filter_control");
 
                 let rgValues = getTags();
                 let value = String(control.dataset.value);
@@ -2573,8 +2648,7 @@ let SearchPageClass = (function(){
                 }
 
                 control.classList.toggle('checked');
-                document.querySelector("#tags").value = rgValues.join(',');
-                ExtensionLayer.runInPageContext(() => AjaxSearchResults());
+                filtersChanged();
             });
 
             excludeContainer.append(excludeItem);
@@ -2602,24 +2676,11 @@ let SearchPageClass = (function(){
     };
 
     function isPriceAbove(node, priceAbove) {
+        let priceValue = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(node.querySelector(".search_price").lastChild.textContent);
         
-        let priceValues = node.querySelector(".search_price").innerText.replace(/,/g, '.').trim().match(/^\d+\.\d*/gm);
-        let priceString;
-        
-        if (priceValues) {
-            // Discounted price
-            if (priceValues[1]) {
-                priceString = priceValues[1];
-            // Non-discounted
-            } else if (priceValues[0]) {
-                priceString = priceValues[0];
-            }
-        } else {
-            // App without price
-            return false;
-        }
+        if (!priceValue) { return false; } // App without price
 
-        return Number(priceString) > priceAbove;
+        return Number(priceValue) > priceAbove;
     }
 
     function isReviewsBelow(node, reviewsBelow) {
@@ -2635,19 +2696,38 @@ let SearchPageClass = (function(){
         return Number(reviewsString) < reviewsBelow;
     }
 
+    function isTagExcluded(node, tags) {
+        if (!node.dataset.dsTagids) return false;
+        let nodeTags = JSON.parse(node.dataset.dsTagids);
+        return nodeTags.some(tag => tags.includes(tag));
+    }
+
     function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
-        let priceAbove = Number(document.querySelector("#es_notpriceabove_val").value.replace(',', '.'));
+        let hideOwned = document.querySelector("#es_owned_games.checked");
+        let hideWishlisted = document.querySelector("#es_wishlist_games.checked");
+        let hideInCart = document.querySelector("#es_cart_games.checked");
+        let hideNotDiscounted = document.querySelector("#es_notdiscounted_games.checked");
+        let hideNotInterested = document.querySelector("#es_notinterested.checked");
+        let hideMixed = document.querySelector("#es_notmixed.checked");
+        let hideNegative = document.querySelector("#es_notnegative.checked");
+        let hidePriceAbove = document.querySelector("#es_notpriceabove.checked");
+        let hideReviewsBelow = document.querySelector("#es_noreviewsbelow.checked");
+
+        let priceAbove = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(document.querySelector("#es_notpriceabove_val").value);
         let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
+        let hideTags = Array.from(document.querySelectorAll("#es_tagfilter_exclude_container > .checked")).map(tag => Math.abs(Number(tag.dataset.value)));
+
         for (let node of nodes) {
-            if (document.querySelector("#es_owned_games.checked") && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_wishlist_games.checked") && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_cart_games.checked") && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notdiscounted.checked") && !node.querySelector(".search_discount span")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notinterested.checked") && node.classList.contains("ds_ignored")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notmixed.checked") && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notnegative.checked") && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_notpriceabove.checked") && isPriceAbove(node, priceAbove)) { node.style.display = "none"; continue; }
-            if (document.querySelector("#es_noreviewsbelow.checked") && isReviewsBelow(node, reviewsBelow)) { node.style.display = "none"; continue; }
+            if (hideOwned && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
+            if (hideWishlisted && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
+            if (hideInCart && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
+            if (hideNotDiscounted && !node.querySelector(".search_discount span")) { node.style.display = "none"; continue; }
+            if (hideNotInterested && node.classList.contains("ds_ignored")) { node.style.display = "none"; continue; }
+            if (hideMixed && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
+            if (hideNegative && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
+            if (hidePriceAbove && isPriceAbove(node, priceAbove)) { node.style.display = "none"; continue; }
+            if (hideReviewsBelow && isReviewsBelow(node, reviewsBelow)) { node.style.display = "none"; continue; }
+            if (hideTags.length && isTagExcluded(node, hideTags)) { node.style.display = "none"; continue; }
             node.style.display = "block";
         }
     }
@@ -2696,7 +2776,7 @@ let SearchPageClass = (function(){
                         <div class="tab_filter_control_checkbox"></div>
                         <span class="tab_filter_control_label">${Localization.str.price_above}</span>
                         <div>
-                            <input type="text" id="es_notpriceabove_val" class="es_input" pattern="${inputPattern.source}" placeholder=${pricePlaceholder}>
+                            <input type="text" id="es_notpriceabove_val" class="es_input" pattern="${inputPattern.source}" placeholder="${pricePlaceholder}">
                         </div>
                     </div>
                     <div class="tab_filter_control" id="es_noreviewsbelow" data-param="es_hide" data-value="reviews-below" title="${Localization.str.reviews_below_tooltip}">
@@ -2713,8 +2793,9 @@ let SearchPageClass = (function(){
             </div>
         `);
 
-        Messenger.addMessageListener("filtersChanged", filtersChanged, false);
-        Messenger.addMessageListener("priceAbove", priceVal => {
+        Messenger.addMessageListener("filtersChanged", filtersChanged);
+
+        Messenger.onMessage("priceAbove").then(priceVal => {
             if (new RegExp(inputPattern.source.replace(',', '\\.')).test(priceVal)) {
                 if (currency.format.decimalSeparator === ',') {
                     priceVal = priceVal.replace('.', ',');
@@ -2724,11 +2805,11 @@ let SearchPageClass = (function(){
             } else {
                 console.warn("Failed to validate price %s from URL params!", priceVal);
             }
-        }, true);
-        Messenger.addMessageListener("reviewsBelow", reviewsVal => {
+        });
+        Messenger.onMessage("reviewsBelow").then(reviewsVal => {
             document.getElementById("es_noreviewsbelow_val").value = reviewsVal;
             Messenger.postMessage("reviewsValueChanged");
-        }, true);
+        });
 
         // TODO(tomas.fedor) Can we somehow simplify this monstrosity? E.g. update URL on our end?
         // Thrown together from sources of searchpage.js
@@ -2736,10 +2817,7 @@ let SearchPageClass = (function(){
 
             GDynamicStore.OnReady(() => {
 
-                // Callback that will fire when the user browses through pages
-                ${!SyncedStorage.get("contscroll") ? `Ajax.Responders.register({ onComplete: () => Messenger.postMessage("ajaxCompleted") });` : ""}
-
-                // For each AS hide filter
+                // For each AS filter
                 $J(".tab_filter_control[id^='es_']").each(function() {
                     let $Control = $J(this);
                     $Control.click(() => updateURL($Control));
@@ -2930,7 +3008,7 @@ let SearchPageClass = (function(){
                                         continue;
                                     }
                                     filter = $J(".tab_filter_control[data-value=price-above]");
-                                    Messenger.addMessageListener("priceValueChanged", () => filter.click(), true);
+                                    Messenger.onMessage("priceValueChanged").then(filter.click);
                                     Messenger.postMessage("priceAbove", priceValue);
                                     continue;
                                 } else if (filterValue.startsWith("reviews-below")) {
@@ -2940,7 +3018,7 @@ let SearchPageClass = (function(){
                                         continue;
                                     }
                                     filter = $J(".tab_filter_control[data-value=reviews-below]");
-                                    Messenger.addMessageListener("reviewsValueChanged", () => filter.click(), true);
+                                    Messenger.onMessage("reviewsValueChanged").then(filter.click);
                                     Messenger.postMessage("reviewsBelow", reviewsValue);
                                     continue;
                                 } else {
@@ -2953,8 +3031,8 @@ let SearchPageClass = (function(){
                     }
                 }
 
-                Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState), false);
-                Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState), false);
+                Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState));
+                Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState));
             });
         }`);
 
@@ -3015,7 +3093,7 @@ let SearchPageClass = (function(){
                 } else {
                     params.delete("es_hide");
                 }
-                linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + params.toString();
+                linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + Array.from(params.entries(), ([key, val]) => `${key}=${val}`).join('&'); // Encoding is done by Steam, see #568
             }
         }
 
@@ -3033,40 +3111,44 @@ let SearchPageClass = (function(){
         let inputObserver = new MutationObserver(modifyLinks);
         inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
 
-        let contscrollObserver;
-        if (SyncedStorage.get("contscroll")) {
-            contscrollObserver = new MutationObserver(mutations => {
-                EarlyAccess.showEarlyAccess();
-                mutations.forEach(mutation => {
-                    Highlights.highlightAndTag(mutation.addedNodes);
-                    filtersChanged(mutation.addedNodes);
-                });
+        let removeObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                for (let node of mutation.addedNodes) {
+                    // Under certain circumstances the search result container will get removed and then added again, thus disconnecting the MutationObserver
+                    if (node.id === "search_result_container") {
+                        observeAjax(node.querySelectorAll(".search_result_row"));
+                        
+                        if (!SyncedStorage.get("contscroll")) {
+                            toggleFilter("price-above", "#es_notpriceabove");
+                            toggleFilter("reviews-below", "#es_noreviewsbelow");
+                            modifyLinks();
+                            filtersChanged();
+                        }
+                        ajaxObserver.observe(node.querySelector("#search_resultsRows"), {childList: true});
+                        break;
+                    }
+                }
             });
-            contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
+        });
+        removeObserver.observe(document.querySelector("#search_results"), { childList: true });
+
+        function observeAjax(addedNodes) {
+            EarlyAccess.showEarlyAccess();
+            
+            Highlights.highlightAndTag(addedNodes);
+            filtersChanged(addedNodes);
         }
 
-        Messenger.addMessageListener("ajaxCompleted", () => {
-            if (SyncedStorage.get("contscroll")) {
-                mutations.forEach(mutation => {
-                    for (let node of mutation.removedNodes) {
-                        // Under certain circumstances the search result container will get removed and then added again, thus disconnecting the MutationObserver
-                        if (node.id && node.id === "search_result_container") {
-                            contscrollObserver.observe(document.querySelectorAll("#search_result_container > div")[1], {childList: true});
-                            break;
-                        }
-                    }
-                })
-            } else {
-                toggleFilter("price-above", "#es_notpriceabove");
-                toggleFilter("reviews-below", "#es_noreviewsbelow");
-                modifyLinks();
+        let ajaxObserver = new MutationObserver(mutations => {
+            let rows = [];
+            for (let mutation of mutations) {
+                rows = rows.concat(
+                    Array.from(mutation.addedNodes).filter(node => node.classList && node.classList.contains("search_result_row"))
+                );
             }
-
-            EarlyAccess.showEarlyAccess();
-
-            Highlights.highlightAndTag(document.querySelectorAll(".search_result_row"));
-            filtersChanged();
-        }, false);
+            observeAjax(rows);
+        });
+        ajaxObserver.observe(document.querySelector("#search_resultsRows"), {childList: true});
     };
 
     return SearchPageClass;
@@ -3138,7 +3220,7 @@ let WishlistPageClass = (function(){
                 if (hover.length) {
                     let activeEntry = hover[hover.length - 1].closest(".wishlist_row");
                     if (activeEntry) {
-                        let priceNode = activeEntry.querySelector(".es_lowest_price");
+                        let priceNode = activeEntry.querySelector(".itad-pricing");
                         if (priceNode) {
                             getNodesBelow(activeEntry).forEach(row => {
                                 row.style.top = parseInt(row.style.top, 10) + priceNode.getBoundingClientRect().height + "px";
@@ -3151,10 +3233,28 @@ let WishlistPageClass = (function(){
 
         observer.observe(container, { 'childList': true, });
 
-        this.addStatsArea();
-        this.addEmptyWishlistButton();
-        this.addUserNotesHandlers();
-        this.addRemoveHandler();
+        let wishlistLoaded = () => {
+            this.addStatsArea();
+            this.addExportWishlistButton();
+            this.addEmptyWishlistButton();
+            this.addUserNotesHandlers();
+            this.addRemoveHandler();
+        };
+        
+        if (document.querySelector("#throbber").style.display === "none") {
+            wishlistLoaded();
+        } else {
+            Messenger.onMessage("wishlistLoaded").then(wishlistLoaded);
+
+            ExtensionLayer.runInPageContext(() => {
+                $J(document).ajaxSuccess((e, xhr, settings) => {
+                    let url = new URL(settings.url);
+                    if (url.origin + url.pathname === `${g_strWishlistBaseURL}wishlistdata/` && g_Wishlist.nPagesToLoad === g_Wishlist.nPagesLoaded) {
+                        Messenger.postMessage("wishlistLoaded");
+                    }
+                });
+            });
+        }
     }
 
     function isMyWishlist() {
@@ -3264,9 +3364,9 @@ let WishlistPageClass = (function(){
         if (!isMyWishlist()) { return; }
         if (!SyncedStorage.get("showemptywishlist")) { return; }
 
-        HTML.beforeEnd("div.wishlist_header", "<div id='es_empty_wishlist'><div>" + Localization.str.empty_wishlist + "</div></div>");
+        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_empty_wishlist'>" + Localization.str.empty_wishlist + "</div>");
 
-        document.querySelector("#es_empty_wishlist div").addEventListener("click", function(e) {
+        document.querySelector("#es_empty_wishlist").addEventListener("click", function(e) {
             emptyWishlist();
         });
     };
@@ -3297,7 +3397,7 @@ let WishlistPageClass = (function(){
             });
         }
 
-        Messenger.addMessageListener("emptyWishlist", () => {
+        Messenger.onMessage("emptyWishlist").then(() => {
             let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
             if (!wishlistData) { return; }
 
@@ -3305,14 +3405,153 @@ let WishlistPageClass = (function(){
                 DynamicStore.clear();
                 location.reload();
             });
-        }, true)
+        });
     }
+
+    class WishlistExporter {
+
+        constructor(appInfo) {
+            this.appInfo = appInfo;
+            this.notes = SyncedStorage.get("user_notes") || {};
+        }
+
+        toJson() {
+            let json = {
+                version: "02",
+                data: []
+            };
+
+            for (let [appid, data] of Object.entries(this.appInfo)) {
+                json.data.push({
+                    gameid: ["steam", "app/"+appid],
+                    title: data.name,
+                    url: `https://store.steampowered.com/app/${appid}/`,
+                    release_date: data.release_string,
+                    note: this.notes[appid] || null
+                });
+            }
+
+            return JSON.stringify(json, null, 4);
+        }
+
+        toText(format) {
+            let result = [];
+            for (let [appid, data] of Object.entries(this.appInfo)) {
+                result.push(
+                    format
+                        .replace("%appid%", appid)
+                        .replace("%id%", "app/"+appid)
+                        .replace("%url%", `https://store.steampowered.com/app/${appid}/`)
+                        .replace("%title%", data.name)
+                        .replace("%release_date%", data.release_string)
+                        .replace("%type%", data.type)
+                        .replace("%note%", this.notes[appid] || "")
+                );
+            }
+
+            return result.join("\n");
+        }
+    }
+    WishlistExporter.method = Object.freeze({"download": Symbol("Download"), "copyToClipboard": Symbol("Copy to clipboard")});
+
+    /**
+     * Using Valve's CModal API here is very hard, since, when trying to copy data to the clipboard, it has to originate from
+     * a short-lived event handler for a user action.
+     * Since we'd use our Messenger class to pass information in between these two contexts, we would "outrange" this specific event
+     * handler, resulting in a denial of access to the clipboard function.
+     * This could be circumvented by adding the appropriate permissions, but doing so would prompt users to explicitly accept the changed
+     * permissions on an update.
+     * 
+     * If we don't use the Messenger, we'd have to move the whole handler part (including WishlistExporter) to
+     * the page context side.
+     * 
+     * Final solution is to query the action buttons of the dialog and adding some extra click handlers on the content script side.
+     * These handlers are using a capture, so that the dialog elements will still be existent at the time of the invocation.
+     */
+    WishlistPageClass.prototype.showExportModalDialog = function(appInfo) {
+
+        let exportStr = Localization.str.export;
+
+        ExtensionLayer.runInPageContext(`function() {
+            ShowConfirmDialog(
+                "${exportStr.wishlist}",
+                \`<div id='es_export_form'>
+                    <div class="es-wexport">
+                    <h2>${exportStr.type}</h2>
+                    <div>
+                        <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${exportStr.text}</label>
+                        <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
+                    </div>
+                    </div>
+                
+                    <div class="es-wexport es-wexport__format">
+                        <h2>${exportStr.format}</h2>
+                        <div>
+                            <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
+                            <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %note%</div>
+                        </div>
+                    </div>
+                </div>\`,
+                "${exportStr.download}",
+                null, // use default "Cancel"
+                "${exportStr.copy_clipboard}"
+            );
+        }`);
+
+        let [ dlBtn, copyBtn ] = document.querySelectorAll(".newmodal_buttons > .btn_medium");
+
+        dlBtn.classList.remove("btn_green_white_innerfade");
+        dlBtn.classList.add("btn_darkblue_white_innerfade");
+
+        dlBtn.addEventListener("click", () => exportWishlist(WishlistExporter.method.download), true);
+        copyBtn.addEventListener("click", () => exportWishlist(WishlistExporter.method.copyToClipboard), true);
+
+        let format = document.querySelector(".es-wexport__format");
+        for (let el of document.getElementsByName("es_wexport_type")) {
+            el.addEventListener("click", e => format.style.display = e.target.value === "json" ? "none" : '');
+        }
+
+        function exportWishlist(method) {
+            let type = document.querySelector("input[name='es_wexport_type']:checked").value;
+            let format = document.querySelector("#es-wexport-format").value;
+
+            let wishlist = new WishlistExporter(appInfo);
+
+            let result = "";
+            let filename = "";
+            let filetype = "";
+            if (type === "json") {
+                result = wishlist.toJson();
+                filename = "wishlist.json";
+                filetype = "application/json";
+            } else if (type === "text" && format) {
+                result = wishlist.toText(format);
+                filename = "wishlist.txt";
+                filetype = "text/plain";
+            }
+
+            if (method === WishlistExporter.method.copyToClipboard) {
+                Clipboard.set(result);
+            } else if (method === WishlistExporter.method.download) {
+                Downloader.download(new Blob([result], { type: `${filetype};charset=UTF-8` }), filename);
+            }
+        }
+    };
+
+    WishlistPageClass.prototype.addExportWishlistButton = function() {
+        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_export_wishlist'><div>" + Localization.str.export.wishlist + "</div></div>");
+
+        document.querySelector("#es_export_wishlist").addEventListener("click", () => {
+            Messenger.onMessage("appInfo").then(appInfo => this.showExportModalDialog(appInfo));
+            ExtensionLayer.runInPageContext(() => Messenger.postMessage("appInfo", g_rgAppInfo));
+        });
+    };
 
     function getNodesBelow(node) {
         let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
 
-        // Limit the selection to the rows that are positioned below the row (including the row itself) where the price is being shown
-        return nodes.filter(row => parseInt(row.style.top, 10) >= parseInt(node.style.top, 10));
+        // Limit the selection to the rows that are positioned below the row (not including the row itself) where the price is being shown
+        return nodes.filter(row => parseInt(row.style.top, 10) > parseInt(node.style.top, 10));
     }
 
     WishlistPageClass.prototype.addPriceHandler = function(node) {
@@ -3328,17 +3567,17 @@ let WishlistPageClass = (function(){
                 cachedPrices[appId] = new Promise(resolve => {
                     let prices = new Prices();
                     prices.appids = [appId];
-                    prices.priceCallback = (type, id, html) => {
-                        HTML.beforeEnd(node, html);
-                        let priceNode = node.querySelector(".es_lowest_price");
-                        priceNode.style.top = -priceNode.getBoundingClientRect().height + "px";
+                    prices.priceCallback = (type, id, contentNode) => {
+                        node.insertAdjacentElement("beforeend", contentNode);
+                        let priceNode = node.querySelector(".itad-pricing");
+                        priceNode.style.bottom = -priceNode.getBoundingClientRect().height + "px";
                         resolve();
-                    }
+                    };
                     prices.load();
                 });
             }
             cachedPrices[appId].then(() => {
-                    let priceNodeHeight = node.querySelector(".es_lowest_price").getBoundingClientRect().height;
+                    let priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
                     getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) + priceNodeHeight + "px");
             });
         });
@@ -3347,7 +3586,7 @@ let WishlistPageClass = (function(){
             // When scrolling really fast, sometimes only this event is called without the invocation of the mouseenter event
             if (cachedPrices[appId]) {
                 cachedPrices[appId].then(() => {
-                    let priceNodeHeight = node.querySelector(".es_lowest_price").getBoundingClientRect().height;
+                    let priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
                     getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) - priceNodeHeight + "px");
                 });
             }
@@ -3404,7 +3643,7 @@ let WishlistPageClass = (function(){
             })
         );
 
-        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry), false);
+        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry));
     };
 
     return WishlistPageClass;
@@ -3447,7 +3686,7 @@ let UserNotes = (function(){
             deferred.always(() => Modal.Dismiss());
 
             Modal.m_fnBackgroundClick = () => {
-                Messenger.addMessageListener("noteSaved", () => Modal.Dismiss(), true);
+                Messenger.onMessenge("noteSaved").then(Modal.Dismiss);
                 Messenger.postMessage("backgroundClick");
             }
 
@@ -3470,10 +3709,10 @@ let UserNotes = (function(){
 
         document.addEventListener("click", clickListener);
 
-        Messenger.addMessageListener("backgroundClick", () => {
+        Messenger.onMessage("backgroundClick").then(() => {
             onNoteUpdate.apply(null, saveNote());
             Messenger.postMessage("noteSaved");
-        }, true);
+        });
 
         function clickListener(e) {
             if (e.target.closest(".es_note_modal_submit")) {

@@ -366,7 +366,6 @@
         "saved_note": "オプションを保存しました",
         "regional_hideworld": "地球儀アイコンを非表示",
         "show_astatslink": "アプリページに AStats のリンクを表示",
-        "showclient": "Steamクライアントのリンクを表示します",
         "guest": "ゲストパスがあるアイテム",
         "show_steamchart_info": "SteamCharts.comの情報を表示",
         "show_steamspy_info": "Steamspy.comの情報を表示",
@@ -381,7 +380,6 @@
         "steamdb": "SteamDBへのリンクを表示",
         "hide_early_access": "ホームページと閲覧、検索ページで早期アクセスゲームを非表示",
         "reset_note": "オプションをリセットしました",
-        "html5video": "フラッシュの代わりに HTML5 を使用してビデオを表示する",
         "profiles_link_group_game": "ゲーム独占",
         "friends_wishlist": "フレンドがウィッシュリストに入れているアイテム",
         "showspeechsearch": "検索ボックスに音声入力を追加",
@@ -454,7 +452,7 @@
     },
     "survey": {
         "performance_survey": "パフォーマンス調査",
-        "users": "__users__人のユーザーがこのゲームのパフォーマンスを調査しました",
+        "users": "__users__人のユーザーがこのゲームのパフォーマンスを調査しました。",
         "framerate": "フレームレート",
         "framerate_response": "のユーザーがフレームレートについて次のように報告しています：",
         "framerate_30": "固定（30fps以下）",
@@ -468,10 +466,10 @@
         "satisfaction": "各GPUのパフォーマンス満足度",
         "gs_y": "グラフィック設定やグラフィックメニューがあります",
         "gs_n": "グラフィック設定やグラフィックメニューがありません",
-        "nobody": "まだこのゲームはパフォーマンス調査されていません",
+        "nobody": "まだこのゲームはパフォーマンス調査されていません。",
         "take": "調査に協力する"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "ウィッシュリストに入っているDLCを選択",
         "none": "何も選択しない",
         "unowned_dlc": "未所有のDLCを選択"

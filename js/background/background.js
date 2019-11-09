@@ -187,6 +187,68 @@ AugmentedSteamApi._progressingRequests = new Map();
 AugmentedSteamApi._earlyAccessAppIds_promise = null;
 
 
+class ContextMenu {
+    _listenerRegistered = false;
+
+    static onClick(info) {
+        switch (info.menuItemId) {
+            case "context_steam_store":
+                chrome.tabs.create({ url: `https://store.steampowered.com/search/?term=${encodeURIComponent(info.selectionText)}` });
+                break;
+            case "context_steam_market":
+                chrome.tabs.create({ url: `https://steamcommunity.com/market/search?q=${encodeURIComponent(info.selectionText)}` });
+                break;
+            case "context_itad":
+                chrome.tabs.create({ url: `https://isthereanydeal.com/search/?q=${encodeURIComponent(info.selectionText)}` });
+                break;
+            case "context_bartervg":
+                chrome.tabs.create({ url: `https://barter.vg/search?q=${encodeURIComponent(info.selectionText.trim())}` });
+                break;
+            case "context_steamdb":
+                chrome.tabs.create({ url: `https://steamdb.info/search/?q=${encodeURIComponent(info.selectionText)}` });
+                break;
+            case "context_steamdb_instant":
+                chrome.tabs.create({ url: `https://steamdb.info/instantsearch/?query=${encodeURIComponent(info.selectionText)}` });
+                break;
+            case "context_steam_keys":
+                let steamkeys = info.selectionText.match(/[A-NP-RTV-Z02-9]{5}(-[A-NP-RTV-Z02-9]{5}){2}/g);
+                if (!steamkeys || steamkeys.length === 0) {
+                    window.alert(Localization.str.options.no_keys_found);
+                    return;
+                }
+                steamkeys.forEach(steamkey => chrome.tabs.create({ url: `https://store.steampowered.com/account/registerkey?key=${encodeURIComponent(steamkey)}` }));
+                break;
+        }
+    }
+    
+    static build() {
+        if (!chrome.contextMenus) { return; }
+        let options = ["context_steam_store", "context_steam_market", "context_itad", "context_bartervg", "context_steamdb", "context_steamdb_instant", "context_steam_keys"];
+        for (let option of options) {
+            if (!SyncedStorage.get(option)) { continue; }
+            chrome.contextMenus.create({
+                "id": option,
+                "title": Localization.str.options[option].replace("__query__", "%s"),
+                "contexts": ["selection"]
+            });
+        }
+    }
+    
+    static update() {
+        if (!chrome.contextMenus) { return; }
+        chrome.contextMenus.removeAll(ContextMenu.build);
+        if (!this._listenerRegistered) {
+            chrome.contextMenus.onClicked.addListener(ContextMenu.onClick);
+            this._listenerRegistered = true;
+        }
+    }
+}
+(async function() {
+    await Localization;
+    ContextMenu.update();
+})();
+
+
 class SteamStore extends Api {
     // static origin = "https://store.steampowered.com/";
     // static params = { 'credentials': 'include', };
@@ -673,7 +735,6 @@ class Steam {
 }
 Steam._dynamicstore_promise = null;
 Steam._supportedCurrencies = null;
-
 
 let profileCacheKey = (params => `profile_${params.profile}`);
 let appCacheKey = (params => `app_${params.appid}`);
