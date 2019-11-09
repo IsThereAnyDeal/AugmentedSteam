@@ -2161,7 +2161,7 @@ class Downloader {
 
     static download(content, filename) {
         let a = document.createElement("a");
-        a.href = URL.createObjectURL(content);
+        a.href = typeof content === "string" ? content : URL.createObjectURL(content);
         a.download = filename;
 
         // Explicitly dispatching the click event (instead of just a.click()) will make it work in FF
