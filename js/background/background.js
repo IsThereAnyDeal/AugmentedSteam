@@ -758,7 +758,7 @@ function onHeadersReceived(details) {
                         break;
                     }
                 case 'steamdb':
-                    response.redirectUrl = `https://steamdb.info/${type}/${id}`;
+                    response.redirectUrl = `https://steamdb.info/${type}/${id}/`;
                     break;
                 case 'custom':
                     response.redirectUrl = SyncedStorage.get('redirect_removed_custom')
