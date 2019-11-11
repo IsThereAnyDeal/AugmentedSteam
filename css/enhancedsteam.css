@@ -1,8 +1,8 @@
-/* Required for "Customize" button and YouTube / Steam tabs */
-.home_actions_ctn {
+/* Required for "Customize" button */
+#es_customize_btn {
   float: right;
 }
-.home_btn {
+#es_customize_btn .home_customize_btn {
   display: inline-block;
   background: rgba( 103, 193, 245, 0.2 );
   color: #67c1f5;
@@ -12,24 +12,23 @@
   padding: 0 8px;
   margin-left: 4px;
   cursor: pointer;
-}
-.home_btn:hover {
-  color: #ffffff;
-  background: linear-gradient(-60deg, #67c1f5 0%, #417a9b 100%);
-}
-.home_btn.active {
-  background: #e3eaef;
-  color: #384959;
-}
-.home_btn.active:hover {
-  background: #e3eaef;
-}
-.home_btn.home_customize_btn {
+  z-index: 13;
   position: relative;
   z-index: 11;
   margin-right: 2px;
 }
-.home_viewsettings_popup {
+#es_customize_btn .home_customize_btn:hover {
+  color: #ffffff;
+  background: linear-gradient(-60deg, #67c1f5 0%, #417a9b 100%);
+}
+#es_customize_btn .home_customize_btn.active {
+  background: #e3eaef;
+  color: #384959;
+}
+#es_customize_btn .home_customize_btn.active:hover {
+  background: #e3eaef;
+}
+#es_customize_btn .home_viewsettings_popup {
   position: absolute;
   color: #384959;
   padding: 12px 11px;
@@ -40,10 +39,11 @@
   background: -webkit-linear-gradient( top, #e3eaef 5%, #c7d5e0 95%);
   background: linear-gradient( to bottom, #e3eaef 5%, #c7d5e0 95%);
 }
-.home_viewsettings_instructions {
+#es_customize_btn .home_viewsettings_instructions {
   margin-bottom: 12px;
+  font-size: 12px;
 }
-.home_viewsettings_checkboxrow {
+#es_customize_btn .home_viewsettings_checkboxrow {
   background: rgba( 0, 0, 0, 0.2 );
   margin-bottom: 1px;
   padding: 2px;
@@ -52,11 +52,11 @@
   font-size: 10px;
   cursor: pointer;
 }
-.home_viewsettings_checkboxrow:hover {
+#es_customize_btn .home_viewsettings_checkboxrow:hover {
   color: #ffffff;
   background: rgba( 0, 0, 0, 0.3 );
 }
-.home_viewsettings_checkbox {
+#es_customize_btn .home_viewsettings_checkbox {
   float: left;
   margin-right: 5px;
   display: inline-block;
@@ -65,11 +65,18 @@
   background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/customize_checkboxes.png');
   background-position: 0px 0px;
 }
-.home_viewsettings_checkbox.checked {
+#es_customize_btn .home_viewsettings_checkbox.checked {
   background-position: 0px 28px;
 }
 
-.home_tab {
+/* Required for YouTube / Steam media tabs */
+#es_media_tabs {
+  position: relative;
+  overflow-x: auto;
+  white-space: nowrap;
+  height: 31px;
+}
+#es_media_tabs .home_tab {
   margin-top: 3px;
   border: none;
   display: inline-block;
@@ -82,16 +89,16 @@
   cursor: pointer;
   vertical-align: top;
 }
-.home_tab.active {
+#es_media_tabs .home_tab.active {
   background: linear-gradient(top, rgba(103,193,245,1) 0%,rgba(103,193,245,0) 100%);
   margin-top: 0;
   box-shadow: none;
   padding: 1px;
 }
-.home_tab:hover {
+#es_media_tabs .home_tab:hover {
   color: #ffffff;
 }
-.home_tab .tab_content {
+#es_media_tabs .home_tab .tab_content {
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   font-size: 13px;
@@ -102,7 +109,7 @@
   vertical-align: top;
   box-shadow: inset 0 -2px 3px 0 rgba( 0, 0, 0, 0.25 );
 }
-.home_tab.active .tab_content {
+#es_media_tabs .home_tab.active .tab_content {
   line-height: 29px;
   font-size: 14px;
   color: #ffffff;
@@ -112,14 +119,9 @@
   margin-top: 0;
   box-shadow: none;
 }
-.home_tab .tab_content:hover {
+#es_media_tabs .home_tab .tab_content:hover {
   color: #ffffff;
   background: linear-gradient(-60deg,  #67c1f5 0%,#417a9b 100%);
-}
-.home_tabs_row {
-  position: relative;
-  overflow-x: auto;
-  white-space: nowrap;
 }
 
 .wishlistRow {

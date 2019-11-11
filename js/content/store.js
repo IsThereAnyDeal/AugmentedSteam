@@ -1194,14 +1194,12 @@ class AppPageClass extends StorePageClass {
 
         HTML.afterBegin(".leftcol",
             `<div id="es_media_tabs">
-                <div class="store_horizontal_minislider_ctn" style="height: 31px;">
-                    <div class="home_tabs_row">
-                        <div id="es_tab_steammedia" class="es_media_tab home_tab active">
-                            <div class="tab_content">Steam</div>
-                        </div>
-                        <div id="es_tab_youtubemedia" class="es_media_tab home_tab">
-                            <div class="tab_content">YouTube Gameplay</div>
-                        </div>
+                <div class="home_tabs_row">
+                    <div id="es_tab_steammedia" class="es_media_tab home_tab active">
+                        <div class="tab_content">Steam</div>
+                    </div>
+                    <div id="es_tab_youtubemedia" class="es_media_tab home_tab">
+                        <div class="tab_content">YouTube Gameplay</div>
                     </div>
                 </div>
             </div>`);
@@ -2089,10 +2087,10 @@ class AppPageClass extends StorePageClass {
     customizeAppPage() {
         let nodes = document.querySelectorAll(".purchase_area_spacer");
         HTML.beforeEnd(nodes[nodes.length-1],
-            `<div id="es_customize_btn" class="home_actions_ctn">
-                <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
+            `<div id="es_customize_btn">
+                <div class="home_btn home_customize_btn" style="">${Localization.str.customize}</div>
                 <div class='home_viewsettings_popup'>
-                    <div class="home_viewsettings_instructions" style="font-size: 12px;">${Localization.str.apppage_sections}</div>
+                    <div class="home_viewsettings_instructions">${Localization.str.apppage_sections}</div>
                 </div>
             </div>
             <div style="clear: both;"></div>`);
