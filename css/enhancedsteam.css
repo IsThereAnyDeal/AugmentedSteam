@@ -2854,7 +2854,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 /***************************************
  * Store curator pages
  **************************************/
-.capsule.smallcapsule .es_overlay_container {
+.store_capsule .es_overlay_container {
   position: absolute;
   top: 0;
   left: 0;
@@ -2862,7 +2862,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
   height: auto;
   vertical-align: top;
 }
-.capsule.smallcapsule .es_overlay_container > img {
+.store_capsule .es_overlay_container > img {
   width: 100%;
 }
 
