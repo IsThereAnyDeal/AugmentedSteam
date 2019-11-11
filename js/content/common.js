@@ -1444,7 +1444,7 @@ let Highlights = (function(){
             if (node.classList.contains("tab_row")) { // can't find it
                 root = node.querySelector(".tab_desc").classList.remove("with_discount");
 
-                node.querySelector(".tab_discount").style.top="15px";
+                node.querySelector(".tab_discount").style.top = "15px";
                 root.querySelector("h4").insertAdjacentElement("afterend", tags);
             }
             else if (node.classList.contains("home_smallcap")) {
@@ -1467,7 +1467,7 @@ let Highlights = (function(){
             else if (node.classList.contains("small_cap")) {
                 node.querySelector("h4").insertAdjacentElement("afterbegin", tags);
             }
-            else if (node.classList.contains("browse_tag_game")) { // can't find it
+            else if (node.classList.contains("browse_tag_game")) {
                 root = node;
 
                 tags.style.display = "table";
@@ -1484,7 +1484,7 @@ let Highlights = (function(){
                 node.querySelector(".match_price").insertAdjacentElement("afterbegin", tags);
             }
             else if (node.classList.contains("cluster_capsule")) {
-                node.querySelector(".main_cap_platform_area").append($tags);
+                node.querySelector(".main_cap_platform_area").append(tags);
             }
             else if (node.classList.contains("recommendation_highlight")) {
                 node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", tags);
@@ -1499,14 +1499,17 @@ let Highlights = (function(){
                     root.querySelector(".discount_block").append(tags);
                 }
             }
-            else if (node.classList.contains("recommendation_carousel_item")) { // can't find it
+            else if (node.classList.contains("recommendation_carousel_item")) {
                 root = node;
+
                 tags.style.float = "left";
+                tags.style.marginLeft = "8px";
                 root.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
             }
-            else if (node.classList.contains("friendplaytime_game")) { // can't find it
+            else if (node.classList.contains("friendplaytime_game")) {
                 root = node;
-                tags.style.float = "left";
+
+                tags.style.marginLeft = "8px";
                 root.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
             }
 
