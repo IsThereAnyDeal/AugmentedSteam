@@ -1486,23 +1486,18 @@ let Highlights = (function(){
             else if (node.classList.contains("cluster_capsule")) {
                 node.querySelector(".main_cap_platform_area").append($tags);
             }
-            else if (node.classList.contains("recommendation_highlight")) { // can't find it
+            else if (node.classList.contains("recommendation_highlight")) {
+                node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", tags);
+            }
+            else if (node.classList.contains("similar_grid_item")) {
                 root = node;
 
-                if (document.querySelector(".game_purchase_action")) {
-                    tags.style.float = "left";
-                    let node = root.querySelector(".game_purchase_action");
-                    node.insertAdjacentElement("beforebegin", tags);
-                    HTML.beforeBegin(node, '<div style="clear: right;"></div>');
-                } else {
-                    tags.style.fload = "right";
-                    HTML.beforeBegin(root.querySelector(".price").parentNode, tags);
-                }
-            }
-            else if (node.classList.contains("similar_grid_item")) { // can't find it
-                root = node;
                 tags.style.float = "right";
-                root.querySelector(".similar_grid_price").querySelector(".price").append($tags);
+                if (root.querySelector(".regular_price")) {
+                    root.querySelector(".regular_price").append(tags);
+                } else {
+                    root.querySelector(".discount_block").append(tags);
+                }
             }
             else if (node.classList.contains("recommendation_carousel_item")) { // can't find it
                 root = node;
