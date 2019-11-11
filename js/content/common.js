@@ -1486,7 +1486,7 @@ let Highlights = (function(){
             else if (node.classList.contains("cluster_capsule")) {
                 node.querySelector(".main_cap_platform_area").append($tags);
             }
-            else if (node.classList.contains("recommendation_highlight")) { // can't find it
+            else if (node.classList.contains("recommendation_highlight")) {
                 root = node;
 
                 if (document.querySelector(".game_purchase_action")) {
@@ -1495,14 +1495,22 @@ let Highlights = (function(){
                     node.insertAdjacentElement("beforebegin", tags);
                     HTML.beforeBegin(node, '<div style="clear: right;"></div>');
                 } else {
-                    tags.style.fload = "right";
-                    HTML.beforeBegin(root.querySelector(".price").parentNode, tags);
+                    tags.style.float = "right";
+                    if (root.querySelector(".regular_price")) {
+                        root.querySelector(".regular_price").parentNode.insertAdjacentElement("beforebegin", tags);
+                    } else {
+                        root.querySelector(".discount_block").parentNode.insertAdjacentElement("beforebegin", tags);
+                    }
                 }
             }
-            else if (node.classList.contains("similar_grid_item")) { // can't find it
+            else if (node.classList.contains("similar_grid_item")) {
                 root = node;
                 tags.style.float = "right";
-                root.querySelector(".similar_grid_price").querySelector(".price").append($tags);
+                if (root.querySelector(".regular_price")) {
+                    root.querySelector(".regular_price").append(tags);
+                } else {
+                    root.querySelector(".discount_block").append(tags);
+                }
             }
             else if (node.classList.contains("recommendation_carousel_item")) { // can't find it
                 root = node;
