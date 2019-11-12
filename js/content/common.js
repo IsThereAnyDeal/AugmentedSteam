@@ -1468,11 +1468,7 @@ let Highlights = (function(){
                 node.querySelector("h4").insertAdjacentElement("afterbegin", tags);
             }
             else if (node.classList.contains("browse_tag_game")) {
-                root = node;
-
-                tags.style.display = "table";
-                tags.style.marginLeft = "8px";
-                root.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
+                node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
             }
             else if (node.classList.contains("game_area_dlc_row")) {
                 node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", tags);
@@ -1490,27 +1486,17 @@ let Highlights = (function(){
                 node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", tags);
             }
             else if (node.classList.contains("similar_grid_item")) {
-                root = node;
-
-                tags.style.float = "right";
-                if (root.querySelector(".regular_price")) {
-                    root.querySelector(".regular_price").append(tags);
+                if (node.querySelector(".regular_price")) {
+                    node.querySelector(".regular_price").append(tags);
                 } else {
-                    root.querySelector(".discount_block").append(tags);
+                    node.querySelector(".discount_block").append(tags);
                 }
             }
             else if (node.classList.contains("recommendation_carousel_item")) {
-                root = node;
-
-                tags.style.float = "left";
-                tags.style.marginLeft = "8px";
-                root.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
+                node.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
             }
             else if (node.classList.contains("friendplaytime_game")) {
-                root = node;
-
-                tags.style.marginLeft = "8px";
-                root.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
+                node.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
             }
 
             tags = [tags];
