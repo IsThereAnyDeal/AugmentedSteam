@@ -3866,6 +3866,7 @@ let StoreFrontPageClass = (function(){
             let browsesteam = document.querySelector(".big_buttons.home_page_content");
             let recentlyupdated = document.querySelector(".recently_updated_block");
             let under = document.querySelector("[class*='specials_under']");
+            let steamlabs = document.querySelector(".labs_title");
 
             let customizer = new Customizer("customize_frontpage");
             customizer
@@ -3879,12 +3880,14 @@ let StoreFrontPageClass = (function(){
                 .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
                 .add("gamesstreamingnow", ".live_streams_ctn")
                 .add("updatesandoffers", ".marketingmessage_area")
-                .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
+                .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar)
+                .add("topnewreleases", ".top_new_releases", Localization.str.homepage_topnewreleases);
 
             if (specialoffers) customizer.add("specialoffers", specialoffers.parentElement);
             if (browsesteam) customizer.add("browsesteam", browsesteam.parentElement);
             if (recentlyupdated) customizer.add("recentlyupdated", recentlyupdated.parentElement);
             if (under) customizer.add("under", under.parentElement.parentElement);
+            if (steamlabs) customizer.add("steamlabs", steamlabs.parentElement.parentElement, steamlabs.textContent);
 
             let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
             for (let i = 0; i < dynamicNodes.length; ++i) {
