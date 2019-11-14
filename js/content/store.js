@@ -3879,7 +3879,7 @@ let StoreFrontPageClass = (function(){
                 .add("popularvrgames", ".best_selling_vr_ctn")
                 .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
                 .add("gamesstreamingnow", ".live_streams_ctn")
-                .add("updatesandoffers", ".marketingmessage_area")
+                .add("updatesandoffers", ".marketingmessage_area", "", true)
                 .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar)
                 .add("topnewreleases", ".top_new_releases", Localization.str.homepage_topnewreleases);
 
