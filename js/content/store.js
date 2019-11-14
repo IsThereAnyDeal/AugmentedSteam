@@ -1153,9 +1153,6 @@ class AppPageClass extends StorePageClass {
                             </div>
                         </div>`);
 
-                    if (!SyncedStorage.get("customize_apppage").reviews) {
-                        document.querySelector("#game_area_reviews").style.display = "none";
-                    }
                 }
 
                 let review_text = "";
@@ -1263,9 +1260,6 @@ class AppPageClass extends StorePageClass {
                     <div id="es_youtube_reviews"></div>
                 </div>`);
 
-            if (!SyncedStorage.get("customize_apppage").reviews) {
-                document.querySelector("#game_area_reviews").style.display = "none";
-            }
         } else {
             HTML.beforeEnd(reviewsNode, '<div id="es_youtube_reviews"></div>');
         }
@@ -2122,14 +2116,14 @@ class AppPageClass extends StorePageClass {
         let customizer = new Customizer("customize_apppage");
         customizer
             .add("recommendedbycurators", ".steam_curators_block")
-            .add("recentupdates", ".early_access_announcements")
+            .add("recentupdates", "#events_root", Localization.str.apppage_recentupdates)
             .add("reviews", "#game_area_reviews")
             .add("about", "[data-parent-of='#game_area_description']")
             .add("contentwarning", "[data-parent-of='#game_area_content_descriptors']")
             .add("steamchart", "#steam-charts")
             .add("surveys", "#performance_survey")
             .add("steamspy", "#steam-spy")
-            .add("sysreq", "[data-parent-of='.sys_req")
+            .add("sysreq", "[data-parent-of='.sys_req']")
             .add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal)
             .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
             .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
