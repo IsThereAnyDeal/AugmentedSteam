@@ -118,6 +118,8 @@
     "using_store": "You are using the Steam store for the __current__ region.",
     "volume_sold_last_24": "Volume: __sold__ sold in the last 24 hours",
     "sold_last_24": "__sold__ sold in the last 24 hours",
+    "homepage_curators": "Steam Curator Recommendations",
+    "homepage_topnewreleases": "Top Steam Releases",
     "homepage_sidebar": "Sidebar",
     "drop_calc": "Click here to calculate drops remaining",
     "price": "Price",

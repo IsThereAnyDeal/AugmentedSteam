@@ -7,15 +7,16 @@ class Customizer {
     }
 
     _textValue(node) {
-        if (!node) return '';
+        let textNode = node.querySelector("h1, h2");
+        if (!textNode) return "";
         let str = "";
-        for (node = node.firstChild; node; node = node.nextSibling) {
-            if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName === "A")) { // Special case for Steam curators
+        for (let node of textNode.childNodes) {
+            if (node.nodeType === 3) {
                 str += node.textContent.trim();
             }
         }
         return str;
-    };
+    }
 
     _updateValue(name, value) {
         this.settings[name] = value;
@@ -46,14 +47,14 @@ class Customizer {
         let isValid = false;
 
         elements.forEach((element, i) => {
-            if (getComputedStyle(element).display === "none" && !forceShow) {
+            if (element.style.display === "none" && !forceShow) {
                 elements.splice(i, 1);
                 return;
             }
     
-            if (!text) {
-                text = (typeof text === "string" && text) || this._textValue(element.querySelector(".home_section_title, h2")).toLowerCase();
-                if (!text) return;
+            if (typeof text !== "string" || text === "") {
+                text = this._textValue(element).toLowerCase();
+                if (text === "") return;
             }
 
             isValid = true;
@@ -3872,13 +3873,15 @@ let StoreFrontPageClass = (function(){
                 .add("featuredrecommended", ".home_cluster_ctn")
                 .add("trendingamongfriends", ".friends_recently_purchased")
                 .add("discoveryqueue", ".discovery_queue_ctn")
-                .add("curators", ".steam_curators_ctn")
-                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
+                .add("curators", ".steam_curators_ctn", Localization.str.homepage_curators)
+                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn", Localization.str.homepage_curators)
                 .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
                 .add("popularvrgames", ".best_selling_vr_ctn")
                 .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
-                .add("gamesstreamingnow", ".live_streams_ctn")
-                .add("updatesandoffers", ".marketingmessage_area")
+                .add("gamesstreamingnow", ".live_streams_ctn", "", true)
+                .add("updatesandoffers", ".marketingmessage_area", "", true)
+                .add("topnewreleases", ".top_new_releases", Localization.str.homepage_topnewreleases)
+                .add("steamlabs", ".labs_cluster")
                 .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
 
             if (specialoffers) customizer.add("specialoffers", specialoffers.parentElement);
