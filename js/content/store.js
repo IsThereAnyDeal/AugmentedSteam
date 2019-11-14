@@ -170,7 +170,7 @@ class StorePageClass {
         if (!SyncedStorage.get("showdrm")) { return; }
 
         let text = "";
-        for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details")) {
+        for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details, .DRM_notice")) {
             text += node.innerHTML;
         }
         let uppercased = text.toUpperCase();
