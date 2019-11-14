@@ -3851,7 +3851,6 @@ let StoreFrontPageClass = (function(){
                 </div>
             </div>`);
 
-        document.querySelector(".home_page_body_ctn").style.overflow = "visible";
         document.querySelector("#es_customize_btn").addEventListener("click", function(e){
             e.target.classList.toggle("active");
         });
