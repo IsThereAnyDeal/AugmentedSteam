@@ -3866,7 +3866,7 @@ let StoreFrontPageClass = (function(){
             let browsesteam = document.querySelector(".big_buttons.home_page_content");
             let recentlyupdated = document.querySelector(".recently_updated_block");
             let under = document.querySelector("[class*='specials_under']");
-            let steamlabs = document.querySelector(".labs_title");
+            let steamlabs = document.querySelector(".labs_cluster h1");
 
             let customizer = new Customizer("customize_frontpage");
             customizer
@@ -3887,7 +3887,7 @@ let StoreFrontPageClass = (function(){
             if (browsesteam) customizer.add("browsesteam", browsesteam.parentElement);
             if (recentlyupdated) customizer.add("recentlyupdated", recentlyupdated.parentElement);
             if (under) customizer.add("under", under.parentElement.parentElement);
-            if (steamlabs) customizer.add("steamlabs", steamlabs.parentElement.parentElement, steamlabs.textContent);
+            if (steamlabs) customizer.add("steamlabs", ".labs_cluster", steamlabs.textContent);
 
             let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
             for (let i = 0; i < dynamicNodes.length; ++i) {
