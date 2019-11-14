@@ -65,22 +65,12 @@ class Customizer {
         for (let element of elements) {
             element.classList.toggle("esi-shown", state);
             element.classList.toggle("esi-hidden", !state);
-            element.classList.add("esi-customizer"); // for dynamic entries on home page
+            element.classList.add("esi-customizer");
             element.dataset.es_name = name;
             element.dataset.es_text = text;
         }
 
         return this;
-    };
-
-    addDynamic(titleNode, targetNode) {
-        let textValue = this._textValue(titleNode);
-
-        console.warn("Node with textValue %s is not recognized!", textValue);
-        let option = textValue.toLowerCase().replace(/[^a-z]*/g, "");
-        if (option === "") { return; }
-
-        this.add("dynamic_" + option, targetNode, textValue);
     }
 
     build() {
@@ -3888,17 +3878,6 @@ let StoreFrontPageClass = (function(){
             if (browsesteam) customizer.add("browsesteam", browsesteam.parentElement);
             if (recentlyupdated) customizer.add("recentlyupdated", recentlyupdated.parentElement);
             if (under) customizer.add("under", under.parentElement.parentElement);
-
-            let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
-            for (let i = 0; i < dynamicNodes.length; ++i) {
-                let node = dynamicNodes[i];
-                if (node.querySelector(".esi-customizer") || node.style.display === "none") { continue; }
-
-                let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
-                if (!headerNode) { continue; }
-
-                customizer.addDynamic(headerNode, node);
-            }
 
             customizer.build();
         }, 1000);
