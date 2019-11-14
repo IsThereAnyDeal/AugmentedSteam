@@ -2111,7 +2111,7 @@ class AppPageClass extends StorePageClass {
         }
 
         let workshop = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
-        let morelikethis = document.querySelector("#recommended_block h2");
+        let greenlight = document.querySelector("[href^='https://steamcommunity.com/greenlight']");
 
         let customizer = new Customizer("customize_apppage");
         customizer
@@ -2127,10 +2127,11 @@ class AppPageClass extends StorePageClass {
             .add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal)
             .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
             .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
+            .add("morelikethis", "#recommended_block")
             .add("customerreviews", "#app_reviews_hash");
 
-        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop.workshop);
-        if (morelikethis) customizer.add("morelikethis", "#recommended_block", morelikethis.textContent);
+        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_workshop);
+        if (greenlight) customizer.add("greenlight", greenlight.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_greenlight);
 
         customizer.build();
         document.querySelector(".purchase_area_spacer").style.height = "auto";
