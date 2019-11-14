@@ -2080,11 +2080,10 @@ class AppPageClass extends StorePageClass {
         let workshop = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
         let morelikethis = document.querySelector("#recommended_block h2");
 
-        setTimeout(() => {
         let customizer = new Customizer("customize_apppage");
         customizer
             .add("recommendedbycurators", ".steam_curators_block")
-            .add("recentupdates", ".early_access_announcements")
+            .add("recentupdates", "#events_root", Localization.str.apppage_recentupdates)
             .add("reviews", "#game_area_reviews")
             .add("about", "[data-parent-of='#game_area_description']")
             .add("contentwarning", "[data-parent-of='#game_area_content_descriptors']")
@@ -2102,7 +2101,6 @@ class AppPageClass extends StorePageClass {
 
         customizer.build();
         document.querySelector(".purchase_area_spacer").style.height = "auto";
-        }, 1000);
     }
 
     addReviewToggleButton() {
