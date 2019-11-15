@@ -1,4 +1,9 @@
 {
+    "manage_groups": "Groepen beheren",
+    "action_groups": "Selecteer hieronder de groepen waar je actie op wilt ondernemen. ",
+    "inverse": "Omkeren",
+    "leave": "Verlaten",
+    "selected": "__n__ geselecteerd",
     "transactionStatus": "__failed__ verzoek(en) gefaald. __size__ van de __total__ transacties ontvangen.",
     "custom_tags": "Aangepaste Tags",
     "add_tag": "Voeg tag toe",

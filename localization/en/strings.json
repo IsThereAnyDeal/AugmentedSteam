@@ -1,4 +1,9 @@
 {
+    "manage_groups": "Manage groups",
+    "action_groups": "Select the groups below that you wish to take action on.",
+    "inverse": "Inverse",
+    "leave": "Leave",
+    "selected": "__n__ selected",
     "transactionStatus": "__failed__ request(s) failed. Retrieved __size__ of __total__ transactions.",
     "custom_tags": "Custom Tags",
     "add_tag": "Add tag",

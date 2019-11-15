@@ -2996,22 +2996,22 @@ let GroupsPageClass = (function(){
 
         HTML.beforeEnd(".title_bar", 
             `<button id="manage_friends_control" class="profile_friends manage_link btnv6_blue_hoverfade btn_small btn_uppercase">
-                <span>Manage groups</span>
+                <span>${Localization.str.manage_groups}</span>
             </button>`);
 
         HTML.afterEnd(".title_bar",
             `<div id="manage_friends" class="manage_friends_panel">
-            <div class="row">Select the groups below that you wish to take action on.	        <span class="row">
+            <div class="row">${Localization.str.action_groups}<span class="row">
                     <span class="dimmed">Select: </span>
-                    <span class="selection_type" id="es_select_all">All</span>
-                    <span class="selection_type" id="es_select_none">None</span>
-                    <span class="selection_type" id="es_select_inverse">Inverse</span>
+                    <span class="selection_type" id="es_select_all">${Localization.str.all}</span>
+                    <span class="selection_type" id="es_select_none">${Localization.str.none}</span>
+                    <span class="selection_type" id="es_select_inverse">${Localization.str.inverse}</span>
                 </span>
             </div>
             <div class="row">
-                <span class="manage_action anage_action btnv6_lightblue_blue btn_medium btn_uppercase" id="es_leave_groups"><span>Leave</span></span>
+                <span class="manage_action anage_action btnv6_lightblue_blue btn_medium btn_uppercase" id="es_leave_groups"><span>${Localization.str.leave}</span></span>
                 <span id="selected_msg_err" class="selected_msg error hidden"></span>
-                <span id="selected_msg" class="selected_msg hidden"><span id="selected_count"></span> selected.</span>
+                <span id="selected_msg" class="selected_msg hidden">${Localization.str.selected.replace("__n__", `<span id="selected_count"></span>`)}.</span>
             </div>
             <div class="row"></div>
         </div>`);
