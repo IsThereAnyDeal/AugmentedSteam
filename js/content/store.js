@@ -2194,23 +2194,14 @@ class AppPageClass extends StorePageClass {
     addPackBreakdown() {
 
         function splitPack(node, ways) {
-            if (node.querySelector(".btn_packageinfo")) { return; }
-
-            let price_text;
-            let priceNode = node.querySelector(".discount_final_price");
-            if (priceNode) {
-                price_text = priceNode.textContent;
-            } else {
-                price_text = node.querySelector(".game_purchase_price").textContent;
-            }
+            let price_text = node.querySelector(".game_purchase_price, .discount_final_price").textContent;
             if (price_text.match(/,\d\d(?!\d)/)) {
                 price_text = price_text.replace(",", ".");
             }
-            let price = (Number(price_text.replace(/[^0-9\.]+/g,""))) / ways;
+            let price = (Number(price_text.replace(/[^0-9\.]+/g, ""))) / ways;
             price = new Price(Math.ceil(price * 100) / 100, Currency.storeCurrency);
 
-            let buttons = node.querySelectorAll(".btn_addtocart");
-            HTML.afterBegin(buttons[buttons.length-1].parentNode,
+            HTML.afterBegin(node.querySelector(".game_purchase_action_bg"),
                 `<div class="es_each_box">
                     <div class="es_each_price">${price}</div>
                     <div class="es_each">${Localization.str.each}</div>
@@ -2218,28 +2209,37 @@ class AppPageClass extends StorePageClass {
         }
 
         for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
-            let title = node.querySelector("h1").textContent.trim();
+
+            // prevent false positives on packages e.g. Doom 3
+            if (node.querySelector(".btn_packageinfo")) { continue; }
+
+            let title = node.querySelector("h1").textContent;
             title = title.toLowerCase().replace(/-/g, ' ');
-            if (!title || !title.includes('pack')) return;
-            if (title.includes('pack') && title.includes('season')) return;
 
-            if (title.includes(' 2 pack')) { splitPack(node, 2); }
-            else if (title.includes(' two pack')) { splitPack(node, 2); }
-            else if (title.includes('tower wars friend pack')) { splitPack(node, 2); }
+            let text = "";
+            if (node.querySelector("p")) {
+                text = node.querySelector("p").textContent;
+            }
 
-            else if (title.includes(' 3 pack')) { splitPack(node, 3); }
-            else if (title.includes(' three pack')) { splitPack(node, 3); }
-            else if (title.includes('tower wars team pack')) { splitPack(node, 3); }
+            if (title.includes("2 pack") ||
+                title.includes("two pack") ||
+                title.includes("tower wars friend pack") ||
+                text.includes("gift copy") ||
+                text.includes("extra copy")) { splitPack(node, 2); }
 
-            else if (title.includes(' 4 pack')) { splitPack(node, 4); }
-            else if (title.includes(' four pack')) { splitPack(node, 4); }
-            else if (title.includes(' clan pack')) { splitPack(node, 4); }
+            else if (title.includes("3 pack") ||
+                title.includes("three pack") ||
+                title.includes("tower wars team pack")) { splitPack(node, 3); }
 
-            else if (title.includes(' 5 pack')) { splitPack(node, 5); }
-            else if (title.includes(' five pack')) { splitPack(node, 5); }
+            else if (title.includes("4 pack") ||
+                title.includes("four pack") ||
+                title.includes("clan pack")) { splitPack(node, 4); }
 
-            else if (title.includes(' 6 pack')) { splitPack(node, 6); }
-            else if (title.includes(' six pack')) { splitPack(node, 6); }
+            else if (title.includes("5 pack") ||
+                title.includes("five pack")) { splitPack(node, 5); }
+
+            else if (title.includes("6 pack") ||
+                title.includes("six pack")) { splitPack(node, 6); }
         }
     }
 }
