@@ -2743,8 +2743,8 @@ let FriendsPageClass = (function(){
     };
 
     FriendsPageClass.prototype.addPoster = function() {
-        let manage = document.querySelectorAll("#manage_friends");
-        if (manage.length === 0) { return; }
+        let manage = document.querySelector("#manage_friends");
+        if (!manage) { return; }
 
         let commentArea = `<div class="row commentthread_entry" style="background-color: initial; padding-right: 24px;">
                 <div class="commentthread_entry_quotebox">
@@ -2752,7 +2752,7 @@ let FriendsPageClass = (function(){
                 </div>
                 <div class="commentthread_entry_submitlink">
                     <a class="btn_grey_black btn_small_thin" id="FormattingHelpPopup">
-                        <span>Formatting help</span>
+                        <span>${Localization.str.formatting_help}</span>
                     </a>
                     <span class="emoticon_container">
                         <span class="emoticon_button small" id="emoticonbtn">
@@ -2763,15 +2763,14 @@ let FriendsPageClass = (function(){
                     </span>
                 </div>
             </div>
-            <div class="row" id="log">
+            <div class="row" id="log" style="margin-top: 0px; margin-bottom: 16px;">
                 <span id="log_head"></span>
-                <span id="log_body"></span>
+                <span id="log_body" class="dimmed"></span>
             </div>`
 
-        HTML.beforeBegin("#manage_friends > div:nth-child(3)", commentArea);
+        HTML.beforeEnd(manage, commentArea);
         ExtensionLayer.runInPageContext(`function() {
             let delay = 7000;
-            ToggleManageFriends();
             new CEmoticonPopup($J('#emoticonbtn'), $J('#comment_textarea'));
             $J("#comment_submit").click(() => {
                 const total = $J(".selected").length;
@@ -2781,7 +2780,7 @@ let FriendsPageClass = (function(){
                     return;
                 }
 
-                if(/([a-zA-Z0-9]+:\\/\\/)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\.[A-Za-z]{2,4})(:[0-9]+)?(\/.*)?/.test(msg)) {
+                if(/([a-zA-Z0-9]+:\\/\\/)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(\\/.*)?/.test(msg)) {
                     ShowAlertDialog("${Localization.str.alert}", "${Localization.str.friends_commenter_no_links}");
                     return;
                 }
@@ -2789,19 +2788,32 @@ let FriendsPageClass = (function(){
                 $J("#log_head, #log_body").html("");
                 $J(".selected").each((i, elem) => {
                     let profileID = $J(elem).data("steamid");
-                    let profileName = $J(elem).data("search").split(" ; ")[0];
-                    setTimeout(() => $J.post("//steamcommunity.com/comment/Profile/post/" + profileID + "/-1/", {
+                    let profileName = $J(elem).find(".friend_block_content").get(0).firstChild.textContent;
+                    setTimeout(() => {
+                        $J.post("//steamcommunity.com/comment/Profile/post/" + profileID + "/-1/", {
                             comment: msg,
                             count: 6,
                             sessionid: g_sessionID
                         })
                         .done(response => {
-                            $J("#log_body").get(0).innerHTML += "<br>" + (response.success === false ? response.error : "${Localization.str.posted_at_success} <a href='https://steamcommunity.com/profiles/" + profileID + "/allcomments/'>" + profileName + "</a>.");
-                            $J(".friend_block_v2[data-steamid=" + profileID + "]").removeClass("selected").find(".select_friend_checkbox").prop("checked", false);
+                            $J("#log_body").get(0).innerHTML += "<br>";
+
+                            if (!response.success) {
+                                $J("#log_body").get(0).innerHTML += response.error || "Unknown error";
+                            } else {
+                                $J("#log_body").get(0).innerHTML += "${Localization.str.posted_at_success}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/allcomments/">\${profileName}</a>\`);
+                            }
+
+                            $J(\`.friend_block_v2[data-steamid="\${profileID}"]\`).removeClass("selected").find(".select_friend_checkbox").prop("checked", false);
                             UpdateSelection();
                         })
-                        .fail(() => $J("#log_body").get(0).innerHTML += "<br>${Localization.str.posted_at_fail} <a href='http://steamcommunity.com/profiles/" + profileID + "/'>" + profileName + "</a>.")
-                        .always(() => $J("#log_head").html("<br><b>Processed " + (i + 1) + " out of " + total + (total.length === 1 ? "${Localization.str.friend}" : "${Localization.str.friends}") + ".<b>")), delay * i);
+                        .fail(() => {
+                            $J("#log_body").get(0).innerHTML += "<br>${Localization.str.posted_at_fail}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/">\${profileName}</a>\`)
+                        })
+                        .always(() => {
+                            $J("#log_head").html("<br><b>${Localization.str.processed}<b>".replace("__i__", i + 1).replace("__total__", total))
+                        });
+                    }, delay * i);
                 });
             });
         }`);
