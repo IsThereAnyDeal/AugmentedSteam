@@ -365,7 +365,6 @@
         "saved_note": "Options sauvegardées",
         "regional_hideworld": "Cacher le globe indicateur",
         "show_astatslink": "Afficher le lien AStats dans les pages des applications",
-        "showclient": "Afficher les liens pour le client Steam",
         "guest": "Articles pour lesquels vous avez des invitations",
         "show_steamchart_info": "Afficher les informations de SteamCharts.com",
         "show_steamspy_info": "Afficher les informations de steamspy.com",
@@ -380,7 +379,6 @@
         "steamdb": "Afficher les liens SteamDB",
         "hide_early_access": "Masquer les jeux en accès anticipé sur la page d'accueil, en navigant et dans les pages de recherche",
         "reset_note": "Options réinitialisées",
-        "html5video": "Afficher les vidéos en utilisant HTML5 au lieu de Flash",
         "profiles_link_group_game": "Exclusif pour ce jeu",
         "friends_wishlist": "Articles que vos amis ont dans leurs listes de souhaits",
         "showspeechsearch": "Ajouter la saisie vocale aux boîtes de recherche",
@@ -453,7 +451,7 @@
     },
     "survey": {
         "performance_survey": "Enquête de performance",
-        "users": "__users__ utilisateurs ont répondu à l'enquête de performance pour ce jeu",
+        "users": "__users__ utilisateurs ont répondu à l'enquête de performance pour ce jeu.",
         "framerate": "Fréquence d'images ",
         "framerate_response": "ont répondu que la fréquence d'images est",
         "framerate_30": "bloquée à 30 fps ou moins",
@@ -467,10 +465,10 @@
         "satisfaction": "Satisfaction sur les performances par GPU",
         "gs_y": "A des options graphiques intégrées ou un menu graphique",
         "gs_n": "N'a pas d'options graphiques intégrées ou un menu graphique",
-        "nobody": "Personne n'a participé l'enquête de performance pour ce jeu",
+        "nobody": "Personne n'a participé l'enquête de performance pour ce jeu.",
         "take": "Participer à l'enquête"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Sélectionner les DLC de la liste de souhaits",
         "none": "Sélectionner aucun",
         "unowned_dlc": "Sélectionner les DLC non-possédés"

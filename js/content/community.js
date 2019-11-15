@@ -24,6 +24,26 @@ let SteamId = (function(){
     return self;
 })();
 
+let GroupID = (function(){
+
+    let self = {};
+    let _groupId = null;
+
+    self.getGroupId = function() {
+        if (_groupId) { return _groupId; }
+
+        if (document.querySelector("#leave_group_form")) {
+            _groupId = document.querySelector("input[name=groupId]").value;
+        } else {
+            _groupId = document.querySelector(".joinchat_bg").getAttribute("onclick").split('\'')[1];
+        }
+
+        return _groupId;
+    };
+
+    return self;
+})();
+
 let ProfileData = (function(){
 
     let self = {};
@@ -91,9 +111,10 @@ let ProfileData = (function(){
     return self;
 })();
 
-let SpamCommentHandler = (function(){
+let CommentHandler = (function(){
 
     let spamRegex = null;
+    let self = {};
 
     function toggleHiddenCommentsButton(threadNode, count) {
         threadNode.classList.add("esi_commentthread");
@@ -159,8 +180,6 @@ let SpamCommentHandler = (function(){
         }
     }
 
-    let self = {};
-
     self.hideSpamComments = function() {
         if (!SyncedStorage.get("hidespamcomments")) { return; }
 
@@ -181,6 +200,131 @@ let SpamCommentHandler = (function(){
             handleAllCommentThreads(latestFrame.document);
         });
         observer.observe(modalWait, {attributes: true});
+    };
+
+    function updateFavs(favs, emoticonPopup, favBox, favRemove, name) {
+        LocalStorage.set("fav_emoticons", favs);
+
+        if (name && favs.includes(name) && favs.length > 1) {
+            HTML.beforeEnd(favBox, buildEmoticonOption(name));
+            let node = favBox.querySelector(`[data-emoticon="${name}"]`);
+            finalizeFav(node, emoticonPopup, favRemove);
+        } else if (name && !favs.includes(name) && favs.length > 0) {
+            let node = favBox.querySelector(`[data-emoticon="${name}"]`);
+            if (!node) { return; }
+            node.parentNode.removeChild(node);             
+        } else {
+            let favsHtml = buildFavBox(favs);
+            HTML.inner(favBox, favsHtml);
+            favBox.querySelectorAll(".emoticon_option").forEach(node => {
+                finalizeFav(node, emoticonPopup, favRemove);
+            });
+        }
+    }
+
+    function finalizeFav(node, emoticonPopup, favRemove) {
+        node.draggable = true;
+        node.querySelector("img").draggable = false;
+        node.addEventListener("dragstart", (ev) => dragFavEmoticon(ev));
+        node.addEventListener("click", (ev) => clickFavEmoticon(ev, emoticonPopup, favRemove));
+    }
+
+    function dragFavEmoticon(ev) {
+        ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon);
+    }
+
+    function clickFavEmoticon(ev, emoticonPopup, favRemove) {
+        let name = ev.target.closest(".emoticon_option").dataset.emoticon;
+        let noFav = emoticonPopup.querySelector(`[data-emoticon=${name}]:not(.es_fav)`);
+        noFav.click();
+    }
+
+    function buildFavBox(favs=[]) {
+        let favsHtml;
+        if (!favs.length) {
+            favsHtml = Localization.str.fav_emoticons_dragging;
+        } else {
+            favsHtml = favs.map(fav => buildEmoticonOption(fav)).join("");
+        }
+        return favsHtml;
+    }
+
+    function buildEmoticonOption(name) {
+        return `<div class="emoticon_option es_fav" data-emoticon="${name}"><img src="https://steamcommunity-a.akamaihd.net/economy/emoticon/${name}" class="emoticon"></div>`;
+    }
+
+    self.addFavoriteEmoticons = function() {
+        let observer = new MutationObserver(() => {
+            let emoticonPopup = document.querySelector(".emoticon_popup:not(.es_emoticons)");
+            if (!emoticonPopup) { return; }
+
+            emoticonPopup.classList.add("es_emoticons");
+            emoticonPopup.style.maxWidth = "352px";
+            emoticonPopup.querySelectorAll(".emoticon_option").forEach(function(node) {
+                node.draggable = true;
+                node.querySelector("img").draggable = false;
+                node.addEventListener("dragstart", ev => ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon));
+            });
+            
+            let favs = LocalStorage.get("fav_emoticons", []);
+            HTML.afterBegin(emoticonPopup, 
+                `<div style="margin-bottom:10px;min-height:32px;line-height:32px;text-align:center;max-height:none;display:flex;" class="emoticon_popup_content">
+                    <div style="width:10%;background-image:url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);background-repeat:no-repeat;background-position:center center;" class="commentthread_entry_quotebox" id="es_fav_remove"></div>
+                    <div style="width:90%;" class="commentthread_entry_quotebox" id="es_fav_emoticons"></div>
+                </div>`);
+                
+            let favBox = emoticonPopup.querySelector("#es_fav_emoticons");
+            let favRemove = emoticonPopup.querySelector("#es_fav_remove");
+            updateFavs(favs, emoticonPopup, favBox, favRemove);
+
+            favBox.addEventListener("dragover", function(ev) {
+                ev.preventDefault();
+                favBox.style.backgroundColor = "black";
+            });
+
+            favBox.addEventListener("dragenter", function(ev) {
+                favBox.style.backgroundColor = "black";
+            });
+
+            favBox.addEventListener("dragleave", function(ev) {
+                favBox.style.backgroundColor = null;
+            });
+
+            favBox.addEventListener("drop", function(ev) {
+                ev.preventDefault();
+
+                favBox.style.backgroundColor = null;
+                let name = ev.dataTransfer.getData("emoticon");
+                if (favs.includes(name)) { return; }
+
+                favs.push(name);
+                updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+            });
+
+            favRemove.addEventListener("dragover", function(ev) {
+                ev.preventDefault();
+                favRemove.style.backgroundColor = "black";
+            });
+            
+            favRemove.addEventListener("dragenter", function(ev) {
+                favRemove.style.backgroundColor = "black";
+            });
+
+            favRemove.addEventListener("dragleave", function(ev) {
+                favRemove.style.backgroundColor = null;
+            });
+
+            favRemove.addEventListener("drop", function(ev) {
+                ev.preventDefault();
+
+                favRemove.style.backgroundColor = null;
+                let name = ev.dataTransfer.getData("emoticon");
+                favs = favs.filter(fav => fav !== name);
+                updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+            });
+        });
+
+        observer.observe(document.body, { childList: true });
     };
 
     return self;
@@ -218,6 +362,23 @@ let CommunityCommon = (function() {
         }
     };
 
+    self.makeProfileLink = function (id, link, name, iconType, iconUrl) {
+        let mainType = iconUrl ? "none" : iconType;
+        let result =
+            `<div class="es_profile_link profile_count_link">
+               <a class="es_sites_icons es_${id}_icon es_${mainType}" href="${link}" target="_blank">`;
+
+        if (iconType !== "none" && iconUrl) {
+            result += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url('${iconUrl}');"></i>`;
+        }
+
+        result += `<span class="count_link_label">${name}</span>
+                        <span class="profile_count_link_total">&nbsp;</span> <!-- Steam spacing -->
+                    </a>
+                </div>`;
+        return result;
+    }
+
     return self;
 })();
 
@@ -244,7 +405,8 @@ let ProfileActivityPageClass = (function(){
             let links = node.querySelectorAll("a:not(.blotter_gamepurchase_logo)");
             for (let link of links) {
                 let appid = GameId.getAppid(link.href);
-                if (!appid || link.childElementCount !== 0) { continue; }
+                if (!appid || link.childElementCount > 1) { continue; }
+                if (link.childElementCount === 1 && link.closest(".vote_header")) { continue; }
 
                 if (DynamicStore.isOwned(appid)) {
                     Highlights.highlightOwned(link);
@@ -289,7 +451,7 @@ let ProfileActivityPageClass = (function(){
         let observer = new MutationObserver(() => {
             that.highlightFriendsActivity();
             EarlyAccess.showEarlyAccess();
-            SpamCommentHandler.hideSpamComments();
+            CommentHandler.hideSpamComments();
         });
 
         observer.observe(document.querySelector("#blotter_content"), { subtree: true, childList: true });
@@ -318,7 +480,7 @@ let ProfileHomePageClass = (function(){
         this.changeUserBackground();
         this.addProfileStoreLinks();
         this.addSteamRepApi();
-        this.addPostHistoryLink();
+        this.userDropdownOptions();
         this.inGameNameLink();
         this.addProfileStyle();
         this.addTwitchInfo();
@@ -330,44 +492,49 @@ let ProfileHomePageClass = (function(){
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
-        if (images !== false) {
+        if (images !== "none") {
             iconType = images === "color" ? "color" : "gray";
         }
 
         let links = [
             {
                 "id": "steamrep",
-                "link": `//steamrep.com/profiles/${steamId}`,
+                "link": `https://steamrep.com/profiles/${steamId}`,
                 "name": "SteamRep",
             },
             {
                 "id": "steamdbcalc",
-                "link": `//steamdb.info/calculator/?player=${steamId}`,
+                "link": `https://steamdb.info/calculator/?player=${steamId}`,
                 "name": "SteamDB",
             },
             {
                 "id": "steamgifts",
-                "link": `//www.steamgifts.com/go/user/${steamId}`,
+                "link": `https://www.steamgifts.com/go/user/${steamId}`,
                 "name": "SteamGifts",
             },
             {
                 "id": "steamtrades",
-                "link": `//www.steamtrades.com/user/${steamId}`,
+                "link": `https://www.steamtrades.com/user/${steamId}`,
                 "name": "SteamTrades",
             },
             {
+                "id": "bartervg",
+                "link": `//barter.vg/steam/${steamId}`,
+                "name": "Barter.vg",
+            },
+            {
                 "id": "astats",
-                "link": `//www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
+                "link": `https://www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
                 "name": "Achievement Stats",
             },
             {
                 "id": "backpacktf",
-                "link": `//backpack.tf/profiles/${steamId}`,
+                "link": `https://backpack.tf/profiles/${steamId}`,
                 "name": "Backpack.tf",
             },
             {
                 "id": "astatsnl",
-                "link": `//astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
+                "link": `https://astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
                 "name": "AStats.nl",
             }
         ];
@@ -385,17 +552,10 @@ let ProfileHomePageClass = (function(){
         // Build the links HTML
         let htmlstr = "";
 
-        links.forEach(link => {
-            if (!SyncedStorage.get("profile_" + link.id)) { return; }
-
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_${link.id}_icon es_${iconType}" href="${link.link}" target="_blank">
-                        <span class="count_link_label">${link.name}</span>
-                    </a>
-                </div>`;
-
-        });
+        for (let link of links) {
+            if (!SyncedStorage.get("profile_" + link.id)) { continue; }
+            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+        }
 
         // custom profile link
         for (let customLink of SyncedStorage.get('profile_custom_link')) {
@@ -410,17 +570,14 @@ let ProfileHomePageClass = (function(){
 
             let name =  HTML.escape(customLink.name);
             let link = "//" + HTML.escape(customUrl.replace("[ID]", steamId));
-            let icon = "//" + HTML.escape(customLink.icon);
+            let icon;
+            if (customLink.icon) {
+                icon = "//" + HTML.escape(customLink.icon);
+            } else {
+                iconType = "none";
+            }
 
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
-                    <span class="count_link_label">${name}</span>`;
-                    if (iconType !== "none") {
-                        htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${icon});"></i>`;
-                    }
-                    htmlstr += `</a>
-                </div>`;
+            htmlstr += CommunityCommon.makeProfileLink("custom", link, name, iconType, icon);
         }
 
         // profile permalink
@@ -636,9 +793,27 @@ let ProfileHomePageClass = (function(){
         });
     };
 
-    ProfileHomePageClass.prototype.addPostHistoryLink = function() {
+    ProfileHomePageClass.prototype.userDropdownOptions = function() {
+
         let node = document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow");
         if (!node) { return; }
+
+        // add nickname option for non-friends
+        if (User.isSignedIn) {
+
+            // check whether we can chat => if we can we are friends => we have nickname option
+            let canAddFriend = document.querySelector("#btn_add_friend");
+            if (canAddFriend) {
+
+                HTML.afterEnd(node, `<a class="popup_menu_item" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`);
+
+                node.parentNode.querySelector("#es_nickname").addEventListener("click", function() {
+                    ExtensionLayer.runInPageContext("function() { ShowNicknameModal(); HideMenu( 'profile_action_dropdown_link', 'profile_action_dropdown' ); return false; }");
+                });
+            }
+        }
+
+        // post history link
         HTML.afterEnd(node,
                 `<a class='popup_menu_item' id='es_posthistory' href='${window.location.pathname}/posthistory'>
                 <img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; ${Localization.str.post_history}
@@ -803,10 +978,9 @@ let ProfileHomePageClass = (function(){
         let sendButton = document.querySelector("div.profile_header_actions > a[href*=OpenFriendChat]");
         if (!sendButton) { return; }
 
-        let href = sendButton.href;
-
-        let m = href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
+        let m = sendButton.href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
         if (!m) { return; }
+        let chatId = m[1];
 
         let rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
         let friendSteamId = rgProfileData.steamid;
@@ -828,7 +1002,10 @@ let ProfileHomePageClass = (function(){
                 </div>
             </div>`);
         sendButton.remove();
-        document.getElementById("btnWebChat").href = href.replace("OpenFriendChat", "OpenFriendChatInWebChat"); // Workaround: 'onclick' and js-href gets removed when inserting HTML
+
+        document.querySelector("#btnWebChat").addEventListener("click", function(){
+            ExtensionLayer.runInPageContext(`OpenFriendChatInWebChat('${chatId}')`);
+        });
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
             ExtensionLayer.runInPageContext(() => ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ));
@@ -837,6 +1014,58 @@ let ProfileHomePageClass = (function(){
 
     return ProfileHomePageClass;
 })();
+
+
+let GroupHomePageClass = (function(){
+
+    function GroupHomePageClass() {
+        this.addGroupLinks();
+    }
+
+    GroupHomePageClass.prototype.addGroupLinks = function() {
+
+        let groupId = GroupID.getGroupId();
+        let iconType = "none";
+        let images = SyncedStorage.get("show_profile_link_images");
+        if (images !== "none") {
+            iconType = images === "color" ? "color" : "gray";
+        }
+
+        let links = [
+            {
+                "id": "steamgifts",
+                "link": `https://www.steamgifts.com/go/group/${groupId}`,
+                "name": "SteamGifts",
+            }
+        ];
+
+
+        // Build the links HTML
+        let htmlstr = "";
+
+        for (let link of links) {
+            if (!SyncedStorage.get("group_" + link.id)) { continue; }
+            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+        }
+
+        // Insert the links HMTL into the page
+        if (htmlstr) {
+            let linksNode = (document.querySelector(".responsive_hidden > .rightbox")).parentNode;
+            if (linksNode) {
+                HTML.afterEnd(linksNode,
+                   `<div class="rightbox_header"></div>
+                    <div class="rightbox">
+                       <div class="content">${htmlstr}</div>
+                    </div>
+                    <div class="rightbox_footer"></div>`
+                );
+            }
+        }
+
+    };
+    return GroupHomePageClass;
+})();
+
 
 let GamesPageClass = (function(){
 
@@ -1253,6 +1482,7 @@ let StatsPageClass = (function(){
         }
 
         this.addAchievementSort();
+        this.showEntireDescriptions();
     }
 
     let _nodes = {
@@ -1325,6 +1555,15 @@ let StatsPageClass = (function(){
             e.target.classList.remove("es_achievement_sort_link");
             sortBy("time", personal);
         });
+    };
+    
+
+    StatsPageClass.prototype.showEntireDescriptions = function() {
+        // .ellipsis is only added by Steam on personal stats pages
+        let nodes = document.querySelectorAll("h5.ellipsis");
+        for (let node of nodes) {
+            node.classList.remove("ellipsis");
+        }
     };
 
     return StatsPageClass;
@@ -1458,11 +1697,10 @@ let InventoryPageClass = (function(){
         if (quickGrind) { quickGrind.parentNode.remove(); }
 
         let scrapActions = document.querySelector("#iteminfo" + item + "_item_scrap_actions");
-        let turnWord = scrapActions.querySelector("a span").textContent;
 
         let divs = scrapActions.querySelectorAll("div");
         HTML.beforeBegin(divs[divs.length-1],
-            "<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>1-Click " + turnWord + "</span></div>");
+            `<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>${Localization.str.oneclickgoo}</span></div>`);
 
         // TODO: Add prompt?
         document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
@@ -1486,8 +1724,8 @@ let InventoryPageClass = (function(){
         });
     }
 
-    function makeMarketButton(id) {
-        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" style="display:none">
+    function makeMarketButton(id, tooltip) {
+        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" data-tooltip-text="${tooltip}" style="display:none">
                     <span class="item_market_action_button_edge item_market_action_button_left"></span>
                     <span class="item_market_action_button_contents"></span>
                     <span class="item_market_action_button_edge item_market_action_button_right"></span>
@@ -1526,8 +1764,11 @@ let InventoryPageClass = (function(){
             thisItem.classList.add("es-loading");
 
             // Add the links with no data, so we can bind actions to them, we add the data later
-            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId));
-            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId));
+            let diff = SyncedStorage.get("quickinv_diff");
+            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId, Localization.str.quick_sell_desc.replace("__modifier__", diff)));
+            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId, Localization.str.instant_sell_desc));
+
+            ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: "community_tooltip"} ));
 
             // Check if price is stored in data
             if (thisItem.classList.contains("es-price-loaded")) {
@@ -1546,7 +1787,7 @@ let InventoryPageClass = (function(){
                     let marketUrl = "https://steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + marketId;
                     let market = await RequestData.getJson(marketUrl);
 
-                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff"));
+                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(diff);
                     let priceLow = market.highest_buy_order / 100;
                     // priceHigh.currency == priceLow.currency == Currency.customCurrency, the arithmetic here is in walletCurrency
 
@@ -1746,15 +1987,15 @@ let InventoryPageClass = (function(){
             });
         });
         
-        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info), false);
+        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info));
 
-        Messenger.addMessageListener("sendFee", info => {
-            let sellPrice = info.feeInfo.amount - info.feeInfo.fees;
+        Messenger.addMessageListener("sendFee", async ({ feeInfo, sessionID, global_id, contextID, assetID }) => {
+            let sellPrice = feeInfo.amount - feeInfo.fees;
             let formData = new FormData();
-            formData.append("sessionid", info.sessionID);
-            formData.append("appid", info.global_id);
-            formData.append("contextid", info.contextID);
-            formData.append("assetid", info.assetID);
+            formData.append("sessionid", sessionID);
+            formData.append("appid", global_id);
+            formData.append("contextid", contextID);
+            formData.append("assetid", assetID);
             formData.append("amount", 1);
             formData.append("price", sellPrice);
 
@@ -1766,17 +2007,15 @@ let InventoryPageClass = (function(){
             * referrer: window.location.origin + window.location.pathname
             */
 
-            RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {
-                withCredentials: true
-            }).then(() => {
-                document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
+            await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, { withCredentials: true });
 
-                let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
-                let node = document.querySelector("[id='" + id + "']");
-                node.classList.add("btn_disabled", "activeInfo");
-                node.style.pointerEvents = "none";
-            });
-        }, false);
+            document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
+
+            let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
+            let node = document.querySelector("[id='" + id + "']");
+            node.classList.add("btn_disabled", "activeInfo");
+            node.style.pointerEvents = "none";
+        });
     }
 
     function addInventoryGoToPage(){
@@ -2947,14 +3186,19 @@ let MarketPageClass = (function(){
 
     }
 
-    // TODO cache data
     async function loadMarketStats() {
-
-        let purchaseTotal = 0;
-        let saleTotal = 0;
+        let { startListing, purchaseTotal, saleTotal } = LocalStorage.get("market_stats", { startListing: null, purchaseTotal: 0, saleTotal: 0 });
+        let curStartListing = null;
         let transactions = new Set();
+        let stop = false;
 
-        function updatePrices(dom) {
+        // If startListing is missing, reset cached data to avoid inaccurate results.
+        if (startListing === null && (purchaseTotal > 0 || saleTotal > 0)) {
+            purchaseTotal = 0;
+            saleTotal = 0;
+        }
+
+        function updatePrices(dom, start) {
 
             let nodes = dom.querySelectorAll(".market_listing_row");
             for (let node of nodes) {
@@ -2976,6 +3220,14 @@ let MarketPageClass = (function(){
                     isPurchase = false;
                 } else {
                     continue;
+                }
+                if (!curStartListing && start === 0) {
+                    curStartListing = node.id;
+                }
+                // If reached cached data, then stop.
+                if (node.id === startListing) {
+                    stop = true;
+                    break;
                 }
 
                 let priceNode = node.querySelector(".market_listing_price");
@@ -3002,8 +3254,8 @@ let MarketPageClass = (function(){
             let saleTotalPrice = new Price(saleTotal, Currency.storeCurrency);
             HTML.inner(
                 "#es_market_summary",
-                `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
-                <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
+                `<div>${Localization.str.purchase_total} <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
+                <div>${Localization.str.sales_total} <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
                 <div>${netText}<span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
             );
         }
@@ -3011,7 +3263,6 @@ let MarketPageClass = (function(){
         const pageSize = 500;
         let pages = -1;
         let currentPage = 0;
-        let currentCount = 0;
         let totalCount = null;
         let pageRequests = [];
         let failedRequests = 0;
@@ -3051,7 +3302,7 @@ let MarketPageClass = (function(){
 
         try {
             pageRequests.push({ 'start': 0, 'attempt': 0, 'lastAttempt': 0, });
-            while (pageRequests.length > 0) {
+            while (pageRequests.length > 0 && !stop) {
                 let t = await nextRequest();
                 if (pages < 0 && t > 0) {
                     totalCount = t;
@@ -3064,15 +3315,17 @@ let MarketPageClass = (function(){
                 progressNode.textContent = `${++currentPage}${failedRequests > 0 ? -failedRequests : ''}/${pages < 0 ? "?" : pages} (${transactions.size}/${totalCount})`;
             }
         } catch (err) {
+            failedRequests += 1;
             console.error(err);
         }
 
-        if (failedRequests == 0) {
+        if (failedRequests === 0) {
             progressNode.textContent = '';
+            LocalStorage.set("market_stats", { startListing: curStartListing, purchaseTotal, saleTotal });
             return true;
         }
 
-        progressNode.textContent = `${failedRequests} request(s) failed. Retrieved ${transactions.size} of ${totalCount} transactions.`; // FIXME Localize
+        progressNode.textContent = Localization.str.transactionStatus.replace("__failed__", failedRequests).replace("__size__", transactions.size).replace("__total__", totalCount);
         return false;
     }
 
@@ -3127,7 +3380,7 @@ let MarketPageClass = (function(){
 
     // Show the lowest market price for items you're selling
     MarketPageClass.prototype.addLowestMarketPrice = function() {
-        if (!User.isSignedIn) { return; }
+        if (!User.isSignedIn || !SyncedStorage.get("showlowestmarketprice") || SyncedStorage.get("hideactivelistings")) { return; }
 
         let country = User.getCountry();
         let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
@@ -3425,6 +3678,7 @@ let CommunityAppPageClass = (function(){
 
         this.addAppPageWishlist();
         this.addSteamDbLink();
+        this.addBartervgLink();
         this.addItadLink();
         AgeCheck.sendVerification();
 
@@ -3477,18 +3731,20 @@ let CommunityAppPageClass = (function(){
 
     CommunityAppPageClass.prototype.addSteamDbLink = function() {
         if (!SyncedStorage.get("showsteamdb")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; SteamDB</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;SteamDB</span></a>`);
     };
 
     CommunityAppPageClass.prototype.addItadLink = function() {
         if (!SyncedStorage.get("showitadlinks")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/line_chart.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; ITAD</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium itad_ico" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;ITAD</span></a>`);
+    };
+
+    CommunityAppPageClass.prototype.addBartervgLink = function() {
+        if (!SyncedStorage.get("showbartervg")) { return; }
+        HTML.beforeEnd(".apphub_OtherSiteInfo",
+            ` <a class="btnv6_blue_hoverfade btn_medium bartervg_ico" target="_blank" href="https://barter.vg/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;Barter.vg</span></a>`);
     };
 
     return CommunityAppPageClass;
@@ -3531,13 +3787,354 @@ let GuidesPageClass = (function(){
     return GuidesPageClass;
 })();
 
+let WorkshopPageClass = (function(){
 
-class WorkshopPageClass {
+    function WorkshopPageClass() {
+        this.loadLastState();
+        this.initAjaxBrowse();
+    }
+
+    WorkshopPageClass.prototype.loadLastState = function() {
+        let url = new URL(window.location.href);
+
+        if (url.searchParams && url.searchParams.has("browsesort")) {
+            LocalStorage.set("workshop_state", url.search);
+            return;
+        }
+
+        let search = LocalStorage.get("workshop_state");
+        url = new URL("https://steamcommunity.com/workshop/" + search);
+        let query = url.searchParams.get("browsesort");
+        this.changeTab(query);
+    };
+
+    WorkshopPageClass.prototype.initAjaxBrowse = function() {
+        ExtensionLayer.runInPageContext(function() {
+            $J(".browseOption").get().forEach(node => node.onclick = () => false);
+        });
+
+        document.querySelectorAll(".browseOption").forEach(tab => {
+            tab.addEventListener("click", () => {
+                let a = tab.querySelector("a[href]");
+                let url = new URL("https://steamcommunity.com/workshop/" + a.href);
+                let query = url.searchParams.get("browsesort");
+                LocalStorage.set("workshop_state", url.search);
+                window.history.pushState(null, null, url.search);
+                this.changeTab(query);
+            });
+        });
+    };
+
+    WorkshopPageClass.prototype.changeTab = async function(query, start=0, count=8) {
+        let tab = document.querySelector("." + query);
+        if (tab.hasAttribute("disabled")) { return; }
+
+        tab.setAttribute("disabled", "disabled");
+        
+        let image = document.querySelector(".browseOptionImage");
+        tab.parentNode.insertAdjacentElement("afterbegin", image);
+
+        document.querySelectorAll(".browseOption").forEach(tab => tab.classList.add("notSelected"));
+        tab.classList.remove("notSelected");
+
+        let container = document.querySelector("#workshop_appsRows");
+        HTML.inner(container, '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin: 170px auto;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div></div>');
+
+        let url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
+        let result = JSON.parse(await RequestData.getHttp(url));
+        HTML.inner(container, result.results_html);
+        tab.removeAttribute("disabled");
+
+        ExtensionLayer.runInPageContext(`function() {
+            g_oSearchResults.m_iCurrentPage = 0;
+            g_oSearchResults.m_strQuery = "${query}";
+            g_oSearchResults.m_cTotalCount = ${result.total_count};
+            g_oSearchResults.m_cPageSize = ${count};
+            g_oSearchResults.UpdatePagingDisplay();
+        }`);
+    };
+
+    return WorkshopPageClass;
+})();
+
+class SharedFilesPageClass {
     constructor() {
         new MediaPage().workshopPage();
         //media.initHdPlayer();
     }
 }
+
+let WorkshopBrowseClass = (function(){
+
+    function WorkshopBrowseClass() {
+        this.addSubscriberButtons();
+    }
+
+    WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
+        let appid = GameId.getAppidUriQuery(window.location.search);
+        if (!appid) { return; }
+        if (!document.querySelector(".workshopBrowsePagingInfo")) { return; }
+
+        let workshopStr = Localization.str.workshop;
+
+        let subscriberButtons = `
+            <div class="rightSectionTopTitle">${workshopStr.subscriptions}:</div>
+            <div id="es_subscriber_container" class="rightDetailsBlock">
+                <div style="position:relative;">
+                    <div class="browseOption mostrecent">
+                        <a class="es_subscriber" data-method="subscribe">${workshopStr.subscribe_all}</a>
+                    </div>
+                </div>
+                <div style="position:relative;">
+                    <div class="browseOption mostrecent">
+                        <a class="es_subscriber" data-method="unsubscribe">${workshopStr.unsubscribe_all}</a>
+                    </div>
+                </div>
+                <hr>
+            </div>`;
+
+        HTML.beforeBegin(".panel > .rightSectionTopTitle", subscriberButtons);
+
+        document.querySelector("#es_subscriber_container").addEventListener("click", event => {
+            let method = event.target.closest(".es_subscriber").dataset.method;
+            let total = parseInt(
+                document.querySelector(".workshopBrowsePagingInfo").textContent
+                    .replace(/\d+-\d+/g, "")
+                    .match(/\d+/g)[0]);
+
+            startSubscriber(method, total);
+        });
+
+        async function startSubscriber(method, total) {
+            let completed = 0;
+            let failed = 0;
+
+            let statusTitle = workshopStr[method + "_all"];
+            let statusString = workshopStr[method + "_confirm"]
+                .replace("__count__", total);
+
+            ExtensionLayer.runInPageContext(`function(){
+                let prompt = ShowConfirmDialog("${statusTitle}", "${statusString}");
+                prompt.done(function(result) {
+                    if (result == "OK") {
+                        Messenger.postMessage("startSubscriber");
+                    }
+                });
+            }`);
+
+            function updateWaitDialog() {
+                let statusString = workshopStr[method + "_loading"]
+                    .replace("__i__", completed)
+                    .replace("__count__", total);
+
+                if (failed) {
+                    statusString += workshopStr.failed.replace("__n__", failed);
+                }
+
+                let modal = document.querySelector(".newmodal_content");
+                if (!modal) {
+                    let statusTitle = workshopStr[method + "_all"];
+                    ExtensionLayer.runInPageContext(`function() {
+                        if (window.dialog) {
+                            window.dialog.Dismiss();
+                        }
+                        
+                        window.dialog = ShowBlockingWaitDialog("${statusTitle}", "${statusString}");
+                    }`);
+                } else {
+                    modal.innerText = statusString;
+                }
+            }
+
+            function showResults() {
+                let statusTitle = workshopStr[method + "_all"];
+                let statusString = workshopStr.finished
+                    .replace("__success__", completed - failed)
+                    .replace("__fail__", failed);
+
+                ExtensionLayer.runInPageContext(`function() {
+                    if (window.dialog) {
+                        window.dialog.Dismiss();
+                    }
+                    
+                    window.dialog = ShowConfirmDialog("${statusTitle}", "${statusString}")
+                        .done(function(result) {
+                            if (result == "OK") {
+                                window.location.reload();
+                            }
+                        });
+                }`);
+            }
+
+            function changeSubscription(id) {
+                let formData = new FormData();
+                formData.append("sessionid", User.getSessionId());
+                formData.append("appid", appid);
+                formData.append("id", id);
+
+                return RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
+                    withCredentials: true
+                }, true)
+                .then(function(res) {
+                    if (!res || !res.success) {
+                        throw new Error("Bad response");
+                    }
+                })
+                .catch(function(err) {
+                    failed++;
+                    console.error(err);
+                })
+                .finally(function() {
+                    completed++;
+                    updateWaitDialog();
+                });
+            }
+
+            Messenger.onMessage("startSubscriber").then(async () => {
+                updateWaitDialog();
+
+                function canSkip(method, node) {
+                    if (method === "subscribe") {
+                        return node && node.style.display !== "none";
+                    }
+
+                    if (method === "unsubscribe") {
+                        return !node || node.style.display === "none";
+                    }
+
+                    return false;
+                }
+
+                let parser = new DOMParser();
+                let workshopItems = [];
+                for (let p = 1; p <= Math.ceil(total / 30); p++) {
+                    let url = new URL(window.location.href);
+                    url.searchParams.set("p", p);
+                    url.searchParams.set("numperpage", 30);
+    
+                    let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+                    if (!result) {
+                        console.error("Failed to request " + url.toString());
+                        continue;
+                    }
+
+                    let xmlDoc = parser.parseFromString(result, "text/html");
+                    for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
+                        let subNode = node.querySelector(".user_action_history_icon.subscribed");
+                        if (canSkip(method, subNode)) { continue; }
+                    
+                        node = node.querySelector(".workshopItemPreviewHolder");
+                        workshopItems.push(node.id.replace("sharedfile_", ""))
+                    }
+                }
+
+                total = workshopItems.length;
+                updateWaitDialog();
+    
+                return Promise.all(workshopItems.map(id => changeSubscription(id)))
+                    .finally(showResults);
+            });            
+        }
+    };
+
+    return WorkshopBrowseClass;
+})();
+
+let EditGuidePageClass = (function(){
+
+    function EditGuidePageClass() {
+        this.allowMultipleLanguages();
+        this.addCustomTags();
+        this.rememberTags();
+    }
+
+    function addTag(name, checked=true) {
+        name = HTML.escape(name);
+        let attr = checked ? " checked" : "";
+        let tag = `<div><input type="checkbox" name="tags[]" value="${name}" class="inputTagsFilter"${attr}>${name}</div>`;
+        HTML.beforeBegin("#es_add_tag", tag);
+    }
+
+    EditGuidePageClass.prototype.allowMultipleLanguages = function() {
+        document.getElementsByName("tags[]").forEach(tag => tag.type = "checkbox");
+    };
+
+    EditGuidePageClass.prototype.addCustomTags = function() {
+        let langSection = document.querySelector("#checkboxgroup_1");
+        if (!langSection) { return; }
+
+        Messenger.addMessageListener("addtag", function(name) {
+            addTag(name, true);
+        });
+        
+        HTML.afterEnd(langSection,
+            `<div class="tag_category_container" id="checkboxgroup_2">
+                <div class="tag_category_desc">${Localization.str.custom_tags}</div>
+                <div><a style="margin-top: 8px;" class="btn_blue_white_innerfade btn_small_thin" id="es_add_tag">
+                    <span>${Localization.str.add_tag}</span>
+                </a></div>
+            </div>`);
+
+        ExtensionLayer.runInPageContext(`function() {
+            $J("#es_add_tag").on("click", () => {
+                let Modal = ShowConfirmDialog("${Localization.str.custom_tags}", \`<div class="commentthread_entry_quotebox"><textarea placeholder="${Localization.str.enter_tag}" class="commentthread_textarea es_tag" rows="1"></textarea></div>\`);
+                
+                let elem = $J(".es_tag");
+                let tag = elem.val();
+
+                function done() {
+                    if (tag.trim().length === 0) { return; }
+                    tag = tag[0].toUpperCase() + tag.slice(1);
+                    Messenger.postMessage("addtag", tag);
+                }
+
+                elem.on("keydown paste input", function(e) {
+                    tag = elem.val();
+                    if (e.key == "Enter") {
+                        Modal.Dismiss();
+                        done();
+                        return;
+                    }
+                });
+
+                Modal.done(done);
+            });
+        }`);
+    };
+
+    EditGuidePageClass.prototype.rememberTags = function() {
+        let submitBtn = document.querySelector("[href*=SubmitGuide]");
+        if (!submitBtn) { return; }
+
+        let params = new URLSearchParams(window.location.search);
+        let curId = params.get("id") || "recent";
+        let savedTags = LocalStorage.get("es_guide_tags", {});
+        if (!savedTags[curId]) {
+            savedTags[curId] = savedTags.recent || [];
+        }
+
+        for (let id in savedTags) {
+            for (let tag of savedTags[id]) {
+                let node = document.querySelector(`[name="tags[]"][value="${tag.replace(/"/g, "\\\"")}"]`);
+                if (node && curId == id) {
+                    node.checked = true;
+                } else if (!node) {
+                    addTag(tag, curId == id);
+                }
+            }
+        }
+
+        submitBtn.removeAttribute("href");
+        submitBtn.addEventListener("click", function() {
+            savedTags.recent = [];
+            savedTags[curId] = Array.from(document.querySelectorAll("[name='tags[]']:checked")).map(node => node.value);
+            LocalStorage.set("es_guide_tags", savedTags);
+            ExtensionLayer.runInPageContext(function() { SubmitGuide(); });
+        });
+    };
+
+    return EditGuidePageClass;
+})();
 
 (async function(){
     let path = window.location.pathname.replace(/\/+/g, "/");
@@ -3546,9 +4143,14 @@ class WorkshopPageClass {
     await Promise.all([Localization, User, Currency]);
 
     Common.init();
-    SpamCommentHandler.hideSpamComments();
+    CommentHandler.hideSpamComments();
+    CommentHandler.addFavoriteEmoticons();
 
     switch (true) {
+
+        case /^\/workshop\/?$/.test(path):
+            (new WorkshopPageClass());
+            break;
 
         case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
             (new ProfileActivityPageClass());
@@ -3594,6 +4196,10 @@ class WorkshopPageClass {
             (new ProfileHomePageClass());
             break;
 
+        case /^\/groups\/[^\/]+\/?$/.test(path):
+            (new GroupHomePageClass());
+            break;
+
         case /^\/app\/[^\/]*\/guides/.test(path):
             (new GuidesPageClass());
             break;
@@ -3606,13 +4212,21 @@ class WorkshopPageClass {
             (new StatsPageClass());
             break;
 
-        case /^\/sharedfiles\/.*/.test(path):
-            (new WorkshopPageClass());
+        case /^\/sharedfiles\/filedetails\/?$/.test(path):
+            (new SharedFilesPageClass());
+            break;
+
+        case /^\/workshop\/browse/.test(path):
+            (new WorkshopBrowseClass());
+            break;
+
+        case /^\/sharedfiles\/editguide\/?$/.test(path):
+            (new EditGuidePageClass());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):
             let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                .textContent.trim().replace(/\d/g, "");
+                .textContent.trim().replace(/[\d]+,?/g, "");
 
             ExtensionLayer.runInPageContext(`function() {
                 $J("#booster_game_selector option").each(function(index) {
@@ -3627,4 +4241,3 @@ class WorkshopPageClass {
     EnhancedSteam.hideTrademarkSymbol(true);
 
 })();
-

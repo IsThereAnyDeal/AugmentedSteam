@@ -298,13 +298,16 @@ let Options = (function(){
 
     function loadTranslation() {
         // When locale files are loaded changed text on page accordingly
-        Localization.then(() => {
+        return Localization.then(async () => {
             document.title = "Augmented Steam " + Localization.str.thewordoptions;
 
             // Localize elements with text
             let nodes = document.querySelectorAll("[data-locale-text]");
             for (let node of nodes) {
                 let translation = Localization.getString(node.dataset.localeText);
+                if (node.dataset.localeText.startsWith("options.context_")) {
+                    translation = translation.replace("__query__", "...");
+                }
                 if (translation) {
                     node.textContent = translation;
                 } else {
@@ -327,17 +330,44 @@ let Options = (function(){
                 let lang = node.textContent;
                 let lang_trl = Localization.str.options.lang[node.value.toLowerCase()];
                 if (lang !== lang_trl) {
-                    node.textContent = lang + " (" + lang_trl + ")";
+                    node.textContent = `${lang} (${lang_trl})`;
                 }
             }
 
-            for (let lang in Localization.str.options.lang) {
-                let node = document.querySelector(".language." + lang);
+            let total = deepCount(Localization.str);
+            for (let lang of Object.keys(Localization.str.options.lang)) {
+                let node = document.querySelector(`.language.${lang}`);
                 if (node) {
-                    node.textContent = Localization.str.options.lang[lang] + ":";
+                    node.textContent = `${Localization.str.options.lang[lang]}:`;
                 }
+
+                if (lang === "english") continue;
+                let code = Language.languages[lang];
+                let locale = await Localization.loadLocalization(code);
+                let count = deepCount(locale);
+                let percentage = 100 * count / total;
+
+                HTML.inner(
+                    document.querySelector(`.lang-perc.${lang}`),
+                    `<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>`
+                );
             }
-        }).then(Sidebar.create);
+
+            function deepCount(obj) {
+                let cnt = 0;
+                for (let key in obj) {
+                    if (!Localization.str[key]) { // don't count "made up" translations
+                        continue;
+                    }
+                    if (typeof obj[key] === "object") {
+                        cnt += deepCount(obj[key]);
+                    } else {
+                        cnt += 1;
+                    }
+                }
+                return cnt;
+            }
+        });
     }
 
     let Region = (function() {
@@ -394,7 +424,7 @@ let Options = (function(){
                 });
                 break;
             }
-            case "false": {
+            case "none": {
                 icons.forEach(icon => icon.style.display = "none");
             }
         }
@@ -437,7 +467,7 @@ let Options = (function(){
             document.getElementById("regional_price_hideworld").style.display = "block";
         }
 
-        let language = Language.getCurrentSteamLanguage();
+        let language = SyncedStorage.get("language");
         if (language !== "schinese" && language !== "tchinese") {
             let n = document.getElementById('profile_steamrepcn');
             if (n) {
@@ -458,8 +488,7 @@ let Options = (function(){
             });
             changelogLoaded = true;
         }
-
-        loadTranslation();
+        
         loadProfileLinkImages();
         loadStores();
     }
@@ -471,6 +500,10 @@ let Options = (function(){
 
         for (let el of document.querySelectorAll(".country_parent")) {
             el.remove();
+        }
+
+        for (let el of document.querySelectorAll(".custom-link__close")) {
+            el.click();
         }
 
         SyncedStorage.then(loadOptions);
@@ -506,7 +539,7 @@ let Options = (function(){
         saveOption(node.dataset.setting);
     }
 
-    function saveOption(option) {
+    async function saveOption(option) {
         let value;
 
         if (option === "regional_countries") {
@@ -531,6 +564,24 @@ let Options = (function(){
                 }
             }
 
+        } else if (option.startsWith("context_")) {
+            // todo replace promise once browser API support has been merged
+            try {
+                value = await new Promise((resolve, reject) => {
+                    chrome.permissions.request({
+                        permissions: ["contextMenus"]
+                    }, granted => {
+                        let node = document.querySelector(`[data-setting='${option}']`);
+                        if (!node) { reject(); }
+                        if (!granted) {
+                            node.checked = false;
+                            reject();
+                        }
+
+                        resolve(node.checked);
+                    });
+                });
+            } catch(err) { return; } // Don't save option
         } else {
 
             let node = document.querySelector("[data-setting='"+option+"']");
@@ -576,8 +627,7 @@ let Options = (function(){
                 el.value = currency;
                 el.innerText = currency;
                 select.appendChild(el);
-            })
-            ;
+            });
     }
 
     self.init = async function() {
@@ -587,6 +637,7 @@ let Options = (function(){
         let Defaults = SyncedStorage.defaults;
 
         loadOptions();
+        loadTranslation().then(Sidebar.create);
 
         document.getElementById("profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
 

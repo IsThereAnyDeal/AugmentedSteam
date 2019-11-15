@@ -365,7 +365,6 @@
         "saved_note": "Opzioni salvate",
         "regional_hideworld": "Nascondi icona del globo",
         "show_astatslink": "Mostra pulsante di AStats sulle pagine del negozio",
-        "showclient": "Mostra link al Client di Steam",
         "guest": "Giochi per i quali hai un Pass Ospite",
         "show_steamchart_info": "Mostra informazioni da SteamCharts.com",
         "show_steamspy_info": "Mostra informazioni di steamspy.com",
@@ -380,7 +379,6 @@
         "steamdb": "Mostra pulsante di Steam Database",
         "hide_early_access": "Nascondi giochi ad Accesso Anticipato su homepage, sfoglia e ricerca",
         "reset_note": "Opzioni resettate",
-        "html5video": "Riproduci i video con HTML5 invece di Flash",
         "profiles_link_group_game": "Gioco esclusivo",
         "friends_wishlist": "Giochi che desiderano i tuoi amici",
         "showspeechsearch": "Aggiungi input vocale al box di ricerca",
@@ -453,7 +451,7 @@
     },
     "survey": {
         "performance_survey": "Sondaggio sulle prestazioni",
-        "users": "__users__ utenti hanno compilato il sondaggio sulle prestazioni di questo gioco",
+        "users": "__users__ utenti hanno compilato il sondaggio sulle prestazioni di questo gioco.",
         "framerate": "Framerate",
         "framerate_response": "ha dichiarato che il framerate è",
         "framerate_30": "fissato a 30fps o meno",
@@ -467,10 +465,10 @@
         "satisfaction": "Soddisfazione sulle prestazioni per GPU",
         "gs_y": "Contiene opzioni o menù dedicati alla grafica",
         "gs_n": "Non contiene opzioni o menù dedicati alla grafica",
-        "nobody": "Nessuno ha ancora compilato il sondaggio sulle prestazioni per questo gioco",
+        "nobody": "Nessuno ha ancora compilato il sondaggio sulle prestazioni per questo gioco.",
         "take": "Partecipa al sondaggio"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Seleziona DLC in lista dei desideri",
         "none": "Nessuno",
         "unowned_dlc": "Seleziona DLC non in libreria"

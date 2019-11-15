@@ -1,4 +1,53 @@
-﻿v1.2.0
+﻿v1.3.1
+------
+- Fixed large text in reviews
+- Added option to hide support info on store pages
+- Added option to disable horizontal media scrolling
+- Added option to force mp4 videos
+- Fixed wishlist export
+- Multiple Steam search fixes regarding filters
+- Localization updates
+
+
+v1.3.0
+------
+Store
+- Added fullscreen screenshot browsing
+- Added horizontal media scrolling on app pages with scroll wheel
+- Added "Hide items with less reviews than" filter
+- Added option to show barter.vg links on app pages and community pages
+- Added developer/publisher search links to app pages (instead of just linking to their homepage on Steam)
+- Added developers support website/email to app pages, if available
+- Added wishlist export
+- Made pricing info from IsThereAnyDeal much prettier
+- Fixed user notes placement
+- Fixed duplicate package info buttons
+- Fixed excluding tag filter
+
+Workshop
+- Workshop browser now remembers your last sorting state (and doesn't require full page reloads when browsing)
+- Added "Workshop subscriber", a feature that allows you to subscribe to multiple workshop items at once, from search
+
+Community
+- Added option to nickname any user, not just your friends
+- Added option to set your favorite emoticons in Community comment boxes
+- Always show full achievement description
+- Added SteamGifts link to group pages
+- Fixed web chat link
+- Fixed profile icon links not respecting color/grayscale setting
+- Always show "View all comments" link in friends activity
+
+General
+- Added translation percentages view to Options
+- Added option to replace "Install Steam" button with "Open in Client" button, and removed "View in client" link from app pages, since it is now obsolete
+- Some bugfixes in options and other minor quality of life changes
+
+
+v1.2.1
+-----
+- Hotfix after latest Steam changes
+
+v1.2.0
 -----
 - Complete rework of Options page. Feels so fresh now.
 - Added option to open external links in new tab
