@@ -2983,6 +2983,103 @@ let FriendsPageClass = (function(){
     return FriendsPageClass;
 })();
 
+let GroupsPageClass = (function(){
+
+    function GroupsPageClass() {
+        this.addLeaveAllBtn();
+    }
+
+    GroupsPageClass.prototype.addLeaveAllBtn = async function() {
+        let groups = document.querySelectorAll(".group_block");
+        if (groups.length === 0) { return; }
+        if (!groups[0].querySelector(".actions")) { return; }
+
+        HTML.beforeEnd(".title_bar", 
+            `<button id="manage_friends_control" class="profile_friends manage_link btnv6_blue_hoverfade btn_small btn_uppercase">
+                <span>Manage groups</span>
+            </button>`);
+
+        HTML.afterEnd(".title_bar",
+            `<div id="manage_friends" class="manage_friends_panel">
+            <div class="row">Select the groups below that you wish to take action on.	        <span class="row">
+                    <span class="dimmed">Select: </span>
+                    <span class="selection_type" id="es_select_all">All</span>
+                    <span class="selection_type" id="es_select_none">None</span>
+                    <span class="selection_type" id="es_select_inverse">Inverse</span>
+                </span>
+            </div>
+            <div class="row">
+                <span class="manage_action anage_action btnv6_lightblue_blue btn_medium btn_uppercase" id="es_leave_groups"><span>Leave</span></span>
+                <span id="selected_msg_err" class="selected_msg error hidden"></span>
+                <span id="selected_msg" class="selected_msg hidden"><span id="selected_count"></span> selected.</span>
+            </div>
+            <div class="row"></div>
+        </div>`);
+
+        for (let group of groups) {
+            group.classList.add("selectable");
+            HTML.afterBegin(group, 
+                `<div class="indicator select_friend">
+                    <input class="select_friend_checkbox" type="checkbox">
+                </div>`);
+            group.querySelector(".select_friend").addEventListener("click", () => {
+                group.classList.toggle("selected");
+                group.querySelector(".select_friend_checkbox").checked = group.classList.contains("selected");
+                ExtensionLayer.runInPageContext(function() { UpdateSelection(); });
+            });    
+        }
+
+        document.querySelector("#manage_friends_control").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { ToggleManageFriends(); });
+        });
+
+        document.querySelector("#es_select_all").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { SelectAll(); });
+        });
+
+        document.querySelector("#es_select_none").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { SelectNone(); });
+        });
+
+        document.querySelector("#es_select_inverse").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { SelectInverse(); });
+        });
+
+        document.querySelector("#es_leave_groups").addEventListener("click", () => leaveGroups());
+
+        async function leaveGroups() {
+            for (let group of groups) {
+                if (!group.classList.contains("selected")) { continue; }
+
+                let id = group.querySelector(".actions > a").getAttribute("onclick").split("'")[1];
+                let res = await leaveGroup(id).catch(err => console.error(err));
+
+                if (!res || !res.success) {
+                    console.error("Failed to leave group " + id);
+                    continue;
+                }
+
+                group.style.opacity = "0.3";
+                group.querySelector(".select_friend").click();
+            }
+        }
+
+        function leaveGroup(id) {
+            let formData = new FormData();
+            formData.append("sessionid", User.getSessionId());
+            formData.append("steamid", User.steamId);
+            formData.append("ajax", 1);
+            formData.append("action", "leave_group");
+            formData.append("steamids[]", id);
+
+            return RequestData.post(User.profileUrl + "/friends/action", formData, {
+                withCredentials: true
+            }, "json");
+        }
+    };
+
+    return GroupsPageClass;
+})();
 
 let MarketListingPageClass = (function(){
 
@@ -4098,6 +4195,10 @@ let EditGuidePageClass = (function(){
 
         case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
             (new FriendsPageClass());
+            break;
+
+        case /^\/(?:id|profiles)\/.+\/groups(?:[/#?]|$)/.test(path):
+            (new GroupsPageClass());
             break;
 
         case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
