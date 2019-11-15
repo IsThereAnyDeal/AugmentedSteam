@@ -1872,9 +1872,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
   height: auto;
   min-height: 136px;
 }
-.es_regional_prices:not(.es_regional_always) .game_purchase_action_bg {
+.es_regional_prices:not(.es_regional_always) .es_regional_onmouse {
   cursor: help;
-  position: relative;
 }
 .es_regional_icon {
   padding-left: 23px !important;
