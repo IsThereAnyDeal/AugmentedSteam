@@ -3040,14 +3040,14 @@ let FriendsPageClass = (function(){
                             if (!response.success) {
                                 $J("#log_body").get(0).innerHTML += response.error || "Unknown error";
                             } else {
-                                $J("#log_body").get(0).innerHTML += "${Localization.str.posted_at_success}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/allcomments/">\${profileName}</a>\`);
+                                $J("#log_body").get(0).innerHTML += "${Localization.str.posted_at_success}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/allcomments/" target="_blank">\${profileName}</a>\`);
                             }
 
                             $J(\`.friend_block_v2[data-steamid="\${profileID}"]\`).removeClass("selected").find(".select_friend_checkbox").prop("checked", false);
                             UpdateSelection();
                         })
                         .fail(() => {
-                            $J("#log_body").get(0).innerHTML += "<br>${Localization.str.posted_at_fail}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/">\${profileName}</a>\`)
+                            $J("#log_body").get(0).innerHTML += "<br>${Localization.str.posted_at_fail}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/" target="_blank">\${profileName}</a>\`)
                         })
                         .always(() => {
                             $J("#log_head").html("<br><b>${Localization.str.processed}<b>".replace("__i__", i + 1).replace("__total__", total))
