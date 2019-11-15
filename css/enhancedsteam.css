@@ -2314,61 +2314,20 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Store app pages
- * addMetacriticUserScore()
+ * addMetacriticUserScore(),addOpenCritic()
  **************************************/
 #game_area_userscore {
   margin-top: 6px;
   padding-top: 10px;
   clear: both;
 }
-#game_area_userscore .score {
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #ffffff;
-  font-size: 25px;
-  text-align: center;
-  float: left;
-  padding: 0 !important;
+/* prevent the injected stylesheet https://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css from changing the padding */
+#game_area_metacritic .score,
+#game_area_userscore .score,
+#game_area_opencritic .score {
+  padding: 0;
 }
-#game_area_userscore .score.high {
-  background-color: #66cc33;
-}
-#game_area_userscore .score.medium {
-  background-color: #ffcc33;
-}
-#game_area_userscore .score.low {
-  background-color: #ff0000;
-}
-#game_area_userscore .logo {
-  background-image: url('https://store.steampowered.com/public/images/v6/mc_logo_no_text.png');
-  background-repeat: no-repeat;
-  height: 35px;
-  width: 35px;
-  margin-left: 10px;
-  margin-top: 10px;
-  float: left;
-}
-#game_area_userscore .wordmark {
-  float: left;
-  width: 180px;
-}
-#game_area_userscore .metacritic {
-  font-family: "Motiva Sans", Sans-serif;
-  font-weight: bold;
-  color: #ffffff;
-  margin-left: 2px;
-  font-size: 26px;
-  line-height: 26px;
-  margin-top: 12px;
-  float: left;
-}
-
-/***************************************
- * Store app pages
- * addOpenCritic()
- **************************************/
+#game_area_userscore .score,
 #game_area_opencritic .score {
   width: 50px;
   height: 50px;
@@ -2378,20 +2337,20 @@ input[type=checkbox].es_dlc_selection:checked + label {
   font-size: 25px;
   text-align: center;
   float: left;
-  padding: 0 !important;
 }
-#game_area_opencritic .score.mighty {
-  background-color: #fc430a;
+#game_area_userscore .score.high {background-color: #66cc33;}
+#game_area_userscore .score.medium {background-color: #ffcc33;}
+#game_area_userscore .score.low {background-color: #ff0000;}
+
+#game_area_opencritic .score.mighty {background-color: #fc430a;}
+#game_area_opencritic .score.strong {background-color: #9e00b4;}
+#game_area_opencritic .score.fair {background-color: #4aa1ce;}
+#game_area_opencritic .score.weak {background-color: #80b06a;}
+
+#game_area_userscore .logo {
+  background-image: url('https://store.steampowered.com/public/images/v6/mc_logo_no_text.png');
 }
-#game_area_opencritic .score.strong {
-  background-color: #9e00b4;
-}
-#game_area_opencritic .score.fair {
-  background-color: #4aa1ce;
-}
-#game_area_opencritic .score.weak {
-  background-color: #80b06a;
-}
+#game_area_userscore .logo,
 #game_area_opencritic .logo {
   background-repeat: no-repeat;
   height: 35px;
@@ -2400,10 +2359,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
   margin-top: 10px;
   float: left;
 }
+#game_area_userscore .wordmark,
 #game_area_opencritic .wordmark {
   float: left;
   width: 180px;
 }
+#game_area_userscore .metacritic {
+  margin-top: 12px;
+}
+#game_area_opencritic .metacritic {
+  margin-top: 4px;
+}
+#game_area_userscore .metacritic,
 #game_area_opencritic .metacritic {
   font-family: "Motiva Sans", Sans-serif;
   font-weight: bold;
@@ -2411,7 +2378,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
   margin-left: 2px;
   font-size: 26px;
   line-height: 26px;
-  margin-top: 4px;
   float: left;
 }
 
