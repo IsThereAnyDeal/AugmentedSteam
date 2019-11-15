@@ -3047,11 +3047,42 @@ let GroupsPageClass = (function(){
 
         document.querySelector("#es_leave_groups").addEventListener("click", () => leaveGroups());
 
+        async function displayAdminConfirmation(name, id) {
+            let body = Localization.str.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
+            ExtensionLayer.runInPageContext(`function(){
+                let prompt = ShowConfirmDialog("${Localization.str.leave}", "${body}");
+                prompt.done(function(result) {
+                    Messenger.postMessage("confirm#${id}", result);
+                }).fail(function() {
+                    Messenger.postMessage("confirm#${id}");
+                });
+            }`);
+            
+            let result = await Messenger.onMessage(`confirm#${id}`);
+            if (result === "OK") {
+                return true;
+            }
+
+            return false;
+        }
+
         async function leaveGroups() {
             for (let group of groups) {
                 if (!group.classList.contains("selected")) { continue; }
+                window.location.hash = group.id;
 
-                let id = group.querySelector(".actions > a").getAttribute("onclick").split("'")[1];
+                let actions = group.querySelector(".actions");
+                let admin = actions.querySelector("[href*='/edit']");
+                let split = actions.querySelector("[onclick*=ConfirmLeaveGroup]").getAttribute("onclick").split(/'|"/);
+                let id = split[1];
+                if (admin) {
+                    let name = split[3]
+                    let cont = await displayAdminConfirmation(name, id);
+                    if (!cont) {
+                        group.querySelector(".select_friend").click();
+                        continue;
+                    }
+                }
                 let res = await leaveGroup(id).catch(err => console.error(err));
 
                 if (!res || !res.success) {
@@ -3072,6 +3103,7 @@ let GroupsPageClass = (function(){
             formData.append("action", "leave_group");
             formData.append("steamids[]", id);
 
+            return id;
             return RequestData.post(User.profileUrl + "/friends/action", formData, {
                 withCredentials: true
             }, "json");

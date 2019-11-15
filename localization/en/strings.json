@@ -1,4 +1,5 @@
 {
+    "leave_groups_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?",
     "manage_groups": "Manage groups",
     "action_groups": "Select the groups below that you wish to take action on.",
     "inverse": "Inverse",
