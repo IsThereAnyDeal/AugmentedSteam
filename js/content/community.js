@@ -3069,7 +3069,6 @@ let GroupsPageClass = (function(){
         async function leaveGroups() {
             for (let group of groups) {
                 if (!group.classList.contains("selected")) { continue; }
-                window.location.hash = group.id;
 
                 let actions = group.querySelector(".actions");
                 let admin = actions.querySelector("[href*='/edit']");
@@ -3090,7 +3089,7 @@ let GroupsPageClass = (function(){
                     continue;
                 }
 
-                group.style.opacity = "0.3";
+                group.style.opacity = 0.3;
                 group.querySelector(".select_friend").click();
             }
         }
@@ -3103,7 +3102,6 @@ let GroupsPageClass = (function(){
             formData.append("action", "leave_group");
             formData.append("steamids[]", id);
 
-            return id;
             return RequestData.post(User.profileUrl + "/friends/action", formData, {
                 withCredentials: true
             }, "json");
