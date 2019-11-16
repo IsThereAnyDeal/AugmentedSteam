@@ -654,6 +654,7 @@ class AppPageClass extends StorePageClass {
         this.addReviewToggleButton();
         this.addHelpButton();
         this.addSupport();
+        this.addHorizontalScrolling();
     }
 
     initHdPlayer() {
@@ -2036,7 +2037,6 @@ class AppPageClass extends StorePageClass {
         }
     }
 
-
     addAstatsLink() {
         if (!SyncedStorage.get("showastatslink")) { return; }
         if (!this.hasAchievements()) { return; }
@@ -2234,6 +2234,31 @@ class AppPageClass extends StorePageClass {
 
             else if (title.includes(' 6 pack')) { splitPack(node, 6); }
             else if (title.includes(' six pack')) { splitPack(node, 6); }
+        }
+    }
+
+    addHorizontalScrolling() {
+
+        let sliders = document.querySelectorAll(".store_autoslider");
+        if (sliders.length === 0 || !SyncedStorage.get("horizontalscrolling")) { return; }
+
+        for (let slider of sliders) {
+            let lastScroll = Date.now();
+            let block = slider.parentNode;
+            block.addEventListener("wheel", scrollBlock, false);
+            function scrollBlock(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                
+                if (Date.now() - lastScroll < 200) {
+                    return;
+                } 
+        
+                lastScroll = Date.now();
+                let isScrollDown = ev.deltaY > 0;                
+                let targetElem = isScrollDown ? block.querySelector(".slider_right") : block.querySelector(".slider_left");
+                targetElem.click();
+            }
         }
     }
 }

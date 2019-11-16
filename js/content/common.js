@@ -2358,7 +2358,7 @@ class MediaPage {
     _horizontalScrolling() {
 
         let strip = document.querySelector("#highlight_strip");
-        if (!strip || !SyncedStorage.get("horizontalmediascrolling")) { return; }
+        if (!strip || !SyncedStorage.get("horizontalscrolling")) { return; }
 
         let lastScroll = Date.now();
         strip.addEventListener("wheel", scrollStrip, false);
