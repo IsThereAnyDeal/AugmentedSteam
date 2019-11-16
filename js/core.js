@@ -250,6 +250,11 @@ class UpdateHandler {
             SyncedStorage.remove("html5video");
             SyncedStorage.remove("showclient");
         }
+
+        if (oldVersion.isSameOrBefore("1.3.1")) {
+            SyncedStorage.set("horizontalscrolling", SyncedStorage.get("horizontalmediascrolling"));
+            SyncedStorage.remove("horizontalmediascrolling");
+        }
     }
 }
 
@@ -585,7 +590,7 @@ SyncedStorage.defaults = {
     'send_age_info': true,
     'mp4video': false,
     'contscroll': true,
-    'horizontalmediascrolling': true,
+    'horizontalscrolling': true,
     'showsupportinfo': true,
     'showdrm': true,
     'regional_hideworld': false,
