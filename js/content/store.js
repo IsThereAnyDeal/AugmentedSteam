@@ -473,11 +473,11 @@ class StorePageClass {
                     purchaseArea.classList.add("es_regional_always");
                 } else {
                     let priceNode = node.querySelector(".price,.discount_prices");
-                    priceNode.insertAdjacentElement("afterend", pricingDiv);
-                    priceNode.parentNode.classList.add("es_regional_onmouse");
+                    priceNode.insertAdjacentElement("beforeend", pricingDiv);
+                    priceNode.classList.add("es_regional_onmouse");
 
                     if (!SyncedStorage.get("regional_hideworld")) {
-                        node.querySelector(".price,.discount_prices").classList.add("es_regional_icon")
+                        priceNode.classList.add("es_regional_icon");
                     }
                 }
             })
