@@ -2585,13 +2585,14 @@ let SearchPageClass = (function(){
     }
 
     SearchPageClass.prototype.endlessScrolling = function() {
-        if (!SyncedStorage.get("contscroll")) { return; }
+        let pagination = document.querySelector(".search_pagination_right");
+        if (!SyncedStorage.get("contscroll") || !pagination) { return; }
 
         // Required for the loading wrapper
         DOMHelper.insertHomeCSS();
 
         let result_count;
-        document.querySelector(".search_pagination_right").style.display = "none";
+        pagination.style.display = "none";
 
         let match = document.querySelector(".search_pagination_left").textContent.trim().match(/(\d+)(?:\D+(\d+)\D+(\d+))?/);
         if (match) {
