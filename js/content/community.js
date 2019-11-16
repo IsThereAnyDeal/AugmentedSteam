@@ -1020,6 +1020,7 @@ let GroupHomePageClass = (function(){
 
     function GroupHomePageClass() {
         this.addGroupLinks();
+        this.addFriendsInviteButton();
     }
 
     GroupHomePageClass.prototype.addGroupLinks = function() {
@@ -1063,6 +1064,22 @@ let GroupHomePageClass = (function(){
         }
 
     };
+
+    GroupHomePageClass.prototype.addFriendsInviteButton = function() {
+        if (!User.isSignedIn) { return; }
+
+        let button = document.querySelector(".grouppage_join_area");
+        if (button) { return; }
+
+        let groupId = GroupID.getGroupId();
+        HTML.afterEnd("#join_group_form", 
+            `<div class="grouppage_join_area">
+                <a class="btn_blue_white_innerfade btn_medium" href="https://steamcommunity.com/my/friends/?invitegid=${groupId}">
+                    <span><img src="//steamcommunity-a.akamaihd.net/public/images/groups/icon_invitefriends.png">&nbsp; ${Localization.str.invite_friends}</span>
+                </a>
+            </div>`);
+    };
+    
     return GroupHomePageClass;
 })();
 
@@ -2907,6 +2924,7 @@ let FriendsPageClass = (function(){
 
     function FriendsPageClass() {
         this.addSort();
+        this.addFriendsInviteButton();
         this.addPoster();
     }
 
@@ -2979,6 +2997,22 @@ let FriendsPageClass = (function(){
         });
 
         sortFriends(SyncedStorage.get("sortfriendsby"));
+    };
+
+    FriendsPageClass.prototype.addFriendsInviteButton = async function() {
+        let params = new URLSearchParams(window.location.search);
+        if (!params.has("invitegid")) { return; }
+
+        let groupId = params.get("invitegid");
+        HTML.afterBegin("#manage_friends > div:nth-child(2)", `<span class="manage_action btnv6_lightblue_blue btn_medium" id="invitetogroup"><span>${Localization.str.invite_to_group}</span></span>`);
+        ExtensionLayer.runInPageContext(`function(){
+            ToggleManageFriends();
+            $J("#invitetogroup").on("click", function() {
+                let groupId = "${groupId}";
+                let friends = GetCheckedAccounts("#search_results > .selectable.selected:visible");
+                InviteUserToGroup(null, groupId, friends);
+            });
+        }`);
     };
 
     FriendsPageClass.prototype.addPoster = function() {
