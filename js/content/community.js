@@ -2925,6 +2925,7 @@ let FriendsPageClass = (function(){
     function FriendsPageClass() {
         this.addSort();
         this.addFriendsInviteButton();
+        this.addPoster();
     }
 
     FriendsPageClass.prototype.addSort = async function() {
@@ -3012,6 +3013,80 @@ let FriendsPageClass = (function(){
                 InviteUserToGroup(null, groupId, friends);
             });
         }`);
+    };
+
+    FriendsPageClass.prototype.addPoster = function() {
+        let manage = document.querySelector("#manage_friends");
+        if (!manage) { return; }
+
+        let commentArea = `<div class="row commentthread_entry" style="background-color: initial; padding-right: 24px;">
+                <div class="commentthread_entry_quotebox">
+                    <textarea rows="3" class="commentthread_textarea" id="comment_textarea" placeholder="${Localization.str.add_comment}" style="overflow: hidden; height: 20px;"></textarea>
+                </div>
+                <div class="commentthread_entry_submitlink">
+                    <a class="btn_grey_black btn_small_thin" id="FormattingHelpPopup">
+                        <span>${Localization.str.formatting_help}</span>
+                    </a>
+                    <span class="emoticon_container">
+                        <span class="emoticon_button small" id="emoticonbtn">
+                        </span>
+                    </span>
+                    <span class="btn_green_white_innerfade btn_small" id="comment_submit">
+                        <span>${Localization.str.friends_commenter}</span>
+                    </span>
+                </div>
+            </div>
+            <div class="row" id="log" style="margin-top: 0px; margin-bottom: 16px;">
+                <span id="log_head"></span>
+                <span id="log_body" class="dimmed"></span>
+            </div>`
+
+        HTML.beforeEnd(manage, commentArea);
+        ExtensionLayer.runInPageContext(`function() {
+            let delay = 7000;
+            new CEmoticonPopup($J('#emoticonbtn'), $J('#comment_textarea'));
+            $J("#comment_submit").click(() => {
+                const total = $J(".selected").length;
+                const msg = $J("#comment_textarea").val();
+                if (total === 0 || msg.length === 0) {
+                    ShowAlertDialog("${Localization.str.alert}", "${Localization.str.friends_commenter_warning}");
+                    return;
+                }
+            
+                $J("#log_head, #log_body").html("");
+                $J(".selected").each((i, elem) => {
+                    let profileID = $J(elem).data("steamid");
+                    let profileName = $J(elem).find(".friend_block_content").get(0).firstChild.textContent;
+                    setTimeout(() => {
+                        $J.post("//steamcommunity.com/comment/Profile/post/" + profileID + "/-1/", {
+                            comment: msg,
+                            count: 6,
+                            sessionid: g_sessionID
+                        })
+                        .done(response => {
+                            $J("#log_body").get(0).innerHTML += "<br>";
+
+                            if (!response.success) {
+                                $J("#log_body").get(0).innerHTML += response.error || "Unknown error";
+                            } else {
+                                $J("#log_body").get(0).innerHTML += "${Localization.str.posted_at_success}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/allcomments/" target="_blank">\${profileName}</a>\`);
+                            }
+
+                            $J(\`.friend_block_v2[data-steamid="\${profileID}"]\`).removeClass("selected").find(".select_friend_checkbox").prop("checked", false);
+                            UpdateSelection();
+                        })
+                        .fail(() => {
+                            $J("#log_body").get(0).innerHTML += "<br>${Localization.str.posted_at_fail}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/" target="_blank">\${profileName}</a>\`)
+                        })
+                        .always(() => {
+                            $J("#log_head").html("<br><b>${Localization.str.processed}<b>".replace("__i__", i + 1).replace("__total__", total))
+                        });
+                    }, delay * i);
+                });
+            });
+        }`);
+
+        document.querySelector("#FormattingHelpPopup").href = "javascript:CCommentThread.FormattingHelpPopup('Profile')";
     };
 
     return FriendsPageClass;
@@ -3720,21 +3795,21 @@ let GuidesPageClass = (function(){
     GuidesPageClass.prototype.removeGuidesLanguageFilter = function() {
         if (!SyncedStorage.get("removeguideslanguagefilter")) { return; }
 
-        let language = Language.getCurrentSteamLanguage();
-        let regex = new RegExp(language, "i");
         let nodes = document.querySelectorAll("#rightContents .browseOption");
         for (let node of nodes) {
             let onclick = node.getAttribute("onclick");
 
-            if (regex.test(onclick)) {
-                node.removeAttribute("onclick"); // remove onclick, we have link anyway, why do they do this?
-                // node.setAttribute("onclick", onclick.replace(/requiredtags[^&]+&?/, ""))
+            if (onclick) {
+                node.setAttribute("onclick", onclick.replace(/requiredtags[^&]+/, "requiredtags[]=-1"));
             }
 
             let linkNode = node.querySelector("a");
-            if (regex.test(linkNode.href)) {
-                linkNode.href = linkNode.href.replace(/requiredtags[^&]+&?/, "");
-            }
+            linkNode.href = linkNode.href.replace(/requiredtags[^&]+/, "requiredtags[]=-1");
+        }
+
+        nodes = document.querySelectorAll(".guides_home_view_all_link > a, .guide_home_category_selection");
+        for (let node of nodes) {
+            node.href = node.href.replace(/&requiredtags[^&]+$/, "");
         }
     };
 

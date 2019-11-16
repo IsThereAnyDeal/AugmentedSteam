@@ -170,7 +170,7 @@ class StorePageClass {
         if (!SyncedStorage.get("showdrm")) { return; }
 
         let text = "";
-        for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details")) {
+        for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details, .DRM_notice")) {
             text += node.innerHTML;
         }
         let uppercased = text.toUpperCase();
@@ -399,7 +399,15 @@ class StorePageClass {
                     .querySelector(".game_purchase_action");
 
                 let apiPrice = prices[User.getCountry().toLowerCase()];
-                let priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
+                let priceLocal;
+                try {
+                    priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
+                } catch(err) {
+                    console.group("Regional pricing");
+                    console.error(err);
+                    console.warn("Can't show relative price differences to any other currencies");
+                    console.groupEnd();
+                }
 
                 let pricingDiv = document.createElement("div");
                 pricingDiv.classList.add("es_regional_container");
@@ -415,25 +423,38 @@ class StorePageClass {
 
                     if (apiPrice) {
                         let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency);
-                        let priceUser = priceRegion.inCurrency(Currency.customCurrency);
-
-
-                        let percentageIndicator = "equal";
-                        let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
-
-                        if (percentage < 0) {
-                            percentage = Math.abs(percentage);
-                            percentageIndicator = "lower";
-                        } else if (percentage > 0) {
-                            percentageIndicator = "higher";
+                        let priceUser;
+                        try {
+                            priceUser = priceRegion.inCurrency(Currency.customCurrency);
+                        } catch(err) {
+                            console.group("Regional pricing");
+                            console.error(err);
+                            console.warn(`Not able to show converted price and relative price differences for country code "%s"`, country.toUpperCase());
+                            console.groupEnd();
                         }
 
                         html =
                             `<div class="es_regional_price es_flag es_flag_${country}">
                                 ${priceRegion}
-                                <span class="es_regional_converted">(${priceUser})</span>
-                                <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>
-                            </div>`;
+                            `;
+
+                        if (priceLocal && priceUser) {
+                            let percentageIndicator = "equal";
+                            let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
+
+                            if (percentage < 0) {
+                                percentage = Math.abs(percentage);
+                                percentageIndicator = "lower";
+                            } else if (percentage > 0) {
+                                percentageIndicator = "higher";
+                            }
+
+                            html +=
+                                `<span class="es_regional_converted">(${priceUser})</span>
+                                <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>`
+                        }
+                        
+                        html += "</div>";
                     } else {
                         html =
                             `<div class="es_regional_price es_flag es_flag_${country}">
@@ -452,11 +473,11 @@ class StorePageClass {
                     purchaseArea.classList.add("es_regional_always");
                 } else {
                     let priceNode = node.querySelector(".price,.discount_prices");
-                    priceNode.insertAdjacentElement("afterend", pricingDiv);
-                    priceNode.parentNode.classList.add("es_regional_onmouse");
+                    priceNode.insertAdjacentElement("beforeend", pricingDiv);
+                    priceNode.classList.add("es_regional_onmouse");
 
                     if (!SyncedStorage.get("regional_hideworld")) {
-                        node.querySelector(".price,.discount_prices").classList.add("es_regional_icon")
+                        priceNode.classList.add("es_regional_icon");
                     }
                 }
             })
@@ -968,10 +989,21 @@ class AppPageClass extends StorePageClass {
 
             let modalTitleLink = modalFooter.parentElement.querySelector(".screenshot_popup_modal_title > a");
             HTML.beforeEnd(modalFooter,
-                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_download_btn" style="right: calc(${nextButtonOffsetWidth + fsvButton.offsetWidth}px + 1em)" title="${modalTitleLink.textContent.trim()}"><i></i></div>`);
+                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_open_btn" style="right: calc(${nextButtonOffsetWidth + fsvButton.offsetWidth}px + 1em)"><i></i></div>`);
+            let openButton = modalFooter.querySelector(".es_screenshot_open_btn");
+            openButton.addEventListener("click", () => {
+                window.open(modalTitleLink.href, "_blank");
+            });
+
+            HTML.beforeEnd(modalFooter,
+                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_download_btn" style="right: calc(${nextButtonOffsetWidth + fsvButton.offsetWidth + openButton.offsetWidth}px + 1.5em)" title="${modalTitleLink.textContent.trim()}"><i></i></div>`);
             let downloadButton = modalFooter.querySelector(".es_screenshot_download_btn");
             downloadButton.addEventListener("click", () => {
-                modalTitleLink.click();
+                let uri = new URL(modalTitleLink.href);
+                let url = uri.href;
+                let filename = uri.pathname.split("/").pop();
+                console.log({ url, filename })
+                Downloader.download({ url, filename });
             });
         }
 
@@ -1077,60 +1109,56 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("showoc")) { return; }
 
         this.data.then(result => {
-            if (!result || !result || !result.oc) { return; }
+            if (!result || !result.oc) { return; }
             let data = result.oc;
 
             if (!data.url) { return; }
 
-            let node = document.querySelector(".rightcol .responsive_apppage_reviewblock");
-            if (!node) {
-                node = document.querySelector("#ReportAppBtn").parentNode;
+            let node = document.querySelector("#game_area_metascore");
+            if (node) {
+                node = node.parentNode;
+            } else {
+                node = document.querySelector(".game_details");
             }
-            HTML.afterEnd(node.parentNode,  "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic' class='solo'></div><div style='clear: both'></div></div>");
+            HTML.afterEnd(node, "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic'></div><div style='clear: both'></div></div>");
 
             let opencriticImg = ExtensionLayer.getLocalUrl("img/opencritic.png");
             let award = data.award || "NA";
 
             HTML.beforeEnd("#game_area_opencritic",
-            `<div class='score ${award.toLowerCase()}'>${data.score ? data.score : "--"}</div>
-                <div><img src='${opencriticImg}'></div>
-                <div class='oc_text'>
-                    ${award} - <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
-                </div>`);
+                `<div class='score ${award.toLowerCase()}'>${data.score ? data.score : "--"}</div>
+                 <div class='logo'><img src='${opencriticImg}'></div>
+                 <div class='wordmark'>
+                     <div class='metacritic'>OpenCritic</div>
+                     <div id='game_area_metalink'>${award} - <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
+                         <img src='https://steamstore-a.akamaihd.net/public/images/ico/iconExternalLink.gif' border='0' align='bottom'>
+                     </div>
+                 </div>`);
 
             // Add data to the review section in the left column, or create one if that block doesn't exist
             if (data.reviews.length > 0) {
-                let reviewsNode = document.querySelector("#game_area_reviews");
-                if (reviewsNode) {
-                    HTML.beforeBegin(reviewsNode.querySelector("p, div"), "<div id='es_opencritic_reviews'></div>");
+                let reviewsNode = document.getElementById("game_area_reviews");
+                let html = `<div id='es_opencritic_reviews'><div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div></div>`;
 
+                if (reviewsNode) {
                     let youTubeReviews = document.getElementById("es_youtube_reviews");
-                    let htmlString = `<div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>`;
 
                     if (youTubeReviews) {
-                        HTML.beforeBegin(youTubeReviews, htmlString);
+                        HTML.beforeBegin(youTubeReviews, html);
                     } else {
-                        HTML.beforeEnd(reviewsNode);
+                        HTML.beforeEnd(reviewsNode, html);
                     }
                 } else {
                     HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
-                        `<div id='game_area_reviews' class='game_area_description'>
-                            <h2>${Localization.str.reviews}</h2>
-                            <div id='es_opencritic_reviews'>
-                                <div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div>
-                            </div>
-                        </div>`);
+                        `<div id='game_area_reviews' class='game_area_description'><h2>${Localization.str.reviews}</h2>${html}</div>`);
 
-                    if (!SyncedStorage.get("customize_apppage").reviews) {
-                        document.querySelector("#game_area_reviews").style.display = "none";
-                    }
                 }
 
                 let review_text = "";
                 for (let i=0, len=data.reviews.length; i<len; i++) {
                     let review = data.reviews[i];
                     let date = new Date(review.date);
-                    review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href='${review.rURL}' target='_blank' data-tooltip-text='${review.author}, ${date.toLocaleDateString()}'>${review.name}</a></p>`;
+                    review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href='${review.rUrl}' target='_blank' data-tooltip-text='${review.author}, ${date.toLocaleDateString()}'>${review.name}</a></p>`;
                 }
 
                 HTML.afterBegin("#es_opencritic_reviews", review_text);
@@ -1231,9 +1259,6 @@ class AppPageClass extends StorePageClass {
                     <div id="es_youtube_reviews"></div>
                 </div>`);
 
-            if (!SyncedStorage.get("customize_apppage").reviews) {
-                document.querySelector("#game_area_reviews").style.display = "none";
-            }
         } else {
             HTML.beforeEnd(reviewsNode, '<div id="es_youtube_reviews"></div>');
         }
@@ -2085,26 +2110,27 @@ class AppPageClass extends StorePageClass {
         }
 
         let workshop = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
-        let morelikethis = document.querySelector("#recommended_block h2");
+        let greenlight = document.querySelector("[href^='https://steamcommunity.com/greenlight']");
 
         let customizer = new Customizer("customize_apppage");
         customizer
             .add("recommendedbycurators", ".steam_curators_block")
-            .add("recentupdates", ".early_access_announcements")
+            .add("recentupdates", "#events_root", Localization.str.apppage_recentupdates)
             .add("reviews", "#game_area_reviews")
             .add("about", "[data-parent-of='#game_area_description']")
             .add("contentwarning", "[data-parent-of='#game_area_content_descriptors']")
             .add("steamchart", "#steam-charts")
             .add("surveys", "#performance_survey")
             .add("steamspy", "#steam-spy")
-            .add("sysreq", "[data-parent-of='.sys_req")
+            .add("sysreq", "[data-parent-of='.sys_req']")
             .add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal)
             .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
             .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
+            .add("morelikethis", "#recommended_block")
             .add("customerreviews", "#app_reviews_hash");
 
-        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.workshop.workshop);
-        if (morelikethis) customizer.add("morelikethis", "#recommended_block", morelikethis.textContent);
+        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_workshop);
+        if (greenlight) customizer.add("greenlight", greenlight.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_greenlight);
 
         customizer.build();
         document.querySelector(".purchase_area_spacer").style.height = "auto";
@@ -2674,7 +2700,7 @@ let SearchPageClass = (function(){
         let hideOwned = document.querySelector("#es_owned_games.checked");
         let hideWishlisted = document.querySelector("#es_wishlist_games.checked");
         let hideInCart = document.querySelector("#es_cart_games.checked");
-        let hideNotDiscounted = document.querySelector("#es_notdiscounted_games.checked");
+        let hideNotDiscounted = document.querySelector("#es_notdiscounted.checked");
         let hideNotInterested = document.querySelector("#es_notinterested.checked");
         let hideMixed = document.querySelector("#es_notmixed.checked");
         let hideNegative = document.querySelector("#es_notnegative.checked");
@@ -3061,7 +3087,9 @@ let SearchPageClass = (function(){
                 } else {
                     params.delete("es_hide");
                 }
-                linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + Array.from(params.entries(), ([key, val]) => `${key}=${val}`).join('&'); // Encoding is done by Steam, see #568
+
+                // Encoding is done by Steam, see #568
+                linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + params.toString();
             }
         }
 
@@ -3817,7 +3845,6 @@ let StoreFrontPageClass = (function(){
                 </div>
             </div>`);
 
-        document.querySelector(".home_page_body_ctn").style.overflow = "visible";
         document.querySelector("#es_customize_btn").addEventListener("click", function(e){
             e.target.classList.toggle("active");
         });

@@ -758,7 +758,7 @@ let Price = (function() {
         }
         let rate = Currency.getRate(this.currency, desiredCurrency);
         if (!rate) {
-            throw `Could not establish conversion rate between ${this.currency} and ${desiredCurrency}`;
+            throw new Error(`Could not establish conversion rate between ${this.currency} and ${desiredCurrency}`);
         }
         return new Price(this.value * rate, desiredCurrency);
     };
@@ -2161,7 +2161,7 @@ class Downloader {
 
     static download(content, filename) {
         let a = document.createElement("a");
-        a.href = URL.createObjectURL(content);
+        a.href = typeof content === "string" ? content : URL.createObjectURL(content);
         a.download = filename;
 
         // Explicitly dispatching the click event (instead of just a.click()) will make it work in FF
