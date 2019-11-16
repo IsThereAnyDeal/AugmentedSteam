@@ -890,6 +890,8 @@ let EnhancedSteam = (function() {
     };
 
     self.addBackToTop = function() {
+        if (!SyncedStorage.get("show_backtotop") || document.querySelector("#BackToTop")) { return; }
+
         HTML.afterBegin("body", `<div class="btn_darkblue_white_innerfade btn_medium_tall es_btt"><span>&#x2191;</span></div>`);
         let node = document.querySelector(".es_btt");
         let prevScrollHeight, timer;

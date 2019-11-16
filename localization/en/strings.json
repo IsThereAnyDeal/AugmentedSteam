@@ -341,6 +341,7 @@
         "formatted_time": "__hours__ hours, __minutes__ minutes"
     },
     "options": {
+        "show_backtotop": "Show back to top button on long pages",
         "context_menu": "Context Menu",
         "context_steam_store": "Search Steam Store for '__query__'",
         "context_steam_market": "Search Steam Market for '__query__'",

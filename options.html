@@ -83,6 +83,68 @@
             <div id="maincontent_general">
                 <h1 data-locale-text="options.general">General</h1>
                 <div class="settings">
+        
+                    <div id="language_section" class="content_section">
+                        <h2 data-locale-text="language">Language</h2>
+                        <div class="option">
+                            <input type="checkbox" id="showlanguagewarning" data-setting="showlanguagewarning">
+                            <label for="showlanguagewarning" data-locale-text="options.show_languagewarning">Show warning if browsing in a language other than</label>
+                            <select id="warning_language" data-setting="showlanguagewarninglanguage">
+                                <option value="english">English</option>
+                                <option value="bulgarian">български</option>
+                                <option value="czech">čeština</option>
+                                <option value="danish">Dansk</option>
+                                <option value="dutch">Nederlands</option>
+                                <option value="finnish">Suomi</option>
+                                <option value="french">Français</option>
+                                <option value="greek">Ελληνικά</option>
+                                <option value="german">Deutsch</option>
+                                <option value="hungarian">Magyar</option>
+                                <option value="italian">Italiano</option>
+                                <option value="japanese">日本語</option>
+                                <option value="koreana">한국어</option>
+                                <option value="norwegian">Norsk</option>
+                                <option value="polish">Polski</option>
+                                <option value="portuguese">Português</option>
+                                <option value="brazilian">Português-Brasil</option>
+                                <option value="russian">Русский</option>
+                                <option value="romanian">Română</option>
+                                <option value="schinese">汉语</option>
+                                <option value="tchinese">漢語</option>
+                                <option value="spanish">Español</option>
+                                <option value="latam">Español Latinoamericano</option>
+                                <option value="swedish">Svenska</option>
+                                <option value="thai">ไทย</option>
+                                <option value="turkish">Türkçe</option>
+                                <option value="ukrainian">Українська</option>
+                            </select>
+                        </div>
+                    </div>
+        
+                    <div id="store_general_section" class="content_section">
+                        <h2 data-locale-text="options.general">General</h2>
+                        <div class="option">
+                            <input type="checkbox" id="show_progressbar" data-setting="show_progressbar">
+                            <label for="show_progressbar" data-locale-text="show_progressbar">Show progress and status bar of this extension</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="version_show" data-setting="version_show">
+                            <label for="version_show" data-locale-text="options.version_show">Show change log when this extension updates</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="replaceaccountname" data-setting="replaceaccountname">
+                            <label for="replaceaccountname" data-locale-text="options.replace_account_name">Replace account name with community name</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="showfakeccwarning" data-setting="showfakeccwarning">
+                            <label for="showfakeccwarning" data-locale-text="options.show_regionwarning">Show warning if browsing in non-account region</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="show_backtotop" data-setting="show_backtotop">
+                            <label for="show_backtotop" data-locale-text="options.show_backtotop">Show back to top button on long pages</label>
+                        </div>
+                    </div>
+                    
                     <div id="context_menu_section" class="content_section">
                         <h2 data-locale-text="options.context_menu">Context Menu</h2>
                         
@@ -286,43 +348,6 @@
                         </div>
                     </div>
         
-                    <div id="language_section" class="content_section">
-                        <h2 data-locale-text="language">Language</h2>
-                        <div class="option">
-                            <input type="checkbox" id="showlanguagewarning" data-setting="showlanguagewarning">
-                            <label for="showlanguagewarning" data-locale-text="options.show_languagewarning">Show warning if browsing in a language other than</label>
-                            <select id="warning_language" data-setting="showlanguagewarninglanguage">
-                                <option value="english">English</option>
-                                <option value="bulgarian">български</option>
-                                <option value="czech">čeština</option>
-                                <option value="danish">Dansk</option>
-                                <option value="dutch">Nederlands</option>
-                                <option value="finnish">Suomi</option>
-                                <option value="french">Français</option>
-                                <option value="greek">Ελληνικά</option>
-                                <option value="german">Deutsch</option>
-                                <option value="hungarian">Magyar</option>
-                                <option value="italian">Italiano</option>
-                                <option value="japanese">日本語</option>
-                                <option value="koreana">한국어</option>
-                                <option value="norwegian">Norsk</option>
-                                <option value="polish">Polski</option>
-                                <option value="portuguese">Português</option>
-                                <option value="brazilian">Português-Brasil</option>
-                                <option value="russian">Русский</option>
-                                <option value="romanian">Română</option>
-                                <option value="schinese">汉语</option>
-                                <option value="tchinese">漢語</option>
-                                <option value="spanish">Español</option>
-                                <option value="latam">Español Latinoamericano</option>
-                                <option value="swedish">Svenska</option>
-                                <option value="thai">ไทย</option>
-                                <option value="turkish">Türkçe</option>
-                                <option value="ukrainian">Українська</option>
-                            </select>
-                        </div>
-                    </div>
-        
                     <div id="homepage_section" class="content_section">
                         <h2 data-locale-text="options.homepage">Homepage</h2>
                         <div class="option">
@@ -341,22 +366,6 @@
         
                     <div id="store_general_section" class="content_section">
                         <h2 data-locale-text="options.general">General</h2>
-                        <div class="option">
-                            <input type="checkbox" id="show_progressbar" data-setting="show_progressbar">
-                            <label for="show_progressbar" data-locale-text="show_progressbar">Show progress and status bar of this extension</label>
-                        </div>
-                        <div class="option">
-                            <input type="checkbox" id="version_show" data-setting="version_show">
-                            <label for="version_show" data-locale-text="options.version_show">Show change log when this extension updates</label>
-                        </div>
-                        <div class="option">
-                            <input type="checkbox" id="replaceaccountname" data-setting="replaceaccountname">
-                            <label for="replaceaccountname" data-locale-text="options.replace_account_name">Replace account name with community name</label>
-                        </div>
-                        <div class="option">
-                            <input type="checkbox" id="showfakeccwarning" data-setting="showfakeccwarning">
-                            <label for="showfakeccwarning" data-locale-text="options.show_regionwarning">Show warning if browsing in non-account region</label>
-                        </div>
                         <div class="option">
                             <input type="checkbox" id="showemptywishlist" data-setting="showemptywishlist">
                             <label for="showemptywishlist" data-locale-text="options.show_empty_wishlist">Show "Empty Wishlist" button</label>

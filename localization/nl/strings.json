@@ -341,6 +341,7 @@
         "formatted_time": "__hours__ uren, __minutes__ minuten"
     },
     "options": {
+        "show_backtotop": "Toon knop om terug naar boven te gaan op lange pagina's",
         "context_menu": "Contextmenu",
         "context_steam_store": "Zoek de Steam Winkel naar '__query__'",
         "context_steam_market": "Zoek de Steam Markt naar '__query__'",
