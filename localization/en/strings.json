@@ -3,7 +3,6 @@
     "add_comment": "Add a comment",
     "friends_commenter": "Post Comments to Selected Friends",
     "friends_commenter_warning": "Please make sure you entered a message and selected 1 or more friends.",
-    "friends_commenter_no_links": "Please remove any links from your message.",
     "posted_at_success": "Successfully posted comment on __profile__.",
     "posted_at_fail": "Failed to post comment on __profile__.",
     "processed": "Processed __i__ out of __total__ friend(s).",
