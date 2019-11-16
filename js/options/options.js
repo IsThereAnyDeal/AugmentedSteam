@@ -391,9 +391,8 @@ let Options = (function(){
             </div>`;
         }
 
-        self.populateRegionalSelects = function() {
+        function attachListeners(countries=[null]) {
             let addAnotherWrapper = document.querySelector("#add_another_region").parentNode;
-            let countries = SyncedStorage.get("regional_countries");
             countries.forEach(country => {
                 HTML.beforeBegin(addAnotherWrapper, generateRegionSelect(country));
                 addAnotherWrapper.previousSibling.querySelector(".custom-link__close").addEventListener("click", e => {
@@ -402,17 +401,10 @@ let Options = (function(){
                     saveOption("regional_countries");
                 }, false);
             });
-        };
+        }
 
-        self.addRegionSelector = function () {
-            let addAnotherWrapper = document.querySelector("#add_another_region").parentNode;
-            HTML.beforeBegin(addAnotherWrapper, generateRegionSelect());
-            addAnotherWrapper.previousSibling.querySelector(".custom-link__close").addEventListener("click", e => {
-                let select = e.target.closest(".country_parent").querySelector(".regional_country");
-                select.value = "";
-                saveOption("regional_countries");
-            }, false);
-        };
+        self.populateRegionalSelects = () => attachListeners(SyncedStorage.get("regional_countries"));
+        self.addRegionSelector = () => attachListeners();
 
         return self;
     })();
