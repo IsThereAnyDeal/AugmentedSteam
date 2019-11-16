@@ -2452,7 +2452,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
   clear: both;
 }
 /* prevent the injected stylesheet https://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css from changing the padding */
-#game_area_metacritic .score,
+#game_area_metascore .score,
 #game_area_userscore .score,
 #game_area_opencritic .score {
   padding: 0;
