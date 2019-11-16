@@ -1,4 +1,13 @@
 {
+    "formatting_help": "Hulp bij opmaken",
+    "add_comment": "Bericht toevoegen",
+    "friends_commenter": "Stuur berichten naar geselecteerde vrienden",
+    "friends_commenter_warning": "Zorg er astublieft voor dat u een bericht heeft ingevoerd en 1 of meer vrienden heeft geselecteerd.",
+    "friends_commenter_no_links": "verwijder astublieft alle links in uw bericht.",
+    "posted_at_success": "Succesvol een bericht gestuurd naar __profile__.",
+    "posted_at_fail": "Niet gelukt een bericht te sturen naar __profile__.",
+    "processed": "__i__ van de __total__ vriend(en) verwerkt",
+    "alert": "Alert",
     "transactionStatus": "__failed__ verzoek(en) gefaald. __size__ van de __total__ transacties ontvangen.",
     "custom_tags": "Aangepaste Tags",
     "add_tag": "Voeg tag toe",
