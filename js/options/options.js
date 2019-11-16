@@ -381,13 +381,13 @@ let Options = (function(){
 
             let countryClass = "";
             if (country) {
-                countryClass = "es_flag_"+country;
+                countryClass = `es_flag_${country}`;
             }
 
             return `<div class="country_parent">
-            <span class='es_flag ${countryClass}'></span>
-            <select class='regional_country'>${options}</select>
-            <button type="button" name="profile_custom_remove" class="custom-link__close"></button>
+                <span class='es_flag ${countryClass}'></span>
+                <select class='regional_country'>${options}</select>
+                <button type="button" class="custom-link__close"></button>
             </div>`;
         }
 
