@@ -1109,26 +1109,31 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("showoc")) { return; }
 
         this.data.then(result => {
-            if (!result || !result || !result.oc) { return; }
+            if (!result || !result.oc) { return; }
             let data = result.oc;
 
             if (!data.url) { return; }
 
-            let node = document.querySelector(".rightcol .responsive_apppage_reviewblock");
-            if (!node) {
-                node = document.querySelector("#ReportAppBtn").parentNode;
+            let node = document.querySelector("#game_area_metascore");
+            if (node) {
+                node = node.parentNode;
+            } else {
+                node = document.querySelector(".game_details");
             }
-            HTML.afterEnd(node.parentNode,  "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic' class='solo'></div><div style='clear: both'></div></div>");
+            HTML.afterEnd(node, "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic'></div><div style='clear: both'></div></div>");
 
             let opencriticImg = ExtensionLayer.getLocalUrl("img/opencritic.png");
             let award = data.award || "NA";
 
             HTML.beforeEnd("#game_area_opencritic",
-            `<div class='score ${award.toLowerCase()}'>${data.score ? data.score : "--"}</div>
-                <div><img src='${opencriticImg}'></div>
-                <div class='oc_text'>
-                    ${award} - <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
-                </div>`);
+                `<div class='score ${award.toLowerCase()}'>${data.score ? data.score : "--"}</div>
+                 <div class='logo'><img src='${opencriticImg}'></div>
+                 <div class='wordmark'>
+                     <div class='metacritic'>OpenCritic</div>
+                     <div id='game_area_metalink'>${award} - <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
+                         <img src='https://steamstore-a.akamaihd.net/public/images/ico/iconExternalLink.gif' border='0' align='bottom'>
+                     </div>
+                 </div>`);
 
             // Add data to the review section in the left column, or create one if that block doesn't exist
             if (data.reviews.length > 0) {
