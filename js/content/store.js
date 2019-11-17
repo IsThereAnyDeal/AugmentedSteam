@@ -2052,20 +2052,12 @@ class AppPageClass extends StorePageClass {
     }
 
     addAchievementCompletionBar() {
-        if (!SyncedStorage.get("showachinstore")) { return; }
-        if (!this.hasAchievements()) { return; }
-        if (!this.isOwned()) { return; }
+        if (!this.isOwned() || !this.hasAchievements() || !SyncedStorage.get("showachinstore")) { return; }
 
         let details_block = document.querySelector(".myactivity_block .details_block");
-        if (!details_block) return;
+        if (!details_block) { return; }
 
-        let stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.type = 'text/css';
-        stylesheet.href = '//steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css';
-        document.head.appendChild(stylesheet);
-
-        HTML.afterEnd(details_block,"<div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
+        HTML.afterEnd(details_block, "<div id='es_ach_stats'></div>");
 
         Stats.getAchievementBar(this.communityAppid).then(achieveBar => {
             if (!achieveBar) {
@@ -2075,7 +2067,6 @@ class AppPageClass extends StorePageClass {
             
             let node = document.querySelector("#es_ach_stats");
             HTML.inner(node, achieveBar)
-
         });
     }
 

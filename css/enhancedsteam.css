@@ -1446,6 +1446,26 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * App pages
+ * addAchievementCompletionBar()
+ **************************************/
+#es_ach_stats {
+  margin-bottom: 9px;
+  margin-top: -16px;
+  float: right;
+}
+/* Taken from: https://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css */
+#es_ach_stats .achieveBar {
+  background: #3a3a3a;
+  padding: 1px;
+  border: 1px solid #aeaeae;
+}
+#es_ach_stats .achieveBarProgress {
+  height: 8px;
+  background-color: #aeaeae;
+}
+
+/***************************************
+ * App pages
  * addFullscreenScreenshotView()
  **************************************/
 .es_screenshot_fullscreen_toggle {
