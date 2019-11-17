@@ -1,3 +1,16 @@
+/* Back To Top button */
+.es_btt {
+  position: fixed; 
+  bottom: 8%; 
+  right: 20%; 
+  display: block; 
+  z-index: 9999;
+  opacity: 0;
+}
+.es_btt > span {
+  font-size: 180% !important;
+}
+
 /* Required for "Customize" button and YouTube / Steam tabs */
 .home_actions_ctn {
   float: right;

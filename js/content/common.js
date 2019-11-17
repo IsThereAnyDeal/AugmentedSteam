@@ -889,6 +889,40 @@ let EnhancedSteam = (function() {
 
     };
 
+    self.addBackToTop = function() {
+        if (!SyncedStorage.get("show_backtotop") || document.querySelector("#BackToTop")) { return; }
+
+        HTML.afterBegin("body", `<div class="btn_darkblue_white_innerfade btn_medium_tall es_btt"><span>&#x2191;</span></div>`);
+        let node = document.querySelector(".es_btt");
+        let prevScrollHeight, timer;
+        node.onclick = gotop;
+        window.onscroll = scrolling;
+        scrolling();
+
+        function gotop() {
+            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
+            timer = setInterval(function() {
+                if (scrollHeight <= 1) {
+                    document.body.scrollTop = 0; // For Safari
+                    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+                    clearInterval(timer);
+                }
+                document.body.scrollTop = scrollHeight; // For Safari
+                document.documentElement.scrollTop = scrollHeight; // For Chrome, Firefox, IE and Opera
+                scrollHeight -= scrollHeight / 20;
+            }, 10);
+        }
+
+        function scrolling() {
+            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
+            if (prevScrollHeight && prevScrollHeight < scrollHeight) {
+                clearInterval(timer);
+            }
+            prevScrollHeight = scrollHeight;
+            node.style.opacity = Math.min(Math.max((scrollHeight - 200) / 800, 0), 1);
+        }
+    };
+
     self.clearCache = function() {
         localStorage.clear();
         SyncedStorage.remove("user_currency");
@@ -2135,6 +2169,7 @@ let Common = (function(){
         ProgressBar.create();
         ProgressBar.loading();
         UpdateHandler.checkVersion(EnhancedSteam.clearCache);
+        EnhancedSteam.addBackToTop();
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
         EnhancedSteam.handleInstallSteamButton();

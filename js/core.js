@@ -632,6 +632,7 @@ SyncedStorage.defaults = {
     'show_wishlist_link': true,
     'show_wishlist_count': true,
     'show_progressbar': true,
+    'show_backtotop': false,
 
     'profile_showcase_twitch': true,
     'profile_showcase_own_twitch': false,
