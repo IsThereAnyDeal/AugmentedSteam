@@ -28,8 +28,14 @@ let initContextMenu = async function() {
     await Localization;
     ContextMenu.update();
 };
-chrome.runtime.onStartup.addListener(initContextMenu);
-chrome.runtime.onInstalled.addListener(initContextMenu);
+
+if (chrome.runtime.onStartup) {
+    chrome.runtime.onStartup.addListener(initContextMenu);
+}
+
+if (chrome.runtime.onInstalled) {
+    chrome.runtime.onInstalled.addListener(initContextMenu);
+}
 
 class Version {
     constructor(major, minor=0, patch=0) {
