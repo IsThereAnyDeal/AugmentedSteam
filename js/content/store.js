@@ -2515,6 +2515,7 @@ let SearchPageClass = (function(){
 
     let processing = false;
     let searchPage = 2;
+    let rows = 0;
 
     function loadSearchResults () {
         if (processing) { return; }
@@ -2576,7 +2577,7 @@ let SearchPageClass = (function(){
             HTML.beforeBegin(".search_pagination:last-child",
                 "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + " <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + "</a></div>");
 
-            document.querySelector("es_retry").addEventListener("click", function(e) {
+            document.querySelector("es_retry").addEventListener("click", function() {
                 processing = false;
                 document.querySelector("#es_error_msg").remove();
                 loadSearchResults();
@@ -2604,7 +2605,15 @@ let SearchPageClass = (function(){
 
             // if the pagination element is in the viewport, continue loading
             if (Viewport.isElementInViewport(node)) {
-                if (result_count > document.querySelectorAll(".search_result_row").length) {
+                let curRows = document.querySelectorAll(".search_result_row").length;
+                
+                // If previous search results got deleted and are no longer relevant (e.g. search term changed), reset search page number
+                if (curRows < rows) {
+                    rows = curRows;
+                    searchPage = 2;
+                }
+    
+                if (result_count > curRows) {
                     loadSearchResults();
                 } else {
                     node.textContent = Localization.str.all_results.replace("__num__", result_count);
