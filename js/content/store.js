@@ -2606,7 +2606,7 @@ let SearchPageClass = (function(){
             // if the pagination element is in the viewport, continue loading
             if (Viewport.isElementInViewport(node)) {
                 let curRows = document.querySelectorAll(".search_result_row").length;
-                
+
                 // If previous search results got deleted and are no longer relevant (e.g. search term changed), reset search page number
                 if (curRows < rows) {
                     rows = curRows;
@@ -3110,7 +3110,6 @@ let SearchPageClass = (function(){
     }
 
     SearchPageClass.prototype.observeChanges = function() {
-
         let hiddenInput = document.getElementById("es_hide");
 
         function modifyLinks() {
@@ -3138,8 +3137,25 @@ let SearchPageClass = (function(){
             }
         }
 
+        function observeAjax(addedNodes) {
+            EarlyAccess.showEarlyAccess();
+            
+            Highlights.highlightAndTag(addedNodes);
+            filtersChanged(addedNodes);
+        }
+
         let inputObserver = new MutationObserver(modifyLinks);
         inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
+
+        let ajaxObserver = new MutationObserver(mutations => {
+            let rows = [];
+            for (let mutation of mutations) {
+                rows = rows.concat(
+                    Array.from(mutation.addedNodes).filter(node => node.classList && node.classList.contains("search_result_row"))
+                );
+            }
+            observeAjax(rows);
+        });
 
         let removeObserver = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
@@ -3154,31 +3170,22 @@ let SearchPageClass = (function(){
                             modifyLinks();
                             filtersChanged();
                         }
-                        ajaxObserver.observe(node.querySelector("#search_resultsRows"), {childList: true});
+
+                        let searchResults = document.querySelector("#search_resultsRows");
+                        if (searchResults) {
+                            ajaxObserver.observe(searchResults, {childList: true});
+                        }
                         break;
                     }
                 }
             });
         });
         removeObserver.observe(document.querySelector("#search_results"), { childList: true });
-
-        function observeAjax(addedNodes) {
-            EarlyAccess.showEarlyAccess();
-            
-            Highlights.highlightAndTag(addedNodes);
-            filtersChanged(addedNodes);
+        
+        let searchResults = document.querySelector("#search_resultsRows");
+        if (searchResults) {
+            ajaxObserver.observe(searchResults, {childList: true});
         }
-
-        let ajaxObserver = new MutationObserver(mutations => {
-            let rows = [];
-            for (let mutation of mutations) {
-                rows = rows.concat(
-                    Array.from(mutation.addedNodes).filter(node => node.classList && node.classList.contains("search_result_row"))
-                );
-            }
-            observeAjax(rows);
-        });
-        ajaxObserver.observe(document.querySelector("#search_resultsRows"), {childList: true});
     };
 
     return SearchPageClass;
