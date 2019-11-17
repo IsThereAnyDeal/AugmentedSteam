@@ -2585,30 +2585,29 @@ let SearchPageClass = (function(){
     }
 
     SearchPageClass.prototype.endlessScrolling = function() {
-        let pagination = document.querySelector(".search_pagination_right");
-        if (!SyncedStorage.get("contscroll") || !pagination) { return; }
+        if (!SyncedStorage.get("contscroll")) { return; }
 
         // Required for the loading wrapper
         DOMHelper.insertHomeCSS();
+        DOMHelper.insertStyle(".search_pagination_right { display: none; }");
 
-        let result_count;
-        pagination.style.display = "none";
+        window.addEventListener("scroll", function() {
+            let node = document.querySelector(".search_pagination_left");
+            if (!node) { return; }
 
-        let match = document.querySelector(".search_pagination_left").textContent.trim().match(/(\d+)(?:\D+(\d+)\D+(\d+))?/);
-        if (match) {
-            result_count = match[2] ? Math.max.apply(Math, match.slice(1, 4)) : match[1];
-            document.querySelector(".search_pagination_left").textContent = Localization.str.results.replace("__num__", result_count);
-        }
+            let result_count;
+            let match = node.textContent.trim().match(/(\d+)(?:\D+(\d+)\D+(\d+))?/);
+            if (match) {
+                result_count = match[2] ? Math.max.apply(Math, match.slice(1, 4)) : match[1];
+                node.textContent = Localization.str.results.replace("__num__", result_count);
+            }
 
-        searchPage = 2;
-
-        window.addEventListener("scroll", function () {
             // if the pagination element is in the viewport, continue loading
-            if (Viewport.isElementInViewport(document.querySelector(".search_pagination_left"))) {
+            if (Viewport.isElementInViewport(node)) {
                 if (result_count > document.querySelectorAll(".search_result_row").length) {
                     loadSearchResults();
                 } else {
-                    document.querySelector(".search_pagination_left").textContent = Localization.str.all_results.replace("__num__", result_count);
+                    node.textContent = Localization.str.all_results.replace("__num__", result_count);
                 }
             }
         });

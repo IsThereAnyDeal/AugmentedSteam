@@ -1169,6 +1169,13 @@ let DOMHelper = (function(){
         return nodes.length !== 0 ? nodes[nodes.length-1] : null;
     };
 
+    self.insertStyle = function(css) {
+        let style = document.createElement("style");
+        style.type = "text/css";
+        style.innerHTML = css;
+        document.head.appendChild(style);
+    }
+
     self.insertStylesheet = function(href) {
         let stylesheet = document.createElement('link');
         stylesheet.rel = 'stylesheet';
