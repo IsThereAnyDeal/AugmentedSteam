@@ -78,6 +78,7 @@
       "exclude_matches": [
         "*://steamcommunity.com/login/*",
         "*://steamcommunity.com/openid/*",
+        "*://steamcommunity.com/chat/*",
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
