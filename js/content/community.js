@@ -3886,12 +3886,43 @@ let WorkshopPageClass = (function(){
     return WorkshopPageClass;
 })();
 
-let MyWorkshopClass = (function(){
-    function MyWorkshopClass() {
-        this.addFileSizeButton();
-    };
+class MyWorkshopClass {
+    constructor() {
+        MyWorkshopClass.addFileSizes();
+        MyWorkshopClass.addTotalSizeButton();
+    }
 
-    MyWorkshopClass.prototype.addFileSizeButton = function() {
+    static getFileSizeStr(size) {                        
+        let sizeStr = size.toString() + " KB";
+        if (size / 1024 >= 1) {
+            sizeStr = (size / 1024).toFixed(2) + " MB";
+        }
+        if (size / (1024 * 1024) >= 1) {
+            sizeStr = (size / (1024 * 1024)).toFixed(2) + " GB";
+        }
+        if (size / (1024 * 1024 * 1024) >= 1) {
+            sizeStr = (size / (1024 * 1024 * 1024)).toFixed(2) + " TB";
+        }
+        return sizeStr;
+    }
+
+    static addFileSizes() {
+        let cache = SharedFilesPageClass.getFileSizeCache();
+        
+        for (let node of document.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
+            if (node.classList.contains("sized")) { continue; }
+            
+            let id = node.id.replace("Subscription", "");
+            if (!cache[id]) { continue; }
+
+            let str = Localization.str.file_size.replace("__size__", MyWorkshopClass.getFileSizeStr(cache[id]));
+            let details = node.querySelector(".workshopItemSubscriptionDetails");
+            HTML.beforeEnd(details, `<div class="workshopItemDate">${str}</div>`)
+            node.classList.add("sized");
+        }
+    }
+
+    static addTotalSizeButton() {
         let url = new URL(window.location.href);
         if (!url.searchParams || url.searchParams.get("browsefilter") !== "mysubscriptions") { return; }
 
@@ -3906,20 +3937,6 @@ let MyWorkshopClass = (function(){
                     </div>
                 </div>
             </div>`);
-
-        function getTotalSizeStr(totalSize) {                        
-            let totalSizeStr = totalSize.toString() + " KB";
-            if (totalSize / 1024 >= 1) {
-                totalSizeStr = (totalSize / 1024).toFixed(2) + " MB";
-            }
-            if (totalSize / (1024 * 1024) >= 1) {
-                totalSizeStr = (totalSize / (1024 * 1024)).toFixed(2) + " GB";
-            }
-            if (totalSize / (1024 * 1024 * 1024) >= 1) {
-                totalSizeStr = (totalSize / (1024 * 1024 * 1024)).toFixed(2) + " TB";
-            }
-            return totalSizeStr;
-        }
         
         document.querySelector("#es_calc_size").addEventListener("click", async function() {
             ExtensionLayer.runInPageContext(`function() {
@@ -3963,7 +3980,7 @@ let MyWorkshopClass = (function(){
                         ExtensionLayer.runInPageContext(`function() {
                             window.dialog.Dismiss();
                             window.dialog = ShowBlockingWaitDialog("${Localization.str.calculating}",
-                                "${Localization.str.total_size}: ${getTotalSizeStr(totalSize)}");
+                                "${Localization.str.total_size}: ${MyWorkshopClass.getFileSizeStr(totalSize)}");
                         }`);
                     }
                 }
@@ -3972,13 +3989,11 @@ let MyWorkshopClass = (function(){
             ExtensionLayer.runInPageContext(`function() {
                 window.dialog.Dismiss();
                 window.dialog = ShowAlertDialog("${Localization.str.finished}!",
-                    "${Localization.str.total_size}: ${getTotalSizeStr(totalSize)}");
+                    "${Localization.str.total_size}: ${MyWorkshopClass.getFileSizeStr(totalSize)}");
             }`);
         });
     };
-
-    return MyWorkshopClass;
-})();
+}
 
 class SharedFilesPageClass {
     constructor() {
