@@ -3886,11 +3886,134 @@ let WorkshopPageClass = (function(){
     return WorkshopPageClass;
 })();
 
+let MyWorkshopClass = (function(){
+    function MyWorkshopClass() {
+        // this.cacheFileSize(document);
+        this.addFileSizeButton();
+    };
+
+    MyWorkshopClass.prototype.addFileSizeButton = function() {
+        let url = new URL(window.location.href);
+        if (!url.searchParams || url.searchParams.get("browsefilter") !== "mysubscriptions") { return; }
+
+        // let instance = new SharedFilesPageClass();
+        let panel = document.querySelector(".primary_panel");
+        HTML.beforeEnd(panel,
+            `<div class="menu_panel">
+                <div class="rightSectionHolder">
+                    <div class="rightDetailsBlock">
+                        <span class="btn_grey_steamui btn_medium" id="es_calc_size">
+                            <span>${Localization.str.calc_size}</span>
+                        </span>
+                    </div>
+                </div>
+            </div>`);
+
+        function getTotalSizeStr(totalSize) {                        
+            let totalSizeStr = totalSize.toString() + " KB";
+            if (totalSize / 1024 >= 1) {
+                totalSizeStr = (totalSize / 1024).toFixed(2) + " MB";
+            }
+            if (totalSize / (1024 * 1024) >= 1) {
+                totalSizeStr = (totalSize / (1024 * 1024)).toFixed(2) + " GB";
+            }
+            if (totalSize / (1024 * 1024 * 1024) >= 1) {
+                totalSizeStr = (totalSize / (1024 * 1024 * 1024)).toFixed(2) + " TB";
+            }
+            return totalSizeStr;
+        }
+        
+        document.querySelector("#es_calc_size").addEventListener("click", async function() {
+            ExtensionLayer.runInPageContext(`function() {
+                window.dialog = ShowBlockingWaitDialog("${Localization.str.calculating}",
+                    "${Localization.str.total_size}: 0 KB");
+            }`);
+
+            let totalStr = document.querySelector(".workshopBrowsePagingInfo").innerText.match(/\d+[,\d]*/g).pop();
+            let total = parseInt(totalStr.replace(/,/g, ""));
+            let cache = SharedFilesPageClass.getFileSizeCache();
+
+            let parser = new DOMParser();
+            let totalSize = 0;
+            for (let p = 1; p <= Math.ceil(total / 30); p++) {
+                url.searchParams.set("p", p);
+                url.searchParams.set("numperpage", 30);
+
+                let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+                if (!result) {
+                    console.error("Failed to request " + url.toString());
+                    continue;
+                }
+
+                let xmlDoc = parser.parseFromString(result, "text/html");
+                for (let node of xmlDoc.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
+                    let id = node.id.replace("Subscription", "");
+                    if (cache[id]) {
+                        totalSize += cache[id];
+                    } else {
+                        let url = `https://steamcommunity.com/sharedfiles/filedetails/?id=${id}`;
+                        let result = await RequestData.getHttp(url).catch(err => console.error(err));
+                        if (!result) {
+                            console.error("Failed to request " + url.toString());
+                            continue;
+                        }
+        
+                        let xmlDoc = parser.parseFromString(result, "text/html");
+                        cache = SharedFilesPageClass.cacheFileSize(url, xmlDoc, cache);
+                        totalSize += cache[id];
+                        
+                        ExtensionLayer.runInPageContext(`function() {
+                            window.dialog.Dismiss();
+                            window.dialog = ShowBlockingWaitDialog("${Localization.str.calculating}",
+                                "${Localization.str.total_size}: ${getTotalSizeStr(totalSize)}");
+                        }`);
+                    }
+                }
+            }
+
+            ExtensionLayer.runInPageContext(`function() {
+                window.dialog.Dismiss();
+                window.dialog = ShowAlertDialog("${Localization.str.finished}!",
+                    "${Localization.str.total_size}: ${getTotalSizeStr(totalSize)}");
+            }`);
+        });
+    };
+
+    return MyWorkshopClass;
+})();
+
 class SharedFilesPageClass {
     constructor() {
         new MediaPage().workshopPage();
         //media.initHdPlayer();
-    }
+        SharedFilesPageClass.cacheFileSize(window.location.href, document);
+    };
+
+    // Every language/region seems to display the same number formatting and in MB
+    static cacheFileSize(url, doc, cache) {
+        let node = doc.querySelector(".detailsStatRight");
+        if (!node || !node.innerText.includes("MB")) { return cache; }
+        
+        let uri = new URL(url);
+        let id = uri.searchParams.get("id");
+        if (!id) { return cache; }
+
+        let text = node.innerText.split(" ")[0].trim();
+        let size = parseFloat(text.replace(/,/g, ""));
+        cache = cache || this.getFileSizeCache();
+        cache[id] = parseInt(size * 1024); // kb
+        LocalStorage.set("workshopSizes", cache);
+        return cache;
+    };
+
+    static getFileSizeCache() {
+        let empty = { date: Date.now() };
+        let cache = LocalStorage.get("workshopSizes") || empty;
+        if (!cache.date || Date.now() - cache.date > 1000 * 60 * 60 * 24 * 7) {
+            cache = empty;
+        }
+        return cache;
+    };
 }
 
 let WorkshopBrowseClass = (function(){
@@ -4239,6 +4362,10 @@ let EditGuidePageClass = (function(){
 
         case /^\/(?:id|profiles)\/.+\/stats/.test(path):
             (new StatsPageClass());
+            break;
+
+        case /^\/(?:id|profiles)\/.+\/myworkshopfiles/.test(path):
+            (new MyWorkshopClass());
             break;
 
         case /^\/sharedfiles\/filedetails\/?$/.test(path):

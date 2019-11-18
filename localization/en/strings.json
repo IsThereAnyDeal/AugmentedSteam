@@ -1,4 +1,7 @@
 {
+    "finished": "Finished",
+    "calculating": "Calculating...",
+    "calc_size": "Calculate Total Size",
     "invite_friends": "Invite Friends",
     "invite_to_group": "Invite To Group",
     "formatting_help": "Formatting help",
