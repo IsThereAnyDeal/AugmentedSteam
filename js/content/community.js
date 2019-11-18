@@ -3888,7 +3888,6 @@ let WorkshopPageClass = (function(){
 
 let MyWorkshopClass = (function(){
     function MyWorkshopClass() {
-        // this.cacheFileSize(document);
         this.addFileSizeButton();
     };
 
@@ -3896,7 +3895,6 @@ let MyWorkshopClass = (function(){
         let url = new URL(window.location.href);
         if (!url.searchParams || url.searchParams.get("browsefilter") !== "mysubscriptions") { return; }
 
-        // let instance = new SharedFilesPageClass();
         let panel = document.querySelector(".primary_panel");
         HTML.beforeEnd(panel,
             `<div class="menu_panel">
