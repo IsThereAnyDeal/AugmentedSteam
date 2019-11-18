@@ -4000,7 +4000,7 @@ class SharedFilesPageClass {
         new MediaPage().workshopPage();
         //media.initHdPlayer();
         SharedFilesPageClass.cacheFileSize(window.location.href, document);
-    };
+    }
 
     // Every language/region seems to display the same number formatting and in MB
     static cacheFileSize(url, doc, cache) {
@@ -4017,16 +4017,16 @@ class SharedFilesPageClass {
         cache[id] = parseInt(size * 1024); // kb
         LocalStorage.set("workshopSizes", cache);
         return cache;
-    };
+    }
 
     static getFileSizeCache() {
         let empty = { date: Date.now() };
         let cache = LocalStorage.get("workshopSizes") || empty;
-        if (!cache.date || Date.now() - cache.date > 1000 * 60 * 60 * 24 * 7) {
+        if (!cache.date || Date.now() - cache.date > 1000 * 60 * 60 * 24 * 5) {
             cache = empty;
         }
         return cache;
-    };
+    }
 }
 
 let WorkshopBrowseClass = (function(){
