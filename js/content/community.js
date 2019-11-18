@@ -3986,6 +3986,7 @@ class MyWorkshopClass {
                 }
             }
 
+            MyWorkshopClass.addFileSizes();
             ExtensionLayer.runInPageContext(`function() {
                 window.dialog.Dismiss();
                 window.dialog = ShowAlertDialog("${Localization.str.finished}!",
