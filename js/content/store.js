@@ -211,11 +211,6 @@ class StorePageClass {
         // Denuvo Antitamper detection
         let denuvo = text.match(/\bdenuvo\b/i);
 
-        // Detect other DRM
-        let drm =
-                text.includes("3rd-party DRM")
-            && !text.match(/No (3rd|third)[- ]party DRM/i);
-
         let drmNames = [];
         if (gfwl) { drmNames.push('Games for Windows Live'); }
         if (uplay) { drmNames.push('Ubisoft Uplay'); }
@@ -225,23 +220,37 @@ class StorePageClass {
         if (rockstar) { drmNames.push('Rockstar Social Club'); }
         if (kalypso) { drmNames.push("Kalypso Launcher"); }
         if (denuvo) { drmNames.push("Denuvo Anti-tamper"); }
-        drm = drm || drmNames.length > 0;
+
+        let drm = false;
+        let drmString = "";
+        if (drmNames.length > 0) {
+            drmString += `(${drmNames.join(", ")})`;
+            drm = true;
+        } else { // Detect other DRM on app pages
+            let drmNode = document.querySelector("#category_block > .DRM_notice");
+            if (drmNode) {
+                drmString += drmNode.innerHTML.replace("<br>", ", ").trim();
+                drm = /\b(drm|account)\b/i.test(drmString);
+            }
+        }
 
         // Prevent false-positives
-        if (this.isAppPage() && this.appid === 21690) { drm = false; } // Resident Evil 5, at Capcom's request
+        if (this.isAppPage() && (
+               this.appid === 21690    // Resident Evil 5, at Capcom's request
+            || this.appid === 1157970  // Special K
+        )) { drm = false; }
 
         if (drm) {
-            let drmString = "";
+            let warnString = "";
             if (drmNames.length > 0) {
-                drmString = "(" + drmNames.join(", ") + ")";
+                warnString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+                warnString = warnString.replace("__drmlist__", drmString);
+            } else {
+                warnString = drmString;
             }
-
-            let warnString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
-            warnString = warnString.replace("__drmlist__", drmString);
-
             let node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
             if (node) {
-                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${warnString}</span></div>`)
+                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${warnString}</span></div>`);
             } else {
                 HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${warnString}</span></div>`);
             }
