@@ -210,6 +210,9 @@ class StorePageClass {
         // Denuvo Antitamper detection
         let denuvo = text.includes("denuvo");
 
+        // EA origin detection
+        let origin = text.includes("origin client");
+
         let drmNames = [];
         if (gfwl) { drmNames.push("Games for Windows Live"); }
         if (uplay) { drmNames.push("Ubisoft Uplay"); }
@@ -219,6 +222,7 @@ class StorePageClass {
         if (rockstar) { drmNames.push("Rockstar Social Club"); }
         if (kalypso) { drmNames.push("Kalypso Launcher"); }
         if (denuvo) { drmNames.push("Denuvo Anti-tamper"); }
+        if (origin) { drmNames.push("EA Origin"); }
 
         let drm = false;
         let drmString = "";
