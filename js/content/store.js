@@ -171,53 +171,52 @@ class StorePageClass {
 
         let text = "";
         for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details, .DRM_notice")) {
-            text += node.innerHTML;
+            text += node.textContent.toLowerCase();
         }
-        let uppercased = text.toUpperCase();
 
         // Games for Windows Live detection
         let gfwl =
-               uppercased.includes("GAMES FOR WINDOWS LIVE")
-            || uppercased.includes("GAMES FOR WINDOWS - LIVE")
-            || text.includes("Online play requires log-in to Games For Windows")
-            || text.includes("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE")
-            || text.includes("Multiplayer play and other LIVE features included at no charge")
+               text.includes("games for windows live")
+            || text.includes("games for windows - live")
+            || text.includes("online play requires log-in to games for windows")
+            || text.includes("installation of the games for windows live software")
+            || text.includes("multiplayer play and other live features included at no charge")
             || text.includes("www.gamesforwindows.com/live");
 
         // Ubisoft Uplay detection
         let uplay =
-               text.includes("Uplay")
-            || text.includes("Ubisoft Account");
+               text.includes("uplay")
+            || text.includes("ubisoft account");
 
         // Securom detection
-        let securom = text.includes("SecuROM");
+        let securom = text.includes("securom");
 
         // Tages detection
         let tages =
-                text.match(/\b(tages|solidshield)\b/i)
-            && !text.match(/angebote des tages/i);
+                text.match(/\b(tages|solidshield)\b/)
+            && !text.match(/angebote des tages/);
 
         // Stardock account detection
-        let stardock = text.includes("Stardock account");
+        let stardock = text.includes("stardock account");
 
         // Rockstar social club detection
         let rockstar =
-               text.includes("Rockstar Social Club")
-            || text.includes("Rockstar Games Social Club");
+               text.includes("rockstar social club")
+            || text.includes("rockstar games social club");
 
         // Kalypso Launcher detection
-        let kalypso = text.includes("Requires a Kalypso account");
+        let kalypso = text.includes("requires a kalypso account");
 
         // Denuvo Antitamper detection
-        let denuvo = text.match(/\bdenuvo\b/i);
+        let denuvo = text.includes("denuvo");
 
         let drmNames = [];
-        if (gfwl) { drmNames.push('Games for Windows Live'); }
-        if (uplay) { drmNames.push('Ubisoft Uplay'); }
-        if (securom) { drmNames.push('SecuROM'); }
-        if (tages) { drmNames.push('Tages'); }
-        if (stardock) { drmNames.push('Stardock Account Required'); }
-        if (rockstar) { drmNames.push('Rockstar Social Club'); }
+        if (gfwl) { drmNames.push("Games for Windows Live"); }
+        if (uplay) { drmNames.push("Ubisoft Uplay"); }
+        if (securom) { drmNames.push("SecuROM"); }
+        if (tages) { drmNames.push("Tages"); }
+        if (stardock) { drmNames.push("Stardock Account Required"); }
+        if (rockstar) { drmNames.push("Rockstar Social Club"); }
         if (kalypso) { drmNames.push("Kalypso Launcher"); }
         if (denuvo) { drmNames.push("Denuvo Anti-tamper"); }
 
