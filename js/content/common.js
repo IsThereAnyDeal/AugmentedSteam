@@ -2452,7 +2452,7 @@ class Sortbox {
         `<div class="es-sortbox">
             <div class="es-sortbox__label">${Localization.str.sort_by}</div>
             <div class="es-sortbox__container" onkeydown="HandleKeyDown">
-                <input id="${id}" type="hidden" name="${name}" value="${defaultOption}" onchange="Messenger.postMessage('sortboxInput', this.value)">
+                <input id="${id}" type="hidden" name="${name}" value="${defaultOption}" onchange="Messenger.postMessage('${id}', this.value)">
                 <a class="trigger" id="${id}_trigger" href="javascript:DSelectNoop()" onfocus="DSelectOnFocus('${id}')" onblur="DSelectOnBlur('${id}')" onclick="DSelectOnTriggerClick('${id}')"></a>
                 <div class="es-dropdown">
                     <ul id="${id}_droplist" class="es-dropdown__list dropdownhidden"></ul>
@@ -2460,7 +2460,7 @@ class Sortbox {
             </div>
         </div>`, false);
 
-        Messenger.addMessageListener("sortboxInput", option => onChange(option));
+        Messenger.addMessageListener(id, option => onChange(option));
 
         let ul = box.querySelector("ul");
         for (let i = 0; i < options.length; ++i) {
