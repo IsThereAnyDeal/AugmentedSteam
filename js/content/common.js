@@ -920,6 +920,11 @@ let EnhancedSteam = (function() {
             }
             prevScrollHeight = scrollHeight;
             node.style.opacity = Math.min(Math.max((scrollHeight - 200) / 800, 0), 1);
+            node.style.display = node.style.opacity >= 0.1 ? "block" : "none";
+            
+            let winWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+            let headerWidth = document.querySelector("div#global_header .content").offsetWidth;
+            node.style.right = `${headerWidth > 0 ? (winWidth / 2) - (headerWidth / 2) - node.offsetWidth - 20 : 20}px`;
         }
     };
 
