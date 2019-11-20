@@ -875,3 +875,72 @@ function sleep(duration) {
         setTimeout(function() { resolve(); }, duration);
     });
 }
+
+
+class PermissionsHandler {
+    static get(option) {
+        return this.options[option];
+    }
+
+    static isInUse(currentOption, permissions) {
+        for (let option in this.options) {
+            if (option == currentOption || !SyncedStorage.get(option)) {
+                continue;
+            }
+
+            let optionPermissions = this.options[option];
+            if (optionPermissions.filter(permission => permissions.includes(permission)).length) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static contains(permissions) {
+        return new Promise((resolve, reject) => {
+            chrome.permissions.contains({ permissions, }, result => {
+                checkError();
+                resolve(result);
+            });
+        });
+    }
+
+    static request(permissions) {
+        return new Promise((resolve, reject) => {
+            // First we request the permissions and then we send a message to the background page to set up any listeners.
+            chrome.permissions.request({ permissions, }, granted => {
+                checkError();
+                if (granted) {
+                    chrome.runtime.sendMessage({ action: "permissions.added", params: { permissions, }, });
+                }
+                resolve(granted);
+            });
+        });        
+    }
+
+    static remove(currentOption, permissions) {
+        // If any of the permissions is in use by another option, don't remove.
+        if (this.isInUse(currentOption, permissions)) {
+            return true;
+        }
+
+        return new Promise((resolve, reject) => {
+            // First we send a message to the background page to clean up any listeners and then we remove the permissions.
+            chrome.runtime.sendMessage({ action: "permissions.removed", params: { permissions, }, }, () => {
+                chrome.permissions.remove({ permissions, }, removed => {
+                    checkError();
+                    resolve(removed);
+                });
+            });
+        });        
+    }
+}
+PermissionsHandler.options = {
+    'context_steam_store': ["contextMenus"],
+    'context_steam_market': ["contextMenus"],
+    'context_itad': ["contextMenus"],
+    'context_bartervg': ["contextMenus"],
+    'context_steamdb': ["contextMenus"],
+    'context_steamdb_instant': ["contextMenus"],
+    'context_steam_keys': ["contextMenus"],
+};

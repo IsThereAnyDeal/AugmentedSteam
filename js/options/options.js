@@ -567,24 +567,6 @@ let Options = (function(){
                 }
             }
 
-        } else if (option.startsWith("context_")) {
-            // todo replace promise once browser API support has been merged
-            try {
-                value = await new Promise((resolve, reject) => {
-                    chrome.permissions.request({
-                        permissions: ["contextMenus"]
-                    }, granted => {
-                        let node = document.querySelector(`[data-setting='${option}']`);
-                        if (!node) { reject(); }
-                        if (!granted) {
-                            node.checked = false;
-                            reject();
-                        }
-
-                        resolve(node.checked);
-                    });
-                });
-            } catch(err) { return; } // Don't save option
         } else {
 
             let node = document.querySelector("[data-setting='"+option+"']");
@@ -599,6 +581,32 @@ let Options = (function(){
             if (option === "quickinv_diff") {
                 value = parseFloat(value.trim()).toFixed(2);
             }
+
+            // todo replace promise once browser API support has been merged
+            let permissions = PermissionsHandler.get(option);
+            if (permissions) {
+                try {
+                    let success;
+                    if (value) {
+                        success = await PermissionsHandler.request(permissions);
+                    } else {
+                        success = await PermissionsHandler.remove(option, permissions);
+                    }
+    
+                    if (!success) {
+                        throw new Error("Could not grant / remove the permissions");
+                    }
+                } catch (err) {
+                    console.error(err);
+
+                    // Don't save option
+                    if (node.type && node.type === "checkbox") {
+                        node.checked = !value;
+                    }
+                    return;
+                }
+            }
+
         }
 
         SyncedStorage.set(option, value);

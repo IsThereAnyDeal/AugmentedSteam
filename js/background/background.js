@@ -736,6 +736,16 @@ class Steam {
 Steam._dynamicstore_promise = null;
 Steam._supportedCurrencies = null;
 
+
+class PermissionsListener {
+    static onAdded(message) {
+    }
+
+    static onRemoved(message) {
+    }
+}
+
+
 let profileCacheKey = (params => `profile_${params.profile}`);
 let appCacheKey = (params => `app_${params.appid}`);
 let ratesCacheKey = (params => `rates_${params.to}`);
@@ -778,6 +788,9 @@ let actionCallbacks = new Map([
     ['inventory.coupons', SteamCommunity.coupons], // #3
     ['inventory.gifts', SteamCommunity.gifts], // #1
     ['inventory.community', SteamCommunity.items], // #6
+
+    ['permissions.added', PermissionsListener.onAdded],
+    ['permissions.removed', PermissionsListener.onRemoved],
 
     ['error.test', () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
