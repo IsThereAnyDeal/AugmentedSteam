@@ -504,6 +504,36 @@ class StorePageClass {
             self.toggleVideoDefinition(video, false);
         });
     }
+
+    removeBroadcasts() {
+        if (!SyncedStorage.get("removebroadcasts")) { return; }
+        
+        function removeBroadcast(nodes) {
+            nodes.forEach(node => node.remove());
+            ExtensionLayer.runInPageContext(() => {
+                if (!window.checker) {
+                    window.checker = setInterval(() => {
+                        if (uiBroadcastWatchStore && uiBroadcastWatchStore.m_activeVideo) {
+                            uiBroadcastWatchStore.StopVideo(uiBroadcastWatchStore.m_activeVideo);
+                            clearInterval(window.checker);
+                            delete window.checker;
+                        }
+                    }, 100);
+                }
+            });
+        }
+        
+        let container = document.querySelector("#application_root");
+        if (container.children.length > 0) {
+            removeBroadcast([...container.children]);
+        }
+
+        let observer = new MutationObserver(mutations => {
+            removeBroadcast(mutations.reduce((nodes, { addedNodes }) => [...nodes, ...addedNodes], []))
+        });
+
+        observer.observe(container, { childList: true });
+    }
 }
 
 
@@ -608,6 +638,7 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
         
+        this.removeBroadcasts();
         this.forceVideoMP4();
         this.initHdPlayer();
         this.addWishlistRemove();
