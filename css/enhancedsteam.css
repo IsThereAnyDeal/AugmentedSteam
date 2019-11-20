@@ -534,24 +534,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
   cursor: pointer;
 }
 
-#friends_sort_options {
-  text-align: right;
-  font-size: 14px;
-  color: white;
-  flex-grow: 2;
-  margin-right: 10px;
-}
-
-#friends_sort_options span {
-  margin-left: 8px;
-  color: white;
-}
-
-.es_friends_sort_link {
-  text-decoration: underline;
-  cursor: pointer;
-}
-
 .browse_tag_game_name {
   margin-left: 8px;
 }
