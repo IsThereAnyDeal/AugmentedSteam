@@ -215,6 +215,60 @@ let ExtensionLayer = (function() {
     return self;
 })();
 
+let DOMHelper = (function(){
+
+    let self = {};
+
+    self.wrap = function(container, node) {
+        let parent = node.parentNode;
+        parent.insertBefore(container, node);
+        parent.removeChild(node);
+        container.append(node);
+    };
+
+    self.remove = function(selector) {
+        let node = document.querySelector(selector);
+        if (!node) { return; }
+        node.remove();
+    };
+
+    // TODO extend Node itself?
+    self.selectLastNode = function(parent, selector) {
+        let nodes = parent.querySelectorAll(selector);
+        return nodes.length !== 0 ? nodes[nodes.length-1] : null;
+    };
+
+    self.insertStylesheet = function(href) {
+        let stylesheet = document.createElement('link');
+        stylesheet.rel = 'stylesheet';
+        stylesheet.type = 'text/css';
+        stylesheet.href = href;
+        document.head.appendChild(stylesheet);
+    }
+
+    self.insertHomeCSS = function() {
+        self.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
+        let headerCtn = document.querySelector("div#global_header .content");
+        if (headerCtn) {
+            // Fixes displaced header, see #190
+            headerCtn.style.right = 0;
+        }
+    }
+
+    self.insertScript = function({ src, content }, id, onload, isAsync = true) {
+        let script = document.createElement("script");
+
+        if (onload)     script.onload = onload;
+        if (id)         script.id = id;
+        if (src)        script.src = src;
+        if (content)    script.textContent = content;
+        script.async = isAsync;
+
+        document.head.appendChild(script);
+    }
+
+    return self;
+})();
 
 /**
  * NOTE FOR ADDON REVIEWER:
@@ -258,9 +312,7 @@ class Messenger {
 
 // Inject the Messenger class into the DOM, providing the same interface for the page context side
 (function() {
-    let script = document.createElement("script");
-    script.textContent = Messenger.toString();
-    document.documentElement.appendChild(script);
+    DOMHelper.insertScript({ content: Messenger.toString() });
 })();
 
 class CookieStorage {
@@ -1179,50 +1231,6 @@ let EnhancedSteam = (function() {
 
     return self;
 })();
-
-let DOMHelper = (function(){
-
-    let self = {};
-
-    self.wrap = function(container, node) {
-        let parent = node.parentNode;
-        parent.insertBefore(container, node);
-        parent.removeChild(node);
-        container.append(node);
-    };
-
-    self.remove = function(selector) {
-        let node = document.querySelector(selector);
-        if (!node) { return; }
-        node.remove();
-    };
-
-    // TODO extend Node itself?
-    self.selectLastNode = function(parent, selector) {
-        let nodes = parent.querySelectorAll(selector);
-        return nodes.length !== 0 ? nodes[nodes.length-1] : null;
-    };
-
-    self.insertStylesheet = function(href) {
-        let stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.type = 'text/css';
-        stylesheet.href = href;
-        document.head.appendChild(stylesheet);
-    }
-
-    self.insertHomeCSS = function() {
-        self.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
-        let headerCtn = document.querySelector("div#global_header .content");
-        if (headerCtn) {
-            // Fixes displaced header, see #190
-            headerCtn.style.right = 0;
-        }
-    }
-
-    return self;
-})();
-
 
 let EarlyAccess = (function(){
 

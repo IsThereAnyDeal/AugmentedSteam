@@ -894,11 +894,8 @@ let ProfileHomePageClass = (function(){
                     HTML.beforeEnd(".profile_header_bg_texture", "<div class='holidayprofile_header_overlay'></div>");
                     document.querySelector(".profile_page").classList.add("holidayprofile");
 
-                    let script = document.createElement("script");
-                    script.type = "text/javascript";
-                    script.src = ExtensionLayer.getLocalUrl("js/steam/holidayprofile.js");
-                    document.body.append(script);
-
+                    DOMHelper.insertScript({ src: ExtensionLayer.getLocalUrl("js/steam/holidayprofile.js") });
+                    
                     break;
                 case "clear":
                     document.body.classList.add("es_style_clear");
@@ -2038,47 +2035,46 @@ let InventoryPageClass = (function(){
     function addInventoryGoToPage(){
         if (!SyncedStorage.get("showinvnav")) { return; }
 
+        // todo can this be circumvented?
         DOMHelper.remove("#es_gotopage");
         DOMHelper.remove("#pagebtn_first");
         DOMHelper.remove("#pagebtn_last");
         DOMHelper.remove("#es_pagego");
 
-        let es_gotopage = document.createElement("script");
-        es_gotopage.type = "text/javascript";
-        es_gotopage.id = "es_gotopage";
-        es_gotopage.textContent = `g_ActiveInventory.GoToPage = function(page){
-                  var nPageWidth = this.m_$Inventory.children('.inventory_page:first').width();
-                	var iCurPage = this.m_iCurrentPage;
-                	var iNextPage = Math.min(Math.max(0, --page), this.m_cPages-1);
-                  var iPages = this.m_cPages
-                  var _this = this;
-                  if (iCurPage < iNextPage) {
+        DOMHelper.insertScript({ content:
+            `g_ActiveInventory.GoToPage = function(page) {
+                var nPageWidth = this.m_$Inventory.children('.inventory_page:first').width();
+                var iCurPage = this.m_iCurrentPage;
+                var iNextPage = Math.min(Math.max(0, --page), this.m_cPages-1);
+                var iPages = this.m_cPages
+                var _this = this;
+                if (iCurPage < iNextPage) {
                     if (iCurPage < iPages - 1) {
-                      this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
-                      this.m_$Inventory.css( 'left', '0' );
-                      this.m_$Inventory.animate( {left: -nPageWidth}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
+                        this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
+                        this.m_$Inventory.css( 'left', '0' );
+                        this.m_$Inventory.animate( {left: -nPageWidth}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
                     }
-                  } else if (iCurPage > iNextPage) {
+                } else if (iCurPage > iNextPage) {
                     if (iCurPage > 0) {
-                      this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
-                      this.m_$Inventory.css( 'left', '-' + nPageWidth + 'px' );
-                      this.m_$Inventory.animate( {left: 0}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
+                        this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
+                        this.m_$Inventory.css( 'left', '-' + nPageWidth + 'px' );
+                        this.m_$Inventory.animate( {left: 0}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
                     }
-                  }
                 }
-                function InventoryLastPage(){
-                	g_ActiveInventory.GoToPage(g_ActiveInventory.m_cPages);
-                }
-                function InventoryFirstPage(){
-                	g_ActiveInventory.GoToPage(1);
-                }
-                function InventoryGoToPage(){
-                	var page = $('es_pagenumber').value;
-                	if (isNaN(page)) return;
-                	g_ActiveInventory.GoToPage(parseInt(page));
-                }`;
+            };
 
-        document.documentElement.appendChild(es_gotopage);
+            function InventoryLastPage(){
+                g_ActiveInventory.GoToPage(g_ActiveInventory.m_cPages);
+            }
+            function InventoryFirstPage(){
+                g_ActiveInventory.GoToPage(1);
+            }
+            function InventoryGoToPage(){
+                var page = $('es_pagenumber').value;
+                if (isNaN(page)) return;
+                g_ActiveInventory.GoToPage(parseInt(page));
+            }`
+        }, "es_gotopage");
 
         // Go to first page
         HTML.afterEnd("#pagebtn_previous", "<a id='pagebtn_first' class='pagebtn pagecontrol_element disabled'>&lt;&lt;</a>");
