@@ -2430,3 +2430,60 @@ class MediaPage {
         }
     }
 }
+
+class Sortbox {
+    _dselectLoaded = false;
+
+    static get(name, options, defaultOption, onChange) {
+
+        if (!this._dselectLoaded) {
+            DOMHelper.insertScript({ src: "https://steamstore-a.akamaihd.net/public/javascript/dselect.js" });
+            this._dselectLoaded = true;
+        }
+
+        let id = `sort_by_${name}`;
+        
+        /*  
+        We need to parse this here without sanitizing, since the onchange property of the input element has to be set in the HTML.
+        If set by changing the property via JS, it is somehow removed by some code (probably on Steam's side).
+        Adding a listener via addEventListener won't work too, since Steam's dselect.js relies on the onchange property.
+        */
+        let box = HTML.element(
+        `<div class="es-sortbox">
+            <div class="es-sortbox__label">${Localization.str.sort_by}</div>
+            <div class="es-sortbox__container" onkeydown="HandleKeyDown">
+                <input id="${id}" type="hidden" name="${name}" value="${defaultOption}" onchange="Messenger.postMessage('sortboxInput', this.value)">
+                <a class="trigger" id="${id}_trigger" href="javascript:DSelectNoop()" onfocus="DSelectOnFocus('${id}')" onblur="DSelectOnBlur('${id}')" onclick="DSelectOnTriggerClick('${id}')"></a>
+                <div class="es-dropdown">
+                    <ul id="${id}_droplist" class="es-dropdown__list dropdownhidden"></ul>
+                </div>
+            </div>
+        </div>`, false);
+
+        Messenger.addMessageListener("sortboxInput", option => onChange(option));
+
+        let ul = box.querySelector("ul");
+        for (let i = 0; i < options.length; ++i) {
+            let [key, text] = options[i];
+
+            let toggle = "inactive";
+            if (key === defaultOption) {
+                box.querySelector(`#${id}`).value = key;
+                box.querySelector(".trigger").textContent = text;
+                toggle = "highlighted";
+            }
+
+            HTML.beforeEnd(ul,
+                `<li>
+                    <a class="${toggle}_selection" tabindex="99999" id="${key}">${text}</a>
+                </li>`);
+
+            let a = ul.querySelector("li:last-child > a");
+            a.href = "javascript:DSelectNoop()";
+            a.addEventListener("mouseover", () => ExtensionLayer.runInPageContext(`() => DHighlightItem("${id}", ${i}, false)`));
+            a.addEventListener("click",     () => ExtensionLayer.runInPageContext(`() => DHighlightItem("${id}", ${i}, true)`));
+        }
+
+        return box;
+    }
+}

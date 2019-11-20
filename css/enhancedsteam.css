@@ -3198,3 +3198,88 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_flag.es_flag_zm:before {background-position: -160px -165px}
 .es_flag.es_flag_zw:before {background-position: -176px -165px}
 .es_flag.es_flag_eu2:before {background-position: -192px -165px}
+
+.es-sortbox {
+  float: right;
+  margin-top: 4px;
+}
+.es-sortbox__label {
+  font-size: 12px;
+  color: #4c6c8c;
+  display: inline-block;
+  margin-right: 4px;
+}
+.es-sortbox__container {
+  display: inline-block;
+  vertical-align: middle;
+  width: 120px;
+  position: relative;
+  font-size: 12px;
+}
+.es-sortbox__container a.trigger, .es-sortbox__container a.activetrigger {
+  display: block;
+  color: #67c1f5;
+  padding: 0 30px 0 8px;
+  font-size: 12px;
+  line-height: 21px;
+  border: 0;
+  border-radius: 3px;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+}
+.es-sortbox__container a.trigger {
+  background: rgba( 103, 193, 245, 0.1 );
+}
+.es-sortbox__container a.activetrigger {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  z-index: 91;
+  position: relative;
+  color: #ffffff;
+  background: #67c1f5;
+}
+.es-sortbox__container a.trigger::after, .es-sortbox_container a.activetrigger::after {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  background: url(https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_arrow_dn_for_select.png) no-repeat left center;
+  content: '';
+}
+.es-dropdown {
+  position: relative;
+}
+.es-dropdown > ul.dropdownhidden {
+  display: none;
+}
+.es-dropdown > ul {
+  list-style-type: none;
+    line-height: 22px;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0;
+    z-index: 900;
+    overflow: auto;
+    overflow-x: hidden;
+    box-shadow: 0 0 5px 0 #000000;
+    background: #417A9B;
+}
+.es-dropdown > ul a {
+  padding: 0 10px;
+  display: block;
+  text-decoration: none;
+  color: #e5e4dc;
+  white-space: nowrap;
+}
+.es-dropdown > ul a.highlighted_selection {
+  color: #ffffff;
+  background-color: #67c1f5;
+  background: linear-gradient(-60deg, #417a9b 5%,#67c1f5 95%);
+}

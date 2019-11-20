@@ -728,14 +728,15 @@ class HTML {
         return str.replace(/[&<>"']/g, function(m) { return map[m]; });
     }
 
-    static fragment(html) {
+    static fragment(html, safe = true) {
         let template = document.createElement('template');
-        template.innerHTML = DOMPurify.sanitize(html);
+        template.innerHTML = safe ? DOMPurify.sanitize(html) : html;
         return template.content;
     }
 
-    static element(html) {
-        return HTML.fragment(html).firstElementChild;
+    // Don't use safe = false unless you have a very good reason to do so!
+    static element(html, safe = true) {
+        return HTML.fragment(html, safe).firstElementChild;
     }
 
     static inner(node, html) {
