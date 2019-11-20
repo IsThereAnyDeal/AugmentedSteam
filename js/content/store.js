@@ -508,31 +508,7 @@ class StorePageClass {
     removeBroadcasts() {
         if (!SyncedStorage.get("removebroadcasts")) { return; }
         
-        function removeBroadcast(nodes) {
-            nodes.forEach(node => node.remove());
-            ExtensionLayer.runInPageContext(() => {
-                if (!window.checker) {
-                    window.checker = setInterval(() => {
-                        if (uiBroadcastWatchStore && uiBroadcastWatchStore.m_activeVideo) {
-                            uiBroadcastWatchStore.StopVideo(uiBroadcastWatchStore.m_activeVideo);
-                            clearInterval(window.checker);
-                            delete window.checker;
-                        }
-                    }, 100);
-                }
-            });
-        }
-        
-        let container = document.querySelector("#application_root");
-        if (container.children.length > 0) {
-            removeBroadcast([...container.children]);
-        }
-
-        let observer = new MutationObserver(mutations => {
-            removeBroadcast(mutations.reduce((nodes, { addedNodes }) => [...nodes, ...addedNodes], []))
-        });
-
-        observer.observe(container, { childList: true });
+        document.querySelector("#application_root").remove();
     }
 }
 
