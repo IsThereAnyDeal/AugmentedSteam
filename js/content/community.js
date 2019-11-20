@@ -2973,7 +2973,7 @@ let FriendsPageClass = (function(){
         document.querySelector("#manage_friends_control").insertAdjacentElement("beforebegin", Sortbox.get(
             "friends",
             [["default", Localization.str.theworddefault], ["lastonline", Localization.str.lastonline]],
-            "default",
+            SyncedStorage.get("sortfriendsby"),
             sortFriends)
         );
 
