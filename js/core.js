@@ -2,6 +2,19 @@ const Info = {
     'version': "1.3.1",
 };
 
+// Detect which browser the extension is running on.
+(function () {
+    let url = chrome.runtime.getURL('/');
+
+    if (url.match(/^chrome/)) {
+        Info.browser = 'chrome';
+    } else if (url.match(/^moz/)) {
+        Info.browser = 'firefox';
+    } else {
+        Info.browser = '';
+    }
+})();
+
 /**
  * Shim for Promise.finally() for browsers (Waterfox/FF 56) that don't have it
  * https://github.com/domenic/promises-unwrapping/issues/18#issuecomment-57801572
