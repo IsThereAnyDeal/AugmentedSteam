@@ -2956,17 +2956,8 @@ let FriendsPageClass = (function(){
         function sortFriends(sortBy) {
             sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
 
-            let options = document.querySelector("#friends_sort_options");
-            let linkNode = options.querySelector("span[data-esi-sort='"+sortBy+"']");
-            if (!linkNode.classList.contains("es_friends_sort_link")) { return; }
-
-            let nodes = options.querySelectorAll("span");
-            for (let node of nodes) {
-                node.classList.toggle("es_friends_sort_link", node.dataset.esiSort !== sortBy);
-            }
-
             // Remove the current offline nodes
-            for (let node of document.querySelectorAll('div.persona.offline[data-steamid]')) {
+            for (let node of document.querySelectorAll("div.persona.offline[data-steamid]")) {
                 node.remove();
             }
 
@@ -2979,18 +2970,12 @@ let FriendsPageClass = (function(){
             SyncedStorage.set("sortfriendsby", sortBy);
         }
 
-        let sortOptions = `<div id="friends_sort_options">
-                            ${Localization.str.sort_by}
-                            <span data-esi-sort='default'>${Localization.str.theworddefault}</span>
-                            <span data-esi-sort='lastonline' class="es_friends_sort_link">${Localization.str.lastonline}</span>
-                          </div>`;
-
-        HTML.beforeBegin("#manage_friends_control", sortOptions);
-
-        document.querySelector("#friends_sort_options").addEventListener("click", function(e) {
-            if (!e.target.closest("[data-esi-sort]")) { return; }
-            sortFriends(e.target.dataset.esiSort);
-        });
+        document.querySelector("#manage_friends_control").insertAdjacentElement("beforebegin", Sortbox.get(
+            "friends",
+            [["default", Localization.str.theworddefault], ["lastonline", Localization.str.lastonline]],
+            "default",
+            sortFriends)
+        );
 
         sortFriends(SyncedStorage.get("sortfriendsby"));
     };
