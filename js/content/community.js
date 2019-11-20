@@ -1549,26 +1549,17 @@ let StatsPageClass = (function(){
         let personal = document.querySelector("#personalAchieve");
         if (!personal) { return; }
 
-        HTML.beforeBegin("#tabs",
-            `<div id='achievement_sort_options' class='sort_options'>
-                ${Localization.str.sort_by}
-                <span id='achievement_sort_default'>${Localization.str.theworddefault}</span>
-                <span id='achievement_sort_date' class='es_achievement_sort_link'>${Localization.str.date_unlocked}</span>
-            </div>`);
+        document.querySelector("#tabs").insertAdjacentElement("beforebegin", Sortbox.get(
+            "achievements",
+            [
+                ["default", Localization.str.theworddefault],
+                ["time", Localization.str.date_unlocked],
+            ],
+            "default",
+            option => sortBy(option, personal)
+        ));
 
         addSortMetaData("default", personal.querySelectorAll(".achieveRow"));
-
-        document.querySelector("#achievement_sort_default").addEventListener("click", e => {
-            document.querySelector("#achievement_sort_date").classList.add("es_achievement_sort_link");
-            e.target.classList.remove("es_achievement_sort_link");
-            sortBy("default", personal);
-        });
-
-        document.querySelector("#achievement_sort_date").addEventListener("click", e => {
-            document.querySelector("#achievement_sort_default").classList.add("es_achievement_sort_link");
-            e.target.classList.remove("es_achievement_sort_link");
-            sortBy("time", personal);
-        });
     };
     
 
