@@ -227,12 +227,12 @@ class StorePageClass {
         let drm = false;
         let drmString = "";
         if (drmNames.length > 0) {
-            drmString += `(${drmNames.join(", ")})`;
+            drmString = `(${drmNames.join(", ")})`;
             drm = true;
         } else { // Detect other DRM on app pages
             let drmNode = document.querySelector("#category_block > .DRM_notice");
             if (drmNode) {
-                drmString += drmNode.innerHTML.replace("<br>", ", ").trim();
+                drmString = drmNode.innerHTML.replace("<br>", ", ").trim();
                 drm = /\b(drm|account)\b/i.test(drmString);
             }
         }
