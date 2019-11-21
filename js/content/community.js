@@ -463,6 +463,10 @@ let ProfileActivityPageClass = (function(){
 let ProfileHomePageClass = (function(){
 
     function ProfileHomePageClass() {
+        // If there is an error message, like profile does not exists. 
+        if (document.querySelector("#message")) {
+            return;
+        }
         if (window.location.hash === "#as-success") {
             /* TODO This is a hack. It turns out, that clearOwn clears data, but immediately reloads them.
              *      That's why when we clear profile before going to API to store changes we don't get updated images
