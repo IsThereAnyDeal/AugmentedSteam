@@ -903,6 +903,9 @@ let EnhancedSteam = (function() {
             scrolling();
             resizing();
         });
+        
+        scrolling();
+        resizing();
 
         function gotop() {
             if (timer) { return; }
