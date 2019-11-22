@@ -1493,6 +1493,12 @@ class AppPageClass extends StorePageClass {
             linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
             HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
         }
+
+        for (let moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {
+            if (moreBtn) { moreBtn.remove(); }
+        }
+
+        ExtensionLayer.runInPageContext(() => CollapseLongStrings(".dev_row .summary.column"));
     }
 
     async addSupport() {
