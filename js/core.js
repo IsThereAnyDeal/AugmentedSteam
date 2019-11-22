@@ -597,6 +597,7 @@ SyncedStorage.defaults = {
     'showinvnav': true,
     'quickinv': true,
     'quickinv_diff': -0.01,
+    'community_default_tab': "",
     'showallachievements': false,
     'showachinstore': true,
     'showcomparelinks': false,
