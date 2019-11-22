@@ -951,13 +951,14 @@ let EnhancedSteam = (function() {
         node.addEventListener("click", gotop);
         window.addEventListener("scroll", scrolling);
         window.addEventListener("resize", resizing);
-        window.addEventListener("load", () => {
+        window.addEventListener("load", onLoad);
+
+        onLoad();
+        
+        function onLoad() {
             scrolling();
             resizing();
-        });
-        
-        scrolling();
-        resizing();
+        }
 
         function gotop() {
             if (timer) { return; }
