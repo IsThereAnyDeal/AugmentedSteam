@@ -921,7 +921,7 @@ class AppPageClass extends StorePageClass {
     }
 
     async addWaitlistDropdown() {
-        if (!document.querySelector("#add_to_wishlist_area") || !await Background.action("itad.isconnected")) return;
+        if (!document.querySelector("#add_to_wishlist_area") || !SyncedStorage.get("add_to_waitlist") || !await Background.action("itad.isconnected")) return;
 
         // This node will be hidden behind the dropdown menu. Also, it's not really desirable when using dropdown menus to have a permanent div floating nearby
         let notice = document.querySelector(".wishlist_added_temp_notice");
