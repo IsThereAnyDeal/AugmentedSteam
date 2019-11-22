@@ -1180,7 +1180,7 @@ let EnhancedSteam = (function() {
         }
     };
 
-    self.alternateLinuxIcon = function(){
+    self.alternateLinuxIcon = function() {
         if (!SyncedStorage.get("show_alternative_linux_icon")) { return; }
         let url = ExtensionLayer.getLocalUrl("img/alternative_linux_icon.png");
         let style = document.createElement('style');
@@ -1226,6 +1226,21 @@ let EnhancedSteam = (function() {
             let node = nodes[i];
             observer.observe(node, {childList:true, subtree:true});
 
+        }
+    };
+
+    self.defaultCommunityTab = function() {
+        let tab = SyncedStorage.get("community_default_tab");
+        if (!tab) { return; }
+
+        let links = document.querySelectorAll("a[href^='https://steamcommunity.com/app/']");
+        for (let link of links) {
+            if (link.classList.contains("apphub_sectionTab")) { continue; }
+            if (!/^\/app\/[0-9]+\/?$/.test(link.pathname)) { continue; }
+            if (!link.pathname.endsWith("/")) {
+                link.pathname += "/";
+            }
+            link.pathname += tab + "/";
         }
     };
 
@@ -2187,6 +2202,7 @@ let Common = (function(){
         EnhancedSteam.disableLinkFilter();
         EnhancedSteam.skipGotSteam();
         EnhancedSteam.keepSteamSubscriberAgreementState();
+        EnhancedSteam.defaultCommunityTab();
 
         if (User.isSignedIn) {
             EnhancedSteam.addRedeemLink();

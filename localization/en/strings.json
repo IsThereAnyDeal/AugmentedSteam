@@ -355,6 +355,11 @@
         "formatted_time": "__hours__ hours, __minutes__ minutes"
     },
     "options": {
+        "community_default_tab": "Default community home page tab",
+        "videos": "Videos",
+        "broadcasts": "Broadcasts",
+        "artwork": "Artwork",
+        "screenshots": "Screenshots",
         "show_backtotop": "Show back to top button on long pages",
         "context_menu": "Context Menu",
         "context_steam_store": "Search Steam Store for '__query__'",
