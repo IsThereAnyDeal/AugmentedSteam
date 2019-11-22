@@ -352,6 +352,11 @@
         "formatted_time": "__hours__ uren, __minutes__ minuten"
     },
     "options": {
+        "community_default_tab": "Standaard community thuispagina tabblad",
+        "videos": "Video's",
+        "broadcasts": "Uitzendingen",
+        "artwork": "Artwork",
+        "screenshots": "Screenshots",
         "show_backtotop": "Toon knop om terug naar boven te gaan op lange pagina's",
         "context_menu": "Contextmenu",
         "context_steam_store": "Zoek de Steam Winkel naar '__query__'",
