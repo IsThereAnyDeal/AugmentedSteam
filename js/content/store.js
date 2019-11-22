@@ -573,6 +573,7 @@ class AppPageClass extends StorePageClass {
         this.userNotes = new UserNotes();
 
         this.appid = GameId.getAppid(url);
+        this.storeid = `app/${this.appid}`;
 
         // Some games (e.g. 201270, 201271) have different appid in store page and community
         let communityAppidSrc = document.querySelector(".apphub_AppIcon img").getAttribute("src");
@@ -976,16 +977,14 @@ class AppPageClass extends StorePageClass {
             </div>`);
 
         let wishlisted = document.querySelector("#add_to_wishlist_area").style.display === "none";
-        let waitlisted = false; // todo endpoint
+        let waitlisted = await Background.action("itad.inwaitlist", this.storeid);
 
         let menuArrow = document.querySelector(".queue_ignore_menu_arrow");
         let menu = document.querySelector(".queue_btn_ignore_menu");
         let wishlistOption = document.querySelector("#queue_ignore_menu_option_not_interested");
         let waitlistOption = document.querySelector("#queue_ignore_menu_option_owned_elsewhere");
 
-        if (wishlisted || waitlisted) menuArrow.classList.add("queue_btn_active");
-        if (wishlisted) menu.classList.add("not_interested");
-        if (waitlisted) menu.classList.add("owned_elsewhere");
+        updateDiv();
 
         function updateDiv() {
             let oneActive = wishlisted || waitlisted;
@@ -1059,10 +1058,6 @@ class AppPageClass extends StorePageClass {
             waitlisted = !waitlisted;
             updateDiv();
         });
-
-        function onWishlistHandler() {
-            
-        }
     }
 
     addNewQueueButton() {

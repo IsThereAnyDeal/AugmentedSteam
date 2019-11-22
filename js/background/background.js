@@ -344,7 +344,7 @@ class ITAD_Api extends Api {
 
     static lastImport() { return LocalStorage.get("lastItadImport"); }
 
-    static filterCollection(result) {
+    static mapCollection(result) {
         if (!result) return;
         let { games, typemap } = result;
         
@@ -357,6 +357,17 @@ class ITAD_Api extends Api {
         return collection;
     }
 
+    static mapWaitlist(result) {
+        if (!result) return;
+        
+        let waitlist = [];
+        for (let { game_id } of Object.values(result)) {
+            waitlist.push(game_id);
+        }
+        return waitlist;
+    }
+
+    static inWaitlist(storeIds) { return IndexedDB.contains("waitlist", storeIds, { "shop": "steam", "optional": "gameid" }) }
     static inCollection(storeIds) { return IndexedDB.contains("collection", storeIds, { "shop": "steam", "optional": "gameid,copy_type" }) }
     static getFromCollection(storeId) { return IndexedDB.get("collection", storeId, { "shop": "steam", "optional": "gameid,copy_type" }) }
 }
@@ -1212,8 +1223,8 @@ IndexedDB.objStoreFetchFns = new Map([
     ["storePageData", AugmentedSteamApi.endpointFactoryCached("v01/storepagedata", "storePageData")],
     ["profiles", AugmentedSteamApi.endpointFactoryCached("v01/profile/profile", "profiles")],
     ["rates", AugmentedSteamApi.endpointFactoryCached("v01/rates", "rates", true)],
-    ["collection", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "collection", true, false, ITAD_Api.filterCollection)],
-    ["waitlist", ITAD_Api.endpointFactoryCached("v01/user/wait/all", "waitlist")],
+    ["collection", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "collection", true, false, ITAD_Api.mapCollection)],
+    ["waitlist", ITAD_Api.endpointFactoryCached("v01/user/wait/all", "waitlist", true, true, ITAD_Api.mapWaitlist)],
 ]);
 
 let actionCallbacks = new Map([
@@ -1263,6 +1274,7 @@ let actionCallbacks = new Map([
     ["itad.isconnected", ITAD_Api.isConnected],
     ["itad.import", ITAD_Api.import],
     ["itad.lastimport", ITAD_Api.lastImport],
+    ["itad.inwaitlist", ITAD_Api.inWaitlist],
     ["itad.addtowaitlist", ITAD_Api.addToWaitlist],
     ["itad.incollection", ITAD_Api.inCollection],
     ["itad.getfromcollection", ITAD_Api.getFromCollection],
