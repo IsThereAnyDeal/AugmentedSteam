@@ -1053,7 +1053,7 @@ class AppPageClass extends StorePageClass {
             if (waitlisted) {
                 // todo remove from waitlist
             } else {
-                // todo add to waitlist
+                await Background.action("itad.addtowaitlist", this.storeid);
             }
             waitlisted = !waitlisted;
             updateDiv();
