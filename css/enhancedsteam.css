@@ -5,6 +5,7 @@
   display: block; 
   z-index: 9999;
   opacity: 0;
+  box-shadow: 0 0 10px 2px #000000;
 }
 .es_btt > span {
   font-size: 180% !important;
