@@ -872,6 +872,13 @@ class StringUtils {
     }
 }
 
+class CommunityLoginError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "CommunityLoginError";
+    }
+}
+
 function sleep(duration) {
     return new Promise(function(resolve, reject) {
         setTimeout(function() { resolve(); }, duration);

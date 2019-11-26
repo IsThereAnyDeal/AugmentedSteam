@@ -458,16 +458,12 @@ class SteamCommunity extends Api {
     // static origin = "https://steamcommunity.com/";
     // static params = { 'credentials': 'include', };
 
-    static cards({ 'params': params, }) {
-        return SteamCommunity.getPage(`/my/gamecards/${params.appid}`, (params.border ? { 'border': 1, } : undefined)).catch(() => {
-            throw new Error("Could not retrieve cards for appid " + params.appid);
-        });
+    static cards({ "params": params, }) {
+        return SteamCommunity.getPage(`/my/gamecards/${params.appid}`, (params.border ? { "border": 1, } : {}));
     }
 
-    static stats({ 'params': params, }) {
-        return SteamCommunity.getPage(`/my/stats/${params.appid}`).catch(() => {
-            throw new Error("Could not retrieve stats for appid " + params.appid);
-        });
+    static stats({ "params": params, }) {
+        return SteamCommunity.getPage(`/my/stats/${params.appid}`);
     }
 
     static async getInventory(contextId) {
@@ -658,7 +654,7 @@ class SteamCommunity extends Api {
     static getPage(endpoint, query) {
         return this._fetchWithDefaults(endpoint, query, { method: 'GET' }).then(response => {
             if (response.url.startsWith("https://steamcommunity.com/login/")) {
-                throw new Error("Got redirected onto login page, the user is not logged into steamcommunity.com")
+                throw new CommunityLoginError("Got redirected onto login page, the user is not logged into steamcommunity.com");
             }
             return response.text();
         });
@@ -810,6 +806,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
                 // JSON.stringify(Error) == "{}"
                 response.message = err.message;
                 response.stack = err.stack;
+                response.name = err.name;
             } else {
                 response.message = err.toString();
                 response.stack = (new Error()).stack;

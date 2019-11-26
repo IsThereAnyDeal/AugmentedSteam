@@ -1973,10 +1973,10 @@ class AppPageClass extends StorePageClass {
 
         let appid = this.communityAppid;
 
-        Background.action('cards', { 'appid': appid, } )
-            .then(result => loadBadgeContent(".es_normal_badge_progress", result));
-        Background.action('cards', { 'appid': appid, 'border': 1, } )
-            .then(result => loadBadgeContent(".es_foil_badge_progress", result));
+        Background.action("cards", { "appid": appid, } )
+            .then(result => loadBadgeContent(".es_normal_badge_progress", result), EnhancedSteam.addLoginWarning);
+        Background.action("cards", { "appid": appid, "border": 1, } )
+            .then(result => loadBadgeContent(".es_foil_badge_progress", result), EnhancedSteam.addLoginWarning);
 
         function loadBadgeContent(targetSelector, result) {
             let dummy = HTMLParser.htmlToDOM(result);

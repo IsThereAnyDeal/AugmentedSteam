@@ -888,7 +888,7 @@ let Stats = (function() {
             <div class="achieveBar">
                 <div style="width: ${stats[3]}%;" class="achieveBarProgress"></div>
             </div>`;
-        });
+        }, EnhancedSteam.addLoginWarning);
     };
 
     return self;
@@ -1046,16 +1046,13 @@ let EnhancedSteam = (function() {
         });
     };
 
-    // todo (MxtOUT) Add this back once proper error handling is implemented
     let loginWarningAdded = false;
     self.addLoginWarning = function(err) {
-        if (!loginWarningAdded) {
+        if (!loginWarningAdded && err.name === "CommunityLoginError") {
             addWarning(`${Localization.str.community_login.replace("__link__", "<a href='https://steamcommunity.com/login/'>steamcommunity.com</a>")}`);
+            console.warn(err.message);
             loginWarningAdded = true;
-        }
-
-        // Triggers the unhandledrejection handler, so that the error is not fully suppressed
-        Promise.reject(err);
+        }        
     };
 
     self.handleInstallSteamButton = function() {
