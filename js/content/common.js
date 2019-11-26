@@ -374,7 +374,9 @@ let RequestData = (function(){
             console.warn("Requesting URL without protocol, please update");
         }
 
-        return fetch(url, settings).then(response => {
+        let fetchFn = content.fetch || fetch;
+
+        return fetchFn(url, settings).then(response => {
 
             ProgressBar.finishRequest();
 
