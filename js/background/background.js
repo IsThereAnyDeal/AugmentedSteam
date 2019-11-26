@@ -63,18 +63,24 @@ class Api {
         }
         return fetch(url, params);
     }
-    static getEndpoint(endpoint, query) {
-        if (!endpoint.endsWith('/'))
-            endpoint += '/';
-        return this._fetchWithDefaults(endpoint, query, { 'method': 'GET', }).then(response => response.json());
+    static async getEndpoint(endpoint, query, responseHandler) {
+        if (!endpoint.endsWith('/')) endpoint += '/';
+
+        let response = await this._fetchWithDefaults(endpoint, query, { "method": "GET" });
+        if (responseHandler) responseHandler(response);
+        return response.json();
     }    
-    static getPage(endpoint, query) {
-        return this._fetchWithDefaults(endpoint, query, { 'method': 'GET', }).then(response => response.text());
+    static async getPage(endpoint, query, responseHandler) {
+        let response = await this._fetchWithDefaults(endpoint, query, { "method": "GET" });
+        if (responseHandler) responseHandler(response);
+        return response.text();
     }
-    static postEndpoint(endpoint, query) {
-        if (!endpoint.endsWith('/'))
-            endpoint += '/';
-        return this._fetchWithDefaults(endpoint, query, { 'method': 'POST', }).then(response => response.json());
+    static async postEndpoint(endpoint, query, responseHandler) {
+        if (!endpoint.endsWith('/')) endpoint += '/';
+
+        let response = await this._fetchWithDefaults(endpoint, query, { "method": "POST" });
+        if (responseHandler) responseHandler(response);
+        return response.json();
     }    
 }
 Api.params = {};
