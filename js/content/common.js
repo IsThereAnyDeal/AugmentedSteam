@@ -374,7 +374,7 @@ let RequestData = (function(){
             console.warn("Requesting URL without protocol, please update");
         }
 
-        let fetchFn = content.fetch || fetch;
+        let fetchFn = (typeof content !== 'undefined' && content && content.fetch) || fetch;
 
         return fetchFn(url, settings).then(response => {
 
