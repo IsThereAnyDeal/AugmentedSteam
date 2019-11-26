@@ -567,24 +567,6 @@ let Options = (function(){
                 }
             }
 
-        } else if (option.startsWith("context_")) {
-            // todo replace promise once browser API support has been merged
-            try {
-                value = await new Promise((resolve, reject) => {
-                    chrome.permissions.request({
-                        permissions: ["contextMenus"]
-                    }, granted => {
-                        let node = document.querySelector(`[data-setting='${option}']`);
-                        if (!node) { reject(); }
-                        if (!granted) {
-                            node.checked = false;
-                            reject();
-                        }
-
-                        resolve(node.checked);
-                    });
-                });
-            } catch(err) { return; } // Don't save option
         } else {
 
             let node = document.querySelector("[data-setting='"+option+"']");
