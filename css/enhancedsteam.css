@@ -1508,6 +1508,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   text-align: center;
   background: linear-gradient(rgb(154, 40, 32) 0%, rgb(214, 53, 37) 100%);
 }
+.es_warning > a {
+  text-decoration: underline;
+}
 
 /***************************************
  * Wishlist
