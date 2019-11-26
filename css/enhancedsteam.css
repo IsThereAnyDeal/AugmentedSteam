@@ -1,6 +1,7 @@
 /* Back To Top button */
 .es_btt {
   position: fixed; 
+  right: 20px;
   bottom: 20px;
   display: block; 
   z-index: 9999;
