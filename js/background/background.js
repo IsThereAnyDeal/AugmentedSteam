@@ -91,16 +91,18 @@ class AugmentedSteamApi extends Api {
     // static _progressingRequests = new Map();
     // static _earlyAccessAppIds_promise = null;
     
-    static getEndpoint(endpoint, query) { // withResponse? boolean that includes Response object in result?
-        return super.getEndpoint(endpoint, query)
-            .then(function(json) {
-                if (!json.result || json.result !== "success") {
-                    throw new Error(`Could not retrieve '${endpoint}'`);
-                }
-                delete json.result;
-                return json; // 'response': response, 
-            })
-        ;
+    static async getEndpoint(endpoint, query) { // withResponse? boolean that includes Response object in result?
+        let json = await super.getEndpoint(endpoint, query, response => {
+            if (response.status === 500) {
+                // Beautify HTTP 500: "User 'p_enhsteam' has exceeded the 'max_user_connections' resource (current value: XX)", which would result in a SyntaxError due to JSON.parse
+                throw new Error(`Augmented Steam servers are currently overloaded, failed to fetch endpoint "${endpoint}"`);
+            }
+        });
+        if (!json.result || json.result !== "success") {
+            throw new Error(`Could not retrieve '${endpoint}'`);
+        }
+        delete json.result;
+        return json;
     }
 
     static endpointFactory(endpoint) {
