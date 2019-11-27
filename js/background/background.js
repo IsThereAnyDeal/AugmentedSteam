@@ -820,3 +820,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     // keep channel open until callback resolves
     return true;
 });
+
+let initContextMenu = async function() {
+    await Localization;
+    ContextMenu.update();
+};
+
+chrome.runtime.onStartup.addListener(initContextMenu);
+chrome.runtime.onInstalled.addListener(initContextMenu);
