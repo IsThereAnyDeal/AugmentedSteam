@@ -1383,15 +1383,6 @@ let EarlyAccess = (function(){
                 checkNodes([".game_info_cap",
                            ".showcase_gamecollector_game",
                            ".favoritegame_showcase_game"]);
-                break;
-            case /^\/app\/.*/.test(window.location.pathname):
-                if (document.querySelector(".apphub_EarlyAccess_Title")) {
-                    let container = document.createElement("span");
-                    container.id = "es_ea_apphub";
-                    DOMHelper.wrap(container, document.querySelector(".apphub_StoreAppLogo:first-of-type"));
-
-                    checkNodes(["#es_ea_apphub"]);
-                }
         }
     }
 
