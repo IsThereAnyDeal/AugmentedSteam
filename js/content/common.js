@@ -2,34 +2,32 @@
  * Common functions that may be used on any pages
  */
 class ProgressBar {
+    _progress = null;
+
     static create() {
         if (!SyncedStorage.get("show_progressbar")) { return; }
 
         let container = document.getElementById("global_actions");
         if (!container) return;
         HTML.afterEnd(container,
-            `<div class="es_progress_wrap">
-                <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
-                    <div class="progress-inner-element">
-                        <div class="progress-bar">
-                            <div class="progress-value" style="width: 18px"></div>
-                        </div>
+            `<div class="es_progress__wrap">
+                <div class="es_progress es_progress--complete" title="${Localization.str.ready.ready}">
+                    <div class="es_progress__bar">
+                        <div class="es_progress__value"></div>
                     </div>
                 </div>
             </div>`);
+        this._progress = document.querySelector(".es_progress");
     }
 
     static loading() {
-        let node = document.getElementById('es_progress');
-        if (!node) { return; }
+        if (!this._progress) return;
+            
+        this._progress.setAttribute("title", Localization.str.ready.loading);
 
-        if (Localization.str.ready) { // FIXME under what circumstance is this false? Should all the other members have the same check?
-            node.setAttribute("title", Localization.str.ready.loading);
-        }
-
-        ProgressBar.requests = { 'initiated': 0, 'completed': 0, };
-        node.classList.remove("complete");
-        node.querySelector(".progress-value").style.width = "18px";
+        ProgressBar.requests = { "initiated": 0, "completed": 0 };
+        this._progress.classList.remove("es_progress--complete");
+        this._progress.querySelector(".es_progress__value").style.width = "18px";
     }
 
     static startRequest() {
@@ -45,40 +43,54 @@ class ProgressBar {
     }
 
     static progress(value) {
-        let node = document.getElementById('es_progress');
-        if (!node) { return; }
+        if (!this._progress) return;
 
-        if (typeof value == 'undefined') {
+        if (!value) {
             if (!ProgressBar.requests) { return; }
             if (ProgressBar.requests.initiated > 0) {
                 value = 100 * ProgressBar.requests.completed / ProgressBar.requests.initiated;
             }
         }
-        if (value >= 100) {
+        if (value > 100) {
             value = 100;
         }
 
-        node.querySelector(".progress-value").style.width = `${value}px`;
+        this._progress.querySelector(".es_progress__value").style.width = `${value}px`;
 
         if (value >= 100) {
-            node.classList.add("complete");
-            node.setAttribute("title", Localization.str.ready.ready);
+            this._progress.classList.add("es_progress--complete");
+            this._progress.setAttribute("title", Localization.str.ready.ready);
             ProgressBar.requests = null;
         }
     }
 
-    static failed() {
-        let node = document.getElementById('es_progress');
-        if (!node) { return; }
+    static serverOutage() {
+        if (!this._progress) return;
 
-        node.classList.add("error");
+        this._progress.classList.add("es_progress--warning");
+        ProgressBar.requests = null;
+
+        if (!this._progress.parentElement.querySelector(".es_progress__warning, .es_progress__error")) {
+            HTML.afterEnd(this._progress, `<div class="es_progress__warning">${Localization.str.ready.server_outage}</div>`);
+        }
+    }
+
+    static failed() {
+        if (!this._progress) return;
+
+        let warningNode = this._progress.parentElement.querySelector(".es_progress__warning");
+        if (warningNode) {
+            this._progress.classList.remove("es_progress--warning"); // Errors have higher precedence
+            warningNode.remove();
+        }
+        this._progress.classList.add("es_progress--error");
         ProgressBar.requests = null;
         
-        let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
+        let nodeError = this._progress.parentElement.querySelector(".es_progress__error");
         if (nodeError) {
             nodeError.textContent = Localization.str.ready.failed.replace("__amount__", ++ProgressBar.failedRequests);
         } else {
-            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed.replace("__amount__", ++ProgressBar.failedRequests) + "</div>");
+            HTML.afterEnd(this._progress, `<div class="es_progress__error">${Localization.str.ready.failed.replace("__amount__", ++ProgressBar.failedRequests)}</div>`);
         }
     }
 }

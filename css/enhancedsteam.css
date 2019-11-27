@@ -2072,7 +2072,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * Site wide
  * get_http()
  **************************************/
-#es_progress {
+.es_progress {
   float: right;
   position: relative;
   margin-top: 55px;
@@ -2084,32 +2084,43 @@ input[type=checkbox].es_dlc_selection:checked + label {
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.20);
 }
-#es_progress.error,
-#es_progress.complete {
+.es_progress--error,
+.es_progress--warning,
+.es_progress--complete {
   width: 16px;
 }
-#es_progress,
-#es_progress .progress-value {
+.es_progress,
+.es_progress__value {
   -webkit-transition: width 1s ease-in-out;
   -moz-transition: width 1s ease-in-out;
   transition: width 1s ease-in-out;
 }
-/* This prevents the black bleeding from "progress-bar" background
-	around the edges of "progress-value" to make it look smoother */
-#es_progress.error .progress-value,
-#es_progress.complete .progress-value {
+.es_progress__value {
+  width: 18px;
+}
+/* This prevents the black bleeding from "es_progress__bar" background
+	around the edges of "es_progress__value" to make it look smoother */
+.es_progress--error .es_progress__value,
+.es_progress--warning .es_progress__value,
+.es_progress--complete .es_progress__value {
   width: calc(100% + 4px) !important;
 }
-#es_progress.complete {
+.es_progress--complete {
   animation: delayBoxShadowGreen linear 1s;
   animation-fill-mode: forwards;
 }
-#es_progress.error {
+.es_progress--error, .es_progress--warning {
   cursor: help;
-  animation: delayBoxShadowRed linear 1s;
+  animation: linear 1s;
   animation-fill-mode: forwards;
 }
-#es_progress.error:before {
+.es_progress--error {
+  animation-name: delayBoxShadowRed;
+}
+.es_progress--warning {
+  animation-name: delayBoxShadowYellow;
+}
+.es_progress--error::before, .es_progress--warning::before {
   display: block;
   content: "!";
   position: absolute;
@@ -2118,34 +2129,45 @@ input[type=checkbox].es_dlc_selection:checked + label {
   left: 0;
   line-height: 12px;
   text-align: center;
-  color: rgb(255, 149, 149);
   font-size: 14px;
   font-family: Impact, Charcoal, sans-serif;
   text-shadow: 0 0 1px black;
 }
-#es_progress .progress-inner-element {
-  border-radius: 8px;
+.es_progress-error::before {
+  color: rgb(255, 149, 149);
 }
-#es_progress .progress-bar,
-#es_progress .progress-bar {
+.es_progress--warning::before {
+  color: white;
+}
+.es_progress .es_progress__bar {
   background-color: black;
   border-radius: 8px;
 }
-#es_progress .progress-value {
+.es_progress__value {
   height: 16px;
   margin-left: -2px;
   background-color: #51771d;
   border-radius: 8px;
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 5%, rgba(255, 255, 255, 0) 95%);
 }
-#es_progress.error .progress-value {
+.es_progress--error .es_progress__value, .es_progress--warning .es_progress__value {
   transition: unset;
-  background-color: #b31414;
   border-radius: 8px;
+}
+.es_progress--error .es_progress__value {
+  background-color: #b31414;
+}
+.es_progress--warning .es_progress__value {
+  background-color: #d9ab05;
 }
 @keyframes delayBoxShadowRed {
   100% {
     box-shadow: 0 0 8px 1px #b31414;
+  }
+}
+@keyframes delayBoxShadowYellow {
+  100% {
+    box-shadow: 0 0 8px 1px #d9ab05;
   }
 }
 @keyframes delayBoxShadowGreen {
@@ -2153,11 +2175,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
     box-shadow: 0 0 8px 1px #51771d;
   }
 }
-.es_progress_wrap {
+.es_progress__wrap {
   position: relative;
   float: right;
 }
-.es_progress_error {
+.es_progress__error, .es_progress__warning {
   display: none;
   color: #ccc;
   font-size: 11px;
@@ -2172,10 +2194,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
   font-size: 11px;
   list-style-position: inside;
 }
-.es_progress_error span {
+.es_progress__error span, .es_progress__warning span {
   word-break: break-all;
 }
-.es_progress_error:before {
+.es_progress__error::before, .es_progress__warning::before {
   content: "";
   display: block;
   background-color: #444;
@@ -2187,11 +2209,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
   z-index: -1;
   transform: rotateZ(45deg);
 }
-.es_progress_error ul {
+.es_progress__error ul, .es_progress__warning ul {
   margin: 0 0 0 6px;
   padding: 0;
 }
-.es_progress_wrap:hover .es_progress_error {
+.es_progress__wrap:hover .es_progress__error, .es_progress__wrap:hover .es_progress__warning {
   display: block !important;
 }
 

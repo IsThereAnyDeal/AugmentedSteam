@@ -879,6 +879,13 @@ class CommunityLoginError extends Error {
     }
 }
 
+class ServerOutageError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "ServerOutageError";
+    }
+}
+
 function sleep(duration) {
     return new Promise(function(resolve, reject) {
         setTimeout(function() { resolve(); }, duration);

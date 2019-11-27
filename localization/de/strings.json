@@ -446,7 +446,8 @@
     "ready": {
         "errormsg": "Fehler beim Laden von Augmented Steam-Daten",
         "loading": "Augmented Steam lädt Daten...",
-        "ready": "Augmented Steam ist bereit"
+        "ready": "Augmented Steam ist bereit",
+        "server_outage": "Augmented Steam Server sind zur Zeit überlastet"
     },
     "twitch": {
         "now_streaming": "__username__ ist live auf Twitch",
