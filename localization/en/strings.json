@@ -58,6 +58,7 @@
     "events": "Events",
     "translation": "Translation",
     "lowest": "Lowest",
+    "lowest_price": "Current Lowest Price:",
     "view_badge_progress": "View badge progress",
     "badge_progress": "Badge Progress",
     "sales_total": "Sales total:",
