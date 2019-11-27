@@ -24,6 +24,19 @@ if (typeof Promise.prototype.finally === 'undefined') {
     });
 }
 
+let initContextMenu = async function() {
+    await Localization;
+    ContextMenu.update();
+};
+
+if (chrome.runtime.onStartup) {
+    chrome.runtime.onStartup.addListener(initContextMenu);
+}
+
+if (chrome.runtime.onInstalled) {
+    chrome.runtime.onInstalled.addListener(initContextMenu);
+}
+
 class Version {
     constructor(major, minor=0, patch=0) {
         console.assert([major, minor, patch].filter(Number.isInteger).length === 3, `${major}.${minor}.${patch} must be integers`);

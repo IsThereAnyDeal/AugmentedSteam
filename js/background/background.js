@@ -251,11 +251,6 @@ class ContextMenu {
         }
     }
 }
-(async function() {
-    await Localization;
-    ContextMenu.update();
-})();
-
 
 class SteamStore extends Api {
     // static origin = "https://store.steampowered.com/";
