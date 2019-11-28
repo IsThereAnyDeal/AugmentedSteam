@@ -622,21 +622,20 @@ let Options = (function(){
         let addHandlerToSetDefaultColor = (key) => {
             document.getElementById(`${key}_default`).addEventListener('click', () => setValue(`#${key}_color`, Defaults[`${key}_color`]));
         };
-        [
-            'highlight_owned',
-            'highlight_wishlist',
-            'highlight_coupon',
-            'highlight_inv_gift',
-            'highlight_inv_guestpass',
-            'highlight_notinterested',
-            'tag_wishlist',
-            'tag_coupon',
-            'tag_inv_gift',
-            'tag_inv_guestpass',
-            'tag_notinterested',
+        ['highlight_owned',
+         'highlight_wishlist',
+         'highlight_coupon',
+         'highlight_inv_gift',
+         'highlight_inv_guestpass',
+         'highlight_notinterested',
+         'tag_owned',
+         'tag_wishlist',
+         'tag_coupon',
+         'tag_inv_gift',
+         'tag_inv_guestpass',
+         'tag_notinterested',
         ].forEach(addHandlerToSetDefaultColor);
 
-        document.getElementById("tag_owned_color_default").addEventListener("click", () => setValue("#tag_owned_color", Defaults.tag_owned_color));
         document.getElementById("spamcommentregex_default").addEventListener("click", () => setValue("#spamcommentregex", "[\\u2500-\\u25FF]"));
         document.getElementById("quickinv_default").addEventListener("click", () => setValue("#quickinv_diff", "-0.01"));
 
