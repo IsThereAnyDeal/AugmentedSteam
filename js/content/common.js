@@ -1485,7 +1485,7 @@ let Highlights = (function(){
                 node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", tags);
             }
             else if (node.classList.contains("similar_grid_item")) {
-                node.querySelector(".price, .discount_block").append(tags);
+                node.querySelector(".regular_price, .discount_block").append(tags);
             }
             else if (node.classList.contains("recommendation_carousel_item")) {
                 node.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
