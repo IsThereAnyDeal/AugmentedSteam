@@ -47,17 +47,10 @@ class Fader {
 class CustomLinks {
 
     static init() {
-
         let links = SyncedStorage.get('profile_custom_link');
         for (let link of links) {
             CustomLinks.show(link);
         }
-
-        document
-            .querySelector("#add-custom-link")
-            .addEventListener("click", function() {
-                CustomLinks.create(SyncedStorage.defaults.profile_custom_link[0]);
-            });
     }
 
     // TODO (KarlCastle?) Want to replace this with a CustomElement when the support is wider. CustomElements were added in FF63.
@@ -651,6 +644,10 @@ let Options = (function(){
             if (isNaN(parseFloat(document.getElementById("quickinv_diff").value))) {
                 setValue("#quickinv_diff", "-0.01");
             }
+        });
+
+        document.getElementById("add-custom-link").addEventListener("click", () => {
+            CustomLinks.create(SyncedStorage.defaults.profile_custom_link[0]);
         });
 
         document.getElementById("clear_countries").addEventListener("click", () => {
