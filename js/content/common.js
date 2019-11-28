@@ -1464,9 +1464,6 @@ let Highlights = (function(){
                 root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", tags);
                 HTML.beforeBegin(root.querySelector(".game_purchase_action"), '<div style="clear: right;"></div>');
             }
-            else if (node.classList.contains("small_cap")) {
-                node.querySelector("h4").insertAdjacentElement("afterbegin", tags);
-            }
             else if (node.classList.contains("browse_tag_game")) {
                 node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
             }
@@ -1486,11 +1483,7 @@ let Highlights = (function(){
                 node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", tags);
             }
             else if (node.classList.contains("similar_grid_item")) {
-                if (node.querySelector(".regular_price")) {
-                    node.querySelector(".regular_price").append(tags);
-                } else {
-                    node.querySelector(".discount_block").append(tags);
-                }
+                node.querySelector(".price, .discount_block").append(tags);
             }
             else if (node.classList.contains("recommendation_carousel_item")) {
                 node.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
