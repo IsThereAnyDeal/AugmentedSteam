@@ -7,7 +7,7 @@ class Customizer {
     }
 
     _textValue(node) {
-        let textNode = node.querySelector("h1, h2");
+        let textNode = node.querySelector("h1, h2, .home_title, .home_section_title");
         if (!textNode) return "";
         let str = "";
         for (let node of textNode.childNodes) {
@@ -47,7 +47,7 @@ class Customizer {
         let isValid = false;
 
         elements.forEach((element, i) => {
-            if (element.style.display === "none" && !forceShow) {
+            if (getComputedStyle(element).display === "none" && !forceShow) {
                 elements.splice(i, 1);
                 return;
             }
@@ -71,6 +71,15 @@ class Customizer {
         }
 
         return this;
+    }
+
+    addDynamic(node) {
+        let text = this._textValue(node);
+        if (text === "") { return; }
+
+        let name = text.toLowerCase();
+
+        this.add(`dynamic_${name}`, node, text);
     }
 
     build() {
@@ -3878,6 +3887,13 @@ let StoreFrontPageClass = (function(){
             if (browsesteam) customizer.add("browsesteam", browsesteam.parentElement);
             if (recentlyupdated) customizer.add("recentlyupdated", recentlyupdated.parentElement);
             if (under) customizer.add("under", under.parentElement.parentElement);
+
+            let dynamicNodes = document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer), .home_pagecontent_ctn");
+            for (let node of dynamicNodes) {
+                if (node.closest(".esi-customizer") || node.querySelector(".esi-customizer") || node.style.display === "none") { continue; }
+
+                customizer.addDynamic(node);
+            }
 
             customizer.build();
         }, 1000);
