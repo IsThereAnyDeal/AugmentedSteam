@@ -372,9 +372,7 @@ class StorePageClass {
         if (!countries || countries.length === 0) { return; }
 
         let localCountry = User.getCountry().toLowerCase();
-        if (countries.indexOf(localCountry) === -1) {
-            countries.push(localCountry);
-        }
+        if (!countries.includes(localCountry)) countries.push(localCountry);
 
         let subids = this.getAllSubids();
         subids.forEach(subid => {
