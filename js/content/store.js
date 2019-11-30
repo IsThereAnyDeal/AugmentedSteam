@@ -1481,18 +1481,15 @@ class AppPageClass extends StorePageClass {
     replaceDevPubLinks() {
         if (!this.isAppPage()) { return; }
 
-        let rows = document.querySelectorAll(".dev_row a");
-        for (let linkNode of rows) {
+        document.querySelectorAll(".dev_row a").forEach((linkNode, i) => {
             let homepageLink = new URL(linkNode.href);
-            if (homepageLink.pathname === "/search/") {
-                continue;
-            }
+            if (homepageLink.pathname === "/search/") return;
 
-            let name = linkNode.parentNode.id === "developers_list" ? "developer" : "publisher";
+            let name = i % 2 ? "publisher" : "developer"; // These elements appear in pairs, where the first represents the developer and the second the publisher
             let value = linkNode.innerText;
             linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
             HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
-        }
+        });
 
         for (let moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {
             if (moreBtn) { moreBtn.remove(); }
