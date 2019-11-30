@@ -1502,10 +1502,12 @@ let Highlights = (function(){
             tagCssLoaded = true;
 
             let tagCss = [];
-            ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
+            let tagNames = ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"];
+            for (let name of tagNames) {
                 let color = SyncedStorage.get(`tag_${name}_color`);
                 tagCss.push(`.es_tag_${name} { background-color: ${color}; }`);
-            });
+            }
+
             let style = document.createElement('style');
             style.id = 'es_tag_styles';
             style.textContent = tagCss.join("\n");
@@ -1516,13 +1518,13 @@ let Highlights = (function(){
         // Add the tags container if needed
         let tags = node.querySelectorAll(".es_tags");
         if (tags.length === 0) {
-            tags = HTMLParser.htmlToElement('<div class="es_tags' + (tagShort ? ' es_tags_short' : '') + '" />');
+            tags = HTMLParser.htmlToElement(`<div class="es_tags ${tagShort ? 'es_tags_short' : ''}"/>`);
 
             let root;
             if (node.classList.contains("tab_row")) { // can't find it
                 root = node.querySelector(".tab_desc").classList.remove("with_discount");
 
-                node.querySelector(".tab_discount").style.top="15px";
+                node.querySelector(".tab_discount").style.top = "15px";
                 root.querySelector("h4").insertAdjacentElement("afterend", tags);
             }
             else if (node.classList.contains("home_smallcap")) {
@@ -1542,15 +1544,8 @@ let Highlights = (function(){
                 root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", tags);
                 HTML.beforeBegin(root.querySelector(".game_purchase_action"), '<div style="clear: right;"></div>');
             }
-            else if (node.classList.contains("small_cap")) {
-                node.querySelector("h4").insertAdjacentElement("afterbegin", tags);
-            }
-            else if (node.classList.contains("browse_tag_game")) { // can't find it
-                root = node;
-
-                tags.style.display = "table";
-                tags.style.marginLeft = "8px";
-                root.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
+            else if (node.classList.contains("browse_tag_game")) {
+                node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
             }
             else if (node.classList.contains("game_area_dlc_row")) {
                 node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", tags);
@@ -1562,44 +1557,28 @@ let Highlights = (function(){
                 node.querySelector(".match_price").insertAdjacentElement("afterbegin", tags);
             }
             else if (node.classList.contains("cluster_capsule")) {
-                node.querySelector(".main_cap_platform_area").append($tags);
+                node.querySelector(".main_cap_platform_area").append(tags);
             }
-            else if (node.classList.contains("recommendation_highlight")) { // can't find it
-                root = node;
-
-                if (document.querySelector(".game_purchase_action")) {
-                    tags.style.float = "left";
-                    let node = root.querySelector(".game_purchase_action");
-                    node.insertAdjacentElement("beforebegin", tags);
-                    HTML.beforeBegin(node, '<div style="clear: right;"></div>');
-                } else {
-                    tags.style.fload = "right";
-                    HTML.beforeBegin(root.querySelector(".price").parentNode, tags);
-                }
+            else if (node.classList.contains("recommendation_highlight")) {
+                node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", tags);
             }
-            else if (node.classList.contains("similar_grid_item")) { // can't find it
-                root = node;
-                tags.style.float = "right";
-                root.querySelector(".similar_grid_price").querySelector(".price").append($tags);
+            else if (node.classList.contains("similar_grid_item")) {
+                node.querySelector(".regular_price, .discount_block").append(tags);
             }
-            else if (node.classList.contains("recommendation_carousel_item")) { // can't find it
-                root = node;
-                tags.style.float = "left";
-                root.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
+            else if (node.classList.contains("recommendation_carousel_item")) {
+                node.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
             }
-            else if (node.classList.contains("friendplaytime_game")) { // can't find it
-                root = node;
-                tags.style.float = "left";
-                root.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
+            else if (node.classList.contains("friendplaytime_game")) {
+                node.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
             }
 
             tags = [tags];
         }
 
         // Add the tag
-        for (let i=0,len=tags.length; i<len; i++) {
-            if (!tags[i].querySelector(".es_tag_" + tag)) {
-                HTML.beforeEnd(tags[i], '<span class="es_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
+        for (let n of tags) {
+            if (!n.querySelector(`es_tag_${tag}`)) {
+                HTML.beforeEnd(n, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
             }
         }
     }
@@ -1625,14 +1604,14 @@ let Highlights = (function(){
             highlightCssLoaded = true;
 
             let hlCss = [];
-
-            ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
+            let hlNames = ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"];
+            for (let name of hlNames) {
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(
                    `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
                     .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name} { outline: solid ${color}; }
                     .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }`);
-            });
+            }
 
             let style = document.createElement('style');
             style.id = 'es_highlight_styles';
@@ -1685,16 +1664,15 @@ let Highlights = (function(){
         node.classList.remove("ds_flagged");
     }
 
-
     function highlightItem(node, name) {
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("highlight_"+name)) {
-            node.classList.add("es_highlighted", "es_highlighted_"+name);
+        if (SyncedStorage.get(`highlight_${name}`)) {
+            node.classList.add("es_highlighted", `es_highlighted_${name}`);
             highlightNode(node);
         }
 
-        if (SyncedStorage.get("tag_" + name)) {
+        if (SyncedStorage.get(`tag_${name}`)) {
             addTag(node, name);
         }
     }
@@ -1737,8 +1715,7 @@ let Highlights = (function(){
     };
 
     self.highlightAndTag = function(nodes) {
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        for (let node of nodes) {
             let nodeToHighlight = node;
 
             if (node.classList.contains("item")) {
@@ -1831,7 +1808,7 @@ let Highlights = (function(){
 
         Messenger.onMessage("dynamicStoreReady").then(() => {
             selectors.forEach(selector => {
-                self.highlightAndTag(parent.querySelectorAll(selector+":not(.es_highlighted)"));
+                self.highlightAndTag(parent.querySelectorAll(`${selector}:not(.es_highlighted)`));
             });
     
             let searchBoxContents = parent.getElementById("search_suggestion_contents");
@@ -1849,7 +1826,6 @@ let Highlights = (function(){
     };
 
     return self;
-
 })();
 
 let DynamicStore = (function(){

@@ -2028,6 +2028,22 @@ input[type=checkbox].es_dlc_selection:checked + label {
   margin-top: 6px;
   clear: right;
 }
+.browse_tag_game .es_tags {
+  display : table;
+  margin-left: 8px;
+}
+.recommendation_highlight .es_tags {
+  position: absolute;
+  margin-top: -20px;
+}
+.similar_grid_item .es_tags {
+  float: right;
+}
+.recommendation_carousel_item .es_tags,
+.friendplaytime_game .es_tags {
+  float: left;
+  margin-left: 8px;
+}
 .game_area_dlc_price .es_tags {
   margin-top: -1px;
 }
