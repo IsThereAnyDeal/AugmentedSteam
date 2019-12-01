@@ -361,8 +361,8 @@ class ITAD_Api extends Api {
         if (!result) return;
         
         let waitlist = [];
-        for (let { game_id } of Object.values(result)) {
-            waitlist.push(game_id);
+        for (let { gameid } of Object.values(result)) {
+            waitlist.push(gameid);
         }
         return waitlist;
     }
