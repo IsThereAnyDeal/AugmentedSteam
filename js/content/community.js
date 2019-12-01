@@ -3776,12 +3776,16 @@ let GuidesPageClass = (function(){
         for (let node of nodes) {
             let onclick = node.getAttribute("onclick");
 
-            if (onclick) {
-                node.setAttribute("onclick", onclick.replace(/requiredtags[^&]+/, "requiredtags[]=-1"));
-            }
-
             let linkNode = node.querySelector("a");
             linkNode.href = linkNode.href.replace(/requiredtags[^&]+/, "requiredtags[]=-1");
+
+            if (onclick) {
+                let url = linkNode.href;
+                node.removeAttribute("onclick");
+                node.addEventListener("click", function() {
+                    window.location.href = url;
+                });
+            }
         }
 
         nodes = document.querySelectorAll(".guides_home_view_all_link > a, .guide_home_category_selection");
