@@ -2976,7 +2976,10 @@ let FriendsPageClass = (function(){
             sortFriends)
         );
 
-        sortFriends(SyncedStorage.get("sortfriendsby"));
+        let sortBy = SyncedStorage.get("sortfriendsby");
+        if (sortBy !== "default") {
+            sortFriends(SyncedStorage.get("sortfriendsby"));
+        }
     };
 
     FriendsPageClass.prototype.addFriendsInviteButton = async function() {
