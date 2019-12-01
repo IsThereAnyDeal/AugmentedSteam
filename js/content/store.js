@@ -1049,7 +1049,7 @@ class AppPageClass extends StorePageClass {
             }
         });
 
-        waitlistOption.addEventListener("click", () => {
+        waitlistOption.addEventListener("click", async () => {
             if (waitlisted) {
                 // todo remove from waitlist
             } else {
