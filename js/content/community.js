@@ -2925,10 +2925,7 @@ let FriendsPageClass = (function(){
 
         let friendsFetched = false;
 
-        let sorted = { default: [], lastonline: [] };
-        for (let friend of offlineFriends) {
-            sorted.default.push(friend);
-        }
+        offlineFriends.forEach((friend, i) => friend.dataset.esSortDefault = i);
 
         async function sortFriends(sortBy) {
             sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
@@ -2938,33 +2935,29 @@ let FriendsPageClass = (function(){
                 friendsFetched = true;
                 let data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
                 let dom = HTMLParser.htmlToElement(data);
-                let lastOnlineMap = [];
 
                 for (let friend of dom.querySelectorAll(".friend_block_v2.persona.offline")) {
                     let lastOnline = friend.querySelector(".friend_last_online_text").textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
+                    let time = Infinity;
                     if (lastOnline) {
                         let days = parseInt(lastOnline[1]) || 0;
                         let hours = parseInt(lastOnline[2]) || 0;
                         let minutes = parseInt(lastOnline[3]) || 0;
                         let downtime = (days * 24 + hours) * 60 + minutes;
-                        lastOnlineMap.push([friend, downtime]);
-                    } else {
-                        lastOnlineMap.push([friend, Infinity]);
+                        time = downtime;
                     }
+                    document.querySelector(`.friend_block_v2.persona.offline[data-steamid="${friend.dataset.steamid}"]`).dataset.esSortTime = time;
                 }
-
-                sorted.lastonline = lastOnlineMap.sort((a, b) => a[1] - b[1]).map(([node]) => node);
             }
 
-            // Remove the current offline nodes
-            for (let node of document.querySelectorAll("div.persona.offline[data-steamid]")) {
-                node.remove();
-            }
-
-            // So we can replace them in sorted order
             let searchResults = document.querySelector("#search_results");
-            for (let node of sorted[sortBy]) {
-                searchResults.insertAdjacentElement("beforeend", node);
+            let curOfflineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
+
+            let property = `esSort${sortBy === "default" ? "Default" : "Time"}`;
+            curOfflineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
+
+            for (let friend of curOfflineFriends) {
+                searchResults.appendChild(friend);
             }
 
             SyncedStorage.set("sortfriendsby", sortBy);
