@@ -338,8 +338,7 @@ class StorePageClass {
                 this.getRightColLinkHtml(
                     "bartervg_ico",
                     `https://barter.vg/steam/${type}/${gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Barter.vg"))
-                );
+                    Localization.str.view_on_website.replace("__website__", "Barter.vg")));
         }
 
         if (SyncedStorage.get("showsteamdb")) {
@@ -347,8 +346,7 @@ class StorePageClass {
                 this.getRightColLinkHtml(
                     "steamdb_ico",
                     `https://steamdb.info/${type}/${gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Steam Database"))
-                );
+                    Localization.str.view_on_website.replace("__website__", "Steam Database")));
         }
 
         if (SyncedStorage.get("showitadlinks")) {
@@ -356,8 +354,7 @@ class StorePageClass {
                 this.getRightColLinkHtml(
                     "itad_ico",
                     `https://isthereanydeal.com/steam/${type}/${gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal"))
-                );
+                    Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal")));
         }
     }
 
@@ -1573,8 +1570,7 @@ class AppPageClass extends StorePageClass {
                 this.getRightColLinkHtml(
                     "pcgw_btn",
                     `https://pcgamingwiki.com/api/appid.php?appid=${this.appid}`,
-                    Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki"))
-                );
+                    Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki")));
         }
 
         if (SyncedStorage.get("showcompletionistme")) {
@@ -1582,8 +1578,7 @@ class AppPageClass extends StorePageClass {
                 this.getRightColLinkHtml(
                     "completionistme_btn",
                     `https://completionist.me/steam/app/${this.appid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Completionist.me"))
-                );
+                    Localization.str.view_on_website.replace("__website__", "Completionist.me")));
         }
 
         if (SyncedStorage.get("showprotondb")) {
@@ -1591,8 +1586,7 @@ class AppPageClass extends StorePageClass {
                 this.getRightColLinkHtml(
                     "protondb_btn",
                     `https://www.protondb.com/app/${this.appid}/`,
-                    Localization.str.view_on_website.replace("__website__", "ProtonDB"))
-                );
+                    Localization.str.view_on_website.replace("__website__", "ProtonDB")));
         }
 
         if (this.hasCards && SyncedStorage.get("showsteamcardexchange")) {
@@ -1601,8 +1595,7 @@ class AppPageClass extends StorePageClass {
                 this.getRightColLinkHtml(
                     "cardexchange_btn",
                     `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.communityAppid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Steam Card Exchange"))
-                );
+                    Localization.str.view_on_website.replace("__website__", "Steam Card Exchange")));
         }
 
         super.addLinks(type);
