@@ -2944,9 +2944,7 @@ let FriendsPageClass = (function(){
             sorted.default.push([node]);
         }
 
-        sorted.lastonline.sort(function(a, b) {
-            return b[1] - a[1];
-        });
+        sorted.lastonline.sort((a, b) => a[1] - b[1]);
 
         function sortFriends(sortBy) {
             sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
@@ -2957,9 +2955,9 @@ let FriendsPageClass = (function(){
             }
 
             // So we can replace them in sorted order
-            let offlineNode = document.querySelector("#state_offline");
+            let searchResults = document.querySelector("#search_results");
             for (let item of sorted[sortBy]) {
-                offlineNode.insertAdjacentElement("afterend", item[0]);
+                searchResults.insertAdjacentElement("beforeend", item[0]);
             }
 
             SyncedStorage.set("sortfriendsby", sortBy);
