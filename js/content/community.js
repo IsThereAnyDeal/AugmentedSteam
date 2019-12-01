@@ -2919,35 +2919,41 @@ let FriendsPageClass = (function(){
         this.addPoster();
     }
 
-    FriendsPageClass.prototype.addSort = async function() {
-        let friends = document.querySelectorAll(".friend_block_v2.persona.offline");
-        if (friends.length === 0) { return; }
+    FriendsPageClass.prototype.addSort = function() {
+        let offlineFriends = document.querySelectorAll(".friend_block_v2.persona.offline");
+        if (offlineFriends.length === 0) { return; }
 
-        let data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
-        let dom = HTMLParser.htmlToElement(data);
+        let friendsFetched = false;
 
         let sorted = { default: [], lastonline: [] };
-
-        let nodes = dom.querySelectorAll(".friend_block_v2.persona.offline");
-        for (let node of nodes) {
-            let lastOnline = node.querySelector(".friend_last_online_text").textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
-            if (lastOnline) {
-                let days = parseInt(lastOnline[1]) || 0;
-                let hours = parseInt(lastOnline[2]) || 0;
-                let minutes = parseInt(lastOnline[3]) || 0;
-                let downtime = (days * 24 + hours) * 60 + minutes;
-                sorted.lastonline.push([node, downtime]);
-            } else {
-                sorted.lastonline.push([node, Infinity]);
-            }
-
-            sorted.default.push([node]);
+        for (let friend of offlineFriends) {
+            sorted.default.push([friend]);
         }
 
-        sorted.lastonline.sort((a, b) => a[1] - b[1]);
-
-        function sortFriends(sortBy) {
+        async function sortFriends(sortBy) {
             sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
+
+            if (sortBy === "lastonline" && !friendsFetched) {
+                
+                friendsFetched = true;
+                let data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
+                let dom = HTMLParser.htmlToElement(data);
+
+                for (let friend of dom.querySelectorAll(".friend_block_v2.persona.offline")) {
+                    let lastOnline = friend.querySelector(".friend_last_online_text").textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
+                    if (lastOnline) {
+                        let days = parseInt(lastOnline[1]) || 0;
+                        let hours = parseInt(lastOnline[2]) || 0;
+                        let minutes = parseInt(lastOnline[3]) || 0;
+                        let downtime = (days * 24 + hours) * 60 + minutes;
+                        sorted.lastonline.push([friend, downtime]);
+                    } else {
+                        sorted.lastonline.push([friend, Infinity]);
+                    }
+                }
+
+                sorted.lastonline.sort((a, b) => a[1] - b[1]);
+            }
 
             // Remove the current offline nodes
             for (let node of document.querySelectorAll("div.persona.offline[data-steamid]")) {
