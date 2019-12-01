@@ -2927,7 +2927,7 @@ let FriendsPageClass = (function(){
 
         let sorted = { default: [], lastonline: [] };
         for (let friend of offlineFriends) {
-            sorted.default.push([friend]);
+            sorted.default.push(friend);
         }
 
         async function sortFriends(sortBy) {
@@ -2938,6 +2938,7 @@ let FriendsPageClass = (function(){
                 friendsFetched = true;
                 let data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
                 let dom = HTMLParser.htmlToElement(data);
+                let lastOnlineMap = [];
 
                 for (let friend of dom.querySelectorAll(".friend_block_v2.persona.offline")) {
                     let lastOnline = friend.querySelector(".friend_last_online_text").textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
@@ -2946,13 +2947,13 @@ let FriendsPageClass = (function(){
                         let hours = parseInt(lastOnline[2]) || 0;
                         let minutes = parseInt(lastOnline[3]) || 0;
                         let downtime = (days * 24 + hours) * 60 + minutes;
-                        sorted.lastonline.push([friend, downtime]);
+                        lastOnlineMap.push([friend, downtime]);
                     } else {
-                        sorted.lastonline.push([friend, Infinity]);
+                        lastOnlineMap.push([friend, Infinity]);
                     }
                 }
 
-                sorted.lastonline.sort((a, b) => a[1] - b[1]);
+                sorted.lastonline = lastOnlineMap.sort((a, b) => a[1] - b[1]).map(([node]) => node);
             }
 
             // Remove the current offline nodes
@@ -2962,8 +2963,8 @@ let FriendsPageClass = (function(){
 
             // So we can replace them in sorted order
             let searchResults = document.querySelector("#search_results");
-            for (let item of sorted[sortBy]) {
-                searchResults.insertAdjacentElement("beforeend", item[0]);
+            for (let node of sorted[sortBy]) {
+                searchResults.insertAdjacentElement("beforeend", node);
             }
 
             SyncedStorage.set("sortfriendsby", sortBy);
