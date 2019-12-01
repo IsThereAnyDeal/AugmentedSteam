@@ -2639,8 +2639,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   content: ")";
 }
 
-.es_app_btn {
-  display: block !important;
+/* right column 3rd party sites buttons */
+.rightcol.game_meta_data .es_app_btn {
+  display: block;
   margin-bottom: 6px;
 }
 
