@@ -1477,7 +1477,7 @@ class AppPageClass extends StorePageClass {
     replaceDevPubLinks() {
         if (!this.isAppPage()) { return; }
 
-        document.querySelectorAll(".dev_row a").forEach((linkNode, i) => {
+        document.querySelectorAll("#game_highlights .dev_row a,.details_block .dev_row:not(:last-of-type) a").forEach((linkNode, i) => {
             let homepageLink = new URL(linkNode.href);
             if (homepageLink.pathname === "/search/") return;
 
