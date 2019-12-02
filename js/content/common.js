@@ -371,6 +371,7 @@ CookieStorage.cache = new Map();
 
 let RequestData = (function(){
     let self = {};
+    let fetchFn = (typeof content !== 'undefined' && content && content.fetch) || fetch;
 
     self.getHttp = function(url, settings, responseType="text") {
         settings = settings || {};
@@ -385,8 +386,6 @@ let RequestData = (function(){
             url = window.location.protocol + url;
             console.warn("Requesting URL without protocol, please update");
         }
-
-        let fetchFn = (typeof content !== 'undefined' && content && content.fetch) || fetch;
 
         return fetchFn(url, settings).then(response => {
 
