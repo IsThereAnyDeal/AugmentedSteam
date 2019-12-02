@@ -2412,37 +2412,56 @@ class MediaPage {
     }
 
     _horizontalScrolling() {
+        if (!SyncedStorage.get("horizontalscrolling")) { return; }
 
         let strip = document.querySelector("#highlight_strip");
-        if (!strip || !SyncedStorage.get("horizontalscrolling")) { return; }
+        if (strip) {
+            new HorizontalScroller(
+                strip,
+                document.querySelector("#highlight_slider_left"),
+                document.querySelector("#highlight_slider_right")
+            );
+        }
 
-        let lastScroll = Date.now();
-        strip.addEventListener("wheel", scrollStrip, false);
-        function scrollStrip(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            
-            if (Date.now() - lastScroll < 200) {
-                return;
-            } 
-    
-            lastScroll = Date.now();
-            let allElem = document.querySelectorAll(".highlight_strip_item");
-            let isScrollDown = ev.deltaY > 0;
-            let siblingProp = isScrollDown ? "nextSibling" : "previousSibling";
-            
-            let targetElem = document.querySelector(".highlight_strip_item.focus")[siblingProp];
-            while (!targetElem.classList || !targetElem.classList.contains("highlight_strip_item")) {
-                targetElem = targetElem[siblingProp];
-                if (!targetElem) {
-                    targetElem = allElem[isScrollDown ? 0 : allElem.length - 1];
-                }
-            }
-            
-            targetElem.click();
+        let nodes = document.querySelectorAll(".store_horizontal_autoslider_ctn");
+        for (let node of nodes) {
+            new HorizontalScroller(
+                node,
+                node.parentNode.querySelector(".slider_left"),
+                node.parentNode.querySelector(".slider_right")
+            )
         }
     }
 }
+
+
+class HorizontalScroller {
+
+    constructor(parentNode, controlLeftNode, controlRightNode) {
+        this._controlLeft = controlLeftNode;
+        this._controlRight = controlRightNode;
+
+        this._lastScroll = 0;
+        parentNode.addEventListener("wheel", (e) => { this._scrollHandler(e); });
+    }
+
+    _scrollHandler(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (Date.now() - this._lastScroll < 200) { return; }
+        this._lastScroll = Date.now();
+
+        let isScrollDown = e.deltaY > 0;
+        if (isScrollDown) {
+            this._controlRight.click();
+        } else {
+            this._controlLeft.click();
+        }
+    }
+}
+
+
 
 class Sortbox {
     _dselectLoaded = false;
