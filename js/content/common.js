@@ -2438,19 +2438,26 @@ class HorizontalScroller {
 // Most of the code here comes from dselect.js
 class Sortbox {
 
-    static handleMouseClick(e) {
-        for (let key in this.activeDropLists) {
-			if (!this.activeDropLists[key]) continue;
+    static init() {
+        this._activeDropLists = {};
+        this._lastSelectHideTime = 0;
+
+        document.addEventListener("mousedown", e => this._handleMouseClick(e));
+    }
+
+    static _handleMouseClick(e) {
+        for (let key of Object.keys(this._activeDropLists)) {
+			if (!this._activeDropLists[key]) continue;
 			
 		    let ulAboveEvent = e.target.closest("ul");
 		
             if (ulAboveEvent && ulAboveEvent.id === `${key}_droplist`) continue;
 		
-            this.hide(key);
+            this._hide(key);
 	    }
     }
 
-    static highlightItem(id, index, bSetSelected) {
+    static _highlightItem(id, index, bSetSelected) {
         let droplist = document.querySelector(`#${id}_droplist`);
         let trigger = document.querySelector(`#${id}_trigger`);
         let rgItems = droplist.getElementsByTagName("a");
@@ -2492,68 +2499,54 @@ class Sortbox {
                 input.value = item.id;
                 input.dispatchEvent(new Event("change"));
                 
-                this.hide(id);
+                this._hide(id);
             }
         }
     }
 
-    static highlightItemByValue(id, value, bSetSelected) {
-        let droplist = document.querySelector(`#${id}_droplist`);
-        let rgItems = droplist.getElementsByTagName("a");
-        
-        for (let index = 0; index < rgItems.length; ++index) {
-            let item = rgItems[index];
-            if (item.id === value) {
-                this.highlightItem(id, index, bSetSelected);
-                return;
-            }
-        }
+    static _onFocus(id) {
+        this._activeDropLists[id] = true;
     }
 
-    static onFocus(id) { this.activeDropLists[id] = true; }
-
-    static onBlur(id) {
-		if (!this.classCheck(document.querySelector(`#${id}_trigger`), "activetrigger"))
-	        this.activeDropLists[id] = false;
+    static _onBlur(id) {
+		if (!this._classCheck(document.querySelector(`#${id}_trigger`), "activetrigger"))
+	        this._activeDropLists[id] = false;
     }
 
-    static hide(id) {
+    static _hide(id) {
         let droplist = document.querySelector(`#${id}_droplist`);
         let trigger = document.querySelector(`#${id}_trigger`);
 	
 		let d = new Date();
-	    this.lastSelectHideTime = d.valueOf();
+	    this._lastSelectHideTime = d.valueOf();
 	
         trigger.className = "trigger";
         droplist.className = "dropdownhidden";
-        this.activeDropLists[id] = false;
+        this._activeDropLists[id] = false;
         trigger.focus();
     }
 
-    static show(id) {
-		let d = new Date()
-	    if (d - this.lastSelectHideTime < 50) return;
+    static _show(id) {
+		let d = new Date();
+	    if (d - this._lastSelectHideTime < 50) return;
 		
         let droplist = document.querySelector(`#${id}_droplist`);
         let trigger = document.querySelector(`#${id}_trigger`);
         
         trigger.className = "activetrigger";
         droplist.className = "dropdownvisible";
-        this.activeDropLists[id] = true;
+        this._activeDropLists[id] = true;
         trigger.focus();
     }
 
-    static onTriggerClick(id) {
-        if ( !this.classCheck(document.querySelector(`#${id}_trigger`), "activetrigger"))
-            this.show(id);
+    static _onTriggerClick(id) {
+        if (!this._classCheck(document.querySelector(`#${id}_trigger`), "activetrigger")) {
+            this._show(id);
+        }
     }
 
-    static classCheck(element, className) {
+    static _classCheck(element, className) {
         return new RegExp(`\\b${className}\\b`).test(element.className);
-    }
-
-    static swapClass(element, class1, class2) {
-        element.className = this.classCheck(element, class1) ? class2 : class1;
     }
 
     static get(name, options, defaultOption, onChange) {
@@ -2580,9 +2573,9 @@ class Sortbox {
         box.querySelector(`#${id}`).addEventListener("change", function() { onChange(this.value); });
 
         let trigger = box.querySelector(`#${id}_trigger`);
-        trigger.addEventListener("focus", () => this.onFocus(id));
-        trigger.addEventListener("blur", () => this.onBlur(id));
-        trigger.addEventListener("click", () => this.onTriggerClick(id));
+        trigger.addEventListener("focus", () => this._onFocus(id));
+        trigger.addEventListener("blur", () => this._onBlur(id));
+        trigger.addEventListener("click", () => this._onTriggerClick(id));
 
         let ul = box.querySelector("ul");
         for (let i = 0; i < options.length; ++i) {
@@ -2602,14 +2595,12 @@ class Sortbox {
 
             let a = ul.querySelector("li:last-child > a");
             //a.href = "javascript:DSelectNoop()";
-            a.addEventListener("mouseover", () => this.highlightItem(id, i, false));
-            a.addEventListener("click",     () => this.highlightItem(id, i, true));
+            a.addEventListener("mouseover", () => this._highlightItem(id, i, false));
+            a.addEventListener("click",     () => this._highlightItem(id, i, true));
         }
 
         return box;
     }
 }
-Sortbox.activeDropLists = {};
-Sortbox.lastSelectHideTime = 0;
 
-document.addEventListener("mousedown", e => Sortbox.handleMouseClick(e));
+Sortbox.init();
