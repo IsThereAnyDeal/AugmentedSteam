@@ -2438,17 +2438,128 @@ class HorizontalScroller {
     }
 }
 
-
-
+// Most of the code here comes from dselect.js
 class Sortbox {
-    _dselectLoaded = false;
+
+    static handleMouseClick(e) {
+        for (let key in this.activeDropLists) {
+			if (!this.activeDropLists[key]) continue;
+			
+		    let ulAboveEvent = e.target.closest("ul");
+		
+            if (ulAboveEvent && ulAboveEvent.id === `${key}_droplist`) continue;
+		
+            this.hide(key);
+	    }
+    }
+
+    static highlightItem(id, index, bSetSelected) {
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let trigger = document.querySelector(`#${id}_trigger`);
+        let rgItems = droplist.getElementsByTagName("a");
+
+        if (index >= 0 && index < rgItems.length ) {
+            let item = rgItems[index];
+            
+            if (typeof trigger.highlightedItem !== "undefined" && trigger.highlightedItem !== index)
+                rgItems[trigger.highlightedItem].className = "inactive_selection";
+                
+            trigger.highlightedItem = index;
+            rgItems[index].className = "highlighted_selection";
+            
+            let yOffset = rgItems[index].offsetTop + rgItems[index].clientHeight;
+            let curVisibleOffset = droplist.scrollTop + droplist.clientHeight;
+            let bScrolledDown = false;
+            let nMaxLoopIterations = rgItems.length;
+            let nLoopCounter = 0;
+
+            while (curVisibleOffset < yOffset && nLoopCounter++ < nMaxLoopIterations) {
+                droplist.scrollTop += rgItems[index].clientHeight;
+                curVisibleOffset = droplist.scrollTop+droplist.clientHeight;
+                bScrolledDown = true;
+            }
+            
+            if ( !bScrolledDown ) {
+                nLoopCounter = 0;
+                yOffset = rgItems[index].offsetTop;
+                curVisibleOffset = droplist.scrollTop;
+                while(curVisibleOffset > yOffset && nLoopCounter++ < nMaxLoopIterations) {
+                    droplist.scrollTop -= rgItems[index].clientHeight;
+                    curVisibleOffset = droplist.scrollTop;
+                }
+            }
+            
+            if (bSetSelected) {
+                HTML.inner(trigger, item.innerHTML);
+                let input = document.querySelector(`#${id}`);
+                input.value = item.id;
+                input.dispatchEvent(new Event("change"));
+                
+                this.hide(id);
+            }
+        }
+    }
+
+    static highlightItemByValue(id, value, bSetSelected) {
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let rgItems = droplist.getElementsByTagName("a");
+        
+        for (let index = 0; index < rgItems.length; ++index) {
+            let item = rgItems[index];
+            if (item.id === value) {
+                this.highlightItem(id, index, bSetSelected);
+                return;
+            }
+        }
+    }
+
+    static onFocus(id) { this.activeDropLists[id] = true; }
+
+    static onBlur(id) {
+		if (!this.classCheck(document.querySelector(`#${id}_trigger`), "activetrigger"))
+	        this.activeDropLists[id] = false;
+    }
+
+    static hide(id) {
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let trigger = document.querySelector(`#${id}_trigger`);
+	
+		let d = new Date();
+	    this.lastSelectHideTime = d.valueOf();
+	
+        trigger.className = "trigger";
+        droplist.className = "dropdownhidden";
+        this.activeDropLists[id] = false;
+        trigger.focus();
+    }
+
+    static show(id) {
+		let d = new Date()
+	    if (d - this.lastSelectHideTime < 50) return;
+		
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let trigger = document.querySelector(`#${id}_trigger`);
+        
+        trigger.className = "activetrigger";
+        droplist.className = "dropdownvisible";
+        this.activeDropLists[id] = true;
+        trigger.focus();
+    }
+
+    static onTriggerClick(id) {
+        if ( !this.classCheck(document.querySelector(`#${id}_trigger`), "activetrigger"))
+            this.show(id);
+    }
+
+    static classCheck(element, className) {
+        return new RegExp(`\\b${className}\\b`).test(element.className);
+    }
+
+    static swapClass(element, class1, class2) {
+        element.className = this.classCheck(element, class1) ? class2 : class1;
+    }
 
     static get(name, options, defaultOption, onChange) {
-
-        if (!this._dselectLoaded) {
-            DOMHelper.insertScript({ src: "https://steamstore-a.akamaihd.net/public/javascript/dselect.js" });
-            this._dselectLoaded = true;
-        }
 
         let id = `sort_by_${name}`;
         
@@ -2460,16 +2571,21 @@ class Sortbox {
         let box = HTML.element(
         `<div class="es-sortbox">
             <div class="es-sortbox__label">${Localization.str.sort_by}</div>
-            <div class="es-sortbox__container" onkeydown="HandleKeyDown">
-                <input id="${id}" type="hidden" name="${name}" value="${defaultOption}" onchange="Messenger.postMessage('${id}', this.value)">
-                <a class="trigger" id="${id}_trigger" href="javascript:DSelectNoop()" onfocus="DSelectOnFocus('${id}')" onblur="DSelectOnBlur('${id}')" onclick="DSelectOnTriggerClick('${id}')"></a>
+            <div class="es-sortbox__container">
+                <input id="${id}" type="hidden" name="${name}" value="${defaultOption}">
+                <a class="trigger" id="${id}_trigger"></a>
                 <div class="es-dropdown">
                     <ul id="${id}_droplist" class="es-dropdown__list dropdownhidden"></ul>
                 </div>
             </div>
         </div>`);
 
-        Messenger.addMessageListener(id, option => onChange(option));
+        box.querySelector(`#${id}`).addEventListener("change", function() { onChange(this.value); });
+
+        let trigger = box.querySelector(`#${id}_trigger`);
+        trigger.addEventListener("focus", () => this.onFocus(id));
+        trigger.addEventListener("blur", () => this.onBlur(id));
+        trigger.addEventListener("click", () => this.onTriggerClick(id));
 
         let ul = box.querySelector("ul");
         for (let i = 0; i < options.length; ++i) {
@@ -2488,11 +2604,15 @@ class Sortbox {
                 </li>`);
 
             let a = ul.querySelector("li:last-child > a");
-            a.href = "javascript:DSelectNoop()";
-            a.addEventListener("mouseover", () => ExtensionLayer.runInPageContext(`() => DHighlightItem("${id}", ${i}, false)`));
-            a.addEventListener("click",     () => ExtensionLayer.runInPageContext(`() => DHighlightItem("${id}", ${i}, true)`));
+            //a.href = "javascript:DSelectNoop()";
+            a.addEventListener("mouseover", () => this.highlightItem(id, i, false));
+            a.addEventListener("click",     () => this.highlightItem(id, i, true));
         }
 
         return box;
     }
 }
+Sortbox.activeDropLists = {};
+Sortbox.lastSelectHideTime = 0;
+
+document.addEventListener("mousedown", e => Sortbox.handleMouseClick(e));
