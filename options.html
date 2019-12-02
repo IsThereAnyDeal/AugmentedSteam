@@ -8,7 +8,7 @@
     <title>Options - Augmented Steam</title>
     <base target="_blank">
     <template id='add_custom_profile_link'>
-        <div class="custom-link option">
+        <div class="custom-link option js-custom-link">
             <input type="checkbox" name="profile_custom_enabled" />
             <div>
                 <div>
@@ -26,7 +26,7 @@
                     <input class="custom-link__input"  type="text" name="profile_custom_icon">
                 </div>
             </div>
-            <button type="button" name="profile_custom_remove" class="custom-link__close"></button>
+            <button type="button" name="profile_custom_remove" class="custom-link__close js-custom-link-remove"></button>
         </div>
     </template>
 </head>
@@ -576,10 +576,11 @@
                             <label for="regional_hideworld" data-locale-text="options.regional_hideworld">Hide globe indicator</label>
                         </div>
                         <div id="region_selects">
+                            <div class="js-regions"></div>
                             <div>
-                                <button id="add_another_region" data-locale-text="options.add_another_region">Add</button>
-                                <button id="reset_countries" data-locale-text="theworddefault">Default</button>
-                                <button id="clear_countries" data-locale-text="thewordclear">Clear</button>
+                                <button class="js-region-add" data-locale-text="options.add_another_region">Add</button>
+                                <button class="js-region-reset" data-locale-text="theworddefault">Default</button>
+                                <button class="js-region-clear" data-locale-text="thewordclear">Clear</button>
                             </div>
                         </div>
                     </div>
