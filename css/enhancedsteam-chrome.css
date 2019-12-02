@@ -94,6 +94,6 @@
   background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/astatsnl.png");
 }
 
-.es_flag:before {
+.es-flag:before {
   background-image: url("chrome-extension://__MSG_@@extension_id__/img/flags/flags.png");
 }

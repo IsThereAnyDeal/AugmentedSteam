@@ -281,7 +281,7 @@ class Region {
         this._container.addEventListener("change", e => {
             let node = e.target.closest(".js-region-parent");
             if (node) {
-                Region._changeFlag(node.querySelector(".es_flag"), e.target);
+                Region._changeFlag(node.querySelector(".es-flag"), e.target);
             }
             this._save();
         });
@@ -312,7 +312,7 @@ class Region {
 
     static _changeFlag(node, selectnode) {
         node.className = "";
-        node.classList.add("es_flag_" + selectnode.value, "es_flag");
+        node.classList.add("es-flag--" + selectnode.value, "es-flag");
     }
 
     static _removeHandler(e) {
@@ -347,11 +347,11 @@ class Region {
 
         let countryClass = "";
         if (country) {
-            countryClass = `es_flag_${country}`;
+            countryClass = `es-flag--${country}`;
         }
 
         let html = `<div class="country_parent js-region-parent">
-                <span class='es_flag ${countryClass}'></span>
+                <span class='es-flag ${countryClass}'></span>
                 <select class='regional_country js-region'>${options}</select>
                 <button type="button" class="custom-link__close js-region-remove"></button>
             </div>`;

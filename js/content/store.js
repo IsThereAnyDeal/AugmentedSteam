@@ -424,10 +424,7 @@ class StorePageClass {
                         console.groupEnd();
                     }
 
-                    html =
-                        `<div class="es_regional_price es_flag es_flag_${country}">
-                            ${priceRegion}
-                        `;
+                    html = `<div class="es-regprice es-flag es-flag--${country}">${priceRegion}`;
 
                     if (priceLocal && priceUser) {
                         let percentageIndicator = "equal";
@@ -441,15 +438,15 @@ class StorePageClass {
                         }
 
                         html +=
-                            `<span class="es_regional_converted">(${priceUser})</span>
-                            <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>`
+                            `<span class="es-regprice__converted">${priceUser}</span>
+                            <span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`
                     }
                     
                     html += "</div>";
                 } else {
                     html =
-                        `<div class="es_regional_price es_flag es_flag_${country}">
-                            <span class="es_regional_unavailable">${Localization.str.region_unavailable}</span>
+                        `<div class="es-regprice es-flag es-flag--${country}">
+                            <span class="es-regprice__none">${Localization.str.region_unavailable}</span>
                         </div>`;
                 }
 
