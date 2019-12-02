@@ -1,14 +1,24 @@
+
 /* Back To Top button */
 .es_btt {
-  position: fixed; 
-  bottom: 20px;
-  display: block; 
+  position: fixed;
+  display: flex;
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
   z-index: 9999;
   opacity: 0;
   box-shadow: 0 0 10px 2px #000000;
+  top: 20px;
+  right: 50px;
+  font-size: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  background: linear-gradient( to bottom, rgba(33,101,138,1) 5%, rgba(23,67,92,1) 95%);
 }
-.es_btt > span {
-  font-size: 180% !important;
+.es_btt:hover {
+  background: linear-gradient( to bottom, rgba(47,137,188,1) 5%, rgba(23,67,92,1) 95%);
 }
 
 /* Required for "Customize" button and YouTube / Steam tabs */
@@ -1443,10 +1453,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin: 5px;
 }
 .es_screenshot_download_btn i {
-	background-image: url(https://steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1);
-}
-.es_screenshot_open_btn i {
-	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAAmJLR0QA/4ePzL8AAAC1SURBVChTlYwxDgFRFEXvmMQStKKQWM+wCzoiEhISkUyHLViJVqGg0igUqkl+MSGSIY7CTPz/p3Je9d45eZIFTR64bOVCROYEmXyIeNmFCBlwxGAwjCRmzgfEBHhiMMRlDeLCjXr+vqRBwCnXXc+9/WDn6DUdMjdYWHpFINHmYQchm1wvCehJEi0rkKgwZ89QYkpSHK3gB8kfwZWUmqcbPDkUSwyknJ25A/0iqBJzxeXCmPDrP4LlL/iR+JDnAAAAAElFTkSuQmCC');
+	background-image: url('https://steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1');
 }
 .screenshot_popup_modal_content:fullscreen .es_screenshot_fullscreen_toggle i {
   background-position: bottom left;
@@ -2027,6 +2034,22 @@ input[type=checkbox].es_dlc_selection:checked + label {
   float: right;
   margin-top: 6px;
   clear: right;
+}
+.browse_tag_game .es_tags {
+  display : table;
+  margin-left: 8px;
+}
+.recommendation_highlight .es_tags {
+  position: absolute;
+  margin-top: -20px;
+}
+.similar_grid_item .es_tags {
+  float: right;
+}
+.recommendation_carousel_item .es_tags,
+.friendplaytime_game .es_tags {
+  float: left;
+  margin-left: 8px;
 }
 .game_area_dlc_price .es_tags {
   margin-top: -1px;
@@ -2623,8 +2646,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   content: ")";
 }
 
-.es_app_btn {
-  display: block !important;
+/* right column 3rd party sites buttons */
+.rightcol.game_meta_data .es_app_btn {
+  display: block;
   margin-bottom: 6px;
 }
 

@@ -301,15 +301,12 @@ class StorePageClass {
     }
 
     getRightColLinkHtml(cls, url, str) {
-        return `<a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}" style="display: block; margin-bottom: 6px;">
+        return `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span>
                 </a>`;
     }
 
     addLinks(type) {
-        if (!SyncedStorage.get("showsteamdb")
-         && !SyncedStorage.get("showbarter")
-         && !SyncedStorage.get("showitadlinks")) { return; }
 
         let gameid = null;
         let node = null;
@@ -340,31 +337,28 @@ class StorePageClass {
             HTML.afterBegin(node,
                 this.getRightColLinkHtml(
                     "bartervg_ico",
-                    `https://barter.vg/steam/${type}/${gameid}`,
-                    Localization.str.view_on_website.replace("__website__", 'Barter.vg'))
-                );
+                    `https://barter.vg/steam/${type}/${gameid}/`,
+                    Localization.str.view_on_website.replace("__website__", "Barter.vg")));
         }
 
         if (SyncedStorage.get("showsteamdb")) {
             HTML.afterBegin(node,
                 this.getRightColLinkHtml(
                     "steamdb_ico",
-                    `https://steamdb.info/${type}/${gameid}`,
-                    Localization.str.view_on_website.replace("__website__", 'Steam Database'))
-                );
+                    `https://steamdb.info/${type}/${gameid}/`,
+                    Localization.str.view_on_website.replace("__website__", "Steam Database")));
         }
 
         if (SyncedStorage.get("showitadlinks")) {
             HTML.afterBegin(node,
                 this.getRightColLinkHtml(
                     "itad_ico",
-                    `https://isthereanydeal.com/steam/${type}/${gameid}`,
-                    Localization.str.view_on_website.replace("__website__", 'IsThereAnyDeal'))
-            );
+                    `https://isthereanydeal.com/steam/${type}/${gameid}/`,
+                    Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal")));
         }
     }
 
-    showRegionalPricing(type) {
+    async showRegionalPricing(type) {
         let showRegionalPrice = SyncedStorage.get("showregionalprice");
         if (showRegionalPrice === "off") { return; }
 
@@ -372,116 +366,112 @@ class StorePageClass {
         if (!countries || countries.length === 0) { return; }
 
         let localCountry = User.getCountry().toLowerCase();
-        if (countries.indexOf(localCountry) === -1) {
-            countries.push(localCountry);
-        }
+        if (!countries.includes(localCountry)) countries.push(localCountry);
 
-        let subids = this.getAllSubids();
-        subids.forEach(subid => {
-            if (!subid) { return; }
+        for (let subid of this.getAllSubids()) {
+            if (!subid) return;
+            
             let promises = [];
-
             let prices = {};
 
-            countries.forEach(country => {
+            for (let country of countries) {
+                promises.push(
+                    RequestData.getJson(`https://store.steampowered.com/api/packagedetails/?packageids=${subid}&cc=${country}`).then(result => {
+                        if (!result || !result[subid] || !result[subid].success) { return; }
+                        prices[country] = result[subid].data.price;
+                    })
+                );
+            }
 
-                let promise = RequestData.getJson("https://store.steampowered.com/api/packagedetails/?packageids="+subid+"&cc="+country).then(result => {
-                    if (!result || !result[subid] || !result[subid].success) { return; }
-                    prices[country] = result[subid].data.price;
-                });
-                promises.push(promise);
-            });
+            await Promise.all(promises);
+            
+            let node = document.querySelector(`input[name=subid][value="${subid}"]`)
+                .closest(".game_area_purchase_game_wrapper,#game_area_purchase,.sale_page_purchase_item")
+                .querySelector(".game_purchase_action");
 
-            Promise.all(promises).then(result => {
+            let apiPrice = prices[User.getCountry().toLowerCase()];
+            let priceLocal;
+            try {
+                priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
+            } catch(err) {
+                console.group("Regional pricing");
+                console.error(err);
+                console.warn("Can't show relative price differences to any other currencies");
+                console.groupEnd();
+            }
 
-                let node = document.querySelector("input[name=subid][value='"+subid+"']")
-                    .closest(".game_area_purchase_game_wrapper,#game_area_purchase,.sale_page_purchase_item")
-                    .querySelector(".game_purchase_action");
+            let pricingDiv = document.createElement("div");
+            pricingDiv.classList.add("es_regional_container");
+            pricingDiv.classList.add(`es_regional_${type || "app"}`);
 
-                let apiPrice = prices[User.getCountry().toLowerCase()];
-                let priceLocal;
-                try {
-                    priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
-                } catch(err) {
-                    console.group("Regional pricing");
-                    console.error(err);
-                    console.warn("Can't show relative price differences to any other currencies");
-                    console.groupEnd();
-                }
+            if (showRegionalPrice === "mouse") {
+                HTML.inner(pricingDiv, pricingDiv.innerHTML + '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>');
+            }
 
-                let pricingDiv = document.createElement("div");
-                pricingDiv.classList.add("es_regional_container");
-                pricingDiv.classList.add("es_regional_" + (type || "app"));
+            for (let country of countries) {
+                let apiPrice = prices[country];
+                let html = "";
 
-                if (showRegionalPrice === "mouse") {
-                    HTML.inner(pricingDiv, pricingDiv.innerHTML + '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>');
-                }
-
-                countries.forEach(country => {
-                    let apiPrice = prices[country];
-                    let html = "";
-
-                    if (apiPrice) {
-                        let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency);
-                        let priceUser;
-                        try {
-                            priceUser = priceRegion.inCurrency(Currency.customCurrency);
-                        } catch(err) {
-                            console.group("Regional pricing");
-                            console.error(err);
-                            console.warn(`Not able to show converted price and relative price differences for country code "%s"`, country.toUpperCase());
-                            console.groupEnd();
-                        }
-
-                        html =
-                            `<div class="es_regional_price es_flag es_flag_${country}">
-                                ${priceRegion}
-                            `;
-
-                        if (priceLocal && priceUser) {
-                            let percentageIndicator = "equal";
-                            let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
-
-                            if (percentage < 0) {
-                                percentage = Math.abs(percentage);
-                                percentageIndicator = "lower";
-                            } else if (percentage > 0) {
-                                percentageIndicator = "higher";
-                            }
-
-                            html +=
-                                `<span class="es_regional_converted">(${priceUser})</span>
-                                <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>`
-                        }
-                        
-                        html += "</div>";
-                    } else {
-                        html =
-                            `<div class="es_regional_price es_flag es_flag_${country}">
-                                <span class="es_regional_unavailable">${Localization.str.region_unavailable}</span>
-                            </div>`;
+                if (apiPrice) {
+                    let priceRegion = new Price(apiPrice.final / 100, apiPrice.currency);
+                    let priceUser;
+                    try {
+                        priceUser = priceRegion.inCurrency(Currency.customCurrency);
+                    } catch(err) {
+                        console.group("Regional pricing");
+                        console.error(err);
+                        console.warn(`Not able to show converted price and relative price differences for country code "%s"`, country.toUpperCase());
+                        console.groupEnd();
                     }
 
-                    HTML.inner(pricingDiv, pricingDiv.innerHTML + html);
-                });
+                    html =
+                        `<div class="es_regional_price es_flag es_flag_${country}">
+                            ${priceRegion}
+                        `;
 
-                let purchaseArea = node.closest(".game_area_purchase_game,.sale_page_purchase_item");
-                purchaseArea.classList.add("es_regional_prices");
+                    if (priceLocal && priceUser) {
+                        let percentageIndicator = "equal";
+                        let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
 
-                if (showRegionalPrice === "always") {
-                    node.insertAdjacentElement("beforebegin", pricingDiv);
-                    purchaseArea.classList.add("es_regional_always");
+                        if (percentage < 0) {
+                            percentage = Math.abs(percentage);
+                            percentageIndicator = "lower";
+                        } else if (percentage > 0) {
+                            percentageIndicator = "higher";
+                        }
+
+                        html +=
+                            `<span class="es_regional_converted">(${priceUser})</span>
+                            <span class="es_percentage es_percentage_${percentageIndicator}">${percentage}%</span>`
+                    }
+                    
+                    html += "</div>";
                 } else {
-                    let priceNode = node.querySelector(".price,.discount_prices");
-                    priceNode.insertAdjacentElement("beforeend", pricingDiv);
-                    priceNode.classList.add("es_regional_onmouse");
-
-                    if (!SyncedStorage.get("regional_hideworld")) {
-                        priceNode.classList.add("es_regional_icon");
-                    }
+                    html =
+                        `<div class="es_regional_price es_flag es_flag_${country}">
+                            <span class="es_regional_unavailable">${Localization.str.region_unavailable}</span>
+                        </div>`;
                 }
-            })
-        });
+
+                HTML.inner(pricingDiv, pricingDiv.innerHTML + html);
+            }
+
+            let purchaseArea = node.closest(".game_area_purchase_game,.sale_page_purchase_item");
+            purchaseArea.classList.add("es_regional_prices");
+
+            if (showRegionalPrice === "always") {
+                node.insertAdjacentElement("beforebegin", pricingDiv);
+                purchaseArea.classList.add("es_regional_always");
+            } else {
+                let priceNode = node.querySelector(".price,.discount_prices");
+                priceNode.insertAdjacentElement("beforeend", pricingDiv);
+                priceNode.classList.add("es_regional_onmouse");
+
+                if (!SyncedStorage.get("regional_hideworld")) {
+                    priceNode.classList.add("es_regional_icon");
+                }
+            }
+        }  
     }
 
     forceVideoMP4() {
@@ -654,7 +644,6 @@ class AppPageClass extends StorePageClass {
         this.addReviewToggleButton();
         this.addHelpButton();
         this.addSupport();
-        this.addHorizontalScrolling();
     }
 
     initHdPlayer() {
@@ -1481,18 +1470,15 @@ class AppPageClass extends StorePageClass {
     replaceDevPubLinks() {
         if (!this.isAppPage()) { return; }
 
-        let rows = document.querySelectorAll(".dev_row a");
-        for (let linkNode of rows) {
+        document.querySelectorAll("#game_highlights .dev_row a,.details_block .dev_row:not(:last-of-type) a").forEach((linkNode, i) => {
             let homepageLink = new URL(linkNode.href);
-            if (homepageLink.pathname === "/search/") {
-                continue;
-            }
+            if (homepageLink.pathname === "/search/") return;
 
-            let name = linkNode.parentNode.id === "developers_list" ? "developer" : "publisher";
+            let name = i % 2 ? "publisher" : "developer"; // These elements appear in pairs, where the first represents the developer and the second the publisher
             let value = linkNode.innerText;
             linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
             HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
-        }
+        });
 
         for (let moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {
             if (moreBtn) { moreBtn.remove(); }
@@ -1572,47 +1558,39 @@ class AppPageClass extends StorePageClass {
     }
 
     addLinks(type) {
-        let linkNode = document.querySelector("#ReportAppBtn").parentNode;
+        let node = document.querySelector("#ReportAppBtn").parentNode;
 
         if (SyncedStorage.get("showpcgw")) {
-            let cls = "pcgw_btn";
-            let url = "http://pcgamingwiki.com/api/appid.php?appid=" + this.appid;
-            let str = Localization.str.wiki_article.replace("__pcgw__","PCGamingWiki");
-
-            HTML.afterBegin(linkNode,
-                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "pcgw_btn",
+                    `https://pcgamingwiki.com/api/appid.php?appid=${this.appid}`,
+                    Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki")));
         }
 
         if (SyncedStorage.get("showcompletionistme")) {
-            let cls = "completionistme_btn";
-            let url = "https://completionist.me/steam/app/" + this.appid;
-            let str = Localization.str.view_on_website.replace("__website__", 'Completionist.me');
-
-            HTML.afterBegin(linkNode,
-                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "completionistme_btn",
+                    `https://completionist.me/steam/app/${this.appid}/`,
+                    Localization.str.view_on_website.replace("__website__", "Completionist.me")));
         }
 
         if (SyncedStorage.get("showprotondb")) {
-            let cls = "protondb_btn";
-            let url = "https://www.protondb.com/app/" + this.appid;
-            let str = Localization.str.view_on_website.replace("__website__", 'ProtonDB');
-
-            HTML.afterBegin(linkNode,
-                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "protondb_btn",
+                    `https://www.protondb.com/app/${this.appid}/`,
+                    Localization.str.view_on_website.replace("__website__", "ProtonDB")));
         }
 
         if (this.hasCards && SyncedStorage.get("showsteamcardexchange")) {
             // FIXME some dlc have card category yet no card
-            let cls = "cardexchange_btn";
-            let url = "http://www.steamcardexchange.net/index.php?gamepage-appid-" + this.communityAppid;
-            let str = Localization.str.view_on_website.replace("__website__", 'Steam Card Exchange');
-
-            HTML.afterBegin(linkNode,
-                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
-                <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span></a>`);
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "cardexchange_btn",
+                    `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.communityAppid}/`,
+                    Localization.str.view_on_website.replace("__website__", "Steam Card Exchange")));
         }
 
         super.addLinks(type);
@@ -2240,31 +2218,6 @@ class AppPageClass extends StorePageClass {
 
             else if (title.includes("6 pack") ||
                 title.includes("six pack")) { splitPack(node, 6); }
-        }
-    }
-
-    addHorizontalScrolling() {
-
-        let sliders = document.querySelectorAll(".store_autoslider");
-        if (sliders.length === 0 || !SyncedStorage.get("horizontalscrolling")) { return; }
-
-        for (let slider of sliders) {
-            let lastScroll = Date.now();
-            let block = slider.parentNode;
-            block.addEventListener("wheel", scrollBlock, false);
-            function scrollBlock(ev) {
-                ev.preventDefault();
-                ev.stopPropagation();
-                
-                if (Date.now() - lastScroll < 200) {
-                    return;
-                } 
-        
-                lastScroll = Date.now();
-                let isScrollDown = ev.deltaY > 0;                
-                let targetElem = isScrollDown ? block.querySelector(".slider_right") : block.querySelector(".slider_left");
-                targetElem.click();
-            }
         }
     }
 }

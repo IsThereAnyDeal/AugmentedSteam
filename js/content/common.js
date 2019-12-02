@@ -371,6 +371,7 @@ CookieStorage.cache = new Map();
 
 let RequestData = (function(){
     let self = {};
+    let fetchFn = (typeof content !== 'undefined' && content && content.fetch) || fetch;
 
     self.getHttp = function(url, settings, responseType="text") {
         settings = settings || {};
@@ -385,8 +386,6 @@ let RequestData = (function(){
             url = window.location.protocol + url;
             console.warn("Requesting URL without protocol, please update");
         }
-
-        let fetchFn = (typeof content !== 'undefined' && content && content.fetch) || fetch;
 
         return fetchFn(url, settings).then(response => {
 
@@ -958,53 +957,31 @@ let EnhancedSteam = (function() {
     self.addBackToTop = function() {
         if (!SyncedStorage.get("show_backtotop") || document.querySelector("#BackToTop")) { return; }
 
-        HTML.afterBegin("body", `<div class="btn_darkblue_white_innerfade btn_medium_tall es_btt"><span>&#x2191;</span></div>`);
+        HTML.afterBegin("body", `<div class="es_btt">&#9650;</div>`);
+
         let node = document.querySelector(".es_btt");
-        let prevScrollHeight, timer;
 
-        node.addEventListener("click", gotop);
-        window.addEventListener("scroll", scrolling);
-        window.addEventListener("resize", resizing);
-        window.addEventListener("load", onLoad);
+        node.addEventListener("click", () => {
+            window.scroll({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+            });
+        });
 
-        onLoad();
-        
-        function onLoad() {
-            scrolling();
-            resizing();
-        }
+        window.addEventListener("scroll", opacityHandler);
 
-        function gotop() {
-            if (timer) { return; }
-            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
-            timer = setInterval(function() {
-                if (scrollHeight <= 1) {
-                    document.body.scrollTop = 0; // For Safari
-                    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-                    clearInterval(timer);
-                    timer = null;
-                }
-                document.body.scrollTop = scrollHeight; // For Safari
-                document.documentElement.scrollTop = scrollHeight; // For Chrome, Firefox, IE and Opera
-                scrollHeight -= scrollHeight / 20;
-            }, 10);
-        }
+        let scrollHandled = false;
 
-        function scrolling() {
-            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
-            if (prevScrollHeight && prevScrollHeight < scrollHeight) {
-                clearInterval(timer);
-                timer = null;
-            }
-            prevScrollHeight = scrollHeight;
-            node.style.opacity = Math.min(Math.max((scrollHeight - 200) / 800, 0), 1);
-            node.style.display = node.style.opacity >= 0.1 ? "block" : "none";
-        }
+        function opacityHandler() {
+            if (scrollHandled) { return; }
 
-        function resizing() {
-            let winWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-            let headerWidth = document.querySelector("div#global_header .content").offsetWidth;
-            node.style.right = `${headerWidth > 0 ? (winWidth / 2) - (headerWidth / 2) - node.offsetWidth - 20 : 20}px`;
+            window.requestAnimationFrame(() => {
+                let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
+                node.style.opacity = Math.min(Math.max((scrollHeight - 200) / 800, 0), 1);
+                scrollHandled = false;
+            });
+            scrollHandled = true;
         }
     };
 
@@ -1502,10 +1479,12 @@ let Highlights = (function(){
             tagCssLoaded = true;
 
             let tagCss = [];
-            ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
+            let tagNames = ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"];
+            for (let name of tagNames) {
                 let color = SyncedStorage.get(`tag_${name}_color`);
                 tagCss.push(`.es_tag_${name} { background-color: ${color}; }`);
-            });
+            }
+
             let style = document.createElement('style');
             style.id = 'es_tag_styles';
             style.textContent = tagCss.join("\n");
@@ -1516,13 +1495,13 @@ let Highlights = (function(){
         // Add the tags container if needed
         let tags = node.querySelectorAll(".es_tags");
         if (tags.length === 0) {
-            tags = HTMLParser.htmlToElement('<div class="es_tags' + (tagShort ? ' es_tags_short' : '') + '" />');
+            tags = HTMLParser.htmlToElement(`<div class="es_tags ${tagShort ? 'es_tags_short' : ''}"/>`);
 
             let root;
             if (node.classList.contains("tab_row")) { // can't find it
                 root = node.querySelector(".tab_desc").classList.remove("with_discount");
 
-                node.querySelector(".tab_discount").style.top="15px";
+                node.querySelector(".tab_discount").style.top = "15px";
                 root.querySelector("h4").insertAdjacentElement("afterend", tags);
             }
             else if (node.classList.contains("home_smallcap")) {
@@ -1542,15 +1521,8 @@ let Highlights = (function(){
                 root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", tags);
                 HTML.beforeBegin(root.querySelector(".game_purchase_action"), '<div style="clear: right;"></div>');
             }
-            else if (node.classList.contains("small_cap")) {
-                node.querySelector("h4").insertAdjacentElement("afterbegin", tags);
-            }
-            else if (node.classList.contains("browse_tag_game")) { // can't find it
-                root = node;
-
-                tags.style.display = "table";
-                tags.style.marginLeft = "8px";
-                root.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
+            else if (node.classList.contains("browse_tag_game")) {
+                node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
             }
             else if (node.classList.contains("game_area_dlc_row")) {
                 node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", tags);
@@ -1562,44 +1534,28 @@ let Highlights = (function(){
                 node.querySelector(".match_price").insertAdjacentElement("afterbegin", tags);
             }
             else if (node.classList.contains("cluster_capsule")) {
-                node.querySelector(".main_cap_platform_area").append($tags);
+                node.querySelector(".main_cap_platform_area").append(tags);
             }
-            else if (node.classList.contains("recommendation_highlight")) { // can't find it
-                root = node;
-
-                if (document.querySelector(".game_purchase_action")) {
-                    tags.style.float = "left";
-                    let node = root.querySelector(".game_purchase_action");
-                    node.insertAdjacentElement("beforebegin", tags);
-                    HTML.beforeBegin(node, '<div style="clear: right;"></div>');
-                } else {
-                    tags.style.fload = "right";
-                    HTML.beforeBegin(root.querySelector(".price").parentNode, tags);
-                }
+            else if (node.classList.contains("recommendation_highlight")) {
+                node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", tags);
             }
-            else if (node.classList.contains("similar_grid_item")) { // can't find it
-                root = node;
-                tags.style.float = "right";
-                root.querySelector(".similar_grid_price").querySelector(".price").append($tags);
+            else if (node.classList.contains("similar_grid_item")) {
+                node.querySelector(".regular_price, .discount_block").append(tags);
             }
-            else if (node.classList.contains("recommendation_carousel_item")) { // can't find it
-                root = node;
-                tags.style.float = "left";
-                root.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
+            else if (node.classList.contains("recommendation_carousel_item")) {
+                node.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
             }
-            else if (node.classList.contains("friendplaytime_game")) { // can't find it
-                root = node;
-                tags.style.float = "left";
-                root.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
+            else if (node.classList.contains("friendplaytime_game")) {
+                node.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
             }
 
             tags = [tags];
         }
 
         // Add the tag
-        for (let i=0,len=tags.length; i<len; i++) {
-            if (!tags[i].querySelector(".es_tag_" + tag)) {
-                HTML.beforeEnd(tags[i], '<span class="es_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
+        for (let n of tags) {
+            if (!n.querySelector(`es_tag_${tag}`)) {
+                HTML.beforeEnd(n, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
             }
         }
     }
@@ -1625,14 +1581,14 @@ let Highlights = (function(){
             highlightCssLoaded = true;
 
             let hlCss = [];
-
-            ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
+            let hlNames = ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"];
+            for (let name of hlNames) {
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(
                    `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
                     .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name} { outline: solid ${color}; }
                     .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }`);
-            });
+            }
 
             let style = document.createElement('style');
             style.id = 'es_highlight_styles';
@@ -1685,16 +1641,15 @@ let Highlights = (function(){
         node.classList.remove("ds_flagged");
     }
 
-
     function highlightItem(node, name) {
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("highlight_"+name)) {
-            node.classList.add("es_highlighted", "es_highlighted_"+name);
+        if (SyncedStorage.get(`highlight_${name}`)) {
+            node.classList.add("es_highlighted", `es_highlighted_${name}`);
             highlightNode(node);
         }
 
-        if (SyncedStorage.get("tag_" + name)) {
+        if (SyncedStorage.get(`tag_${name}`)) {
             addTag(node, name);
         }
     }
@@ -1737,8 +1692,7 @@ let Highlights = (function(){
     };
 
     self.highlightAndTag = function(nodes) {
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        for (let node of nodes) {
             let nodeToHighlight = node;
 
             if (node.classList.contains("item")) {
@@ -1831,7 +1785,7 @@ let Highlights = (function(){
 
         Messenger.onMessage("dynamicStoreReady").then(() => {
             selectors.forEach(selector => {
-                self.highlightAndTag(parent.querySelectorAll(selector+":not(.es_highlighted)"));
+                self.highlightAndTag(parent.querySelectorAll(`${selector}:not(.es_highlighted)`));
             });
     
             let searchBoxContents = parent.getElementById("search_suggestion_contents");
@@ -1849,7 +1803,6 @@ let Highlights = (function(){
     };
 
     return self;
-
 })();
 
 let DynamicStore = (function(){
@@ -2436,47 +2389,177 @@ class MediaPage {
     }
 
     _horizontalScrolling() {
+        if (!SyncedStorage.get("horizontalscrolling")) { return; }
 
         let strip = document.querySelector("#highlight_strip");
-        if (!strip || !SyncedStorage.get("horizontalscrolling")) { return; }
+        if (strip) {
+            new HorizontalScroller(
+                strip,
+                document.querySelector("#highlight_slider_left"),
+                document.querySelector("#highlight_slider_right")
+            );
+        }
 
-        let lastScroll = Date.now();
-        strip.addEventListener("wheel", scrollStrip, false);
-        function scrollStrip(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            
-            if (Date.now() - lastScroll < 200) {
-                return;
-            } 
-    
-            lastScroll = Date.now();
-            let allElem = document.querySelectorAll(".highlight_strip_item");
-            let isScrollDown = ev.deltaY > 0;
-            let siblingProp = isScrollDown ? "nextSibling" : "previousSibling";
-            
-            let targetElem = document.querySelector(".highlight_strip_item.focus")[siblingProp];
-            while (!targetElem.classList || !targetElem.classList.contains("highlight_strip_item")) {
-                targetElem = targetElem[siblingProp];
-                if (!targetElem) {
-                    targetElem = allElem[isScrollDown ? 0 : allElem.length - 1];
-                }
-            }
-            
-            targetElem.click();
+        let nodes = document.querySelectorAll(".store_horizontal_autoslider_ctn");
+        for (let node of nodes) {
+            new HorizontalScroller(
+                node,
+                node.parentNode.querySelector(".slider_left"),
+                node.parentNode.querySelector(".slider_right")
+            )
         }
     }
 }
 
+
+class HorizontalScroller {
+
+    constructor(parentNode, controlLeftNode, controlRightNode) {
+        this._controlLeft = controlLeftNode;
+        this._controlRight = controlRightNode;
+
+        this._lastScroll = 0;
+        parentNode.addEventListener("wheel", (e) => { this._scrollHandler(e); });
+    }
+
+    _scrollHandler(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (Date.now() - this._lastScroll < 200) { return; }
+        this._lastScroll = Date.now();
+
+        let isScrollDown = e.deltaY > 0;
+        if (isScrollDown) {
+            this._controlRight.click();
+        } else {
+            this._controlLeft.click();
+        }
+    }
+}
+
+// Most of the code here comes from dselect.js
 class Sortbox {
-    _dselectLoaded = false;
+
+    static handleMouseClick(e) {
+        for (let key in this.activeDropLists) {
+			if (!this.activeDropLists[key]) continue;
+			
+		    let ulAboveEvent = e.target.closest("ul");
+		
+            if (ulAboveEvent && ulAboveEvent.id === `${key}_droplist`) continue;
+		
+            this.hide(key);
+	    }
+    }
+
+    static highlightItem(id, index, bSetSelected) {
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let trigger = document.querySelector(`#${id}_trigger`);
+        let rgItems = droplist.getElementsByTagName("a");
+
+        if (index >= 0 && index < rgItems.length ) {
+            let item = rgItems[index];
+            
+            if (typeof trigger.highlightedItem !== "undefined" && trigger.highlightedItem !== index)
+                rgItems[trigger.highlightedItem].className = "inactive_selection";
+                
+            trigger.highlightedItem = index;
+            rgItems[index].className = "highlighted_selection";
+            
+            let yOffset = rgItems[index].offsetTop + rgItems[index].clientHeight;
+            let curVisibleOffset = droplist.scrollTop + droplist.clientHeight;
+            let bScrolledDown = false;
+            let nMaxLoopIterations = rgItems.length;
+            let nLoopCounter = 0;
+
+            while (curVisibleOffset < yOffset && nLoopCounter++ < nMaxLoopIterations) {
+                droplist.scrollTop += rgItems[index].clientHeight;
+                curVisibleOffset = droplist.scrollTop+droplist.clientHeight;
+                bScrolledDown = true;
+            }
+            
+            if ( !bScrolledDown ) {
+                nLoopCounter = 0;
+                yOffset = rgItems[index].offsetTop;
+                curVisibleOffset = droplist.scrollTop;
+                while(curVisibleOffset > yOffset && nLoopCounter++ < nMaxLoopIterations) {
+                    droplist.scrollTop -= rgItems[index].clientHeight;
+                    curVisibleOffset = droplist.scrollTop;
+                }
+            }
+            
+            if (bSetSelected) {
+                HTML.inner(trigger, item.innerHTML);
+                let input = document.querySelector(`#${id}`);
+                input.value = item.id;
+                input.dispatchEvent(new Event("change"));
+                
+                this.hide(id);
+            }
+        }
+    }
+
+    static highlightItemByValue(id, value, bSetSelected) {
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let rgItems = droplist.getElementsByTagName("a");
+        
+        for (let index = 0; index < rgItems.length; ++index) {
+            let item = rgItems[index];
+            if (item.id === value) {
+                this.highlightItem(id, index, bSetSelected);
+                return;
+            }
+        }
+    }
+
+    static onFocus(id) { this.activeDropLists[id] = true; }
+
+    static onBlur(id) {
+		if (!this.classCheck(document.querySelector(`#${id}_trigger`), "activetrigger"))
+	        this.activeDropLists[id] = false;
+    }
+
+    static hide(id) {
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let trigger = document.querySelector(`#${id}_trigger`);
+	
+		let d = new Date();
+	    this.lastSelectHideTime = d.valueOf();
+	
+        trigger.className = "trigger";
+        droplist.className = "dropdownhidden";
+        this.activeDropLists[id] = false;
+        trigger.focus();
+    }
+
+    static show(id) {
+		let d = new Date()
+	    if (d - this.lastSelectHideTime < 50) return;
+		
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let trigger = document.querySelector(`#${id}_trigger`);
+        
+        trigger.className = "activetrigger";
+        droplist.className = "dropdownvisible";
+        this.activeDropLists[id] = true;
+        trigger.focus();
+    }
+
+    static onTriggerClick(id) {
+        if ( !this.classCheck(document.querySelector(`#${id}_trigger`), "activetrigger"))
+            this.show(id);
+    }
+
+    static classCheck(element, className) {
+        return new RegExp(`\\b${className}\\b`).test(element.className);
+    }
+
+    static swapClass(element, class1, class2) {
+        element.className = this.classCheck(element, class1) ? class2 : class1;
+    }
 
     static get(name, options, defaultOption, onChange) {
-
-        if (!this._dselectLoaded) {
-            DOMHelper.insertScript({ src: "https://steamstore-a.akamaihd.net/public/javascript/dselect.js" });
-            this._dselectLoaded = true;
-        }
 
         let id = `sort_by_${name}`;
         
@@ -2488,16 +2571,21 @@ class Sortbox {
         let box = HTML.element(
         `<div class="es-sortbox">
             <div class="es-sortbox__label">${Localization.str.sort_by}</div>
-            <div class="es-sortbox__container" onkeydown="HandleKeyDown">
-                <input id="${id}" type="hidden" name="${name}" value="${defaultOption}" onchange="Messenger.postMessage('${id}', this.value)">
-                <a class="trigger" id="${id}_trigger" href="javascript:DSelectNoop()" onfocus="DSelectOnFocus('${id}')" onblur="DSelectOnBlur('${id}')" onclick="DSelectOnTriggerClick('${id}')"></a>
+            <div class="es-sortbox__container">
+                <input id="${id}" type="hidden" name="${name}" value="${defaultOption}">
+                <a class="trigger" id="${id}_trigger"></a>
                 <div class="es-dropdown">
                     <ul id="${id}_droplist" class="es-dropdown__list dropdownhidden"></ul>
                 </div>
             </div>
-        </div>`, false);
+        </div>`);
 
-        Messenger.addMessageListener(id, option => onChange(option));
+        box.querySelector(`#${id}`).addEventListener("change", function() { onChange(this.value); });
+
+        let trigger = box.querySelector(`#${id}_trigger`);
+        trigger.addEventListener("focus", () => this.onFocus(id));
+        trigger.addEventListener("blur", () => this.onBlur(id));
+        trigger.addEventListener("click", () => this.onTriggerClick(id));
 
         let ul = box.querySelector("ul");
         for (let i = 0; i < options.length; ++i) {
@@ -2516,11 +2604,15 @@ class Sortbox {
                 </li>`);
 
             let a = ul.querySelector("li:last-child > a");
-            a.href = "javascript:DSelectNoop()";
-            a.addEventListener("mouseover", () => ExtensionLayer.runInPageContext(`() => DHighlightItem("${id}", ${i}, false)`));
-            a.addEventListener("click",     () => ExtensionLayer.runInPageContext(`() => DHighlightItem("${id}", ${i}, true)`));
+            //a.href = "javascript:DSelectNoop()";
+            a.addEventListener("mouseover", () => this.highlightItem(id, i, false));
+            a.addEventListener("click",     () => this.highlightItem(id, i, true));
         }
 
         return box;
     }
 }
+Sortbox.activeDropLists = {};
+Sortbox.lastSelectHideTime = 0;
+
+document.addEventListener("mousedown", e => Sortbox.handleMouseClick(e));

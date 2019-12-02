@@ -2919,47 +2919,45 @@ let FriendsPageClass = (function(){
         this.addPoster();
     }
 
-    FriendsPageClass.prototype.addSort = async function() {
-        let friends = document.querySelectorAll(".friend_block_v2.persona.offline");
-        if (friends.length === 0) { return; }
+    FriendsPageClass.prototype.addSort = function() {
+        let offlineFriends = document.querySelectorAll(".friend_block_v2.persona.offline");
+        if (offlineFriends.length === 0) { return; }
 
-        let data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
-        let dom = HTMLParser.htmlToElement(data);
+        let friendsFetched = false;
 
-        let sorted = { default: [], lastonline: [] };
+        offlineFriends.forEach((friend, i) => friend.dataset.esSortDefault = i);
 
-        let nodes = dom.querySelectorAll(".friend_block_v2.persona.offline");
-        for (let node of nodes) {
-            let lastOnline = node.querySelector(".friend_last_online_text").textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
-            if (lastOnline) {
-                let days = parseInt(lastOnline[1]) || 0;
-                let hours = parseInt(lastOnline[2]) || 0;
-                let minutes = parseInt(lastOnline[3]) || 0;
-                let downtime = (days * 24 + hours) * 60 + minutes;
-                sorted.lastonline.push([node, downtime]);
-            } else {
-                sorted.lastonline.push([node, Infinity]);
-            }
-
-            sorted.default.push([node]);
-        }
-
-        sorted.lastonline.sort(function(a, b) {
-            return b[1] - a[1];
-        });
-
-        function sortFriends(sortBy) {
+        async function sortFriends(sortBy) {
             sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
 
-            // Remove the current offline nodes
-            for (let node of document.querySelectorAll("div.persona.offline[data-steamid]")) {
-                node.remove();
+            if (sortBy === "lastonline" && !friendsFetched) {
+                
+                friendsFetched = true;
+                let data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
+                let dom = HTMLParser.htmlToElement(data);
+
+                for (let friend of dom.querySelectorAll(".friend_block_v2.persona.offline")) {
+                    let lastOnline = friend.querySelector(".friend_last_online_text").textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
+                    let time = Infinity;
+                    if (lastOnline) {
+                        let days = parseInt(lastOnline[1]) || 0;
+                        let hours = parseInt(lastOnline[2]) || 0;
+                        let minutes = parseInt(lastOnline[3]) || 0;
+                        let downtime = (days * 24 + hours) * 60 + minutes;
+                        time = downtime;
+                    }
+                    document.querySelector(`.friend_block_v2.persona.offline[data-steamid="${friend.dataset.steamid}"]`).dataset.esSortTime = time;
+                }
             }
 
-            // So we can replace them in sorted order
-            let offlineNode = document.querySelector("#state_offline");
-            for (let item of sorted[sortBy]) {
-                offlineNode.insertAdjacentElement("afterend", item[0]);
+            let searchResults = document.querySelector("#search_results");
+            let curOfflineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
+
+            let property = `esSort${sortBy === "default" ? "Default" : "Time"}`;
+            curOfflineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
+
+            for (let friend of curOfflineFriends) {
+                searchResults.appendChild(friend);
             }
 
             SyncedStorage.set("sortfriendsby", sortBy);
@@ -2972,7 +2970,10 @@ let FriendsPageClass = (function(){
             sortFriends)
         );
 
-        sortFriends(SyncedStorage.get("sortfriendsby"));
+        let sortBy = SyncedStorage.get("sortfriendsby");
+        if (sortBy !== "default") {
+            sortFriends(SyncedStorage.get("sortfriendsby"));
+        }
     };
 
     FriendsPageClass.prototype.addFriendsInviteButton = async function() {
@@ -3775,12 +3776,16 @@ let GuidesPageClass = (function(){
         for (let node of nodes) {
             let onclick = node.getAttribute("onclick");
 
-            if (onclick) {
-                node.setAttribute("onclick", onclick.replace(/requiredtags[^&]+/, "requiredtags[]=-1"));
-            }
-
             let linkNode = node.querySelector("a");
             linkNode.href = linkNode.href.replace(/requiredtags[^&]+/, "requiredtags[]=-1");
+
+            if (onclick) {
+                let url = linkNode.href;
+                node.removeAttribute("onclick");
+                node.addEventListener("click", function() {
+                    window.location.href = url;
+                });
+            }
         }
 
         nodes = document.querySelectorAll(".guides_home_view_all_link > a, .guide_home_category_selection");
