@@ -958,53 +958,31 @@ let EnhancedSteam = (function() {
     self.addBackToTop = function() {
         if (!SyncedStorage.get("show_backtotop") || document.querySelector("#BackToTop")) { return; }
 
-        HTML.afterBegin("body", `<div class="btn_darkblue_white_innerfade btn_medium_tall es_btt"><span>&#x2191;</span></div>`);
+        HTML.afterBegin("body", `<div class="es_btt">&#9650;</div>`);
+
         let node = document.querySelector(".es_btt");
-        let prevScrollHeight, timer;
 
-        node.addEventListener("click", gotop);
-        window.addEventListener("scroll", scrolling);
-        window.addEventListener("resize", resizing);
-        window.addEventListener("load", onLoad);
+        node.addEventListener("click", () => {
+            window.scroll({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+            });
+        });
 
-        onLoad();
-        
-        function onLoad() {
-            scrolling();
-            resizing();
-        }
+        window.addEventListener("scroll", opacityHandler);
 
-        function gotop() {
-            if (timer) { return; }
-            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
-            timer = setInterval(function() {
-                if (scrollHeight <= 1) {
-                    document.body.scrollTop = 0; // For Safari
-                    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-                    clearInterval(timer);
-                    timer = null;
-                }
-                document.body.scrollTop = scrollHeight; // For Safari
-                document.documentElement.scrollTop = scrollHeight; // For Chrome, Firefox, IE and Opera
-                scrollHeight -= scrollHeight / 20;
-            }, 10);
-        }
+        let scrollHandled = false;
 
-        function scrolling() {
-            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
-            if (prevScrollHeight && prevScrollHeight < scrollHeight) {
-                clearInterval(timer);
-                timer = null;
-            }
-            prevScrollHeight = scrollHeight;
-            node.style.opacity = Math.min(Math.max((scrollHeight - 200) / 800, 0), 1);
-            node.style.display = node.style.opacity >= 0.1 ? "block" : "none";
-        }
+        function opacityHandler() {
+            if (scrollHandled) { return; }
 
-        function resizing() {
-            let winWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-            let headerWidth = document.querySelector("div#global_header .content").offsetWidth;
-            node.style.right = `${headerWidth > 0 ? (winWidth / 2) - (headerWidth / 2) - node.offsetWidth - 20 : 20}px`;
+            window.requestAnimationFrame(() => {
+                let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
+                node.style.opacity = Math.min(Math.max((scrollHeight - 200) / 800, 0), 1);
+                scrollHandled = false;
+            });
+            scrollHandled = true;
         }
     };
 
