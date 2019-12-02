@@ -2057,7 +2057,7 @@ class AppPageClass extends StorePageClass {
         let details_block = document.querySelector(".myactivity_block .details_block");
         if (!details_block) { return; }
 
-        HTML.afterEnd(details_block, "<div id='es_ach_stats'></div>");
+        HTML.afterEnd(details_block, '<div id="es_ach_stats"></div>');
 
         Stats.getAchievementBar(this.communityAppid).then(achieveBar => {
             if (!achieveBar) {
@@ -2065,8 +2065,7 @@ class AppPageClass extends StorePageClass {
                 return;
             }
             
-            let node = document.querySelector("#es_ach_stats");
-            HTML.inner(node, achieveBar)
+            HTML.inner("#es_ach_stats", achieveBar);
         });
     }
 
