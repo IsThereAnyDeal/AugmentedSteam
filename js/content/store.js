@@ -1929,9 +1929,7 @@ class AppPageClass extends StorePageClass {
     }
 
     addBadgeProgress() {
-        if (!this.hasCards) { return; }
-        if (!User.isSignedIn) { return; }
-        if (!SyncedStorage.get("show_badge_progress")) { return; }
+        if (!this.hasCards || !User.isSignedIn || !SyncedStorage.get("show_badge_progress")) { return; }
 
         let stylesheet = document.createElement('link');
         stylesheet.rel = 'stylesheet';
@@ -1993,19 +1991,19 @@ class AppPageClass extends StorePageClass {
             let is_normal_badge = targetSelector === ".es_normal_badge_progress";
 
             if (is_normal_badge || (card_num_owned > 0 || !blockSel.querySelector(".badge_empty_circle"))) {
-                document.querySelector(".es_badges_progress_block").style.display = 'block';
+                document.querySelector(".es_badges_progress_block").style.display = "block";
                 blockSel.style.display = "block";
 
                 let progressBold = badgeNode.querySelector(".progress_info_bold");
 
                 HTML.beforeEnd(blockSel,
                     `<div class="es_cards_numbers">
-                         <div class="es_cards_remaining">${progressBold ? progressBold.textContent : ""}</div>
-                     </div>
-                     <div class="game_area_details_specs">
-                         <div class="icon"><img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png" width="24" height="16" border="0" align="top"></div>
-                         <a href="//steamcommunity.com/my/gamecards/${ appid + (is_normal_badge ? `/` : `?border=1`) }" class="name">${badge_completed ? Localization.str.view_badge : Localization.str.view_badge_progress}</a>
-                     </div>`);
+                        <div class="es_cards_remaining">${progressBold ? progressBold.textContent : ""}</div>
+                    </div>
+                    <div class="game_area_details_specs">
+                        <div class="icon"><img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png" class="category_icon"></div>
+                        <a href="//steamcommunity.com/my/gamecards/${appid}${is_normal_badge ? '/' : '?border=1'}" class="name">${badge_completed ? Localization.str.view_badge : Localization.str.view_badge_progress}</a>
+                    </div>`);
 
                 if (show_card_num) {
                     HTML.beforeEnd(blockSel.querySelector(".es_cards_numbers"),
@@ -2023,17 +2021,16 @@ class AppPageClass extends StorePageClass {
     }
 
     addAstatsLink() {
-        if (!SyncedStorage.get("showastatslink")) { return; }
-        if (!this.hasAchievements()) { return; }
+        if (!this.hasAchievements() || !SyncedStorage.get("showastatslink")) { return; }
 
         let imgUrl = ExtensionLayer.getLocalUrl("img/ico/astatsnl.png");
-        let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + this.communityAppid;
+        let url = `https://astats.astats.nl/astats/Steam_Game_Info.php?AppID=${this.communityAppid}`;
 
         HTML.beforeEnd("#achievement_block",
-        `<div class='game_area_details_specs'>
-                  <div class='icon'><img src='${imgUrl}' style='margin-left: 4px; width: 16px;'></div>
-                  <a class='name' href='${url}' target='_blank'><span>${Localization.str.view_astats}</span></a>
-               </div>`);
+            `<div class="game_area_details_specs">
+                <div class="icon"><img class="astats_icon" src="${imgUrl}"></div>
+                <a class="name" href="${url}" target="_blank">${Localization.str.view_astats}</a>
+            </div>`);
     }
 
     addAchievementCompletionBar() {
