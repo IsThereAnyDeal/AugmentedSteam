@@ -955,7 +955,12 @@ let EnhancedSteam = (function() {
     };
 
     self.addBackToTop = function() {
-        if (!SyncedStorage.get("show_backtotop") || document.querySelector("#BackToTop")) { return; }
+        if (!SyncedStorage.get("show_backtotop")) { return; }
+
+        let steamButton = document.querySelector("#BackToTop");
+        if (steamButton) {
+            steamButton.remove();
+        }
 
         HTML.afterBegin("body", `<div class="es_btt">&#9650;</div>`);
 
@@ -971,17 +976,9 @@ let EnhancedSteam = (function() {
 
         window.addEventListener("scroll", opacityHandler);
 
-        let scrollHandled = false;
-
         function opacityHandler() {
-            if (scrollHandled) { return; }
-
-            window.requestAnimationFrame(() => {
-                let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
-                node.style.opacity = Math.min(Math.max((scrollHeight - 200) / 800, 0), 1);
-                scrollHandled = false;
-            });
-            scrollHandled = true;
+            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
+            node.classList.toggle("is-visible", scrollHeight >= 400)
         }
     };
 
