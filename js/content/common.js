@@ -2467,7 +2467,7 @@ class Sortbox {
                     <ul id="${id}_droplist" class="es-dropdown__list dropdownhidden"></ul>
                 </div>
             </div>
-        </div>`, false);
+        </div>`);
 
         Messenger.addMessageListener(id, option => onChange(option));
 
