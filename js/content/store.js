@@ -1160,7 +1160,7 @@ class AppPageClass extends StorePageClass {
     }
 
     async addCoupon() {
-        if (!SyncedStorage.get("show_coupon")) return;
+        if (!SyncedStorage.get("show_coupon")) { return; }
         
         let coupon;
         try {
@@ -1169,6 +1169,7 @@ class AppPageClass extends StorePageClass {
             EnhancedSteam.addLoginWarning(err);
             return;
         }
+        if (!coupon) { return; }
 
         let couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
 
