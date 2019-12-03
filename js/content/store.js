@@ -863,9 +863,8 @@ class AppPageClass extends StorePageClass {
             }
         });
 
-        let nodes = document.querySelectorAll("#add_to_wishlist_area, #add_to_wishlist_area_success, .queue_btn_ignore");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            nodes[i].addEventListener("click", DynamicStore.clear);
+        for (let node of document.querySelectorAll("#add_to_wishlist_area, #add_to_wishlist_area_success, .queue_btn_ignore")) {
+            node.addEventListener("click", DynamicStore.clear);
         }
     }
 
