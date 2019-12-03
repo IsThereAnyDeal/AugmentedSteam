@@ -1,0 +1,17 @@
+{
+  "name": "augmentedsteam",
+  "description": "Augments your Steam Experience",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tfedor/AugmentedSteam.git"
+  },
+  "author": "tfedor",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/tfedor/AugmentedSteam/issues"
+  },
+  "homepage": "https://github.com/tfedor/AugmentedSteam#readme"
+}
