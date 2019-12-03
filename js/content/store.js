@@ -834,7 +834,7 @@ class AppPageClass extends StorePageClass {
             `<img class='es-remove-wl' src='${ExtensionResources.getURL("img/remove.png")}' style='display:none' />
              <img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
 
-        successNode.addEventListener("click", e => {
+        successNode.addEventListener("click", async e => {
             e.preventDefault();
 
             let parent = successNode.parentNode;
@@ -843,10 +843,12 @@ class AppPageClass extends StorePageClass {
 
                 let removeWaitlist = !!document.querySelector(".queue_btn_wishlist + .queue_btn_ignore_menu.owned_elsewhere");
 
-                Promise.all([
-                    this._removeFromWishlist(),
-                    removeWaitlist ? Promise.resolve() : Promise.resolve(), // todo Remove from waitlist
-                ]).then(() => {
+                try {
+                    await Promise.all([
+                        this._removeFromWishlist(),
+                        removeWaitlist ? this._removeFromWaitlist() : Promise.resolve(),
+                    ]);
+
                     document.querySelector("#add_to_wishlist_area").style.display = "inline";
                     document.querySelector("#add_to_wishlist_area_success").style.display = "none";
 
@@ -855,9 +857,9 @@ class AppPageClass extends StorePageClass {
 
                     // Invalidate dynamic store data cache
                     ExtensionLayer.runInPageContext(() => GDynamicStore.InvalidateCache());
-                }).finally(() => {
+                } finally {
                     parent.classList.remove("loading");
-                });
+                }
             }
         });
 
