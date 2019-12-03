@@ -2100,9 +2100,9 @@ class AppPageClass extends StorePageClass {
 
         let appid = this.communityAppid;
 
-        Background.action('cards', { 'appid': appid, } )
+        Background.action("cards", appid)
             .then(result => loadBadgeContent(".es_normal_badge_progress", result));
-        Background.action('cards', { 'appid': appid, 'border': 1, } )
+        Background.action("cards", appid, true)
             .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
         function loadBadgeContent(targetSelector, result) {
