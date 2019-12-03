@@ -73,20 +73,32 @@ class Api {
         }
         return fetch(url, params);
     }
-    static async getEndpoint(endpoint, query, params = {}) {
+
+    static async getEndpoint(endpoint, query, responseHandler, params = {}) {
         if (!endpoint.endsWith('/')) endpoint += '/';
-        return (await this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'GET', }))).json();
+
+        let response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, { "method": "GET" }));
+        if (responseHandler) responseHandler(response);
+        return response.json();
     }    
-    static async getPage(endpoint, query, params = {}) {
-        return (await this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'GET', }))).text();
-   }
-    static async postEndpoint(endpoint, query, params = {}) {
-        if (!endpoint.endsWith('/')) endpoint += '/';
-        return (await this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'POST', }))).json();
+    static async getPage(endpoint, query, responseHandler, params = {}) {
+        let response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, { "method": "GET" }));
+        if (responseHandler) responseHandler(response);
+        return response.text();
     }
-    static async deleteEndpoint(endpoint, query, params = {}) {
+    static async postEndpoint(endpoint, query, responseHandler, params = {}) {
         if (!endpoint.endsWith('/')) endpoint += '/';
-        return (await this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'DELETE', }))).json();
+
+        let response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, { "method": "POST" }));
+        if (responseHandler) responseHandler(response);
+        return response.json();
+    }
+    static async deleteEndpoint(endpoint, query, responseHandler, params = {}) {
+        if (!endpoint.endsWith('/')) endpoint += '/';
+
+        let response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, { "method": "DELETE" }));
+        if (responseHandler) responseHandler(response);
+        return response.json();
     }
     static endpointFactory(endpoint) {
         return async params => this.getEndpoint(endpoint, params).then(result => result.data);
@@ -125,17 +137,6 @@ class Api {
             );
         };
     }
-
-    static clearEndpointCache(keyMapper, objectStore) {
-        return async params => {
-            let key = keyMapper.map(params, true);
-            if (!key) {
-                throw new Error(`Can't clear invalid key from cache`);
-            }
-            this._progressingRequests.delete(key);
-            return IndexedDB.delete(objectStore, keyMapper.map(params, false));
-        };
-    }
 }
 Api.params = {};
 
@@ -144,22 +145,25 @@ class AugmentedSteamApi extends Api {
     // static origin = Config.ApiServerHost;
     // static _progressingRequests = new Map();
     
-    static getEndpoint(endpoint, query) { // withResponse? boolean that includes Response object in result?
-        return super.getEndpoint(endpoint, query)
-            .then(function(json) {
-                if (!json.result || json.result !== "success") {
-                    throw new Error(`Could not retrieve '${endpoint}'`);
-                }
-                delete json.result;
-                return json; // 'response': response, 
-            });
+    static async getEndpoint(endpoint, query) { // withResponse? boolean that includes Response object in result?
+        let json = await super.getEndpoint(endpoint, query, response => {
+            if (response.status === 500) {
+                // Beautify HTTP 500: "User 'p_enhsteam' has exceeded the 'max_user_connections' resource (current value: XX)", which would result in a SyntaxError due to JSON.parse
+                throw new Error(`Augmented Steam servers are currently overloaded, failed to fetch endpoint "${endpoint}"`);
+            }
+        });
+        if (!json.result || json.result !== "success") {
+            throw new Error(`Could not retrieve '${endpoint}'`);
+        }
+        delete json.result;
+        return json;
     }    
 
     static storePageData(appid, metalink, showoc) { 
         let params = { "appid": appid };
         if (metalink)   params.mcurl = metalink;
         if (showoc)     params.oc = 1;
-        return IndexedDB.get("storePageData", appid, params)
+        return IndexedDB.get("storePageData", appid, params);
     }
 
     static expireStorePageData(appid) {
@@ -241,7 +245,7 @@ class ITAD_Api extends Api {
             }
         }
 
-        await ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, { "body": JSON.stringify(waitlistJSON) });
+        await ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, null, { "body": JSON.stringify(waitlistJSON) });
         return IndexedDB.put("waitlist", null, storeids, Array.isArray(storeids));
     }
 
@@ -293,7 +297,7 @@ class ITAD_Api extends Api {
             }
         }
 
-        return ITAD_Api.postEndpoint("v01/collection/import/", { "access_token": ITAD_Api.accessToken }, { "body": JSON.stringify(collectionJSON) });
+        return ITAD_Api.postEndpoint("v01/collection/import/", { "access_token": ITAD_Api.accessToken }, null, { "body": JSON.stringify(collectionJSON) });
     }
 
     static async import(force) {
@@ -399,24 +403,26 @@ class ContextMenu {
     _listenerRegistered = false;
 
     static onClick(info) {
+        let selectionText = encodeURIComponent(info.selectionText.trim());
+
         switch (info.menuItemId) {
             case "context_steam_store":
-                chrome.tabs.create({ url: `https://store.steampowered.com/search/?term=${encodeURIComponent(info.selectionText)}` });
+                chrome.tabs.create({ url: `https://store.steampowered.com/search/?term=${selectionText}` });
                 break;
             case "context_steam_market":
-                chrome.tabs.create({ url: `https://steamcommunity.com/market/search?q=${encodeURIComponent(info.selectionText)}` });
+                chrome.tabs.create({ url: `https://steamcommunity.com/market/search?q=${selectionText}` });
                 break;
             case "context_itad":
-                chrome.tabs.create({ url: `https://isthereanydeal.com/search/?q=${encodeURIComponent(info.selectionText)}` });
+                chrome.tabs.create({ url: `https://isthereanydeal.com/search/?q=${selectionText}` });
                 break;
             case "context_bartervg":
-                chrome.tabs.create({ url: `https://barter.vg/search?q=${encodeURIComponent(info.selectionText.trim())}` });
+                chrome.tabs.create({ url: `https://barter.vg/search?q=${selectionText}` });
                 break;
             case "context_steamdb":
-                chrome.tabs.create({ url: `https://steamdb.info/search/?q=${encodeURIComponent(info.selectionText)}` });
+                chrome.tabs.create({ url: `https://steamdb.info/search/?q=${selectionText}` });
                 break;
             case "context_steamdb_instant":
-                chrome.tabs.create({ url: `https://steamdb.info/instantsearch/?query=${encodeURIComponent(info.selectionText)}` });
+                chrome.tabs.create({ url: `https://steamdb.info/instantsearch/?query=${selectionText}` });
                 break;
             case "context_steam_keys":
                 let steamkeys = info.selectionText.match(/[A-NP-RTV-Z02-9]{5}(-[A-NP-RTV-Z02-9]{5}){2}/g);
@@ -432,8 +438,10 @@ class ContextMenu {
     static build() {
         if (!chrome.contextMenus) { return; }
         let options = ["context_steam_store", "context_steam_market", "context_itad", "context_bartervg", "context_steamdb", "context_steamdb_instant", "context_steam_keys"];
+
         for (let option of options) {
             if (!SyncedStorage.get(option)) { continue; }
+
             chrome.contextMenus.create({
                 "id": option,
                 "title": Localization.str.options[option].replace("__query__", "%s"),
@@ -445,16 +453,18 @@ class ContextMenu {
     static update() {
         if (!chrome.contextMenus) { return; }
         chrome.contextMenus.removeAll(ContextMenu.build);
+
         if (!this._listenerRegistered) {
             chrome.contextMenus.onClicked.addListener(ContextMenu.onClick);
             this._listenerRegistered = true;
         }
     }
+
+    static async init() {
+        await Localization;
+        ContextMenu.update();
+    }
 }
-(async function() {
-    await Localization;
-    ContextMenu.update();
-})();
 
 class SteamStore extends Api {
     // static origin = "https://store.steampowered.com/";
@@ -607,15 +617,11 @@ class SteamCommunity extends Api {
     // static params = { 'credentials': 'include', };
 
     static cards(appid, border) {
-        return SteamCommunity.getPage(`/my/gamecards/${appid}`, (border ? { 'border': 1, } : undefined)).catch(() => {
-            throw new Error("Could not retrieve cards for appid " + appid);
-        });
+        return SteamCommunity.getPage(`/my/gamecards/${appid}`, (border ? { "border": 1 } : {}));
     }
 
     static stats(appid) {
-        return SteamCommunity.getPage(`/my/stats/${appid}`).catch(() => {
-            throw new Error("Could not retrieve stats for appid " + appid);
-        });
+        return SteamCommunity.getPage(`/my/stats/${appid}`);
     }
 
     static async getInventory(contextId) {
@@ -813,7 +819,7 @@ class SteamCommunity extends Api {
     static getPage(endpoint, query) {
         return this._fetchWithDefaults(endpoint, query, { method: 'GET' }).then(response => {
             if (response.url.startsWith("https://steamcommunity.com/login/")) {
-                throw new Error("Got redirected onto login page, the user is not logged into steamcommunity.com")
+                throw new CommunityLoginError("Got redirected onto login page, the user is not logged into steamcommunity.com");
             }
             return response.text();
         });
@@ -1331,3 +1337,6 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
         throw err;
     }
 });
+
+chrome.runtime.onStartup.addListener(ContextMenu.init);
+chrome.runtime.onInstalled.addListener(ContextMenu.init);

@@ -1,4 +1,5 @@
 {
+    "transactionStatus": "__failed__ requisição(ões) falhou(aram). Foram recuperadas __size__ de __total__ transações.",
     "custom_tags": "Marcadores personalzados",
     "add_tag": "Adicionar marcador",
     "enter_tag": "Insira o marcador personalizado que deseja adicionar",
@@ -340,6 +341,15 @@
         "formatted_time": "__hours__ horas e __minutes__ minutos"
     },
     "options": {
+        "context_menu": "Menu de Contexto",
+        "context_steam_store": "Buscar na Loja do Steam por '__query__'",
+        "context_steam_market": "Buscar no Mercado do Steam por '__query__'",
+        "context_itad": "Buscar no IsThereAnyDeal por '__query__'",
+        "context_bartervg": "Buscar no Barter.vg por '__query__'",
+        "context_steamdb": "Buscar no SteamDB por '__query__'",
+        "context_steamdb_instant": "Buscar instantaneamente no SteamDB por '__query__'",
+        "context_steam_keys": "Ativar chaves de produtos Steam dentro da seleção",
+        "no_keys_found": "Não foram encontradas chaves de produtos Steam dentro da seleção!",
         "wsgf": "Exibir informações do site WSGF (Widescreen)",
         "version_show": "Exibir registro de alterações quando o Augmented Steam atualizar",
         "steamcardexchange": "Exibir links para o site SteamCardExchange em insígnias",
@@ -371,7 +381,7 @@
         "regional_price_on": "Exibir comparação de preços regionais",
         "cart": "Itens no seu carrinho",
         "friends_own": "Itens que os seus amigos possuem",
-        "horizontalmediascrolling": "Ativar rolagem horizontal de mídia em páginas de aplicativos",
+        "horizontalscrolling": "Ativar rolagem horizontal em páginas de aplicativos",
         "supportinfo": "Exibir informações de suporte na loja",
         "drm": "Exibir avisos para GDD/DRM de terceiros",
         "profile_permalink": "Exibir link permanente (permalink) em perfis",
@@ -539,6 +549,7 @@
         "take": "Responder a pesquisa"
     },
     "dlc_select": {
+        "select": "Selecionar",
         "wishlisted_dlc": "Selecionar na lista de desejos",
         "none": "Selecionar nenhum",
         "unowned_dlc": "Selecionar ainda não comprados"

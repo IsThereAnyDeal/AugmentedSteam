@@ -254,6 +254,9 @@ class UpdateHandler {
 
         if (oldVersion.isSameOrBefore("1.3.1")) {
             browser.runtime.sendMessage({ "action": "cache.clear" }) // todo Implement general background communication class
+
+            SyncedStorage.set("horizontalscrolling", SyncedStorage.get("horizontalmediascrolling"));
+            SyncedStorage.remove("horizontalmediascrolling");
         }
     }
 }
@@ -606,13 +609,14 @@ SyncedStorage.defaults = {
     'send_age_info': true,
     'mp4video': false,
     'contscroll': true,
-    'horizontalmediascrolling': true,
+    'horizontalscrolling': true,
     'showsupportinfo': true,
     'showdrm': true,
     'regional_hideworld': false,
     'showinvnav': true,
     'quickinv': true,
     'quickinv_diff': -0.01,
+    'community_default_tab': "",
     'showallachievements': false,
     'showachinstore': true,
     'showcomparelinks': false,
@@ -648,6 +652,7 @@ SyncedStorage.defaults = {
     'show_wishlist_link': true,
     'show_wishlist_count': true,
     'show_progressbar': true,
+    'show_backtotop': false,
 
     'profile_showcase_twitch': true,
     'profile_showcase_own_twitch': false,
@@ -898,6 +903,20 @@ class StringUtils {
         }
 
         return hash;
+    }
+}
+
+class CommunityLoginError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "CommunityLoginError";
+    }
+}
+
+class ServerOutageError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "ServerOutageError";
     }
 }
 

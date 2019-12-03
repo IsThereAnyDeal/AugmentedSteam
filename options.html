@@ -8,7 +8,7 @@
     <title>Options - Augmented Steam</title>
     <base target="_blank">
     <template id='add_custom_profile_link'>
-        <div class="custom-link option">
+        <div class="custom-link option js-custom-link">
             <input type="checkbox" name="profile_custom_enabled" />
             <div>
                 <div>
@@ -26,7 +26,7 @@
                     <input class="custom-link__input"  type="text" name="profile_custom_icon">
                 </div>
             </div>
-            <button type="button" name="profile_custom_remove" class="custom-link__close"></button>
+            <button type="button" name="profile_custom_remove" class="custom-link__close js-custom-link-remove"></button>
         </div>
     </template>
 </head>
@@ -83,6 +83,68 @@
             <div id="maincontent_general">
                 <h1 data-locale-text="options.general">General</h1>
                 <div class="settings">
+        
+                    <div id="language_section" class="content_section">
+                        <h2 data-locale-text="language">Language</h2>
+                        <div class="option">
+                            <input type="checkbox" id="showlanguagewarning" data-setting="showlanguagewarning">
+                            <label for="showlanguagewarning" data-locale-text="options.show_languagewarning">Show warning if browsing in a language other than</label>
+                            <select id="warning_language" data-setting="showlanguagewarninglanguage">
+                                <option value="english">English</option>
+                                <option value="bulgarian">български</option>
+                                <option value="czech">čeština</option>
+                                <option value="danish">Dansk</option>
+                                <option value="dutch">Nederlands</option>
+                                <option value="finnish">Suomi</option>
+                                <option value="french">Français</option>
+                                <option value="greek">Ελληνικά</option>
+                                <option value="german">Deutsch</option>
+                                <option value="hungarian">Magyar</option>
+                                <option value="italian">Italiano</option>
+                                <option value="japanese">日本語</option>
+                                <option value="koreana">한국어</option>
+                                <option value="norwegian">Norsk</option>
+                                <option value="polish">Polski</option>
+                                <option value="portuguese">Português</option>
+                                <option value="brazilian">Português-Brasil</option>
+                                <option value="russian">Русский</option>
+                                <option value="romanian">Română</option>
+                                <option value="schinese">汉语</option>
+                                <option value="tchinese">漢語</option>
+                                <option value="spanish">Español</option>
+                                <option value="latam">Español Latinoamericano</option>
+                                <option value="swedish">Svenska</option>
+                                <option value="thai">ไทย</option>
+                                <option value="turkish">Türkçe</option>
+                                <option value="ukrainian">Українська</option>
+                            </select>
+                        </div>
+                    </div>
+        
+                    <div id="store_general_section" class="content_section">
+                        <h2 data-locale-text="options.general">General</h2>
+                        <div class="option">
+                            <input type="checkbox" id="show_progressbar" data-setting="show_progressbar">
+                            <label for="show_progressbar" data-locale-text="show_progressbar">Show progress and status bar of this extension</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="version_show" data-setting="version_show">
+                            <label for="version_show" data-locale-text="options.version_show">Show change log when this extension updates</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="replaceaccountname" data-setting="replaceaccountname">
+                            <label for="replaceaccountname" data-locale-text="options.replace_account_name">Replace account name with community name</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="showfakeccwarning" data-setting="showfakeccwarning">
+                            <label for="showfakeccwarning" data-locale-text="options.show_regionwarning">Show warning if browsing in non-account region</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="show_backtotop" data-setting="show_backtotop">
+                            <label for="show_backtotop" data-locale-text="options.show_backtotop">Show back to top button on long pages</label>
+                        </div>
+                    </div>
+                    
                     <div id="context_menu_section" class="content_section">
                         <h2 data-locale-text="options.context_menu">Context Menu</h2>
                         
@@ -323,43 +385,6 @@
                         </div>
                     </div>
         
-                    <div id="language_section" class="content_section">
-                        <h2 data-locale-text="language">Language</h2>
-                        <div class="option">
-                            <input type="checkbox" id="showlanguagewarning" data-setting="showlanguagewarning">
-                            <label for="showlanguagewarning" data-locale-text="options.show_languagewarning">Show warning if browsing in a language other than</label>
-                            <select id="warning_language" data-setting="showlanguagewarninglanguage">
-                                <option value="english">English</option>
-                                <option value="bulgarian">български</option>
-                                <option value="czech">čeština</option>
-                                <option value="danish">Dansk</option>
-                                <option value="dutch">Nederlands</option>
-                                <option value="finnish">Suomi</option>
-                                <option value="french">Français</option>
-                                <option value="greek">Ελληνικά</option>
-                                <option value="german">Deutsch</option>
-                                <option value="hungarian">Magyar</option>
-                                <option value="italian">Italiano</option>
-                                <option value="japanese">日本語</option>
-                                <option value="koreana">한국어</option>
-                                <option value="norwegian">Norsk</option>
-                                <option value="polish">Polski</option>
-                                <option value="portuguese">Português</option>
-                                <option value="brazilian">Português-Brasil</option>
-                                <option value="russian">Русский</option>
-                                <option value="romanian">Română</option>
-                                <option value="schinese">汉语</option>
-                                <option value="tchinese">漢語</option>
-                                <option value="spanish">Español</option>
-                                <option value="latam">Español Latinoamericano</option>
-                                <option value="swedish">Svenska</option>
-                                <option value="thai">ไทย</option>
-                                <option value="turkish">Türkçe</option>
-                                <option value="ukrainian">Українська</option>
-                            </select>
-                        </div>
-                    </div>
-        
                     <div id="homepage_section" class="content_section">
                         <h2 data-locale-text="options.homepage">Homepage</h2>
                         <div class="option">
@@ -378,22 +403,6 @@
         
                     <div id="store_general_section" class="content_section">
                         <h2 data-locale-text="options.general">General</h2>
-                        <div class="option">
-                            <input type="checkbox" id="show_progressbar" data-setting="show_progressbar">
-                            <label for="show_progressbar" data-locale-text="show_progressbar">Show progress and status bar of this extension</label>
-                        </div>
-                        <div class="option">
-                            <input type="checkbox" id="version_show" data-setting="version_show">
-                            <label for="version_show" data-locale-text="options.version_show">Show change log when this extension updates</label>
-                        </div>
-                        <div class="option">
-                            <input type="checkbox" id="replaceaccountname" data-setting="replaceaccountname">
-                            <label for="replaceaccountname" data-locale-text="options.replace_account_name">Replace account name with community name</label>
-                        </div>
-                        <div class="option">
-                            <input type="checkbox" id="showfakeccwarning" data-setting="showfakeccwarning">
-                            <label for="showfakeccwarning" data-locale-text="options.show_regionwarning">Show warning if browsing in non-account region</label>
-                        </div>
                         <div class="option">
                             <input type="checkbox" id="showemptywishlist" data-setting="showemptywishlist">
                             <label for="showemptywishlist" data-locale-text="options.show_empty_wishlist">Show "Empty Wishlist" button</label>
@@ -415,8 +424,8 @@
                             <label for="contscroll" data-locale-text="options.contscroll">Enable continuous scrolling of search results</label>
                         </div>
                         <div class="option">
-                            <input type="checkbox" id="horizontalmediascrolling" data-setting="horizontalmediascrolling">
-                            <label for="horizontalmediascrolling" data-locale-text="options.horizontalmediascrolling">Enable horizontal scrolling of media on app pages with scroll wheel</label>
+                            <input type="checkbox" id="horizontalscrolling" data-setting="horizontalscrolling">
+                            <label for="horizontalscrolling" data-locale-text="options.horizontalscrolling">Enable horizontal scrolling on app pages with scroll wheel</label>
                         </div>
                         <div class="option">
                             <input type="checkbox" id="showsupportinfo" data-setting="showsupportinfo">
@@ -604,9 +613,11 @@
                             <label for="regional_hideworld" data-locale-text="options.regional_hideworld">Hide globe indicator</label>
                         </div>
                         <div id="region_selects">
+                            <div class="js-regions"></div>
                             <div>
-                                <button id="add_another_region" data-locale-text="options.add_another_region">Add</button>
-                                <button id="reset_countries" data-locale-text="theworddefault">Default</button>
+                                <button class="js-region-add" data-locale-text="options.add_another_region">Add</button>
+                                <button class="js-region-reset" data-locale-text="theworddefault">Default</button>
+                                <button class="js-region-clear" data-locale-text="thewordclear">Clear</button>
                             </div>
                         </div>
                     </div>
@@ -751,6 +762,21 @@
         
                     <div id="community_general_section" class="content_section">
                         <h2 data-locale-text="options.general">General</h2>
+                        <div class="option">
+                            <label for="community_default_tab" data-locale-text="options.community_default_tab">Default community home page tab</label>
+                            <select id="community_default_tab" data-setting="community_default_tab">
+                                <option data-locale-text="all" value="">All</option>
+                                <option data-locale-text="discussions" value="discussions">Discussions</option>
+                                <option data-locale-text="options.screenshots" value="screenshots">Screenshots</option>
+                                <option data-locale-text="options.artwork" value="images">Artwork</option>
+                                <option data-locale-text="options.broadcasts" value="broadcasts">Broadcasts</option>
+                                <option data-locale-text="options.videos" value="videos">Videos</option>
+                                <option data-locale-text="workshop.workshop" value="workshop">Workshop</option>
+                                <option data-locale-text="news" value="allnews">News</option>
+                                <option data-locale-text="guides" value="guides">Guides</option>
+                                <option data-locale-text="reviews" value="reviews">Reviews</option>
+                            </select>
+                        </div>
                         <div class="option">
                             <input type="checkbox" id="showallachievements" data-setting="showallachievements">
                             <label for="showallachievements" data-locale-text="options.showallachievements">Show achievement stats on "All Games" page</label>

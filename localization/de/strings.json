@@ -330,7 +330,7 @@
         "regional_price_on": "Regionalen Preisvergleich anzeigen",
         "cart": "Spiele in deinem Warenkorb",
         "friends_own": "Titel, die deine Freunde besitzen",
-        "horizontalmediascrolling": "Aktiviere horizontales Scrollen von Medien auf Store-Seiten mithilfe des Mausrads",
+        "horizontalscrolling": "Aktiviere horizontales Scrollen auf Store-Seiten mithilfe des Mausrads",
         "supportinfo": "Zeige Supportinfo auf Store-Seiten",
         "drm": "Warnung über DRMs von Dritten anzeigen",
         "profile_permalink": "Permalink in Profilen anzeigen",
@@ -452,7 +452,8 @@
     "ready": {
         "errormsg": "Fehler beim Laden von Augmented Steam-Daten",
         "loading": "Augmented Steam lädt Daten...",
-        "ready": "Augmented Steam ist bereit"
+        "ready": "Augmented Steam ist bereit",
+        "server_outage": "Augmented Steam Server sind zur Zeit überlastet"
     },
     "twitch": {
         "now_streaming": "__username__ ist live auf Twitch",

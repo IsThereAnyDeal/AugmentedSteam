@@ -371,7 +371,7 @@
         "regional_price_on": "显示区域价格比较",
         "cart": "购物车中的物品",
         "friends_own": "好友拥有的物品",
-        "horizontalmediascrolling": "为商店页面媒体启用鼠标滚轮水平滚动",
+        "horizontalscrolling": "为商店页面媒体启用鼠标滚轮水平滚动",
         "supportinfo": "在商店页面显示支持信息",
         "drm": "显示第三方 DRM 警告",
         "profile_permalink": "在个人资料中显示永久链接",

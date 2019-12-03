@@ -158,34 +158,32 @@ class ITAD {
 }
 
 class ProgressBar {
+    _progress = null;
+
     static create() {
         if (!SyncedStorage.get("show_progressbar")) { return; }
 
         let container = document.getElementById("global_actions");
         if (!container) return;
         HTML.afterEnd(container,
-            `<div class="es_progress_wrap">
-                <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
-                    <div class="progress-inner-element">
-                        <div class="progress-bar">
-                            <div class="progress-value" style="width: 18px"></div>
-                        </div>
+            `<div class="es_progress__wrap">
+                <div class="es_progress es_progress--complete" title="${Localization.str.ready.ready}">
+                    <div class="es_progress__bar">
+                        <div class="es_progress__value"></div>
                     </div>
                 </div>
             </div>`);
+        this._progress = document.querySelector(".es_progress");
     }
 
     static loading() {
-        let node = document.getElementById('es_progress');
-        if (!node) { return; }
+        if (!this._progress) return;
+            
+        this._progress.setAttribute("title", Localization.str.ready.loading);
 
-        if (Localization.str.ready) { // FIXME under what circumstance is this false? Should all the other members have the same check?
-            node.setAttribute("title", Localization.str.ready.loading);
-        }
-
-        ProgressBar.requests = { 'initiated': 0, 'completed': 0, };
-        node.classList.remove("complete");
-        node.querySelector(".progress-value").style.width = "18px";
+        ProgressBar.requests = { "initiated": 0, "completed": 0 };
+        this._progress.classList.remove("es_progress--complete");
+        this._progress.querySelector(".es_progress__value").style.width = "18px";
     }
 
     static startRequest() {
@@ -201,40 +199,54 @@ class ProgressBar {
     }
 
     static progress(value) {
-        let node = document.getElementById('es_progress');
-        if (!node) { return; }
+        if (!this._progress) return;
 
-        if (typeof value == 'undefined') {
+        if (!value) {
             if (!ProgressBar.requests) { return; }
             if (ProgressBar.requests.initiated > 0) {
                 value = 100 * ProgressBar.requests.completed / ProgressBar.requests.initiated;
             }
         }
-        if (value >= 100) {
+        if (value > 100) {
             value = 100;
         }
 
-        node.querySelector(".progress-value").style.width = `${value}px`;
+        this._progress.querySelector(".es_progress__value").style.width = `${value}px`;
 
         if (value >= 100) {
-            node.classList.add("complete");
-            node.setAttribute("title", Localization.str.ready.ready);
+            this._progress.classList.add("es_progress--complete");
+            this._progress.setAttribute("title", Localization.str.ready.ready);
             ProgressBar.requests = null;
         }
     }
 
-    static failed() {
-        let node = document.getElementById('es_progress');
-        if (!node) { return; }
+    static serverOutage() {
+        if (!this._progress) return;
 
-        node.classList.add("error");
+        this._progress.classList.add("es_progress--warning");
+        ProgressBar.requests = null;
+
+        if (!this._progress.parentElement.querySelector(".es_progress__warning, .es_progress__error")) {
+            HTML.afterEnd(this._progress, `<div class="es_progress__warning">${Localization.str.ready.server_outage}</div>`);
+        }
+    }
+
+    static failed() {
+        if (!this._progress) return;
+
+        let warningNode = this._progress.parentElement.querySelector(".es_progress__warning");
+        if (warningNode) {
+            this._progress.classList.remove("es_progress--warning"); // Errors have higher precedence
+            warningNode.remove();
+        }
+        this._progress.classList.add("es_progress--error");
         ProgressBar.requests = null;
         
-        let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
+        let nodeError = this._progress.parentElement.querySelector(".es_progress__error");
         if (nodeError) {
             nodeError.textContent = Localization.str.ready.failed.replace("__amount__", ++ProgressBar.failedRequests);
         } else {
-            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed.replace("__amount__", ++ProgressBar.failedRequests) + "</div>");
+            HTML.afterEnd(this._progress, `<div class="es_progress__error">${Localization.str.ready.failed.replace("__amount__", ++ProgressBar.failedRequests)}</div>`);
         }
     }
 }
@@ -356,6 +368,60 @@ let ExtensionLayer = (function() {
     return self;
 })();
 
+let DOMHelper = (function(){
+
+    let self = {};
+
+    self.wrap = function(container, node) {
+        let parent = node.parentNode;
+        parent.insertBefore(container, node);
+        parent.removeChild(node);
+        container.append(node);
+    };
+
+    self.remove = function(selector) {
+        let node = document.querySelector(selector);
+        if (!node) { return; }
+        node.remove();
+    };
+
+    // TODO extend Node itself?
+    self.selectLastNode = function(parent, selector) {
+        let nodes = parent.querySelectorAll(selector);
+        return nodes.length !== 0 ? nodes[nodes.length-1] : null;
+    };
+
+    self.insertStylesheet = function(href) {
+        let stylesheet = document.createElement('link');
+        stylesheet.rel = 'stylesheet';
+        stylesheet.type = 'text/css';
+        stylesheet.href = href;
+        document.head.appendChild(stylesheet);
+    }
+
+    self.insertHomeCSS = function() {
+        self.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
+        let headerCtn = document.querySelector("div#global_header .content");
+        if (headerCtn) {
+            // Fixes displaced header, see #190
+            headerCtn.style.right = 0;
+        }
+    }
+
+    self.insertScript = function({ src, content }, id, onload, isAsync = true) {
+        let script = document.createElement("script");
+
+        if (onload)     script.onload = onload;
+        if (id)         script.id = id;
+        if (src)        script.src = src;
+        if (content)    script.textContent = content;
+        script.async = isAsync;
+
+        document.head.appendChild(script);
+    }
+
+    return self;
+})();
 
 /**
  * NOTE FOR ADDON REVIEWER:
@@ -399,9 +465,7 @@ class Messenger {
 
 // Inject the Messenger class into the DOM, providing the same interface for the page context side
 (function() {
-    let script = document.createElement("script");
-    script.textContent = Messenger.toString();
-    document.documentElement.appendChild(script);
+    DOMHelper.insertScript({ content: Messenger.toString() });
 })();
 
 class CookieStorage {
@@ -448,6 +512,7 @@ CookieStorage.cache = new Map();
 
 let RequestData = (function(){
     let self = {};
+    let fetchFn = (typeof content !== 'undefined' && content && content.fetch) || fetch;
 
     self.getHttp = function(url, settings, responseType="text") {
         settings = settings || {};
@@ -463,7 +528,7 @@ let RequestData = (function(){
             console.warn("Requesting URL without protocol, please update");
         }
 
-        return fetch(url, settings).then(response => {
+        return fetchFn(url, settings).then(response => {
 
             ProgressBar.finishRequest();
 
@@ -896,7 +961,7 @@ let Price = (function() {
         }
         let rate = Currency.getRate(this.currency, desiredCurrency);
         if (!rate) {
-            throw `Could not establish conversion rate between ${this.currency} and ${desiredCurrency}`;
+            throw new Error(`Could not establish conversion rate between ${this.currency} and ${desiredCurrency}`);
         }
         return new Price(this.value * rate, desiredCurrency);
     };
@@ -972,7 +1037,7 @@ let Stats = (function() {
             <div class="achieveBar">
                 <div style="width: ${stats[3]}%;" class="achieveBarProgress"></div>
             </div>`;
-        });
+        }, EnhancedSteam.addLoginWarning);
     };
 
     return self;
@@ -1027,6 +1092,34 @@ let EnhancedSteam = (function() {
 
     };
 
+    self.addBackToTop = function() {
+        if (!SyncedStorage.get("show_backtotop")) { return; }
+
+        let steamButton = document.querySelector("#BackToTop");
+        if (steamButton) {
+            steamButton.remove();
+        }
+
+        HTML.afterBegin("body", `<div class="es_btt">&#9650;</div>`);
+
+        let node = document.querySelector(".es_btt");
+
+        node.addEventListener("click", () => {
+            window.scroll({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        window.addEventListener("scroll", opacityHandler);
+
+        function opacityHandler() {
+            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
+            node.classList.toggle("is-visible", scrollHeight >= 400)
+        }
+    };
+
     self.clearCache = function() {
         localStorage.clear();
         SyncedStorage.remove("user_currency");
@@ -1075,16 +1168,13 @@ let EnhancedSteam = (function() {
         });
     };
 
-    // todo (MxtOUT) Add this back once proper error handling is implemented
     let loginWarningAdded = false;
     self.addLoginWarning = function(err) {
-        if (!loginWarningAdded) {
+        if (!loginWarningAdded && err.name === "CommunityLoginError") {
             addWarning(`${Localization.str.community_login.replace("__link__", "<a href='https://steamcommunity.com/login/'>steamcommunity.com</a>")}`);
+            console.warn(err.message);
             loginWarningAdded = true;
-        }
-
-        // Triggers the unhandledrejection handler, so that the error is not fully suppressed
-        Promise.reject(err);
+        }        
     };
 
     self.handleInstallSteamButton = function() {
@@ -1230,7 +1320,7 @@ let EnhancedSteam = (function() {
         }
     };
 
-    self.alternateLinuxIcon = function(){
+    self.alternateLinuxIcon = function() {
         if (!SyncedStorage.get("show_alternative_linux_icon")) { return; }
         let url = ExtensionResources.getURL("img/alternative_linux_icon.png");
         let style = document.createElement('style');
@@ -1279,52 +1369,23 @@ let EnhancedSteam = (function() {
         }
     };
 
-    return self;
-})();
+    self.defaultCommunityTab = function() {
+        let tab = SyncedStorage.get("community_default_tab");
+        if (!tab) { return; }
 
-let DOMHelper = (function(){
-
-    let self = {};
-
-    self.wrap = function(container, node) {
-        let parent = node.parentNode;
-        parent.insertBefore(container, node);
-        parent.removeChild(node);
-        container.append(node);
-    };
-
-    self.remove = function(selector) {
-        let node = document.querySelector(selector);
-        if (!node) { return; }
-        node.remove();
-    };
-
-    // TODO extend Node itself?
-    self.selectLastNode = function(parent, selector) {
-        let nodes = parent.querySelectorAll(selector);
-        return nodes.length !== 0 ? nodes[nodes.length-1] : null;
-    };
-
-    self.insertStylesheet = function(href) {
-        let stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.type = 'text/css';
-        stylesheet.href = href;
-        document.head.appendChild(stylesheet);
-    }
-
-    self.insertHomeCSS = function() {
-        self.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
-        let headerCtn = document.querySelector("div#global_header .content");
-        if (headerCtn) {
-            // Fixes displaced header, see #190
-            headerCtn.style.right = 0;
+        let links = document.querySelectorAll("a[href^='https://steamcommunity.com/app/']");
+        for (let link of links) {
+            if (link.classList.contains("apphub_sectionTab")) { continue; }
+            if (!/^\/app\/[0-9]+\/?$/.test(link.pathname)) { continue; }
+            if (!link.pathname.endsWith("/")) {
+                link.pathname += "/";
+            }
+            link.pathname += tab + "/";
         }
-    }
+    };
 
     return self;
 })();
-
 
 let EarlyAccess = (function(){
 
@@ -1437,15 +1498,6 @@ let EarlyAccess = (function(){
                 checkNodes([".game_info_cap",
                            ".showcase_gamecollector_game",
                            ".favoritegame_showcase_game"]);
-                break;
-            case /^\/app\/.*/.test(window.location.pathname):
-                if (document.querySelector(".apphub_EarlyAccess_Title")) {
-                    let container = document.createElement("span");
-                    container.id = "es_ea_apphub";
-                    DOMHelper.wrap(container, document.querySelector(".apphub_StoreAppLogo:first-of-type"));
-
-                    checkNodes(["#es_ea_apphub"]);
-                }
         }
     }
 
@@ -1540,10 +1592,11 @@ let Highlights = (function(){
             tagCssLoaded = true;
 
             let tagCss = [];
-            highlightTypes.forEach(name => {
+            for (let name of highlightTypes) {
                 let color = SyncedStorage.get(`tag_${name}_color`);
                 tagCss.push(`.es_tag_${name} { background-color: ${color}; }`);
-            });
+            }
+
             let style = document.createElement('style');
             style.id = 'es_tag_styles';
             style.textContent = tagCss.join("\n");
@@ -1554,13 +1607,13 @@ let Highlights = (function(){
         // Add the tags container if needed
         let tags = node.querySelectorAll(".es_tags");
         if (tags.length === 0) {
-            tags = HTMLParser.htmlToElement('<div class="es_tags' + (tagShort ? ' es_tags_short' : '') + '" />');
+            tags = HTMLParser.htmlToElement(`<div class="es_tags ${tagShort ? 'es_tags_short' : ''}"/>`);
 
             let root;
             if (node.classList.contains("tab_row")) { // can't find it
                 root = node.querySelector(".tab_desc").classList.remove("with_discount");
 
-                node.querySelector(".tab_discount").style.top="15px";
+                node.querySelector(".tab_discount").style.top = "15px";
                 root.querySelector("h4").insertAdjacentElement("afterend", tags);
             }
             else if (node.classList.contains("home_smallcap")) {
@@ -1580,15 +1633,8 @@ let Highlights = (function(){
                 root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", tags);
                 HTML.beforeBegin(root.querySelector(".game_purchase_action"), '<div style="clear: right;"></div>');
             }
-            else if (node.classList.contains("small_cap")) {
-                node.querySelector("h4").insertAdjacentElement("afterbegin", tags);
-            }
-            else if (node.classList.contains("browse_tag_game")) { // can't find it
-                root = node;
-
-                tags.style.display = "table";
-                tags.style.marginLeft = "8px";
-                root.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
+            else if (node.classList.contains("browse_tag_game")) {
+                node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
             }
             else if (node.classList.contains("game_area_dlc_row")) {
                 node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", tags);
@@ -1600,44 +1646,28 @@ let Highlights = (function(){
                 node.querySelector(".match_price").insertAdjacentElement("afterbegin", tags);
             }
             else if (node.classList.contains("cluster_capsule")) {
-                node.querySelector(".main_cap_platform_area").append($tags);
+                node.querySelector(".main_cap_platform_area").append(tags);
             }
-            else if (node.classList.contains("recommendation_highlight")) { // can't find it
-                root = node;
-
-                if (document.querySelector(".game_purchase_action")) {
-                    tags.style.float = "left";
-                    let node = root.querySelector(".game_purchase_action");
-                    node.insertAdjacentElement("beforebegin", tags);
-                    HTML.beforeBegin(node, '<div style="clear: right;"></div>');
-                } else {
-                    tags.style.fload = "right";
-                    HTML.beforeBegin(root.querySelector(".price").parentNode, tags);
-                }
+            else if (node.classList.contains("recommendation_highlight")) {
+                node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", tags);
             }
-            else if (node.classList.contains("similar_grid_item")) { // can't find it
-                root = node;
-                tags.style.float = "right";
-                root.querySelector(".similar_grid_price").querySelector(".price").append($tags);
+            else if (node.classList.contains("similar_grid_item")) {
+                node.querySelector(".regular_price, .discount_block").append(tags);
             }
-            else if (node.classList.contains("recommendation_carousel_item")) { // can't find it
-                root = node;
-                tags.style.float = "left";
-                root.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
+            else if (node.classList.contains("recommendation_carousel_item")) {
+                node.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
             }
-            else if (node.classList.contains("friendplaytime_game")) { // can't find it
-                root = node;
-                tags.style.float = "left";
-                root.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
+            else if (node.classList.contains("friendplaytime_game")) {
+                node.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
             }
 
             tags = [tags];
         }
 
         // Add the tag
-        for (let i=0,len=tags.length; i<len; i++) {
-            if (!tags[i].querySelector(".es_tag_" + tag)) {
-                HTML.beforeEnd(tags[i], '<span class="es_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
+        for (let n of tags) {
+            if (!n.querySelector(`es_tag_${tag}`)) {
+                HTML.beforeEnd(n, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
             }
         }
     }
@@ -1664,13 +1694,13 @@ let Highlights = (function(){
 
             let hlCss = [];
 
-            highlightTypes.forEach(name => {
+            for (let name of highlightTypes) {
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(
                    `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
                     .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name} { outline: solid ${color}; }
                     .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }`);
-            });
+            }
 
             let style = document.createElement('style');
             style.id = 'es_highlight_styles';
@@ -1723,16 +1753,15 @@ let Highlights = (function(){
         node.classList.remove("ds_flagged");
     }
 
-
     function highlightItem(node, name) {
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("highlight_"+name)) {
-            node.classList.add("es_highlighted", "es_highlighted_"+name);
+        if (SyncedStorage.get(`highlight_${name}`)) {
+            node.classList.add("es_highlighted", `es_highlighted_${name}`);
             highlightNode(node);
         }
 
-        if (SyncedStorage.get("tag_" + name)) {
+        if (SyncedStorage.get(`tag_${name}`)) {
             addTag(node, name);
         }
     }
@@ -1943,7 +1972,6 @@ let Highlights = (function(){
     };
 
     return self;
-
 })();
 
 let DynamicStore = (function(){
@@ -2325,6 +2353,7 @@ let Common = (function(){
         if (User.isSignedIn) {
             ITAD.create();
         }
+        EnhancedSteam.addBackToTop();
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
         EnhancedSteam.handleInstallSteamButton();
@@ -2334,6 +2363,7 @@ let Common = (function(){
         EnhancedSteam.disableLinkFilter();
         EnhancedSteam.skipGotSteam();
         EnhancedSteam.keepSteamSubscriberAgreementState();
+        EnhancedSteam.defaultCommunityTab();
 
         if (User.isSignedIn) {
             EnhancedSteam.addRedeemLink();
@@ -2351,7 +2381,7 @@ class Downloader {
 
     static download(content, filename) {
         let a = document.createElement("a");
-        a.href = URL.createObjectURL(content);
+        a.href = typeof content === "string" ? content : URL.createObjectURL(content);
         a.download = filename;
 
         // Explicitly dispatching the click event (instead of just a.click()) will make it work in FF
@@ -2546,34 +2576,221 @@ class MediaPage {
     }
 
     _horizontalScrolling() {
+        if (!SyncedStorage.get("horizontalscrolling")) { return; }
 
         let strip = document.querySelector("#highlight_strip");
-        if (!strip || !SyncedStorage.get("horizontalmediascrolling")) { return; }
+        if (strip) {
+            new HorizontalScroller(
+                strip,
+                document.querySelector("#highlight_slider_left"),
+                document.querySelector("#highlight_slider_right")
+            );
+        }
 
-        let lastScroll = Date.now();
-        strip.addEventListener("wheel", scrollStrip, false);
-        function scrollStrip(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            
-            if (Date.now() - lastScroll < 200) {
-                return;
-            } 
-    
-            lastScroll = Date.now();
-            let allElem = document.querySelectorAll(".highlight_strip_item");
-            let isScrollDown = ev.deltaY > 0;
-            let siblingProp = isScrollDown ? "nextSibling" : "previousSibling";
-            
-            let targetElem = document.querySelector(".highlight_strip_item.focus")[siblingProp];
-            while (!targetElem.classList || !targetElem.classList.contains("highlight_strip_item")) {
-                targetElem = targetElem[siblingProp];
-                if (!targetElem) {
-                    targetElem = allElem[isScrollDown ? 0 : allElem.length - 1];
-                }
-            }
-            
-            targetElem.click();
+        let nodes = document.querySelectorAll(".store_horizontal_autoslider_ctn");
+        for (let node of nodes) {
+            new HorizontalScroller(
+                node,
+                node.parentNode.querySelector(".slider_left"),
+                node.parentNode.querySelector(".slider_right")
+            )
         }
     }
 }
+
+
+class HorizontalScroller {
+
+    constructor(parentNode, controlLeftNode, controlRightNode) {
+        this._controlLeft = controlLeftNode;
+        this._controlRight = controlRightNode;
+
+        this._lastScroll = 0;
+        parentNode.addEventListener("wheel", (e) => { this._scrollHandler(e); });
+    }
+
+    _scrollHandler(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (Date.now() - this._lastScroll < 200) { return; }
+        this._lastScroll = Date.now();
+
+        let isScrollDown = e.deltaY > 0;
+        if (isScrollDown) {
+            this._controlRight.click();
+        } else {
+            this._controlLeft.click();
+        }
+    }
+}
+
+// Most of the code here comes from dselect.js
+class Sortbox {
+
+    static init() {
+        this._activeDropLists = {};
+        this._lastSelectHideTime = 0;
+
+        document.addEventListener("mousedown", e => this._handleMouseClick(e));
+    }
+
+    static _handleMouseClick(e) {
+        for (let key of Object.keys(this._activeDropLists)) {
+			if (!this._activeDropLists[key]) continue;
+			
+		    let ulAboveEvent = e.target.closest("ul");
+		
+            if (ulAboveEvent && ulAboveEvent.id === `${key}_droplist`) continue;
+		
+            this._hide(key);
+	    }
+    }
+
+    static _highlightItem(id, index, bSetSelected) {
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let trigger = document.querySelector(`#${id}_trigger`);
+        let rgItems = droplist.getElementsByTagName("a");
+
+        if (index >= 0 && index < rgItems.length ) {
+            let item = rgItems[index];
+            
+            if (typeof trigger.highlightedItem !== "undefined" && trigger.highlightedItem !== index)
+                rgItems[trigger.highlightedItem].className = "inactive_selection";
+                
+            trigger.highlightedItem = index;
+            rgItems[index].className = "highlighted_selection";
+            
+            let yOffset = rgItems[index].offsetTop + rgItems[index].clientHeight;
+            let curVisibleOffset = droplist.scrollTop + droplist.clientHeight;
+            let bScrolledDown = false;
+            let nMaxLoopIterations = rgItems.length;
+            let nLoopCounter = 0;
+
+            while (curVisibleOffset < yOffset && nLoopCounter++ < nMaxLoopIterations) {
+                droplist.scrollTop += rgItems[index].clientHeight;
+                curVisibleOffset = droplist.scrollTop+droplist.clientHeight;
+                bScrolledDown = true;
+            }
+            
+            if ( !bScrolledDown ) {
+                nLoopCounter = 0;
+                yOffset = rgItems[index].offsetTop;
+                curVisibleOffset = droplist.scrollTop;
+                while(curVisibleOffset > yOffset && nLoopCounter++ < nMaxLoopIterations) {
+                    droplist.scrollTop -= rgItems[index].clientHeight;
+                    curVisibleOffset = droplist.scrollTop;
+                }
+            }
+            
+            if (bSetSelected) {
+                HTML.inner(trigger, item.innerHTML);
+                let input = document.querySelector(`#${id}`);
+                input.value = item.id;
+                input.dispatchEvent(new Event("change"));
+                
+                this._hide(id);
+            }
+        }
+    }
+
+    static _onFocus(id) {
+        this._activeDropLists[id] = true;
+    }
+
+    static _onBlur(id) {
+		if (!this._classCheck(document.querySelector(`#${id}_trigger`), "activetrigger"))
+	        this._activeDropLists[id] = false;
+    }
+
+    static _hide(id) {
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let trigger = document.querySelector(`#${id}_trigger`);
+	
+		let d = new Date();
+	    this._lastSelectHideTime = d.valueOf();
+	
+        trigger.className = "trigger";
+        droplist.className = "dropdownhidden";
+        this._activeDropLists[id] = false;
+        trigger.focus();
+    }
+
+    static _show(id) {
+		let d = new Date();
+	    if (d - this._lastSelectHideTime < 50) return;
+		
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let trigger = document.querySelector(`#${id}_trigger`);
+        
+        trigger.className = "activetrigger";
+        droplist.className = "dropdownvisible";
+        this._activeDropLists[id] = true;
+        trigger.focus();
+    }
+
+    static _onTriggerClick(id) {
+        if (!this._classCheck(document.querySelector(`#${id}_trigger`), "activetrigger")) {
+            this._show(id);
+        }
+    }
+
+    static _classCheck(element, className) {
+        return new RegExp(`\\b${className}\\b`).test(element.className);
+    }
+
+    static get(name, options, defaultOption, onChange) {
+
+        let id = `sort_by_${name}`;
+        
+        /*  
+        We need to parse this here without sanitizing, since the onchange property of the input element has to be set in the HTML.
+        If set by changing the property via JS, it is somehow removed by some code (probably on Steam's side).
+        Adding a listener via addEventListener won't work too, since Steam's dselect.js relies on the onchange property.
+        */
+        let box = HTML.element(
+        `<div class="es-sortbox">
+            <div class="es-sortbox__label">${Localization.str.sort_by}</div>
+            <div class="es-sortbox__container">
+                <input id="${id}" type="hidden" name="${name}" value="${defaultOption}">
+                <a class="trigger" id="${id}_trigger"></a>
+                <div class="es-dropdown">
+                    <ul id="${id}_droplist" class="es-dropdown__list dropdownhidden"></ul>
+                </div>
+            </div>
+        </div>`);
+
+        box.querySelector(`#${id}`).addEventListener("change", function() { onChange(this.value); });
+
+        let trigger = box.querySelector(`#${id}_trigger`);
+        trigger.addEventListener("focus", () => this._onFocus(id));
+        trigger.addEventListener("blur", () => this._onBlur(id));
+        trigger.addEventListener("click", () => this._onTriggerClick(id));
+
+        let ul = box.querySelector("ul");
+        for (let i = 0; i < options.length; ++i) {
+            let [key, text] = options[i];
+
+            let toggle = "inactive";
+            if (key === defaultOption) {
+                box.querySelector(`#${id}`).value = key;
+                box.querySelector(".trigger").textContent = text;
+                toggle = "highlighted";
+            }
+
+            HTML.beforeEnd(ul,
+                `<li>
+                    <a class="${toggle}_selection" tabindex="99999" id="${key}">${text}</a>
+                </li>`);
+
+            let a = ul.querySelector("li:last-child > a");
+            //a.href = "javascript:DSelectNoop()";
+            a.addEventListener("mouseover", () => this._highlightItem(id, i, false));
+            a.addEventListener("click",     () => this._highlightItem(id, i, true));
+        }
+
+        return box;
+    }
+}
+
+Sortbox.init();

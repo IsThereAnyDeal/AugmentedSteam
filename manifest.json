@@ -1,5 +1,6 @@
 {
   "name": "Augmented Steam",
+  "short_name": "AS",
   "version": "1.3.1",
   "description": "Augments your Steam Experience",
   "icons": {
@@ -16,12 +17,10 @@
   "permissions": [
     "storage",
     "identity",
+    "contextMenus",
     "*://*.steampowered.com/*",
     "*://steamcommunity.com/*",
     "*://*.isthereanydeal.com/"
-  ],
-  "optional_permissions": [
-    "contextMenus"
   ],
   "web_accessible_resources": [
     "img/*.png",
@@ -79,6 +78,7 @@
       "exclude_matches": [
         "*://steamcommunity.com/login/*",
         "*://steamcommunity.com/openid/*",
+        "*://steamcommunity.com/chat/*",
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
