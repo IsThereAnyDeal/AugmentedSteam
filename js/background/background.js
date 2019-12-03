@@ -239,7 +239,8 @@ class ITAD_Api extends Api {
             }
         }
 
-        return ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, { "body": JSON.stringify(waitlistJSON) });
+        await ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, { "body": JSON.stringify(waitlistJSON) });
+        return IndexedDB.put("waitlist", null, storeids, Array.isArray(storeids));
     }
 
     static addToCollection(appids, subids) {
