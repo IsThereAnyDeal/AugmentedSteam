@@ -265,9 +265,11 @@ class Background {
                 case "ServerOutageError":
                     ProgressBar.serverOutage();
                     break;
-                case "CommunityLoginError":
+                case "CommunityLoginError": {
                     EnhancedSteam.addLoginWarning();
+                    ProgressBar.finishRequest();
                     break;
+                } 
                 default:
                     ProgressBar.failed();
             }
