@@ -216,8 +216,8 @@ class ITAD_Api extends Api {
         }
     }
 
-    static async addToWaitlist(appids) {
-        if (!appids || (Array.isArray(appids) && !appids.length)) {
+    static async addToWaitlist(storeids) {
+        if (!storeids || (Array.isArray(storeids) && !storeids.length)) {
             console.warn("Can't add nothing to ITAD waitlist");
             return;
         }
@@ -227,22 +227,22 @@ class ITAD_Api extends Api {
             "data": [],
         };
 
-        if (Array.isArray(appids)) {
-            appids.forEach(appid => {
+        if (Array.isArray(storeids)) {
+            storeids.forEach(storeid => {
                 waitlistJSON.data.push({
-                    "gameid": ["steam", `app/${appid}`],
+                    "gameid": ["steam", storeid],
                 });
             });
         } else {
             waitlistJSON.data[0] = {
-                "gameid": ["steam", `app/${appids}`],
+                "gameid": ["steam", storeids],
             }
         }
 
         return ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, { "body": JSON.stringify(waitlistJSON) });
     }
 
-    static async addToCollection(appids, subids) {
+    static addToCollection(appids, subids) {
         if ((!appids || (Array.isArray(appids) && !appids.length)) && (!subids || (Array.isArray(subids) && !subids.length))) {
             console.warn("Can't add nothing to ITAD collection");
             return;
@@ -333,7 +333,7 @@ class ITAD_Api extends Api {
             let [{ wishlisted }, { lastWishlisted }] = result;
             let newWishlisted = removeDuplicates(wishlisted, lastWishlisted);
             if (newWishlisted.length) {
-                promises.push(ITAD_Api.addToWaitlist(newWishlisted)
+                promises.push(ITAD_Api.addToWaitlist(`app/${newWishlisted}`)
                     .then(() => IndexedDB.put("itadImport", wishlisted, "lastWishlisted")));
             }
         }
