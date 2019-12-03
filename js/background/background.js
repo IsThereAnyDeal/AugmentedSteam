@@ -149,7 +149,7 @@ class AugmentedSteamApi extends Api {
         let json = await super.getEndpoint(endpoint, query, response => {
             if (response.status === 500) {
                 // Beautify HTTP 500: "User 'p_enhsteam' has exceeded the 'max_user_connections' resource (current value: XX)", which would result in a SyntaxError due to JSON.parse
-                throw new Error(`Augmented Steam servers are currently overloaded, failed to fetch endpoint "${endpoint}"`);
+                throw new ServerOutageError(`Augmented Steam servers are currently overloaded, failed to fetch endpoint "${endpoint}"`);
             }
         });
         if (!json.result || json.result !== "success") {
@@ -634,7 +634,11 @@ class SteamCommunity extends Api {
 
         do {
             let thisParams = Object.assign(params, last_assetid ? { "start_assetid": last_assetid } : null);
-            result = await SteamCommunity.getEndpoint(`/inventory/${login.steamId}/753/${contextId}`, thisParams);
+            result = await SteamCommunity.getEndpoint(`/inventory/${login.steamId}/753/${contextId}`, thisParams, res => {
+                if (res.status === 403) {
+                    throw new CommunityLoginError(`Can't access resource at ${res.url}, HTTP 403`);
+                }
+            });
             if (result && result.success) {
                 if (!data) data = { "assets": [], "descriptions": [] };
                 if (result.assets) data.assets = data.assets.concat(result.assets);

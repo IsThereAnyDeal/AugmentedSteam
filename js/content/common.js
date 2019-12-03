@@ -261,7 +261,11 @@ class Background {
             ProgressBar.finishRequest();
             return result;
         }, err => {
-            ProgressBar.failed();
+            if (err instanceof ServerOutageError) {
+                ProgressBar.serverOutage();
+            } else {
+                ProgressBar.failed();
+            }
             throw err;
         });
     }
@@ -1541,20 +1545,28 @@ let Inventory = (function(){
             };
         }
 
-        let [ giftsAndPasses, coupons ] = await Promise.all([
-            Background.action("hasgiftsandpasses", appids),
-            Background.action("hascoupon", appids),
-        ]);
-        if (Array.isArray(appids)) {
-            let results = {};
-            
-            for (let id of appids.values()) {
-                results[id] = getStatusObject(giftsAndPasses[id], coupons[id]);
+        let giftsAndPasses, coupons;
+
+        try {
+            [ giftsAndPasses, coupons ] = await Promise.all([
+                Background.action("hasgiftsandpasses", appids),
+                Background.action("hascoupon", appids),
+            ]);
+
+            if (Array.isArray(appids)) {
+                let results = {};
+                
+                for (let id of appids.values()) {
+                    results[id] = getStatusObject(giftsAndPasses[id], coupons[id]);
+                }
+                
+                return results;
             }
-            
-            return results;
+        } catch (err) {
+            EnhancedSteam.addLoginWarning(err);
+        } finally {
+            return getStatusObject(giftsAndPasses || [], coupons || null);
         }
-        return getStatusObject(giftsAndPasses, coupons);
     };
 
     self.hasInInventory6 = function(marketHashes) {
