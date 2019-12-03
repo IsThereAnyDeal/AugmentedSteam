@@ -111,7 +111,11 @@ class Background {
                     return;
                 }
                 if (typeof response.error !== 'undefined') {
-                    ProgressBar.failed();
+                    if (response.name === "ServerOutageError") {
+                        ProgressBar.serverOutage();
+                    } else {
+                        ProgressBar.failed();
+                    }
                     response.localStack = (new Error(message.action)).stack;
                     reject(response);
                     return;

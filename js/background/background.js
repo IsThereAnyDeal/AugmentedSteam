@@ -95,7 +95,7 @@ class AugmentedSteamApi extends Api {
         let json = await super.getEndpoint(endpoint, query, response => {
             if (response.status === 500) {
                 // Beautify HTTP 500: "User 'p_enhsteam' has exceeded the 'max_user_connections' resource (current value: XX)", which would result in a SyntaxError due to JSON.parse
-                throw new Error(`Augmented Steam servers are currently overloaded, failed to fetch endpoint "${endpoint}"`);
+                throw new ServerOutageError(`Augmented Steam servers are currently overloaded, failed to fetch endpoint "${endpoint}"`);
             }
         });
         if (!json.result || json.result !== "success") {
