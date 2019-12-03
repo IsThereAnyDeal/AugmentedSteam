@@ -1041,7 +1041,7 @@ let Stats = (function() {
             <div class="achieveBar">
                 <div style="width: ${stats[3]}%;" class="achieveBarProgress"></div>
             </div>`;
-        }, EnhancedSteam.addLoginWarning);
+        });
     };
 
     return self;
