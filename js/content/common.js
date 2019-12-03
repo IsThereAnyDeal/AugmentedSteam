@@ -1564,8 +1564,7 @@ let Inventory = (function(){
             }
         } catch (err) {
             EnhancedSteam.addLoginWarning(err);
-        } finally {
-            return getStatusObject(giftsAndPasses || [], coupons || null);
+            return getStatusObject([], null);
         }
     };
 
