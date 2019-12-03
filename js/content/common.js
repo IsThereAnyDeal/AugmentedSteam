@@ -1427,7 +1427,7 @@ let Inventory = (function(){
             promises.push(Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)));
         }
         
-        _promise = Promise.all(promises);
+        _promise = Promise.all(promises).catch(EnhancedSteam.addLoginWarning);
         return _promise;
     };
 

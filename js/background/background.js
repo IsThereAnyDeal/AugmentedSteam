@@ -489,7 +489,11 @@ class SteamCommunity extends Api {
 
         do {
             let thisParams = Object.assign(params, last_assetid ? { "start_assetid": last_assetid } : null);
-            result = await SteamCommunity.getEndpoint(`/inventory/${login.steamId}/753/${contextId}`, thisParams);
+            result = await SteamCommunity.getEndpoint(`/inventory/${login.steamId}/753/${contextId}`, thisParams, res => {
+                if (res.status === 403) {
+                    throw new CommunityLoginError(`Can't access resource at ${res.url}, HTTP 403`);
+                }
+            });
             if (result && result.success) {
                 if (!data) data = { "assets": [], "descriptions": [] };
                 if (result.assets) data.assets = data.assets.concat(result.assets);
