@@ -73,18 +73,20 @@ class Api {
         }
         return fetch(url, params);
     }
-    static getEndpoint(endpoint, query, params = {}) {
-        if (!endpoint.endsWith('/'))
-            endpoint += '/';
-        return this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'GET', })).then(response => response.json());
+    static async getEndpoint(endpoint, query, params = {}) {
+        if (!endpoint.endsWith('/')) endpoint += '/';
+        return (await this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'GET', }))).json();
     }    
-    static getPage(endpoint, query, params = {}) {
-        return this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'GET', })).then(response => response.text());
+    static async getPage(endpoint, query, params = {}) {
+        return (await this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'GET', }))).text();
+   }
+    static async postEndpoint(endpoint, query, params = {}) {
+        if (!endpoint.endsWith('/')) endpoint += '/';
+        return (await this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'POST', }))).json();
     }
-    static postEndpoint(endpoint, query, params = {}) {
-        if (!endpoint.endsWith('/'))
-            endpoint += '/';
-        return this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'POST', })).then(response => response.json());
+    static async deleteEndpoint(endpoint, query, params = {}) {
+        if (!endpoint.endsWith('/')) endpoint += '/';
+        return (await this._fetchWithDefaults(endpoint, query, Object.assign(params, { 'method': 'DELETE', }))).json();
     }
     static endpointFactory(endpoint) {
         return async params => this.getEndpoint(endpoint, params).then(result => result.data);
@@ -241,6 +243,15 @@ class ITAD_Api extends Api {
 
         await ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, { "body": JSON.stringify(waitlistJSON) });
         return IndexedDB.put("waitlist", null, storeids, Array.isArray(storeids));
+    }
+
+    static async removeFromWaitlist(storeids) {
+        if (!storeids || (Array.isArray(storeids) && !storeids.length)) {
+            throw new Error("Can't remove nothing from ITAD Waitlist!");
+        }
+        storeids = Array.isArray(storeids) ? storeids : [storeids];
+        await ITAD_Api.deleteEndpoint("v02/user/wait/remove/", { "access_token": ITAD_Api.accessToken, "shop": "steam", "ids": storeids.join() });
+        return IndexedDB.delete("waitlist", storeids);
     }
 
     static addToCollection(appids, subids) {
@@ -1054,8 +1065,14 @@ class IndexedDB {
         }
     }
 
-    static delete(objectStoreName, key) {
-        return IndexedDB.db.delete(objectStoreName, key);
+    static delete(objectStoreName, keys) {
+        keys = Array.isArray(keys) ? keys : [keys];
+
+        let promises = [];
+        for (let key of keys) {
+            promises.push(IndexedDB.db.delete(objectStoreName, key));
+        }
+        return Promise.all(promises);
     }
 
     static clear(objectStoreNames) {
@@ -1277,6 +1294,7 @@ let actionCallbacks = new Map([
     ["itad.lastimport", ITAD_Api.lastImport],
     ["itad.inwaitlist", ITAD_Api.inWaitlist],
     ["itad.addtowaitlist", ITAD_Api.addToWaitlist],
+    ["itad.removefromwaitlist", ITAD_Api.removeFromWaitlist],
     ["itad.incollection", ITAD_Api.inCollection],
     ["itad.getfromcollection", ITAD_Api.getFromCollection],
 

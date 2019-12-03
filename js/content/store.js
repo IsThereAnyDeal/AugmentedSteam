@@ -575,6 +575,8 @@ class AppPageClass extends StorePageClass {
         this.appid = GameId.getAppid(url);
         this.storeid = `app/${this.appid}`;
 
+        this.onWishAndWaitlistRemove = null;
+
         // Some games (e.g. 201270, 201271) have different appid in store page and community
         let communityAppidSrc = document.querySelector(".apphub_AppIcon img").getAttribute("src");
         this.communityAppid = GameId.getAppidImgSrc(communityAppidSrc);
@@ -849,6 +851,8 @@ class AppPageClass extends StorePageClass {
                         removeWaitlist ? this._removeFromWaitlist() : Promise.resolve(),
                     ]);
 
+                    if (SyncedStorage.get("add_to_waitlist")) { this.onWishAndWaitlistRemove(); }
+
                     document.querySelector("#add_to_wishlist_area").style.display = "inline";
                     document.querySelector("#add_to_wishlist_area_success").style.display = "none";
 
@@ -874,6 +878,10 @@ class AppPageClass extends StorePageClass {
         formData.append("appid", this.appid);
 
         return RequestData.post("https://store.steampowered.com/api/removefromwishlist", formData, {withCredentials: true})
+    }
+
+    async _removeFromWaitlist() {
+        return Background.action("itad.removefromwaitlist", this.storeid);
     }
 
     async addUserNote() {
@@ -1030,15 +1038,10 @@ class AppPageClass extends StorePageClass {
             );
         });
 
-        wishlistSuccessArea.addEventListener("click", async () => {
-            await this._removeFromWishlist();
-            wishlisted = false;
-
-            // todo remove from waitlist
-            waitlisted = false;
-
+        this.onWishAndWaitlistRemove = () => {
+            wishlisted = waitlisted = false;
             updateDiv();
-        });
+        };
 
         wishlistOption.addEventListener("click", async () => {
             if (wishlisted) {
@@ -1052,7 +1055,7 @@ class AppPageClass extends StorePageClass {
 
         waitlistOption.addEventListener("click", async () => {
             if (waitlisted) {
-                // todo remove from waitlist
+                await Background.action("itad.removefromwaitlist", this.storeid);
             } else {
                 await Background.action("itad.addtowaitlist", this.storeid);
             }
