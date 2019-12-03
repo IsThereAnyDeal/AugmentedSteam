@@ -1545,10 +1545,8 @@ let Inventory = (function(){
             };
         }
 
-        let giftsAndPasses, coupons;
-
         try {
-            [ giftsAndPasses, coupons ] = await Promise.all([
+            let [ giftsAndPasses, coupons ] = await Promise.all([
                 Background.action("hasgiftsandpasses", appids),
                 Background.action("hascoupon", appids),
             ]);
@@ -1556,7 +1554,7 @@ let Inventory = (function(){
             if (Array.isArray(appids)) {
                 let results = {};
                 
-                for (let id of appids.values()) {
+                for (let id of appids) {
                     results[id] = getStatusObject(giftsAndPasses[id], coupons[id]);
                 }
                 
@@ -1564,6 +1562,15 @@ let Inventory = (function(){
             }
         } catch (err) {
             EnhancedSteam.addLoginWarning(err);
+
+            if (Array.isArray(appids)) {
+                let results = {};
+                for (let id of appids) {
+                    results[id] = getStatusObject([], null);
+                }
+                return results;
+            }
+
             return getStatusObject([], null);
         }
     };
