@@ -177,7 +177,7 @@ class ITAD_Api extends Api {
     static async authorize(hash) {
         let url = await browser.identity.launchWebAuthFlow(
             {
-                url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=https://${browser.runtime.id}.chromiumapp.org/itad`,
+                url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${browser.identity.getRedirectURL()}`,
                 interactive: true
             });
         if (!url) { throw new Error("Couldn't retrieve access token for ITAD authorization"); }
