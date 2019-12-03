@@ -1162,13 +1162,7 @@ class AppPageClass extends StorePageClass {
     async addCoupon() {
         if (!SyncedStorage.get("show_coupon")) { return; }
         
-        let coupon;
-        try {
-            coupon = await Inventory.getCoupon(this.appid);
-        } catch (err) {
-            EnhancedSteam.addLoginWarning(err);
-            return;
-        }
+        let coupon = await Inventory.getCoupon(this.appid);
         if (!coupon) { return; }
 
         let couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
@@ -2114,9 +2108,9 @@ class AppPageClass extends StorePageClass {
         let appid = this.communityAppid;
 
         Background.action("cards", appid)
-            .then(result => loadBadgeContent(".es_normal_badge_progress", result), EnhancedSteam.addLoginWarning);
+            .then(result => loadBadgeContent(".es_normal_badge_progress", result));
         Background.action("cards", appid, true)
-            .then(result => loadBadgeContent(".es_foil_badge_progress", result), EnhancedSteam.addLoginWarning);
+            .then(result => loadBadgeContent(".es_foil_badge_progress", result));
 
         function loadBadgeContent(targetSelector, result) {
             let dummy = HTMLParser.htmlToDOM(result);
@@ -2221,7 +2215,7 @@ class AppPageClass extends StorePageClass {
             
             let node = document.querySelector("#es_ach_stats");
             HTML.inner(node, achieveBar)
-        }, EnhancedSteam.addLoginWarning);
+        });
     }
 
     customizeAppPage() {

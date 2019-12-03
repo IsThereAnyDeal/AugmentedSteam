@@ -1163,7 +1163,7 @@ let GamesPageClass = (function(){
 
                     HTML.inner(node, achieveBar);
 
-                }, EnhancedSteam.addLoginWarning);
+                });
             }
         }
     };
@@ -3647,13 +3647,9 @@ let MarketPageClass = (function(){
             let m = node.href.match(/market\/listings\/753\/(.+?)(\?|$)/);
             if (!m) { continue; }
 
-            try {
-                // todo Collect hashes and query them all at once
-                if (await Inventory.hasInInventory6(decodeURIComponent(m[1]))) {
-                    Highlights.highlightOwned(node.querySelector("div"));
-                }
-            } catch (err) {
-                EnhancedSteam.addLoginWarning(err);
+            // todo Collect hashes and query them all at once
+            if (await Inventory.hasInInventory6(decodeURIComponent(m[1]))) {
+                Highlights.highlightOwned(node.querySelector("div"));
             }
         }
     };

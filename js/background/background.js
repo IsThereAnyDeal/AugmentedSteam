@@ -1333,13 +1333,15 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     }
 
     message.params = message.params || [];
+    let res;
     try {
         await Promise.all([IndexedDB, SyncedStorage]);
-        return callback(...message.params);
+        res = await callback(...message.params);
     } catch(err) {
         console.error(`Failed to execute callback ${message.action}: ${err.name}: ${err.message}\n${err.stack}`);
-        throw err;
+        throw { "message": err.name };
     }
+    return res;
 });
 
 chrome.runtime.onStartup.addListener(ContextMenu.init);

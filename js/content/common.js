@@ -261,10 +261,15 @@ class Background {
             ProgressBar.finishRequest();
             return result;
         }, err => {
-            if (err instanceof ServerOutageError) {
-                ProgressBar.serverOutage();
-            } else {
-                ProgressBar.failed();
+            switch (err.message) {
+                case "ServerOutageError":
+                    ProgressBar.serverOutage();
+                    break;
+                case "CommunityLoginError":
+                    EnhancedSteam.addLoginWarning();
+                    break;
+                default:
+                    ProgressBar.failed();
             }
             throw err;
         });
@@ -1173,10 +1178,10 @@ let EnhancedSteam = (function() {
     };
 
     let loginWarningAdded = false;
-    self.addLoginWarning = function(err) {
-        if (!loginWarningAdded && err.name === "CommunityLoginError") {
+    self.addLoginWarning = function() {
+        if (!loginWarningAdded) {
             addWarning(`${Localization.str.community_login.replace("__link__", "<a href='https://steamcommunity.com/login/'>steamcommunity.com</a>")}`);
-            console.warn(err.message);
+            console.warn("Are you logged in to steamcommunity.com?");
             loginWarningAdded = true;
         }        
     };
@@ -1561,8 +1566,6 @@ let Inventory = (function(){
                 return results;
             }
         } catch (err) {
-            EnhancedSteam.addLoginWarning(err);
-
             if (Array.isArray(appids)) {
                 let results = {};
                 for (let id of appids) {
