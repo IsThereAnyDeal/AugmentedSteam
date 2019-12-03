@@ -817,8 +817,8 @@ class SteamCommunity extends Api {
         LocalStorage.remove("login");
     }
 
-    static getProfile(steamId) { IndexedDB.get("profiles", steamId, { "profile": steamId }) }
-    static clearOwn(steamId) { IndexedDB.delete("profiles", steamId) }
+    static getProfile(steamId) { return IndexedDB.get("profiles", steamId, { "profile": steamId }) }
+    static clearOwn(steamId) { return IndexedDB.delete("profiles", steamId) }
 
     static getPage(endpoint, query) {
         return this._fetchWithDefaults(endpoint, query, { method: 'GET' }).then(response => {
