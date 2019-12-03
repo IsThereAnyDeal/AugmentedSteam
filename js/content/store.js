@@ -1183,7 +1183,7 @@ class AppPageClass extends StorePageClass {
                             <div class="tab_content">Steam</div>
                         </div>
                         <div id="es_tab_youtubemedia" class="es_media_tab home_tab">
-                            <div class="tab_content">YouTube Gameplay</div>
+                            <div class="tab_content">${Localization.str.youtube_gameplay}</div>
                         </div>
                     </div>
                 </div>
