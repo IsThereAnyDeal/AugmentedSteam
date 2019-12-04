@@ -1567,6 +1567,7 @@ let Inventory = (function(){
                 
                 return results;
             }
+            return getStatusObject(giftsAndPasses, coupons);
         } catch (err) {
             if (Array.isArray(appids)) {
                 let results = {};
