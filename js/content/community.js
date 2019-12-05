@@ -1204,8 +1204,6 @@ let GamesPageClass = (function(){
 
             if (_commonGames.has(appid)) {
                 node.classList.add("esi-common");
-            } else {
-                node.classList.add("esi-notcommon");
             }
         }
     }
@@ -1228,16 +1226,8 @@ let GamesPageClass = (function(){
             return checkboxEl;
         }
 
-        let commonCheckbox = createCheckox("es_gl_show_common_games", Localization.str.common_label);
         let notCommonCheckbox = createCheckox("es_gl_show_notcommon_games", Localization.str.notcommon_label);
-
         label.insertAdjacentElement("afterend", notCommonCheckbox.parentNode);
-        label.insertAdjacentElement("afterend", commonCheckbox.parentNode);
-
-        commonCheckbox.addEventListener("change", async function(e) {
-            await loadCommonGames();
-            document.querySelector("#games_list_rows").classList.toggle("esi-hide-notcommon", e.target.checked);
-        });
 
         notCommonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
