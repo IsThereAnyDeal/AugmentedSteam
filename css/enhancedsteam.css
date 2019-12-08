@@ -960,27 +960,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
   border-color: #c00000;
 }
 
-.es_recentAchievements {
-  position: absolute;
-  right: 4px;
-  width: 205px;
-  font-size: 10px;
-  font-weight: normal;
-}
-.clientConnItemBlock ~ * .es_recentAchievements {
-  bottom: 0;
-}
-.es_recentAchievements .achieveBar {
-  background: #3a3a3a;
-  padding: 1px;
-  border: 1px solid #aeaeae;
-  width: 176.9px;
-}
-.es_recentAchievements .achieveBarProgress {
-  height: 8px;
-  background-color: #aeaeae;
-}
-
 #es_customize_btn {
   position: relative;
   visibility: visible;
@@ -1445,21 +1424,34 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
- * App pages
- * addAchievementCompletionBar()
+ * App pages and Games page
+ * addAchievementCompletionBar(), addGamelistAchievements
  **************************************/
+.es_recentAchievements {
+  position: absolute;
+  right: 4px;
+  width: 205px;
+  font-size: 10px;
+  font-weight: normal;
+}
+.clientConnItemBlock ~ * .es_recentAchievements {
+  bottom: 0;
+}
 #es_ach_stats {
   margin-bottom: 9px;
   margin-top: -16px;
   float: right;
 }
 /* Taken from: https://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css */
-#es_ach_stats .achieveBar {
+#es_ach_stats .achieveBar,
+.es_recentAchievements .achieveBar {
   background: #3a3a3a;
   padding: 1px;
   border: 1px solid #aeaeae;
+  width: 176.9px;
 }
-#es_ach_stats .achieveBarProgress {
+#es_ach_stats .achieveBarProgress,
+.es_recentAchievements .achieveBarProgress {
   height: 8px;
   background-color: #aeaeae;
 }
