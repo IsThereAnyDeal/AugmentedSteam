@@ -875,8 +875,8 @@ let Stats = (function() {
 
     let self = {};
 
-    self.getAchievementBar = function(appid) {
-        return Background.action("stats", { "appid": appid }).then(response => {
+    self.getAchievementBar = function(appid, profile) {
+        return Background.action("stats", { "appid": appid, "profile": profile }).then(response => {
             let dummy = HTMLParser.htmlToDOM(response);
             let achNode = dummy.querySelector("#topSummaryAchievements");
 

@@ -1089,7 +1089,7 @@ let GamesPageClass = (function(){
 
     function GamesPageClass() {
 
-        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(\?tab=all)?/);
+        let page = window.location.href.match(/\/((?:id|profiles)\/.+)\/games\/?(\?tab=all)?/);
 
         if (page[2]) {
             this.computeStats();
@@ -1101,8 +1101,6 @@ let GamesPageClass = (function(){
     // Display total time played for all games
     GamesPageClass.prototype.computeStats = function() {
         let games = HTMLParser.getVariableFromDom("rgGames", "array");
-
-        let statsHtml = "";
 
         let countTotal = games.length;
         let countPlayed = 0;
@@ -1116,31 +1114,29 @@ let GamesPageClass = (function(){
             }
 
             countPlayed++;
-            time += parseFloat(game['hours_forever'].replace(",",""));
+            time += parseFloat(game['hours_forever'].replace(",", ""));
         });
 
         let totalTime = Localization.str.hours_short.replace("__hours__", time.toFixed(1));
 
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>`;
-
-        let html = `<div id="esi-collection-chart-content">${statsHtml}</div>`;
-
-        HTML.beforeBegin("#mainContents", html);
+        HTML.beforeBegin("#mainContents",
+            `<div id="esi-collection-chart-content">
+                <div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>
+                <div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>
+                <div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>
+                <div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>
+            </div>`);
     };
 
     let scrollTimeout = null;
 
-    GamesPageClass.prototype.addGamelistAchievements = function(userProfileLink) {
+    GamesPageClass.prototype.addGamelistAchievements = function(profile) {
         if (!SyncedStorage.get("showallachievements")) { return; }
 
         let node = document.querySelector(".profile_small_header_texture a");
         if (!node) { return; }
-        let statsLink = "https://steamcommunity.com/" + userProfileLink + "stats/";
 
-        document.addEventListener("scroll", function(){
+        document.addEventListener("scroll", () => {
             if (scrollTimeout) { window.clearTimeout(scrollTimeout); }
             scrollTimeout = window.setTimeout(addAchievements, 500);
         });
@@ -1151,8 +1147,7 @@ let GamesPageClass = (function(){
             // Only show stats on the "All Games" tab
             let nodes = document.querySelectorAll(".gameListRow:not(.es_achievements_checked)");
             let hadNodesInView = false;
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            for (let node of nodes) {
 
                 if (!Viewport.isElementInViewport(node)) {
                     if (hadNodesInView) { break; }
@@ -1164,18 +1159,17 @@ let GamesPageClass = (function(){
                 let appid = GameId.getAppidWishlist(node.id);
                 node.classList.add("es_achievements_checked");
                 if (!node.innerHTML.match(/ico_stats\.png/)) { continue; }
-                if (!node.querySelector("h5.hours_played")) { continue; }
+
+                let hoursNode = node.querySelector("h5.hours_played");
+                if (!hoursNode) { continue; }
 
                 // Copy achievement stats to row
-                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'></div>");
+                HTML.afterEnd(hoursNode, `<div class="es_recentAchievements" id="es_app_${appid}"></div>`);
 
-                Stats.getAchievementBar(appid).then(achieveBar => {
-                    let node = document.querySelector("#es_app_" + appid);
+                Stats.getAchievementBar(appid, profile).then(achieveBar => {
+                    if (!achieveBar) { return; }
 
-                    if (!achieveBar) return;
-
-                    HTML.inner(node, achieveBar);
-
+                    HTML.inner(document.querySelector(`#es_app_${appid}`), achieveBar);
                 }, err => {
                     console.error(err);
                 });

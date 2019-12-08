@@ -476,7 +476,7 @@ class SteamCommunity extends Api {
     }
 
     static stats({ "params": params, }) {
-        return SteamCommunity.getPage(`/my/stats/${params.appid}`);
+        return SteamCommunity.getPage(`/${params.profile}/stats/${params.appid}`);
     }
 
     static async getInventory(contextId) {
