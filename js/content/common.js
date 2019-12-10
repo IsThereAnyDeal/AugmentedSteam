@@ -907,7 +907,6 @@ let Stats = (function() {
     };
 
     return self;
-
 })();
 
 let EnhancedSteam = (function() {
