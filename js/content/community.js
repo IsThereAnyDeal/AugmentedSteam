@@ -1088,6 +1088,10 @@ let GroupHomePageClass = (function(){
 let GamesPageClass = (function(){
 
     function GamesPageClass() {
+        // Prevent errors if "Game Details" is private
+        if (!document.querySelector(".gameListRow")) {
+            return;
+        }
 
         let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(\?tab=all)?/);
 
