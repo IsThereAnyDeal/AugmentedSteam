@@ -1098,38 +1098,46 @@ let GamesPageClass = (function(){
         }
     }
 
-    // Display total time played for all games
     GamesPageClass.prototype.computeStats = function() {
-        let games = HTMLParser.getVariableFromDom("rgGames", "array");
 
-        let statsHtml = "";
+        HTML.beforeBegin("#mainContents", 
+            `<div id="esi-collection-chart-content">
+                <a>${Localization.str.wl.compute}</a>
+            </div>`);
+
+        document.querySelector("#esi-collection-chart-content a").addEventListener("click", e => {
+            HTML.inner(e.target.parentNode, `<span>${Localization.str.loading}</span>`);
+            loadStats();
+        });
+    };
+
+    // Calculate total time played for all games
+    function loadStats() {
+        let games = HTMLParser.getVariableFromDom("rgGames", "array");
 
         let countTotal = games.length;
         let countPlayed = 0;
         let countNeverPlayed = 0;
 
         let time = 0;
-        games.forEach(game => {
+        for (let game of games) {
             if (!game['hours_forever']) {
                 countNeverPlayed++;
-                return;
+                continue;
             }
 
             countPlayed++;
             time += parseFloat(game['hours_forever'].replace(",",""));
-        });
+        }
 
         let totalTime = Localization.str.hours_short.replace("__hours__", time.toFixed(1));
 
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>`;
-
-        let html = `<div id="esi-collection-chart-content">${statsHtml}</div>`;
-
-        HTML.beforeBegin("#mainContents", html);
-    };
+        HTML.inner("#esi-collection-chart-content",
+            `<div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>
+            <div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>
+            <div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>
+            <div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>`);
+    }
 
     let scrollTimeout = null;
 

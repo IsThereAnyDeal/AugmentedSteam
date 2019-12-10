@@ -2701,6 +2701,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
   align-items: center;
   font-size: 1.6em;
 }
+#esi-wishlist-chart-content span,
+#esi-collection-chart-content span {
+  text-align: center;
+  flex-grow: 2;
+}
 #esi-wishlist-chart-content a,
 #esi-collection-chart-content a {
   cursor: pointer;
