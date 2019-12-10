@@ -2048,7 +2048,7 @@ class AppPageClass extends StorePageClass {
 
         HTML.afterEnd(details_block,"<div id='es_ach_stats' style='margin-bottom: 9px; margin-top: -16px; float: right;'></div>");
 
-        Stats.getAchievementBar(this.communityAppid).then(achieveBar => {
+        Stats.getAchievementBar("/my", this.communityAppid).then(achieveBar => {
             if (!achieveBar) {
                 console.warn("Failed to find achievement stats for appid", this.communityAppid);
                 return;

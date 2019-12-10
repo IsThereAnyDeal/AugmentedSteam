@@ -1098,7 +1098,7 @@ let GamesPageClass = (function(){
         if (page[2]) {
             this.computeStats();
             this.handleCommonGames();
-            this.addGamelistAchievements(page[1]);
+            this.addGamelistAchievements();
         }
     }
 
@@ -1137,12 +1137,11 @@ let GamesPageClass = (function(){
 
     let scrollTimeout = null;
 
-    GamesPageClass.prototype.addGamelistAchievements = function(userProfileLink) {
+    GamesPageClass.prototype.addGamelistAchievements = function() {
         if (!SyncedStorage.get("showallachievements")) { return; }
 
-        let node = document.querySelector(".profile_small_header_texture a");
-        if (!node) { return; }
-        let statsLink = "https://steamcommunity.com/" + userProfileLink + "stats/";
+        // Path of profile in view to retrieve achievement stats
+        let path = window.location.pathname.replace("/games", "");
 
         document.addEventListener("scroll", function(){
             if (scrollTimeout) { window.clearTimeout(scrollTimeout); }
@@ -1173,7 +1172,7 @@ let GamesPageClass = (function(){
                 // Copy achievement stats to row
                 HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'></div>");
 
-                Stats.getAchievementBar(appid).then(achieveBar => {
+                Stats.getAchievementBar(path, appid).then(achieveBar => {
                     let node = document.querySelector("#es_app_" + appid);
 
                     if (!achieveBar) return;
