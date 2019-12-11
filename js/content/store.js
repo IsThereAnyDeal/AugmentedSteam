@@ -836,7 +836,6 @@ class AppPageClass extends StorePageClass {
         let successNode = document.querySelector("#add_to_wishlist_area_success");
         if (!successNode) { return; }
 
-        let imgNode = successNode.querySelector("img:last-child");
         let innerNode = successNode.querySelector("[data-tooltip-text]");
         if (!innerNode) { return; }
         innerNode.dataset.tooltipText = Localization.str.remove_from_wishlist;
