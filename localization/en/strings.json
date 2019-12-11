@@ -32,6 +32,7 @@
     "add_selected_dlc_to_cart": "Add selected DLC to cart",
     "credits": "Credits",
     "store_transactions": "Store Purchases",
+    "sign_in": "Sign in",
     "games_coupon": "Games With Coupons",
     "all_friends_own": "All friends who own this (__friendcount__)",
     "translate": "Translate",
@@ -98,6 +99,7 @@
     "dlc": "Downloadable Content",
     "add_to_wishlist": "Add to your wishlist",
     "remove_from_wishlist": "This product is already on your wishlist. Click to remove it from your wishlist.",
+    "add_to_waitlist": "Add to your Waitlist",
     "language": "Language",
     "theworddefault": "Default",
     "thewordclear": "Clear",
@@ -112,6 +114,7 @@
     "community": "Community",
     "dlc_data_header": "Downloadable Content Details",
     "graphics": "Graphics",
+    "owned_elsewhere": "You already own __gametitle__ on __storelist__",
     "trading_cards": "Steam Trading Cards",
     "view_badge": "View Badge",
     "purchase_total": "Purchase total:",
@@ -243,6 +246,8 @@
     "show_all_steam_releases": "Show all Steam releases",
     "wishlist": "Wishlist",
     "on_wishlist": "On Wishlist",
+    "ignored": "Ignored",
+    "on_waitlist": "On Waitlist",
     "notdiscounted": "Items not discounted",
     "cancel": "Cancel",
     "wiki_article": "View __pcgw__ Article",
@@ -454,6 +459,8 @@
         "openinnewtab": "Open external links in a new tab",
         "showbartervg": "Show Barter.vg links",
         "guest": "Items you have a guest pass for",
+        "collection": "Items in your ITAD Collection",
+        "waitlist": "Items in your ITAD Waitlist",
         "show_steamchart_info": "Show SteamCharts.com info",
         "show_steamspy_info": "Show steamspy.com info",
         "showallachievements": "Show achievement stats on \"All Games\" page",
@@ -539,7 +546,8 @@
             "ukrainian": "Ukrainian"
         },
         "add_custom_link": "Add custom link",
-        "auto_detect": "Auto-detect"
+        "auto_detect": "Auto-detect",
+        "add_to_waitlist": "Show separate \"Add to Waitlist\" button"
     },
     "ready": {
         "errormsg": "Error loading Augmented Steam data",
@@ -604,6 +612,9 @@
         "certifications": "WSGF Widescreen Certifications"
     },
     "itad": {
+        "import": "Periodically import:",
+        "last_import": "Last import",
+        "import_now": "Import now",
         "option": "Show menu option to sync data to IsThereAnyDeal.com",
         "send_to_itad": "Send owned games to IsThereAnyDeal",
         "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com"
