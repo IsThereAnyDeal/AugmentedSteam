@@ -407,22 +407,22 @@ class ContextMenu {
 
         switch (info.menuItemId) {
             case "context_steam_store":
-                chrome.tabs.create({ url: `https://store.steampowered.com/search/?term=${selectionText}` });
+                browser.tabs.create({ url: `https://store.steampowered.com/search/?term=${selectionText}` });
                 break;
             case "context_steam_market":
-                chrome.tabs.create({ url: `https://steamcommunity.com/market/search?q=${selectionText}` });
+                browser.tabs.create({ url: `https://steamcommunity.com/market/search?q=${selectionText}` });
                 break;
             case "context_itad":
-                chrome.tabs.create({ url: `https://isthereanydeal.com/search/?q=${selectionText}` });
+                browser.tabs.create({ url: `https://isthereanydeal.com/search/?q=${selectionText}` });
                 break;
             case "context_bartervg":
-                chrome.tabs.create({ url: `https://barter.vg/search?q=${selectionText}` });
+                browser.tabs.create({ url: `https://barter.vg/search?q=${selectionText}` });
                 break;
             case "context_steamdb":
-                chrome.tabs.create({ url: `https://steamdb.info/search/?q=${selectionText}` });
+                browser.tabs.create({ url: `https://steamdb.info/search/?q=${selectionText}` });
                 break;
             case "context_steamdb_instant":
-                chrome.tabs.create({ url: `https://steamdb.info/instantsearch/?query=${selectionText}` });
+                browser.tabs.create({ url: `https://steamdb.info/instantsearch/?query=${selectionText}` });
                 break;
             case "context_steam_keys":
                 let steamkeys = info.selectionText.match(/[A-NP-RTV-Z02-9]{5}(-[A-NP-RTV-Z02-9]{5}){2}/g);
@@ -430,19 +430,19 @@ class ContextMenu {
                     window.alert(Localization.str.options.no_keys_found);
                     return;
                 }
-                steamkeys.forEach(steamkey => chrome.tabs.create({ url: `https://store.steampowered.com/account/registerkey?key=${encodeURIComponent(steamkey)}` }));
+                steamkeys.forEach(steamkey => browser.tabs.create({ url: `https://store.steampowered.com/account/registerkey?key=${encodeURIComponent(steamkey)}` }));
                 break;
         }
     }
     
     static build() {
-        if (!chrome.contextMenus) { return; }
+        if (!browser.contextMenus) { return; }
         let options = ["context_steam_store", "context_steam_market", "context_itad", "context_bartervg", "context_steamdb", "context_steamdb_instant", "context_steam_keys"];
 
         for (let option of options) {
             if (!SyncedStorage.get(option)) { continue; }
 
-            chrome.contextMenus.create({
+            browser.contextMenus.create({
                 "id": option,
                 "title": Localization.str.options[option].replace("__query__", "%s"),
                 "contexts": ["selection"]
@@ -451,11 +451,11 @@ class ContextMenu {
     }
     
     static update() {
-        if (!chrome.contextMenus) { return; }
-        chrome.contextMenus.removeAll(ContextMenu.build);
+        if (!browser.contextMenus) { return; }
+        browser.contextMenus.removeAll().then(ContextMenu.build);
 
         if (!this._listenerRegistered) {
-            chrome.contextMenus.onClicked.addListener(ContextMenu.onClick);
+            browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
             this._listenerRegistered = true;
         }
     }
@@ -1344,5 +1344,5 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     return res;
 });
 
-chrome.runtime.onStartup.addListener(ContextMenu.init);
-chrome.runtime.onInstalled.addListener(ContextMenu.init);
+browser.runtime.onStartup.addListener(ContextMenu.init);
+browser.runtime.onInstalled.addListener(ContextMenu.init);
