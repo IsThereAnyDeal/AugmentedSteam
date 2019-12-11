@@ -97,6 +97,7 @@
     "spam_comment_show": "__num__ spam comments hidden on this page.  Click here to show them.",
     "dlc": "Downloadable Content",
     "add_to_wishlist": "Add to your wishlist",
+    "remove_from_wishlist": "This product is already on your wishlist. Click to remove it from your wishlist.",
     "language": "Language",
     "theworddefault": "Default",
     "thewordclear": "Clear",

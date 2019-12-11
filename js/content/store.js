@@ -836,7 +836,11 @@ class AppPageClass extends StorePageClass {
         let successNode = document.querySelector("#add_to_wishlist_area_success");
         if (!successNode) { return; }
 
-        let imgNode = successNode.querySelector("img:last-child");
+        let innerNode = successNode.querySelector("[data-tooltip-text]");
+        if (!innerNode) { return; }
+        innerNode.dataset.tooltipText = Localization.str.remove_from_wishlist;
+
+        let imgNode = innerNode.querySelector("img:last-child");
         if (!imgNode) { return; }
 
         imgNode.classList.add("es-in-wl");
@@ -844,30 +848,32 @@ class AppPageClass extends StorePageClass {
             `<img class='es-remove-wl' src='${ExtensionLayer.getLocalUrl("img/remove.png")}' style='display:none' />
              <img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
 
-        successNode.addEventListener("click", function(e){
+        successNode.addEventListener("click", function(e) {
             e.preventDefault();
 
             let parent = successNode.parentNode;
-            if (!parent.classList.contains("loading")) {
-                parent.classList.add("loading");
-
-                let formData = new FormData();
-                formData.append("sessionid", User.getSessionId());
-                formData.append("appid", appid)
-
-                RequestData.post("https://store.steampowered.com/api/removefromwishlist", formData, {withCredentials: true}).then(response => {
-                    document.querySelector("#add_to_wishlist_area").style.display = "inline";
-                    document.querySelector("#add_to_wishlist_area_success").style.display = "none";
-
-                    // Clear dynamicstore cache
-                    DynamicStore.clear();
-
-                    // Invalidate dynamic store data cache
-                    ExtensionLayer.runInPageContext(() => GDynamicStore.InvalidateCache());
-                }).finally(() => {
-                    parent.classList.remove("loading");
-                });
+            if (parent.classList.contains("loading")) {
+                return;
             }
+
+            parent.classList.add("loading");
+
+            let formData = new FormData();
+            formData.append("sessionid", User.getSessionId());
+            formData.append("appid", appid)
+
+            RequestData.post("https://store.steampowered.com/api/removefromwishlist", formData, { withCredentials: true }).then(() => {
+                document.querySelector("#add_to_wishlist_area").style.display = "inline";
+                document.querySelector("#add_to_wishlist_area_success").style.display = "none";
+
+                // Clear dynamicstore cache
+                DynamicStore.clear();
+
+                // Invalidate dynamic store data cache
+                ExtensionLayer.runInPageContext(() => GDynamicStore.InvalidateCache());
+            }).finally(() => {
+                parent.classList.remove("loading");
+            });
         });
 
         let nodes = document.querySelectorAll("#add_to_wishlist_area, #add_to_wishlist_area_success, .queue_btn_ignore");
