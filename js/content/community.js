@@ -1232,6 +1232,7 @@ let GamesPageClass = (function(){
         notCommonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
             document.querySelector("#games_list_rows").classList.toggle("esi-hide-common", e.target.checked);
+            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
         });
     };
 
