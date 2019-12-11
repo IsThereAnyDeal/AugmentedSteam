@@ -875,8 +875,8 @@ let Stats = (function() {
 
     let self = {};
 
-    self.getAchievementBar = function(appid) {
-        return Background.action("stats", { "appid": appid }).then(response => {
+    self.getAchievementBar = function(path, appid) {
+        return Background.action("stats", { "path": path, "appid": appid }).then(response => {
             let dummy = HTMLParser.htmlToDOM(response);
             let achNode = dummy.querySelector("#topSummaryAchievements");
 
@@ -907,7 +907,6 @@ let Stats = (function() {
     };
 
     return self;
-
 })();
 
 let EnhancedSteam = (function() {

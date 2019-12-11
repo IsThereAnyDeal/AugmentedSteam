@@ -1088,13 +1088,15 @@ let GroupHomePageClass = (function(){
 let GamesPageClass = (function(){
 
     function GamesPageClass() {
-
-        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(\?tab=all)?/);
-
-        if (page[2]) {
+        // Prevent errors if "Game Details" is private
+        if (!document.querySelector(".gameListRow")) {
+            return;
+        }
+        // Only show stats on the "All Games" tab
+        if (window.location.search.includes("?tab=all")) {
             this.computeStats();
             this.handleCommonGames();
-            this.addGamelistAchievements(page[1]);
+            this.addGamelistAchievements();
         }
     }
 
@@ -1133,14 +1135,13 @@ let GamesPageClass = (function(){
 
     let scrollTimeout = null;
 
-    GamesPageClass.prototype.addGamelistAchievements = function(userProfileLink) {
+    GamesPageClass.prototype.addGamelistAchievements = function() {
         if (!SyncedStorage.get("showallachievements")) { return; }
 
-        let node = document.querySelector(".profile_small_header_texture a");
-        if (!node) { return; }
-        let statsLink = "https://steamcommunity.com/" + userProfileLink + "stats/";
+        // Path of profile in view to retrieve achievement stats
+        let path = window.location.pathname.replace("/games", "");
 
-        document.addEventListener("scroll", function(){
+        document.addEventListener("scroll", () => {
             if (scrollTimeout) { window.clearTimeout(scrollTimeout); }
             scrollTimeout = window.setTimeout(addAchievements, 500);
         });
@@ -1148,11 +1149,9 @@ let GamesPageClass = (function(){
         addAchievements();
 
         function addAchievements() {
-            // Only show stats on the "All Games" tab
             let nodes = document.querySelectorAll(".gameListRow:not(.es_achievements_checked)");
             let hadNodesInView = false;
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            for (let node of nodes) {
 
                 if (!Viewport.isElementInViewport(node)) {
                     if (hadNodesInView) { break; }
@@ -1164,18 +1163,16 @@ let GamesPageClass = (function(){
                 let appid = GameId.getAppidWishlist(node.id);
                 node.classList.add("es_achievements_checked");
                 if (!node.innerHTML.match(/ico_stats\.png/)) { continue; }
-                if (!node.querySelector("h5.hours_played")) { continue; }
 
-                // Copy achievement stats to row
-                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'></div>");
+                let hoursNode = node.querySelector("h5.hours_played");
+                if (!hoursNode) { continue; }
 
-                Stats.getAchievementBar(appid).then(achieveBar => {
-                    let node = document.querySelector("#es_app_" + appid);
+                HTML.afterEnd(hoursNode, `<div class="es_recentAchievements" id="es_app_${appid}"></div>`);
 
-                    if (!achieveBar) return;
+                Stats.getAchievementBar(path, appid).then(achieveBar => {
+                    if (!achieveBar) { return; }
 
-                    HTML.inner(node, achieveBar);
-
+                    HTML.inner(document.querySelector(`#es_app_${appid}`), achieveBar);
                 }, err => {
                     console.error(err);
                 });
@@ -1188,11 +1185,10 @@ let GamesPageClass = (function(){
     async function loadCommonGames() {
         if (_commonGames != null) { return; }
 
-        let url = window.location.href;
-        let commonUrl = url + (url.indexOf( '?' ) != -1 ? '&' : '?' ) + 'games_in_common=1';
+        let commonUrl = `${window.location.href}&games_in_common=1`;
         let data = await RequestData.getHttp(commonUrl);
 
-        let games = HTMLParser.getVariableFromText(data, "rgGames", "array");;
+        let games = HTMLParser.getVariableFromText(data, "rgGames", "array");
         _commonGames = new Set();
         for (let game of games) {
             _commonGames.add(parseInt(game.appid));
