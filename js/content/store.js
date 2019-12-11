@@ -955,6 +955,10 @@ class AppPageClass extends StorePageClass {
 
         // Creating a common parent for #add_to_wishlist_area and #add_to_wishlist_area_success makes it easier to apply the dropdown menu
         let wrapper = document.querySelector(".queue_btn_wishlist");
+
+        // Move the wrapper such that there can't be any other elements in between the dropdown and other buttons (see #690)
+        document.querySelector(".queue_actions_ctn").insertBefore(wrapper.parentNode, wishlistArea);
+
         wishlistDivs.forEach(div => {
             wrapper.appendChild(div);
             let button = div.querySelector(".btnv6_blue_hoverfade");
