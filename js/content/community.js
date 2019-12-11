@@ -2009,10 +2009,9 @@ let InventoryPageClass = (function(){
 
             await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, { withCredentials: true });
 
-            document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
+            document.querySelector(`#es_instantsell${assetID}`).parentNode.style.display = "none";
 
-            let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
-            let node = document.querySelector("[id='" + id + "']");
+            let node = document.querySelector(`[id="${global_id}_${contextID}_${assetID}"]`);
             node.classList.add("btn_disabled", "activeInfo");
             node.style.pointerEvents = "none";
         });
