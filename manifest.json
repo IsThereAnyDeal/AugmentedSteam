@@ -16,6 +16,7 @@
   },
   "permissions": [
     "storage",
+    "identity",
     "contextMenus",
     "*://*.steampowered.com/*",
     "*://steamcommunity.com/*",
@@ -57,6 +58,7 @@
         "*://partner.steampowered.com/*"        
       ],
       "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
@@ -80,6 +82,7 @@
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
@@ -97,11 +100,12 @@
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
-        "js/language.js",
         "js/content/common.js",
+        "js/language.js",
         "js/content/tradeoffer.js"
       ],
       "css": [
@@ -119,8 +123,10 @@
   ],
   "background": {
     "scripts": [
+      "js/lib/webextension-polyfill/browser-polyfill.js",
       "js/language.js",
       "js/lib/DOMPurify/purify.js",
+      "js/lib/idb/with-async-ittr.js",
       "js/config.js",
       "js/core.js",
       "js/background/background.js"

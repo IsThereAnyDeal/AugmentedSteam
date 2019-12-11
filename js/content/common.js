@@ -1,6 +1,162 @@
 /**
  * Common functions that may be used on any pages
  */
+class ITAD {
+    static async create() {
+        HTML.afterBegin("#global_action_menu",
+            `<div id="es_itad">
+                <img id="es_itad_logo" src="${ExtensionResources.getURL("img/itad.png")}" height="20px">
+                <span id="es_itad_status"></span>
+            </div>`);
+
+        let connected = await Background.action("itad.isconnected");
+        let itadDiv = document.querySelector("#es_itad");
+        let itadStatus = itadDiv.querySelector("#es_itad_status");
+        
+        if (connected) {
+            itadStatus.textContent = '\u2713';
+            itadDiv.classList.add("authorized");
+            itadDiv.addEventListener("mouseenter", ITAD.onHover);
+            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
+                Background.action("itad.import");
+            }
+        } else {
+            itadStatus.textContent = Localization.str.sign_in;
+            itadDiv.classList.add("not_authorized");
+            itadDiv.addEventListener("click", ITAD.authorize);
+        }
+    }
+
+    static async authorize() {
+        let sessionId = User.getSessionId();
+        // Avoid predictable hash when string is empty
+        if (sessionId) {
+            try {
+                await Background.action("itad.authorize", StringUtils.hashCode(sessionId));
+            } catch(err) {
+                console.group("ITAD authorization");
+                console.error(err);
+                console.error("Failed to authorize to ITAD");
+                console.groupEnd();
+                return;
+            }
+
+            let itadStatus = document.getElementById("es_itad_status");
+            let itadDiv = itadStatus.parentElement;
+
+            itadStatus.textContent = '\u2713';
+            itadDiv.classList.add("authorized");
+            itadDiv.classList.remove("not_authorized");
+            itadDiv.addEventListener("mouseenter", ITAD.onHover);
+            itadDiv.removeEventListener("click", ITAD.authorize);
+            
+            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
+                Background.action("itad.import");
+            }
+        } else {
+            console.error("Can't retrieve Session ID, unable to authorize app");
+        }
+    }
+
+    static async onHover() {
+        if (!document.querySelector(".es-itad-hover")) {
+            HTML.afterEnd("#es_itad_status",
+                `<div class="es-itad-hover">
+                    <div class="es-itad-hover__content">
+                        <p class="es-itad-hover__last-import"></p>
+                        <div class="es-itad-hover__import-now">
+                            <span class="es-itad-hover__import-now-text">${Localization.str.itad.import_now}</span>
+                            <div class="loader"></div>
+                            <span class="es-itad-hover__import-failed">&#10060;</span>
+                            <span class="es-itad-hover__import-success">&#10003;</span>
+                        </div>
+                    </div>
+                    <div class="es-itad-hover__arrow"></div>
+                </div>`);
+
+            let hover = document.querySelector(".es-itad-hover");
+
+            let importDiv = document.querySelector(".es-itad-hover__import-now");
+            document.querySelector(".es-itad-hover__import-now-text").addEventListener("click", async () => {
+                importDiv.classList.remove("es-itad-hover__import-now--failed", "es-itad-hover__import-now--success");
+                importDiv.classList.add("es-itad-hover__import-now--loading");
+                hover.style.display = "block";
+
+                let timeout;
+
+                try {
+                    await Background.action("itad.import", true);
+                    importDiv.classList.add("es-itad-hover__import-now--success");
+                    await updateLastImport();
+                    
+                    timeout = 1000;
+                } catch(err) {
+                    importDiv.classList.add("es-itad-hover__import-now--failed");
+
+                    console.group("ITAD import");
+                    console.error(err);
+                    console.error("Failed to import to ITAD");
+                    console.groupEnd();
+
+                    timeout = 3000;
+                } finally {
+                    setTimeout(() => hover.style.display = '', timeout);
+                    importDiv.classList.remove("es-itad-hover__import-now--loading");
+                }
+            });
+        }
+
+        await updateLastImport();
+
+        async function updateLastImport() {
+            let timestamp = await Background.action("itad.lastimport");
+            HTML.inner(".es-itad-hover__last-import", `<i>${Localization.str.itad.last_import}</i>: ${timestamp ? new Date(timestamp * 1000).toLocaleString() : Localization.str.never}`);
+        }
+    }
+
+    static async getAppStatus(storeIds) {
+        let highlightCollection = SyncedStorage.get("highlight_collection");
+        let highlightWaitlist = SyncedStorage.get("highlight_waitlist");
+        let multiple = Array.isArray(storeIds);
+        let promises = [];
+        let resolved = Promise.resolve(multiple ? {} : false);
+
+        if (!await Background.action("itad.isconnected")) {
+            promises.push(resolved, resolved);
+        } else {
+            if (highlightCollection) {
+                promises.push(Background.action("itad.incollection", storeIds));
+            } else {
+                promises.push(resolved);
+            }
+            if (highlightWaitlist) {
+                promises.push(resolved);
+                // todo Waitlist endpoint
+            } else {
+                promises.push(resolved);
+            }
+        }        
+
+        let [ inCollection, inWaitlist ] = await Promise.all(promises);
+
+        if (multiple) {
+            let result = {};
+            for (let id of storeIds) {
+                result[id] = {
+                    "collected": inCollection[id],
+                    "waitlisted": inWaitlist[id],
+                }
+            }
+            return result;
+        } else {
+            return {
+                "collected": inCollection,
+                "waitlisted": inWaitlist,
+            }
+        }
+    }
+}
+
 class ProgressBar {
     _progress = null;
 
@@ -98,37 +254,33 @@ ProgressBar._progress = null;
 ProgressBar._failedRequests = 0;
 
 class Background {
-    static async message(message) {
+    static message(message) {
         ProgressBar.startRequest();
 
-        return new Promise(function (resolve, reject) {
-            chrome.runtime.sendMessage(message, function(response) {
-                ProgressBar.finishRequest();
-
-                if (!response) {
+        return browser.runtime.sendMessage(message).then(result => {
+            ProgressBar.finishRequest();
+            return result;
+        }, err => {
+            switch (err.message) {
+                case "ServerOutageError":
+                    ProgressBar.serverOutage();
+                    break;
+                case "CommunityLoginError": {
+                    EnhancedSteam.addLoginWarning();
+                    ProgressBar.finishRequest();
+                    break;
+                } 
+                default:
                     ProgressBar.failed();
-                    reject("No response from extension background context.");
-                    return;
-                }
-                if (typeof response.error !== 'undefined') {
-                    if (response.name === "ServerOutageError") {
-                        ProgressBar.serverOutage();
-                    } else {
-                        ProgressBar.failed();
-                    }
-                    response.localStack = (new Error(message.action)).stack;
-                    reject(response);
-                    return;
-                }
-                resolve(response.response);
-            });
+            }
+            throw err;
         });
     }
     
-    static action(requested, params) {
-        if (typeof params == 'undefined')
-            return Background.message({ 'action': requested, });
-        return Background.message({ 'action': requested, 'params': params, });
+    static action(requested, ...params) {
+        if (!params.length)
+            return Background.message({ "action": requested, });
+        return Background.message({ "action": requested, "params": params, });
     }
 }
 
@@ -214,10 +366,6 @@ let DateParser = (function(){
 let ExtensionLayer = (function() {
 
     let self = {};
-
-    self.getLocalUrl = function(url) {
-        return chrome.runtime.getURL(url);
-    };
 
     // NOTE: use cautiously!
     // Run script in the context of the current tab
@@ -447,12 +595,12 @@ let User = (function(){
 
         // If profilePath is not available, we're not logged in
         if (!self.profilePath) {
-            Background.action('logout');
+            Background.action("logout");
             _promise = Promise.resolve();
             return _promise;
         }
 
-        _promise = Background.action('login', { 'path': self.profilePath, })
+        _promise = Background.action("login", self.profilePath)
             .then(function (login) {
                 if (!login) return;
                 self.isSignedIn = true;
@@ -486,7 +634,7 @@ let User = (function(){
         return sessionId;
     };
 
-    self.getStoreSessionId = async function() {
+    self.getStoreSessionId = function() {
         return Background.action('sessionid');
     };
 
@@ -507,8 +655,9 @@ let User = (function(){
         return country.substr(0, 2);
     };
 
-    self.getPurchaseDate = async function(lang, appName) {
-        return Background.action('purchase', { 'lang': lang, 'appName': appName, });
+    self.getPurchaseDate = function(lang, appName) {
+        appName = HTMLParser.clearSpecialSymbols(appName);
+        return Background.action("purchases", appName, lang);
     };
 
     return self;
@@ -684,19 +833,8 @@ let Currency = (function() {
     self.customCurrency = null;
     self.storeCurrency = null;
 
-    let _rates = {};
+    let _rates;
     let _promise = null;
-
-    function _getRates() {
-        let target = [self.storeCurrency,];
-        if (self.customCurrency !== self.storeCurrency) {
-            target.push(self.customCurrency);
-        }
-        // assert (Array.isArray(target) && target.length == target.filter(el => typeof el == 'string').length)
-        target.sort();
-        return Background.action('rates', { 'to': target.join(","), })
-            .then(rates => _rates = rates);
-    }
 
     function getCurrencyFromDom() {
         let currencyNode = document.querySelector('meta[itemprop="priceCurrency"]');
@@ -749,6 +887,14 @@ let Currency = (function() {
         }
     }
 
+    async function _getRates() {
+        let toCurrencies = [self.storeCurrency,];
+        if (self.customCurrency !== self.storeCurrency) {
+            toCurrencies.push(self.customCurrency);
+        }
+        _rates = await Background.action("rates", toCurrencies);
+    }
+
     // load user currency
     self.init = function() {
         if (_promise) { return _promise; }
@@ -759,7 +905,6 @@ let Currency = (function() {
                 console.error("Failed to initialize Currency");
                 console.error(e);
             });
-            ;
     };
 
     self.then = function(onDone, onCatch) {
@@ -876,7 +1021,7 @@ let Stats = (function() {
     let self = {};
 
     self.getAchievementBar = function(path, appid) {
-        return Background.action("stats", { "path": path, "appid": appid }).then(response => {
+        return Background.action("stats", path, appid).then(response => {
             let dummy = HTMLParser.htmlToDOM(response);
             let achNode = dummy.querySelector("#topSummaryAchievements");
 
@@ -903,7 +1048,7 @@ let Stats = (function() {
             <div class="achieveBar">
                 <div style="width: ${stats[3]}%;" class="achieveBarProgress"></div>
             </div>`;
-        }, EnhancedSteam.addLoginWarning);
+        });
     };
 
     return self;
@@ -919,7 +1064,7 @@ let EnhancedSteam = (function() {
                 <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
                 <div id="es_popup" class="popup_block_new">
                     <div class="popup_body popup_menu">
-                        <a class="popup_menu_item" target="_blank" href="${ExtensionLayer.getLocalUrl("options.html")}">${Localization.str.thewordoptions}</a>
+                        <a class="popup_menu_item" target="_blank" href="${ExtensionResources.getURL("options.html")}">${Localization.str.thewordoptions}</a>
                         <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
                         <div class="hr"></div>
                         <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/AugmentedSteam">${Localization.str.contribute}</a>
@@ -989,9 +1134,7 @@ let EnhancedSteam = (function() {
         localStorage.clear();
         SyncedStorage.remove("user_currency");
         SyncedStorage.remove("store_sessionid");
-        DynamicStore.clear();
-        Background.action('dynamicstore.clear');
-        Background.action('api.cache.clear');
+        Background.action('cache.clear');
     };
 
     self.bindLogout = function(){
@@ -1036,10 +1179,10 @@ let EnhancedSteam = (function() {
     };
 
     let loginWarningAdded = false;
-    self.addLoginWarning = function(err) {
-        if (!loginWarningAdded && err.name === "CommunityLoginError") {
+    self.addLoginWarning = function() {
+        if (!loginWarningAdded) {
             addWarning(`${Localization.str.community_login.replace("__link__", "<a href='https://steamcommunity.com/login/'>steamcommunity.com</a>")}`);
-            console.warn(err.message);
+            console.warn("Are you logged in to steamcommunity.com?");
             loginWarningAdded = true;
         }        
     };
@@ -1189,7 +1332,7 @@ let EnhancedSteam = (function() {
 
     self.alternateLinuxIcon = function() {
         if (!SyncedStorage.get("show_alternative_linux_icon")) { return; }
-        let url = ExtensionLayer.getLocalUrl("img/alternative_linux_icon.png");
+        let url = ExtensionResources.getURL("img/alternative_linux_icon.png");
         let style = document.createElement('style');
         style.textContent = `span.platform_img.linux { background-image: url("${url}"); }`;
         document.head.appendChild(style);
@@ -1258,34 +1401,39 @@ let EarlyAccess = (function(){
 
     let self = {};
 
-    let cache = new Set();
     let imageUrl;
 
-    function checkNodes(selectors, selectorModifier) {
+    async function checkNodes(selectors, selectorModifier) {
         selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
+        let appidsMap = new Map();
 
-        selectors.forEach(selector => {
-            let nodes = document.querySelectorAll(selector+":not(.es_ea_checked)");
-            for (let i=0; i<nodes.length; i++) {
-                let node = nodes[i];
-                node.classList.add("es_ea_checked");
+        let selector = selectors.map(selector => `${selector}:not(.es_ea_checked)`).join(',');
+        let nodes = document.querySelectorAll(selector);
+        nodes.forEach(node => {
+            node.classList.add("es_ea_checked");
 
-                let linkNode = node.querySelector("a");
-                let href = linkNode && linkNode.hasAttribute("href") ? linkNode.getAttribute("href") : node.getAttribute("href");
-                let imgHeader = node.querySelector("img" + selectorModifier);
-                let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
+            let linkNode = node.querySelector("a");
+            let href = linkNode && linkNode.hasAttribute("href") ? linkNode.getAttribute("href") : node.getAttribute("href");
+            let imgHeader = node.querySelector("img" + selectorModifier);
+            let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
-                if (appid && cache.has(appid)) {
-                    node.classList.add("es_early_access");
-
-                    let container = document.createElement("span");
-                    container.classList.add("es_overlay_container");
-                    DOMHelper.wrap(container, imgHeader);
-
-                    HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
-                }
-            }
+            if (appid) appidsMap.set(appid, node);
         });
+
+        let eaAppids = await Background.action("isea", Array.from(appidsMap.keys()).map(key => Number(key)));
+
+        for (let [appid, node] of appidsMap) {
+            if (!eaAppids[appid]) continue;
+
+            node.classList.add("es_early_access");
+
+            let imgHeader = node.querySelector("img" + selectorModifier);
+            let container = document.createElement("span");
+            container.classList.add("es_overlay_container");
+            DOMHelper.wrap(container, imgHeader);
+
+            HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
+        }
     }
 
     function handleStore() {
@@ -1366,13 +1514,11 @@ let EarlyAccess = (function(){
     self.showEarlyAccess = async function() {
         if (!SyncedStorage.get("show_early_access")) { return; }
 
-        cache = new Set(await Background.action('early_access_appids'));
-
         let imageName = "img/overlay/early_access_banner_english.png";
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
             imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage() + ".png";
         }
-        imageUrl = ExtensionLayer.getLocalUrl(imageName);
+        imageUrl = ExtensionResources.getURL(imageName);
 
         switch (window.location.host) {
             case "store.steampowered.com":
@@ -1392,79 +1538,69 @@ let Inventory = (function(){
 
     let self = {};
 
-    let gifts = new Set();
-    let guestpasses = new Set();
-    let coupons = {};
-    let inv6set = new Set();
-    let coupon_appids = new Map();
+    self.getCoupon = function(appid) {
+        return Background.action("coupon", appid);
+    };
 
-    let _promise = null;
-    self.promise = async function() {
-        if (_promise) { return _promise; }
-
-        if (!User.isSignedIn) {
-            _promise = Promise.resolve();
-            return _promise;
+    self.getAppStatus = async function(appids) {
+        function getStatusObject(giftsAndPasses, hasCoupon) {
+            return {
+                "gift": giftsAndPasses.includes("gifts"),
+                "guestPass": giftsAndPasses.includes("passes"),
+                "coupon": hasCoupon,
+            };
         }
 
-        function handleCoupons(data) {
-            coupons = data;
-            for (let [subid, details] of Object.entries(coupons)) {
-                for (let { "id": appid, } of details.appids) {
-                    coupon_appids.set(appid, parseInt(subid, 10));
+        try {
+            let [ giftsAndPasses, coupons ] = await Promise.all([
+                Background.action("hasgiftsandpasses", appids),
+                Background.action("hascoupon", appids),
+            ]);
+
+            if (Array.isArray(appids)) {
+                let results = {};
+                
+                for (let id of appids) {
+                    results[id] = getStatusObject(giftsAndPasses[id], coupons[id]);
                 }
+                
+                return results;
             }
+            return getStatusObject(giftsAndPasses, coupons);
+        } catch (err) {
+            if (Array.isArray(appids)) {
+                let results = {};
+                for (let id of appids) {
+                    results[id] = getStatusObject([], null);
+                }
+                return results;
+            }
+
+            return getStatusObject([], null);
         }
-
-        let promises = [];
-
-        if (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass") || SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift")) {
-            promises.push(Background.action('inventory.gifts').then(({ "gifts": x, "passes": y, }) => { gifts = new Set(x); guestpasses = new Set(y); }));
-        }
-
-        if (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon") || SyncedStorage.get("show_coupon")) {
-            promises.push(Background.action('inventory.coupons').then(handleCoupons));
-        }
-
-        if (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")) {
-            promises.push(Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)));
-        }
-        
-        _promise = Promise.all(promises).catch(EnhancedSteam.addLoginWarning);
-        return _promise;
     };
 
-    self.then = function(onDone, onCatch) {
-        return self.promise().then(onDone, onCatch);
-    };
-
-    self.getCoupon = function(subid) {
-        return coupons && coupons[subid];
-    };
-
-    self.getCouponByAppId = function(appid) {
-        if (!coupon_appids.has(appid))
-            return false;
-        let subid = coupon_appids.get(appid);
-        return self.getCoupon(subid);
-    };
-
-    self.hasGift = function(subid) {
-        return gifts.has(subid);
-    };
-
-    self.hasGuestPass = function(subid) {
-        return guestpasses.has(subid);
-    };
-
-    self.hasInInventory6 = function(marketHash) {
-        return inv6set.has(marketHash);
+    self.hasInInventory6 = function(marketHashes) {
+        return Background.action("hasItem", marketHashes);
     };
 
     return self;
 })();
 
 let Highlights = (function(){
+
+    // Attention, the sequence of these entries determines the precendence of the highlights!
+    // The later it appears in the array, the higher its precedence
+    let highlightTypes = [
+        "notinterested",
+        "waitlist",
+        "wishlist",
+        "collection",
+        "owned",
+        "coupon",
+        "inv_guestpass",
+        "inv_gift",
+    ]
 
     let self = {};
 
@@ -1479,8 +1615,7 @@ let Highlights = (function(){
             tagCssLoaded = true;
 
             let tagCss = [];
-            let tagNames = ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"];
-            for (let name of tagNames) {
+            for (let name of highlightTypes) {
                 let color = SyncedStorage.get(`tag_${name}_color`);
                 tagCss.push(`.es_tag_${name} { background-color: ${color}; }`);
             }
@@ -1581,8 +1716,8 @@ let Highlights = (function(){
             highlightCssLoaded = true;
 
             let hlCss = [];
-            let hlNames = ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"];
-            for (let name of hlNames) {
+
+            for (let name of highlightTypes) {
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(
                    `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
@@ -1691,7 +1826,27 @@ let Highlights = (function(){
         highlightItem(node, "notinterested");
     };
 
-    self.highlightAndTag = function(nodes) {
+    self.highlightCollection = function(node) {
+        highlightItem(node, "collection");
+    };
+
+    self.highlightWaitlist = function(node) {
+        highlightItem(node, "waitlist");
+    };
+
+    /**
+     * Highlights and tags DOM nodes that are owned, wishlisted, ignored, collected, waitlisted
+     * or that the user has a gift, a guest pass or coupon for.
+     * 
+     * Additionally hides non-discounted titles if wished by the user.
+     * @param {NodeList} nodes      The nodes that should get highlighted
+     * @param {boolean} hasDsInfo   Whether or not the supplied nodes contain dynamic store info.
+     * @returns {Promise}           Resolved once the highlighting and tagging completed for the nodes
+     */
+    self.highlightAndTag = async function(nodes, hasDsInfo = true) {
+
+        let storeIdsMap = new Map();
+
         for (let node of nodes) {
             let nodeToHighlight = node;
 
@@ -1705,43 +1860,81 @@ let Highlights = (function(){
                 nodeToHighlight = node.parentNode;
             }
 
-            if (node.querySelector(".ds_owned_flag")) {
-                self.highlightOwned(nodeToHighlight);
+            let aNode = node.querySelector("a");
+
+            let appid = GameId.getAppid(node) || GameId.getAppid(aNode) || GameId.getAppidFromId(node.id);
+            let subid = GameId.getSubid(node) || GameId.getSubid(aNode);
+            let bundleid = GameId.getBundleid(node) || GameId.getBundleid(aNode);
+
+            let storeId;
+            if (appid) {
+                storeId = `app/${appid}`;
+            } else if (bundleid) {
+                storeId = `bundle/${bundleid}`;
+            } else if (subid) {
+                storeId = `sub/${subid}`;
             }
 
-            if (node.querySelector(".ds_wishlist_flag")) {
-                self.highlightWishlist(nodeToHighlight);
+            if (storeId) {
+                if (storeIdsMap.has(storeId)) {
+                    let arr = storeIdsMap.get(storeId);
+                    arr.push(nodeToHighlight);
+                    storeIdsMap.set(storeId, arr);
+                } else {
+                    storeIdsMap.set(storeId, [ nodeToHighlight ]);
+                }
             }
 
-            if (node.querySelector(".ds_ignored_flag")) {
-                self.highlightNotInterested(nodeToHighlight);
+            if (hasDsInfo) {
+                if (node.querySelector(".ds_owned_flag")) {
+                    self.highlightOwned(nodeToHighlight);
+                }
+                
+                if (node.querySelector(".ds_wishlist_flag")) {
+                    self.highlightWishlist(nodeToHighlight);
+                }
+    
+                if (node.querySelector(".ds_ignored_flag")) {
+                    self.highlightNotInterested(nodeToHighlight);
+                }
             }
-
+            
             if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
                 self.highlightNonDiscounts(nodeToHighlight);
             }
-
-            let aNode = node.querySelector("a");
-            let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
-            if (appid) {
-                if (Inventory.hasGuestPass(appid)) {
-                    self.highlightInvGuestpass(node);
-                }
-                if (Inventory.getCouponByAppId(appid)) {
-                    self.highlightCoupon(node);
-                }
-                if (Inventory.hasGift(appid)) {
-                    self.highlightInvGift(node);
-                }
-            }
         }
+
+        let storeIds = Array.from(storeIdsMap.keys());
+        let trimmedStoreIds = storeIds.map(id => GameId.trimStoreId(id));
+
+        let [ dsStatus, itadStatus, invStatus ] = await Promise.all([
+            hasDsInfo ? Promise.resolve() : DynamicStore.getAppStatus(storeIds),
+            ITAD.getAppStatus(storeIds),
+            Inventory.getAppStatus(trimmedStoreIds),
+        ]);
+        
+        let it = trimmedStoreIds.values();
+        for (let [storeid, nodes] of storeIdsMap) {
+            if (dsStatus) {
+                if (dsStatus[storeid].owned) nodes.forEach(node => self.highlightOwned(node));
+                if (dsStatus[storeid].wishlisted) nodes.forEach(node => self.highlightWishlist(node));
+                if (dsStatus[storeid].ignored) nodes.forEach(node => self.highlightNotInterested(node));
+            }
+
+            if (itadStatus[storeid].collected) nodes.forEach(node => self.highlightCollection(node));
+            if (itadStatus[storeid].waitlisted) nodes.forEach(node => self.highlightWaitlist(node));
+
+            let trimmedId = it.next().value;
+            if (invStatus[trimmedId].gift) nodes.forEach(node => self.highlightInvGift(node));
+            if (invStatus[trimmedId].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
+            if (invStatus[trimmedId].coupon) nodes.forEach(node => self.highlightCoupon(node));
+        }
+        
     }
 
     self.startHighlightsAndTags = async function(parent) {
-        await Inventory;
-
         // Batch all the document.ready appid lookups into one storefront call.
-        let selectors = [
+        let selector = [
             "div.tab_row",                                  // Storefront rows
             "div.dailydeal_ctn",
             ".store_main_capsule",                          // "Featured & Recommended"
@@ -1779,14 +1972,13 @@ let Highlights = (function(){
             "div.curated_app_item",                         // curated app items!
             ".hero_capsule",                                // Summer sale "Featured"
             ".sale_capsule"                                 // Summer sale general capsules
-        ];
+        ].map(sel => `${sel}:not(.es_highlighted)`)
+        .join(',');
 
         parent = parent || document;
 
         Messenger.onMessage("dynamicStoreReady").then(() => {
-            selectors.forEach(selector => {
-                self.highlightAndTag(parent.querySelectorAll(`${selector}:not(.es_highlighted)`));
-            });
+            self.highlightAndTag(parent.querySelectorAll(selector));
     
             let searchBoxContents = parent.getElementById("search_suggestion_contents");
             if (searchBoxContents) {
@@ -1809,46 +2001,61 @@ let DynamicStore = (function(){
 
     let self = {};
 
-    let _data = {};
     let _promise = null;
-    let _owned = new Set();
-    let _wishlisted = new Set();
 
     self.clear = function() {
-        _data = {};
-        _promise = null;
-        _owned = new Set();
-        _wishlisted = new Set();
-        LocalStorage.remove("dynamicstore");
-        LocalStorage.remove("dynamicstore_update");
+        return Background.action("dynamicstore.clear");
     };
 
-    self.isIgnored = function(appid) {
-        let list = _data.rgIgnoredApps || {};
-        return list.hasOwnProperty(appid);
-    };
+    self.getAppStatus = async function(storeId) {
+        let multiple = Array.isArray(storeId);
+        let promise;
+        let trimmedIds;
 
-    self.isOwned = function(appid) {
-        return _owned.has(appid);
-    };
+        if (multiple) {
+            trimmedIds = storeId.map(id => GameId.trimStoreId(id));
+            promise = Background.action("dynamicstorestatus", trimmedIds);
+        } else {
+            promise = Background.action("dynamicstorestatus", GameId.trimStoreId(storeId));
+        }
 
-    self.isWishlisted = function(appid) {
-        return _wishlisted.has(appid);
-    };
+        let statusList;
+        let dsStatusList = await promise;
 
-    Object.defineProperty(self, 'wishlist', {
-        get() { return new Set(_wishlisted); },
-    });
+        if (multiple) {
+            statusList = {};
+            for (let i = 0; i < storeId.length; ++i) {
+                let trimmedId = trimmedIds[i];
+                let id = storeId[i];
+                statusList[id] = {
+                    "ignored": dsStatusList[trimmedId].includes("ignored"),
+                    "wishlisted": dsStatusList[trimmedId].includes("wishlisted"),
+                }
+                if (id.startsWith("app/")) {
+                    statusList[id].owned = dsStatusList[trimmedId].includes("ownedApps");
+                } else if (id.startsWith("sub/")) {
+                    statusList[id].owned = dsStatusList[trimmedId].includes("ownedPackages");
+                }
+            }
+        } else {
+            statusList = {
+                "ignored": dsStatusList.includes("ignored"),
+                "wishlisted": dsStatusList.includes("wishlisted"),
+            }
+            if (storeId.startsWith("app/")) {
+                statusList.owned = dsStatusList.includes("ownedApps");
+            } else if (storeId.startsWith("sub/")) {
+                statusList.owned = dsStatusList.includes("ownedPackages");
+            }
+        }
+
+        return statusList;
+    }
 
     async function _fetch() {
         if (!User.isSignedIn) {
-            self.clear();
-            return _data;
+            return self.clear();
         }
-        _data = await Background.action('dynamicstore');
-        _owned = new Set(_data.rgOwnedApps);
-        _wishlisted = new Set(_data.rgWishlist);
-        return _data;
     }
 
     self.then = function(onDone, onCatch) {
@@ -1942,7 +2149,7 @@ let Prices = (function(){
             let priceUrl = HTML.escape(info.price.url.toString());
 
             let prices = lowest.toString();
-            if (Currency.customCurrency !== Currency.storeCurrency) {
+            if (Currency.customCurrency != Currency.storeCurrency) {
                 let lowest_alt = lowest.inCurrency(Currency.storeCurrency);
                 prices += ` (${lowest_alt.toString()})`;
             }
@@ -2001,7 +2208,7 @@ let Prices = (function(){
         }
     };
 
-    Prices.prototype._processBundles = function(gameid, meta, info) {
+    Prices.prototype._processBundles = function(meta, info) {
         if (!this.bundleCallback) { return; }
         if (info.bundles.live.length == 0) { return; }
 
@@ -2058,7 +2265,7 @@ let Prices = (function(){
                 purchase += '<b>';
                 if (bundle.tiers.length > 1) {
                     let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    let tierPrice = new Price(tier.price, meta.currency).inCurrency(Currency.customCurrency).toString();
+                    let tierPrice = (new Price(tier.price, meta.currency).inCurrency(Currency.customCurrency)).toString();
 
                     purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice).replace("__num__", tier.games.length);
                 } else {
@@ -2090,7 +2297,7 @@ let Prices = (function(){
             purchase += '\n<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
                 purchase += '<div class="game_purchase_price price" itemprop="price">';
-                    purchase += new Price(bundlePrice, meta.currency).inCurrency(Currency.customCurrency).toString();
+                    purchase += (new Price(bundlePrice, meta.currency).inCurrency(Currency.customCurrency)).toString();
                 purchase += '</div>';
             }
 
@@ -2114,7 +2321,7 @@ let Prices = (function(){
 
             for (let [gameid, info] of Object.entries(response.data)) {
                 that._processPrices(gameid, meta, info);
-                that._processBundles(gameid, meta, info);
+                that._processBundles(meta, info);
             }
         });
     };
@@ -2166,6 +2373,9 @@ let Common = (function(){
         ProgressBar.create();
         ProgressBar.loading();
         UpdateHandler.checkVersion(EnhancedSteam.clearCache);
+        if (User.isSignedIn) {
+            ITAD.create();
+        }
         EnhancedSteam.addBackToTop();
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
