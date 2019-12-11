@@ -181,7 +181,7 @@ class ITAD_Api extends Api {
     static async authorize(hash) {
         let url = await browser.identity.launchWebAuthFlow(
             {
-                url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${ITAD_Api.clientId}&response_type=token&state=${hash}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${browser.identity.getRedirectURL()}`,
+                url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${hash}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${browser.identity.getRedirectURL()}`,
                 interactive: true
             });
         if (!url) { throw new Error("Couldn't retrieve access token for ITAD authorization"); }
@@ -388,7 +388,6 @@ class ITAD_Api extends Api {
     static getFromCollection(storeId) { return IndexedDB.get("collection", storeId, { "shop": "steam", "optional": "gameid,copy_type" }) }
 }
 ITAD_Api.accessToken = null;
-ITAD_Api.clientId = "5fe78af07889f43a";
 ITAD_Api.requiredScopes = [
     "wait_read",
     "wait_write",
