@@ -2552,28 +2552,42 @@ class Sortbox {
         return new RegExp(`\\b${className}\\b`).test(element.className);
     }
 
-    static get(name, options, defaultOption, onChange) {
+    static get(name, options, initialOption, changeFn, storageOption) {
 
         let id = `sort_by_${name}`;
+        let reversed = initialOption.endsWith("_DESC");
+
+        let arrowDown = '↓';
+        let arrowUp = '↑';
         
-        /*  
-        We need to parse this here without sanitizing, since the onchange property of the input element has to be set in the HTML.
-        If set by changing the property via JS, it is somehow removed by some code (probably on Steam's side).
-        Adding a listener via addEventListener won't work too, since Steam's dselect.js relies on the onchange property.
-        */
         let box = HTML.element(
         `<div class="es-sortbox">
             <div class="es-sortbox__label">${Localization.str.sort_by}</div>
             <div class="es-sortbox__container">
-                <input id="${id}" type="hidden" name="${name}" value="${defaultOption}">
+                <input id="${id}" type="hidden" name="${name}" value="${initialOption}">
                 <a class="trigger" id="${id}_trigger"></a>
                 <div class="es-dropdown">
                     <ul id="${id}_droplist" class="es-dropdown__list dropdownhidden"></ul>
                 </div>
             </div>
+            <span class="es-sortbox__reverse">${arrowDown}</span>
         </div>`);
 
-        box.querySelector(`#${id}`).addEventListener("change", function() { onChange(this.value); });
+        let input = box.querySelector(`#${id}`);
+        input.addEventListener("change", function() { onChange(this.value, reversed); });
+
+        // Trigger changeFn for initial option
+        if (initialOption !== "default_ASC") {
+            input.dispatchEvent(new Event("change"));
+        }
+
+        let reverseEl = box.querySelector(".es-sortbox__reverse");
+        reverseEl.addEventListener("click", () => {
+            reversed = !reversed;
+            reverseEl.textContent = reversed ? arrowUp : arrowDown;
+            onChange(input.value, reversed);
+        });
+        if (reversed) reverseEl.textContent = arrowUp;
 
         let trigger = box.querySelector(`#${id}_trigger`);
         trigger.addEventListener("focus", () => this._onFocus(id));
@@ -2581,11 +2595,12 @@ class Sortbox {
         trigger.addEventListener("click", () => this._onTriggerClick(id));
 
         let ul = box.querySelector("ul");
+        let trimmedOption = getTrimmedValue(initialOption);
         for (let i = 0; i < options.length; ++i) {
             let [key, text] = options[i];
 
             let toggle = "inactive";
-            if (key === defaultOption) {
+            if (key === trimmedOption) {
                 box.querySelector(`#${id}`).value = key;
                 box.querySelector(".trigger").textContent = text;
                 toggle = "highlighted";
@@ -2600,6 +2615,14 @@ class Sortbox {
             //a.href = "javascript:DSelectNoop()";
             a.addEventListener("mouseover", () => this._highlightItem(id, i, false));
             a.addEventListener("click",     () => this._highlightItem(id, i, true));
+        }
+
+        function getTrimmedValue(val) { return val.replace(/(_ASC|_DESC)$/, ''); }
+
+        function onChange(val, reversed) {
+            val = getTrimmedValue(val);
+            changeFn(val, reversed);
+            if (storageOption) { SyncedStorage.set(storageOption, `${val}_${reversed ? "DESC" : "ASC"}`); }
         }
 
         return box;

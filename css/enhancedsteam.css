@@ -3254,12 +3254,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es-flag.es-flag--eu2:before {background-position: -192px -165px}
 
 .es-sortbox {
+  color: #fff;
   float: right;
   margin-top: 4px;
 }
 .es-sortbox__label {
   font-size: 12px;
-  color: #fff;
   display: inline-block;
   margin-right: 4px;
 }
@@ -3269,6 +3269,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   width: 120px;
   position: relative;
   font-size: 12px;
+}
+.es-sortbox__reverse {
+  cursor: pointer;
 }
 .es-sortbox__container a.trigger, .es-sortbox__container a.activetrigger {
   display: block;

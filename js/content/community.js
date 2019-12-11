@@ -1522,7 +1522,8 @@ let StatsPageClass = (function(){
         }
     }
 
-    async function sortBy(key, personal) {
+    async function sortBy(key, reversed) {
+        let personal = document.querySelector("#personalAchieve");
         if (key === "time") {
             if (!_nodes.time.length) {
                 await addSortMetaData(key, personal.querySelectorAll(".achieveRow"));
@@ -1530,9 +1531,8 @@ let StatsPageClass = (function(){
         }
         
         for (let br of personal.querySelectorAll(":scope > br")) br.remove();
-        for (let item of _nodes[key]) {
-            let node = item[1];
-            personal.insertAdjacentElement("beforeend", node);
+        for (let [, node] of _nodes[key]) {
+            personal.insertAdjacentElement(reversed ? "afterbegin" : "beforeend", node);
         }
     }
 
@@ -1547,7 +1547,7 @@ let StatsPageClass = (function(){
                 ["time", Localization.str.date_unlocked],
             ],
             "default",
-            option => sortBy(option, personal)
+            sortBy
         ));
 
         addSortMetaData("default", personal.querySelectorAll(".achieveRow"));
@@ -2913,7 +2913,7 @@ let FriendsPageClass = (function(){
 
         offlineFriends.forEach((friend, i) => friend.dataset.esSortDefault = i);
 
-        async function sortFriends(sortBy) {
+        async function sortFriends(sortBy, reversed) {
             sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
 
             if (sortBy === "lastonline" && !friendsFetched) {
@@ -2936,30 +2936,29 @@ let FriendsPageClass = (function(){
                 }
             }
 
-            let searchResults = document.querySelector("#search_results");
+            let offlineBlock = document.querySelector("#state_offline");
             let curOfflineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
 
             let property = `esSort${sortBy === "default" ? "Default" : "Time"}`;
             curOfflineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
 
             for (let friend of curOfflineFriends) {
-                searchResults.appendChild(friend);
+                if (reversed) {
+                    offlineBlock.insertAdjacentElement("afterend", friend);
+                } else {
+                    offlineBlock.parentElement.appendChild(friend);
+                }
             }
-
-            SyncedStorage.set("sortfriendsby", sortBy);
         }
 
+        let sortBy = SyncedStorage.get("sortfriendsby");
         document.querySelector("#manage_friends_control").insertAdjacentElement("beforebegin", Sortbox.get(
             "friends",
             [["default", Localization.str.theworddefault], ["lastonline", Localization.str.lastonline]],
-            SyncedStorage.get("sortfriendsby"),
-            sortFriends)
+            sortBy,
+            sortFriends,
+            "sortfriendsby")
         );
-
-        let sortBy = SyncedStorage.get("sortfriendsby");
-        if (sortBy !== "default") {
-            sortFriends(SyncedStorage.get("sortfriendsby"));
-        }
     };
 
     FriendsPageClass.prototype.addFriendsInviteButton = async function() {
