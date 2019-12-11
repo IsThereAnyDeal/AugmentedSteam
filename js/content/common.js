@@ -17,17 +17,17 @@ class ProgressBar {
                     </div>
                 </div>
             </div>`);
-        this._progress = document.querySelector(".es_progress");
+        ProgressBar._progress = document.querySelector(".es_progress");
     }
 
     static loading() {
-        if (!this._progress) return;
+        if (!ProgressBar._progress) return;
             
-        this._progress.setAttribute("title", Localization.str.ready.loading);
+        ProgressBar._progress.setAttribute("title", Localization.str.ready.loading);
 
         ProgressBar.requests = { "initiated": 0, "completed": 0 };
-        this._progress.classList.remove("es_progress--complete");
-        this._progress.querySelector(".es_progress__value").style.width = "18px";
+        ProgressBar._progress.classList.remove("es_progress--complete");
+        ProgressBar._progress.querySelector(".es_progress__value").style.width = "18px";
     }
 
     static startRequest() {
@@ -43,7 +43,7 @@ class ProgressBar {
     }
 
     static progress(value) {
-        if (!this._progress) return;
+        if (!ProgressBar._progress) return;
 
         if (!value) {
             if (!ProgressBar.requests) { return; }
@@ -55,47 +55,47 @@ class ProgressBar {
             value = 100;
         }
 
-        this._progress.querySelector(".es_progress__value").style.width = `${value}px`;
+        ProgressBar._progress.querySelector(".es_progress__value").style.width = `${value}px`;
 
         if (value >= 100) {
-            this._progress.classList.add("es_progress--complete");
-            this._progress.setAttribute("title", Localization.str.ready.ready);
+            ProgressBar._progress.classList.add("es_progress--complete");
+            ProgressBar._progress.setAttribute("title", Localization.str.ready.ready);
             ProgressBar.requests = null;
         }
     }
 
     static serverOutage() {
-        if (!this._progress) return;
+        if (!ProgressBar._progress) return;
 
-        this._progress.classList.add("es_progress--warning");
+        ProgressBar._progress.classList.add("es_progress--warning");
         ProgressBar.requests = null;
 
-        if (!this._progress.parentElement.querySelector(".es_progress__warning, .es_progress__error")) {
-            HTML.afterEnd(this._progress, `<div class="es_progress__warning">${Localization.str.ready.server_outage}</div>`);
+        if (!ProgressBar._progress.parentElement.querySelector(".es_progress__warning, .es_progress__error")) {
+            HTML.afterEnd(ProgressBar._progress, `<div class="es_progress__warning">${Localization.str.ready.server_outage}</div>`);
         }
     }
 
     static failed() {
-        if (!this._progress) return;
+        if (!ProgressBar._progress) return;
 
-        let warningNode = this._progress.parentElement.querySelector(".es_progress__warning");
+        let warningNode = ProgressBar._progress.parentElement.querySelector(".es_progress__warning");
         if (warningNode) {
-            this._progress.classList.remove("es_progress--warning"); // Errors have higher precedence
+            ProgressBar._progress.classList.remove("es_progress--warning"); // Errors have higher precedence
             warningNode.remove();
         }
-        this._progress.classList.add("es_progress--error");
+        ProgressBar._progress.classList.add("es_progress--error");
         ProgressBar.requests = null;
         
-        let nodeError = this._progress.parentElement.querySelector(".es_progress__error");
+        let nodeError = ProgressBar._progress.parentElement.querySelector(".es_progress__error");
         if (nodeError) {
-            nodeError.textContent = Localization.str.ready.failed.replace("__amount__", ++ProgressBar.failedRequests);
+            nodeError.textContent = Localization.str.ready.failed.replace("__amount__", ++ProgressBar._failedRequests);
         } else {
-            HTML.afterEnd(this._progress, `<div class="es_progress__error">${Localization.str.ready.failed.replace("__amount__", ++ProgressBar.failedRequests)}</div>`);
+            HTML.afterEnd(ProgressBar._progress, `<div class="es_progress__error">${Localization.str.ready.failed.replace("__amount__", ++ProgressBar._failedRequests)}</div>`);
         }
     }
 }
-
-ProgressBar.failedRequests = 0;
+ProgressBar._progress = null;
+ProgressBar._failedRequests = 0;
 
 class Background {
     static async message(message) {
