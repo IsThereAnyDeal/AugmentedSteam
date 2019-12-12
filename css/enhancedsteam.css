@@ -2897,9 +2897,15 @@ input[type=checkbox].es_dlc_selection:checked + label {
   overflow: hidden;
 }
 
-.esi-hide-common .esi-common { display: none; }
-.esi-hide-notcommon .esi-notcommon { display: none; }
-
+/* hide Steam's option on "All Games" page */
+input[id='show_common_games'],
+label[for='show_common_games'] {
+  display: none;
+}
+.esi-hide-common .esi-common,
+.esi-hide-notcommon .esi-notcommon { 
+  display: none !important;
+}
 
 .esi-stream {
   position: relative;
