@@ -1199,20 +1199,19 @@ let GamesPageClass = (function(){
         let label = document.querySelector("label[for='show_common_games']");
         if (!label) { return; }
 
-        function createCheckox(id, string) {
-            let checkboxEl = document.createElement("input");
-            checkboxEl.type = "checkbox";
-            checkboxEl.id = id;
+        function createCheckbox(id, string) {
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.id = id;
 
-            let uncommonLabel = document.createElement("label");
-            uncommonLabel.append(checkboxEl);
-            uncommonLabel.append(document.createTextNode(string));
+            let label = document.createElement("label");
+            label.append(checkbox, string);
 
-            return checkboxEl;
+            return checkbox;
         }
 
-        let commonCheckbox = createCheckox("es_gl_show_common_games", Localization.str.common_label);
-        let notCommonCheckbox = createCheckox("es_gl_show_notcommon_games", Localization.str.notcommon_label);
+        let commonCheckbox = createCheckbox("es_gl_show_common_games", Localization.str.common_label);
+        let notCommonCheckbox = createCheckbox("es_gl_show_notcommon_games", Localization.str.notcommon_label);
 
         label.insertAdjacentElement("afterend", notCommonCheckbox.parentNode);
         label.insertAdjacentElement("afterend", commonCheckbox.parentNode);
