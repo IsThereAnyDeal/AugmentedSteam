@@ -2897,9 +2897,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   overflow: hidden;
 }
 
-.esi-hide-common .esi-common {
-  display: none !important;
-}
+.esi-hide-common .esi-common { display: none; }
+.esi-hide-notcommon .esi-notcommon { display: none; }
+
 
 .esi-stream {
   position: relative;
