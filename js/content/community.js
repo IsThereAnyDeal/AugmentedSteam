@@ -2824,60 +2824,49 @@ let FriendsThatPlayPageClass = (function(){
     };
 
     FriendsThatPlayPageClass.prototype.addFriendsPlayTimeSort = function() {
-        let memberList = document.querySelector("#memberList");
 
-        let section = memberList.querySelectorAll(".mainSectionHeader").length;
-        if (section < 3) return; // DLC and unreleased games with no playtime
-        section = section >= 4 ? 1 : 2;
+        let sorted = {};
 
-        HTML.beforeEnd(
-            memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")"),
-            ` (<span id='es_default_sort' style='cursor: pointer;'>
-                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.theworddefault)}
-                 </span> | <span id='es_playtime_sort' style='text-decoration: underline;cursor: pointer;'>
-                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.playtime)}
-                </span>)`);
+        document.querySelector(".friendListSectionHeader").insertAdjacentElement("beforeend", Sortbox.get("friends_that_play", [
+            ["default", Localization.str.theworddefault],
+            ["playtime", Localization.str.playtime],
+        ], "default", onChange));
 
-        memberList.querySelector(".profile_friends:nth-child(" + ((section*2)+2) + ")")
-            .id = "es_friends_default";
-
-        let sorted = document.querySelector("#es_friends_default").cloneNode(true);
-        sorted.id = "es_friends_playtime";
-        sorted.style.display = "none";
-
-        let defaultNode = document.querySelector("#es_friends_default");
-        defaultNode.insertAdjacentElement("afterend", sorted);
-        HTML.afterEnd(defaultNode, "<div style='clear: both'></div>");
-
-        document.querySelector("#es_playtime_sort").addEventListener("click", function(e) {
-            document.querySelector("#es_playtime_sort").style.textDecoration = "none";
-            document.querySelector("#es_default_sort").style.textDecoration = "underline";
-            document.querySelector("#es_friends_default").style.display = "none";
-            document.querySelector("#es_friends_playtime").style.display = "block";
-
-            let friendArray = [];
-            let nodes = document.querySelectorAll("#es_friends_playtime .friendBlock");
-            for (let node of nodes) {
-                friendArray.push([
-                    node,
-                    parseFloat(node.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0])
-                ]);
+        function onChange(key, reversed) {
+            if (!sorted.default) {
+                sorted.default = new Map();
+                for (let block of document.querySelectorAll(".profile_friends")) {
+                    if (block.querySelector(".friendBlockInnerLink")) {
+                        sorted.default.set(block, Array.from(block.querySelectorAll(".friendBlock")));
+                    }
+                }
             }
 
-            friendArray.sort(function(a,b) { return b[1] - a[1]; });
-
-            let playtimeNode = document.querySelector("#es_friends_playtime");
-            for (let item of friendArray) {
-                playtimeNode.append(item[0])
+            // This only happens for the first sort after playtime
+            if (!sorted[key]) {
+                if (key === "playtime") {
+                    sorted[key] = new Map();
+                    for (let [block, friends] of sorted.default) {
+                        let friendsCopy = friends.slice();
+                        friendsCopy.sort((a, b) =>
+                            parseFloat(b.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0]) -
+                            parseFloat(a.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0])
+                        );
+                        sorted[key].set(block, friendsCopy);
+                    }
+                }                
             }
-        });
 
-        document.querySelector("#es_default_sort").addEventListener("click", function(e) {
-            document.querySelector("#es_default_sort").style.textDecoration = "none";
-            document.querySelector("#es_playtime_sort").style.textDecoration = "underline";
-            document.querySelector("#es_friends_playtime").style.display = "none";
-            document.querySelector("#es_friends_default").style.display = "block";
-        });
+            for (let [block, friends] of sorted[key]) {
+                for (let friend of friends) {
+                    if (reversed) {
+                        block.insertAdjacentElement("afterbegin", friend);
+                    } else {
+                        block.closest(".profile_friends").querySelector(":scope > :last-child").insertAdjacentElement("beforebegin", friend);
+                    }
+                }
+            }
+        }
     };
 
     return FriendsThatPlayPageClass;
