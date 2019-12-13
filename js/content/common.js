@@ -158,8 +158,6 @@ class ITAD {
 }
 
 class ProgressBar {
-    _progress = null;
-
     static create() {
         if (!SyncedStorage.get("show_progressbar")) { return; }
 
