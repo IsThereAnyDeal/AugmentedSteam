@@ -721,8 +721,7 @@ let ProfileHomePageClass = (function(){
         if (!SyncedStorage.get("showsteamrepapi")) { return; }
 
         ProfileData.promise().then(data => {
-            let steamrep = data.steamrep;
-            if (!steamrep || steamrep.length === 0) { return; }
+            if (!data.steamrep || data.steamrep.length === 0) { return; }
 
             let steamId = SteamId.getSteamId();
             if (!steamId) { return; }
@@ -738,8 +737,8 @@ let ProfileHomePageClass = (function(){
 
             let html = "";
 
-            steamrep.forEach(value => {
-                if (value.trim() === "") { return; }
+            for (let value of data.steamrep) {
+                if (value.trim() === "") { continue; }
                 for (let [img, regex] of Object.entries(repImgs)) {
                     if (!value.match(regex)) { continue; }
 
@@ -766,10 +765,8 @@ let ProfileHomePageClass = (function(){
                                 <img src="${imgUrl}">
                                 <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
                             </div>`;
-
-                    return;
                 }
-            });
+            }
 
             if (html) {
                 HTML.beforeEnd(".profile_header_summary", `<div id="es_steamrep">${html}</div>`);
