@@ -2898,8 +2898,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /* hide Steam's option on "All Games" page */
-input[id='show_common_games'],
-label[for='show_common_games'] {
+input[id="show_common_games"],
+label[for="show_common_games"] {
   display: none;
 }
 .esi-hide-common .esi-common,
