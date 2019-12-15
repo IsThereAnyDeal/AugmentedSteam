@@ -47,17 +47,10 @@ class Fader {
 class CustomLinks {
 
     static init() {
-
         let links = SyncedStorage.get('profile_custom_link');
         for (let link of links) {
             CustomLinks.show(link);
         }
-
-        document
-            .querySelector("#add-custom-link")
-            .addEventListener("click", function() {
-                CustomLinks.create(SyncedStorage.defaults.profile_custom_link[0]);
-            });
     }
 
     // TODO (KarlCastle?) Want to replace this with a CustomElement when the support is wider. CustomElements were added in FF63.
@@ -658,21 +651,20 @@ let Options = (function(){
         let addHandlerToSetDefaultColor = (key) => {
             document.getElementById(`${key}_default`).addEventListener('click', () => setValue(`#${key}_color`, Defaults[`${key}_color`]));
         };
-        [
-            'highlight_owned',
-            'highlight_wishlist',
-            'highlight_coupon',
-            'highlight_inv_gift',
-            'highlight_inv_guestpass',
-            'highlight_notinterested',
-            'tag_wishlist',
-            'tag_coupon',
-            'tag_inv_gift',
-            'tag_inv_guestpass',
-            'tag_notinterested',
+        ['highlight_owned',
+         'highlight_wishlist',
+         'highlight_coupon',
+         'highlight_inv_gift',
+         'highlight_inv_guestpass',
+         'highlight_notinterested',
+         'tag_owned',
+         'tag_wishlist',
+         'tag_coupon',
+         'tag_inv_gift',
+         'tag_inv_guestpass',
+         'tag_notinterested',
         ].forEach(addHandlerToSetDefaultColor);
 
-        document.getElementById("tag_owned_color_default").addEventListener("click", () => setValue("#tag_owned_color", Defaults.tag_owned_color));
         document.getElementById("spamcommentregex_default").addEventListener("click", () => setValue("#spamcommentregex", "[\\u2500-\\u25FF]"));
         document.getElementById("quickinv_default").addEventListener("click", () => setValue("#quickinv_diff", "-0.01"));
 
@@ -680,6 +672,10 @@ let Options = (function(){
             if (isNaN(parseFloat(document.getElementById("quickinv_diff").value))) {
                 setValue("#quickinv_diff", "-0.01");
             }
+        });
+
+        document.getElementById("add-custom-link").addEventListener("click", () => {
+            CustomLinks.create(SyncedStorage.defaults.profile_custom_link[0]);
         });
 
         document.getElementById("regional_price_on").addEventListener("change", e => {

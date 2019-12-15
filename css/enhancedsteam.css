@@ -162,6 +162,21 @@
   margin: auto;
 }
 
+/* https://www.w3schools.com/howto/howto_css_loader.asp */
+.loader {
+  border: 1px solid #f3f3f3;
+  border-top: 1px solid #3498db;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 span.platform_img {
   display: inline-block;
   width: 22px;
@@ -943,27 +958,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
   border-color: #c00000;
 }
 
-.es_recentAchievements {
-  position: absolute;
-  right: 4px;
-  width: 205px;
-  font-size: 10px;
-  font-weight: normal;
-}
-.clientConnItemBlock ~ * .es_recentAchievements {
-  bottom: 0;
-}
-.es_recentAchievements .achieveBar {
-  background: #3a3a3a;
-  padding: 1px;
-  border: 1px solid #aeaeae;
-  width: 176.9px;
-}
-.es_recentAchievements .achieveBarProgress {
-  height: 8px;
-  background-color: #aeaeae;
-}
-
 #es_customize_btn {
   position: relative;
   visibility: visible;
@@ -1425,6 +1419,39 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 .es_playback_sd .es_hd_toggle span {
   opacity: 0.4;
+}
+
+/***************************************
+ * App pages and Games page
+ * addAchievementCompletionBar(), addGamelistAchievements
+ **************************************/
+.es_recentAchievements {
+  position: absolute;
+  right: 4px;
+  width: 205px;
+  font-size: 10px;
+  font-weight: normal;
+}
+.clientConnItemBlock ~ * .es_recentAchievements {
+  bottom: 0;
+}
+#es_ach_stats {
+  margin-bottom: 9px;
+  margin-top: -16px;
+  float: right;
+}
+/* Taken from: https://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css */
+#es_ach_stats .achieveBar,
+.es_recentAchievements .achieveBar {
+  background: #3a3a3a;
+  padding: 1px;
+  border: 1px solid #aeaeae;
+  width: 176.9px;
+}
+#es_ach_stats .achieveBarProgress,
+.es_recentAchievements .achieveBarProgress {
+  height: 8px;
+  background-color: #aeaeae;
 }
 
 /***************************************
@@ -2407,6 +2434,23 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_menu {
   display: inline-block;
 }
+#es_itad {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1em;
+}
+#es_itad.not_authorized {
+	cursor: pointer;
+}
+#es_itad.authorized #es_itad_status {
+	color: rgb(81, 119, 29);
+}
+#es_itad.not_authorized #es_itad_status {
+	text-decoration: underline;
+}
+#es_itad_status {
+	margin-left: 0.4em;
+}
 #es_popup {
   visibility: hidden;
   opacity: 0;
@@ -2427,6 +2471,56 @@ input[type=checkbox].es_dlc_selection:checked + label {
   margin: 0;
   border: 1px solid #82807c;
   color: #ffffff;
+}
+.es-itad-hover {
+  display: none;
+  position: absolute;
+  top: 0;
+  z-index: 1200;
+  margin-top: 24px;
+}
+#es_itad:hover .es-itad-hover {
+  display: block;
+}
+.es-itad-hover__content {
+  padding: 6px 10px;
+  background-color: #3b3938;
+  border: 1px solid #797979;
+  margin: 12px 12px 12px -12px;
+  box-shadow: 0 0 12px #000000;
+  white-space: nowrap;
+}
+.es-itad-hover__arrow {
+  background-image: url(https://steamcommunity-a.akamaihd.net/public/shared/images/popups/hover_arrow_both.gif);
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  width: 26px;
+  height: 13px;
+}
+.es-itad-hover__import-now {
+  font-weight: bolder;
+  font-size: medium;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.es-itad-hover__import-now--loading .es-itad-hover__import-now-text {
+  cursor: progress;
+}
+.es-itad-hover__import-now-text {
+  cursor: pointer;
+  text-decoration: underline;
+  margin-right: 5px;
+}
+.es-itad-hover__import-success {
+  color: rgb(81, 119, 29);
+}
+.es-itad-hover__import-now .loader, .es-itad-hover__import-failed, .es-itad-hover__import-success {
+  display: none;
+}
+.es-itad-hover__import-now--failed .es-itad-hover__import-failed, .es-itad-hover__import-now--success .es-itad-hover__import-success, .es-itad-hover__import-now--loading .loader {
+  display: block;
 }
 
 /***************************************
@@ -2803,9 +2897,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   overflow: hidden;
 }
 
-.esi-hide-common .esi-common { display: none; }
-.esi-hide-notcommon .esi-notcommon { display: none; }
-
+.esi-hide-common .esi-common {
+  display: none !important;
+}
 
 .esi-stream {
   position: relative;
@@ -3242,12 +3336,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es-flag.es-flag--eu2:before {background-position: -192px -165px}
 
 .es-sortbox {
+  color: #fff;
   float: right;
   margin-top: 4px;
 }
 .es-sortbox__label {
   font-size: 12px;
-  color: #fff;
   display: inline-block;
   margin-right: 4px;
 }
@@ -3257,6 +3351,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   width: 120px;
   position: relative;
   font-size: 12px;
+}
+.es-sortbox__reverse {
+  cursor: pointer;
 }
 .es-sortbox__container a.trigger, .es-sortbox__container a.activetrigger {
   display: block;

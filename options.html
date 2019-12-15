@@ -38,12 +38,12 @@
 
 <div id="page">
     <div id="side_bar">
-        <div class="tab_row" data-block-sel="#maincontent_general">
+        <div class="tab_row selected" data-block-sel="#maincontent_general">
             <div class="category sidebar_entry">
                 <div data-locale-text="options.general">General</div>
             </div>
         </div>
-        <div class="tab_row selected" data-block-sel="#maincontent_store">
+        <div class="tab_row" data-block-sel="#maincontent_store">
             <div class="category sidebar_entry">
                 <div data-locale-text="store">Store</div>
             </div>
@@ -121,7 +121,7 @@
                         </div>
                     </div>
         
-                    <div id="store_general_section" class="content_section">
+                    <div id="general_general_section" class="content_section">
                         <h2 data-locale-text="options.general">General</h2>
                         <div class="option">
                             <input type="checkbox" id="show_progressbar" data-setting="show_progressbar">
@@ -184,6 +184,23 @@
             <div id="maincontent_store">
                 <h1 data-locale-text="store">Store</h1>
                 <div class="settings">
+                    <div id="itad_section" class="content_section">
+                        <h2>IsThereAnyDeal</h2>
+                        <label data-locale-text="itad.import">Periodically import:</label>
+                        <div class="indented option">
+                            <input type="checkbox" id="itad_import_library" data-setting="itad_import_library">
+                            <label for="itad_import_library" data-locale-text="library_menu">Library</label>
+                        </div>
+                        <div class="indented option">
+                            <input type="checkbox" id="itad_import_wishlist" data-setting="itad_import_wishlist">
+                            <label for="itad_import_wishlist" data-locale-text="wishlist">Wishlist</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="add_to_waitlist" data-setting="add_to_waitlist">
+                            <label for="add_to_waitlist" data-locale-text="options.add_to_waitlist">Show separate "Add to Waitlist" button</label>
+                        </div>
+                    </div>
+
                     <div id="highlight_section" class="content_section">
                         <h2 data-locale-text="highlight">Highlight</h2>
                         <div class="option">
@@ -245,6 +262,26 @@
                                 <button id="highlight_notinterested_default" data-locale-text="theworddefault">Default</button>
                             </div>
                         </div>
+
+                        <div class="option">
+                            <input type="checkbox" id="highlight_collection" data-setting="highlight_collection">
+                            <label for="highlight_collection" data-locale-text="options.collection">Items in your ITAD Collection</label>
+            
+                            <div class="buttons">
+                                <input type="color" id="highlight_collection_color" data-setting="highlight_collection_color">
+                                <button id="highlight_collection_default" data-locale-text="theworddefault">Default</button>
+                            </div>
+                        </div>
+
+                        <div class="option">
+                            <input type="checkbox" id="highlight_waitlist" data-setting="highlight_waitlist">
+                            <label for="highlight_waitlist" data-locale-text="options.waitlist">Items in your ITAD Waitlist</label>
+            
+                            <div class="buttons">
+                                <input type="color" id="highlight_waitlist_color" data-setting="highlight_waitlist_color">
+                                <button id="highlight_waitlist_default" data-locale-text="theworddefault">Default</button>
+                            </div>
+                        </div>
             
                         <div class="option distance_top">
                             <input type="checkbox" id="highlight_excludef2p" data-setting="highlight_excludef2p">
@@ -260,7 +297,7 @@
             
                             <div class="buttons">
                                 <input type="color" id="tag_owned_color" data-setting="tag_owned_color">
-                                <button id="tag_owned_color_default" data-locale-text="theworddefault">Default</button>
+                                <button id="tag_owned_default" data-locale-text="theworddefault">Default</button>
                             </div>
                         </div>
             
@@ -713,7 +750,7 @@
                         </div>
                     </div>
 
-                    <div id="community_profile_section" class="content_section">
+                    <div id="community_group_section" class="content_section">
                         <h2 data-locale-text="options.group">Group</h2>
                         <h3 data-locale-text="options.group_links">Show group links to:</h3>
                         <div class="option">
@@ -1023,6 +1060,7 @@
     </div>
 </div>
 <script src="js/lib/DOMPurify/purify.js"></script>
+<script src="js/lib/webextension-polyfill/browser-polyfill.js"></script>
 <script src="js/options/countryList.js"></script>
 <script src="js/options/storeList.js"></script>
 <script src="js/core.js"></script>

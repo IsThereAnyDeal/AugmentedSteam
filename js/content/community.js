@@ -52,9 +52,7 @@ let ProfileData = (function(){
     let _promise = null;
     self.promise = async function() {
         if (!_promise) {
-            let steamId = SteamId.getSteamId();
-
-            _promise = Background.action('profile', { 'profile': steamId, } )
+            _promise = Background.action("profile", SteamId.getSteamId())
                 .then(response => { _data = response; return _data; });
         }
         return _promise;
@@ -103,7 +101,7 @@ let ProfileData = (function(){
 
     self.clearOwn = async function() {
         if (!User.isSignedIn) { return; }
-        await Background.action('profile.clear', { 'profile': User.steamId, });
+        await Background.action("clearownprofile", User.steamId);
         _promise = null;
         return self.promise();
     };
@@ -353,7 +351,7 @@ let CommunityCommon = (function() {
             HTML.afterBegin(node,
                 `<div class="es_steamcardexchange_link">
                     <a href="http://www.steamcardexchange.net/index.php?gamepage-appid-${appid}" target="_blank" title="Steam Card Exchange">
-                        <img src="${ExtensionLayer.getLocalUrl('img/ico/steamcardexchange.png')}" width="24" height="24" border="0" alt="Steam Card Exchange" />
+                        <img src="${ExtensionResources.getURL('img/ico/steamcardexchange.png')}" width="24" height="24" border="0" alt="Steam Card Exchange" />
                     </a>
                 </div>`);
 
@@ -395,43 +393,32 @@ let ProfileActivityPageClass = (function(){
     }
 
     ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
-        await Promise.all([DynamicStore, Inventory, User]);
+        await Promise.all([DynamicStore, User]);
 
-        // Get all appids and nodes from selectors
-        let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
-        for (let node of nodes) {
-            node.classList.add("es_highlight_checked");
+        let blotterBlocks = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
+        blotterBlocks.forEach(node => node.classList.add("es_highlight_checked"));
 
-            let links = node.querySelectorAll("a:not(.blotter_gamepurchase_logo)");
-            for (let link of links) {
-                let appid = GameId.getAppid(link.href);
-                if (!appid || link.childElementCount > 1) { continue; }
-                if (link.childElementCount === 1 && link.closest(".vote_header")) { continue; }
+        let aNodes = Array.from(blotterBlocks).reduce((acc, cur) => {
+            acc.push(...Array.from(cur.querySelectorAll("a:not(.blotter_gamepurchase_logo)")).filter(link =>
+                (GameId.getAppid(link) && link.childElementCount <= 1)
+                &&
+                // https://github.com/tfedor/AugmentedSteam/pull/470#pullrequestreview-284928257
+                (link.childElementCount !== 1 || !link.closest(".vote_header"))
+            ));
+            return acc;
+        }, []);
 
-                if (DynamicStore.isOwned(appid)) {
-                    Highlights.highlightOwned(link);
+        await Highlights.highlightAndTag(aNodes, false);
 
-                    addAchievementComparisonLink(link, appid);
-                } else if (Inventory.hasGuestPass(appid)) {
-                    Highlights.highlightInvGuestpass(link);
-                } else if (Inventory.getCouponByAppId(appid)) {
-                    Highlights.highlightCoupon(link);
-                } else if (Inventory.hasGift(appid)) {
-                    Highlights.highlightInvGift(link);
-                } else if (DynamicStore.isWishlisted(appid)) {
-                    Highlights.highlightWishlist(link);
-                } else if (DynamicStore.isIgnored(appid)) {
-                    Highlights.highlightNotInterested(link);
-                } else {
-                    continue;
-                }
-            }
-        }
+        if (!SyncedStorage.get("showcomparelinks")) { return; }
+        blotterBlocks.forEach(blotter => {
+            blotter.querySelectorAll("a.es_highlighted_owned").forEach(aNode => {
+                addAchievementComparisonLink(aNode);
+            })
+        });
     };
 
-    function addAchievementComparisonLink(node, appid) {
-        if (!SyncedStorage.get("showcomparelinks")) { return; }
-
+    function addAchievementComparisonLink(node) {
         let blotter = node.closest(".blotter_daily_rollup_line");
         if (!blotter) { return; }
 
@@ -442,7 +429,7 @@ let ProfileActivityPageClass = (function(){
 
         node.classList.add("es_achievements");
 
-        let compareLink = friendProfileUrl + "/stats/" + appid + "/compare/#es-compare";
+        let compareLink = friendProfileUrl + "/stats/" + GameId.getAppid(node) + "/compare/#es-compare";
         HTML.afterEnd(blotter.querySelector("span"), `<a class='es_achievement_compare' href='${compareLink}' target='_blank' style='line-height: 32px'>(${Localization.str.compare})</a>`);
     }
 
@@ -586,7 +573,7 @@ let ProfileHomePageClass = (function(){
 
         // profile permalink
         if (SyncedStorage.get("profile_permalink")) {
-            let imgUrl = ExtensionLayer.getLocalUrl("img/clippy.svg");
+            let imgUrl = ExtensionResources.getURL("img/clippy.svg");
             htmlstr +=
                 `<div id="es_permalink_div" class="profile_count_link">
 					<span class="count_link_label">${Localization.str.permalink}</span>
@@ -756,7 +743,7 @@ let ProfileHomePageClass = (function(){
                 for (let [img, regex] of Object.entries(repImgs)) {
                     if (!value.match(regex)) { continue; }
 
-                    let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
+                    let imgUrl = ExtensionResources.getURL(`img/sr/${img}.png`);
                     let status;
 
                     switch (img) {
@@ -902,9 +889,9 @@ let ProfileHomePageClass = (function(){
                     document.body.classList.add("es_style_clear");
                     break;
                 default:
-                    let styleUrl = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/style.css");
-                    let headerImg = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/header.jpg");
-                    let showcase = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/showcase.png");
+                    let styleUrl = ExtensionResources.getURL("img/profile_styles/" + style + "/style.css");
+                    let headerImg = ExtensionResources.getURL("img/profile_styles/" + style + "/header.jpg");
+                    let showcase = ExtensionResources.getURL("img/profile_styles/" + style + "/showcase.png");
 
                     stylesheet.href = styleUrl;
                     document.head.appendChild(stylesheet);
@@ -1085,13 +1072,15 @@ let GroupHomePageClass = (function(){
 let GamesPageClass = (function(){
 
     function GamesPageClass() {
-
-        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(\?tab=all)?/);
-
-        if (page[2]) {
+        // Prevent errors if "Game Details" is private
+        if (!document.querySelector(".gameListRow")) {
+            return;
+        }
+        // Only show stats on the "All Games" tab
+        if (window.location.search.includes("?tab=all")) {
             this.computeStats();
             this.handleCommonGames();
-            this.addGamelistAchievements(page[1]);
+            this.addGamelistAchievements();
         }
     }
 
@@ -1130,14 +1119,13 @@ let GamesPageClass = (function(){
 
     let scrollTimeout = null;
 
-    GamesPageClass.prototype.addGamelistAchievements = function(userProfileLink) {
+    GamesPageClass.prototype.addGamelistAchievements = function() {
         if (!SyncedStorage.get("showallachievements")) { return; }
 
-        let node = document.querySelector(".profile_small_header_texture a");
-        if (!node) { return; }
-        let statsLink = "https://steamcommunity.com/" + userProfileLink + "stats/";
+        // Path of profile in view to retrieve achievement stats
+        let path = window.location.pathname.replace("/games", "");
 
-        document.addEventListener("scroll", function(){
+        document.addEventListener("scroll", () => {
             if (scrollTimeout) { window.clearTimeout(scrollTimeout); }
             scrollTimeout = window.setTimeout(addAchievements, 500);
         });
@@ -1145,11 +1133,9 @@ let GamesPageClass = (function(){
         addAchievements();
 
         function addAchievements() {
-            // Only show stats on the "All Games" tab
             let nodes = document.querySelectorAll(".gameListRow:not(.es_achievements_checked)");
             let hadNodesInView = false;
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            for (let node of nodes) {
 
                 if (!Viewport.isElementInViewport(node)) {
                     if (hadNodesInView) { break; }
@@ -1158,21 +1144,19 @@ let GamesPageClass = (function(){
 
                 hadNodesInView = true;
 
-                let appid = GameId.getAppidWishlist(node.id);
+                let appid = GameId.getAppidFromId(node.id);
                 node.classList.add("es_achievements_checked");
                 if (!node.innerHTML.match(/ico_stats\.png/)) { continue; }
-                if (!node.querySelector("h5.hours_played")) { continue; }
 
-                // Copy achievement stats to row
-                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'></div>");
+                let hoursNode = node.querySelector("h5.hours_played");
+                if (!hoursNode) { continue; }
 
-                Stats.getAchievementBar(appid).then(achieveBar => {
-                    let node = document.querySelector("#es_app_" + appid);
+                HTML.afterEnd(hoursNode, `<div class="es_recentAchievements" id="es_app_${appid}"></div>`);
 
-                    if (!achieveBar) return;
+                Stats.getAchievementBar(path, appid).then(achieveBar => {
+                    if (!achieveBar) { return; }
 
-                    HTML.inner(node, achieveBar);
-
+                    HTML.inner(document.querySelector(`#es_app_${appid}`), achieveBar);
                 }, err => {
                     console.error(err);
                 });
@@ -1185,11 +1169,10 @@ let GamesPageClass = (function(){
     async function loadCommonGames() {
         if (_commonGames != null) { return; }
 
-        let url = window.location.href;
-        let commonUrl = url + (url.indexOf( '?' ) != -1 ? '&' : '?' ) + 'games_in_common=1';
+        let commonUrl = `${window.location.href}&games_in_common=1`;
         let data = await RequestData.getHttp(commonUrl);
 
-        let games = HTMLParser.getVariableFromText(data, "rgGames", "array");;
+        let games = HTMLParser.getVariableFromText(data, "rgGames", "array");
         _commonGames = new Set();
         for (let game of games) {
             _commonGames.add(parseInt(game.appid));
@@ -1201,8 +1184,6 @@ let GamesPageClass = (function(){
 
             if (_commonGames.has(appid)) {
                 node.classList.add("esi-common");
-            } else {
-                node.classList.add("esi-notcommon");
             }
         }
     }
@@ -1225,20 +1206,13 @@ let GamesPageClass = (function(){
             return checkboxEl;
         }
 
-        let commonCheckbox = createCheckox("es_gl_show_common_games", Localization.str.common_label);
         let notCommonCheckbox = createCheckox("es_gl_show_notcommon_games", Localization.str.notcommon_label);
-
         label.insertAdjacentElement("afterend", notCommonCheckbox.parentNode);
-        label.insertAdjacentElement("afterend", commonCheckbox.parentNode);
-
-        commonCheckbox.addEventListener("change", async function(e) {
-            await loadCommonGames();
-            document.querySelector("#games_list_rows").classList.toggle("esi-hide-notcommon", e.target.checked);
-        });
 
         notCommonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
             document.querySelector("#games_list_rows").classList.toggle("esi-hide-common", e.target.checked);
+            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
         });
     };
 
@@ -1248,21 +1222,20 @@ let GamesPageClass = (function(){
 let ProfileEditPageClass = (function(){
 
     function ProfileEditPageClass() {
-        let that = this;
         ProfileData.clearOwn().then(() => {
-            if (window.location.pathname.indexOf("/settings") < 0) {
-                that.addBackgroundSelection();
-                that.addStyleSelection();
+            if (!window.location.pathname.includes("/settings")) {
+                this.addBackgroundSelection();
+                this.addStyleSelection();
             }
         })
     }
 
     function showBgFormLoading() {
-        document.querySelector("#es_bg .es_loading").style.display="block";
+        document.querySelector("#es_bg .es_loading").style.display = "block";
     }
 
     function hideBgFormLoading() {
-        document.querySelector("#es_bg .es_loading").style.display="none";
+        document.querySelector("#es_bg .es_loading").style.display = "none";
     }
 
     function getGameSelectOptions(games) {
@@ -1415,8 +1388,8 @@ let ProfileEditPageClass = (function(){
                             <option id='blue' value='blue'>Blue Theme</option>
                             <option id='clear' value='clear'>Clear Theme</option>
                             <option id='green' value='green'>Green Theme</option>
-                            <option id='orange' value='orange'>Orange Theme</option
-                            <option id='pink' value='pink'>Pink Theme</option
+                            <option id='orange' value='orange'>Orange Theme</option>
+                            <option id='pink' value='pink'>Pink Theme</option>
                             <option id='purple' value='purple'>Purple Theme</option>
                             <option id='red' value='red'>Red Theme</option>
                             <option id='teal' value='teal'>Teal Theme</option>
@@ -1447,7 +1420,7 @@ let ProfileEditPageClass = (function(){
             styleSelectNode.value = currentStyle;
 
             let imgNode = document.querySelector("#es_style_preview");
-            imgNode.src = ExtensionLayer.getLocalUrl("img/profile_styles/" + currentStyle + "/preview.png");
+            imgNode.src = ExtensionResources.getURL("img/profile_styles/" + currentStyle + "/preview.png");
 
             if (currentStyle === "remove") {
                 imgNode.style.display = "none";
@@ -1460,7 +1433,7 @@ let ProfileEditPageClass = (function(){
                 imgNode.style.display = "none";
             } else {
                 imgNode.style.display = "block";
-                imgNode.src = ExtensionLayer.getLocalUrl("img/profile_styles/" + styleSelectNode.value + "/preview.png");
+                imgNode.src = ExtensionResources.getURL("img/profile_styles/" + styleSelectNode.value + "/preview.png");
             }
 
             // Enable the "save" button
@@ -1532,7 +1505,8 @@ let StatsPageClass = (function(){
         }
     }
 
-    async function sortBy(key, personal) {
+    async function sortBy(key, reversed) {
+        let personal = document.querySelector("#personalAchieve");
         if (key === "time") {
             if (!_nodes.time.length) {
                 await addSortMetaData(key, personal.querySelectorAll(".achieveRow"));
@@ -1540,9 +1514,8 @@ let StatsPageClass = (function(){
         }
         
         for (let br of personal.querySelectorAll(":scope > br")) br.remove();
-        for (let item of _nodes[key]) {
-            let node = item[1];
-            personal.insertAdjacentElement("beforeend", node);
+        for (let [, node] of _nodes[key]) {
+            personal.insertAdjacentElement(reversed ? "afterbegin" : "beforeend", node);
         }
     }
 
@@ -1557,7 +1530,7 @@ let StatsPageClass = (function(){
                 ["time", Localization.str.date_unlocked],
             ],
             "default",
-            option => sortBy(option, personal)
+            sortBy
         ));
 
         addSortMetaData("default", personal.querySelectorAll(".achieveRow"));
@@ -2015,10 +1988,9 @@ let InventoryPageClass = (function(){
 
             await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, { withCredentials: true });
 
-            document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
+            document.querySelector(`#es_instantsell${assetID}`).parentNode.style.display = "none";
 
-            let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
-            let node = document.querySelector("[id='" + id + "']");
+            let node = document.querySelector(`[id="${global_id}_${contextID}_${assetID}"]`);
             node.classList.add("btn_disabled", "activeInfo");
             node.style.pointerEvents = "none";
         });
@@ -2849,60 +2821,49 @@ let FriendsThatPlayPageClass = (function(){
     };
 
     FriendsThatPlayPageClass.prototype.addFriendsPlayTimeSort = function() {
-        let memberList = document.querySelector("#memberList");
 
-        let section = memberList.querySelectorAll(".mainSectionHeader").length;
-        if (section < 3) return; // DLC and unreleased games with no playtime
-        section = section >= 4 ? 1 : 2;
+        let sorted = {};
 
-        HTML.beforeEnd(
-            memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")"),
-            ` (<span id='es_default_sort' style='cursor: pointer;'>
-                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.theworddefault)}
-                 </span> | <span id='es_playtime_sort' style='text-decoration: underline;cursor: pointer;'>
-                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.playtime)}
-                </span>)`);
+        document.querySelector(".friendListSectionHeader").insertAdjacentElement("beforeend", Sortbox.get("friends_that_play", [
+            ["default", Localization.str.theworddefault],
+            ["playtime", Localization.str.playtime],
+        ], "default", onChange));
 
-        memberList.querySelector(".profile_friends:nth-child(" + ((section*2)+2) + ")")
-            .id = "es_friends_default";
-
-        let sorted = document.querySelector("#es_friends_default").cloneNode(true);
-        sorted.id = "es_friends_playtime";
-        sorted.style.display = "none";
-
-        let defaultNode = document.querySelector("#es_friends_default");
-        defaultNode.insertAdjacentElement("afterend", sorted);
-        HTML.afterEnd(defaultNode, "<div style='clear: both'></div>");
-
-        document.querySelector("#es_playtime_sort").addEventListener("click", function(e) {
-            document.querySelector("#es_playtime_sort").style.textDecoration = "none";
-            document.querySelector("#es_default_sort").style.textDecoration = "underline";
-            document.querySelector("#es_friends_default").style.display = "none";
-            document.querySelector("#es_friends_playtime").style.display = "block";
-
-            let friendArray = [];
-            let nodes = document.querySelectorAll("#es_friends_playtime .friendBlock");
-            for (let node of nodes) {
-                friendArray.push([
-                    node,
-                    parseFloat(node.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0])
-                ]);
+        function onChange(key, reversed) {
+            if (!sorted.default) {
+                sorted.default = new Map();
+                for (let block of document.querySelectorAll(".profile_friends")) {
+                    if (block.querySelector(".friendBlockInnerLink")) {
+                        sorted.default.set(block, Array.from(block.querySelectorAll(".friendBlock")));
+                    }
+                }
             }
 
-            friendArray.sort(function(a,b) { return b[1] - a[1]; });
-
-            let playtimeNode = document.querySelector("#es_friends_playtime");
-            for (let item of friendArray) {
-                playtimeNode.append(item[0])
+            // This only happens for the first sort after playtime
+            if (!sorted[key]) {
+                if (key === "playtime") {
+                    sorted[key] = new Map();
+                    for (let [block, friends] of sorted.default) {
+                        let friendsCopy = friends.slice();
+                        friendsCopy.sort((a, b) =>
+                            parseFloat(b.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0]) -
+                            parseFloat(a.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0])
+                        );
+                        sorted[key].set(block, friendsCopy);
+                    }
+                }                
             }
-        });
 
-        document.querySelector("#es_default_sort").addEventListener("click", function(e) {
-            document.querySelector("#es_default_sort").style.textDecoration = "none";
-            document.querySelector("#es_playtime_sort").style.textDecoration = "underline";
-            document.querySelector("#es_friends_playtime").style.display = "none";
-            document.querySelector("#es_friends_default").style.display = "block";
-        });
+            for (let [block, friends] of sorted[key]) {
+                for (let friend of friends) {
+                    if (reversed) {
+                        block.insertAdjacentElement("afterbegin", friend);
+                    } else {
+                        block.closest(".profile_friends").querySelector(":scope > :last-child").insertAdjacentElement("beforebegin", friend);
+                    }
+                }
+            }
+        }
     };
 
     return FriendsThatPlayPageClass;
@@ -2924,7 +2885,7 @@ let FriendsPageClass = (function(){
 
         offlineFriends.forEach((friend, i) => friend.dataset.esSortDefault = i);
 
-        async function sortFriends(sortBy) {
+        async function sortFriends(sortBy, reversed) {
             sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
 
             if (sortBy === "lastonline" && !friendsFetched) {
@@ -2947,30 +2908,29 @@ let FriendsPageClass = (function(){
                 }
             }
 
-            let searchResults = document.querySelector("#search_results");
+            let offlineBlock = document.querySelector("#state_offline");
             let curOfflineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
 
             let property = `esSort${sortBy === "default" ? "Default" : "Time"}`;
             curOfflineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
 
             for (let friend of curOfflineFriends) {
-                searchResults.appendChild(friend);
+                if (reversed) {
+                    offlineBlock.insertAdjacentElement("afterend", friend);
+                } else {
+                    offlineBlock.parentElement.appendChild(friend);
+                }
             }
-
-            SyncedStorage.set("sortfriendsby", sortBy);
         }
 
+        let sortBy = SyncedStorage.get("sortfriendsby");
         document.querySelector("#manage_friends_control").insertAdjacentElement("beforebegin", Sortbox.get(
             "friends",
             [["default", Localization.str.theworddefault], ["lastonline", Localization.str.lastonline]],
-            SyncedStorage.get("sortfriendsby"),
-            sortFriends)
+            sortBy,
+            sortFriends,
+            "sortfriendsby")
         );
-
-        let sortBy = SyncedStorage.get("sortfriendsby");
-        if (sortBy !== "default") {
-            sortFriends(SyncedStorage.get("sortfriendsby"));
-        }
     };
 
     FriendsPageClass.prototype.addFriendsInviteButton = async function() {
@@ -3154,29 +3114,24 @@ let MarketPageClass = (function(){
 
     function MarketPageClass() {
 
-        Inventory.then(() => {
-            this.highlightMarketItems();
+        this.highlightMarketItems();
 
-            let that = this;
-            let observer = new MutationObserver(mutations => {
-                mutations.forEach(mutation => {
-                    for (let node of mutation.addedNodes) {
-                        if (node.classList && node.classList.contains("market_listing_row_link")) {
-                            that.highlightMarketItems();
-                            return;
-                        }
+        let that = this;
+        let observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                for (let node of mutation.addedNodes) {
+                    if (node.classList && node.classList.contains("market_listing_row_link")) {
+                        that.highlightMarketItems();
+                        return;
                     }
-                });
+                }
             });
-
-            observer.observe(
-                document.querySelector("#mainContents"),
-                {childList: true, subtree: true}
-            );
-
-        }).catch(result => {
-            console.error("Failed to load inventory", result);
         });
+
+        observer.observe(
+            document.querySelector("#mainContents"),
+            {childList: true, subtree: true}
+        );
 
         // TODO shouldn't this be global? Do we want to run on other pages?
         if (window.location.pathname.match(/^\/market\/$/)) {
@@ -3657,7 +3612,7 @@ let MarketPageClass = (function(){
         }
     };
 
-    MarketPageClass.prototype.highlightMarketItems = function() {
+    MarketPageClass.prototype.highlightMarketItems = async function() {
         if (!SyncedStorage.get("highlight_owned")) { return; }
 
         let nodes = document.querySelectorAll(".market_listing_row_link");
@@ -3665,7 +3620,8 @@ let MarketPageClass = (function(){
             let m = node.href.match(/market\/listings\/753\/(.+?)(\?|$)/);
             if (!m) { continue; }
 
-            if (Inventory.hasInInventory6(decodeURIComponent(m[1]))) {
+            // todo Collect hashes and query them all at once
+            if (await Inventory.hasInInventory6(decodeURIComponent(m[1]))) {
                 Highlights.highlightOwned(node.querySelector("div"));
             }
         }
@@ -3700,12 +3656,15 @@ let CommunityAppPageClass = (function(){
 
         let nameNode = document.querySelector(".apphub_AppName");
 
-        if (DynamicStore.isOwned(this.appid)) {
+        // todo add other highlights
+        let appStatus = await DynamicStore.getAppStatus(`app/${this.appid}`);
+
+        if (appStatus.owned) {
             nameNode.style.color = SyncedStorage.get("highlight_owned_color");
             return;
         }
 
-        if (DynamicStore.isWishlisted(this.appid)) {
+        if (appStatus.wishlisted) {
             nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
             return;
         }
