@@ -1106,7 +1106,6 @@ let GamesPageClass = (function(){
             </div>`);
 
         document.querySelector("#esi-collection-chart-content a").addEventListener("click", e => {
-            HTML.inner(e.target.parentNode, `<span>${Localization.str.loading}</span>`);
             loadStats();
         });
     };
