@@ -770,10 +770,6 @@ let ProfileHomePageClass = (function(){
 
             if (html) {
                 HTML.beforeEnd(".profile_header_summary", `<div id="es_steamrep">${html}</div>`);
-
-                let backgroundStyle = document.querySelector(".profile_header_bg_texture").style;
-                backgroundStyle.paddingBottom = "20px";
-                backgroundStyle.backgroundSize = "cover";
             }
         });
     };

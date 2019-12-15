@@ -2717,7 +2717,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
   display: flex;
   font-size: 13px;
   font-family: Verdana;
-  margin-top: 10px;
 }
 #es_steamrep div {
   margin: 0 8px;
