@@ -213,6 +213,9 @@ class StorePageClass {
         // EA origin detection
         let origin = text.includes("origin client");
 
+        // Microsoft Xbox Live account detection
+        let xbox = text.includes("xbox live");
+
         let drmNames = [];
         if (gfwl) { drmNames.push("Games for Windows Live"); }
         if (uplay) { drmNames.push("Ubisoft Uplay"); }
@@ -223,6 +226,7 @@ class StorePageClass {
         if (kalypso) { drmNames.push("Kalypso Launcher"); }
         if (denuvo) { drmNames.push("Denuvo Anti-tamper"); }
         if (origin) { drmNames.push("EA Origin"); }
+        if (xbox) { drmNames.push("Microsoft Xbox Live"); }
 
         let drm = false;
         let drmString;
