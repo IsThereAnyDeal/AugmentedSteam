@@ -1099,6 +1099,7 @@ let GamesPageClass = (function(){
     }
 
     GamesPageClass.prototype.computeStats = function() {
+        if (!SyncedStorage.get("showallstats") { return; }
 
         HTML.beforeBegin("#mainContents", 
             `<div id="esi-collection-chart-content">

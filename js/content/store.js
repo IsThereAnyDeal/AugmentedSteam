@@ -3276,6 +3276,7 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addStatsArea = function() {
+        if (!SyncedStorage.get("showwishliststats") { return; }
         if (document.getElementById("nothing_to_see_here").style.display !== "none") { return; }
 
         HTML.beforeBegin("#wishlist_ctn",
