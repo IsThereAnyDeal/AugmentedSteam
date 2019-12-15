@@ -11,7 +11,7 @@ class Customizer {
         if (!textNode) return "";
         let str = "";
         for (let node of textNode.childNodes) {
-            if (node.nodeType === 3) {
+            if (node.nodeType === Node.TEXT_NODE) {
                 str += node.textContent.trim();
             }
         }
@@ -74,12 +74,10 @@ class Customizer {
     }
 
     addDynamic(node) {
-        let text = this._textValue(node);
-        if (text === "") { return; }
+        let text = this._textValue(node).toLowerCase();
+        if (text === "") return;
 
-        let name = text.toLowerCase();
-
-        this.add(`dynamic_${name}`, node, text);
+        this.add(`dynamic_${text}`, node, text);
     }
 
     build() {
@@ -98,10 +96,10 @@ class Customizer {
                 let text = element.dataset.es_text;
 
                 HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
-                `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                    <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
-                    <div class="home_viewsettings_label">${text}</div>
-                </div>`);
+                    `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
+                        <div class="home_viewsettings_checkbox ${state ? 'checked' : ''}"></div>
+                        <div class="home_viewsettings_label">${text}</div>
+                    </div>`);
 
                 customizerEntries.set(name, [element]);
             }            
@@ -112,10 +110,10 @@ class Customizer {
             checkboxrow.addEventListener("click", e => {
                 let state = !checkboxrow.querySelector(".checked");
 
-                elements.forEach(element => {
+                for (let element of elements) {
                     element.classList.toggle("esi-shown", state);
                     element.classList.toggle("esi-hidden", !state);
-                });
+                }
 
                 e.target.closest(".home_viewsettings_checkboxrow")
                     .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
