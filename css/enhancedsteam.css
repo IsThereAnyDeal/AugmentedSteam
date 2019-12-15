@@ -2963,12 +2963,20 @@ input[type=checkbox].es_dlc_selection:checked + label {
   text-align: right;
 }
 
-.es_hltb a.linkbar > img {
+.es_hltb a.linkbar > img,
+.es_wsgf a.linkbar > img {
   border: 0;
   vertical-align: baseline;
 }
+
 .es_hltb .details_block span {
   float: right;
+}
+
+.es_wsgf .details_block img {
+  border: 0;
+  height: 120px;
+  cursor: help;
 }
 
 /***************************************

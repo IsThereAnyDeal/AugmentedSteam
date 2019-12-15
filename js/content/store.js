@@ -1450,15 +1450,11 @@ class AppPageClass extends StorePageClass {
     }
 
     addWidescreenCertification() {
-        if (!SyncedStorage.get("showwsgf")) { return; }
-        if (this.isDlc()) { return; }
+        if (this.isDlc() || !SyncedStorage.get("showwsgf")) { return; }
 
         this.data.then(result => {
             if (!result || !result.wsgf) { return; }
-            let node = document.querySelector(".game_details");
-
             let data = result.wsgf;
-            if (!data) { return; }
 
             let path = data["Path"];
             let wsg = data["WideScreenGrade"];
@@ -1560,18 +1556,20 @@ class AppPageClass extends StorePageClass {
                     break;
             }
 
+            let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.wsgf.certifications}</div>
+                       <div class="block underlined_links es_wsgf">
+                       <div class="block_content"><div class="block_content_inner"><div class="details_block"><center>`;
 
-            let wsgfUrl = HTML.escape(path);
+            if (wsg !== "Incomplete") { html += `<img src="${HTML.escape(wsg_icon)}" title="${HTML.escape(wsg_text)}">&nbsp;&nbsp;&nbsp;`; }
+            if (mmg !== "Incomplete") { html += `<img src="${HTML.escape(mmg_icon)}" title="${HTML.escape(mmg_text)}">&nbsp;&nbsp;&nbsp;`; }
+            if (uws !== "Incomplete") { html += `<img src="${HTML.escape(uws_icon)}" title="${HTML.escape(uws_text)}">&nbsp;&nbsp;&nbsp;`; }
+            if (fkg !== "Incomplete") { html += `<img src="${HTML.escape(fkg_icon)}" title="${HTML.escape(fkg_text)}">&nbsp;&nbsp;&nbsp;`; }
 
-            let html = "<div class='block responsive_apppage_details_right heading'>"+Localization.str.wsgf.certifications+"</div><div class='block underlined_links'><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
-            if (wsg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(wsg_icon) + "' height='120' title='" + HTML.escape(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (mmg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(mmg_icon) + "' height='120' title='" + HTML.escape(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (uws !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(uws_icon) + "' height='120' title='" + HTML.escape(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (fkg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(fkg_icon) + "' height='120' title='" + HTML.escape(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + wsgfUrl + "'>" + Localization.str.rating_details + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
-            html += "</div></div></div></div>";
+            html += `</center></div>
+                    <br><a class="linkbar" target="_blank" href="${HTML.escape(path)}">${Localization.str.rating_details} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></a>
+                    </div></div></div>`;
 
-            HTML.afterEnd(node, html);
+            HTML.afterEnd("div.game_details", html);
         });
     }
 
