@@ -2963,6 +2963,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
   text-align: right;
 }
 
+.es_hltb a.linkbar > img {
+  border: 0;
+  vertical-align: baseline;
+}
+.es_hltb .details_block span {
+  float: right;
+}
+
 /***************************************
  * Store curator pages
  **************************************/
