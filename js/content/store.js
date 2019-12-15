@@ -169,6 +169,12 @@ class StorePageClass {
     addDrmWarnings() {
         if (!SyncedStorage.get("showdrm")) { return; }
 
+        // Prevent false-positives
+        if (this.isAppPage() && (
+               this.appid === 21690    // Resident Evil 5, at Capcom's request
+            || this.appid === 1157970  // Special K
+        )) { return; }
+
         let text = "";
         for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details, .DRM_notice")) {
             text += node.textContent.toLowerCase();
@@ -228,19 +234,16 @@ class StorePageClass {
         if (origin) { drmNames.push("EA Origin"); }
         if (xbox) { drmNames.push("Microsoft Xbox Live"); }
 
-        let drm = false;
         let drmString;
         let regex = /\b(drm|account|steam)\b/i;
         if (drmNames.length > 0) {
             drmString = `(${drmNames.join(", ")})`;
-            drm = true;
         } else { // Detect other DRM
             if (this.isAppPage()) {
                 for (let node of document.querySelectorAll("#category_block > .DRM_notice")) {
                     let text = node.textContent;
                     if (text.match(regex)) {
                         drmString = text;
-                        drm = true;
                         break;
                     }
                 }
@@ -250,18 +253,11 @@ class StorePageClass {
                 let text = node.textContent + node.nextSibling.textContent;
                 if (text.match(regex)) {
                     drmString = text;
-                    drm = true;
                 }
             }
         }
 
-        // Prevent false-positives
-        if (this.isAppPage() && (
-               this.appid === 21690    // Resident Evil 5, at Capcom's request
-            || this.appid === 1157970  // Special K
-        )) { drm = false; }
-
-        if (drm) {
+        if (drmString) {
             let warnString;
             if (drmNames.length > 0) {
                 warnString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
