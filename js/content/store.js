@@ -225,15 +225,29 @@ class StorePageClass {
         if (origin) { drmNames.push("EA Origin"); }
 
         let drm = false;
-        let drmString = "";
+        let drmString;
+        let regex = /\b(drm|account|steam)\b/i;
         if (drmNames.length > 0) {
             drmString = `(${drmNames.join(", ")})`;
             drm = true;
-        } else { // Detect other DRM on app pages
-            let drmNode = document.querySelector("#category_block > .DRM_notice");
-            if (drmNode) {
-                drmString = drmNode.innerHTML.replace("<br>", ", ").trim();
-                drm = /\b(drm|account)\b/i.test(drmString);
+        } else { // Detect other DRM
+            if (this.isAppPage()) {
+                for (let node of document.querySelectorAll("#category_block > .DRM_notice")) {
+                    let text = node.textContent;
+                    if (text.match(regex)) {
+                        drmString = text;
+                        drm = true;
+                        break;
+                    }
+                }
+            }
+            if (this.isSubPage()) {
+                let node = document.querySelector(".game_details .details_block > p > b:last-of-type");
+                let text = node.textContent + node.nextSibling.textContent;
+                if (text.match(regex)) {
+                    drmString = text;
+                    drm = true;
+                }
             }
         }
 
@@ -244,7 +258,7 @@ class StorePageClass {
         )) { drm = false; }
 
         if (drm) {
-            let warnString = "";
+            let warnString;
             if (drmNames.length > 0) {
                 warnString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
                 warnString = warnString.replace("__drmlist__", drmString);
