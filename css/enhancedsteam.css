@@ -2721,16 +2721,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_steamrep div {
   margin: 0 8px;
 }
-#es_steamrep .bad a {
+#es_steamrep .bad span {
   color: red;
 }
-#es_steamrep .caution a {
+#es_steamrep .caution span {
   color: orangered;
 }
-#es_steamrep .good a {
+#es_steamrep .good span {
   color: green;
 }
-#es_steamrep .neutral a {
+#es_steamrep .neutral span {
   color: gray;
 }
 

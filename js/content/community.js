@@ -761,15 +761,17 @@ let ProfileHomePageClass = (function(){
                             break;
                     }
 
-                    html += `<div class="${status}">
-                                <img src="${imgUrl}">
-                                <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
-                            </div>`;
+                    html += `<div class="${status}"><img src="${imgUrl}"><span> ${value}</span></div>`;
                 }
             }
 
             if (html) {
-                HTML.beforeEnd(".profile_header_summary", `<div id="es_steamrep">${html}</div>`);
+
+                HTML.beforeEnd(".profile_header_summary",
+                    `<div id="es_steamrep">
+                        ${html}
+                        <a href="https://steamrep.com/profiles/${steamId}" target="_blank">(?)</a>
+                    </div>`);
             }
         });
     };
