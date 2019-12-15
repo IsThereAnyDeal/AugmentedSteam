@@ -1645,7 +1645,7 @@ class AppPageClass extends StorePageClass {
         });
 
         for (let moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {
-            if (moreBtn) { moreBtn.remove(); }
+            moreBtn.remove();
         }
 
         ExtensionLayer.runInPageContext(() => CollapseLongStrings(".dev_row .summary.column"));
