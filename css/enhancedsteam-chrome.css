@@ -37,12 +37,13 @@
   background-image: url("chrome-extension://__MSG_@@extension_id__/img/steamcardexchange.png");
 }
 
-.es_slider_toggle i {
+.es_slider_toggle i,
+.es_screenshot_fullscreen_toggle i {
   background-image: url("chrome-extension://__MSG_@@extension_id__/img/fullscreen-icons.gif");
 }
 
-.es_screenshot_fullscreen_toggle i {
-  background-image: url("chrome-extension://__MSG_@@extension_id__/img/fullscreen-icons.gif");
+.es_screenshot_open_btn i {
+  background-image: url('chrome-extension://__MSG_@@extension_id__/img/screenshot_open.png');
 }
 
 .es_user_note:before {
@@ -93,6 +94,6 @@
   background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/astatsnl.png");
 }
 
-.es_flag:before {
+.es-flag:before {
   background-image: url("chrome-extension://__MSG_@@extension_id__/img/flags/flags.png");
 }

@@ -49,6 +49,10 @@
   background-image: url("moz-extension://__MSG_@@extension_id__/img/fullscreen-icons.gif");
 }
 
+.es_screenshot_open_btn i {
+  background-image: url('chrome-extension://__MSG_@@extension_id__/img/screenshot_open.png');
+}
+
 .es_user_note:before {
   background-image: url("moz-extension://__MSG_@@extension_id__/img/pinn.png");
 }
@@ -96,6 +100,6 @@
   background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/astatsnl.png");
 }
 
-.es_flag:before {
+.es-flag:before {
   background-image: url("moz-extension://__MSG_@@extension_id__/img/flags/flags.png");
 }

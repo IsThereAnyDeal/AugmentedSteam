@@ -1,14 +1,31 @@
+
 /* Back To Top button */
 .es_btt {
-  position: fixed; 
-  bottom: 20px;
-  display: block; 
+  position: fixed;
+  display: flex;
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
   z-index: 9999;
   opacity: 0;
   box-shadow: 0 0 10px 2px #000000;
+  left: 50%;
+  bottom: 20px;
+  top: auto;
+  margin-left: 500px;
+  font-size: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  background: linear-gradient( to bottom, rgba(33,101,138,1) 5%, rgba(23,67,92,1) 95%);
+  transition: opacity 200ms ease-in-out;
+  color: white;
 }
-.es_btt > span {
-  font-size: 180% !important;
+.es_btt:hover {
+  background: linear-gradient( to bottom, rgba(47,137,188,1) 5%, rgba(23,67,92,1) 95%);
+}
+.es_btt.is-visible {
+  opacity: 1;
 }
 
 /* Required for "Customize" button and YouTube / Steam tabs */
@@ -143,6 +160,21 @@
   background-color: #82807c;
   width: 90%;
   margin: auto;
+}
+
+/* https://www.w3schools.com/howto/howto_css_loader.asp */
+.loader {
+  border: 1px solid #f3f3f3;
+  border-top: 1px solid #3498db;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 span.platform_img {
@@ -286,9 +318,6 @@ img.astats_icon {
 .profile_link_icon.profile_link_icon_background {
   background: #ebebeb;
   border-radius: 4px;
-}
-.es_flag {
-  margin-right: 4px;
 }
 .es_each {
   color: #626366;
@@ -934,27 +963,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
   border-color: #c00000;
 }
 
-.es_recentAchievements {
-  position: absolute;
-  right: 4px;
-  width: 205px;
-  font-size: 10px;
-  font-weight: normal;
-}
-.clientConnItemBlock ~ * .es_recentAchievements {
-  bottom: 0;
-}
-.es_recentAchievements .achieveBar {
-  background: #3a3a3a;
-  padding: 1px;
-  border: 1px solid #aeaeae;
-  width: 176.9px;
-}
-.es_recentAchievements .achieveBarProgress {
-  height: 8px;
-  background-color: #aeaeae;
-}
-
 #es_customize_btn {
   position: relative;
   visibility: visible;
@@ -1419,6 +1427,39 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
+ * App pages and Games page
+ * addAchievementCompletionBar(), addGamelistAchievements
+ **************************************/
+.es_recentAchievements {
+  position: absolute;
+  right: 4px;
+  width: 205px;
+  font-size: 10px;
+  font-weight: normal;
+}
+.clientConnItemBlock ~ * .es_recentAchievements {
+  bottom: 0;
+}
+#es_ach_stats {
+  margin-bottom: 9px;
+  margin-top: -16px;
+  float: right;
+}
+/* Taken from: https://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css */
+#es_ach_stats .achieveBar,
+.es_recentAchievements .achieveBar {
+  background: #3a3a3a;
+  padding: 1px;
+  border: 1px solid #aeaeae;
+  width: 176.9px;
+}
+#es_ach_stats .achieveBarProgress,
+.es_recentAchievements .achieveBarProgress {
+  height: 8px;
+  background-color: #aeaeae;
+}
+
+/***************************************
  * App pages
  * addFullscreenScreenshotView()
  **************************************/
@@ -1448,10 +1489,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 	margin: 5px;
 }
 .es_screenshot_download_btn i {
-	background-image: url(https://steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1);
-}
-.es_screenshot_open_btn i {
-	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAAmJLR0QA/4ePzL8AAAC1SURBVChTlYwxDgFRFEXvmMQStKKQWM+wCzoiEhISkUyHLViJVqGg0igUqkl+MSGSIY7CTPz/p3Je9d45eZIFTR64bOVCROYEmXyIeNmFCBlwxGAwjCRmzgfEBHhiMMRlDeLCjXr+vqRBwCnXXc+9/WDn6DUdMjdYWHpFINHmYQchm1wvCehJEi0rkKgwZ89QYkpSHK3gB8kfwZWUmqcbPDkUSwyknJ25A/0iqBJzxeXCmPDrP4LlL/iR+JDnAAAAAElFTkSuQmCC');
+	background-image: url('https://steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1');
 }
 .screenshot_popup_modal_content:fullscreen .es_screenshot_fullscreen_toggle i {
   background-position: bottom left;
@@ -1895,7 +1933,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
   clear: both;
 }
 .es_regional_always .es_regional_container {
-  display: inline-block;
+  display: block;
   position: relative;
   float: right;
   margin-bottom: 5px;
@@ -1907,53 +1945,69 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_regional_onmouse:hover .es_regional_container {
   display: block !important;
 }
-.es_regional_price {
-  margin-right: 8px;
+
+/**
+ * Regional price comparison item
+ */
+
+.es-regprice {
+  display: flex;
+  align-items: baseline;
   font-size: 14px;
+  white-space: nowrap;
 }
-.es_regional_converted {
+
+.es-regprice__converted {
   font-size: 12px;
+  text-align: right;
+  flex-grow: 1;
+  min-width: 60px;
+  margin-left: 5px
 }
-.es_percentage {
+
+.es-regprice__perc {
   font-size: 12px;
-  margin-left: 3px;
+  margin-left: 5px;
+  width: 60px;
+  text-align: right;
 }
-.es_percentage:before {
+.es-regprice__perc:after {
   content: "";
   width: 0;
   height: 0;
-  margin-right: 2px;
+  margin-left: 4px;
   margin-bottom: 2px;
   position: relative;
   display: inline-block;
   border-color: transparent;
   border-style: solid;
 }
-.es_percentage_higher:before {
+
+.es-regprice__perc--higher {
+  color: #ff1717;
+}
+.es-regprice__perc--equal {
+  color: #e5e500;
+}
+.es-regprice__perc--lower {
+  color: #60ad0a;
+}
+
+.es-regprice__perc--higher:after {
   border-width: 0 5px 5px 5px;
   border-bottom-color: #ff1717;
 }
-.es_percentage_equal:before {
+.es-regprice__perc--equal:after {
   width: 6px;
   content: "=";
 }
-.es_percentage_lower:before {
+.es-regprice__perc--lower:after {
   border-width: 5px 5px 0 5px;
   border-top-color: #60ad0a;
 }
-.es_percentage_higher {
-  color: #ff1717;
-}
-.es_percentage_equal {
-  color: #e5e500;
-}
-.es_percentage_lower {
-  color: #60ad0a;
-}
-.es_regional_dailydeal {
-  margin-top: auto;
-}
-.es_regional_unavailable {
+
+
+.es-regprice__none {
   font-size: 12px;
 }
 
@@ -2385,6 +2439,23 @@ input[type=checkbox].es_dlc_selection:checked + label {
 #es_menu {
   display: inline-block;
 }
+#es_itad {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1em;
+}
+#es_itad.not_authorized {
+	cursor: pointer;
+}
+#es_itad.authorized #es_itad_status {
+	color: rgb(81, 119, 29);
+}
+#es_itad.not_authorized #es_itad_status {
+	text-decoration: underline;
+}
+#es_itad_status {
+	margin-left: 0.4em;
+}
 #es_popup {
   visibility: hidden;
   opacity: 0;
@@ -2405,6 +2476,56 @@ input[type=checkbox].es_dlc_selection:checked + label {
   margin: 0;
   border: 1px solid #82807c;
   color: #ffffff;
+}
+.es-itad-hover {
+  display: none;
+  position: absolute;
+  top: 0;
+  z-index: 1200;
+  margin-top: 24px;
+}
+#es_itad:hover .es-itad-hover {
+  display: block;
+}
+.es-itad-hover__content {
+  padding: 6px 10px;
+  background-color: #3b3938;
+  border: 1px solid #797979;
+  margin: 12px 12px 12px -12px;
+  box-shadow: 0 0 12px #000000;
+  white-space: nowrap;
+}
+.es-itad-hover__arrow {
+  background-image: url(https://steamcommunity-a.akamaihd.net/public/shared/images/popups/hover_arrow_both.gif);
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  width: 26px;
+  height: 13px;
+}
+.es-itad-hover__import-now {
+  font-weight: bolder;
+  font-size: medium;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.es-itad-hover__import-now--loading .es-itad-hover__import-now-text {
+  cursor: progress;
+}
+.es-itad-hover__import-now-text {
+  cursor: pointer;
+  text-decoration: underline;
+  margin-right: 5px;
+}
+.es-itad-hover__import-success {
+  color: rgb(81, 119, 29);
+}
+.es-itad-hover__import-now .loader, .es-itad-hover__import-failed, .es-itad-hover__import-success {
+  display: none;
+}
+.es-itad-hover__import-now--failed .es-itad-hover__import-failed, .es-itad-hover__import-now--success .es-itad-hover__import-success, .es-itad-hover__import-now--loading .loader {
+  display: block;
 }
 
 /***************************************
@@ -2781,9 +2902,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   overflow: hidden;
 }
 
-.esi-hide-common .esi-common { display: none; }
-.esi-hide-notcommon .esi-notcommon { display: none; }
-
+.esi-hide-common .esi-common {
+  display: none !important;
+}
 
 .esi-stream {
   position: relative;
@@ -2951,7 +3072,11 @@ input[type=checkbox].es_dlc_selection:checked + label {
 /**
  * Flags
  */
-.es_flag:before {
+.es-flag {
+  margin-right: 4px;
+}
+
+.es-flag:before {
   content: "";
   position: relative;
   width: 16px;
@@ -2962,266 +3087,266 @@ input[type=checkbox].es_dlc_selection:checked + label {
   background-position: top left;
 }
 
-.es_flag.es_flag_ad:before {background-position: -16px 0}
-.es_flag.es_flag_ae:before {background-position: -32px 0}
-.es_flag.es_flag_af:before {background-position: -48px 0}
-.es_flag.es_flag_ag:before {background-position: -64px 0}
-.es_flag.es_flag_ai:before {background-position: -80px 0}
-.es_flag.es_flag_al:before {background-position: -96px 0}
-.es_flag.es_flag_am:before {background-position: -112px 0}
-.es_flag.es_flag_an:before {background-position: -128px 0}
-.es_flag.es_flag_ao:before {background-position: -144px 0}
-.es_flag.es_flag_ar:before {background-position: -160px 0}
-.es_flag.es_flag_as:before {background-position: -176px 0}
-.es_flag.es_flag_at:before {background-position: -192px 0}
-.es_flag.es_flag_au:before {background-position: -208px 0}
-.es_flag.es_flag_aw:before {background-position: -224px 0}
-.es_flag.es_flag_az:before {background-position: -240px 0}
-.es_flag.es_flag_ba:before {background-position: 0 -11px}
-.es_flag.es_flag_bb:before {background-position: -16px -11px}
-.es_flag.es_flag_bd:before {background-position: -32px -11px}
-.es_flag.es_flag_be:before {background-position: -48px -11px}
-.es_flag.es_flag_bf:before {background-position: -64px -11px}
-.es_flag.es_flag_bg:before {background-position: -80px -11px}
-.es_flag.es_flag_bh:before {background-position: -96px -11px}
-.es_flag.es_flag_bi:before {background-position: -112px -11px}
-.es_flag.es_flag_bj:before {background-position: -128px -11px}
-.es_flag.es_flag_bm:before {background-position: -144px -11px}
-.es_flag.es_flag_bn:before {background-position: -160px -11px}
-.es_flag.es_flag_bo:before {background-position: -176px -11px}
-.es_flag.es_flag_br:before {background-position: -192px -11px}
-.es_flag.es_flag_bs:before {background-position: -208px -11px}
-.es_flag.es_flag_bt:before {background-position: -224px -11px}
-.es_flag.es_flag_bv:before {background-position: -240px -11px}
-.es_flag.es_flag_bw:before {background-position: 0 -22px}
-.es_flag.es_flag_by:before {background-position: -16px -22px}
-.es_flag.es_flag_bz:before {background-position: -32px -22px}
-.es_flag.es_flag_ca:before {background-position: -48px -22px}
-.es_flag.es_flag_catalonia:before {background-position: -64px -22px}
-.es_flag.es_flag_cd:before {background-position: -80px -22px}
-.es_flag.es_flag_cf:before {background-position: -96px -22px}
-.es_flag.es_flag_cg:before {background-position: -112px -22px}
-.es_flag.es_flag_ch:before {background-position: -128px -22px}
-.es_flag.es_flag_ci:before {background-position: -144px -22px}
-.es_flag.es_flag_ck:before {background-position: -160px -22px}
-.es_flag.es_flag_cl:before {background-position: -176px -22px}
-.es_flag.es_flag_cm:before {background-position: -192px -22px}
-.es_flag.es_flag_cn:before {background-position: -208px -22px}
-.es_flag.es_flag_co:before {background-position: -224px -22px}
-.es_flag.es_flag_cr:before {background-position: -240px -22px}
-.es_flag.es_flag_cu:before {background-position: 0 -33px}
-.es_flag.es_flag_cv:before {background-position: -16px -33px}
-.es_flag.es_flag_cw:before {background-position: -32px -33px}
-.es_flag.es_flag_cy:before {background-position: -48px -33px}
-.es_flag.es_flag_cz:before {background-position: -64px -33px}
-.es_flag.es_flag_de:before {background-position: -80px -33px}
-.es_flag.es_flag_dj:before {background-position: -96px -33px}
-.es_flag.es_flag_dk:before {background-position: -112px -33px}
-.es_flag.es_flag_dm:before {background-position: -128px -33px}
-.es_flag.es_flag_do:before {background-position: -144px -33px}
-.es_flag.es_flag_dz:before {background-position: -160px -33px}
-.es_flag.es_flag_ec:before {background-position: -176px -33px}
-.es_flag.es_flag_ee:before {background-position: -192px -33px}
-.es_flag.es_flag_eg:before {background-position: -208px -33px}
-.es_flag.es_flag_eh:before {background-position: -224px -33px}
-.es_flag.es_flag_england:before {background-position: -240px -33px}
-.es_flag.es_flag_er:before {background-position: 0 -44px}
-.es_flag.es_flag_es:before {background-position: -16px -44px}
-.es_flag.es_flag_et:before {background-position: -32px -44px}
-.es_flag.es_flag_eu1:before {background-position: -48px -44px}
-.es_flag.es_flag_fi:before {background-position: -64px -44px}
-.es_flag.es_flag_fj:before {background-position: -80px -44px}
-.es_flag.es_flag_fk:before {background-position: -96px -44px}
-.es_flag.es_flag_fm:before {background-position: -112px -44px}
-.es_flag.es_flag_fo:before {background-position: -128px -44px}
-.es_flag.es_flag_fr:before {background-position: -144px -44px}
-.es_flag.es_flag_ga:before {background-position: -160px -44px}
-.es_flag.es_flag_gb:before {background-position: -176px -44px}
-.es_flag.es_flag_gd:before {background-position: -192px -44px}
-.es_flag.es_flag_ge:before {background-position: -208px -44px}
-.es_flag.es_flag_gf:before {background-position: -224px -44px}
-.es_flag.es_flag_gg:before {background-position: -240px -44px}
-.es_flag.es_flag_gh:before {background-position: 0 -55px}
-.es_flag.es_flag_gi:before {background-position: -16px -55px}
-.es_flag.es_flag_gl:before {background-position: -32px -55px}
-.es_flag.es_flag_gm:before {background-position: -48px -55px}
-.es_flag.es_flag_gn:before {background-position: -64px -55px}
-.es_flag.es_flag_gp:before {background-position: -80px -55px}
-.es_flag.es_flag_gq:before {background-position: -96px -55px}
-.es_flag.es_flag_gr:before {background-position: -112px -55px}
-.es_flag.es_flag_gs:before {background-position: -128px -55px}
-.es_flag.es_flag_gt:before {background-position: -144px -55px}
-.es_flag.es_flag_gu:before {background-position: -160px -55px}
-.es_flag.es_flag_gw:before {background-position: -176px -55px}
-.es_flag.es_flag_gy:before {background-position: -192px -55px}
-.es_flag.es_flag_hk:before {background-position: -208px -55px}
-.es_flag.es_flag_hm:before {background-position: -224px -55px}
-.es_flag.es_flag_hn:before {background-position: -240px -55px}
-.es_flag.es_flag_hr:before {background-position: 0 -66px}
-.es_flag.es_flag_ht:before {background-position: -16px -66px}
-.es_flag.es_flag_hu:before {background-position: -32px -66px}
-.es_flag.es_flag_ic:before {background-position: -48px -66px}
-.es_flag.es_flag_id:before {background-position: -64px -66px}
-.es_flag.es_flag_ie:before {background-position: -80px -66px}
-.es_flag.es_flag_il:before {background-position: -96px -66px}
-.es_flag.es_flag_im:before {background-position: -112px -66px}
-.es_flag.es_flag_in:before {background-position: -128px -66px}
-.es_flag.es_flag_io:before {background-position: -144px -66px}
-.es_flag.es_flag_iq:before {background-position: -160px -66px}
-.es_flag.es_flag_ir:before {background-position: -176px -66px}
-.es_flag.es_flag_is:before {background-position: -192px -66px}
-.es_flag.es_flag_it:before {background-position: -208px -66px}
-.es_flag.es_flag_je:before {background-position: -224px -66px}
-.es_flag.es_flag_jm:before {background-position: -240px -66px}
-.es_flag.es_flag_jo:before {background-position: 0 -77px}
-.es_flag.es_flag_jp:before {background-position: -16px -77px}
-.es_flag.es_flag_ke:before {background-position: -32px -77px}
-.es_flag.es_flag_kg:before {background-position: -48px -77px}
-.es_flag.es_flag_kh:before {background-position: -64px -77px}
-.es_flag.es_flag_ki:before {background-position: -80px -77px}
-.es_flag.es_flag_km:before {background-position: -96px -77px}
-.es_flag.es_flag_kn:before {background-position: -112px -77px}
-.es_flag.es_flag_kp:before {background-position: -128px -77px}
-.es_flag.es_flag_kr:before {background-position: -144px -77px}
-.es_flag.es_flag_kurdistan:before {background-position: -160px -77px}
-.es_flag.es_flag_kw:before {background-position: -176px -77px}
-.es_flag.es_flag_ky:before {background-position: -192px -77px}
-.es_flag.es_flag_kz:before {background-position: -208px -77px}
-.es_flag.es_flag_la:before {background-position: -224px -77px}
-.es_flag.es_flag_lb:before {background-position: -240px -77px}
-.es_flag.es_flag_lc:before {background-position: 0 -88px}
-.es_flag.es_flag_li:before {background-position: -16px -88px}
-.es_flag.es_flag_lk:before {background-position: -32px -88px}
-.es_flag.es_flag_lr:before {background-position: -48px -88px}
-.es_flag.es_flag_ls:before {background-position: -64px -88px}
-.es_flag.es_flag_lt:before {background-position: -80px -88px}
-.es_flag.es_flag_lu:before {background-position: -96px -88px}
-.es_flag.es_flag_lv:before {background-position: -112px -88px}
-.es_flag.es_flag_ly:before {background-position: -128px -88px}
-.es_flag.es_flag_ma:before {background-position: -144px -88px}
-.es_flag.es_flag_mc:before {background-position: -160px -88px}
-.es_flag.es_flag_md:before {background-position: -176px -88px}
-.es_flag.es_flag_me:before {background-position: -192px -88px}
-.es_flag.es_flag_mg:before {background-position: -208px -88px}
-.es_flag.es_flag_mh:before {background-position: -224px -88px}
-.es_flag.es_flag_mk:before {background-position: -240px -88px}
-.es_flag.es_flag_ml:before {background-position: 0 -99px}
-.es_flag.es_flag_mm:before {background-position: -16px -99px}
-.es_flag.es_flag_mn:before {background-position: -32px -99px}
-.es_flag.es_flag_mo:before {background-position: -48px -99px}
-.es_flag.es_flag_mp:before {background-position: -64px -99px}
-.es_flag.es_flag_mq:before {background-position: -80px -99px}
-.es_flag.es_flag_mr:before {background-position: -96px -99px}
-.es_flag.es_flag_ms:before {background-position: -112px -99px}
-.es_flag.es_flag_mt:before {background-position: -128px -99px}
-.es_flag.es_flag_mu:before {background-position: -144px -99px}
-.es_flag.es_flag_mv:before {background-position: -160px -99px}
-.es_flag.es_flag_mw:before {background-position: -176px -99px}
-.es_flag.es_flag_mx:before {background-position: -192px -99px}
-.es_flag.es_flag_my:before {background-position: -208px -99px}
-.es_flag.es_flag_mz:before {background-position: -224px -99px}
-.es_flag.es_flag_na:before {background-position: -240px -99px}
-.es_flag.es_flag_nc:before {background-position: 0 -110px}
-.es_flag.es_flag_ne:before {background-position: -16px -110px}
-.es_flag.es_flag_nf:before {background-position: -32px -110px}
-.es_flag.es_flag_ng:before {background-position: -48px -110px}
-.es_flag.es_flag_ni:before {background-position: -64px -110px}
-.es_flag.es_flag_nl:before {background-position: -80px -110px}
-.es_flag.es_flag_no:before {background-position: -96px -110px}
-.es_flag.es_flag_np:before {background-position: -112px -110px}
-.es_flag.es_flag_nr:before {background-position: -128px -110px}
-.es_flag.es_flag_nu:before {background-position: -144px -110px}
-.es_flag.es_flag_nz:before {background-position: -160px -110px}
-.es_flag.es_flag_om:before {background-position: -176px -110px}
-.es_flag.es_flag_pa:before {background-position: -192px -110px}
-.es_flag.es_flag_pe:before {background-position: -208px -110px}
-.es_flag.es_flag_pf:before {background-position: -224px -110px}
-.es_flag.es_flag_pg:before {background-position: -240px -110px}
-.es_flag.es_flag_ph:before {background-position: 0 -121px}
-.es_flag.es_flag_pk:before {background-position: -16px -121px}
-.es_flag.es_flag_pl:before {background-position: -32px -121px}
-.es_flag.es_flag_pm:before {background-position: -48px -121px}
-.es_flag.es_flag_pn:before {background-position: -64px -121px}
-.es_flag.es_flag_pr:before {background-position: -80px -121px}
-.es_flag.es_flag_ps:before {background-position: -96px -121px}
-.es_flag.es_flag_pt:before {background-position: -112px -121px}
-.es_flag.es_flag_pw:before {background-position: -128px -121px}
-.es_flag.es_flag_py:before {background-position: -144px -121px}
-.es_flag.es_flag_qa:before {background-position: -160px -121px}
-.es_flag.es_flag_re:before {background-position: -176px -121px}
-.es_flag.es_flag_ro:before {background-position: -192px -121px}
-.es_flag.es_flag_rs:before {background-position: -208px -121px}
-.es_flag.es_flag_ru:before {background-position: -224px -121px}
-.es_flag.es_flag_rw:before {background-position: -240px -121px}
-.es_flag.es_flag_sa:before {background-position: 0 -132px}
-.es_flag.es_flag_sb:before {background-position: -16px -132px}
-.es_flag.es_flag_sc:before {background-position: -32px -132px}
-.es_flag.es_flag_scotland:before {background-position: -48px -132px}
-.es_flag.es_flag_sd:before {background-position: -64px -132px}
-.es_flag.es_flag_se:before {background-position: -80px -132px}
-.es_flag.es_flag_sg:before {background-position: -96px -132px}
-.es_flag.es_flag_sh:before {background-position: -112px -132px}
-.es_flag.es_flag_si:before {background-position: -128px -132px}
-.es_flag.es_flag_sk:before {background-position: -144px -132px}
-.es_flag.es_flag_sl:before {background-position: -160px -132px}
-.es_flag.es_flag_sm:before {background-position: -176px -132px}
-.es_flag.es_flag_sn:before {background-position: -192px -132px}
-.es_flag.es_flag_so:before {background-position: -208px -132px}
-.es_flag.es_flag_somaliland:before {background-position: -224px -132px}
-.es_flag.es_flag_sr:before {background-position: -240px -132px}
-.es_flag.es_flag_ss:before {background-position: 0 -143px}
-.es_flag.es_flag_st:before {background-position: -16px -143px}
-.es_flag.es_flag_sv:before {background-position: -32px -143px}
-.es_flag.es_flag_sx:before {background-position: -48px -143px}
-.es_flag.es_flag_sy:before {background-position: -64px -143px}
-.es_flag.es_flag_sz:before {background-position: -80px -143px}
-.es_flag.es_flag_tc:before {background-position: -96px -143px}
-.es_flag.es_flag_td:before {background-position: -112px -143px}
-.es_flag.es_flag_tf:before {background-position: -128px -143px}
-.es_flag.es_flag_tg:before {background-position: -144px -143px}
-.es_flag.es_flag_th:before {background-position: -160px -143px}
-.es_flag.es_flag_tj:before {background-position: -176px -143px}
-.es_flag.es_flag_tk:before {background-position: -192px -143px}
-.es_flag.es_flag_tl:before {background-position: -208px -143px}
-.es_flag.es_flag_tm:before {background-position: -224px -143px}
-.es_flag.es_flag_tn:before {background-position: -240px -143px}
-.es_flag.es_flag_to:before {background-position: 0 -154px}
-.es_flag.es_flag_tr:before {background-position: -16px -154px}
-.es_flag.es_flag_tt:before {background-position: -32px -154px}
-.es_flag.es_flag_tv:before {background-position: -48px -154px}
-.es_flag.es_flag_tw:before {background-position: -64px -154px}
-.es_flag.es_flag_tz:before {background-position: -80px -154px}
-.es_flag.es_flag_ua:before {background-position: -96px -154px}
-.es_flag.es_flag_ug:before {background-position: -112px -154px}
-.es_flag.es_flag_um:before {background-position: -128px -154px}
-.es_flag.es_flag_us:before {background-position: -144px -154px}
-.es_flag.es_flag_uy:before {background-position: -160px -154px}
-.es_flag.es_flag_uz:before {background-position: -176px -154px}
-.es_flag.es_flag_va:before {background-position: -192px -154px}
-.es_flag.es_flag_vc:before {background-position: -208px -154px}
-.es_flag.es_flag_ve:before {background-position: -224px -154px}
-.es_flag.es_flag_vg:before {background-position: -240px -154px}
-.es_flag.es_flag_vi:before {background-position: 0 -165px}
-.es_flag.es_flag_vn:before {background-position: -16px -165px}
-.es_flag.es_flag_vu:before {background-position: -32px -165px}
-.es_flag.es_flag_wales:before {background-position: -48px -165px}
-.es_flag.es_flag_wf:before {background-position: -64px -165px}
-.es_flag.es_flag_ws:before {background-position: -80px -165px}
-.es_flag.es_flag_ye:before {background-position: -96px -165px}
-.es_flag.es_flag_yt:before {background-position: -112px -165px}
-.es_flag.es_flag_za:before {background-position: -128px -165px}
-.es_flag.es_flag_zanzibar:before {background-position: -144px -165px}
-.es_flag.es_flag_zm:before {background-position: -160px -165px}
-.es_flag.es_flag_zw:before {background-position: -176px -165px}
-.es_flag.es_flag_eu2:before {background-position: -192px -165px}
+.es-flag.es-flag--ad:before {background-position: -16px 0}
+.es-flag.es-flag--ae:before {background-position: -32px 0}
+.es-flag.es-flag--af:before {background-position: -48px 0}
+.es-flag.es-flag--ag:before {background-position: -64px 0}
+.es-flag.es-flag--ai:before {background-position: -80px 0}
+.es-flag.es-flag--al:before {background-position: -96px 0}
+.es-flag.es-flag--am:before {background-position: -112px 0}
+.es-flag.es-flag--an:before {background-position: -128px 0}
+.es-flag.es-flag--ao:before {background-position: -144px 0}
+.es-flag.es-flag--ar:before {background-position: -160px 0}
+.es-flag.es-flag--as:before {background-position: -176px 0}
+.es-flag.es-flag--at:before {background-position: -192px 0}
+.es-flag.es-flag--au:before {background-position: -208px 0}
+.es-flag.es-flag--aw:before {background-position: -224px 0}
+.es-flag.es-flag--az:before {background-position: -240px 0}
+.es-flag.es-flag--ba:before {background-position: 0 -11px}
+.es-flag.es-flag--bb:before {background-position: -16px -11px}
+.es-flag.es-flag--bd:before {background-position: -32px -11px}
+.es-flag.es-flag--be:before {background-position: -48px -11px}
+.es-flag.es-flag--bf:before {background-position: -64px -11px}
+.es-flag.es-flag--bg:before {background-position: -80px -11px}
+.es-flag.es-flag--bh:before {background-position: -96px -11px}
+.es-flag.es-flag--bi:before {background-position: -112px -11px}
+.es-flag.es-flag--bj:before {background-position: -128px -11px}
+.es-flag.es-flag--bm:before {background-position: -144px -11px}
+.es-flag.es-flag--bn:before {background-position: -160px -11px}
+.es-flag.es-flag--bo:before {background-position: -176px -11px}
+.es-flag.es-flag--br:before {background-position: -192px -11px}
+.es-flag.es-flag--bs:before {background-position: -208px -11px}
+.es-flag.es-flag--bt:before {background-position: -224px -11px}
+.es-flag.es-flag--bv:before {background-position: -240px -11px}
+.es-flag.es-flag--bw:before {background-position: 0 -22px}
+.es-flag.es-flag--by:before {background-position: -16px -22px}
+.es-flag.es-flag--bz:before {background-position: -32px -22px}
+.es-flag.es-flag--ca:before {background-position: -48px -22px}
+.es-flag.es-flag--catalonia:before {background-position: -64px -22px}
+.es-flag.es-flag--cd:before {background-position: -80px -22px}
+.es-flag.es-flag--cf:before {background-position: -96px -22px}
+.es-flag.es-flag--cg:before {background-position: -112px -22px}
+.es-flag.es-flag--ch:before {background-position: -128px -22px}
+.es-flag.es-flag--ci:before {background-position: -144px -22px}
+.es-flag.es-flag--ck:before {background-position: -160px -22px}
+.es-flag.es-flag--cl:before {background-position: -176px -22px}
+.es-flag.es-flag--cm:before {background-position: -192px -22px}
+.es-flag.es-flag--cn:before {background-position: -208px -22px}
+.es-flag.es-flag--co:before {background-position: -224px -22px}
+.es-flag.es-flag--cr:before {background-position: -240px -22px}
+.es-flag.es-flag--cu:before {background-position: 0 -33px}
+.es-flag.es-flag--cv:before {background-position: -16px -33px}
+.es-flag.es-flag--cw:before {background-position: -32px -33px}
+.es-flag.es-flag--cy:before {background-position: -48px -33px}
+.es-flag.es-flag--cz:before {background-position: -64px -33px}
+.es-flag.es-flag--de:before {background-position: -80px -33px}
+.es-flag.es-flag--dj:before {background-position: -96px -33px}
+.es-flag.es-flag--dk:before {background-position: -112px -33px}
+.es-flag.es-flag--dm:before {background-position: -128px -33px}
+.es-flag.es-flag--do:before {background-position: -144px -33px}
+.es-flag.es-flag--dz:before {background-position: -160px -33px}
+.es-flag.es-flag--ec:before {background-position: -176px -33px}
+.es-flag.es-flag--ee:before {background-position: -192px -33px}
+.es-flag.es-flag--eg:before {background-position: -208px -33px}
+.es-flag.es-flag--eh:before {background-position: -224px -33px}
+.es-flag.es-flag--england:before {background-position: -240px -33px}
+.es-flag.es-flag--er:before {background-position: 0 -44px}
+.es-flag.es-flag--es:before {background-position: -16px -44px}
+.es-flag.es-flag--et:before {background-position: -32px -44px}
+.es-flag.es-flag--eu1:before {background-position: -48px -44px}
+.es-flag.es-flag--fi:before {background-position: -64px -44px}
+.es-flag.es-flag--fj:before {background-position: -80px -44px}
+.es-flag.es-flag--fk:before {background-position: -96px -44px}
+.es-flag.es-flag--fm:before {background-position: -112px -44px}
+.es-flag.es-flag--fo:before {background-position: -128px -44px}
+.es-flag.es-flag--fr:before {background-position: -144px -44px}
+.es-flag.es-flag--ga:before {background-position: -160px -44px}
+.es-flag.es-flag--gb:before {background-position: -176px -44px}
+.es-flag.es-flag--gd:before {background-position: -192px -44px}
+.es-flag.es-flag--ge:before {background-position: -208px -44px}
+.es-flag.es-flag--gf:before {background-position: -224px -44px}
+.es-flag.es-flag--gg:before {background-position: -240px -44px}
+.es-flag.es-flag--gh:before {background-position: 0 -55px}
+.es-flag.es-flag--gi:before {background-position: -16px -55px}
+.es-flag.es-flag--gl:before {background-position: -32px -55px}
+.es-flag.es-flag--gm:before {background-position: -48px -55px}
+.es-flag.es-flag--gn:before {background-position: -64px -55px}
+.es-flag.es-flag--gp:before {background-position: -80px -55px}
+.es-flag.es-flag--gq:before {background-position: -96px -55px}
+.es-flag.es-flag--gr:before {background-position: -112px -55px}
+.es-flag.es-flag--gs:before {background-position: -128px -55px}
+.es-flag.es-flag--gt:before {background-position: -144px -55px}
+.es-flag.es-flag--gu:before {background-position: -160px -55px}
+.es-flag.es-flag--gw:before {background-position: -176px -55px}
+.es-flag.es-flag--gy:before {background-position: -192px -55px}
+.es-flag.es-flag--hk:before {background-position: -208px -55px}
+.es-flag.es-flag--hm:before {background-position: -224px -55px}
+.es-flag.es-flag--hn:before {background-position: -240px -55px}
+.es-flag.es-flag--hr:before {background-position: 0 -66px}
+.es-flag.es-flag--ht:before {background-position: -16px -66px}
+.es-flag.es-flag--hu:before {background-position: -32px -66px}
+.es-flag.es-flag--ic:before {background-position: -48px -66px}
+.es-flag.es-flag--id:before {background-position: -64px -66px}
+.es-flag.es-flag--ie:before {background-position: -80px -66px}
+.es-flag.es-flag--il:before {background-position: -96px -66px}
+.es-flag.es-flag--im:before {background-position: -112px -66px}
+.es-flag.es-flag--in:before {background-position: -128px -66px}
+.es-flag.es-flag--io:before {background-position: -144px -66px}
+.es-flag.es-flag--iq:before {background-position: -160px -66px}
+.es-flag.es-flag--ir:before {background-position: -176px -66px}
+.es-flag.es-flag--is:before {background-position: -192px -66px}
+.es-flag.es-flag--it:before {background-position: -208px -66px}
+.es-flag.es-flag--je:before {background-position: -224px -66px}
+.es-flag.es-flag--jm:before {background-position: -240px -66px}
+.es-flag.es-flag--jo:before {background-position: 0 -77px}
+.es-flag.es-flag--jp:before {background-position: -16px -77px}
+.es-flag.es-flag--ke:before {background-position: -32px -77px}
+.es-flag.es-flag--kg:before {background-position: -48px -77px}
+.es-flag.es-flag--kh:before {background-position: -64px -77px}
+.es-flag.es-flag--ki:before {background-position: -80px -77px}
+.es-flag.es-flag--km:before {background-position: -96px -77px}
+.es-flag.es-flag--kn:before {background-position: -112px -77px}
+.es-flag.es-flag--kp:before {background-position: -128px -77px}
+.es-flag.es-flag--kr:before {background-position: -144px -77px}
+.es-flag.es-flag--kurdistan:before {background-position: -160px -77px}
+.es-flag.es-flag--kw:before {background-position: -176px -77px}
+.es-flag.es-flag--ky:before {background-position: -192px -77px}
+.es-flag.es-flag--kz:before {background-position: -208px -77px}
+.es-flag.es-flag--la:before {background-position: -224px -77px}
+.es-flag.es-flag--lb:before {background-position: -240px -77px}
+.es-flag.es-flag--lc:before {background-position: 0 -88px}
+.es-flag.es-flag--li:before {background-position: -16px -88px}
+.es-flag.es-flag--lk:before {background-position: -32px -88px}
+.es-flag.es-flag--lr:before {background-position: -48px -88px}
+.es-flag.es-flag--ls:before {background-position: -64px -88px}
+.es-flag.es-flag--lt:before {background-position: -80px -88px}
+.es-flag.es-flag--lu:before {background-position: -96px -88px}
+.es-flag.es-flag--lv:before {background-position: -112px -88px}
+.es-flag.es-flag--ly:before {background-position: -128px -88px}
+.es-flag.es-flag--ma:before {background-position: -144px -88px}
+.es-flag.es-flag--mc:before {background-position: -160px -88px}
+.es-flag.es-flag--md:before {background-position: -176px -88px}
+.es-flag.es-flag--me:before {background-position: -192px -88px}
+.es-flag.es-flag--mg:before {background-position: -208px -88px}
+.es-flag.es-flag--mh:before {background-position: -224px -88px}
+.es-flag.es-flag--mk:before {background-position: -240px -88px}
+.es-flag.es-flag--ml:before {background-position: 0 -99px}
+.es-flag.es-flag--mm:before {background-position: -16px -99px}
+.es-flag.es-flag--mn:before {background-position: -32px -99px}
+.es-flag.es-flag--mo:before {background-position: -48px -99px}
+.es-flag.es-flag--mp:before {background-position: -64px -99px}
+.es-flag.es-flag--mq:before {background-position: -80px -99px}
+.es-flag.es-flag--mr:before {background-position: -96px -99px}
+.es-flag.es-flag--ms:before {background-position: -112px -99px}
+.es-flag.es-flag--mt:before {background-position: -128px -99px}
+.es-flag.es-flag--mu:before {background-position: -144px -99px}
+.es-flag.es-flag--mv:before {background-position: -160px -99px}
+.es-flag.es-flag--mw:before {background-position: -176px -99px}
+.es-flag.es-flag--mx:before {background-position: -192px -99px}
+.es-flag.es-flag--my:before {background-position: -208px -99px}
+.es-flag.es-flag--mz:before {background-position: -224px -99px}
+.es-flag.es-flag--na:before {background-position: -240px -99px}
+.es-flag.es-flag--nc:before {background-position: 0 -110px}
+.es-flag.es-flag--ne:before {background-position: -16px -110px}
+.es-flag.es-flag--nf:before {background-position: -32px -110px}
+.es-flag.es-flag--ng:before {background-position: -48px -110px}
+.es-flag.es-flag--ni:before {background-position: -64px -110px}
+.es-flag.es-flag--nl:before {background-position: -80px -110px}
+.es-flag.es-flag--no:before {background-position: -96px -110px}
+.es-flag.es-flag--np:before {background-position: -112px -110px}
+.es-flag.es-flag--nr:before {background-position: -128px -110px}
+.es-flag.es-flag--nu:before {background-position: -144px -110px}
+.es-flag.es-flag--nz:before {background-position: -160px -110px}
+.es-flag.es-flag--om:before {background-position: -176px -110px}
+.es-flag.es-flag--pa:before {background-position: -192px -110px}
+.es-flag.es-flag--pe:before {background-position: -208px -110px}
+.es-flag.es-flag--pf:before {background-position: -224px -110px}
+.es-flag.es-flag--pg:before {background-position: -240px -110px}
+.es-flag.es-flag--ph:before {background-position: 0 -121px}
+.es-flag.es-flag--pk:before {background-position: -16px -121px}
+.es-flag.es-flag--pl:before {background-position: -32px -121px}
+.es-flag.es-flag--pm:before {background-position: -48px -121px}
+.es-flag.es-flag--pn:before {background-position: -64px -121px}
+.es-flag.es-flag--pr:before {background-position: -80px -121px}
+.es-flag.es-flag--ps:before {background-position: -96px -121px}
+.es-flag.es-flag--pt:before {background-position: -112px -121px}
+.es-flag.es-flag--pw:before {background-position: -128px -121px}
+.es-flag.es-flag--py:before {background-position: -144px -121px}
+.es-flag.es-flag--qa:before {background-position: -160px -121px}
+.es-flag.es-flag--re:before {background-position: -176px -121px}
+.es-flag.es-flag--ro:before {background-position: -192px -121px}
+.es-flag.es-flag--rs:before {background-position: -208px -121px}
+.es-flag.es-flag--ru:before {background-position: -224px -121px}
+.es-flag.es-flag--rw:before {background-position: -240px -121px}
+.es-flag.es-flag--sa:before {background-position: 0 -132px}
+.es-flag.es-flag--sb:before {background-position: -16px -132px}
+.es-flag.es-flag--sc:before {background-position: -32px -132px}
+.es-flag.es-flag--scotland:before {background-position: -48px -132px}
+.es-flag.es-flag--sd:before {background-position: -64px -132px}
+.es-flag.es-flag--se:before {background-position: -80px -132px}
+.es-flag.es-flag--sg:before {background-position: -96px -132px}
+.es-flag.es-flag--sh:before {background-position: -112px -132px}
+.es-flag.es-flag--si:before {background-position: -128px -132px}
+.es-flag.es-flag--sk:before {background-position: -144px -132px}
+.es-flag.es-flag--sl:before {background-position: -160px -132px}
+.es-flag.es-flag--sm:before {background-position: -176px -132px}
+.es-flag.es-flag--sn:before {background-position: -192px -132px}
+.es-flag.es-flag--so:before {background-position: -208px -132px}
+.es-flag.es-flag--somaliland:before {background-position: -224px -132px}
+.es-flag.es-flag--sr:before {background-position: -240px -132px}
+.es-flag.es-flag--ss:before {background-position: 0 -143px}
+.es-flag.es-flag--st:before {background-position: -16px -143px}
+.es-flag.es-flag--sv:before {background-position: -32px -143px}
+.es-flag.es-flag--sx:before {background-position: -48px -143px}
+.es-flag.es-flag--sy:before {background-position: -64px -143px}
+.es-flag.es-flag--sz:before {background-position: -80px -143px}
+.es-flag.es-flag--tc:before {background-position: -96px -143px}
+.es-flag.es-flag--td:before {background-position: -112px -143px}
+.es-flag.es-flag--tf:before {background-position: -128px -143px}
+.es-flag.es-flag--tg:before {background-position: -144px -143px}
+.es-flag.es-flag--th:before {background-position: -160px -143px}
+.es-flag.es-flag--tj:before {background-position: -176px -143px}
+.es-flag.es-flag--tk:before {background-position: -192px -143px}
+.es-flag.es-flag--tl:before {background-position: -208px -143px}
+.es-flag.es-flag--tm:before {background-position: -224px -143px}
+.es-flag.es-flag--tn:before {background-position: -240px -143px}
+.es-flag.es-flag--to:before {background-position: 0 -154px}
+.es-flag.es-flag--tr:before {background-position: -16px -154px}
+.es-flag.es-flag--tt:before {background-position: -32px -154px}
+.es-flag.es-flag--tv:before {background-position: -48px -154px}
+.es-flag.es-flag--tw:before {background-position: -64px -154px}
+.es-flag.es-flag--tz:before {background-position: -80px -154px}
+.es-flag.es-flag--ua:before {background-position: -96px -154px}
+.es-flag.es-flag--ug:before {background-position: -112px -154px}
+.es-flag.es-flag--um:before {background-position: -128px -154px}
+.es-flag.es-flag--us:before {background-position: -144px -154px}
+.es-flag.es-flag--uy:before {background-position: -160px -154px}
+.es-flag.es-flag--uz:before {background-position: -176px -154px}
+.es-flag.es-flag--va:before {background-position: -192px -154px}
+.es-flag.es-flag--vc:before {background-position: -208px -154px}
+.es-flag.es-flag--ve:before {background-position: -224px -154px}
+.es-flag.es-flag--vg:before {background-position: -240px -154px}
+.es-flag.es-flag--vi:before {background-position: 0 -165px}
+.es-flag.es-flag--vn:before {background-position: -16px -165px}
+.es-flag.es-flag--vu:before {background-position: -32px -165px}
+.es-flag.es-flag--wales:before {background-position: -48px -165px}
+.es-flag.es-flag--wf:before {background-position: -64px -165px}
+.es-flag.es-flag--ws:before {background-position: -80px -165px}
+.es-flag.es-flag--ye:before {background-position: -96px -165px}
+.es-flag.es-flag--yt:before {background-position: -112px -165px}
+.es-flag.es-flag--za:before {background-position: -128px -165px}
+.es-flag.es-flag--zanzibar:before {background-position: -144px -165px}
+.es-flag.es-flag--zm:before {background-position: -160px -165px}
+.es-flag.es-flag--zw:before {background-position: -176px -165px}
+.es-flag.es-flag--eu2:before {background-position: -192px -165px}
 
 .es-sortbox {
+  color: #fff;
   float: right;
   margin-top: 4px;
 }
 .es-sortbox__label {
   font-size: 12px;
-  color: #fff;
   display: inline-block;
   margin-right: 4px;
 }
@@ -3231,6 +3356,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   width: 120px;
   position: relative;
   font-size: 12px;
+}
+.es-sortbox__reverse {
+  cursor: pointer;
 }
 .es-sortbox__container a.trigger, .es-sortbox__container a.activetrigger {
   display: block;
