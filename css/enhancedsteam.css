@@ -2800,17 +2800,19 @@ input[type=checkbox].es_dlc_selection:checked + label {
   justify-content: space-between;
   align-items: center;
   font-size: 1.6em;
+  text-align: center;
+}
+#esi-wishlist-chart-content span {
+  flex-grow: 2;
 }
 #esi-wishlist-chart-content a,
 #esi-collection-chart-content a {
   cursor: pointer;
-  text-align: center;
   flex-grow: 2;
 }
 
 .esi-wishlist-stat,
 .esi-collection-stat {
-  text-align: center;
   display: flex;
   flex-direction: column;
 }

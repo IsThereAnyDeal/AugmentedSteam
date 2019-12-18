@@ -3480,15 +3480,16 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addStatsArea = function() {
+        if (!SyncedStorage.get("showwishliststats") { return; }
         if (document.getElementById("nothing_to_see_here").style.display !== "none") { return; }
 
         HTML.beforeBegin("#wishlist_ctn",
             `<div id="esi-wishlist-chart-content">
                 <a>${Localization.str.wl.compute}</a>
-             </div>`);
+            </div>`);
 
-        document.querySelector("#esi-wishlist-chart-content a").addEventListener("click", function(e) {
-            HTML.inner(e.target.parentNode, "<span style='text-align:center;flex-grow:2'>" + Localization.str.loading + "</span>");
+        document.querySelector("#esi-wishlist-chart-content a").addEventListener("click", e => {
+            HTML.inner(e.target.parentNode, `<span>${Localization.str.loading}</span>`);
             loadStats();
         });
     };
