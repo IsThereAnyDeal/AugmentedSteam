@@ -2882,7 +2882,7 @@ let FriendsPageClass = (function(){
 
     FriendsPageClass.prototype.addSort = function() {
         let offlineFriends = document.querySelectorAll(".friend_block_v2.persona.offline");
-        if (offlineFriends.length === 0) { return; }
+        if (offlineFriends.length === 0 || !document.querySelector("#manage_friends_control")) { return; }
 
         let friendsFetched = false;
 
