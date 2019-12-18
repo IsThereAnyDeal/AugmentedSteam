@@ -717,20 +717,17 @@ let ProfileHomePageClass = (function(){
         }
     };
 
-    ProfileHomePageClass.prototype.addSteamRepApi = function(){
+    ProfileHomePageClass.prototype.addSteamRepApi = function() {
         if (!SyncedStorage.get("showsteamrepapi")) { return; }
 
         ProfileData.promise().then(data => {
-            if (!data.steamrep) { return; }
-
-            let steamrep = data.steamrep;
-            if (steamrep.length === 0) { return; }
+            if (!data.steamrep || data.steamrep.length === 0) { return; }
 
             let steamId = SteamId.getSteamId();
             if (!steamId) { return; }
 
             // Build reputation images regexp
-            let repimgs = {
+            let repImgs = {
                 "banned": /scammer|banned/gi,
                 "valve": /valve admin/gi,
                 "caution": /caution/gi,
@@ -738,49 +735,44 @@ let ProfileHomePageClass = (function(){
                 "donate": /donator/gi
             };
 
-            // Build SteamRep section
-            HTML.beforeEnd(".profile_header_summary", '<div id="es_steamrep"></div>');
+            let html = "";
 
-            let steamrepElement = document.getElementById("es_steamrep");
-            let priorities = ["bad", "caution", "good", "neutral"];
-            let backgroundStyle = document.querySelector(".profile_header_bg_texture").style;
-
-            backgroundStyle.paddingBottom = "20px";
-            backgroundStyle.backgroundSize = "cover";
-
-            steamrep.forEach(function(value) {
-                if (value.trim() == "") { return; }
-                for (let [img, regex] of Object.entries(repimgs)) {
+            for (let value of data.steamrep) {
+                if (value.trim() === "") { continue; }
+                for (let [img, regex] of Object.entries(repImgs)) {
                     if (!value.match(regex)) { continue; }
 
                     let imgUrl = ExtensionResources.getURL(`img/sr/${img}.png`);
-                    let priority;
+                    let status;
 
                     switch (img) {
                         case "banned":
-                            priority = 0;
+                            status = "bad";
                             break;
                         case "caution":
-                            priority = 1;
+                            status = "caution";
                             break;
                         case "valve":
                         case "okay":
-                            priority = 2;
+                            status = "good";
                             break;
                         case "donate":
-                            priority = 3;
+                            status = "neutral";
                             break;
                     }
 
-                    HTML.beforeEnd(steamrepElement,
-                        `<div class="${priorities[priority]}">
-                            <img src="${imgUrl}" />
-                            <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
-                        </div>`);
-                        
-                    return;
+                    html += `<div class="${status}"><img src="${imgUrl}"><span> ${value}</span></div>`;
                 }
-            });
+            }
+
+            if (html) {
+
+                HTML.beforeEnd(".profile_header_summary",
+                    `<div id="es_steamrep">
+                        ${html}
+                        <a href="https://steamrep.com/profiles/${steamId}" target="_blank">(?)</a>
+                    </div>`);
+            }
         });
     };
 
