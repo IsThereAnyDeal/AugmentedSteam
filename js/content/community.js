@@ -1081,18 +1081,6 @@ let GamesPageClass = (function(){
     GamesPageClass.prototype.computeStats = function() {
         if (!SyncedStorage.get("showallstats")) { return; }
 
-        HTML.beforeBegin("#mainContents", 
-            `<div id="esi-collection-chart-content">
-                <a>${Localization.str.wl.compute}</a>
-            </div>`);
-
-        document.querySelector("#esi-collection-chart-content a").addEventListener("click", e => {
-            loadStats();
-        });
-    };
-
-    // Calculate total time played for all games
-    function loadStats() {
         let games = HTMLParser.getVariableFromDom("rgGames", "array");
 
         let countTotal = games.length;
@@ -1112,12 +1100,14 @@ let GamesPageClass = (function(){
 
         let totalTime = Localization.str.hours_short.replace("__hours__", time.toFixed(1));
 
-        HTML.inner("#esi-collection-chart-content",
-            `<div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>
-            <div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>
-            <div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>
-            <div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>`);
-    }
+        HTML.beforeBegin("#mainContents",
+            `<div id="esi-collection-chart-content">
+                <div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>
+                <div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>
+                <div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>
+                <div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>
+            </div>`);
+    };
 
     let scrollTimeout = null;
 
