@@ -3546,14 +3546,15 @@ let WishlistPageClass = (function(){
             return RequestData.post(url, formData);
         }
 
-        Messenger.onMessage("emptyWishlist").then(() => {
+        Messenger.onMessage("emptyWishlist").then(async () => {
             let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
             if (!wishlistData) { return; }
 
-            Promise.all(wishlistData.map(app => removeApp(app.appid))).finally(() => {
-                DynamicStore.clear();
-                location.reload();
-            });
+            for (let { appid } of wishlistData) {
+                await removeApp(appid);
+            }
+            DynamicStore.clear();
+            location.reload();
         });
     }
 
