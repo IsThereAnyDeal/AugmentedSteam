@@ -1634,7 +1634,7 @@ class AppPageClass extends StorePageClass {
     replaceDevPubLinks() {
         if (!this.isAppPage()) { return; }
 
-        document.querySelectorAll("#game_highlights .dev_row a,.details_block .dev_row:not(:last-of-type) a").forEach((linkNode, i) => {
+        document.querySelectorAll("#game_highlights .dev_row a,.details_block .dev_row:not(:nth-of-type(3)) a").forEach((linkNode, i) => {
             let homepageLink = new URL(linkNode.href);
             if (homepageLink.pathname === "/search/") return;
 
@@ -1645,7 +1645,7 @@ class AppPageClass extends StorePageClass {
         });
 
         for (let moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {
-            if (moreBtn) { moreBtn.remove(); }
+            moreBtn.remove();
         }
 
         ExtensionLayer.runInPageContext(() => CollapseLongStrings(".dev_row .summary.column"));
