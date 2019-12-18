@@ -638,7 +638,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
   display: table-cell;
   vertical-align: middle;
   line-height: normal;
-  padding-left: 15px;
+  padding: 0 15px;
 }
 
 #es-lightbox {
