@@ -767,11 +767,10 @@ let ProfileHomePageClass = (function(){
 
             if (html) {
 
-                HTML.beforeEnd(".profile_header_summary",
-                    `<div id="es_steamrep">
+                HTML.afterBegin(".profile_rightcol",
+                    `<a id="es_steamrep" href="https://steamrep.com/profiles/${steamId}" target="_blank">
                         ${html}
-                        <a href="https://steamrep.com/profiles/${steamId}" target="_blank">(?)</a>
-                    </div>`);
+                    </a>`);
             }
         });
     };

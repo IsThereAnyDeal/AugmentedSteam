@@ -2714,7 +2714,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * add_steamrep_api()
  **************************************/
 #es_steamrep {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto;
+  margin-bottom: 10px;
   font-size: 13px;
   font-family: Verdana;
 }
