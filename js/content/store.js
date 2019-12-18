@@ -1450,15 +1450,11 @@ class AppPageClass extends StorePageClass {
     }
 
     addWidescreenCertification() {
-        if (!SyncedStorage.get("showwsgf")) { return; }
-        if (this.isDlc()) { return; }
+        if (this.isDlc() || !SyncedStorage.get("showwsgf")) { return; }
 
         this.data.then(result => {
             if (!result || !result.wsgf) { return; }
-            let node = document.querySelector(".game_details");
-
             let data = result.wsgf;
-            if (!data) { return; }
 
             let path = data["Path"];
             let wsg = data["WideScreenGrade"];
@@ -1560,72 +1556,65 @@ class AppPageClass extends StorePageClass {
                     break;
             }
 
+            let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.wsgf.certifications}</div>
+                       <div class="block underlined_links es_wsgf">
+                       <div class="block_content"><div class="block_content_inner"><div class="details_block"><center>`;
 
-            let wsgfUrl = HTML.escape(path);
+            if (wsg !== "Incomplete") { html += `<img src="${HTML.escape(wsg_icon)}" title="${HTML.escape(wsg_text)}">&nbsp;&nbsp;&nbsp;`; }
+            if (mmg !== "Incomplete") { html += `<img src="${HTML.escape(mmg_icon)}" title="${HTML.escape(mmg_text)}">&nbsp;&nbsp;&nbsp;`; }
+            if (uws !== "Incomplete") { html += `<img src="${HTML.escape(uws_icon)}" title="${HTML.escape(uws_text)}">&nbsp;&nbsp;&nbsp;`; }
+            if (fkg !== "Incomplete") { html += `<img src="${HTML.escape(fkg_icon)}" title="${HTML.escape(fkg_text)}">&nbsp;&nbsp;&nbsp;`; }
 
-            let html = "<div class='block responsive_apppage_details_right heading'>"+Localization.str.wsgf.certifications+"</div><div class='block underlined_links'><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
-            if (wsg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(wsg_icon) + "' height='120' title='" + HTML.escape(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (mmg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(mmg_icon) + "' height='120' title='" + HTML.escape(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (uws !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(uws_icon) + "' height='120' title='" + HTML.escape(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (fkg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(fkg_icon) + "' height='120' title='" + HTML.escape(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + wsgfUrl + "'>" + Localization.str.rating_details + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
-            html += "</div></div></div></div>";
+            html += `</center></div>
+                    <br><a class="linkbar" target="_blank" href="${HTML.escape(path)}">${Localization.str.rating_details} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></a>
+                    </div></div></div>`;
 
-            HTML.afterEnd(node, html);
+            HTML.afterEnd("div.game_details", html);
         });
     }
 
     addHltb() {
-        if (!SyncedStorage.get("showhltb")) { return; }
-        if (this.isDlc()) { return; }
+        if (this.isDlc() || !SyncedStorage.get("showhltb")) { return; }
 
         this.data.then(result => {
             if (!result || !result.hltb) { return; }
             let data = result.hltb;
 
-            let html = "";
-            if (data.success) {
-                html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.hltb.title}</div>
-                            <div class='block game_details underlined_links'>
-                            <div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
+            let suggestUrl = `${Config.PublicHost}/gamedata/hltb_link_suggest.php`;
+            let icoImg = "//store.steampowered.com/public/images/v5/ico_external_link.gif";
 
-                if (data["main_story"]){
-                    let value = HTML.escape(data['main_story']);
-                    html += `<b>${Localization.str.hltb.main}:</b><span style='float: right;'>${value}</span><br>`;
+            let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.hltb.title}</div>
+                       <div class="block game_details underlined_links es_hltb">
+                       <div class="block_content"><div class="block_content_inner"><div class="details_block">`;
+
+            if (data.success) {
+                if (data["main_story"]) {
+                    html += `<b>${Localization.str.hltb.main}:</b><span>${HTML.escape(data["main_story"])}</span><br>`;
                 }
-                if (data["main_extras"]){
-                    let value = HTML.escape(data['main_extras']);
-                    html += `<b>${Localization.str.hltb.main_e}:</b><span style='float: right;'>${value}</span><br>`;
+                if (data["main_extras"]) {
+                    html += `<b>${Localization.str.hltb.main_e}:</b><span>${HTML.escape(data["main_extras"])}</span><br>`;
                 }
                 if (data["comp"]) {
-                    let value = HTML.escape(data['comp']);
-                    html += `<b>${Localization.str.hltb.compl}:</b><span style='float: right;'>${value}</span><br>`;
+                    html += `<b>${Localization.str.hltb.compl}:</b><span>${HTML.escape(data["comp"])}</span><br>`;
                 }
 
-                let suggestUrl = Config.PublicHost + "/gamedata/hltb_link_suggest.php";
-
-                html += "</div>"
-                    + "<a class='linkbar' href='" + HTML.escape(data['url']) + "' target='_blank'>" + Localization.str.more_information + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-                    + "<a class='linkbar' href='" + HTML.escape(data['submit_url']) + "' target='_blank'>" + Localization.str.hltb.submit + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-                    + "<a class='linkbar' href='" + suggestUrl + "' id='suggest'>" + Localization.str.hltb.wrong + " - " + Localization.str.hltb.help + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-                    + "</div></div></div>";
-
-
+                html += `</div>
+                        <a class="linkbar" href="${HTML.escape(data["url"])}" target="_blank">${Localization.str.more_information} <img src="${icoImg}"></a>
+                        <a class="linkbar" href="${HTML.escape(data["submit_url"])}" target="_blank">${Localization.str.hltb.submit} <img src="${icoImg}"></a>`;
+                        // FIXME <a class="linkbar" href="${suggestUrl}" id="suggest">${Localization.str.hltb.wrong}-${Localization.str.hltb.help} <img src="${icoImg}"></a>
             } else {
-                html = "<div class='block game_details underlined_links'>"
-                    + "<div class='block_header'><h4>How Long to Beat</h4></div>"
-                    + "<div class='block_content'><div class='block_content_inner'><div class='details_block'>" + Localization.str.hltb.no_data + "</div>"
-                    // FIXME + "<a class='linkbar' href='//www.enhancedsteam.com/gamedata/hltb_link_suggest.php' id='suggest'>" + Localization.str.hltb.help + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-                    + "</div></div></div>";
+                html += `${Localization.str.hltb.no_data}</div>`;
+                        // FIXME <a class="linkbar" href="${suggestUrl}" id="suggest">${Localization.str.hltb.wrong}-${Localization.str.hltb.help} <img src="${icoImg}"></a>
             }
+            html += '</div></div></div>';
 
             HTML.afterEnd("div.game_details", html);
 
             let suggest = document.querySelector("#suggest");
             if (suggest) { // FIXME consequence of the above FIXME
-                suggest.addEventListener("click", function(){
-                    LocalStorage.remove("storePageData_" + this.appid);
-                    Background.action('storepagedata.expire', this.appid);
+                suggest.addEventListener("click", () => {
+                    LocalStorage.remove(`storePageData_${this.appid}`);
+                    Background.action("storepagedata.expire", this.appid);
                 });
             }
         });
