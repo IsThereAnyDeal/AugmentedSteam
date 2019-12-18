@@ -229,9 +229,10 @@
     },
     "none": "無",
     "separator": "分隔符",
-    "empty_wishlist": "清空願望清單",
-    "empty_wishlist_confirm": "你確定要清空願望清單嗎？\n此動作無法復原！",
-    "empty_wishlist_loading": "正在清空你的願望清單，請稍候…",
+    "empty_wishlist": {
+        "title": "清空願望清單",
+        "confirm": "你確定要清空願望清單嗎？\n此動作無法復原！"
+    },
     "about": "關於",
     "never": "永不",
     "coupon_available": "你有可用的優惠券！",

@@ -179,9 +179,10 @@
     "item_type": "아이템 종류",
     "avg_price_3cards": "트레이딩 카드 3개의 평균 가격: __price__",
     "mods": "모드",
-    "empty_wishlist": "찜 목록 비우기",
-    "empty_wishlist_confirm": "정말로 찜 목록을 비우시겠습니까?\n\n이 작업은 되돌릴 수 없습니다!",
-    "empty_wishlist_loading": "찜 목록을 지우는 중입니다. 잠시만 기다려주세요...",
+    "empty_wishlist": {
+        "title": "찜 목록 비우기",
+        "confirm": "정말로 찜 목록을 비우시겠습니까?\n\n이 작업은 되돌릴 수 없습니다!"
+    },
     "about": "정보",
     "never": "사용하지 않음",
     "coupon_available": "사용 가능한 쿠폰이 있습니다!",

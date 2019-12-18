@@ -179,9 +179,10 @@
     "item_type": "Elem típusa",
     "avg_price_3cards": "Három játékkártya átlagára: __price__",
     "mods": "Modok",
-    "empty_wishlist": "Kívánságlista ürítése",
-    "empty_wishlist_confirm": "Biztos vagy abban, hogy ki akarod üríteni a kívánságlistádat?\n\nEz a művelet visszavonhatatlan!",
-    "empty_wishlist_loading": "Kívánság listád kiürítése, kérlek várj...",
+    "empty_wishlist": {
+        "title": "Kívánságlista ürítése",
+        "confirm": "Biztos vagy abban, hogy ki akarod üríteni a kívánságlistádat?\n\nEz a művelet visszavonhatatlan!"
+    }, 
     "about": "Infó",
     "never": "Soha",
     "coupon_available": "Van felhasználható kuponod!",

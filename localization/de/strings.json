@@ -185,9 +185,11 @@
     "item_type": "Art des Titels",
     "avg_price_3cards": "Durchschnittspreis von drei Sammelkarten: __price__",
     "mods": "Modifikationen",
-    "empty_wishlist": "Wunschliste leeren",
-    "empty_wishlist_confirm": "Bist du sicher, dass du deine Wunschliste leeren willst?\n\nDiese Aktion kann nicht rückgängig gemacht werden!",
-    "empty_wishlist_loading": "Wunschliste wird geleert, bitte warten...",
+    "empty_wishlist": {
+        "title": "Wunschliste leeren",
+        "confirm": "Bist du sicher, dass du deine Wunschliste leeren willst?\n\nDiese Aktion kann nicht rückgängig gemacht werden!",
+        "removing": "Entferne App __cur__ von __total__"
+    },
     "about": "Über",
     "never": "Niemals",
     "coupon_available": "Du hast einen Gutschein zur Verfügung!",

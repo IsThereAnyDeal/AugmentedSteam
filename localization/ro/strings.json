@@ -179,9 +179,10 @@
     "item_type": "Tip Produs",
     "avg_price_3cards": "Prețul mediu a trei cărți de schimb: __price__",
     "mods": "Mod-uri",
-    "empty_wishlist": "Golește lista de dorințe",
-    "empty_wishlist_confirm": "Ești sigur că vrei să golești lista de dorințe?\nAceastă acțiune este ireversibilă!",
-    "empty_wishlist_loading": "Se golește lista de dorințe, te rog să aștepți...",
+    "empty_wishlist": {
+        "title": "Golește lista de dorințe",
+        "confirm": "Ești sigur că vrei să golești lista de dorințe?\nAceastă acțiune este ireversibilă!"
+    },
     "about": "Despre",
     "never": "Niciodată",
     "coupon_available": "Ai un cupon disponibil!",

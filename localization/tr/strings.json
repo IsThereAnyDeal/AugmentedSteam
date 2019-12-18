@@ -212,9 +212,10 @@
     },
     "none": "Hiçbiri",
     "separator": "Ayraç",
-    "empty_wishlist": "İstek listesini temizle",
-    "empty_wishlist_confirm": "İstek listeni boşaltmak istediğine emin misin?\nBu işlem geri alınamaz!",
-    "empty_wishlist_loading": "İstek listeniz boşaltılıyor, lütfen bekleyin...",
+    "empty_wishlist": {
+        "title": "İstek listesini temizle",
+        "confirm": "İstek listeni boşaltmak istediğine emin misin?\nBu işlem geri alınamaz!"
+    },
     "about": "Hakkında",
     "never": "Asla",
     "coupon_available": "Bir kupona sahipsiniz!",

@@ -211,9 +211,10 @@
     },
     "none": "无",
     "separator": "分隔符",
-    "empty_wishlist": "清空愿望单",
-    "empty_wishlist_confirm": "您确定要清空愿望单？\n\n此操作无法撤消！",
-    "empty_wishlist_loading": "正在清空愿望单，请稍候...",
+    "empty_wishlist": {
+        "title": "清空愿望单",
+        "confirm": "您确定要清空愿望单？\n\n此操作无法撤消！"
+    },
     "about": "关于",
     "never": "永不",
     "coupon_available": "您有优惠券可以使用！",

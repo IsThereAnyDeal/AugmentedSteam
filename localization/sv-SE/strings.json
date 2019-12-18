@@ -179,9 +179,10 @@
     "item_type": "Typ av föremål",
     "avg_price_3cards": "Genomsnittspris för tre samlarkort: __price__",
     "mods": "Modifikationer",
-    "empty_wishlist": "Töm önskelistan",
-    "empty_wishlist_confirm": "Är du säker på att du vill tömma din önskelista?\n\nÅtgärden kan inte ångras!",
-    "empty_wishlist_loading": "Tömmer din önskelista, vänligen vänta...",
+    "empty_wishlist": {
+        "title": "Töm önskelistan",
+        "confirm": "Är du säker på att du vill tömma din önskelista?\n\nÅtgärden kan inte ångras!"
+    },
     "about": "Om",
     "never": "Aldrig",
     "coupon_available": "Du har en kupong tillgängligt!",

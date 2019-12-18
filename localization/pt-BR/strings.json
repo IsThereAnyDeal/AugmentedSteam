@@ -212,9 +212,10 @@
     },
     "none": "Nenhum",
     "separator": "Separador",
-    "empty_wishlist": "Esvaziar lista de desejos",
-    "empty_wishlist_confirm": "Tem certeza de que deseja esvaziar a sua lista de desejos?\n\nIsso não pode ser desfeito!",
-    "empty_wishlist_loading": "Esvaziando lista de desejos. Por favor, aguarde...",
+    "empty_wishlist": {
+        "title": "Esvaziar lista de desejos",
+        "confirm": "Tem certeza de que deseja esvaziar a sua lista de desejos?\n\nIsso não pode ser desfeito!"
+    },
     "about": "Sobre",
     "never": "Nunca",
     "coupon_available": "Você possui um cupom!",

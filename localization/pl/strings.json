@@ -207,9 +207,10 @@
     },
     "none": "Brak",
     "separator": "Separator",
-    "empty_wishlist": "Wyczyść listę życzeń",
-    "empty_wishlist_confirm": "Czy na pewno chcesz wyczyścić swoją listę życzeń?\n\nTej operacji nie można cofnąć!",
-    "empty_wishlist_loading": "Trwa czyszczenie listy życzeń, proszę czekać...",
+    "empty_wishlist": {
+        "title": "Wyczyść listę życzeń",
+        "confirm": "Czy na pewno chcesz wyczyścić swoją listę życzeń?\n\nTej operacji nie można cofnąć!"
+    },
     "about": "O dodatku",
     "never": "Nigdy",
     "coupon_available": "Masz kupon do wykorzystania!",

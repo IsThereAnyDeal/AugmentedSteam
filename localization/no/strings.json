@@ -179,9 +179,10 @@
     "item_type": "Gjenstandstype",
     "avg_price_3cards": "Gjennomsnittspris for tre samlekort: __price__",
     "mods": "Modifikasjoner",
-    "empty_wishlist": "Tøm ønskeliste",
-    "empty_wishlist_confirm": "Er du sikker på at du vil tømme ønskelisten din?\n\nDenne handlingen kan ikke omgjøres!",
-    "empty_wishlist_loading": "Tømmer ønskelisten, vennligst vent...",
+    "empty_wishlist": {
+        "title": "Tøm ønskeliste",
+        "confirm": "Er du sikker på at du vil tømme ønskelisten din?\n\nDenne handlingen kan ikke omgjøres!"
+    },
     "about": "Om",
     "never": "Aldri",
     "coupon_available": "Du har en kupong tilgjengelig!",

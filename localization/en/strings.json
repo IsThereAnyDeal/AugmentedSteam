@@ -233,9 +233,11 @@
     },
     "none": "None",
     "separator": "Separator",
-    "empty_wishlist": "Empty wishlist",
-    "empty_wishlist_confirm": "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!",
-    "empty_wishlist_loading": "Emptying your wishlist, please wait...",
+    "empty_wishlist": {
+        "title": "Empty wishlist",
+        "confirm": "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!",
+        "removing": "Removing app __cur__ from __total__..."
+    },
     "about": "About",
     "never": "Never",
     "coupon_available": "You have a coupon available!",

@@ -179,9 +179,10 @@
     "item_type": "Tipo de Objeto",
     "avg_price_3cards": "Precio medio de tres cromos: __price__",
     "mods": "Mods",
-    "empty_wishlist": "Vacíar lista de deseados",
-    "empty_wishlist_confirm": "¿Estás seguro que deseas vaciar tu lista de deseados?\n\n!Esta acción no se puede deshacer!",
-    "empty_wishlist_loading": "Vaciando tu lista de deseados. Por favor, espera...",
+    "empty_wishlist": {
+        "title": "Vacíar lista de deseados",
+        "confirm": "¿Estás seguro que deseas vaciar tu lista de deseados?\n\n!Esta acción no se puede deshacer!"
+    },
     "about": "Acerca de",
     "never": "Nunca",
     "coupon_available": "¡Tienes un cupón disponible!",

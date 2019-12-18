@@ -3518,7 +3518,7 @@ let WishlistPageClass = (function(){
         if (!isMyWishlist()) { return; }
         if (!SyncedStorage.get("showemptywishlist")) { return; }
 
-        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_empty_wishlist'>" + Localization.str.empty_wishlist + "</div>");
+        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_empty_wishlist'>" + Localization.str.empty_wishlist.title + "</div>");
 
         document.querySelector("#es_empty_wishlist").addEventListener("click", function(e) {
             emptyWishlist();
@@ -3527,11 +3527,11 @@ let WishlistPageClass = (function(){
 
     function emptyWishlist() {
         ExtensionLayer.runInPageContext(`function(){
-            var prompt = ShowConfirmDialog("${Localization.str.empty_wishlist}", \`${Localization.str.empty_wishlist_confirm}\`);
+            var prompt = ShowConfirmDialog(\`${Localization.str.empty_wishlist.title}\`, \`${Localization.str.empty_wishlist.confirm}\`);
             prompt.done(function(result) {
                 if (result == "OK") {
+                    ShowBlockingWaitDialog(\`${Localization.str.empty_wishlist.title}\`, \`${Localization.str.empty_wishlist.removing}\`.replace("__cur__", 1).replace("__total__", g_rgWishlistData.length));
                     Messenger.postMessage("emptyWishlist");
-                    ShowBlockingWaitDialog("${Localization.str.empty_wishlist}", \`${Localization.str.empty_wishlist_loading}\`);
                 }
             });
         }`);
@@ -3550,7 +3550,10 @@ let WishlistPageClass = (function(){
             let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
             if (!wishlistData) { return; }
 
+            let cur = 1;
+            let textNode = document.querySelector(".waiting_dialog_throbber").nextSibling;
             for (let { appid } of wishlistData) {
+                textNode.textContent = Localization.str.empty_wishlist.removing.replace("__cur__", cur++).replace("__total__", wishlistData.length);
                 await removeApp(appid);
             }
             DynamicStore.clear();

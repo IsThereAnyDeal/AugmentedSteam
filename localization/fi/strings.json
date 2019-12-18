@@ -179,9 +179,10 @@
     "item_type": "Esinetyyppi",
     "avg_price_3cards": "Kolmen keräilykortin keskiarvo: __price__",
     "mods": "Modit",
-    "empty_wishlist": "Tyhjennä toivelista",
-    "empty_wishlist_confirm": "Oletko varma että haluat tyhjentää toivelistasi?\n\nTätä toimintoa ei voi perua!",
-    "empty_wishlist_loading": "Tyhjennetään toivelistaa, odota hetki...",
+    "empty_wishlist": {
+        "title": "Tyhjennä toivelista",
+        "confirm": "Oletko varma että haluat tyhjentää toivelistasi?\n\nTätä toimintoa ei voi perua!"
+    },
     "about": "Tietoja",
     "never": "Ei koskaan",
     "coupon_available": "Sinulla on kuponki käytettävissäsi!",

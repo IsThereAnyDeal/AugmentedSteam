@@ -179,9 +179,10 @@
     "item_type": "アイテム種別",
     "avg_price_3cards": "3枚のトレーディングカードの平均価格: __price__",
     "mods": "Mod",
-    "empty_wishlist": "ウィッシュリストを空にする",
-    "empty_wishlist_confirm": "本当にウィッシュリストを空にしてもよろしいですか？\n\nこの操作は元に戻せません！",
-    "empty_wishlist_loading": "ウィッシュリストを空にしています... 少々お待ちください",
+    "empty_wishlist": {
+        "title": "ウィッシュリストを空にする",
+        "confirm": "本当にウィッシュリストを空にしてもよろしいですか？\n\nこの操作は元に戻せません！"
+    },
     "about": "アバウト",
     "never": "表示しない",
     "coupon_available": "クーポンが利用できます!",

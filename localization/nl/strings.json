@@ -235,9 +235,10 @@
     },
     "none": "Geen",
     "separator": "Verdeler",
-    "empty_wishlist": "Verlanglijst leegmaken",
-    "empty_wishlist_confirm": "Weet u zeker dat u uw verlanglijstje leeg wilt maken?\nDit kan niet ongedaan gemaakt worden!",
-    "empty_wishlist_loading": "Verlanglijst aan het legen, even geduld a. u. b...",
+    "empty_wishlist": {
+        "title": "Verlanglijst leegmaken",
+        "confirm": "Weet u zeker dat u uw verlanglijstje leeg wilt maken?\nDit kan niet ongedaan gemaakt worden!"
+    },
     "about": "Over Ons",
     "never": "Nooit",
     "coupon_available": "Je hebt een waardebon beschikbaar!",
