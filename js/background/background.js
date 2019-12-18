@@ -625,7 +625,10 @@ class SteamCommunity extends Api {
 
     static async getInventory(contextId) {
         let login = LocalStorage.get("login");
-        if (!login) throw new Error("Must be signed in to access Inventory");
+        if (!login) {
+            console.warn("Must be signed in to access Inventory");
+            return;
+        }
 
         let params = { "l": "english", "count": 2000 };
         let data = null;
@@ -658,6 +661,7 @@ class SteamCommunity extends Api {
     static async coupons() { // context#3
         let coupons = {};
         let data = await SteamCommunity.getInventory(3);
+        if (!data) return;
 
         for (let description of data.descriptions) {
             if (!description.type || description.type !== "Coupon") { continue; }
@@ -722,6 +726,7 @@ class SteamCommunity extends Api {
         let passes = [];
 
         let data = await SteamCommunity.getInventory(1);
+        if (!data) return;
 
         for (let description of data.descriptions) {
             let isPackage = false;
@@ -769,7 +774,10 @@ class SteamCommunity extends Api {
 
     static async items() { // context#6, community items
         // only used for market highlighting
-        return IndexedDB.putCached("items", null, (await SteamCommunity.getInventory(6)).descriptions.map(item => item.market_hash_name), true);
+        let data = await SteamCommunity.getInventory(6);
+        if (data) {
+            return IndexedDB.putCached("items", null, data.descriptions.map(item => item.market_hash_name), true);
+        }
     }
 
     static hasItem(hashes) { return IndexedDB.contains("items", hashes) }
