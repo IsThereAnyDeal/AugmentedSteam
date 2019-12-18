@@ -3542,13 +3542,8 @@ let WishlistPageClass = (function(){
             formData.append("sessionid", User.getSessionId());
             formData.append("appid", appid);
 
-            let url = "https://store.steampowered.com/wishlist/profiles/" + User.steamId + "/remove/";
-            return RequestData.post(url, formData).then(() => {
-                let node = document.querySelector(".wishlist-row[data-app-id'"+appid+"']");
-                if (node) {
-                    node.remove();
-                }
-            });
+            let url = `https://store.steampowered.com/wishlist/profiles/${User.steamId}/remove/`;
+            return RequestData.post(url, formData);
         }
 
         Messenger.onMessage("emptyWishlist").then(() => {
