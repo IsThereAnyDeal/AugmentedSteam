@@ -3039,16 +3039,15 @@ let GroupsPageClass = (function(){
         let groups = Array.from(document.querySelectorAll(".group_block"));
         if (groups.length === 0) { return; }
 
-        groups.forEach((group, i) => group.dataset.esSortdefault = i);
+        groups.forEach((group, i) => {
+            let name = group.querySelector(".groupTitle > a").textContent;
+            let membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
+            group.dataset.esSortdefault = i;
+            group.dataset.esSortnames = name;
+            group.dataset.esSortmembers = membercount;
+        });
 
         function sortGroups(sortBy, reversed) {
-            for (let group of groups) {
-                let name = group.querySelector(".groupTitle > a").textContent;
-                let membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
-                group.dataset.esSortnames = name;
-                group.dataset.esSortmembers = membercount;
-            }
-
             let searchResults = document.querySelector("#search_results_empty");
             let property = `esSort${sortBy.toLowerCase()}`;
             groups.sort((a, b) => {
