@@ -3321,48 +3321,63 @@ let WishlistPageClass = (function(){
             });
             lastRequest = window.performance.now();
             if (timeout == null) {
-                timeout = window.setTimeout(function markWishlist() {
+                timeout = window.setTimeout(async function markWishlist() {
                     if (window.performance.now() - lastRequest < 40) {
                         timeout = window.setTimeout(markWishlist, 50);
                         return;
                     }
                     timeout = null;
+                    let promises = [];
                     for (let node of delayedWork) {
                         delayedWork.delete(node);
                         if (node.parentNode !== container) { // Valve detaches wishlist entries that aren't visible
                             continue;
                         }
                         if (myWishlist && SyncedStorage.get("showusernotes")) {
-                            instance.addUserNote(node);
+                            promises.push(instance.addUserNote(node));
                         } else {
                             instance.highlightApps(node); // not sure of the value of highlighting wishlisted apps on your wishlist
                         }
                         instance.addPriceHandler(node);
                     }
+                    await Promise.all(promises);
                     window.dispatchEvent(new Event("resize"));
                 }, 50);
             }
         });
 
         if (SyncedStorage.get("showlowestprice_onwishlist")) {
-            // If the mouse is still inside an entry while scrolling or resizing, wishlist.js's event handler will put back the elements to their original position
-            window.addEventListener("scroll", scrollResizeHandler);
-            window.addEventListener("resize", scrollResizeHandler);
+            
+            ExtensionLayer.runInPageContext(() => {
+                function getNodesBelow(node) {
+                    let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
+            
+                    // Limit the selection to the rows that are positioned below the row (not including the row itself) where the price is being shown
+                    return nodes.filter(row => parseInt(row.style.top, 10) > parseInt(node.style.top, 10));
+                }
 
-            function scrollResizeHandler() {
-                let hover = document.querySelectorAll(":hover");
-                if (hover.length) {
-                    let activeEntry = hover[hover.length - 1].closest(".wishlist_row");
-                    if (activeEntry) {
-                        let priceNode = activeEntry.querySelector(".itad-pricing");
-                        if (priceNode) {
-                            getNodesBelow(activeEntry).forEach(row => {
-                                row.style.top = parseInt(row.style.top, 10) + priceNode.getBoundingClientRect().height + "px";
-                            });
+                let oldOnScroll = CWishlistController.prototype.OnScroll;
+
+                CWishlistController.prototype.OnScroll = function() {
+                    oldOnScroll.call(g_Wishlist);
+
+                    // If the mouse is still inside an entry while scrolling or resizing, wishlist.js's event handler will put back the elements to their original position
+                    let hover = document.querySelectorAll(":hover");
+                    if (hover.length) {
+                        let activeEntry = hover[hover.length - 1].closest(".wishlist_row");
+                        if (activeEntry) {
+                            let priceNode = activeEntry.querySelector(".itad-pricing");
+                            
+                            if (priceNode) {
+                                for (let row of getNodesBelow(activeEntry)) {
+                                    row.style.top = `${parseInt(row.style.top) + priceNode.getBoundingClientRect().height}px`;
+                                }
+                            }
                         }
                     }
                 }
-            }
+
+            });
         }
 
         observer.observe(container, { 'childList': true, });
