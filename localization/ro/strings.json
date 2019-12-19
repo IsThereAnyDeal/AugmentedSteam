@@ -72,6 +72,7 @@
     "spam_comment_show": "__num__ comentarii spam ascunse pe această pagină. Click aici pentru a le afișa.",
     "dlc": "Conţinut suplimentar",
     "add_to_wishlist": "Adaugă la lista de dorințe",
+    "add_to_wishlist_tooltip": "Primește notificări prin e-mail atunci când produsele din lista ta de dorințe sunt lansate sau se află la reducere",
     "language": "Limba",
     "theworddefault": "Implicit",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\"> Aflaţi mai multe</a> despre cupoanele Steam",

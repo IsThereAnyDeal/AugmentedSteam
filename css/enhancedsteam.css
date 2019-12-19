@@ -999,7 +999,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * App page, wishlist buttons
  **************************************/
 .es-loading-wl {
-  -webkit-filter: brightness(350%); /* to make the image more consitent with others, feel free to replace the image and remove this */
+  width: 16px;
+  filter: brightness(350%); /* to make the image more consitent with others, feel free to replace the image and remove this */
 }
 .queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-in-wl {
   display: none !important;

@@ -98,7 +98,8 @@
     "spam_comment_show": "__num__ spam comments hidden on this page.  Click here to show them.",
     "dlc": "Downloadable Content",
     "add_to_wishlist": "Add to your wishlist",
-    "remove_from_wishlist": "This product is already on your wishlist. Click to remove it from your wishlist.",
+    "add_to_wishlist_tooltip": "Get notified by email when your wishlisted items get released or are on sale",
+    "remove_from_wishlist_tooltip": "This product is already on your wishlist. Click to remove it from your wishlist.",
     "add_to_waitlist": "Add to your Waitlist",
     "language": "Language",
     "theworddefault": "Default",
@@ -545,7 +546,8 @@
             "tchinese": "Traditional Chinese",
             "thai": "Thai",
             "turkish": "Turkish",
-            "ukrainian": "Ukrainian"
+            "ukrainian": "Ukrainian",
+            "vietnamese": "Vietnamese"
         },
         "add_custom_link": "Add custom link",
         "auto_detect": "Auto-detect",

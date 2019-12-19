@@ -72,6 +72,7 @@
     "spam_comment_show": "สแปม __num__ ความเห็น ถูกซ่อนในหน้านี้  คลิกที่นี่เพื่อแสดง",
     "dlc": "เนื้อหาเสริม",
     "add_to_wishlist": "เพิ่มลงไปในสิ่งที่คุณอยากได้",
+    "add_to_wishlist_tooltip": "รับการแจ้งเตือนทางอีเมล เมื่อรายการสิ่งที่อยากได้ของคุณถูกวางจำหน่ายแล้ว หรือลดราคาอยู่",
     "language": "ภาษา",
     "theworddefault": "ค่าเริ่มต้น",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">เรียนรู้เพิ่มเติม</a> เกี่ยวกับคูปอง Steam",

@@ -72,6 +72,7 @@
     "spam_comment_show": "__num__ spam kommentarer skjult på denne side. Klik her for at vise dem.",
     "dlc": "Indhold til download",
     "add_to_wishlist": "Tilføj til ønskeliste",
+    "add_to_wishlist_tooltip": "Få besked via e-mail, når emner på din ønskeliste udgives eller kommer på udsalg",
     "language": "Sprog",
     "theworddefault": "Standard",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Lær mere</a> om Steam Kuponer",

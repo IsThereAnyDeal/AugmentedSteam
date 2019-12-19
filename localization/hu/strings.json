@@ -72,6 +72,7 @@
     "spam_comment_show": "__num__ kéretlen hozzászólás elrejtve az oldalon.  Kattintson ide a megtekintéshez.",
     "dlc": "Letölthető tartalom",
     "add_to_wishlist": "Felvétel a kívánságlistára",
+    "add_to_wishlist_tooltip": "Kapj e-mail értesítést, amikor a kívánságlistádon szereplő elemek megjelennek vagy akciósak.",
     "language": "Nyelv",
     "theworddefault": "Alapértelmezett",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Tudj meg többet</a> a Steam kuponokról",

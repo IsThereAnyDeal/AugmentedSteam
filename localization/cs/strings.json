@@ -72,6 +72,7 @@
     "spam_comment_show": "__num__ spam komentářů skryto na této stránce.  Klikněte sem pro jejich zobrazení.",
     "dlc": "Stáhnutelný obsah",
     "add_to_wishlist": "Přidat do Seznamu přání",
+    "add_to_wishlist_tooltip": "Přidejte tento produkt do svého seznamu přání a budete upozorněni na jeho vydání nebo zlevnění.",
     "language": "Jazyk",
     "theworddefault": "Výchozí",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Zjistěte více</a> o Steam kupónech",

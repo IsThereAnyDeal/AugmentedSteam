@@ -72,6 +72,7 @@
     "spam_comment_show": "__num__ σχόλια σπαμ κρύφθηκαν σε αυτή τη σελίδα.  Κάντε κλικ εδώ για να τα δείτε.",
     "dlc": "Περιεχόμενα προς Λήψη",
     "add_to_wishlist": "Προσθήκη στη λίστα επιθυμιών σας",
+    "add_to_wishlist_tooltip": "Ειδοποιηθείτε με email όταν τα αντικείμενα στη λίστα επιθυμιών σας κυκλοφορήσουν ή όταν είναι σε προσφορά",
     "language": "Γλώσσα",
     "theworddefault": "Προεπιλογή",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Μάθε περισσότερα</a> για τα Steam coupons",

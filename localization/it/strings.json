@@ -72,6 +72,7 @@
     "spam_comment_show": "__num__ commenti spam nascosti in questa pagina. Clicca qui per mostrarli.",
     "dlc": "Contenuti scaricabili",
     "add_to_wishlist": "Aggiungi alla tua lista dei desideri",
+    "add_to_wishlist_tooltip": "Ricevi una notifica via email quando gli articoli nella tua lista dei desideri vengono rilasciati o sono scontati",
     "language": "Lingua",
     "theworddefault": "Predefinito",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Scopri di più</a> sui coupon di Steam",

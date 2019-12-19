@@ -72,6 +72,7 @@
     "spam_comment_show": "На цій сторінці приховано спам-коментарі (__num__). Натисніть тут, щоби показати їх.",
     "dlc": "Завантажуваний вміст",
     "add_to_wishlist": "Додати до списку бажаного",
+    "add_to_wishlist_tooltip": "Отримувати сповіщення електронною поштою, коли бажані продукти виходять чи отримують знижку",
     "language": "Мова",
     "theworddefault": "Стандартно",
     "coupon_learn_more": "Дізнатися більше про <a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\"> купони Steam </a>",

@@ -85,6 +85,7 @@
     "spam_comment_show": "本页有 __num__ 条垃圾评论被隐藏，点击这里显示。",
     "dlc": "可下载内容（DLC）",
     "add_to_wishlist": "添加至您的愿望单",
+    "add_to_wishlist_tooltip": "在您愿望单中的物品正式发布或特价销售时获取邮件通知",
     "language": "语言",
     "theworddefault": "默认",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">详细了解</a> Steam 优惠券",

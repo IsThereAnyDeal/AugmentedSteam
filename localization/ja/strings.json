@@ -72,6 +72,7 @@
     "spam_comment_show": "このページで __num__ 件のスパムコメントが非表示にされています。ここをクリックして表示。",
     "dlc": "ダウンロードコンテンツ",
     "add_to_wishlist": "ウィッシュリストに追加",
+    "add_to_wishlist_tooltip": "ウィッシュリストに追加したアイテムのリリース通知やセール通知をメールで受け取ります",
     "language": "言語",
     "theworddefault": "デフォルト",
     "coupon_learn_more": "クーポンについての<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">詳細</a>",

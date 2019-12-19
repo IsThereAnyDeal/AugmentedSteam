@@ -72,6 +72,7 @@
     "spam_comment_show": "\"__num__\"Spamkommentarer dolda på denna sida. Klicka här för att visa dem.",
     "dlc": "Nedladdningsbart innehåll",
     "add_to_wishlist": "Lägg till i önskelistan",
+    "add_to_wishlist_tooltip": "Få ett e-postmeddelande när artiklar i din önskelista släpps eller är på rea.",
     "language": "Språk",
     "theworddefault": "Standard",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Läs mer</a> om Steam kuponger",

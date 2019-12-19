@@ -72,6 +72,7 @@
     "spam_comment_show": "__num__ spam-kommentarer skjult på denne siden.  Klikk her for å vise dem.",
     "dlc": "Nedlastbart innhold",
     "add_to_wishlist": "Legg til i ønskelisten din",
+    "add_to_wishlist_tooltip": "Bli varslet på e-post når gjenstander på ønskelisten gis ut eller er på salg",
     "language": "Språk",
     "theworddefault": "Standard",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Lær mer</a> om Steam-kuponger",

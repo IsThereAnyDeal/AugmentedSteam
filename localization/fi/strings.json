@@ -72,6 +72,7 @@
     "spam_comment_show": "__num__ roskaviestiä piilotettu tältä sivulta.  Paina tästä nähdäksesi ne.",
     "dlc": "Ladattava Sisältö",
     "add_to_wishlist": "Lisää toivelistalle",
+    "add_to_wishlist_tooltip": "Saat sähköposti-ilmoituksen, kun toivelistallasi olevat tuotteet julkaistaan tai ne on alennuksessa.",
     "language": "Kieli",
     "theworddefault": "Oletusarvo",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Lue lisää</a> Steam-kupongeista",

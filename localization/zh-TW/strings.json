@@ -97,6 +97,8 @@
     "spam_comment_show": "此頁面有 __num__ 則垃圾留言已被隱藏。按此顯示。",
     "dlc": "可下載內容（DLC）",
     "add_to_wishlist": "新增至你的願望清單",
+    "add_to_wishlist_tooltip": "當您加入願望清單的項目正式發行或特價時，您會收到電子郵件通知",
+    "remove_from_wishlist_tooltip": "這項產品已經在您的願望清單中了。按此將其從願望清單移除。",
     "language": "語言",
     "theworddefault": "預設",
     "thewordclear": "清除",
@@ -536,7 +538,8 @@
             "tchinese": "繁體中文",
             "thai": "泰文",
             "turkish": "土耳其文",
-            "ukrainian": "烏克蘭文"
+            "ukrainian": "烏克蘭文",
+            "vietnamese": "越南文"
         },
         "add_custom_link": "新增自訂連結",
         "auto_detect": "自動偵測"

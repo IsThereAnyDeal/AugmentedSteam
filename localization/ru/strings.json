@@ -72,6 +72,7 @@
     "spam_comment_show": "Скрыто спам-комментариев на этой странице: __num__ Нажмите здесь, чтобы их отобразить.",
     "dlc": "Загружаемый контент",
     "add_to_wishlist": "Добавить в список желаемого",
+    "add_to_wishlist_tooltip": "Получать уведомление по электронной почте, если продукт из списка желаемого выпущен или продаётся по скидке.",
     "language": "Язык",
     "theworddefault": "По умолчанию",
     "coupon_learn_more": "Узнать больше о <a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">купонах Steam</a>",

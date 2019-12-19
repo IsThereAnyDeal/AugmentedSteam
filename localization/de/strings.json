@@ -76,6 +76,7 @@
     "spam_comment_show": "__num__ Spam-Kommentare wurden versteckt. Klick hier, um sie anzuzeigen.",
     "dlc": "Herunterladbare Inhalte",
     "add_to_wishlist": "Zur Wunschliste hinzufügen",
+    "add_to_wishlist_tooltip": "Sie erhalten eine E-Mail, wenn ein Titel von Ihrer Wunschliste veröffentlicht wird oder im Sale ist (jederzeit widerrufbar).",
     "add_to_waitlist": "Zur Waitlist hinzufügen",
     "language": "Sprache",
     "theworddefault": "Standard",

@@ -86,6 +86,7 @@
     "spam_comment_show": "Bu sayfadaki  __num__  spam yorumu gizlendi. Görmek için buraya tıklayın.",
     "dlc": "İndirilebilir İçerik",
     "add_to_wishlist": "İstek listene ekle",
+    "add_to_wishlist_tooltip": "İstek listenizdeki ürünler çıktığı zaman veya indirime girdiği zaman e-posta ile bildirim alın.",
     "language": "Dil",
     "theworddefault": "Varsayılan",
     "coupon_learn_more": "Steam Kuponları hakkında <a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">daha fazla</a> bilgiye sahip olun",

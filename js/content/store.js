@@ -813,45 +813,47 @@ class AppPageClass extends StorePageClass {
         return Background.action("storepagedata", this.appid, this.metalink, SyncedStorage.get("showoc"));
     }
 
-    /**
-     *  Allows the user to intuitively remove an item from their wishlist on the app page
-     */
     addWishlistRemove() {
-        if (!User.isSignedIn) { return; }
+        if (!User.isSignedIn || this.isOwned()) { return; }
 
-        // there is no add to wishlist button and game is not purchased yet, add required nodes
-        if (!document.querySelector("#add_to_wishlist_area") && !document.querySelector(".game_area_already_owned")) {
+        // If game is already wishlisted, add required nodes
+        if (!document.getElementById("add_to_wishlist_area")) {
             let firstButton = document.querySelector(".queue_actions_ctn a.queue_btn_active");
-            HTML.beforeEnd(firstButton, "<div id='add_to_wishlist_area_success' style='display: inline-block;'></div>");
+            HTML.beforeBegin(firstButton, '<div id="add_to_wishlist_area_success"></div>');
 
-            let wlSuccessArea = document.querySelector("#add_to_wishlist_area_success");
+            let wlSuccessArea = document.getElementById("add_to_wishlist_area_success");
             DOMHelper.wrap(wlSuccessArea, firstButton);
-            HTML.beforeBegin(wlSuccessArea,  `<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist(${this.appid}, \\"add_to_wishlist_area\\", \\"add_to_wishlist_area_success\\", \\"add_to_wishlist_area_fail\\", \\"1_5_9__407\\" );'><span>${Localization.str.add_to_wishlist}</span></a></div>`);
-            HTML.beforeBegin(wlSuccessArea, `<div id='add_to_wishlist_area_fail' style='display: none;'></div>`);
+            HTML.beforeBegin(wlSuccessArea,
+                `<div id="add_to_wishlist_area" style="display: none;">
+                    <a class="btnv6_blue_hoverfade btn_medium" data-tooltip-text="${Localization.str.add_to_wishlist_tooltip}">
+                        <span>${Localization.str.add_to_wishlist}</span>
+                    </a>
+                </div>
+                <div id="add_to_wishlist_area_fail" style="display: none;">
+                    <b>${Localization.str.error}</b>
+                </div>`);
         }
 
-        let addBtn = document.querySelector("#add_to_wishlist_area > a");
-        if (addBtn && !addBtn.href) addBtn.href = `javascript:AddToWishlist( ${this.appid}, 'add_to_wishlist_area', 'add_to_wishlist_area_success', 'add_to_wishlist_area_fail', null, 'add_to_wishlist_area2' );`
+        let addBtn = document.getElementById("add_to_wishlist_area");
+        let successBtn = document.getElementById("add_to_wishlist_area_success");
 
-        let successNode = document.querySelector("#add_to_wishlist_area_success");
-        if (!successNode) { return; }
+        if (!addBtn.querySelector("a").href) {
+            addBtn.querySelector("a").href = `javascript:AddToWishlist( ${this.appid}, 'add_to_wishlist_area', 'add_to_wishlist_area_success', 'add_to_wishlist_area_fail', null, 'add_to_wishlist_area2' );`;
+        }
 
-        let innerNode = successNode.querySelector("[data-tooltip-text]");
-        if (!innerNode) { return; }
-        innerNode.dataset.tooltipText = Localization.str.remove_from_wishlist;
+        // Update tooltip for wishlisted items
+        successBtn.querySelector("a").dataset.tooltipText = Localization.str.remove_from_wishlist_tooltip;
 
-        let imgNode = innerNode.querySelector("img:last-child");
-        if (!imgNode) { return; }
-
+        let imgNode = successBtn.querySelector("img:last-child");
         imgNode.classList.add("es-in-wl");
         HTML.beforeBegin(imgNode,
-            `<img class='es-remove-wl' src='${ExtensionResources.getURL("img/remove.png")}' style='display:none' />
-             <img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
+            `<img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}" style="display: none;">
+            <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">`);
 
-        successNode.addEventListener("click", async e => {
+        successBtn.addEventListener("click", async e => {
             e.preventDefault();
 
-            let parent = successNode.parentNode;
+            let parent = successBtn.parentNode;
             if (!parent.classList.contains("loading")) {
                 parent.classList.add("loading");
 
@@ -865,8 +867,8 @@ class AppPageClass extends StorePageClass {
 
                     if (SyncedStorage.get("add_to_waitlist")) { this.onWishAndWaitlistRemove(); }
 
-                    document.querySelector("#add_to_wishlist_area").style.display = "inline";
-                    document.querySelector("#add_to_wishlist_area_success").style.display = "none";
+                    addBtn.style.display = "";
+                    successBtn.style.display = "none";
 
                     // Clear dynamicstore cache
                     DynamicStore.clear();
