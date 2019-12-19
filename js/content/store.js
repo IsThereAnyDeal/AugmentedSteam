@@ -3781,7 +3781,7 @@ let WishlistPageClass = (function(){
         let noteText;
         let cssClass;
         if (await userNotes.exists(appid)) {
-            noteText = `"${await userNotes.getNote(appid)}"`;
+            noteText = `"${await userNotes.get(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.user_note.add;
@@ -3824,7 +3824,7 @@ let WishlistPageClass = (function(){
             })
         );
 
-        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry));
+        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.delete(removedEntry));
     };
 
     return WishlistPageClass;
