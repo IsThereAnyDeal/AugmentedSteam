@@ -1194,37 +1194,29 @@ let GamesPageClass = (function(){
     }
 
     GamesPageClass.prototype.handleCommonGames = function() {
-        if (!User.isSignedIn) { return;}
+        if (!User.isSignedIn) { return; }
 
         let label = document.querySelector("label[for='show_common_games']");
         if (!label) { return; }
 
-        function createCheckbox(id, string) {
-            let checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.id = id;
+        HTML.afterEnd(label,
+            `<label for="es_gl_show_common_games"><input type="checkbox" id="es_gl_show_common_games">${Localization.str.common_label}</label>
+            <label for="es_gl_show_notcommon_games"><input type="checkbox" id="es_gl_show_notcommon_games">${Localization.str.notcommon_label}</label>`);
 
-            let label = document.createElement("label");
-            label.append(checkbox, string);
-
-            return checkbox;
-        }
-
-        let commonCheckbox = createCheckbox("es_gl_show_common_games", Localization.str.common_label);
-        let notCommonCheckbox = createCheckbox("es_gl_show_notcommon_games", Localization.str.notcommon_label);
-
-        label.insertAdjacentElement("afterend", notCommonCheckbox.parentNode);
-        label.insertAdjacentElement("afterend", commonCheckbox.parentNode);
+        let commonCheckbox = document.getElementById("es_gl_show_common_games");
+        let notCommonCheckbox = document.getElementById("es_gl_show_notcommon_games");
+        let rows = document.getElementById("games_list_rows");
 
         commonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
-            document.querySelector("#games_list_rows").classList.toggle("esi-hide-notcommon", e.target.checked);
+            rows.classList.toggle("esi-hide-notcommon", e.target.checked);
             ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
         });
 
         notCommonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
-            document.querySelector("#games_list_rows").classList.toggle("esi-hide-common", e.target.checked);
+            rows.classList.toggle("esi-hide-common", e.target.checked);
+            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
         });
     };
 
