@@ -672,6 +672,7 @@ class AppPageClass extends StorePageClass {
         this.addReviewToggleButton();
         this.addHelpButton();
         this.addSupport();
+        this.addSystemRequirementsCheck();
     }
 
     initHdPlayer() {
@@ -2385,6 +2386,18 @@ class AppPageClass extends StorePageClass {
             else if (title.includes("6 pack") ||
                 title.includes("six pack")) { splitPack(node, 6); }
         }
+    }
+
+    addSystemRequirementsCheck() {
+        if (!SyncedStorage.get("show_sysreqcheck")) { return; }
+
+        let node = document.querySelector(".sysreq_contents");
+        if (!node) { return; }
+
+        HTML.afterEnd(node,
+            `<a class="btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs" href="steam://checksysreqs/${this.appid}">
+                <span>${Localization.str.check_system}</span>
+            </a>`);
     }
 }
 
