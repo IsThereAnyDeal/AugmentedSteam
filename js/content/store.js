@@ -887,11 +887,7 @@ class AppPageClass extends StorePageClass {
     }
 
     async _removeFromWishlist() {
-        let formData = new FormData();
-        formData.append("sessionid", User.getSessionId());
-        formData.append("appid", this.appid);
-
-        return RequestData.post("https://store.steampowered.com/api/removefromwishlist", formData, {withCredentials: true})
+        return Background.action("wishlist.remove", { "sessionid": User.getSessionId(), "appid": this.appid });
     }
 
     async _removeFromWaitlist() {

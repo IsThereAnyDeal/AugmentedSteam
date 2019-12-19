@@ -487,6 +487,10 @@ class SteamStore extends Api {
         return SteamStore.postEndpoint("/api/addtowishlist", params);
     }
 
+    static async wishlistRemove(params) {
+        return SteamStore.postEndpoint("/api/removefromwishlist", params);
+    }
+
     static async currencyFromWallet() {
         let html = await SteamStore.getPage("/steamaccount/addfunds");
         let dummyPage = HTMLParser.htmlToDOM(html);
@@ -1264,6 +1268,7 @@ IndexedDB.objStoreFetchFns = new Map([
 
 let actionCallbacks = new Map([
     ["wishlist.add", SteamStore.wishlistAdd],
+    ["wishlist.remove", SteamStore.wishlistRemove],
     ["dynamicstore.clear", SteamStore.clearDynamicStore],
     ["steam.currencies", Steam.currencies],
     
