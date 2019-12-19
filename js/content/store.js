@@ -2264,7 +2264,9 @@ class AppPageClass extends StorePageClass {
 
         let customizer = new Customizer("customize_apppage");
         customizer
-            .add("recommendedbycurators", ".steam_curators_block")
+            .add("franchisenotice", ".franchise_notice", Localization.str.apppage_franchise)
+            .add("eaheader", ".early_access_header", Localization.str.apppage_eaheader)
+            .add("eabanner", ".early_access_banner", Localization.str.apppage_eabanner)
             .add("recentupdates", "#events_root", Localization.str.apppage_recentupdates)
             .add("reviews", "#game_area_reviews")
             .add("about", "[data-parent-of='#game_area_description']")
@@ -2275,8 +2277,9 @@ class AppPageClass extends StorePageClass {
             .add("sysreq", "[data-parent-of='.sys_req']")
             .add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal)
             .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
-            .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
+            .add("franchise", "#franchise_block", Localization.str.apppage_morefromfranchise)
             .add("morelikethis", "#recommended_block")
+            .add("recommendedbycurators", ".steam_curators_block")
             .add("customerreviews", "#app_reviews_hash");
 
         if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_workshop);
