@@ -62,6 +62,7 @@ Language.languages = {
     "thai": "th",
     "turkish": "tr",
     "ukrainian": "ua",
+    "vietnamese": "vi",
 };
 
   
