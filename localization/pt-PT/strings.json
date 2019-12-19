@@ -178,9 +178,10 @@
     "item_type": "Tipo de Item",
     "avg_price_3cards": "Preço médio de três cartas: __price__",
     "mods": "Mods",
-    "empty_wishlist": "Esvaziar lista de desejos",
-    "empty_wishlist_confirm": "Tens a certeza que queres limpar a tua lista de desejos?\n\nEsta acção não pode ser desfeita!",
-    "empty_wishlist_loading": "A limpar a tua lista de desejos, por favor aguarda...",
+    "empty_wishlist": {
+        "title": "Esvaziar lista de desejos",
+        "confirm": "Tens a certeza que queres limpar a tua lista de desejos?\n\nEsta acção não pode ser desfeita!"
+    },
     "about": "Sobre",
     "never": "Nunca",
     "coupon_available": "Tens um cupão disponível!",
@@ -466,7 +467,7 @@
         "nobody": "Ainda ninguém completou o inquérito de desempenho para este jogo.",
         "take": "Faz o Inquérito"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Selecionar DLC na Lista de Desejos",
         "none": "Escolher nenhum",
         "unowned_dlc": "Selecionar DLC Não Adquirido"

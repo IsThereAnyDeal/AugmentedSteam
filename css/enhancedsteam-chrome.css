@@ -37,12 +37,13 @@
   background-image: url("chrome-extension://__MSG_@@extension_id__/img/steamcardexchange.png");
 }
 
-.es_slider_toggle i {
+.es_slider_toggle i,
+.es_screenshot_fullscreen_toggle i {
   background-image: url("chrome-extension://__MSG_@@extension_id__/img/fullscreen-icons.gif");
 }
 
-.es_screenshot_fullscreen_toggle i {
-  background-image: url("chrome-extension://__MSG_@@extension_id__/img/fullscreen-icons.gif");
+.es_screenshot_open_btn i {
+  background-image: url('chrome-extension://__MSG_@@extension_id__/img/screenshot_open.png');
 }
 
 .es_user_note:before {
@@ -62,4 +63,37 @@
 
 .itad-pricing {
   background-image: url("chrome-extension://__MSG_@@extension_id__/img/itad.png");
+}
+
+.es_sites_icons.es_steamrepcn_icon:before {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/srcn.png");
+}
+.es_sites_icons.es_steamrep_icon:before {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/steamrep.png");
+  background-color: rgb(235, 235, 235);
+}
+.es_sites_icons.es_steamdbcalc_icon:before {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/steamdb.png");
+}
+.es_sites_icons.es_steamgifts_icon:before {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/steamgifts.png");
+}
+.es_sites_icons.es_steamtrades_icon:before {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/steamtrades.png");
+}
+.es_sites_icons.es_bartervg_icon:before {
+	background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/bartervg.png");
+}
+.es_sites_icons.es_astats_icon:before {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/achievementstats.png");
+}
+.es_sites_icons.es_backpacktf_icon:before {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/backpacktf.png");
+}
+.es_sites_icons.es_astatsnl_icon:before {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/ico/astatsnl.png");
+}
+
+.es-flag:before {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/img/flags/flags.png");
 }

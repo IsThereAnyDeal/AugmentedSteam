@@ -178,9 +178,10 @@
     "item_type": "Elem típusa",
     "avg_price_3cards": "Három játékkártya átlagára: __price__",
     "mods": "Modok",
-    "empty_wishlist": "Kívánságlista ürítése",
-    "empty_wishlist_confirm": "Biztos vagy abban, hogy ki akarod üríteni a kívánságlistádat?\n\nEz a művelet visszavonhatatlan!",
-    "empty_wishlist_loading": "Kívánság listád kiürítése, kérlek várj...",
+    "empty_wishlist": {
+        "title": "Kívánságlista ürítése",
+        "confirm": "Biztos vagy abban, hogy ki akarod üríteni a kívánságlistádat?\n\nEz a művelet visszavonhatatlan!"
+    }, 
     "about": "Infó",
     "never": "Soha",
     "coupon_available": "Van felhasználható kuponod!",
@@ -466,7 +467,7 @@
         "nobody": "Még senki nem töltötte ki a teljesítmény kérdőívet ezzel a játékkal kapcsolatban.",
         "take": "Töltsd ki a kérdőívet"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Kívánságlistán szereplő DLC-k kiválasztása",
         "none": "Kiválasztás törlése",
         "unowned_dlc": "Nem birtokolt DLC-k kiválasztása"

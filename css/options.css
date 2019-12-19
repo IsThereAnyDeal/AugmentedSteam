@@ -319,6 +319,7 @@ a:hover {
 	height: 1.5em;
 	min-width: 1.5em;
 	padding: 0;
+	vertical-align: middle;
 }
 .distance_top {
 	margin-top: 2em !important;

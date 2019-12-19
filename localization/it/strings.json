@@ -178,9 +178,10 @@
     "item_type": "Tipologia articolo",
     "avg_price_3cards": "Prezzo medio di tre carte collezionabili: __price__",
     "mods": "Mod",
-    "empty_wishlist": "Svuota lista dei desideri",
-    "empty_wishlist_confirm": "Sei sicuro di voler svuotare la tua lista dei desideri?\n\nQuesta azione non può essere annullata!",
-    "empty_wishlist_loading": "Svuotamento della lista dei desideri in corso, attendere prego...",
+    "empty_wishlist": {
+        "title": "Svuota lista dei desideri",
+        "confirm": "Sei sicuro di voler svuotare la tua lista dei desideri?\n\nQuesta azione non può essere annullata!"
+    },
     "about": "Informazioni",
     "never": "Mai",
     "coupon_available": "Hai un coupon a disposizione!",
@@ -466,7 +467,7 @@
         "nobody": "Nessuno ha ancora compilato il sondaggio sulle prestazioni per questo gioco.",
         "take": "Partecipa al sondaggio"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Seleziona DLC in lista dei desideri",
         "none": "Nessuno",
         "unowned_dlc": "Seleziona DLC non in libreria"

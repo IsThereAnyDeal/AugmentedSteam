@@ -81,6 +81,7 @@ class Localization {
             if (currentSteamLanguage !== storedSteamLanguage) {
                 storedSteamLanguage = currentSteamLanguage;
                 SyncedStorage.set("language", currentSteamLanguage);
+                Background.action("clearpurchases");
             }
         }
 
@@ -88,7 +89,7 @@ class Localization {
             // Object.assign() but deep-assigning objects recursively
             for (let [key, val] of Object.entries(source)) {
                 if (target[key] === undefined) {
-                    console.warn("The key %s doesn't exists in the English localization file", key);
+                    console.warn("The key %s doesn't exist in the English localization file", key);
                     continue;
                 }
                 if (typeof val === "object") {

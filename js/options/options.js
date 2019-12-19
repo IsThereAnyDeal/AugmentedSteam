@@ -47,17 +47,10 @@ class Fader {
 class CustomLinks {
 
     static init() {
-
         let links = SyncedStorage.get('profile_custom_link');
         for (let link of links) {
             CustomLinks.show(link);
         }
-
-        document
-            .querySelector("#add-custom-link")
-            .addEventListener("click", function() {
-                CustomLinks.create(SyncedStorage.defaults.profile_custom_link[0]);
-            });
     }
 
     // TODO (KarlCastle?) Want to replace this with a CustomElement when the support is wider. CustomElements were added in FF63.
@@ -78,7 +71,7 @@ class CustomLinks {
         node = insertionPoint.insertAdjacentElement('beforebegin', node);
 
         node.addEventListener('change', CustomLinks.save);
-        node.querySelector('.custom-link__close')
+        node.querySelector('.js-custom-link-remove')
             .addEventListener('click', CustomLinks.remove, false);
     }
 
@@ -97,7 +90,7 @@ class CustomLinks {
     }
 
     static save() {
-        let customLinks = document.querySelectorAll('.custom-link');
+        let customLinks = document.querySelectorAll('.js-custom-link');
         let links = [];
         for (let row of customLinks) {
             let link = CustomLinks.read(row);
@@ -113,9 +106,8 @@ class CustomLinks {
 
     static remove(ev) {
         if (!ev.target || !(ev.target instanceof Element)) { return; }
-        //if (!ev.target.matches('.close_button')) { return; }
 
-        let row = ev.target.closest('.custom-link');
+        let row = ev.target.closest('.js-custom-link');
         if (row) {
             row.remove();
             row = null;
@@ -270,6 +262,107 @@ class Sidebar {
 
 }
 
+
+class Region {
+
+    static init() {
+        this._container = document.querySelector(".js-regions");
+
+        this._container
+            .addEventListener("click", e => { Region._removeHandler(e); });
+
+        this._container.addEventListener("change", e => {
+            let node = e.target.closest(".js-region-parent");
+            if (node) {
+                Region._changeFlag(node.querySelector(".es-flag"), e.target);
+            }
+            this._save();
+        });
+
+        document.querySelector(".js-region-add")
+            .addEventListener("click", () => {
+                Region._addRegionHtml("");
+            });
+
+        document.querySelector(".js-region-reset")
+            .addEventListener("click", () => {
+                Region.loadDefault();
+                Region._save();
+            });
+
+        document.querySelector(".js-region-clear")
+            .addEventListener("click", () => {
+                Region._clear();
+                Region._save();
+            });
+    }
+
+    static loadDefault() {
+        this._clear();
+        SyncedStorage.remove("regional_countries");
+        this.populate();
+    }
+
+    static _changeFlag(node, selectnode) {
+        node.className = "";
+        node.classList.add("es-flag--" + selectnode.value, "es-flag");
+    }
+
+    static _removeHandler(e) {
+        if (!e.target || !e.target.classList || !e.target.classList.contains("js-region-remove")) { return; }
+        e.target.closest(".js-region-parent").remove();
+        this._save();
+    }
+
+    static _save() {
+        let value = [];
+        let nodes = document.querySelectorAll(".js-region");
+        for (let node of nodes) {
+            if (node.value && node.value != "") {
+                value.push(node.value);
+            }
+        }
+
+        SyncedStorage.set("regional_countries", value);
+        SaveIndicator.show();
+    }
+
+    static _clear() {
+        HTML.inner(this._container, "");
+    }
+
+    static _addRegionHtml(country) {
+        let options = "";
+        for (let cc in CountryList) {
+            let selected = (cc.toLowerCase() == country ? " selected='selected'" : "");
+            options += `<option value='${cc.toLowerCase()}'${selected}>${CountryList[cc]}</option>`;
+        }
+
+        let countryClass = "";
+        if (country) {
+            countryClass = `es-flag--${country}`;
+        }
+
+        let html = `<div class="country_parent js-region-parent">
+                <span class='es-flag ${countryClass}'></span>
+                <select class='regional_country js-region'>${options}</select>
+                <button type="button" class="custom-link__close js-region-remove"></button>
+            </div>`;
+
+        HTML.beforeEnd(this._container, html);
+    }
+
+    static populate() {
+        this._clear();
+        let countries = SyncedStorage.get("regional_countries");
+        for (let country of countries) {
+            this._addRegionHtml(country);
+        }
+    }
+}
+
+
+
 let Options = (function(){
     let self = {};
 
@@ -305,6 +398,9 @@ let Options = (function(){
             let nodes = document.querySelectorAll("[data-locale-text]");
             for (let node of nodes) {
                 let translation = Localization.getString(node.dataset.localeText);
+                if (node.dataset.localeText.startsWith("options.context_")) {
+                    translation = translation.replace("__query__", "...");
+                }
                 if (translation) {
                     node.textContent = translation;
                 } else {
@@ -327,13 +423,17 @@ let Options = (function(){
                 let lang = node.textContent;
                 let lang_trl = Localization.str.options.lang[node.value.toLowerCase()];
                 if (lang !== lang_trl) {
-                    node.textContent = lang + " (" + lang_trl + ")";
+                    node.textContent = `${lang} (${lang_trl})`;
                 }
             }
 
-
             let total = deepCount(Localization.str);
             for (let lang of Object.keys(Localization.str.options.lang)) {
+                let node = document.querySelector(`.language.${lang}`);
+                if (node) {
+                    node.textContent = `${Localization.str.options.lang[lang]}:`;
+                }
+
                 if (lang === "english") continue;
                 let code = Language.languages[lang];
                 let locale = await Localization.loadLocalization(code);
@@ -341,7 +441,7 @@ let Options = (function(){
                 let percentage = 100 * count / total;
 
                 HTML.inner(
-                    document.querySelector(".lang-perc." + lang),
+                    document.querySelector(`.lang-perc.${lang}`),
                     `<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>`
                 );
             }
@@ -362,42 +462,6 @@ let Options = (function(){
             }
         });
     }
-
-    let Region = (function() {
-
-        function generateRegionSelect(country) {
-            let options = "";
-            for (let cc in CountryList) {
-                let selected = (cc.toLowerCase() == country ? " selected='selected'" : "");
-                options += `<option value='${cc.toLowerCase()}'${selected}>${CountryList[cc]}</option>`;
-            }
-
-            let countryClass = "";
-            if (country) {
-                countryClass = "es_flag_"+country;
-            }
-
-            return `<div class="country_parent">
-            <span class='es_flag ${countryClass}'></span>
-            <select class='regional_country'>${options}</select>
-            </div>`;
-        }
-
-        self.populateRegionalSelects = function() {
-            let addAnotherWrapper = document.querySelector("#add_another_region").parentNode;
-            let countries = SyncedStorage.get("regional_countries");
-            countries.forEach(country => {
-                HTML.beforeBegin(addAnotherWrapper, generateRegionSelect(country));
-            });
-        };
-
-        self.addRegionSelector = function () {
-            let addAnotherWrapper = document.querySelector("#add_another_region").parentNode;
-            HTML.beforeBegin(addAnotherWrapper, generateRegionSelect());
-        };
-
-        return self;
-    })();
 
     function loadProfileLinkImages() {
 
@@ -431,7 +495,7 @@ let Options = (function(){
         CustomLinks.init();
 
         // Set the value or state for each input
-        nodes = document.querySelectorAll("[data-setting]");
+        let nodes = document.querySelectorAll("[data-setting]");
         for (let node of nodes) {
             let setting = node.dataset.setting;
             let value = SyncedStorage.get(setting);
@@ -460,16 +524,14 @@ let Options = (function(){
             document.getElementById("regional_price_hideworld").style.display = "block";
         }
 
-        let language = Language.getCurrentSteamLanguage();
-        if (language !== "schinese" || language !== "tchinese") {
+        let language = SyncedStorage.get("language");
+        if (language !== "schinese" && language !== "tchinese") {
             let n = document.getElementById('profile_steamrepcn');
             if (n) {
                 // Hide SteamRepCN option if language isn't Chinese
                 n.parentNode.style.display = 'none';
             }
         }
-
-        Region.populateRegionalSelects();
 
         if (!changelogLoaded) {
             ExtensionResources.getText('changelog.txt')
@@ -484,16 +546,14 @@ let Options = (function(){
         
         loadProfileLinkImages();
         loadStores();
+
+        Region.populate();
     }
 
 
     function clearSettings() {
         if (!confirm(Localization.str.options.clear)) { return; }
         SyncedStorage.clear();
-
-        for (let el of document.querySelectorAll(".country_parent")) {
-            el.remove();
-        }
 
         for (let el of document.querySelectorAll(".custom-link__close")) {
             el.click();
@@ -505,19 +565,6 @@ let Options = (function(){
         if (node) {
             Fader.fadeInFadeOut(node);
         }
-    }
-
-    function loadDefaultCountries() {
-        SyncedStorage.remove("regional_countries");
-
-        let nodes = document.querySelectorAll("#region_selects div.country_parent");
-        for (let node of nodes) {
-            node.remove();
-        }
-
-        Region.populateRegionalSelects();
-
-        SaveIndicator.show();
     }
 
     function saveOptionFromEvent(e) {
@@ -532,22 +579,10 @@ let Options = (function(){
         saveOption(node.dataset.setting);
     }
 
-    function saveOption(option) {
+    async function saveOption(option) {
         let value;
 
-        if (option === "regional_countries") {
-
-            value = [];
-            let nodes = document.querySelectorAll(".regional_country");
-            for (let node of nodes) {
-                if (node.value && node.value != "") {
-                    value.push(node.value);
-                } else {
-                    node.closest(".country_parent").remove();
-                }
-            }
-
-        } else if (option === "stores") {
+        if (option === "stores") {
 
             value = [];
             let nodes = document.querySelectorAll("#store_stores input[type=checkbox]");
@@ -577,11 +612,6 @@ let Options = (function(){
         SaveIndicator.show();
     }
 
-    function changeFlag(node, selectnode) {
-        node.className = "";
-        node.classList.add("es_flag_" + selectnode.value, "es_flag");
-    }
-
     function setValue(selector, value) {
         let node = document.querySelector(selector);
         node.value = value;
@@ -602,8 +632,7 @@ let Options = (function(){
                 el.value = currency;
                 el.innerText = currency;
                 select.appendChild(el);
-            })
-            ;
+            });
     }
 
     self.init = async function() {
@@ -611,6 +640,8 @@ let Options = (function(){
         let currency = ExtensionResources.getJSON('json/currency.json').then(addCurrencies);
         await Promise.all([settings, currency]);
         let Defaults = SyncedStorage.defaults;
+
+        Region.init();
 
         loadOptions();
         loadTranslation().then(Sidebar.create);
@@ -620,21 +651,20 @@ let Options = (function(){
         let addHandlerToSetDefaultColor = (key) => {
             document.getElementById(`${key}_default`).addEventListener('click', () => setValue(`#${key}_color`, Defaults[`${key}_color`]));
         };
-        [
-            'highlight_owned',
-            'highlight_wishlist',
-            'highlight_coupon',
-            'highlight_inv_gift',
-            'highlight_inv_guestpass',
-            'highlight_notinterested',
-            'tag_wishlist',
-            'tag_coupon',
-            'tag_inv_gift',
-            'tag_inv_guestpass',
-            'tag_notinterested',
+        ['highlight_owned',
+         'highlight_wishlist',
+         'highlight_coupon',
+         'highlight_inv_gift',
+         'highlight_inv_guestpass',
+         'highlight_notinterested',
+         'tag_owned',
+         'tag_wishlist',
+         'tag_coupon',
+         'tag_inv_gift',
+         'tag_inv_guestpass',
+         'tag_notinterested',
         ].forEach(addHandlerToSetDefaultColor);
 
-        document.getElementById("tag_owned_color_default").addEventListener("click", () => setValue("#tag_owned_color", Defaults.tag_owned_color));
         document.getElementById("spamcommentregex_default").addEventListener("click", () => setValue("#spamcommentregex", "[\\u2500-\\u25FF]"));
         document.getElementById("quickinv_default").addEventListener("click", () => setValue("#quickinv_diff", "-0.01"));
 
@@ -644,16 +674,9 @@ let Options = (function(){
             }
         });
 
-        document.getElementById("reset_countries").addEventListener("click", loadDefaultCountries);
-
-        document.getElementById("region_selects").addEventListener("change", e => {
-            let node = e.target.closest(".country_parent");
-            if (node) {
-                changeFlag(node.querySelector(".es_flag"), e.target);
-            }
-            saveOption("regional_countries");
+        document.getElementById("add-custom-link").addEventListener("click", () => {
+            CustomLinks.create(SyncedStorage.defaults.profile_custom_link[0]);
         });
-        document.getElementById("add_another_region").addEventListener("click", Region.addRegionSelector);
 
         document.getElementById("regional_price_on").addEventListener("change", e => {
             let node = e.target.closest("#regional_price_on");

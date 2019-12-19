@@ -178,9 +178,10 @@
     "item_type": "Typ předmětu",
     "avg_price_3cards": "Průměrná cena 3 sběratelských karet: __price__",
     "mods": "Módy",
-    "empty_wishlist": "Vyprázdnit Seznam přání",
-    "empty_wishlist_confirm": "Jste si jistý, že chcete vymazat váš seznam přání?\n\nTato akce je nevratná!",
-    "empty_wishlist_loading": "Váš seznam přání je vyprazdňován, prosím čekejte...",
+    "empty_wishlist": {
+        "title": "Vyprázdnit Seznam přání",
+        "confirm": "Jste si jistý, že chcete vymazat váš seznam přání?\n\nTato akce je nevratná!"
+    },
     "about": "O rozšíření",
     "never": "Nikdy",
     "coupon_available": "Máte dostupný kupón!",
@@ -466,7 +467,7 @@
         "nobody": "Nikdo dosud nevyplnil dotazník výkonu pro tuto hru.",
         "take": "Vyplnit dotazník"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Vybrat DLC na Seznamu přání",
         "none": "Zrušit výběr",
         "unowned_dlc": "Vybrat nevlastněná DLC"

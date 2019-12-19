@@ -178,9 +178,10 @@
     "item_type": "Loại mục",
     "avg_price_3cards": "Giá trung bình của ba thẻ trao đổi: __price__",
     "mods": "Mod",
-    "empty_wishlist": "Danh sách yêu thích trống",
-    "empty_wishlist_confirm": "Bạn có chắc bạn muốn xóa toàn bộ danh sách mong ước của bạn? Hành động này không thể hoàn tác!",
-    "empty_wishlist_loading": "Đang xóa danh sách mong ước của bạn, xin vui lòng chờ...",
+    "empty_wishlist": {
+        "title": "Danh sách yêu thích trống",
+        "confirm": "Bạn có chắc bạn muốn xóa toàn bộ danh sách mong ước của bạn? Hành động này không thể hoàn tác!"
+    },
     "about": "Giới thiệu",
     "never": "Không bao giờ",
     "coupon_available": "Bạn có một phiếu giảm giá thích hợp!",
@@ -466,7 +467,7 @@
         "nobody": "Nobody has taken a performance survey for this game yet.",
         "take": "Take The Survey"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Select Wishlisted DLC",
         "none": "Select None",
         "unowned_dlc": "Select Unowned DLC"

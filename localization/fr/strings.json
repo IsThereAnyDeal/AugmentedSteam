@@ -178,9 +178,10 @@
     "item_type": "Type d'article",
     "avg_price_3cards": "Prix moyen de 3 cartes à échanger: __price__",
     "mods": "Mods",
-    "empty_wishlist": "Vider la liste de souhaits",
-    "empty_wishlist_confirm": "Êtes-vous sûr de vouloir vider votre liste de souhaits ?\n\nCette action ne peut pas être annulée !",
-    "empty_wishlist_loading": "Vidage de votre liste de souhaits, veuillez patienter...",
+    "empty_wishlist": {
+        "title": "Vider la liste de souhaits",
+        "confirm": "Êtes-vous sûr de vouloir vider votre liste de souhaits ?\n\nCette action ne peut pas être annulée !"
+    },
     "about": "À propos",
     "never": "Jamais",
     "coupon_available": "Vous avez un coupon disponible !",
@@ -466,7 +467,7 @@
         "nobody": "Personne n'a participé l'enquête de performance pour ce jeu.",
         "take": "Participer à l'enquête"
     },
-    "select": {
+    "dlc_select": {
         "wishlisted_dlc": "Sélectionner les DLC de la liste de souhaits",
         "none": "Sélectionner aucun",
         "unowned_dlc": "Sélectionner les DLC non-possédés"

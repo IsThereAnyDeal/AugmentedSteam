@@ -1,7 +1,9 @@
 {
   "name": "Augmented Steam",
-  "version": "1.2.1",
+  "short_name": "AS",
+  "version": "1.3.1",
   "description": "Augments your Steam Experience",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgSsjOO0ecqqAz6LCjjIoiRUV3VyW4p7mmTg9bC9uUkj28OgVr5+NRJpyI8gJx7Nd43ZEQ8dfwOl8GLnc3+m90jPSUASlliWxG2LQt81IZhtFurCLUELGIfUSr5vPdthRbwgnPrmRc5nylstBORBwYtT0Dos9pBcikHn0QKo87ggWEAQEBGkLXQ8An01LnQopLX4VbZHTfvoTIjPZOiHUVhKhn4aKM70e/u61mGMSp9WDBYrV0/OFKsVC9jWd9s0DX/uOm3KpFhOj4Bx+ehzEklXNuTTQshIC7NSgh+tAJwSa1GpO9jcCWCnFRqjfxwOrdylqIvCy+87fpU7nJ6sHRQIDAQAB",
   "icons": {
     "128": "img/es_128.png",
     "96": "img/es_96.png",
@@ -9,12 +11,19 @@
     "32": "img/es_32.png"
   },
   "manifest_version": 2,
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{1be309c5-3e4f-4b99-927d-bb500eb4fa88}"
+    }
+  },
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
   },
   "permissions": [
     "storage",
+    "identity",
+    "contextMenus",
     "*://*.steampowered.com/*",
     "*://steamcommunity.com/*",
     "*://*.isthereanydeal.com/"
@@ -48,12 +57,14 @@
         "*://store.steampowered.com/login/*",
         "*://store.steampowered.com/join/*",
         "*://store.steampowered.com/api/*",
+        "*://api.steampowered.com/*",
         "*://support.steampowered.com/*",
         "*://help.steampowered.com/*",
         "*://translation.steampowered.com/*",
         "*://partner.steampowered.com/*"        
       ],
       "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
@@ -63,8 +74,7 @@
       ],
       "css": [
         "css/enhancedsteam.css",
-        "css/enhancedsteam-chrome.css",
-        "css/es_flags.css"
+        "css/enhancedsteam-chrome.css"
       ]
     },
     {
@@ -74,9 +84,11 @@
       "exclude_matches": [
         "*://steamcommunity.com/login/*",
         "*://steamcommunity.com/openid/*",
+        "*://steamcommunity.com/chat/*",
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
@@ -86,18 +98,7 @@
       ],
       "css": [
         "css/enhancedsteam.css",
-        "css/enhancedsteam-chrome.css",
-        "css/es_flags.css"
-      ]
-    },
-    {
-      "matches": [
-        "*://steamcommunity.com/id/*",
-        "*://steamcommunity.com/profiles/*",
-        "*://steamcommunity.com/groups/*"
-      ],
-      "css": [
-        "css/es_sites_links.css"
+        "css/enhancedsteam-chrome.css"
       ]
     },
     {
@@ -105,11 +106,12 @@
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",
-        "js/language.js",
         "js/content/common.js",
+        "js/language.js",
         "js/content/tradeoffer.js"
       ],
       "css": [
@@ -127,7 +129,10 @@
   ],
   "background": {
     "scripts": [
+      "js/lib/webextension-polyfill/browser-polyfill.js",
+      "js/language.js",
       "js/lib/DOMPurify/purify.js",
+      "js/lib/idb/with-async-ittr.js",
       "js/config.js",
       "js/core.js",
       "js/background/background.js"

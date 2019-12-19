@@ -76,6 +76,7 @@
     "spam_comment_show": "__num__ Spam-Kommentare wurden versteckt. Klick hier, um sie anzuzeigen.",
     "dlc": "Herunterladbare Inhalte",
     "add_to_wishlist": "Zur Wunschliste hinzufügen",
+    "add_to_waitlist": "Zur Waitlist hinzufügen",
     "language": "Sprache",
     "theworddefault": "Standard",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Mehr über Steam-Gutscheine erfahren</a>",
@@ -89,6 +90,7 @@
     "community": "Community",
     "dlc_data_header": "Details zu herunterladbaren Inhalten",
     "graphics": "Grafik",
+    "owned_elsewhere": "Sie besitzen __gametitle__ bereits auf __storelist__",
     "trading_cards": "Steam-Sammelkarten",
     "view_badge": "Abzeichen ansehen",
     "purchase_total": "Gesamtkosten:",
@@ -182,9 +184,11 @@
     "item_type": "Art des Titels",
     "avg_price_3cards": "Durchschnittspreis von drei Sammelkarten: __price__",
     "mods": "Modifikationen",
-    "empty_wishlist": "Wunschliste leeren",
-    "empty_wishlist_confirm": "Bist du sicher, dass du deine Wunschliste leeren willst?\n\nDiese Aktion kann nicht rückgängig gemacht werden!",
-    "empty_wishlist_loading": "Wunschliste wird geleert, bitte warten...",
+    "empty_wishlist": {
+        "title": "Wunschliste leeren",
+        "confirm": "Bist du sicher, dass du deine Wunschliste leeren willst?\n\nDiese Aktion kann nicht rückgängig gemacht werden!",
+        "removing": "Entferne App __cur__ von __total__"
+    },
     "about": "Über",
     "never": "Niemals",
     "coupon_available": "Du hast einen Gutschein zur Verfügung!",
@@ -195,6 +199,7 @@
     "show_all_steam_releases": "Alle Steam-Veröffentlichungen anzeigen",
     "wishlist": "Wunschliste",
     "on_wishlist": "Auf der Wunschliste",
+    "ignored": "Ignoriert",
     "notdiscounted": "Spiele, die nicht im Angebot sind",
     "cancel": "Abbrechen",
     "wiki_article": "__pcgw__-Artikel anzeigen",
@@ -326,6 +331,8 @@
         "regional_price_on": "Regionalen Preisvergleich anzeigen",
         "cart": "Spiele in deinem Warenkorb",
         "friends_own": "Titel, die deine Freunde besitzen",
+        "horizontalscrolling": "Aktiviere horizontales Scrollen auf Store-Seiten mithilfe des Mausrads",
+        "supportinfo": "Zeige Supportinfo auf Store-Seiten",
         "drm": "Warnung über DRMs von Dritten anzeigen",
         "show_regionwarning": "Warnung anzeigen, wenn ein regionaler Steam-Shop genutzt wird, der nicht dem Account entspricht",
         "foot_link": "Augmented Steam Erweiterung",
@@ -355,6 +362,7 @@
         "library_f2p": "Kostenlose Spiele und Demos die gespielt wurden in der Bibliothek anzeigen ",
         "inventory_market_text": "Marktpreise im Inventar anzeigen",
         "send_age_info": "Alter automatisch senden, wenn Altersbestätigung angefordert wird",
+        "mp4video": "Erzwinge das Abspielen von Videos auf Store-Seiten als MP4",
         "pcgw": "PCGamingWiki-Links anzeigen",
         "protondb": "ProtonDB-Links anzeigen",
         "store_steamcards": "SteamCardExchange-Links auf Store-Seiten zeigen",
@@ -365,6 +373,8 @@
         "show_astatslink": "AStats-Link auf Anwendungsseiten anzeigen",
         "openinnewtab": "Externe Links in einem neuen Fenster öffen",
         "guest": "Spiele, die als Besucherpass in meinem Inventar liegen",
+        "collection": "Spiele, die in deiner ITAD Collection sind",
+        "waitlist": "Spiele, die in deiner ITAD Waitlist sind",
         "show_steamchart_info": "Informationen von SteamCharts.com anzeigen",
         "show_steamspy_info": "Steamspy.com-Infos anzeigen",
         "showallachievements": "Statistiken für Errungenschaften auf der \"Alle Spiele\"-Seite anzeigen",
@@ -436,12 +446,14 @@
             "thai": "Thai",
             "turkish": "Türkisch",
             "ukrainian": "Ukrainisch"
-        }
+        },
+        "add_to_waitlist": "Zeige separaten \"Zur Waitlist hinzufügen\" Button"
     },
     "ready": {
         "errormsg": "Fehler beim Laden von Augmented Steam-Daten",
         "loading": "Augmented Steam lädt Daten...",
-        "ready": "Augmented Steam ist bereit"
+        "ready": "Augmented Steam ist bereit",
+        "server_outage": "Augmented Steam Server sind zur Zeit überlastet"
     },
     "twitch": {
         "now_streaming": "__username__ ist live auf Twitch",
@@ -468,7 +480,8 @@
         "nobody": "Noch niemand hat die Leistungsumfrage für dieses Spiel abgeschlossen.",
         "take": "Nimm an der Umfrage teil"
     },
-    "select": {
+    "dlc_select": {
+        "select": "Auswählen",
         "wishlisted_dlc": "DLC von der Wunschliste auswählen",
         "none": "Keines Auswählen",
         "unowned_dlc": "DLC auswählen, den du noch nicht besitzt"
@@ -497,6 +510,9 @@
         "certifications": "WSGF-Breitbild-Zertifizierungen"
     },
     "itad": {
+        "import": "Importiere regelmäßig:",
+        "last_import": "Letzter Import",
+        "import_now": "Jetzt importieren",
         "option": "Menüoption zum Senden von Daten an IsThereAnyDeal.com anzeigen",
         "send_to_itad": "Spiele in deinem Besitz an IsThereAnyDeal senden",
         "sending": "Lade Spiele und Pakete in deinem Besitz und sende sie an IsThereAnyDeal.com"
