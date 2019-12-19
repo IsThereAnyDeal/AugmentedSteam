@@ -961,7 +961,7 @@ class AppPageClass extends StorePageClass {
         }
 
         let handler = () => {
-            this.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, this.appid, "#esi-store-user-note", toggleState);
+            this.userNotes.showModalDialog(this.appName, this.appid, "#esi-store-user-note", toggleState);
         };
 
         document.querySelector(".js-user-note-button").addEventListener("click", handler);
@@ -3720,7 +3720,7 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addExportWishlistButton = function() {
-        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_export_wishlist'><div>" + Localization.str.export.wishlist + "</div></div>");
+        HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${Localization.str.export.wishlist}</div></div>`);
 
         document.querySelector("#es_export_wishlist").addEventListener("click", () => {
             Messenger.onMessage("appInfo").then(appInfo => this.showExportModalDialog(appInfo));
@@ -3789,11 +3789,11 @@ let WishlistPageClass = (function(){
         }
 
         HTML.afterEnd(node.querySelector(".mid_container"),
-            "<div class='esi-note " + cssClass + "'>" + noteText + "</div>");
+            `<div class="esi-note ${cssClass}">${noteText}</div>`);
         node.classList.add("esi-has-note");
     };
 
-    WishlistPageClass.prototype.addUserNotesHandlers =  function() {
+    WishlistPageClass.prototype.addUserNotesHandlers = function() {
         if (!isMyWishlist()) { return; }
 
         let stateHandler = function(node, active) {
@@ -3907,7 +3907,7 @@ class UserNotes {
         }
 
         let saveNote = () => {
-            let modal = document.querySelector('#es_note_modal');
+            let modal = document.querySelector("#es_note_modal");
             let appid = parseInt(modal.dataset.appid, 10);
             let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
             let node = document.querySelector(decodeURIComponent(modal.dataset.selector));
