@@ -991,6 +991,101 @@ let Price = (function() {
 })();
 
 
+let SteamId = (function(){
+    function SteamId(steam64str) {
+        if (!steam64str) {
+            throw new Error("Missing first parameter 'steam64str'.") 
+        }
+
+        this._steamId = this.fromString(steam64str);
+        this._steamId64 = steam64str;
+    };
+
+    function divide(str) {
+        let length = str.length;
+        let result = [];
+        let num = 0;
+        for (let i = 0; i < length; i++) {
+            num += Number(str[i]);
+
+            let r = Math.floor(num / 2);
+            num = ((num - 2*r) * 10);
+
+            if (r != 0 || result.length != 0) {
+                result.push(r);
+            }
+        }
+
+        return [result, num > 0 ? 1 : 0];
+    }
+
+    function getBinary(str) {
+        let upper32 = 0;
+        let lower32 = 0;
+        let index = 0;
+        let bit = 0;
+        do {
+            [str, bit] = divide(str);
+            
+            if (bit) {
+                if (index < 32) {
+                lower32 = lower32 | (1 << index);
+                } else {
+                    upper32 = upper32 | (1 << (index - 32));
+                }
+            }
+            
+            index++;
+        } while(str.length > 0);
+
+        return [upper32, lower32];
+    }
+
+    SteamId.prototype.fromString = function(steam64str) {
+        let [upper32, lower32] = getBinary(steam64str);
+        return {
+            y: lower32 & 1,
+            accountNumber: (lower32 & ((1 << 31) - 1) << 1) >> 1,
+            instance: (upper32 & ((1 << 20) - 1)),
+            type: (upper32 & (15 << 20)) >> 20,
+            universe: (upper32 & ((1 << 8) - 1) << 20) >> 20
+        }
+    };
+
+    SteamId.prototype.getAccountId = function() {
+        return this._steamId.accountNumber * 2;
+    };
+
+    SteamId.prototype.getSteamId2 = function() {
+        return "STEAM_0:0:" + this._steamId.accountNumber;
+    };
+    
+
+    SteamId.prototype.getSteamId3 = function() {
+        return "[U:1:" + this.getAccountId() + "]";
+    };
+
+    SteamId.prototype.getSteamId64 = function() {
+        return this._steamId64;
+    };
+
+    return SteamId;
+})();
+SteamId.fromDOM = () => {
+    let id = null;
+    let g_steamID = HTMLParser.getVariableFromDom("g_steamID", "string");
+    let g_rgProfileData = HTMLParser.getVariableFromDom("g_steamID", "string");
+    if (document.querySelector("#reportAbuseModal")) {
+        id = document.querySelector("input[name=abuseID]").value;
+    } else if (g_steamID) {
+        id = g_steamID;
+    } else if (g_rgProfileData) {
+        id = g_rgProfileData.steamid;
+    }
+    return id;
+};
+
+
 let Viewport = (function(){
 
     let self = {};

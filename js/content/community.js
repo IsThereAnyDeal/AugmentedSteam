@@ -1,96 +1,3 @@
-
-let SteamId = (function(){
-    function SteamId(steam64str) {
-        this._steamId64 = steam64str || this.getSteamId64();
-        this._steamId = this.fromString(this._steamId64);
-    };
-
-    function divide(str) {
-        let length = str.length;
-        let result = [];
-        let num = 0;
-        for (let i=0; i<length; i++) {
-            num += Number(str[i]);
-
-            let r = Math.floor(num / 2);
-            num = ((num - 2*r) * 10);
-
-            if (r != 0 || result.length != 0) {
-                result.push(r);
-            }
-        }
-
-
-        return [result, num > 0 ? 1 : 0];
-    }
-
-    function getBinary(str) {
-        let upper32 = 0;
-        let lower32 = 0;
-
-        let index = 0;
-        let bit = 0;
-        do {
-            [str, bit] = divide(str);
-            
-            if (bit) {
-                if (index < 32) {
-                lower32 = lower32 | (1 << index);
-                } else {
-                    upper32 = upper32 | (1 << (index - 32));
-                }
-            }
-            
-            index++;
-        } while(str.length > 0);
-
-        return [upper32, lower32];
-    }
-
-    SteamId.prototype.fromString = function(steam64str) {
-        let [upper32, lower32] = getBinary(steam64str);
-        return {
-            y: lower32 & 1,
-            accountNumber: (lower32 & ((1 << 31) - 1) << 1) >> 1,
-            instance: (upper32 & ((1 << 20) - 1)),
-            type: (upper32 & (15 << 20)) >> 20,
-            universe: (upper32 & ((1 << 8) - 1) << 20) >> 20
-        }
-    };
-
-    SteamId.prototype.getAccountId = function() {
-        return this._steamId.accountNumber * 2;
-    };
-
-    SteamId.prototype.getSteamId2 = function() {
-        return "STEAM_0:0:" + this._steamId.accountNumber;
-    };
-    
-
-    SteamId.prototype.getSteamId3 = function() {
-        return "[U:1:" + this.getAccountId() + "]";
-    };
-
-    SteamId.prototype.getSteamId64 = function() {
-        if (this._steamId64) { return this._steamId64; }
-
-        if (document.querySelector("#reportAbuseModal")) {
-            this._steamId64 = document.querySelector("input[name=abuseID]").value;
-        } else {
-            this._steamId64 = HTMLParser.getVariableFromDom("g_steamID", "string");
-        }
-
-        if (!this._steamId64) {
-            let profileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
-            this._steamId64 = profileData.steamid;
-        }
-
-        return this._steamId64;
-    };
-
-    return SteamId;
-})();
-
 let GroupID = (function(){
 
     let self = {};
@@ -119,7 +26,7 @@ let ProfileData = (function(){
     let _promise = null;
     self.promise = async function() {
         if (!_promise) {
-            let steamId = new SteamId().getSteamId64();
+            let steamId = SteamId.fromDOM();
 
             _promise = Background.action('profile', { 'profile': steamId, } )
                 .then(response => { _data = response; return _data; });
@@ -548,7 +455,7 @@ let ProfileHomePageClass = (function(){
     }
 
     ProfileHomePageClass.prototype.addCommunityProfileLinks = function() {
-        let steamId = new SteamId().getSteamId64();
+        let steamId = SteamId.fromDOM();
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
@@ -688,7 +595,7 @@ let ProfileHomePageClass = (function(){
         }
 
         function showSteamIdDialog() {
-            let steamId = new SteamId();
+            let steamId = new SteamId(SteamId.fromDOM());
             let html =
                 `<div class="bb_h1">${Localization.str.click_to_copy}</div>
                 <p><a data-copy="${steamId.getSteamId2()}" class="es_copy">${steamId.getSteamId2()}</a></p>
@@ -820,7 +727,7 @@ let ProfileHomePageClass = (function(){
         ProfileData.promise().then(data => {
             if (!data.steamrep || data.steamrep.length === 0) { return; }
 
-            let steamId = new SteamId().getSteamId64();
+            let steamId = SteamId.fromDOM();
             if (!steamId) { return; }
 
             // Build reputation images regexp
@@ -1362,7 +1269,7 @@ let ProfileEditPageClass = (function(){
 
         let result = await Background.action("profile.background", {
             appid: appid,
-            profile: new SteamId().getSteamId64()
+            profile: SteamId.fromDOM()
         });
 
         let selectedImg = ProfileData.getBgImg();
