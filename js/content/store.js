@@ -3399,7 +3399,6 @@ let WishlistPageClass = (function(){
             this.addExportWishlistButton();
             this.addEmptyWishlistButton();
             this.addUserNotesHandlers();
-            this.addRemoveHandler();
         };
         
         if (document.querySelector("#throbber").style.display === "none") {
@@ -3813,18 +3812,6 @@ let WishlistPageClass = (function(){
             let appid = Number(row.dataset.appId);
             userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note", stateHandler);
         });
-    };
-
-    WishlistPageClass.prototype.addRemoveHandler = function() {
-        ExtensionLayer.runInPageContext(() =>
-            $J(document).ajaxSuccess(function( event, xhr, settings ) {
-                if (settings.url.endsWith("/remove/")) {
-                    Messenger.postMessage("removeWlEntry", settings.data.match(/(?!appid=)\d+/)[0]);
-                }
-            })
-        );
-
-        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.delete(removedEntry));
     };
 
     return WishlistPageClass;
