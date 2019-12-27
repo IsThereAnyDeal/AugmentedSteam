@@ -3073,7 +3073,7 @@ let GroupsPageClass = (function(){
         let sortBy = SyncedStorage.get("sortgroupsby") || "default";
         document.querySelector("#search_text_box").insertAdjacentElement("beforebegin", Sortbox.get(
             "groups",
-            [["default", Localization.str.datecreated], ["members", Localization.str.members], ["names", Localization.str.name]],
+            [["default", Localization.str.theworddefault], ["members", Localization.str.members], ["names", Localization.str.name]],
             sortBy,
             sortGroups,
             "sortgroupsby")
