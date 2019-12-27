@@ -2970,7 +2970,7 @@ let FriendsPageClass = (function(){
 
         HTML.beforeEnd(manage, commentArea);
         ExtensionLayer.runInPageContext(`function() {
-            const delay = 7000; // This ensures Valve's rate limit doesn't get hit ()
+            const delay = 7000; // This ensures Valve's rate limit doesn't get hit
             new CEmoticonPopup($J('#emoticonbtn'), $J('#comment_textarea'));
             $J("#comment_submit").click(() => {
                 const total = $J(".selected").length;
@@ -2979,8 +2979,27 @@ let FriendsPageClass = (function(){
                     ShowAlertDialog("${Localization.str.alert}", "${Localization.str.friends_commenter_warning}");
                     return;
                 }
+
+                const sec = 1000; // 1 second in ms
+                let duration = (total - 1) * delay;
+                let showTime = () => {
+                    let date = new Date(null);
+                    date.setSeconds(duration / sec);
+                    let timestr = date.toISOString().substr(11, 8);
+                    $J("#timer").html(\` (${Localization.str.timer})\`.replace("__time__", timestr));
+                };
+                let timer = setInterval(() => {
+                    duration -= sec;
+                    showTime();
+                    if (duration <= 0) {
+                        clearInterval(timer);
+                    }
+                }, sec)
             
-                $J("#log_head, #log_body").html("");
+                $J("#log_head").html(\`<br><b>${Localization.str.processed} </b><i id="timer"></i>\`.replace("__i__", 0).replace("__total__", total));
+                $J("#log_body").html("");
+                showTime();
+
                 $J(".selected").each((i, elem) => {
                     let profileID = $J(elem).data("steamid");
                     let profileName = $J(elem).find(".friend_block_content").get(0).firstChild.textContent;
@@ -3006,7 +3025,8 @@ let FriendsPageClass = (function(){
                             $J("#log_body").get(0).innerHTML += "<br>${Localization.str.posted_at_fail}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/" target="_blank">\${profileName}</a>\`)
                         })
                         .always(() => {
-                            $J("#log_head").html("<br><b>${Localization.str.processed}<b>".replace("__i__", i + 1).replace("__total__", total))
+                            $J("#log_head").html(\`<br><b>${Localization.str.processed} </b><i id="timer"></i>\`.replace("__i__", i + 1).replace("__total__", total))
+                            showTime();
                         });
                     }, delay * i);
                 });

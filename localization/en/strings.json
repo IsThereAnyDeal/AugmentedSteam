@@ -8,6 +8,7 @@
     "posted_at_success": "Successfully posted comment on __profile__.",
     "posted_at_fail": "Failed to post comment on __profile__.",
     "processed": "Processed __i__ out of __total__ friend(s).",
+    "timer": "Approximately __time__ until completion",
     "alert": "Alert",
     "transactionStatus": "__failed__ request(s) failed. Retrieved __size__ of __total__ transactions.",
     "custom_tags": "Custom Tags",
