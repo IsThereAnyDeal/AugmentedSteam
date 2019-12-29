@@ -513,8 +513,10 @@
     },
     "itad": {
         "import": "Importiere regelmäßig:",
-        "last_import": "Letzter Import",
-        "import_now": "Jetzt importieren",
+        "last_import": "Letzter Import...",
+        "from": "von ITAD:",
+        "to": "nach ITAD:",
+        "sync_now": "Jetzt synchronisieren",
         "option": "Menüoption zum Senden von Daten an IsThereAnyDeal.com anzeigen",
         "send_to_itad": "Spiele in deinem Besitz an IsThereAnyDeal senden",
         "sending": "Lade Spiele und Pakete in deinem Besitz und sende sie an IsThereAnyDeal.com"

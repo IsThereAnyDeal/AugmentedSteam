@@ -355,7 +355,18 @@ class ITAD_Api extends Api {
         }
         
         await Promise.all(promises);
-        LocalStorage.set("lastItadImport", Timestamp.now());
+
+        let lastImport = LocalStorage.get("lastItadImport") || {};
+        lastImport.to = Timestamp.now();
+        LocalStorage.set("lastItadImport", lastImport);
+    }
+
+    static async sync() {
+        await Promise.all([
+            ITAD_Api.import(true),
+            IndexedDB.clear("waitlist").then(() => IndexedDB.objStoreFetchFns.get("waitlist")({ "shop": "steam", "optional": "gameid" })),
+            IndexedDB.clear("collection").then(() => IndexedDB.objStoreFetchFns.get("collection")({ "shop": "steam", "optional": "gameid,copy_type" })),
+        ]);        
     }
 
     static lastImport() { return LocalStorage.get("lastItadImport"); }
@@ -370,6 +381,11 @@ class ITAD_Api extends Api {
 
             collection[gameid] = types;
         });
+
+        let lastImport = LocalStorage.get("lastItadImport") || {};
+        lastImport.from = Timestamp.now();
+        LocalStorage.set("lastItadImport", lastImport);
+
         return collection;
     }
 
@@ -380,6 +396,11 @@ class ITAD_Api extends Api {
         for (let { gameid } of Object.values(result)) {
             waitlist.push(gameid);
         }
+
+        let lastImport = LocalStorage.get("lastItadImport") || {};
+        lastImport.from = Timestamp.now();
+        LocalStorage.set("lastItadImport", lastImport);
+
         return waitlist;
     }
 
@@ -1308,6 +1329,7 @@ let actionCallbacks = new Map([
     ["itad.authorize", ITAD_Api.authorize],
     ["itad.isconnected", ITAD_Api.isConnected],
     ["itad.import", ITAD_Api.import],
+    ["itad.sync", ITAD_Api.sync],
     ["itad.lastimport", ITAD_Api.lastImport],
     ["itad.inwaitlist", ITAD_Api.inWaitlist],
     ["itad.addtowaitlist", ITAD_Api.addToWaitlist],
