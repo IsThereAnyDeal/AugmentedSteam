@@ -631,6 +631,7 @@ SyncedStorage.defaults = {
     'disablelinkfilter': false,
     'showallfriendsthatown': false,
     'sortfriendsby': "default",
+    'sortgroupsby': "default",
     'show1clickgoo': true,
     'show_profile_link_images': "gray",
     'profile_steamrepcn': true,
