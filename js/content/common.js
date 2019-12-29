@@ -138,8 +138,7 @@ class ITAD {
                 promises.push(resolved);
             }
             if (highlightWaitlist) {
-                promises.push(resolved);
-                // todo Waitlist endpoint
+                promises.push(Background.action("itad.inwaitlist", storeIds));
             } else {
                 promises.push(resolved);
             }
