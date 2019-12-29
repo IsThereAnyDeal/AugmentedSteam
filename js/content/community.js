@@ -3039,16 +3039,21 @@ let GroupsPageClass = (function(){
 
         function sortGroups(sortBy, reversed) {
             let searchResults = document.querySelector("#search_results_empty");
-            let property = `esSort${sortBy.toLowerCase()}`;
+            let property = `esSort${sortBy}`;
             groups.sort((a, b) => {
                 let propA = a.dataset[property];
                 let propB = b.dataset[property];
-                if (isNaN(propA)) {               
-                    if (propA.toLowerCase() < propB.toLowerCase()) { return -1; }
-                    if (propA.toLowerCase() > propB.toLowerCase()) { return 1; }
-                    return 0;
+                switch(sortBy) {
+                    case "default":
+                        return Number(propA) - Number(propB);
+                    case "members":
+                        return Number(propB) - Number(propA);
+                    case "names": {
+                        if (propA.toLowerCase() < propB.toLowerCase()) { return -1; }
+                        if (propA.toLowerCase() > propB.toLowerCase()) { return 1; }
+                        return 0;
+                    }
                 }
-                return Number(propA) - Number(propB);
             });
 
             for (let group of groups) {
@@ -3060,11 +3065,10 @@ let GroupsPageClass = (function(){
             }
         }
 
-        let sortBy = SyncedStorage.get("sortgroupsby");
         document.querySelector("#search_text_box").insertAdjacentElement("beforebegin", Sortbox.get(
             "groups",
             [["default", Localization.str.theworddefault], ["members", Localization.str.members], ["names", Localization.str.name]],
-            sortBy,
+            SyncedStorage.get("sortgroupsby"),
             sortGroups,
             "sortgroupsby")
         );
