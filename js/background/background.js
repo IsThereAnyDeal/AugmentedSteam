@@ -1315,15 +1315,6 @@ let actionCallbacks = new Map([
     ["itad.incollection", ITAD_Api.inCollection],
     ["itad.getfromcollection", ITAD_Api.getFromCollection],
 
-    ["idb.get", IndexedDB.get],
-    ["idb.getfromindex", IndexedDB.getFromIndex],
-    ["idb.getallfromindex", IndexedDB.getAllFromIndex],
-    ["idb.put", IndexedDB.put],
-    ["idb.delete", IndexedDB.delete],
-    ["idb.clear", IndexedDB.clear],
-    ["idb.contains", IndexedDB.contains],
-    ["idb.indexcontainskey", IndexedDB.indexContainsKey],
-
     ["error.test", () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
 // new Map() for Map.prototype.get() in lieu of:
