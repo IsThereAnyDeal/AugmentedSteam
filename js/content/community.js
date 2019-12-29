@@ -2990,10 +2990,11 @@ let FriendsPageClass = (function(){
                 };
                 let timer = setInterval(() => {
                     duration -= sec;
-                    showTime();
                     if (duration <= 0) {
+                        duration = 0;
                         clearInterval(timer);
                     }
+                    showTime();
                 }, sec)
             
                 $J("#log_head").html(\`<br><b>${Localization.str.processed} </b><i id="timer"></i>\`.replace("__i__", 0).replace("__total__", total));
