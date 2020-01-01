@@ -28,33 +28,28 @@ class ITAD {
     }
 
     static async authorize() {
-        let sessionId = User.getSessionId();
-        // Avoid predictable hash when string is empty
-        if (sessionId) {
-            try {
-                await Background.action("itad.authorize", StringUtils.hashCode(sessionId));
-            } catch(err) {
-                console.group("ITAD authorization");
-                console.error(err);
-                console.error("Failed to authorize to ITAD");
-                console.groupEnd();
-                return;
-            }
+        
+        try {
+            await Background.action("itad.authorize");
+        } catch(err) {
+            console.group("ITAD authorization");
+            console.error(err);
+            console.error("Failed to authorize to ITAD");
+            console.groupEnd();
+            return;
+        }
 
-            let itadStatus = document.getElementById("es_itad_status");
-            let itadDiv = itadStatus.parentElement;
+        let itadStatus = document.getElementById("es_itad_status");
+        let itadDiv = itadStatus.parentElement;
 
-            itadStatus.textContent = '\u2713';
-            itadDiv.classList.add("authorized");
-            itadDiv.classList.remove("not_authorized");
-            itadDiv.addEventListener("mouseenter", ITAD.onHover);
-            itadDiv.removeEventListener("click", ITAD.authorize);
-            
-            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
-                Background.action("itad.import");
-            }
-        } else {
-            console.error("Can't retrieve Session ID, unable to authorize app");
+        itadStatus.textContent = '\u2713';
+        itadDiv.classList.add("authorized");
+        itadDiv.classList.remove("not_authorized");
+        itadDiv.addEventListener("mouseenter", ITAD.onHover);
+        itadDiv.removeEventListener("click", ITAD.authorize);
+        
+        if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
+            Background.action("itad.import");
         }
     }
 

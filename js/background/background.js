@@ -178,10 +178,12 @@ AugmentedSteamApi._progressingRequests = new Map();
 
 class ITAD_Api extends Api {
 
-    static async authorize(hash) {
+    static async authorize() {
+        let rnd = crypto.getRandomValues(new Uint32Array(1))[0];
+
         let url = await browser.identity.launchWebAuthFlow(
             {
-                url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${hash}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${browser.identity.getRedirectURL()}`,
+                url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${rnd}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${browser.identity.getRedirectURL()}`,
                 interactive: true
             });
         if (!url) { throw new Error("Couldn't retrieve access token for ITAD authorization"); }
@@ -191,7 +193,7 @@ class ITAD_Api extends Api {
 
         let params = new URLSearchParams(hashFragment.substr(1));
 
-        if (parseInt(params.get("state"), 10) !== hash) { throw new Error("Failed to verify state parameter from URL fragment"); }
+        if (parseInt(params.get("state")) !== rnd) { throw new Error("Failed to verify state parameter from URL fragment"); }
 
         let accessToken = params.get("access_token");
         let expiresIn = params.get("expires_in");
