@@ -203,6 +203,11 @@ class ITAD_Api extends Api {
         LocalStorage.set("access_token", { token: accessToken, expiry: Timestamp.now() + parseInt(expiresIn, 10) });
     }
 
+    static disconnect() {
+        LocalStorage.remove("access_token");
+        return IndexedDB.clear(["collection", "waitlist", "itadImport"]);
+    }
+
     static isConnected() {
         let lsEntry = LocalStorage.get("access_token");
         if (!lsEntry) return false;
@@ -1329,6 +1334,7 @@ let actionCallbacks = new Map([
     ["clearownprofile", SteamCommunity.clearOwn],
 
     ["itad.authorize", ITAD_Api.authorize],
+    ["itad.disconnect", ITAD_Api.disconnect],
     ["itad.isconnected", ITAD_Api.isConnected],
     ["itad.import", ITAD_Api.import],
     ["itad.sync", ITAD_Api.sync],
