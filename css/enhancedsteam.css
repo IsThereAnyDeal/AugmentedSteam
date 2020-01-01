@@ -2519,9 +2519,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
   text-decoration: underline;
   margin-right: 5px;
 }
-.es-itad-hover__sync-now--loading .es-itad-hover__sync-now-text {
-  cursor: progress;
-}
 .es-itad-hover__sync-success {
   color: rgb(81, 119, 29);
 }
