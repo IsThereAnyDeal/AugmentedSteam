@@ -307,7 +307,7 @@ class ITAD_Api extends Api {
         } else {
             let lastImport = LocalStorage.get("lastItadImport");
 
-            if (lastImport && !IndexedDB.isExpired(lastImport + 12 * 60 * 60)) { return; }
+            if (lastImport && lastImport.to && !IndexedDB.isExpired(lastImport.to + 12 * 60 * 60)) { return; }
         }
 
         let dsKeys = [];
