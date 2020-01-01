@@ -3,52 +3,17 @@
  */
 class ITAD {
     static async create() {
+        if (!await Background.action("itad.isconnected")) { return; }
+
         HTML.afterBegin("#global_action_menu",
             `<div id="es_itad">
                 <img id="es_itad_logo" src="${ExtensionResources.getURL("img/itad.png")}" height="20px">
-                <span id="es_itad_status"></span>
+                <span id="es_itad_status">✓</span>
             </div>`);
 
-        let connected = await Background.action("itad.isconnected");
-        let itadDiv = document.querySelector("#es_itad");
-        let itadStatus = itadDiv.querySelector("#es_itad_status");
-        
-        if (connected) {
-            itadStatus.textContent = '\u2713';
-            itadDiv.classList.add("authorized");
-            itadDiv.addEventListener("mouseenter", ITAD.onHover);
-            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
-                Background.action("itad.import");
-            }
-        } else {
-            itadStatus.textContent = Localization.str.sign_in;
-            itadDiv.classList.add("not_authorized");
-            itadDiv.addEventListener("click", ITAD.authorize);
-        }
-    }
+        document.querySelector("#es_itad").addEventListener("mouseenter", ITAD.onHover);
 
-    static async authorize() {
-        
-        try {
-            await Background.action("itad.authorize");
-        } catch(err) {
-            console.group("ITAD authorization");
-            console.error(err);
-            console.error("Failed to authorize to ITAD");
-            console.groupEnd();
-            return;
-        }
-
-        let itadStatus = document.getElementById("es_itad_status");
-        let itadDiv = itadStatus.parentElement;
-
-        itadStatus.textContent = '\u2713';
-        itadDiv.classList.add("authorized");
-        itadDiv.classList.remove("not_authorized");
-        itadDiv.addEventListener("mouseenter", ITAD.onHover);
-        itadDiv.removeEventListener("click", ITAD.authorize);
-        
-        if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
+        if (User.isSignedIn && (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist"))) {
             Background.action("itad.import");
         }
     }
@@ -2369,9 +2334,6 @@ let Common = (function(){
         ProgressBar.create();
         ProgressBar.loading();
         UpdateHandler.checkVersion(EnhancedSteam.clearCache);
-        if (User.isSignedIn) {
-            ITAD.create();
-        }
         EnhancedSteam.addBackToTop();
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
@@ -2383,12 +2345,12 @@ let Common = (function(){
         EnhancedSteam.skipGotSteam();
         EnhancedSteam.keepSteamSubscriberAgreementState();
         EnhancedSteam.defaultCommunityTab();
+        ITAD.create();
 
         if (User.isSignedIn) {
             EnhancedSteam.addRedeemLink();
             EnhancedSteam.replaceAccountName();
             EnhancedSteam.launchRandomButton();
-            // TODO add itad sync
             EnhancedSteam.bindLogout();
         }
     };
