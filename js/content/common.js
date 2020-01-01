@@ -258,14 +258,16 @@ class ProgressBar {
 ProgressBar._progress = null;
 ProgressBar._failedRequests = 0;
 
-class Background {
-    static message(message) {
+class Background extends BackgroundBase {
+    static async message(message) {
         ProgressBar.startRequest();
 
-        return browser.runtime.sendMessage(message).then(result => {
+        let result;
+        try {
+            result = await super.message(message);
             ProgressBar.finishRequest();
             return result;
-        }, err => {
+        } catch(err) {
             switch (err.message) {
                 case "ServerOutageError":
                     ProgressBar.serverOutage();
@@ -279,13 +281,7 @@ class Background {
                     ProgressBar.failed();
             }
             throw err;
-        });
-    }
-    
-    static action(requested, ...params) {
-        if (!params.length)
-            return Background.message({ "action": requested, });
-        return Background.message({ "action": requested, "params": params, });
+        }
     }
 }
 

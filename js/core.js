@@ -25,6 +25,18 @@ if (typeof Promise.prototype.finally === 'undefined') {
     });
 }
 
+class BackgroundBase {
+    static message(message) {
+        return browser.runtime.sendMessage(message);
+    }
+    
+    static action(requested, ...params) {
+        if (!params.length)
+            return this.message({ "action": requested, });
+        return this.message({ "action": requested, "params": params, });
+    }
+}
+
 class Version {
     constructor(major, minor=0, patch=0) {
         console.assert([major, minor, patch].filter(Number.isInteger).length === 3, `${major}.${minor}.${patch} must be integers`);
