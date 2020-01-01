@@ -389,78 +389,117 @@ let Options = (function(){
         HTML.inner(stores_node, html);
     }
 
-    function loadTranslation() {
+    async function loadTranslation() {
         // When locale files are loaded changed text on page accordingly
-        return Localization.then(async () => {
-            document.title = "Augmented Steam " + Localization.str.thewordoptions;
+        await Localization;
+        
+        document.title = "Augmented Steam " + Localization.str.thewordoptions;
 
-            // Localize elements with text
-            let nodes = document.querySelectorAll("[data-locale-text]");
-            for (let node of nodes) {
-                let translation = Localization.getString(node.dataset.localeText);
-                if (node.dataset.localeText.startsWith("options.context_")) {
-                    translation = translation.replace("__query__", "...");
+        // Localize elements with text
+        let nodes = document.querySelectorAll("[data-locale-text]");
+        for (let node of nodes) {
+            let translation = Localization.getString(node.dataset.localeText);
+            if (node.dataset.localeText.startsWith("options.context_")) {
+                translation = translation.replace("__query__", "...");
+            }
+            if (translation) {
+                node.textContent = translation;
+            } else {
+                console.warn(`Missing translation ${node.dataset.localeText}`);
+            }
+        }
+
+        nodes = document.querySelectorAll("[data-locale-html]");
+        for (let node of nodes) {
+            let translation = Localization.getString(node.dataset.localeHtml);
+            if (translation) {
+                HTML.inner(node, translation);
+            } else {
+                console.warn(`Missing translation ${node.dataset.localeHtml}`);
+            }
+        }
+
+        nodes = document.querySelectorAll("#warning_language option");
+        for (let node of nodes) {
+            let lang = node.textContent;
+            let lang_trl = Localization.str.options.lang[node.value.toLowerCase()];
+            if (lang !== lang_trl) {
+                node.textContent = `${lang} (${lang_trl})`;
+            }
+        }
+
+        let total = deepCount(Localization.str);
+        for (let lang of Object.keys(Localization.str.options.lang)) {
+            let node = document.querySelector(`.language.${lang}`);
+            if (node) {
+                node.textContent = `${Localization.str.options.lang[lang]}:`;
+            }
+
+            if (lang === "english") continue;
+            let code = Language.languages[lang];
+            let locale = await Localization.loadLocalization(code);
+            let count = deepCount(locale);
+            let percentage = 100 * count / total;
+
+            HTML.inner(
+                document.querySelector(`.lang-perc.${lang}`),
+                `<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>`
+            );
+        }
+
+        let [ itadStatus, itadAction ] = document.querySelectorAll("#itad_status, #itad_action");
+        if (await BackgroundBase.action("itad.isconnected")) {
+            itadStatus.textContent = Localization.str.connected;
+            itadStatus.classList.add("connected");
+
+            itadAction.textContent = Localization.str.disconnect;
+            itadAction.addEventListener("click", disconnect);
+        } else {
+            itadStatus.textContent = Localization.str.disconnected;
+            itadStatus.classList.add("disconnected");
+
+            itadAction.textContent = Localization.str.connect;
+            itadAction.addEventListener("click", connect);
+        }
+
+        async function disconnect() {
+            await BackgroundBase.action("itad.disconnect");
+
+            itadStatus.textContent = Localization.str.disconnected;
+            itadStatus.classList.add("disconnected");
+            itadStatus.classList.remove("connected");
+
+            itadAction.textContent = Localization.str.connect;
+            itadAction.removeEventListener("click", disconnect);
+            itadAction.addEventListener("click", connect);
+        }
+
+        async function connect() {
+            await BackgroundBase.action("itad.authorize");
+
+            itadStatus.textContent = Localization.str.connected;
+            itadStatus.classList.add("connected");
+            itadStatus.classList.remove("disconnected");
+
+            itadAction.textContent = Localization.str.disconnect;
+            itadAction.removeEventListener("click", connect);
+            itadAction.addEventListener("click", disconnect);
+        }
+
+        function deepCount(obj) {
+            let cnt = 0;
+            for (let key in obj) {
+                if (!Localization.str[key]) { // don't count "made up" translations
+                    continue;
                 }
-                if (translation) {
-                    node.textContent = translation;
+                if (typeof obj[key] === "object") {
+                    cnt += deepCount(obj[key]);
                 } else {
-                    console.warn(`Missing translation ${node.dataset.localeText}`);
+                    cnt += 1;
                 }
             }
-
-            nodes = document.querySelectorAll("[data-locale-html]");
-            for (let node of nodes) {
-                let translation = Localization.getString(node.dataset.localeHtml);
-                if (translation) {
-                    HTML.inner(node, translation);
-                } else {
-                    console.warn(`Missing translation ${node.dataset.localeHtml}`);
-                }
-            }
-
-            nodes = document.querySelectorAll("#warning_language option");
-            for (let node of nodes) {
-                let lang = node.textContent;
-                let lang_trl = Localization.str.options.lang[node.value.toLowerCase()];
-                if (lang !== lang_trl) {
-                    node.textContent = `${lang} (${lang_trl})`;
-                }
-            }
-
-            let total = deepCount(Localization.str);
-            for (let lang of Object.keys(Localization.str.options.lang)) {
-                let node = document.querySelector(`.language.${lang}`);
-                if (node) {
-                    node.textContent = `${Localization.str.options.lang[lang]}:`;
-                }
-
-                if (lang === "english") continue;
-                let code = Language.languages[lang];
-                let locale = await Localization.loadLocalization(code);
-                let count = deepCount(locale);
-                let percentage = 100 * count / total;
-
-                HTML.inner(
-                    document.querySelector(`.lang-perc.${lang}`),
-                    `<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>`
-                );
-            }
-
-            function deepCount(obj) {
-                let cnt = 0;
-                for (let key in obj) {
-                    if (!Localization.str[key]) { // don't count "made up" translations
-                        continue;
-                    }
-                    if (typeof obj[key] === "object") {
-                        cnt += deepCount(obj[key]);
-                    } else {
-                        cnt += 1;
-                    }
-                }
-                return cnt;
-            }
-        });
+            return cnt;
+        }
     }
 
     function loadProfileLinkImages() {
