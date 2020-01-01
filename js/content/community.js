@@ -2948,7 +2948,7 @@ let FriendsPageClass = (function(){
 
         let commentArea = `<div class="row commentthread_entry" style="background-color: initial; padding-right: 24px;">
                 <div class="commentthread_entry_quotebox">
-                    <textarea rows="3" class="commentthread_textarea" id="comment_textarea" placeholder="${Localization.str.add_comment}" style="overflow: hidden; height: 20px;"></textarea>
+                    <textarea class="commentthread_textarea" id="comment_textarea" placeholder="${Localization.str.add_comment}"></textarea>
                 </div>
                 <div class="commentthread_entry_submitlink">
                     <a class="btn_grey_black btn_small_thin" id="FormattingHelpPopup">
@@ -2970,17 +2970,37 @@ let FriendsPageClass = (function(){
 
         HTML.beforeEnd(manage, commentArea);
         ExtensionLayer.runInPageContext(`function() {
-            let delay = 7000;
+            const delay = 7000; // This ensures Valve's rate limit doesn't get hit
             new CEmoticonPopup($J('#emoticonbtn'), $J('#comment_textarea'));
             $J("#comment_submit").click(() => {
                 const total = $J(".selected").length;
                 const msg = $J("#comment_textarea").val();
-                if (total === 0 || msg.length === 0) {
+                if (total === 0 || msg.length === 0 || total > 1000) {
                     ShowAlertDialog("${Localization.str.alert}", "${Localization.str.friends_commenter_warning}");
                     return;
                 }
+
+                const sec = 1000; // 1 second in ms
+                let duration = (total - 1) * delay;
+                let showTime = () => {
+                    let date = new Date(null);
+                    date.setSeconds(duration / sec);
+                    let timestr = date.toISOString().substr(11, 8);
+                    $J("#timer").html(\` (${Localization.str.timer})\`.replace("__time__", timestr));
+                };
+                let timer = setInterval(() => {
+                    duration -= sec;
+                    if (duration <= 0) {
+                        duration = 0;
+                        clearInterval(timer);
+                    }
+                    showTime();
+                }, sec)
             
-                $J("#log_head, #log_body").html("");
+                $J("#log_head").html(\`<br><b>${Localization.str.processed} </b><i id="timer"></i>\`.replace("__i__", 0).replace("__total__", total));
+                $J("#log_body").html("");
+                showTime();
+
                 $J(".selected").each((i, elem) => {
                     let profileID = $J(elem).data("steamid");
                     let profileName = $J(elem).find(".friend_block_content").get(0).firstChild.textContent;
@@ -2994,7 +3014,7 @@ let FriendsPageClass = (function(){
                             $J("#log_body").get(0).innerHTML += "<br>";
 
                             if (!response.success) {
-                                $J("#log_body").get(0).innerHTML += response.error || "Unknown error";
+                                $J("#log_body").get(0).innerHTML += \`<a href="//steamcommunity.com/profiles/\${profileID}/" target="_blank">\${response.error || "Unknown error"}</a>\`;
                             } else {
                                 $J("#log_body").get(0).innerHTML += "${Localization.str.posted_at_success}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/allcomments/" target="_blank">\${profileName}</a>\`);
                             }
@@ -3006,13 +3026,16 @@ let FriendsPageClass = (function(){
                             $J("#log_body").get(0).innerHTML += "<br>${Localization.str.posted_at_fail}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/" target="_blank">\${profileName}</a>\`)
                         })
                         .always(() => {
-                            $J("#log_head").html("<br><b>${Localization.str.processed}<b>".replace("__i__", i + 1).replace("__total__", total))
+                            $J("#log_head").html(\`<br><b>${Localization.str.processed} </b><i id="timer"></i>\`.replace("__i__", i + 1).replace("__total__", total))
+                            showTime();
                         });
                     }, delay * i);
                 });
             });
         }`);
 
+        let textArea = document.querySelector("#comment_textarea");
+        textArea.oninput = () => { textArea.style.height = ""; textArea.style.height = textArea.scrollHeight + "px" };
         document.querySelector("#FormattingHelpPopup").href = "javascript:CCommentThread.FormattingHelpPopup('Profile')";
     };
 
