@@ -265,7 +265,7 @@ class UpdateHandler {
         }
 
         if (oldVersion.isSameOrBefore("1.3.1")) {
-            browser.runtime.sendMessage({ "action": "cache.clear" }) // todo Implement general background communication class
+            BackgroundBase.action("cache.clear");
 
             SyncedStorage.set("horizontalscrolling", SyncedStorage.get("horizontalmediascrolling"));
             SyncedStorage.remove("horizontalmediascrolling");
