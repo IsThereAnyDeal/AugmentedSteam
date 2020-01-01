@@ -559,7 +559,7 @@
         },
         "add_custom_link": "Add custom link",
         "auto_detect": "Auto-detect",
-        "add_to_waitlist": "Show separate \"Add to Waitlist\" button"
+        "add_to_waitlist": "Show \"Add to Waitlist\" dropdown on app pages"
     },
     "ready": {
         "errormsg": "Error loading Augmented Steam data",
