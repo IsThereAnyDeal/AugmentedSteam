@@ -673,7 +673,7 @@ SyncedStorage.defaults = {
     'profile_showcase_own_twitch': false,
     'profile_showcase_twitch_profileonly': false,
 
-    'itad_import_library': true,
+    'itad_import_library': false,
     'itad_import_wishlist': false,
     'add_to_waitlist': false,
 
