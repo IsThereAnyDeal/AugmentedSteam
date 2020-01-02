@@ -186,11 +186,8 @@ class ITAD_Api extends Api {
                 url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${rnd}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${browser.identity.getRedirectURL()}`,
                 interactive: true
             });
-        if (!url) { throw new Error("Couldn't retrieve access token for ITAD authorization"); }
 
         let hashFragment = new URL(url).hash;
-        if (!hashFragment) { throw new Error("URL " + url + " doesn't contain a fragment"); }
-
         let params = new URLSearchParams(hashFragment.substr(1));
 
         if (parseInt(params.get("state")) !== rnd) { throw new Error("Failed to verify state parameter from URL fragment"); }
@@ -198,7 +195,7 @@ class ITAD_Api extends Api {
         let accessToken = params.get("access_token");
         let expiresIn = params.get("expires_in");
 
-        if (!accessToken || !expiresIn) { throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'"); }
+        if (!accessToken || !expiresIn) { throw new Error(`Couldn't retrieve information from URL fragment "${hashFragment}"`); }
             
         LocalStorage.set("access_token", { token: accessToken, expiry: Timestamp.now() + parseInt(expiresIn, 10) });
     }
