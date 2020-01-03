@@ -1,0 +1,137 @@
+{
+  "name": "Augmented Steam",
+  "short_name": "AS",
+  "version": "1.4.0",
+  "description": "Augments your Steam Experience",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgSsjOO0ecqqAz6LCjjIoiRUV3VyW4p7mmTg9bC9uUkj28OgVr5+NRJpyI8gJx7Nd43ZEQ8dfwOl8GLnc3+m90jPSUASlliWxG2LQt81IZhtFurCLUELGIfUSr5vPdthRbwgnPrmRc5nylstBORBwYtT0Dos9pBcikHn0QKo87ggWEAQEBGkLXQ8An01LnQopLX4VbZHTfvoTIjPZOiHUVhKhn4aKM70e/u61mGMSp9WDBYrV0/OFKsVC9jWd9s0DX/uOm3KpFhOj4Bx+ehzEklXNuTTQshIC7NSgh+tAJwSa1GpO9jcCWCnFRqjfxwOrdylqIvCy+87fpU7nJ6sHRQIDAQAB",
+  "icons": {
+    "128": "img/es_128.png",
+    "96": "img/es_96.png",
+    "48": "img/es_48.png",
+    "32": "img/es_32.png"
+  },
+  "manifest_version": 2,
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "permissions": [
+    "storage",
+    "identity",
+    "contextMenus",
+    "*://*.steampowered.com/*",
+    "*://steamcommunity.com/*",
+    "*://*.isthereanydeal.com/"
+  ],
+  "web_accessible_resources": [
+    "img/*.png",
+    "img/*.gif",
+    "img/*.jpg",
+    "img/*.svg",
+    "css/*.css",
+    "options.html",
+    "changelog_new.html",
+    "img/*/*.png",
+    "img/profile_styles/*/header.jpg",
+    "img/profile_styles/*/showcase.png",
+    "img/profile_styles/*/style.css",
+    "img/profile_styles/*/preview.png",
+    "localization/*/strings.json",
+    "js/steam/holidayprofile.js"
+  ],
+  "homepage_url": "https://es.isthereanydeal.com/",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.steampowered.com/*"
+      ],
+      "exclude_matches": [
+        "*://store.steampowered.com/dynamicstore/*",
+        "*://store.steampowered.com/checkout/*",
+        "*://store.steampowered.com/widget/*",
+        "*://store.steampowered.com/login/*",
+        "*://store.steampowered.com/join/*",
+        "*://store.steampowered.com/api/*",
+        "*://api.steampowered.com/*",
+        "*://support.steampowered.com/*",
+        "*://help.steampowered.com/*",
+        "*://translation.steampowered.com/*",
+        "*://partner.steampowered.com/*"        
+      ],
+      "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
+        "js/lib/DOMPurify/purify.js",
+        "js/config.js",
+        "js/core.js",
+        "js/language.js",
+        "js/content/common.js",
+        "js/content/store.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css"
+      ]
+    },
+    {
+      "matches": [
+        "*://steamcommunity.com/*"
+      ],
+      "exclude_matches": [
+        "*://steamcommunity.com/login/*",
+        "*://steamcommunity.com/openid/*",
+        "*://steamcommunity.com/chat/*",
+        "*://steamcommunity.com/tradeoffer/*"
+      ],
+      "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
+        "js/lib/DOMPurify/purify.js",
+        "js/config.js",
+        "js/core.js",
+        "js/language.js",
+        "js/content/common.js",
+        "js/content/community.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css"
+      ]
+    },
+    {
+      "matches": [
+        "*://steamcommunity.com/tradeoffer/*"
+      ],
+      "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
+        "js/lib/DOMPurify/purify.js",
+        "js/config.js",
+        "js/core.js",
+        "js/content/common.js",
+        "js/language.js",
+        "js/content/tradeoffer.js"
+      ],
+      "css": [
+        "css/community/tradeoffer.css"
+      ]
+    },
+    {
+      "matches": [
+        "*://store.steampowered.com/"
+      ],
+      "css": [
+        "css/store/store_front.css"
+      ]
+    }
+  ],
+  "background": {
+    "scripts": [
+      "js/lib/webextension-polyfill/browser-polyfill.js",
+      "js/language.js",
+      "js/lib/DOMPurify/purify.js",
+      "js/lib/idb/with-async-ittr.js",
+      "js/config.js",
+      "js/core.js",
+      "js/background/background.js"
+    ],
+    "persistent": false
+  }
+}
