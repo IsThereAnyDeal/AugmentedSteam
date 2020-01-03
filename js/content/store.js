@@ -1967,14 +1967,14 @@ class AppPageClass extends StorePageClass {
     }
 
     addStats() {
-        let that = this;
-        if (this.isDlc()) { return Promise.resolve(); }
+        if (this.isDlc() || !document.querySelector(".sys_req")) {
+            return Promise.resolve();
+        }
+
         return this.data.then(result => {
-
-            that.addSteamChart(result);
-            that.addSteamSpy(result);
-            that.addSurveyData(result);
-
+            this.addSteamChart(result);
+            this.addSteamSpy(result);
+            this.addSurveyData(result);
         });
     }
 
