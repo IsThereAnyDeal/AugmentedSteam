@@ -3300,6 +3300,39 @@ let SearchPageClass = (function(){
     return SearchPageClass;
 })();
 
+let StatsPageClass = (function(){
+
+    function StatsPageClass() {
+        this.highlightTopGames();
+    }
+
+    StatsPageClass.prototype.highlightTopGames = async function() {
+        if (!User.isSignedIn) { return; }
+
+        for (let node of document.querySelectorAll(".gameLink")) {
+            let appid = GameId.getAppid(node.href);
+
+            await DynamicStore;
+        
+            let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
+                ITAD.getAppStatus(`app/${appid}`),
+                DynamicStore.getAppStatus(`app/${appid}`),
+                Inventory.getAppStatus(appid),
+            ]);
+
+            if (collected) Highlights.highlightCollection(node);
+            if (waitlisted) Highlights.highlightWaitlist(node);
+            if (owned) Highlights.highlightOwned(node);
+            if (guestPass) Highlights.highlightInvGuestpass(node);
+            if (coupon) Highlights.highlightCoupon(node);
+            if (gift) Highlights.highlightInvGift(node);
+            if (wishlisted) Highlights.highlightWishlist(node);
+            if (ignored) Highlights.highlightNotInterested(node);
+        }
+    }
+
+    return StatsPageClass;
+})();
 
 let CuratorPageClass = (function(){
 
@@ -4122,6 +4155,10 @@ let TabAreaObserver = (function(){
 
         case /^\/search\/.*/.test(path):
             (new SearchPageClass());
+            break;
+
+        case /^\/(stats)\//.test(path):
+            (new StatsPageClass());
             break;
 
         case /^\/(tags|genre)\//.test(path):
