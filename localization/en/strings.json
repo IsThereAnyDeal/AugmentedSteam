@@ -630,7 +630,11 @@
         "sync_now": "Sync now",
         "option": "Show menu option to sync data to IsThereAnyDeal.com",
         "send_to_itad": "Send owned games to IsThereAnyDeal",
-        "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+        "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com",
+        "info": {
+            "itad-steam": "Connecting Augmented Steam with IsThereAnyDeal allows you to apply Augmented Steam's highlighting and tagging to games in your Waitlist and Collection even if you don't have them on Steam.",
+            "steam-itad": "Furthermore, it allows you to import games from your Steam Library and/or Wishlist to IsThereAnyDeal, for improved accuracy. Currently this feature can only add titles, not remove them, so it's not the replacement for IsThereAnyDeal's integrated sync, but an addition to it."
+        }
     },
     "tradeoffer": {
         "num_item": "__num__ item",
@@ -688,6 +692,7 @@
         "finished": "Finished! __success__ successful, __fail__ failed. Click OK to refresh the page",
         "failed": "__n__ failed"
     },
+
     "this_version": "This version",
     "original_authors": "Original authors",
     "acknowledgements": "Acknowledgments",
