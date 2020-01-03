@@ -1,5 +1,5 @@
 const Info = {
-    'version': "1.4.0",
+    'version': browser.runtime.getManifest().version,
     'db_version': 1,
 };
 
