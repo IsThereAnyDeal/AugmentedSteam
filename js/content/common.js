@@ -2560,22 +2560,12 @@ class MediaPage {
     _horizontalScrolling() {
         if (!SyncedStorage.get("horizontalscrolling")) { return; }
 
-        let strip = document.querySelector("#highlight_strip");
-        if (strip) {
+        for (let node of document.querySelectorAll(".slider_ctn")) {
             new HorizontalScroller(
-                strip,
-                document.querySelector("#highlight_slider_left"),
-                document.querySelector("#highlight_slider_right")
+                node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
+                node.querySelector(".slider_left"),
+                node.querySelector(".slider_right")
             );
-        }
-
-        let nodes = document.querySelectorAll(".store_horizontal_autoslider_ctn");
-        for (let node of nodes) {
-            new HorizontalScroller(
-                node,
-                node.parentNode.querySelector(".slider_left"),
-                node.parentNode.querySelector(".slider_right")
-            )
         }
     }
 }
@@ -2588,7 +2578,7 @@ class HorizontalScroller {
         this._controlRight = controlRightNode;
 
         this._lastScroll = 0;
-        parentNode.addEventListener("wheel", (e) => { this._scrollHandler(e); });
+        parentNode.addEventListener("wheel", e => this._scrollHandler(e));
     }
 
     _scrollHandler(e) {
