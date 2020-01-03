@@ -696,6 +696,8 @@ let Options = (function(){
          'highlight_inv_gift',
          'highlight_inv_guestpass',
          'highlight_notinterested',
+         'highlight_waitlist',
+         'highlight_collection',
          'tag_owned',
          'tag_wishlist',
          'tag_coupon',
