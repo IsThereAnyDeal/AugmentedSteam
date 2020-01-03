@@ -1248,12 +1248,11 @@ class AppPageClass extends StorePageClass {
         let node = document.querySelector("#game_area_metascore");
         if (!node) { return; }
 
-        this.data.then(response => {
-            if (!response || !response.data || !response.data.userscore) { return; }
+        this.data.then(result => {
+            if (!result || !result.data || !result.data.userscore) { return; }
 
-            let metauserscore = response.data.userscore * 10;
+            let metauserscore = result.data.userscore * 10;
             if (!isNaN(metauserscore)) {
-                HTML.afterEnd(node, "<div id='game_area_userscore'></div>");
 
                 let rating;
                 if (metauserscore >= 75) {
@@ -1264,9 +1263,14 @@ class AppPageClass extends StorePageClass {
                     rating = "low";
                 }
 
-                HTML.beforeEnd("#game_area_userscore",
-                    `<div class='score ${rating}'>${metauserscore}</div>
-                    <div class='logo'></div><div class='wordmark'><div class='metacritic'>${Localization.str.user_score}</div></div>`)
+                HTML.afterEnd(node,
+                    `<div id="game_area_userscore">
+                        <div class="score ${rating}">${metauserscore}</div>
+                        <div class="logo"></div>
+                        <div class="wordmark">
+                            <div class="metacritic">${Localization.str.user_score}</div>
+                        </div>
+                    </div>`);
             }
         });
     }
@@ -1275,10 +1279,11 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("showoc")) { return; }
 
         this.data.then(result => {
-            if (!result || !result.oc) { return; }
+            if (!result || !result.oc || !result.oc.url) { return; }
             let data = result.oc;
 
-            if (!data.url) { return; }
+            let ocImg = ExtensionResources.getURL("img/opencritic.png");
+            let award = data.award || "NA";
 
             let node = document.querySelector("#game_area_metascore");
             if (node) {
@@ -1286,29 +1291,34 @@ class AppPageClass extends StorePageClass {
             } else {
                 node = document.querySelector(".game_details");
             }
-            HTML.afterEnd(node, "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic'></div><div style='clear: both'></div></div>");
 
-            let opencriticImg = ExtensionResources.getURL("img/opencritic.png");
-            let award = data.award || "NA";
-
-            HTML.beforeEnd("#game_area_opencritic",
-                `<div class='score ${award.toLowerCase()}'>${data.score ? data.score : "--"}</div>
-                 <div class='logo'><img src='${opencriticImg}'></div>
-                 <div class='wordmark'>
-                     <div class='metacritic'>OpenCritic</div>
-                     <div id='game_area_metalink'>${award} - <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
-                         <img src='https://steamstore-a.akamaihd.net/public/images/ico/iconExternalLink.gif' border='0' align='bottom'>
-                     </div>
-                 </div>`);
+            HTML.afterEnd(node,
+                `<div>
+                    <div class="block responsive_apppage_reviewblock">
+                        <div id="game_area_opencritic">
+                            <div class="score ${award.toLowerCase()}">${data.score ? data.score : "--"}</div>
+                            <div class="logo"><img src="${ocImg}"></div>
+                            <div class="wordmark">
+                                <div class="metacritic">OpenCritic</div>
+                                <div id="game_area_metalink">${award} - <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=average" target="_blank">${Localization.str.read_reviews}</a>
+                                    <img src="https://steamstore-a.akamaihd.net/public/images/ico/iconExternalLink.gif" border="0" align="bottom">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>`);
 
             // Add data to the review section in the left column, or create one if that block doesn't exist
             if (data.reviews.length > 0) {
                 let reviewsNode = document.getElementById("game_area_reviews");
-                let html = `<div id='es_opencritic_reviews'><div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div></div>`;
+                let html =
+                    `<div id="es_opencritic_reviews">
+                        <div class="chart-footer">${Localization.str.read_more_reviews} <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews" target="_blank">OpenCritic.com</a></div>
+                    </div>`;
 
                 if (reviewsNode) {
                     let youTubeReviews = document.getElementById("es_youtube_reviews");
-
                     if (youTubeReviews) {
                         HTML.beforeBegin(youTubeReviews, html);
                     } else {
@@ -1316,15 +1326,16 @@ class AppPageClass extends StorePageClass {
                     }
                 } else {
                     HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
-                        `<div id='game_area_reviews' class='game_area_description'><h2>${Localization.str.reviews}</h2>${html}</div>`);
-
+                        `<div id="game_area_reviews" class="game_area_description">
+                            <h2>${Localization.str.reviews}</h2>
+                            ${html}
+                        </div>`);
                 }
 
                 let review_text = "";
-                for (let i=0, len=data.reviews.length; i<len; i++) {
-                    let review = data.reviews[i];
+                for (let review of data.reviews) {
                     let date = new Date(review.date);
-                    review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href='${review.rUrl}' target='_blank' data-tooltip-text='${review.author}, ${date.toLocaleDateString()}'>${review.name}</a></p>`;
+                    review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href="${review.rUrl}" target="_blank" data-tooltip-text="${review.author}, ${date.toLocaleDateString()}">${review.name}</a></p>`;
                 }
 
                 HTML.afterBegin("#es_opencritic_reviews", review_text);
@@ -1351,7 +1362,6 @@ class AppPageClass extends StorePageClass {
     }
 
     addYouTubeGameplay() {
-
         if (!SyncedStorage.get("showyoutubegameplay")) { return; }
 
         HTML.afterBegin(".leftcol",
@@ -1433,7 +1443,7 @@ class AppPageClass extends StorePageClass {
     }
 
     displayViewInLibrary() {
-        if (!User.isSignedIn || !SyncedStorage.get("showviewinlibrary")) { return; }
+        if (!SyncedStorage.get("showviewinlibrary")) { return; }
 
         let node = document.querySelector(".already_owned_actions");
         if (!node) { return; }
@@ -1449,23 +1459,23 @@ class AppPageClass extends StorePageClass {
     displayPurchaseDate() {
         if (!SyncedStorage.get("purchase_dates")) { return; }
 
-        let node = document.querySelector(".game_area_already_owned");
+        let node = document.querySelector(".game_area_already_owned .already_in_library");
         if (!node) { return; }
 
         let appname = this.appName.replace(":", "").trim();
 
         User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname).then(date => {
             if (!date) { return; }
-            HTML.beforeEnd(".game_area_already_owned .already_in_library",
+            HTML.beforeEnd(node,
                 ` ${Localization.str.purchase_date.replace("__date__", date)}`);
         });
     }
 
     addOwnedElsewhere() {
-        if (document.querySelector(".game_area_already_owned")) return;
+        if (this.isOwned()) { return; }
 
         Background.action("itad.getfromcollection", `app/${this.appid}`).then(result => {
-            if (!result) return;
+            if (!result) { return; }
             
             HTML.afterEnd(".queue_overflow_ctn",
                 `<div class="game_area_already_owned page_content" style="background-image: linear-gradient(to right, #856d0e 0%, #d1a906 100%);">
@@ -1647,14 +1657,13 @@ class AppPageClass extends StorePageClass {
     }
 
     replaceDevPubLinks() {
-        if (!this.isAppPage()) { return; }
 
         document.querySelectorAll("#game_highlights .dev_row a,.details_block .dev_row:not(:nth-of-type(3)) a").forEach((linkNode, i) => {
             let homepageLink = new URL(linkNode.href);
-            if (homepageLink.pathname === "/search/") return;
+            if (homepageLink.pathname === "/search/") { return; }
 
             let name = i % 2 ? "publisher" : "developer"; // These elements appear in pairs, where the first represents the developer and the second the publisher
-            let value = linkNode.innerText;
+            let value = linkNode.textContent;
             linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
             HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
         });
@@ -1667,25 +1676,25 @@ class AppPageClass extends StorePageClass {
     }
 
     async addSupport() {
-        if (!this.isAppPage() || this.isDlc() || !SyncedStorage.get("showsupportinfo")) { return; }
+        if (this.isDlc() || !SyncedStorage.get("showsupportinfo")) { return; }
 
         let cache = LocalStorage.get("support_info", null);
         if (!cache || !cache.expiry || cache.expiry < Date.now()) {
             cache = {
                 "data": {},
-                "expiry": Date.now() + (31*86400 * 1000) // 31 days
+                "expiry": Date.now() + (31 * 86400 * 1000) // 31 days
             }
         }
 
         let appid = this.appid;
         let supportInfo = cache[appid];
         if (!supportInfo) {
-            let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
+            let response = await Background.action("appdetails", { "appids": appid, "filters": "support_info" });
             if (!response || !response[appid] || !response[appid].success) { return; }
 
             supportInfo = response[appid].data.support_info;
 
-            cache['data'][appid] = supportInfo;
+            cache["data"][appid] = supportInfo;
             LocalStorage.set("support_info", cache);
         }
 
@@ -1714,8 +1723,7 @@ class AppPageClass extends StorePageClass {
             }
         }
 
-        let block = document.querySelector(".glance_ctn .user_reviews");
-        HTML.beforeEnd(block,
+        HTML.beforeEnd(".glance_ctn .user_reviews",
             `<div class="release_date">
                 <div class="subtitle column">${Localization.str.support}:</div>
                 <div class="summary column" id="es_support_list">${support}</div>
@@ -1723,7 +1731,6 @@ class AppPageClass extends StorePageClass {
     }
 
     moveUsefulLinks() {
-        if (!this.isAppPage()) { return; }
 
         let usefulLinks = document.querySelector("#ReportAppBtn").parentNode.parentNode;
         usefulLinks.classList.add("es_useful_link");
@@ -1801,9 +1808,12 @@ class AppPageClass extends StorePageClass {
         this.data.then(result => {
             if (!result.exfgls || !result.exfgls.excluded) { return; }
 
-            let str = Localization.str.family_sharing_notice;
             HTML.beforeBegin("#game_area_purchase",
-                `<div id="purchase_note"><div class="notice_box_top"></div><div class="notice_box_content">${str}</div><div class="notice_box_bottom"></div></div>`);
+                `<div id="purchase_note">
+                    <div class="notice_box_top"></div>
+                        <div class="notice_box_content">${Localization.str.family_sharing_notice}</div>
+                    <div class="notice_box_bottom"></div>
+                </div>`);
         });
     }
 
@@ -1818,44 +1828,44 @@ class AppPageClass extends StorePageClass {
     addPackageInfoButton() {
         if (!SyncedStorage.get("show_package_info")) { return; }
 
-        let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
-        for (let node of nodes) {
-            if (node.querySelector(".btn_packageinfo")) return;
+        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
+            if (node.querySelector(".btn_packageinfo")) { return; }
 
             let subid = node.querySelector("input[name=subid]").value;
-            if (!subid) return;
+            if (!subid) { return; }
 
             HTML.afterBegin(node.querySelector(".game_purchase_action"),
-                `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
-                 <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
-                 ${Localization.str.package_info}</span></a></div></div>`);
+                `<div class="game_purchase_action_bg">
+                    <div class="btn_addtocart btn_packageinfo">
+                        <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/">
+                            <span>${Localization.str.package_info}</span>
+                        </a>
+                    </div>
+                </div>`);
         }
     }
 
     addSteamChart(result) {
-        if (this.isDlc()) { return; }
         if (!SyncedStorage.get("show_steamchart_info")) { return; }
-	    if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
+        if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
 
-        let appid = this.appid;
         let chart = result.charts.chart;
-        let html = '<div id="steam-charts" class="game_area_description"><h2>' + Localization.str.charts.current + '</h2>';
-            html += '<div class="chart-content">';
-                html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["current"]) + '</span><br>' + Localization.str.charts.playing_now + '</div>';
-                html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["peaktoday"]) + '</span><br>' + Localization.str.charts.peaktoday + '</div>';
-                html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["peakall"]) + '</span><br>' + Localization.str.charts.peakall + '</div>';
-            html += '</div>';
-            html += '<span class="chart-footer">';
-                html += Localization.str.powered_by.replace('__link__', '<a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a>');
-            html += '</span>';
-            html += '</div>';
 
-        HTML.beforeBegin(document.querySelector(".sys_req").parentNode, html);
+        HTML.beforeBegin(document.querySelector(".sys_req").parentNode,
+            `<div id="steam-charts" class="game_area_description">
+                <h2>${Localization.str.charts.current}</h2>
+                <div class="chart-content">
+                    <div class="chart-stat"><span class="num">${HTML.escape(chart["current"])}</span><br>${Localization.str.charts.playing_now}</div>
+                    <div class="chart-stat"><span class="num">${HTML.escape(chart["peaktoday"])}</span><br>${Localization.str.charts.peaktoday}</div>
+                    <div class="chart-stat"><span class="num">${HTML.escape(chart["peakall"])}</span><br>${Localization.str.charts.peakall}</div>
+                </div>
+                <span class="chart-footer">${Localization.str.powered_by.replace("__link__", `<a href="https://steamcharts.com/app/${this.appid}" target="_blank">SteamCharts.com</a>`)}</span>
+            </div>`);
     }
 
     addSteamSpy(result) {
-        if (this.isDlc()) { return; }
-        if (!SyncedStorage.get("show_steamspy_info") || !result.steamspy || !result.steamspy.owners) { return; } // customization setting
+        if (!SyncedStorage.get("show_steamspy_info")) { return; }
+        if (!result.steamspy || !result.steamspy.owners) { return; }
 
         function getTimeString(value) {
 
@@ -1868,107 +1878,87 @@ class AppPageClass extends StorePageClass {
             let minutes = value;
 
             let result = "";
-            if (days > 0) { result += days+"d ";}
-            result += hours+"h "+minutes+"m";
+            if (days > 0) { result += `${days}d `; }
+            result += `${hours}h ${minutes}m`;
 
             return result;
         }
 
-        let appid = this.appid;
-
-        let owners = result.steamspy.owners.split("..")
+        let owners = result.steamspy.owners.split("..");
         let owners_from = HTML.escape(owners[0].trim());
         let owners_to = HTML.escape(owners[1].trim());
         let averageTotal = getTimeString(result.steamspy.average_forever);
         let average2weeks = getTimeString(result.steamspy.average_2weeks);
 
-        let html = '<div id="steam-spy" class="game_area_description"><h2>' + Localization.str.spy.player_data + '</h2>';
-            html += '<div class="chart-content">';
-                html += '<div class="chart-stat"><span class="num">' + owners_from + "<br>-<br>" + owners_to + '</span><br>' + Localization.str.spy.owners + '</div>';
-                html += '<div class="chart-stat"><span class="num">' + averageTotal + '</span><br>' + Localization.str.spy.average_playtime + '</div>';
-                html += '<div class="chart-stat"><span class="num">' + average2weeks + '</span><br>' + Localization.str.spy.average_playtime_2weeks + '</div>';
-            html += "</div>";
-            html += "<span class='chart-footer' style='padding-right: 13px;'>";
-                html += Localization.str.powered_by.replace("__link__", "<a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a>");
-            html += "</span>";
-            html += "</div>";
-
-        HTML.beforeBegin(document.querySelector(".sys_req").parentElement, html);
+        HTML.beforeBegin(document.querySelector(".sys_req").parentNode,
+            `<div id="steam-spy" class="game_area_description">
+                <h2>${Localization.str.spy.player_data}</h2>
+                <div class="chart-content">
+                    <div class="chart-stat"><span class="num">${owners_from}<br>-<br>${owners_to}</span><br>${Localization.str.spy.owners}</div>
+                    <div class="chart-stat"><span class="num">${averageTotal}</span><br>${Localization.str.spy.average_playtime}</div>
+                    <div class="chart-stat"><span class="num">${average2weeks}</span><br>${Localization.str.spy.average_playtime_2weeks}</div>
+                </div>
+                <span class="chart-footer">${Localization.str.powered_by.replace("__link__", `<a href="https://steamspy.com/app/${this.appid}" target="_blank">steamspy.com</a>`)}</span>
+            </div>`);
     }
 
     addSurveyData(result) {
-        if (this.isDlc()) { return; }
         if (this.isVideo()) { return; }
         if (!result.survey) { return; }
 
-        let survey = result.survey;
-        let appid = this.appid;
+        function getBarHtml(name, data) {
+            if (data > 90 || data < 10) {
+                return `<div class="row"><div class="left-bar ${name.toLowerCase()}" style="width: ${parseInt(data)}%;"><span>${name}&nbsp;${data}%</span></div><div class="right-bar" style="width: ${parseInt(100 - data)}%;"></div></div>`;
+            } else {
+                return `<div class="row"><div class="left-bar ${name.toLowerCase()}" style="width: ${parseInt(data)}%;"><span>${name}</span></div><div class="right-bar" style="width: ${parseInt(100 - data)}%;"><span>${data}%</span></div></div>`;
+            }
+        }
 
-        let html = "<div id='performance_survey' class='game_area_description'><h2>" + Localization.str.survey.performance_survey + "</h2>";
+        let survey = result.survey;
+        let html = `<div id="performance_survey" class="game_area_description"><h2>${Localization.str.survey.performance_survey}</h2>`;
 
         if (survey.success) {
-            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + "</p>";
-            html += "<p><b>" + Localization.str.survey.framerate + "</b>: " + Math.round(survey["frp"]) + "% " + Localization.str.survey.framerate_response + " "
+            html += `<p>${Localization.str.survey.users.replace("__users__", survey["responses"])}</p>`;
+
+            html += `<p><b>${Localization.str.survey.framerate}</b>: ${Math.round(survey["frp"])}% ${Localization.str.survey.framerate_response}`;
             switch (survey["fr"]) {
-                case "30": html += "<span style='color: #8f0e10;'>" + Localization.str.survey.framerate_30 + "</span>"; break;
-                case "fi": html += "<span style='color: #e1c48a;'>" + Localization.str.survey.framerate_fi + "</span>"; break;
-                case "va": html += "<span style='color: #8BC53F;'>" + Localization.str.survey.framerate_va + "</span>"; break;
+                case "30": html += ` <span style="color: #8f0e10;">${Localization.str.survey.framerate_30}</span>`; break;
+                case "fi": html += ` <span style="color: #e1c48a;">${Localization.str.survey.framerate_fi}</span>`; break;
+                case "va": html += ` <span style="color: #8BC53F;">${Localization.str.survey.framerate_va}</span>`; break;
             }
 
-            html += "<br><b>" + Localization.str.survey.resolution + "</b>: " + Localization.str.survey.resolution_support + " "
+            html += `<br><b>${Localization.str.survey.resolution}</b>: ${Localization.str.survey.resolution_support}`;
             switch (survey["mr"]) {
-                case "less": html += "<span style='color: #8f0e10;'>" + Localization.str.survey.resolution_less.replace("__pixels__", "1920x1080") + "</span>"; break;
-                case "hd": html += "<span style='color: #8BC53F;'>" + Localization.str.survey.resolution_up.replace("__pixels__", "1920x1080 (HD)") + "</span>"; break;
-                case "wqhd": html += "<span style='color: #8BC53F;'>" + Localization.str.survey.resolution_up.replace("__pixels__", "2560x1440 (WQHD)") + "</span>"; break;
-                case "4k": html += "<span style='color: #8BC53F;'>" + Localization.str.survey.resolution_up.replace("__pixels__", "3840x2160 (4K)") + "</span>"; break;
+                case "less": html += ` <span style="color: #8f0e10;">${Localization.str.survey.resolution_less.replace("__pixels__", "1920x1080")}</span>`; break;
+                case "hd":   html += ` <span style="color: #8BC53F;">${Localization.str.survey.resolution_up.replace("__pixels__", "1920x1080 (HD)")}</span>`; break;
+                case "wqhd": html += ` <span style="color: #8BC53F;">${Localization.str.survey.resolution_up.replace("__pixels__", "2560x1440 (WQHD)")}</span>`; break;
+                case "4k":   html += ` <span style="color: #8BC53F;">${Localization.str.survey.resolution_up.replace("__pixels__", "3840x2160 (4K)")}</span>`; break;
             }
 
-            html += "<br><b>" + Localization.str.survey.graphics_settings + "</b>: ";
+            html += `<br><b>${Localization.str.survey.graphics_settings}</b>:`;
             if (survey["gs"]) {
-                html += "<span style='color: #8BC53F;'>" + Localization.str.survey.gs_y + "</span></p>";
+                html += ` <span style="color: #8BC53F;">${Localization.str.survey.gs_y}</span></p>`;
             } else {
-                html += "<span style='color: #8f0e10;'>" + Localization.str.survey.gs_n + "</span></p>";
+                html += ` <span style="color: #8f0e10;">${Localization.str.survey.gs_n}</span></p>`;
             }
 
             if (survey["nvidia"] !== undefined || survey["amd"] !== undefined || survey["intel"] !== undefined || survey["other"] !== undefined) {
-                html += "<p><b>" + Localization.str.survey.satisfaction + "</b>:";
-                html += "<div class='performance-graph'>";
-                if (survey["nvidia"] !== undefined) {
-                    if (survey["nvidia"] > 90 || survey["nvidia"] < 10) {
-                        html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(survey["nvidia"]).toString() + "%;'><span>Nvidia&nbsp;" + survey["nvidia"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-survey["nvidia"]) + "%;'></div></div>";
-                    } else {
-                        html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(survey["nvidia"]).toString() + "%;'><span>Nvidia</span></div><div class='right-bar' style='width: " + parseInt(100-survey["nvidia"]) + "%;'><span>" + survey["nvidia"] + "%</span></div></div>";
-                    }
-                }
-                if (survey["amd"] !== undefined) {
-                    if (survey["amd"] > 90 || survey["amd"] < 10) {
-                        html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(survey["amd"]).toString() + "%;'><span>AMD&nbsp;" + survey["amd"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-survey["amd"]) + "%'></div></div>";
-                    } else {
-                        html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(survey["amd"]).toString() + "%;'><span>AMD</span></div><div class='right-bar' style='width: " + parseInt(100-survey["amd"]) + "%'><span>" + survey["amd"] + "%</span></div></div>";
-                    }
-                }
-                if (survey["intel"] !== undefined) {
-                    if (survey["intel"] > 90 || survey["intel"] < 10) {
-                        html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(survey["intel"]).toString() + "%;'><span>Intel&nbsp;" + survey["intel"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-survey["intel"]) + "%'></div></div>";
-                    } else {
-                        html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(survey["intel"]).toString() + "%;'><span>Intel</span></div><div class='right-bar' style='width: " + parseInt(100-survey["intel"]) + "%'><span>" + survey["intel"] + "%</span></div></div>";
-                    }
-                }
-                if (survey["other"] !== undefined) {
-                    if (survey["other"] > 90 || survey["other"] < 10) {
-                        html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(survey["other"]).toString() + "%;'><span>Other&nbsp;" + survey["other"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-survey["other"]) + "%'></div></div>";
-                    } else {
-                        html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(survey["other"]).toString() + "%;'><span>Other</span></div><div class='right-bar' style='width: " + parseInt(100-survey["other"]) + "%'><span>" + survey["other"] + "%</span></div></div>";
-                    }
-                }
+                html += `<p><b>${Localization.str.survey.satisfaction}</b>:
+                        <div class="performance-graph">`;
+
+                if (survey["nvidia"] !== undefined)  html += getBarHtml("Nvidia", survey["nvidia"]);
+                if (survey["amd"] !== undefined)     html += getBarHtml("AMD", survey["amd"]);
+                if (survey["intel"] !== undefined)   html += getBarHtml("Intel", survey["intel"]);
+                if (survey["other"] !== undefined)   html += getBarHtml("Other", survey["other"]);
+
                 html += "</div>";
             }
         } else {
-            html += "<p>" + Localization.str.survey.nobody + "</p>";
+            html += `<p>${Localization.str.survey.nobody}</p>`;
         }
 
-        if (document.querySelector(".game_area_already_owned") && document.querySelector(".hours_played")) {
-            // FIXME html += "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>" + Localization.str.survey.take + "</span></a>";
+        if (this.isOwned() && document.getElementById("my_activity")) {
+            // FIXME html += `<a class="btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs" href="${Config.PublicHost}/survey/?appid=${this.appid}"><span>${Localization.str.survey.take}</span></a>`;
         }
 
         html += "</div>";
@@ -2212,12 +2202,10 @@ class AppPageClass extends StorePageClass {
     }
 
     addAchievementCompletionBar() {
-        if (!this.isOwned() || !this.hasAchievements() || !SyncedStorage.get("showachinstore")) { return; }
+        if (!this.hasAchievements() || !SyncedStorage.get("showachinstore")) { return; }
 
-        let details_block = document.querySelector(".myactivity_block .details_block");
-        if (!details_block) { return; }
-
-        HTML.afterEnd(details_block, '<div id="es_ach_stats"></div>');
+        let node = document.querySelector("#my_activity > .hours_played");
+        if (!node) { return; }
 
         Stats.getAchievementBar("/my", this.communityAppid).then(achieveBar => {
             if (!achieveBar) {
@@ -2225,7 +2213,7 @@ class AppPageClass extends StorePageClass {
                 return;
             }
             
-            HTML.inner("#es_ach_stats", achieveBar);
+            HTML.afterEnd(node, `<div id="es_ach_stats">${achieveBar}</div>`);
         });
     }
 
@@ -2283,27 +2271,26 @@ class AppPageClass extends StorePageClass {
         if (greenlight) customizer.add("greenlight", greenlight.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_greenlight);
 
         customizer.build();
-        document.querySelector(".purchase_area_spacer").style.height = "auto";
     }
 
     addReviewToggleButton() {
         let head = document.querySelector("#review_create h1");
         if (!head) { return; }
-        HTML.beforeEnd(head, "<div style='float: right;'><a class='btnv6_lightblue_blue btn_mdium' id='es_review_toggle'><span>▲</span></a></div>");
+
+        HTML.beforeEnd(head, '<div style="float: right;"><a class="btnv6_lightblue_blue btn_mdium" id="es_review_toggle"><span>▲</span></a></div>');
 
         let reviewSectionNode = document.createElement("div");
         reviewSectionNode.setAttribute("id", "es_review_section");
 
         let nodes = document.querySelector("#review_container").querySelectorAll("p, .avatar_block, .content");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        for (let node of nodes) {
             reviewSectionNode.append(node);
         }
 
         head.insertAdjacentElement("afterend", reviewSectionNode);
 
         function toggleReviews(state) {
-            if (typeof state == 'undefined') {
+            if (typeof state === "undefined") {
                 state = !LocalStorage.get("show_review_section", true);
                 LocalStorage.set("show_review_section", state);
             }
@@ -2331,27 +2318,16 @@ class AppPageClass extends StorePageClass {
     addHelpButton() {
         let node = document.querySelector(".game_area_play_stats .already_owned_actions");
         if (!node) { return; }
+
         HTML.afterEnd(node,
-            "<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/wizard/HelpWithGame/?appid=" + this.appid + "'><span>" + Localization.str.get_help + "</span></a></div>");
+            `<div class="game_area_already_owned_btn">
+                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="//help.steampowered.com/wizard/HelpWithGame/?appid=${this.appid}">
+                    <span>${Localization.str.get_help}</span>
+                </a>
+            </div>`);
     }
 
     addPackBreakdown() {
-
-        function splitPack(node, ways) {
-            let price_text = node.querySelector(".game_purchase_price, .discount_final_price").textContent;
-            if (price_text.match(/,\d\d(?!\d)/)) {
-                price_text = price_text.replace(",", ".");
-            }
-            let price = (Number(price_text.replace(/[^0-9\.]+/g, ""))) / ways;
-            price = new Price(Math.ceil(price * 100) / 100, Currency.storeCurrency);
-
-            HTML.afterBegin(node.querySelector(".game_purchase_action_bg"),
-                `<div class="es_each_box">
-                    <div class="es_each_price">${price}</div>
-                    <div class="es_each">${Localization.str.each}</div>
-                </div>`);
-        }
-
         for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
 
             // prevent false positives on packages e.g. Doom 3
@@ -2384,6 +2360,21 @@ class AppPageClass extends StorePageClass {
 
             else if (title.includes("6 pack") ||
                 title.includes("six pack")) { splitPack(node, 6); }
+        }
+
+        function splitPack(node, ways) {
+            let price_text = node.querySelector(".game_purchase_price, .discount_final_price").textContent;
+            if (price_text.match(/,\d\d(?!\d)/)) {
+                price_text = price_text.replace(",", ".");
+            }
+            let price = (Number(price_text.replace(/[^0-9\.]+/g, ""))) / ways;
+            price = new Price(Math.ceil(price * 100) / 100, Currency.storeCurrency);
+
+            HTML.afterBegin(node.querySelector(".game_purchase_action_bg"),
+                `<div class="es_each_box">
+                    <div class="es_each_price">${price}</div>
+                    <div class="es_each">${Localization.str.each}</div>
+                </div>`);
         }
     }
 }

@@ -290,6 +290,12 @@ img.astats_icon {
   padding-top: 5px;
   margin-bottom: 20px;
 }
+
+#steam-charts .chart-footer,
+#steam-spy .chart-footer {
+  padding-right: 13px;
+}
+
 .apphub_HeaderTop.es_greenlight {
   background-image: url('https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_blue.jpg');
   background-position: left center;
@@ -3006,9 +3012,15 @@ label[for="show_common_games"] {
 /***************************************
  * Layout around Customizer on App Pages
  **************************************/
-.game_page_autocollapse_ctn { margin-top: 30px; }
-.game_page_autocollapse_ctn .game_area_description { margin-top: 0; }
-
+.game_page_autocollapse_ctn {
+  margin-top: 30px;
+}
+.game_page_autocollapse_ctn .game_area_description {
+  margin-top: 0;
+}
+.purchase_area_spacer {
+  height: auto !important;
+}
 
 #pagebtn_first,
 #pagebtn_last {
