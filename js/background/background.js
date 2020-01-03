@@ -227,8 +227,8 @@ class ITAD_Api extends Api {
         }
     }
 
-    static async addToWaitlist(storeids) {
-        if (!storeids || (Array.isArray(storeids) && !storeids.length)) {
+    static async addToWaitlist(appids) {
+        if (!appids || (Array.isArray(appids) && !appids.length)) {
             console.warn("Can't add nothing to ITAD waitlist");
             return;
         }
@@ -238,29 +238,30 @@ class ITAD_Api extends Api {
             "data": [],
         };
 
-        if (Array.isArray(storeids)) {
-            storeids.forEach(storeid => {
+        if (Array.isArray(appids)) {
+            appids.forEach(appid => {
                 waitlistJSON.data.push({
-                    "gameid": ["steam", storeid],
+                    "gameid": ["steam", `app/${appid}`],
                 });
             });
         } else {
             waitlistJSON.data[0] = {
-                "gameid": ["steam", storeids],
+                "gameid": ["steam", `app/${appids}`],
             }
         }
 
         await ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, null, { "body": JSON.stringify(waitlistJSON) });
-        return IndexedDB.put("waitlist", null, storeids, Array.isArray(storeids));
+        return IndexedDB.put("waitlist", null, appids, Array.isArray(appids));
     }
 
-    static async removeFromWaitlist(storeids) {
-        if (!storeids || (Array.isArray(storeids) && !storeids.length)) {
+    static async removeFromWaitlist(appids) {
+        if (!appids || (Array.isArray(appids) && !appids.length)) {
             throw new Error("Can't remove nothing from ITAD Waitlist!");
         }
-        storeids = Array.isArray(storeids) ? storeids : [storeids];
+        appids = Array.isArray(appids) ? appids : [appids];
+        let storeids = appids.map(appid => `app/${appid}`);
         await ITAD_Api.deleteEndpoint("v02/user/wait/remove/", { "access_token": ITAD_Api.accessToken, "shop": "steam", "ids": storeids.join() });
-        return IndexedDB.delete("waitlist", storeids);
+        return IndexedDB.delete("waitlist", appids);
     }
 
     static addToCollection(appids, subids) {
@@ -354,7 +355,7 @@ class ITAD_Api extends Api {
             let [{ wishlisted }, { lastWishlisted }] = result;
             let newWishlisted = removeDuplicates(wishlisted, lastWishlisted);
             if (newWishlisted.length) {
-                promises.push(ITAD_Api.addToWaitlist(`app/${newWishlisted}`)
+                promises.push(ITAD_Api.addToWaitlist(newWishlisted)
                     .then(() => IndexedDB.put("itadImport", wishlisted, "lastWishlisted")));
             }
         }

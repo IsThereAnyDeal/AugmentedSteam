@@ -919,7 +919,7 @@ class AppPageClass extends StorePageClass {
     }
 
     async _removeFromWaitlist() {
-        return Background.action("itad.removefromwaitlist", this.storeid);
+        return Background.action("itad.removefromwaitlist", this.appid);
     }
 
     async addUserNote() {
@@ -1097,9 +1097,9 @@ class AppPageClass extends StorePageClass {
 
         waitlistOption.addEventListener("click", async () => {
             if (waitlisted) {
-                await Background.action("itad.removefromwaitlist", this.storeid);
+                await Background.action("itad.removefromwaitlist", this.appid);
             } else {
-                await Background.action("itad.addtowaitlist", this.storeid);
+                await Background.action("itad.addtowaitlist", this.appid);
             }
             waitlisted = !waitlisted;
             updateDiv();
