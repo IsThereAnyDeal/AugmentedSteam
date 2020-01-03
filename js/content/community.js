@@ -1102,7 +1102,7 @@ let GamesPageClass = (function(){
 
         HTML.beforeBegin("#mainContents",
             `<div id="esi-collection-chart-content">
-                <div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>
+                <div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.coll.total_time}</div>
                 <div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>
                 <div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>
                 <div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>

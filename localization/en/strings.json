@@ -77,7 +77,6 @@
     "website": "Website",
     "game": "Game",
     "games": "Games",
-    "total_time": "Total Time",
     "dlc_suggest": "Suggest a new category",
     "badge_completion_cost": "Cost of completing badge: __cost__",
     "loading": "Loading...",
@@ -656,14 +655,15 @@
     "wl": {
         "compute": "Click to compute stats",
         "total_price": "current value",
-        "in_wishlist": "in wishlist",
+        "in_wishlist": "on wishlist",
         "on_sale": "on sale",
         "no_price": "without price"
     },
     "coll": {
-        "in_collection": "In Collection",
-        "played": "Played",
-        "never_played": "Never Played"
+        "total_time": "total time",
+        "in_collection": "in collection",
+        "played": "played",
+        "never_played": "never played"
     },
     "user_note": {
         "add": "Add a note",
