@@ -178,27 +178,31 @@ AugmentedSteamApi._progressingRequests = new Map();
 
 class ITAD_Api extends Api {
 
-    static async authorize(hash) {
+    static async authorize() {
+        let rnd = crypto.getRandomValues(new Uint32Array(1))[0];
+
         let url = await browser.identity.launchWebAuthFlow(
             {
-                url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${hash}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${browser.identity.getRedirectURL()}`,
+                url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${rnd}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${browser.identity.getRedirectURL()}`,
                 interactive: true
             });
-        if (!url) { throw new Error("Couldn't retrieve access token for ITAD authorization"); }
 
         let hashFragment = new URL(url).hash;
-        if (!hashFragment) { throw new Error("URL " + url + " doesn't contain a fragment"); }
-
         let params = new URLSearchParams(hashFragment.substr(1));
 
-        if (parseInt(params.get("state"), 10) !== hash) { throw new Error("Failed to verify state parameter from URL fragment"); }
+        if (parseInt(params.get("state")) !== rnd) { throw new Error("Failed to verify state parameter from URL fragment"); }
 
         let accessToken = params.get("access_token");
         let expiresIn = params.get("expires_in");
 
-        if (!accessToken || !expiresIn) { throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'"); }
+        if (!accessToken || !expiresIn) { throw new Error(`Couldn't retrieve information from URL fragment "${hashFragment}"`); }
             
         LocalStorage.set("access_token", { token: accessToken, expiry: Timestamp.now() + parseInt(expiresIn, 10) });
+    }
+
+    static disconnect() {
+        LocalStorage.remove("access_token");
+        return IndexedDB.clear(["collection", "waitlist", "itadImport"]);
     }
 
     static isConnected() {
@@ -307,7 +311,7 @@ class ITAD_Api extends Api {
         } else {
             let lastImport = LocalStorage.get("lastItadImport");
 
-            if (lastImport && !IndexedDB.isExpired(lastImport + 12 * 60 * 60)) { return; }
+            if (lastImport && lastImport.to && !IndexedDB.isExpired(lastImport.to + 12 * 60 * 60)) { return; }
         }
 
         let dsKeys = [];
@@ -355,7 +359,18 @@ class ITAD_Api extends Api {
         }
         
         await Promise.all(promises);
-        LocalStorage.set("lastItadImport", Timestamp.now());
+
+        let lastImport = LocalStorage.get("lastItadImport") || {};
+        lastImport.to = Timestamp.now();
+        LocalStorage.set("lastItadImport", lastImport);
+    }
+
+    static async sync() {
+        await Promise.all([
+            ITAD_Api.import(true),
+            IndexedDB.clear("waitlist").then(() => IndexedDB.objStoreFetchFns.get("waitlist")({ "shop": "steam", "optional": "gameid" })),
+            IndexedDB.clear("collection").then(() => IndexedDB.objStoreFetchFns.get("collection")({ "shop": "steam", "optional": "gameid,copy_type" })),
+        ]);        
     }
 
     static lastImport() { return LocalStorage.get("lastItadImport"); }
@@ -370,6 +385,11 @@ class ITAD_Api extends Api {
 
             collection[gameid] = types;
         });
+
+        let lastImport = LocalStorage.get("lastItadImport") || {};
+        lastImport.from = Timestamp.now();
+        LocalStorage.set("lastItadImport", lastImport);
+
         return collection;
     }
 
@@ -380,6 +400,11 @@ class ITAD_Api extends Api {
         for (let { gameid } of Object.values(result)) {
             waitlist.push(gameid);
         }
+
+        let lastImport = LocalStorage.get("lastItadImport") || {};
+        lastImport.from = Timestamp.now();
+        LocalStorage.set("lastItadImport", lastImport);
+
         return waitlist;
     }
 
@@ -1311,23 +1336,16 @@ let actionCallbacks = new Map([
     ["clearownprofile", SteamCommunity.clearOwn],
 
     ["itad.authorize", ITAD_Api.authorize],
+    ["itad.disconnect", ITAD_Api.disconnect],
     ["itad.isconnected", ITAD_Api.isConnected],
     ["itad.import", ITAD_Api.import],
+    ["itad.sync", ITAD_Api.sync],
     ["itad.lastimport", ITAD_Api.lastImport],
     ["itad.inwaitlist", ITAD_Api.inWaitlist],
     ["itad.addtowaitlist", ITAD_Api.addToWaitlist],
     ["itad.removefromwaitlist", ITAD_Api.removeFromWaitlist],
     ["itad.incollection", ITAD_Api.inCollection],
     ["itad.getfromcollection", ITAD_Api.getFromCollection],
-
-    ["idb.get", IndexedDB.get],
-    ["idb.getfromindex", IndexedDB.getFromIndex],
-    ["idb.getallfromindex", IndexedDB.getAllFromIndex],
-    ["idb.put", IndexedDB.put],
-    ["idb.delete", IndexedDB.delete],
-    ["idb.clear", IndexedDB.clear],
-    ["idb.contains", IndexedDB.contains],
-    ["idb.indexcontainskey", IndexedDB.indexContainsKey],
 
     ["error.test", () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);

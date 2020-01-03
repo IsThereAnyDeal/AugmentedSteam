@@ -187,6 +187,12 @@
                 <div class="settings">
                     <div id="itad_section" class="content_section">
                         <h2>IsThereAnyDeal</h2>
+                        <div class="option">
+                            <span data-locale-text="status">Status:</span>
+                            &nbsp;
+                            <span id="itad_status"></span>
+                            <button id="itad_action"></button>
+                        </div>
                         <label data-locale-text="itad.import">Periodically import:</label>
                         <div class="indented option">
                             <input type="checkbox" id="itad_import_library" data-setting="itad_import_library">
@@ -198,7 +204,7 @@
                         </div>
                         <div class="option">
                             <input type="checkbox" id="add_to_waitlist" data-setting="add_to_waitlist">
-                            <label for="add_to_waitlist" data-locale-text="options.add_to_waitlist">Show separate "Add to Waitlist" button</label>
+                            <label for="add_to_waitlist" data-locale-text="options.add_to_waitlist">Show "Add to Waitlist" dropdown on app pages</label>
                         </div>
                     </div>
 
@@ -407,6 +413,10 @@
                         <div class="option">
                             <input type="checkbox" id="showemptywishlist" data-setting="showemptywishlist">
                             <label for="showemptywishlist" data-locale-text="options.show_empty_wishlist">Show "Empty Wishlist" button</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="showwishliststats" data-setting="showwishliststats">
+                            <label for="showwishliststats" data-locale-text="options.show_wishlist_stats">Show wishlist stats on wishlist</label>
                         </div>
                         <div class="option">
                             <input type="checkbox" id="showusernotes" data-setting="showusernotes">
@@ -781,6 +791,10 @@
                         <div class="option">
                             <input type="checkbox" id="showallachievements" data-setting="showallachievements">
                             <label for="showallachievements" data-locale-text="options.showallachievements">Show achievement stats on "All Games" page</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="showallstats" data-setting="showallstats">
+                            <label for="showallstats" data-locale-text="options.showallstats">Show playtime stats on "All Games" page</label>
                         </div>
                         <div class="option">
                             <input type="checkbox" id="showcomparelinks" data-setting="showcomparelinks">

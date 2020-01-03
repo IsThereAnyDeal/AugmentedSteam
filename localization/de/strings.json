@@ -10,6 +10,11 @@
     "remove": "Entfernen",
     "get_help": "Hilfe",
     "add_selected_dlc_to_cart": "Ausgewählten DLC in den Warenkorb ",
+    "status": "Status:",
+    "connect": "Verbinden",
+    "connected": "Verbunden",
+    "disconnect": "Trennen",
+    "disconnected": "Getrennt",
     "credits": "Danksagungen",
     "store_transactions": "Shop-Käufe",
     "games_coupon": "Spiele mit Gutscheinen",
@@ -450,7 +455,7 @@
             "turkish": "Türkisch",
             "ukrainian": "Ukrainisch"
         },
-        "add_to_waitlist": "Zeige separaten \"Zur Waitlist hinzufügen\" Button"
+        "add_to_waitlist": "Zeige \"Zur Waitlist hinzufügen\" Dropdown auf Produktseiten"
     },
     "ready": {
         "errormsg": "Fehler beim Laden von Augmented Steam-Daten",
@@ -514,8 +519,10 @@
     },
     "itad": {
         "import": "Importiere regelmäßig:",
-        "last_import": "Letzter Import",
-        "import_now": "Jetzt importieren",
+        "last_import": "Letzter Import...",
+        "from": "von ITAD:",
+        "to": "nach ITAD:",
+        "sync_now": "Jetzt synchronisieren",
         "option": "Menüoption zum Senden von Daten an IsThereAnyDeal.com anzeigen",
         "send_to_itad": "Spiele in deinem Besitz an IsThereAnyDeal senden",
         "sending": "Lade Spiele und Pakete in deinem Besitz und sende sie an IsThereAnyDeal.com"

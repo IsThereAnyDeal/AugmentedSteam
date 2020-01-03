@@ -3,58 +3,18 @@
  */
 class ITAD {
     static async create() {
+        if (!await Background.action("itad.isconnected")) { return; }
+
         HTML.afterBegin("#global_action_menu",
             `<div id="es_itad">
                 <img id="es_itad_logo" src="${ExtensionResources.getURL("img/itad.png")}" height="20px">
-                <span id="es_itad_status"></span>
+                <span id="es_itad_status">✓</span>
             </div>`);
 
-        let connected = await Background.action("itad.isconnected");
-        let itadDiv = document.querySelector("#es_itad");
-        let itadStatus = itadDiv.querySelector("#es_itad_status");
-        
-        if (connected) {
-            itadStatus.textContent = '\u2713';
-            itadDiv.classList.add("authorized");
-            itadDiv.addEventListener("mouseenter", ITAD.onHover);
-            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
-                Background.action("itad.import");
-            }
-        } else {
-            itadStatus.textContent = Localization.str.sign_in;
-            itadDiv.classList.add("not_authorized");
-            itadDiv.addEventListener("click", ITAD.authorize);
-        }
-    }
+        document.querySelector("#es_itad").addEventListener("mouseenter", ITAD.onHover);
 
-    static async authorize() {
-        let sessionId = User.getSessionId();
-        // Avoid predictable hash when string is empty
-        if (sessionId) {
-            try {
-                await Background.action("itad.authorize", StringUtils.hashCode(sessionId));
-            } catch(err) {
-                console.group("ITAD authorization");
-                console.error(err);
-                console.error("Failed to authorize to ITAD");
-                console.groupEnd();
-                return;
-            }
-
-            let itadStatus = document.getElementById("es_itad_status");
-            let itadDiv = itadStatus.parentElement;
-
-            itadStatus.textContent = '\u2713';
-            itadDiv.classList.add("authorized");
-            itadDiv.classList.remove("not_authorized");
-            itadDiv.addEventListener("mouseenter", ITAD.onHover);
-            itadDiv.removeEventListener("click", ITAD.authorize);
-            
-            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
-                Background.action("itad.import");
-            }
-        } else {
-            console.error("Can't retrieve Session ID, unable to authorize app");
+        if (User.isSignedIn && (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist"))) {
+            Background.action("itad.import");
         }
     }
 
@@ -63,12 +23,13 @@ class ITAD {
             HTML.afterEnd("#es_itad_status",
                 `<div class="es-itad-hover">
                     <div class="es-itad-hover__content">
-                        <p class="es-itad-hover__last-import"></p>
-                        <div class="es-itad-hover__import-now">
-                            <span class="es-itad-hover__import-now-text">${Localization.str.itad.import_now}</span>
+                        <h4>${Localization.str.itad.last_import}</h4>
+                        <div class="es-itad-hover__last-import"></div>
+                        <div class="es-itad-hover__sync-now">
+                            <span class="es-itad-hover__sync-now-text">${Localization.str.itad.sync_now}</span>
                             <div class="loader"></div>
-                            <span class="es-itad-hover__import-failed">&#10060;</span>
-                            <span class="es-itad-hover__import-success">&#10003;</span>
+                            <span class="es-itad-hover__sync-failed">&#10060;</span>
+                            <span class="es-itad-hover__sync-success">&#10003;</span>
                         </div>
                     </div>
                     <div class="es-itad-hover__arrow"></div>
@@ -76,32 +37,32 @@ class ITAD {
 
             let hover = document.querySelector(".es-itad-hover");
 
-            let importDiv = document.querySelector(".es-itad-hover__import-now");
-            document.querySelector(".es-itad-hover__import-now-text").addEventListener("click", async () => {
-                importDiv.classList.remove("es-itad-hover__import-now--failed", "es-itad-hover__import-now--success");
-                importDiv.classList.add("es-itad-hover__import-now--loading");
+            let syncDiv = document.querySelector(".es-itad-hover__sync-now");
+            document.querySelector(".es-itad-hover__sync-now-text").addEventListener("click", async () => {
+                syncDiv.classList.remove("es-itad-hover__sync-now--failed", "es-itad-hover__sync-now--success");
+                syncDiv.classList.add("es-itad-hover__sync-now--loading");
                 hover.style.display = "block";
 
                 let timeout;
 
                 try {
-                    await Background.action("itad.import", true);
-                    importDiv.classList.add("es-itad-hover__import-now--success");
+                    await Background.action("itad.sync");
+                    syncDiv.classList.add("es-itad-hover__sync-now--success");
                     await updateLastImport();
                     
                     timeout = 1000;
                 } catch(err) {
-                    importDiv.classList.add("es-itad-hover__import-now--failed");
+                    syncDiv.classList.add("es-itad-hover__sync-now--failed");
 
-                    console.group("ITAD import");
+                    console.group("ITAD sync");
+                    console.error("Failed to sync with ITAD");
                     console.error(err);
-                    console.error("Failed to import to ITAD");
                     console.groupEnd();
 
                     timeout = 3000;
                 } finally {
                     setTimeout(() => hover.style.display = '', timeout);
-                    importDiv.classList.remove("es-itad-hover__import-now--loading");
+                    syncDiv.classList.remove("es-itad-hover__sync-now--loading");
                 }
             });
         }
@@ -109,8 +70,15 @@ class ITAD {
         await updateLastImport();
 
         async function updateLastImport() {
-            let timestamp = await Background.action("itad.lastimport");
-            HTML.inner(".es-itad-hover__last-import", `<i>${Localization.str.itad.last_import}</i>: ${timestamp ? new Date(timestamp * 1000).toLocaleString() : Localization.str.never}`);
+            let { from, to } = await Background.action("itad.lastimport");
+
+            let htmlStr = `<div>${Localization.str.itad.from}</div><div>${from ? new Date(from * 1000).toLocaleString() : Localization.str.never}</div>`;
+
+            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
+                htmlStr += `<div>${Localization.str.itad.to}</div><div>${to ? new Date(to * 1000).toLocaleString() : Localization.str.never}</div>`;
+            }
+
+            HTML.inner(".es-itad-hover__last-import", htmlStr);
         }
     }
 
@@ -130,8 +98,7 @@ class ITAD {
                 promises.push(resolved);
             }
             if (highlightWaitlist) {
-                promises.push(resolved);
-                // todo Waitlist endpoint
+                promises.push(Background.action("itad.inwaitlist", storeIds));
             } else {
                 promises.push(resolved);
             }
@@ -251,14 +218,16 @@ class ProgressBar {
 ProgressBar._progress = null;
 ProgressBar._failedRequests = 0;
 
-class Background {
-    static message(message) {
+class Background extends BackgroundBase {
+    static async message(message) {
         ProgressBar.startRequest();
 
-        return browser.runtime.sendMessage(message).then(result => {
+        let result;
+        try {
+            result = await super.message(message);
             ProgressBar.finishRequest();
             return result;
-        }, err => {
+        } catch(err) {
             switch (err.message) {
                 case "ServerOutageError":
                     ProgressBar.serverOutage();
@@ -272,13 +241,7 @@ class Background {
                     ProgressBar.failed();
             }
             throw err;
-        });
-    }
-    
-    static action(requested, ...params) {
-        if (!params.length)
-            return Background.message({ "action": requested, });
-        return Background.message({ "action": requested, "params": params, });
+        }
     }
 }
 
@@ -1720,6 +1683,7 @@ let Highlights = (function(){
                 hlCss.push(
                    `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
                     .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name} { outline: solid ${color}; }
+                    #search_suggestion_contents .focus.es_highlighted_${name} { box-shadow: -5px 0 0 ${color}; }
                     .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }`);
             }
 
@@ -2371,9 +2335,6 @@ let Common = (function(){
         ProgressBar.create();
         ProgressBar.loading();
         UpdateHandler.checkVersion(EnhancedSteam.clearCache);
-        if (User.isSignedIn) {
-            ITAD.create();
-        }
         EnhancedSteam.addBackToTop();
         EnhancedSteam.addMenu();
         EnhancedSteam.addLanguageWarning();
@@ -2385,12 +2346,12 @@ let Common = (function(){
         EnhancedSteam.skipGotSteam();
         EnhancedSteam.keepSteamSubscriberAgreementState();
         EnhancedSteam.defaultCommunityTab();
+        ITAD.create();
 
         if (User.isSignedIn) {
             EnhancedSteam.addRedeemLink();
             EnhancedSteam.replaceAccountName();
             EnhancedSteam.launchRandomButton();
-            // TODO add itad sync
             EnhancedSteam.bindLogout();
         }
     };

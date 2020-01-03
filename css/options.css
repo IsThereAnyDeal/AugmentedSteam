@@ -327,3 +327,13 @@ a:hover {
 .distance_bottom {
 	margin-bottom: 2em !important;
 }
+
+#itad_status {
+	flex-grow: 1;
+}
+#itad_status.connected {
+	color: green;
+}
+#itad_status.disconnected {
+	color: red;
+}
