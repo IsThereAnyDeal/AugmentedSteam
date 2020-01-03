@@ -876,7 +876,7 @@ let ProfileHomePageClass = (function(){
                     HTML.beforeEnd(".profile_header_bg_texture", "<div class='holidayprofile_header_overlay'></div>");
                     document.querySelector(".profile_page").classList.add("holidayprofile");
 
-                    DOMHelper.insertScript({ src: ExtensionLayer.getLocalUrl("js/steam/holidayprofile.js") });
+                    DOMHelper.insertScript({ src: ExtensionResources.getURL("js/steam/holidayprofile.js") });
                     
                     break;
                 case "clear":
