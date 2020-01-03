@@ -202,6 +202,7 @@ class ITAD_Api extends Api {
 
     static disconnect() {
         LocalStorage.remove("access_token");
+        LocalStorage.remove("lastItadImport");
         return IndexedDB.clear(["collection", "waitlist", "itadImport"]);
     }
 
