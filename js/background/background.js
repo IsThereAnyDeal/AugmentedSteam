@@ -450,7 +450,7 @@ class ContextMenu {
                 browser.tabs.create({ url: `https://steamdb.info/instantsearch/?query=${selectionText}` });
                 break;
             case "context_steam_keys":
-                let steamkeys = info.selectionText.match(/[A-NP-RTV-Z02-9]{5}(-[A-NP-RTV-Z02-9]{5}){2}/g);
+                let steamkeys = info.selectionText.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
                 if (!steamkeys || steamkeys.length === 0) {
                     window.alert(Localization.str.options.no_keys_found);
                     return;
