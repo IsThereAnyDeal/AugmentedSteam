@@ -1,15 +1,6 @@
 {
     "invite_friends": "Invite Friends",
     "invite_to_group": "Invite To Group",
-    "formatting_help": "Formatting help",
-    "add_comment": "Add a comment",
-    "friends_commenter": "Post Comments to Selected Friends",
-    "friends_commenter_warning": "Please make sure you entered a message and selected between 1 and 1000 friends.",
-    "posted_at_success": "Successfully posted comment on __profile__.",
-    "posted_at_fail": "Failed to post comment on __profile__.",
-    "processed": "Processed __i__ out of __total__ friend(s).",
-    "timer": "Approximately __time__ until completion",
-    "alert": "Alert",
     "transactionStatus": "__failed__ request(s) failed. Retrieved __size__ of __total__ transactions.",
     "custom_tags": "Custom Tags",
     "add_tag": "Add tag",
@@ -77,7 +68,6 @@
     "website": "Website",
     "game": "Game",
     "games": "Games",
-    "total_time": "Total Time",
     "dlc_suggest": "Suggest a new category",
     "badge_completion_cost": "Cost of completing badge: __cost__",
     "loading": "Loading...",
@@ -255,7 +245,7 @@
     "wishlist": "Wishlist",
     "on_wishlist": "On Wishlist",
     "ignored": "Ignored",
-    "on_waitlist": "On Waitlist",
+    "on_waitlist": "In Waitlist",
     "notdiscounted": "Items not discounted",
     "cancel": "Cancel",
     "wiki_article": "View __pcgw__ Article",
@@ -631,7 +621,11 @@
         "sync_now": "Sync now",
         "option": "Show menu option to sync data to IsThereAnyDeal.com",
         "send_to_itad": "Send owned games to IsThereAnyDeal",
-        "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+        "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com",
+        "info": {
+            "itad-steam": "Connecting Augmented Steam with IsThereAnyDeal allows you to apply Augmented Steam's highlighting and tagging to games in your Waitlist and Collection even if you don't have them on Steam.",
+            "steam-itad": "Furthermore, it allows you to import games from your Steam Library and/or Wishlist to IsThereAnyDeal, for improved accuracy. Currently this feature can only add titles, not remove them, so it's not the replacement for IsThereAnyDeal's integrated sync, but an addition to it."
+        }
     },
     "tradeoffer": {
         "num_item": "__num__ item",
@@ -656,14 +650,15 @@
     "wl": {
         "compute": "Click to compute stats",
         "total_price": "current value",
-        "in_wishlist": "in wishlist",
+        "in_wishlist": "on wishlist",
         "on_sale": "on sale",
         "no_price": "without price"
     },
     "coll": {
-        "in_collection": "In Collection",
-        "played": "Played",
-        "never_played": "Never Played"
+        "total_time": "total time",
+        "in_collection": "in collection",
+        "played": "played",
+        "never_played": "never played"
     },
     "user_note": {
         "add": "Add a note",
@@ -688,6 +683,7 @@
         "finished": "Finished! __success__ successful, __fail__ failed. Click OK to refresh the page",
         "failed": "__n__ failed"
     },
+
     "this_version": "This version",
     "original_authors": "Original authors",
     "acknowledgements": "Acknowledgments",

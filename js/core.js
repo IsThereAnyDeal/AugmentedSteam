@@ -139,19 +139,30 @@ class UpdateHandler {
         SyncedStorage.set("version", Info.version);
     };
 
-    static _showChangelog() {
-        RequestData.getHttp(ExtensionResources.getURL("changelog_new.html")).then(
-            changelog => {
-                changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
-                let logo = ExtensionResources.getURL("img/es_128.png");
-                let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
-                ExtensionLayer.runInPageContext(
-                    `function() {
-                        ShowAlertDialog("${Localization.str.update.updated.replace("__version__", Info.version)}", '${dialog}');
-					}`
-                );
-            }
+    static async _showChangelog() {
+        let changelog = (await RequestData.getHttp(ExtensionResources.getURL("changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
+        let logo = ExtensionResources.getURL("img/es_128.png");
+        let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
+        ExtensionLayer.runInPageContext(
+            `function() {
+                ShowAlertDialog("${Localization.str.update.updated.replace("__version__", Info.version)}", '${dialog}');
+            }`
         );
+
+        if (Info.version === "1.4") {
+            let connectBtn = document.querySelector("#itad_connect");
+            if (await BackgroundBase.action("itad.isconnected")) {
+                itadConnected();
+            } else {
+                connectBtn.addEventListener("click", async function() {
+                    await BackgroundBase.action("itad.authorize");
+                    ITAD.create();
+                    itadConnected();
+                });
+            }
+
+            function itadConnected() { connectBtn.replaceWith("✓"); }
+        }
     }
 
     static _migrateSettings(oldVersion) {

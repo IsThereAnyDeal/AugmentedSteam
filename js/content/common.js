@@ -2721,10 +2721,13 @@ class Sortbox {
         return new RegExp(`\\b${className}\\b`).test(element.className);
     }
 
-    // FOR REVIEWER: Elements returned by this function are already sanitized (calls to HTML class),
-    // so they can be safely inserted without being sanitized again.
-    // If we would sanitize it again, all event listeners would be lost due to DOMPurify only returning
-    // HTML strings.
+    /**
+     * NOTE FOR ADDON REVIEWER:
+     * Elements returned by this function are already sanitized (calls to HTML class),
+     * so they can be safely inserted without being sanitized again.
+     * If we would sanitize them again, all event listeners would be lost due to
+     * DOMPurify only returning HTML strings.
+     */
     static get(name, options, initialOption, changeFn, storageOption) {
 
         let id = `sort_by_${name}`;

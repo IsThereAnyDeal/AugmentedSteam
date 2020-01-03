@@ -1475,21 +1475,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
   height: 16px;
   margin: 5px;
 }
-.es_screenshot_download_btn, .es_screenshot_open_btn {
+.es_screenshot_open_btn {
 	position: absolute;
 	right: 24%;
 	bottom: 0;
 }
-.es_screenshot_download_btn i, .es_screenshot_open_btn i {
+.es_screenshot_open_btn i {
 	display: block;
 	background-position: center;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 	margin: 5px;
-}
-.es_screenshot_download_btn i {
-	background-image: url('https://steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1');
 }
 .screenshot_popup_modal_content:fullscreen .es_screenshot_fullscreen_toggle i {
   background-position: bottom left;

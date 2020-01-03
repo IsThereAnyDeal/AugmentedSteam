@@ -186,11 +186,8 @@ class ITAD_Api extends Api {
                 url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${rnd}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${browser.identity.getRedirectURL()}`,
                 interactive: true
             });
-        if (!url) { throw new Error("Couldn't retrieve access token for ITAD authorization"); }
 
         let hashFragment = new URL(url).hash;
-        if (!hashFragment) { throw new Error("URL " + url + " doesn't contain a fragment"); }
-
         let params = new URLSearchParams(hashFragment.substr(1));
 
         if (parseInt(params.get("state")) !== rnd) { throw new Error("Failed to verify state parameter from URL fragment"); }
@@ -198,13 +195,14 @@ class ITAD_Api extends Api {
         let accessToken = params.get("access_token");
         let expiresIn = params.get("expires_in");
 
-        if (!accessToken || !expiresIn) { throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'"); }
+        if (!accessToken || !expiresIn) { throw new Error(`Couldn't retrieve information from URL fragment "${hashFragment}"`); }
             
         LocalStorage.set("access_token", { token: accessToken, expiry: Timestamp.now() + parseInt(expiresIn, 10) });
     }
 
     static disconnect() {
         LocalStorage.remove("access_token");
+        LocalStorage.remove("lastItadImport");
         return IndexedDB.clear(["collection", "waitlist", "itadImport"]);
     }
 
@@ -229,8 +227,8 @@ class ITAD_Api extends Api {
         }
     }
 
-    static async addToWaitlist(storeids) {
-        if (!storeids || (Array.isArray(storeids) && !storeids.length)) {
+    static async addToWaitlist(appids) {
+        if (!appids || (Array.isArray(appids) && !appids.length)) {
             console.warn("Can't add nothing to ITAD waitlist");
             return;
         }
@@ -240,29 +238,30 @@ class ITAD_Api extends Api {
             "data": [],
         };
 
-        if (Array.isArray(storeids)) {
-            storeids.forEach(storeid => {
+        if (Array.isArray(appids)) {
+            appids.forEach(appid => {
                 waitlistJSON.data.push({
-                    "gameid": ["steam", storeid],
+                    "gameid": ["steam", `app/${appid}`],
                 });
             });
         } else {
             waitlistJSON.data[0] = {
-                "gameid": ["steam", storeids],
+                "gameid": ["steam", `app/${appids}`],
             }
         }
 
         await ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, null, { "body": JSON.stringify(waitlistJSON) });
-        return IndexedDB.put("waitlist", null, storeids, Array.isArray(storeids));
+        return IndexedDB.put("waitlist", null, appids, Array.isArray(appids));
     }
 
-    static async removeFromWaitlist(storeids) {
-        if (!storeids || (Array.isArray(storeids) && !storeids.length)) {
+    static async removeFromWaitlist(appids) {
+        if (!appids || (Array.isArray(appids) && !appids.length)) {
             throw new Error("Can't remove nothing from ITAD Waitlist!");
         }
-        storeids = Array.isArray(storeids) ? storeids : [storeids];
+        appids = Array.isArray(appids) ? appids : [appids];
+        let storeids = appids.map(appid => `app/${appid}`);
         await ITAD_Api.deleteEndpoint("v02/user/wait/remove/", { "access_token": ITAD_Api.accessToken, "shop": "steam", "ids": storeids.join() });
-        return IndexedDB.delete("waitlist", storeids);
+        return IndexedDB.delete("waitlist", appids);
     }
 
     static addToCollection(appids, subids) {
@@ -356,7 +355,7 @@ class ITAD_Api extends Api {
             let [{ wishlisted }, { lastWishlisted }] = result;
             let newWishlisted = removeDuplicates(wishlisted, lastWishlisted);
             if (newWishlisted.length) {
-                promises.push(ITAD_Api.addToWaitlist(`app/${newWishlisted}`)
+                promises.push(ITAD_Api.addToWaitlist(newWishlisted)
                     .then(() => IndexedDB.put("itadImport", wishlisted, "lastWishlisted")));
             }
         }
@@ -452,7 +451,7 @@ class ContextMenu {
                 browser.tabs.create({ url: `https://steamdb.info/instantsearch/?query=${selectionText}` });
                 break;
             case "context_steam_keys":
-                let steamkeys = info.selectionText.match(/[A-NP-RTV-Z02-9]{5}(-[A-NP-RTV-Z02-9]{5}){2}/g);
+                let steamkeys = info.selectionText.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
                 if (!steamkeys || steamkeys.length === 0) {
                     window.alert(Localization.str.options.no_keys_found);
                     return;
