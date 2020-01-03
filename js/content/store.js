@@ -819,10 +819,8 @@ class AppPageClass extends StorePageClass {
         // If game is already wishlisted, add required nodes
         if (!document.getElementById("add_to_wishlist_area")) {
             let firstButton = document.querySelector(".queue_actions_ctn a.queue_btn_active");
-            HTML.beforeBegin(firstButton, '<div id="add_to_wishlist_area_success"></div>');
+            let wlSuccessArea = HTML.wrap(firstButton, '<div id="add_to_wishlist_area_success"></div>');
 
-            let wlSuccessArea = document.getElementById("add_to_wishlist_area_success");
-            DOMHelper.wrap(wlSuccessArea, firstButton);
             HTML.beforeBegin(wlSuccessArea,
                 `<div id="add_to_wishlist_area" style="display: none;">
                     <a class="btnv6_blue_hoverfade btn_medium" data-tooltip-text="${Localization.str.add_to_wishlist_tooltip}">
@@ -832,14 +830,12 @@ class AppPageClass extends StorePageClass {
                 <div id="add_to_wishlist_area_fail" style="display: none;">
                     <b>${Localization.str.error}</b>
                 </div>`);
+
+            document.querySelector("#add_to_wishlist_area > a").href = `javascript:AddToWishlist( ${this.appid}, 'add_to_wishlist_area', 'add_to_wishlist_area_success', 'add_to_wishlist_area_fail', null, 'add_to_wishlist_area2' );`;
         }
 
         let addBtn = document.getElementById("add_to_wishlist_area");
         let successBtn = document.getElementById("add_to_wishlist_area_success");
-
-        if (!addBtn.querySelector("a").href) {
-            addBtn.querySelector("a").href = `javascript:AddToWishlist( ${this.appid}, 'add_to_wishlist_area', 'add_to_wishlist_area_success', 'add_to_wishlist_area_fail', null, 'add_to_wishlist_area2' );`;
-        }
 
         // Update tooltip for wishlisted items
         successBtn.querySelector("a").dataset.tooltipText = Localization.str.remove_from_wishlist_tooltip;
