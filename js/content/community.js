@@ -767,11 +767,10 @@ let ProfileHomePageClass = (function(){
 
             if (html) {
 
-                HTML.beforeEnd(".profile_header_summary",
-                    `<div id="es_steamrep">
+                HTML.afterBegin(".profile_rightcol",
+                    `<a id="es_steamrep" href="https://steamrep.com/profiles/${steamId}" target="_blank">
                         ${html}
-                        <a href="https://steamrep.com/profiles/${steamId}" target="_blank">(?)</a>
-                    </div>`);
+                    </a>`);
             }
         });
     };
@@ -1079,37 +1078,35 @@ let GamesPageClass = (function(){
         }
     }
 
-    // Display total time played for all games
     GamesPageClass.prototype.computeStats = function() {
-        let games = HTMLParser.getVariableFromDom("rgGames", "array");
+        if (!SyncedStorage.get("showallstats")) { return; }
 
-        let statsHtml = "";
+        let games = HTMLParser.getVariableFromDom("rgGames", "array");
 
         let countTotal = games.length;
         let countPlayed = 0;
         let countNeverPlayed = 0;
 
         let time = 0;
-        games.forEach(game => {
+        for (let game of games) {
             if (!game['hours_forever']) {
                 countNeverPlayed++;
-                return;
+                continue;
             }
 
             countPlayed++;
             time += parseFloat(game['hours_forever'].replace(",",""));
-        });
+        }
 
         let totalTime = Localization.str.hours_short.replace("__hours__", time.toFixed(1));
 
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>`;
-
-        let html = `<div id="esi-collection-chart-content">${statsHtml}</div>`;
-
-        HTML.beforeBegin("#mainContents", html);
+        HTML.beforeBegin("#mainContents",
+            `<div id="esi-collection-chart-content">
+                <div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>
+                <div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>
+                <div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>
+                <div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>
+            </div>`);
     };
 
     let scrollTimeout = null;
@@ -1179,34 +1176,35 @@ let GamesPageClass = (function(){
 
             if (_commonGames.has(appid)) {
                 node.classList.add("esi-common");
+            } else {
+                node.classList.add("esi-notcommon");
             }
         }
     }
 
     GamesPageClass.prototype.handleCommonGames = function() {
-        if (!User.isSignedIn) { return;}
+        if (!User.isSignedIn) { return; }
 
         let label = document.querySelector("label[for='show_common_games']");
         if (!label) { return; }
 
-        function createCheckox(id, string) {
-            let checkboxEl = document.createElement("input");
-            checkboxEl.type = "checkbox";
-            checkboxEl.id = id;
+        HTML.afterEnd(label,
+            `<label for="es_gl_show_common_games"><input type="checkbox" id="es_gl_show_common_games">${Localization.str.common_label}</label>
+            <label for="es_gl_show_notcommon_games"><input type="checkbox" id="es_gl_show_notcommon_games">${Localization.str.notcommon_label}</label>`);
 
-            let uncommonLabel = document.createElement("label");
-            uncommonLabel.append(checkboxEl);
-            uncommonLabel.append(document.createTextNode(string));
+        let commonCheckbox = document.getElementById("es_gl_show_common_games");
+        let notCommonCheckbox = document.getElementById("es_gl_show_notcommon_games");
+        let rows = document.getElementById("games_list_rows");
 
-            return checkboxEl;
-        }
-
-        let notCommonCheckbox = createCheckox("es_gl_show_notcommon_games", Localization.str.notcommon_label);
-        label.insertAdjacentElement("afterend", notCommonCheckbox.parentNode);
+        commonCheckbox.addEventListener("change", async function(e) {
+            await loadCommonGames();
+            rows.classList.toggle("esi-hide-notcommon", e.target.checked);
+            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
+        });
 
         notCommonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
-            document.querySelector("#games_list_rows").classList.toggle("esi-hide-common", e.target.checked);
+            rows.classList.toggle("esi-hide-common", e.target.checked);
             ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
         });
     };
@@ -2950,7 +2948,7 @@ let FriendsPageClass = (function(){
 
         let commentArea = `<div class="row commentthread_entry" style="background-color: initial; padding-right: 24px;">
                 <div class="commentthread_entry_quotebox">
-                    <textarea rows="3" class="commentthread_textarea" id="comment_textarea" placeholder="${Localization.str.add_comment}" style="overflow: hidden; height: 20px;"></textarea>
+                    <textarea class="commentthread_textarea" id="comment_textarea" placeholder="${Localization.str.add_comment}"></textarea>
                 </div>
                 <div class="commentthread_entry_submitlink">
                     <a class="btn_grey_black btn_small_thin" id="FormattingHelpPopup">
@@ -2972,17 +2970,37 @@ let FriendsPageClass = (function(){
 
         HTML.beforeEnd(manage, commentArea);
         ExtensionLayer.runInPageContext(`function() {
-            let delay = 7000;
+            const delay = 7000; // This ensures Valve's rate limit doesn't get hit
             new CEmoticonPopup($J('#emoticonbtn'), $J('#comment_textarea'));
             $J("#comment_submit").click(() => {
                 const total = $J(".selected").length;
                 const msg = $J("#comment_textarea").val();
-                if (total === 0 || msg.length === 0) {
+                if (total === 0 || msg.length === 0 || total > 1000) {
                     ShowAlertDialog("${Localization.str.alert}", "${Localization.str.friends_commenter_warning}");
                     return;
                 }
+
+                const sec = 1000; // 1 second in ms
+                let duration = (total - 1) * delay;
+                let showTime = () => {
+                    let date = new Date(null);
+                    date.setSeconds(duration / sec);
+                    let timestr = date.toISOString().substr(11, 8);
+                    $J("#timer").html(\` (${Localization.str.timer})\`.replace("__time__", timestr));
+                };
+                let timer = setInterval(() => {
+                    duration -= sec;
+                    if (duration <= 0) {
+                        duration = 0;
+                        clearInterval(timer);
+                    }
+                    showTime();
+                }, sec)
             
-                $J("#log_head, #log_body").html("");
+                $J("#log_head").html(\`<br><b>${Localization.str.processed} </b><i id="timer"></i>\`.replace("__i__", 0).replace("__total__", total));
+                $J("#log_body").html("");
+                showTime();
+
                 $J(".selected").each((i, elem) => {
                     let profileID = $J(elem).data("steamid");
                     let profileName = $J(elem).find(".friend_block_content").get(0).firstChild.textContent;
@@ -2996,7 +3014,7 @@ let FriendsPageClass = (function(){
                             $J("#log_body").get(0).innerHTML += "<br>";
 
                             if (!response.success) {
-                                $J("#log_body").get(0).innerHTML += response.error || "Unknown error";
+                                $J("#log_body").get(0).innerHTML += \`<a href="//steamcommunity.com/profiles/\${profileID}/" target="_blank">\${response.error || "Unknown error"}</a>\`;
                             } else {
                                 $J("#log_body").get(0).innerHTML += "${Localization.str.posted_at_success}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/allcomments/" target="_blank">\${profileName}</a>\`);
                             }
@@ -3008,19 +3026,80 @@ let FriendsPageClass = (function(){
                             $J("#log_body").get(0).innerHTML += "<br>${Localization.str.posted_at_fail}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/" target="_blank">\${profileName}</a>\`)
                         })
                         .always(() => {
-                            $J("#log_head").html("<br><b>${Localization.str.processed}<b>".replace("__i__", i + 1).replace("__total__", total))
+                            $J("#log_head").html(\`<br><b>${Localization.str.processed} </b><i id="timer"></i>\`.replace("__i__", i + 1).replace("__total__", total))
+                            showTime();
                         });
                     }, delay * i);
                 });
             });
         }`);
 
+        let textArea = document.querySelector("#comment_textarea");
+        textArea.oninput = () => { textArea.style.height = ""; textArea.style.height = textArea.scrollHeight + "px" };
         document.querySelector("#FormattingHelpPopup").href = "javascript:CCommentThread.FormattingHelpPopup('Profile')";
     };
 
     return FriendsPageClass;
 })();
 
+let GroupsPageClass = (function(){
+
+    function GroupsPageClass() {
+        this.addSort();
+    }
+
+    GroupsPageClass.prototype.addSort = function() {
+        let groups = Array.from(document.querySelectorAll(".group_block"));
+        if (groups.length === 0) { return; }
+
+        groups.forEach((group, i) => {
+            let name = group.querySelector(".groupTitle > a").textContent;
+            let membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
+            group.dataset.esSortdefault = i;
+            group.dataset.esSortnames = name;
+            group.dataset.esSortmembers = membercount;
+        });
+
+        function sortGroups(sortBy, reversed) {
+            let searchResults = document.querySelector("#search_results_empty");
+            let property = `esSort${sortBy}`;
+            groups.sort((a, b) => {
+                let propA = a.dataset[property];
+                let propB = b.dataset[property];
+                switch(sortBy) {
+                    case "default":
+                        return Number(propA) - Number(propB);
+                    case "members":
+                        return Number(propB) - Number(propA);
+                    case "names": {
+                        if (propA.toLowerCase() < propB.toLowerCase()) { return -1; }
+                        if (propA.toLowerCase() > propB.toLowerCase()) { return 1; }
+                        return 0;
+                    }
+                }
+            });
+
+            for (let group of groups) {
+                if (reversed) {
+                    searchResults.insertAdjacentElement("afterend", group);
+                } else {
+                    searchResults.parentElement.appendChild(group);
+                }
+            }
+        }
+
+        document.querySelector("#search_text_box").insertAdjacentElement("beforebegin", Sortbox.get(
+            "groups",
+            [["default", Localization.str.theworddefault], ["members", Localization.str.members], ["names", Localization.str.name]],
+            SyncedStorage.get("sortgroupsby"),
+            sortGroups,
+            "sortgroupsby")
+        );
+        document.querySelector(".es-sortbox").style.flex = 2;
+    };
+
+    return GroupsPageClass;
+})();
 
 let MarketListingPageClass = (function(){
 
@@ -4139,6 +4218,10 @@ let EditGuidePageClass = (function(){
 
         case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
             (new FriendsPageClass());
+            break;
+
+        case /^\/(?:id|profiles)\/.+\/groups(?:[/#?]|$)/.test(path):
+            (new GroupsPageClass());
             break;
 
         case /^\/(?:id|profiles)\/.+\/inventory/.test(path):

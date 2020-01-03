@@ -206,6 +206,11 @@ img.platform_small, .platform_img {
   margin-right: 1px;
 }
 
+img.astats_icon {
+  width: 16px;
+  margin-left: 4px;
+}
+
 .es_badges {
   cursor: pointer;
 }
@@ -633,7 +638,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
   display: table-cell;
   vertical-align: middle;
   line-height: normal;
-  padding-left: 15px;
+  padding: 0 15px;
 }
 
 #es-lightbox {
@@ -2440,14 +2445,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
   align-items: center;
   margin-right: 1em;
 }
-#es_itad.not_authorized {
-	cursor: pointer;
-}
-#es_itad.authorized #es_itad_status {
+#es_itad_status {
 	color: rgb(81, 119, 29);
-}
-#es_itad.not_authorized #es_itad_status {
-	text-decoration: underline;
 }
 #es_itad_status {
 	margin-left: 0.4em;
@@ -2499,28 +2498,29 @@ input[type=checkbox].es_dlc_selection:checked + label {
   width: 26px;
   height: 13px;
 }
-.es-itad-hover__import-now {
-  font-weight: bolder;
-  font-size: medium;
+.es-itad-hover__last-import {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-column-gap: 1em;
+}
+.es-itad-hover__sync-now {
   display: flex;
-  align-items: center;
   justify-content: center;
 }
-.es-itad-hover__import-now--loading .es-itad-hover__import-now-text {
-  cursor: progress;
-}
-.es-itad-hover__import-now-text {
+.es-itad-hover__sync-now-text {
+  font-weight: bolder;
+  font-size: medium;
   cursor: pointer;
   text-decoration: underline;
   margin-right: 5px;
 }
-.es-itad-hover__import-success {
+.es-itad-hover__sync-success {
   color: rgb(81, 119, 29);
 }
-.es-itad-hover__import-now .loader, .es-itad-hover__import-failed, .es-itad-hover__import-success {
+.es-itad-hover__sync-now .loader, .es-itad-hover__sync-failed, .es-itad-hover__sync-success {
   display: none;
 }
-.es-itad-hover__import-now--failed .es-itad-hover__import-failed, .es-itad-hover__import-now--success .es-itad-hover__import-success, .es-itad-hover__import-now--loading .loader {
+.es-itad-hover__sync-now--failed .es-itad-hover__sync-failed, .es-itad-hover__sync-now--success .es-itad-hover__sync-success, .es-itad-hover__sync-now--loading .loader {
   display: block;
 }
 
@@ -2715,7 +2715,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * add_steamrep_api()
  **************************************/
 #es_steamrep {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto;
+  margin-bottom: 10px;
   font-size: 13px;
   font-family: Verdana;
 }
@@ -2794,17 +2796,19 @@ input[type=checkbox].es_dlc_selection:checked + label {
   justify-content: space-between;
   align-items: center;
   font-size: 1.6em;
+  text-align: center;
+}
+#esi-wishlist-chart-content span {
+  flex-grow: 2;
 }
 #esi-wishlist-chart-content a,
 #esi-collection-chart-content a {
   cursor: pointer;
-  text-align: center;
   flex-grow: 2;
 }
 
 .esi-wishlist-stat,
 .esi-collection-stat {
-  text-align: center;
   display: flex;
   flex-direction: column;
 }
@@ -2897,7 +2901,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
   overflow: hidden;
 }
 
-.esi-hide-common .esi-common {
+/* hide Steam's option on "All Games" page */
+input[id="show_common_games"],
+label[for="show_common_games"] {
+  display: none;
+}
+.esi-hide-common .esi-common,
+.esi-hide-notcommon .esi-notcommon { 
   display: none !important;
 }
 
@@ -2961,6 +2971,22 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_profile_buttons {
   margin-top: 10px;
   text-align: right;
+}
+
+.es_hltb a.linkbar > img,
+.es_wsgf a.linkbar > img {
+  border: 0;
+  vertical-align: baseline;
+}
+
+.es_hltb .details_block span {
+  float: right;
+}
+
+.es_wsgf .details_block img {
+  border: 0;
+  height: 120px;
+  cursor: help;
 }
 
 /***************************************

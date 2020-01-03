@@ -169,79 +169,105 @@ class StorePageClass {
     addDrmWarnings() {
         if (!SyncedStorage.get("showdrm")) { return; }
 
+        // Prevent false-positives
+        if (this.isAppPage() && (
+               this.appid === 21690    // Resident Evil 5, at Capcom's request
+            || this.appid === 1157970  // Special K
+        )) { return; }
+
         let text = "";
         for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details, .DRM_notice")) {
-            text += node.innerHTML;
+            text += node.textContent.toLowerCase();
         }
-        let uppercased = text.toUpperCase();
 
         // Games for Windows Live detection
         let gfwl =
-               uppercased.includes("GAMES FOR WINDOWS LIVE")
-            || uppercased.includes("GAMES FOR WINDOWS - LIVE")
-            || text.includes("Online play requires log-in to Games For Windows")
-            || text.includes("INSTALLATION OF THE GAMES FOR WINDOWS LIVE SOFTWARE")
-            || text.includes("Multiplayer play and other LIVE features included at no charge")
+               text.includes("games for windows live")
+            || text.includes("games for windows - live")
+            || text.includes("online play requires log-in to games for windows")
+            || text.includes("installation of the games for windows live software")
+            || text.includes("multiplayer play and other live features included at no charge")
             || text.includes("www.gamesforwindows.com/live");
 
         // Ubisoft Uplay detection
         let uplay =
-               text.includes("Uplay")
-            || text.includes("Ubisoft Account");
+               text.includes("uplay")
+            || text.includes("ubisoft account");
 
         // Securom detection
-        let securom = text.includes("SecuROM");
+        let securom = text.includes("securom");
 
         // Tages detection
         let tages =
-                text.match(/\b(tages|solidshield)\b/i)
-            && !text.match(/angebote des tages/i);
+                text.match(/\b(tages|solidshield)\b/)
+            && !text.match(/angebote des tages/);
 
         // Stardock account detection
-        let stardock = text.includes("Stardock account");
+        let stardock = text.includes("stardock account");
 
         // Rockstar social club detection
         let rockstar =
-               text.includes("Rockstar Social Club")
-            || text.includes("Rockstar Games Social Club");
+               text.includes("rockstar social club")
+            || text.includes("rockstar games social club");
 
         // Kalypso Launcher detection
-        let kalypso = text.includes("Requires a Kalypso account");
+        let kalypso = text.includes("requires a kalypso account");
 
         // Denuvo Antitamper detection
-        let denuvo = text.match(/\bdenuvo\b/i);
+        let denuvo = text.includes("denuvo");
 
-        // Detect other DRM
-        let drm =
-                text.includes("3rd-party DRM")
-            && !text.match(/No (3rd|third)[- ]party DRM/i);
+        // EA origin detection
+        let origin = text.includes("origin client");
+
+        // Microsoft Xbox Live account detection
+        let xbox = text.includes("xbox live");
 
         let drmNames = [];
-        if (gfwl) { drmNames.push('Games for Windows Live'); }
-        if (uplay) { drmNames.push('Ubisoft Uplay'); }
-        if (securom) { drmNames.push('SecuROM'); }
-        if (tages) { drmNames.push('Tages'); }
-        if (stardock) { drmNames.push('Stardock Account Required'); }
-        if (rockstar) { drmNames.push('Rockstar Social Club'); }
+        if (gfwl) { drmNames.push("Games for Windows Live"); }
+        if (uplay) { drmNames.push("Ubisoft Uplay"); }
+        if (securom) { drmNames.push("SecuROM"); }
+        if (tages) { drmNames.push("Tages"); }
+        if (stardock) { drmNames.push("Stardock Account Required"); }
+        if (rockstar) { drmNames.push("Rockstar Social Club"); }
         if (kalypso) { drmNames.push("Kalypso Launcher"); }
         if (denuvo) { drmNames.push("Denuvo Anti-tamper"); }
-        drm = drm || drmNames.length > 0;
+        if (origin) { drmNames.push("EA Origin"); }
+        if (xbox) { drmNames.push("Microsoft Xbox Live"); }
 
-        // Prevent false-positives
-        if (this.isAppPage() && this.appid === 21690) { drm = false; } // Resident Evil 5, at Capcom's request
-
-        if (drm) {
-            let drmString = "";
-            if (drmNames.length > 0) {
-                drmString = "(" + drmNames.join(", ") + ")";
+        let drmString;
+        let regex = /\b(drm|account|steam)\b/i;
+        if (drmNames.length > 0) {
+            drmString = `(${drmNames.join(", ")})`;
+        } else { // Detect other DRM
+            if (this.isAppPage()) {
+                for (let node of document.querySelectorAll("#category_block > .DRM_notice")) {
+                    let text = node.textContent;
+                    if (text.match(regex)) {
+                        drmString = text;
+                        break;
+                    }
+                }
             }
+            if (this.isSubPage()) {
+                let node = document.querySelector(".game_details .details_block > p > b:last-of-type");
+                let text = node.textContent + node.nextSibling.textContent;
+                if (text.match(regex)) {
+                    drmString = text;
+                }
+            }
+        }
 
-            let warnString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
-            warnString = warnString.replace("__drmlist__", drmString);
-
+        if (drmString) {
+            let warnString;
+            if (drmNames.length > 0) {
+                warnString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+                warnString = warnString.replace("__drmlist__", drmString);
+            } else {
+                warnString = drmString;
+            }
             let node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
             if (node) {
-                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${warnString}</span></div>`)
+                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${warnString}</span></div>`);
             } else {
                 HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${warnString}</span></div>`);
             }
@@ -933,7 +959,7 @@ class AppPageClass extends StorePageClass {
         }
 
         let handler = () => {
-            this.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, this.appid, "#esi-store-user-note", toggleState);
+            this.userNotes.showModalDialog(this.appName, this.appid, "#esi-store-user-note", toggleState);
         };
 
         document.querySelector(".js-user-note-button").addEventListener("click", handler);
@@ -1448,15 +1474,11 @@ class AppPageClass extends StorePageClass {
     }
 
     addWidescreenCertification() {
-        if (!SyncedStorage.get("showwsgf")) { return; }
-        if (this.isDlc()) { return; }
+        if (this.isDlc() || !SyncedStorage.get("showwsgf")) { return; }
 
         this.data.then(result => {
             if (!result || !result.wsgf) { return; }
-            let node = document.querySelector(".game_details");
-
             let data = result.wsgf;
-            if (!data) { return; }
 
             let path = data["Path"];
             let wsg = data["WideScreenGrade"];
@@ -1558,72 +1580,65 @@ class AppPageClass extends StorePageClass {
                     break;
             }
 
+            let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.wsgf.certifications}</div>
+                       <div class="block underlined_links es_wsgf">
+                       <div class="block_content"><div class="block_content_inner"><div class="details_block"><center>`;
 
-            let wsgfUrl = HTML.escape(path);
+            if (wsg !== "Incomplete") { html += `<img src="${HTML.escape(wsg_icon)}" title="${HTML.escape(wsg_text)}">&nbsp;&nbsp;&nbsp;`; }
+            if (mmg !== "Incomplete") { html += `<img src="${HTML.escape(mmg_icon)}" title="${HTML.escape(mmg_text)}">&nbsp;&nbsp;&nbsp;`; }
+            if (uws !== "Incomplete") { html += `<img src="${HTML.escape(uws_icon)}" title="${HTML.escape(uws_text)}">&nbsp;&nbsp;&nbsp;`; }
+            if (fkg !== "Incomplete") { html += `<img src="${HTML.escape(fkg_icon)}" title="${HTML.escape(fkg_text)}">&nbsp;&nbsp;&nbsp;`; }
 
-            let html = "<div class='block responsive_apppage_details_right heading'>"+Localization.str.wsgf.certifications+"</div><div class='block underlined_links'><div class='block_content'><div class='block_content_inner'><div class='details_block'><center>";
-            if (wsg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(wsg_icon) + "' height='120' title='" + HTML.escape(wsg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (mmg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(mmg_icon) + "' height='120' title='" + HTML.escape(mmg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (uws !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(uws_icon) + "' height='120' title='" + HTML.escape(uws_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (fkg !== "Incomplete") { html += "<a target='_blank' href='" + wsgfUrl + "'><img src='" + HTML.escape(fkg_icon) + "' height='120' title='" + HTML.escape(fkg_text) + "' border=0></a>&nbsp;&nbsp;&nbsp;"; }
-            if (path) { html += "</center><br><a class='linkbar' target='_blank' href='" + wsgfUrl + "'>" + Localization.str.rating_details + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"; }
-            html += "</div></div></div></div>";
+            html += `</center></div>
+                    <br><a class="linkbar" target="_blank" href="${HTML.escape(path)}">${Localization.str.rating_details} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></a>
+                    </div></div></div>`;
 
-            HTML.afterEnd(node, html);
+            HTML.afterEnd("div.game_details", html);
         });
     }
 
     addHltb() {
-        if (!SyncedStorage.get("showhltb")) { return; }
-        if (this.isDlc()) { return; }
+        if (this.isDlc() || !SyncedStorage.get("showhltb")) { return; }
 
         this.data.then(result => {
             if (!result || !result.hltb) { return; }
             let data = result.hltb;
 
-            let html = "";
-            if (data.success) {
-                html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.hltb.title}</div>
-                            <div class='block game_details underlined_links'>
-                            <div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
+            let suggestUrl = `${Config.PublicHost}/gamedata/hltb_link_suggest.php`;
+            let icoImg = "//store.steampowered.com/public/images/v5/ico_external_link.gif";
 
-                if (data["main_story"]){
-                    let value = HTML.escape(data['main_story']);
-                    html += `<b>${Localization.str.hltb.main}:</b><span style='float: right;'>${value}</span><br>`;
+            let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.hltb.title}</div>
+                       <div class="block game_details underlined_links es_hltb">
+                       <div class="block_content"><div class="block_content_inner"><div class="details_block">`;
+
+            if (data.success) {
+                if (data["main_story"]) {
+                    html += `<b>${Localization.str.hltb.main}:</b><span>${HTML.escape(data["main_story"])}</span><br>`;
                 }
-                if (data["main_extras"]){
-                    let value = HTML.escape(data['main_extras']);
-                    html += `<b>${Localization.str.hltb.main_e}:</b><span style='float: right;'>${value}</span><br>`;
+                if (data["main_extras"]) {
+                    html += `<b>${Localization.str.hltb.main_e}:</b><span>${HTML.escape(data["main_extras"])}</span><br>`;
                 }
                 if (data["comp"]) {
-                    let value = HTML.escape(data['comp']);
-                    html += `<b>${Localization.str.hltb.compl}:</b><span style='float: right;'>${value}</span><br>`;
+                    html += `<b>${Localization.str.hltb.compl}:</b><span>${HTML.escape(data["comp"])}</span><br>`;
                 }
 
-                let suggestUrl = Config.PublicHost + "/gamedata/hltb_link_suggest.php";
-
-                html += "</div>"
-                    + "<a class='linkbar' href='" + HTML.escape(data['url']) + "' target='_blank'>" + Localization.str.more_information + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-                    + "<a class='linkbar' href='" + HTML.escape(data['submit_url']) + "' target='_blank'>" + Localization.str.hltb.submit + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-                    + "<a class='linkbar' href='" + suggestUrl + "' id='suggest'>" + Localization.str.hltb.wrong + " - " + Localization.str.hltb.help + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-                    + "</div></div></div>";
-
-
+                html += `</div>
+                        <a class="linkbar" href="${HTML.escape(data["url"])}" target="_blank">${Localization.str.more_information} <img src="${icoImg}"></a>
+                        <a class="linkbar" href="${HTML.escape(data["submit_url"])}" target="_blank">${Localization.str.hltb.submit} <img src="${icoImg}"></a>`;
+                        // FIXME <a class="linkbar" href="${suggestUrl}" id="suggest">${Localization.str.hltb.wrong}-${Localization.str.hltb.help} <img src="${icoImg}"></a>
             } else {
-                html = "<div class='block game_details underlined_links'>"
-                    + "<div class='block_header'><h4>How Long to Beat</h4></div>"
-                    + "<div class='block_content'><div class='block_content_inner'><div class='details_block'>" + Localization.str.hltb.no_data + "</div>"
-                    // FIXME + "<a class='linkbar' href='//www.enhancedsteam.com/gamedata/hltb_link_suggest.php' id='suggest'>" + Localization.str.hltb.help + " <img src='//store.steampowered.com/public/images/v5/ico_external_link.gif' border='0' align='bottom'></a>"
-                    + "</div></div></div>";
+                html += `${Localization.str.hltb.no_data}</div>`;
+                        // FIXME <a class="linkbar" href="${suggestUrl}" id="suggest">${Localization.str.hltb.wrong}-${Localization.str.hltb.help} <img src="${icoImg}"></a>
             }
+            html += '</div></div></div>';
 
             HTML.afterEnd("div.game_details", html);
 
             let suggest = document.querySelector("#suggest");
             if (suggest) { // FIXME consequence of the above FIXME
-                suggest.addEventListener("click", function(){
-                    LocalStorage.remove("storePageData_" + this.appid);
-                    Background.action('storepagedata.expire', this.appid);
+                suggest.addEventListener("click", () => {
+                    LocalStorage.remove(`storePageData_${this.appid}`);
+                    Background.action("storepagedata.expire", this.appid);
                 });
             }
         });
@@ -1632,7 +1647,7 @@ class AppPageClass extends StorePageClass {
     replaceDevPubLinks() {
         if (!this.isAppPage()) { return; }
 
-        document.querySelectorAll("#game_highlights .dev_row a,.details_block .dev_row:not(:last-of-type) a").forEach((linkNode, i) => {
+        document.querySelectorAll("#game_highlights .dev_row a,.details_block .dev_row:not(:nth-of-type(3)) a").forEach((linkNode, i) => {
             let homepageLink = new URL(linkNode.href);
             if (homepageLink.pathname === "/search/") return;
 
@@ -1643,7 +1658,7 @@ class AppPageClass extends StorePageClass {
         });
 
         for (let moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {
-            if (moreBtn) { moreBtn.remove(); }
+            moreBtn.remove();
         }
 
         ExtensionLayer.runInPageContext(() => CollapseLongStrings(".dev_row .summary.column"));
@@ -2090,9 +2105,7 @@ class AppPageClass extends StorePageClass {
     }
 
     addBadgeProgress() {
-        if (!this.hasCards) { return; }
-        if (!User.isSignedIn) { return; }
-        if (!SyncedStorage.get("show_badge_progress")) { return; }
+        if (!this.hasCards || !User.isSignedIn || !SyncedStorage.get("show_badge_progress")) { return; }
 
         let stylesheet = document.createElement('link');
         stylesheet.rel = 'stylesheet';
@@ -2154,19 +2167,19 @@ class AppPageClass extends StorePageClass {
             let is_normal_badge = targetSelector === ".es_normal_badge_progress";
 
             if (is_normal_badge || (card_num_owned > 0 || !blockSel.querySelector(".badge_empty_circle"))) {
-                document.querySelector(".es_badges_progress_block").style.display = 'block';
+                document.querySelector(".es_badges_progress_block").style.display = "block";
                 blockSel.style.display = "block";
 
                 let progressBold = badgeNode.querySelector(".progress_info_bold");
 
                 HTML.beforeEnd(blockSel,
                     `<div class="es_cards_numbers">
-                         <div class="es_cards_remaining">${progressBold ? progressBold.textContent : ""}</div>
-                     </div>
-                     <div class="game_area_details_specs">
-                         <div class="icon"><img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png" width="24" height="16" border="0" align="top"></div>
-                         <a href="//steamcommunity.com/my/gamecards/${ appid + (is_normal_badge ? `/` : `?border=1`) }" class="name">${badge_completed ? Localization.str.view_badge : Localization.str.view_badge_progress}</a>
-                     </div>`);
+                        <div class="es_cards_remaining">${progressBold ? progressBold.textContent : ""}</div>
+                    </div>
+                    <div class="game_area_details_specs">
+                        <div class="icon"><img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png" class="category_icon"></div>
+                        <a href="//steamcommunity.com/my/gamecards/${appid}${is_normal_badge ? '/' : '?border=1'}" class="name">${badge_completed ? Localization.str.view_badge : Localization.str.view_badge_progress}</a>
+                    </div>`);
 
                 if (show_card_num) {
                     HTML.beforeEnd(blockSel.querySelector(".es_cards_numbers"),
@@ -2184,17 +2197,16 @@ class AppPageClass extends StorePageClass {
     }
 
     addAstatsLink() {
-        if (!SyncedStorage.get("showastatslink")) { return; }
-        if (!this.hasAchievements()) { return; }
+        if (!this.hasAchievements() || !SyncedStorage.get("showastatslink")) { return; }
 
         let imgUrl = ExtensionResources.getURL("img/ico/astatsnl.png");
-        let url = "http://astats.astats.nl/astats/Steam_Game_Info.php?AppID=" + this.communityAppid;
+        let url = `https://astats.astats.nl/astats/Steam_Game_Info.php?AppID=${this.communityAppid}`;
 
         HTML.beforeEnd("#achievement_block",
-        `<div class='game_area_details_specs'>
-                  <div class='icon'><img src='${imgUrl}' style='margin-left: 4px; width: 16px;'></div>
-                  <a class='name' href='${url}' target='_blank'><span>${Localization.str.view_astats}</span></a>
-               </div>`);
+            `<div class="game_area_details_specs">
+                <div class="icon"><img class="astats_icon" src="${imgUrl}"></div>
+                <a class="name" href="${url}" target="_blank">${Localization.str.view_astats}</a>
+            </div>`);
     }
 
     addAchievementCompletionBar() {
@@ -3385,7 +3397,6 @@ let WishlistPageClass = (function(){
             this.addExportWishlistButton();
             this.addEmptyWishlistButton();
             this.addUserNotesHandlers();
-            this.addRemoveHandler();
         };
         
         if (document.querySelector("#throbber").style.display === "none") {
@@ -3466,15 +3477,16 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addStatsArea = function() {
+        if (!SyncedStorage.get("showwishliststats")) { return; }
         if (document.getElementById("nothing_to_see_here").style.display !== "none") { return; }
 
         HTML.beforeBegin("#wishlist_ctn",
             `<div id="esi-wishlist-chart-content">
                 <a>${Localization.str.wl.compute}</a>
-             </div>`);
+            </div>`);
 
-        document.querySelector("#esi-wishlist-chart-content a").addEventListener("click", function(e) {
-            HTML.inner(e.target.parentNode, "<span style='text-align:center;flex-grow:2'>" + Localization.str.loading + "</span>");
+        document.querySelector("#esi-wishlist-chart-content a").addEventListener("click", e => {
+            HTML.inner(e.target.parentNode, `<span>${Localization.str.loading}</span>`);
             loadStats();
         });
     };
@@ -3705,7 +3717,7 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addExportWishlistButton = function() {
-        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_export_wishlist'><div>" + Localization.str.export.wishlist + "</div></div>");
+        HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${Localization.str.export.wishlist}</div></div>`);
 
         document.querySelector("#es_export_wishlist").addEventListener("click", () => {
             Messenger.onMessage("appInfo").then(appInfo => this.showExportModalDialog(appInfo));
@@ -3766,7 +3778,7 @@ let WishlistPageClass = (function(){
         let noteText;
         let cssClass;
         if (await userNotes.exists(appid)) {
-            noteText = `"${await userNotes.getNote(appid)}"`;
+            noteText = `"${await userNotes.get(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.user_note.add;
@@ -3774,11 +3786,11 @@ let WishlistPageClass = (function(){
         }
 
         HTML.afterEnd(node.querySelector(".mid_container"),
-            "<div class='esi-note " + cssClass + "'>" + noteText + "</div>");
+            `<div class="esi-note ${cssClass}">${noteText}</div>`);
         node.classList.add("esi-has-note");
     };
 
-    WishlistPageClass.prototype.addUserNotesHandlers =  function() {
+    WishlistPageClass.prototype.addUserNotesHandlers = function() {
         if (!isMyWishlist()) { return; }
 
         let stateHandler = function(node, active) {
@@ -3798,18 +3810,6 @@ let WishlistPageClass = (function(){
             let appid = Number(row.dataset.appId);
             userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note", stateHandler);
         });
-    };
-
-    WishlistPageClass.prototype.addRemoveHandler = function() {
-        ExtensionLayer.runInPageContext(() =>
-            $J(document).ajaxSuccess(function( event, xhr, settings ) {
-                if (settings.url.endsWith("/remove/")) {
-                    Messenger.postMessage("removeWlEntry", settings.data.match(/(?!appid=)\d+/)[0]);
-                }
-            })
-        );
-
-        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry));
     };
 
     return WishlistPageClass;
@@ -3892,7 +3892,7 @@ class UserNotes {
         }
 
         let saveNote = () => {
-            let modal = document.querySelector('#es_note_modal');
+            let modal = document.querySelector("#es_note_modal");
             let appid = parseInt(modal.dataset.appid, 10);
             let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
             let node = document.querySelector(decodeURIComponent(modal.dataset.selector));
