@@ -2023,6 +2023,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  max-width: 800px
 }
 .es_changelog p {
   margin-bottom: 0.4em;

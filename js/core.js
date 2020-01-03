@@ -1,5 +1,5 @@
 const Info = {
-    'version': "1.3.1",
+    'version': "1.4.0",
     'db_version': 1,
 };
 
@@ -149,7 +149,7 @@ class UpdateHandler {
             }`
         );
 
-        if (Info.version === "1.4") {
+        if (Version.fromString(Info.version).isSame(new Version(1, 4))) {
             let connectBtn = document.querySelector("#itad_connect");
             if (await BackgroundBase.action("itad.isconnected")) {
                 itadConnected();
