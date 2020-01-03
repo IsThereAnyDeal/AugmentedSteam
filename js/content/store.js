@@ -1163,17 +1163,6 @@ class AppPageClass extends StorePageClass {
             openButton.addEventListener("click", () => {
                 window.open(modalTitleLink.href, "_blank");
             });
-
-            HTML.beforeEnd(modalFooter,
-                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_download_btn" style="right: calc(${nextButtonOffsetWidth + fsvButton.offsetWidth + openButton.offsetWidth}px + 1.5em)" title="${modalTitleLink.textContent.trim()}"><i></i></div>`);
-            let downloadButton = modalFooter.querySelector(".es_screenshot_download_btn");
-            downloadButton.addEventListener("click", () => {
-                let uri = new URL(modalTitleLink.href);
-                let url = uri.href;
-                let filename = uri.pathname.split("/").pop();
-                console.log({ url, filename })
-                Downloader.download({ url, filename });
-            });
         }
 
         let observer = new MutationObserver(records => {
