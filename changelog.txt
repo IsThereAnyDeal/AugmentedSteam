@@ -4,7 +4,7 @@ Integration with IsThereAnyDeal (BETA)
 Added IsThereAnyDeal integration, which allows you to connect Augmented Steam with your ITAD account.
 That way you can apply Augmented Steam's highlighting and tagging to games in your Waitlist and Collection even if you don't have them on Steam.
 
-Furthermore, it allows you to import games from your Steam Library and/or Wishlist to IsThereAnyDeal, for improved accuracy.
+Furthermore, it allows you to import games from your Steam Library and/or Wishlist to IsThereAnyDeal, for improved accuracy (e.g. DLCs or unlisted games).
 Currently this feature can only add titles, not remove them, so it's not the replacement for IsThereAnyDeal's integrated sync, but an addition to it.
 
 Context menu
