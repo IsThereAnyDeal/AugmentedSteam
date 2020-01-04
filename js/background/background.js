@@ -413,7 +413,6 @@ ITAD_Api.origin = Config.ITAD_ApiServerHost;
 ITAD_Api._progressingRequests = new Map();
 
 class ContextMenu {
-    _listenerRegistered = false;
 
     static onClick(info) {
         let selectionText = encodeURIComponent(info.selectionText.trim());
@@ -467,9 +466,9 @@ class ContextMenu {
         if (!browser.contextMenus) { return; }
         browser.contextMenus.removeAll().then(ContextMenu.build);
 
-        if (!this._listenerRegistered) {
+        if (!ContextMenu._listenerRegistered) {
             browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
-            this._listenerRegistered = true;
+            ContextMenu._listenerRegistered = true;
         }
     }
 
@@ -478,6 +477,8 @@ class ContextMenu {
         ContextMenu.update();
     }
 }
+ContextMenu._listenerRegistered = false;
+
 
 class SteamStore extends Api {
     // static origin = "https://store.steampowered.com/";
