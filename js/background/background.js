@@ -275,32 +275,19 @@ class ITAD_Api extends Api {
             "data": [],
         };
 
-        if (Array.isArray(appids)) {
-            appids.forEach(appid => {
-                collectionJSON.data.push({
-                    "gameid": ["steam", `app/${appid}`],
-                    "copies": [{ "type": "steam" }],
-                });
-            });
-        } else if (appids) {
-            collectionJSON.data[0] = {
-                "gameid": ["steam", `app/${appids}`],
-                "copies": [{ "type": "steam" }],
-            }
-        }
+        appids = Array.isArray(appids) ? appids : (appids ? [appids] : []);
+        subids = Array.isArray(subids) ? subids : (subids ? [subids] : []);
 
-        if (Array.isArray(subids)) {
-            subids.forEach(subid => {
-                collectionJSON.data.push({
-                    "gameid": ["steam", `sub/${subid}`],
-                    "copies": [{ "type": "steam" }],
-                });
+        let storeids = appids.map(appid => `app/${appid}`).concat(subids.map(subid => `sub/${subids}`));
+        for (let storeid of storeids) {
+            collectionJSON.data.push({
+                "gameid": ["steam", storeid],
+                "copies": [{
+                    "type": "steam",
+                    "status": "redeemed",
+                    "owned": 1,
+                }],
             });
-        } else if (subids) {
-            collectionJSON.data[0] = {
-                "gameid": ["steam", `sub/${subids}`],
-                "copies": [{ "type": "steam" }],
-            }
         }
 
         return ITAD_Api.postEndpoint("v01/collection/import/", { "access_token": ITAD_Api.accessToken }, null, { "body": JSON.stringify(collectionJSON) });
