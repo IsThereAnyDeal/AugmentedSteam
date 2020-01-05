@@ -571,8 +571,7 @@ let User = (function(){
                     LocalStorage.set("userCountry", login.userCountry);
                 }
             })
-            .catch(err => console.error(err))
-            ;
+            .catch(err => console.error(err));
 
         return _promise;
     };
@@ -1020,6 +1019,7 @@ let EnhancedSteam = (function() {
     let self = {};
 
     self.addMenu = function() {
+
         HTML.afterBegin("#global_action_menu",
             `<div id="es_menu">
                 <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
@@ -1036,8 +1036,7 @@ let EnhancedSteam = (function() {
                         <a class="popup_menu_item" target="_blank" href="https://discord.gg/yn57q7f">Discord</a>
                     </div>
                 </div>
-            </div>
-        `);
+            </div>`);
 
         let popup = document.querySelector("#es_popup");
         document.querySelector("#es_pulldown").addEventListener("click", function(){
@@ -1430,13 +1429,11 @@ let EarlyAccess = (function(){
                            ".browse_tag_game_cap"]);
                 break;
             case /^\/(?:curator|developer|dlc|publisher)\/.*/.test(window.location.pathname):
-                checkNodes( [
-                    "#curator_avatar_image",
-                    ".capsule",
-                ]);
+                checkNodes(["#curator_avatar_image",
+                           ".capsule"]);
                 break;
             case /^\/$/.test(window.location.pathname):
-                checkNodes( [".cap",
+                checkNodes([".cap",
                            ".special",
                            ".game_capsule",
                            ".cluster_capsule",
@@ -1576,6 +1573,7 @@ let Highlights = (function(){
             tagCssLoaded = true;
 
             let tagCss = [];
+
             for (let name of highlightTypes) {
                 let color = SyncedStorage.get(`tag_${name}_color`);
                 tagCss.push(`.es_tag_${name} { background-color: ${color}; }`);
