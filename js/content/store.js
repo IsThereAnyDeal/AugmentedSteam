@@ -3304,11 +3304,13 @@ let WishlistPageClass = (function(){
 
     let cachedPrices = {};
     let userNotes;
+    let myWishlist;
 
     function WishlistPageClass() {
 
         let that = this;
         userNotes = new UserNotes();
+        myWishlist = isMyWishlist();
 
         let container = document.querySelector("#wishlist_ctn");
         let timeout = null, lastRequest = null;
@@ -3333,7 +3335,7 @@ let WishlistPageClass = (function(){
                         if (node.parentNode !== container) { // Valve detaches wishlist entries that aren't visible
                             continue;
                         }
-                        if (isMyWishlist() && SyncedStorage.get("showusernotes")) {
+                        if (myWishlist && SyncedStorage.get("showusernotes")) {
                             promises.push(that.addUserNote(node));
                         }
                         that.highlightApps(node);
@@ -3407,9 +3409,10 @@ let WishlistPageClass = (function(){
     function isMyWishlist() {
         if (!User.isSignedIn) { return false; }
 
-        let loginImage = document.querySelector("#global_actions .user_avatar img").getAttribute("src");
-        let userImage = document.querySelector(".wishlist_header img").getAttribute("src").replace("_full", "");
-        return loginImage === userImage;
+        let myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/").replace(/\/$/, "");
+        let myWishlistUrlRegex = new RegExp("^" + myWishlistUrl + "([/#]|$)");
+        return myWishlistUrlRegex.test(window.location.href)
+            || window.location.href.includes("/profiles/" + User.steamId);
     }
 
     WishlistPageClass.prototype.highlightApps = async function(node) {
@@ -3426,7 +3429,7 @@ let WishlistPageClass = (function(){
         if (collected) Highlights.highlightCollection(node);
         if (waitlisted) Highlights.highlightWaitlist(node);
 
-        if (!isMyWishlist()) {
+        if (!myWishlist) {
             if (owned) {
                 node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
 
@@ -3527,7 +3530,7 @@ let WishlistPageClass = (function(){
     }
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
-        if (!isMyWishlist() || !SyncedStorage.get("showemptywishlist")) { return; }
+        if (!myWishlist || !SyncedStorage.get("showemptywishlist")) { return; }
 
         HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_empty_wishlist">${Localization.str.empty_wishlist.title}</div>`);
 
@@ -3777,7 +3780,7 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addUserNotesHandlers = function() {
-        if (!isMyWishlist()) { return; }
+        if (!myWishlist) { return; }
 
         let stateHandler = function(node, active) {
             if (active) {
