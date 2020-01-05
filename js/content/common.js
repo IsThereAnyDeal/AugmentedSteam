@@ -1650,7 +1650,7 @@ let Highlights = (function(){
 
         // Add the tag
         for (let n of tags) {
-            if (!n.querySelector(`es_tag_${tag}`)) {
+            if (!n.querySelector(`.es_tag_${tag}`)) {
                 HTML.beforeEnd(n, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
             }
         }
