@@ -281,6 +281,10 @@ class UpdateHandler {
             SyncedStorage.set("horizontalscrolling", SyncedStorage.get("horizontalmediascrolling"));
             SyncedStorage.remove("horizontalmediascrolling");
         }
+
+        if (oldVersion.isSameOrBefore("1.4")) {
+            SyncedStorage.remove("show_sysreqcheck");
+        }
     }
 }
 
@@ -608,7 +612,6 @@ SyncedStorage.defaults = {
 
     //'show_keylol_links': false, // not in use, option is commented out
     'show_package_info': false,
-    'show_sysreqcheck': false,
     'show_steamchart_info': true,
     'show_steamspy_info': true,
     'show_early_access': true,
