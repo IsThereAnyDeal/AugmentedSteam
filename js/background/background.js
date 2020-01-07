@@ -278,7 +278,7 @@ class ITAD_Api extends Api {
         appids = Array.isArray(appids) ? appids : (appids ? [appids] : []);
         subids = Array.isArray(subids) ? subids : (subids ? [subids] : []);
 
-        let storeids = appids.map(appid => `app/${appid}`).concat(subids.map(subid => `sub/${subids}`));
+        let storeids = appids.map(appid => `app/${appid}`).concat(subids.map(subid => `sub/${subid}`));
         for (let storeid of storeids) {
             collectionJSON.data.push({
                 "gameid": ["steam", storeid],
