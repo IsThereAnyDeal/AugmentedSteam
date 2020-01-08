@@ -1542,7 +1542,7 @@ let Inventory = (function(){
     };
 
     self.hasInInventory6 = function(marketHashes) {
-        return Background.action("hasItem", marketHashes);
+        return Background.action("hasitem", marketHashes);
     };
 
     return self;
