@@ -314,8 +314,8 @@ class GameId {
         }
 
         // app, market/listing
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
+        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(?:app|market\/listings)\/(\d+)\/?/);
+        return m && GameId.parseId(m[1]);
     }
     
     static getSubid(text) {
@@ -329,7 +329,7 @@ class GameId {
         }
         
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/sub\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
+        return m && GameId.parseId(m[1]);
     }
 
     static getBundleid(text) {
@@ -343,7 +343,7 @@ class GameId {
         }
 
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/bundle\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
+        return m && GameId.parseId(m[1]);
     }
 
     static trimStoreId(storeId) {
