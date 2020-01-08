@@ -1669,10 +1669,13 @@ class AppPageClass extends StorePageClass {
         let appid = this.appid;
         let supportInfo = cache[appid];
         if (!supportInfo) {
-            let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
-            if (!response || !response[appid] || !response[appid].success) { return; }
+            let response = await Background.action("appdetails", appid, "support_info");
+            if (!response || !response.success) { 
+                console.warn("Failed to retrieve support info");
+                return;
+            }
 
-            supportInfo = response[appid].data.support_info;
+            supportInfo = response.data.support_info;
 
             cache['data'][appid] = supportInfo;
             LocalStorage.set("support_info", cache);

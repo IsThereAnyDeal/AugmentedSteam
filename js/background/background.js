@@ -106,8 +106,22 @@ class Api {
         if (responseHandler) responseHandler(response);
         return response.json();
     }
-    static endpointFactory(endpoint) {
-        return async params => this.getEndpoint(endpoint, params).then(result => result.data);
+    static endpointFactory(endpoint, objPath) {
+        return async params => {
+            let result = await this.getEndpoint(endpoint, params);
+            if (objPath) {
+                if (Array.isArray(objPath)) {
+                    for (let part of objPath) {
+                        result = result[part];
+                    }
+                } else {
+                    result = result[objPath];
+                }
+            } else {
+                result = result.data;
+            }
+            return result;
+        }
     }
     static endpointFactoryCached(endpoint, objectStoreName, multiple, oneDimensional, resultFn) {
         return async (params, dbKey) => {
@@ -626,6 +640,14 @@ class SteamStore extends Api {
         await IndexedDB.clear("dynamicStore");
         Steam._dynamicstore_promise = null;
     }
+
+    static appDetails(appid, filter)    {
+        let params = { "appids": appid };
+        if (filter) { params.filters = filter; }
+
+        return SteamStore.endpointFactory("api/appdetails/", appid)(params);
+    }
+    static appUserDetails(appid) { return SteamStore.endpointFactory("api/appuserdetails/", appid)({ "appids": appid }); }
 }
 SteamStore.origin = "https://store.steampowered.com/";
 SteamStore.params = { 'credentials': 'include', };
@@ -1309,8 +1331,8 @@ let actionCallbacks = new Map([
     ["market.averagecardprice", AugmentedSteamApi.endpointFactory("v01/market/averagecardprice")], // FIXME deprecated
     ["market.averagecardprices", AugmentedSteamApi.endpointFactory("v01/market/averagecardprices")],
 
-    ["appdetails", SteamStore.endpointFactory("api/appdetails/")],
-    ["appuserdetails", SteamStore.endpointFactory("api/appuserdetails/")],
+    ["appdetails", SteamStore.appDetails],
+    ["appuserdetails", SteamStore.appUserDetails],
     ["currency", SteamStore.currency],
     ["sessionid", SteamStore.sessionId],
     ["purchases", SteamStore.purchases],

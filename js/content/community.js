@@ -1626,20 +1626,21 @@ let InventoryPageClass = (function(){
         if (!giftAppid) { return; }
         // TODO: Add support for package(sub)
 
-        let result = await Background.action('appdetails', { 'appids': giftAppid, 'filters': 'price_overview', } );
-        if (!result[giftAppid] || !result[giftAppid].success) { return; }
-        if (!result[giftAppid]['data']['price_overview']) { return; }
+        let result = await Background.action("appdetails", giftAppid, "price_overview");
+        if (!result || !result.success) { return; }
 
-        let overview = result[giftAppid]['data']['price_overview'];
-        let discount = overview["discount_percent"];
-        let price = new Price(overview['final'] / 100, overview['currency']);
+        let overview = result.data.price_overview;
+        if (!overview) { return; }
+
+        let discount = overview.discount_percent;
+        let price = new Price(overview.final / 100, overview.currency);
 
         itemActions.style.display = "flex";
         itemActions.style.alignItems = "center";
         itemActions.style.justifyContent = "space-between";
 
         if (discount > 0) {
-            let originalPrice = new Price(overview['initial'] / 100, overview['currency']);
+            let originalPrice = new Price(overview.initial / 100, overview.currency);
             HTML.beforeEnd(itemActions,
                 `<div class='es_game_purchase_action' style='margin-bottom:16px'>
                     <div class='es_game_purchase_action_bg'>
@@ -2755,15 +2756,13 @@ let FriendsThatPlayPageClass = (function(){
         if (!SyncedStorage.get("showallfriendsthatown")) return;
 
         let friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
-        let data = await Background.action('appuserdetails', { 'appids': this.appid, });
-        if (!data[this.appid].success || !data[this.appid].data.friendsown || data[this.appid].data.friendsown.length === 0) {
-            return;
-        }
+        let result = await Background.action("appuserdetails", this.appid);
+        if (!result || !result.success || !result.data || !result.data.friendsown || !result.data.friendsown.length) { return; }
 
         let friendsData = await friendsPromise;
         let friendsHtml = HTMLParser.htmlToDOM(friendsData);
 
-        let friendsOwn = data[this.appid].data.friendsown;
+        let friendsOwn = result.data.friendsown;
 
         let html = `<div class="mainSectionHeader friendListSectionHeader">
                         ${Localization.str.all_friends_own.replace('__friendcount__', friendsOwn.length)}

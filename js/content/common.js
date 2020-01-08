@@ -1244,9 +1244,9 @@ let EnhancedSteam = (function() {
             if (!result.rgOwnedApps) { return; }
             let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
 
-            Background.action('appdetails', { 'appids': appid, }).then(response => {
-                if (!response || !response[appid] || !response[appid].success) { return; }
-                let data = response[appid].data;
+            Background.action("appdetails", appid).then(response => {
+                if (!response || !response.success) { return; }
+                let data = response.data;
 
                 let gameid = appid;
                 let gamename;
