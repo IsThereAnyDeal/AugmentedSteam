@@ -200,12 +200,52 @@ class ITAD_Api extends Api {
 
     static async authorize() {
         let rnd = crypto.getRandomValues(new Uint32Array(1))[0];
+        let redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
 
-        let url = await browser.identity.launchWebAuthFlow(
-            {
-                url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${rnd}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${browser.identity.getRedirectURL()}`,
-                interactive: true
+        // https://groups.google.com/a/chromium.org/d/msg/chromium-extensions/K8njaUCU81c/eUxMIEACAQAJ
+
+        function noop() {}
+
+        // https://stackoverflow.com/a/58577052
+        browser.runtime.onConnect.addListener(noop);
+
+        // For some reason the scripts are not inserted on FF, but this doesn't really matter since FF doesn't support event pages. Therefore the event listeners never get unloaded.
+        document.body.appendChild(document.createElement("iframe")).src = "background-iframe.html";
+
+        let tab = await browser.tabs.create({ "url": `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${rnd}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${encodeURIComponent(redirectURI)}` });
+
+        let url;
+        try {
+            url = await new Promise((resolve, reject) => {
+                function webRequestListener({ url }) {
+                    resolve(url);
+                    
+                    browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
+                    browser.tabs.onRemoved.removeListener(tabsListener);
+
+                    browser.tabs.remove(tab.id);
+                    return { "cancel": true };
+                }
+
+                function tabsListener(tabId) {
+                    if (tabId === tab.id) {
+                        reject(new Error("Authorization tab closed"));
+                        
+                        browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
+                        browser.tabs.onRemoved.removeListener(tabsListener);
+                    }
+                }
+
+                browser.webRequest.onBeforeRequest.addListener(webRequestListener, { "urls": [
+                    redirectURI,        // For Chrome, seems to not support match patterns (probably a problem with the Polyfill?)
+                    `${redirectURI}#*`  // For Firefox
+                ], "tabId": tab.id }, ["blocking"]);
+                browser.tabs.onRemoved.addListener(tabsListener);
             });
+        } finally {
+            browser.runtime.onConnect.removeListener(noop);
+            document.querySelector("iframe").remove();
+        }        
 
         let hashFragment = new URL(url).hash;
         let params = new URLSearchParams(hashFragment.substr(1));

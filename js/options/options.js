@@ -475,6 +475,7 @@ let Options = (function(){
         }
 
         async function connect() {
+            if (!await browser.permissions.request({ "permissions": ["webRequest", "webRequestBlocking"] })) { return; } // Has to be synchronously acquired from a user gesture
             await BackgroundBase.action("itad.authorize");
 
             itadStatus.textContent = Localization.str.connected;
