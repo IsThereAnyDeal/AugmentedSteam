@@ -3581,10 +3581,12 @@ let WishlistPageClass = (function(){
 
         constructor(appInfo) {
             this.appInfo = appInfo;
-            this.notes = SyncedStorage.get("user_notes") || {};
+            this.notesPromise = Background.action("notes.getall");
         }
 
-        toJson() {
+        async toJson() {
+            let notes = await this.notesPromise;
+
             let json = {
                 version: "02",
                 data: []
@@ -3596,14 +3598,15 @@ let WishlistPageClass = (function(){
                     title: data.name,
                     url: `https://store.steampowered.com/app/${appid}/`,
                     release_date: data.release_string,
-                    note: this.notes[appid] || null
+                    note: notes[appid] || null
                 });
             }
 
             return JSON.stringify(json, null, 4);
         }
 
-        toText(format) {
+        async toText(format) {
+            let notes = await this.notesPromise;
             let result = [];
             for (let [appid, data] of Object.entries(this.appInfo)) {
                 result.push(
@@ -3614,7 +3617,7 @@ let WishlistPageClass = (function(){
                         .replace("%title%", data.name)
                         .replace("%release_date%", data.release_string)
                         .replace("%type%", data.type)
-                        .replace("%note%", this.notes[appid] || "")
+                        .replace("%note%", notes[appid] || "")
                 );
             }
 
@@ -3680,7 +3683,7 @@ let WishlistPageClass = (function(){
             el.addEventListener("click", e => format.style.display = e.target.value === "json" ? "none" : '');
         }
 
-        function exportWishlist(method) {
+        async function exportWishlist(method) {
             let type = document.querySelector("input[name='es_wexport_type']:checked").value;
             let format = document.querySelector("#es-wexport-format").value;
 
@@ -3690,11 +3693,11 @@ let WishlistPageClass = (function(){
             let filename = "";
             let filetype = "";
             if (type === "json") {
-                result = wishlist.toJson();
+                result = await wishlist.toJson();
                 filename = "wishlist.json";
                 filetype = "application/json";
             } else if (type === "text" && format) {
-                result = wishlist.toText(format);
+                result = await wishlist.toText(format);
                 filename = "wishlist.txt";
                 filetype = "text/plain";
             }
