@@ -46,6 +46,11 @@ class AugmentedSteam {
     static deleteUserNote(appid)    { return IndexedDB.delete("notes", appid) }
     static userNoteExists(appid)    { return IndexedDB.contains("notes", appid) }
 
+    static importOldUserNotes() {
+        let notes = SyncedStorage.get("user_notes");
+        return IndexedDB.put("notes", Object.values(notes), Object.keys(notes).map(appid => parseInt(appid)), true);
+    }
+
     static clearCache() {
         CacheStorage.clear();
         return IndexedDB.clear();
@@ -1286,6 +1291,7 @@ let actionCallbacks = new Map([
     ["notes.set", AugmentedSteam.setUserNote],
     ["notes.delete", AugmentedSteam.deleteUserNote],
     ["notes.exists", AugmentedSteam.userNoteExists],
+    ["notes.importold", AugmentedSteam.importOldUserNotes],
     ["cache.clear", AugmentedSteam.clearCache],
 
     ["dlcinfo", AugmentedSteamApi.endpointFactory("v01/dlcinfo")],
