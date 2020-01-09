@@ -1482,7 +1482,7 @@ class AppPageClass extends StorePageClass {
                     <div class="ds_owned_flag ds_flag" style="background-color: #856d0e;">${Localization.str.coll.in_collection.toUpperCase()}&nbsp;&nbsp;</div>
                     <div class="already_in_library" style="color: #ffe000;">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", result.map(store => `<strong>${store}</strong>`).join(", "))}</div>
                 </div>`)
-        })
+        });
     }
 
     addWidescreenCertification() {
@@ -1943,8 +1943,7 @@ class AppPageClass extends StorePageClass {
             }
 
             if (survey["nvidia"] !== undefined || survey["amd"] !== undefined || survey["intel"] !== undefined || survey["other"] !== undefined) {
-                html += `<p><b>${Localization.str.survey.satisfaction}</b>:
-                        <div class="performance-graph">`;
+                html += `<p><b>${Localization.str.survey.satisfaction}</b>:</p><div class="performance-graph">`;
 
                 if (survey["nvidia"] !== undefined)  html += getBarHtml("Nvidia", survey["nvidia"]);
                 if (survey["amd"] !== undefined)     html += getBarHtml("AMD", survey["amd"]);
@@ -2099,11 +2098,7 @@ class AppPageClass extends StorePageClass {
     addBadgeProgress() {
         if (!this.hasCards || !User.isSignedIn || !SyncedStorage.get("show_badge_progress")) { return; }
 
-        let stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.type = 'text/css';
-        stylesheet.href = '//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css';
-        document.head.appendChild(stylesheet);
+        DOMHelper.insertStylesheet("//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css");
 
         HTML.afterEnd("#category_block",
             `<div id="es_badge_progress" class="block responsive_apppage_details_right heading">
@@ -2159,7 +2154,7 @@ class AppPageClass extends StorePageClass {
             let is_normal_badge = targetSelector === ".es_normal_badge_progress";
 
             if (is_normal_badge || (card_num_owned > 0 || !blockSel.querySelector(".badge_empty_circle"))) {
-                document.querySelector(".es_badges_progress_block").style.display = "block";
+                blockSel.parentNode.style.display = "block";
                 blockSel.style.display = "block";
 
                 let progressBold = badgeNode.querySelector(".progress_info_bold");
@@ -2218,33 +2213,35 @@ class AppPageClass extends StorePageClass {
     }
 
     customizeAppPage() {
-        let nodes = document.querySelectorAll(".purchase_area_spacer");
-        HTML.beforeEnd(nodes[nodes.length-1],
+        let node = DOMHelper.selectLastNode(document, ".purchase_area_spacer");
+        node.style.height = "auto";
+
+        HTML.beforeEnd(node,
             `<div id="es_customize_btn" class="home_actions_ctn">
                 <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
-                <div class='home_viewsettings_popup'>
+                <div class="home_viewsettings_popup">
                     <div class="home_viewsettings_instructions" style="font-size: 12px;">${Localization.str.apppage_sections}</div>
                 </div>
             </div>
             <div style="clear: both;"></div>`);
 
-        document.querySelector("#es_customize_btn").addEventListener("click", function(e) {
+        document.querySelector("#es_customize_btn").addEventListener("click", e => {
             e.target.classList.toggle("active");
         });
 
-        document.querySelector("body").addEventListener("click", function(e){
+        document.body.addEventListener("click", e => {
             if (e.target.closest("#es_customize_btn")) { return; }
             let node = document.querySelector("#es_customize_btn .home_customize_btn.active");
             if (!node) { return; }
             node.classList.remove("active");
         });
 
-        for (let sel of ['#game_area_description', '#game_area_content_descriptors', '.sys_req', '#game_area_legal']) {
+        for (let sel of ["#game_area_description", "#game_area_content_descriptors", ".sys_req", "#game_area_legal"]) {
             let el = document.querySelector(sel);
             if (!el) { continue; }
-            let parent = el.closest('.game_page_autocollapse_ctn');
+            let parent = el.closest(".game_page_autocollapse_ctn");
             if (!parent) { continue; }
-            parent.setAttribute('data-parent-of', sel);
+            parent.setAttribute("data-parent-of", sel);
         }
 
         let workshop = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");

@@ -3018,9 +3018,6 @@ label[for="show_common_games"] {
 .game_page_autocollapse_ctn .game_area_description {
   margin-top: 0;
 }
-.purchase_area_spacer {
-  height: auto !important;
-}
 
 #pagebtn_first,
 #pagebtn_last {
