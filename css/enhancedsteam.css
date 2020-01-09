@@ -372,32 +372,6 @@ img.astats_icon {
 .es_custom_money .giftcard_text.small {
   font-size: 22px !important;
 }
-input[type=checkbox].es_dlc_selection {
-  position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-}
-
-input[type=checkbox].es_dlc_selection + label {
-  padding-left: 20px;
-  height: 13px;
-  display: inline-block;
-  line-height: 13px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  vertical-align: middle;
-  cursor: default;
-  z-index: 99;
-}
-
-input[type=checkbox].es_dlc_selection:checked + label {
-  background-position: 0 -13px;
-}
 
 .es_review_image {
   vertical-align: middle;
@@ -407,35 +381,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_review_text {
   font-size: 14px;
   font-weight: bold;
-}
-
-#es_dlc_option_button {
-  float: right;
-  margin-right: 8px;
-  line-height: normal;
-  text-decoration: none;
-}
-
-#es_dlc_option_button:hover {
-  cursor: pointer;
-}
-
-#es_dlc_option_panel {
-  background: url('https://steamcommunity-a.akamaihd.net/public/images/profile/profile_header_bg_texture.jpg');
-  border-bottom: 1px solid black;
-}
-
-.es_dlc_option {
-  display: inline-block;
-  margin-right: 10px;
-  margin-top: 5px;
-  font-size: 11px;
-  color: #ffffff;
-}
-
-.es_dlc_option:hover {
-  text-decoration: underline;
-  cursor: pointer;
 }
 
 #es_price_range {
@@ -2677,6 +2622,76 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
+ * Store app pages
+ * addDlcCheckboxes()
+ **************************************/
+#es_selected_btn {
+  float: left;
+  margin-top: 4px;
+  display: none;
+}
+#es_dlc_option_button {
+  float: right;
+  margin-right: 8px;
+  line-height: normal;
+  text-decoration: none;
+}
+#es_dlc_option_button:hover {
+  cursor: pointer;
+}
+#es_dlc_option_panel {
+  background: url('https://steamcommunity-a.akamaihd.net/public/images/profile/profile_header_bg_texture.jpg');
+  border-bottom: 1px solid black;
+  height: 28px;
+  padding-left: 15px;
+  display: none;
+}
+.es_dlc_option {
+  display: inline-block;
+  margin-right: 10px;
+  margin-top: 5px;
+  font-size: 11px;
+  color: #ffffff;
+}
+.es_dlc_option:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* hide dlc flag due to checkboxes */
+.game_area_dlc_row:hover .ds_flag {
+  display: none;
+}
+
+.es_dlc_selection {
+  cursor: default;
+}
+input[type=checkbox].es_dlc_selection {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+}
+input[type=checkbox].es_dlc_selection + label {
+  padding-left: 20px;
+  height: 13px;
+  display: inline-block;
+  line-height: 13px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  vertical-align: middle;
+  cursor: default;
+  z-index: 99;
+}
+input[type=checkbox].es_dlc_selection:checked + label {
+  background-position: 0 -13px;
+}
+
+/***************************************
  * Steam Web Chat
  **************************************/
 .chat_dialog_content_inner {
@@ -2763,9 +2778,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
   display: block;
   margin-bottom: 6px;
 }
-
-/* hide dlc flag due to checkboxes */
-.game_area_dlc_row:hover .ds_flag { display: none; }
 
 .esi-shown {
   display: block !important;
@@ -2970,7 +2982,8 @@ label[for="show_common_games"] {
 }
 
 .es_hltb a.linkbar > img,
-.es_wsgf a.linkbar > img {
+.es_wsgf a.linkbar > img,
+.es_dlc_info a.linkbar > img {
   border: 0;
   vertical-align: baseline;
 }
@@ -2983,6 +2996,10 @@ label[for="show_common_games"] {
   border: 0;
   height: 120px;
   cursor: help;
+}
+
+.es_dlc_info .details_block img {
+  vertical-align: top;
 }
 
 /***************************************

@@ -1215,17 +1215,25 @@ class AppPageClass extends StorePageClass {
     addDlcInfo() {
         if (!this.isDlc()) { return; }
 
-        let html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.dlc_details}</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
-        Background.action('dlcinfo', { 'appid': this.appid, 'appname': this.appName, } ).then(response => {
+        let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.dlc_details}</div>
+                   <div class="block es_dlc_info">
+                   <div class="block_content"><div class="block_content_inner"><div class="details_block">`;
+
+        Background.action("dlcinfo", { "appid": this.appid, "appname": this.appName }).then(response => {
             for(let item of response) {
-                let iconUrl = Config.CdnHost + "/gamedata/icons/" + encodeURIComponent(item.icon);
+                let iconUrl = `${Config.PublicHost}/gamedata/icons/${encodeURIComponent(item.icon)}`;
                 let title = HTML.escape(item.desc);
                 let name = HTML.escape(item.name);
-                html += `<div class='game_area_details_specs'><div class='icon'><img src='${iconUrl}' align='top'></div><a class='name' title='${title}'>${name}</a></div>`;
+                html += `<div class="game_area_details_specs">
+                            <div class="icon"><img src="${iconUrl}"></div>
+                            <a class="name" title="${title}">${name}</a>
+                        </div>`;
             }
         }).finally(() => {
-            let suggestUrl = Config.PublicHost + "/gamedata/dlc_category_suggest.php?appid=" + this.appid + "&appname=" + encodeURIComponent(this.appName);
-            html += `</div><a class='linkbar' style='margin-top: 10px;' href='${suggestUrl}' target='_blank'>${Localization.str.dlc_suggest}</a></div></div></div>`;
+            let suggestUrl = `${Config.PublicHost}/gamedata/dlc_category_suggest.php?appid=${this.appid}&appname=${encodeURIComponent(this.appName)}`;
+            html += `</div>
+                    <br><a class="linkbar" href="${suggestUrl}" target="_blank">${Localization.str.dlc_suggest} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></a>
+                    </div></div></div>`;
 
             HTML.beforeBegin(document.querySelector("#category_block").parentNode, html);
         });
@@ -1978,15 +1986,43 @@ class AppPageClass extends StorePageClass {
     }
 
     addDlcCheckboxes() {
-        let dlcs = document.querySelectorAll(".game_area_dlc_row");
-        if (dlcs.length === 0) { return; }
-        let expandedNode = document.querySelector("#game_area_dlc_expanded");
+        let dlcs = document.querySelector(".game_area_dlc_section");
+        if (!dlcs) { return; }
 
+        let imgUrl = ExtensionResources.getURL("img/check_sheet.png");
+        for (let dlc of dlcs.querySelectorAll(".game_area_dlc_row")) {
+            if (dlc.querySelector("input")) {
+                let value = dlc.querySelector("input").value;
+
+                HTML.afterBegin(dlc.querySelector(".game_area_dlc_name"),
+                    `<input type="checkbox" class="es_dlc_selection" id="es_select_dlc_${value}" value="${value}">
+                    <label for="es_select_dlc_${value}" style="background-image: url(${imgUrl});"></label>`);
+            } else {
+                dlc.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
+            }
+        }
+
+        let expandedNode = dlcs.querySelector("#game_area_dlc_expanded");
         if (expandedNode) {
-            HTML.afterEnd(expandedNode, `<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>${Localization.str.add_selected_dlc_to_cart}</span></a></div></div>`);
-            HTML.afterEnd(".game_area_dlc_section", "<div style='clear: both;'></div>");
+            HTML.afterEnd(expandedNode, 
+                `<div class="game_purchase_action game_purchase_action_bg" style="margin-bottom: 10px;" id="es_selected_btn">
+                    <div class="btn_addtocart">
+                        <a class="btnv6_green_white_innerfade btn_medium">
+                            <span>${Localization.str.add_selected_dlc_to_cart}</span>
+                        </a>
+                    </div>
+                </div>`);
+
+            HTML.afterEnd(dlcs, '<div style="clear: both;"></div>');
         } else {
-            HTML.afterEnd(".gameDlcBlocks", `<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>${Localization.str.add_selected_dlc_to_cart}</span></a></div></div>`);
+            HTML.afterEnd(dlcs.querySelector(".gameDlcBlocks"),
+                `<div class="game_purchase_action game_purchase_action_bg" id="es_selected_btn">
+                    <div class="btn_addtocart">
+                        <a class="btnv6_green_white_innerfade btn_medium">
+                            <span>${Localization.str.add_selected_dlc_to_cart}</span>
+                        </a>
+                    </div>
+                </div>`);
         }
 
         let form = document.createElement("form");
@@ -1995,76 +2031,61 @@ class AppPageClass extends StorePageClass {
         form.setAttribute("method", "POST");
         form.setAttribute("id", "es_selected_cart");
 
-        let button = document.querySelector("#es_selected_btn");
-        button.insertAdjacentElement("beforebegin", form);
-        button.addEventListener("click", function() {
-            document.querySelector("form[name=add_selected_dlc_to_cart]").submit();
+        let cartBtn = dlcs.querySelector("#es_selected_btn");
+        cartBtn.insertAdjacentElement("beforebegin", form);
+        cartBtn.addEventListener("click", () => {
+            form.submit();
         });
 
-        for (let dlc of dlcs) {
-            if (dlc.querySelector("input")) {
-                let value = dlc.querySelector("input").value;
+        HTML.afterEnd(dlcs.querySelector(".gradientbg"),
+            `<div id="es_dlc_option_panel">
+                <div class="es_dlc_option" id="unowned_dlc_check">${Localization.str.dlc_select.unowned_dlc}</div>
+                <div class="es_dlc_option" id="wl_dlc_check">${Localization.str.dlc_select.wishlisted_dlc}</div>
+                <div class="es_dlc_option" id="no_dlc_check">${Localization.str.dlc_select.none}</div>
+            </div>`);
 
-                HTML.afterBegin(
-                    dlc.querySelector(".game_area_dlc_name"),
-                    `<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_${value}' value='${value}'><label for='es_select_dlc_${value}' style='background-image: url(${ExtensionResources.getURL("img/check_sheet.png")})'></label>`);
-            } else {
-                dlc.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
-            }
-        }
+        let change = new Event("change", { "bubbles": true });
 
-        HTML.afterEnd(".game_area_dlc_section .gradientbg", "<div style='height: 28px; padding-left: 15px; display: none;' id='es_dlc_option_panel'></div>");
-
-        HTML.afterBegin("#es_dlc_option_panel",
-            `<div class='es_dlc_option' id='unowned_dlc_check'>${Localization.str.dlc_select.unowned_dlc}</div>
-             <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.dlc_select.wishlisted_dlc}</div>
-             <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.dlc_select.none}</div>`);
-
-        let change = new Event("change", {"bubbles": true});
-
-        document.querySelector("#unowned_dlc_check").addEventListener("click", function() {
-            let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row:not(.ds_owned) input:not(:checked)");
+        dlcs.querySelector("#unowned_dlc_check").addEventListener("click", () => {
+            let nodes = dlcs.querySelectorAll(".game_area_dlc_row:not(.ds_owned) input:not(:checked)");
             for (let node of nodes) {
                 node.checked = true;
                 node.dispatchEvent(change);
             }
         });
 
-        document.querySelector("#wl_dlc_check").addEventListener("click", function() {
-            let nodes = document.querySelectorAll(".game_area_dlc_section .ds_wishlist input:not(:checked)");
+        dlcs.querySelector("#wl_dlc_check").addEventListener("click", () => {
+            let nodes = dlcs.querySelectorAll(".ds_wishlist input:not(:checked)");
             for (let node of nodes) {
                 node.checked = true;
                 node.dispatchEvent(change);
             }
         });
 
-        document.querySelector("#no_dlc_check").addEventListener("click", function() {
-            let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row input:checked");
+        dlcs.querySelector("#no_dlc_check").addEventListener("click", () => {
+            let nodes = dlcs.querySelectorAll(".game_area_dlc_row input:checked");
             for (let node of nodes) {
                 node.checked = false;
                 node.dispatchEvent(change);
             }
         });
 
-        HTML.beforeEnd(".game_area_dlc_section .gradientbg",
-            `<a id='es_dlc_option_button'>${Localization.str.dlc_select.select} ▼</a>`);
+        HTML.beforeEnd(dlcs.querySelector(".gradientbg"),
+            `<a id="es_dlc_option_button">${Localization.str.dlc_select.select} ▼</a>`);
 
-        document.querySelector("#es_dlc_option_button").addEventListener("click", function() {
-            document.querySelector("#es_dlc_option_panel")
-                .classList.toggle("esi-shown");
+        dlcs.querySelector("#es_dlc_option_button").addEventListener("click", e => {
+            dlcs.querySelector("#es_dlc_option_panel").classList.toggle("esi-shown");
 
-            let button = document.querySelector("#es_dlc_option_button");
-
-            button.textContent = (button.textContent.match("▼")
+            e.target.textContent = e.target.textContent.includes("▼")
                 ? `${Localization.str.dlc_select.select} ▲`
-                : `${Localization.str.dlc_select.select} ▼`);
+                : `${Localization.str.dlc_select.select} ▼`;
         });
 
-        document.querySelector(".game_area_dlc_section").addEventListener("change", function(e) {
+        dlcs.addEventListener("change", e => {
             if (!e.target.classList.contains("es_dlc_selection")) { return; }
 
-            let cartNode = document.querySelector("#es_selected_cart");
-            cartNode.innerHTML = "";
+            let cartForm = dlcs.querySelector("#es_selected_cart");
+            cartForm.innerHTML = "";
 
             let inputAction = document.createElement("input");
             inputAction.type = "hidden";
@@ -2076,23 +2097,21 @@ class AppPageClass extends StorePageClass {
             inputSessionId.name = "sessionid";
             inputSessionId.value = User.getSessionId();
 
-            cartNode.appendChild(inputAction);
-            cartNode.appendChild(inputSessionId);
+            cartForm.append(inputAction, inputSessionId);
 
-            let nodes = document.querySelectorAll(".es_dlc_selection:checked");
+            let nodes = dlcs.querySelectorAll(".es_dlc_selection:checked");
             for (let node of nodes) {
 
                 let inputSubId = document.createElement("input");
-                inputSubId.setAttribute("type", "hidden");
-                inputSubId.setAttribute("name", "subid[]");
-                inputSubId.setAttribute("value", node.value);
+                inputSubId.type = "hidden";
+                inputSubId.name = "subid[]";
+                inputSubId.value = node.value;
 
-                cartNode.insertAdjacentElement("beforeend", inputSubId);
+                cartForm.append(inputSubId);
             }
 
-            let button = document.querySelector("#es_selected_btn");
-            button.style.display = (nodes.length > 0 ? "block" : "none");
-        })
+            cartBtn.style.display = nodes.length > 0 ? "block" : "none";
+        });
     }
 
     addBadgeProgress() {
