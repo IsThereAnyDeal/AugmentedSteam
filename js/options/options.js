@@ -475,6 +475,7 @@ let Options = (function(){
         }
 
         async function connect() {
+            if (!await browser.permissions.request({ "permissions": ["webRequest", "webRequestBlocking"] })) { return; } // Has to be synchronously acquired from a user gesture
             await BackgroundBase.action("itad.authorize");
 
             itadStatus.textContent = Localization.str.connected;
@@ -696,6 +697,8 @@ let Options = (function(){
          'highlight_inv_gift',
          'highlight_inv_guestpass',
          'highlight_notinterested',
+         'highlight_waitlist',
+         'highlight_collection',
          'tag_owned',
          'tag_wishlist',
          'tag_coupon',
@@ -744,3 +747,19 @@ let Options = (function(){
 
 document.addEventListener("DOMContentLoaded", Options.init);
 
+// add correct version of styles based on browser
+(function(){
+    let manifest = browser.runtime.getManifest();
+
+    let linkEl = document.createElement("link");
+    linkEl.rel = "stylesheet";
+    linkEl.type = "text/css";
+
+    if (manifest.browser_specific_settings) { // we only include this in firefox manifest
+        linkEl.href = "css/enhancedsteam-firefox.css";
+    } else {
+        linkEl.href = "css/enhancedsteam-chrome.css";
+    }
+    document.head.appendChild(linkEl);
+
+})();

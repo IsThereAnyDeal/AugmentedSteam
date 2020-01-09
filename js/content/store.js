@@ -913,7 +913,7 @@ class AppPageClass extends StorePageClass {
     }
 
     async _removeFromWaitlist() {
-        return Background.action("itad.removefromwaitlist", this.storeid);
+        return Background.action("itad.removefromwaitlist", this.appid);
     }
 
     async addUserNote() {
@@ -1091,9 +1091,9 @@ class AppPageClass extends StorePageClass {
 
         waitlistOption.addEventListener("click", async () => {
             if (waitlisted) {
-                await Background.action("itad.removefromwaitlist", this.storeid);
+                await Background.action("itad.removefromwaitlist", this.appid);
             } else {
-                await Background.action("itad.addtowaitlist", this.storeid);
+                await Background.action("itad.addtowaitlist", this.appid);
             }
             waitlisted = !waitlisted;
             updateDiv();
@@ -1156,17 +1156,6 @@ class AppPageClass extends StorePageClass {
             let openButton = modalFooter.querySelector(".es_screenshot_open_btn");
             openButton.addEventListener("click", () => {
                 window.open(modalTitleLink.href, "_blank");
-            });
-
-            HTML.beforeEnd(modalFooter,
-                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_download_btn" style="right: calc(${nextButtonOffsetWidth + fsvButton.offsetWidth + openButton.offsetWidth}px + 1.5em)" title="${modalTitleLink.textContent.trim()}"><i></i></div>`);
-            let downloadButton = modalFooter.querySelector(".es_screenshot_download_btn");
-            downloadButton.addEventListener("click", () => {
-                let uri = new URL(modalTitleLink.href);
-                let url = uri.href;
-                let filename = uri.pathname.split("/").pop();
-                console.log({ url, filename })
-                Downloader.download({ url, filename });
             });
         }
 
@@ -1674,10 +1663,13 @@ class AppPageClass extends StorePageClass {
         let appid = this.appid;
         let supportInfo = cache[appid];
         if (!supportInfo) {
-            let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
-            if (!response || !response[appid] || !response[appid].success) { return; }
+            let response = await Background.action("appdetails", appid, "support_info");
+            if (!response || !response.success) { 
+                console.warn("Failed to retrieve support info");
+                return;
+            }
 
-            supportInfo = response[appid].data.support_info;
+            supportInfo = response.data.support_info;
 
             cache['data'][appid] = supportInfo;
             LocalStorage.set("support_info", cache);
@@ -3586,10 +3578,12 @@ let WishlistPageClass = (function(){
 
         constructor(appInfo) {
             this.appInfo = appInfo;
-            this.notes = SyncedStorage.get("user_notes") || {};
+            this.notesPromise = Background.action("notes.getall");
         }
 
-        toJson() {
+        async toJson() {
+            let notes = await this.notesPromise;
+
             let json = {
                 version: "02",
                 data: []
@@ -3601,14 +3595,15 @@ let WishlistPageClass = (function(){
                     title: data.name,
                     url: `https://store.steampowered.com/app/${appid}/`,
                     release_date: data.release_string,
-                    note: this.notes[appid] || null
+                    note: notes[appid] || null
                 });
             }
 
             return JSON.stringify(json, null, 4);
         }
 
-        toText(format) {
+        async toText(format) {
+            let notes = await this.notesPromise;
             let result = [];
             for (let [appid, data] of Object.entries(this.appInfo)) {
                 result.push(
@@ -3619,7 +3614,7 @@ let WishlistPageClass = (function(){
                         .replace("%title%", data.name)
                         .replace("%release_date%", data.release_string)
                         .replace("%type%", data.type)
-                        .replace("%note%", this.notes[appid] || "")
+                        .replace("%note%", notes[appid] || "")
                 );
             }
 
@@ -3685,7 +3680,7 @@ let WishlistPageClass = (function(){
             el.addEventListener("click", e => format.style.display = e.target.value === "json" ? "none" : '');
         }
 
-        function exportWishlist(method) {
+        async function exportWishlist(method) {
             let type = document.querySelector("input[name='es_wexport_type']:checked").value;
             let format = document.querySelector("#es-wexport-format").value;
 
@@ -3695,11 +3690,11 @@ let WishlistPageClass = (function(){
             let filename = "";
             let filetype = "";
             if (type === "json") {
-                result = wishlist.toJson();
+                result = await wishlist.toJson();
                 filename = "wishlist.json";
                 filetype = "application/json";
             } else if (type === "text" && format) {
-                result = wishlist.toText(format);
+                result = await wishlist.toText(format);
                 filename = "wishlist.txt";
                 filetype = "text/plain";
             }

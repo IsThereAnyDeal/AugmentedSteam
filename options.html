@@ -2,7 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <link href="css/enhancedsteam.css" rel="stylesheet" type="text/css">
-    <link href="css/enhancedsteam-chrome.css" rel="stylesheet" type="text/css">
     <link href="css/options.css" rel="stylesheet" type="text/css">
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>Options - Augmented Steam</title>
@@ -193,6 +192,14 @@
                             <span id="itad_status"></span>
                             <button id="itad_action"></button>
                         </div>
+
+                        <div style="max-width: 650px">
+                            <div style="font-size:0.92em;background-color:#1a1c21;padding: 15px">
+                                <p style="margin: 0 0 0.5em 0" data-locale-text="itad.info.itad-steam"></p>
+                                <p style="margin: 0" data-locale-text="itad.info.steam-itad"></p>
+                            </div>
+                        </div>
+
                         <label data-locale-text="itad.import">Periodically import:</label>
                         <div class="indented option">
                             <input type="checkbox" id="itad_import_library" data-setting="itad_import_library">
@@ -457,10 +464,6 @@
                         <div class="option">
                             <input type="checkbox" id="show_package_info" data-setting="show_package_info">
                             <label for="show_package_info" data-locale-text="options.show_package_info">Show package info for all apps</label>
-                        </div>
-                        <div class="option">
-                            <input type="checkbox" id="show_sysreqcheck" data-setting="show_sysreqcheck">
-                            <label for="show_sysreqcheck" data-locale-text="options.show_sysreqcheck">Show button to check system requirements on app pages (Experimental!)</label>
                         </div>
                         <div class="option">
                             <input type="checkbox" id="show_early_access" data-setting="show_early_access">
