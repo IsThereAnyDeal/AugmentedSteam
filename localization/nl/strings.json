@@ -1,19 +1,15 @@
 {
     "invite_friends": "Vrienden Uitnodigen",
     "invite_to_group": "Naar Groep Uitnodigen",
-    "formatting_help": "Hulp bij opmaken",
-    "add_comment": "Bericht toevoegen",
-    "friends_commenter": "Stuur berichten naar geselecteerde vrienden",
-    "friends_commenter_warning": "Zorg er astublieft voor dat u een bericht heeft ingevoerd en tussen de 1 en 1000 vrienden heeft geselecteerd.",
-    "timer": "Ongeveer __time__ tot voltooiing",
-    "posted_at_success": "Succesvol een bericht gestuurd naar __profile__.",
-    "posted_at_fail": "Niet gelukt een bericht te sturen naar __profile__.",
-    "processed": "__i__ van de __total__ vriend(en) verwerkt",
-    "alert": "Alert",
     "transactionStatus": "__failed__ verzoek(en) gefaald. __size__ van de __total__ transacties ontvangen.",
     "custom_tags": "Aangepaste Tags",
     "add_tag": "Voeg tag toe",
     "enter_tag": "Voer de aangepaste tag in die u wilt toevoegen",
+    "status": "Status:",
+    "connect": "Verbind",
+    "connected": "Verbonden",
+    "disconnect": "Loskoppelen",
+    "disconnected": "Losgekoppeld",
     "oneclickgoo": "1-Klik in Gems veranderen...",
     "view_in_library": "Bekijk in jouw Bibliotheek",
     "support": "Ondersteuning",
@@ -48,6 +44,7 @@
     "add_selected_dlc_to_cart": "Voeg geselecteerde DLC toe aan je winkelwagen",
     "credits": "Bijdragen",
     "store_transactions": "Winkel Transacties",
+    "sign_in": "Inloggen",
     "games_coupon": "Spellen Met Kortingsbonnen",
     "all_friends_own": "Alle vrienden die dit hebben (__friendcount__)",
     "translate": "Vertaal",
@@ -109,6 +106,7 @@
     "dlc": "Downloadbare Content.",
     "add_to_wishlist": "Voeg toe aan verlanglijst",
     "remove_from_wishlist": "Dit product staat al op je verlanglijst. Klik om het van je verlanglijst te verwijderen.",
+    "add_to_waitlist": "Voeg toe aan Wachtlijst",
     "language": "Taal",
     "theworddefault": "Standaard",
     "thewordclear": "Legen",
@@ -123,6 +121,7 @@
     "community": "Gemeenschap",
     "dlc_data_header": "Details over downloadbare inhoud",
     "graphics": "Grafisch",
+    "owned_elsewhere": "Je hebt __gametitle__ al op __storelist__",
     "trading_cards": "Steam Ruil Kaarten",
     "view_badge": "Bekijk Badge",
     "purchase_total": "Gekocht totaal:",
@@ -238,7 +237,8 @@
     "separator": "Verdeler",
     "empty_wishlist": {
         "title": "Verlanglijst leegmaken",
-        "confirm": "Weet u zeker dat u uw verlanglijstje leeg wilt maken?\nDit kan niet ongedaan gemaakt worden!"
+        "confirm": "Weet u zeker dat u uw verlanglijstje leeg wilt maken?\nDit kan niet ongedaan gemaakt worden!",
+        "removing": "App __cur__ van de __total__ aan het verwijderen..."
     },
     "about": "Over Ons",
     "never": "Nooit",
@@ -250,6 +250,8 @@
     "show_all_steam_releases": "Toon alle Steam releases",
     "wishlist": "Verlanglijst",
     "on_wishlist": "Op Verlanglijst",
+    "ignored": "Genegeerd",
+    "on_waitlist": "In Wachtlijst",
     "notdiscounted": "Artikelen zonder korting",
     "cancel": "Annuleer",
     "wiki_article": "Bekijk __pcgw_ Artikel",
@@ -449,7 +451,7 @@
         "pcgw": "Toon PCGamingWiki links",
         "completionistme": "Toon Completionist.me links",
         "protondb": "Toon ProtonDB links",
-        "store_steamcards": "Toon SteamCardExchange links op winkelpagina 's",
+        "store_steamcards": "Toon SteamCardExchange links op winkelpagina's",
         "spamcommentregex": "Reguliere Expressie string:",
         "hide_owned_homepage": "Items die jij hebt op de hoofdpagina",
         "saved_note": "Opties bewaard",
@@ -459,10 +461,13 @@
         "show_youtubereviews": "Toon YouTube review video's op app page's",
         "openinnewtab": "Open externe links in een nieuwe tablad",
         "showbartervg": "Toon Barter.vg links",
-        "guest": "Items waar je een gast pas voor hebt ",
+        "guest": "Items waar je een gast pas voor hebt",
+        "collection": "Items van jouw ITAD Collectie",
+        "waitlist": "Items van jouw ITAD Wachtlijst",
         "show_steamchart_info": "Toon SteamCharts.com info",
         "show_steamspy_info": "Toon steamspy.com info",
         "showallachievements": "Toon achievements statistieken op \"Alle spellen\" pagina",
+        "showallstats": "Toon speeltijdstatistieken op \"Alle spellen\" pagina",
         "lowestprice_onwishlist": "Toon op verlanglijst",
         "steamrepapi": "Toon SteamRep status op profiel pagina's",
         "header": "Koptekst",
@@ -483,6 +488,7 @@
         "install_steam_button": "\"Installeer Steam\" knop",
         "replace_view_client":  "Vervang met \"Beijk in Client\"",
         "show_empty_wishlist": "Knop \"Verlanglijst Leegmaken\" weergeven",
+        "show_wishlist_stats": "Toon statistieken op verlanglijstjes",
         "show_user_notes": "Gebruiker notities op verlanglijst en app pagina's weergeven",
         "inventory_nav_text": "Toon geavanceerde navigatie in inventory pagina",
         "carousel_description": "Toon app beschrijving op de winkel front",
@@ -545,7 +551,8 @@
             "ukrainian": "Oekraïens"
         },
         "add_custom_link": "Voeg aangepaste link toe",
-        "auto_detect": "Automatisch detecteren"
+        "auto_detect": "Automatisch detecteren",
+        "add_to_waitlist": "Toon \"Add to Wachtlijst\" menu op app pagina's"
     },
     "ready": {
         "errormsg": "Fout tijdens het laden van Augmented Steam gegevens",
@@ -610,9 +617,18 @@
         "certifications": "WSGF breedbeeld certificeringen"
     },
     "itad": {
+        "import": "Periodiek importeren:",
+        "last_import": "Laaste import...",
+        "from": "van ITAD:",
+        "to": "naar ITAD:",
+        "sync_now": "Synchroniseer nu",
         "option": "Toon menu optie om informatie te synchroniseren met IsThereAnyDeal.com",
         "send_to_itad": "Verstuur spellen in bezit naar IsThereAnyDeal",
-        "sending": "Spellen en pakketten die je in bezit hebt worden geladen en naar IsThereAnyDeal.com verstuurd"
+        "sending": "Spellen en pakketten die je in bezit hebt worden geladen en naar IsThereAnyDeal.com verstuurd",
+        "info": {
+            "itad-steam": "Door Augmented Steam te verbinden met IsThereAnyDeal kun je de highlights en tagging van Augmented Steam toepassen op games in je Wachtlijst en Collectie, zelfs als je ze niet op Steam hebt.",
+            "steam-itad": "Bovendien kunt u games uit uw Steam-bibliotheek en/of verlanglijstje importeren in IsThereAnyDeal, voor verbeterde nauwkeurigheid. Momenteel kan deze functie alleen titels toevoegen, niet verwijderen, dus het is geen vervanging voor de geïntegreerde synchronisatie van IsThereAnyDeal, maar een aanvulling daarop."
+        }
     },
     "tradeoffer": {
         "num_item": "__num__ object",
@@ -642,6 +658,7 @@
         "no_price": "zonder prijs"
     },
     "coll": {
+        "total_time": "totale tijd",
         "in_collection": "In Verzameling",
         "played": "Gespeeld",
         "never_played": "Nooit Gespeeld"

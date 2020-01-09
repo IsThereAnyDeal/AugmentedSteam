@@ -1244,9 +1244,9 @@ let EnhancedSteam = (function() {
             if (!result.rgOwnedApps) { return; }
             let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
 
-            Background.action('appdetails', { 'appids': appid, }).then(response => {
-                if (!response || !response[appid] || !response[appid].success) { return; }
-                let data = response[appid].data;
+            Background.action("appdetails", appid).then(response => {
+                if (!response || !response.success) { return; }
+                let data = response.data;
 
                 let gameid = appid;
                 let gamename;
@@ -1542,7 +1542,7 @@ let Inventory = (function(){
     };
 
     self.hasInInventory6 = function(marketHashes) {
-        return Background.action("hasItem", marketHashes);
+        return Background.action("hasitem", marketHashes);
     };
 
     return self;
@@ -2721,10 +2721,13 @@ class Sortbox {
         return new RegExp(`\\b${className}\\b`).test(element.className);
     }
 
-    // FOR REVIEWER: Elements returned by this function are already sanitized (calls to HTML class),
-    // so they can be safely inserted without being sanitized again.
-    // If we would sanitize it again, all event listeners would be lost due to DOMPurify only returning
-    // HTML strings.
+    /**
+     * NOTE FOR ADDON REVIEWER:
+     * Elements returned by this function are already sanitized (calls to HTML class),
+     * so they can be safely inserted without being sanitized again.
+     * If we would sanitize them again, all event listeners would be lost due to
+     * DOMPurify only returning HTML strings.
+     */
     static get(name, options, initialOption, changeFn, storageOption) {
 
         let id = `sort_by_${name}`;

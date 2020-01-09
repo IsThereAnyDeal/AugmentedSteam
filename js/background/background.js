@@ -42,9 +42,15 @@ class CacheStorage {
 
 class AugmentedSteam {
     static getUserNote(appid)       { return IndexedDB.get("notes", appid) }
+    static getAllUserNotes()        { return IndexedDB.getAll("notes") }
     static setUserNote(appid, note) { return IndexedDB.put("notes", note, appid) }
     static deleteUserNote(appid)    { return IndexedDB.delete("notes", appid) }
     static userNoteExists(appid)    { return IndexedDB.contains("notes", appid) }
+
+    static importOldUserNotes() {
+        let notes = SyncedStorage.get("user_notes");
+        return IndexedDB.put("notes", Object.values(notes), Object.keys(notes).map(appid => parseInt(appid)), true);
+    }
 
     static clearCache() {
         CacheStorage.clear();
@@ -100,8 +106,22 @@ class Api {
         if (responseHandler) responseHandler(response);
         return response.json();
     }
-    static endpointFactory(endpoint) {
-        return async params => this.getEndpoint(endpoint, params).then(result => result.data);
+    static endpointFactory(endpoint, objPath) {
+        return async params => {
+            let result = await this.getEndpoint(endpoint, params);
+            if (objPath) {
+                if (Array.isArray(objPath)) {
+                    for (let part of objPath) {
+                        result = result[part];
+                    }
+                } else {
+                    result = result[objPath];
+                }
+            } else {
+                result = result.data;
+            }
+            return result;
+        }
     }
     static endpointFactoryCached(endpoint, objectStoreName, multiple, oneDimensional, resultFn) {
         return async (params, dbKey) => {
@@ -180,17 +200,54 @@ class ITAD_Api extends Api {
 
     static async authorize() {
         let rnd = crypto.getRandomValues(new Uint32Array(1))[0];
+        let redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
 
-        let url = await browser.identity.launchWebAuthFlow(
-            {
-                url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${rnd}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${browser.identity.getRedirectURL()}`,
-                interactive: true
+        // https://groups.google.com/a/chromium.org/d/msg/chromium-extensions/K8njaUCU81c/eUxMIEACAQAJ
+
+        function noop() {}
+
+        // https://stackoverflow.com/a/58577052
+        browser.runtime.onConnect.addListener(noop);
+
+        // For some reason the scripts are not inserted on FF, but this doesn't really matter since FF doesn't support event pages. Therefore the event listeners never get unloaded.
+        document.body.appendChild(document.createElement("iframe")).src = "background-iframe.html";
+
+        let tab = await browser.tabs.create({ "url": `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${rnd}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${encodeURIComponent(redirectURI)}` });
+
+        let url;
+        try {
+            url = await new Promise((resolve, reject) => {
+                function webRequestListener({ url }) {
+                    resolve(url);
+                    
+                    browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
+                    browser.tabs.onRemoved.removeListener(tabsListener);
+
+                    browser.tabs.remove(tab.id);
+                    return { "cancel": true };
+                }
+
+                function tabsListener(tabId) {
+                    if (tabId === tab.id) {
+                        reject(new Error("Authorization tab closed"));
+                        
+                        browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
+                        browser.tabs.onRemoved.removeListener(tabsListener);
+                    }
+                }
+
+                browser.webRequest.onBeforeRequest.addListener(webRequestListener, { "urls": [
+                    redirectURI,        // For Chrome, seems to not support match patterns (probably a problem with the Polyfill?)
+                    `${redirectURI}#*`  // For Firefox
+                ], "tabId": tab.id }, ["blocking"]);
+                browser.tabs.onRemoved.addListener(tabsListener);
             });
-        if (!url) { throw new Error("Couldn't retrieve access token for ITAD authorization"); }
+        } finally {
+            browser.runtime.onConnect.removeListener(noop);
+            document.querySelector("iframe").remove();
+        }        
 
         let hashFragment = new URL(url).hash;
-        if (!hashFragment) { throw new Error("URL " + url + " doesn't contain a fragment"); }
-
         let params = new URLSearchParams(hashFragment.substr(1));
 
         if (parseInt(params.get("state")) !== rnd) { throw new Error("Failed to verify state parameter from URL fragment"); }
@@ -198,13 +255,14 @@ class ITAD_Api extends Api {
         let accessToken = params.get("access_token");
         let expiresIn = params.get("expires_in");
 
-        if (!accessToken || !expiresIn) { throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'"); }
+        if (!accessToken || !expiresIn) { throw new Error(`Couldn't retrieve information from URL fragment "${hashFragment}"`); }
             
         LocalStorage.set("access_token", { token: accessToken, expiry: Timestamp.now() + parseInt(expiresIn, 10) });
     }
 
     static disconnect() {
         LocalStorage.remove("access_token");
+        LocalStorage.remove("lastItadImport");
         return IndexedDB.clear(["collection", "waitlist", "itadImport"]);
     }
 
@@ -229,8 +287,8 @@ class ITAD_Api extends Api {
         }
     }
 
-    static async addToWaitlist(storeids) {
-        if (!storeids || (Array.isArray(storeids) && !storeids.length)) {
+    static async addToWaitlist(appids) {
+        if (!appids || (Array.isArray(appids) && !appids.length)) {
             console.warn("Can't add nothing to ITAD waitlist");
             return;
         }
@@ -240,29 +298,30 @@ class ITAD_Api extends Api {
             "data": [],
         };
 
-        if (Array.isArray(storeids)) {
-            storeids.forEach(storeid => {
+        if (Array.isArray(appids)) {
+            appids.forEach(appid => {
                 waitlistJSON.data.push({
-                    "gameid": ["steam", storeid],
+                    "gameid": ["steam", `app/${appid}`],
                 });
             });
         } else {
             waitlistJSON.data[0] = {
-                "gameid": ["steam", storeids],
+                "gameid": ["steam", `app/${appids}`],
             }
         }
 
         await ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, null, { "body": JSON.stringify(waitlistJSON) });
-        return IndexedDB.put("waitlist", null, storeids, Array.isArray(storeids));
+        return IndexedDB.put("waitlist", null, appids, Array.isArray(appids));
     }
 
-    static async removeFromWaitlist(storeids) {
-        if (!storeids || (Array.isArray(storeids) && !storeids.length)) {
+    static async removeFromWaitlist(appids) {
+        if (!appids || (Array.isArray(appids) && !appids.length)) {
             throw new Error("Can't remove nothing from ITAD Waitlist!");
         }
-        storeids = Array.isArray(storeids) ? storeids : [storeids];
+        appids = Array.isArray(appids) ? appids : [appids];
+        let storeids = appids.map(appid => `app/${appid}`);
         await ITAD_Api.deleteEndpoint("v02/user/wait/remove/", { "access_token": ITAD_Api.accessToken, "shop": "steam", "ids": storeids.join() });
-        return IndexedDB.delete("waitlist", storeids);
+        return IndexedDB.delete("waitlist", appids);
     }
 
     static addToCollection(appids, subids) {
@@ -276,32 +335,19 @@ class ITAD_Api extends Api {
             "data": [],
         };
 
-        if (Array.isArray(appids)) {
-            appids.forEach(appid => {
-                collectionJSON.data.push({
-                    "gameid": ["steam", `app/${appid}`],
-                    "copies": [{ "type": "steam" }],
-                });
-            });
-        } else if (appids) {
-            collectionJSON.data[0] = {
-                "gameid": ["steam", `app/${appids}`],
-                "copies": [{ "type": "steam" }],
-            }
-        }
+        appids = Array.isArray(appids) ? appids : (appids ? [appids] : []);
+        subids = Array.isArray(subids) ? subids : (subids ? [subids] : []);
 
-        if (Array.isArray(subids)) {
-            subids.forEach(subid => {
-                collectionJSON.data.push({
-                    "gameid": ["steam", `sub/${subid}`],
-                    "copies": [{ "type": "steam" }],
-                });
+        let storeids = appids.map(appid => `app/${appid}`).concat(subids.map(subid => `sub/${subid}`));
+        for (let storeid of storeids) {
+            collectionJSON.data.push({
+                "gameid": ["steam", storeid],
+                "copies": [{
+                    "type": "steam",
+                    "status": "redeemed",
+                    "owned": 1,
+                }],
             });
-        } else if (subids) {
-            collectionJSON.data[0] = {
-                "gameid": ["steam", `sub/${subids}`],
-                "copies": [{ "type": "steam" }],
-            }
         }
 
         return ITAD_Api.postEndpoint("v01/collection/import/", { "access_token": ITAD_Api.accessToken }, null, { "body": JSON.stringify(collectionJSON) });
@@ -356,7 +402,7 @@ class ITAD_Api extends Api {
             let [{ wishlisted }, { lastWishlisted }] = result;
             let newWishlisted = removeDuplicates(wishlisted, lastWishlisted);
             if (newWishlisted.length) {
-                promises.push(ITAD_Api.addToWaitlist(`app/${newWishlisted}`)
+                promises.push(ITAD_Api.addToWaitlist(newWishlisted)
                     .then(() => IndexedDB.put("itadImport", wishlisted, "lastWishlisted")));
             }
         }
@@ -427,7 +473,6 @@ ITAD_Api.origin = Config.ITAD_ApiServerHost;
 ITAD_Api._progressingRequests = new Map();
 
 class ContextMenu {
-    _listenerRegistered = false;
 
     static onClick(info) {
         let selectionText = encodeURIComponent(info.selectionText.trim());
@@ -452,7 +497,7 @@ class ContextMenu {
                 browser.tabs.create({ url: `https://steamdb.info/instantsearch/?query=${selectionText}` });
                 break;
             case "context_steam_keys":
-                let steamkeys = info.selectionText.match(/[A-NP-RTV-Z02-9]{5}(-[A-NP-RTV-Z02-9]{5}){2}/g);
+                let steamkeys = info.selectionText.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
                 if (!steamkeys || steamkeys.length === 0) {
                     window.alert(Localization.str.options.no_keys_found);
                     return;
@@ -481,9 +526,9 @@ class ContextMenu {
         if (!browser.contextMenus) { return; }
         browser.contextMenus.removeAll().then(ContextMenu.build);
 
-        if (!this._listenerRegistered) {
+        if (!ContextMenu._listenerRegistered) {
             browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
-            this._listenerRegistered = true;
+            ContextMenu._listenerRegistered = true;
         }
     }
 
@@ -492,6 +537,8 @@ class ContextMenu {
         ContextMenu.update();
     }
 }
+ContextMenu._listenerRegistered = false;
+
 
 class SteamStore extends Api {
     // static origin = "https://store.steampowered.com/";
@@ -633,6 +680,14 @@ class SteamStore extends Api {
         await IndexedDB.clear("dynamicStore");
         Steam._dynamicstore_promise = null;
     }
+
+    static appDetails(appid, filter)    {
+        let params = { "appids": appid };
+        if (filter) { params.filters = filter; }
+
+        return SteamStore.endpointFactory("api/appdetails/", appid)(params);
+    }
+    static appUserDetails(appid) { return SteamStore.endpointFactory("api/appuserdetails/", appid)({ "appids": appid }); }
 }
 SteamStore.origin = "https://store.steampowered.com/";
 SteamStore.params = { 'credentials': 'include', };
@@ -1296,9 +1351,11 @@ let actionCallbacks = new Map([
     ["steam.currencies", Steam.currencies],
     
     ["notes.get", AugmentedSteam.getUserNote],
+    ["notes.getall", AugmentedSteam.getAllUserNotes],
     ["notes.set", AugmentedSteam.setUserNote],
     ["notes.delete", AugmentedSteam.deleteUserNote],
     ["notes.exists", AugmentedSteam.userNoteExists],
+    ["notes.importold", AugmentedSteam.importOldUserNotes],
     ["cache.clear", AugmentedSteam.clearCache],
 
     ["dlcinfo", AugmentedSteamApi.endpointFactory("v01/dlcinfo")],
@@ -1314,8 +1371,8 @@ let actionCallbacks = new Map([
     ["market.averagecardprice", AugmentedSteamApi.endpointFactory("v01/market/averagecardprice")], // FIXME deprecated
     ["market.averagecardprices", AugmentedSteamApi.endpointFactory("v01/market/averagecardprices")],
 
-    ["appdetails", SteamStore.endpointFactory("api/appdetails/")],
-    ["appuserdetails", SteamStore.endpointFactory("api/appuserdetails/")],
+    ["appdetails", SteamStore.appDetails],
+    ["appuserdetails", SteamStore.appUserDetails],
     ["currency", SteamStore.currency],
     ["sessionid", SteamStore.sessionId],
     ["purchases", SteamStore.purchases],

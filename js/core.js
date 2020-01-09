@@ -1,5 +1,5 @@
 const Info = {
-    'version': "1.3.1",
+    'version': browser.runtime.getManifest().version,
     'db_version': 1,
 };
 
@@ -139,19 +139,30 @@ class UpdateHandler {
         SyncedStorage.set("version", Info.version);
     };
 
-    static _showChangelog() {
-        RequestData.getHttp(ExtensionResources.getURL("changelog_new.html")).then(
-            changelog => {
-                changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
-                let logo = ExtensionResources.getURL("img/es_128.png");
-                let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
-                ExtensionLayer.runInPageContext(
-                    `function() {
-                        ShowAlertDialog("${Localization.str.update.updated.replace("__version__", Info.version)}", '${dialog}');
-					}`
-                );
-            }
+    static async _showChangelog() {
+        let changelog = (await RequestData.getHttp(ExtensionResources.getURL("changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
+        let logo = ExtensionResources.getURL("img/es_128.png");
+        let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
+        ExtensionLayer.runInPageContext(
+            `function() {
+                ShowAlertDialog("${Localization.str.update.updated.replace("__version__", Info.version)}", '${dialog}');
+            }`
         );
+
+        if (Version.fromString(Info.version).isSame(new Version(1, 4))) {
+            let connectBtn = document.querySelector("#itad_connect");
+            if (await BackgroundBase.action("itad.isconnected")) {
+                itadConnected();
+            } else {
+                connectBtn.addEventListener("click", async function() {
+                    await BackgroundBase.action("itad.authorize");
+                    ITAD.create();
+                    itadConnected();
+                });
+            }
+
+            function itadConnected() { connectBtn.replaceWith("✓"); }
+        }
     }
 
     static _migrateSettings(oldVersion) {
@@ -270,6 +281,15 @@ class UpdateHandler {
             SyncedStorage.set("horizontalscrolling", SyncedStorage.get("horizontalmediascrolling"));
             SyncedStorage.remove("horizontalmediascrolling");
         }
+
+        if (oldVersion.isSameOrBefore("1.4")) {
+            SyncedStorage.remove("show_sysreqcheck");
+
+            BackgroundBase.action("notes.importold");
+
+            // todo Remove on next update in order to make sure that this data was properly imported
+            // SyncedStorage.remove("user_notes");
+        }
     }
 }
 
@@ -294,8 +314,8 @@ class GameId {
         }
 
         // app, market/listing
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
+        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(?:app|market\/listings)\/(\d+)\/?/);
+        return m && GameId.parseId(m[1]);
     }
     
     static getSubid(text) {
@@ -309,7 +329,7 @@ class GameId {
         }
         
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/sub\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
+        return m && GameId.parseId(m[1]);
     }
 
     static getBundleid(text) {
@@ -323,7 +343,7 @@ class GameId {
         }
 
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/bundle\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
+        return m && GameId.parseId(m[1]);
     }
 
     static trimStoreId(storeId) {
@@ -597,7 +617,6 @@ SyncedStorage.defaults = {
 
     //'show_keylol_links': false, // not in use, option is commented out
     'show_package_info': false,
-    'show_sysreqcheck': false,
     'show_steamchart_info': true,
     'show_steamspy_info': true,
     'show_early_access': true,

@@ -11,11 +11,6 @@
     "32": "img/es_32.png"
   },
   "manifest_version": 2,
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "{1be309c5-3e4f-4b99-927d-bb500eb4fa88}"
-    }
-  },
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
@@ -27,10 +22,6 @@
     "*://*.steampowered.com/*",
     "*://steamcommunity.com/*",
     "*://*.isthereanydeal.com/"
-  ],
-  "optional_permissions": [
-    "webRequest",
-    "webRequestBlocking"
   ],
   "web_accessible_resources": [
     "img/*.png",

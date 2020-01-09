@@ -100,7 +100,7 @@
 }
 
 .home_tab {
-  margin-top: 3px;
+  margin-top: 6px;
   border: none;
   display: inline-block;
   margin-right: 0px;
@@ -130,7 +130,6 @@
   padding: 0 10px;
   cursor: pointer;
   vertical-align: top;
-  box-shadow: inset 0 -2px 3px 0 rgba( 0, 0, 0, 0.25 );
 }
 .home_tab.active .tab_content {
   line-height: 29px;
@@ -1481,21 +1480,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
   height: 16px;
   margin: 5px;
 }
-.es_screenshot_download_btn, .es_screenshot_open_btn {
+.es_screenshot_open_btn {
 	position: absolute;
 	right: 24%;
 	bottom: 0;
 }
-.es_screenshot_download_btn i, .es_screenshot_open_btn i {
+.es_screenshot_open_btn i {
 	display: block;
 	background-position: center;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 	margin: 5px;
-}
-.es_screenshot_download_btn i {
-	background-image: url('https://steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1');
 }
 .screenshot_popup_modal_content:fullscreen .es_screenshot_fullscreen_toggle i {
   background-position: bottom left;
@@ -2032,6 +2028,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  max-width: 800px
 }
 .es_changelog p {
   margin-bottom: 0.4em;
