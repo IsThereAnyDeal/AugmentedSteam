@@ -622,6 +622,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
   float: right;
   line-height: inherit !important;
 }
+.es_percentage_higher {
+  color: #ff1717;
+}
+.es_percentage_lower {
+  color: #60ad0a;
+}
 .es_item_action {
   height: 60px;
 }
