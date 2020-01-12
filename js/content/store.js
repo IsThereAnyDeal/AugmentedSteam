@@ -403,7 +403,7 @@ class StorePageClass {
             for (let country of countries) {
                 promises.push(
                     RequestData.getJson(`https://store.steampowered.com/api/packagedetails/?packageids=${subid}&cc=${country}`).then(result => {
-                        if (!result || !result[subid] || !result[subid].success) { return; }
+                        if (!result || !result[subid] || !result[subid].success || !result[subid].data.price) { return; }
                         prices[country] = result[subid].data.price;
                     })
                 );
