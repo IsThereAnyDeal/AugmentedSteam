@@ -3811,6 +3811,9 @@ let WishlistPageClass = (function(){
 
 class UserNotes {
     constructor() {
+
+        this._notes = SyncedStorage.get("user_notes") || {};
+
         this.noteModalTemplate = `
             <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
                 <div id="es_note_modal_content">
@@ -3828,6 +3831,25 @@ class UserNotes {
                 </div>
             </div>`;
     }
+
+    // TODO data functions should probably be split from presentation, but splitting it to background seems unneccessary
+    get(appid) {
+        return this._notes[appid];
+    };
+
+    set(appid, note) {
+        this._notes[appid] = note;
+        SyncedStorage.set("user_notes", this._notes);
+    };
+
+    delete(appid) {
+        delete this._notes[appid];
+        SyncedStorage.set("user_notes", this._notes);
+    };
+
+    exists(appid) {
+        return (this._notes[appid] && (this._notes[appid] !== ''));
+    };
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
         // Partly copied from shared_global.js
@@ -3902,10 +3924,6 @@ class UserNotes {
             }
         }
     }
-    get(appid)          { return Background.action("notes.get", appid) }
-    set(appid, note)    { return Background.action("notes.set", appid, note) }
-    delete(appid)       { return Background.action("notes.delete", appid) }
-    exists(appid)       { return Background.action("notes.exists", appid) }
 }
 
 let TagPageClass = (function(){

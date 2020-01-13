@@ -41,11 +41,6 @@ class CacheStorage {
 }
 
 class AugmentedSteam {
-    static getUserNote(appid)       { return IndexedDB.get("notes", appid) }
-    static setUserNote(appid, note) { return IndexedDB.put("notes", note, appid) }
-    static deleteUserNote(appid)    { return IndexedDB.delete("notes", appid) }
-    static userNoteExists(appid)    { return IndexedDB.contains("notes", appid) }
-
     static clearCache() {
         CacheStorage.clear();
         return IndexedDB.clear();
@@ -1344,10 +1339,6 @@ let actionCallbacks = new Map([
     ["dynamicstore.clear", SteamStore.clearDynamicStore],
     ["steam.currencies", Steam.currencies],
     
-    ["notes.get", AugmentedSteam.getUserNote],
-    ["notes.set", AugmentedSteam.setUserNote],
-    ["notes.delete", AugmentedSteam.deleteUserNote],
-    ["notes.exists", AugmentedSteam.userNoteExists],
     ["cache.clear", AugmentedSteam.clearCache],
 
     ["dlcinfo", AugmentedSteamApi.endpointFactory("v01/dlcinfo")],
