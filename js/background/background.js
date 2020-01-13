@@ -210,17 +210,31 @@ class ITAD_Api extends Api {
         let rnd = crypto.getRandomValues(new Uint32Array(1))[0];
         let redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
 
-        // https://groups.google.com/a/chromium.org/d/msg/chromium-extensions/K8njaUCU81c/eUxMIEACAQAJ
-
-        function noop() {}
-
-        // https://stackoverflow.com/a/58577052
+        /*
+         * How to use webRequest with event pages:
+         * https://groups.google.com/a/chromium.org/d/msg/chromium-extensions/K8njaUCU81c/eUxMIEACAQAJ
+         *
+         * Preventing event page from unloading by using iframe
+         * https://stackoverflow.com/a/58577052
+         */
+        function noop() {} // so we can removeListener
         browser.runtime.onConnect.addListener(noop);
 
-        // For some reason the scripts are not inserted on FF, but this doesn't really matter since FF doesn't support event pages. Therefore the event listeners never get unloaded.
-        document.body.appendChild(document.createElement("iframe")).src = "background-iframe.html";
+        /*
+         * For some reason the scripts are not inserted on FF,
+         * but this doesn't really matter since FF doesn't support event pages.
+         * Therefore the event listeners never gets unloaded.
+         */
+        document.body.appendChild(document.createElement("iframe")).src = "authorizationFrame.html";
 
-        let tab = await browser.tabs.create({ "url": `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${rnd}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${encodeURIComponent(redirectURI)}` });
+        let authUrl = new URL(`${Config.ITAD_ApiServerHost}/oauth/authorize/`);
+        authUrl.searchParams.set("client_id", Config.ITAD_ClientID);
+        authUrl.searchParams.set("response_type", "token");
+        authUrl.searchParams.set("state", rnd);
+        authUrl.searchParams.set("scope", ITAD_Api.requiredScopes.join(' '));
+        authUrl.searchParams.set("redirect_uri", redirectURI);
+
+        let tab = await browser.tabs.create({"url": authUrl.toString()});
 
         let url;
         try {
@@ -244,28 +258,40 @@ class ITAD_Api extends Api {
                     }
                 }
 
-                browser.webRequest.onBeforeRequest.addListener(webRequestListener, { "urls": [
-                    redirectURI,        // For Chrome, seems to not support match patterns (probably a problem with the Polyfill?)
-                    `${redirectURI}#*`  // For Firefox
-                ], "tabId": tab.id }, ["blocking"]);
+                browser.webRequest.onBeforeRequest.addListener(
+                    webRequestListener,
+                    {
+                        "urls": [
+                            redirectURI,        // For Chrome, seems to not support match patterns (probably a problem with the Polyfill?)
+                            `${redirectURI}#*`  // For Firefox
+                        ],
+                        "tabId": tab.id
+                    }, ["blocking"]);
                 browser.tabs.onRemoved.addListener(tabsListener);
             });
         } finally {
             browser.runtime.onConnect.removeListener(noop);
             document.querySelector("iframe").remove();
-        }        
+        }
 
         let hashFragment = new URL(url).hash;
         let params = new URLSearchParams(hashFragment.substr(1));
 
-        if (parseInt(params.get("state")) !== rnd) { throw new Error("Failed to verify state parameter from URL fragment"); }
+        if (parseInt(params.get("state")) !== rnd) {
+            throw new Error("Failed to verify state parameter from URL fragment");
+        }
 
         let accessToken = params.get("access_token");
         let expiresIn = params.get("expires_in");
 
-        if (!accessToken || !expiresIn) { throw new Error(`Couldn't retrieve information from URL fragment "${hashFragment}"`); }
+        if (!accessToken || !expiresIn) {
+            throw new Error(`Couldn't retrieve information from URL fragment "${hashFragment}"`);
+        }
             
-        LocalStorage.set("access_token", { token: accessToken, expiry: Timestamp.now() + parseInt(expiresIn, 10) });
+        LocalStorage.set("access_token", {
+            token: accessToken,
+            expiry: Timestamp.now() + parseInt(expiresIn, 10)
+        });
     }
 
     static disconnect() {
@@ -700,7 +726,7 @@ class SteamStore extends Api {
     static appDetails(appid, filter)    {
         let params = { "appids": appid };
         if (filter) { params.filters = filter; }
-        
+
         return SteamStore.endpointFactory("api/appdetails/", appid)(params);
     }
     static appUserDetails(appid) { return SteamStore.endpointFactory("api/appuserdetails/", appid)({ "appids": appid }); }
