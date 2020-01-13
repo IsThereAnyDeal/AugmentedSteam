@@ -23,6 +23,10 @@
     "*://steamcommunity.com/*",
     "*://*.isthereanydeal.com/"
   ],
+  "optional_permissions": [
+    "webRequest",
+    "webRequestBlocking"
+  ],
   "web_accessible_resources": [
     "img/*.png",
     "img/*.gif",
