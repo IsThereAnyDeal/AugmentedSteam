@@ -193,8 +193,13 @@ class AugmentedSteamApi extends Api {
         return IndexedDB.delete("storePageData", `app_${appid}`);
     }
 
-    static rates(to) { return IndexedDB.getAll("rates", { "to": to.sort().join(',') }) }
-    static isEA(appids) { return IndexedDB.contains("earlyAccessAppids", appids) }
+    static rates(to) {
+        return IndexedDB.getAll("rates", { "to": to.sort().join(',') });
+    }
+
+    static isEA(appids) {
+        return IndexedDB.contains("earlyAccessAppids", appids);
+    }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();
@@ -677,8 +682,16 @@ class SteamStore extends Api {
         return IndexedDB.putCached("dynamicStore", Object.values(dynamicStore), Object.keys(dynamicStore), true);
     }
 
-    static dsStatus(ids) { return IndexedDB.getAllFromIndex("dynamicStore", "appid", ids, true) }
-    
+    static dsStatus(ids) {
+        return IndexedDB.getAllFromIndex("dynamicStore", "appid", ids, true)
+    }
+
+    static async dynamicStoreRandomApp() {
+        let store = await IndexedDB.getAll("dynamicStore");
+        if (!store || !store.ownedApps) { return null; }
+        return store.ownedApps[Math.floor(Math.random() * store.ownedApps.length)];
+    }
+
     static async clearDynamicStore() {
         await IndexedDB.clear("dynamicStore");
         Steam._dynamicstore_promise = null;
@@ -687,7 +700,7 @@ class SteamStore extends Api {
     static appDetails(appid, filter)    {
         let params = { "appids": appid };
         if (filter) { params.filters = filter; }
-
+        
         return SteamStore.endpointFactory("api/appdetails/", appid)(params);
     }
     static appUserDetails(appid) { return SteamStore.endpointFactory("api/appuserdetails/", appid)({ "appids": appid }); }
@@ -1376,6 +1389,7 @@ let actionCallbacks = new Map([
     ["purchases", SteamStore.purchases],
     ["clearpurchases", SteamStore.clearPurchases],
     ["dynamicstorestatus", SteamStore.dsStatus],
+    ["dynamicStore.randomApp", SteamStore.dynamicStoreRandomApp],
 
     ["login", SteamCommunity.login],
     ["logout", SteamCommunity.logout],
