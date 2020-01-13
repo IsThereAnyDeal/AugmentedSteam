@@ -1,6 +1,6 @@
 ﻿v.1.4.1
 ------
-- Improved ITAD Authorization workflow, so it doesn't look so scatchy
+- Improved ITAD Authorization workflow, so it doesn't look so sketchy
 - Fixed user notes no longer showing up
 - Fixed memory crash for big libraries
 - Fixed price colors in market
