@@ -1,4 +1,19 @@
-﻿v.1.4.0
+﻿v.1.4.1
+------
+Patch release.
+
+- Improved ITAD Authorization workflow, so it doesn't look so scatchy
+- Fixed user notes no longer showing up
+- Fixed memory crash for big libraries
+- Fixed price colors in market
+- Fixed support info on app pages, "All friends that own", and gift prices
+- Fixed launch random game feature
+- Bumped minimum supported Firefox version to 57.0
+- Removed obsolete "show system requirements" option
+
+
+
+v.1.4.0
 ------
 Integration with IsThereAnyDeal (BETA)
 Added IsThereAnyDeal integration, which allows you to connect Augmented Steam with your ITAD account.
