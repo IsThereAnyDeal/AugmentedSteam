@@ -42,7 +42,6 @@ class CacheStorage {
 
 class AugmentedSteam {
     static getUserNote(appid)       { return IndexedDB.get("notes", appid) }
-    static getAllUserNotes()        { return IndexedDB.getAll("notes") }
     static setUserNote(appid, note) { return IndexedDB.put("notes", note, appid) }
     static deleteUserNote(appid)    { return IndexedDB.delete("notes", appid) }
     static userNoteExists(appid)    { return IndexedDB.contains("notes", appid) }
@@ -1346,7 +1345,6 @@ let actionCallbacks = new Map([
     ["steam.currencies", Steam.currencies],
     
     ["notes.get", AugmentedSteam.getUserNote],
-    ["notes.getall", AugmentedSteam.getAllUserNotes],
     ["notes.set", AugmentedSteam.setUserNote],
     ["notes.delete", AugmentedSteam.deleteUserNote],
     ["notes.exists", AugmentedSteam.userNoteExists],
