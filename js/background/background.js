@@ -53,7 +53,7 @@ class AugmentedSteam {
     static async moveNotesToSyncedStorage() {
         let idbNotes = Object.entries(await IndexedDB.getAll("notes"));
 
-        let notes = SyncedStorage.get("user_notes") || {};
+        let notes = SyncedStorage.get("user_notes");
         for (let [appid, note] of idbNotes) {
             notes[appid] = note;
         }

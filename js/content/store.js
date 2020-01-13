@@ -3848,7 +3848,7 @@ class UserNotes {
     };
 
     exists(appid) {
-        return (this._notes[appid] && (this._notes[appid] !== ''));
+        return Boolean(this._notes[appid]);
     };
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
