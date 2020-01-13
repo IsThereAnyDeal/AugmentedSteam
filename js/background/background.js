@@ -45,6 +45,20 @@ class AugmentedSteam {
         CacheStorage.clear();
         return IndexedDB.clear();
     }
+
+    /*
+     * TEMP(1.4.1)
+     * TODO delete after few versions
+     */
+    static async moveNotesToSyncedStorage() {
+        let idbNotes = Object.entries(await IndexedDB.getAll("notes"));
+
+        let notes = SyncedStorage.get("user_notes") || {};
+        for (let [appid, note] of idbNotes) {
+            notes[appid] = note;
+        }
+        SyncedStorage.set("user_notes", notes);
+    }
 }
 
 class Api {
@@ -966,7 +980,7 @@ class IndexedDB {
         };
     }
     static then(onDone, onCatch) {
-        return IndexedDB.init()().then(onDone, onCatch);
+        return (IndexedDB.init())().then(onDone, onCatch);
     }
 
     static putCached(objectStoreName, data, key, multiple) {
@@ -1338,7 +1352,8 @@ let actionCallbacks = new Map([
     ["wishlist.add", SteamStore.wishlistAdd],
     ["dynamicstore.clear", SteamStore.clearDynamicStore],
     ["steam.currencies", Steam.currencies],
-    
+
+    ["migrate.notesToSyncedStorage", AugmentedSteam.moveNotesToSyncedStorage],
     ["cache.clear", AugmentedSteam.clearCache],
 
     ["dlcinfo", AugmentedSteamApi.endpointFactory("v01/dlcinfo")],

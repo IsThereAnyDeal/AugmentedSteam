@@ -285,6 +285,10 @@ class UpdateHandler {
         if (oldVersion.isSameOrBefore("1.4")) {
             SyncedStorage.remove("show_sysreqcheck");
         }
+
+        if (oldVersion.isSame("1.4")) {
+            Background.action("migrate.notesToSyncedStorage");
+        }
     }
 }
 
