@@ -1,7 +1,5 @@
 ﻿v.1.4.1
 ------
-Patch release.
-
 - Improved ITAD Authorization workflow, so it doesn't look so scatchy
 - Fixed user notes no longer showing up
 - Fixed memory crash for big libraries
