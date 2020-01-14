@@ -1198,14 +1198,24 @@ let GamesPageClass = (function(){
 
         commonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
-            rows.classList.toggle("esi-hide-notcommon", e.target.checked);
-            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
+            if (!SyncedStorage.get("library_pagination")) {
+              rows.classList.toggle("esi-hide-notcommon", e.target.checked);
+              ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
+            } else {
+                var event = new CustomEvent('update', { 'detail': JSON.stringify({ 'commonGames': [..._commonGames],'common': e.target.checked, 'notcommon': null })});
+                e.target.parentElement.parentElement.dispatchEvent(event);
+	    }
         });
 
         notCommonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
-            rows.classList.toggle("esi-hide-common", e.target.checked);
-            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
+            if (!SyncedStorage.get("library_pagination")) {
+                rows.classList.toggle("esi-hide-common", e.target.checked);
+                ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
+            } else {
+                var event = new CustomEvent('update', { 'detail': JSON.stringify({ 'commonGames': [..._commonGames],'common': null, 'notcommon': e.target.checked })});
+                e.target.parentElement.parentElement.dispatchEvent(event);
+	    }
         });
     };
 

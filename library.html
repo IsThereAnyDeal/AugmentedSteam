@@ -1,0 +1,49 @@
+<!--
+ Copyright 2017 Yan Li
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<div class="sliwipi-sorting-options">
+  <div
+    id="sliwipi-sort-by-pulldown" class="pulldown global_action_link sliwipi-pulldown"
+    onmouseover="ShowMenu(this, 'sliwipi-sort-by-dropdown', 'right', 'bottom', true)"
+    onmouseout="HideMenu(this, 'sliwipi-sort-by-dropdown')"
+  >
+    <span data-locale-text="sort_by">Sort by</span>
+    <span class="sliwipi-dropdown-label" data-locale-text="name">Name</span>
+    <div id="sliwipi-sort-by-dropdown" class="popup_block_new" style="display: none;">
+      <div class="popup_body popup_menu">
+        <a class="popup_menu_item" href="#" onclick="HideMenu(this.parentNode.parentNode.parentNode, 'sliwipi-sort-by-dropdown')" data-data="name" data-locale-text="name">Name</a>
+        <a class="popup_menu_item" href="#" onclick="HideMenu(this.parentNode.parentNode.parentNode, 'sliwipi-sort-by-dropdown')" data-data="playtime" data-locale-text="playtime">Playtime</a>
+        <a class="popup_menu_item" href="#" onclick="HideMenu(this.parentNode.parentNode.parentNode, 'sliwipi-sort-by-dropdown')" data-data="installedSize" data-locale-text="installed_size">Installed Size</a>
+      </div>
+    </div>
+  </div>
+  <div
+    id="sliwipi-filter-by-pulldown" class="pulldown global_action_link sliwipi-pulldown"
+    onmouseover="ShowMenu(this, 'sliwipi-filter-by-dropdown', 'right', 'bottom', true)"
+    onmouseout="HideMenu(this, 'sliwipi-filter-by-dropdown')"
+  >
+    <span data-locale-text="show">Show</span>
+    <span class="sliwipi-dropdown-label" data-locale-text="games_all">All Games</span>
+    <div id="sliwipi-filter-by-dropdown" class="popup_block_new" style="display: none;">
+      <div class="popup_body popup_menu">
+        <a class="popup_menu_item" href="#" onclick="HideMenu(this.parentNode.parentNode.parentNode, 'sliwipi-filter-by-dropdown')" data-data="all" data-locale-text="games_all">All Games</a>
+        <a class="popup_menu_item" href="#" onclick="HideMenu(this.parentNode.parentNode.parentNode, 'sliwipi-filter-by-dropdown')" data-data="installed" data-locale-text="games_installed">Installed Games</a>
+        <a class="popup_menu_item" href="#" onclick="HideMenu(this.parentNode.parentNode.parentNode, 'sliwipi-filter-by-dropdown')" data-data="-installed" data-locale-text="games_not_installed">Not Installed Games</a>
+        <a class="popup_menu_item" href="#" onclick="HideMenu(this.parentNode.parentNode.parentNode, 'sliwipi-filter-by-dropdown')" data-data="played" data-locale-text="games_played">Played Games</a>
+        <a class="popup_menu_item" href="#" onclick="HideMenu(this.parentNode.parentNode.parentNode, 'sliwipi-filter-by-dropdown')" data-data="-played" data-locale-text="games_not_played">Not Played Games</a>
+      </div>
+    </div>
+  </div>
+</div>
