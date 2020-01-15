@@ -1819,6 +1819,8 @@ let Highlights = (function(){
                 nodeToHighlight = node.nextElementSibling;
             } else if (node.parentNode.parentNode.classList.contains("curations")) {
                 nodeToHighlight = node.parentNode;
+            } else if (node.classList.contains("special_img_ctn") && node.parentElement.classList.contains("special")) {
+                nodeToHighlight = node.parentElement;
             }
 
             let aNode = node.querySelector("a");
@@ -1929,7 +1931,8 @@ let Highlights = (function(){
             "div.browse_tag_game",                          // Tagged games
             "div.similar_grid_item",                        // Items on the "Similarly tagged" pages
             ".tab_item",                                    // Items on new homepage
-            "a.special",                                    // new homepage specials
+            ".special > .special_img_ctn",                  // new homepage specials
+            ".special.special_img_ctn",
             "div.curated_app_item",                         // curated app items!
             ".hero_capsule",                                // Summer sale "Featured"
             ".sale_capsule"                                 // Summer sale general capsules
