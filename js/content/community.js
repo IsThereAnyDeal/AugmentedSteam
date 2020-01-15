@@ -28,7 +28,7 @@ let ProfileData = (function(){
         if (!_promise) {
             let steamId = SteamId.fromDOM();
 
-            _promise = Background.action('profile', { 'profile': steamId, } )
+            _promise = Background.action("profile", SteamId.getSteamId())
                 .then(response => { _data = response; return _data; });
         }
         return _promise;
@@ -551,17 +551,17 @@ let ProfileHomePageClass = (function(){
         if (SyncedStorage.get("profile_steamid")) {
             let dropdown = document.querySelector("#profile_action_dropdown .popup_body.popup_menu");
             if (dropdown) {
-                dropdown.innerHTML += 
+                HTML.beforeEnd(dropdown,
                     `<a class="popup_menu_item" id="es_steamid">
                         <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/iconForums.png">&nbsp; ${Localization.str.view_steamid}
-                    </a>`;
+                    </a>`);
             } else {
                 let actions = document.querySelector(".profile_header_actions");
                 if (actions) {
-                    actions.innerHTML +=
+                    HTML.beforeEnd(actions,
                         `<a class="btn_profile_action btn_medium" id="es_steamid">
                             <span>${Localization.str.view_steamid}</span>
-                        </a>`;
+                        </a>`);
                 }
             }
 
@@ -590,6 +590,7 @@ let ProfileHomePageClass = (function(){
 
             ExtensionLayer.runInPageContext(`function() {
                 window.idDialog.Dismiss();
+                window.idDialog = null;
                 ShowAlertDialog(g_rgProfileData.personaname + "'s SteamID", \`${Localization.str.copied}\`.replace("__text__", "${text}"));
             }`)
         }

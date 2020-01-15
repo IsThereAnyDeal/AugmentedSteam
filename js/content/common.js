@@ -1074,7 +1074,7 @@ let SteamId = (function(){
 SteamId.fromDOM = () => {
     let id = null;
     let g_steamID = HTMLParser.getVariableFromDom("g_steamID", "string");
-    let g_rgProfileData = HTMLParser.getVariableFromDom("g_steamID", "string");
+    let g_rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
     if (document.querySelector("#reportAbuseModal")) {
         id = document.querySelector("input[name=abuseID]").value;
     } else if (g_steamID) {
