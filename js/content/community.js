@@ -4183,6 +4183,5 @@ let EditGuidePageClass = (function(){
             break;
     }
 
-    EnhancedSteam.hideTrademarkSymbol(true);
-
+    AugmentedSteam.hideTrademarkSymbol(true);
 })();

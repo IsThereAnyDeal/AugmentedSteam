@@ -233,7 +233,7 @@ class Background extends BackgroundBase {
                     ProgressBar.serverOutage();
                     break;
                 case "CommunityLoginError": {
-                    EnhancedSteam.addLoginWarning();
+                    AugmentedSteam.addLoginWarning();
                     ProgressBar.finishRequest();
                     break;
                 } 
@@ -1015,7 +1015,7 @@ let Stats = (function() {
     return self;
 })();
 
-let EnhancedSteam = (function() {
+let AugmentedSteam = (function() {
 
     let self = {};
 
@@ -2349,25 +2349,25 @@ let Common = (function(){
 
         ProgressBar.create();
         ProgressBar.loading();
-        UpdateHandler.checkVersion(EnhancedSteam.clearCache);
-        EnhancedSteam.addBackToTop();
-        EnhancedSteam.addMenu();
-        EnhancedSteam.addLanguageWarning();
-        EnhancedSteam.handleInstallSteamButton();
-        EnhancedSteam.removeAboutLinks();
-        EnhancedSteam.addHeaderLinks();
+        UpdateHandler.checkVersion(AugmentedSteam.clearCache);
+        AugmentedSteam.addBackToTop();
+        AugmentedSteam.addMenu();
+        AugmentedSteam.addLanguageWarning();
+        AugmentedSteam.handleInstallSteamButton();
+        AugmentedSteam.removeAboutLinks();
+        AugmentedSteam.addHeaderLinks();
         EarlyAccess.showEarlyAccess();
-        EnhancedSteam.disableLinkFilter();
-        EnhancedSteam.skipGotSteam();
-        EnhancedSteam.keepSteamSubscriberAgreementState();
-        EnhancedSteam.defaultCommunityTab();
+        AugmentedSteam.disableLinkFilter();
+        AugmentedSteam.skipGotSteam();
+        AugmentedSteam.keepSteamSubscriberAgreementState();
+        AugmentedSteam.defaultCommunityTab();
         ITAD.create();
 
         if (User.isSignedIn) {
-            EnhancedSteam.addRedeemLink();
-            EnhancedSteam.replaceAccountName();
-            EnhancedSteam.launchRandomButton();
-            EnhancedSteam.bindLogout();
+            AugmentedSteam.addRedeemLink();
+            AugmentedSteam.replaceAccountName();
+            AugmentedSteam.launchRandomButton();
+            AugmentedSteam.bindLogout();
         }
     };
 

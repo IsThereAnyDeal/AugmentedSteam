@@ -4145,8 +4145,8 @@ let TabAreaObserver = (function(){
 
     // common for store pages
     Highlights.startHighlightsAndTags();
-    EnhancedSteam.alternateLinuxIcon();
-    EnhancedSteam.hideTrademarkSymbol(false);
+    AugmentedSteam.alternateLinuxIcon();
+    AugmentedSteam.hideTrademarkSymbol(false);
     TabAreaObserver.observeChanges();
 
 })();
