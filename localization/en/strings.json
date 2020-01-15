@@ -7,10 +7,17 @@
     "visibility": "Visibility",
     "processing": "Processing...",
     "wait": "Please wait",
+    "invite_friends": "Invite Friends",
+    "invite_to_group": "Invite To Group",
     "transactionStatus": "__failed__ request(s) failed. Retrieved __size__ of __total__ transactions.",
     "custom_tags": "Custom Tags",
     "add_tag": "Add tag",
     "enter_tag": "Enter the custom tag you'd like you add",
+    "status": "Status:",
+    "connect": "Connect",
+    "connected": "Connected",
+    "disconnect": "Disconnect",
+    "disconnected": "Disconnected",
     "oneclickgoo": "1-Click turn into Gems...",
     "view_in_library": "View in Library",
     "support": "Support",
@@ -30,6 +37,7 @@
     "add_selected_dlc_to_cart": "Add selected DLC to cart",
     "credits": "Credits",
     "store_transactions": "Store Purchases",
+    "sign_in": "Sign in",
     "games_coupon": "Games With Coupons",
     "all_friends_own": "All friends who own this (__friendcount__)",
     "translate": "Translate",
@@ -56,6 +64,7 @@
     "events": "Events",
     "translation": "Translation",
     "lowest": "Lowest",
+    "lowest_price": "Current Lowest Price:",
     "view_badge_progress": "View badge progress",
     "badge_progress": "Badge Progress",
     "sales_total": "Sales total:",
@@ -67,7 +76,6 @@
     "website": "Website",
     "game": "Game",
     "games": "Games",
-    "total_time": "Total Time",
     "dlc_suggest": "Suggest a new category",
     "badge_completion_cost": "Cost of completing badge: __cost__",
     "loading": "Loading...",
@@ -94,8 +102,11 @@
     "spam_comment_show": "__num__ spam comments hidden on this page.  Click here to show them.",
     "dlc": "Downloadable Content",
     "add_to_wishlist": "Add to your wishlist",
+    "remove_from_wishlist": "This product is already on your wishlist. Click to remove it from your wishlist.",
+    "add_to_waitlist": "Add to your Waitlist",
     "language": "Language",
     "theworddefault": "Default",
+    "thewordclear": "Clear",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Learn more</a> about Steam Coupons",
     "show": "Show",
     "badges_all": "All Badges",
@@ -107,6 +118,7 @@
     "community": "Community",
     "dlc_data_header": "Downloadable Content Details",
     "graphics": "Graphics",
+    "owned_elsewhere": "You already own __gametitle__ on __storelist__",
     "trading_cards": "Steam Trading Cards",
     "view_badge": "View Badge",
     "purchase_total": "Purchase total:",
@@ -120,6 +132,7 @@
     "read_reviews": "Read Reviews",
     "read_more_reviews": "Read more reviews at",
     "gameplay": "Gameplay",
+    "youtube_gameplay": "Youtube Gameplay",
     "size": "Size",
     "package_info": "Package info",
     "badge_completion_avg": "Avg cost of completion: __cost__",
@@ -131,6 +144,7 @@
     "price": "Price",
     "view_marketplace": "View Marketplace",
     "market_transactions": "Market Transactions",
+    "load_market_stats": "Load Market Stats",
     "card_drops_remaining": "__drops__ card drops remaining",
     "badges_drops": "Badges With Card Drops Remaining",
     "using_language_return": "Click here to browse Steam in __base__.",
@@ -166,6 +180,9 @@
     "most_drops": "Most Drops",
     "badge_foil_progress": "View Foil Badge Progress",
     "net_gain": "Net gain:",
+    "apppage_recentupdates": "Recent Events & Announcements",
+    "apppage_workshop": "Steam Workshop Banner",
+    "apppage_greenlight": "Steam Greenlight Banner",
     "apppage_legal": "Legal Information",
     "apppage_franchise": "Franchise",
     "bug_feature": "Report Bug / Suggest Feature",
@@ -220,9 +237,11 @@
     },
     "none": "None",
     "separator": "Separator",
-    "empty_wishlist": "Empty wishlist",
-    "empty_wishlist_confirm": "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!",
-    "empty_wishlist_loading": "Emptying your wishlist, please wait...",
+    "empty_wishlist": {
+        "title": "Empty wishlist",
+        "confirm": "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!",
+        "removing": "Removing app __cur__ from __total__..."
+    },
     "about": "About",
     "never": "Never",
     "coupon_available": "You have a coupon available!",
@@ -233,6 +252,8 @@
     "show_all_steam_releases": "Show all Steam releases",
     "wishlist": "Wishlist",
     "on_wishlist": "On Wishlist",
+    "ignored": "Ignored",
+    "on_waitlist": "In Waitlist",
     "notdiscounted": "Items not discounted",
     "cancel": "Cancel",
     "wiki_article": "View __pcgw__ Article",
@@ -244,6 +265,8 @@
     "playtime": "Playtime",
     "year": "Year",
     "lastonline": "Last Online",
+    "members": "Members",
+    "name": "Name",
     "edit_price": "Edit Price",
     "relist": "Relist",
     "relist_an_item": "Relist an item",
@@ -349,6 +372,12 @@
         "formatted_time": "__hours__ hours, __minutes__ minutes"
     },
     "options": {
+        "community_default_tab": "Default community home page tab",
+        "videos": "Videos",
+        "broadcasts": "Broadcasts",
+        "artwork": "Artwork",
+        "screenshots": "Screenshots",
+        "show_backtotop": "Show back to top button on long pages",
         "context_menu": "Context Menu",
         "context_steam_store": "Search Steam Store for '__query__'",
         "context_steam_market": "Search Steam Market for '__query__'",
@@ -389,7 +418,7 @@
         "regional_price_on": "Show regional price comparison",
         "cart": "Items in your cart",
         "friends_own": "Items your friends own",
-        "horizontalmediascrolling": "Enable horizontal scrolling of media on app pages with scroll wheel",
+        "horizontalscrolling": "Enable horizontal scrolling on app pages with scroll wheel",
         "supportinfo": "Show support info on store pages",
         "drm": "Show 3rd-party DRM warnings",
         "profile_permalink": "Show permalink on profiles",
@@ -438,9 +467,12 @@
         "openinnewtab": "Open external links in a new tab",
         "showbartervg": "Show Barter.vg links",
         "guest": "Items you have a guest pass for",
+        "collection": "Items in your ITAD Collection",
+        "waitlist": "Items in your ITAD Waitlist",
         "show_steamchart_info": "Show SteamCharts.com info",
         "show_steamspy_info": "Show steamspy.com info",
         "showallachievements": "Show achievement stats on \"All Games\" page",
+        "showallstats": "Show playtime stats on \"All Games\" page",
         "lowestprice_onwishlist": "Show on Wishlist",
         "steamrepapi": "Show SteamRep status on profile pages",
         "header": "Header",
@@ -461,6 +493,7 @@
         "install_steam_button": "\"Install Steam\" button",
         "replace_view_client":  "Replace with \"View in Client\"",
         "show_empty_wishlist": "Show \"Empty Wishlist\" button",
+        "show_wishlist_stats": "Show wishlist stats on wishlist",
         "show_user_notes": "Show user notes on wishlist and app pages",
         "inventory_nav_text": "Show advanced navigation on inventory page",
         "carousel_description": "Show app descriptions on storefront carousel",
@@ -523,13 +556,15 @@
             "ukrainian": "Ukrainian"
         },
         "add_custom_link": "Add custom link",
-        "auto_detect": "Auto-detect"
+        "auto_detect": "Auto-detect",
+        "add_to_waitlist": "Show \"Add to Waitlist\" dropdown on app pages"
     },
     "ready": {
         "errormsg": "Error loading Augmented Steam data",
         "loading": "Augmented Steam loading data...",
         "ready": "Augmented Steam ready",
-        "failed": "__amount__ request(s) failed, check browser console for more information"
+        "failed": "__amount__ request(s) failed, check browser console for more information",
+        "server_outage": "Augmented Steam servers are currently overloaded"
     },
     "twitch": {
         "now_streaming": "__username__ is live streaming on Twitch",
@@ -587,9 +622,18 @@
         "certifications": "WSGF Widescreen Certifications"
     },
     "itad": {
+        "import": "Periodically import:",
+        "last_import": "Last import...",
+        "from": "from ITAD:",
+        "to": "to ITAD:",
+        "sync_now": "Sync now",
         "option": "Show menu option to sync data to IsThereAnyDeal.com",
         "send_to_itad": "Send owned games to IsThereAnyDeal",
-        "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+        "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com",
+        "info": {
+            "itad-steam": "Connecting Augmented Steam with IsThereAnyDeal allows you to apply Augmented Steam's highlighting and tagging to games in your Waitlist and Collection even if you don't have them on Steam.",
+            "steam-itad": "Furthermore, it allows you to import games from your Steam Library and/or Wishlist to IsThereAnyDeal, for improved accuracy (e.g. DLCs or unlisted games). Currently this feature can only add titles, not remove them, so it's not the replacement for IsThereAnyDeal's integrated sync, but an addition to it."
+        }
     },
     "tradeoffer": {
         "num_item": "__num__ item",
@@ -614,14 +658,15 @@
     "wl": {
         "compute": "Click to compute stats",
         "total_price": "current value",
-        "in_wishlist": "in wishlist",
+        "in_wishlist": "on wishlist",
         "on_sale": "on sale",
         "no_price": "without price"
     },
     "coll": {
-        "in_collection": "In Collection",
-        "played": "Played",
-        "never_played": "Never Played"
+        "total_time": "total time",
+        "in_collection": "in collection",
+        "played": "played",
+        "never_played": "never played"
     },
     "user_note": {
         "add": "Add a note",
@@ -646,6 +691,7 @@
         "finished": "Finished! __success__ successful, __fail__ failed. Click OK to refresh the page",
         "failed": "__n__ failed"
     },
+
     "this_version": "This version",
     "original_authors": "Original authors",
     "acknowledgements": "Acknowledgments",

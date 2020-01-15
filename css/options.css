@@ -319,10 +319,21 @@ a:hover {
 	height: 1.5em;
 	min-width: 1.5em;
 	padding: 0;
+	vertical-align: middle;
 }
 .distance_top {
 	margin-top: 2em !important;
 }
 .distance_bottom {
 	margin-bottom: 2em !important;
+}
+
+#itad_status {
+	flex-grow: 1;
+}
+#itad_status.connected {
+	color: green;
+}
+#itad_status.disconnected {
+	color: red;
 }

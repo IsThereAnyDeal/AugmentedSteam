@@ -1,7 +1,7 @@
-#es_progress::-moz-progress-bar {
+.es_progress::-moz-es_progress__bar {
   background-color: #51771d;
 }
-#es_progress.error::-moz-progress-bar {
+.es_progress.error::-moz-es_progress__bar {
   background-color: #b31414;
 }
 
@@ -47,6 +47,10 @@
 .es_slider_toggle i,
 .es_screenshot_fullscreen_toggle i {
   background-image: url("moz-extension://__MSG_@@extension_id__/img/fullscreen-icons.gif");
+}
+
+.es_screenshot_open_btn i {
+  background-image: url('chrome-extension://__MSG_@@extension_id__/img/screenshot_open.png');
 }
 
 .es_user_note:before {
@@ -96,6 +100,6 @@
   background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/astatsnl.png");
 }
 
-.es_flag:before {
+.es-flag:before {
   background-image: url("moz-extension://__MSG_@@extension_id__/img/flags/flags.png");
 }
