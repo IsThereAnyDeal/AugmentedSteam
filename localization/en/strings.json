@@ -4,7 +4,7 @@
     "transactionStatus": "__failed__ request(s) failed. Retrieved __size__ of __total__ transactions.",
     "custom_tags": "Custom Tags",
     "add_tag": "Add tag",
-    "enter_tag": "Enter the custom tag you'd like you add",
+    "enter_tag": "Enter the custom tag you'd like to add",
     "status": "Status:",
     "connect": "Connect",
     "connected": "Connected",
