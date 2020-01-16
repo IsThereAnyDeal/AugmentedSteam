@@ -1,7 +1,15 @@
 {
+    "invite_friends": "邀请好友",
+    "invite_to_group": "邀请至组",
+    "transactionStatus": "__failed__ 个请求失败。已获取 __size__ / __total__ 笔交易。",
     "custom_tags": "自定义标签",
     "add_tag": "添加标签",
     "enter_tag": "输入您要添加的自定义标签",
+    "status": "状态：",
+    "connect": "连接",
+    "connected": "已连接",
+    "disconnect": "断开",
+    "disconnected": "已断开连接",
     "oneclickgoo": "一键转换为宝石...",
     "view_in_library": "在库中查看",
     "support": "支持信息",
@@ -21,6 +29,7 @@
     "add_selected_dlc_to_cart": "将选择的 DLC 加入购物车",
     "credits": "制作人员",
     "store_transactions": "商店消费",
+    "sign_in": "登录",
     "games_coupon": "有优惠券的游戏",
     "all_friends_own": "拥有此物品的好友（__friendcount__）",
     "translate": "翻译",
@@ -47,6 +56,7 @@
     "events": "事件",
     "translation": "翻译",
     "lowest": "最低",
+    "lowest_price": "当前最低价：",
     "view_badge_progress": "查看徽章进度",
     "badge_progress": "徽章进度",
     "sales_total": "出售总计：",
@@ -84,8 +94,11 @@
     "spam_comment_show": "本页有 __num__ 条垃圾评论被隐藏，点击这里显示。",
     "dlc": "可下载内容（DLC）",
     "add_to_wishlist": "添加至您的愿望单",
+    "remove_from_wishlist": "此产品已经在您的愿望单中。点击从愿望单中移除。",
+    "add_to_waitlist": "添加至关注列表（Waitlist）",
     "language": "语言",
     "theworddefault": "默认",
+    "thewordclear": "清除",
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">详细了解</a> Steam 优惠券",
     "show": "显示",
     "badges_all": "全部徽章",
@@ -97,6 +110,7 @@
     "community": "社区",
     "dlc_data_header": "DLC 详情",
     "graphics": "图像",
+    "owned_elsewhere": "您已在 __storelist__ 拥有 __gametitle__",
     "trading_cards": "Steam 集换式卡牌",
     "view_badge": "查看徽章",
     "purchase_total": "消费总计：",
@@ -110,6 +124,7 @@
     "read_reviews": "阅读评测",
     "read_more_reviews": "阅读更多评测于",
     "gameplay": "实况",
+    "youtube_gameplay": "Youtube 实况",
     "size": "大小",
     "package_info": "游戏包信息",
     "badge_completion_avg": "完成徽章的平均花费：__cost__",
@@ -121,6 +136,7 @@
     "price": "价格",
     "view_marketplace": "查看市场",
     "market_transactions": "市场交易",
+    "load_market_stats": "加载市场统计",
     "card_drops_remaining": "__drops__ 张剩余卡牌掉落",
     "badges_drops": "仍可获得卡牌的徽章",
     "using_language_return": "点击这里将 Steam 切换成__base__。",
@@ -156,6 +172,9 @@
     "most_drops": "最多掉落",
     "badge_foil_progress": "查看闪亮徽章进度",
     "net_gain": "净收益：",
+    "apppage_recentupdates": "最新活动与通知",
+    "apppage_workshop": "Steam 创意工坊横幅",
+    "apppage_greenlight": "Steam 青睐之光横幅",
     "apppage_legal": "法律信息",
     "apppage_franchise": "系列作品",
     "bug_feature": "报告错误/提出建议",
@@ -212,7 +231,8 @@
     "separator": "分隔符",
     "empty_wishlist": {
         "title": "清空愿望单",
-        "confirm": "您确定要清空愿望单？\n\n此操作无法撤消！"
+        "confirm": "您确定要清空愿望单？\n\n此操作无法撤消！",
+        "removing": "正在移除 __total__ 个产品中的第 __cur__ 个..."
     },
     "about": "关于",
     "never": "永不",
@@ -224,6 +244,8 @@
     "show_all_steam_releases": "显示全部 Steam 新品",
     "wishlist": "愿望单",
     "on_wishlist": "在愿望单上",
+    "ignored": "已忽略",
+    "on_waitlist": "在观察列表中",
     "notdiscounted": "无折扣物品",
     "cancel": "取消",
     "wiki_article": "在 __pcgw__ 上查看文章",
@@ -235,6 +257,8 @@
     "playtime": "游戏时长",
     "year": "年",
     "lastonline": "最后在线时间",
+    "members": "成员",
+    "name": "名称",
     "edit_price": "编辑价格",
     "relist": "重新上架",
     "relist_an_item": "重新上架一件物品",
@@ -340,6 +364,21 @@
         "formatted_time": "__hours__ 小时，__minutes__ 分钟"
     },
     "options": {
+        "community_default_tab": "默认社区中心页面",
+        "videos": "视频",
+        "broadcasts": "直播",
+        "artwork": "艺术作品",
+        "screenshots": "截图",
+        "show_backtotop": "在长页面显示返回顶部按钮",
+        "context_menu": "右键菜单",
+        "context_steam_store": "在 Steam 商店搜索 '__query__'",
+        "context_steam_market": "在 Steam 市场搜索 '__query__'",
+        "context_itad": "在 IsThereAnyDeal 搜索 '__query__'",
+        "context_bartervg": "在 Barter.vg 搜索 '__query__'",
+        "context_steamdb": "在 SteamDB 搜索 '__query__'",
+        "context_steamdb_instant": "在 SteamDB 快速搜索 '__query__'",
+        "context_steam_keys": "激活选中的 Steam 产品代码",
+        "no_keys_found": "已选文字中未找到 Steam 产品代码！",
         "wsgf": "显示 WSGF（宽屏支持）信息",
         "version_show": "在 Augmented Steam 更新时显示更新日志",
         "steamcardexchange": "在徽章页面显示 SteamCardExchange 链接",
@@ -420,9 +459,12 @@
         "openinnewtab": "在新标签页打开外部链接",
         "showbartervg": "显示 Barter.vg 链接",
         "guest": "拥有玩家通行证的物品",
+        "collection": "您 ITAD 收藏库（Collection）中的物品",
+        "waitlist": "您 ITAD 观察列表（Waitlist）中的物品",
         "show_steamchart_info": "显示 SteamCharts.com 信息",
         "show_steamspy_info": "显示 steamspy.com 信息",
         "showallachievements": "在“所有游戏”页面显示成就数据",
+        "showallstats": "在“所有游戏”页面显示时长统计",
         "lowestprice_onwishlist": "在愿望单中显示",
         "steamrepapi": "在个人资料页面显示 SteamRep 状态",
         "header": "页首",
@@ -443,6 +485,7 @@
         "install_steam_button": "“安装 Steam”按钮",
         "replace_view_client": "替换为“在客户端中查看”",
         "show_empty_wishlist": "显示“清空愿望单”按钮",
+        "show_wishlist_stats": "在愿望单页面显示统计",
         "show_user_notes": "在愿望单与商店页面显示用户备注",
         "inventory_nav_text": "在库存页面启用高级导航功能",
         "carousel_description": "在商店首页轮盘中显示简介",
@@ -505,13 +548,15 @@
             "ukrainian": "乌克兰语"
         },
         "add_custom_link": "添加自定义链接",
-        "auto_detect": "自动检测"
+        "auto_detect": "自动检测",
+        "add_to_waitlist": "在商店页面显示“添加到观察列表（Waitlist）”下拉菜单"
     },
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",
         "loading": "Augmented Steam 数据载入中...",
         "ready": "Augmented Steam 已就绪",
-        "failed": "__amount__ 个请求发送失败，请打开浏览器开发者控制台以了解详情"
+        "failed": "__amount__ 个请求发送失败，请打开浏览器开发者控制台以了解详情",
+        "server_outage": "Augmented Steam 服务器目前已超负荷"
     },
     "twitch": {
         "now_streaming": "__username__ 正在 Twitch 上直播",
@@ -569,9 +614,18 @@
         "certifications": "WSGF 宽屏认证"
     },
     "itad": {
+        "import": "定时导入：",
+        "last_import": "最新导入...",
+        "from": "从 ITAD：",
+        "to": "至 ITAD：",
+        "sync_now": "立刻同步",
         "option": "在菜单中显示与 IsThereAnyDeal.com 同步数据选项",
         "send_to_itad": "与 IsThereAnyDeal 同步已拥有游戏",
-        "sending": "载入您已拥有的游戏与合集包，并将信息发送到 IsThereAnyDeal.com"
+        "sending": "载入您已拥有的游戏与合集包，并将信息发送到 IsThereAnyDeal.com",
+        "info": {
+            "itad-steam": "将 Augmented Steam 连接至 IsThereAnyDeal，则 Augmented Steam 可以高亮显示并标记您的观察列表（Waitlist）与收藏库（Collection）中的游戏，即使您不在 Steam 上拥有它们。",
+            "steam-itad": "并且，您还可以将 Steam 库和/或愿望单中的游戏导入至 IsThereAnyDeal, 而且更准确（例如，准确处理 DLC 或缺失的游戏）。目前此功能只能添加项目，不能删除，所以无法完全替代 IsThereAnyDeal 内置的同步功能，仅仅是个补充。"
+        }
     },
     "tradeoffer": {
         "num_item": "__num__ 个物品",
@@ -601,6 +655,7 @@
         "no_price": "无价格"
     },
     "coll": {
+        "total_time": "总时长",
         "in_collection": "拥有",
         "played": "已玩过",
         "never_played": "未玩过"
@@ -633,15 +688,5 @@
     "acknowledgements": "致谢",
     "other": "其他",
     "images": "图像",
-    "powered_by": "数据来自 __link__",
-    "invite_to_group": "邀请至群组",
-    "thewordclear": "清除",
-    "apppage_recentupdates": "近期活动和公告",
-    "apppage_workshop": "Steam 工作坊橫幅",
-    "youtube_gameplay": "Youtube 游玩影片",
-    "transactionStatus": "__failed__ 个请求发送失败。已取得 __size__ / __total__ 笔交易。",
-    "load_market_stats": "载入市集统计资料",
-    "lowest_price": "当前最低价：",
-    "apppage_greenlight": "Steam Greenlight 橫幅",
-    "invite_friends": "邀请好友"
+    "powered_by": "数据来自 __link__"
 }
