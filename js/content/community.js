@@ -2947,6 +2947,7 @@ let GroupsPageClass = (function(){
 
     function GroupsPageClass() {
         this.addSort();
+        this.addLeaveAllBtn();
     }
 
     GroupsPageClass.prototype.addSort = function() {
@@ -2998,15 +2999,6 @@ let GroupsPageClass = (function(){
         );
         document.querySelector(".es-sortbox").style.flex = 2;
     };
-
-    return GroupsPageClass;
-})();
-
-let GroupsPageClass = (function(){
-
-    function GroupsPageClass() {
-        this.addLeaveAllBtn();
-    }
 
     GroupsPageClass.prototype.addLeaveAllBtn = async function() {
         let groups = document.querySelectorAll(".group_block");
