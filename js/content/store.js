@@ -4149,11 +4149,11 @@ let TabAreaObserver = (function(){
             (new SearchPageClass());
             break;
 
-        case /^\/(stats)\//.test(path):
+        case /^\/stats\//.test(path):
             (new StatsPageClass());
             break;
 
-        case /^\/(tags|genre)\//.test(path):
+        case /^\/(?:tags|genre)\//.test(path):
             (new TagPageClass());
             break;
 
