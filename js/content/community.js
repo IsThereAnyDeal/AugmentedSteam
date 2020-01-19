@@ -3002,6 +3002,134 @@ let GroupsPageClass = (function(){
     return GroupsPageClass;
 })();
 
+let GroupsPageClass = (function(){
+
+    function GroupsPageClass() {
+        this.addLeaveAllBtn();
+    }
+
+    GroupsPageClass.prototype.addLeaveAllBtn = async function() {
+        let groups = document.querySelectorAll(".group_block");
+        if (groups.length === 0) { return; }
+        if (!groups[0].querySelector(".actions")) { return; }
+
+        HTML.beforeEnd(".title_bar", 
+            `<button id="manage_friends_control" class="profile_friends manage_link btnv6_blue_hoverfade btn_small btn_uppercase">
+                <span>${Localization.str.manage_groups}</span>
+            </button>`);
+
+        HTML.afterEnd(".title_bar",
+            `<div id="manage_friends" class="manage_friends_panel">
+            <div class="row">${Localization.str.action_groups}<span class="row">
+                    <span class="dimmed">Select: </span>
+                    <span class="selection_type" id="es_select_all">${Localization.str.all}</span>
+                    <span class="selection_type" id="es_select_none">${Localization.str.none}</span>
+                    <span class="selection_type" id="es_select_inverse">${Localization.str.inverse}</span>
+                </span>
+            </div>
+            <div class="row">
+                <span class="manage_action anage_action btnv6_lightblue_blue btn_medium btn_uppercase" id="es_leave_groups"><span>${Localization.str.leave}</span></span>
+                <span id="selected_msg_err" class="selected_msg error hidden"></span>
+                <span id="selected_msg" class="selected_msg hidden">${Localization.str.selected.replace("__n__", `<span id="selected_count"></span>`)}.</span>
+            </div>
+            <div class="row"></div>
+        </div>`);
+
+        for (let group of groups) {
+            group.classList.add("selectable");
+            HTML.afterBegin(group, 
+                `<div class="indicator select_friend">
+                    <input class="select_friend_checkbox" type="checkbox">
+                </div>`);
+            group.querySelector(".select_friend").addEventListener("click", () => {
+                group.classList.toggle("selected");
+                group.querySelector(".select_friend_checkbox").checked = group.classList.contains("selected");
+                ExtensionLayer.runInPageContext(function() { UpdateSelection(); });
+            });    
+        }
+
+        document.querySelector("#manage_friends_control").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { ToggleManageFriends(); });
+        });
+
+        document.querySelector("#es_select_all").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { SelectAll(); });
+        });
+
+        document.querySelector("#es_select_none").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { SelectNone(); });
+        });
+
+        document.querySelector("#es_select_inverse").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { SelectInverse(); });
+        });
+
+        document.querySelector("#es_leave_groups").addEventListener("click", () => leaveGroups());
+
+        async function displayAdminConfirmation(name, id) {
+            let body = Localization.str.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
+            ExtensionLayer.runInPageContext(`function(){
+                let prompt = ShowConfirmDialog("${Localization.str.leave}", "${body}");
+                prompt.done(function(result) {
+                    Messenger.postMessage("confirm#${id}", result);
+                }).fail(function() {
+                    Messenger.postMessage("confirm#${id}");
+                });
+            }`);
+            
+            let result = await Messenger.onMessage(`confirm#${id}`);
+            if (result === "OK") {
+                return true;
+            }
+
+            return false;
+        }
+
+        async function leaveGroups() {
+            for (let group of groups) {
+                if (!group.classList.contains("selected")) { continue; }
+
+                let actions = group.querySelector(".actions");
+                let admin = actions.querySelector("[href*='/edit']");
+                let split = actions.querySelector("[onclick*=ConfirmLeaveGroup]").getAttribute("onclick").split(/'|"/);
+                let id = split[1];
+                if (admin) {
+                    let name = split[3]
+                    let cont = await displayAdminConfirmation(name, id);
+                    if (!cont) {
+                        group.querySelector(".select_friend").click();
+                        continue;
+                    }
+                }
+                let res = await leaveGroup(id).catch(err => console.error(err));
+
+                if (!res || !res.success) {
+                    console.error("Failed to leave group " + id);
+                    continue;
+                }
+
+                group.style.opacity = 0.3;
+                group.querySelector(".select_friend").click();
+            }
+        }
+
+        function leaveGroup(id) {
+            let formData = new FormData();
+            formData.append("sessionid", User.getSessionId());
+            formData.append("steamid", User.steamId);
+            formData.append("ajax", 1);
+            formData.append("action", "leave_group");
+            formData.append("steamids[]", id);
+
+            return RequestData.post(User.profileUrl + "/friends/action", formData, {
+                withCredentials: true
+            }, "json");
+        }
+    };
+
+    return GroupsPageClass;
+})();
+
 let MarketListingPageClass = (function(){
 
     function MarketListingPageClass() {
