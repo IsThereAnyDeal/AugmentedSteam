@@ -94,6 +94,7 @@
     "spam_comment_show": "Komentarzy ze spamem ukrytych na tej stronie: __num__. Kliknij tutaj, by je wyświetlić.",
     "dlc": "DLC",
     "add_to_wishlist": "Dodaj do listy życzeń",
+    "add_to_wishlist_tooltip": "Otrzymaj powiadomienie e-mailem, kiedy produkt na liście życzeń zostanie wydany lub będzie na wyprzedaży",
     "remove_from_wishlist": "Ten produkt już jest na twojej liście życzeń. Kliknij tutaj, aby go z niej usunąć.",
     "add_to_waitlist": "Dodaj do listy oczekujących",
     "language": "Język",

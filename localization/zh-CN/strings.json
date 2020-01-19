@@ -94,6 +94,7 @@
     "spam_comment_show": "本页有 __num__ 条垃圾评论被隐藏，点击这里显示。",
     "dlc": "可下载内容（DLC）",
     "add_to_wishlist": "添加至您的愿望单",
+    "add_to_wishlist_tooltip": "在您愿望单中的物品正式发布或特价销售时获取邮件通知",
     "remove_from_wishlist": "此产品已经在您的愿望单中。点击从愿望单中移除。",
     "add_to_waitlist": "添加至关注列表（Waitlist）",
     "language": "语言",
