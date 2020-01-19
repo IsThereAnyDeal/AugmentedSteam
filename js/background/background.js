@@ -41,20 +41,23 @@ class CacheStorage {
 }
 
 class AugmentedSteam {
-    static getUserNote(appid)       { return IndexedDB.get("notes", appid) }
-    static getAllUserNotes()        { return IndexedDB.getAll("notes") }
-    static setUserNote(appid, note) { return IndexedDB.put("notes", note, appid) }
-    static deleteUserNote(appid)    { return IndexedDB.delete("notes", appid) }
-    static userNoteExists(appid)    { return IndexedDB.contains("notes", appid) }
-
-    static importOldUserNotes() {
-        let notes = SyncedStorage.get("user_notes");
-        return IndexedDB.put("notes", Object.values(notes), Object.keys(notes).map(appid => parseInt(appid)), true);
-    }
-
     static clearCache() {
         CacheStorage.clear();
         return IndexedDB.clear();
+    }
+
+    /*
+     * TEMP(1.4.1)
+     * TODO delete after few versions
+     */
+    static async moveNotesToSyncedStorage() {
+        let idbNotes = Object.entries(await IndexedDB.getAll("notes"));
+
+        let notes = SyncedStorage.get("user_notes");
+        for (let [appid, note] of idbNotes) {
+            notes[appid] = note;
+        }
+        SyncedStorage.set("user_notes", notes);
     }
 }
 
@@ -190,8 +193,13 @@ class AugmentedSteamApi extends Api {
         return IndexedDB.delete("storePageData", `app_${appid}`);
     }
 
-    static rates(to) { return IndexedDB.getAll("rates", { "to": to.sort().join(',') }) }
-    static isEA(appids) { return IndexedDB.contains("earlyAccessAppids", appids) }
+    static rates(to) {
+        return IndexedDB.getAll("rates", { "to": to.sort().join(',') });
+    }
+
+    static isEA(appids) {
+        return IndexedDB.contains("earlyAccessAppids", appids);
+    }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();
@@ -202,17 +210,31 @@ class ITAD_Api extends Api {
         let rnd = crypto.getRandomValues(new Uint32Array(1))[0];
         let redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
 
-        // https://groups.google.com/a/chromium.org/d/msg/chromium-extensions/K8njaUCU81c/eUxMIEACAQAJ
-
-        function noop() {}
-
-        // https://stackoverflow.com/a/58577052
+        /*
+         * How to use webRequest with event pages:
+         * https://groups.google.com/a/chromium.org/d/msg/chromium-extensions/K8njaUCU81c/eUxMIEACAQAJ
+         *
+         * Preventing event page from unloading by using iframe
+         * https://stackoverflow.com/a/58577052
+         */
+        function noop() {} // so we can removeListener
         browser.runtime.onConnect.addListener(noop);
 
-        // For some reason the scripts are not inserted on FF, but this doesn't really matter since FF doesn't support event pages. Therefore the event listeners never get unloaded.
-        document.body.appendChild(document.createElement("iframe")).src = "background-iframe.html";
+        /*
+         * For some reason the scripts are not inserted on FF,
+         * but this doesn't really matter since FF doesn't support event pages.
+         * Therefore the event listeners never gets unloaded.
+         */
+        document.body.appendChild(document.createElement("iframe")).src = "authorizationFrame.html";
 
-        let tab = await browser.tabs.create({ "url": `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${rnd}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${encodeURIComponent(redirectURI)}` });
+        let authUrl = new URL(`${Config.ITAD_ApiServerHost}/oauth/authorize/`);
+        authUrl.searchParams.set("client_id", Config.ITAD_ClientID);
+        authUrl.searchParams.set("response_type", "token");
+        authUrl.searchParams.set("state", rnd);
+        authUrl.searchParams.set("scope", ITAD_Api.requiredScopes.join(' '));
+        authUrl.searchParams.set("redirect_uri", redirectURI);
+
+        let tab = await browser.tabs.create({"url": authUrl.toString()});
 
         let url;
         try {
@@ -236,28 +258,40 @@ class ITAD_Api extends Api {
                     }
                 }
 
-                browser.webRequest.onBeforeRequest.addListener(webRequestListener, { "urls": [
-                    redirectURI,        // For Chrome, seems to not support match patterns (probably a problem with the Polyfill?)
-                    `${redirectURI}#*`  // For Firefox
-                ], "tabId": tab.id }, ["blocking"]);
+                browser.webRequest.onBeforeRequest.addListener(
+                    webRequestListener,
+                    {
+                        "urls": [
+                            redirectURI,        // For Chrome, seems to not support match patterns (probably a problem with the Polyfill?)
+                            `${redirectURI}#*`  // For Firefox
+                        ],
+                        "tabId": tab.id
+                    }, ["blocking"]);
                 browser.tabs.onRemoved.addListener(tabsListener);
             });
         } finally {
             browser.runtime.onConnect.removeListener(noop);
             document.querySelector("iframe").remove();
-        }        
+        }
 
         let hashFragment = new URL(url).hash;
         let params = new URLSearchParams(hashFragment.substr(1));
 
-        if (parseInt(params.get("state")) !== rnd) { throw new Error("Failed to verify state parameter from URL fragment"); }
+        if (parseInt(params.get("state")) !== rnd) {
+            throw new Error("Failed to verify state parameter from URL fragment");
+        }
 
         let accessToken = params.get("access_token");
         let expiresIn = params.get("expires_in");
 
-        if (!accessToken || !expiresIn) { throw new Error(`Couldn't retrieve information from URL fragment "${hashFragment}"`); }
+        if (!accessToken || !expiresIn) {
+            throw new Error(`Couldn't retrieve information from URL fragment "${hashFragment}"`);
+        }
             
-        LocalStorage.set("access_token", { token: accessToken, expiry: Timestamp.now() + parseInt(expiresIn, 10) });
+        LocalStorage.set("access_token", {
+            token: accessToken,
+            expiry: Timestamp.now() + parseInt(expiresIn, 10)
+        });
     }
 
     static disconnect() {
@@ -678,8 +712,16 @@ class SteamStore extends Api {
         return IndexedDB.putCached("dynamicStore", Object.values(dynamicStore), Object.keys(dynamicStore), true);
     }
 
-    static dsStatus(ids) { return IndexedDB.getAllFromIndex("dynamicStore", "appid", ids, true) }
-    
+    static dsStatus(ids) {
+        return IndexedDB.getAllFromIndex("dynamicStore", "appid", ids, true)
+    }
+
+    static async dynamicStoreRandomApp() {
+        let store = await IndexedDB.getAll("dynamicStore");
+        if (!store || !store.ownedApps) { return null; }
+        return store.ownedApps[Math.floor(Math.random() * store.ownedApps.length)];
+    }
+
     static async clearDynamicStore() {
         await IndexedDB.clear("dynamicStore");
         Steam._dynamicstore_promise = null;
@@ -981,7 +1023,7 @@ class IndexedDB {
         };
     }
     static then(onDone, onCatch) {
-        return IndexedDB.init()().then(onDone, onCatch);
+        return (IndexedDB.init())().then(onDone, onCatch);
     }
 
     static putCached(objectStoreName, data, key, multiple) {
@@ -1354,13 +1396,8 @@ let actionCallbacks = new Map([
     ["wishlist.remove", SteamStore.wishlistRemove],
     ["dynamicstore.clear", SteamStore.clearDynamicStore],
     ["steam.currencies", Steam.currencies],
-    
-    ["notes.get", AugmentedSteam.getUserNote],
-    ["notes.getall", AugmentedSteam.getAllUserNotes],
-    ["notes.set", AugmentedSteam.setUserNote],
-    ["notes.delete", AugmentedSteam.deleteUserNote],
-    ["notes.exists", AugmentedSteam.userNoteExists],
-    ["notes.importold", AugmentedSteam.importOldUserNotes],
+
+    ["migrate.notesToSyncedStorage", AugmentedSteam.moveNotesToSyncedStorage],
     ["cache.clear", AugmentedSteam.clearCache],
 
     ["dlcinfo", AugmentedSteamApi.endpointFactory("v01/dlcinfo")],
@@ -1383,6 +1420,7 @@ let actionCallbacks = new Map([
     ["purchases", SteamStore.purchases],
     ["clearpurchases", SteamStore.clearPurchases],
     ["dynamicstorestatus", SteamStore.dsStatus],
+    ["dynamicStore.randomApp", SteamStore.dynamicStoreRandomApp],
 
     ["login", SteamCommunity.login],
     ["logout", SteamCommunity.logout],

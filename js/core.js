@@ -284,11 +284,10 @@ class UpdateHandler {
 
         if (oldVersion.isSameOrBefore("1.4")) {
             SyncedStorage.remove("show_sysreqcheck");
+        }
 
-            BackgroundBase.action("notes.importold");
-
-            // todo Remove on next update in order to make sure that this data was properly imported
-            // SyncedStorage.remove("user_notes");
+        if (oldVersion.isSame("1.4")) {
+            Background.action("migrate.notesToSyncedStorage");
         }
     }
 }

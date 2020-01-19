@@ -233,7 +233,7 @@ class Background extends BackgroundBase {
                     ProgressBar.serverOutage();
                     break;
                 case "CommunityLoginError": {
-                    EnhancedSteam.addLoginWarning();
+                    AugmentedSteam.addLoginWarning();
                     ProgressBar.finishRequest();
                     break;
                 } 
@@ -1015,7 +1015,7 @@ let Stats = (function() {
     return self;
 })();
 
-let EnhancedSteam = (function() {
+let AugmentedSteam = (function() {
 
     let self = {};
 
@@ -1240,9 +1240,8 @@ let EnhancedSteam = (function() {
             `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
 
         document.querySelector("#es_random_game").addEventListener("click", async function(){
-            let result = await DynamicStore;
-            if (!result.rgOwnedApps) { return; }
-            let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
+            let appid = await DynamicStore.getRandomApp();
+            if (!appid) { return; }
 
             Background.action("appdetails", appid).then(response => {
                 if (!response || !response.success) { return; }
@@ -1820,6 +1819,8 @@ let Highlights = (function(){
                 nodeToHighlight = node.nextElementSibling;
             } else if (node.parentNode.parentNode.classList.contains("curations")) {
                 nodeToHighlight = node.parentNode;
+            } else if (node.classList.contains("special_img_ctn") && node.parentElement.classList.contains("special")) {
+                nodeToHighlight = node.parentElement;
             }
 
             let aNode = node.querySelector("a");
@@ -1930,7 +1931,8 @@ let Highlights = (function(){
             "div.browse_tag_game",                          // Tagged games
             "div.similar_grid_item",                        // Items on the "Similarly tagged" pages
             ".tab_item",                                    // Items on new homepage
-            "a.special",                                    // new homepage specials
+            ".special > .special_img_ctn",                  // new homepage specials
+            ".special.special_img_ctn",
             "div.curated_app_item",                         // curated app items!
             ".hero_capsule",                                // Summer sale "Featured"
             ".sale_capsule"                                 // Summer sale general capsules
@@ -1960,6 +1962,14 @@ let Highlights = (function(){
 })();
 
 let DynamicStore = (function(){
+
+    /*
+    * FIXME
+    *  1. Check usage of `await DynamicStore`, currently it does nothing
+    *  2. getAppStatus() is not properly waiting for initialization of the DynamicStore
+    *  3. There is no guarante that `User` is initialized before `_fetch()` is called
+    *  4. getAppStatus() should probably be simplified if we force array even when only one storeId was requested
+    */
 
     let self = {};
 
@@ -1992,7 +2002,7 @@ let DynamicStore = (function(){
                 statusList[id] = {
                     "ignored": dsStatusList[trimmedId].includes("ignored"),
                     "wishlisted": dsStatusList[trimmedId].includes("wishlisted"),
-                }
+                };
                 if (id.startsWith("app/")) {
                     statusList[id].owned = dsStatusList[trimmedId].includes("ownedApps");
                 } else if (id.startsWith("sub/")) {
@@ -2003,7 +2013,7 @@ let DynamicStore = (function(){
             statusList = {
                 "ignored": dsStatusList.includes("ignored"),
                 "wishlisted": dsStatusList.includes("wishlisted"),
-            }
+            };
             if (storeId.startsWith("app/")) {
                 statusList.owned = dsStatusList.includes("ownedApps");
             } else if (storeId.startsWith("sub/")) {
@@ -2012,7 +2022,12 @@ let DynamicStore = (function(){
         }
 
         return statusList;
-    }
+    };
+
+    self.getRandomApp = async function() {
+        await _fetch();
+        return await Background.action("dynamicStore.randomApp");
+    };
 
     async function _fetch() {
         if (!User.isSignedIn) {
@@ -2334,25 +2349,25 @@ let Common = (function(){
 
         ProgressBar.create();
         ProgressBar.loading();
-        UpdateHandler.checkVersion(EnhancedSteam.clearCache);
-        EnhancedSteam.addBackToTop();
-        EnhancedSteam.addMenu();
-        EnhancedSteam.addLanguageWarning();
-        EnhancedSteam.handleInstallSteamButton();
-        EnhancedSteam.removeAboutLinks();
-        EnhancedSteam.addHeaderLinks();
+        UpdateHandler.checkVersion(AugmentedSteam.clearCache);
+        AugmentedSteam.addBackToTop();
+        AugmentedSteam.addMenu();
+        AugmentedSteam.addLanguageWarning();
+        AugmentedSteam.handleInstallSteamButton();
+        AugmentedSteam.removeAboutLinks();
+        AugmentedSteam.addHeaderLinks();
         EarlyAccess.showEarlyAccess();
-        EnhancedSteam.disableLinkFilter();
-        EnhancedSteam.skipGotSteam();
-        EnhancedSteam.keepSteamSubscriberAgreementState();
-        EnhancedSteam.defaultCommunityTab();
+        AugmentedSteam.disableLinkFilter();
+        AugmentedSteam.skipGotSteam();
+        AugmentedSteam.keepSteamSubscriberAgreementState();
+        AugmentedSteam.defaultCommunityTab();
         ITAD.create();
 
         if (User.isSignedIn) {
-            EnhancedSteam.addRedeemLink();
-            EnhancedSteam.replaceAccountName();
-            EnhancedSteam.launchRandomButton();
-            EnhancedSteam.bindLogout();
+            AugmentedSteam.addRedeemLink();
+            AugmentedSteam.replaceAccountName();
+            AugmentedSteam.launchRandomButton();
+            AugmentedSteam.bindLogout();
         }
     };
 

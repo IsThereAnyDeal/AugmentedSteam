@@ -403,7 +403,7 @@ class StorePageClass {
             for (let country of countries) {
                 promises.push(
                     RequestData.getJson(`https://store.steampowered.com/api/packagedetails/?packageids=${subid}&cc=${country}`).then(result => {
-                        if (!result || !result[subid] || !result[subid].success) { return; }
+                        if (!result || !result[subid] || !result[subid].success || !result[subid].data.price) { return; }
                         prices[country] = result[subid].data.price;
                     })
                 );
@@ -1339,14 +1339,12 @@ class AppPageClass extends StorePageClass {
 
         HTML.afterBegin(".leftcol",
             `<div id="es_media_tabs">
-                <div class="store_horizontal_minislider_ctn" style="height: 31px;">
-                    <div class="home_tabs_row">
-                        <div id="es_tab_steammedia" class="es_media_tab home_tab active">
-                            <div class="tab_content">Steam</div>
-                        </div>
-                        <div id="es_tab_youtubemedia" class="es_media_tab home_tab">
-                            <div class="tab_content">${Localization.str.youtube_gameplay}</div>
-                        </div>
+                <div class="home_tabs_row">
+                    <div id="es_tab_steammedia" class="es_media_tab home_tab active">
+                        <div class="tab_content">Steam</div>
+                    </div>
+                    <div id="es_tab_youtubemedia" class="es_media_tab home_tab">
+                        <div class="tab_content">${Localization.str.youtube_gameplay}</div>
                     </div>
                 </div>
             </div>`);
@@ -2218,10 +2216,10 @@ class AppPageClass extends StorePageClass {
     customizeAppPage() {
         let nodes = document.querySelectorAll(".purchase_area_spacer");
         HTML.beforeEnd(nodes[nodes.length-1],
-            `<div id="es_customize_btn" class="home_actions_ctn">
-                <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
+            `<div id="es_customize_btn">
+                <div class="home_btn home_customize_btn">${Localization.str.customize}</div>
                 <div class='home_viewsettings_popup'>
-                    <div class="home_viewsettings_instructions" style="font-size: 12px;">${Localization.str.apppage_sections}</div>
+                    <div class="home_viewsettings_instructions">${Localization.str.apppage_sections}</div>
                 </div>
             </div>
             <div style="clear: both;"></div>`);
@@ -2250,7 +2248,9 @@ class AppPageClass extends StorePageClass {
 
         let customizer = new Customizer("customize_apppage");
         customizer
-            .add("recommendedbycurators", ".steam_curators_block")
+            .add("franchisenotice", ".franchise_notice", Localization.str.apppage_franchise)
+            .add("eaheader", ".early_access_header", Localization.str.apppage_eaheader)
+            .add("eabanner", ".early_access_banner", Localization.str.apppage_eabanner)
             .add("recentupdates", "#events_root", Localization.str.apppage_recentupdates)
             .add("reviews", "#game_area_reviews")
             .add("about", "[data-parent-of='#game_area_description']")
@@ -2261,8 +2261,9 @@ class AppPageClass extends StorePageClass {
             .add("sysreq", "[data-parent-of='.sys_req']")
             .add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal)
             .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
-            .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
+            .add("franchise", "#franchise_block", Localization.str.apppage_morefromfranchise)
             .add("morelikethis", "#recommended_block")
+            .add("recommendedbycurators", ".steam_curators_block")
             .add("customerreviews", "#app_reviews_hash");
 
         if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_workshop);
@@ -3578,12 +3579,10 @@ let WishlistPageClass = (function(){
 
         constructor(appInfo) {
             this.appInfo = appInfo;
-            this.notesPromise = Background.action("notes.getall");
+            this.notes = SyncedStorage.get("user_notes") || {};
         }
 
-        async toJson() {
-            let notes = await this.notesPromise;
-
+        toJson() {
             let json = {
                 version: "02",
                 data: []
@@ -3595,15 +3594,14 @@ let WishlistPageClass = (function(){
                     title: data.name,
                     url: `https://store.steampowered.com/app/${appid}/`,
                     release_date: data.release_string,
-                    note: notes[appid] || null
+                    note: this.notes[appid] || null
                 });
             }
 
             return JSON.stringify(json, null, 4);
         }
 
-        async toText(format) {
-            let notes = await this.notesPromise;
+        toText(format) {
             let result = [];
             for (let [appid, data] of Object.entries(this.appInfo)) {
                 result.push(
@@ -3614,7 +3612,7 @@ let WishlistPageClass = (function(){
                         .replace("%title%", data.name)
                         .replace("%release_date%", data.release_string)
                         .replace("%type%", data.type)
-                        .replace("%note%", notes[appid] || "")
+                        .replace("%note%", this.notes[appid] || "")
                 );
             }
 
@@ -3680,7 +3678,7 @@ let WishlistPageClass = (function(){
             el.addEventListener("click", e => format.style.display = e.target.value === "json" ? "none" : '');
         }
 
-        async function exportWishlist(method) {
+        function exportWishlist(method) {
             let type = document.querySelector("input[name='es_wexport_type']:checked").value;
             let format = document.querySelector("#es-wexport-format").value;
 
@@ -3690,11 +3688,11 @@ let WishlistPageClass = (function(){
             let filename = "";
             let filetype = "";
             if (type === "json") {
-                result = await wishlist.toJson();
+                result = wishlist.toJson();
                 filename = "wishlist.json";
                 filetype = "application/json";
             } else if (type === "text" && format) {
-                result = await wishlist.toText(format);
+                result = wishlist.toText(format);
                 filename = "wishlist.txt";
                 filetype = "text/plain";
             }
@@ -3808,6 +3806,9 @@ let WishlistPageClass = (function(){
 
 class UserNotes {
     constructor() {
+
+        this._notes = SyncedStorage.get("user_notes") || {};
+
         this.noteModalTemplate = `
             <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
                 <div id="es_note_modal_content">
@@ -3825,6 +3826,25 @@ class UserNotes {
                 </div>
             </div>`;
     }
+
+    // TODO data functions should probably be split from presentation, but splitting it to background seems unneccessary
+    get(appid) {
+        return this._notes[appid];
+    };
+
+    set(appid, note) {
+        this._notes[appid] = note;
+        SyncedStorage.set("user_notes", this._notes);
+    };
+
+    delete(appid) {
+        delete this._notes[appid];
+        SyncedStorage.set("user_notes", this._notes);
+    };
+
+    exists(appid) {
+        return Boolean(this._notes[appid]);
+    };
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
         // Partly copied from shared_global.js
@@ -3899,10 +3919,6 @@ class UserNotes {
             }
         }
     }
-    get(appid)          { return Background.action("notes.get", appid) }
-    set(appid, note)    { return Background.action("notes.set", appid, note) }
-    delete(appid)       { return Background.action("notes.delete", appid) }
-    exists(appid)       { return Background.action("notes.exists", appid) }
 }
 
 let TagPageClass = (function(){
@@ -4124,8 +4140,8 @@ let TabAreaObserver = (function(){
 
     // common for store pages
     Highlights.startHighlightsAndTags();
-    EnhancedSteam.alternateLinuxIcon();
-    EnhancedSteam.hideTrademarkSymbol(false);
+    AugmentedSteam.alternateLinuxIcon();
+    AugmentedSteam.hideTrademarkSymbol(false);
     TabAreaObserver.observeChanges();
 
 })();
