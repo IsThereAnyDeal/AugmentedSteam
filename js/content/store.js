@@ -3335,13 +3335,14 @@ let WishlistPageClass = (function(){
 
     let cachedPrices = {};
     let userNotes;
+    let myWishlist;
 
     function WishlistPageClass() {
 
-        let instance = this;
+        let that = this;
         userNotes = new UserNotes();
+        myWishlist = isMyWishlist();
 
-        let myWishlist = isMyWishlist();
         let container = document.querySelector("#wishlist_ctn");
         let timeout = null, lastRequest = null;
         let delayedWork = new Set();
@@ -3352,7 +3353,7 @@ let WishlistPageClass = (function(){
                 }
             });
             lastRequest = window.performance.now();
-            if (timeout == null) {
+            if (timeout === null) {
                 timeout = window.setTimeout(async function markWishlist() {
                     if (window.performance.now() - lastRequest < 40) {
                         timeout = window.setTimeout(markWishlist, 50);
@@ -3366,11 +3367,10 @@ let WishlistPageClass = (function(){
                             continue;
                         }
                         if (myWishlist && SyncedStorage.get("showusernotes")) {
-                            promises.push(instance.addUserNote(node));
-                        } else {
-                            instance.highlightApps(node); // not sure of the value of highlighting wishlisted apps on your wishlist
+                            promises.push(that.addUserNote(node));
                         }
-                        instance.addPriceHandler(node);
+                        that.highlightApps(node);
+                        that.addPriceHandler(node);
                     }
                     await Promise.all(promises);
                     window.dispatchEvent(new Event("resize"));
@@ -3449,10 +3449,6 @@ let WishlistPageClass = (function(){
     WishlistPageClass.prototype.highlightApps = async function(node) {
         if (!User.isSignedIn) { return; }
 
-        let loginImage = document.querySelector("#global_actions .user_avatar img").getAttribute("src");
-        let userImage = document.querySelector(".wishlist_header img").getAttribute("src").replace("_full", "");
-        if (loginImage === userImage) { return; }
-
         await DynamicStore;
 
         let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { coupon, guestPass, gift }] = await Promise.all([
@@ -3464,22 +3460,25 @@ let WishlistPageClass = (function(){
         if (collected) Highlights.highlightCollection(node);
         if (waitlisted) Highlights.highlightWaitlist(node);
 
-        if (owned) {
-            node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
-            if (SyncedStorage.get("highlight_owned")) {
-                Highlights.highlightOwned(node);
-            } else {
-                HTML.beforeEnd(node, `<div class="ds_flag ds_owned_flag">${Localization.str.library.in_library.toUpperCase()}&nbsp;&nbsp;</div>`);
+        if (!myWishlist) {
+            if (owned) {
+                node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
+
+                if (SyncedStorage.get("highlight_owned")) {
+                    Highlights.highlightOwned(node);
+                } else {
+                    HTML.beforeEnd(node, `<div class="ds_flag ds_owned_flag">${Localization.str.library.in_library.toUpperCase()}&nbsp;&nbsp;</div>`);
+                }
             }
-        }
 
-        if (wishlisted) {
-            node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
+            if (wishlisted) {
+                node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
 
-            if (SyncedStorage.get("highlight_wishlist")) {
-                Highlights.highlightWishlist(node);
-            } else {
-                HTML.beforeEnd(node, `<div class="ds_flag ds_wishlist_flag">${Localization.str.on_wishlist.toUpperCase()}&nbsp;&nbsp;</div>`);
+                if (SyncedStorage.get("highlight_wishlist")) {
+                    Highlights.highlightWishlist(node);
+                } else {
+                    HTML.beforeEnd(node, `<div class="ds_flag ds_wishlist_flag">${Localization.str.on_wishlist.toUpperCase()}&nbsp;&nbsp;</div>`);
+                }
             }
         }
 
@@ -3528,7 +3527,7 @@ let WishlistPageClass = (function(){
             let promises = [];
 
             for (let i=0; i<pages; i++) {
-                promises.push(RequestData.getJson(baseUrl+"wishlistdata/?p="+i).then(data => {
+                promises.push(RequestData.getJson(`${baseUrl}wishlistdata/?p=${i}`).then(data => {
                     Object.assign(wishlistData, data);
                 }));
             }
@@ -3562,12 +3561,11 @@ let WishlistPageClass = (function(){
     }
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
-        if (!isMyWishlist()) { return; }
-        if (!SyncedStorage.get("showemptywishlist")) { return; }
+        if (!myWishlist || !SyncedStorage.get("showemptywishlist")) { return; }
 
-        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_empty_wishlist'>" + Localization.str.empty_wishlist.title + "</div>");
+        HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_empty_wishlist">${Localization.str.empty_wishlist.title}</div>`);
 
-        document.querySelector("#es_empty_wishlist").addEventListener("click", function(e) {
+        document.querySelector("#es_empty_wishlist").addEventListener("click", () => {
             emptyWishlist();
         });
     };
@@ -3623,7 +3621,7 @@ let WishlistPageClass = (function(){
 
             for (let [appid, data] of Object.entries(this.appInfo)) {
                 json.data.push({
-                    gameid: ["steam", "app/"+appid],
+                    gameid: ["steam", `app/${appid}`],
                     title: data.name,
                     url: `https://store.steampowered.com/app/${appid}/`,
                     release_date: data.release_string,
@@ -3640,7 +3638,7 @@ let WishlistPageClass = (function(){
                 result.push(
                     format
                         .replace("%appid%", appid)
-                        .replace("%id%", "app/"+appid)
+                        .replace("%id%", `app/${appid}`)
                         .replace("%url%", `https://store.steampowered.com/app/${appid}/`)
                         .replace("%title%", data.name)
                         .replace("%release_date%", data.release_string)
@@ -3755,10 +3753,10 @@ let WishlistPageClass = (function(){
     }
 
     WishlistPageClass.prototype.addPriceHandler = function(node) {
-        if (!SyncedStorage.get("showlowestprice_onwishlist")) return;
+        if (!SyncedStorage.get("showlowestprice_onwishlist")) { return; }
 
         let appId = node.dataset.appId;
-        if (!appId || typeof cachedPrices[appId] !== "undefined") return;
+        if (!appId || typeof cachedPrices[appId] !== "undefined") { return; }
 
         cachedPrices[appId] = null;
 
@@ -3813,7 +3811,7 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addUserNotesHandlers = function() {
-        if (!isMyWishlist()) { return; }
+        if (!myWishlist) { return; }
 
         let stateHandler = function(node, active) {
             if (active) {
@@ -3825,12 +3823,12 @@ let WishlistPageClass = (function(){
             }
         };
 
-        document.addEventListener("click", function(e) {
+        document.addEventListener("click", e => {
             if (!e.target.classList.contains("esi-note")) { return; }
 
             let row = e.target.closest(".wishlist_row");
             let appid = Number(row.dataset.appId);
-            userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note", stateHandler);
+            userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, `.wishlist_row[data-app-id="${appid}"] div.esi-note`, stateHandler);
         });
     };
 
