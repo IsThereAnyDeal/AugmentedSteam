@@ -334,48 +334,45 @@ let CommunityCommon = (function() {
     self.currentUserIsOwner = function() {
         if (!User.isSignedIn) { return false; }
 
-        let badgeOwnerLink = document.querySelector(".profile_small_header_texture a").href;
-        let userProfileLink = document.querySelector(".playerAvatar a").href.replace(/\/*$/, "");
+        let badgeOwnerUrl = document.querySelector(".profile_small_header_texture > a").href + "/";
 
-        return badgeOwnerLink === userProfileLink;
+        return badgeOwnerUrl === User.profileUrl;
     };
 
     self.addCardExchangeLinks = function(game) {
         if (!SyncedStorage.get("steamcardexchange")) { return; }
 
-        let nodes = document.querySelectorAll(".badge_row:not(.es-has-ce-link");
-        for (let node of nodes) {
+        let ceImg = ExtensionResources.getURL("img/ico/steamcardexchange.png");
+
+        for (let node of document.querySelectorAll(".badge_row:not(.es-has-ce-link")) {
             let appid = game || GameId.getAppidFromGameCard(node.querySelector(".badge_row_overlay").href);
-            if(!appid) { continue; }
+            if (!appid) { continue; }
 
             HTML.afterBegin(node,
                 `<div class="es_steamcardexchange_link">
-                    <a href="http://www.steamcardexchange.net/index.php?gamepage-appid-${appid}" target="_blank" title="Steam Card Exchange">
-                        <img src="${ExtensionResources.getURL('img/ico/steamcardexchange.png')}" width="24" height="24" border="0" alt="Steam Card Exchange" />
+                    <a href="https://www.steamcardexchange.net/index.php?gamepage-appid-${appid}/" target="_blank" title="Steam Card Exchange">
+                        <img src="${ceImg}" alt="Steam Card Exchange">
                     </a>
                 </div>`);
 
-            node.querySelector(".badge_title_row").style.paddingRight = "44px";
             node.classList.add("es-has-ce-link");
         }
     };
 
-    self.makeProfileLink = function (id, link, name, iconType, iconUrl) {
+    self.makeProfileLink = function(id, link, name, iconType, iconUrl) {
         let mainType = iconUrl ? "none" : iconType;
-        let result =
-            `<div class="es_profile_link profile_count_link">
-               <a class="es_sites_icons es_${id}_icon es_${mainType}" href="${link}" target="_blank">`;
+        let html = `<div class="es_profile_link profile_count_link">
+                   <a class="es_sites_icons es_${id}_icon es_${mainType}" href="${link}" target="_blank">`;
 
         if (iconType !== "none" && iconUrl) {
-            result += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url('${iconUrl}');"></i>`;
+            html += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url('${iconUrl}');"></i>`;
         }
 
-        result += `<span class="count_link_label">${name}</span>
-                        <span class="profile_count_link_total">&nbsp;</span> <!-- Steam spacing -->
-                    </a>
-                </div>`;
-        return result;
-    }
+        html += `<span class="count_link_label">${name}</span>
+                <span class="profile_count_link_total"></span></a></div>`; // Steam spacing
+
+        return html;
+    };
 
     return self;
 })();
