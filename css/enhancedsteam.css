@@ -2107,7 +2107,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   position: absolute;
   margin-top: -20px;
 }
-.similar_grid_item .es_tags {
+.similar_grid_item .es_tags,
+.newonsteam_headercap .es_tags,
+.comingsoon_headercap .es_tags {
   float: right;
 }
 .recommendation_carousel_item .es_tags,
