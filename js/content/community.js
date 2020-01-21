@@ -2614,17 +2614,16 @@ let GameCardPageClass = (function(){
 
     function GameCardPageClass() {
         this.appid = GameId.getAppidFromGameCard(window.location.pathname);
+        this.isFoil = window.location.search.includes("?border=1");
 
         CommunityCommon.addCardExchangeLinks(this.appid);
         this.addMarketLinks();
         this.addFoilLink();
         this.addStoreTradeForumLink();
-        applyLinkButtonsLayout();
     }
 
     GameCardPageClass.prototype.addMarketLinks = async function() {
         let cost = 0;
-        let isFoil = /border=1/i.test(document.URL);
 
         let data;
         try {
@@ -2632,24 +2631,23 @@ let GameCardPageClass = (function(){
                 appid: this.appid,
                 currency: Currency.storeCurrency,
             });
-        } catch(exception) {
-            console.error("Failed to load card prices", exception);
+        } catch (err) {
+            console.error("Failed to load card prices", err);
             return;
         }
 
-        let nodes = document.querySelectorAll(".badge_card_set_card");
-        for (let node of nodes) {
+        for (let node of document.querySelectorAll(".badge_card_set_card")) {
             let cardName = node
                 .querySelector(".badge_card_set_text").textContent
-                .replace(/&amp;/g, '&')
-                .replace(/\(\d+\)/g, '').trim();
+                .replace(/&amp;/g, "&")
+                .replace(/\(\d+\)/g, "").trim();
             let cardData = data[cardName] || data[cardName + " (Trading Card)"];
-            if (isFoil) {
+            if (this.isFoil) {
                 cardData = data[cardName + " (Foil)"] || data[cardName + " (Foil Trading Card)"];
             }
 
             if (cardData) {
-                let marketLink = "https://steamcommunity.com/market/listings/" + cardData.url;
+                let marketLink = `https://steamcommunity.com/market/listings/${cardData.url}`;
                 let cardPrice = new Price(cardData.price, Currency.storeCurrency);
 
                 if (node.classList.contains("unowned")) {
@@ -2673,59 +2671,40 @@ let GameCardPageClass = (function(){
     };
 
     GameCardPageClass.prototype.addFoilLink = function() {
-        let urlSearch = window.location.search;
-        let urlParameters = urlSearch.replace("?","").split("&");
-        let foilIndex = urlParameters.indexOf("border=1");
+        let node = document.querySelector(".gamecards_inventorylink");
+        if (!node) { return; }
 
+        let url = window.location.href;
         let text;
-        let url = window.location.origin + window.location.pathname;
-
-        if (foilIndex !== -1) {
-
-            if (urlParameters.length > 1) {
-                url += "?" + urlParameters.splice(foilIndex, 1).join("&");
-            }
-
+        if (this.isFoil) {
+            url = url.replace(/\?border=1/, "");
             text = Localization.str.view_normal_badge;
-
         } else {
-
-            if (urlParameters[0] === ""){
-                url += "?" + "border=1";
-            }
-
+            url += "?border=1";
             text = Localization.str.view_foil_badge;
         }
 
-        HTML.beforeEnd(".gamecards_inventorylink",
-            `<a class='btn_grey_grey btn_small_thin' href='${url}'><span>${text}</span></a>`);
+        HTML.beforeEnd(node,
+            `<a class="btn_grey_grey btn_small_thin" href="${url}"><span>${text}</span></a>`);
     };
 
     GameCardPageClass.prototype.addStoreTradeForumLink = function() {
-        HTML.beforeEnd(".gamecards_inventorylink",
-            `<div style="float: right">
-                <a class="es_visit_tforum btn_grey_grey btn_medium" href="https://store.steampowered.com/app/${this.appid}">
-    				<span>${Localization.str.visit_store}</span>
-    			</a>
-    			<a class="es_visit_tforum btn_grey_grey btn_medium" href="https://steamcommunity.com/app/${this.appid}/tradingforum/">
-    				<span>${Localization.str.visit_trade_forum}</span>
-    			</a>
-    		</div>`);
+        // TODO certain cards e.g. sale event cards don't have valid forum links
+        let node = document.querySelector(".gamecards_inventorylink");
+        if (!node) { return; }
+
+        HTML.beforeEnd(node,
+            `<div style="float: right;">
+                <a class="btn_grey_grey btn_medium" href="//store.steampowered.com/app/${this.appid}/">
+                    <span>${Localization.str.visit_store}</span>
+                </a>
+                <a class="es_visit_tforum btn_grey_grey btn_medium" href="https://steamcommunity.com/app/${this.appid}/tradingforum/">
+                    <span>${Localization.str.visit_trade_forum}</span>
+                </a>
+            </div>`);
     };
 
-    // Layout for the case when zoomed in (and the buttons are wrapped)
-    function applyLinkButtonsLayout() {
-        let linksDiv = document.querySelector(".gamecards_inventorylink");
-        linksDiv.style.overflow = "auto";
-        // Default is 14px => 14-5 = 9
-        linksDiv.style.marginBottom = "9px";
-
-        linksDiv.querySelectorAll("a").forEach(button => {
-            button.style.marginBottom = "5px";
-        });
-    }
-
-    return GameCardPageClass
+    return GameCardPageClass;
 })();
 
 let FriendsThatPlayPageClass = (function(){

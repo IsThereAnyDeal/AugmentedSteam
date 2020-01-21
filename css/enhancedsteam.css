@@ -1094,6 +1094,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es-leave-options button:disabled {opacity: .6}
 
 /***************************************
+ * Game Cards page
+ **************************************/
+/* Layout for the case when zoomed in (and the buttons are wrapped) */
+.badge_detail_tasks .gamecards_inventorylink {
+  overflow: auto;
+  margin-bottom: 9px; /* Default is 14px => 14-5 = 9 */
+}
+.badge_detail_tasks .gamecards_inventorylink a {
+  margin-bottom: 5px;
+}
+
+/***************************************
  * Badges page
  * add_badge_view_options()
  **************************************/
