@@ -1,8 +1,21 @@
 {
+    "invite_friends": "Arkadaş Davet Et",
+    "invite_to_group": "Gruba Davet Et",
+    "leave_groups_confirm": "Şu anda __name__ yöneticisisin.<br>Grubu terketmek istediğinden emin misin?",
+    "manage_groups": "Grupları yönet",
+    "action_groups": "İşlem yapmak istediğin grupları aşağıdan seç.",
+    "inverse": "Tersine Çevir",
+    "leave": "Ayrıl",
+    "selected": "__n__ seçili",
     "transactionStatus": "__failed__ istek başarısız. __size__/__total__ işlem getirilebildi.",
     "custom_tags": "Özel Etiketler",
     "add_tag": "Etiket ekle",
     "enter_tag": "Eklemek istediğiniz özet etiketi girin",
+    "status": "Durum:",
+    "connect": "Bağlan",
+    "connected": "Bağlı",
+    "disconnect": "Bağlantıyı Kes",
+    "disconnected": "Bağlantı Kesildi",
     "oneclickgoo": "Tek Tık ile Cevhere Dönüştür...",
     "view_in_library": "Kütüphanede Görüntüle",
     "support": "Destek",
@@ -22,6 +35,7 @@
     "add_selected_dlc_to_cart": "Seçili indirilebilir içeriği sepete ekle",
     "credits": "Emeği Geçenler",
     "store_transactions": "Mağaza İşlemleri",
+    "sign_in": "Oturum aç",
     "games_coupon": "İndirim Kuponu Olan Oyunlar",
     "all_friends_own": "Buna sahip olan arkadaşların  (__friendcount__)",
     "translate": "Tercüme Et",
@@ -48,6 +62,7 @@
     "events": "Etkinlikler",
     "translation": "Çeviri",
     "lowest": "En düşük",
+    "lowest_price": "Şu Anki En Düşük Fiyat:",
     "view_badge_progress": "Rozet ilerlemesini görüntüle",
     "badge_progress": "Rozet İlerlemesi",
     "sales_total": "Toplam satılan:",
@@ -86,8 +101,11 @@
     "dlc": "İndirilebilir İçerik",
     "add_to_wishlist": "İstek listene ekle",
     "add_to_wishlist_tooltip": "İstek listenizdeki ürünler çıktığı zaman veya indirime girdiği zaman e-posta ile bildirim alın.",
+    "remove_from_wishlist_tooltip": "Bu ürün zaten istek listesinde. Listenden silmek için tıkla.",
+    "add_to_waitlist": "Bekleme listene ekle",
     "language": "Dil",
     "theworddefault": "Varsayılan",
+    "thewordclear": "Temizle",
     "coupon_learn_more": "Steam Kuponları hakkında <a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">daha fazla</a> bilgiye sahip olun",
     "show": "Göster",
     "badges_all": "Tüm Rozetler",
@@ -99,6 +117,7 @@
     "community": "Topluluk",
     "dlc_data_header": "İndirilebilir İçerik Ayrıntıları",
     "graphics": "Grafikler",
+    "owned_elsewhere": "Bu __gametitle__ oyununa zaten __storelist__ mağazasında sahipsin.",
     "trading_cards": "Steam Koleksiyon Kartları",
     "view_badge": "Rozeti Göster",
     "purchase_total": "Satın alma toplamı:",
@@ -112,6 +131,7 @@
     "read_reviews": "Değerlendirmeleri Oku",
     "read_more_reviews": "Daha fazla değerlendirme oku:",
     "gameplay": "Oynanış",
+    "youtube_gameplay": "Youtube Oynanışı",
     "size": "Boyut",
     "package_info": "Paket Bilgisi",
     "badge_completion_avg": "Ortalama Tamamlama Tutarı: __cost__",
@@ -123,6 +143,7 @@
     "price": "Fiyat",
     "view_marketplace": "Pazar'a Bak",
     "market_transactions": "Pazar İşlemleri",
+    "load_market_stats": "Mağaza İstatistiklerini Yükle",
     "card_drops_remaining": "__drops__ kart düşürme hakkınız kaldı",
     "badges_drops": "Düşürülecek Kartı Kalan Rozetler",
     "using_language_return": "Buraya tıklayarak Steam'i __base__ dilinde görüntüleyin.",
@@ -158,8 +179,14 @@
     "most_drops": "En Çok Düşenler",
     "badge_foil_progress": "Parlak Rozet İlerlemesine Bak",
     "net_gain": "Net kazanç:",
+    "apppage_recentupdates": "Yakın Zamanlı Etkinlikler ve Duyurular",
+    "apppage_eaheader": "Erken Erişim Bilgi Kutusu",
+    "apppage_eabanner": "Erken Erişim Tartışma Afişi",
+    "apppage_workshop": "Steam Atölyesi Afişi",
+    "apppage_greenlight": "Steam Greenlight Afişi",
     "apppage_legal": "Yasal Bilgiler",
     "apppage_franchise": "Franchise",
+    "apppage_morefromfranchise": "Franchise'dan Daha Fazlası",
     "bug_feature": "Hata Bildir / Özellik Öner",
     "always": "Her zaman",
     "compare": "Karşılaştır",
@@ -214,11 +241,12 @@
     "separator": "Ayraç",
     "empty_wishlist": {
         "title": "İstek listesini temizle",
-        "confirm": "İstek listeni boşaltmak istediğine emin misin?\nBu işlem geri alınamaz!"
+        "confirm": "İstek listeni boşaltmak istediğine emin misin?\n\nBu işlem geri alınamaz!",
+        "removing": "Uygulama __cur__ / __total__ kaldırılıyor..."
     },
     "about": "Hakkında",
     "never": "Asla",
-    "coupon_available": "Bir kupona sahipsiniz!",
+    "coupon_available": "Bir kuponun var!",
     "launch_random": "Rastgele Bir Oyun Başlat",
     "play_game": "__gamename__ oyna?",
     "drops_value": "En Yüksek Düşme Değeri",
@@ -226,6 +254,8 @@
     "show_all_steam_releases": "Steam'de çıkanların tümünü göster",
     "wishlist": "İstek Listesi",
     "on_wishlist": "İstek Listesinde",
+    "ignored": "Yok Sayılmış",
+    "on_waitlist": "Bekleme Listesinde",
     "notdiscounted": "İndirimde olmayan öğeler",
     "cancel": "İptal",
     "wiki_article": "__pcgw__ Makalesini Gör",
@@ -237,6 +267,8 @@
     "playtime": "Oynama zamanı",
     "year": "Yıl",
     "lastonline": "Son Çevrimiçi",
+    "members": "Üyeler",
+    "name": "İsim",
     "edit_price": "Fiyatı Düzenle",
     "relist": "Yeniden listele",
     "relist_an_item": "Bir ürünü yeniden listele",
@@ -280,7 +312,7 @@
     "early_access": "Erken Erişim",
     "filter_games": "Oyunları filtrele",
     "show_wishlist_total": "İstek listesi toplamını göster",
-    "tag_short": "Alanı kazanmak için kısa etiketleri kullanın",
+    "tag_short": "Alan kazanmak için kısa etiketler kullan",
     "no_price_data": "Fiyat bilgisi bulunamadı",
     "exclude_tags": "Etiketleri hariç tut",
     "user_score": "Kullanıcı Puanı",
@@ -308,7 +340,7 @@
     "charts": {
         "peakall": "tüm zamanlardaki en yüksek zirve",
         "current": "Şu Anki Oyuncular",
-        "playing_now": "şimdi oynuyor",
+        "playing_now": "şimdi oyunda",
         "peaktoday": "bugünün zirvesi"
     },
     "hltb": {
@@ -338,6 +370,12 @@
         "formatted_time": "__hours__ saat, __minutes__ dakika"
     },
     "options": {
+        "community_default_tab": "Varsayılan topluluk ana sayfası sekmesi",
+        "videos": "Videolar",
+        "broadcasts": "Yayınlar",
+        "artwork": "Çizimler",
+        "screenshots": "Ekran Görüntüleri",
+        "show_backtotop": "Uzun sayfalarda, başa dön düğmesini göster",
         "context_menu": "Bağlam Menüsü",
         "context_steam_store": "'__query__' terimini Steam Mağazası'nda ara",
         "context_steam_market": "'__query__' terimini Steam Pazarı'nda ara",
@@ -426,10 +464,13 @@
         "show_youtubereviews": "Uygulama sayfalarında YouTube inceleme videolarını göster",
         "openinnewtab": "Harici bağlantıları yeni sekmede aç",
         "showbartervg": "Barter.vg bağlantılarını göster",
-        "guest": "Misafir girişine sahip olduklarınız",
+        "guest": "Misafir girişine sahip oldukların",
+        "collection": "ITAD Koleksiyonundaki Öğeler",
+        "waitlist": "ITAD Bekleme Listendeki Öğeler",
         "show_steamchart_info": "SteamCharts.com bilgisini göster",
         "show_steamspy_info": "Steamspy.com bilgisini göster",
         "showallachievements": "\"Tüm Oyunlar\" sayfasında başarım istatistiklerini göster",
+        "showallstats": "\"Tüm Oyunlar\" sayfasında oynama istatistiklerini göster",
         "lowestprice_onwishlist": "İstek Listesinde Göster",
         "steamrepapi": "SteamRep durumunu profil sayfalarında göster",
         "header": "Başlık",
@@ -450,6 +491,7 @@
         "install_steam_button": "\"Steam Yükle\" düğmesi",
         "replace_view_client": "\"İstemcide Görüntüle\" ile değiştir",
         "show_empty_wishlist": "\"İstek Listesini Temizle\" düğmesini göster",
+        "show_wishlist_stats": "İstek listesindeki istek listesi istatistiklerini göster",
         "show_user_notes": "İstek listesi ve uygulama sayfalarında kullanıcı notlarını göster",
         "inventory_nav_text": "Envanter sayfasında gelişmiş navigasyon göster",
         "carousel_description": "Öne çıkanlar sayfasındaki uygulamaların açıklamalarını göster",
@@ -477,6 +519,7 @@
         "purchase_dates": "Uygulamaların satın alım tarihini mağaza sayfasında göster",
         "show_coupon": "Mağaza sayfalarında kullanılabilir kuponları göster",
         "show_badge_progress": "Mağaza sayfalarında uygulamalarla ilgili rozet ilerlemesini göster",
+        "show_coupon": "Mağaza sayfalarında kullanılabilir kuponları göster",
         "show_wishlist_link": "Profillerde bir İstek Listesi bağlantısı göster",
         "show_wishlist_count": "İstek Listesi'ndeki öge sayısını göster",
         "profile_showcase_twitch": "Bağlantı varsa Twitch.tv gösterimine bağlantı ekle",
@@ -509,21 +552,24 @@
             "tchinese": "Geleneksel Çince",
             "thai": "Tayca",
             "turkish": "Türkçe",
-            "ukrainian": "Ukraynaca"
+            "ukrainian": "Ukraynaca",
+            "vietnamese": "Vietnamca"
         },
         "add_custom_link": "Özel bağlantı ekle",
-        "auto_detect": "Otomatik bul"
+        "auto_detect": "Otomatik bul",
+        "add_to_waitlist": "Uygulama sayfalarında \"Bekleme Listesine Ekle\" açılır menüsünü göster"
     },
     "ready": {
         "errormsg": "Augmented Steam verilerini yüklerken hata oluştu",
         "loading": "Augmented Steam verileri yüklüyor...",
         "ready": "Augmented Steam hazır",
-        "failed": "__amount__ istek başarısız oldu, lütfen tarayıcı konsoluna bakın"
+        "failed": "__amount__ istek başarısız oldu, lütfen tarayıcı konsoluna bak",
+        "server_outage": "Augmented Steam sunucuları şu anda aşırı yükleme yaşıyor"
     },
     "twitch": {
         "now_streaming": "__username__ Twitch üzerinden canlı yayın yapıyor",
-        "viewers": "İzleyiciler",
-        "followers": "Takipçiler",
+        "viewers": "İzleyici",
+        "followers": "Takipçi",
         "views": "Görüntüleme"
     },
     "survey": {
@@ -546,6 +592,7 @@
         "take": "Anketimize Katılın"
     },
     "dlc_select": {
+        "select": "Seç",
         "wishlisted_dlc": "İstek Listesindeki DLC'yi seç",
         "none": "Hiçbirini Seçme",
         "unowned_dlc": "Sahip olunmayan DLC Seç"
@@ -575,9 +622,18 @@
         "certifications": "WSGF Geniş Ekran Sertifikası"
     },
     "itad": {
+        "import": "Periyodik olarak içe al:",
+        "last_import": "Son içe alma...",
+        "from": "ITAD'dan:",
+        "to": "ITAD'a:",
+        "sync_now": "Şimdi eşitle",
         "option": "IsThereAnyDeal.com ile verileri eşitlemek için menü seçeneği göster",
         "send_to_itad": "Sahip olunan oyunları IsThereAnyDeal'a gönder",
-        "sending": "Sahip olduğunuz oyunlar ve paketler yükleniyor ve IsThereAnyDeal.com'a gönderiliyor"
+        "sending": "Sahip olduğun oyunlar ve paketler yükleniyor ve IsThereAnyDeal.com'a gönderiliyor",
+        "info": {
+            "itad-steam": "Augmented Steam'i IsThereAnyDeal ile bağlamak, Augmented Steam'in vurgulamasını ve etiketlemesini, Steam'de olmasan bile Bekleme Listesi ve Koleksiyondaki oyunlara uygulamanı sağlar.",
+            "steam-itad": "Ayrıca, daha yüksek doğruluk için (örneğin DLC'ler veya liste dışı oyunlar) Steam Kütüphanenizden ve/veya İstek Listeniz'den IsThereAnyDeal'a oyun aktarmanıza izin verir. Şu anda bu özellik yalnızca oyunları ekleyebilir, kaldıramaz, bu nedenle IsThereAnyDeal'ın entegre eşitlemesinin yerini almaz, buna ek olarak kullanılır."
+        }
     },
     "tradeoffer": {
         "num_item": "__num__ öğe",
@@ -607,6 +663,7 @@
         "no_price": "fiyatsız"
     },
     "coll": {
+        "total_time": "toplam süre",
         "in_collection": "Koleksiyonda",
         "played": "Oynandı",
         "never_played": "Hiç Oynanmadı"
