@@ -7,15 +7,16 @@ class Customizer {
     }
 
     _textValue(node) {
-        if (!node) return '';
+        let textNode = node.querySelector("h1, h2, .home_title, .home_section_title");
+        if (!textNode) return "";
         let str = "";
-        for (node = node.firstChild; node; node = node.nextSibling) {
-            if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName === "A")) { // Special case for Steam curators
+        for (let node of textNode.childNodes) {
+            if (node.nodeType === Node.TEXT_NODE) {
                 str += node.textContent.trim();
             }
         }
         return str;
-    };
+    }
 
     _updateValue(name, value) {
         this.settings[name] = value;
@@ -51,9 +52,9 @@ class Customizer {
                 return;
             }
     
-            if (!text) {
-                text = (typeof text === "string" && text) || this._textValue(element.querySelector(".home_section_title, h2")).toLowerCase();
-                if (!text) return;
+            if (typeof text !== "string" || text === "") {
+                text = this._textValue(element).toLowerCase();
+                if (text === "") return;
             }
 
             isValid = true;
@@ -64,22 +65,19 @@ class Customizer {
         for (let element of elements) {
             element.classList.toggle("esi-shown", state);
             element.classList.toggle("esi-hidden", !state);
-            element.classList.add("esi-customizer"); // for dynamic entries on home page
+            element.classList.add("esi-customizer");
             element.dataset.es_name = name;
             element.dataset.es_text = text;
         }
 
         return this;
-    };
+    }
 
-    addDynamic(titleNode, targetNode) {
-        let textValue = this._textValue(titleNode);
+    addDynamic(node) {
+        let text = this._textValue(node).toLowerCase();
+        if (text === "") return;
 
-        console.warn("Node with textValue %s is not recognized!", textValue);
-        let option = textValue.toLowerCase().replace(/[^a-z]*/g, "");
-        if (option === "") { return; }
-
-        this.add("dynamic_" + option, targetNode, textValue);
+        this.add(`dynamic_${text}`, node, text);
     }
 
     build() {
@@ -98,10 +96,10 @@ class Customizer {
                 let text = element.dataset.es_text;
 
                 HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
-                `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                    <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
-                    <div class="home_viewsettings_label">${text}</div>
-                </div>`);
+                    `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
+                        <div class="home_viewsettings_checkbox ${state ? 'checked' : ''}"></div>
+                        <div class="home_viewsettings_label">${text}</div>
+                    </div>`);
 
                 customizerEntries.set(name, [element]);
             }            
@@ -112,10 +110,10 @@ class Customizer {
             checkboxrow.addEventListener("click", e => {
                 let state = !checkboxrow.querySelector(".checked");
 
-                elements.forEach(element => {
+                for (let element of elements) {
                     element.classList.toggle("esi-shown", state);
                     element.classList.toggle("esi-hidden", !state);
-                });
+                }
 
                 e.target.closest(".home_viewsettings_checkboxrow")
                     .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
@@ -4043,13 +4041,15 @@ let StoreFrontPageClass = (function(){
                 .add("featuredrecommended", ".home_cluster_ctn")
                 .add("trendingamongfriends", ".friends_recently_purchased")
                 .add("discoveryqueue", ".discovery_queue_ctn")
-                .add("curators", ".steam_curators_ctn")
-                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
+                .add("curators", ".steam_curators_ctn", Localization.str.homepage_curators)
+                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn", Localization.str.homepage_curators)
                 .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
                 .add("popularvrgames", ".best_selling_vr_ctn")
                 .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
-                .add("gamesstreamingnow", ".live_streams_ctn")
-                .add("updatesandoffers", ".marketingmessage_area")
+                .add("gamesstreamingnow", ".live_streams_ctn", "", true)
+                .add("updatesandoffers", ".marketingmessage_area", "", true)
+                .add("topnewreleases", ".top_new_releases", Localization.str.homepage_topnewreleases)
+                .add("steamlabs", ".labs_cluster")
                 .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
 
             if (specialoffers) customizer.add("specialoffers", specialoffers.parentElement);
@@ -4057,15 +4057,11 @@ let StoreFrontPageClass = (function(){
             if (recentlyupdated) customizer.add("recentlyupdated", recentlyupdated.parentElement);
             if (under) customizer.add("under", under.parentElement.parentElement);
 
-            let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
-            for (let i = 0; i < dynamicNodes.length; ++i) {
-                let node = dynamicNodes[i];
-                if (node.querySelector(".esi-customizer") || node.style.display === "none") { continue; }
+            let dynamicNodes = document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer), .home_pagecontent_ctn");
+            for (let node of dynamicNodes) {
+                if (node.closest(".esi-customizer") || node.querySelector(".esi-customizer") || node.style.display === "none") { continue; }
 
-                let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
-                if (!headerNode) { continue; }
-
-                customizer.addDynamic(headerNode, node);
+                customizer.addDynamic(node);
             }
 
             customizer.build();
