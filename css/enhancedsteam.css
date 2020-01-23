@@ -1111,6 +1111,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
   top: 12px;
   right: 12px;
 }
+.es_steamcardexchange_link img {
+  width: 24px;
+  height: 24px;
+  border: 0;
+}
+.es-has-ce-link .badge_title_row {
+  padding-right: 44px;
+}
 
 .es_binder_view .badges_sheet {
   overflow: hidden;
