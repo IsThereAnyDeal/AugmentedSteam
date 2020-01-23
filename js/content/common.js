@@ -128,9 +128,7 @@ class ProgressBar {
     static create() {
         if (!SyncedStorage.get("show_progressbar")) { return; }
 
-        let container = document.getElementById("global_actions");
-        if (!container) return;
-        HTML.afterEnd(container,
+        HTML.afterEnd("#global_actions",
             `<div class="es_progress__wrap">
                 <div class="es_progress es_progress--complete" title="${Localization.str.ready.ready}">
                     <div class="es_progress__bar">
@@ -142,7 +140,7 @@ class ProgressBar {
     }
 
     static loading() {
-        if (!ProgressBar._progress) return;
+        if (!ProgressBar._progress) { return; }
             
         ProgressBar._progress.setAttribute("title", Localization.str.ready.loading);
 
@@ -164,7 +162,7 @@ class ProgressBar {
     }
 
     static progress(value) {
-        if (!ProgressBar._progress) return;
+        if (!ProgressBar._progress) { return; }
 
         if (!value) {
             if (!ProgressBar.requests) { return; }
@@ -186,7 +184,7 @@ class ProgressBar {
     }
 
     static serverOutage() {
-        if (!ProgressBar._progress) return;
+        if (!ProgressBar._progress) { return; }
 
         ProgressBar._progress.classList.add("es_progress--warning");
         ProgressBar.requests = null;
@@ -197,7 +195,7 @@ class ProgressBar {
     }
 
     static failed() {
-        if (!ProgressBar._progress) return;
+        if (!ProgressBar._progress) { return; }
 
         let warningNode = ProgressBar._progress.parentElement.querySelector(".es_progress__warning");
         if (warningNode) {
@@ -331,8 +329,8 @@ let ExtensionLayer = (function() {
     // NOTE: use cautiously!
     // Run script in the context of the current tab
     self.runInPageContext = function(fun) {
-        let script  = document.createElement("script");
-        script.textContent = '(' + fun + ")();";
+        let script = document.createElement("script");
+        script.textContent = `(${fun})();`;
         document.documentElement.appendChild(script);
         script.parentNode.removeChild(script);
     };
@@ -1039,9 +1037,9 @@ let AugmentedSteam = (function() {
             </div>`);
 
         let popup = document.querySelector("#es_popup");
-        document.querySelector("#es_pulldown").addEventListener("click", function(){
-            let width = document.querySelector("#es_pulldown").getBoundingClientRect().width - 19; // padding
-            popup.style.left = "-" + width + "px";
+        document.querySelector("#es_pulldown").addEventListener("click", function(e){
+            let width = e.target.getBoundingClientRect().width - 19; // padding
+            popup.style.left = `-${width}px`;
             popup.classList.toggle("open");
         });
 
@@ -1059,16 +1057,13 @@ let AugmentedSteam = (function() {
             self.clearCache();
             window.location.reload();
         });
-
     };
 
     self.addBackToTop = function() {
         if (!SyncedStorage.get("show_backtotop")) { return; }
 
-        let steamButton = document.querySelector("#BackToTop");
-        if (steamButton) {
-            steamButton.remove();
-        }
+        // Remove Steam's back-to-top button
+        DOMHelper.remove("#BackToTop");
 
         HTML.afterBegin("body", `<div class="es_btt">&#9650;</div>`);
 
@@ -1086,7 +1081,7 @@ let AugmentedSteam = (function() {
 
         function opacityHandler() {
             let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
-            node.classList.toggle("is-visible", scrollHeight >= 400)
+            node.classList.toggle("is-visible", scrollHeight >= 400);
         }
     };
 
@@ -1094,13 +1089,13 @@ let AugmentedSteam = (function() {
         localStorage.clear();
         SyncedStorage.remove("user_currency");
         SyncedStorage.remove("store_sessionid");
-        Background.action('cache.clear');
+        Background.action("cache.clear");
     };
 
-    self.bindLogout = function(){
+    self.bindLogout = function() {
         // TODO there should be a better detection of logout, probably
         let logoutNode = document.querySelector("a[href$='javascript:Logout();']");
-        logoutNode.addEventListener("click", function(e) {
+        logoutNode.addEventListener("click", function() {
             self.clearCache();
         });
     };
@@ -1116,12 +1111,12 @@ let AugmentedSteam = (function() {
         if (!SyncedStorage.get("showlanguagewarning")) { return; }
 
         let currentLanguage = Language.getCurrentSteamLanguage();
-        if (!currentLanguage) return;
-        
+        if (!currentLanguage) { return; }
+
         if (!SyncedStorage.has("showlanguagewarninglanguage")) {
             SyncedStorage.set("showlanguagewarninglanguage", currentLanguage);
         }
-        
+
         let warningLanguage = SyncedStorage.get("showlanguagewarninglanguage");
 
         if (currentLanguage === warningLanguage) { return; }
@@ -1154,7 +1149,7 @@ let AugmentedSteam = (function() {
         } else if (option === "replace") {
             let btn = document.querySelector("div.header_installsteam_btn > a");
             btn.textContent = Localization.str.viewinclient;
-            btn.href =  `steam://openurl/${window.location.href}`;
+            btn.href = `steam://openurl/${window.location.href}`;
             btn.classList.add("es_steamclient_btn");
         }
     };
@@ -1162,29 +1157,24 @@ let AugmentedSteam = (function() {
     self.removeAboutLinks = function() {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
 
-        if (User.isSignedIn) {
-            DOMHelper.remove(".submenuitem[href^='https://store.steampowered.com/about/']");
-        } else {
-            DOMHelper.remove(".menuitem[href^='https://store.steampowered.com/about/']");
-        }
+        DOMHelper.remove("#global_header a[href^='https://store.steampowered.com/about/']");
     };
 
-    self.addHeaderLinks = function(){
-        if (!User.isSignedIn || document.querySelector(".supernav_container").length === 0) { return; }
+    self.addUsernameSubmenuLinks = function() {
+        let node = document.querySelector(".supernav_container .submenu_username");
 
-        let submenuUsername = document.querySelector(".supernav_container .submenu_username");
-        HTML.afterEnd(submenuUsername.querySelector("a"), `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
-        HTML.afterEnd(submenuUsername.querySelector("a:nth-child(2)"), `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`)
-        HTML.beforeEnd(submenuUsername, `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
+        HTML.afterEnd(node.querySelector("a"), `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
+        HTML.afterEnd(node.querySelector("a:nth-child(2)"), `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`);
+        HTML.beforeEnd(node, `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
     };
 
-    self.disableLinkFilter = function(){
+    self.disableLinkFilter = function() {
         if (!SyncedStorage.get("disablelinkfilter")) { return; }
 
         removeLinksFilter();
 
         let observer = new MutationObserver(removeLinksFilter);
-        observer.observe(document, {childList: true, subtree: true});
+        observer.observe(document, { childList: true, subtree: true });
 
         function removeLinksFilter(mutations) {
             let selector = "a.bb_link[href*='/linkfilter/'], div.weblink a[href*='/linkfilter/']";
@@ -1208,7 +1198,7 @@ let AugmentedSteam = (function() {
 
     self.addRedeemLink = function() {
         HTML.beforeBegin("#account_dropdown .popup_menu_item:last-child:not(.tight)",
-            `<a class='popup_menu_item' href='https://store.steampowered.com/account/registerkey'>${Localization.str.activate}</a>`);
+            `<a class="popup_menu_item" href="https://store.steampowered.com/account/registerkey">${Localization.str.activate}</a>`);
     };
 
     self.replaceAccountName = function() {
@@ -1236,7 +1226,7 @@ let AugmentedSteam = (function() {
     self.launchRandomButton = function() {
 
         HTML.beforeEnd("#es_popup .popup_menu",
-            `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
+            `<div class="hr"></div><a id="es_random_game" class="popup_menu_item" style="cursor: pointer;">${Localization.str.launch_random}</a>`);
 
         document.querySelector("#es_random_game").addEventListener("click", async function(){
             let appid = await DynamicStore.getRandomApp();
@@ -1265,7 +1255,6 @@ let AugmentedSteam = (function() {
                         });
                     }`);
             });
-
         });
     };
 
@@ -1279,8 +1268,7 @@ let AugmentedSteam = (function() {
 
     self.keepSteamSubscriberAgreementState = function() {
         let nodes = document.querySelectorAll("#market_sell_dialog_accept_ssa,#market_buynow_dialog_accept_ssa,#accept_ssa");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        for (let node of nodes) {
             node.checked = SyncedStorage.get("keepssachecked");
 
             node.addEventListener("click", function(){
@@ -1291,8 +1279,9 @@ let AugmentedSteam = (function() {
 
     self.alternateLinuxIcon = function() {
         if (!SyncedStorage.get("show_alternative_linux_icon")) { return; }
+
         let url = ExtensionResources.getURL("img/alternative_linux_icon.png");
-        let style = document.createElement('style');
+        let style = document.createElement("style");
         style.textContent = `span.platform_img.linux { background-image: url("${url}"); }`;
         document.head.appendChild(style);
         style = null;
@@ -1304,22 +1293,21 @@ let AugmentedSteam = (function() {
 
         // TODO I would try to reduce number of selectors here
         let selectors= "title, .apphub_AppName, .breadcrumbs, h1, h4";
-        if(community){
+        if (community) {
             selectors += ".game_suggestion, .appHubShortcut_Title, .apphub_CardContentNewsTitle, .apphub_CardTextContent, .apphub_CardContentAppName, .apphub_AppName";
         } else {
             selectors += ".game_area_already_owned, .details_block, .game_description_snippet, .game_area_description p, .glance_details, .game_area_dlc_bubble game_area_bubble, .package_contents, .game_area_dlc_name, .tab_desc, .tab_item_name";
         }
 
         // Replaces "R", "C" and "TM" signs
-        function replaceSymbols(node){
+        function replaceSymbols(node) {
             // tfedor I don't trust this won't break any inline JS
-            if (!node ||!node.innerHTML) { return; }
+            if (!node || !node.innerHTML) { return; }
             HTML.inner(node, node.innerHTML.replace(/[\u00AE\u00A9\u2122]/g, ""));
         }
 
-        let nodes = document.querySelectorAll(selectors);
-        for (let i=0, len=nodes.length; i<len; i++) {
-            replaceSymbols(nodes[i]);
+        for (let node of document.querySelectorAll(selectors)) {
+            replaceSymbols(node);
         }
 
         let observer = new MutationObserver(mutations => {
@@ -1330,11 +1318,9 @@ let AugmentedSteam = (function() {
             });
         });
 
-        nodes = document.querySelectorAll("#game_select_suggestions,#search_suggestion_contents,.tab_content_ctn");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            observer.observe(node, {childList:true, subtree:true});
-
+        let nodes = document.querySelectorAll("#game_select_suggestions,#search_suggestion_contents,.tab_content_ctn");
+        for (let node of nodes) {
+            observer.observe(node, { childList: true, subtree: true });
         }
     };
 
@@ -1366,9 +1352,8 @@ let EarlyAccess = (function(){
         selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
         let appidsMap = new Map();
 
-        let selector = selectors.map(selector => `${selector}:not(.es_ea_checked)`).join(',');
-        let nodes = document.querySelectorAll(selector);
-        nodes.forEach(node => {
+        let selector = selectors.map(selector => `${selector}:not(.es_ea_checked)`).join(",");
+        for (let node of document.querySelectorAll(selector)) {
             node.classList.add("es_ea_checked");
 
             let linkNode = node.querySelector("a");
@@ -1376,13 +1361,15 @@ let EarlyAccess = (function(){
             let imgHeader = node.querySelector("img" + selectorModifier);
             let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
-            if (appid) appidsMap.set(appid, node);
-        });
+            if (appid) {
+                appidsMap.set(appid, node);
+            }
+        }
 
         let eaAppids = await Background.action("isea", Array.from(appidsMap.keys()).map(key => Number(key)));
 
         for (let [appid, node] of appidsMap) {
-            if (!eaAppids[appid]) continue;
+            if (!eaAppids[appid]) { continue; }
 
             node.classList.add("es_early_access");
 
@@ -1391,7 +1378,7 @@ let EarlyAccess = (function(){
             container.classList.add("es_overlay_container");
             DOMHelper.wrap(container, imgHeader);
 
-            HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
+            HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}"></span>`);
         }
     }
 
@@ -1473,7 +1460,7 @@ let EarlyAccess = (function(){
 
         let imageName = "img/overlay/early_access_banner_english.png";
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
-            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage() + ".png";
+            imageName = `img/overlay/early_access_banner_${Language.getCurrentSteamLanguage()}.png`;
         }
         imageUrl = ExtensionResources.getURL(imageName);
 
@@ -1578,8 +1565,8 @@ let Highlights = (function(){
                 tagCss.push(`.es_tag_${name} { background-color: ${color}; }`);
             }
 
-            let style = document.createElement('style');
-            style.id = 'es_tag_styles';
+            let style = document.createElement("style");
+            style.id = "es_tag_styles";
             style.textContent = tagCss.join("\n");
             document.head.appendChild(style);
             style = null;
@@ -1588,7 +1575,7 @@ let Highlights = (function(){
         // Add the tags container if needed
         let tags = node.querySelectorAll(".es_tags");
         if (tags.length === 0) {
-            tags = HTMLParser.htmlToElement(`<div class="es_tags ${tagShort ? 'es_tags_short' : ''}"/>`);
+            tags = HTMLParser.htmlToElement(`<div class="es_tags ${tagShort ? 'es_tags_short' : ''}"></div>`);
 
             let root;
             if (node.classList.contains("tab_row")) { // can't find it
@@ -1680,15 +1667,16 @@ let Highlights = (function(){
 
             for (let name of highlightTypes) {
                 let color = SyncedStorage.get(`highlight_${name}_color`);
-                hlCss.push(
-                   `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
+                hlCss.push(`
+                    .es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
                     .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name} { outline: solid ${color}; }
                     #search_suggestion_contents .focus.es_highlighted_${name} { box-shadow: -5px 0 0 ${color}; }
-                    .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }`);
+                    .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }
+                `);
             }
 
-            let style = document.createElement('style');
-            style.id = 'es_highlight_styles';
+            let style = document.createElement("style");
+            style.id = "es_highlight_styles";
             style.textContent = hlCss.join("\n");
             document.head.appendChild(style);
             style = null;
@@ -1732,7 +1720,6 @@ let Highlights = (function(){
                 }
                 break;
             }
-            
         }
 
         node.classList.remove("ds_flagged");
@@ -1777,7 +1764,7 @@ let Highlights = (function(){
     self.highlightOwned = function(node) {
         if (SyncedStorage.get("hide_owned") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
             node.style.display = "none";
-        } 
+        }
         highlightItem(node, "owned");
     };
 
@@ -1853,16 +1840,16 @@ let Highlights = (function(){
                 if (node.querySelector(".ds_owned_flag")) {
                     self.highlightOwned(nodeToHighlight);
                 }
-                
+
                 if (node.querySelector(".ds_wishlist_flag")) {
                     self.highlightWishlist(nodeToHighlight);
                 }
-    
+
                 if (node.querySelector(".ds_ignored_flag")) {
                     self.highlightNotInterested(nodeToHighlight);
                 }
             }
-            
+
             if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
                 self.highlightNonDiscounts(nodeToHighlight);
             }
@@ -1876,7 +1863,7 @@ let Highlights = (function(){
             ITAD.getAppStatus(storeIds),
             Inventory.getAppStatus(trimmedStoreIds),
         ]);
-        
+
         let it = trimmedStoreIds.values();
         for (let [storeid, nodes] of storeIdsMap) {
             if (dsStatus) {
@@ -1893,7 +1880,6 @@ let Highlights = (function(){
             if (invStatus[trimmedId].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
             if (invStatus[trimmedId].coupon) nodes.forEach(node => self.highlightCoupon(node));
         }
-        
     }
 
     self.startHighlightsAndTags = async function(parent) {
@@ -1940,7 +1926,7 @@ let Highlights = (function(){
             ".hero_capsule",                                // Summer sale "Featured"
             ".sale_capsule"                                 // Summer sale general capsules
         ].map(sel => `${sel}:not(.es_highlighted)`)
-        .join(',');
+        .join(",");
 
         parent = parent || document;
 
@@ -1952,7 +1938,7 @@ let Highlights = (function(){
                 let observer = new MutationObserver(records => {
                     self.highlightAndTag(records[0].addedNodes);
                 });
-                observer.observe(searchBoxContents, {childList: true});
+                observer.observe(searchBoxContents, { childList: true });
             }
         });
 
@@ -2313,12 +2299,12 @@ let AgeCheck = (function(){
 
     let self = {};
 
-    self.sendVerification = function(){
+    self.sendVerification = function() {
         if (!SyncedStorage.get("send_age_info")) { return; }
 
         let ageYearNode = document.querySelector("#ageYear");
         if (ageYearNode) {
-            let myYear = Math.floor(Math.random()*75)+10;
+            let myYear = Math.floor(Math.random() * 75) + 10;
             ageYearNode.value = "19" + myYear;
             document.querySelector(".btnv6_blue_hoverfade").click();
         } else {
@@ -2345,8 +2331,8 @@ let Common = (function(){
 
         console.log.apply(console, [
             "%c Augmented %cSteam v" + Info.version + " %c https://es.isthereanydeal.com/",
-            "background: #000000;color:#046eb2",
-            "background: #000000;color: #ffffff",
+            "background: #000000; color: #046eb2",
+            "background: #000000; color: #ffffff",
             "",
         ]);
 
@@ -2358,7 +2344,6 @@ let Common = (function(){
         AugmentedSteam.addLanguageWarning();
         AugmentedSteam.handleInstallSteamButton();
         AugmentedSteam.removeAboutLinks();
-        AugmentedSteam.addHeaderLinks();
         EarlyAccess.showEarlyAccess();
         AugmentedSteam.disableLinkFilter();
         AugmentedSteam.skipGotSteam();
@@ -2367,6 +2352,7 @@ let Common = (function(){
         ITAD.create();
 
         if (User.isSignedIn) {
+            AugmentedSteam.addUsernameSubmenuLinks();
             AugmentedSteam.addRedeemLink();
             AugmentedSteam.replaceAccountName();
             AugmentedSteam.launchRandomButton();
