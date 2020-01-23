@@ -1606,6 +1606,9 @@ let Highlights = (function(){
             else if (node.classList.contains("tab_item")) {
                 node.querySelector(".tab_item_name").insertAdjacentElement("afterend", tags);
             }
+            else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
+                node.querySelector(".discount_block").insertAdjacentElement("beforebegin", tags);
+            }
             else if (node.classList.contains("search_result_row")) {
                 node.querySelector("p").insertAdjacentElement("afterbegin", tags);
             }
@@ -1921,6 +1924,8 @@ let Highlights = (function(){
             "div.carousel_items.curator_featured > div",    // Carousel items on Curator pages
             "div.item_ctn",                                 // Curator list item
             ".store_capsule",                               // All sorts of items on almost every page
+            ".newonsteam_headercap",                        // explore/new/
+            ".comingsoon_headercap",                        // explore/upcoming/
             ".home_marketing_message",                      // "Updates and offers"
             "div.dlc_page_purchase_dlc",                    // DLC page rows
             "div.sale_page_purchase_item",                  // Sale pages
