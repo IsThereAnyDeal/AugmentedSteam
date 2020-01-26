@@ -62,6 +62,7 @@ Language.languages = {
     "thai": "th",
     "turkish": "tr",
     "ukrainian": "ua",
+    "vietnamese": "vi",
 };
 
   
@@ -81,6 +82,7 @@ class Localization {
             if (currentSteamLanguage !== storedSteamLanguage) {
                 storedSteamLanguage = currentSteamLanguage;
                 SyncedStorage.set("language", currentSteamLanguage);
+                Background.action("clearpurchases");
             }
         }
 

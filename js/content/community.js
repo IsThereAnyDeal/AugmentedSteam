@@ -52,9 +52,7 @@ let ProfileData = (function(){
     let _promise = null;
     self.promise = async function() {
         if (!_promise) {
-            let steamId = SteamId.getSteamId();
-
-            _promise = Background.action('profile', { 'profile': steamId, } )
+            _promise = Background.action("profile", SteamId.getSteamId())
                 .then(response => { _data = response; return _data; });
         }
         return _promise;
@@ -103,7 +101,7 @@ let ProfileData = (function(){
 
     self.clearOwn = async function() {
         if (!User.isSignedIn) { return; }
-        await Background.action('profile.clear', { 'profile': User.steamId, });
+        await Background.action("clearownprofile", User.steamId);
         _promise = null;
         return self.promise();
     };
@@ -336,48 +334,45 @@ let CommunityCommon = (function() {
     self.currentUserIsOwner = function() {
         if (!User.isSignedIn) { return false; }
 
-        let badgeOwnerLink = document.querySelector(".profile_small_header_texture a").href;
-        let userProfileLink = document.querySelector(".playerAvatar a").href.replace(/\/*$/, "");
+        let badgeOwnerUrl = document.querySelector(".profile_small_header_texture > a").href + "/";
 
-        return badgeOwnerLink === userProfileLink;
+        return badgeOwnerUrl === User.profileUrl;
     };
 
     self.addCardExchangeLinks = function(game) {
         if (!SyncedStorage.get("steamcardexchange")) { return; }
 
-        let nodes = document.querySelectorAll(".badge_row:not(.es-has-ce-link");
-        for (let node of nodes) {
+        let ceImg = ExtensionResources.getURL("img/ico/steamcardexchange.png");
+
+        for (let node of document.querySelectorAll(".badge_row:not(.es-has-ce-link")) {
             let appid = game || GameId.getAppidFromGameCard(node.querySelector(".badge_row_overlay").href);
-            if(!appid) { continue; }
+            if (!appid) { continue; }
 
             HTML.afterBegin(node,
                 `<div class="es_steamcardexchange_link">
-                    <a href="http://www.steamcardexchange.net/index.php?gamepage-appid-${appid}" target="_blank" title="Steam Card Exchange">
-                        <img src="${ExtensionLayer.getLocalUrl('img/ico/steamcardexchange.png')}" width="24" height="24" border="0" alt="Steam Card Exchange" />
+                    <a href="https://www.steamcardexchange.net/index.php?gamepage-appid-${appid}/" target="_blank" title="Steam Card Exchange">
+                        <img src="${ceImg}" alt="Steam Card Exchange">
                     </a>
                 </div>`);
 
-            node.querySelector(".badge_title_row").style.paddingRight = "44px";
             node.classList.add("es-has-ce-link");
         }
     };
 
-    self.makeProfileLink = function (id, link, name, iconType, iconUrl) {
+    self.makeProfileLink = function(id, link, name, iconType, iconUrl) {
         let mainType = iconUrl ? "none" : iconType;
-        let result =
-            `<div class="es_profile_link profile_count_link">
-               <a class="es_sites_icons es_${id}_icon es_${mainType}" href="${link}" target="_blank">`;
+        let html = `<div class="es_profile_link profile_count_link">
+                   <a class="es_sites_icons es_${id}_icon es_${mainType}" href="${link}" target="_blank">`;
 
         if (iconType !== "none" && iconUrl) {
-            result += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url('${iconUrl}');"></i>`;
+            html += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url('${iconUrl}');"></i>`;
         }
 
-        result += `<span class="count_link_label">${name}</span>
-                        <span class="profile_count_link_total">&nbsp;</span> <!-- Steam spacing -->
-                    </a>
-                </div>`;
-        return result;
-    }
+        html += `<span class="count_link_label">${name}</span>
+                <span class="profile_count_link_total"></span></a></div>`; // Steam spacing
+
+        return html;
+    };
 
     return self;
 })();
@@ -395,43 +390,32 @@ let ProfileActivityPageClass = (function(){
     }
 
     ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
-        await Promise.all([DynamicStore, Inventory, User]);
+        await Promise.all([DynamicStore, User]);
 
-        // Get all appids and nodes from selectors
-        let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
-        for (let node of nodes) {
-            node.classList.add("es_highlight_checked");
+        let blotterBlocks = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
+        blotterBlocks.forEach(node => node.classList.add("es_highlight_checked"));
 
-            let links = node.querySelectorAll("a:not(.blotter_gamepurchase_logo)");
-            for (let link of links) {
-                let appid = GameId.getAppid(link.href);
-                if (!appid || link.childElementCount > 1) { continue; }
-                if (link.childElementCount === 1 && link.closest(".vote_header")) { continue; }
+        let aNodes = Array.from(blotterBlocks).reduce((acc, cur) => {
+            acc.push(...Array.from(cur.querySelectorAll("a:not(.blotter_gamepurchase_logo)")).filter(link =>
+                (GameId.getAppid(link) && link.childElementCount <= 1)
+                &&
+                // https://github.com/tfedor/AugmentedSteam/pull/470#pullrequestreview-284928257
+                (link.childElementCount !== 1 || !link.closest(".vote_header"))
+            ));
+            return acc;
+        }, []);
 
-                if (DynamicStore.isOwned(appid)) {
-                    Highlights.highlightOwned(link);
+        await Highlights.highlightAndTag(aNodes, false);
 
-                    addAchievementComparisonLink(link, appid);
-                } else if (Inventory.hasGuestPass(appid)) {
-                    Highlights.highlightInvGuestpass(link);
-                } else if (Inventory.getCouponByAppId(appid)) {
-                    Highlights.highlightCoupon(link);
-                } else if (Inventory.hasGift(appid)) {
-                    Highlights.highlightInvGift(link);
-                } else if (DynamicStore.isWishlisted(appid)) {
-                    Highlights.highlightWishlist(link);
-                } else if (DynamicStore.isIgnored(appid)) {
-                    Highlights.highlightNotInterested(link);
-                } else {
-                    continue;
-                }
-            }
-        }
+        if (!SyncedStorage.get("showcomparelinks")) { return; }
+        blotterBlocks.forEach(blotter => {
+            blotter.querySelectorAll("a.es_highlighted_owned").forEach(aNode => {
+                addAchievementComparisonLink(aNode);
+            })
+        });
     };
 
-    function addAchievementComparisonLink(node, appid) {
-        if (!SyncedStorage.get("showcomparelinks")) { return; }
-
+    function addAchievementComparisonLink(node) {
         let blotter = node.closest(".blotter_daily_rollup_line");
         if (!blotter) { return; }
 
@@ -442,7 +426,7 @@ let ProfileActivityPageClass = (function(){
 
         node.classList.add("es_achievements");
 
-        let compareLink = friendProfileUrl + "/stats/" + appid + "/compare/#es-compare";
+        let compareLink = friendProfileUrl + "/stats/" + GameId.getAppid(node) + "/compare/#es-compare";
         HTML.afterEnd(blotter.querySelector("span"), `<a class='es_achievement_compare' href='${compareLink}' target='_blank' style='line-height: 32px'>(${Localization.str.compare})</a>`);
     }
 
@@ -586,7 +570,7 @@ let ProfileHomePageClass = (function(){
 
         // profile permalink
         if (SyncedStorage.get("profile_permalink")) {
-            let imgUrl = ExtensionLayer.getLocalUrl("img/clippy.svg");
+            let imgUrl = ExtensionResources.getURL("img/clippy.svg");
             htmlstr +=
                 `<div id="es_permalink_div" class="profile_count_link">
 					<span class="count_link_label">${Localization.str.permalink}</span>
@@ -730,20 +714,17 @@ let ProfileHomePageClass = (function(){
         }
     };
 
-    ProfileHomePageClass.prototype.addSteamRepApi = function(){
+    ProfileHomePageClass.prototype.addSteamRepApi = function() {
         if (!SyncedStorage.get("showsteamrepapi")) { return; }
 
         ProfileData.promise().then(data => {
-            if (!data.steamrep) { return; }
-
-            let steamrep = data.steamrep;
-            if (steamrep.length === 0) { return; }
+            if (!data.steamrep || data.steamrep.length === 0) { return; }
 
             let steamId = SteamId.getSteamId();
             if (!steamId) { return; }
 
             // Build reputation images regexp
-            let repimgs = {
+            let repImgs = {
                 "banned": /scammer|banned/gi,
                 "valve": /valve admin/gi,
                 "caution": /caution/gi,
@@ -751,49 +732,43 @@ let ProfileHomePageClass = (function(){
                 "donate": /donator/gi
             };
 
-            // Build SteamRep section
-            HTML.beforeEnd(".profile_header_summary", '<div id="es_steamrep"></div>');
+            let html = "";
 
-            let steamrepElement = document.getElementById("es_steamrep");
-            let priorities = ["bad", "caution", "good", "neutral"];
-            let backgroundStyle = document.querySelector(".profile_header_bg_texture").style;
-
-            backgroundStyle.paddingBottom = "20px";
-            backgroundStyle.backgroundSize = "cover";
-
-            steamrep.forEach(function(value) {
-                if (value.trim() == "") { return; }
-                for (let [img, regex] of Object.entries(repimgs)) {
+            for (let value of data.steamrep) {
+                if (value.trim() === "") { continue; }
+                for (let [img, regex] of Object.entries(repImgs)) {
                     if (!value.match(regex)) { continue; }
 
-                    let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
-                    let priority;
+                    let imgUrl = ExtensionResources.getURL(`img/sr/${img}.png`);
+                    let status;
 
                     switch (img) {
                         case "banned":
-                            priority = 0;
+                            status = "bad";
                             break;
                         case "caution":
-                            priority = 1;
+                            status = "caution";
                             break;
                         case "valve":
                         case "okay":
-                            priority = 2;
+                            status = "good";
                             break;
                         case "donate":
-                            priority = 3;
+                            status = "neutral";
                             break;
                     }
 
-                    HTML.beforeEnd(steamrepElement,
-                        `<div class="${priorities[priority]}">
-                            <img src="${imgUrl}" />
-                            <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
-                        </div>`);
-                        
-                    return;
+                    html += `<div class="${status}"><img src="${imgUrl}"><span> ${value}</span></div>`;
                 }
-            });
+            }
+
+            if (html) {
+
+                HTML.afterBegin(".profile_rightcol",
+                    `<a id="es_steamrep" href="https://steamrep.com/profiles/${steamId}" target="_blank">
+                        ${html}
+                    </a>`);
+            }
         });
     };
 
@@ -898,16 +873,16 @@ let ProfileHomePageClass = (function(){
                     HTML.beforeEnd(".profile_header_bg_texture", "<div class='holidayprofile_header_overlay'></div>");
                     document.querySelector(".profile_page").classList.add("holidayprofile");
 
-                    DOMHelper.insertScript({ src: ExtensionLayer.getLocalUrl("js/steam/holidayprofile.js") });
+                    DOMHelper.insertScript({ src: ExtensionResources.getURL("js/steam/holidayprofile.js") });
                     
                     break;
                 case "clear":
                     document.body.classList.add("es_style_clear");
                     break;
                 default:
-                    let styleUrl = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/style.css");
-                    let headerImg = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/header.jpg");
-                    let showcase = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/showcase.png");
+                    let styleUrl = ExtensionResources.getURL("img/profile_styles/" + style + "/style.css");
+                    let headerImg = ExtensionResources.getURL("img/profile_styles/" + style + "/header.jpg");
+                    let showcase = ExtensionResources.getURL("img/profile_styles/" + style + "/showcase.png");
 
                     stylesheet.href = styleUrl;
                     document.head.appendChild(stylesheet);
@@ -1088,59 +1063,58 @@ let GroupHomePageClass = (function(){
 let GamesPageClass = (function(){
 
     function GamesPageClass() {
-
-        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(\?tab=all)?/);
-
-        if (page[2]) {
+        // Prevent errors if "Game Details" is private
+        if (!document.querySelector(".gameListRow")) {
+            return;
+        }
+        // Only show stats on the "All Games" tab
+        if (window.location.search.includes("?tab=all")) {
             this.computeStats();
             this.handleCommonGames();
-            this.addGamelistAchievements(page[1]);
+            this.addGamelistAchievements();
         }
     }
 
-    // Display total time played for all games
     GamesPageClass.prototype.computeStats = function() {
-        let games = HTMLParser.getVariableFromDom("rgGames", "array");
+        if (!SyncedStorage.get("showallstats")) { return; }
 
-        let statsHtml = "";
+        let games = HTMLParser.getVariableFromDom("rgGames", "array");
 
         let countTotal = games.length;
         let countPlayed = 0;
         let countNeverPlayed = 0;
 
         let time = 0;
-        games.forEach(game => {
+        for (let game of games) {
             if (!game['hours_forever']) {
                 countNeverPlayed++;
-                return;
+                continue;
             }
 
             countPlayed++;
             time += parseFloat(game['hours_forever'].replace(",",""));
-        });
+        }
 
         let totalTime = Localization.str.hours_short.replace("__hours__", time.toFixed(1));
 
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>`;
-
-        let html = `<div id="esi-collection-chart-content">${statsHtml}</div>`;
-
-        HTML.beforeBegin("#mainContents", html);
+        HTML.beforeBegin("#mainContents",
+            `<div id="esi-collection-chart-content">
+                <div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.coll.total_time}</div>
+                <div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>
+                <div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>
+                <div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>
+            </div>`);
     };
 
     let scrollTimeout = null;
 
-    GamesPageClass.prototype.addGamelistAchievements = function(userProfileLink) {
+    GamesPageClass.prototype.addGamelistAchievements = function() {
         if (!SyncedStorage.get("showallachievements")) { return; }
 
-        let node = document.querySelector(".profile_small_header_texture a");
-        if (!node) { return; }
-        let statsLink = "https://steamcommunity.com/" + userProfileLink + "stats/";
+        // Path of profile in view to retrieve achievement stats
+        let path = window.location.pathname.replace("/games", "");
 
-        document.addEventListener("scroll", function(){
+        document.addEventListener("scroll", () => {
             if (scrollTimeout) { window.clearTimeout(scrollTimeout); }
             scrollTimeout = window.setTimeout(addAchievements, 500);
         });
@@ -1148,11 +1122,9 @@ let GamesPageClass = (function(){
         addAchievements();
 
         function addAchievements() {
-            // Only show stats on the "All Games" tab
             let nodes = document.querySelectorAll(".gameListRow:not(.es_achievements_checked)");
             let hadNodesInView = false;
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            for (let node of nodes) {
 
                 if (!Viewport.isElementInViewport(node)) {
                     if (hadNodesInView) { break; }
@@ -1161,21 +1133,19 @@ let GamesPageClass = (function(){
 
                 hadNodesInView = true;
 
-                let appid = GameId.getAppidWishlist(node.id);
+                let appid = GameId.getAppidFromId(node.id);
                 node.classList.add("es_achievements_checked");
                 if (!node.innerHTML.match(/ico_stats\.png/)) { continue; }
-                if (!node.querySelector("h5.hours_played")) { continue; }
 
-                // Copy achievement stats to row
-                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'></div>");
+                let hoursNode = node.querySelector("h5.hours_played");
+                if (!hoursNode) { continue; }
 
-                Stats.getAchievementBar(appid).then(achieveBar => {
-                    let node = document.querySelector("#es_app_" + appid);
+                HTML.afterEnd(hoursNode, `<div class="es_recentAchievements" id="es_app_${appid}"></div>`);
 
-                    if (!achieveBar) return;
+                Stats.getAchievementBar(path, appid).then(achieveBar => {
+                    if (!achieveBar) { return; }
 
-                    HTML.inner(node, achieveBar);
-
+                    HTML.inner(document.querySelector(`#es_app_${appid}`), achieveBar);
                 }, err => {
                     console.error(err);
                 });
@@ -1188,11 +1158,10 @@ let GamesPageClass = (function(){
     async function loadCommonGames() {
         if (_commonGames != null) { return; }
 
-        let url = window.location.href;
-        let commonUrl = url + (url.indexOf( '?' ) != -1 ? '&' : '?' ) + 'games_in_common=1';
+        let commonUrl = `${window.location.href}&games_in_common=1`;
         let data = await RequestData.getHttp(commonUrl);
 
-        let games = HTMLParser.getVariableFromText(data, "rgGames", "array");;
+        let games = HTMLParser.getVariableFromText(data, "rgGames", "array");
         _commonGames = new Set();
         for (let game of games) {
             _commonGames.add(parseInt(game.appid));
@@ -1211,37 +1180,29 @@ let GamesPageClass = (function(){
     }
 
     GamesPageClass.prototype.handleCommonGames = function() {
-        if (!User.isSignedIn) { return;}
+        if (!User.isSignedIn) { return; }
 
         let label = document.querySelector("label[for='show_common_games']");
         if (!label) { return; }
 
-        function createCheckox(id, string) {
-            let checkboxEl = document.createElement("input");
-            checkboxEl.type = "checkbox";
-            checkboxEl.id = id;
+        HTML.afterEnd(label,
+            `<label for="es_gl_show_common_games"><input type="checkbox" id="es_gl_show_common_games">${Localization.str.common_label}</label>
+            <label for="es_gl_show_notcommon_games"><input type="checkbox" id="es_gl_show_notcommon_games">${Localization.str.notcommon_label}</label>`);
 
-            let uncommonLabel = document.createElement("label");
-            uncommonLabel.append(checkboxEl);
-            uncommonLabel.append(document.createTextNode(string));
-
-            return checkboxEl;
-        }
-
-        let commonCheckbox = createCheckox("es_gl_show_common_games", Localization.str.common_label);
-        let notCommonCheckbox = createCheckox("es_gl_show_notcommon_games", Localization.str.notcommon_label);
-
-        label.insertAdjacentElement("afterend", notCommonCheckbox.parentNode);
-        label.insertAdjacentElement("afterend", commonCheckbox.parentNode);
+        let commonCheckbox = document.getElementById("es_gl_show_common_games");
+        let notCommonCheckbox = document.getElementById("es_gl_show_notcommon_games");
+        let rows = document.getElementById("games_list_rows");
 
         commonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
-            document.querySelector("#games_list_rows").classList.toggle("esi-hide-notcommon", e.target.checked);
+            rows.classList.toggle("esi-hide-notcommon", e.target.checked);
+            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
         });
 
         notCommonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
-            document.querySelector("#games_list_rows").classList.toggle("esi-hide-common", e.target.checked);
+            rows.classList.toggle("esi-hide-common", e.target.checked);
+            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
         });
     };
 
@@ -1251,21 +1212,20 @@ let GamesPageClass = (function(){
 let ProfileEditPageClass = (function(){
 
     function ProfileEditPageClass() {
-        let that = this;
         ProfileData.clearOwn().then(() => {
-            if (window.location.pathname.indexOf("/settings") < 0) {
-                that.addBackgroundSelection();
-                that.addStyleSelection();
+            if (!window.location.pathname.includes("/settings")) {
+                this.addBackgroundSelection();
+                this.addStyleSelection();
             }
         })
     }
 
     function showBgFormLoading() {
-        document.querySelector("#es_bg .es_loading").style.display="block";
+        document.querySelector("#es_bg .es_loading").style.display = "block";
     }
 
     function hideBgFormLoading() {
-        document.querySelector("#es_bg .es_loading").style.display="none";
+        document.querySelector("#es_bg .es_loading").style.display = "none";
     }
 
     function getGameSelectOptions(games) {
@@ -1418,8 +1378,8 @@ let ProfileEditPageClass = (function(){
                             <option id='blue' value='blue'>Blue Theme</option>
                             <option id='clear' value='clear'>Clear Theme</option>
                             <option id='green' value='green'>Green Theme</option>
-                            <option id='orange' value='orange'>Orange Theme</option
-                            <option id='pink' value='pink'>Pink Theme</option
+                            <option id='orange' value='orange'>Orange Theme</option>
+                            <option id='pink' value='pink'>Pink Theme</option>
                             <option id='purple' value='purple'>Purple Theme</option>
                             <option id='red' value='red'>Red Theme</option>
                             <option id='teal' value='teal'>Teal Theme</option>
@@ -1450,7 +1410,7 @@ let ProfileEditPageClass = (function(){
             styleSelectNode.value = currentStyle;
 
             let imgNode = document.querySelector("#es_style_preview");
-            imgNode.src = ExtensionLayer.getLocalUrl("img/profile_styles/" + currentStyle + "/preview.png");
+            imgNode.src = ExtensionResources.getURL("img/profile_styles/" + currentStyle + "/preview.png");
 
             if (currentStyle === "remove") {
                 imgNode.style.display = "none";
@@ -1463,7 +1423,7 @@ let ProfileEditPageClass = (function(){
                 imgNode.style.display = "none";
             } else {
                 imgNode.style.display = "block";
-                imgNode.src = ExtensionLayer.getLocalUrl("img/profile_styles/" + styleSelectNode.value + "/preview.png");
+                imgNode.src = ExtensionResources.getURL("img/profile_styles/" + styleSelectNode.value + "/preview.png");
             }
 
             // Enable the "save" button
@@ -1535,7 +1495,8 @@ let StatsPageClass = (function(){
         }
     }
 
-    async function sortBy(key, personal) {
+    async function sortBy(key, reversed) {
+        let personal = document.querySelector("#personalAchieve");
         if (key === "time") {
             if (!_nodes.time.length) {
                 await addSortMetaData(key, personal.querySelectorAll(".achieveRow"));
@@ -1543,9 +1504,8 @@ let StatsPageClass = (function(){
         }
         
         for (let br of personal.querySelectorAll(":scope > br")) br.remove();
-        for (let item of _nodes[key]) {
-            let node = item[1];
-            personal.insertAdjacentElement("beforeend", node);
+        for (let [, node] of _nodes[key]) {
+            personal.insertAdjacentElement(reversed ? "afterbegin" : "beforeend", node);
         }
     }
 
@@ -1560,7 +1520,7 @@ let StatsPageClass = (function(){
                 ["time", Localization.str.date_unlocked],
             ],
             "default",
-            option => sortBy(option, personal)
+            sortBy
         ));
 
         addSortMetaData("default", personal.querySelectorAll(".achieveRow"));
@@ -1663,20 +1623,21 @@ let InventoryPageClass = (function(){
         if (!giftAppid) { return; }
         // TODO: Add support for package(sub)
 
-        let result = await Background.action('appdetails', { 'appids': giftAppid, 'filters': 'price_overview', } );
-        if (!result[giftAppid] || !result[giftAppid].success) { return; }
-        if (!result[giftAppid]['data']['price_overview']) { return; }
+        let result = await Background.action("appdetails", giftAppid, "price_overview");
+        if (!result || !result.success) { return; }
 
-        let overview = result[giftAppid]['data']['price_overview'];
-        let discount = overview["discount_percent"];
-        let price = new Price(overview['final'] / 100, overview['currency']);
+        let overview = result.data.price_overview;
+        if (!overview) { return; }
+
+        let discount = overview.discount_percent;
+        let price = new Price(overview.final / 100, overview.currency);
 
         itemActions.style.display = "flex";
         itemActions.style.alignItems = "center";
         itemActions.style.justifyContent = "space-between";
 
         if (discount > 0) {
-            let originalPrice = new Price(overview['initial'] / 100, overview['currency']);
+            let originalPrice = new Price(overview.initial / 100, overview.currency);
             HTML.beforeEnd(itemActions,
                 `<div class='es_game_purchase_action' style='margin-bottom:16px'>
                     <div class='es_game_purchase_action_bg'>
@@ -2018,10 +1979,9 @@ let InventoryPageClass = (function(){
 
             await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, { withCredentials: true });
 
-            document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
+            document.querySelector(`#es_instantsell${assetID}`).parentNode.style.display = "none";
 
-            let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
-            let node = document.querySelector("[id='" + id + "']");
+            let node = document.querySelector(`[id="${global_id}_${contextID}_${assetID}"]`);
             node.classList.add("btn_disabled", "activeInfo");
             node.style.pointerEvents = "none";
         });
@@ -2651,17 +2611,16 @@ let GameCardPageClass = (function(){
 
     function GameCardPageClass() {
         this.appid = GameId.getAppidFromGameCard(window.location.pathname);
+        this.isFoil = window.location.search.includes("?border=1");
 
         CommunityCommon.addCardExchangeLinks(this.appid);
         this.addMarketLinks();
         this.addFoilLink();
         this.addStoreTradeForumLink();
-        applyLinkButtonsLayout();
     }
 
     GameCardPageClass.prototype.addMarketLinks = async function() {
         let cost = 0;
-        let isFoil = /border=1/i.test(document.URL);
 
         let data;
         try {
@@ -2669,24 +2628,23 @@ let GameCardPageClass = (function(){
                 appid: this.appid,
                 currency: Currency.storeCurrency,
             });
-        } catch(exception) {
-            console.error("Failed to load card prices", exception);
+        } catch (err) {
+            console.error("Failed to load card prices", err);
             return;
         }
 
-        let nodes = document.querySelectorAll(".badge_card_set_card");
-        for (let node of nodes) {
+        for (let node of document.querySelectorAll(".badge_card_set_card")) {
             let cardName = node
                 .querySelector(".badge_card_set_text").textContent
-                .replace(/&amp;/g, '&')
-                .replace(/\(\d+\)/g, '').trim();
+                .replace(/&amp;/g, "&")
+                .replace(/\(\d+\)/g, "").trim();
             let cardData = data[cardName] || data[cardName + " (Trading Card)"];
-            if (isFoil) {
+            if (this.isFoil) {
                 cardData = data[cardName + " (Foil)"] || data[cardName + " (Foil Trading Card)"];
             }
 
             if (cardData) {
-                let marketLink = "https://steamcommunity.com/market/listings/" + cardData.url;
+                let marketLink = `https://steamcommunity.com/market/listings/${cardData.url}`;
                 let cardPrice = new Price(cardData.price, Currency.storeCurrency);
 
                 if (node.classList.contains("unowned")) {
@@ -2710,59 +2668,40 @@ let GameCardPageClass = (function(){
     };
 
     GameCardPageClass.prototype.addFoilLink = function() {
-        let urlSearch = window.location.search;
-        let urlParameters = urlSearch.replace("?","").split("&");
-        let foilIndex = urlParameters.indexOf("border=1");
+        let node = document.querySelector(".gamecards_inventorylink");
+        if (!node) { return; }
 
+        let url = window.location.href;
         let text;
-        let url = window.location.origin + window.location.pathname;
-
-        if (foilIndex !== -1) {
-
-            if (urlParameters.length > 1) {
-                url += "?" + urlParameters.splice(foilIndex, 1).join("&");
-            }
-
+        if (this.isFoil) {
+            url = url.replace(/\?border=1/, "");
             text = Localization.str.view_normal_badge;
-
         } else {
-
-            if (urlParameters[0] === ""){
-                url += "?" + "border=1";
-            }
-
+            url += "?border=1";
             text = Localization.str.view_foil_badge;
         }
 
-        HTML.beforeEnd(".gamecards_inventorylink",
-            `<a class='btn_grey_grey btn_small_thin' href='${url}'><span>${text}</span></a>`);
+        HTML.beforeEnd(node,
+            `<a class="btn_grey_grey btn_small_thin" href="${url}"><span>${text}</span></a>`);
     };
 
     GameCardPageClass.prototype.addStoreTradeForumLink = function() {
-        HTML.beforeEnd(".gamecards_inventorylink",
-            `<div style="float: right">
-                <a class="es_visit_tforum btn_grey_grey btn_medium" href="https://store.steampowered.com/app/${this.appid}">
-    				<span>${Localization.str.visit_store}</span>
-    			</a>
-    			<a class="es_visit_tforum btn_grey_grey btn_medium" href="https://steamcommunity.com/app/${this.appid}/tradingforum/">
-    				<span>${Localization.str.visit_trade_forum}</span>
-    			</a>
-    		</div>`);
+        // TODO certain cards e.g. sale event cards don't have valid forum links
+        let node = document.querySelector(".gamecards_inventorylink");
+        if (!node) { return; }
+
+        HTML.beforeEnd(node,
+            `<div style="float: right;">
+                <a class="btn_grey_grey btn_medium" href="//store.steampowered.com/app/${this.appid}/">
+                    <span>${Localization.str.visit_store}</span>
+                </a>
+                <a class="es_visit_tforum btn_grey_grey btn_medium" href="https://steamcommunity.com/app/${this.appid}/tradingforum/">
+                    <span>${Localization.str.visit_trade_forum}</span>
+                </a>
+            </div>`);
     };
 
-    // Layout for the case when zoomed in (and the buttons are wrapped)
-    function applyLinkButtonsLayout() {
-        let linksDiv = document.querySelector(".gamecards_inventorylink");
-        linksDiv.style.overflow = "auto";
-        // Default is 14px => 14-5 = 9
-        linksDiv.style.marginBottom = "9px";
-
-        linksDiv.querySelectorAll("a").forEach(button => {
-            button.style.marginBottom = "5px";
-        });
-    }
-
-    return GameCardPageClass
+    return GameCardPageClass;
 })();
 
 let FriendsThatPlayPageClass = (function(){
@@ -2793,15 +2732,13 @@ let FriendsThatPlayPageClass = (function(){
         if (!SyncedStorage.get("showallfriendsthatown")) return;
 
         let friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
-        let data = await Background.action('appuserdetails', { 'appids': this.appid, });
-        if (!data[this.appid].success || !data[this.appid].data.friendsown || data[this.appid].data.friendsown.length === 0) {
-            return;
-        }
+        let result = await Background.action("appuserdetails", this.appid);
+        if (!result || !result.success || !result.data || !result.data.friendsown || !result.data.friendsown.length) { return; }
 
         let friendsData = await friendsPromise;
         let friendsHtml = HTMLParser.htmlToDOM(friendsData);
 
-        let friendsOwn = data[this.appid].data.friendsown;
+        let friendsOwn = result.data.friendsown;
 
         let html = `<div class="mainSectionHeader friendListSectionHeader">
                         ${Localization.str.all_friends_own.replace('__friendcount__', friendsOwn.length)}
@@ -2852,60 +2789,49 @@ let FriendsThatPlayPageClass = (function(){
     };
 
     FriendsThatPlayPageClass.prototype.addFriendsPlayTimeSort = function() {
-        let memberList = document.querySelector("#memberList");
 
-        let section = memberList.querySelectorAll(".mainSectionHeader").length;
-        if (section < 3) return; // DLC and unreleased games with no playtime
-        section = section >= 4 ? 1 : 2;
+        let sorted = {};
 
-        HTML.beforeEnd(
-            memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")"),
-            ` (<span id='es_default_sort' style='cursor: pointer;'>
-                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.theworddefault)}
-                 </span> | <span id='es_playtime_sort' style='text-decoration: underline;cursor: pointer;'>
-                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.playtime)}
-                </span>)`);
+        document.querySelector(".friendListSectionHeader").insertAdjacentElement("beforeend", Sortbox.get("friends_that_play", [
+            ["default", Localization.str.theworddefault],
+            ["playtime", Localization.str.playtime],
+        ], "default", onChange));
 
-        memberList.querySelector(".profile_friends:nth-child(" + ((section*2)+2) + ")")
-            .id = "es_friends_default";
-
-        let sorted = document.querySelector("#es_friends_default").cloneNode(true);
-        sorted.id = "es_friends_playtime";
-        sorted.style.display = "none";
-
-        let defaultNode = document.querySelector("#es_friends_default");
-        defaultNode.insertAdjacentElement("afterend", sorted);
-        HTML.afterEnd(defaultNode, "<div style='clear: both'></div>");
-
-        document.querySelector("#es_playtime_sort").addEventListener("click", function(e) {
-            document.querySelector("#es_playtime_sort").style.textDecoration = "none";
-            document.querySelector("#es_default_sort").style.textDecoration = "underline";
-            document.querySelector("#es_friends_default").style.display = "none";
-            document.querySelector("#es_friends_playtime").style.display = "block";
-
-            let friendArray = [];
-            let nodes = document.querySelectorAll("#es_friends_playtime .friendBlock");
-            for (let node of nodes) {
-                friendArray.push([
-                    node,
-                    parseFloat(node.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0])
-                ]);
+        function onChange(key, reversed) {
+            if (!sorted.default) {
+                sorted.default = new Map();
+                for (let block of document.querySelectorAll(".profile_friends")) {
+                    if (block.querySelector(".friendBlockInnerLink")) {
+                        sorted.default.set(block, Array.from(block.querySelectorAll(".friendBlock")));
+                    }
+                }
             }
 
-            friendArray.sort(function(a,b) { return b[1] - a[1]; });
-
-            let playtimeNode = document.querySelector("#es_friends_playtime");
-            for (let item of friendArray) {
-                playtimeNode.append(item[0])
+            // This only happens for the first sort after playtime
+            if (!sorted[key]) {
+                if (key === "playtime") {
+                    sorted[key] = new Map();
+                    for (let [block, friends] of sorted.default) {
+                        let friendsCopy = friends.slice();
+                        friendsCopy.sort((a, b) =>
+                            parseFloat(b.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0]) -
+                            parseFloat(a.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0])
+                        );
+                        sorted[key].set(block, friendsCopy);
+                    }
+                }                
             }
-        });
 
-        document.querySelector("#es_default_sort").addEventListener("click", function(e) {
-            document.querySelector("#es_default_sort").style.textDecoration = "none";
-            document.querySelector("#es_playtime_sort").style.textDecoration = "underline";
-            document.querySelector("#es_friends_playtime").style.display = "none";
-            document.querySelector("#es_friends_default").style.display = "block";
-        });
+            for (let [block, friends] of sorted[key]) {
+                for (let friend of friends) {
+                    if (reversed) {
+                        block.insertAdjacentElement("afterbegin", friend);
+                    } else {
+                        block.closest(".profile_friends").querySelector(":scope > :last-child").insertAdjacentElement("beforebegin", friend);
+                    }
+                }
+            }
+        }
     };
 
     return FriendsThatPlayPageClass;
@@ -2916,18 +2842,17 @@ let FriendsPageClass = (function(){
     function FriendsPageClass() {
         this.addSort();
         this.addFriendsInviteButton();
-        this.addPoster();
     }
 
     FriendsPageClass.prototype.addSort = function() {
         let offlineFriends = document.querySelectorAll(".friend_block_v2.persona.offline");
-        if (offlineFriends.length === 0) { return; }
+        if (offlineFriends.length === 0 || !document.querySelector("#manage_friends_control")) { return; }
 
         let friendsFetched = false;
 
         offlineFriends.forEach((friend, i) => friend.dataset.esSortDefault = i);
 
-        async function sortFriends(sortBy) {
+        async function sortFriends(sortBy, reversed) {
             sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
 
             if (sortBy === "lastonline" && !friendsFetched) {
@@ -2950,30 +2875,29 @@ let FriendsPageClass = (function(){
                 }
             }
 
-            let searchResults = document.querySelector("#search_results");
+            let offlineBlock = document.querySelector("#state_offline");
             let curOfflineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
 
             let property = `esSort${sortBy === "default" ? "Default" : "Time"}`;
             curOfflineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
 
             for (let friend of curOfflineFriends) {
-                searchResults.appendChild(friend);
+                if (reversed) {
+                    offlineBlock.insertAdjacentElement("afterend", friend);
+                } else {
+                    offlineBlock.parentElement.appendChild(friend);
+                }
             }
-
-            SyncedStorage.set("sortfriendsby", sortBy);
         }
 
+        let sortBy = SyncedStorage.get("sortfriendsby");
         document.querySelector("#manage_friends_control").insertAdjacentElement("beforebegin", Sortbox.get(
             "friends",
             [["default", Localization.str.theworddefault], ["lastonline", Localization.str.lastonline]],
-            SyncedStorage.get("sortfriendsby"),
-            sortFriends)
+            sortBy,
+            sortFriends,
+            "sortfriendsby")
         );
-
-        let sortBy = SyncedStorage.get("sortfriendsby");
-        if (sortBy !== "default") {
-            sortFriends(SyncedStorage.get("sortfriendsby"));
-        }
     };
 
     FriendsPageClass.prototype.addFriendsInviteButton = async function() {
@@ -2992,83 +2916,187 @@ let FriendsPageClass = (function(){
         }`);
     };
 
-    FriendsPageClass.prototype.addPoster = function() {
-        let manage = document.querySelector("#manage_friends");
-        if (!manage) { return; }
-
-        let commentArea = `<div class="row commentthread_entry" style="background-color: initial; padding-right: 24px;">
-                <div class="commentthread_entry_quotebox">
-                    <textarea rows="3" class="commentthread_textarea" id="comment_textarea" placeholder="${Localization.str.add_comment}" style="overflow: hidden; height: 20px;"></textarea>
-                </div>
-                <div class="commentthread_entry_submitlink">
-                    <a class="btn_grey_black btn_small_thin" id="FormattingHelpPopup">
-                        <span>${Localization.str.formatting_help}</span>
-                    </a>
-                    <span class="emoticon_container">
-                        <span class="emoticon_button small" id="emoticonbtn">
-                        </span>
-                    </span>
-                    <span class="btn_green_white_innerfade btn_small" id="comment_submit">
-                        <span>${Localization.str.friends_commenter}</span>
-                    </span>
-                </div>
-            </div>
-            <div class="row" id="log" style="margin-top: 0px; margin-bottom: 16px;">
-                <span id="log_head"></span>
-                <span id="log_body" class="dimmed"></span>
-            </div>`
-
-        HTML.beforeEnd(manage, commentArea);
-        ExtensionLayer.runInPageContext(`function() {
-            let delay = 7000;
-            new CEmoticonPopup($J('#emoticonbtn'), $J('#comment_textarea'));
-            $J("#comment_submit").click(() => {
-                const total = $J(".selected").length;
-                const msg = $J("#comment_textarea").val();
-                if (total === 0 || msg.length === 0) {
-                    ShowAlertDialog("${Localization.str.alert}", "${Localization.str.friends_commenter_warning}");
-                    return;
-                }
-            
-                $J("#log_head, #log_body").html("");
-                $J(".selected").each((i, elem) => {
-                    let profileID = $J(elem).data("steamid");
-                    let profileName = $J(elem).find(".friend_block_content").get(0).firstChild.textContent;
-                    setTimeout(() => {
-                        $J.post("//steamcommunity.com/comment/Profile/post/" + profileID + "/-1/", {
-                            comment: msg,
-                            count: 6,
-                            sessionid: g_sessionID
-                        })
-                        .done(response => {
-                            $J("#log_body").get(0).innerHTML += "<br>";
-
-                            if (!response.success) {
-                                $J("#log_body").get(0).innerHTML += response.error || "Unknown error";
-                            } else {
-                                $J("#log_body").get(0).innerHTML += "${Localization.str.posted_at_success}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/allcomments/" target="_blank">\${profileName}</a>\`);
-                            }
-
-                            $J(\`.friend_block_v2[data-steamid="\${profileID}"]\`).removeClass("selected").find(".select_friend_checkbox").prop("checked", false);
-                            UpdateSelection();
-                        })
-                        .fail(() => {
-                            $J("#log_body").get(0).innerHTML += "<br>${Localization.str.posted_at_fail}".replace("__profile__", \`<a href="//steamcommunity.com/profiles/\${profileID}/" target="_blank">\${profileName}</a>\`)
-                        })
-                        .always(() => {
-                            $J("#log_head").html("<br><b>${Localization.str.processed}<b>".replace("__i__", i + 1).replace("__total__", total))
-                        });
-                    }, delay * i);
-                });
-            });
-        }`);
-
-        document.querySelector("#FormattingHelpPopup").href = "javascript:CCommentThread.FormattingHelpPopup('Profile')";
-    };
-
     return FriendsPageClass;
 })();
 
+let GroupsPageClass = (function(){
+
+    function GroupsPageClass() {
+        this.addSort();
+        this.addLeaveAllBtn();
+    }
+
+    GroupsPageClass.prototype.addSort = function() {
+        let groups = Array.from(document.querySelectorAll(".group_block"));
+        if (groups.length === 0) { return; }
+
+        groups.forEach((group, i) => {
+            let name = group.querySelector(".groupTitle > a").textContent;
+            let membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
+            group.dataset.esSortdefault = i;
+            group.dataset.esSortnames = name;
+            group.dataset.esSortmembers = membercount;
+        });
+
+        function sortGroups(sortBy, reversed) {
+            let searchResults = document.querySelector("#search_results_empty");
+            let property = `esSort${sortBy}`;
+            groups.sort((a, b) => {
+                let propA = a.dataset[property];
+                let propB = b.dataset[property];
+                switch(sortBy) {
+                    case "default":
+                        return Number(propA) - Number(propB);
+                    case "members":
+                        return Number(propB) - Number(propA);
+                    case "names": {
+                        if (propA.toLowerCase() < propB.toLowerCase()) { return -1; }
+                        if (propA.toLowerCase() > propB.toLowerCase()) { return 1; }
+                        return 0;
+                    }
+                }
+            });
+
+            for (let group of groups) {
+                if (reversed) {
+                    searchResults.insertAdjacentElement("afterend", group);
+                } else {
+                    searchResults.parentElement.appendChild(group);
+                }
+            }
+        }
+
+        document.querySelector("#search_text_box").insertAdjacentElement("beforebegin", Sortbox.get(
+            "groups",
+            [["default", Localization.str.theworddefault], ["members", Localization.str.members], ["names", Localization.str.name]],
+            SyncedStorage.get("sortgroupsby"),
+            sortGroups,
+            "sortgroupsby")
+        );
+        document.querySelector(".es-sortbox").style.flex = 2;
+    };
+
+    GroupsPageClass.prototype.addLeaveAllBtn = async function() {
+        let groups = document.querySelectorAll(".group_block");
+        if (groups.length === 0) { return; }
+        if (!groups[0].querySelector(".actions")) { return; }
+
+        HTML.beforeEnd(".title_bar", 
+            `<button id="manage_friends_control" class="profile_friends manage_link btnv6_blue_hoverfade btn_small btn_uppercase">
+                <span>${Localization.str.manage_groups}</span>
+            </button>`);
+
+        HTML.afterEnd(".title_bar",
+            `<div id="manage_friends" class="manage_friends_panel">
+            <div class="row">${Localization.str.action_groups}<span class="row">
+                    <span class="dimmed">Select: </span>
+                    <span class="selection_type" id="es_select_all">${Localization.str.all}</span>
+                    <span class="selection_type" id="es_select_none">${Localization.str.none}</span>
+                    <span class="selection_type" id="es_select_inverse">${Localization.str.inverse}</span>
+                </span>
+            </div>
+            <div class="row">
+                <span class="manage_action anage_action btnv6_lightblue_blue btn_medium btn_uppercase" id="es_leave_groups"><span>${Localization.str.leave}</span></span>
+                <span id="selected_msg_err" class="selected_msg error hidden"></span>
+                <span id="selected_msg" class="selected_msg hidden">${Localization.str.selected.replace("__n__", `<span id="selected_count"></span>`)}.</span>
+            </div>
+            <div class="row"></div>
+        </div>`);
+
+        for (let group of groups) {
+            group.classList.add("selectable");
+            HTML.afterBegin(group, 
+                `<div class="indicator select_friend">
+                    <input class="select_friend_checkbox" type="checkbox">
+                </div>`);
+            group.querySelector(".select_friend").addEventListener("click", () => {
+                group.classList.toggle("selected");
+                group.querySelector(".select_friend_checkbox").checked = group.classList.contains("selected");
+                ExtensionLayer.runInPageContext(function() { UpdateSelection(); });
+            });    
+        }
+
+        document.querySelector("#manage_friends_control").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { ToggleManageFriends(); });
+        });
+
+        document.querySelector("#es_select_all").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { SelectAll(); });
+        });
+
+        document.querySelector("#es_select_none").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { SelectNone(); });
+        });
+
+        document.querySelector("#es_select_inverse").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { SelectInverse(); });
+        });
+
+        document.querySelector("#es_leave_groups").addEventListener("click", () => leaveGroups());
+
+        async function displayAdminConfirmation(name, id) {
+            let body = Localization.str.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
+            ExtensionLayer.runInPageContext(`function(){
+                let prompt = ShowConfirmDialog("${Localization.str.leave}", "${body}");
+                prompt.done(function(result) {
+                    Messenger.postMessage("confirm#${id}", result);
+                }).fail(function() {
+                    Messenger.postMessage("confirm#${id}");
+                });
+            }`);
+            
+            let result = await Messenger.onMessage(`confirm#${id}`);
+            if (result === "OK") {
+                return true;
+            }
+
+            return false;
+        }
+
+        async function leaveGroups() {
+            for (let group of groups) {
+                if (!group.classList.contains("selected")) { continue; }
+
+                let actions = group.querySelector(".actions");
+                let admin = actions.querySelector("[href*='/edit']");
+                let split = actions.querySelector("[onclick*=ConfirmLeaveGroup]").getAttribute("onclick").split(/'|"/);
+                let id = split[1];
+                if (admin) {
+                    let name = split[3]
+                    let cont = await displayAdminConfirmation(name, id);
+                    if (!cont) {
+                        group.querySelector(".select_friend").click();
+                        continue;
+                    }
+                }
+                let res = await leaveGroup(id).catch(err => console.error(err));
+
+                if (!res || !res.success) {
+                    console.error("Failed to leave group " + id);
+                    continue;
+                }
+
+                group.style.opacity = 0.3;
+                group.querySelector(".select_friend").click();
+            }
+        }
+
+        function leaveGroup(id) {
+            let formData = new FormData();
+            formData.append("sessionid", User.getSessionId());
+            formData.append("steamid", User.steamId);
+            formData.append("ajax", 1);
+            formData.append("action", "leave_group");
+            formData.append("steamids[]", id);
+
+            return RequestData.post(User.profileUrl + "/friends/action", formData, {
+                withCredentials: true
+            }, "json");
+        }
+    };
+
+    return GroupsPageClass;
+})();
 
 let MarketListingPageClass = (function(){
 
@@ -3157,29 +3185,24 @@ let MarketPageClass = (function(){
 
     function MarketPageClass() {
 
-        Inventory.then(() => {
-            this.highlightMarketItems();
+        this.highlightMarketItems();
 
-            let that = this;
-            let observer = new MutationObserver(mutations => {
-                mutations.forEach(mutation => {
-                    for (let node of mutation.addedNodes) {
-                        if (node.classList && node.classList.contains("market_listing_row_link")) {
-                            that.highlightMarketItems();
-                            return;
-                        }
+        let that = this;
+        let observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                for (let node of mutation.addedNodes) {
+                    if (node.classList && node.classList.contains("market_listing_row_link")) {
+                        that.highlightMarketItems();
+                        return;
                     }
-                });
+                }
             });
-
-            observer.observe(
-                document.querySelector("#mainContents"),
-                {childList: true, subtree: true}
-            );
-
-        }).catch(result => {
-            console.error("Failed to load inventory", result);
         });
+
+        observer.observe(
+            document.querySelector("#mainContents"),
+            {childList: true, subtree: true}
+        );
 
         // TODO shouldn't this be global? Do we want to run on other pages?
         if (window.location.pathname.match(/^\/market\/$/)) {
@@ -3348,7 +3371,7 @@ let MarketPageClass = (function(){
                 </div>`);
 
         let node = document.querySelector("#es_market_summary_status");
-        HTML.inner(node, `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>Load Market Stats</span></a>`); // FIXME Localize
+        HTML.inner(node, `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>${Localization.str.load_market_stats}</span></a>`);
 
         async function startLoadingStats() {
             HTML.inner(node, `<img id="es_market_summary_throbber" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
@@ -3660,7 +3683,7 @@ let MarketPageClass = (function(){
         }
     };
 
-    MarketPageClass.prototype.highlightMarketItems = function() {
+    MarketPageClass.prototype.highlightMarketItems = async function() {
         if (!SyncedStorage.get("highlight_owned")) { return; }
 
         let nodes = document.querySelectorAll(".market_listing_row_link");
@@ -3668,7 +3691,8 @@ let MarketPageClass = (function(){
             let m = node.href.match(/market\/listings\/753\/(.+?)(\?|$)/);
             if (!m) { continue; }
 
-            if (Inventory.hasInInventory6(decodeURIComponent(m[1]))) {
+            // todo Collect hashes and query them all at once
+            if (await Inventory.hasInInventory6(decodeURIComponent(m[1]))) {
                 Highlights.highlightOwned(node.querySelector("div"));
             }
         }
@@ -3703,12 +3727,15 @@ let CommunityAppPageClass = (function(){
 
         let nameNode = document.querySelector(".apphub_AppName");
 
-        if (DynamicStore.isOwned(this.appid)) {
+        // todo add other highlights
+        let appStatus = await DynamicStore.getAppStatus(`app/${this.appid}`);
+
+        if (appStatus.owned) {
             nameNode.style.color = SyncedStorage.get("highlight_owned_color");
             return;
         }
 
-        if (DynamicStore.isWishlisted(this.appid)) {
+        if (appStatus.wishlisted) {
             nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
             return;
         }
@@ -4190,6 +4217,10 @@ let EditGuidePageClass = (function(){
             (new FriendsPageClass());
             break;
 
+        case /^\/(?:id|profiles)\/.+\/groups(?:[/#?]|$)/.test(path):
+            (new GroupsPageClass());
+            break;
+
         case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
             (new InventoryPageClass());
             break;
@@ -4248,6 +4279,5 @@ let EditGuidePageClass = (function(){
             break;
     }
 
-    EnhancedSteam.hideTrademarkSymbol(true);
-
+    AugmentedSteam.hideTrademarkSymbol(true);
 })();
