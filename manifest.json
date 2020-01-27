@@ -10,12 +10,6 @@
     "48": "img/es_48.png",
     "32": "img/es_32.png"
   },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "{1be309c5-3e4f-4b99-927d-bb500eb4fa88}",
-      "strict_min_version": "52.0"
-    }
-  },
   "manifest_version": 2,
   "browser_specific_settings": {
     "gecko": {
@@ -147,6 +141,7 @@
         "*://steamcommunity.com/*/games?tab=all*"
       ],
       "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
         "js/lib/DOMPurify/purify.js",
         "js/config.js",
         "js/core.js",

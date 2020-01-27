@@ -41,7 +41,10 @@
     "img/profile_styles/*/style.css",
     "img/profile_styles/*/preview.png",
     "localization/*/strings.json",
-    "js/steam/holidayprofile.js"
+    "js/steam/holidayprofile.js",
+    "js/sliwipi/thenBy.js",
+    "js/sliwipi/library-performance-injectable.js",
+    "library.html"
   ],
   "homepage_url": "https://es.isthereanydeal.com/",
   "content_scripts": [
@@ -84,7 +87,9 @@
         "*://steamcommunity.com/login/*",
         "*://steamcommunity.com/openid/*",
         "*://steamcommunity.com/chat/*",
-        "*://steamcommunity.com/tradeoffer/*"
+        "*://steamcommunity.com/tradeoffer/*",
+        "*://steamcommunity.com/*/games/?tab=all*",
+        "*://steamcommunity.com/*/games?tab=all*"
       ],
       "js": [
         "js/lib/webextension-polyfill/browser-polyfill.js",
@@ -123,6 +128,35 @@
       ],
       "css": [
         "css/store/store_front.css"
+      ]
+    },
+    {
+      "matches": [
+        "*://steamcommunity.com/*/games/?tab=all*",
+        "*://steamcommunity.com/*/games?tab=all*"
+      ],
+      "js": [
+        "js/lib/webextension-polyfill/browser-polyfill.js",
+        "js/lib/DOMPurify/purify.js",
+        "js/config.js",
+        "js/core.js",
+        "js/language.js",
+        "js/sliwipi/library-performance.js"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "*://steamcommunity.com/*/games/?tab=all*",
+        "*://steamcommunity.com/*/games?tab=all*"
+      ],
+      "js": [
+        "js/content/common.js",
+        "js/content/community.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css"
       ]
     }
   ],
