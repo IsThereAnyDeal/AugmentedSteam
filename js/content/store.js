@@ -1491,7 +1491,33 @@ class AppPageClass extends StorePageClass {
                 let data = await Background.action("steampeek", this.appid);
                 if (!data) { return; }
 
-                for (let { title, appid } of data) {
+                let apps = data.reduce((acc, { title, appid, score }) => {
+                    acc[appid] = { title, score };
+                    return acc;
+                }, {});
+
+                let storeids = Object.keys(apps).map(id => `app/${id}`);
+                let [dsInfo, itadInfo] = await Promise.all([
+                    DynamicStore.getAppStatus(storeids),
+                    ITAD.getAppStatus(storeids),
+                ])
+                
+                function rate(appid, i) {
+                    let storeid = `app/${appid}`;
+
+                    if      (dsInfo[storeid].owned || itadInfo[storeid].collected)          { return i + 10; }
+                    else if (dsInfo[storeid].wishlisted || itadInfo[storeid].waitlisted)    { return i + 5; }
+                    else if (dsInfo[storeid].ignored)                                       { return -1; }
+                    return  i;
+                }
+
+                let recommendations = data
+                    .map(({ title, appid }, i) => ({ title, appid, "relevance": rate(appid, i) }))
+                    .filter(({ relevance }) => relevance >= 0) // Filter out ignored games (see rate function)
+                    .sort((a, b) => a.relevance - b.relevance)
+                    .slice(0, 15);
+
+                for (let { title, appid } of recommendations) {
                     HTML.beforeBegin(content.querySelector(":scope > :last-child"),
                         `<a class="small_cap es_sp_similar" data-ds-appid="${appid}" href="https://store.steampowered.com/app/${appid}/">
                             <img src="https://steamcdn-a.akamaihd.net/steam/apps/${appid}/capsule_184x69.jpg" class="small_cap_img"></img>
