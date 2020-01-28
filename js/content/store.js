@@ -1461,11 +1461,17 @@ class AppPageClass extends StorePageClass {
             node.classList.add("es_steam_similar");
         }
 
+        function adjustScroller() {
+            ExtensionLayer.runInPageContext(() => $J("#recommended_block_content").trigger("v_contentschanged"));
+        }
+
         steamTab.addEventListener("click", () => {
             steamPeekTab.classList.remove("active");
             steamTab.classList.add("active");
             content.classList.remove("es_sp_active");
             content.classList.add("es_steam_active");
+
+            adjustScroller();
         });
 
         let spLoaded = false;
@@ -1495,6 +1501,8 @@ class AppPageClass extends StorePageClass {
 
                 Highlights.highlightAndTag(content.querySelectorAll("a.es_sp_similar"), true);
             }
+
+            adjustScroller();
         });
     }
 
