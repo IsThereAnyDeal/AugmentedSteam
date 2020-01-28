@@ -1482,13 +1482,11 @@ class AppPageClass extends StorePageClass {
                 if (!data) { return; }
 
                 for (let { title, appid } of data) {
-                    let el = HTML.element(
+                    HTML.beforeBegin(content.querySelector(":scope > :last-child"),
                         `<a class="small_cap es_sp_similar" data-ds-appid="${appid}" href="https://store.steampowered.com/app/${appid}/">
                             <img src="https://steamcdn-a.akamaihd.net/steam/apps/${appid}/capsule_184x69.jpg" class="small_cap_img"></img>
                             <h4>${title}</h4>
                         </a>`);
-
-                    content.insertAdjacentElement("beforeend", el);
 
                     ExtensionLayer.runInPageContext(`() => { GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), ${appid}); }`);
                 }
