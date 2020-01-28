@@ -1514,8 +1514,8 @@ class AppPageClass extends StorePageClass {
                 let recommendations = data
                     .map(({ title, appid }, i) => ({ title, appid, "relevance": rate(appid, i) }))
                     .filter(({ relevance }) => relevance >= 0) // Filter out ignored games (see rate function)
-                    .sort((a, b) => a.relevance - b.relevance)
-                    .slice(0, 15);
+                    .slice(0, 15)
+                    .sort((a, b) => a.relevance - b.relevance);
 
                 for (let { title, appid } of recommendations) {
                     HTML.beforeBegin(content.querySelector(":scope > :last-child"),
