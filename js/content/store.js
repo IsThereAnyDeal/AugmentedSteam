@@ -1457,10 +1457,6 @@ class AppPageClass extends StorePageClass {
         let [steamTab, steamPeekTab, content] = moreLikeThis
             .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");
 
-        for (let node of content.querySelectorAll(":scope > a")) {
-            node.classList.add("es_steam_similar");
-        }
-
         function adjustScroller() {
             ExtensionLayer.runInPageContext(() => $J("#recommended_block_content").trigger("v_contentschanged"));
         }
@@ -1483,6 +1479,10 @@ class AppPageClass extends StorePageClass {
 
             if (!spLoaded) {
                 spLoaded = true;
+
+                for (let node of content.querySelectorAll(":scope > a")) {
+                    node.classList.add("es_steam_similar");
+                }
 
                 let data = await Background.action("steampeek", this.appid);
                 if (!data) { return; }
