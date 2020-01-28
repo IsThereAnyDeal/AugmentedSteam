@@ -202,7 +202,7 @@ class AugmentedSteamApi extends Api {
     }
 
     static steamPeek(appid) {
-        return AugmentedSteamApi.endpointFactory("v01/similar")({ appid, "count": 20 });
+        return AugmentedSteamApi.endpointFactory("v01/similar")({ appid, "count": 15 });
     }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
