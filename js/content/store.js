@@ -1492,6 +1492,8 @@ class AppPageClass extends StorePageClass {
                 }
 
                 ExtensionLayer.runInPageContext(() => GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar")));
+
+                Highlights.highlightAndTag(content.querySelectorAll("a.es_sp_similar"), true);
             }
         });
     }
