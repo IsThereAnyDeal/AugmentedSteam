@@ -642,6 +642,7 @@ class AppPageClass extends StorePageClass {
         this.displayPurchaseDate();
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
+        this.addSteamPeek();
 
         new MediaPage().appPage();
 
@@ -1354,12 +1355,12 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("showyoutubegameplay")) { return; }
 
         HTML.afterBegin(".leftcol",
-            `<div id="es_media_tabs">
+            `<div class="es_tabs">
                 <div class="home_tabs_row">
-                    <div id="es_tab_steammedia" class="es_media_tab home_tab active">
+                    <div id="es_tab_steammedia" class="es_tab home_tab active">
                         <div class="tab_content">Steam</div>
                     </div>
-                    <div id="es_tab_youtubemedia" class="es_media_tab home_tab">
+                    <div id="es_tab_youtubemedia" class="es_tab home_tab">
                         <div class="tab_content">${Localization.str.youtube_gameplay}</div>
                     </div>
                 </div>
@@ -1427,6 +1428,74 @@ class AppPageClass extends StorePageClass {
         }
 
         document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName, Localization.str.review));
+    }
+
+    async addSteamPeek() {
+        let moreLikeThis = document.querySelector("#recommended_block");
+        if (!moreLikeThis) { return; }
+
+        HTML.afterEnd(moreLikeThis.querySelector(".block_header"),
+            `<div class="es_tabs">
+                <div class="home_tabs_row">
+                    <div id="es_tab_steamsimilar" class="es_tab home_tab active">
+                        <div class="tab_content">Steam</div>
+                    </div>
+                    <div id="es_tab_steampeek" class="es_tab home_tab">
+                        <div class="tab_content">SteamPeek</div>
+                    </div>
+                </div>
+            </div>`);
+
+        HTML.beforeEnd(moreLikeThis.querySelector(".store_horizontal_autoslider_ctn"),
+            `<div class="block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad" id="es_steampeek_content"></div>`);
+
+        // TODO Create a global handler for DS loading
+        let dsLoaded = Messenger.onMessage("dsLoaded");
+        ExtensionLayer.runInPageContext(() => GDynamicStore.OnReady(() => Messenger.postMessage("dsLoaded")));
+        await dsLoaded;
+
+        let [steamTab, steamPeekTab, content] = moreLikeThis
+            .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");
+
+        for (let node of content.querySelectorAll(":scope > a")) {
+            node.classList.add("es_steam_similar");
+        }
+
+        steamTab.addEventListener("click", () => {
+            steamPeekTab.classList.remove("active");
+            steamTab.classList.add("active");
+            content.classList.remove("es_sp_active");
+            content.classList.add("es_steam_active");
+        });
+
+        let spLoaded = false;
+        steamPeekTab.addEventListener("click", async () => {
+            steamPeekTab.classList.add("active");
+            steamTab.classList.remove("active");
+            content.classList.add("es_sp_active");
+            content.classList.remove("es_steam_active");
+
+            if (!spLoaded) {
+                spLoaded = true;
+
+                let data = await Background.action("steampeek", this.appid);
+                if (!data) { return; }
+
+                for (let { title, appid } of data) {
+                    let el = HTML.element(
+                        `<a class="small_cap es_sp_similar" data-ds-appid="${appid}" href="https://store.steampowered.com/app/${appid}/">
+                            <img src="https://steamcdn-a.akamaihd.net/steam/apps/${appid}/capsule_184x69.jpg" class="small_cap_img"></img>
+                            <h4>${title}</h4>
+                        </a>`);
+
+                    content.insertAdjacentElement("beforeend", el);
+
+                    ExtensionLayer.runInPageContext(`() => { GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), ${appid}); }`);
+                }
+
+                ExtensionLayer.runInPageContext(() => GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar")));
+            }
+        });
     }
 
     displayViewInLibrary() {

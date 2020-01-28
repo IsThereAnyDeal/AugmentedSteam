@@ -200,6 +200,10 @@ class AugmentedSteamApi extends Api {
     static isEA(appids) {
         return IndexedDB.contains("earlyAccessAppids", appids);
     }
+
+    static steamPeek(appid) {
+        return AugmentedSteamApi.endpointFactory("v01/similar")({ appid, "count": 12 });
+    }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();
@@ -1412,6 +1416,7 @@ let actionCallbacks = new Map([
     ["market.cardprices", AugmentedSteamApi.endpointFactory("v01/market/cardprices")],
     ["market.averagecardprice", AugmentedSteamApi.endpointFactory("v01/market/averagecardprice")], // FIXME deprecated
     ["market.averagecardprices", AugmentedSteamApi.endpointFactory("v01/market/averagecardprices")],
+    ["steampeek", AugmentedSteamApi.steamPeek],
 
     ["appdetails", SteamStore.appDetails],
     ["appuserdetails", SteamStore.appUserDetails],

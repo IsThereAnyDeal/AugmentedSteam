@@ -99,14 +99,13 @@
   background-position: 0px 28px;
 }
 
-/* Required for YouTube / Steam media tabs */
-#es_media_tabs {
+.es_tabs {
   position: relative;
   overflow-x: auto;
   white-space: nowrap;
   height: 31px;
 }
-#es_media_tabs .home_tab {
+.es_tabs .home_tab {
   margin-top: 6px;
   border: none;
   display: inline-block;
@@ -119,16 +118,16 @@
   cursor: pointer;
   vertical-align: top;
 }
-#es_media_tabs .home_tab.active {
+.es_tabs .home_tab.active {
   background: linear-gradient(top, rgba(103,193,245,1) 0%,rgba(103,193,245,0) 100%);
   margin-top: 0;
   box-shadow: none;
   padding: 1px;
 }
-#es_media_tabs .home_tab:hover {
+.es_tabs .home_tab:hover {
   color: #ffffff;
 }
-#es_media_tabs .home_tab .tab_content {
+.es_tabs .home_tab .tab_content {
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   font-size: 13px;
@@ -138,7 +137,7 @@
   cursor: pointer;
   vertical-align: top;
 }
-#es_media_tabs .home_tab.active .tab_content {
+.es_tabs .home_tab.active .tab_content {
   line-height: 29px;
   font-size: 14px;
   color: #ffffff;
@@ -148,9 +147,16 @@
   margin-top: 0;
   box-shadow: none;
 }
-#es_media_tabs .home_tab .tab_content:hover {
+.es_tabs .home_tab .tab_content:hover {
   color: #ffffff;
   background: linear-gradient(-60deg,  #67c1f5 0%,#417a9b 100%);
+}
+
+#recommended_block_content.es_steam_active > a.es_sp_similar {
+  display: none;
+}
+#recommended_block_content.es_sp_active > a.es_steam_similar {
+  display: none;
 }
 
 .wishlistRow {
@@ -259,7 +265,7 @@ img.astats_icon {
   margin-top: 20px;
 }
 
-.es_media_tab.active .tab_content {
+.es_tab.active .tab_content {
   background-color: #0003 !important;
 }
 
