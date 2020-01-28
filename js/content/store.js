@@ -1467,6 +1467,8 @@ class AppPageClass extends StorePageClass {
             content.classList.remove("es_sp_active");
             content.classList.add("es_steam_active");
 
+            LocalStorage.set("steampeek", false);
+
             adjustScroller();
         });
 
@@ -1476,6 +1478,8 @@ class AppPageClass extends StorePageClass {
             steamTab.classList.remove("active");
             content.classList.add("es_sp_active");
             content.classList.remove("es_steam_active");
+
+            LocalStorage.set("steampeek", true);
 
             if (!spLoaded) {
                 spLoaded = true;
@@ -1504,6 +1508,10 @@ class AppPageClass extends StorePageClass {
 
             adjustScroller();
         });
+
+        if (LocalStorage.get("steampeek", false)) {
+            steamPeekTab.click();
+        }
     }
 
     displayViewInLibrary() {
