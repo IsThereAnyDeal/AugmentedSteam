@@ -243,6 +243,13 @@ class Background extends BackgroundBase {
     }
 }
 
+class HTTPError extends Error {
+  constructor(code, message) {
+    super(message);
+    this.code = code;
+  }
+}
+
 /**
  * Event handler for uncaught Background errors
  */
@@ -479,7 +486,6 @@ class CookieStorage {
 }
 CookieStorage.cache = new Map();
 
-
 let RequestData = (function(){
     let self = {};
     let fetchFn = (typeof content !== 'undefined' && content && content.fetch) || fetch;
@@ -502,7 +508,7 @@ let RequestData = (function(){
 
             ProgressBar.finishRequest();
 
-            if (!response.ok) { throw new Error(`HTTP ${response.status} ${response.statusText} for ${response.url}`) }
+            if (!response.ok) { throw new HTTPError(response.status, `HTTP ${response.status} ${response.statusText} for ${response.url}`) }
 
             return response[responseType]();
             

@@ -3505,7 +3505,7 @@ let MarketPageClass = (function(){
                             priceData = data;
                         } catch(errorCode) {
                             // Too Many Requests
-                            if (errorCode.message.startsWith("HTTP 429")) {
+                            if (errorCode.code == 429) {
                                 await sleep(30000);
                                 if (node) {
                                     done = false;
