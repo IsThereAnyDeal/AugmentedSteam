@@ -3841,7 +3841,7 @@ let WorkshopBrowseClass = (function(){
 
         document.querySelector("#es_subscriber_container").addEventListener("click", e => {
             let method = e.target.closest(".es_subscriber").dataset.method;
-            let total = Math.max(...pagingInfo.textContent.replace(",", "").match(/\d+/g));
+            let total = Math.max(...pagingInfo.textContent.replace(/,/g, "").match(/\d+/g));
 
             startSubscriber(method, total);
         });
