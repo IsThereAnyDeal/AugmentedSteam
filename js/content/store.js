@@ -550,24 +550,26 @@ class SubPageClass extends StorePageClass {
             }
 
             if (notOwnedTotalPrice !== null) {
-                let priceNodes = document.querySelectorAll(".package_totals_area .price");
-                let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
+                let priceNode = DOMHelper.selectLastNode(document, ".package_totals_area .price");
+                let packagePrice = Price.parseFromString(priceNode.textContent, Currency.storeCurrency);
                 if (!packagePrice) { return; }
 
                 notOwnedTotalPrice -= packagePrice.value;
+                notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency);
 
                 if (!document.querySelector("#package_savings_bar")) {
                     HTML.beforeEnd(".package_totals_area",
-                        "<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + Localization.str.bundle_saving_text + "</div></div>");
+                        `<div id="package_savings_bar">
+                            <div class="savings"></div>
+                            <div class="message">${Localization.str.bundle_saving_text}</div>
+                        </div>`);
                 }
 
-                notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency);
-                let style = (notOwnedTotalPrice.value < 0 ? " style='color:red'" : "");
-                let html = `<div class="savings"${style}>${notOwnedTotalPrice}</div>`;
-
-                let savingsNode = document.querySelector(".savings");
-                HTML.beforeBegin(savingsNode, html);
-                savingsNode.remove();
+                let savingsNode = document.querySelector("#package_savings_bar > .savings");
+                savingsNode.textContent = notOwnedTotalPrice;
+                if (notOwnedTotalPrice.value < 0) {
+                    savingsNode.style.color = "red";
+                }
             }
             
         }, 500); // why is this here?
