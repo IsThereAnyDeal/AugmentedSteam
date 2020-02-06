@@ -3908,36 +3908,35 @@ let WorkshopBrowseClass = (function(){
     }
 
     WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
+        if (!User.isSignedIn) { return; }
+
         let appid = GameId.getAppidUriQuery(window.location.search);
         if (!appid) { return; }
-        if (!document.querySelector(".workshopBrowsePagingInfo")) { return; }
+
+        let pagingInfo = document.querySelector(".workshopBrowsePagingInfo");
+        if (!pagingInfo) { return; }
 
         let workshopStr = Localization.str.workshop;
 
-        let subscriberButtons = `
-            <div class="rightSectionTopTitle">${workshopStr.subscriptions}:</div>
+        HTML.beforeBegin(".panel > .rightSectionTopTitle",
+            `<div class="rightSectionTopTitle">${workshopStr.subscriptions}:</div>
             <div id="es_subscriber_container" class="rightDetailsBlock">
-                <div style="position:relative;">
+                <div style="position: relative;">
                     <div class="browseOption mostrecent">
                         <a class="es_subscriber" data-method="subscribe">${workshopStr.subscribe_all}</a>
                     </div>
                 </div>
-                <div style="position:relative;">
+                <div style="position: relative;">
                     <div class="browseOption mostrecent">
                         <a class="es_subscriber" data-method="unsubscribe">${workshopStr.unsubscribe_all}</a>
                     </div>
                 </div>
                 <hr>
-            </div>`;
+            </div>`);
 
-        HTML.beforeBegin(".panel > .rightSectionTopTitle", subscriberButtons);
-
-        document.querySelector("#es_subscriber_container").addEventListener("click", event => {
-            let method = event.target.closest(".es_subscriber").dataset.method;
-            let total = parseInt(
-                document.querySelector(".workshopBrowsePagingInfo").textContent
-                    .replace(/\d+-\d+/g, "")
-                    .match(/\d+/g)[0]);
+        document.querySelector("#es_subscriber_container").addEventListener("click", e => {
+            let method = e.target.closest(".es_subscriber").dataset.method;
+            let total = Math.max(...pagingInfo.textContent.replace(/,/g, "").match(/\d+/g));
 
             startSubscriber(method, total);
         });
