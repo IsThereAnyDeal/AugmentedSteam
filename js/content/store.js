@@ -1499,7 +1499,7 @@ class AppPageClass extends StorePageClass {
                 Highlights.highlightAndTag(content.querySelectorAll("a.es_sp_similar"), true);
 
                 HTML.beforeBegin(lastChild,
-                    `<a class="small_cap es_sp_similar" href="http://steampeek.hu/?appid=${this.appid}" target="__blank">
+                    `<a class="small_cap es_sp_similar" href="http://steampeek.hu/?appid=${this.appid}" target="_blank">
                         <div class="es_sp_similar__link">${Localization.str.more_on_steampeek}</div>
                     </a>`);
             }
