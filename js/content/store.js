@@ -126,7 +126,7 @@ class Customizer {
 
 class StorePageClass {
     constructor() {
-        this.hasCards = document.querySelector(".icon img[src$='/ico_cards.png'") ? true : false;
+        this.hasCards = !!document.querySelector("#category_block img[src$='/ico_cards.png']");
     }
 
     // TODO(tfedor) maybe make properties instead of dynamic qheck of all of these "isXY"? Not sure
@@ -139,26 +139,26 @@ class StorePageClass {
     }
 
     isDlc() {
-        return document.querySelector("div.game_area_dlc_bubble") ? true : false;
+        return !!document.querySelector("div.game_area_dlc_bubble");
     }
 
     isVideo() {
-        return document.querySelector(".game_area_purchase_game .streamingvideo") ? true : false;
+        return !!document.querySelector(".game_area_purchase_game span[class*='streaming']")
+            || !!document.querySelector("div.series_seasons");
     }
 
     isOwned() {
-        return document.querySelector(".game_area_already_owned") ? true :false;
+        return !!document.querySelector(".game_area_already_owned");
     }
 
     hasAchievements() {
-        return document.querySelector("#achievement_block") ? true : false;
+        return !!document.querySelector("#achievement_block");
     }
 
     getAllSubids() {
         let result = [];
-        let nodes = document.querySelectorAll("input[name=subid]");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            result.push(nodes[i].value);
+        for (let node of document.querySelectorAll("input[name=subid]")) {
+            result.push(node.value);
         }
         return result;
     }
@@ -277,34 +277,27 @@ class StorePageClass {
 
         let prices = new Prices();
 
-        prices.subids = [];
-        let nodes = document.querySelectorAll("input[name=subid]");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            prices.subids.push(node.value);
-        }
+        prices.subids = this.getAllSubids();
 
         prices.bundleids = [];
-        nodes = document.querySelectorAll("[data-ds-bundleid]");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            prices.bundleids.push(node.dataset['dsBundleid']);
+        for (let node of document.querySelectorAll("[data-ds-bundleid]")) {
+            prices.bundleids.push(node.dataset.dsBundleid);
         }
 
         prices.priceCallback = function(type, id, contentNode) {
             let node;
             let placement = "afterbegin";
             if (type === "sub") {
-                node = document.querySelector("input[name=subid][value='"+id+"']").parentNode.parentNode.parentNode;
+                node = document.querySelector(`input[name=subid][value="${id}"]`).parentNode.parentNode.parentNode;
             } else if (type === "bundle") {
-                node = document.querySelector(".game_area_purchase_game_wrapper[data-ds-bundleid='"+id+"']");
+                node = document.querySelector(`.game_area_purchase_game_wrapper[data-ds-bundleid="${id}"]`);
                 if (!node) {
-                    node = document.querySelector(".game_area_purchase_game[data-ds-bundleid='"+id+"']");
+                    node = document.querySelector(`.game_area_purchase_game[data-ds-bundleid="${id}"]`);
                     placement = "beforebegin";
                 } else {
                     // Move any "Complete your Collection!" banner out of the way
-                    let banner = node.querySelector('.ds_completetheset');
-                    let newParent = node.querySelector('.game_area_purchase_game');
+                    let banner = node.querySelector(".ds_completetheset");
+                    let newParent = node.querySelector(".game_area_purchase_game");
                     if (banner && newParent) {
                         newParent.appendChild(banner);
                     }
@@ -317,8 +310,8 @@ class StorePageClass {
         prices.bundleCallback = function(html) {
 
             HTML.afterEnd("#game_area_purchase",
-                "<h2 class='gradientbg'>" + Localization.str.bundle.header + " <img src='/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>"
-                + html);
+                `<h2 class="gradientbg es_bundle_info">${Localization.str.bundle.header} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></h2>
+                ${html}`);
         };
 
         prices.load();
@@ -346,13 +339,8 @@ class StorePageClass {
                 break;
             case "bundle":
                 gameid = this.bundleid;
-                node = document.querySelector(".share");
-                if (!node) {
-                    node = document.querySelector(".rightcol .game_details");
-                }
+                node = document.querySelector(".share, .rightcol .game_details");
                 break;
-            default:
-                return;
         }
 
         if (!node) { return; }
@@ -390,10 +378,12 @@ class StorePageClass {
         if (!countries || countries.length === 0) { return; }
 
         let localCountry = User.getCountry().toLowerCase();
-        if (!countries.includes(localCountry)) countries.push(localCountry);
+        if (!countries.includes(localCountry)) {
+            countries.push(localCountry);
+        }
 
         for (let subid of this.getAllSubids()) {
-            if (!subid) return;
+            if (!subid) { return; }
             
             let promises = [];
             let prices = {};
@@ -429,7 +419,7 @@ class StorePageClass {
             pricingDiv.classList.add(`es_regional_${type || "app"}`);
 
             if (showRegionalPrice === "mouse") {
-                HTML.inner(pricingDiv, pricingDiv.innerHTML + '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>');
+                HTML.afterBegin(pricingDiv, '<div class="es_regional_arrow"></div>');
             }
 
             for (let country of countries) {
@@ -463,7 +453,7 @@ class StorePageClass {
 
                         html +=
                             `<span class="es-regprice__converted">${priceUser}</span>
-                            <span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`
+                            <span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`;
                     }
                     
                     html += "</div>";
@@ -474,7 +464,7 @@ class StorePageClass {
                         </div>`;
                 }
 
-                HTML.inner(pricingDiv, pricingDiv.innerHTML + html);
+                HTML.beforeEnd(pricingDiv, html);
             }
 
             let purchaseArea = node.closest(".game_area_purchase_game,.sale_page_purchase_item");
@@ -497,12 +487,11 @@ class StorePageClass {
 
     forceVideoMP4() {
         if (!SyncedStorage.get("mp4video")) { return; }
-        let self = this;
 
-        document.querySelectorAll("[data-webm-source]").forEach(function(node) {
+        for (let node of document.querySelectorAll("[data-webm-source]")) {
             let mp4 = node.dataset.mp4Source;
             let mp4hd = node.dataset.mp4HdSource;
-            if (!mp4 || !mp4hd) return;
+            if (!mp4 || !mp4hd) { return; }
 
             node.dataset.webmSource = mp4;
             node.dataset.webmHdSource = mp4hd;
@@ -512,8 +501,8 @@ class StorePageClass {
 
             video.dataset.sdSrc = mp4;
             video.dataset.hdSrc = mp4hd;
-            self.toggleVideoDefinition(video, false);
-        });
+            this.toggleVideoDefinition(video, false);
+        }
     }
 }
 

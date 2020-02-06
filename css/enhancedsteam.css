@@ -1917,6 +1917,16 @@ img.astats_icon {
   margin-top: -25px;
   text-align: left;
 }
+.es_regional_container > .es_regional_arrow {
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 8px solid #313f56;
+  position: absolute;
+  top: 12px;
+  right: -8px;
+  width: 0;
+  height: 0;
+}
 .es_regional_prices:not(.es_regional_always) .es_regional_container {
   display: none;
   position: absolute;
@@ -3041,7 +3051,8 @@ label[for="show_common_games"] {
 
 .es_hltb a.linkbar > img,
 .es_wsgf a.linkbar > img,
-.es_dlc_info a.linkbar > img {
+.es_dlc_info a.linkbar > img,
+.es_bundle_info > img {
   border: 0;
   vertical-align: baseline;
 }
