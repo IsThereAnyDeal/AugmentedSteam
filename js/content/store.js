@@ -245,8 +245,7 @@ class StorePageClass {
                         break;
                     }
                 }
-            }
-            if (this.isSubPage()) {
+            } else {
                 let node = document.querySelector(".game_details .details_block > p > b:last-of-type");
                 let text = node.textContent + node.nextSibling.textContent;
                 if (text.match(regex)) {
