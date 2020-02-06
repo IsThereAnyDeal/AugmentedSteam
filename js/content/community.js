@@ -3813,18 +3813,17 @@ let WorkshopBrowseClass = (function(){
     }
 
     WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
+        if (!User.isSignedIn) { return; }
+
         let appid = GameId.getAppidUriQuery(window.location.search);
         if (!appid) { return; }
 
         let pagingInfo = document.querySelector(".workshopBrowsePagingInfo");
         if (!pagingInfo) { return; }
 
-        let rightSection = document.querySelector(".panel > .rightSectionTopTitle");
-        if (!rightSection) { return; }
-
         let workshopStr = Localization.str.workshop;
 
-        HTML.beforeBegin(rightSection,
+        HTML.beforeBegin(".panel > .rightSectionTopTitle",
             `<div class="rightSectionTopTitle">${workshopStr.subscriptions}:</div>
             <div id="es_subscriber_container" class="rightDetailsBlock">
                 <div style="position: relative;">
