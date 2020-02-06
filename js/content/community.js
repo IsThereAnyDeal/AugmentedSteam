@@ -3503,9 +3503,9 @@ let MarketPageClass = (function(){
                             done = true;
                             loadedMarketPrices[marketHashName] = data;
                             priceData = data;
-                        } catch(errorCode) {
+                        } catch(err) {
                             // Too Many Requests
-                            if (errorCode.code == 429) {
+                            if (err instanceof HTTPError && err.code === 429) {
                                 await sleep(30000);
                                 if (node) {
                                     done = false;
