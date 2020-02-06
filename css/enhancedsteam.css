@@ -152,11 +152,26 @@
   background: linear-gradient(-60deg,  #67c1f5 0%,#417a9b 100%);
 }
 
-#recommended_block_content.es_steam_active > a.es_sp_similar {
+#recommended_block_content.es_steam_active > .es_sp_similar {
   display: none;
 }
-#recommended_block_content.es_sp_active > a.es_steam_similar {
+#recommended_block_content.es_sp_active > .es_steam_similar {
   display: none;
+}
+.es_sp_similar:last-of-type:hover > .es_sp_similar__link {
+  color: #ffffff;
+}
+.es_sp_similar__link {
+  width: 171px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 10px;
+  white-space: normal;
+  text-align: center;
+  background-color: #1b2838;
+  color: #67c1f5;
 }
 
 .wishlistRow {

@@ -1491,8 +1491,10 @@ class AppPageClass extends StorePageClass {
                 let data = await Background.action("steampeek", this.appid);
                 if (!data) { return; }
 
+                let lastChild = content.querySelector(":scope > :last-child");
+
                 for (let { title, appid } of data) {
-                    HTML.beforeBegin(content.querySelector(":scope > :last-child"),
+                    HTML.beforeBegin(lastChild,
                         `<a class="small_cap es_sp_similar" data-ds-appid="${appid}" href="https://store.steampowered.com/app/${appid}/">
                             <img src="https://steamcdn-a.akamaihd.net/steam/apps/${appid}/capsule_184x69.jpg" class="small_cap_img"></img>
                             <h4>${title}</h4>
@@ -1504,6 +1506,11 @@ class AppPageClass extends StorePageClass {
                 ExtensionLayer.runInPageContext(() => GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar")));
 
                 Highlights.highlightAndTag(content.querySelectorAll("a.es_sp_similar"), true);
+
+                HTML.beforeBegin(lastChild,
+                    `<a class="small_cap es_sp_similar" href="http://steampeek.hu/?appid=${this.appid}" target="__blank">
+                        <div class="es_sp_similar__link">${Localization.str.more_on_steampeek}</div>
+                    </a>`);
             }
 
             adjustScroller();
