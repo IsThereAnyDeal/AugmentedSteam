@@ -369,7 +369,7 @@ let CommunityCommon = (function() {
         }
 
         html += `<span class="count_link_label">${name}</span>
-                <span class="profile_count_link_total"></span></a></div>`; // Steam spacing
+                <span class="profile_count_link_total">&nbsp;</span></a></div>`; // Steam spacing
 
         return html;
     };
