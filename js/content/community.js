@@ -2966,7 +2966,11 @@ let GroupsPageClass = (function(){
             }
         }
 
-        document.querySelector("#search_text_box").insertAdjacentElement("beforebegin", Sortbox.get(
+        // move the search bar to the same position as on friends page
+        let container = HTML.wrap("#search_text_box", '<div class="searchBarContainer"></div>');
+        document.querySelector("#search_results").insertAdjacentElement("beforebegin", container);
+
+        document.querySelector("span.profile_groups.title").insertAdjacentElement("afterend", Sortbox.get(
             "groups",
             [["default", Localization.str.theworddefault], ["members", Localization.str.members], ["names", Localization.str.name]],
             SyncedStorage.get("sortgroupsby"),
