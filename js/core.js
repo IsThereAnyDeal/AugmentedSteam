@@ -955,9 +955,10 @@ class Debug {
 
     static async executionTime(fn, label) {
         let start = performance.now();
-        await fn();
+        let result = await fn();
         let end = performance.now();
         console.debug("Took", end - start, "ms to execute", label);
+        return result;
     }
 }
 
