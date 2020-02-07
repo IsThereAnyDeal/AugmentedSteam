@@ -2051,7 +2051,6 @@ let Prices = (function(){
         this.bundleCallback = function(html) {};
 
         this._bundles = [];
-        this.appName = document.querySelector(".apphub_AppName").textContent;
     }
 
     Prices.prototype._getApiParams = function() {
@@ -2229,7 +2228,7 @@ let Prices = (function(){
             purchase += '<p class="package_contents">';
 
             let bundlePrice;
-            let appName = this.appName;
+            let appName = document.querySelector(".apphub_AppName").textContent;
 
             tiers.forEach((tier, t) => {
                 let tierNum = t + 1;
