@@ -2994,7 +2994,7 @@ let GroupsPageClass = (function(){
             `<div id="manage_friends" class="manage_friends_panel">
                 <div class="row">${Localization.str.action_groups}
                     <span class="row">
-                        <span class="dimmed">Select: </span>
+                        <span class="dimmed">${Localization.str.select}</span>
                         <span class="selection_type" id="es_select_all">${Localization.str.all}</span>
                         <span class="selection_type" id="es_select_none">${Localization.str.none}</span>
                         <span class="selection_type" id="es_select_inverse">${Localization.str.inverse}</span>
@@ -3005,7 +3005,7 @@ let GroupsPageClass = (function(){
                         <span>${Localization.str.leave}</span>
                     </span>
                     <span id="selected_msg_err" class="selected_msg error hidden"></span>
-                    <span id="selected_msg" class="selected_msg hidden">${Localization.str.selected.replace("__n__", `<span id="selected_count"></span>`)}.</span>
+                    <span id="selected_msg" class="selected_msg hidden">${Localization.str.selected.replace("__n__", `<span id="selected_count"></span>`)}</span>
                 </div>
                 <div class="row"></div>
             </div>`);
