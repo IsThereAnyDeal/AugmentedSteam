@@ -1038,6 +1038,7 @@ class IndexedDB {
         if (cached) {
             let ttl = IndexedDB.cacheObjectStores.get(objectStoreName);
             let expiry = Timestamp.now() + ttl;
+
             if (IndexedDB.timestampedObjectStores.has(objectStoreName)) {
                 await IndexedDB.db.put(objectStoreName, expiry, "expiry");
             } else {
@@ -1049,19 +1050,17 @@ class IndexedDB {
             }
         }
         if (multiple) {
-            let promises = [];
+            let tx = IndexedDB.db.transaction(objectStoreName, "readwrite");
             if (key) {
                 for (let i = 0; i < key.length; ++i) {
-                    if (data) {
-                        promises.push(IndexedDB.db.put(objectStoreName, data[i], key[i]));
-                    } else {
-                        promises.push(IndexedDB.db.put(objectStoreName, null, key[i]));
-                    }
+                    tx.store.put(data ? data[i] : null, key[i]);
                 }
             } else {
-                data.forEach(value => promises.push(IndexedDB.db.put(objectStoreName, value)));
+                for (let value of data) {
+                    tx.store.put(value);
+                }
             }
-            return Promise.all(promises);
+            return tx.done;
         } else {
             if (key) {
                 if (data) {
@@ -1075,23 +1074,26 @@ class IndexedDB {
         }
     }
 
-    static async get(objectStoreName, key, params) {
+    static async get(objectStoreName, keys, params) {
         await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
 
-        if (Array.isArray(key)) {
+        if (Array.isArray(keys)) {
             let promises = [];
-            for (let i = 0; i < key.length; ++i) {
-                promises.push(IndexedDB.db.get(objectStoreName, key[i])
-                    .then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, key[i], params)));
+            let tx = IndexedDB.db.transaction(objectStoreName);
+
+            for (let key of keys) {
+                promises.push(tx.store.get(key).then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, keys[i], params)));
             }
+
             let resolved = await Promise.all(promises);
-            return key.reduce((acc, cur, i) => {
+
+            return keys.reduce((acc, cur, i) => {
                 acc[cur] = resolved[i];
                 return acc;
             }, {});
         } else {
-            return IndexedDB.db.get(objectStoreName, key)
-                .then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, key, params));
+            return IndexedDB.db.get(objectStoreName, keys)
+                .then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, keys, params));
         }
     }
 
@@ -1216,13 +1218,17 @@ class IndexedDB {
     }
 
     static delete(objectStoreName, keys) {
-        keys = Array.isArray(keys) ? keys : [keys];
+        if (Array.isArray(keys)) {
+            let tx = IndexedDB.db.transaction(objectStoreName, "readwrite");
 
-        let promises = [];
-        for (let key of keys) {
-            promises.push(IndexedDB.db.delete(objectStoreName, key));
-        }
-        return Promise.all(promises);
+            for (let key of keys) {
+                tx.store.delete(key);
+            }
+
+            return tx.done;
+        } else {
+            return IndexedDB.db.delete(objectStoreName, keys);
+        }        
     }
 
     static clear(objectStoreNames) {
