@@ -233,14 +233,16 @@ class StorePageClass {
         if (xbox) { drmNames.push("Microsoft Xbox Live"); }
 
         let drmString;
-        let regex = /\b(drm|account|steam)\b/i;
         if (drmNames.length > 0) {
-            drmString = `(${drmNames.join(", ")})`;
+            drmString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+            drmString = drmString.replace("__drmlist__", `(${drmNames.join(", ")})`);
+
         } else { // Detect other DRM
+            let regex = /\b(drm|account|steam)\b/i;
             if (this.isAppPage()) {
                 for (let node of document.querySelectorAll("#category_block > .DRM_notice")) {
                     let text = node.textContent;
-                    if (text.match(regex)) {
+                    if (regex.test(text)) {
                         drmString = text;
                         break;
                     }
@@ -248,25 +250,18 @@ class StorePageClass {
             } else {
                 let node = document.querySelector(".game_details .details_block > p > b:last-of-type");
                 let text = node.textContent + node.nextSibling.textContent;
-                if (text.match(regex)) {
+                if (regex.test(text)) {
                     drmString = text;
                 }
             }
         }
 
         if (drmString) {
-            let warnString;
-            if (drmNames.length > 0) {
-                warnString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
-                warnString = warnString.replace("__drmlist__", drmString);
-            } else {
-                warnString = drmString;
-            }
             let node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
             if (node) {
-                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${warnString}</span></div>`);
+                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${drmString}</span></div>`);
             } else {
-                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${warnString}</span></div>`);
+                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${drmString}</span></div>`);
             }
         }
     }
