@@ -2,12 +2,7 @@
     "more_on_steampeek": "See more on SteamPeek",
     "invite_friends": "Invite Friends",
     "invite_to_group": "Invite To Group",
-    "leave_groups_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?",
-    "manage_groups": "Manage groups",
-    "action_groups": "Select the groups below that you wish to take action on.",
     "inverse": "Inverse",
-    "leave": "Leave",
-    "selected": "__n__ selected",
     "transactionStatus": "__failed__ request(s) failed. Retrieved __size__ of __total__ transactions.",
     "custom_tags": "Custom Tags",
     "add_tag": "Add tag",
@@ -232,6 +227,14 @@
     "item_type": "Item Type",
     "avg_price_3cards": "Average price of three trading cards: __price__",
     "mods": "Mods",
+    "groups": {
+        "leave_groups_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?",
+        "manage_groups": "Manage groups",
+        "action_groups": "Select the groups below that you wish to take action on.",
+        "select": "Select:",
+        "leave": "Leave",
+        "selected": "__n__ selected."
+    },
     "export": {
         "wishlist": "Export wishlist",
         "type": "Export type",

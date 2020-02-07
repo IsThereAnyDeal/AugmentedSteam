@@ -1,12 +1,7 @@
 {
     "invite_friends": "Arkadaş Davet Et",
     "invite_to_group": "Gruba Davet Et",
-    "leave_groups_confirm": "Şu anda __name__ yöneticisisin.<br>Grubu terketmek istediğinden emin misin?",
-    "manage_groups": "Grupları yönet",
-    "action_groups": "İşlem yapmak istediğin grupları aşağıdan seç.",
     "inverse": "Tersine Çevir",
-    "leave": "Ayrıl",
-    "selected": "__n__ seçili",
     "transactionStatus": "__failed__ istek başarısız. __size__/__total__ işlem getirilebildi.",
     "custom_tags": "Özel Etiketler",
     "add_tag": "Etiket ekle",
@@ -229,6 +224,13 @@
     "item_type": "Eşya Türü",
     "avg_price_3cards": "3 takas kartı için en fazla fiyat: __price__",
     "mods": "Modlar",
+    "groups": {
+        "leave_groups_confirm": "Şu anda __name__ yöneticisisin.<br>Grubu terketmek istediğinden emin misin?",
+        "manage_groups": "Grupları yönet",
+        "action_groups": "İşlem yapmak istediğin grupları aşağıdan seç.",
+        "leave": "Ayrıl",
+        "selected": "__n__ seçili"
+    },
     "export": {
         "wishlist": "İstek listesini dışarı aktar",
         "type": "Aktarma türü",

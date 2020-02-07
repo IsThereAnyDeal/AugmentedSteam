@@ -2923,7 +2923,7 @@ let GroupsPageClass = (function(){
 
     function GroupsPageClass() {
         this.addSort();
-        this.addLeaveAllBtn();
+        this.addManageBtn();
     }
 
     GroupsPageClass.prototype.addSort = function() {
@@ -2966,7 +2966,11 @@ let GroupsPageClass = (function(){
             }
         }
 
-        document.querySelector("#search_text_box").insertAdjacentElement("beforebegin", Sortbox.get(
+        // move the search bar to the same position as on friends page
+        let container = HTML.wrap("#search_text_box", '<div class="searchBarContainer"></div>');
+        document.querySelector("#search_results").insertAdjacentElement("beforebegin", container);
+
+        document.querySelector("span.profile_groups.title").insertAdjacentElement("afterend", Sortbox.get(
             "groups",
             [["default", Localization.str.theworddefault], ["members", Localization.str.members], ["names", Localization.str.name]],
             SyncedStorage.get("sortgroupsby"),
@@ -2976,32 +2980,37 @@ let GroupsPageClass = (function(){
         document.querySelector(".es-sortbox").style.flex = 2;
     };
 
-    GroupsPageClass.prototype.addLeaveAllBtn = async function() {
+    GroupsPageClass.prototype.addManageBtn = async function() {
         let groups = document.querySelectorAll(".group_block");
         if (groups.length === 0) { return; }
         if (!groups[0].querySelector(".actions")) { return; }
 
+        let groupsStr = Localization.str.groups;
+
         HTML.beforeEnd(".title_bar", 
-            `<button id="manage_friends_control" class="profile_friends manage_link btnv6_blue_hoverfade btn_small btn_uppercase">
-                <span>${Localization.str.manage_groups}</span>
+            `<button id="manage_friends_control" class="profile_friends manage_link btnv6_blue_hoverfade btn_medium btn_uppercase">
+                <span>${groupsStr.manage_groups}</span>
             </button>`);
 
         HTML.afterEnd(".title_bar",
             `<div id="manage_friends" class="manage_friends_panel">
-            <div class="row">${Localization.str.action_groups}<span class="row">
-                    <span class="dimmed">Select: </span>
-                    <span class="selection_type" id="es_select_all">${Localization.str.all}</span>
-                    <span class="selection_type" id="es_select_none">${Localization.str.none}</span>
-                    <span class="selection_type" id="es_select_inverse">${Localization.str.inverse}</span>
-                </span>
-            </div>
-            <div class="row">
-                <span class="manage_action anage_action btnv6_lightblue_blue btn_medium btn_uppercase" id="es_leave_groups"><span>${Localization.str.leave}</span></span>
-                <span id="selected_msg_err" class="selected_msg error hidden"></span>
-                <span id="selected_msg" class="selected_msg hidden">${Localization.str.selected.replace("__n__", `<span id="selected_count"></span>`)}.</span>
-            </div>
-            <div class="row"></div>
-        </div>`);
+                <div class="row">${groupsStr.action_groups}
+                    <span class="row">
+                        <span class="dimmed">${groupsStr.select}</span>
+                        <span class="selection_type" id="es_select_all">${Localization.str.all}</span>
+                        <span class="selection_type" id="es_select_none">${Localization.str.none}</span>
+                        <span class="selection_type" id="es_select_inverse">${Localization.str.inverse}</span>
+                    </span>
+                </div>
+                <div class="row">
+                    <span class="manage_action anage_action btnv6_lightblue_blue btn_medium btn_uppercase" id="es_leave_groups">
+                        <span>${groupsStr.leave}</span>
+                    </span>
+                    <span id="selected_msg_err" class="selected_msg error hidden"></span>
+                    <span id="selected_msg" class="selected_msg hidden">${groupsStr.selected.replace("__n__", `<span id="selected_count"></span>`)}</span>
+                </div>
+                <div class="row"></div>
+            </div>`);
 
         for (let group of groups) {
             group.classList.add("selectable");
@@ -3035,9 +3044,9 @@ let GroupsPageClass = (function(){
         document.querySelector("#es_leave_groups").addEventListener("click", () => leaveGroups());
 
         async function displayAdminConfirmation(name, id) {
-            let body = Localization.str.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
+            let body = groupsStr.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
             ExtensionLayer.runInPageContext(`function(){
-                let prompt = ShowConfirmDialog("${Localization.str.leave}", "${body}");
+                let prompt = ShowConfirmDialog("${groupsStr.leave}", "${body}");
                 prompt.done(function(result) {
                     Messenger.postMessage("confirm#${id}", result);
                 }).fail(function() {

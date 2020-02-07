@@ -1,12 +1,7 @@
 {
     "invite_friends": "Vrienden Uitnodigen",
     "invite_to_group": "Naar Groep Uitnodigen",
-    "leave_groups_confirm": "U bent momenteel admin van __name__.<br>Weet u zeker dat u deze groep wilt verlaten?",
-    "manage_groups": "Groepen beheren",
-    "action_groups": "Selecteer hieronder de groepen waar je actie op wilt ondernemen. ",
     "inverse": "Omkeren",
-    "leave": "Verlaten",
-    "selected": "__n__ geselecteerd",
     "transactionStatus": "__failed__ verzoek(en) gefaald. __size__ van de __total__ transacties ontvangen.",
     "custom_tags": "Aangepaste Tags",
     "add_tag": "Voeg tag toe",
@@ -229,6 +224,13 @@
     "item_type": "Itemtype",
     "avg_price_3cards": "Gemiddelde prijs van drie ruilkaarten: __price__",
     "mods": "Modificaties. ",
+    "groups": {
+        "leave_groups_confirm": "U bent momenteel admin van __name__.<br>Weet u zeker dat u deze groep wilt verlaten?",
+        "manage_groups": "Groepen beheren",
+        "action_groups": "Selecteer hieronder de groepen waar je actie op wilt ondernemen. ",
+        "leave": "Verlaten",
+        "selected": "__n__ geselecteerd"
+    },
     "export": {
         "wishlist": "Verlanglijst exporteren",
         "type": "Exporteertype",
