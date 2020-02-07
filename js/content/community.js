@@ -2923,7 +2923,7 @@ let GroupsPageClass = (function(){
 
     function GroupsPageClass() {
         this.addSort();
-        this.addLeaveAllBtn();
+        this.addManageBtn();
     }
 
     GroupsPageClass.prototype.addSort = function() {
@@ -2976,7 +2976,7 @@ let GroupsPageClass = (function(){
         document.querySelector(".es-sortbox").style.flex = 2;
     };
 
-    GroupsPageClass.prototype.addLeaveAllBtn = async function() {
+    GroupsPageClass.prototype.addManageBtn = async function() {
         let groups = document.querySelectorAll(".group_block");
         if (groups.length === 0) { return; }
         if (!groups[0].querySelector(".actions")) { return; }
