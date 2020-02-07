@@ -356,10 +356,12 @@ class ITAD_Api extends Api {
         if (!appids || (Array.isArray(appids) && !appids.length)) {
             throw new Error("Can't remove nothing from ITAD Waitlist!");
         }
+
         appids = Array.isArray(appids) ? appids : [appids];
         let storeids = appids.map(appid => `app/${appid}`);
+
         await ITAD_Api.deleteEndpoint("v02/user/wait/remove/", { "access_token": ITAD_Api.accessToken, "shop": "steam", "ids": storeids.join() });
-        return IndexedDB.delete("waitlist", appids);
+        return IndexedDB.delete("waitlist", storeids);
     }
 
     static addToCollection(appids, subids) {
