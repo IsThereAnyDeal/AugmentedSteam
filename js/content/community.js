@@ -2982,7 +2982,7 @@ let GroupsPageClass = (function(){
         if (!groups[0].querySelector(".actions")) { return; }
 
         HTML.beforeEnd(".title_bar", 
-            `<button id="manage_friends_control" class="profile_friends manage_link btnv6_blue_hoverfade btn_small btn_uppercase">
+            `<button id="manage_friends_control" class="profile_friends manage_link btnv6_blue_hoverfade btn_medium btn_uppercase">
                 <span>${Localization.str.manage_groups}</span>
             </button>`);
 
