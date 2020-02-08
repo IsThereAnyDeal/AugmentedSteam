@@ -28,7 +28,7 @@ let ProfileData = (function(){
         if (!_promise) {
             let steamId = SteamId.fromDOM();
 
-            _promise = Background.action("profile", SteamId.getSteamId())
+            _promise = Background.action("profile", steamId)
                 .then(response => { _data = response; return _data; });
         }
         return _promise;
