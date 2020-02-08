@@ -2781,9 +2781,6 @@ let SearchPageClass = (function(){
     SearchPageClass.prototype.endlessScrolling = function() {
         if (!SyncedStorage.get("contscroll")) { return; }
 
-        // Required for the loading wrapper
-        DOMHelper.insertHomeCSS();
-
         let result_count;
         document.querySelector(".search_pagination_right").style.display = "none";
 
