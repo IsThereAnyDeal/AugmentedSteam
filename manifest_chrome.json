@@ -116,14 +116,6 @@
       "css": [
         "css/community/tradeoffer.css"
       ]
-    },
-    {
-      "matches": [
-        "*://store.steampowered.com/"
-      ],
-      "css": [
-        "css/store/store_front.css"
-      ]
     }
   ],
   "background": {
