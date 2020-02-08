@@ -3,58 +3,18 @@
  */
 class ITAD {
     static async create() {
+        if (!await Background.action("itad.isconnected")) { return; }
+
         HTML.afterBegin("#global_action_menu",
             `<div id="es_itad">
                 <img id="es_itad_logo" src="${ExtensionResources.getURL("img/itad.png")}" height="20px">
-                <span id="es_itad_status"></span>
+                <span id="es_itad_status">✓</span>
             </div>`);
 
-        let connected = await Background.action("itad.isconnected");
-        let itadDiv = document.querySelector("#es_itad");
-        let itadStatus = itadDiv.querySelector("#es_itad_status");
-        
-        if (connected) {
-            itadStatus.textContent = '\u2713';
-            itadDiv.classList.add("authorized");
-            itadDiv.addEventListener("mouseenter", ITAD.onHover);
-            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
-                Background.action("itad.import");
-            }
-        } else {
-            itadStatus.textContent = Localization.str.sign_in;
-            itadDiv.classList.add("not_authorized");
-            itadDiv.addEventListener("click", ITAD.authorize);
-        }
-    }
+        document.querySelector("#es_itad").addEventListener("mouseenter", ITAD.onHover);
 
-    static async authorize() {
-        let sessionId = User.getSessionId();
-        // Avoid predictable hash when string is empty
-        if (sessionId) {
-            try {
-                await Background.action("itad.authorize", StringUtils.hashCode(sessionId));
-            } catch(err) {
-                console.group("ITAD authorization");
-                console.error(err);
-                console.error("Failed to authorize to ITAD");
-                console.groupEnd();
-                return;
-            }
-
-            let itadStatus = document.getElementById("es_itad_status");
-            let itadDiv = itadStatus.parentElement;
-
-            itadStatus.textContent = '\u2713';
-            itadDiv.classList.add("authorized");
-            itadDiv.classList.remove("not_authorized");
-            itadDiv.addEventListener("mouseenter", ITAD.onHover);
-            itadDiv.removeEventListener("click", ITAD.authorize);
-            
-            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
-                Background.action("itad.import");
-            }
-        } else {
-            console.error("Can't retrieve Session ID, unable to authorize app");
+        if (User.isSignedIn && (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist"))) {
+            Background.action("itad.import");
         }
     }
 
@@ -63,12 +23,13 @@ class ITAD {
             HTML.afterEnd("#es_itad_status",
                 `<div class="es-itad-hover">
                     <div class="es-itad-hover__content">
-                        <p class="es-itad-hover__last-import"></p>
-                        <div class="es-itad-hover__import-now">
-                            <span class="es-itad-hover__import-now-text">${Localization.str.itad.import_now}</span>
+                        <h4>${Localization.str.itad.last_import}</h4>
+                        <div class="es-itad-hover__last-import"></div>
+                        <div class="es-itad-hover__sync-now">
+                            <span class="es-itad-hover__sync-now-text">${Localization.str.itad.sync_now}</span>
                             <div class="loader"></div>
-                            <span class="es-itad-hover__import-failed">&#10060;</span>
-                            <span class="es-itad-hover__import-success">&#10003;</span>
+                            <span class="es-itad-hover__sync-failed">&#10060;</span>
+                            <span class="es-itad-hover__sync-success">&#10003;</span>
                         </div>
                     </div>
                     <div class="es-itad-hover__arrow"></div>
@@ -76,32 +37,32 @@ class ITAD {
 
             let hover = document.querySelector(".es-itad-hover");
 
-            let importDiv = document.querySelector(".es-itad-hover__import-now");
-            document.querySelector(".es-itad-hover__import-now-text").addEventListener("click", async () => {
-                importDiv.classList.remove("es-itad-hover__import-now--failed", "es-itad-hover__import-now--success");
-                importDiv.classList.add("es-itad-hover__import-now--loading");
+            let syncDiv = document.querySelector(".es-itad-hover__sync-now");
+            document.querySelector(".es-itad-hover__sync-now-text").addEventListener("click", async () => {
+                syncDiv.classList.remove("es-itad-hover__sync-now--failed", "es-itad-hover__sync-now--success");
+                syncDiv.classList.add("es-itad-hover__sync-now--loading");
                 hover.style.display = "block";
 
                 let timeout;
 
                 try {
-                    await Background.action("itad.import", true);
-                    importDiv.classList.add("es-itad-hover__import-now--success");
+                    await Background.action("itad.sync");
+                    syncDiv.classList.add("es-itad-hover__sync-now--success");
                     await updateLastImport();
                     
                     timeout = 1000;
                 } catch(err) {
-                    importDiv.classList.add("es-itad-hover__import-now--failed");
+                    syncDiv.classList.add("es-itad-hover__sync-now--failed");
 
-                    console.group("ITAD import");
+                    console.group("ITAD sync");
+                    console.error("Failed to sync with ITAD");
                     console.error(err);
-                    console.error("Failed to import to ITAD");
                     console.groupEnd();
 
                     timeout = 3000;
                 } finally {
                     setTimeout(() => hover.style.display = '', timeout);
-                    importDiv.classList.remove("es-itad-hover__import-now--loading");
+                    syncDiv.classList.remove("es-itad-hover__sync-now--loading");
                 }
             });
         }
@@ -109,8 +70,15 @@ class ITAD {
         await updateLastImport();
 
         async function updateLastImport() {
-            let timestamp = await Background.action("itad.lastimport");
-            HTML.inner(".es-itad-hover__last-import", `<i>${Localization.str.itad.last_import}</i>: ${timestamp ? new Date(timestamp * 1000).toLocaleString() : Localization.str.never}`);
+            let { from, to } = await Background.action("itad.lastimport");
+
+            let htmlStr = `<div>${Localization.str.itad.from}</div><div>${from ? new Date(from * 1000).toLocaleString() : Localization.str.never}</div>`;
+
+            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
+                htmlStr += `<div>${Localization.str.itad.to}</div><div>${to ? new Date(to * 1000).toLocaleString() : Localization.str.never}</div>`;
+            }
+
+            HTML.inner(".es-itad-hover__last-import", htmlStr);
         }
     }
 
@@ -130,8 +98,7 @@ class ITAD {
                 promises.push(resolved);
             }
             if (highlightWaitlist) {
-                promises.push(resolved);
-                // todo Waitlist endpoint
+                promises.push(Background.action("itad.inwaitlist", storeIds));
             } else {
                 promises.push(resolved);
             }
@@ -161,9 +128,7 @@ class ProgressBar {
     static create() {
         if (!SyncedStorage.get("show_progressbar")) { return; }
 
-        let container = document.getElementById("global_actions");
-        if (!container) return;
-        HTML.afterEnd(container,
+        HTML.afterEnd("#global_actions",
             `<div class="es_progress__wrap">
                 <div class="es_progress es_progress--complete" title="${Localization.str.ready.ready}">
                     <div class="es_progress__bar">
@@ -175,7 +140,7 @@ class ProgressBar {
     }
 
     static loading() {
-        if (!ProgressBar._progress) return;
+        if (!ProgressBar._progress) { return; }
             
         ProgressBar._progress.setAttribute("title", Localization.str.ready.loading);
 
@@ -197,7 +162,7 @@ class ProgressBar {
     }
 
     static progress(value) {
-        if (!ProgressBar._progress) return;
+        if (!ProgressBar._progress) { return; }
 
         if (!value) {
             if (!ProgressBar.requests) { return; }
@@ -219,7 +184,7 @@ class ProgressBar {
     }
 
     static serverOutage() {
-        if (!ProgressBar._progress) return;
+        if (!ProgressBar._progress) { return; }
 
         ProgressBar._progress.classList.add("es_progress--warning");
         ProgressBar.requests = null;
@@ -230,7 +195,7 @@ class ProgressBar {
     }
 
     static failed() {
-        if (!ProgressBar._progress) return;
+        if (!ProgressBar._progress) { return; }
 
         let warningNode = ProgressBar._progress.parentElement.querySelector(".es_progress__warning");
         if (warningNode) {
@@ -251,20 +216,22 @@ class ProgressBar {
 ProgressBar._progress = null;
 ProgressBar._failedRequests = 0;
 
-class Background {
-    static message(message) {
+class Background extends BackgroundBase {
+    static async message(message) {
         ProgressBar.startRequest();
 
-        return browser.runtime.sendMessage(message).then(result => {
+        let result;
+        try {
+            result = await super.message(message);
             ProgressBar.finishRequest();
             return result;
-        }, err => {
+        } catch(err) {
             switch (err.message) {
                 case "ServerOutageError":
                     ProgressBar.serverOutage();
                     break;
                 case "CommunityLoginError": {
-                    EnhancedSteam.addLoginWarning();
+                    AugmentedSteam.addLoginWarning();
                     ProgressBar.finishRequest();
                     break;
                 } 
@@ -272,14 +239,15 @@ class Background {
                     ProgressBar.failed();
             }
             throw err;
-        });
+        }
     }
-    
-    static action(requested, ...params) {
-        if (!params.length)
-            return Background.message({ "action": requested, });
-        return Background.message({ "action": requested, "params": params, });
-    }
+}
+
+class HTTPError extends Error {
+  constructor(code, message) {
+    super(message);
+    this.code = code;
+  }
 }
 
 /**
@@ -368,8 +336,8 @@ let ExtensionLayer = (function() {
     // NOTE: use cautiously!
     // Run script in the context of the current tab
     self.runInPageContext = function(fun) {
-        let script  = document.createElement("script");
-        script.textContent = '(' + fun + ")();";
+        let script = document.createElement("script");
+        script.textContent = `(${fun})();`;
         document.documentElement.appendChild(script);
         script.parentNode.removeChild(script);
     };
@@ -518,7 +486,6 @@ class CookieStorage {
 }
 CookieStorage.cache = new Map();
 
-
 let RequestData = (function(){
     let self = {};
     let fetchFn = (typeof content !== 'undefined' && content && content.fetch) || fetch;
@@ -541,7 +508,7 @@ let RequestData = (function(){
 
             ProgressBar.finishRequest();
 
-            if (!response.ok) { throw new Error(`HTTP ${response.status} ${response.statusText} for ${response.url}`) }
+            if (!response.ok) { throw new HTTPError(response.status, `HTTP ${response.status} ${response.statusText} for ${response.url}`) }
 
             return response[responseType]();
             
@@ -608,8 +575,7 @@ let User = (function(){
                     LocalStorage.set("userCountry", login.userCountry);
                 }
             })
-            .catch(err => console.error(err))
-            ;
+            .catch(err => console.error(err));
 
         return _promise;
     };
@@ -1147,11 +1113,12 @@ let Stats = (function() {
     return self;
 })();
 
-let EnhancedSteam = (function() {
+let AugmentedSteam = (function() {
 
     let self = {};
 
     self.addMenu = function() {
+
         HTML.afterBegin("#global_action_menu",
             `<div id="es_menu">
                 <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
@@ -1168,13 +1135,12 @@ let EnhancedSteam = (function() {
                         <a class="popup_menu_item" target="_blank" href="https://discord.gg/yn57q7f">Discord</a>
                     </div>
                 </div>
-            </div>
-        `);
+            </div>`);
 
         let popup = document.querySelector("#es_popup");
-        document.querySelector("#es_pulldown").addEventListener("click", function(){
-            let width = document.querySelector("#es_pulldown").getBoundingClientRect().width - 19; // padding
-            popup.style.left = "-" + width + "px";
+        document.querySelector("#es_pulldown").addEventListener("click", function(e){
+            let width = e.target.getBoundingClientRect().width - 19; // padding
+            popup.style.left = `-${width}px`;
             popup.classList.toggle("open");
         });
 
@@ -1192,16 +1158,13 @@ let EnhancedSteam = (function() {
             self.clearCache();
             window.location.reload();
         });
-
     };
 
     self.addBackToTop = function() {
         if (!SyncedStorage.get("show_backtotop")) { return; }
 
-        let steamButton = document.querySelector("#BackToTop");
-        if (steamButton) {
-            steamButton.remove();
-        }
+        // Remove Steam's back-to-top button
+        DOMHelper.remove("#BackToTop");
 
         HTML.afterBegin("body", `<div class="es_btt">&#9650;</div>`);
 
@@ -1219,7 +1182,7 @@ let EnhancedSteam = (function() {
 
         function opacityHandler() {
             let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
-            node.classList.toggle("is-visible", scrollHeight >= 400)
+            node.classList.toggle("is-visible", scrollHeight >= 400);
         }
     };
 
@@ -1227,13 +1190,13 @@ let EnhancedSteam = (function() {
         localStorage.clear();
         SyncedStorage.remove("user_currency");
         SyncedStorage.remove("store_sessionid");
-        Background.action('cache.clear');
+        Background.action("cache.clear");
     };
 
-    self.bindLogout = function(){
+    self.bindLogout = function() {
         // TODO there should be a better detection of logout, probably
         let logoutNode = document.querySelector("a[href$='javascript:Logout();']");
-        logoutNode.addEventListener("click", function(e) {
+        logoutNode.addEventListener("click", function() {
             self.clearCache();
         });
     };
@@ -1249,12 +1212,12 @@ let EnhancedSteam = (function() {
         if (!SyncedStorage.get("showlanguagewarning")) { return; }
 
         let currentLanguage = Language.getCurrentSteamLanguage();
-        if (!currentLanguage) return;
-        
+        if (!currentLanguage) { return; }
+
         if (!SyncedStorage.has("showlanguagewarninglanguage")) {
             SyncedStorage.set("showlanguagewarninglanguage", currentLanguage);
         }
-        
+
         let warningLanguage = SyncedStorage.get("showlanguagewarninglanguage");
 
         if (currentLanguage === warningLanguage) { return; }
@@ -1287,7 +1250,7 @@ let EnhancedSteam = (function() {
         } else if (option === "replace") {
             let btn = document.querySelector("div.header_installsteam_btn > a");
             btn.textContent = Localization.str.viewinclient;
-            btn.href =  `steam://openurl/${window.location.href}`;
+            btn.href = `steam://openurl/${window.location.href}`;
             btn.classList.add("es_steamclient_btn");
         }
     };
@@ -1295,29 +1258,24 @@ let EnhancedSteam = (function() {
     self.removeAboutLinks = function() {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
 
-        if (User.isSignedIn) {
-            DOMHelper.remove(".submenuitem[href^='https://store.steampowered.com/about/']");
-        } else {
-            DOMHelper.remove(".menuitem[href^='https://store.steampowered.com/about/']");
-        }
+        DOMHelper.remove("#global_header a[href^='https://store.steampowered.com/about/']");
     };
 
-    self.addHeaderLinks = function(){
-        if (!User.isSignedIn || document.querySelector(".supernav_container").length === 0) { return; }
+    self.addUsernameSubmenuLinks = function() {
+        let node = document.querySelector(".supernav_container .submenu_username");
 
-        let submenuUsername = document.querySelector(".supernav_container .submenu_username");
-        HTML.afterEnd(submenuUsername.querySelector("a"), `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
-        HTML.afterEnd(submenuUsername.querySelector("a:nth-child(2)"), `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`)
-        HTML.beforeEnd(submenuUsername, `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
+        HTML.afterEnd(node.querySelector("a"), `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
+        HTML.afterEnd(node.querySelector("a:nth-child(2)"), `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`);
+        HTML.beforeEnd(node, `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
     };
 
-    self.disableLinkFilter = function(){
+    self.disableLinkFilter = function() {
         if (!SyncedStorage.get("disablelinkfilter")) { return; }
 
         removeLinksFilter();
 
         let observer = new MutationObserver(removeLinksFilter);
-        observer.observe(document, {childList: true, subtree: true});
+        observer.observe(document, { childList: true, subtree: true });
 
         function removeLinksFilter(mutations) {
             let selector = "a.bb_link[href*='/linkfilter/'], div.weblink a[href*='/linkfilter/']";
@@ -1341,7 +1299,7 @@ let EnhancedSteam = (function() {
 
     self.addRedeemLink = function() {
         HTML.beforeBegin("#account_dropdown .popup_menu_item:last-child:not(.tight)",
-            `<a class='popup_menu_item' href='https://store.steampowered.com/account/registerkey'>${Localization.str.activate}</a>`);
+            `<a class="popup_menu_item" href="https://store.steampowered.com/account/registerkey">${Localization.str.activate}</a>`);
     };
 
     self.replaceAccountName = function() {
@@ -1369,16 +1327,15 @@ let EnhancedSteam = (function() {
     self.launchRandomButton = function() {
 
         HTML.beforeEnd("#es_popup .popup_menu",
-            `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
+            `<div class="hr"></div><a id="es_random_game" class="popup_menu_item" style="cursor: pointer;">${Localization.str.launch_random}</a>`);
 
         document.querySelector("#es_random_game").addEventListener("click", async function(){
-            let result = await DynamicStore;
-            if (!result.rgOwnedApps) { return; }
-            let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
+            let appid = await DynamicStore.getRandomApp();
+            if (!appid) { return; }
 
-            Background.action('appdetails', { 'appids': appid, }).then(response => {
-                if (!response || !response[appid] || !response[appid].success) { return; }
-                let data = response[appid].data;
+            Background.action("appdetails", appid).then(response => {
+                if (!response || !response.success) { return; }
+                let data = response.data;
 
                 let gameid = appid;
                 let gamename;
@@ -1399,7 +1356,6 @@ let EnhancedSteam = (function() {
                         });
                     }`);
             });
-
         });
     };
 
@@ -1413,8 +1369,7 @@ let EnhancedSteam = (function() {
 
     self.keepSteamSubscriberAgreementState = function() {
         let nodes = document.querySelectorAll("#market_sell_dialog_accept_ssa,#market_buynow_dialog_accept_ssa,#accept_ssa");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        for (let node of nodes) {
             node.checked = SyncedStorage.get("keepssachecked");
 
             node.addEventListener("click", function(){
@@ -1425,8 +1380,9 @@ let EnhancedSteam = (function() {
 
     self.alternateLinuxIcon = function() {
         if (!SyncedStorage.get("show_alternative_linux_icon")) { return; }
+
         let url = ExtensionResources.getURL("img/alternative_linux_icon.png");
-        let style = document.createElement('style');
+        let style = document.createElement("style");
         style.textContent = `span.platform_img.linux { background-image: url("${url}"); }`;
         document.head.appendChild(style);
         style = null;
@@ -1438,22 +1394,21 @@ let EnhancedSteam = (function() {
 
         // TODO I would try to reduce number of selectors here
         let selectors= "title, .apphub_AppName, .breadcrumbs, h1, h4";
-        if(community){
+        if (community) {
             selectors += ".game_suggestion, .appHubShortcut_Title, .apphub_CardContentNewsTitle, .apphub_CardTextContent, .apphub_CardContentAppName, .apphub_AppName";
         } else {
             selectors += ".game_area_already_owned, .details_block, .game_description_snippet, .game_area_description p, .glance_details, .game_area_dlc_bubble game_area_bubble, .package_contents, .game_area_dlc_name, .tab_desc, .tab_item_name";
         }
 
         // Replaces "R", "C" and "TM" signs
-        function replaceSymbols(node){
+        function replaceSymbols(node) {
             // tfedor I don't trust this won't break any inline JS
-            if (!node ||!node.innerHTML) { return; }
+            if (!node || !node.innerHTML) { return; }
             HTML.inner(node, node.innerHTML.replace(/[\u00AE\u00A9\u2122]/g, ""));
         }
 
-        let nodes = document.querySelectorAll(selectors);
-        for (let i=0, len=nodes.length; i<len; i++) {
-            replaceSymbols(nodes[i]);
+        for (let node of document.querySelectorAll(selectors)) {
+            replaceSymbols(node);
         }
 
         let observer = new MutationObserver(mutations => {
@@ -1464,11 +1419,9 @@ let EnhancedSteam = (function() {
             });
         });
 
-        nodes = document.querySelectorAll("#game_select_suggestions,#search_suggestion_contents,.tab_content_ctn");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            observer.observe(node, {childList:true, subtree:true});
-
+        let nodes = document.querySelectorAll("#game_select_suggestions,#search_suggestion_contents,.tab_content_ctn");
+        for (let node of nodes) {
+            observer.observe(node, { childList: true, subtree: true });
         }
     };
 
@@ -1500,9 +1453,8 @@ let EarlyAccess = (function(){
         selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
         let appidsMap = new Map();
 
-        let selector = selectors.map(selector => `${selector}:not(.es_ea_checked)`).join(',');
-        let nodes = document.querySelectorAll(selector);
-        nodes.forEach(node => {
+        let selector = selectors.map(selector => `${selector}:not(.es_ea_checked)`).join(",");
+        for (let node of document.querySelectorAll(selector)) {
             node.classList.add("es_ea_checked");
 
             let linkNode = node.querySelector("a");
@@ -1510,13 +1462,15 @@ let EarlyAccess = (function(){
             let imgHeader = node.querySelector("img" + selectorModifier);
             let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
-            if (appid) appidsMap.set(appid, node);
-        });
+            if (appid) {
+                appidsMap.set(appid, node);
+            }
+        }
 
         let eaAppids = await Background.action("isea", Array.from(appidsMap.keys()).map(key => Number(key)));
 
         for (let [appid, node] of appidsMap) {
-            if (!eaAppids[appid]) continue;
+            if (!eaAppids[appid]) { continue; }
 
             node.classList.add("es_early_access");
 
@@ -1525,7 +1479,7 @@ let EarlyAccess = (function(){
             container.classList.add("es_overlay_container");
             DOMHelper.wrap(container, imgHeader);
 
-            HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
+            HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}"></span>`);
         }
     }
 
@@ -1562,13 +1516,11 @@ let EarlyAccess = (function(){
                            ".browse_tag_game_cap"]);
                 break;
             case /^\/(?:curator|developer|dlc|publisher)\/.*/.test(window.location.pathname):
-                checkNodes( [
-                    "#curator_avatar_image",
-                    ".capsule",
-                ]);
+                checkNodes(["#curator_avatar_image",
+                           ".capsule"]);
                 break;
             case /^\/$/.test(window.location.pathname):
-                checkNodes( [".cap",
+                checkNodes([".cap",
                            ".special",
                            ".game_capsule",
                            ".cluster_capsule",
@@ -1609,7 +1561,7 @@ let EarlyAccess = (function(){
 
         let imageName = "img/overlay/early_access_banner_english.png";
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
-            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage() + ".png";
+            imageName = `img/overlay/early_access_banner_${Language.getCurrentSteamLanguage()}.png`;
         }
         imageUrl = ExtensionResources.getURL(imageName);
 
@@ -1674,7 +1626,7 @@ let Inventory = (function(){
     };
 
     self.hasInInventory6 = function(marketHashes) {
-        return Background.action("hasItem", marketHashes);
+        return Background.action("hasitem", marketHashes);
     };
 
     return self;
@@ -1708,13 +1660,14 @@ let Highlights = (function(){
             tagCssLoaded = true;
 
             let tagCss = [];
+
             for (let name of highlightTypes) {
                 let color = SyncedStorage.get(`tag_${name}_color`);
                 tagCss.push(`.es_tag_${name} { background-color: ${color}; }`);
             }
 
-            let style = document.createElement('style');
-            style.id = 'es_tag_styles';
+            let style = document.createElement("style");
+            style.id = "es_tag_styles";
             style.textContent = tagCss.join("\n");
             document.head.appendChild(style);
             style = null;
@@ -1723,7 +1676,7 @@ let Highlights = (function(){
         // Add the tags container if needed
         let tags = node.querySelectorAll(".es_tags");
         if (tags.length === 0) {
-            tags = HTMLParser.htmlToElement(`<div class="es_tags ${tagShort ? 'es_tags_short' : ''}"/>`);
+            tags = HTMLParser.htmlToElement(`<div class="es_tags ${tagShort ? 'es_tags_short' : ''}"></div>`);
 
             let root;
             if (node.classList.contains("tab_row")) { // can't find it
@@ -1740,6 +1693,9 @@ let Highlights = (function(){
             }
             else if (node.classList.contains("tab_item")) {
                 node.querySelector(".tab_item_name").insertAdjacentElement("afterend", tags);
+            }
+            else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
+                node.querySelector(".discount_block").insertAdjacentElement("beforebegin", tags);
             }
             else if (node.classList.contains("search_result_row")) {
                 node.querySelector("p").insertAdjacentElement("afterbegin", tags);
@@ -1782,7 +1738,7 @@ let Highlights = (function(){
 
         // Add the tag
         for (let n of tags) {
-            if (!n.querySelector(`es_tag_${tag}`)) {
+            if (!n.querySelector(`.es_tag_${tag}`)) {
                 HTML.beforeEnd(n, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
             }
         }
@@ -1812,14 +1768,16 @@ let Highlights = (function(){
 
             for (let name of highlightTypes) {
                 let color = SyncedStorage.get(`highlight_${name}_color`);
-                hlCss.push(
-                   `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
+                hlCss.push(`
+                    .es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
                     .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name} { outline: solid ${color}; }
-                    .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }`);
+                    #search_suggestion_contents .focus.es_highlighted_${name} { box-shadow: -5px 0 0 ${color}; }
+                    .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }
+                `);
             }
 
-            let style = document.createElement('style');
-            style.id = 'es_highlight_styles';
+            let style = document.createElement("style");
+            style.id = "es_highlight_styles";
             style.textContent = hlCss.join("\n");
             document.head.appendChild(style);
             style = null;
@@ -1863,7 +1821,6 @@ let Highlights = (function(){
                 }
                 break;
             }
-            
         }
 
         node.classList.remove("ds_flagged");
@@ -1908,7 +1865,7 @@ let Highlights = (function(){
     self.highlightOwned = function(node) {
         if (SyncedStorage.get("hide_owned") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
             node.style.display = "none";
-        } 
+        }
         highlightItem(node, "owned");
     };
 
@@ -1951,6 +1908,8 @@ let Highlights = (function(){
                 nodeToHighlight = node.nextElementSibling;
             } else if (node.parentNode.parentNode.classList.contains("curations")) {
                 nodeToHighlight = node.parentNode;
+            } else if (node.classList.contains("special_img_ctn") && node.parentElement.classList.contains("special")) {
+                nodeToHighlight = node.parentElement;
             }
 
             let aNode = node.querySelector("a");
@@ -1982,16 +1941,16 @@ let Highlights = (function(){
                 if (node.querySelector(".ds_owned_flag")) {
                     self.highlightOwned(nodeToHighlight);
                 }
-                
+
                 if (node.querySelector(".ds_wishlist_flag")) {
                     self.highlightWishlist(nodeToHighlight);
                 }
-    
+
                 if (node.querySelector(".ds_ignored_flag")) {
                     self.highlightNotInterested(nodeToHighlight);
                 }
             }
-            
+
             if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
                 self.highlightNonDiscounts(nodeToHighlight);
             }
@@ -2005,7 +1964,7 @@ let Highlights = (function(){
             ITAD.getAppStatus(storeIds),
             Inventory.getAppStatus(trimmedStoreIds),
         ]);
-        
+
         let it = trimmedStoreIds.values();
         for (let [storeid, nodes] of storeIdsMap) {
             if (dsStatus) {
@@ -2022,7 +1981,6 @@ let Highlights = (function(){
             if (invStatus[trimmedId].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
             if (invStatus[trimmedId].coupon) nodes.forEach(node => self.highlightCoupon(node));
         }
-        
     }
 
     self.startHighlightsAndTags = async function(parent) {
@@ -2053,6 +2011,8 @@ let Highlights = (function(){
             "div.carousel_items.curator_featured > div",    // Carousel items on Curator pages
             "div.item_ctn",                                 // Curator list item
             ".store_capsule",                               // All sorts of items on almost every page
+            ".newonsteam_headercap",                        // explore/new/
+            ".comingsoon_headercap",                        // explore/upcoming/
             ".home_marketing_message",                      // "Updates and offers"
             "div.dlc_page_purchase_dlc",                    // DLC page rows
             "div.sale_page_purchase_item",                  // Sale pages
@@ -2061,12 +2021,13 @@ let Highlights = (function(){
             "div.browse_tag_game",                          // Tagged games
             "div.similar_grid_item",                        // Items on the "Similarly tagged" pages
             ".tab_item",                                    // Items on new homepage
-            "a.special",                                    // new homepage specials
+            ".special > .special_img_ctn",                  // new homepage specials
+            ".special.special_img_ctn",
             "div.curated_app_item",                         // curated app items!
             ".hero_capsule",                                // Summer sale "Featured"
             ".sale_capsule"                                 // Summer sale general capsules
         ].map(sel => `${sel}:not(.es_highlighted)`)
-        .join(',');
+        .join(",");
 
         parent = parent || document;
 
@@ -2078,7 +2039,7 @@ let Highlights = (function(){
                 let observer = new MutationObserver(records => {
                     self.highlightAndTag(records[0].addedNodes);
                 });
-                observer.observe(searchBoxContents, {childList: true});
+                observer.observe(searchBoxContents, { childList: true });
             }
         });
 
@@ -2091,6 +2052,14 @@ let Highlights = (function(){
 })();
 
 let DynamicStore = (function(){
+
+    /*
+    * FIXME
+    *  1. Check usage of `await DynamicStore`, currently it does nothing
+    *  2. getAppStatus() is not properly waiting for initialization of the DynamicStore
+    *  3. There is no guarante that `User` is initialized before `_fetch()` is called
+    *  4. getAppStatus() should probably be simplified if we force array even when only one storeId was requested
+    */
 
     let self = {};
 
@@ -2123,7 +2092,7 @@ let DynamicStore = (function(){
                 statusList[id] = {
                     "ignored": dsStatusList[trimmedId].includes("ignored"),
                     "wishlisted": dsStatusList[trimmedId].includes("wishlisted"),
-                }
+                };
                 if (id.startsWith("app/")) {
                     statusList[id].owned = dsStatusList[trimmedId].includes("ownedApps");
                 } else if (id.startsWith("sub/")) {
@@ -2134,7 +2103,7 @@ let DynamicStore = (function(){
             statusList = {
                 "ignored": dsStatusList.includes("ignored"),
                 "wishlisted": dsStatusList.includes("wishlisted"),
-            }
+            };
             if (storeId.startsWith("app/")) {
                 statusList.owned = dsStatusList.includes("ownedApps");
             } else if (storeId.startsWith("sub/")) {
@@ -2143,7 +2112,12 @@ let DynamicStore = (function(){
         }
 
         return statusList;
-    }
+    };
+
+    self.getRandomApp = async function() {
+        await _fetch();
+        return await Background.action("dynamicStore.randomApp");
+    };
 
     async function _fetch() {
         if (!User.isSignedIn) {
@@ -2206,64 +2180,64 @@ let Prices = (function(){
 
         let node = document.createElement("div");
         node.classList.add("itad-pricing");
-        node.id = "es_price_" + id;
+        node.id = `es_price_${id}`;
 
         let pricingStr = Localization.str.pricing;
 
         let hasData = false;
+        let priceData = info.price;
+        let lowestData = info.lowest;
+        let bundledCount = info.bundles.count;
+        let urlData = info.urls;
 
         // Current best
-        if (info.price) {
+        if (priceData) {
             hasData = true;
-            let priceData = info.price;
 
             let lowest;
-            let voucherStr = '';
+            let voucherStr = "";
             if (SyncedStorage.get("showlowestpricecoupon") && priceData.price_voucher) {
                 lowest = new Price(priceData.price_voucher, meta.currency);
 
-                let voucher = HTML.escape(info.price.voucher);
+                let voucher = HTML.escape(priceData.voucher);
                 voucherStr = `${pricingStr.with_voucher.replace("__voucher__", `<span class="itad-pricing__voucher">${voucher}</span>`)} `;
             } else {
                 lowest = new Price(priceData.price, meta.currency);
             }
+
             lowest = lowest.inCurrency(Currency.customCurrency);
-
-            let cutStr = '';
-            if (priceData.cut > 0) {
-                cutStr = `<span class='itad-pricing__cut'>-${priceData.cut}%</span> `;
-            }
-
-            let drmStr = '';
-            if (priceData.drm.length > 0 && priceData.store !== "Steam") {
-                drmStr = `<span class='itad-pricing__drm'>(${priceData.drm[0]})</span>`;
-            }
-
-            let priceUrl = HTML.escape(info.price.url.toString());
-
             let prices = lowest.toString();
-            if (Currency.customCurrency != Currency.storeCurrency) {
+            if (Currency.customCurrency !== Currency.storeCurrency) {
                 let lowest_alt = lowest.inCurrency(Currency.storeCurrency);
                 prices += ` (${lowest_alt.toString()})`;
             }
             let pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
 
-            let storeStr = pricingStr.store.replace("__store__", HTML.escape(priceData.store));
-            let infoUrl = HTML.escape(info.urls.info);
+            let cutStr = "";
+            if (priceData.cut > 0) {
+                cutStr = `<span class="itad-pricing__cut">-${priceData.cut}%</span> `;
+            }
+
+            let storeStr = pricingStr.store.replace("__store__", priceData.store);
+
+            let drmStr = "";
+            if (priceData.drm.length > 0 && priceData.store !== "Steam") {
+                drmStr = `<span class="itad-pricing__drm">(${priceData.drm[0]})</span>`;
+            }
+
+            let infoUrl = HTML.escape(urlData.info);
+            let storeUrl = HTML.escape(priceData.url.toString());
 
             HTML.beforeEnd(node, `<a href="${infoUrl}" target="_blank">${pricingStr.lowest_price}</a>`);
             HTML.beforeEnd(node, pricesStr);
-            HTML.beforeEnd(node, `<a href="${priceUrl}" class="itad-pricing__main" target="_blank">${cutStr}${voucherStr}${storeStr}&nbsp;${drmStr}</a>`);
+            HTML.beforeEnd(node, `<a href="${storeUrl}" class="itad-pricing__main" target="_blank">${cutStr}${voucherStr}${storeStr} ${drmStr}</a>`);
         }
 
         // Historical low
-        if (info.lowest) {
+        if (lowestData) {
             hasData = true;
-            let lowestData = info.lowest;
 
             let historical = new Price(lowestData.price, meta.currency).inCurrency(Currency.customCurrency);
-            let recorded = new Date(info.lowest.recorded * 1000);
-
             let prices = historical.toString();
             if (Currency.customCurrency !== Currency.storeCurrency) {
                 let historical_alt = historical.inCurrency(Currency.storeCurrency);
@@ -2271,28 +2245,29 @@ let Prices = (function(){
             }
             let pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
 
-            let cutStr = '';
+            let cutStr = "";
             if (lowestData.cut > 0) {
-                cutStr = `<span class='itad-pricing__cut'>-${lowestData.cut}%</span> `;
+                cutStr = `<span class="itad-pricing__cut">-${lowestData.cut}%</span> `;
             }
 
             let storeStr = pricingStr.store.replace("__store__", lowestData.store);
-            let infoUrl = HTML.escape(info.urls.history);
+            let dateStr = new Date(lowestData.recorded * 1000).toLocaleDateString();
 
-            HTML.beforeEnd(node, `<a href="${infoUrl}" target="_blank">${pricingStr.historical_low}</div>`);
+            let infoUrl = HTML.escape(urlData.history);
+
+            HTML.beforeEnd(node, `<a href="${infoUrl}" target="_blank">${pricingStr.historical_low}</a>`);
             HTML.beforeEnd(node, pricesStr);
-            HTML.beforeEnd(node, `<div class="itad-pricing__main">${cutStr}${storeStr} ${recorded.toLocaleDateString()}</div>`);
+            HTML.beforeEnd(node, `<div class="itad-pricing__main">${cutStr}${storeStr} ${dateStr}</div>`);
         }
 
         // times bundled
-        if (info.bundles.count > 0) {
+        if (bundledCount > 0) {
             hasData = true;
 
-            let bundlesUrl = HTML.escape(info.urls.bundles || info.urls.bundle_history);
-            
-            HTML.beforeEnd(node, `<a href="${bundlesUrl}" target="_blank">${pricingStr.bundled}</a>`);
+            let bundledUrl = HTML.escape(urlData.bundles || urlData.bundle_history);
+            let bundledStr = pricingStr.bundle_count.replace("__count__", bundledCount);
 
-            let bundledStr = pricingStr.bundle_count.replace("__count__", info.bundles.count);
+            HTML.beforeEnd(node, `<a href="${bundledUrl}" target="_blank">${pricingStr.bundled}</a>`);
             HTML.beforeEnd(node, `<div class="itad-pricing__bundled">${bundledStr}</div>`);
         }
 
@@ -2303,13 +2278,12 @@ let Prices = (function(){
 
     Prices.prototype._processBundles = function(meta, info) {
         if (!this.bundleCallback) { return; }
-        if (info.bundles.live.length == 0) { return; }
 
-        let length = info.bundles.live.length;
         let purchase = "";
 
-        for (let i = 0; i < length; i++) {
-            let bundle = info.bundles.live[i];
+        for (let bundle of info.bundles.live) {
+            let tiers = bundle.tiers;
+
             let endDate;
             if (bundle.expiry) {
                 endDate = new Date(bundle.expiry * 1000);
@@ -2323,11 +2297,11 @@ let Prices = (function(){
                 title: bundle.title || "",
                 url:   bundle.url || "",
                 tiers: (function() {
-                    let tiers = [];
-                    for (let tier in bundle.tiers) {
-                        tiers.push((bundle.tiers[tier].games || []).sort());
+                    let sorted = [];
+                    for (let t of Object.keys(tiers)) {
+                        sorted.push((tiers[t].games || []).sort());
                     }
-                    return tiers;
+                    return sorted;
                 })()
             });
 
@@ -2335,7 +2309,7 @@ let Prices = (function(){
             this._bundles.push(bundle_normalized);
 
             if (bundle.page) {
-                let bundlePage = Localization.str.buy_package.replace("__package__", bundle.page + ' ' + bundle.title);
+                let bundlePage = Localization.str.buy_package.replace("__package__", `${bundle.page} ${bundle.title}`);
                 purchase += `<div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>${bundlePage}</h1>`;
             } else {
                 let bundleTitle = Localization.str.buy_package.replace("__package__", bundle.title);
@@ -2349,14 +2323,13 @@ let Prices = (function(){
             purchase += '<p class="package_contents">';
 
             let bundlePrice;
-            let appName = this.appName;
+            let appName = document.querySelector(".apphub_AppName").textContent;
 
-            for (let t=0; t<bundle.tiers.length; t++) {
-                let tier = bundle.tiers[t];
+            tiers.forEach((tier, t) => {
                 let tierNum = t + 1;
 
-                purchase += '<b>';
-                if (bundle.tiers.length > 1) {
+                purchase += "<b>";
+                if (tiers.length > 1) {
                     let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
                     let tierPrice = (new Price(tier.price, meta.currency).inCurrency(Currency.customCurrency)).toString();
 
@@ -2364,57 +2337,57 @@ let Prices = (function(){
                 } else {
                     purchase += Localization.str.bundle.includes.replace("__num__", tier.games.length);
                 }
-                purchase += ':</b> ';
+                purchase += ":</b> ";
 
                 let gameList = tier.games.join(", ");
                 if (gameList.includes(appName)) {
-                    purchase += gameList.replace(appName, "<u>"+appName+"</u>");
+                    purchase += gameList.replace(appName, `<u>${appName}</u>`);
                     bundlePrice = tier.price;
                 } else {
                     purchase += gameList;
                 }
 
                 purchase += "<br>";
-            }
+            });
 
             purchase += "</p>";
             purchase += `<div class="game_purchase_action">
                             <div class="game_purchase_action_bg">
-                                 <div class="btn_addtocart btn_packageinfo">
+                                <div class="btn_addtocart btn_packageinfo">
                                     <a class="btnv6_blue_blue_innerfade btn_medium" href="${bundle.details}" target="_blank">
-                                         <span>${Localization.str.bundle.info}</span>
+                                        <span>${Localization.str.bundle.info}</span>
                                     </a>
                                 </div>
-                            </div>`;
+                            </div>
+                            <div class="game_purchase_action_bg">`;
 
-            purchase += '\n<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
-                purchase += '<div class="game_purchase_price price" itemprop="price">';
-                    purchase += (new Price(bundlePrice, meta.currency).inCurrency(Currency.customCurrency)).toString();
-                purchase += '</div>';
+                bundlePrice = (new Price(bundlePrice, meta.currency).inCurrency(Currency.customCurrency)).toString();
+                purchase += `<div class="game_purchase_price price" itemprop="price">${bundlePrice}</div>`;
             }
 
-            purchase += '<div class="btn_addtocart">';
-            purchase += '<a class="btnv6_green_white_innerfade btn_medium" href="' + bundle["url"] + '" target="_blank">';
-            purchase += '<span>' + Localization.str.buy + '</span>';
-            purchase += '</a></div></div></div></div>';
+            purchase += `<div class="btn_addtocart">
+                            <a class="btnv6_green_white_innerfade btn_medium" href="${bundle.url}" target="_blank">
+                                <span>${Localization.str.buy}</span>
+                            </a>
+                        </div></div></div></div>`;
         }
 
-        if (purchase) this.bundleCallback(purchase);
+        if (purchase) {
+            this.bundleCallback(purchase);
+        }
     };
 
     Prices.prototype.load = function() {
-        let that = this;
         let apiParams = this._getApiParams();
-
         if (!apiParams) { return; }
 
-        Background.action('prices', apiParams).then(response => {
-            let meta = response['.meta'];
+        Background.action("prices", apiParams).then(response => {
+            let meta = response[".meta"];
 
             for (let [gameid, info] of Object.entries(response.data)) {
-                that._processPrices(gameid, meta, info);
-                that._processBundles(meta, info);
+                this._processPrices(gameid, meta, info);
+                this._processBundles(meta, info);
             }
         });
     };
@@ -2426,12 +2399,12 @@ let AgeCheck = (function(){
 
     let self = {};
 
-    self.sendVerification = function(){
+    self.sendVerification = function() {
         if (!SyncedStorage.get("send_age_info")) { return; }
 
         let ageYearNode = document.querySelector("#ageYear");
         if (ageYearNode) {
-            let myYear = Math.floor(Math.random()*75)+10;
+            let myYear = Math.floor(Math.random() * 75) + 10;
             ageYearNode.value = "19" + myYear;
             document.querySelector(".btnv6_blue_hoverfade").click();
         } else {
@@ -2458,35 +2431,32 @@ let Common = (function(){
 
         console.log.apply(console, [
             "%c Augmented %cSteam v" + Info.version + " %c https://es.isthereanydeal.com/",
-            "background: #000000;color:#046eb2",
-            "background: #000000;color: #ffffff",
+            "background: #000000; color: #046eb2",
+            "background: #000000; color: #ffffff",
             "",
         ]);
 
         ProgressBar.create();
         ProgressBar.loading();
-        UpdateHandler.checkVersion(EnhancedSteam.clearCache);
-        if (User.isSignedIn) {
-            ITAD.create();
-        }
-        EnhancedSteam.addBackToTop();
-        EnhancedSteam.addMenu();
-        EnhancedSteam.addLanguageWarning();
-        EnhancedSteam.handleInstallSteamButton();
-        EnhancedSteam.removeAboutLinks();
-        EnhancedSteam.addHeaderLinks();
+        UpdateHandler.checkVersion(AugmentedSteam.clearCache);
+        AugmentedSteam.addBackToTop();
+        AugmentedSteam.addMenu();
+        AugmentedSteam.addLanguageWarning();
+        AugmentedSteam.handleInstallSteamButton();
+        AugmentedSteam.removeAboutLinks();
         EarlyAccess.showEarlyAccess();
-        EnhancedSteam.disableLinkFilter();
-        EnhancedSteam.skipGotSteam();
-        EnhancedSteam.keepSteamSubscriberAgreementState();
-        EnhancedSteam.defaultCommunityTab();
+        AugmentedSteam.disableLinkFilter();
+        AugmentedSteam.skipGotSteam();
+        AugmentedSteam.keepSteamSubscriberAgreementState();
+        AugmentedSteam.defaultCommunityTab();
+        ITAD.create();
 
         if (User.isSignedIn) {
-            EnhancedSteam.addRedeemLink();
-            EnhancedSteam.replaceAccountName();
-            EnhancedSteam.launchRandomButton();
-            // TODO add itad sync
-            EnhancedSteam.bindLogout();
+            AugmentedSteam.addUsernameSubmenuLinks();
+            AugmentedSteam.addRedeemLink();
+            AugmentedSteam.replaceAccountName();
+            AugmentedSteam.launchRandomButton();
+            AugmentedSteam.bindLogout();
         }
     };
 
@@ -2694,22 +2664,12 @@ class MediaPage {
     _horizontalScrolling() {
         if (!SyncedStorage.get("horizontalscrolling")) { return; }
 
-        let strip = document.querySelector("#highlight_strip");
-        if (strip) {
+        for (let node of document.querySelectorAll(".slider_ctn")) {
             new HorizontalScroller(
-                strip,
-                document.querySelector("#highlight_slider_left"),
-                document.querySelector("#highlight_slider_right")
+                node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
+                node.querySelector(".slider_left"),
+                node.querySelector(".slider_right")
             );
-        }
-
-        let nodes = document.querySelectorAll(".store_horizontal_autoslider_ctn");
-        for (let node of nodes) {
-            new HorizontalScroller(
-                node,
-                node.parentNode.querySelector(".slider_left"),
-                node.parentNode.querySelector(".slider_right")
-            )
         }
     }
 }
@@ -2722,7 +2682,7 @@ class HorizontalScroller {
         this._controlRight = controlRightNode;
 
         this._lastScroll = 0;
-        parentNode.addEventListener("wheel", (e) => { this._scrollHandler(e); });
+        parentNode.addEventListener("wheel", e => this._scrollHandler(e));
     }
 
     _scrollHandler(e) {
@@ -2855,10 +2815,13 @@ class Sortbox {
         return new RegExp(`\\b${className}\\b`).test(element.className);
     }
 
-    // FOR REVIEWER: Elements returned by this function are already sanitized (calls to HTML class),
-    // so they can be safely inserted without being sanitized again.
-    // If we would sanitize it again, all event listeners would be lost due to DOMPurify only returning
-    // HTML strings.
+    /**
+     * NOTE FOR ADDON REVIEWER:
+     * Elements returned by this function are already sanitized (calls to HTML class),
+     * so they can be safely inserted without being sanitized again.
+     * If we would sanitize them again, all event listeners would be lost due to
+     * DOMPurify only returning HTML strings.
+     */
     static get(name, options, initialOption, changeFn, storageOption) {
 
         let id = `sort_by_${name}`;

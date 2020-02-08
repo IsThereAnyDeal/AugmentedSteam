@@ -41,14 +41,23 @@ class CacheStorage {
 }
 
 class AugmentedSteam {
-    static getUserNote(appid)       { return IndexedDB.get("notes", appid) }
-    static setUserNote(appid, note) { return IndexedDB.put("notes", note, appid) }
-    static deleteUserNote(appid)    { return IndexedDB.delete("notes", appid) }
-    static userNoteExists(appid)    { return IndexedDB.contains("notes", appid) }
-
     static clearCache() {
         CacheStorage.clear();
         return IndexedDB.clear();
+    }
+
+    /*
+     * TEMP(1.4.1)
+     * TODO delete after few versions
+     */
+    static async moveNotesToSyncedStorage() {
+        let idbNotes = Object.entries(await IndexedDB.getAll("notes"));
+
+        let notes = SyncedStorage.get("user_notes");
+        for (let [appid, note] of idbNotes) {
+            notes[appid] = note;
+        }
+        SyncedStorage.set("user_notes", notes);
     }
 }
 
@@ -100,10 +109,24 @@ class Api {
         if (responseHandler) responseHandler(response);
         return response.json();
     }
-    static endpointFactory(endpoint) {
-        return async params => this.getEndpoint(endpoint, params).then(result => result.data);
+    static endpointFactory(endpoint, objPath) {
+        return async params => {
+            let result = await this.getEndpoint(endpoint, params);
+            if (objPath) {
+                if (Array.isArray(objPath)) {
+                    for (let part of objPath) {
+                        result = result[part];
+                    }
+                } else {
+                    result = result[objPath];
+                }
+            } else {
+                result = result.data;
+            }
+            return result;
+        }
     }
-    static endpointFactoryCached(endpoint, objectStoreName, multiple, oneDimensional, resultFn) {
+    static endpointFactoryCached(endpoint, objectStoreName, oneDimensional, resultFn) {
         return async (params, dbKey) => {
             let result = await this.getEndpoint(endpoint, params);
 
@@ -133,7 +156,6 @@ class Api {
                 objectStoreName,
                 oneDimensional ? null : finalResult,
                 oneDimensional ? finalResult : dbKey,
-                multiple,
             );
         };
     }
@@ -170,35 +192,115 @@ class AugmentedSteamApi extends Api {
         return IndexedDB.delete("storePageData", `app_${appid}`);
     }
 
-    static rates(to) { return IndexedDB.getAll("rates", { "to": to.sort().join(',') }) }
-    static isEA(appids) { return IndexedDB.contains("earlyAccessAppids", appids) }
+    static rates(to) {
+        return IndexedDB.getAll("rates", { "to": to.sort().join(',') });
+    }
+
+    static isEA(appids) {
+        return IndexedDB.contains("earlyAccessAppids", appids);
+    }
+
+    static steamPeek(appid) {
+        return AugmentedSteamApi.endpointFactory("v01/similar")({ appid, "count": 15 });
+    }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();
 
 class ITAD_Api extends Api {
 
-    static async authorize(hash) {
-        let url = await browser.identity.launchWebAuthFlow(
-            {
-                url: `${Config.ITAD_ApiServerHost}/oauth/authorize/?client_id=${Config.ITAD_ClientID}&response_type=token&state=${hash}&scope=${encodeURIComponent(ITAD_Api.requiredScopes.join(' '))}&redirect_uri=${browser.identity.getRedirectURL()}`,
-                interactive: true
+    static async authorize() {
+        let rnd = crypto.getRandomValues(new Uint32Array(1))[0];
+        let redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
+
+        /*
+         * How to use webRequest with event pages:
+         * https://groups.google.com/a/chromium.org/d/msg/chromium-extensions/K8njaUCU81c/eUxMIEACAQAJ
+         *
+         * Preventing event page from unloading by using iframe
+         * https://stackoverflow.com/a/58577052
+         */
+        function noop() {} // so we can removeListener
+        browser.runtime.onConnect.addListener(noop);
+
+        /*
+         * For some reason the scripts are not inserted on FF,
+         * but this doesn't really matter since FF doesn't support event pages.
+         * Therefore the event listeners never gets unloaded.
+         */
+        document.body.appendChild(document.createElement("iframe")).src = "authorizationFrame.html";
+
+        let authUrl = new URL(`${Config.ITAD_ApiServerHost}/oauth/authorize/`);
+        authUrl.searchParams.set("client_id", Config.ITAD_ClientID);
+        authUrl.searchParams.set("response_type", "token");
+        authUrl.searchParams.set("state", rnd);
+        authUrl.searchParams.set("scope", ITAD_Api.requiredScopes.join(' '));
+        authUrl.searchParams.set("redirect_uri", redirectURI);
+
+        let tab = await browser.tabs.create({"url": authUrl.toString()});
+
+        let url;
+        try {
+            url = await new Promise((resolve, reject) => {
+                function webRequestListener({ url }) {
+                    resolve(url);
+                    
+                    browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
+                    browser.tabs.onRemoved.removeListener(tabsListener);
+
+                    browser.tabs.remove(tab.id);
+                    return { "cancel": true };
+                }
+
+                function tabsListener(tabId) {
+                    if (tabId === tab.id) {
+                        reject(new Error("Authorization tab closed"));
+                        
+                        browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
+                        browser.tabs.onRemoved.removeListener(tabsListener);
+                    }
+                }
+
+                browser.webRequest.onBeforeRequest.addListener(
+                    webRequestListener,
+                    {
+                        "urls": [
+                            redirectURI,        // For Chrome, seems to not support match patterns (probably a problem with the Polyfill?)
+                            `${redirectURI}#*`  // For Firefox
+                        ],
+                        "tabId": tab.id
+                    }, ["blocking"]);
+                browser.tabs.onRemoved.addListener(tabsListener);
             });
-        if (!url) { throw new Error("Couldn't retrieve access token for ITAD authorization"); }
+        } finally {
+            browser.runtime.onConnect.removeListener(noop);
+            document.querySelector("iframe").remove();
+        }
 
         let hashFragment = new URL(url).hash;
-        if (!hashFragment) { throw new Error("URL " + url + " doesn't contain a fragment"); }
-
         let params = new URLSearchParams(hashFragment.substr(1));
 
-        if (parseInt(params.get("state"), 10) !== hash) { throw new Error("Failed to verify state parameter from URL fragment"); }
+        if (parseInt(params.get("state")) !== rnd) {
+            throw new Error("Failed to verify state parameter from URL fragment");
+        }
 
         let accessToken = params.get("access_token");
         let expiresIn = params.get("expires_in");
 
-        if (!accessToken || !expiresIn) { throw new Error("Couldn't retrieve information from URL fragment '" + hashFragment + "'"); }
+        if (!accessToken || !expiresIn) {
+            throw new Error(`Couldn't retrieve information from URL fragment "${hashFragment}"`);
+        }
             
-        LocalStorage.set("access_token", { token: accessToken, expiry: Timestamp.now() + parseInt(expiresIn, 10) });
+        LocalStorage.set("access_token", {
+            token: accessToken,
+            expiry: Timestamp.now() + parseInt(expiresIn, 10)
+        });
+    }
+
+    static disconnect() {
+        LocalStorage.remove("access_token");
+        LocalStorage.remove("lastItadImport");
+        return IndexedDB.clear(["collection", "waitlist", "itadImport"]);
     }
 
     static isConnected() {
@@ -214,16 +316,16 @@ class ITAD_Api extends Api {
         return true;
     }
 
-    static endpointFactoryCached(endpoint, objectStore, multiple, oneDimensional, resultFn) {
+    static endpointFactoryCached(endpoint, objectStore, oneDimensional, resultFn) {
         return async (params, dbKey) => {
             if (ITAD_Api.isConnected()) {
-                return super.endpointFactoryCached(endpoint, objectStore, multiple, oneDimensional, resultFn)(Object.assign(params || {}, { access_token: ITAD_Api.accessToken }), dbKey);
+                return super.endpointFactoryCached(endpoint, objectStore, oneDimensional, resultFn)(Object.assign(params || {}, { access_token: ITAD_Api.accessToken }), dbKey);
             }
         }
     }
 
-    static async addToWaitlist(storeids) {
-        if (!storeids || (Array.isArray(storeids) && !storeids.length)) {
+    static async addToWaitlist(appids) {
+        if (!appids || (Array.isArray(appids) && !appids.length)) {
             console.warn("Can't add nothing to ITAD waitlist");
             return;
         }
@@ -233,27 +335,30 @@ class ITAD_Api extends Api {
             "data": [],
         };
 
-        if (Array.isArray(storeids)) {
-            storeids.forEach(storeid => {
+        if (Array.isArray(appids)) {
+            appids.forEach(appid => {
                 waitlistJSON.data.push({
-                    "gameid": ["steam", storeid],
+                    "gameid": ["steam", `app/${appid}`],
                 });
             });
         } else {
             waitlistJSON.data[0] = {
-                "gameid": ["steam", storeids],
+                "gameid": ["steam", `app/${appids}`],
             }
         }
 
         await ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, null, { "body": JSON.stringify(waitlistJSON) });
-        return IndexedDB.put("waitlist", null, storeids, Array.isArray(storeids));
+        return IndexedDB.put("waitlist", null, appids);
     }
 
-    static async removeFromWaitlist(storeids) {
-        if (!storeids || (Array.isArray(storeids) && !storeids.length)) {
+    static async removeFromWaitlist(appids) {
+        if (!appids || (Array.isArray(appids) && !appids.length)) {
             throw new Error("Can't remove nothing from ITAD Waitlist!");
         }
-        storeids = Array.isArray(storeids) ? storeids : [storeids];
+
+        appids = Array.isArray(appids) ? appids : [appids];
+        let storeids = appids.map(appid => `app/${appid}`);
+
         await ITAD_Api.deleteEndpoint("v02/user/wait/remove/", { "access_token": ITAD_Api.accessToken, "shop": "steam", "ids": storeids.join() });
         return IndexedDB.delete("waitlist", storeids);
     }
@@ -269,32 +374,19 @@ class ITAD_Api extends Api {
             "data": [],
         };
 
-        if (Array.isArray(appids)) {
-            appids.forEach(appid => {
-                collectionJSON.data.push({
-                    "gameid": ["steam", `app/${appid}`],
-                    "copies": [{ "type": "steam" }],
-                });
-            });
-        } else if (appids) {
-            collectionJSON.data[0] = {
-                "gameid": ["steam", `app/${appids}`],
-                "copies": [{ "type": "steam" }],
-            }
-        }
+        appids = Array.isArray(appids) ? appids : (appids ? [appids] : []);
+        subids = Array.isArray(subids) ? subids : (subids ? [subids] : []);
 
-        if (Array.isArray(subids)) {
-            subids.forEach(subid => {
-                collectionJSON.data.push({
-                    "gameid": ["steam", `sub/${subid}`],
-                    "copies": [{ "type": "steam" }],
-                });
+        let storeids = appids.map(appid => `app/${appid}`).concat(subids.map(subid => `sub/${subid}`));
+        for (let storeid of storeids) {
+            collectionJSON.data.push({
+                "gameid": ["steam", storeid],
+                "copies": [{
+                    "type": "steam",
+                    "status": "redeemed",
+                    "owned": 1,
+                }],
             });
-        } else if (subids) {
-            collectionJSON.data[0] = {
-                "gameid": ["steam", `sub/${subids}`],
-                "copies": [{ "type": "steam" }],
-            }
         }
 
         return ITAD_Api.postEndpoint("v01/collection/import/", { "access_token": ITAD_Api.accessToken }, null, { "body": JSON.stringify(collectionJSON) });
@@ -307,7 +399,7 @@ class ITAD_Api extends Api {
         } else {
             let lastImport = LocalStorage.get("lastItadImport");
 
-            if (lastImport && !IndexedDB.isExpired(lastImport + 12 * 60 * 60)) { return; }
+            if (lastImport && lastImport.to && !IndexedDB.isExpired(lastImport.to + 12 * 60 * 60)) { return; }
         }
 
         let dsKeys = [];
@@ -341,7 +433,7 @@ class ITAD_Api extends Api {
             let newOwnedPackages = removeDuplicates(ownedPackages, lastOwnedPackages);
             if (newOwnedApps.length || newOwnedPackages.length) {
                 promises.push(ITAD_Api.addToCollection(newOwnedApps, newOwnedPackages)
-                    .then(() => IndexedDB.put("itadImport", [ownedApps, ownedPackages], ["lastOwnedApps", "lastOwnedPackages"], true)));
+                    .then(() => IndexedDB.put("itadImport", [ownedApps, ownedPackages], ["lastOwnedApps", "lastOwnedPackages"])));
             }
         }
 
@@ -349,13 +441,24 @@ class ITAD_Api extends Api {
             let [{ wishlisted }, { lastWishlisted }] = result;
             let newWishlisted = removeDuplicates(wishlisted, lastWishlisted);
             if (newWishlisted.length) {
-                promises.push(ITAD_Api.addToWaitlist(`app/${newWishlisted}`)
+                promises.push(ITAD_Api.addToWaitlist(newWishlisted)
                     .then(() => IndexedDB.put("itadImport", wishlisted, "lastWishlisted")));
             }
         }
         
         await Promise.all(promises);
-        LocalStorage.set("lastItadImport", Timestamp.now());
+
+        let lastImport = LocalStorage.get("lastItadImport") || {};
+        lastImport.to = Timestamp.now();
+        LocalStorage.set("lastItadImport", lastImport);
+    }
+
+    static async sync() {
+        await Promise.all([
+            ITAD_Api.import(true),
+            IndexedDB.clear("waitlist").then(() => IndexedDB.objStoreFetchFns.get("waitlist")({ "shop": "steam", "optional": "gameid" })),
+            IndexedDB.clear("collection").then(() => IndexedDB.objStoreFetchFns.get("collection")({ "shop": "steam", "optional": "gameid,copy_type" })),
+        ]);        
     }
 
     static lastImport() { return LocalStorage.get("lastItadImport"); }
@@ -370,6 +473,11 @@ class ITAD_Api extends Api {
 
             collection[gameid] = types;
         });
+
+        let lastImport = LocalStorage.get("lastItadImport") || {};
+        lastImport.from = Timestamp.now();
+        LocalStorage.set("lastItadImport", lastImport);
+
         return collection;
     }
 
@@ -380,6 +488,11 @@ class ITAD_Api extends Api {
         for (let { gameid } of Object.values(result)) {
             waitlist.push(gameid);
         }
+
+        let lastImport = LocalStorage.get("lastItadImport") || {};
+        lastImport.from = Timestamp.now();
+        LocalStorage.set("lastItadImport", lastImport);
+
         return waitlist;
     }
 
@@ -399,7 +512,6 @@ ITAD_Api.origin = Config.ITAD_ApiServerHost;
 ITAD_Api._progressingRequests = new Map();
 
 class ContextMenu {
-    _listenerRegistered = false;
 
     static onClick(info) {
         let selectionText = encodeURIComponent(info.selectionText.trim());
@@ -424,7 +536,7 @@ class ContextMenu {
                 browser.tabs.create({ url: `https://steamdb.info/instantsearch/?query=${selectionText}` });
                 break;
             case "context_steam_keys":
-                let steamkeys = info.selectionText.match(/[A-NP-RTV-Z02-9]{5}(-[A-NP-RTV-Z02-9]{5}){2}/g);
+                let steamkeys = info.selectionText.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
                 if (!steamkeys || steamkeys.length === 0) {
                     window.alert(Localization.str.options.no_keys_found);
                     return;
@@ -453,9 +565,9 @@ class ContextMenu {
         if (!browser.contextMenus) { return; }
         browser.contextMenus.removeAll().then(ContextMenu.build);
 
-        if (!this._listenerRegistered) {
+        if (!ContextMenu._listenerRegistered) {
             browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
-            this._listenerRegistered = true;
+            ContextMenu._listenerRegistered = true;
         }
     }
 
@@ -464,6 +576,8 @@ class ContextMenu {
         ContextMenu.update();
     }
 }
+ContextMenu._listenerRegistered = false;
+
 
 class SteamStore extends Api {
     // static origin = "https://store.steampowered.com/";
@@ -485,6 +599,10 @@ class SteamStore extends Api {
     
     static async wishlistAdd(params) {
         return SteamStore.postEndpoint("/api/addtowishlist", params);
+    }
+
+    static async wishlistRemove(params) {
+        return SteamStore.postEndpoint("/api/removefromwishlist", params);
     }
 
     static async currencyFromWallet() {
@@ -575,7 +693,7 @@ class SteamStore extends Api {
             purchaseDates.push(node.textContent);
         }
 
-        return IndexedDB.putCached("purchases", purchaseDates, keys, true);
+        return IndexedDB.putCached("purchases", purchaseDates, keys);
     }
 
     static purchases(appName, lang) { return IndexedDB.get("purchases", appName, lang) }
@@ -596,15 +714,31 @@ class SteamStore extends Api {
         // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
         // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
 
-        return IndexedDB.putCached("dynamicStore", Object.values(dynamicStore), Object.keys(dynamicStore), true);
+        return IndexedDB.putCached("dynamicStore", Object.values(dynamicStore), Object.keys(dynamicStore));
     }
 
-    static dsStatus(ids) { return IndexedDB.getAllFromIndex("dynamicStore", "appid", ids, true) }
-    
+    static dsStatus(ids) {
+        return IndexedDB.getAllFromIndex("dynamicStore", "appid", ids, true)
+    }
+
+    static async dynamicStoreRandomApp() {
+        let store = await IndexedDB.getAll("dynamicStore");
+        if (!store || !store.ownedApps) { return null; }
+        return store.ownedApps[Math.floor(Math.random() * store.ownedApps.length)];
+    }
+
     static async clearDynamicStore() {
         await IndexedDB.clear("dynamicStore");
         Steam._dynamicstore_promise = null;
     }
+
+    static appDetails(appid, filter)    {
+        let params = { "appids": appid };
+        if (filter) { params.filters = filter; }
+
+        return SteamStore.endpointFactory("api/appdetails/", appid)(params);
+    }
+    static appUserDetails(appid) { return SteamStore.endpointFactory("api/appuserdetails/", appid)({ "appids": appid }); }
 }
 SteamStore.origin = "https://store.steampowered.com/";
 SteamStore.params = { 'credentials': 'include', };
@@ -715,7 +849,7 @@ class SteamCommunity extends Api {
             }
         }
 
-        return IndexedDB.putCached("coupons", Object.values(coupons), Object.keys(coupons).map(key => Number(key)), true);
+        return IndexedDB.putCached("coupons", Object.values(coupons), Object.keys(coupons).map(key => Number(key)));
     }
 
     static getCoupon(appids) { return IndexedDB.getFromIndex("coupons", "appid", appids) }
@@ -767,7 +901,7 @@ class SteamCommunity extends Api {
             "passes": passes,
         };
 
-        return IndexedDB.putCached("giftsAndPasses", Object.values(data), Object.keys(data), true);
+        return IndexedDB.putCached("giftsAndPasses", Object.values(data), Object.keys(data));
     }
 
     static async hasGiftsAndPasses(appid) { return IndexedDB.getAllFromIndex("giftsAndPasses", "appid", appid, true) }
@@ -776,7 +910,7 @@ class SteamCommunity extends Api {
         // only used for market highlighting
         let data = await SteamCommunity.getInventory(6);
         if (data) {
-            return IndexedDB.putCached("items", null, data.descriptions.map(item => item.market_hash_name), true);
+            return IndexedDB.putCached("items", null, data.descriptions.map(item => item.market_hash_name));
         }
     }
 
@@ -894,17 +1028,20 @@ class IndexedDB {
         };
     }
     static then(onDone, onCatch) {
-        return IndexedDB.init()().then(onDone, onCatch);
+        return (IndexedDB.init())().then(onDone, onCatch);
     }
 
-    static putCached(objectStoreName, data, key, multiple) {
-        return IndexedDB.put(objectStoreName, data, key, multiple, true);
+    static putCached(objectStoreName, data, key) {
+        return IndexedDB.put(objectStoreName, data, key, true);
     }
 
-    static async put(objectStoreName, data, key, multiple, cached) {
+    static async put(objectStoreName, data, keys, cached) {
+        let multiple = Array.isArray(keys);
+
         if (cached) {
             let ttl = IndexedDB.cacheObjectStores.get(objectStoreName);
             let expiry = Timestamp.now() + ttl;
+
             if (IndexedDB.timestampedObjectStores.has(objectStoreName)) {
                 await IndexedDB.db.put(objectStoreName, expiry, "expiry");
             } else {
@@ -916,25 +1053,23 @@ class IndexedDB {
             }
         }
         if (multiple) {
-            let promises = [];
-            if (key) {
-                for (let i = 0; i < key.length; ++i) {
-                    if (data) {
-                        promises.push(IndexedDB.db.put(objectStoreName, data[i], key[i]));
-                    } else {
-                        promises.push(IndexedDB.db.put(objectStoreName, null, key[i]));
-                    }
+            let tx = IndexedDB.db.transaction(objectStoreName, "readwrite");
+            if (keys) {
+                for (let i = 0; i < keys.length; ++i) {
+                    tx.store.put(data ? data[i] : null, keys[i]);
                 }
             } else {
-                data.forEach(value => promises.push(IndexedDB.db.put(objectStoreName, value)));
+                for (let value of data) {
+                    tx.store.put(value);
+                }
             }
-            return Promise.all(promises);
+            return tx.done;
         } else {
-            if (key) {
+            if (keys) {
                 if (data) {
-                    return IndexedDB.db.put(objectStoreName, data, key);
+                    return IndexedDB.db.put(objectStoreName, data, keys);
                 } else {
-                    return IndexedDB.db.put(objectStoreName, null, key);
+                    return IndexedDB.db.put(objectStoreName, null, keys);
                 }
             } else {
                 return IndexedDB.db.put(objectStoreName, data);
@@ -942,23 +1077,26 @@ class IndexedDB {
         }
     }
 
-    static async get(objectStoreName, key, params) {
+    static async get(objectStoreName, keys, params) {
         await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
 
-        if (Array.isArray(key)) {
+        if (Array.isArray(keys)) {
             let promises = [];
-            for (let i = 0; i < key.length; ++i) {
-                promises.push(IndexedDB.db.get(objectStoreName, key[i])
-                    .then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, key[i], params)));
+            let tx = IndexedDB.db.transaction(objectStoreName);
+
+            for (let key of keys) {
+                promises.push(tx.store.get(key).then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, keys[i], params)));
             }
+
             let resolved = await Promise.all(promises);
-            return key.reduce((acc, cur, i) => {
+
+            return keys.reduce((acc, cur, i) => {
                 acc[cur] = resolved[i];
                 return acc;
             }, {});
         } else {
-            return IndexedDB.db.get(objectStoreName, key)
-                .then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, key, params));
+            return IndexedDB.db.get(objectStoreName, keys)
+                .then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, keys, params));
         }
     }
 
@@ -1083,13 +1221,17 @@ class IndexedDB {
     }
 
     static delete(objectStoreName, keys) {
-        keys = Array.isArray(keys) ? keys : [keys];
+        if (Array.isArray(keys)) {
+            let tx = IndexedDB.db.transaction(objectStoreName, "readwrite");
 
-        let promises = [];
-        for (let key of keys) {
-            promises.push(IndexedDB.db.delete(objectStoreName, key));
-        }
-        return Promise.all(promises);
+            for (let key of keys) {
+                tx.store.delete(key);
+            }
+
+            return tx.done;
+        } else {
+            return IndexedDB.db.delete(objectStoreName, keys);
+        }        
     }
 
     static clear(objectStoreNames) {
@@ -1251,26 +1393,24 @@ IndexedDB.objStoreFetchFns = new Map([
     ["coupons", SteamCommunity.coupons],
     ["giftsAndPasses", SteamCommunity.giftsAndPasses],
     ["items", SteamCommunity.items],
-    ["earlyAccessAppids", AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", "earlyAccessAppids", true, true)],
+    ["earlyAccessAppids", AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", "earlyAccessAppids", true)],
     ["purchases", SteamStore.purchaseDate],
     ["dynamicStore", SteamStore.dynamicStore],
     ["packages", SteamStore.fetchPackage],
     ["storePageData", AugmentedSteamApi.endpointFactoryCached("v01/storepagedata", "storePageData")],
     ["profiles", AugmentedSteamApi.endpointFactoryCached("v01/profile/profile", "profiles")],
-    ["rates", AugmentedSteamApi.endpointFactoryCached("v01/rates", "rates", true)],
-    ["collection", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "collection", true, false, ITAD_Api.mapCollection)],
-    ["waitlist", ITAD_Api.endpointFactoryCached("v01/user/wait/all", "waitlist", true, true, ITAD_Api.mapWaitlist)],
+    ["rates", AugmentedSteamApi.endpointFactoryCached("v01/rates", "rates")],
+    ["collection", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "collection", false, ITAD_Api.mapCollection)],
+    ["waitlist", ITAD_Api.endpointFactoryCached("v01/user/wait/all", "waitlist", true, ITAD_Api.mapWaitlist)],
 ]);
 
 let actionCallbacks = new Map([
     ["wishlist.add", SteamStore.wishlistAdd],
+    ["wishlist.remove", SteamStore.wishlistRemove],
     ["dynamicstore.clear", SteamStore.clearDynamicStore],
     ["steam.currencies", Steam.currencies],
-    
-    ["notes.get", AugmentedSteam.getUserNote],
-    ["notes.set", AugmentedSteam.setUserNote],
-    ["notes.delete", AugmentedSteam.deleteUserNote],
-    ["notes.exists", AugmentedSteam.userNoteExists],
+
+    ["migrate.notesToSyncedStorage", AugmentedSteam.moveNotesToSyncedStorage],
     ["cache.clear", AugmentedSteam.clearCache],
 
     ["dlcinfo", AugmentedSteamApi.endpointFactory("v01/dlcinfo")],
@@ -1285,14 +1425,16 @@ let actionCallbacks = new Map([
     ["market.cardprices", AugmentedSteamApi.endpointFactory("v01/market/cardprices")],
     ["market.averagecardprice", AugmentedSteamApi.endpointFactory("v01/market/averagecardprice")], // FIXME deprecated
     ["market.averagecardprices", AugmentedSteamApi.endpointFactory("v01/market/averagecardprices")],
+    ["steampeek", AugmentedSteamApi.steamPeek],
 
-    ["appdetails", SteamStore.endpointFactory("api/appdetails/")],
-    ["appuserdetails", SteamStore.endpointFactory("api/appuserdetails/")],
+    ["appdetails", SteamStore.appDetails],
+    ["appuserdetails", SteamStore.appUserDetails],
     ["currency", SteamStore.currency],
     ["sessionid", SteamStore.sessionId],
     ["purchases", SteamStore.purchases],
     ["clearpurchases", SteamStore.clearPurchases],
     ["dynamicstorestatus", SteamStore.dsStatus],
+    ["dynamicStore.randomApp", SteamStore.dynamicStoreRandomApp],
 
     ["login", SteamCommunity.login],
     ["logout", SteamCommunity.logout],
@@ -1306,23 +1448,16 @@ let actionCallbacks = new Map([
     ["clearownprofile", SteamCommunity.clearOwn],
 
     ["itad.authorize", ITAD_Api.authorize],
+    ["itad.disconnect", ITAD_Api.disconnect],
     ["itad.isconnected", ITAD_Api.isConnected],
     ["itad.import", ITAD_Api.import],
+    ["itad.sync", ITAD_Api.sync],
     ["itad.lastimport", ITAD_Api.lastImport],
     ["itad.inwaitlist", ITAD_Api.inWaitlist],
     ["itad.addtowaitlist", ITAD_Api.addToWaitlist],
     ["itad.removefromwaitlist", ITAD_Api.removeFromWaitlist],
     ["itad.incollection", ITAD_Api.inCollection],
     ["itad.getfromcollection", ITAD_Api.getFromCollection],
-
-    ["idb.get", IndexedDB.get],
-    ["idb.getfromindex", IndexedDB.getFromIndex],
-    ["idb.getallfromindex", IndexedDB.getAllFromIndex],
-    ["idb.put", IndexedDB.put],
-    ["idb.delete", IndexedDB.delete],
-    ["idb.clear", IndexedDB.clear],
-    ["idb.contains", IndexedDB.contains],
-    ["idb.indexcontainskey", IndexedDB.indexContainsKey],
 
     ["error.test", () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);

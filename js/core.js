@@ -1,5 +1,5 @@
 const Info = {
-    'version': "1.3.1",
+    'version': browser.runtime.getManifest().version,
     'db_version': 1,
 };
 
@@ -23,6 +23,18 @@ if (typeof Promise.prototype.finally === 'undefined') {
             });
         },
     });
+}
+
+class BackgroundBase {
+    static message(message) {
+        return browser.runtime.sendMessage(message);
+    }
+    
+    static action(requested, ...params) {
+        if (!params.length)
+            return this.message({ "action": requested, });
+        return this.message({ "action": requested, "params": params, });
+    }
 }
 
 class Version {
@@ -127,19 +139,30 @@ class UpdateHandler {
         SyncedStorage.set("version", Info.version);
     };
 
-    static _showChangelog() {
-        RequestData.getHttp(ExtensionResources.getURL("changelog_new.html")).then(
-            changelog => {
-                changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
-                let logo = ExtensionResources.getURL("img/es_128.png");
-                let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
-                ExtensionLayer.runInPageContext(
-                    `function() {
-                        ShowAlertDialog("${Localization.str.update.updated.replace("__version__", Info.version)}", '${dialog}');
-					}`
-                );
-            }
+    static async _showChangelog() {
+        let changelog = (await RequestData.getHttp(ExtensionResources.getURL("changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
+        let logo = ExtensionResources.getURL("img/es_128.png");
+        let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
+        ExtensionLayer.runInPageContext(
+            `function() {
+                ShowAlertDialog("${Localization.str.update.updated.replace("__version__", Info.version)}", '${dialog}');
+            }`
         );
+
+        if (Version.fromString(Info.version).isSame(new Version(1, 4))) {
+            let connectBtn = document.querySelector("#itad_connect");
+            if (await BackgroundBase.action("itad.isconnected")) {
+                itadConnected();
+            } else {
+                connectBtn.addEventListener("click", async function() {
+                    await BackgroundBase.action("itad.authorize");
+                    ITAD.create();
+                    itadConnected();
+                });
+            }
+
+            function itadConnected() { connectBtn.replaceWith("✓"); }
+        }
     }
 
     static _migrateSettings(oldVersion) {
@@ -253,10 +276,18 @@ class UpdateHandler {
         }
 
         if (oldVersion.isSameOrBefore("1.3.1")) {
-            browser.runtime.sendMessage({ "action": "cache.clear" }) // todo Implement general background communication class
+            BackgroundBase.action("cache.clear");
 
             SyncedStorage.set("horizontalscrolling", SyncedStorage.get("horizontalmediascrolling"));
             SyncedStorage.remove("horizontalmediascrolling");
+        }
+
+        if (oldVersion.isSameOrBefore("1.4")) {
+            SyncedStorage.remove("show_sysreqcheck");
+        }
+
+        if (oldVersion.isSame("1.4")) {
+            Background.action("migrate.notesToSyncedStorage");
         }
     }
 }
@@ -282,8 +313,8 @@ class GameId {
         }
 
         // app, market/listing
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
+        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(?:app|market\/listings)\/(\d+)\/?/);
+        return m && GameId.parseId(m[1]);
     }
     
     static getSubid(text) {
@@ -297,7 +328,7 @@ class GameId {
         }
         
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/sub\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
+        return m && GameId.parseId(m[1]);
     }
 
     static getBundleid(text) {
@@ -311,7 +342,7 @@ class GameId {
         }
 
         let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/bundle\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
+        return m && GameId.parseId(m[1]);
     }
 
     static trimStoreId(storeId) {
@@ -585,7 +616,6 @@ SyncedStorage.defaults = {
 
     //'show_keylol_links': false, // not in use, option is commented out
     'show_package_info': false,
-    'show_sysreqcheck': false,
     'show_steamchart_info': true,
     'show_steamspy_info': true,
     'show_early_access': true,
@@ -631,6 +661,7 @@ SyncedStorage.defaults = {
     'disablelinkfilter': false,
     'showallfriendsthatown': false,
     'sortfriendsby': "default",
+    'sortgroupsby': "default",
     'show1clickgoo': true,
     'show_profile_link_images': "gray",
     'profile_steamrepcn': true,
@@ -660,7 +691,7 @@ SyncedStorage.defaults = {
     'profile_showcase_own_twitch': false,
     'profile_showcase_twitch_profileonly': false,
 
-    'itad_import_library': true,
+    'itad_import_library': false,
     'itad_import_wishlist': false,
     'add_to_waitlist': false,
 
@@ -890,22 +921,6 @@ class StringUtils {
     static escapeRegExp(str) {
         return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
     }
-
-    // https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
-    static hashCode(string){
-        let hash = 0;
-        if (string.length === 0) {
-            return hash;
-        }
-
-        for (let i = 0; i < string.length; i++) {
-            let char = string.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; // convert to 32bit integer
-        }
-
-        return hash;
-    }
 }
 
 class CommunityLoginError extends Error {
@@ -940,9 +955,10 @@ class Debug {
 
     static async executionTime(fn, label) {
         let start = performance.now();
-        await fn();
+        let result = await fn();
         let end = performance.now();
         console.debug("Took", end - start, "ms to execute", label);
+        return result;
     }
 }
 

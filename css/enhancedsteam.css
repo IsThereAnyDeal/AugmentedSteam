@@ -28,11 +28,11 @@
   opacity: 1;
 }
 
-/* Required for "Customize" button and YouTube / Steam tabs */
-.home_actions_ctn {
+/* Required for "Customize" button */
+#es_customize_btn {
   float: right;
 }
-.home_btn {
+#es_customize_btn .home_customize_btn {
   display: inline-block;
   background: rgba( 103, 193, 245, 0.2 );
   color: #67c1f5;
@@ -42,24 +42,23 @@
   padding: 0 8px;
   margin-left: 4px;
   cursor: pointer;
-}
-.home_btn:hover {
-  color: #ffffff;
-  background: linear-gradient(-60deg, #67c1f5 0%, #417a9b 100%);
-}
-.home_btn.active {
-  background: #e3eaef;
-  color: #384959;
-}
-.home_btn.active:hover {
-  background: #e3eaef;
-}
-.home_btn.home_customize_btn {
+  z-index: 13;
   position: relative;
   z-index: 11;
   margin-right: 2px;
 }
-.home_viewsettings_popup {
+#es_customize_btn .home_customize_btn:hover {
+  color: #ffffff;
+  background: linear-gradient(-60deg, #67c1f5 0%, #417a9b 100%);
+}
+#es_customize_btn .home_customize_btn.active {
+  background: #e3eaef;
+  color: #384959;
+}
+#es_customize_btn .home_customize_btn.active:hover {
+  background: #e3eaef;
+}
+#es_customize_btn .home_viewsettings_popup {
   position: absolute;
   color: #384959;
   padding: 12px 11px;
@@ -70,10 +69,11 @@
   background: -webkit-linear-gradient( top, #e3eaef 5%, #c7d5e0 95%);
   background: linear-gradient( to bottom, #e3eaef 5%, #c7d5e0 95%);
 }
-.home_viewsettings_instructions {
+#es_customize_btn .home_viewsettings_instructions {
   margin-bottom: 12px;
+  font-size: 12px;
 }
-.home_viewsettings_checkboxrow {
+#es_customize_btn .home_viewsettings_checkboxrow {
   background: rgba( 0, 0, 0, 0.2 );
   margin-bottom: 1px;
   padding: 2px;
@@ -82,11 +82,11 @@
   font-size: 10px;
   cursor: pointer;
 }
-.home_viewsettings_checkboxrow:hover {
+#es_customize_btn .home_viewsettings_checkboxrow:hover {
   color: #ffffff;
   background: rgba( 0, 0, 0, 0.3 );
 }
-.home_viewsettings_checkbox {
+#es_customize_btn .home_viewsettings_checkbox {
   float: left;
   margin-right: 5px;
   display: inline-block;
@@ -95,12 +95,18 @@
   background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/customize_checkboxes.png');
   background-position: 0px 0px;
 }
-.home_viewsettings_checkbox.checked {
+#es_customize_btn .home_viewsettings_checkbox.checked {
   background-position: 0px 28px;
 }
 
-.home_tab {
-  margin-top: 3px;
+.es_tabs {
+  position: relative;
+  overflow-x: auto;
+  white-space: nowrap;
+  height: 31px;
+}
+.es_tabs .home_tab {
+  margin-top: 6px;
   border: none;
   display: inline-block;
   margin-right: 0px;
@@ -112,16 +118,16 @@
   cursor: pointer;
   vertical-align: top;
 }
-.home_tab.active {
+.es_tabs .home_tab.active {
   background: linear-gradient(top, rgba(103,193,245,1) 0%,rgba(103,193,245,0) 100%);
   margin-top: 0;
   box-shadow: none;
   padding: 1px;
 }
-.home_tab:hover {
+.es_tabs .home_tab:hover {
   color: #ffffff;
 }
-.home_tab .tab_content {
+.es_tabs .home_tab .tab_content {
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   font-size: 13px;
@@ -130,9 +136,8 @@
   padding: 0 10px;
   cursor: pointer;
   vertical-align: top;
-  box-shadow: inset 0 -2px 3px 0 rgba( 0, 0, 0, 0.25 );
 }
-.home_tab.active .tab_content {
+.es_tabs .home_tab.active .tab_content {
   line-height: 29px;
   font-size: 14px;
   color: #ffffff;
@@ -142,14 +147,31 @@
   margin-top: 0;
   box-shadow: none;
 }
-.home_tab .tab_content:hover {
+.es_tabs .home_tab .tab_content:hover {
   color: #ffffff;
   background: linear-gradient(-60deg,  #67c1f5 0%,#417a9b 100%);
 }
-.home_tabs_row {
-  position: relative;
-  overflow-x: auto;
-  white-space: nowrap;
+
+#recommended_block_content.es_steam_active > .es_sp_similar {
+  display: none;
+}
+#recommended_block_content.es_sp_active > .es_steam_similar {
+  display: none;
+}
+.es_sp_similar:last-of-type:hover > .es_sp_similar__link {
+  color: #ffffff;
+}
+.es_sp_similar__link {
+  width: 171px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 10px;
+  white-space: normal;
+  text-align: center;
+  background-color: #1b2838;
+  color: #67c1f5;
 }
 
 .wishlistRow {
@@ -258,7 +280,7 @@ img.astats_icon {
   margin-top: 20px;
 }
 
-.es_media_tab.active .tab_content {
+.es_tab.active .tab_content {
   background-color: #0003 !important;
 }
 
@@ -290,6 +312,12 @@ img.astats_icon {
   padding-top: 5px;
   margin-bottom: 20px;
 }
+
+#steam-charts .chart-footer,
+#steam-spy .chart-footer {
+  padding-right: 13px;
+}
+
 .apphub_HeaderTop.es_greenlight {
   background-image: url('https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/ig/gl_item_blue.jpg');
   background-position: left center;
@@ -373,32 +401,6 @@ img.astats_icon {
 .es_custom_money .giftcard_text.small {
   font-size: 22px !important;
 }
-input[type=checkbox].es_dlc_selection {
-  position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-}
-
-input[type=checkbox].es_dlc_selection + label {
-  padding-left: 20px;
-  height: 13px;
-  display: inline-block;
-  line-height: 13px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  vertical-align: middle;
-  cursor: default;
-  z-index: 99;
-}
-
-input[type=checkbox].es_dlc_selection:checked + label {
-  background-position: 0 -13px;
-}
 
 .es_review_image {
   vertical-align: middle;
@@ -408,35 +410,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_review_text {
   font-size: 14px;
   font-weight: bold;
-}
-
-#es_dlc_option_button {
-  float: right;
-  margin-right: 8px;
-  line-height: normal;
-  text-decoration: none;
-}
-
-#es_dlc_option_button:hover {
-  cursor: pointer;
-}
-
-#es_dlc_option_panel {
-  background: url('https://steamcommunity-a.akamaihd.net/public/images/profile/profile_header_bg_texture.jpg');
-  border-bottom: 1px solid black;
-}
-
-.es_dlc_option {
-  display: inline-block;
-  margin-right: 10px;
-  margin-top: 5px;
-  font-size: 11px;
-  color: #ffffff;
-}
-
-.es_dlc_option:hover {
-  text-decoration: underline;
-  cursor: pointer;
 }
 
 #es_price_range {
@@ -622,6 +595,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es_market_summary_item {
   float: right;
   line-height: inherit !important;
+}
+.es_percentage_higher {
+  color: #ff1717;
+}
+.es_percentage_lower {
+  color: #60ad0a;
 }
 .es_item_action {
   height: 60px;
@@ -1004,7 +983,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
  * App page, wishlist buttons
  **************************************/
 .es-loading-wl {
-  -webkit-filter: brightness(350%); /* to make the image more consitent with others, feel free to replace the image and remove this */
+  width: 16px;
+  filter: brightness(350%); /* to make the image more consitent with others, feel free to replace the image and remove this */
 }
 .queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-in-wl {
   display: none !important;
@@ -1080,6 +1060,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .es-leave-options button:disabled {opacity: .6}
 
 /***************************************
+ * Game Cards page
+ **************************************/
+/* Layout for the case when zoomed in (and the buttons are wrapped) */
+.badge_detail_tasks .gamecards_inventorylink {
+  overflow: auto;
+  margin-bottom: 9px; /* Default is 14px => 14-5 = 9 */
+}
+.badge_detail_tasks .gamecards_inventorylink a {
+  margin-bottom: 5px;
+}
+
+/***************************************
  * Badges page
  * add_badge_view_options()
  **************************************/
@@ -1096,6 +1088,14 @@ input[type=checkbox].es_dlc_selection:checked + label {
   z-index: 3;
   top: 12px;
   right: 12px;
+}
+.es_steamcardexchange_link img {
+  width: 24px;
+  height: 24px;
+  border: 0;
+}
+.es-has-ce-link .badge_title_row {
+  padding-right: 44px;
 }
 
 .es_binder_view .badges_sheet {
@@ -1475,21 +1475,18 @@ input[type=checkbox].es_dlc_selection:checked + label {
   height: 16px;
   margin: 5px;
 }
-.es_screenshot_download_btn, .es_screenshot_open_btn {
+.es_screenshot_open_btn {
 	position: absolute;
 	right: 24%;
 	bottom: 0;
 }
-.es_screenshot_download_btn i, .es_screenshot_open_btn i {
+.es_screenshot_open_btn i {
 	display: block;
 	background-position: center;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 	margin: 5px;
-}
-.es_screenshot_download_btn i {
-	background-image: url('https://steamcommunity-a.akamaihd.net/public/shared/images/header/btn_header_installsteam_download.png?v=1');
 }
 .screenshot_popup_modal_content:fullscreen .es_screenshot_fullscreen_toggle i {
   background-position: bottom left;
@@ -1920,6 +1917,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
   margin-top: -25px;
   text-align: left;
 }
+.es_regional_container > .es_regional_arrow {
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 8px solid #313f56;
+  position: absolute;
+  top: 12px;
+  right: -8px;
+  width: 0;
+  height: 0;
+}
 .es_regional_prices:not(.es_regional_always) .es_regional_container {
   display: none;
   position: absolute;
@@ -2026,6 +2033,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  max-width: 800px
 }
 .es_changelog p {
   margin-bottom: 0.4em;
@@ -2095,7 +2103,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
   position: absolute;
   margin-top: -20px;
 }
-.similar_grid_item .es_tags {
+.similar_grid_item .es_tags,
+.newonsteam_headercap .es_tags,
+.comingsoon_headercap .es_tags {
   float: right;
 }
 .recommendation_carousel_item .es_tags,
@@ -2444,14 +2454,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
   align-items: center;
   margin-right: 1em;
 }
-#es_itad.not_authorized {
-	cursor: pointer;
-}
-#es_itad.authorized #es_itad_status {
+#es_itad_status {
 	color: rgb(81, 119, 29);
-}
-#es_itad.not_authorized #es_itad_status {
-	text-decoration: underline;
 }
 #es_itad_status {
 	margin-left: 0.4em;
@@ -2503,28 +2507,29 @@ input[type=checkbox].es_dlc_selection:checked + label {
   width: 26px;
   height: 13px;
 }
-.es-itad-hover__import-now {
-  font-weight: bolder;
-  font-size: medium;
+.es-itad-hover__last-import {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-column-gap: 1em;
+}
+.es-itad-hover__sync-now {
   display: flex;
-  align-items: center;
   justify-content: center;
 }
-.es-itad-hover__import-now--loading .es-itad-hover__import-now-text {
-  cursor: progress;
-}
-.es-itad-hover__import-now-text {
+.es-itad-hover__sync-now-text {
+  font-weight: bolder;
+  font-size: medium;
   cursor: pointer;
   text-decoration: underline;
   margin-right: 5px;
 }
-.es-itad-hover__import-success {
+.es-itad-hover__sync-success {
   color: rgb(81, 119, 29);
 }
-.es-itad-hover__import-now .loader, .es-itad-hover__import-failed, .es-itad-hover__import-success {
+.es-itad-hover__sync-now .loader, .es-itad-hover__sync-failed, .es-itad-hover__sync-success {
   display: none;
 }
-.es-itad-hover__import-now--failed .es-itad-hover__import-failed, .es-itad-hover__import-now--success .es-itad-hover__import-success, .es-itad-hover__import-now--loading .loader {
+.es-itad-hover__sync-now--failed .es-itad-hover__sync-failed, .es-itad-hover__sync-now--success .es-itad-hover__sync-success, .es-itad-hover__sync-now--loading .loader {
   display: block;
 }
 
@@ -2685,6 +2690,76 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
+ * Store app pages
+ * addDlcCheckboxes()
+ **************************************/
+#es_selected_btn {
+  float: left;
+  margin-top: 4px;
+  display: none;
+}
+#es_dlc_option_button {
+  float: right;
+  margin-right: 8px;
+  line-height: normal;
+  text-decoration: none;
+}
+#es_dlc_option_button:hover {
+  cursor: pointer;
+}
+#es_dlc_option_panel {
+  background: url('https://steamcommunity-a.akamaihd.net/public/images/profile/profile_header_bg_texture.jpg');
+  border-bottom: 1px solid black;
+  height: 28px;
+  padding-left: 15px;
+  display: none;
+}
+.es_dlc_option {
+  display: inline-block;
+  margin-right: 10px;
+  margin-top: 5px;
+  font-size: 11px;
+  color: #ffffff;
+}
+.es_dlc_option:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* hide dlc flag due to checkboxes */
+.game_area_dlc_row:hover .ds_flag {
+  display: none;
+}
+
+.es_dlc_selection {
+  cursor: default;
+}
+input[type=checkbox].es_dlc_selection {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+}
+input[type=checkbox].es_dlc_selection + label {
+  padding-left: 20px;
+  height: 13px;
+  display: inline-block;
+  line-height: 13px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  vertical-align: middle;
+  cursor: default;
+  z-index: 99;
+}
+input[type=checkbox].es_dlc_selection:checked + label {
+  background-position: 0 -13px;
+}
+
+/***************************************
  * Steam Web Chat
  **************************************/
 .chat_dialog_content_inner {
@@ -2771,9 +2846,6 @@ input[type=checkbox].es_dlc_selection:checked + label {
   display: block;
   margin-bottom: 6px;
 }
-
-/* hide dlc flag due to checkboxes */
-.game_area_dlc_row:hover .ds_flag { display: none; }
 
 .esi-shown {
   display: block !important;
@@ -2905,7 +2977,13 @@ input[type=checkbox].es_dlc_selection:checked + label {
   overflow: hidden;
 }
 
-.esi-hide-common .esi-common {
+/* hide Steam's option on "All Games" page */
+input[id="show_common_games"],
+label[for="show_common_games"] {
+  display: none;
+}
+.esi-hide-common .esi-common,
+.esi-hide-notcommon .esi-notcommon { 
   display: none !important;
 }
 
@@ -2972,7 +3050,9 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 .es_hltb a.linkbar > img,
-.es_wsgf a.linkbar > img {
+.es_wsgf a.linkbar > img,
+.es_dlc_info a.linkbar > img,
+.es_bundle_info > img {
   border: 0;
   vertical-align: baseline;
 }
@@ -2985,6 +3065,10 @@ input[type=checkbox].es_dlc_selection:checked + label {
   border: 0;
   height: 120px;
   cursor: help;
+}
+
+.es_dlc_info .details_block img {
+  vertical-align: top;
 }
 
 /***************************************
@@ -3005,9 +3089,12 @@ input[type=checkbox].es_dlc_selection:checked + label {
 /***************************************
  * Layout around Customizer on App Pages
  **************************************/
-.game_page_autocollapse_ctn { margin-top: 30px; }
-.game_page_autocollapse_ctn .game_area_description { margin-top: 0; }
-
+.game_page_autocollapse_ctn {
+  margin-top: 30px;
+}
+.game_page_autocollapse_ctn .game_area_description {
+  margin-top: 0;
+}
 
 #pagebtn_first,
 #pagebtn_last {

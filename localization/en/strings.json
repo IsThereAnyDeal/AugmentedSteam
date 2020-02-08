@@ -4,20 +4,19 @@
     "copied": "Copied to your clipboard!",
     "profile_steamid": "Show SteamID on profiles",
     "view_steamid": "View SteamID",
+    "more_on_steampeek": "See more on SteamPeek",
     "invite_friends": "Invite Friends",
     "invite_to_group": "Invite To Group",
-    "formatting_help": "Formatting help",
-    "add_comment": "Add a comment",
-    "friends_commenter": "Post Comments to Selected Friends",
-    "friends_commenter_warning": "Please make sure you entered a message and selected 1 or more friends.",
-    "posted_at_success": "Successfully posted comment on __profile__.",
-    "posted_at_fail": "Failed to post comment on __profile__.",
-    "processed": "Processed __i__ out of __total__ friend(s).",
-    "alert": "Alert",
+    "inverse": "Inverse",
     "transactionStatus": "__failed__ request(s) failed. Retrieved __size__ of __total__ transactions.",
     "custom_tags": "Custom Tags",
     "add_tag": "Add tag",
-    "enter_tag": "Enter the custom tag you'd like you add",
+    "enter_tag": "Enter the custom tag you'd like to add",
+    "status": "Status:",
+    "connect": "Connect",
+    "connected": "Connected",
+    "disconnect": "Disconnect",
+    "disconnected": "Disconnected",
     "oneclickgoo": "1-Click turn into Gems...",
     "view_in_library": "View in Library",
     "support": "Support",
@@ -76,7 +75,6 @@
     "website": "Website",
     "game": "Game",
     "games": "Games",
-    "total_time": "Total Time",
     "dlc_suggest": "Suggest a new category",
     "badge_completion_cost": "Cost of completing badge: __cost__",
     "loading": "Loading...",
@@ -103,7 +101,8 @@
     "spam_comment_show": "__num__ spam comments hidden on this page.  Click here to show them.",
     "dlc": "Downloadable Content",
     "add_to_wishlist": "Add to your wishlist",
-    "remove_from_wishlist": "This product is already on your wishlist. Click to remove it from your wishlist.",
+    "add_to_wishlist_tooltip": "Get notified by email when your wishlisted items get released or are on sale",
+    "remove_from_wishlist_tooltip": "This product is already on your wishlist. Click to remove it from your wishlist.",
     "add_to_waitlist": "Add to your Waitlist",
     "language": "Language",
     "theworddefault": "Default",
@@ -140,6 +139,8 @@
     "using_store": "You are using the Steam store for the __current__ region.",
     "volume_sold_last_24": "Volume: __sold__ sold in the last 24 hours",
     "sold_last_24": "__sold__ sold in the last 24 hours",
+    "homepage_curators": "Steam Curator Recommendations",
+    "homepage_topnewreleases": "Top Steam Releases",
     "homepage_sidebar": "Sidebar",
     "drop_calc": "Click here to calculate drops remaining",
     "price": "Price",
@@ -181,10 +182,13 @@
     "badge_foil_progress": "View Foil Badge Progress",
     "net_gain": "Net gain:",
     "apppage_recentupdates": "Recent Events & Announcements",
+    "apppage_eaheader": "Early Access Info Box",
+    "apppage_eabanner": "Early Access Discussions Banner",
     "apppage_workshop": "Steam Workshop Banner",
     "apppage_greenlight": "Steam Greenlight Banner",
     "apppage_legal": "Legal Information",
     "apppage_franchise": "Franchise",
+    "apppage_morefromfranchise": "More From Franchise",
     "bug_feature": "Report Bug / Suggest Feature",
     "always": "Always",
     "compare": "Compare",
@@ -227,6 +231,14 @@
     "item_type": "Item Type",
     "avg_price_3cards": "Average price of three trading cards: __price__",
     "mods": "Mods",
+    "groups": {
+        "leave_groups_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?",
+        "manage_groups": "Manage groups",
+        "action_groups": "Select the groups below that you wish to take action on.",
+        "select": "Select:",
+        "leave": "Leave",
+        "selected": "__n__ selected."
+    },
     "export": {
         "wishlist": "Export wishlist",
         "type": "Export type",
@@ -253,7 +265,7 @@
     "wishlist": "Wishlist",
     "on_wishlist": "On Wishlist",
     "ignored": "Ignored",
-    "on_waitlist": "On Waitlist",
+    "on_waitlist": "In Waitlist",
     "notdiscounted": "Items not discounted",
     "cancel": "Cancel",
     "wiki_article": "View __pcgw__ Article",
@@ -265,6 +277,8 @@
     "playtime": "Playtime",
     "year": "Year",
     "lastonline": "Last Online",
+    "members": "Members",
+    "name": "Name",
     "edit_price": "Edit Price",
     "relist": "Relist",
     "relist_an_item": "Relist an item",
@@ -294,10 +308,6 @@
     },
     "favorited": "Favorited",
     "followed": "Followed",
-    "leave_group_selected": "Leave Selected",
-    "leave_group_all": "Leave All",
-    "leave_group_all_confirm": "You are about to leave ALL GROUPS you belong to!\nAre you sure you want to continue?",
-    "leave_group_admin_confirm": "You are Admin in this group: __groupname__\nAre you sure you want to leave?",
     "wrong_try_again": "Something went wrong. Please try again.",
     "join_group": "Join Group",
     "chat": "Chat",
@@ -550,11 +560,12 @@
             "tchinese": "Traditional Chinese",
             "thai": "Thai",
             "turkish": "Turkish",
-            "ukrainian": "Ukrainian"
+            "ukrainian": "Ukrainian",
+            "vietnamese": "Vietnamese"
         },
         "add_custom_link": "Add custom link",
         "auto_detect": "Auto-detect",
-        "add_to_waitlist": "Show separate \"Add to Waitlist\" button"
+        "add_to_waitlist": "Show \"Add to Waitlist\" dropdown on app pages"
     },
     "ready": {
         "errormsg": "Error loading Augmented Steam data",
@@ -620,11 +631,17 @@
     },
     "itad": {
         "import": "Periodically import:",
-        "last_import": "Last import",
-        "import_now": "Import now",
+        "last_import": "Last import...",
+        "from": "from ITAD:",
+        "to": "to ITAD:",
+        "sync_now": "Sync now",
         "option": "Show menu option to sync data to IsThereAnyDeal.com",
         "send_to_itad": "Send owned games to IsThereAnyDeal",
-        "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com"
+        "sending": "Loading your owned games and packages and sending them to IsThereAnyDeal.com",
+        "info": {
+            "itad-steam": "Connecting Augmented Steam with IsThereAnyDeal allows you to apply Augmented Steam's highlighting and tagging to games in your Waitlist and Collection even if you don't have them on Steam.",
+            "steam-itad": "Furthermore, it allows you to import games from your Steam Library and/or Wishlist to IsThereAnyDeal, for improved accuracy (e.g. DLCs or unlisted games). Currently this feature can only add titles, not remove them, so it's not the replacement for IsThereAnyDeal's integrated sync, but an addition to it."
+        }
     },
     "tradeoffer": {
         "num_item": "__num__ item",
@@ -649,14 +666,15 @@
     "wl": {
         "compute": "Click to compute stats",
         "total_price": "current value",
-        "in_wishlist": "in wishlist",
+        "in_wishlist": "on wishlist",
         "on_sale": "on sale",
         "no_price": "without price"
     },
     "coll": {
-        "in_collection": "In Collection",
-        "played": "Played",
-        "never_played": "Never Played"
+        "total_time": "total time",
+        "in_collection": "in collection",
+        "played": "played",
+        "never_played": "never played"
     },
     "user_note": {
         "add": "Add a note",
@@ -681,6 +699,7 @@
         "finished": "Finished! __success__ successful, __fail__ failed. Click OK to refresh the page",
         "failed": "__n__ failed"
     },
+
     "this_version": "This version",
     "original_authors": "Original authors",
     "acknowledgements": "Acknowledgments",

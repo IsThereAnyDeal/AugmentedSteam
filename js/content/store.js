@@ -7,15 +7,16 @@ class Customizer {
     }
 
     _textValue(node) {
-        if (!node) return '';
+        let textNode = node.querySelector("h1, h2, .home_title, .home_section_title");
+        if (!textNode) return "";
         let str = "";
-        for (node = node.firstChild; node; node = node.nextSibling) {
-            if (node.nodeType === 3 || (node.nodeType === 1 && node.tagName === "A")) { // Special case for Steam curators
+        for (let node of textNode.childNodes) {
+            if (node.nodeType === Node.TEXT_NODE) {
                 str += node.textContent.trim();
             }
         }
         return str;
-    };
+    }
 
     _updateValue(name, value) {
         this.settings[name] = value;
@@ -51,9 +52,9 @@ class Customizer {
                 return;
             }
     
-            if (!text) {
-                text = (typeof text === "string" && text) || this._textValue(element.querySelector(".home_section_title, h2")).toLowerCase();
-                if (!text) return;
+            if (typeof text !== "string" || text === "") {
+                text = this._textValue(element).toLowerCase();
+                if (text === "") return;
             }
 
             isValid = true;
@@ -64,22 +65,19 @@ class Customizer {
         for (let element of elements) {
             element.classList.toggle("esi-shown", state);
             element.classList.toggle("esi-hidden", !state);
-            element.classList.add("esi-customizer"); // for dynamic entries on home page
+            element.classList.add("esi-customizer");
             element.dataset.es_name = name;
             element.dataset.es_text = text;
         }
 
         return this;
-    };
+    }
 
-    addDynamic(titleNode, targetNode) {
-        let textValue = this._textValue(titleNode);
+    addDynamic(node) {
+        let text = this._textValue(node).toLowerCase();
+        if (text === "") return;
 
-        console.warn("Node with textValue %s is not recognized!", textValue);
-        let option = textValue.toLowerCase().replace(/[^a-z]*/g, "");
-        if (option === "") { return; }
-
-        this.add("dynamic_" + option, targetNode, textValue);
+        this.add(`dynamic_${text}`, node, text);
     }
 
     build() {
@@ -98,10 +96,10 @@ class Customizer {
                 let text = element.dataset.es_text;
 
                 HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
-                `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                    <div class="home_viewsettings_checkbox ${state ? `checked` : ``}"></div>
-                    <div class="home_viewsettings_label">${text}</div>
-                </div>`);
+                    `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
+                        <div class="home_viewsettings_checkbox ${state ? 'checked' : ''}"></div>
+                        <div class="home_viewsettings_label">${text}</div>
+                    </div>`);
 
                 customizerEntries.set(name, [element]);
             }            
@@ -112,10 +110,10 @@ class Customizer {
             checkboxrow.addEventListener("click", e => {
                 let state = !checkboxrow.querySelector(".checked");
 
-                elements.forEach(element => {
+                for (let element of elements) {
                     element.classList.toggle("esi-shown", state);
                     element.classList.toggle("esi-hidden", !state);
-                });
+                }
 
                 e.target.closest(".home_viewsettings_checkboxrow")
                     .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
@@ -128,7 +126,7 @@ class Customizer {
 
 class StorePageClass {
     constructor() {
-        this.hasCards = document.querySelector(".icon img[src$='/ico_cards.png'") ? true : false;
+        this.hasCards = !!document.querySelector("#category_block img[src$='/ico_cards.png']");
     }
 
     // TODO(tfedor) maybe make properties instead of dynamic qheck of all of these "isXY"? Not sure
@@ -141,26 +139,26 @@ class StorePageClass {
     }
 
     isDlc() {
-        return document.querySelector("div.game_area_dlc_bubble") ? true : false;
+        return !!document.querySelector("div.game_area_dlc_bubble");
     }
 
     isVideo() {
-        return document.querySelector(".game_area_purchase_game .streamingvideo") ? true : false;
+        return !!document.querySelector(".game_area_purchase_game span[class*='streaming']")
+            || !!document.querySelector("div.series_seasons");
     }
 
     isOwned() {
-        return document.querySelector(".game_area_already_owned") ? true :false;
+        return !!document.querySelector(".game_area_already_owned");
     }
 
     hasAchievements() {
-        return document.querySelector("#achievement_block") ? true : false;
+        return !!document.querySelector("#achievement_block");
     }
 
     getAllSubids() {
         let result = [];
-        let nodes = document.querySelectorAll("input[name=subid]");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            result.push(nodes[i].value);
+        for (let node of document.querySelectorAll("input[name=subid]")) {
+            result.push(node.value);
         }
         return result;
     }
@@ -235,41 +233,35 @@ class StorePageClass {
         if (xbox) { drmNames.push("Microsoft Xbox Live"); }
 
         let drmString;
-        let regex = /\b(drm|account|steam)\b/i;
         if (drmNames.length > 0) {
-            drmString = `(${drmNames.join(", ")})`;
+            drmString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+            drmString = drmString.replace("__drmlist__", `(${drmNames.join(", ")})`);
+
         } else { // Detect other DRM
+            let regex = /\b(drm|account|steam)\b/i;
             if (this.isAppPage()) {
                 for (let node of document.querySelectorAll("#category_block > .DRM_notice")) {
                     let text = node.textContent;
-                    if (text.match(regex)) {
+                    if (regex.test(text)) {
                         drmString = text;
                         break;
                     }
                 }
-            }
-            if (this.isSubPage()) {
+            } else {
                 let node = document.querySelector(".game_details .details_block > p > b:last-of-type");
                 let text = node.textContent + node.nextSibling.textContent;
-                if (text.match(regex)) {
+                if (regex.test(text)) {
                     drmString = text;
                 }
             }
         }
 
         if (drmString) {
-            let warnString;
-            if (drmNames.length > 0) {
-                warnString = this.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
-                warnString = warnString.replace("__drmlist__", drmString);
-            } else {
-                warnString = drmString;
-            }
             let node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
             if (node) {
-                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${warnString}</span></div>`);
+                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${drmString}</span></div>`);
             } else {
-                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${warnString}</span></div>`);
+                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${drmString}</span></div>`);
             }
         }
     }
@@ -279,34 +271,27 @@ class StorePageClass {
 
         let prices = new Prices();
 
-        prices.subids = [];
-        let nodes = document.querySelectorAll("input[name=subid]");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            prices.subids.push(node.value);
-        }
+        prices.subids = this.getAllSubids();
 
         prices.bundleids = [];
-        nodes = document.querySelectorAll("[data-ds-bundleid]");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            prices.bundleids.push(node.dataset['dsBundleid']);
+        for (let node of document.querySelectorAll("[data-ds-bundleid]")) {
+            prices.bundleids.push(node.dataset.dsBundleid);
         }
 
         prices.priceCallback = function(type, id, contentNode) {
             let node;
             let placement = "afterbegin";
             if (type === "sub") {
-                node = document.querySelector("input[name=subid][value='"+id+"']").parentNode.parentNode.parentNode;
+                node = document.querySelector(`input[name=subid][value="${id}"]`).parentNode.parentNode.parentNode;
             } else if (type === "bundle") {
-                node = document.querySelector(".game_area_purchase_game_wrapper[data-ds-bundleid='"+id+"']");
+                node = document.querySelector(`.game_area_purchase_game_wrapper[data-ds-bundleid="${id}"]`);
                 if (!node) {
-                    node = document.querySelector(".game_area_purchase_game[data-ds-bundleid='"+id+"']");
+                    node = document.querySelector(`.game_area_purchase_game[data-ds-bundleid="${id}"]`);
                     placement = "beforebegin";
                 } else {
                     // Move any "Complete your Collection!" banner out of the way
-                    let banner = node.querySelector('.ds_completetheset');
-                    let newParent = node.querySelector('.game_area_purchase_game');
+                    let banner = node.querySelector(".ds_completetheset");
+                    let newParent = node.querySelector(".game_area_purchase_game");
                     if (banner && newParent) {
                         newParent.appendChild(banner);
                     }
@@ -319,8 +304,8 @@ class StorePageClass {
         prices.bundleCallback = function(html) {
 
             HTML.afterEnd("#game_area_purchase",
-                "<h2 class='gradientbg'>" + Localization.str.bundle.header + " <img src='/public/images/v5/ico_external_link.gif' border='0' align='bottom'></h2>"
-                + html);
+                `<h2 class="gradientbg es_bundle_info">${Localization.str.bundle.header} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></h2>
+                ${html}`);
         };
 
         prices.load();
@@ -348,13 +333,8 @@ class StorePageClass {
                 break;
             case "bundle":
                 gameid = this.bundleid;
-                node = document.querySelector(".share");
-                if (!node) {
-                    node = document.querySelector(".rightcol .game_details");
-                }
+                node = document.querySelector(".share, .rightcol .game_details");
                 break;
-            default:
-                return;
         }
 
         if (!node) { return; }
@@ -392,10 +372,12 @@ class StorePageClass {
         if (!countries || countries.length === 0) { return; }
 
         let localCountry = User.getCountry().toLowerCase();
-        if (!countries.includes(localCountry)) countries.push(localCountry);
+        if (!countries.includes(localCountry)) {
+            countries.push(localCountry);
+        }
 
         for (let subid of this.getAllSubids()) {
-            if (!subid) return;
+            if (!subid) { return; }
             
             let promises = [];
             let prices = {};
@@ -403,7 +385,7 @@ class StorePageClass {
             for (let country of countries) {
                 promises.push(
                     RequestData.getJson(`https://store.steampowered.com/api/packagedetails/?packageids=${subid}&cc=${country}`).then(result => {
-                        if (!result || !result[subid] || !result[subid].success) { return; }
+                        if (!result || !result[subid] || !result[subid].success || !result[subid].data.price) { return; }
                         prices[country] = result[subid].data.price;
                     })
                 );
@@ -431,7 +413,7 @@ class StorePageClass {
             pricingDiv.classList.add(`es_regional_${type || "app"}`);
 
             if (showRegionalPrice === "mouse") {
-                HTML.inner(pricingDiv, pricingDiv.innerHTML + '<div class="miniprofile_arrow right" style="position: absolute; top: 12px; right: -8px;"></div>');
+                HTML.afterBegin(pricingDiv, '<div class="es_regional_arrow"></div>');
             }
 
             for (let country of countries) {
@@ -465,7 +447,7 @@ class StorePageClass {
 
                         html +=
                             `<span class="es-regprice__converted">${priceUser}</span>
-                            <span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`
+                            <span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`;
                     }
                     
                     html += "</div>";
@@ -476,7 +458,7 @@ class StorePageClass {
                         </div>`;
                 }
 
-                HTML.inner(pricingDiv, pricingDiv.innerHTML + html);
+                HTML.beforeEnd(pricingDiv, html);
             }
 
             let purchaseArea = node.closest(".game_area_purchase_game,.sale_page_purchase_item");
@@ -499,12 +481,11 @@ class StorePageClass {
 
     forceVideoMP4() {
         if (!SyncedStorage.get("mp4video")) { return; }
-        let self = this;
 
-        document.querySelectorAll("[data-webm-source]").forEach(function(node) {
+        for (let node of document.querySelectorAll("[data-webm-source]")) {
             let mp4 = node.dataset.mp4Source;
             let mp4hd = node.dataset.mp4HdSource;
-            if (!mp4 || !mp4hd) return;
+            if (!mp4 || !mp4hd) { return; }
 
             node.dataset.webmSource = mp4;
             node.dataset.webmHdSource = mp4hd;
@@ -514,8 +495,8 @@ class StorePageClass {
 
             video.dataset.sdSrc = mp4;
             video.dataset.hdSrc = mp4hd;
-            self.toggleVideoDefinition(video, false);
-        });
+            this.toggleVideoDefinition(video, false);
+        }
     }
 }
 
@@ -563,24 +544,26 @@ class SubPageClass extends StorePageClass {
             }
 
             if (notOwnedTotalPrice !== null) {
-                let priceNodes = document.querySelectorAll(".package_totals_area .price");
-                let packagePrice = Price.parseFromString(priceNodes[priceNodes.length-1].textContent, Currency.storeCurrency);
+                let priceNode = DOMHelper.selectLastNode(document, ".package_totals_area .price");
+                let packagePrice = Price.parseFromString(priceNode.textContent, Currency.storeCurrency);
                 if (!packagePrice) { return; }
 
                 notOwnedTotalPrice -= packagePrice.value;
+                notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency);
 
                 if (!document.querySelector("#package_savings_bar")) {
                     HTML.beforeEnd(".package_totals_area",
-                        "<div id='package_savings_bar'><div class='savings'></div><div class='message'>" + Localization.str.bundle_saving_text + "</div></div>");
+                        `<div id="package_savings_bar">
+                            <div class="savings"></div>
+                            <div class="message">${Localization.str.bundle_saving_text}</div>
+                        </div>`);
                 }
 
-                notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency);
-                let style = (notOwnedTotalPrice.value < 0 ? " style='color:red'" : "");
-                let html = `<div class="savings"${style}>${notOwnedTotalPrice}</div>`;
-
-                let savingsNode = document.querySelector(".savings");
-                HTML.beforeBegin(savingsNode, html);
-                savingsNode.remove();
+                let savingsNode = document.querySelector("#package_savings_bar > .savings");
+                savingsNode.textContent = notOwnedTotalPrice;
+                if (notOwnedTotalPrice.value < 0) {
+                    savingsNode.style.color = "red";
+                }
             }
             
         }, 500); // why is this here?
@@ -644,6 +627,7 @@ class AppPageClass extends StorePageClass {
         this.displayPurchaseDate();
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
+        this.addSteamPeek();
 
         new MediaPage().appPage();
 
@@ -839,45 +823,43 @@ class AppPageClass extends StorePageClass {
         return Background.action("storepagedata", this.appid, this.metalink, SyncedStorage.get("showoc"));
     }
 
-    /**
-     *  Allows the user to intuitively remove an item from their wishlist on the app page
-     */
     addWishlistRemove() {
-        if (!User.isSignedIn) { return; }
+        if (!User.isSignedIn || this.isOwned()) { return; }
 
-        // there is no add to wishlist button and game is not purchased yet, add required nodes
-        if (!document.querySelector("#add_to_wishlist_area") && !document.querySelector(".game_area_already_owned")) {
+        // If game is already wishlisted, add required nodes
+        if (!document.getElementById("add_to_wishlist_area")) {
             let firstButton = document.querySelector(".queue_actions_ctn a.queue_btn_active");
-            HTML.beforeEnd(firstButton, "<div id='add_to_wishlist_area_success' style='display: inline-block;'></div>");
+            let wlSuccessArea = HTML.wrap(firstButton, '<div id="add_to_wishlist_area_success"></div>');
 
-            let wlSuccessArea = document.querySelector("#add_to_wishlist_area_success");
-            DOMHelper.wrap(wlSuccessArea, firstButton);
-            HTML.beforeBegin(wlSuccessArea,  `<div id='add_to_wishlist_area' style='display: none;'><a class='btnv6_blue_hoverfade btn_medium' href='javascript:AddToWishlist(${this.appid}, \\"add_to_wishlist_area\\", \\"add_to_wishlist_area_success\\", \\"add_to_wishlist_area_fail\\", \\"1_5_9__407\\" );'><span>${Localization.str.add_to_wishlist}</span></a></div>`);
-            HTML.beforeBegin(wlSuccessArea, `<div id='add_to_wishlist_area_fail' style='display: none;'></div>`);
+            HTML.beforeBegin(wlSuccessArea,
+                `<div id="add_to_wishlist_area" style="display: none;">
+                    <a class="btnv6_blue_hoverfade btn_medium" data-tooltip-text="${Localization.str.add_to_wishlist_tooltip}">
+                        <span>${Localization.str.add_to_wishlist}</span>
+                    </a>
+                </div>
+                <div id="add_to_wishlist_area_fail" style="display: none;">
+                    <b>${Localization.str.error}</b>
+                </div>`);
+
+            document.querySelector("#add_to_wishlist_area > a").href = `javascript:AddToWishlist( ${this.appid}, 'add_to_wishlist_area', 'add_to_wishlist_area_success', 'add_to_wishlist_area_fail', null, 'add_to_wishlist_area2' );`;
         }
 
-        let addBtn = document.querySelector("#add_to_wishlist_area > a");
-        if (addBtn && !addBtn.href) addBtn.href = `javascript:AddToWishlist( ${this.appid}, 'add_to_wishlist_area', 'add_to_wishlist_area_success', 'add_to_wishlist_area_fail', null, 'add_to_wishlist_area2' );`
+        let addBtn = document.getElementById("add_to_wishlist_area");
+        let successBtn = document.getElementById("add_to_wishlist_area_success");
 
-        let successNode = document.querySelector("#add_to_wishlist_area_success");
-        if (!successNode) { return; }
+        // Update tooltip for wishlisted items
+        successBtn.querySelector("a").dataset.tooltipText = Localization.str.remove_from_wishlist_tooltip;
 
-        let innerNode = successNode.querySelector("[data-tooltip-text]");
-        if (!innerNode) { return; }
-        innerNode.dataset.tooltipText = Localization.str.remove_from_wishlist;
-
-        let imgNode = innerNode.querySelector("img:last-child");
-        if (!imgNode) { return; }
-
+        let imgNode = successBtn.querySelector("img:last-child");
         imgNode.classList.add("es-in-wl");
         HTML.beforeBegin(imgNode,
-            `<img class='es-remove-wl' src='${ExtensionResources.getURL("img/remove.png")}' style='display:none' />
-             <img class='es-loading-wl' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' style='display:none; width:16px' />`);
+            `<img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}" style="display: none;">
+            <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">`);
 
-        successNode.addEventListener("click", async e => {
+        successBtn.addEventListener("click", async e => {
             e.preventDefault();
 
-            let parent = successNode.parentNode;
+            let parent = successBtn.parentNode;
             if (!parent.classList.contains("loading")) {
                 parent.classList.add("loading");
 
@@ -891,8 +873,8 @@ class AppPageClass extends StorePageClass {
 
                     if (SyncedStorage.get("add_to_waitlist")) { this.onWishAndWaitlistRemove(); }
 
-                    document.querySelector("#add_to_wishlist_area").style.display = "inline";
-                    document.querySelector("#add_to_wishlist_area_success").style.display = "none";
+                    addBtn.style.display = "";
+                    successBtn.style.display = "none";
 
                     // Clear dynamicstore cache
                     DynamicStore.clear();
@@ -911,15 +893,11 @@ class AppPageClass extends StorePageClass {
     }
 
     async _removeFromWishlist() {
-        let formData = new FormData();
-        formData.append("sessionid", User.getSessionId());
-        formData.append("appid", this.appid);
-
-        return RequestData.post("https://store.steampowered.com/api/removefromwishlist", formData, {withCredentials: true})
+        return Background.action("wishlist.remove", { "sessionid": User.getSessionId(), "appid": this.appid });
     }
 
     async _removeFromWaitlist() {
-        return Background.action("itad.removefromwaitlist", this.storeid);
+        return Background.action("itad.removefromwaitlist", this.appid);
     }
 
     async addUserNote() {
@@ -961,7 +939,7 @@ class AppPageClass extends StorePageClass {
         }
 
         let handler = () => {
-            this.userNotes.showModalDialog(document.getElementsByClassName("apphub_AppName")[0].textContent, this.appid, "#esi-store-user-note", toggleState);
+            this.userNotes.showModalDialog(this.appName, this.appid, "#esi-store-user-note", toggleState);
         };
 
         document.querySelector(".js-user-note-button").addEventListener("click", handler);
@@ -1097,9 +1075,9 @@ class AppPageClass extends StorePageClass {
 
         waitlistOption.addEventListener("click", async () => {
             if (waitlisted) {
-                await Background.action("itad.removefromwaitlist", this.storeid);
+                await Background.action("itad.removefromwaitlist", this.appid);
             } else {
-                await Background.action("itad.addtowaitlist", this.storeid);
+                await Background.action("itad.addtowaitlist", this.appid);
             }
             waitlisted = !waitlisted;
             updateDiv();
@@ -1163,17 +1141,6 @@ class AppPageClass extends StorePageClass {
             openButton.addEventListener("click", () => {
                 window.open(modalTitleLink.href, "_blank");
             });
-
-            HTML.beforeEnd(modalFooter,
-                `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_download_btn" style="right: calc(${nextButtonOffsetWidth + fsvButton.offsetWidth + openButton.offsetWidth}px + 1.5em)" title="${modalTitleLink.textContent.trim()}"><i></i></div>`);
-            let downloadButton = modalFooter.querySelector(".es_screenshot_download_btn");
-            downloadButton.addEventListener("click", () => {
-                let uri = new URL(modalTitleLink.href);
-                let url = uri.href;
-                let filename = uri.pathname.split("/").pop();
-                console.log({ url, filename })
-                Downloader.download({ url, filename });
-            });
         }
 
         let observer = new MutationObserver(records => {
@@ -1226,17 +1193,25 @@ class AppPageClass extends StorePageClass {
     addDlcInfo() {
         if (!this.isDlc()) { return; }
 
-        let html = `<div class='block responsive_apppage_details_right heading'>${Localization.str.dlc_details}</div><div class='block'><div class='block_content'><div class='block_content_inner'><div class='details_block'>`;
-        Background.action('dlcinfo', { 'appid': this.appid, 'appname': this.appName, } ).then(response => {
+        let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.dlc_details}</div>
+                   <div class="block es_dlc_info">
+                   <div class="block_content"><div class="block_content_inner"><div class="details_block">`;
+
+        Background.action("dlcinfo", { "appid": this.appid, "appname": this.appName }).then(response => {
             for(let item of response) {
-                let iconUrl = Config.CdnHost + "/gamedata/icons/" + encodeURIComponent(item.icon);
+                let iconUrl = `${Config.PublicHost}/gamedata/icons/${encodeURIComponent(item.icon)}`;
                 let title = HTML.escape(item.desc);
                 let name = HTML.escape(item.name);
-                html += `<div class='game_area_details_specs'><div class='icon'><img src='${iconUrl}' align='top'></div><a class='name' title='${title}'>${name}</a></div>`;
+                html += `<div class="game_area_details_specs">
+                            <div class="icon"><img src="${iconUrl}"></div>
+                            <a class="name" title="${title}">${name}</a>
+                        </div>`;
             }
         }).finally(() => {
-            let suggestUrl = Config.PublicHost + "/gamedata/dlc_category_suggest.php?appid=" + this.appid + "&appname=" + encodeURIComponent(this.appName);
-            html += `</div><a class='linkbar' style='margin-top: 10px;' href='${suggestUrl}' target='_blank'>${Localization.str.dlc_suggest}</a></div></div></div>`;
+            let suggestUrl = `${Config.PublicHost}/gamedata/dlc_category_suggest.php?appid=${this.appid}&appname=${encodeURIComponent(this.appName)}`;
+            html += `</div>
+                    <br><a class="linkbar" href="${suggestUrl}" target="_blank">${Localization.str.dlc_suggest} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></a>
+                    </div></div></div>`;
 
             HTML.beforeBegin(document.querySelector("#category_block").parentNode, html);
         });
@@ -1248,12 +1223,11 @@ class AppPageClass extends StorePageClass {
         let node = document.querySelector("#game_area_metascore");
         if (!node) { return; }
 
-        this.data.then(response => {
-            if (!response || !response.data || !response.data.userscore) { return; }
+        this.data.then(result => {
+            if (!result || !result.data || !result.data.userscore) { return; }
 
-            let metauserscore = response.data.userscore * 10;
+            let metauserscore = result.data.userscore * 10;
             if (!isNaN(metauserscore)) {
-                HTML.afterEnd(node, "<div id='game_area_userscore'></div>");
 
                 let rating;
                 if (metauserscore >= 75) {
@@ -1264,9 +1238,14 @@ class AppPageClass extends StorePageClass {
                     rating = "low";
                 }
 
-                HTML.beforeEnd("#game_area_userscore",
-                    `<div class='score ${rating}'>${metauserscore}</div>
-                    <div class='logo'></div><div class='wordmark'><div class='metacritic'>${Localization.str.user_score}</div></div>`)
+                HTML.afterEnd(node,
+                    `<div id="game_area_userscore">
+                        <div class="score ${rating}">${metauserscore}</div>
+                        <div class="logo"></div>
+                        <div class="wordmark">
+                            <div class="metacritic">${Localization.str.user_score}</div>
+                        </div>
+                    </div>`);
             }
         });
     }
@@ -1275,10 +1254,11 @@ class AppPageClass extends StorePageClass {
         if (!SyncedStorage.get("showoc")) { return; }
 
         this.data.then(result => {
-            if (!result || !result.oc) { return; }
+            if (!result || !result.oc || !result.oc.url) { return; }
             let data = result.oc;
 
-            if (!data.url) { return; }
+            let ocImg = ExtensionResources.getURL("img/opencritic.png");
+            let award = data.award || "NA";
 
             let node = document.querySelector("#game_area_metascore");
             if (node) {
@@ -1286,29 +1266,34 @@ class AppPageClass extends StorePageClass {
             } else {
                 node = document.querySelector(".game_details");
             }
-            HTML.afterEnd(node, "<div><div class='block responsive_apppage_reviewblock'><div id='game_area_opencritic'></div><div style='clear: both'></div></div>");
 
-            let opencriticImg = ExtensionResources.getURL("img/opencritic.png");
-            let award = data.award || "NA";
-
-            HTML.beforeEnd("#game_area_opencritic",
-                `<div class='score ${award.toLowerCase()}'>${data.score ? data.score : "--"}</div>
-                 <div class='logo'><img src='${opencriticImg}'></div>
-                 <div class='wordmark'>
-                     <div class='metacritic'>OpenCritic</div>
-                     <div id='game_area_metalink'>${award} - <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=average' target='_blank'>${Localization.str.read_reviews}</a>
-                         <img src='https://steamstore-a.akamaihd.net/public/images/ico/iconExternalLink.gif' border='0' align='bottom'>
-                     </div>
-                 </div>`);
+            HTML.afterEnd(node,
+                `<div>
+                    <div class="block responsive_apppage_reviewblock">
+                        <div id="game_area_opencritic">
+                            <div class="score ${award.toLowerCase()}">${data.score ? data.score : "--"}</div>
+                            <div class="logo"><img src="${ocImg}"></div>
+                            <div class="wordmark">
+                                <div class="metacritic">OpenCritic</div>
+                                <div id="game_area_metalink">${award} - <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=average" target="_blank">${Localization.str.read_reviews}</a>
+                                    <img src="https://steamstore-a.akamaihd.net/public/images/ico/iconExternalLink.gif" border="0" align="bottom">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>`);
 
             // Add data to the review section in the left column, or create one if that block doesn't exist
             if (data.reviews.length > 0) {
                 let reviewsNode = document.getElementById("game_area_reviews");
-                let html = `<div id='es_opencritic_reviews'><div class='chart-footer'>${Localization.str.read_more_reviews} <a href='${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews' target='_blank'>OpenCritic.com</a></div></div>`;
+                let html =
+                    `<div id="es_opencritic_reviews">
+                        <div class="chart-footer">${Localization.str.read_more_reviews} <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews" target="_blank">OpenCritic.com</a></div>
+                    </div>`;
 
                 if (reviewsNode) {
                     let youTubeReviews = document.getElementById("es_youtube_reviews");
-
                     if (youTubeReviews) {
                         HTML.beforeBegin(youTubeReviews, html);
                     } else {
@@ -1316,15 +1301,16 @@ class AppPageClass extends StorePageClass {
                     }
                 } else {
                     HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
-                        `<div id='game_area_reviews' class='game_area_description'><h2>${Localization.str.reviews}</h2>${html}</div>`);
-
+                        `<div id="game_area_reviews" class="game_area_description">
+                            <h2>${Localization.str.reviews}</h2>
+                            ${html}
+                        </div>`);
                 }
 
                 let review_text = "";
-                for (let i=0, len=data.reviews.length; i<len; i++) {
-                    let review = data.reviews[i];
+                for (let review of data.reviews) {
                     let date = new Date(review.date);
-                    review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href='${review.rUrl}' target='_blank' data-tooltip-text='${review.author}, ${date.toLocaleDateString()}'>${review.name}</a></p>`;
+                    review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href="${review.rUrl}" target="_blank" data-tooltip-text="${review.author}, ${date.toLocaleDateString()}">${review.name}</a></p>`;
                 }
 
                 HTML.afterBegin("#es_opencritic_reviews", review_text);
@@ -1351,19 +1337,16 @@ class AppPageClass extends StorePageClass {
     }
 
     addYouTubeGameplay() {
-
         if (!SyncedStorage.get("showyoutubegameplay")) { return; }
 
         HTML.afterBegin(".leftcol",
-            `<div id="es_media_tabs">
-                <div class="store_horizontal_minislider_ctn" style="height: 31px;">
-                    <div class="home_tabs_row">
-                        <div id="es_tab_steammedia" class="es_media_tab home_tab active">
-                            <div class="tab_content">Steam</div>
-                        </div>
-                        <div id="es_tab_youtubemedia" class="es_media_tab home_tab">
-                            <div class="tab_content">${Localization.str.youtube_gameplay}</div>
-                        </div>
+            `<div class="es_tabs">
+                <div class="home_tabs_row">
+                    <div id="es_tab_steammedia" class="es_tab home_tab active">
+                        <div class="tab_content">Steam</div>
+                    </div>
+                    <div id="es_tab_youtubemedia" class="es_tab home_tab">
+                        <div class="tab_content">${Localization.str.youtube_gameplay}</div>
                     </div>
                 </div>
             </div>`);
@@ -1432,8 +1415,99 @@ class AppPageClass extends StorePageClass {
         document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName, Localization.str.review));
     }
 
+    async addSteamPeek() {
+        let moreLikeThis = document.querySelector("#recommended_block");
+        if (!moreLikeThis) { return; }
+
+        HTML.afterEnd(moreLikeThis.querySelector(".block_header"),
+            `<div class="es_tabs">
+                <div class="home_tabs_row">
+                    <div id="es_tab_steamsimilar" class="es_tab home_tab active">
+                        <div class="tab_content">Steam</div>
+                    </div>
+                    <div id="es_tab_steampeek" class="es_tab home_tab">
+                        <div class="tab_content">SteamPeek</div>
+                    </div>
+                </div>
+            </div>`);
+
+        HTML.beforeEnd(moreLikeThis.querySelector(".store_horizontal_autoslider_ctn"),
+            `<div class="block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad" id="es_steampeek_content"></div>`);
+
+        // TODO Create a global handler for DS loading
+        let dsLoaded = Messenger.onMessage("dsLoaded");
+        ExtensionLayer.runInPageContext(() => GDynamicStore.OnReady(() => Messenger.postMessage("dsLoaded")));
+        await dsLoaded;
+
+        let [steamTab, steamPeekTab, content] = moreLikeThis
+            .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");
+
+        function adjustScroller() {
+            ExtensionLayer.runInPageContext(() => $J("#recommended_block_content").trigger("v_contentschanged"));
+        }
+
+        steamTab.addEventListener("click", () => {
+            steamPeekTab.classList.remove("active");
+            steamTab.classList.add("active");
+            content.classList.remove("es_sp_active");
+            content.classList.add("es_steam_active");
+
+            LocalStorage.set("steampeek", false);
+
+            adjustScroller();
+        });
+
+        let spLoaded = false;
+        steamPeekTab.addEventListener("click", async () => {
+            steamPeekTab.classList.add("active");
+            steamTab.classList.remove("active");
+            content.classList.add("es_sp_active");
+            content.classList.remove("es_steam_active");
+
+            LocalStorage.set("steampeek", true);
+
+            if (!spLoaded) {
+                spLoaded = true;
+
+                for (let node of content.querySelectorAll(":scope > a")) {
+                    node.classList.add("es_steam_similar");
+                }
+
+                let data = await Background.action("steampeek", this.appid);
+                if (!data) { return; }
+
+                let lastChild = content.querySelector(":scope > :last-child");
+
+                for (let { title, appid } of data) {
+                    HTML.beforeBegin(lastChild,
+                        `<a class="small_cap es_sp_similar" data-ds-appid="${appid}" href="https://store.steampowered.com/app/${appid}/">
+                            <img src="https://steamcdn-a.akamaihd.net/steam/apps/${appid}/capsule_184x69.jpg" class="small_cap_img"></img>
+                            <h4>${title}</h4>
+                        </a>`);
+
+                    ExtensionLayer.runInPageContext(`() => { GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), ${appid}); }`);
+                }
+
+                ExtensionLayer.runInPageContext(() => GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar")));
+
+                Highlights.highlightAndTag(content.querySelectorAll("a.es_sp_similar"), true);
+
+                HTML.beforeBegin(lastChild,
+                    `<a class="small_cap es_sp_similar" href="http://steampeek.hu/?appid=${this.appid}" target="_blank">
+                        <div class="es_sp_similar__link">${Localization.str.more_on_steampeek}</div>
+                    </a>`);
+            }
+
+            adjustScroller();
+        });
+
+        if (LocalStorage.get("steampeek", false)) {
+            steamPeekTab.click();
+        }
+    }
+
     displayViewInLibrary() {
-        if (!User.isSignedIn || !SyncedStorage.get("showviewinlibrary")) { return; }
+        if (!SyncedStorage.get("showviewinlibrary")) { return; }
 
         let node = document.querySelector(".already_owned_actions");
         if (!node) { return; }
@@ -1449,30 +1523,30 @@ class AppPageClass extends StorePageClass {
     displayPurchaseDate() {
         if (!SyncedStorage.get("purchase_dates")) { return; }
 
-        let node = document.querySelector(".game_area_already_owned");
+        let node = document.querySelector(".game_area_already_owned .already_in_library");
         if (!node) { return; }
 
         let appname = this.appName.replace(":", "").trim();
 
         User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname).then(date => {
             if (!date) { return; }
-            HTML.beforeEnd(".game_area_already_owned .already_in_library",
+            HTML.beforeEnd(node,
                 ` ${Localization.str.purchase_date.replace("__date__", date)}`);
         });
     }
 
     addOwnedElsewhere() {
-        if (document.querySelector(".game_area_already_owned")) return;
+        if (this.isOwned()) { return; }
 
         Background.action("itad.getfromcollection", `app/${this.appid}`).then(result => {
-            if (!result) return;
+            if (!result) { return; }
             
             HTML.afterEnd(".queue_overflow_ctn",
                 `<div class="game_area_already_owned page_content" style="background-image: linear-gradient(to right, #856d0e 0%, #d1a906 100%);">
                     <div class="ds_owned_flag ds_flag" style="background-color: #856d0e;">${Localization.str.coll.in_collection.toUpperCase()}&nbsp;&nbsp;</div>
                     <div class="already_in_library" style="color: #ffe000;">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", result.map(store => `<strong>${store}</strong>`).join(", "))}</div>
                 </div>`)
-        })
+        });
     }
 
     addWidescreenCertification() {
@@ -1647,14 +1721,13 @@ class AppPageClass extends StorePageClass {
     }
 
     replaceDevPubLinks() {
-        if (!this.isAppPage()) { return; }
 
         document.querySelectorAll("#game_highlights .dev_row a,.details_block .dev_row:not(:nth-of-type(3)) a").forEach((linkNode, i) => {
             let homepageLink = new URL(linkNode.href);
-            if (homepageLink.pathname === "/search/") return;
+            if (homepageLink.pathname === "/search/") { return; }
 
             let name = i % 2 ? "publisher" : "developer"; // These elements appear in pairs, where the first represents the developer and the second the publisher
-            let value = linkNode.innerText;
+            let value = linkNode.textContent;
             linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
             HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
         });
@@ -1667,25 +1740,28 @@ class AppPageClass extends StorePageClass {
     }
 
     async addSupport() {
-        if (!this.isAppPage() || this.isDlc() || !SyncedStorage.get("showsupportinfo")) { return; }
+        if (this.isDlc() || !SyncedStorage.get("showsupportinfo")) { return; }
 
         let cache = LocalStorage.get("support_info", null);
         if (!cache || !cache.expiry || cache.expiry < Date.now()) {
             cache = {
                 "data": {},
-                "expiry": Date.now() + (31*86400 * 1000) // 31 days
+                "expiry": Date.now() + (31 * 86400 * 1000) // 31 days
             }
         }
 
         let appid = this.appid;
         let supportInfo = cache[appid];
         if (!supportInfo) {
-            let response = await Background.action("appdetails", {"appids": appid, "filters": "support_info"});
-            if (!response || !response[appid] || !response[appid].success) { return; }
+            let response = await Background.action("appdetails", appid, "support_info");
+            if (!response || !response.success) { 
+                console.warn("Failed to retrieve support info");
+                return;
+            }
 
-            supportInfo = response[appid].data.support_info;
+            supportInfo = response.data.support_info;
 
-            cache['data'][appid] = supportInfo;
+            cache["data"][appid] = supportInfo;
             LocalStorage.set("support_info", cache);
         }
 
@@ -1714,8 +1790,7 @@ class AppPageClass extends StorePageClass {
             }
         }
 
-        let block = document.querySelector(".glance_ctn .user_reviews");
-        HTML.beforeEnd(block,
+        HTML.beforeEnd(".glance_ctn .user_reviews",
             `<div class="release_date">
                 <div class="subtitle column">${Localization.str.support}:</div>
                 <div class="summary column" id="es_support_list">${support}</div>
@@ -1723,7 +1798,6 @@ class AppPageClass extends StorePageClass {
     }
 
     moveUsefulLinks() {
-        if (!this.isAppPage()) { return; }
 
         let usefulLinks = document.querySelector("#ReportAppBtn").parentNode.parentNode;
         usefulLinks.classList.add("es_useful_link");
@@ -1801,9 +1875,12 @@ class AppPageClass extends StorePageClass {
         this.data.then(result => {
             if (!result.exfgls || !result.exfgls.excluded) { return; }
 
-            let str = Localization.str.family_sharing_notice;
             HTML.beforeBegin("#game_area_purchase",
-                `<div id="purchase_note"><div class="notice_box_top"></div><div class="notice_box_content">${str}</div><div class="notice_box_bottom"></div></div>`);
+                `<div id="purchase_note">
+                    <div class="notice_box_top"></div>
+                        <div class="notice_box_content">${Localization.str.family_sharing_notice}</div>
+                    <div class="notice_box_bottom"></div>
+                </div>`);
         });
     }
 
@@ -1818,44 +1895,44 @@ class AppPageClass extends StorePageClass {
     addPackageInfoButton() {
         if (!SyncedStorage.get("show_package_info")) { return; }
 
-        let nodes = document.querySelectorAll(".game_area_purchase_game_wrapper");
-        for (let node of nodes) {
-            if (node.querySelector(".btn_packageinfo")) return;
+        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
+            if (node.querySelector(".btn_packageinfo")) { return; }
 
             let subid = node.querySelector("input[name=subid]").value;
-            if (!subid) return;
+            if (!subid) { return; }
 
             HTML.afterBegin(node.querySelector(".game_purchase_action"),
-                `<div class="game_purchase_action_bg"><div class="btn_addtocart btn_packageinfo">
-                 <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/"><span>
-                 ${Localization.str.package_info}</span></a></div></div>`);
+                `<div class="game_purchase_action_bg">
+                    <div class="btn_addtocart btn_packageinfo">
+                        <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/">
+                            <span>${Localization.str.package_info}</span>
+                        </a>
+                    </div>
+                </div>`);
         }
     }
 
     addSteamChart(result) {
-        if (this.isDlc()) { return; }
         if (!SyncedStorage.get("show_steamchart_info")) { return; }
-	    if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
+        if (!result.charts || !result.charts.chart || !result.charts.chart.peakall) { return; }
 
-        let appid = this.appid;
         let chart = result.charts.chart;
-        let html = '<div id="steam-charts" class="game_area_description"><h2>' + Localization.str.charts.current + '</h2>';
-            html += '<div class="chart-content">';
-                html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["current"]) + '</span><br>' + Localization.str.charts.playing_now + '</div>';
-                html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["peaktoday"]) + '</span><br>' + Localization.str.charts.peaktoday + '</div>';
-                html += '<div class="chart-stat"><span class="num">' + HTML.escape(chart["peakall"]) + '</span><br>' + Localization.str.charts.peakall + '</div>';
-            html += '</div>';
-            html += '<span class="chart-footer">';
-                html += Localization.str.powered_by.replace('__link__', '<a href="http://steamcharts.com/app/' + appid + '" target="_blank">SteamCharts.com</a>');
-            html += '</span>';
-            html += '</div>';
 
-        HTML.beforeBegin(document.querySelector(".sys_req").parentNode, html);
+        HTML.beforeBegin(document.querySelector(".sys_req").parentNode,
+            `<div id="steam-charts" class="game_area_description">
+                <h2>${Localization.str.charts.current}</h2>
+                <div class="chart-content">
+                    <div class="chart-stat"><span class="num">${HTML.escape(chart["current"])}</span><br>${Localization.str.charts.playing_now}</div>
+                    <div class="chart-stat"><span class="num">${HTML.escape(chart["peaktoday"])}</span><br>${Localization.str.charts.peaktoday}</div>
+                    <div class="chart-stat"><span class="num">${HTML.escape(chart["peakall"])}</span><br>${Localization.str.charts.peakall}</div>
+                </div>
+                <span class="chart-footer">${Localization.str.powered_by.replace("__link__", `<a href="https://steamcharts.com/app/${this.appid}" target="_blank">SteamCharts.com</a>`)}</span>
+            </div>`);
     }
 
     addSteamSpy(result) {
-        if (this.isDlc()) { return; }
-        if (!SyncedStorage.get("show_steamspy_info") || !result.steamspy || !result.steamspy.owners) { return; } // customization setting
+        if (!SyncedStorage.get("show_steamspy_info")) { return; }
+        if (!result.steamspy || !result.steamspy.owners) { return; }
 
         function getTimeString(value) {
 
@@ -1868,107 +1945,86 @@ class AppPageClass extends StorePageClass {
             let minutes = value;
 
             let result = "";
-            if (days > 0) { result += days+"d ";}
-            result += hours+"h "+minutes+"m";
+            if (days > 0) { result += `${days}d `; }
+            result += `${hours}h ${minutes}m`;
 
             return result;
         }
 
-        let appid = this.appid;
-
-        let owners = result.steamspy.owners.split("..")
+        let owners = result.steamspy.owners.split("..");
         let owners_from = HTML.escape(owners[0].trim());
         let owners_to = HTML.escape(owners[1].trim());
         let averageTotal = getTimeString(result.steamspy.average_forever);
         let average2weeks = getTimeString(result.steamspy.average_2weeks);
 
-        let html = '<div id="steam-spy" class="game_area_description"><h2>' + Localization.str.spy.player_data + '</h2>';
-            html += '<div class="chart-content">';
-                html += '<div class="chart-stat"><span class="num">' + owners_from + "<br>-<br>" + owners_to + '</span><br>' + Localization.str.spy.owners + '</div>';
-                html += '<div class="chart-stat"><span class="num">' + averageTotal + '</span><br>' + Localization.str.spy.average_playtime + '</div>';
-                html += '<div class="chart-stat"><span class="num">' + average2weeks + '</span><br>' + Localization.str.spy.average_playtime_2weeks + '</div>';
-            html += "</div>";
-            html += "<span class='chart-footer' style='padding-right: 13px;'>";
-                html += Localization.str.powered_by.replace("__link__", "<a href='http://steamspy.com/app/" + appid + "' target='_blank'>steamspy.com</a>");
-            html += "</span>";
-            html += "</div>";
-
-        HTML.beforeBegin(document.querySelector(".sys_req").parentElement, html);
+        HTML.beforeBegin(document.querySelector(".sys_req").parentNode,
+            `<div id="steam-spy" class="game_area_description">
+                <h2>${Localization.str.spy.player_data}</h2>
+                <div class="chart-content">
+                    <div class="chart-stat"><span class="num">${owners_from}<br>-<br>${owners_to}</span><br>${Localization.str.spy.owners}</div>
+                    <div class="chart-stat"><span class="num">${averageTotal}</span><br>${Localization.str.spy.average_playtime}</div>
+                    <div class="chart-stat"><span class="num">${average2weeks}</span><br>${Localization.str.spy.average_playtime_2weeks}</div>
+                </div>
+                <span class="chart-footer">${Localization.str.powered_by.replace("__link__", `<a href="https://steamspy.com/app/${this.appid}" target="_blank">steamspy.com</a>`)}</span>
+            </div>`);
     }
 
     addSurveyData(result) {
-        if (this.isDlc()) { return; }
         if (this.isVideo()) { return; }
         if (!result.survey) { return; }
 
-        let survey = result.survey;
-        let appid = this.appid;
+        function getBarHtml(name, data) {
+            if (data > 90 || data < 10) {
+                return `<div class="row"><div class="left-bar ${name.toLowerCase()}" style="width: ${parseInt(data)}%;"><span>${name}&nbsp;${data}%</span></div><div class="right-bar" style="width: ${parseInt(100 - data)}%;"></div></div>`;
+            } else {
+                return `<div class="row"><div class="left-bar ${name.toLowerCase()}" style="width: ${parseInt(data)}%;"><span>${name}</span></div><div class="right-bar" style="width: ${parseInt(100 - data)}%;"><span>${data}%</span></div></div>`;
+            }
+        }
 
-        let html = "<div id='performance_survey' class='game_area_description'><h2>" + Localization.str.survey.performance_survey + "</h2>";
+        let survey = result.survey;
+        let html = `<div id="performance_survey" class="game_area_description"><h2>${Localization.str.survey.performance_survey}</h2>`;
 
         if (survey.success) {
-            html += "<p>" + Localization.str.survey.users.replace("__users__", survey["responses"]) + "</p>";
-            html += "<p><b>" + Localization.str.survey.framerate + "</b>: " + Math.round(survey["frp"]) + "% " + Localization.str.survey.framerate_response + " "
+            html += `<p>${Localization.str.survey.users.replace("__users__", survey["responses"])}</p>`;
+
+            html += `<p><b>${Localization.str.survey.framerate}</b>: ${Math.round(survey["frp"])}% ${Localization.str.survey.framerate_response}`;
             switch (survey["fr"]) {
-                case "30": html += "<span style='color: #8f0e10;'>" + Localization.str.survey.framerate_30 + "</span>"; break;
-                case "fi": html += "<span style='color: #e1c48a;'>" + Localization.str.survey.framerate_fi + "</span>"; break;
-                case "va": html += "<span style='color: #8BC53F;'>" + Localization.str.survey.framerate_va + "</span>"; break;
+                case "30": html += ` <span style="color: #8f0e10;">${Localization.str.survey.framerate_30}</span>`; break;
+                case "fi": html += ` <span style="color: #e1c48a;">${Localization.str.survey.framerate_fi}</span>`; break;
+                case "va": html += ` <span style="color: #8BC53F;">${Localization.str.survey.framerate_va}</span>`; break;
             }
 
-            html += "<br><b>" + Localization.str.survey.resolution + "</b>: " + Localization.str.survey.resolution_support + " "
+            html += `<br><b>${Localization.str.survey.resolution}</b>: ${Localization.str.survey.resolution_support}`;
             switch (survey["mr"]) {
-                case "less": html += "<span style='color: #8f0e10;'>" + Localization.str.survey.resolution_less.replace("__pixels__", "1920x1080") + "</span>"; break;
-                case "hd": html += "<span style='color: #8BC53F;'>" + Localization.str.survey.resolution_up.replace("__pixels__", "1920x1080 (HD)") + "</span>"; break;
-                case "wqhd": html += "<span style='color: #8BC53F;'>" + Localization.str.survey.resolution_up.replace("__pixels__", "2560x1440 (WQHD)") + "</span>"; break;
-                case "4k": html += "<span style='color: #8BC53F;'>" + Localization.str.survey.resolution_up.replace("__pixels__", "3840x2160 (4K)") + "</span>"; break;
+                case "less": html += ` <span style="color: #8f0e10;">${Localization.str.survey.resolution_less.replace("__pixels__", "1920x1080")}</span>`; break;
+                case "hd":   html += ` <span style="color: #8BC53F;">${Localization.str.survey.resolution_up.replace("__pixels__", "1920x1080 (HD)")}</span>`; break;
+                case "wqhd": html += ` <span style="color: #8BC53F;">${Localization.str.survey.resolution_up.replace("__pixels__", "2560x1440 (WQHD)")}</span>`; break;
+                case "4k":   html += ` <span style="color: #8BC53F;">${Localization.str.survey.resolution_up.replace("__pixels__", "3840x2160 (4K)")}</span>`; break;
             }
 
-            html += "<br><b>" + Localization.str.survey.graphics_settings + "</b>: ";
+            html += `<br><b>${Localization.str.survey.graphics_settings}</b>:`;
             if (survey["gs"]) {
-                html += "<span style='color: #8BC53F;'>" + Localization.str.survey.gs_y + "</span></p>";
+                html += ` <span style="color: #8BC53F;">${Localization.str.survey.gs_y}</span></p>`;
             } else {
-                html += "<span style='color: #8f0e10;'>" + Localization.str.survey.gs_n + "</span></p>";
+                html += ` <span style="color: #8f0e10;">${Localization.str.survey.gs_n}</span></p>`;
             }
 
             if (survey["nvidia"] !== undefined || survey["amd"] !== undefined || survey["intel"] !== undefined || survey["other"] !== undefined) {
-                html += "<p><b>" + Localization.str.survey.satisfaction + "</b>:";
-                html += "<div class='performance-graph'>";
-                if (survey["nvidia"] !== undefined) {
-                    if (survey["nvidia"] > 90 || survey["nvidia"] < 10) {
-                        html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(survey["nvidia"]).toString() + "%;'><span>Nvidia&nbsp;" + survey["nvidia"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-survey["nvidia"]) + "%;'></div></div>";
-                    } else {
-                        html += "<div class='row'><div class='left-bar nvidia' style='width: " + parseInt(survey["nvidia"]).toString() + "%;'><span>Nvidia</span></div><div class='right-bar' style='width: " + parseInt(100-survey["nvidia"]) + "%;'><span>" + survey["nvidia"] + "%</span></div></div>";
-                    }
-                }
-                if (survey["amd"] !== undefined) {
-                    if (survey["amd"] > 90 || survey["amd"] < 10) {
-                        html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(survey["amd"]).toString() + "%;'><span>AMD&nbsp;" + survey["amd"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-survey["amd"]) + "%'></div></div>";
-                    } else {
-                        html += "<div class='row'><div class='left-bar amd' style='width: " + parseInt(survey["amd"]).toString() + "%;'><span>AMD</span></div><div class='right-bar' style='width: " + parseInt(100-survey["amd"]) + "%'><span>" + survey["amd"] + "%</span></div></div>";
-                    }
-                }
-                if (survey["intel"] !== undefined) {
-                    if (survey["intel"] > 90 || survey["intel"] < 10) {
-                        html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(survey["intel"]).toString() + "%;'><span>Intel&nbsp;" + survey["intel"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-survey["intel"]) + "%'></div></div>";
-                    } else {
-                        html += "<div class='row'><div class='left-bar intel' style='width: " + parseInt(survey["intel"]).toString() + "%;'><span>Intel</span></div><div class='right-bar' style='width: " + parseInt(100-survey["intel"]) + "%'><span>" + survey["intel"] + "%</span></div></div>";
-                    }
-                }
-                if (survey["other"] !== undefined) {
-                    if (survey["other"] > 90 || survey["other"] < 10) {
-                        html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(survey["other"]).toString() + "%;'><span>Other&nbsp;" + survey["other"] + "%</span></div><div class='right-bar' style='width: " + parseInt(100-survey["other"]) + "%'></div></div>";
-                    } else {
-                        html += "<div class='row'><div class='left-bar other' style='width: " + parseInt(survey["other"]).toString() + "%;'><span>Other</span></div><div class='right-bar' style='width: " + parseInt(100-survey["other"]) + "%'><span>" + survey["other"] + "%</span></div></div>";
-                    }
-                }
+                html += `<p><b>${Localization.str.survey.satisfaction}</b>:</p><div class="performance-graph">`;
+
+                if (survey["nvidia"] !== undefined)  html += getBarHtml("Nvidia", survey["nvidia"]);
+                if (survey["amd"] !== undefined)     html += getBarHtml("AMD", survey["amd"]);
+                if (survey["intel"] !== undefined)   html += getBarHtml("Intel", survey["intel"]);
+                if (survey["other"] !== undefined)   html += getBarHtml("Other", survey["other"]);
+
                 html += "</div>";
             }
         } else {
-            html += "<p>" + Localization.str.survey.nobody + "</p>";
+            html += `<p>${Localization.str.survey.nobody}</p>`;
         }
 
-        if (document.querySelector(".game_area_already_owned") && document.querySelector(".hours_played")) {
-            // FIXME html += "<a class='btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs' href='//enhancedsteam.com/survey/?appid=" + appid + "'><span>" + Localization.str.survey.take + "</span></a>";
+        if (this.isOwned() && document.getElementById("my_activity")) {
+            // FIXME html += `<a class="btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs" href="${Config.PublicHost}/survey/?appid=${this.appid}"><span>${Localization.str.survey.take}</span></a>`;
         }
 
         html += "</div>";
@@ -1977,27 +2033,55 @@ class AppPageClass extends StorePageClass {
     }
 
     addStats() {
-        let that = this;
-        if (this.isDlc()) { return Promise.resolve(); }
+        if (this.isDlc() || !document.querySelector(".sys_req")) {
+            return Promise.resolve();
+        }
+
         return this.data.then(result => {
-
-            that.addSteamChart(result);
-            that.addSteamSpy(result);
-            that.addSurveyData(result);
-
+            this.addSteamChart(result);
+            this.addSteamSpy(result);
+            this.addSurveyData(result);
         });
     }
 
     addDlcCheckboxes() {
-        let dlcs = document.querySelectorAll(".game_area_dlc_row");
-        if (dlcs.length === 0) { return; }
-        let expandedNode = document.querySelector("#game_area_dlc_expanded");
+        let dlcs = document.querySelector(".game_area_dlc_section");
+        if (!dlcs) { return; }
 
+        let imgUrl = ExtensionResources.getURL("img/check_sheet.png");
+        for (let dlc of dlcs.querySelectorAll(".game_area_dlc_row")) {
+            if (dlc.querySelector("input")) {
+                let value = dlc.querySelector("input").value;
+
+                HTML.afterBegin(dlc.querySelector(".game_area_dlc_name"),
+                    `<input type="checkbox" class="es_dlc_selection" id="es_select_dlc_${value}" value="${value}">
+                    <label for="es_select_dlc_${value}" style="background-image: url(${imgUrl});"></label>`);
+            } else {
+                dlc.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
+            }
+        }
+
+        let expandedNode = dlcs.querySelector("#game_area_dlc_expanded");
         if (expandedNode) {
-            HTML.afterEnd(expandedNode, `<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; margin-bottom: 10px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>${Localization.str.add_selected_dlc_to_cart}</span></a></div></div>`);
-            HTML.afterEnd(".game_area_dlc_section", "<div style='clear: both;'></div>");
+            HTML.afterEnd(expandedNode, 
+                `<div class="game_purchase_action game_purchase_action_bg" style="margin-bottom: 10px;" id="es_selected_btn">
+                    <div class="btn_addtocart">
+                        <a class="btnv6_green_white_innerfade btn_medium">
+                            <span>${Localization.str.add_selected_dlc_to_cart}</span>
+                        </a>
+                    </div>
+                </div>`);
+
+            HTML.afterEnd(dlcs, '<div style="clear: both;"></div>');
         } else {
-            HTML.afterEnd(".gameDlcBlocks", `<div class='game_purchase_action game_purchase_action_bg' style='float: left; margin-top: 4px; display: none;' id='es_selected_btn'><div class='btn_addtocart'><a class='btnv6_green_white_innerfade btn_medium'><span>${Localization.str.add_selected_dlc_to_cart}</span></a></div></div>`);
+            HTML.afterEnd(dlcs.querySelector(".gameDlcBlocks"),
+                `<div class="game_purchase_action game_purchase_action_bg" id="es_selected_btn">
+                    <div class="btn_addtocart">
+                        <a class="btnv6_green_white_innerfade btn_medium">
+                            <span>${Localization.str.add_selected_dlc_to_cart}</span>
+                        </a>
+                    </div>
+                </div>`);
         }
 
         let form = document.createElement("form");
@@ -2006,76 +2090,61 @@ class AppPageClass extends StorePageClass {
         form.setAttribute("method", "POST");
         form.setAttribute("id", "es_selected_cart");
 
-        let button = document.querySelector("#es_selected_btn");
-        button.insertAdjacentElement("beforebegin", form);
-        button.addEventListener("click", function() {
-            document.querySelector("form[name=add_selected_dlc_to_cart]").submit();
+        let cartBtn = dlcs.querySelector("#es_selected_btn");
+        cartBtn.insertAdjacentElement("beforebegin", form);
+        cartBtn.addEventListener("click", () => {
+            form.submit();
         });
 
-        for (let dlc of dlcs) {
-            if (dlc.querySelector("input")) {
-                let value = dlc.querySelector("input").value;
+        HTML.afterEnd(dlcs.querySelector(".gradientbg"),
+            `<div id="es_dlc_option_panel">
+                <div class="es_dlc_option" id="unowned_dlc_check">${Localization.str.dlc_select.unowned_dlc}</div>
+                <div class="es_dlc_option" id="wl_dlc_check">${Localization.str.dlc_select.wishlisted_dlc}</div>
+                <div class="es_dlc_option" id="no_dlc_check">${Localization.str.dlc_select.none}</div>
+            </div>`);
 
-                HTML.afterBegin(
-                    dlc.querySelector(".game_area_dlc_name"),
-                    `<input type='checkbox' class='es_dlc_selection' style='cursor: default;' id='es_select_dlc_${value}' value='${value}'><label for='es_select_dlc_${value}' style='background-image: url(${ExtensionResources.getURL("img/check_sheet.png")})'></label>`);
-            } else {
-                dlc.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
-            }
-        }
+        let change = new Event("change", { "bubbles": true });
 
-        HTML.afterEnd(".game_area_dlc_section .gradientbg", "<div style='height: 28px; padding-left: 15px; display: none;' id='es_dlc_option_panel'></div>");
-
-        HTML.afterBegin("#es_dlc_option_panel",
-            `<div class='es_dlc_option' id='unowned_dlc_check'>${Localization.str.dlc_select.unowned_dlc}</div>
-             <div class='es_dlc_option' id='wl_dlc_check'>${Localization.str.dlc_select.wishlisted_dlc}</div>
-             <div class='es_dlc_option' id='no_dlc_check'>${Localization.str.dlc_select.none}</div>`);
-
-        let change = new Event("change", {"bubbles": true});
-
-        document.querySelector("#unowned_dlc_check").addEventListener("click", function() {
-            let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row:not(.ds_owned) input:not(:checked)");
+        dlcs.querySelector("#unowned_dlc_check").addEventListener("click", () => {
+            let nodes = dlcs.querySelectorAll(".game_area_dlc_row:not(.ds_owned) input:not(:checked)");
             for (let node of nodes) {
                 node.checked = true;
                 node.dispatchEvent(change);
             }
         });
 
-        document.querySelector("#wl_dlc_check").addEventListener("click", function() {
-            let nodes = document.querySelectorAll(".game_area_dlc_section .ds_wishlist input:not(:checked)");
+        dlcs.querySelector("#wl_dlc_check").addEventListener("click", () => {
+            let nodes = dlcs.querySelectorAll(".ds_wishlist input:not(:checked)");
             for (let node of nodes) {
                 node.checked = true;
                 node.dispatchEvent(change);
             }
         });
 
-        document.querySelector("#no_dlc_check").addEventListener("click", function() {
-            let nodes = document.querySelectorAll(".game_area_dlc_section .game_area_dlc_row input:checked");
+        dlcs.querySelector("#no_dlc_check").addEventListener("click", () => {
+            let nodes = dlcs.querySelectorAll(".game_area_dlc_row input:checked");
             for (let node of nodes) {
                 node.checked = false;
                 node.dispatchEvent(change);
             }
         });
 
-        HTML.beforeEnd(".game_area_dlc_section .gradientbg",
-            `<a id='es_dlc_option_button'>${Localization.str.dlc_select.select} ▼</a>`);
+        HTML.beforeEnd(dlcs.querySelector(".gradientbg"),
+            `<a id="es_dlc_option_button">${Localization.str.dlc_select.select} ▼</a>`);
 
-        document.querySelector("#es_dlc_option_button").addEventListener("click", function() {
-            document.querySelector("#es_dlc_option_panel")
-                .classList.toggle("esi-shown");
+        dlcs.querySelector("#es_dlc_option_button").addEventListener("click", e => {
+            dlcs.querySelector("#es_dlc_option_panel").classList.toggle("esi-shown");
 
-            let button = document.querySelector("#es_dlc_option_button");
-
-            button.textContent = (button.textContent.match("▼")
+            e.target.textContent = e.target.textContent.includes("▼")
                 ? `${Localization.str.dlc_select.select} ▲`
-                : `${Localization.str.dlc_select.select} ▼`);
+                : `${Localization.str.dlc_select.select} ▼`;
         });
 
-        document.querySelector(".game_area_dlc_section").addEventListener("change", function(e) {
+        dlcs.addEventListener("change", e => {
             if (!e.target.classList.contains("es_dlc_selection")) { return; }
 
-            let cartNode = document.querySelector("#es_selected_cart");
-            cartNode.innerHTML = "";
+            let cartForm = dlcs.querySelector("#es_selected_cart");
+            cartForm.innerHTML = "";
 
             let inputAction = document.createElement("input");
             inputAction.type = "hidden";
@@ -2087,33 +2156,27 @@ class AppPageClass extends StorePageClass {
             inputSessionId.name = "sessionid";
             inputSessionId.value = User.getSessionId();
 
-            cartNode.appendChild(inputAction);
-            cartNode.appendChild(inputSessionId);
+            cartForm.append(inputAction, inputSessionId);
 
-            let nodes = document.querySelectorAll(".es_dlc_selection:checked");
+            let nodes = dlcs.querySelectorAll(".es_dlc_selection:checked");
             for (let node of nodes) {
 
                 let inputSubId = document.createElement("input");
-                inputSubId.setAttribute("type", "hidden");
-                inputSubId.setAttribute("name", "subid[]");
-                inputSubId.setAttribute("value", node.value);
+                inputSubId.type = "hidden";
+                inputSubId.name = "subid[]";
+                inputSubId.value = node.value;
 
-                cartNode.insertAdjacentElement("beforeend", inputSubId);
+                cartForm.append(inputSubId);
             }
 
-            let button = document.querySelector("#es_selected_btn");
-            button.style.display = (nodes.length > 0 ? "block" : "none");
-        })
+            cartBtn.style.display = nodes.length > 0 ? "block" : "none";
+        });
     }
 
     addBadgeProgress() {
         if (!this.hasCards || !User.isSignedIn || !SyncedStorage.get("show_badge_progress")) { return; }
 
-        let stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.type = 'text/css';
-        stylesheet.href = '//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css';
-        document.head.appendChild(stylesheet);
+        DOMHelper.insertStylesheet("//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css");
 
         HTML.afterEnd("#category_block",
             `<div id="es_badge_progress" class="block responsive_apppage_details_right heading">
@@ -2169,7 +2232,7 @@ class AppPageClass extends StorePageClass {
             let is_normal_badge = targetSelector === ".es_normal_badge_progress";
 
             if (is_normal_badge || (card_num_owned > 0 || !blockSel.querySelector(".badge_empty_circle"))) {
-                document.querySelector(".es_badges_progress_block").style.display = "block";
+                blockSel.parentNode.style.display = "block";
                 blockSel.style.display = "block";
 
                 let progressBold = badgeNode.querySelector(".progress_info_bold");
@@ -2212,12 +2275,10 @@ class AppPageClass extends StorePageClass {
     }
 
     addAchievementCompletionBar() {
-        if (!this.isOwned() || !this.hasAchievements() || !SyncedStorage.get("showachinstore")) { return; }
+        if (!this.hasAchievements() || !SyncedStorage.get("showachinstore")) { return; }
 
-        let details_block = document.querySelector(".myactivity_block .details_block");
-        if (!details_block) { return; }
-
-        HTML.afterEnd(details_block, '<div id="es_ach_stats"></div>');
+        let node = document.querySelector("#my_activity > .hours_played");
+        if (!node) { return; }
 
         Stats.getAchievementBar("/my", this.communityAppid).then(achieveBar => {
             if (!achieveBar) {
@@ -2225,38 +2286,40 @@ class AppPageClass extends StorePageClass {
                 return;
             }
             
-            HTML.inner("#es_ach_stats", achieveBar);
+            HTML.afterEnd(node, `<div id="es_ach_stats">${achieveBar}</div>`);
         });
     }
 
     customizeAppPage() {
-        let nodes = document.querySelectorAll(".purchase_area_spacer");
-        HTML.beforeEnd(nodes[nodes.length-1],
-            `<div id="es_customize_btn" class="home_actions_ctn">
-                <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
+        let node = DOMHelper.selectLastNode(document, ".purchase_area_spacer");
+        node.style.height = "auto";
+
+        HTML.beforeEnd(node,
+            `<div id="es_customize_btn">
+                <div class="home_btn home_customize_btn">${Localization.str.customize}</div>
                 <div class='home_viewsettings_popup'>
-                    <div class="home_viewsettings_instructions" style="font-size: 12px;">${Localization.str.apppage_sections}</div>
+                    <div class="home_viewsettings_instructions">${Localization.str.apppage_sections}</div>
                 </div>
             </div>
             <div style="clear: both;"></div>`);
 
-        document.querySelector("#es_customize_btn").addEventListener("click", function(e) {
+        document.querySelector("#es_customize_btn").addEventListener("click", e => {
             e.target.classList.toggle("active");
         });
 
-        document.querySelector("body").addEventListener("click", function(e){
+        document.body.addEventListener("click", e => {
             if (e.target.closest("#es_customize_btn")) { return; }
             let node = document.querySelector("#es_customize_btn .home_customize_btn.active");
             if (!node) { return; }
             node.classList.remove("active");
         });
 
-        for (let sel of ['#game_area_description', '#game_area_content_descriptors', '.sys_req', '#game_area_legal']) {
+        for (let sel of ["#game_area_description", "#game_area_content_descriptors", ".sys_req", "#game_area_legal"]) {
             let el = document.querySelector(sel);
             if (!el) { continue; }
-            let parent = el.closest('.game_page_autocollapse_ctn');
+            let parent = el.closest(".game_page_autocollapse_ctn");
             if (!parent) { continue; }
-            parent.setAttribute('data-parent-of', sel);
+            parent.setAttribute("data-parent-of", sel);
         }
 
         let workshop = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
@@ -2264,7 +2327,9 @@ class AppPageClass extends StorePageClass {
 
         let customizer = new Customizer("customize_apppage");
         customizer
-            .add("recommendedbycurators", ".steam_curators_block")
+            .add("franchisenotice", ".franchise_notice", Localization.str.apppage_franchise)
+            .add("eaheader", ".early_access_header", Localization.str.apppage_eaheader)
+            .add("eabanner", ".early_access_banner", Localization.str.apppage_eabanner)
             .add("recentupdates", "#events_root", Localization.str.apppage_recentupdates)
             .add("reviews", "#game_area_reviews")
             .add("about", "[data-parent-of='#game_area_description']")
@@ -2275,35 +2340,35 @@ class AppPageClass extends StorePageClass {
             .add("sysreq", "[data-parent-of='.sys_req']")
             .add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal)
             .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
-            .add("franchise", "#franchise_block", Localization.str.apppage_franchise)
+            .add("franchise", "#franchise_block", Localization.str.apppage_morefromfranchise)
             .add("morelikethis", "#recommended_block")
+            .add("recommendedbycurators", ".steam_curators_block")
             .add("customerreviews", "#app_reviews_hash");
 
         if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_workshop);
         if (greenlight) customizer.add("greenlight", greenlight.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_greenlight);
 
         customizer.build();
-        document.querySelector(".purchase_area_spacer").style.height = "auto";
     }
 
     addReviewToggleButton() {
         let head = document.querySelector("#review_create h1");
         if (!head) { return; }
-        HTML.beforeEnd(head, "<div style='float: right;'><a class='btnv6_lightblue_blue btn_mdium' id='es_review_toggle'><span>▲</span></a></div>");
+
+        HTML.beforeEnd(head, '<div style="float: right;"><a class="btnv6_lightblue_blue btn_mdium" id="es_review_toggle"><span>▲</span></a></div>');
 
         let reviewSectionNode = document.createElement("div");
         reviewSectionNode.setAttribute("id", "es_review_section");
 
         let nodes = document.querySelector("#review_container").querySelectorAll("p, .avatar_block, .content");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        for (let node of nodes) {
             reviewSectionNode.append(node);
         }
 
         head.insertAdjacentElement("afterend", reviewSectionNode);
 
         function toggleReviews(state) {
-            if (typeof state == 'undefined') {
+            if (typeof state === "undefined") {
                 state = !LocalStorage.get("show_review_section", true);
                 LocalStorage.set("show_review_section", state);
             }
@@ -2331,27 +2396,16 @@ class AppPageClass extends StorePageClass {
     addHelpButton() {
         let node = document.querySelector(".game_area_play_stats .already_owned_actions");
         if (!node) { return; }
+
         HTML.afterEnd(node,
-            "<div class='game_area_already_owned_btn'><a class='btnv6_lightblue_blue btnv6_border_2px btn_medium' href='https://help.steampowered.com/wizard/HelpWithGame/?appid=" + this.appid + "'><span>" + Localization.str.get_help + "</span></a></div>");
+            `<div class="game_area_already_owned_btn">
+                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="//help.steampowered.com/wizard/HelpWithGame/?appid=${this.appid}">
+                    <span>${Localization.str.get_help}</span>
+                </a>
+            </div>`);
     }
 
     addPackBreakdown() {
-
-        function splitPack(node, ways) {
-            let price_text = node.querySelector(".game_purchase_price, .discount_final_price").textContent;
-            if (price_text.match(/,\d\d(?!\d)/)) {
-                price_text = price_text.replace(",", ".");
-            }
-            let price = (Number(price_text.replace(/[^0-9\.]+/g, ""))) / ways;
-            price = new Price(Math.ceil(price * 100) / 100, Currency.storeCurrency);
-
-            HTML.afterBegin(node.querySelector(".game_purchase_action_bg"),
-                `<div class="es_each_box">
-                    <div class="es_each_price">${price}</div>
-                    <div class="es_each">${Localization.str.each}</div>
-                </div>`);
-        }
-
         for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
 
             // prevent false positives on packages e.g. Doom 3
@@ -2384,6 +2438,21 @@ class AppPageClass extends StorePageClass {
 
             else if (title.includes("6 pack") ||
                 title.includes("six pack")) { splitPack(node, 6); }
+        }
+
+        function splitPack(node, ways) {
+            let price_text = node.querySelector(".game_purchase_price, .discount_final_price").textContent;
+            if (price_text.match(/,\d\d(?!\d)/)) {
+                price_text = price_text.replace(",", ".");
+            }
+            let price = (Number(price_text.replace(/[^0-9\.]+/g, ""))) / ways;
+            price = new Price(Math.ceil(price * 100) / 100, Currency.storeCurrency);
+
+            HTML.afterBegin(node.querySelector(".game_purchase_action_bg"),
+                `<div class="es_each_box">
+                    <div class="es_each_price">${price}</div>
+                    <div class="es_each">${Localization.str.each}</div>
+                </div>`);
         }
     }
 }
@@ -3300,6 +3369,39 @@ let SearchPageClass = (function(){
     return SearchPageClass;
 })();
 
+let StatsPageClass = (function(){
+
+    function StatsPageClass() {
+        this.highlightTopGames();
+    }
+
+    StatsPageClass.prototype.highlightTopGames = async function() {
+        if (!User.isSignedIn) { return; }
+
+        for (let node of document.querySelectorAll(".gameLink")) {
+            let appid = GameId.getAppid(node.href);
+
+            await DynamicStore;
+        
+            let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
+                ITAD.getAppStatus(`app/${appid}`),
+                DynamicStore.getAppStatus(`app/${appid}`),
+                Inventory.getAppStatus(appid),
+            ]);
+
+            if (collected) Highlights.highlightCollection(node);
+            if (waitlisted) Highlights.highlightWaitlist(node);
+            if (owned) Highlights.highlightOwned(node);
+            if (guestPass) Highlights.highlightInvGuestpass(node);
+            if (coupon) Highlights.highlightCoupon(node);
+            if (gift) Highlights.highlightInvGift(node);
+            if (wishlisted) Highlights.highlightWishlist(node);
+            if (ignored) Highlights.highlightNotInterested(node);
+        }
+    }
+
+    return StatsPageClass;
+})();
 
 let CuratorPageClass = (function(){
 
@@ -3315,13 +3417,14 @@ let WishlistPageClass = (function(){
 
     let cachedPrices = {};
     let userNotes;
+    let myWishlist;
 
     function WishlistPageClass() {
 
-        let instance = this;
+        let that = this;
         userNotes = new UserNotes();
+        myWishlist = isMyWishlist();
 
-        let myWishlist = isMyWishlist();
         let container = document.querySelector("#wishlist_ctn");
         let timeout = null, lastRequest = null;
         let delayedWork = new Set();
@@ -3332,7 +3435,7 @@ let WishlistPageClass = (function(){
                 }
             });
             lastRequest = window.performance.now();
-            if (timeout == null) {
+            if (timeout === null) {
                 timeout = window.setTimeout(async function markWishlist() {
                     if (window.performance.now() - lastRequest < 40) {
                         timeout = window.setTimeout(markWishlist, 50);
@@ -3346,11 +3449,10 @@ let WishlistPageClass = (function(){
                             continue;
                         }
                         if (myWishlist && SyncedStorage.get("showusernotes")) {
-                            promises.push(instance.addUserNote(node));
-                        } else {
-                            instance.highlightApps(node); // not sure of the value of highlighting wishlisted apps on your wishlist
+                            promises.push(that.addUserNote(node));
                         }
-                        instance.addPriceHandler(node);
+                        that.highlightApps(node);
+                        that.addPriceHandler(node);
                     }
                     await Promise.all(promises);
                     window.dispatchEvent(new Event("resize"));
@@ -3399,7 +3501,6 @@ let WishlistPageClass = (function(){
             this.addExportWishlistButton();
             this.addEmptyWishlistButton();
             this.addUserNotesHandlers();
-            this.addRemoveHandler();
         };
         
         if (document.querySelector("#throbber").style.display === "none") {
@@ -3430,10 +3531,6 @@ let WishlistPageClass = (function(){
     WishlistPageClass.prototype.highlightApps = async function(node) {
         if (!User.isSignedIn) { return; }
 
-        let loginImage = document.querySelector("#global_actions .user_avatar img").getAttribute("src");
-        let userImage = document.querySelector(".wishlist_header img").getAttribute("src").replace("_full", "");
-        if (loginImage === userImage) { return; }
-
         await DynamicStore;
 
         let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { coupon, guestPass, gift }] = await Promise.all([
@@ -3445,22 +3542,25 @@ let WishlistPageClass = (function(){
         if (collected) Highlights.highlightCollection(node);
         if (waitlisted) Highlights.highlightWaitlist(node);
 
-        if (owned) {
-            node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
-            if (SyncedStorage.get("highlight_owned")) {
-                Highlights.highlightOwned(node);
-            } else {
-                HTML.beforeEnd(node, `<div class="ds_flag ds_owned_flag">${Localization.str.library.in_library.toUpperCase()}&nbsp;&nbsp;</div>`);
+        if (!myWishlist) {
+            if (owned) {
+                node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
+
+                if (SyncedStorage.get("highlight_owned")) {
+                    Highlights.highlightOwned(node);
+                } else {
+                    HTML.beforeEnd(node, `<div class="ds_flag ds_owned_flag">${Localization.str.library.in_library.toUpperCase()}&nbsp;&nbsp;</div>`);
+                }
             }
-        }
 
-        if (wishlisted) {
-            node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
+            if (wishlisted) {
+                node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
 
-            if (SyncedStorage.get("highlight_wishlist")) {
-                Highlights.highlightWishlist(node);
-            } else {
-                HTML.beforeEnd(node, `<div class="ds_flag ds_wishlist_flag">${Localization.str.on_wishlist.toUpperCase()}&nbsp;&nbsp;</div>`);
+                if (SyncedStorage.get("highlight_wishlist")) {
+                    Highlights.highlightWishlist(node);
+                } else {
+                    HTML.beforeEnd(node, `<div class="ds_flag ds_wishlist_flag">${Localization.str.on_wishlist.toUpperCase()}&nbsp;&nbsp;</div>`);
+                }
             }
         }
 
@@ -3509,7 +3609,7 @@ let WishlistPageClass = (function(){
             let promises = [];
 
             for (let i=0; i<pages; i++) {
-                promises.push(RequestData.getJson(baseUrl+"wishlistdata/?p="+i).then(data => {
+                promises.push(RequestData.getJson(`${baseUrl}wishlistdata/?p=${i}`).then(data => {
                     Object.assign(wishlistData, data);
                 }));
             }
@@ -3543,12 +3643,11 @@ let WishlistPageClass = (function(){
     }
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
-        if (!isMyWishlist()) { return; }
-        if (!SyncedStorage.get("showemptywishlist")) { return; }
+        if (!myWishlist || !SyncedStorage.get("showemptywishlist")) { return; }
 
-        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_empty_wishlist'>" + Localization.str.empty_wishlist.title + "</div>");
+        HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_empty_wishlist">${Localization.str.empty_wishlist.title}</div>`);
 
-        document.querySelector("#es_empty_wishlist").addEventListener("click", function(e) {
+        document.querySelector("#es_empty_wishlist").addEventListener("click", () => {
             emptyWishlist();
         });
     };
@@ -3604,7 +3703,7 @@ let WishlistPageClass = (function(){
 
             for (let [appid, data] of Object.entries(this.appInfo)) {
                 json.data.push({
-                    gameid: ["steam", "app/"+appid],
+                    gameid: ["steam", `app/${appid}`],
                     title: data.name,
                     url: `https://store.steampowered.com/app/${appid}/`,
                     release_date: data.release_string,
@@ -3621,7 +3720,7 @@ let WishlistPageClass = (function(){
                 result.push(
                     format
                         .replace("%appid%", appid)
-                        .replace("%id%", "app/"+appid)
+                        .replace("%id%", `app/${appid}`)
                         .replace("%url%", `https://store.steampowered.com/app/${appid}/`)
                         .replace("%title%", data.name)
                         .replace("%release_date%", data.release_string)
@@ -3720,7 +3819,7 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addExportWishlistButton = function() {
-        HTML.afterBegin("#cart_status_data", "<div class='es-wbtn' id='es_export_wishlist'><div>" + Localization.str.export.wishlist + "</div></div>");
+        HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${Localization.str.export.wishlist}</div></div>`);
 
         document.querySelector("#es_export_wishlist").addEventListener("click", () => {
             Messenger.onMessage("appInfo").then(appInfo => this.showExportModalDialog(appInfo));
@@ -3736,10 +3835,10 @@ let WishlistPageClass = (function(){
     }
 
     WishlistPageClass.prototype.addPriceHandler = function(node) {
-        if (!SyncedStorage.get("showlowestprice_onwishlist")) return;
+        if (!SyncedStorage.get("showlowestprice_onwishlist")) { return; }
 
         let appId = node.dataset.appId;
-        if (!appId || typeof cachedPrices[appId] !== "undefined") return;
+        if (!appId || typeof cachedPrices[appId] !== "undefined") { return; }
 
         cachedPrices[appId] = null;
 
@@ -3781,7 +3880,7 @@ let WishlistPageClass = (function(){
         let noteText;
         let cssClass;
         if (await userNotes.exists(appid)) {
-            noteText = `"${await userNotes.getNote(appid)}"`;
+            noteText = `"${await userNotes.get(appid)}"`;
             cssClass = "esi-user-note";
         } else {
             noteText = Localization.str.user_note.add;
@@ -3789,12 +3888,12 @@ let WishlistPageClass = (function(){
         }
 
         HTML.afterEnd(node.querySelector(".mid_container"),
-            "<div class='esi-note " + cssClass + "'>" + noteText + "</div>");
+            `<div class="esi-note ${cssClass}">${noteText}</div>`);
         node.classList.add("esi-has-note");
     };
 
-    WishlistPageClass.prototype.addUserNotesHandlers =  function() {
-        if (!isMyWishlist()) { return; }
+    WishlistPageClass.prototype.addUserNotesHandlers = function() {
+        if (!myWishlist) { return; }
 
         let stateHandler = function(node, active) {
             if (active) {
@@ -3806,25 +3905,13 @@ let WishlistPageClass = (function(){
             }
         };
 
-        document.addEventListener("click", function(e) {
+        document.addEventListener("click", e => {
             if (!e.target.classList.contains("esi-note")) { return; }
 
             let row = e.target.closest(".wishlist_row");
             let appid = Number(row.dataset.appId);
-            userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, ".wishlist_row[data-app-id='" + appid + "'] div.esi-note", stateHandler);
+            userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, `.wishlist_row[data-app-id="${appid}"] div.esi-note`, stateHandler);
         });
-    };
-
-    WishlistPageClass.prototype.addRemoveHandler = function() {
-        ExtensionLayer.runInPageContext(() =>
-            $J(document).ajaxSuccess(function( event, xhr, settings ) {
-                if (settings.url.endsWith("/remove/")) {
-                    Messenger.postMessage("removeWlEntry", settings.data.match(/(?!appid=)\d+/)[0]);
-                }
-            })
-        );
-
-        Messenger.addMessageListener("removeWlEntry", removedEntry => userNotes.deleteNote(removedEntry));
     };
 
     return WishlistPageClass;
@@ -3832,6 +3919,9 @@ let WishlistPageClass = (function(){
 
 class UserNotes {
     constructor() {
+
+        this._notes = SyncedStorage.get("user_notes") || {};
+
         this.noteModalTemplate = `
             <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
                 <div id="es_note_modal_content">
@@ -3849,6 +3939,25 @@ class UserNotes {
                 </div>
             </div>`;
     }
+
+    // TODO data functions should probably be split from presentation, but splitting it to background seems unneccessary
+    get(appid) {
+        return this._notes[appid];
+    };
+
+    set(appid, note) {
+        this._notes[appid] = note;
+        SyncedStorage.set("user_notes", this._notes);
+    };
+
+    delete(appid) {
+        delete this._notes[appid];
+        SyncedStorage.set("user_notes", this._notes);
+    };
+
+    exists(appid) {
+        return Boolean(this._notes[appid]);
+    };
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
         // Partly copied from shared_global.js
@@ -3907,7 +4016,7 @@ class UserNotes {
         }
 
         let saveNote = () => {
-            let modal = document.querySelector('#es_note_modal');
+            let modal = document.querySelector("#es_note_modal");
             let appid = parseInt(modal.dataset.appid, 10);
             let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
             let node = document.querySelector(decodeURIComponent(modal.dataset.selector));
@@ -3923,10 +4032,6 @@ class UserNotes {
             }
         }
     }
-    get(appid)          { return Background.action("notes.get", appid) }
-    set(appid, note)    { return Background.action("notes.set", appid, note) }
-    delete(appid)       { return Background.action("notes.delete", appid) }
-    exists(appid)       { return Background.action("notes.exists", appid) }
 }
 
 let TagPageClass = (function(){
@@ -4032,13 +4137,15 @@ let StoreFrontPageClass = (function(){
                 .add("featuredrecommended", ".home_cluster_ctn")
                 .add("trendingamongfriends", ".friends_recently_purchased")
                 .add("discoveryqueue", ".discovery_queue_ctn")
-                .add("curators", ".steam_curators_ctn")
-                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn")
+                .add("curators", ".steam_curators_ctn", Localization.str.homepage_curators)
+                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn", Localization.str.homepage_curators)
                 .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
                 .add("popularvrgames", ".best_selling_vr_ctn")
                 .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
-                .add("gamesstreamingnow", ".live_streams_ctn")
-                .add("updatesandoffers", ".marketingmessage_area")
+                .add("gamesstreamingnow", ".live_streams_ctn", "", true)
+                .add("updatesandoffers", ".marketingmessage_area", "", true)
+                .add("topnewreleases", ".top_new_releases", Localization.str.homepage_topnewreleases)
+                .add("steamlabs", ".labs_cluster")
                 .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
 
             if (specialoffers) customizer.add("specialoffers", specialoffers.parentElement);
@@ -4046,15 +4153,11 @@ let StoreFrontPageClass = (function(){
             if (recentlyupdated) customizer.add("recentlyupdated", recentlyupdated.parentElement);
             if (under) customizer.add("under", under.parentElement.parentElement);
 
-            let dynamicNodes = Array.from(document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer)"));
-            for (let i = 0; i < dynamicNodes.length; ++i) {
-                let node = dynamicNodes[i];
-                if (node.querySelector(".esi-customizer") || node.style.display === "none") { continue; }
+            let dynamicNodes = document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer), .home_pagecontent_ctn");
+            for (let node of dynamicNodes) {
+                if (node.closest(".esi-customizer") || node.querySelector(".esi-customizer") || node.style.display === "none") { continue; }
 
-                let headerNode = node.querySelector(".home_page_content > h2,.carousel_container > h2");
-                if (!headerNode) { continue; }
-
-                customizer.addDynamic(headerNode, node);
+                customizer.addDynamic(node);
             }
 
             customizer.build();
@@ -4124,7 +4227,11 @@ let TabAreaObserver = (function(){
             (new SearchPageClass());
             break;
 
-        case /^\/(tags|genre)\//.test(path):
+        case /^\/stats\//.test(path):
+            (new StatsPageClass());
+            break;
+
+        case /^\/(?:tags|genre)\//.test(path):
             (new TagPageClass());
             break;
 
@@ -4148,8 +4255,8 @@ let TabAreaObserver = (function(){
 
     // common for store pages
     Highlights.startHighlightsAndTags();
-    EnhancedSteam.alternateLinuxIcon();
-    EnhancedSteam.hideTrademarkSymbol(false);
+    AugmentedSteam.alternateLinuxIcon();
+    AugmentedSteam.hideTrademarkSymbol(false);
     TabAreaObserver.observeChanges();
 
 })();
