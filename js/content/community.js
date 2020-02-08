@@ -566,7 +566,6 @@ let ProfileHomePageClass = (function(){
             }
 
             document.querySelector("#es_steamid").addEventListener("click", showSteamIdDialog);
-            document.addEventListener("click", copySteamId);
         }
 
         // Insert the links HMTL into the page
@@ -595,6 +594,8 @@ let ProfileHomePageClass = (function(){
         }
 
         function showSteamIdDialog() {
+            document.addEventListener("click", copySteamId);
+
             let steamId = new SteamId(SteamId.fromDOM());
             let html =
                 `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
@@ -604,9 +605,11 @@ let ProfileHomePageClass = (function(){
                 <p><a data-copy="https://steamcommunity.com/profiles/${steamId.getSteamId64()}" class="es_copy">https://steamcommunity.com/profiles/${steamId.getSteamId64()}</a></p>`;
 
 
+            Messenger.onMessage("closeDialog").then(() => document.removeEventListener("click", copySteamId));
             ExtensionLayer.runInPageContext(`function() {
                 HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
-                window.idDialog = ShowAlertDialog("${Localization.str.steamid_of_user}".replace("__user__", g_rgProfileData.personaname), \`${html}\`, "${Localization.str.close}");
+                let dialog = ShowAlertDialog("${Localization.str.steamid_of_user}".replace("__user__", g_rgProfileData.personaname), \`${html}\`, "${Localization.str.close}");
+                dialog.done(() => Messenger.postMessage("closeDialog"));
             }`);
         }
     };
