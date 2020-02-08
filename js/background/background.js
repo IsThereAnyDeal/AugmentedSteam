@@ -1085,7 +1085,7 @@ class IndexedDB {
             let tx = IndexedDB.db.transaction(objectStoreName);
 
             for (let key of keys) {
-                promises.push(tx.store.get(key).then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, keys[i], params)));
+                promises.push(tx.store.get(key).then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, key, params)));
             }
 
             let resolved = await Promise.all(promises);
