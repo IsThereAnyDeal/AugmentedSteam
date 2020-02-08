@@ -1,35 +1,152 @@
 /**
  * Common functions that may be used on any pages
  */
+class ITAD {
+    static async create() {
+        if (!await Background.action("itad.isconnected")) { return; }
+
+        HTML.afterBegin("#global_action_menu",
+            `<div id="es_itad">
+                <img id="es_itad_logo" src="${ExtensionResources.getURL("img/itad.png")}" height="20px">
+                <span id="es_itad_status">✓</span>
+            </div>`);
+
+        document.querySelector("#es_itad").addEventListener("mouseenter", ITAD.onHover);
+
+        if (User.isSignedIn && (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist"))) {
+            Background.action("itad.import");
+        }
+    }
+
+    static async onHover() {
+        if (!document.querySelector(".es-itad-hover")) {
+            HTML.afterEnd("#es_itad_status",
+                `<div class="es-itad-hover">
+                    <div class="es-itad-hover__content">
+                        <h4>${Localization.str.itad.last_import}</h4>
+                        <div class="es-itad-hover__last-import"></div>
+                        <div class="es-itad-hover__sync-now">
+                            <span class="es-itad-hover__sync-now-text">${Localization.str.itad.sync_now}</span>
+                            <div class="loader"></div>
+                            <span class="es-itad-hover__sync-failed">&#10060;</span>
+                            <span class="es-itad-hover__sync-success">&#10003;</span>
+                        </div>
+                    </div>
+                    <div class="es-itad-hover__arrow"></div>
+                </div>`);
+
+            let hover = document.querySelector(".es-itad-hover");
+
+            let syncDiv = document.querySelector(".es-itad-hover__sync-now");
+            document.querySelector(".es-itad-hover__sync-now-text").addEventListener("click", async () => {
+                syncDiv.classList.remove("es-itad-hover__sync-now--failed", "es-itad-hover__sync-now--success");
+                syncDiv.classList.add("es-itad-hover__sync-now--loading");
+                hover.style.display = "block";
+
+                let timeout;
+
+                try {
+                    await Background.action("itad.sync");
+                    syncDiv.classList.add("es-itad-hover__sync-now--success");
+                    await updateLastImport();
+                    
+                    timeout = 1000;
+                } catch(err) {
+                    syncDiv.classList.add("es-itad-hover__sync-now--failed");
+
+                    console.group("ITAD sync");
+                    console.error("Failed to sync with ITAD");
+                    console.error(err);
+                    console.groupEnd();
+
+                    timeout = 3000;
+                } finally {
+                    setTimeout(() => hover.style.display = '', timeout);
+                    syncDiv.classList.remove("es-itad-hover__sync-now--loading");
+                }
+            });
+        }
+
+        await updateLastImport();
+
+        async function updateLastImport() {
+            let { from, to } = await Background.action("itad.lastimport");
+
+            let htmlStr = `<div>${Localization.str.itad.from}</div><div>${from ? new Date(from * 1000).toLocaleString() : Localization.str.never}</div>`;
+
+            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
+                htmlStr += `<div>${Localization.str.itad.to}</div><div>${to ? new Date(to * 1000).toLocaleString() : Localization.str.never}</div>`;
+            }
+
+            HTML.inner(".es-itad-hover__last-import", htmlStr);
+        }
+    }
+
+    static async getAppStatus(storeIds) {
+        let highlightCollection = SyncedStorage.get("highlight_collection");
+        let highlightWaitlist = SyncedStorage.get("highlight_waitlist");
+        let multiple = Array.isArray(storeIds);
+        let promises = [];
+        let resolved = Promise.resolve(multiple ? {} : false);
+
+        if (!await Background.action("itad.isconnected")) {
+            promises.push(resolved, resolved);
+        } else {
+            if (highlightCollection) {
+                promises.push(Background.action("itad.incollection", storeIds));
+            } else {
+                promises.push(resolved);
+            }
+            if (highlightWaitlist) {
+                promises.push(Background.action("itad.inwaitlist", storeIds));
+            } else {
+                promises.push(resolved);
+            }
+        }        
+
+        let [ inCollection, inWaitlist ] = await Promise.all(promises);
+
+        if (multiple) {
+            let result = {};
+            for (let id of storeIds) {
+                result[id] = {
+                    "collected": inCollection[id],
+                    "waitlisted": inWaitlist[id],
+                }
+            }
+            return result;
+        } else {
+            return {
+                "collected": inCollection,
+                "waitlisted": inWaitlist,
+            }
+        }
+    }
+}
+
 class ProgressBar {
     static create() {
         if (!SyncedStorage.get("show_progressbar")) { return; }
 
-        let container = document.getElementById("global_actions");
-        if (!container) return;
-        HTML.afterEnd(container,
-            `<div class="es_progress_wrap">
-                <div id="es_progress" class="complete" title="${ Localization.str.ready.ready }">
-                    <div class="progress-inner-element">
-                        <div class="progress-bar">
-                            <div class="progress-value" style="width: 18px"></div>
-                        </div>
+        HTML.afterEnd("#global_actions",
+            `<div class="es_progress__wrap">
+                <div class="es_progress es_progress--complete" title="${Localization.str.ready.ready}">
+                    <div class="es_progress__bar">
+                        <div class="es_progress__value"></div>
                     </div>
                 </div>
             </div>`);
+        ProgressBar._progress = document.querySelector(".es_progress");
     }
 
     static loading() {
-        let node = document.getElementById('es_progress');
-        if (!node) { return; }
+        if (!ProgressBar._progress) { return; }
+            
+        ProgressBar._progress.setAttribute("title", Localization.str.ready.loading);
 
-        if (Localization.str.ready) { // FIXME under what circumstance is this false? Should all the other members have the same check?
-            node.setAttribute("title", Localization.str.ready.loading);
-        }
-
-        ProgressBar.requests = { 'initiated': 0, 'completed': 0, };
-        node.classList.remove("complete");
-        node.querySelector(".progress-value").style.width = "18px";
+        ProgressBar.requests = { "initiated": 0, "completed": 0 };
+        ProgressBar._progress.classList.remove("es_progress--complete");
+        ProgressBar._progress.querySelector(".es_progress__value").style.width = "18px";
     }
 
     static startRequest() {
@@ -45,75 +162,92 @@ class ProgressBar {
     }
 
     static progress(value) {
-        let node = document.getElementById('es_progress');
-        if (!node) { return; }
+        if (!ProgressBar._progress) { return; }
 
-        if (typeof value == 'undefined') {
+        if (!value) {
             if (!ProgressBar.requests) { return; }
             if (ProgressBar.requests.initiated > 0) {
                 value = 100 * ProgressBar.requests.completed / ProgressBar.requests.initiated;
             }
         }
-        if (value >= 100) {
+        if (value > 100) {
             value = 100;
         }
 
-        node.querySelector(".progress-value").style.width = `${value}px`;
+        ProgressBar._progress.querySelector(".es_progress__value").style.width = `${value}px`;
 
         if (value >= 100) {
-            node.classList.add("complete");
-            node.setAttribute("title", Localization.str.ready.ready);
+            ProgressBar._progress.classList.add("es_progress--complete");
+            ProgressBar._progress.setAttribute("title", Localization.str.ready.ready);
             ProgressBar.requests = null;
         }
     }
 
-    static failed() {
-        let node = document.getElementById('es_progress');
-        if (!node) { return; }
+    static serverOutage() {
+        if (!ProgressBar._progress) { return; }
 
-        node.classList.add("error");
+        ProgressBar._progress.classList.add("es_progress--warning");
+        ProgressBar.requests = null;
+
+        if (!ProgressBar._progress.parentElement.querySelector(".es_progress__warning, .es_progress__error")) {
+            HTML.afterEnd(ProgressBar._progress, `<div class="es_progress__warning">${Localization.str.ready.server_outage}</div>`);
+        }
+    }
+
+    static failed() {
+        if (!ProgressBar._progress) { return; }
+
+        let warningNode = ProgressBar._progress.parentElement.querySelector(".es_progress__warning");
+        if (warningNode) {
+            ProgressBar._progress.classList.remove("es_progress--warning"); // Errors have higher precedence
+            warningNode.remove();
+        }
+        ProgressBar._progress.classList.add("es_progress--error");
         ProgressBar.requests = null;
         
-        let nodeError = node.closest('.es_progress_wrap').querySelector(".es_progress_error");
+        let nodeError = ProgressBar._progress.parentElement.querySelector(".es_progress__error");
         if (nodeError) {
-            nodeError.textContent = Localization.str.ready.failed.replace("__amount__", ++ProgressBar.failedRequests);
+            nodeError.textContent = Localization.str.ready.failed.replace("__amount__", ++ProgressBar._failedRequests);
         } else {
-            HTML.afterEnd(node, "<div class='es_progress_error'>" + Localization.str.ready.failed.replace("__amount__", ++ProgressBar.failedRequests) + "</div>");
+            HTML.afterEnd(ProgressBar._progress, `<div class="es_progress__error">${Localization.str.ready.failed.replace("__amount__", ++ProgressBar._failedRequests)}</div>`);
+        }
+    }
+}
+ProgressBar._progress = null;
+ProgressBar._failedRequests = 0;
+
+class Background extends BackgroundBase {
+    static async message(message) {
+        ProgressBar.startRequest();
+
+        let result;
+        try {
+            result = await super.message(message);
+            ProgressBar.finishRequest();
+            return result;
+        } catch(err) {
+            switch (err.message) {
+                case "ServerOutageError":
+                    ProgressBar.serverOutage();
+                    break;
+                case "CommunityLoginError": {
+                    AugmentedSteam.addLoginWarning();
+                    ProgressBar.finishRequest();
+                    break;
+                } 
+                default:
+                    ProgressBar.failed();
+            }
+            throw err;
         }
     }
 }
 
-ProgressBar.failedRequests = 0;
-
-class Background {
-    static async message(message) {
-        ProgressBar.startRequest();
-
-        return new Promise(function (resolve, reject) {
-            chrome.runtime.sendMessage(message, function(response) {
-                ProgressBar.finishRequest();
-
-                if (!response) {
-                    ProgressBar.failed();
-                    reject("No response from extension background context.");
-                    return;
-                }
-                if (typeof response.error !== 'undefined') {
-                    ProgressBar.failed();
-                    response.localStack = (new Error(message.action)).stack;
-                    reject(response);
-                    return;
-                }
-                resolve(response.response);
-            });
-        });
-    }
-    
-    static action(requested, params) {
-        if (typeof params == 'undefined')
-            return Background.message({ 'action': requested, });
-        return Background.message({ 'action': requested, 'params': params, });
-    }
+class HTTPError extends Error {
+  constructor(code, message) {
+    super(message);
+    this.code = code;
+  }
 }
 
 /**
@@ -199,15 +333,11 @@ let ExtensionLayer = (function() {
 
     let self = {};
 
-    self.getLocalUrl = function(url) {
-        return chrome.runtime.getURL(url);
-    };
-
     // NOTE: use cautiously!
     // Run script in the context of the current tab
     self.runInPageContext = function(fun) {
-        let script  = document.createElement("script");
-        script.textContent = '(' + fun + ")();";
+        let script = document.createElement("script");
+        script.textContent = `(${fun})();`;
         document.documentElement.appendChild(script);
         script.parentNode.removeChild(script);
     };
@@ -215,6 +345,60 @@ let ExtensionLayer = (function() {
     return self;
 })();
 
+let DOMHelper = (function(){
+
+    let self = {};
+
+    self.wrap = function(container, node) {
+        let parent = node.parentNode;
+        parent.insertBefore(container, node);
+        parent.removeChild(node);
+        container.append(node);
+    };
+
+    self.remove = function(selector) {
+        let node = document.querySelector(selector);
+        if (!node) { return; }
+        node.remove();
+    };
+
+    // TODO extend Node itself?
+    self.selectLastNode = function(parent, selector) {
+        let nodes = parent.querySelectorAll(selector);
+        return nodes.length !== 0 ? nodes[nodes.length-1] : null;
+    };
+
+    self.insertStylesheet = function(href) {
+        let stylesheet = document.createElement('link');
+        stylesheet.rel = 'stylesheet';
+        stylesheet.type = 'text/css';
+        stylesheet.href = href;
+        document.head.appendChild(stylesheet);
+    }
+
+    self.insertHomeCSS = function() {
+        self.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
+        let headerCtn = document.querySelector("div#global_header .content");
+        if (headerCtn) {
+            // Fixes displaced header, see #190
+            headerCtn.style.right = 0;
+        }
+    }
+
+    self.insertScript = function({ src, content }, id, onload, isAsync = true) {
+        let script = document.createElement("script");
+
+        if (onload)     script.onload = onload;
+        if (id)         script.id = id;
+        if (src)        script.src = src;
+        if (content)    script.textContent = content;
+        script.async = isAsync;
+
+        document.head.appendChild(script);
+    }
+
+    return self;
+})();
 
 /**
  * NOTE FOR ADDON REVIEWER:
@@ -258,9 +442,7 @@ class Messenger {
 
 // Inject the Messenger class into the DOM, providing the same interface for the page context side
 (function() {
-    let script = document.createElement("script");
-    script.textContent = Messenger.toString();
-    document.documentElement.appendChild(script);
+    DOMHelper.insertScript({ content: Messenger.toString() });
 })();
 
 class CookieStorage {
@@ -304,9 +486,9 @@ class CookieStorage {
 }
 CookieStorage.cache = new Map();
 
-
 let RequestData = (function(){
     let self = {};
+    let fetchFn = (typeof content !== 'undefined' && content && content.fetch) || fetch;
 
     self.getHttp = function(url, settings, responseType="text") {
         settings = settings || {};
@@ -322,11 +504,11 @@ let RequestData = (function(){
             console.warn("Requesting URL without protocol, please update");
         }
 
-        return fetch(url, settings).then(response => {
+        return fetchFn(url, settings).then(response => {
 
             ProgressBar.finishRequest();
 
-            if (!response.ok) { throw new Error(`HTTP ${response.status} ${response.statusText} for ${response.url}`) }
+            if (!response.ok) { throw new HTTPError(response.status, `HTTP ${response.status} ${response.statusText} for ${response.url}`) }
 
             return response[responseType]();
             
@@ -378,12 +560,12 @@ let User = (function(){
 
         // If profilePath is not available, we're not logged in
         if (!self.profilePath) {
-            Background.action('logout');
+            Background.action("logout");
             _promise = Promise.resolve();
             return _promise;
         }
 
-        _promise = Background.action('login', { 'path': self.profilePath, })
+        _promise = Background.action("login", self.profilePath)
             .then(function (login) {
                 if (!login) return;
                 self.isSignedIn = true;
@@ -393,8 +575,7 @@ let User = (function(){
                     LocalStorage.set("userCountry", login.userCountry);
                 }
             })
-            .catch(err => console.error(err))
-            ;
+            .catch(err => console.error(err));
 
         return _promise;
     };
@@ -417,7 +598,7 @@ let User = (function(){
         return sessionId;
     };
 
-    self.getStoreSessionId = async function() {
+    self.getStoreSessionId = function() {
         return Background.action('sessionid');
     };
 
@@ -438,8 +619,9 @@ let User = (function(){
         return country.substr(0, 2);
     };
 
-    self.getPurchaseDate = async function(lang, appName) {
-        return Background.action('purchase', { 'lang': lang, 'appName': appName, });
+    self.getPurchaseDate = function(lang, appName) {
+        appName = HTMLParser.clearSpecialSymbols(appName);
+        return Background.action("purchases", appName, lang);
     };
 
     return self;
@@ -615,19 +797,8 @@ let Currency = (function() {
     self.customCurrency = null;
     self.storeCurrency = null;
 
-    let _rates = {};
+    let _rates;
     let _promise = null;
-
-    function _getRates() {
-        let target = [self.storeCurrency,];
-        if (self.customCurrency !== self.storeCurrency) {
-            target.push(self.customCurrency);
-        }
-        // assert (Array.isArray(target) && target.length == target.filter(el => typeof el == 'string').length)
-        target.sort();
-        return Background.action('rates', { 'to': target.join(","), })
-            .then(rates => _rates = rates);
-    }
 
     function getCurrencyFromDom() {
         let currencyNode = document.querySelector('meta[itemprop="priceCurrency"]');
@@ -680,6 +851,14 @@ let Currency = (function() {
         }
     }
 
+    async function _getRates() {
+        let toCurrencies = [self.storeCurrency,];
+        if (self.customCurrency !== self.storeCurrency) {
+            toCurrencies.push(self.customCurrency);
+        }
+        _rates = await Background.action("rates", toCurrencies);
+    }
+
     // load user currency
     self.init = function() {
         if (_promise) { return _promise; }
@@ -690,7 +869,6 @@ let Currency = (function() {
                 console.error("Failed to initialize Currency");
                 console.error(e);
             });
-            ;
     };
 
     self.then = function(onDone, onCatch) {
@@ -806,8 +984,8 @@ let Stats = (function() {
 
     let self = {};
 
-    self.getAchievementBar = function(appid) {
-        return Background.action("stats", { "appid": appid }).then(response => {
+    self.getAchievementBar = function(path, appid) {
+        return Background.action("stats", path, appid).then(response => {
             let dummy = HTMLParser.htmlToDOM(response);
             let achNode = dummy.querySelector("#topSummaryAchievements");
 
@@ -838,20 +1016,20 @@ let Stats = (function() {
     };
 
     return self;
-
 })();
 
-let EnhancedSteam = (function() {
+let AugmentedSteam = (function() {
 
     let self = {};
 
     self.addMenu = function() {
+
         HTML.afterBegin("#global_action_menu",
             `<div id="es_menu">
                 <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
                 <div id="es_popup" class="popup_block_new">
                     <div class="popup_body popup_menu">
-                        <a class="popup_menu_item" target="_blank" href="${ExtensionLayer.getLocalUrl("options.html")}">${Localization.str.thewordoptions}</a>
+                        <a class="popup_menu_item" target="_blank" href="${ExtensionResources.getURL("options.html")}">${Localization.str.thewordoptions}</a>
                         <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
                         <div class="hr"></div>
                         <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/AugmentedSteam">${Localization.str.contribute}</a>
@@ -862,13 +1040,12 @@ let EnhancedSteam = (function() {
                         <a class="popup_menu_item" target="_blank" href="https://discord.gg/yn57q7f">Discord</a>
                     </div>
                 </div>
-            </div>
-        `);
+            </div>`);
 
         let popup = document.querySelector("#es_popup");
-        document.querySelector("#es_pulldown").addEventListener("click", function(){
-            let width = document.querySelector("#es_pulldown").getBoundingClientRect().width - 19; // padding
-            popup.style.left = "-" + width + "px";
+        document.querySelector("#es_pulldown").addEventListener("click", function(e){
+            let width = e.target.getBoundingClientRect().width - 19; // padding
+            popup.style.left = `-${width}px`;
             popup.classList.toggle("open");
         });
 
@@ -886,40 +1063,31 @@ let EnhancedSteam = (function() {
             self.clearCache();
             window.location.reload();
         });
-
     };
 
     self.addBackToTop = function() {
-        if (!SyncedStorage.get("show_backtotop") || document.querySelector("#BackToTop")) { return; }
+        if (!SyncedStorage.get("show_backtotop")) { return; }
 
-        HTML.afterBegin("body", `<div class="btn_darkblue_white_innerfade btn_medium_tall es_btt"><span>&#x2191;</span></div>`);
+        // Remove Steam's back-to-top button
+        DOMHelper.remove("#BackToTop");
+
+        HTML.afterBegin("body", `<div class="es_btt">&#9650;</div>`);
+
         let node = document.querySelector(".es_btt");
-        let prevScrollHeight, timer;
-        node.onclick = gotop;
-        window.onscroll = scrolling;
-        scrolling();
 
-        function gotop() {
-            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
-            timer = setInterval(function() {
-                if (scrollHeight <= 1) {
-                    document.body.scrollTop = 0; // For Safari
-                    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-                    clearInterval(timer);
-                }
-                document.body.scrollTop = scrollHeight; // For Safari
-                document.documentElement.scrollTop = scrollHeight; // For Chrome, Firefox, IE and Opera
-                scrollHeight -= scrollHeight / 20;
-            }, 10);
-        }
+        node.addEventListener("click", () => {
+            window.scroll({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+            });
+        });
 
-        function scrolling() {
+        window.addEventListener("scroll", opacityHandler);
+
+        function opacityHandler() {
             let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
-            if (prevScrollHeight && prevScrollHeight < scrollHeight) {
-                clearInterval(timer);
-            }
-            prevScrollHeight = scrollHeight;
-            node.style.opacity = Math.min(Math.max((scrollHeight - 200) / 800, 0), 1);
+            node.classList.toggle("is-visible", scrollHeight >= 400);
         }
     };
 
@@ -927,15 +1095,13 @@ let EnhancedSteam = (function() {
         localStorage.clear();
         SyncedStorage.remove("user_currency");
         SyncedStorage.remove("store_sessionid");
-        DynamicStore.clear();
-        Background.action('dynamicstore.clear');
-        Background.action('api.cache.clear');
+        Background.action("cache.clear");
     };
 
-    self.bindLogout = function(){
+    self.bindLogout = function() {
         // TODO there should be a better detection of logout, probably
         let logoutNode = document.querySelector("a[href$='javascript:Logout();']");
-        logoutNode.addEventListener("click", function(e) {
+        logoutNode.addEventListener("click", function() {
             self.clearCache();
         });
     };
@@ -951,12 +1117,12 @@ let EnhancedSteam = (function() {
         if (!SyncedStorage.get("showlanguagewarning")) { return; }
 
         let currentLanguage = Language.getCurrentSteamLanguage();
-        if (!currentLanguage) return;
-        
+        if (!currentLanguage) { return; }
+
         if (!SyncedStorage.has("showlanguagewarninglanguage")) {
             SyncedStorage.set("showlanguagewarninglanguage", currentLanguage);
         }
-        
+
         let warningLanguage = SyncedStorage.get("showlanguagewarninglanguage");
 
         if (currentLanguage === warningLanguage) { return; }
@@ -973,16 +1139,13 @@ let EnhancedSteam = (function() {
         });
     };
 
-    // todo (MxtOUT) Add this back once proper error handling is implemented
     let loginWarningAdded = false;
-    self.addLoginWarning = function(err) {
+    self.addLoginWarning = function() {
         if (!loginWarningAdded) {
             addWarning(`${Localization.str.community_login.replace("__link__", "<a href='https://steamcommunity.com/login/'>steamcommunity.com</a>")}`);
+            console.warn("Are you logged in to steamcommunity.com?");
             loginWarningAdded = true;
-        }
-
-        // Triggers the unhandledrejection handler, so that the error is not fully suppressed
-        Promise.reject(err);
+        }        
     };
 
     self.handleInstallSteamButton = function() {
@@ -992,7 +1155,7 @@ let EnhancedSteam = (function() {
         } else if (option === "replace") {
             let btn = document.querySelector("div.header_installsteam_btn > a");
             btn.textContent = Localization.str.viewinclient;
-            btn.href =  `steam://openurl/${window.location.href}`;
+            btn.href = `steam://openurl/${window.location.href}`;
             btn.classList.add("es_steamclient_btn");
         }
     };
@@ -1000,29 +1163,24 @@ let EnhancedSteam = (function() {
     self.removeAboutLinks = function() {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
 
-        if (User.isSignedIn) {
-            DOMHelper.remove(".submenuitem[href^='https://store.steampowered.com/about/']");
-        } else {
-            DOMHelper.remove(".menuitem[href^='https://store.steampowered.com/about/']");
-        }
+        DOMHelper.remove("#global_header a[href^='https://store.steampowered.com/about/']");
     };
 
-    self.addHeaderLinks = function(){
-        if (!User.isSignedIn || document.querySelector(".supernav_container").length === 0) { return; }
+    self.addUsernameSubmenuLinks = function() {
+        let node = document.querySelector(".supernav_container .submenu_username");
 
-        let submenuUsername = document.querySelector(".supernav_container .submenu_username");
-        HTML.afterEnd(submenuUsername.querySelector("a"), `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
-        HTML.afterEnd(submenuUsername.querySelector("a:nth-child(2)"), `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`)
-        HTML.beforeEnd(submenuUsername, `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
+        HTML.afterEnd(node.querySelector("a"), `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
+        HTML.afterEnd(node.querySelector("a:nth-child(2)"), `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`);
+        HTML.beforeEnd(node, `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
     };
 
-    self.disableLinkFilter = function(){
+    self.disableLinkFilter = function() {
         if (!SyncedStorage.get("disablelinkfilter")) { return; }
 
         removeLinksFilter();
 
         let observer = new MutationObserver(removeLinksFilter);
-        observer.observe(document, {childList: true, subtree: true});
+        observer.observe(document, { childList: true, subtree: true });
 
         function removeLinksFilter(mutations) {
             let selector = "a.bb_link[href*='/linkfilter/'], div.weblink a[href*='/linkfilter/']";
@@ -1046,7 +1204,7 @@ let EnhancedSteam = (function() {
 
     self.addRedeemLink = function() {
         HTML.beforeBegin("#account_dropdown .popup_menu_item:last-child:not(.tight)",
-            `<a class='popup_menu_item' href='https://store.steampowered.com/account/registerkey'>${Localization.str.activate}</a>`);
+            `<a class="popup_menu_item" href="https://store.steampowered.com/account/registerkey">${Localization.str.activate}</a>`);
     };
 
     self.replaceAccountName = function() {
@@ -1074,16 +1232,15 @@ let EnhancedSteam = (function() {
     self.launchRandomButton = function() {
 
         HTML.beforeEnd("#es_popup .popup_menu",
-            `<div class='hr'></div><a id='es_random_game' class='popup_menu_item' style='cursor: pointer;'>${Localization.str.launch_random}</a>`);
+            `<div class="hr"></div><a id="es_random_game" class="popup_menu_item" style="cursor: pointer;">${Localization.str.launch_random}</a>`);
 
         document.querySelector("#es_random_game").addEventListener("click", async function(){
-            let result = await DynamicStore;
-            if (!result.rgOwnedApps) { return; }
-            let appid = result.rgOwnedApps[Math.floor(Math.random() * result.rgOwnedApps.length)];
+            let appid = await DynamicStore.getRandomApp();
+            if (!appid) { return; }
 
-            Background.action('appdetails', { 'appids': appid, }).then(response => {
-                if (!response || !response[appid] || !response[appid].success) { return; }
-                let data = response[appid].data;
+            Background.action("appdetails", appid).then(response => {
+                if (!response || !response.success) { return; }
+                let data = response.data;
 
                 let gameid = appid;
                 let gamename;
@@ -1104,7 +1261,6 @@ let EnhancedSteam = (function() {
                         });
                     }`);
             });
-
         });
     };
 
@@ -1118,8 +1274,7 @@ let EnhancedSteam = (function() {
 
     self.keepSteamSubscriberAgreementState = function() {
         let nodes = document.querySelectorAll("#market_sell_dialog_accept_ssa,#market_buynow_dialog_accept_ssa,#accept_ssa");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        for (let node of nodes) {
             node.checked = SyncedStorage.get("keepssachecked");
 
             node.addEventListener("click", function(){
@@ -1128,10 +1283,11 @@ let EnhancedSteam = (function() {
         }
     };
 
-    self.alternateLinuxIcon = function(){
+    self.alternateLinuxIcon = function() {
         if (!SyncedStorage.get("show_alternative_linux_icon")) { return; }
-        let url = ExtensionLayer.getLocalUrl("img/alternative_linux_icon.png");
-        let style = document.createElement('style');
+
+        let url = ExtensionResources.getURL("img/alternative_linux_icon.png");
+        let style = document.createElement("style");
         style.textContent = `span.platform_img.linux { background-image: url("${url}"); }`;
         document.head.appendChild(style);
         style = null;
@@ -1143,22 +1299,21 @@ let EnhancedSteam = (function() {
 
         // TODO I would try to reduce number of selectors here
         let selectors= "title, .apphub_AppName, .breadcrumbs, h1, h4";
-        if(community){
+        if (community) {
             selectors += ".game_suggestion, .appHubShortcut_Title, .apphub_CardContentNewsTitle, .apphub_CardTextContent, .apphub_CardContentAppName, .apphub_AppName";
         } else {
             selectors += ".game_area_already_owned, .details_block, .game_description_snippet, .game_area_description p, .glance_details, .game_area_dlc_bubble game_area_bubble, .package_contents, .game_area_dlc_name, .tab_desc, .tab_item_name";
         }
 
         // Replaces "R", "C" and "TM" signs
-        function replaceSymbols(node){
+        function replaceSymbols(node) {
             // tfedor I don't trust this won't break any inline JS
-            if (!node ||!node.innerHTML) { return; }
+            if (!node || !node.innerHTML) { return; }
             HTML.inner(node, node.innerHTML.replace(/[\u00AE\u00A9\u2122]/g, ""));
         }
 
-        let nodes = document.querySelectorAll(selectors);
-        for (let i=0, len=nodes.length; i<len; i++) {
-            replaceSymbols(nodes[i]);
+        for (let node of document.querySelectorAll(selectors)) {
+            replaceSymbols(node);
         }
 
         let observer = new MutationObserver(mutations => {
@@ -1169,93 +1324,68 @@ let EnhancedSteam = (function() {
             });
         });
 
-        nodes = document.querySelectorAll("#game_select_suggestions,#search_suggestion_contents,.tab_content_ctn");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
-            observer.observe(node, {childList:true, subtree:true});
+        let nodes = document.querySelectorAll("#game_select_suggestions,#search_suggestion_contents,.tab_content_ctn");
+        for (let node of nodes) {
+            observer.observe(node, { childList: true, subtree: true });
+        }
+    };
 
+    self.defaultCommunityTab = function() {
+        let tab = SyncedStorage.get("community_default_tab");
+        if (!tab) { return; }
+
+        let links = document.querySelectorAll("a[href^='https://steamcommunity.com/app/']");
+        for (let link of links) {
+            if (link.classList.contains("apphub_sectionTab")) { continue; }
+            if (!/^\/app\/[0-9]+\/?$/.test(link.pathname)) { continue; }
+            if (!link.pathname.endsWith("/")) {
+                link.pathname += "/";
+            }
+            link.pathname += tab + "/";
         }
     };
 
     return self;
 })();
-
-let DOMHelper = (function(){
-
-    let self = {};
-
-    self.wrap = function(container, node) {
-        let parent = node.parentNode;
-        parent.insertBefore(container, node);
-        parent.removeChild(node);
-        container.append(node);
-    };
-
-    self.remove = function(selector) {
-        let node = document.querySelector(selector);
-        if (!node) { return; }
-        node.remove();
-    };
-
-    // TODO extend Node itself?
-    self.selectLastNode = function(parent, selector) {
-        let nodes = parent.querySelectorAll(selector);
-        return nodes.length !== 0 ? nodes[nodes.length-1] : null;
-    };
-
-    self.insertStylesheet = function(href) {
-        let stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.type = 'text/css';
-        stylesheet.href = href;
-        document.head.appendChild(stylesheet);
-    }
-
-    self.insertHomeCSS = function() {
-        self.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
-        let headerCtn = document.querySelector("div#global_header .content");
-        if (headerCtn) {
-            // Fixes displaced header, see #190
-            headerCtn.style.right = 0;
-        }
-    }
-
-    return self;
-})();
-
 
 let EarlyAccess = (function(){
 
     let self = {};
 
-    let cache = new Set();
     let imageUrl;
 
-    function checkNodes(selectors, selectorModifier) {
+    async function checkNodes(selectors, selectorModifier) {
         selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
+        let appidsMap = new Map();
 
-        selectors.forEach(selector => {
-            let nodes = document.querySelectorAll(selector+":not(.es_ea_checked)");
-            for (let i=0; i<nodes.length; i++) {
-                let node = nodes[i];
-                node.classList.add("es_ea_checked");
+        let selector = selectors.map(selector => `${selector}:not(.es_ea_checked)`).join(",");
+        for (let node of document.querySelectorAll(selector)) {
+            node.classList.add("es_ea_checked");
 
-                let linkNode = node.querySelector("a");
-                let href = linkNode && linkNode.hasAttribute("href") ? linkNode.getAttribute("href") : node.getAttribute("href");
-                let imgHeader = node.querySelector("img" + selectorModifier);
-                let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
+            let linkNode = node.querySelector("a");
+            let href = linkNode && linkNode.hasAttribute("href") ? linkNode.getAttribute("href") : node.getAttribute("href");
+            let imgHeader = node.querySelector("img" + selectorModifier);
+            let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
-                if (appid && cache.has(appid)) {
-                    node.classList.add("es_early_access");
-
-                    let container = document.createElement("span");
-                    container.classList.add("es_overlay_container");
-                    DOMHelper.wrap(container, imgHeader);
-
-                    HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}" /></span>`);
-                }
+            if (appid) {
+                appidsMap.set(appid, node);
             }
-        });
+        }
+
+        let eaAppids = await Background.action("isea", Array.from(appidsMap.keys()).map(key => Number(key)));
+
+        for (let [appid, node] of appidsMap) {
+            if (!eaAppids[appid]) { continue; }
+
+            node.classList.add("es_early_access");
+
+            let imgHeader = node.querySelector("img" + selectorModifier);
+            let container = document.createElement("span");
+            container.classList.add("es_overlay_container");
+            DOMHelper.wrap(container, imgHeader);
+
+            HTML.afterBegin(container, `<span class="es_overlay"><img title="${Localization.str.early_access}" src="${imageUrl}"></span>`);
+        }
     }
 
     function handleStore() {
@@ -1291,13 +1421,11 @@ let EarlyAccess = (function(){
                            ".browse_tag_game_cap"]);
                 break;
             case /^\/(?:curator|developer|dlc|publisher)\/.*/.test(window.location.pathname):
-                checkNodes( [
-                    "#curator_avatar_image",
-                    ".capsule",
-                ]);
+                checkNodes(["#curator_avatar_image",
+                           ".capsule"]);
                 break;
             case /^\/$/.test(window.location.pathname):
-                checkNodes( [".cap",
+                checkNodes([".cap",
                            ".special",
                            ".game_capsule",
                            ".cluster_capsule",
@@ -1330,28 +1458,17 @@ let EarlyAccess = (function(){
                 checkNodes([".game_info_cap",
                            ".showcase_gamecollector_game",
                            ".favoritegame_showcase_game"]);
-                break;
-            case /^\/app\/.*/.test(window.location.pathname):
-                if (document.querySelector(".apphub_EarlyAccess_Title")) {
-                    let container = document.createElement("span");
-                    container.id = "es_ea_apphub";
-                    DOMHelper.wrap(container, document.querySelector(".apphub_StoreAppLogo:first-of-type"));
-
-                    checkNodes(["#es_ea_apphub"]);
-                }
         }
     }
 
     self.showEarlyAccess = async function() {
         if (!SyncedStorage.get("show_early_access")) { return; }
 
-        cache = new Set(await Background.action('early_access_appids'));
-
         let imageName = "img/overlay/early_access_banner_english.png";
         if (Language.isCurrentLanguageOneOf(["brazilian", "french", "italian", "japanese", "koreana", "polish", "portuguese", "russian", "schinese", "spanish", "latam", "tchinese", "thai"])) {
-            imageName = "img/overlay/early_access_banner_" + Language.getCurrentSteamLanguage() + ".png";
+            imageName = `img/overlay/early_access_banner_${Language.getCurrentSteamLanguage()}.png`;
         }
-        imageUrl = ExtensionLayer.getLocalUrl(imageName);
+        imageUrl = ExtensionResources.getURL(imageName);
 
         switch (window.location.host) {
             case "store.steampowered.com":
@@ -1371,79 +1488,69 @@ let Inventory = (function(){
 
     let self = {};
 
-    let gifts = new Set();
-    let guestpasses = new Set();
-    let coupons = {};
-    let inv6set = new Set();
-    let coupon_appids = new Map();
+    self.getCoupon = function(appid) {
+        return Background.action("coupon", appid);
+    };
 
-    let _promise = null;
-    self.promise = async function() {
-        if (_promise) { return _promise; }
-
-        if (!User.isSignedIn) {
-            _promise = Promise.resolve();
-            return _promise;
+    self.getAppStatus = async function(appids) {
+        function getStatusObject(giftsAndPasses, hasCoupon) {
+            return {
+                "gift": giftsAndPasses.includes("gifts"),
+                "guestPass": giftsAndPasses.includes("passes"),
+                "coupon": hasCoupon,
+            };
         }
 
-        function handleCoupons(data) {
-            coupons = data;
-            for (let [subid, details] of Object.entries(coupons)) {
-                for (let { "id": appid, } of details.appids) {
-                    coupon_appids.set(appid, parseInt(subid, 10));
+        try {
+            let [ giftsAndPasses, coupons ] = await Promise.all([
+                Background.action("hasgiftsandpasses", appids),
+                Background.action("hascoupon", appids),
+            ]);
+
+            if (Array.isArray(appids)) {
+                let results = {};
+                
+                for (let id of appids) {
+                    results[id] = getStatusObject(giftsAndPasses[id], coupons[id]);
                 }
+                
+                return results;
             }
+            return getStatusObject(giftsAndPasses, coupons);
+        } catch (err) {
+            if (Array.isArray(appids)) {
+                let results = {};
+                for (let id of appids) {
+                    results[id] = getStatusObject([], null);
+                }
+                return results;
+            }
+
+            return getStatusObject([], null);
         }
-
-        let promises = [];
-
-        if (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass") || SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift")) {
-            promises.push(Background.action('inventory.gifts').then(({ "gifts": x, "passes": y, }) => { gifts = new Set(x); guestpasses = new Set(y); }));
-        }
-
-        if (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon") || SyncedStorage.get("show_coupon")) {
-            promises.push(Background.action('inventory.coupons').then(handleCoupons));
-        }
-
-        if (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")) {
-            promises.push(Background.action('inventory.community').then(inv6 => inv6set = new Set(inv6)));
-        }
-        
-        _promise = Promise.all(promises);
-        return _promise;
     };
 
-    self.then = function(onDone, onCatch) {
-        return self.promise().then(onDone, onCatch);
-    };
-
-    self.getCoupon = function(subid) {
-        return coupons && coupons[subid];
-    };
-
-    self.getCouponByAppId = function(appid) {
-        if (!coupon_appids.has(appid))
-            return false;
-        let subid = coupon_appids.get(appid);
-        return self.getCoupon(subid);
-    };
-
-    self.hasGift = function(subid) {
-        return gifts.has(subid);
-    };
-
-    self.hasGuestPass = function(subid) {
-        return guestpasses.has(subid);
-    };
-
-    self.hasInInventory6 = function(marketHash) {
-        return inv6set.has(marketHash);
+    self.hasInInventory6 = function(marketHashes) {
+        return Background.action("hasitem", marketHashes);
     };
 
     return self;
 })();
 
 let Highlights = (function(){
+
+    // Attention, the sequence of these entries determines the precendence of the highlights!
+    // The later it appears in the array, the higher its precedence
+    let highlightTypes = [
+        "notinterested",
+        "waitlist",
+        "wishlist",
+        "collection",
+        "owned",
+        "coupon",
+        "inv_guestpass",
+        "inv_gift",
+    ]
 
     let self = {};
 
@@ -1458,12 +1565,14 @@ let Highlights = (function(){
             tagCssLoaded = true;
 
             let tagCss = [];
-            ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
+
+            for (let name of highlightTypes) {
                 let color = SyncedStorage.get(`tag_${name}_color`);
                 tagCss.push(`.es_tag_${name} { background-color: ${color}; }`);
-            });
-            let style = document.createElement('style');
-            style.id = 'es_tag_styles';
+            }
+
+            let style = document.createElement("style");
+            style.id = "es_tag_styles";
             style.textContent = tagCss.join("\n");
             document.head.appendChild(style);
             style = null;
@@ -1472,13 +1581,13 @@ let Highlights = (function(){
         // Add the tags container if needed
         let tags = node.querySelectorAll(".es_tags");
         if (tags.length === 0) {
-            tags = HTMLParser.htmlToElement('<div class="es_tags' + (tagShort ? ' es_tags_short' : '') + '" />');
+            tags = HTMLParser.htmlToElement(`<div class="es_tags ${tagShort ? 'es_tags_short' : ''}"></div>`);
 
             let root;
             if (node.classList.contains("tab_row")) { // can't find it
                 root = node.querySelector(".tab_desc").classList.remove("with_discount");
 
-                node.querySelector(".tab_discount").style.top="15px";
+                node.querySelector(".tab_discount").style.top = "15px";
                 root.querySelector("h4").insertAdjacentElement("afterend", tags);
             }
             else if (node.classList.contains("home_smallcap")) {
@@ -1490,6 +1599,9 @@ let Highlights = (function(){
             else if (node.classList.contains("tab_item")) {
                 node.querySelector(".tab_item_name").insertAdjacentElement("afterend", tags);
             }
+            else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
+                node.querySelector(".discount_block").insertAdjacentElement("beforebegin", tags);
+            }
             else if (node.classList.contains("search_result_row")) {
                 node.querySelector("p").insertAdjacentElement("afterbegin", tags);
             }
@@ -1498,15 +1610,8 @@ let Highlights = (function(){
                 root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", tags);
                 HTML.beforeBegin(root.querySelector(".game_purchase_action"), '<div style="clear: right;"></div>');
             }
-            else if (node.classList.contains("small_cap")) {
-                node.querySelector("h4").insertAdjacentElement("afterbegin", tags);
-            }
-            else if (node.classList.contains("browse_tag_game")) { // can't find it
-                root = node;
-
-                tags.style.display = "table";
-                tags.style.marginLeft = "8px";
-                root.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
+            else if (node.classList.contains("browse_tag_game")) {
+                node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
             }
             else if (node.classList.contains("game_area_dlc_row")) {
                 node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", tags);
@@ -1518,44 +1623,28 @@ let Highlights = (function(){
                 node.querySelector(".match_price").insertAdjacentElement("afterbegin", tags);
             }
             else if (node.classList.contains("cluster_capsule")) {
-                node.querySelector(".main_cap_platform_area").append($tags);
+                node.querySelector(".main_cap_platform_area").append(tags);
             }
-            else if (node.classList.contains("recommendation_highlight")) { // can't find it
-                root = node;
-
-                if (document.querySelector(".game_purchase_action")) {
-                    tags.style.float = "left";
-                    let node = root.querySelector(".game_purchase_action");
-                    node.insertAdjacentElement("beforebegin", tags);
-                    HTML.beforeBegin(node, '<div style="clear: right;"></div>');
-                } else {
-                    tags.style.fload = "right";
-                    HTML.beforeBegin(root.querySelector(".price").parentNode, tags);
-                }
+            else if (node.classList.contains("recommendation_highlight")) {
+                node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", tags);
             }
-            else if (node.classList.contains("similar_grid_item")) { // can't find it
-                root = node;
-                tags.style.float = "right";
-                root.querySelector(".similar_grid_price").querySelector(".price").append($tags);
+            else if (node.classList.contains("similar_grid_item")) {
+                node.querySelector(".regular_price, .discount_block").append(tags);
             }
-            else if (node.classList.contains("recommendation_carousel_item")) { // can't find it
-                root = node;
-                tags.style.float = "left";
-                root.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
+            else if (node.classList.contains("recommendation_carousel_item")) {
+                node.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
             }
-            else if (node.classList.contains("friendplaytime_game")) { // can't find it
-                root = node;
-                tags.style.float = "left";
-                root.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
+            else if (node.classList.contains("friendplaytime_game")) {
+                node.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
             }
 
             tags = [tags];
         }
 
         // Add the tag
-        for (let i=0,len=tags.length; i<len; i++) {
-            if (!tags[i].querySelector(".es_tag_" + tag)) {
-                HTML.beforeEnd(tags[i], '<span class="es_tag_' + tag + '">' + Localization.str.tag[tag] + '</span>');
+        for (let n of tags) {
+            if (!n.querySelector(`.es_tag_${tag}`)) {
+                HTML.beforeEnd(n, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
             }
         }
     }
@@ -1582,16 +1671,18 @@ let Highlights = (function(){
 
             let hlCss = [];
 
-            ["notinterested", "owned", "wishlist", "inv_guestpass", "coupon", "inv_gift"].forEach(name => {
+            for (let name of highlightTypes) {
                 let color = SyncedStorage.get(`highlight_${name}_color`);
-                hlCss.push(
-                   `.es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
+                hlCss.push(`
+                    .es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
                     .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name} { outline: solid ${color}; }
-                    .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }`);
-            });
+                    #search_suggestion_contents .focus.es_highlighted_${name} { box-shadow: -5px 0 0 ${color}; }
+                    .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }
+                `);
+            }
 
-            let style = document.createElement('style');
-            style.id = 'es_highlight_styles';
+            let style = document.createElement("style");
+            style.id = "es_highlight_styles";
             style.textContent = hlCss.join("\n");
             document.head.appendChild(style);
             style = null;
@@ -1635,22 +1726,20 @@ let Highlights = (function(){
                 }
                 break;
             }
-            
         }
 
         node.classList.remove("ds_flagged");
     }
 
-
     function highlightItem(node, name) {
         node.classList.add("es_highlight_checked");
 
-        if (SyncedStorage.get("highlight_"+name)) {
-            node.classList.add("es_highlighted", "es_highlighted_"+name);
+        if (SyncedStorage.get(`highlight_${name}`)) {
+            node.classList.add("es_highlighted", `es_highlighted_${name}`);
             highlightNode(node);
         }
 
-        if (SyncedStorage.get("tag_" + name)) {
+        if (SyncedStorage.get(`tag_${name}`)) {
             addTag(node, name);
         }
     }
@@ -1681,7 +1770,7 @@ let Highlights = (function(){
     self.highlightOwned = function(node) {
         if (SyncedStorage.get("hide_owned") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
             node.style.display = "none";
-        } 
+        }
         highlightItem(node, "owned");
     };
 
@@ -1692,9 +1781,28 @@ let Highlights = (function(){
         highlightItem(node, "notinterested");
     };
 
-    self.highlightAndTag = function(nodes) {
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+    self.highlightCollection = function(node) {
+        highlightItem(node, "collection");
+    };
+
+    self.highlightWaitlist = function(node) {
+        highlightItem(node, "waitlist");
+    };
+
+    /**
+     * Highlights and tags DOM nodes that are owned, wishlisted, ignored, collected, waitlisted
+     * or that the user has a gift, a guest pass or coupon for.
+     * 
+     * Additionally hides non-discounted titles if wished by the user.
+     * @param {NodeList} nodes      The nodes that should get highlighted
+     * @param {boolean} hasDsInfo   Whether or not the supplied nodes contain dynamic store info.
+     * @returns {Promise}           Resolved once the highlighting and tagging completed for the nodes
+     */
+    self.highlightAndTag = async function(nodes, hasDsInfo = true) {
+
+        let storeIdsMap = new Map();
+
+        for (let node of nodes) {
             let nodeToHighlight = node;
 
             if (node.classList.contains("item")) {
@@ -1705,45 +1813,84 @@ let Highlights = (function(){
                 nodeToHighlight = node.nextElementSibling;
             } else if (node.parentNode.parentNode.classList.contains("curations")) {
                 nodeToHighlight = node.parentNode;
+            } else if (node.classList.contains("special_img_ctn") && node.parentElement.classList.contains("special")) {
+                nodeToHighlight = node.parentElement;
             }
 
-            if (node.querySelector(".ds_owned_flag")) {
-                self.highlightOwned(nodeToHighlight);
+            let aNode = node.querySelector("a");
+
+            let appid = GameId.getAppid(node) || GameId.getAppid(aNode) || GameId.getAppidFromId(node.id);
+            let subid = GameId.getSubid(node) || GameId.getSubid(aNode);
+            let bundleid = GameId.getBundleid(node) || GameId.getBundleid(aNode);
+
+            let storeId;
+            if (appid) {
+                storeId = `app/${appid}`;
+            } else if (bundleid) {
+                storeId = `bundle/${bundleid}`;
+            } else if (subid) {
+                storeId = `sub/${subid}`;
             }
 
-            if (node.querySelector(".ds_wishlist_flag")) {
-                self.highlightWishlist(nodeToHighlight);
+            if (storeId) {
+                if (storeIdsMap.has(storeId)) {
+                    let arr = storeIdsMap.get(storeId);
+                    arr.push(nodeToHighlight);
+                    storeIdsMap.set(storeId, arr);
+                } else {
+                    storeIdsMap.set(storeId, [ nodeToHighlight ]);
+                }
             }
 
-            if (node.querySelector(".ds_ignored_flag")) {
-                self.highlightNotInterested(nodeToHighlight);
+            if (hasDsInfo) {
+                if (node.querySelector(".ds_owned_flag")) {
+                    self.highlightOwned(nodeToHighlight);
+                }
+
+                if (node.querySelector(".ds_wishlist_flag")) {
+                    self.highlightWishlist(nodeToHighlight);
+                }
+
+                if (node.querySelector(".ds_ignored_flag")) {
+                    self.highlightNotInterested(nodeToHighlight);
+                }
             }
 
             if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
                 self.highlightNonDiscounts(nodeToHighlight);
             }
+        }
 
-            let aNode = node.querySelector("a");
-            let appid = GameId.getAppid(node.href || (aNode && aNode.href) || GameId.getAppidWishlist(node.id));
-            if (appid) {
-                if (Inventory.hasGuestPass(appid)) {
-                    self.highlightInvGuestpass(node);
-                }
-                if (Inventory.getCouponByAppId(appid)) {
-                    self.highlightCoupon(node);
-                }
-                if (Inventory.hasGift(appid)) {
-                    self.highlightInvGift(node);
-                }
+        let storeIds = Array.from(storeIdsMap.keys());
+        let trimmedStoreIds = storeIds.map(id => GameId.trimStoreId(id));
+
+        let [ dsStatus, itadStatus, invStatus ] = await Promise.all([
+            hasDsInfo ? Promise.resolve() : DynamicStore.getAppStatus(storeIds),
+            ITAD.getAppStatus(storeIds),
+            Inventory.getAppStatus(trimmedStoreIds),
+        ]);
+
+        let it = trimmedStoreIds.values();
+        for (let [storeid, nodes] of storeIdsMap) {
+            if (dsStatus) {
+                if (dsStatus[storeid].owned) nodes.forEach(node => self.highlightOwned(node));
+                if (dsStatus[storeid].wishlisted) nodes.forEach(node => self.highlightWishlist(node));
+                if (dsStatus[storeid].ignored) nodes.forEach(node => self.highlightNotInterested(node));
             }
+
+            if (itadStatus[storeid].collected) nodes.forEach(node => self.highlightCollection(node));
+            if (itadStatus[storeid].waitlisted) nodes.forEach(node => self.highlightWaitlist(node));
+
+            let trimmedId = it.next().value;
+            if (invStatus[trimmedId].gift) nodes.forEach(node => self.highlightInvGift(node));
+            if (invStatus[trimmedId].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
+            if (invStatus[trimmedId].coupon) nodes.forEach(node => self.highlightCoupon(node));
         }
     }
 
     self.startHighlightsAndTags = async function(parent) {
-        await Inventory;
-
         // Batch all the document.ready appid lookups into one storefront call.
-        let selectors = [
+        let selector = [
             "div.tab_row",                                  // Storefront rows
             "div.dailydeal_ctn",
             ".store_main_capsule",                          // "Featured & Recommended"
@@ -1769,6 +1916,8 @@ let Highlights = (function(){
             "div.carousel_items.curator_featured > div",    // Carousel items on Curator pages
             "div.item_ctn",                                 // Curator list item
             ".store_capsule",                               // All sorts of items on almost every page
+            ".newonsteam_headercap",                        // explore/new/
+            ".comingsoon_headercap",                        // explore/upcoming/
             ".home_marketing_message",                      // "Updates and offers"
             "div.dlc_page_purchase_dlc",                    // DLC page rows
             "div.sale_page_purchase_item",                  // Sale pages
@@ -1777,25 +1926,25 @@ let Highlights = (function(){
             "div.browse_tag_game",                          // Tagged games
             "div.similar_grid_item",                        // Items on the "Similarly tagged" pages
             ".tab_item",                                    // Items on new homepage
-            "a.special",                                    // new homepage specials
+            ".special > .special_img_ctn",                  // new homepage specials
+            ".special.special_img_ctn",
             "div.curated_app_item",                         // curated app items!
             ".hero_capsule",                                // Summer sale "Featured"
             ".sale_capsule"                                 // Summer sale general capsules
-        ];
+        ].map(sel => `${sel}:not(.es_highlighted)`)
+        .join(",");
 
         parent = parent || document;
 
         Messenger.onMessage("dynamicStoreReady").then(() => {
-            selectors.forEach(selector => {
-                self.highlightAndTag(parent.querySelectorAll(selector+":not(.es_highlighted)"));
-            });
+            self.highlightAndTag(parent.querySelectorAll(selector));
     
             let searchBoxContents = parent.getElementById("search_suggestion_contents");
             if (searchBoxContents) {
                 let observer = new MutationObserver(records => {
                     self.highlightAndTag(records[0].addedNodes);
                 });
-                observer.observe(searchBoxContents, {childList: true});
+                observer.observe(searchBoxContents, { childList: true });
             }
         });
 
@@ -1805,53 +1954,80 @@ let Highlights = (function(){
     };
 
     return self;
-
 })();
 
 let DynamicStore = (function(){
 
+    /*
+    * FIXME
+    *  1. Check usage of `await DynamicStore`, currently it does nothing
+    *  2. getAppStatus() is not properly waiting for initialization of the DynamicStore
+    *  3. There is no guarante that `User` is initialized before `_fetch()` is called
+    *  4. getAppStatus() should probably be simplified if we force array even when only one storeId was requested
+    */
+
     let self = {};
 
-    let _data = {};
     let _promise = null;
-    let _owned = new Set();
-    let _wishlisted = new Set();
 
     self.clear = function() {
-        _data = {};
-        _promise = null;
-        _owned = new Set();
-        _wishlisted = new Set();
-        LocalStorage.remove("dynamicstore");
-        LocalStorage.remove("dynamicstore_update");
+        return Background.action("dynamicstore.clear");
     };
 
-    self.isIgnored = function(appid) {
-        let list = _data.rgIgnoredApps || {};
-        return list.hasOwnProperty(appid);
+    self.getAppStatus = async function(storeId) {
+        let multiple = Array.isArray(storeId);
+        let promise;
+        let trimmedIds;
+
+        if (multiple) {
+            trimmedIds = storeId.map(id => GameId.trimStoreId(id));
+            promise = Background.action("dynamicstorestatus", trimmedIds);
+        } else {
+            promise = Background.action("dynamicstorestatus", GameId.trimStoreId(storeId));
+        }
+
+        let statusList;
+        let dsStatusList = await promise;
+
+        if (multiple) {
+            statusList = {};
+            for (let i = 0; i < storeId.length; ++i) {
+                let trimmedId = trimmedIds[i];
+                let id = storeId[i];
+                statusList[id] = {
+                    "ignored": dsStatusList[trimmedId].includes("ignored"),
+                    "wishlisted": dsStatusList[trimmedId].includes("wishlisted"),
+                };
+                if (id.startsWith("app/")) {
+                    statusList[id].owned = dsStatusList[trimmedId].includes("ownedApps");
+                } else if (id.startsWith("sub/")) {
+                    statusList[id].owned = dsStatusList[trimmedId].includes("ownedPackages");
+                }
+            }
+        } else {
+            statusList = {
+                "ignored": dsStatusList.includes("ignored"),
+                "wishlisted": dsStatusList.includes("wishlisted"),
+            };
+            if (storeId.startsWith("app/")) {
+                statusList.owned = dsStatusList.includes("ownedApps");
+            } else if (storeId.startsWith("sub/")) {
+                statusList.owned = dsStatusList.includes("ownedPackages");
+            }
+        }
+
+        return statusList;
     };
 
-    self.isOwned = function(appid) {
-        return _owned.has(appid);
+    self.getRandomApp = async function() {
+        await _fetch();
+        return await Background.action("dynamicStore.randomApp");
     };
-
-    self.isWishlisted = function(appid) {
-        return _wishlisted.has(appid);
-    };
-
-    Object.defineProperty(self, 'wishlist', {
-        get() { return new Set(_wishlisted); },
-    });
 
     async function _fetch() {
         if (!User.isSignedIn) {
-            self.clear();
-            return _data;
+            return self.clear();
         }
-        _data = await Background.action('dynamicstore');
-        _owned = new Set(_data.rgOwnedApps);
-        _wishlisted = new Set(_data.rgWishlist);
-        return _data;
     }
 
     self.then = function(onDone, onCatch) {
@@ -1909,41 +2085,32 @@ let Prices = (function(){
 
         let node = document.createElement("div");
         node.classList.add("itad-pricing");
-        node.id = "es_price_" + id;
+        node.id = `es_price_${id}`;
 
         let pricingStr = Localization.str.pricing;
 
         let hasData = false;
+        let priceData = info.price;
+        let lowestData = info.lowest;
+        let bundledCount = info.bundles.count;
+        let urlData = info.urls;
 
         // Current best
-        if (info.price) {
+        if (priceData) {
             hasData = true;
-            let priceData = info.price;
 
             let lowest;
-            let voucherStr = '';
+            let voucherStr = "";
             if (SyncedStorage.get("showlowestpricecoupon") && priceData.price_voucher) {
                 lowest = new Price(priceData.price_voucher, meta.currency);
 
-                let voucher = HTML.escape(info.price.voucher);
+                let voucher = HTML.escape(priceData.voucher);
                 voucherStr = `${pricingStr.with_voucher.replace("__voucher__", `<span class="itad-pricing__voucher">${voucher}</span>`)} `;
             } else {
                 lowest = new Price(priceData.price, meta.currency);
             }
+
             lowest = lowest.inCurrency(Currency.customCurrency);
-
-            let cutStr = '';
-            if (priceData.cut > 0) {
-                cutStr = `<span class='itad-pricing__cut'>-${priceData.cut}%</span> `;
-            }
-
-            let drmStr = '';
-            if (priceData.drm.length > 0 && priceData.store !== "Steam") {
-                drmStr = `<span class='itad-pricing__drm'>(${priceData.drm[0]})</span>`;
-            }
-
-            let priceUrl = HTML.escape(info.price.url.toString());
-
             let prices = lowest.toString();
             if (Currency.customCurrency !== Currency.storeCurrency) {
                 let lowest_alt = lowest.inCurrency(Currency.storeCurrency);
@@ -1951,22 +2118,31 @@ let Prices = (function(){
             }
             let pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
 
-            let storeStr = pricingStr.store.replace("__store__", HTML.escape(priceData.store));
-            let infoUrl = HTML.escape(info.urls.info);
+            let cutStr = "";
+            if (priceData.cut > 0) {
+                cutStr = `<span class="itad-pricing__cut">-${priceData.cut}%</span> `;
+            }
+
+            let storeStr = pricingStr.store.replace("__store__", priceData.store);
+
+            let drmStr = "";
+            if (priceData.drm.length > 0 && priceData.store !== "Steam") {
+                drmStr = `<span class="itad-pricing__drm">(${priceData.drm[0]})</span>`;
+            }
+
+            let infoUrl = HTML.escape(urlData.info);
+            let storeUrl = HTML.escape(priceData.url.toString());
 
             HTML.beforeEnd(node, `<a href="${infoUrl}" target="_blank">${pricingStr.lowest_price}</a>`);
             HTML.beforeEnd(node, pricesStr);
-            HTML.beforeEnd(node, `<a href="${priceUrl}" class="itad-pricing__main" target="_blank">${cutStr}${voucherStr}${storeStr}&nbsp;${drmStr}</a>`);
+            HTML.beforeEnd(node, `<a href="${storeUrl}" class="itad-pricing__main" target="_blank">${cutStr}${voucherStr}${storeStr} ${drmStr}</a>`);
         }
 
         // Historical low
-        if (info.lowest) {
+        if (lowestData) {
             hasData = true;
-            let lowestData = info.lowest;
 
             let historical = new Price(lowestData.price, meta.currency).inCurrency(Currency.customCurrency);
-            let recorded = new Date(info.lowest.recorded * 1000);
-
             let prices = historical.toString();
             if (Currency.customCurrency !== Currency.storeCurrency) {
                 let historical_alt = historical.inCurrency(Currency.storeCurrency);
@@ -1974,28 +2150,29 @@ let Prices = (function(){
             }
             let pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
 
-            let cutStr = '';
+            let cutStr = "";
             if (lowestData.cut > 0) {
-                cutStr = `<span class='itad-pricing__cut'>-${lowestData.cut}%</span> `;
+                cutStr = `<span class="itad-pricing__cut">-${lowestData.cut}%</span> `;
             }
 
             let storeStr = pricingStr.store.replace("__store__", lowestData.store);
-            let infoUrl = HTML.escape(info.urls.history);
+            let dateStr = new Date(lowestData.recorded * 1000).toLocaleDateString();
 
-            HTML.beforeEnd(node, `<a href="${infoUrl}" target="_blank">${pricingStr.historical_low}</div>`);
+            let infoUrl = HTML.escape(urlData.history);
+
+            HTML.beforeEnd(node, `<a href="${infoUrl}" target="_blank">${pricingStr.historical_low}</a>`);
             HTML.beforeEnd(node, pricesStr);
-            HTML.beforeEnd(node, `<div class="itad-pricing__main">${cutStr}${storeStr} ${recorded.toLocaleDateString()}</div>`);
+            HTML.beforeEnd(node, `<div class="itad-pricing__main">${cutStr}${storeStr} ${dateStr}</div>`);
         }
 
         // times bundled
-        if (info.bundles.count > 0) {
+        if (bundledCount > 0) {
             hasData = true;
 
-            let bundlesUrl = HTML.escape(info.urls.bundles || info.urls.bundle_history);
-            
-            HTML.beforeEnd(node, `<a href="${bundlesUrl}" target="_blank">${pricingStr.bundled}</a>`);
+            let bundledUrl = HTML.escape(urlData.bundles || urlData.bundle_history);
+            let bundledStr = pricingStr.bundle_count.replace("__count__", bundledCount);
 
-            let bundledStr = pricingStr.bundle_count.replace("__count__", info.bundles.count);
+            HTML.beforeEnd(node, `<a href="${bundledUrl}" target="_blank">${pricingStr.bundled}</a>`);
             HTML.beforeEnd(node, `<div class="itad-pricing__bundled">${bundledStr}</div>`);
         }
 
@@ -2004,15 +2181,14 @@ let Prices = (function(){
         }
     };
 
-    Prices.prototype._processBundles = function(gameid, meta, info) {
+    Prices.prototype._processBundles = function(meta, info) {
         if (!this.bundleCallback) { return; }
-        if (info.bundles.live.length == 0) { return; }
 
-        let length = info.bundles.live.length;
         let purchase = "";
 
-        for (let i = 0; i < length; i++) {
-            let bundle = info.bundles.live[i];
+        for (let bundle of info.bundles.live) {
+            let tiers = bundle.tiers;
+
             let endDate;
             if (bundle.expiry) {
                 endDate = new Date(bundle.expiry * 1000);
@@ -2026,11 +2202,11 @@ let Prices = (function(){
                 title: bundle.title || "",
                 url:   bundle.url || "",
                 tiers: (function() {
-                    let tiers = [];
-                    for (let tier in bundle.tiers) {
-                        tiers.push((bundle.tiers[tier].games || []).sort());
+                    let sorted = [];
+                    for (let t of Object.keys(tiers)) {
+                        sorted.push((tiers[t].games || []).sort());
                     }
-                    return tiers;
+                    return sorted;
                 })()
             });
 
@@ -2038,7 +2214,7 @@ let Prices = (function(){
             this._bundles.push(bundle_normalized);
 
             if (bundle.page) {
-                let bundlePage = Localization.str.buy_package.replace("__package__", bundle.page + ' ' + bundle.title);
+                let bundlePage = Localization.str.buy_package.replace("__package__", `${bundle.page} ${bundle.title}`);
                 purchase += `<div class="game_area_purchase_game"><div class="game_area_purchase_platform"></div><h1>${bundlePage}</h1>`;
             } else {
                 let bundleTitle = Localization.str.buy_package.replace("__package__", bundle.title);
@@ -2052,72 +2228,71 @@ let Prices = (function(){
             purchase += '<p class="package_contents">';
 
             let bundlePrice;
-            let appName = this.appName;
+            let appName = document.querySelector(".apphub_AppName").textContent;
 
-            for (let t=0; t<bundle.tiers.length; t++) {
-                let tier = bundle.tiers[t];
+            tiers.forEach((tier, t) => {
                 let tierNum = t + 1;
 
-                purchase += '<b>';
-                if (bundle.tiers.length > 1) {
+                purchase += "<b>";
+                if (tiers.length > 1) {
                     let tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    let tierPrice = new Price(tier.price, meta.currency).inCurrency(Currency.customCurrency).toString();
+                    let tierPrice = (new Price(tier.price, meta.currency).inCurrency(Currency.customCurrency)).toString();
 
                     purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice).replace("__num__", tier.games.length);
                 } else {
                     purchase += Localization.str.bundle.includes.replace("__num__", tier.games.length);
                 }
-                purchase += ':</b> ';
+                purchase += ":</b> ";
 
                 let gameList = tier.games.join(", ");
                 if (gameList.includes(appName)) {
-                    purchase += gameList.replace(appName, "<u>"+appName+"</u>");
+                    purchase += gameList.replace(appName, `<u>${appName}</u>`);
                     bundlePrice = tier.price;
                 } else {
                     purchase += gameList;
                 }
 
                 purchase += "<br>";
-            }
+            });
 
             purchase += "</p>";
             purchase += `<div class="game_purchase_action">
                             <div class="game_purchase_action_bg">
-                                 <div class="btn_addtocart btn_packageinfo">
+                                <div class="btn_addtocart btn_packageinfo">
                                     <a class="btnv6_blue_blue_innerfade btn_medium" href="${bundle.details}" target="_blank">
-                                         <span>${Localization.str.bundle.info}</span>
+                                        <span>${Localization.str.bundle.info}</span>
                                     </a>
                                 </div>
-                            </div>`;
+                            </div>
+                            <div class="game_purchase_action_bg">`;
 
-            purchase += '\n<div class="game_purchase_action_bg">';
             if (bundlePrice && bundlePrice > 0) {
-                purchase += '<div class="game_purchase_price price" itemprop="price">';
-                    purchase += new Price(bundlePrice, meta.currency).inCurrency(Currency.customCurrency).toString();
-                purchase += '</div>';
+                bundlePrice = (new Price(bundlePrice, meta.currency).inCurrency(Currency.customCurrency)).toString();
+                purchase += `<div class="game_purchase_price price" itemprop="price">${bundlePrice}</div>`;
             }
 
-            purchase += '<div class="btn_addtocart">';
-            purchase += '<a class="btnv6_green_white_innerfade btn_medium" href="' + bundle["url"] + '" target="_blank">';
-            purchase += '<span>' + Localization.str.buy + '</span>';
-            purchase += '</a></div></div></div></div>';
+            purchase += `<div class="btn_addtocart">
+                            <a class="btnv6_green_white_innerfade btn_medium" href="${bundle.url}" target="_blank">
+                                <span>${Localization.str.buy}</span>
+                            </a>
+                        </div></div></div></div>`;
         }
 
-        if (purchase) this.bundleCallback(purchase);
+        if (purchase) {
+            this.bundleCallback(purchase);
+        }
     };
 
     Prices.prototype.load = function() {
-        let that = this;
         let apiParams = this._getApiParams();
-
         if (!apiParams) { return; }
 
-        Background.action('prices', apiParams).then(response => {
-            let meta = response['.meta'];
+        Background.action("prices", apiParams).then(response => {
+            let meta = response[".meta"];
 
             for (let [gameid, info] of Object.entries(response.data)) {
-                that._processPrices(gameid, meta, info);
-                that._processBundles(gameid, meta, info);
+                this._processPrices(gameid, meta, info);
+                this._processBundles(meta, info);
             }
         });
     };
@@ -2129,12 +2304,12 @@ let AgeCheck = (function(){
 
     let self = {};
 
-    self.sendVerification = function(){
+    self.sendVerification = function() {
         if (!SyncedStorage.get("send_age_info")) { return; }
 
         let ageYearNode = document.querySelector("#ageYear");
         if (ageYearNode) {
-            let myYear = Math.floor(Math.random()*75)+10;
+            let myYear = Math.floor(Math.random() * 75) + 10;
             ageYearNode.value = "19" + myYear;
             document.querySelector(".btnv6_blue_hoverfade").click();
         } else {
@@ -2161,31 +2336,32 @@ let Common = (function(){
 
         console.log.apply(console, [
             "%c Augmented %cSteam v" + Info.version + " %c https://es.isthereanydeal.com/",
-            "background: #000000;color:#046eb2",
-            "background: #000000;color: #ffffff",
+            "background: #000000; color: #046eb2",
+            "background: #000000; color: #ffffff",
             "",
         ]);
 
         ProgressBar.create();
         ProgressBar.loading();
-        UpdateHandler.checkVersion(EnhancedSteam.clearCache);
-        EnhancedSteam.addBackToTop();
-        EnhancedSteam.addMenu();
-        EnhancedSteam.addLanguageWarning();
-        EnhancedSteam.handleInstallSteamButton();
-        EnhancedSteam.removeAboutLinks();
-        EnhancedSteam.addHeaderLinks();
+        UpdateHandler.checkVersion(AugmentedSteam.clearCache);
+        AugmentedSteam.addBackToTop();
+        AugmentedSteam.addMenu();
+        AugmentedSteam.addLanguageWarning();
+        AugmentedSteam.handleInstallSteamButton();
+        AugmentedSteam.removeAboutLinks();
         EarlyAccess.showEarlyAccess();
-        EnhancedSteam.disableLinkFilter();
-        EnhancedSteam.skipGotSteam();
-        EnhancedSteam.keepSteamSubscriberAgreementState();
+        AugmentedSteam.disableLinkFilter();
+        AugmentedSteam.skipGotSteam();
+        AugmentedSteam.keepSteamSubscriberAgreementState();
+        AugmentedSteam.defaultCommunityTab();
+        ITAD.create();
 
         if (User.isSignedIn) {
-            EnhancedSteam.addRedeemLink();
-            EnhancedSteam.replaceAccountName();
-            EnhancedSteam.launchRandomButton();
-            // TODO add itad sync
-            EnhancedSteam.bindLogout();
+            AugmentedSteam.addUsernameSubmenuLinks();
+            AugmentedSteam.addRedeemLink();
+            AugmentedSteam.replaceAccountName();
+            AugmentedSteam.launchRandomButton();
+            AugmentedSteam.bindLogout();
         }
     };
 
@@ -2391,34 +2567,241 @@ class MediaPage {
     }
 
     _horizontalScrolling() {
+        if (!SyncedStorage.get("horizontalscrolling")) { return; }
 
-        let strip = document.querySelector("#highlight_strip");
-        if (!strip || !SyncedStorage.get("horizontalscrolling")) { return; }
-
-        let lastScroll = Date.now();
-        strip.addEventListener("wheel", scrollStrip, false);
-        function scrollStrip(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            
-            if (Date.now() - lastScroll < 200) {
-                return;
-            } 
-    
-            lastScroll = Date.now();
-            let allElem = document.querySelectorAll(".highlight_strip_item");
-            let isScrollDown = ev.deltaY > 0;
-            let siblingProp = isScrollDown ? "nextSibling" : "previousSibling";
-            
-            let targetElem = document.querySelector(".highlight_strip_item.focus")[siblingProp];
-            while (!targetElem.classList || !targetElem.classList.contains("highlight_strip_item")) {
-                targetElem = targetElem[siblingProp];
-                if (!targetElem) {
-                    targetElem = allElem[isScrollDown ? 0 : allElem.length - 1];
-                }
-            }
-            
-            targetElem.click();
+        for (let node of document.querySelectorAll(".slider_ctn")) {
+            new HorizontalScroller(
+                node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
+                node.querySelector(".slider_left"),
+                node.querySelector(".slider_right")
+            );
         }
     }
 }
+
+
+class HorizontalScroller {
+
+    constructor(parentNode, controlLeftNode, controlRightNode) {
+        this._controlLeft = controlLeftNode;
+        this._controlRight = controlRightNode;
+
+        this._lastScroll = 0;
+        parentNode.addEventListener("wheel", e => this._scrollHandler(e));
+    }
+
+    _scrollHandler(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (Date.now() - this._lastScroll < 200) { return; }
+        this._lastScroll = Date.now();
+
+        let isScrollDown = e.deltaY > 0;
+        if (isScrollDown) {
+            this._controlRight.click();
+        } else {
+            this._controlLeft.click();
+        }
+    }
+}
+
+// Most of the code here comes from dselect.js
+class Sortbox {
+
+    static init() {
+        this._activeDropLists = {};
+        this._lastSelectHideTime = 0;
+
+        document.addEventListener("mousedown", e => this._handleMouseClick(e));
+    }
+
+    static _handleMouseClick(e) {
+        for (let key of Object.keys(this._activeDropLists)) {
+			if (!this._activeDropLists[key]) continue;
+			
+		    let ulAboveEvent = e.target.closest("ul");
+		
+            if (ulAboveEvent && ulAboveEvent.id === `${key}_droplist`) continue;
+		
+            this._hide(key);
+	    }
+    }
+
+    static _highlightItem(id, index, bSetSelected) {
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let trigger = document.querySelector(`#${id}_trigger`);
+        let rgItems = droplist.getElementsByTagName("a");
+
+        if (index >= 0 && index < rgItems.length ) {
+            let item = rgItems[index];
+            
+            if (typeof trigger.highlightedItem !== "undefined" && trigger.highlightedItem !== index)
+                rgItems[trigger.highlightedItem].className = "inactive_selection";
+                
+            trigger.highlightedItem = index;
+            rgItems[index].className = "highlighted_selection";
+            
+            let yOffset = rgItems[index].offsetTop + rgItems[index].clientHeight;
+            let curVisibleOffset = droplist.scrollTop + droplist.clientHeight;
+            let bScrolledDown = false;
+            let nMaxLoopIterations = rgItems.length;
+            let nLoopCounter = 0;
+
+            while (curVisibleOffset < yOffset && nLoopCounter++ < nMaxLoopIterations) {
+                droplist.scrollTop += rgItems[index].clientHeight;
+                curVisibleOffset = droplist.scrollTop+droplist.clientHeight;
+                bScrolledDown = true;
+            }
+            
+            if ( !bScrolledDown ) {
+                nLoopCounter = 0;
+                yOffset = rgItems[index].offsetTop;
+                curVisibleOffset = droplist.scrollTop;
+                while(curVisibleOffset > yOffset && nLoopCounter++ < nMaxLoopIterations) {
+                    droplist.scrollTop -= rgItems[index].clientHeight;
+                    curVisibleOffset = droplist.scrollTop;
+                }
+            }
+            
+            if (bSetSelected) {
+                HTML.inner(trigger, item.innerHTML);
+                let input = document.querySelector(`#${id}`);
+                input.value = item.id;
+                input.dispatchEvent(new Event("change"));
+                
+                this._hide(id);
+            }
+        }
+    }
+
+    static _onFocus(id) {
+        this._activeDropLists[id] = true;
+    }
+
+    static _onBlur(id) {
+		if (!this._classCheck(document.querySelector(`#${id}_trigger`), "activetrigger"))
+	        this._activeDropLists[id] = false;
+    }
+
+    static _hide(id) {
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let trigger = document.querySelector(`#${id}_trigger`);
+	
+		let d = new Date();
+	    this._lastSelectHideTime = d.valueOf();
+	
+        trigger.className = "trigger";
+        droplist.className = "dropdownhidden";
+        this._activeDropLists[id] = false;
+        trigger.focus();
+    }
+
+    static _show(id) {
+		let d = new Date();
+	    if (d - this._lastSelectHideTime < 50) return;
+		
+        let droplist = document.querySelector(`#${id}_droplist`);
+        let trigger = document.querySelector(`#${id}_trigger`);
+        
+        trigger.className = "activetrigger";
+        droplist.className = "dropdownvisible";
+        this._activeDropLists[id] = true;
+        trigger.focus();
+    }
+
+    static _onTriggerClick(id) {
+        if (!this._classCheck(document.querySelector(`#${id}_trigger`), "activetrigger")) {
+            this._show(id);
+        }
+    }
+
+    static _classCheck(element, className) {
+        return new RegExp(`\\b${className}\\b`).test(element.className);
+    }
+
+    /**
+     * NOTE FOR ADDON REVIEWER:
+     * Elements returned by this function are already sanitized (calls to HTML class),
+     * so they can be safely inserted without being sanitized again.
+     * If we would sanitize them again, all event listeners would be lost due to
+     * DOMPurify only returning HTML strings.
+     */
+    static get(name, options, initialOption, changeFn, storageOption) {
+
+        let id = `sort_by_${name}`;
+        let reversed = initialOption.endsWith("_DESC");
+
+        let arrowDown = '↓';
+        let arrowUp = '↑';
+        
+        let box = HTML.element(
+        `<div class="es-sortbox">
+            <div class="es-sortbox__label">${Localization.str.sort_by}</div>
+            <div class="es-sortbox__container">
+                <input id="${id}" type="hidden" name="${name}" value="${initialOption}">
+                <a class="trigger" id="${id}_trigger"></a>
+                <div class="es-dropdown">
+                    <ul id="${id}_droplist" class="es-dropdown__list dropdownhidden"></ul>
+                </div>
+            </div>
+            <span class="es-sortbox__reverse">${arrowDown}</span>
+        </div>`);
+
+        let input = box.querySelector(`#${id}`);
+        input.addEventListener("change", function() { onChange(this.value, reversed); });
+
+        // Trigger changeFn for initial option
+        if (initialOption !== "default_ASC") {
+            input.dispatchEvent(new Event("change"));
+        }
+
+        let reverseEl = box.querySelector(".es-sortbox__reverse");
+        reverseEl.addEventListener("click", () => {
+            reversed = !reversed;
+            reverseEl.textContent = reversed ? arrowUp : arrowDown;
+            onChange(input.value, reversed);
+        });
+        if (reversed) reverseEl.textContent = arrowUp;
+
+        let trigger = box.querySelector(`#${id}_trigger`);
+        trigger.addEventListener("focus", () => this._onFocus(id));
+        trigger.addEventListener("blur", () => this._onBlur(id));
+        trigger.addEventListener("click", () => this._onTriggerClick(id));
+
+        let ul = box.querySelector("ul");
+        let trimmedOption = getTrimmedValue(initialOption);
+        for (let i = 0; i < options.length; ++i) {
+            let [key, text] = options[i];
+
+            let toggle = "inactive";
+            if (key === trimmedOption) {
+                box.querySelector(`#${id}`).value = key;
+                box.querySelector(".trigger").textContent = text;
+                toggle = "highlighted";
+            }
+
+            HTML.beforeEnd(ul,
+                `<li>
+                    <a class="${toggle}_selection" tabindex="99999" id="${key}">${text}</a>
+                </li>`);
+
+            let a = ul.querySelector("li:last-child > a");
+            //a.href = "javascript:DSelectNoop()";
+            a.addEventListener("mouseover", () => this._highlightItem(id, i, false));
+            a.addEventListener("click",     () => this._highlightItem(id, i, true));
+        }
+
+        function getTrimmedValue(val) { return val.replace(/(_ASC|_DESC)$/, ''); }
+
+        function onChange(val, reversed) {
+            val = getTrimmedValue(val);
+            changeFn(val, reversed);
+            if (storageOption) { SyncedStorage.set(storageOption, `${val}_${reversed ? "DESC" : "ASC"}`); }
+        }
+
+        return box;
+    }
+}
+
+Sortbox.init();

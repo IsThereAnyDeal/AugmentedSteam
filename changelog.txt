@@ -1,4 +1,63 @@
-﻿v1.3.1
+﻿v.1.4.1
+------
+- Improved ITAD Authorization workflow, so it doesn't look so sketchy
+- Fixed user notes no longer showing up
+- Fixed memory crash for big libraries
+- Fixed price colors in market
+- Fixed support info on app pages, "All friends that own", and gift prices
+- Fixed launch random game feature
+- Bumped minimum supported Firefox version to 57.0
+- Removed obsolete "show system requirements" option
+
+
+
+v.1.4.0
+------
+Integration with IsThereAnyDeal (BETA)
+Added IsThereAnyDeal integration, which allows you to connect Augmented Steam with your ITAD account.
+That way you can apply Augmented Steam's highlighting and tagging to games in your Waitlist and Collection even if you don't have them on Steam.
+
+Furthermore, it allows you to import games from your Steam Library and/or Wishlist to IsThereAnyDeal, for improved accuracy (e.g. DLCs or unlisted games).
+Currently this feature can only add titles, not remove them, so it's not the replacement for IsThereAnyDeal's integrated sync, but an addition to it.
+
+Context menu
+- Context menu option (requires new extension permission): you can select multiple context menu shortcuts which will show up when you select text on page and right click on it, including search in Steam or product key activation
+
+Friends
+- Added button to invite friends to group
+- Added sorting options to friends page
+
+Store
+- Tweaked style of regional prices so they are more readable. Also improved their behavior and settings
+- Improved price breakdown of packages
+- Improved DRM notice handling and DRM detection
+- Improved app page customizer
+- Fixed pagination of search page
+
+Wishlist
+- Fixed wishlist empty for large wishlists
+- Fixed position of pricing info in wishlist
+
+Market
+- Improved handling of market history
+- Fixed instant/quick sell throbber
+
+Community
+- Added sorting to groups pages
+- Improved position of SteamRep info
+- Fixed missing custom theme options
+
+Other new features
+- Improved achievements view in library
+- Added horizontal scrolling with mouse wheel option to more media boxes
+- Added back to top button to all pages
+- Minor visual changes and fixes
+- Multiple localization updates
+- Improved error handling
+
+
+
+v1.3.1
 ------
 - Fixed large text in reviews
 - Added option to hide support info on store pages
