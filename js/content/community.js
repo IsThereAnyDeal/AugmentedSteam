@@ -606,7 +606,7 @@ let ProfileHomePageClass = (function(){
 
             ExtensionLayer.runInPageContext(`function() {
                 HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
-                window.idDialog = ShowAlertDialog(g_rgProfileData.personaname + "'s SteamID", \`${html}\`, "${Localization.str.close}");
+                window.idDialog = ShowAlertDialog("${Localization.str.steamid_of_user}".replace("__user__", g_rgProfileData.personaname), \`${html}\`, "${Localization.str.close}");
             }`);
         }
     };
