@@ -588,17 +588,16 @@ let ProfileHomePageClass = (function(){
             let text = elem.dataset.copy;
             Clipboard.set(text);
 
-            ExtensionLayer.runInPageContext(`function() {
-                window.idDialog.Dismiss();
-                window.idDialog = null;
-                ShowAlertDialog(g_rgProfileData.personaname + "'s SteamID", \`${Localization.str.copied}\`.replace("__text__", "${text}"));
-            }`)
+            let header = document.querySelector("#es_copy_header");
+            let headerText = header.innerText;
+            header.innerText = `${Localization.str.copied}`;
+            setTimeout(() => header.innerText = headerText, 1000);
         }
 
         function showSteamIdDialog() {
             let steamId = new SteamId(SteamId.fromDOM());
             let html =
-                `<div class="bb_h1">${Localization.str.click_to_copy}</div>
+                `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
                 <p><a data-copy="${steamId.getSteamId2()}" class="es_copy">${steamId.getSteamId2()}</a></p>
                 <p><a data-copy="${steamId.getSteamId3()}" class="es_copy">${steamId.getSteamId3()}</a></p>
                 <p><a data-copy="${steamId.getSteamId64()}" class="es_copy">${steamId.getSteamId64()}</a></p>
