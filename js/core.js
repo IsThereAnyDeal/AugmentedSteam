@@ -289,6 +289,11 @@ class UpdateHandler {
         if (oldVersion.isSame("1.4")) {
             Background.action("migrate.notesToSyncedStorage");
         }
+
+        if (oldVersion.isSameOrBefore("1.4.1")) {
+            SyncedStorage.set("profile_steamid", SyncedStorage.get("profile_permalink"));
+            SyncedStorage.remove("profile_permalink");
+        }
     }
 }
 
