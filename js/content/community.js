@@ -1,29 +1,3 @@
-
-let SteamId = (function(){
-
-    let self = {};
-    let _steamId = null;
-
-    self.getSteamId = function() {
-        if (_steamId) { return _steamId; }
-
-        if (document.querySelector("#reportAbuseModal")) {
-            _steamId = document.querySelector("input[name=abuseID]").value;
-        } else {
-            _steamId = HTMLParser.getVariableFromDom("g_steamID", "string");
-        }
-
-        if (!_steamId) {
-            let profileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
-            _steamId = profileData.steamid;
-        }
-
-        return _steamId;
-    };
-
-    return self;
-})();
-
 let GroupID = (function(){
 
     let self = {};
@@ -52,7 +26,9 @@ let ProfileData = (function(){
     let _promise = null;
     self.promise = async function() {
         if (!_promise) {
-            _promise = Background.action("profile", SteamId.getSteamId())
+            let steamId = SteamId.fromDOM();
+
+            _promise = Background.action("profile", steamId)
                 .then(response => { _data = response; return _data; });
         }
         return _promise;
@@ -476,7 +452,7 @@ let ProfileHomePageClass = (function(){
     }
 
     ProfileHomePageClass.prototype.addCommunityProfileLinks = function() {
-        let steamId = SteamId.getSteamId();
+        let steamId = SteamId.fromDOM();
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
@@ -568,17 +544,25 @@ let ProfileHomePageClass = (function(){
             htmlstr += CommunityCommon.makeProfileLink("custom", link, name, iconType, icon);
         }
 
-        // profile permalink
-        if (SyncedStorage.get("profile_permalink")) {
-            let imgUrl = ExtensionResources.getURL("img/clippy.svg");
-            htmlstr +=
-                `<div id="es_permalink_div" class="profile_count_link">
-					<span class="count_link_label">${Localization.str.permalink}</span>
-					<div class="es_copy_wrap">
-						<input id="es_permalink" type="text" value="https://steamcommunity.com/profiles/${steamId}" readonly />
-						<button id="es_permalink_copy"><img src="${imgUrl}" /></button>
-					</div>
-				</div>`;
+        // profile steamid
+        if (SyncedStorage.get("profile_steamid")) {
+            let dropdown = document.querySelector("#profile_action_dropdown .popup_body.popup_menu");
+            if (dropdown) {
+                HTML.beforeEnd(dropdown,
+                    `<a class="popup_menu_item" id="es_steamid">
+                        <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/iconForums.png">&nbsp; ${Localization.str.view_steamid}
+                    </a>`);
+            } else {
+                let actions = document.querySelector(".profile_header_actions");
+                if (actions) {
+                    HTML.beforeEnd(actions,
+                        `<a class="btn_profile_action btn_medium" id="es_steamid">
+                            <span>${Localization.str.view_steamid}</span>
+                        </a>`);
+                }
+            }
+
+            document.querySelector("#es_steamid").addEventListener("click", showSteamIdDialog);
         }
 
         // Insert the links HMTL into the page
@@ -593,14 +577,37 @@ let ProfileHomePageClass = (function(){
             }
         }
 
-        if (SyncedStorage.get("profile_permalink")) {
-            document.querySelector("#es_permalink").addEventListener("click", function(e) {
-                e.target.select();
-            });
-            document.querySelector("#es_permalink_copy").addEventListener("click", function(e) {
-                document.querySelector("#es_permalink").select();
-                document.execCommand('copy');
-            });
+        function copySteamId(e) {
+            let elem = e.target.closest(".es_copy");
+            if (!elem) { return }
+
+            let text = elem.dataset.copy;
+            Clipboard.set(text);
+
+            let header = document.querySelector("#es_copy_header");
+            let headerText = header.innerText;
+            header.innerText = `${Localization.str.copied}`;
+            setTimeout(() => header.innerText = headerText, 1000);
+        }
+
+        function showSteamIdDialog() {
+            document.addEventListener("click", copySteamId);
+
+            let steamId = new SteamId(SteamId.fromDOM());
+            let html =
+                `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
+                <p><a data-copy="${steamId.getSteamId2()}" class="es_copy">${steamId.getSteamId2()}</a></p>
+                <p><a data-copy="${steamId.getSteamId3()}" class="es_copy">${steamId.getSteamId3()}</a></p>
+                <p><a data-copy="${steamId.getSteamId64()}" class="es_copy">${steamId.getSteamId64()}</a></p>
+                <p><a data-copy="https://steamcommunity.com/profiles/${steamId.getSteamId64()}" class="es_copy">https://steamcommunity.com/profiles/${steamId.getSteamId64()}</a></p>`;
+
+
+            Messenger.onMessage("closeDialog").then(() => document.removeEventListener("click", copySteamId));
+            ExtensionLayer.runInPageContext(`function() {
+                HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
+                let dialog = ShowAlertDialog("${Localization.str.steamid_of_user}".replace("__user__", g_rgProfileData.personaname), \`${html}\`, "${Localization.str.close}");
+                dialog.done(() => Messenger.postMessage("closeDialog"));
+            }`);
         }
     };
 
@@ -720,7 +727,7 @@ let ProfileHomePageClass = (function(){
         ProfileData.promise().then(data => {
             if (!data.steamrep || data.steamrep.length === 0) { return; }
 
-            let steamId = SteamId.getSteamId();
+            let steamId = SteamId.fromDOM();
             if (!steamId) { return; }
 
             // Build reputation images regexp
@@ -1263,7 +1270,7 @@ let ProfileEditPageClass = (function(){
 
         let result = await Background.action("profile.background", {
             appid: appid,
-            profile: SteamId.getSteamId()
+            profile: SteamId.fromDOM()
         });
 
         let selectedImg = ProfileData.getBgImg();
