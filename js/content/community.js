@@ -581,8 +581,7 @@ let ProfileHomePageClass = (function(){
             let elem = e.target.closest(".es_copy");
             if (!elem) { return; }
 
-            let text = elem.dataset.copy;
-            Clipboard.set(text);
+            Clipboard.set(elem.innerText);
 
             ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
         }
@@ -593,10 +592,10 @@ let ProfileHomePageClass = (function(){
             let steamId = new SteamId(SteamId.fromDOM());
             let html =
                 `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
-                <p><a data-copy="${steamId.getSteamId2()}" class="es_copy">${steamId.getSteamId2()}</a></p>
-                <p><a data-copy="${steamId.getSteamId3()}" class="es_copy">${steamId.getSteamId3()}</a></p>
-                <p><a data-copy="${steamId.getSteamId64()}" class="es_copy">${steamId.getSteamId64()}</a></p>
-                <p><a data-copy="https://steamcommunity.com/profiles/${steamId.getSteamId64()}" class="es_copy">https://steamcommunity.com/profiles/${steamId.getSteamId64()}</a></p>`;
+                <p><a class="es_copy">${steamId.getSteamId2()}</a></p>
+                <p><a class="es_copy">${steamId.getSteamId3()}</a></p>
+                <p><a class="es_copy">${steamId.getSteamId64()}</a></p>
+                <p><a class="es_copy">https://steamcommunity.com/profiles/${steamId.getSteamId64()}</a></p>`;
 
 
             Messenger.onMessage("closeDialog").then(() => document.removeEventListener("click", copySteamId));
