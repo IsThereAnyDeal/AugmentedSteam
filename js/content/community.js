@@ -579,15 +579,12 @@ let ProfileHomePageClass = (function(){
 
         function copySteamId(e) {
             let elem = e.target.closest(".es_copy");
-            if (!elem) { return }
+            if (!elem) { return; }
 
             let text = elem.dataset.copy;
             Clipboard.set(text);
 
-            let header = document.querySelector("#es_copy_header");
-            let headerText = header.innerText;
-            header.innerText = `${Localization.str.copied}`;
-            setTimeout(() => header.innerText = headerText, 1000);
+            ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
         }
 
         function showSteamIdDialog() {
