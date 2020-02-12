@@ -797,9 +797,15 @@ let ProfileHomePageClass = (function(){
 
         // post history link
         HTML.afterEnd(node,
-                `<a class='popup_menu_item' id='es_posthistory' href='${window.location.pathname}/posthistory'>
+            `<a class='popup_menu_item' id='es_posthistory' href='${window.location.pathname}/posthistory'>
                 <img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; ${Localization.str.post_history}
-                </a>`);
+            </a>`);
+
+        // chat history link
+        HTML.afterEnd(node,
+            `<a class="popup_menu_item" id="es_chathistory" href="//help.steampowered.com/accountdata/GetFriendMessagesLog">
+                <img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; ${Localization.str.chat_history}
+            </a>`);
     };
 
     ProfileHomePageClass.prototype.inGameNameLink = function() {
