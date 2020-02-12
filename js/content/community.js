@@ -583,7 +583,10 @@ let ProfileHomePageClass = (function(){
 
             Clipboard.set(elem.innerText);
 
-            ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+            let header = document.querySelector("#es_copy_header");
+            let headerText = header.innerText;
+            header.innerText = `${Localization.str.copied}`;
+            setTimeout(() => header.innerText = headerText, 1000);
         }
 
         function showSteamIdDialog() {
