@@ -1129,10 +1129,9 @@ let AugmentedSteam = (function() {
             </div>`);
 
         let popup = document.querySelector("#es_popup");
-        document.querySelector("#es_pulldown").addEventListener("click", function(e){
-            let width = e.target.getBoundingClientRect().width - 19; // padding
-            popup.style.left = `-${width}px`;
-            popup.classList.toggle("open");
+
+        document.querySelector("#es_pulldown").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(() => ShowMenu("es_pulldown", "es_popup", "right", "bottom", true));
         });
 
         document.querySelector("#es_menu").addEventListener("click", function(e){

@@ -2461,13 +2461,7 @@ img.astats_icon {
 	margin-left: 0.4em;
 }
 #es_popup {
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-#es_popup.open {
-  visibility: visible;
-  opacity: 1;
+  display: none;
 }
 #es_pulldown {
   vertical-align: middle;
@@ -2475,11 +2469,6 @@ img.astats_icon {
   margin: 1px;
   padding-left: 4px;
   line-height: 19px;
-}
-#es_pulldown.focus {
-  margin: 0;
-  border: 1px solid #82807c;
-  color: #ffffff;
 }
 .es-itad-hover {
   display: none;
