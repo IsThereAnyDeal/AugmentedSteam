@@ -5,6 +5,7 @@
     "profile_steamid": "Show SteamID on profiles",
     "view_steamid": "View SteamID",
     "more_on_steampeek": "See more on SteamPeek",
+    "available_on_geforce_now": "Available on NVIDIA GeForce NOW",
     "invite_friends": "Invite Friends",
     "invite_to_group": "Invite To Group",
     "inverse": "Inverse",
@@ -565,7 +566,8 @@
         },
         "add_custom_link": "Add custom link",
         "auto_detect": "Auto-detect",
-        "add_to_waitlist": "Show \"Add to Waitlist\" dropdown on app pages"
+        "add_to_waitlist": "Show \"Add to Waitlist\" dropdown on app pages",
+        "showstreaming": "Show cloud gaming (i.e. GeForce NOW) compatibility"
     },
     "ready": {
         "errormsg": "Error loading Augmented Steam data",

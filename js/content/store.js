@@ -628,6 +628,7 @@ class AppPageClass extends StorePageClass {
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
         this.addSteamPeek();
+        this.addStreamingBadges();
 
         new MediaPage().appPage();
 
@@ -1504,6 +1505,35 @@ class AppPageClass extends StorePageClass {
         if (LocalStorage.get("steampeek", false)) {
             steamPeekTab.click();
         }
+    }
+
+    async addStreamingBadges(){
+        if (!SyncedStorage.get("showstreaming")) { return; }
+
+        let streaming = await Background.action("streaming", this.appid);
+
+        let badges = [];
+
+        if (streaming.geforce_now) {
+            let badge = document.createElement("div");
+            badge.innerHTML = `
+                <div class="icon">
+                    <a href="https://nvidia.com/geforce-now" target="_blank">
+                        <img class="category_icon" src="${ExtensionResources.getURL("img/icon-geforce.png")}">
+                    </a>
+                </div>
+                <a class="name" href="https://nvidia.com/geforce-now" target="_blank">
+                    ${Localization.str.available_on_geforce_now} <img src="https://steamstore-a.akamaihd.net/public/images/v5/ico_external_link.gif" border="0" align="bottom">
+                </a>
+            `;
+            badge.className = "game_area_details_specs";
+            badges.push(badge);
+        }
+
+        for (let badge of badges) {
+            HTML.beforeEnd(document.querySelector(".game_area_details_specs").parentElement, badge);
+        }
+        
     }
 
     displayViewInLibrary() {
