@@ -453,6 +453,8 @@
         "inventory_market_text": "Toon Market prijs in inventory pagina",
         "send_age_info": "Verstuur automatisch leeftijd verificatie wanneer gevraagd",
         "mp4video": "Forceer app videos in winkelpagina's in MP4 formaat",
+        "youtube": "Toon YouTube links",
+        "twitch": "Toon Twitch links",
         "pcgw": "Toon PCGamingWiki links",
         "completionistme": "Toon Completionist.me links",
         "protondb": "Toon ProtonDB links",
