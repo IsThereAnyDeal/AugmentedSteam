@@ -28,6 +28,14 @@
   background-image: url("moz-extension://__MSG_@@extension_id__/img/bartervg.png");
 }
 
+.youtube_btn i {
+  background-image: url("moz-extension://__MSG_@@extension_id__/img/icon-youtube.png");
+}
+
+.twitch_btn i {
+  background-image: url("moz-extension://__MSG_@@extension_id__/img/icon-twitch.png");
+}
+
 .pcgw_btn i {
   background-image: url("moz-extension://__MSG_@@extension_id__/img/pcgw.png");
 }
