@@ -1813,6 +1813,24 @@ class AppPageClass extends StorePageClass {
     addLinks(type) {
         let node = document.querySelector("#ReportAppBtn").parentNode;
 
+        if (SyncedStorage.get("showyoutube")) {
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "youtube_btn",
+                    `https://www.youtube.com/results?search_query=${encodeURIComponent(this.appName)}`,
+                    Localization.str.view_on_website.replace("__website__", "YouTube")));
+        }
+
+
+        if (SyncedStorage.get("showtwitch")) {
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "twitch_btn",
+                    `https://www.twitch.tv/directory/game/${encodeURIComponent(this.appName.replace(/(\u2122)/g,"").replace(/(\xAE)/g,""))}`,
+                    Localization.str.view_on_website.replace("__website__", "Twitch")));
+        }
+
+
         if (SyncedStorage.get("showpcgw")) {
             HTML.afterBegin(node,
                 this.getRightColLinkHtml(

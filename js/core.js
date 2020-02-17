@@ -572,6 +572,8 @@ SyncedStorage.defaults = {
     'showmcus': true,
     'showoc': true,
     'showhltb': true,
+    'showyoutube': true,
+    'showtwitch': true,
     'showpcgw': true,
     'showcompletionistme': false,
     'showprotondb': false,
