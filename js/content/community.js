@@ -583,7 +583,10 @@ let ProfileHomePageClass = (function(){
 
             Clipboard.set(elem.innerText);
 
-            ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+            let header = document.querySelector("#es_copy_header");
+            let headerText = header.innerText;
+            header.innerText = `${Localization.str.copied}`;
+            setTimeout(() => header.innerText = headerText, 1000);
         }
 
         function showSteamIdDialog() {
@@ -1068,13 +1071,40 @@ let GroupHomePageClass = (function(){
             HTML.afterEnd("#join_group_form", `<div class="grouppage_join_area"></div>`);
         }
 
-        let groupId = GroupID.getGroupId();
         HTML.afterBegin(".grouppage_join_area", 
             `<div id="es_steamid" class="btn_blue_white_innerfade btn_medium">
                 <span>${Localization.str.view_steamid}</span>
             </div>`);
 
         document.querySelector("#es_steamid").addEventListener("click", showSteamIdDialog);
+
+        function copySteamId(e) {
+            let elem = e.target.closest(".es_copy");
+            if (!elem) { return; }
+
+            Clipboard.set(elem.innerText);
+
+            let header = document.querySelector("#es_copy_header");
+            let headerText = header.innerText;
+            header.innerText = `${Localization.str.copied}`;
+            setTimeout(() => header.innerText = headerText, 1000);
+        }
+
+        function showSteamIdDialog() {
+            document.addEventListener("click", copySteamId);
+
+            let groupId = GroupID.getGroupId();
+            let html =
+                `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
+                <p><a class="es_copy">${groupId}</a></p>
+                <p><a class="es_copy">https://steamcommunity.com/gid/${groupId}</a></p>`;
+
+            Messenger.onMessage("closeDialog").then(() => document.removeEventListener("click", copySteamId));
+            ExtensionLayer.runInPageContext(`function() {
+                let dialog = ShowAlertDialog("${Localization.str.steamid_of_user}".replace("__user__", g_strGroupName), \`${html}\`, "${Localization.str.close}");
+                dialog.done(() => Messenger.postMessage("closeDialog"));
+            }`);
+        }
     };
     
     return GroupHomePageClass;
