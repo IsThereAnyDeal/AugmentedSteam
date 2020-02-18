@@ -87,7 +87,6 @@ let ProfileData = (function(){
 
 let CommentHandler = (function(){
 
-    let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";
     let scriptsLoading = false;
     let spamRegex = null;
     let self = {};
@@ -372,6 +371,7 @@ let CommentHandler = (function(){
                 }
             }
 
+            let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";
             $J(textAreaSelector).each(function(i, elem) {
                 let textarea = $J(elem);
                 textarea.addClass("es_textarea");
@@ -459,6 +459,7 @@ let CommentHandler = (function(){
     }
 
     self.addEditor = async function() {
+        let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";
         let observer = new MutationObserver(function() {
             let textAreas = document.querySelectorAll(textAreaSelector);
             if (textAreas.length > 0) { addEditors(); } 
