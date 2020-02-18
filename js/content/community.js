@@ -573,6 +573,7 @@ let ProfileHomePageClass = (function(){
             document.addEventListener("click", copySteamId);
 
             let steamId = new SteamId(SteamId.fromProfilePage());
+            console.log(steamId)
             let html =
                 `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
                 <p><a class="es_copy">${steamId.getSteamId2()}</a></p>
@@ -1073,11 +1074,13 @@ let GroupHomePageClass = (function(){
         function showSteamIdDialog() {
             document.addEventListener("click", copySteamId);
 
-            let groupId = SteamId.fromGroupPage();
+            let groupId = new SteamId(SteamId.fromGroupPage());
             let html =
                 `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
-                <p><a class="es_copy">${groupId}</a></p>
-                <p><a class="es_copy">https://steamcommunity.com/gid/${groupId}</a></p>`;
+                <p><a class="es_copy">${groupId.getSteamId2()}</a></p>
+                <p><a class="es_copy">${groupId.getSteamId3()}</a></p>
+                <p><a class="es_copy">${groupId.getSteamId64()}</a></p>
+                <p><a class="es_copy">https://steamcommunity.com/gid/${groupId.getSteamId64()}</a></p>`;
 
             Messenger.onMessage("closeDialog").then(() => document.removeEventListener("click", copySteamId));
             ExtensionLayer.runInPageContext(`function() {

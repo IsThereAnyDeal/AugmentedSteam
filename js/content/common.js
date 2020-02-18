@@ -947,8 +947,8 @@ let Price = (function() {
     return Price;
 })();
 
-
-let SteamId = (function(){
+// https://developer.valvesoftware.com/wiki/SteamID
+let SteamId = (function() {
     function SteamId(steam64str) {
         if (!steam64str) {
             throw new Error("Missing first parameter 'steam64str'.") 
@@ -1010,16 +1010,17 @@ let SteamId = (function(){
     };
 
     SteamId.prototype.getAccountId = function() {
-        return this._steamId.accountNumber * 2;
+        return this._steamId.accountNumber * 2 + this._steamId.y;
     };
 
     SteamId.prototype.getSteamId2 = function() {
-        return "STEAM_0:0:" + this._steamId.accountNumber;
+        return `STEAM_0:${this._steamId.y}:${this._steamId.accountNumber}`;
     };
     
 
     SteamId.prototype.getSteamId3 = function() {
-        return "[U:1:" + this.getAccountId() + "]";
+        const TYPES = { 0: "I", 1: "U", 2: "M", 3: "G", 4: "A", 5: "P", 6: "C", 7: "g", 10: "a" };
+        return `[${TYPES[this._steamId.type]}:1:${this.getAccountId()}]`;
     };
 
     SteamId.prototype.getSteamId64 = function() {
