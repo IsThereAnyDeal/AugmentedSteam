@@ -1027,6 +1027,37 @@ let SteamId = (function() {
         return this._steamId64;
     };
 
+    SteamId.prototype.showDialog = function(path, name) {
+        function copySteamId(e) {
+            let elem = e.target.closest(".es_copy");
+            if (!elem) { return; }
+    
+            Clipboard.set(elem.innerText);
+    
+            let header = document.querySelector("#es_copy_header");
+            let headerText = header.innerText;
+            header.innerText = `${Localization.str.copied}`;
+            setTimeout(() => header.innerText = headerText, 1000);
+        }
+
+        let title = Localization.str.steamid_of_user.replace("__user__", name);
+        let html =
+            `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
+            <p><a class="es_copy">${this.getSteamId2()}</a></p>
+            <p><a class="es_copy">${this.getSteamId3()}</a></p>
+            <p><a class="es_copy">${this.getSteamId64()}</a></p>
+            <p><a class="es_copy">https://steamcommunity.com/${path}/${this.getSteamId64()}</a></p>`;
+
+        document.addEventListener("click", copySteamId);
+        Messenger.onMessage("closeDialog").then(() => document.removeEventListener("click", copySteamId));
+
+        ExtensionLayer.runInPageContext(`function() {
+            HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
+            let dialog = ShowAlertDialog("${title}", \`${html}\`, "${Localization.str.close}");
+            dialog.done(() => Messenger.postMessage("closeDialog"));
+        }`);
+    }
+
     return SteamId;
 })();
 SteamId.fromProfilePage = () => {

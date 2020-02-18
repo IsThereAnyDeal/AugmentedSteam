@@ -542,7 +542,11 @@ let ProfileHomePageClass = (function(){
                 }
             }
 
-            document.querySelector("#es_steamid").addEventListener("click", showSteamIdDialog);
+            document.querySelector("#es_steamid").addEventListener("click", () => {
+                let steamId = new SteamId(SteamId.fromProfilePage());
+                let profile = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
+                steamId.showDialog("profiles", profile.personaname);
+            });
         }
 
         // Insert the links HMTL into the page
@@ -555,39 +559,6 @@ let ProfileHomePageClass = (function(){
                 HTML.beforeEnd(rightColNode, '<div class="profile_item_links">' + htmlstr + '</div>');
                 HTML.afterEnd(rightColNode, '<div style="clear: both;"></div>');
             }
-        }
-
-        function copySteamId(e) {
-            let elem = e.target.closest(".es_copy");
-            if (!elem) { return; }
-
-            Clipboard.set(elem.innerText);
-
-            let header = document.querySelector("#es_copy_header");
-            let headerText = header.innerText;
-            header.innerText = `${Localization.str.copied}`;
-            setTimeout(() => header.innerText = headerText, 1000);
-        }
-
-        function showSteamIdDialog() {
-            document.addEventListener("click", copySteamId);
-
-            let steamId = new SteamId(SteamId.fromProfilePage());
-            console.log(steamId)
-            let html =
-                `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
-                <p><a class="es_copy">${steamId.getSteamId2()}</a></p>
-                <p><a class="es_copy">${steamId.getSteamId3()}</a></p>
-                <p><a class="es_copy">${steamId.getSteamId64()}</a></p>
-                <p><a class="es_copy">https://steamcommunity.com/profiles/${steamId.getSteamId64()}</a></p>`;
-
-
-            Messenger.onMessage("closeDialog").then(() => document.removeEventListener("click", copySteamId));
-            ExtensionLayer.runInPageContext(`function() {
-                HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
-                let dialog = ShowAlertDialog("${Localization.str.steamid_of_user}".replace("__user__", g_rgProfileData.personaname), \`${html}\`, "${Localization.str.close}");
-                dialog.done(() => Messenger.postMessage("closeDialog"));
-            }`);
         }
     };
 
@@ -1057,37 +1028,11 @@ let GroupHomePageClass = (function(){
                 <span>${Localization.str.view_steamid}</span>
             </div>`);
 
-        document.querySelector("#es_steamid").addEventListener("click", showSteamIdDialog);
-
-        function copySteamId(e) {
-            let elem = e.target.closest(".es_copy");
-            if (!elem) { return; }
-
-            Clipboard.set(elem.innerText);
-
-            let header = document.querySelector("#es_copy_header");
-            let headerText = header.innerText;
-            header.innerText = `${Localization.str.copied}`;
-            setTimeout(() => header.innerText = headerText, 1000);
-        }
-
-        function showSteamIdDialog() {
-            document.addEventListener("click", copySteamId);
-
+        document.querySelector("#es_steamid").addEventListener("click", () => {
             let groupId = new SteamId(SteamId.fromGroupPage());
-            let html =
-                `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
-                <p><a class="es_copy">${groupId.getSteamId2()}</a></p>
-                <p><a class="es_copy">${groupId.getSteamId3()}</a></p>
-                <p><a class="es_copy">${groupId.getSteamId64()}</a></p>
-                <p><a class="es_copy">https://steamcommunity.com/gid/${groupId.getSteamId64()}</a></p>`;
-
-            Messenger.onMessage("closeDialog").then(() => document.removeEventListener("click", copySteamId));
-            ExtensionLayer.runInPageContext(`function() {
-                let dialog = ShowAlertDialog("${Localization.str.steamid_of_user}".replace("__user__", g_strGroupName), \`${html}\`, "${Localization.str.close}");
-                dialog.done(() => Messenger.postMessage("closeDialog"));
-            }`);
-        }
+            let groupName = HTMLParser.getVariableFromDom("g_strGroupName", "string");
+            groupId.showDialog("gid", groupName);
+        });
     };
     
     return GroupHomePageClass;
