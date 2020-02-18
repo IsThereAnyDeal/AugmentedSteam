@@ -93,6 +93,7 @@ let ProfileData = (function(){
 
 let CommentHandler = (function(){
 
+    let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";
     let scriptsLoading = false;
     let spamRegex = null;
     let self = {};
@@ -328,8 +329,6 @@ let CommentHandler = (function(){
         }
     
         ExtensionLayer.runInPageContext(function() {
-            let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";
-
             // Credits go to https://github.com/ZeroUnderscoreOu/SteamBBCodes/blob/master/SteamBBCodes.js#L153
             function supportPlus() {
                 let URLPath = document.location.pathname;
@@ -392,75 +391,70 @@ let CommentHandler = (function(){
                     leftmargin = 5 + parseFloat(avatar.css("margin-left")) + parseFloat(avatar.css("width")) + parseFloat(avatar.css("margin-right"));
                 }
 
-                $J(grandparent).prepend(
-                    `<div style="margin-left: ${leftmargin}px; margin-bottom: 5px;${hidden ? `` : ` display: none;`}" class="es_editor">
-                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_H1Selection();">
-                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_header1.png"></span>
-                        </a>
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_BoldSelection();">
-                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_bold.png"></span>
-                        </a>
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_ItalicizeSelection();">
-                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_italic.png"></span>
-                        </a>
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_UnderlineSelection();">
-                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_underline.png"></span>
-                        </a>
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_StrikethroughSelection();">
-                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_strike.png"></span>
-                        </a>
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_SpoilerSelection();">
-                            <span style="color: #b7b7b7; font-weight: bold;">██</span>
-                        </a>
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_HyperlinkSelection();">
-                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_link.png"></span>
-                        </a>
-                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_MakeListFromSelection();">
-                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_bullet.png"></span>
-                        </a>
-                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_MakeOListFromSelection();">
-                            <span style="color: #b7b7b7; font-weight: bold; font-size: 120%; padding-bottom: 2px;">&sup1;☰</span>
-                        </a>
-                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_MakeTableFromSelection();">
-                            <span style="color: #b7b7b7; font-weight: bold; font-size: 120%;">&plusb;</span>
-                        </a>
-                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_QuoteSelection();">
-                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/comment_quoteicon.png"></span>
-                        </a>
-                        <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_CodeSelection();">
-                            <span style="color: #b7b7b7; font-weight: bold;">&lt;/&gt;</span>
-                        </a>
-                        <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_NoParseSelection();">
-                            <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_trash_bright.png"></span>
-                        </a>
-                    </div>`
-                );
+                $J(grandparent).prepend(`<div style="margin-left: ${leftmargin}px; margin-bottom: 5px;${hidden ? `` : ` display: none;`}" class="es_editor">
+                    <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_H1Selection();">
+                        <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_header1.png"></span>
+                    </a>
+                    <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_BoldSelection();">
+                        <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_bold.png"></span>
+                    </a>
+                    <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_ItalicizeSelection();">
+                        <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_italic.png"></span>
+                    </a>
+                    <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_UnderlineSelection();">
+                        <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_underline.png"></span>
+                    </a>
+                    <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_StrikethroughSelection();">
+                        <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_strike.png"></span>
+                    </a>
+                    <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_SpoilerSelection();">
+                        <span style="color: #b7b7b7; font-weight: bold;">██</span>
+                    </a>
+                    <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_HyperlinkSelection();">
+                        <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_link.png"></span>
+                    </a>
+                    <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_MakeListFromSelection();">
+                        <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/sharedfiles/guides/format_bullet.png"></span>
+                    </a>
+                    <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_MakeOListFromSelection();">
+                        <span style="color: #b7b7b7; font-weight: bold; font-size: 120%; padding-bottom: 2px;">&sup1;☰</span>
+                    </a>
+                    <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_MakeTableFromSelection();">
+                        <span style="color: #b7b7b7; font-weight: bold; font-size: 120%;">&plusb;</span>
+                    </a>
+                    <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_QuoteSelection();">
+                        <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/comment_quoteicon.png"></span>
+                    </a>
+                    <a class="btn_grey_black btn_small_thin es_editor_plus" href="javascript:BBCode_CodeSelection();">
+                        <span style="color: #b7b7b7; font-weight: bold;">&lt;/&gt;</span>
+                    </a>
+                    <a class="btn_grey_black btn_small_thin" href="javascript:BBCode_NoParseSelection();">
+                        <span><img style="vertical-align: middle;" src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_trash_bright.png"></span>
+                    </a>
+                </div>`);
 
                 let editor = grandparent.find(".es_editor");
                 let postbtn = grandparent.find("[id*='_submit'].btn_small");
                 if (!hidden) {
-                    postbtn.on("blur unload mouseleave", function() {
-                        editor.toggle(postbtn.is(":visible"));
-                    });
+                    postbtn.on("blur unload mouseleave", () =>
+                        editor.toggle(postbtn.is(":visible")));
                 }
 
-                textarea.on("keyup input change click paste select focus load", function() {
+                textarea.on("keyup input change click paste select focus load", () => {
                     if (!hidden) { editor.toggle(postbtn.is(":visible")); }
 
                     if (typeof InitSectionDescriptionTextArea !== "undefined") {
                         InitSectionDescriptionTextArea(elem);
                     }                    
-                });
-
-                textarea.on("paste", function(e) {
-                    let pastedData = (e.originalEvent || e).clipboardData.getData("text/plain");
+                }).on("paste", (ev) => {
+                    let pastedData = (ev.originalEvent || ev).clipboardData.getData("text/plain");
                     if (pastedData &&
                         /^https?:\/\/(?:[a-z0-9\-]+\.)+[a-z]{2,6}(?:\/[^/#?]+)+/i.test(pastedData) &&
                         !/^https?:\/\/(www\.)?youtube\.com\/.*/i.test(pastedData) &&
                         !/^https?:\/\/youtu\.be\/.*/i.test(pastedData) &&
                         !/^https?:\/\/store\.steampowered\.com\/app\/.*/i.test(pastedData) &&
                         !/^https?:\/\/steamcommunity\.com\/sharedfiles\/filedetails\/.*/i.test(pastedData)) {
-                        e.preventDefault();
+                        ev.preventDefault();
                         BBCode_MakeURLFromSelection(pastedData, "");
                     }
                 });
@@ -471,7 +465,6 @@ let CommentHandler = (function(){
     }
 
     self.addEditor = async function() {
-        let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";
         let observer = new MutationObserver(function() {
             let textAreas = document.querySelectorAll(textAreaSelector);
             if (textAreas.length > 0) { addEditors(); } 

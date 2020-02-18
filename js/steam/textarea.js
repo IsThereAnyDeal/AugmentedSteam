@@ -125,4 +125,3 @@ Control.TextArea.ToolBar = Class.create(    {
 		this.container.appendChild(li);
 	}
 });
-
