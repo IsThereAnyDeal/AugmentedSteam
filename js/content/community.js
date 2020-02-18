@@ -308,19 +308,25 @@ let CommentHandler = (function(){
         observer.observe(document.body, { childList: true });
     };
 
-    function loadScripts() {
-        scriptsLoading = true;
-        let scripts = [
-            "https://steamcommunity-a.akamaihd.net/public/shared/javascript/shared_global.js?v=NuCEF6NW8c0Q",
-            "https://steamcommunity-a.akamaihd.net/public/javascript/livepipe.js?v=.sk9HEaDHE9C5",
-            "https://steamcommunity-a.akamaihd.net/public/javascript/textarea.js?v=.KmmHJqTpwrPO",
-            "https://steamcommunity-a.akamaihd.net/public/javascript/sharedfiles_editor.js?v=pqvj6_7nvfqb"
-        ];
-        return ExtensionLayer.loadInPageContext(scripts, true);
+    function insertScript(file) {
+        return new Promise((res, rej) => {
+            try {
+                DOMHelper.insertScript({ src: ExtensionResources.getURL(file) }, null, res);
+            } catch(err) {
+                rej(err);
+            }
+        });
     }
-
+    
     async function addEditors() {
-        if (!scriptsLoading) { await loadScripts(); }
+        if (!scriptsLoading) { 
+            scriptsLoading = true;
+            await insertScript("js/steam/shared_global.js")
+                .then(() => insertScript("js/steam/livepipe.js"))
+                .then(() => insertScript("js/steam/textarea.js"))
+                .then(() => insertScript("js/steam/sharedfiles_editor.js"))
+            scriptsLoading = true;
+        }
     
         ExtensionLayer.runInPageContext(function() {
             let textAreaSelector = ".commentthread_textarea:not(#es_url):not(.es_textarea), .forumtopic_reply_textarea:not(.es_textarea)";

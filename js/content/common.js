@@ -212,47 +212,6 @@ let ExtensionLayer = (function() {
         script.parentNode.removeChild(script);
     };
 
-    // NOTE: use cautiously!
-    // Load remote script(s) in the context of the current tab
-    self.loadInPageContext = async function(srcs, sync=false) {
-        function _makeScript(src) {
-            return new Promise(function(resolve, reject) {
-                let script = document.createElement("script");
-                script.src = src;
-                script.onload = resolve;
-                script.onerror = reject;
-                document.documentElement.appendChild(script);
-                script.parentNode.removeChild(script);
-            });
-        }
-
-        if (!Array.isArray(srcs)) {
-            srcs = [srcs];
-        }
-
-        let whitelist = ["steamcommunity-a.akamaihd.net"];
-        let promise = sync ? Promise.resolve(true) : [];
-        for (let src of srcs) {
-            if (src.startsWith("//")) { // TODO remove when not needed
-                src = window.location.protocol + src;
-                console.warn("Requesting URL without protocol, please update");
-            }
-    
-            let domain = new URL(src).hostname;
-            if (!whitelist.includes(domain)) {
-                throw new Error("Script host not allowed");
-            }
-
-            if (sync) {
-                promise = promise.then(function() { return _makeScript(src); });
-            } else {
-                promise.push(_makeScript(src));
-            }
-        }
-
-        return promise;
-    };
-
     return self;
 })();
 
@@ -1208,6 +1167,18 @@ let DOMHelper = (function(){
         document.head.appendChild(stylesheet);
     }
 
+    self.insertScript = function({ src, content }, id, onload, isAsync = true) {
+        let script = document.createElement("script");
+
+        if (onload)     script.onload = onload;
+        if (id)         script.id = id;
+        if (src)        script.src = src;
+        if (content)    script.textContent = content;
+        script.async = isAsync;
+
+        document.head.appendChild(script);
+    }
+    
     return self;
 })();
 

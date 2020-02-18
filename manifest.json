@@ -33,7 +33,11 @@
     "img/profile_styles/*/style.css",
     "img/profile_styles/*/preview.png",
     "localization/*/strings.json",
-    "js/steam/holidayprofile.js"
+    "js/steam/holidayprofile.js",
+    "js/steam/livepipe.js",
+    "js/steam/shared_global.js",
+    "js/steam/sharedfiles_editor.js",
+    "js/steam/textarea.js"
   ],
   "homepage_url": "https://es.isthereanydeal.com/",
   "content_scripts": [
