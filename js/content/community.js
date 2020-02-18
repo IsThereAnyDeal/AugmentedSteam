@@ -1000,6 +1000,7 @@ let GroupHomePageClass = (function(){
     function GroupHomePageClass() {
         this.addGroupLinks();
         this.addFriendsInviteButton();
+        this.addSteamIdButton();
     }
 
     GroupHomePageClass.prototype.addGroupLinks = function() {
@@ -1057,6 +1058,23 @@ let GroupHomePageClass = (function(){
                     <span><img src="//steamcommunity-a.akamaihd.net/public/images/groups/icon_invitefriends.png">&nbsp; ${Localization.str.invite_friends}</span>
                 </a>
             </div>`);
+    };
+    
+    GroupHomePageClass.prototype.addSteamIdButton = function() {
+        if (!SyncedStorage.get("group_steamid")) { return; }
+
+        let joinArea = document.querySelector(".grouppage_join_area");
+        if (!joinArea) {
+            HTML.afterEnd("#join_group_form", `<div class="grouppage_join_area"></div>`);
+        }
+
+        let groupId = GroupID.getGroupId();
+        HTML.afterBegin(".grouppage_join_area", 
+            `<div id="es_steamid" class="btn_blue_white_innerfade btn_medium">
+                <span>${Localization.str.view_steamid}</span>
+            </div>`);
+
+        document.querySelector("#es_steamid").addEventListener("click", showSteamIdDialog);
     };
     
     return GroupHomePageClass;
