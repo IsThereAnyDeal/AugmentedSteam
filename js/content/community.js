@@ -321,11 +321,10 @@ let CommentHandler = (function(){
     async function addEditors() {
         if (!scriptsLoading) { 
             scriptsLoading = true;
-            await insertScript("js/steam/shared_global.js")
-                .then(() => insertScript("js/steam/livepipe.js"))
-                .then(() => insertScript("js/steam/textarea.js"))
-                .then(() => insertScript("js/steam/sharedfiles_editor.js"))
-            scriptsLoading = true;
+            await insertScript("js/steam/shared_global.js");
+            await insertScript("js/steam/livepipe.js");
+            await insertScript("js/steam/textarea.js");
+            await insertScript("js/steam/sharedfiles_editor.js");
         }
     
         ExtensionLayer.runInPageContext(function() {
