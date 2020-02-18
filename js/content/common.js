@@ -1430,26 +1430,6 @@ let AugmentedSteam = (function() {
         }
     };
 
-    self.insertStylesheet = function(href) {
-        let stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.type = 'text/css';
-        stylesheet.href = href;
-        document.head.appendChild(stylesheet);
-    }
-
-    self.insertScript = function({ src, content }, id, onload, isAsync = true) {
-        let script = document.createElement("script");
-
-        if (onload)     script.onload = onload;
-        if (id)         script.id = id;
-        if (src)        script.src = src;
-        if (content)    script.textContent = content;
-        script.async = isAsync;
-
-        document.head.appendChild(script);
-    }
-
     return self;
 })();
 
