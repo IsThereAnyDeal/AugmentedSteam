@@ -1028,7 +1028,7 @@ let SteamId = (function(){
 
     return SteamId;
 })();
-SteamId.fromDOM = () => {
+SteamId.fromProfilePage = () => {
     let id = null;
     let g_steamID = HTMLParser.getVariableFromDom("g_steamID", "string");
     let g_rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
@@ -1041,7 +1041,15 @@ SteamId.fromDOM = () => {
     }
     return id;
 };
-
+SteamId.fromGroupPage = function() {
+    let id = null;
+    if (document.querySelector("#leave_group_form")) {
+        id = document.querySelector("input[name=groupId]").value;
+    } else {
+        id = document.querySelector(".joinchat_bg").getAttribute("onclick").split("'")[1];
+    }
+    return id;
+};
 
 let Viewport = (function(){
 

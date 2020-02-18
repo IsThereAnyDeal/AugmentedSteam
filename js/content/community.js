@@ -1,23 +1,3 @@
-let GroupID = (function(){
-
-    let self = {};
-    let _groupId = null;
-
-    self.getGroupId = function() {
-        if (_groupId) { return _groupId; }
-
-        if (document.querySelector("#leave_group_form")) {
-            _groupId = document.querySelector("input[name=groupId]").value;
-        } else {
-            _groupId = document.querySelector(".joinchat_bg").getAttribute("onclick").split('\'')[1];
-        }
-
-        return _groupId;
-    };
-
-    return self;
-})();
-
 let ProfileData = (function(){
 
     let self = {};
@@ -26,7 +6,7 @@ let ProfileData = (function(){
     let _promise = null;
     self.promise = async function() {
         if (!_promise) {
-            let steamId = SteamId.fromDOM();
+            let steamId = SteamId.fromProfilePage();
 
             _promise = Background.action("profile", steamId)
                 .then(response => { _data = response; return _data; });
@@ -452,7 +432,7 @@ let ProfileHomePageClass = (function(){
     }
 
     ProfileHomePageClass.prototype.addCommunityProfileLinks = function() {
-        let steamId = SteamId.fromDOM();
+        let steamId = SteamId.fromProfilePage();
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
@@ -592,7 +572,7 @@ let ProfileHomePageClass = (function(){
         function showSteamIdDialog() {
             document.addEventListener("click", copySteamId);
 
-            let steamId = new SteamId(SteamId.fromDOM());
+            let steamId = new SteamId(SteamId.fromProfilePage());
             let html =
                 `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
                 <p><a class="es_copy">${steamId.getSteamId2()}</a></p>
@@ -726,7 +706,7 @@ let ProfileHomePageClass = (function(){
         ProfileData.promise().then(data => {
             if (!data.steamrep || data.steamrep.length === 0) { return; }
 
-            let steamId = SteamId.fromDOM();
+            let steamId = SteamId.fromProfilePage();
             if (!steamId) { return; }
 
             // Build reputation images regexp
@@ -1008,7 +988,7 @@ let GroupHomePageClass = (function(){
 
     GroupHomePageClass.prototype.addGroupLinks = function() {
 
-        let groupId = GroupID.getGroupId();
+        let groupId = SteamId.fromGroupPage();
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
         if (images !== "none") {
@@ -1054,7 +1034,7 @@ let GroupHomePageClass = (function(){
         let button = document.querySelector(".grouppage_join_area");
         if (button) { return; }
 
-        let groupId = GroupID.getGroupId();
+        let groupId = SteamId.fromGroupPage();
         HTML.afterEnd("#join_group_form", 
             `<div class="grouppage_join_area">
                 <a class="btn_blue_white_innerfade btn_medium" href="https://steamcommunity.com/my/friends/?invitegid=${groupId}">
@@ -1093,7 +1073,7 @@ let GroupHomePageClass = (function(){
         function showSteamIdDialog() {
             document.addEventListener("click", copySteamId);
 
-            let groupId = GroupID.getGroupId();
+            let groupId = SteamId.fromGroupPage();
             let html =
                 `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
                 <p><a class="es_copy">${groupId}</a></p>
@@ -1314,7 +1294,7 @@ let ProfileEditPageClass = (function(){
 
         let result = await Background.action("profile.background", {
             appid: appid,
-            profile: SteamId.fromDOM()
+            profile: SteamId.fromProfilePage()
         });
 
         let selectedImg = ProfileData.getBgImg();
