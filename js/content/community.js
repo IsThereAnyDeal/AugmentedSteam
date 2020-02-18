@@ -1,24 +1,18 @@
-
-let SteamId = (function(){
+let GroupID = (function(){
 
     let self = {};
-    let _steamId = null;
+    let _groupId = null;
 
-    self.getSteamId = function() {
-        if (_steamId) { return _steamId; }
+    self.getGroupId = function() {
+        if (_groupId) { return _groupId; }
 
-        if (document.querySelector("#reportAbuseModal")) {
-            _steamId = document.querySelector("input[name=abuseID]").value;
+        if (document.querySelector("#leave_group_form")) {
+            _groupId = document.querySelector("input[name=groupId]").value;
         } else {
-            _steamId = HTMLParser.getVariableFromDom("g_steamID", "string");
+            _groupId = document.querySelector(".joinchat_bg").getAttribute("onclick").split('\'')[1];
         }
 
-        if (!_steamId) {
-            let profileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
-            _steamId = profileData.steamid;
-        }
-
-        return _steamId;
+        return _groupId;
     };
 
     return self;
@@ -32,9 +26,9 @@ let ProfileData = (function(){
     let _promise = null;
     self.promise = async function() {
         if (!_promise) {
-            let steamId = SteamId.getSteamId();
+            let steamId = SteamId.fromDOM();
 
-            _promise = Background.action('profile', { 'profile': steamId, } )
+            _promise = Background.action("profile", steamId)
                 .then(response => { _data = response; return _data; });
         }
         return _promise;
@@ -83,7 +77,7 @@ let ProfileData = (function(){
 
     self.clearOwn = async function() {
         if (!User.isSignedIn) { return; }
-        await Background.action('profile.clear', { 'profile': User.steamId, });
+        await Background.action("clearownprofile", User.steamId);
         _promise = null;
         return self.promise();
     };
@@ -484,30 +478,44 @@ let CommunityCommon = (function() {
     self.currentUserIsOwner = function() {
         if (!User.isSignedIn) { return false; }
 
-        let badgeOwnerLink = document.querySelector(".profile_small_header_texture a").href;
-        let userProfileLink = document.querySelector(".playerAvatar a").href.replace(/\/*$/, "");
+        let badgeOwnerUrl = document.querySelector(".profile_small_header_texture > a").href + "/";
 
-        return badgeOwnerLink === userProfileLink;
+        return badgeOwnerUrl === User.profileUrl;
     };
 
     self.addCardExchangeLinks = function(game) {
         if (!SyncedStorage.get("steamcardexchange")) { return; }
 
-        let nodes = document.querySelectorAll(".badge_row:not(.es-has-ce-link");
-        for (let node of nodes) {
+        let ceImg = ExtensionResources.getURL("img/ico/steamcardexchange.png");
+
+        for (let node of document.querySelectorAll(".badge_row:not(.es-has-ce-link")) {
             let appid = game || GameId.getAppidFromGameCard(node.querySelector(".badge_row_overlay").href);
-            if(!appid) { continue; }
+            if (!appid) { continue; }
 
             HTML.afterBegin(node,
                 `<div class="es_steamcardexchange_link">
-                    <a href="http://www.steamcardexchange.net/index.php?gamepage-appid-${appid}" target="_blank" title="Steam Card Exchange">
-                        <img src="${ExtensionLayer.getLocalUrl('img/ico/steamcardexchange.png')}" width="24" height="24" border="0" alt="Steam Card Exchange" />
+                    <a href="https://www.steamcardexchange.net/index.php?gamepage-appid-${appid}/" target="_blank" title="Steam Card Exchange">
+                        <img src="${ceImg}" alt="Steam Card Exchange">
                     </a>
                 </div>`);
 
-            node.querySelector(".badge_title_row").style.paddingRight = "44px";
             node.classList.add("es-has-ce-link");
         }
+    };
+
+    self.makeProfileLink = function(id, link, name, iconType, iconUrl) {
+        let mainType = iconUrl ? "none" : iconType;
+        let html = `<div class="es_profile_link profile_count_link">
+                   <a class="es_sites_icons es_${id}_icon es_${mainType}" href="${link}" target="_blank">`;
+
+        if (iconType !== "none" && iconUrl) {
+            html += `<i class="es_sites_custom_icon es_${iconType}" style="background-image: url('${iconUrl}');"></i>`;
+        }
+
+        html += `<span class="count_link_label">${name}</span>
+                <span class="profile_count_link_total">&nbsp;</span></a></div>`; // Steam spacing
+
+        return html;
     };
 
     return self;
@@ -526,42 +534,32 @@ let ProfileActivityPageClass = (function(){
     }
 
     ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
-        await Promise.all([DynamicStore, Inventory, User]);
+        await Promise.all([DynamicStore, User]);
 
-        // Get all appids and nodes from selectors
-        let nodes = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
-        for (let node of nodes) {
-            node.classList.add("es_highlight_checked");
+        let blotterBlocks = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
+        blotterBlocks.forEach(node => node.classList.add("es_highlight_checked"));
 
-            let links = node.querySelectorAll("a:not(.blotter_gamepurchase_logo)");
-            for (let link of links) {
-                let appid = GameId.getAppid(link.href);
-                if (!appid || link.childElementCount !== 0) { continue; }
+        let aNodes = Array.from(blotterBlocks).reduce((acc, cur) => {
+            acc.push(...Array.from(cur.querySelectorAll("a:not(.blotter_gamepurchase_logo)")).filter(link =>
+                (GameId.getAppid(link) && link.childElementCount <= 1)
+                &&
+                // https://github.com/tfedor/AugmentedSteam/pull/470#pullrequestreview-284928257
+                (link.childElementCount !== 1 || !link.closest(".vote_header"))
+            ));
+            return acc;
+        }, []);
 
-                if (DynamicStore.isOwned(appid)) {
-                    Highlights.highlightOwned(link);
+        await Highlights.highlightAndTag(aNodes, false);
 
-                    addAchievementComparisonLink(link, appid);
-                } else if (Inventory.hasGuestPass(appid)) {
-                    Highlights.highlightInvGuestpass(link);
-                } else if (Inventory.getCouponByAppId(appid)) {
-                    Highlights.highlightCoupon(link);
-                } else if (Inventory.hasGift(appid)) {
-                    Highlights.highlightInvGift(link);
-                } else if (DynamicStore.isWishlisted(appid)) {
-                    Highlights.highlightWishlist(link);
-                } else if (DynamicStore.isIgnored(appid)) {
-                    Highlights.highlightNotInterested(link);
-                } else {
-                    continue;
-                }
-            }
-        }
+        if (!SyncedStorage.get("showcomparelinks")) { return; }
+        blotterBlocks.forEach(blotter => {
+            blotter.querySelectorAll("a.es_highlighted_owned").forEach(aNode => {
+                addAchievementComparisonLink(aNode);
+            })
+        });
     };
 
-    function addAchievementComparisonLink(node, appid) {
-        if (!SyncedStorage.get("showcomparelinks")) { return; }
-
+    function addAchievementComparisonLink(node) {
         let blotter = node.closest(".blotter_daily_rollup_line");
         if (!blotter) { return; }
 
@@ -572,7 +570,7 @@ let ProfileActivityPageClass = (function(){
 
         node.classList.add("es_achievements");
 
-        let compareLink = friendProfileUrl + "/stats/" + appid + "/compare/#es-compare";
+        let compareLink = friendProfileUrl + "/stats/" + GameId.getAppid(node) + "/compare/#es-compare";
         HTML.afterEnd(blotter.querySelector("span"), `<a class='es_achievement_compare' href='${compareLink}' target='_blank' style='line-height: 32px'>(${Localization.str.compare})</a>`);
     }
 
@@ -593,6 +591,10 @@ let ProfileActivityPageClass = (function(){
 let ProfileHomePageClass = (function(){
 
     function ProfileHomePageClass() {
+        // If there is an error message, like profile does not exists. 
+        if (document.querySelector("#message")) {
+            return;
+        }
         if (window.location.hash === "#as-success") {
             /* TODO This is a hack. It turns out, that clearOwn clears data, but immediately reloads them.
              *      That's why when we clear profile before going to API to store changes we don't get updated images
@@ -618,48 +620,53 @@ let ProfileHomePageClass = (function(){
     }
 
     ProfileHomePageClass.prototype.addCommunityProfileLinks = function() {
-        let steamId = SteamId.getSteamId();
+        let steamId = SteamId.fromDOM();
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
-        if (images !== false) {
+        if (images !== "none") {
             iconType = images === "color" ? "color" : "gray";
         }
 
         let links = [
             {
                 "id": "steamrep",
-                "link": `//steamrep.com/profiles/${steamId}`,
+                "link": `https://steamrep.com/profiles/${steamId}`,
                 "name": "SteamRep",
             },
             {
                 "id": "steamdbcalc",
-                "link": `//steamdb.info/calculator/?player=${steamId}`,
+                "link": `https://steamdb.info/calculator/?player=${steamId}`,
                 "name": "SteamDB",
             },
             {
                 "id": "steamgifts",
-                "link": `//www.steamgifts.com/go/user/${steamId}`,
+                "link": `https://www.steamgifts.com/go/user/${steamId}`,
                 "name": "SteamGifts",
             },
             {
                 "id": "steamtrades",
-                "link": `//www.steamtrades.com/user/${steamId}`,
+                "link": `https://www.steamtrades.com/user/${steamId}`,
                 "name": "SteamTrades",
             },
             {
+                "id": "bartervg",
+                "link": `//barter.vg/steam/${steamId}`,
+                "name": "Barter.vg",
+            },
+            {
                 "id": "astats",
-                "link": `//www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
+                "link": `https://www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
                 "name": "Achievement Stats",
             },
             {
                 "id": "backpacktf",
-                "link": `//backpack.tf/profiles/${steamId}`,
+                "link": `https://backpack.tf/profiles/${steamId}`,
                 "name": "Backpack.tf",
             },
             {
                 "id": "astatsnl",
-                "link": `//astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
+                "link": `https://astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
                 "name": "AStats.nl",
             }
         ];
@@ -677,17 +684,10 @@ let ProfileHomePageClass = (function(){
         // Build the links HTML
         let htmlstr = "";
 
-        links.forEach(link => {
-            if (!SyncedStorage.get("profile_" + link.id)) { return; }
-
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_${link.id}_icon es_${iconType}" href="${link.link}" target="_blank">
-                        <span class="count_link_label">${link.name}</span>
-                    </a>
-                </div>`;
-
-        });
+        for (let link of links) {
+            if (!SyncedStorage.get("profile_" + link.id)) { continue; }
+            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+        }
 
         // custom profile link
         for (let customLink of SyncedStorage.get('profile_custom_link')) {
@@ -702,30 +702,35 @@ let ProfileHomePageClass = (function(){
 
             let name =  HTML.escape(customLink.name);
             let link = "//" + HTML.escape(customUrl.replace("[ID]", steamId));
-            let icon = "//" + HTML.escape(customLink.icon);
+            let icon;
+            if (customLink.icon) {
+                icon = "//" + HTML.escape(customLink.icon);
+            } else {
+                iconType = "none";
+            }
 
-            htmlstr +=
-                `<div class="es_profile_link profile_count_link">
-                    <a class="es_sites_icons es_none es_custom_icon" href="${link}" target="_blank">
-                    <span class="count_link_label">${name}</span>`;
-                    if (iconType !== "none") {
-                        htmlstr += `<i class="es_sites_custom_icon" style="background-image: url(${icon});"></i>`;
-                    }
-                    htmlstr += `</a>
-                </div>`;
+            htmlstr += CommunityCommon.makeProfileLink("custom", link, name, iconType, icon);
         }
 
-        // profile permalink
-        if (SyncedStorage.get("profile_permalink")) {
-            let imgUrl = ExtensionLayer.getLocalUrl("img/clippy.svg");
-            htmlstr +=
-                `<div id="es_permalink_div" class="profile_count_link">
-					<span class="count_link_label">${Localization.str.permalink}</span>
-					<div class="es_copy_wrap">
-						<input id="es_permalink" type="text" value="https://steamcommunity.com/profiles/${steamId}" readonly />
-						<button id="es_permalink_copy"><img src="${imgUrl}" /></button>
-					</div>
-				</div>`;
+        // profile steamid
+        if (SyncedStorage.get("profile_steamid")) {
+            let dropdown = document.querySelector("#profile_action_dropdown .popup_body.popup_menu");
+            if (dropdown) {
+                HTML.beforeEnd(dropdown,
+                    `<a class="popup_menu_item" id="es_steamid">
+                        <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/iconForums.png">&nbsp; ${Localization.str.view_steamid}
+                    </a>`);
+            } else {
+                let actions = document.querySelector(".profile_header_actions");
+                if (actions) {
+                    HTML.beforeEnd(actions,
+                        `<a class="btn_profile_action btn_medium" id="es_steamid">
+                            <span>${Localization.str.view_steamid}</span>
+                        </a>`);
+                }
+            }
+
+            document.querySelector("#es_steamid").addEventListener("click", showSteamIdDialog);
         }
 
         // Insert the links HMTL into the page
@@ -740,14 +745,33 @@ let ProfileHomePageClass = (function(){
             }
         }
 
-        if (SyncedStorage.get("profile_permalink")) {
-            document.querySelector("#es_permalink").addEventListener("click", function(e) {
-                e.target.select();
-            });
-            document.querySelector("#es_permalink_copy").addEventListener("click", function(e) {
-                document.querySelector("#es_permalink").select();
-                document.execCommand('copy');
-            });
+        function copySteamId(e) {
+            let elem = e.target.closest(".es_copy");
+            if (!elem) { return; }
+
+            Clipboard.set(elem.innerText);
+
+            ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+        }
+
+        function showSteamIdDialog() {
+            document.addEventListener("click", copySteamId);
+
+            let steamId = new SteamId(SteamId.fromDOM());
+            let html =
+                `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
+                <p><a class="es_copy">${steamId.getSteamId2()}</a></p>
+                <p><a class="es_copy">${steamId.getSteamId3()}</a></p>
+                <p><a class="es_copy">${steamId.getSteamId64()}</a></p>
+                <p><a class="es_copy">https://steamcommunity.com/profiles/${steamId.getSteamId64()}</a></p>`;
+
+
+            Messenger.onMessage("closeDialog").then(() => document.removeEventListener("click", copySteamId));
+            ExtensionLayer.runInPageContext(`function() {
+                HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
+                let dialog = ShowAlertDialog("${Localization.str.steamid_of_user}".replace("__user__", g_rgProfileData.personaname), \`${html}\`, "${Localization.str.close}");
+                dialog.done(() => Messenger.postMessage("closeDialog"));
+            }`);
         }
     };
 
@@ -861,20 +885,17 @@ let ProfileHomePageClass = (function(){
         }
     };
 
-    ProfileHomePageClass.prototype.addSteamRepApi = function(){
+    ProfileHomePageClass.prototype.addSteamRepApi = function() {
         if (!SyncedStorage.get("showsteamrepapi")) { return; }
 
         ProfileData.promise().then(data => {
-            if (!data.steamrep) { return; }
+            if (!data.steamrep || data.steamrep.length === 0) { return; }
 
-            let steamrep = data.steamrep;
-            if (steamrep.length === 0) { return; }
-
-            let steamId = SteamId.getSteamId();
+            let steamId = SteamId.fromDOM();
             if (!steamId) { return; }
 
             // Build reputation images regexp
-            let repimgs = {
+            let repImgs = {
                 "banned": /scammer|banned/gi,
                 "valve": /valve admin/gi,
                 "caution": /caution/gi,
@@ -882,49 +903,43 @@ let ProfileHomePageClass = (function(){
                 "donate": /donator/gi
             };
 
-            // Build SteamRep section
-            HTML.beforeEnd(".profile_header_summary", '<div id="es_steamrep"></div>');
+            let html = "";
 
-            let steamrepElement = document.getElementById("es_steamrep");
-            let priorities = ["bad", "caution", "good", "neutral"];
-            let backgroundStyle = document.querySelector(".profile_header_bg_texture").style;
-
-            backgroundStyle.paddingBottom = "20px";
-            backgroundStyle.backgroundSize = "cover";
-
-            steamrep.forEach(function(value) {
-                if (value.trim() == "") { return; }
-                for (let [img, regex] of Object.entries(repimgs)) {
+            for (let value of data.steamrep) {
+                if (value.trim() === "") { continue; }
+                for (let [img, regex] of Object.entries(repImgs)) {
                     if (!value.match(regex)) { continue; }
 
-                    let imgUrl = ExtensionLayer.getLocalUrl(`img/sr/${img}.png`);
-                    let priority;
+                    let imgUrl = ExtensionResources.getURL(`img/sr/${img}.png`);
+                    let status;
 
                     switch (img) {
                         case "banned":
-                            priority = 0;
+                            status = "bad";
                             break;
                         case "caution":
-                            priority = 1;
+                            status = "caution";
                             break;
                         case "valve":
                         case "okay":
-                            priority = 2;
+                            status = "good";
                             break;
                         case "donate":
-                            priority = 3;
+                            status = "neutral";
                             break;
                     }
 
-                    HTML.beforeEnd(steamrepElement,
-                        `<div class="${priorities[priority]}">
-                            <img src="${imgUrl}" />
-                            <a href="https://steamrep.com/profiles/${steamId}" target="_blank"> ${HTML.escape(value)}</a>
-                        </div>`);
-                        
-                    return;
+                    html += `<div class="${status}"><img src="${imgUrl}"><span> ${value}</span></div>`;
                 }
-            });
+            }
+
+            if (html) {
+
+                HTML.afterBegin(".profile_rightcol",
+                    `<a id="es_steamrep" href="https://steamrep.com/profiles/${steamId}" target="_blank">
+                        ${html}
+                    </a>`);
+            }
         });
     };
 
@@ -1029,19 +1044,16 @@ let ProfileHomePageClass = (function(){
                     HTML.beforeEnd(".profile_header_bg_texture", "<div class='holidayprofile_header_overlay'></div>");
                     document.querySelector(".profile_page").classList.add("holidayprofile");
 
-                    let script = document.createElement("script");
-                    script.type = "text/javascript";
-                    script.src = ExtensionLayer.getLocalUrl("js/steam/holidayprofile.js");
-                    document.body.append(script);
-
+                    DOMHelper.insertScript({ src: ExtensionResources.getURL("js/steam/holidayprofile.js") });
+                    
                     break;
                 case "clear":
                     document.body.classList.add("es_style_clear");
                     break;
                 default:
-                    let styleUrl = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/style.css");
-                    let headerImg = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/header.jpg");
-                    let showcase = ExtensionLayer.getLocalUrl("img/profile_styles/" + style + "/showcase.png");
+                    let styleUrl = ExtensionResources.getURL("img/profile_styles/" + style + "/style.css");
+                    let headerImg = ExtensionResources.getURL("img/profile_styles/" + style + "/header.jpg");
+                    let showcase = ExtensionResources.getURL("img/profile_styles/" + style + "/showcase.png");
 
                     stylesheet.href = styleUrl;
                     document.head.appendChild(stylesheet);
@@ -1150,62 +1162,130 @@ let ProfileHomePageClass = (function(){
     return ProfileHomePageClass;
 })();
 
+
+let GroupHomePageClass = (function(){
+
+    function GroupHomePageClass() {
+        this.addGroupLinks();
+        this.addFriendsInviteButton();
+    }
+
+    GroupHomePageClass.prototype.addGroupLinks = function() {
+
+        let groupId = GroupID.getGroupId();
+        let iconType = "none";
+        let images = SyncedStorage.get("show_profile_link_images");
+        if (images !== "none") {
+            iconType = images === "color" ? "color" : "gray";
+        }
+
+        let links = [
+            {
+                "id": "steamgifts",
+                "link": `https://www.steamgifts.com/go/group/${groupId}`,
+                "name": "SteamGifts",
+            }
+        ];
+
+
+        // Build the links HTML
+        let htmlstr = "";
+
+        for (let link of links) {
+            if (!SyncedStorage.get("group_" + link.id)) { continue; }
+            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+        }
+
+        // Insert the links HMTL into the page
+        if (htmlstr) {
+            let linksNode = (document.querySelector(".responsive_hidden > .rightbox")).parentNode;
+            if (linksNode) {
+                HTML.afterEnd(linksNode,
+                   `<div class="rightbox_header"></div>
+                    <div class="rightbox">
+                       <div class="content">${htmlstr}</div>
+                    </div>
+                    <div class="rightbox_footer"></div>`
+                );
+            }
+        }
+
+    };
+
+    GroupHomePageClass.prototype.addFriendsInviteButton = function() {
+        if (!User.isSignedIn) { return; }
+
+        let button = document.querySelector(".grouppage_join_area");
+        if (button) { return; }
+
+        let groupId = GroupID.getGroupId();
+        HTML.afterEnd("#join_group_form", 
+            `<div class="grouppage_join_area">
+                <a class="btn_blue_white_innerfade btn_medium" href="https://steamcommunity.com/my/friends/?invitegid=${groupId}">
+                    <span><img src="//steamcommunity-a.akamaihd.net/public/images/groups/icon_invitefriends.png">&nbsp; ${Localization.str.invite_friends}</span>
+                </a>
+            </div>`);
+    };
+    
+    return GroupHomePageClass;
+})();
+
+
 let GamesPageClass = (function(){
 
     function GamesPageClass() {
-
-        let page = window.location.href.match(/(\/(?:id|profiles)\/.+\/)games\/?(\?tab=all)?/);
-
-        if (page[2]) {
+        // Prevent errors if "Game Details" is private
+        if (!document.querySelector(".gameListRow")) {
+            return;
+        }
+        // Only show stats on the "All Games" tab
+        if (window.location.search.includes("?tab=all")) {
             this.computeStats();
             this.handleCommonGames();
-            this.addGamelistAchievements(page[1]);
+            this.addGamelistAchievements();
         }
     }
 
-    // Display total time played for all games
     GamesPageClass.prototype.computeStats = function() {
-        let games = HTMLParser.getVariableFromDom("rgGames", "array");
+        if (!SyncedStorage.get("showallstats")) { return; }
 
-        let statsHtml = "";
+        let games = HTMLParser.getVariableFromDom("rgGames", "array");
 
         let countTotal = games.length;
         let countPlayed = 0;
         let countNeverPlayed = 0;
 
         let time = 0;
-        games.forEach(game => {
+        for (let game of games) {
             if (!game['hours_forever']) {
                 countNeverPlayed++;
-                return;
+                continue;
             }
 
             countPlayed++;
             time += parseFloat(game['hours_forever'].replace(",",""));
-        });
+        }
 
         let totalTime = Localization.str.hours_short.replace("__hours__", time.toFixed(1));
 
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.total_time}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>`;
-        statsHtml += `<div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>`;
-
-        let html = `<div id="esi-collection-chart-content">${statsHtml}</div>`;
-
-        HTML.beforeBegin("#mainContents", html);
+        HTML.beforeBegin("#mainContents",
+            `<div id="esi-collection-chart-content">
+                <div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.coll.total_time}</div>
+                <div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>
+                <div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>
+                <div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>
+            </div>`);
     };
 
     let scrollTimeout = null;
 
-    GamesPageClass.prototype.addGamelistAchievements = function(userProfileLink) {
+    GamesPageClass.prototype.addGamelistAchievements = function() {
         if (!SyncedStorage.get("showallachievements")) { return; }
 
-        let node = document.querySelector(".profile_small_header_texture a");
-        if (!node) { return; }
-        let statsLink = "https://steamcommunity.com/" + userProfileLink + "stats/";
+        // Path of profile in view to retrieve achievement stats
+        let path = window.location.pathname.replace("/games", "");
 
-        document.addEventListener("scroll", function(){
+        document.addEventListener("scroll", () => {
             if (scrollTimeout) { window.clearTimeout(scrollTimeout); }
             scrollTimeout = window.setTimeout(addAchievements, 500);
         });
@@ -1213,11 +1293,9 @@ let GamesPageClass = (function(){
         addAchievements();
 
         function addAchievements() {
-            // Only show stats on the "All Games" tab
             let nodes = document.querySelectorAll(".gameListRow:not(.es_achievements_checked)");
             let hadNodesInView = false;
-            for (let i=0, len=nodes.length; i<len; i++) {
-                let node = nodes[i];
+            for (let node of nodes) {
 
                 if (!Viewport.isElementInViewport(node)) {
                     if (hadNodesInView) { break; }
@@ -1226,21 +1304,19 @@ let GamesPageClass = (function(){
 
                 hadNodesInView = true;
 
-                let appid = GameId.getAppidWishlist(node.id);
+                let appid = GameId.getAppidFromId(node.id);
                 node.classList.add("es_achievements_checked");
                 if (!node.innerHTML.match(/ico_stats\.png/)) { continue; }
-                if (!node.querySelector("h5.hours_played")) { continue; }
 
-                // Copy achievement stats to row
-                HTML.afterEnd(node.querySelector("h5"), "<div class='es_recentAchievements' id='es_app_" + appid + "'></div>");
+                let hoursNode = node.querySelector("h5.hours_played");
+                if (!hoursNode) { continue; }
 
-                Stats.getAchievementBar(appid).then(achieveBar => {
-                    let node = document.querySelector("#es_app_" + appid);
+                HTML.afterEnd(hoursNode, `<div class="es_recentAchievements" id="es_app_${appid}"></div>`);
 
-                    if (!achieveBar) return;
+                Stats.getAchievementBar(path, appid).then(achieveBar => {
+                    if (!achieveBar) { return; }
 
-                    HTML.inner(node, achieveBar);
-
+                    HTML.inner(document.querySelector(`#es_app_${appid}`), achieveBar);
                 }, err => {
                     console.error(err);
                 });
@@ -1253,11 +1329,10 @@ let GamesPageClass = (function(){
     async function loadCommonGames() {
         if (_commonGames != null) { return; }
 
-        let url = window.location.href;
-        let commonUrl = url + (url.indexOf( '?' ) != -1 ? '&' : '?' ) + 'games_in_common=1';
+        let commonUrl = `${window.location.href}&games_in_common=1`;
         let data = await RequestData.getHttp(commonUrl);
 
-        let games = HTMLParser.getVariableFromText(data, "rgGames", "array");;
+        let games = HTMLParser.getVariableFromText(data, "rgGames", "array");
         _commonGames = new Set();
         for (let game of games) {
             _commonGames.add(parseInt(game.appid));
@@ -1276,37 +1351,29 @@ let GamesPageClass = (function(){
     }
 
     GamesPageClass.prototype.handleCommonGames = function() {
-        if (!User.isSignedIn) { return;}
+        if (!User.isSignedIn) { return; }
 
         let label = document.querySelector("label[for='show_common_games']");
         if (!label) { return; }
 
-        function createCheckox(id, string) {
-            let checkboxEl = document.createElement("input");
-            checkboxEl.type = "checkbox";
-            checkboxEl.id = id;
+        HTML.afterEnd(label,
+            `<label for="es_gl_show_common_games"><input type="checkbox" id="es_gl_show_common_games">${Localization.str.common_label}</label>
+            <label for="es_gl_show_notcommon_games"><input type="checkbox" id="es_gl_show_notcommon_games">${Localization.str.notcommon_label}</label>`);
 
-            let uncommonLabel = document.createElement("label");
-            uncommonLabel.append(checkboxEl);
-            uncommonLabel.append(document.createTextNode(string));
-
-            return checkboxEl;
-        }
-
-        let commonCheckbox = createCheckox("es_gl_show_common_games", Localization.str.common_label);
-        let notCommonCheckbox = createCheckox("es_gl_show_notcommon_games", Localization.str.notcommon_label);
-
-        label.insertAdjacentElement("afterend", notCommonCheckbox.parentNode);
-        label.insertAdjacentElement("afterend", commonCheckbox.parentNode);
+        let commonCheckbox = document.getElementById("es_gl_show_common_games");
+        let notCommonCheckbox = document.getElementById("es_gl_show_notcommon_games");
+        let rows = document.getElementById("games_list_rows");
 
         commonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
-            document.querySelector("#games_list_rows").classList.toggle("esi-hide-notcommon", e.target.checked);
+            rows.classList.toggle("esi-hide-notcommon", e.target.checked);
+            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
         });
 
         notCommonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
-            document.querySelector("#games_list_rows").classList.toggle("esi-hide-common", e.target.checked);
+            rows.classList.toggle("esi-hide-common", e.target.checked);
+            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
         });
     };
 
@@ -1316,21 +1383,20 @@ let GamesPageClass = (function(){
 let ProfileEditPageClass = (function(){
 
     function ProfileEditPageClass() {
-        let that = this;
         ProfileData.clearOwn().then(() => {
-            if (window.location.pathname.indexOf("/settings") < 0) {
-                that.addBackgroundSelection();
-                that.addStyleSelection();
+            if (!window.location.pathname.includes("/settings")) {
+                this.addBackgroundSelection();
+                this.addStyleSelection();
             }
         })
     }
 
     function showBgFormLoading() {
-        document.querySelector("#es_bg .es_loading").style.display="block";
+        document.querySelector("#es_bg .es_loading").style.display = "block";
     }
 
     function hideBgFormLoading() {
-        document.querySelector("#es_bg .es_loading").style.display="none";
+        document.querySelector("#es_bg .es_loading").style.display = "none";
     }
 
     function getGameSelectOptions(games) {
@@ -1368,7 +1434,7 @@ let ProfileEditPageClass = (function(){
 
         let result = await Background.action("profile.background", {
             appid: appid,
-            profile: SteamId.getSteamId()
+            profile: SteamId.fromDOM()
         });
 
         let selectedImg = ProfileData.getBgImg();
@@ -1483,8 +1549,8 @@ let ProfileEditPageClass = (function(){
                             <option id='blue' value='blue'>Blue Theme</option>
                             <option id='clear' value='clear'>Clear Theme</option>
                             <option id='green' value='green'>Green Theme</option>
-                            <option id='orange' value='orange'>Orange Theme</option
-                            <option id='pink' value='pink'>Pink Theme</option
+                            <option id='orange' value='orange'>Orange Theme</option>
+                            <option id='pink' value='pink'>Pink Theme</option>
                             <option id='purple' value='purple'>Purple Theme</option>
                             <option id='red' value='red'>Red Theme</option>
                             <option id='teal' value='teal'>Teal Theme</option>
@@ -1515,7 +1581,7 @@ let ProfileEditPageClass = (function(){
             styleSelectNode.value = currentStyle;
 
             let imgNode = document.querySelector("#es_style_preview");
-            imgNode.src = ExtensionLayer.getLocalUrl("img/profile_styles/" + currentStyle + "/preview.png");
+            imgNode.src = ExtensionResources.getURL("img/profile_styles/" + currentStyle + "/preview.png");
 
             if (currentStyle === "remove") {
                 imgNode.style.display = "none";
@@ -1528,7 +1594,7 @@ let ProfileEditPageClass = (function(){
                 imgNode.style.display = "none";
             } else {
                 imgNode.style.display = "block";
-                imgNode.src = ExtensionLayer.getLocalUrl("img/profile_styles/" + styleSelectNode.value + "/preview.png");
+                imgNode.src = ExtensionResources.getURL("img/profile_styles/" + styleSelectNode.value + "/preview.png");
             }
 
             // Enable the "save" button
@@ -1600,7 +1666,8 @@ let StatsPageClass = (function(){
         }
     }
 
-    async function sortBy(key, personal) {
+    async function sortBy(key, reversed) {
+        let personal = document.querySelector("#personalAchieve");
         if (key === "time") {
             if (!_nodes.time.length) {
                 await addSortMetaData(key, personal.querySelectorAll(".achieveRow"));
@@ -1608,9 +1675,8 @@ let StatsPageClass = (function(){
         }
         
         for (let br of personal.querySelectorAll(":scope > br")) br.remove();
-        for (let item of _nodes[key]) {
-            let node = item[1];
-            personal.insertAdjacentElement("beforeend", node);
+        for (let [, node] of _nodes[key]) {
+            personal.insertAdjacentElement(reversed ? "afterbegin" : "beforeend", node);
         }
     }
 
@@ -1618,26 +1684,17 @@ let StatsPageClass = (function(){
         let personal = document.querySelector("#personalAchieve");
         if (!personal) { return; }
 
-        HTML.beforeBegin("#tabs",
-            `<div id='achievement_sort_options' class='sort_options'>
-                ${Localization.str.sort_by}
-                <span id='achievement_sort_default'>${Localization.str.theworddefault}</span>
-                <span id='achievement_sort_date' class='es_achievement_sort_link'>${Localization.str.date_unlocked}</span>
-            </div>`);
+        document.querySelector("#tabs").insertAdjacentElement("beforebegin", Sortbox.get(
+            "achievements",
+            [
+                ["default", Localization.str.theworddefault],
+                ["time", Localization.str.date_unlocked],
+            ],
+            "default",
+            sortBy
+        ));
 
         addSortMetaData("default", personal.querySelectorAll(".achieveRow"));
-
-        document.querySelector("#achievement_sort_default").addEventListener("click", e => {
-            document.querySelector("#achievement_sort_date").classList.add("es_achievement_sort_link");
-            e.target.classList.remove("es_achievement_sort_link");
-            sortBy("default", personal);
-        });
-
-        document.querySelector("#achievement_sort_date").addEventListener("click", e => {
-            document.querySelector("#achievement_sort_default").classList.add("es_achievement_sort_link");
-            e.target.classList.remove("es_achievement_sort_link");
-            sortBy("time", personal);
-        });
     };
     
 
@@ -1737,20 +1794,21 @@ let InventoryPageClass = (function(){
         if (!giftAppid) { return; }
         // TODO: Add support for package(sub)
 
-        let result = await Background.action('appdetails', { 'appids': giftAppid, 'filters': 'price_overview', } );
-        if (!result[giftAppid] || !result[giftAppid].success) { return; }
-        if (!result[giftAppid]['data']['price_overview']) { return; }
+        let result = await Background.action("appdetails", giftAppid, "price_overview");
+        if (!result || !result.success) { return; }
 
-        let overview = result[giftAppid]['data']['price_overview'];
-        let discount = overview["discount_percent"];
-        let price = new Price(overview['final'] / 100, overview['currency']);
+        let overview = result.data.price_overview;
+        if (!overview) { return; }
+
+        let discount = overview.discount_percent;
+        let price = new Price(overview.final / 100, overview.currency);
 
         itemActions.style.display = "flex";
         itemActions.style.alignItems = "center";
         itemActions.style.justifyContent = "space-between";
 
         if (discount > 0) {
-            let originalPrice = new Price(overview['initial'] / 100, overview['currency']);
+            let originalPrice = new Price(overview.initial / 100, overview.currency);
             HTML.beforeEnd(itemActions,
                 `<div class='es_game_purchase_action' style='margin-bottom:16px'>
                     <div class='es_game_purchase_action_bg'>
@@ -1780,11 +1838,10 @@ let InventoryPageClass = (function(){
         if (quickGrind) { quickGrind.parentNode.remove(); }
 
         let scrapActions = document.querySelector("#iteminfo" + item + "_item_scrap_actions");
-        let turnWord = scrapActions.querySelector("a span").textContent;
 
         let divs = scrapActions.querySelectorAll("div");
         HTML.beforeBegin(divs[divs.length-1],
-            "<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>1-Click " + turnWord + "</span></div>");
+            `<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>${Localization.str.oneclickgoo}</span></div>`);
 
         // TODO: Add prompt?
         document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
@@ -1808,8 +1865,8 @@ let InventoryPageClass = (function(){
         });
     }
 
-    function makeMarketButton(id) {
-        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" style="display:none">
+    function makeMarketButton(id, tooltip) {
+        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" data-tooltip-text="${tooltip}" style="display:none">
                     <span class="item_market_action_button_edge item_market_action_button_left"></span>
                     <span class="item_market_action_button_contents"></span>
                     <span class="item_market_action_button_edge item_market_action_button_right"></span>
@@ -1848,8 +1905,11 @@ let InventoryPageClass = (function(){
             thisItem.classList.add("es-loading");
 
             // Add the links with no data, so we can bind actions to them, we add the data later
-            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId));
-            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId));
+            let diff = SyncedStorage.get("quickinv_diff");
+            HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId, Localization.str.quick_sell_desc.replace("__modifier__", diff)));
+            HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId, Localization.str.instant_sell_desc));
+
+            ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: "community_tooltip"} ));
 
             // Check if price is stored in data
             if (thisItem.classList.contains("es-price-loaded")) {
@@ -1868,7 +1928,7 @@ let InventoryPageClass = (function(){
                     let marketUrl = "https://steamcommunity.com/market/itemordershistogram?language=english&currency=" + walletCurrency + "&item_nameid=" + marketId;
                     let market = await RequestData.getJson(marketUrl);
 
-                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(SyncedStorage.get("quickinv_diff"));
+                    let priceHigh = parseFloat(market.lowest_sell_order / 100) + parseFloat(diff);
                     let priceLow = market.highest_buy_order / 100;
                     // priceHigh.currency == priceLow.currency == Currency.customCurrency, the arithmetic here is in walletCurrency
 
@@ -2068,15 +2128,15 @@ let InventoryPageClass = (function(){
             });
         });
         
-        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info), false);
+        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info));
 
-        Messenger.addMessageListener("sendFee", info => {
-            let sellPrice = info.feeInfo.amount - info.feeInfo.fees;
+        Messenger.addMessageListener("sendFee", async ({ feeInfo, sessionID, global_id, contextID, assetID }) => {
+            let sellPrice = feeInfo.amount - feeInfo.fees;
             let formData = new FormData();
-            formData.append("sessionid", info.sessionID);
-            formData.append("appid", info.global_id);
-            formData.append("contextid", info.contextID);
-            formData.append("assetid", info.assetID);
+            formData.append("sessionid", sessionID);
+            formData.append("appid", global_id);
+            formData.append("contextid", contextID);
+            formData.append("assetid", assetID);
             formData.append("amount", 1);
             formData.append("price", sellPrice);
 
@@ -2088,63 +2148,59 @@ let InventoryPageClass = (function(){
             * referrer: window.location.origin + window.location.pathname
             */
 
-            RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {
-                withCredentials: true
-            }).then(() => {
-                document.querySelector("#es_instantsell" + info.assetID).parentNode.style.display = "none";
+            await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, { withCredentials: true });
 
-                let id = info.global_id + "_" + info.contextID + "_" + info.assetID;
-                let node = document.querySelector("[id='" + id + "']");
-                node.classList.add("btn_disabled", "activeInfo");
-                node.style.pointerEvents = "none";
-            });
-        }, false);
+            document.querySelector(`#es_instantsell${assetID}`).parentNode.style.display = "none";
+
+            let node = document.querySelector(`[id="${global_id}_${contextID}_${assetID}"]`);
+            node.classList.add("btn_disabled", "activeInfo");
+            node.style.pointerEvents = "none";
+        });
     }
 
     function addInventoryGoToPage(){
         if (!SyncedStorage.get("showinvnav")) { return; }
 
+        // todo can this be circumvented?
         DOMHelper.remove("#es_gotopage");
         DOMHelper.remove("#pagebtn_first");
         DOMHelper.remove("#pagebtn_last");
         DOMHelper.remove("#es_pagego");
 
-        let es_gotopage = document.createElement("script");
-        es_gotopage.type = "text/javascript";
-        es_gotopage.id = "es_gotopage";
-        es_gotopage.textContent = `g_ActiveInventory.GoToPage = function(page){
-                  var nPageWidth = this.m_$Inventory.children('.inventory_page:first').width();
-                	var iCurPage = this.m_iCurrentPage;
-                	var iNextPage = Math.min(Math.max(0, --page), this.m_cPages-1);
-                  var iPages = this.m_cPages
-                  var _this = this;
-                  if (iCurPage < iNextPage) {
+        DOMHelper.insertScript({ content:
+            `g_ActiveInventory.GoToPage = function(page) {
+                var nPageWidth = this.m_$Inventory.children('.inventory_page:first').width();
+                var iCurPage = this.m_iCurrentPage;
+                var iNextPage = Math.min(Math.max(0, --page), this.m_cPages-1);
+                var iPages = this.m_cPages
+                var _this = this;
+                if (iCurPage < iNextPage) {
                     if (iCurPage < iPages - 1) {
-                      this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
-                      this.m_$Inventory.css( 'left', '0' );
-                      this.m_$Inventory.animate( {left: -nPageWidth}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
+                        this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
+                        this.m_$Inventory.css( 'left', '0' );
+                        this.m_$Inventory.animate( {left: -nPageWidth}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
                     }
-                  } else if (iCurPage > iNextPage) {
+                } else if (iCurPage > iNextPage) {
                     if (iCurPage > 0) {
-                      this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
-                      this.m_$Inventory.css( 'left', '-' + nPageWidth + 'px' );
-                      this.m_$Inventory.animate( {left: 0}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
+                        this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
+                        this.m_$Inventory.css( 'left', '-' + nPageWidth + 'px' );
+                        this.m_$Inventory.animate( {left: 0}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
                     }
-                  }
                 }
-                function InventoryLastPage(){
-                	g_ActiveInventory.GoToPage(g_ActiveInventory.m_cPages);
-                }
-                function InventoryFirstPage(){
-                	g_ActiveInventory.GoToPage(1);
-                }
-                function InventoryGoToPage(){
-                	var page = $('es_pagenumber').value;
-                	if (isNaN(page)) return;
-                	g_ActiveInventory.GoToPage(parseInt(page));
-                }`;
+            };
 
-        document.documentElement.appendChild(es_gotopage);
+            function InventoryLastPage(){
+                g_ActiveInventory.GoToPage(g_ActiveInventory.m_cPages);
+            }
+            function InventoryFirstPage(){
+                g_ActiveInventory.GoToPage(1);
+            }
+            function InventoryGoToPage(){
+                var page = $('es_pagenumber').value;
+                if (isNaN(page)) return;
+                g_ActiveInventory.GoToPage(parseInt(page));
+            }`
+        }, "es_gotopage");
 
         // Go to first page
         HTML.afterEnd("#pagebtn_previous", "<a id='pagebtn_first' class='pagebtn pagecontrol_element disabled'>&lt;&lt;</a>");
@@ -2726,17 +2782,16 @@ let GameCardPageClass = (function(){
 
     function GameCardPageClass() {
         this.appid = GameId.getAppidFromGameCard(window.location.pathname);
+        this.isFoil = window.location.search.includes("?border=1");
 
         CommunityCommon.addCardExchangeLinks(this.appid);
         this.addMarketLinks();
         this.addFoilLink();
         this.addStoreTradeForumLink();
-        applyLinkButtonsLayout();
     }
 
     GameCardPageClass.prototype.addMarketLinks = async function() {
         let cost = 0;
-        let isFoil = /border=1/i.test(document.URL);
 
         let data;
         try {
@@ -2744,24 +2799,23 @@ let GameCardPageClass = (function(){
                 appid: this.appid,
                 currency: Currency.storeCurrency,
             });
-        } catch(exception) {
-            console.error("Failed to load card prices", exception);
+        } catch (err) {
+            console.error("Failed to load card prices", err);
             return;
         }
 
-        let nodes = document.querySelectorAll(".badge_card_set_card");
-        for (let node of nodes) {
+        for (let node of document.querySelectorAll(".badge_card_set_card")) {
             let cardName = node
                 .querySelector(".badge_card_set_text").textContent
-                .replace(/&amp;/g, '&')
-                .replace(/\(\d+\)/g, '').trim();
+                .replace(/&amp;/g, "&")
+                .replace(/\(\d+\)/g, "").trim();
             let cardData = data[cardName] || data[cardName + " (Trading Card)"];
-            if (isFoil) {
+            if (this.isFoil) {
                 cardData = data[cardName + " (Foil)"] || data[cardName + " (Foil Trading Card)"];
             }
 
             if (cardData) {
-                let marketLink = "https://steamcommunity.com/market/listings/" + cardData.url;
+                let marketLink = `https://steamcommunity.com/market/listings/${cardData.url}`;
                 let cardPrice = new Price(cardData.price, Currency.storeCurrency);
 
                 if (node.classList.contains("unowned")) {
@@ -2785,59 +2839,40 @@ let GameCardPageClass = (function(){
     };
 
     GameCardPageClass.prototype.addFoilLink = function() {
-        let urlSearch = window.location.search;
-        let urlParameters = urlSearch.replace("?","").split("&");
-        let foilIndex = urlParameters.indexOf("border=1");
+        let node = document.querySelector(".gamecards_inventorylink");
+        if (!node) { return; }
 
+        let url = window.location.href;
         let text;
-        let url = window.location.origin + window.location.pathname;
-
-        if (foilIndex !== -1) {
-
-            if (urlParameters.length > 1) {
-                url += "?" + urlParameters.splice(foilIndex, 1).join("&");
-            }
-
+        if (this.isFoil) {
+            url = url.replace(/\?border=1/, "");
             text = Localization.str.view_normal_badge;
-
         } else {
-
-            if (urlParameters[0] === ""){
-                url += "?" + "border=1";
-            }
-
+            url += "?border=1";
             text = Localization.str.view_foil_badge;
         }
 
-        HTML.beforeEnd(".gamecards_inventorylink",
-            `<a class='btn_grey_grey btn_small_thin' href='${url}'><span>${text}</span></a>`);
+        HTML.beforeEnd(node,
+            `<a class="btn_grey_grey btn_small_thin" href="${url}"><span>${text}</span></a>`);
     };
 
     GameCardPageClass.prototype.addStoreTradeForumLink = function() {
-        HTML.beforeEnd(".gamecards_inventorylink",
-            `<div style="float: right">
-                <a class="es_visit_tforum btn_grey_grey btn_medium" href="https://store.steampowered.com/app/${this.appid}">
-    				<span>${Localization.str.visit_store}</span>
-    			</a>
-    			<a class="es_visit_tforum btn_grey_grey btn_medium" href="https://steamcommunity.com/app/${this.appid}/tradingforum/">
-    				<span>${Localization.str.visit_trade_forum}</span>
-    			</a>
-    		</div>`);
+        // TODO certain cards e.g. sale event cards don't have valid forum links
+        let node = document.querySelector(".gamecards_inventorylink");
+        if (!node) { return; }
+
+        HTML.beforeEnd(node,
+            `<div style="float: right;">
+                <a class="btn_grey_grey btn_medium" href="//store.steampowered.com/app/${this.appid}/">
+                    <span>${Localization.str.visit_store}</span>
+                </a>
+                <a class="es_visit_tforum btn_grey_grey btn_medium" href="https://steamcommunity.com/app/${this.appid}/tradingforum/">
+                    <span>${Localization.str.visit_trade_forum}</span>
+                </a>
+            </div>`);
     };
 
-    // Layout for the case when zoomed in (and the buttons are wrapped)
-    function applyLinkButtonsLayout() {
-        let linksDiv = document.querySelector(".gamecards_inventorylink");
-        linksDiv.style.overflow = "auto";
-        // Default is 14px => 14-5 = 9
-        linksDiv.style.marginBottom = "9px";
-
-        linksDiv.querySelectorAll("a").forEach(button => {
-            button.style.marginBottom = "5px";
-        });
-    }
-
-    return GameCardPageClass
+    return GameCardPageClass;
 })();
 
 let FriendsThatPlayPageClass = (function(){
@@ -2868,15 +2903,13 @@ let FriendsThatPlayPageClass = (function(){
         if (!SyncedStorage.get("showallfriendsthatown")) return;
 
         let friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
-        let data = await Background.action('appuserdetails', { 'appids': this.appid, });
-        if (!data[this.appid].success || !data[this.appid].data.friendsown || data[this.appid].data.friendsown.length === 0) {
-            return;
-        }
+        let result = await Background.action("appuserdetails", this.appid);
+        if (!result || !result.success || !result.data || !result.data.friendsown || !result.data.friendsown.length) { return; }
 
         let friendsData = await friendsPromise;
         let friendsHtml = HTMLParser.htmlToDOM(friendsData);
 
-        let friendsOwn = data[this.appid].data.friendsown;
+        let friendsOwn = result.data.friendsown;
 
         let html = `<div class="mainSectionHeader friendListSectionHeader">
                         ${Localization.str.all_friends_own.replace('__friendcount__', friendsOwn.length)}
@@ -2927,60 +2960,49 @@ let FriendsThatPlayPageClass = (function(){
     };
 
     FriendsThatPlayPageClass.prototype.addFriendsPlayTimeSort = function() {
-        let memberList = document.querySelector("#memberList");
 
-        let section = memberList.querySelectorAll(".mainSectionHeader").length;
-        if (section < 3) return; // DLC and unreleased games with no playtime
-        section = section >= 4 ? 1 : 2;
+        let sorted = {};
 
-        HTML.beforeEnd(
-            memberList.querySelector(".mainSectionHeader:nth-child(" + ((section*2)+1) + ")"),
-            ` (<span id='es_default_sort' style='cursor: pointer;'>
-                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.theworddefault)}
-                 </span> | <span id='es_playtime_sort' style='text-decoration: underline;cursor: pointer;'>
-                    ${Localization.str.sort_by_keyword.replace("__keyword__", Localization.str.playtime)}
-                </span>)`);
+        document.querySelector(".friendListSectionHeader").insertAdjacentElement("beforeend", Sortbox.get("friends_that_play", [
+            ["default", Localization.str.theworddefault],
+            ["playtime", Localization.str.playtime],
+        ], "default", onChange));
 
-        memberList.querySelector(".profile_friends:nth-child(" + ((section*2)+2) + ")")
-            .id = "es_friends_default";
-
-        let sorted = document.querySelector("#es_friends_default").cloneNode(true);
-        sorted.id = "es_friends_playtime";
-        sorted.style.display = "none";
-
-        let defaultNode = document.querySelector("#es_friends_default");
-        defaultNode.insertAdjacentElement("afterend", sorted);
-        HTML.afterEnd(defaultNode, "<div style='clear: both'></div>");
-
-        document.querySelector("#es_playtime_sort").addEventListener("click", function(e) {
-            document.querySelector("#es_playtime_sort").style.textDecoration = "none";
-            document.querySelector("#es_default_sort").style.textDecoration = "underline";
-            document.querySelector("#es_friends_default").style.display = "none";
-            document.querySelector("#es_friends_playtime").style.display = "block";
-
-            let friendArray = [];
-            let nodes = document.querySelectorAll("#es_friends_playtime .friendBlock");
-            for (let node of nodes) {
-                friendArray.push([
-                    node,
-                    parseFloat(node.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0])
-                ]);
+        function onChange(key, reversed) {
+            if (!sorted.default) {
+                sorted.default = new Map();
+                for (let block of document.querySelectorAll(".profile_friends")) {
+                    if (block.querySelector(".friendBlockInnerLink")) {
+                        sorted.default.set(block, Array.from(block.querySelectorAll(".friendBlock")));
+                    }
+                }
             }
 
-            friendArray.sort(function(a,b) { return b[1] - a[1]; });
-
-            let playtimeNode = document.querySelector("#es_friends_playtime");
-            for (let item of friendArray) {
-                playtimeNode.append(item[0])
+            // This only happens for the first sort after playtime
+            if (!sorted[key]) {
+                if (key === "playtime") {
+                    sorted[key] = new Map();
+                    for (let [block, friends] of sorted.default) {
+                        let friendsCopy = friends.slice();
+                        friendsCopy.sort((a, b) =>
+                            parseFloat(b.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0]) -
+                            parseFloat(a.querySelector(".friendSmallText").textContent.match(/(\d+(\.\d+)?)/)[0])
+                        );
+                        sorted[key].set(block, friendsCopy);
+                    }
+                }                
             }
-        });
 
-        document.querySelector("#es_default_sort").addEventListener("click", function(e) {
-            document.querySelector("#es_default_sort").style.textDecoration = "none";
-            document.querySelector("#es_playtime_sort").style.textDecoration = "underline";
-            document.querySelector("#es_friends_playtime").style.display = "none";
-            document.querySelector("#es_friends_default").style.display = "block";
-        });
+            for (let [block, friends] of sorted[key]) {
+                for (let friend of friends) {
+                    if (reversed) {
+                        block.insertAdjacentElement("afterbegin", friend);
+                    } else {
+                        block.closest(".profile_friends").querySelector(":scope > :last-child").insertAdjacentElement("beforebegin", friend);
+                    }
+                }
+            }
+        }
     };
 
     return FriendsThatPlayPageClass;
@@ -2990,82 +3012,271 @@ let FriendsPageClass = (function(){
 
     function FriendsPageClass() {
         this.addSort();
+        this.addFriendsInviteButton();
     }
 
-    FriendsPageClass.prototype.addSort = async function() {
-        let friends = document.querySelectorAll(".friend_block_v2.persona.offline");
-        if (friends.length === 0) { return; }
+    FriendsPageClass.prototype.addSort = function() {
+        let offlineFriends = document.querySelectorAll(".friend_block_v2.persona.offline");
+        if (offlineFriends.length === 0 || !document.querySelector("#manage_friends_control")) { return; }
 
-        let data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
-        let dom = HTMLParser.htmlToElement(data);
+        let friendsFetched = false;
 
-        let sorted = { default: [], lastonline: [] };
+        offlineFriends.forEach((friend, i) => friend.dataset.esSortDefault = i);
 
-        let nodes = dom.querySelectorAll(".friend_block_v2.persona.offline");
-        for (let node of nodes) {
-            let lastOnline = node.querySelector(".friend_last_online_text").textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
-            if (lastOnline) {
-                let days = parseInt(lastOnline[1]) || 0;
-                let hours = parseInt(lastOnline[2]) || 0;
-                let minutes = parseInt(lastOnline[3]) || 0;
-                let downtime = (days * 24 + hours) * 60 + minutes;
-                sorted.lastonline.push([node, downtime]);
-            } else {
-                sorted.lastonline.push([node, Infinity]);
-            }
-
-            sorted.default.push([node]);
-        }
-
-        sorted.lastonline.sort(function(a, b) {
-            return b[1] - a[1];
-        });
-
-        function sortFriends(sortBy) {
+        async function sortFriends(sortBy, reversed) {
             sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
 
-            let options = document.querySelector("#friends_sort_options");
-            let linkNode = options.querySelector("span[data-esi-sort='"+sortBy+"']");
-            if (!linkNode.classList.contains("es_friends_sort_link")) { return; }
+            if (sortBy === "lastonline" && !friendsFetched) {
+                
+                friendsFetched = true;
+                let data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
+                let dom = HTMLParser.htmlToElement(data);
 
-            let nodes = options.querySelectorAll("span");
-            for (let node of nodes) {
-                node.classList.toggle("es_friends_sort_link", node.dataset.esiSort !== sortBy);
+                for (let friend of dom.querySelectorAll(".friend_block_v2.persona.offline")) {
+                    let lastOnline = friend.querySelector(".friend_last_online_text").textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
+                    let time = Infinity;
+                    if (lastOnline) {
+                        let days = parseInt(lastOnline[1]) || 0;
+                        let hours = parseInt(lastOnline[2]) || 0;
+                        let minutes = parseInt(lastOnline[3]) || 0;
+                        let downtime = (days * 24 + hours) * 60 + minutes;
+                        time = downtime;
+                    }
+                    document.querySelector(`.friend_block_v2.persona.offline[data-steamid="${friend.dataset.steamid}"]`).dataset.esSortTime = time;
+                }
             }
 
-            // Remove the current offline nodes
-            for (let node of document.querySelectorAll('div.persona.offline[data-steamid]')) {
-                node.remove();
-            }
+            let offlineBlock = document.querySelector("#state_offline");
+            let curOfflineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
 
-            // So we can replace them in sorted order
-            let offlineNode = document.querySelector("#state_offline");
-            for (let item of sorted[sortBy]) {
-                offlineNode.insertAdjacentElement("afterend", item[0]);
-            }
+            let property = `esSort${sortBy === "default" ? "Default" : "Time"}`;
+            curOfflineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
 
-            SyncedStorage.set("sortfriendsby", sortBy);
+            for (let friend of curOfflineFriends) {
+                if (reversed) {
+                    offlineBlock.insertAdjacentElement("afterend", friend);
+                } else {
+                    offlineBlock.parentElement.appendChild(friend);
+                }
+            }
         }
 
-        let sortOptions = `<div id="friends_sort_options">
-                            ${Localization.str.sort_by}
-                            <span data-esi-sort='default'>${Localization.str.theworddefault}</span>
-                            <span data-esi-sort='lastonline' class="es_friends_sort_link">${Localization.str.lastonline}</span>
-                          </div>`;
+        let sortBy = SyncedStorage.get("sortfriendsby");
+        document.querySelector("#manage_friends_control").insertAdjacentElement("beforebegin", Sortbox.get(
+            "friends",
+            [["default", Localization.str.theworddefault], ["lastonline", Localization.str.lastonline]],
+            sortBy,
+            sortFriends,
+            "sortfriendsby")
+        );
+    };
 
-        HTML.beforeBegin("#manage_friends_control", sortOptions);
+    FriendsPageClass.prototype.addFriendsInviteButton = async function() {
+        let params = new URLSearchParams(window.location.search);
+        if (!params.has("invitegid")) { return; }
 
-        document.querySelector("#friends_sort_options").addEventListener("click", function(e) {
-            if (!e.target.closest("[data-esi-sort]")) { return; }
-            sortFriends(e.target.dataset.esiSort);
-        });
-
-        sortFriends(SyncedStorage.get("sortfriendsby"));
+        let groupId = params.get("invitegid");
+        HTML.afterBegin("#manage_friends > div:nth-child(2)", `<span class="manage_action btnv6_lightblue_blue btn_medium" id="invitetogroup"><span>${Localization.str.invite_to_group}</span></span>`);
+        ExtensionLayer.runInPageContext(`function(){
+            ToggleManageFriends();
+            $J("#invitetogroup").on("click", function() {
+                let groupId = "${groupId}";
+                let friends = GetCheckedAccounts("#search_results > .selectable.selected:visible");
+                InviteUserToGroup(null, groupId, friends);
+            });
+        }`);
     };
 
     return FriendsPageClass;
 })();
 
+let GroupsPageClass = (function(){
+
+    function GroupsPageClass() {
+        this.addSort();
+        this.addManageBtn();
+    }
+
+    GroupsPageClass.prototype.addSort = function() {
+        let groups = Array.from(document.querySelectorAll(".group_block"));
+        if (groups.length === 0) { return; }
+
+        groups.forEach((group, i) => {
+            let name = group.querySelector(".groupTitle > a").textContent;
+            let membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
+            group.dataset.esSortdefault = i;
+            group.dataset.esSortnames = name;
+            group.dataset.esSortmembers = membercount;
+        });
+
+        function sortGroups(sortBy, reversed) {
+            let searchResults = document.querySelector("#search_results_empty");
+            let property = `esSort${sortBy}`;
+            groups.sort((a, b) => {
+                let propA = a.dataset[property];
+                let propB = b.dataset[property];
+                switch(sortBy) {
+                    case "default":
+                        return Number(propA) - Number(propB);
+                    case "members":
+                        return Number(propB) - Number(propA);
+                    case "names": {
+                        if (propA.toLowerCase() < propB.toLowerCase()) { return -1; }
+                        if (propA.toLowerCase() > propB.toLowerCase()) { return 1; }
+                        return 0;
+                    }
+                }
+            });
+
+            for (let group of groups) {
+                if (reversed) {
+                    searchResults.insertAdjacentElement("afterend", group);
+                } else {
+                    searchResults.parentElement.appendChild(group);
+                }
+            }
+        }
+
+        // move the search bar to the same position as on friends page
+        let container = HTML.wrap("#search_text_box", '<div class="searchBarContainer"></div>');
+        document.querySelector("#search_results").insertAdjacentElement("beforebegin", container);
+
+        document.querySelector("span.profile_groups.title").insertAdjacentElement("afterend", Sortbox.get(
+            "groups",
+            [["default", Localization.str.theworddefault], ["members", Localization.str.members], ["names", Localization.str.name]],
+            SyncedStorage.get("sortgroupsby"),
+            sortGroups,
+            "sortgroupsby")
+        );
+        document.querySelector(".es-sortbox").style.flex = 2;
+    };
+
+    GroupsPageClass.prototype.addManageBtn = async function() {
+        let groups = document.querySelectorAll(".group_block");
+        if (groups.length === 0) { return; }
+        if (!groups[0].querySelector(".actions")) { return; }
+
+        let groupsStr = Localization.str.groups;
+
+        HTML.beforeEnd(".title_bar", 
+            `<button id="manage_friends_control" class="profile_friends manage_link btnv6_blue_hoverfade btn_medium btn_uppercase">
+                <span>${groupsStr.manage_groups}</span>
+            </button>`);
+
+        HTML.afterEnd(".title_bar",
+            `<div id="manage_friends" class="manage_friends_panel">
+                <div class="row">${groupsStr.action_groups}
+                    <span class="row">
+                        <span class="dimmed">${groupsStr.select}</span>
+                        <span class="selection_type" id="es_select_all">${Localization.str.all}</span>
+                        <span class="selection_type" id="es_select_none">${Localization.str.none}</span>
+                        <span class="selection_type" id="es_select_inverse">${Localization.str.inverse}</span>
+                    </span>
+                </div>
+                <div class="row">
+                    <span class="manage_action anage_action btnv6_lightblue_blue btn_medium btn_uppercase" id="es_leave_groups">
+                        <span>${groupsStr.leave}</span>
+                    </span>
+                    <span id="selected_msg_err" class="selected_msg error hidden"></span>
+                    <span id="selected_msg" class="selected_msg hidden">${groupsStr.selected.replace("__n__", `<span id="selected_count"></span>`)}</span>
+                </div>
+                <div class="row"></div>
+            </div>`);
+
+        for (let group of groups) {
+            group.classList.add("selectable");
+            HTML.afterBegin(group, 
+                `<div class="indicator select_friend">
+                    <input class="select_friend_checkbox" type="checkbox">
+                </div>`);
+            group.querySelector(".select_friend").addEventListener("click", () => {
+                group.classList.toggle("selected");
+                group.querySelector(".select_friend_checkbox").checked = group.classList.contains("selected");
+                ExtensionLayer.runInPageContext(function() { UpdateSelection(); });
+            });    
+        }
+
+        document.querySelector("#manage_friends_control").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { ToggleManageFriends(); });
+        });
+
+        document.querySelector("#es_select_all").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { SelectAll(); });
+        });
+
+        document.querySelector("#es_select_none").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { SelectNone(); });
+        });
+
+        document.querySelector("#es_select_inverse").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(function() { SelectInverse(); });
+        });
+
+        document.querySelector("#es_leave_groups").addEventListener("click", () => leaveGroups());
+
+        async function displayAdminConfirmation(name, id) {
+            let body = groupsStr.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
+            ExtensionLayer.runInPageContext(`function(){
+                let prompt = ShowConfirmDialog("${groupsStr.leave}", "${body}");
+                prompt.done(function(result) {
+                    Messenger.postMessage("confirm#${id}", result);
+                }).fail(function() {
+                    Messenger.postMessage("confirm#${id}");
+                });
+            }`);
+            
+            let result = await Messenger.onMessage(`confirm#${id}`);
+            if (result === "OK") {
+                return true;
+            }
+
+            return false;
+        }
+
+        async function leaveGroups() {
+            for (let group of groups) {
+                if (!group.classList.contains("selected")) { continue; }
+
+                let actions = group.querySelector(".actions");
+                let admin = actions.querySelector("[href*='/edit']");
+                let split = actions.querySelector("[onclick*=ConfirmLeaveGroup]").getAttribute("onclick").split(/'|"/);
+                let id = split[1];
+                if (admin) {
+                    let name = split[3]
+                    let cont = await displayAdminConfirmation(name, id);
+                    if (!cont) {
+                        group.querySelector(".select_friend").click();
+                        continue;
+                    }
+                }
+                let res = await leaveGroup(id).catch(err => console.error(err));
+
+                if (!res || !res.success) {
+                    console.error("Failed to leave group " + id);
+                    continue;
+                }
+
+                group.style.opacity = 0.3;
+                group.querySelector(".select_friend").click();
+            }
+        }
+
+        function leaveGroup(id) {
+            let formData = new FormData();
+            formData.append("sessionid", User.getSessionId());
+            formData.append("steamid", User.steamId);
+            formData.append("ajax", 1);
+            formData.append("action", "leave_group");
+            formData.append("steamids[]", id);
+
+            return RequestData.post(User.profileUrl + "/friends/action", formData, {
+                withCredentials: true
+            }, "json");
+        }
+    };
+
+    return GroupsPageClass;
+})();
 
 let MarketListingPageClass = (function(){
 
@@ -3154,29 +3365,24 @@ let MarketPageClass = (function(){
 
     function MarketPageClass() {
 
-        Inventory.then(() => {
-            this.highlightMarketItems();
+        this.highlightMarketItems();
 
-            let that = this;
-            let observer = new MutationObserver(mutations => {
-                mutations.forEach(mutation => {
-                    for (let node of mutation.addedNodes) {
-                        if (node.classList && node.classList.contains("market_listing_row_link")) {
-                            that.highlightMarketItems();
-                            return;
-                        }
+        let that = this;
+        let observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                for (let node of mutation.addedNodes) {
+                    if (node.classList && node.classList.contains("market_listing_row_link")) {
+                        that.highlightMarketItems();
+                        return;
                     }
-                });
+                }
             });
-
-            observer.observe(
-                document.querySelector("#mainContents"),
-                {childList: true, subtree: true}
-            );
-
-        }).catch(result => {
-            console.error("Failed to load inventory", result);
         });
+
+        observer.observe(
+            document.querySelector("#mainContents"),
+            {childList: true, subtree: true}
+        );
 
         // TODO shouldn't this be global? Do we want to run on other pages?
         if (window.location.pathname.match(/^\/market\/$/)) {
@@ -3189,14 +3395,19 @@ let MarketPageClass = (function(){
 
     }
 
-    // TODO cache data
     async function loadMarketStats() {
-
-        let purchaseTotal = 0;
-        let saleTotal = 0;
+        let { startListing, purchaseTotal, saleTotal } = LocalStorage.get("market_stats", { startListing: null, purchaseTotal: 0, saleTotal: 0 });
+        let curStartListing = null;
         let transactions = new Set();
+        let stop = false;
 
-        function updatePrices(dom) {
+        // If startListing is missing, reset cached data to avoid inaccurate results.
+        if (startListing === null && (purchaseTotal > 0 || saleTotal > 0)) {
+            purchaseTotal = 0;
+            saleTotal = 0;
+        }
+
+        function updatePrices(dom, start) {
 
             let nodes = dom.querySelectorAll(".market_listing_row");
             for (let node of nodes) {
@@ -3218,6 +3429,14 @@ let MarketPageClass = (function(){
                     isPurchase = false;
                 } else {
                     continue;
+                }
+                if (!curStartListing && start === 0) {
+                    curStartListing = node.id;
+                }
+                // If reached cached data, then stop.
+                if (node.id === startListing) {
+                    stop = true;
+                    break;
                 }
 
                 let priceNode = node.querySelector(".market_listing_price");
@@ -3244,8 +3463,8 @@ let MarketPageClass = (function(){
             let saleTotalPrice = new Price(saleTotal, Currency.storeCurrency);
             HTML.inner(
                 "#es_market_summary",
-                `<div>${Localization.str.purchase_total}: <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
-                <div>${Localization.str.sales_total}: <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
+                `<div>${Localization.str.purchase_total} <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
+                <div>${Localization.str.sales_total} <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
                 <div>${netText}<span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
             );
         }
@@ -3253,7 +3472,6 @@ let MarketPageClass = (function(){
         const pageSize = 500;
         let pages = -1;
         let currentPage = 0;
-        let currentCount = 0;
         let totalCount = null;
         let pageRequests = [];
         let failedRequests = 0;
@@ -3293,7 +3511,7 @@ let MarketPageClass = (function(){
 
         try {
             pageRequests.push({ 'start': 0, 'attempt': 0, 'lastAttempt': 0, });
-            while (pageRequests.length > 0) {
+            while (pageRequests.length > 0 && !stop) {
                 let t = await nextRequest();
                 if (pages < 0 && t > 0) {
                     totalCount = t;
@@ -3306,15 +3524,17 @@ let MarketPageClass = (function(){
                 progressNode.textContent = `${++currentPage}${failedRequests > 0 ? -failedRequests : ''}/${pages < 0 ? "?" : pages} (${transactions.size}/${totalCount})`;
             }
         } catch (err) {
+            failedRequests += 1;
             console.error(err);
         }
 
-        if (failedRequests == 0) {
+        if (failedRequests === 0) {
             progressNode.textContent = '';
+            LocalStorage.set("market_stats", { startListing: curStartListing, purchaseTotal, saleTotal });
             return true;
         }
 
-        progressNode.textContent = `${failedRequests} request(s) failed. Retrieved ${transactions.size} of ${totalCount} transactions.`; // FIXME Localize
+        progressNode.textContent = Localization.str.transactionStatus.replace("__failed__", failedRequests).replace("__size__", transactions.size).replace("__total__", totalCount);
         return false;
     }
 
@@ -3331,7 +3551,7 @@ let MarketPageClass = (function(){
                 </div>`);
 
         let node = document.querySelector("#es_market_summary_status");
-        HTML.inner(node, `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>Load Market Stats</span></a>`); // FIXME Localize
+        HTML.inner(node, `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>${Localization.str.load_market_stats}</span></a>`);
 
         async function startLoadingStats() {
             HTML.inner(node, `<img id="es_market_summary_throbber" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
@@ -3369,7 +3589,7 @@ let MarketPageClass = (function(){
 
     // Show the lowest market price for items you're selling
     MarketPageClass.prototype.addLowestMarketPrice = function() {
-        if (!User.isSignedIn) { return; }
+        if (!User.isSignedIn || !SyncedStorage.get("showlowestmarketprice") || SyncedStorage.get("hideactivelistings")) { return; }
 
         let country = User.getCountry();
         let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
@@ -3463,9 +3683,9 @@ let MarketPageClass = (function(){
                             done = true;
                             loadedMarketPrices[marketHashName] = data;
                             priceData = data;
-                        } catch(errorCode) {
+                        } catch(err) {
                             // Too Many Requests
-                            if (errorCode === 429) {
+                            if (err instanceof HTTPError && err.code === 429) {
                                 await sleep(30000);
                                 if (node) {
                                     done = false;
@@ -3643,7 +3863,7 @@ let MarketPageClass = (function(){
         }
     };
 
-    MarketPageClass.prototype.highlightMarketItems = function() {
+    MarketPageClass.prototype.highlightMarketItems = async function() {
         if (!SyncedStorage.get("highlight_owned")) { return; }
 
         let nodes = document.querySelectorAll(".market_listing_row_link");
@@ -3651,7 +3871,8 @@ let MarketPageClass = (function(){
             let m = node.href.match(/market\/listings\/753\/(.+?)(\?|$)/);
             if (!m) { continue; }
 
-            if (Inventory.hasInInventory6(decodeURIComponent(m[1]))) {
+            // todo Collect hashes and query them all at once
+            if (await Inventory.hasInInventory6(decodeURIComponent(m[1]))) {
                 Highlights.highlightOwned(node.querySelector("div"));
             }
         }
@@ -3667,6 +3888,7 @@ let CommunityAppPageClass = (function(){
 
         this.addAppPageWishlist();
         this.addSteamDbLink();
+        this.addBartervgLink();
         this.addItadLink();
         AgeCheck.sendVerification();
 
@@ -3685,12 +3907,15 @@ let CommunityAppPageClass = (function(){
 
         let nameNode = document.querySelector(".apphub_AppName");
 
-        if (DynamicStore.isOwned(this.appid)) {
+        // todo add other highlights
+        let appStatus = await DynamicStore.getAppStatus(`app/${this.appid}`);
+
+        if (appStatus.owned) {
             nameNode.style.color = SyncedStorage.get("highlight_owned_color");
             return;
         }
 
-        if (DynamicStore.isWishlisted(this.appid)) {
+        if (appStatus.wishlisted) {
             nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
             return;
         }
@@ -3719,18 +3944,20 @@ let CommunityAppPageClass = (function(){
 
     CommunityAppPageClass.prototype.addSteamDbLink = function() {
         if (!SyncedStorage.get("showsteamdb")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/steamdb_store.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; SteamDB</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;SteamDB</span></a>`);
     };
 
     CommunityAppPageClass.prototype.addItadLink = function() {
         if (!SyncedStorage.get("showitadlinks")) { return; }
-        let bgUrl = ExtensionLayer.getLocalUrl("img/line_chart.png");
-
         HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16" style="background-image:url('${bgUrl}')"></i>&nbsp; ITAD</span></a>`);
+            ` <a class="btnv6_blue_hoverfade btn_medium itad_ico" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;ITAD</span></a>`);
+    };
+
+    CommunityAppPageClass.prototype.addBartervgLink = function() {
+        if (!SyncedStorage.get("showbartervg")) { return; }
+        HTML.beforeEnd(".apphub_OtherSiteInfo",
+            ` <a class="btnv6_blue_hoverfade btn_medium bartervg_ico" target="_blank" href="https://barter.vg/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;Barter.vg</span></a>`);
     };
 
     return CommunityAppPageClass;
@@ -3752,29 +3979,102 @@ let GuidesPageClass = (function(){
     GuidesPageClass.prototype.removeGuidesLanguageFilter = function() {
         if (!SyncedStorage.get("removeguideslanguagefilter")) { return; }
 
-        let language = Language.getCurrentSteamLanguage();
-        let regex = new RegExp(language, "i");
         let nodes = document.querySelectorAll("#rightContents .browseOption");
         for (let node of nodes) {
             let onclick = node.getAttribute("onclick");
 
-            if (regex.test(onclick)) {
-                node.removeAttribute("onclick"); // remove onclick, we have link anyway, why do they do this?
-                // node.setAttribute("onclick", onclick.replace(/requiredtags[^&]+&?/, ""))
-            }
-
             let linkNode = node.querySelector("a");
-            if (regex.test(linkNode.href)) {
-                linkNode.href = linkNode.href.replace(/requiredtags[^&]+&?/, "");
+            linkNode.href = linkNode.href.replace(/requiredtags[^&]+/, "requiredtags[]=-1");
+
+            if (onclick) {
+                let url = linkNode.href;
+                node.removeAttribute("onclick");
+                node.addEventListener("click", function() {
+                    window.location.href = url;
+                });
             }
+        }
+
+        nodes = document.querySelectorAll(".guides_home_view_all_link > a, .guide_home_category_selection");
+        for (let node of nodes) {
+            node.href = node.href.replace(/&requiredtags[^&]+$/, "");
         }
     };
 
     return GuidesPageClass;
 })();
 
+let WorkshopPageClass = (function(){
 
-class WorkshopPageClass {
+    function WorkshopPageClass() {
+        this.loadLastState();
+        this.initAjaxBrowse();
+    }
+
+    WorkshopPageClass.prototype.loadLastState = function() {
+        let url = new URL(window.location.href);
+
+        if (url.searchParams && url.searchParams.has("browsesort")) {
+            LocalStorage.set("workshop_state", url.search);
+            return;
+        }
+
+        let search = LocalStorage.get("workshop_state");
+        url = new URL("https://steamcommunity.com/workshop/" + search);
+        let query = url.searchParams.get("browsesort");
+        this.changeTab(query);
+    };
+
+    WorkshopPageClass.prototype.initAjaxBrowse = function() {
+        ExtensionLayer.runInPageContext(function() {
+            $J(".browseOption").get().forEach(node => node.onclick = () => false);
+        });
+
+        document.querySelectorAll(".browseOption").forEach(tab => {
+            tab.addEventListener("click", () => {
+                let a = tab.querySelector("a[href]");
+                let url = new URL("https://steamcommunity.com/workshop/" + a.href);
+                let query = url.searchParams.get("browsesort");
+                LocalStorage.set("workshop_state", url.search);
+                window.history.pushState(null, null, url.search);
+                this.changeTab(query);
+            });
+        });
+    };
+
+    WorkshopPageClass.prototype.changeTab = async function(query, start=0, count=8) {
+        let tab = document.querySelector("." + query);
+        if (tab.hasAttribute("disabled")) { return; }
+
+        tab.setAttribute("disabled", "disabled");
+        
+        let image = document.querySelector(".browseOptionImage");
+        tab.parentNode.insertAdjacentElement("afterbegin", image);
+
+        document.querySelectorAll(".browseOption").forEach(tab => tab.classList.add("notSelected"));
+        tab.classList.remove("notSelected");
+
+        let container = document.querySelector("#workshop_appsRows");
+        HTML.inner(container, '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin: 170px auto;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div></div>');
+
+        let url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
+        let result = JSON.parse(await RequestData.getHttp(url));
+        HTML.inner(container, result.results_html);
+        tab.removeAttribute("disabled");
+
+        ExtensionLayer.runInPageContext(`function() {
+            g_oSearchResults.m_iCurrentPage = 0;
+            g_oSearchResults.m_strQuery = "${query}";
+            g_oSearchResults.m_cTotalCount = ${result.total_count};
+            g_oSearchResults.m_cPageSize = ${count};
+            g_oSearchResults.UpdatePagingDisplay();
+        }`);
+    };
+
+    return WorkshopPageClass;
+})();
+
+class SharedFilesPageClass {
     constructor() {
         new MediaPage().workshopPage();
         //media.initHdPlayer();
@@ -3788,43 +4088,49 @@ let WorkshopBrowseClass = (function(){
     }
 
     WorkshopBrowseClass.prototype.addSubscriberButtons = function() {
+        if (!User.isSignedIn) { return; }
+
         let appid = GameId.getAppidUriQuery(window.location.search);
         if (!appid) { return; }
-        if (!document.querySelector(".workshopBrowsePagingInfo")) { return; }
 
-        let subscriberButtons = `
-            <div class="rightSectionTopTitle">${Localization.str.subscriptions}:</div>
+        let pagingInfo = document.querySelector(".workshopBrowsePagingInfo");
+        if (!pagingInfo) { return; }
+
+        let workshopStr = Localization.str.workshop;
+
+        HTML.beforeBegin(".panel > .rightSectionTopTitle",
+            `<div class="rightSectionTopTitle">${workshopStr.subscriptions}:</div>
             <div id="es_subscriber_container" class="rightDetailsBlock">
-                <div style="position:relative;">
+                <div style="position: relative;">
                     <div class="browseOption mostrecent">
-                        <a class="es_subscriber" data-method="subscribe">${Localization.str.subscribe_all}</a>
+                        <a class="es_subscriber" data-method="subscribe">${workshopStr.subscribe_all}</a>
                     </div>
                 </div>
-                <div style="position:relative;">
+                <div style="position: relative;">
                     <div class="browseOption mostrecent">
-                        <a class="es_subscriber" data-method="unsubscribe">${Localization.str.unsubscribe_all}</a>
+                        <a class="es_subscriber" data-method="unsubscribe">${workshopStr.unsubscribe_all}</a>
                     </div>
                 </div>
                 <hr>
-            </div>`;
+            </div>`);
 
-        HTML.beforeBegin(".panel > .rightSectionTopTitle", subscriberButtons);
-
-        document.querySelector("#es_subscriber_container").addEventListener("click", event => {
-            let method = event.target.closest(".es_subscriber").dataset.method;
-            let total = parseInt(
-                document.querySelector(".workshopBrowsePagingInfo").textContent
-                    .replace(/\d+-\d+/g, "")
-                    .match(/\d+/g)[0]);
+        document.querySelector("#es_subscriber_container").addEventListener("click", e => {
+            let method = e.target.closest(".es_subscriber").dataset.method;
+            let total = Math.max(...pagingInfo.textContent.replace(/,/g, "").match(/\d+/g));
 
             startSubscriber(method, total);
         });
 
-        function startSubscriber(method, total) {
-            let i = -1;
+        async function startSubscriber(method, total) {
+            let completed = 0;
+            let failed = 0;
+
+            let statusTitle = workshopStr[method + "_all"];
+            let statusString = workshopStr[method + "_confirm"]
+                .replace("__count__", total);
 
             ExtensionLayer.runInPageContext(`function(){
-                var prompt = ShowConfirmDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_confirm"].replace("__count__", total)}\`);
+                let prompt = ShowConfirmDialog("${statusTitle}", "${statusString}");
                 prompt.done(function(result) {
                     if (result == "OK") {
                         Messenger.postMessage("startSubscriber");
@@ -3833,57 +4139,217 @@ let WorkshopBrowseClass = (function(){
             }`);
 
             function updateWaitDialog() {
+                let statusString = workshopStr[method + "_loading"]
+                    .replace("__i__", completed)
+                    .replace("__count__", total);
+
+                if (failed) {
+                    statusString += workshopStr.failed.replace("__n__", failed);
+                }
+
+                let modal = document.querySelector(".newmodal_content");
+                if (!modal) {
+                    let statusTitle = workshopStr[method + "_all"];
+                    ExtensionLayer.runInPageContext(`function() {
+                        if (window.dialog) {
+                            window.dialog.Dismiss();
+                        }
+                        
+                        window.dialog = ShowBlockingWaitDialog("${statusTitle}", "${statusString}");
+                    }`);
+                } else {
+                    modal.innerText = statusString;
+                }
+            }
+
+            function showResults() {
+                let statusTitle = workshopStr[method + "_all"];
+                let statusString = workshopStr.finished
+                    .replace("__success__", completed - failed)
+                    .replace("__fail__", failed);
+
                 ExtensionLayer.runInPageContext(`function() {
                     if (window.dialog) {
                         window.dialog.Dismiss();
                     }
-
-                    window.dialog = ShowBlockingWaitDialog("${Localization.str[method + "_all"]}", \`${Localization.str[method + "_loading"].replace("__i__", ++i).replace("__count__", total)}\`);
-                }`)
+                    
+                    window.dialog = ShowConfirmDialog("${statusTitle}", "${statusString}")
+                        .done(function(result) {
+                            if (result == "OK") {
+                                window.location.reload();
+                            }
+                        });
+                }`);
             }
 
             function changeSubscription(id) {
-                return new Promise(function(resolve) {
-                    let formData = new FormData();
-                    formData.append("sessionid", User.getSessionId());
-                    formData.append("appid", appid);
-                    formData.append("id", id);
+                let formData = new FormData();
+                formData.append("sessionid", User.getSessionId());
+                formData.append("appid", appid);
+                formData.append("id", id);
 
-                    RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
-                        withCredentials: true
-                    }).then(function() {
-                        updateWaitDialog();
-                        resolve();
-                    });
+                return RequestData.post("https://steamcommunity.com/sharedfiles/" + method, formData, {
+                    withCredentials: true
+                }, true)
+                .then(function(res) {
+                    if (!res || !res.success) {
+                        throw new Error("Bad response");
+                    }
+                })
+                .catch(function(err) {
+                    failed++;
+                    console.error(err);
+                })
+                .finally(function() {
+                    completed++;
+                    updateWaitDialog();
                 });
             }
 
-            Messenger.addMessageListener("startSubscriber", async function() {
+            Messenger.onMessage("startSubscriber").then(async () => {
                 updateWaitDialog();
 
+                function canSkip(method, node) {
+                    if (method === "subscribe") {
+                        return node && node.style.display !== "none";
+                    }
+
+                    if (method === "unsubscribe") {
+                        return !node || node.style.display === "none";
+                    }
+
+                    return false;
+                }
+
+                let parser = new DOMParser();
                 let workshopItems = [];
                 for (let p = 1; p <= Math.ceil(total / 30); p++) {
                     let url = new URL(window.location.href);
                     url.searchParams.set("p", p);
                     url.searchParams.set("numperpage", 30);
     
-                    let result = await RequestData.getHttp(url.toString());
-                    let xmlDoc = new DOMParser().parseFromString(result, "text/html");
+                    let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+                    if (!result) {
+                        console.error("Failed to request " + url.toString());
+                        continue;
+                    }
 
-                    for (let node of xmlDoc.querySelectorAll(".workshopItemPreviewHolder")) {
+                    let xmlDoc = parser.parseFromString(result, "text/html");
+                    for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
+                        let subNode = node.querySelector(".user_action_history_icon.subscribed");
+                        if (canSkip(method, subNode)) { continue; }
+                    
+                        node = node.querySelector(".workshopItemPreviewHolder");
                         workshopItems.push(node.id.replace("sharedfile_", ""))
                     }
                 }
+
+                total = workshopItems.length;
+                updateWaitDialog();
     
-                Promise.all(
-                    workshopItems
-                        .map(id => changeSubscription(id)))
-                        .finally(() => { location.reload(); });
-            }, true)
+                return Promise.all(workshopItems.map(id => changeSubscription(id)))
+                    .finally(showResults);
+            });            
         }
     };
 
     return WorkshopBrowseClass;
+})();
+
+let EditGuidePageClass = (function(){
+
+    function EditGuidePageClass() {
+        this.allowMultipleLanguages();
+        this.addCustomTags();
+        this.rememberTags();
+    }
+
+    function addTag(name, checked=true) {
+        name = HTML.escape(name);
+        let attr = checked ? " checked" : "";
+        let tag = `<div><input type="checkbox" name="tags[]" value="${name}" class="inputTagsFilter"${attr}>${name}</div>`;
+        HTML.beforeBegin("#es_add_tag", tag);
+    }
+
+    EditGuidePageClass.prototype.allowMultipleLanguages = function() {
+        document.getElementsByName("tags[]").forEach(tag => tag.type = "checkbox");
+    };
+
+    EditGuidePageClass.prototype.addCustomTags = function() {
+        let langSection = document.querySelector("#checkboxgroup_1");
+        if (!langSection) { return; }
+
+        Messenger.addMessageListener("addtag", function(name) {
+            addTag(name, true);
+        });
+        
+        HTML.afterEnd(langSection,
+            `<div class="tag_category_container" id="checkboxgroup_2">
+                <div class="tag_category_desc">${Localization.str.custom_tags}</div>
+                <div><a style="margin-top: 8px;" class="btn_blue_white_innerfade btn_small_thin" id="es_add_tag">
+                    <span>${Localization.str.add_tag}</span>
+                </a></div>
+            </div>`);
+
+        ExtensionLayer.runInPageContext(`function() {
+            $J("#es_add_tag").on("click", () => {
+                let Modal = ShowConfirmDialog("${Localization.str.custom_tags}", \`<div class="commentthread_entry_quotebox"><textarea placeholder="${Localization.str.enter_tag}" class="commentthread_textarea es_tag" rows="1"></textarea></div>\`);
+                
+                let elem = $J(".es_tag");
+                let tag = elem.val();
+
+                function done() {
+                    if (tag.trim().length === 0) { return; }
+                    tag = tag[0].toUpperCase() + tag.slice(1);
+                    Messenger.postMessage("addtag", tag);
+                }
+
+                elem.on("keydown paste input", function(e) {
+                    tag = elem.val();
+                    if (e.key == "Enter") {
+                        Modal.Dismiss();
+                        done();
+                        return;
+                    }
+                });
+
+                Modal.done(done);
+            });
+        }`);
+    };
+
+    EditGuidePageClass.prototype.rememberTags = function() {
+        let submitBtn = document.querySelector("[href*=SubmitGuide]");
+        if (!submitBtn) { return; }
+
+        let params = new URLSearchParams(window.location.search);
+        let curId = params.get("id") || "recent";
+        let savedTags = LocalStorage.get("es_guide_tags", {});
+        if (!savedTags[curId]) {
+            savedTags[curId] = savedTags.recent || [];
+        }
+
+        for (let id in savedTags) {
+            for (let tag of savedTags[id]) {
+                let node = document.querySelector(`[name="tags[]"][value="${tag.replace(/"/g, "\\\"")}"]`);
+                if (node && curId == id) {
+                    node.checked = true;
+                } else if (!node) {
+                    addTag(tag, curId == id);
+                }
+            }
+        }
+
+        submitBtn.removeAttribute("href");
+        submitBtn.addEventListener("click", function() {
+            savedTags.recent = [];
+            savedTags[curId] = Array.from(document.querySelectorAll("[name='tags[]']:checked")).map(node => node.value);
+            LocalStorage.set("es_guide_tags", savedTags);
+            ExtensionLayer.runInPageContext(function() { SubmitGuide(); });
+        });
+    };
+
+    return EditGuidePageClass;
 })();
 
 (async function(){
@@ -3898,6 +4364,10 @@ let WorkshopBrowseClass = (function(){
     CommentHandler.addEditor();
 
     switch (true) {
+
+        case /^\/workshop\/?$/.test(path):
+            (new WorkshopPageClass());
+            break;
 
         case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
             (new ProfileActivityPageClass());
@@ -3927,6 +4397,10 @@ let WorkshopBrowseClass = (function(){
             (new FriendsPageClass());
             break;
 
+        case /^\/(?:id|profiles)\/.+\/groups(?:[/#?]|$)/.test(path):
+            (new GroupsPageClass());
+            break;
+
         case /^\/(?:id|profiles)\/.+\/inventory/.test(path):
             (new InventoryPageClass());
             break;
@@ -3943,6 +4417,10 @@ let WorkshopBrowseClass = (function(){
             (new ProfileHomePageClass());
             break;
 
+        case /^\/groups\/[^\/]+\/?$/.test(path):
+            (new GroupHomePageClass());
+            break;
+
         case /^\/app\/[^\/]*\/guides/.test(path):
             (new GuidesPageClass());
             break;
@@ -3955,12 +4433,16 @@ let WorkshopBrowseClass = (function(){
             (new StatsPageClass());
             break;
 
-        case /^\/sharedfiles\/.*/.test(path):
-            (new WorkshopPageClass());
+        case /^\/sharedfiles\/filedetails\/?$/.test(path):
+            (new SharedFilesPageClass());
             break;
 
         case /^\/workshop\/browse/.test(path):
             (new WorkshopBrowseClass());
+            break;
+
+        case /^\/sharedfiles\/editguide\/?$/.test(path):
+            (new EditGuidePageClass());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):
@@ -3977,7 +4459,5 @@ let WorkshopBrowseClass = (function(){
             break;
     }
 
-    EnhancedSteam.hideTrademarkSymbol(true);
-
+    AugmentedSteam.hideTrademarkSymbol(true);
 })();
-

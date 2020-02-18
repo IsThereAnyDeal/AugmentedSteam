@@ -58,8 +58,8 @@ let TradeOfferPageClass = (function(){
     return TradeOfferPageClass;
 })();
 
-(function(){
-    SyncedStorage
-        .then(Localization)
-        .then(() => { (new TradeOfferPageClass()); })
+(async function() {
+    await SyncedStorage;
+    await Localization;
+    new TradeOfferPageClass();
 })();

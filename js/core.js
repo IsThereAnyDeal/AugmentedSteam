@@ -1,5 +1,6 @@
 const Info = {
-    'version': "1.2.1",
+    'version': browser.runtime.getManifest().version,
+    'db_version': 1,
 };
 
 /**
@@ -22,6 +23,18 @@ if (typeof Promise.prototype.finally === 'undefined') {
             });
         },
     });
+}
+
+class BackgroundBase {
+    static message(message) {
+        return browser.runtime.sendMessage(message);
+    }
+    
+    static action(requested, ...params) {
+        if (!params.length)
+            return this.message({ "action": requested, });
+        return this.message({ "action": requested, "params": params, });
+    }
 }
 
 class Version {
@@ -126,19 +139,30 @@ class UpdateHandler {
         SyncedStorage.set("version", Info.version);
     };
 
-    static _showChangelog() {
-        RequestData.getHttp(ExtensionLayer.getLocalUrl("changelog_new.html")).then(
-            changelog => {
-                changelog = changelog.replace(/\r|\n/g, "").replace(/'/g, "\\'");
-                let logo = ExtensionLayer.getLocalUrl("img/es_128.png");
-                let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
-                ExtensionLayer.runInPageContext(
-                    `function() {
-                        ShowAlertDialog("${Localization.str.update.updated.replace("__version__", Info.version)}", '${dialog}');
-					}`
-                );
-            }
+    static async _showChangelog() {
+        let changelog = (await RequestData.getHttp(ExtensionResources.getURL("changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
+        let logo = ExtensionResources.getURL("img/es_128.png");
+        let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
+        ExtensionLayer.runInPageContext(
+            `function() {
+                ShowAlertDialog("${Localization.str.update.updated.replace("__version__", Info.version)}", '${dialog}');
+            }`
         );
+
+        if (Version.fromString(Info.version).isSame(new Version(1, 4))) {
+            let connectBtn = document.querySelector("#itad_connect");
+            if (await BackgroundBase.action("itad.isconnected")) {
+                itadConnected();
+            } else {
+                connectBtn.addEventListener("click", async function() {
+                    await BackgroundBase.action("itad.authorize");
+                    ITAD.create();
+                    itadConnected();
+                });
+            }
+
+            function itadConnected() { connectBtn.replaceWith("✓"); }
+        }
     }
 
     static _migrateSettings(oldVersion) {
@@ -197,7 +221,9 @@ class UpdateHandler {
                 SyncedStorage.remove(oldkey);
             }
             SyncedStorage.set('customize_apppage', settings);
-        } else if (oldVersion.isSameOrBefore("0.9.5")) {
+        }
+        
+        if (oldVersion.isSameOrBefore("0.9.5")) {
             SyncedStorage.remove("version");
             SyncedStorage.remove("showesbg");
             SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
@@ -219,7 +245,9 @@ class UpdateHandler {
             }
             SyncedStorage.set("user_notes", SyncedStorage.get("wishlist_notes"));
             SyncedStorage.remove("wishlist_notes");
-        } else if (oldVersion.isSameOrBefore("0.9.7")) {
+        }
+        
+        if (oldVersion.isSameOrBefore("0.9.7")) {
             SyncedStorage.remove("hide_wishlist");
             SyncedStorage.remove("hide_cart");
             SyncedStorage.remove("hide_notdiscounted");
@@ -227,18 +255,47 @@ class UpdateHandler {
             SyncedStorage.remove("hide_negative");
             SyncedStorage.remove("hide_priceabove");
             SyncedStorage.remove("priceabove_value");
-        }    
+        }
+        
+        if (oldVersion.isSameOrBefore("1.2.1")) {
+            if (!SyncedStorage.get("show_profile_link_images")) {
+                SyncedStorage.set("show_profile_link_images", "none");
+            }
+
+            if (SyncedStorage.get("showclient")) {
+                SyncedStorage.set("showviewinlibrary", true);
+                SyncedStorage.set("installsteam", "replace");
+            }
+
+            if (SyncedStorage.has("showlanguagewarninglanguage")) {
+                SyncedStorage.set("showlanguagewarninglanguage", SyncedStorage.get("showlanguagewarninglanguage").toLowerCase());
+            }
+
+            SyncedStorage.remove("html5video");
+            SyncedStorage.remove("showclient");
+        }
+
+        if (oldVersion.isSameOrBefore("1.3.1")) {
+            BackgroundBase.action("cache.clear");
+
+            SyncedStorage.set("horizontalscrolling", SyncedStorage.get("horizontalmediascrolling"));
+            SyncedStorage.remove("horizontalmediascrolling");
+        }
+
+        if (oldVersion.isSameOrBefore("1.4")) {
+            SyncedStorage.remove("show_sysreqcheck");
+        }
+
+        if (oldVersion.isSame("1.4")) {
+            Background.action("migrate.notesToSyncedStorage");
+        }
+
+        if (oldVersion.isSameOrBefore("1.4.1")) {
+            SyncedStorage.set("profile_steamid", SyncedStorage.get("profile_permalink"));
+            SyncedStorage.remove("profile_permalink");
+        }
     }
 }
-
-
-function checkError() {
-    if (!chrome.runtime.lastError) {
-        return;
-    }
-    throw chrome.runtime.lastError.message;
-}
-
 
 class GameId {
     static parseId(id) {
@@ -252,17 +309,49 @@ class GameId {
     
     static getAppid(text) {
         if (!text) { return null; }
-        
+
+        if (text instanceof HTMLElement) {
+            let appid = text.dataset.dsAppid;
+            if (appid) return GameId.parseId(appid);
+            text = text.href;
+            if (!text) return null;
+        }
+
         // app, market/listing
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(app|market\/listings)\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
+        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(?:app|market\/listings)\/(\d+)\/?/);
+        return m && GameId.parseId(m[1]);
     }
     
     static getSubid(text) {
         if (!text) { return null; }
+
+        if (text instanceof HTMLElement) {
+            let subid = text.dataset.dsPackageid;
+            if (subid) return GameId.parseId(subid);
+            text = text.href;
+            if (!text) return null;
+        }
         
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(sub|bundle)\/(\d+)\/?/);
-        return m && GameId.parseId(m[2]);
+        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/sub\/(\d+)\/?/);
+        return m && GameId.parseId(m[1]);
+    }
+
+    static getBundleid(text) {
+        if (!text) { return null; }
+
+        if (text instanceof HTMLElement) {
+            let bundleid = text.dataset.dsBundleid;
+            if (bundleid) return GameId.parseId(bundleid);
+            text = text.href;
+            if (!text) return null;
+        }
+
+        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/bundle\/(\d+)\/?/);
+        return m && GameId.parseId(m[1]);
+    }
+
+    static trimStoreId(storeId) {
+        return Number(storeId.slice(storeId.indexOf('/') + 1));
     }
     
     static getAppidImgSrc(text) {
@@ -290,7 +379,7 @@ class GameId {
         return res;
     }
     
-    static getAppidWishlist(text) {
+    static getAppidFromId(text) {
         if (!text) { return null; }
         let m = text.match(/game_(\d+)/);
         return m && GameId.parseId(m[1]);
@@ -338,11 +427,8 @@ class LocalStorage {
 
 
 class SyncedStorage {
-    // static adapter = chrome.storage.sync || chrome.storage.local;
-    // static cache = {};
-
     /**
-     * chrome.storage.sync limits
+     * browser.storage.sync limits
      * QUOTA_BYTES = 102400 // 100KB
      * QUOTA_BYTES_PER_ITEM = 8192 // 8KB
      * MAX_ITEMS = 512
@@ -363,24 +449,17 @@ class SyncedStorage {
     }
 
     static set(key, value) {
-        let that = this;
-        that.cache[key] = value;
-        return new Promise((resolve, reject) => {
-            that.adapter.set({ [key]: value, }, () => { checkError(); resolve(true); });
-            // this will throw if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
-        });
-        
+        this.cache[key] = value;
+        return this.adapter.set({ [key]: value, });
+        // this will throw if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
     }
 
     static remove(key) {
-        let that = this;
-        if (typeof that.cache[key]) {
-            delete that.cache[key];
+        if (typeof this.cache[key]) {
+            delete this.cache[key];
         }
-        return new Promise((resolve, reject) => {
-            that.adapter.remove(key, () => { checkError(); resolve(true); });
-            // can throw if MAX_WRITE* is exceeded
-        });
+        return this.adapter.remove(key);
+        // can throw if MAX_WRITE* is exceeded
     }
 
     static keys(prefix='') {
@@ -389,39 +468,37 @@ class SyncedStorage {
 
     static clear() {
         this.cache = {};
-        return new Promise((resolve, reject) => {
-            this.adapter.clear(() => { checkError(); resolve(true); });
-            // can throw if MAX_WRITE* is exceeded
-        });
+        return this.adapter.clear();
+        // can throw if MAX_WRITE* is exceeded
     }
 
     // load whole storage and make local copy
     static async init() {
-        let that = this;
-        function onChange(changes, namespace) {
-            let that = SyncedStorage;
-            for (let [key, { 'newValue': val, }] of Object.entries(changes)) {
-                that.cache[key] = val;
+        browser.storage.onChanged.addListener(changes => {
+            for (let [key, { newValue: val, }] of Object.entries(changes)) {
+                this.cache[key] = val;
             }
-        }
-        chrome.storage.onChanged.addListener(onChange);
-        let storage = await new Promise((resolve, reject) => that.adapter.get(null, result => resolve(result)));
-        Object.assign(that.cache, storage);
+            if (typeof ContextMenu === "function" && Object.keys(changes).some(key => key.startsWith("context_"))) {
+                ContextMenu.update();
+            }
+        });
 
-        return that.cache;
+        let storage = await this.adapter.get(null);
+        Object.assign(this.cache, storage);
+
+        return this.cache;
     }
     static then(onDone, onCatch) {
         return this.init().then(onDone, onCatch);
     }
 
     static async quota() {
-        let that = this;
         let maxBytes = this.adapter.QUOTA_BYTES;
-        let bytes = await new Promise((resolve, reject) => that.adapter.getBytesInUse(bytes => resolve(bytes)));
+        let bytes = await this.adapter.getBytesInUse();
         return bytes / maxBytes; // float 0.0 (0%) -> 1.0 (100%)
     }
 }
-SyncedStorage.adapter = chrome.storage.sync || chrome.storage.local;
+SyncedStorage.adapter = browser.storage.sync || browser.storage.local;
 SyncedStorage.cache = {};
 SyncedStorage.defaults = {
     'language': "english",
@@ -435,6 +512,8 @@ SyncedStorage.defaults = {
     'highlight_inv_gift_color': "#800040",
     'highlight_inv_guestpass_color': "#513c73",
     'highlight_notinterested_color': "#4f4f4f",
+    'highlight_collection_color': "#856d0e",
+    'highlight_waitlist_color': "#4c7521",
 
     'tag_owned_color': "#00b75b",
     'tag_wishlist_color': "#0383b4",
@@ -442,6 +521,8 @@ SyncedStorage.defaults = {
     'tag_inv_gift_color': "#b10059",
     'tag_inv_guestpass_color': "#65449a",
     'tag_notinterested_color': "#4f4f4f",
+    'tag_collection_color': "#856d0e",
+    'tag_waitlist_color': "#4c7521",
 
     'highlight_owned': true,
     'highlight_wishlist': true,
@@ -451,6 +532,8 @@ SyncedStorage.defaults = {
     'highlight_notinterested': false,
     'highlight_excludef2p': false,
     'highlight_notdiscounted': false,
+    'highlight_collection': true,
+    'highlight_waitlist': true,
 
     'tag_owned': false,
     'tag_wishlist': false,
@@ -458,6 +541,8 @@ SyncedStorage.defaults = {
     'tag_inv_gift': false,
     'tag_inv_guestpass': false,
     'tag_notinterested': true,
+    'tag_collection': false,
+    'tag_waitlist': false,
     'tag_short': false,
 
     'hide_owned': false,
@@ -487,13 +572,16 @@ SyncedStorage.defaults = {
     'showmcus': true,
     'showoc': true,
     'showhltb': true,
+    'showyoutube': true,
+    'showtwitch': true,
     'showpcgw': true,
     'showcompletionistme': false,
     'showprotondb': false,
-    'showclient': true,
+    'showviewinlibrary': false,
     'showsteamcardexchange': false,
     'showitadlinks': true,
     'showsteamdb': true,
+    'showbartervg': false,
     'showastatslink': true,
     'showyoutubegameplay': true,
     'showyoutubereviews': true,
@@ -535,7 +623,6 @@ SyncedStorage.defaults = {
 
     //'show_keylol_links': false, // not in use, option is commented out
     'show_package_info': false,
-    'show_sysreqcheck': false,
     'show_steamchart_info': true,
     'show_steamspy_info': true,
     'show_early_access': true,
@@ -544,29 +631,36 @@ SyncedStorage.defaults = {
     'skip_got_steam': false,
 
     'hideaboutlinks': false,
+    'installsteam': "show",
     'openinnewtab': false,
     'keepssachecked': false,
     'showemptywishlist': true,
     'showusernotes': true,
+    'showwishliststats': true,
     'user_notes': {},
     'replaceaccountname': true,
     'showfakeccwarning': true,
     'showlanguagewarning': true,
-    'showlanguagewarninglanguage': "English",
+    'showlanguagewarninglanguage': "english",
     'homepage_tab_selection': "remember",
     'homepage_tab_last': null,
     'send_age_info': true,
-    'html5video': true,
+    'mp4video': false,
     'contscroll': true,
+    'horizontalscrolling': true,
+    'showsupportinfo': true,
     'showdrm': true,
     'regional_hideworld': false,
     'showinvnav': true,
     'quickinv': true,
     'quickinv_diff': -0.01,
+    'community_default_tab': "",
     'showallachievements': false,
+    'showallstats': true,
     'showachinstore': true,
     'showcomparelinks': false,
     'hideactivelistings': false,
+    'showlowestmarketprice': true,
     'hidespamcomments': false,
     'spamcommentregex': "[\\u2500-\\u25FF]",
     'wlbuttoncommunityapp': true,
@@ -574,20 +668,23 @@ SyncedStorage.defaults = {
     'disablelinkfilter': false,
     'showallfriendsthatown': false,
     'sortfriendsby': "default",
+    'sortgroupsby': "default",
     'show1clickgoo': true,
     'show_profile_link_images': "gray",
     'profile_steamrepcn': true,
     'profile_steamgifts': true,
     'profile_steamtrades': true,
+    'profile_bartervg': true,
     'profile_steamrep': true,
     'profile_steamdbcalc': true,
     'profile_astats': true,
     'profile_backpacktf': true,
     'profile_astatsnl': true,
-    'profile_permalink': true,
+    'profile_steamid': true,
     'profile_custom_link': [
         { 'enabled': true, 'name': "Google", 'url': "google.com/search?q=[ID]", 'icon': "www.google.com/images/branding/product/ico/googleg_lodp.ico", },
     ],
+    'group_steamgifts': true,
     'steamcardexchange': true,
     'purchase_dates': true,
     'show_badge_progress': true,
@@ -595,16 +692,29 @@ SyncedStorage.defaults = {
     'show_wishlist_link': true,
     'show_wishlist_count': true,
     'show_progressbar': true,
+    'show_backtotop': false,
 
     'profile_showcase_twitch': true,
     'profile_showcase_own_twitch': false,
     'profile_showcase_twitch_profileonly': false,
+
+    'itad_import_library': false,
+    'itad_import_wishlist': false,
+    'add_to_waitlist': false,
+
+    'context_steam_store': false,
+    'context_steam_market': false,
+    'context_itad': false,
+    'context_bartervg': false,
+    'context_steamdb': false,
+    'context_steamdb_instant': false,
+    'context_steam_keys': false,
 };
 
 
 class ExtensionResources {
     static getURL(pathname) {
-        return chrome.runtime.getURL(pathname);
+        return browser.runtime.getURL(pathname);
     }
 
     static get(pathname) {
@@ -812,8 +922,51 @@ class HTMLParser {
     };
 }
 
+class StringUtils {
+
+    // https://stackoverflow.com/a/6969486/7162651
+    static escapeRegExp(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    }
+}
+
+class CommunityLoginError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "CommunityLoginError";
+    }
+}
+
+class ServerOutageError extends Error {
+    constructor(msg) {
+        super(msg);
+        this.name = "ServerOutageError";
+    }
+}
+
 function sleep(duration) {
     return new Promise(function(resolve, reject) {
         setTimeout(function() { resolve(); }, duration);
     });
 }
+
+class Timestamp {
+
+    static now() {
+        return Math.trunc(Date.now() / 1000);
+    }
+}
+
+
+class Debug {
+
+    static async executionTime(fn, label) {
+        let start = performance.now();
+        let result = await fn();
+        let end = performance.now();
+        console.debug("Took", end - start, "ms to execute", label);
+        return result;
+    }
+}
+
+
