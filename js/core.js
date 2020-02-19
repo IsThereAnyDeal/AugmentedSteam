@@ -682,7 +682,7 @@ SyncedStorage.defaults = {
     'profile_backpacktf': true,
     'profile_astatsnl': true,
     'profile_steamid': true,
-    'group_steamid': true,
+    'group_steamid': false,
     'profile_custom_link': [
         { 'enabled': true, 'name': "Google", 'url': "google.com/search?q=[ID]", 'icon': "www.google.com/images/branding/product/ico/googleg_lodp.ico", },
     ],
@@ -970,5 +970,4 @@ class Debug {
         return result;
     }
 }
-
 
