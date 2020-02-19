@@ -292,7 +292,6 @@ class UpdateHandler {
 
         if (oldVersion.isSameOrBefore("1.4.1")) {
             SyncedStorage.set("profile_steamid", SyncedStorage.get("profile_permalink"));
-            SyncedStorage.set("group_steamid", SyncedStorage.get("profile_permalink"));
             SyncedStorage.remove("profile_permalink");
         }
     }
