@@ -1722,15 +1722,20 @@ class AppPageClass extends StorePageClass {
 
     replaceDevPubLinks() {
 
-        document.querySelectorAll("#game_highlights .dev_row a,.details_block .dev_row:not(:nth-of-type(3)) a").forEach((linkNode, i) => {
-            let homepageLink = new URL(linkNode.href);
-            if (homepageLink.pathname === "/search/") { return; }
+        for (let node of document.querySelectorAll(`.dev_row a[href^="https://store.steampowered.com/"]`)) {
+            let homepageLink = new URL(node.href);
 
-            let name = i % 2 ? "publisher" : "developer"; // These elements appear in pairs, where the first represents the developer and the second the publisher
-            let value = linkNode.textContent;
-            linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
-            HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
-        });
+            let type;
+            if (homepageLink.pathname.startsWith("/developer/")) {
+                type = "developer";
+            } else if (homepageLink.pathname.startsWith("/publisher/")) {
+                type = "publisher";
+            }
+            if (!type) { return; }
+
+            node.href = `https://store.steampowered.com/search/?${type}=${encodeURIComponent(node.textContent)}`;
+            HTML.afterEnd(node, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
+        }
 
         for (let moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {
             moreBtn.remove();
