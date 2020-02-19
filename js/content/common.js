@@ -1034,10 +1034,10 @@ let SteamId = (function() {
     
             Clipboard.set(elem.innerText);
     
-            let header = document.querySelector("#es_copy_header");
-            let headerText = header.innerText;
-            header.innerText = `${Localization.str.copied}`;
-            setTimeout(() => header.innerText = headerText, 1000);
+            ExtensionLayer.runInPageContext(`function() {
+                dialog.GetContent().find(".newmodal_content").html("<div class=bb_h1>${Localization.str.copied}</div>");
+                setTimeout(() => dialog.GetContent().fadeOut("fast", () => dialog.Dismiss()), 750)
+            }`);
         }
 
         let title = Localization.str.steamid_of_user.replace("__user__", name);
@@ -1052,8 +1052,8 @@ let SteamId = (function() {
         Messenger.onMessage("closeDialog").then(() => document.removeEventListener("click", copySteamId));
 
         ExtensionLayer.runInPageContext(`function() {
-            HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
-            let dialog = ShowAlertDialog("${title}", \`${html}\`, "${Localization.str.close}");
+            if (HideMenu) HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
+            dialog = ShowAlertDialog("${title}", \`${html}\`, "${Localization.str.close}");
             dialog.done(() => Messenger.postMessage("closeDialog"));
         }`);
     }
