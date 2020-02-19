@@ -1034,9 +1034,10 @@ let SteamId = (function() {
     
             Clipboard.set(elem.innerText);
     
+            let copied = Localization.str.copied.replace("__text__", elem.innerText);
             ExtensionLayer.runInPageContext(`function() {
-                dialog.GetContent().find(".newmodal_content").html("<div class=bb_h1>${Localization.str.copied}</div>");
-                setTimeout(() => dialog.GetContent().fadeOut("fast", () => dialog.Dismiss()), 750)
+                dialog.GetContent().find(".newmodal_content").html("${copied}");
+                setTimeout(() => dialog.GetContent().fadeOut("fast", () => dialog.Dismiss()), 1000)
             }`);
         }
 

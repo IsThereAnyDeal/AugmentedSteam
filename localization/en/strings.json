@@ -1,7 +1,7 @@
 {
     "steamid_of_user": "__user__'s SteamID",
     "click_to_copy": "Click to copy",
-    "copied": "Copied to your clipboard!",
+    "copied": "'__text__' was copied to your clipboard!",
     "profile_group": "Show SteamID on groups",
     "profile_steamid": "Show SteamID on profiles",
     "view_steamid": "View SteamID",
