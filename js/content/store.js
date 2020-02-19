@@ -4207,6 +4207,9 @@ let TabAreaObserver = (function(){
 })();
 
 (async function(){
+    let nginxError = document.querySelector("body > center:nth-child(3)");
+    if (nginxError && nginxError.innerText === "nginx") { return; }
+
     let path = window.location.pathname.replace(/\/+/g, "/");
 
     await SyncedStorage.init().catch(err => console.error(err));
