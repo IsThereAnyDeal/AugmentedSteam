@@ -1731,7 +1731,7 @@ class AppPageClass extends StorePageClass {
             } else if (homepageLink.pathname.startsWith("/publisher/")) {
                 type = "publisher";
             }
-            if (!type) { return; }
+            if (!type) { continue; }
 
             node.href = `https://store.steampowered.com/search/?${type}=${encodeURIComponent(node.textContent)}`;
             HTML.afterEnd(node, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
