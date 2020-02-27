@@ -629,6 +629,7 @@ SyncedStorage.defaults = {
     'show_alternative_linux_icon': false,
     'show_itad_button': false,
     'skip_got_steam': false,
+    'instant_activate': false,
 
     'hideaboutlinks': false,
     'installsteam': "show",

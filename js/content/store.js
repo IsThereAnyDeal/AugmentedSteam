@@ -2497,7 +2497,7 @@ let RegisterKeyPageClass = (function(){
 
     RegisterKeyPageClass.prototype.instantActivation = function() {
         let params = new URLSearchParams(window.location.search);
-        if (!SyncedStorage.get("instantactivate") || !params.has("key")) { return; }
+        if (!SyncedStorage.get("instant_activate") || !params.has("key")) { return; }
 
         document.querySelector("[name=accept_ssa]").checked = true;
         document.querySelector("#register_btn").click();
