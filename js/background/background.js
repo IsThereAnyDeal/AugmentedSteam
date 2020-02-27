@@ -514,50 +514,39 @@ ITAD_Api._progressingRequests = new Map();
 class ContextMenu {
 
     static onClick(info) {
-        let selectionText = encodeURIComponent(info.selectionText.trim());
+        let query = encodeURIComponent(info.selectionText.trim());
+        let url = ContextMenu.queryLinks[info.menuItemId];
+        if (!url) { return; }
 
-        switch (info.menuItemId) {
-            case "context_steam_store":
-                browser.tabs.create({ url: `https://store.steampowered.com/search/?term=${selectionText}` });
-                break;
-            case "context_steam_market":
-                browser.tabs.create({ url: `https://steamcommunity.com/market/search?q=${selectionText}` });
-                break;
-            case "context_itad":
-                browser.tabs.create({ url: `https://isthereanydeal.com/search/?q=${selectionText}` });
-                break;
-            case "context_bartervg":
-                browser.tabs.create({ url: `https://barter.vg/search?q=${selectionText}` });
-                break;
-            case "context_steamdb":
-                browser.tabs.create({ url: `https://steamdb.info/search/?q=${selectionText}` });
-                break;
-            case "context_steamdb_instant":
-                browser.tabs.create({ url: `https://steamdb.info/instantsearch/?query=${selectionText}` });
-                break;
-            case "context_steam_keys":
-                let steamkeys = info.selectionText.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
-                if (!steamkeys || steamkeys.length === 0) {
-                    window.alert(Localization.str.options.no_keys_found);
-                    return;
-                }
-                steamkeys.forEach(steamkey => browser.tabs.create({ url: `https://store.steampowered.com/account/registerkey?key=${encodeURIComponent(steamkey)}` }));
-                break;
+        url = url.replace("__query__", query);
+        if (info.menuItemId === "context_steam_keys") {
+            let steamkeys = info.selectionText.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
+            if (!steamkeys || steamkeys.length === 0) {
+                window.alert(Localization.str.options.no_keys_found);
+                return;
+            }
+
+            steamkeys.forEach(steamkey => {
+                url.replace("__steamkey__", steamkey);
+                browser.tabs.create({ url });
+            });
+        } else {
+            browser.tabs.create({ url });
         }
     }
     
-    static build() {
+    static async build() {
         if (!browser.contextMenus) { return; }
-        let options = ["context_steam_store", "context_steam_market", "context_itad", "context_bartervg", "context_steamdb", "context_steamdb_instant", "context_steam_keys"];
+        await Localization;
 
-        for (let option of options) {
+        for (let option of Object.keys(ContextMenu.queryLinks)) {
             if (!SyncedStorage.get(option)) { continue; }
 
             browser.contextMenus.create({
                 "id": option,
                 "title": Localization.str.options[option].replace("__query__", "%s"),
                 "contexts": ["selection"]
-            });
+            }, () => chrome.runtime.lastError); // https://stackoverflow.com/q/54504328
         }
     }
     
@@ -571,12 +560,20 @@ class ContextMenu {
         }
     }
 
-    static async init() {
-        await Localization;
+    static init() {
         ContextMenu.update();
     }
 }
 ContextMenu._listenerRegistered = false;
+ContextMenu.queryLinks = {
+    "context_steam_store": "https://store.steampowered.com/search/?term=__query__",
+    "context_steam_market": "https://steamcommunity.com/market/search?q=__query__",
+    "context_itad": "https://isthereanydeal.com/search/?q=__query__",
+    "context_bartervg": "https://barter.vg/search?q=__query__",
+    "context_steamdb": "https://steamdb.info/search/?q=__query__",
+    "context_steamdb_instant": "https://steamdb.info/instantsearch/?query=__query__",
+    "context_steam_keys": "https://store.steampowered.com/account/registerkey?key=__steamkey__"
+}
 
 
 class SteamStore extends Api {
