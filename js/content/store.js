@@ -880,7 +880,7 @@ class AppPageClass extends StorePageClass {
                     DynamicStore.clear();
 
                     // Invalidate dynamic store data cache
-                    ExtensionLayer.runInPageContext(() => GDynamicStore.InvalidateCache());
+                    ExtensionLayer.runInPageContext(() => { GDynamicStore.InvalidateCache() });
                 } finally {
                     parent.classList.remove("loading");
                 }
@@ -1042,20 +1042,19 @@ class AppPageClass extends StorePageClass {
             document.querySelector("#add_to_wishlist_area_success span").lastChild.textContent = ` ${text}`;
         }
 
-        wishlistArea.querySelector("a").addEventListener("click", () => {
-            Messenger.onMessage("wishlistAdded").then(() => {
-                wishlisted = !wishlisted;
-                updateDiv();
-            });
+        wishlistArea.querySelector("a").addEventListener("click", async () => {
 
-            ExtensionLayer.runInPageContext(() =>
+            await ExtensionLayer.runInPageContext(() => new Promise(resolve => {
                 $J(document).ajaxComplete(function handler(e, xhr, { url }) {
                     if (url === "https://store.steampowered.com/api/addtowishlist") {
-                        Messenger.postMessage("wishlistAdded");
+                        resolve();
                         $J(document).unbind("ajaxComplete", handler);
                     }
-                })
-            );
+                });
+            }), "wishlistAdded");
+
+            wishlisted = !wishlisted;
+            updateDiv();
         });
 
         this.onWishAndWaitlistRemove = () => {
@@ -1314,7 +1313,7 @@ class AppPageClass extends StorePageClass {
                 }
 
                 HTML.afterBegin("#es_opencritic_reviews", review_text);
-                ExtensionLayer.runInPageContext(() => BindTooltips( '#game_area_reviews', { tooltipCSSClass: 'store_tooltip'} ));
+                ExtensionLayer.runInPageContext(() => { BindTooltips('#game_area_reviews', { tooltipCSSClass: 'store_tooltip'}); });
             }
         });
     }
@@ -1377,7 +1376,7 @@ class AppPageClass extends StorePageClass {
             youTubeMedia.style.display = "block";
             youTubeTab.classList.add("active");
 
-            ExtensionLayer.runInPageContext(() => SteamOnWebPanelHidden());
+            ExtensionLayer.runInPageContext(() => { SteamOnWebPanelHidden(); });
         });
 
         steamTab.addEventListener("click", () => {
@@ -1392,7 +1391,7 @@ class AppPageClass extends StorePageClass {
                 steamMedia.style.display = "block";
                 steamTab.classList.add("active");
 
-                ExtensionLayer.runInPageContext(() => SteamOnWebPanelShown());
+                ExtensionLayer.runInPageContext(() => { SteamOnWebPanelShown(); });
             }
         });
     }
@@ -1435,15 +1434,13 @@ class AppPageClass extends StorePageClass {
             `<div class="block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad" id="es_steampeek_content"></div>`);
 
         // TODO Create a global handler for DS loading
-        let dsLoaded = Messenger.onMessage("dsLoaded");
-        ExtensionLayer.runInPageContext(() => GDynamicStore.OnReady(() => Messenger.postMessage("dsLoaded")));
-        await dsLoaded;
+        await ExtensionLayer.runInPageContext(() => new Promise(resolve => { GDynamicStore.OnReady(() => { resolve(); }); }), "dsLoaded");
 
         let [steamTab, steamPeekTab, content] = moreLikeThis
             .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");
 
         function adjustScroller() {
-            ExtensionLayer.runInPageContext(() => $J("#recommended_block_content").trigger("v_contentschanged"));
+            ExtensionLayer.runInPageContext(() => { $J("#recommended_block_content").trigger("v_contentschanged"); });
         }
 
         steamTab.addEventListener("click", () => {
@@ -1488,7 +1485,7 @@ class AppPageClass extends StorePageClass {
                     ExtensionLayer.runInPageContext(`() => { GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), ${appid}); }`);
                 }
 
-                ExtensionLayer.runInPageContext(() => GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar")));
+                ExtensionLayer.runInPageContext(() => { GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar")); });
 
                 Highlights.highlightAndTag(content.querySelectorAll("a.es_sp_similar"), true);
 
@@ -1748,7 +1745,7 @@ class AppPageClass extends StorePageClass {
             moreBtn.remove();
         }
 
-        ExtensionLayer.runInPageContext(() => CollapseLongStrings(".dev_row .summary.column"));
+        ExtensionLayer.runInPageContext(() => { CollapseLongStrings(".dev_row .summary.column"); });
     }
 
     async addSupport() {
@@ -2514,14 +2511,14 @@ let RegisterKeyPageClass = (function(){
         document.querySelector("#register_btn").addEventListener("click", function(e) {
             if (document.querySelector("#product_key").value.indexOf(",") > 0) {
                 e.preventDefault();
-                ExtensionLayer.runInPageContext(`() => ShowDialog("${Localization.str.activate_multiple_header}", \`${activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n"))}\`)`);
+                ExtensionLayer.runInPageContext(`() => { ShowDialog("${Localization.str.activate_multiple_header}", \`${activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n"))}\`); }`);
             }
         });
 
         // Show note input modal
         document.addEventListener("click", function(e){
             if (!e.target.closest("#es_activate_multiple")) { return; }
-            ExtensionLayer.runInPageContext(`() => ShowDialog("${Localization.str.activate_multiple_header}", \`${activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n"))}\`)`);
+            ExtensionLayer.runInPageContext(`() => { ShowDialog("${Localization.str.activate_multiple_header}", \`${activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n"))}\`); }`);
         });
 
         // Insert the "activate multiple products" button
@@ -2617,7 +2614,7 @@ let RegisterKeyPageClass = (function(){
         // Bind the "Cancel" button to close the modal
         document.addEventListener("click", function(e) {
             if (!e.target.closest(".es_activate_modal_close")) { return; }
-            ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+            ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
         })
     };
 
@@ -2703,7 +2700,7 @@ let FundsPageClass = (function(){
             if (giftcard) {
 
                 if (e.target.closest(".giftcard_cont")) {
-                    ExtensionLayer.runInPageContext(`() => submitSelectGiftCard(${jsvalue})`);
+                    ExtensionLayer.runInPageContext(`() => { submitSelectGiftCard(${jsvalue}); }`);
                 }
 
             } else {
@@ -2712,7 +2709,7 @@ let FundsPageClass = (function(){
                 btn.removeAttribute("onclick");
                 btn.dataset.amount = jsvalue;
 
-                ExtensionLayer.runInPageContext(() => submitAddFunds(document.querySelector(".es_custom_money .es_custom_button")));
+                ExtensionLayer.runInPageContext(() => { submitAddFunds(document.querySelector(".es_custom_money .es_custom_button")); });
             }
 
         }, true);
@@ -2894,9 +2891,9 @@ let SearchPageClass = (function(){
             excludeContainer.append(excludeItem);
         }
 
-        ExtensionLayer.runInPageContext(() =>
-            $J("#es_tagfilter_exclude_container").tableFilter({ maxvisible: 15, control: "#es_tagfilter_exclude_suggest", dataattribute: "loc", defaultText: $J("#TagSuggest").attr("value")})
-        );
+        ExtensionLayer.runInPageContext(() => {
+            $J("#es_tagfilter_exclude_container").tableFilter({ maxvisible: 15, control: "#es_tagfilter_exclude_suggest", dataattribute: "loc", defaultText: $J("#TagSuggest").attr("value")});
+        });
 
         let observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation){
@@ -2912,7 +2909,7 @@ let SearchPageClass = (function(){
             });
         });
         observer.observe(document.querySelector(".termcontainer"), {childList:true, subtree:true});
-        ExtensionLayer.runInPageContext(() => UpdateTags());
+        ExtensionLayer.runInPageContext(() => { UpdateTags(); });
     };
 
     function isPriceAbove(node, priceAbove) {
@@ -3533,16 +3530,15 @@ let WishlistPageClass = (function(){
         if (document.querySelector("#throbber").style.display === "none") {
             wishlistLoaded();
         } else {
-            Messenger.onMessage("wishlistLoaded").then(wishlistLoaded);
-
-            ExtensionLayer.runInPageContext(() => {
+            ExtensionLayer.runInPageContext(() => new Promise(resolve => {
                 $J(document).ajaxSuccess((e, xhr, settings) => {
                     let url = new URL(settings.url);
                     if (url.origin + url.pathname === `${g_strWishlistBaseURL}wishlistdata/` && g_Wishlist.nPagesToLoad === g_Wishlist.nPagesLoaded) {
-                        Messenger.postMessage("wishlistLoaded");
+                        resolve();
                     }
                 });
-            });
+            }), "wishlistLoaded")
+            .then(() => { wishlistLoaded(); });
         }
     }
 
@@ -3679,16 +3675,7 @@ let WishlistPageClass = (function(){
         });
     };
 
-    function emptyWishlist() {
-        ExtensionLayer.runInPageContext(`function(){
-            var prompt = ShowConfirmDialog(\`${Localization.str.empty_wishlist.title}\`, \`${Localization.str.empty_wishlist.confirm}\`);
-            prompt.done(function(result) {
-                if (result == "OK") {
-                    ShowBlockingWaitDialog(\`${Localization.str.empty_wishlist.title}\`, \`${Localization.str.empty_wishlist.removing}\`.replace("__cur__", 1).replace("__total__", g_rgWishlistData.length));
-                    Messenger.postMessage("emptyWishlist");
-                }
-            });
-        }`);
+    async function emptyWishlist() {
 
         function removeApp(appid) {
 
@@ -3700,19 +3687,30 @@ let WishlistPageClass = (function(){
             return RequestData.post(url, formData);
         }
 
-        Messenger.onMessage("emptyWishlist").then(async () => {
-            let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
-            if (!wishlistData) { return; }
+        await ExtensionLayer.runInPageContext(`() => {
+            let prompt = ShowConfirmDialog(\`${Localization.str.empty_wishlist.title}\`, \`${Localization.str.empty_wishlist.confirm}\`);
 
-            let cur = 1;
-            let textNode = document.querySelector(".waiting_dialog_throbber").nextSibling;
-            for (let { appid } of wishlistData) {
-                textNode.textContent = Localization.str.empty_wishlist.removing.replace("__cur__", cur++).replace("__total__", wishlistData.length);
-                await removeApp(appid);
-            }
-            DynamicStore.clear();
-            location.reload();
-        });
+            return new Promise(resolve => {
+                prompt.done(result => {
+                    if (result === "OK") {
+                        ShowBlockingWaitDialog(\`${Localization.str.empty_wishlist.title}\`, \`${Localization.str.empty_wishlist.removing}\`.replace("__cur__", 1).replace("__total__", g_rgWishlistData.length));
+                        resolve();
+                    }
+                });
+            });
+        }`, "emptyWishlist");
+
+        let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
+        if (!wishlistData) { return; }
+
+        let cur = 1;
+        let textNode = document.querySelector(".waiting_dialog_throbber").nextSibling;
+        for (let { appid } of wishlistData) {
+            textNode.textContent = Localization.str.empty_wishlist.removing.replace("__cur__", cur++).replace("__total__", wishlistData.length);
+            await removeApp(appid);
+        }
+        DynamicStore.clear();
+        location.reload();
     }
 
     class WishlistExporter {
@@ -3848,9 +3846,8 @@ let WishlistPageClass = (function(){
     WishlistPageClass.prototype.addExportWishlistButton = function() {
         HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${Localization.str.export.wishlist}</div></div>`);
 
-        document.querySelector("#es_export_wishlist").addEventListener("click", () => {
-            Messenger.onMessage("appInfo").then(appInfo => this.showExportModalDialog(appInfo));
-            ExtensionLayer.runInPageContext(() => Messenger.postMessage("appInfo", g_rgAppInfo));
+        document.querySelector("#es_export_wishlist").addEventListener("click", async () => {
+            this.showExportModalDialog(await ExtensionLayer.runInPageContext(() => g_rgAppInfo, "appInfo"));
         });
     };
 
@@ -3988,7 +3985,7 @@ class UserNotes {
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
         // Partly copied from shared_global.js
-        ExtensionLayer.runInPageContext(`function() {
+        let bgClick = ExtensionLayer.runInPageContext(`function() {
             let deferred = new jQuery.Deferred();
             let fnOK = () => deferred.resolve();
     
@@ -3998,10 +3995,12 @@ class UserNotes {
                 [], fnOK);
             deferred.always(() => Modal.Dismiss());
     
-            Modal.m_fnBackgroundClick = () => {
-                Messenger.onMessenge("noteSaved").then(Modal.Dismiss);
-                Messenger.postMessage("backgroundClick");
-            }
+            let promise = new Promise(resolve => {
+                Modal.m_fnBackgroundClick = () => {
+                    Messenger.onMessage("noteSaved").then(() => { Modal.Dismiss(); });
+                    resolve();
+                };
+            });
     
             Modal.Show();
     
@@ -4018,11 +4017,13 @@ class UserNotes {
                     Modal.Dismiss();
                 }
             });
-        }`);
+
+            return promise;
+        }`, "backgroundClick");
 
         document.addEventListener("click", clickListener);
 
-        Messenger.onMessage("backgroundClick").then(() => {
+        bgClick.then(() => {
             onNoteUpdate.apply(null, saveNote());
             Messenger.postMessage("noteSaved");
         });
@@ -4031,10 +4032,10 @@ class UserNotes {
             if (e.target.closest(".es_note_modal_submit")) {
                 e.preventDefault();
                 onNoteUpdate.apply(null, saveNote());
-                ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
             }
             else if (e.target.closest(".es_note_modal_close")) {
-                ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
             }
             else {
                 return;

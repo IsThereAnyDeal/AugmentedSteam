@@ -335,11 +335,21 @@ let ExtensionLayer = (function() {
 
     // NOTE: use cautiously!
     // Run script in the context of the current tab
-    self.runInPageContext = function(fun) {
+    self.runInPageContext = function(fun, msgId) {
         let script = document.createElement("script");
-        script.textContent = `(${fun})();`;
+        let promise;
+
+        if (msgId) {
+            promise = Messenger.onMessage(msgId);
+            script.textContent = `(async () => { Messenger.postMessage("${msgId}", await (${fun})()); })();`;
+        } else {
+            script.textContent = `(${fun})();`;
+        }
+        
         document.documentElement.appendChild(script);
         script.parentNode.removeChild(script);
+
+        if (msgId) { return promise; }
     };
 
     return self;
@@ -800,12 +810,12 @@ let Currency = (function() {
     }
 
     async function getCurrencyFromWallet() {
-        ExtensionLayer.runInPageContext(() =>
-            Messenger.postMessage("walletCurrency", typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null)
+        let walletCurrency = await ExtensionLayer.runInPageContext(
+            () => typeof g_rgWalletInfo !== "undefined" && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null,
+            "walletCurrency"
         );
 
-        let walletCurrency = await Messenger.onMessage("walletCurrency");
-        if (walletCurrency !== null) {
+        if (walletCurrency) {
             return Currency.currencyNumberToType(walletCurrency);
         }
     }
@@ -1131,7 +1141,7 @@ let AugmentedSteam = (function() {
         let popup = document.querySelector("#es_popup");
 
         document.querySelector("#es_pulldown").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(() => ShowMenu("es_pulldown", "es_popup", "right", "bottom", true));
+            ExtensionLayer.runInPageContext(() => { ShowMenu("es_pulldown", "es_popup", "right", "bottom", true); });
         });
 
         document.querySelector("#es_menu").addEventListener("click", function(e){
@@ -1219,7 +1229,7 @@ let AugmentedSteam = (function() {
 
             document.querySelector("#es_reset_language_code").addEventListener("click", function(e){
                 e.preventDefault();
-                ExtensionLayer.runInPageContext(`() => ChangeLanguage("${warningLanguage}")`);
+                ExtensionLayer.runInPageContext(`() => { ChangeLanguage("${warningLanguage}"); }`);
             });
         });
     };
@@ -2021,21 +2031,17 @@ let Highlights = (function(){
 
         parent = parent || document;
 
-        Messenger.onMessage("dynamicStoreReady").then(() => {
-            self.highlightAndTag(parent.querySelectorAll(selector));
-    
-            let searchBoxContents = parent.getElementById("search_suggestion_contents");
-            if (searchBoxContents) {
-                let observer = new MutationObserver(records => {
-                    self.highlightAndTag(records[0].addedNodes);
-                });
-                observer.observe(searchBoxContents, { childList: true });
-            }
-        });
+        await ExtensionLayer.runInPageContext(() => new Promise(resolve => { GDynamicStore.OnReady(() => { resolve(); }); }), "dynamicStoreReady");
+        
+        self.highlightAndTag(parent.querySelectorAll(selector));
 
-        ExtensionLayer.runInPageContext(() => {
-            GDynamicStore.OnReady(() => Messenger.postMessage("dynamicStoreReady"));
-        });
+        let searchBoxContents = parent.getElementById("search_suggestion_contents");
+        if (searchBoxContents) {
+            let observer = new MutationObserver(records => {
+                self.highlightAndTag(records[0].addedNodes);
+            });
+            observer.observe(searchBoxContents, { childList: true });
+        }
     };
 
     return self;

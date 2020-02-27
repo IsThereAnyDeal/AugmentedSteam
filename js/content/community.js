@@ -583,7 +583,7 @@ let ProfileHomePageClass = (function(){
 
             Clipboard.set(elem.innerText);
 
-            ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+            ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal() });
         }
 
         function showSteamIdDialog() {
@@ -597,13 +597,13 @@ let ProfileHomePageClass = (function(){
                 <p><a class="es_copy">${steamId.getSteamId64()}</a></p>
                 <p><a class="es_copy">https://steamcommunity.com/profiles/${steamId.getSteamId64()}</a></p>`;
 
-
-            Messenger.onMessage("closeDialog").then(() => document.removeEventListener("click", copySteamId));
             ExtensionLayer.runInPageContext(`function() {
                 HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
                 let dialog = ShowAlertDialog("${Localization.str.steamid_of_user}".replace("__user__", g_rgProfileData.personaname), \`${html}\`, "${Localization.str.close}");
-                dialog.done(() => Messenger.postMessage("closeDialog"));
-            }`);
+
+                return new Promise(resolve => { dialog.done(() => { resolve(); }); });
+            }`, "closeDialog")
+            .then(() => { document.removeEventListener("click", copySteamId); });
         }
     };
 
@@ -662,7 +662,7 @@ let ProfileHomePageClass = (function(){
 
             HTML.afterEnd(profileBadges, html);
 
-            ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
+            ExtensionLayer.runInPageContext(() => { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ) });
         });
     };
 
@@ -808,7 +808,7 @@ let ProfileHomePageClass = (function(){
 
         let node = document.querySelector(".profile_in_game_name");
         HTML.inner(node, `<a data-tooltip-html="${tooltip}" href="//store.steampowered.com/app/${ingameNode.value}" target="_blank">${node.textContent}</a>`);
-        ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
+        ExtensionLayer.runInPageContext(() => { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ) });
     };
 
     ProfileHomePageClass.prototype.addProfileStyle = function() {
@@ -981,11 +981,11 @@ let ProfileHomePageClass = (function(){
         sendButton.remove();
 
         document.querySelector("#btnWebChat").addEventListener("click", function(){
-            ExtensionLayer.runInPageContext(`OpenFriendChatInWebChat('${chatId}')`);
+            ExtensionLayer.runInPageContext(`() => { OpenFriendChatInWebChat('${chatId}'); }`);
         });
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
-            ExtensionLayer.runInPageContext(() => ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ));
+            ExtensionLayer.runInPageContext(() => { ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ) });
         });
     };
 
@@ -1197,13 +1197,13 @@ let GamesPageClass = (function(){
         commonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
             rows.classList.toggle("esi-hide-notcommon", e.target.checked);
-            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
+            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc() });
         });
 
         notCommonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
             rows.classList.toggle("esi-hide-common", e.target.checked);
-            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
+            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc() });
         });
     };
 
@@ -1325,7 +1325,7 @@ let ProfileEditPageClass = (function(){
             </div>`;
 
         HTML.beforeBegin(".group_content_bodytext", html);
-        ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
+        ExtensionLayer.runInPageContext(() => { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
 
         let response = await Background.action('profile.background.games');
 
@@ -1402,7 +1402,7 @@ let ProfileEditPageClass = (function(){
 
         HTML.beforeBegin(".group_content_bodytext", html);
 
-        ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: 'community_tooltip' }); });
 
         let styleSelectNode = document.querySelector("#es_style");
 
@@ -1739,7 +1739,7 @@ let InventoryPageClass = (function(){
             HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId, Localization.str.quick_sell_desc.replace("__modifier__", diff)));
             HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId, Localization.str.instant_sell_desc));
 
-            ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: "community_tooltip"} ));
+            ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip"}); });
 
             // Check if price is stored in data
             if (thisItem.classList.contains("es-price-loaded")) {
@@ -1806,7 +1806,7 @@ let InventoryPageClass = (function(){
                     marketActions.querySelector("div"),
                     "<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>"
                 );
-                ExtensionLayer.runInPageContext(`() => Messenger.postMessage("sendFee", {feeInfo: CalculateFeeAmount(${sellPrice}, 0.10), sessionID: "${sessionId}", global_id: "${globalId}", contextID: "${contextId}", assetID: "${assetId}"})`);
+                ExtensionLayer.runInPageContext(`() => { Messenger.postMessage("sendFee", { feeInfo: CalculateFeeAmount(${sellPrice}, 0.10), sessionID: "${sessionId}", global_id: "${globalId}", contextID: "${contextId}", assetID: "${assetId}" }); }`);
             });
         }
     }
@@ -1931,7 +1931,7 @@ let InventoryPageClass = (function(){
     }
 
     function prepareMarketForInventory() {
-        ExtensionLayer.runInPageContext(function(){
+        ExtensionLayer.runInPageContext(() => {
             $J(document).on("click", ".inventory_item_link, .newitem", function(){
                 if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
                     g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
@@ -1958,7 +1958,7 @@ let InventoryPageClass = (function(){
             });
         });
         
-        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info));
+        Messenger.addMessageListener("sendMessage", info => { inventoryMarketHelper(info) });
 
         Messenger.addMessageListener("sendFee", async ({ feeInfo, sessionID, global_id, contextID, assetID }) => {
             let sellPrice = feeInfo.amount - feeInfo.fees;
@@ -2035,13 +2035,13 @@ let InventoryPageClass = (function(){
         // Go to first page
         HTML.afterEnd("#pagebtn_previous", "<a id='pagebtn_first' class='pagebtn pagecontrol_element disabled'>&lt;&lt;</a>");
         document.querySelector("#pagebtn_first").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext("() => { InventoryFirstPage(); }");
+            ExtensionLayer.runInPageContext(() => { InventoryFirstPage(); });
         });
 
         // Go to last page
         HTML.beforeBegin("#pagebtn_next", "<a id='pagebtn_last' class='pagebtn pagecontrol_element'>&gt;&gt;</a>");
         document.querySelector("#pagebtn_last").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext("() => { InventoryLastPage(); }");
+            ExtensionLayer.runInPageContext(() => { InventoryLastPage(); });
         });
 
         let pageGo = document.createElement("div");
@@ -2426,7 +2426,7 @@ let BadgesPageClass = (function(){
                 </div>
             </span>`);
 
-        ExtensionLayer.runInPageContext(() => BindAutoFlyoutEvents());
+        ExtensionLayer.runInPageContext(() => { BindAutoFlyoutEvents(); });
 
         if (isOwnProfile) {
             let that = this;
@@ -2786,7 +2786,7 @@ let FriendsThatPlayPageClass = (function(){
         HTML.beforeEnd(".friends_that_play_content", html);
 
         // Reinitialize miniprofiles by injecting the function call.
-        ExtensionLayer.runInPageContext(() => InitMiniprofileHovers());
+        ExtensionLayer.runInPageContext(() => { InitMiniprofileHovers(); });
     };
 
     FriendsThatPlayPageClass.prototype.addFriendsPlayTimeSort = function() {
@@ -3022,40 +3022,43 @@ let GroupsPageClass = (function(){
             group.querySelector(".select_friend").addEventListener("click", () => {
                 group.classList.toggle("selected");
                 group.querySelector(".select_friend_checkbox").checked = group.classList.contains("selected");
-                ExtensionLayer.runInPageContext(function() { UpdateSelection(); });
+                ExtensionLayer.runInPageContext(() => { UpdateSelection(); });
             });    
         }
 
         document.querySelector("#manage_friends_control").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(function() { ToggleManageFriends(); });
+            ExtensionLayer.runInPageContext(() => { ToggleManageFriends(); });
         });
 
         document.querySelector("#es_select_all").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(function() { SelectAll(); });
+            ExtensionLayer.runInPageContext(() => { SelectAll(); });
         });
 
         document.querySelector("#es_select_none").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(function() { SelectNone(); });
+            ExtensionLayer.runInPageContext(() => { SelectNone(); });
         });
 
         document.querySelector("#es_select_inverse").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(function() { SelectInverse(); });
+            ExtensionLayer.runInPageContext(() => { SelectInverse(); });
         });
 
         document.querySelector("#es_leave_groups").addEventListener("click", () => leaveGroups());
 
         async function displayAdminConfirmation(name, id) {
             let body = groupsStr.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
-            ExtensionLayer.runInPageContext(`function(){
+
+            let result = await ExtensionLayer.runInPageContext(`() => {
                 let prompt = ShowConfirmDialog("${groupsStr.leave}", "${body}");
-                prompt.done(function(result) {
-                    Messenger.postMessage("confirm#${id}", result);
-                }).fail(function() {
-                    Messenger.postMessage("confirm#${id}");
+
+                return new Promise(resolve => {
+                    prompt.done(result => {
+                        resolve(result);
+                    }).fail(() => {
+                        resolve();
+                    });
                 });
-            }`);
+            }`, `confirm#${id}`);
             
-            let result = await Messenger.onMessage(`confirm#${id}`);
             if (result === "OK") {
                 return true;
             }
@@ -3184,7 +3187,7 @@ let MarketListingPageClass = (function(){
         document.querySelector(".as-zoomcontrol").addEventListener("click", function() {
             ExtensionLayer.runInPageContext(() => {
                 pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
-            })
+            });
         });
     };
 
@@ -3684,12 +3687,12 @@ let MarketPageClass = (function(){
 
         toggleRefresh(LocalStorage.get("popular_refresh", false));
 
-        ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: 'community_tooltip'}); });
 
         function toggleRefresh(state) {
             document.querySelector("#es_popular_refresh_toggle").classList.toggle("es_refresh_off", !state);
             LocalStorage.set("popular_refresh", state);
-            ExtensionLayer.runInPageContext(`() => g_bMarketWindowHidden = ${state}`);
+            ExtensionLayer.runInPageContext(`() => { g_bMarketWindowHidden = ${state}; }`);
         }
     };
 
@@ -3856,7 +3859,7 @@ let WorkshopPageClass = (function(){
     };
 
     WorkshopPageClass.prototype.initAjaxBrowse = function() {
-        ExtensionLayer.runInPageContext(function() {
+        ExtensionLayer.runInPageContext(() => {
             $J(".browseOption").get().forEach(node => node.onclick = () => false);
         });
 
@@ -3892,7 +3895,7 @@ let WorkshopPageClass = (function(){
         HTML.inner(container, result.results_html);
         tab.removeAttribute("disabled");
 
-        ExtensionLayer.runInPageContext(`function() {
+        ExtensionLayer.runInPageContext(`() => {
             g_oSearchResults.m_iCurrentPage = 0;
             g_oSearchResults.m_strQuery = "${query}";
             g_oSearchResults.m_cTotalCount = ${result.total_count};
@@ -3958,15 +3961,6 @@ let WorkshopBrowseClass = (function(){
             let statusTitle = workshopStr[method + "_all"];
             let statusString = workshopStr[method + "_confirm"]
                 .replace("__count__", total);
-
-            ExtensionLayer.runInPageContext(`function(){
-                let prompt = ShowConfirmDialog("${statusTitle}", "${statusString}");
-                prompt.done(function(result) {
-                    if (result == "OK") {
-                        Messenger.postMessage("startSubscriber");
-                    }
-                });
-            }`);
 
             function updateWaitDialog() {
                 let statusString = workshopStr[method + "_loading"]
@@ -4036,50 +4030,62 @@ let WorkshopBrowseClass = (function(){
                 });
             }
 
-            Messenger.onMessage("startSubscriber").then(async () => {
-                updateWaitDialog();
+            // todo reject when dialog closed
+            await ExtensionLayer.runInPageContext(`() => {
+                let prompt = ShowConfirmDialog("${statusTitle}", "${statusString}");
 
-                function canSkip(method, node) {
-                    if (method === "subscribe") {
-                        return node && node.style.display !== "none";
-                    }
+                return new Promise(resolve => {
+                    prompt.done(result => {
+                        if (result === "OK") {
+                            resolve();
+                        }
+                    });
+                });
+                
+            }`, "startSubscriber");
 
-                    if (method === "unsubscribe") {
-                        return !node || node.style.display === "none";
-                    }
+            updateWaitDialog();
 
-                    return false;
+            function canSkip(method, node) {
+                if (method === "subscribe") {
+                    return node && node.style.display !== "none";
                 }
 
-                let parser = new DOMParser();
-                let workshopItems = [];
-                for (let p = 1; p <= Math.ceil(total / 30); p++) {
-                    let url = new URL(window.location.href);
-                    url.searchParams.set("p", p);
-                    url.searchParams.set("numperpage", 30);
-    
-                    let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
-                    if (!result) {
-                        console.error("Failed to request " + url.toString());
-                        continue;
-                    }
-
-                    let xmlDoc = parser.parseFromString(result, "text/html");
-                    for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
-                        let subNode = node.querySelector(".user_action_history_icon.subscribed");
-                        if (canSkip(method, subNode)) { continue; }
-                    
-                        node = node.querySelector(".workshopItemPreviewHolder");
-                        workshopItems.push(node.id.replace("sharedfile_", ""))
-                    }
+                if (method === "unsubscribe") {
+                    return !node || node.style.display === "none";
                 }
 
-                total = workshopItems.length;
-                updateWaitDialog();
-    
-                return Promise.all(workshopItems.map(id => changeSubscription(id)))
-                    .finally(showResults);
-            });            
+                return false;
+            }
+
+            let parser = new DOMParser();
+            let workshopItems = [];
+            for (let p = 1; p <= Math.ceil(total / 30); p++) {
+                let url = new URL(window.location.href);
+                url.searchParams.set("p", p);
+                url.searchParams.set("numperpage", 30);
+
+                let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+                if (!result) {
+                    console.error("Failed to request " + url.toString());
+                    continue;
+                }
+
+                let xmlDoc = parser.parseFromString(result, "text/html");
+                for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
+                    let subNode = node.querySelector(".user_action_history_icon.subscribed");
+                    if (canSkip(method, subNode)) { continue; }
+                
+                    node = node.querySelector(".workshopItemPreviewHolder");
+                    workshopItems.push(node.id.replace("sharedfile_", ""))
+                }
+            }
+
+            total = workshopItems.length;
+            updateWaitDialog();
+
+            return Promise.all(workshopItems.map(id => changeSubscription(id)))
+                .finally(showResults);
         }
     };
 
@@ -4175,7 +4181,7 @@ let EditGuidePageClass = (function(){
             savedTags.recent = [];
             savedTags[curId] = Array.from(document.querySelectorAll("[name='tags[]']:checked")).map(node => node.value);
             LocalStorage.set("es_guide_tags", savedTags);
-            ExtensionLayer.runInPageContext(function() { SubmitGuide(); });
+            ExtensionLayer.runInPageContext(() => { SubmitGuide(); });
         });
     };
 
@@ -4281,7 +4287,7 @@ let EditGuidePageClass = (function(){
             let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
                 .textContent.trim().replace(/[\d]+,?/g, "");
 
-            ExtensionLayer.runInPageContext(`function() {
+            ExtensionLayer.runInPageContext(`() => {
                 $J("#booster_game_selector option").each(function(index) {
                     if ($J(this).val()) {
                         $J(this).append(" - " + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + " ${gemWord}");
