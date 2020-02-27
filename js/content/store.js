@@ -2491,8 +2491,17 @@ class AppPageClass extends StorePageClass {
 let RegisterKeyPageClass = (function(){
 
     function RegisterKeyPageClass() {
+        this.instantActivation();
         this.activateMultipleKeys();
     }
+
+    RegisterKeyPageClass.prototype.instantActivation = function() {
+        let params = new URLSearchParams(window.location.search);
+        if (!SyncedStorage.get("instantactivate") || !params.has("key")) { return; }
+
+        document.querySelector("[name=accept_ssa]").checked = true;
+        document.querySelector("#register_btn").click();
+    };
 
     RegisterKeyPageClass.prototype.activateMultipleKeys = function() {
         let activateModalTemplate = `<div id="es_activate_modal">
