@@ -143,7 +143,11 @@ class UpdateHandler {
         let changelog = (await RequestData.getHttp(ExtensionResources.getURL("changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
         let logo = ExtensionResources.getURL("img/es_128.png");
         let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
-        ExtensionLayer.runInPageContext(`() => { ShowAlertDialog("${Localization.str.update.updated.replace("__version__", Info.version)}", '${dialog}'); }`);
+
+        ExtensionLayer.runInPageContext(
+            (updatedStr, dialog) => { ShowAlertDialog(updatedStr, dialog); },
+            [ Localization.str.update.updated.replace("__version__", Info.version), dialog ]
+        );
 
         if (Version.fromString(Info.version).isSame(new Version(1, 4))) {
             let connectBtn = document.querySelector("#itad_connect");

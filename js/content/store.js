@@ -880,7 +880,7 @@ class AppPageClass extends StorePageClass {
                     DynamicStore.clear();
 
                     // Invalidate dynamic store data cache
-                    ExtensionLayer.runInPageContext(() => { GDynamicStore.InvalidateCache() });
+                    ExtensionLayer.runInPageContext(() => { GDynamicStore.InvalidateCache(); });
                 } finally {
                     parent.classList.remove("loading");
                 }
@@ -1051,7 +1051,7 @@ class AppPageClass extends StorePageClass {
                         $J(document).unbind("ajaxComplete", handler);
                     }
                 });
-            }), "wishlistAdded");
+            }), null, "wishlistAdded");
 
             wishlisted = !wishlisted;
             updateDiv();
@@ -1313,7 +1313,7 @@ class AppPageClass extends StorePageClass {
                 }
 
                 HTML.afterBegin("#es_opencritic_reviews", review_text);
-                ExtensionLayer.runInPageContext(() => { BindTooltips('#game_area_reviews', { tooltipCSSClass: 'store_tooltip'}); });
+                ExtensionLayer.runInPageContext(() => { BindTooltips("#game_area_reviews", { tooltipCSSClass: "store_tooltip" }); });
             }
         });
     }
@@ -1434,7 +1434,7 @@ class AppPageClass extends StorePageClass {
             `<div class="block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad" id="es_steampeek_content"></div>`);
 
         // TODO Create a global handler for DS loading
-        await ExtensionLayer.runInPageContext(() => new Promise(resolve => { GDynamicStore.OnReady(() => { resolve(); }); }), "dsLoaded");
+        await ExtensionLayer.runInPageContext(() => new Promise(resolve => { GDynamicStore.OnReady(() => { resolve(); }); }), null, "dsLoaded");
 
         let [steamTab, steamPeekTab, content] = moreLikeThis
             .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");
@@ -1482,7 +1482,7 @@ class AppPageClass extends StorePageClass {
                             <h4>${title}</h4>
                         </a>`);
 
-                    ExtensionLayer.runInPageContext(`() => { GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), ${appid}); }`);
+                    ExtensionLayer.runInPageContext(appid => { GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), appid); }, [ appid ]);
                 }
 
                 ExtensionLayer.runInPageContext(() => { GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar")); });
@@ -2508,17 +2508,27 @@ let RegisterKeyPageClass = (function(){
                 </div>
             </div>`;
 
+        function showMultipleKeysDialog() {
+            ExtensionLayer.runInPageContext((header, template) => {
+                ShowDialog(header, template);
+            },
+            [
+                Localization.str.activate_multiple_header,
+                activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n"))
+            ]);
+        }
+
         document.querySelector("#register_btn").addEventListener("click", function(e) {
             if (document.querySelector("#product_key").value.indexOf(",") > 0) {
                 e.preventDefault();
-                ExtensionLayer.runInPageContext(`() => { ShowDialog("${Localization.str.activate_multiple_header}", \`${activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n"))}\`); }`);
+                showMultipleKeysDialog();
             }
         });
 
         // Show note input modal
         document.addEventListener("click", function(e){
             if (!e.target.closest("#es_activate_multiple")) { return; }
-            ExtensionLayer.runInPageContext(`() => { ShowDialog("${Localization.str.activate_multiple_header}", \`${activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n"))}\`); }`);
+            showMultipleKeysDialog();
         });
 
         // Insert the "activate multiple products" button
@@ -2692,22 +2702,22 @@ let FundsPageClass = (function(){
             }
         });
 
-        newel.querySelector((giftcard ? ".es_custom_money a.btn_medium" : ".es_custom_button")).addEventListener("click", function(e) {
+        newel.querySelector((giftcard ? ".es_custom_money a.btn_medium" : ".es_custom_button")).addEventListener("click", e => {
             e.preventDefault();
 
-            let jsvalue = (+document.querySelector("#es_custom_money_amount").value).toFixed(2).replace(/[,.]/g, '');
+            let customAmount = Number(document.querySelector("#es_custom_money_amount").value).toFixed(2).replace(/[,.]/g, '');
 
             if (giftcard) {
 
                 if (e.target.closest(".giftcard_cont")) {
-                    ExtensionLayer.runInPageContext(`() => { submitSelectGiftCard(${jsvalue}); }`);
+                    ExtensionLayer.runInPageContext(amount => { submitSelectGiftCard(amount); }, [ customAmount ]);
                 }
 
             } else {
                 let btn = document.querySelector(".es_custom_money .es_custom_button");
                 btn.href = "#";
                 btn.removeAttribute("onclick");
-                btn.dataset.amount = jsvalue;
+                btn.dataset.amount = customAmount;
 
                 ExtensionLayer.runInPageContext(() => { submitAddFunds(document.querySelector(".es_custom_money .es_custom_button")); });
             }
@@ -2786,9 +2796,9 @@ let SearchPageClass = (function(){
             processing = false;
 
             ExtensionLayer.runInPageContext(() => {
-                let addedDate = document.querySelector('#search_result_container').dataset.lastAddDate;
+                let addedDate = document.querySelector("#search_result_container").dataset.lastAddDate;
                 GDynamicStore.DecorateDynamicItems(jQuery(`.search_result_row[data-added-date="${addedDate}"]`));
-                SetupTooltips( { tooltipCSSClass: 'store_tooltip'} );
+                SetupTooltips({ tooltipCSSClass: "store_tooltip" });
             });
 
             Highlights.highlightAndTag(rows);
@@ -2892,7 +2902,7 @@ let SearchPageClass = (function(){
         }
 
         ExtensionLayer.runInPageContext(() => {
-            $J("#es_tagfilter_exclude_container").tableFilter({ maxvisible: 15, control: "#es_tagfilter_exclude_suggest", dataattribute: "loc", defaultText: $J("#TagSuggest").attr("value")});
+            $J("#es_tagfilter_exclude_container").tableFilter({ maxvisible: 15, control: "#es_tagfilter_exclude_suggest", dataattribute: "loc", defaultText: $J("#TagSuggest").attr("value") });
         });
 
         let observer = new MutationObserver(function(mutations) {
@@ -3050,7 +3060,7 @@ let SearchPageClass = (function(){
 
         // TODO(tomas.fedor) Can we somehow simplify this monstrosity? E.g. update URL on our end?
         // Thrown together from sources of searchpage.js
-        ExtensionLayer.runInPageContext(`() => {
+        ExtensionLayer.runInPageContext(hideFilter => {
 
             GDynamicStore.OnReady(() => {
 
@@ -3218,7 +3228,7 @@ let SearchPageClass = (function(){
                         let label;
 
                         if ($Tag.is("[id*='es_']")) {
-                            label = "${Localization.str.hide_filter}".replace("__filter__", $J(".tab_filter_control_label", Tag).text());
+                            label = hideFilter.replace("__filter__", $J(".tab_filter_control_label", Tag).text());
                         } else {
                             label = $J(".tab_filter_control_label", Tag).text();
                         }
@@ -3271,7 +3281,7 @@ let SearchPageClass = (function(){
                 Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState));
                 Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState));
             });
-        }`);
+        }, [ Localization.str.hide_filter ]);
 
         let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol + "</span>";
         let priceAboveVal = document.querySelector("#es_notpriceabove_val");
@@ -3537,7 +3547,7 @@ let WishlistPageClass = (function(){
                         resolve();
                     }
                 });
-            }), "wishlistLoaded")
+            }), null, "wishlistLoaded")
             .then(() => { wishlistLoaded(); });
         }
     }
@@ -3687,18 +3697,18 @@ let WishlistPageClass = (function(){
             return RequestData.post(url, formData);
         }
 
-        await ExtensionLayer.runInPageContext(`() => {
-            let prompt = ShowConfirmDialog(\`${Localization.str.empty_wishlist.title}\`, \`${Localization.str.empty_wishlist.confirm}\`);
+        await ExtensionLayer.runInPageContext(emptyWishlist => {
+            let prompt = ShowConfirmDialog(emptyWishlist.title, emptyWishlist.confirm);
 
             return new Promise(resolve => {
                 prompt.done(result => {
                     if (result === "OK") {
-                        ShowBlockingWaitDialog(\`${Localization.str.empty_wishlist.title}\`, \`${Localization.str.empty_wishlist.removing}\`.replace("__cur__", 1).replace("__total__", g_rgWishlistData.length));
+                        ShowBlockingWaitDialog(emptyWishlist.title, emptyWishlist.removing.replace("__cur__", 1).replace("__total__", g_rgWishlistData.length));
                         resolve();
                     }
                 });
             });
-        }`, "emptyWishlist");
+        }, [ Localization.str.empty_wishlist ], "emptyWishlist");
 
         let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
         if (!wishlistData) { return; }
@@ -3775,12 +3785,10 @@ let WishlistPageClass = (function(){
      */
     WishlistPageClass.prototype.showExportModalDialog = function(appInfo) {
 
-        let exportStr = Localization.str.export;
-
-        ExtensionLayer.runInPageContext(`function() {
+        ExtensionLayer.runInPageContext(exportStr => {
             ShowConfirmDialog(
-                "${exportStr.wishlist}",
-                \`<div id='es_export_form'>
+                exportStr.wishlist,
+                `<div id='es_export_form'>
                     <div class="es-wexport">
                     <h2>${exportStr.type}</h2>
                     <div>
@@ -3796,12 +3804,12 @@ let WishlistPageClass = (function(){
                             <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %note%</div>
                         </div>
                     </div>
-                </div>\`,
-                "${exportStr.download}",
+                </div>`,
+                exportStr.download,
                 null, // use default "Cancel"
-                "${exportStr.copy_clipboard}"
+                exportStr.copy_clipboard
             );
-        }`);
+        }, [ Localization.str.export ]);
 
         let [ dlBtn, copyBtn ] = document.querySelectorAll(".newmodal_buttons > .btn_medium");
 
@@ -3847,7 +3855,7 @@ let WishlistPageClass = (function(){
         HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${Localization.str.export.wishlist}</div></div>`);
 
         document.querySelector("#es_export_wishlist").addEventListener("click", async () => {
-            this.showExportModalDialog(await ExtensionLayer.runInPageContext(() => g_rgAppInfo, "appInfo"));
+            this.showExportModalDialog(await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, "appInfo"));
         });
     };
 
@@ -3985,14 +3993,11 @@ class UserNotes {
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
         // Partly copied from shared_global.js
-        let bgClick = ExtensionLayer.runInPageContext(`function() {
+        let bgClick = ExtensionLayer.runInPageContext((title, template) => {
             let deferred = new jQuery.Deferred();
             let fnOK = () => deferred.resolve();
     
-            let Modal = _BuildDialog(
-                "${Localization.str.user_note.add_for_game.replace("__gamename__", appname)}",
-                \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", await this.get(appid) || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
-                [], fnOK);
+            let Modal = _BuildDialog(title, template, [], fnOK);
             deferred.always(() => Modal.Dismiss());
     
             let promise = new Promise(resolve => {
@@ -4019,7 +4024,11 @@ class UserNotes {
             });
 
             return promise;
-        }`, "backgroundClick");
+        },
+        [
+            Localization.str.user_note.add_for_game.replace("__gamename__", appname),
+            this.noteModalTemplate.replace("__appid__", appid).replace("__note__", await this.get(appid) || '').replace("__selector__", encodeURIComponent(nodeSelector)),
+        ], "backgroundClick");
 
         document.addEventListener("click", clickListener);
 

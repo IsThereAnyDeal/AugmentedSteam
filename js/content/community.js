@@ -597,12 +597,17 @@ let ProfileHomePageClass = (function(){
                 <p><a class="es_copy">${steamId.getSteamId64()}</a></p>
                 <p><a class="es_copy">https://steamcommunity.com/profiles/${steamId.getSteamId64()}</a></p>`;
 
-            ExtensionLayer.runInPageContext(`function() {
+            ExtensionLayer.runInPageContext((steamidOfUser, html, close) => {
                 HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
-                let dialog = ShowAlertDialog("${Localization.str.steamid_of_user}".replace("__user__", g_rgProfileData.personaname), \`${html}\`, "${Localization.str.close}");
+                let dialog = ShowAlertDialog(steamidOfUser.replace("__user__", g_rgProfileData.personaname), html, close);
 
                 return new Promise(resolve => { dialog.done(() => { resolve(); }); });
-            }`, "closeDialog")
+            },
+            [
+                Localization.str.steamid_of_user,
+                html,
+                Localization.str.close,
+            ], "closeDialog")
             .then(() => { document.removeEventListener("click", copySteamId); });
         }
     };
@@ -662,7 +667,7 @@ let ProfileHomePageClass = (function(){
 
             HTML.afterEnd(profileBadges, html);
 
-            ExtensionLayer.runInPageContext(() => { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ) });
+            ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
         });
     };
 
@@ -788,7 +793,10 @@ let ProfileHomePageClass = (function(){
                 HTML.afterEnd(node, `<a class="popup_menu_item" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`);
 
                 node.parentNode.querySelector("#es_nickname").addEventListener("click", function() {
-                    ExtensionLayer.runInPageContext("function() { ShowNicknameModal(); HideMenu( 'profile_action_dropdown_link', 'profile_action_dropdown' ); return false; }");
+                    ExtensionLayer.runInPageContext(() => {
+                        ShowNicknameModal();
+                        HideMenu("profile_action_dropdown_link", "profile_action_dropdown" );
+                    });
                 });
             }
         }
@@ -808,7 +816,7 @@ let ProfileHomePageClass = (function(){
 
         let node = document.querySelector(".profile_in_game_name");
         HTML.inner(node, `<a data-tooltip-html="${tooltip}" href="//store.steampowered.com/app/${ingameNode.value}" target="_blank">${node.textContent}</a>`);
-        ExtensionLayer.runInPageContext(() => { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ) });
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
     };
 
     ProfileHomePageClass.prototype.addProfileStyle = function() {
@@ -980,12 +988,12 @@ let ProfileHomePageClass = (function(){
             </div>`);
         sendButton.remove();
 
-        document.querySelector("#btnWebChat").addEventListener("click", function(){
-            ExtensionLayer.runInPageContext(`() => { OpenFriendChatInWebChat('${chatId}'); }`);
+        document.querySelector("#btnWebChat").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(chatId => { OpenFriendChatInWebChat(chatId); }, [ chatId ]);
         });
 
-        document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
-            ExtensionLayer.runInPageContext(() => { ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ) });
+        document.querySelector("#profile_chat_dropdown_link").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(() => { ShowMenu(document.querySelector("#profile_chat_dropdown_link"), "profile_chat_dropdown", "right"); });
         });
     };
 
@@ -1197,13 +1205,13 @@ let GamesPageClass = (function(){
         commonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
             rows.classList.toggle("esi-hide-notcommon", e.target.checked);
-            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc() });
+            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); });
         });
 
         notCommonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
             rows.classList.toggle("esi-hide-common", e.target.checked);
-            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc() });
+            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); });
         });
     };
 
@@ -1325,7 +1333,7 @@ let ProfileEditPageClass = (function(){
             </div>`;
 
         HTML.beforeBegin(".group_content_bodytext", html);
-        ExtensionLayer.runInPageContext(() => { SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ); });
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
 
         let response = await Background.action('profile.background.games');
 
@@ -1402,7 +1410,7 @@ let ProfileEditPageClass = (function(){
 
         HTML.beforeBegin(".group_content_bodytext", html);
 
-        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: 'community_tooltip' }); });
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
 
         let styleSelectNode = document.querySelector("#es_style");
 
@@ -1661,7 +1669,7 @@ let InventoryPageClass = (function(){
         }
     }
 
-    function addOneClickGemsOption(item, appid, assetId) {
+    function addOneClickGemsOption(item, appid, assetid) {
         if (!SyncedStorage.get("show1clickgoo")) { return; }
 
         let quickGrind = document.querySelector("#es_quickgrind");
@@ -1675,24 +1683,26 @@ let InventoryPageClass = (function(){
 
         // TODO: Add prompt?
         document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
-            ExtensionLayer.runInPageContext(`function() {
-                var rgAJAXParams = {
+            ExtensionLayer.runInPageContext((appid, assetid) => {
+                let rgAJAXParams = {
                     sessionid: g_sessionID,
-                    appid: ${appid},
-                    assetid: ${assetId},
+                    appid,
+                    assetid,
                     contextid: 6
                 };
 
-                var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';
-                $J.get( strActionURL, rgAJAXParams ).done( function( data ) {
-                    strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';
+                let strActionURL = `${g_strProfileURL}/ajaxgetgoovalue/`;
+
+                $J.get(strActionURL, rgAJAXParams).done(data => {
+                    strActionURL = `${g_strProfileURL}/ajaxgrindintogoo/`;
                     rgAJAXParams.goo_value_expected = data.goo_value;
-                    $J.post( strActionURL, rgAJAXParams).done( function( data ) {
+
+                    $J.post(strActionURL, rgAJAXParams).done(() => {
                         ReloadCommunityInventory();
                     });
                 });
-            }`);
-        });
+            });
+        }, [ appid, assetid ]);
     }
 
     function makeMarketButton(id, tooltip) {
@@ -1739,7 +1749,7 @@ let InventoryPageClass = (function(){
             HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId, Localization.str.quick_sell_desc.replace("__modifier__", diff)));
             HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId, Localization.str.instant_sell_desc));
 
-            ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip"}); });
+            ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
 
             // Check if price is stored in data
             if (thisItem.classList.contains("es-price-loaded")) {
@@ -1806,7 +1816,25 @@ let InventoryPageClass = (function(){
                     marketActions.querySelector("div"),
                     "<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>"
                 );
-                ExtensionLayer.runInPageContext(`() => { Messenger.postMessage("sendFee", { feeInfo: CalculateFeeAmount(${sellPrice}, 0.10), sessionID: "${sessionId}", global_id: "${globalId}", contextID: "${contextId}", assetID: "${assetId}" }); }`);
+
+                ExtensionLayer.runInPageContext((sellPrice, sessionID, global_id, contextID, assetID) => {
+                    Messenger.postMessage("sendFee",
+                        {
+                            feeInfo: CalculateFeeAmount(sellPrice, 0.10),
+                            sessionID,
+                            global_id,
+                            contextID,
+                            assetID,
+                        }
+                    );
+                },
+                [
+                    sellPrice,
+                    sessionId,
+                    globalId,
+                    contextId,
+                    assetId,
+                ]);
             });
         }
     }
@@ -1931,8 +1959,10 @@ let InventoryPageClass = (function(){
     }
 
     function prepareMarketForInventory() {
+
         ExtensionLayer.runInPageContext(() => {
-            $J(document).on("click", ".inventory_item_link, .newitem", function(){
+
+            $J(document).on("click", ".inventory_item_link, .newitem", () => {
                 if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
                     g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
                 }
@@ -2905,16 +2935,14 @@ let FriendsPageClass = (function(){
         let params = new URLSearchParams(window.location.search);
         if (!params.has("invitegid")) { return; }
 
-        let groupId = params.get("invitegid");
         HTML.afterBegin("#manage_friends > div:nth-child(2)", `<span class="manage_action btnv6_lightblue_blue btn_medium" id="invitetogroup"><span>${Localization.str.invite_to_group}</span></span>`);
-        ExtensionLayer.runInPageContext(`function(){
+        ExtensionLayer.runInPageContext(groupId => {
             ToggleManageFriends();
-            $J("#invitetogroup").on("click", function() {
-                let groupId = "${groupId}";
+            $J("#invitetogroup").on("click", () => {
                 let friends = GetCheckedAccounts("#search_results > .selectable.selected:visible");
                 InviteUserToGroup(null, groupId, friends);
             });
-        }`);
+        }, [ params.get("invitegid") ]);
     };
 
     return FriendsPageClass;
@@ -3047,17 +3075,17 @@ let GroupsPageClass = (function(){
         async function displayAdminConfirmation(name, id) {
             let body = groupsStr.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
 
-            let result = await ExtensionLayer.runInPageContext(`() => {
-                let prompt = ShowConfirmDialog("${groupsStr.leave}", "${body}");
+            let result = await ExtensionLayer.runInPageContext((leave, body) => {
+                let prompt = ShowConfirmDialog(leave, body);
 
                 return new Promise(resolve => {
                     prompt.done(result => {
                         resolve(result);
                     }).fail(() => {
-                        resolve();
+                        resolve(); // todo when is fail triggered?
                     });
                 });
-            }`, `confirm#${id}`);
+            }, [ groupsStr.leave, body ], `confirm#${id}`);
             
             if (result === "OK") {
                 return true;
@@ -3687,12 +3715,12 @@ let MarketPageClass = (function(){
 
         toggleRefresh(LocalStorage.get("popular_refresh", false));
 
-        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: 'community_tooltip'}); });
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
 
         function toggleRefresh(state) {
             document.querySelector("#es_popular_refresh_toggle").classList.toggle("es_refresh_off", !state);
             LocalStorage.set("popular_refresh", state);
-            ExtensionLayer.runInPageContext(`() => { g_bMarketWindowHidden = ${state}; }`);
+            ExtensionLayer.runInPageContext(state => { g_bMarketWindowHidden = state; }, [ state ]);
         }
     };
 
@@ -3895,13 +3923,13 @@ let WorkshopPageClass = (function(){
         HTML.inner(container, result.results_html);
         tab.removeAttribute("disabled");
 
-        ExtensionLayer.runInPageContext(`() => {
+        ExtensionLayer.runInPageContext((query, totalCount, count) => {
             g_oSearchResults.m_iCurrentPage = 0;
-            g_oSearchResults.m_strQuery = "${query}";
-            g_oSearchResults.m_cTotalCount = ${result.total_count};
-            g_oSearchResults.m_cPageSize = ${count};
+            g_oSearchResults.m_strQuery = query;
+            g_oSearchResults.m_cTotalCount = totalCount;
+            g_oSearchResults.m_cPageSize = count;
             g_oSearchResults.UpdatePagingDisplay();
-        }`);
+        }, [ query, result.total_count, count ]);
     };
 
     return WorkshopPageClass;
@@ -3974,13 +4002,13 @@ let WorkshopBrowseClass = (function(){
                 let modal = document.querySelector(".newmodal_content");
                 if (!modal) {
                     let statusTitle = workshopStr[method + "_all"];
-                    ExtensionLayer.runInPageContext(`function() {
+                    ExtensionLayer.runInPageContext((title, progress) => {
                         if (window.dialog) {
                             window.dialog.Dismiss();
                         }
                         
-                        window.dialog = ShowBlockingWaitDialog("${statusTitle}", "${statusString}");
-                    }`);
+                        window.dialog = ShowBlockingWaitDialog(title, progress);
+                    }, [ statusTitle, statusString ]);
                 } else {
                     modal.innerText = statusString;
                 }
@@ -3992,18 +4020,18 @@ let WorkshopBrowseClass = (function(){
                     .replace("__success__", completed - failed)
                     .replace("__fail__", failed);
 
-                ExtensionLayer.runInPageContext(`function() {
+                ExtensionLayer.runInPageContext((title, finished) => {
                     if (window.dialog) {
                         window.dialog.Dismiss();
                     }
                     
-                    window.dialog = ShowConfirmDialog("${statusTitle}", "${statusString}")
-                        .done(function(result) {
-                            if (result == "OK") {
+                    window.dialog = ShowConfirmDialog(title, finished)
+                        .done(result => {
+                            if (result === "OK") {
                                 window.location.reload();
                             }
                         });
-                }`);
+                }, [ statusTitle, statusString ]);
             }
 
             function changeSubscription(id) {
@@ -4031,8 +4059,8 @@ let WorkshopBrowseClass = (function(){
             }
 
             // todo reject when dialog closed
-            await ExtensionLayer.runInPageContext(`() => {
-                let prompt = ShowConfirmDialog("${statusTitle}", "${statusString}");
+            await ExtensionLayer.runInPageContext((title, confirm) => {
+                let prompt = ShowConfirmDialog(title, confirm);
 
                 return new Promise(resolve => {
                     prompt.done(result => {
@@ -4042,7 +4070,7 @@ let WorkshopBrowseClass = (function(){
                     });
                 });
                 
-            }`, "startSubscriber");
+            }, [ statusTitle, statusString ], "startSubscriber");
 
             updateWaitDialog();
 
@@ -4115,7 +4143,7 @@ let EditGuidePageClass = (function(){
         let langSection = document.querySelector("#checkboxgroup_1");
         if (!langSection) { return; }
 
-        Messenger.addMessageListener("addtag", function(name) {
+        Messenger.addMessageListener("addtag", name => {
             addTag(name, true);
         });
         
@@ -4127,9 +4155,12 @@ let EditGuidePageClass = (function(){
                 </a></div>
             </div>`);
 
-        ExtensionLayer.runInPageContext(`function() {
+        ExtensionLayer.runInPageContext((customTags, enterTag) => {
             $J("#es_add_tag").on("click", () => {
-                let Modal = ShowConfirmDialog("${Localization.str.custom_tags}", \`<div class="commentthread_entry_quotebox"><textarea placeholder="${Localization.str.enter_tag}" class="commentthread_textarea es_tag" rows="1"></textarea></div>\`);
+                let Modal = ShowConfirmDialog(customTags, 
+                    `<div class="commentthread_entry_quotebox">
+                        <textarea placeholder="${enterTag}" class="commentthread_textarea es_tag" rows="1"></textarea>
+                    </div>`);
                 
                 let elem = $J(".es_tag");
                 let tag = elem.val();
@@ -4140,18 +4171,17 @@ let EditGuidePageClass = (function(){
                     Messenger.postMessage("addtag", tag);
                 }
 
-                elem.on("keydown paste input", function(e) {
+                elem.on("keydown paste input", e => {
                     tag = elem.val();
-                    if (e.key == "Enter") {
+                    if (e.key === "Enter") {
                         Modal.Dismiss();
                         done();
-                        return;
                     }
                 });
 
                 Modal.done(done);
             });
-        }`);
+        }, [ Localization.str.custom_tags, Localization.str.enter_tag ]);
     };
 
     EditGuidePageClass.prototype.rememberTags = function() {
@@ -4284,16 +4314,13 @@ let EditGuidePageClass = (function(){
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):
-            let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                .textContent.trim().replace(/[\d]+,?/g, "");
-
-            ExtensionLayer.runInPageContext(`() => {
-                $J("#booster_game_selector option").each(function(index) {
+            ExtensionLayer.runInPageContext(gemWord => {
+                $J("#booster_game_selector option").each(function() {
                     if ($J(this).val()) {
-                        $J(this).append(" - " + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + " ${gemWord}");
+                        $J(this).append(` - ${CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price} ${gemWord}`);
                     }
                 });
-            }`);
+            }, [ document.querySelector(".booster_creator_goostatus .goo_display").textContent.trim().replace(/[\d]+,?/g, "") ]);
             break;
     }
 

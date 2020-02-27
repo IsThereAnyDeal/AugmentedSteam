@@ -335,15 +335,16 @@ let ExtensionLayer = (function() {
 
     // NOTE: use cautiously!
     // Run script in the context of the current tab
-    self.runInPageContext = function(fun, msgId) {
+    self.runInPageContext = function(fun, args, msgId) {
         let script = document.createElement("script");
         let promise;
+        let argsString = Array.isArray(args) ? JSON.stringify(args) : "[]";
 
         if (msgId) {
             promise = Messenger.onMessage(msgId);
-            script.textContent = `(async () => { Messenger.postMessage("${msgId}", await (${fun})()); })();`;
+            script.textContent = `(async () => { Messenger.postMessage("${msgId}", await (${fun})(...${argsString})); })();`;
         } else {
-            script.textContent = `(${fun})();`;
+            script.textContent = `(${fun})(...${argsString});`;
         }
         
         document.documentElement.appendChild(script);
@@ -812,6 +813,7 @@ let Currency = (function() {
     async function getCurrencyFromWallet() {
         let walletCurrency = await ExtensionLayer.runInPageContext(
             () => typeof g_rgWalletInfo !== "undefined" && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null,
+            null,
             "walletCurrency"
         );
 
@@ -1229,7 +1231,7 @@ let AugmentedSteam = (function() {
 
             document.querySelector("#es_reset_language_code").addEventListener("click", function(e){
                 e.preventDefault();
-                ExtensionLayer.runInPageContext(`() => { ChangeLanguage("${warningLanguage}"); }`);
+                ExtensionLayer.runInPageContext(warningLanguage => { ChangeLanguage(warningLanguage); }, [ warningLanguage ]);
             });
         });
     };
@@ -1346,15 +1348,18 @@ let AugmentedSteam = (function() {
                     gamename = data.name;
                 }
 
-                let playGameStr = Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim());
-                ExtensionLayer.runInPageContext(
-                    `function() {
-                        var prompt = ShowConfirmDialog('${playGameStr}', "<img src='//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg'>", null, null, '${Localization.str.visit_store}');
-                        prompt.done(function(result) {
-                            if (result == 'OK') { window.location.assign('steam://run/${gameid}'); }
-                            if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/${gameid}'); }
-                        });
-                    }`);
+                ExtensionLayer.runInPageContext((playGameStr, gameid, visitStore) => {
+                    let prompt = ShowConfirmDialog(playGameStr, `<img src="//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg">`, null, null, visitStore);
+                    prompt.done(result => {
+                        if (result === "OK") { window.location.assign(`steam://run/${gameid}`); }
+                        if (result === "SECONDARY") { window.location.assign(`//store.steampowered.com/app/${gameid}`); }
+                    });
+                }, 
+                [
+                    Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim()),
+                    gameid,
+                    Localization.str.visit_store,
+                ]);
             });
         });
     };
@@ -2031,7 +2036,7 @@ let Highlights = (function(){
 
         parent = parent || document;
 
-        await ExtensionLayer.runInPageContext(() => new Promise(resolve => { GDynamicStore.OnReady(() => { resolve(); }); }), "dynamicStoreReady");
+        await ExtensionLayer.runInPageContext(() => new Promise(resolve => { GDynamicStore.OnReady(() => { resolve(); }); }), null, "dynamicStoreReady");
         
         self.highlightAndTag(parent.querySelectorAll(selector));
 
@@ -2517,7 +2522,7 @@ class MediaPage {
             </div>`);
 
         // Initiate tooltip
-        ExtensionLayer.runInPageContext(function() { $J('[data-slider-tooltip]').v_tooltip({'tooltipClass': 'store_tooltip community_tooltip', 'dataName': 'sliderTooltip' }); });
+        ExtensionLayer.runInPageContext(() => { $J("[data-slider-tooltip]").v_tooltip({ "tooltipClass": "store_tooltip community_tooltip", "dataName": "sliderTooltip" }); });
 
         function buildSideDetails() {
             if (detailsBuilt) { return; }
