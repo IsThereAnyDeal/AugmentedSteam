@@ -73,8 +73,16 @@
         "js/config.js",
         "js/core.js",
         "js/language.js",
+        "js/FeatureDependencyError.js",
+        "js/ASFeatureManager.js",
+        "js/ASContext.js",
+        "js/ASFeature.js",
+        "js/CStorePage.js",
+        "js/CAppPage.js",
+        "js/FReplaceDevPubLinks.js",
+        "js/FRemoveFromWishlist.js",
         "js/content/common.js",
-        "js/content/store.js"
+        "js/content/store.js"        
       ],
       "css": [
         "css/enhancedsteam.css",

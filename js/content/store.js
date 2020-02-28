@@ -824,72 +824,8 @@ class AppPageClass extends StorePageClass {
     }
 
     addWishlistRemove() {
-        if (!User.isSignedIn || this.isOwned()) { return; }
 
-        // If game is already wishlisted, add required nodes
-        if (!document.getElementById("add_to_wishlist_area")) {
-            let firstButton = document.querySelector(".queue_actions_ctn a.queue_btn_active");
-            let wlSuccessArea = HTML.wrap(firstButton, '<div id="add_to_wishlist_area_success"></div>');
-
-            HTML.beforeBegin(wlSuccessArea,
-                `<div id="add_to_wishlist_area" style="display: none;">
-                    <a class="btnv6_blue_hoverfade btn_medium" data-tooltip-text="${Localization.str.add_to_wishlist_tooltip}">
-                        <span>${Localization.str.add_to_wishlist}</span>
-                    </a>
-                </div>
-                <div id="add_to_wishlist_area_fail" style="display: none;">
-                    <b>${Localization.str.error}</b>
-                </div>`);
-
-            document.querySelector("#add_to_wishlist_area > a").href = `javascript:AddToWishlist( ${this.appid}, 'add_to_wishlist_area', 'add_to_wishlist_area_success', 'add_to_wishlist_area_fail', null, 'add_to_wishlist_area2' );`;
-        }
-
-        let addBtn = document.getElementById("add_to_wishlist_area");
-        let successBtn = document.getElementById("add_to_wishlist_area_success");
-
-        // Update tooltip for wishlisted items
-        successBtn.querySelector("a").dataset.tooltipText = Localization.str.remove_from_wishlist_tooltip;
-
-        let imgNode = successBtn.querySelector("img:last-child");
-        imgNode.classList.add("es-in-wl");
-        HTML.beforeBegin(imgNode,
-            `<img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}" style="display: none;">
-            <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">`);
-
-        successBtn.addEventListener("click", async e => {
-            e.preventDefault();
-
-            let parent = successBtn.parentNode;
-            if (!parent.classList.contains("loading")) {
-                parent.classList.add("loading");
-
-                let removeWaitlist = !!document.querySelector(".queue_btn_wishlist + .queue_btn_ignore_menu.owned_elsewhere");
-
-                try {
-                    await Promise.all([
-                        this._removeFromWishlist(),
-                        removeWaitlist ? this._removeFromWaitlist() : Promise.resolve(),
-                    ]);
-
-                    if (SyncedStorage.get("add_to_waitlist")) { this.onWishAndWaitlistRemove(); }
-
-                    addBtn.style.display = "";
-                    successBtn.style.display = "none";
-
-                    // Clear dynamicstore cache
-                    DynamicStore.clear();
-
-                    // Invalidate dynamic store data cache
-                    ExtensionLayer.runInPageContext(() => { GDynamicStore.InvalidateCache(); });
-                } finally {
-                    parent.classList.remove("loading");
-                }
-            }
-        });
-
-        for (let node of document.querySelectorAll("#add_to_wishlist_area, #add_to_wishlist_area_success, .queue_btn_ignore")) {
-            node.addEventListener("click", DynamicStore.clear);
-        }
+        
     }
 
     async _removeFromWishlist() {
@@ -1719,34 +1655,7 @@ class AppPageClass extends StorePageClass {
 
     replaceDevPubLinks() {
 
-        let devs = Array.from(document.querySelectorAll("#developers_list > a, .details_block > .dev_row:first-of-type > a"));
-        let pubs = Array.from(document.querySelectorAll(".user_reviews > .dev_row:last-of-type a, .details_block > .dev_row:nth-of-type(2) > a"));
-        let franchise = document.querySelector(".details_block > .dev_row:nth-of-type(3) > a");
-        franchise = franchise ? [franchise] : [];
-
-        for (let node of [...devs, ...pubs, ...franchise]) {
-            let homepageLink = new URL(node.href);
-            if (homepageLink.pathname.startsWith("/search/")) { continue; }
-
-            let type;
-            if (devs.includes(node)) {
-                type = "developer";
-            } else if (pubs.includes(node)) {
-                type = "publisher";
-            } else if (franchise === node) {
-                type = "franchise";
-            }
-            if (!type) { continue; }
-
-            node.href = `https://store.steampowered.com/search/?${type}=${encodeURIComponent(node.textContent)}`;
-            HTML.afterEnd(node, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
-        }
-
-        for (let moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {
-            moreBtn.remove();
-        }
-
-        ExtensionLayer.runInPageContext(() => { CollapseLongStrings(".dev_row .summary.column"); });
+        
     }
 
     async addSupport() {
@@ -4241,7 +4150,7 @@ let TabAreaObserver = (function(){
             break;
 
         case /^\/app\/.*/.test(path):
-            (new AppPageClass(window.location.host + path));
+            new CAppPage([ FReplaceDevPubLinks, FRemoveFromWishlist ], window.location.host + path);
             break;
 
         case /^\/sub\/.*/.test(path):

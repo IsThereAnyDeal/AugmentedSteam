@@ -1,0 +1,3 @@
+class CStorePage extends ASContext {
+
+}
