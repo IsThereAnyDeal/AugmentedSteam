@@ -31,18 +31,18 @@ class ASFeatureManager {
             // Iterate backwards so that splice doesn't mess up indices
             for (let i = features.length - 1; i >= 0; i--) {
                 let feature = features[i];
-                let finished = true;
+                let ready = true;
                 let promise = Promise.resolve(true);
 
                 if (Array.isArray(feature.constructor.deps)) {
 
                     for (let dep of feature.constructor.deps) {
                         if (!promisesMap.has(dep)) {
-                            finished = false;
+                            ready = false;
                             break;
                         }
                     }
-                    if (finished) {
+                    if (ready) {
 
                         // Promise that waits for all dependencies to finish executing
                         promise = Promise.all(
@@ -56,7 +56,7 @@ class ASFeatureManager {
                     }
                 }
 
-                if (finished) {
+                if (ready) {
                     promisesMap.set(feature.constructor,
                         promise
                         .then(async previousCheck => {
