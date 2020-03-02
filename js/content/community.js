@@ -2948,71 +2948,88 @@ let FriendsPageClass = (function(){
     return FriendsPageClass;
 })();
 
-let GroupsPageClass = (function(){
+class GroupsPageClass {
 
-    function GroupsPageClass() {
-        this.addSort();
-        this.addManageBtn();
+    constructor() {
+        this._groups = Array.from(document.querySelectorAll(".group_block"));
+        this._initSort = true;
+
+        this._moveSearchBar();
+        this._addSort();
+        this._addManageBtn();
     }
 
-    GroupsPageClass.prototype.addSort = function() {
-        let groups = Array.from(document.querySelectorAll(".group_block"));
-        if (groups.length === 0) { return; }
-
-        groups.forEach((group, i) => {
-            let name = group.querySelector(".groupTitle > a").textContent;
-            let membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
-            group.dataset.esSortdefault = i;
-            group.dataset.esSortnames = name;
-            group.dataset.esSortmembers = membercount;
-        });
-
-        function sortGroups(sortBy, reversed) {
-            let searchResults = document.querySelector("#search_results_empty");
-            let property = `esSort${sortBy}`;
-            groups.sort((a, b) => {
-                let propA = a.dataset[property];
-                let propB = b.dataset[property];
-                switch(sortBy) {
-                    case "default":
-                        return Number(propA) - Number(propB);
-                    case "members":
-                        return Number(propB) - Number(propA);
-                    case "names": {
-                        if (propA.toLowerCase() < propB.toLowerCase()) { return -1; }
-                        if (propA.toLowerCase() > propB.toLowerCase()) { return 1; }
-                        return 0;
-                    }
-                }
-            });
-
-            for (let group of groups) {
-                if (reversed) {
-                    searchResults.insertAdjacentElement("afterend", group);
-                } else {
-                    searchResults.parentElement.appendChild(group);
-                }
-            }
-        }
-
+    _moveSearchBar() {
         // move the search bar to the same position as on friends page
         let container = HTML.wrap("#search_text_box", '<div class="searchBarContainer"></div>');
         document.querySelector("#search_results").insertAdjacentElement("beforebegin", container);
+    }
 
+    _addSort() {
         document.querySelector("span.profile_groups.title").insertAdjacentElement("afterend", Sortbox.get(
             "groups",
-            [["default", Localization.str.theworddefault], ["members", Localization.str.members], ["names", Localization.str.name]],
+            [
+                ["default", Localization.str.theworddefault],
+                ["members", Localization.str.members],
+                ["names", Localization.str.name]
+            ],
             SyncedStorage.get("sortgroupsby"),
-            sortGroups,
+            (sortBy, reversed) => { this._sortGroups(sortBy, reversed) },
             "sortgroupsby")
         );
-        document.querySelector(".es-sortbox").style.flex = 2;
-    };
 
-    GroupsPageClass.prototype.addManageBtn = async function() {
-        let groups = document.querySelectorAll(".group_block");
-        if (groups.length === 0) { return; }
-        if (!groups[0].querySelector(".actions")) { return; }
+        let sortbox = document.querySelector("div.es-sortbox");
+        sortbox.style.flexGrow = "2";
+        sortbox.style.marginRight = "20px";
+        sortbox.style.marginTop = "0";
+        sortbox.style.textAlign = "right";
+    }
+
+    _getSortFunc(sortBy) {
+        let property = `esSort${sortBy}`;
+        switch(sortBy) {
+            case "default":
+                return (a, b) => Number(a.dataset[property]) - Number(b.dataset[property]);
+            case "members":
+                return (a, b) => Number(b.dataset[property]) - Number(a.dataset[property]);
+            case "names":
+                return (a, b) => a.dataset[property].localeCompare(b.dataset[property]);
+        }
+    }
+
+    _sortGroups(sortBy, reversed) {
+        if (this._groups.length === 0) { return; }
+
+        if (this._initSort) {
+
+            let i = 0;
+            for (let group of this._groups) {
+                let name = group.querySelector(".groupTitle > a").textContent;
+                let membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
+                group.dataset.esSortdefault = i.toString();
+                group.dataset.esSortnames = name;
+                group.dataset.esSortmembers = membercount.toString();
+                i++;
+            }
+
+            this._initSort = false;
+        }
+
+        this._groups.sort(this._getSortFunc(sortBy, `esSort${sortBy}`));
+
+        let searchResults = document.querySelector("#search_results_empty");
+        for (let group of this._groups) {
+            if (reversed) {
+                searchResults.insertAdjacentElement("afterend", group);
+            } else {
+                searchResults.parentElement.appendChild(group);
+            }
+        }
+    }
+
+    _addManageBtn() {
+        if (this._groups.length === 0) { return; }
+        if (!this._groups[0].querySelector(".actions")) { return; }
 
         let groupsStr = Localization.str.groups;
 
@@ -3041,7 +3058,7 @@ let GroupsPageClass = (function(){
                 <div class="row"></div>
             </div>`);
 
-        for (let group of groups) {
+        for (let group of this._groups) {
             group.classList.add("selectable");
             HTML.afterBegin(group, 
                 `<div class="indicator select_friend">
@@ -3070,74 +3087,70 @@ let GroupsPageClass = (function(){
             ExtensionLayer.runInPageContext(() => { SelectInverse(); });
         });
 
-        document.querySelector("#es_leave_groups").addEventListener("click", () => leaveGroups());
-
-        async function displayAdminConfirmation(name, id) {
-            let body = groupsStr.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
-
-            let result = await ExtensionLayer.runInPageContext((leave, body) => {
-                let prompt = ShowConfirmDialog(leave, body);
-
-                return new Promise(resolve => {
-                    prompt.done(result => {
-                        resolve(result);
-                    }).fail(() => {
-                        resolve(); // todo when is fail triggered?
-                    });
-                });
-            }, [ groupsStr.leave, body ], `confirm#${id}`);
-            
-            if (result === "OK") {
-                return true;
-            }
-
-            return false;
-        }
-
-        async function leaveGroups() {
-            for (let group of groups) {
-                if (!group.classList.contains("selected")) { continue; }
-
-                let actions = group.querySelector(".actions");
-                let admin = actions.querySelector("[href*='/edit']");
-                let split = actions.querySelector("[onclick*=ConfirmLeaveGroup]").getAttribute("onclick").split(/'|"/);
-                let id = split[1];
-                if (admin) {
-                    let name = split[3]
-                    let cont = await displayAdminConfirmation(name, id);
-                    if (!cont) {
-                        group.querySelector(".select_friend").click();
-                        continue;
-                    }
-                }
-                let res = await leaveGroup(id).catch(err => console.error(err));
-
-                if (!res || !res.success) {
-                    console.error("Failed to leave group " + id);
-                    continue;
-                }
-
-                group.style.opacity = 0.3;
-                group.querySelector(".select_friend").click();
-            }
-        }
-
-        function leaveGroup(id) {
-            let formData = new FormData();
-            formData.append("sessionid", User.getSessionId());
-            formData.append("steamid", User.steamId);
-            formData.append("ajax", 1);
-            formData.append("action", "leave_group");
-            formData.append("steamids[]", id);
-
-            return RequestData.post(User.profileUrl + "/friends/action", formData, {
-                withCredentials: true
-            }, "json");
-        }
+        document.querySelector("#es_leave_groups").addEventListener("click", () => this._leaveGroups());
     };
 
-    return GroupsPageClass;
-})();
+
+    async _displayAdminConfirmation(name, id) {
+        let body = Localization.str.groups.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
+
+        let result = await ExtensionLayer.runInPageContext((leave, body) => {
+            let prompt = ShowConfirmDialog(leave, body);
+
+            return new Promise(resolve => {
+                prompt.done(result => {
+                    resolve(result);
+                }).fail(() => {
+                    resolve(); // todo when is fail triggered?
+                });
+            });
+        }, [ Localization.str.groups.leave, body ], `confirm#${id}`);
+
+        return result === "OK";
+    }
+
+    async _leaveGroups() {
+        for (let group of this._groups) {
+            if (!group.classList.contains("selected")) { continue; }
+
+            let actions = group.querySelector(".actions");
+            let admin = actions.querySelector("[href*='/edit']");
+            let split = actions.querySelector("[onclick*=ConfirmLeaveGroup]")
+                .getAttribute("onclick").split(/'|"/);
+            let id = split[1];
+            if (admin) {
+                let name = split[3];
+                let cont = await this._displayAdminConfirmation(name, id);
+                if (!cont) {
+                    group.querySelector(".select_friend").click();
+                    continue;
+                }
+            }
+            let res = await this._leaveGroup(id).catch(err => console.error(err));
+
+            if (!res || !res.success) {
+                console.error("Failed to leave group " + id);
+                continue;
+            }
+
+            group.style.opacity = "0.3";
+            group.querySelector(".select_friend").click();
+        }
+    }
+
+    _leaveGroup(id) {
+        let formData = new FormData();
+        formData.append("sessionid", User.getSessionId());
+        formData.append("steamid", User.steamId);
+        formData.append("ajax", 1);
+        formData.append("action", "leave_group");
+        formData.append("steamids[]", id);
+
+        return RequestData.post(User.profileUrl + "/friends/action", formData, {
+            withCredentials: true
+        }, "json");
+    }
+}
 
 let MarketListingPageClass = (function(){
 
