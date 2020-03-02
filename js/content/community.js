@@ -578,24 +578,38 @@ let ProfileHomePageClass = (function(){
         }
 
         function copySteamId(e) {
-            let elem = e.target.closest(".es_copy");
+            let elem = e.target.closest(".es-copy");
             if (!elem) { return; }
 
-            Clipboard.set(elem.innerText);
+            Clipboard.set(elem.querySelector(".es-copy__id").innerText);
 
-            ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal() });
+            let lastCopied = document.querySelector(".es-copy.is-copied");
+            if (lastCopied) {
+                lastCopied.classList.remove("is-copied");
+            }
+            
+            elem.classList.add("is-copied");
+            window.setTimeout(() => { elem.classList.remove("is-copied")}, 2000);
         }
 
         function showSteamIdDialog() {
             document.addEventListener("click", copySteamId);
 
+            let imgUrl = ExtensionResources.getURL("img/clippy.svg");
+
             let steamId = new SteamId(SteamId.fromDOM());
-            let html =
-                `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
-                <p><a class="es_copy">${steamId.getSteamId2()}</a></p>
-                <p><a class="es_copy">${steamId.getSteamId3()}</a></p>
-                <p><a class="es_copy">${steamId.getSteamId64()}</a></p>
-                <p><a class="es_copy">https://steamcommunity.com/profiles/${steamId.getSteamId64()}</a></p>`;
+            let ids = [
+                steamId.getSteamId2(),
+                steamId.getSteamId3(),
+                steamId.getSteamId64(),
+                `https://steamcommunity.com/profiles/${steamId.getSteamId64()}`
+            ];
+
+            let copied = Localization.str.copied;
+            let html = "";
+            for (let id of ids) {
+                html += `<p><a class="es-copy"><span class="es-copy__id">${id}</span><img src='${imgUrl}' class="es-copy__icon"><span class="es-copy__copied">${copied}</span></a></p>`
+            }
 
             ExtensionLayer.runInPageContext((steamidOfUser, html, close) => {
                 HideMenu("profile_action_dropdown_link", "profile_action_dropdown");

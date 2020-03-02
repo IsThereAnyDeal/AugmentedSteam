@@ -2522,54 +2522,39 @@ img.astats_icon {
 }
 
 /***************************************
- * Users profiles
- * add_community_profile_links()
+ * User's SteamIDs
  **************************************/
-#es_permalink {
-  width: 175px;
-  padding: 2px 1px 1px 1px;
-  border-radius: 0;
-  direction: rtl;
-  box-shadow: rgb(0, 0, 0) 0 0 1px 1px inset;
+.es-copy {
+  display: flex;
+  align-items: baseline;
 }
-#es_permalink_div .count_link_label {
-  margin-top: 10px;
-  float: left;
-  color: #ebebeb;
+
+.es-copy:hover .es-copy__id{
+  text-decoration: underline;
 }
-.es_copy_wrap {
-  float: left;
-  overflow: hidden;
-  border-radius: 3px;
-  margin: 8px -4px 0 6px;
-  box-shadow: rgba(193, 193, 193, 0.168627) 0 0 0 1px;
+
+.es-copy:hover .es-copy__icon {
+  opacity: 1;
 }
-#es_permalink_copy {
-  border: 0;
-  float: right;
-  border-radius: 0;
-  cursor: pointer;
-  padding: 1px 4px;
-  border-left: 1px solid #313131;
-  background: linear-gradient(to bottom, #333333 5%, #222222 95%);
-}
-#es_permalink_copy img {
-  width: 14px;
-  padding: 1px 0 2px 0;
-  vertical-align: middle;
+
+.es-copy .es-copy__icon {
   filter: invert(55%);
+  height: 1.2em;
+  margin-left: 5px;
+  opacity: 0;
 }
-#es_permalink_copy:hover {
-  background: linear-gradient(to bottom, #444444 5%, #333333 95%);
+
+.es-copy__copied {
+  opacity: 0;
+  transition: opacity 200ms;
+  margin-left: 20px;
+  color: #999;
+  font-size: 0.95em;
 }
-#es_permalink_copy:hover img {
-  filter: invert(75%);
+.es-copy.is-copied .es-copy__copied {
+  opacity: 1;
 }
-@media screen and (max-width: 910px) {
-  #es_permalink {
-    width: 67px;
-  }
-}
+
 
 /***************************************
  * Users profiles
