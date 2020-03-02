@@ -331,26 +331,28 @@ let DateParser = (function(){
 
 let ExtensionLayer = (function() {
 
+    let msgCounter = 0;
+
     let self = {};
 
     // NOTE: use cautiously!
     // Run script in the context of the current tab
-    self.runInPageContext = function(fun, args, msgId) {
+    self.runInPageContext = function(fun, args, withPromise) {
         let script = document.createElement("script");
         let promise;
         let argsString = Array.isArray(args) ? JSON.stringify(args) : "[]";
 
-        if (msgId) {
+        if (withPromise) {
+            let msgId = "msg_" + (msgCounter++);
             promise = Messenger.onMessage(msgId);
             script.textContent = `(async () => { Messenger.postMessage("${msgId}", await (${fun})(...${argsString})); })();`;
         } else {
             script.textContent = `(${fun})(...${argsString});`;
         }
-        
+
         document.documentElement.appendChild(script);
         script.parentNode.removeChild(script);
-
-        if (msgId) { return promise; }
+        return promise;
     };
 
     return self;
@@ -1354,7 +1356,7 @@ let AugmentedSteam = (function() {
                         if (result === "OK") { window.location.assign(`steam://run/${gameid}`); }
                         if (result === "SECONDARY") { window.location.assign(`//store.steampowered.com/app/${gameid}`); }
                     });
-                }, 
+                },
                 [
                     Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim()),
                     gameid,
