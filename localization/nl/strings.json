@@ -229,7 +229,7 @@
     "avg_price_3cards": "Gemiddelde prijs van drie ruilkaarten: __price__",
     "mods": "Modificaties. ",
     "groups": {
-        "leave_groups_confirm": "U bent momenteel admin van __name__.<br>Weet u zeker dat u deze groep wilt verlaten?",
+        "leave_admin_confirm": "U bent momenteel admin van __name__.<br>Weet u zeker dat u deze groep wilt verlaten?",
         "manage_groups": "Groepen beheren",
         "action_groups": "Selecteer hieronder de groepen waar je actie op wilt ondernemen. ",
         "leave": "Verlaten",

@@ -232,11 +232,12 @@
     "avg_price_3cards": "Average price of three trading cards: __price__",
     "mods": "Mods",
     "groups": {
-        "leave_groups_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?",
+        "leave_admin_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?",
+        "leave_groups_confirm": "Are you sure you want to leave __n__ selected groups?",
         "manage_groups": "Manage groups",
         "action_groups": "Select the groups below that you wish to take action on.",
         "select": "Select:",
-        "leave": "Leave",
+        "leave": "Leave Groups",
         "selected": "__n__ selected."
     },
     "export": {

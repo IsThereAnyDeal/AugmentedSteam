@@ -3090,51 +3090,53 @@ class GroupsPageClass {
         document.querySelector("#es_leave_groups").addEventListener("click", () => this._leaveGroups());
     };
 
-
-    async _displayAdminConfirmation(name, id) {
-        let body = Localization.str.groups.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
-
-        let result = await ExtensionLayer.runInPageContext((leave, body) => {
-            let prompt = ShowConfirmDialog(leave, body);
-
-            return new Promise(resolve => {
-                prompt.done(result => {
-                    resolve(result);
-                }).fail(() => {
-                    resolve(); // todo when is fail triggered?
-                });
-            });
-        }, [ Localization.str.groups.leave, body ], `confirm#${id}`);
-
-        return result === "OK";
-    }
-
     async _leaveGroups() {
+        let selected = [];
+
         for (let group of this._groups) {
-            if (!group.classList.contains("selected")) { continue; }
+            if (!group.classList.contains("selected")) {
+                continue;
+            }
 
             let actions = group.querySelector(".actions");
             let admin = actions.querySelector("[href*='/edit']");
             let split = actions.querySelector("[onclick*=ConfirmLeaveGroup]")
                 .getAttribute("onclick").split(/'|"/);
             let id = split[1];
+
             if (admin) {
                 let name = split[3];
-                let cont = await this._displayAdminConfirmation(name, id);
+
+                let body = Localization.str.groups.leave_admin_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
+                let result = await ConfirmDialog.open(Localization.str.groups.leave, body);
+                let cont = (result === "OK");
                 if (!cont) {
                     group.querySelector(".select_friend").click();
                     continue;
                 }
             }
-            let res = await this._leaveGroup(id).catch(err => console.error(err));
 
-            if (!res || !res.success) {
-                console.error("Failed to leave group " + id);
-                continue;
+            selected.push([id, group]);
+        }
+
+        if (selected.length > 0) {
+            let body = Localization.str.groups.leave_groups_confirm.replace("__n__", selected.length);
+            let result = await ConfirmDialog.open(Localization.str.groups.leave, body);
+
+            if (result === "OK") {
+                for (let tuple of selected) {
+                    let [id, group] = tuple;
+                    let res = await this._leaveGroup(id).catch(err => console.error(err));
+
+                    if (!res || !res.success) {
+                        console.error("Failed to leave group " + id);
+                        continue;
+                    }
+
+                    group.style.opacity = "0.3";
+                    group.querySelector(".select_friend").click();
+                }
             }
-
-            group.style.opacity = "0.3";
-            group.querySelector(".select_friend").click();
         }
     }
 

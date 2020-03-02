@@ -224,7 +224,7 @@
     "avg_price_3cards": "3 takas kartı için en fazla fiyat: __price__",
     "mods": "Modlar",
     "groups": {
-        "leave_groups_confirm": "Şu anda __name__ yöneticisisin.<br>Grubu terketmek istediğinden emin misin?",
+        "leave_admin_confirm": "Şu anda __name__ yöneticisisin.<br>Grubu terketmek istediğinden emin misin?",
         "manage_groups": "Grupları yönet",
         "action_groups": "İşlem yapmak istediğin grupları aşağıdan seç.",
         "leave": "Ayrıl",

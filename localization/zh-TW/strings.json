@@ -227,7 +227,7 @@
     "avg_price_3cards": "三張交換卡片的平均價格：__price__",
     "mods": "模組",
     "groups": {
-        "leave_groups_confirm": "你目前是 __name__ 的管理員。<br>你確定要離開此群組嗎？",
+        "leave_admin_confirm": "你目前是 __name__ 的管理員。<br>你確定要離開此群組嗎？",
         "manage_groups": "管理群組",
         "action_groups": "請從下方選擇你欲採取行動的群組。",
         "select": "選擇：",
