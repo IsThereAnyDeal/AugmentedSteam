@@ -26,7 +26,7 @@ let ProfileData = (function(){
     let _promise = null;
     self.promise = async function() {
         if (!_promise) {
-            let steamId = SteamId.fromDOM().id64;
+            let steamId = SteamId.getSteamId();
 
             _promise = Background.action("profile", steamId)
                 .then(response => { _data = response; return _data; });
@@ -452,7 +452,7 @@ let ProfileHomePageClass = (function(){
     }
 
     ProfileHomePageClass.prototype.addCommunityProfileLinks = function() {
-        let steamId = SteamId.fromDOM().id64;
+        let steamId = SteamId.getSteamId();
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
@@ -597,7 +597,7 @@ let ProfileHomePageClass = (function(){
 
             let imgUrl = ExtensionResources.getURL("img/clippy.svg");
 
-            let steamId = SteamId.fromDOM();
+            let steamId = new SteamId.Detail(SteamId.getSteamId());
             let ids = [
                 steamId.id2,
                 steamId.id3,
@@ -741,9 +741,8 @@ let ProfileHomePageClass = (function(){
         ProfileData.promise().then(data => {
             if (!data.steamrep || data.steamrep.length === 0) { return; }
 
-            let steamId = SteamId.fromDOM();
+            let steamId = SteamId.getSteamId();
             if (!steamId) { return; }
-            steamId = steamId.id64;
 
             // Build reputation images regexp
             let repImgs = {
@@ -1288,7 +1287,7 @@ let ProfileEditPageClass = (function(){
 
         let result = await Background.action("profile.background", {
             appid: appid,
-            profile: SteamId.fromDOM().id64
+            profile: SteamId.getSteamId()
         });
 
         let selectedImg = ProfileData.getBgImg();

@@ -962,123 +962,133 @@ let Price = (function() {
 })();
 
 
-class SteamId {
+let SteamId = (function(){
 
-    static fromDOM() {
+    let self = {};
+    let _steamId = null;
 
-        // TODO right now we may create multiple instances of same SteamID, we should try not to do that
-                
-        let id = null;
-        let g_steamID = HTMLParser.getVariableFromDom("g_steamID", "string");
-        let g_rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
+    self.getSteamId = function() {
+        if (_steamId) { return _steamId; }
+
         if (document.querySelector("#reportAbuseModal")) {
-            id = document.querySelector("input[name=abuseID]").value;
-        } else if (g_steamID) {
-            id = g_steamID;
-        } else if (g_rgProfileData) {
-            id = g_rgProfileData.steamid;
+            _steamId = document.querySelector("input[name=abuseID]").value;
         } else {
-            return null;
-        }
-        return new SteamId(id);
-    }
-
-    /*
-     * @see https://developer.valvesoftware.com/wiki/SteamID
-     */
-
-    constructor(steam64str) {
-        if (!steam64str) {
-            throw new Error("Missing first parameter 'steam64str'.") 
+            _steamId = HTMLParser.getVariableFromDom("g_steamID", "string");
         }
 
-        let [upper32, lower32] = this._getBinary(steam64str);
-        this._y = lower32 & 1;
-        this._accountNumber = (lower32 & ((1 << 31) - 1) << 1) >> 1;
-        this._instance = (upper32 & ((1  << 20) - 1));
-        this._type =     (upper32 & (((1 <<  4) - 1) << 20)) >> 20;
-        this._universe = (upper32 & (((1 <<  8) - 1) << 24)) >> 24;
+        if (!_steamId) {
+            let profileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
+            _steamId = profileData.steamid;
+        }
 
-        this._steamId64 = steam64str;
-    }
+        return _steamId;
+    };
 
-    _divide(str) {
-        let length = str.length;
-        let result = [];
-        let num = 0;
-        for (let i = 0; i < length; i++) {
-            num += Number(str[i]);
 
-            let r = Math.floor(num / 2);
-            num = ((num - 2*r) * 10);
+    class SteamIdDetail {
 
-            if (r !== 0 || result.length !== 0) {
-                result.push(r);
+        /*
+         * @see https://developer.valvesoftware.com/wiki/SteamID
+         */
+
+        constructor(steam64str) {
+            if (!steam64str) {
+                throw new Error("Missing first parameter 'steam64str'.")
             }
+
+            let [upper32, lower32] = this._getBinary(steam64str);
+            this._y = lower32 & 1;
+            this._accountNumber = (lower32 & ((1 << 31) - 1) << 1) >> 1;
+            this._instance = (upper32 & ((1  << 20) - 1));
+            this._type =     (upper32 & (((1 <<  4) - 1) << 20)) >> 20;
+            this._universe = (upper32 & (((1 <<  8) - 1) << 24)) >> 24;
+
+            this._steamId64 = steam64str;
         }
 
-        return [result, num > 0 ? 1 : 0];
-    }
+        _divide(str) {
+            let length = str.length;
+            let result = [];
+            let num = 0;
+            for (let i = 0; i < length; i++) {
+                num += Number(str[i]);
 
-    _getBinary(str) {
-        let upper32 = 0;
-        let lower32 = 0;
-        let index = 0;
-        let bit = 0;
-        do {
-            [str, bit] = this._divide(str);
-            
-            if (bit) {
-                if (index < 32) {
-                lower32 = lower32 | (1 << index);
-                } else {
-                    upper32 = upper32 | (1 << (index - 32));
+                let r = Math.floor(num / 2);
+                num = ((num - 2*r) * 10);
+
+                if (r !== 0 || result.length !== 0) {
+                    result.push(r);
                 }
             }
-            
-            index++;
-        } while(str.length > 0);
 
-        return [upper32, lower32];
+            return [result, num > 0 ? 1 : 0];
+        }
+
+        _getBinary(str) {
+            let upper32 = 0;
+            let lower32 = 0;
+            let index = 0;
+            let bit = 0;
+            do {
+                [str, bit] = this._divide(str);
+
+                if (bit) {
+                    if (index < 32) {
+                        lower32 = lower32 | (1 << index);
+                    } else {
+                        upper32 = upper32 | (1 << (index - 32));
+                    }
+                }
+
+                index++;
+            } while(str.length > 0);
+
+            return [upper32, lower32];
+        }
+
+        get id2() {
+            return `STEAM_${this._universe}:${this._y}:${this._accountNumber}`;
+        };
+
+
+        get id3() {
+            let map = new Map(
+                [
+                    [0, "I"], // invalid
+                    [1, "U"], // individual
+                    [2, "M"], // multiset
+                    [3, "G"], // game server
+                    [4, "A"], // anon game server
+                    [5, "P"], // pending
+                    [6, "C"], // content server
+                    [7, "g"], // clan
+                    // [8, "T / L / C"], // chat // TODO no idea what does this mean
+                    [9, "a"] // anon user
+                ]
+            );
+
+            let type = null;
+            if (map.has(this._type)) {
+                type = map.get(this._type);
+            }
+
+            if (!type) {
+                return null;
+            }
+
+            return `[${type}:${this._universe}:${this._accountNumber << 1 | this._y}]`;
+        };
+
+        get id64() {
+            return this._steamId64;
+        };
     }
 
-    get id2() {
-        return `STEAM_${this._universe}:${this._y}:${this._accountNumber}`;
-    };
-    
+    self.Detail = SteamIdDetail;
 
-    get id3() {
-        let map = new Map(
-            [
-                [0, "I"], // invalid
-                [1, "U"], // individual
-                [2, "M"], // multiset
-                [3, "G"], // game server
-                [4, "A"], // anon game server
-                [5, "P"], // pending
-                [6, "C"], // content server
-                [7, "g"], // clan
-                // [8, "T / L / C"], // chat // TODO no idea what does this mean
-                [9, "a"] // anon user
-            ]
-        );
+    return self;
+})();
 
-        let type = null;
-        if (map.has(this._type)) {
-            type = map.get(this._type);
-        }
-
-        if (!type) {
-            return null;
-        }
-
-        return `[${type}:${this._universe}:${this._accountNumber << 1 | this._y}]`;
-    };
-
-    get id64() {
-        return this._steamId64;
-    };
-}
 
 
 let Viewport = (function(){
