@@ -962,17 +962,47 @@ let Price = (function() {
 })();
 
 
-let SteamId = (function(){
-    function SteamId(steam64str) {
+class SteamId {
+
+    static fromDOM() {
+
+        // TODO right now we may create multiple instances of same SteamID, we should try not to do that
+                
+        let id = null;
+        let g_steamID = HTMLParser.getVariableFromDom("g_steamID", "string");
+        let g_rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
+        if (document.querySelector("#reportAbuseModal")) {
+            id = document.querySelector("input[name=abuseID]").value;
+        } else if (g_steamID) {
+            id = g_steamID;
+        } else if (g_rgProfileData) {
+            id = g_rgProfileData.steamid;
+        } else {
+            return null;
+        }
+        return new SteamId(id);
+    }
+
+    /*
+     * @see https://developer.valvesoftware.com/wiki/SteamID
+     */
+
+    constructor(steam64str) {
         if (!steam64str) {
             throw new Error("Missing first parameter 'steam64str'.") 
         }
 
-        this._steamId = this.fromString(steam64str);
-        this._steamId64 = steam64str;
-    };
+        let [upper32, lower32] = this._getBinary(steam64str);
+        this._y = lower32 & 1;
+        this._accountNumber = (lower32 & ((1 << 31) - 1) << 1) >> 1;
+        this._instance = (upper32 & ((1  << 20) - 1));
+        this._type =     (upper32 & (((1 <<  4) - 1) << 20)) >> 20;
+        this._universe = (upper32 & (((1 <<  8) - 1) << 24)) >> 24;
 
-    function divide(str) {
+        this._steamId64 = steam64str;
+    }
+
+    _divide(str) {
         let length = str.length;
         let result = [];
         let num = 0;
@@ -982,7 +1012,7 @@ let SteamId = (function(){
             let r = Math.floor(num / 2);
             num = ((num - 2*r) * 10);
 
-            if (r != 0 || result.length != 0) {
+            if (r !== 0 || result.length !== 0) {
                 result.push(r);
             }
         }
@@ -990,13 +1020,13 @@ let SteamId = (function(){
         return [result, num > 0 ? 1 : 0];
     }
 
-    function getBinary(str) {
+    _getBinary(str) {
         let upper32 = 0;
         let lower32 = 0;
         let index = 0;
         let bit = 0;
         do {
-            [str, bit] = divide(str);
+            [str, bit] = this._divide(str);
             
             if (bit) {
                 if (index < 32) {
@@ -1012,49 +1042,43 @@ let SteamId = (function(){
         return [upper32, lower32];
     }
 
-    SteamId.prototype.fromString = function(steam64str) {
-        let [upper32, lower32] = getBinary(steam64str);
-        return {
-            y: lower32 & 1,
-            accountNumber: (lower32 & ((1 << 31) - 1) << 1) >> 1,
-            instance: (upper32 & ((1 << 20) - 1)),
-            type: (upper32 & (15 << 20)) >> 20,
-            universe: (upper32 & ((1 << 8) - 1) << 20) >> 20
-        }
-    };
-
-    SteamId.prototype.getAccountId = function() {
-        return this._steamId.accountNumber * 2;
-    };
-
-    SteamId.prototype.getSteamId2 = function() {
-        return "STEAM_0:0:" + this._steamId.accountNumber;
+    get id2() {
+        return `STEAM_${this._universe}:${this._y}:${this._accountNumber}`;
     };
     
 
-    SteamId.prototype.getSteamId3 = function() {
-        return "[U:1:" + this.getAccountId() + "]";
+    get id3() {
+        let map = new Map(
+            [
+                [0, "I"], // invalid
+                [1, "U"], // individual
+                [2, "M"], // multiset
+                [3, "G"], // game server
+                [4, "A"], // anon game server
+                [5, "P"], // pending
+                [6, "C"], // content server
+                [7, "g"], // clan
+                // [8, "T / L / C"], // chat // TODO no idea what does this mean
+                [9, "a"] // anon user
+            ]
+        );
+
+        let type = null;
+        if (map.has(this._type)) {
+            type = map.get(this._type);
+        }
+
+        if (!type) {
+            return null;
+        }
+
+        return `[${type}:${this._universe}:${this._accountNumber << 1 | this._y}]`;
     };
 
-    SteamId.prototype.getSteamId64 = function() {
+    get id64() {
         return this._steamId64;
     };
-
-    return SteamId;
-})();
-SteamId.fromDOM = () => {
-    let id = null;
-    let g_steamID = HTMLParser.getVariableFromDom("g_steamID", "string");
-    let g_rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
-    if (document.querySelector("#reportAbuseModal")) {
-        id = document.querySelector("input[name=abuseID]").value;
-    } else if (g_steamID) {
-        id = g_steamID;
-    } else if (g_rgProfileData) {
-        id = g_rgProfileData.steamid;
-    }
-    return id;
-};
+}
 
 
 let Viewport = (function(){

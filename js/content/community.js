@@ -26,7 +26,7 @@ let ProfileData = (function(){
     let _promise = null;
     self.promise = async function() {
         if (!_promise) {
-            let steamId = SteamId.fromDOM();
+            let steamId = SteamId.fromDOM().id64;
 
             _promise = Background.action("profile", steamId)
                 .then(response => { _data = response; return _data; });
@@ -452,7 +452,7 @@ let ProfileHomePageClass = (function(){
     }
 
     ProfileHomePageClass.prototype.addCommunityProfileLinks = function() {
-        let steamId = SteamId.fromDOM();
+        let steamId = SteamId.fromDOM().id64;
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
@@ -587,7 +587,7 @@ let ProfileHomePageClass = (function(){
             if (lastCopied) {
                 lastCopied.classList.remove("is-copied");
             }
-            
+
             elem.classList.add("is-copied");
             window.setTimeout(() => { elem.classList.remove("is-copied")}, 2000);
         }
@@ -597,17 +597,18 @@ let ProfileHomePageClass = (function(){
 
             let imgUrl = ExtensionResources.getURL("img/clippy.svg");
 
-            let steamId = new SteamId(SteamId.fromDOM());
+            let steamId = SteamId.fromDOM();
             let ids = [
-                steamId.getSteamId2(),
-                steamId.getSteamId3(),
-                steamId.getSteamId64(),
-                `https://steamcommunity.com/profiles/${steamId.getSteamId64()}`
+                steamId.id2,
+                steamId.id3,
+                steamId.id64,
+                `https://steamcommunity.com/profiles/${steamId.id64}`
             ];
 
             let copied = Localization.str.copied;
             let html = "";
             for (let id of ids) {
+                if (!id) { continue; }
                 html += `<p><a class="es-copy"><span class="es-copy__id">${id}</span><img src='${imgUrl}' class="es-copy__icon"><span class="es-copy__copied">${copied}</span></a></p>`
             }
 
@@ -742,6 +743,7 @@ let ProfileHomePageClass = (function(){
 
             let steamId = SteamId.fromDOM();
             if (!steamId) { return; }
+            steamId = steamId.id64;
 
             // Build reputation images regexp
             let repImgs = {
@@ -1286,7 +1288,7 @@ let ProfileEditPageClass = (function(){
 
         let result = await Background.action("profile.background", {
             appid: appid,
-            profile: SteamId.fromDOM()
+            profile: SteamId.fromDOM().id64
         });
 
         let selectedImg = ProfileData.getBgImg();
