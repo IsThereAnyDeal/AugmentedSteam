@@ -486,14 +486,14 @@ let Options = (function(){
 
         function deepCount(obj) {
             let cnt = 0;
-            for (let key in obj) {
+            for (let key of Object.keys(obj)) {
                 if (!Localization.str[key]) { // don't count "made up" translations
                     continue;
                 }
                 if (typeof obj[key] === "object") {
                     cnt += deepCount(obj[key]);
-                } else {
-                    cnt += 1;
+                } else if (obj[key] !== "") {
+                    cnt++;
                 }
             }
             return cnt;
