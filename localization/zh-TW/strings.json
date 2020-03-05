@@ -1,4 +1,9 @@
 {
+    "steamid_of_user": "",
+    "click_to_copy": "",
+    "copied": "",
+    "profile_steamid": "",
+    "view_steamid": "",
     "more_on_steampeek": "前往 SteamPeek 查看更多",
     "invite_friends": "邀請好友",
     "invite_to_group": "邀請至群組",
@@ -227,12 +232,13 @@
     "avg_price_3cards": "三張交換卡片的平均價格：__price__",
     "mods": "模組",
     "groups": {
-        "leave_admin_confirm": "你目前是 __name__ 的管理員。<br>你確定要離開此群組嗎？",
+        "leave_groups_confirm": "你目前是 __name__ 的管理員。<br>你確定要離開此群組嗎？",
         "manage_groups": "管理群組",
         "action_groups": "請從下方選擇你欲採取行動的群組。",
         "select": "選擇：",
         "leave": "離開",
-        "selected": "已選擇 __n__ 個。"
+        "selected": "已選擇 __n__ 個。",
+        "leave_admin_confirm": ""
     },
     "export": {
         "wishlist": "匯出願望清單",
@@ -455,6 +461,8 @@
         "inventory_market_text": "在物品庫頁面中顯示市集價格",
         "send_age_info": "自動送出年齡認證",
         "mp4video": "強制以 MP4 格式播放應用程式頁面中的影片",
+        "youtube": "",
+        "twitch": "",
         "pcgw": "顯示 PCGamingWiki 連結",
         "completionistme": "顯示 Completionist.me 連結",
         "protondb": "顯示 ProtonDB 連結",
