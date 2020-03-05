@@ -1,6 +1,6 @@
 ﻿v1.4.2
 ------
-- Fix high disk usage and long loading times
+- Fix high disk & CPU usage and improve loading times
 - Improved games highlighting
 - Updated entries in page customizers
 - Added similar games from SteamPeek to app pages
