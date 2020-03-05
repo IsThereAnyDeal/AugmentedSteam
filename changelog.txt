@@ -1,4 +1,15 @@
-﻿v.1.4.1
+﻿v1.4.2
+------
+- Fix high disk usage and long loading times
+- Improved games highlighting
+- Updated entries in page customizers
+- Added similar games from SteamPeek to app pages
+- Added quick links for youtube and twitch to app pages
+- Added sort to your groups
+- Added option to leave multiple groups at once
+
+
+v1.4.1
 ------
 - Improved ITAD Authorization workflow, so it doesn't look so sketchy
 - Fixed user notes no longer showing up
@@ -11,7 +22,7 @@
 
 
 
-v.1.4.0
+v1.4.0
 ------
 Integration with IsThereAnyDeal (BETA)
 Added IsThereAnyDeal integration, which allows you to connect Augmented Steam with your ITAD account.
