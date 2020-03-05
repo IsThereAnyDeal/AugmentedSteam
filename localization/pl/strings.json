@@ -1,6 +1,13 @@
 {
+    "steamid_of_user": "",
+    "click_to_copy": "",
+    "copied": "",
+    "profile_steamid": "",
+    "view_steamid": "",
+    "more_on_steampeek": "",
     "invite_friends": "Zaproś znajomych",
     "invite_to_group": "Zaproś do grupy",
+    "inverse": "",
     "transactionStatus": "Liczba żądań zakończonych niepowodzeniem: __failed__. Pobrano __size__ z __total__ transakcji.",
     "custom_tags": "Niestandardowe tagi",
     "add_tag": "Dodaj tag",
@@ -95,7 +102,7 @@
     "dlc": "DLC",
     "add_to_wishlist": "Dodaj do listy życzeń",
     "add_to_wishlist_tooltip": "Otrzymaj powiadomienie e-mailem, kiedy produkt na liście życzeń zostanie wydany lub będzie na wyprzedaży",
-    "remove_from_wishlist": "Ten produkt już jest na twojej liście życzeń. Kliknij tutaj, aby go z niej usunąć.",
+    "remove_from_wishlist_tooltip": "",
     "add_to_waitlist": "Dodaj do listy oczekujących",
     "language": "Język",
     "theworddefault": "Domyślne",
@@ -103,6 +110,7 @@
     "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Dowiedz się więcej</a> o kuponach Steam",
     "show": "Pokaż",
     "badges_all": "Wszystkie odznaki",
+    "comparison_mode": "",
     "search": "Szukaj",
     "es_supporter": "Zwolennik Enhanced Steam",
     "view_to_scale": "Pokaż w skali",
@@ -131,6 +139,8 @@
     "using_store": "Aktualnie przeglądasz Sklep Steam dla regionu: __current__.",
     "volume_sold_last_24": "Nakład: Sprzedano __sold__ przez ostatnie 24 godziny",
     "sold_last_24": "Sprzedano __sold__ przez ostatnie 24 godziny",
+    "homepage_curators": "",
+    "homepage_topnewreleases": "",
     "homepage_sidebar": "Pasek boczny",
     "drop_calc": "Kliknij tutaj, aby obliczyć liczbę pozostałych kart",
     "price": "Cena",
@@ -172,10 +182,13 @@
     "badge_foil_progress": "Zobacz postęp foliowanej odznaki",
     "net_gain": "Dochód:",
     "apppage_recentupdates": "Ostatnie wydarzenia i ogłoszenia",
+    "apppage_eaheader": "",
+    "apppage_eabanner": "",
     "apppage_workshop": "Baner Warsztatu Steam",
     "apppage_greenlight": "Baner Steam Greenlight",
     "apppage_legal": "Informacje prawne",
     "apppage_franchise": "Więcej tytułów w serii",
+    "apppage_morefromfranchise": "",
     "bug_feature": "Zgłoś błąd / Zaproponuj nową funkcję",
     "always": "Zawsze",
     "compare": "Porównaj",
@@ -218,6 +231,15 @@
     "item_type": "Rodzaj przedmiotu",
     "avg_price_3cards": "Śr. cena 3 kart kolekcjonerskich: __price__",
     "mods": "Modyfikacje",
+    "groups": {
+        "leave_groups_confirm": "",
+        "manage_groups": "",
+        "action_groups": "",
+        "select": "",
+        "leave": "",
+        "selected": "",
+        "leave_admin_confirm": ""
+    },
     "export": {
         "wishlist": "Eksportuj listę życzeń",
         "type": "Typ pliku",
@@ -439,6 +461,8 @@
         "inventory_market_text": "Wyświetlaj ceny z rynku na stronach ekwipunku",
         "send_age_info": "Automatycznie potwierdzaj wiek na żądanie",
         "mp4video": "Wymuszaj odtwarzanie wideo ze sklepu w formacie MP4",
+        "youtube": "",
+        "twitch": "",
         "pcgw": "Wyświetlaj odnośniki do PCGamingWiki",
         "completionistme": "Wyświetlaj odnośniki do Completionist.me",
         "protondb": "Wyświetlaj odnośniki do ProtonDB",
@@ -539,7 +563,8 @@
             "tchinese": "chiński tradycyjny",
             "thai": "tajski",
             "turkish": "turecki",
-            "ukrainian": "ukraiński"
+            "ukrainian": "ukraiński",
+            "vietnamese": ""
         },
         "add_custom_link": "Dodaj niestandardowy odnośnik",
         "auto_detect": "Wykryj automatycznie",
@@ -615,7 +640,11 @@
         "sync_now": "Synchronizuj teraz",
         "option": "Wyświetlaj w menu podręcznym Augmented Steam opcję synchronizacji danych z IsThereAnyDeal.com",
         "send_to_itad": "Wyślij posiadane gry do IsThereAnyDeal",
-        "sending": "Trwa wczytywanie pakietów i gier z twojej biblioteki, i wysyłanie ich do IsThereAnyDeal.com"
+        "sending": "Trwa wczytywanie pakietów i gier z twojej biblioteki, i wysyłanie ich do IsThereAnyDeal.com",
+        "info": {
+            "itad-steam": "",
+            "steam-itad": ""
+        }
     },
     "tradeoffer": {
         "num_item": "__num__ przedmiot",
@@ -673,7 +702,6 @@
         "finished": "Gotowe! Zakończone powodzeniem: __success__, zakończone niepowodzeniem: __fail__. Kliknij przycisk „OK”, by odświeżyć stronę",
         "failed": "Zakończone niepowodzeniem: __n__"
     },
-
     "this_version": "To wydanie",
     "original_authors": "Pierwotni autorzy",
     "acknowledgements": "Podziękowania",
