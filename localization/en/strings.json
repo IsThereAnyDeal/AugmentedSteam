@@ -1,5 +1,6 @@
 {
     "steamid_of_user": "__user__'s SteamID",
+    "click_to_copy": "Click to copy",
     "copied": "Copied to your clipboard!",
     "profile_steamid": "Show SteamID on profiles",
     "view_steamid": "View SteamID",
@@ -61,7 +62,6 @@
     "clear_cache": "Clear cached data",
     "events": "Events",
     "translation": "Translation",
-    "help_translate": "Help us translate Augmented Steam over at POEditor",
     "lowest": "Lowest",
     "lowest_price": "Current Lowest Price:",
     "view_badge_progress": "View badge progress",
@@ -169,8 +169,8 @@
     "price_above": "Items that cost more than",
     "price_above_tooltip": "Enter zero for free items or items without price tags; leave this field empty to disable this feature",
     "price_above_wrong_format": "Wrong format, expected input in the form of __pattern__",
-    "reviews_below":"Items with less reviews than",
-    "reviews_below_tooltip":"Enter zero for items without reviews; leave this field empty to disable this feature",
+    "reviews_below": "Items with less reviews than",
+    "reviews_below_tooltip": "Enter zero for items without reviews; leave this field empty to disable this feature",
     "news": "News",
     "check_system": "Check Your System",
     "viewinclient": "View in Client",
@@ -232,13 +232,13 @@
     "avg_price_3cards": "Average price of three trading cards: __price__",
     "mods": "Mods",
     "groups": {
-        "leave_admin_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?",
         "leave_groups_confirm": "Are you sure you want to leave __n__ selected groups?",
         "manage_groups": "Manage groups",
         "action_groups": "Select the groups below that you wish to take action on.",
         "select": "Select:",
         "leave": "Leave Groups",
-        "selected": "__n__ selected."
+        "selected": "__n__ selected.",
+        "leave_admin_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?"
     },
     "export": {
         "wishlist": "Export wishlist",
@@ -501,7 +501,7 @@
         "hide_about_links": "Hide \"About\" link",
         "show_view_in_library": "Show \"View in library\" button for owned games",
         "install_steam_button": "\"Install Steam\" button",
-        "replace_view_client":  "Replace with \"View in Client\"",
+        "replace_view_client": "Replace with \"View in Client\"",
         "show_empty_wishlist": "Show \"Empty Wishlist\" button",
         "show_wishlist_stats": "Show wishlist stats on wishlist",
         "show_user_notes": "Show user notes on wishlist and app pages",
@@ -702,7 +702,6 @@
         "finished": "Finished! __success__ successful, __fail__ failed. Click OK to refresh the page",
         "failed": "__n__ failed"
     },
-
     "this_version": "This version",
     "original_authors": "Original authors",
     "acknowledgements": "Acknowledgments",
