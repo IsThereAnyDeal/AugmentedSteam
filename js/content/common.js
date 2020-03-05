@@ -1481,6 +1481,17 @@ let AugmentedSteam = (function() {
         }
     };
 
+    self.horizontalScrolling = function() {
+        if (!SyncedStorage.get("horizontalscrolling")) { return; }
+
+        for (let node of document.querySelectorAll(".slider_ctn")) {
+            new HorizontalScroller(
+                node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
+                node.querySelector(".slider_left"),
+                node.querySelector(".slider_right"));
+        }
+    };
+
     return self;
 })();
 
@@ -2486,6 +2497,7 @@ let Common = (function(){
         AugmentedSteam.skipGotSteam();
         AugmentedSteam.keepSteamSubscriberAgreementState();
         AugmentedSteam.defaultCommunityTab();
+        AugmentedSteam.horizontalScrolling();
         ITAD.create();
 
         if (User.isSignedIn) {
@@ -2693,20 +2705,6 @@ class MediaPage {
             for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
                 node.classList.toggle("es_expanded");
             }
-        }
-
-        this._horizontalScrolling();
-    }
-
-    _horizontalScrolling() {
-        if (!SyncedStorage.get("horizontalscrolling")) { return; }
-
-        for (let node of document.querySelectorAll(".slider_ctn")) {
-            new HorizontalScroller(
-                node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
-                node.querySelector(".slider_left"),
-                node.querySelector(".slider_right")
-            );
         }
     }
 }
