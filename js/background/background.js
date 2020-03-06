@@ -335,20 +335,25 @@ class ITAD_Api extends Api {
             "data": [],
         };
 
+        let storeids = [];
         if (Array.isArray(appids)) {
             appids.forEach(appid => {
+                let id = `app/${appid}`;
                 waitlistJSON.data.push({
-                    "gameid": ["steam", `app/${appid}`],
+                    "gameid": ["steam", id],
                 });
+                storeids.push(id);
             });
         } else {
+            let id = `app/${appids}`;
             waitlistJSON.data[0] = {
-                "gameid": ["steam", `app/${appids}`],
-            }
+                "gameid": ["steam", id],
+            };
+            storeids.push(id);
         }
 
         await ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, null, { "body": JSON.stringify(waitlistJSON) });
-        return IndexedDB.put("waitlist", null, appids);
+        return IndexedDB.put("waitlist", null, storeids);
     }
 
     static async removeFromWaitlist(appids) {
