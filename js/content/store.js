@@ -1016,7 +1016,7 @@ class AppPageClass extends StorePageClass {
         updateDiv();
 
         function updateDiv() {
-            let oneActive = wishlisted || waitlisted;
+            let oneActive = Boolean(wishlisted) || Boolean(waitlisted);
 
             menuArrow.classList.toggle("queue_btn_active", oneActive);
             menuArrow.classList.toggle("queue_btn_inactive", !oneActive);
