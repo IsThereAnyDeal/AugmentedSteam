@@ -432,7 +432,7 @@
         "drm": "Show 3rd-party DRM warnings",
         "show_regionwarning": "Show warning if browsing in non-account region",
         "foot_link": "Augmented Steam Extension",
-        "profile_link_images": "Profile link images",
+        "profile_link_images": "Profile and Group links image style",
         "library": "Show Library button in header",
         "show1clickgoo": "Show \"1-Click turn into Gems...\" button on applicable inventory items",
         "hidedlcunownedgames": "DLC for games you do not own",
