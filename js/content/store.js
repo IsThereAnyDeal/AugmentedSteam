@@ -1923,16 +1923,16 @@ class AppPageClass extends StorePageClass {
     addPackageInfoButton() {
         if (!SyncedStorage.get("show_package_info")) { return; }
 
-        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
+        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper:not(.bundle_hidden_by_preferences)")) {
             if (node.querySelector(".btn_packageinfo")) { return; }
 
-            let subid = node.querySelector("input[name=subid]").value;
+            let subid = node.querySelector("input[name=subid]");
             if (!subid) { return; }
 
             HTML.afterBegin(node.querySelector(".game_purchase_action"),
                 `<div class="game_purchase_action_bg">
                     <div class="btn_addtocart btn_packageinfo">
-                        <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/">
+                        <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid.value}/">
                             <span>${Localization.str.package_info}</span>
                         </a>
                     </div>
@@ -2074,7 +2074,7 @@ class AppPageClass extends StorePageClass {
 
     addDlcCheckboxes() {
         let dlcs = document.querySelector(".game_area_dlc_section");
-        if (!dlcs) { return; }
+        if (!dlcs || !dlcs.querySelector(".game_area_dlc_list")) { return; }
 
         let imgUrl = ExtensionResources.getURL("img/check_sheet.png");
         for (let dlc of dlcs.querySelectorAll(".game_area_dlc_row")) {
@@ -2434,7 +2434,7 @@ class AppPageClass extends StorePageClass {
     }
 
     addPackBreakdown() {
-        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
+        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper:not(.bundle_hidden_by_preferences)")) {
 
             // prevent false positives on packages e.g. Doom 3
             if (node.querySelector(".btn_packageinfo")) { continue; }
