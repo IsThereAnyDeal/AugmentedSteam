@@ -1101,6 +1101,7 @@ img.astats_icon {
   overflow: hidden;
 }
 .es_badge_progress_info,
+.es_game_stats,
 .es_binder_view .badge_progress_info,
 .es_binder_view .badge_cards,
 .es_binder_view .badge_title_stats,
@@ -1156,7 +1157,8 @@ img.astats_icon {
 .es_binder_view .badge_empty_name {
   clear: both;
 }
-.es_binder_view .es_badge_progress_info {
+.es_binder_view .es_badge_progress_info,
+.es_binder_view .es_game_stats {
   display: block !important;
 }
 .badge_content .es_game_stats {

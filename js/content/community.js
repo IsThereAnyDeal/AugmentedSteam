@@ -2378,7 +2378,7 @@ let BadgesPageClass = (function(){
             });
 
         } else {
-            HTML.beforeBegin(".profile_xp_block_right",
+            HTML.afterBegin(".profile_xp_block_right",
                 "<div id='es_calculations'>" + Localization.str.drop_calc + "</div>");
 
             addDropsCount();
