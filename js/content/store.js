@@ -2305,7 +2305,7 @@ class AppPageClass extends StorePageClass {
     addAchievementCompletionBar() {
         if (!this.hasAchievements() || !SyncedStorage.get("showachinstore")) { return; }
 
-        let node = document.querySelector("#my_activity > .hours_played");
+        let node = document.querySelector("#my_activity");
         if (!node) { return; }
 
         Stats.getAchievementBar("/my", this.communityAppid).then(achieveBar => {
@@ -2314,7 +2314,7 @@ class AppPageClass extends StorePageClass {
                 return;
             }
             
-            HTML.afterEnd(node, `<div id="es_ach_stats">${achieveBar}</div>`);
+            HTML.afterBegin(node, `<div id="es_ach_stats">${achieveBar}</div>`);
         });
     }
 
