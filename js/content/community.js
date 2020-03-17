@@ -1019,13 +1019,14 @@ let ProfileHomePageClass = (function(){
 let GroupHomePageClass = (function(){
 
     function GroupHomePageClass() {
+        this.groupId = GroupID.getGroupId();
+
         this.addGroupLinks();
         this.addFriendsInviteButton();
     }
 
     GroupHomePageClass.prototype.addGroupLinks = function() {
 
-        let groupId = GroupID.getGroupId();
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
         if (images !== "none") {
@@ -1035,34 +1036,28 @@ let GroupHomePageClass = (function(){
         let links = [
             {
                 "id": "steamgifts",
-                "link": `https://www.steamgifts.com/go/group/${groupId}`,
+                "link": `https://www.steamgifts.com/go/group/${this.groupId}`,
                 "name": "SteamGifts",
             }
         ];
 
-
-        // Build the links HTML
-        let htmlstr = "";
-
+        let html = "";
         for (let link of links) {
-            if (!SyncedStorage.get("group_" + link.id)) { continue; }
-            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+            if (!SyncedStorage.get(`group_${link.id}`)) { continue; }
+            html += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
         }
 
-        // Insert the links HMTL into the page
-        if (htmlstr) {
-            let linksNode = (document.querySelector(".responsive_hidden > .rightbox")).parentNode;
-            if (linksNode) {
-                HTML.afterEnd(linksNode,
-                   `<div class="rightbox_header"></div>
+        if (html) {
+            let node = document.querySelector(".responsive_hidden > .rightbox");
+            if (node) {
+                HTML.afterEnd(node.parentNode,
+                    `<div class="rightbox_header"></div>
                     <div class="rightbox">
-                       <div class="content">${htmlstr}</div>
+                        <div class="content">${html}</div>
                     </div>
-                    <div class="rightbox_footer"></div>`
-                );
+                    <div class="rightbox_footer"></div>`);
             }
         }
-
     };
 
     GroupHomePageClass.prototype.addFriendsInviteButton = function() {
@@ -1071,10 +1066,9 @@ let GroupHomePageClass = (function(){
         let button = document.querySelector(".grouppage_join_area");
         if (button) { return; }
 
-        let groupId = GroupID.getGroupId();
         HTML.afterEnd("#join_group_form", 
             `<div class="grouppage_join_area">
-                <a class="btn_blue_white_innerfade btn_medium" href="https://steamcommunity.com/my/friends/?invitegid=${groupId}">
+                <a class="btn_blue_white_innerfade btn_medium" href="https://steamcommunity.com/my/friends/?invitegid=${this.groupId}">
                     <span><img src="//steamcommunity-a.akamaihd.net/public/images/groups/icon_invitefriends.png">&nbsp; ${Localization.str.invite_friends}</span>
                 </a>
             </div>`);
@@ -2378,7 +2372,7 @@ let BadgesPageClass = (function(){
             });
 
         } else {
-            HTML.beforeBegin(".profile_xp_block_right",
+            HTML.afterBegin(".profile_xp_block_right",
                 "<div id='es_calculations'>" + Localization.str.drop_calc + "</div>");
 
             addDropsCount();
