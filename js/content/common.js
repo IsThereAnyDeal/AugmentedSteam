@@ -1811,7 +1811,7 @@ let Highlights = (function(){
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(`
                     .es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
-                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name} { outline: solid ${color}; }
+                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name}, .blotter_userstatus_game.es_highlighted_${name} { outline: solid ${color}; }
                     #search_suggestion_contents .focus.es_highlighted_${name} { box-shadow: -5px 0 0 ${color}; }
                     .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }
                 `);
@@ -1950,6 +1950,8 @@ let Highlights = (function(){
             } else if (node.parentNode.parentNode.classList.contains("curations")) {
                 nodeToHighlight = node.parentNode;
             } else if (node.classList.contains("special_img_ctn") && node.parentElement.classList.contains("special")) {
+                nodeToHighlight = node.parentElement;
+            } else if (node.classList.contains("blotter_userstats_game")) { // Small game capsules on activity page (e.g. when posting a status about a game)
                 nodeToHighlight = node.parentElement;
             }
 
