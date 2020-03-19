@@ -551,7 +551,10 @@ class ContextMenu {
                 "id": option,
                 "title": Localization.str.options[option].replace("__query__", "%s"),
                 "contexts": ["selection"]
-            }, () => chrome.runtime.lastError); // https://stackoverflow.com/q/54504328
+            }, 
+            // TODO don't recreate the context menu entries on each change, only update the affected entry (which should also prevent this error)
+            // Error when you create an entry with duplicate id
+            () => chrome.runtime.lastError);
         }
     }
     
