@@ -1442,8 +1442,6 @@ img.astats_icon {
   bottom: 0;
 }
 #es_ach_stats {
-  margin-bottom: 9px;
-  margin-top: -16px;
   float: right;
 }
 /* Taken from: https://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css */
