@@ -3771,6 +3771,8 @@ let CommunityAppPageClass = (function(){
     function CommunityAppPageClass() {
         this.appid = GameId.getAppid(window.location.href);
 
+        Highlights.addTitleHighlight(this.appid);
+
         this.addAppPageWishlist();
         this.addSteamDbLink();
         this.addBartervgLink();
@@ -3792,18 +3794,8 @@ let CommunityAppPageClass = (function(){
 
         let nameNode = document.querySelector(".apphub_AppName");
 
-        // todo add other highlights
-        let appStatus = await DynamicStore.getAppStatus(`app/${this.appid}`);
-
-        if (appStatus.owned) {
-            nameNode.style.color = SyncedStorage.get("highlight_owned_color");
-            return;
-        }
-
-        if (appStatus.wishlisted) {
-            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
-            return;
-        }
+        let { owned, wishlisted } = await DynamicStore.getAppStatus(`app/${this.appid}`);
+        if (owned || wishlisted) { return; }
 
         // TODO remove from wishlist button
 
@@ -3822,7 +3814,6 @@ let CommunityAppPageClass = (function(){
 
             nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
 
-            // Clear dynamicstore cache
             DynamicStore.clear();
         });
     };

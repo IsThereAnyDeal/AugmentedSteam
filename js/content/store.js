@@ -638,7 +638,6 @@ class AppPageClass extends StorePageClass {
         this.replaceDevPubLinks();
         this.moveUsefulLinks();
         this.addLinks("app");
-        this.addTitleHighlight();
         this.addFamilySharingWarning();
         this.removeAboutLink();
 
@@ -656,6 +655,8 @@ class AppPageClass extends StorePageClass {
         this.addReviewToggleButton();
         this.addHelpButton();
         this.addSupport();
+
+        Highlights.addTitleHighlight(this.appid);
     }
 
     initHdPlayer() {
@@ -1875,26 +1876,6 @@ class AppPageClass extends StorePageClass {
         }
 
         super.addLinks(type);
-    }
-
-    async addTitleHighlight() {
-        await DynamicStore;
-        
-        let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
-            ITAD.getAppStatus(`app/${this.appid}`),
-            DynamicStore.getAppStatus(`app/${this.appid}`),
-            Inventory.getAppStatus(this.appid),
-        ]);
-        let title = document.querySelector(".apphub_AppName");
-
-        if (collected) Highlights.highlightCollection(title);
-        if (waitlisted) Highlights.highlightWaitlist(title);
-        if (owned) Highlights.highlightOwned(title);
-        if (guestPass) Highlights.highlightInvGuestpass(title);
-        if (coupon) Highlights.highlightCoupon(title);
-        if (gift) Highlights.highlightInvGift(title);
-        if (wishlisted) Highlights.highlightWishlist(title);
-        if (ignored) Highlights.highlightNotInterested(title);
     }
 
     addFamilySharingWarning() {
