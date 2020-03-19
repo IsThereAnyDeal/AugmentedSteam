@@ -3774,9 +3774,7 @@ let CommunityAppPageClass = (function(){
         Highlights.addTitleHighlight(this.appid);
 
         this.addAppPageWishlist();
-        this.addSteamDbLink();
-        this.addBartervgLink();
-        this.addItadLink();
+        this.addLinks();
         AgeCheck.sendVerification();
 
         let node = document.querySelector(".apphub_background");
@@ -3818,22 +3816,35 @@ let CommunityAppPageClass = (function(){
         });
     };
 
-    CommunityAppPageClass.prototype.addSteamDbLink = function() {
-        if (!SyncedStorage.get("showsteamdb")) { return; }
-        HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;SteamDB</span></a>`);
-    };
+    function makeHeaderLink(cls, url, str) {
+        return ` <a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}">
+                   <span><i class="ico16"></i>&nbsp;${str}</span>
+               </a>`;
+    }
 
-    CommunityAppPageClass.prototype.addItadLink = function() {
-        if (!SyncedStorage.get("showitadlinks")) { return; }
-        HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium itad_ico" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;ITAD</span></a>`);
-    };
+    CommunityAppPageClass.prototype.addLinks = function() {
+        let node = document.querySelector(".apphub_OtherSiteInfo");
 
-    CommunityAppPageClass.prototype.addBartervgLink = function() {
-        if (!SyncedStorage.get("showbartervg")) { return; }
-        HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium bartervg_ico" target="_blank" href="https://barter.vg/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;Barter.vg</span></a>`);
+        if (SyncedStorage.get("showsteamdb")) {
+            HTML.beforeEnd(node, makeHeaderLink(
+                "steamdb_ico",
+                `https://steamdb.info/app/${this.appid}/`,
+                "SteamDB"));
+        }
+
+        if (SyncedStorage.get("showitadlinks")) {
+            HTML.beforeEnd(node, makeHeaderLink(
+                "itad_ico",
+                `https://isthereanydeal.com/steam/app/${this.appid}/`,
+                "ITAD"));
+        }
+
+        if (SyncedStorage.get("showbartervg")) {
+            HTML.beforeEnd(node, makeHeaderLink(
+                "bartervg_ico",
+                `https://barter.vg/steam/app/${this.appid}/`,
+                "Barter.vg"));
+        }
     };
 
     return CommunityAppPageClass;
