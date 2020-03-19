@@ -42,7 +42,6 @@
   padding: 0 8px;
   margin-left: 4px;
   cursor: pointer;
-  z-index: 13;
   position: relative;
   z-index: 11;
   margin-right: 2px;
@@ -1102,6 +1101,7 @@ img.astats_icon {
   overflow: hidden;
 }
 .es_badge_progress_info,
+.es_game_stats,
 .es_binder_view .badge_progress_info,
 .es_binder_view .badge_cards,
 .es_binder_view .badge_title_stats,
@@ -1157,7 +1157,8 @@ img.astats_icon {
 .es_binder_view .badge_empty_name {
   clear: both;
 }
-.es_binder_view .es_badge_progress_info {
+.es_binder_view .es_badge_progress_info,
+.es_binder_view .es_game_stats {
   display: block !important;
 }
 .badge_content .es_game_stats {
@@ -1441,8 +1442,6 @@ img.astats_icon {
   bottom: 0;
 }
 #es_ach_stats {
-  margin-bottom: 9px;
-  margin-top: -16px;
   float: right;
 }
 /* Taken from: https://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css */
@@ -2461,13 +2460,7 @@ img.astats_icon {
 	margin-left: 0.4em;
 }
 #es_popup {
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-#es_popup.open {
-  visibility: visible;
-  opacity: 1;
+  display: none;
 }
 #es_pulldown {
   vertical-align: middle;
@@ -2475,11 +2468,6 @@ img.astats_icon {
   margin: 1px;
   padding-left: 4px;
   line-height: 19px;
-}
-#es_pulldown.focus {
-  margin: 0;
-  border: 1px solid #82807c;
-  color: #ffffff;
 }
 .es-itad-hover {
   display: none;
@@ -2534,54 +2522,39 @@ img.astats_icon {
 }
 
 /***************************************
- * Users profiles
- * add_community_profile_links()
+ * User's SteamIDs
  **************************************/
-#es_permalink {
-  width: 175px;
-  padding: 2px 1px 1px 1px;
-  border-radius: 0;
-  direction: rtl;
-  box-shadow: rgb(0, 0, 0) 0 0 1px 1px inset;
+.es-copy {
+  display: flex;
+  align-items: baseline;
 }
-#es_permalink_div .count_link_label {
-  margin-top: 10px;
-  float: left;
-  color: #ebebeb;
+
+.es-copy:hover .es-copy__id{
+  text-decoration: underline;
 }
-.es_copy_wrap {
-  float: left;
-  overflow: hidden;
-  border-radius: 3px;
-  margin: 8px -4px 0 6px;
-  box-shadow: rgba(193, 193, 193, 0.168627) 0 0 0 1px;
+
+.es-copy:hover .es-copy__icon {
+  opacity: 1;
 }
-#es_permalink_copy {
-  border: 0;
-  float: right;
-  border-radius: 0;
-  cursor: pointer;
-  padding: 1px 4px;
-  border-left: 1px solid #313131;
-  background: linear-gradient(to bottom, #333333 5%, #222222 95%);
-}
-#es_permalink_copy img {
-  width: 14px;
-  padding: 1px 0 2px 0;
-  vertical-align: middle;
+
+.es-copy .es-copy__icon {
   filter: invert(55%);
+  height: 1.2em;
+  margin-left: 5px;
+  opacity: 0;
 }
-#es_permalink_copy:hover {
-  background: linear-gradient(to bottom, #444444 5%, #333333 95%);
+
+.es-copy__copied {
+  opacity: 0;
+  transition: opacity 200ms;
+  margin-left: 20px;
+  color: #999;
+  font-size: 0.95em;
 }
-#es_permalink_copy:hover img {
-  filter: invert(75%);
+.es-copy.is-copied .es-copy__copied {
+  opacity: 1;
 }
-@media screen and (max-width: 910px) {
-  #es_permalink {
-    width: 67px;
-  }
-}
+
 
 /***************************************
  * Users profiles
@@ -2859,9 +2832,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 #es_review_section {
-  max-height: 400px;
   overflow: hidden;
-  transition: max-height 0.2s ease-in-out;
 }
 
 #esi-wishlist-chart-content,

@@ -95,7 +95,7 @@ class Localization {
                 }
                 if (typeof val === "object") {
                     deepAssign(target[key], val);
-                } else {
+                } else if (val !== "") {
                     target[key] = val;
                 }
             }

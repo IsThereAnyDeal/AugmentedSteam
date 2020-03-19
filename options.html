@@ -541,6 +541,14 @@
                             <label for="showyoutubereviews" data-locale-text="options.show_youtubereviews">Show YouTube review videos on app pages</label>
                         </div>
                         <div class="option">
+                            <input type="checkbox" id="showyoutube" data-setting="showyoutube">
+                            <label for="showyoutube" data-locale-text="options.youtube">Show YouTube links</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="showtwitch" data-setting="showtwitch">
+                            <label for="showtwitch" data-locale-text="options.twitch">Show Twitch links</label>
+                        </div>
+                        <div class="option">
                             <input type="checkbox" id="showpcgw" data-setting="showpcgw">
                             <label for="showpcgw" data-locale-text="options.pcgw">Show PCGamingWiki links</label>
                         </div>
@@ -696,8 +704,8 @@
                             <label for="showsteamrepapi" data-locale-text="options.steamrepapi">Show SteamRep status on profile pages</label>
                         </div>
                         <div class="option">
-                            <input type="checkbox" id="profile_permalink" data-setting="profile_permalink">
-                            <label for="profile_permalink" data-locale-text="options.profile_permalink">Show permalink on profiles</label>
+                            <input type="checkbox" id="profile_steamid" data-setting="profile_steamid">
+                            <label for="profile_steamid" data-locale-text="options.profile_steamid">Show SteamID on profiles</label>
                         </div>
                         <div class="parent_option option">
                             <input type="checkbox" id="profile_showcase_twitch" data-setting="profile_showcase_twitch">
@@ -754,14 +762,6 @@
                         <div class="distance_bottom">
                             <button id="add-custom-link" data-locale-text="options.add_custom_link">Add custom link</button>
                         </div>
-                        <div class="option">
-                            <label data-locale-text="options.profile_link_images">Profile link images</label>&nbsp;
-                            <select id="profile_link_images_dropdown" data-setting="show_profile_link_images">
-                                <option value="gray" id="profile_link_images_gray" data-locale-text="options.profile_link_images_gray">Grayscale</option>
-                                <option value="color" id="profile_link_images_color" data-locale-text="options.profile_link_images_color">Colored</option>
-                                <option value="none" id="profile_link_images_none" data-locale-text="options.profile_link_images_none">None</option>
-                            </select>
-                        </div>
                     </div>
 
                     <div id="community_group_section" class="content_section">
@@ -773,9 +773,16 @@
                         </div>
                     </div>
 
-        
                     <div id="community_general_section" class="content_section">
                         <h2 data-locale-text="options.general">General</h2>
+                        <div class="option">
+                            <label data-locale-text="options.profile_link_images">Profile and Group links image style</label>
+                            <select id="profile_link_images_dropdown" data-setting="show_profile_link_images">
+                                <option value="gray" id="profile_link_images_gray" data-locale-text="options.profile_link_images_gray">Grayscale</option>
+                                <option value="color" id="profile_link_images_color" data-locale-text="options.profile_link_images_color">Colored</option>
+                                <option value="none" id="profile_link_images_none" data-locale-text="options.profile_link_images_none">None</option>
+                            </select>
+                        </div>
                         <div class="option">
                             <label for="community_default_tab" data-locale-text="options.community_default_tab">Default community home page tab</label>
                             <select id="community_default_tab" data-setting="community_default_tab">
@@ -866,7 +873,9 @@
                 <li>Revadike <a href="https://steamcommunity.com/id/revadike/">Revadike</a></li>
             </ul>
 
-            <h3 id="translation_text" data-locale-text="translation">Translation</h3>
+            <h3 id="translation_text" data-locale-text="translation">Translation</h3>            
+            <a data-locale-text="help_translate" target="blank" href="https://poeditor.com/join/project/yGk0CFH2Uu">Help us translate Augmented Steam over at POEditor</a>
+            <br><br>
             <table class="indented">
                 <tr>
                     <td class="lang-perc brazilian"></td>

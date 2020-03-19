@@ -435,16 +435,13 @@ let Options = (function(){
                 node.textContent = `${Localization.str.options.lang[lang]}:`;
             }
 
-            if (lang === "english") continue;
+            if (lang === "english") { continue; }
             let code = Language.languages[lang];
             let locale = await Localization.loadLocalization(code);
             let count = deepCount(locale);
             let percentage = 100 * count / total;
 
-            HTML.inner(
-                document.querySelector(`.lang-perc.${lang}`),
-                `<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>`
-            );
+            HTML.inner(document.querySelector(`.lang-perc.${lang}`), `${percentage.toFixed(1)}%&nbsp;`);
         }
 
         let [ itadStatus, itadAction ] = document.querySelectorAll("#itad_status, #itad_action");
@@ -489,14 +486,14 @@ let Options = (function(){
 
         function deepCount(obj) {
             let cnt = 0;
-            for (let key in obj) {
+            for (let key of Object.keys(obj)) {
                 if (!Localization.str[key]) { // don't count "made up" translations
                     continue;
                 }
                 if (typeof obj[key] === "object") {
                     cnt += deepCount(obj[key]);
-                } else {
-                    cnt += 1;
+                } else if (obj[key] !== "") {
+                    cnt++;
                 }
             }
             return cnt;

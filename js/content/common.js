@@ -331,15 +331,28 @@ let DateParser = (function(){
 
 let ExtensionLayer = (function() {
 
+    let msgCounter = 0;
+
     let self = {};
 
     // NOTE: use cautiously!
     // Run script in the context of the current tab
-    self.runInPageContext = function(fun) {
+    self.runInPageContext = function(fun, args, withPromise) {
         let script = document.createElement("script");
-        script.textContent = `(${fun})();`;
+        let promise;
+        let argsString = Array.isArray(args) ? JSON.stringify(args) : "[]";
+
+        if (withPromise) {
+            let msgId = "msg_" + (msgCounter++);
+            promise = Messenger.onMessage(msgId);
+            script.textContent = `(async () => { Messenger.postMessage("${msgId}", await (${fun})(...${argsString})); })();`;
+        } else {
+            script.textContent = `(${fun})(...${argsString});`;
+        }
+
         document.documentElement.appendChild(script);
         script.parentNode.removeChild(script);
+        return promise;
     };
 
     return self;
@@ -374,15 +387,6 @@ let DOMHelper = (function(){
         stylesheet.type = 'text/css';
         stylesheet.href = href;
         document.head.appendChild(stylesheet);
-    }
-
-    self.insertHomeCSS = function() {
-        self.insertStylesheet("//steamstore-a.akamaihd.net/public/css/v6/home.css");
-        let headerCtn = document.querySelector("div#global_header .content");
-        if (headerCtn) {
-            // Fixes displaced header, see #190
-            headerCtn.style.right = 0;
-        }
     }
 
     self.insertScript = function({ src, content }, id, onload, isAsync = true) {
@@ -809,12 +813,13 @@ let Currency = (function() {
     }
 
     async function getCurrencyFromWallet() {
-        ExtensionLayer.runInPageContext(() =>
-            Messenger.postMessage("walletCurrency", typeof g_rgWalletInfo !== 'undefined' && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null)
+        let walletCurrency = await ExtensionLayer.runInPageContext(
+            () => typeof g_rgWalletInfo !== "undefined" && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null,
+            null,
+            "walletCurrency"
         );
 
-        let walletCurrency = await Messenger.onMessage("walletCurrency");
-        if (walletCurrency !== null) {
+        if (walletCurrency) {
             return Currency.currencyNumberToType(walletCurrency);
         }
     }
@@ -957,6 +962,135 @@ let Price = (function() {
 })();
 
 
+let SteamId = (function(){
+
+    let self = {};
+    let _steamId = null;
+
+    self.getSteamId = function() {
+        if (_steamId) { return _steamId; }
+
+        if (document.querySelector("#reportAbuseModal")) {
+            _steamId = document.querySelector("input[name=abuseID]").value;
+        } else {
+            _steamId = HTMLParser.getVariableFromDom("g_steamID", "string");
+        }
+
+        if (!_steamId) {
+            let profileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
+            _steamId = profileData.steamid;
+        }
+
+        return _steamId;
+    };
+
+
+    class SteamIdDetail {
+
+        /*
+         * @see https://developer.valvesoftware.com/wiki/SteamID
+         */
+
+        constructor(steam64str) {
+            if (!steam64str) {
+                throw new Error("Missing first parameter 'steam64str'.")
+            }
+
+            let [upper32, lower32] = this._getBinary(steam64str);
+            this._y = lower32 & 1;
+            this._accountNumber = (lower32 & ((1 << 31) - 1) << 1) >> 1;
+            this._instance = (upper32 & ((1  << 20) - 1));
+            this._type =     (upper32 & (((1 <<  4) - 1) << 20)) >> 20;
+            this._universe = (upper32 & (((1 <<  8) - 1) << 24)) >> 24;
+
+            this._steamId64 = steam64str;
+        }
+
+        _divide(str) {
+            let length = str.length;
+            let result = [];
+            let num = 0;
+            for (let i = 0; i < length; i++) {
+                num += Number(str[i]);
+
+                let r = Math.floor(num / 2);
+                num = ((num - 2*r) * 10);
+
+                if (r !== 0 || result.length !== 0) {
+                    result.push(r);
+                }
+            }
+
+            return [result, num > 0 ? 1 : 0];
+        }
+
+        _getBinary(str) {
+            let upper32 = 0;
+            let lower32 = 0;
+            let index = 0;
+            let bit = 0;
+            do {
+                [str, bit] = this._divide(str);
+
+                if (bit) {
+                    if (index < 32) {
+                        lower32 = lower32 | (1 << index);
+                    } else {
+                        upper32 = upper32 | (1 << (index - 32));
+                    }
+                }
+
+                index++;
+            } while(str.length > 0);
+
+            return [upper32, lower32];
+        }
+
+        get id2() {
+            return `STEAM_${this._universe}:${this._y}:${this._accountNumber}`;
+        };
+
+
+        get id3() {
+            let map = new Map(
+                [
+                    [0, "I"], // invalid
+                    [1, "U"], // individual
+                    [2, "M"], // multiset
+                    [3, "G"], // game server
+                    [4, "A"], // anon game server
+                    [5, "P"], // pending
+                    [6, "C"], // content server
+                    [7, "g"], // clan
+                    // [8, "T / L / C"], // chat // TODO no idea what does this mean
+                    [9, "a"] // anon user
+                ]
+            );
+
+            let type = null;
+            if (map.has(this._type)) {
+                type = map.get(this._type);
+            }
+
+            if (!type) {
+                return null;
+            }
+
+            return `[${type}:${this._universe}:${this._accountNumber << 1 | this._y}]`;
+        };
+
+        get id64() {
+            return this._steamId64;
+        };
+    }
+
+    self.Detail = SteamIdDetail;
+
+    return self;
+})();
+
+
+
 let Viewport = (function(){
 
     let self = {};
@@ -1043,10 +1177,9 @@ let AugmentedSteam = (function() {
             </div>`);
 
         let popup = document.querySelector("#es_popup");
-        document.querySelector("#es_pulldown").addEventListener("click", function(e){
-            let width = e.target.getBoundingClientRect().width - 19; // padding
-            popup.style.left = `-${width}px`;
-            popup.classList.toggle("open");
+
+        document.querySelector("#es_pulldown").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(() => { ShowMenu("es_pulldown", "es_popup", "right", "bottom", true); });
         });
 
         document.querySelector("#es_menu").addEventListener("click", function(e){
@@ -1134,7 +1267,7 @@ let AugmentedSteam = (function() {
 
             document.querySelector("#es_reset_language_code").addEventListener("click", function(e){
                 e.preventDefault();
-                ExtensionLayer.runInPageContext(`() => ChangeLanguage("${warningLanguage}")`);
+                ExtensionLayer.runInPageContext(warningLanguage => { ChangeLanguage(warningLanguage); }, [ warningLanguage ]);
             });
         });
     };
@@ -1251,15 +1384,18 @@ let AugmentedSteam = (function() {
                     gamename = data.name;
                 }
 
-                let playGameStr = Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim());
-                ExtensionLayer.runInPageContext(
-                    `function() {
-                        var prompt = ShowConfirmDialog('${playGameStr}', "<img src='//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg'>", null, null, '${Localization.str.visit_store}');
-                        prompt.done(function(result) {
-                            if (result == 'OK') { window.location.assign('steam://run/${gameid}'); }
-                            if (result == 'SECONDARY') { window.location.assign('//store.steampowered.com/app/${gameid}'); }
-                        });
-                    }`);
+                ExtensionLayer.runInPageContext((playGameStr, gameid, visitStore) => {
+                    let prompt = ShowConfirmDialog(playGameStr, `<img src="//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg">`, null, null, visitStore);
+                    prompt.done(result => {
+                        if (result === "OK") { window.location.assign(`steam://run/${gameid}`); }
+                        if (result === "SECONDARY") { window.location.assign(`//store.steampowered.com/app/${gameid}`); }
+                    });
+                },
+                [
+                    Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim()),
+                    gameid,
+                    Localization.str.visit_store,
+                ]);
             });
         });
     };
@@ -1342,6 +1478,17 @@ let AugmentedSteam = (function() {
                 link.pathname += "/";
             }
             link.pathname += tab + "/";
+        }
+    };
+
+    self.horizontalScrolling = function() {
+        if (!SyncedStorage.get("horizontalscrolling")) { return; }
+
+        for (let node of document.querySelectorAll(".slider_ctn")) {
+            new HorizontalScroller(
+                node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
+                node.querySelector(".slider_left"),
+                node.querySelector(".slider_right"));
         }
     };
 
@@ -1675,7 +1822,7 @@ let Highlights = (function(){
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(`
                     .es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
-                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name} { outline: solid ${color}; }
+                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name}, .blotter_userstatus_game.es_highlighted_${name} { outline: solid ${color}; }
                     #search_suggestion_contents .focus.es_highlighted_${name} { box-shadow: -5px 0 0 ${color}; }
                     .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }
                 `);
@@ -1815,6 +1962,8 @@ let Highlights = (function(){
                 nodeToHighlight = node.parentNode;
             } else if (node.classList.contains("special_img_ctn") && node.parentElement.classList.contains("special")) {
                 nodeToHighlight = node.parentElement;
+            } else if (node.classList.contains("blotter_userstats_game")) { // Small game capsules on activity page (e.g. when posting a status about a game)
+                nodeToHighlight = node.parentElement;
             }
 
             let aNode = node.querySelector("a");
@@ -1936,22 +2085,38 @@ let Highlights = (function(){
 
         parent = parent || document;
 
-        Messenger.onMessage("dynamicStoreReady").then(() => {
-            self.highlightAndTag(parent.querySelectorAll(selector));
-    
-            let searchBoxContents = parent.getElementById("search_suggestion_contents");
-            if (searchBoxContents) {
-                let observer = new MutationObserver(records => {
-                    self.highlightAndTag(records[0].addedNodes);
-                });
-                observer.observe(searchBoxContents, { childList: true });
-            }
-        });
+        await ExtensionLayer.runInPageContext(() => new Promise(resolve => { GDynamicStore.OnReady(() => { resolve(); }); }), null, "dynamicStoreReady");
+        
+        self.highlightAndTag(parent.querySelectorAll(selector));
 
-        ExtensionLayer.runInPageContext(() => {
-            GDynamicStore.OnReady(() => Messenger.postMessage("dynamicStoreReady"));
-        });
+        let searchBoxContents = parent.getElementById("search_suggestion_contents");
+        if (searchBoxContents) {
+            let observer = new MutationObserver(records => {
+                self.highlightAndTag(records[0].addedNodes);
+            });
+            observer.observe(searchBoxContents, { childList: true });
+        }
     };
+
+    self.addTitleHighlight = async function(appid) {
+        await DynamicStore;
+        
+        let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
+            ITAD.getAppStatus(`app/${appid}`),
+            DynamicStore.getAppStatus(`app/${appid}`),
+            Inventory.getAppStatus(appid),
+        ]);
+        let title = document.querySelector(".apphub_AppName");
+
+        if (collected) Highlights.highlightCollection(title);
+        if (waitlisted) Highlights.highlightWaitlist(title);
+        if (owned) Highlights.highlightOwned(title);
+        if (guestPass) Highlights.highlightInvGuestpass(title);
+        if (coupon) Highlights.highlightCoupon(title);
+        if (gift) Highlights.highlightInvGift(title);
+        if (wishlisted) Highlights.highlightWishlist(title);
+        if (ignored) Highlights.highlightNotInterested(title);
+    }
 
     return self;
 })();
@@ -2354,6 +2519,7 @@ let Common = (function(){
         AugmentedSteam.skipGotSteam();
         AugmentedSteam.keepSteamSubscriberAgreementState();
         AugmentedSteam.defaultCommunityTab();
+        AugmentedSteam.horizontalScrolling();
         ITAD.create();
 
         if (User.isSignedIn) {
@@ -2426,7 +2592,7 @@ class MediaPage {
             </div>`);
 
         // Initiate tooltip
-        ExtensionLayer.runInPageContext(function() { $J('[data-slider-tooltip]').v_tooltip({'tooltipClass': 'store_tooltip community_tooltip', 'dataName': 'sliderTooltip' }); });
+        ExtensionLayer.runInPageContext(() => { $J("[data-slider-tooltip]").v_tooltip({ "tooltipClass": "store_tooltip community_tooltip", "dataName": "sliderTooltip" }); });
 
         function buildSideDetails() {
             if (detailsBuilt) { return; }
@@ -2561,20 +2727,6 @@ class MediaPage {
             for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
                 node.classList.toggle("es_expanded");
             }
-        }
-
-        this._horizontalScrolling();
-    }
-
-    _horizontalScrolling() {
-        if (!SyncedStorage.get("horizontalscrolling")) { return; }
-
-        for (let node of document.querySelectorAll(".slider_ctn")) {
-            new HorizontalScroller(
-                node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
-                node.querySelector(".slider_left"),
-                node.querySelector(".slider_right")
-            );
         }
     }
 }
@@ -2801,6 +2953,31 @@ class Sortbox {
         }
 
         return box;
+    }
+}
+
+class ConfirmDialog {
+
+    static open(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton) {
+        return ExtensionLayer.runInPageContext((a,b,c,d,e) => {
+            let prompt = ShowConfirmDialog(a,b,c,d,e);
+
+            return new Promise((resolve, reject) => {
+                prompt.done(result => {
+                    resolve(result);
+                }).fail(() => {
+                    resolve("CANCEL");
+                });
+            });
+        },
+        [
+            strTitle,
+            strDescription,
+            strOKButton,
+            strCancelButton,
+            strSecondaryActionButton
+        ],
+        true);
     }
 }
 

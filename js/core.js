@@ -143,10 +143,10 @@ class UpdateHandler {
         let changelog = (await RequestData.getHttp(ExtensionResources.getURL("changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
         let logo = ExtensionResources.getURL("img/es_128.png");
         let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
+
         ExtensionLayer.runInPageContext(
-            `function() {
-                ShowAlertDialog("${Localization.str.update.updated.replace("__version__", Info.version)}", '${dialog}');
-            }`
+            (updatedStr, dialog) => { ShowAlertDialog(updatedStr, dialog); },
+            [ Localization.str.update.updated.replace("__version__", Info.version), dialog ]
         );
 
         if (Version.fromString(Info.version).isSame(new Version(1, 4))) {
@@ -288,6 +288,11 @@ class UpdateHandler {
 
         if (oldVersion.isSame("1.4")) {
             Background.action("migrate.notesToSyncedStorage");
+        }
+
+        if (oldVersion.isSameOrBefore("1.4.1")) {
+            SyncedStorage.set("profile_steamid", SyncedStorage.get("profile_permalink"));
+            SyncedStorage.remove("profile_permalink");
         }
     }
 }
@@ -567,6 +572,8 @@ SyncedStorage.defaults = {
     'showmcus': true,
     'showoc': true,
     'showhltb': true,
+    'showyoutube': true,
+    'showtwitch': true,
     'showpcgw': true,
     'showcompletionistme': false,
     'showprotondb': false,
@@ -673,7 +680,7 @@ SyncedStorage.defaults = {
     'profile_astats': true,
     'profile_backpacktf': true,
     'profile_astatsnl': true,
-    'profile_permalink': true,
+    'profile_steamid': true,
     'profile_custom_link': [
         { 'enabled': true, 'name': "Google", 'url': "google.com/search?q=[ID]", 'icon': "www.google.com/images/branding/product/ico/googleg_lodp.ico", },
     ],

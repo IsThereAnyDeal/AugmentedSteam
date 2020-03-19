@@ -139,7 +139,7 @@ class StorePageClass {
     }
 
     isDlc() {
-        return !!document.querySelector("div.game_area_dlc_bubble");
+        return !!document.querySelector("#game_area_purchase .game_area_bubble");
     }
 
     isVideo() {
@@ -638,7 +638,6 @@ class AppPageClass extends StorePageClass {
         this.replaceDevPubLinks();
         this.moveUsefulLinks();
         this.addLinks("app");
-        this.addTitleHighlight();
         this.addFamilySharingWarning();
         this.removeAboutLink();
 
@@ -656,6 +655,8 @@ class AppPageClass extends StorePageClass {
         this.addReviewToggleButton();
         this.addHelpButton();
         this.addSupport();
+
+        Highlights.addTitleHighlight(this.appid);
     }
 
     initHdPlayer() {
@@ -880,7 +881,7 @@ class AppPageClass extends StorePageClass {
                     DynamicStore.clear();
 
                     // Invalidate dynamic store data cache
-                    ExtensionLayer.runInPageContext(() => GDynamicStore.InvalidateCache());
+                    ExtensionLayer.runInPageContext(() => { GDynamicStore.InvalidateCache(); });
                 } finally {
                     parent.classList.remove("loading");
                 }
@@ -1016,7 +1017,7 @@ class AppPageClass extends StorePageClass {
         updateDiv();
 
         function updateDiv() {
-            let oneActive = wishlisted || waitlisted;
+            let oneActive = Boolean(wishlisted) || Boolean(waitlisted);
 
             menuArrow.classList.toggle("queue_btn_active", oneActive);
             menuArrow.classList.toggle("queue_btn_inactive", !oneActive);
@@ -1042,20 +1043,19 @@ class AppPageClass extends StorePageClass {
             document.querySelector("#add_to_wishlist_area_success span").lastChild.textContent = ` ${text}`;
         }
 
-        wishlistArea.querySelector("a").addEventListener("click", () => {
-            Messenger.onMessage("wishlistAdded").then(() => {
-                wishlisted = !wishlisted;
-                updateDiv();
-            });
+        wishlistArea.querySelector("a").addEventListener("click", async () => {
 
-            ExtensionLayer.runInPageContext(() =>
+            await ExtensionLayer.runInPageContext(() => new Promise(resolve => {
                 $J(document).ajaxComplete(function handler(e, xhr, { url }) {
                     if (url === "https://store.steampowered.com/api/addtowishlist") {
-                        Messenger.postMessage("wishlistAdded");
+                        resolve();
                         $J(document).unbind("ajaxComplete", handler);
                     }
-                })
-            );
+                });
+            }), null, "wishlistAdded");
+
+            wishlisted = !wishlisted;
+            updateDiv();
         });
 
         this.onWishAndWaitlistRemove = () => {
@@ -1314,7 +1314,7 @@ class AppPageClass extends StorePageClass {
                 }
 
                 HTML.afterBegin("#es_opencritic_reviews", review_text);
-                ExtensionLayer.runInPageContext(() => BindTooltips( '#game_area_reviews', { tooltipCSSClass: 'store_tooltip'} ));
+                ExtensionLayer.runInPageContext(() => { BindTooltips("#game_area_reviews", { tooltipCSSClass: "store_tooltip" }); });
             }
         });
     }
@@ -1377,7 +1377,7 @@ class AppPageClass extends StorePageClass {
             youTubeMedia.style.display = "block";
             youTubeTab.classList.add("active");
 
-            ExtensionLayer.runInPageContext(() => SteamOnWebPanelHidden());
+            ExtensionLayer.runInPageContext(() => { SteamOnWebPanelHidden(); });
         });
 
         steamTab.addEventListener("click", () => {
@@ -1392,7 +1392,7 @@ class AppPageClass extends StorePageClass {
                 steamMedia.style.display = "block";
                 steamTab.classList.add("active");
 
-                ExtensionLayer.runInPageContext(() => SteamOnWebPanelShown());
+                ExtensionLayer.runInPageContext(() => { SteamOnWebPanelShown(); });
             }
         });
     }
@@ -1435,15 +1435,13 @@ class AppPageClass extends StorePageClass {
             `<div class="block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad" id="es_steampeek_content"></div>`);
 
         // TODO Create a global handler for DS loading
-        let dsLoaded = Messenger.onMessage("dsLoaded");
-        ExtensionLayer.runInPageContext(() => GDynamicStore.OnReady(() => Messenger.postMessage("dsLoaded")));
-        await dsLoaded;
+        await ExtensionLayer.runInPageContext(() => new Promise(resolve => { GDynamicStore.OnReady(() => { resolve(); }); }), null, "dsLoaded");
 
         let [steamTab, steamPeekTab, content] = moreLikeThis
             .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");
 
         function adjustScroller() {
-            ExtensionLayer.runInPageContext(() => $J("#recommended_block_content").trigger("v_contentschanged"));
+            ExtensionLayer.runInPageContext(() => { $J("#recommended_block_content").trigger("v_contentschanged"); });
         }
 
         steamTab.addEventListener("click", () => {
@@ -1485,10 +1483,10 @@ class AppPageClass extends StorePageClass {
                             <h4>${title}</h4>
                         </a>`);
 
-                    ExtensionLayer.runInPageContext(`() => { GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), ${appid}); }`);
+                    ExtensionLayer.runInPageContext(appid => { GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), appid); }, [ appid ]);
                 }
 
-                ExtensionLayer.runInPageContext(() => GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar")));
+                ExtensionLayer.runInPageContext(() => { GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar")); });
 
                 Highlights.highlightAndTag(content.querySelectorAll("a.es_sp_similar"), true);
 
@@ -1722,21 +1720,34 @@ class AppPageClass extends StorePageClass {
 
     replaceDevPubLinks() {
 
-        document.querySelectorAll("#game_highlights .dev_row a,.details_block .dev_row:not(:nth-of-type(3)) a").forEach((linkNode, i) => {
-            let homepageLink = new URL(linkNode.href);
-            if (homepageLink.pathname === "/search/") { return; }
+        let devs = Array.from(document.querySelectorAll("#developers_list > a, .details_block > .dev_row:first-of-type > a"));
+        let pubs = Array.from(document.querySelectorAll(".user_reviews > .dev_row:last-of-type a, .details_block > .dev_row:nth-of-type(2) > a"));
+        let franchise = document.querySelector(".details_block > .dev_row:nth-of-type(3) > a");
+        franchise = franchise ? [franchise] : [];
 
-            let name = i % 2 ? "publisher" : "developer"; // These elements appear in pairs, where the first represents the developer and the second the publisher
-            let value = linkNode.textContent;
-            linkNode.href = `https://store.steampowered.com/search/?${name}=${encodeURIComponent(value)}`;
-            HTML.afterEnd(linkNode, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
-        });
+        for (let node of [...devs, ...pubs, ...franchise]) {
+            let homepageLink = new URL(node.href);
+            if (homepageLink.pathname.startsWith("/search/")) { continue; }
+
+            let type;
+            if (devs.includes(node)) {
+                type = "developer";
+            } else if (pubs.includes(node)) {
+                type = "publisher";
+            } else if (franchise === node) {
+                type = "franchise";
+            }
+            if (!type) { continue; }
+
+            node.href = `https://store.steampowered.com/search/?${type}=${encodeURIComponent(node.textContent)}`;
+            HTML.afterEnd(node, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
+        }
 
         for (let moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {
             moreBtn.remove();
         }
 
-        ExtensionLayer.runInPageContext(() => CollapseLongStrings(".dev_row .summary.column"));
+        ExtensionLayer.runInPageContext(() => { CollapseLongStrings(".dev_row .summary.column"); });
     }
 
     async addSupport() {
@@ -1813,6 +1824,24 @@ class AppPageClass extends StorePageClass {
     addLinks(type) {
         let node = document.querySelector("#ReportAppBtn").parentNode;
 
+        if (SyncedStorage.get("showyoutube")) {
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "youtube_btn",
+                    `https://www.youtube.com/results?search_query=${encodeURIComponent(this.appName)}`,
+                    Localization.str.view_on_website.replace("__website__", "YouTube")));
+        }
+
+
+        if (SyncedStorage.get("showtwitch")) {
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "twitch_btn",
+                    `https://www.twitch.tv/directory/game/${encodeURIComponent(this.appName.replace(/(\u2122)/g,"").replace(/(\xAE)/g,""))}`,
+                    Localization.str.view_on_website.replace("__website__", "Twitch")));
+        }
+
+
         if (SyncedStorage.get("showpcgw")) {
             HTML.afterBegin(node,
                 this.getRightColLinkHtml(
@@ -1849,26 +1878,6 @@ class AppPageClass extends StorePageClass {
         super.addLinks(type);
     }
 
-    async addTitleHighlight() {
-        await DynamicStore;
-        
-        let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
-            ITAD.getAppStatus(`app/${this.appid}`),
-            DynamicStore.getAppStatus(`app/${this.appid}`),
-            Inventory.getAppStatus(this.appid),
-        ]);
-        let title = document.querySelector(".apphub_AppName");
-
-        if (collected) Highlights.highlightCollection(title);
-        if (waitlisted) Highlights.highlightWaitlist(title);
-        if (owned) Highlights.highlightOwned(title);
-        if (guestPass) Highlights.highlightInvGuestpass(title);
-        if (coupon) Highlights.highlightCoupon(title);
-        if (gift) Highlights.highlightInvGift(title);
-        if (wishlisted) Highlights.highlightWishlist(title);
-        if (ignored) Highlights.highlightNotInterested(title);
-    }
-
     addFamilySharingWarning() {
         if (!SyncedStorage.get("exfgls")) { return; }
 
@@ -1895,16 +1904,16 @@ class AppPageClass extends StorePageClass {
     addPackageInfoButton() {
         if (!SyncedStorage.get("show_package_info")) { return; }
 
-        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
+        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper:not(.bundle_hidden_by_preferences)")) {
             if (node.querySelector(".btn_packageinfo")) { return; }
 
-            let subid = node.querySelector("input[name=subid]").value;
+            let subid = node.querySelector("input[name=subid]");
             if (!subid) { return; }
 
             HTML.afterBegin(node.querySelector(".game_purchase_action"),
                 `<div class="game_purchase_action_bg">
                     <div class="btn_addtocart btn_packageinfo">
-                        <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/">
+                        <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid.value}/">
                             <span>${Localization.str.package_info}</span>
                         </a>
                     </div>
@@ -2046,7 +2055,7 @@ class AppPageClass extends StorePageClass {
 
     addDlcCheckboxes() {
         let dlcs = document.querySelector(".game_area_dlc_section");
-        if (!dlcs) { return; }
+        if (!dlcs || !dlcs.querySelector(".game_area_dlc_list")) { return; }
 
         let imgUrl = ExtensionResources.getURL("img/check_sheet.png");
         for (let dlc of dlcs.querySelectorAll(".game_area_dlc_row")) {
@@ -2277,7 +2286,7 @@ class AppPageClass extends StorePageClass {
     addAchievementCompletionBar() {
         if (!this.hasAchievements() || !SyncedStorage.get("showachinstore")) { return; }
 
-        let node = document.querySelector("#my_activity > .hours_played");
+        let node = document.querySelector("#my_activity");
         if (!node) { return; }
 
         Stats.getAchievementBar("/my", this.communityAppid).then(achieveBar => {
@@ -2286,7 +2295,7 @@ class AppPageClass extends StorePageClass {
                 return;
             }
             
-            HTML.afterEnd(node, `<div id="es_ach_stats">${achieveBar}</div>`);
+            HTML.afterBegin(node, `<div id="es_ach_stats">${achieveBar}</div>`);
         });
     }
 
@@ -2406,7 +2415,7 @@ class AppPageClass extends StorePageClass {
     }
 
     addPackBreakdown() {
-        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
+        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper:not(.bundle_hidden_by_preferences)")) {
 
             // prevent false positives on packages e.g. Doom 3
             if (node.querySelector(".btn_packageinfo")) { continue; }
@@ -2481,17 +2490,27 @@ let RegisterKeyPageClass = (function(){
                 </div>
             </div>`;
 
+        function showMultipleKeysDialog() {
+            ExtensionLayer.runInPageContext((header, template) => {
+                ShowDialog(header, template);
+            },
+            [
+                Localization.str.activate_multiple_header,
+                activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n"))
+            ]);
+        }
+
         document.querySelector("#register_btn").addEventListener("click", function(e) {
             if (document.querySelector("#product_key").value.indexOf(",") > 0) {
                 e.preventDefault();
-                ExtensionLayer.runInPageContext(`() => ShowDialog("${Localization.str.activate_multiple_header}", \`${activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n"))}\`)`);
+                showMultipleKeysDialog();
             }
         });
 
         // Show note input modal
         document.addEventListener("click", function(e){
             if (!e.target.closest("#es_activate_multiple")) { return; }
-            ExtensionLayer.runInPageContext(`() => ShowDialog("${Localization.str.activate_multiple_header}", \`${activateModalTemplate.replace("__alreadyentered__", document.querySelector("#product_key").value.replace(/\,/g, "\n"))}\`)`);
+            showMultipleKeysDialog();
         });
 
         // Insert the "activate multiple products" button
@@ -2587,7 +2606,7 @@ let RegisterKeyPageClass = (function(){
         // Bind the "Cancel" button to close the modal
         document.addEventListener("click", function(e) {
             if (!e.target.closest(".es_activate_modal_close")) { return; }
-            ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+            ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
         })
     };
 
@@ -2665,24 +2684,24 @@ let FundsPageClass = (function(){
             }
         });
 
-        newel.querySelector((giftcard ? ".es_custom_money a.btn_medium" : ".es_custom_button")).addEventListener("click", function(e) {
+        newel.querySelector((giftcard ? ".es_custom_money a.btn_medium" : ".es_custom_button")).addEventListener("click", e => {
             e.preventDefault();
 
-            let jsvalue = (+document.querySelector("#es_custom_money_amount").value).toFixed(2).replace(/[,.]/g, '');
+            let customAmount = Number(document.querySelector("#es_custom_money_amount").value).toFixed(2).replace(/[,.]/g, '');
 
             if (giftcard) {
 
                 if (e.target.closest(".giftcard_cont")) {
-                    ExtensionLayer.runInPageContext(`() => submitSelectGiftCard(${jsvalue})`);
+                    ExtensionLayer.runInPageContext(amount => { submitSelectGiftCard(amount); }, [ customAmount ]);
                 }
 
             } else {
                 let btn = document.querySelector(".es_custom_money .es_custom_button");
                 btn.href = "#";
                 btn.removeAttribute("onclick");
-                btn.dataset.amount = jsvalue;
+                btn.dataset.amount = customAmount;
 
-                ExtensionLayer.runInPageContext(() => submitAddFunds(document.querySelector(".es_custom_money .es_custom_button")));
+                ExtensionLayer.runInPageContext(() => { submitAddFunds(document.querySelector(".es_custom_money .es_custom_button")); });
             }
 
         }, true);
@@ -2759,9 +2778,9 @@ let SearchPageClass = (function(){
             processing = false;
 
             ExtensionLayer.runInPageContext(() => {
-                let addedDate = document.querySelector('#search_result_container').dataset.lastAddDate;
+                let addedDate = document.querySelector("#search_result_container").dataset.lastAddDate;
                 GDynamicStore.DecorateDynamicItems(jQuery(`.search_result_row[data-added-date="${addedDate}"]`));
-                SetupTooltips( { tooltipCSSClass: 'store_tooltip'} );
+                SetupTooltips({ tooltipCSSClass: "store_tooltip" });
             });
 
             Highlights.highlightAndTag(rows);
@@ -2780,9 +2799,6 @@ let SearchPageClass = (function(){
 
     SearchPageClass.prototype.endlessScrolling = function() {
         if (!SyncedStorage.get("contscroll")) { return; }
-
-        // Required for the loading wrapper
-        DOMHelper.insertHomeCSS();
 
         let result_count;
         document.querySelector(".search_pagination_right").style.display = "none";
@@ -2867,9 +2883,9 @@ let SearchPageClass = (function(){
             excludeContainer.append(excludeItem);
         }
 
-        ExtensionLayer.runInPageContext(() =>
-            $J("#es_tagfilter_exclude_container").tableFilter({ maxvisible: 15, control: "#es_tagfilter_exclude_suggest", dataattribute: "loc", defaultText: $J("#TagSuggest").attr("value")})
-        );
+        ExtensionLayer.runInPageContext(() => {
+            $J("#es_tagfilter_exclude_container").tableFilter({ maxvisible: 15, control: "#es_tagfilter_exclude_suggest", dataattribute: "loc", defaultText: $J("#TagSuggest").attr("value") });
+        });
 
         let observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation){
@@ -2885,7 +2901,7 @@ let SearchPageClass = (function(){
             });
         });
         observer.observe(document.querySelector(".termcontainer"), {childList:true, subtree:true});
-        ExtensionLayer.runInPageContext(() => UpdateTags());
+        ExtensionLayer.runInPageContext(() => { UpdateTags(); });
     };
 
     function isPriceAbove(node, priceAbove) {
@@ -3026,7 +3042,7 @@ let SearchPageClass = (function(){
 
         // TODO(tomas.fedor) Can we somehow simplify this monstrosity? E.g. update URL on our end?
         // Thrown together from sources of searchpage.js
-        ExtensionLayer.runInPageContext(`() => {
+        ExtensionLayer.runInPageContext(hideFilter => {
 
             GDynamicStore.OnReady(() => {
 
@@ -3194,7 +3210,7 @@ let SearchPageClass = (function(){
                         let label;
 
                         if ($Tag.is("[id*='es_']")) {
-                            label = "${Localization.str.hide_filter}".replace("__filter__", $J(".tab_filter_control_label", Tag).text());
+                            label = hideFilter.replace("__filter__", $J(".tab_filter_control_label", Tag).text());
                         } else {
                             label = $J(".tab_filter_control_label", Tag).text();
                         }
@@ -3247,7 +3263,7 @@ let SearchPageClass = (function(){
                 Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState));
                 Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState));
             });
-        }`);
+        }, [ Localization.str.hide_filter ]);
 
         let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol + "</span>";
         let priceAboveVal = document.querySelector("#es_notpriceabove_val");
@@ -3506,16 +3522,15 @@ let WishlistPageClass = (function(){
         if (document.querySelector("#throbber").style.display === "none") {
             wishlistLoaded();
         } else {
-            Messenger.onMessage("wishlistLoaded").then(wishlistLoaded);
-
-            ExtensionLayer.runInPageContext(() => {
+            ExtensionLayer.runInPageContext(() => new Promise(resolve => {
                 $J(document).ajaxSuccess((e, xhr, settings) => {
                     let url = new URL(settings.url);
                     if (url.origin + url.pathname === `${g_strWishlistBaseURL}wishlistdata/` && g_Wishlist.nPagesToLoad === g_Wishlist.nPagesLoaded) {
-                        Messenger.postMessage("wishlistLoaded");
+                        resolve();
                     }
                 });
-            });
+            }), null, "wishlistLoaded")
+            .then(() => { wishlistLoaded(); });
         }
     }
 
@@ -3652,16 +3667,7 @@ let WishlistPageClass = (function(){
         });
     };
 
-    function emptyWishlist() {
-        ExtensionLayer.runInPageContext(`function(){
-            var prompt = ShowConfirmDialog(\`${Localization.str.empty_wishlist.title}\`, \`${Localization.str.empty_wishlist.confirm}\`);
-            prompt.done(function(result) {
-                if (result == "OK") {
-                    ShowBlockingWaitDialog(\`${Localization.str.empty_wishlist.title}\`, \`${Localization.str.empty_wishlist.removing}\`.replace("__cur__", 1).replace("__total__", g_rgWishlistData.length));
-                    Messenger.postMessage("emptyWishlist");
-                }
-            });
-        }`);
+    async function emptyWishlist() {
 
         function removeApp(appid) {
 
@@ -3673,19 +3679,30 @@ let WishlistPageClass = (function(){
             return RequestData.post(url, formData);
         }
 
-        Messenger.onMessage("emptyWishlist").then(async () => {
-            let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
-            if (!wishlistData) { return; }
+        await ExtensionLayer.runInPageContext(emptyWishlist => {
+            let prompt = ShowConfirmDialog(emptyWishlist.title, emptyWishlist.confirm);
 
-            let cur = 1;
-            let textNode = document.querySelector(".waiting_dialog_throbber").nextSibling;
-            for (let { appid } of wishlistData) {
-                textNode.textContent = Localization.str.empty_wishlist.removing.replace("__cur__", cur++).replace("__total__", wishlistData.length);
-                await removeApp(appid);
-            }
-            DynamicStore.clear();
-            location.reload();
-        });
+            return new Promise(resolve => {
+                prompt.done(result => {
+                    if (result === "OK") {
+                        ShowBlockingWaitDialog(emptyWishlist.title, emptyWishlist.removing.replace("__cur__", 1).replace("__total__", g_rgWishlistData.length));
+                        resolve();
+                    }
+                });
+            });
+        }, [ Localization.str.empty_wishlist ], "emptyWishlist");
+
+        let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
+        if (!wishlistData) { return; }
+
+        let cur = 1;
+        let textNode = document.querySelector(".waiting_dialog_throbber").nextSibling;
+        for (let { appid } of wishlistData) {
+            textNode.textContent = Localization.str.empty_wishlist.removing.replace("__cur__", cur++).replace("__total__", wishlistData.length);
+            await removeApp(appid);
+        }
+        DynamicStore.clear();
+        location.reload();
     }
 
     class WishlistExporter {
@@ -3750,12 +3767,10 @@ let WishlistPageClass = (function(){
      */
     WishlistPageClass.prototype.showExportModalDialog = function(appInfo) {
 
-        let exportStr = Localization.str.export;
-
-        ExtensionLayer.runInPageContext(`function() {
+        ExtensionLayer.runInPageContext(exportStr => {
             ShowConfirmDialog(
-                "${exportStr.wishlist}",
-                \`<div id='es_export_form'>
+                exportStr.wishlist,
+                `<div id='es_export_form'>
                     <div class="es-wexport">
                     <h2>${exportStr.type}</h2>
                     <div>
@@ -3771,12 +3786,12 @@ let WishlistPageClass = (function(){
                             <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %note%</div>
                         </div>
                     </div>
-                </div>\`,
-                "${exportStr.download}",
+                </div>`,
+                exportStr.download,
                 null, // use default "Cancel"
-                "${exportStr.copy_clipboard}"
+                exportStr.copy_clipboard
             );
-        }`);
+        }, [ Localization.str.export ]);
 
         let [ dlBtn, copyBtn ] = document.querySelectorAll(".newmodal_buttons > .btn_medium");
 
@@ -3821,9 +3836,8 @@ let WishlistPageClass = (function(){
     WishlistPageClass.prototype.addExportWishlistButton = function() {
         HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${Localization.str.export.wishlist}</div></div>`);
 
-        document.querySelector("#es_export_wishlist").addEventListener("click", () => {
-            Messenger.onMessage("appInfo").then(appInfo => this.showExportModalDialog(appInfo));
-            ExtensionLayer.runInPageContext(() => Messenger.postMessage("appInfo", g_rgAppInfo));
+        document.querySelector("#es_export_wishlist").addEventListener("click", async () => {
+            this.showExportModalDialog(await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, "appInfo"));
         });
     };
 
@@ -3961,20 +3975,19 @@ class UserNotes {
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
         // Partly copied from shared_global.js
-        ExtensionLayer.runInPageContext(`function() {
+        let bgClick = ExtensionLayer.runInPageContext((title, template) => {
             let deferred = new jQuery.Deferred();
             let fnOK = () => deferred.resolve();
     
-            let Modal = _BuildDialog(
-                "${Localization.str.user_note.add_for_game.replace("__gamename__", appname)}",
-                \`${this.noteModalTemplate.replace("__appid__", appid).replace("__note__", await this.get(appid) || '').replace("__selector__", encodeURIComponent(nodeSelector))}\`,
-                [], fnOK);
+            let Modal = _BuildDialog(title, template, [], fnOK);
             deferred.always(() => Modal.Dismiss());
     
-            Modal.m_fnBackgroundClick = () => {
-                Messenger.onMessenge("noteSaved").then(Modal.Dismiss);
-                Messenger.postMessage("backgroundClick");
-            }
+            let promise = new Promise(resolve => {
+                Modal.m_fnBackgroundClick = () => {
+                    Messenger.onMessage("noteSaved").then(() => { Modal.Dismiss(); });
+                    resolve();
+                };
+            });
     
             Modal.Show();
     
@@ -3991,11 +4004,17 @@ class UserNotes {
                     Modal.Dismiss();
                 }
             });
-        }`);
+
+            return promise;
+        },
+        [
+            Localization.str.user_note.add_for_game.replace("__gamename__", appname),
+            this.noteModalTemplate.replace("__appid__", appid).replace("__note__", await this.get(appid) || '').replace("__selector__", encodeURIComponent(nodeSelector)),
+        ], "backgroundClick");
 
         document.addEventListener("click", clickListener);
 
-        Messenger.onMessage("backgroundClick").then(() => {
+        bgClick.then(() => {
             onNoteUpdate.apply(null, saveNote());
             Messenger.postMessage("noteSaved");
         });
@@ -4004,10 +4023,10 @@ class UserNotes {
             if (e.target.closest(".es_note_modal_submit")) {
                 e.preventDefault();
                 onNoteUpdate.apply(null, saveNote());
-                ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
             }
             else if (e.target.closest(".es_note_modal_close")) {
-                ExtensionLayer.runInPageContext(() => CModal.DismissActiveModal());
+                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
             }
             else {
                 return;
@@ -4187,6 +4206,9 @@ let TabAreaObserver = (function(){
 })();
 
 (async function(){
+    let nginxError = document.querySelector("body > center:nth-child(3)");
+    if (nginxError && nginxError.innerText === "nginx") { return; }
+
     let path = window.location.pathname.replace(/\/+/g, "/");
 
     await SyncedStorage.init().catch(err => console.error(err));

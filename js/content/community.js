@@ -1,29 +1,3 @@
-
-let SteamId = (function(){
-
-    let self = {};
-    let _steamId = null;
-
-    self.getSteamId = function() {
-        if (_steamId) { return _steamId; }
-
-        if (document.querySelector("#reportAbuseModal")) {
-            _steamId = document.querySelector("input[name=abuseID]").value;
-        } else {
-            _steamId = HTMLParser.getVariableFromDom("g_steamID", "string");
-        }
-
-        if (!_steamId) {
-            let profileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
-            _steamId = profileData.steamid;
-        }
-
-        return _steamId;
-    };
-
-    return self;
-})();
-
 let GroupID = (function(){
 
     let self = {};
@@ -52,7 +26,9 @@ let ProfileData = (function(){
     let _promise = null;
     self.promise = async function() {
         if (!_promise) {
-            _promise = Background.action("profile", SteamId.getSteamId())
+            let steamId = SteamId.getSteamId();
+
+            _promise = Background.action("profile", steamId)
                 .then(response => { _data = response; return _data; });
         }
         return _promise;
@@ -568,17 +544,25 @@ let ProfileHomePageClass = (function(){
             htmlstr += CommunityCommon.makeProfileLink("custom", link, name, iconType, icon);
         }
 
-        // profile permalink
-        if (SyncedStorage.get("profile_permalink")) {
-            let imgUrl = ExtensionResources.getURL("img/clippy.svg");
-            htmlstr +=
-                `<div id="es_permalink_div" class="profile_count_link">
-					<span class="count_link_label">${Localization.str.permalink}</span>
-					<div class="es_copy_wrap">
-						<input id="es_permalink" type="text" value="https://steamcommunity.com/profiles/${steamId}" readonly />
-						<button id="es_permalink_copy"><img src="${imgUrl}" /></button>
-					</div>
-				</div>`;
+        // profile steamid
+        if (SyncedStorage.get("profile_steamid")) {
+            let dropdown = document.querySelector("#profile_action_dropdown .popup_body.popup_menu");
+            if (dropdown) {
+                HTML.beforeEnd(dropdown,
+                    `<a class="popup_menu_item" id="es_steamid">
+                        <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/iconForums.png">&nbsp; ${Localization.str.view_steamid}
+                    </a>`);
+            } else {
+                let actions = document.querySelector(".profile_header_actions");
+                if (actions) {
+                    HTML.beforeEnd(actions,
+                        `<a class="btn_profile_action btn_medium" id="es_steamid">
+                            <span>${Localization.str.view_steamid}</span>
+                        </a>`);
+                }
+            }
+
+            document.querySelector("#es_steamid").addEventListener("click", showSteamIdDialog);
         }
 
         // Insert the links HMTL into the page
@@ -593,14 +577,53 @@ let ProfileHomePageClass = (function(){
             }
         }
 
-        if (SyncedStorage.get("profile_permalink")) {
-            document.querySelector("#es_permalink").addEventListener("click", function(e) {
-                e.target.select();
-            });
-            document.querySelector("#es_permalink_copy").addEventListener("click", function(e) {
-                document.querySelector("#es_permalink").select();
-                document.execCommand('copy');
-            });
+        function copySteamId(e) {
+            let elem = e.target.closest(".es-copy");
+            if (!elem) { return; }
+
+            Clipboard.set(elem.querySelector(".es-copy__id").innerText);
+
+            let lastCopied = document.querySelector(".es-copy.is-copied");
+            if (lastCopied) {
+                lastCopied.classList.remove("is-copied");
+            }
+
+            elem.classList.add("is-copied");
+            window.setTimeout(() => { elem.classList.remove("is-copied")}, 2000);
+        }
+
+        function showSteamIdDialog() {
+            document.addEventListener("click", copySteamId);
+
+            let imgUrl = ExtensionResources.getURL("img/clippy.svg");
+
+            let steamId = new SteamId.Detail(SteamId.getSteamId());
+            let ids = [
+                steamId.id2,
+                steamId.id3,
+                steamId.id64,
+                `https://steamcommunity.com/profiles/${steamId.id64}`
+            ];
+
+            let copied = Localization.str.copied;
+            let html = "";
+            for (let id of ids) {
+                if (!id) { continue; }
+                html += `<p><a class="es-copy"><span class="es-copy__id">${id}</span><img src='${imgUrl}' class="es-copy__icon"><span class="es-copy__copied">${copied}</span></a></p>`
+            }
+
+            ExtensionLayer.runInPageContext((steamidOfUser, html, close) => {
+                HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
+                let dialog = ShowAlertDialog(steamidOfUser.replace("__user__", g_rgProfileData.personaname), html, close);
+
+                return new Promise(resolve => { dialog.done(() => { resolve(); }); });
+            },
+            [
+                Localization.str.steamid_of_user,
+                html,
+                Localization.str.close,
+            ], "closeDialog")
+            .then(() => { document.removeEventListener("click", copySteamId); });
         }
     };
 
@@ -620,11 +643,9 @@ let ProfileHomePageClass = (function(){
                 </a>
             </div>`);
 
-        if (SyncedStorage.get("show_wishlist_count")) {
-            if (document.querySelector(".gamecollector_showcase")) {
-                let nodes = document.querySelectorAll(".gamecollector_showcase .showcase_stat");
-                document.querySelector("#es_wishlist_count").textContent = nodes[nodes.length-1].textContent.match(/\d+(?:,\d+)?/)[0];
-            }
+        let wishlistNode = document.querySelector(".gamecollector_showcase .showcase_stat[href$='/wishlist/']");
+        if (SyncedStorage.get("show_wishlist_count") && wishlistNode) {
+            document.querySelector("#es_wishlist_count").textContent = wishlistNode.textContent.match(/\d+(?:,\d+)?/)[0];
         }
     };
 
@@ -661,7 +682,7 @@ let ProfileHomePageClass = (function(){
 
             HTML.afterEnd(profileBadges, html);
 
-            ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
+            ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
         });
     };
 
@@ -787,7 +808,10 @@ let ProfileHomePageClass = (function(){
                 HTML.afterEnd(node, `<a class="popup_menu_item" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`);
 
                 node.parentNode.querySelector("#es_nickname").addEventListener("click", function() {
-                    ExtensionLayer.runInPageContext("function() { ShowNicknameModal(); HideMenu( 'profile_action_dropdown_link', 'profile_action_dropdown' ); return false; }");
+                    ExtensionLayer.runInPageContext(() => {
+                        ShowNicknameModal();
+                        HideMenu("profile_action_dropdown_link", "profile_action_dropdown" );
+                    });
                 });
             }
         }
@@ -807,7 +831,7 @@ let ProfileHomePageClass = (function(){
 
         let node = document.querySelector(".profile_in_game_name");
         HTML.inner(node, `<a data-tooltip-html="${tooltip}" href="//store.steampowered.com/app/${ingameNode.value}" target="_blank">${node.textContent}</a>`);
-        ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
     };
 
     ProfileHomePageClass.prototype.addProfileStyle = function() {
@@ -979,12 +1003,12 @@ let ProfileHomePageClass = (function(){
             </div>`);
         sendButton.remove();
 
-        document.querySelector("#btnWebChat").addEventListener("click", function(){
-            ExtensionLayer.runInPageContext(`OpenFriendChatInWebChat('${chatId}')`);
+        document.querySelector("#btnWebChat").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(chatId => { OpenFriendChatInWebChat(chatId); }, [ chatId ]);
         });
 
-        document.querySelector("#profile_chat_dropdown_link").addEventListener("click", function(e) {
-            ExtensionLayer.runInPageContext(() => ShowMenu( document.querySelector('#profile_chat_dropdown_link'), 'profile_chat_dropdown', 'right' ));
+        document.querySelector("#profile_chat_dropdown_link").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(() => { ShowMenu(document.querySelector("#profile_chat_dropdown_link"), "profile_chat_dropdown", "right"); });
         });
     };
 
@@ -995,13 +1019,14 @@ let ProfileHomePageClass = (function(){
 let GroupHomePageClass = (function(){
 
     function GroupHomePageClass() {
+        this.groupId = GroupID.getGroupId();
+
         this.addGroupLinks();
         this.addFriendsInviteButton();
     }
 
     GroupHomePageClass.prototype.addGroupLinks = function() {
 
-        let groupId = GroupID.getGroupId();
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
         if (images !== "none") {
@@ -1011,34 +1036,28 @@ let GroupHomePageClass = (function(){
         let links = [
             {
                 "id": "steamgifts",
-                "link": `https://www.steamgifts.com/go/group/${groupId}`,
+                "link": `https://www.steamgifts.com/go/group/${this.groupId}`,
                 "name": "SteamGifts",
             }
         ];
 
-
-        // Build the links HTML
-        let htmlstr = "";
-
+        let html = "";
         for (let link of links) {
-            if (!SyncedStorage.get("group_" + link.id)) { continue; }
-            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+            if (!SyncedStorage.get(`group_${link.id}`)) { continue; }
+            html += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
         }
 
-        // Insert the links HMTL into the page
-        if (htmlstr) {
-            let linksNode = (document.querySelector(".responsive_hidden > .rightbox")).parentNode;
-            if (linksNode) {
-                HTML.afterEnd(linksNode,
-                   `<div class="rightbox_header"></div>
+        if (html) {
+            let node = document.querySelector(".responsive_hidden > .rightbox");
+            if (node) {
+                HTML.afterEnd(node.parentNode,
+                    `<div class="rightbox_header"></div>
                     <div class="rightbox">
-                       <div class="content">${htmlstr}</div>
+                        <div class="content">${html}</div>
                     </div>
-                    <div class="rightbox_footer"></div>`
-                );
+                    <div class="rightbox_footer"></div>`);
             }
         }
-
     };
 
     GroupHomePageClass.prototype.addFriendsInviteButton = function() {
@@ -1047,10 +1066,9 @@ let GroupHomePageClass = (function(){
         let button = document.querySelector(".grouppage_join_area");
         if (button) { return; }
 
-        let groupId = GroupID.getGroupId();
         HTML.afterEnd("#join_group_form", 
             `<div class="grouppage_join_area">
-                <a class="btn_blue_white_innerfade btn_medium" href="https://steamcommunity.com/my/friends/?invitegid=${groupId}">
+                <a class="btn_blue_white_innerfade btn_medium" href="https://steamcommunity.com/my/friends/?invitegid=${this.groupId}">
                     <span><img src="//steamcommunity-a.akamaihd.net/public/images/groups/icon_invitefriends.png">&nbsp; ${Localization.str.invite_friends}</span>
                 </a>
             </div>`);
@@ -1196,13 +1214,13 @@ let GamesPageClass = (function(){
         commonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
             rows.classList.toggle("esi-hide-notcommon", e.target.checked);
-            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
+            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); });
         });
 
         notCommonCheckbox.addEventListener("change", async function(e) {
             await loadCommonGames();
             rows.classList.toggle("esi-hide-common", e.target.checked);
-            ExtensionLayer.runInPageContext(() => CScrollOffsetWatcher.ForceRecalc());
+            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); });
         });
     };
 
@@ -1324,7 +1342,7 @@ let ProfileEditPageClass = (function(){
             </div>`;
 
         HTML.beforeBegin(".group_content_bodytext", html);
-        ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
 
         let response = await Background.action('profile.background.games');
 
@@ -1401,7 +1419,7 @@ let ProfileEditPageClass = (function(){
 
         HTML.beforeBegin(".group_content_bodytext", html);
 
-        ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
 
         let styleSelectNode = document.querySelector("#es_style");
 
@@ -1660,7 +1678,7 @@ let InventoryPageClass = (function(){
         }
     }
 
-    function addOneClickGemsOption(item, appid, assetId) {
+    function addOneClickGemsOption(item, appid, assetid) {
         if (!SyncedStorage.get("show1clickgoo")) { return; }
 
         let quickGrind = document.querySelector("#es_quickgrind");
@@ -1674,24 +1692,26 @@ let InventoryPageClass = (function(){
 
         // TODO: Add prompt?
         document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
-            ExtensionLayer.runInPageContext(`function() {
-                var rgAJAXParams = {
+            ExtensionLayer.runInPageContext((appid, assetid) => {
+                let rgAJAXParams = {
                     sessionid: g_sessionID,
-                    appid: ${appid},
-                    assetid: ${assetId},
+                    appid,
+                    assetid,
                     contextid: 6
                 };
 
-                var strActionURL = g_strProfileURL + '/ajaxgetgoovalue/';
-                $J.get( strActionURL, rgAJAXParams ).done( function( data ) {
-                    strActionURL = g_strProfileURL + '/ajaxgrindintogoo/';
+                let strActionURL = `${g_strProfileURL}/ajaxgetgoovalue/`;
+
+                $J.get(strActionURL, rgAJAXParams).done(data => {
+                    strActionURL = `${g_strProfileURL}/ajaxgrindintogoo/`;
                     rgAJAXParams.goo_value_expected = data.goo_value;
-                    $J.post( strActionURL, rgAJAXParams).done( function( data ) {
+
+                    $J.post(strActionURL, rgAJAXParams).done(() => {
                         ReloadCommunityInventory();
                     });
                 });
-            }`);
-        });
+            });
+        }, [ appid, assetid ]);
     }
 
     function makeMarketButton(id, tooltip) {
@@ -1738,7 +1758,7 @@ let InventoryPageClass = (function(){
             HTML.beforeEnd(marketActions, makeMarketButton("es_quicksell" + assetId, Localization.str.quick_sell_desc.replace("__modifier__", diff)));
             HTML.beforeEnd(marketActions, makeMarketButton("es_instantsell" + assetId, Localization.str.instant_sell_desc));
 
-            ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: "community_tooltip"} ));
+            ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
 
             // Check if price is stored in data
             if (thisItem.classList.contains("es-price-loaded")) {
@@ -1805,7 +1825,25 @@ let InventoryPageClass = (function(){
                     marketActions.querySelector("div"),
                     "<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>" + Localization.str.selling + "</div>"
                 );
-                ExtensionLayer.runInPageContext(`() => Messenger.postMessage("sendFee", {feeInfo: CalculateFeeAmount(${sellPrice}, 0.10), sessionID: "${sessionId}", global_id: "${globalId}", contextID: "${contextId}", assetID: "${assetId}"})`);
+
+                ExtensionLayer.runInPageContext((sellPrice, sessionID, global_id, contextID, assetID) => {
+                    Messenger.postMessage("sendFee",
+                        {
+                            feeInfo: CalculateFeeAmount(sellPrice, 0.10),
+                            sessionID,
+                            global_id,
+                            contextID,
+                            assetID,
+                        }
+                    );
+                },
+                [
+                    sellPrice,
+                    sessionId,
+                    globalId,
+                    contextId,
+                    assetId,
+                ]);
             });
         }
     }
@@ -1930,8 +1968,10 @@ let InventoryPageClass = (function(){
     }
 
     function prepareMarketForInventory() {
-        ExtensionLayer.runInPageContext(function(){
-            $J(document).on("click", ".inventory_item_link, .newitem", function(){
+
+        ExtensionLayer.runInPageContext(() => {
+
+            $J(document).on("click", ".inventory_item_link, .newitem", () => {
                 if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
                     g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
                 }
@@ -1957,7 +1997,7 @@ let InventoryPageClass = (function(){
             });
         });
         
-        Messenger.addMessageListener("sendMessage", info => inventoryMarketHelper(info));
+        Messenger.addMessageListener("sendMessage", info => { inventoryMarketHelper(info) });
 
         Messenger.addMessageListener("sendFee", async ({ feeInfo, sessionID, global_id, contextID, assetID }) => {
             let sellPrice = feeInfo.amount - feeInfo.fees;
@@ -2034,13 +2074,13 @@ let InventoryPageClass = (function(){
         // Go to first page
         HTML.afterEnd("#pagebtn_previous", "<a id='pagebtn_first' class='pagebtn pagecontrol_element disabled'>&lt;&lt;</a>");
         document.querySelector("#pagebtn_first").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext("() => { InventoryFirstPage(); }");
+            ExtensionLayer.runInPageContext(() => { InventoryFirstPage(); });
         });
 
         // Go to last page
         HTML.beforeBegin("#pagebtn_next", "<a id='pagebtn_last' class='pagebtn pagecontrol_element'>&gt;&gt;</a>");
         document.querySelector("#pagebtn_last").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext("() => { InventoryLastPage(); }");
+            ExtensionLayer.runInPageContext(() => { InventoryLastPage(); });
         });
 
         let pageGo = document.createElement("div");
@@ -2332,7 +2372,7 @@ let BadgesPageClass = (function(){
             });
 
         } else {
-            HTML.beforeBegin(".profile_xp_block_right",
+            HTML.afterBegin(".profile_xp_block_right",
                 "<div id='es_calculations'>" + Localization.str.drop_calc + "</div>");
 
             addDropsCount();
@@ -2425,7 +2465,7 @@ let BadgesPageClass = (function(){
                 </div>
             </span>`);
 
-        ExtensionLayer.runInPageContext(() => BindAutoFlyoutEvents());
+        ExtensionLayer.runInPageContext(() => { BindAutoFlyoutEvents(); });
 
         if (isOwnProfile) {
             let that = this;
@@ -2785,7 +2825,7 @@ let FriendsThatPlayPageClass = (function(){
         HTML.beforeEnd(".friends_that_play_content", html);
 
         // Reinitialize miniprofiles by injecting the function call.
-        ExtensionLayer.runInPageContext(() => InitMiniprofileHovers());
+        ExtensionLayer.runInPageContext(() => { InitMiniprofileHovers(); });
     };
 
     FriendsThatPlayPageClass.prototype.addFriendsPlayTimeSort = function() {
@@ -2904,86 +2944,101 @@ let FriendsPageClass = (function(){
         let params = new URLSearchParams(window.location.search);
         if (!params.has("invitegid")) { return; }
 
-        let groupId = params.get("invitegid");
         HTML.afterBegin("#manage_friends > div:nth-child(2)", `<span class="manage_action btnv6_lightblue_blue btn_medium" id="invitetogroup"><span>${Localization.str.invite_to_group}</span></span>`);
-        ExtensionLayer.runInPageContext(`function(){
+        ExtensionLayer.runInPageContext(groupId => {
             ToggleManageFriends();
-            $J("#invitetogroup").on("click", function() {
-                let groupId = "${groupId}";
+            $J("#invitetogroup").on("click", () => {
                 let friends = GetCheckedAccounts("#search_results > .selectable.selected:visible");
                 InviteUserToGroup(null, groupId, friends);
             });
-        }`);
+        }, [ params.get("invitegid") ]);
     };
 
     return FriendsPageClass;
 })();
 
-let GroupsPageClass = (function(){
+class GroupsPageClass {
 
-    function GroupsPageClass() {
-        this.addSort();
-        this.addManageBtn();
+    constructor() {
+        this._groups = Array.from(document.querySelectorAll(".group_block"));
+        this._initSort = true;
+
+        this._moveSearchBar();
+        this._addSort();
+        this._addManageBtn();
     }
 
-    GroupsPageClass.prototype.addSort = function() {
-        let groups = Array.from(document.querySelectorAll(".group_block"));
-        if (groups.length === 0) { return; }
-
-        groups.forEach((group, i) => {
-            let name = group.querySelector(".groupTitle > a").textContent;
-            let membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
-            group.dataset.esSortdefault = i;
-            group.dataset.esSortnames = name;
-            group.dataset.esSortmembers = membercount;
-        });
-
-        function sortGroups(sortBy, reversed) {
-            let searchResults = document.querySelector("#search_results_empty");
-            let property = `esSort${sortBy}`;
-            groups.sort((a, b) => {
-                let propA = a.dataset[property];
-                let propB = b.dataset[property];
-                switch(sortBy) {
-                    case "default":
-                        return Number(propA) - Number(propB);
-                    case "members":
-                        return Number(propB) - Number(propA);
-                    case "names": {
-                        if (propA.toLowerCase() < propB.toLowerCase()) { return -1; }
-                        if (propA.toLowerCase() > propB.toLowerCase()) { return 1; }
-                        return 0;
-                    }
-                }
-            });
-
-            for (let group of groups) {
-                if (reversed) {
-                    searchResults.insertAdjacentElement("afterend", group);
-                } else {
-                    searchResults.parentElement.appendChild(group);
-                }
-            }
-        }
-
+    _moveSearchBar() {
         // move the search bar to the same position as on friends page
         let container = HTML.wrap("#search_text_box", '<div class="searchBarContainer"></div>');
         document.querySelector("#search_results").insertAdjacentElement("beforebegin", container);
+    }
 
+    _addSort() {
         document.querySelector("span.profile_groups.title").insertAdjacentElement("afterend", Sortbox.get(
             "groups",
-            [["default", Localization.str.theworddefault], ["members", Localization.str.members], ["names", Localization.str.name]],
+            [
+                ["default", Localization.str.theworddefault],
+                ["members", Localization.str.members],
+                ["names", Localization.str.name]
+            ],
             SyncedStorage.get("sortgroupsby"),
-            sortGroups,
+            (sortBy, reversed) => { this._sortGroups(sortBy, reversed) },
             "sortgroupsby")
         );
-        document.querySelector(".es-sortbox").style.flex = 2;
-    };
 
-    GroupsPageClass.prototype.addManageBtn = async function() {
-        let groups = document.querySelectorAll(".group_block");
-        if (groups.length === 0) { return; }
-        if (!groups[0].querySelector(".actions")) { return; }
+        let sortbox = document.querySelector("div.es-sortbox");
+        sortbox.style.flexGrow = "2";
+        sortbox.style.marginRight = "20px";
+        sortbox.style.marginTop = "0";
+        sortbox.style.textAlign = "right";
+    }
+
+    _getSortFunc(sortBy) {
+        let property = `esSort${sortBy}`;
+        switch(sortBy) {
+            case "default":
+                return (a, b) => Number(a.dataset[property]) - Number(b.dataset[property]);
+            case "members":
+                return (a, b) => Number(b.dataset[property]) - Number(a.dataset[property]);
+            case "names":
+                return (a, b) => a.dataset[property].localeCompare(b.dataset[property]);
+        }
+    }
+
+    _sortGroups(sortBy, reversed) {
+        if (this._groups.length === 0) { return; }
+
+        if (this._initSort) {
+
+            let i = 0;
+            for (let group of this._groups) {
+                let name = group.querySelector(".groupTitle > a").textContent;
+                let membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
+                group.dataset.esSortdefault = i.toString();
+                group.dataset.esSortnames = name;
+                group.dataset.esSortmembers = membercount.toString();
+                i++;
+            }
+
+            this._initSort = false;
+        }
+
+        this._groups.sort(this._getSortFunc(sortBy, `esSort${sortBy}`));
+
+        let searchResults = document.querySelector("#search_results_empty");
+        for (let group of this._groups) {
+            if (reversed) {
+                searchResults.insertAdjacentElement("afterend", group);
+            } else {
+                searchResults.parentElement.appendChild(group);
+            }
+        }
+    }
+
+    _addManageBtn() {
+        if (this._groups.length === 0) { return; }
+        if (!this._groups[0].querySelector(".actions")) { return; }
 
         let groupsStr = Localization.str.groups;
 
@@ -3012,7 +3067,7 @@ let GroupsPageClass = (function(){
                 <div class="row"></div>
             </div>`);
 
-        for (let group of groups) {
+        for (let group of this._groups) {
             group.classList.add("selectable");
             HTML.afterBegin(group, 
                 `<div class="indicator select_friend">
@@ -3021,91 +3076,92 @@ let GroupsPageClass = (function(){
             group.querySelector(".select_friend").addEventListener("click", () => {
                 group.classList.toggle("selected");
                 group.querySelector(".select_friend_checkbox").checked = group.classList.contains("selected");
-                ExtensionLayer.runInPageContext(function() { UpdateSelection(); });
+                ExtensionLayer.runInPageContext(() => { UpdateSelection(); });
             });    
         }
 
         document.querySelector("#manage_friends_control").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(function() { ToggleManageFriends(); });
+            ExtensionLayer.runInPageContext(() => { ToggleManageFriends(); });
         });
 
         document.querySelector("#es_select_all").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(function() { SelectAll(); });
+            ExtensionLayer.runInPageContext(() => { SelectAll(); });
         });
 
         document.querySelector("#es_select_none").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(function() { SelectNone(); });
+            ExtensionLayer.runInPageContext(() => { SelectNone(); });
         });
 
         document.querySelector("#es_select_inverse").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(function() { SelectInverse(); });
+            ExtensionLayer.runInPageContext(() => { SelectInverse(); });
         });
 
-        document.querySelector("#es_leave_groups").addEventListener("click", () => leaveGroups());
-
-        async function displayAdminConfirmation(name, id) {
-            let body = groupsStr.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
-            ExtensionLayer.runInPageContext(`function(){
-                let prompt = ShowConfirmDialog("${groupsStr.leave}", "${body}");
-                prompt.done(function(result) {
-                    Messenger.postMessage("confirm#${id}", result);
-                }).fail(function() {
-                    Messenger.postMessage("confirm#${id}");
-                });
-            }`);
-            
-            let result = await Messenger.onMessage(`confirm#${id}`);
-            if (result === "OK") {
-                return true;
-            }
-
-            return false;
-        }
-
-        async function leaveGroups() {
-            for (let group of groups) {
-                if (!group.classList.contains("selected")) { continue; }
-
-                let actions = group.querySelector(".actions");
-                let admin = actions.querySelector("[href*='/edit']");
-                let split = actions.querySelector("[onclick*=ConfirmLeaveGroup]").getAttribute("onclick").split(/'|"/);
-                let id = split[1];
-                if (admin) {
-                    let name = split[3]
-                    let cont = await displayAdminConfirmation(name, id);
-                    if (!cont) {
-                        group.querySelector(".select_friend").click();
-                        continue;
-                    }
-                }
-                let res = await leaveGroup(id).catch(err => console.error(err));
-
-                if (!res || !res.success) {
-                    console.error("Failed to leave group " + id);
-                    continue;
-                }
-
-                group.style.opacity = 0.3;
-                group.querySelector(".select_friend").click();
-            }
-        }
-
-        function leaveGroup(id) {
-            let formData = new FormData();
-            formData.append("sessionid", User.getSessionId());
-            formData.append("steamid", User.steamId);
-            formData.append("ajax", 1);
-            formData.append("action", "leave_group");
-            formData.append("steamids[]", id);
-
-            return RequestData.post(User.profileUrl + "/friends/action", formData, {
-                withCredentials: true
-            }, "json");
-        }
+        document.querySelector("#es_leave_groups").addEventListener("click", () => this._leaveGroups());
     };
 
-    return GroupsPageClass;
-})();
+    async _leaveGroups() {
+        let selected = [];
+
+        for (let group of this._groups) {
+            if (!group.classList.contains("selected")) {
+                continue;
+            }
+
+            let actions = group.querySelector(".actions");
+            let admin = actions.querySelector("[href*='/edit']");
+            let split = actions.querySelector("[onclick*=ConfirmLeaveGroup]")
+                .getAttribute("onclick").split(/'|"/);
+            let id = split[1];
+
+            if (admin) {
+                let name = split[3];
+
+                let body = Localization.str.groups.leave_admin_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
+                let result = await ConfirmDialog.open(Localization.str.groups.leave, body);
+                let cont = (result === "OK");
+                if (!cont) {
+                    group.querySelector(".select_friend").click();
+                    continue;
+                }
+            }
+
+            selected.push([id, group]);
+        }
+
+        if (selected.length > 0) {
+            let body = Localization.str.groups.leave_groups_confirm.replace("__n__", selected.length);
+            let result = await ConfirmDialog.open(Localization.str.groups.leave, body);
+
+            if (result === "OK") {
+                for (let tuple of selected) {
+                    let [id, group] = tuple;
+                    let res = await this._leaveGroup(id).catch(err => console.error(err));
+
+                    if (!res || !res.success) {
+                        console.error("Failed to leave group " + id);
+                        continue;
+                    }
+
+                    group.style.opacity = "0.3";
+                    group.querySelector(".select_friend").click();
+                }
+            }
+        }
+    }
+
+    _leaveGroup(id) {
+        let formData = new FormData();
+        formData.append("sessionid", User.getSessionId());
+        formData.append("steamid", User.steamId);
+        formData.append("ajax", 1);
+        formData.append("action", "leave_group");
+        formData.append("steamids[]", id);
+
+        return RequestData.post(User.profileUrl + "/friends/action", formData, {
+            withCredentials: true
+        }, "json");
+    }
+}
 
 let MarketListingPageClass = (function(){
 
@@ -3183,7 +3239,7 @@ let MarketListingPageClass = (function(){
         document.querySelector(".as-zoomcontrol").addEventListener("click", function() {
             ExtensionLayer.runInPageContext(() => {
                 pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
-            })
+            });
         });
     };
 
@@ -3683,12 +3739,12 @@ let MarketPageClass = (function(){
 
         toggleRefresh(LocalStorage.get("popular_refresh", false));
 
-        ExtensionLayer.runInPageContext(() => SetupTooltips( { tooltipCSSClass: 'community_tooltip'} ));
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
 
         function toggleRefresh(state) {
             document.querySelector("#es_popular_refresh_toggle").classList.toggle("es_refresh_off", !state);
             LocalStorage.set("popular_refresh", state);
-            ExtensionLayer.runInPageContext(`() => g_bMarketWindowHidden = ${state}`);
+            ExtensionLayer.runInPageContext(state => { g_bMarketWindowHidden = state; }, [ state ]);
         }
     };
 
@@ -3715,6 +3771,8 @@ let CommunityAppPageClass = (function(){
     function CommunityAppPageClass() {
         this.appid = GameId.getAppid(window.location.href);
 
+        Highlights.addTitleHighlight(this.appid);
+
         this.addAppPageWishlist();
         this.addSteamDbLink();
         this.addBartervgLink();
@@ -3736,18 +3794,8 @@ let CommunityAppPageClass = (function(){
 
         let nameNode = document.querySelector(".apphub_AppName");
 
-        // todo add other highlights
-        let appStatus = await DynamicStore.getAppStatus(`app/${this.appid}`);
-
-        if (appStatus.owned) {
-            nameNode.style.color = SyncedStorage.get("highlight_owned_color");
-            return;
-        }
-
-        if (appStatus.wishlisted) {
-            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
-            return;
-        }
+        let { owned, wishlisted } = await DynamicStore.getAppStatus(`app/${this.appid}`);
+        if (owned || wishlisted) { return; }
 
         // TODO remove from wishlist button
 
@@ -3766,7 +3814,6 @@ let CommunityAppPageClass = (function(){
 
             nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
 
-            // Clear dynamicstore cache
             DynamicStore.clear();
         });
     };
@@ -3855,7 +3902,7 @@ let WorkshopPageClass = (function(){
     };
 
     WorkshopPageClass.prototype.initAjaxBrowse = function() {
-        ExtensionLayer.runInPageContext(function() {
+        ExtensionLayer.runInPageContext(() => {
             $J(".browseOption").get().forEach(node => node.onclick = () => false);
         });
 
@@ -3891,13 +3938,13 @@ let WorkshopPageClass = (function(){
         HTML.inner(container, result.results_html);
         tab.removeAttribute("disabled");
 
-        ExtensionLayer.runInPageContext(`function() {
+        ExtensionLayer.runInPageContext((query, totalCount, count) => {
             g_oSearchResults.m_iCurrentPage = 0;
-            g_oSearchResults.m_strQuery = "${query}";
-            g_oSearchResults.m_cTotalCount = ${result.total_count};
-            g_oSearchResults.m_cPageSize = ${count};
+            g_oSearchResults.m_strQuery = query;
+            g_oSearchResults.m_cTotalCount = totalCount;
+            g_oSearchResults.m_cPageSize = count;
             g_oSearchResults.UpdatePagingDisplay();
-        }`);
+        }, [ query, result.total_count, count ]);
     };
 
     return WorkshopPageClass;
@@ -4095,15 +4142,6 @@ let WorkshopBrowseClass = (function(){
             let statusString = workshopStr[method + "_confirm"]
                 .replace("__count__", total);
 
-            ExtensionLayer.runInPageContext(`function(){
-                let prompt = ShowConfirmDialog("${statusTitle}", "${statusString}");
-                prompt.done(function(result) {
-                    if (result == "OK") {
-                        Messenger.postMessage("startSubscriber");
-                    }
-                });
-            }`);
-
             function updateWaitDialog() {
                 let statusString = workshopStr[method + "_loading"]
                     .replace("__i__", completed)
@@ -4116,13 +4154,13 @@ let WorkshopBrowseClass = (function(){
                 let modal = document.querySelector(".newmodal_content");
                 if (!modal) {
                     let statusTitle = workshopStr[method + "_all"];
-                    ExtensionLayer.runInPageContext(`function() {
+                    ExtensionLayer.runInPageContext((title, progress) => {
                         if (window.dialog) {
                             window.dialog.Dismiss();
                         }
                         
-                        window.dialog = ShowBlockingWaitDialog("${statusTitle}", "${statusString}");
-                    }`);
+                        window.dialog = ShowBlockingWaitDialog(title, progress);
+                    }, [ statusTitle, statusString ]);
                 } else {
                     modal.innerText = statusString;
                 }
@@ -4134,18 +4172,18 @@ let WorkshopBrowseClass = (function(){
                     .replace("__success__", completed - failed)
                     .replace("__fail__", failed);
 
-                ExtensionLayer.runInPageContext(`function() {
+                ExtensionLayer.runInPageContext((title, finished) => {
                     if (window.dialog) {
                         window.dialog.Dismiss();
                     }
                     
-                    window.dialog = ShowConfirmDialog("${statusTitle}", "${statusString}")
-                        .done(function(result) {
-                            if (result == "OK") {
+                    window.dialog = ShowConfirmDialog(title, finished)
+                        .done(result => {
+                            if (result === "OK") {
                                 window.location.reload();
                             }
                         });
-                }`);
+                }, [ statusTitle, statusString ]);
             }
 
             function changeSubscription(id) {
@@ -4172,50 +4210,62 @@ let WorkshopBrowseClass = (function(){
                 });
             }
 
-            Messenger.onMessage("startSubscriber").then(async () => {
-                updateWaitDialog();
+            // todo reject when dialog closed
+            await ExtensionLayer.runInPageContext((title, confirm) => {
+                let prompt = ShowConfirmDialog(title, confirm);
 
-                function canSkip(method, node) {
-                    if (method === "subscribe") {
-                        return node && node.style.display !== "none";
-                    }
+                return new Promise(resolve => {
+                    prompt.done(result => {
+                        if (result === "OK") {
+                            resolve();
+                        }
+                    });
+                });
+                
+            }, [ statusTitle, statusString ], "startSubscriber");
 
-                    if (method === "unsubscribe") {
-                        return !node || node.style.display === "none";
-                    }
+            updateWaitDialog();
 
-                    return false;
+            function canSkip(method, node) {
+                if (method === "subscribe") {
+                    return node && node.style.display !== "none";
                 }
 
-                let parser = new DOMParser();
-                let workshopItems = [];
-                for (let p = 1; p <= Math.ceil(total / 30); p++) {
-                    let url = new URL(window.location.href);
-                    url.searchParams.set("p", p);
-                    url.searchParams.set("numperpage", 30);
-    
-                    let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
-                    if (!result) {
-                        console.error("Failed to request " + url.toString());
-                        continue;
-                    }
-
-                    let xmlDoc = parser.parseFromString(result, "text/html");
-                    for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
-                        let subNode = node.querySelector(".user_action_history_icon.subscribed");
-                        if (canSkip(method, subNode)) { continue; }
-                    
-                        node = node.querySelector(".workshopItemPreviewHolder");
-                        workshopItems.push(node.id.replace("sharedfile_", ""))
-                    }
+                if (method === "unsubscribe") {
+                    return !node || node.style.display === "none";
                 }
 
-                total = workshopItems.length;
-                updateWaitDialog();
-    
-                return Promise.all(workshopItems.map(id => changeSubscription(id)))
-                    .finally(showResults);
-            });            
+                return false;
+            }
+
+            let parser = new DOMParser();
+            let workshopItems = [];
+            for (let p = 1; p <= Math.ceil(total / 30); p++) {
+                let url = new URL(window.location.href);
+                url.searchParams.set("p", p);
+                url.searchParams.set("numperpage", 30);
+
+                let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+                if (!result) {
+                    console.error("Failed to request " + url.toString());
+                    continue;
+                }
+
+                let xmlDoc = parser.parseFromString(result, "text/html");
+                for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
+                    let subNode = node.querySelector(".user_action_history_icon.subscribed");
+                    if (canSkip(method, subNode)) { continue; }
+                
+                    node = node.querySelector(".workshopItemPreviewHolder");
+                    workshopItems.push(node.id.replace("sharedfile_", ""))
+                }
+            }
+
+            total = workshopItems.length;
+            updateWaitDialog();
+
+            return Promise.all(workshopItems.map(id => changeSubscription(id)))
+                .finally(showResults);
         }
     };
 
@@ -4245,7 +4295,7 @@ let EditGuidePageClass = (function(){
         let langSection = document.querySelector("#checkboxgroup_1");
         if (!langSection) { return; }
 
-        Messenger.addMessageListener("addtag", function(name) {
+        Messenger.addMessageListener("addtag", name => {
             addTag(name, true);
         });
         
@@ -4257,9 +4307,12 @@ let EditGuidePageClass = (function(){
                 </a></div>
             </div>`);
 
-        ExtensionLayer.runInPageContext(`function() {
+        ExtensionLayer.runInPageContext((customTags, enterTag) => {
             $J("#es_add_tag").on("click", () => {
-                let Modal = ShowConfirmDialog("${Localization.str.custom_tags}", \`<div class="commentthread_entry_quotebox"><textarea placeholder="${Localization.str.enter_tag}" class="commentthread_textarea es_tag" rows="1"></textarea></div>\`);
+                let Modal = ShowConfirmDialog(customTags, 
+                    `<div class="commentthread_entry_quotebox">
+                        <textarea placeholder="${enterTag}" class="commentthread_textarea es_tag" rows="1"></textarea>
+                    </div>`);
                 
                 let elem = $J(".es_tag");
                 let tag = elem.val();
@@ -4270,18 +4323,17 @@ let EditGuidePageClass = (function(){
                     Messenger.postMessage("addtag", tag);
                 }
 
-                elem.on("keydown paste input", function(e) {
+                elem.on("keydown paste input", e => {
                     tag = elem.val();
-                    if (e.key == "Enter") {
+                    if (e.key === "Enter") {
                         Modal.Dismiss();
                         done();
-                        return;
                     }
                 });
 
                 Modal.done(done);
             });
-        }`);
+        }, [ Localization.str.custom_tags, Localization.str.enter_tag ]);
     };
 
     EditGuidePageClass.prototype.rememberTags = function() {
@@ -4311,7 +4363,7 @@ let EditGuidePageClass = (function(){
             savedTags.recent = [];
             savedTags[curId] = Array.from(document.querySelectorAll("[name='tags[]']:checked")).map(node => node.value);
             LocalStorage.set("es_guide_tags", savedTags);
-            ExtensionLayer.runInPageContext(function() { SubmitGuide(); });
+            ExtensionLayer.runInPageContext(() => { SubmitGuide(); });
         });
     };
 
@@ -4319,6 +4371,9 @@ let EditGuidePageClass = (function(){
 })();
 
 (async function(){
+    let nginxError = document.querySelector("body > center:nth-child(3)");
+    if (nginxError && nginxError.innerText === "nginx") { return; }
+
     let path = window.location.pathname.replace(/\/+/g, "/");
 
     await SyncedStorage.init().catch(err => console.error(err));
@@ -4415,16 +4470,13 @@ let EditGuidePageClass = (function(){
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):
-            let gemWord = document.querySelector(".booster_creator_goostatus .goo_display")
-                .textContent.trim().replace(/[\d]+,?/g, "");
-
-            ExtensionLayer.runInPageContext(`function() {
-                $J("#booster_game_selector option").each(function(index) {
+            ExtensionLayer.runInPageContext(gemWord => {
+                $J("#booster_game_selector option").each(function() {
                     if ($J(this).val()) {
-                        $J(this).append(" - " + CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price + " ${gemWord}");
+                        $J(this).append(` - ${CBoosterCreatorPage.sm_rgBoosterData[$J(this).val()].price} ${gemWord}`);
                     }
                 });
-            }`);
+            }, [ document.querySelector(".booster_creator_goostatus .goo_display").textContent.trim().replace(/[\d]+,?/g, "") ]);
             break;
     }
 
