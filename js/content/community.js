@@ -3789,33 +3789,72 @@ let CommunityAppPageClass = (function(){
     }
 
     CommunityAppPageClass.prototype.addAppPageWishlist = async function() {
-        if (!SyncedStorage.get("wlbuttoncommunityapp")) { return; }
+        if (!User.isSignedIn || !SyncedStorage.get("wlbuttoncommunityapp")) { return; }
         await DynamicStore;
 
-        let nameNode = document.querySelector(".apphub_AppName");
-
         let { owned, wishlisted } = await DynamicStore.getAppStatus(`app/${this.appid}`);
-        if (owned || wishlisted) { return; }
+        if (owned) { return; }
 
-        // TODO remove from wishlist button
+        let inactiveStyle = "";
+        let activeStyle = "display: none;";
 
-        HTML.beforeEnd(".apphub_OtherSiteInfo",
-            '<a id="es_wishlist" class="btnv6_blue_hoverfade btn_medium" style="margin-left: 3px"><span>' + Localization.str.add_to_wishlist + '</span></a>');
+        if (wishlisted) {
+            inactiveStyle = "display: none;";
+            activeStyle = "";
+        }
+
+        let parent = document.querySelector(".apphub_OtherSiteInfo");
+        HTML.beforeEnd(parent,
+            ` <a id="es_wishlist_add" class="btnv6_blue_hoverfade btn_medium" style="${inactiveStyle}">
+                  <span>
+                      <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">
+                      ${Localization.str.add_to_wishlist}
+                  </span>
+              </a>
+              <a id="es_wishlist_success" class="btnv6_blue_hoverfade btn_medium" style="${activeStyle}">
+                  <span>
+                      <img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}" style="display: none;">
+                      <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">
+                      <img class="es-in-wl" src="//steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected.png" border="0">
+                      ${Localization.str.on_wishlist}
+                  </span>
+              </a>
+              <div id="es_wishlist_fail" style="display: none;">
+                  <b>${Localization.str.error}</b>
+              </div>`);
+
+        let addBtn = document.getElementById("es_wishlist_add");
+        let successBtn = document.getElementById("es_wishlist_success");
+        let failNode = document.getElementById("es_wishlist_fail");
+
+        addBtn.addEventListener("click", handler);
+        successBtn.addEventListener("click", handler);
 
         let that = this;
-        document.querySelector("#es_wishlist").addEventListener("click", async function(e) {
+        async function handler(e) {
             e.preventDefault();
-            if (e.target.classList.contains("btn_disabled")) { return; }
 
-            await Background.action('wishlist.add', { 'sessionid': await User.getStoreSessionId(), 'appid': that.appid, } );
+            if (parent.classList.contains("loading")) { return; }
+            parent.classList.add("loading");
+            failNode.style.display = "none";
 
-            e.target.classList.add("btn_disabled");
-            HTML.inner(e.target, "<span>" + Localization.str.on_wishlist + "</span>");
+            wishlisted = this === successBtn;
+            let action = wishlisted ? "wishlist.remove" : "wishlist.add";
 
-            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
+            try {
+                let res = await Background.action(action, { "sessionid": await User.getStoreSessionId(), "appid": that.appid });
+                if (res && res.success) {
+                    successBtn.style.display = wishlisted ? "none" : "";
+                    addBtn.style.display = wishlisted ? "" : "none";
 
-            DynamicStore.clear();
-        });
+                    DynamicStore.clear();
+                } else {
+                    failNode.style.display = "block";
+                }
+            } finally {
+                parent.classList.remove("loading");
+            }
+        }
     };
 
     CommunityAppPageClass.prototype.addSteamDbLink = function() {
