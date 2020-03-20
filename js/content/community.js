@@ -3773,8 +3773,8 @@ let CommunityAppPageClass = (function(){
 
         Highlights.addTitleHighlight(this.appid);
 
-        this.addAppPageWishlist();
         this.addLinks();
+        this.addAppPageWishlist();
         AgeCheck.sendVerification();
 
         let node = document.querySelector(".apphub_background");
