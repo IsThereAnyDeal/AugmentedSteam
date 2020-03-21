@@ -2963,33 +2963,47 @@ let SearchPageClass = (function(){
         let pricePlaceholder = currency.placeholder();
 
         HTML.afterBegin("#advsearchform .rightcol",
-            `<div class="block" id="es_hide_menu">
+            `<div class="block search_collapse_block" data-collapse-name="augmented_steam">
                 <div class="block_header"><div>${Localization.str.hide}</div></div>
-                <div class="block_content block_content_inner" id="es_hide_options">
-                    <div class="tab_filter_control" id="es_cart_games" data-param="es_hide" data-value="cart">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.options.cart}</span>
+                <div class="block_content block_content_inner">
+                    <div>
+                        <input type="hidden" name="augmented_steam">
                     </div>
-                    <div class="tab_filter_control" id="es_notdiscounted" data-param="es_hide" data-value="not-discounted">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.notdiscounted}</span>
+                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="hide_cart" data-loc="${Localization.str.options.cart}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="hide_cart" data-loc="${Localization.str.options.cart}" data-clientside="1">
+                            <span>
+                                <span class="tab_filter_control_checkbox"></span>
+                                <span class="tab_filter_control_label">${Localization.str.options.cart}</span>
+                                <span class="tab_filter_control_count" style="display: none;"></span>
+                            </span>
+                        </span>
                     </div>
-                    <div class="tab_filter_control" id="es_notmixed" data-param="es_hide" data-value="mixed">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.mixed_item}</span>
+                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="hide_mixed" data-loc="${Localization.str.mixed_item}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="hide_mixed" data-loc="${Localization.str.mixed_item}" data-clientside="1">
+                            <span>
+                                <span class="tab_filter_control_checkbox"></span>
+                                <span class="tab_filter_control_label">${Localization.str.mixed_item}</span>
+                                <span class="tab_filter_control_count" style="display: none;"></span>
+                            </span>
+                        </span>
                     </div>
-                    <div class="tab_filter_control" id="es_notnegative" data-param="es_hide" data-value="negative">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.negative_item}</span>
+                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="hide_negative" data-loc="${Localization.str.negative_item}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="hide_negative" data-loc="${Localization.str.negative_item}" data-clientside="1">
+                            <span>
+                                <span class="tab_filter_control_checkbox"></span>
+                                <span class="tab_filter_control_label">${Localization.str.negative_item}</span>
+                                <span class="tab_filter_control_count" style="display: none;"></span>
+                            </span>
+                        </span>
                     </div>
-                    <div class="tab_filter_control" id="es_notpriceabove" data-param="es_hide" data-value="price-above" title="${Localization.str.price_above_tooltip}">
+                    <div class="tab_filter_control_row" id="es_notpriceabove" data-param="es_hide" data-value="price-above" data-clientside="1" title="${Localization.str.price_above_tooltip}">
                         <div class="tab_filter_control_checkbox"></div>
                         <span class="tab_filter_control_label">${Localization.str.price_above}</span>
                         <div>
                             <input type="text" id="es_notpriceabove_val" class="es_input" pattern="${inputPattern.source}" placeholder="${pricePlaceholder}">
                         </div>
                     </div>
-                    <div class="tab_filter_control" id="es_noreviewsbelow" data-param="es_hide" data-value="reviews-below" title="${Localization.str.reviews_below_tooltip}">
+                    <div class="tab_filter_control_row" id="es_noreviewsbelow" data-param="es_hide" data-value="reviews-below" data-clientside="1" title="${Localization.str.reviews_below_tooltip}">
                         <div class="tab_filter_control_checkbox"></div>
                         <span class="tab_filter_control_label">${Localization.str.reviews_below}</span>
                         <div>
