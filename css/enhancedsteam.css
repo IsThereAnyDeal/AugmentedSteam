@@ -3504,3 +3504,14 @@ label[for="show_common_games"] {
   background-color: #67c1f5;
   background: linear-gradient(-60deg, #417a9b 5%,#67c1f5 95%);
 }
+
+/* || SEARCH PAGE FILTERS */
+
+/**
+ * https://github.com/SteamDatabase/SteamTracking/blob/3d3de779d93086bba59d32864526c0ced6dc856e/store.steampowered.com/public/css/v6/search.css#L250
+*/
+.search_results.hide_cart .ds_incart {
+  height: 0;
+  margin: 0;
+  border: none;
+}
