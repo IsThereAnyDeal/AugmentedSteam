@@ -2722,7 +2722,6 @@ let SearchPageClass = (function(){
 
     function SearchPageClass() {
         this.endlessScrolling();
-        this.addExcludeTagsToSearch();
         this.addHideButtonsToSearch();
         this.observeChanges();
     }
@@ -2822,87 +2821,6 @@ let SearchPageClass = (function(){
                 }
             }
         });
-    };
-
-    SearchPageClass.prototype.addExcludeTagsToSearch = function() {
-        let tarFilterDivs = document.querySelectorAll('#TagFilter_Container')[0].children;
-
-        HTML.afterEnd(document.querySelector("#TagFilter_Container").parentNode.parentNode,
-            `<div class='block' id='es_tagfilter_exclude'>
-                <div class='block_header'>
-                    <div>${Localization.str.exclude_tags}</div>
-                 </div>
-                 <div class='block_content block_content_inner'>
-                    <div style='max-height: 150px; overflow: hidden;' id='es_tagfilter_exclude_container'></div>
-                    <input type="text" id="es_tagfilter_exclude_suggest" class="es_input">
-                </div>
-            </div>`);
-
-        let excludeContainer = document.querySelector("#es_tagfilter_exclude_container");
-
-        //tag numbers from the URL are already in the element with id #tags
-        function getTags() {
-            let tagsValue = decodeURIComponent(document.querySelector("#tags").value);
-            return tagsValue ? tagsValue.split(',') : [];
-        }
-
-        let tags = getTags();
-
-        for (let val of tarFilterDivs) {
-            let item_checked = tags.indexOf(`-${val.dataset.value}`) > -1 ? "checked" : '';
-
-            let excludeItem = HTMLParser.htmlToElement(
-                `<div class="tab_filter_control ${item_checked}" data-param="tags" data-value="-${val.dataset.value}" data-loc="${val.dataset.loc}">
-                    <div class="tab_filter_control_checkbox"></div>
-                    <span class="tab_filter_control_label">${val.dataset.loc}</span>
-                </div>`);
-
-            excludeItem.addEventListener("click", e => {
-                let control = e.target.closest(".tab_filter_control");
-
-                let rgValues = getTags();
-                let value = String(control.dataset.value);
-                if (!control.classList.contains("checked")) {
-
-                    if(!rgValues) {
-                        rgValues = [value];
-                    } else if (rgValues.indexOf(value) === -1) {
-                        rgValues.push(value);
-                    }
-
-                } else {
-
-                    if (rgValues.indexOf(value) !== -1) {
-                        rgValues.splice(rgValues.indexOf(value), 1);
-                    }
-                }
-
-                control.classList.toggle('checked');
-                filtersChanged();
-            });
-
-            excludeContainer.append(excludeItem);
-        }
-
-        ExtensionLayer.runInPageContext(() => {
-            $J("#es_tagfilter_exclude_container").tableFilter({ maxvisible: 15, control: "#es_tagfilter_exclude_suggest", dataattribute: "loc", defaultText: $J("#TagSuggest").attr("value") });
-        });
-
-        let observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation){
-                if (!mutation["addedNodes"]) { return; }
-
-                let addedNodes = mutation["addedNodes"];
-                for (let i=0; i<addedNodes.length; i++) {
-                    let node = addedNodes[i].parentNode;
-                    if (node.classList.contains("tag_dynamic") && parseFloat(node.dataset['tag_value']) < 0) {
-                        node.querySelector(".label").textContent = Localization.str.not.replace("__tag__", node.textContent);
-                    }
-                }
-            });
-        });
-        observer.observe(document.querySelector(".termcontainer"), {childList:true, subtree:true});
-        ExtensionLayer.runInPageContext(() => { UpdateTags(); });
     };
 
     function isPriceAbove(node, priceAbove) {
