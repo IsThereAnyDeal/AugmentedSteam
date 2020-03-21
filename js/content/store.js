@@ -2933,26 +2933,12 @@ let SearchPageClass = (function(){
     }
 
     function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
-        let hideInCart = document.querySelector("#es_cart_games.checked");
-        let hideNotDiscounted = document.querySelector("#es_notdiscounted.checked");
-        let hideMixed = document.querySelector("#es_notmixed.checked");
-        let hideNegative = document.querySelector("#es_notnegative.checked");
-        let hidePriceAbove = document.querySelector("#es_notpriceabove.checked");
-        let hideReviewsBelow = document.querySelector("#es_noreviewsbelow.checked");
-
         let priceAbove = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(document.querySelector("#es_notpriceabove_val").value);
         let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
-        let hideTags = Array.from(document.querySelectorAll("#es_tagfilter_exclude_container > .checked")).map(tag => Math.abs(Number(tag.dataset.value)));
 
         for (let node of nodes) {
-            if (hideInCart && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
-            if (hideNotDiscounted && !node.querySelector(".search_discount span")) { node.style.display = "none"; continue; }
-            if (hideMixed && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
-            if (hideNegative && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
-            if (hidePriceAbove && isPriceAbove(node, priceAbove)) { node.style.display = "none"; continue; }
-            if (hideReviewsBelow && isReviewsBelow(node, reviewsBelow)) { node.style.display = "none"; continue; }
-            if (hideTags.length && isTagExcluded(node, hideTags)) { node.style.display = "none"; continue; }
-            node.style.display = "block";
+            if (node.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { node.classList.add("js-hide-mixed");      }
+            if (node.querySelector(".search_reviewscore span.search_review_summary.negative"))  { node.classList.add("js-hide-negative");   }
         }
     }
 
@@ -3390,9 +3376,9 @@ let SearchPageClass = (function(){
         inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
 
         let removeObserver = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
+            for (let mutation of mutations) {
                 for (let node of mutation.addedNodes) {
-                    // Under certain circumstances the search result container will get removed and then added again, thus disconnecting the MutationObserver
+                    // When navigating in between pages the search result container will get removed and then added again, thus disconnecting the MutationObserver
                     if (node.id === "search_result_container") {
                         observeAjax(node.querySelectorAll(".search_result_row"));
                         
@@ -3406,7 +3392,7 @@ let SearchPageClass = (function(){
                         break;
                     }
                 }
-            });
+            }
         });
         removeObserver.observe(document.querySelector("#search_results"), { childList: true });
 

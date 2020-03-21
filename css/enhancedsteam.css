@@ -3510,7 +3510,9 @@ label[for="show_common_games"] {
 /**
  * https://github.com/SteamDatabase/SteamTracking/blob/3d3de779d93086bba59d32864526c0ced6dc856e/store.steampowered.com/public/css/v6/search.css#L250
 */
-.search_results.hide_cart .ds_incart {
+.search_results.hide_cart .ds_incart,
+.search_results.hide_mixed .js-hide-mixed,
+.search_results.hide_negative .js-hide-negative {
   height: 0;
   margin: 0;
   border: none;
