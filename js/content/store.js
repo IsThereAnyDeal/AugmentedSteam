@@ -2763,10 +2763,11 @@ let SearchPageClass = (function(){
         let currency = CurrencyRegistry.storeCurrency;
         let inputPattern = currency.regExp();
         let pricePlaceholder = currency.placeholder();
+        let collapseName = "augmented_steam";
 
         HTML.afterBegin("#advsearchform .rightcol",
-            `<div class="block search_collapse_block" data-collapse-name="augmented_steam">
                 <div class="block_header"><div>${Localization.str.hide}</div></div>
+            `<div class="block search_collapse_block" data-collapse-name="${collapseName}">
                 <div class="block_content block_content_inner">
                     <div>
                         <input type="hidden" name="augmented_steam">
@@ -2870,6 +2871,49 @@ let SearchPageClass = (function(){
          * END
          * EnableClientSideFilters
          */
+
+        ExtensionLayer.runInPageContext(collapseName => {
+            /**
+             * START https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L927
+             * InitAutocollapse
+             */
+            let prefs = GetCollapsePrefs();
+
+            let block = $J(`.search_collapse_block[data-collapse-name="${collapseName}"]`);
+            let collapsed;
+
+            if (prefs[collapseName] !== undefined) {
+                collapsed = prefs[collapseName];
+            } else {
+                prefs[collapseName] = collapsed = false;
+            }
+
+            collapsed = collapsed && !(block.find(".tab_filter_control.checked").length > 0);
+
+            block.children(".block_content").css("height", '');
+
+            if (collapsed) {
+                block.addClass("collapsed");
+                block.children(".block_content").hide();
+            }
+
+            block.children(".block_header").on("click", () => {
+                if (block.hasClass("collapsed")) {
+                    prefs[collapseName] = false;
+                    block.children(".block_content").slideDown("fast");
+                } else {
+                    prefs[collapseName] = true;
+                    block.children(".block_content").slideUp("fast");
+                }
+
+                block.toggleClass("collapsed");
+                SaveCollapsePrefs(prefs);
+            });
+            /**
+             * END
+             * InitAutocollapse
+             */
+        }, [ collapseName ]);
 
         addRowMetadata();
 
