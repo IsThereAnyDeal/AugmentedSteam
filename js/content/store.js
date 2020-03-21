@@ -2748,13 +2748,13 @@ let SearchPageClass = (function(){
         return Number(reviewsString) < reviewsBelow;
     }
 
-    function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
+    function addRowMetadata(rows = document.querySelectorAll(".search_result_row")) {
         let priceAbove = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(document.querySelector("#es_notpriceabove_val").value);
         let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
 
-        for (let node of nodes) {
-            if (node.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { node.classList.add("js-hide-mixed");      }
-            if (node.querySelector(".search_reviewscore span.search_review_summary.negative"))  { node.classList.add("js-hide-negative");   }
+        for (let row of rows) {
+            if (row.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { row.classList.add("js-hide-mixed");      }
+            if (row.querySelector(".search_reviewscore span.search_review_summary.negative"))  { row.classList.add("js-hide-negative");   }
         }
     }
 
@@ -2870,6 +2870,8 @@ let SearchPageClass = (function(){
          * END
          * EnableClientSideFilters
          */
+
+        addRowMetadata();
 
         /*Messenger.addMessageListener("filtersChanged", filtersChanged);
 
@@ -3202,7 +3204,7 @@ let SearchPageClass = (function(){
                             toggleFilter("price-above", "#es_notpriceabove");
                             toggleFilter("reviews-below", "#es_noreviewsbelow");
                             modifyLinks();
-                            filtersChanged();
+                            addRowMetadata();
                         }
                         ajaxObserver.observe(node.querySelector("#search_resultsRows"), {childList: true});
                         break;
@@ -3212,11 +3214,11 @@ let SearchPageClass = (function(){
         });
         removeObserver.observe(document.querySelector("#search_results"), { childList: true });
 
-        function observeAjax(addedNodes) {
+        function observeAjax(addedRows) {
             EarlyAccess.showEarlyAccess();
             
-            Highlights.highlightAndTag(addedNodes);
-            filtersChanged(addedNodes);
+            Highlights.highlightAndTag(addedRows);
+            addRowMetadata(addedRows);
         }
 
         let ajaxObserver = new MutationObserver(mutations => {
