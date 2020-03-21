@@ -2722,20 +2722,12 @@ let SearchPageClass = (function(){
 
     function SearchPageClass() {
         infiniteScrollEnabled = document.querySelector(".search_pagination").style.display === "none";
-        
+
         this.addHideButtonsToSearch();
         this.observeChanges();
     }
 
     let infiniteScrollEnabled;
-
-    function isPriceAbove(node, priceAbove) {
-        let priceValue = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(node.querySelector(".search_price").lastChild.textContent);
-        
-        if (!priceValue) { return false; } // App without price
-
-        return Number(priceValue) > priceAbove;
-    }
 
     function isReviewsBelow(node, reviewsBelow) {
         if (!node.querySelector(".search_review_summary")) {
@@ -2751,7 +2743,6 @@ let SearchPageClass = (function(){
     }
 
     function addRowMetadata(rows = document.querySelectorAll(".search_result_row")) {
-        let priceAbove = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(document.querySelector("#es_notpriceabove_val").value);
         let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
 
         for (let row of rows) {
@@ -2762,9 +2753,6 @@ let SearchPageClass = (function(){
 
     SearchPageClass.prototype.addHideButtonsToSearch = function() {
 
-        let currency = CurrencyRegistry.storeCurrency;
-        let inputPattern = currency.regExp();
-        let pricePlaceholder = currency.placeholder();
         let collapseName = "augmented_steam";
 
         HTML.afterBegin("#advsearchform .rightcol",
@@ -2800,13 +2788,6 @@ let SearchPageClass = (function(){
                                 <span class="tab_filter_control_count" style="display: none;"></span>
                             </span>
                         </span>
-                    </div>
-                    <div class="tab_filter_control_row" id="es_notpriceabove" data-param="es_hide" data-value="price-above" data-clientside="1" title="${Localization.str.price_above_tooltip}">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.price_above}</span>
-                        <div>
-                            <input type="text" id="es_notpriceabove_val" class="es_input" pattern="${inputPattern.source}" placeholder="${pricePlaceholder}">
-                        </div>
                     </div>
                     <div class="tab_filter_control_row" id="es_noreviewsbelow" data-param="es_hide" data-value="reviews-below" data-clientside="1" title="${Localization.str.reviews_below_tooltip}">
                         <div class="tab_filter_control_checkbox"></div>

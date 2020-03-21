@@ -2406,14 +2406,6 @@ img.astats_icon {
   text-shadow: -1px -1px 0px rgba(0, 0, 0, 0.4);
 }
 
-#es_notpriceabove_val {
-  width: calc(100% - 50px);
-}
-
-#es_notpriceabove_val_currency {
-  margin: 5px;
-}
-
 /***************************************
  * Global Achievements pages
  **************************************/
