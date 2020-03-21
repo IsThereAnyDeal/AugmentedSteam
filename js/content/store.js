@@ -2723,7 +2723,8 @@ let SearchPageClass = (function(){
     function SearchPageClass() {
         this.endlessScrolling();
         this.addExcludeTagsToSearch();
-        this.addHideButtonsToSearch().then(() => this.observeChanges());
+        this.addHideButtonsToSearch();
+        this.observeChanges();
     }
 
     let processing = false;
@@ -2932,11 +2933,8 @@ let SearchPageClass = (function(){
     }
 
     function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
-        let hideOwned = document.querySelector("#es_owned_games.checked");
-        let hideWishlisted = document.querySelector("#es_wishlist_games.checked");
         let hideInCart = document.querySelector("#es_cart_games.checked");
         let hideNotDiscounted = document.querySelector("#es_notdiscounted.checked");
-        let hideNotInterested = document.querySelector("#es_notinterested.checked");
         let hideMixed = document.querySelector("#es_notmixed.checked");
         let hideNegative = document.querySelector("#es_notnegative.checked");
         let hidePriceAbove = document.querySelector("#es_notpriceabove.checked");
@@ -2947,11 +2945,8 @@ let SearchPageClass = (function(){
         let hideTags = Array.from(document.querySelectorAll("#es_tagfilter_exclude_container > .checked")).map(tag => Math.abs(Number(tag.dataset.value)));
 
         for (let node of nodes) {
-            if (hideOwned && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
-            if (hideWishlisted && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
             if (hideInCart && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
             if (hideNotDiscounted && !node.querySelector(".search_discount span")) { node.style.display = "none"; continue; }
-            if (hideNotInterested && node.classList.contains("ds_ignored")) { node.style.display = "none"; continue; }
             if (hideMixed && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
             if (hideNegative && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
             if (hidePriceAbove && isPriceAbove(node, priceAbove)) { node.style.display = "none"; continue; }
@@ -2961,30 +2956,16 @@ let SearchPageClass = (function(){
         }
     }
 
-    SearchPageClass.prototype.addHideButtonsToSearch = async function() {
+    SearchPageClass.prototype.addHideButtonsToSearch = function() {
 
         let currency = CurrencyRegistry.storeCurrency;
         let inputPattern = currency.regExp();
         let pricePlaceholder = currency.placeholder();
 
-        await User;
-
         HTML.afterBegin("#advsearchform .rightcol",
             `<div class="block" id="es_hide_menu">
                 <div class="block_header"><div>${Localization.str.hide}</div></div>
                 <div class="block_content block_content_inner" id="es_hide_options">
-                    ${User.isSignedIn ? `<div class="tab_filter_control" id="es_owned_games" data-param="es_hide" data-value="owned">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.options.owned}</span>
-                    </div>
-                    <div class="tab_filter_control" id="es_wishlist_games" data-param="es_hide" data-value="wishlisted">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.options.wishlist}</span>
-                    </div>
-                    <div class="tab_filter_control" id="es_notinterested" data-param="es_hide" data-value="ignored">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.notinterested}</span>
-                    </div>` : ""}
                     <div class="tab_filter_control" id="es_cart_games" data-param="es_hide" data-value="cart">
                         <div class="tab_filter_control_checkbox"></div>
                         <span class="tab_filter_control_label">${Localization.str.options.cart}</span>
