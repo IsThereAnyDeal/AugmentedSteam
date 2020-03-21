@@ -2766,8 +2766,8 @@ let SearchPageClass = (function(){
         let collapseName = "augmented_steam";
 
         HTML.afterBegin("#advsearchform .rightcol",
-                <div class="block_header"><div>${Localization.str.hide}</div></div>
             `<div class="block search_collapse_block" data-collapse-name="${collapseName}">
+                <div class="block_header"><div>${Localization.str.filters}</div></div>
                 <div class="block_content block_content_inner">
                     <div>
                         <input type="hidden" name="augmented_steam">
