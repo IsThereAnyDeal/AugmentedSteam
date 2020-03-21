@@ -294,6 +294,10 @@ class UpdateHandler {
             SyncedStorage.set("profile_steamid", SyncedStorage.get("profile_permalink"));
             SyncedStorage.remove("profile_permalink");
         }
+
+        if (oldVersion.isSameOrBefore("1.4.3")) {
+            SyncedStorage.remove("contscroll");
+        }
     }
 }
 
@@ -646,7 +650,6 @@ SyncedStorage.defaults = {
     'homepage_tab_last': null,
     'send_age_info': true,
     'mp4video': false,
-    'contscroll': true,
     'horizontalscrolling': true,
     'showsupportinfo': true,
     'showdrm': true,

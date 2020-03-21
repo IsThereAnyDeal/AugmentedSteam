@@ -2721,107 +2721,11 @@ let FundsPageClass = (function(){
 let SearchPageClass = (function(){
 
     function SearchPageClass() {
-        this.endlessScrolling();
         this.addHideButtonsToSearch();
         this.observeChanges();
     }
 
-    let processing = false;
-    let searchPage = 2;
-
-    function loadSearchResults () {
-        if (processing) { return; }
-        processing = true;
-
-        let search = document.URL.match(/(.+)\/(.+)/)[2].replace(/\&page=./, "").replace(/\#/g, "&");
-        if (!document.querySelector(".LoadingWrapper")) {
-            let nodes = document.querySelectorAll(".search_pagination");
-
-            HTML.beforeBegin(nodes[nodes.length-1], '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin-bottom: 15px;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div><div id="LoadingText">' + Localization.str.loading + '</div></div>');
-        }
-
-        if (search.substring(0,1) === "&") { search = "?" + search.substring(1, search.length); }
-        if (search.substring(0,1) !== "?") { search = "?" + search; }
-
-        RequestData.getHttp(`https://store.steampowered.com/search/results${search}&page=${searchPage}&snr=es`).then(result => {
-            let dummy = HTMLParser.htmlToDOM(result);
-
-            let addedDate = Date.now();
-            document.querySelector('#search_result_container').dataset.lastAddDate = addedDate;
-
-            let lastNode = document.querySelector(".search_result_row:last-child");
-
-            // When you're not logged in, the constructed hover doesn't include friends info
-            let publicAttr = User.isSignedIn ? '' : `,"public":1`;
-
-            let rows = dummy.querySelectorAll("a.search_result_row");
-            for (let row of rows) {
-                row.dataset.addedDate = addedDate;
-                lastNode.insertAdjacentElement("afterend", row);
-                lastNode = row;
-
-                // Construct the hover that was just sanitized out of row
-                let subtype = "app";
-                let subid = parseInt(lastNode.dataset.dsAppid, 10);
-                if (lastNode.dataset.dsPackageid) {
-                    // this is a sub, not an app
-                    subtype = "sub";
-                    subid = parseInt(lastNode.dataset.dsPackageid, 10);
-                }
-                lastNode.setAttribute('onmouseover', `GameHover( this, event, 'global_hover', {"type":"${subtype}","id":${subid}${publicAttr},"v6":1} );`);
-                lastNode.setAttribute('onmouseout', `HideGameHover( this, event, 'global_hover' )`);
-            }
-
-            document.querySelector(".LoadingWrapper").remove();
-
-            searchPage = searchPage + 1;
-            processing = false;
-
-            ExtensionLayer.runInPageContext(() => {
-                let addedDate = document.querySelector("#search_result_container").dataset.lastAddDate;
-                GDynamicStore.DecorateDynamicItems(jQuery(`.search_result_row[data-added-date="${addedDate}"]`));
-                SetupTooltips({ tooltipCSSClass: "store_tooltip" });
-            });
-
-            Highlights.highlightAndTag(rows);
-        }, () => {
-            document.querySelector(".LoadingWrapper").remove();
-            HTML.beforeBegin(".search_pagination:last-child",
-                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + " <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + "</a></div>");
-
-            document.querySelector("es_retry").addEventListener("click", function(e) {
-                processing = false;
-                document.querySelector("#es_error_msg").remove();
-                loadSearchResults();
-            });
-        });
-    }
-
-    SearchPageClass.prototype.endlessScrolling = function() {
-        if (!SyncedStorage.get("contscroll")) { return; }
-
-        let result_count;
-        document.querySelector(".search_pagination_right").style.display = "none";
-
-        let match = document.querySelector(".search_pagination_left").textContent.trim().match(/(\d+)(?:\D+(\d+)\D+(\d+))?/);
-        if (match) {
-            result_count = match[2] ? Math.max.apply(Math, match.slice(1, 4)) : match[1];
-            document.querySelector(".search_pagination_left").textContent = Localization.str.results.replace("__num__", result_count);
-        }
-
-        searchPage = 2;
-
-        window.addEventListener("scroll", function () {
-            // if the pagination element is in the viewport, continue loading
-            if (Viewport.isElementInViewport(document.querySelector(".search_pagination_left"))) {
-                if (result_count > document.querySelectorAll(".search_result_row").length) {
-                    loadSearchResults();
-                } else {
-                    document.querySelector(".search_pagination_left").textContent = Localization.str.all_results.replace("__num__", result_count);
-                }
-            }
-        });
-    };
+    let infiniteScrollEnabled = document.querySelector(".search_pagination").style.display === "none";
 
     function isPriceAbove(node, priceAbove) {
         let priceValue = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(node.querySelector(".search_price").lastChild.textContent);
@@ -2842,12 +2746,6 @@ let SearchPageClass = (function(){
             .match(/\d+/g).join("");
 
         return Number(reviewsString) < reviewsBelow;
-    }
-
-    function isTagExcluded(node, tags) {
-        if (!node.dataset.dsTagids) return false;
-        let nodeTags = JSON.parse(node.dataset.dsTagids);
-        return nodeTags.some(tag => tags.includes(tag));
     }
 
     function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
@@ -3300,7 +3198,7 @@ let SearchPageClass = (function(){
                     if (node.id === "search_result_container") {
                         observeAjax(node.querySelectorAll(".search_result_row"));
                         
-                        if (!SyncedStorage.get("contscroll")) {
+                        if (!infiniteScrollEnabled) {
                             toggleFilter("price-above", "#es_notpriceabove");
                             toggleFilter("reviews-below", "#es_noreviewsbelow");
                             modifyLinks();
