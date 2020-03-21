@@ -2721,11 +2721,13 @@ let FundsPageClass = (function(){
 let SearchPageClass = (function(){
 
     function SearchPageClass() {
+        infiniteScrollEnabled = document.querySelector(".search_pagination").style.display === "none";
+        
         this.addHideButtonsToSearch();
         this.observeChanges();
     }
 
-    let infiniteScrollEnabled = document.querySelector(".search_pagination").style.display === "none";
+    let infiniteScrollEnabled;
 
     function isPriceAbove(node, priceAbove) {
         let priceValue = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(node.querySelector(".search_price").lastChild.textContent);
