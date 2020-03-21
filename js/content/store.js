@@ -2743,7 +2743,7 @@ let SearchPageClass = (function(){
     }
 
     function addRowMetadata(rows = document.querySelectorAll(".search_result_row")) {
-        let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
+        //let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
 
         for (let row of rows) {
             if (row.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { row.classList.add("js-hide-mixed");      }
@@ -2789,12 +2789,13 @@ let SearchPageClass = (function(){
                             </span>
                         </span>
                     </div>
-                    <div class="tab_filter_control_row" id="es_noreviewsbelow" data-param="es_hide" data-value="reviews-below" data-clientside="1" title="${Localization.str.reviews_below_tooltip}">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.reviews_below}</span>
-                        <div>
-                            <input type="number" id="es_noreviewsbelow_val" class="es_input" min="0" step="1">
+                    <div class="range_container" style="margin-top: 8px;">
+                        <div class="as-double-slider range_container_inner">
+                            <input class="as-double-slider__input as-double-slider__input--lower js-reviews-input js-reviews-lower range_input" type="range" min="0" max="13" step="1" value="0">
+                            <input class="as-double-slider__input as-double-slider__input--upper js-reviews-input js-reviews-upper range_input" type="range" min="0" max="13" step="1" value="13">
+                            <input type="hidden" name="maxreviews" value="">
                         </div>
+                        <div class="range_display">Any amount of reviews</div>
                     </div>
                     <div>
                         <input type="hidden" id="es_hide" name="es_hide" value>
@@ -2802,6 +2803,34 @@ let SearchPageClass = (function(){
                 </div>
             </div>
         `);
+
+        for (let input of document.querySelectorAll(".js-reviews-input")) {
+            input.addEventListener("input", () => {
+                let parent = input.parentElement;
+                let minBtn = parent.querySelector(".js-reviews-lower");
+                let maxBtn = parent.querySelector(".js-reviews-upper");
+                let minVal = parseInt(minBtn.value);
+                let maxVal = parseInt(maxBtn.value);
+
+                if (input.classList.contains("js-reviews-upper")) {
+                    if (minVal >= maxVal) {
+                        if (minVal > 0) {
+                            minBtn.value = maxVal - 1;
+                        } else {
+                            maxBtn.value = 1;
+                        }
+                    }
+                } else {
+                    if (maxVal <= minVal) {
+                        if (maxVal < 13) {
+                            maxBtn.value = minVal + 1;
+                        } else {
+                            minBtn.value = maxVal - 1;
+                        }
+                    }
+                }
+            });
+        }
 
         let results = document.getElementById("search_results");
 

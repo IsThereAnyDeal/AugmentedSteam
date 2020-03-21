@@ -3501,6 +3501,7 @@ label[for="show_common_games"] {
 
 /**
  * https://github.com/SteamDatabase/SteamTracking/blob/3d3de779d93086bba59d32864526c0ced6dc856e/store.steampowered.com/public/css/v6/search.css#L250
+ * Hide search results
 */
 .search_results.hide_cart .ds_incart,
 .search_results.hide_mixed .js-hide-mixed,
@@ -3508,4 +3509,29 @@ label[for="show_common_games"] {
   height: 0;
   margin: 0;
   border: none;
+}
+
+/**
+ * Slider with two knobs
+*/
+.as-double-slider {
+  position: relative;
+  display: grid !important;
+}
+
+.as-double-slider__input {
+  grid-row-start: 1;
+  grid-column-start: 1;
+}
+
+.as-double-slider__input::-webkit-slider-thumb {
+  position: relative;
+}
+
+.as-double-slider__input--lower::-webkit-slider-thumb {
+  z-index: 1;
+}
+
+.as-double-slider__input--upper::-webkit-slider-thumb {
+  z-index: 2;
 }
