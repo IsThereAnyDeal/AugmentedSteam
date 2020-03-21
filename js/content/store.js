@@ -3017,7 +3017,59 @@ let SearchPageClass = (function(){
             </div>
         `);
 
-        Messenger.addMessageListener("filtersChanged", filtersChanged);
+        let results = document.getElementById("search_results");
+
+        let filterNames = [
+            "hide_cart",
+            "hide_mixed",
+            "hide_negative",
+        ];
+
+        /**
+         * START https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L815
+         * EnableClientSideFilters
+         */
+        for (let filterName of filterNames) {
+            let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
+
+            if (SyncedStorage.get(filterName)) {
+                results.classList.add(filterName);
+                filter.classList.add("checked");
+                filter.parentElement.classList.add("checked");
+            }
+
+            filter.addEventListener("click", () => {
+                /**
+                 * START https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L859
+                 * OnClickClientFilter
+                 */
+                let savedOffset = filter.getBoundingClientRect().top;
+                let isChecked = filter.classList.toggle("checked");
+
+                if (isChecked) {
+                    results.classList.add(filterName);
+                    filter.parentElement.classList.add("checked");
+                } else {
+                    results.classList.remove(filterName);
+                    filter.parentElement.classList.remove("checked");
+                }
+
+                let fixScrollOffset = document.scrollTop - savedOffset + filter.getBoundingClientRect().top;
+                document.scrollTop = fixScrollOffset;
+
+                SyncedStorage.set(filterName, isChecked);
+                /**
+                 * END
+                 * OnClickClientFilter
+                 */
+            });
+        }
+        /**
+         * END
+         * EnableClientSideFilters
+         */
+
+        /*Messenger.addMessageListener("filtersChanged", filtersChanged);
 
         Messenger.onMessage("priceAbove").then(priceVal => {
             if (new RegExp(inputPattern.source.replace(',', '\\.')).test(priceVal)) {
@@ -3278,7 +3330,7 @@ let SearchPageClass = (function(){
         addFilterInputEvents(
             document.querySelector("#es_noreviewsbelow_val"),
             document.querySelector("#es_noreviewsbelow"),
-            "reviewsChanged", /^\d+$/, "");
+            "reviewsChanged", /^\d+$/, "");*/
     };
 
     function addFilterInputEvents(node, checkboxNode, messageId, inputPattern, errorMessage) {
