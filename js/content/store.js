@@ -2765,6 +2765,7 @@ let SearchPageClass = (function(){
         applyFilters(rows);
     }
 
+    let maxStep = 13;
     let valueMapping = [
         0,
         100,
@@ -2779,17 +2780,18 @@ let SearchPageClass = (function(){
         100000,
         200000,
         500000,
-        1000000,
     ];
 
     function applyFilters(rows = document.querySelectorAll(".search_result_row")) {
 
-        let minVal = valueMapping[parseInt(document.querySelector(".js-reviews-lower").value)];
-        let maxVal = valueMapping[parseInt(document.querySelector(".js-reviews-upper").value)];
+        let minReviews = valueMapping[parseInt(document.querySelector(".js-reviews-lower").value)];
+
+        let maxVal = parseInt(document.querySelector(".js-reviews-upper").value);
+        let maxReviews = maxVal === maxStep ? Infinity : valueMapping[maxVal];
 
         for (let row of rows) {
             let rowReviews = parseInt(row.dataset.asReviews);
-            row.classList.toggle("as-hide-reviews", rowReviews < minVal || rowReviews > maxVal);
+            row.classList.toggle("as-hide-reviews", rowReviews < minReviews || rowReviews > maxReviews);
         }
     }
 
@@ -2833,8 +2835,8 @@ let SearchPageClass = (function(){
                     </div>
                     <div class="range_container" style="margin-top: 8px;">
                         <div class="as-double-slider range_container_inner">
-                            <input class="as-double-slider__input as-double-slider__input--lower js-reviews-input js-reviews-lower range_input" type="range" min="0" max="13" step="1" value="0">
-                            <input class="as-double-slider__input as-double-slider__input--upper js-reviews-input js-reviews-upper range_input" type="range" min="0" max="13" step="1" value="13">
+                            <input class="as-double-slider__input as-double-slider__input--lower js-reviews-input js-reviews-lower range_input" type="range" min="0" max="${maxStep}" step="1" value="0">
+                            <input class="as-double-slider__input as-double-slider__input--upper js-reviews-input js-reviews-upper range_input" type="range" min="0" max="${maxStep}" step="1" value="${maxStep}">
                             <input type="hidden" name="maxreviews" value="">
                         </div>
                         <div class="as-range-display range_display">Any amount of reviews</div>
@@ -2867,7 +2869,7 @@ let SearchPageClass = (function(){
                     }
                 } else {
                     if (maxVal <= minVal) {
-                        if (maxVal < 13) {
+                        if (maxVal < maxStep) {
                             maxBtn.value = maxVal = minVal + 1;
                         } else {
                             minBtn.value = minVal = maxVal - 1;
@@ -2877,13 +2879,13 @@ let SearchPageClass = (function(){
 
                 let text;
                 if (minVal === 0) {
-                    if (maxVal === 13) {
+                    if (maxVal === maxStep) {
                         text = Localization.str.reviews_filter.any;
                     } else {
                         text = Localization.str.reviews_filter.up_to.replace("__amount__", valueMapping[maxVal]);
                     }
                 } else {
-                    if (maxVal === 13) {
+                    if (maxVal === maxStep) {
                         text = Localization.str.reviews_filter.more_than.replace("__amount__", valueMapping[minVal]);
                     } else {
                         text = Localization.str.reviews_filter.between.replace("__lower__", valueMapping[minVal]).replace("__upper__", valueMapping[maxVal]);
