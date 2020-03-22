@@ -2833,6 +2833,7 @@ let SearchPageClass = (function(){
                             </span>
                         </span>
                     </div>
+                    <div class="block_rule"></div>
                     <div class="range_container" style="margin-top: 8px;">
                         <div class="as-double-slider range_container_inner">
                             <input class="as-double-slider__input as-double-slider__input--lower js-reviews-input js-reviews-lower range_input" type="range" min="0" max="${maxStep}" step="1" value="0">
