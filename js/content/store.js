@@ -2847,32 +2847,22 @@ let SearchPageClass = (function(){
         `);
 
         function updateUrl(key, val) {
-            ExtensionLayer.runInPageContext((key, val) => {
-                /**
-                 * https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L230
-                 * AjaxSearchResultsInternal
-                 */
-                let params = GatherSearchParameters();
+            let curParams = new URLSearchParams(window.location.search);
+            if (val !== "") {
+                curParams.set(key, val);
+            } else {
+                curParams.delete(key);
+            }
 
-                delete params.snr;
-                if (params.sort_by === "_ASC") {
-                    delete params.sort_by;
-                }
-                if (params.page === 1 || params.page === '1') {
-                    delete params.page;
-                }
-                if (InitInfiniteScroll.bEnabled && BShouldUseInfiniscroll()) {
-                    delete params.force_infinite;
-                }
-                
-                if (val !== "") {
-                    params[key] = val;
-                }
+            let paramsObj = {};
+            for (let [paramKey, paramVal] of curParams.entries()) {
+                paramsObj[paramKey] = paramVal;
+            }
 
+            ExtensionLayer.runInPageContext(params => {
                 // https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L217
                 UpdateUrl(params);
-
-            }, [ key, val ]);
+            }, [ paramsObj ]);            
         }
 
         // Setup handlers for reviews filter
