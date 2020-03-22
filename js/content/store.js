@@ -2867,21 +2867,24 @@ let SearchPageClass = (function(){
 
         // Setup handlers for reviews filter
         for (let input of document.querySelectorAll(".js-reviews-input")) {
-            input.addEventListener("input", () => {
-                let parent = input.parentElement;
-                let rangeDisplay = parent.nextElementSibling;
-                let minBtn = parent.querySelector(".js-reviews-lower");
-                let maxBtn = parent.querySelector(".js-reviews-upper");
-                let minVal = parseInt(minBtn.value);
-                let maxVal = parseInt(maxBtn.value);
 
-                let changed = true;
+            let parent = input.parentElement;
+            let minBtn = parent.querySelector(".js-reviews-lower");
+            let maxBtn = parent.querySelector(".js-reviews-upper");
+            let minVal = parseInt(minBtn.value);
+            let maxVal = parseInt(maxBtn.value);
+
+            input.addEventListener("input", () => {
+                
+                let rangeDisplay = parent.nextElementSibling;
+
+                minVal = parseInt(minBtn.value);
+                maxVal = parseInt(maxBtn.value);
 
                 if (input.classList.contains("js-reviews-upper")) {
                     if (minVal >= maxVal) {
                         if (minVal <= 0) {
                             maxBtn.value = maxVal = 1;
-                            changed = false;
                         } else if (maxVal === 0) {
                             minBtn.value = minVal = 0;
                             maxBtn.value = maxVal = 1;
@@ -2895,7 +2898,6 @@ let SearchPageClass = (function(){
                             maxBtn.value = maxVal = minVal + 1;
                         } else {
                             minBtn.value = minVal = maxVal - 1;
-                            changed = false;
                         }
                     }
                 }
@@ -2917,16 +2919,18 @@ let SearchPageClass = (function(){
 
                 rangeDisplay.textContent = text;
 
-                if (changed) {
-                    applyFilters();
+                
+            });
 
-                    let val = "";
-                    if (minVal !== 0 || maxVal !== maxStep) {
-                        val = `${minVal === 0 ? '' : valueMapping[minVal]}-${maxVal === maxStep ? '' : valueMapping[maxVal]}`;
-                    }
+            input.addEventListener("change", () => {
+                applyFilters();
 
-                    updateUrl("as-reviews", val);
+                let val = "";
+                if (minVal !== 0 || maxVal !== maxStep) {
+                    val = `${minVal === 0 ? '' : valueMapping[minVal]}-${maxVal === maxStep ? '' : valueMapping[maxVal]}`;
                 }
+
+                updateUrl("as-reviews", val);
             });
         }
 
