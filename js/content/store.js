@@ -2798,7 +2798,7 @@ let SearchPageClass = (function(){
     SearchPageClass.prototype.addHideButtonsToSearch = function() {
 
         let collapseName = "augmented_steam";
-        let initialFilters = getASFilters();
+        let activeFilters = getASFilters();
 
         HTML.afterBegin("#advsearchform .rightcol",
             `<div class="block search_collapse_block" data-collapse-name="${collapseName}">
@@ -2933,8 +2933,8 @@ let SearchPageClass = (function(){
             });
         }
 
-        if (initialFilters["as-reviews"]) {
-            let [, lower, upper] = initialFilters["as-reviews"].match(/(^\d*)-(\d*)/);
+        if (activeFilters["as-reviews"]) {
+            let [, lower, upper] = activeFilters["as-reviews"].match(/(^\d*)-(\d*)/);
             lower = parseInt(lower);
             upper = parseInt(upper);
 
@@ -2979,7 +2979,7 @@ let SearchPageClass = (function(){
         for (let filterName of filterNames) {
             let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
 
-            if (initialFilters["as-hide"].has(filterName)) {
+            if (activeFilters["as-hide"].has(filterName)) {
                 results.classList.add(filterName);
                 filter.classList.add("checked");
                 filter.parentElement.classList.add("checked");
@@ -3004,15 +3004,15 @@ let SearchPageClass = (function(){
                 let fixScrollOffset = document.scrollTop - savedOffset + filter.getBoundingClientRect().top;
                 document.scrollTop = fixScrollOffset;
                 
-                let activeFilters = getASFilters()["as-hide"];
+                activeFilters = getASFilters();
 
                 if (isChecked) {
-                    activeFilters.add(filterName);
+                    activeFilters["as-hide"].add(filterName);
                 } else {
-                    activeFilters.delete(filterName);
+                    activeFilters["as-hide"].delete(filterName);
                 }
 
-                updateUrl("as-hide", Array.from(activeFilters).join(','));
+                updateUrl("as-hide", Array.from(activeFilters["as-hide"]).join(','));
                 /**
                  * END
                  * OnClickClientFilter
@@ -3070,7 +3070,7 @@ let SearchPageClass = (function(){
         addRowMetadata();
 
         window.addEventListener("popstate", () => {
-            let activeFilters = getASFilters();
+            activeFilters = getASFilters();
 
             for (let filterName of filterNames) {
                 let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
