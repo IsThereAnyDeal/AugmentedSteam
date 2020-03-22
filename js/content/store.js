@@ -2846,6 +2846,35 @@ let SearchPageClass = (function(){
             </div>
         `);
 
+        function updateUrl(key, val) {
+            ExtensionLayer.runInPageContext((key, val) => {
+                /**
+                 * https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L230
+                 * AjaxSearchResultsInternal
+                 */
+                let params = GatherSearchParameters();
+
+                delete params.snr;
+                if (params.sort_by === "_ASC") {
+                    delete params.sort_by;
+                }
+                if (params.page === 1 || params.page === '1') {
+                    delete params.page;
+                }
+                if (InitInfiniteScroll.bEnabled && BShouldUseInfiniscroll()) {
+                    delete params.force_infinite;
+                }
+                
+                if (val !== "") {
+                    params[key] = val;
+                }
+
+                // https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L217
+                UpdateUrl(params);
+
+            }, [ key, val ]);
+        }
+
         // Setup handlers for reviews filter
         for (let input of document.querySelectorAll(".js-reviews-input")) {
             input.addEventListener("input", () => {
@@ -2862,6 +2891,7 @@ let SearchPageClass = (function(){
                     if (minVal >= maxVal) {
                         if (minVal <= 0) {
                             maxBtn.value = maxVal = 1;
+                            changed = false;
                         } else {
                             minBtn.value = minVal = maxVal - 1;
                         }
@@ -2872,6 +2902,7 @@ let SearchPageClass = (function(){
                             maxBtn.value = maxVal = minVal + 1;
                         } else {
                             minBtn.value = minVal = maxVal - 1;
+                            changed = false;
                         }
                     }
                 }
@@ -2895,6 +2926,13 @@ let SearchPageClass = (function(){
 
                 if (changed) {
                     applyFilters();
+
+                    let val = "";
+                    if (minVal !== 0 || maxVal !== maxStep) {
+                        val = `${minVal === 0 ? '' : valueMapping[minVal]}-${maxVal === maxStep ? '' : valueMapping[maxVal]}`;
+                    }
+
+                    updateUrl("as-reviews", val);
                 }
             });
         }
@@ -2956,30 +2994,7 @@ let SearchPageClass = (function(){
                     activeFilters.delete(filterName);
                 }
 
-                ExtensionLayer.runInPageContext(param => {
-                    /**
-                     * https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L230
-                     * AjaxSearchResultsInternal
-                     */
-                    let params = GatherSearchParameters();
-
-                    delete params.snr;
-                    if (params.sort_by === "_ASC") {
-                        delete params.sort_by;
-                    }
-                    if (params.page === 1 || params.page === '1') {
-                        delete params.page;
-                    }
-                    if (InitInfiniteScroll.bEnabled && BShouldUseInfiniscroll()) {
-                        delete params.force_infinite;
-                    }
-                    
-                    params["as-hide"] = param;
-
-                    // https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L217
-                    UpdateUrl(params);
-
-                }, [ Array.from(activeFilters).join(',') ]);
+                updateUrl("as-hide", Array.from(activeFilters).join(','));
                 /**
                  * END
                  * OnClickClientFilter
