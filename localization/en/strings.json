@@ -166,6 +166,12 @@
     "notinterested": "Items marked not interested",
     "mixed_item": "Mixed rating items",
     "negative_item": "Negative rating items",
+    "reviews_filter": {
+        "between": "Between __lower__ and __upper__ reviews",
+        "any": "Any amount of reviews",
+        "up_to": "Up to __amount__ reviews",
+        "more_than": "More than __amount__ reviews"
+    },
     "reviews_below": "Items with less reviews than",
     "reviews_below_tooltip": "Enter zero for items without reviews; leave this field empty to disable this feature",
     "news": "News",

@@ -2804,9 +2804,26 @@ let SearchPageClass = (function(){
             </div>
         `);
 
+        let valueMapping = [
+            0,
+            100,
+            1000,
+            2000,
+            5000,
+            7500,
+            10000,
+            15000,
+            30000,
+            50000,
+            100000,
+            200000,
+            500000,
+        ];
+
         for (let input of document.querySelectorAll(".js-reviews-input")) {
             input.addEventListener("input", () => {
                 let parent = input.parentElement;
+                let rangeDisplay = parent.nextElementSibling;
                 let minBtn = parent.querySelector(".js-reviews-lower");
                 let maxBtn = parent.querySelector(".js-reviews-upper");
                 let minVal = parseInt(minBtn.value);
@@ -2814,21 +2831,38 @@ let SearchPageClass = (function(){
 
                 if (input.classList.contains("js-reviews-upper")) {
                     if (minVal >= maxVal) {
-                        if (minVal > 0) {
-                            minBtn.value = maxVal - 1;
+                        if (minVal <= 0) {
+                            maxBtn.value = maxVal = 1;
                         } else {
-                            maxBtn.value = 1;
+                            minBtn.value = minVal = maxVal - 1;
                         }
                     }
                 } else {
                     if (maxVal <= minVal) {
                         if (maxVal < 13) {
-                            maxBtn.value = minVal + 1;
+                            maxBtn.value = maxVal = minVal + 1;
                         } else {
-                            minBtn.value = maxVal - 1;
+                            minBtn.value = minVal = maxVal - 1;
                         }
                     }
                 }
+
+                let text;
+                if (minVal === 0) {
+                    if (maxVal === 13) {
+                        text = Localization.str.reviews_filter.any;
+                    } else {
+                        text = Localization.str.reviews_filter.up_to.replace("__amount__", valueMapping[maxVal]);
+                    }
+                } else {
+                    if (maxVal === 13) {
+                        text = Localization.str.reviews_filter.more_than.replace("__amount__", valueMapping[minVal]);
+                    } else {
+                        text = Localization.str.reviews_filter.between.replace("__lower__", valueMapping[minVal]).replace("__upper__", valueMapping[maxVal]);
+                    }
+                }
+
+                rangeDisplay.textContent = text;
             });
         }
 
