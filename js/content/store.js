@@ -2752,6 +2752,28 @@ let SearchPageClass = (function(){
         applyFilters(rows);
     }
 
+    function modifyParams(searchParams, key, val) {
+        if (val !== "" && val !== null) {
+            searchParams.set(key, val);
+        } else {
+            searchParams.delete(key);
+        }
+    }
+
+    function modifyPageLinks() {
+        if (!infiniteScrollEnabled) {
+            for (let linkElement of document.querySelectorAll(".search_pagination_right a")) {
+                let curParams = new URLSearchParams(window.location.search);
+                let url = new URL(linkElement.href);
+
+                modifyParams(url.searchParams, "as-hide", curParams.get("as-hide"));
+                modifyParams(url.searchParams, "as-reviews", curParams.get("as-reviews"));
+    
+                linkElement.href = url.href;
+            }
+        }
+    }
+
     let maxStep = 13;
     let valueMapping = [
         0,
@@ -2849,16 +2871,16 @@ let SearchPageClass = (function(){
             }
         }
 
-        function updateUrl(key, val) {
+        function updateUrls(key, val) {
+
+            document.getElementsByName(key)[0].value = val;
+
+            // Update the current URL
             let curParams = new URLSearchParams(window.location.search);
-            if (val !== "") {
-                curParams.set(key, val);
-            } else {
-                curParams.delete(key);
-            }
+            modifyParams(curParams, key, val);
 
             let paramsObj = {};
-            for (let [paramKey, paramVal] of curParams.entries()) {
+            for (let [paramKey, paramVal] of curParams) {
                 paramsObj[paramKey] = paramVal;
             }
 
@@ -2867,6 +2889,8 @@ let SearchPageClass = (function(){
                 UpdateUrl(params);
             }, [ paramsObj ]);
 
+            modifyPageLinks();
+
             activeFilters = getASFilters();
         }
 
@@ -2874,9 +2898,6 @@ let SearchPageClass = (function(){
             `<div class="block search_collapse_block" data-collapse-name="${collapseName}">
                 <div class="block_header"><div>${Localization.str.filters}</div></div>
                 <div class="block_content block_content_inner">
-                    <div>
-                        <input type="hidden" name="augmented_steam">
-                    </div>
                     <div class="tab_filter_control_row" data-param="augmented_steam" data-value="hide_cart" data-loc="${Localization.str.options.cart}" data-clientside="1">
                         <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="hide_cart" data-loc="${Localization.str.options.cart}" data-clientside="1">
                             <span>
@@ -2904,12 +2925,13 @@ let SearchPageClass = (function(){
                             </span>
                         </span>
                     </div>
+                    <div><input type="hidden" name="as-hide"></div>
                     <div class="block_rule"></div>
                     <div class="range_container" style="margin-top: 8px;">
                         <div class="as-double-slider js-reviews-filter range_container_inner">
                             <input class="as-double-slider__input as-double-slider__input--lower js-reviews-input js-reviews-lower range_input" type="range" min="0" max="${maxStep}" step="1" value="0">
                             <input class="as-double-slider__input as-double-slider__input--upper js-reviews-input js-reviews-upper range_input" type="range" min="0" max="${maxStep}" step="1" value="${maxStep}">
-                            <input type="hidden" name="maxreviews" value="">
+                            <input type="hidden" name="as-reviews">
                         </div>
                         <div class="as-range-display range_display">Any amount of reviews</div>
                     </div>
@@ -2980,7 +3002,7 @@ let SearchPageClass = (function(){
                     val = `${minVal === 0 ? '' : valueMapping[minVal]}-${maxVal === maxStep ? '' : valueMapping[maxVal]}`;
                 }
 
-                updateUrl("as-reviews", val);
+                updateUrls("as-reviews", val);
             });
         }
         
@@ -3014,7 +3036,7 @@ let SearchPageClass = (function(){
                     activeFilters["as-hide"].delete(filterName);
                 }
 
-                updateUrl("as-hide", Array.from(activeFilters["as-hide"]).join(','));
+                updateUrls("as-hide", Array.from(activeFilters["as-hide"]).join(','));
             });
         }
 
@@ -3064,40 +3086,11 @@ let SearchPageClass = (function(){
         });
 
         setFilterStates();
-        addRowMetadata();        
+        addRowMetadata();
+        modifyPageLinks();
     };
 
     SearchPageClass.prototype.observeChanges = function() {
-
-        let hiddenInput = document.getElementById("es_hide");
-
-        function modifyLinks() {
-            for (let linkElement of document.querySelectorAll(".search_pagination_right a")) {
-                let params = new URLSearchParams(linkElement.href.substring(linkElement.href.indexOf('?')));
-                if (hiddenInput.value) {
-                    params.set("es_hide", hiddenInput.value);
-                } else {
-                    params.delete("es_hide");
-                }
-
-                // Encoding is done by Steam, see #568
-                linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + params.toString();
-            }
-        }
-
-        function toggleFilter(name, selector) {
-            let params = new URLSearchParams(window.location.search);
-            if (params.has("es_hide")) {
-                decodeURIComponent(params.get("es_hide")).split(',').forEach(filter => {
-                    if (filter.startsWith(name)) {
-                        document.querySelector(selector).classList.add("checked");
-                    }
-                });
-            }
-        }
-
-        let inputObserver = new MutationObserver(modifyLinks);
-        //inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
 
         let removeObserver = new MutationObserver(mutations => {
             for (let mutation of mutations) {
@@ -3107,9 +3100,7 @@ let SearchPageClass = (function(){
                         observeAjax(node.querySelectorAll(".search_result_row"));
                         
                         if (!infiniteScrollEnabled) {
-                            toggleFilter("price-above", "#es_notpriceabove");
-                            toggleFilter("reviews-below", "#es_noreviewsbelow");
-                            modifyLinks();
+                            modifyPageLinks();
                             addRowMetadata();
                         }
                         ajaxObserver.observe(node.querySelector("#search_resultsRows"), {childList: true});
