@@ -3535,3 +3535,13 @@ label[for="show_common_games"] {
 .as-double-slider__input--upper::-webkit-slider-thumb {
   z-index: 2;
 }
+
+/* 
+ * https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/css/v6/browse.css#L206
+ * Allows wraps at white spaces for long texts in the range display
+ */
+.as-range-display {
+  white-space: normal !important;
+  line-height: unset !important;
+  padding: 7.5px 8px !important; /* 7.5px is the (line-height (28px) - font-size (13px)) / 2 */
+}

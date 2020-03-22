@@ -2795,7 +2795,7 @@ let SearchPageClass = (function(){
                             <input class="as-double-slider__input as-double-slider__input--upper js-reviews-input js-reviews-upper range_input" type="range" min="0" max="13" step="1" value="13">
                             <input type="hidden" name="maxreviews" value="">
                         </div>
-                        <div class="range_display">Any amount of reviews</div>
+                        <div class="as-range-display range_display">Any amount of reviews</div>
                     </div>
                     <div>
                         <input type="hidden" id="es_hide" name="es_hide" value>
