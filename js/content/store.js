@@ -2863,7 +2863,9 @@ let SearchPageClass = (function(){
             ExtensionLayer.runInPageContext(params => {
                 // https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L217
                 UpdateUrl(params);
-            }, [ paramsObj ]);            
+            }, [ paramsObj ]);
+
+            activeFilters = getASFilters();
         }
 
         let reviewsFilter = document.querySelector(".js-reviews-filter");
@@ -2933,21 +2935,6 @@ let SearchPageClass = (function(){
             });
         }
 
-        if (activeFilters["as-reviews"]) {
-            let [, lower, upper] = activeFilters["as-reviews"].match(/(^\d*)-(\d*)/);
-            lower = parseInt(lower);
-            upper = parseInt(upper);
-
-            if (lower !== NaN && valueMapping.includes(lower)) {
-                minBtn.value = valueMapping.indexOf(lower);
-                minBtn.dispatchEvent(new Event("input"));
-            }
-            if (upper !== NaN && valueMapping.includes(upper)) {
-                maxBtn.value = valueMapping.indexOf(upper);
-                maxBtn.dispatchEvent(new Event("input"));
-            }
-        }
-
         function getASFilters() {
             let paramsObj = {};
             let params = new URLSearchParams(window.location.search);
@@ -2972,22 +2959,46 @@ let SearchPageClass = (function(){
             "hide_negative",
         ];
 
-        /**
-         * START https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L815
-         * EnableClientSideFilters
-         */
-        for (let filterName of filterNames) {
-            let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
+        function setFilterStates() {
+            for (let filterName of filterNames) {
+                /**
+                 * https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L815
+                 * EnableClientSideFilters
+                 */
+                let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
 
-            if (activeFilters["as-hide"].has(filterName)) {
-                results.classList.add(filterName);
-                filter.classList.add("checked");
-                filter.parentElement.classList.add("checked");
+                if (activeFilters["as-hide"].has(filterName)) {
+                    results.classList.add(filterName);
+                    filter.classList.add("checked");
+                    filter.parentElement.classList.add("checked");
+                }
             }
+
+            if (activeFilters["as-reviews"]) {
+                let [, lower, upper] = activeFilters["as-reviews"].match(/(^\d*)-(\d*)/);
+                lower = parseInt(lower);
+                upper = parseInt(upper);
+    
+                if (lower !== NaN && valueMapping.includes(lower)) {
+                    minBtn.value = valueMapping.indexOf(lower);
+                    minBtn.dispatchEvent(new Event("input"));
+                }
+                if (upper !== NaN && valueMapping.includes(upper)) {
+                    maxBtn.value = valueMapping.indexOf(upper);
+                    maxBtn.dispatchEvent(new Event("input"));
+                }
+            }
+        }
+
+        setFilterStates();
+        
+        for (let filterName of filterNames) {
+            
+            let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
 
             filter.addEventListener("click", () => {
                 /**
-                 * START https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L859
+                 * https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L859
                  * OnClickClientFilter
                  */
                 let savedOffset = filter.getBoundingClientRect().top;
@@ -3003,8 +3014,6 @@ let SearchPageClass = (function(){
 
                 let fixScrollOffset = document.scrollTop - savedOffset + filter.getBoundingClientRect().top;
                 document.scrollTop = fixScrollOffset;
-                
-                activeFilters = getASFilters();
 
                 if (isChecked) {
                     activeFilters["as-hide"].add(filterName);
@@ -3013,16 +3022,8 @@ let SearchPageClass = (function(){
                 }
 
                 updateUrl("as-hide", Array.from(activeFilters["as-hide"]).join(','));
-                /**
-                 * END
-                 * OnClickClientFilter
-                 */
             });
         }
-        /**
-         * END
-         * EnableClientSideFilters
-         */
 
         ExtensionLayer.runInPageContext(collapseName => {
             /**
@@ -3071,16 +3072,7 @@ let SearchPageClass = (function(){
 
         window.addEventListener("popstate", () => {
             activeFilters = getASFilters();
-
-            for (let filterName of filterNames) {
-                let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
-
-                if (activeFilters["as-hide"].has(filterName)) {
-                    results.classList.add(filterName);
-                    filter.classList.add("checked");
-                    filter.parentElement.classList.add("checked");
-                }
-            }
+            setFilterStates();
         });
     };
 
