@@ -2831,17 +2831,20 @@ let SearchPageClass = (function(){
             }
 
             if (activeFilters["as-reviews"]) {
-                let [, lower, upper] = activeFilters["as-reviews"].match(/(^\d*)-(\d*)/);
-                lower = parseInt(lower);
-                upper = parseInt(upper);
-    
-                if (lower !== NaN && valueMapping.includes(lower)) {
-                    minBtn.value = valueMapping.indexOf(lower);
-                    minBtn.dispatchEvent(new Event("input"));
-                }
-                if (upper !== NaN && valueMapping.includes(upper)) {
-                    maxBtn.value = valueMapping.indexOf(upper);
-                    maxBtn.dispatchEvent(new Event("input"));
+                let match = activeFilters["as-reviews"].match(/(^\d*)-(\d*)/);
+                if (match) {
+                    let [, lower, upper] = match;
+                    lower = parseInt(lower);
+                    upper = parseInt(upper);
+        
+                    if (lower !== NaN && valueMapping.includes(lower)) {
+                        minBtn.value = valueMapping.indexOf(lower);
+                        minBtn.dispatchEvent(new Event("input"));
+                    }
+                    if (upper !== NaN && valueMapping.includes(upper)) {
+                        maxBtn.value = valueMapping.indexOf(upper);
+                        maxBtn.dispatchEvent(new Event("input"));
+                    }
                 }
             }
         }
