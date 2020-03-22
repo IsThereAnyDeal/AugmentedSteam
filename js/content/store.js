@@ -2842,13 +2842,11 @@ let SearchPageClass = (function(){
                         </div>
                         <div class="as-range-display range_display">Any amount of reviews</div>
                     </div>
-                    <div>
-                        <input type="hidden" id="es_hide" name="es_hide" value>
-                    </div>
                 </div>
             </div>
         `);
 
+        // Setup handlers for reviews filter
         for (let input of document.querySelectorAll(".js-reviews-input")) {
             input.addEventListener("input", () => {
                 let parent = input.parentElement;
@@ -2901,16 +2899,31 @@ let SearchPageClass = (function(){
             });
         }
 
+        function getASFilters() {
+            let params = new URLSearchParams(window.location.search);
+            let urlParam = params.get("as-hide");
+            if (urlParam) {
+                return new Set(urlParam.split(','));
+            }
+            return new Set();
+        }
+
         let results = document.getElementById("search_results");
+        let initialFilters = getASFilters();
+        let filterNames = [
+            "hide_cart",
+            "hide_mixed",
+            "hide_negative",
+        ];
 
         /**
          * START https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L815
          * EnableClientSideFilters
          */
-        for (let filterName of [ "hide_cart", "hide_mixed", "hide_negative" ]) {
+        for (let filterName of filterNames) {
             let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
 
-            if (SyncedStorage.get(filterName)) {
+            if (initialFilters.has(filterName)) {
                 results.classList.add(filterName);
                 filter.classList.add("checked");
                 filter.parentElement.classList.add("checked");
@@ -2934,8 +2947,39 @@ let SearchPageClass = (function(){
 
                 let fixScrollOffset = document.scrollTop - savedOffset + filter.getBoundingClientRect().top;
                 document.scrollTop = fixScrollOffset;
+                
+                let activeFilters = getASFilters();
 
-                SyncedStorage.set(filterName, isChecked);
+                if (isChecked) {
+                    activeFilters.add(filterName);
+                } else {
+                    activeFilters.delete(filterName);
+                }
+
+                ExtensionLayer.runInPageContext(param => {
+                    /**
+                     * https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L230
+                     * AjaxSearchResultsInternal
+                     */
+                    let params = GatherSearchParameters();
+
+                    delete params.snr;
+                    if (params.sort_by === "_ASC") {
+                        delete params.sort_by;
+                    }
+                    if (params.page === 1 || params.page === '1') {
+                        delete params.page;
+                    }
+                    if (InitInfiniteScroll.bEnabled && BShouldUseInfiniscroll()) {
+                        delete params.force_infinite;
+                    }
+                    
+                    params["as-hide"] = param;
+
+                    // https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L217
+                    UpdateUrl(params);
+
+                }, [ Array.from(activeFilters).join(',') ]);
                 /**
                  * END
                  * OnClickClientFilter
@@ -2992,293 +3036,19 @@ let SearchPageClass = (function(){
 
         addRowMetadata();
 
-        /*Messenger.addMessageListener("filtersChanged", filtersChanged);
+        window.addEventListener("popstate", () => {
+            let activeFilters = getASFilters();
+            for (let filterName of filterNames) {
+                let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
 
-        Messenger.onMessage("priceAbove").then(priceVal => {
-            if (new RegExp(inputPattern.source.replace(',', '\\.')).test(priceVal)) {
-                if (currency.format.decimalSeparator === ',') {
-                    priceVal = priceVal.replace('.', ',');
+                if (activeFilters.has(filterName)) {
+                    results.classList.add(filterName);
+                    filter.classList.add("checked");
+                    filter.parentElement.classList.add("checked");
                 }
-                document.getElementById("es_notpriceabove_val").value = priceVal;
-                Messenger.postMessage("priceValueChanged");
-            } else {
-                console.warn("Failed to validate price %s from URL params!", priceVal);
             }
         });
-        Messenger.onMessage("reviewsBelow").then(reviewsVal => {
-            document.getElementById("es_noreviewsbelow_val").value = reviewsVal;
-            Messenger.postMessage("reviewsValueChanged");
-        });
-
-        // TODO(tomas.fedor) Can we somehow simplify this monstrosity? E.g. update URL on our end?
-        // Thrown together from sources of searchpage.js
-        ExtensionLayer.runInPageContext(hideFilter => {
-
-            GDynamicStore.OnReady(() => {
-
-                // For each AS filter
-                $J(".tab_filter_control[id^='es_']").each(function() {
-                    let $Control = $J(this);
-                    $Control.click(() => updateURL($Control));
-                });
-
-                function updateURL($Control, forcedState) {
-
-                    let strParam = $Control.data("param");
-                    let value = $Control.data("value");
-                    let strValues = decodeURIComponent($J('#' + strParam).val());
-                    value = String(value); // Javascript: Dynamic types except sometimes not.
-                    if (!$Control.hasClass("checked")) {
-                        let rgValues;
-                        if(!strValues) {
-                            if (typeof forcedState !== "undefined" && !forcedState) {
-                                rgValues = [];
-                            } else {
-                                if (value === "price-above") {
-                                    rgValues = [value + $J("#es_notpriceabove_val").val().replace(',', '.')];
-                                } else if (value === "reviews-below") {
-                                    rgValues = [value + $J("#es_noreviewsbelow_val").val()];
-                                } else {
-                                    rgValues = [value];
-                                }
-                            }
-                        } else {
-                            rgValues = strValues.split(',');
-
-                            if (!(typeof forcedState !== "undefined" && !forcedState)) {
-                                if (value === "price-above") {
-                                    let found = false;
-                                    for (let rgValue in rgValues) {
-                                        if (rgValue.startsWith(value)) {
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!found) {
-                                        rgValues.push(value + $J("#es_notpriceabove_val").val().replace(',', '.'));
-                                    }
-                                } else if (value === "reviews-below") {
-                                    let found = false;
-                                    for (let rgValue in rgValues) {
-                                        if (rgValue.startsWith(value)) {
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!found) {
-                                        rgValues.push(value + $J("#es_noreviewsbelow_val").val());
-                                    }
-                                } else {
-                                    if ($J.inArray(value, rgValues) === -1) {
-                                        rgValues.push(value)
-                                    }
-                                }
-                            }
-                            
-                        }
-    
-                        $J('#' + strParam).val(rgValues.join(','));
-
-                        if (typeof forcedState !== "undefined") {
-                            if (forcedState) {
-                                $Control.addClass("checked");
-                            }
-                        } else {
-                            $Control.addClass("checked");
-                        }
-                    } else {
-                        let rgValues = strValues.split(',');
-
-                        if (value === "price-above") {
-                            for (let i = 0; i < rgValues.length; ++i) {
-                                if (rgValues[i].startsWith("price-above")) {
-                                    if (typeof forcedState !== "undefined" && forcedState) {
-                                        rgValues[i] = "price-above" + $J("#es_notpriceabove_val").val().replace(',', '.');
-                                    } else {
-                                        rgValues.splice(i, 1);
-                                    }
-                                    break;
-                                }
-                            }
-                        } else if (value === "reviews-below") {
-                            for (let i = 0; i < rgValues.length; ++i) {
-                                if (rgValues[i].startsWith("reviews-below")) {
-                                    if (typeof forcedState !== "undefined" && forcedState) {
-                                        rgValues[i] = "reviews-below" + $J("#es_noreviewsbelow_val").val();
-                                    } else {
-                                        rgValues.splice(i, 1);
-                                    }
-                                    break;
-                                }
-                            }
-                        } else {
-                            if (!(typeof forcedState !== "undefined" && forcedState)) {
-                                if (rgValues.indexOf(value) !== -1) {
-                                    rgValues.splice(rgValues.indexOf(value), 1);
-                                }
-                            }
-                        }
-
-                        $J('#' + strParam).val(rgValues.join(','));
-
-                        if (typeof forcedState !== "undefined") {
-                            if (!forcedState) {
-                                $Control.removeClass("checked");
-                            }
-                        } else {
-                            $Control.removeClass("checked");
-                        }
-                    }
-
-                    let rgParameters = GatherSearchParameters();
-
-                    // remove snr for history purposes
-                    delete rgParameters["snr"];
-                    if (rgParameters["sort_by"] === "_ASC") {
-                        delete rgParameters["sort_by"];
-                    }
-                    if (rgParameters["page"] === 1 || rgParameters["page"] === '1')
-                        delete rgParameters["page"];
-
-                    // don't want this on the url either
-                    delete rgParameters["hide_filtered_results_warning"];
-
-                    if (g_bUseHistoryAPI) {
-                        history.pushState({ params: rgParameters}, '', '?' + Object.toQueryString(rgParameters));
-                    } else {
-                        window.location = '#' + Object.toQueryString(rgParameters);
-                    }
-
-                    $J(".tag_dynamic").remove();
-                    $J("#termsnone").show();
-                    let rgActiveTags = $J(".tab_filter_control.checked");
-
-                    // Search term
-                    let strTerm = $J("#realterm").val();
-                    if(strTerm) {
-                        AddSearchTag("term", strTerm, '"'+strTerm+'"', function(tag) { $J("#realterm").val(''); $J("#term").val(''); AjaxSearchResults(); return false; });
-                        $J("#termsnone").hide();
-                    }
-
-                    // Publisher
-                    let strPublisher = $J("#publisher").val();
-                    if(strPublisher) {
-                        AddSearchTag("publisher", strPublisher, "Publisher" + ": "+strPublisher, function(tag) { $J("#publisher").val(''); AjaxSearchResults(); return false; });
-                        $J("#termsnone").hide();
-                    }
-
-                    // Developer
-                    let strDeveloper = $J("#developer").val();
-                    if(strDeveloper) {
-                        AddSearchTag("publisher", strDeveloper, "Developer" + ": " + strDeveloper, function(tag) { $J("#developer").val(''); AjaxSearchResults(); return false; });
-                        $J("#termsnone").hide();
-                    }
-
-                    rgActiveTags.each(function() {
-                        let Tag = this;
-                        let $Tag = $J(this);
-                        let label;
-
-                        if ($Tag.is("[id*='es_']")) {
-                            label = hideFilter.replace("__filter__", $J(".tab_filter_control_label", Tag).text());
-                        } else {
-                            label = $J(".tab_filter_control_label", Tag).text();
-                        }
-                        AddSearchTag($Tag.data("param"), $Tag.data("value"), label, function(tag) { return function() { tag.click(); return false; } }(Tag) );
-                        if (!$Tag.is(":visible"))
-                        {
-                            $Tag.parent().prepend($Tag.show());
-                            $Tag.trigger( "tablefilter_update" );
-                        }
-                        $J("#termsnone").hide();
-                    });
-                    Messenger.postMessage("filtersChanged");
-                }
-    
-                for (let [key, value] of new URLSearchParams(window.location.search)) {
-                    if (key === "es_hide") {
-                        for (let filterValue of value.split(',')) {
-                            let filter = $J(".tab_filter_control[data-value='" + filterValue + "']");
-                            if (!filter.length) {
-                                if (filterValue.startsWith("price-above")) {
-                                    let priceValue = /price-above(.+)/.exec(filterValue)[1];
-                                    if (!priceValue) {
-                                        console.warn("Didn't set a value for the price filter!");
-                                        continue;
-                                    }
-                                    filter = $J(".tab_filter_control[data-value=price-above]");
-                                    Messenger.onMessage("priceValueChanged").then(filter.click);
-                                    Messenger.postMessage("priceAbove", priceValue);
-                                    continue;
-                                } else if (filterValue.startsWith("reviews-below")) {
-                                    let reviewsValue = /reviews-below(.+)/.exec(filterValue)[1];
-                                    if (!reviewsValue) {
-                                        console.warn("Didn't set a value for the reviews filter!");
-                                        continue;
-                                    }
-                                    filter = $J(".tab_filter_control[data-value=reviews-below]");
-                                    Messenger.onMessage("reviewsValueChanged").then(filter.click);
-                                    Messenger.postMessage("reviewsBelow", reviewsValue);
-                                    continue;
-                                } else {
-                                    console.warn("Invalid filter value %s", filterValue);
-                                    continue;
-                                }
-                            }
-                            filter.click();
-                        }
-                    }
-                }
-
-                Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState));
-                Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState));
-            });
-        }, [ Localization.str.hide_filter ]);
-
-        let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol + "</span>";
-        let priceAboveVal = document.querySelector("#es_notpriceabove_val");
-
-        if (currency.format.postfix) {
-            HTML.afterEnd(priceAboveVal, html);
-        } else {
-            HTML.beforeBegin(priceAboveVal, html);
-        }
-
-        addFilterInputEvents(
-            priceAboveVal,
-            document.querySelector("#es_notpriceabove"),
-            "priceChanged", inputPattern,
-            Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
-
-        addFilterInputEvents(
-            document.querySelector("#es_noreviewsbelow_val"),
-            document.querySelector("#es_noreviewsbelow"),
-            "reviewsChanged", /^\d+$/, "");*/
     };
-
-    function addFilterInputEvents(node, checkboxNode, messageId, inputPattern, errorMessage) {
-        node.addEventListener("click", e => e.stopPropagation());
-        node.addEventListener("keydown", e => {
-            if(e.key === "Enter") {
-                // This would normally trigger a call to AjaxSearchResults() which is not required here
-                e.preventDefault();
-            }
-        });
-        node.addEventListener("input", () => {
-            let newValue = node.value;
-
-            if (!inputPattern || inputPattern.test(newValue)) {
-                // The "checked" class will be toggled by the page context code
-                Messenger.postMessage(messageId, newValue !== "");
-                node.setCustomValidity('');
-            } else {
-                Messenger.postMessage(messageId, false);
-                node.setCustomValidity(errorMessage);
-            }
-
-            node.reportValidity();
-        });
-    }
 
     SearchPageClass.prototype.observeChanges = function() {
 
@@ -3310,7 +3080,7 @@ let SearchPageClass = (function(){
         }
 
         let inputObserver = new MutationObserver(modifyLinks);
-        inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
+        //inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
 
         let removeObserver = new MutationObserver(mutations => {
             for (let mutation of mutations) {
