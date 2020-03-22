@@ -2798,6 +2798,7 @@ let SearchPageClass = (function(){
     SearchPageClass.prototype.addHideButtonsToSearch = function() {
 
         let collapseName = "augmented_steam";
+        let initialFilters = getASFilters();
 
         HTML.afterBegin("#advsearchform .rightcol",
             `<div class="block search_collapse_block" data-collapse-name="${collapseName}">
@@ -2835,7 +2836,7 @@ let SearchPageClass = (function(){
                     </div>
                     <div class="block_rule"></div>
                     <div class="range_container" style="margin-top: 8px;">
-                        <div class="as-double-slider range_container_inner">
+                        <div class="as-double-slider js-reviews-filter range_container_inner">
                             <input class="as-double-slider__input as-double-slider__input--lower js-reviews-input js-reviews-lower range_input" type="range" min="0" max="${maxStep}" step="1" value="0">
                             <input class="as-double-slider__input as-double-slider__input--upper js-reviews-input js-reviews-upper range_input" type="range" min="0" max="${maxStep}" step="1" value="${maxStep}">
                             <input type="hidden" name="maxreviews" value="">
@@ -2865,18 +2866,18 @@ let SearchPageClass = (function(){
             }, [ paramsObj ]);            
         }
 
+        let reviewsFilter = document.querySelector(".js-reviews-filter");
+        let minBtn = reviewsFilter.querySelector(".js-reviews-lower");
+        let maxBtn = reviewsFilter.querySelector(".js-reviews-upper");
+        let rangeDisplay = reviewsFilter.nextElementSibling;
+
         // Setup handlers for reviews filter
         for (let input of document.querySelectorAll(".js-reviews-input")) {
-
-            let parent = input.parentElement;
-            let minBtn = parent.querySelector(".js-reviews-lower");
-            let maxBtn = parent.querySelector(".js-reviews-upper");
+            
             let minVal = parseInt(minBtn.value);
             let maxVal = parseInt(maxBtn.value);
 
             input.addEventListener("input", () => {
-                
-                let rangeDisplay = parent.nextElementSibling;
 
                 minVal = parseInt(minBtn.value);
                 maxVal = parseInt(maxBtn.value);
@@ -2918,8 +2919,6 @@ let SearchPageClass = (function(){
                 }
 
                 rangeDisplay.textContent = text;
-
-                
             });
 
             input.addEventListener("change", () => {
@@ -2934,17 +2933,39 @@ let SearchPageClass = (function(){
             });
         }
 
-        function getASFilters() {
-            let params = new URLSearchParams(window.location.search);
-            let urlParam = params.get("as-hide");
-            if (urlParam) {
-                return new Set(urlParam.split(','));
+        if (initialFilters["as-reviews"]) {
+            let [, lower, upper] = initialFilters["as-reviews"].match(/(^\d*)-(\d*)/);
+            lower = parseInt(lower);
+            upper = parseInt(upper);
+
+            if (lower !== NaN && valueMapping.includes(lower)) {
+                minBtn.value = valueMapping.indexOf(lower);
+                minBtn.dispatchEvent(new Event("input"));
             }
-            return new Set();
+            if (upper !== NaN && valueMapping.includes(upper)) {
+                maxBtn.value = valueMapping.indexOf(upper);
+                maxBtn.dispatchEvent(new Event("input"));
+            }
+        }
+
+        function getASFilters() {
+            let paramsObj = {};
+            let params = new URLSearchParams(window.location.search);
+
+            let rawParam = params.get("as-hide");
+            if (rawParam) {
+                paramsObj["as-hide"] = new Set(rawParam.split(','));
+            } else {
+                paramsObj["as-hide"] = new Set();
+            }
+
+            paramsObj["as-reviews"] = params.get("as-reviews");
+
+            return paramsObj;
         }
 
         let results = document.getElementById("search_results");
-        let initialFilters = getASFilters();
+        
         let filterNames = [
             "hide_cart",
             "hide_mixed",
@@ -2958,7 +2979,7 @@ let SearchPageClass = (function(){
         for (let filterName of filterNames) {
             let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
 
-            if (initialFilters.has(filterName)) {
+            if (initialFilters["as-hide"].has(filterName)) {
                 results.classList.add(filterName);
                 filter.classList.add("checked");
                 filter.parentElement.classList.add("checked");
@@ -2983,7 +3004,7 @@ let SearchPageClass = (function(){
                 let fixScrollOffset = document.scrollTop - savedOffset + filter.getBoundingClientRect().top;
                 document.scrollTop = fixScrollOffset;
                 
-                let activeFilters = getASFilters();
+                let activeFilters = getASFilters()["as-hide"];
 
                 if (isChecked) {
                     activeFilters.add(filterName);
@@ -3050,10 +3071,11 @@ let SearchPageClass = (function(){
 
         window.addEventListener("popstate", () => {
             let activeFilters = getASFilters();
+
             for (let filterName of filterNames) {
                 let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
 
-                if (activeFilters.has(filterName)) {
+                if (activeFilters["as-hide"].has(filterName)) {
                     results.classList.add(filterName);
                     filter.classList.add("checked");
                     filter.parentElement.classList.add("checked");
