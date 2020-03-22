@@ -2746,8 +2746,8 @@ let SearchPageClass = (function(){
         //let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
 
         for (let row of rows) {
-            if (row.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { row.classList.add("js-hide-mixed");      }
-            if (row.querySelector(".search_reviewscore span.search_review_summary.negative"))  { row.classList.add("js-hide-negative");   }
+            if (row.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { row.classList.add("as-hide-mixed");      }
+            if (row.querySelector(".search_reviewscore span.search_review_summary.negative"))  { row.classList.add("as-hide-negative");   }
 
             let reviews = 0;
             let reviewsNode = row.querySelector(".search_review_summary");
