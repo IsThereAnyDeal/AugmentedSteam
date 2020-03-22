@@ -2882,6 +2882,9 @@ let SearchPageClass = (function(){
                         if (minVal <= 0) {
                             maxBtn.value = maxVal = 1;
                             changed = false;
+                        } else if (maxVal === 0) {
+                            minBtn.value = minVal = 0;
+                            maxBtn.value = maxVal = 1;
                         } else {
                             minBtn.value = minVal = maxVal - 1;
                         }
