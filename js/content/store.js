@@ -2748,6 +2748,48 @@ let SearchPageClass = (function(){
         for (let row of rows) {
             if (row.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { row.classList.add("js-hide-mixed");      }
             if (row.querySelector(".search_reviewscore span.search_review_summary.negative"))  { row.classList.add("js-hide-negative");   }
+
+            let reviews = 0;
+            let reviewsNode = row.querySelector(".search_review_summary");
+            if (reviewsNode) {
+                reviews = Number(
+                    reviewsNode.dataset.tooltipHtml
+                        .replace(/\d+%/g, "")
+                        .match(/\d+/g).join("")
+                );
+            }
+
+            row.dataset.asReviews = reviews;
+        }
+
+        applyFilters(rows);
+    }
+
+    let valueMapping = [
+        0,
+        100,
+        1000,
+        2000,
+        5000,
+        7500,
+        10000,
+        15000,
+        30000,
+        50000,
+        100000,
+        200000,
+        500000,
+        1000000,
+    ];
+
+    function applyFilters(rows = document.querySelectorAll(".search_result_row")) {
+
+        let minVal = valueMapping[parseInt(document.querySelector(".js-reviews-lower").value)];
+        let maxVal = valueMapping[parseInt(document.querySelector(".js-reviews-upper").value)];
+
+        for (let row of rows) {
+            let rowReviews = parseInt(row.dataset.asReviews);
+            row.classList.toggle("as-hide-reviews", rowReviews < minVal || rowReviews > maxVal);
         }
     }
 
@@ -2804,22 +2846,6 @@ let SearchPageClass = (function(){
             </div>
         `);
 
-        let valueMapping = [
-            0,
-            100,
-            1000,
-            2000,
-            5000,
-            7500,
-            10000,
-            15000,
-            30000,
-            50000,
-            100000,
-            200000,
-            500000,
-        ];
-
         for (let input of document.querySelectorAll(".js-reviews-input")) {
             input.addEventListener("input", () => {
                 let parent = input.parentElement;
@@ -2828,6 +2854,8 @@ let SearchPageClass = (function(){
                 let maxBtn = parent.querySelector(".js-reviews-upper");
                 let minVal = parseInt(minBtn.value);
                 let maxVal = parseInt(maxBtn.value);
+
+                let changed = true;
 
                 if (input.classList.contains("js-reviews-upper")) {
                     if (minVal >= maxVal) {
@@ -2863,6 +2891,10 @@ let SearchPageClass = (function(){
                 }
 
                 rangeDisplay.textContent = text;
+
+                if (changed) {
+                    applyFilters();
+                }
             });
         }
 
