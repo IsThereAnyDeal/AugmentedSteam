@@ -2808,9 +2808,9 @@ let SearchPageClass = (function(){
 
         let collapseName = "augmented_steam";
         let filterNames = [
-            "hide_cart",
-            "hide_mixed",
-            "hide_negative",
+            "cart",
+            "mixed",
+            "negative",
         ];
 
         let activeFilters = getASFilters();
@@ -2898,8 +2898,8 @@ let SearchPageClass = (function(){
             `<div class="block search_collapse_block" data-collapse-name="${collapseName}">
                 <div class="block_header"><div>${Localization.str.filters}</div></div>
                 <div class="block_content block_content_inner">
-                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="hide_cart" data-loc="${Localization.str.options.cart}" data-clientside="1">
-                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="hide_cart" data-loc="${Localization.str.options.cart}" data-clientside="1">
+                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="cart" data-loc="${Localization.str.options.cart}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="cart" data-loc="${Localization.str.options.cart}" data-clientside="1">
                             <span>
                                 <span class="tab_filter_control_checkbox"></span>
                                 <span class="tab_filter_control_label">${Localization.str.options.cart}</span>
@@ -2907,8 +2907,8 @@ let SearchPageClass = (function(){
                             </span>
                         </span>
                     </div>
-                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="hide_mixed" data-loc="${Localization.str.mixed_item}" data-clientside="1">
-                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="hide_mixed" data-loc="${Localization.str.mixed_item}" data-clientside="1">
+                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="mixed" data-loc="${Localization.str.mixed_item}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="mixed" data-loc="${Localization.str.mixed_item}" data-clientside="1">
                             <span>
                                 <span class="tab_filter_control_checkbox"></span>
                                 <span class="tab_filter_control_label">${Localization.str.mixed_item}</span>
@@ -2916,8 +2916,8 @@ let SearchPageClass = (function(){
                             </span>
                         </span>
                     </div>
-                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="hide_negative" data-loc="${Localization.str.negative_item}" data-clientside="1">
-                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="hide_negative" data-loc="${Localization.str.negative_item}" data-clientside="1">
+                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="negative" data-loc="${Localization.str.negative_item}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="negative" data-loc="${Localization.str.negative_item}" data-clientside="1">
                             <span>
                                 <span class="tab_filter_control_checkbox"></span>
                                 <span class="tab_filter_control_label">${Localization.str.negative_item}</span>
