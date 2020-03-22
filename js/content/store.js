@@ -2903,17 +2903,11 @@ let SearchPageClass = (function(){
 
         let results = document.getElementById("search_results");
 
-        let filterNames = [
-            "hide_cart",
-            "hide_mixed",
-            "hide_negative",
-        ];
-
         /**
          * START https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L815
          * EnableClientSideFilters
          */
-        for (let filterName of filterNames) {
+        for (let filterName of [ "hide_cart", "hide_mixed", "hide_negative" ]) {
             let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
 
             if (SyncedStorage.get(filterName)) {
