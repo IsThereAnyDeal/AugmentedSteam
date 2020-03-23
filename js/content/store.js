@@ -2856,6 +2856,7 @@ let SearchPageClass = (function(){
             }
 
             paramsObj["as-reviews-score"] = params.get("as-reviews-score");
+            paramsObj["as-reviews-count"] = params.get("as-reviews-count");
 
             return paramsObj;
         }        
@@ -2882,11 +2883,11 @@ let SearchPageClass = (function(){
                     lower = parseInt(lower);
                     upper = parseInt(upper);
         
-                    if (lower !== NaN && scoreValues.includes(lower)) {
+                    if (!isNaN(lower) && scoreValues.includes(lower)) {
                         minScoreInput.value = scoreValues.indexOf(lower);
                         minScoreInput.dispatchEvent(new Event("input"));
                     }
-                    if (upper !== NaN && scoreValues.includes(upper)) {
+                    if (!isNaN(upper) && scoreValues.includes(upper)) {
                         maxScoreInput.value = scoreValues.indexOf(upper);
                         maxScoreInput.dispatchEvent(new Event("input"));
                     }
@@ -2894,12 +2895,31 @@ let SearchPageClass = (function(){
             }
 
             if (activeFilters["as-reviews-count"]) {
-
+                let match = activeFilters["as-reviews-count"].match(/(^\d*)-(\d*)/);
+                if (match) {
+                    let [, lower, upper] = match;
+                    lower = parseInt(lower);
+                    upper = parseInt(upper);
+        
+                    if (!isNaN(lower)) {
+                        minCountInput.value = lower;
+                        minCountInput.dispatchEvent(new Event("change"));
+                    }
+                    if (!isNaN(upper)) {
+                        maxCountInput.value = upper;
+                        maxCountInput.dispatchEvent(new Event("change"));
+                    }
+                }
             }
         }
 
         function updateUrls(key, val) {
 
+            /**
+             * This hidden input is required for GatherSearchParameters,
+             * otherwise AS' inputs are not considered when selecting another Steam native filter.
+             * https://github.com/SteamDatabase/SteamTracking/blob/1dfdbd838714d4b868e0221ca812696ca05f0a6b/store.steampowered.com/public/javascript/searchpage.js#L177
+             */
             document.getElementsByName(key)[0].value = val;
 
             // Update the current URL
@@ -2968,6 +2988,7 @@ let SearchPageClass = (function(){
                             <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-lower" type="number" min="0" placeholder="${Localization.str.reviews_filter.min_count}">
                             -
                             <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-upper" type="number" min="0" placeholder="${Localization.str.reviews_filter.max_count}">
+                            <input type="hidden" name="as-reviews-count">
                         </div>
                     </div>
                 </div>
@@ -3049,6 +3070,15 @@ let SearchPageClass = (function(){
             
             input.addEventListener("change", () => {
                 applyCountFilter();
+
+                let minVal = minCountInput.value;
+                let maxVal = maxCountInput.value;
+                let val = "";
+
+                if ((minVal && Number(minVal) !== 0) || maxVal) {
+                    val = `${minVal}-${maxVal}`;
+                }
+                updateUrls("as-reviews-count", val);
             });
             
             input.addEventListener("keydown", e => {
