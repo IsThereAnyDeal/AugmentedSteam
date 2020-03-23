@@ -2730,23 +2730,23 @@ let SearchPageClass = (function(){
     let infiniteScrollEnabled;
 
     function addRowMetadata(rows = document.querySelectorAll(".search_result_row")) {
-        //let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
-
         for (let row of rows) {
             if (row.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { row.classList.add("as-hide-mixed");      }
             if (row.querySelector(".search_reviewscore span.search_review_summary.negative"))  { row.classList.add("as-hide-negative");   }
 
-            let reviews = 0;
+            let reviewPercentage = 100;
+            let reviewCount = 0;
             let reviewsNode = row.querySelector(".search_review_summary");
             if (reviewsNode) {
-                reviews = Number(
-                    reviewsNode.dataset.tooltipHtml
-                        .replace(/\d+%/g, "")
-                        .match(/\d+/g).join("")
-                );
+                let match = reviewsNode.dataset.tooltipHtml.match(/(\d{1,3})%.*?((?:\d{1,3},?)+)/);
+                if (match) {
+                    reviewPercentage = Number(match[1]);
+                    reviewCount = Number(match[2].replace(/,/g, ''));
+                }
             }
 
-            row.dataset.asReviews = reviews;
+            row.dataset.asReviewPercentage = reviewPercentage;
+            row.dataset.asReviewCount = reviewCount;
         }
 
         applyFilters(rows);
@@ -2799,7 +2799,7 @@ let SearchPageClass = (function(){
         let maxReviews = maxVal === maxStep ? Infinity : valueMapping[maxVal];
 
         for (let row of rows) {
-            let rowReviews = parseInt(row.dataset.asReviews);
+            let rowReviews = parseInt(row.dataset.asReviewCount);
             row.classList.toggle("as-hide-reviews", rowReviews < minReviews || rowReviews > maxReviews);
         }
     }
