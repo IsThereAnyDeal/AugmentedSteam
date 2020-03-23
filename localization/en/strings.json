@@ -167,10 +167,10 @@
     "mixed_item": "Mixed rating items",
     "negative_item": "Negative rating items",
     "reviews_filter": {
-        "between": "Between __lower__ and __upper__ reviews",
-        "any": "Any amount of reviews",
-        "up_to": "Up to __amount__ reviews",
-        "more_than": "More than __amount__ reviews"
+        "between": "Between __lower__% and __upper__% review score",
+        "any": "Any review score",
+        "up_to": "Up to __score__% review score",
+        "more_than": "More than __score__% review score"
     },
     "reviews_below": "Items with less reviews than",
     "reviews_below_tooltip": "Enter zero for items without reviews; leave this field empty to disable this feature",

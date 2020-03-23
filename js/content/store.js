@@ -2774,33 +2774,25 @@ let SearchPageClass = (function(){
         }
     }
 
-    let maxStep = 13;
-    let valueMapping = [
-        0,
-        100,
-        1000,
-        2000,
-        5000,
-        7500,
-        10000,
-        15000,
-        30000,
-        50000,
-        100000,
-        200000,
-        500000,
-    ];
+    let maxStep;
+    let valueMapping = [];
+    let stepSize = 5;
+
+    for (let score = 0; score < 100; score += stepSize) {
+        valueMapping.push(score);
+    }
+    maxStep = valueMapping.length;
 
     function applyFilters(rows = document.querySelectorAll(".search_result_row")) {
 
-        let minReviews = valueMapping[parseInt(document.querySelector(".js-reviews-lower").value)];
+        let minScore = valueMapping[parseInt(document.querySelector(".js-reviews-lower").value)];
 
         let maxVal = parseInt(document.querySelector(".js-reviews-upper").value);
-        let maxReviews = maxVal === maxStep ? Infinity : valueMapping[maxVal];
+        let maxScore = maxVal === maxStep ? Infinity : valueMapping[maxVal];
 
         for (let row of rows) {
-            let rowReviews = parseInt(row.dataset.asReviewCount);
-            row.classList.toggle("as-hide-reviews", rowReviews < minReviews || rowReviews > maxReviews);
+            let rowScore = parseInt(row.dataset.asReviewPercentage);
+            row.classList.toggle("as-hide-reviews", rowScore < minScore || rowScore > maxScore);
         }
     }
 
@@ -2933,7 +2925,7 @@ let SearchPageClass = (function(){
                             <input class="as-double-slider__input as-double-slider__input--upper js-reviews-input js-reviews-upper range_input" type="range" min="0" max="${maxStep}" step="1" value="${maxStep}">
                             <input type="hidden" name="as-reviews">
                         </div>
-                        <div class="as-range-display range_display">Any amount of reviews</div>
+                        <div class="as-range-display range_display">${Localization.str.reviews_filter.any}</div>
                     </div>
                 </div>
             </div>
@@ -2981,11 +2973,11 @@ let SearchPageClass = (function(){
                     if (maxVal === maxStep) {
                         text = Localization.str.reviews_filter.any;
                     } else {
-                        text = Localization.str.reviews_filter.up_to.replace("__amount__", valueMapping[maxVal]);
+                        text = Localization.str.reviews_filter.up_to.replace("__score__", valueMapping[maxVal]);
                     }
                 } else {
                     if (maxVal === maxStep) {
-                        text = Localization.str.reviews_filter.more_than.replace("__amount__", valueMapping[minVal]);
+                        text = Localization.str.reviews_filter.more_than.replace("__score__", valueMapping[minVal]);
                     } else {
                         text = Localization.str.reviews_filter.between.replace("__lower__", valueMapping[minVal]).replace("__upper__", valueMapping[maxVal]);
                     }
