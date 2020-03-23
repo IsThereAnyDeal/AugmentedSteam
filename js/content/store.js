@@ -3142,8 +3142,17 @@ let SearchPageClass = (function(){
             });
         }
 
+        window.addEventListener("popstate", () => {
+            activeFilters = getASFilters();
+            setFilterStates();
+        });
+
+        setFilterStates();
+        addRowMetadata();
+        modifyPageLinks();
+
         // Allow user to autocollapse the added category block just like any other
-        ExtensionLayer.runInPageContext(collapseName => {
+        ExtensionLayer.runInPageContext((collapseName, maxStep) => {
             /**
              * https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L927
              * InitAutocollapse
@@ -3159,7 +3168,12 @@ let SearchPageClass = (function(){
                 prefs[collapseName] = collapsed = false;
             }
 
-            collapsed = collapsed && !(block.find(".tab_filter_control.checked").length > 0);
+            collapsed = collapsed
+                && !(block.find(".tab_filter_control.checked").length > 0)
+                && $J(".js-reviews-score-lower").val() === "0"
+                && $J(".js-reviews-score-upper").val() === maxStep
+                && !$J(".js-reviews-count-lower").val()
+                && !$J(".js-reviews-count-upper").val();
 
             block.children(".block_content").css("height", '');
 
@@ -3180,16 +3194,7 @@ let SearchPageClass = (function(){
                 block.toggleClass("collapsed");
                 SaveCollapsePrefs(prefs);
             });
-        }, [ collapseName ]);
-
-        window.addEventListener("popstate", () => {
-            activeFilters = getASFilters();
-            setFilterStates();
-        });
-
-        setFilterStates();
-        addRowMetadata();
-        modifyPageLinks();
+        }, [ collapseName, maxStep.toString() ]);
     };
 
     SearchPageClass.prototype.observeChanges = function() {
