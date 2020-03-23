@@ -2927,6 +2927,14 @@ let SearchPageClass = (function(){
                         </div>
                         <div class="as-range-display range_display">${Localization.str.reviews_filter.any}</div>
                     </div>
+                    <div class="as-reviews-count-filter">
+                        <div class="as-reviews-count-filter__header">${Localization.str.reviews_filter.count}</div>
+                        <div class="as-reviews-count-filter__content js-reviews-count-filter">
+                            <input class="as-reviews-count-filter__input" type="number" min="0" placeholder="${Localization.str.reviews_filter.min_count}">
+                            -
+                            <input class="as-reviews-count-filter__input" type="number" min="0" placeholder="${Localization.str.reviews_filter.max_count}">
+                        </div>
+                    </div>
                 </div>
             </div>
         `);

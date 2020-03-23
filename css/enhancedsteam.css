@@ -3546,3 +3546,38 @@ label[for="show_common_games"] {
   line-height: unset !important;
   padding: 7.5px 8px !important; /* 7.5px is the (line-height (28px) - font-size (13px)) / 2 */
 }
+
+.as-reviews-count-filter {
+  margin-top: 10px;
+}
+
+.as-reviews-count-filter__header {
+  margin-left: 8px;
+  font-size: 13px;
+  font-family: "Motiva Sans", Sans-serif;
+  font-weight: normal;
+  color: #9fbbcb;
+}
+
+.as-reviews-count-filter__content {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  margin-top: 5px;
+}
+
+/* https://github.com/SteamDatabase/SteamTracking/blob/ad1bfe7966cbfc3a8cdff7d0fcc9f3437425b7a8/store.steampowered.com/public/css/v6/search.css#L546 */
+.as-reviews-count-filter__input {
+  min-width: 0;
+  background-color: rgba( 0, 0, 0, 0.2 );
+  color: #fff;
+  border-radius: 3px;
+  border: 1px solid rgba( 0, 0, 0, 0.3);
+  box-shadow: 1px 1px 0px rgba( 255, 255, 255, 0.2);
+  padding: 5px;
+  margin: 5px;
+}
+
+.as-reviews-count-filter__input::placeholder {
+  text-transform: lowercase;
+}
