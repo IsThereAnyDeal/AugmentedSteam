@@ -2767,7 +2767,7 @@ let SearchPageClass = (function(){
                 let url = new URL(linkElement.href);
 
                 modifyParams(url.searchParams, "as-hide", curParams.get("as-hide"));
-                modifyParams(url.searchParams, "as-reviews", curParams.get("as-reviews"));
+                modifyParams(url.searchParams, "as-reviews-score", curParams.get("as-reviews-score"));
     
                 linkElement.href = url.href;
             }
@@ -2785,9 +2785,9 @@ let SearchPageClass = (function(){
 
     function applyFilters(rows = document.querySelectorAll(".search_result_row")) {
 
-        let minScore = valueMapping[parseInt(document.querySelector(".js-reviews-lower").value)];
+        let minScore = valueMapping[parseInt(document.querySelector(".js-reviews-score-lower").value)];
 
-        let maxVal = parseInt(document.querySelector(".js-reviews-upper").value);
+        let maxVal = parseInt(document.querySelector(".js-reviews-score-upper").value);
         let maxScore = maxVal === maxStep ? Infinity : valueMapping[maxVal];
 
         for (let row of rows) {
@@ -2824,7 +2824,7 @@ let SearchPageClass = (function(){
                 paramsObj["as-hide"] = new Set();
             }
 
-            paramsObj["as-reviews"] = params.get("as-reviews");
+            paramsObj["as-reviews-score"] = params.get("as-reviews-score");
 
             return paramsObj;
         }        
@@ -2844,8 +2844,8 @@ let SearchPageClass = (function(){
                 }
             }
 
-            if (activeFilters["as-reviews"]) {
-                let match = activeFilters["as-reviews"].match(/(^\d*)-(\d*)/);
+            if (activeFilters["as-reviews-score"]) {
+                let match = activeFilters["as-reviews-score"].match(/(^\d*)-(\d*)/);
                 if (match) {
                     let [, lower, upper] = match;
                     lower = parseInt(lower);
@@ -2920,10 +2920,10 @@ let SearchPageClass = (function(){
                     <div><input type="hidden" name="as-hide"></div>
                     <div class="block_rule"></div>
                     <div class="range_container" style="margin-top: 8px;">
-                        <div class="as-double-slider js-reviews-filter range_container_inner">
-                            <input class="as-double-slider__input as-double-slider__input--upper js-reviews-input js-reviews-upper range_input" type="range" min="0" max="${maxStep}" step="1" value="${maxStep}">
-                            <input class="as-double-slider__input as-double-slider__input--lower js-reviews-input js-reviews-lower range_input" type="range" min="0" max="${maxStep}" step="1" value="0">
-                            <input type="hidden" name="as-reviews">
+                        <div class="as-double-slider js-reviews-score-filter range_container_inner">
+                            <input class="as-double-slider__input as-double-slider__input--upper js-reviews-score-input js-reviews-score-upper range_input" type="range" min="0" max="${maxStep}" step="1" value="${maxStep}">
+                            <input class="as-double-slider__input as-double-slider__input--lower js-reviews-score-input js-reviews-score-lower range_input" type="range" min="0" max="${maxStep}" step="1" value="0">
+                            <input type="hidden" name="as-reviews-score">
                         </div>
                         <div class="as-range-display range_display">${Localization.str.reviews_filter.any}</div>
                     </div>
@@ -2931,13 +2931,13 @@ let SearchPageClass = (function(){
             </div>
         `);
 
-        reviewsFilter = document.querySelector(".js-reviews-filter");
-        minBtn = reviewsFilter.querySelector(".js-reviews-lower");
-        maxBtn = reviewsFilter.querySelector(".js-reviews-upper");
+        reviewsFilter = document.querySelector(".js-reviews-score-filter");
+        minBtn = reviewsFilter.querySelector(".js-reviews-score-lower");
+        maxBtn = reviewsFilter.querySelector(".js-reviews-score-upper");
         rangeDisplay = reviewsFilter.nextElementSibling;
 
         // Setup handlers for reviews filter
-        for (let input of document.querySelectorAll(".js-reviews-input")) {
+        for (let input of document.querySelectorAll(".js-reviews-score-input")) {
             
             let minVal = parseInt(minBtn.value);
             let maxVal = parseInt(maxBtn.value);
@@ -2947,7 +2947,7 @@ let SearchPageClass = (function(){
                 minVal = parseInt(minBtn.value);
                 maxVal = parseInt(maxBtn.value);
 
-                if (input.classList.contains("js-reviews-upper")) {
+                if (input.classList.contains("js-reviews-score-upper")) {
                     if (minVal >= maxVal) {
                         if (minVal <= 0) {
                             maxBtn.value = maxVal = 1;
@@ -2995,7 +2995,7 @@ let SearchPageClass = (function(){
                     val = `${minVal === 0 ? '' : valueMapping[minVal]}-${maxVal === maxStep ? '' : valueMapping[maxVal]}`;
                 }
 
-                updateUrls("as-reviews", val);
+                updateUrls("as-reviews-score", val);
             });
         }
         
