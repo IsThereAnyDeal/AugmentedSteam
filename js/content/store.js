@@ -2921,8 +2921,8 @@ let SearchPageClass = (function(){
                     <div class="block_rule"></div>
                     <div class="range_container" style="margin-top: 8px;">
                         <div class="as-double-slider js-reviews-filter range_container_inner">
-                            <input class="as-double-slider__input as-double-slider__input--lower js-reviews-input js-reviews-lower range_input" type="range" min="0" max="${maxStep}" step="1" value="0">
                             <input class="as-double-slider__input as-double-slider__input--upper js-reviews-input js-reviews-upper range_input" type="range" min="0" max="${maxStep}" step="1" value="${maxStep}">
+                            <input class="as-double-slider__input as-double-slider__input--lower js-reviews-input js-reviews-lower range_input" type="range" min="0" max="${maxStep}" step="1" value="0">
                             <input type="hidden" name="as-reviews">
                         </div>
                         <div class="as-range-display range_display">${Localization.str.reviews_filter.any}</div>
@@ -2951,16 +2951,17 @@ let SearchPageClass = (function(){
                     if (minVal >= maxVal) {
                         if (minVal <= 0) {
                             maxBtn.value = maxVal = 1;
-                        } else if (maxVal === 0) {
-                            minBtn.value = minVal = 0;
-                            maxBtn.value = maxVal = 1;
                         } else {
                             minBtn.value = minVal = maxVal - 1;
                         }
                     }
                 } else {
                     if (maxVal <= minVal) {
-                        if (maxVal < maxStep) {
+                        // Happens when the user clicks to the highest step after the max thumb instead of dragging
+                        if (minVal === maxStep) {
+                            minBtn.value = minVal = maxStep - 1;
+                            maxBtn.value = maxVal = maxStep;
+                        } else if (maxVal < maxStep) {
                             maxBtn.value = maxVal = minVal + 1;
                         } else {
                             minBtn.value = minVal = maxVal - 1;
