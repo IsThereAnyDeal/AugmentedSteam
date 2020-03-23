@@ -2729,6 +2729,21 @@ let SearchPageClass = (function(){
 
     let infiniteScrollEnabled;
 
+    let scoreFilter;
+    let minScoreInput, maxScoreInput;
+    let rangeDisplay;
+
+    let minCountInput, maxCountInput;
+
+    let maxStep;
+    let scoreValues = [];
+    let stepSize = 5;
+
+    for (let score = 0; score < 100; score += stepSize) {
+        scoreValues.push(score);
+    }
+    maxStep = scoreValues.length;
+
     function addRowMetadata(rows = document.querySelectorAll(".search_result_row")) {
         for (let row of rows) {
             if (row.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { row.classList.add("as-hide-mixed");      }
@@ -2774,26 +2789,46 @@ let SearchPageClass = (function(){
         }
     }
 
-    let maxStep;
-    let valueMapping = [];
-    let stepSize = 5;
+    function applyCountFilter(rows = document.querySelectorAll(".search_result_row")) {
 
-    for (let score = 0; score < 100; score += stepSize) {
-        valueMapping.push(score);
-    }
-    maxStep = valueMapping.length;
+        let minCount, maxCount;
 
-    function applyFilters(rows = document.querySelectorAll(".search_result_row")) {
+        for (let input of [minCountInput, maxCountInput]) {
+            let val;
+            if (input.value === '' && input === maxCountInput) {
+                val = Infinity;
+            } else {
+                val = Number(input.value);
+            }
 
-        let minScore = valueMapping[parseInt(document.querySelector(".js-reviews-score-lower").value)];
-
-        let maxVal = parseInt(document.querySelector(".js-reviews-score-upper").value);
-        let maxScore = maxVal === maxStep ? Infinity : valueMapping[maxVal];
+            if (input === minCountInput) {
+                minCount = val;
+            } else {
+                maxCount = val;
+            }
+        }
 
         for (let row of rows) {
-            let rowScore = parseInt(row.dataset.asReviewPercentage);
-            row.classList.toggle("as-hide-reviews", rowScore < minScore || rowScore > maxScore);
+            let rowCount = Number(row.dataset.asReviewCount);
+            row.classList.toggle("as-reviews-count", rowCount < minCount || rowCount > maxCount);
         }
+    }
+
+    function applyScoreFilter(rows = document.querySelectorAll(".search_result_row")) {
+        let minScore = scoreValues[Number(document.querySelector(".js-reviews-score-lower").value)];
+
+        let maxVal = Number(document.querySelector(".js-reviews-score-upper").value);
+        let maxScore = maxVal === maxStep ? Infinity : scoreValues[maxVal];
+
+        for (let row of rows) {
+            let rowScore = Number(row.dataset.asReviewPercentage);
+            row.classList.toggle("as-reviews-score", rowScore < minScore || rowScore > maxScore);
+        }
+    }
+
+    function applyFilters(rows = document.querySelectorAll(".search_result_row")) {
+        applyScoreFilter(rows);
+        applyCountFilter(rows);
     }
 
     SearchPageClass.prototype.addSearchFilters = function() {
@@ -2806,10 +2841,6 @@ let SearchPageClass = (function(){
         ];
 
         let activeFilters = getASFilters();
-
-        let reviewsFilter;
-        let minBtn, maxBtn;
-        let rangeDisplay;
 
         let results = document.getElementById("search_results");
 
@@ -2851,15 +2882,19 @@ let SearchPageClass = (function(){
                     lower = parseInt(lower);
                     upper = parseInt(upper);
         
-                    if (lower !== NaN && valueMapping.includes(lower)) {
-                        minBtn.value = valueMapping.indexOf(lower);
-                        minBtn.dispatchEvent(new Event("input"));
+                    if (lower !== NaN && scoreValues.includes(lower)) {
+                        minScoreInput.value = scoreValues.indexOf(lower);
+                        minScoreInput.dispatchEvent(new Event("input"));
                     }
-                    if (upper !== NaN && valueMapping.includes(upper)) {
-                        maxBtn.value = valueMapping.indexOf(upper);
-                        maxBtn.dispatchEvent(new Event("input"));
+                    if (upper !== NaN && scoreValues.includes(upper)) {
+                        maxScoreInput.value = scoreValues.indexOf(upper);
+                        maxScoreInput.dispatchEvent(new Event("input"));
                     }
                 }
+            }
+
+            if (activeFilters["as-reviews-count"]) {
+
             }
         }
 
@@ -2930,49 +2965,49 @@ let SearchPageClass = (function(){
                     <div class="as-reviews-count-filter">
                         <div class="as-reviews-count-filter__header">${Localization.str.reviews_filter.count}</div>
                         <div class="as-reviews-count-filter__content js-reviews-count-filter">
-                            <input class="as-reviews-count-filter__input" type="number" min="0" placeholder="${Localization.str.reviews_filter.min_count}">
+                            <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-lower" type="number" min="0" placeholder="${Localization.str.reviews_filter.min_count}">
                             -
-                            <input class="as-reviews-count-filter__input" type="number" min="0" placeholder="${Localization.str.reviews_filter.max_count}">
+                            <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-upper" type="number" min="0" placeholder="${Localization.str.reviews_filter.max_count}">
                         </div>
                     </div>
                 </div>
             </div>
         `);
 
-        reviewsFilter = document.querySelector(".js-reviews-score-filter");
-        minBtn = reviewsFilter.querySelector(".js-reviews-score-lower");
-        maxBtn = reviewsFilter.querySelector(".js-reviews-score-upper");
-        rangeDisplay = reviewsFilter.nextElementSibling;
+        scoreFilter = document.querySelector(".js-reviews-score-filter");
+        minScoreInput = scoreFilter.querySelector(".js-reviews-score-lower");
+        maxScoreInput = scoreFilter.querySelector(".js-reviews-score-upper");
+        rangeDisplay = scoreFilter.nextElementSibling;
 
-        // Setup handlers for reviews filter
+        // Setup handlers for reviews score filter
         for (let input of document.querySelectorAll(".js-reviews-score-input")) {
             
-            let minVal = parseInt(minBtn.value);
-            let maxVal = parseInt(maxBtn.value);
+            let minVal = parseInt(minScoreInput.value);
+            let maxVal = parseInt(maxScoreInput.value);
 
             input.addEventListener("input", () => {
 
-                minVal = parseInt(minBtn.value);
-                maxVal = parseInt(maxBtn.value);
+                minVal = parseInt(minScoreInput.value);
+                maxVal = parseInt(maxScoreInput.value);
 
-                if (input.classList.contains("js-reviews-score-upper")) {
+                if (input === maxScoreInput) {
                     if (minVal >= maxVal) {
                         if (minVal <= 0) {
-                            maxBtn.value = maxVal = 1;
+                            maxScoreInput.value = maxVal = 1;
                         } else {
-                            minBtn.value = minVal = maxVal - 1;
+                            minScoreInput.value = minVal = maxVal - 1;
                         }
                     }
                 } else {
                     if (maxVal <= minVal) {
                         // Happens when the user clicks to the highest step after the max thumb instead of dragging
                         if (minVal === maxStep) {
-                            minBtn.value = minVal = maxStep - 1;
-                            maxBtn.value = maxVal = maxStep;
+                            minScoreInput.value = minVal = maxStep - 1;
+                            maxScoreInput.value = maxVal = maxStep;
                         } else if (maxVal < maxStep) {
-                            maxBtn.value = maxVal = minVal + 1;
+                            maxScoreInput.value = maxVal = minVal + 1;
                         } else {
-                            minBtn.value = minVal = maxVal - 1;
+                            minScoreInput.value = minVal = maxVal - 1;
                         }
                     }
                 }
@@ -2982,13 +3017,13 @@ let SearchPageClass = (function(){
                     if (maxVal === maxStep) {
                         text = Localization.str.reviews_filter.any;
                     } else {
-                        text = Localization.str.reviews_filter.up_to.replace("__score__", valueMapping[maxVal]);
+                        text = Localization.str.reviews_filter.up_to.replace("__score__", scoreValues[maxVal]);
                     }
                 } else {
                     if (maxVal === maxStep) {
-                        text = Localization.str.reviews_filter.more_than.replace("__score__", valueMapping[minVal]);
+                        text = Localization.str.reviews_filter.more_than.replace("__score__", scoreValues[minVal]);
                     } else {
-                        text = Localization.str.reviews_filter.between.replace("__lower__", valueMapping[minVal]).replace("__upper__", valueMapping[maxVal]);
+                        text = Localization.str.reviews_filter.between.replace("__lower__", scoreValues[minVal]).replace("__upper__", scoreValues[maxVal]);
                     }
                 }
 
@@ -2996,14 +3031,33 @@ let SearchPageClass = (function(){
             });
 
             input.addEventListener("change", () => {
-                applyFilters();
+                applyScoreFilter();
 
                 let val = "";
                 if (minVal !== 0 || maxVal !== maxStep) {
-                    val = `${minVal === 0 ? '' : valueMapping[minVal]}-${maxVal === maxStep ? '' : valueMapping[maxVal]}`;
+                    val = `${minVal === 0 ? '' : scoreValues[minVal]}-${maxVal === maxStep ? '' : scoreValues[maxVal]}`;
                 }
 
                 updateUrls("as-reviews-score", val);
+            });
+        }
+
+        minCountInput = document.querySelector(".js-reviews-count-lower");
+        maxCountInput = document.querySelector(".js-reviews-count-upper");
+
+        for (let input of document.querySelectorAll(".js-reviews-count-input")) {
+            
+            input.addEventListener("change", () => {
+                applyCountFilter();
+            });
+            
+            input.addEventListener("keydown", e => {
+                if(e.key === "Enter") {
+                    // Prevents unnecessary submitting of the advanced search form
+                    e.preventDefault();
+
+                    input.dispatchEvent(new Event("change"));
+                }
             });
         }
         
