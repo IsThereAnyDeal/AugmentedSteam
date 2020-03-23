@@ -2869,12 +2869,14 @@ let SearchPageClass = (function(){
                  */
                 let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
 
-                if (activeFilters["as-hide"].has(filterName)) {
-                    results.classList.add(filterName);
-                    filter.classList.add("checked");
-                    filter.parentElement.classList.add("checked");
-                }
+                let active = activeFilters["as-hide"].has(filterName);
+                results.classList.toggle(filterName, active);
+                filter.classList.toggle("checked", active);
+                filter.parentElement.classList.toggle("checked", active);
             }
+
+            let lowerScoreVal = "0";
+            let upperScoreVal = maxStep.toString();
 
             if (activeFilters["as-reviews-score"]) {
                 let match = activeFilters["as-reviews-score"].match(/(^\d*)-(\d*)/);
@@ -2884,15 +2886,25 @@ let SearchPageClass = (function(){
                     upper = parseInt(upper);
         
                     if (!isNaN(lower) && scoreValues.includes(lower)) {
-                        minScoreInput.value = scoreValues.indexOf(lower);
-                        minScoreInput.dispatchEvent(new Event("input"));
+                        lowerScoreVal = scoreValues.indexOf(lower).toString();
                     }
                     if (!isNaN(upper) && scoreValues.includes(upper)) {
-                        maxScoreInput.value = scoreValues.indexOf(upper);
-                        maxScoreInput.dispatchEvent(new Event("input"));
+                        upperScoreVal = scoreValues.indexOf(upper).toString();
                     }
                 }
             }
+
+            if (lowerScoreVal !== minScoreInput.value) {
+                minScoreInput.value = lowerScoreVal;
+                minScoreInput.dispatchEvent(new Event("input"));
+            }
+            if (upperScoreVal !== maxScoreInput.value) {
+                maxScoreInput.value = upperScoreVal;
+                maxScoreInput.dispatchEvent(new Event("input"));
+            }
+
+            let lowerCountVal = '';
+            let upperCountVal = '';
 
             if (activeFilters["as-reviews-count"]) {
                 let match = activeFilters["as-reviews-count"].match(/(^\d*)-(\d*)/);
@@ -2902,14 +2914,19 @@ let SearchPageClass = (function(){
                     upper = parseInt(upper);
         
                     if (!isNaN(lower)) {
-                        minCountInput.value = lower;
-                        minCountInput.dispatchEvent(new Event("change"));
+                        lowerCountVal = lower;
                     }
                     if (!isNaN(upper)) {
-                        maxCountInput.value = upper;
-                        maxCountInput.dispatchEvent(new Event("change"));
+                        upperCountVal = upper;
                     }
                 }
+            }
+
+            if (lowerCountVal !== minCountInput.value) {
+                minCountInput.value = lowerCountVal;
+            }
+            if (upperCountVal !== maxCountInput.value) {
+                maxCountInput.value = upperCountVal;
             }
         }
 
