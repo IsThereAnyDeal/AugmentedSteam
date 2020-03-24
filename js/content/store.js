@@ -3199,6 +3199,32 @@ let SearchPageClass = (function(){
 
     SearchPageClass.prototype.observeChanges = function() {
 
+        ExtensionLayer.runInPageContext(() => {
+            // https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L264
+            let searchOld = window.ExecuteSearch;
+
+            window.ExecuteSearch = function(params) {
+                /**
+                 * The ExecuteSearch function uses the global object g_rgCurrentParameters, that is
+                 * filled by GatherSearchParameters(), and compares it to the new search parameters
+                 * (the object passed to this function).
+                 * If it detects that the two objects are different, it triggers a search request.
+                 * Since the AS filters are all clientside, we don't want to do that and remove
+                 * our added entries from the objects here.
+                 * https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L273
+                 */
+                for (let filter in g_rgCurrentParameters) {
+                    if (filter.startsWith("as-")) { delete g_rgCurrentParameters[filter]; }
+                }
+
+                for (let filter in params) {
+                    if (filter.startsWith("as-")) { delete params[filter]; }
+                }
+
+                searchOld(params);
+            }
+        });
+
         let removeObserver = new MutationObserver(mutations => {
             for (let mutation of mutations) {
                 for (let node of mutation.addedNodes) {
