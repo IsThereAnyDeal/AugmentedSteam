@@ -2744,7 +2744,7 @@ let SearchPageClass = (function(){
     }
     maxStep = scoreValues.length;
 
-    function addRowMetadata(rows = document.querySelectorAll(".search_result_row")) {
+    function addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-count])")) {
         for (let row of rows) {
             if (row.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { row.classList.add("as-hide-mixed");      }
             if (row.querySelector(".search_reviewscore span.search_review_summary.negative"))  { row.classList.add("as-hide-negative");   }
@@ -3199,7 +3199,35 @@ let SearchPageClass = (function(){
 
     SearchPageClass.prototype.observeChanges = function() {
 
+        Messenger.addMessageListener("searchCompleted", () => {
+            let newResults = document.querySelectorAll(".search_result_row:not([data-as-review-count])");
+
+            EarlyAccess.showEarlyAccess();
+            Highlights.highlightAndTag(newResults);
+            addRowMetadata(newResults);
+            modifyPageLinks();
+            applyFilters(newResults);
+        });
+
         ExtensionLayer.runInPageContext(() => {
+
+            /**
+             * The handler set by this function is triggered when the page that infiniscroll will display has changed
+             * https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L614
+             */
+            function setPageChangeHandler() {
+                let controller = InitInfiniteScroll.oController;
+                if (controller) {
+                    let oldPageHandler = controller.m_fnPageChangedHandler;
+
+                    controller.SetPageChangedHandler(function() {
+                        oldPageHandler(...arguments);
+
+                        Messenger.postMessage("searchCompleted");
+                    });
+                }
+            }
+
             // https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L264
             let searchOld = window.ExecuteSearch;
 
@@ -3213,54 +3241,54 @@ let SearchPageClass = (function(){
                  * our added entries from the objects here.
                  * https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L273
                  */
+
+                let currentAsParameters, asParameters;
+                currentAsParameters = asParameters = {};
+
                 for (let filter in g_rgCurrentParameters) {
-                    if (filter.startsWith("as-")) { delete g_rgCurrentParameters[filter]; }
+                    if (filter.startsWith("as-")) {
+                        currentAsParameters[filter] = g_rgCurrentParameters[filter];
+                        delete g_rgCurrentParameters[filter];
+                    }
                 }
 
                 for (let filter in params) {
-                    if (filter.startsWith("as-")) { delete params[filter]; }
-                }
-
-                searchOld(params);
-            }
-        });
-
-        let removeObserver = new MutationObserver(mutations => {
-            for (let mutation of mutations) {
-                for (let node of mutation.addedNodes) {
-                    // When navigating in between pages the search result container will get removed and then added again, thus disconnecting the MutationObserver
-                    if (node.id === "search_result_container") {
-                        observeAjax(node.querySelectorAll(".search_result_row"));
-                        
-                        if (!infiniteScrollEnabled) {
-                            modifyPageLinks();
-                            addRowMetadata();
-                        }
-                        ajaxObserver.observe(node.querySelector("#search_resultsRows"), {childList: true});
-                        break;
+                    if (filter.startsWith("as-")) {
+                        asParameters[filter] = params[filter];
+                        delete params[filter];
                     }
                 }
-            }
-        });
-        removeObserver.observe(document.querySelector("#search_results"), { childList: true });
 
-        function observeAjax(addedRows) {
-            EarlyAccess.showEarlyAccess();
+                /**
+                 * If our parameters have changed, but not theirs, there won't be new results.
+                 * Therefore we can already notify the content script that the search completed.
+                 */
+                if (Object.toQueryString(currentAsParameters) !== Object.toQueryString(asParameters)
+                    &&
+                    g_rgCurrentParameters && Object.toQueryString(g_rgCurrentParameters) === Object.toQueryString(rgParameters)) {
+                        Messenger.postMessage("searchCompleted");
+                }
+
+                searchOld(...arguments);
+            };
+
+            // https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L298
+            let searchCompletedOld = window.SearchCompleted;
+
+            window.SearchCompleted = function() {
+                searchCompletedOld(...arguments);
+
+                // https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L319
+                setPageChangeHandler();
+
+                // At this point the new results have been loaded and decorated (by the Dynamic Store)
+                Messenger.postMessage("searchCompleted");
+            };
+
+            // https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L463
+            setPageChangeHandler();
             
-            Highlights.highlightAndTag(addedRows);
-            addRowMetadata(addedRows);
-        }
-
-        let ajaxObserver = new MutationObserver(mutations => {
-            let rows = [];
-            for (let mutation of mutations) {
-                rows = rows.concat(
-                    Array.from(mutation.addedNodes).filter(node => node.classList && node.classList.contains("search_result_row"))
-                );
-            }
-            observeAjax(rows);
         });
-        ajaxObserver.observe(document.querySelector("#search_resultsRows"), {childList: true});
     };
 
     return SearchPageClass;
