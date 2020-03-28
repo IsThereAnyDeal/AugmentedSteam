@@ -3059,7 +3059,7 @@ let SearchPageClass = (function(){
                     }
                 } else {
                     if (maxVal === maxStep) {
-                        text = Localization.str.reviews_filter.more_than.replace("__score__", scoreValues[minVal]);
+                        text = Localization.str.reviews_filter.from.replace("__score__", scoreValues[minVal]);
                     } else {
                         text = Localization.str.reviews_filter.between.replace("__lower__", scoreValues[minVal]).replace("__upper__", scoreValues[maxVal]);
                     }

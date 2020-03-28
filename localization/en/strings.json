@@ -170,7 +170,7 @@
         "between": "Between __lower__% and __upper__% review score",
         "any": "Any review score",
         "up_to": "Up to __score__% review score",
-        "more_than": "More than __score__% review score",
+        "from": "From __score__% review score",
         "count": "Reviews count:",
         "min_count": "Min count",
         "max_count": "Max count"
