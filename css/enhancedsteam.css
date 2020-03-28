@@ -3513,11 +3513,8 @@ label[for="show_common_games"] {
   border: none;
 }
 
-/**
- * Slider with two knobs
-*/
+/* Slider with two thumbs (more in browser-specific CSS files) */
 .as-double-slider {
-  position: relative;
   display: grid !important;
 }
 
@@ -3526,17 +3523,7 @@ label[for="show_common_games"] {
   grid-column-start: 1;
 }
 
-.as-double-slider__input::-webkit-slider-thumb {
-  position: relative;
-}
-
-.as-double-slider__input--lower::-webkit-slider-thumb {
-  z-index: 1;
-}
-
-.as-double-slider__input--upper::-webkit-slider-thumb {
-  z-index: 2;
-}
+/* doesn't apply filters on popstate */
 
 /* 
  * https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/css/v6/browse.css#L206
