@@ -2789,7 +2789,7 @@ let SearchPageClass = (function(){
         }
     }
 
-    function applyCountFilter(rows = document.querySelectorAll(".search_result_row")) {
+    function applyCountFilter(rows) {
 
         let minCount, maxCount;
 
@@ -2826,7 +2826,7 @@ let SearchPageClass = (function(){
         }
     }
 
-    function applyFilters(rows = document.querySelectorAll(".search_result_row")) {
+    function applyFilters(rows) {
         applyScoreFilter(rows);
         applyCountFilter(rows);
     }
@@ -3199,14 +3199,14 @@ let SearchPageClass = (function(){
 
     SearchPageClass.prototype.observeChanges = function() {
 
-        Messenger.addMessageListener("searchCompleted", () => {
+        Messenger.addMessageListener("searchCompleted", filtersChanged => {
             let newResults = document.querySelectorAll(".search_result_row:not([data-as-review-count])");
 
             EarlyAccess.showEarlyAccess();
             Highlights.highlightAndTag(newResults);
             addRowMetadata(newResults);
             modifyPageLinks();
-            applyFilters(newResults);
+            applyFilters(filtersChanged ? document.querySelectorAll(".search_result_row") : newResults);
         });
 
         ExtensionLayer.runInPageContext(() => {
@@ -3223,7 +3223,7 @@ let SearchPageClass = (function(){
                     controller.SetPageChangedHandler(function() {
                         oldPageHandler(...arguments);
 
-                        Messenger.postMessage("searchCompleted");
+                        Messenger.postMessage("searchCompleted", false);
                     });
                 }
             }
@@ -3242,8 +3242,11 @@ let SearchPageClass = (function(){
                  * https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L273
                  */
 
-                let currentAsParameters, asParameters;
-                currentAsParameters = asParameters = {};
+                let paramsCopy = {};
+                Object.assign(paramsCopy, params);
+
+                let currentAsParameters = {};
+                let asParameters = {};
 
                 for (let filter in g_rgCurrentParameters) {
                     if (filter.startsWith("as-")) {
@@ -3260,16 +3263,18 @@ let SearchPageClass = (function(){
                 }
 
                 /**
-                 * If our parameters have changed, but not theirs, there won't be new results.
+                 * If our parameters have changed (this automatically means theirs have not, since
+                 * during different states there is only one change in parameters), there won't be new results.
                  * Therefore we can already notify the content script that the search completed.
                  */
-                if (Object.toQueryString(currentAsParameters) !== Object.toQueryString(asParameters)
-                    &&
-                    g_rgCurrentParameters && Object.toQueryString(g_rgCurrentParameters) === Object.toQueryString(rgParameters)) {
-                        Messenger.postMessage("searchCompleted");
+                if (Object.toQueryString(currentAsParameters) !== Object.toQueryString(asParameters)) {
+                        Messenger.postMessage("searchCompleted", true);
                 }
+                
+                searchOld(params);
 
-                searchOld(...arguments);
+                // Restore state such that the next comparison includes AS filters
+                g_rgCurrentParameters = paramsCopy;
             };
 
             // https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L298
@@ -3282,7 +3287,7 @@ let SearchPageClass = (function(){
                 setPageChangeHandler();
 
                 // At this point the new results have been loaded and decorated (by the Dynamic Store)
-                Messenger.postMessage("searchCompleted");
+                Messenger.postMessage("searchCompleted", false);
             };
 
             // https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L463

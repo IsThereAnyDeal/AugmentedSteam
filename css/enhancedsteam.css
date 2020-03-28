@@ -3523,8 +3523,6 @@ label[for="show_common_games"] {
   grid-column-start: 1;
 }
 
-/* doesn't apply filters on popstate */
-
 /* 
  * https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/css/v6/browse.css#L206
  * Allows wraps at white spaces for long texts in the range display
