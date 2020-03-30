@@ -164,8 +164,6 @@
     "gift_transactions": "Gift Purchases",
     "demos": "Demos",
     "notinterested": "Items marked not interested",
-    "mixed_item": "Mixed rating items",
-    "negative_item": "Negative rating items",
     "reviews_filter": {
         "between": "Between __lower__% and __upper__% review score",
         "any": "Any review score",

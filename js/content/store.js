@@ -2746,8 +2746,6 @@ let SearchPageClass = (function(){
 
     function addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-count])")) {
         for (let row of rows) {
-            if (row.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { row.classList.add("as-hide-mixed");      }
-            if (row.querySelector(".search_reviewscore span.search_review_summary.negative"))  { row.classList.add("as-hide-negative");   }
 
             let reviewPercentage = 100;
             let reviewCount = 0;
@@ -2836,8 +2834,6 @@ let SearchPageClass = (function(){
         let collapseName = "augmented_steam";
         let filterNames = [
             "cart",
-            "mixed",
-            "negative",
         ];
 
         let activeFilters = getASFilters();
@@ -2971,24 +2967,6 @@ let SearchPageClass = (function(){
                             </span>
                         </span>
                     </div>
-                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="mixed" data-loc="${Localization.str.mixed_item}" data-clientside="1">
-                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="mixed" data-loc="${Localization.str.mixed_item}" data-clientside="1">
-                            <span>
-                                <span class="tab_filter_control_checkbox"></span>
-                                <span class="tab_filter_control_label">${Localization.str.mixed_item}</span>
-                                <span class="tab_filter_control_count" style="display: none;"></span>
-                            </span>
-                        </span>
-                    </div>
-                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="negative" data-loc="${Localization.str.negative_item}" data-clientside="1">
-                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="negative" data-loc="${Localization.str.negative_item}" data-clientside="1">
-                            <span>
-                                <span class="tab_filter_control_checkbox"></span>
-                                <span class="tab_filter_control_label">${Localization.str.negative_item}</span>
-                                <span class="tab_filter_control_count" style="display: none;"></span>
-                            </span>
-                        </span>
-                    </div>
                     <div><input type="hidden" name="as-hide"></div>
                     <div class="block_rule"></div>
                     <div class="range_container" style="margin-top: 8px;">
@@ -3108,7 +3086,7 @@ let SearchPageClass = (function(){
             });
         }
         
-        // Setup handlers for other hide filters
+        // Setup handlers for other toggleable filters
         for (let filterName of filterNames) {
             
             let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);

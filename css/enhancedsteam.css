@@ -3504,8 +3504,6 @@ label[for="show_common_games"] {
  * Hide search results
 */
 .search_results.cart .ds_incart,
-.search_results.mixed .as-hide-mixed,
-.search_results.negative .as-hide-negative,
 .search_results .as-reviews-score,
 .search_results .as-reviews-count {
   height: 0;
