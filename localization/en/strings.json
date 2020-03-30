@@ -427,7 +427,7 @@
         "disablelinkfilter": "Disable confirmation when accessing external sites",
         "showallfriendsthatown": "Show \"All friends that own\"",
         "regional_price_on": "Show regional price comparison",
-        "cart": "Items in your cart",
+        "cart": "Hide items in your cart",
         "friends_own": "Items your friends own",
         "horizontalscrolling": "Enable horizontal scrolling with the mouse wheel",
         "supportinfo": "Show support info on store pages",
