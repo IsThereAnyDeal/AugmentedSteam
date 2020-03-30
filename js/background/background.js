@@ -1333,7 +1333,7 @@ class IndexedDB {
         }
     }
 
-    static async fetchUpdatedData(objectStoreName, key, params) {
+    static fetchUpdatedData(objectStoreName, key, params) {
         if (!IndexedDB.cacheObjectStores.has(objectStoreName)) return;
 
         let requestKey = key ? `${objectStoreName}_${key}` : objectStoreName;
