@@ -1403,9 +1403,9 @@ let AugmentedSteam = (function() {
     self.skipGotSteam = function() {
         if (!SyncedStorage.get("skip_got_steam")) { return; }
 
-        let node = document.querySelector("a[href^='javascript:ShowGotSteamModal']");
-        if (!node) { return; }
-        node.setAttribute("href", node.getAttribute("href").split("'")[1]);
+        for (let node of document.querySelectorAll("a[href^='javascript:ShowGotSteamModal']")) {
+            node.href = node.href.split("'")[1];
+        }
     };
 
     self.keepSteamSubscriberAgreementState = function() {
