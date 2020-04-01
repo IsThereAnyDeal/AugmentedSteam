@@ -1341,7 +1341,7 @@ let AugmentedSteam = (function() {
     };
 
     self.addRedeemLink = function() {
-        HTML.beforeBegin("#account_dropdown .popup_menu_item:last-child:not(.tight)",
+        HTML.beforeBegin("#account_language_pulldown",
             `<a class="popup_menu_item" href="https://store.steampowered.com/account/registerkey">${Localization.str.activate}</a>`);
     };
 
