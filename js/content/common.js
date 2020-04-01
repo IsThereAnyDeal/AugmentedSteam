@@ -82,9 +82,14 @@ class ITAD {
         }
     }
 
-    static async getAppStatus(storeIds) {
-        let highlightCollection = SyncedStorage.get("highlight_collection");
-        let highlightWaitlist = SyncedStorage.get("highlight_waitlist");
+    static async getAppStatus(storeIds, options) {
+        let opts = Object.assign({
+            "waitlist": true,
+            "collection": true,
+        }, options);
+
+        if (!opts.collection && !opts.waitlist) { return null; }
+        
         let multiple = Array.isArray(storeIds);
         let promises = [];
         let resolved = Promise.resolve(multiple ? {} : false);
@@ -92,12 +97,12 @@ class ITAD {
         if (!await Background.action("itad.isconnected")) {
             promises.push(resolved, resolved);
         } else {
-            if (highlightCollection) {
+            if (opts.collection) {
                 promises.push(Background.action("itad.incollection", storeIds));
             } else {
                 promises.push(resolved);
             }
-            if (highlightWaitlist) {
+            if (opts.waitlist) {
                 promises.push(Background.action("itad.inwaitlist", storeIds));
             } else {
                 promises.push(resolved);
@@ -1639,41 +1644,50 @@ let Inventory = (function(){
         return Background.action("coupon", appid);
     };
 
-    self.getAppStatus = async function(appids) {
+    self.getAppStatus = async function(appids, options) {
         function getStatusObject(giftsAndPasses, hasCoupon) {
             return {
                 "gift": giftsAndPasses.includes("gifts"),
                 "guestPass": giftsAndPasses.includes("passes"),
-                "coupon": hasCoupon,
+                "coupon": Boolean(hasCoupon),
             };
         }
 
+        let opts = Object.assign({
+            "giftsAndPasses": true,
+            "coupons": true,
+        }, options);
+
+        if (!opts.giftsAndPasses && !opts.coupons) { return null; }
+
+        let multiple = Array.isArray(appids);
+
         try {
             let [ giftsAndPasses, coupons ] = await Promise.all([
-                Background.action("hasgiftsandpasses", appids),
-                Background.action("hascoupon", appids),
+                opts.giftsAndPasses ? Background.action("hasgiftsandpasses", appids) : Promise.resolve(),
+                opts.coupons ? Background.action("hascoupon", appids) : Promise.resolve(),
             ]);
 
-            if (Array.isArray(appids)) {
+            if (multiple) {
                 let results = {};
                 
                 for (let id of appids) {
-                    results[id] = getStatusObject(giftsAndPasses[id], coupons[id]);
+                    results[id] = getStatusObject(giftsAndPasses ? giftsAndPasses[id] : [], coupons ? coupons[id] : false);
                 }
                 
                 return results;
             }
-            return getStatusObject(giftsAndPasses, coupons);
+            return getStatusObject(giftsAndPasses || [], typeof coupons !== "undefined" ? coupons : false);
         } catch (err) {
-            if (Array.isArray(appids)) {
+            if (multiple) {
                 let results = {};
                 for (let id of appids) {
-                    results[id] = getStatusObject([], null);
+                    results[id] = getStatusObject([], false);
                 }
                 return results;
             }
 
-            return getStatusObject([], null);
+            return getStatusObject([], false);
         }
     };
 
@@ -2013,10 +2027,23 @@ let Highlights = (function(){
         let storeIds = Array.from(storeIdsMap.keys());
         let trimmedStoreIds = storeIds.map(id => GameId.trimStoreId(id));
 
+        let includeDsInfo =
+            !hasDsInfo
+            && (SyncedStorage.get("highlight_owned") || SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("highlight_notinterested")
+            || SyncedStorage.get("tag_owned") || SyncedStorage.get("tag_wishlist") || SyncedStorage.get("tag_notinterested")
+            || SyncedStorage.get("hide_owned") || SyncedStorage.get("hide_ignored"));
+
         let [ dsStatus, itadStatus, invStatus ] = await Promise.all([
-            hasDsInfo ? Promise.resolve() : DynamicStore.getAppStatus(storeIds),
-            ITAD.getAppStatus(storeIds),
-            Inventory.getAppStatus(trimmedStoreIds),
+            includeDsInfo ? DynamicStore.getAppStatus(storeIds) : Promise.resolve(),
+            ITAD.getAppStatus(storeIds, {
+                "waitlist": SyncedStorage.get("highlight_waitlist"),
+                "collection": SyncedStorage.get("highlight_collection"),
+            }),
+            Inventory.getAppStatus(trimmedStoreIds, {
+                "giftsAndPasses": SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift")
+                                || SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass"),
+                "coupons": SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon"),
+            }),
         ]);
 
         let it = trimmedStoreIds.values();
@@ -2027,13 +2054,17 @@ let Highlights = (function(){
                 if (dsStatus[storeid].ignored) nodes.forEach(node => self.highlightNotInterested(node));
             }
 
-            if (itadStatus[storeid].collected) nodes.forEach(node => self.highlightCollection(node));
-            if (itadStatus[storeid].waitlisted) nodes.forEach(node => self.highlightWaitlist(node));
+            if (itadStatus) {
+                if (itadStatus[storeid].collected) nodes.forEach(node => self.highlightCollection(node));
+                if (itadStatus[storeid].waitlisted) nodes.forEach(node => self.highlightWaitlist(node));
+            }
 
-            let trimmedId = it.next().value;
-            if (invStatus[trimmedId].gift) nodes.forEach(node => self.highlightInvGift(node));
-            if (invStatus[trimmedId].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
-            if (invStatus[trimmedId].coupon) nodes.forEach(node => self.highlightCoupon(node));
+            if (invStatus) {
+                let trimmedId = it.next().value;
+                if (invStatus[trimmedId].gift) nodes.forEach(node => self.highlightInvGift(node));
+                if (invStatus[trimmedId].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
+                if (invStatus[trimmedId].coupon) nodes.forEach(node => self.highlightCoupon(node));
+            }
         }
     }
 
