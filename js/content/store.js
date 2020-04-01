@@ -3283,29 +3283,8 @@ let StatsPageClass = (function(){
         this.highlightTopGames();
     }
 
-    StatsPageClass.prototype.highlightTopGames = async function() {
-        if (!User.isSignedIn) { return; }
-
-        for (let node of document.querySelectorAll(".gameLink")) {
-            let appid = GameId.getAppid(node.href);
-
-            await DynamicStore;
-        
-            let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
-                ITAD.getAppStatus(`app/${appid}`),
-                DynamicStore.getAppStatus(`app/${appid}`),
-                Inventory.getAppStatus(appid),
-            ]);
-
-            if (collected) Highlights.highlightCollection(node);
-            if (waitlisted) Highlights.highlightWaitlist(node);
-            if (owned) Highlights.highlightOwned(node);
-            if (guestPass) Highlights.highlightInvGuestpass(node);
-            if (coupon) Highlights.highlightCoupon(node);
-            if (gift) Highlights.highlightInvGift(node);
-            if (wishlisted) Highlights.highlightWishlist(node);
-            if (ignored) Highlights.highlightNotInterested(node);
-        }
+    StatsPageClass.prototype.highlightTopGames = function() {
+        return Highlights.highlightAndTag(document.querySelectorAll(".gameLink"), false);
     }
 
     return StatsPageClass;
