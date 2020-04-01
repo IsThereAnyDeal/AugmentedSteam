@@ -1489,7 +1489,7 @@ let AugmentedSteam = (function() {
     self.horizontalScrolling = function() {
         if (!SyncedStorage.get("horizontalscrolling")) { return; }
 
-        for (let node of document.querySelectorAll(".slider_ctn")) {
+        for (let node of document.querySelectorAll(".slider_ctn:not(.spotlight)")) {
             new HorizontalScroller(
                 node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
                 node.querySelector(".slider_left"),
