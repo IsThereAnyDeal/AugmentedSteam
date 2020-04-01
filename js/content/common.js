@@ -2129,24 +2129,12 @@ let Highlights = (function(){
         }
     };
 
-    self.addTitleHighlight = async function(appid) {
-        await DynamicStore;
-        
-        let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
-            ITAD.getAppStatus(`app/${appid}`),
-            DynamicStore.getAppStatus(`app/${appid}`),
-            Inventory.getAppStatus(appid),
-        ]);
-        let title = document.querySelector(".apphub_AppName");
+    self.addTitleHighlight = function(appid) {
 
-        if (collected) Highlights.highlightCollection(title);
-        if (waitlisted) Highlights.highlightWaitlist(title);
-        if (owned) Highlights.highlightOwned(title);
-        if (guestPass) Highlights.highlightInvGuestpass(title);
-        if (coupon) Highlights.highlightCoupon(title);
-        if (gift) Highlights.highlightInvGift(title);
-        if (wishlisted) Highlights.highlightWishlist(title);
-        if (ignored) Highlights.highlightNotInterested(title);
+        let title = document.querySelector(".apphub_AppName");
+        title.dataset.dsAppid = appid;
+
+        Highlights.highlightAndTag([title], false);
     }
 
     return self;
