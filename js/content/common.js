@@ -1957,9 +1957,21 @@ let Highlights = (function(){
      * Additionally hides non-discounted titles if wished by the user.
      * @param {NodeList} nodes      The nodes that should get highlighted
      * @param {boolean} hasDsInfo   Whether or not the supplied nodes contain dynamic store info.
+     * @param {Object} options      The highlights/tags that should be applied. Defaults to all enabled.
      * @returns {Promise}           Resolved once the highlighting and tagging completed for the nodes
      */
-    self.highlightAndTag = async function(nodes, hasDsInfo = true) {
+    self.highlightAndTag = async function(nodes, hasDsInfo = true, options) {
+
+        let opts = Object.assign({
+            "owned": true,
+            "wishlisted": true,
+            "ignored": true,
+            "collected": true,
+            "waitlisted": true,
+            "gift": true,
+            "guestPass": true,
+            "coupon": true,
+        }, options);
 
         let storeIdsMap = new Map();
 
@@ -2006,15 +2018,15 @@ let Highlights = (function(){
             }
 
             if (hasDsInfo) {
-                if (node.querySelector(".ds_owned_flag")) {
+                if (node.querySelector(".ds_owned_flag") && opts.owned) {
                     self.highlightOwned(nodeToHighlight);
                 }
 
-                if (node.querySelector(".ds_wishlist_flag")) {
+                if (node.querySelector(".ds_wishlist_flag") && opts.wishlisted) {
                     self.highlightWishlist(nodeToHighlight);
                 }
 
-                if (node.querySelector(".ds_ignored_flag")) {
+                if (node.querySelector(".ds_ignored_flag") && opts.ignored) {
                     self.highlightNotInterested(nodeToHighlight);
                 }
             }
@@ -2029,31 +2041,33 @@ let Highlights = (function(){
 
         let includeDsInfo =
             !hasDsInfo
-            && (SyncedStorage.get("highlight_owned") || SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("highlight_notinterested")
-            || SyncedStorage.get("tag_owned") || SyncedStorage.get("tag_wishlist") || SyncedStorage.get("tag_notinterested")
-            || SyncedStorage.get("hide_owned") || SyncedStorage.get("hide_ignored"));
+            && (   (opts.owned && (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned") || SyncedStorage.get("hide_owned")))
+                || (opts.wishlisted && (SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist")))
+                || (opts.ignored && (SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested") || SyncedStorage.get("hide_ignored")))
+               );
 
         let [ dsStatus, itadStatus, invStatus ] = await Promise.all([
             includeDsInfo ? DynamicStore.getAppStatus(storeIds) : Promise.resolve(),
             ITAD.getAppStatus(storeIds, {
-                "waitlist": SyncedStorage.get("highlight_waitlist"),
-                "collection": SyncedStorage.get("highlight_collection"),
+                "waitlist": opts.waitlisted && SyncedStorage.get("highlight_waitlist"),
+                "collection": opts.collected && SyncedStorage.get("highlight_collection"),
             }),
             Inventory.getAppStatus(trimmedStoreIds, {
-                "giftsAndPasses": SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift")
-                                || SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass"),
-                "coupons": SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon"),
+                "giftsAndPasses": opts.gift && (SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift"))
+                                || opts.guestPass && (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass")),
+                "coupons": opts.coupon && (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon")),
             }),
         ]);
 
         let it = trimmedStoreIds.values();
         for (let [storeid, nodes] of storeIdsMap) {
             if (dsStatus) {
-                if (dsStatus[storeid].owned) nodes.forEach(node => self.highlightOwned(node));
-                if (dsStatus[storeid].wishlisted) nodes.forEach(node => self.highlightWishlist(node));
-                if (dsStatus[storeid].ignored) nodes.forEach(node => self.highlightNotInterested(node));
+                if (opts.owned && dsStatus[storeid].owned) nodes.forEach(node => self.highlightOwned(node));
+                if (opts.wishlisted && dsStatus[storeid].wishlisted) nodes.forEach(node => self.highlightWishlist(node));
+                if (opts.ignored && dsStatus[storeid].ignored) nodes.forEach(node => self.highlightNotInterested(node));
             }
 
+            // Don't need to check for the opts object here, since the result contains false for every property if the highlight has been disabled
             if (itadStatus) {
                 if (itadStatus[storeid].collected) nodes.forEach(node => self.highlightCollection(node));
                 if (itadStatus[storeid].waitlisted) nodes.forEach(node => self.highlightWaitlist(node));
@@ -2061,9 +2075,9 @@ let Highlights = (function(){
 
             if (invStatus) {
                 let trimmedId = it.next().value;
-                if (invStatus[trimmedId].gift) nodes.forEach(node => self.highlightInvGift(node));
-                if (invStatus[trimmedId].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
-                if (invStatus[trimmedId].coupon) nodes.forEach(node => self.highlightCoupon(node));
+                if (opts.gift && invStatus[trimmedId].gift) nodes.forEach(node => self.highlightInvGift(node));
+                if (opts.guestPass && invStatus[trimmedId].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
+                if (invStatus[trimmedId].coupon) nodes.forEach(node => self.highlightCoupon(node)); // Same as for the ITAD highlights (don't need to check)
             }
         }
     }

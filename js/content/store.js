@@ -3435,55 +3435,16 @@ let WishlistPageClass = (function(){
             || window.location.href.includes("/profiles/" + User.steamId);
     }
 
-    WishlistPageClass.prototype.highlightApps = async function(node) {
+    WishlistPageClass.prototype.highlightApps = function(node) {
         if (!User.isSignedIn) { return; }
 
-        await DynamicStore;
-
-        let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { coupon, guestPass, gift }] = await Promise.all([
-            ITAD.getAppStatus(`app/${node.dataset.appId}`),
-            DynamicStore.getAppStatus(`app/${node.dataset.appId}`),
-            Inventory.getAppStatus(Number(node.dataset.appId)),
-        ]);
-
-        if (collected) Highlights.highlightCollection(node);
-        if (waitlisted) Highlights.highlightWaitlist(node);
-
-        if (!myWishlist) {
-            if (owned) {
-                node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
-
-                if (SyncedStorage.get("highlight_owned")) {
-                    Highlights.highlightOwned(node);
-                } else {
-                    HTML.beforeEnd(node, `<div class="ds_flag ds_owned_flag">${Localization.str.library.in_library.toUpperCase()}&nbsp;&nbsp;</div>`);
-                }
-            }
-
-            if (wishlisted) {
-                node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
-
-                if (SyncedStorage.get("highlight_wishlist")) {
-                    Highlights.highlightWishlist(node);
-                } else {
-                    HTML.beforeEnd(node, `<div class="ds_flag ds_wishlist_flag">${Localization.str.on_wishlist.toUpperCase()}&nbsp;&nbsp;</div>`);
-                }
-            }
+        let options = {};
+        if (myWishlist) {
+            options.wishlisted = false;
+            options.waitlisted = false;
         }
 
-        if (ignored) {
-            node.classList.add("ds_collapse_flag", "ds_flagged", "ds_ignored");
-
-            if (SyncedStorage.get("highlight_notinterested")) {
-                Highlights.highlightNotInterested(node);
-            } else {
-                HTML.beforeEnd(node, `<div class="ds_flag ds_ignored_flag">${Localization.str.ignored.toUpperCase()}&nbsp;&nbsp;</div>`);
-            }
-        }
-
-        if (coupon) Highlights.highlightCoupon(node);
-        if (guestPass) Highlights.highlightInvGuestpass(node);
-        if (gift) Highlights.highlightInvGift(node);
+        return Highlights.highlightAndTag([node], false, options);
     };
 
     WishlistPageClass.prototype.addStatsArea = function() {
