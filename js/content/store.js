@@ -3324,15 +3324,6 @@ let StatsPageClass = (function(){
     return StatsPageClass;
 })();
 
-let CuratorPageClass = (function(){
-
-    function CuratorPageClass() {
-        // no page-specific handling
-    }
-
-    return CuratorPageClass;
-})();
-
 
 let WishlistPageClass = (function(){
 
@@ -4108,10 +4099,6 @@ let TabAreaObserver = (function(){
 
         case /^\/stats(\/.*|$)/.test(path):
             (new StatsPageClass());
-            break;
-
-        case /^\/(?:curator|developer|dlc|publisher|franchise)\/.*/.test(path):
-            (new CuratorPageClass());
             break;
 
         case /^\/sale\/.*/.test(path):
