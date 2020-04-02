@@ -979,22 +979,39 @@ img.astats_icon {
 
 
 /***************************************
- * App page, wishlist buttons
+ * Store and Community wishlist buttons
  **************************************/
 .es-loading-wl {
   width: 16px;
   filter: brightness(350%); /* to make the image more consitent with others, feel free to replace the image and remove this */
 }
-.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-in-wl {
+
+#es_wishlist_success img,
+#es_wishlist_add img {
+  margin: 7px 0;
+  vertical-align: top;
+}
+
+#es_wishlist_fail {
+  position: absolute;
+  right: 0px;
+}
+
+.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-in-wl,
+.apphub_OtherSiteInfo:not(.loading) #es_wishlist_success:hover .es-in-wl {
   display: none !important;
 }
-.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-remove-wl {
+.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-remove-wl,
+.apphub_OtherSiteInfo:not(.loading) #es_wishlist_success:hover .es-remove-wl {
   display: inline !important;
 }
-.queue_actions_ctn.loading img {
+.queue_actions_ctn.loading img,
+.apphub_OtherSiteInfo.loading img {
   display: none;
 }
-.queue_actions_ctn.loading #add_to_wishlist_area_success .es-loading-wl {
+.queue_actions_ctn.loading #add_to_wishlist_area_success .es-loading-wl,
+.apphub_OtherSiteInfo.loading #es_wishlist_success .es-loading-wl,
+.apphub_OtherSiteInfo.loading #es_wishlist_add .es-loading-wl {
   display: inline !important;
 }
 
