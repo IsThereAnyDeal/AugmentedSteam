@@ -602,12 +602,24 @@ class SteamStore extends Api {
         return Promise.all(promises);
     }
     
-    static async wishlistAdd(params) {
-        return SteamStore.postEndpoint("/api/addtowishlist", params);
+    static async wishlistAdd(sessionid, appid) {
+        let res = await SteamStore.postEndpoint("/api/addtowishlist", { sessionid, appid });
+        
+        if (!res || !res.success) {
+            throw new Error(`Failed to add appid ${appid} to wishlist`);
+        }
+
+        return SteamStore.clearDynamicStore();
     }
 
-    static async wishlistRemove(params) {
-        return SteamStore.postEndpoint("/api/removefromwishlist", params);
+    static async wishlistRemove(sessionid, appid) {
+        let res = await SteamStore.postEndpoint("/api/removefromwishlist", { sessionid, appid });
+
+        if (!res || !res.success) {
+            throw new Error(`Failed to remove appid ${appid} from wishlist`);
+        }
+
+        return SteamStore.clearDynamicStore();
     }
 
     static async currencyFromWallet() {

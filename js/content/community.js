@@ -3842,15 +3842,15 @@ let CommunityAppPageClass = (function(){
             let action = wishlisted ? "wishlist.remove" : "wishlist.add";
 
             try {
-                let res = await Background.action(action, { "sessionid": await User.getStoreSessionId(), "appid": that.appid });
-                if (res && res.success) {
-                    successBtn.style.display = wishlisted ? "none" : "";
-                    addBtn.style.display = wishlisted ? "" : "none";
+                await Background.action(action, await User.getStoreSessionId(), that.appid);
+                
+                successBtn.style.display = wishlisted ? "none" : "";
+                addBtn.style.display = wishlisted ? "" : "none";
 
-                    DynamicStore.clear();
-                } else {
-                    failNode.style.display = "block";
-                }
+                DynamicStore.clear();
+            } catch(err) {
+                console.error("Failed to add to/remove from wishlist");
+                failNode.style.display = "block";
             } finally {
                 parent.classList.remove("loading");
             }
