@@ -2640,18 +2640,16 @@ let FundsPageClass = (function(){
         this.addCustomMoneyAmount();
     }
 
-    FundsPageClass.prototype.addCustomMoneyAmount = async function() {
-        let giftcard = document.querySelector(".giftcard_amounts");
+    FundsPageClass.prototype.addCustomMoneyAmount = function() {
+        let giftcard = window.location.pathname.includes("/digitalgiftcards/");
 
         let newel = document.querySelector(giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game").cloneNode(true);
-        let priceel = newel.querySelector((giftcard ? ".giftcard_text" : ".price"));
+        let priceel = newel.querySelector(giftcard ? ".giftcard_text" : ".price");
         let price = priceel.textContent.trim();
 
         newel.classList.add("es_custom_money");
-        if(!giftcard) {
-            newel.querySelector(".btnv6_green_white_innerfade").classList.add("es_custom_button");
-            newel.querySelector(".btnv6_green_white_innerfade").removeAttribute("onclick");
-            newel.querySelector("h1").textContent = Localization.str.wallet.custom_amount;
+        if (!giftcard) {
+            newel.querySelector("h1").textContent = `${Localization.str.wallet.custom_amount} ${price}`;
             newel.querySelector("p").textContent = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
         } else {
             HTML.inner(
@@ -2662,53 +2660,41 @@ let FundsPageClass = (function(){
             );
         }
 
-        let currency = await Price.parseFromString(price, Currency.storeCurrency);
+        let currency = CurrencyRegistry.fromType(Currency.storeCurrency);
+        let minValue = currency.valueOf(price);
+        let symbol = currency.format.symbol;
+        let step = currency.format.decimalPlaces === 0 ? 1 : .01;
 
-        let inputel = newel.querySelector((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));
-        HTML.inner(inputel, "<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>");
-        // TODO currency symbol
+        HTML.inner(
+            newel.querySelector(giftcard ? "#es_custom_money_amount_wrapper" : ".price"),
+            `${symbol}<input type="number" id="es_custom_money_amount" class="es_text_input money" min="${minValue}" step="${step}" value="${minValue}">`
+        );
 
-        document.querySelector((giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game"))
+        document.querySelector(giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game")
             .insertAdjacentElement("afterend", newel);
 
-        document.querySelector("#es_custom_money_amount").addEventListener("input", function() {
-            let value = document.querySelector("#es_custom_money_amount").value;
+        let btn = newel.querySelector("a.btn_medium");
 
-            if(!isNaN(value) && value != "") {
-                currency = new Price(value, Currency.storeCurrency);
+        document.querySelector("#es_custom_money_amount").addEventListener("input", e => {
+            let value = e.target.value;
+            if (value < minValue) {
+                value = minValue;
+            }
 
-                if(giftcard) {
-                    priceel.classList.toggle("small", value > 10);
-                    priceel.textContent = currency;
-                }
+            let customAmount = Number(value).toFixed(2).replace(/[,.]/g, '');
+
+            if (giftcard) {
+                priceel.classList.toggle("small", customAmount >= 100000); // 4 digits or longer
+                priceel.textContent = new Price(value, Currency.storeCurrency);
+                btn.href = `javascript:submitSelectGiftCard( ${customAmount} );`;
+            } else {
+                newel.querySelector("h1").textContent = `${Localization.str.wallet.custom_amount} ${new Price(value, Currency.storeCurrency)}`;
+                btn.dataset.amount = customAmount;
             }
         });
 
-        newel.querySelector((giftcard ? ".es_custom_money a.btn_medium" : ".es_custom_button")).addEventListener("click", e => {
-            e.preventDefault();
-
-            let customAmount = Number(document.querySelector("#es_custom_money_amount").value).toFixed(2).replace(/[,.]/g, '');
-
-            if (giftcard) {
-
-                if (e.target.closest(".giftcard_cont")) {
-                    ExtensionLayer.runInPageContext(amount => { submitSelectGiftCard(amount); }, [ customAmount ]);
-                }
-
-            } else {
-                let btn = document.querySelector(".es_custom_money .es_custom_button");
-                btn.href = "#";
-                btn.removeAttribute("onclick");
-                btn.dataset.amount = customAmount;
-
-                ExtensionLayer.runInPageContext(() => { submitAddFunds(document.querySelector(".es_custom_money .es_custom_button")); });
-            }
-
-        }, true);
-
-        let giftcardMoneyNode = document.querySelector(".giftcard_selection #es_custom_money_amount");
-        if (giftcardMoneyNode) {
-            giftcardMoneyNode.addEventListener("click", function(e) {
+        if (giftcard) {
+            newel.querySelector(".giftcard_style").addEventListener("click", e => {
                 e.preventDefault();
             });
         }
