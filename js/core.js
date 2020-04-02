@@ -822,25 +822,6 @@ class HTML {
         return node;
     }
 
-    static wrap(node, html) {
-        if (typeof node == 'undefined' || node === null) {
-            console.warn(`${node} is not an Element.`);
-            return null;
-        }
-        if (typeof node == "string") {
-            node = document.querySelector(node);
-        }
-        if (!(node instanceof Element)) {
-            console.warn(`${node} is not an Element.`);
-            return null;
-        }
-
-        let wrapper = HTML.element(html);
-        node.replaceWith(wrapper);
-        wrapper.appendChild(node);
-        return wrapper;
-    }
-
     static replace(node, html) {
         if (typeof node == 'undefined' || node === null) {
             console.warn(`${node} is not an Element.`);
@@ -857,6 +838,12 @@ class HTML {
         let newNode = HTML.element(html);
         node.replaceWith(newNode);
         return newNode;
+    }
+
+    static wrap(node, html) {
+        let wrapper = HTML.replace(node, html);
+        wrapper.append(node);
+        return wrapper;
     }
 
     static adjacent(node, position, html) {
