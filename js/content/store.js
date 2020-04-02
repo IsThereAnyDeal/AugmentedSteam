@@ -3589,6 +3589,7 @@ let WishlistPageClass = (function(){
                     gameid: ["steam", `app/${appid}`],
                     title: data.name,
                     url: `https://store.steampowered.com/app/${appid}/`,
+                    type: data.type,
                     release_date: data.release_string,
                     note: this.notes[appid] || null,
                     price: data.subs[0] ? data.subs[0].price : false,
