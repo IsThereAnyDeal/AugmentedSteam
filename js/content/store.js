@@ -2781,6 +2781,7 @@ let SearchPageClass = (function(){
 
                 modifyParams(url.searchParams, "as-hide", curParams.get("as-hide"));
                 modifyParams(url.searchParams, "as-reviews-score", curParams.get("as-reviews-score"));
+                modifyParams(url.searchParams, "as-reviews-count", curParams.get("as-reviews-count"));
     
                 linkElement.href = url.href;
             }
