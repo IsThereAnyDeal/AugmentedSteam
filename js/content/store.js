@@ -2729,6 +2729,8 @@ let SearchPageClass = (function(){
 
     let infiniteScrollEnabled;
 
+    let eaFilter;
+
     let scoreFilter;
     let minScoreInput, maxScoreInput;
     let rangeDisplay;
@@ -2762,7 +2764,19 @@ let SearchPageClass = (function(){
             row.dataset.asReviewCount = reviewCount;
         }
 
+        if (eaFilter.classList.contains("checked")) {
+            addEaMetadata(rows);
+        }
+
         applyFilters(rows);
+    }
+
+    async function addEaMetadata(rows = document.querySelectorAll(".search_result_row:not(.es_ea_checked)")) {
+        if (SyncedStorage.get("show_early_access")) { return; }
+
+        for (let row of await EarlyAccess.getEaNodes(rows)) {
+            row.classList.add("es_early_access");
+        }
     }
 
     function modifyParams(searchParams, key, val) {
@@ -2835,6 +2849,7 @@ let SearchPageClass = (function(){
         let collapseName = "augmented_steam";
         let filterNames = [
             "cart",
+            "ea",
         ];
 
         let activeFilters = getASFilters();
@@ -2870,6 +2885,10 @@ let SearchPageClass = (function(){
                 results.classList.toggle(filterName, active);
                 filter.classList.toggle("checked", active);
                 filter.parentElement.classList.toggle("checked", active);
+
+                if (filterName === "ea" && active) {
+                    addEaMetadata();
+                }
             }
 
             let lowerScoreVal = "0";
@@ -2968,6 +2987,15 @@ let SearchPageClass = (function(){
                             </span>
                         </span>
                     </div>
+                    <div class="js-ea-filter tab_filter_control_row" data-param="augmented_steam" data-value="ea" data-loc="${Localization.str.search_filters.hide_ea}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="ea" data-loc="${Localization.str.search_filters.hide_ea}" data-clientside="1">
+                            <span>
+                                <span class="tab_filter_control_checkbox"></span>
+                                <span class="tab_filter_control_label">${Localization.str.search_filters.hide_ea}</span>
+                                <span class="tab_filter_control_count" style="display: none;"></span>
+                            </span>
+                        </span>
+                    </div>
                     <div><input type="hidden" name="as-hide"></div>
                     <div class="block_rule"></div>
                     <div class="range_container" style="margin-top: 8px;">
@@ -2976,14 +3004,14 @@ let SearchPageClass = (function(){
                             <input class="as-double-slider__input as-double-slider__input--lower js-reviews-score-input js-reviews-score-lower range_input" type="range" min="0" max="${maxStep}" step="1" value="0">
                             <input type="hidden" name="as-reviews-score">
                         </div>
-                        <div class="as-range-display range_display">${Localization.str.reviews_filter.any}</div>
+                        <div class="as-range-display range_display">${Localization.str.search_filters.reviews_score.any}</div>
                     </div>
                     <div class="as-reviews-count-filter">
-                        <div class="as-reviews-count-filter__header">${Localization.str.reviews_filter.count}</div>
+                        <div class="as-reviews-count-filter__header">${Localization.str.search_filters.reviews_count.count}</div>
                         <div class="as-reviews-count-filter__content js-reviews-count-filter">
-                            <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-lower" type="number" min="0" step="100" placeholder="${Localization.str.reviews_filter.min_count}">
+                            <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-lower" type="number" min="0" step="100" placeholder="${Localization.str.search_filters.reviews_count.min_count}">
                             -
-                            <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-upper" type="number" min="0" step="100" placeholder="${Localization.str.reviews_filter.max_count}">
+                            <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-upper" type="number" min="0" step="100" placeholder="${Localization.str.search_filters.reviews_count.max_count}">
                             <input type="hidden" name="as-reviews-count">
                         </div>
                     </div>
@@ -2991,6 +3019,7 @@ let SearchPageClass = (function(){
             </div>
         `);
 
+        eaFilter = document.querySelector(".js-ea-filter");
         scoreFilter = document.querySelector(".js-reviews-score-filter");
         minScoreInput = scoreFilter.querySelector(".js-reviews-score-lower");
         maxScoreInput = scoreFilter.querySelector(".js-reviews-score-upper");
@@ -3032,15 +3061,15 @@ let SearchPageClass = (function(){
                 let text;
                 if (minVal === 0) {
                     if (maxVal === maxStep) {
-                        text = Localization.str.reviews_filter.any;
+                        text = Localization.str.search_filters.reviews_score.any;
                     } else {
-                        text = Localization.str.reviews_filter.up_to.replace("__score__", scoreValues[maxVal]);
+                        text = Localization.str.search_filters.reviews_score.up_to.replace("__score__", scoreValues[maxVal]);
                     }
                 } else {
                     if (maxVal === maxStep) {
-                        text = Localization.str.reviews_filter.from.replace("__score__", scoreValues[minVal]);
+                        text = Localization.str.search_filters.reviews_score.from.replace("__score__", scoreValues[minVal]);
                     } else {
-                        text = Localization.str.reviews_filter.between.replace("__lower__", scoreValues[minVal]).replace("__upper__", scoreValues[maxVal]);
+                        text = Localization.str.search_filters.reviews_score.between.replace("__lower__", scoreValues[minVal]).replace("__upper__", scoreValues[maxVal]);
                     }
                 }
 
@@ -3118,6 +3147,10 @@ let SearchPageClass = (function(){
                 }
 
                 updateUrls("as-hide", Array.from(activeFilters["as-hide"]).join(','));
+
+                if (filterName === "ea" && isChecked) {
+                    addEaMetadata();
+                }
             });
         }
 

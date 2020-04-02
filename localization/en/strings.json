@@ -164,14 +164,19 @@
     "gift_transactions": "Gift Purchases",
     "demos": "Demos",
     "notinterested": "Items marked not interested",
-    "reviews_filter": {
-        "between": "Between __lower__% and __upper__% review score",
-        "any": "Any review score",
-        "up_to": "Up to __score__% review score",
-        "from": "From __score__% review score",
-        "count": "Reviews count:",
-        "min_count": "Min count",
-        "max_count": "Max count"
+    "search_filters": {
+        "reviews_score": {
+            "between": "Between __lower__% and __upper__% review score",
+            "any": "Any review score",
+            "up_to": "Up to __score__% review score",
+            "from": "From __score__% review score"
+        },
+        "reviews_count": {
+            "count": "Reviews count:",
+            "min_count": "Min count",
+            "max_count": "Max count"
+        },
+        "hide_ea": "Hide Early Access items"
     },
     "reviews_below": "Items with less reviews than",
     "reviews_below_tooltip": "Enter zero for items without reviews; leave this field empty to disable this feature",

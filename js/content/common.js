@@ -1506,12 +1506,10 @@ let EarlyAccess = (function(){
 
     let imageUrl;
 
-    async function checkNodes(selectors, selectorModifier) {
-        selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
+    self.getEaNodes = async function(nodes, selectorModifier) {
         let appidsMap = new Map();
 
-        let selector = selectors.map(selector => `${selector}:not(.es_ea_checked)`).join(",");
-        for (let node of document.querySelectorAll(selector)) {
+        for (let node of nodes) {
             node.classList.add("es_ea_checked");
 
             let linkNode = node.querySelector("a");
@@ -1524,11 +1522,22 @@ let EarlyAccess = (function(){
             }
         }
 
-        let eaAppids = await Background.action("isea", Array.from(appidsMap.keys()).map(key => Number(key)));
+        let eaStatus = await Background.action("isea", Array.from(appidsMap.keys()));
+        
+        for (let appid of appidsMap.keys()) {
+            if (!eaStatus[appid]) {
+                appidsMap.delete(appid);
+            }
+        }
 
-        for (let [appid, node] of appidsMap) {
-            if (!eaAppids[appid]) { continue; }
+        return Array.from(appidsMap.values());
+    }
 
+    async function checkNodes(selectors, selectorModifier) {
+        selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
+        let selector = selectors.map(selector => `${selector}:not(.es_ea_checked)`).join(",");
+
+        for (let node of await self.getEaNodes(document.querySelectorAll(selector), selectorModifier)) {
             node.classList.add("es_early_access");
 
             let imgHeader = node.querySelector("img" + selectorModifier);
@@ -1540,56 +1549,51 @@ let EarlyAccess = (function(){
         }
     }
 
-    function handleStore() {
+    async function handleStore() {
         // TODO refactor these checks to appropriate page calls
         switch (true) {
             case /^\/app\/.*/.test(window.location.pathname):
-                checkNodes([".game_header_image_ctn", ".small_cap"]);
-                break;
+                return checkNodes([".game_header_image_ctn", ".small_cap"]);
             case /^\/(?:genre|browse|tag)\/.*/.test(window.location.pathname):
-                checkNodes([".tab_item",
-                           ".special_tiny_cap",
-                           ".cluster_capsule",
-                           ".game_capsule",
-                           ".browse_tag_game",
-                           ".dq_item:not(:first-child)",
-                           ".discovery_queue:not(:first-child)"]);
-                break;
+                return checkNodes(  [".tab_item",
+                                    ".special_tiny_cap",
+                                    ".cluster_capsule",
+                                    ".game_capsule",
+                                    ".browse_tag_game",
+                                    ".dq_item:not(:first-child)",
+                                    ".discovery_queue:not(:first-child)"]);
             case /^\/search\/.*/.test(window.location.pathname):
-                checkNodes([".search_result_row"]);
-                break;
+                return checkNodes([".search_result_row"]);
             case /^\/recommended/.test(window.location.pathname):
-                checkNodes([".friendplaytime_appheader",
+                return checkNodes([".friendplaytime_appheader",
                            ".header_image",
                            ".appheader",
                            ".recommendation_carousel_item .carousel_cap",
                            ".game_capsule",
                            ".game_capsule_area",
                            ".similar_grid_capsule"]);
-                break;
             case /^\/tag\/.*/.test(window.location.pathname):
-                checkNodes([".cluster_capsule",
+                return checkNodes([".cluster_capsule",
                            ".tab_row",
                            ".browse_tag_game_cap"]);
-                break;
             case /^\/(?:curator|developer|dlc|publisher)\/.*/.test(window.location.pathname):
-                checkNodes(["#curator_avatar_image",
+                return checkNodes(["#curator_avatar_image",
                            ".capsule"]);
-                break;
             case /^\/$/.test(window.location.pathname):
-                checkNodes([".cap",
+                return checkNodes([".cap",
                            ".special",
                            ".game_capsule",
                            ".cluster_capsule",
                            ".recommended_spotlight_ctn",
                            ".curated_app_link",
                            ".dailydeal_ctn a",
-                           ".tab_item:last-of-type"]);
+                           ".tab_item:last-of-type",
+                           // Sales fields
+                           ".large_sale_caps a",
+                           ".small_sale_caps a",
+                           ".spotlight_img"]);
 
-                // Sales fields
-                checkNodes([".large_sale_caps a", ".small_sale_caps a", ".spotlight_img"]);
                 // checkNodes($(".sale_capsule_image").parent()); // TODO check/remove
-                break;
         }
     }
 
@@ -1613,7 +1617,7 @@ let EarlyAccess = (function(){
         }
     }
 
-    self.showEarlyAccess = async function() {
+    self.showEarlyAccess = function() {
         if (!SyncedStorage.get("show_early_access")) { return; }
 
         let imageName = "img/overlay/early_access_banner_english.png";
@@ -1624,11 +1628,9 @@ let EarlyAccess = (function(){
 
         switch (window.location.host) {
             case "store.steampowered.com":
-                handleStore();
-                break;
+                return handleStore();
             case "steamcommunity.com":
-                handleCommunity();
-                break;
+                return handleCommunity();
         }
     };
 
