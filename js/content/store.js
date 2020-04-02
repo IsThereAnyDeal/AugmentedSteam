@@ -2978,11 +2978,11 @@ let SearchPageClass = (function(){
             `<div class="block search_collapse_block" data-collapse-name="${collapseName}">
                 <div class="block_header"><div>${Localization.str.filters}</div></div>
                 <div class="block_content block_content_inner">
-                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="cart" data-loc="${Localization.str.options.cart}" data-clientside="1">
-                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="cart" data-loc="${Localization.str.options.cart}" data-clientside="1">
+                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="cart" data-loc="${Localization.str.search_filters.hide_cart}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="cart" data-loc="${Localization.str.search_filters.hide_cart}" data-clientside="1">
                             <span>
                                 <span class="tab_filter_control_checkbox"></span>
-                                <span class="tab_filter_control_label">${Localization.str.options.cart}</span>
+                                <span class="tab_filter_control_label">${Localization.str.search_filters.hide_cart}</span>
                                 <span class="tab_filter_control_count" style="display: none;"></span>
                             </span>
                         </span>
