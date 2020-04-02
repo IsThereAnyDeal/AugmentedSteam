@@ -4072,8 +4072,7 @@ let TabAreaObserver = (function(){
 })();
 
 (async function(){
-    let nginxError = document.querySelector("body > center:nth-child(3)");
-    if (nginxError && nginxError.innerText === "nginx") { return; }
+    if (!document.getElementById("global_header")) { return; }
 
     let path = window.location.pathname.replace(/\/+/g, "/");
 
