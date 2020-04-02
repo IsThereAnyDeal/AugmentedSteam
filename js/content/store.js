@@ -3590,6 +3590,8 @@ let WishlistPageClass = (function(){
                     title: data.name,
                     url: `https://store.steampowered.com/app/${appid}/`,
                     release_date: data.release_string,
+                    price: new Price(data.subs.length > 0 ? data.subs[0].price / 100 : 0, Currency.storeCurrency),
+                    discount_pct: data.subs.length > 0 ? data.subs[0].discount_pct : 0,
                     note: this.notes[appid] || null
                 });
             }
@@ -3609,6 +3611,8 @@ let WishlistPageClass = (function(){
                         .replace("%release_date%", data.release_string)
                         .replace("%type%", data.type)
                         .replace("%note%", this.notes[appid] || "")
+                        .replace("%price%", new Price(data.subs.length > 0 ? data.subs[0].price / 100 : 0, Currency.storeCurrency))
+                        .replace("%discount_pct%", data.subs.length > 0 ? data.subs[0].discount_pct : 0)
                 );
             }
 
@@ -3649,7 +3653,7 @@ let WishlistPageClass = (function(){
                         <h2>${exportStr.format}</h2>
                         <div>
                             <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
-                            <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %note%</div>
+                            <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %price%, %discount_pct%, %note%</div>
                         </div>
                     </div>
                 </div>`,
