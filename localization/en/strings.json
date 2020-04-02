@@ -625,7 +625,9 @@
         "inv_guestpass": "Guestpass",
         "owned": "Owned",
         "notinterested": "Not Interested",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ wish for</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ wish for</a>",
+        "collection": "Collected",
+        "waitlist": "Waitlisted"
     },
     "wallet": {
         "custom_amount": "Add custom amount",

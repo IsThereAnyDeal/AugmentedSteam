@@ -688,20 +688,22 @@ let Options = (function(){
         let addHandlerToSetDefaultColor = (key) => {
             document.getElementById(`${key}_default`).addEventListener('click', () => setValue(`#${key}_color`, Defaults[`${key}_color`]));
         };
-        ['highlight_owned',
-         'highlight_wishlist',
-         'highlight_coupon',
-         'highlight_inv_gift',
-         'highlight_inv_guestpass',
-         'highlight_notinterested',
-         'highlight_waitlist',
-         'highlight_collection',
-         'tag_owned',
-         'tag_wishlist',
-         'tag_coupon',
-         'tag_inv_gift',
-         'tag_inv_guestpass',
-         'tag_notinterested',
+        ["highlight_owned",
+         "highlight_wishlist",
+         "highlight_coupon",
+         "highlight_inv_gift",
+         "highlight_inv_guestpass",
+         "highlight_notinterested",
+         "highlight_waitlist",
+         "highlight_collection",
+         "tag_owned",
+         "tag_wishlist",
+         "tag_coupon",
+         "tag_inv_gift",
+         "tag_inv_guestpass",
+         "tag_notinterested",
+         "tag_collection",
+         "tag_waitlist",
         ].forEach(addHandlerToSetDefaultColor);
 
         document.getElementById("spamcommentregex_default").addEventListener("click", () => setValue("#spamcommentregex", "[\\u2500-\\u25FF]"));

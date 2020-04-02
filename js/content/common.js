@@ -2051,8 +2051,8 @@ let Highlights = (function(){
         let [ dsStatus, itadStatus, invStatus ] = await Promise.all([
             includeDsInfo ? DynamicStore.getAppStatus(storeIds) : Promise.resolve(),
             ITAD.getAppStatus(storeIds, {
-                "waitlist": opts.waitlisted && SyncedStorage.get("highlight_waitlist"),
-                "collection": opts.collected && SyncedStorage.get("highlight_collection"),
+                "waitlist": opts.waitlisted && (SyncedStorage.get("highlight_waitlist") || SyncedStorage.get("tag_waitlist")),
+                "collection": opts.collected && (SyncedStorage.get("highlight_collection") || SyncedStorage.get("tag_collection")),
             }),
             Inventory.getAppStatus(trimmedStoreIds, {
                 "giftsAndPasses": opts.gift && (SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift"))
