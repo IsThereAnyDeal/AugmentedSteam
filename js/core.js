@@ -841,6 +841,24 @@ class HTML {
         return wrapper;
     }
 
+    static replace(node, html) {
+        if (typeof node == 'undefined' || node === null) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+        if (typeof node == "string") {
+            node = document.querySelector(node);
+        }
+        if (!(node instanceof Element)) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+
+        let newNode = HTML.element(html);
+        node.replaceWith(newNode);
+        return newNode;
+    }
+
     static adjacent(node, position, html) {
         if (typeof node == 'undefined' || node === null) {
             console.warn(`${node} is not an Element.`);
