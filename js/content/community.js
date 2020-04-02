@@ -3842,13 +3842,15 @@ let CommunityAppPageClass = (function(){
             let action = wishlisted ? "wishlist.remove" : "wishlist.add";
 
             try {
-                await Background.action(action, await User.getStoreSessionId(), that.appid);
+                await Background.action(action, that.appid);
                 
                 successBtn.style.display = wishlisted ? "none" : "";
                 addBtn.style.display = wishlisted ? "" : "none";
 
                 DynamicStore.clear();
             } catch(err) {
+                /* We can't (easily) detect whether or not the user is logged in to the store,
+                   therefore we're also not able to provide more details here */
                 console.error("Failed to add to/remove from wishlist");
                 failNode.style.display = "block";
             } finally {
