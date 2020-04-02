@@ -4099,23 +4099,23 @@ let TabAreaObserver = (function(){
             (new BundlePageClass(window.location.host + path));
             break;
 
-        case /^\/account\/registerkey(\/.*)?/.test(path):
+        case /^\/account\/registerkey(\/.*|$)/.test(path):
             (new RegisterKeyPageClass());
             return;
 
-        case /^\/account(\/)?/.test(path):
+        case /^\/account(\/)?$/.test(path):
             (new AccountPageClass());
             return;
 
-        case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard)/.test(path):
+        case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard(\/.*|$))/.test(path):
             (new FundsPageClass());
             break;
 
-        case /^\/search\/.*/.test(path):
+        case /^\/search(\/.*|$)/.test(path):
             (new SearchPageClass());
             break;
 
-        case /^\/stats\//.test(path):
+        case /^\/stats(\/.*|$)/.test(path):
             (new StatsPageClass());
             break;
 
