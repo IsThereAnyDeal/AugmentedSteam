@@ -3580,7 +3580,7 @@ let WishlistPageClass = (function(){
 
         toJson() {
             let json = {
-                version: "02",
+                version: "03",
                 data: []
             };
 
@@ -3590,7 +3590,9 @@ let WishlistPageClass = (function(){
                     title: data.name,
                     url: `https://store.steampowered.com/app/${appid}/`,
                     release_date: data.release_string,
-                    note: this.notes[appid] || null
+                    note: this.notes[appid] || null,
+                    price: data.subs[0] ? data.subs[0].price : false,
+                    discount: data.subs[0] ? data.subs[0].discount_pct : 0
                 });
             }
 
@@ -3599,7 +3601,25 @@ let WishlistPageClass = (function(){
 
         toText(format) {
             let result = [];
+            let parser = new DOMParser();
             for (let [appid, data] of Object.entries(this.appInfo)) {
+                let price = "";
+                let discount = "0%";
+                let base_price = "";
+
+                // if it has a price (steam always picks first sub, see /public/javascript/wishlist.js)
+                if (data.subs[0]) {
+                    let block = parser.parseFromString(data.subs[0].discount_block, "text/html");
+                    price = block.querySelector(".discount_final_price").innerText;
+                    base_price = block.querySelector(".discount_final_price").innerText;
+
+                    // if it is discounted
+                    if (data.subs[0].discount_pct > 0) {
+                        discount = block.querySelector(".discount_pct").innerText;
+                        base_price = block.querySelector(".discount_original_price").innerText;
+                    }
+                }
+
                 result.push(
                     format
                         .replace("%appid%", appid)
@@ -3607,6 +3627,9 @@ let WishlistPageClass = (function(){
                         .replace("%url%", `https://store.steampowered.com/app/${appid}/`)
                         .replace("%title%", data.name)
                         .replace("%release_date%", data.release_string)
+                        .replace("%price%", price)
+                        .replace("%discount%", discount)
+                        .replace("%base_price%",  base_price)
                         .replace("%type%", data.type)
                         .replace("%note%", this.notes[appid] || "")
                 );
@@ -3649,7 +3672,7 @@ let WishlistPageClass = (function(){
                         <h2>${exportStr.format}</h2>
                         <div>
                             <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
-                            <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %note%</div>
+                            <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %price%, %discount%, %base_price%, %type%, %note%</div>
                         </div>
                     </div>
                 </div>`,
