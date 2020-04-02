@@ -3919,15 +3919,6 @@ class UserNotes {
     }
 }
 
-let TagPageClass = (function(){
-
-    function TagPageClass() {
-
-    }
-
-    return TagPageClass;
-})();
-
 
 let StoreFrontPageClass = (function(){
 
@@ -4117,10 +4108,6 @@ let TabAreaObserver = (function(){
 
         case /^\/stats(\/.*|$)/.test(path):
             (new StatsPageClass());
-            break;
-
-        case /^\/(?:tags|genre)\//.test(path):
-            (new TagPageClass());
             break;
 
         case /^\/(?:curator|developer|dlc|publisher|franchise)\/.*/.test(path):
