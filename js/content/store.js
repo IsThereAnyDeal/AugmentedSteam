@@ -3604,9 +3604,9 @@ let WishlistPageClass = (function(){
             let result = [];
             let parser = new DOMParser();
             for (let [appid, data] of Object.entries(this.appInfo)) {
-                let price = "";
+                let price = "N/A";
                 let discount = "0%";
-                let base_price = "";
+                let base_price = "N/A";
 
                 // if it has a price (steam always picks first sub, see https://github.com/SteamDatabase/SteamTracking/blob/f3f38deef1f1a8c6bf5707013adabde3ed873620/store.steampowered.com/public/javascript/wishlist.js#L292)
                 if (data.subs[0]) {
