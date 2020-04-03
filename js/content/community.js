@@ -4034,9 +4034,16 @@ class MyWorkshopClass {
                         totalSize += cache[id];
                     } else {
                         let url = `https://steamcommunity.com/sharedfiles/filedetails/?id=${id}`;
-                        let result = await RequestData.getHttp(url).catch(err => console.error(err));
-                        if (!result) {
-                            console.error("Failed to request " + url.toString());
+                        let result;
+
+                        try {
+                            result = await RequestData.getHttp(url);
+                        } catch(err) {
+                            console.group("Workshop file sizes");
+                            console.error(`Failed to request ${url.toString()}`);
+                            console.error(err);
+                            console.groupEnd();
+
                             continue;
                         }
         
