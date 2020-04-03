@@ -4004,7 +4004,7 @@ class MyWorkshopClass {
         
         document.querySelector("#es_calc_size").addEventListener("click", async () => {
             ExtensionLayer.runInPageContext((calculating, totalSize) => {
-                window.dialog = ShowBlockingWaitDialog(calculating, totalSize);
+                ShowBlockingWaitDialog(calculating, totalSize);
             },
             [
                 Localization.str.calc_workshop_size.calculating,
@@ -4045,8 +4045,8 @@ class MyWorkshopClass {
                         totalSize += cache[id];
                         
                         ExtensionLayer.runInPageContext((calculating, totalSize) => {
-                            window.dialog.Dismiss();
-                            window.dialog = ShowBlockingWaitDialog(calculating, totalSize);
+                            CModal.DismissActiveModal();
+                            ShowBlockingWaitDialog(calculating, totalSize);
                         },
                         [
                             Localization.str.calc_workshop_size.calculating,
@@ -4058,8 +4058,8 @@ class MyWorkshopClass {
 
             MyWorkshopClass.addFileSizes();
             ExtensionLayer.runInPageContext((finished, totalSize) => {
-                window.dialog.Dismiss();
-                window.dialog = ShowAlertDialog(finished, totalSize);
+                CModal.DismissActiveModal();
+                ShowAlertDialog(finished, totalSize);
             },
             [
                 Localization.str.calc_workshop_size.finished,
