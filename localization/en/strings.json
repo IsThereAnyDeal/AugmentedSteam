@@ -1,8 +1,11 @@
 {
-    "file_size": "File size is __size__",
-    "finished": "Finished",
-    "calculating": "Calculating...",
-    "calc_size": "Calculate Total Size",
+    "calc_workshop_size": {
+        "file_size": "File size __size__",
+        "finished": "Finished",
+        "calculating": "Calculating...",
+        "calc_size": "Calculate Total Size",
+        "total_size": "Total size: __size__"
+    },
     "steamid_of_user": "__user__'s SteamID",
     "click_to_copy": "Click to copy",
     "copied": "Copied to your clipboard!",

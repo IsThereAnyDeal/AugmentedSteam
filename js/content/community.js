@@ -3979,7 +3979,7 @@ class MyWorkshopClass {
             let id = node.id.replace("Subscription", "");
             if (!cache[id]) { continue; }
 
-            let str = Localization.str.file_size.replace("__size__", MyWorkshopClass.getFileSizeStr(cache[id]));
+            let str = Localization.str.calc_workshop_size.file_size.replace("__size__", MyWorkshopClass.getFileSizeStr(cache[id]));
             let details = node.querySelector(".workshopItemSubscriptionDetails");
             HTML.beforeEnd(details, `<div class="workshopItemDate">${str}</div>`)
             node.classList.add("sized");
@@ -3996,17 +3996,20 @@ class MyWorkshopClass {
                 <div class="rightSectionHolder">
                     <div class="rightDetailsBlock">
                         <span class="btn_grey_steamui btn_medium" id="es_calc_size">
-                            <span>${Localization.str.calc_size}</span>
+                            <span>${Localization.str.calc_workshop_size.calc_size}</span>
                         </span>
                     </div>
                 </div>
             </div>`);
         
-        document.querySelector("#es_calc_size").addEventListener("click", async function() {
-            ExtensionLayer.runInPageContext(`function() {
-                window.dialog = ShowBlockingWaitDialog("${Localization.str.calculating}",
-                    "${Localization.str.total_size}: 0 KB");
-            }`);
+        document.querySelector("#es_calc_size").addEventListener("click", async () => {
+            ExtensionLayer.runInPageContext((calculating, totalSize) => {
+                window.dialog = ShowBlockingWaitDialog(calculating, totalSize);
+            },
+            [
+                Localization.str.calc_workshop_size.calculating,
+                Localization.str.calc_workshop_size.total_size.replace("__size__", "0 KB"),
+            ]);
 
             let totalStr = document.querySelector(".workshopBrowsePagingInfo").innerText.match(/\d+[,\d]*/g).pop();
             let total = parseInt(totalStr.replace(/,/g, ""));
@@ -4041,21 +4044,27 @@ class MyWorkshopClass {
                         cache = SharedFilesPageClass.cacheFileSize(url, xmlDoc, cache);
                         totalSize += cache[id];
                         
-                        ExtensionLayer.runInPageContext(`function() {
+                        ExtensionLayer.runInPageContext((calculating, totalSize) => {
                             window.dialog.Dismiss();
-                            window.dialog = ShowBlockingWaitDialog("${Localization.str.calculating}",
-                                "${Localization.str.total_size}: ${MyWorkshopClass.getFileSizeStr(totalSize)}");
-                        }`);
+                            window.dialog = ShowBlockingWaitDialog(calculating, totalSize);
+                        },
+                        [
+                            Localization.str.calc_workshop_size.calculating,
+                            Localization.str.calc_workshop_size.total_size.replace("__size__", MyWorkshopClass.getFileSizeStr(totalSize)),
+                        ]);
                     }
                 }
             }
 
             MyWorkshopClass.addFileSizes();
-            ExtensionLayer.runInPageContext(`function() {
+            ExtensionLayer.runInPageContext((finished, totalSize) => {
                 window.dialog.Dismiss();
-                window.dialog = ShowAlertDialog("${Localization.str.finished}!",
-                    "${Localization.str.total_size}: ${MyWorkshopClass.getFileSizeStr(totalSize)}");
-            }`);
+                window.dialog = ShowAlertDialog(finished, totalSize);
+            },
+            [
+                Localization.str.calc_workshop_size.finished,
+                Localization.str.calc_workshop_size.total_size.replace("__size__", MyWorkshopClass.getFileSizeStr(totalSize)),
+            ]);
         });
     };
 }
