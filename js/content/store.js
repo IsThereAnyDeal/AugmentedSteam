@@ -4020,7 +4020,7 @@ let StoreFrontPageClass = (function(){
                 .add("updatesandoffers", ".marketingmessage_area", "", true)
                 .add("topnewreleases", ".top_new_releases", Localization.str.homepage_topnewreleases)
                 .add("steamlabs", ".labs_cluster")
-                .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
+                .add("homepagesidebar", "body:not(.no_home_gutter) .home_page_gutter", Localization.str.homepage_sidebar);
 
             if (specialoffers) customizer.add("specialoffers", specialoffers.parentElement);
             if (browsesteam) customizer.add("browsesteam", browsesteam.parentElement);
