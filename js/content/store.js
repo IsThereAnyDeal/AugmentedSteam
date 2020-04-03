@@ -639,7 +639,7 @@ class AppPageClass extends StorePageClass {
         this.moveUsefulLinks();
         this.addLinks("app");
         this.addFamilySharingWarning();
-        this.removeAboutLink();
+        this.handleInstallSteamButton();
 
         this.addPackBreakdown();
         this.addPackageInfoButton();
@@ -1893,11 +1893,18 @@ class AppPageClass extends StorePageClass {
         });
     }
 
-    removeAboutLink() {
-        if (!SyncedStorage.get("hideaboutlinks")) { return; }
+    handleInstallSteamButton() {
+        if (!User.isSignedIn) { return; }
 
-        if (document.querySelector(".game_area_already_owned .ds_owned_flag")) {
-            document.querySelector(".game_area_already_owned_btn > [href^='https://store.steampowered.com/about/']").remove();
+        let btn = document.querySelector(".game_area_already_owned_btn > [href^='https://store.steampowered.com/about/']");
+        if (!btn) { return; }
+
+        let option = SyncedStorage.get("installsteam");
+        if (option === "hide") {
+            btn.remove();
+        } else if (option === "replace") {
+            btn.querySelector("span").textContent = Localization.str.viewinclient;
+            btn.href = `steam://store/${this.appid}`;
         }
     }
 
