@@ -1036,15 +1036,15 @@ class IndexedDB {
         return (IndexedDB.init())().then(onDone, onCatch);
     }
 
-    static putCached(objectStoreName, data, key) {
-        return IndexedDB.put(objectStoreName, data, key, true);
+    static putCached(objectStoreName, data, key, ttl) {
+        return IndexedDB.put(objectStoreName, data, key, true, ttl);
     }
 
-    static async put(objectStoreName, data, keys, cached) {
+    static async put(objectStoreName, data, keys, cached, ttl) {
         let multiple = Array.isArray(keys);
 
         if (cached) {
-            let ttl = IndexedDB.cacheObjectStores.get(objectStoreName);
+            ttl = ttl || IndexedDB.cacheObjectStores.get(objectStoreName);
             let expiry = Timestamp.now() + ttl;
 
             if (IndexedDB.timestampedObjectStores.has(objectStoreName)) {
@@ -1073,12 +1073,14 @@ class IndexedDB {
             if (keys) {
                 if (data) {
                     return IndexedDB.db.put(objectStoreName, data, keys);
-                } else {
-                    return IndexedDB.db.put(objectStoreName, null, keys);
                 }
-            } else {
+                return IndexedDB.db.put(objectStoreName, null, keys);
+                
+            }
+            if (data) {
                 return IndexedDB.db.put(objectStoreName, data);
             }
+            // Do nothing when there is no data and no key/s
         }
     }
 
@@ -1348,13 +1350,20 @@ class IndexedDB {
             req = IndexedDB.objStoreFetchFns.get(objectStoreName)(params, key);
         }
         req = req
-            .then(async () => {
+            .catch(async err => {
+                console.group("Object store data");
                 if (key) {
-                    if (!await IndexedDB.db.transaction(objectStoreName).store.openKeyCursor(key)) {
-                        // Prevent fetching the same empty result for every db request for this key
-                        return IndexedDB.putCached(objectStoreName, null, key);
-                    }
+                    console.error("Failed to update key %s of object store %s", key, objectStoreName);
+                } else {
+                    console.error("Failed to update object store %s", objectStoreName);
                 }
+                console.error(err);
+                console.groupEnd();
+
+                // Wait some seconds before retrying
+                await IndexedDB.putCached(objectStoreName, null, key, 60);
+
+                throw err;
             })
             .finally(() => IndexedDB._ongoingRequests.delete(requestKey));
         IndexedDB._ongoingRequests.set(requestKey, req);
