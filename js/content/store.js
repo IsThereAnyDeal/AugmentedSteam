@@ -894,7 +894,7 @@ class AppPageClass extends StorePageClass {
     }
 
     async _removeFromWishlist() {
-        return Background.action("wishlist.remove", this.appid);
+        return Background.action("wishlist.remove", this.appid, User.getSessionId());
     }
 
     async _removeFromWaitlist() {

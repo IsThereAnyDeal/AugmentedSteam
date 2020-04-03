@@ -617,10 +617,12 @@ class SteamStore extends Api {
         return SteamStore.clearDynamicStore();
     }
 
-    static async wishlistRemove(appid) {
+    static async wishlistRemove(appid, sessionid) {
         let res;
-        let sessionid = await SteamStore.sessionId();
 
+        if (!sessionid) {
+            sessionid = await SteamStore.sessionId();
+        }
         if (sessionid) {
             res = await SteamStore.postEndpoint("/api/removefromwishlist", { sessionid, appid });
         }
