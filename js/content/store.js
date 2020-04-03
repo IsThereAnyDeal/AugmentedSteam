@@ -4081,7 +4081,7 @@ let TabAreaObserver = (function(){
             (new BundlePageClass(window.location.host + path));
             break;
 
-        case /^\/account\/registerkey(\/.*|$)/.test(path):
+        case /^\/account\/registerkey(\/.*)?$/.test(path):
             (new RegisterKeyPageClass());
             return;
 
@@ -4089,15 +4089,16 @@ let TabAreaObserver = (function(){
             (new AccountPageClass());
             return;
 
-        case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard(\/.*|$))/.test(path):
+        // Match URLs like https://store.steampowered.com/steamaccount/addfundskjdsakjdsakjkjsa since they are still valid
+        case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard(\/.*)?$)/.test(path):
             (new FundsPageClass());
             break;
 
-        case /^\/search(\/.*|$)/.test(path):
+        case /^\/search(\/.*)?$/.test(path):
             (new SearchPageClass());
             break;
 
-        case /^\/stats(\/.*|$)/.test(path):
+        case /^\/stats(\/.*)?$/.test(path):
             (new StatsPageClass());
             break;
 
