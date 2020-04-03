@@ -3612,12 +3612,13 @@ let WishlistPageClass = (function(){
                 if (data.subs[0]) {
                     let block = parser.parseFromString(data.subs[0].discount_block, "text/html");
                     price = block.querySelector(".discount_final_price").innerText;
-                    base_price = block.querySelector(".discount_final_price").innerText;
 
                     // if it is discounted
                     if (data.subs[0].discount_pct > 0) {
                         discount = block.querySelector(".discount_pct").innerText;
                         base_price = block.querySelector(".discount_original_price").innerText;
+                    } else {
+                        base_price = block.querySelector(".discount_final_price").innerText;
                     }
                 }
 
