@@ -959,7 +959,9 @@ class SteamCommunity extends Api {
         return IndexedDB.putCached("workshopFileSizes", size * 1000, Number(id));
     }
 
-    static getWorkshopFileSize(id) { return IndexedDB.get("workshopFileSizes", Number(id)); }
+    static getWorkshopFileSize(id, preventFetch) {
+        return IndexedDB.get("workshopFileSizes", Number(id), null, preventFetch);
+    }
 
     /**
      * Invoked when the content script thinks the user is logged in
@@ -1121,15 +1123,15 @@ class IndexedDB {
         }
     }
 
-    static async get(objectStoreName, keys, params) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
+    static async get(objectStoreName, keys, params, preventFetch) {
+        await IndexedDB.objStoreExpiryCheck(objectStoreName, params, preventFetch);
 
         if (Array.isArray(keys)) {
             let promises = [];
             let tx = IndexedDB.db.transaction(objectStoreName);
 
             for (let key of keys) {
-                promises.push(tx.store.get(key).then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, key, params)));
+                promises.push(tx.store.get(key).then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, key, params, preventFetch)));
             }
 
             let resolved = await Promise.all(promises);
@@ -1140,7 +1142,7 @@ class IndexedDB {
             }, {});
         } else {
             return IndexedDB.db.get(objectStoreName, keys)
-                .then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, keys, params));
+                .then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, keys, params, preventFetch));
         }
     }
 
@@ -1293,22 +1295,28 @@ class IndexedDB {
         }
     }
 
-    static async contains(objectStoreName, key, params) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
+    static async contains(objectStoreName, key, params, preventFetch) {
+        await IndexedDB.objStoreExpiryCheck(objectStoreName, params, preventFetch);
 
         if (Array.isArray(key)) {
             let objectStore = IndexedDB.db.transaction(objectStoreName).store;
             let promises = [];
             key.forEach(_key => {
                 if (_key) {
-                    promises.push(objectStore.openCursor(_key)
-                        .then(cursor => {
-                            if (cursor) {
-                                return IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
-                            }
-                        })
-                        .then(result => typeof result !== "undefined")
-                    );
+                    if (preventFetch) {
+                        promises.push(objectStore.openKeyCursor(_key)
+                            .then(cursor => Boolean(cursor))
+                        );
+                    } else {
+                        promises.push(objectStore.openCursor(_key)
+                            .then(cursor => {
+                                if (cursor) {
+                                    return IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
+                                }
+                            })
+                            .then(result => typeof result !== "undefined")
+                        );
+                    }
                 } else {
                     promises.push(Promise.resolve(false));
                 }
@@ -1321,6 +1329,10 @@ class IndexedDB {
             }, {});
         } else {
             if (!key) return false;
+
+            if (preventFetch) {
+                return Boolean(await IndexedDB.db.transaction(objectStoreName).store.openKeyCursor(key));
+            }
             let cursor = await IndexedDB.db.transaction(objectStoreName).store.openCursor(key);
             
             if (cursor) {
@@ -1330,10 +1342,10 @@ class IndexedDB {
         }
     }
 
-    static async resultExpiryCheck(result, objectStoreName, key, params) {
+    static async resultExpiryCheck(result, objectStoreName, key, params, preventFetch) {
         if (IndexedDB.timestampedObjectStores.has(objectStoreName) || !IndexedDB.cacheObjectStores.has(objectStoreName)) return result;
 
-        if (!result || IndexedDB.isExpired(result.expiry)) {
+        if (!preventFetch && (!result || IndexedDB.isExpired(result.expiry))) {
             await IndexedDB.fetchUpdatedData(objectStoreName, key, params);
             return IndexedDB.get(objectStoreName, key);
         }
@@ -1345,7 +1357,7 @@ class IndexedDB {
         return expiry <= Timestamp.now();
     }
 
-    static async objStoreExpiryCheck(objectStoreName, params) {
+    static async objStoreExpiryCheck(objectStoreName, params, preventFetch) {
         // Remove old entries
         if (IndexedDB.timestampedEntriesObjectStores.has(objectStoreName)) {
             let cursor = await IndexedDB.db.transaction(objectStoreName, "readwrite").store.index("expiry")
@@ -1368,7 +1380,9 @@ class IndexedDB {
         }
         if (expired) {
             await IndexedDB.clear(objectStoreName);
-            await IndexedDB.fetchUpdatedData(objectStoreName, null, params);
+            if (!preventFetch) {
+                await IndexedDB.fetchUpdatedData(objectStoreName, null, params);
+            }
         }
     }
 

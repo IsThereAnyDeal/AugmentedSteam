@@ -4004,7 +4004,7 @@ let WorkshopPageClass = (function(){
 
 class MyWorkshopClass {
     constructor() {
-        //MyWorkshopClass.addFileSizes();
+        MyWorkshopClass.addFileSizes();
         MyWorkshopClass.addTotalSizeButton();
     }
 
@@ -4018,15 +4018,14 @@ class MyWorkshopClass {
     }
 
     static async addFileSizes() {
-        let cache = SharedFilesPageClass.getFileSizeCache();
-        
         for (let node of document.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
             if (node.classList.contains("sized")) { continue; }
             
             let id = node.id.replace("Subscription", "");
-            if (!cache[id]) { continue; }
+            let size = await Background.action("workshopfilesize", id, true);
+            if (typeof size !== "number") { continue; }
 
-            let str = Localization.str.calc_workshop_size.file_size.replace("__size__", MyWorkshopClass.getFileSizeStr(cache[id]));
+            let str = Localization.str.calc_workshop_size.file_size.replace("__size__", MyWorkshopClass.getFileSizeStr(size));
             let details = node.querySelector(".workshopItemSubscriptionDetails");
             HTML.beforeEnd(details, `<div class="workshopItemDate">${str}</div>`)
             node.classList.add("sized");
@@ -4102,7 +4101,7 @@ class MyWorkshopClass {
                 }
             }
 
-            //MyWorkshopClass.addFileSizes();
+            MyWorkshopClass.addFileSizes();
             ExtensionLayer.runInPageContext((finished, totalSize) => {
                 CModal.DismissActiveModal();
                 ShowAlertDialog(finished, totalSize);
