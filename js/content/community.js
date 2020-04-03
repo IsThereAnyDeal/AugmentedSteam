@@ -3952,7 +3952,7 @@ let WorkshopPageClass = (function(){
 
 class MyWorkshopClass {
     constructor() {
-        MyWorkshopClass.addFileSizes();
+        //MyWorkshopClass.addFileSizes();
         MyWorkshopClass.addTotalSizeButton();
     }
 
@@ -3970,7 +3970,7 @@ class MyWorkshopClass {
         return sizeStr;
     }
 
-    static addFileSizes() {
+    static async addFileSizes() {
         let cache = SharedFilesPageClass.getFileSizeCache();
         
         for (let node of document.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
@@ -4012,11 +4012,10 @@ class MyWorkshopClass {
             ]);
 
             let totalStr = document.querySelector(".workshopBrowsePagingInfo").innerText.match(/\d+[,\d]*/g).pop();
-            let total = parseInt(totalStr.replace(/,/g, ""));
-            let cache = SharedFilesPageClass.getFileSizeCache();
-
+            let total = Number(totalStr.replace(/,/g, ""));
             let parser = new DOMParser();
             let totalSize = 0;
+
             for (let p = 1; p <= Math.ceil(total / 30); p++) {
                 url.searchParams.set("p", p);
                 url.searchParams.set("numperpage", 30);
@@ -4027,43 +4026,36 @@ class MyWorkshopClass {
                     continue;
                 }
 
-                let xmlDoc = parser.parseFromString(result, "text/html");
-                for (let node of xmlDoc.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
-                    let id = node.id.replace("Subscription", "");
-                    if (cache[id]) {
-                        totalSize += cache[id];
-                    } else {
-                        let url = `https://steamcommunity.com/sharedfiles/filedetails/?id=${id}`;
-                        let result;
+                let doc = parser.parseFromString(result, "text/html");
+                for (let item of doc.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
+                    let id = item.id.replace("Subscription", "");
+                    let size;
 
-                        try {
-                            result = await RequestData.getHttp(url);
-                        } catch(err) {
-                            console.group("Workshop file sizes");
-                            console.error(`Failed to request ${url.toString()}`);
-                            console.error(err);
-                            console.groupEnd();
-
-                            continue;
-                        }
-        
-                        let xmlDoc = parser.parseFromString(result, "text/html");
-                        cache = SharedFilesPageClass.cacheFileSize(url, xmlDoc, cache);
-                        totalSize += cache[id];
-                        
-                        ExtensionLayer.runInPageContext((calculating, totalSize) => {
-                            CModal.DismissActiveModal();
-                            ShowBlockingWaitDialog(calculating, totalSize);
-                        },
-                        [
-                            Localization.str.calc_workshop_size.calculating,
-                            Localization.str.calc_workshop_size.total_size.replace("__size__", MyWorkshopClass.getFileSizeStr(totalSize)),
-                        ]);
+                    try {
+                        size = await Background.action("workshopfilesize", id);
+                    } catch(err) {
+                        console.group("Workshop file sizes");
+                        console.error(`Couldn't get file size for item ID ${id}`);
+                        console.error(err);
+                        console.groupEnd();
                     }
+    
+                    if (!size) { continue; }
+
+                    totalSize += size;
+                    
+                    ExtensionLayer.runInPageContext((calculating, totalSize) => {
+                        CModal.DismissActiveModal();
+                        ShowBlockingWaitDialog(calculating, totalSize);
+                    },
+                    [
+                        Localization.str.calc_workshop_size.calculating,
+                        Localization.str.calc_workshop_size.total_size.replace("__size__", MyWorkshopClass.getFileSizeStr(totalSize)),
+                    ]);
                 }
             }
 
-            MyWorkshopClass.addFileSizes();
+            //MyWorkshopClass.addFileSizes();
             ExtensionLayer.runInPageContext((finished, totalSize) => {
                 CModal.DismissActiveModal();
                 ShowAlertDialog(finished, totalSize);
@@ -4080,33 +4072,6 @@ class SharedFilesPageClass {
     constructor() {
         new MediaPage().workshopPage();
         //media.initHdPlayer();
-        SharedFilesPageClass.cacheFileSize(window.location.href, document);
-    }
-
-    // Every language/region seems to display the same number formatting and in MB
-    static cacheFileSize(url, doc, cache) {
-        let node = doc.querySelector(".detailsStatRight");
-        if (!node || !node.innerText.includes("MB")) { return cache; }
-        
-        let uri = new URL(url);
-        let id = uri.searchParams.get("id");
-        if (!id) { return cache; }
-
-        let text = node.innerText.split(" ")[0].trim();
-        let size = parseFloat(text.replace(/,/g, ""));
-        cache = cache || this.getFileSizeCache();
-        cache[id] = parseInt(size * 1024); // kb
-        LocalStorage.set("workshopSizes", cache);
-        return cache;
-    }
-
-    static getFileSizeCache() {
-        let empty = { date: Date.now() };
-        let cache = LocalStorage.get("workshopSizes") || empty;
-        if (!cache.date || Date.now() - cache.date > 1000 * 60 * 60 * 24 * 5) {
-            cache = empty;
-        }
-        return cache;
     }
 }
 
