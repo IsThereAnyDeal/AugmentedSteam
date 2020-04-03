@@ -2247,8 +2247,8 @@ let Prices = (function(){
         this.subids = [];
         this.bundleids = [];
 
-        this.priceCallback = function(type, id, node) {};
-        this.bundleCallback = function(html) {};
+        this.priceCallback = null;
+        this.bundleCallback = null;
 
         this._bundles = [];
     }
