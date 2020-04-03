@@ -3956,18 +3956,13 @@ class MyWorkshopClass {
         MyWorkshopClass.addTotalSizeButton();
     }
 
-    static getFileSizeStr(size) {                        
-        let sizeStr = size.toString() + " KB";
-        if (size / 1024 >= 1) {
-            sizeStr = (size / 1024).toFixed(2) + " MB";
-        }
-        if (size / (1024 * 1024) >= 1) {
-            sizeStr = (size / (1024 * 1024)).toFixed(2) + " GB";
-        }
-        if (size / (1024 * 1024 * 1024) >= 1) {
-            sizeStr = (size / (1024 * 1024 * 1024)).toFixed(2) + " TB";
-        }
-        return sizeStr;
+    static getFileSizeStr(size) {
+        let units = ["TB", "GB", "MB", "KB"];
+
+        let index = units.findIndex((unit, i) =>
+            size / Math.pow(1000, units.length - (i + 1)) >= 1
+        );
+        return `${(size / Math.pow(1000, units.length - (index + 1))).toFixed(2)} ${units[index]}`;
     }
 
     static async addFileSizes() {
