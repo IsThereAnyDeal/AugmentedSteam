@@ -1350,7 +1350,7 @@ class IndexedDB {
             return IndexedDB.get(objectStoreName, key);
         }
 
-        return result.value;
+        return result ? result.value : result;
     }
 
     static isExpired(expiry) {
