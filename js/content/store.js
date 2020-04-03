@@ -3608,7 +3608,7 @@ let WishlistPageClass = (function(){
                 let discount = "0%";
                 let base_price = "";
 
-                // if it has a price (steam always picks first sub, see /public/javascript/wishlist.js)
+                // if it has a price (steam always picks first sub, see https://github.com/SteamDatabase/SteamTracking/blob/f3f38deef1f1a8c6bf5707013adabde3ed873620/store.steampowered.com/public/javascript/wishlist.js#L292)
                 if (data.subs[0]) {
                     let block = parser.parseFromString(data.subs[0].discount_block, "text/html");
                     price = block.querySelector(".discount_final_price").innerText;
