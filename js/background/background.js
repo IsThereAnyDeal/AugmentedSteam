@@ -956,10 +956,10 @@ class SteamCommunity extends Api {
         let text = details.innerText.split(" ")[0].trim();
         let size = parseFloat(text.replace(/,/g, ""));
         
-        return IndexedDB.putCached("workshopFileSizes", size * 1000, id);
+        return IndexedDB.putCached("workshopFileSizes", size * 1000, Number(id));
     }
 
-    static getWorkshopFileSize(id) { return IndexedDB.get("workshopFileSizes", id); }
+    static getWorkshopFileSize(id) { return IndexedDB.get("workshopFileSizes", Number(id)); }
 
     /**
      * Invoked when the content script thinks the user is logged in
