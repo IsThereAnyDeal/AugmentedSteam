@@ -945,6 +945,22 @@ class SteamCommunity extends Api {
 
     static hasItem(hashes) { return IndexedDB.contains("items", hashes) }
 
+    static async fetchWorkshopFileSize(params, id) {
+        let parser = new DOMParser();
+        let res = await SteamCommunity.getPage(`/sharedfiles/filedetails/`, { id });
+        let doc = parser.parseFromString(res, "text/html");
+
+        let details = doc.querySelector(".detailsStatRight");
+        if (!details || !details.innerText.includes("MB")) { throw new Error("Couldn't find details block for workshop file size"); }
+
+        let text = details.innerText.split(" ")[0].trim();
+        let size = parseFloat(text.replace(/,/g, ""));
+        
+        return IndexedDB.putCached("workshopFileSizes", size * 1000, id);
+    }
+
+    static getWorkshopFileSize(id) { return IndexedDB.get("workshopFileSizes", id); }
+
     /**
      * Invoked when the content script thinks the user is logged in
      * If we don't know the user's steamId, fetch their community profile
@@ -1026,28 +1042,25 @@ class IndexedDB {
         return IndexedDB._promise = async () => {
             IndexedDB.db = await idb.openDB("Augmented Steam", Info.db_version, {
                 upgrade(db, oldVersion) {
-                    switch(oldVersion) {
-                        case 0: {
-                            db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
-                            db.createObjectStore("giftsAndPasses").createIndex("appid", '', { unique: false, multiEntry: true });
-                            db.createObjectStore("items");
-                            db.createObjectStore("earlyAccessAppids");
-                            db.createObjectStore("purchases");
-                            db.createObjectStore("dynamicStore").createIndex("appid", '', { unique: false, multiEntry: true });
-                            db.createObjectStore("packages").createIndex("expiry", "expiry");
-                            db.createObjectStore("storePageData").createIndex("expiry", "expiry");
-                            db.createObjectStore("profiles").createIndex("expiry", "expiry");
-                            db.createObjectStore("rates");
-                            db.createObjectStore("notes");
-                            db.createObjectStore("collection");
-                            db.createObjectStore("waitlist");
-                            db.createObjectStore("itadImport");
-                            break;
-                        }
-                        default: {
-                            console.warn("Unknown oldVersion", oldVersion);
-                            break;
-                        }
+                    if (oldVersion === 0) {
+                        db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
+                        db.createObjectStore("giftsAndPasses").createIndex("appid", '', { unique: false, multiEntry: true });
+                        db.createObjectStore("items");
+                        db.createObjectStore("earlyAccessAppids");
+                        db.createObjectStore("purchases");
+                        db.createObjectStore("dynamicStore").createIndex("appid", '', { unique: false, multiEntry: true });
+                        db.createObjectStore("packages").createIndex("expiry", "expiry");
+                        db.createObjectStore("storePageData").createIndex("expiry", "expiry");
+                        db.createObjectStore("profiles").createIndex("expiry", "expiry");
+                        db.createObjectStore("rates");
+                        db.createObjectStore("notes");
+                        db.createObjectStore("collection");
+                        db.createObjectStore("waitlist");
+                        db.createObjectStore("itadImport");
+                    }
+
+                    if (oldVersion <= 1) {
+                        db.createObjectStore("workshopFileSizes").createIndex("expiry", "expiry");
                     }
                 },
                 blocked() {
@@ -1060,15 +1073,15 @@ class IndexedDB {
         return (IndexedDB.init())().then(onDone, onCatch);
     }
 
-    static putCached(objectStoreName, data, key) {
-        return IndexedDB.put(objectStoreName, data, key, true);
+    static putCached(objectStoreName, data, key, ttl) {
+        return IndexedDB.put(objectStoreName, data, key, true, ttl);
     }
 
-    static async put(objectStoreName, data, keys, cached) {
+    static async put(objectStoreName, data, keys, cached, ttl) {
         let multiple = Array.isArray(keys);
 
         if (cached) {
-            let ttl = IndexedDB.cacheObjectStores.get(objectStoreName);
+            ttl = ttl || IndexedDB.cacheObjectStores.get(objectStoreName);
             let expiry = Timestamp.now() + ttl;
 
             if (IndexedDB.timestampedObjectStores.has(objectStoreName)) {
@@ -1097,12 +1110,14 @@ class IndexedDB {
             if (keys) {
                 if (data) {
                     return IndexedDB.db.put(objectStoreName, data, keys);
-                } else {
-                    return IndexedDB.db.put(objectStoreName, null, keys);
                 }
-            } else {
+                return IndexedDB.db.put(objectStoreName, null, keys);
+                
+            }
+            if (data) {
                 return IndexedDB.db.put(objectStoreName, data);
             }
+            // Do nothing when there is no data and no key/s
         }
     }
 
@@ -1372,13 +1387,20 @@ class IndexedDB {
             req = IndexedDB.objStoreFetchFns.get(objectStoreName)(params, key);
         }
         req = req
-            .then(async () => {
+            .catch(async err => {
+                console.group("Object store data");
                 if (key) {
-                    if (!await IndexedDB.db.transaction(objectStoreName).store.openKeyCursor(key)) {
-                        // Prevent fetching the same empty result for every db request for this key
-                        return IndexedDB.putCached(objectStoreName, null, key);
-                    }
+                    console.error("Failed to update key %s of object store %s", key, objectStoreName);
+                } else {
+                    console.error("Failed to update object store %s", objectStoreName);
                 }
+                console.error(err);
+                console.groupEnd();
+
+                // Wait some seconds before retrying
+                await IndexedDB.putCached(objectStoreName, null, key, 60);
+
+                throw err;
             })
             .finally(() => IndexedDB._ongoingRequests.delete(requestKey));
         IndexedDB._ongoingRequests.set(requestKey, req);
@@ -1413,6 +1435,7 @@ IndexedDB.timestampedEntriesObjectStores = new Map([
     ["packages", 7 * 24 * 60 * 60],
     ["storePageData", 60 * 60],
     ["profiles", 24 * 60 * 60],
+    ["workshopFileSizes", 5 * 24 * 60 * 60],
 ]);
 
 IndexedDB.cacheObjectStores = new Map([...IndexedDB.timestampedObjectStores, ...IndexedDB.timestampedEntriesObjectStores]);
@@ -1422,6 +1445,7 @@ IndexedDB.objStoreFetchFns = new Map([
     ["coupons", SteamCommunity.coupons],
     ["giftsAndPasses", SteamCommunity.giftsAndPasses],
     ["items", SteamCommunity.items],
+    ["workshopFileSizes", SteamCommunity.fetchWorkshopFileSize],
     ["earlyAccessAppids", AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", "earlyAccessAppids", true)],
     ["purchases", SteamStore.purchaseDate],
     ["dynamicStore", SteamStore.dynamicStore],
@@ -1475,6 +1499,7 @@ let actionCallbacks = new Map([
     ["hasitem", SteamCommunity.hasItem],
     ["profile", SteamCommunity.getProfile],
     ["clearownprofile", SteamCommunity.clearOwn],
+    ["workshopfilesize", SteamCommunity.getWorkshopFileSize],
 
     ["itad.authorize", ITAD_Api.authorize],
     ["itad.disconnect", ITAD_Api.disconnect],

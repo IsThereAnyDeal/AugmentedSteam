@@ -1,4 +1,8 @@
 {
+    "file_size": "Bestandsgrootte van __size__",
+    "finished": "Klaar",
+    "calculating": "Berekenen...",
+    "calc_size": "Bereken Totale Grootte",
     "steamid_of_user": "__user__'s SteamID",
     "click_to_copy": "Klik om te kopiëren",
     "copied": "Gekopieerd naar uw klembord!",
