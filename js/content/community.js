@@ -4479,7 +4479,7 @@ let EditGuidePageClass = (function(){
             (new StatsPageClass());
             break;
 
-        case /^\/(?:id|profiles)\/.+\/myworkshopfiles$/.test(path):
+        case /^\/(?:id|profiles)\/.+\/myworkshopfiles\/?$/.test(path):
             (new MyWorkshopClass());
             break;
 
