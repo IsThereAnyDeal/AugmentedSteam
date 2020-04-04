@@ -126,37 +126,17 @@ class Api {
             return result;
         }
     }
-    static endpointFactoryCached(endpoint, objectStoreName, oneDimensional, resultFn) {
+    static endpointFactoryCached(endpoint, objectStoreName, mapFn) {
         return async (params, dbKey) => {
             let result = await this.getEndpoint(endpoint, params);
 
-            let finalResult;
-            if (resultFn) {
-                finalResult = resultFn(result.data);
+            if (mapFn) {
+                result = mapFn(result.data);
             } else {
-                finalResult = result.data;
+                result = result.data;
             }
-            
-            if (!dbKey) {
-                dbKey = Object.keys(finalResult).map(key => {
-                    let intKey = Number(key);
-                    if (intKey && intKey <= Number.MAX_SAFE_INTEGER) {
-                        return intKey;
-                    }
-                    return key;
-                });
-                finalResult = Object.values(finalResult);
-            } else {
-                let intKey = Number(dbKey);
-                if (intKey && intKey <= Number.MAX_SAFE_INTEGER) {
-                    dbKey = intKey;
-                }
-            }
-            return IndexedDB.putCached(
-                objectStoreName,
-                oneDimensional ? null : finalResult,
-                oneDimensional ? finalResult : dbKey,
-            );
+
+            return IndexedDB.put(objectStoreName, typeof dbKey !== "undefined" ? new Map([[dbKey, result]]) : result);
         };
     }
 }
@@ -316,10 +296,10 @@ class ITAD_Api extends Api {
         return true;
     }
 
-    static endpointFactoryCached(endpoint, objectStore, oneDimensional, resultFn) {
+    static endpointFactoryCached(endpoint, objectStore, resultFn) {
         return async (params, dbKey) => {
             if (ITAD_Api.isConnected()) {
-                return super.endpointFactoryCached(endpoint, objectStore, oneDimensional, resultFn)(Object.assign(params || {}, { access_token: ITAD_Api.accessToken }), dbKey);
+                return super.endpointFactoryCached(endpoint, objectStore, resultFn)(Object.assign(params || {}, { access_token: ITAD_Api.accessToken }), dbKey);
             }
         }
     }
@@ -335,25 +315,25 @@ class ITAD_Api extends Api {
             "data": [],
         };
 
-        let storeids = [];
+        let storeids = {};
         if (Array.isArray(appids)) {
             appids.forEach(appid => {
                 let id = `app/${appid}`;
                 waitlistJSON.data.push({
                     "gameid": ["steam", id],
                 });
-                storeids.push(id);
+                storeids[id] = null;
             });
         } else {
             let id = `app/${appids}`;
             waitlistJSON.data[0] = {
                 "gameid": ["steam", id],
             };
-            storeids.push(id);
+            storeids[id] = null;
         }
 
         await ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, null, { "body": JSON.stringify(waitlistJSON) });
-        return IndexedDB.put("waitlist", null, storeids);
+        return IndexedDB.put("waitlist", storeids);
     }
 
     static async removeFromWaitlist(appids) {
@@ -438,7 +418,10 @@ class ITAD_Api extends Api {
             let newOwnedPackages = removeDuplicates(ownedPackages, lastOwnedPackages);
             if (newOwnedApps.length || newOwnedPackages.length) {
                 promises.push(ITAD_Api.addToCollection(newOwnedApps, newOwnedPackages)
-                    .then(() => IndexedDB.put("itadImport", [ownedApps, ownedPackages], ["lastOwnedApps", "lastOwnedPackages"])));
+                    .then(() => IndexedDB.put("itadImport", {
+                        "lastOwnedApps": ownedApps,
+                        "lastOwnedPackages": ownedPackages,
+                    })));
             }
         }
 
@@ -447,7 +430,7 @@ class ITAD_Api extends Api {
             let newWishlisted = removeDuplicates(wishlisted, lastWishlisted);
             if (newWishlisted.length) {
                 promises.push(ITAD_Api.addToWaitlist(newWishlisted)
-                    .then(() => IndexedDB.put("itadImport", wishlisted, "lastWishlisted")));
+                    .then(() => IndexedDB.put("itadImport", { "lastWishlisted": wishlisted })));
             }
         }
         
@@ -581,14 +564,15 @@ class SteamStore extends Api {
     static async fetchPackage(params, subid) {
         let data = await SteamStore.getEndpoint("/api/packagedetails/", { "packageids": subid, });
         let promises = [];
+        let appids = new Map();
+
         for (let [subid, details] of Object.entries(data)) {
             if (details && details.success) {
-                let appids = details.data.apps.map(obj => obj.id);
                 // .apps is an array of { 'id': ##, 'name': "", }
-                promises.push(IndexedDB.putCached("packages", appids, Number(subid)));
+                appids.set(Number(subid), details.data.apps.map(obj => obj.id))
             }
         }
-        return Promise.all(promises);
+        return IndexedDB.put("packages", appids);
     }
     
     static async wishlistAdd(appid) {
@@ -691,8 +675,7 @@ class SteamStore extends Api {
             /ROW/ig,
             /:/ig,
         ];
-        let purchaseDates = [];
-        let keys = [];
+        let purchaseDates = new Map();
 
         let html = await SteamStore.getPage("/account/licenses/", { 'l': lang, });
         let dummyPage = HTMLParser.htmlToDOM(html);
@@ -707,11 +690,10 @@ class SteamStore extends Api {
                 appName = appName.replace(regex, "");
             }
             appName = appName.trim();
-            keys.push(appName);
-            purchaseDates.push(node.textContent);
+            purchaseDates.set(appName, node.textContent);
         }
 
-        return IndexedDB.putCached("purchases", purchaseDates, keys);
+        return IndexedDB.put("purchases", purchaseDates);
     }
 
     static purchases(appName, lang) { return IndexedDB.get("purchases", appName, lang) }
@@ -732,7 +714,7 @@ class SteamStore extends Api {
         // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
         // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
 
-        return IndexedDB.putCached("dynamicStore", Object.values(dynamicStore), Object.keys(dynamicStore));
+        return IndexedDB.put("dynamicStore", dynamicStore);
     }
 
     static dsStatus(ids) {
@@ -811,7 +793,7 @@ class SteamCommunity extends Api {
      * Inventory functions, must be signed in to function correctly
      */
     static async coupons() { // context#3
-        let coupons = {};
+        let coupons = new Map();
         let data = await SteamCommunity.getInventory(3);
         if (!data) return;
 
@@ -849,16 +831,17 @@ class SteamCommunity extends Api {
                 }
 
                 for (let packageid of match[0].split(',')) {
-                    if (!coupons[packageid] || coupons[packageid].discount < coupon.discount) {
-                        coupons[packageid] = coupon;
+                    packageid = Number(packageid);
+                    if (!coupons.has(packageid) || coupons.get(packageid).discount < coupon.discount) {
+                        coupons.set(packageid, coupon);
                     }
                 }
             }
         }
 
-        let packages = await IndexedDB.get("packages", Object.keys(coupons).map(key => Number(key)));
+        let packages = await IndexedDB.get("packages", Array.from(coupons.keys()));
 
-        for (let [subid, coupon] of Object.entries(coupons)) {
+        for (let [subid, coupon] of coupons.entries()) {
             let details = packages[subid];
             if (details) {
                 coupon.appids = details;
@@ -867,7 +850,7 @@ class SteamCommunity extends Api {
             }
         }
 
-        return IndexedDB.putCached("coupons", Object.values(coupons), Object.keys(coupons).map(key => Number(key)));
+        return IndexedDB.put("coupons", coupons);
     }
 
     static getCoupon(appids) { return IndexedDB.getFromIndex("coupons", "appid", appids) }
@@ -919,7 +902,7 @@ class SteamCommunity extends Api {
             "passes": passes,
         };
 
-        return IndexedDB.putCached("giftsAndPasses", Object.values(data), Object.keys(data));
+        return IndexedDB.put("giftsAndPasses", data);
     }
 
     static async hasGiftsAndPasses(appid) { return IndexedDB.getAllFromIndex("giftsAndPasses", "appid", appid, true) }
@@ -928,7 +911,7 @@ class SteamCommunity extends Api {
         // only used for market highlighting
         let data = await SteamCommunity.getInventory(6);
         if (data) {
-            return IndexedDB.putCached("items", null, data.descriptions.map(item => item.market_hash_name));
+            return IndexedDB.put("items", data.descriptions.map(item => item.market_hash_name));
         }
     }
 
@@ -945,7 +928,7 @@ class SteamCommunity extends Api {
         let text = details.innerText.split(" ")[0].trim();
         let size = parseFloat(text.replace(/,/g, ""));
         
-        return IndexedDB.putCached("workshopFileSizes", size * 1000, Number(id));
+        return IndexedDB.put("workshopFileSizes", new Map([[Number(id), size * 1000]]));
     }
 
     static getWorkshopFileSize(id, preventFetch) {
@@ -1064,52 +1047,49 @@ class IndexedDB {
         return (IndexedDB.init())().then(onDone, onCatch);
     }
 
-    static putCached(objectStoreName, data, key, ttl) {
-        return IndexedDB.put(objectStoreName, data, key, true, ttl);
-    }
+    static put(objectStoreName, data, { ttl, multiple = typeof data === "object" }) {
+        let tx = IndexedDB.db.transaction(objectStoreName, "readwrite");
+        let cached = IndexedDB.cacheObjectStores.has(objectStoreName);
+        let timestampedEntry = IndexedDB.timestampedEntriesObjectStores.has(objectStoreName);
+        let expiry;
 
-    static async put(objectStoreName, data, keys, cached, ttl) {
-        let multiple = Array.isArray(keys);
+        function getFinalVal(value) {
+            return timestampedEntry ? { value, expiry } : value;
+        }
+
+        function nonAssociativeData(data) {
+            if (tx.store.autoIncrement) {
+                tx.store.put(getFinalVal(data));
+            } else {
+                tx.store.put(getFinalVal(null), data);
+            }
+        }
 
         if (cached) {
             ttl = ttl || IndexedDB.cacheObjectStores.get(objectStoreName);
-            let expiry = Timestamp.now() + ttl;
+            expiry = Timestamp.now() + ttl;
 
-            if (IndexedDB.timestampedObjectStores.has(objectStoreName)) {
-                await IndexedDB.db.put(objectStoreName, expiry, "expiry");
-            } else {
-                if (multiple) {
-                    if (data) data.map(value => ({ "value": value, "expiry": expiry }));
-                } else {
-                    data = { "value": data, "expiry": expiry };
-                }
+            if (!timestampedEntry) {
+                tx.store.put(expiry, "expiry");
             }
         }
+
         if (multiple) {
-            let tx = IndexedDB.db.transaction(objectStoreName, "readwrite");
-            if (keys) {
-                for (let i = 0; i < keys.length; ++i) {
-                    tx.store.put(data ? data[i] : null, keys[i]);
+            if (Array.isArray(data)) {
+                data.forEach(nonAssociativeData);
+            } else if (typeof data === "object") {
+                let entries = data instanceof Map ? data.entries() : Object.entries(data);
+                for (let [key, value] of entries) {
+                    tx.store.put(getFinalVal(value), key);
                 }
             } else {
-                for (let value of data) {
-                    tx.store.put(value);
-                }
+                console.warn("multiple parameter specified but the data is a primitive");
             }
-            return tx.done;
         } else {
-            if (keys) {
-                if (data) {
-                    return IndexedDB.db.put(objectStoreName, data, keys);
-                }
-                return IndexedDB.db.put(objectStoreName, null, keys);
-                
-            }
-            if (data) {
-                return IndexedDB.db.put(objectStoreName, data);
-            }
-            // Do nothing when there is no data and no key/s
+            nonAssociativeData(data);
         }
+
+        return tx.done;
     }
 
     static async get(objectStoreName, keys, params, preventFetch) {
@@ -1401,7 +1381,7 @@ class IndexedDB {
                 console.groupEnd();
 
                 // Wait some seconds before retrying
-                await IndexedDB.putCached(objectStoreName, null, key, 60);
+                await IndexedDB.put(objectStoreName, key, { "ttl": 60 });
 
                 throw err;
             })
@@ -1449,15 +1429,15 @@ IndexedDB.objStoreFetchFns = new Map([
     ["giftsAndPasses", SteamCommunity.giftsAndPasses],
     ["items", SteamCommunity.items],
     ["workshopFileSizes", SteamCommunity.fetchWorkshopFileSize],
-    ["earlyAccessAppids", AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", "earlyAccessAppids", true)],
+    ["earlyAccessAppids", AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", "earlyAccessAppids")],
     ["purchases", SteamStore.purchaseDate],
     ["dynamicStore", SteamStore.dynamicStore],
     ["packages", SteamStore.fetchPackage],
     ["storePageData", AugmentedSteamApi.endpointFactoryCached("v01/storepagedata", "storePageData")],
     ["profiles", AugmentedSteamApi.endpointFactoryCached("v01/profile/profile", "profiles")],
     ["rates", AugmentedSteamApi.endpointFactoryCached("v01/rates", "rates")],
-    ["collection", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "collection", false, ITAD_Api.mapCollection)],
-    ["waitlist", ITAD_Api.endpointFactoryCached("v01/user/wait/all", "waitlist", true, ITAD_Api.mapWaitlist)],
+    ["collection", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "collection", ITAD_Api.mapCollection)],
+    ["waitlist", ITAD_Api.endpointFactoryCached("v01/user/wait/all", "waitlist", ITAD_Api.mapWaitlist)],
 ]);
 
 let actionCallbacks = new Map([
