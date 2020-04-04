@@ -541,7 +541,6 @@ class ContextMenu {
     }
     
     static async build() {
-        if (!browser.contextMenus) { return; }
         await Localization;
 
         for (let option of Object.keys(ContextMenu.queryLinks)) {
@@ -551,7 +550,7 @@ class ContextMenu {
                 "id": option,
                 "title": Localization.str.options[option].replace("__query__", "%s"),
                 "contexts": ["selection"]
-            }, 
+            },
             // TODO don't recreate the context menu entries on each change, only update the affected entry (which should also prevent this error)
             // Error when you create an entry with duplicate id
             () => chrome.runtime.lastError);
@@ -559,20 +558,10 @@ class ContextMenu {
     }
     
     static update() {
-        if (!browser.contextMenus) { return; }
         browser.contextMenus.removeAll().then(ContextMenu.build);
-
-        if (!ContextMenu._listenerRegistered) {
-            browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
-            ContextMenu._listenerRegistered = true;
-        }
-    }
-
-    static init() {
-        ContextMenu.update();
     }
 }
-ContextMenu._listenerRegistered = false;
+
 ContextMenu.queryLinks = {
     "context_steam_store": "https://store.steampowered.com/search/?term=__query__",
     "context_steam_market": "https://steamcommunity.com/market/search?q=__query__",
@@ -1554,5 +1543,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     return res;
 });
 
-browser.runtime.onStartup.addListener(ContextMenu.init);
-browser.runtime.onInstalled.addListener(ContextMenu.init);
+browser.runtime.onStartup.addListener(ContextMenu.update);
+browser.runtime.onInstalled.addListener(ContextMenu.update);
+
+browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
