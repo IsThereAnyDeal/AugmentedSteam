@@ -570,6 +570,8 @@ class SteamStore extends Api {
             if (details && details.success) {
                 // .apps is an array of { 'id': ##, 'name': "", }
                 appids.set(Number(subid), details.data.apps.map(obj => obj.id))
+            } else {
+                appids.set(Number(subid), null);
             }
         }
         return IndexedDB.put("packages", appids);
