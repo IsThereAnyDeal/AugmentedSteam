@@ -1562,182 +1562,78 @@ let RecommendedPageClass = (function(){
         this.addReviewSort();
     }
 
-    RecommendedPageClass.prototype.addReviewSort = function() {
+    RecommendedPageClass.prototype.addReviewSort = async function() {
         let numReviewsNode = document.querySelector(".review_stat:nth-child(1) .giantNumber");
-        if (numReviewsNode.length === 0) { return; }
+        if (!numReviewsNode) { return; }
 
-        let numReviews = parseInt(numReviewsNode.innerText);
-        if (numReviews === 0) { return; }
+        let numReviews = Number(numReviewsNode.innerText);
+        if (isNaN(numReviews) || numReviews === 0) { return; }
 
-        let steamId = window.location.pathname.split("/")[2]; // I know, this can be vanity url or steamid64, but it serves as just an identifier anyway
         let params = new URLSearchParams(window.location.search);
         let curPage = params.get("p") || 1;
-        let pagecnt = 10;
-        let sorted = [];
-        let allowcache = true;
+        let pageCount = 10;
+        let reviews;
 
-        let sortreviewsdate = (LocalStorage.get("sortreviewsdate") || {})[steamId];
-        if (sortreviewsdate && Date.now() - sortreviewsdate < 60 * 60 * 1000) { // If exists & less 1h old, use cache
-            let cache = LocalStorage.get("sortreviewscache")[steamId];
-            for (let i = 0; i < cache.length; i++) {
-                cache[i].node = HTMLParser.htmlToElement(cache[i].node);
-            }
-            sorted = cache;
-        }
+        async function getReviews() {
+            ExtensionLayer.runInPageContext((processing, wait) => { ShowBlockingWaitDialog(processing, wait); },
+            [
+                Localization.str.processing,
+                Localization.str.wait
+            ]);
 
-        async function updateAllData() {
-            sorted = [];
-            ExtensionLayer.runInPageContext(`function() {
-                window.dialog = ShowBlockingWaitDialog("${Localization.str.processing}", "${Localization.str.wait}");
-            }`);
-
-            let parser = new DOMParser();
-            for (let p = 1; p <= Math.ceil(numReviews / pagecnt); p++) {
-                let url = new URL(window.location.href);
-                url.searchParams.set("p", p);
-
-                let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
-                if (!result) {
-                    console.error("Failed to request " + url.toString());
-                    continue;
-                }
-
-                let xmlDoc = parser.parseFromString(result, "text/html");
-                extractData(xmlDoc.querySelectorAll(".review_box"));
-            }
-
-            for (let i = 0, d = sorted.length; i < sorted.length; i++, d--) {
-                sorted[i].date = d; // Using integers as date, as it is sorted by date by default
-            }
+            reviews = await Background.action("reviews", window.location.href, numReviews);
             
-            ExtensionLayer.runInPageContext(`function() {
-                if (window.dialog) {
-                    window.dialog.Dismiss();
-                }
-            }`);
+            ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
         }
 
-        function extractData(reviews) {
-            for (let node of reviews) {
-                let headerText = node.querySelector(".header").innerHTML.split("<br>");
-                let playtimeText = node.querySelector(".hours").textContent.split("(")[0].match(/(\d+,)?\d+\.\d+/);
-                let visibilityNode = node.querySelector(".dselect_container:nth-child(2) .trigger");
-
-                let rating = node.querySelector("[src*=thumbsUp]") ? 1 : 0;
-                let helpful = headerText[0] && headerText[0].match(/\d+/g) ? parseInt(headerText[0].match(/\d+/g).join("")): 0;
-                let funny = headerText[1] && headerText[1].match(/\d+/g) ? parseInt(headerText[1].match(/\d+/g).join("")): 0;
-                let length = node.querySelector(".content").textContent.trim().length;
-                let visibility = visibilityNode ? visibilityNode.textContent : "Public";
-                let playtime = playtimeText ? parseFloat(playtimeText[0].split(",").join("")) : 0.0;
-
-                sorted.push({ rating, helpful, funny, length, visibility, playtime, node });
-            }            
-        }
-
-        function cacheData(sortBy) {
-            SyncedStorage.set("sortreviewsby", sortBy);
-            if (!allowcache) { return; }
-
-            let cache = [];
-            for (let i = 0; i < sorted.length; i++) {
-                let review = {};
-                for (let key in sorted[i]) {
-                    review[key] = sorted[i][key];
-                }
-                review.node = review.node.outerHTML;
-                cache.push(review);
+        async function sortReviews(sortBy, reverse) {
+            if (!reviews) {
+                await getReviews();
             }
 
-            try {
-                let data = LocalStorage.get("sortreviewscache") || {};
-                data[steamId] = cache;
-                LocalStorage.set("sortreviewscache", data);
-
-                let sortreviewsdate = LocalStorage.get("sortreviewsdate") || {};
-                sortreviewsdate[steamId] = Date.now();
-                LocalStorage.set("sortreviewsdate", sortreviewsdate);
-            } catch (e) {
-                console.warn("Too many reviews to cache. It will retreive data on every page refresh.");
-                allowcache = false;
-            }
-        }
-
-        async function sortReviews(sortBy) {
-            if (sorted.length === 0) {
-                await updateAllData();
-                sortReviews(sortBy);
-                return;
-            }
-
-            let options = document.querySelector("#friends_sort_options");
-            let linkNode = options.querySelector("span[data-esi-sort='"+sortBy+"']");
-            if (!linkNode.classList.contains("es_friends_sort_link")) { return; }
-
-            if (sortBy === "reverse") {
-                sorted.reverse();
-                cacheData(SyncedStorage.get("sortreviewsby") || "date");
-            } else {
-                let nodes = options.querySelectorAll("span");
-                for (let node of nodes) {
-                    node.classList.toggle("es_friends_sort_link", node.dataset.esiSort !== sortBy);
-                }
-
-                sorted = sorted.sort(function(a, b) {
-                    if (isNaN(a[sortBy])) {
-                        a = a[sortBy].toLowerCase();
-                        b = b[sortBy].toLowerCase();
-                        if (a > b) { return -1; }
-                        if (a < b) { return 1; }
-                        return 0;
-                    }
-
-                    return b[sortBy] - a[sortBy];
-                });
-                
-                cacheData(sortBy);
-            }
-
-            displayReviews();
-        }
-
-        function displayReviews() {            
             for (let node of document.querySelectorAll(".review_box")) {
                 node.remove();
             }
 
+            let displayedReviews = reviews.sort((a, b) => {
+                if (isNaN(a[sortBy])) {
+                    a = a[sortBy].toLowerCase();
+                    b = b[sortBy].toLowerCase();
+                    if (a > b) { return -1; }
+                    if (a < b) { return 1; }
+                    return 0;
+                } else if (sortBy === "date") {
+                    return a[sortBy] - b[sortBy];
+                }
+
+                return b[sortBy] - a[sortBy];
+            });
+
+            if (reverse) {
+                displayedReviews.reverse();
+            }
+
+            displayedReviews = displayedReviews
+                .slice(pageCount * (curPage - 1), pageCount * curPage)
+                .map(review => review.node);
+
             let footer = document.querySelector("#leftContents > .workshopBrowsePaging:last-child");
-            let displayedReviews = sorted.slice(pagecnt * (curPage - 1), pagecnt * curPage);
             for (let review of displayedReviews) {
-                footer.insertAdjacentElement("beforebegin", review.node);
+                footer.insertAdjacentElement("beforebegin", HTMLParser.htmlToElement(review));
             }
         }
 
-        HTML.afterEnd("#leftContents > h1",
-            `<div class="workshopBrowsePaging">
-                <div class="workshopBrowsePagingControls" id="friends_sort_options">
-                    <span data-esi-sort="date" class="es_friends_sort_link">${Localization.str.date}</span>
-                    <span data-esi-sort="rating" class="es_friends_sort_link">${Localization.str.rating}</span>
-                    <span data-esi-sort="helpful" class="es_friends_sort_link">${Localization.str.helpful}</span>
-                    <span data-esi-sort="funny" class="es_friends_sort_link">${Localization.str.funny}</span>
-                    <span data-esi-sort="length" class="es_friends_sort_link">${Localization.str.length}</span>
-                    <span data-esi-sort="visibility" class="es_friends_sort_link">${Localization.str.visibility}</span>
-                    <span data-esi-sort="playtime" class="es_friends_sort_link">${Localization.str.playtime}</span>
-                    <span data-esi-sort="reverse" class="es_friends_sort_link">&#8693;</span>
-                </div>
-                <div class="workshopBrowsePagingInfo">${Localization.str.sort_by}</div>
-            </div>`);
-
-        document.querySelector("#friends_sort_options").addEventListener("click", function(e) {
-            if (!e.target.closest("[data-esi-sort]")) { return; }
-            sortReviews(e.target.dataset.esiSort);
-        });
-
-        let sortreviewsby = "date";
-        if (sorted.length > 0) {
-            sortreviewsby = SyncedStorage.get("sortreviewsby") || "date";
-            displayReviews();            
-        }
-        document.querySelector(`[data-esi-sort="${sortreviewsby}"]`).classList.toggle("es_friends_sort_link", false);
+        document.querySelector("#leftContents > h1").insertAdjacentElement("afterend",
+            Sortbox.get("reviews", [
+                ["date", Localization.str.date],
+                ["rating", Localization.str.rating],
+                ["helpful", Localization.str.helpful],
+                ["funny", Localization.str.funny],
+                ["length", Localization.str.length],
+                ["visibility", Localization.str.visibility],
+                ["playtime", Localization.str.playtime],
+            ], SyncedStorage.get("sortreviewsby"), sortReviews, "sortreviewsby")
+        );
     };
 
     return RecommendedPageClass;
