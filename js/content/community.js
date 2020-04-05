@@ -1618,14 +1618,39 @@ let RecommendedPageClass = (function(){
                 displayedReviews.reverse();
             }
 
-            displayedReviews = displayedReviews
-                .slice(pageCount * (curPage - 1), pageCount * curPage)
-                .map(review => review.node);
+            displayedReviews = displayedReviews.slice(pageCount * (curPage - 1), pageCount * curPage);
 
             let footer = document.querySelector("#leftContents > .workshopBrowsePaging:last-child");
-            for (let review of displayedReviews) {
-                footer.insertAdjacentElement("beforebegin", HTMLParser.htmlToElement(review));
+            for (let { node } of displayedReviews) {
+                footer.insertAdjacentElement("beforebegin", HTMLParser.htmlToElement(node));
             }
+
+            ExtensionLayer.runInPageContext(ids => {
+                Array.from(document.querySelectorAll(".review_box")).forEach((node, boxIndex) => {
+                    let id = ids[boxIndex];
+
+                    // Add back sanitized event handlers
+                    for (let container of node.querySelectorAll(".dselect_container")) {
+                        let type = container.id.startsWith("ReviewVisibility") ? "Visibility" : "Language";
+                        let input = container.querySelector("input");
+                        let trigger = container.querySelector(".trigger");
+                        let selections = Array.from(container.querySelectorAll(".dropcontainer a"));
+
+                        input.onchange = () => window[`OnReview${type}Change`](id, `Review${type}${id}`);
+
+                        trigger.href = "javascript:DSelectNoop();"
+                        trigger.onfocus = () => DSelectOnFocus(`Review${type}${id}`);
+                        trigger.onblur = () => DSelectOnBlur(`Review${type}${id}`);
+                        trigger.onclick = () => DSelectOnTriggerClick(`Review${type}${id}`);
+
+                        selections.forEach((selection, selIndex) => {
+                            selection.href = "javascript:DSelectNoop();";
+                            selection.onmouseover = () => DHighlightItem(`Review${type}${id}`, selIndex, false);
+                            selection.onclick = () => DHighlightItem(`Review${type}${id}`, selIndex, true);
+                        });
+                    }
+                });
+            }, [ displayedReviews.map(review => review.id) ]);
         }
 
         document.querySelector("#leftContents > h1").insertAdjacentElement("afterend",

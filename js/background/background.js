@@ -951,6 +951,8 @@ class SteamCommunity extends Api {
                 let playtimeText = node.querySelector(".hours").textContent.split("(")[0].match(/(\d+,)?\d+\.\d+/);
                 let visibilityNode = node.querySelector(".dselect_container:nth-child(2) .trigger");
 
+                let id = Number(node.querySelector("input").id.replace("ReviewVisibility", ''));
+
                 let rating = node.querySelector("[src*=thumbsUp]") ? 1 : 0;
                 let helpful = headerText[0] && headerText[0].match(/\d+/g) ? parseInt(headerText[0].match(/\d+/g).join("")): 0;
                 let funny = headerText[1] && headerText[1].match(/\d+/g) ? parseInt(headerText[1].match(/\d+/g).join("")): 0;
@@ -958,8 +960,7 @@ class SteamCommunity extends Api {
                 let visibility = visibilityNode ? visibilityNode.textContent : "Public";
                 let playtime = playtimeText ? parseFloat(playtimeText[0].split(",").join("")) : 0.0;
 
-                data.set(i, { "default": i, rating, helpful, funny, length, visibility, playtime, "node": node.outerHTML });
-                i++;
+                data.set(id, { "default": i++, rating, helpful, funny, length, visibility, playtime, "node": node.outerHTML, id });
             }
         }
 
