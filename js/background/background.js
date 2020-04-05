@@ -1287,7 +1287,8 @@ class IndexedDB {
         }
 
         let req;
-        if (IndexedDB.timestampedStores.has(storeName)) {
+        let timestampedStore = IndexedDB.timestampedStores.has(storeName);
+        if (timestampedStore) {
             req = IndexedDB.objStoreFetchFns.get(storeName)({ params });
         } else {
             req = IndexedDB.objStoreFetchFns.get(storeName)({ params, key });
@@ -1304,7 +1305,7 @@ class IndexedDB {
                 console.groupEnd();
 
                 // Wait some seconds before retrying
-                await IndexedDB.put(storeName, key, { "ttl": 60 });
+                await IndexedDB.put(storeName, timestampedStore ? [] : new Map([[key, null]]), { "ttl": 60 });
 
                 throw err;
             })
