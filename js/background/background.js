@@ -127,7 +127,7 @@ class Api {
         }
     }
     static endpointFactoryCached(endpoint, objectStoreName, mapFn) {
-        return async (params, dbKey) => {
+        return async ({ params, key } = {}) => {
             let result = await this.getEndpoint(endpoint, params);
 
             if (mapFn) {
@@ -136,7 +136,7 @@ class Api {
                 result = result.data;
             }
 
-            return IndexedDB.put(objectStoreName, typeof dbKey !== "undefined" ? new Map([[dbKey, result]]) : result);
+            return IndexedDB.put(objectStoreName, typeof key !== "undefined" ? new Map([[key, result]]) : result);
         };
     }
 }
@@ -165,7 +165,7 @@ class AugmentedSteamApi extends Api {
         let params = { "appid": appid };
         if (metalink)   params.mcurl = metalink;
         if (showoc)     params.oc = 1;
-        return IndexedDB.get("storePageData", appid, params);
+        return IndexedDB.get("storePageData", appid, { params });
     }
 
     static expireStorePageData(appid) {
@@ -173,7 +173,7 @@ class AugmentedSteamApi extends Api {
     }
 
     static rates(to) {
-        return IndexedDB.getAll("rates", { "to": to.sort().join(',') });
+        return IndexedDB.getAll("rates", { "params": { "to": to.sort().join(',') } });
     }
 
     static isEA(appids) {
@@ -297,9 +297,9 @@ class ITAD_Api extends Api {
     }
 
     static endpointFactoryCached(endpoint, objectStore, resultFn) {
-        return async (params, dbKey) => {
+        return async ({ params = {}, key } = {}) => {
             if (ITAD_Api.isConnected()) {
-                return super.endpointFactoryCached(endpoint, objectStore, resultFn)(Object.assign(params || {}, { access_token: ITAD_Api.accessToken }), dbKey);
+                return super.endpointFactoryCached(endpoint, objectStore, resultFn)({ "params": Object.assign(params, { "access_token": ITAD_Api.accessToken }), key });
             }
         }
     }
@@ -484,9 +484,9 @@ class ITAD_Api extends Api {
         return waitlist;
     }
 
-    static inWaitlist(storeIds) { return IndexedDB.contains("waitlist", storeIds, { "shop": "steam", "optional": "gameid" }) }
-    static inCollection(storeIds) { return IndexedDB.contains("collection", storeIds, { "shop": "steam", "optional": "gameid,copy_type" }) }
-    static getFromCollection(storeId) { return IndexedDB.get("collection", storeId, { "shop": "steam", "optional": "gameid,copy_type" }) }
+    static inWaitlist(storeIds) { return IndexedDB.contains("waitlist", storeIds, { "params": { "shop": "steam", "optional": "gameid" } }); }
+    static inCollection(storeIds) { return IndexedDB.contains("collection", storeIds, { "params": { "shop": "steam", "optional": "gameid,copy_type" } }); }
+    static getFromCollection(storeId) { return IndexedDB.get("collection", storeId, { "params": { "shop": "steam", "optional": "gameid,copy_type" } }); }
 }
 ITAD_Api.accessToken = null;
 ITAD_Api.requiredScopes = [
@@ -561,9 +561,8 @@ class SteamStore extends Api {
     // static params = { 'credentials': 'include', };
     // static _progressingRequests = new Map();
 
-    static async fetchPackage(params, subid) {
+    static async fetchPackage({ "key": subid }) {
         let data = await SteamStore.getEndpoint("/api/packagedetails/", { "packageids": subid, });
-        let promises = [];
         let appids = new Map();
 
         for (let [subid, details] of Object.entries(data)) {
@@ -661,7 +660,7 @@ class SteamStore extends Api {
         return HTMLParser.getVariableFromText(html, "g_sessionID", "string");
     }
     
-    static async purchaseDate(lang) {
+    static async purchaseDate({ "params": lang }) {
         let replaceRegex = [
             /- Complete Pack/ig,
             /Standard Edition/ig,
@@ -698,7 +697,7 @@ class SteamStore extends Api {
         return IndexedDB.put("purchases", purchaseDates);
     }
 
-    static purchases(appName, lang) { return IndexedDB.get("purchases", appName, lang) }
+    static purchases(appName, lang) { return IndexedDB.get("purchases", appName, { "params": lang }) }
     static clearPurchases() { return IndexedDB.clear("purchases") }
 
     static async dynamicStore() {
@@ -720,7 +719,7 @@ class SteamStore extends Api {
     }
 
     static dsStatus(ids) {
-        return IndexedDB.getAllFromIndex("dynamicStore", "appid", ids, true)
+        return IndexedDB.getFromIndex("dynamicStore", "appid", ids, { "all": true, "asKey": true })
     }
 
     static async dynamicStoreRandomApp() {
@@ -855,8 +854,8 @@ class SteamCommunity extends Api {
         return IndexedDB.put("coupons", coupons);
     }
 
-    static getCoupon(appids) { return IndexedDB.getFromIndex("coupons", "appid", appids) }
-    static hasCoupon(appids) { return IndexedDB.indexContainsKey("coupons", "appid", appids) }
+    static getCoupon(appid) { return IndexedDB.getFromIndex("coupons", "appid", appid) }
+    static hasCoupon(appid) { return IndexedDB.indexContainsKey("coupons", "appid", appid) }
 
     static async giftsAndPasses() { // context#1, gifts and guest passes
         let gifts = [];
@@ -907,7 +906,7 @@ class SteamCommunity extends Api {
         return IndexedDB.put("giftsAndPasses", data);
     }
 
-    static async hasGiftsAndPasses(appid) { return IndexedDB.getAllFromIndex("giftsAndPasses", "appid", appid, true) }
+    static async hasGiftsAndPasses(appid) { return IndexedDB.getFromIndex("giftsAndPasses", "appid", appid, { "all": true, "asKey": true }); }
 
     static async items() { // context#6, community items
         // only used for market highlighting
@@ -917,9 +916,9 @@ class SteamCommunity extends Api {
         }
     }
 
-    static hasItem(hashes) { return IndexedDB.contains("items", hashes) }
+    static hasItem(hashes) { return IndexedDB.contains("items", hashes); }
 
-    static async fetchWorkshopFileSize(params, id) {
+    static async fetchWorkshopFileSize({ "key": id }) {
         let parser = new DOMParser();
         let res = await SteamCommunity.getPage(`/sharedfiles/filedetails/`, { id });
         let doc = parser.parseFromString(res, "text/html");
@@ -934,7 +933,7 @@ class SteamCommunity extends Api {
     }
 
     static getWorkshopFileSize(id, preventFetch) {
-        return IndexedDB.get("workshopFileSizes", Number(id), null, preventFetch);
+        return IndexedDB.get("workshopFileSizes", Number(id), { preventFetch });
     }
 
     /**
@@ -979,7 +978,7 @@ class SteamCommunity extends Api {
         LocalStorage.remove("login");
     }
 
-    static getProfile(steamId) { return IndexedDB.get("profiles", steamId, { "profile": steamId }) }
+    static getProfile(steamId) { return IndexedDB.get("profiles", steamId, { "params": { "profile": steamId } }); }
     static clearOwn(steamId) { return IndexedDB.delete("profiles", steamId) }
 
     static getPage(endpoint, query) {
@@ -1049,7 +1048,7 @@ class IndexedDB {
         return (IndexedDB.init())().then(onDone, onCatch);
     }
 
-    static put(objectStoreName, data, { ttl, multiple = typeof data === "object" }) {
+    static put(objectStoreName, data, { ttl, multiple = typeof data === "object" } = {}) {
         let tx = IndexedDB.db.transaction(objectStoreName, "readwrite");
         let cached = IndexedDB.cacheObjectStores.has(objectStoreName);
         let timestampedEntry = IndexedDB.timestampedEntriesObjectStores.has(objectStoreName);
@@ -1094,231 +1093,153 @@ class IndexedDB {
         return tx.done;
     }
 
-    static async get(objectStoreName, keys, params, preventFetch) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params, preventFetch);
+    static async get(objectStoreName, key, options = {}) {
+        let keys = IndexedDB._asArray(key);
+        let values;
+        let store;
 
-        if (Array.isArray(keys)) {
-            let promises = [];
-            let tx = IndexedDB.db.transaction(objectStoreName);
+        await IndexedDB.objStoreExpiryCheck(objectStoreName, options);
 
-            for (let key of keys) {
-                promises.push(tx.store.get(key).then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, key, params, preventFetch)));
-            }
+        store = IndexedDB.db.transaction(objectStoreName).store;
 
-            let resolved = await Promise.all(promises);
+        values = await Promise.all(keys.map(key =>
+            store.get(key).then(result => IndexedDB.resultExpiryCheck(objectStoreName, result, key, options))
+        ));
 
-            return keys.reduce((acc, cur, i) => {
-                acc[cur] = resolved[i];
-                return acc;
-            }, {});
-        } else {
-            return IndexedDB.db.get(objectStoreName, keys)
-                .then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, keys, params, preventFetch));
-        }
+        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
     }
 
-    static async getAll(objectStoreName, params) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
-
-        let cursor = await IndexedDB.db.transaction(objectStoreName).store.openCursor();
-
-        let promises = [];
+    static async getAll(objectStoreName, options = {}) {
         let keys = [];
+        let values = [];
+        let cursor;
+
+        await IndexedDB.objStoreExpiryCheck(objectStoreName, options);
+
+        cursor = await IndexedDB.db.transaction(objectStoreName).store.openCursor();
+        
         while (cursor) {
-            if (cursor.key !== "expiry") {
+            if (cursor.key !== "expiry" || !IndexedDB.timestampedObjectStores.has(objectStoreName)) {
                 keys.push(cursor.key);
-                promises.push(IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params));
+                values.push(IndexedDB.resultExpiryCheck(objectStoreName, cursor.value, cursor.key, options));
             }            
             cursor = await cursor.continue();
         }
-        return (await Promise.all(promises)).reduce((acc, cur, i) => {
-            acc[keys[i]] = cur;
-            return acc;
-        }, {});
+
+        return IndexedDB._resultsAsObject(keys, await Promise.all(values));
     }
 
-    static async getFromIndex(objectStoreName, indexName, key, asKey, params) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
+    static async getFromIndex(objectStoreName, indexName, key, options = {}) {
+        let keys = IndexedDB._asArray(key);
+        let values;
+        let index;
 
-        let cursor = await IndexedDB.db.transaction(objectStoreName).store.index(indexName).openCursor(key);
-        return IndexedDB.resultExpiryCheck(cursor && cursor.value, objectStoreName, cursor && cursor.primaryKey, params)
-            .then(result => {
-                if (result && asKey) {
-                    return cursor.key;
-                } else {
-                    return result;
-                }
-            });
-    }
+        await IndexedDB.objStoreExpiryCheck(objectStoreName, options);
 
-    static async getAllFromIndex(objectStoreName, indexName, key, asKey, params) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
+        index = IndexedDB.db.transaction(objectStoreName).store.index(indexName);
 
-        let promises = [];
-        if (Array.isArray(key)) {
-            let index = IndexedDB.db.transaction(objectStoreName).store.index(indexName);
-            key.forEach(_key => {
-                promises.push((async () => {
-                    let cursorPromises = [];
-                    let cursor = await index.openCursor(_key);
-                    while (cursor) {
-                        cursorPromises.push(IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params)
-                            .then(result => {
-                                if (result && asKey) {
-                                    return cursor.primaryKey;
-                                } else {
-                                    return result;
-                                }
-                            }));
-                        cursor = await cursor.continue();
-                    }
-                    return Promise.all(cursorPromises);
-                })());
-            });
+        values = await Promise.all(keys.map(key =>
+            index.openCursor(key)
+                .then(async cursor => {
 
-            let resolved = await Promise.all(promises);
-            return key.reduce((acc, cur, i) => {
-                acc[cur] = resolved[i];
-                return acc;
-            }, {});
-        } else {
-            let cursor = await IndexedDB.db.transaction(objectStoreName).store.index(indexName).openCursor(key);
-            while (cursor) {
-                promises.push(IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params)
-                    .then(result => {
-                        if (result && asKey) {
+                    async function getValue() {
+                        let result = await IndexedDB.resultExpiryCheck(objectStoreName, cursor.value, cursor.primaryKey, options);
+                            
+                        if (result && options.asKey) {
                             return cursor.primaryKey;
-                        } else {
-                            return result;
                         }
-                    }));
-                cursor = await cursor.continue();
-            }
-        }
-        
-        return Promise.all(promises);
-    }
-
-    static async indexContainsKey(objectStoreName, indexName, key, params) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
-
-        if (Array.isArray(key)) {
-            let promises = [];
-            let index = IndexedDB.db.transaction(objectStoreName).store.index(indexName);
-            key.forEach(_key => {
-                if (_key) {
-                    promises.push(index.openCursor(_key)
-                        .then(cursor => {
-                            if (cursor) {
-                                return IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params);
-                            }
-                        })
-                        .then(result => typeof result !== "undefined")
-                    );
-                } else {
-                    promises.push(Promise.resolve(false));
-                }
-            });
-
-            let resolved = await Promise.all(promises);
-            return key.reduce((acc, cur, i) => {
-                acc[cur] = resolved[i];
-                return acc;
-            }, {});
-        } else {
-            if (!key) return false;
-            let cursor = await IndexedDB.db.transaction(objectStoreName).store.index(indexName).openCursor(key);
-            
-            let result;
-            if (cursor) {
-                result = await IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params);
-            }
-            return typeof result !== "undefined";
-        }
-    }
-
-    static delete(objectStoreName, keys) {
-        if (Array.isArray(keys)) {
-            let tx = IndexedDB.db.transaction(objectStoreName, "readwrite");
-
-            for (let key of keys) {
-                tx.store.delete(key);
-            }
-
-            return tx.done;
-        } else {
-            return IndexedDB.db.delete(objectStoreName, keys);
-        }        
-    }
-
-    static clear(objectStoreNames) {
-        let objectStores = objectStoreNames || Array.from(IndexedDB.cacheObjectStores.keys());
-        let multiple = Array.isArray(objectStores);
-
-        if (multiple) {
-            let promises = [];
-            objectStores.forEach(objectStoreName => {
-                promises.push(IndexedDB.db.clear(objectStoreName));
-            });
-            return Promise.all(promises);
-        } else {
-            return IndexedDB.db.clear(objectStoreNames);
-        }
-    }
-
-    static async contains(objectStoreName, key, params, preventFetch) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params, preventFetch);
-
-        if (Array.isArray(key)) {
-            let objectStore = IndexedDB.db.transaction(objectStoreName).store;
-            let promises = [];
-            key.forEach(_key => {
-                if (_key) {
-                    if (preventFetch) {
-                        promises.push(objectStore.openKeyCursor(_key)
-                            .then(cursor => Boolean(cursor))
-                        );
-                    } else {
-                        promises.push(objectStore.openCursor(_key)
-                            .then(cursor => {
-                                if (cursor) {
-                                    return IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
-                                }
-                            })
-                            .then(result => typeof result !== "undefined")
-                        );
+                        return result;
                     }
-                } else {
-                    promises.push(Promise.resolve(false));
-                }
-            });
-            
-            let resolved = await Promise.all(promises);
-            return key.reduce((acc, cur, i) => {
-                acc[cur] = resolved[i];
-                return acc;
-            }, {});
-        } else {
-            if (!key) return false;
 
-            if (preventFetch) {
-                return Boolean(await IndexedDB.db.transaction(objectStoreName).store.openKeyCursor(key));
-            }
-            let cursor = await IndexedDB.db.transaction(objectStoreName).store.openCursor(key);
-            
-            if (cursor) {
-                let result = await IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
-                return typeof result !== "undefined";
-            }
-        }
+                    if (options.all) {
+                        let promises = [];
+
+                        while (cursor) {
+                            promises.push(getValue());
+                            cursor = await cursor.continue();
+                        }
+    
+                        return Promise.all(promises);
+                    }
+                    if (cursor) {
+                        return getValue();
+                    }
+                })
+        ));
+
+        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
     }
 
-    static async resultExpiryCheck(result, objectStoreName, key, params, preventFetch) {
+    static async indexContainsKey(objectStoreName, indexName, key, options = {}) {
+        let keys = IndexedDB._asArray(key);
+        let values;
+        let index;
+
+        await IndexedDB.objStoreExpiryCheck(objectStoreName, options);
+
+        index = IndexedDB.db.transaction(objectStoreName).store.index(indexName);
+
+        values = await Promise.all(keys.map(key =>
+            index.openCursor(key)
+                .then(cursor => {
+                    if (cursor) {
+                        return IndexedDB.resultExpiryCheck(objectStoreName, cursor.value, cursor.primaryKey, options);
+                    }
+                })
+                .then(result => typeof result !== "undefined")
+        ));
+
+        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
+    }
+
+    static delete(objectStoreName, key) {
+        let keys = IndexedDB._asArray(key);
+        let tx = IndexedDB.db.transaction(objectStoreName, "readwrite");
+
+        keys.forEach(key => tx.store.delete(key));
+
+        return tx.done;
+    }
+
+    static clear(objectStoreName = Array.from(IndexedDB.cacheObjectStores.keys())) {
+        let objectStoreNames = IndexedDB._asArray(objectStoreName);
+
+        return Promise.all(objectStoreNames.map(name => IndexedDB.db.clear(name)));
+    }
+
+    static async contains(objectStoreName, key, options = {}) {
+        let keys = IndexedDB._asArray(key);
+        let values;
+        let objectStore;
+
+        await IndexedDB.objStoreExpiryCheck(objectStoreName, options);
+        
+        objectStore = IndexedDB.db.transaction(objectStoreName).store;
+
+        values = await Promise.all(keys.map(key => {
+            if (options.preventFetch) {
+                return objectStore.openKeyCursor(key)
+                    .then(cursor => Boolean(cursor));
+            }
+            
+            return objectStore.openCursor(key)
+                .then(cursor => {
+                    if (cursor) {
+                        return IndexedDB.resultExpiryCheck(objectStoreName, cursor.value, cursor.key, options);
+                    }
+                })
+                .then(result => typeof result !== "undefined");
+        }));
+        
+        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
+    }
+
+    static async resultExpiryCheck(objectStoreName, result, key, options = {}) {
         if (IndexedDB.timestampedObjectStores.has(objectStoreName) || !IndexedDB.cacheObjectStores.has(objectStoreName)) return result;
 
-        if (!preventFetch && (!result || IndexedDB.isExpired(result.expiry))) {
-            await IndexedDB.fetchUpdatedData(objectStoreName, key, params);
-            return IndexedDB.get(objectStoreName, key);
+        if (!options.preventFetch && (!result || IndexedDB.isExpired(result.expiry))) {
+            await IndexedDB.fetchUpdatedData(objectStoreName, key, options.params);
+            return IndexedDB.get(objectStoreName, key); // todo does this have to be called again?
         }
 
         return result ? result.value : result;
@@ -1328,7 +1249,7 @@ class IndexedDB {
         return expiry <= Timestamp.now();
     }
 
-    static async objStoreExpiryCheck(objectStoreName, params, preventFetch) {
+    static async objStoreExpiryCheck(objectStoreName, options = {}) {
         // Remove old entries
         if (IndexedDB.timestampedEntriesObjectStores.has(objectStoreName)) {
             let cursor = await IndexedDB.db.transaction(objectStoreName, "readwrite").store.index("expiry")
@@ -1351,8 +1272,8 @@ class IndexedDB {
         }
         if (expired) {
             await IndexedDB.clear(objectStoreName);
-            if (!preventFetch) {
-                await IndexedDB.fetchUpdatedData(objectStoreName, null, params);
+            if (!options.preventFetch) {
+                await IndexedDB.fetchUpdatedData(objectStoreName, null, options.params);
             }
         }
     }
@@ -1367,9 +1288,9 @@ class IndexedDB {
 
         let req;
         if (IndexedDB.timestampedObjectStores.has(objectStoreName)) {
-            req = IndexedDB.objStoreFetchFns.get(objectStoreName)(params);
+            req = IndexedDB.objStoreFetchFns.get(objectStoreName)({ params });
         } else {
-            req = IndexedDB.objStoreFetchFns.get(objectStoreName)(params, key);
+            req = IndexedDB.objStoreFetchFns.get(objectStoreName)({ params, key });
         }
         req = req
             .catch(async err => {
@@ -1390,6 +1311,17 @@ class IndexedDB {
             .finally(() => IndexedDB._ongoingRequests.delete(requestKey));
         IndexedDB._ongoingRequests.set(requestKey, req);
         return req;        
+    }
+
+    static _asArray(key) {
+        return Array.isArray(key) ? key : [key];
+    }
+
+    static _resultsAsObject(keys, values) {
+        return keys.reduce((acc, key, i) => {
+            acc[key] = values[i];
+            return acc;
+        }, {});
     }
 }
 IndexedDB._promise = null;

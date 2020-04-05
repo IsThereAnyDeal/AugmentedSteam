@@ -1518,7 +1518,7 @@ let EarlyAccess = (function(){
             let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
             if (appid) {
-                appidsMap.set(appid, node);
+                appidsMap.set(String(appid), node);
             }
         }
 
