@@ -1596,17 +1596,22 @@ let RecommendedPageClass = (function(){
             }
 
             let displayedReviews = reviews.sort((a, b) => {
-                if (isNaN(a[sortBy])) {
-                    a = a[sortBy].toLowerCase();
-                    b = b[sortBy].toLowerCase();
-                    if (a > b) { return -1; }
-                    if (a < b) { return 1; }
-                    return 0;
-                } else if (sortBy === "date") {
-                    return a[sortBy] - b[sortBy];
+                switch(sortBy) {
+                    case "rating":
+                    case "helpful":
+                    case "funny":
+                    case "length":
+                    case "playtime":
+                        return b[sortBy] - a[sortBy];
+                    case "visibility":
+                        a = a[sortBy].toLowerCase();
+                        b = b[sortBy].toLowerCase();
+                        if (a > b) { return -1; }
+                        if (a < b) { return 1; }
+                        return 0;
+                    case "default":
+                        return a[sortBy] - b[sortBy];
                 }
-
-                return b[sortBy] - a[sortBy];
             });
 
             if (reverse) {
@@ -1625,7 +1630,7 @@ let RecommendedPageClass = (function(){
 
         document.querySelector("#leftContents > h1").insertAdjacentElement("afterend",
             Sortbox.get("reviews", [
-                ["date", Localization.str.date],
+                ["default", Localization.str.date],
                 ["rating", Localization.str.rating],
                 ["helpful", Localization.str.helpful],
                 ["funny", Localization.str.funny],

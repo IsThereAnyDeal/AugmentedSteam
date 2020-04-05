@@ -958,7 +958,7 @@ class SteamCommunity extends Api {
                 let visibility = visibilityNode ? visibilityNode.textContent : "Public";
                 let playtime = playtimeText ? parseFloat(playtimeText[0].split(",").join("")) : 0.0;
 
-                data.set(i, { "date": i, rating, helpful, funny, length, visibility, playtime, "node": node.outerHTML });
+                data.set(i, { "default": i, rating, helpful, funny, length, visibility, playtime, "node": node.outerHTML });
                 i++;
             }
         }
