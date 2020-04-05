@@ -2936,7 +2936,7 @@ class Sortbox {
         </div>`);
 
         let input = box.querySelector(`#${id}`);
-        input.addEventListener("change", function() { onChange(this.value, reversed); });
+        input.addEventListener("change", function() { onChange(this.value.replace(`${id}_`, ''), reversed); });
 
         // Trigger changeFn for initial option
         if (initialOption !== "default_ASC") {
@@ -2947,7 +2947,7 @@ class Sortbox {
         reverseEl.addEventListener("click", () => {
             reversed = !reversed;
             reverseEl.textContent = reversed ? arrowUp : arrowDown;
-            onChange(input.value, reversed);
+            onChange(input.value.replace(`${id}_`, ''), reversed);
         });
         if (reversed) reverseEl.textContent = arrowUp;
 
@@ -2970,7 +2970,7 @@ class Sortbox {
 
             HTML.beforeEnd(ul,
                 `<li>
-                    <a class="${toggle}_selection" tabindex="99999" id="${key}">${text}</a>
+                    <a class="${toggle}_selection" tabindex="99999" id="${id}_${key}">${text}</a>
                 </li>`);
 
             let a = ul.querySelector("li:last-child > a");
