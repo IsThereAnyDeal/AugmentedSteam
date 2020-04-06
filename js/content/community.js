@@ -1686,7 +1686,6 @@ let RecommendedPageClass = (function(){
 
         ExtensionLayer.runInPageContext(() => {
             $J(document).ajaxSuccess((event, xhr, { url }) => {
-                console.log(url)
                 let pathname = new URL(url).pathname;
                 if (pathname.startsWith("/userreviews/rate/") || pathname.startsWith("/userreviews/votetag/") || pathname.startsWith("/userreviews/update/")) {
                     let splits = pathname.split('/');
