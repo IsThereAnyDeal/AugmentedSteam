@@ -1569,6 +1569,7 @@ let RecommendedPageClass = (function(){
         let numReviews = Number(numReviewsNode.innerText);
         if (isNaN(numReviews) || numReviews === 0) { return; }
 
+        let steamId = window.location.pathname.match(/\/((?:id|profiles)\/.+?)\//)[1];
         let params = new URLSearchParams(window.location.search);
         let curPage = params.get("p") || 1;
         let pageCount = 10;
@@ -1582,7 +1583,12 @@ let RecommendedPageClass = (function(){
             ]);
 
             try {
-                reviews = await Background.action("reviews", window.location.href, numReviews);
+                reviews = await Background.action("reviews", steamId, numReviews);
+
+                reviews.map((review, i) => {
+                    review.default = i;
+                    return review;
+                })
             } finally {
                 ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
             }

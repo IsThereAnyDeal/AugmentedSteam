@@ -936,22 +936,26 @@ class SteamCommunity extends Api {
         return IndexedDB.get("workshopFileSizes", Number(id), { preventFetch });
     }
 
-    static async fetchReviews({ "params": { url, reviewCount } }) {
+    static async fetchReviews({ "key": steamId, "params": { reviewCount } }) {
         let parser = new DOMParser();
         let pageCount = 10;
-        let data = new Map();
+        let reviews = [];
 
-        url = new URL(url);
-
-        for (let p = 1, i = 0; p <= Math.ceil(reviewCount / pageCount); p++) {
-            let doc = parser.parseFromString(await SteamCommunity.getPage(url.pathname, { p }), "text/html");
+        for (let p = 1; p <= Math.ceil(reviewCount / pageCount); p++) {
+            let doc = parser.parseFromString(await SteamCommunity.getPage(`${steamId}/recommended`, { p }), "text/html");
 
             for (let node of doc.querySelectorAll(".review_box")) {
                 let headerText = node.querySelector(".header").innerHTML.split("<br>");
                 let playtimeText = node.querySelector(".hours").textContent.split("(")[0].match(/(\d+,)?\d+\.\d+/);
                 let visibilityNode = node.querySelector(".dselect_container:nth-child(2) .trigger");
 
-                let id = Number(node.querySelector("input").id.replace("ReviewVisibility", ''));
+                let id = null;
+                let input = node.querySelector("input");
+
+                // Inputs only exist when the requested profile is yours (these are the input fields where you can change visibility and language of the review)
+                if (input) {
+                    id = Number(input.id.replace("ReviewVisibility", ''));
+                }
 
                 let rating = node.querySelector("[src*=thumbsUp]") ? 1 : 0;
                 let helpful = headerText[0] && headerText[0].match(/\d+/g) ? parseInt(headerText[0].match(/\d+/g).join("")): 0;
@@ -960,16 +964,15 @@ class SteamCommunity extends Api {
                 let visibility = visibilityNode ? visibilityNode.textContent : "Public";
                 let playtime = playtimeText ? parseFloat(playtimeText[0].split(",").join("")) : 0.0;
 
-                data.set(id, { "default": i++, rating, helpful, funny, length, visibility, playtime, "node": DOMPurify.sanitize(node.outerHTML), id });
+                reviews.push({ rating, helpful, funny, length, visibility, playtime, "node": DOMPurify.sanitize(node.outerHTML), id })
             }
         }
 
-        return IndexedDB.put("reviews", data);
+        return IndexedDB.put("reviews", { [steamId]: reviews });
     }
 
-    static async getReviews(url, reviewCount) {
-        let reviews = await IndexedDB.getAll("reviews", { "params": { url, reviewCount } });
-        return Array.from(Object.values(reviews));
+    static async getReviews(steamId, reviewCount) {
+        return IndexedDB.get("reviews", steamId, { "params": { reviewCount } });
     }
 
     /**
@@ -1072,7 +1075,7 @@ class IndexedDB {
 
                     if (oldVersion <= 1) {
                         db.createObjectStore("workshopFileSizes").createIndex("expiry", "expiry");
-                        db.createObjectStore("reviews");
+                        db.createObjectStore("reviews").createIndex("expiry", "expiry");
                     }
                 },
                 blocked() {
@@ -1384,7 +1387,6 @@ IndexedDB.timestampedStores = new Map([
     ["rates", 60 * 60],
     ["collection", 15 * 60],
     ["waitlist", 15 * 60],
-    ["reviews", 60 * 60],
 ]);
 
 IndexedDB.timestampedEntriesStores = new Map([
@@ -1392,6 +1394,7 @@ IndexedDB.timestampedEntriesStores = new Map([
     ["storePageData", 60 * 60],
     ["profiles", 24 * 60 * 60],
     ["workshopFileSizes", 5 * 24 * 60 * 60],
+    ["reviews", 60 * 60],
 ]);
 
 IndexedDB.cacheObjectStores = new Map([...IndexedDB.timestampedStores, ...IndexedDB.timestampedEntriesStores]);
