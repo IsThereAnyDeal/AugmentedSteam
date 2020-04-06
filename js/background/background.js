@@ -936,6 +936,17 @@ class SteamCommunity extends Api {
         return IndexedDB.get("workshopFileSizes", Number(id), { preventFetch });
     }
 
+    static _getReviewId(node) {
+        let input = node.querySelector("input");
+
+        // Only exists when the requested profile is yours (these are the input fields where you can change visibility and language of the review)
+        if (input) {
+            return Number(input.id.replace("ReviewVisibility", ''));
+        }
+        // Otherwise you have buttons to vote for the review (Was it helpful or not, was it funny?)
+        return Number(node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", ''));
+    }
+
     static async fetchReviews({ "key": steamId, "params": { reviewCount } }) {
         let parser = new DOMParser();
         let pageCount = 10;
@@ -949,17 +960,7 @@ class SteamCommunity extends Api {
                 let playtimeText = node.querySelector(".hours").textContent.split("(")[0].match(/(\d+,)?\d+\.\d+/);
                 let visibilityNode = node.querySelector(".dselect_container:nth-child(2) .trigger");
 
-                let id = null;
-                let input = node.querySelector("input");
-
-                // Only exists when the requested profile is yours (these are the input fields where you can change visibility and language of the review)
-                if (input) {
-                    id = Number(input.id.replace("ReviewVisibility", ''));
-                // Otherwise you have buttons to vote for the review (Was it helpful or not, was it funny?)
-                } else {
-                    id = Number(node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", ''));
-                }
-
+                let id = SteamCommunity._getReviewId(node);
                 let rating = node.querySelector("[src*=thumbsUp]") ? 1 : 0;
                 let helpful = headerText[0] && headerText[0].match(/\d+/g) ? parseInt(headerText[0].match(/\d+/g).join("")): 0;
                 let funny = headerText[1] && headerText[1].match(/\d+/g) ? parseInt(headerText[1].match(/\d+/g).join("")): 0;
@@ -971,6 +972,25 @@ class SteamCommunity extends Api {
             }
         }
 
+        return IndexedDB.put("reviews", { [steamId]: reviews });
+    }
+
+    static async updateReviewNode(steamId, html, reviewCount) {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(html, "text/html");
+        let node = doc.querySelector(".review_box");
+        let id = SteamCommunity._getReviewId(node);
+
+        let reviews = await IndexedDB.get("reviews", steamId, { "params": reviewCount });
+
+        for (let review of reviews) {
+            if (review.id === id) {
+                review.node = DOMPurify.sanitize(node.outerHTML);
+                break;
+            }
+        }
+
+        // Todo updates expiry even though there is no new fetched data
         return IndexedDB.put("reviews", { [steamId]: reviews });
     }
 
@@ -1464,6 +1484,7 @@ let actionCallbacks = new Map([
     ["clearownprofile", SteamCommunity.clearOwn],
     ["workshopfilesize", SteamCommunity.getWorkshopFileSize],
     ["reviews", SteamCommunity.getReviews],
+    ["updatereviewnode", SteamCommunity.updateReviewNode],
 
     ["itad.authorize", ITAD_Api.authorize],
     ["itad.disconnect", ITAD_Api.disconnect],

@@ -1588,7 +1588,22 @@ let RecommendedPageClass = (function(){
                 reviews.map((review, i) => {
                     review.default = i;
                     return review;
-                })
+                });
+
+                Messenger.addMessageListener("updateReview", id => {
+                    Background.action("updatereviewnode", steamId, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, numReviews);
+                });
+
+                ExtensionLayer.runInPageContext(() => {
+                    $J(document).ajaxSuccess((event, xhr, { url }) => {
+                        console.log(url)
+                        let pathname = new URL(url).pathname;
+                        if (pathname.startsWith("/userreviews/rate/") || pathname.startsWith("/userreviews/votetag/") || pathname.startsWith("/userreviews/update/")) {
+                            let splits = pathname.split('/');
+                            Messenger.postMessage("updateReview", splits[splits.length - 1]);
+                        }
+                    });
+                });
             } finally {
                 ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
             }
@@ -1648,7 +1663,7 @@ let RecommendedPageClass = (function(){
                             let trigger = container.querySelector(".trigger");
                             let selections = Array.from(container.querySelectorAll(".dropcontainer a"));
 
-                            input.onchange = () => window[`OnReview${type}Change`](id, `Review${type}${id}`);
+                            input.onchange = () => { window[`OnReview${type}Change`](id, `Review${type}${id}`) };
 
                             trigger.href = "javascript:DSelectNoop();"
                             trigger.onfocus = () => DSelectOnFocus(`Review${type}${id}`);
