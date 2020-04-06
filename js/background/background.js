@@ -981,6 +981,8 @@ class SteamCommunity extends Api {
         let node = doc.querySelector(".review_box");
         let id = SteamCommunity._getReviewId(node);
 
+        if (!await IndexedDB.contains("reviews", steamId, { "preventFetch": true })) { return; }
+
         let reviews = await IndexedDB.get("reviews", steamId, { "params": reviewCount });
 
         for (let review of reviews) {

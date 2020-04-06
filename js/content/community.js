@@ -1589,21 +1589,6 @@ let RecommendedPageClass = (function(){
                     review.default = i;
                     return review;
                 });
-
-                Messenger.addMessageListener("updateReview", id => {
-                    Background.action("updatereviewnode", steamId, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, numReviews);
-                });
-
-                ExtensionLayer.runInPageContext(() => {
-                    $J(document).ajaxSuccess((event, xhr, { url }) => {
-                        console.log(url)
-                        let pathname = new URL(url).pathname;
-                        if (pathname.startsWith("/userreviews/rate/") || pathname.startsWith("/userreviews/votetag/") || pathname.startsWith("/userreviews/update/")) {
-                            let splits = pathname.split('/');
-                            Messenger.postMessage("updateReview", splits[splits.length - 1]);
-                        }
-                    });
-                });
             } finally {
                 ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
             }
@@ -1694,6 +1679,21 @@ let RecommendedPageClass = (function(){
                 });
             }, [ displayedReviews.map(review => review.id) ]);
         }
+
+        Messenger.addMessageListener("updateReview", id => {
+            Background.action("updatereviewnode", steamId, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, numReviews);
+        });
+
+        ExtensionLayer.runInPageContext(() => {
+            $J(document).ajaxSuccess((event, xhr, { url }) => {
+                console.log(url)
+                let pathname = new URL(url).pathname;
+                if (pathname.startsWith("/userreviews/rate/") || pathname.startsWith("/userreviews/votetag/") || pathname.startsWith("/userreviews/update/")) {
+                    let splits = pathname.split('/');
+                    Messenger.postMessage("updateReview", splits[splits.length - 1]);
+                }
+            });
+        });
 
         document.querySelector("#leftContents > h1").insertAdjacentElement("afterend",
             Sortbox.get("reviews", [
