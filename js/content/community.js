@@ -1581,9 +1581,11 @@ let RecommendedPageClass = (function(){
                 Localization.str.wait
             ]);
 
-            reviews = await Background.action("reviews", window.location.href, numReviews);
-            
-            ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
+            try {
+                reviews = await Background.action("reviews", window.location.href, numReviews);
+            } finally {
+                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
+            }
         }
 
         async function sortReviews(sortBy, reverse) {
