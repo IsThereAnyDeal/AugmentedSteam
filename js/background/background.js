@@ -444,8 +444,8 @@ class ITAD_Api extends Api {
     static async sync() {
         await Promise.all([
             ITAD_Api.import(true),
-            IndexedDB.clear("waitlist").then(() => IndexedDB.objStoreFetchFns.get("waitlist")({ "shop": "steam", "optional": "gameid" })),
-            IndexedDB.clear("collection").then(() => IndexedDB.objStoreFetchFns.get("collection")({ "shop": "steam", "optional": "gameid,copy_type" })),
+            IndexedDB.clear("waitlist").then(() => IndexedDB.objStoreFetchFns.get("waitlist")({ "params": { "shop": "steam", "optional": "gameid" } })),
+            IndexedDB.clear("collection").then(() => IndexedDB.objStoreFetchFns.get("collection")({ "params": { "shop": "steam", "optional": "gameid,copy_type" } })),
         ]);        
     }
 
