@@ -1281,20 +1281,15 @@ class IndexedDB {
         
         store = IndexedDB.db.transaction(storeName).store;
 
-        values = await Promise.all(keys.map(key => {
-            if (options.preventFetch) {
-                return store.openKeyCursor(key)
-                    .then(cursor => Boolean(cursor));
-            }
-            
-            return store.openCursor(key)
+        values = await Promise.all(keys.map(key => 
+            store.openCursor(key)
                 .then(cursor => {
                     if (cursor) {
                         return IndexedDB.resultExpiryCheck(storeName, cursor.value, cursor.key, options);
                     }
                 })
-                .then(result => typeof result !== "undefined");
-        }));
+                .then(result => typeof result !== "undefined")
+        ));
         
         return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
     }
@@ -1302,7 +1297,13 @@ class IndexedDB {
     static async resultExpiryCheck(storeName, result, key, options = {}) {
         if (IndexedDB.timestampedStores.has(storeName) || !IndexedDB.cacheObjectStores.has(storeName)) return result;
 
-        if (!options.preventFetch && (!result || IndexedDB.isExpired(result.expiry))) {
+        if (!result || IndexedDB.isExpired(result.expiry)) {
+
+            if (options.preventFetch) { 
+                await IndexedDB.delete(storeName, key);
+                return;
+            }
+                
             await IndexedDB.fetchUpdatedData(storeName, key, options.params);
             return IndexedDB.get(storeName, key); // todo does this have to be called again?
         }
