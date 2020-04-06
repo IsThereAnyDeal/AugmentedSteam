@@ -952,9 +952,12 @@ class SteamCommunity extends Api {
                 let id = null;
                 let input = node.querySelector("input");
 
-                // Inputs only exist when the requested profile is yours (these are the input fields where you can change visibility and language of the review)
+                // Only exists when the requested profile is yours (these are the input fields where you can change visibility and language of the review)
                 if (input) {
                     id = Number(input.id.replace("ReviewVisibility", ''));
+                // Otherwise you have buttons to vote for the review (Was it helpful or not, was it funny?)
+                } else {
+                    id = Number(node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", ''));
                 }
 
                 let rating = node.querySelector("[src*=thumbsUp]") ? 1 : 0;

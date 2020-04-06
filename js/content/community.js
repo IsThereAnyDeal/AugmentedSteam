@@ -1633,29 +1633,48 @@ let RecommendedPageClass = (function(){
                 footer.insertAdjacentElement("beforebegin", HTMLParser.htmlToElement(node));
             }
 
+            // Add back sanitized event handlers
             ExtensionLayer.runInPageContext(ids => {
                 Array.from(document.querySelectorAll(".review_box")).forEach((node, boxIndex) => {
                     let id = ids[boxIndex];
 
-                    // Add back sanitized event handlers
-                    for (let container of node.querySelectorAll(".dselect_container")) {
-                        let type = container.id.startsWith("ReviewVisibility") ? "Visibility" : "Language";
-                        let input = container.querySelector("input");
-                        let trigger = container.querySelector(".trigger");
-                        let selections = Array.from(container.querySelectorAll(".dropcontainer a"));
+                    let containers = node.querySelectorAll(".dselect_container");
 
-                        input.onchange = () => window[`OnReview${type}Change`](id, `Review${type}${id}`);
+                    // Only exists when the requested profile is yours (these are the input fields where you can change visibility and language of the review)
+                    if (containers.length) {
+                        for (let container of node.querySelectorAll(".dselect_container")) {
+                            let type = container.id.startsWith("ReviewVisibility") ? "Visibility" : "Language";
+                            let input = container.querySelector("input");
+                            let trigger = container.querySelector(".trigger");
+                            let selections = Array.from(container.querySelectorAll(".dropcontainer a"));
 
-                        trigger.href = "javascript:DSelectNoop();"
-                        trigger.onfocus = () => DSelectOnFocus(`Review${type}${id}`);
-                        trigger.onblur = () => DSelectOnBlur(`Review${type}${id}`);
-                        trigger.onclick = () => DSelectOnTriggerClick(`Review${type}${id}`);
+                            input.onchange = () => window[`OnReview${type}Change`](id, `Review${type}${id}`);
 
-                        selections.forEach((selection, selIndex) => {
-                            selection.href = "javascript:DSelectNoop();";
-                            selection.onmouseover = () => DHighlightItem(`Review${type}${id}`, selIndex, false);
-                            selection.onclick = () => DHighlightItem(`Review${type}${id}`, selIndex, true);
-                        });
+                            trigger.href = "javascript:DSelectNoop();"
+                            trigger.onfocus = () => DSelectOnFocus(`Review${type}${id}`);
+                            trigger.onblur = () => DSelectOnBlur(`Review${type}${id}`);
+                            trigger.onclick = () => DSelectOnTriggerClick(`Review${type}${id}`);
+
+                            selections.forEach((selection, selIndex) => {
+                                selection.href = "javascript:DSelectNoop();";
+                                selection.onmouseover = () => DHighlightItem(`Review${type}${id}`, selIndex, false);
+                                selection.onclick = () => DHighlightItem(`Review${type}${id}`, selIndex, true);
+                            });
+                        }
+                    // Otherwise you have buttons to vote for the review (Was it helpful or not, was it funny?)
+                    } else {
+                        let controlBlock = node.querySelector(".control_block");
+
+                        let btns = controlBlock.querySelectorAll("a");
+                        let [ upvote, downvote, funny ] = btns;
+
+                        for (let btn of btns) {
+                            btn.href = "javascript:void(0)";
+                        }
+
+                        upvote.onclick = () => UserReviewVoteUp(id);
+                        downvote.onclick = () => UserReviewVoteDown(id);
+                        funny.onclick = () => UserReviewVoteTag(id, 1, `RecommendationVoteTagBtn${id}_1`);
                     }
                 });
             }, [ displayedReviews.map(review => review.id) ]);
