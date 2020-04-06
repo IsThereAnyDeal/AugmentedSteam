@@ -1688,13 +1688,13 @@ let RecommendedPageClass = (function(){
             $J(document).ajaxSuccess((event, xhr, { url }) => {
                 let pathname = new URL(url).pathname;
                 if (pathname.startsWith("/userreviews/rate/") || pathname.startsWith("/userreviews/votetag/") || pathname.startsWith("/userreviews/update/")) {
-                    let splits = pathname.split('/');
-                    Messenger.postMessage("updateReview", splits[splits.length - 1]);
+                    let id = pathname.split('/').pop();
+                    Messenger.postMessage("updateReview", id);
                 }
             });
         });
 
-        document.querySelector("#leftContents > h1").insertAdjacentElement("afterend",
+        document.querySelector(".review_list h1").insertAdjacentElement("beforebegin",
             Sortbox.get("reviews", [
                 ["default", Localization.str.date],
                 ["rating", Localization.str.rating],
@@ -1703,7 +1703,7 @@ let RecommendedPageClass = (function(){
                 ["length", Localization.str.length],
                 ["visibility", Localization.str.visibility],
                 ["playtime", Localization.str.playtime],
-            ], SyncedStorage.get("sortreviewsby"), sortReviews, "sortreviewsby")
+            ], SyncedStorage.get("sortreviewsby"), sortReviews, "sortreviewsby", "padding: 20px 0 5px 0;")
         );
     };
 
