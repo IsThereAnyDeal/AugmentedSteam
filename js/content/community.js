@@ -1576,11 +1576,16 @@ let RecommendedPageClass = (function(){
         let reviews;
 
         async function getReviews() {
-            ExtensionLayer.runInPageContext((processing, wait) => { ShowBlockingWaitDialog(processing, wait); },
-            [
-                Localization.str.processing,
-                Localization.str.wait
-            ]);
+            // Delay half a second to avoid dialog flicker when grabbing cache
+            let delayer = setTimeout(
+                ExtensionLayer.runInPageContext,
+                500,
+                (processing, wait) => { window.dialog = ShowBlockingWaitDialog(processing, wait); },
+                [
+                    Localization.str.processing,
+                    Localization.str.wait
+                ]
+            );
 
             try {
                 reviews = await Background.action("reviews", steamId, numReviews);
@@ -1590,7 +1595,12 @@ let RecommendedPageClass = (function(){
                     return review;
                 });
             } finally {
-                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
+                clearTimeout(delayer);
+                ExtensionLayer.runInPageContext(() => {
+                    if (window.dialog) {
+                        window.dialog.Dismiss();
+                    }
+                });
             }
         }
 
@@ -1681,7 +1691,7 @@ let RecommendedPageClass = (function(){
         }
 
         Messenger.addMessageListener("updateReview", id => {
-            Background.action("updatereviewnode", steamId, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, numReviews);
+            Background.action("updatereviewnode", steamId, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, numReviews).then(getReviews);
         });
 
         ExtensionLayer.runInPageContext(() => {
