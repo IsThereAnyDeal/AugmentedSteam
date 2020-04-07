@@ -1528,19 +1528,20 @@ class AppPageClass extends StorePageClass {
             </div>`);
     }
 
-    displayPurchaseDate() {
-        if (!SyncedStorage.get("purchase_dates")) { return; }
+    async displayPurchaseDate() {
+        if (!User.isSignedIn || !SyncedStorage.get("purchase_dates")) { return; }
 
         let node = document.querySelector(".game_area_already_owned .already_in_library");
         if (!node) { return; }
 
-        let appname = this.appName.replace(":", "").trim();
+        let appname = this.appName.replace(/:/g, "").trim();
+        let date = await User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname);
+        if (!date) {
+            console.warn("Failed to retrieve purchase date");
+            return;
+        }
 
-        User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname).then(date => {
-            if (!date) { return; }
-            HTML.beforeEnd(node,
-                ` ${Localization.str.purchase_date.replace("__date__", date)}`);
-        });
+        node.textContent += ` ${Localization.str.purchase_date.replace("__date__", date)}`;
     }
 
     addOwnedElsewhere() {
