@@ -51,7 +51,7 @@ class Customizer {
                 elements.splice(i, 1);
                 return;
             }
-    
+
             if (typeof text !== "string" || text === "") {
                 text = this._textValue(element).toLowerCase();
                 if (text === "") return;
@@ -102,7 +102,7 @@ class Customizer {
                     </div>`);
 
                 customizerEntries.set(name, [element]);
-            }            
+            }
         }
 
         for (let [name, elements] of customizerEntries) {
@@ -378,7 +378,7 @@ class StorePageClass {
 
         for (let subid of this.getAllSubids()) {
             if (!subid) { return; }
-            
+
             let promises = [];
             let prices = {};
 
@@ -392,7 +392,7 @@ class StorePageClass {
             }
 
             await Promise.all(promises);
-            
+
             let node = document.querySelector(`input[name=subid][value="${subid}"]`)
                 .closest(".game_area_purchase_game_wrapper,#game_area_purchase,.sale_page_purchase_item")
                 .querySelector(".game_purchase_action");
@@ -449,7 +449,7 @@ class StorePageClass {
                             `<span class="es-regprice__converted">${priceUser}</span>
                             <span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`;
                     }
-                    
+
                     html += "</div>";
                 } else {
                     html =
@@ -476,7 +476,7 @@ class StorePageClass {
                     priceNode.classList.add("es_regional_icon");
                 }
             }
-        }  
+        }
     }
 
     forceVideoMP4() {
@@ -523,7 +523,7 @@ class SubPageClass extends StorePageClass {
                 // Only present when the product has a price associated with (so it's not free or N/A)
                 if (priceNode) {
                     let priceContainer = priceNode.textContent.trim();
-                    if (priceContainer) { 
+                    if (priceContainer) {
                         let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
                         if (price) {
                             notOwnedTotalPrice += price.value;
@@ -565,7 +565,7 @@ class SubPageClass extends StorePageClass {
                     savingsNode.style.color = "red";
                 }
             }
-            
+
         }, 500); // why is this here?
     }
 }
@@ -606,7 +606,7 @@ class AppPageClass extends StorePageClass {
 
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
-        
+
         this.forceVideoMP4();
         this.initHdPlayer();
         this.addWishlistRemove();
@@ -1038,7 +1038,7 @@ class AppPageClass extends StorePageClass {
                 document.querySelector("#add_to_wishlist_area span").textContent = ` ${Localization.str.add_to_wishlist}`;
                 return;
             }
-            
+
             document.querySelector("#add_to_wishlist_area_success span").lastChild.textContent = ` ${text}`;
         }
 
@@ -1160,7 +1160,7 @@ class AppPageClass extends StorePageClass {
 
     async addCoupon() {
         if (!SyncedStorage.get("show_coupon")) { return; }
-        
+
         let coupon = await Inventory.getCoupon(this.appid);
         if (!coupon) { return; }
 
@@ -1553,7 +1553,7 @@ class AppPageClass extends StorePageClass {
         if (!response) { return; }
 
         let storeList = response.map(store => `<strong>${store}</strong>`).join(", ");
-        
+
         HTML.afterEnd(".queue_overflow_ctn",
             `<div class="game_area_already_owned page_content" style="background-image: linear-gradient(to right, #856d0e 0%, #d1a906 100%);">
                 <div class="ds_owned_flag ds_flag" style="background-color: #856d0e;">${Localization.str.coll.in_collection.toUpperCase()}&nbsp;&nbsp;</div>
@@ -1779,7 +1779,7 @@ class AppPageClass extends StorePageClass {
         let supportInfo = cache[appid];
         if (!supportInfo) {
             let response = await Background.action("appdetails", appid, "support_info");
-            if (!response || !response.success) { 
+            if (!response || !response.success) {
                 console.warn("Failed to retrieve support info");
                 return;
             }
@@ -2093,7 +2093,7 @@ class AppPageClass extends StorePageClass {
 
         let expandedNode = dlcs.querySelector("#game_area_dlc_expanded");
         if (expandedNode) {
-            HTML.afterEnd(expandedNode, 
+            HTML.afterEnd(expandedNode,
                 `<div class="game_purchase_action game_purchase_action_bg" style="margin-bottom: 10px;" id="es_selected_btn">
                     <div class="btn_addtocart">
                         <a class="btnv6_green_white_innerfade btn_medium">
@@ -2315,7 +2315,7 @@ class AppPageClass extends StorePageClass {
                 console.warn("Failed to find achievement stats for appid", this.communityAppid);
                 return;
             }
-            
+
             HTML.afterBegin(node, `<div id="es_ach_stats">${achieveBar}</div>`);
         });
     }
@@ -2805,7 +2805,7 @@ let SearchPageClass = (function(){
                 modifyParams(url.searchParams, "as-hide", curParams.get("as-hide"));
                 modifyParams(url.searchParams, "as-reviews-score", curParams.get("as-reviews-score"));
                 modifyParams(url.searchParams, "as-reviews-count", curParams.get("as-reviews-count"));
-    
+
                 linkElement.href = url.href;
             }
         }
@@ -2880,7 +2880,7 @@ let SearchPageClass = (function(){
             paramsObj["as-reviews-count"] = params.get("as-reviews-count");
 
             return paramsObj;
-        }        
+        }
 
         function setFilterStates() {
             for (let filterName of filterNames) {
@@ -2909,7 +2909,7 @@ let SearchPageClass = (function(){
                     let [, lower, upper] = match;
                     lower = parseInt(lower);
                     upper = parseInt(upper);
-        
+
                     if (!isNaN(lower) && scoreValues.includes(lower)) {
                         lowerScoreVal = scoreValues.indexOf(lower).toString();
                     }
@@ -2937,7 +2937,7 @@ let SearchPageClass = (function(){
                     let [, lower, upper] = match;
                     lower = parseInt(lower);
                     upper = parseInt(upper);
-        
+
                     if (!isNaN(lower)) {
                         lowerCountVal = lower;
                     }
@@ -3036,7 +3036,7 @@ let SearchPageClass = (function(){
 
         // Setup handlers for reviews score filter
         for (let input of document.querySelectorAll(".js-reviews-score-input")) {
-            
+
             let minVal = parseInt(minScoreInput.value);
             let maxVal = parseInt(maxScoreInput.value);
 
@@ -3101,7 +3101,7 @@ let SearchPageClass = (function(){
         maxCountInput = document.querySelector(".js-reviews-count-upper");
 
         for (let input of document.querySelectorAll(".js-reviews-count-input")) {
-            
+
             input.addEventListener("change", () => {
                 applyCountFilter();
 
@@ -3114,7 +3114,7 @@ let SearchPageClass = (function(){
                 }
                 updateUrls("as-reviews-count", val);
             });
-            
+
             input.addEventListener("keydown", e => {
                 if(e.key === "Enter") {
                     // Prevents unnecessary submitting of the advanced search form
@@ -3124,10 +3124,10 @@ let SearchPageClass = (function(){
                 }
             });
         }
-        
+
         // Setup handlers for other toggleable filters
         for (let filterName of filterNames) {
-            
+
             let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
 
             filter.addEventListener("click", () => {
@@ -3291,7 +3291,7 @@ let SearchPageClass = (function(){
                 if (Object.toQueryString(currentAsParameters) !== Object.toQueryString(asParameters)) {
                         Messenger.postMessage("searchCompleted", true);
                 }
-                
+
                 searchOld(params);
 
                 // Restore state such that the next comparison includes AS filters
@@ -3313,7 +3313,7 @@ let SearchPageClass = (function(){
 
             // https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L463
             setPageChangeHandler();
-            
+
         });
     };
 
@@ -3382,11 +3382,11 @@ let WishlistPageClass = (function(){
         });
 
         if (SyncedStorage.get("showlowestprice_onwishlist")) {
-            
+
             ExtensionLayer.runInPageContext(() => {
                 function getNodesBelow(node) {
                     let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
-            
+
                     // Limit the selection to the rows that are positioned below the row (not including the row itself) where the price is being shown
                     return nodes.filter(row => parseInt(row.style.top, 10) > parseInt(node.style.top, 10));
                 }
@@ -3402,7 +3402,7 @@ let WishlistPageClass = (function(){
                         let activeEntry = hover[hover.length - 1].closest(".wishlist_row");
                         if (activeEntry) {
                             let priceNode = activeEntry.querySelector(".itad-pricing");
-                            
+
                             if (priceNode) {
                                 for (let row of getNodesBelow(activeEntry)) {
                                     row.style.top = `${parseInt(row.style.top) + priceNode.getBoundingClientRect().height}px`;
@@ -3423,7 +3423,7 @@ let WishlistPageClass = (function(){
             this.addEmptyWishlistButton();
             this.addUserNotesHandlers();
         };
-        
+
         if (document.querySelector("#throbber").style.display === "none") {
             wishlistLoaded();
         } else {
@@ -3649,10 +3649,10 @@ let WishlistPageClass = (function(){
      * handler, resulting in a denial of access to the clipboard function.
      * This could be circumvented by adding the appropriate permissions, but doing so would prompt users to explicitly accept the changed
      * permissions on an update.
-     * 
+     *
      * If we don't use the Messenger, we'd have to move the whole handler part (including WishlistExporter) to
      * the page context side.
-     * 
+     *
      * Final solution is to query the action buttons of the dialog and adding some extra click handlers on the content script side.
      * These handlers are using a capture, so that the dialog elements will still be existent at the time of the invocation.
      */
@@ -3669,7 +3669,7 @@ let WishlistPageClass = (function(){
                         <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
                     </div>
                     </div>
-                
+
                     <div class="es-wexport es-wexport__format">
                         <h2>${exportStr.format}</h2>
                         <div>
@@ -3766,7 +3766,7 @@ let WishlistPageClass = (function(){
                     getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) + priceNodeHeight + "px");
             });
         });
-        
+
         node.addEventListener("mouseleave", () => {
             // When scrolling really fast, sometimes only this event is called without the invocation of the mouseenter event
             if (cachedPrices[appId]) {
@@ -3869,22 +3869,22 @@ class UserNotes {
         let bgClick = ExtensionLayer.runInPageContext((title, template) => {
             let deferred = new jQuery.Deferred();
             let fnOK = () => deferred.resolve();
-    
+
             let Modal = _BuildDialog(title, template, [], fnOK);
             deferred.always(() => Modal.Dismiss());
-    
+
             let promise = new Promise(resolve => {
                 Modal.m_fnBackgroundClick = () => {
                     Messenger.onMessage("noteSaved").then(() => { Modal.Dismiss(); });
                     resolve();
                 };
             });
-    
+
             Modal.Show();
-    
+
             // attach the deferred's events to the modal
             deferred.promise(Modal);
-    
+
             let note_input = document.getElementById("es_note_input");
             note_input.focus();
             note_input.setSelectionRange(0, note_input.textLength);
@@ -3948,11 +3948,11 @@ class UserNotes {
 let StoreFrontPageClass = (function(){
 
     function StoreFrontPageClass() {
-        
+
         if (User.isSignedIn) {
             this.highlightDynamic();
         }
-        
+
         this.setHomePageTab();
         this.customizeHomePage();
     }
