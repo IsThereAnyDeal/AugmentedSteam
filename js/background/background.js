@@ -1103,7 +1103,7 @@ class IndexedDB {
                 }
 
                 if (oldVersion < 3) {
-                    db.createObjectStore("expiries");
+                    db.createObjectStore("expiries").createIndex("expiry", '');
 
                     tx.objectStore("packages").deleteIndex("expiry");
                     tx.objectStore("storePageData").deleteIndex("expiry");
@@ -1116,10 +1116,62 @@ class IndexedDB {
                 console.error("Failed to upgrade database, there is already an open connection");
             },
         })
-        .then(db => { debugger; IndexedDB.db = db; });
+        .then(db => { IndexedDB.db = db; })
+        .then(IndexedDB._deleteOldData);
     }
     static then(onDone, onCatch) {
         return IndexedDB.init().then(onDone, onCatch);
+    }
+
+    static async _deleteOldData() {
+        let expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
+        let cursor = await expiryStore.index("expiry").openCursor(IDBKeyRange.upperBound(Timestamp.now()));
+        let expired = [];
+        let stores = {};
+        let promises = [];
+
+        while (cursor) {
+            expired.push(cursor.primaryKey);
+            promises.push(expiryStore.delete(cursor.primaryKey));
+            cursor = await cursor.continue();
+        }
+
+        for (let expiryKey of expired) {
+            let [storeName, key] = expiryKey.split(/_/);
+            if (!stores[storeName]) {
+                stores[storeName] = [];
+            }
+
+            if (key) {
+                stores[storeName].push(key);
+            }
+        }
+
+        for (let [storeName, keys] of Object.entries(stores)) {
+
+            let dataStore = IndexedDB.db.transaction(storeName, "readwrite").store;
+
+            if (IndexedDB.timestampedStores.has(storeName)) {
+                promises.push(dataStore.clear());
+            } else {
+                promises.push(Promise.all(keys.map(key => {
+
+                    let strKeyPromise = dataStore.delete(key);
+
+                    let nmbKey = Number(key);
+                    if (nmbKey) {
+                        return Promise.all([
+                            strKeyPromise,
+                            dataStore.delete(nmbKey),
+                        ]);
+                    }
+
+                    return strKeyPromise;
+                })));
+            }
+        }
+
+        return Promise.all(promises);
     }
 
     static async put(storeName, data, { ttl, multiple = typeof data === "object" } = {}) {
