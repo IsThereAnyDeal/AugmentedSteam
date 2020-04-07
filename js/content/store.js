@@ -3460,6 +3460,7 @@ let WishlistPageClass = (function(){
 
     WishlistPageClass.prototype.computeStats = async function() {
         if (!SyncedStorage.get("showwishliststats")) { return; }
+        if (document.getElementById("nothing_to_see_here").style.display !== "none") { return; }
 
         let appInfo = await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, "appInfo");
 
