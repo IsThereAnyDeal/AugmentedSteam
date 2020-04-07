@@ -3416,7 +3416,7 @@ let WishlistPageClass = (function(){
         observer.observe(container, { 'childList': true, });
 
         let wishlistLoaded = () => {
-            this.addStatsArea();
+            this.computeStats();
             this.addExportWishlistButton();
             this.addEmptyWishlistButton();
             this.addUserNotesHandlers();
@@ -3458,53 +3458,21 @@ let WishlistPageClass = (function(){
         return Highlights.highlightAndTag([node], false, options);
     };
 
-    WishlistPageClass.prototype.addStatsArea = function() {
+    WishlistPageClass.prototype.computeStats = async function() {
         if (!SyncedStorage.get("showwishliststats")) { return; }
-        if (document.getElementById("nothing_to_see_here").style.display !== "none") { return; }
 
-        HTML.beforeBegin("#wishlist_ctn",
-            `<div id="esi-wishlist-chart-content">
-                <a>${Localization.str.wl.compute}</a>
-            </div>`);
+        let appInfo = await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, "appInfo");
 
-        document.querySelector("#esi-wishlist-chart-content a").addEventListener("click", e => {
-            HTML.inner(e.target.parentNode, `<span>${Localization.str.loading}</span>`);
-            loadStats();
-        });
-    };
-
-    // Calculate total cost of all items on wishlist
-    async function loadStats() {
-        let wishlistData = HTMLParser.getVariableFromDom("g_rgAppInfo", "object");
-        if (!wishlistData || Object.keys(wishlistData).length == 0) {
-            let pages = HTMLParser.getVariableFromDom("g_nAdditionalPages", "int");
-            let baseUrl = HTMLParser.getVariableFromDom("g_strWishlistBaseURL", "string");
-
-            if (!pages || !baseUrl || !baseUrl.startsWith("https://store.steampowered.com/wishlist/profiles/")) {
-                throw "loadStats() expected profile url";
-            }
-
-            wishlistData = {};
-            let promises = [];
-
-            for (let i=0; i<pages; i++) {
-                promises.push(RequestData.getJson(`${baseUrl}wishlistdata/?p=${i}`).then(data => {
-                    Object.assign(wishlistData, data);
-                }));
-            }
-
-            await Promise.all(promises);
-        }
         let totalPrice = 0;
         let totalCount = 0;
         let totalOnSale = 0;
         let totalNoPrice = 0;
 
-        for (let [key, game] of Object.entries(wishlistData)) {
-            if (game.subs.length > 0) {
-                totalPrice += game.subs[0].price / 100;
+        for (let data of Object.values(appInfo)) {
+            if (data.subs.length > 0) {
+                totalPrice += data.subs[0].price / 100;
 
-                if (game.subs[0].discount_pct > 0) {
+                if (data.subs[0].discount_pct > 0) {
                     totalOnSale++;
                 }
             } else {
@@ -3512,13 +3480,15 @@ let WishlistPageClass = (function(){
             }
             totalCount++;
         }
-        totalPrice = new Price(totalPrice, Currency.storeCurrency)
+        totalPrice = new Price(totalPrice, Currency.storeCurrency);
 
-        HTML.inner("#esi-wishlist-chart-content",
-            `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
-            <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
-            <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
-            <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>`);
+        HTML.beforeBegin("#wishlist_ctn",
+            `<div id="esi-wishlist-chart-content">
+                <div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>
+            </div>`);
     }
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
