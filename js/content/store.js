@@ -1283,14 +1283,21 @@ class AppPageClass extends StorePageClass {
                     </div>
                 </div>`);
 
-            // Add data to the review section in the left column, or create one if that block doesn't exist
-            if (data.reviews.length > 0) {
-                let reviewsNode = document.getElementById("game_area_reviews");
+            let reviews = "";
+            for (let review of data.reviews) {
+                let date = new Date(review.date).toLocaleDateString();
+                reviews += `<p>"${review.snippet}"<br>${review.dScore} - <a href="${review.rUrl}" target="_blank" data-tooltip-text="${review.author}, ${date}">${review.name}</a></p>`;
+            }
+
+            if (reviews) {
                 let html =
                     `<div id="es_opencritic_reviews">
+                        ${reviews}
                         <div class="chart-footer">${Localization.str.read_more_reviews} <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews" target="_blank">OpenCritic.com</a></div>
                     </div>`;
 
+                // Add data to the review section in the left column, or create one if that block doesn't exist
+                let reviewsNode = document.getElementById("game_area_reviews");
                 if (reviewsNode) {
                     let youTubeReviews = document.getElementById("es_youtube_reviews");
                     if (youTubeReviews) {
@@ -1306,13 +1313,6 @@ class AppPageClass extends StorePageClass {
                         </div>`);
                 }
 
-                let review_text = "";
-                for (let review of data.reviews) {
-                    let date = new Date(review.date);
-                    review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href="${review.rUrl}" target="_blank" data-tooltip-text="${review.author}, ${date.toLocaleDateString()}">${review.name}</a></p>`;
-                }
-
-                HTML.afterBegin("#es_opencritic_reviews", review_text);
                 ExtensionLayer.runInPageContext(() => { BindTooltips("#game_area_reviews", { tooltipCSSClass: "store_tooltip" }); });
             }
         });
