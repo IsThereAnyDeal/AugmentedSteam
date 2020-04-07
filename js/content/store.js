@@ -3571,8 +3571,9 @@ let WishlistPageClass = (function(){
 
     class WishlistExporter {
 
-        constructor(appInfo) {
+        constructor(appInfo, apps) {
             this.appInfo = appInfo;
+            this.apps = apps;
             this.notes = SyncedStorage.get("user_notes") || {};
         }
 
@@ -3601,7 +3602,8 @@ let WishlistPageClass = (function(){
         toText(format) {
             let result = [];
             let parser = new DOMParser();
-            for (let [appid, data] of Object.entries(this.appInfo)) {
+            for (let appid of this.apps) {
+                let data = this.appInfo[appid];
                 let price = "N/A";
                 let discount = "0%";
                 let base_price = "N/A";
@@ -3654,7 +3656,7 @@ let WishlistPageClass = (function(){
      * Final solution is to query the action buttons of the dialog and adding some extra click handlers on the content script side.
      * These handlers are using a capture, so that the dialog elements will still be existent at the time of the invocation.
      */
-    WishlistPageClass.prototype.showExportModalDialog = function(appInfo) {
+    WishlistPageClass.prototype.showExportModalDialog = function(appInfo, apps) {
 
         ExtensionLayer.runInPageContext(exportStr => {
             ShowConfirmDialog(
@@ -3699,7 +3701,7 @@ let WishlistPageClass = (function(){
             let type = document.querySelector("input[name='es_wexport_type']:checked").value;
             let format = document.querySelector("#es-wexport-format").value;
 
-            let wishlist = new WishlistExporter(appInfo);
+            let wishlist = new WishlistExporter(appInfo, apps);
 
             let result = "";
             let filename = "";
@@ -3726,7 +3728,10 @@ let WishlistPageClass = (function(){
         HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${Localization.str.export.wishlist}</div></div>`);
 
         document.querySelector("#es_export_wishlist").addEventListener("click", async () => {
-            this.showExportModalDialog(await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, "appInfo"));
+            this.showExportModalDialog(
+                await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, "appInfo"), 
+                await ExtensionLayer.runInPageContext(() => g_Wishlist.rgAllApps, null, "apps")
+            );
         });
     };
 
