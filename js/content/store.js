@@ -1189,31 +1189,34 @@ class AppPageClass extends StorePageClass {
         // TODO show price in purchase box
     }
 
-    addDlcInfo() {
+    async addDlcInfo() {
         if (!this.isDlc()) { return; }
 
         let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.dlc_details}</div>
                    <div class="block es_dlc_info">
                    <div class="block_content"><div class="block_content_inner"><div class="details_block">`;
 
-        Background.action("dlcinfo", { "appid": this.appid, "appname": this.appName }).then(response => {
-            for(let item of response) {
+        try {
+            let response = await Background.action("dlcinfo", { "appid": this.appid, "appname": this.appName });
+
+            for (let item of response) {
                 let iconUrl = `${Config.PublicHost}/gamedata/icons/${encodeURIComponent(item.icon)}`;
                 let title = HTML.escape(item.desc);
                 let name = HTML.escape(item.name);
+
                 html += `<div class="game_area_details_specs">
                             <div class="icon"><img src="${iconUrl}"></div>
                             <a class="name" title="${title}">${name}</a>
                         </div>`;
             }
-        }).finally(() => {
+        } finally {
             let suggestUrl = `${Config.PublicHost}/gamedata/dlc_category_suggest.php?appid=${this.appid}&appname=${encodeURIComponent(this.appName)}`;
             html += `</div>
                     <br><a class="linkbar" href="${suggestUrl}" target="_blank">${Localization.str.dlc_suggest} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></a>
                     </div></div></div>`;
 
             HTML.beforeBegin(document.querySelector("#category_block").parentNode, html);
-        });
+        }
     }
 
     addMetacriticUserScore() {
@@ -1544,18 +1547,19 @@ class AppPageClass extends StorePageClass {
         node.textContent += ` ${Localization.str.purchase_date.replace("__date__", date)}`;
     }
 
-    addOwnedElsewhere() {
+    async addOwnedElsewhere() {
         if (this.isOwned()) { return; }
 
-        Background.action("itad.getfromcollection", `app/${this.appid}`).then(result => {
-            if (!result) { return; }
-            
-            HTML.afterEnd(".queue_overflow_ctn",
-                `<div class="game_area_already_owned page_content" style="background-image: linear-gradient(to right, #856d0e 0%, #d1a906 100%);">
-                    <div class="ds_owned_flag ds_flag" style="background-color: #856d0e;">${Localization.str.coll.in_collection.toUpperCase()}&nbsp;&nbsp;</div>
-                    <div class="already_in_library" style="color: #ffe000;">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", result.map(store => `<strong>${store}</strong>`).join(", "))}</div>
-                </div>`)
-        });
+        let response = await Background.action("itad.getfromcollection", this.storeid);
+        if (!response) { return; }
+
+        let storeList = response.map(store => `<strong>${store}</strong>`).join(", ");
+        
+        HTML.afterEnd(".queue_overflow_ctn",
+            `<div class="game_area_already_owned page_content" style="background-image: linear-gradient(to right, #856d0e 0%, #d1a906 100%);">
+                <div class="ds_owned_flag ds_flag" style="background-color: #856d0e;">${Localization.str.coll.in_collection.toUpperCase()}&nbsp;&nbsp;</div>
+                <div class="already_in_library" style="color: #ffe000;">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", storeList)}</div>
+            </div>`);
     }
 
     addWidescreenCertification() {
