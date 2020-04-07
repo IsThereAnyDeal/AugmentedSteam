@@ -1567,7 +1567,7 @@ let RecommendedPageClass = (function(){
         if (!numReviewsNode) { return; }
 
         let numReviews = Number(numReviewsNode.innerText);
-        if (isNaN(numReviews) || numReviews === 0) { return; }
+        if (isNaN(numReviews) || numReviews <= 1) { return; }
 
         let steamId = window.location.pathname.match(/\/((?:id|profiles)\/.+?)\//)[1];
         let params = new URLSearchParams(window.location.search);
