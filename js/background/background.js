@@ -1078,49 +1078,48 @@ Steam._supportedCurrencies = null;
 class IndexedDB {
     static init() {
         if (IndexedDB._promise) { return IndexedDB._promise; }
-        return IndexedDB._promise = async () => {
-            IndexedDB.db = await idb.openDB("Augmented Steam", Info.db_version, {
-                upgrade(db, oldVersion, newVersion, tx) {
-                    if (oldVersion < 1) {
-                        db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
-                        db.createObjectStore("giftsAndPasses").createIndex("appid", '', { unique: false, multiEntry: true });
-                        db.createObjectStore("items");
-                        db.createObjectStore("earlyAccessAppids");
-                        db.createObjectStore("purchases");
-                        db.createObjectStore("dynamicStore").createIndex("appid", '', { unique: false, multiEntry: true });
-                        db.createObjectStore("packages").createIndex("expiry", "expiry");
-                        db.createObjectStore("storePageData").createIndex("expiry", "expiry");
-                        db.createObjectStore("profiles").createIndex("expiry", "expiry");
-                        db.createObjectStore("rates");
-                        db.createObjectStore("notes");
-                        db.createObjectStore("collection");
-                        db.createObjectStore("waitlist");
-                        db.createObjectStore("itadImport");
-                    }
+        return IndexedDB._promise = idb.openDB("Augmented Steam", Info.db_version, {
+            upgrade(db, oldVersion, newVersion, tx) {
+                if (oldVersion < 1) {
+                    db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
+                    db.createObjectStore("giftsAndPasses").createIndex("appid", '', { unique: false, multiEntry: true });
+                    db.createObjectStore("items");
+                    db.createObjectStore("earlyAccessAppids");
+                    db.createObjectStore("purchases");
+                    db.createObjectStore("dynamicStore").createIndex("appid", '', { unique: false, multiEntry: true });
+                    db.createObjectStore("packages").createIndex("expiry", "expiry");
+                    db.createObjectStore("storePageData").createIndex("expiry", "expiry");
+                    db.createObjectStore("profiles").createIndex("expiry", "expiry");
+                    db.createObjectStore("rates");
+                    db.createObjectStore("notes");
+                    db.createObjectStore("collection");
+                    db.createObjectStore("waitlist");
+                    db.createObjectStore("itadImport");
+                }
 
-                    if (oldVersion < 2) {
-                        db.createObjectStore("workshopFileSizes").createIndex("expiry", "expiry");
-                        db.createObjectStore("reviews").createIndex("expiry", "expiry");
-                    }
+                if (oldVersion < 2) {
+                    db.createObjectStore("workshopFileSizes").createIndex("expiry", "expiry");
+                    db.createObjectStore("reviews").createIndex("expiry", "expiry");
+                }
 
-                    if (oldVersion < 3) {
-                        db.createObjectStore("expiries");
+                if (oldVersion < 3) {
+                    db.createObjectStore("expiries");
 
-                        tx.objectStore("packages").deleteIndex("expiry");
-                        tx.objectStore("storePageData").deleteIndex("expiry");
-                        tx.objectStore("profiles").deleteIndex("expiry");
-                        tx.objectStore("workshopFileSizes").deleteIndex("expiry");
-                        tx.objectStore("reviews").deleteIndex("expiry");
-                    }
-                },
-                blocked() {
-                    console.error("Failed to upgrade database, there is already an open connection");
-                },
-            });
-        };
+                    tx.objectStore("packages").deleteIndex("expiry");
+                    tx.objectStore("storePageData").deleteIndex("expiry");
+                    tx.objectStore("profiles").deleteIndex("expiry");
+                    tx.objectStore("workshopFileSizes").deleteIndex("expiry");
+                    tx.objectStore("reviews").deleteIndex("expiry");
+                }
+            },
+            blocked() {
+                console.error("Failed to upgrade database, there is already an open connection");
+            },
+        })
+        .then(db => { debugger; IndexedDB.db = db; });
     }
     static then(onDone, onCatch) {
-        return (IndexedDB.init())().then(onDone, onCatch);
+        return IndexedDB.init().then(onDone, onCatch);
     }
 
     static async put(storeName, data, { ttl, multiple = typeof data === "object" } = {}) {
