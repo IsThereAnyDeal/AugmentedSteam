@@ -647,7 +647,7 @@ class AppPageClass extends StorePageClass {
         this.addDlcCheckboxes();
         this.addBadgeProgress();
         this.addAstatsLink();
-        this.addAchievementCompletionBar();
+        this.addAchievementBar();
 
         this.showRegionalPricing("app");
 
@@ -2304,20 +2304,19 @@ class AppPageClass extends StorePageClass {
             </div>`);
     }
 
-    addAchievementCompletionBar() {
+    async addAchievementBar() {
         if (!this.hasAchievements() || !SyncedStorage.get("showachinstore")) { return; }
 
         let node = document.querySelector("#my_activity");
         if (!node) { return; }
 
-        Stats.getAchievementBar("/my", this.communityAppid).then(achieveBar => {
-            if (!achieveBar) {
-                console.warn("Failed to find achievement stats for appid", this.communityAppid);
-                return;
-            }
-
-            HTML.afterBegin(node, `<div id="es_ach_stats">${achieveBar}</div>`);
-        });
+        let achieveBar = await Stats.getAchievementBar("/my", this.communityAppid);
+        if (!achieveBar) {
+            console.warn("Failed to retrieve achievement stats");
+            return;
+        }
+        
+        HTML.afterBegin(node, `<div class="es-achieveBar-store">${achieveBar}</div>`);
     }
 
     customizeAppPage() {
