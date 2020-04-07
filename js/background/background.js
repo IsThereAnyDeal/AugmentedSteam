@@ -1080,8 +1080,8 @@ class IndexedDB {
         if (IndexedDB._promise) { return IndexedDB._promise; }
         return IndexedDB._promise = async () => {
             IndexedDB.db = await idb.openDB("Augmented Steam", Info.db_version, {
-                upgrade(db, oldVersion) {
-                    if (oldVersion === 0) {
+                upgrade(db, oldVersion, newVersion, tx) {
+                    if (oldVersion < 1) {
                         db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
                         db.createObjectStore("giftsAndPasses").createIndex("appid", '', { unique: false, multiEntry: true });
                         db.createObjectStore("items");
@@ -1098,9 +1098,19 @@ class IndexedDB {
                         db.createObjectStore("itadImport");
                     }
 
-                    if (oldVersion <= 1) {
+                    if (oldVersion < 2) {
                         db.createObjectStore("workshopFileSizes").createIndex("expiry", "expiry");
                         db.createObjectStore("reviews").createIndex("expiry", "expiry");
+                    }
+
+                    if (oldVersion < 3) {
+                        db.createObjectStore("expiries");
+
+                        tx.objectStore("packages").deleteIndex("expiry");
+                        tx.objectStore("storePageData").deleteIndex("expiry");
+                        tx.objectStore("profiles").deleteIndex("expiry");
+                        tx.objectStore("workshopFileSizes").deleteIndex("expiry");
+                        tx.objectStore("reviews").deleteIndex("expiry");
                     }
                 },
                 blocked() {
@@ -1113,22 +1123,24 @@ class IndexedDB {
         return (IndexedDB.init())().then(onDone, onCatch);
     }
 
-    static put(storeName, data, { ttl, multiple = typeof data === "object" } = {}) {
+    static async put(storeName, data, { ttl, multiple = typeof data === "object" } = {}) {
         let tx = IndexedDB.db.transaction(storeName, "readwrite");
+        let expiryTx;
+
+        let expiry;
+        let expiryKeys = [];
+
         let cached = IndexedDB.cacheObjectStores.has(storeName);
         let timestampedEntry = IndexedDB.timestampedEntriesStores.has(storeName);
-        let expiry;
-
-        function getFinalVal(value) {
-            return timestampedEntry ? { value, expiry } : value;
-        }
 
         function nonAssociativeData(data) {
+            let promise;
             if (tx.store.autoIncrement || tx.store.keyPath !== null) {
-                tx.store.put(getFinalVal(data));
+                promise = tx.store.put(data);
             } else {
-                tx.store.put(getFinalVal(null), data);
+                promise = tx.store.put(null, data);
             }
+            promise.then(key => { if (timestampedEntry) { expiryKeys.push(`${storeName}_${key}`); } });
         }
 
         if (cached) {
@@ -1136,7 +1148,7 @@ class IndexedDB {
             expiry = Timestamp.now() + ttl;
 
             if (!timestampedEntry) {
-                tx.store.put(expiry, "expiry");
+                expiryKeys.push(storeName);
             }
         }
 
@@ -1146,7 +1158,7 @@ class IndexedDB {
             } else if (typeof data === "object") {
                 let entries = data instanceof Map ? data.entries() : Object.entries(data);
                 for (let [key, value] of entries) {
-                    tx.store.put(getFinalVal(value), key);
+                    tx.store.put(value, key).then(key => { if (timestampedEntry) { expiryKeys.push(`${storeName}_${key}`); } });
                 }
             } else {
                 console.warn("multiple parameter specified but the data is a primitive");
@@ -1155,7 +1167,15 @@ class IndexedDB {
             nonAssociativeData(data);
         }
 
-        return tx.done;
+        await tx.done;
+
+        expiryTx = IndexedDB.db.transaction("expiries", "readwrite");
+
+        for (let key of expiryKeys) {
+            expiryTx.store.put(expiry, key);
+        }
+
+        return expiryTx;
     }
 
     static async get(storeName, key, options = {}) {
@@ -1163,13 +1183,14 @@ class IndexedDB {
         let values;
         let store;
 
-        await IndexedDB.objStoreExpiryCheck(storeName, options);
+        await Promise.all([
+            IndexedDB.checkStoreExpiry(storeName, options),
+            IndexedDB.checkEntryExpiry(storeName, keys, options),
+        ]);
 
         store = IndexedDB.db.transaction(storeName).store;
 
-        values = await Promise.all(keys.map(key =>
-            store.get(key).then(result => IndexedDB.resultExpiryCheck(storeName, result, key, options))
-        ));
+        values = await Promise.all(keys.map(key => store.get(key)));
 
         return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
     }
@@ -1179,15 +1200,18 @@ class IndexedDB {
         let values = [];
         let cursor;
 
-        await IndexedDB.objStoreExpiryCheck(storeName, options);
+        await IndexedDB.checkStoreExpiry(storeName, options);
+
+        if (IndexedDB.timestampedEntriesStores.has(storeName)) {
+            await checkEntryExpiry(storeName, await IndexedDB.db.getAllKeys(storeName), options);
+        }
 
         cursor = await IndexedDB.db.transaction(storeName).store.openCursor();
         
         while (cursor) {
-            if (cursor.key !== "expiry" || !IndexedDB.timestampedStores.has(storeName)) {
-                keys.push(cursor.key);
-                values.push(IndexedDB.resultExpiryCheck(storeName, cursor.value, cursor.key, options));
-            }            
+            keys.push(cursor.key);
+            values.push(cursor.value);
+                      
             cursor = await cursor.continue();
         }
 
@@ -1195,81 +1219,107 @@ class IndexedDB {
     }
 
     static async getFromIndex(storeName, indexName, key, options = {}) {
+
+        // It doesn't make sense to query on an index from a timestamped entry store, since the data is not complete
+        if (IndexedDB.timestampedEntriesStores.has(storeName)) { return; }
+
         let keys = IndexedDB._asArray(key);
         let values;
         let index;
 
-        await IndexedDB.objStoreExpiryCheck(storeName, options);
+        await IndexedDB.checkStoreExpiry(storeName, options);
 
         index = IndexedDB.db.transaction(storeName).store.index(indexName);
 
-        values = await Promise.all(keys.map(key =>
-            index.openCursor(key)
-                .then(async cursor => {
+        values = await Promise.all(keys.map(key => {
+            if (options.asKey) {
+                if (options.all) {
+                    return index.getAllKeys(key);
+                }
+                return index.getKey(key);
+            }
 
-                    async function getValue() {
-                        let result = await IndexedDB.resultExpiryCheck(storeName, cursor.value, cursor.primaryKey, options);
-                            
-                        if (result && options.asKey) {
-                            return cursor.primaryKey;
-                        }
-                        return result;
-                    }
+            if (options.all) {
+                return index.getAll(key);
+            }
 
-                    if (options.all) {
-                        let promises = [];
-
-                        while (cursor) {
-                            promises.push(getValue());
-                            cursor = await cursor.continue();
-                        }
-    
-                        return Promise.all(promises);
-                    }
-                    if (cursor) {
-                        return getValue();
-                    }
-                })
-        ));
+            return index.get(key);
+        }));
 
         return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
     }
 
     static async indexContainsKey(storeName, indexName, key, options = {}) {
+
+        // It doesn't make sense to query on an index from a timestamped entry store, since the data is not complete
+        if (IndexedDB.timestampedEntriesStores.has(storeName)) { return; }
+
         let keys = IndexedDB._asArray(key);
         let values;
         let index;
 
-        await IndexedDB.objStoreExpiryCheck(storeName, options);
+        await IndexedDB.checkStoreExpiry(storeName, options);
 
         index = IndexedDB.db.transaction(storeName).store.index(indexName);
 
         values = await Promise.all(keys.map(key =>
-            index.openCursor(key)
-                .then(cursor => {
-                    if (cursor) {
-                        return IndexedDB.resultExpiryCheck(storeName, cursor.value, cursor.primaryKey, options);
-                    }
-                })
-                .then(result => typeof result !== "undefined")
+            index.openKeyCursor(key)
+                .then(cursor => Boolean(cursor))
         ));
 
         return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
     }
 
     static delete(storeName, key) {
+
         let keys = IndexedDB._asArray(key);
-        let tx = IndexedDB.db.transaction(storeName, "readwrite");
+        let dataStore = IndexedDB.db.transaction(storeName, "readwrite").store;
+        let expiryStore;
+        
+        if (IndexedDB.cacheObjectStores.has(storeName)) {
+            expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
+        }
 
-        keys.forEach(key => tx.store.delete(key));
-
-        return tx.done;
+        return Promise.all(keys.forEach(key => {
+            let dataPromise = dataStore.delete(key);
+            if (expiryStore) {
+                return Promise.all([
+                    dataPromise,
+                    expiryStore.delete(IndexedDB.timestampedStores.has(storeName) ? storeName : `${storeName}_${key}`)
+                ]);
+            }
+            return dataPromise;
+        }));
     }
 
     static clear(storeName = Array.from(IndexedDB.cacheObjectStores.keys())) {
         let storeNames = IndexedDB._asArray(storeName);
+        let expiryStore;
 
-        return Promise.all(storeNames.map(name => IndexedDB.db.clear(name)));
+        if (storeNames.some(storeName => IndexedDB.cacheObjectStores.has(storeName))) {
+            expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
+        }
+
+        return Promise.all(storeNames.map(storeName => {
+            let clearPromise = IndexedDB.db.clear(storeName);
+
+            if (IndexedDB.cacheObjectStores.has(storeName)) {
+
+                let expiryKey;
+                if (IndexedDB.timestampedStores.has(storeName)) {
+                    expiryKey = storeName;
+                } else {
+                    expiryKey = IDBKeyRange.bound(`${storeName}_`, `${storeName}${String.fromCharCode('_'.charCodeAt(0) + 1)}`, false, true) `${storeName}_${key}`;
+                }
+
+                return Promise.all([
+                    clearPromise,
+                    expiryStore.delete(expiryKey),
+                ]);
+            }
+
+            return clearPromise;
+        }));
     }
 
     static async contains(storeName, key, options = {}) {
@@ -1277,75 +1327,75 @@ class IndexedDB {
         let values;
         let store;
 
-        await IndexedDB.objStoreExpiryCheck(storeName, options);
+        await Promise.all([
+            IndexedDB.checkStoreExpiry(storeName, options),
+            IndexedDB.checkEntryExpiry(storeName, keys, options),
+        ]);
         
         store = IndexedDB.db.transaction(storeName).store;
 
         values = await Promise.all(keys.map(key => 
             store.openCursor(key)
-                .then(cursor => {
-                    if (cursor) {
-                        return IndexedDB.resultExpiryCheck(storeName, cursor.value, cursor.key, options);
-                    }
-                })
-                .then(result => typeof result !== "undefined")
+                .then(cursor => Boolean(cursor))
         ));
         
         return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
     }
 
-    static async resultExpiryCheck(storeName, result, key, options = {}) {
-        if (IndexedDB.timestampedStores.has(storeName) || !IndexedDB.cacheObjectStores.has(storeName)) return result;
+    static async checkEntryExpiry(storeName, keys, options = {}) {
+        let tx;
+        let expired;
 
-        if (!result || IndexedDB.isExpired(result.expiry)) {
+        if (!IndexedDB.timestampedEntriesStores.has(storeName)) { return; }
 
-            if (options.preventFetch) { 
-                await IndexedDB.delete(storeName, key);
-                return;
-            }
-                
-            await IndexedDB.fetchUpdatedData(storeName, key, options.params);
-            return IndexedDB.get(storeName, key); // todo does this have to be called again?
+        tx = IndexedDB.db.transaction("expiries");
+        expired = [];
+
+        for (let key of keys) {
+            tx.store.get(`${storeName}_${key}`).then(expiry => {
+                if (!expiry || IndexedDB.isExpired(expiry)) {
+                    expired.push(key);
+                }
+            });
         }
 
-        return result ? result.value : result;
-    }
+        await tx.done;
 
-    static isExpired(expiry) {
-        return expiry <= Timestamp.now();
-    }
+        if (options.preventFetch) {
+            let dataTx = IndexedDB.db.transaction(storeName, "readwrite");
 
-    static async objStoreExpiryCheck(storeName, options = {}) {
-        // Remove old entries
-        if (IndexedDB.timestampedEntriesStores.has(storeName)) {
-            let cursor = await IndexedDB.db.transaction(storeName, "readwrite").store.index("expiry")
-                .openCursor(IDBKeyRange.upperBound(Timestamp.now() - IndexedDB.timestampedEntriesStores.get(storeName)));
-
-            while (cursor) {
-                await cursor.delete();
-                cursor = await cursor.continue();
+            for (let key of expired) {
+                dataTx.store.delete(key);
             }
+
+            return dataTx.done;
         }
+
+        return Promise.all(expired.map(key => 
+            IndexedDB.fetchUpdatedData(storeName, key, options.params)
+        ));
+    }
+
+    static async checkStoreExpiry(storeName, options = {}) {
         
         if (!IndexedDB.timestampedStores.has(storeName)) return;
         
-        let expiry = await IndexedDB.db.get(storeName, "expiry");
-        let expired;
-        if (!expiry) {
-            expired = true;
-        } else {
+        let expiry = await IndexedDB.db.get("expiries", storeName);
+        let expired = true;
+
+        if (expiry) {
             expired = IndexedDB.isExpired(expiry);
         }
+
         if (expired) {
             await IndexedDB.clear(storeName);
             if (!options.preventFetch) {
-                await IndexedDB.fetchUpdatedData(storeName, null, options.params);
+                return IndexedDB.fetchUpdatedData(storeName, null, options.params);
             }
         }
     }
 
     static fetchUpdatedData(storeName, key, params) {
-        if (!IndexedDB.cacheObjectStores.has(storeName)) return;
 
         let requestKey = key ? `${storeName}_${key}` : storeName;
         if (IndexedDB._ongoingRequests.has(requestKey)) {
@@ -1371,13 +1421,17 @@ class IndexedDB {
                 console.groupEnd();
 
                 // Wait some seconds before retrying
-                await IndexedDB.put(storeName, timestampedStore ? [] : new Map([[key, null]]), { "ttl": 60 });
+                await IndexedDB.db.put("expiries", Timestamp.now() + 60, timestampedStore ? storeName : `${storeName}_${key}`);
 
                 throw err;
             })
             .finally(() => IndexedDB._ongoingRequests.delete(requestKey));
         IndexedDB._ongoingRequests.set(requestKey, req);
         return req;        
+    }
+
+    static isExpired(expiry) {
+        return expiry <= Timestamp.now();
     }
 
     static _asArray(key) {
