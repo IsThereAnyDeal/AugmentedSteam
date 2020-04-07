@@ -1,6 +1,6 @@
 const Info = {
     "version": browser.runtime.getManifest().version,
-    "db_version": 2,
+    "db_version": 3,
 };
 
 /**
