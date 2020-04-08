@@ -673,9 +673,8 @@ class AppPageClass extends StorePageClass {
 
         let observer = new MutationObserver(mutations => {
             for (let mutation of mutations) {
-                // Array.from(mr.addedNodes).filter(n => n.matches && n.matches('video.highlight_movie')).forEach(n => addHDControl(n));
                 for (let node of mutation.addedNodes) {
-                    if (!node.matches || !node.matches("video.highlight_movie")) { continue; }
+                    if (!node.matches("video.highlight_movie")) { continue; }
                     addHDControl(node);
                 }
             }
@@ -687,7 +686,7 @@ class AppPageClass extends StorePageClass {
         // When the "HD" button is clicked change the definition for all videos accordingly
         document.querySelector("#highlight_player_area").addEventListener("click", clickHDControl, true);
         function clickHDControl(ev) {
-            if (!ev.target.matches || !ev.target.closest(".es_hd_toggle")) { return; }
+            if (!ev.target.closest(".es_hd_toggle")) { return; }
 
             ev.preventDefault();
             ev.stopPropagation();
