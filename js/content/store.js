@@ -3471,7 +3471,7 @@ let WishlistPageClass = (function(){
 
         for (let data of Object.values(appInfo)) {
             if (data.subs.length > 0) {
-                totalPrice += data.subs[0].price / 100;
+                totalPrice += data.subs[0].price;
 
                 if (data.subs[0].discount_pct > 0) {
                     totalOnSale++;
@@ -3481,7 +3481,7 @@ let WishlistPageClass = (function(){
             }
             totalCount++;
         }
-        totalPrice = new Price(totalPrice, Currency.storeCurrency);
+        totalPrice = new Price(totalPrice / 100, Currency.storeCurrency);
 
         HTML.beforeBegin("#wishlist_ctn",
             `<div id="esi-wishlist-chart-content">
