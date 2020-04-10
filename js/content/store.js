@@ -749,28 +749,27 @@ class AppPageClass extends StorePageClass {
 
         function toggleFullscreen(videoControl) {
             let fullscreenAvailable = document.fullscreenEnabled || document.mozFullScreenEnabled;
-            // Chrome unprefixed in v45
             // Mozilla unprefixed in v64
             if (!fullscreenAvailable) { return; }
 
             let container = videoControl.parentNode;
-            let isFullscreen = document.webkitFullscreenElement || document.mozFullScreenElement || document.fullscreenElement;
+            let isFullscreen = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
             // Mozilla unprefixed in v64
-            // Chrome still prefixed
+            // Chrome unprefixed in v53
 
             if (isFullscreen) {
                 if (document.exitFullscreen)
-                    document.exitFullscreen(); // Unprefixed in v64
+                    document.exitFullscreen();
                 else if (document.mozCancelFullScreen)
-                    document.mozCancelFullScreen(); // Unprefixed in v64
+                    document.mozCancelFullScreen(); // Mozilla unprefixed in v64
             } else {
                 let response = null;
                 if (container.requestFullscreen)
                     response = container.requestFullscreen();
                 else if (container.mozRequestFullScreen)
-                    response = container.mozRequestFullScreen(); // Unprefixed in v64
+                    response = container.mozRequestFullScreen(); // Mozilla unprefixed in v64
                 else if (container.webkitRequestFullscreen)
-                    container.webkitRequestFullscreen(); // no promise
+                    container.webkitRequestFullscreen(); // Chrome unprefixed in v69, no promise
                 // if response is a promise, catch any errors it throws
                 Promise.resolve(response).catch(err => console.error(err));
             }
