@@ -1713,7 +1713,7 @@ let RecommendedPageClass = (function(){
                 ["length", Localization.str.length],
                 ["visibility", Localization.str.visibility],
                 ["playtime", Localization.str.playtime],
-            ], SyncedStorage.get("sortreviewsby"), sortReviews, "sortreviewsby", "padding: 20px 0 5px 0;")
+            ], SyncedStorage.get("sortreviewsby"), sortReviews, "sortreviewsby")
         );
     };
 
