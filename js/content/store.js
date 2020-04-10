@@ -51,7 +51,7 @@ class Customizer {
                 elements.splice(i, 1);
                 return;
             }
-    
+
             if (typeof text !== "string" || text === "") {
                 text = this._textValue(element).toLowerCase();
                 if (text === "") return;
@@ -102,7 +102,7 @@ class Customizer {
                     </div>`);
 
                 customizerEntries.set(name, [element]);
-            }            
+            }
         }
 
         for (let [name, elements] of customizerEntries) {
@@ -378,7 +378,7 @@ class StorePageClass {
 
         for (let subid of this.getAllSubids()) {
             if (!subid) { return; }
-            
+
             let promises = [];
             let prices = {};
 
@@ -392,7 +392,7 @@ class StorePageClass {
             }
 
             await Promise.all(promises);
-            
+
             let node = document.querySelector(`input[name=subid][value="${subid}"]`)
                 .closest(".game_area_purchase_game_wrapper,#game_area_purchase,.sale_page_purchase_item")
                 .querySelector(".game_purchase_action");
@@ -449,7 +449,7 @@ class StorePageClass {
                             `<span class="es-regprice__converted">${priceUser}</span>
                             <span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`;
                     }
-                    
+
                     html += "</div>";
                 } else {
                     html =
@@ -476,7 +476,7 @@ class StorePageClass {
                     priceNode.classList.add("es_regional_icon");
                 }
             }
-        }  
+        }
     }
 
     forceVideoMP4() {
@@ -523,7 +523,7 @@ class SubPageClass extends StorePageClass {
                 // Only present when the product has a price associated with (so it's not free or N/A)
                 if (priceNode) {
                     let priceContainer = priceNode.textContent.trim();
-                    if (priceContainer) { 
+                    if (priceContainer) {
                         let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
                         if (price) {
                             notOwnedTotalPrice += price.value;
@@ -565,7 +565,7 @@ class SubPageClass extends StorePageClass {
                     savingsNode.style.color = "red";
                 }
             }
-            
+
         }, 500); // why is this here?
     }
 }
@@ -606,7 +606,7 @@ class AppPageClass extends StorePageClass {
 
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
-        
+
         this.forceVideoMP4();
         this.initHdPlayer();
         this.addWishlistRemove();
@@ -623,7 +623,6 @@ class AppPageClass extends StorePageClass {
         this.addMetacriticUserScore();
         this.addOpenCritic();
         this.addOwnedElsewhere();
-        this.displayViewInLibrary();
         this.displayPurchaseDate();
         this.addYouTubeGameplay();
         this.addYouTubeReviews();
@@ -639,7 +638,6 @@ class AppPageClass extends StorePageClass {
         this.moveUsefulLinks();
         this.addLinks("app");
         this.addFamilySharingWarning();
-        this.handleInstallSteamButton();
 
         this.addPackBreakdown();
         this.addPackageInfoButton();
@@ -648,12 +646,12 @@ class AppPageClass extends StorePageClass {
         this.addDlcCheckboxes();
         this.addBadgeProgress();
         this.addAstatsLink();
-        this.addAchievementCompletionBar();
+        this.addAchievementBar();
 
         this.showRegionalPricing("app");
 
         this.addReviewToggleButton();
-        this.addHelpButton();
+        this.addOwnedActionsButtons();
         this.addSupport();
 
         Highlights.addTitleHighlight(this.appid);
@@ -661,87 +659,86 @@ class AppPageClass extends StorePageClass {
 
     initHdPlayer() {
         let self = this;
-        let movieNode = document.querySelector('div.highlight_movie');
+        let movieNode = document.querySelector("div.highlight_movie");
         if (!movieNode) { return; }
 
-        let playInHD = LocalStorage.get('playback_hd');
+        let playInHD = LocalStorage.get("playback_hd");
 
         // Add HD Control to each video as it's added to the DOM
-        let firstVideoIsPlaying = movieNode.querySelector('video.highlight_movie');
+        let firstVideoIsPlaying = movieNode.querySelector("video.highlight_movie");
         if (firstVideoIsPlaying) {
             addHDControl(firstVideoIsPlaying);
         }
 
-        let observer = new MutationObserver(function(mutation_records){
-            for (let mr of mutation_records) {
-                // Array.from(mr.addedNodes).filter(n => n.matches && n.matches('video.highlight_movie')).forEach(n => addHDControl(n));
-                for (let node of mr.addedNodes) {
-                    if (!node.matches || !node.matches('video.highlight_movie')) continue;
+        let observer = new MutationObserver(mutations => {
+            for (let mutation of mutations) {
+                for (let node of mutation.addedNodes) {
+                    if (!node.matches("video.highlight_movie")) { continue; }
                     addHDControl(node);
                 }
             }
         });
-        document.querySelectorAll('div.highlight_movie').forEach(function(node, idx){
-            observer.observe(node, { 'childList': true, });
-        });
+        for (let node of document.querySelectorAll("div.highlight_movie")) {
+            observer.observe(node, { childList: true });
+        }
 
         // When the "HD" button is clicked change the definition for all videos accordingly
-        document.querySelector('#highlight_player_area').addEventListener('click', clickHDControl, true);
+        document.querySelector("#highlight_player_area").addEventListener("click", clickHDControl, true);
         function clickHDControl(ev) {
-            if (!ev.target.matches || !ev.target.closest('.es_hd_toggle')) return;
+            if (!ev.target.closest(".es_hd_toggle")) { return; }
 
             ev.preventDefault();
             ev.stopPropagation();
 
-            let videoControl = ev.target.closest('div.highlight_movie').querySelector('video');
+            let videoControl = ev.target.closest("div.highlight_movie").querySelector("video");
             let playInHD = self.toggleVideoDefinition(videoControl);
 
-            for (let n of document.querySelectorAll('video.highlight_movie')) {
-                if (n === videoControl) continue;
-                self.toggleVideoDefinition(n, playInHD);
+            for (let node of document.querySelectorAll("video.highlight_movie")) {
+                if (node === videoControl) { continue; }
+                self.toggleVideoDefinition(node, playInHD);
             }
 
-            LocalStorage.set('playback_hd', playInHD);
+            LocalStorage.set("playback_hd", playInHD);
         }
 
         // When the slider is expanded first time after the page was loaded set videos definition to HD
-        for (let node of document.querySelectorAll('.es_slider_toggle')) {
-            node.addEventListener('click', clickInitialHD, false);
+        for (let node of document.querySelectorAll(".es_slider_toggle")) {
+            node.addEventListener("click", clickInitialHD, false);
         }
         function clickInitialHD(ev) {
-            ev.currentTarget.removeEventListener('click', clickInitialHD, false);
-            if (!ev.target.classList.contains('es_expanded')) return;
-            for (let node of document.querySelectorAll('video.highlight_movie.es_video_sd')) {
+            ev.currentTarget.removeEventListener("click", clickInitialHD, false);
+            if (!ev.target.classList.contains("es_expanded")) { return; }
+            for (let node of document.querySelectorAll("video.highlight_movie.es_video_sd")) {
                 self.toggleVideoDefinition(node, true);
             }
-            LocalStorage.set('playback_hd', true);
+            LocalStorage.set("playback_hd", true);
         }
 
         function addHDControl(videoControl) {
-            playInHD = LocalStorage.get('playback_hd');
+            playInHD = LocalStorage.get("playback_hd");
 
             function _addHDControl() {
                 // Add "HD" button to the video
                 if (videoControl.dataset.hdSrc) {
-                    let node = videoControl.parentNode.querySelector('.time');
+                    let node = videoControl.parentNode.querySelector(".time");
                     if (node) {
                         HTML.afterEnd(node, `<div class="es_hd_toggle"><span>HD</span></div>`);
                     }
                 }
 
                 // Override Valve's auto switch to HD when putting a video in fullscreen
-                let node = videoControl.parentNode.querySelector('.fullscreen_button');
+                let node = videoControl.parentNode.querySelector(".fullscreen_button");
                 if (node) {
-                    let newNode = document.createElement('div');
+                    let newNode = document.createElement("div");
                     newNode.classList.add("fullscreen_button");
-                    newNode.addEventListener('click', (() => toggleFullscreen(videoControl)), false);
+                    newNode.addEventListener("click", (() => toggleFullscreen(videoControl)), false);
                     node.replaceWith(newNode);
                     node = null; // prevent memory leak
                     newNode = null;
                 }
 
                 // Toggle fullscreen on video double click
-                videoControl.addEventListener('dblclick', (() => toggleFullscreen(videoControl)), false);
+                videoControl.addEventListener("dblclick", (() => toggleFullscreen(videoControl)), false);
 
                 self.toggleVideoDefinition(videoControl, playInHD);
             }
@@ -751,28 +748,27 @@ class AppPageClass extends StorePageClass {
 
         function toggleFullscreen(videoControl) {
             let fullscreenAvailable = document.fullscreenEnabled || document.mozFullScreenEnabled;
-            // Chrome unprefixed in v45
             // Mozilla unprefixed in v64
-            if (!fullscreenAvailable) return;
+            if (!fullscreenAvailable) { return; }
 
             let container = videoControl.parentNode;
-            let isFullscreen = document.webkitFullscreenElement || document.mozFullScreenElement || document.fullscreenElement;
+            let isFullscreen = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
             // Mozilla unprefixed in v64
-            // Chrome still prefixed
+            // Chrome unprefixed in v53
 
             if (isFullscreen) {
                 if (document.exitFullscreen)
-                    document.exitFullscreen(); // Unprefixed in v64
+                    document.exitFullscreen();
                 else if (document.mozCancelFullScreen)
-                    document.mozCancelFullScreen(); // Unprefixed in v64
+                    document.mozCancelFullScreen(); // Mozilla unprefixed in v64
             } else {
                 let response = null;
                 if (container.requestFullscreen)
                     response = container.requestFullscreen();
                 else if (container.mozRequestFullScreen)
-                    response = container.mozRequestFullScreen(); // Unprefixed in v64
+                    response = container.mozRequestFullScreen(); // Mozilla unprefixed in v64
                 else if (container.webkitRequestFullscreen)
-                    container.webkitRequestFullscreen(); // no promise
+                    container.webkitRequestFullscreen(); // Chrome unprefixed in v69, no promise
                 // if response is a promise, catch any errors it throws
                 Promise.resolve(response).catch(err => console.error(err));
             }
@@ -797,10 +793,10 @@ class AppPageClass extends StorePageClass {
                 // if response is a promise, suppress any errors it throws
                 Promise.resolve(videoControl.play()).catch(err => {});
             }
-            videoControl.removeEventListener('loadedmetadata', onLoadedMetaData, false);
+            videoControl.removeEventListener("loadedmetadata", onLoadedMetaData, false);
         }
 
-        if ((!playInHD && typeof setHD === 'undefined') || setHD === true) {
+        if ((!playInHD && typeof setHD === "undefined") || setHD === true) {
             videoIsHD = true;
             videoControl.src = videoControl.dataset.hdSrc;
         } else if (loadedSrc) {
@@ -1039,7 +1035,7 @@ class AppPageClass extends StorePageClass {
                 document.querySelector("#add_to_wishlist_area span").textContent = ` ${Localization.str.add_to_wishlist}`;
                 return;
             }
-            
+
             document.querySelector("#add_to_wishlist_area_success span").lastChild.textContent = ` ${text}`;
         }
 
@@ -1111,10 +1107,9 @@ class AppPageClass extends StorePageClass {
     }
 
     addFullscreenScreenshotView() {
-        function toggleFullScreen(event) {
+        function toggleFullScreen(ev) {
             if (!document.fullscreenElement) {
-                let element = event.target.closest(".screenshot_popup_modal_content");
-                element.requestFullscreen();
+                ev.target.closest(".screenshot_popup_modal_content").requestFullscreen();
             } else {
                 document.exitFullscreen();
             }
@@ -1143,9 +1138,9 @@ class AppPageClass extends StorePageClass {
             });
         }
 
-        let observer = new MutationObserver(records => {
-            for (let record of records) {
-                for (let node of record.addedNodes) {
+        let observer = new MutationObserver(mutations => {
+            for (let mutation of mutations) {
+                for (let node of mutation.addedNodes) {
                     if (node.classList.contains("screenshot_popup_modal")) {
                         initFSVButtons();
                     }
@@ -1162,7 +1157,7 @@ class AppPageClass extends StorePageClass {
 
     async addCoupon() {
         if (!SyncedStorage.get("show_coupon")) { return; }
-        
+
         let coupon = await Inventory.getCoupon(this.appid);
         if (!coupon) { return; }
 
@@ -1190,31 +1185,34 @@ class AppPageClass extends StorePageClass {
         // TODO show price in purchase box
     }
 
-    addDlcInfo() {
+    async addDlcInfo() {
         if (!this.isDlc()) { return; }
 
         let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.dlc_details}</div>
                    <div class="block es_dlc_info">
                    <div class="block_content"><div class="block_content_inner"><div class="details_block">`;
 
-        Background.action("dlcinfo", { "appid": this.appid, "appname": this.appName }).then(response => {
-            for(let item of response) {
+        try {
+            let response = await Background.action("dlcinfo", { "appid": this.appid, "appname": this.appName });
+
+            for (let item of response) {
                 let iconUrl = `${Config.PublicHost}/gamedata/icons/${encodeURIComponent(item.icon)}`;
                 let title = HTML.escape(item.desc);
                 let name = HTML.escape(item.name);
+
                 html += `<div class="game_area_details_specs">
                             <div class="icon"><img src="${iconUrl}"></div>
                             <a class="name" title="${title}">${name}</a>
                         </div>`;
             }
-        }).finally(() => {
+        } finally {
             let suggestUrl = `${Config.PublicHost}/gamedata/dlc_category_suggest.php?appid=${this.appid}&appname=${encodeURIComponent(this.appName)}`;
             html += `</div>
                     <br><a class="linkbar" href="${suggestUrl}" target="_blank">${Localization.str.dlc_suggest} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></a>
                     </div></div></div>`;
 
             HTML.beforeBegin(document.querySelector("#category_block").parentNode, html);
-        });
+        }
     }
 
     addMetacriticUserScore() {
@@ -1284,14 +1282,21 @@ class AppPageClass extends StorePageClass {
                     </div>
                 </div>`);
 
-            // Add data to the review section in the left column, or create one if that block doesn't exist
-            if (data.reviews.length > 0) {
-                let reviewsNode = document.getElementById("game_area_reviews");
+            let reviews = "";
+            for (let review of data.reviews) {
+                let date = new Date(review.date).toLocaleDateString();
+                reviews += `<p>"${review.snippet}"<br>${review.dScore} - <a href="${review.rUrl}" target="_blank" data-tooltip-text="${review.author}, ${date}">${review.name}</a></p>`;
+            }
+
+            if (reviews) {
                 let html =
                     `<div id="es_opencritic_reviews">
+                        ${reviews}
                         <div class="chart-footer">${Localization.str.read_more_reviews} <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews" target="_blank">OpenCritic.com</a></div>
                     </div>`;
 
+                // Add data to the review section in the left column, or create one if that block doesn't exist
+                let reviewsNode = document.getElementById("game_area_reviews");
                 if (reviewsNode) {
                     let youTubeReviews = document.getElementById("es_youtube_reviews");
                     if (youTubeReviews) {
@@ -1307,13 +1312,6 @@ class AppPageClass extends StorePageClass {
                         </div>`);
                 }
 
-                let review_text = "";
-                for (let review of data.reviews) {
-                    let date = new Date(review.date);
-                    review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href="${review.rUrl}" target="_blank" data-tooltip-text="${review.author}, ${date.toLocaleDateString()}">${review.name}</a></p>`;
-                }
-
-                HTML.afterBegin("#es_opencritic_reviews", review_text);
                 ExtensionLayer.runInPageContext(() => { BindTooltips("#game_area_reviews", { tooltipCSSClass: "store_tooltip" }); });
             }
         });
@@ -1504,47 +1502,70 @@ class AppPageClass extends StorePageClass {
         }
     }
 
-    displayViewInLibrary() {
-        if (!SyncedStorage.get("showviewinlibrary")) { return; }
+    addOwnedActionsButtons() {
+        if (!User.isSignedIn) { return; }
 
-        let node = document.querySelector(".already_owned_actions");
+        let node = document.querySelector(".game_area_play_stats .already_owned_actions");
         if (!node) { return; }
 
-        HTML.afterBegin(node,
+        // handle Install Steam button
+        let btn = node.querySelector("a[href^='https://store.steampowered.com/about/']");
+        let option = SyncedStorage.get("installsteam");
+        if (option === "hide") {
+            btn.remove();
+        } else if (option === "replace") {
+            btn.querySelector("span").textContent = Localization.str.viewinclient;
+            btn.href = `steam://store/${this.appid}`;
+        }
+
+        // add view in library button
+        if (SyncedStorage.get("showviewinlibrary")) {
+            HTML.afterBegin(node,
+                `<div class="game_area_already_owned_btn">
+                    <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${this.appid}">
+                        <span>${Localization.str.view_in_library}</span>
+                    </a>
+                </div>`);
+        }
+
+        // add help button
+        HTML.afterEnd(node,
             `<div class="game_area_already_owned_btn">
-                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${this.appid}">
-                    <span>${Localization.str.view_in_library}</span>
+                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="//help.steampowered.com/wizard/HelpWithGame/?appid=${this.appid}">
+                    <span>${Localization.str.get_help}</span>
                 </a>
             </div>`);
     }
 
-    displayPurchaseDate() {
-        if (!SyncedStorage.get("purchase_dates")) { return; }
+    async displayPurchaseDate() {
+        if (!User.isSignedIn || !SyncedStorage.get("purchase_dates")) { return; }
 
         let node = document.querySelector(".game_area_already_owned .already_in_library");
         if (!node) { return; }
 
-        let appname = this.appName.replace(":", "").trim();
+        let appname = this.appName.replace(/:/g, "").trim();
+        let date = await User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname);
+        if (!date) {
+            console.warn("Failed to retrieve purchase date");
+            return;
+        }
 
-        User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname).then(date => {
-            if (!date) { return; }
-            HTML.beforeEnd(node,
-                ` ${Localization.str.purchase_date.replace("__date__", date)}`);
-        });
+        node.textContent += ` ${Localization.str.purchase_date.replace("__date__", date)}`;
     }
 
-    addOwnedElsewhere() {
+    async addOwnedElsewhere() {
         if (this.isOwned()) { return; }
 
-        Background.action("itad.getfromcollection", `app/${this.appid}`).then(result => {
-            if (!result) { return; }
-            
-            HTML.afterEnd(".queue_overflow_ctn",
-                `<div class="game_area_already_owned page_content" style="background-image: linear-gradient(to right, #856d0e 0%, #d1a906 100%);">
-                    <div class="ds_owned_flag ds_flag" style="background-color: #856d0e;">${Localization.str.coll.in_collection.toUpperCase()}&nbsp;&nbsp;</div>
-                    <div class="already_in_library" style="color: #ffe000;">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", result.map(store => `<strong>${store}</strong>`).join(", "))}</div>
-                </div>`)
-        });
+        let response = await Background.action("itad.getfromcollection", this.storeid);
+        if (!response) { return; }
+
+        let storeList = response.map(store => `<strong>${store}</strong>`).join(", ");
+
+        HTML.afterEnd(".queue_overflow_ctn",
+            `<div class="game_area_already_owned page_content" style="background-image: linear-gradient(to right, #856d0e 0%, #d1a906 100%);">
+                <div class="ds_owned_flag ds_flag" style="background-color: #856d0e;">${Localization.str.coll.in_collection.toUpperCase()}&nbsp;&nbsp;</div>
+                <div class="already_in_library" style="color: #ffe000;">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", storeList)}</div>
+            </div>`);
     }
 
     addWidescreenCertification() {
@@ -1765,7 +1786,7 @@ class AppPageClass extends StorePageClass {
         let supportInfo = cache[appid];
         if (!supportInfo) {
             let response = await Background.action("appdetails", appid, "support_info");
-            if (!response || !response.success) { 
+            if (!response || !response.success) {
                 console.warn("Failed to retrieve support info");
                 return;
             }
@@ -1891,21 +1912,6 @@ class AppPageClass extends StorePageClass {
                     <div class="notice_box_bottom"></div>
                 </div>`);
         });
-    }
-
-    handleInstallSteamButton() {
-        if (!User.isSignedIn) { return; }
-
-        let btn = document.querySelector(".game_area_already_owned_btn > [href^='https://store.steampowered.com/about/']");
-        if (!btn) { return; }
-
-        let option = SyncedStorage.get("installsteam");
-        if (option === "hide") {
-            btn.remove();
-        } else if (option === "replace") {
-            btn.querySelector("span").textContent = Localization.str.viewinclient;
-            btn.href = `steam://store/${this.appid}`;
-        }
     }
 
     addPackageInfoButton() {
@@ -2079,7 +2085,7 @@ class AppPageClass extends StorePageClass {
 
         let expandedNode = dlcs.querySelector("#game_area_dlc_expanded");
         if (expandedNode) {
-            HTML.afterEnd(expandedNode, 
+            HTML.afterEnd(expandedNode,
                 `<div class="game_purchase_action game_purchase_action_bg" style="margin-bottom: 10px;" id="es_selected_btn">
                     <div class="btn_addtocart">
                         <a class="btnv6_green_white_innerfade btn_medium">
@@ -2290,20 +2296,19 @@ class AppPageClass extends StorePageClass {
             </div>`);
     }
 
-    addAchievementCompletionBar() {
+    async addAchievementBar() {
         if (!this.hasAchievements() || !SyncedStorage.get("showachinstore")) { return; }
 
         let node = document.querySelector("#my_activity");
         if (!node) { return; }
 
-        Stats.getAchievementBar("/my", this.communityAppid).then(achieveBar => {
-            if (!achieveBar) {
-                console.warn("Failed to find achievement stats for appid", this.communityAppid);
-                return;
-            }
-            
-            HTML.afterBegin(node, `<div id="es_ach_stats">${achieveBar}</div>`);
-        });
+        let achieveBar = await Stats.getAchievementBar("/my", this.communityAppid);
+        if (!achieveBar) {
+            console.warn("Failed to retrieve achievement stats");
+            return;
+        }
+        
+        HTML.afterBegin(node, `<div class="es-achieveBar-store">${achieveBar}</div>`);
     }
 
     customizeAppPage() {
@@ -2407,18 +2412,6 @@ class AppPageClass extends StorePageClass {
                 toggleReviews();
             });
         }
-    }
-
-    addHelpButton() {
-        let node = document.querySelector(".game_area_play_stats .already_owned_actions");
-        if (!node) { return; }
-
-        HTML.afterEnd(node,
-            `<div class="game_area_already_owned_btn">
-                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="//help.steampowered.com/wizard/HelpWithGame/?appid=${this.appid}">
-                    <span>${Localization.str.get_help}</span>
-                </a>
-            </div>`);
     }
 
     addPackBreakdown() {
@@ -2789,7 +2782,7 @@ let SearchPageClass = (function(){
                 modifyParams(url.searchParams, "as-hide", curParams.get("as-hide"));
                 modifyParams(url.searchParams, "as-reviews-score", curParams.get("as-reviews-score"));
                 modifyParams(url.searchParams, "as-reviews-count", curParams.get("as-reviews-count"));
-    
+
                 linkElement.href = url.href;
             }
         }
@@ -2864,7 +2857,7 @@ let SearchPageClass = (function(){
             paramsObj["as-reviews-count"] = params.get("as-reviews-count");
 
             return paramsObj;
-        }        
+        }
 
         function setFilterStates() {
             for (let filterName of filterNames) {
@@ -2893,7 +2886,7 @@ let SearchPageClass = (function(){
                     let [, lower, upper] = match;
                     lower = parseInt(lower);
                     upper = parseInt(upper);
-        
+
                     if (!isNaN(lower) && scoreValues.includes(lower)) {
                         lowerScoreVal = scoreValues.indexOf(lower).toString();
                     }
@@ -2921,7 +2914,7 @@ let SearchPageClass = (function(){
                     let [, lower, upper] = match;
                     lower = parseInt(lower);
                     upper = parseInt(upper);
-        
+
                     if (!isNaN(lower)) {
                         lowerCountVal = lower;
                     }
@@ -3020,7 +3013,7 @@ let SearchPageClass = (function(){
 
         // Setup handlers for reviews score filter
         for (let input of document.querySelectorAll(".js-reviews-score-input")) {
-            
+
             let minVal = parseInt(minScoreInput.value);
             let maxVal = parseInt(maxScoreInput.value);
 
@@ -3085,7 +3078,7 @@ let SearchPageClass = (function(){
         maxCountInput = document.querySelector(".js-reviews-count-upper");
 
         for (let input of document.querySelectorAll(".js-reviews-count-input")) {
-            
+
             input.addEventListener("change", () => {
                 applyCountFilter();
 
@@ -3098,7 +3091,7 @@ let SearchPageClass = (function(){
                 }
                 updateUrls("as-reviews-count", val);
             });
-            
+
             input.addEventListener("keydown", e => {
                 if(e.key === "Enter") {
                     // Prevents unnecessary submitting of the advanced search form
@@ -3108,10 +3101,10 @@ let SearchPageClass = (function(){
                 }
             });
         }
-        
+
         // Setup handlers for other toggleable filters
         for (let filterName of filterNames) {
-            
+
             let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
 
             filter.addEventListener("click", () => {
@@ -3275,7 +3268,7 @@ let SearchPageClass = (function(){
                 if (Object.toQueryString(currentAsParameters) !== Object.toQueryString(asParameters)) {
                         Messenger.postMessage("searchCompleted", true);
                 }
-                
+
                 searchOld(params);
 
                 // Restore state such that the next comparison includes AS filters
@@ -3297,7 +3290,7 @@ let SearchPageClass = (function(){
 
             // https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L463
             setPageChangeHandler();
-            
+
         });
     };
 
@@ -3366,11 +3359,11 @@ let WishlistPageClass = (function(){
         });
 
         if (SyncedStorage.get("showlowestprice_onwishlist")) {
-            
+
             ExtensionLayer.runInPageContext(() => {
                 function getNodesBelow(node) {
                     let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
-            
+
                     // Limit the selection to the rows that are positioned below the row (not including the row itself) where the price is being shown
                     return nodes.filter(row => parseInt(row.style.top, 10) > parseInt(node.style.top, 10));
                 }
@@ -3386,7 +3379,7 @@ let WishlistPageClass = (function(){
                         let activeEntry = hover[hover.length - 1].closest(".wishlist_row");
                         if (activeEntry) {
                             let priceNode = activeEntry.querySelector(".itad-pricing");
-                            
+
                             if (priceNode) {
                                 for (let row of getNodesBelow(activeEntry)) {
                                     row.style.top = `${parseInt(row.style.top) + priceNode.getBoundingClientRect().height}px`;
@@ -3407,7 +3400,7 @@ let WishlistPageClass = (function(){
             this.addEmptyWishlistButton();
             this.addUserNotesHandlers();
         };
-        
+
         if (document.querySelector("#throbber").style.display === "none") {
             wishlistLoaded();
         } else {
@@ -3606,10 +3599,10 @@ let WishlistPageClass = (function(){
      * handler, resulting in a denial of access to the clipboard function.
      * This could be circumvented by adding the appropriate permissions, but doing so would prompt users to explicitly accept the changed
      * permissions on an update.
-     * 
+     *
      * If we don't use the Messenger, we'd have to move the whole handler part (including WishlistExporter) to
      * the page context side.
-     * 
+     *
      * Final solution is to query the action buttons of the dialog and adding some extra click handlers on the content script side.
      * These handlers are using a capture, so that the dialog elements will still be existent at the time of the invocation.
      */
@@ -3626,7 +3619,7 @@ let WishlistPageClass = (function(){
                         <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
                     </div>
                     </div>
-                
+
                     <div class="es-wexport es-wexport__format">
                         <h2>${exportStr.format}</h2>
                         <div>
@@ -3726,7 +3719,7 @@ let WishlistPageClass = (function(){
                     getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) + priceNodeHeight + "px");
             });
         });
-        
+
         node.addEventListener("mouseleave", () => {
             // When scrolling really fast, sometimes only this event is called without the invocation of the mouseenter event
             if (cachedPrices[appId]) {
@@ -3829,22 +3822,22 @@ class UserNotes {
         let bgClick = ExtensionLayer.runInPageContext((title, template) => {
             let deferred = new jQuery.Deferred();
             let fnOK = () => deferred.resolve();
-    
+
             let Modal = _BuildDialog(title, template, [], fnOK);
             deferred.always(() => Modal.Dismiss());
-    
+
             let promise = new Promise(resolve => {
                 Modal.m_fnBackgroundClick = () => {
                     Messenger.onMessage("noteSaved").then(() => { Modal.Dismiss(); });
                     resolve();
                 };
             });
-    
+
             Modal.Show();
-    
+
             // attach the deferred's events to the modal
             deferred.promise(Modal);
-    
+
             let note_input = document.getElementById("es_note_input");
             note_input.focus();
             note_input.setSelectionRange(0, note_input.textLength);
@@ -3908,11 +3901,11 @@ class UserNotes {
 let StoreFrontPageClass = (function(){
 
     function StoreFrontPageClass() {
-        
+
         if (User.isSignedIn) {
             this.highlightDynamic();
         }
-        
+
         this.setHomePageTab();
         this.customizeHomePage();
     }
