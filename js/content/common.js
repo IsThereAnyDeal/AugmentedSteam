@@ -2914,16 +2914,16 @@ class Sortbox {
      * If we would sanitize them again, all event listeners would be lost due to
      * DOMPurify only returning HTML strings.
      */
-    static get(name, options, initialOption, changeFn, storageOption) {
+    static get(name, options, initialOption, changeFn, storageOption, style="") {
 
         let id = `sort_by_${name}`;
         let reversed = initialOption.endsWith("_DESC");
 
-        let arrowDown = '↓';
-        let arrowUp = '↑';
+        let arrowDown = "↓";
+        let arrowUp = "↑";
         
         let box = HTML.element(
-        `<div class="es-sortbox">
+        `<div class="es-sortbox" style="${style}">
             <div class="es-sortbox__label">${Localization.str.sort_by}</div>
             <div class="es-sortbox__container">
                 <input id="${id}" type="hidden" name="${name}" value="${initialOption}">

@@ -1567,7 +1567,7 @@ let RecommendedPageClass = (function(){
         if (!numReviewsNode) { return; }
 
         let numReviews = Number(numReviewsNode.innerText);
-        if (isNaN(numReviews) || numReviews === 0) { return; }
+        if (isNaN(numReviews) || numReviews <= 1) { return; }
 
         let steamId = window.location.pathname.match(/\/((?:id|profiles)\/.+?)\//)[1];
         let params = new URLSearchParams(window.location.search);
@@ -1576,11 +1576,16 @@ let RecommendedPageClass = (function(){
         let reviews;
 
         async function getReviews() {
-            ExtensionLayer.runInPageContext((processing, wait) => { ShowBlockingWaitDialog(processing, wait); },
-            [
-                Localization.str.processing,
-                Localization.str.wait
-            ]);
+            // Delay half a second to avoid dialog flicker when grabbing cache
+            let delayer = setTimeout(
+                ExtensionLayer.runInPageContext,
+                500,
+                (processing, wait) => { window.dialog = ShowBlockingWaitDialog(processing, wait); },
+                [
+                    Localization.str.processing,
+                    Localization.str.wait
+                ]
+            );
 
             try {
                 reviews = await Background.action("reviews", steamId, numReviews);
@@ -1590,7 +1595,12 @@ let RecommendedPageClass = (function(){
                     return review;
                 });
             } finally {
-                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
+                clearTimeout(delayer);
+                ExtensionLayer.runInPageContext(() => {
+                    if (window.dialog) {
+                        window.dialog.Dismiss();
+                    }
+                });
             }
         }
 
@@ -1681,20 +1691,20 @@ let RecommendedPageClass = (function(){
         }
 
         Messenger.addMessageListener("updateReview", id => {
-            Background.action("updatereviewnode", steamId, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, numReviews);
+            Background.action("updatereviewnode", steamId, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, numReviews).then(getReviews);
         });
 
         ExtensionLayer.runInPageContext(() => {
             $J(document).ajaxSuccess((event, xhr, { url }) => {
                 let pathname = new URL(url).pathname;
                 if (pathname.startsWith("/userreviews/rate/") || pathname.startsWith("/userreviews/votetag/") || pathname.startsWith("/userreviews/update/")) {
-                    let splits = pathname.split('/');
-                    Messenger.postMessage("updateReview", splits[splits.length - 1]);
+                    let id = pathname.split('/').pop();
+                    Messenger.postMessage("updateReview", id);
                 }
             });
         });
 
-        document.querySelector("#leftContents > h1").insertAdjacentElement("afterend",
+        document.querySelector(".review_list h1").insertAdjacentElement("beforebegin",
             Sortbox.get("reviews", [
                 ["default", Localization.str.date],
                 ["rating", Localization.str.rating],
@@ -1703,7 +1713,7 @@ let RecommendedPageClass = (function(){
                 ["length", Localization.str.length],
                 ["visibility", Localization.str.visibility],
                 ["playtime", Localization.str.playtime],
-            ], SyncedStorage.get("sortreviewsby"), sortReviews, "sortreviewsby")
+            ], SyncedStorage.get("sortreviewsby"), sortReviews, "sortreviewsby", "padding: 20px 0 5px 0;")
         );
     };
 
