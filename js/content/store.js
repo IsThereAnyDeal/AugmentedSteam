@@ -2664,7 +2664,7 @@ let FundsPageClass = (function(){
         let input = `<input type="number" id="es_custom_money_amount" class="es_text_input money" min="${minValue}" step="${step}" value="${minValue}">`;
 
         // add currency symbol
-        if (currency.format.right) {
+        if (currency.format.postfix) {
             input += currency.format.symbol;
         } else {
             input = currency.format.symbol + input;
