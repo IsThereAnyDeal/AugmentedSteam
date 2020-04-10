@@ -985,7 +985,7 @@ let ProfileHomePageClass = (function(){
         let rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
         let friendSteamId = rgProfileData.steamid;
 
-        HTML.beforeBegin(sendButton,
+        HTML.replace(sendButton,
             `<span class="btn_profile_action btn_medium" id="profile_chat_dropdown_link">
                 <span>${sendButton.textContent}<img src="https://steamcommunity-a.akamaihd.net/public/images/profile/profile_action_dropdown.png"></span>
             </span>
@@ -1001,7 +1001,6 @@ let ProfileHomePageClass = (function(){
                     </a>
                 </div>
             </div>`);
-        sendButton.remove();
 
         document.querySelector("#btnWebChat").addEventListener("click", () => {
             ExtensionLayer.runInPageContext(chatId => { OpenFriendChatInWebChat(chatId); }, [ chatId ]);
@@ -2409,10 +2408,8 @@ let BadgesPageClass = (function(){
                         if (worth.value > 0) {
                             this.totalWorth += worth.value;
 
-                            let howToNode = node.querySelector(".how_to_get_card_drops");
-                            HTML.afterEnd(howToNode,
+                            HTML.replace(node.querySelector(".how_to_get_card_drops"),
                                 `<span class='es_card_drop_worth' data-es-card-worth='${worth.value}'>${Localization.str.drops_worth_avg} ${worth}</span>`);
-                            howToNode.remove();
                         }
                     }
                 }

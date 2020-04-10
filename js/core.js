@@ -823,7 +823,7 @@ class HTML {
         return node;
     }
 
-    static wrap(node, html) {
+    static replace(node, html) {
         if (typeof node == 'undefined' || node === null) {
             console.warn(`${node} is not an Element.`);
             return null;
@@ -836,9 +836,14 @@ class HTML {
             return null;
         }
 
-        let wrapper = HTML.element(html);
-        node.replaceWith(wrapper);
-        wrapper.appendChild(node);
+        let newNode = HTML.element(html);
+        node.replaceWith(newNode);
+        return newNode;
+    }
+
+    static wrap(node, html) {
+        let wrapper = HTML.replace(node, html);
+        wrapper.append(node);
         return wrapper;
     }
 
