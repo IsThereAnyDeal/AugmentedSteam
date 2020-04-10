@@ -1576,15 +1576,21 @@ let RecommendedPageClass = (function(){
         let reviews;
 
         async function getReviews() {
+
+            let modalActive = false;
+
             // Delay half a second to avoid dialog flicker when grabbing cache
             let delayer = setTimeout(
-                ExtensionLayer.runInPageContext,
-                500,
-                (processing, wait) => { window.dialog = ShowBlockingWaitDialog(processing, wait); },
-                [
-                    Localization.str.processing,
-                    Localization.str.wait
-                ]
+                () => {
+                    ExtensionLayer.runInPageContext(
+                        (processing, wait) => { ShowBlockingWaitDialog(processing, wait); },
+                        [
+                            Localization.str.processing,
+                            Localization.str.wait
+                        ]);
+                    modalActive = true;
+                },
+                500,                
             );
 
             try {
@@ -1596,11 +1602,12 @@ let RecommendedPageClass = (function(){
                 });
             } finally {
                 clearTimeout(delayer);
-                ExtensionLayer.runInPageContext(() => {
-                    if (window.dialog) {
-                        window.dialog.Dismiss();
-                    }
-                });
+
+                if (modalActive) {
+                    ExtensionLayer.runInPageContext(() => {
+                        CModal.DismissActiveModal();
+                    });
+                }
             }
         }
 
