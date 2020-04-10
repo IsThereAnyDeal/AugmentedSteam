@@ -2788,7 +2788,7 @@ let SearchPageClass = (function(){
         }
     }
 
-    function applyCountFilter(rows) {
+    function applyCountFilter(rows = document.querySelectorAll(".search_result_row")) {
 
         let minCount, maxCount;
 
