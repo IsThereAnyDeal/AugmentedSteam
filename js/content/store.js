@@ -638,7 +638,6 @@ class AppPageClass extends StorePageClass {
         this.moveUsefulLinks();
         this.addLinks("app");
         this.addFamilySharingWarning();
-        this.handleInstallSteamButton();
 
         this.addPackBreakdown();
         this.addPackageInfoButton();
@@ -1509,6 +1508,16 @@ class AppPageClass extends StorePageClass {
         let node = document.querySelector(".game_area_play_stats .already_owned_actions");
         if (!node) { return; }
 
+        // handle Install Steam button
+        let btn = node.querySelector("a[href^='https://store.steampowered.com/about/']");
+        let option = SyncedStorage.get("installsteam");
+        if (option === "hide") {
+            btn.remove();
+        } else if (option === "replace") {
+            btn.querySelector("span").textContent = Localization.str.viewinclient;
+            btn.href = `steam://store/${this.appid}`;
+        }
+
         // add view in library button
         if (SyncedStorage.get("showviewinlibrary")) {
             HTML.afterBegin(node,
@@ -1903,21 +1912,6 @@ class AppPageClass extends StorePageClass {
                     <div class="notice_box_bottom"></div>
                 </div>`);
         });
-    }
-
-    handleInstallSteamButton() {
-        if (!User.isSignedIn) { return; }
-
-        let btn = document.querySelector(".game_area_already_owned_btn > [href^='https://store.steampowered.com/about/']");
-        if (!btn) { return; }
-
-        let option = SyncedStorage.get("installsteam");
-        if (option === "hide") {
-            btn.remove();
-        } else if (option === "replace") {
-            btn.querySelector("span").textContent = Localization.str.viewinclient;
-            btn.href = `steam://store/${this.appid}`;
-        }
     }
 
     addPackageInfoButton() {
