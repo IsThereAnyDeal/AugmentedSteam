@@ -1045,13 +1045,12 @@ class SteamCommunity extends Api {
     static getProfile(steamId) { return IndexedDB.get("profiles", steamId, { "params": { "profile": steamId } }); }
     static clearOwn(steamId) { return IndexedDB.delete("profiles", steamId) }
 
-    static getPage(endpoint, query) {
-        return this._fetchWithDefaults(endpoint, query, { method: 'GET' }).then(response => {
-            if (response.url.startsWith("https://steamcommunity.com/login/")) {
-                throw new CommunityLoginError("Got redirected onto login page, the user is not logged into steamcommunity.com");
-            }
-            return response.text();
-        });
+    static async getPage(endpoint, query) {
+        let response = await this._fetchWithDefaults(endpoint, query, { method: "GET" });
+        if (response.url.startsWith("https://steamcommunity.com/login/")) {
+            throw new CommunityLoginError("Got redirected onto login page, the user is not logged into steamcommunity.com");
+        }
+        return response.text();
     }
 }
 SteamCommunity.origin = "https://steamcommunity.com/";
