@@ -1224,11 +1224,14 @@ let AugmentedSteam = (function() {
             });
         });
 
-        btn.addEventListener("transitionend", () => {
+        btn.addEventListener("transitionstart", () => {
             if (btn.style.visibility === "hidden") {
                 btn.style.visibility = "visible";
             } else {
-                btn.style.visibility = "hidden";
+                // transition: opacity 200ms ease-in-out;
+                setTimeout(() => {
+                    btn.style.visibility = "hidden";
+                }, 200);
             }
         });
 
