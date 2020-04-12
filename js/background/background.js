@@ -1008,30 +1008,30 @@ class SteamCommunity extends Api {
         let self = SteamCommunity;
         if (!path) {
             self.logout();
-            throw new Error("Login endpoint needs profile url");
+            throw new Error("Login endpoint needs a valid profile path");
         }
-        let url = new URL(path, "https://steamcommunity.com/");
-        if (!path.startsWith('/id/') && !path.startsWith('/profiles/')) {
+        if (!path.startsWith("/id/") && !path.startsWith("/profiles/")) {
             self.logout();
-            throw new Error(`Could not interpret '${path}' as a profile`);
+            throw new Error(`Could not interpret ${path} as a valid profile path`);
         }
-        let login = LocalStorage.get('login');
+
+        let login = LocalStorage.get("login");
         if (login && login.profilePath === path) {
             // Profile path from the currently loading page matches existing login information, return cached steamId
             return login;
         }
 
         // New login; retrieve steamId from community profile
-        let html = await self.getPage(url);
-        let steamId = (html.match(/"steamid":"(\d+)"/) || [])[1];
+        let html = await self.getPage(new URL(path, "https://steamcommunity.com/"));
+        let steamId = HTMLParser.getVariableFromText(html, "g_steamID", "string");
         if (!steamId) {
             // Couldn't retrieve steamId, probably not logged in
             self.logout();
             return;
         }
 
-        let value = { 'steamId': steamId, 'profilePath': path, };
-        LocalStorage.set('login', value);
+        let value = { "steamId": steamId, "profilePath": path, };
+        LocalStorage.set("login", value);
 
         // As this is a new login, also retrieve country information from store account page
         value.userCountry = await (SteamStore.country().catch(err => undefined));
@@ -1045,13 +1045,12 @@ class SteamCommunity extends Api {
     static getProfile(steamId) { return IndexedDB.get("profiles", steamId, { "params": { "profile": steamId } }); }
     static clearOwn(steamId) { return IndexedDB.delete("profiles", steamId) }
 
-    static getPage(endpoint, query) {
-        return this._fetchWithDefaults(endpoint, query, { method: 'GET' }).then(response => {
-            if (response.url.startsWith("https://steamcommunity.com/login/")) {
-                throw new CommunityLoginError("Got redirected onto login page, the user is not logged into steamcommunity.com");
-            }
-            return response.text();
-        });
+    static async getPage(endpoint, query) {
+        let response = this._fetchWithDefaults(endpoint, query, { method: "GET" });
+        if (response.url.startsWith("https://steamcommunity.com/login/")) {
+            throw new CommunityLoginError("Got redirected onto login page, the user is not logged into steamcommunity.com");
+        }
+        return response.text();
     }
 }
 SteamCommunity.origin = "https://steamcommunity.com/";
