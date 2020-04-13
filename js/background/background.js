@@ -1366,7 +1366,7 @@ class IndexedDB {
                 if (IndexedDB.timestampedStores.has(storeName)) {
                     expiryKey = storeName;
                 } else {
-                    expiryKey = IDBKeyRange.bound(`${storeName}_`, `${storeName}${String.fromCharCode('_'.charCodeAt(0) + 1)}`, false, true) `${storeName}_${key}`;
+                    expiryKey = IDBKeyRange.bound(`${storeName}_`, `${storeName}${String.fromCharCode('_'.charCodeAt(0) + 1)}`, false, true);
                 }
 
                 return Promise.all([
