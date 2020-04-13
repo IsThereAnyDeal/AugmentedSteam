@@ -563,20 +563,19 @@ let User = (function(){
     self.promise = function() {
         if (_promise) { return _promise; }
 
-        let avatarNode = document.querySelector("#global_actions .playerAvatar");
-        self.profileUrl = avatarNode ? avatarNode.getAttribute("href") : false;
-        self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [])[0];
-
-        // If profilePath is not available, we're not logged in
-        if (!self.profilePath) {
+        let avatarNode = document.querySelector("#global_actions > a.user_avatar");
+        if (avatarNode) {
+            self.profileUrl = avatarNode.href;
+            self.profilePath = avatarNode.pathname;
+        } else {
             Background.action("logout");
             _promise = Promise.resolve();
             return _promise;
         }
 
         _promise = Background.action("login", self.profilePath)
-            .then(function (login) {
-                if (!login) return;
+            .then(login => {
+                if (!login) { return; }
                 self.isSignedIn = true;
                 self.steamId = login.steamId;
                 // If we're *newly* logged in, then login.userCountry will be set
