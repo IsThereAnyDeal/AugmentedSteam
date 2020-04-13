@@ -1337,7 +1337,7 @@ class IndexedDB {
             expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
         }
 
-        return Promise.all(keys.forEach(key => {
+        return Promise.all(keys.map(key => {
             let dataPromise = dataStore.delete(key);
             if (expiryStore) {
                 return Promise.all([
