@@ -644,8 +644,11 @@ let ProfileHomePageClass = (function(){
             </div>`);
 
         if (SyncedStorage.get("show_wishlist_count")) {
-            document.querySelector("#es_wishlist_count")
-                .textContent = await Background.action("wishlists", window.location.pathname);
+
+            let wishlistNode = document.querySelector(`.gamecollector_showcase .showcase_stat[href$="/wishlist/"]`);
+            let count = wishlistNode ? wishlistNode.textContent.match(/\d+(?:,\d+)?/)[0] : await Background.action("wishlists", window.location.pathname);
+
+            document.querySelector("#es_wishlist_count").textContent = count;
         }
     };
 
