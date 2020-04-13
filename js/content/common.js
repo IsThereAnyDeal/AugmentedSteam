@@ -1181,11 +1181,14 @@ let AugmentedSteam = (function() {
         // Remove Steam's back-to-top button
         DOMHelper.remove("#BackToTop");
 
-        HTML.afterBegin("body", `<div class="es_btt">&#9650;</div>`);
+        let btn = document.createElement("div");
+        btn.classList.add("es_btt");
+        btn.textContent = "▲";
+        btn.style.visibility = "hidden";
 
-        let node = document.querySelector(".es_btt");
+        document.body.append(btn);
 
-        node.addEventListener("click", () => {
+        btn.addEventListener("click", () => {
             window.scroll({
                 top: 0,
                 left: 0,
@@ -1193,12 +1196,20 @@ let AugmentedSteam = (function() {
             });
         });
 
-        window.addEventListener("scroll", opacityHandler);
+        btn.addEventListener("transitionstart", () => {
+            if (btn.style.visibility === "hidden") {
+                btn.style.visibility = "visible";
+            } else {
+                // transition: opacity 200ms ease-in-out;
+                setTimeout(() => {
+                    btn.style.visibility = "hidden";
+                }, 200);
+            }
+        });
 
-        function opacityHandler() {
-            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
-            node.classList.toggle("is-visible", scrollHeight >= 400);
-        }
+        window.addEventListener("scroll", () => {
+            btn.classList.toggle("is-visible", window.scrollY >= 400);
+        });
     };
 
     self.clearCache = function() {
