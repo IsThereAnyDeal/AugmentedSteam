@@ -523,8 +523,8 @@ class SubPageClass extends StorePageClass {
                 // Only present when the product has a price associated with (so it's not free or N/A)
                 if (priceNode) {
                     let priceContainer = priceNode.textContent.trim();
-                    if (priceContainer) {
-                        let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
+                    if (priceContainer) { 
+                        let price = new Price(priceContainer, Currency.storeCurrency);
                         if (price) {
                             notOwnedTotalPrice += price.value;
                             continue;
@@ -545,7 +545,7 @@ class SubPageClass extends StorePageClass {
 
             if (notOwnedTotalPrice !== null) {
                 let priceNode = DOMHelper.selectLastNode(document, ".package_totals_area .price");
-                let packagePrice = Price.parseFromString(priceNode.textContent, Currency.storeCurrency);
+                let packagePrice = new Price(priceNode.textContent, Currency.storeCurrency);
                 if (!packagePrice) { return; }
 
                 notOwnedTotalPrice -= packagePrice.value;

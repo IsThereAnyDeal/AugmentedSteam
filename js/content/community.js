@@ -3498,7 +3498,7 @@ let MarketPageClass = (function(){
                 let priceNode = node.querySelector(".market_listing_price");
                 if (!priceNode) { continue; }
 
-                let price = Price.parseFromString(priceNode.textContent, Currency.storeCurrency);
+                let price = new Price(priceNode.textContent, Currency.storeCurrency);
 
                 if (isPurchase) {
                     purchaseTotal += price.value;
@@ -3507,7 +3507,7 @@ let MarketPageClass = (function(){
                 }
             }
 
-            let net = new Price(saleTotal - purchaseTotal, Currency.storeCurrency, false);
+            let net = new Price(saleTotal - purchaseTotal, Currency.storeCurrency);
             let color = "green";
             let netText = Localization.str.net_gain;
             if (net.value < 0) {
@@ -3664,8 +3664,8 @@ let MarketPageClass = (function(){
             let lowestNode = node.querySelector(".market_listing_es_lowest");
             lowestNode.textContent = data['lowest_price'];
 
-            let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent, Currency.storeCurrency);
-            let lowPrice = Price.parseFromString(data['lowest_price'], Currency.storeCurrency);
+            let myPrice = new Price(node.querySelector(".market_listing_price span span").textContent, Currency.storeCurrency);
+            let lowPrice = new Price(data['lowest_price'], Currency.storeCurrency);
 
             if (myPrice.value <= lowPrice.value) {
                 lowestNode.classList.add("es_percentage_lower"); // Ours matches the lowest price
