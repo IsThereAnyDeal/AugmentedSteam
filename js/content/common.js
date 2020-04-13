@@ -1095,35 +1095,36 @@ let Stats = (function() {
 
     let self = {};
 
-    self.getAchievementBar = function(path, appid) {
-        return Background.action("stats", path, appid).then(response => {
-            let dummy = HTMLParser.htmlToDOM(response);
-            let achNode = dummy.querySelector("#topSummaryAchievements");
+    self.getAchievementBar = async function(path, appid) {
+        let html = await Background.action("stats", path, appid);
+        let dummy = HTMLParser.htmlToDOM(html);
+        let achNode = dummy.querySelector("#topSummaryAchievements");
 
-            if (!achNode) return null;
+        if (!achNode) return null;
 
-            achNode.style.whiteSpace = "nowrap";
+        achNode.style.whiteSpace = "nowrap";
 
-            if (!achNode.querySelector("img")) {
-                // The size of the achievement bars for games without leaderboards/other stats is fine, return
-                return achNode.innerHTML;
-            }
+        if (!achNode.querySelector("img")) {
+            // The size of the achievement bars for games without leaderboards/other stats is fine, return
+            return achNode.innerHTML;
+        }
 
-            let stats = achNode.innerHTML.match(/(\d+) of (\d+) \((\d{1,3})%\)/);
+        let stats = achNode.innerHTML.match(/(\d+) of (\d+) \((\d{1,3})%\)/);
 
-            // 1 full match, 3 group matches
-            if (!stats || stats.length !== 4) {
-                return null;
-            }
+        // 1 full match, 3 group matches
+        if (!stats || stats.length !== 4) {
+            return null;
+        }
 
-            return `<div>${Localization.str.achievements.summary
-                .replace("__unlocked__", stats[1])
-                .replace("__total__", stats[2])
-                .replace("__percentage__", stats[3])}</div>
-            <div class="achieveBar">
-                <div style="width: ${stats[3]}%;" class="achieveBarProgress"></div>
-            </div>`;
-        });
+        let achievementStr = Localization.str.achievements.summary
+            .replace("__unlocked__", stats[1])
+            .replace("__total__", stats[2])
+            .replace("__percentage__", stats[3]);
+
+        return `<div>${achievementStr}</div>
+                <div class="achieveBar">
+                    <div style="width: ${stats[3]}%;" class="achieveBarProgress"></div>
+                </div>`;
     };
 
     return self;
