@@ -659,6 +659,12 @@ class SteamStore extends Api {
         let html = await self.getPage("/news/");
         return HTMLParser.getVariableFromText(html, "g_sessionID", "string");
     }
+
+    static async wishlists(path) {
+        let html = await SteamStore.getPage(`/wishlist${path}`);
+        let data = HTMLParser.getVariableFromText(html, "g_rgWishlistData", "array");
+        return data ? data.length : '';
+    }
     
     static async purchaseDate({ "params": lang }) {
         let replaceRegex = [
@@ -1575,6 +1581,7 @@ let actionCallbacks = new Map([
     ["appuserdetails", SteamStore.appUserDetails],
     ["currency", SteamStore.currency],
     ["sessionid", SteamStore.sessionId],
+    ["wishlists", SteamStore.wishlists],
     ["purchases", SteamStore.purchases],
     ["clearpurchases", SteamStore.clearPurchases],
     ["dynamicstorestatus", SteamStore.dsStatus],

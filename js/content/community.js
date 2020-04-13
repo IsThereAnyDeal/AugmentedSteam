@@ -627,7 +627,7 @@ let ProfileHomePageClass = (function(){
         }
     };
 
-    ProfileHomePageClass.prototype.addWishlistProfileLink = function() {
+    ProfileHomePageClass.prototype.addWishlistProfileLink = async function() {
         if (document.querySelector("body.profile_page.private_profile")) { return; }
         if (!SyncedStorage.get("show_wishlist_link")) { return; }
         if (!document.querySelector(".profile_item_links")) { return; }
@@ -643,9 +643,9 @@ let ProfileHomePageClass = (function(){
                 </a>
             </div>`);
 
-        let wishlistNode = document.querySelector(".gamecollector_showcase .showcase_stat[href$='/wishlist/']");
-        if (SyncedStorage.get("show_wishlist_count") && wishlistNode) {
-            document.querySelector("#es_wishlist_count").textContent = wishlistNode.textContent.match(/\d+(?:,\d+)?/)[0];
+        if (SyncedStorage.get("show_wishlist_count")) {
+            document.querySelector("#es_wishlist_count")
+                .textContent = await Background.action("wishlists", window.location.pathname);
         }
     };
 
