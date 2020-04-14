@@ -297,6 +297,7 @@ class UpdateHandler {
 
         if (oldVersion.isSameOrBefore("1.4.3")) {
             SyncedStorage.remove("contscroll");
+            Background.action("logout");
         }
     }
 }

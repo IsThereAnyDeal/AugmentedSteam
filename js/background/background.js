@@ -648,9 +648,7 @@ class SteamStore extends Api {
         let dummyPage = HTMLParser.htmlToDOM(html);
 
         let node = dummyPage.querySelector("#dselect_user_country");
-        if (node && node.value)
-            return node.value;
-        throw new Error("Could not retrieve country");
+        return node && node.value;
     }
 
     static async sessionId() {
@@ -1010,37 +1008,41 @@ class SteamCommunity extends Api {
      * Invoked when the content script thinks the user is logged in
      * If we don't know the user's steamId, fetch their community profile
      */
-    static async login(path) {
+    static async login(profilePath) {
         let self = SteamCommunity;
-        if (!path) {
+        let login;
+
+        if (!profilePath) {
             self.logout();
             throw new Error("Login endpoint needs a valid profile path");
         }
-        if (!path.startsWith("/id/") && !path.startsWith("/profiles/")) {
+        if (!profilePath.startsWith("/id/") && !profilePath.startsWith("/profiles/")) {
             self.logout();
-            throw new Error(`Could not interpret ${path} as a valid profile path`);
+            throw new Error(`Could not interpret ${profilePath} as a valid profile path`);
         }
 
-        let login = LocalStorage.get("login");
-        if (login && login.profilePath === path) {
-            // Profile path from the currently loading page matches existing login information, return cached steamId
-            return login;
-        }
+        login = LocalStorage.get("login");
+        if (login && login.profilePath === profilePath) { return login; }
+        
+        self.logout();
 
-        // New login; retrieve steamId from community profile
-        let html = await self.getPage(path);
+        let html = await self.getPage(profilePath);
+
         let steamId = HTMLParser.getVariableFromText(html, "g_steamID", "string");
         if (!steamId) {
-            // Couldn't retrieve steamId, probably not logged in
-            self.logout();
+            // Possibly not logged in
             return;
         }
 
-        let value = { "steamId": steamId, "profilePath": path, };
+        let userCountry = await SteamStore.country();
+        if (!userCountry) {
+            console.warn("Retrieved steamID but failed to detect user country");
+            return;
+        }
+
+        let value = { steamId, profilePath, userCountry };
         LocalStorage.set("login", value);
 
-        // As this is a new login, also retrieve country information from store account page
-        value.userCountry = await (SteamStore.country().catch(err => undefined));
         return value;
     }
 

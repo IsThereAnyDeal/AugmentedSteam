@@ -554,6 +554,7 @@ let User = (function(){
     self.profileUrl = false;
     self.profilePath = false;
     self.steamId = null;
+    self._country = null;
 
     let accountId = false;
     let sessionId = false;
@@ -578,10 +579,7 @@ let User = (function(){
                 if (!login) { return; }
                 self.isSignedIn = true;
                 self.steamId = login.steamId;
-                // If we're *newly* logged in, then login.userCountry will be set
-                if (login.userCountry) {
-                    LocalStorage.set("userCountry", login.userCountry);
-                }
+                self._country = login.userCountry;
             })
             .catch(err => console.error(err));
 
@@ -617,7 +615,7 @@ let User = (function(){
         if (url.searchParams && url.searchParams.has("cc")) {
             country = url.searchParams.get("cc");
         } else {
-            country = LocalStorage.get("userCountry");
+            country = self._country;
             if (!country) {
                 country = CookieStorage.get("steamCountry");
             }
