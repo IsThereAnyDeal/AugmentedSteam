@@ -587,8 +587,25 @@ let Options = (function(){
         Region.populate();
     }
 
-    function importSettings() {
+    function importSettings({ "target": input }) {
+        let reader = new FileReader();
+        reader.addEventListener("load", () => {
+            let importedSettings;
+            try {
+                importedSettings = JSON.parse(reader.result);
+            } catch(err) {
+                console.group("Import");
+                console.error("Failed to read settings file");
+                console.error(err);
+                console.groupEnd();
+                return;
+            }
 
+            for (let [key, value] of Object.entries(importedSettings)) {
+                SyncedStorage.set(key, value);
+            }
+        });
+        reader.readAsText(input.files[0]);
     }
 
     function exportSettings() {
@@ -741,7 +758,10 @@ let Options = (function(){
             });
         });
 
-        document.getElementById("import").addEventListener("click", importSettings);
+        let importInput = document.getElementById("import_input");
+
+        importInput.addEventListener("change", importSettings, false);
+        document.getElementById("import").addEventListener("click", () => { importInput.click(); });
         document.getElementById("export").addEventListener("click", exportSettings);
         document.getElementById("reset").addEventListener("click", clearSettings);
 
