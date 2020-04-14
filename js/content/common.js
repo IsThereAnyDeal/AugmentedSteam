@@ -561,6 +561,23 @@ let User = (function(){
 
     let _promise = null;
 
+    Object.defineProperty(self, "country", { get() {
+        let url = new URL(window.location.href);
+
+        let country;
+        if (url.searchParams && url.searchParams.has("cc")) {
+            country = url.searchParams.get("cc");
+        } else {
+            country = self._country;
+            if (!country) {
+                country = CookieStorage.get("steamCountry");
+            }
+        }
+
+        if (!country) { return null; }
+        return country.substr(0, 2);
+    } });
+
     self.promise = function() {
         if (_promise) { return _promise; }
 
@@ -606,23 +623,6 @@ let User = (function(){
 
     self.getStoreSessionId = function() {
         return Background.action('sessionid');
-    };
-
-    self.getCountry = function() {
-        let url = new URL(window.location.href);
-
-        let country;
-        if (url.searchParams && url.searchParams.has("cc")) {
-            country = url.searchParams.get("cc");
-        } else {
-            country = self._country;
-            if (!country) {
-                country = CookieStorage.get("steamCountry");
-            }
-        }
-
-        if (!country) { return null; }
-        return country.substr(0, 2);
     };
 
     self.getPurchaseDate = function(lang, appName) {
@@ -2246,7 +2246,7 @@ let Prices = (function(){
             apiParams.stores = SyncedStorage.get("stores").join(",");
         }
 
-        let cc = User.getCountry();
+        let cc = User.country;
         if (cc) {
             apiParams.cc = cc;
         }

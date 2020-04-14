@@ -3349,7 +3349,7 @@ let MarketListingPageClass = (function(){
     }
 
     MarketListingPageClass.prototype.addSoldAmountLastDay = async function() {
-        let country = User.getCountry();
+        let country = User.country;
         let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
 
         let link = DOMHelper.selectLastNode(document, ".market_listing_nav a").href;
@@ -3647,7 +3647,7 @@ let MarketPageClass = (function(){
     MarketPageClass.prototype.addLowestMarketPrice = function() {
         if (!User.isSignedIn || !SyncedStorage.get("showlowestmarketprice") || SyncedStorage.get("hideactivelistings")) { return; }
 
-        let country = User.getCountry();
+        let country = User.country;
         let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
 
         let loadedMarketPrices = {};
