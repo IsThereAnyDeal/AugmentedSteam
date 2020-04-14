@@ -901,9 +901,9 @@ let Currency = (function() {
 })();
 
 let Price = (function() {
-    function Price(value, currency) {
-        this.value = value || 0;
-        this.currency = currency || Currency.customCurrency;
+    function Price(value = 0, currency = Currency.storeCurrency) {
+        this.value = value;
+        this.currency = currency;
         Object.freeze(this);
     }
 
@@ -935,7 +935,7 @@ let Price = (function() {
         return new Price(this.value * rate, desiredCurrency);
     };
 
-    Price.parseFromString = function(str, currencyType) {
+    Price.parseFromString = function(str, currencyType = Currency.storeCurrency) {
         let currency = CurrencyRegistry.fromType(currencyType);
         let value = currency.valueOf(str);
         if (value !== null) {

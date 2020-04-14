@@ -2397,7 +2397,7 @@ let BadgesPageClass = (function(){
                 let card = progressInfoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
                 if (card) {
                     let need = card[2] - card[1];
-                    cost = new Price(averagePrice * need, Currency.storeCurrency);
+                    cost = new Price(averagePrice * need);
                 }
             }
 
@@ -2406,7 +2406,7 @@ let BadgesPageClass = (function(){
                 if (progressBoldNode) {
                     let drops = progressBoldNode.textContent.match(/\d+/);
                     if (drops) {
-                        let worth = new Price(drops[0] * averagePrice, Currency.storeCurrency);
+                        let worth = new Price(drops[0] * averagePrice);
 
                         if (worth.value > 0) {
                             this.totalWorth += worth.value;
@@ -2429,7 +2429,7 @@ let BadgesPageClass = (function(){
             node.classList.add("esi-badge");
         }
 
-        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + new Price(this.totalWorth, Currency.storeCurrency);
+        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + new Price(this.totalWorth);
     };
 
     async function eachBadgePage(callback) {
@@ -2856,7 +2856,7 @@ let GameCardPageClass = (function(){
 
             if (cardData) {
                 let marketLink = `https://steamcommunity.com/market/listings/${cardData.url}`;
-                let cardPrice = new Price(cardData.price, Currency.storeCurrency);
+                let cardPrice = new Price(cardData.price);
 
                 if (node.classList.contains("unowned")) {
                     cost += cardPrice.value;
@@ -2869,7 +2869,7 @@ let GameCardPageClass = (function(){
         }
 
         if (cost > 0 && CommunityCommon.currentUserIsOwner()) {
-            cost = new Price(cost, Currency.storeCurrency);
+            cost = new Price(cost);
             HTML.afterEnd(
                 DOMHelper.selectLastNode(document, ".badge_empty_name"),
                 `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost.replace("__cost__", cost)}</div>`);
@@ -3498,7 +3498,7 @@ let MarketPageClass = (function(){
                 let priceNode = node.querySelector(".market_listing_price");
                 if (!priceNode) { continue; }
 
-                let price = Price.parseFromString(priceNode.textContent, Currency.storeCurrency);
+                let price = Price.parseFromString(priceNode.textContent);
 
                 if (isPurchase) {
                     purchaseTotal += price.value;
@@ -3507,7 +3507,7 @@ let MarketPageClass = (function(){
                 }
             }
 
-            let net = new Price(saleTotal - purchaseTotal, Currency.storeCurrency);
+            let net = new Price(saleTotal - purchaseTotal);
             let color = "green";
             let netText = Localization.str.net_gain;
             if (net.value < 0) {
@@ -3515,8 +3515,8 @@ let MarketPageClass = (function(){
                 netText = Localization.str.net_spent;
             }
 
-            let purchaseTotalPrice = new Price(purchaseTotal, Currency.storeCurrency);
-            let saleTotalPrice = new Price(saleTotal, Currency.storeCurrency);
+            let purchaseTotalPrice = new Price(purchaseTotal);
+            let saleTotalPrice = new Price(saleTotal);
             HTML.inner(
                 "#es_market_summary",
                 `<div>${Localization.str.purchase_total} <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
@@ -3664,8 +3664,8 @@ let MarketPageClass = (function(){
             let lowestNode = node.querySelector(".market_listing_es_lowest");
             lowestNode.textContent = data['lowest_price'];
 
-            let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent, Currency.storeCurrency);
-            let lowPrice = Price.parseFromString(data['lowest_price'], Currency.storeCurrency);
+            let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent);
+            let lowPrice = Price.parseFromString(data['lowest_price']);
 
             if (myPrice.value <= lowPrice.value) {
                 lowestNode.classList.add("es_percentage_lower"); // Ours matches the lowest price

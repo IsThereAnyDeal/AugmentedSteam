@@ -524,7 +524,7 @@ class SubPageClass extends StorePageClass {
                 if (priceNode) {
                     let priceContainer = priceNode.textContent.trim();
                     if (priceContainer) {
-                        let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
+                        let price = Price.parseFromString(priceContainer);
                         if (price) {
                             notOwnedTotalPrice += price.value;
                             continue;
@@ -545,11 +545,11 @@ class SubPageClass extends StorePageClass {
 
             if (notOwnedTotalPrice !== null) {
                 let priceNode = DOMHelper.selectLastNode(document, ".package_totals_area .price");
-                let packagePrice = Price.parseFromString(priceNode.textContent, Currency.storeCurrency);
+                let packagePrice = Price.parseFromString(priceNode.textContent);
                 if (!packagePrice) { return; }
 
                 notOwnedTotalPrice -= packagePrice.value;
-                notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency);
+                notOwnedTotalPrice = new Price(notOwnedTotalPrice);
 
                 if (!document.querySelector("#package_savings_bar")) {
                     HTML.beforeEnd(".package_totals_area",
@@ -2455,7 +2455,7 @@ class AppPageClass extends StorePageClass {
                 price_text = price_text.replace(",", ".");
             }
             let price = (Number(price_text.replace(/[^0-9\.]+/g, ""))) / ways;
-            price = new Price(Math.ceil(price * 100) / 100, Currency.storeCurrency);
+            price = new Price(Math.ceil(price * 100) / 100);
 
             HTML.afterBegin(node.querySelector(".game_purchase_action_bg"),
                 `<div class="es_each_box">
@@ -2690,11 +2690,11 @@ let FundsPageClass = (function(){
             let customAmount = Number(value).toFixed(2).replace(/[,.]/g, '');
 
             if (giftcard) {
-                priceel.textContent = new Price(value, Currency.storeCurrency);
+                priceel.textContent = new Price(value);
                 priceel.classList.toggle("small", priceel.textContent.length > 8);
                 newel.querySelector("a.btn_medium").href = `javascript:submitSelectGiftCard( ${customAmount} );`;
             } else {
-                newel.querySelector("h1").textContent = `${Localization.str.wallet.custom_amount} ${new Price(value, Currency.storeCurrency)}`;
+                newel.querySelector("h1").textContent = `${Localization.str.wallet.custom_amount} ${new Price(value)}`;
                 newel.querySelector("a.btn_medium").dataset.amount = customAmount;
             }
         });
@@ -3460,7 +3460,7 @@ let WishlistPageClass = (function(){
             }
             totalCount++;
         }
-        totalPrice = new Price(totalPrice / 100, Currency.storeCurrency);
+        totalPrice = new Price(totalPrice / 100);
 
         HTML.beforeBegin("#wishlist_ctn",
             `<div id="esi-wishlist-chart-content">
