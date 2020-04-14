@@ -602,6 +602,7 @@ let Options = (function(){
             }
 
             for (let [key, value] of Object.entries(importedSettings)) {
+                if (key === "version") { continue; } 
                 SyncedStorage.set(key, value);
             }
         });
