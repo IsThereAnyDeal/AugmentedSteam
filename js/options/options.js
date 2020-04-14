@@ -587,6 +587,13 @@ let Options = (function(){
         Region.populate();
     }
 
+    function importSettings() {
+
+    }
+
+    function exportSettings() {
+        Downloader.download(new Blob([JSON.stringify(SyncedStorage.cache)]), `AugmentedSteam_v${Info.version}.json`);
+    }
 
     function clearSettings() {
         if (!confirm(Localization.str.options.clear)) { return; }
@@ -734,6 +741,8 @@ let Options = (function(){
             });
         });
 
+        document.getElementById("import").addEventListener("click", importSettings);
+        document.getElementById("export").addEventListener("click", exportSettings);
         document.getElementById("reset").addEventListener("click", clearSettings);
 
         document.addEventListener("change", saveOptionFromEvent);
