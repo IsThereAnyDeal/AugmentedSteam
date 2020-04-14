@@ -605,6 +605,8 @@ let Options = (function(){
                 if (key === "version") { continue; } 
                 SyncedStorage.set(key, value);
             }
+
+            window.location.reload();
         });
         reader.readAsText(input.files[0]);
     }
