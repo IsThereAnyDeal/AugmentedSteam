@@ -756,23 +756,12 @@ let CurrencyRegistry = (function() {
     let defaultCurrency = null;
     let re = null;
 
-    self.fromSymbol = function(symbol) {
-        return indices.symbols[symbol] || defaultCurrency;
-    };
-
     self.fromType = function(type) {
         return indices.abbr[type] || defaultCurrency;
     };
 
     self.fromNumber = function(number) {
         return indices.id[number] || defaultCurrency;
-    };
-
-    self.fromString = function(price) {
-        let match = price.match(re);
-        if (!match)
-            return defaultCurrency;
-        return self.fromSymbol(match[0]);
     };
 
     Object.defineProperty(self, 'storeCurrency', { get() { return CurrencyRegistry.fromType(Currency.storeCurrency); }});
@@ -900,10 +889,6 @@ let Currency = (function() {
         return match ? match[0] : '';
     };
 
-    self.currencySymbolToType = function(symbol) {
-        return CurrencyRegistry.fromSymbol(symbol).abbr;
-    };
-
     self.currencyTypeToNumber = function(type) {
         return CurrencyRegistry.fromType(type).id;
     };
@@ -950,14 +935,11 @@ let Price = (function() {
         return new Price(this.value * rate, desiredCurrency);
     };
 
-    Price.parseFromString = function(str, desiredCurrency) {
-        let currency = CurrencyRegistry.fromString(str);
+    Price.parseFromString = function(str, currencyType) {
+        let currency = CurrencyRegistry.fromType(currencyType);
         let value = currency.valueOf(str);
         if (value !== null) {
-            value = new Price(value, currency.abbr);
-            if (currency.abbr !== desiredCurrency) {
-                value = value.inCurrency(desiredCurrency);
-            }
+            value = new Price(value, currencyType);
         }
         return value;
     };

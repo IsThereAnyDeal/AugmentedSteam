@@ -3507,7 +3507,7 @@ let MarketPageClass = (function(){
                 }
             }
 
-            let net = new Price(saleTotal - purchaseTotal, Currency.storeCurrency, false);
+            let net = new Price(saleTotal - purchaseTotal, Currency.storeCurrency);
             let color = "green";
             let netText = Localization.str.net_gain;
             if (net.value < 0) {
