@@ -589,7 +589,7 @@ let Options = (function(){
 
     function importSettings({ "target": input }) {
         let reader = new FileReader();
-        reader.addEventListener("load", () => {
+        reader.addEventListener("load", async () => {
             let importedSettings;
             try {
                 importedSettings = JSON.parse(reader.result);
@@ -600,10 +600,16 @@ let Options = (function(){
                 console.groupEnd();
                 return;
             }
+            
+            let maxWritesPerMinute = SyncedStorage.adapter.MAX_WRITE_OPERATIONS_PER_MINUTE;
 
             for (let [key, value] of Object.entries(importedSettings)) {
                 if (key === "version") { continue; } 
                 SyncedStorage.set(key, value);
+
+                if (maxWritesPerMinute) {
+                    await sleep(60 / maxWritesPerMinute * 1000);
+                }
             }
 
             window.location.reload();
