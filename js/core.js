@@ -412,6 +412,10 @@ class LocalStorage {
     static set(key, value) {
         localStorage.setItem(key, JSON.stringify(value));
     }
+
+    static has(key) {
+        return localStorage.getItem(key) !== null;
+    }
     
     static remove(key) {
         localStorage.removeItem(key);

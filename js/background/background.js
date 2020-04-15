@@ -628,7 +628,7 @@ class SteamStore extends Api {
     }
 
     static async currency() {
-        let currency = CacheStorage.get("currency", 3600);
+        let currency = CacheStorage.get("currency", 60 * 60);
         if (currency) return currency;
 
         currency = await SteamStore.currencyFromWallet();
@@ -1023,8 +1023,6 @@ class SteamCommunity extends Api {
 
         login = LocalStorage.get("login");
         if (login && login.profilePath === profilePath) { return login; }
-        
-        self.logout();
 
         let html = await self.getPage(profilePath);
 
@@ -1036,9 +1034,10 @@ class SteamCommunity extends Api {
 
         let userCountry = await SteamStore.country();
         if (!userCountry) {
-            console.warn("Retrieved steamID but failed to detect user country");
-            return;
+            throw new Error("Retrieved steamID but failed to detect user country");
         }
+
+        self.logout(true);
 
         let value = { steamId, profilePath, userCountry };
         LocalStorage.set("login", value);
@@ -1046,8 +1045,11 @@ class SteamCommunity extends Api {
         return value;
     }
 
-    static logout() {
-        LocalStorage.remove("login");
+    static logout(newLogout = LocalStorage.has("login")) {
+        if (newLogout) {
+            LocalStorage.remove("login");
+            CacheStorage.remove("currency");
+        }
     }
 
     static getProfile(steamId) { return IndexedDB.get("profiles", steamId, { "params": { "profile": steamId } }); }

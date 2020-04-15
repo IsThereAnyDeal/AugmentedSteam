@@ -586,12 +586,10 @@ let User = (function(){
             self.profileUrl = avatarNode.href;
             self.profilePath = avatarNode.pathname;
         } else {
-            Background.action("logout");
-            _promise = Promise.resolve();
-            return _promise;
+            return _promise = Background.action("logout");
         }
 
-        _promise = Background.action("login", self.profilePath)
+        return _promise = Background.action("login", self.profilePath)
             .then(login => {
                 if (!login) { return; }
                 self.isSignedIn = true;
@@ -599,8 +597,6 @@ let User = (function(){
                 self._country = login.userCountry;
             })
             .catch(err => console.error(err));
-
-        return _promise;
     };
 
     self.then = function(onDone, onCatch) {
