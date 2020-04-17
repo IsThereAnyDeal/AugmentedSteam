@@ -603,16 +603,27 @@ let Options = (function(){
             
             let maxWritesPerMinute = SyncedStorage.adapter.MAX_WRITE_OPERATIONS_PER_MINUTE;
 
-            for (let [key, value] of Object.entries(importedSettings)) {
-                if (key === "version") { continue; } 
-                SyncedStorage.set(key, value);
-
-                if (maxWritesPerMinute) {
-                    await sleep(60 / maxWritesPerMinute * 1000);
+            try {
+                for (let [key, value] of Object.entries(importedSettings)) {
+                    if (key === "version") { continue; } 
+                    SyncedStorage.set(key, value);
+    
+                    if (maxWritesPerMinute) {
+                        await sleep(60 / maxWritesPerMinute * 1000);
+                    }
                 }
-            }
 
-            window.location.reload();
+                window.alert(Localization.str.options.settings_mngmt.import_success);
+            } catch(err) {
+                console.group("Import");
+                console.error("Failed to write settings to storage");
+                console.error(err);
+                console.groupEnd();
+
+                window.alert(Localization.str.options.settings_mngmt.import_fail);
+            } finally {
+                window.location.reload();
+            }
         });
         reader.readAsText(input.files[0]);
     }

@@ -408,6 +408,8 @@
     "options": {
         "settings_mngmt": {
             "import": "Import",
+            "import_success": "Successfully imported settings",
+            "import_fail": "Failed to import settings",
             "export": "Export",
             "reset": "Reset"
         },
