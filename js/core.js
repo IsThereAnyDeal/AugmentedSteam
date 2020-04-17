@@ -469,6 +469,13 @@ class SyncedStorage {
         // this will throw if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
     }
 
+    static import(entries) {
+        for (let [key, value] of Object.entries(entries)) {
+            this.cache[key] = value;
+        }
+        return this.adapter.set(entries);
+    }
+
     static remove(key) {
         if (typeof this.cache[key]) {
             delete this.cache[key];
