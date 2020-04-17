@@ -1637,8 +1637,12 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
         await Promise.all([IndexedDB, SyncedStorage]);
         res = await callback(...message.params);
     } catch(err) {
-        console.error(`Failed to execute callback ${message.action}: ${err.name}: ${err.message}\n${err.stack}`);
-        throw { "message": err.name };
+        console.group(`Callback: "${message.action}"`);
+        console.error(`Failed to execute callback "%s" with params %o`, message.action, message.params);
+        console.error(err);
+        console.groupEnd();
+        
+        throw err;
     }
     return res;
 });
