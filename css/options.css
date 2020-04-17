@@ -337,3 +337,7 @@ a:hover {
 #itad_status.disconnected {
 	color: red;
 }
+
+#import_input {
+	display: none;
+}

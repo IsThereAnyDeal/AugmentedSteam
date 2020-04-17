@@ -406,6 +406,13 @@
         "formatted_time": "__hours__ hours, __minutes__ minutes"
     },
     "options": {
+        "settings_mngmt": {
+            "import": "Import",
+            "import_success": "Successfully imported settings",
+            "import_fail": "Failed to import settings",
+            "export": "Export",
+            "reset": "Reset"
+        },
         "community_default_tab": "Default community home page tab",
         "videos": "Videos",
         "broadcasts": "Broadcasts",
@@ -463,7 +470,6 @@
         "hidespamcomments": "Hide spam comments from Workshop & profiles",
         "hide_owned": "Items you own in search results and tag pages",
         "hide_ignored": "Items you ignored in search results and tag pages",
-        "reset": "Reset options",
         "api_key": "API Key",
         "gift": "Items stored as gift",
         "show_sysreqcheck": "Show button to check system requirements on app pages (Experimental!)",

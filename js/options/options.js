@@ -587,6 +587,41 @@ let Options = (function(){
         Region.populate();
     }
 
+    function importSettings({ "target": input }) {
+        let reader = new FileReader();
+        reader.addEventListener("load", () => {
+            let importedSettings;
+            try {
+                importedSettings = JSON.parse(reader.result);
+            } catch(err) {
+                console.group("Import");
+                console.error("Failed to read settings file");
+                console.error(err);
+                console.groupEnd();
+                return;
+            }
+
+            try {
+                SyncedStorage.import(importedSettings);
+
+                window.alert(Localization.str.options.settings_mngmt.import_success);
+            } catch(err) {
+                console.group("Import");
+                console.error("Failed to write settings to storage");
+                console.error(err);
+                console.groupEnd();
+
+                window.alert(Localization.str.options.settings_mngmt.import_fail);
+            } finally {
+                window.location.reload();
+            }
+        });
+        reader.readAsText(input.files[0]);
+    }
+
+    function exportSettings() {
+        Downloader.download(new Blob([JSON.stringify(SyncedStorage.cache)]), `AugmentedSteam_v${Info.version}.json`);
+    }
 
     function clearSettings() {
         if (!confirm(Localization.str.options.clear)) { return; }
@@ -734,6 +769,11 @@ let Options = (function(){
             });
         });
 
+        let importInput = document.getElementById("import_input");
+
+        importInput.addEventListener("change", importSettings, false);
+        document.getElementById("import").addEventListener("click", () => { importInput.click(); });
+        document.getElementById("export").addEventListener("click", exportSettings);
         document.getElementById("reset").addEventListener("click", clearSettings);
 
         document.addEventListener("change", saveOptionFromEvent);
