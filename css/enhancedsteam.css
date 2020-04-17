@@ -1559,14 +1559,26 @@ img.astats_icon {
  * add_fake_country_code_warning()
  **************************************/
 .es_warning {
+  display: flex;
   font-size: 12px;
   color: #fff;
   padding: 8px 0;
   text-align: center;
   background: linear-gradient(rgb(154, 40, 32) 0%, rgb(214, 53, 37) 100%);
 }
-.es_warning > a {
+.es_warning__msg {
+  display: inline;
+  flex-grow: 1;
+}
+.es_warning__msg > a {
   text-decoration: underline;
+}
+.es_warning__controls {
+  display: inline-flex;
+  margin-right: 10px;
+}
+.es_warning__close {
+  cursor: pointer;
 }
 
 /***************************************
