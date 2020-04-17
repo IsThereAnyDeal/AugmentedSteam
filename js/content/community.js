@@ -3547,9 +3547,8 @@ let MarketPageClass = (function(){
                 // Give up after four tries
                 throw new Error("Could not retrieve market transactions.");
             }
-            console.log(url.toString());
+            
             let data = await RequestData.getJson(url.toString());
-
             let dom = HTMLParser.htmlToDOM(data.results_html);
 
             // Request may fail with results_html == "\t\t\t\t\t\t<div class=\"market_listing_table_message\">There was an error loading your market history. Please try again later.</div>\r\n\t"
