@@ -231,12 +231,14 @@ class Background extends BackgroundBase {
             ProgressBar.finishRequest();
             return result;
         } catch(err) {
-            switch (err.message) {
+            let { name, msg } = ErrorParser.parse(err.message);
+
+            switch (name) {
                 case "ServerOutageError":
                     ProgressBar.serverOutage();
                     break;
-                case "CommunityLoginError": {
-                    AugmentedSteam.addLoginWarning();
+                case "LoginError": {
+                    AugmentedSteam.addLoginWarning(msg);
                     ProgressBar.finishRequest();
                     break;
                 } 
@@ -1260,12 +1262,21 @@ let AugmentedSteam = (function() {
     };
 
     let loginWarningAdded = false;
-    self.addLoginWarning = function() {
-        if (!loginWarningAdded) {
-            addWarning(`${Localization.str.community_login.replace("__link__", "<a href='https://steamcommunity.com/login/'>steamcommunity.com</a>")}`);
-            console.warn("Are you logged in to steamcommunity.com?");
-            loginWarningAdded = true;
-        }        
+    self.addLoginWarning = function(type) {
+        if (loginWarningAdded) { return; }
+        let host;
+
+        if (type === "store") {
+            host = "store.steampowered.com";
+        } else if (type === "community") {
+            host = "steamcommunity.com";
+        } else {
+            console.warn("Unknown login warning type %s", type);
+            return;
+        }
+
+        addWarning(`${Localization.str.login_warning.replace("__link__", `<a href="https://${host}/login/">${host}</a>`)}`);
+        loginWarningAdded = true;
     };
 
     self.handleInstallSteamButton = function() {

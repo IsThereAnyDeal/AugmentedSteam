@@ -644,7 +644,11 @@ class SteamStore extends Api {
      */
     static async country() {
         let self = SteamStore;
-        let html = await self.getPage("/account/change_country/");
+        let html = await self.getPage("/account/change_country/", {}, res => {
+            if (new URL(res.url).pathname === "/login/") {
+                throw new LoginError("store");
+            }
+        });
         let dummyPage = HTMLParser.htmlToDOM(html);
 
         let node = dummyPage.querySelector("#dselect_user_country");
@@ -777,7 +781,7 @@ class SteamCommunity extends Api {
             let thisParams = Object.assign(params, last_assetid ? { "start_assetid": last_assetid } : null);
             result = await SteamCommunity.getEndpoint(`/inventory/${login.steamId}/753/${contextId}`, thisParams, res => {
                 if (res.status === 403) {
-                    throw new CommunityLoginError(`Can't access resource at ${res.url}, HTTP 403`);
+                    throw new LoginError("community");
                 }
             });
             if (result && result.success) {
@@ -1057,8 +1061,8 @@ class SteamCommunity extends Api {
 
     static async getPage(endpoint, query) {
         let response = await this._fetchWithDefaults(endpoint, query, { method: "GET" });
-        if (response.url.startsWith("https://steamcommunity.com/login/")) {
-            throw new CommunityLoginError("Got redirected onto login page, the user is not logged into steamcommunity.com");
+        if (new URL(response.url).pathname === "/login/") {
+            throw new LoginError("community");
         }
         return response.text();
     }
@@ -1642,7 +1646,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
         console.error(err);
         console.groupEnd();
         
-        throw err;
+        throw { "message": err.toString() };
     }
     return res;
 });
