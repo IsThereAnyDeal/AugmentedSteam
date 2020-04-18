@@ -1575,7 +1575,18 @@ img.astats_icon {
 }
 .es_warning__controls {
   display: inline-flex;
+  align-items: center;
   margin-right: 10px;
+}
+.es_warning__controls > * {
+  margin: 0 5px;
+}
+.es_warning__dont-show-again {
+  display: inline-flex;
+  align-items: center;
+}
+.es_warning__input {
+  margin-right: .5em;
 }
 .es_warning__close {
   cursor: pointer;

@@ -1234,10 +1234,10 @@ let AugmentedSteam = (function() {
                 <div class="es_warning__msg">${innerHTML}</div>
                 <div class="es_warning__controls">
                     <div class="es_warning__dont-show-again">
-                        <input type="checkbox" class="js_warning__input">
+                        <input type="checkbox" class="es_warning__input js_warning__input">
                         ${Localization.str.update.dont_show}
                     </div>
-                    <div class="es_warning__close js_warning__close">&#10060;</div>
+                    <div class="es_warning__close js_warning__close">X</div>
                 </div>
             </div>`);
 
