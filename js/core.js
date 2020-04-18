@@ -408,7 +408,7 @@ class GameId {
     }
 }
 
-
+// todo use https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage
 class LocalStorage {
     static get(key, defaultValue) {
         let item = localStorage.getItem(key);

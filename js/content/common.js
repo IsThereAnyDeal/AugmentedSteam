@@ -1228,8 +1228,27 @@ let AugmentedSteam = (function() {
         });
     };
 
-    function addWarning(innerHTML) {
-        HTML.afterEnd("#global_header", `<div class="es_warning">${innerHTML}</div>`);
+    function addWarning(innerHTML, stopShowingHandler) {
+        let el = HTML.element(
+            `<div class="es_warning">
+                <div class="es_warning__msg">${innerHTML}</div>
+                <div class="es_warning__controls">
+                    <div class="es_warning__dont-show-again">
+                        <input type="checkbox" class="es_warning__input js_warning__input">
+                        ${Localization.str.update.dont_show}
+                    </div>
+                    <div class="es_warning__close js_warning__close">X</div>
+                </div>
+            </div>`);
+
+        el.querySelector(".js_warning__close").addEventListener("click", () => {
+            if (el.querySelector(".js_warning__input").checked && stopShowingHandler) {
+                stopShowingHandler();
+            }
+            el.closest(".es_warning").remove();
+        })
+
+        document.getElementById("global_header").insertAdjacentElement("afterend", el);
     }
 
     /**
@@ -1252,7 +1271,8 @@ let AugmentedSteam = (function() {
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
             addWarning(
                 `${strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage)}
-                <a href="#" id="es_reset_language_code">${strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage)}</a>`);
+                <a href="#" id="es_reset_language_code">${strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage)}</a>`,
+                () => { SyncedStorage.set("showlanguagewarning", false) });
 
             document.querySelector("#es_reset_language_code").addEventListener("click", function(e){
                 e.preventDefault();
@@ -1263,7 +1283,8 @@ let AugmentedSteam = (function() {
 
     let loginWarningAdded = false;
     self.addLoginWarning = function(type) {
-        if (loginWarningAdded) { return; }
+        if (loginWarningAdded || LocalStorage.get(`hide_login_warn_${type}`)) { return; }
+        
         let host;
 
         if (type === "store") {
@@ -1275,8 +1296,12 @@ let AugmentedSteam = (function() {
             return;
         }
 
-        addWarning(`${Localization.str.login_warning.replace("__link__", `<a href="https://${host}/login/">${host}</a>`)}`);
+        addWarning(`${Localization.str.login_warning.replace("__link__", `<a href="https://${host}/login/">${host}</a>`)}`, () => {
+            LocalStorage.set(`hide_login_warn_${type}`, true);
+        });
         loginWarningAdded = true;
+
+        console.warn("Are you logged into %s?", host);
     };
 
     self.handleInstallSteamButton = function() {
