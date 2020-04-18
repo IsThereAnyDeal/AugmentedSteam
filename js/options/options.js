@@ -598,13 +598,13 @@ let Options = (function(){
                 console.error("Failed to read settings file");
                 console.error(err);
                 console.groupEnd();
+
+                window.alert(Localization.str.options.settings_mngmt.import_fail);
                 return;
             }
 
             try {
                 SyncedStorage.import(importedSettings);
-
-                window.alert(Localization.str.options.settings_mngmt.import_success);
             } catch(err) {
                 console.group("Import");
                 console.error("Failed to write settings to storage");
@@ -612,9 +612,11 @@ let Options = (function(){
                 console.groupEnd();
 
                 window.alert(Localization.str.options.settings_mngmt.import_fail);
-            } finally {
-                window.location.reload();
+                return;
             }
+
+            window.alert(Localization.str.options.settings_mngmt.import_success);
+            window.location.reload();
         });
         reader.readAsText(input.files[0]);
     }
