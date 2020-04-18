@@ -1271,7 +1271,8 @@ let AugmentedSteam = (function() {
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
             addWarning(
                 `${strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage)}
-                <a href="#" id="es_reset_language_code">${strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage)}</a>`);
+                <a href="#" id="es_reset_language_code">${strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage)}</a>`,
+                () => { SyncedStorage.set("showlanguagewarning", false) });
 
             document.querySelector("#es_reset_language_code").addEventListener("click", function(e){
                 e.preventDefault();
