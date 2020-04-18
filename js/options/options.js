@@ -603,6 +603,8 @@ let Options = (function(){
                 return;
             }
 
+            delete importedSettings.version;
+
             try {
                 SyncedStorage.import(importedSettings);
             } catch(err) {
