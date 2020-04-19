@@ -139,7 +139,7 @@ class StorePageClass {
     }
 
     isDlc() {
-        return !!document.querySelector("#game_area_purchase .game_area_bubble");
+        return !!document.querySelector("div.game_area_dlc_bubble");
     }
 
     isVideo() {
