@@ -2773,11 +2773,13 @@ let SearchPageClass = (function(){
         return paramsObj;
     }
 
-    function modifyParams(searchParams, key, val) {
-        if (val !== "" && val !== null) {
-            searchParams.set(key, val);
-        } else {
-            searchParams.delete(key);
+    function modifyParams(searchParams, entries) {
+        for (let [key, val] of entries) {
+            if (val !== "" && val !== null) {
+                searchParams.set(key, val);
+            } else {
+                searchParams.delete(key);
+            }
         }
     }
 
@@ -2788,9 +2790,11 @@ let SearchPageClass = (function(){
                 let url = new URL(linkElement.href);
                 let params = url.searchParams;
 
-                modifyParams(params, "as-hide", curParams.get("as-hide"));
-                modifyParams(params, "as-reviews-score", curParams.get("as-reviews-score"));
-                modifyParams(params, "as-reviews-count", curParams.get("as-reviews-count"));
+                modifyParams(params, [
+                    ["as-hide", curParams.get("as-hide")],
+                    ["as-reviews-score", curParams.get("as-reviews-score")],
+                    ["as-reviews-count", curParams.get("as-reviews-count")],
+                ]);
 
                 ExtensionLayer.runInPageContext(obj => Object.toQueryString(obj), [paramsToObject(params)], true)
                     .then(queryString => {
@@ -2956,7 +2960,7 @@ let SearchPageClass = (function(){
 
             // Update the current URL
             let curParams = new URLSearchParams(window.location.search);
-            modifyParams(curParams, key, val);            
+            modifyParams(curParams, [[key, val]]);
 
             ExtensionLayer.runInPageContext(params => {
                 // https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L217
