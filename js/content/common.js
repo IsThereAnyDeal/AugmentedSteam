@@ -2929,7 +2929,7 @@ class Sortbox {
         let arrowUp = "↑";
         
         let box = HTML.element(
-        `<div class="js-sortbox-${name} es-sortbox">
+        `<div class="es-sortbox es-sortbox--${name}">
             <div class="es-sortbox__label">${Localization.str.sort_by}</div>
             <div class="es-sortbox__container">
                 <input id="${id}" type="hidden" name="${name}" value="${initialOption}">

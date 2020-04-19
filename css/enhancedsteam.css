@@ -3454,6 +3454,10 @@ label[for="show_common_games"] {
   float: right;
   margin-top: 4px;
 }
+.es-sortbox--reviews {
+  padding: 20px 0 5px 0;
+}
+
 .es-sortbox__label {
   font-size: 12px;
   display: inline-block;
@@ -3535,10 +3539,6 @@ label[for="show_common_games"] {
   color: #ffffff;
   background-color: #67c1f5;
   background: linear-gradient(-60deg, #417a9b 5%,#67c1f5 95%);
-}
-
-.js-sortbox-reviews {
-  padding: 20px 0 5px 0;
 }
 
 /* || SEARCH PAGE FILTERS */
