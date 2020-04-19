@@ -2765,6 +2765,14 @@ let SearchPageClass = (function(){
         }
     }
 
+    function paramsToObject(params) {
+        let paramsObj = {};
+        for (let [key, val] of params) {
+            paramsObj[key] = val;
+        }
+        return paramsObj;
+    }
+
     function modifyParams(searchParams, key, val) {
         if (val !== "" && val !== null) {
             searchParams.set(key, val);
@@ -2773,17 +2781,22 @@ let SearchPageClass = (function(){
         }
     }
 
-    function modifyPageLinks() {
+    async function modifyPageLinks() {
         if (!infiniteScrollEnabled) {
             for (let linkElement of document.querySelectorAll(".search_pagination_right a")) {
                 let curParams = new URLSearchParams(window.location.search);
                 let url = new URL(linkElement.href);
+                let params = url.searchParams;
 
-                modifyParams(url.searchParams, "as-hide", curParams.get("as-hide"));
-                modifyParams(url.searchParams, "as-reviews-score", curParams.get("as-reviews-score"));
-                modifyParams(url.searchParams, "as-reviews-count", curParams.get("as-reviews-count"));
+                modifyParams(params, "as-hide", curParams.get("as-hide"));
+                modifyParams(params, "as-reviews-score", curParams.get("as-reviews-score"));
+                modifyParams(params, "as-reviews-count", curParams.get("as-reviews-count"));
 
-                linkElement.href = url.href;
+                ExtensionLayer.runInPageContext(obj => Object.toQueryString(obj), [paramsToObject(params)], true)
+                    .then(queryString => {
+                        url.search = `?${queryString}`;
+                        linkElement.href = url.href;
+                    });
             }
         }
     }
@@ -2943,17 +2956,12 @@ let SearchPageClass = (function(){
 
             // Update the current URL
             let curParams = new URLSearchParams(window.location.search);
-            modifyParams(curParams, key, val);
-
-            let paramsObj = {};
-            for (let [paramKey, paramVal] of curParams) {
-                paramsObj[paramKey] = paramVal;
-            }
+            modifyParams(curParams, key, val);            
 
             ExtensionLayer.runInPageContext(params => {
                 // https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L217
                 UpdateUrl(params);
-            }, [ paramsObj ]);
+            }, [ paramsToObject(curParams) ]);
 
             modifyPageLinks();
 
