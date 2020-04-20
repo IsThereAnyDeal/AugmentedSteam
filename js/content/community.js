@@ -2312,11 +2312,11 @@ let InventoryPageClass = (function(){
 let BadgesPageClass = (function(){
 
     function BadgesPageClass() {
-        this.hasMultiplePages = (document.querySelector(".pagebtn") !== null);
+        this.isMyProfile = CommunityCommon.currentUserIsOwner();
+        this.hasMultiplePages = !!document.querySelector(".profile_paging");
         this.hasAllPagesLoaded = false;
-        this.totalWorth = 0;
 
-        if (CommunityCommon.currentUserIsOwner()) {
+        if (this.isMyProfile) {
             this.updateHead();
             this.addBadgeCompletionCost();
             this.addTotalDropsCount();
@@ -2333,29 +2333,29 @@ let BadgesPageClass = (function(){
         // move faq to the middle
         let xpBlockRight = document.querySelector(".profile_xp_block_right");
 
-        HTML.beforeEnd(
-            document.querySelector(".profile_xp_block_mid"),
-            "<div class='es_faq_cards'>" + xpBlockRight.innerHTML + "</div>"
-        );
-        xpBlockRight.innerHTML = "<div id='es_cards_worth'></div>";
+        HTML.beforeEnd(document.querySelector(".profile_xp_block_mid"),
+            `<div class="es_faq_cards">${xpBlockRight.innerHTML}</div>`);
+
+        HTML.inner(xpBlockRight, '<div id="es_cards_worth"></div>');
     };
 
     // Display the cost estimate of crafting a game badge by purchasing unowned trading cards
     BadgesPageClass.prototype.addBadgeCompletionCost = async function() {
-        if (!CommunityCommon.currentUserIsOwner()) { return; }
+        if (!this.isMyProfile) { return; }
 
+        let items = [];
         let appids = [];
-        let nodes = [];
         let foilAppids = [];
 
-        let rows = document.querySelectorAll(".badge_row.is_link:not(.esi-badge)");
-        for (let node of rows) {
-            let game = node.querySelector(".badge_row_overlay").href.match(/gamecards\/(\d+)\//);
+        for (let node of document.querySelectorAll(".badge_row.is_link:not(.esi-badge)")) {
+            let link = node.querySelector("a.badge_row_overlay").href;
+
+            let game = link.match(/gamecards\/(\d+)\//);
             if (!game) { continue; }
             let appid = parseInt(game[1]);
 
-            let foil = /\?border=1/.test(node.querySelector("a:last-of-type").href);
-            nodes.push([appid, node, foil]);
+            let foil = link.includes("?border=1");
+            items.push([appid, node, foil]);
 
             if (foil) {
                 foilAppids.push(appid);
@@ -2375,24 +2375,22 @@ let BadgesPageClass = (function(){
                 appids: appids.join(","),
                 foilappids: foilAppids.join(",")
             });
-        } catch (exception) {
-            console.error("Couldn't retrieve average card prices", exception);
+        } catch (err) {
+            console.error("Failed to retrieve average card prices", err);
             return;
         }
 
-        // regular cards
-        for (let item of nodes) {
-            let appid = item[0];
-            let node = item[1];
-            let isFoil = item[2];
+        let totalWorth = 0;
+        for (let tuple of items) {
+            let [appid, node, isFoil] = tuple;
 
             let key = isFoil ? "foil" : "regular";
             if (!data[appid] || !data[appid][key]) { continue; }
 
-            let averagePrice = data[appid][key]['average'];
+            let averagePrice = data[appid][key].average;
 
             let cost;
-            let progressInfoNode = node.querySelector("div.badge_progress_info");
+            let progressInfoNode = node.querySelector(".badge_progress_info");
             if (progressInfoNode) {
                 let card = progressInfoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
                 if (card) {
@@ -2401,6 +2399,7 @@ let BadgesPageClass = (function(){
                 }
             }
 
+            // calculate total worth of regular cards
             if (!isFoil) {
                 let progressBoldNode = node.querySelector(".progress_info_bold");
                 if (progressBoldNode) {
@@ -2409,10 +2408,10 @@ let BadgesPageClass = (function(){
                         let worth = new Price(drops[0] * averagePrice);
 
                         if (worth.value > 0) {
-                            this.totalWorth += worth.value;
+                            totalWorth += worth.value;
 
                             HTML.replace(node.querySelector(".how_to_get_card_drops"),
-                                `<span class='es_card_drop_worth' data-es-card-worth='${worth.value}'>${Localization.str.drops_worth_avg} ${worth}</span>`);
+                                `<span class="es_card_drop_worth" data-es-card-worth="${worth.value}">${Localization.str.drops_worth_avg} ${worth}</span>`);
                         }
                     }
                 }
@@ -2421,27 +2420,23 @@ let BadgesPageClass = (function(){
             if (cost) {
                 let badgeNameBox = DOMHelper.selectLastNode(node, ".badge_empty_name");
                 if (badgeNameBox) {
-                    HTML.afterEnd(badgeNameBox, "<div class='badge_info_unlocked' style='color: #5c5c5c;'>" + Localization.str.badge_completion_avg.replace("__cost__", cost) + "</div>");
+                    HTML.afterEnd(badgeNameBox, `<div class="badge_info_unlocked">${Localization.str.badge_completion_avg.replace("__cost__", cost)}</div>`);
                 }
             }
 
-            // note CSS styles moved to .css instead of doing it in javascript
             node.classList.add("esi-badge");
         }
 
-        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + new Price(this.totalWorth);
+        document.querySelector("#es_cards_worth").textContent = `${Localization.str.drops_worth_avg} ${new Price(totalWorth)}`;
     };
 
     async function eachBadgePage(callback) {
-        let baseUrl = "https://steamcommunity.com/" + window.location.pathname + "?p=";
+        let baseUrl = `https://steamcommunity.com/${window.location.pathname}?p=`;
 
-        let skip = 1;
-        let m = window.location.search.match("p=(\d+)");
-        if (m) {
-            skip = parseInt(m[1]);
-        }
+        let params = new URLSearchParams(window.location.search);
+        let skip = params.get("p") || 1;
 
-        let lastPage = parseInt(DOMHelper.selectLastNode(document, ".pagelink").textContent);
+        let lastPage = parseInt(DOMHelper.selectLastNode(document, "div.pageLinks a.pagelink").textContent);
         for (let p = 1; p <= lastPage; p++) { // doing one page at a time to prevent too many requests at once
             if (p === skip) { continue; }
             try {
@@ -2450,8 +2445,8 @@ let BadgesPageClass = (function(){
                 let dom = HTMLParser.htmlToDOM(response);
                 await callback(dom);
 
-            } catch (exception) {
-                console.error("Failed to load " + baseUrl + p + ": " + exception);
+            } catch (err) {
+                console.error(`Failed to load page ${baseUrl + p}`, err);
                 return;
             }
         }
@@ -2465,21 +2460,18 @@ let BadgesPageClass = (function(){
 
         // let images = Viewport.getVariableFromDom("g_rgDelayedLoadImages", "object");
 
-        let that = this;
-        await eachBadgePage(async function(dom){
-            let nodes = dom.querySelectorAll(".badge_row");
-            for (let node of nodes) {
+        await eachBadgePage(async (dom) => {
+            for (let node of dom.querySelectorAll(".badge_row")) {
                 sheetNode.append(node);
             }
 
             CommunityCommon.addCardExchangeLinks();
-            await that.addBadgeCompletionCost();
+            await this.addBadgeCompletionCost();
 
             // images = Object.assign(images, Viewport.getVariableFromDom("g_rgDelayedLoadImages", "object", dom));
         });
 
-        let nodes = document.querySelectorAll(".profile_paging");
-        for (let node of nodes) {
+        for (let node of document.querySelectorAll(".profile_paging")) {
             node.style.display = "none";
         }
 
@@ -2494,47 +2486,44 @@ let BadgesPageClass = (function(){
         let completed = false;
 
         function countDropsFromDOM(dom) {
-            let nodes = dom.querySelectorAll(".badge_title_stats_drops .progress_info_bold");
-            for (let node of nodes) {
-                let count = node.innerText.match(/(\d+)/);
+            for (let node of dom.querySelectorAll("span.progress_info_bold")) {
+                let count = node.textContent.match(/\d+/);
                 if (!count) { continue; }
 
                 dropsGames++;
-                dropsCount += parseInt(count[1]);
+                dropsCount += parseInt(count[0]);
             }
         }
 
         async function addDropsCount() {
-            HTML.inner(
-                "#es_calculations",
-                Localization.str.card_drops_remaining.replace("__drops__", dropsCount)
-                    + "<br>" + Localization.str.games_with_drops.replace("__dropsgames__", dropsGames)
-            );
+            HTML.inner("#es_calculations",
+                `${Localization.str.card_drops_remaining.replace("__drops__", dropsCount)}
+                <br>${Localization.str.games_with_drops.replace("__dropsgames__", dropsGames)}`);
 
             let response;
             try {
                 response = await RequestData.getHttp("https://steamcommunity.com/my/ajaxgetboostereligibility/");
-            } catch(exception) {
-                console.error("Failed to load booster eligibility", exception);
+            } catch (err) {
+                console.error("Failed to load booster eligibility", err);
                 return;
             }
 
-            let boosterGames = response.match(/class="booster_eligibility_game"/g);
-            let boosterCount = boosterGames && boosterGames.length || 0;
+            let dummy = HTMLParser.htmlToDOM(response);
+            let boosterCount = dummy.querySelectorAll(".booster_eligibility_game").length;
 
-            HTML.beforeEnd("#es_calculations",
-                "<br>" + Localization.str.games_with_booster.replace("__boostergames__", boosterCount));
+            HTML.beforeEnd("#es_calculations", `<br>${Localization.str.games_with_booster.replace("__boostergames__", boosterCount)}`);
         }
 
         countDropsFromDOM(document);
 
         if (this.hasMultiplePages) {
-            HTML.afterBegin(".profile_xp_block_right", "<div id='es_calculations'><div class='btn_grey_black btn_small_thin'><span>" + Localization.str.drop_calc + "</span></div></div>");
+            HTML.afterBegin(".profile_xp_block_right",
+                `<div id="es_calculations"><div class="btn_grey_black btn_small_thin"><span>${Localization.str.drop_calc}</span></div></div>`);
 
-            document.querySelector("#es_calculations").addEventListener("click", async function(e) {
+            document.querySelector("#es_calculations").addEventListener("click", async e => {
                 if (completed) { return; }
 
-                document.querySelector("#es_calculations").textContent = Localization.str.loading;
+                e.target.textContent = Localization.str.loading;
 
                 await eachBadgePage(countDropsFromDOM);
 
@@ -2543,8 +2532,7 @@ let BadgesPageClass = (function(){
             });
 
         } else {
-            HTML.afterBegin(".profile_xp_block_right",
-                "<div id='es_calculations'>" + Localization.str.drop_calc + "</div>");
+            HTML.afterBegin(".profile_xp_block_right", '<div id="es_calculations"></div>');
 
             addDropsCount();
         }
@@ -2567,15 +2555,12 @@ let BadgesPageClass = (function(){
 
     function sortBadgeRows(activeText, nodeValueCallback) {
         let badgeRows = [];
-        let nodes = document.querySelectorAll(".badge_row");
-        for (let node of nodes) {
+        for (let node of document.querySelectorAll(".badge_row")) {
             badgeRows.push([node.outerHTML, nodeValueCallback(node)]);
             node.remove();
         }
 
-        badgeRows.sort(function(a,b) {
-            return b[1] - a[1];
-        });
+        badgeRows.sort((a, b) => b[1] - a[1]);
 
         let sheetNode = document.querySelector(".badges_sheet");
         for (let row of badgeRows) {
@@ -2584,52 +2569,50 @@ let BadgesPageClass = (function(){
 
         resetLazyLoader();
         document.querySelector("#es_sort_active").textContent = activeText;
-        document.querySelector("#es_sort_flyout").style.display = "none"; // TODO fadeout
+        document.querySelector("#es_sort_flyout").style.display = "none";
     }
 
     BadgesPageClass.prototype.addBadgeSort = function() {
-        let isOwnProfile = CommunityCommon.currentUserIsOwner();
+
         let sorts = ["c", "a", "r"];
-
-        let sorted = document.querySelector("a.badge_sort_option.active").search.replace("?sort=", "")
-            || (isOwnProfile ? "p": "c");
-
-        let linksHtml = "";
-
-        if (isOwnProfile) {
+        if (this.isMyProfile) {
             sorts.unshift("p");
         }
 
+        // Steam's sort options, hidden by CSS
+        let sortOptions = document.querySelector(".profile_badges_sortoptions");
+
         // Build dropdown links HTML
-        let nodes = document.querySelectorAll(".profile_badges_sortoptions a");
-        let i=0;
-        for (let node of nodes) {
-            node.style.display = "none";
-            linksHtml += `<a class="badge_sort_option popup_menu_item by_${sorts[i]}" data-sort-by="${sorts[i]}" href="?sort=${sorts[i]}">${node.textContent.trim()}</a>`;
-            i++;
-        }
-        if (isOwnProfile) {
-            linksHtml += '<a class="badge_sort_option popup_menu_item by_d" data-sort-by="d" id="es_badge_sort_drops">' + Localization.str.most_drops + '</a>';
-            linksHtml += '<a class="badge_sort_option popup_menu_item by_v" data-sort-by="v" id="es_badge_sort_value">' + Localization.str.drops_value + '</a>';
+        let html = "";
+        sortOptions.querySelectorAll("a").forEach((node, i) => {
+            html += `<a class="popup_menu_item by_${sorts[i]}" data-sort-by="${sorts[i]}" href="?sort=${sorts[i]}">${node.textContent.trim()}</a>`;
+        });
+        if (this.isMyProfile) {
+            html += `<a class="popup_menu_item by_d" data-sort-by="d" id="es_badge_sort_drops">${Localization.str.most_drops}</a>`;
+            html += `<a class="popup_menu_item by_v" data-sort-by="v" id="es_badge_sort_value">${Localization.str.drops_value}</a>`;
         }
 
         let container = document.createElement("span");
         container.id = "wishlist_sort_options";
-        DOMHelper.wrap(container, document.querySelector(".profile_badges_sortoptions"));
+        DOMHelper.wrap(container, sortOptions);
 
         // Insert dropdown options links
-        HTML.beforeEnd(".profile_badges_sortoptions",
-            `<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
-			    <div class="popup_body popup_menu">${linksHtml}</div>
-		    </div>`);
+        HTML.beforeEnd(sortOptions,
+            `<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown">
+                <div class="popup_body popup_menu">${html}</div>
+            </div>`);
+
+        let sorted = sortOptions.querySelector("a.badge_sort_option.active").search.replace("?sort=", "")
+            || (this.isMyProfile ? "p" : "c");
+        let activeText = sortOptions.querySelector(`#es_sort_flyout a.by_${sorted}`).textContent;
 
         // Insert dropdown button
-        HTML.afterEnd(".profile_badges_sortoptions span",
+        HTML.afterEnd(sortOptions.querySelector("span"),
             `<span id="wishlist_sort_options">
                 <div class="store_nav">
-                    <div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+                    <div id="es_sort_tab" class="tab flyout_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
                         <span class="pulldown">
-                            <div id="es_sort_active" style="display: inline;">` + document.querySelector("#es_sort_flyout a.by_" + sorted).textContent + `</div>
+                            <div id="es_sort_active">${activeText}</div>
                             <span></span>
                         </span>
                     </div>
@@ -2638,28 +2621,30 @@ let BadgesPageClass = (function(){
 
         ExtensionLayer.runInPageContext(() => { BindAutoFlyoutEvents(); });
 
-        if (isOwnProfile) {
-            let that = this;
-            document.querySelector("#es_badge_sort_drops").addEventListener("click", async function(e) {
+        if (this.isMyProfile) {
+            document.querySelector("#es_badge_sort_drops").addEventListener("click", async e => {
 
-                if (that.hasMultiplePages) {
-                    await that.loadAllPages();
+                if (this.hasMultiplePages) {
+                    await this.loadAllPages();
                 }
 
                 sortBadgeRows(e.target.textContent, (node) => {
                     let content = 0;
-                    let progressInfo = node.innerHTML.match(/progress_info_bold".+(\d+)/);
-                    if (progressInfo) {
-                        content = parseInt(progressInfo[1])
+                    let dropCount = node.querySelector(".progress_info_bold");
+                    if (dropCount) {
+                        let drops = dropCount.textContent.match(/\d+/);
+                        if (drops) {
+                            content = parseInt(drops[0]);
+                        }
                     }
                     return content;
-                })
+                });
             });
 
-            document.querySelector("#es_badge_sort_value").addEventListener("click", async function(e) {
+            document.querySelector("#es_badge_sort_value").addEventListener("click", async e => {
 
-                if (that.hasMultiplePages) {
-                    await that.loadAllPages();
+                if (this.hasMultiplePages) {
+                    await this.loadAllPages();
                 }
 
                 sortBadgeRows(e.target.textContent, (node) => {
@@ -2675,120 +2660,118 @@ let BadgesPageClass = (function(){
     };
 
     BadgesPageClass.prototype.addBadgeFilter = function() {
-        if (!CommunityCommon.currentUserIsOwner()) { return; }
+        if (!this.isMyProfile) { return; }
 
-        let html  = `<span>${Localization.str.show}</span>
-            <div class="store_nav">
-                <div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom">
-                    <span class="pulldown">
-                        <div id="es_filter_active" style="display: inline;">${Localization.str.badges_all}</div>
-                        <span></span>
-                    </span>
+        HTML.afterBegin("#wishlist_sort_options", 
+            `<div class="es_badge_filter"><span>${Localization.str.show}</span>
+                <div class="store_nav">
+                    <div id="es_filter_tab" class="tab flyout_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+                        <span class="pulldown">
+                            <div id="es_filter_active">${Localization.str.badges_all}</div>
+                            <span></span>
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
-                <div class="popup_body popup_menu">
-                    <a class="popup_menu_item es_bg_filter" id="es_badge_all">${Localization.str.badges_all}</a>
-                    <a class="popup_menu_item es_bg_filter" id="es_badge_drops">${Localization.str.badges_drops}</a>
+                <div id="es_filter_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown">
+                    <div class="popup_body popup_menu">
+                        <a class="popup_menu_item es_bg_filter" id="es_badge_all">${Localization.str.badges_all}</a>
+                        <a class="popup_menu_item es_bg_filter" id="es_badge_drops">${Localization.str.badges_drops}</a>
+                    </div>
                 </div>
-            </div>`;
-
-        HTML.afterBegin("#wishlist_sort_options",
-            "<div class='es_badge_filter' style='float: right; margin-left: 18px;'>" + html + "</div>");
+            </div>`);
 
         document.querySelector("#es_badge_all").addEventListener("click", () => {
-            for (let badge of document.querySelectorAll(".is_link")) {
-                badge.style.display = "block";
+            for (let node of document.querySelectorAll(".badge_row")) {
+                node.style.display = "block";
             }
+
             document.querySelector("#es_filter_active").textContent = Localization.str.badges_all;
-            document.querySelector("#es_filter_flyout").style.display = "none"; // TODO fadeout
+            document.querySelector("#es_filter_flyout").style.display = "none";
             resetLazyLoader();
         });
 
-        let that = this;
-        document.querySelector("#es_badge_drops").addEventListener("click", async function(e) {
+        document.querySelector("#es_badge_drops").addEventListener("click", async e => {
             e.preventDefault();
 
             // Load additinal badge sections if multiple pages are present
-            if (that.hasMultiplePages) {
-                await that.loadAllPages();
+            if (this.hasMultiplePages) {
+                await this.loadAllPages();
             }
 
-            let nodes = document.querySelectorAll(".is_link");
-            for (let node of nodes) {
-                let progress = node.innerHTML.match(/progress_info_bold".+(\d+)/);
-                if (!progress || parseInt(progress[1]) === 0) {
+            for (let node of document.querySelectorAll(".badge_row")) {
+                let stats = node.querySelector(".progress_info_bold");
+                if (!stats || !/\d+/.test(stats.textContent)) {
                     node.style.display = "none";
-                } else if (node.innerHTML.match(/badge_info_unlocked/) && !node.innerHTML.match(/badge_current/)) {
-                    node.style.display = "none";
-                // Hide foil badges too
-                } else if (!node.innerHTML.match(/progress_info_bold/)) {
+                } else if (node.querySelector(".badge_info_unlocked") && !node.querySelector(".badge_current")) {
                     node.style.display = "none";
                 }
             }
 
             document.querySelector("#es_filter_active").textContent = Localization.str.badges_drops;
-            document.querySelector("#es_filter_flyout").style.display = "none"; // TODO fadeOut();
+            document.querySelector("#es_filter_flyout").style.display = "none";
             resetLazyLoader();
         });
     };
 
     BadgesPageClass.prototype.addBadgeViewOptions = function() {
-        let html = `<span>${Localization.str.view}</span>
-            <div class="store_nav">
-                <div class="tab flyout_tab" id="es_badgeview_tab" data-flyout="es_badgeview_flyout" data-flyout-align="right" data-flyout-valign="bottom">
-                    <span class="pulldown">
-                        <div id="es_badgeview_active" style="display: inline;">${Localization.str.theworddefault}</div>
-                        <span></span>
-                    </span>
-                </div>
-            </div>
-            <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_badgeview_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
-                <div class="popup_body popup_menu">
-                    <a class="popup_menu_item es_bg_view" data-view="defaultview">${Localization.str.theworddefault}</a>
-                    <a class="popup_menu_item es_bg_view" data-view="binderview">${Localization.str.binder_view}</a>
-                </div>
-            </div>`;
 
-        HTML.afterBegin("#wishlist_sort_options",  "<div class='es_badge_view' style='float: right; margin-left: 18px;'>" + html + "</div>");
+        HTML.afterBegin("#wishlist_sort_options",
+            `<div class="es_badge_view"><span>${Localization.str.view}</span>
+                <div class="store_nav">
+                    <div id="es_badgeview_tab" class="tab flyout_tab" data-flyout="es_badgeview_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+                        <span class="pulldown">
+                            <div id="es_badgeview_active">${Localization.str.theworddefault}</div>
+                            <span></span>
+                        </span>
+                    </div>
+                </div>
+                <div id="es_badgeview_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown">
+                    <div class="popup_body popup_menu">
+                        <a class="popup_menu_item es_bg_view" data-view="defaultview">${Localization.str.theworddefault}</a>
+                        <a class="popup_menu_item es_bg_view" data-view="binderview">${Localization.str.binder_view}</a>
+                    </div>
+                </div>
+            </div>`);
 
         // Change hash when selecting view
-        document.querySelector("#es_badgeview_flyout").addEventListener("click", function(e) {
+        document.querySelector("#es_badgeview_flyout").addEventListener("click", e => {
             let node = e.target.closest(".es_bg_view");
             if (!node) { return; }
             window.location.hash = node.dataset.view;
+            e.currentTarget.style.display = "none";
         });
 
         // Monitor for hash changes
-        window.addEventListener("hashchange", function(){
+        window.addEventListener("hashchange", () => {
             toggleBinderView();
         });
 
         toggleBinderView();
 
-        function toggleBinderView(state) {
-            if (window.location.hash === "#binderview" || state === true) {
-                document.querySelector("div.maincontent").classList.add("es_binder_view");
+        function toggleBinderView() {
+            let mainNode = document.querySelector("div.maincontent");
 
-                let mainNode = document.querySelector("div.maincontent");
+            if (window.location.hash === "#binderview") {
+                mainNode.classList.add("es_binder_view");
 
                 // Don't attempt changes again if already loaded
                 if (!mainNode.classList.contains("es_binder_loaded")) {
                     mainNode.classList.add("es_binder_loaded");
 
-                    let nodes = document.querySelectorAll("div.badge_row.is_link");
-                    for (let node of nodes) {
-                        let stats = node.querySelector("span.progress_info_bold");
-                        if (stats && stats.innerHTML.match(/\d+/)) {
-                            HTML.beforeEnd(node.querySelector("div.badge_content"),
-                                "<span class='es_game_stats'>" + stats.outerHTML + "</span>");
+                    for (let node of document.querySelectorAll(".badge_row")) {
+                        let stats = node.querySelector(".progress_info_bold");
+                        if (stats && /\d+/.test(stats.textContent)) {
+                            HTML.beforeEnd(node.querySelector(".badge_content"),
+                                `<span class="es_game_stats">${stats.innerHTML}</span>`);
                         }
 
-                        let infoNode = node.querySelector("div.badge_progress_info");
+                        let infoNode = node.querySelector(".badge_progress_info");
                         if (infoNode) {
                             let card = infoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
-                            let text = (card) ? card[1] + " / " + card[2] : '';
-                            HTML.beforeBegin(infoNode,  '<div class="es_badge_progress_info">' + text + '</div>');
+                            if (card) {
+                                HTML.beforeBegin(infoNode,
+                                    `<div class="es_badge_progress_info">${card[1]} / ${card[2]}</div>`);
+                            }
                         }
                     }
                 }
@@ -2796,15 +2779,17 @@ let BadgesPageClass = (function(){
                 // Add hash to pagination links
                 let nodes = document.querySelectorAll("div.pageLinks a.pagelink, div.pageLinks a.pagebtn");
                 for (let node of nodes) {
-                    node.href = node.href + "#binderview";
+                    node.href += "#binderview";
                 }
 
                 // Triggers the loading of out-of-view badge images
                 window.dispatchEvent(new Event("resize"));
+
                 document.querySelector("#es_badgeview_active").textContent = Localization.str.binder_view;
             } else {
-                document.querySelector("div.maincontent").classList.remove("es_binder_view");
+                mainNode.classList.remove("es_binder_view");
 
+                // Remove hash from pagination links
                 let nodes = document.querySelectorAll("div.pageLinks a.pagelink, div.pageLinks a.pagebtn");
                 for (let node of nodes) {
                     node.href = node.href.replace("#binderview", "");
