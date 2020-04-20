@@ -624,8 +624,7 @@ class AppPageClass extends StorePageClass {
         this.addOpenCritic();
         this.addOwnedElsewhere();
         this.displayPurchaseDate();
-        this.addYouTubeGameplay();
-        this.addYouTubeReviews();
+        this.addYouTubePlayers();
         this.addSteamPeek();
 
         new MediaPage().appPage();
@@ -1328,89 +1327,115 @@ class AppPageClass extends StorePageClass {
         let player = document.createElement("iframe");
         player.classList.add("es_youtube_player");
         player.type = "text/html";
-        player.src = `https://www.youtube.com/embed?listType=search&list=${listParam}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${hlParam}`;
+        player.src = `https://www.youtube.com/embed?listType=search&list=${listParam}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${hlParam}&enablejsapi=1`;
         player.allowFullscreen = true;
 
         return player;
     }
 
-    addYouTubeGameplay() {
-        if (!SyncedStorage.get("showyoutubegameplay")) { return; }
+    addYouTubePlayers() {
+        if (!SyncedStorage.get("showyoutubegameplay") && !SyncedStorage.get("showyoutubereviews")) { return; }
+
+        let ytTabsHtml = "";
+
+        if (SyncedStorage.get("showyoutubegameplay")) {
+            ytTabsHtml +=
+                `<div class="js-tab-yt-gameplay js-tab-yt js-tab es_tab home_tab">
+                    <div class="tab_content">${Localization.str.youtube_gameplay}</div>
+                </div>`;
+        }
+
+        if (SyncedStorage.get("showyoutubereviews")) {
+            ytTabsHtml +=
+                `<div class="js-tab-yt-review js-tab-yt js-tab es_tab home_tab">
+                    <div class="tab_content">${Localization.str.youtube_reviews}</div>
+                </div>`;
+        }
 
         HTML.afterBegin(".leftcol",
             `<div class="es_tabs">
                 <div class="home_tabs_row">
-                    <div id="es_tab_steammedia" class="es_tab home_tab active">
+                    <div class="js-tab-steam js-tab es_tab home_tab active">
                         <div class="tab_content">Steam</div>
                     </div>
-                    <div id="es_tab_youtubemedia" class="es_tab home_tab">
-                        <div class="tab_content">${Localization.str.youtube_gameplay}</div>
-                    </div>
+                    ${ytTabsHtml}
                 </div>
             </div>`);
 
         /*  The separation of the tabs bar allows us to place the media slider right above the top right corner of the player.
             This empty div is inserted here in order to keep the same height difference between the left and the right column. */
-        HTML.afterBegin(".rightcol", "<div style='height: 31px;'></div>");
+        HTML.afterBegin(".rightcol", `<div style="height: 31px;"></div>`);
 
-        let youTubeTab = document.getElementById("es_tab_youtubemedia");
-        let steamTab = document.getElementById("es_tab_steammedia");
+        let steamTab = document.querySelector(".js-tab-steam");
 
-        let youTubeMedia = document.getElementById("es_youtube_gameplay_player");
-        let steamMedia = document.querySelector(".highlight_overflow");
+        let tabToMedia = new Map([
+            [steamTab, document.querySelector(".highlight_overflow")],
+        ]);
 
-        youTubeTab.addEventListener("click", () => {
+        steamTab.addEventListener("click", () => { setActiveTab(steamTab) });
 
-            if (!youTubeMedia) {
-                youTubeMedia = this._getYoutubeIframeNode(this.appName, Localization.str.gameplay);
-                youTubeMedia.id = "es_youtube_gameplay_player";
+        if (SyncedStorage.get("showyoutubegameplay")) {
+            let gamePlayTab = document.querySelector(".js-tab-yt-gameplay");
 
-                document.querySelector(".highlight_ctn")
-                    .insertAdjacentElement("beforeend", youTubeMedia);
-            }
+            tabToMedia.set(gamePlayTab, null);
 
-            steamMedia.style.display = "none";
-            steamTab.classList.remove("active");
-
-            youTubeMedia.style.display = "block";
-            youTubeTab.classList.add("active");
-
-            ExtensionLayer.runInPageContext(() => { SteamOnWebPanelHidden(); });
-        });
-
-        steamTab.addEventListener("click", () => {
-
-            if (youTubeMedia) {
-
-                youTubeMedia.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "https://www.youtube.com");
-
-                youTubeMedia.style.display = "none";
-                youTubeTab.classList.remove("active");
-
-                steamMedia.style.display = "block";
-                steamTab.classList.add("active");
-
-                ExtensionLayer.runInPageContext(() => { SteamOnWebPanelShown(); });
-            }
-        });
-    }
-
-    addYouTubeReviews() {
-        if (!SyncedStorage.get("showyoutubereviews")) { return; }
-
-        let reviewsNode = document.querySelector("#game_area_reviews");
-        if (!reviewsNode) {
-            HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
-                `<div id="game_area_reviews" class="game_area_description">
-                    <h2>${Localization.str.reviews}</h2>
-                    <div id="es_youtube_reviews"></div>
-                </div>`);
-
-        } else {
-            HTML.beforeEnd(reviewsNode, '<div id="es_youtube_reviews"></div>');
+            gamePlayTab.addEventListener("click", () => {
+                if (!tabToMedia.get(gamePlayTab)) {
+                    let gamePlayMedia = this._getYoutubeIframeNode(this.appName, Localization.str.gameplay);
+    
+                    document.querySelector(".highlight_ctn")
+                        .insertAdjacentElement("beforeend", gamePlayMedia);
+    
+                    tabToMedia.set(gamePlayTab, gamePlayMedia);
+                }
+    
+                setActiveTab(gamePlayTab);
+            });
         }
 
-        document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName, Localization.str.review));
+        if (SyncedStorage.get("showyoutubereviews")) {
+            let reviewTab = document.querySelector(".js-tab-yt-review");
+
+            tabToMedia.set(reviewTab, null);
+
+            reviewTab.addEventListener("click", () => {
+                if (!tabToMedia.get(reviewTab)) {
+                    let reviewMedia = this._getYoutubeIframeNode(this.appName, Localization.str.review);
+    
+                    document.querySelector(".highlight_ctn")
+                        .insertAdjacentElement("beforeend", reviewMedia);
+    
+                    tabToMedia.set(reviewTab, reviewMedia);
+                }
+    
+                setActiveTab(reviewTab);
+            });
+        }
+
+        function setActiveTab(tab) {
+
+            let activeTab = document.querySelector(".js-tab.active");
+            if (activeTab === tab) { return; }
+
+            let media = tabToMedia.get(tab);
+            let activeMedia = tabToMedia.get(activeTab);
+
+            if (activeTab.classList.contains("js-tab-steam")) {
+                ExtensionLayer.runInPageContext(() => { SteamOnWebPanelHidden(); });
+            } else if (activeTab.classList.contains("js-tab-yt")) {
+                activeMedia.contentWindow.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube.com");
+            }
+
+            activeMedia.style.display = "none";
+            activeTab.classList.remove("active");
+            
+            media.style.display = "block";
+            tab.classList.add("active");
+
+            if (tab.classList.contains("js-tab-steam")) {
+                ExtensionLayer.runInPageContext(() => { SteamOnWebPanelShown(); });
+            }
+        }
     }
 
     async addSteamPeek() {
