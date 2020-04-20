@@ -1377,10 +1377,8 @@ class AppPageClass extends StorePageClass {
         if (SyncedStorage.get("showyoutubegameplay")) {
             let gamePlayTab = document.querySelector(".js-tab-yt-gameplay");
 
-            tabToMedia.set(gamePlayTab, null);
-
             gamePlayTab.addEventListener("click", () => {
-                if (!tabToMedia.get(gamePlayTab)) {
+                if (!tabToMedia.has(gamePlayTab)) {
                     let gamePlayMedia = this._getYoutubeIframeNode(this.appName, Localization.str.gameplay);
     
                     document.querySelector(".highlight_ctn")
@@ -1396,10 +1394,8 @@ class AppPageClass extends StorePageClass {
         if (SyncedStorage.get("showyoutubereviews")) {
             let reviewTab = document.querySelector(".js-tab-yt-review");
 
-            tabToMedia.set(reviewTab, null);
-
             reviewTab.addEventListener("click", () => {
-                if (!tabToMedia.get(reviewTab)) {
+                if (!tabToMedia.has(reviewTab)) {
                     let reviewMedia = this._getYoutubeIframeNode(this.appName, Localization.str.review);
     
                     document.querySelector(".highlight_ctn")
