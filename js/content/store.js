@@ -2796,6 +2796,9 @@ let SearchPageClass = (function(){
                     ["as-reviews-count", curParams.get("as-reviews-count")],
                 ]);
 
+                /* We can't simply use URLSearchParams.prototype.toString here, since existing query string parameters
+                 * would be modified when stringifying back again (e.g. "white%20space" will turn into "white+space" and break links).
+                 * Therefore the URLSearchParameters are converted to an object and parsed by Prototype's Object.toQueryString. */
                 ExtensionLayer.runInPageContext(obj => Object.toQueryString(obj), [paramsToObject(params)], true)
                     .then(queryString => {
                         url.search = `?${queryString}`;
