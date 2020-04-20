@@ -2759,6 +2759,8 @@ let SearchPageClass = (function(){
 
     function addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-count])")) {
         for (let row of rows) {
+            if (row.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { row.classList.add("as-hide-mixed");      }
+            if (row.querySelector(".search_reviewscore span.search_review_summary.negative"))  { row.classList.add("as-hide-negative");   }
 
             let reviewPercentage = 100;
             let reviewCount = 0;
@@ -2881,6 +2883,8 @@ let SearchPageClass = (function(){
         let filterNames = [
             "cart",
             "ea",
+            "mixed",
+            "negative",
         ];
 
         let activeFilters = getASFilters();
@@ -3018,6 +3022,24 @@ let SearchPageClass = (function(){
                             <span>
                                 <span class="tab_filter_control_checkbox"></span>
                                 <span class="tab_filter_control_label">${Localization.str.search_filters.hide_ea}</span>
+                                <span class="tab_filter_control_count" style="display: none;"></span>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="mixed" data-loc="${Localization.str.search_filters.hide_mixed}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="mixed" data-loc="${Localization.str.search_filters.hide_mixed}" data-clientside="1">
+                            <span>
+                                <span class="tab_filter_control_checkbox"></span>
+                                <span class="tab_filter_control_label">${Localization.str.search_filters.hide_mixed}</span>
+                                <span class="tab_filter_control_count" style="display: none;"></span>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="negative" data-loc="${Localization.str.search_filters.hide_negative}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="negative" data-loc="${Localization.str.search_filters.hide_negative}" data-clientside="1">
+                            <span>
+                                <span class="tab_filter_control_checkbox"></span>
+                                <span class="tab_filter_control_label">${Localization.str.search_filters.hide_negative}</span>
                                 <span class="tab_filter_control_count" style="display: none;"></span>
                             </span>
                         </span>
