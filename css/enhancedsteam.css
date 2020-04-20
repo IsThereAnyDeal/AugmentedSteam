@@ -2558,7 +2558,8 @@ img.astats_icon {
 }
 
 /***************************************
- * User's SteamIDs
+ * User profiles
+ * addViewSteamId()
  **************************************/
 .es-copy {
   display: flex;
@@ -2591,10 +2592,9 @@ img.astats_icon {
   opacity: 1;
 }
 
-
 /***************************************
- * Users profiles
- * add_profile_style()
+ * User profiles
+ * addProfileStyle()
  **************************************/
 .es_profile_style .holidayprofile .persona_name.persona_name_spacer {
   pointer-events: none; /* fixes username and alias dropdown not being clickable */
@@ -2602,6 +2602,21 @@ img.astats_icon {
 .es_profile_style .holidayprofile .profile_content {
   margin-top: -66px !important;
   padding-top: 24px !important;
+}
+
+/***************************************
+ * User profiles
+ * chatDropdownOptions()
+ **************************************/
+#profile_chat_dropdown {
+  display: none;
+}
+#profile_chat_dropdown .shadow_content {
+  box-shadow: 0 0 12px #000;
+}
+#profile_chat_dropdown .popup_menu_item img {
+  position: relative;
+  top: 3px;
 }
 
 /***************************************

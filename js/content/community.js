@@ -423,10 +423,9 @@ let ProfileActivityPageClass = (function(){
 let ProfileHomePageClass = (function(){
 
     function ProfileHomePageClass() {
-        // If there is an error message, like profile does not exists. 
-        if (document.querySelector("#message")) {
-            return;
-        }
+        // Prevent errors if for example the profile doesn't exist and there's an error message
+        if (document.querySelector("#message")) { return; }
+
         if (window.location.hash === "#as-success") {
             /* TODO This is a hack. It turns out, that clearOwn clears data, but immediately reloads them.
              *      That's why when we clear profile before going to API to store changes we don't get updated images
@@ -437,22 +436,28 @@ let ProfileHomePageClass = (function(){
              */
             ProfileData.clearOwn();
         }
-        ProfileData.promise();
+
+        this.isPrivateProfile = !!document.querySelector("body.profile_page.private_profile");
+        this.steamId = SteamId.getSteamId();
+
         this.addCommunityProfileLinks();
+        this.addViewSteamId();
         this.addWishlistProfileLink();
-        this.addSupporterBadges();
-        this.changeUserBackground();
         this.addProfileStoreLinks();
-        this.addSteamRepApi();
         this.userDropdownOptions();
         this.inGameNameLink();
-        this.addProfileStyle();
         this.addTwitchInfo();
         this.chatDropdownOptions();
+
+        ProfileData.promise().then(() => {
+            this.addSupporterBadges();
+            this.changeUserBackground();
+            this.addSteamRepApi();
+            this.addProfileStyle();
+        });
     }
 
     ProfileHomePageClass.prototype.addCommunityProfileLinks = function() {
-        let steamId = SteamId.getSteamId();
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
@@ -463,77 +468,73 @@ let ProfileHomePageClass = (function(){
         let links = [
             {
                 "id": "steamrep",
-                "link": `https://steamrep.com/profiles/${steamId}`,
+                "link": `https://steamrep.com/profiles/${this.steamId}`,
                 "name": "SteamRep",
             },
             {
                 "id": "steamdbcalc",
-                "link": `https://steamdb.info/calculator/?player=${steamId}`,
+                "link": `https://steamdb.info/calculator/?player=${this.steamId}`,
                 "name": "SteamDB",
             },
             {
                 "id": "steamgifts",
-                "link": `https://www.steamgifts.com/go/user/${steamId}`,
+                "link": `https://www.steamgifts.com/go/user/${this.steamId}`,
                 "name": "SteamGifts",
             },
             {
                 "id": "steamtrades",
-                "link": `https://www.steamtrades.com/user/${steamId}`,
+                "link": `https://www.steamtrades.com/user/${this.steamId}`,
                 "name": "SteamTrades",
             },
             {
                 "id": "bartervg",
-                "link": `//barter.vg/steam/${steamId}`,
+                "link": `https://barter.vg/steam/${this.steamId}`,
                 "name": "Barter.vg",
             },
             {
                 "id": "astats",
-                "link": `https://www.achievementstats.com/index.php?action=profile&playerId=${steamId}`,
+                "link": `https://www.achievementstats.com/index.php?action=profile&playerId=${this.steamId}`,
                 "name": "Achievement Stats",
             },
             {
                 "id": "backpacktf",
-                "link": `https://backpack.tf/profiles/${steamId}`,
+                "link": `https://backpack.tf/profiles/${this.steamId}`,
                 "name": "Backpack.tf",
             },
             {
                 "id": "astatsnl",
-                "link": `https://astats.astats.nl/astats/User_Info.php?steamID64=${steamId}`,
+                "link": `https://astats.astats.nl/astats/User_Info.php?steamID64=${this.steamId}`,
                 "name": "AStats.nl",
             }
         ];
 
         // Add "SteamRepCN"
         let language = Language.getCurrentSteamLanguage();
-        if ((language === "schinese" || language === "tchinese") && SyncedStorage.get('profile_steamrepcn')) {
+        if ((language === "schinese" || language === "tchinese") && SyncedStorage.get("profile_steamrepcn")) {
             links.push({
                 "id": "steamrepcn",
-                "link": `//steamrepcn.com/profiles/${steamId}`,
+                "link": `https://steamrepcn.com/profiles/${this.steamId}`,
                 "name": (language === "schinese" ? "查看信誉记录" : "確認信譽記錄")
             });
         }
 
-        // Build the links HTML
-        let htmlstr = "";
+        let html = "";
 
         for (let link of links) {
-            if (!SyncedStorage.get("profile_" + link.id)) { continue; }
-            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+            if (!SyncedStorage.get(`profile_${link.id}`)) { continue; }
+            html += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
         }
 
-        // custom profile link
-        for (let customLink of SyncedStorage.get('profile_custom_link')) {
-            if (!customLink || !customLink.enabled) {
-                continue;
-            }
+        for (let customLink of SyncedStorage.get("profile_custom_link")) {
+            if (!customLink || !customLink.enabled) { continue; }
 
             let customUrl = customLink.url;
             if (!customUrl.includes("[ID]")) {
                 customUrl += "[ID]";
             }
 
-            let name =  HTML.escape(customLink.name);
-            let link = "//" + HTML.escape(customUrl.replace("[ID]", steamId));
+            let name = HTML.escape(customLink.name);
+            let link = "//" + HTML.escape(customUrl.replace("[ID]", this.steamId));
             let icon;
             if (customLink.icon) {
                 icon = "//" + HTML.escape(customLink.icon);
@@ -541,63 +542,61 @@ let ProfileHomePageClass = (function(){
                 iconType = "none";
             }
 
-            htmlstr += CommunityCommon.makeProfileLink("custom", link, name, iconType, icon);
+            html += CommunityCommon.makeProfileLink("custom", link, name, iconType, icon);
         }
 
-        // profile steamid
-        if (SyncedStorage.get("profile_steamid")) {
-            let dropdown = document.querySelector("#profile_action_dropdown .popup_body.popup_menu");
-            if (dropdown) {
-                HTML.beforeEnd(dropdown,
-                    `<a class="popup_menu_item" id="es_steamid">
-                        <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/iconForums.png">&nbsp; ${Localization.str.view_steamid}
-                    </a>`);
-            } else {
-                let actions = document.querySelector(".profile_header_actions");
-                if (actions) {
-                    HTML.beforeEnd(actions,
-                        `<a class="btn_profile_action btn_medium" id="es_steamid">
-                            <span>${Localization.str.view_steamid}</span>
-                        </a>`);
-                }
-            }
-
-            document.querySelector("#es_steamid").addEventListener("click", showSteamIdDialog);
-        }
-
-        // Insert the links HMTL into the page
-        if (htmlstr) {
+        if (html) {
             let linksNode = document.querySelector(".profile_item_links");
             if (linksNode) {
-                HTML.beforeEnd(linksNode,  htmlstr + '<div style="clear: both;"></div>');
+                HTML.beforeEnd(linksNode, html + '<div style="clear: both;"></div>');
             } else {
                 let rightColNode = document.querySelector(".profile_rightcol");
-                HTML.beforeEnd(rightColNode, '<div class="profile_item_links">' + htmlstr + '</div>');
+                HTML.beforeEnd(rightColNode, `<div class="profile_item_links">${html}</div>`);
                 HTML.afterEnd(rightColNode, '<div style="clear: both;"></div>');
             }
         }
+    };
 
-        function copySteamId(e) {
-            let elem = e.target.closest(".es-copy");
-            if (!elem) { return; }
+    ProfileHomePageClass.prototype.addViewSteamId = function() {
+        if (!SyncedStorage.get("profile_steamid")) { return; }
 
-            Clipboard.set(elem.querySelector(".es-copy__id").innerText);
-
-            let lastCopied = document.querySelector(".es-copy.is-copied");
-            if (lastCopied) {
-                lastCopied.classList.remove("is-copied");
-            }
-
-            elem.classList.add("is-copied");
-            window.setTimeout(() => { elem.classList.remove("is-copied")}, 2000);
+        let dropdown = document.querySelector("#profile_action_dropdown .popup_body.popup_menu");
+        if (dropdown) {
+            HTML.beforeEnd(dropdown,
+                `<a class="popup_menu_item" id="es_steamid">
+                    <img src="//steamcommunity-a.akamaihd.net/public/images/skin_1/iconForums.png">&nbsp; ${Localization.str.view_steamid}
+                </a>`);
+        } else {
+            HTML.beforeEnd(document.querySelector(".profile_header_actions"),
+                `<a class="btn_profile_action btn_medium" id="es_steamid">
+                    <span>${Localization.str.view_steamid}</span>
+                </a>`);
         }
 
+        document.querySelector("#es_steamid").addEventListener("click", showSteamIdDialog);
+
+        let that = this;
         function showSteamIdDialog() {
             document.addEventListener("click", copySteamId);
 
-            let imgUrl = ExtensionResources.getURL("img/clippy.svg");
+            function copySteamId(e) {
+                let elem = e.target.closest(".es-copy");
+                if (!elem) { return; }
 
-            let steamId = new SteamId.Detail(SteamId.getSteamId());
+                Clipboard.set(elem.querySelector(".es-copy__id").innerText);
+
+                let lastCopied = document.querySelector(".es-copy.is-copied");
+                if (lastCopied) {
+                    lastCopied.classList.remove("is-copied");
+                }
+
+                elem.classList.add("is-copied");
+                window.setTimeout(() => {
+                    elem.classList.remove("is-copied");
+                }, 2000);
+            }
+
+            let steamId = new SteamId.Detail(that.steamId);
             let ids = [
                 steamId.id2,
                 steamId.id3,
@@ -605,11 +604,18 @@ let ProfileHomePageClass = (function(){
                 `https://steamcommunity.com/profiles/${steamId.id64}`
             ];
 
-            let copied = Localization.str.copied;
+            let imgUrl = ExtensionResources.getURL("img/clippy.svg");
+
             let html = "";
             for (let id of ids) {
                 if (!id) { continue; }
-                html += `<p><a class="es-copy"><span class="es-copy__id">${id}</span><img src='${imgUrl}' class="es-copy__icon"><span class="es-copy__copied">${copied}</span></a></p>`
+                html += `<p>
+                            <a class="es-copy">
+                                <span class="es-copy__id">${id}</span>
+                                <img src="${imgUrl}" class="es-copy__icon">
+                                <span class="es-copy__copied">${Localization.str.copied}</span>
+                            </a>
+                        </p>`;
             }
 
             ExtensionLayer.runInPageContext((steamidOfUser, html, close) => {
@@ -628,16 +634,14 @@ let ProfileHomePageClass = (function(){
     };
 
     ProfileHomePageClass.prototype.addWishlistProfileLink = async function() {
-        if (document.querySelector("body.profile_page.private_profile")) { return; }
-        if (!SyncedStorage.get("show_wishlist_link")) { return; }
-        if (!document.querySelector(".profile_item_links")) { return; }
+        if (this.isPrivateProfile || !SyncedStorage.get("show_wishlist_link")) { return; }
 
-        let m = window.location.pathname.match(/(profiles|id)\/[^\/]+/);
-        if (!m) { return; }
+        let node = document.querySelector(".profile_item_links .profile_count_link");
+        if (!node) { return; }
 
-        HTML.afterEnd(".profile_item_links .profile_count_link",
-            `<div id="es_wishlist_link" class="profile_count_link">
-                <a href="//store.steampowered.com/wishlist/${m[0]}">
+        HTML.afterEnd(node,
+            `<div id="es_wishlist_link" class="profile_count_link ellipsis">
+                <a href="//store.steampowered.com/wishlist${window.location.pathname}">
                     <span class="count_link_label">${Localization.str.wishlist}</span>&nbsp;
                     <span id="es_wishlist_count" class="profile_count_link_total"></span>
                 </a>
@@ -653,147 +657,141 @@ let ProfileHomePageClass = (function(){
     };
 
     ProfileHomePageClass.prototype.addSupporterBadges = function() {
-        ProfileData.promise().then(data => {
-            if (!data) { return; }
+        let badges = ProfileData.getBadges();
+        if (!badges || badges.length === 0) { return; }
 
-            let badgeCount = data["badges"].length;
-            if (badgeCount === 0) { return;}
+        let profileBadges = document.querySelector(".profile_badges");
+        if (!profileBadges) { return; }
 
-            let profileBadges = document.querySelector(".profile_badges");
-            if (!profileBadges) { return; }
+        let html =
+            `<div class="profile_badges" id="es_supporter_badges">
+                <div class="profile_count_link">
+                    <a href="${Config.PublicHost}">
+                        <span class="count_link_label">${Localization.str.es_supporter}</span>&nbsp;
+                        <span class="profile_count_link_total">${badges.length}</span>
+                    </a>
+                </div>
+                <div class="profile_count_link_preview">`;
 
-            let html =
-                `<div class="profile_badges" id="es_supporter_badges">
-                    <div class="profile_count_link">
-                        <a href="${Config.PublicHost}">
-                            <span class="count_link_label">${Localization.str.es_supporter}</span>&nbsp;
-                            <span class="profile_count_link_total">${badgeCount}</span>
-                        </a>
-                    </div>
-                    <div class="profile_count_link_preview">`;
-
-
-            for (let i=0; i < badgeCount; i++) {
-                if (data["badges"][i].link) {
-                    html += '<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>' + data["badges"][i].title + '"><a href="' + data["badges"][i].link + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></a></div>';
-                } else {
-                    html += '<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>' + data["badges"][i].title + '"><img class="badge_icon small" src="' + data["badges"][i].img + '"></div>';
-                }
+        for (let badge of badges) {
+            if (badge.link) {
+                html += `<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>${badge.title}">
+                            <a href="${badge.link}">
+                                <img class="badge_icon small" src="${badge.img}">
+                            </a>
+                        </div>`;
+            } else {
+                html += `<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>${badge.title}">
+                            <img class="badge_icon small" src="${badge.img}">
+                        </div>`;
             }
+        }
 
-            html += '</div></div>';
+        html += "</div></div>";
 
-            HTML.afterEnd(profileBadges, html);
+        HTML.afterEnd(profileBadges, html);
 
-            ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
-        });
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
     };
 
-    ProfileHomePageClass.prototype.changeUserBackground = async function() {
-        let prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9.]+)/i);
+    ProfileHomePageClass.prototype.changeUserBackground = function() {
 
+        let prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9.]+)/i);
         if (prevHash) {
-            let imgUrl = "//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/" + prevHash[1] + "/" + prevHash[2];
+            let imgUrl = `//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/${prevHash[1]}/${prevHash[2]}`;
             // Make sure the url is for a valid background image
-            HTML.beforeEnd(document.body, '<img class="es_bg_test" style="display: none" src="' + imgUrl + '" />');
-            document.querySelector("img.es_bg_test").addEventListener("load", function() {
+            HTML.beforeEnd(document.body, `<img class="es_bg_test" style="display: none;" src="${imgUrl}">`);
+            document.querySelector("img.es_bg_test").addEventListener("load", () => {
                 let nodes = document.querySelectorAll(".no_header.profile_page, .profile_background_image_content");
-                for (let i=0, len=nodes.length; i<len; i++) {
-                    let node = nodes[i];
-                    node.style.backgroundImage = "url('"+imgUrl+"')";
+                for (let node of nodes) {
+                    node.style.backgroundImage = `url("${imgUrl}")`;
                 }
-                document.querySelector(".es_bg_test").remove();
+                document.querySelector("img.es_bg_test").remove();
             });
             return;
         }
 
-        if (document.querySelector(".profile_page.private_profile")) {
-            return;
-        }
+        if (this.isPrivateProfile) { return; }
 
-        await ProfileData;
         let bg = ProfileData.getBgImgUrl();
         if (!bg) { return; }
 
-        document.querySelector(".no_header").style.backgroundImage = "url(" + bg + ")";
-
-        let node = document.querySelector(".profile_background_image_content");
+        let profilePage = document.querySelector("div.no_header.profile_page");
+        profilePage.style.backgroundImage = `url("${bg}")`;
+        let node = profilePage.querySelector(".profile_background_image_content");
         if (node) {
-            node.style.backgroundImage = "url(" + bg + ")";
-            return;
+            node.style.backgroundImage = `url("${bg}")`;
+        } else {
+            profilePage.classList.add("has_profile_background");
+            node = profilePage.querySelector(".profile_content");
+            node.classList.add("has_profile_background");
+            HTML.afterBegin(node,
+                `<div class="profile_background_holder_content">
+                    <div class="profile_background_overlay_content"></div>
+                    <div class="profile_background_image_content" style="background-image: url('${bg}');"></div>
+                </div>`);
         }
-
-        document.querySelector(".no_header").classList.add("has_profile_background");
-        node = document.querySelector(".profile_content");
-        node.classList.add("has_profile_background");
-        HTML.afterBegin(node, '<div class="profile_background_holder_content"><div class="profile_background_overlay_content"></div><div class="profile_background_image_content " style="background-image: url(' + bg + ');"></div></div></div>');
     };
 
     ProfileHomePageClass.prototype.addProfileStoreLinks = function() {
-        let nodes = document.querySelectorAll(".game_name .whiteLink");
-        for (let i=0, len=nodes.length; i<len; i++) {
-            let node = nodes[i];
+        for (let node of document.querySelectorAll(".game_name .whiteLink")) {
             let href = node.href.replace("//steamcommunity.com", "//store.steampowered.com");
-            HTML.afterEnd(node, "<br><a class='whiteLink' style='font-size: 10px;' href=" + href + ">" + Localization.str.visit_store + "</a>");
+            HTML.afterEnd(node, `<br><a class="whiteLink" style="font-size: 10px;" href="${href}">${Localization.str.visit_store}</a>`);
         }
     };
 
     ProfileHomePageClass.prototype.addSteamRepApi = function() {
         if (!SyncedStorage.get("showsteamrepapi")) { return; }
 
-        ProfileData.promise().then(data => {
-            if (!data.steamrep || data.steamrep.length === 0) { return; }
+        let steamrep = ProfileData.getSteamRep();
+        if (!steamrep || steamrep.length === 0) { return; }
 
-            let steamId = SteamId.getSteamId();
-            if (!steamId) { return; }
+        // Build reputation images regexp
+        let repImgs = {
+            "banned": /scammer|banned/i,
+            "valve": /valve admin/i,
+            "caution": /caution/i,
+            "okay": /admin|middleman/i,
+            "donate": /donator/i
+        };
 
-            // Build reputation images regexp
-            let repImgs = {
-                "banned": /scammer|banned/gi,
-                "valve": /valve admin/gi,
-                "caution": /caution/gi,
-                "okay": /admin|middleman/gi,
-                "donate": /donator/gi
-            };
+        let html = "";
 
-            let html = "";
+        for (let value of steamrep) {
+            if (value.trim() === "") { continue; }
+            for (let [img, regex] of Object.entries(repImgs)) {
+                if (!regex.test(value)) { continue; }
 
-            for (let value of data.steamrep) {
-                if (value.trim() === "") { continue; }
-                for (let [img, regex] of Object.entries(repImgs)) {
-                    if (!value.match(regex)) { continue; }
+                let imgUrl = ExtensionResources.getURL(`img/sr/${img}.png`);
+                let status;
 
-                    let imgUrl = ExtensionResources.getURL(`img/sr/${img}.png`);
-                    let status;
-
-                    switch (img) {
-                        case "banned":
-                            status = "bad";
-                            break;
-                        case "caution":
-                            status = "caution";
-                            break;
-                        case "valve":
-                        case "okay":
-                            status = "good";
-                            break;
-                        case "donate":
-                            status = "neutral";
-                            break;
-                    }
-
-                    html += `<div class="${status}"><img src="${imgUrl}"><span> ${value}</span></div>`;
+                switch (img) {
+                    case "banned":
+                        status = "bad";
+                        break;
+                    case "caution":
+                        status = "caution";
+                        break;
+                    case "valve":
+                    case "okay":
+                        status = "good";
+                        break;
+                    case "donate":
+                        status = "neutral";
+                        break;
                 }
-            }
 
-            if (html) {
-
-                HTML.afterBegin(".profile_rightcol",
-                    `<a id="es_steamrep" href="https://steamrep.com/profiles/${steamId}" target="_blank">
-                        ${html}
-                    </a>`);
+                html += `<div class="${status}"><img src="${imgUrl}"><span> ${value}</span></div>`;
             }
-        });
+        }
+
+        if (html) {
+
+            HTML.afterBegin(".profile_rightcol",
+                `<a id="es_steamrep" href="https://steamrep.com/profiles/${this.steamId}" target="_blank">
+                    ${html}
+                </a>`);
+        }
     };
 
     ProfileHomePageClass.prototype.userDropdownOptions = function() {
@@ -802,139 +800,133 @@ let ProfileHomePageClass = (function(){
         if (!node) { return; }
 
         // add nickname option for non-friends
-        if (User.isSignedIn) {
+        if (User.isSignedIn && document.querySelector("#btn_add_friend")) {
+            HTML.afterEnd(node,
+                `<a class="popup_menu_item" id="es_nickname">
+                    <img src="//steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}
+                </a>`);
 
-            // check whether we can chat => if we can we are friends => we have nickname option
-            let canAddFriend = document.querySelector("#btn_add_friend");
-            if (canAddFriend) {
-
-                HTML.afterEnd(node, `<a class="popup_menu_item" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`);
-
-                node.parentNode.querySelector("#es_nickname").addEventListener("click", function() {
-                    ExtensionLayer.runInPageContext(() => {
-                        ShowNicknameModal();
-                        HideMenu("profile_action_dropdown_link", "profile_action_dropdown" );
-                    });
+            document.querySelector("#es_nickname").addEventListener("click", () => {
+                ExtensionLayer.runInPageContext(() => {
+                    ShowNicknameModal();
+                    HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
                 });
-            }
+            });
         }
 
-        // post history link
+        // add post history link
         HTML.afterEnd(node,
-                `<a class='popup_menu_item' id='es_posthistory' href='${window.location.pathname}/posthistory'>
-                <img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; ${Localization.str.post_history}
-                </a>`);
+            `<a class="popup_menu_item" id="es_posthistory" href="${window.location.pathname}/posthistory">
+                <img src="//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">&nbsp; ${Localization.str.post_history}
+            </a>`);
     };
 
     ProfileHomePageClass.prototype.inGameNameLink = function() {
-        let ingameNode = document.querySelector("input[name='ingameAppID']");
+        let ingameNode = document.querySelector("input[name=ingameAppID]");
         if (!ingameNode || !ingameNode.value) { return; }
 
-        let tooltip = Localization.str.view_in_store;
-
         let node = document.querySelector(".profile_in_game_name");
-        HTML.inner(node, `<a data-tooltip-html="${tooltip}" href="//store.steampowered.com/app/${ingameNode.value}" target="_blank">${node.textContent}</a>`);
+        HTML.inner(node,
+            `<a data-tooltip-html="${Localization.str.view_in_store}" href="//store.steampowered.com/app/${ingameNode.value}" target="_blank">${node.textContent}</a>`);
+
         ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
     };
 
     ProfileHomePageClass.prototype.addProfileStyle = function() {
-        if (document.querySelector("body.profile_page.private_profile")) { return; }
+        if (this.isPrivateProfile) { return; }
 
-        ProfileData.promise().then(data => {
-            if (!data || !data.style) { return; }
+        let style = ProfileData.getStyle();
+        if (!style) { return; }
 
-            let style = ProfileData.getStyle();
-            let stylesheet = document.createElement('link');
-            stylesheet.rel = 'stylesheet';
-            stylesheet.type = 'text/css';
-            let availableStyles = ["clear", "goldenprofile", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue", "grey"];
-            if (availableStyles.indexOf(style) === -1) { return; }
+        let availableStyles = ["clear", "goldenprofile", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue", "grey"];
+        if (!availableStyles.includes(style)) { return; }
 
-            document.body.classList.add("es_profile_style");
-            switch (style) {
-                case "goldenprofile":
-                    stylesheet.href = 'https://steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css';
-                    document.head.appendChild(stylesheet);
+        document.body.classList.add("es_profile_style");
 
-                    let container = document.createElement("div");
-                    container.classList.add("profile_lny_wrapper");
+        let stylesheet = document.createElement("link");
+        stylesheet.rel = "stylesheet";
+        stylesheet.type = "text/css";
 
-                    let profilePageNode = document.querySelector(".responsive_page_template_content .profile_page");
-                    DOMHelper.wrap(container, profilePageNode);
+        switch (style) {
+            case "goldenprofile":
+                stylesheet.href = "//steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css";
+                document.head.appendChild(stylesheet);
 
-                    profilePageNode.classList.add("lnyprofile");
+                let container = document.createElement("div");
+                container.classList.add("profile_lny_wrapper");
 
-                    HTML.afterBegin(profilePageNode,
-                        `<div class="lny_sides_position">
-                            <div class="lny_side left">
-                                <div class="lny_side_background"></div>
-                                <div class="lny_top"></div>
-                                <div class="lny_pig"></div>
-                                <div class="lny_pendulum">
-                                    <div class="lny_strings"></div>
-                                    <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern1.png">
-                                </div>
+                let profilePageNode = document.querySelector(".responsive_page_template_content .profile_page");
+                DOMHelper.wrap(container, profilePageNode);
+
+                profilePageNode.classList.add("lnyprofile");
+
+                HTML.afterBegin(profilePageNode,
+                    `<div class="lny_sides_position">
+                        <div class="lny_side left">
+                            <div class="lny_side_background"></div>
+                            <div class="lny_top"></div>
+                            <div class="lny_pig"></div>
+                            <div class="lny_pendulum">
+                                <div class="lny_strings"></div>
+                                <img src="//steamcdn-a.akamaihd.net/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern1.png">
                             </div>
-                            <div class="lny_side right">
-                                <div class="lny_side_background"></div>
-                                <div class="lny_top"></div>
-                                <div class="lny_pig"></div>
-                                <div class="lny_pendulum">
-                                    <div class="lny_strings"></div>
-                                    <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern2.png">
-                                </div>
+                        </div>
+                        <div class="lny_side right">
+                            <div class="lny_side_background"></div>
+                            <div class="lny_top"></div>
+                            <div class="lny_pig"></div>
+                            <div class="lny_pendulum">
+                                <div class="lny_strings"></div>
+                                <img src="//steamcdn-a.akamaihd.net/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern2.png">
                             </div>
-                        </div>`);
+                        </div>
+                    </div>`);
 
-                    HTML.beforeBegin(
-                        ".profile_header",
-                        `<div class="lny_header">
-                            <div class="lny_pig_center"></div>
-                        </div>`);
+                HTML.beforeBegin(".profile_header",
+                    `<div class="lny_header">
+                        <div class="lny_pig_center"></div>
+                    </div>`);
 
-                    break;
-                case "holiday2014":
-                    stylesheet.href = '//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css';
-                    document.head.appendChild(stylesheet);
+                break;
+            case "holiday2014":
+                stylesheet.href = "//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css";
+                document.head.appendChild(stylesheet);
 
-                    HTML.beforeEnd(".profile_header_bg_texture", "<div class='holidayprofile_header_overlay'></div>");
-                    document.querySelector(".profile_page").classList.add("holidayprofile");
+                HTML.beforeEnd(".profile_header_bg_texture", '<div class="holidayprofile_header_overlay"></div>');
+                document.querySelector(".profile_page").classList.add("holidayprofile");
 
-                    DOMHelper.insertScript({ src: ExtensionResources.getURL("js/steam/holidayprofile.js") });
-                    
-                    break;
-                case "clear":
-                    document.body.classList.add("es_style_clear");
-                    break;
-                default:
-                    let styleUrl = ExtensionResources.getURL("img/profile_styles/" + style + "/style.css");
-                    let headerImg = ExtensionResources.getURL("img/profile_styles/" + style + "/header.jpg");
-                    let showcase = ExtensionResources.getURL("img/profile_styles/" + style + "/showcase.png");
+                DOMHelper.insertScript({ src: ExtensionResources.getURL("js/steam/holidayprofile.js") });
+                break;
+            case "clear":
+                document.body.classList.add("es_style_clear");
+                break;
+            default:
+                let styleUrl = ExtensionResources.getURL(`img/profile_styles/${style}/style.css`);
+                let headerImg = ExtensionResources.getURL(`img/profile_styles/${style}/header.jpg`);
+                let showcase = ExtensionResources.getURL(`img/profile_styles/${style}/showcase.png`);
 
-                    stylesheet.href = styleUrl;
-                    document.head.appendChild(stylesheet);
+                stylesheet.href = styleUrl;
+                document.head.appendChild(stylesheet);
 
-                    document.querySelector(".profile_header_bg_texture").style.backgroundImage = "url('" + headerImg + "')";
-                    document.querySelectorAll(".profile_customization").forEach(node => node.style.backgroundImage = "url('" + showcase + "')");
-                    break;
-            }
-            stylesheet = null;
-        });
+                document.querySelector(".profile_header_bg_texture").style.backgroundImage = `url("${headerImg}")`;
+                document.querySelectorAll(".profile_customization").forEach(node => node.style.backgroundImage = `url("${showcase}")`);
+                break;
+        }
+        stylesheet = null;
     };
 
     ProfileHomePageClass.prototype.addTwitchInfo = async function() {
+        if (!SyncedStorage.get("profile_showcase_twitch")) { return; }
 
-        if (!SyncedStorage.get('profile_showcase_twitch')) { return; }
-
-        if (User.isSignedIn && !SyncedStorage.get('profile_showcase_own_twitch')) {
-            if (window.location.pathname == User.profilePath) {
+        if (User.isSignedIn && !SyncedStorage.get("profile_showcase_own_twitch")) {
+            if (window.location.pathname === User.profilePath) {
                 // Don't show our Twitch.tv showcase on our own profile
                 return;
             }
         }
 
         let selector = ".profile_summary a[href*='twitch.tv/']";
-        if (!SyncedStorage.get('profile_showcase_twitch_profileonly')) {
+        if (!SyncedStorage.get("profile_showcase_twitch_profileonly")) {
             selector += ", .customtext_showcase a[href*='twitch.tv/']";
         }
         let search = document.querySelector(selector);
@@ -945,11 +937,11 @@ let ProfileHomePageClass = (function(){
 
         let twitchId = m[1].replace(/\//g, "");
 
-        let data = await Background.action("twitch.stream", { 'channel': twitchId, } );
+        let data = await Background.action("twitch.stream", { "channel": twitchId });
 
         // If the channel is not streaming, the response is: {"result":"success","data":[]}
         if (Array.isArray(data)) { return; }
-        
+
         let channelUsername = data.user_name;
         let channelUrl = search.href;
         let channelGame = data.game;
@@ -957,22 +949,22 @@ let ProfileHomePageClass = (function(){
         let previewUrl = data.thumbnail_url.replace("{width}", 636).replace("{height}", 358) + "?" + Math.random();
 
         HTML.afterBegin(".profile_leftcol",
-            `<div class='profile_customization' id='es_twitch'>
-                    <div class='profile_customization_header'>
-                        ${Localization.str.twitch.now_streaming.replace("__username__", channelUsername)}
+            `<div class="profile_customization" id="es_twitch">
+                <div class="profile_customization_header">
+                    ${Localization.str.twitch.now_streaming.replace("__username__", channelUsername)}
+                </div>
+                <a class="esi-stream" href="${channelUrl}" target="_blank">
+                    <div class="esi-stream__preview">
+                        <img src="${previewUrl}">
+                        <img src="//steamstore-a.akamaihd.net/public/shared/images/apphubs/play_icon80.png" class="esi-stream__play">
+                        <div class="esi-stream__live">Live on <span class="esi-stream__twitch">Twitch</span></div>
                     </div>
-                    <a class="esi-stream" href="${channelUrl}">
-                        <div class="esi-stream__preview">
-                            <img src="${previewUrl}">
-                            <img src="https://steamstore-a.akamaihd.net/public/shared/images/apphubs/play_icon80.png" class="esi-stream__play">
-                            <div class="esi-stream__live">Live on <span class="esi-stream__twitch">Twitch</span></div>
-                        </div>
-                        <div class="esi-stream__title">
-                            <span class="live_stream_app">${channelGame}</span>
-                            <span class="live_steam_viewers">${channelViewers} ${Localization.str.twitch.viewers}</span>
-                        </div>
-                    </a>
-                </div>`);
+                    <div class="esi-stream__title">
+                        <span class="live_stream_app">${channelGame}</span>
+                        <span class="live_steam_viewers">${channelViewers} ${Localization.str.twitch.viewers}</span>
+                    </div>
+                </a>
+            </div>`);
     };
 
     ProfileHomePageClass.prototype.chatDropdownOptions = function() {
@@ -981,36 +973,34 @@ let ProfileHomePageClass = (function(){
         let sendButton = document.querySelector("div.profile_header_actions > a[href*=OpenFriendChat]");
         if (!sendButton) { return; }
 
-        let m = sendButton.href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
-        if (!m) { return; }
-        let chatId = m[1];
-
-        let rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
-        let friendSteamId = rgProfileData.steamid;
+        let friendProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
+        let friendSteamId = friendProfileData.steamid;
 
         HTML.replace(sendButton,
             `<span class="btn_profile_action btn_medium" id="profile_chat_dropdown_link">
-                <span>${sendButton.textContent}<img src="https://steamcommunity-a.akamaihd.net/public/images/profile/profile_action_dropdown.png"></span>
+                <span>${sendButton.textContent}<img src="//steamcommunity-a.akamaihd.net/public/images/profile/profile_action_dropdown.png"></span>
             </span>
-            <div class="popup_block" id="profile_chat_dropdown" style="visibility: visible; top: 168px; left: 679px; display: none; opacity: 1;">
-                <div class="popup_body popup_menu shadow_content" style="box-shadow: 0 0 12px #000">
-                    <a id="btnWebChat" class="popup_menu_item webchat">
-                        <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">
-                        &nbsp; ${Localization.str.web_browser_chat}
+            <div class="popup_block" id="profile_chat_dropdown">
+                <div class="popup_body popup_menu shadow_content">
+                    <a id="btnWebChat" class="popup_menu_item">
+                        <img src="//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">&nbsp; ${Localization.str.web_browser_chat}
                     </a>
                     <a class="popup_menu_item" href="steam://friends/message/${friendSteamId}">
-                        <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">
-                        &nbsp; ${Localization.str.steam_client_chat}
+                        <img src="//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">&nbsp; ${Localization.str.steam_client_chat}
                     </a>
                 </div>
             </div>`);
 
         document.querySelector("#btnWebChat").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(chatId => { OpenFriendChatInWebChat(chatId); }, [ chatId ]);
+            ExtensionLayer.runInPageContext(steamId => { OpenFriendChatInWebChat(steamId); }, [ friendSteamId ]);
         });
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(() => { ShowMenu(document.querySelector("#profile_chat_dropdown_link"), "profile_chat_dropdown", "right"); });
+            ExtensionLayer.runInPageContext(() => { ShowMenu("profile_chat_dropdown_link", "profile_chat_dropdown", "right"); });
+        });
+
+        document.querySelector("#profile_chat_dropdown").addEventListener("click", () => {
+            ExtensionLayer.runInPageContext(() => { HideMenu("profile_chat_dropdown_link", "profile_chat_dropdown"); });
         });
     };
 
