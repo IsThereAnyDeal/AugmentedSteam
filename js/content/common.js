@@ -2607,7 +2607,7 @@ let Clipboard = (function(){
 class MediaPage {
 
     appPage() {
-        if (SyncedStorage.get("showyoutubegameplay")) {
+        if (SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews")) {
             this._mediaSliderExpander(HTML.beforeEnd, ".home_tabs_row");
         } else {
             this._mediaSliderExpander(HTML.beforeEnd, "#highlight_player_area");
