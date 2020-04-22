@@ -1297,12 +1297,7 @@ class AppPageClass extends StorePageClass {
                 // Add data to the review section in the left column, or create one if that block doesn't exist
                 let reviewsNode = document.getElementById("game_area_reviews");
                 if (reviewsNode) {
-                    let youTubeReviews = document.getElementById("es_youtube_reviews");
-                    if (youTubeReviews) {
-                        HTML.beforeBegin(youTubeReviews, html);
-                    } else {
-                        HTML.beforeEnd(reviewsNode, html);
-                    }
+                    HTML.beforeEnd(reviewsNode, html);
                 } else {
                     HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
                         `<div id="game_area_reviews" class="game_area_description">
