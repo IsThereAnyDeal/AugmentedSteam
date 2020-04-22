@@ -1339,21 +1339,21 @@ let AugmentedSteam = (function() {
         observer.observe(document, { childList: true, subtree: true });
 
         function removeLinksFilter(mutations) {
-            let selector = "a.bb_link[href*='/linkfilter/'], div.weblink a[href*='/linkfilter/']";
+            let selector = "a[href*='/linkfilter/']";
             if (mutations) {
-                mutations.forEach(mutation => {
-                    mutation.addedNodes.forEach(node => {
-                        if (node.nodeType === Node.ELEMENT_NODE) {
-                            node.querySelectorAll(selector).forEach(matchedNode => {
-                                matchedNode.setAttribute("href", matchedNode.getAttribute("href").replace(/^.+?\/linkfilter\/\?url=/, ""));
-                            });
+                for (let mutation of mutations) {
+                    for (let addedNode of mutation.addedNodes) {
+                        if (addedNode.nodeType === Node.ELEMENT_NODE) {
+                            for (let node of addedNode.querySelectorAll(selector)) {
+                                node.href = node.href.replace(/^.+?\/linkfilter\/\?url=/, "");
+                            }
                         }
-                    });
-                });
+                    }
+                }
             } else {
-                document.querySelectorAll(selector).forEach(node => {
-                    node.setAttribute("href", node.getAttribute("href").replace(/^.+?\/linkfilter\/\?url=/, ""));
-                });
+                for (let node of document.querySelectorAll(selector)) {
+                    node.href = node.href.replace(/^.+?\/linkfilter\/\?url=/, "");
+                }
             }
         }
     };
