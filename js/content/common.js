@@ -1109,6 +1109,11 @@ let Stats = (function() {
 
         achNode.style.whiteSpace = "nowrap";
 
+        if (!achNode.querySelector("img")) {
+            // The size of the achievement bars for games without leaderboards/other stats is fine, return
+            return achNode.innerHTML;
+        }
+
         let stats = achNode.innerHTML.match(/(\d+) of (\d+) \((\d{1,3})%\)/);
 
         // 1 full match, 3 group matches
