@@ -1235,23 +1235,26 @@ let AugmentedSteam = (function() {
 
     function addWarning(innerHTML, stopShowingHandler) {
         let el = HTML.element(
-            `<div class="es_warning">
-                <div class="es_warning__msg">${innerHTML}</div>
-                <div class="es_warning__controls">
-                    <div class="es_warning__dont-show-again">
-                        <input type="checkbox" class="es_warning__input js_warning__input">
-                        ${Localization.str.update.dont_show}
+            `<div class="es_warn js-warn">
+                <div class="es_warn__cnt">
+                    <div>${innerHTML}</div>
+                    <div class="es_warn__control">
+                        <a class="es_warn__btn js-warn-close">${Localization.str.update.dont_show}</a>
+                        <a class="es_warn__btn js-warn-hide">${Localization.str.hide}</a>
                     </div>
-                    <div class="es_warning__close js_warning__close">X</div>
                 </div>
             </div>`);
 
-        el.querySelector(".js_warning__close").addEventListener("click", () => {
-            if (el.querySelector(".js_warning__input").checked && stopShowingHandler) {
+        el.querySelector(".js-warn-close").addEventListener("click", () => {
+            if (stopShowingHandler) {
                 stopShowingHandler();
             }
-            el.closest(".es_warning").remove();
-        })
+            el.closest(".js-warn").remove();
+        });
+
+        el.querySelector(".js-warn-hide").addEventListener("click", () => {
+            el.closest(".js-warn").remove();
+        });
 
         document.getElementById("global_header").insertAdjacentElement("afterend", el);
     }

@@ -1554,39 +1554,47 @@ img.astats_icon {
  * add_language_warning(),
  * add_fake_country_code_warning()
  **************************************/
-.es_warning {
-  display: flex;
+.es_warn {
   font-size: 12px;
-  color: #fff;
   padding: 8px 0;
   text-align: center;
-  background: linear-gradient(rgb(154, 40, 32) 0%, rgb(214, 53, 37) 100%);
+  background: linear-gradient(#9a2820 0%, #d63525 100%);
+  color: white;
 }
-.es_warning__msg {
-  display: inline;
-  flex-grow: 1;
+
+.es_warn__cnt {
+  max-width: 940px;
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  line-height: 20px;
 }
-.es_warning__msg > a {
+.es_warn__cnt a {
   text-decoration: underline;
 }
-.es_warning__controls {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 10px;
+
+.es_warn__control {
+  white-space: nowrap;
 }
-.es_warning__controls > * {
-  margin: 0 5px;
-}
-.es_warning__dont-show-again {
-  display: inline-flex;
-  align-items: center;
-}
-.es_warning__input {
-  margin-right: .5em;
-}
-.es_warning__close {
+
+.es_warn__btn {
+  background: linear-gradient(135deg, #faa 0%,#d46a6a 100%);
+  padding: 0 10px;
+  color: black;
+  text-transform: uppercase;
+  font-size: 11px;
+  border-radius: 1px;
+  text-decoration: none !important;
+  display: inline-block;
+  line-height: 20px;
   cursor: pointer;
+  white-space: nowrap;
 }
+.es_warn__btn:hover {
+  background: linear-gradient(135deg, #801515 0%,#500 100%);
+  color: white;
+}
+
 
 /***************************************
  * Wishlist
