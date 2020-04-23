@@ -2,7 +2,6 @@
     "steamid_of_user": "",
     "click_to_copy": "",
     "copied": "",
-    "profile_steamid": "",
     "view_steamid": "",
     "more_on_steampeek": "",
     "invite_friends": "",
@@ -164,8 +163,6 @@
     "gift_transactions": "Gave transaktioner",
     "demos": "Demoer",
     "notinterested": "Poste markeret er ikke interesseret",
-    "mixed_item": "Blandet bedømte varer",
-    "negative_item": "Negativt bedømte varer",
     "price_above": "Elementer som koster mere end",
     "price_above_tooltip": "Skriv \"0\" for gratis varer eller varer uden prisskilte; Efterlad dette felt tomt for at deaktivere denne funktion",
     "price_above_wrong_format": "",
@@ -425,7 +422,6 @@
         "disablelinkfilter": "Slå bekræftelse af når du går på andre sider",
         "showallfriendsthatown": "",
         "regional_price_on": "Vis regional prissammenligning",
-        "cart": "Varer i din vogn",
         "friends_own": "Genstande dine venner ejer",
         "horizontalscrolling": "",
         "supportinfo": "",
@@ -568,7 +564,15 @@
         },
         "add_custom_link": "",
         "auto_detect": "",
-        "add_to_waitlist": ""
+        "add_to_waitlist": "",
+        "profile_steamid": "",
+        "settings_mngmt": {
+            "import": "",
+            "import_success": "",
+            "import_fail": "",
+            "export": "",
+            "reset": ""
+        }
     },
     "ready": {
         "errormsg": "Fejl under indlæsning af Augmented Steam data",
@@ -617,12 +621,14 @@
         "inv_guestpass": "Gæstepas",
         "owned": "Ejet",
         "notinterested": "Ikke interesseret",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ ønsker</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ ønsker</a>",
+        "collection": "",
+        "waitlist": ""
     },
     "wallet": {
         "custom_amount": "Tilføj selvlavet mængde",
         "custom_amount_text": "Tilføje et beløb over __minamount__",
-        "custom_giftcard_amount": ""
+        "custom_giftcard": ""
     },
     "wsgf": {
         "incomplete": "Ufuldstændig",
@@ -667,7 +673,6 @@
         "default": "Der opstod en uventet fejl.  Din produktkode er ikke blevet indløst.  Vent venligst 30 minutter og prøv at indløse koden igen."
     },
     "wl": {
-        "compute": "",
         "total_price": "",
         "in_wishlist": "",
         "on_sale": "",
@@ -707,5 +712,41 @@
     "acknowledgements": "",
     "other": "",
     "images": "",
-    "powered_by": ""
+    "powered_by": "",
+    "help_translate": "",
+    "filters": "",
+    "search_filters": {
+        "reviews_score": {
+            "between": "",
+            "any": "",
+            "up_to": "",
+            "from": ""
+        },
+        "reviews_count": {
+            "count": "",
+            "min_count": "",
+            "max_count": ""
+        },
+        "hide_ea": "",
+        "hide_cart": "",
+        "hide_mixed": "",
+        "hide_negative": ""
+    },
+    "calc_workshop_size": {
+        "file_size": "",
+        "finished": "",
+        "calculating": "",
+        "calc_size": "",
+        "total_size": ""
+    },
+    "date": "",
+    "rating": "",
+    "helpful": "",
+    "funny": "",
+    "length": "",
+    "visibility": "",
+    "processing": "",
+    "wait": "",
+    "login_warning": "",
+    "youtube_reviews": ""
 }

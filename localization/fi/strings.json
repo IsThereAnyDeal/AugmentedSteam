@@ -2,7 +2,6 @@
     "steamid_of_user": "",
     "click_to_copy": "",
     "copied": "",
-    "profile_steamid": "",
     "view_steamid": "",
     "more_on_steampeek": "",
     "invite_friends": "",
@@ -164,8 +163,6 @@
     "gift_transactions": "Lahjatapahtumat",
     "demos": "Demot",
     "notinterested": "Esineet merkattu ei kiinnostaviksi",
-    "mixed_item": "Sekoitettuja luokitus kohteita",
-    "negative_item": "Negatiivisia luokitus kohteita",
     "price_above": "Esineet, jotka maksavat enemmän kuin",
     "price_above_tooltip": "Näppäile nolla nähdäksesi ilmaiset tai hinnoittelemattomat kohteet; kentän tyhjäksi jättäminen poistaa ominaisuuden käytöstä",
     "price_above_wrong_format": "",
@@ -425,7 +422,6 @@
         "disablelinkfilter": "Ohita vahvistus ulkopuolisille sivustoille siirryttäessä",
         "showallfriendsthatown": "",
         "regional_price_on": "Näytä alueellinen hintavertailu",
-        "cart": "Kohteet ostoskorissasi",
         "friends_own": "Tuotteet jotka ystäväsi omistavat",
         "horizontalscrolling": "",
         "supportinfo": "",
@@ -568,7 +564,15 @@
         },
         "add_custom_link": "",
         "auto_detect": "",
-        "add_to_waitlist": ""
+        "add_to_waitlist": "",
+        "profile_steamid": "",
+        "settings_mngmt": {
+            "import": "",
+            "import_success": "",
+            "import_fail": "",
+            "export": "",
+            "reset": ""
+        }
     },
     "ready": {
         "errormsg": "Virhe ladatessa Augmented Steamin tietoja",
@@ -617,12 +621,14 @@
         "inv_guestpass": "Vierailulupa",
         "owned": "Omistetut",
         "notinterested": "Ei kiinnosta",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ toivoo</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ toivoo</a>",
+        "collection": "",
+        "waitlist": ""
     },
     "wallet": {
         "custom_amount": "Lisää mukautettu summa",
         "custom_amount_text": "Lisää mikä tahansa summa yli __minamount__",
-        "custom_giftcard_amount": ""
+        "custom_giftcard": ""
     },
     "wsgf": {
         "incomplete": "Keskeneräinen",
@@ -667,7 +673,6 @@
         "default": "Odottamaton virhe. Tuotekoodiasi ei lunastettu. Odota 30 minuuttia ja yritä lunastaa koodi uudestaan."
     },
     "wl": {
-        "compute": "",
         "total_price": "",
         "in_wishlist": "",
         "on_sale": "",
@@ -707,5 +712,41 @@
     "acknowledgements": "",
     "other": "",
     "images": "",
-    "powered_by": ""
+    "powered_by": "",
+    "help_translate": "",
+    "filters": "",
+    "search_filters": {
+        "reviews_score": {
+            "between": "",
+            "any": "",
+            "up_to": "",
+            "from": ""
+        },
+        "reviews_count": {
+            "count": "",
+            "min_count": "",
+            "max_count": ""
+        },
+        "hide_ea": "",
+        "hide_cart": "",
+        "hide_mixed": "",
+        "hide_negative": ""
+    },
+    "calc_workshop_size": {
+        "file_size": "",
+        "finished": "",
+        "calculating": "",
+        "calc_size": "",
+        "total_size": ""
+    },
+    "date": "",
+    "rating": "",
+    "helpful": "",
+    "funny": "",
+    "length": "",
+    "visibility": "",
+    "processing": "",
+    "wait": "",
+    "login_warning": "",
+    "youtube_reviews": ""
 }

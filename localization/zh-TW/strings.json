@@ -1,9 +1,8 @@
 {
-    "steamid_of_user": "",
-    "click_to_copy": "",
-    "copied": "",
-    "profile_steamid": "",
-    "view_steamid": "",
+    "steamid_of_user": "__user__ 的 SteamID",
+    "click_to_copy": "點擊複製",
+    "copied": "已複製到你的剪貼板！",
+    "view_steamid": "檢視 SteamID",
     "more_on_steampeek": "前往 SteamPeek 查看更多",
     "invite_friends": "邀請好友",
     "invite_to_group": "邀請至群組",
@@ -132,7 +131,7 @@
     "read_reviews": "閱讀評論",
     "read_more_reviews": "閱讀更多評論於",
     "gameplay": "遊玩",
-    "youtube_gameplay": "Youtube 遊玩影片",
+    "youtube_gameplay": "YouTube 遊玩影片",
     "size": "大小",
     "package_info": "套件資訊",
     "badge_completion_avg": "完成徽章平均需花費：__cost__",
@@ -164,8 +163,6 @@
     "gift_transactions": "禮物購買",
     "demos": "試玩版",
     "notinterested": "標記為不感興趣的項目",
-    "mixed_item": "褒貶不一的項目",
-    "negative_item": "負評的項目",
     "price_above": "價格高於下方數值的項目",
     "price_above_tooltip": "輸入 0 來顯示免費或未標價的項目；留白以停用此功能",
     "price_above_wrong_format": "格式錯誤，應輸入 __pattern__",
@@ -238,7 +235,7 @@
         "select": "選擇：",
         "leave": "離開",
         "selected": "已選擇 __n__ 個。",
-        "leave_admin_confirm": ""
+        "leave_admin_confirm": "你目前是 __name__ 的管理員。<br>你確定想要離開這個群組嗎？"
     },
     "export": {
         "wishlist": "匯出願望清單",
@@ -425,9 +422,8 @@
         "disablelinkfilter": "停用造訪外部網站時的確認訊息",
         "showallfriendsthatown": "顯示「所有擁有的好友」",
         "regional_price_on": "顯示區域價格比較",
-        "cart": "購物車中的項目",
         "friends_own": "好友擁有的項目",
-        "horizontalscrolling": "啟用滑鼠滾輪水平捲動",
+        "horizontalscrolling": "在應用程式頁面啟用滑鼠滾輪水平捲動",
         "supportinfo": "在商店頁面中顯示客服資訊",
         "drm": "顯示第三方 DRM 警告",
         "show_regionwarning": "跨區瀏覽時顯示警告",
@@ -461,8 +457,8 @@
         "inventory_market_text": "在物品庫頁面中顯示市集價格",
         "send_age_info": "自動送出年齡認證",
         "mp4video": "強制以 MP4 格式播放應用程式頁面中的影片",
-        "youtube": "",
-        "twitch": "",
+        "youtube": "顯示 YouTube 連結",
+        "twitch": "顯示 Twitch 連結",
         "pcgw": "顯示 PCGamingWiki 連結",
         "completionistme": "顯示 Completionist.me 連結",
         "protondb": "顯示 ProtonDB 連結",
@@ -568,7 +564,15 @@
         },
         "add_custom_link": "新增自訂連結",
         "auto_detect": "自動偵測",
-        "add_to_waitlist": "在應用程式頁面中顯示「新增至 Waitlist」選單"
+        "add_to_waitlist": "在應用程式頁面中顯示「新增至 Waitlist」選單",
+        "profile_steamid": "在個人檔案上顯示 SteamID",
+        "settings_mngmt": {
+            "import": "",
+            "import_success": "",
+            "import_fail": "",
+            "export": "",
+            "reset": ""
+        }
     },
     "ready": {
         "errormsg": "Augmented Steam 資料載入錯誤",
@@ -617,12 +621,14 @@
         "inv_guestpass": "招待券",
         "owned": "已擁有",
         "notinterested": "不感興趣",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 位想要</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 位想要</a>",
+        "collection": "",
+        "waitlist": ""
     },
     "wallet": {
         "custom_amount": "新增自訂金額",
         "custom_amount_text": "新增大於 __minamount__ 的任意金額",
-        "custom_giftcard_amount": "選擇 __input__ 自訂禮物卡（大於 __minamount__ 的任意金額）"
+        "custom_giftcard": ""
     },
     "wsgf": {
         "incomplete": "不完全",
@@ -667,7 +673,6 @@
         "default": "發生意外錯誤。你的產品序號尚未兌換。請等待 30 分鐘再試一次。"
     },
     "wl": {
-        "compute": "按此計算統計資料",
         "total_price": "目前總價值",
         "in_wishlist": "在願望清單中",
         "on_sale": "特價中",
@@ -707,5 +712,41 @@
     "acknowledgements": "致謝",
     "other": "其他",
     "images": "影像",
-    "powered_by": "由 __link__ 提供"
+    "powered_by": "由 __link__ 提供",
+    "help_translate": "",
+    "filters": "",
+    "search_filters": {
+        "reviews_score": {
+            "between": "",
+            "any": "",
+            "up_to": "",
+            "from": ""
+        },
+        "reviews_count": {
+            "count": "",
+            "min_count": "",
+            "max_count": ""
+        },
+        "hide_ea": "",
+        "hide_cart": "",
+        "hide_mixed": "",
+        "hide_negative": ""
+    },
+    "calc_workshop_size": {
+        "file_size": "",
+        "finished": "",
+        "calculating": "",
+        "calc_size": "",
+        "total_size": ""
+    },
+    "date": "",
+    "rating": "",
+    "helpful": "",
+    "funny": "",
+    "length": "",
+    "visibility": "",
+    "processing": "",
+    "wait": "",
+    "login_warning": "",
+    "youtube_reviews": ""
 }

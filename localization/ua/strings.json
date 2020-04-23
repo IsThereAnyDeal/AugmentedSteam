@@ -1,13 +1,12 @@
 {
     "steamid_of_user": "SteamID __user__",
-    "click_to_copy": "Натисніть щоб скопійувати",
+    "click_to_copy": "Натисніть щоб скопіювати",
     "copied": "Скопійовано до буферу обміну",
-    "profile_steamid": "Відображати SteamID у профілях",
-    "view_steamid": "Переглянути SteamID",
+    "view_steamid": "SteamID",
     "more_on_steampeek": "Переглянути більше на SteamPeek",
     "invite_friends": "Запросити друзів",
     "invite_to_group": "Запросити до групи",
-    "inverse": "Інвертувати",
+    "inverse": "Навпаки",
     "transactionStatus": "__failed__ запит(и) завершено з помилками. Отримано __size__ з __total__ обмінів.",
     "custom_tags": "Теги користувача",
     "add_tag": "Додати тег",
@@ -132,7 +131,7 @@
     "read_reviews": "Переглянути рецензії",
     "read_more_reviews": "Переглянути більше рецензій",
     "gameplay": "Ґеймплей",
-    "youtube_gameplay": "Ґеймплей з Youtube",
+    "youtube_gameplay": "Ґеймплей з YouTube",
     "size": "Розмір",
     "package_info": "Інформація набору",
     "badge_completion_avg": "Середня ціна завершення: __cost__",
@@ -163,9 +162,7 @@
     "game_name": "Назва гри",
     "gift_transactions": "Операції з подарунками",
     "demos": "Демо-версії",
-    "notinterested": "продукти відмічені, як не цікавлячі",
-    "mixed_item": "Змішані оцінки",
-    "negative_item": "Негативні оцінки",
+    "notinterested": "продукти, відмічені, як не цікаві",
     "price_above": "Продукти із вартістю понад",
     "price_above_tooltip": "Уведіть нуль для безкоштовних продуктів або продуктів без вказаної ціни; залиште це поле порожнім, щоби вимкнути цю функцію",
     "price_above_wrong_format": "Помилка формату, очікуються дані у формі __pattern__",
@@ -181,14 +178,14 @@
     "most_drops": "більшість випадінь",
     "badge_foil_progress": "Переглянути прогрес металевого значка",
     "net_gain": "чистий доход:",
-    "apppage_recentupdates": "",
-    "apppage_eaheader": "",
-    "apppage_eabanner": "",
-    "apppage_workshop": "",
-    "apppage_greenlight": "",
+    "apppage_recentupdates": "Нещодавні події та оголошення",
+    "apppage_eaheader": "Інформація про дочасний доступ",
+    "apppage_eabanner": "Банер обговорень дочасного доступу",
+    "apppage_workshop": "Банер Майстерні Steam",
+    "apppage_greenlight": "Банер Steam Greenlight",
     "apppage_legal": "Правова інформація",
-    "apppage_franchise": "",
-    "apppage_morefromfranchise": "",
+    "apppage_franchise": "Франшиза",
+    "apppage_morefromfranchise": "Більше від франшизи",
     "bug_feature": "Провідомити про помилку / Запропонувати функцію",
     "always": "Завжди",
     "compare": "Порівняти",
@@ -238,7 +235,7 @@
         "select": "Обрати:",
         "leave": "Залишити",
         "selected": "__n__ обрано.",
-        "leave_admin_confirm": ""
+        "leave_admin_confirm": "Ви наразі є адміном __name__.<br>Ви певні, що бажаєте покинути цю групу?"
     },
     "export": {
         "wishlist": "Експортувати список бажаного",
@@ -248,7 +245,7 @@
         "download": "Скачати",
         "copy_clipboard": "Скопіювати до буферу обміну"
     },
-    "none": "",
+    "none": "Жодної",
     "separator": "Роздільник",
     "empty_wishlist": {
         "title": "Очистити список бажаного",
@@ -265,7 +262,7 @@
     "show_all_steam_releases": "Показати всі релізи Steam",
     "wishlist": "Список бажаного",
     "on_wishlist": "У списку Бажаного",
-    "ignored": "",
+    "ignored": "Не зацікавлений",
     "on_waitlist": "У Waitlist",
     "notdiscounted": "Продукт без знижки",
     "cancel": "Вихід",
@@ -303,9 +300,9 @@
         "with_voucher": "З купоном __voucher__",
         "store": "у&nbsp;__store__",
         "bundle_count": "__count__ разів",
-        "info": "",
-        "more": "",
-        "history": ""
+        "info": "інформація",
+        "more": "більше",
+        "history": "історія"
     },
     "favorited": "Favorited",
     "followed": "Підписаний",
@@ -410,7 +407,7 @@
         "icon": "Значок",
         "name": "Назва",
         "show_alternative_linux_icon": "Показати альтернативні iконки Linux",
-        "showcomparelinks": "Показати \"Порівняти\" посилання для досягнення одного інформаційного каналу активності",
+        "showcomparelinks": "Показати посилання \"Порівняти\" для досягненнь у стрічці діяльності друзів",
         "hidetmsymbols": "Символи торгової марки та авторського права у заголовках ігор",
         "metacritic": "Відображувати користувацький рейтинг з Metacritic",
         "opencritic": "Показувати інформацію з Opencritic.com",
@@ -425,7 +422,6 @@
         "disablelinkfilter": "Вимкнути підтвердження при зверненні до зовнішніх сайтів",
         "showallfriendsthatown": "Показувати \"Всі друзі-власники\"",
         "regional_price_on": "Відображати порівняння цін",
-        "cart": "Продукти у вашому кошику",
         "friends_own": "Предмети, які є у ваших друзів",
         "horizontalscrolling": "Включити горизонтальне прокручування коліщатком миші на сторінках продуктів",
         "supportinfo": "Показувати інформацію про підтримку на сторінках крамниці",
@@ -434,7 +430,7 @@
         "foot_link": "Додаток Augmented Steam",
         "profile_link_images": "Іконки в профілі",
         "library": "Відображати кнопку «Бібліотека» в шапці",
-        "show1clickgoo": "Показати «1-Click перетворитися дорогоцінні камені...» кнопки застосовних товарно-матеріальних",
+        "show1clickgoo": "Показати кнопку «Перетворити у самоцвіти в 1 клік...» для відповідних предметів інвентарю",
         "hidedlcunownedgames": "Доповнення для ігор, яких у вас немає",
         "hltb": "Відображати інформацію HowLongToBeat.com",
         "hidespamcomments": "Заховати коментарі в Майстерні і профілях, помічені як спам",
@@ -498,7 +494,7 @@
         "friends_wishlist": "Ігри у списку бажаного ваших друзів",
         "showspeechsearch": "Додати значок голосового пошуку в поле пошуку",
         "profile_link_images_color": "кольорові",
-        "hide_about_links": "",
+        "hide_about_links": "Приховати посилання \"ПРО STEAM\"",
         "show_view_in_library": "Показувати кнопку \"Переглянути у бібліотеці\" для ігор якими ви володієте",
         "install_steam_button": "Кнопка \"Інсталювати Steam\"",
         "replace_view_client": "Замінити на \"Переглянути в клієнті Steam\"",
@@ -568,7 +564,15 @@
         },
         "add_custom_link": "Додати довільне посилання",
         "auto_detect": "Авто-визначення",
-        "add_to_waitlist": "Відображати випадаюче меню  \"Додати у Waitlist\"  на сторінках товарів"
+        "add_to_waitlist": "Відображати випадаюче меню  \"Додати у Waitlist\"  на сторінках товарів",
+        "profile_steamid": "Відображати SteamID у профілях",
+        "settings_mngmt": {
+            "import": "Імпорт",
+            "import_success": "Налаштування успішно імпортовано",
+            "import_fail": "Помилка імортування налаштувань",
+            "export": "Eкспорт",
+            "reset": "Скинути"
+        }
     },
     "ready": {
         "errormsg": "Помилка завантаження даних Augmented Steam",
@@ -617,12 +621,14 @@
         "inv_guestpass": "Гостьова перепустка",
         "owned": "Придбано",
         "notinterested": "Не зацікавлений",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\"> Ваші друзі (__friendcount__) хочуть це </a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\"> Ваші друзі (__friendcount__) хочуть це </a>",
+        "collection": "Приховати товари у дочасному доступі",
+        "waitlist": "У Waitlist"
     },
     "wallet": {
-        "custom_amount": "Додати певну кількість",
-        "custom_amount_text": "Додати будь-яку суму більш __minamount__",
-        "custom_giftcard_amount": "Обрати __input__ довільну подарункову картку (будь-яка сума більш __minamount__)"
+        "custom_amount": "Додати",
+        "custom_amount_text": "Будь-яка сума більше ніж __minamount__",
+        "custom_giftcard": "Обрати подарункову картку  __input__"
     },
     "wsgf": {
         "incomplete": "Неповний",
@@ -648,7 +654,7 @@
     },
     "tradeoffer": {
         "num_item": "__num__ річ",
-        "num_items": "__num_речей"
+        "num_items": "__num__ речей"
     },
     "update": {
         "dont_show": "Більше не показувати",
@@ -667,17 +673,16 @@
         "default": "Сталася неочікувана помилка. Ваш код гаманця Steam не може бути активований. Будь ласка, зачекайте 30 хвилин, а потім спробуйте активувати код знову."
     },
     "wl": {
-        "compute": "Натисніть для розрахунку статистики",
-        "total_price": "",
-        "in_wishlist": "",
-        "on_sale": "",
-        "no_price": ""
+        "total_price": "поточна ціна",
+        "in_wishlist": "у бажаному",
+        "on_sale": "зі знижками",
+        "no_price": "без ціни"
     },
     "coll": {
-        "total_time": "",
-        "in_collection": "",
-        "played": "",
-        "never_played": ""
+        "total_time": "часу в іграх",
+        "in_collection": "в колекції",
+        "played": "запускалися",
+        "never_played": "не запускалися"
     },
     "user_note": {
         "add": "Додати нотатку",
@@ -707,5 +712,41 @@
     "acknowledgements": "Подяки",
     "other": "Інше",
     "images": "Зображення",
-    "powered_by": "Powered by __link__"
+    "powered_by": "Powered by __link__",
+    "help_translate": "Допоможіть нам перекладати Augmented Steam у POEditor",
+    "filters": "Фільтри Augmented Steam",
+    "search_filters": {
+        "reviews_score": {
+            "between": "Від __lower__% до __upper__% рецензій схвальні",
+            "any": "Будь-яка оцінка",
+            "up_to": "До __score__% рецензій схвальні",
+            "from": "Від __score__% рецензій схвальні"
+        },
+        "reviews_count": {
+            "count": "Кількість рецензій",
+            "min_count": "Мінімум",
+            "max_count": "Максимум"
+        },
+        "hide_ea": "Приховати товари у дочасному доступі",
+        "hide_cart": "Приховати товари у вашому кошику",
+        "hide_mixed": "Приховати товари зі змішаними рецензіями",
+        "hide_negative": "Приховати товари з негативними рецензіями"
+    },
+    "calc_workshop_size": {
+        "file_size": "Розмір файла __size__",
+        "finished": "Закінчено",
+        "calculating": "Розрахунок...",
+        "calc_size": "Розрахувати загальний розмір",
+        "total_size": "Загальний розмір: __size__"
+    },
+    "date": "Дата",
+    "rating": "Оцінка",
+    "helpful": "Корисні",
+    "funny": "Смішні",
+    "length": "Довжина",
+    "visibility": "Видимість",
+    "processing": "Опрацювання...",
+    "wait": "Будь ласка зачекайте",
+    "login_warning": "Переконайтеся, що ви увійшли до __link__, щоб мати можливість скористатися усіма можливостями Augmented Steam.",
+    "youtube_reviews": "Огляди з YouTube"
 }

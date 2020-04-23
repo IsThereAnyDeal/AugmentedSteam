@@ -2,7 +2,6 @@
     "steamid_of_user": "",
     "click_to_copy": "",
     "copied": "",
-    "profile_steamid": "",
     "view_steamid": "",
     "more_on_steampeek": "",
     "invite_friends": "",
@@ -164,8 +163,6 @@
     "gift_transactions": "Dárkové transakce",
     "demos": "Dema",
     "notinterested": "Položky označené jako nezajímavé",
-    "mixed_item": "Smíšeně hodnocené položky",
-    "negative_item": "Negativně hodnocené položky",
     "price_above": "Položky, které stojí více než",
     "price_above_tooltip": "Zadejte nulu pro položky zdarma nebo položky bez ceny; zanechte prázdné, pokud tuto funkci nechcete použít",
     "price_above_wrong_format": "",
@@ -425,7 +422,6 @@
         "disablelinkfilter": "Zakázat potvrzení, když přecházím na jiné stránky",
         "showallfriendsthatown": "",
         "regional_price_on": "Ukázat srovnání cen v regionech",
-        "cart": "Položky ve vašem košíku",
         "friends_own": "Položky, které vlastní vaši přátelé",
         "horizontalscrolling": "",
         "supportinfo": "",
@@ -568,7 +564,15 @@
         },
         "add_custom_link": "",
         "auto_detect": "",
-        "add_to_waitlist": ""
+        "add_to_waitlist": "",
+        "profile_steamid": "",
+        "settings_mngmt": {
+            "import": "",
+            "import_success": "",
+            "import_fail": "",
+            "export": "",
+            "reset": ""
+        }
     },
     "ready": {
         "errormsg": "Chyba při načítání Augmented Steam dat",
@@ -617,12 +621,14 @@
         "inv_guestpass": "Vlastněný Guest Pass",
         "owned": "Vlastněné",
         "notinterested": "Nezajímá mě",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ si přeje</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ si přeje</a>",
+        "collection": "",
+        "waitlist": ""
     },
     "wallet": {
         "custom_amount": "Přidat vlastní částku",
         "custom_amount_text": "Přidat jakoukoli částku nad __minamount__",
-        "custom_giftcard_amount": ""
+        "custom_giftcard": ""
     },
     "wsgf": {
         "incomplete": "Nekompletní",
@@ -667,7 +673,6 @@
         "default": "Došlo k neočekávané chybě. Váš klíč nebyl použit. Počkejte prosím 30 minut a zkuste jej aktivovat znovu."
     },
     "wl": {
-        "compute": "",
         "total_price": "",
         "in_wishlist": "",
         "on_sale": "",
@@ -707,5 +712,41 @@
     "acknowledgements": "",
     "other": "",
     "images": "",
-    "powered_by": ""
+    "powered_by": "",
+    "help_translate": "",
+    "filters": "",
+    "search_filters": {
+        "reviews_score": {
+            "between": "",
+            "any": "",
+            "up_to": "",
+            "from": ""
+        },
+        "reviews_count": {
+            "count": "",
+            "min_count": "",
+            "max_count": ""
+        },
+        "hide_ea": "",
+        "hide_cart": "",
+        "hide_mixed": "",
+        "hide_negative": ""
+    },
+    "calc_workshop_size": {
+        "file_size": "",
+        "finished": "",
+        "calculating": "",
+        "calc_size": "",
+        "total_size": ""
+    },
+    "date": "",
+    "rating": "",
+    "helpful": "",
+    "funny": "",
+    "length": "",
+    "visibility": "",
+    "processing": "",
+    "wait": "",
+    "login_warning": "",
+    "youtube_reviews": ""
 }

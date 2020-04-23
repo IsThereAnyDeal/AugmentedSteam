@@ -2,7 +2,6 @@
     "steamid_of_user": "",
     "click_to_copy": "",
     "copied": "",
-    "profile_steamid": "",
     "view_steamid": "",
     "more_on_steampeek": "",
     "invite_friends": "",
@@ -164,8 +163,6 @@
     "gift_transactions": "Transacciones de regalos",
     "demos": "Demos",
     "notinterested": "Artículos marcados no interesantes",
-    "mixed_item": "Artículos con recepción mixta",
-    "negative_item": "Artículos con recepción negativa",
     "price_above": "Artículos que cuestan mas de",
     "price_above_tooltip": "Introduce un cero para buscar artículos gratuitos o sin precio; deja este campo vacío para desactivar esta función",
     "price_above_wrong_format": "",
@@ -425,7 +422,6 @@
         "disablelinkfilter": "Desactivar confirmación al acceder a sitios externos",
         "showallfriendsthatown": "",
         "regional_price_on": "Mostrar comparación de precios regionales",
-        "cart": "Artículos en su carro",
         "friends_own": "Artículos que tienen tus amigos",
         "horizontalscrolling": "",
         "supportinfo": "",
@@ -568,7 +564,15 @@
         },
         "add_custom_link": "",
         "auto_detect": "",
-        "add_to_waitlist": ""
+        "add_to_waitlist": "",
+        "profile_steamid": "",
+        "settings_mngmt": {
+            "import": "",
+            "import_success": "",
+            "import_fail": "",
+            "export": "",
+            "reset": ""
+        }
     },
     "ready": {
         "errormsg": "Error al cargar los datos de Augmented Steam",
@@ -617,12 +621,14 @@
         "inv_guestpass": "Pase de invitado",
         "owned": "Comprado",
         "notinterested": "No me interesa",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ amigos lo desean</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ amigos lo desean</a>",
+        "collection": "",
+        "waitlist": ""
     },
     "wallet": {
         "custom_amount": "Añadir valor personal",
         "custom_amount_text": "Añadir cualquier valor sobre __minamount__",
-        "custom_giftcard_amount": ""
+        "custom_giftcard": ""
     },
     "wsgf": {
         "incomplete": "Incompleto",
@@ -667,7 +673,6 @@
         "default": "Se ha producido un error inesperado. Tu clave de producto no se ha canjeado. Por favor, espera 30 minutos y vuelve a intentarlo."
     },
     "wl": {
-        "compute": "",
         "total_price": "",
         "in_wishlist": "",
         "on_sale": "",
@@ -707,5 +712,41 @@
     "acknowledgements": "",
     "other": "",
     "images": "",
-    "powered_by": ""
+    "powered_by": "",
+    "help_translate": "",
+    "filters": "",
+    "search_filters": {
+        "reviews_score": {
+            "between": "",
+            "any": "",
+            "up_to": "",
+            "from": ""
+        },
+        "reviews_count": {
+            "count": "",
+            "min_count": "",
+            "max_count": ""
+        },
+        "hide_ea": "",
+        "hide_cart": "",
+        "hide_mixed": "",
+        "hide_negative": ""
+    },
+    "calc_workshop_size": {
+        "file_size": "",
+        "finished": "",
+        "calculating": "",
+        "calc_size": "",
+        "total_size": ""
+    },
+    "date": "",
+    "rating": "",
+    "helpful": "",
+    "funny": "",
+    "length": "",
+    "visibility": "",
+    "processing": "",
+    "wait": "",
+    "login_warning": "",
+    "youtube_reviews": ""
 }

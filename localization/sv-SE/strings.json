@@ -2,7 +2,6 @@
     "steamid_of_user": "",
     "click_to_copy": "",
     "copied": "",
-    "profile_steamid": "",
     "view_steamid": "",
     "more_on_steampeek": "",
     "invite_friends": "",
@@ -164,8 +163,6 @@
     "gift_transactions": "Gåvotransaktioner",
     "demos": "Demos",
     "notinterested": "Objekt som markeras inte intresserad",
-    "mixed_item": "Produkter med blandade betyg",
-    "negative_item": "Produkter med negativt betyg",
     "price_above": "Föremål som kostar mer än",
     "price_above_tooltip": "Ange noll för gratis artiklar eller artiklar utan prislappar; lämna fältet tomt om du vill inaktivera den här funktionen",
     "price_above_wrong_format": "",
@@ -425,7 +422,6 @@
         "disablelinkfilter": "Inaktivera bekräftelse när du besöker externa webbplatser",
         "showallfriendsthatown": "",
         "regional_price_on": "Visa regional pris jämförelse",
-        "cart": "Föremål i kundvagnen",
         "friends_own": "Föremål som dina vänner äger",
         "horizontalscrolling": "",
         "supportinfo": "",
@@ -568,7 +564,15 @@
         },
         "add_custom_link": "",
         "auto_detect": "",
-        "add_to_waitlist": ""
+        "add_to_waitlist": "",
+        "profile_steamid": "",
+        "settings_mngmt": {
+            "import": "",
+            "import_success": "",
+            "import_fail": "",
+            "export": "",
+            "reset": ""
+        }
     },
     "ready": {
         "errormsg": "Fel vid inläsning av Augmented Steams data",
@@ -617,12 +621,14 @@
         "inv_guestpass": "Gästpass",
         "owned": "Ägda",
         "notinterested": "Inte Intresserad",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ önskar</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ önskar</a>",
+        "collection": "",
+        "waitlist": ""
     },
     "wallet": {
         "custom_amount": "Lägg till anpassat belopp",
         "custom_amount_text": "Lägg till vilket belopp som helst högre än __minamount__",
-        "custom_giftcard_amount": ""
+        "custom_giftcard": ""
     },
     "wsgf": {
         "incomplete": "Ej komplett",
@@ -667,7 +673,6 @@
         "default": "Ett oväntat fel uppstod. Din produktkod har inte aktiverats. Vänligen vänta 30 minuter och försök igen."
     },
     "wl": {
-        "compute": "",
         "total_price": "",
         "in_wishlist": "",
         "on_sale": "",
@@ -707,5 +712,41 @@
     "acknowledgements": "",
     "other": "",
     "images": "",
-    "powered_by": ""
+    "powered_by": "",
+    "help_translate": "",
+    "filters": "",
+    "search_filters": {
+        "reviews_score": {
+            "between": "",
+            "any": "",
+            "up_to": "",
+            "from": ""
+        },
+        "reviews_count": {
+            "count": "",
+            "min_count": "",
+            "max_count": ""
+        },
+        "hide_ea": "",
+        "hide_cart": "",
+        "hide_mixed": "",
+        "hide_negative": ""
+    },
+    "calc_workshop_size": {
+        "file_size": "",
+        "finished": "",
+        "calculating": "",
+        "calc_size": "",
+        "total_size": ""
+    },
+    "date": "",
+    "rating": "",
+    "helpful": "",
+    "funny": "",
+    "length": "",
+    "visibility": "",
+    "processing": "",
+    "wait": "",
+    "login_warning": "",
+    "youtube_reviews": ""
 }

@@ -2,7 +2,6 @@
     "steamid_of_user": "__user__ 的 SteamID",
     "click_to_copy": "点击复制",
     "copied": "已复制到剪贴板！",
-    "profile_steamid": "在个人资料页面显示 SteamID",
     "view_steamid": "查看 SteamID",
     "more_on_steampeek": "在 SteamPeek 查看详情",
     "invite_friends": "邀请好友",
@@ -103,7 +102,7 @@
     "add_to_wishlist": "添加至您的愿望单",
     "add_to_wishlist_tooltip": "在您愿望单中的物品正式发布或特价销售时获取邮件通知",
     "remove_from_wishlist_tooltip": "此产品已经在您的愿望单中。点击从愿望单中移除。",
-    "add_to_waitlist": "添加至关注列表（Waitlist）",
+    "add_to_waitlist": "添加至观察列表（Waitlist）",
     "language": "语言",
     "theworddefault": "默认",
     "thewordclear": "清除",
@@ -132,7 +131,7 @@
     "read_reviews": "阅读评测",
     "read_more_reviews": "阅读更多评测于",
     "gameplay": "实况",
-    "youtube_gameplay": "Youtube 实况",
+    "youtube_gameplay": "YouTube 实况",
     "size": "大小",
     "package_info": "游戏包信息",
     "badge_completion_avg": "完成徽章的平均花费：__cost__",
@@ -164,8 +163,6 @@
     "gift_transactions": "礼物消费",
     "demos": "试玩版",
     "notinterested": "标记为不感兴趣的物品",
-    "mixed_item": "褒贬不一的物品",
-    "negative_item": "差评物品",
     "price_above": "价格高于",
     "price_above_tooltip": "输入 0 显示免费或是未定价的物品，留空禁用此条件",
     "price_above_wrong_format": "格式错误，应以 __pattern__ 形式输入",
@@ -425,14 +422,13 @@
         "disablelinkfilter": "禁用访问外部网站的确认警告",
         "showallfriendsthatown": "显示“所有拥有的好友”",
         "regional_price_on": "显示区域价格比较",
-        "cart": "购物车中的物品",
         "friends_own": "好友拥有的物品",
-        "horizontalscrolling": "为商店页面媒体启用鼠标滚轮水平滚动",
+        "horizontalscrolling": "启用鼠标滚轮水平滚动",
         "supportinfo": "在商店页面显示支持信息",
         "drm": "显示第三方 DRM 警告",
         "show_regionwarning": "跨区浏览时显示警告",
         "foot_link": "Augmented Steam 扩展程序",
-        "profile_link_images": "个人资料链接图片",
+        "profile_link_images": "个人资料与群组页面链接图标样式",
         "library": "在顶部显示库按钮",
         "show1clickgoo": "在适用的库存物品上显示“一键转换成宝石”按钮",
         "hidedlcunownedgames": "您尚未拥有的游戏的 DLC",
@@ -568,7 +564,15 @@
         },
         "add_custom_link": "添加自定义链接",
         "auto_detect": "自动检测",
-        "add_to_waitlist": "在商店页面显示“添加到观察列表（Waitlist）”下拉菜单"
+        "add_to_waitlist": "在商店页面显示“添加到观察列表（Waitlist）”下拉菜单",
+        "profile_steamid": "在个人资料页面显示 SteamID",
+        "settings_mngmt": {
+            "import": "",
+            "import_success": "",
+            "import_fail": "",
+            "export": "",
+            "reset": ""
+        }
     },
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",
@@ -617,12 +621,14 @@
         "inv_guestpass": "玩家通行证",
         "owned": "已拥有",
         "notinterested": "不感兴趣",
-        "friends_want": "<a href=\"https://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 人想要</a>"
+        "friends_want": "<a href=\"https://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 人想要</a>",
+        "collection": "在收藏库中",
+        "waitlist": "在观察列表中"
     },
     "wallet": {
         "custom_amount": "充值自定义金额",
         "custom_amount_text": "充值任意大于 __minamount__ 的金额",
-        "custom_giftcard_amount": "选择 __input__ 自定义礼物卡（任意多于 __minamount__ 的金额）"
+        "custom_giftcard": "选择 __input__ 自定义礼物卡"
     },
     "wsgf": {
         "incomplete": "未完成",
@@ -667,7 +673,6 @@
         "default": "发生了一个意外错误。您的产品代码尚未被兑换。请在 30 分钟后重新尝试兑换该代码。"
     },
     "wl": {
-        "compute": "点击计算统计资料",
         "total_price": "当前价值",
         "in_wishlist": "在愿望单中",
         "on_sale": "特价中",
@@ -707,5 +712,41 @@
     "acknowledgements": "致谢",
     "other": "其他",
     "images": "图像",
-    "powered_by": "数据来自 __link__"
+    "powered_by": "数据来自 __link__",
+    "help_translate": "在 POEditor 帮助我们翻译 Augmented Steam",
+    "filters": "Augmented Steam 筛选",
+    "search_filters": {
+        "reviews_score": {
+            "between": "评测分数介于 __lower__% 与 __upper__%",
+            "any": "任意评测分数",
+            "up_to": "评测分数低于 __score__%",
+            "from": "评测分数高于 __score__%"
+        },
+        "reviews_count": {
+            "count": "评测数：",
+            "min_count": "最少",
+            "max_count": "最多"
+        },
+        "hide_ea": "隐藏抢先体验物品",
+        "hide_cart": "隐藏购物车中的物品",
+        "hide_mixed": "",
+        "hide_negative": ""
+    },
+    "calc_workshop_size": {
+        "file_size": "文件大小 __size__",
+        "finished": "已完成",
+        "calculating": "正在计算...",
+        "calc_size": "计算总大小",
+        "total_size": "总大小：__size__"
+    },
+    "date": "日期",
+    "rating": "评价",
+    "helpful": "有价值",
+    "funny": "欢乐",
+    "length": "长度",
+    "visibility": "可见性",
+    "processing": "处理中...",
+    "wait": "请稍候",
+    "login_warning": "",
+    "youtube_reviews": ""
 }

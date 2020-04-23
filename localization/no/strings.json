@@ -2,7 +2,6 @@
     "steamid_of_user": "",
     "click_to_copy": "",
     "copied": "",
-    "profile_steamid": "",
     "view_steamid": "",
     "more_on_steampeek": "",
     "invite_friends": "",
@@ -164,8 +163,6 @@
     "gift_transactions": "Gavetransaksjoner",
     "demos": "Demoer",
     "notinterested": "Gjenstander markert ikke interessert",
-    "mixed_item": "Blandet vurdering elementer",
-    "negative_item": "Negativt vurderte elementer",
     "price_above": "Elementer som koster mer enn",
     "price_above_tooltip": "Angi null for gratis varer eller varer uten prislapper; La feltet stå tomt for å deaktivere denne funksjonen",
     "price_above_wrong_format": "",
@@ -425,7 +422,6 @@
         "disablelinkfilter": "Deaktivere bekreftelse ved tilgang til eksterne nettsted",
         "showallfriendsthatown": "",
         "regional_price_on": "Vis sammenligning av regionale priser",
-        "cart": "Gjenstander i handlevognen din",
         "friends_own": "Gjenstander dine venner eier",
         "horizontalscrolling": "",
         "supportinfo": "",
@@ -568,7 +564,15 @@
         },
         "add_custom_link": "",
         "auto_detect": "",
-        "add_to_waitlist": ""
+        "add_to_waitlist": "",
+        "profile_steamid": "",
+        "settings_mngmt": {
+            "import": "",
+            "import_success": "",
+            "import_fail": "",
+            "export": "",
+            "reset": ""
+        }
     },
     "ready": {
         "errormsg": "Feil under lasting av Augmented Steam-data",
@@ -617,12 +621,14 @@
         "inv_guestpass": "Gjestepass",
         "owned": "Eid",
         "notinterested": "Ikke Interessert",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ ønsker seg</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ ønsker seg</a>",
+        "collection": "",
+        "waitlist": ""
     },
     "wallet": {
         "custom_amount": "Legg til egendefinert antall",
         "custom_amount_text": "Legg til hvilket som helst beløp over __minamount__",
-        "custom_giftcard_amount": ""
+        "custom_giftcard": ""
     },
     "wsgf": {
         "incomplete": "Uferdig",
@@ -667,7 +673,6 @@
         "default": "Det oppstod en uventet feil. Din produktkode er ikke innløst. Vennligst vent 30 minutter og prøv å innløse koden igjen."
     },
     "wl": {
-        "compute": "",
         "total_price": "",
         "in_wishlist": "",
         "on_sale": "",
@@ -707,5 +712,41 @@
     "acknowledgements": "",
     "other": "",
     "images": "",
-    "powered_by": ""
+    "powered_by": "",
+    "help_translate": "",
+    "filters": "",
+    "search_filters": {
+        "reviews_score": {
+            "between": "",
+            "any": "",
+            "up_to": "",
+            "from": ""
+        },
+        "reviews_count": {
+            "count": "",
+            "min_count": "",
+            "max_count": ""
+        },
+        "hide_ea": "",
+        "hide_cart": "",
+        "hide_mixed": "",
+        "hide_negative": ""
+    },
+    "calc_workshop_size": {
+        "file_size": "",
+        "finished": "",
+        "calculating": "",
+        "calc_size": "",
+        "total_size": ""
+    },
+    "date": "",
+    "rating": "",
+    "helpful": "",
+    "funny": "",
+    "length": "",
+    "visibility": "",
+    "processing": "",
+    "wait": "",
+    "login_warning": "",
+    "youtube_reviews": ""
 }

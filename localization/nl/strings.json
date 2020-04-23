@@ -1,8 +1,4 @@
 {
-    "file_size": "Bestandsgrootte van __size__",
-    "finished": "Klaar",
-    "calculating": "Berekenen...",
-    "calc_size": "Bereken Totale Grootte",
     "steamid_of_user": "__user__'s SteamID",
     "click_to_copy": "Klik om te kopiëren",
     "copied": "Gekopieerd naar uw klembord!",
@@ -135,7 +131,7 @@
     "read_reviews": "Lees de recensies",
     "read_more_reviews": "Lees meer recensies op",
     "gameplay": "Gameplay",
-    "youtube_gameplay": "Youtube Gameplay",
+    "youtube_gameplay": "YouTube Gameplay",
     "size": "Grote",
     "package_info": "Pakket informatie",
     "badge_completion_avg": "Gemiddelde kosten voor completen: __cost__",
@@ -167,8 +163,6 @@
     "gift_transactions": "Geschenktransacties",
     "demos": "Demo's",
     "notinterested": "Voorwerpen gemarkeerd als niet interessant",
-    "mixed_item": "Verdeeld beoordeelde voorwerpen",
-    "negative_item": "Negatief beoordelde voorwerpen",
     "price_above": "Voorwerpen die meer kosten dan",
     "price_above_tooltip": "Voer een nul in voor kosteloze voorwerpen of voorwerpen zonder prijsaanduiding; laat dit veld leeg om dit onderdeel uit te schakelen",
     "price_above_wrong_format": "Verkeerd formaat, verwachte invoer in formaat: __pattern__",
@@ -235,7 +229,7 @@
     "avg_price_3cards": "Gemiddelde prijs van drie ruilkaarten: __price__",
     "mods": "Modificaties. ",
     "groups": {
-        "leave_groups_confirm": "",
+        "leave_groups_confirm": "U bent momenteel admin van __name__.<br>Weet u zeker dat u deze groep wilt verlaten?",
         "manage_groups": "Groepen beheren",
         "action_groups": "Selecteer hieronder de groepen waar je actie op wilt ondernemen. ",
         "select": "Selecteer:",
@@ -428,7 +422,6 @@
         "disablelinkfilter": "Bevestiging uitschakelen bij het benaderen van externe sites",
         "showallfriendsthatown": "Toon \"Alle vrienden die dat in hun bibliotheek hebben\"",
         "regional_price_on": "Toon regionale prijs vergelijking",
-        "cart": "Artikelen in je winkelwagen",
         "friends_own": "Items die je vrienden hebben",
         "horizontalscrolling": "Schakel horizontaal scrollen in op app pagina's met de middelmuisknop",
         "supportinfo": "Toon support info op winkelpagina's",
@@ -488,7 +481,6 @@
         "showallstats": "Toon speeltijdstatistieken op \"Alle spellen\" pagina",
         "lowestprice_onwishlist": "Toon op verlanglijst",
         "steamrepapi": "Toon SteamRep status op profiel pagina's",
-        "profile_steamid": "Toon SteamID op profiel pagina's",
         "header": "Koptekst",
         "lowestprice": "Toon",
         "group_events": "Toon evenementen bij groep overzicht",
@@ -572,7 +564,15 @@
         },
         "add_custom_link": "Voeg aangepaste link toe",
         "auto_detect": "Automatisch detecteren",
-        "add_to_waitlist": "Toon \"Add to Wachtlijst\" menu op app pagina's"
+        "add_to_waitlist": "Toon \"Add to Wachtlijst\" menu op app pagina's",
+        "profile_steamid": "Laat SteamID op profielen zien",
+        "settings_mngmt": {
+            "import": "",
+            "import_success": "",
+            "import_fail": "",
+            "export": "",
+            "reset": ""
+        }
     },
     "ready": {
         "errormsg": "Fout tijdens het laden van Augmented Steam gegevens",
@@ -621,12 +621,14 @@
         "inv_guestpass": "Gastenpas",
         "owned": "In je bezit",
         "notinterested": "Niet geïnteresseerd",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ willen dit</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ willen dit</a>",
+        "collection": "",
+        "waitlist": ""
     },
     "wallet": {
         "custom_amount": "Voeg custom getal toe",
         "custom_amount_text": "Voeg elke hoeveelheid toe over __minamount__",
-        "custom_giftcard_amount": "Selecteer __input__ Aangepaste Gift Card (elke hoeveelheid meer dan __minamount__)"
+        "custom_giftcard": ""
     },
     "wsgf": {
         "incomplete": "Onvolledig ",
@@ -671,7 +673,6 @@
         "default": "Er is een onverwachte fout opgetreden. De productcode is niet geactiveerd. Probeer het over 30 minuten opnieuw."
     },
     "wl": {
-        "compute": "Klik om statistieken te berekenen",
         "total_price": "huidige waarde",
         "in_wishlist": "in verlanglijst",
         "on_sale": "in de verkoop",
@@ -711,5 +712,41 @@
     "acknowledgements": "Erkenningen",
     "other": "Anders",
     "images": "Afbeeldingen",
-    "powered_by": "Mede mogelijk gemaakt door __link__"
+    "powered_by": "Mede mogelijk gemaakt door __link__",
+    "help_translate": "",
+    "filters": "",
+    "search_filters": {
+        "reviews_score": {
+            "between": "",
+            "any": "",
+            "up_to": "",
+            "from": ""
+        },
+        "reviews_count": {
+            "count": "",
+            "min_count": "",
+            "max_count": ""
+        },
+        "hide_ea": "",
+        "hide_cart": "",
+        "hide_mixed": "",
+        "hide_negative": ""
+    },
+    "calc_workshop_size": {
+        "file_size": "",
+        "finished": "",
+        "calculating": "",
+        "calc_size": "",
+        "total_size": ""
+    },
+    "date": "",
+    "rating": "",
+    "helpful": "",
+    "funny": "",
+    "length": "",
+    "visibility": "",
+    "processing": "",
+    "wait": "",
+    "login_warning": "",
+    "youtube_reviews": ""
 }

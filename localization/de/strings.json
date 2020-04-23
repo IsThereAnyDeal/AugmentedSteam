@@ -2,7 +2,6 @@
     "steamid_of_user": "SteamID von __user__",
     "click_to_copy": "Klicke zum Kopieren",
     "copied": "In die Zwischenablage kopiert!",
-    "profile_steamid": "Zeige SteamID auf Profilen",
     "view_steamid": "Zeige SteamID",
     "more_on_steampeek": "Zeige mehr auf SteamPeek",
     "invite_friends": "Freunde einladen",
@@ -164,8 +163,6 @@
     "gift_transactions": "Geschenk-Käufe",
     "demos": "Demos",
     "notinterested": "Spiele, die mit \"Nicht interessiert\" markiert sind",
-    "mixed_item": "Artikel mit ausgeglichener Bewertung",
-    "negative_item": "Artikel mit negativer Bewertung",
     "price_above": "Artikel, die mehr kosten als",
     "price_above_tooltip": "Gib Null für kostenlose Items oder Items ohne Preis ein; Lass das Feld leer um dieses Feature zu deaktivieren",
     "price_above_wrong_format": "Falsches Format, erwarte Eingabe in der Form von __pattern__",
@@ -232,7 +229,7 @@
     "avg_price_3cards": "Durchschnittspreis von drei Sammelkarten: __price__",
     "mods": "Modifikationen",
     "groups": {
-        "leave_groups_confirm": "",
+        "leave_groups_confirm": "Bist du dir sicher, dass du die __n__ ausgewählten Gruppen verlassen möchtest?",
         "manage_groups": "Gruppen verwalten",
         "action_groups": "Wähle unten die Gruppen aus, auf denen du Aktionen ausführen willst.",
         "select": "Auswählen:",
@@ -425,9 +422,8 @@
         "disablelinkfilter": "Bestätigung bei Verweisen auf externe Seiten deaktivieren",
         "showallfriendsthatown": "Zeige \"Alle Freunde, die dies besitzen\"",
         "regional_price_on": "Regionalen Preisvergleich anzeigen",
-        "cart": "Spiele in deinem Warenkorb",
         "friends_own": "Titel, die deine Freunde besitzen",
-        "horizontalscrolling": "Aktiviere horizontales Scrollen auf Store-Seiten mithilfe des Mausrads",
+        "horizontalscrolling": "Aktiviere horizontales Scrollen mithilfe des Mausrads",
         "supportinfo": "Zeige Supportinfo auf Store-Seiten",
         "drm": "Warnung über DRMs von Dritten anzeigen",
         "show_regionwarning": "Warnung anzeigen, wenn ein regionaler Steam-Shop genutzt wird, der nicht dem Account entspricht",
@@ -568,7 +564,15 @@
         },
         "add_custom_link": "Füge benutzerdefinierten Link hinzu",
         "auto_detect": "Automatisch erkennen",
-        "add_to_waitlist": "Zeige \"Zur Waitlist hinzufügen\" Dropdown auf Produktseiten"
+        "add_to_waitlist": "Zeige \"Zur Waitlist hinzufügen\" Dropdown auf Produktseiten",
+        "profile_steamid": "Zeige SteamID auf Profilen",
+        "settings_mngmt": {
+            "import": "Importieren",
+            "import_success": "Einstellungen erfolgreich importiert",
+            "import_fail": "Importieren von Einstellungen fehlgeschlagen",
+            "export": "Exportieren",
+            "reset": "Zurücksetzen"
+        }
     },
     "ready": {
         "errormsg": "Fehler beim Laden von Augmented Steam-Daten",
@@ -617,12 +621,14 @@
         "inv_guestpass": "Besucherpass",
         "owned": "Im Besitz",
         "notinterested": "Nicht interessiert",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ mal gewünscht</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ mal gewünscht</a>",
+        "collection": "",
+        "waitlist": ""
     },
     "wallet": {
         "custom_amount": "Eigenen Betrag hinzufügen",
         "custom_amount_text": "Beliebigen Betrag über __minamount__ hinzufügen",
-        "custom_giftcard_amount": "Wähle __input__ Geschenkkarte aus (jeder Betrag über __minamount__)"
+        "custom_giftcard": ""
     },
     "wsgf": {
         "incomplete": "Unvollständig",
@@ -667,7 +673,6 @@
         "default": "Ein unerwarteter Fehler ist aufgetreten. Ihr Produktschlüssel konnte nicht aktiviert werden. Bitte warten Sie 30 Minuten und versuchen Sie es dann erneut."
     },
     "wl": {
-        "compute": "Klicke, um Statistiken zu berechnen",
         "total_price": "Derzeitiger Wert",
         "in_wishlist": "auf Wunschliste",
         "on_sale": "reduziert",
@@ -707,5 +712,41 @@
     "acknowledgements": "Anerkennungen",
     "other": "Anderes",
     "images": "Bilder",
-    "powered_by": "Unterstützt von __link__"
+    "powered_by": "Unterstützt von __link__",
+    "help_translate": "Hilf uns, Augmented Steam bei POEditor zu übersetzen",
+    "filters": "Augmented Steam Filter",
+    "search_filters": {
+        "reviews_score": {
+            "between": "",
+            "any": "",
+            "up_to": "",
+            "from": ""
+        },
+        "reviews_count": {
+            "count": "",
+            "min_count": "Mindestanzahl",
+            "max_count": "Maximalanzahl"
+        },
+        "hide_ea": "Early Access Titel verstecken",
+        "hide_cart": "Titel in deinem Warenkorb verstecken",
+        "hide_mixed": "",
+        "hide_negative": ""
+    },
+    "calc_workshop_size": {
+        "file_size": "Dateigröße __size__",
+        "finished": "Beendet",
+        "calculating": "Berechne...",
+        "calc_size": "Gesamtgröße berechnen",
+        "total_size": "Gesamtgröße: __size__"
+    },
+    "date": "Datum",
+    "rating": "Bewertung",
+    "helpful": "Hilfreich",
+    "funny": "Witzig",
+    "length": "Länge",
+    "visibility": "Sichtbarkeit",
+    "processing": "Verarbeite...",
+    "wait": "Bitte warten",
+    "login_warning": "",
+    "youtube_reviews": ""
 }

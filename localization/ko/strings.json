@@ -2,7 +2,6 @@
     "steamid_of_user": "",
     "click_to_copy": "",
     "copied": "",
-    "profile_steamid": "",
     "view_steamid": "",
     "more_on_steampeek": "",
     "invite_friends": "",
@@ -164,8 +163,6 @@
     "gift_transactions": "선물 구매 금액",
     "demos": "데모",
     "notinterested": "관심 없음이 표시 된 항목",
-    "mixed_item": "복합적으로 평가된 항목들",
-    "negative_item": "부정적으로 평가된 항목들",
     "price_above": "보다 비싼 항목",
     "price_above_tooltip": "0을 기입하여 무료 또는 가격이 표시되지 않은 항목을 표시할 수 있습니다. 해당 기능을 비활성화 하려면 비워두세요.",
     "price_above_wrong_format": "",
@@ -425,7 +422,6 @@
         "disablelinkfilter": "외부 사이트에 접속할 때 확인여부를 묻지 않도록 설정",
         "showallfriendsthatown": "",
         "regional_price_on": "지역별 가격 비교를 보여준다",
-        "cart": "장바구니에 있는 물품들",
         "friends_own": "당신의 친구가 소유한 아이템",
         "horizontalscrolling": "",
         "supportinfo": "",
@@ -568,7 +564,15 @@
         },
         "add_custom_link": "",
         "auto_detect": "",
-        "add_to_waitlist": ""
+        "add_to_waitlist": "",
+        "profile_steamid": "",
+        "settings_mngmt": {
+            "import": "",
+            "import_success": "",
+            "import_fail": "",
+            "export": "",
+            "reset": ""
+        }
     },
     "ready": {
         "errormsg": "Augmented Steam 데이터 로딩 오류",
@@ -617,12 +621,14 @@
         "inv_guestpass": "게스트 패스",
         "owned": "소유",
         "notinterested": "관심 없음",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 명이 원함</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 명이 원함</a>",
+        "collection": "",
+        "waitlist": ""
     },
     "wallet": {
         "custom_amount": "특정 금액만큼 추가",
         "custom_amount_text": "__minamount__ 이상 추가",
-        "custom_giftcard_amount": ""
+        "custom_giftcard": ""
     },
     "wsgf": {
         "incomplete": "미완성",
@@ -667,7 +673,6 @@
         "default": "오류가 발생했습니다. 귀하의 제품 코드가 등록되지 않았습니다. 30분 뒤에 다시 시도해주세요."
     },
     "wl": {
-        "compute": "",
         "total_price": "",
         "in_wishlist": "",
         "on_sale": "",
@@ -707,5 +712,41 @@
     "acknowledgements": "",
     "other": "",
     "images": "",
-    "powered_by": ""
+    "powered_by": "",
+    "help_translate": "",
+    "filters": "",
+    "search_filters": {
+        "reviews_score": {
+            "between": "",
+            "any": "",
+            "up_to": "",
+            "from": ""
+        },
+        "reviews_count": {
+            "count": "",
+            "min_count": "",
+            "max_count": ""
+        },
+        "hide_ea": "",
+        "hide_cart": "",
+        "hide_mixed": "",
+        "hide_negative": ""
+    },
+    "calc_workshop_size": {
+        "file_size": "",
+        "finished": "",
+        "calculating": "",
+        "calc_size": "",
+        "total_size": ""
+    },
+    "date": "",
+    "rating": "",
+    "helpful": "",
+    "funny": "",
+    "length": "",
+    "visibility": "",
+    "processing": "",
+    "wait": "",
+    "login_warning": "",
+    "youtube_reviews": ""
 }
