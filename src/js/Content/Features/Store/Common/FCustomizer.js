@@ -81,11 +81,11 @@ export default class FCustomizer extends Feature {
 
         // TODO position when takeover link is active (big banner at the top of the front page)
         HTML.beforeEnd(".home_page_content",
-            `<div class="home_pagecontent_ctn clearfix" style="margin-bottom: 5px; margin-top: 3px;">
-                <div id="es_customize_btn" class="home_actions_ctn">
-                    <div class="home_btn home_customize_btn" style="z-index: 13;">${Localization.str.customize}</div>
-                    <div class='home_viewsettings_popup'>
-                        <div class='home_viewsettings_instructions' style='font-size: 12px;'>${Localization.str.apppage_sections}</div>
+            `<div class="es_customize_homepage_ctn">
+                <div id="es_customize_btn">
+                    <div class="home_btn home_customize_btn">${Localization.str.customize}</div>
+                    <div class="home_viewsettings_popup">
+                        <div class="home_viewsettings_instructions">${Localization.str.apppage_sections}</div>
                     </div>
                 </div>
             </div>`);

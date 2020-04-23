@@ -28,13 +28,18 @@
   opacity: 1;
 }
 
-/* Required for "Customize" button */
+/**
+ * Customize button on storefront and app pages
+ * Taken from: https://steamstore-a.akamaihd.net/public/css/v6/home.css
+ */
 #es_customize_btn {
   float: right;
+  position: relative;
+  visibility: visible;
 }
 #es_customize_btn .home_customize_btn {
   display: inline-block;
-  background: rgba( 103, 193, 245, 0.2 );
+  background: rgba(103, 193, 245, 0.2);
   color: #67c1f5;
   border-radius: 1px;
   font-size: 11px;
@@ -64,14 +69,22 @@
   width: 200px;
   z-index: 10;
   box-shadow: 0 0 12px #000000;
-  background: linear-gradient( to bottom, #e3eaef 5%, #c7d5e0 95%);
+  background: linear-gradient(to bottom, #e3eaef 5%, #c7d5e0 95%);
+  right: 2px;
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility, opacity 0.2s ease-in-out;
+}
+#es_customize_btn .active + .home_viewsettings_popup {
+  opacity: 1;
+  visibility: visible;
 }
 #es_customize_btn .home_viewsettings_instructions {
   margin-bottom: 12px;
   font-size: 12px;
 }
 #es_customize_btn .home_viewsettings_checkboxrow {
-  background: rgba( 0, 0, 0, 0.2 );
+  background: rgba(0, 0, 0, 0.2);
   margin-bottom: 1px;
   padding: 2px;
   line-height: 14px;
@@ -81,7 +94,7 @@
 }
 #es_customize_btn .home_viewsettings_checkboxrow:hover {
   color: #ffffff;
-  background: rgba( 0, 0, 0, 0.3 );
+  background: rgba(0, 0, 0, 0.3);
 }
 #es_customize_btn .home_viewsettings_checkbox {
   float: left;
@@ -94,6 +107,18 @@
 }
 #es_customize_btn .home_viewsettings_checkbox.checked {
   background-position: 0px 28px;
+}
+#es_customize_btn .home_viewsettings_label {
+  text-transform: capitalize;
+}
+.es_customize_homepage_ctn {
+  margin-bottom: 5px;
+  margin-top: 3px;
+}
+.es_customize_homepage_ctn::after {
+  content: "";
+  display: block;
+  clear: both;
 }
 
 .es_tabs {
@@ -498,25 +523,6 @@ img.astats_icon {
 
 .search_suggest .match.focus {
   background: #212d3d !important;
-}
-
-#es_customize_btn {
-  position: relative;
-  visibility: visible;
-}
-#es_customize_btn .home_viewsettings_popup {
-  right: 2px;
-  z-index: 10;
-  opacity: 0;
-  visibility: hidden;
-  transition: visibility, opacity 0.2s ease-in-out;
-}
-#es_customize_btn .active + .home_viewsettings_popup {
-  opacity: 1;
-  visibility: visible;
-}
-.home_viewsettings_label {
-  text-transform: capitalize;
 }
 
 /***************************************
@@ -2367,12 +2373,6 @@ label[for="show_common_games"] {
 #pagebtn_first,
 #pagebtn_last {
   margin: 0 3px;
-}
-
-.clearfix::after {
-  content: "";
-  display: block;
-  clear: both;
 }
 
 /***************************************
