@@ -1,4 +1,19 @@
-﻿v1.4.2, v1.4.3
+﻿v1.4.4
+------
+- added option to compute total size of all subscribed workshop items
+- added sorting options to user's review page
+- added import and export of your Augmented Steam settings
+- updated search filters; removed redundant onces, improved review score and count filters, improved design to better match new Steam search page
+- YouTube reviews moved from app page body to the tab, next to YouTube gameplay
+- improved wishlist export, now including price data
+- fixed prices not being computed correctly in CNY and JPY currencies on some pages
+- fixed context menu sometimes not working correctly
+- fixed wishlist button on community pages
+- multiple game highlights fixes; improved highlighting itself as well as how much we respect your settings
+- a lot of localization updates, thanks to our wonderful contributors
+
+
+v1.4.2, v1.4.3
 ------
 - Fix high disk & CPU usage and improve loading times
 - Improved games highlighting
