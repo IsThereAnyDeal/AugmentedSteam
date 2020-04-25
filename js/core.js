@@ -869,7 +869,20 @@ class HTML {
     }
 
     static wrap(node, html) {
-        let wrapper = HTML.replace(node, html);
+        if (typeof node == 'undefined' || node === null) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+        if (typeof node == "string") {
+            node = document.querySelector(node);
+        }
+        if (!(node instanceof Element)) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+
+        let wrapper = HTML.element(html);
+        node.replaceWith(wrapper);
         wrapper.append(node);
         return wrapper;
     }
