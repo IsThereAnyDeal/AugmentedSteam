@@ -863,9 +863,8 @@ class HTML {
             return null;
         }
 
-        let newNode = HTML.element(html);
-        node.replaceWith(newNode);
-        return newNode;
+        node.outerHTML = DOMPurify.sanitize(html);
+        return node;
     }
 
     static wrap(node, html) {
