@@ -478,26 +478,6 @@ class StorePageClass {
             }
         }
     }
-
-    forceVideoMP4() {
-        if (!SyncedStorage.get("mp4video")) { return; }
-
-        for (let node of document.querySelectorAll("[data-webm-source]")) {
-            let mp4 = node.dataset.mp4Source;
-            let mp4hd = node.dataset.mp4HdSource;
-            if (!mp4 || !mp4hd) { return; }
-
-            node.dataset.webmSource = mp4;
-            node.dataset.webmHdSource = mp4hd;
-
-            let video = node.querySelector("video");
-            if (!video) { return; }
-
-            video.dataset.sdSrc = mp4;
-            video.dataset.hdSrc = mp4hd;
-            this.toggleVideoDefinition(video, false);
-        }
-    }
 }
 
 
@@ -607,7 +587,6 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
-        this.forceVideoMP4();
         this.initHdPlayer();
         this.addWishlistRemove();
         this.addUserNote();
@@ -774,46 +753,7 @@ class AppPageClass extends StorePageClass {
         }
     }
 
-    toggleVideoDefinition(videoControl, setHD) {
-        let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
-            videoIsHD = false,
-            loadedSrc = videoControl.classList.contains("es_loaded_src"),
-            playInHD = LocalStorage.get("playback_hd") || videoControl.classList.contains("es_video_hd");
-
-        let videoPosition = videoControl.currentTime || 0,
-            videoPaused = videoControl.paused;
-        if (videoIsVisible) {
-            videoControl.preload = "metadata";
-            videoControl.addEventListener("loadedmetadata", onLoadedMetaData, false);
-        }
-        function onLoadedMetaData() {
-            this.currentTime = videoPosition;
-            if (!videoPaused && videoControl.play) {
-                // if response is a promise, suppress any errors it throws
-                Promise.resolve(videoControl.play()).catch(err => {});
-            }
-            videoControl.removeEventListener("loadedmetadata", onLoadedMetaData, false);
-        }
-
-        if ((!playInHD && typeof setHD === "undefined") || setHD === true) {
-            videoIsHD = true;
-            videoControl.src = videoControl.dataset.hdSrc;
-        } else if (loadedSrc) {
-            videoControl.src = videoControl.dataset.sdSrc;
-        }
-
-        if (videoIsVisible && loadedSrc) {
-            videoControl.load();
-        }
-
-        videoControl.classList.add("es_loaded_src");
-        videoControl.classList.toggle("es_video_sd", !videoIsHD);
-        videoControl.classList.toggle("es_video_hd", videoIsHD);
-        videoControl.parentNode.classList.toggle("es_playback_sd", !videoIsHD);
-        videoControl.parentNode.classList.toggle("es_playback_hd", videoIsHD);
-
-        return videoIsHD;
-    }
+    
 
     storePageDataPromise() {
         return Background.action("storepagedata", this.appid, this.metalink, SyncedStorage.get("showoc"));
@@ -4018,7 +3958,7 @@ let TabAreaObserver = (function(){
             break;
 
         case /^\/app\/.*/.test(path):
-            new CAppPage([ FReplaceDevPubLinks, FRemoveFromWishlist ], window.location.host + path);
+            new CAppPage([ FReplaceDevPubLinks, FRemoveFromWishlist, FForceMP4 ], window.location.host + path);
             break;
 
         case /^\/sub\/.*/.test(path):

@@ -76,11 +76,12 @@
         "js/ASContext.js",
         "js/ASFeature.js",
         "js/ASFeatureManager.js",
-        "js/CStorePage.js",
-        "js/CAppPage.js",
         "js/FeatureDependencyError.js",
-        "js/FReplaceDevPubLinks.js",
-        "js/FRemoveFromWishlist.js",
+        "js/content/store/CStorePage.js",
+        "js/content/store/CAppPage.js",
+        "js/content/store/FForceMP4.js",
+        "js/content/store/FReplaceDevPubLinks.js",
+        "js/content/store/FRemoveFromWishlist.js",
         "js/content/store.js"
       ],
       "css": [
