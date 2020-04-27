@@ -68,6 +68,14 @@
         "js/core.js",
         "js/language.js",
         "js/content/common.js",
+        "js/ASContext.js",
+        "js/ASFeature.js",
+        "js/ASFeatureManager.js",
+        "js/CStorePage.js",
+        "js/CAppPage.js",
+        "js/FeatureDependencyError.js",
+        "js/FReplaceDevPubLinks.js",
+        "js/FRemoveFromWishlist.js",
         "js/content/store.js"
       ],
       "css": [
