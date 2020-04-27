@@ -53,14 +53,17 @@ class FRemoveFromWishlist extends ASFeature {
                     if (SyncedStorage.get("add_to_waitlist")) { this.context.onWishAndWaitlistRemove(); }
 
                     addBtn.style.display = "";
-                    successBtn.style.display = "none";
 
                     // Clear dynamicstore cache
                     DynamicStore.clear();
 
                     // Invalidate dynamic store data cache
                     ExtensionLayer.runInPageContext(() => { GDynamicStore.InvalidateCache(); });
+                } catch(err) {
+                    document.getElementById("add_to_wishlist_area_fail").style.display = "";
+                    this.logError(err, "Failed to remove app from wishlist");
                 } finally {
+                    successBtn.style.display = "none";
                     parent.classList.remove("loading");
                 }
             }
@@ -71,5 +74,3 @@ class FRemoveFromWishlist extends ASFeature {
         }
     }
 }
-
-FRemoveFromWishlist.deps = [ FReplaceDevPubLinks ];
