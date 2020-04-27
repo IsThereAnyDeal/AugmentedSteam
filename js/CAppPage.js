@@ -30,6 +30,14 @@ class CAppPage extends CStorePage {
     }
 
     isOwned() {
-        return !!document.querySelector(".game_area_already_owned");
+        return Boolean(document.querySelector(".game_area_already_owned"));
+    }
+
+    removeFromWishlist() {
+        return Background.action("wishlist.remove", this.appid, User.getSessionId());
+    }
+
+    removeFromWaitlist() {
+        return Background.action("itad.removefromwaitlist", this.appid);
     }
 }
