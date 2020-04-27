@@ -1,6 +1,6 @@
 const Info = {
-    'version': browser.runtime.getManifest().version,
-    'db_version': 1,
+    "version": browser.runtime.getManifest().version,
+    "db_version": 3,
 };
 
 /**
@@ -121,6 +121,17 @@ class Version {
     }
 }
 
+class Downloader {
+
+    static download(content, filename) {
+        let a = document.createElement("a");
+        a.href = typeof content === "string" ? content : URL.createObjectURL(content);
+        a.download = filename;
+
+        // Explicitly dispatching the click event (instead of just a.click()) will make it work in FF
+        a.dispatchEvent(new MouseEvent("click"));
+    }
+}
 
 class UpdateHandler {
 
@@ -294,6 +305,11 @@ class UpdateHandler {
             SyncedStorage.set("profile_steamid", SyncedStorage.get("profile_permalink"));
             SyncedStorage.remove("profile_permalink");
         }
+
+        if (oldVersion.isSameOrBefore("1.4.3")) {
+            SyncedStorage.remove("contscroll");
+            Background.action("logout");
+        }
     }
 }
 
@@ -392,7 +408,7 @@ class GameId {
     }
 }
 
-
+// todo use https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage
 class LocalStorage {
     static get(key, defaultValue) {
         let item = localStorage.getItem(key);
@@ -406,6 +422,10 @@ class LocalStorage {
     
     static set(key, value) {
         localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    static has(key) {
+        return localStorage.getItem(key) !== null;
     }
     
     static remove(key) {
@@ -454,6 +474,13 @@ class SyncedStorage {
         // this will throw if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
     }
 
+    static import(entries) {
+        for (let [key, value] of Object.entries(entries)) {
+            this.cache[key] = value;
+        }
+        return this.adapter.set(entries);
+    }
+
     static remove(key) {
         if (typeof this.cache[key]) {
             delete this.cache[key];
@@ -464,6 +491,10 @@ class SyncedStorage {
 
     static keys(prefix='') {
         return Object.keys(this.cache).filter(k => k.startsWith(prefix));
+    }
+
+    static entries() {
+        return Object.entries(this.cache);
     }
 
     static clear() {
@@ -646,7 +677,6 @@ SyncedStorage.defaults = {
     'homepage_tab_last': null,
     'send_age_info': true,
     'mp4video': false,
-    'contscroll': true,
     'horizontalscrolling': true,
     'showsupportinfo': true,
     'showdrm': true,
@@ -668,6 +698,7 @@ SyncedStorage.defaults = {
     'disablelinkfilter': false,
     'showallfriendsthatown': false,
     'sortfriendsby': "default",
+    'sortreviewsby': "default",
     'sortgroupsby': "default",
     'show1clickgoo': true,
     'show_profile_link_images': "gray",
@@ -819,6 +850,23 @@ class HTML {
         return node;
     }
 
+    static replace(node, html) {
+        if (typeof node == 'undefined' || node === null) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+        if (typeof node == "string") {
+            node = document.querySelector(node);
+        }
+        if (!(node instanceof Element)) {
+            console.warn(`${node} is not an Element.`);
+            return null;
+        }
+
+        node.outerHTML = DOMPurify.sanitize(html);
+        return node;
+    }
+
     static wrap(node, html) {
         if (typeof node == 'undefined' || node === null) {
             console.warn(`${node} is not an Element.`);
@@ -834,7 +882,7 @@ class HTML {
 
         let wrapper = HTML.element(html);
         node.replaceWith(wrapper);
-        wrapper.appendChild(node);
+        wrapper.append(node);
         return wrapper;
     }
 
@@ -930,10 +978,30 @@ class StringUtils {
     }
 }
 
-class CommunityLoginError extends Error {
-    constructor(msg) {
-        super(msg);
-        this.name = "CommunityLoginError";
+/**
+ * Convenience class for passing errors between contexts.
+ * Errors thrown in the context of a message callback on the background page are
+ * {@link https://github.com/mozilla/webextension-polyfill/blob/87bdfa844da054d189ac28423cf01b64ebfe1e5b/src/browser-polyfill.js#L418 cut down to only send the message of the error},
+ * losing information about the type.
+ */
+class ErrorParser {
+
+    /**
+     * Takes an Error string and parses it by splitting it into name and message
+     * @param {String} errStr a string created by Error.prototype.toString
+     * @returns {{name: String, msg: String}} an object containing information about the error name and its message
+     */
+    static parse(errStr) {
+        let info = errStr.match(/(.*):\s(.+)/);
+
+        return { "name": info[1] || "", "msg": info[2] || "" };
+    }
+}
+
+class LoginError extends Error {
+    constructor(type) {
+        super(type);
+        this.name = "LoginError";
     }
 }
 

@@ -82,9 +82,14 @@ class ITAD {
         }
     }
 
-    static async getAppStatus(storeIds) {
-        let highlightCollection = SyncedStorage.get("highlight_collection");
-        let highlightWaitlist = SyncedStorage.get("highlight_waitlist");
+    static async getAppStatus(storeIds, options) {
+        let opts = Object.assign({
+            "waitlist": true,
+            "collection": true,
+        }, options);
+
+        if (!opts.collection && !opts.waitlist) { return null; }
+        
         let multiple = Array.isArray(storeIds);
         let promises = [];
         let resolved = Promise.resolve(multiple ? {} : false);
@@ -92,12 +97,12 @@ class ITAD {
         if (!await Background.action("itad.isconnected")) {
             promises.push(resolved, resolved);
         } else {
-            if (highlightCollection) {
+            if (opts.collection) {
                 promises.push(Background.action("itad.incollection", storeIds));
             } else {
                 promises.push(resolved);
             }
-            if (highlightWaitlist) {
+            if (opts.waitlist) {
                 promises.push(Background.action("itad.inwaitlist", storeIds));
             } else {
                 promises.push(resolved);
@@ -226,12 +231,14 @@ class Background extends BackgroundBase {
             ProgressBar.finishRequest();
             return result;
         } catch(err) {
-            switch (err.message) {
+            let { name, msg } = ErrorParser.parse(err.message);
+
+            switch (name) {
                 case "ServerOutageError":
                     ProgressBar.serverOutage();
                     break;
-                case "CommunityLoginError": {
-                    AugmentedSteam.addLoginWarning();
+                case "LoginError": {
+                    AugmentedSteam.addLoginWarning(msg);
                     ProgressBar.finishRequest();
                     break;
                 } 
@@ -331,26 +338,28 @@ let DateParser = (function(){
 
 let ExtensionLayer = (function() {
 
+    let msgCounter = 0;
+
     let self = {};
 
     // NOTE: use cautiously!
     // Run script in the context of the current tab
-    self.runInPageContext = function(fun, args, msgId) {
+    self.runInPageContext = function(fun, args, withPromise) {
         let script = document.createElement("script");
         let promise;
         let argsString = Array.isArray(args) ? JSON.stringify(args) : "[]";
 
-        if (msgId) {
+        if (withPromise) {
+            let msgId = "msg_" + (msgCounter++);
             promise = Messenger.onMessage(msgId);
             script.textContent = `(async () => { Messenger.postMessage("${msgId}", await (${fun})(...${argsString})); })();`;
         } else {
             script.textContent = `(${fun})(...${argsString});`;
         }
-        
+
         document.documentElement.appendChild(script);
         script.parentNode.removeChild(script);
-
-        if (msgId) { return promise; }
+        return promise;
     };
 
     return self;
@@ -547,39 +556,49 @@ let User = (function(){
     self.profileUrl = false;
     self.profilePath = false;
     self.steamId = null;
+    self._country = null;
 
     let accountId = false;
     let sessionId = false;
 
     let _promise = null;
 
+    Object.defineProperty(self, "country", { get() {
+        let url = new URL(window.location.href);
+
+        let country;
+        if (url.searchParams && url.searchParams.has("cc")) {
+            country = url.searchParams.get("cc");
+        } else {
+            country = self._country;
+            if (!country) {
+                country = CookieStorage.get("steamCountry");
+            }
+        }
+
+        if (!country) { return null; }
+        return country.substr(0, 2);
+    } });
+
     self.promise = function() {
         if (_promise) { return _promise; }
 
-        let avatarNode = document.querySelector("#global_actions .playerAvatar");
-        self.profileUrl = avatarNode ? avatarNode.getAttribute("href") : false;
-        self.profilePath = self.profileUrl && (self.profileUrl.match(/\/(?:id|profiles)\/(.+?)\/$/) || [])[0];
-
-        // If profilePath is not available, we're not logged in
-        if (!self.profilePath) {
-            Background.action("logout");
-            _promise = Promise.resolve();
-            return _promise;
+        let avatarNode = document.querySelector("#global_actions > a.user_avatar");
+        if (avatarNode) {
+            self.profileUrl = avatarNode.href;
+            self.profilePath = avatarNode.pathname;
+        } else {
+            return _promise = Background.action("logout");
         }
 
-        _promise = Background.action("login", self.profilePath)
-            .then(function (login) {
-                if (!login) return;
+        return _promise = Background.action("login", self.profilePath)
+            .then(login => {
+                if (!login) { return; }
                 self.isSignedIn = true;
                 self.steamId = login.steamId;
-                // If we're *newly* logged in, then login.userCountry will be set
-                if (login.userCountry) {
-                    LocalStorage.set("userCountry", login.userCountry);
-                }
+                self._country = login.userCountry;
             })
             .catch(err => console.error(err));
-
-        return _promise;
     };
 
     self.then = function(onDone, onCatch) {
@@ -602,23 +621,6 @@ let User = (function(){
 
     self.getStoreSessionId = function() {
         return Background.action('sessionid');
-    };
-
-    self.getCountry = function() {
-        let url = new URL(window.location.href);
-
-        let country;
-        if (url.searchParams && url.searchParams.has("cc")) {
-            country = url.searchParams.get("cc");
-        } else {
-            country = LocalStorage.get("userCountry");
-            if (!country) {
-                country = CookieStorage.get("steamCountry");
-            }
-        }
-
-        if (!country) { return null; }
-        return country.substr(0, 2);
     };
 
     self.getPurchaseDate = function(lang, appName) {
@@ -750,23 +752,12 @@ let CurrencyRegistry = (function() {
     let defaultCurrency = null;
     let re = null;
 
-    self.fromSymbol = function(symbol) {
-        return indices.symbols[symbol] || defaultCurrency;
-    };
-
     self.fromType = function(type) {
         return indices.abbr[type] || defaultCurrency;
     };
 
     self.fromNumber = function(number) {
         return indices.id[number] || defaultCurrency;
-    };
-
-    self.fromString = function(price) {
-        let match = price.match(re);
-        if (!match)
-            return defaultCurrency;
-        return self.fromSymbol(match[0]);
     };
 
     Object.defineProperty(self, 'storeCurrency', { get() { return CurrencyRegistry.fromType(Currency.storeCurrency); }});
@@ -894,10 +885,6 @@ let Currency = (function() {
         return match ? match[0] : '';
     };
 
-    self.currencySymbolToType = function(symbol) {
-        return CurrencyRegistry.fromSymbol(symbol).abbr;
-    };
-
     self.currencyTypeToNumber = function(type) {
         return CurrencyRegistry.fromType(type).id;
     };
@@ -910,9 +897,9 @@ let Currency = (function() {
 })();
 
 let Price = (function() {
-    function Price(value, currency) {
-        this.value = value || 0;
-        this.currency = currency || Currency.customCurrency;
+    function Price(value = 0, currency = Currency.storeCurrency) {
+        this.value = value;
+        this.currency = currency;
         Object.freeze(this);
     }
 
@@ -944,14 +931,11 @@ let Price = (function() {
         return new Price(this.value * rate, desiredCurrency);
     };
 
-    Price.parseFromString = function(str, desiredCurrency) {
-        let currency = CurrencyRegistry.fromString(str);
+    Price.parseFromString = function(str, currencyType = Currency.storeCurrency) {
+        let currency = CurrencyRegistry.fromType(currencyType);
         let value = currency.valueOf(str);
         if (value !== null) {
-            value = new Price(value, currency.abbr);
-            if (currency.abbr !== desiredCurrency) {
-                value = value.inCurrency(desiredCurrency);
-            }
+            value = new Price(value, currencyType);
         }
         return value;
     };
@@ -961,98 +945,132 @@ let Price = (function() {
 
 
 let SteamId = (function(){
-    function SteamId(steam64str) {
-        if (!steam64str) {
-            throw new Error("Missing first parameter 'steam64str'.") 
+
+    let self = {};
+    let _steamId = null;
+
+    self.getSteamId = function() {
+        if (_steamId) { return _steamId; }
+
+        if (document.querySelector("#reportAbuseModal")) {
+            _steamId = document.querySelector("input[name=abuseID]").value;
+        } else {
+            _steamId = HTMLParser.getVariableFromDom("g_steamID", "string");
         }
 
-        this._steamId = this.fromString(steam64str);
-        this._steamId64 = steam64str;
+        if (!_steamId) {
+            let profileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
+            _steamId = profileData.steamid;
+        }
+
+        return _steamId;
     };
 
-    function divide(str) {
-        let length = str.length;
-        let result = [];
-        let num = 0;
-        for (let i = 0; i < length; i++) {
-            num += Number(str[i]);
 
-            let r = Math.floor(num / 2);
-            num = ((num - 2*r) * 10);
+    class SteamIdDetail {
 
-            if (r != 0 || result.length != 0) {
-                result.push(r);
+        /*
+         * @see https://developer.valvesoftware.com/wiki/SteamID
+         */
+
+        constructor(steam64str) {
+            if (!steam64str) {
+                throw new Error("Missing first parameter 'steam64str'.")
             }
+
+            let [upper32, lower32] = this._getBinary(steam64str);
+            this._y = lower32 & 1;
+            this._accountNumber = (lower32 & ((1 << 31) - 1) << 1) >> 1;
+            this._instance = (upper32 & ((1  << 20) - 1));
+            this._type =     (upper32 & (((1 <<  4) - 1) << 20)) >> 20;
+            this._universe = (upper32 & (((1 <<  8) - 1) << 24)) >> 24;
+
+            this._steamId64 = steam64str;
         }
 
-        return [result, num > 0 ? 1 : 0];
-    }
+        _divide(str) {
+            let length = str.length;
+            let result = [];
+            let num = 0;
+            for (let i = 0; i < length; i++) {
+                num += Number(str[i]);
 
-    function getBinary(str) {
-        let upper32 = 0;
-        let lower32 = 0;
-        let index = 0;
-        let bit = 0;
-        do {
-            [str, bit] = divide(str);
-            
-            if (bit) {
-                if (index < 32) {
-                lower32 = lower32 | (1 << index);
-                } else {
-                    upper32 = upper32 | (1 << (index - 32));
+                let r = Math.floor(num / 2);
+                num = ((num - 2*r) * 10);
+
+                if (r !== 0 || result.length !== 0) {
+                    result.push(r);
                 }
             }
-            
-            index++;
-        } while(str.length > 0);
 
-        return [upper32, lower32];
-    }
-
-    SteamId.prototype.fromString = function(steam64str) {
-        let [upper32, lower32] = getBinary(steam64str);
-        return {
-            y: lower32 & 1,
-            accountNumber: (lower32 & ((1 << 31) - 1) << 1) >> 1,
-            instance: (upper32 & ((1 << 20) - 1)),
-            type: (upper32 & (15 << 20)) >> 20,
-            universe: (upper32 & ((1 << 8) - 1) << 20) >> 20
+            return [result, num > 0 ? 1 : 0];
         }
-    };
 
-    SteamId.prototype.getAccountId = function() {
-        return this._steamId.accountNumber * 2;
-    };
+        _getBinary(str) {
+            let upper32 = 0;
+            let lower32 = 0;
+            let index = 0;
+            let bit = 0;
+            do {
+                [str, bit] = this._divide(str);
 
-    SteamId.prototype.getSteamId2 = function() {
-        return "STEAM_0:0:" + this._steamId.accountNumber;
-    };
-    
+                if (bit) {
+                    if (index < 32) {
+                        lower32 = lower32 | (1 << index);
+                    } else {
+                        upper32 = upper32 | (1 << (index - 32));
+                    }
+                }
 
-    SteamId.prototype.getSteamId3 = function() {
-        return "[U:1:" + this.getAccountId() + "]";
-    };
+                index++;
+            } while(str.length > 0);
 
-    SteamId.prototype.getSteamId64 = function() {
-        return this._steamId64;
-    };
+            return [upper32, lower32];
+        }
 
-    return SteamId;
-})();
-SteamId.fromDOM = () => {
-    let id = null;
-    let g_steamID = HTMLParser.getVariableFromDom("g_steamID", "string");
-    let g_rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
-    if (document.querySelector("#reportAbuseModal")) {
-        id = document.querySelector("input[name=abuseID]").value;
-    } else if (g_steamID) {
-        id = g_steamID;
-    } else if (g_rgProfileData) {
-        id = g_rgProfileData.steamid;
+        get id2() {
+            return `STEAM_${this._universe}:${this._y}:${this._accountNumber}`;
+        };
+
+
+        get id3() {
+            let map = new Map(
+                [
+                    [0, "I"], // invalid
+                    [1, "U"], // individual
+                    [2, "M"], // multiset
+                    [3, "G"], // game server
+                    [4, "A"], // anon game server
+                    [5, "P"], // pending
+                    [6, "C"], // content server
+                    [7, "g"], // clan
+                    // [8, "T / L / C"], // chat // TODO no idea what does this mean
+                    [9, "a"] // anon user
+                ]
+            );
+
+            let type = null;
+            if (map.has(this._type)) {
+                type = map.get(this._type);
+            }
+
+            if (!type) {
+                return null;
+            }
+
+            return `[${type}:${this._universe}:${this._accountNumber << 1 | this._y}]`;
+        };
+
+        get id64() {
+            return this._steamId64;
+        };
     }
-    return id;
-};
+
+    self.Detail = SteamIdDetail;
+
+    return self;
+})();
+
 
 
 let Viewport = (function(){
@@ -1082,35 +1100,36 @@ let Stats = (function() {
 
     let self = {};
 
-    self.getAchievementBar = function(path, appid) {
-        return Background.action("stats", path, appid).then(response => {
-            let dummy = HTMLParser.htmlToDOM(response);
-            let achNode = dummy.querySelector("#topSummaryAchievements");
+    self.getAchievementBar = async function(path, appid) {
+        let html = await Background.action("stats", path, appid);
+        let dummy = HTMLParser.htmlToDOM(html);
+        let achNode = dummy.querySelector("#topSummaryAchievements");
 
-            if (!achNode) return null;
+        if (!achNode) return null;
 
-            achNode.style.whiteSpace = "nowrap";
+        achNode.style.whiteSpace = "nowrap";
 
-            if (!achNode.querySelector("img")) {
-                // The size of the achievement bars for games without leaderboards/other stats is fine, return
-                return achNode.innerHTML;
-            }
+        if (!achNode.querySelector("img")) {
+            // The size of the achievement bars for games without leaderboards/other stats is fine, return
+            return achNode.innerHTML;
+        }
 
-            let stats = achNode.innerHTML.match(/(\d+) of (\d+) \((\d{1,3})%\)/);
+        let stats = achNode.innerHTML.match(/(\d+) of (\d+) \((\d{1,3})%\)/);
 
-            // 1 full match, 3 group matches
-            if (!stats || stats.length !== 4) {
-                return null;
-            }
+        // 1 full match, 3 group matches
+        if (!stats || stats.length !== 4) {
+            return null;
+        }
 
-            return `<div>${Localization.str.achievements.summary
-                .replace("__unlocked__", stats[1])
-                .replace("__total__", stats[2])
-                .replace("__percentage__", stats[3])}</div>
-            <div class="achieveBar">
-                <div style="width: ${stats[3]}%;" class="achieveBarProgress"></div>
-            </div>`;
-        });
+        let achievementStr = Localization.str.achievements.summary
+            .replace("__unlocked__", stats[1])
+            .replace("__total__", stats[2])
+            .replace("__percentage__", stats[3]);
+
+        return `<div>${achievementStr}</div>
+                <div class="achieveBar">
+                    <div style="width: ${stats[3]}%;" class="achieveBarProgress"></div>
+                </div>`;
     };
 
     return self;
@@ -1168,11 +1187,14 @@ let AugmentedSteam = (function() {
         // Remove Steam's back-to-top button
         DOMHelper.remove("#BackToTop");
 
-        HTML.afterBegin("body", `<div class="es_btt">&#9650;</div>`);
+        let btn = document.createElement("div");
+        btn.classList.add("es_btt");
+        btn.textContent = "▲";
+        btn.style.visibility = "hidden";
 
-        let node = document.querySelector(".es_btt");
+        document.body.append(btn);
 
-        node.addEventListener("click", () => {
+        btn.addEventListener("click", () => {
             window.scroll({
                 top: 0,
                 left: 0,
@@ -1180,12 +1202,20 @@ let AugmentedSteam = (function() {
             });
         });
 
-        window.addEventListener("scroll", opacityHandler);
+        btn.addEventListener("transitionstart", () => {
+            if (btn.style.visibility === "hidden") {
+                btn.style.visibility = "visible";
+            } else {
+                // transition: opacity 200ms ease-in-out;
+                setTimeout(() => {
+                    btn.style.visibility = "hidden";
+                }, 200);
+            }
+        });
 
-        function opacityHandler() {
-            let scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
-            node.classList.toggle("is-visible", scrollHeight >= 400);
-        }
+        window.addEventListener("scroll", () => {
+            btn.classList.toggle("is-visible", window.scrollY >= 400);
+        });
     };
 
     self.clearCache = function() {
@@ -1203,8 +1233,30 @@ let AugmentedSteam = (function() {
         });
     };
 
-    function addWarning(innerHTML) {
-        HTML.afterEnd("#global_header", `<div class="es_warning">${innerHTML}</div>`);
+    function addWarning(innerHTML, stopShowingHandler) {
+        let el = HTML.element(
+            `<div class="es_warn js-warn">
+                <div class="es_warn__cnt">
+                    <div>${innerHTML}</div>
+                    <div class="es_warn__control">
+                        <a class="es_warn__btn js-warn-close">${Localization.str.update.dont_show}</a>
+                        <a class="es_warn__btn js-warn-hide">${Localization.str.hide}</a>
+                    </div>
+                </div>
+            </div>`);
+
+        el.querySelector(".js-warn-close").addEventListener("click", () => {
+            if (stopShowingHandler) {
+                stopShowingHandler();
+            }
+            el.closest(".js-warn").remove();
+        });
+
+        el.querySelector(".js-warn-hide").addEventListener("click", () => {
+            el.closest(".js-warn").remove();
+        });
+
+        document.getElementById("global_header").insertAdjacentElement("afterend", el);
     }
 
     /**
@@ -1227,7 +1279,8 @@ let AugmentedSteam = (function() {
         Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then(function(strings){
             addWarning(
                 `${strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage)}
-                <a href="#" id="es_reset_language_code">${strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage)}</a>`);
+                <a href="#" id="es_reset_language_code">${strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage)}</a>`,
+                () => { SyncedStorage.set("showlanguagewarning", false) });
 
             document.querySelector("#es_reset_language_code").addEventListener("click", function(e){
                 e.preventDefault();
@@ -1237,12 +1290,26 @@ let AugmentedSteam = (function() {
     };
 
     let loginWarningAdded = false;
-    self.addLoginWarning = function() {
-        if (!loginWarningAdded) {
-            addWarning(`${Localization.str.community_login.replace("__link__", "<a href='https://steamcommunity.com/login/'>steamcommunity.com</a>")}`);
-            console.warn("Are you logged in to steamcommunity.com?");
-            loginWarningAdded = true;
-        }        
+    self.addLoginWarning = function(type) {
+        if (loginWarningAdded || LocalStorage.get(`hide_login_warn_${type}`)) { return; }
+        
+        let host;
+
+        if (type === "store") {
+            host = "store.steampowered.com";
+        } else if (type === "community") {
+            host = "steamcommunity.com";
+        } else {
+            console.warn("Unknown login warning type %s", type);
+            return;
+        }
+
+        addWarning(`${Localization.str.login_warning.replace("__link__", `<a href="https://${host}/login/">${host}</a>`)}`, () => {
+            LocalStorage.set(`hide_login_warn_${type}`, true);
+        });
+        loginWarningAdded = true;
+
+        console.warn("Are you logged into %s?", host);
     };
 
     self.handleInstallSteamButton = function() {
@@ -1300,7 +1367,7 @@ let AugmentedSteam = (function() {
     };
 
     self.addRedeemLink = function() {
-        HTML.beforeBegin("#account_dropdown .popup_menu_item:last-child:not(.tight)",
+        HTML.beforeBegin("#account_language_pulldown",
             `<a class="popup_menu_item" href="https://store.steampowered.com/account/registerkey">${Localization.str.activate}</a>`);
     };
 
@@ -1354,7 +1421,7 @@ let AugmentedSteam = (function() {
                         if (result === "OK") { window.location.assign(`steam://run/${gameid}`); }
                         if (result === "SECONDARY") { window.location.assign(`//store.steampowered.com/app/${gameid}`); }
                     });
-                }, 
+                },
                 [
                     Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim()),
                     gameid,
@@ -1367,9 +1434,9 @@ let AugmentedSteam = (function() {
     self.skipGotSteam = function() {
         if (!SyncedStorage.get("skip_got_steam")) { return; }
 
-        let node = document.querySelector("a[href^='javascript:ShowGotSteamModal']");
-        if (!node) { return; }
-        node.setAttribute("href", node.getAttribute("href").split("'")[1]);
+        for (let node of document.querySelectorAll("a[href^='javascript:ShowGotSteamModal']")) {
+            node.href = node.href.split("'")[1];
+        }
     };
 
     self.keepSteamSubscriberAgreementState = function() {
@@ -1445,6 +1512,17 @@ let AugmentedSteam = (function() {
         }
     };
 
+    self.horizontalScrolling = function() {
+        if (!SyncedStorage.get("horizontalscrolling")) { return; }
+
+        for (let node of document.querySelectorAll(".slider_ctn:not(.spotlight)")) {
+            new HorizontalScroller(
+                node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
+                node.querySelector(".slider_left"),
+                node.querySelector(".slider_right"));
+        }
+    };
+
     return self;
 })();
 
@@ -1454,12 +1532,10 @@ let EarlyAccess = (function(){
 
     let imageUrl;
 
-    async function checkNodes(selectors, selectorModifier) {
-        selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
+    self.getEaNodes = async function(nodes, selectorModifier) {
         let appidsMap = new Map();
 
-        let selector = selectors.map(selector => `${selector}:not(.es_ea_checked)`).join(",");
-        for (let node of document.querySelectorAll(selector)) {
+        for (let node of nodes) {
             node.classList.add("es_ea_checked");
 
             let linkNode = node.querySelector("a");
@@ -1468,15 +1544,26 @@ let EarlyAccess = (function(){
             let appid = GameId.getAppid(href) || GameId.getAppidImgSrc(imgHeader ? imgHeader.getAttribute("src") : null);
 
             if (appid) {
-                appidsMap.set(appid, node);
+                appidsMap.set(String(appid), node);
             }
         }
 
-        let eaAppids = await Background.action("isea", Array.from(appidsMap.keys()).map(key => Number(key)));
+        let eaStatus = await Background.action("isea", Array.from(appidsMap.keys()));
+        
+        for (let appid of appidsMap.keys()) {
+            if (!eaStatus[appid]) {
+                appidsMap.delete(appid);
+            }
+        }
 
-        for (let [appid, node] of appidsMap) {
-            if (!eaAppids[appid]) { continue; }
+        return Array.from(appidsMap.values());
+    }
 
+    async function checkNodes(selectors, selectorModifier) {
+        selectorModifier = typeof selectorModifier === "string" ? selectorModifier : "";
+        let selector = selectors.map(selector => `${selector}:not(.es_ea_checked)`).join(",");
+
+        for (let node of await self.getEaNodes(document.querySelectorAll(selector), selectorModifier)) {
             node.classList.add("es_early_access");
 
             let imgHeader = node.querySelector("img" + selectorModifier);
@@ -1488,56 +1575,51 @@ let EarlyAccess = (function(){
         }
     }
 
-    function handleStore() {
+    async function handleStore() {
         // TODO refactor these checks to appropriate page calls
         switch (true) {
             case /^\/app\/.*/.test(window.location.pathname):
-                checkNodes([".game_header_image_ctn", ".small_cap"]);
-                break;
+                return checkNodes([".game_header_image_ctn", ".small_cap"]);
             case /^\/(?:genre|browse|tag)\/.*/.test(window.location.pathname):
-                checkNodes([".tab_item",
-                           ".special_tiny_cap",
-                           ".cluster_capsule",
-                           ".game_capsule",
-                           ".browse_tag_game",
-                           ".dq_item:not(:first-child)",
-                           ".discovery_queue:not(:first-child)"]);
-                break;
+                return checkNodes(  [".tab_item",
+                                    ".special_tiny_cap",
+                                    ".cluster_capsule",
+                                    ".game_capsule",
+                                    ".browse_tag_game",
+                                    ".dq_item:not(:first-child)",
+                                    ".discovery_queue:not(:first-child)"]);
             case /^\/search\/.*/.test(window.location.pathname):
-                checkNodes([".search_result_row"]);
-                break;
+                return checkNodes([".search_result_row"]);
             case /^\/recommended/.test(window.location.pathname):
-                checkNodes([".friendplaytime_appheader",
+                return checkNodes([".friendplaytime_appheader",
                            ".header_image",
                            ".appheader",
                            ".recommendation_carousel_item .carousel_cap",
                            ".game_capsule",
                            ".game_capsule_area",
                            ".similar_grid_capsule"]);
-                break;
             case /^\/tag\/.*/.test(window.location.pathname):
-                checkNodes([".cluster_capsule",
+                return checkNodes([".cluster_capsule",
                            ".tab_row",
                            ".browse_tag_game_cap"]);
-                break;
             case /^\/(?:curator|developer|dlc|publisher)\/.*/.test(window.location.pathname):
-                checkNodes(["#curator_avatar_image",
+                return checkNodes(["#curator_avatar_image",
                            ".capsule"]);
-                break;
             case /^\/$/.test(window.location.pathname):
-                checkNodes([".cap",
+                return checkNodes([".cap",
                            ".special",
                            ".game_capsule",
                            ".cluster_capsule",
                            ".recommended_spotlight_ctn",
                            ".curated_app_link",
                            ".dailydeal_ctn a",
-                           ".tab_item:last-of-type"]);
+                           ".tab_item:last-of-type",
+                           // Sales fields
+                           ".large_sale_caps a",
+                           ".small_sale_caps a",
+                           ".spotlight_img"]);
 
-                // Sales fields
-                checkNodes([".large_sale_caps a", ".small_sale_caps a", ".spotlight_img"]);
                 // checkNodes($(".sale_capsule_image").parent()); // TODO check/remove
-                break;
         }
     }
 
@@ -1561,7 +1643,7 @@ let EarlyAccess = (function(){
         }
     }
 
-    self.showEarlyAccess = async function() {
+    self.showEarlyAccess = function() {
         if (!SyncedStorage.get("show_early_access")) { return; }
 
         let imageName = "img/overlay/early_access_banner_english.png";
@@ -1572,11 +1654,9 @@ let EarlyAccess = (function(){
 
         switch (window.location.host) {
             case "store.steampowered.com":
-                handleStore();
-                break;
+                return handleStore();
             case "steamcommunity.com":
-                handleCommunity();
-                break;
+                return handleCommunity();
         }
     };
 
@@ -1592,41 +1672,50 @@ let Inventory = (function(){
         return Background.action("coupon", appid);
     };
 
-    self.getAppStatus = async function(appids) {
+    self.getAppStatus = async function(appids, options) {
         function getStatusObject(giftsAndPasses, hasCoupon) {
             return {
                 "gift": giftsAndPasses.includes("gifts"),
                 "guestPass": giftsAndPasses.includes("passes"),
-                "coupon": hasCoupon,
+                "coupon": Boolean(hasCoupon),
             };
         }
 
+        let opts = Object.assign({
+            "giftsAndPasses": true,
+            "coupons": true,
+        }, options);
+
+        if (!opts.giftsAndPasses && !opts.coupons) { return null; }
+
+        let multiple = Array.isArray(appids);
+
         try {
             let [ giftsAndPasses, coupons ] = await Promise.all([
-                Background.action("hasgiftsandpasses", appids),
-                Background.action("hascoupon", appids),
+                opts.giftsAndPasses ? Background.action("hasgiftsandpasses", appids) : Promise.resolve(),
+                opts.coupons ? Background.action("hascoupon", appids) : Promise.resolve(),
             ]);
 
-            if (Array.isArray(appids)) {
+            if (multiple) {
                 let results = {};
                 
                 for (let id of appids) {
-                    results[id] = getStatusObject(giftsAndPasses[id], coupons[id]);
+                    results[id] = getStatusObject(giftsAndPasses ? giftsAndPasses[id] : [], coupons ? coupons[id] : false);
                 }
                 
                 return results;
             }
-            return getStatusObject(giftsAndPasses, coupons);
+            return getStatusObject(giftsAndPasses || [], typeof coupons !== "undefined" ? coupons : false);
         } catch (err) {
-            if (Array.isArray(appids)) {
+            if (multiple) {
                 let results = {};
                 for (let id of appids) {
-                    results[id] = getStatusObject([], null);
+                    results[id] = getStatusObject([], false);
                 }
                 return results;
             }
 
-            return getStatusObject([], null);
+            return getStatusObject([], false);
         }
     };
 
@@ -1775,7 +1864,7 @@ let Highlights = (function(){
                 let color = SyncedStorage.get(`highlight_${name}_color`);
                 hlCss.push(`
                     .es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
-                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name} { outline: solid ${color}; }
+                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name}, .blotter_userstatus_game.es_highlighted_${name} { outline: solid ${color}; }
                     #search_suggestion_contents .focus.es_highlighted_${name} { box-shadow: -5px 0 0 ${color}; }
                     .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }
                 `);
@@ -1896,9 +1985,21 @@ let Highlights = (function(){
      * Additionally hides non-discounted titles if wished by the user.
      * @param {NodeList} nodes      The nodes that should get highlighted
      * @param {boolean} hasDsInfo   Whether or not the supplied nodes contain dynamic store info.
+     * @param {Object} options      The highlights/tags that should be applied. Defaults to all enabled.
      * @returns {Promise}           Resolved once the highlighting and tagging completed for the nodes
      */
-    self.highlightAndTag = async function(nodes, hasDsInfo = true) {
+    self.highlightAndTag = async function(nodes, hasDsInfo = true, options) {
+
+        let opts = Object.assign({
+            "owned": true,
+            "wishlisted": true,
+            "ignored": true,
+            "collected": true,
+            "waitlisted": true,
+            "gift": true,
+            "guestPass": true,
+            "coupon": true,
+        }, options);
 
         let storeIdsMap = new Map();
 
@@ -1914,6 +2015,8 @@ let Highlights = (function(){
             } else if (node.parentNode.parentNode.classList.contains("curations")) {
                 nodeToHighlight = node.parentNode;
             } else if (node.classList.contains("special_img_ctn") && node.parentElement.classList.contains("special")) {
+                nodeToHighlight = node.parentElement;
+            } else if (node.classList.contains("blotter_userstats_game")) { // Small game capsules on activity page (e.g. when posting a status about a game)
                 nodeToHighlight = node.parentElement;
             }
 
@@ -1943,15 +2046,15 @@ let Highlights = (function(){
             }
 
             if (hasDsInfo) {
-                if (node.querySelector(".ds_owned_flag")) {
+                if (node.querySelector(".ds_owned_flag") && opts.owned) {
                     self.highlightOwned(nodeToHighlight);
                 }
 
-                if (node.querySelector(".ds_wishlist_flag")) {
+                if (node.querySelector(".ds_wishlist_flag") && opts.wishlisted) {
                     self.highlightWishlist(nodeToHighlight);
                 }
 
-                if (node.querySelector(".ds_ignored_flag")) {
+                if (node.querySelector(".ds_ignored_flag") && opts.ignored) {
                     self.highlightNotInterested(nodeToHighlight);
                 }
             }
@@ -1964,27 +2067,46 @@ let Highlights = (function(){
         let storeIds = Array.from(storeIdsMap.keys());
         let trimmedStoreIds = storeIds.map(id => GameId.trimStoreId(id));
 
+        let includeDsInfo =
+            !hasDsInfo
+            && (   (opts.owned && (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned") || SyncedStorage.get("hide_owned")))
+                || (opts.wishlisted && (SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist")))
+                || (opts.ignored && (SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested") || SyncedStorage.get("hide_ignored")))
+               );
+
         let [ dsStatus, itadStatus, invStatus ] = await Promise.all([
-            hasDsInfo ? Promise.resolve() : DynamicStore.getAppStatus(storeIds),
-            ITAD.getAppStatus(storeIds),
-            Inventory.getAppStatus(trimmedStoreIds),
+            includeDsInfo ? DynamicStore.getAppStatus(storeIds) : Promise.resolve(),
+            ITAD.getAppStatus(storeIds, {
+                "waitlist": opts.waitlisted && (SyncedStorage.get("highlight_waitlist") || SyncedStorage.get("tag_waitlist")),
+                "collection": opts.collected && (SyncedStorage.get("highlight_collection") || SyncedStorage.get("tag_collection")),
+            }),
+            Inventory.getAppStatus(trimmedStoreIds, {
+                "giftsAndPasses": opts.gift && (SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift"))
+                                || opts.guestPass && (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass")),
+                "coupons": opts.coupon && (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon")),
+            }),
         ]);
 
         let it = trimmedStoreIds.values();
         for (let [storeid, nodes] of storeIdsMap) {
             if (dsStatus) {
-                if (dsStatus[storeid].owned) nodes.forEach(node => self.highlightOwned(node));
-                if (dsStatus[storeid].wishlisted) nodes.forEach(node => self.highlightWishlist(node));
-                if (dsStatus[storeid].ignored) nodes.forEach(node => self.highlightNotInterested(node));
+                if (opts.owned && dsStatus[storeid].owned) nodes.forEach(node => self.highlightOwned(node));
+                if (opts.wishlisted && dsStatus[storeid].wishlisted) nodes.forEach(node => self.highlightWishlist(node));
+                if (opts.ignored && dsStatus[storeid].ignored) nodes.forEach(node => self.highlightNotInterested(node));
             }
 
-            if (itadStatus[storeid].collected) nodes.forEach(node => self.highlightCollection(node));
-            if (itadStatus[storeid].waitlisted) nodes.forEach(node => self.highlightWaitlist(node));
+            // Don't need to check for the opts object here, since the result contains false for every property if the highlight has been disabled
+            if (itadStatus) {
+                if (itadStatus[storeid].collected) nodes.forEach(node => self.highlightCollection(node));
+                if (itadStatus[storeid].waitlisted) nodes.forEach(node => self.highlightWaitlist(node));
+            }
 
-            let trimmedId = it.next().value;
-            if (invStatus[trimmedId].gift) nodes.forEach(node => self.highlightInvGift(node));
-            if (invStatus[trimmedId].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
-            if (invStatus[trimmedId].coupon) nodes.forEach(node => self.highlightCoupon(node));
+            if (invStatus) {
+                let trimmedId = it.next().value;
+                if (opts.gift && invStatus[trimmedId].gift) nodes.forEach(node => self.highlightInvGift(node));
+                if (opts.guestPass && invStatus[trimmedId].guestPass) nodes.forEach(node => self.highlightInvGuestpass(node));
+                if (invStatus[trimmedId].coupon) nodes.forEach(node => self.highlightCoupon(node)); // Same as for the ITAD highlights (don't need to check)
+            }
         }
     }
 
@@ -2048,6 +2170,14 @@ let Highlights = (function(){
             observer.observe(searchBoxContents, { childList: true });
         }
     };
+
+    self.addTitleHighlight = function(appid) {
+
+        let title = document.querySelector(".apphub_AppName");
+        title.dataset.dsAppid = appid;
+
+        Highlights.highlightAndTag([title], false);
+    }
 
     return self;
 })();
@@ -2143,8 +2273,8 @@ let Prices = (function(){
         this.subids = [];
         this.bundleids = [];
 
-        this.priceCallback = function(type, id, node) {};
-        this.bundleCallback = function(html) {};
+        this.priceCallback = null;
+        this.bundleCallback = null;
 
         this._bundles = [];
     }
@@ -2156,7 +2286,7 @@ let Prices = (function(){
             apiParams.stores = SyncedStorage.get("stores").join(",");
         }
 
-        let cc = User.getCountry();
+        let cc = User.country;
         if (cc) {
             apiParams.cc = cc;
         }
@@ -2450,6 +2580,7 @@ let Common = (function(){
         AugmentedSteam.skipGotSteam();
         AugmentedSteam.keepSteamSubscriberAgreementState();
         AugmentedSteam.defaultCommunityTab();
+        AugmentedSteam.horizontalScrolling();
         ITAD.create();
 
         if (User.isSignedIn) {
@@ -2463,18 +2594,6 @@ let Common = (function(){
 
     return self;
 })();
-
-class Downloader {
-
-    static download(content, filename) {
-        let a = document.createElement("a");
-        a.href = typeof content === "string" ? content : URL.createObjectURL(content);
-        a.download = filename;
-
-        // Explicitly dispatching the click event (instead of just a.click()) will make it work in FF
-        a.dispatchEvent(new MouseEvent("click"));
-    }
-}
 
 let Clipboard = (function(){
 
@@ -2496,7 +2615,7 @@ let Clipboard = (function(){
 class MediaPage {
 
     appPage() {
-        if (SyncedStorage.get("showyoutubegameplay")) {
+        if (SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews")) {
             this._mediaSliderExpander(HTML.beforeEnd, ".home_tabs_row");
         } else {
             this._mediaSliderExpander(HTML.beforeEnd, "#highlight_player_area");
@@ -2658,20 +2777,6 @@ class MediaPage {
                 node.classList.toggle("es_expanded");
             }
         }
-
-        this._horizontalScrolling();
-    }
-
-    _horizontalScrolling() {
-        if (!SyncedStorage.get("horizontalscrolling")) { return; }
-
-        for (let node of document.querySelectorAll(".slider_ctn")) {
-            new HorizontalScroller(
-                node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
-                node.querySelector(".slider_left"),
-                node.querySelector(".slider_right")
-            );
-        }
     }
 }
 
@@ -2828,11 +2933,11 @@ class Sortbox {
         let id = `sort_by_${name}`;
         let reversed = initialOption.endsWith("_DESC");
 
-        let arrowDown = '↓';
-        let arrowUp = '↑';
+        let arrowDown = "↓";
+        let arrowUp = "↑";
         
         let box = HTML.element(
-        `<div class="es-sortbox">
+        `<div class="es-sortbox es-sortbox--${name}">
             <div class="es-sortbox__label">${Localization.str.sort_by}</div>
             <div class="es-sortbox__container">
                 <input id="${id}" type="hidden" name="${name}" value="${initialOption}">
@@ -2845,7 +2950,7 @@ class Sortbox {
         </div>`);
 
         let input = box.querySelector(`#${id}`);
-        input.addEventListener("change", function() { onChange(this.value, reversed); });
+        input.addEventListener("change", function() { onChange(this.value.replace(`${id}_`, ''), reversed); });
 
         // Trigger changeFn for initial option
         if (initialOption !== "default_ASC") {
@@ -2856,7 +2961,7 @@ class Sortbox {
         reverseEl.addEventListener("click", () => {
             reversed = !reversed;
             reverseEl.textContent = reversed ? arrowUp : arrowDown;
-            onChange(input.value, reversed);
+            onChange(input.value.replace(`${id}_`, ''), reversed);
         });
         if (reversed) reverseEl.textContent = arrowUp;
 
@@ -2879,7 +2984,7 @@ class Sortbox {
 
             HTML.beforeEnd(ul,
                 `<li>
-                    <a class="${toggle}_selection" tabindex="99999" id="${key}">${text}</a>
+                    <a class="${toggle}_selection" tabindex="99999" id="${id}_${key}">${text}</a>
                 </li>`);
 
             let a = ul.querySelector("li:last-child > a");
@@ -2897,6 +3002,31 @@ class Sortbox {
         }
 
         return box;
+    }
+}
+
+class ConfirmDialog {
+
+    static open(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton) {
+        return ExtensionLayer.runInPageContext((a,b,c,d,e) => {
+            let prompt = ShowConfirmDialog(a,b,c,d,e);
+
+            return new Promise((resolve, reject) => {
+                prompt.done(result => {
+                    resolve(result);
+                }).fail(() => {
+                    resolve("CANCEL");
+                });
+            });
+        },
+        [
+            strTitle,
+            strDescription,
+            strOKButton,
+            strCancelButton,
+            strSecondaryActionButton
+        ],
+        true);
     }
 }
 

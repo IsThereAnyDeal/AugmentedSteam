@@ -365,6 +365,27 @@
                                 <button id="tag_notinterested_default" data-locale-text="theworddefault">Default</button>
                             </div>
                         </div>
+
+                        <div class="option">
+                            <input type="checkbox" id="tag_collection" data-setting="tag_collection">
+                            <label for="tag_collection" data-locale-text="options.collection">Items in your ITAD Collection</label>
+            
+                            <div class="buttons">
+                                <input type="color" id="tag_collection_color" data-setting="tag_collection_color">
+                                <button id="tag_collection_default" data-locale-text="theworddefault">Default</button>
+                            </div>
+                        </div>
+
+                        <div class="option">
+                            <input type="checkbox" id="tag_waitlist" data-setting="tag_waitlist">
+                            <label for="tag_waitlist" data-locale-text="options.waitlist">Items in your ITAD Waitlist</label>
+            
+                            <div class="buttons">
+                                <input type="color" id="tag_waitlist_color" data-setting="tag_waitlist_color">
+                                <button id="tag_waitlist_default" data-locale-text="theworddefault">Default</button>
+                            </div>
+                        </div>
+
                         <div class="option distance_top">
                             <input type="checkbox" id="tag_short" data-setting="tag_short">
                             <label for="tag_short" data-locale-text="tag_short">Use short tags to save space</label>
@@ -436,10 +457,6 @@
                         <div class="option">
                             <input type="checkbox" id="mp4video" data-setting="mp4video">
                             <label for="mp4video" data-locale-text="options.mp4video">Force app store videos to be in MP4 format</label>
-                        </div>
-                        <div class="option">
-                            <input type="checkbox" id="contscroll" data-setting="contscroll">
-                            <label for="contscroll" data-locale-text="options.contscroll">Enable continuous scrolling of search results</label>
                         </div>
                         <div class="option">
                             <input type="checkbox" id="horizontalscrolling" data-setting="horizontalscrolling">
@@ -762,14 +779,6 @@
                         <div class="distance_bottom">
                             <button id="add-custom-link" data-locale-text="options.add_custom_link">Add custom link</button>
                         </div>
-                        <div class="option">
-                            <label data-locale-text="options.profile_link_images">Profile link images</label>&nbsp;
-                            <select id="profile_link_images_dropdown" data-setting="show_profile_link_images">
-                                <option value="gray" id="profile_link_images_gray" data-locale-text="options.profile_link_images_gray">Grayscale</option>
-                                <option value="color" id="profile_link_images_color" data-locale-text="options.profile_link_images_color">Colored</option>
-                                <option value="none" id="profile_link_images_none" data-locale-text="options.profile_link_images_none">None</option>
-                            </select>
-                        </div>
                     </div>
 
                     <div id="community_group_section" class="content_section">
@@ -781,9 +790,16 @@
                         </div>
                     </div>
 
-        
                     <div id="community_general_section" class="content_section">
                         <h2 data-locale-text="options.general">General</h2>
+                        <div class="option">
+                            <label data-locale-text="options.profile_link_images">Profile and Group links image style</label>
+                            <select id="profile_link_images_dropdown" data-setting="show_profile_link_images">
+                                <option value="gray" id="profile_link_images_gray" data-locale-text="options.profile_link_images_gray">Grayscale</option>
+                                <option value="color" id="profile_link_images_color" data-locale-text="options.profile_link_images_color">Colored</option>
+                                <option value="none" id="profile_link_images_none" data-locale-text="options.profile_link_images_none">None</option>
+                            </select>
+                        </div>
                         <div class="option">
                             <label for="community_default_tab" data-locale-text="options.community_default_tab">Default community home page tab</label>
                             <select id="community_default_tab" data-setting="community_default_tab">
@@ -874,7 +890,9 @@
                 <li>Revadike <a href="https://steamcommunity.com/id/revadike/">Revadike</a></li>
             </ul>
 
-            <h3 id="translation_text" data-locale-text="translation">Translation</h3>
+            <h3 id="translation_text" data-locale-text="translation">Translation</h3>            
+            <a data-locale-text="help_translate" target="blank" href="https://poeditor.com/join/project/yGk0CFH2Uu">Help us translate Augmented Steam over at POEditor</a>
+            <br><br>
             <table class="indented">
                 <tr>
                     <td class="lang-perc brazilian"></td>
@@ -1087,7 +1105,11 @@
     </div>
     <span id="author_info">a fork by IsThereAnyDeal<br />original author jshackles</span>
     <div>
-        <button id="reset" data-locale-text="options.reset">Reset options</button>
+        <button id="import" data-locale-text="options.settings_mngmt.import">Import</button>
+        <button id="export" data-locale-text="options.settings_mngmt.export">Export</button>
+        <button id="reset" data-locale-text="options.settings_mngmt.reset">Reset</input>
+
+        <input type="file" id="import_input" accept=".json">
     </div>
 </div>
 <script src="js/lib/DOMPurify/purify.js"></script>

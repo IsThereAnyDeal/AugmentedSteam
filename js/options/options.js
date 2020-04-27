@@ -435,16 +435,13 @@ let Options = (function(){
                 node.textContent = `${Localization.str.options.lang[lang]}:`;
             }
 
-            if (lang === "english") continue;
+            if (lang === "english") { continue; }
             let code = Language.languages[lang];
             let locale = await Localization.loadLocalization(code);
             let count = deepCount(locale);
             let percentage = 100 * count / total;
 
-            HTML.inner(
-                document.querySelector(`.lang-perc.${lang}`),
-                `<a href="https://github.com/tfedor/AugmentedSteam/edit/develop/localization/${code}/strings.json">${percentage.toFixed(1)}%</a>`
-            );
+            HTML.inner(document.querySelector(`.lang-perc.${lang}`), `${percentage.toFixed(1)}%&nbsp;`);
         }
 
         let [ itadStatus, itadAction ] = document.querySelectorAll("#itad_status, #itad_action");
@@ -489,14 +486,14 @@ let Options = (function(){
 
         function deepCount(obj) {
             let cnt = 0;
-            for (let key in obj) {
+            for (let key of Object.keys(obj)) {
                 if (!Localization.str[key]) { // don't count "made up" translations
                     continue;
                 }
                 if (typeof obj[key] === "object") {
                     cnt += deepCount(obj[key]);
-                } else {
-                    cnt += 1;
+                } else if (obj[key] !== "") {
+                    cnt++;
                 }
             }
             return cnt;
@@ -590,6 +587,45 @@ let Options = (function(){
         Region.populate();
     }
 
+    function importSettings({ "target": input }) {
+        let reader = new FileReader();
+        reader.addEventListener("load", () => {
+            let importedSettings;
+            try {
+                importedSettings = JSON.parse(reader.result);
+            } catch(err) {
+                console.group("Import");
+                console.error("Failed to read settings file");
+                console.error(err);
+                console.groupEnd();
+
+                window.alert(Localization.str.options.settings_mngmt.import_fail);
+                return;
+            }
+
+            delete importedSettings.version;
+
+            try {
+                SyncedStorage.import(importedSettings);
+            } catch(err) {
+                console.group("Import");
+                console.error("Failed to write settings to storage");
+                console.error(err);
+                console.groupEnd();
+
+                window.alert(Localization.str.options.settings_mngmt.import_fail);
+                return;
+            }
+
+            window.alert(Localization.str.options.settings_mngmt.import_success);
+            window.location.reload();
+        });
+        reader.readAsText(input.files[0]);
+    }
+
+    function exportSettings() {
+        Downloader.download(new Blob([JSON.stringify(SyncedStorage.cache)]), `AugmentedSteam_v${Info.version}.json`);
+    }
 
     function clearSettings() {
         if (!confirm(Localization.str.options.clear)) { return; }
@@ -691,20 +727,22 @@ let Options = (function(){
         let addHandlerToSetDefaultColor = (key) => {
             document.getElementById(`${key}_default`).addEventListener('click', () => setValue(`#${key}_color`, Defaults[`${key}_color`]));
         };
-        ['highlight_owned',
-         'highlight_wishlist',
-         'highlight_coupon',
-         'highlight_inv_gift',
-         'highlight_inv_guestpass',
-         'highlight_notinterested',
-         'highlight_waitlist',
-         'highlight_collection',
-         'tag_owned',
-         'tag_wishlist',
-         'tag_coupon',
-         'tag_inv_gift',
-         'tag_inv_guestpass',
-         'tag_notinterested',
+        ["highlight_owned",
+         "highlight_wishlist",
+         "highlight_coupon",
+         "highlight_inv_gift",
+         "highlight_inv_guestpass",
+         "highlight_notinterested",
+         "highlight_waitlist",
+         "highlight_collection",
+         "tag_owned",
+         "tag_wishlist",
+         "tag_coupon",
+         "tag_inv_gift",
+         "tag_inv_guestpass",
+         "tag_notinterested",
+         "tag_collection",
+         "tag_waitlist",
         ].forEach(addHandlerToSetDefaultColor);
 
         document.getElementById("spamcommentregex_default").addEventListener("click", () => setValue("#spamcommentregex", "[\\u2500-\\u25FF]"));
@@ -735,6 +773,11 @@ let Options = (function(){
             });
         });
 
+        let importInput = document.getElementById("import_input");
+
+        importInput.addEventListener("change", importSettings, false);
+        document.getElementById("import").addEventListener("click", () => { importInput.click(); });
+        document.getElementById("export").addEventListener("click", exportSettings);
         document.getElementById("reset").addEventListener("click", clearSettings);
 
         document.addEventListener("change", saveOptionFromEvent);

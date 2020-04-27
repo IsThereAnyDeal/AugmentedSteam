@@ -126,37 +126,17 @@ class Api {
             return result;
         }
     }
-    static endpointFactoryCached(endpoint, objectStoreName, oneDimensional, resultFn) {
-        return async (params, dbKey) => {
+    static endpointFactoryCached(endpoint, storeName, mapFn) {
+        return async ({ params, key } = {}) => {
             let result = await this.getEndpoint(endpoint, params);
 
-            let finalResult;
-            if (resultFn) {
-                finalResult = resultFn(result.data);
+            if (mapFn) {
+                result = mapFn(result.data);
             } else {
-                finalResult = result.data;
+                result = result.data;
             }
-            
-            if (!dbKey) {
-                dbKey = Object.keys(finalResult).map(key => {
-                    let intKey = Number(key);
-                    if (intKey && intKey <= Number.MAX_SAFE_INTEGER) {
-                        return intKey;
-                    }
-                    return key;
-                });
-                finalResult = Object.values(finalResult);
-            } else {
-                let intKey = Number(dbKey);
-                if (intKey && intKey <= Number.MAX_SAFE_INTEGER) {
-                    dbKey = intKey;
-                }
-            }
-            return IndexedDB.putCached(
-                objectStoreName,
-                oneDimensional ? null : finalResult,
-                oneDimensional ? finalResult : dbKey,
-            );
+
+            return IndexedDB.put(storeName, typeof key !== "undefined" ? new Map([[key, result]]) : result);
         };
     }
 }
@@ -185,7 +165,7 @@ class AugmentedSteamApi extends Api {
         let params = { "appid": appid };
         if (metalink)   params.mcurl = metalink;
         if (showoc)     params.oc = 1;
-        return IndexedDB.get("storePageData", appid, params);
+        return IndexedDB.get("storePageData", appid, { params });
     }
 
     static expireStorePageData(appid) {
@@ -193,7 +173,7 @@ class AugmentedSteamApi extends Api {
     }
 
     static rates(to) {
-        return IndexedDB.getAll("rates", { "to": to.sort().join(',') });
+        return IndexedDB.getAll("rates", { "params": { "to": to.sort().join(',') } });
     }
 
     static isEA(appids) {
@@ -316,10 +296,10 @@ class ITAD_Api extends Api {
         return true;
     }
 
-    static endpointFactoryCached(endpoint, objectStore, oneDimensional, resultFn) {
-        return async (params, dbKey) => {
+    static endpointFactoryCached(endpoint, storeName, resultFn) {
+        return async ({ params = {}, key } = {}) => {
             if (ITAD_Api.isConnected()) {
-                return super.endpointFactoryCached(endpoint, objectStore, oneDimensional, resultFn)(Object.assign(params || {}, { access_token: ITAD_Api.accessToken }), dbKey);
+                return super.endpointFactoryCached(endpoint, storeName, resultFn)({ "params": Object.assign(params, { "access_token": ITAD_Api.accessToken }), key });
             }
         }
     }
@@ -335,20 +315,25 @@ class ITAD_Api extends Api {
             "data": [],
         };
 
+        let storeids = {};
         if (Array.isArray(appids)) {
             appids.forEach(appid => {
+                let id = `app/${appid}`;
                 waitlistJSON.data.push({
-                    "gameid": ["steam", `app/${appid}`],
+                    "gameid": ["steam", id],
                 });
+                storeids[id] = null;
             });
         } else {
+            let id = `app/${appids}`;
             waitlistJSON.data[0] = {
-                "gameid": ["steam", `app/${appids}`],
-            }
+                "gameid": ["steam", id],
+            };
+            storeids[id] = null;
         }
 
         await ITAD_Api.postEndpoint("v01/waitlist/import/", { "access_token": ITAD_Api.accessToken }, null, { "body": JSON.stringify(waitlistJSON) });
-        return IndexedDB.put("waitlist", null, appids);
+        return IndexedDB.put("waitlist", storeids);
     }
 
     static async removeFromWaitlist(appids) {
@@ -433,7 +418,10 @@ class ITAD_Api extends Api {
             let newOwnedPackages = removeDuplicates(ownedPackages, lastOwnedPackages);
             if (newOwnedApps.length || newOwnedPackages.length) {
                 promises.push(ITAD_Api.addToCollection(newOwnedApps, newOwnedPackages)
-                    .then(() => IndexedDB.put("itadImport", [ownedApps, ownedPackages], ["lastOwnedApps", "lastOwnedPackages"])));
+                    .then(() => IndexedDB.put("itadImport", {
+                        "lastOwnedApps": ownedApps,
+                        "lastOwnedPackages": ownedPackages,
+                    })));
             }
         }
 
@@ -442,7 +430,7 @@ class ITAD_Api extends Api {
             let newWishlisted = removeDuplicates(wishlisted, lastWishlisted);
             if (newWishlisted.length) {
                 promises.push(ITAD_Api.addToWaitlist(newWishlisted)
-                    .then(() => IndexedDB.put("itadImport", wishlisted, "lastWishlisted")));
+                    .then(() => IndexedDB.put("itadImport", { "lastWishlisted": wishlisted })));
             }
         }
         
@@ -456,8 +444,8 @@ class ITAD_Api extends Api {
     static async sync() {
         await Promise.all([
             ITAD_Api.import(true),
-            IndexedDB.clear("waitlist").then(() => IndexedDB.objStoreFetchFns.get("waitlist")({ "shop": "steam", "optional": "gameid" })),
-            IndexedDB.clear("collection").then(() => IndexedDB.objStoreFetchFns.get("collection")({ "shop": "steam", "optional": "gameid,copy_type" })),
+            IndexedDB.clear("waitlist").then(() => IndexedDB.objStoreFetchFns.get("waitlist")({ "params": { "shop": "steam", "optional": "gameid" } })),
+            IndexedDB.clear("collection").then(() => IndexedDB.objStoreFetchFns.get("collection")({ "params": { "shop": "steam", "optional": "gameid,copy_type" } })),
         ]);        
     }
 
@@ -496,9 +484,9 @@ class ITAD_Api extends Api {
         return waitlist;
     }
 
-    static inWaitlist(storeIds) { return IndexedDB.contains("waitlist", storeIds, { "shop": "steam", "optional": "gameid" }) }
-    static inCollection(storeIds) { return IndexedDB.contains("collection", storeIds, { "shop": "steam", "optional": "gameid,copy_type" }) }
-    static getFromCollection(storeId) { return IndexedDB.get("collection", storeId, { "shop": "steam", "optional": "gameid,copy_type" }) }
+    static inWaitlist(storeIds) { return IndexedDB.contains("waitlist", storeIds, { "params": { "shop": "steam", "optional": "gameid" } }); }
+    static inCollection(storeIds) { return IndexedDB.contains("collection", storeIds, { "params": { "shop": "steam", "optional": "gameid,copy_type" } }); }
+    static getFromCollection(storeId) { return IndexedDB.get("collection", storeId, { "params": { "shop": "steam", "optional": "gameid,copy_type" } }); }
 }
 ITAD_Api.accessToken = null;
 ITAD_Api.requiredScopes = [
@@ -514,69 +502,58 @@ ITAD_Api._progressingRequests = new Map();
 class ContextMenu {
 
     static onClick(info) {
-        let selectionText = encodeURIComponent(info.selectionText.trim());
+        let query = encodeURIComponent(info.selectionText.trim());
+        let url = ContextMenu.queryLinks[info.menuItemId];
+        if (!url) { return; }
 
-        switch (info.menuItemId) {
-            case "context_steam_store":
-                browser.tabs.create({ url: `https://store.steampowered.com/search/?term=${selectionText}` });
-                break;
-            case "context_steam_market":
-                browser.tabs.create({ url: `https://steamcommunity.com/market/search?q=${selectionText}` });
-                break;
-            case "context_itad":
-                browser.tabs.create({ url: `https://isthereanydeal.com/search/?q=${selectionText}` });
-                break;
-            case "context_bartervg":
-                browser.tabs.create({ url: `https://barter.vg/search?q=${selectionText}` });
-                break;
-            case "context_steamdb":
-                browser.tabs.create({ url: `https://steamdb.info/search/?q=${selectionText}` });
-                break;
-            case "context_steamdb_instant":
-                browser.tabs.create({ url: `https://steamdb.info/instantsearch/?query=${selectionText}` });
-                break;
-            case "context_steam_keys":
-                let steamkeys = info.selectionText.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
-                if (!steamkeys || steamkeys.length === 0) {
-                    window.alert(Localization.str.options.no_keys_found);
-                    return;
-                }
-                steamkeys.forEach(steamkey => browser.tabs.create({ url: `https://store.steampowered.com/account/registerkey?key=${encodeURIComponent(steamkey)}` }));
-                break;
+        url = url.replace("__query__", query);
+        if (info.menuItemId === "context_steam_keys") {
+            let steamkeys = info.selectionText.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
+            if (!steamkeys || steamkeys.length === 0) {
+                window.alert(Localization.str.options.no_keys_found);
+                return;
+            }
+
+            steamkeys.forEach(steamkey => {
+                url.replace("__steamkey__", steamkey);
+                browser.tabs.create({ url });
+            });
+        } else {
+            browser.tabs.create({ url });
         }
     }
     
-    static build() {
-        if (!browser.contextMenus) { return; }
-        let options = ["context_steam_store", "context_steam_market", "context_itad", "context_bartervg", "context_steamdb", "context_steamdb_instant", "context_steam_keys"];
+    static async build() {
+        await Localization;
 
-        for (let option of options) {
+        for (let option of Object.keys(ContextMenu.queryLinks)) {
             if (!SyncedStorage.get(option)) { continue; }
 
             browser.contextMenus.create({
                 "id": option,
                 "title": Localization.str.options[option].replace("__query__", "%s"),
                 "contexts": ["selection"]
-            });
+            },
+            // TODO don't recreate the context menu entries on each change, only update the affected entry (which should also prevent this error)
+            // Error when you create an entry with duplicate id
+            () => chrome.runtime.lastError);
         }
     }
     
     static update() {
-        if (!browser.contextMenus) { return; }
         browser.contextMenus.removeAll().then(ContextMenu.build);
-
-        if (!ContextMenu._listenerRegistered) {
-            browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
-            ContextMenu._listenerRegistered = true;
-        }
-    }
-
-    static async init() {
-        await Localization;
-        ContextMenu.update();
     }
 }
-ContextMenu._listenerRegistered = false;
+
+ContextMenu.queryLinks = {
+    "context_steam_store": "https://store.steampowered.com/search/?term=__query__",
+    "context_steam_market": "https://steamcommunity.com/market/search?q=__query__",
+    "context_itad": "https://isthereanydeal.com/search/?q=__query__",
+    "context_bartervg": "https://barter.vg/search?q=__query__",
+    "context_steamdb": "https://steamdb.info/search/?q=__query__",
+    "context_steamdb_instant": "https://steamdb.info/instantsearch/?query=__query__",
+    "context_steam_keys": "https://store.steampowered.com/account/registerkey?key=__steamkey__"
+}
 
 
 class SteamStore extends Api {
@@ -584,25 +561,51 @@ class SteamStore extends Api {
     // static params = { 'credentials': 'include', };
     // static _progressingRequests = new Map();
 
-    static async fetchPackage(params, subid) {
+    static async fetchPackage({ "key": subid }) {
         let data = await SteamStore.getEndpoint("/api/packagedetails/", { "packageids": subid, });
-        let promises = [];
+        let appids = new Map();
+
         for (let [subid, details] of Object.entries(data)) {
             if (details && details.success) {
-                let appids = details.data.apps.map(obj => obj.id);
                 // .apps is an array of { 'id': ##, 'name': "", }
-                promises.push(IndexedDB.putCached("packages", appids, Number(subid)));
+                appids.set(Number(subid), details.data.apps.map(obj => obj.id))
+            } else {
+                appids.set(Number(subid), null);
             }
         }
-        return Promise.all(promises);
+        return IndexedDB.put("packages", appids);
     }
     
-    static async wishlistAdd(params) {
-        return SteamStore.postEndpoint("/api/addtowishlist", params);
+    static async wishlistAdd(appid) {
+        let res;
+        let sessionid = await SteamStore.sessionId();
+
+        if (sessionid) {
+            res = await SteamStore.postEndpoint("/api/addtowishlist", { sessionid, appid });
+        }
+        
+        if (!res || !res.success) {
+            throw new Error(`Failed to add app ${appid} to wishlist`);
+        }
+
+        return SteamStore.clearDynamicStore();
     }
 
-    static async wishlistRemove(params) {
-        return SteamStore.postEndpoint("/api/removefromwishlist", params);
+    static async wishlistRemove(appid, sessionid) {
+        let res;
+
+        if (!sessionid) {
+            sessionid = await SteamStore.sessionId();
+        }
+        if (sessionid) {
+            res = await SteamStore.postEndpoint("/api/removefromwishlist", { sessionid, appid });
+        }
+
+        if (!res || !res.success) {
+            throw new Error(`Failed to remove app ${appid} from wishlist`);
+        }
+
+        return SteamStore.clearDynamicStore();
     }
 
     static async currencyFromWallet() {
@@ -625,7 +628,7 @@ class SteamStore extends Api {
     }
 
     static async currency() {
-        let currency = CacheStorage.get("currency", 3600);
+        let currency = CacheStorage.get("currency", 60 * 60);
         if (currency) return currency;
 
         currency = await SteamStore.currencyFromWallet();
@@ -641,13 +644,15 @@ class SteamStore extends Api {
      */
     static async country() {
         let self = SteamStore;
-        let html = await self.getPage("/account/change_country/");
+        let html = await self.getPage("/account/change_country/", {}, res => {
+            if (new URL(res.url).pathname === "/login/") {
+                throw new LoginError("store");
+            }
+        });
         let dummyPage = HTMLParser.htmlToDOM(html);
 
         let node = dummyPage.querySelector("#dselect_user_country");
-        if (node && node.value)
-            return node.value;
-        throw new Error("Could not retrieve country");
+        return node && node.value;
     }
 
     static async sessionId() {
@@ -656,8 +661,14 @@ class SteamStore extends Api {
         let html = await self.getPage("/news/");
         return HTMLParser.getVariableFromText(html, "g_sessionID", "string");
     }
+
+    static async wishlists(path) {
+        let html = await SteamStore.getPage(`/wishlist${path}`);
+        let data = HTMLParser.getVariableFromText(html, "g_rgWishlistData", "array");
+        return data ? data.length : '';
+    }
     
-    static async purchaseDate(lang) {
+    static async purchaseDate({ "params": lang }) {
         let replaceRegex = [
             /- Complete Pack/ig,
             /Standard Edition/ig,
@@ -673,8 +684,7 @@ class SteamStore extends Api {
             /ROW/ig,
             /:/ig,
         ];
-        let purchaseDates = [];
-        let keys = [];
+        let purchaseDates = new Map();
 
         let html = await SteamStore.getPage("/account/licenses/", { 'l': lang, });
         let dummyPage = HTMLParser.htmlToDOM(html);
@@ -689,14 +699,13 @@ class SteamStore extends Api {
                 appName = appName.replace(regex, "");
             }
             appName = appName.trim();
-            keys.push(appName);
-            purchaseDates.push(node.textContent);
+            purchaseDates.set(appName, node.textContent);
         }
 
-        return IndexedDB.putCached("purchases", purchaseDates, keys);
+        return IndexedDB.put("purchases", purchaseDates);
     }
 
-    static purchases(appName, lang) { return IndexedDB.get("purchases", appName, lang) }
+    static purchases(appName, lang) { return IndexedDB.get("purchases", appName, { "params": lang }) }
     static clearPurchases() { return IndexedDB.clear("purchases") }
 
     static async dynamicStore() {
@@ -714,11 +723,11 @@ class SteamStore extends Api {
         // "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
         // "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
 
-        return IndexedDB.putCached("dynamicStore", Object.values(dynamicStore), Object.keys(dynamicStore));
+        return IndexedDB.put("dynamicStore", dynamicStore);
     }
 
     static dsStatus(ids) {
-        return IndexedDB.getAllFromIndex("dynamicStore", "appid", ids, true)
+        return IndexedDB.getFromIndex("dynamicStore", "appid", ids, { "all": true, "asKey": true })
     }
 
     static async dynamicStoreRandomApp() {
@@ -772,7 +781,7 @@ class SteamCommunity extends Api {
             let thisParams = Object.assign(params, last_assetid ? { "start_assetid": last_assetid } : null);
             result = await SteamCommunity.getEndpoint(`/inventory/${login.steamId}/753/${contextId}`, thisParams, res => {
                 if (res.status === 403) {
-                    throw new CommunityLoginError(`Can't access resource at ${res.url}, HTTP 403`);
+                    throw new LoginError("community");
                 }
             });
             if (result && result.success) {
@@ -793,7 +802,7 @@ class SteamCommunity extends Api {
      * Inventory functions, must be signed in to function correctly
      */
     static async coupons() { // context#3
-        let coupons = {};
+        let coupons = new Map();
         let data = await SteamCommunity.getInventory(3);
         if (!data) return;
 
@@ -831,16 +840,17 @@ class SteamCommunity extends Api {
                 }
 
                 for (let packageid of match[0].split(',')) {
-                    if (!coupons[packageid] || coupons[packageid].discount < coupon.discount) {
-                        coupons[packageid] = coupon;
+                    packageid = Number(packageid);
+                    if (!coupons.has(packageid) || coupons.get(packageid).discount < coupon.discount) {
+                        coupons.set(packageid, coupon);
                     }
                 }
             }
         }
 
-        let packages = await IndexedDB.get("packages", Object.keys(coupons).map(key => Number(key)));
+        let packages = await IndexedDB.get("packages", Array.from(coupons.keys()));
 
-        for (let [subid, coupon] of Object.entries(coupons)) {
+        for (let [subid, coupon] of coupons.entries()) {
             let details = packages[subid];
             if (details) {
                 coupon.appids = details;
@@ -849,11 +859,11 @@ class SteamCommunity extends Api {
             }
         }
 
-        return IndexedDB.putCached("coupons", Object.values(coupons), Object.keys(coupons).map(key => Number(key)));
+        return IndexedDB.put("coupons", coupons);
     }
 
-    static getCoupon(appids) { return IndexedDB.getFromIndex("coupons", "appid", appids) }
-    static hasCoupon(appids) { return IndexedDB.indexContainsKey("coupons", "appid", appids) }
+    static getCoupon(appid) { return IndexedDB.getFromIndex("coupons", "appid", appid) }
+    static hasCoupon(appid) { return IndexedDB.indexContainsKey("coupons", "appid", appid) }
 
     static async giftsAndPasses() { // context#1, gifts and guest passes
         let gifts = [];
@@ -901,73 +911,160 @@ class SteamCommunity extends Api {
             "passes": passes,
         };
 
-        return IndexedDB.putCached("giftsAndPasses", Object.values(data), Object.keys(data));
+        return IndexedDB.put("giftsAndPasses", data);
     }
 
-    static async hasGiftsAndPasses(appid) { return IndexedDB.getAllFromIndex("giftsAndPasses", "appid", appid, true) }
+    static async hasGiftsAndPasses(appid) { return IndexedDB.getFromIndex("giftsAndPasses", "appid", appid, { "all": true, "asKey": true }); }
 
     static async items() { // context#6, community items
         // only used for market highlighting
         let data = await SteamCommunity.getInventory(6);
         if (data) {
-            return IndexedDB.putCached("items", null, data.descriptions.map(item => item.market_hash_name));
+            return IndexedDB.put("items", data.descriptions.map(item => item.market_hash_name));
         }
     }
 
-    static hasItem(hashes) { return IndexedDB.contains("items", hashes) }
+    static hasItem(hashes) { return IndexedDB.contains("items", hashes); }
+
+    static async fetchWorkshopFileSize({ "key": id }) {
+        let parser = new DOMParser();
+        let res = await SteamCommunity.getPage(`/sharedfiles/filedetails/`, { id });
+        let doc = parser.parseFromString(res, "text/html");
+
+        let details = doc.querySelector(".detailsStatRight");
+        if (!details || !details.innerText.includes("MB")) { throw new Error("Couldn't find details block for workshop file size"); }
+
+        let text = details.innerText.split(" ")[0].trim();
+        let size = parseFloat(text.replace(/,/g, ""));
+        
+        return IndexedDB.put("workshopFileSizes", new Map([[Number(id), size * 1000]]));
+    }
+
+    static getWorkshopFileSize(id, preventFetch) {
+        return IndexedDB.get("workshopFileSizes", Number(id), { preventFetch });
+    }
+
+    static _getReviewId(node) {
+        let input = node.querySelector("input");
+
+        // Only exists when the requested profile is yours (these are the input fields where you can change visibility and language of the review)
+        if (input) {
+            return Number(input.id.replace("ReviewVisibility", ''));
+        }
+        // Otherwise you have buttons to vote for the review (Was it helpful or not, was it funny?)
+        return Number(node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", ''));
+    }
+
+    static async fetchReviews({ "key": steamId, "params": { reviewCount } }) {
+        let parser = new DOMParser();
+        let pageCount = 10;
+        let reviews = [];
+
+        for (let p = 1; p <= Math.ceil(reviewCount / pageCount); p++) {
+            let doc = parser.parseFromString(await SteamCommunity.getPage(`${steamId}/recommended`, { p }), "text/html");
+
+            for (let node of doc.querySelectorAll(".review_box")) {
+                let headerText = node.querySelector(".header").innerHTML.split("<br>");
+                let playtimeText = node.querySelector(".hours").textContent.split("(")[0].match(/(\d+,)?\d+\.\d+/);
+                let visibilityNode = node.querySelector(".dselect_container:nth-child(2) .trigger");
+
+                let id = SteamCommunity._getReviewId(node);
+                let rating = node.querySelector("[src*=thumbsUp]") ? 1 : 0;
+                let helpful = headerText[0] && headerText[0].match(/\d+/g) ? parseInt(headerText[0].match(/\d+/g).join("")): 0;
+                let funny = headerText[1] && headerText[1].match(/\d+/g) ? parseInt(headerText[1].match(/\d+/g).join("")): 0;
+                let length = node.querySelector(".content").textContent.trim().length;
+                let visibility = visibilityNode ? visibilityNode.textContent : "Public";
+                let playtime = playtimeText ? parseFloat(playtimeText[0].split(",").join("")) : 0.0;
+
+                reviews.push({ rating, helpful, funny, length, visibility, playtime, "node": DOMPurify.sanitize(node.outerHTML), id })
+            }
+        }
+
+        return IndexedDB.put("reviews", { [steamId]: reviews });
+    }
+
+    static async updateReviewNode(steamId, html, reviewCount) {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(html, "text/html");
+        let node = doc.querySelector(".review_box");
+        let id = SteamCommunity._getReviewId(node);
+
+        if (!await IndexedDB.contains("reviews", steamId, { "preventFetch": true })) { return; }
+
+        let reviews = await IndexedDB.get("reviews", steamId, { "params": reviewCount });
+
+        for (let review of reviews) {
+            if (review.id === id) {
+                review.node = DOMPurify.sanitize(node.outerHTML);
+                break;
+            }
+        }
+
+        // Todo updates expiry even though there is no new fetched data
+        return IndexedDB.put("reviews", { [steamId]: reviews });
+    }
+
+    static async getReviews(steamId, reviewCount) {
+        return IndexedDB.get("reviews", steamId, { "params": { reviewCount } });
+    }
 
     /**
      * Invoked when the content script thinks the user is logged in
      * If we don't know the user's steamId, fetch their community profile
      */
-    static async login(path) {
+    static async login(profilePath) {
         let self = SteamCommunity;
-        if (!path) {
+        let login;
+
+        if (!profilePath) {
             self.logout();
-            throw new Error("Login endpoint needs profile url");
+            throw new Error("Login endpoint needs a valid profile path");
         }
-        let url = new URL(path, "https://steamcommunity.com/");
-        if (!path.startsWith('/id/') && !path.startsWith('/profiles/')) {
+        if (!profilePath.startsWith("/id/") && !profilePath.startsWith("/profiles/")) {
             self.logout();
-            throw new Error(`Could not interpret '${path}' as a profile`);
-        }
-        let login = LocalStorage.get('login');
-        if (login && login.profilePath === path) {
-            // Profile path from the currently loading page matches existing login information, return cached steamId
-            return login;
+            throw new Error(`Could not interpret ${profilePath} as a valid profile path`);
         }
 
-        // New login; retrieve steamId from community profile
-        let html = await self.getPage(url);
-        let steamId = (html.match(/"steamid":"(\d+)"/) || [])[1];
+        login = LocalStorage.get("login");
+        if (login && login.profilePath === profilePath) { return login; }
+
+        let html = await self.getPage(profilePath);
+
+        let steamId = HTMLParser.getVariableFromText(html, "g_steamID", "string");
         if (!steamId) {
-            // Couldn't retrieve steamId, probably not logged in
-            self.logout();
+            // Possibly not logged in
             return;
         }
 
-        let value = { 'steamId': steamId, 'profilePath': path, };
-        LocalStorage.set('login', value);
+        let userCountry = await SteamStore.country();
+        if (!userCountry) {
+            throw new Error("Retrieved steamID but failed to detect user country");
+        }
 
-        // As this is a new login, also retrieve country information from store account page
-        value.userCountry = await (SteamStore.country().catch(err => undefined));
+        self.logout(true);
+
+        let value = { steamId, profilePath, userCountry };
+        LocalStorage.set("login", value);
+
         return value;
     }
 
-    static logout() {
-        LocalStorage.remove("login");
+    static logout(newLogout = LocalStorage.has("login")) {
+        if (newLogout) {
+            LocalStorage.remove("login");
+            CacheStorage.remove("currency");
+        }
     }
 
-    static getProfile(steamId) { return IndexedDB.get("profiles", steamId, { "profile": steamId }) }
+    static getProfile(steamId) { return IndexedDB.get("profiles", steamId, { "params": { "profile": steamId } }); }
     static clearOwn(steamId) { return IndexedDB.delete("profiles", steamId) }
 
-    static getPage(endpoint, query) {
-        return this._fetchWithDefaults(endpoint, query, { method: 'GET' }).then(response => {
-            if (response.url.startsWith("https://steamcommunity.com/login/")) {
-                throw new CommunityLoginError("Got redirected onto login page, the user is not logged into steamcommunity.com");
-            }
-            return response.text();
-        });
+    static async getPage(endpoint, query) {
+        let response = await this._fetchWithDefaults(endpoint, query, { method: "GET" });
+        if (new URL(response.url).pathname === "/login/") {
+            throw new LoginError("community");
+        }
+        return response.text();
     }
 }
 SteamCommunity.origin = "https://steamcommunity.com/";
@@ -994,366 +1091,422 @@ Steam._supportedCurrencies = null;
 class IndexedDB {
     static init() {
         if (IndexedDB._promise) { return IndexedDB._promise; }
-        return IndexedDB._promise = async () => {
-            IndexedDB.db = await idb.openDB("Augmented Steam", Info.db_version, {
-                upgrade(db, oldVersion) {
-                    switch(oldVersion) {
-                        case 0: {
-                            db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
-                            db.createObjectStore("giftsAndPasses").createIndex("appid", '', { unique: false, multiEntry: true });
-                            db.createObjectStore("items");
-                            db.createObjectStore("earlyAccessAppids");
-                            db.createObjectStore("purchases");
-                            db.createObjectStore("dynamicStore").createIndex("appid", '', { unique: false, multiEntry: true });
-                            db.createObjectStore("packages").createIndex("expiry", "expiry");
-                            db.createObjectStore("storePageData").createIndex("expiry", "expiry");
-                            db.createObjectStore("profiles").createIndex("expiry", "expiry");
-                            db.createObjectStore("rates");
-                            db.createObjectStore("notes");
-                            db.createObjectStore("collection");
-                            db.createObjectStore("waitlist");
-                            db.createObjectStore("itadImport");
-                            break;
-                        }
-                        default: {
-                            console.warn("Unknown oldVersion", oldVersion);
-                            break;
-                        }
-                    }
-                },
-                blocked() {
-                    console.error("Failed to upgrade database, there is already an open connection");
-                },
-            });
-        };
+        return IndexedDB._promise = idb.openDB("Augmented Steam", Info.db_version, {
+            upgrade(db, oldVersion, newVersion, tx) {
+                if (oldVersion < 1) {
+                    db.createObjectStore("coupons").createIndex("appid", "appids", { unique: false, multiEntry: true });
+                    db.createObjectStore("giftsAndPasses").createIndex("appid", '', { unique: false, multiEntry: true });
+                    db.createObjectStore("items");
+                    db.createObjectStore("earlyAccessAppids");
+                    db.createObjectStore("purchases");
+                    db.createObjectStore("dynamicStore").createIndex("appid", '', { unique: false, multiEntry: true });
+                    db.createObjectStore("packages").createIndex("expiry", "expiry");
+                    db.createObjectStore("storePageData").createIndex("expiry", "expiry");
+                    db.createObjectStore("profiles").createIndex("expiry", "expiry");
+                    db.createObjectStore("rates");
+                    db.createObjectStore("notes");
+                    db.createObjectStore("collection");
+                    db.createObjectStore("waitlist");
+                    db.createObjectStore("itadImport");
+                }
+
+                if (oldVersion < 2) {
+                    db.createObjectStore("workshopFileSizes").createIndex("expiry", "expiry");
+                    db.createObjectStore("reviews").createIndex("expiry", "expiry");
+                }
+
+                if (oldVersion < 3) {
+                    db.createObjectStore("expiries").createIndex("expiry", '');
+
+                    tx.objectStore("packages").deleteIndex("expiry");
+                    tx.objectStore("storePageData").deleteIndex("expiry");
+                    tx.objectStore("profiles").deleteIndex("expiry");
+                    tx.objectStore("workshopFileSizes").deleteIndex("expiry");
+                    tx.objectStore("reviews").deleteIndex("expiry");
+                }
+            },
+            blocked() {
+                console.error("Failed to upgrade database, there is already an open connection");
+            },
+        })
+        .then(db => { IndexedDB.db = db; })
+        .then(IndexedDB._deleteOldData);
     }
     static then(onDone, onCatch) {
-        return (IndexedDB.init())().then(onDone, onCatch);
+        return IndexedDB.init().then(onDone, onCatch);
     }
 
-    static putCached(objectStoreName, data, key) {
-        return IndexedDB.put(objectStoreName, data, key, true);
-    }
-
-    static async put(objectStoreName, data, keys, cached) {
-        let multiple = Array.isArray(keys);
-
-        if (cached) {
-            let ttl = IndexedDB.cacheObjectStores.get(objectStoreName);
-            let expiry = Timestamp.now() + ttl;
-
-            if (IndexedDB.timestampedObjectStores.has(objectStoreName)) {
-                await IndexedDB.db.put(objectStoreName, expiry, "expiry");
-            } else {
-                if (multiple) {
-                    if (data) data.map(value => ({ "value": value, "expiry": expiry }));
-                } else {
-                    data = { "value": data, "expiry": expiry };
-                }
-            }
-        }
-        if (multiple) {
-            let tx = IndexedDB.db.transaction(objectStoreName, "readwrite");
-            if (keys) {
-                for (let i = 0; i < keys.length; ++i) {
-                    tx.store.put(data ? data[i] : null, keys[i]);
-                }
-            } else {
-                for (let value of data) {
-                    tx.store.put(value);
-                }
-            }
-            return tx.done;
-        } else {
-            if (keys) {
-                if (data) {
-                    return IndexedDB.db.put(objectStoreName, data, keys);
-                } else {
-                    return IndexedDB.db.put(objectStoreName, null, keys);
-                }
-            } else {
-                return IndexedDB.db.put(objectStoreName, data);
-            }
-        }
-    }
-
-    static async get(objectStoreName, keys, params) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
-
-        if (Array.isArray(keys)) {
-            let promises = [];
-            let tx = IndexedDB.db.transaction(objectStoreName);
-
-            for (let key of keys) {
-                promises.push(tx.store.get(key).then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, key, params)));
-            }
-
-            let resolved = await Promise.all(promises);
-
-            return keys.reduce((acc, cur, i) => {
-                acc[cur] = resolved[i];
-                return acc;
-            }, {});
-        } else {
-            return IndexedDB.db.get(objectStoreName, keys)
-                .then(result => IndexedDB.resultExpiryCheck(result, objectStoreName, keys, params));
-        }
-    }
-
-    static async getAll(objectStoreName, params) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
-
-        let cursor = await IndexedDB.db.transaction(objectStoreName).store.openCursor();
-
+    static async _deleteOldData() {
+        let expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
+        let cursor = await expiryStore.index("expiry").openCursor(IDBKeyRange.upperBound(Timestamp.now()));
+        let expired = [];
+        let stores = {};
         let promises = [];
-        let keys = [];
+
         while (cursor) {
-            if (cursor.key !== "expiry") {
-                keys.push(cursor.key);
-                promises.push(IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params));
-            }            
+            expired.push(cursor.primaryKey);
+            promises.push(expiryStore.delete(cursor.primaryKey));
             cursor = await cursor.continue();
         }
-        return (await Promise.all(promises)).reduce((acc, cur, i) => {
-            acc[keys[i]] = cur;
-            return acc;
-        }, {});
-    }
 
-    static async getFromIndex(objectStoreName, indexName, key, asKey, params) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
+        for (let expiryKey of expired) {
+            let [storeName, key] = expiryKey.split(/_/);
+            if (!stores[storeName]) {
+                stores[storeName] = [];
+            }
 
-        let cursor = await IndexedDB.db.transaction(objectStoreName).store.index(indexName).openCursor(key);
-        return IndexedDB.resultExpiryCheck(cursor && cursor.value, objectStoreName, cursor && cursor.primaryKey, params)
-            .then(result => {
-                if (result && asKey) {
-                    return cursor.key;
-                } else {
-                    return result;
-                }
-            });
-    }
-
-    static async getAllFromIndex(objectStoreName, indexName, key, asKey, params) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
-
-        let promises = [];
-        if (Array.isArray(key)) {
-            let index = IndexedDB.db.transaction(objectStoreName).store.index(indexName);
-            key.forEach(_key => {
-                promises.push((async () => {
-                    let cursorPromises = [];
-                    let cursor = await index.openCursor(_key);
-                    while (cursor) {
-                        cursorPromises.push(IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params)
-                            .then(result => {
-                                if (result && asKey) {
-                                    return cursor.primaryKey;
-                                } else {
-                                    return result;
-                                }
-                            }));
-                        cursor = await cursor.continue();
-                    }
-                    return Promise.all(cursorPromises);
-                })());
-            });
-
-            let resolved = await Promise.all(promises);
-            return key.reduce((acc, cur, i) => {
-                acc[cur] = resolved[i];
-                return acc;
-            }, {});
-        } else {
-            let cursor = await IndexedDB.db.transaction(objectStoreName).store.index(indexName).openCursor(key);
-            while (cursor) {
-                promises.push(IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params)
-                    .then(result => {
-                        if (result && asKey) {
-                            return cursor.primaryKey;
-                        } else {
-                            return result;
-                        }
-                    }));
-                cursor = await cursor.continue();
+            if (key) {
+                stores[storeName].push(key);
             }
         }
-        
+
+        for (let [storeName, keys] of Object.entries(stores)) {
+
+            let dataStore = IndexedDB.db.transaction(storeName, "readwrite").store;
+
+            if (IndexedDB.timestampedStores.has(storeName)) {
+                promises.push(dataStore.clear());
+            } else {
+                promises.push(Promise.all(keys.map(key => {
+
+                    let strKeyPromise = dataStore.delete(key);
+
+                    let nmbKey = Number(key);
+                    if (nmbKey) {
+                        return Promise.all([
+                            strKeyPromise,
+                            dataStore.delete(nmbKey),
+                        ]);
+                    }
+
+                    return strKeyPromise;
+                })));
+            }
+        }
+
         return Promise.all(promises);
     }
 
-    static async indexContainsKey(objectStoreName, indexName, key, params) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
+    static async put(storeName, data, { ttl, multiple = typeof data === "object" } = {}) {
+        let tx = IndexedDB.db.transaction(storeName, "readwrite");
+        let expiryTx;
 
-        if (Array.isArray(key)) {
-            let promises = [];
-            let index = IndexedDB.db.transaction(objectStoreName).store.index(indexName);
-            key.forEach(_key => {
-                if (_key) {
-                    promises.push(index.openCursor(_key)
-                        .then(cursor => {
-                            if (cursor) {
-                                return IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params);
-                            }
-                        })
-                        .then(result => typeof result !== "undefined")
-                    );
-                } else {
-                    promises.push(Promise.resolve(false));
-                }
-            });
+        let expiry;
+        let expiryKeys = [];
 
-            let resolved = await Promise.all(promises);
-            return key.reduce((acc, cur, i) => {
-                acc[cur] = resolved[i];
-                return acc;
-            }, {});
-        } else {
-            if (!key) return false;
-            let cursor = await IndexedDB.db.transaction(objectStoreName).store.index(indexName).openCursor(key);
-            
-            let result;
-            if (cursor) {
-                result = await IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.primaryKey, params);
+        let cached = IndexedDB.cacheObjectStores.has(storeName);
+        let timestampedEntry = IndexedDB.timestampedEntriesStores.has(storeName);
+
+        function nonAssociativeData(data) {
+            let promise;
+            if (tx.store.autoIncrement || tx.store.keyPath !== null) {
+                promise = tx.store.put(data);
+            } else {
+                promise = tx.store.put(null, data);
             }
-            return typeof result !== "undefined";
+            promise.then(key => { if (timestampedEntry) { expiryKeys.push(`${storeName}_${key}`); } });
         }
-    }
 
-    static delete(objectStoreName, keys) {
-        if (Array.isArray(keys)) {
-            let tx = IndexedDB.db.transaction(objectStoreName, "readwrite");
+        if (cached) {
+            ttl = ttl || IndexedDB.cacheObjectStores.get(storeName);
+            expiry = Timestamp.now() + ttl;
 
-            for (let key of keys) {
-                tx.store.delete(key);
+            if (!timestampedEntry) {
+                expiryKeys.push(storeName);
             }
-
-            return tx.done;
-        } else {
-            return IndexedDB.db.delete(objectStoreName, keys);
-        }        
-    }
-
-    static clear(objectStoreNames) {
-        let objectStores = objectStoreNames || Array.from(IndexedDB.cacheObjectStores.keys());
-        let multiple = Array.isArray(objectStores);
+        }
 
         if (multiple) {
-            let promises = [];
-            objectStores.forEach(objectStoreName => {
-                promises.push(IndexedDB.db.clear(objectStoreName));
-            });
-            return Promise.all(promises);
+            if (Array.isArray(data)) {
+                data.forEach(nonAssociativeData);
+            } else if (typeof data === "object") {
+                let entries = data instanceof Map ? data.entries() : Object.entries(data);
+                for (let [key, value] of entries) {
+                    tx.store.put(value, key).then(key => { if (timestampedEntry) { expiryKeys.push(`${storeName}_${key}`); } });
+                }
+            } else {
+                console.warn("multiple parameter specified but the data is a primitive");
+            }
         } else {
-            return IndexedDB.db.clear(objectStoreNames);
+            nonAssociativeData(data);
         }
+
+        await tx.done;
+
+        expiryTx = IndexedDB.db.transaction("expiries", "readwrite");
+
+        for (let key of expiryKeys) {
+            expiryTx.store.put(expiry, key);
+        }
+
+        return expiryTx;
     }
 
-    static async contains(objectStoreName, key, params) {
-        await IndexedDB.objStoreExpiryCheck(objectStoreName, params);
+    static async get(storeName, key, options = {}) {
+        let keys = IndexedDB._asArray(key);
+        let values;
+        let store;
 
-        if (Array.isArray(key)) {
-            let objectStore = IndexedDB.db.transaction(objectStoreName).store;
-            let promises = [];
-            key.forEach(_key => {
-                if (_key) {
-                    promises.push(objectStore.openCursor(_key)
-                        .then(cursor => {
-                            if (cursor) {
-                                return IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
-                            }
-                        })
-                        .then(result => typeof result !== "undefined")
-                    );
+        await Promise.all([
+            IndexedDB.checkStoreExpiry(storeName, options),
+            IndexedDB.checkEntryExpiry(storeName, keys, options),
+        ]);
+
+        store = IndexedDB.db.transaction(storeName).store;
+
+        values = await Promise.all(keys.map(key => store.get(key)));
+
+        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
+    }
+
+    static async getAll(storeName, options = {}) {
+        let keys = [];
+        let values = [];
+        let cursor;
+
+        await IndexedDB.checkStoreExpiry(storeName, options);
+
+        if (IndexedDB.timestampedEntriesStores.has(storeName)) {
+            await checkEntryExpiry(storeName, await IndexedDB.db.getAllKeys(storeName), options);
+        }
+
+        cursor = await IndexedDB.db.transaction(storeName).store.openCursor();
+        
+        while (cursor) {
+            keys.push(cursor.key);
+            values.push(cursor.value);
+                      
+            cursor = await cursor.continue();
+        }
+
+        return IndexedDB._resultsAsObject(keys, await Promise.all(values));
+    }
+
+    static async getFromIndex(storeName, indexName, key, options = {}) {
+
+        // It doesn't make sense to query on an index from a timestamped entry store, since the data is not complete
+        if (IndexedDB.timestampedEntriesStores.has(storeName)) { return; }
+
+        let keys = IndexedDB._asArray(key);
+        let values;
+        let index;
+
+        await IndexedDB.checkStoreExpiry(storeName, options);
+
+        index = IndexedDB.db.transaction(storeName).store.index(indexName);
+
+        values = await Promise.all(keys.map(key => {
+            if (options.asKey) {
+                if (options.all) {
+                    return index.getAllKeys(key);
+                }
+                return index.getKey(key);
+            }
+
+            if (options.all) {
+                return index.getAll(key);
+            }
+
+            return index.get(key);
+        }));
+
+        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
+    }
+
+    static async indexContainsKey(storeName, indexName, key, options = {}) {
+
+        // It doesn't make sense to query on an index from a timestamped entry store, since the data is not complete
+        if (IndexedDB.timestampedEntriesStores.has(storeName)) { return; }
+
+        let keys = IndexedDB._asArray(key);
+        let values;
+        let index;
+
+        await IndexedDB.checkStoreExpiry(storeName, options);
+
+        index = IndexedDB.db.transaction(storeName).store.index(indexName);
+
+        values = await Promise.all(keys.map(key =>
+            index.openKeyCursor(key)
+                .then(cursor => Boolean(cursor))
+        ));
+
+        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
+    }
+
+    static delete(storeName, key) {
+
+        let keys = IndexedDB._asArray(key);
+        let dataStore = IndexedDB.db.transaction(storeName, "readwrite").store;
+        let expiryStore;
+        
+        if (IndexedDB.cacheObjectStores.has(storeName)) {
+            expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
+        }
+
+        return Promise.all(keys.map(key => {
+            let dataPromise = dataStore.delete(key);
+            if (expiryStore) {
+                return Promise.all([
+                    dataPromise,
+                    expiryStore.delete(IndexedDB.timestampedStores.has(storeName) ? storeName : `${storeName}_${key}`)
+                ]);
+            }
+            return dataPromise;
+        }));
+    }
+
+    static clear(storeName = Array.from(IndexedDB.cacheObjectStores.keys())) {
+        let storeNames = IndexedDB._asArray(storeName);
+        let expiryStore;
+
+        if (storeNames.some(storeName => IndexedDB.cacheObjectStores.has(storeName))) {
+            expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
+        }
+
+        return Promise.all(storeNames.map(storeName => {
+            let clearPromise = IndexedDB.db.clear(storeName);
+
+            if (IndexedDB.cacheObjectStores.has(storeName)) {
+
+                let expiryKey;
+                if (IndexedDB.timestampedStores.has(storeName)) {
+                    expiryKey = storeName;
                 } else {
-                    promises.push(Promise.resolve(false));
+                    expiryKey = IDBKeyRange.bound(`${storeName}_`, `${storeName}${String.fromCharCode('_'.charCodeAt(0) + 1)}`, false, true);
+                }
+
+                return Promise.all([
+                    clearPromise,
+                    expiryStore.delete(expiryKey),
+                ]);
+            }
+
+            return clearPromise;
+        }));
+    }
+
+    static async contains(storeName, key, options = {}) {
+        let keys = IndexedDB._asArray(key);
+        let values;
+        let store;
+
+        await Promise.all([
+            IndexedDB.checkStoreExpiry(storeName, options),
+            IndexedDB.checkEntryExpiry(storeName, keys, options),
+        ]);
+        
+        store = IndexedDB.db.transaction(storeName).store;
+
+        values = await Promise.all(keys.map(key => 
+            store.openCursor(key)
+                .then(cursor => Boolean(cursor))
+        ));
+        
+        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
+    }
+
+    static async checkEntryExpiry(storeName, keys, options = {}) {
+        let tx;
+        let expired;
+
+        if (!IndexedDB.timestampedEntriesStores.has(storeName)) { return; }
+
+        tx = IndexedDB.db.transaction("expiries");
+        expired = [];
+
+        for (let key of keys) {
+            tx.store.get(`${storeName}_${key}`).then(expiry => {
+                if (!expiry || IndexedDB.isExpired(expiry)) {
+                    expired.push(key);
                 }
             });
-            
-            let resolved = await Promise.all(promises);
-            return key.reduce((acc, cur, i) => {
-                acc[cur] = resolved[i];
-                return acc;
-            }, {});
-        } else {
-            if (!key) return false;
-            let cursor = await IndexedDB.db.transaction(objectStoreName).store.openCursor(key);
-            
-            if (cursor) {
-                let result = await IndexedDB.resultExpiryCheck(cursor.value, objectStoreName, cursor.key, params);
-                return typeof result !== "undefined";
+        }
+
+        await tx.done;
+
+        if (options.preventFetch) {
+            let dataTx = IndexedDB.db.transaction(storeName, "readwrite");
+
+            for (let key of expired) {
+                dataTx.store.delete(key);
+            }
+
+            return dataTx.done;
+        }
+
+        return Promise.all(expired.map(key => 
+            IndexedDB.fetchUpdatedData(storeName, key, options.params)
+        ));
+    }
+
+    static async checkStoreExpiry(storeName, options = {}) {
+        
+        if (!IndexedDB.timestampedStores.has(storeName)) return;
+        
+        let expiry = await IndexedDB.db.get("expiries", storeName);
+        let expired = true;
+
+        if (expiry) {
+            expired = IndexedDB.isExpired(expiry);
+        }
+
+        if (expired) {
+            await IndexedDB.clear(storeName);
+            if (!options.preventFetch) {
+                return IndexedDB.fetchUpdatedData(storeName, null, options.params);
             }
         }
     }
 
-    static async resultExpiryCheck(result, objectStoreName, key, params) {
-        if (IndexedDB.timestampedObjectStores.has(objectStoreName) || !IndexedDB.cacheObjectStores.has(objectStoreName)) return result;
+    static fetchUpdatedData(storeName, key, params) {
 
-        if (!result || IndexedDB.isExpired(result.expiry)) {
-            await IndexedDB.fetchUpdatedData(objectStoreName, key, params);
-            return IndexedDB.get(objectStoreName, key);
+        let requestKey = key ? `${storeName}_${key}` : storeName;
+        if (IndexedDB._ongoingRequests.has(requestKey)) {
+            return IndexedDB._ongoingRequests.get(requestKey);
         }
 
-        return result.value;
+        let req;
+        let timestampedStore = IndexedDB.timestampedStores.has(storeName);
+        if (timestampedStore) {
+            req = IndexedDB.objStoreFetchFns.get(storeName)({ params });
+        } else {
+            req = IndexedDB.objStoreFetchFns.get(storeName)({ params, key });
+        }
+        req = req
+            .catch(async err => {
+                console.group("Object store data");
+                if (key) {
+                    console.error("Failed to update key %s of object store %s", key, storeName);
+                } else {
+                    console.error("Failed to update object store %s", storeName);
+                }
+                console.error(err);
+                console.groupEnd();
+
+                // Wait some seconds before retrying
+                await IndexedDB.db.put("expiries", Timestamp.now() + 60, timestampedStore ? storeName : `${storeName}_${key}`);
+
+                throw err;
+            })
+            .finally(() => IndexedDB._ongoingRequests.delete(requestKey));
+        IndexedDB._ongoingRequests.set(requestKey, req);
+        return req;        
     }
 
     static isExpired(expiry) {
         return expiry <= Timestamp.now();
     }
 
-    static async objStoreExpiryCheck(objectStoreName, params) {
-        // Remove old entries
-        if (IndexedDB.timestampedEntriesObjectStores.has(objectStoreName)) {
-            let cursor = await IndexedDB.db.transaction(objectStoreName, "readwrite").store.index("expiry")
-                .openCursor(IDBKeyRange.upperBound(Timestamp.now() - IndexedDB.timestampedEntriesObjectStores.get(objectStoreName)));
-
-            while (cursor) {
-                await cursor.delete();
-                cursor = await cursor.continue();
-            }
-        }
-        
-        if (!IndexedDB.timestampedObjectStores.has(objectStoreName)) return;
-        
-        let expiry = await IndexedDB.db.get(objectStoreName, "expiry");
-        let expired;
-        if (!expiry) {
-            expired = true;
-        } else {
-            expired = IndexedDB.isExpired(expiry);
-        }
-        if (expired) {
-            await IndexedDB.clear(objectStoreName);
-            await IndexedDB.fetchUpdatedData(objectStoreName, null, params);
-        }
+    static _asArray(key) {
+        return Array.isArray(key) ? key : [key];
     }
 
-    static async fetchUpdatedData(objectStoreName, key, params) {
-        if (!IndexedDB.cacheObjectStores.has(objectStoreName)) return;
-
-        let requestKey = key ? `${objectStoreName}_${key}` : objectStoreName;
-        if (IndexedDB._ongoingRequests.has(requestKey)) {
-            return IndexedDB._ongoingRequests.get(requestKey);
-        }
-
-        let req;
-        if (IndexedDB.timestampedObjectStores.has(objectStoreName)) {
-            req = IndexedDB.objStoreFetchFns.get(objectStoreName)(params);
-        } else {
-            req = IndexedDB.objStoreFetchFns.get(objectStoreName)(params, key);
-        }
-        req = req
-            .then(async () => {
-                if (key) {
-                    if (!await IndexedDB.db.transaction(objectStoreName).store.openKeyCursor(key)) {
-                        // Prevent fetching the same empty result for every db request for this key
-                        return IndexedDB.putCached(objectStoreName, null, key);
-                    }
-                }
-            })
-            .finally(() => IndexedDB._ongoingRequests.delete(requestKey));
-        IndexedDB._ongoingRequests.set(requestKey, req);
-        return req;        
+    static _resultsAsObject(keys, values) {
+        return keys.reduce((acc, key, i) => {
+            acc[key] = values[i];
+            return acc;
+        }, {});
     }
 }
 IndexedDB._promise = null;
@@ -1368,7 +1521,7 @@ IndexedDB._ongoingRequests = new Map();
     each individual entry, although they're basically fetched during
     the same time.
 */
-IndexedDB.timestampedObjectStores = new Map([
+IndexedDB.timestampedStores = new Map([
     ["coupons", 60 * 60],
     ["giftsAndPasses", 60 * 60],
     ["items", 60 * 60],
@@ -1380,28 +1533,32 @@ IndexedDB.timestampedObjectStores = new Map([
     ["waitlist", 15 * 60],
 ]);
 
-IndexedDB.timestampedEntriesObjectStores = new Map([
+IndexedDB.timestampedEntriesStores = new Map([
     ["packages", 7 * 24 * 60 * 60],
     ["storePageData", 60 * 60],
     ["profiles", 24 * 60 * 60],
+    ["workshopFileSizes", 5 * 24 * 60 * 60],
+    ["reviews", 60 * 60],
 ]);
 
-IndexedDB.cacheObjectStores = new Map([...IndexedDB.timestampedObjectStores, ...IndexedDB.timestampedEntriesObjectStores]);
+IndexedDB.cacheObjectStores = new Map([...IndexedDB.timestampedStores, ...IndexedDB.timestampedEntriesStores]);
 
 // Functions that are called when an object store (or one of its entries) has expired
 IndexedDB.objStoreFetchFns = new Map([
     ["coupons", SteamCommunity.coupons],
     ["giftsAndPasses", SteamCommunity.giftsAndPasses],
     ["items", SteamCommunity.items],
-    ["earlyAccessAppids", AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", "earlyAccessAppids", true)],
+    ["workshopFileSizes", SteamCommunity.fetchWorkshopFileSize],
+    ["reviews", SteamCommunity.fetchReviews],
+    ["earlyAccessAppids", AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", "earlyAccessAppids")],
     ["purchases", SteamStore.purchaseDate],
     ["dynamicStore", SteamStore.dynamicStore],
     ["packages", SteamStore.fetchPackage],
     ["storePageData", AugmentedSteamApi.endpointFactoryCached("v01/storepagedata", "storePageData")],
     ["profiles", AugmentedSteamApi.endpointFactoryCached("v01/profile/profile", "profiles")],
     ["rates", AugmentedSteamApi.endpointFactoryCached("v01/rates", "rates")],
-    ["collection", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "collection", false, ITAD_Api.mapCollection)],
-    ["waitlist", ITAD_Api.endpointFactoryCached("v01/user/wait/all", "waitlist", true, ITAD_Api.mapWaitlist)],
+    ["collection", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "collection", ITAD_Api.mapCollection)],
+    ["waitlist", ITAD_Api.endpointFactoryCached("v01/user/wait/all", "waitlist", ITAD_Api.mapWaitlist)],
 ]);
 
 let actionCallbacks = new Map([
@@ -1431,6 +1588,7 @@ let actionCallbacks = new Map([
     ["appuserdetails", SteamStore.appUserDetails],
     ["currency", SteamStore.currency],
     ["sessionid", SteamStore.sessionId],
+    ["wishlists", SteamStore.wishlists],
     ["purchases", SteamStore.purchases],
     ["clearpurchases", SteamStore.clearPurchases],
     ["dynamicstorestatus", SteamStore.dsStatus],
@@ -1446,6 +1604,9 @@ let actionCallbacks = new Map([
     ["hasitem", SteamCommunity.hasItem],
     ["profile", SteamCommunity.getProfile],
     ["clearownprofile", SteamCommunity.clearOwn],
+    ["workshopfilesize", SteamCommunity.getWorkshopFileSize],
+    ["reviews", SteamCommunity.getReviews],
+    ["updatereviewnode", SteamCommunity.updateReviewNode],
 
     ["itad.authorize", ITAD_Api.authorize],
     ["itad.disconnect", ITAD_Api.disconnect],
@@ -1480,11 +1641,17 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
         await Promise.all([IndexedDB, SyncedStorage]);
         res = await callback(...message.params);
     } catch(err) {
-        console.error(`Failed to execute callback ${message.action}: ${err.name}: ${err.message}\n${err.stack}`);
-        throw { "message": err.name };
+        console.group(`Callback: "${message.action}"`);
+        console.error(`Failed to execute callback "%s" with params %o`, message.action, message.params);
+        console.error(err);
+        console.groupEnd();
+        
+        throw { "message": err.toString() };
     }
     return res;
 });
 
-browser.runtime.onStartup.addListener(ContextMenu.init);
-browser.runtime.onInstalled.addListener(ContextMenu.init);
+browser.runtime.onStartup.addListener(ContextMenu.update);
+browser.runtime.onInstalled.addListener(ContextMenu.update);
+
+browser.contextMenus.onClicked.addListener(ContextMenu.onClick);

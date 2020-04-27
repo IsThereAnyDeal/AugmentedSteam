@@ -1,4 +1,9 @@
 {
+    "steamid_of_user": "__user__ SteamID'si",
+    "click_to_copy": "Kopyalamak için tıkla",
+    "copied": "Panoya kopyalandı!",
+    "view_steamid": "SteamID'sini Göster",
+    "more_on_steampeek": "SteamPeek'te daha fazlasını gör",
     "invite_friends": "Arkadaş Davet Et",
     "invite_to_group": "Gruba Davet Et",
     "inverse": "Tersine Çevir",
@@ -126,13 +131,15 @@
     "read_reviews": "Değerlendirmeleri Oku",
     "read_more_reviews": "Daha fazla değerlendirme oku:",
     "gameplay": "Oynanış",
-    "youtube_gameplay": "Youtube Oynanışı",
+    "youtube_gameplay": "YouTube Oynanışı",
     "size": "Boyut",
     "package_info": "Paket Bilgisi",
     "badge_completion_avg": "Ortalama Tamamlama Tutarı: __cost__",
     "using_store": "Steam mağazasını __current__ bölgesinde kullanıyorsunuz.",
     "volume_sold_last_24": "Miktar: Son 24 saatte __sold__ tane satıldı",
     "sold_last_24": "Son 24 saatte __sold__ tane satıldı",
+    "homepage_curators": "Steam Küratör Önerileri",
+    "homepage_topnewreleases": "Steam'deki En İyi Çıkışlar",
     "homepage_sidebar": "Kenar çubuğu",
     "drop_calc": "Kalan düşecek kartları hesaplamak için tıklayın",
     "price": "Fiyat",
@@ -156,8 +163,6 @@
     "gift_transactions": "Hediye İşlemleri",
     "demos": "Demolar",
     "notinterested": "İlgilenmiyorum olarak işaretlenmiş öğeler",
-    "mixed_item": "Karışık olarak değerlendirilmiş öğeler",
-    "negative_item": "Olumsuz değerlendirilmiş öğeler",
     "price_above": "Bu fiyattan daha pahalı öğeler",
     "price_above_tooltip": "Ücretsiz veya fiyat etiketi olmayan eşyalar için bu değeri sıfır girin; bu özelliği devre dışı bırakmak için bu alanı boş bırakın",
     "price_above_wrong_format": "Hatalı biçim, __pattern__ şeklinde girdi bekleniyor",
@@ -227,8 +232,10 @@
         "leave_groups_confirm": "Şu anda __name__ yöneticisisin.<br>Grubu terketmek istediğinden emin misin?",
         "manage_groups": "Grupları yönet",
         "action_groups": "İşlem yapmak istediğin grupları aşağıdan seç.",
+        "select": "Seç:",
         "leave": "Ayrıl",
-        "selected": "__n__ seçili"
+        "selected": "__n__ seçili",
+        "leave_admin_confirm": "Şu anda __name__ yöneticisisiniz.<br>Gruptan ayrılmak istiyor musunuz?"
     },
     "export": {
         "wishlist": "İstek listesini dışarı aktar",
@@ -415,7 +422,6 @@
         "disablelinkfilter": "Dış sitelerine erişirken onayı devre dışı bırak",
         "showallfriendsthatown": "\"Sahip olan arkadaşlarınız\"ı göster",
         "regional_price_on": "Karşılaştırmada bölgesel fiyatları göster",
-        "cart": "Sepetinizdeki ürünler",
         "friends_own": "Arkadaşlarının sahip oldukları öğeler",
         "horizontalscrolling": "Fare tekerleği ile sayfalarda yatay ortam geçişlerini etkinleştir",
         "supportinfo": "Mağaza sayfalarında destek bilgisini göster",
@@ -451,6 +457,8 @@
         "inventory_market_text": "Envanter Sayfasında Pazar Fiyatını Göster (Deneysel!)",
         "send_age_info": "Yaş doğrulaması istendiğinde otomatik olarak gönder",
         "mp4video": "Uygulama mağazası videolarının MP4 biçiminde olmasını zorla",
+        "youtube": "YouTube bağlantılarını göster",
+        "twitch": "Twitch bağlantılarını göster",
         "pcgw": "PCGamingWiki bağlantılarını göster",
         "completionistme": "Completionist.me bağlantılarını göster",
         "protondb": "ProtonDB bağlantılarını göster",
@@ -517,7 +525,6 @@
         "skip_got_steam": "'Steam'iniz var mı?' penceresini atla",
         "store_general_thirdparty": "Üçüncü Parti Sitelerden Bilgi Seçenekleri",
         "purchase_dates": "Uygulamaların satın alım tarihini mağaza sayfasında göster",
-        "show_coupon": "Mağaza sayfalarında kullanılabilir kuponları göster",
         "show_badge_progress": "Mağaza sayfalarında uygulamalarla ilgili rozet ilerlemesini göster",
         "show_coupon": "Mağaza sayfalarında kullanılabilir kuponları göster",
         "show_wishlist_link": "Profillerde bir İstek Listesi bağlantısı göster",
@@ -557,7 +564,15 @@
         },
         "add_custom_link": "Özel bağlantı ekle",
         "auto_detect": "Otomatik bul",
-        "add_to_waitlist": "Uygulama sayfalarında \"Bekleme Listesine Ekle\" açılır menüsünü göster"
+        "add_to_waitlist": "Uygulama sayfalarında \"Bekleme Listesine Ekle\" açılır menüsünü göster",
+        "profile_steamid": "Profillerde SteamID'leri göster",
+        "settings_mngmt": {
+            "import": "",
+            "import_success": "",
+            "import_fail": "",
+            "export": "",
+            "reset": ""
+        }
     },
     "ready": {
         "errormsg": "Augmented Steam verilerini yüklerken hata oluştu",
@@ -606,12 +621,14 @@
         "inv_guestpass": "Misafir girişi",
         "owned": "Sahipsiniz",
         "notinterested": "İlgilenmiyorum",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ kişi istiyor</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ kişi istiyor</a>",
+        "collection": "Toplanan",
+        "waitlist": "Bekleme Listesinde"
     },
     "wallet": {
         "custom_amount": "Farklı bir miktar ekle",
         "custom_amount_text": "__minamount__ üzerine herhangi bir miktar ekle",
-        "custom_giftcard_amount": "__input__ Özel Hediye Kartı Seç (__minamount__ üzerindeki herhangi bir miktar)"
+        "custom_giftcard": "__input__ Özel Hediye Kartını Seç"
     },
     "wsgf": {
         "incomplete": "Tamamlanmamış",
@@ -656,7 +673,6 @@
         "default": "Beklenmeyen bir hata oluştu. Ürün kodunuz kullanılamadı. Lütfen 30 dakika bekleyip kodu kullanmayı tekrar deneyin."
     },
     "wl": {
-        "compute": "İstatistikleri hesaplamak için tıklayın",
         "total_price": "geçerli değer",
         "in_wishlist": "istek listesinde",
         "on_sale": "indirimde",
@@ -696,5 +712,41 @@
     "acknowledgements": "Teşekkürler",
     "other": "Diğer",
     "images": "Resimler",
-    "powered_by": "Altyapı: __link__"
+    "powered_by": "Altyapı: __link__",
+    "help_translate": "Augmented Steam'i POEditor'de çevirmemize yardım edin",
+    "filters": "Augmented Steam filtreleri",
+    "search_filters": {
+        "reviews_score": {
+            "between": "__lower__ ve __upper__ yorum arasında",
+            "any": "Herhangi yorum sayısı",
+            "up_to": "%__score__ inceleme puanına kadar",
+            "from": "%__score__ inceleme puanından itibaren"
+        },
+        "reviews_count": {
+            "count": "İnceleme sayısı:",
+            "min_count": "Asgari sayı",
+            "max_count": "Azami sayı"
+        },
+        "hide_ea": "Erken Erişim öğelerini gizle",
+        "hide_cart": "Sepetimdeki öğeleri gizle",
+        "hide_mixed": "",
+        "hide_negative": ""
+    },
+    "calc_workshop_size": {
+        "file_size": "Dosya sayısı __size__",
+        "finished": "Bitti",
+        "calculating": "Hesaplanıyor...",
+        "calc_size": "Toplam Boyutu Hesapla",
+        "total_size": "Toplam boyut: __size__"
+    },
+    "date": "Tarih",
+    "rating": "Değerlendirme",
+    "helpful": "Faydalı",
+    "funny": "Komik",
+    "length": "Uzunluk",
+    "visibility": "Görünürlük",
+    "processing": "İşleniyor...",
+    "wait": "Lütfen bekleyin",
+    "login_warning": "",
+    "youtube_reviews": ""
 }

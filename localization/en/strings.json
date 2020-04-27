@@ -1,10 +1,24 @@
 {
+    "calc_workshop_size": {
+        "file_size": "File size __size__",
+        "finished": "Finished",
+        "calculating": "Calculating...",
+        "calc_size": "Calculate Total Size",
+        "total_size": "Total size: __size__"
+    },
     "steamid_of_user": "__user__'s SteamID",
     "click_to_copy": "Click to copy",
     "copied": "Copied to your clipboard!",
-    "profile_steamid": "Show SteamID on profiles",
     "view_steamid": "View SteamID",
     "more_on_steampeek": "See more on SteamPeek",
+    "date": "Date",
+    "rating": "Rating",
+    "helpful": "Helpful",
+    "funny": "Funny",
+    "length": "Length",
+    "visibility": "Visibility",
+    "processing": "Processing...",
+    "wait": "Please wait",
     "invite_friends": "Invite Friends",
     "invite_to_group": "Invite To Group",
     "inverse": "Inverse",
@@ -53,6 +67,7 @@
     "activate_products": "Activate products",
     "coupon_application_note": "A coupon in your inventory will be applied automatically at checkout.",
     "hide": "Hide",
+    "filters": "Augmented Steam filters",
     "cards_owned": "__owned__ of __possible__ cards owned",
     "common_label": "Hide games that you do not own",
     "birthday_message": "Happy Steam Birthday, __username__! Your Steam account is __age__ years old today.",
@@ -62,6 +77,7 @@
     "clear_cache": "Clear cached data",
     "events": "Events",
     "translation": "Translation",
+    "help_translate": "Help us translate Augmented Steam over at POEditor",
     "lowest": "Lowest",
     "lowest_price": "Current Lowest Price:",
     "view_badge_progress": "View badge progress",
@@ -132,7 +148,8 @@
     "read_reviews": "Read Reviews",
     "read_more_reviews": "Read more reviews at",
     "gameplay": "Gameplay",
-    "youtube_gameplay": "Youtube Gameplay",
+    "youtube_gameplay": "YouTube Gameplay",
+    "youtube_reviews": "YouTube Reviews",
     "size": "Size",
     "package_info": "Package info",
     "badge_completion_avg": "Avg cost of completion: __cost__",
@@ -164,13 +181,25 @@
     "gift_transactions": "Gift Purchases",
     "demos": "Demos",
     "notinterested": "Items marked not interested",
-    "mixed_item": "Mixed rating items",
-    "negative_item": "Negative rating items",
-    "price_above": "Items that cost more than",
-    "price_above_tooltip": "Enter zero for free items or items without price tags; leave this field empty to disable this feature",
-    "price_above_wrong_format": "Wrong format, expected input in the form of __pattern__",
-    "reviews_below":"Items with less reviews than",
-    "reviews_below_tooltip":"Enter zero for items without reviews; leave this field empty to disable this feature",
+    "search_filters": {
+        "reviews_score": {
+            "between": "Between __lower__% and __upper__% review score",
+            "any": "Any review score",
+            "up_to": "Up to __score__% review score",
+            "from": "From __score__% review score"
+        },
+        "reviews_count": {
+            "count": "Reviews count:",
+            "min_count": "Min count",
+            "max_count": "Max count"
+        },
+        "hide_cart": "Hide items in your cart",
+        "hide_ea": "Hide Early Access items",
+        "hide_mixed": "Hide mixed rating items",
+        "hide_negative": "Hide negative rating items"
+    },
+    "reviews_below": "Items with less reviews than",
+    "reviews_below_tooltip": "Enter zero for items without reviews; leave this field empty to disable this feature",
     "news": "News",
     "check_system": "Check Your System",
     "viewinclient": "View in Client",
@@ -210,7 +239,7 @@
     "binder_view": "Binder View",
     "view_stats": "View stats",
     "using_language": "You are browsing Steam in __current__.",
-    "community_login": "Make sure that you are logged into __link__ in order to be able to use all features of Augmented Steam.",
+    "login_warning": "Make sure that you are logged into __link__ in order to be able to use all features of Augmented Steam.",
     "popular": "Popular",
     "visit_trade_forum": "Visit Trade Forum",
     "software": "Software",
@@ -232,12 +261,13 @@
     "avg_price_3cards": "Average price of three trading cards: __price__",
     "mods": "Mods",
     "groups": {
-        "leave_groups_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?",
+        "leave_groups_confirm": "Are you sure you want to leave __n__ selected groups?",
         "manage_groups": "Manage groups",
         "action_groups": "Select the groups below that you wish to take action on.",
         "select": "Select:",
-        "leave": "Leave",
-        "selected": "__n__ selected."
+        "leave": "Leave Groups",
+        "selected": "__n__ selected.",
+        "leave_admin_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?"
     },
     "export": {
         "wishlist": "Export wishlist",
@@ -324,7 +354,6 @@
     "show_wishlist_total": "Show wishlist Total",
     "tag_short": "Use short tags to save space",
     "no_price_data": "No price data available",
-    "exclude_tags": "Exclude tags",
     "user_score": "User Score",
     "user_reviews": "User reviews",
     "review_summary": "__percent__ of the __num__ user reviews for this game are positive.",
@@ -380,6 +409,13 @@
         "formatted_time": "__hours__ hours, __minutes__ minutes"
     },
     "options": {
+        "settings_mngmt": {
+            "import": "Import",
+            "import_success": "Successfully imported settings",
+            "import_fail": "Failed to import settings",
+            "export": "Export",
+            "reset": "Reset"
+        },
         "community_default_tab": "Default community home page tab",
         "videos": "Videos",
         "broadcasts": "Broadcasts",
@@ -400,7 +436,6 @@
         "steamcardexchange": "Show SteamCardExchange links on badges",
         "regional_price": "Regional Price Comparison",
         "excludef2p": "Exclude free to play games from highlighting",
-        "contscroll": "Enable continuous scrolling of search results",
         "profile_link_images_none": "None",
         "replace_account_name": "Replace account name with community name",
         "profile_links": "Show profile links to",
@@ -424,14 +459,13 @@
         "disablelinkfilter": "Disable confirmation when accessing external sites",
         "showallfriendsthatown": "Show \"All friends that own\"",
         "regional_price_on": "Show regional price comparison",
-        "cart": "Items in your cart",
         "friends_own": "Items your friends own",
-        "horizontalscrolling": "Enable horizontal scrolling on app pages with scroll wheel",
+        "horizontalscrolling": "Enable horizontal scrolling with the mouse wheel",
         "supportinfo": "Show support info on store pages",
         "drm": "Show 3rd-party DRM warnings",
         "show_regionwarning": "Show warning if browsing in non-account region",
         "foot_link": "Augmented Steam Extension",
-        "profile_link_images": "Profile link images",
+        "profile_link_images": "Profile and Group links image style",
         "library": "Show Library button in header",
         "show1clickgoo": "Show \"1-Click turn into Gems...\" button on applicable inventory items",
         "hidedlcunownedgames": "DLC for games you do not own",
@@ -439,7 +473,6 @@
         "hidespamcomments": "Hide spam comments from Workshop & profiles",
         "hide_owned": "Items you own in search results and tag pages",
         "hide_ignored": "Items you ignored in search results and tag pages",
-        "reset": "Reset options",
         "api_key": "API Key",
         "gift": "Items stored as gift",
         "show_sysreqcheck": "Show button to check system requirements on app pages (Experimental!)",
@@ -484,6 +517,7 @@
         "showallstats": "Show playtime stats on \"All Games\" page",
         "lowestprice_onwishlist": "Show on Wishlist",
         "steamrepapi": "Show SteamRep status on profile pages",
+        "profile_steamid": "Show SteamID on profiles",
         "header": "Header",
         "lowestprice": "Show",
         "group_events": "Show events on group overview",
@@ -500,7 +534,7 @@
         "hide_about_links": "Hide \"About\" link",
         "show_view_in_library": "Show \"View in library\" button for owned games",
         "install_steam_button": "\"Install Steam\" button",
-        "replace_view_client":  "Replace with \"View in Client\"",
+        "replace_view_client": "Replace with \"View in Client\"",
         "show_empty_wishlist": "Show \"Empty Wishlist\" button",
         "show_wishlist_stats": "Show wishlist stats on wishlist",
         "show_user_notes": "Show user notes on wishlist and app pages",
@@ -616,12 +650,14 @@
         "inv_guestpass": "Guestpass",
         "owned": "Owned",
         "notinterested": "Not Interested",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ wish for</a>"
+        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ wish for</a>",
+        "collection": "Collected",
+        "waitlist": "Waitlisted"
     },
     "wallet": {
         "custom_amount": "Add custom amount",
-        "custom_amount_text": "Add any amount over __minamount__",
-        "custom_giftcard_amount": "Select __input__ Custom Gift Card (any amount over __minamount__)"
+        "custom_amount_text": "Any amount over __minamount__",
+        "custom_giftcard": "Select __input__ Custom Gift Card"
     },
     "wsgf": {
         "incomplete": "Incomplete",
@@ -666,7 +702,6 @@
         "default": "An unexpected error occurred.  Your product code has not been redeemed.  Please wait 30 minutes and try redeeming the code again."
     },
     "wl": {
-        "compute": "Click to compute stats",
         "total_price": "current value",
         "in_wishlist": "on wishlist",
         "on_sale": "on sale",
@@ -701,7 +736,6 @@
         "finished": "Finished! __success__ successful, __fail__ failed. Click OK to refresh the page",
         "failed": "__n__ failed"
     },
-
     "this_version": "This version",
     "original_authors": "Original authors",
     "acknowledgements": "Acknowledgments",

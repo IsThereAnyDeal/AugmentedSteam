@@ -105,3 +105,10 @@
 .es-flag:before {
   background-image: url("chrome-extension://__MSG_@@extension_id__/img/flags/flags.png");
 }
+
+/* || DOUBLE SLIDER */
+
+/* Displays the lower stacked thumb above higher stacked track */
+.as-double-slider__input::-webkit-slider-thumb {
+  position: relative;
+}

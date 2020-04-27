@@ -51,7 +51,7 @@ class Customizer {
                 elements.splice(i, 1);
                 return;
             }
-    
+
             if (typeof text !== "string" || text === "") {
                 text = this._textValue(element).toLowerCase();
                 if (text === "") return;
@@ -102,7 +102,7 @@ class Customizer {
                     </div>`);
 
                 customizerEntries.set(name, [element]);
-            }            
+            }
         }
 
         for (let [name, elements] of customizerEntries) {
@@ -371,14 +371,14 @@ class StorePageClass {
         let countries = SyncedStorage.get("regional_countries");
         if (!countries || countries.length === 0) { return; }
 
-        let localCountry = User.getCountry().toLowerCase();
+        let localCountry = User.country.toLowerCase();
         if (!countries.includes(localCountry)) {
             countries.push(localCountry);
         }
 
         for (let subid of this.getAllSubids()) {
             if (!subid) { return; }
-            
+
             let promises = [];
             let prices = {};
 
@@ -392,12 +392,12 @@ class StorePageClass {
             }
 
             await Promise.all(promises);
-            
+
             let node = document.querySelector(`input[name=subid][value="${subid}"]`)
                 .closest(".game_area_purchase_game_wrapper,#game_area_purchase,.sale_page_purchase_item")
                 .querySelector(".game_purchase_action");
 
-            let apiPrice = prices[User.getCountry().toLowerCase()];
+            let apiPrice = prices[User.country.toLowerCase()];
             let priceLocal;
             try {
                 priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
@@ -449,7 +449,7 @@ class StorePageClass {
                             `<span class="es-regprice__converted">${priceUser}</span>
                             <span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`;
                     }
-                    
+
                     html += "</div>";
                 } else {
                     html =
@@ -476,7 +476,7 @@ class StorePageClass {
                     priceNode.classList.add("es_regional_icon");
                 }
             }
-        }  
+        }
     }
 
     forceVideoMP4() {
@@ -523,8 +523,8 @@ class SubPageClass extends StorePageClass {
                 // Only present when the product has a price associated with (so it's not free or N/A)
                 if (priceNode) {
                     let priceContainer = priceNode.textContent.trim();
-                    if (priceContainer) { 
-                        let price = Price.parseFromString(priceContainer, Currency.storeCurrency);
+                    if (priceContainer) {
+                        let price = Price.parseFromString(priceContainer);
                         if (price) {
                             notOwnedTotalPrice += price.value;
                             continue;
@@ -545,11 +545,11 @@ class SubPageClass extends StorePageClass {
 
             if (notOwnedTotalPrice !== null) {
                 let priceNode = DOMHelper.selectLastNode(document, ".package_totals_area .price");
-                let packagePrice = Price.parseFromString(priceNode.textContent, Currency.storeCurrency);
+                let packagePrice = Price.parseFromString(priceNode.textContent);
                 if (!packagePrice) { return; }
 
                 notOwnedTotalPrice -= packagePrice.value;
-                notOwnedTotalPrice = new Price(notOwnedTotalPrice, Currency.storeCurrency);
+                notOwnedTotalPrice = new Price(notOwnedTotalPrice);
 
                 if (!document.querySelector("#package_savings_bar")) {
                     HTML.beforeEnd(".package_totals_area",
@@ -565,7 +565,7 @@ class SubPageClass extends StorePageClass {
                     savingsNode.style.color = "red";
                 }
             }
-            
+
         }, 500); // why is this here?
     }
 }
@@ -606,7 +606,7 @@ class AppPageClass extends StorePageClass {
 
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
-        
+
         this.forceVideoMP4();
         this.initHdPlayer();
         this.addWishlistRemove();
@@ -623,10 +623,8 @@ class AppPageClass extends StorePageClass {
         this.addMetacriticUserScore();
         this.addOpenCritic();
         this.addOwnedElsewhere();
-        this.displayViewInLibrary();
         this.displayPurchaseDate();
-        this.addYouTubeGameplay();
-        this.addYouTubeReviews();
+        this.addYouTubePlayers();
         this.addSteamPeek();
 
         new MediaPage().appPage();
@@ -638,9 +636,7 @@ class AppPageClass extends StorePageClass {
         this.replaceDevPubLinks();
         this.moveUsefulLinks();
         this.addLinks("app");
-        this.addTitleHighlight();
         this.addFamilySharingWarning();
-        this.removeAboutLink();
 
         this.addPackBreakdown();
         this.addPackageInfoButton();
@@ -649,98 +645,99 @@ class AppPageClass extends StorePageClass {
         this.addDlcCheckboxes();
         this.addBadgeProgress();
         this.addAstatsLink();
-        this.addAchievementCompletionBar();
+        this.addAchievementBar();
 
         this.showRegionalPricing("app");
 
         this.addReviewToggleButton();
-        this.addHelpButton();
+        this.addOwnedActionsButtons();
         this.addSupport();
+
+        Highlights.addTitleHighlight(this.appid);
     }
 
     initHdPlayer() {
         let self = this;
-        let movieNode = document.querySelector('div.highlight_movie');
+        let movieNode = document.querySelector("div.highlight_movie");
         if (!movieNode) { return; }
 
-        let playInHD = LocalStorage.get('playback_hd');
+        let playInHD = LocalStorage.get("playback_hd");
 
         // Add HD Control to each video as it's added to the DOM
-        let firstVideoIsPlaying = movieNode.querySelector('video.highlight_movie');
+        let firstVideoIsPlaying = movieNode.querySelector("video.highlight_movie");
         if (firstVideoIsPlaying) {
             addHDControl(firstVideoIsPlaying);
         }
 
-        let observer = new MutationObserver(function(mutation_records){
-            for (let mr of mutation_records) {
-                // Array.from(mr.addedNodes).filter(n => n.matches && n.matches('video.highlight_movie')).forEach(n => addHDControl(n));
-                for (let node of mr.addedNodes) {
-                    if (!node.matches || !node.matches('video.highlight_movie')) continue;
+        let observer = new MutationObserver(mutations => {
+            for (let mutation of mutations) {
+                for (let node of mutation.addedNodes) {
+                    if (!node.matches("video.highlight_movie")) { continue; }
                     addHDControl(node);
                 }
             }
         });
-        document.querySelectorAll('div.highlight_movie').forEach(function(node, idx){
-            observer.observe(node, { 'childList': true, });
-        });
+        for (let node of document.querySelectorAll("div.highlight_movie")) {
+            observer.observe(node, { childList: true });
+        }
 
         // When the "HD" button is clicked change the definition for all videos accordingly
-        document.querySelector('#highlight_player_area').addEventListener('click', clickHDControl, true);
+        document.querySelector("#highlight_player_area").addEventListener("click", clickHDControl, true);
         function clickHDControl(ev) {
-            if (!ev.target.matches || !ev.target.closest('.es_hd_toggle')) return;
+            if (!ev.target.closest(".es_hd_toggle")) { return; }
 
             ev.preventDefault();
             ev.stopPropagation();
 
-            let videoControl = ev.target.closest('div.highlight_movie').querySelector('video');
+            let videoControl = ev.target.closest("div.highlight_movie").querySelector("video");
             let playInHD = self.toggleVideoDefinition(videoControl);
 
-            for (let n of document.querySelectorAll('video.highlight_movie')) {
-                if (n === videoControl) continue;
-                self.toggleVideoDefinition(n, playInHD);
+            for (let node of document.querySelectorAll("video.highlight_movie")) {
+                if (node === videoControl) { continue; }
+                self.toggleVideoDefinition(node, playInHD);
             }
 
-            LocalStorage.set('playback_hd', playInHD);
+            LocalStorage.set("playback_hd", playInHD);
         }
 
         // When the slider is expanded first time after the page was loaded set videos definition to HD
-        for (let node of document.querySelectorAll('.es_slider_toggle')) {
-            node.addEventListener('click', clickInitialHD, false);
+        for (let node of document.querySelectorAll(".es_slider_toggle")) {
+            node.addEventListener("click", clickInitialHD, false);
         }
         function clickInitialHD(ev) {
-            ev.currentTarget.removeEventListener('click', clickInitialHD, false);
-            if (!ev.target.classList.contains('es_expanded')) return;
-            for (let node of document.querySelectorAll('video.highlight_movie.es_video_sd')) {
+            ev.currentTarget.removeEventListener("click", clickInitialHD, false);
+            if (!ev.target.classList.contains("es_expanded")) { return; }
+            for (let node of document.querySelectorAll("video.highlight_movie.es_video_sd")) {
                 self.toggleVideoDefinition(node, true);
             }
-            LocalStorage.set('playback_hd', true);
+            LocalStorage.set("playback_hd", true);
         }
 
         function addHDControl(videoControl) {
-            playInHD = LocalStorage.get('playback_hd');
+            playInHD = LocalStorage.get("playback_hd");
 
             function _addHDControl() {
                 // Add "HD" button to the video
                 if (videoControl.dataset.hdSrc) {
-                    let node = videoControl.parentNode.querySelector('.time');
+                    let node = videoControl.parentNode.querySelector(".time");
                     if (node) {
                         HTML.afterEnd(node, `<div class="es_hd_toggle"><span>HD</span></div>`);
                     }
                 }
 
                 // Override Valve's auto switch to HD when putting a video in fullscreen
-                let node = videoControl.parentNode.querySelector('.fullscreen_button');
+                let node = videoControl.parentNode.querySelector(".fullscreen_button");
                 if (node) {
-                    let newNode = document.createElement('div');
+                    let newNode = document.createElement("div");
                     newNode.classList.add("fullscreen_button");
-                    newNode.addEventListener('click', (() => toggleFullscreen(videoControl)), false);
+                    newNode.addEventListener("click", (() => toggleFullscreen(videoControl)), false);
                     node.replaceWith(newNode);
                     node = null; // prevent memory leak
                     newNode = null;
                 }
 
                 // Toggle fullscreen on video double click
-                videoControl.addEventListener('dblclick', (() => toggleFullscreen(videoControl)), false);
+                videoControl.addEventListener("dblclick", (() => toggleFullscreen(videoControl)), false);
 
                 self.toggleVideoDefinition(videoControl, playInHD);
             }
@@ -750,28 +747,27 @@ class AppPageClass extends StorePageClass {
 
         function toggleFullscreen(videoControl) {
             let fullscreenAvailable = document.fullscreenEnabled || document.mozFullScreenEnabled;
-            // Chrome unprefixed in v45
             // Mozilla unprefixed in v64
-            if (!fullscreenAvailable) return;
+            if (!fullscreenAvailable) { return; }
 
             let container = videoControl.parentNode;
-            let isFullscreen = document.webkitFullscreenElement || document.mozFullScreenElement || document.fullscreenElement;
+            let isFullscreen = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
             // Mozilla unprefixed in v64
-            // Chrome still prefixed
+            // Chrome unprefixed in v53
 
             if (isFullscreen) {
                 if (document.exitFullscreen)
-                    document.exitFullscreen(); // Unprefixed in v64
+                    document.exitFullscreen();
                 else if (document.mozCancelFullScreen)
-                    document.mozCancelFullScreen(); // Unprefixed in v64
+                    document.mozCancelFullScreen(); // Mozilla unprefixed in v64
             } else {
                 let response = null;
                 if (container.requestFullscreen)
                     response = container.requestFullscreen();
                 else if (container.mozRequestFullScreen)
-                    response = container.mozRequestFullScreen(); // Unprefixed in v64
+                    response = container.mozRequestFullScreen(); // Mozilla unprefixed in v64
                 else if (container.webkitRequestFullscreen)
-                    container.webkitRequestFullscreen(); // no promise
+                    container.webkitRequestFullscreen(); // Chrome unprefixed in v69, no promise
                 // if response is a promise, catch any errors it throws
                 Promise.resolve(response).catch(err => console.error(err));
             }
@@ -796,10 +792,10 @@ class AppPageClass extends StorePageClass {
                 // if response is a promise, suppress any errors it throws
                 Promise.resolve(videoControl.play()).catch(err => {});
             }
-            videoControl.removeEventListener('loadedmetadata', onLoadedMetaData, false);
+            videoControl.removeEventListener("loadedmetadata", onLoadedMetaData, false);
         }
 
-        if ((!playInHD && typeof setHD === 'undefined') || setHD === true) {
+        if ((!playInHD && typeof setHD === "undefined") || setHD === true) {
             videoIsHD = true;
             videoControl.src = videoControl.dataset.hdSrc;
         } else if (loadedSrc) {
@@ -829,7 +825,7 @@ class AppPageClass extends StorePageClass {
     }
 
     async _removeFromWishlist() {
-        return Background.action("wishlist.remove", { "sessionid": User.getSessionId(), "appid": this.appid });
+        return Background.action("wishlist.remove", this.appid, User.getSessionId());
     }
 
     async _removeFromWaitlist() {
@@ -952,7 +948,7 @@ class AppPageClass extends StorePageClass {
         updateDiv();
 
         function updateDiv() {
-            let oneActive = wishlisted || waitlisted;
+            let oneActive = Boolean(wishlisted) || Boolean(waitlisted);
 
             menuArrow.classList.toggle("queue_btn_active", oneActive);
             menuArrow.classList.toggle("queue_btn_inactive", !oneActive);
@@ -974,7 +970,7 @@ class AppPageClass extends StorePageClass {
                 document.querySelector("#add_to_wishlist_area span").textContent = ` ${Localization.str.add_to_wishlist}`;
                 return;
             }
-            
+
             document.querySelector("#add_to_wishlist_area_success span").lastChild.textContent = ` ${text}`;
         }
 
@@ -1046,10 +1042,9 @@ class AppPageClass extends StorePageClass {
     }
 
     addFullscreenScreenshotView() {
-        function toggleFullScreen(event) {
+        function toggleFullScreen(ev) {
             if (!document.fullscreenElement) {
-                let element = event.target.closest(".screenshot_popup_modal_content");
-                element.requestFullscreen();
+                ev.target.closest(".screenshot_popup_modal_content").requestFullscreen();
             } else {
                 document.exitFullscreen();
             }
@@ -1078,9 +1073,9 @@ class AppPageClass extends StorePageClass {
             });
         }
 
-        let observer = new MutationObserver(records => {
-            for (let record of records) {
-                for (let node of record.addedNodes) {
+        let observer = new MutationObserver(mutations => {
+            for (let mutation of mutations) {
+                for (let node of mutation.addedNodes) {
                     if (node.classList.contains("screenshot_popup_modal")) {
                         initFSVButtons();
                     }
@@ -1097,7 +1092,7 @@ class AppPageClass extends StorePageClass {
 
     async addCoupon() {
         if (!SyncedStorage.get("show_coupon")) { return; }
-        
+
         let coupon = await Inventory.getCoupon(this.appid);
         if (!coupon) { return; }
 
@@ -1125,31 +1120,34 @@ class AppPageClass extends StorePageClass {
         // TODO show price in purchase box
     }
 
-    addDlcInfo() {
+    async addDlcInfo() {
         if (!this.isDlc()) { return; }
 
         let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.dlc_details}</div>
                    <div class="block es_dlc_info">
                    <div class="block_content"><div class="block_content_inner"><div class="details_block">`;
 
-        Background.action("dlcinfo", { "appid": this.appid, "appname": this.appName }).then(response => {
-            for(let item of response) {
+        try {
+            let response = await Background.action("dlcinfo", { "appid": this.appid, "appname": this.appName });
+
+            for (let item of response) {
                 let iconUrl = `${Config.PublicHost}/gamedata/icons/${encodeURIComponent(item.icon)}`;
                 let title = HTML.escape(item.desc);
                 let name = HTML.escape(item.name);
+
                 html += `<div class="game_area_details_specs">
                             <div class="icon"><img src="${iconUrl}"></div>
                             <a class="name" title="${title}">${name}</a>
                         </div>`;
             }
-        }).finally(() => {
+        } finally {
             let suggestUrl = `${Config.PublicHost}/gamedata/dlc_category_suggest.php?appid=${this.appid}&appname=${encodeURIComponent(this.appName)}`;
             html += `</div>
                     <br><a class="linkbar" href="${suggestUrl}" target="_blank">${Localization.str.dlc_suggest} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></a>
                     </div></div></div>`;
 
             HTML.beforeBegin(document.querySelector("#category_block").parentNode, html);
-        });
+        }
     }
 
     addMetacriticUserScore() {
@@ -1219,21 +1217,23 @@ class AppPageClass extends StorePageClass {
                     </div>
                 </div>`);
 
-            // Add data to the review section in the left column, or create one if that block doesn't exist
-            if (data.reviews.length > 0) {
-                let reviewsNode = document.getElementById("game_area_reviews");
+            let reviews = "";
+            for (let review of data.reviews) {
+                let date = new Date(review.date).toLocaleDateString();
+                reviews += `<p>"${review.snippet}"<br>${review.dScore} - <a href="${review.rUrl}" target="_blank" data-tooltip-text="${review.author}, ${date}">${review.name}</a></p>`;
+            }
+
+            if (reviews) {
                 let html =
                     `<div id="es_opencritic_reviews">
+                        ${reviews}
                         <div class="chart-footer">${Localization.str.read_more_reviews} <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews" target="_blank">OpenCritic.com</a></div>
                     </div>`;
 
+                // Add data to the review section in the left column, or create one if that block doesn't exist
+                let reviewsNode = document.getElementById("game_area_reviews");
                 if (reviewsNode) {
-                    let youTubeReviews = document.getElementById("es_youtube_reviews");
-                    if (youTubeReviews) {
-                        HTML.beforeBegin(youTubeReviews, html);
-                    } else {
-                        HTML.beforeEnd(reviewsNode, html);
-                    }
+                    HTML.beforeEnd(reviewsNode, html);
                 } else {
                     HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
                         `<div id="game_area_reviews" class="game_area_description">
@@ -1242,13 +1242,6 @@ class AppPageClass extends StorePageClass {
                         </div>`);
                 }
 
-                let review_text = "";
-                for (let review of data.reviews) {
-                    let date = new Date(review.date);
-                    review_text += `<p>"${review.snippet}"<br>${review.dScore} - <a href="${review.rUrl}" target="_blank" data-tooltip-text="${review.author}, ${date.toLocaleDateString()}">${review.name}</a></p>`;
-                }
-
-                HTML.afterBegin("#es_opencritic_reviews", review_text);
                 ExtensionLayer.runInPageContext(() => { BindTooltips("#game_area_reviews", { tooltipCSSClass: "store_tooltip" }); });
             }
         });
@@ -1265,89 +1258,111 @@ class AppPageClass extends StorePageClass {
         let player = document.createElement("iframe");
         player.classList.add("es_youtube_player");
         player.type = "text/html";
-        player.src = `https://www.youtube.com/embed?listType=search&list=${listParam}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${hlParam}`;
+        player.src = `https://www.youtube.com/embed?listType=search&list=${listParam}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${hlParam}&enablejsapi=1`;
         player.allowFullscreen = true;
 
         return player;
     }
 
-    addYouTubeGameplay() {
-        if (!SyncedStorage.get("showyoutubegameplay")) { return; }
+    addYouTubePlayers() {
+        if (!SyncedStorage.get("showyoutubegameplay") && !SyncedStorage.get("showyoutubereviews")) { return; }
+
+        let ytTabsHtml = "";
+
+        if (SyncedStorage.get("showyoutubegameplay")) {
+            ytTabsHtml +=
+                `<div class="js-tab-yt-gameplay js-tab-yt js-tab es_tab home_tab">
+                    <div class="tab_content">${Localization.str.youtube_gameplay}</div>
+                </div>`;
+        }
+
+        if (SyncedStorage.get("showyoutubereviews")) {
+            ytTabsHtml +=
+                `<div class="js-tab-yt-review js-tab-yt js-tab es_tab home_tab">
+                    <div class="tab_content">${Localization.str.youtube_reviews}</div>
+                </div>`;
+        }
 
         HTML.afterBegin(".leftcol",
             `<div class="es_tabs">
                 <div class="home_tabs_row">
-                    <div id="es_tab_steammedia" class="es_tab home_tab active">
+                    <div class="js-tab-steam js-tab es_tab home_tab active">
                         <div class="tab_content">Steam</div>
                     </div>
-                    <div id="es_tab_youtubemedia" class="es_tab home_tab">
-                        <div class="tab_content">${Localization.str.youtube_gameplay}</div>
-                    </div>
+                    ${ytTabsHtml}
                 </div>
             </div>`);
 
         /*  The separation of the tabs bar allows us to place the media slider right above the top right corner of the player.
             This empty div is inserted here in order to keep the same height difference between the left and the right column. */
-        HTML.afterBegin(".rightcol", "<div style='height: 31px;'></div>");
+        HTML.afterBegin(".rightcol", `<div style="height: 31px;"></div>`);
 
-        let youTubeTab = document.getElementById("es_tab_youtubemedia");
-        let steamTab = document.getElementById("es_tab_steammedia");
+        let steamTab = document.querySelector(".js-tab-steam");
 
-        let youTubeMedia = document.getElementById("es_youtube_gameplay_player");
-        let steamMedia = document.querySelector(".highlight_overflow");
+        let tabToMedia = new Map([
+            [steamTab, document.querySelector(".highlight_overflow")],
+        ]);
 
-        youTubeTab.addEventListener("click", () => {
+        steamTab.addEventListener("click", () => { setActiveTab(steamTab) });
 
-            if (!youTubeMedia) {
-                youTubeMedia = this._getYoutubeIframeNode(this.appName, Localization.str.gameplay);
-                youTubeMedia.id = "es_youtube_gameplay_player";
+        if (SyncedStorage.get("showyoutubegameplay")) {
+            let gamePlayTab = document.querySelector(".js-tab-yt-gameplay");
 
-                document.querySelector(".highlight_ctn")
-                    .insertAdjacentElement("beforeend", youTubeMedia);
-            }
-
-            steamMedia.style.display = "none";
-            steamTab.classList.remove("active");
-
-            youTubeMedia.style.display = "block";
-            youTubeTab.classList.add("active");
-
-            ExtensionLayer.runInPageContext(() => { SteamOnWebPanelHidden(); });
-        });
-
-        steamTab.addEventListener("click", () => {
-
-            if (youTubeMedia) {
-
-                youTubeMedia.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "https://www.youtube.com");
-
-                youTubeMedia.style.display = "none";
-                youTubeTab.classList.remove("active");
-
-                steamMedia.style.display = "block";
-                steamTab.classList.add("active");
-
-                ExtensionLayer.runInPageContext(() => { SteamOnWebPanelShown(); });
-            }
-        });
-    }
-
-    addYouTubeReviews() {
-        if (!SyncedStorage.get("showyoutubereviews")) { return; }
-
-        let reviewsNode = document.querySelector("#game_area_reviews");
-        if (!reviewsNode) {
-            HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
-                `<div id="game_area_reviews" class="game_area_description">
-                    <h2>${Localization.str.reviews}</h2>
-                    <div id="es_youtube_reviews"></div>
-                </div>`);
-
-        } else {
-            HTML.beforeEnd(reviewsNode, '<div id="es_youtube_reviews"></div>');
+            gamePlayTab.addEventListener("click", () => {
+                if (!tabToMedia.has(gamePlayTab)) {
+                    let gamePlayMedia = this._getYoutubeIframeNode(this.appName, Localization.str.gameplay);
+    
+                    document.querySelector(".highlight_ctn")
+                        .insertAdjacentElement("beforeend", gamePlayMedia);
+    
+                    tabToMedia.set(gamePlayTab, gamePlayMedia);
+                }
+    
+                setActiveTab(gamePlayTab);
+            });
         }
 
-        document.getElementById("es_youtube_reviews").appendChild(this._getYoutubeIframeNode(this.appName, Localization.str.review));
+        if (SyncedStorage.get("showyoutubereviews")) {
+            let reviewTab = document.querySelector(".js-tab-yt-review");
+
+            reviewTab.addEventListener("click", () => {
+                if (!tabToMedia.has(reviewTab)) {
+                    let reviewMedia = this._getYoutubeIframeNode(this.appName, Localization.str.review);
+    
+                    document.querySelector(".highlight_ctn")
+                        .insertAdjacentElement("beforeend", reviewMedia);
+    
+                    tabToMedia.set(reviewTab, reviewMedia);
+                }
+    
+                setActiveTab(reviewTab);
+            });
+        }
+
+        function setActiveTab(tab) {
+
+            let activeTab = document.querySelector(".js-tab.active");
+            if (activeTab === tab) { return; }
+
+            let media = tabToMedia.get(tab);
+            let activeMedia = tabToMedia.get(activeTab);
+
+            if (activeTab.classList.contains("js-tab-steam")) {
+                ExtensionLayer.runInPageContext(() => { SteamOnWebPanelHidden(); });
+            } else if (activeTab.classList.contains("js-tab-yt")) {
+                activeMedia.contentWindow.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube.com");
+            }
+
+            activeMedia.style.display = "none";
+            activeTab.classList.remove("active");
+            
+            media.style.display = "block";
+            tab.classList.add("active");
+
+            if (tab.classList.contains("js-tab-steam")) {
+                ExtensionLayer.runInPageContext(() => { SteamOnWebPanelShown(); });
+            }
+        }
     }
 
     async addSteamPeek() {
@@ -1439,47 +1454,70 @@ class AppPageClass extends StorePageClass {
         }
     }
 
-    displayViewInLibrary() {
-        if (!SyncedStorage.get("showviewinlibrary")) { return; }
+    addOwnedActionsButtons() {
+        if (!User.isSignedIn) { return; }
 
-        let node = document.querySelector(".already_owned_actions");
+        let node = document.querySelector(".game_area_play_stats .already_owned_actions");
         if (!node) { return; }
 
-        HTML.afterBegin(node,
+        // handle Install Steam button
+        let btn = node.querySelector("a[href^='https://store.steampowered.com/about/']");
+        let option = SyncedStorage.get("installsteam");
+        if (option === "hide") {
+            btn.remove();
+        } else if (option === "replace") {
+            btn.querySelector("span").textContent = Localization.str.viewinclient;
+            btn.href = `steam://store/${this.appid}`;
+        }
+
+        // add view in library button
+        if (SyncedStorage.get("showviewinlibrary")) {
+            HTML.afterBegin(node,
+                `<div class="game_area_already_owned_btn">
+                    <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${this.appid}">
+                        <span>${Localization.str.view_in_library}</span>
+                    </a>
+                </div>`);
+        }
+
+        // add help button
+        HTML.afterEnd(node,
             `<div class="game_area_already_owned_btn">
-                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${this.appid}">
-                    <span>${Localization.str.view_in_library}</span>
+                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="//help.steampowered.com/wizard/HelpWithGame/?appid=${this.appid}">
+                    <span>${Localization.str.get_help}</span>
                 </a>
             </div>`);
     }
 
-    displayPurchaseDate() {
-        if (!SyncedStorage.get("purchase_dates")) { return; }
+    async displayPurchaseDate() {
+        if (!User.isSignedIn || !SyncedStorage.get("purchase_dates")) { return; }
 
         let node = document.querySelector(".game_area_already_owned .already_in_library");
         if (!node) { return; }
 
-        let appname = this.appName.replace(":", "").trim();
+        let appname = this.appName.replace(/:/g, "").trim();
+        let date = await User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname);
+        if (!date) {
+            console.warn("Failed to retrieve purchase date");
+            return;
+        }
 
-        User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname).then(date => {
-            if (!date) { return; }
-            HTML.beforeEnd(node,
-                ` ${Localization.str.purchase_date.replace("__date__", date)}`);
-        });
+        node.textContent += ` ${Localization.str.purchase_date.replace("__date__", date)}`;
     }
 
-    addOwnedElsewhere() {
+    async addOwnedElsewhere() {
         if (this.isOwned()) { return; }
 
-        Background.action("itad.getfromcollection", `app/${this.appid}`).then(result => {
-            if (!result) { return; }
-            
-            HTML.afterEnd(".queue_overflow_ctn",
-                `<div class="game_area_already_owned page_content" style="background-image: linear-gradient(to right, #856d0e 0%, #d1a906 100%);">
-                    <div class="ds_owned_flag ds_flag" style="background-color: #856d0e;">${Localization.str.coll.in_collection.toUpperCase()}&nbsp;&nbsp;</div>
-                    <div class="already_in_library" style="color: #ffe000;">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", result.map(store => `<strong>${store}</strong>`).join(", "))}</div>
-                </div>`)
-        });
+        let response = await Background.action("itad.getfromcollection", this.storeid);
+        if (!response) { return; }
+
+        let storeList = response.map(store => `<strong>${store}</strong>`).join(", ");
+
+        HTML.afterEnd(".queue_overflow_ctn",
+            `<div class="game_area_already_owned page_content" style="background-image: linear-gradient(to right, #856d0e 0%, #d1a906 100%);">
+                <div class="ds_owned_flag ds_flag" style="background-color: #856d0e;">${Localization.str.coll.in_collection.toUpperCase()}&nbsp;&nbsp;</div>
+                <div class="already_in_library" style="color: #ffe000;">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", storeList)}</div>
+            </div>`);
     }
 
     addWidescreenCertification() {
@@ -1673,7 +1711,7 @@ class AppPageClass extends StorePageClass {
         let supportInfo = cache[appid];
         if (!supportInfo) {
             let response = await Background.action("appdetails", appid, "support_info");
-            if (!response || !response.success) { 
+            if (!response || !response.success) {
                 console.warn("Failed to retrieve support info");
                 return;
             }
@@ -1786,26 +1824,6 @@ class AppPageClass extends StorePageClass {
         super.addLinks(type);
     }
 
-    async addTitleHighlight() {
-        await DynamicStore;
-        
-        let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
-            ITAD.getAppStatus(`app/${this.appid}`),
-            DynamicStore.getAppStatus(`app/${this.appid}`),
-            Inventory.getAppStatus(this.appid),
-        ]);
-        let title = document.querySelector(".apphub_AppName");
-
-        if (collected) Highlights.highlightCollection(title);
-        if (waitlisted) Highlights.highlightWaitlist(title);
-        if (owned) Highlights.highlightOwned(title);
-        if (guestPass) Highlights.highlightInvGuestpass(title);
-        if (coupon) Highlights.highlightCoupon(title);
-        if (gift) Highlights.highlightInvGift(title);
-        if (wishlisted) Highlights.highlightWishlist(title);
-        if (ignored) Highlights.highlightNotInterested(title);
-    }
-
     addFamilySharingWarning() {
         if (!SyncedStorage.get("exfgls")) { return; }
 
@@ -1821,27 +1839,19 @@ class AppPageClass extends StorePageClass {
         });
     }
 
-    removeAboutLink() {
-        if (!SyncedStorage.get("hideaboutlinks")) { return; }
-
-        if (document.querySelector(".game_area_already_owned .ds_owned_flag")) {
-            document.querySelector(".game_area_already_owned_btn > [href^='https://store.steampowered.com/about/']").remove();
-        }
-    }
-
     addPackageInfoButton() {
         if (!SyncedStorage.get("show_package_info")) { return; }
 
-        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
+        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper:not(.bundle_hidden_by_preferences)")) {
             if (node.querySelector(".btn_packageinfo")) { return; }
 
-            let subid = node.querySelector("input[name=subid]").value;
+            let subid = node.querySelector("input[name=subid]");
             if (!subid) { return; }
 
             HTML.afterBegin(node.querySelector(".game_purchase_action"),
                 `<div class="game_purchase_action_bg">
                     <div class="btn_addtocart btn_packageinfo">
-                        <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid}/">
+                        <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid.value}/">
                             <span>${Localization.str.package_info}</span>
                         </a>
                     </div>
@@ -1983,7 +1993,7 @@ class AppPageClass extends StorePageClass {
 
     addDlcCheckboxes() {
         let dlcs = document.querySelector(".game_area_dlc_section");
-        if (!dlcs) { return; }
+        if (!dlcs || !dlcs.querySelector(".game_area_dlc_list")) { return; }
 
         let imgUrl = ExtensionResources.getURL("img/check_sheet.png");
         for (let dlc of dlcs.querySelectorAll(".game_area_dlc_row")) {
@@ -2000,7 +2010,7 @@ class AppPageClass extends StorePageClass {
 
         let expandedNode = dlcs.querySelector("#game_area_dlc_expanded");
         if (expandedNode) {
-            HTML.afterEnd(expandedNode, 
+            HTML.afterEnd(expandedNode,
                 `<div class="game_purchase_action game_purchase_action_bg" style="margin-bottom: 10px;" id="es_selected_btn">
                     <div class="btn_addtocart">
                         <a class="btnv6_green_white_innerfade btn_medium">
@@ -2211,20 +2221,19 @@ class AppPageClass extends StorePageClass {
             </div>`);
     }
 
-    addAchievementCompletionBar() {
+    async addAchievementBar() {
         if (!this.hasAchievements() || !SyncedStorage.get("showachinstore")) { return; }
 
-        let node = document.querySelector("#my_activity > .hours_played");
+        let node = document.querySelector("#my_activity");
         if (!node) { return; }
 
-        Stats.getAchievementBar("/my", this.communityAppid).then(achieveBar => {
-            if (!achieveBar) {
-                console.warn("Failed to find achievement stats for appid", this.communityAppid);
-                return;
-            }
-            
-            HTML.afterEnd(node, `<div id="es_ach_stats">${achieveBar}</div>`);
-        });
+        let achieveBar = await Stats.getAchievementBar("/my", this.communityAppid);
+        if (!achieveBar) {
+            console.warn("Failed to retrieve achievement stats");
+            return;
+        }
+        
+        HTML.afterBegin(node, `<div class="es-achieveBar-store">${achieveBar}</div>`);
     }
 
     customizeAppPage() {
@@ -2330,20 +2339,8 @@ class AppPageClass extends StorePageClass {
         }
     }
 
-    addHelpButton() {
-        let node = document.querySelector(".game_area_play_stats .already_owned_actions");
-        if (!node) { return; }
-
-        HTML.afterEnd(node,
-            `<div class="game_area_already_owned_btn">
-                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="//help.steampowered.com/wizard/HelpWithGame/?appid=${this.appid}">
-                    <span>${Localization.str.get_help}</span>
-                </a>
-            </div>`);
-    }
-
     addPackBreakdown() {
-        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper")) {
+        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper:not(.bundle_hidden_by_preferences)")) {
 
             // prevent false positives on packages e.g. Doom 3
             if (node.querySelector(".btn_packageinfo")) { continue; }
@@ -2383,7 +2380,7 @@ class AppPageClass extends StorePageClass {
                 price_text = price_text.replace(",", ".");
             }
             let price = (Number(price_text.replace(/[^0-9\.]+/g, ""))) / ways;
-            price = new Price(Math.ceil(price * 100) / 100, Currency.storeCurrency);
+            price = new Price(Math.ceil(price * 100) / 100);
 
             HTML.afterBegin(node.querySelector(".game_purchase_action_bg"),
                 `<div class="es_each_box">
@@ -2568,78 +2565,64 @@ let FundsPageClass = (function(){
         this.addCustomMoneyAmount();
     }
 
-    FundsPageClass.prototype.addCustomMoneyAmount = async function() {
-        let giftcard = document.querySelector(".giftcard_amounts");
+    FundsPageClass.prototype.addCustomMoneyAmount = function() {
+        let giftcard = window.location.pathname.startsWith("/digitalgiftcards/");
 
-        let newel = document.querySelector(giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game").cloneNode(true);
-        let priceel = newel.querySelector((giftcard ? ".giftcard_text" : ".price"));
+        let minAmountNode = document.querySelector(giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game");
+        let newel = minAmountNode.cloneNode(true);
+        newel.classList.add("es_custom_money");
+
+        let priceel = newel.querySelector(giftcard ? ".giftcard_text" : ".price");
         let price = priceel.textContent.trim();
 
-        newel.classList.add("es_custom_money");
-        if(!giftcard) {
-            newel.querySelector(".btnv6_green_white_innerfade").classList.add("es_custom_button");
-            newel.querySelector(".btnv6_green_white_innerfade").removeAttribute("onclick");
-            newel.querySelector("h1").textContent = Localization.str.wallet.custom_amount;
-            newel.querySelector("p").textContent = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
+        let currency = CurrencyRegistry.fromType(Currency.storeCurrency);
+        let minValue = currency.valueOf(price);
+        let step = Math.pow(10, -currency.format.decimalPlaces);
+
+        let input = `<input type="number" id="es_custom_money_amount" class="es_text_input money" min="${minValue}" step="${step}" value="${minValue}">`;
+
+        // add currency symbol
+        if (currency.format.postfix) {
+            input += currency.format.symbol;
         } else {
-            HTML.inner(
-                newel.querySelector(".giftcard_style"),
-                Localization.str.wallet.custom_giftcard_amount
-                    .replace("__minamount__", price)
-                    .replace("__input__", "<span id='es_custom_money_amount_wrapper'></span>")
-            );
+            input = currency.format.symbol + input;
         }
 
-        let currency = await Price.parseFromString(price, Currency.storeCurrency);
+        if (giftcard) {
+            let styleel = newel.querySelector(".giftcard_style");
+            HTML.inner(styleel, Localization.str.wallet.custom_giftcard.replace("__input__", `<span>${input}</span>`));
+            newel.querySelector("#es_custom_money_amount").dataset.tooltipText = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
 
-        let inputel = newel.querySelector((giftcard ? "#es_custom_money_amount_wrapper" : ".price"));
-        HTML.inner(inputel, "<input type='number' id='es_custom_money_amount' class='es_text_input money' min='" + currency.value + "' step='.01' value='" + currency.value +"'>");
-        // TODO currency symbol
+            minAmountNode.insertAdjacentElement("afterend", newel);
 
-        document.querySelector((giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game"))
-            .insertAdjacentElement("afterend", newel);
-
-        document.querySelector("#es_custom_money_amount").addEventListener("input", function() {
-            let value = document.querySelector("#es_custom_money_amount").value;
-
-            if(!isNaN(value) && value != "") {
-                currency = new Price(value, Currency.storeCurrency);
-
-                if(giftcard) {
-                    priceel.classList.toggle("small", value > 10);
-                    priceel.textContent = currency;
-                }
-            }
-        });
-
-        newel.querySelector((giftcard ? ".es_custom_money a.btn_medium" : ".es_custom_button")).addEventListener("click", e => {
-            e.preventDefault();
-
-            let customAmount = Number(document.querySelector("#es_custom_money_amount").value).toFixed(2).replace(/[,.]/g, '');
-
-            if (giftcard) {
-
-                if (e.target.closest(".giftcard_cont")) {
-                    ExtensionLayer.runInPageContext(amount => { submitSelectGiftCard(amount); }, [ customAmount ]);
-                }
-
-            } else {
-                let btn = document.querySelector(".es_custom_money .es_custom_button");
-                btn.href = "#";
-                btn.removeAttribute("onclick");
-                btn.dataset.amount = customAmount;
-
-                ExtensionLayer.runInPageContext(() => { submitAddFunds(document.querySelector(".es_custom_money .es_custom_button")); });
-            }
-
-        }, true);
-
-        let giftcardMoneyNode = document.querySelector(".giftcard_selection #es_custom_money_amount");
-        if (giftcardMoneyNode) {
-            giftcardMoneyNode.addEventListener("click", function(e) {
+            styleel.addEventListener("click", e => {
                 e.preventDefault();
             });
+        } else {
+            HTML.inner(priceel, input);
+            newel.querySelector("h1").textContent = `${Localization.str.wallet.custom_amount} ${price}`;
+            newel.querySelector("p").textContent = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
+
+            minAmountNode.insertAdjacentElement("afterend", newel);
         }
+
+        newel.querySelector("#es_custom_money_amount").addEventListener("input", e => {
+            let value = e.target.value;
+            if (value < minValue) {
+                value = minValue; // prevent purchase error
+            }
+
+            let customAmount = Number(value).toFixed(2).replace(/[,.]/g, '');
+
+            if (giftcard) {
+                priceel.textContent = new Price(value);
+                priceel.classList.toggle("small", priceel.textContent.length > 8);
+                newel.querySelector("a.btn_medium").href = `javascript:submitSelectGiftCard( ${customAmount} );`;
+            } else {
+                newel.querySelector("h1").textContent = `${Localization.str.wallet.custom_amount} ${new Price(value)}`;
+                newel.querySelector("a.btn_medium").dataset.amount = customAmount;
+            }
+        });
     };
 
     return FundsPageClass;
@@ -2649,665 +2632,628 @@ let FundsPageClass = (function(){
 let SearchPageClass = (function(){
 
     function SearchPageClass() {
-        this.endlessScrolling();
-        this.addExcludeTagsToSearch();
-        this.addHideButtonsToSearch().then(() => this.observeChanges());
+        infiniteScrollEnabled = document.querySelector(".search_pagination").style.display === "none";
+
+        this.addSearchFilters();
+        this.observeChanges();
     }
 
-    let processing = false;
-    let searchPage = 2;
+    let infiniteScrollEnabled;
 
-    function loadSearchResults () {
-        if (processing) { return; }
-        processing = true;
+    let eaFilter;
 
-        let search = document.URL.match(/(.+)\/(.+)/)[2].replace(/\&page=./, "").replace(/\#/g, "&");
-        if (!document.querySelector(".LoadingWrapper")) {
-            let nodes = document.querySelectorAll(".search_pagination");
+    let scoreFilter;
+    let minScoreInput, maxScoreInput;
+    let rangeDisplay;
 
-            HTML.beforeBegin(nodes[nodes.length-1], '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin-bottom: 15px;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div><div id="LoadingText">' + Localization.str.loading + '</div></div>');
-        }
+    let minCountInput, maxCountInput;
 
-        if (search.substring(0,1) === "&") { search = "?" + search.substring(1, search.length); }
-        if (search.substring(0,1) !== "?") { search = "?" + search; }
+    let maxStep;
+    let scoreValues = [];
+    let stepSize = 5;
 
-        RequestData.getHttp(`https://store.steampowered.com/search/results${search}&page=${searchPage}&snr=es`).then(result => {
-            let dummy = HTMLParser.htmlToDOM(result);
-
-            let addedDate = Date.now();
-            document.querySelector('#search_result_container').dataset.lastAddDate = addedDate;
-
-            let lastNode = document.querySelector(".search_result_row:last-child");
-
-            // When you're not logged in, the constructed hover doesn't include friends info
-            let publicAttr = User.isSignedIn ? '' : `,"public":1`;
-
-            let rows = dummy.querySelectorAll("a.search_result_row");
-            for (let row of rows) {
-                row.dataset.addedDate = addedDate;
-                lastNode.insertAdjacentElement("afterend", row);
-                lastNode = row;
-
-                // Construct the hover that was just sanitized out of row
-                let subtype = "app";
-                let subid = parseInt(lastNode.dataset.dsAppid, 10);
-                if (lastNode.dataset.dsPackageid) {
-                    // this is a sub, not an app
-                    subtype = "sub";
-                    subid = parseInt(lastNode.dataset.dsPackageid, 10);
-                }
-                lastNode.setAttribute('onmouseover', `GameHover( this, event, 'global_hover', {"type":"${subtype}","id":${subid}${publicAttr},"v6":1} );`);
-                lastNode.setAttribute('onmouseout', `HideGameHover( this, event, 'global_hover' )`);
-            }
-
-            document.querySelector(".LoadingWrapper").remove();
-
-            searchPage = searchPage + 1;
-            processing = false;
-
-            ExtensionLayer.runInPageContext(() => {
-                let addedDate = document.querySelector("#search_result_container").dataset.lastAddDate;
-                GDynamicStore.DecorateDynamicItems(jQuery(`.search_result_row[data-added-date="${addedDate}"]`));
-                SetupTooltips({ tooltipCSSClass: "store_tooltip" });
-            });
-
-            Highlights.highlightAndTag(rows);
-        }, () => {
-            document.querySelector(".LoadingWrapper").remove();
-            HTML.beforeBegin(".search_pagination:last-child",
-                "<div style='text-align: center; margin-top: 16px;' id='es_error_msg'>" + Localization.str.search_error + " <a id='es_retry' style='cursor: pointer;'>" + Localization.str.search_error_retry + "</a></div>");
-
-            document.querySelector("es_retry").addEventListener("click", function(e) {
-                processing = false;
-                document.querySelector("#es_error_msg").remove();
-                loadSearchResults();
-            });
-        });
+    for (let score = 0; score < 100; score += stepSize) {
+        scoreValues.push(score);
     }
+    maxStep = scoreValues.length;
 
-    SearchPageClass.prototype.endlessScrolling = function() {
-        if (!SyncedStorage.get("contscroll")) { return; }
+    function addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-count])")) {
+        for (let row of rows) {
+            if (row.querySelector(".search_reviewscore span.search_review_summary.mixed"))     { row.classList.add("as-hide-mixed");      }
+            if (row.querySelector(".search_reviewscore span.search_review_summary.negative"))  { row.classList.add("as-hide-negative");   }
 
-        let result_count;
-        document.querySelector(".search_pagination_right").style.display = "none";
-
-        let match = document.querySelector(".search_pagination_left").textContent.trim().match(/(\d+)(?:\D+(\d+)\D+(\d+))?/);
-        if (match) {
-            result_count = match[2] ? Math.max.apply(Math, match.slice(1, 4)) : match[1];
-            document.querySelector(".search_pagination_left").textContent = Localization.str.results.replace("__num__", result_count);
-        }
-
-        searchPage = 2;
-
-        window.addEventListener("scroll", function () {
-            // if the pagination element is in the viewport, continue loading
-            if (Viewport.isElementInViewport(document.querySelector(".search_pagination_left"))) {
-                if (result_count > document.querySelectorAll(".search_result_row").length) {
-                    loadSearchResults();
-                } else {
-                    document.querySelector(".search_pagination_left").textContent = Localization.str.all_results.replace("__num__", result_count);
+            let reviewPercentage = 100;
+            let reviewCount = 0;
+            let reviewsNode = row.querySelector(".search_review_summary");
+            if (reviewsNode) {
+                let match = reviewsNode.dataset.tooltipHtml.match(/(\d{1,3})%.*?((?:\d{1,3},?)+)/);
+                if (match) {
+                    reviewPercentage = Number(match[1]);
+                    reviewCount = Number(match[2].replace(/,/g, ''));
                 }
             }
-        });
-    };
 
-    SearchPageClass.prototype.addExcludeTagsToSearch = function() {
-        let tarFilterDivs = document.querySelectorAll('#TagFilter_Container')[0].children;
-
-        HTML.afterEnd(document.querySelector("#TagFilter_Container").parentNode.parentNode,
-            `<div class='block' id='es_tagfilter_exclude'>
-                <div class='block_header'>
-                    <div>${Localization.str.exclude_tags}</div>
-                 </div>
-                 <div class='block_content block_content_inner'>
-                    <div style='max-height: 150px; overflow: hidden;' id='es_tagfilter_exclude_container'></div>
-                    <input type="text" id="es_tagfilter_exclude_suggest" class="es_input">
-                </div>
-            </div>`);
-
-        let excludeContainer = document.querySelector("#es_tagfilter_exclude_container");
-
-        //tag numbers from the URL are already in the element with id #tags
-        function getTags() {
-            let tagsValue = decodeURIComponent(document.querySelector("#tags").value);
-            return tagsValue ? tagsValue.split(',') : [];
+            row.dataset.asReviewPercentage = reviewPercentage;
+            row.dataset.asReviewCount = reviewCount;
         }
 
-        let tags = getTags();
+        if (eaFilter.classList.contains("checked")) {
+            addEaMetadata(rows);
+        }
 
-        for (let val of tarFilterDivs) {
-            let item_checked = tags.indexOf(`-${val.dataset.value}`) > -1 ? "checked" : '';
+        applyFilters(rows);
+    }
 
-            let excludeItem = HTMLParser.htmlToElement(
-                `<div class="tab_filter_control ${item_checked}" data-param="tags" data-value="-${val.dataset.value}" data-loc="${val.dataset.loc}">
-                    <div class="tab_filter_control_checkbox"></div>
-                    <span class="tab_filter_control_label">${val.dataset.loc}</span>
-                </div>`);
+    async function addEaMetadata(rows = document.querySelectorAll(".search_result_row:not(.es_ea_checked)")) {
+        if (SyncedStorage.get("show_early_access")) { return; }
 
-            excludeItem.addEventListener("click", e => {
-                let control = e.target.closest(".tab_filter_control");
+        for (let row of await EarlyAccess.getEaNodes(rows)) {
+            row.classList.add("es_early_access");
+        }
+    }
 
-                let rgValues = getTags();
-                let value = String(control.dataset.value);
-                if (!control.classList.contains("checked")) {
+    function paramsToObject(params) {
+        let paramsObj = {};
+        for (let [key, val] of params) {
+            paramsObj[key] = val;
+        }
+        return paramsObj;
+    }
 
-                    if(!rgValues) {
-                        rgValues = [value];
-                    } else if (rgValues.indexOf(value) === -1) {
-                        rgValues.push(value);
+    function modifyParams(searchParams, entries) {
+        for (let [key, val] of entries) {
+            if (val !== "" && val !== null) {
+                searchParams.set(key, val);
+            } else {
+                searchParams.delete(key);
+            }
+        }
+    }
+
+    async function modifyPageLinks() {
+        if (!infiniteScrollEnabled) {
+            for (let linkElement of document.querySelectorAll(".search_pagination_right a")) {
+                let curParams = new URLSearchParams(window.location.search);
+                let url = new URL(linkElement.href);
+                let params = url.searchParams;
+
+                modifyParams(params, [
+                    ["as-hide", curParams.get("as-hide")],
+                    ["as-reviews-score", curParams.get("as-reviews-score")],
+                    ["as-reviews-count", curParams.get("as-reviews-count")],
+                ]);
+
+                /* We can't simply use URLSearchParams.prototype.toString here, since existing query string parameters
+                 * would be modified when stringifying back again (e.g. "white%20space" will turn into "white+space" and break links).
+                 * Therefore the URLSearchParameters are converted to an object and parsed by Prototype's Object.toQueryString. */
+                ExtensionLayer.runInPageContext(obj => Object.toQueryString(obj), [paramsToObject(params)], true)
+                    .then(queryString => {
+                        url.search = `?${queryString}`;
+                        linkElement.href = url.href;
+                    });
+            }
+        }
+    }
+
+    function applyCountFilter(rows = document.querySelectorAll(".search_result_row")) {
+
+        let minCount, maxCount;
+
+        for (let input of [minCountInput, maxCountInput]) {
+            let val;
+            if (input.value === '' && input === maxCountInput) {
+                val = Infinity;
+            } else {
+                val = Number(input.value);
+            }
+
+            if (input === minCountInput) {
+                minCount = val;
+            } else {
+                maxCount = val;
+            }
+        }
+
+        for (let row of rows) {
+            let rowCount = Number(row.dataset.asReviewCount);
+            row.classList.toggle("as-reviews-count", rowCount < minCount || rowCount > maxCount);
+        }
+    }
+
+    function applyScoreFilter(rows = document.querySelectorAll(".search_result_row")) {
+        let minScore = scoreValues[Number(document.querySelector(".js-reviews-score-lower").value)];
+
+        let maxVal = Number(document.querySelector(".js-reviews-score-upper").value);
+        let maxScore = maxVal === maxStep ? Infinity : scoreValues[maxVal];
+
+        for (let row of rows) {
+            let rowScore = Number(row.dataset.asReviewPercentage);
+            row.classList.toggle("as-reviews-score", rowScore < minScore || rowScore > maxScore);
+        }
+    }
+
+    function applyFilters(rows) {
+        applyScoreFilter(rows);
+        applyCountFilter(rows);
+    }
+
+    SearchPageClass.prototype.addSearchFilters = function() {
+
+        let collapseName = "augmented_steam";
+        let filterNames = [
+            "cart",
+            "ea",
+            "mixed",
+            "negative",
+        ];
+
+        let activeFilters = getASFilters();
+
+        let results = document.getElementById("search_results");
+
+        function getASFilters() {
+            let paramsObj = {};
+            let params = new URLSearchParams(window.location.search);
+
+            let rawParam = params.get("as-hide");
+            if (rawParam) {
+                paramsObj["as-hide"] = new Set(rawParam.split(','));
+            } else {
+                paramsObj["as-hide"] = new Set();
+            }
+
+            paramsObj["as-reviews-score"] = params.get("as-reviews-score");
+            paramsObj["as-reviews-count"] = params.get("as-reviews-count");
+
+            return paramsObj;
+        }
+
+        function setFilterStates() {
+            for (let filterName of filterNames) {
+                /**
+                 * https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L815
+                 * EnableClientSideFilters
+                 */
+                let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
+
+                let active = activeFilters["as-hide"].has(filterName);
+                results.classList.toggle(filterName, active);
+                filter.classList.toggle("checked", active);
+                filter.parentElement.classList.toggle("checked", active);
+
+                if (filterName === "ea" && active) {
+                    addEaMetadata();
+                }
+            }
+
+            let lowerScoreVal = "0";
+            let upperScoreVal = maxStep.toString();
+
+            if (activeFilters["as-reviews-score"]) {
+                let match = activeFilters["as-reviews-score"].match(/(^\d*)-(\d*)/);
+                if (match) {
+                    let [, lower, upper] = match;
+                    lower = parseInt(lower);
+                    upper = parseInt(upper);
+
+                    if (!isNaN(lower) && scoreValues.includes(lower)) {
+                        lowerScoreVal = scoreValues.indexOf(lower).toString();
                     }
-
-                } else {
-
-                    if (rgValues.indexOf(value) !== -1) {
-                        rgValues.splice(rgValues.indexOf(value), 1);
+                    if (!isNaN(upper) && scoreValues.includes(upper)) {
+                        upperScoreVal = scoreValues.indexOf(upper).toString();
                     }
                 }
+            }
 
-                control.classList.toggle('checked');
-                filtersChanged();
-            });
+            if (lowerScoreVal !== minScoreInput.value) {
+                minScoreInput.value = lowerScoreVal;
+                minScoreInput.dispatchEvent(new Event("input"));
+            }
+            if (upperScoreVal !== maxScoreInput.value) {
+                maxScoreInput.value = upperScoreVal;
+                maxScoreInput.dispatchEvent(new Event("input"));
+            }
 
-            excludeContainer.append(excludeItem);
-        }
+            let lowerCountVal = '';
+            let upperCountVal = '';
 
-        ExtensionLayer.runInPageContext(() => {
-            $J("#es_tagfilter_exclude_container").tableFilter({ maxvisible: 15, control: "#es_tagfilter_exclude_suggest", dataattribute: "loc", defaultText: $J("#TagSuggest").attr("value") });
-        });
+            if (activeFilters["as-reviews-count"]) {
+                let match = activeFilters["as-reviews-count"].match(/(^\d*)-(\d*)/);
+                if (match) {
+                    let [, lower, upper] = match;
+                    lower = parseInt(lower);
+                    upper = parseInt(upper);
 
-        let observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation){
-                if (!mutation["addedNodes"]) { return; }
-
-                let addedNodes = mutation["addedNodes"];
-                for (let i=0; i<addedNodes.length; i++) {
-                    let node = addedNodes[i].parentNode;
-                    if (node.classList.contains("tag_dynamic") && parseFloat(node.dataset['tag_value']) < 0) {
-                        node.querySelector(".label").textContent = Localization.str.not.replace("__tag__", node.textContent);
+                    if (!isNaN(lower)) {
+                        lowerCountVal = lower;
+                    }
+                    if (!isNaN(upper)) {
+                        upperCountVal = upper;
                     }
                 }
-            });
-        });
-        observer.observe(document.querySelector(".termcontainer"), {childList:true, subtree:true});
-        ExtensionLayer.runInPageContext(() => { UpdateTags(); });
-    };
+            }
 
-    function isPriceAbove(node, priceAbove) {
-        let priceValue = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(node.querySelector(".search_price").lastChild.textContent);
-        
-        if (!priceValue) { return false; } // App without price
-
-        return Number(priceValue) > priceAbove;
-    }
-
-    function isReviewsBelow(node, reviewsBelow) {
-        if (!node.querySelector(".search_review_summary")) {
-            // App without reviews
-            return true;
+            if (lowerCountVal !== minCountInput.value) {
+                minCountInput.value = lowerCountVal;
+            }
+            if (upperCountVal !== maxCountInput.value) {
+                maxCountInput.value = upperCountVal;
+            }
         }
 
-        let reviewsString = node.querySelector(".search_review_summary").dataset.tooltipHtml
-            .replace(/\d+%/g, "")
-            .match(/\d+/g).join("");
+        function updateUrls(key, val) {
 
-        return Number(reviewsString) < reviewsBelow;
-    }
+            /**
+             * This hidden input is required for GatherSearchParameters,
+             * otherwise AS' inputs are not considered when selecting another Steam native filter.
+             * https://github.com/SteamDatabase/SteamTracking/blob/1dfdbd838714d4b868e0221ca812696ca05f0a6b/store.steampowered.com/public/javascript/searchpage.js#L177
+             */
+            document.getElementsByName(key)[0].value = val;
 
-    function isTagExcluded(node, tags) {
-        if (!node.dataset.dsTagids) return false;
-        let nodeTags = JSON.parse(node.dataset.dsTagids);
-        return nodeTags.some(tag => tags.includes(tag));
-    }
+            // Update the current URL
+            let curParams = new URLSearchParams(window.location.search);
+            modifyParams(curParams, [[key, val]]);
 
-    function filtersChanged(nodes = document.querySelectorAll(".search_result_row")) {
-        let hideOwned = document.querySelector("#es_owned_games.checked");
-        let hideWishlisted = document.querySelector("#es_wishlist_games.checked");
-        let hideInCart = document.querySelector("#es_cart_games.checked");
-        let hideNotDiscounted = document.querySelector("#es_notdiscounted.checked");
-        let hideNotInterested = document.querySelector("#es_notinterested.checked");
-        let hideMixed = document.querySelector("#es_notmixed.checked");
-        let hideNegative = document.querySelector("#es_notnegative.checked");
-        let hidePriceAbove = document.querySelector("#es_notpriceabove.checked");
-        let hideReviewsBelow = document.querySelector("#es_noreviewsbelow.checked");
+            ExtensionLayer.runInPageContext(params => {
+                // https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L217
+                UpdateUrl(params);
+            }, [ paramsToObject(curParams) ]);
 
-        let priceAbove = CurrencyRegistry.fromType(Currency.storeCurrency).valueOf(document.querySelector("#es_notpriceabove_val").value);
-        let reviewsBelow = Number(document.querySelector("#es_noreviewsbelow_val").value);
-        let hideTags = Array.from(document.querySelectorAll("#es_tagfilter_exclude_container > .checked")).map(tag => Math.abs(Number(tag.dataset.value)));
+            modifyPageLinks();
 
-        for (let node of nodes) {
-            if (hideOwned && node.classList.contains("ds_owned")) { node.style.display = "none"; continue; }
-            if (hideWishlisted && node.classList.contains("ds_wishlist")) { node.style.display = "none"; continue; }
-            if (hideInCart && node.classList.contains("ds_incart")) { node.style.display = "none"; continue; }
-            if (hideNotDiscounted && !node.querySelector(".search_discount span")) { node.style.display = "none"; continue; }
-            if (hideNotInterested && node.classList.contains("ds_ignored")) { node.style.display = "none"; continue; }
-            if (hideMixed && node.querySelector(".search_reviewscore span.search_review_summary.mixed")) { node.style.display = "none"; continue; }
-            if (hideNegative && node.querySelector(".search_reviewscore span.search_review_summary.negative")) { node.style.display = "none"; continue; }
-            if (hidePriceAbove && isPriceAbove(node, priceAbove)) { node.style.display = "none"; continue; }
-            if (hideReviewsBelow && isReviewsBelow(node, reviewsBelow)) { node.style.display = "none"; continue; }
-            if (hideTags.length && isTagExcluded(node, hideTags)) { node.style.display = "none"; continue; }
-            node.style.display = "block";
+            activeFilters = getASFilters();
         }
-    }
-
-    SearchPageClass.prototype.addHideButtonsToSearch = async function() {
-
-        let currency = CurrencyRegistry.storeCurrency;
-        let inputPattern = currency.regExp();
-        let pricePlaceholder = currency.placeholder();
-
-        await User;
 
         HTML.afterBegin("#advsearchform .rightcol",
-            `<div class="block" id="es_hide_menu">
-                <div class="block_header"><div>${Localization.str.hide}</div></div>
-                <div class="block_content block_content_inner" id="es_hide_options">
-                    ${User.isSignedIn ? `<div class="tab_filter_control" id="es_owned_games" data-param="es_hide" data-value="owned">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.options.owned}</span>
+            `<div class="block search_collapse_block" data-collapse-name="${collapseName}">
+                <div class="block_header"><div>${Localization.str.filters}</div></div>
+                <div class="block_content block_content_inner">
+                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="cart" data-loc="${Localization.str.search_filters.hide_cart}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="cart" data-loc="${Localization.str.search_filters.hide_cart}" data-clientside="1">
+                            <span>
+                                <span class="tab_filter_control_checkbox"></span>
+                                <span class="tab_filter_control_label">${Localization.str.search_filters.hide_cart}</span>
+                                <span class="tab_filter_control_count" style="display: none;"></span>
+                            </span>
+                        </span>
                     </div>
-                    <div class="tab_filter_control" id="es_wishlist_games" data-param="es_hide" data-value="wishlisted">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.options.wishlist}</span>
+                    <div class="js-ea-filter tab_filter_control_row" data-param="augmented_steam" data-value="ea" data-loc="${Localization.str.search_filters.hide_ea}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="ea" data-loc="${Localization.str.search_filters.hide_ea}" data-clientside="1">
+                            <span>
+                                <span class="tab_filter_control_checkbox"></span>
+                                <span class="tab_filter_control_label">${Localization.str.search_filters.hide_ea}</span>
+                                <span class="tab_filter_control_count" style="display: none;"></span>
+                            </span>
+                        </span>
                     </div>
-                    <div class="tab_filter_control" id="es_notinterested" data-param="es_hide" data-value="ignored">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.notinterested}</span>
-                    </div>` : ""}
-                    <div class="tab_filter_control" id="es_cart_games" data-param="es_hide" data-value="cart">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.options.cart}</span>
+                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="mixed" data-loc="${Localization.str.search_filters.hide_mixed}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="mixed" data-loc="${Localization.str.search_filters.hide_mixed}" data-clientside="1">
+                            <span>
+                                <span class="tab_filter_control_checkbox"></span>
+                                <span class="tab_filter_control_label">${Localization.str.search_filters.hide_mixed}</span>
+                                <span class="tab_filter_control_count" style="display: none;"></span>
+                            </span>
+                        </span>
                     </div>
-                    <div class="tab_filter_control" id="es_notdiscounted" data-param="es_hide" data-value="not-discounted">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.notdiscounted}</span>
+                    <div class="tab_filter_control_row" data-param="augmented_steam" data-value="negative" data-loc="${Localization.str.search_filters.hide_negative}" data-clientside="1">
+                        <span class="tab_filter_control tab_filter_control_include" data-param="augmented_steam" data-value="negative" data-loc="${Localization.str.search_filters.hide_negative}" data-clientside="1">
+                            <span>
+                                <span class="tab_filter_control_checkbox"></span>
+                                <span class="tab_filter_control_label">${Localization.str.search_filters.hide_negative}</span>
+                                <span class="tab_filter_control_count" style="display: none;"></span>
+                            </span>
+                        </span>
                     </div>
-                    <div class="tab_filter_control" id="es_notmixed" data-param="es_hide" data-value="mixed">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.mixed_item}</span>
-                    </div>
-                    <div class="tab_filter_control" id="es_notnegative" data-param="es_hide" data-value="negative">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.negative_item}</span>
-                    </div>
-                    <div class="tab_filter_control" id="es_notpriceabove" data-param="es_hide" data-value="price-above" title="${Localization.str.price_above_tooltip}">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.price_above}</span>
-                        <div>
-                            <input type="text" id="es_notpriceabove_val" class="es_input" pattern="${inputPattern.source}" placeholder="${pricePlaceholder}">
+                    <div><input type="hidden" name="as-hide"></div>
+                    <div class="block_rule"></div>
+                    <div class="range_container" style="margin-top: 8px;">
+                        <div class="as-double-slider js-reviews-score-filter range_container_inner">
+                            <input class="as-double-slider__input as-double-slider__input--upper js-reviews-score-input js-reviews-score-upper range_input" type="range" min="0" max="${maxStep}" step="1" value="${maxStep}">
+                            <input class="as-double-slider__input as-double-slider__input--lower js-reviews-score-input js-reviews-score-lower range_input" type="range" min="0" max="${maxStep}" step="1" value="0">
+                            <input type="hidden" name="as-reviews-score">
                         </div>
+                        <div class="as-range-display range_display">${Localization.str.search_filters.reviews_score.any}</div>
                     </div>
-                    <div class="tab_filter_control" id="es_noreviewsbelow" data-param="es_hide" data-value="reviews-below" title="${Localization.str.reviews_below_tooltip}">
-                        <div class="tab_filter_control_checkbox"></div>
-                        <span class="tab_filter_control_label">${Localization.str.reviews_below}</span>
-                        <div>
-                            <input type="number" id="es_noreviewsbelow_val" class="es_input" min="0" step="1">
+                    <div class="as-reviews-count-filter">
+                        <div class="as-reviews-count-filter__header">${Localization.str.search_filters.reviews_count.count}</div>
+                        <div class="as-reviews-count-filter__content js-reviews-count-filter">
+                            <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-lower" type="number" min="0" step="100" placeholder="${Localization.str.search_filters.reviews_count.min_count}">
+                            -
+                            <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-upper" type="number" min="0" step="100" placeholder="${Localization.str.search_filters.reviews_count.max_count}">
+                            <input type="hidden" name="as-reviews-count">
                         </div>
-                    </div>
-                    <div>
-                        <input type="hidden" id="es_hide" name="es_hide" value>
                     </div>
                 </div>
             </div>
         `);
 
-        Messenger.addMessageListener("filtersChanged", filtersChanged);
+        eaFilter = document.querySelector(".js-ea-filter");
+        scoreFilter = document.querySelector(".js-reviews-score-filter");
+        minScoreInput = scoreFilter.querySelector(".js-reviews-score-lower");
+        maxScoreInput = scoreFilter.querySelector(".js-reviews-score-upper");
+        rangeDisplay = scoreFilter.nextElementSibling;
 
-        Messenger.onMessage("priceAbove").then(priceVal => {
-            if (new RegExp(inputPattern.source.replace(',', '\\.')).test(priceVal)) {
-                if (currency.format.decimalSeparator === ',') {
-                    priceVal = priceVal.replace('.', ',');
+        // Setup handlers for reviews score filter
+        for (let input of document.querySelectorAll(".js-reviews-score-input")) {
+
+            let minVal = parseInt(minScoreInput.value);
+            let maxVal = parseInt(maxScoreInput.value);
+
+            input.addEventListener("input", () => {
+
+                minVal = parseInt(minScoreInput.value);
+                maxVal = parseInt(maxScoreInput.value);
+
+                if (input === maxScoreInput) {
+                    if (minVal >= maxVal) {
+                        if (minVal <= 0) {
+                            maxScoreInput.value = maxVal = 1;
+                        } else {
+                            minScoreInput.value = minVal = maxVal - 1;
+                        }
+                    }
+                } else {
+                    if (maxVal <= minVal) {
+                        // Happens when the user clicks to the highest step after the max thumb instead of dragging
+                        if (minVal === maxStep) {
+                            minScoreInput.value = minVal = maxStep - 1;
+                            maxScoreInput.value = maxVal = maxStep;
+                        } else if (maxVal < maxStep) {
+                            maxScoreInput.value = maxVal = minVal + 1;
+                        } else {
+                            minScoreInput.value = minVal = maxVal - 1;
+                        }
+                    }
                 }
-                document.getElementById("es_notpriceabove_val").value = priceVal;
-                Messenger.postMessage("priceValueChanged");
-            } else {
-                console.warn("Failed to validate price %s from URL params!", priceVal);
-            }
-        });
-        Messenger.onMessage("reviewsBelow").then(reviewsVal => {
-            document.getElementById("es_noreviewsbelow_val").value = reviewsVal;
-            Messenger.postMessage("reviewsValueChanged");
-        });
 
-        // TODO(tomas.fedor) Can we somehow simplify this monstrosity? E.g. update URL on our end?
-        // Thrown together from sources of searchpage.js
-        ExtensionLayer.runInPageContext(hideFilter => {
-
-            GDynamicStore.OnReady(() => {
-
-                // For each AS filter
-                $J(".tab_filter_control[id^='es_']").each(function() {
-                    let $Control = $J(this);
-                    $Control.click(() => updateURL($Control));
-                });
-
-                function updateURL($Control, forcedState) {
-
-                    let strParam = $Control.data("param");
-                    let value = $Control.data("value");
-                    let strValues = decodeURIComponent($J('#' + strParam).val());
-                    value = String(value); // Javascript: Dynamic types except sometimes not.
-                    if (!$Control.hasClass("checked")) {
-                        let rgValues;
-                        if(!strValues) {
-                            if (typeof forcedState !== "undefined" && !forcedState) {
-                                rgValues = [];
-                            } else {
-                                if (value === "price-above") {
-                                    rgValues = [value + $J("#es_notpriceabove_val").val().replace(',', '.')];
-                                } else if (value === "reviews-below") {
-                                    rgValues = [value + $J("#es_noreviewsbelow_val").val()];
-                                } else {
-                                    rgValues = [value];
-                                }
-                            }
-                        } else {
-                            rgValues = strValues.split(',');
-
-                            if (!(typeof forcedState !== "undefined" && !forcedState)) {
-                                if (value === "price-above") {
-                                    let found = false;
-                                    for (let rgValue in rgValues) {
-                                        if (rgValue.startsWith(value)) {
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!found) {
-                                        rgValues.push(value + $J("#es_notpriceabove_val").val().replace(',', '.'));
-                                    }
-                                } else if (value === "reviews-below") {
-                                    let found = false;
-                                    for (let rgValue in rgValues) {
-                                        if (rgValue.startsWith(value)) {
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!found) {
-                                        rgValues.push(value + $J("#es_noreviewsbelow_val").val());
-                                    }
-                                } else {
-                                    if ($J.inArray(value, rgValues) === -1) {
-                                        rgValues.push(value)
-                                    }
-                                }
-                            }
-                            
-                        }
-    
-                        $J('#' + strParam).val(rgValues.join(','));
-
-                        if (typeof forcedState !== "undefined") {
-                            if (forcedState) {
-                                $Control.addClass("checked");
-                            }
-                        } else {
-                            $Control.addClass("checked");
-                        }
+                let text;
+                if (minVal === 0) {
+                    if (maxVal === maxStep) {
+                        text = Localization.str.search_filters.reviews_score.any;
                     } else {
-                        let rgValues = strValues.split(',');
-
-                        if (value === "price-above") {
-                            for (let i = 0; i < rgValues.length; ++i) {
-                                if (rgValues[i].startsWith("price-above")) {
-                                    if (typeof forcedState !== "undefined" && forcedState) {
-                                        rgValues[i] = "price-above" + $J("#es_notpriceabove_val").val().replace(',', '.');
-                                    } else {
-                                        rgValues.splice(i, 1);
-                                    }
-                                    break;
-                                }
-                            }
-                        } else if (value === "reviews-below") {
-                            for (let i = 0; i < rgValues.length; ++i) {
-                                if (rgValues[i].startsWith("reviews-below")) {
-                                    if (typeof forcedState !== "undefined" && forcedState) {
-                                        rgValues[i] = "reviews-below" + $J("#es_noreviewsbelow_val").val();
-                                    } else {
-                                        rgValues.splice(i, 1);
-                                    }
-                                    break;
-                                }
-                            }
-                        } else {
-                            if (!(typeof forcedState !== "undefined" && forcedState)) {
-                                if (rgValues.indexOf(value) !== -1) {
-                                    rgValues.splice(rgValues.indexOf(value), 1);
-                                }
-                            }
-                        }
-
-                        $J('#' + strParam).val(rgValues.join(','));
-
-                        if (typeof forcedState !== "undefined") {
-                            if (!forcedState) {
-                                $Control.removeClass("checked");
-                            }
-                        } else {
-                            $Control.removeClass("checked");
-                        }
+                        text = Localization.str.search_filters.reviews_score.up_to.replace("__score__", scoreValues[maxVal]);
                     }
-
-                    let rgParameters = GatherSearchParameters();
-
-                    // remove snr for history purposes
-                    delete rgParameters["snr"];
-                    if (rgParameters["sort_by"] === "_ASC") {
-                        delete rgParameters["sort_by"];
-                    }
-                    if (rgParameters["page"] === 1 || rgParameters["page"] === '1')
-                        delete rgParameters["page"];
-
-                    // don't want this on the url either
-                    delete rgParameters["hide_filtered_results_warning"];
-
-                    if (g_bUseHistoryAPI) {
-                        history.pushState({ params: rgParameters}, '', '?' + Object.toQueryString(rgParameters));
+                } else {
+                    if (maxVal === maxStep) {
+                        text = Localization.str.search_filters.reviews_score.from.replace("__score__", scoreValues[minVal]);
                     } else {
-                        window.location = '#' + Object.toQueryString(rgParameters);
-                    }
-
-                    $J(".tag_dynamic").remove();
-                    $J("#termsnone").show();
-                    let rgActiveTags = $J(".tab_filter_control.checked");
-
-                    // Search term
-                    let strTerm = $J("#realterm").val();
-                    if(strTerm) {
-                        AddSearchTag("term", strTerm, '"'+strTerm+'"', function(tag) { $J("#realterm").val(''); $J("#term").val(''); AjaxSearchResults(); return false; });
-                        $J("#termsnone").hide();
-                    }
-
-                    // Publisher
-                    let strPublisher = $J("#publisher").val();
-                    if(strPublisher) {
-                        AddSearchTag("publisher", strPublisher, "Publisher" + ": "+strPublisher, function(tag) { $J("#publisher").val(''); AjaxSearchResults(); return false; });
-                        $J("#termsnone").hide();
-                    }
-
-                    // Developer
-                    let strDeveloper = $J("#developer").val();
-                    if(strDeveloper) {
-                        AddSearchTag("publisher", strDeveloper, "Developer" + ": " + strDeveloper, function(tag) { $J("#developer").val(''); AjaxSearchResults(); return false; });
-                        $J("#termsnone").hide();
-                    }
-
-                    rgActiveTags.each(function() {
-                        let Tag = this;
-                        let $Tag = $J(this);
-                        let label;
-
-                        if ($Tag.is("[id*='es_']")) {
-                            label = hideFilter.replace("__filter__", $J(".tab_filter_control_label", Tag).text());
-                        } else {
-                            label = $J(".tab_filter_control_label", Tag).text();
-                        }
-                        AddSearchTag($Tag.data("param"), $Tag.data("value"), label, function(tag) { return function() { tag.click(); return false; } }(Tag) );
-                        if (!$Tag.is(":visible"))
-                        {
-                            $Tag.parent().prepend($Tag.show());
-                            $Tag.trigger( "tablefilter_update" );
-                        }
-                        $J("#termsnone").hide();
-                    });
-                    Messenger.postMessage("filtersChanged");
-                }
-    
-                for (let [key, value] of new URLSearchParams(window.location.search)) {
-                    if (key === "es_hide") {
-                        for (let filterValue of value.split(',')) {
-                            let filter = $J(".tab_filter_control[data-value='" + filterValue + "']");
-                            if (!filter.length) {
-                                if (filterValue.startsWith("price-above")) {
-                                    let priceValue = /price-above(.+)/.exec(filterValue)[1];
-                                    if (!priceValue) {
-                                        console.warn("Didn't set a value for the price filter!");
-                                        continue;
-                                    }
-                                    filter = $J(".tab_filter_control[data-value=price-above]");
-                                    Messenger.onMessage("priceValueChanged").then(filter.click);
-                                    Messenger.postMessage("priceAbove", priceValue);
-                                    continue;
-                                } else if (filterValue.startsWith("reviews-below")) {
-                                    let reviewsValue = /reviews-below(.+)/.exec(filterValue)[1];
-                                    if (!reviewsValue) {
-                                        console.warn("Didn't set a value for the reviews filter!");
-                                        continue;
-                                    }
-                                    filter = $J(".tab_filter_control[data-value=reviews-below]");
-                                    Messenger.onMessage("reviewsValueChanged").then(filter.click);
-                                    Messenger.postMessage("reviewsBelow", reviewsValue);
-                                    continue;
-                                } else {
-                                    console.warn("Invalid filter value %s", filterValue);
-                                    continue;
-                                }
-                            }
-                            filter.click();
-                        }
+                        text = Localization.str.search_filters.reviews_score.between.replace("__lower__", scoreValues[minVal]).replace("__upper__", scoreValues[maxVal]);
                     }
                 }
 
-                Messenger.addMessageListener("priceChanged", forcedState => updateURL($J(".tab_filter_control[id='es_notpriceabove']"), forcedState));
-                Messenger.addMessageListener("reviewsChanged", forcedState => updateURL($J(".tab_filter_control[id='es_noreviewsbelow']"), forcedState));
+                rangeDisplay.textContent = text;
             });
-        }, [ Localization.str.hide_filter ]);
 
-        let html = "<span id='es_notpriceabove_val_currency'>" + currency.format.symbol + "</span>";
-        let priceAboveVal = document.querySelector("#es_notpriceabove_val");
+            input.addEventListener("change", () => {
+                applyScoreFilter();
 
-        if (currency.format.postfix) {
-            HTML.afterEnd(priceAboveVal, html);
-        } else {
-            HTML.beforeBegin(priceAboveVal, html);
+                let val = "";
+                if (minVal !== 0 || maxVal !== maxStep) {
+                    val = `${minVal === 0 ? '' : scoreValues[minVal]}-${maxVal === maxStep ? '' : scoreValues[maxVal]}`;
+                }
+
+                updateUrls("as-reviews-score", val);
+            });
         }
 
-        addFilterInputEvents(
-            priceAboveVal,
-            document.querySelector("#es_notpriceabove"),
-            "priceChanged", inputPattern,
-            Localization.str.price_above_wrong_format.replace("__pattern__", pricePlaceholder));
+        minCountInput = document.querySelector(".js-reviews-count-lower");
+        maxCountInput = document.querySelector(".js-reviews-count-upper");
 
-        addFilterInputEvents(
-            document.querySelector("#es_noreviewsbelow_val"),
-            document.querySelector("#es_noreviewsbelow"),
-            "reviewsChanged", /^\d+$/, "");
-    };
+        for (let input of document.querySelectorAll(".js-reviews-count-input")) {
 
-    function addFilterInputEvents(node, checkboxNode, messageId, inputPattern, errorMessage) {
-        node.addEventListener("click", e => e.stopPropagation());
-        node.addEventListener("keydown", e => {
-            if(e.key === "Enter") {
-                // This would normally trigger a call to AjaxSearchResults() which is not required here
-                e.preventDefault();
-            }
+            input.addEventListener("change", () => {
+                applyCountFilter();
+
+                let minVal = minCountInput.value;
+                let maxVal = maxCountInput.value;
+                let val = "";
+
+                if ((minVal && Number(minVal) !== 0) || maxVal) {
+                    val = `${minVal}-${maxVal}`;
+                }
+                updateUrls("as-reviews-count", val);
+            });
+
+            input.addEventListener("keydown", e => {
+                if(e.key === "Enter") {
+                    // Prevents unnecessary submitting of the advanced search form
+                    e.preventDefault();
+
+                    input.dispatchEvent(new Event("change"));
+                }
+            });
+        }
+
+        // Setup handlers for other toggleable filters
+        for (let filterName of filterNames) {
+
+            let filter = document.querySelector(`span[data-param="augmented_steam"][data-value="${filterName}"]`);
+
+            filter.addEventListener("click", () => {
+                /**
+                 * https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L859
+                 * OnClickClientFilter
+                 */
+                let savedOffset = filter.getBoundingClientRect().top;
+                let isChecked = filter.classList.toggle("checked");
+
+                if (isChecked) {
+                    results.classList.add(filterName);
+                    filter.parentElement.classList.add("checked");
+                } else {
+                    results.classList.remove(filterName);
+                    filter.parentElement.classList.remove("checked");
+                }
+
+                let fixScrollOffset = document.scrollTop - savedOffset + filter.getBoundingClientRect().top;
+                document.scrollTop = fixScrollOffset;
+
+                if (isChecked) {
+                    activeFilters["as-hide"].add(filterName);
+                } else {
+                    activeFilters["as-hide"].delete(filterName);
+                }
+
+                updateUrls("as-hide", Array.from(activeFilters["as-hide"]).join(','));
+
+                if (filterName === "ea" && isChecked) {
+                    addEaMetadata();
+                }
+            });
+        }
+
+        window.addEventListener("popstate", () => {
+            activeFilters = getASFilters();
+            setFilterStates();
         });
-        node.addEventListener("input", () => {
-            let newValue = node.value;
 
-            if (!inputPattern || inputPattern.test(newValue)) {
-                // The "checked" class will be toggled by the page context code
-                Messenger.postMessage(messageId, newValue !== "");
-                node.setCustomValidity('');
+        setFilterStates();
+        addRowMetadata();
+        modifyPageLinks();
+
+        // Allow user to autocollapse the added category block just like any other
+        ExtensionLayer.runInPageContext((collapseName, maxStep) => {
+            /**
+             * https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L927
+             * InitAutocollapse
+             */
+            let prefs = GetCollapsePrefs();
+
+            let block = $J(`.search_collapse_block[data-collapse-name="${collapseName}"]`);
+            let collapsed;
+
+            if (prefs[collapseName] !== undefined) {
+                collapsed = prefs[collapseName];
             } else {
-                Messenger.postMessage(messageId, false);
-                node.setCustomValidity(errorMessage);
+                prefs[collapseName] = collapsed = false;
             }
 
-            node.reportValidity();
-        });
-    }
+            collapsed = collapsed
+                && !(block.find(".tab_filter_control.checked").length > 0)
+                && $J(".js-reviews-score-lower").val() === "0"
+                && $J(".js-reviews-score-upper").val() === maxStep
+                && !$J(".js-reviews-count-lower").val()
+                && !$J(".js-reviews-count-upper").val();
+
+            block.children(".block_content").css("height", '');
+
+            if (collapsed) {
+                block.addClass("collapsed");
+                block.children(".block_content").hide();
+            }
+
+            block.children(".block_header").on("click", () => {
+                if (block.hasClass("collapsed")) {
+                    prefs[collapseName] = false;
+                    block.children(".block_content").slideDown("fast");
+                } else {
+                    prefs[collapseName] = true;
+                    block.children(".block_content").slideUp("fast");
+                }
+
+                block.toggleClass("collapsed");
+                SaveCollapsePrefs(prefs);
+            });
+        }, [ collapseName, maxStep.toString() ]);
+    };
 
     SearchPageClass.prototype.observeChanges = function() {
 
-        let hiddenInput = document.getElementById("es_hide");
+        Messenger.addMessageListener("searchCompleted", filtersChanged => {
+            let newResults = document.querySelectorAll(".search_result_row:not([data-as-review-count])");
 
-        function modifyLinks() {
-            for (let linkElement of document.querySelectorAll(".search_pagination_right a")) {
-                let params = new URLSearchParams(linkElement.href.substring(linkElement.href.indexOf('?')));
-                if (hiddenInput.value) {
-                    params.set("es_hide", hiddenInput.value);
-                } else {
-                    params.delete("es_hide");
-                }
-
-                // Encoding is done by Steam, see #568
-                linkElement.href = linkElement.href.substring(0, linkElement.href.indexOf('?') + 1) + params.toString();
-            }
-        }
-
-        function toggleFilter(name, selector) {
-            let params = new URLSearchParams(window.location.search);
-            if (params.has("es_hide")) {
-                decodeURIComponent(params.get("es_hide")).split(',').forEach(filter => {
-                    if (filter.startsWith(name)) {
-                        document.querySelector(selector).classList.add("checked");
-                    }
-                });
-            }
-        }
-
-        let inputObserver = new MutationObserver(modifyLinks);
-        inputObserver.observe(hiddenInput, {attributes: true, attributeFilter: ["value"]});
-
-        let removeObserver = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                for (let node of mutation.addedNodes) {
-                    // Under certain circumstances the search result container will get removed and then added again, thus disconnecting the MutationObserver
-                    if (node.id === "search_result_container") {
-                        observeAjax(node.querySelectorAll(".search_result_row"));
-                        
-                        if (!SyncedStorage.get("contscroll")) {
-                            toggleFilter("price-above", "#es_notpriceabove");
-                            toggleFilter("reviews-below", "#es_noreviewsbelow");
-                            modifyLinks();
-                            filtersChanged();
-                        }
-                        ajaxObserver.observe(node.querySelector("#search_resultsRows"), {childList: true});
-                        break;
-                    }
-                }
-            });
-        });
-        removeObserver.observe(document.querySelector("#search_results"), { childList: true });
-
-        function observeAjax(addedNodes) {
             EarlyAccess.showEarlyAccess();
-            
-            Highlights.highlightAndTag(addedNodes);
-            filtersChanged(addedNodes);
-        }
-
-        let ajaxObserver = new MutationObserver(mutations => {
-            let rows = [];
-            for (let mutation of mutations) {
-                rows = rows.concat(
-                    Array.from(mutation.addedNodes).filter(node => node.classList && node.classList.contains("search_result_row"))
-                );
-            }
-            observeAjax(rows);
+            Highlights.highlightAndTag(newResults);
+            addRowMetadata(newResults);
+            modifyPageLinks();
+            applyFilters(filtersChanged ? document.querySelectorAll(".search_result_row") : newResults);
         });
-        ajaxObserver.observe(document.querySelector("#search_resultsRows"), {childList: true});
+
+        ExtensionLayer.runInPageContext(() => {
+
+            /**
+             * The handler set by this function is triggered when the page that infiniscroll will display has changed
+             * https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L614
+             */
+            function setPageChangeHandler() {
+                let controller = InitInfiniteScroll.oController;
+                if (controller) {
+                    let oldPageHandler = controller.m_fnPageChangedHandler;
+
+                    controller.SetPageChangedHandler(function() {
+                        oldPageHandler(...arguments);
+
+                        Messenger.postMessage("searchCompleted", false);
+                    });
+                }
+            }
+
+            // https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L264
+            let searchOld = window.ExecuteSearch;
+
+            window.ExecuteSearch = function(params) {
+                /**
+                 * The ExecuteSearch function uses the global object g_rgCurrentParameters, that is
+                 * filled by GatherSearchParameters(), and compares it to the new search parameters
+                 * (the object passed to this function).
+                 * If it detects that the two objects are different, it triggers a search request.
+                 * Since the AS filters are all clientside, we don't want to do that and remove
+                 * our added entries from the objects here.
+                 * https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L273
+                 */
+
+                let paramsCopy = {};
+                Object.assign(paramsCopy, params);
+
+                let currentAsParameters = {};
+                let asParameters = {};
+
+                for (let filter in g_rgCurrentParameters) {
+                    if (filter.startsWith("as-")) {
+                        currentAsParameters[filter] = g_rgCurrentParameters[filter];
+                        delete g_rgCurrentParameters[filter];
+                    }
+                }
+
+                for (let filter in params) {
+                    if (filter.startsWith("as-")) {
+                        asParameters[filter] = params[filter];
+                        delete params[filter];
+                    }
+                }
+
+                /**
+                 * If our parameters have changed (this automatically means theirs have not, since
+                 * during different states there is only one change in parameters), there won't be new results.
+                 * Therefore we can already notify the content script that the search completed.
+                 */
+                if (Object.toQueryString(currentAsParameters) !== Object.toQueryString(asParameters)) {
+                        Messenger.postMessage("searchCompleted", true);
+                }
+
+                searchOld(params);
+
+                // Restore state such that the next comparison includes AS filters
+                g_rgCurrentParameters = paramsCopy;
+            };
+
+            // https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L298
+            let searchCompletedOld = window.SearchCompleted;
+
+            window.SearchCompleted = function() {
+                searchCompletedOld(...arguments);
+
+                // https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L319
+                setPageChangeHandler();
+
+                // At this point the new results have been loaded and decorated (by the Dynamic Store)
+                Messenger.postMessage("searchCompleted", false);
+            };
+
+            // https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L463
+            setPageChangeHandler();
+
+        });
     };
 
     return SearchPageClass;
@@ -3319,41 +3265,11 @@ let StatsPageClass = (function(){
         this.highlightTopGames();
     }
 
-    StatsPageClass.prototype.highlightTopGames = async function() {
-        if (!User.isSignedIn) { return; }
-
-        for (let node of document.querySelectorAll(".gameLink")) {
-            let appid = GameId.getAppid(node.href);
-
-            await DynamicStore;
-        
-            let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { guestPass, coupon, gift }] = await Promise.all([
-                ITAD.getAppStatus(`app/${appid}`),
-                DynamicStore.getAppStatus(`app/${appid}`),
-                Inventory.getAppStatus(appid),
-            ]);
-
-            if (collected) Highlights.highlightCollection(node);
-            if (waitlisted) Highlights.highlightWaitlist(node);
-            if (owned) Highlights.highlightOwned(node);
-            if (guestPass) Highlights.highlightInvGuestpass(node);
-            if (coupon) Highlights.highlightCoupon(node);
-            if (gift) Highlights.highlightInvGift(node);
-            if (wishlisted) Highlights.highlightWishlist(node);
-            if (ignored) Highlights.highlightNotInterested(node);
-        }
+    StatsPageClass.prototype.highlightTopGames = function() {
+        return Highlights.highlightAndTag(document.querySelectorAll(".gameLink"), false);
     }
 
     return StatsPageClass;
-})();
-
-let CuratorPageClass = (function(){
-
-    function CuratorPageClass() {
-        // no page-specific handling
-    }
-
-    return CuratorPageClass;
 })();
 
 
@@ -3405,11 +3321,11 @@ let WishlistPageClass = (function(){
         });
 
         if (SyncedStorage.get("showlowestprice_onwishlist")) {
-            
+
             ExtensionLayer.runInPageContext(() => {
                 function getNodesBelow(node) {
                     let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
-            
+
                     // Limit the selection to the rows that are positioned below the row (not including the row itself) where the price is being shown
                     return nodes.filter(row => parseInt(row.style.top, 10) > parseInt(node.style.top, 10));
                 }
@@ -3425,7 +3341,7 @@ let WishlistPageClass = (function(){
                         let activeEntry = hover[hover.length - 1].closest(".wishlist_row");
                         if (activeEntry) {
                             let priceNode = activeEntry.querySelector(".itad-pricing");
-                            
+
                             if (priceNode) {
                                 for (let row of getNodesBelow(activeEntry)) {
                                     row.style.top = `${parseInt(row.style.top) + priceNode.getBoundingClientRect().height}px`;
@@ -3441,12 +3357,12 @@ let WishlistPageClass = (function(){
         observer.observe(container, { 'childList': true, });
 
         let wishlistLoaded = () => {
-            this.addStatsArea();
+            this.computeStats();
             this.addExportWishlistButton();
             this.addEmptyWishlistButton();
             this.addUserNotesHandlers();
         };
-        
+
         if (document.querySelector("#throbber").style.display === "none") {
             wishlistLoaded();
         } else {
@@ -3471,104 +3387,34 @@ let WishlistPageClass = (function(){
             || window.location.href.includes("/profiles/" + User.steamId);
     }
 
-    WishlistPageClass.prototype.highlightApps = async function(node) {
+    WishlistPageClass.prototype.highlightApps = function(node) {
         if (!User.isSignedIn) { return; }
 
-        await DynamicStore;
-
-        let [{ collected, waitlisted }, { owned, wishlisted, ignored }, { coupon, guestPass, gift }] = await Promise.all([
-            ITAD.getAppStatus(`app/${node.dataset.appId}`),
-            DynamicStore.getAppStatus(`app/${node.dataset.appId}`),
-            Inventory.getAppStatus(Number(node.dataset.appId)),
-        ]);
-
-        if (collected) Highlights.highlightCollection(node);
-        if (waitlisted) Highlights.highlightWaitlist(node);
-
-        if (!myWishlist) {
-            if (owned) {
-                node.classList.add("ds_collapse_flag", "ds_flagged", "ds_owned");
-
-                if (SyncedStorage.get("highlight_owned")) {
-                    Highlights.highlightOwned(node);
-                } else {
-                    HTML.beforeEnd(node, `<div class="ds_flag ds_owned_flag">${Localization.str.library.in_library.toUpperCase()}&nbsp;&nbsp;</div>`);
-                }
-            }
-
-            if (wishlisted) {
-                node.classList.add("ds_collapse_flag", "ds_flagged", "ds_wishlist");
-
-                if (SyncedStorage.get("highlight_wishlist")) {
-                    Highlights.highlightWishlist(node);
-                } else {
-                    HTML.beforeEnd(node, `<div class="ds_flag ds_wishlist_flag">${Localization.str.on_wishlist.toUpperCase()}&nbsp;&nbsp;</div>`);
-                }
-            }
+        let options = {};
+        if (myWishlist) {
+            options.wishlisted = false;
+            options.waitlisted = false;
         }
 
-        if (ignored) {
-            node.classList.add("ds_collapse_flag", "ds_flagged", "ds_ignored");
-
-            if (SyncedStorage.get("highlight_notinterested")) {
-                Highlights.highlightNotInterested(node);
-            } else {
-                HTML.beforeEnd(node, `<div class="ds_flag ds_ignored_flag">${Localization.str.ignored.toUpperCase()}&nbsp;&nbsp;</div>`);
-            }
-        }
-
-        if (coupon) Highlights.highlightCoupon(node);
-        if (guestPass) Highlights.highlightInvGuestpass(node);
-        if (gift) Highlights.highlightInvGift(node);
+        return Highlights.highlightAndTag([node], false, options);
     };
 
-    WishlistPageClass.prototype.addStatsArea = function() {
+    WishlistPageClass.prototype.computeStats = async function() {
         if (!SyncedStorage.get("showwishliststats")) { return; }
         if (document.getElementById("nothing_to_see_here").style.display !== "none") { return; }
 
-        HTML.beforeBegin("#wishlist_ctn",
-            `<div id="esi-wishlist-chart-content">
-                <a>${Localization.str.wl.compute}</a>
-            </div>`);
+        let appInfo = await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, "appInfo");
 
-        document.querySelector("#esi-wishlist-chart-content a").addEventListener("click", e => {
-            HTML.inner(e.target.parentNode, `<span>${Localization.str.loading}</span>`);
-            loadStats();
-        });
-    };
-
-    // Calculate total cost of all items on wishlist
-    async function loadStats() {
-        let wishlistData = HTMLParser.getVariableFromDom("g_rgAppInfo", "object");
-        if (!wishlistData || Object.keys(wishlistData).length == 0) {
-            let pages = HTMLParser.getVariableFromDom("g_nAdditionalPages", "int");
-            let baseUrl = HTMLParser.getVariableFromDom("g_strWishlistBaseURL", "string");
-
-            if (!pages || !baseUrl || !baseUrl.startsWith("https://store.steampowered.com/wishlist/profiles/")) {
-                throw "loadStats() expected profile url";
-            }
-
-            wishlistData = {};
-            let promises = [];
-
-            for (let i=0; i<pages; i++) {
-                promises.push(RequestData.getJson(`${baseUrl}wishlistdata/?p=${i}`).then(data => {
-                    Object.assign(wishlistData, data);
-                }));
-            }
-
-            await Promise.all(promises);
-        }
         let totalPrice = 0;
         let totalCount = 0;
         let totalOnSale = 0;
         let totalNoPrice = 0;
 
-        for (let [key, game] of Object.entries(wishlistData)) {
-            if (game.subs.length > 0) {
-                totalPrice += game.subs[0].price / 100;
+        for (let data of Object.values(appInfo)) {
+            if (data.subs.length > 0) {
+                totalPrice += data.subs[0].price;
 
-                if (game.subs[0].discount_pct > 0) {
+                if (data.subs[0].discount_pct > 0) {
                     totalOnSale++;
                 }
             } else {
@@ -3576,13 +3422,15 @@ let WishlistPageClass = (function(){
             }
             totalCount++;
         }
-        totalPrice = new Price(totalPrice, Currency.storeCurrency)
+        totalPrice = new Price(totalPrice / 100);
 
-        HTML.inner("#esi-wishlist-chart-content",
-            `<div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
-            <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
-            <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
-            <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>`);
+        HTML.beforeBegin("#wishlist_ctn",
+            `<div id="esi-wishlist-chart-content">
+                <div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
+                <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>
+            </div>`);
     }
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
@@ -3635,14 +3483,15 @@ let WishlistPageClass = (function(){
 
     class WishlistExporter {
 
-        constructor(appInfo) {
+        constructor(appInfo, apps) {
             this.appInfo = appInfo;
+            this.apps = apps;
             this.notes = SyncedStorage.get("user_notes") || {};
         }
 
         toJson() {
             let json = {
-                version: "02",
+                version: "03",
                 data: []
             };
 
@@ -3651,8 +3500,11 @@ let WishlistPageClass = (function(){
                     gameid: ["steam", `app/${appid}`],
                     title: data.name,
                     url: `https://store.steampowered.com/app/${appid}/`,
+                    type: data.type,
                     release_date: data.release_string,
-                    note: this.notes[appid] || null
+                    note: this.notes[appid] || null,
+                    price: data.subs[0] ? data.subs[0].price : null,
+                    discount: data.subs[0] ? data.subs[0].discount_pct : 0,
                 });
             }
 
@@ -3661,7 +3513,27 @@ let WishlistPageClass = (function(){
 
         toText(format) {
             let result = [];
-            for (let [appid, data] of Object.entries(this.appInfo)) {
+            let parser = new DOMParser();
+            for (let appid of this.apps) {
+                let data = this.appInfo[appid];
+                let price = "N/A";
+                let discount = "0%";
+                let base_price = "N/A";
+
+                // if it has a price (steam always picks first sub, see https://github.com/SteamDatabase/SteamTracking/blob/f3f38deef1f1a8c6bf5707013adabde3ed873620/store.steampowered.com/public/javascript/wishlist.js#L292)
+                if (data.subs[0]) {
+                    let block = parser.parseFromString(data.subs[0].discount_block, "text/html");
+                    price = block.querySelector(".discount_final_price").innerText;
+
+                    // if it is discounted
+                    if (data.subs[0].discount_pct > 0) {
+                        discount = block.querySelector(".discount_pct").innerText;
+                        base_price = block.querySelector(".discount_original_price").innerText;
+                    } else {
+                        base_price = block.querySelector(".discount_final_price").innerText;
+                    }
+                }
+
                 result.push(
                     format
                         .replace("%appid%", appid)
@@ -3669,6 +3541,9 @@ let WishlistPageClass = (function(){
                         .replace("%url%", `https://store.steampowered.com/app/${appid}/`)
                         .replace("%title%", data.name)
                         .replace("%release_date%", data.release_string)
+                        .replace("%price%", price)
+                        .replace("%discount%", discount)
+                        .replace("%base_price%",  base_price)
                         .replace("%type%", data.type)
                         .replace("%note%", this.notes[appid] || "")
                 );
@@ -3686,14 +3561,14 @@ let WishlistPageClass = (function(){
      * handler, resulting in a denial of access to the clipboard function.
      * This could be circumvented by adding the appropriate permissions, but doing so would prompt users to explicitly accept the changed
      * permissions on an update.
-     * 
+     *
      * If we don't use the Messenger, we'd have to move the whole handler part (including WishlistExporter) to
      * the page context side.
-     * 
+     *
      * Final solution is to query the action buttons of the dialog and adding some extra click handlers on the content script side.
      * These handlers are using a capture, so that the dialog elements will still be existent at the time of the invocation.
      */
-    WishlistPageClass.prototype.showExportModalDialog = function(appInfo) {
+    WishlistPageClass.prototype.showExportModalDialog = function(appInfo, apps) {
 
         ExtensionLayer.runInPageContext(exportStr => {
             ShowConfirmDialog(
@@ -3706,12 +3581,12 @@ let WishlistPageClass = (function(){
                         <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
                     </div>
                     </div>
-                
+
                     <div class="es-wexport es-wexport__format">
                         <h2>${exportStr.format}</h2>
                         <div>
                             <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
-                            <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %type%, %note%</div>
+                            <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %price%, %discount%, %base_price%, %type%, %note%</div>
                         </div>
                     </div>
                 </div>`,
@@ -3738,7 +3613,7 @@ let WishlistPageClass = (function(){
             let type = document.querySelector("input[name='es_wexport_type']:checked").value;
             let format = document.querySelector("#es-wexport-format").value;
 
-            let wishlist = new WishlistExporter(appInfo);
+            let wishlist = new WishlistExporter(appInfo, apps);
 
             let result = "";
             let filename = "";
@@ -3765,7 +3640,10 @@ let WishlistPageClass = (function(){
         HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${Localization.str.export.wishlist}</div></div>`);
 
         document.querySelector("#es_export_wishlist").addEventListener("click", async () => {
-            this.showExportModalDialog(await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, "appInfo"));
+            this.showExportModalDialog(
+                await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, "appInfo"), 
+                await ExtensionLayer.runInPageContext(() => g_Wishlist.rgAllApps, null, "apps")
+            );
         });
     };
 
@@ -3803,7 +3681,7 @@ let WishlistPageClass = (function(){
                     getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) + priceNodeHeight + "px");
             });
         });
-        
+
         node.addEventListener("mouseleave", () => {
             // When scrolling really fast, sometimes only this event is called without the invocation of the mouseenter event
             if (cachedPrices[appId]) {
@@ -3906,22 +3784,22 @@ class UserNotes {
         let bgClick = ExtensionLayer.runInPageContext((title, template) => {
             let deferred = new jQuery.Deferred();
             let fnOK = () => deferred.resolve();
-    
+
             let Modal = _BuildDialog(title, template, [], fnOK);
             deferred.always(() => Modal.Dismiss());
-    
+
             let promise = new Promise(resolve => {
                 Modal.m_fnBackgroundClick = () => {
                     Messenger.onMessage("noteSaved").then(() => { Modal.Dismiss(); });
                     resolve();
                 };
             });
-    
+
             Modal.Show();
-    
+
             // attach the deferred's events to the modal
             deferred.promise(Modal);
-    
+
             let note_input = document.getElementById("es_note_input");
             note_input.focus();
             note_input.setSelectionRange(0, note_input.textLength);
@@ -3981,24 +3859,15 @@ class UserNotes {
     }
 }
 
-let TagPageClass = (function(){
-
-    function TagPageClass() {
-
-    }
-
-    return TagPageClass;
-})();
-
 
 let StoreFrontPageClass = (function(){
 
     function StoreFrontPageClass() {
-        
+
         if (User.isSignedIn) {
             this.highlightDynamic();
         }
-        
+
         this.setHomePageTab();
         this.customizeHomePage();
     }
@@ -4093,7 +3962,7 @@ let StoreFrontPageClass = (function(){
                 .add("updatesandoffers", ".marketingmessage_area", "", true)
                 .add("topnewreleases", ".top_new_releases", Localization.str.homepage_topnewreleases)
                 .add("steamlabs", ".labs_cluster")
-                .add("homepagesidebar", ".home_page_gutter", Localization.str.homepage_sidebar);
+                .add("homepagesidebar", "body:not(.no_home_gutter) .home_page_gutter", Localization.str.homepage_sidebar);
 
             if (specialoffers) customizer.add("specialoffers", specialoffers.parentElement);
             if (browsesteam) customizer.add("browsesteam", browsesteam.parentElement);
@@ -4134,8 +4003,7 @@ let TabAreaObserver = (function(){
 })();
 
 (async function(){
-    let nginxError = document.querySelector("body > center:nth-child(3)");
-    if (nginxError && nginxError.innerText === "nginx") { return; }
+    if (!document.getElementById("global_header")) { return; }
 
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -4161,32 +4029,25 @@ let TabAreaObserver = (function(){
             (new BundlePageClass(window.location.host + path));
             break;
 
-        case /^\/account\/registerkey(\/.*)?/.test(path):
+        case /^\/account\/registerkey(\/.*)?$/.test(path):
             (new RegisterKeyPageClass());
             return;
 
-        case /^\/account(\/)?/.test(path):
+        case /^\/account(\/)?$/.test(path):
             (new AccountPageClass());
             return;
 
-        case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard)/.test(path):
+        // Match URLs like https://store.steampowered.com/steamaccount/addfundskjdsakjdsakjkjsa since they are still valid
+        case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard(\/.*)?$)/.test(path):
             (new FundsPageClass());
             break;
 
-        case /^\/search\/.*/.test(path):
+        case /^\/search(\/.*)?$/.test(path):
             (new SearchPageClass());
             break;
 
-        case /^\/stats\//.test(path):
+        case /^\/stats(\/.*)?$/.test(path):
             (new StatsPageClass());
-            break;
-
-        case /^\/(?:tags|genre)\//.test(path):
-            (new TagPageClass());
-            break;
-
-        case /^\/(?:curator|developer|dlc|publisher|franchise)\/.*/.test(path):
-            (new CuratorPageClass());
             break;
 
         case /^\/sale\/.*/.test(path):

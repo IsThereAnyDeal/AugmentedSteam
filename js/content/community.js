@@ -26,7 +26,7 @@ let ProfileData = (function(){
     let _promise = null;
     self.promise = async function() {
         if (!_promise) {
-            let steamId = SteamId.fromDOM();
+            let steamId = SteamId.getSteamId();
 
             _promise = Background.action("profile", steamId)
                 .then(response => { _data = response; return _data; });
@@ -452,7 +452,7 @@ let ProfileHomePageClass = (function(){
     }
 
     ProfileHomePageClass.prototype.addCommunityProfileLinks = function() {
-        let steamId = SteamId.fromDOM();
+        let steamId = SteamId.getSteamId();
 
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
@@ -578,24 +578,39 @@ let ProfileHomePageClass = (function(){
         }
 
         function copySteamId(e) {
-            let elem = e.target.closest(".es_copy");
+            let elem = e.target.closest(".es-copy");
             if (!elem) { return; }
 
-            Clipboard.set(elem.innerText);
+            Clipboard.set(elem.querySelector(".es-copy__id").innerText);
 
-            ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal() });
+            let lastCopied = document.querySelector(".es-copy.is-copied");
+            if (lastCopied) {
+                lastCopied.classList.remove("is-copied");
+            }
+
+            elem.classList.add("is-copied");
+            window.setTimeout(() => { elem.classList.remove("is-copied")}, 2000);
         }
 
         function showSteamIdDialog() {
             document.addEventListener("click", copySteamId);
 
-            let steamId = new SteamId(SteamId.fromDOM());
-            let html =
-                `<div class="bb_h1" id="es_copy_header">${Localization.str.click_to_copy}</div>
-                <p><a class="es_copy">${steamId.getSteamId2()}</a></p>
-                <p><a class="es_copy">${steamId.getSteamId3()}</a></p>
-                <p><a class="es_copy">${steamId.getSteamId64()}</a></p>
-                <p><a class="es_copy">https://steamcommunity.com/profiles/${steamId.getSteamId64()}</a></p>`;
+            let imgUrl = ExtensionResources.getURL("img/clippy.svg");
+
+            let steamId = new SteamId.Detail(SteamId.getSteamId());
+            let ids = [
+                steamId.id2,
+                steamId.id3,
+                steamId.id64,
+                `https://steamcommunity.com/profiles/${steamId.id64}`
+            ];
+
+            let copied = Localization.str.copied;
+            let html = "";
+            for (let id of ids) {
+                if (!id) { continue; }
+                html += `<p><a class="es-copy"><span class="es-copy__id">${id}</span><img src='${imgUrl}' class="es-copy__icon"><span class="es-copy__copied">${copied}</span></a></p>`
+            }
 
             ExtensionLayer.runInPageContext((steamidOfUser, html, close) => {
                 HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
@@ -612,7 +627,7 @@ let ProfileHomePageClass = (function(){
         }
     };
 
-    ProfileHomePageClass.prototype.addWishlistProfileLink = function() {
+    ProfileHomePageClass.prototype.addWishlistProfileLink = async function() {
         if (document.querySelector("body.profile_page.private_profile")) { return; }
         if (!SyncedStorage.get("show_wishlist_link")) { return; }
         if (!document.querySelector(".profile_item_links")) { return; }
@@ -628,9 +643,12 @@ let ProfileHomePageClass = (function(){
                 </a>
             </div>`);
 
-        let wishlistNode = document.querySelector(".gamecollector_showcase .showcase_stat[href$='/wishlist/']");
-        if (SyncedStorage.get("show_wishlist_count") && wishlistNode) {
-            document.querySelector("#es_wishlist_count").textContent = wishlistNode.textContent.match(/\d+(?:,\d+)?/)[0];
+        if (SyncedStorage.get("show_wishlist_count")) {
+
+            let wishlistNode = document.querySelector(`.gamecollector_showcase .showcase_stat[href$="/wishlist/"]`);
+            let count = wishlistNode ? wishlistNode.textContent.match(/\d+(?:,\d+)?/)[0] : await Background.action("wishlists", window.location.pathname);
+
+            document.querySelector("#es_wishlist_count").textContent = count;
         }
     };
 
@@ -726,7 +744,7 @@ let ProfileHomePageClass = (function(){
         ProfileData.promise().then(data => {
             if (!data.steamrep || data.steamrep.length === 0) { return; }
 
-            let steamId = SteamId.fromDOM();
+            let steamId = SteamId.getSteamId();
             if (!steamId) { return; }
 
             // Build reputation images regexp
@@ -970,7 +988,7 @@ let ProfileHomePageClass = (function(){
         let rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
         let friendSteamId = rgProfileData.steamid;
 
-        HTML.beforeBegin(sendButton,
+        HTML.replace(sendButton,
             `<span class="btn_profile_action btn_medium" id="profile_chat_dropdown_link">
                 <span>${sendButton.textContent}<img src="https://steamcommunity-a.akamaihd.net/public/images/profile/profile_action_dropdown.png"></span>
             </span>
@@ -986,7 +1004,6 @@ let ProfileHomePageClass = (function(){
                     </a>
                 </div>
             </div>`);
-        sendButton.remove();
 
         document.querySelector("#btnWebChat").addEventListener("click", () => {
             ExtensionLayer.runInPageContext(chatId => { OpenFriendChatInWebChat(chatId); }, [ chatId ]);
@@ -1004,13 +1021,14 @@ let ProfileHomePageClass = (function(){
 let GroupHomePageClass = (function(){
 
     function GroupHomePageClass() {
+        this.groupId = GroupID.getGroupId();
+
         this.addGroupLinks();
         this.addFriendsInviteButton();
     }
 
     GroupHomePageClass.prototype.addGroupLinks = function() {
 
-        let groupId = GroupID.getGroupId();
         let iconType = "none";
         let images = SyncedStorage.get("show_profile_link_images");
         if (images !== "none") {
@@ -1020,34 +1038,28 @@ let GroupHomePageClass = (function(){
         let links = [
             {
                 "id": "steamgifts",
-                "link": `https://www.steamgifts.com/go/group/${groupId}`,
+                "link": `https://www.steamgifts.com/go/group/${this.groupId}`,
                 "name": "SteamGifts",
             }
         ];
 
-
-        // Build the links HTML
-        let htmlstr = "";
-
+        let html = "";
         for (let link of links) {
-            if (!SyncedStorage.get("group_" + link.id)) { continue; }
-            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+            if (!SyncedStorage.get(`group_${link.id}`)) { continue; }
+            html += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
         }
 
-        // Insert the links HMTL into the page
-        if (htmlstr) {
-            let linksNode = (document.querySelector(".responsive_hidden > .rightbox")).parentNode;
-            if (linksNode) {
-                HTML.afterEnd(linksNode,
-                   `<div class="rightbox_header"></div>
+        if (html) {
+            let node = document.querySelector(".responsive_hidden > .rightbox");
+            if (node) {
+                HTML.afterEnd(node.parentNode,
+                    `<div class="rightbox_header"></div>
                     <div class="rightbox">
-                       <div class="content">${htmlstr}</div>
+                        <div class="content">${html}</div>
                     </div>
-                    <div class="rightbox_footer"></div>`
-                );
+                    <div class="rightbox_footer"></div>`);
             }
         }
-
     };
 
     GroupHomePageClass.prototype.addFriendsInviteButton = function() {
@@ -1056,10 +1068,9 @@ let GroupHomePageClass = (function(){
         let button = document.querySelector(".grouppage_join_area");
         if (button) { return; }
 
-        let groupId = GroupID.getGroupId();
         HTML.afterEnd("#join_group_form", 
             `<div class="grouppage_join_area">
-                <a class="btn_blue_white_innerfade btn_medium" href="https://steamcommunity.com/my/friends/?invitegid=${groupId}">
+                <a class="btn_blue_white_innerfade btn_medium" href="https://steamcommunity.com/my/friends/?invitegid=${this.groupId}">
                     <span><img src="//steamcommunity-a.akamaihd.net/public/images/groups/icon_invitefriends.png">&nbsp; ${Localization.str.invite_friends}</span>
                 </a>
             </div>`);
@@ -1272,7 +1283,7 @@ let ProfileEditPageClass = (function(){
 
         let result = await Background.action("profile.background", {
             appid: appid,
-            profile: SteamId.fromDOM()
+            profile: SteamId.getSteamId()
         });
 
         let selectedImg = ProfileData.getBgImg();
@@ -1545,6 +1556,177 @@ let StatsPageClass = (function(){
     };
 
     return StatsPageClass;
+})();
+
+let RecommendedPageClass = (function(){
+
+    function RecommendedPageClass() {
+        this.addReviewSort();
+    }
+
+    RecommendedPageClass.prototype.addReviewSort = async function() {
+        let numReviewsNode = document.querySelector(".review_stat:nth-child(1) .giantNumber");
+        if (!numReviewsNode) { return; }
+
+        let numReviews = Number(numReviewsNode.innerText);
+        if (isNaN(numReviews) || numReviews <= 1) { return; }
+
+        let steamId = window.location.pathname.match(/\/((?:id|profiles)\/.+?)\//)[1];
+        let params = new URLSearchParams(window.location.search);
+        let curPage = params.get("p") || 1;
+        let pageCount = 10;
+        let reviews;
+
+        async function getReviews() {
+
+            let modalActive = false;
+
+            // Delay half a second to avoid dialog flicker when grabbing cache
+            let delayer = setTimeout(
+                () => {
+                    ExtensionLayer.runInPageContext(
+                        (processing, wait) => { ShowBlockingWaitDialog(processing, wait); },
+                        [
+                            Localization.str.processing,
+                            Localization.str.wait
+                        ]);
+                    modalActive = true;
+                },
+                500,                
+            );
+
+            try {
+                reviews = await Background.action("reviews", steamId, numReviews);
+
+                reviews.map((review, i) => {
+                    review.default = i;
+                    return review;
+                });
+            } finally {
+                clearTimeout(delayer);
+
+                if (modalActive) {
+                    ExtensionLayer.runInPageContext(() => {
+                        CModal.DismissActiveModal();
+                    });
+                }
+            }
+        }
+
+        async function sortReviews(sortBy, reverse) {
+            if (!reviews) {
+                await getReviews();
+            }
+
+            for (let node of document.querySelectorAll(".review_box")) {
+                node.remove();
+            }
+
+            let displayedReviews = reviews.sort((a, b) => {
+                switch(sortBy) {
+                    case "rating":
+                    case "helpful":
+                    case "funny":
+                    case "length":
+                    case "playtime":
+                        return b[sortBy] - a[sortBy];
+                    case "visibility":
+                        a = a[sortBy].toLowerCase();
+                        b = b[sortBy].toLowerCase();
+                        if (a > b) { return -1; }
+                        if (a < b) { return 1; }
+                        return 0;
+                    case "default":
+                        return a[sortBy] - b[sortBy];
+                }
+            });
+
+            if (reverse) {
+                displayedReviews.reverse();
+            }
+
+            displayedReviews = displayedReviews.slice(pageCount * (curPage - 1), pageCount * curPage);
+
+            let footer = document.querySelector("#leftContents > .workshopBrowsePaging:last-child");
+            for (let { node } of displayedReviews) {
+                footer.insertAdjacentElement("beforebegin", HTMLParser.htmlToElement(node));
+            }
+
+            // Add back sanitized event handlers
+            ExtensionLayer.runInPageContext(ids => {
+                Array.from(document.querySelectorAll(".review_box")).forEach((node, boxIndex) => {
+                    let id = ids[boxIndex];
+
+                    let containers = node.querySelectorAll(".dselect_container");
+
+                    // Only exists when the requested profile is yours (these are the input fields where you can change visibility and language of the review)
+                    if (containers.length) {
+                        for (let container of node.querySelectorAll(".dselect_container")) {
+                            let type = container.id.startsWith("ReviewVisibility") ? "Visibility" : "Language";
+                            let input = container.querySelector("input");
+                            let trigger = container.querySelector(".trigger");
+                            let selections = Array.from(container.querySelectorAll(".dropcontainer a"));
+
+                            input.onchange = () => { window[`OnReview${type}Change`](id, `Review${type}${id}`) };
+
+                            trigger.href = "javascript:DSelectNoop();"
+                            trigger.onfocus = () => DSelectOnFocus(`Review${type}${id}`);
+                            trigger.onblur = () => DSelectOnBlur(`Review${type}${id}`);
+                            trigger.onclick = () => DSelectOnTriggerClick(`Review${type}${id}`);
+
+                            selections.forEach((selection, selIndex) => {
+                                selection.href = "javascript:DSelectNoop();";
+                                selection.onmouseover = () => DHighlightItem(`Review${type}${id}`, selIndex, false);
+                                selection.onclick = () => DHighlightItem(`Review${type}${id}`, selIndex, true);
+                            });
+                        }
+                    // Otherwise you have buttons to vote for the review (Was it helpful or not, was it funny?)
+                    } else {
+                        let controlBlock = node.querySelector(".control_block");
+
+                        let btns = controlBlock.querySelectorAll("a");
+                        let [ upvote, downvote, funny ] = btns;
+
+                        for (let btn of btns) {
+                            btn.href = "javascript:void(0)";
+                        }
+
+                        upvote.onclick = () => UserReviewVoteUp(id);
+                        downvote.onclick = () => UserReviewVoteDown(id);
+                        funny.onclick = () => UserReviewVoteTag(id, 1, `RecommendationVoteTagBtn${id}_1`);
+                    }
+                });
+            }, [ displayedReviews.map(review => review.id) ]);
+        }
+
+        Messenger.addMessageListener("updateReview", id => {
+            Background.action("updatereviewnode", steamId, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, numReviews).then(getReviews);
+        });
+
+        ExtensionLayer.runInPageContext(() => {
+            $J(document).ajaxSuccess((event, xhr, { url }) => {
+                let pathname = new URL(url).pathname;
+                if (pathname.startsWith("/userreviews/rate/") || pathname.startsWith("/userreviews/votetag/") || pathname.startsWith("/userreviews/update/")) {
+                    let id = pathname.split('/').pop();
+                    Messenger.postMessage("updateReview", id);
+                }
+            });
+        });
+
+        document.querySelector(".review_list h1").insertAdjacentElement("beforebegin",
+            Sortbox.get("reviews", [
+                ["default", Localization.str.date],
+                ["rating", Localization.str.rating],
+                ["helpful", Localization.str.helpful],
+                ["funny", Localization.str.funny],
+                ["length", Localization.str.length],
+                ["visibility", Localization.str.visibility],
+                ["playtime", Localization.str.playtime],
+            ], SyncedStorage.get("sortreviewsby"), sortReviews, "sortreviewsby")
+        );
+    };
+
+    return RecommendedPageClass;
 })();
 
 let InventoryPageClass = (function(){
@@ -2215,7 +2397,7 @@ let BadgesPageClass = (function(){
                 let card = progressInfoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
                 if (card) {
                     let need = card[2] - card[1];
-                    cost = new Price(averagePrice * need, Currency.storeCurrency);
+                    cost = new Price(averagePrice * need);
                 }
             }
 
@@ -2224,15 +2406,13 @@ let BadgesPageClass = (function(){
                 if (progressBoldNode) {
                     let drops = progressBoldNode.textContent.match(/\d+/);
                     if (drops) {
-                        let worth = new Price(drops[0] * averagePrice, Currency.storeCurrency);
+                        let worth = new Price(drops[0] * averagePrice);
 
                         if (worth.value > 0) {
                             this.totalWorth += worth.value;
 
-                            let howToNode = node.querySelector(".how_to_get_card_drops");
-                            HTML.afterEnd(howToNode,
+                            HTML.replace(node.querySelector(".how_to_get_card_drops"),
                                 `<span class='es_card_drop_worth' data-es-card-worth='${worth.value}'>${Localization.str.drops_worth_avg} ${worth}</span>`);
-                            howToNode.remove();
                         }
                     }
                 }
@@ -2249,7 +2429,7 @@ let BadgesPageClass = (function(){
             node.classList.add("esi-badge");
         }
 
-        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + new Price(this.totalWorth, Currency.storeCurrency);
+        document.querySelector("#es_cards_worth").innerText = Localization.str.drops_worth_avg + " " + new Price(this.totalWorth);
     };
 
     async function eachBadgePage(callback) {
@@ -2363,7 +2543,7 @@ let BadgesPageClass = (function(){
             });
 
         } else {
-            HTML.beforeBegin(".profile_xp_block_right",
+            HTML.afterBegin(".profile_xp_block_right",
                 "<div id='es_calculations'>" + Localization.str.drop_calc + "</div>");
 
             addDropsCount();
@@ -2676,7 +2856,7 @@ let GameCardPageClass = (function(){
 
             if (cardData) {
                 let marketLink = `https://steamcommunity.com/market/listings/${cardData.url}`;
-                let cardPrice = new Price(cardData.price, Currency.storeCurrency);
+                let cardPrice = new Price(cardData.price);
 
                 if (node.classList.contains("unowned")) {
                     cost += cardPrice.value;
@@ -2689,7 +2869,7 @@ let GameCardPageClass = (function(){
         }
 
         if (cost > 0 && CommunityCommon.currentUserIsOwner()) {
-            cost = new Price(cost, Currency.storeCurrency);
+            cost = new Price(cost);
             HTML.afterEnd(
                 DOMHelper.selectLastNode(document, ".badge_empty_name"),
                 `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost.replace("__cost__", cost)}</div>`);
@@ -2948,71 +3128,88 @@ let FriendsPageClass = (function(){
     return FriendsPageClass;
 })();
 
-let GroupsPageClass = (function(){
+class GroupsPageClass {
 
-    function GroupsPageClass() {
-        this.addSort();
-        this.addManageBtn();
+    constructor() {
+        this._groups = Array.from(document.querySelectorAll(".group_block"));
+        this._initSort = true;
+
+        this._moveSearchBar();
+        this._addSort();
+        this._addManageBtn();
     }
 
-    GroupsPageClass.prototype.addSort = function() {
-        let groups = Array.from(document.querySelectorAll(".group_block"));
-        if (groups.length === 0) { return; }
-
-        groups.forEach((group, i) => {
-            let name = group.querySelector(".groupTitle > a").textContent;
-            let membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
-            group.dataset.esSortdefault = i;
-            group.dataset.esSortnames = name;
-            group.dataset.esSortmembers = membercount;
-        });
-
-        function sortGroups(sortBy, reversed) {
-            let searchResults = document.querySelector("#search_results_empty");
-            let property = `esSort${sortBy}`;
-            groups.sort((a, b) => {
-                let propA = a.dataset[property];
-                let propB = b.dataset[property];
-                switch(sortBy) {
-                    case "default":
-                        return Number(propA) - Number(propB);
-                    case "members":
-                        return Number(propB) - Number(propA);
-                    case "names": {
-                        if (propA.toLowerCase() < propB.toLowerCase()) { return -1; }
-                        if (propA.toLowerCase() > propB.toLowerCase()) { return 1; }
-                        return 0;
-                    }
-                }
-            });
-
-            for (let group of groups) {
-                if (reversed) {
-                    searchResults.insertAdjacentElement("afterend", group);
-                } else {
-                    searchResults.parentElement.appendChild(group);
-                }
-            }
-        }
-
+    _moveSearchBar() {
         // move the search bar to the same position as on friends page
         let container = HTML.wrap("#search_text_box", '<div class="searchBarContainer"></div>');
         document.querySelector("#search_results").insertAdjacentElement("beforebegin", container);
+    }
 
+    _addSort() {
         document.querySelector("span.profile_groups.title").insertAdjacentElement("afterend", Sortbox.get(
             "groups",
-            [["default", Localization.str.theworddefault], ["members", Localization.str.members], ["names", Localization.str.name]],
+            [
+                ["default", Localization.str.theworddefault],
+                ["members", Localization.str.members],
+                ["names", Localization.str.name]
+            ],
             SyncedStorage.get("sortgroupsby"),
-            sortGroups,
+            (sortBy, reversed) => { this._sortGroups(sortBy, reversed) },
             "sortgroupsby")
         );
-        document.querySelector(".es-sortbox").style.flex = 2;
-    };
 
-    GroupsPageClass.prototype.addManageBtn = async function() {
-        let groups = document.querySelectorAll(".group_block");
-        if (groups.length === 0) { return; }
-        if (!groups[0].querySelector(".actions")) { return; }
+        let sortbox = document.querySelector("div.es-sortbox");
+        sortbox.style.flexGrow = "2";
+        sortbox.style.marginRight = "20px";
+        sortbox.style.marginTop = "0";
+        sortbox.style.textAlign = "right";
+    }
+
+    _getSortFunc(sortBy) {
+        let property = `esSort${sortBy}`;
+        switch(sortBy) {
+            case "default":
+                return (a, b) => Number(a.dataset[property]) - Number(b.dataset[property]);
+            case "members":
+                return (a, b) => Number(b.dataset[property]) - Number(a.dataset[property]);
+            case "names":
+                return (a, b) => a.dataset[property].localeCompare(b.dataset[property]);
+        }
+    }
+
+    _sortGroups(sortBy, reversed) {
+        if (this._groups.length === 0) { return; }
+
+        if (this._initSort) {
+
+            let i = 0;
+            for (let group of this._groups) {
+                let name = group.querySelector(".groupTitle > a").textContent;
+                let membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
+                group.dataset.esSortdefault = i.toString();
+                group.dataset.esSortnames = name;
+                group.dataset.esSortmembers = membercount.toString();
+                i++;
+            }
+
+            this._initSort = false;
+        }
+
+        this._groups.sort(this._getSortFunc(sortBy, `esSort${sortBy}`));
+
+        let searchResults = document.querySelector("#search_results_empty");
+        for (let group of this._groups) {
+            if (reversed) {
+                searchResults.insertAdjacentElement("afterend", group);
+            } else {
+                searchResults.parentElement.appendChild(group);
+            }
+        }
+    }
+
+    _addManageBtn() {
+        if (this._groups.length === 0) { return; }
+        if (!this._groups[0].querySelector(".actions")) { return; }
 
         let groupsStr = Localization.str.groups;
 
@@ -3041,7 +3238,7 @@ let GroupsPageClass = (function(){
                 <div class="row"></div>
             </div>`);
 
-        for (let group of groups) {
+        for (let group of this._groups) {
             group.classList.add("selectable");
             HTML.afterBegin(group, 
                 `<div class="indicator select_friend">
@@ -3070,74 +3267,72 @@ let GroupsPageClass = (function(){
             ExtensionLayer.runInPageContext(() => { SelectInverse(); });
         });
 
-        document.querySelector("#es_leave_groups").addEventListener("click", () => leaveGroups());
-
-        async function displayAdminConfirmation(name, id) {
-            let body = groupsStr.leave_groups_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
-
-            let result = await ExtensionLayer.runInPageContext((leave, body) => {
-                let prompt = ShowConfirmDialog(leave, body);
-
-                return new Promise(resolve => {
-                    prompt.done(result => {
-                        resolve(result);
-                    }).fail(() => {
-                        resolve(); // todo when is fail triggered?
-                    });
-                });
-            }, [ groupsStr.leave, body ], `confirm#${id}`);
-            
-            if (result === "OK") {
-                return true;
-            }
-
-            return false;
-        }
-
-        async function leaveGroups() {
-            for (let group of groups) {
-                if (!group.classList.contains("selected")) { continue; }
-
-                let actions = group.querySelector(".actions");
-                let admin = actions.querySelector("[href*='/edit']");
-                let split = actions.querySelector("[onclick*=ConfirmLeaveGroup]").getAttribute("onclick").split(/'|"/);
-                let id = split[1];
-                if (admin) {
-                    let name = split[3]
-                    let cont = await displayAdminConfirmation(name, id);
-                    if (!cont) {
-                        group.querySelector(".select_friend").click();
-                        continue;
-                    }
-                }
-                let res = await leaveGroup(id).catch(err => console.error(err));
-
-                if (!res || !res.success) {
-                    console.error("Failed to leave group " + id);
-                    continue;
-                }
-
-                group.style.opacity = 0.3;
-                group.querySelector(".select_friend").click();
-            }
-        }
-
-        function leaveGroup(id) {
-            let formData = new FormData();
-            formData.append("sessionid", User.getSessionId());
-            formData.append("steamid", User.steamId);
-            formData.append("ajax", 1);
-            formData.append("action", "leave_group");
-            formData.append("steamids[]", id);
-
-            return RequestData.post(User.profileUrl + "/friends/action", formData, {
-                withCredentials: true
-            }, "json");
-        }
+        document.querySelector("#es_leave_groups").addEventListener("click", () => this._leaveGroups());
     };
 
-    return GroupsPageClass;
-})();
+    async _leaveGroups() {
+        let selected = [];
+
+        for (let group of this._groups) {
+            if (!group.classList.contains("selected")) {
+                continue;
+            }
+
+            let actions = group.querySelector(".actions");
+            let admin = actions.querySelector("[href*='/edit']");
+            let split = actions.querySelector("[onclick*=ConfirmLeaveGroup]")
+                .getAttribute("onclick").split(/'|"/);
+            let id = split[1];
+
+            if (admin) {
+                let name = split[3];
+
+                let body = Localization.str.groups.leave_admin_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
+                let result = await ConfirmDialog.open(Localization.str.groups.leave, body);
+                let cont = (result === "OK");
+                if (!cont) {
+                    group.querySelector(".select_friend").click();
+                    continue;
+                }
+            }
+
+            selected.push([id, group]);
+        }
+
+        if (selected.length > 0) {
+            let body = Localization.str.groups.leave_groups_confirm.replace("__n__", selected.length);
+            let result = await ConfirmDialog.open(Localization.str.groups.leave, body);
+
+            if (result === "OK") {
+                for (let tuple of selected) {
+                    let [id, group] = tuple;
+                    let res = await this._leaveGroup(id).catch(err => console.error(err));
+
+                    if (!res || !res.success) {
+                        console.error("Failed to leave group " + id);
+                        continue;
+                    }
+
+                    group.style.opacity = "0.3";
+                    group.querySelector(".select_friend").click();
+                }
+            }
+        }
+    }
+
+    _leaveGroup(id) {
+        let formData = new FormData();
+        formData.append("sessionid", User.getSessionId());
+        formData.append("steamid", User.steamId);
+        formData.append("ajax", 1);
+        formData.append("action", "leave_group");
+        formData.append("steamids[]", id);
+
+        return RequestData.post(User.profileUrl + "/friends/action", formData, {
+            withCredentials: true
+        }, "json");
+    }
+}
 
 let MarketListingPageClass = (function(){
 
@@ -3154,7 +3349,7 @@ let MarketListingPageClass = (function(){
     }
 
     MarketListingPageClass.prototype.addSoldAmountLastDay = async function() {
-        let country = User.getCountry();
+        let country = User.country;
         let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
 
         let link = DOMHelper.selectLastNode(document, ".market_listing_nav a").href;
@@ -3303,7 +3498,7 @@ let MarketPageClass = (function(){
                 let priceNode = node.querySelector(".market_listing_price");
                 if (!priceNode) { continue; }
 
-                let price = Price.parseFromString(priceNode.textContent, Currency.storeCurrency);
+                let price = Price.parseFromString(priceNode.textContent);
 
                 if (isPurchase) {
                     purchaseTotal += price.value;
@@ -3312,7 +3507,7 @@ let MarketPageClass = (function(){
                 }
             }
 
-            let net = new Price(saleTotal - purchaseTotal, Currency.storeCurrency, false);
+            let net = new Price(saleTotal - purchaseTotal);
             let color = "green";
             let netText = Localization.str.net_gain;
             if (net.value < 0) {
@@ -3320,8 +3515,8 @@ let MarketPageClass = (function(){
                 netText = Localization.str.net_spent;
             }
 
-            let purchaseTotalPrice = new Price(purchaseTotal, Currency.storeCurrency);
-            let saleTotalPrice = new Price(saleTotal, Currency.storeCurrency);
+            let purchaseTotalPrice = new Price(purchaseTotal);
+            let saleTotalPrice = new Price(saleTotal);
             HTML.inner(
                 "#es_market_summary",
                 `<div>${Localization.str.purchase_total} <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
@@ -3352,9 +3547,8 @@ let MarketPageClass = (function(){
                 // Give up after four tries
                 throw new Error("Could not retrieve market transactions.");
             }
-            console.log(url.toString());
+            
             let data = await RequestData.getJson(url.toString());
-
             let dom = HTMLParser.htmlToDOM(data.results_html);
 
             // Request may fail with results_html == "\t\t\t\t\t\t<div class=\"market_listing_table_message\">There was an error loading your market history. Please try again later.</div>\r\n\t"
@@ -3452,7 +3646,7 @@ let MarketPageClass = (function(){
     MarketPageClass.prototype.addLowestMarketPrice = function() {
         if (!User.isSignedIn || !SyncedStorage.get("showlowestmarketprice") || SyncedStorage.get("hideactivelistings")) { return; }
 
-        let country = User.getCountry();
+        let country = User.country;
         let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
 
         let loadedMarketPrices = {};
@@ -3469,8 +3663,8 @@ let MarketPageClass = (function(){
             let lowestNode = node.querySelector(".market_listing_es_lowest");
             lowestNode.textContent = data['lowest_price'];
 
-            let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent, Currency.storeCurrency);
-            let lowPrice = Price.parseFromString(data['lowest_price'], Currency.storeCurrency);
+            let myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent);
+            let lowPrice = Price.parseFromString(data['lowest_price']);
 
             if (myPrice.value <= lowPrice.value) {
                 lowestNode.classList.add("es_percentage_lower"); // Ours matches the lowest price
@@ -3747,10 +3941,10 @@ let CommunityAppPageClass = (function(){
     function CommunityAppPageClass() {
         this.appid = GameId.getAppid(window.location.href);
 
+        Highlights.addTitleHighlight(this.appid);
+
+        this.addLinks();
         this.addAppPageWishlist();
-        this.addSteamDbLink();
-        this.addBartervgLink();
-        this.addItadLink();
         AgeCheck.sendVerification();
 
         let node = document.querySelector(".apphub_background");
@@ -3763,62 +3957,105 @@ let CommunityAppPageClass = (function(){
     }
 
     CommunityAppPageClass.prototype.addAppPageWishlist = async function() {
-        if (!SyncedStorage.get("wlbuttoncommunityapp")) { return; }
+        if (!User.isSignedIn || !SyncedStorage.get("wlbuttoncommunityapp")) { return; }
         await DynamicStore;
 
-        let nameNode = document.querySelector(".apphub_AppName");
+        let { owned, wishlisted } = await DynamicStore.getAppStatus(`app/${this.appid}`);
+        if (owned) { return; }
 
-        // todo add other highlights
-        let appStatus = await DynamicStore.getAppStatus(`app/${this.appid}`);
+        let inactiveStyle = "";
+        let activeStyle = "display: none;";
 
-        if (appStatus.owned) {
-            nameNode.style.color = SyncedStorage.get("highlight_owned_color");
-            return;
+        if (wishlisted) {
+            inactiveStyle = "display: none;";
+            activeStyle = "";
         }
 
-        if (appStatus.wishlisted) {
-            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
-            return;
-        }
+        let parent = document.querySelector(".apphub_OtherSiteInfo");
+        HTML.beforeEnd(parent,
+            ` <a id="es_wishlist_add" class="btnv6_blue_hoverfade btn_medium" style="${inactiveStyle}">
+                  <span>
+                      <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">
+                      ${Localization.str.add_to_wishlist}
+                  </span>
+              </a>
+              <a id="es_wishlist_success" class="btnv6_blue_hoverfade btn_medium" style="${activeStyle}">
+                  <span>
+                      <img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}" style="display: none;">
+                      <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">
+                      <img class="es-in-wl" src="//steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected.png" border="0">
+                      ${Localization.str.on_wishlist}
+                  </span>
+              </a>
+              <div id="es_wishlist_fail" style="display: none;">
+                  <b>${Localization.str.error}</b>
+              </div>`);
 
-        // TODO remove from wishlist button
+        let addBtn = document.getElementById("es_wishlist_add");
+        let successBtn = document.getElementById("es_wishlist_success");
+        let failNode = document.getElementById("es_wishlist_fail");
 
-        HTML.beforeEnd(".apphub_OtherSiteInfo",
-            '<a id="es_wishlist" class="btnv6_blue_hoverfade btn_medium" style="margin-left: 3px"><span>' + Localization.str.add_to_wishlist + '</span></a>');
+        addBtn.addEventListener("click", handler);
+        successBtn.addEventListener("click", handler);
 
         let that = this;
-        document.querySelector("#es_wishlist").addEventListener("click", async function(e) {
+        async function handler(e) {
             e.preventDefault();
-            if (e.target.classList.contains("btn_disabled")) { return; }
 
-            await Background.action('wishlist.add', { 'sessionid': await User.getStoreSessionId(), 'appid': that.appid, } );
+            if (parent.classList.contains("loading")) { return; }
+            parent.classList.add("loading");
+            failNode.style.display = "none";
 
-            e.target.classList.add("btn_disabled");
-            HTML.inner(e.target, "<span>" + Localization.str.on_wishlist + "</span>");
+            wishlisted = this === successBtn;
+            let action = wishlisted ? "wishlist.remove" : "wishlist.add";
 
-            nameNode.style.color = SyncedStorage.get("highlight_wishlist_color");
+            try {
+                await Background.action(action, that.appid);
+                
+                successBtn.style.display = wishlisted ? "none" : "";
+                addBtn.style.display = wishlisted ? "" : "none";
 
-            // Clear dynamicstore cache
-            DynamicStore.clear();
-        });
+                DynamicStore.clear();
+            } catch(err) {
+                /* We can't (easily) detect whether or not the user is logged in to the store,
+                   therefore we're also not able to provide more details here */
+                console.error("Failed to add to/remove from wishlist");
+                failNode.style.display = "block";
+            } finally {
+                parent.classList.remove("loading");
+            }
+        }
     };
 
-    CommunityAppPageClass.prototype.addSteamDbLink = function() {
-        if (!SyncedStorage.get("showsteamdb")) { return; }
-        HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium steamdb_ico" target="_blank" href="https://steamdb.info/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;SteamDB</span></a>`);
-    };
+    function makeHeaderLink(cls, url, str) {
+        return ` <a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}">
+                   <span><i class="ico16"></i>&nbsp;${str}</span>
+               </a>`;
+    }
 
-    CommunityAppPageClass.prototype.addItadLink = function() {
-        if (!SyncedStorage.get("showitadlinks")) { return; }
-        HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium itad_ico" target="_blank" href="https://isthereanydeal.com/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;ITAD</span></a>`);
-    };
+    CommunityAppPageClass.prototype.addLinks = function() {
+        let node = document.querySelector(".apphub_OtherSiteInfo");
 
-    CommunityAppPageClass.prototype.addBartervgLink = function() {
-        if (!SyncedStorage.get("showbartervg")) { return; }
-        HTML.beforeEnd(".apphub_OtherSiteInfo",
-            ` <a class="btnv6_blue_hoverfade btn_medium bartervg_ico" target="_blank" href="https://barter.vg/steam/app/${this.appid}/"><span><i class="ico16"></i>&nbsp;Barter.vg</span></a>`);
+        if (SyncedStorage.get("showsteamdb")) {
+            HTML.beforeEnd(node, makeHeaderLink(
+                "steamdb_ico",
+                `https://steamdb.info/app/${this.appid}/`,
+                "SteamDB"));
+        }
+
+        if (SyncedStorage.get("showitadlinks")) {
+            HTML.beforeEnd(node, makeHeaderLink(
+                "itad_ico",
+                `https://isthereanydeal.com/steam/app/${this.appid}/`,
+                "ITAD"));
+        }
+
+        if (SyncedStorage.get("showbartervg")) {
+            HTML.beforeEnd(node, makeHeaderLink(
+                "bartervg_ico",
+                `https://barter.vg/steam/app/${this.appid}/`,
+                "Barter.vg"));
+        }
     };
 
     return CommunityAppPageClass;
@@ -3934,6 +4171,118 @@ let WorkshopPageClass = (function(){
 
     return WorkshopPageClass;
 })();
+
+class MyWorkshopClass {
+    constructor() {
+        MyWorkshopClass.addFileSizes();
+        MyWorkshopClass.addTotalSizeButton();
+    }
+
+    static getFileSizeStr(size) {
+        let units = ["TB", "GB", "MB", "KB"];
+
+        let index = units.findIndex((unit, i) =>
+            size / Math.pow(1000, units.length - (i + 1)) >= 1
+        );
+        return `${(size / Math.pow(1000, units.length - (index + 1))).toFixed(2)} ${units[index]}`;
+    }
+
+    static async addFileSizes() {
+        for (let node of document.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
+            if (node.classList.contains("sized")) { continue; }
+            
+            let id = node.id.replace("Subscription", "");
+            let size = await Background.action("workshopfilesize", id, true);
+            if (typeof size !== "number") { continue; }
+
+            let str = Localization.str.calc_workshop_size.file_size.replace("__size__", MyWorkshopClass.getFileSizeStr(size));
+            let details = node.querySelector(".workshopItemSubscriptionDetails");
+            HTML.beforeEnd(details, `<div class="workshopItemDate">${str}</div>`)
+            node.classList.add("sized");
+        }
+    }
+
+    static addTotalSizeButton() {
+        let url = new URL(window.location.href);
+        if (!url.searchParams || url.searchParams.get("browsefilter") !== "mysubscriptions") { return; }
+
+        let panel = document.querySelector(".primary_panel");
+        HTML.beforeEnd(panel,
+            `<div class="menu_panel">
+                <div class="rightSectionHolder">
+                    <div class="rightDetailsBlock">
+                        <span class="btn_grey_steamui btn_medium" id="es_calc_size">
+                            <span>${Localization.str.calc_workshop_size.calc_size}</span>
+                        </span>
+                    </div>
+                </div>
+            </div>`);
+        
+        document.querySelector("#es_calc_size").addEventListener("click", async () => {
+            ExtensionLayer.runInPageContext((calculating, totalSize) => {
+                ShowBlockingWaitDialog(calculating, totalSize);
+            },
+            [
+                Localization.str.calc_workshop_size.calculating,
+                Localization.str.calc_workshop_size.total_size.replace("__size__", "0 KB"),
+            ]);
+
+            let totalStr = document.querySelector(".workshopBrowsePagingInfo").innerText.match(/\d+[,\d]*/g).pop();
+            let total = Number(totalStr.replace(/,/g, ""));
+            let parser = new DOMParser();
+            let totalSize = 0;
+
+            for (let p = 1; p <= Math.ceil(total / 30); p++) {
+                url.searchParams.set("p", p);
+                url.searchParams.set("numperpage", 30);
+
+                let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+                if (!result) {
+                    console.error("Failed to request " + url.toString());
+                    continue;
+                }
+
+                let doc = parser.parseFromString(result, "text/html");
+                for (let item of doc.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
+                    let id = item.id.replace("Subscription", "");
+                    let size;
+
+                    try {
+                        size = await Background.action("workshopfilesize", id);
+                    } catch(err) {
+                        console.group("Workshop file sizes");
+                        console.error(`Couldn't get file size for item ID ${id}`);
+                        console.error(err);
+                        console.groupEnd();
+                    }
+    
+                    if (!size) { continue; }
+
+                    totalSize += size;
+                    
+                    ExtensionLayer.runInPageContext((calculating, totalSize) => {
+                        CModal.DismissActiveModal();
+                        ShowBlockingWaitDialog(calculating, totalSize);
+                    },
+                    [
+                        Localization.str.calc_workshop_size.calculating,
+                        Localization.str.calc_workshop_size.total_size.replace("__size__", MyWorkshopClass.getFileSizeStr(totalSize)),
+                    ]);
+                }
+            }
+
+            MyWorkshopClass.addFileSizes();
+            ExtensionLayer.runInPageContext((finished, totalSize) => {
+                CModal.DismissActiveModal();
+                ShowAlertDialog(finished, totalSize);
+            },
+            [
+                Localization.str.calc_workshop_size.finished,
+                Localization.str.calc_workshop_size.total_size.replace("__size__", MyWorkshopClass.getFileSizeStr(totalSize)),
+            ]);
+        });
+    };
+}
 
 class SharedFilesPageClass {
     constructor() {
@@ -4219,8 +4568,7 @@ let EditGuidePageClass = (function(){
 })();
 
 (async function(){
-    let nginxError = document.querySelector("body > center:nth-child(3)");
-    if (nginxError && nginxError.innerText === "nginx") { return; }
+    if (!document.getElementById("global_header")) { return; }
 
     let path = window.location.pathname.replace(/\/+/g, "/");
 
@@ -4301,6 +4649,10 @@ let EditGuidePageClass = (function(){
             (new StatsPageClass());
             break;
 
+        case /^\/(?:id|profiles)\/.+\/myworkshopfiles\/?$/.test(path):
+            (new MyWorkshopClass());
+            break;
+
         case /^\/sharedfiles\/filedetails\/?$/.test(path):
             (new SharedFilesPageClass());
             break;
@@ -4311,6 +4663,10 @@ let EditGuidePageClass = (function(){
 
         case /^\/sharedfiles\/editguide\/?$/.test(path):
             (new EditGuidePageClass());
+            break;
+
+        case /^\/(?:id|profiles)\/.+\/recommended/.test(path):
+            (new RecommendedPageClass());
             break;
 
         case /^\/tradingcards\/boostercreator/.test(path):
