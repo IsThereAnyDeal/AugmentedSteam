@@ -50,7 +50,7 @@ class FRemoveFromWishlist extends ASFeature {
                         removeWaitlist ? this.context.removeFromWaitlist() : Promise.resolve(),
                     ]);
 
-                    if (SyncedStorage.get("add_to_waitlist")) { this.context.onWishAndWaitlistRemove(); }
+                    if (this.context.onWishAndWaitlistRemove) { this.context.onWishAndWaitlistRemove(); }
 
                     addBtn.style.display = "";
 
