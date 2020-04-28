@@ -2460,24 +2460,6 @@ img.astats_icon {
 }
 
 /***************************************
- * User profiles
- * add_profile_style()
- **************************************/
-.es_profile_style.es_style_clear .profile_header_badge {
-  background-color: rgba(22, 22, 23, 0.6) !important;
-  background-image: none !important;
-  box-shadow: none !important;
-}
-.es_profile_style.es_style_clear .profile_content {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
-.es_profile_style.es_style_clear .profile_header_bg,
-.es_profile_style.es_style_clear .profile_header_bg_texture {
-  background-image: none !important;
-}
-
-/***************************************
  * Site wide
  * add_enhanced_steam_options()
  **************************************/
@@ -2565,22 +2547,18 @@ img.astats_icon {
   display: flex;
   align-items: baseline;
 }
-
-.es-copy:hover .es-copy__id{
+.es-copy:hover .es-copy__id {
   text-decoration: underline;
 }
-
 .es-copy:hover .es-copy__icon {
   opacity: 1;
 }
-
 .es-copy .es-copy__icon {
   filter: invert(55%);
   height: 1.2em;
   margin-left: 5px;
   opacity: 0;
 }
-
 .es-copy__copied {
   opacity: 0;
   transition: opacity 200ms;
@@ -2596,6 +2574,20 @@ img.astats_icon {
  * User profiles
  * addProfileStyle()
  **************************************/
+.es_profile_style.es_style_clear .profile_header_badge {
+  background-color: rgba(22, 22, 23, 0.6) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+.es_profile_style.es_style_clear .profile_content {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.es_profile_style.es_style_clear .profile_header_bg,
+.es_profile_style.es_style_clear .profile_header_bg_texture {
+  background-image: none !important;
+}
+
 .es_profile_style .holidayprofile .persona_name.persona_name_spacer {
   pointer-events: none; /* fixes username and alias dropdown not being clickable */
 }
@@ -2814,8 +2806,8 @@ input[type=checkbox].es_dlc_selection:checked + label {
 }
 
 /***************************************
- * SteamRep
- * add_steamrep_api()
+ * User profiles
+ * addSteamRepApi()
  **************************************/
 #es_steamrep {
   display: grid;
@@ -3009,13 +3001,16 @@ label[for="show_common_games"] {
   display: none !important;
 }
 
+/***************************************
+ * User profiles
+ * addTwitchInfo()
+ **************************************/
 .esi-stream {
   position: relative;
   display: block;
   background: #396685;
   margin: 0 -10px -10px -10px;
 }
-
 .esi-stream__play {
   position: absolute;
   top: 0;
@@ -3025,7 +3020,6 @@ label[for="show_common_games"] {
   margin: auto;
   z-index: 2;
 }
-
 .esi-stream__live {
   white-space: nowrap;
   height: 13px;
@@ -3040,12 +3034,10 @@ label[for="show_common_games"] {
   box-shadow: 0 0 7px #a94847;
   background: black;
 }
-
 .esi-stream__twitch {
   color: #4b367c;
   font-weight: bold;
 }
-
 .esi-stream__title {
   display: flex;
   justify-content: space-between;
@@ -3158,15 +3150,14 @@ label[for="show_common_games"] {
 }
 
 /***************************************
- * Users profiles
- * add_community_profile_links()
+ * User profiles
+ * addCommunityProfileLinks()
  **************************************/
 .es_sites_icons {
   display: inline-flex;
   align-items: center;
 }
-
-.es_sites_icons:not(.es_none):before, .es_sites_custom_icon {
+.es_sites_icons:not(.es_none)::before, .es_sites_custom_icon {
   content: "";
   display: inline-block;
   width: 16px;
@@ -3178,11 +3169,10 @@ label[for="show_common_games"] {
   background-position: 2px 2px !important;
   padding: 2px;
   border-radius: 3px;
-  box-shadow: inset 0 0 1px 1px rgb(0, 0, 0),
-  0 0 0 1px rgba(193, 193, 193, 0.17);
+  box-shadow: inset 0 0 1px 1px rgb(0, 0, 0), 0 0 0 1px rgba(193, 193, 193, 0.17);
   vertical-align: top;
 }
-.es_sites_icons.es_gray:before, .es_sites_icons .es_gray {
+.es_sites_icons.es_gray::before, .es_sites_icons .es_gray {
   filter: grayscale(100%);
 }
 
