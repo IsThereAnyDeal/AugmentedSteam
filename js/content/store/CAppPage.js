@@ -21,12 +21,15 @@ class CAppPage extends CStorePage {
             FSteamPeek,
             FWidescreenCertification,
             FHowLongToBeat,
+            FExtraLinks,
         ]);
 
         this.userNotes = new UserNotes();
 
         this.appid = GameId.getAppid(url);
         this.storeid = `app/${this.appid}`;
+
+        this.hasCards = document.querySelector(`#category_block img[src$="/ico_cards.png"]`) !== null;
 
         this.onWishAndWaitlistRemove = null;
 

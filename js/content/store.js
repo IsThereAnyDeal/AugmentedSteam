@@ -125,9 +125,6 @@ class Customizer {
 }
 
 class StorePageClass {
-    constructor() {
-        this.hasCards = !!document.querySelector("#category_block img[src$='/ico_cards.png']");
-    }
 
     isSubPage() {
         return /^\/sub\/\d+/.test(window.location.pathname);
@@ -140,59 +137,6 @@ class StorePageClass {
 
     hasAchievements() {
         return !!document.querySelector("#achievement_block");
-    }
-
-    getRightColLinkHtml(cls, url, str) {
-        return `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span>
-                </a>`;
-    }
-
-    addLinks(type) {
-
-        let gameid = null;
-        let node = null;
-
-        switch (type) {
-            case "app":
-                gameid = this.appid;
-                node = document.querySelector("#ReportAppBtn").parentNode;
-                break;
-            case "sub":
-                gameid = this.subid;
-                node = document.querySelector(".share").parentNode;
-                break;
-            case "bundle":
-                gameid = this.bundleid;
-                node = document.querySelector(".share, .rightcol .game_details");
-                break;
-        }
-
-        if (!node) { return; }
-
-        if (SyncedStorage.get("showbartervg")) {
-            HTML.afterBegin(node,
-                this.getRightColLinkHtml(
-                    "bartervg_ico",
-                    `https://barter.vg/steam/${type}/${gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Barter.vg")));
-        }
-
-        if (SyncedStorage.get("showsteamdb")) {
-            HTML.afterBegin(node,
-                this.getRightColLinkHtml(
-                    "steamdb_ico",
-                    `https://steamdb.info/${type}/${gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Steam Database")));
-        }
-
-        if (SyncedStorage.get("showitadlinks")) {
-            HTML.afterBegin(node,
-                this.getRightColLinkHtml(
-                    "itad_ico",
-                    `https://isthereanydeal.com/steam/${type}/${gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal")));
-        }
     }
 
     async showRegionalPricing(type) {
@@ -421,7 +365,6 @@ class AppPageClass extends StorePageClass {
         new MediaPage().appPage();
 
         this.moveUsefulLinks();
-        this.addLinks("app");
         this.addFamilySharingWarning();
 
         this.addPackBreakdown();
@@ -563,63 +506,6 @@ class AppPageClass extends StorePageClass {
         } else {
             document.querySelector("div.rightcol.game_meta_data").insertAdjacentElement("afterbegin", usefulLinks);
         }
-    }
-
-    addLinks(type) {
-        let node = document.querySelector("#ReportAppBtn").parentNode;
-
-        if (SyncedStorage.get("showyoutube")) {
-            HTML.afterBegin(node,
-                this.getRightColLinkHtml(
-                    "youtube_btn",
-                    `https://www.youtube.com/results?search_query=${encodeURIComponent(this.appName)}`,
-                    Localization.str.view_on_website.replace("__website__", "YouTube")));
-        }
-
-
-        if (SyncedStorage.get("showtwitch")) {
-            HTML.afterBegin(node,
-                this.getRightColLinkHtml(
-                    "twitch_btn",
-                    `https://www.twitch.tv/directory/game/${encodeURIComponent(this.appName.replace(/(\u2122)/g,"").replace(/(\xAE)/g,""))}`,
-                    Localization.str.view_on_website.replace("__website__", "Twitch")));
-        }
-
-
-        if (SyncedStorage.get("showpcgw")) {
-            HTML.afterBegin(node,
-                this.getRightColLinkHtml(
-                    "pcgw_btn",
-                    `https://pcgamingwiki.com/api/appid.php?appid=${this.appid}`,
-                    Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki")));
-        }
-
-        if (SyncedStorage.get("showcompletionistme")) {
-            HTML.afterBegin(node,
-                this.getRightColLinkHtml(
-                    "completionistme_btn",
-                    `https://completionist.me/steam/app/${this.appid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Completionist.me")));
-        }
-
-        if (SyncedStorage.get("showprotondb")) {
-            HTML.afterBegin(node,
-                this.getRightColLinkHtml(
-                    "protondb_btn",
-                    `https://www.protondb.com/app/${this.appid}/`,
-                    Localization.str.view_on_website.replace("__website__", "ProtonDB")));
-        }
-
-        if (this.hasCards && SyncedStorage.get("showsteamcardexchange")) {
-            // FIXME some dlc have card category yet no card
-            HTML.afterBegin(node,
-                this.getRightColLinkHtml(
-                    "cardexchange_btn",
-                    `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.communityAppid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Steam Card Exchange")));
-        }
-
-        super.addLinks(type);
     }
 
     addFamilySharingWarning() {
