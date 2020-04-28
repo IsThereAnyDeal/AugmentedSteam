@@ -85,6 +85,7 @@
         "js/content/store/FHDPlayer.js",
         "js/content/store/FReplaceDevPubLinks.js",
         "js/content/store/FRemoveFromWishlist.js",
+        "js/content/store/FNewQueue.js",
         "js/content/store.js"
       ],
       "css": [
