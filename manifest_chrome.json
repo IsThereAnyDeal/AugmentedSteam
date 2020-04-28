@@ -82,6 +82,7 @@
         "js/content/store/FRemoveFromWishlist.js",
         "js/content/store/FNewQueue.js",
         "js/content/store/FFullscreenScreenshotView.js",
+        "js/content/store/FShowCoupon.js",
         "js/content/store.js"
       ],
       "css": [
