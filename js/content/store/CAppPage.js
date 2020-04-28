@@ -22,6 +22,7 @@ class CAppPage extends CStorePage {
             FWidescreenCertification,
             FHowLongToBeat,
             FExtraLinks,
+            FFamilySharingNotice,
         ]);
 
         this.userNotes = new UserNotes();

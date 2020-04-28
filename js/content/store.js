@@ -364,9 +364,6 @@ class AppPageClass extends StorePageClass {
 
         new MediaPage().appPage();
 
-        this.moveUsefulLinks();
-        this.addFamilySharingWarning();
-
         this.addPackBreakdown();
         this.addPackageInfoButton();
         this.addStats().then(this.customizeAppPage);
@@ -493,21 +490,6 @@ class AppPageClass extends StorePageClass {
                 <div class="subtitle column">${Localization.str.support}:</div>
                 <div class="summary column" id="es_support_list">${support}</div>
             </div>`);
-    }
-
-    addFamilySharingWarning() {
-        if (!SyncedStorage.get("exfgls")) { return; }
-
-        this.data.then(result => {
-            if (!result.exfgls || !result.exfgls.excluded) { return; }
-
-            HTML.beforeBegin("#game_area_purchase",
-                `<div id="purchase_note">
-                    <div class="notice_box_top"></div>
-                        <div class="notice_box_content">${Localization.str.family_sharing_notice}</div>
-                    <div class="notice_box_bottom"></div>
-                </div>`);
-        });
     }
 
     addPackageInfoButton() {
