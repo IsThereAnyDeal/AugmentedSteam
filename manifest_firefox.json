@@ -86,6 +86,7 @@
         "js/content/store/FReplaceDevPubLinks.js",
         "js/content/store/FRemoveFromWishlist.js",
         "js/content/store/FNewQueue.js",
+        "js/content/store/FFullscreenScreenshotView.js",
         "js/content/store.js"
       ],
       "css": [
