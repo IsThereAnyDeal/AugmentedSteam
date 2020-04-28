@@ -587,9 +587,6 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
-        this.initHdPlayer();
-        this.addWishlistRemove();
-        this.addUserNote();
         this.addWaitlistDropdown();
         this.addNewQueueButton();
         this.addFullscreenScreenshotView();
@@ -633,21 +630,10 @@ class AppPageClass extends StorePageClass {
         this.addSupport();
 
         Highlights.addTitleHighlight(this.appid);
-    }
-
-    initHdPlayer() {
-        
-    }
-
-    
+    }    
 
     storePageDataPromise() {
         return Background.action("storepagedata", this.appid, this.metalink, SyncedStorage.get("showoc"));
-    }
-
-    addWishlistRemove() {
-
-        
     }
 
     async _removeFromWishlist() {
@@ -656,52 +642,6 @@ class AppPageClass extends StorePageClass {
 
     async _removeFromWaitlist() {
         return Background.action("itad.removefromwaitlist", this.appid);
-    }
-
-    async addUserNote() {
-        if (!User.isSignedIn || !SyncedStorage.get("showusernotes")) { return; }
-
-        let noteText = "";
-        let cssClass = "esi-note--hidden";
-
-        let inactiveStyle = "";
-        let activeStyle = "display:none;";
-
-        if (await this.userNotes.exists(this.appid)) {
-            noteText = `"${await this.userNotes.get(this.appid)}"`;
-            cssClass = "";
-
-            inactiveStyle = "display:none;";
-            activeStyle = "";
-        }
-
-        HTML.beforeBegin(".queue_actions_ctn > :last-child",
-            `<div class="queue_control_button js-user-note-button">
-                <div id="es_add_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${inactiveStyle}">
-                    <span>${Localization.str.user_note.add}</span>
-                </div>
-                <div id="es_update_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${activeStyle}">
-                    <span>${Localization.str.user_note.update}</span>
-                </div>
-            </div>`);
-
-        HTML.beforeEnd(".queue_actions_ctn",
-            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
-
-        function toggleState(node, active) {
-            let button = document.querySelector(".js-user-note-button");
-            button.querySelector("#es_add_note").style.display = active ? "none" : null;
-            button.querySelector("#es_update_note").style.display = active ? null : "none";
-
-            node.classList.toggle("esi-note--hidden", !active);
-        }
-
-        let handler = () => {
-            this.userNotes.showModalDialog(this.appName, this.appid, "#esi-store-user-note", toggleState);
-        };
-
-        document.querySelector(".js-user-note-button").addEventListener("click", handler);
-        document.querySelector("#esi-store-user-note").addEventListener("click", handler);
     }
 
     async addWaitlistDropdown() {
@@ -3844,7 +3784,7 @@ let TabAreaObserver = (function(){
             break;
 
         case /^\/app\/.*/.test(path):
-            new CAppPage([ FReplaceDevPubLinks, FRemoveFromWishlist, FForceMP4, FHDPlayer ], window.location.host + path);
+            new CAppPage([ FReplaceDevPubLinks, FRemoveFromWishlist, FForceMP4, FHDPlayer, FUserNotes ], window.location.host + path);
             break;
 
         case /^\/sub\/.*/.test(path):
