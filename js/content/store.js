@@ -364,7 +364,6 @@ class AppPageClass extends StorePageClass {
 
         new MediaPage().appPage();
 
-        this.addPackageInfoButton();
         this.addStats().then(this.customizeAppPage);
 
         this.addDlcCheckboxes();
@@ -489,26 +488,6 @@ class AppPageClass extends StorePageClass {
                 <div class="subtitle column">${Localization.str.support}:</div>
                 <div class="summary column" id="es_support_list">${support}</div>
             </div>`);
-    }
-
-    addPackageInfoButton() {
-        if (!SyncedStorage.get("show_package_info")) { return; }
-
-        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper:not(.bundle_hidden_by_preferences)")) {
-            if (node.querySelector(".btn_packageinfo")) { return; }
-
-            let subid = node.querySelector("input[name=subid]");
-            if (!subid) { return; }
-
-            HTML.afterBegin(node.querySelector(".game_purchase_action"),
-                `<div class="game_purchase_action_bg">
-                    <div class="btn_addtocart btn_packageinfo">
-                        <a class="btnv6_blue_blue_innerfade btn_medium" href="//store.steampowered.com/sub/${subid.value}/">
-                            <span>${Localization.str.package_info}</span>
-                        </a>
-                    </div>
-                </div>`);
-        }
     }
 
     addSteamChart(result) {

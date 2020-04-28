@@ -24,6 +24,7 @@ class CAppPage extends CStorePage {
             FExtraLinks,
             FFamilySharingNotice,
             FPackBreakdown,
+            FPackageInfoButton,
         ]);
 
         this.userNotes = new UserNotes();
