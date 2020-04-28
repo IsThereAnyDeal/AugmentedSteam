@@ -10,6 +10,7 @@ class CAppPage extends CStorePage {
             FNewQueue,
             FFullscreenScreenshotView,
             FShowCoupon,
+            FITADPrices,
             FDLCInfo,
         ]);
 
