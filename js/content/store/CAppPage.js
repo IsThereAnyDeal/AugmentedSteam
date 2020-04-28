@@ -20,6 +20,7 @@ class CAppPage extends CStorePage {
             FYouTubeVideos,
             FSteamPeek,
             FWidescreenCertification,
+            FHowLongToBeat,
         ]);
 
         this.userNotes = new UserNotes();

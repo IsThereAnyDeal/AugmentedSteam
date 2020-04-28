@@ -93,6 +93,7 @@
         "js/content/store/FYouTubeVideos.js",
         "js/content/store/FSteamPeek.js",
         "js/content/store/FWidescreenCertification.js",
+        "js/content/store/FHowLongToBeat.js",
         "js/content/store.js"
       ],
       "css": [
