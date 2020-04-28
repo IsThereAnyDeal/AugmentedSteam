@@ -103,6 +103,9 @@
         "js/content/store/FFamilySharingNotice.js",
         "js/content/store/FPackBreakdown.js",
         "js/content/store/FPackageInfoButton.js",
+        "js/content/store/FSteamChart.js",
+        "js/content/store/FSteamSpy.js",
+        "js/content/store/FSurveyData.js",
         "js/content/store.js"
       ],
       "css": [

@@ -5,7 +5,7 @@ class FDRMWarnings extends ASFeature {
 
     apply() {
         // Prevent false-positives
-        if (this.context.isAppPage() && (
+        if (this.context instanceof CAppPage && (
             this.appid === 21690    // Resident Evil 5, at Capcom's request
          || this.appid === 1157970  // Special K
         )) { return; }
@@ -71,12 +71,12 @@ class FDRMWarnings extends ASFeature {
 
         let drmString;
         if (drmNames.length > 0) {
-            drmString = this.context.isAppPage() ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+            drmString = this.context instanceof CAppPage ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
             drmString = drmString.replace("__drmlist__", `(${drmNames.join(", ")})`);
 
         } else { // Detect other DRM
             let regex = /\b(drm|account|steam)\b/i;
-            if (this.context.isAppPage()) {
+            if (this.context instanceof CAppPage) {
                 for (let node of document.querySelectorAll("#category_block > .DRM_notice")) {
                     let text = node.textContent;
                     if (regex.test(text)) {

@@ -25,6 +25,9 @@ class CAppPage extends CStorePage {
             FFamilySharingNotice,
             FPackBreakdown,
             FPackageInfoButton,
+            FSteamChart,
+            FSteamSpy,
+            FSurveyData,
         ]);
 
         this.userNotes = new UserNotes();
@@ -56,8 +59,17 @@ class CAppPage extends CStorePage {
         return Background.action("storepagedata", this.appid, this.metalink, SyncedStorage.get("showoc"));
     }
 
+    // TODO(tfedor) maybe make properties instead of dynamic qheck of all of these "isXY"? Not sure
     isOwned() {
-        return Boolean(document.querySelector(".game_area_already_owned"));
+        return document.querySelector(".game_area_already_owned") !== null;
+    }
+
+    isDlc() {
+        return Boolean(document.querySelector("div.game_area_dlc_bubble"));
+    }
+
+    isVideo() {
+        return document.querySelector(`.game_area_purchase_game span[class*="streaming"], div.series_seasons`) !== null;
     }
 
     removeFromWishlist() {
