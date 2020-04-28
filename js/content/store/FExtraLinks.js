@@ -25,21 +25,17 @@ class FExtraLinks extends ASFeature {
             console.warn("Couldn't find element to insert extra links");
         }
 
-        if (this._node === null) { return false; }
-
-        let shouldRun =  SyncedStorage.get("showbartervg") || SyncedStorage.get("showsteamdb") || SyncedStorage.get("showitadlinks");
-        
-        if (this._type === "app") {
-            shouldRun = shouldRun || SyncedStorage.get("showyoutube") || SyncedStorage.get("showtwitch") || SyncedStorage.get("showpcgw") || SyncedStorage.get("showcompletionistme")
-                                  || SyncedStorage.get("showprotondb") || (this.context.hasCards && SyncedStorage.get("showsteamcardexchange"));
-        }
-
-        return shouldRun;
+        return this._node !== null && (
+            this._type === "app" // Even if the user doesn't want to see any extra links, the place of the native links is changed (see _moveExtraLinks)
+            || (SyncedStorage.get("showbartervg") || SyncedStorage.get("showsteamdb") || SyncedStorage.get("showitadlinks")) // Preferences for links shown on all pages
+        );
     }
 
     apply() {
 
         if (this._type === "app") {
+
+            this._moveExtraLinks();
 
             if (SyncedStorage.get("showyoutube")) {
                 HTML.afterBegin(this._node,
@@ -121,5 +117,18 @@ class FExtraLinks extends ASFeature {
         return `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
                     <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span>
                 </a>`;
+    }
+
+    _moveExtraLinks() {
+
+        let usefulLinks = this._node.parentNode;
+        usefulLinks.classList.add("es_useful_link");
+
+        let sideDetails = document.querySelector(".es_side_details_wrap");
+        if (sideDetails) {
+            sideDetails.insertAdjacentElement("afterend", usefulLinks);
+        } else {
+            document.querySelector("div.rightcol.game_meta_data").insertAdjacentElement("afterbegin", usefulLinks);
+        }
     }
 }

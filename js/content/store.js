@@ -495,19 +495,6 @@ class AppPageClass extends StorePageClass {
             </div>`);
     }
 
-    moveUsefulLinks() {
-
-        let usefulLinks = document.querySelector("#ReportAppBtn").parentNode.parentNode;
-        usefulLinks.classList.add("es_useful_link");
-
-        let sideDetails = document.querySelector(".es_side_details_wrap");
-        if (sideDetails) {
-            sideDetails.insertAdjacentElement("afterend", usefulLinks);
-        } else {
-            document.querySelector("div.rightcol.game_meta_data").insertAdjacentElement("afterbegin", usefulLinks);
-        }
-    }
-
     addFamilySharingWarning() {
         if (!SyncedStorage.get("exfgls")) { return; }
 
