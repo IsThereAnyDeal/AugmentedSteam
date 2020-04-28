@@ -17,6 +17,7 @@ class CAppPage extends CStorePage {
             FOpenCritic,
             FOwnedElsewhere,
             FPurchaseDate,
+            FYouTubeVideos,
         ]);
 
         this.userNotes = new UserNotes();

@@ -90,6 +90,7 @@
         "js/content/store/FOpenCritic.js",
         "js/content/store/FOwnedElsewhere.js",
         "js/content/store/FPurchaseDate.js",
+        "js/content/store/FYouTubeVideos.js",
         "js/content/store.js"
       ],
       "css": [
