@@ -13,6 +13,7 @@ class CAppPage extends CStorePage {
             FITADPrices,
             FDLCInfo,
             FDRMWarnings,
+            FMetacriticUserScore,
         ]);
 
         this.userNotes = new UserNotes();
@@ -32,7 +33,7 @@ class CAppPage extends CStorePage {
         let metalinkNode = document.querySelector("#game_area_metalink a");
         this.metalink = metalinkNode && metalinkNode.getAttribute("href");
 
-        this.data = this.storePageDataPromise().catch(err => console.error(err));
+        this.data = this.storePageDataPromise().catch(err => { console.error(err) });
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
         this.applyFeatures();

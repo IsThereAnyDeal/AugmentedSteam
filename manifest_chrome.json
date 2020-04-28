@@ -86,6 +86,7 @@
         "js/content/store/FITADPrices.js",
         "js/content/store/FDLCInfo.js",
         "js/content/store/FDRMWarnings.js",
+        "js/content/store/FMetacriticUserScore.js",
         "js/content/store.js"
       ],
       "css": [

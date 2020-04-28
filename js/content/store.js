@@ -424,8 +424,6 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
-        this.addDrmWarnings();
-        this.addMetacriticUserScore();
         this.addOpenCritic();
         this.addOwnedElsewhere();
         this.displayPurchaseDate();
@@ -476,39 +474,6 @@ class AppPageClass extends StorePageClass {
     getFirstSubid() {
         let node = document.querySelector("div.game_area_purchase_game input[name=subid]");
         return node && node.value;
-    }
-
-    addMetacriticUserScore() {
-        if (!SyncedStorage.get("showmcus")) { return; }
-
-        let node = document.querySelector("#game_area_metascore");
-        if (!node) { return; }
-
-        this.data.then(result => {
-            if (!result || !result.data || !result.data.userscore) { return; }
-
-            let metauserscore = result.data.userscore * 10;
-            if (!isNaN(metauserscore)) {
-
-                let rating;
-                if (metauserscore >= 75) {
-                    rating = "high";
-                } else if (metauserscore >= 50) {
-                    rating = "medium";
-                } else {
-                    rating = "low";
-                }
-
-                HTML.afterEnd(node,
-                    `<div id="game_area_userscore">
-                        <div class="score ${rating}">${metauserscore}</div>
-                        <div class="logo"></div>
-                        <div class="wordmark">
-                            <div class="metacritic">${Localization.str.user_score}</div>
-                        </div>
-                    </div>`);
-            }
-        });
     }
 
     addOpenCritic() {
