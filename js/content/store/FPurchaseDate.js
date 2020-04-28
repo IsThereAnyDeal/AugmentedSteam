@@ -1,6 +1,6 @@
 class FPurchaseDate extends ASFeature {
 
-    _node = null;
+    _node;
 
     checkPrerequisites() {
         if (User.isSignedIn && SyncedStorage.get("purchase_dates")) {
