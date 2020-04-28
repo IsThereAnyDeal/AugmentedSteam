@@ -88,6 +88,7 @@
         "js/content/store/FNewQueue.js",
         "js/content/store/FFullscreenScreenshotView.js",
         "js/content/store/FShowCoupon.js",
+        "js/content/store/FITADPrices.js",
         "js/content/store.js"
       ],
       "css": [

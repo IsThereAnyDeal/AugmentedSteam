@@ -1,6 +1,16 @@
 class CAppPage extends CStorePage {
-    constructor(features, url) {
-        super(features);
+    constructor(url) {
+        super([
+            FReplaceDevPubLinks,
+            FRemoveFromWishlist,
+            FForceMP4,
+            FHDPlayer,
+            FUserNotes,
+            FWaitlistDropdown,
+            FNewQueue,
+            FFullscreenScreenshotView,
+            FShowCoupon,
+        ]);
 
         this.userNotes = new UserNotes();
 

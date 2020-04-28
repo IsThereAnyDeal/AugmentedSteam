@@ -155,13 +155,7 @@ class StorePageClass {
         return !!document.querySelector("#achievement_block");
     }
 
-    getAllSubids() {
-        let result = [];
-        for (let node of document.querySelectorAll("input[name=subid]")) {
-            result.push(node.value);
-        }
-        return result;
-    }
+    
 
 
     addDrmWarnings() {
@@ -267,48 +261,8 @@ class StorePageClass {
     }
 
     addPrices() {
-        if (!SyncedStorage.get("showlowestprice")) { return; }
 
-        let prices = new Prices();
-
-        prices.subids = this.getAllSubids();
-
-        prices.bundleids = [];
-        for (let node of document.querySelectorAll("[data-ds-bundleid]")) {
-            prices.bundleids.push(node.dataset.dsBundleid);
-        }
-
-        prices.priceCallback = function(type, id, contentNode) {
-            let node;
-            let placement = "afterbegin";
-            if (type === "sub") {
-                node = document.querySelector(`input[name=subid][value="${id}"]`).parentNode.parentNode.parentNode;
-            } else if (type === "bundle") {
-                node = document.querySelector(`.game_area_purchase_game_wrapper[data-ds-bundleid="${id}"]`);
-                if (!node) {
-                    node = document.querySelector(`.game_area_purchase_game[data-ds-bundleid="${id}"]`);
-                    placement = "beforebegin";
-                } else {
-                    // Move any "Complete your Collection!" banner out of the way
-                    let banner = node.querySelector(".ds_completetheset");
-                    let newParent = node.querySelector(".game_area_purchase_game");
-                    if (banner && newParent) {
-                        newParent.appendChild(banner);
-                    }
-                }
-            }
-
-            node.insertAdjacentElement(placement, contentNode);
-        };
-
-        prices.bundleCallback = function(html) {
-
-            HTML.afterEnd("#game_area_purchase",
-                `<h2 class="gradientbg es_bundle_info">${Localization.str.bundle.header} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></h2>
-                ${html}`);
-        };
-
-        prices.load();
+        
     }
 
     getRightColLinkHtml(cls, url, str) {
@@ -587,7 +541,6 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
-        this.addCoupon();
         this.addPrices();
         this.addDlcInfo();
 
@@ -3543,7 +3496,7 @@ let TabAreaObserver = (function(){
             break;
 
         case /^\/app\/.*/.test(path):
-            new CAppPage([ FReplaceDevPubLinks, FRemoveFromWishlist, FForceMP4, FHDPlayer, FUserNotes, FWaitlistDropdown, FNewQueue, FFullscreenScreenshotView, FShowCoupon ], window.location.host + path);
+            new CAppPage(window.location.host + path);
             break;
 
         case /^\/sub\/.*/.test(path):
