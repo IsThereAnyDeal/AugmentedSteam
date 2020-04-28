@@ -14,4 +14,8 @@ class CStorePage extends ASContext {
         }
         return result;
     }
+
+    isDlc() {
+        return Boolean(document.querySelector("div.game_area_dlc_bubble"));
+    }
 }
