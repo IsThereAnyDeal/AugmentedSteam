@@ -48,10 +48,7 @@ class ASFeatureManager {
                         promise = Promise.all(
                             Array.from(promisesMap.entries())
                             .filter(([ftr]) => feature.constructor.deps.includes(ftr))
-                            .reduce((acc, [, promise]) => {
-                                acc.push(promise, []);
-                                return acc;
-                            })
+                            .map(([, promise]) => promise)
                         );
                     }
                 }
