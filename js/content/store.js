@@ -418,7 +418,6 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
-        this.displayPurchaseDate();
         this.addYouTubePlayers();
         this.addSteamPeek();
 
@@ -708,22 +707,6 @@ class AppPageClass extends StorePageClass {
                     <span>${Localization.str.get_help}</span>
                 </a>
             </div>`);
-    }
-
-    async displayPurchaseDate() {
-        if (!User.isSignedIn || !SyncedStorage.get("purchase_dates")) { return; }
-
-        let node = document.querySelector(".game_area_already_owned .already_in_library");
-        if (!node) { return; }
-
-        let appname = this.appName.replace(/:/g, "").trim();
-        let date = await User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname);
-        if (!date) {
-            console.warn("Failed to retrieve purchase date");
-            return;
-        }
-
-        node.textContent += ` ${Localization.str.purchase_date.replace("__date__", date)}`;
     }
 
     addWidescreenCertification() {
