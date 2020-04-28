@@ -15,6 +15,7 @@ class CAppPage extends CStorePage {
             FDRMWarnings,
             FMetacriticUserScore,
             FOpenCritic,
+            FOwnedElsewhere,
         ]);
 
         this.userNotes = new UserNotes();

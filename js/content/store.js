@@ -133,15 +133,9 @@ class StorePageClass {
         return /^\/sub\/\d+/.test(window.location.pathname);
     }
 
-    
-
     isVideo() {
         return !!document.querySelector(".game_area_purchase_game span[class*='streaming']")
             || !!document.querySelector("div.series_seasons");
-    }
-
-    isOwned() {
-        return !!document.querySelector(".game_area_already_owned");
     }
 
     hasAchievements() {
@@ -424,7 +418,6 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
-        this.addOwnedElsewhere();
         this.displayPurchaseDate();
         this.addYouTubePlayers();
         this.addSteamPeek();
@@ -731,21 +724,6 @@ class AppPageClass extends StorePageClass {
         }
 
         node.textContent += ` ${Localization.str.purchase_date.replace("__date__", date)}`;
-    }
-
-    async addOwnedElsewhere() {
-        if (this.isOwned()) { return; }
-
-        let response = await Background.action("itad.getfromcollection", this.storeid);
-        if (!response) { return; }
-
-        let storeList = response.map(store => `<strong>${store}</strong>`).join(", ");
-
-        HTML.afterEnd(".queue_overflow_ctn",
-            `<div class="game_area_already_owned page_content" style="background-image: linear-gradient(to right, #856d0e 0%, #d1a906 100%);">
-                <div class="ds_owned_flag ds_flag" style="background-color: #856d0e;">${Localization.str.coll.in_collection.toUpperCase()}&nbsp;&nbsp;</div>
-                <div class="already_in_library" style="color: #ffe000;">${Localization.str.owned_elsewhere.replace("__gametitle__", this.appName).replace("__storelist__", storeList)}</div>
-            </div>`);
     }
 
     addWidescreenCertification() {

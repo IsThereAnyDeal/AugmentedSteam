@@ -16,4 +16,8 @@ class CStorePage extends ASContext {
     isDlc() {
         return Boolean(document.querySelector("div.game_area_dlc_bubble"));
     }
+
+    isOwned() {
+        return Boolean(document.querySelector(".game_area_already_owned"));
+    }
 }

@@ -88,6 +88,7 @@
         "js/content/store/FDRMWarnings.js",
         "js/content/store/FMetacriticUserScore.js",
         "js/content/store/FOpenCritic.js",
+        "js/content/store/FOwnedElsewhere.js",
         "js/content/store.js"
       ],
       "css": [
