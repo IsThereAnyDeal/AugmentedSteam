@@ -96,6 +96,7 @@
         "js/content/store/FHowLongToBeat.js",
         "js/content/store/FExtraLinks.js",
         "js/content/store/FFamilySharingNotice.js",
+        "js/content/store/FPackBreakdown.js",
         "js/content/store.js"
       ],
       "css": [

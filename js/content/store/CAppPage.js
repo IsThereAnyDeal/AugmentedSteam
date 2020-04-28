@@ -23,6 +23,7 @@ class CAppPage extends CStorePage {
             FHowLongToBeat,
             FExtraLinks,
             FFamilySharingNotice,
+            FPackBreakdown,
         ]);
 
         this.userNotes = new UserNotes();
