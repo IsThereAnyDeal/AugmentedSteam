@@ -12,6 +12,7 @@ class CAppPage extends CStorePage {
             FShowCoupon,
             FITADPrices,
             FDLCInfo,
+            FDRMWarnings,
         ]);
 
         this.userNotes = new UserNotes();
