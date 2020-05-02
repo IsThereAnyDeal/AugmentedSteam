@@ -2117,17 +2117,14 @@ class AppPageClass extends StorePageClass {
                 </div>`);
         }
 
-        let form = document.createElement("form");
-        form.setAttribute("name", "add_selected_dlc_to_cart");
-        form.setAttribute("action", "/cart/");
-        form.setAttribute("method", "POST");
-        form.setAttribute("id", "es_selected_cart");
+        let cartForm = document.createElement("form");
+        cartForm.name = "add_selected_dlc_to_cart";
+        cartForm.action = "/cart/";
+        cartForm.method = "POST";
 
         let cartBtn = dlcs.querySelector("#es_selected_btn");
-        cartBtn.insertAdjacentElement("beforebegin", form);
-        cartBtn.addEventListener("click", () => {
-            form.submit();
-        });
+        cartBtn.insertAdjacentElement("beforebegin", cartForm);
+        cartBtn.addEventListener("click", () => { cartForm.submit(); });
 
         HTML.afterEnd(dlcs.querySelector(".gradientbg"),
             `<div id="es_dlc_option_panel">
@@ -2147,7 +2144,7 @@ class AppPageClass extends StorePageClass {
         });
 
         dlcs.querySelector("#wl_dlc_check").addEventListener("click", () => {
-            let nodes = dlcs.querySelectorAll(".ds_wishlist input:not(:checked)");
+            let nodes = dlcs.querySelectorAll(".game_area_dlc_row.ds_wishlist input:not(:checked)");
             for (let node of nodes) {
                 node.checked = true;
                 node.dispatchEvent(change);
@@ -2173,7 +2170,6 @@ class AppPageClass extends StorePageClass {
         dlcs.addEventListener("change", e => {
             if (!e.target.parentNode.classList.contains("es_dlc_select")) { return; }
 
-            let cartForm = dlcs.querySelector("#es_selected_cart");
             cartForm.innerHTML = "";
 
             let inputAction = document.createElement("input");
