@@ -2735,37 +2735,37 @@ img.astats_icon {
   cursor: pointer;
 }
 
-/* hide dlc flag due to checkboxes */
+/* hide dlc flag due to checkboxes (if highlighting is disabled) */
 .game_area_dlc_row:hover .ds_flag {
   display: none;
 }
+/* move title out of the way */
+.game_area_dlc_name {
+  margin-left: 23px;
+}
 
-.es_dlc_selection {
-  cursor: default;
-}
-input[type=checkbox].es_dlc_selection {
+label.es_dlc_select {
   position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
+  padding: 4px 11px 1px;
+  top: 0px;
+  left: 1px;
 }
-input[type=checkbox].es_dlc_selection + label {
-  padding-left: 20px;
-  height: 13px;
-  display: inline-block;
-  line-height: 13px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  vertical-align: middle;
-  cursor: default;
-  z-index: 99;
+label.es_dlc_select > input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #545454;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #343434;
+  outline: none;
 }
-input[type=checkbox].es_dlc_selection:checked + label {
-  background-position: 0 -13px;
+label.es_dlc_select > input:checked::after {
+  content: "✔";
+  color: #8bc53f;
+  font-size: 12px;
+  position: absolute;
+  bottom: 3px;
+  left: 14px;
 }
 
 /***************************************

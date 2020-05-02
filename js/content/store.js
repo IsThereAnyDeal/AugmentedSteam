@@ -2086,17 +2086,12 @@ class AppPageClass extends StorePageClass {
         let dlcs = document.querySelector(".game_area_dlc_section");
         if (!dlcs || !dlcs.querySelector(".game_area_dlc_list")) { return; }
 
-        let imgUrl = ExtensionResources.getURL("img/check_sheet.png");
         for (let dlc of dlcs.querySelectorAll(".game_area_dlc_row")) {
-            if (dlc.querySelector("input")) {
-                let value = dlc.querySelector("input").value;
+            let subid = dlc.querySelector("input[name^=subid]");
+            if (!subid) { continue; }
 
-                HTML.afterBegin(dlc.querySelector(".game_area_dlc_name"),
-                    `<input type="checkbox" class="es_dlc_selection" id="es_select_dlc_${value}" value="${value}">
-                    <label for="es_select_dlc_${value}" style="background-image: url(${imgUrl});"></label>`);
-            } else {
-                dlc.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
-            }
+            HTML.afterBegin(dlc.querySelector(".game_area_dlc_name"),
+                `<label class="es_dlc_select"><input type="checkbox" value="${subid.value}"></label>`);
         }
 
         let expandedNode = dlcs.querySelector("#game_area_dlc_expanded");
@@ -2179,7 +2174,7 @@ class AppPageClass extends StorePageClass {
         });
 
         dlcs.addEventListener("change", e => {
-            if (!e.target.classList.contains("es_dlc_selection")) { return; }
+            if (!e.target.parentNode.classList.contains("es_dlc_select")) { return; }
 
             let cartForm = dlcs.querySelector("#es_selected_cart");
             cartForm.innerHTML = "";
@@ -2196,7 +2191,7 @@ class AppPageClass extends StorePageClass {
 
             cartForm.append(inputAction, inputSessionId);
 
-            let nodes = dlcs.querySelectorAll(".es_dlc_selection:checked");
+            let nodes = dlcs.querySelectorAll(".game_area_dlc_row input:checked");
             for (let node of nodes) {
 
                 let inputSubId = document.createElement("input");
