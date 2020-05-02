@@ -505,21 +505,19 @@ class ContextMenu {
         let query = encodeURIComponent(info.selectionText.trim());
         let url = ContextMenu.queryLinks[info.menuItemId];
         if (!url) { return; }
-
-        url = url.replace("__query__", query);
+        
         if (info.menuItemId === "context_steam_keys") {
-            let steamkeys = info.selectionText.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
-            if (!steamkeys || steamkeys.length === 0) {
+            let steamKeys = query.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
+            if (!steamKeys || steamKeys.length === 0) {
                 window.alert(Localization.str.options.no_keys_found);
                 return;
             }
 
-            steamkeys.forEach(steamkey => {
-                url.replace("__steamkey__", steamkey);
-                browser.tabs.create({ url });
-            });
+            for (let steamKey of steamKeys) {
+                browser.tabs.create({ "url": url.replace("__steamkey__", steamKey) });
+            }
         } else {
-            browser.tabs.create({ url });
+            browser.tabs.create({ "url": url.replace("__query__", query) });
         }
     }
     
