@@ -2712,9 +2712,14 @@ img.astats_icon {
   margin-right: 8px;
   line-height: normal;
   text-decoration: none;
-}
-#es_dlc_option_button:hover {
   cursor: pointer;
+  color: #67c1f5;
+}
+#es_dlc_option_button::after {
+  content: "▼";
+}
+#es_dlc_option_button.open::after {
+  content: "▲";
 }
 #es_dlc_option_panel {
   background: url('https://steamcommunity-a.akamaihd.net/public/images/profile/profile_header_bg_texture.jpg');

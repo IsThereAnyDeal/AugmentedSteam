@@ -2163,14 +2163,11 @@ class AppPageClass extends StorePageClass {
         });
 
         HTML.beforeEnd(dlcs.querySelector(".gradientbg"),
-            `<a id="es_dlc_option_button">${Localization.str.dlc_select.select} ▼</a>`);
+            `<a id="es_dlc_option_button">${Localization.str.dlc_select.select} </a>`);
 
         dlcs.querySelector("#es_dlc_option_button").addEventListener("click", e => {
+            e.target.classList.toggle("open");
             dlcs.querySelector("#es_dlc_option_panel").classList.toggle("esi-shown");
-
-            e.target.textContent = e.target.textContent.includes("▼")
-                ? `${Localization.str.dlc_select.select} ▲`
-                : `${Localization.str.dlc_select.select} ▼`;
         });
 
         dlcs.addEventListener("change", e => {
