@@ -1126,50 +1126,40 @@ let GamesPageClass = (function(){
             </div>`);
     };
 
-    let scrollTimeout = null;
-
     GamesPageClass.prototype.addGamelistAchievements = function() {
         if (!SyncedStorage.get("showallachievements")) { return; }
 
         // Path of profile in view to retrieve achievement stats
         let path = window.location.pathname.replace("/games", "");
 
-        document.addEventListener("scroll", () => {
-            if (scrollTimeout) { window.clearTimeout(scrollTimeout); }
-            scrollTimeout = window.setTimeout(addAchievements, 500);
+        let observer = new IntersectionObserver(addAchievementBars, {
+            root: null, // Viewport
+            rootMargin: "0px",
+            threshold: 0.0
         });
 
-        addAchievements();
-
-        function addAchievements() {
-            let nodes = document.querySelectorAll(".gameListRow:not(.es_achievements_checked)");
-            let hadNodesInView = false;
-            for (let node of nodes) {
-
-                if (!Viewport.isElementInViewport(node)) {
-                    if (hadNodesInView) { break; }
+        async function addAchievementBars(entries) {
+            for (let entry of entries) {
+                if (!entry.isIntersecting && !(entry.boundingClientRect.top >= 0 && entry.boundingClientRect.bottom <= window.innerHeight)) {
                     continue;
                 }
 
-                hadNodesInView = true;
-
-                let appid = GameId.getAppidFromId(node.id);
-                node.classList.add("es_achievements_checked");
-                if (!node.innerHTML.match(/ico_stats\.png/)) { continue; }
+                let node = entry.target;
+                observer.unobserve(node);
 
                 let hoursNode = node.querySelector("h5.hours_played");
                 if (!hoursNode) { continue; }
 
-                HTML.afterEnd(hoursNode, `<div class="es_recentAchievements" id="es_app_${appid}"></div>`);
+                let appid = GameId.getAppidFromId(node.id);
+                let achieveBar = await Stats.getAchievementBar(path, appid);
+                if (!achieveBar) { continue; }
 
-                Stats.getAchievementBar(path, appid).then(achieveBar => {
-                    if (!achieveBar) { return; }
-
-                    HTML.inner(document.querySelector(`#es_app_${appid}`), achieveBar);
-                }, err => {
-                    console.error(err);
-                });
+                HTML.afterEnd(hoursNode, `<div class="es-achieveBar-gl">${achieveBar}</div>`);
             }
+        }
+
+        for (let node of document.querySelectorAll(".gameListRow")) {
+            observer.observe(node);
         }
     };
 
