@@ -1374,7 +1374,7 @@ class AppPageClass extends StorePageClass {
 
             gamePlayTab.addEventListener("click", () => {
                 if (!tabToMedia.has(gamePlayTab)) {
-                    let gamePlayMedia = this._getYoutubeIframeNode(this.appName, Localization.str.gameplay);
+                    let gamePlayMedia = this._getYoutubeIframeNode(this.appName, "Gameplay");
     
                     document.querySelector(".highlight_ctn")
                         .insertAdjacentElement("beforeend", gamePlayMedia);
@@ -1391,7 +1391,7 @@ class AppPageClass extends StorePageClass {
 
             reviewTab.addEventListener("click", () => {
                 if (!tabToMedia.has(reviewTab)) {
-                    let reviewMedia = this._getYoutubeIframeNode(this.appName, Localization.str.review);
+                    let reviewMedia = this._getYoutubeIframeNode(this.appName, "Review");
     
                     document.querySelector(".highlight_ctn")
                         .insertAdjacentElement("beforeend", reviewMedia);
