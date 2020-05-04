@@ -249,7 +249,6 @@ class AppPageClass extends StorePageClass {
 
         new MediaPage().appPage();
 
-        this.addOwnedActionsButtons();
         this.addSupport();
 
         Highlights.addTitleHighlight(this.appid);
@@ -270,41 +269,6 @@ class AppPageClass extends StorePageClass {
     getFirstSubid() {
         let node = document.querySelector("div.game_area_purchase_game input[name=subid]");
         return node && node.value;
-    }
-
-    addOwnedActionsButtons() {
-        if (!User.isSignedIn) { return; }
-
-        let node = document.querySelector(".game_area_play_stats .already_owned_actions");
-        if (!node) { return; }
-
-        // handle Install Steam button
-        let btn = node.querySelector("a[href^='https://store.steampowered.com/about/']");
-        let option = SyncedStorage.get("installsteam");
-        if (option === "hide") {
-            btn.remove();
-        } else if (option === "replace") {
-            btn.querySelector("span").textContent = Localization.str.viewinclient;
-            btn.href = `steam://store/${this.appid}`;
-        }
-
-        // add view in library button
-        if (SyncedStorage.get("showviewinlibrary")) {
-            HTML.afterBegin(node,
-                `<div class="game_area_already_owned_btn">
-                    <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${this.appid}">
-                        <span>${Localization.str.view_in_library}</span>
-                    </a>
-                </div>`);
-        }
-
-        // add help button
-        HTML.afterEnd(node,
-            `<div class="game_area_already_owned_btn">
-                <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="//help.steampowered.com/wizard/HelpWithGame/?appid=${this.appid}">
-                    <span>${Localization.str.get_help}</span>
-                </a>
-            </div>`);
     }
 
     async addSupport() {
