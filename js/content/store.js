@@ -124,29 +124,13 @@ class Customizer {
     }
 }
 
-class StorePageClass {
-
-    isSubPage() {
-        return /^\/sub\/\d+/.test(window.location.pathname);
-    }
-
-    hasAchievements() {
-        
-    }
-
-    async showRegionalPricing(type) {
-
-        
-    }
-}
+class StorePageClass {}
 
 
 class SubPageClass extends StorePageClass {
     constructor() {
         super();
 
-        this.addPrices();
-        this.addLinks("sub");
         this.showRegionalPricing("sub");
         this.subscriptionSavingsCheck();
     }
