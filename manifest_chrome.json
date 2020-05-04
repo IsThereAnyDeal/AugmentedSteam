@@ -113,6 +113,7 @@
         "js/content/store/FSupportInfo.js",
         "js/content/common/FMediaExpander.js",
         "js/content/common/FHighlightsTags.js",
+        "js/content/store/sub/FSavingsCheck.js",
         "js/content/store.js"
       ],
       "css": [
