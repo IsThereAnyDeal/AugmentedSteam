@@ -111,6 +111,7 @@
         "js/content/store/FOwnedActionsButtons.js",
         "js/content/store/FSupportInfo.js",
         "js/content/common/FMediaExpander.js",
+        "js/content/common/FHighlightsTags.js",
         "js/content/store.js"
       ],
       "css": [

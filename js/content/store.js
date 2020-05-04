@@ -1925,7 +1925,6 @@ let TabAreaObserver = (function(){
     }
 
     // common for store pages
-    Highlights.startHighlightsAndTags();
     AugmentedSteam.alternateLinuxIcon();
     AugmentedSteam.hideTrademarkSymbol(false);
     TabAreaObserver.observeChanges();

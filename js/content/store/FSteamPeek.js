@@ -76,7 +76,7 @@ class FSteamPeek extends ASFeature {
 
                 ExtensionLayer.runInPageContext(() => { GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar")); });
 
-                Highlights.highlightAndTag(content.querySelectorAll("a.es_sp_similar"), true);
+                FHighlightsTags.highlightAndTag(content.querySelectorAll("a.es_sp_similar"), true);
 
                 HTML.beforeBegin(lastChild,
                     `<a class="small_cap es_sp_similar" href="http://steampeek.hu/?appid=${this.context.appid}" target="_blank">
