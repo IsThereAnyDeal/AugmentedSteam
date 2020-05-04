@@ -30,6 +30,7 @@ class CAppPage extends CStorePage {
             FSurveyData,
             FCustomizer,
             FDLCCheckboxes,
+            FBadgeProgress,
         ]);
 
         this.userNotes = new UserNotes();
