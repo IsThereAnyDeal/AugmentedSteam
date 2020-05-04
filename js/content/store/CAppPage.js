@@ -31,6 +31,7 @@ class CAppPage extends CStorePage {
             FCustomizer,
             FDLCCheckboxes,
             FBadgeProgress,
+            FAStatsLink,
         ]);
 
         this.userNotes = new UserNotes();
@@ -71,11 +72,15 @@ class CAppPage extends CStorePage {
     }
 
     isDlc() {
-        return Boolean(document.querySelector("div.game_area_dlc_bubble"));
+        return document.querySelector("div.game_area_dlc_bubble") !== null;
     }
 
     isVideo() {
         return document.querySelector(`.game_area_purchase_game span[class*="streaming"], div.series_seasons`) !== null;
+    }
+
+    hasAchievements() {
+        return document.querySelector("#achievement_block") !== null;
     }
 
     removeFromWishlist() {

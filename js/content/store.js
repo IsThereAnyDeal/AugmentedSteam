@@ -131,7 +131,7 @@ class StorePageClass {
     }
 
     hasAchievements() {
-        return !!document.querySelector("#achievement_block");
+        
     }
 
     async showRegionalPricing(type) {
@@ -359,7 +359,6 @@ class AppPageClass extends StorePageClass {
 
         new MediaPage().appPage();
 
-        this.addAstatsLink();
         this.addAchievementBar();
 
         this.showRegionalPricing("app");
@@ -478,19 +477,6 @@ class AppPageClass extends StorePageClass {
             `<div class="release_date">
                 <div class="subtitle column">${Localization.str.support}:</div>
                 <div class="summary column" id="es_support_list">${support}</div>
-            </div>`);
-    }
-
-    addAstatsLink() {
-        if (!this.hasAchievements() || !SyncedStorage.get("showastatslink")) { return; }
-
-        let imgUrl = ExtensionResources.getURL("img/ico/astatsnl.png");
-        let url = `https://astats.astats.nl/astats/Steam_Game_Info.php?AppID=${this.communityAppid}`;
-
-        HTML.beforeEnd("#achievement_block",
-            `<div class="game_area_details_specs">
-                <div class="icon"><img class="astats_icon" src="${imgUrl}"></div>
-                <a class="name" href="${url}" target="_blank">${Localization.str.view_astats}</a>
             </div>`);
     }
 
