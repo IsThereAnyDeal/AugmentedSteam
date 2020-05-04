@@ -142,12 +142,9 @@ class StorePageClass {
 
 
 class SubPageClass extends StorePageClass {
-    constructor(url) {
+    constructor() {
         super();
 
-        this.subid = GameId.getSubid(url);
-
-        this.addDrmWarnings();
         this.addPrices();
         this.addLinks("sub");
         this.showRegionalPricing("sub");
@@ -1853,7 +1850,7 @@ let TabAreaObserver = (function(){
             break;
 
         case /^\/sub\/.*/.test(path):
-            (new SubPageClass(window.location.host + path));
+            new CSubPage(window.location.host + path);
             break;
 
         case /^\/bundle\/.*/.test(path):

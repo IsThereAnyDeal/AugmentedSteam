@@ -1,15 +1,16 @@
 class FDRMWarnings extends ASFeature {
     checkPrerequisites() {
-        return SyncedStorage.get("showdrm");
+        if (!SyncedStorage.get("showdrm")) { return false; };
+
+        // Prevent false-positives
+        return !this.context instanceof CAppPage || (
+                this.context.appid !== 21690    // Resident Evil 5, at Capcom's request
+            &&  this.context.appid !== 1157970  // Special K
+        );
     }
 
     apply() {
-        // Prevent false-positives
-        if (this.context instanceof CAppPage && (
-            this.appid === 21690    // Resident Evil 5, at Capcom's request
-         || this.appid === 1157970  // Special K
-        )) { return; }
-
+        
         let text = "";
         for (let node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details, .DRM_notice")) {
             text += node.textContent.toLowerCase();

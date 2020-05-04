@@ -1,4 +1,5 @@
 class CAppPage extends CStorePage {
+    
     constructor(url) {
         super([
             FReplaceDevPubLinks,
