@@ -249,7 +249,6 @@ class AppPageClass extends StorePageClass {
 
         new MediaPage().appPage();
 
-        this.addReviewToggleButton();
         this.addOwnedActionsButtons();
         this.addSupport();
 
@@ -364,48 +363,6 @@ class AppPageClass extends StorePageClass {
                 <div class="subtitle column">${Localization.str.support}:</div>
                 <div class="summary column" id="es_support_list">${support}</div>
             </div>`);
-    }
-
-    addReviewToggleButton() {
-        let head = document.querySelector("#review_create h1");
-        if (!head) { return; }
-
-        HTML.beforeEnd(head, '<div style="float: right;"><a class="btnv6_lightblue_blue btn_mdium" id="es_review_toggle"><span>▲</span></a></div>');
-
-        let reviewSectionNode = document.createElement("div");
-        reviewSectionNode.setAttribute("id", "es_review_section");
-
-        let nodes = document.querySelector("#review_container").querySelectorAll("p, .avatar_block, .content");
-        for (let node of nodes) {
-            reviewSectionNode.append(node);
-        }
-
-        head.insertAdjacentElement("afterend", reviewSectionNode);
-
-        function toggleReviews(state) {
-            if (typeof state === "undefined") {
-                state = !LocalStorage.get("show_review_section", true);
-                LocalStorage.set("show_review_section", state);
-            }
-            if (state) {
-                document.querySelector("#es_review_toggle span").textContent = "▲";
-                document.querySelector("#es_review_section").style.maxHeight = null;
-            } else {
-                document.querySelector("#es_review_toggle span").textContent = "▼";
-                document.querySelector("#es_review_section").style.maxHeight = 0;
-            }
-        }
-
-        let showReviews = LocalStorage.get("show_review_section", true);
-        toggleReviews(showReviews);
-
-        let node = document.querySelector("#review_create");
-        if (node) {
-            node.addEventListener("click", function(e) {
-                if (!e.target.closest("#es_review_toggle")) { return; }
-                toggleReviews();
-            });
-        }
     }
 }
 
