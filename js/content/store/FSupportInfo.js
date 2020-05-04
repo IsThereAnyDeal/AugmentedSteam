@@ -16,7 +16,7 @@ class FSupportInfo extends ASFeature {
         }
 
         let appid = this.context.appid;
-        this._supportInfo = cache[appid];
+        this._supportInfo = cache.data[appid];
         
         if (!this._supportInfo) {
             let response = await Background.action("appdetails", appid, "support_info");
