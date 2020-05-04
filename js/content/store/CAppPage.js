@@ -29,6 +29,7 @@ class CAppPage extends CStorePage {
             FSteamSpy,
             FSurveyData,
             FCustomizer,
+            FDLCCheckboxes,
         ]);
 
         this.userNotes = new UserNotes();

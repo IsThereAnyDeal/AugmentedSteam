@@ -102,6 +102,7 @@
         "js/content/store/FSteamSpy.js",
         "js/content/store/FSurveyData.js",
         "js/content/store/FCustomizer.js",
+        "js/content/store/FDLCCheckboxes.js",
         "js/content/store.js"
       ],
       "css": [
