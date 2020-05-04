@@ -5,6 +5,7 @@ class CSubPage extends CStorePage {
         super([
             FExtraLinks,
             FDRMWarnings,
+            FITADPrices,
         ]);
 
         this.subid = GameId.getSubid(url);
