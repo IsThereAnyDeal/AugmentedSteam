@@ -1029,11 +1029,10 @@ class SteamCommunity extends Api {
         if (login && login.profilePath === profilePath) { return login; }
 
         let html = await self.getPage(profilePath);
-
-        let steamId = HTMLParser.getVariableFromText(html, "g_steamID", "string");
-        if (!steamId) {
-            // Possibly not logged in
-            return;
+        let profileData = HTMLParser.getVariableFromText(html, "g_rgProfileData", "object");
+        let steamId = profileData.steamid;
+        if (!steamId) { // this should never happen
+            throw new Error("Failed to retrieve steamID from profile");
         }
 
         let userCountry = await SteamStore.country();
