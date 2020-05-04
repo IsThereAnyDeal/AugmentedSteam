@@ -111,6 +111,7 @@
         "js/content/store/FBadgeProgress.js",
         "js/content/store/FAStatsLink.js",
         "js/content/store/FAchievementBar.js",
+        "js/content/store/FRegionalPricing.js",
         "js/content/store.js"
       ],
       "css": [

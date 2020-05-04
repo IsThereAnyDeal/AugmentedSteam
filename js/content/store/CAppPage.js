@@ -33,6 +33,7 @@ class CAppPage extends CStorePage {
             FBadgeProgress,
             FAStatsLink,
             FAchievementBar,
+            FRegionalPricing,
         ]);
 
         this.userNotes = new UserNotes();
