@@ -247,27 +247,8 @@ class AppPageClass extends StorePageClass {
         this.data = this.storePageDataPromise().catch(err => console.error(err));
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
-        new MediaPage().appPage();
-
         Highlights.addTitleHighlight(this.appid);
     }    
-
-    storePageDataPromise() {
-        return Background.action("storepagedata", this.appid, this.metalink, SyncedStorage.get("showoc"));
-    }
-
-    async _removeFromWishlist() {
-        return Background.action("wishlist.remove", this.appid, User.getSessionId());
-    }
-
-    async _removeFromWaitlist() {
-        return Background.action("itad.removefromwaitlist", this.appid);
-    }
-
-    getFirstSubid() {
-        let node = document.querySelector("div.game_area_purchase_game input[name=subid]");
-        return node && node.value;
-    }        
 }
 
 

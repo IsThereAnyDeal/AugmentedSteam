@@ -34,9 +34,9 @@ class ASFeatureManager {
                 let ready = true;
                 let promise = Promise.resolve(true);
 
-                if (Array.isArray(feature.constructor.deps)) {
+                if (Array.isArray(feature.constructor.dependencies)) {
 
-                    for (let dep of feature.constructor.deps) {
+                    for (let dep of feature.constructor.dependencies) {
                         if (!promisesMap.has(dep)) {
                             ready = false;
                             break;
@@ -47,7 +47,7 @@ class ASFeatureManager {
                         // Promise that waits for all dependencies to finish executing
                         promise = Promise.all(
                             Array.from(promisesMap.entries())
-                            .filter(([ftr]) => feature.constructor.deps.includes(ftr))
+                            .filter(([ftr]) => feature.constructor.dependencies.includes(ftr))
                             .map(([, promise]) => promise)
                         );
                     }
@@ -57,11 +57,14 @@ class ASFeatureManager {
                     promisesMap.set(feature.constructor,
                         promise
                         .then(async previousCheck => {
-                            let prev;
-                            if (Array.isArray(previousCheck)) {
-                                prev = previousCheck.every(res => res);
-                            } else {
-                                prev = previousCheck;
+                            let prev = true;
+
+                            if (!feature.constructor.weakDependency) {
+                                if (Array.isArray(previousCheck)) {
+                                    prev = previousCheck.every(res => res);
+                                } else {
+                                    prev = previousCheck;
+                                }
                             }
 
                             return prev && await feature.checkPrerequisites();

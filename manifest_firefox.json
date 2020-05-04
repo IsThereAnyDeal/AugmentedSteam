@@ -115,6 +115,7 @@
         "js/content/store/FReviewToggleButton.js",
         "js/content/store/FOwnedActionsButtons.js",
         "js/content/store/FSupportInfo.js",
+        "js/content/common/FMediaExpander.js",
         "js/content/store.js"
       ],
       "css": [

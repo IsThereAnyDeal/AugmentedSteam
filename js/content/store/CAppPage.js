@@ -37,6 +37,7 @@ class CAppPage extends CStorePage {
             FReviewToggleButton,
             FOwnedActionsButtons,
             FSupportInfo,
+            FMediaExpander,
         ]);
 
         this.userNotes = new UserNotes();
@@ -62,7 +63,10 @@ class CAppPage extends CStorePage {
         this.appName = document.querySelector(".apphub_AppName").textContent;
 
         // The customizer has to wait on this data to be added in order to find the HTML elements
-        FCustomizer.deps = [ FSteamSpy, FSteamChart, FSurveyData ];
+        FCustomizer.dependencies = [ FSteamSpy, FSteamChart, FSurveyData ];
+
+        FMediaExpander.dependencies = [ FYouTubeVideos ];
+        FMediaExpander.weakDependency = true;
 
         this.applyFeatures();
     }
