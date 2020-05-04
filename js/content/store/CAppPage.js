@@ -28,6 +28,7 @@ class CAppPage extends CStorePage {
             FSteamChart,
             FSteamSpy,
             FSurveyData,
+            FCustomizer,
         ]);
 
         this.userNotes = new UserNotes();
@@ -51,6 +52,9 @@ class CAppPage extends CStorePage {
 
         this.data = this.storePageDataPromise().catch(err => { console.error(err) });
         this.appName = document.querySelector(".apphub_AppName").textContent;
+
+        // The customizer has to wait on this data to be added in order to find the HTML elements
+        FCustomizer.deps = [ FSteamSpy, FSteamChart, FSurveyData ];
 
         this.applyFeatures();
     }

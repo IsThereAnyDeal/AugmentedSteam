@@ -106,6 +106,7 @@
         "js/content/store/FSteamChart.js",
         "js/content/store/FSteamSpy.js",
         "js/content/store/FSurveyData.js",
+        "js/content/store/FCustomizer.js",
         "js/content/store.js"
       ],
       "css": [
