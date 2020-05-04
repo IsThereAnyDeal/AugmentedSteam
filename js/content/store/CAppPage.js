@@ -32,6 +32,7 @@ class CAppPage extends CStorePage {
             FDLCCheckboxes,
             FBadgeProgress,
             FAStatsLink,
+            FAchievementBar,
         ]);
 
         this.userNotes = new UserNotes();

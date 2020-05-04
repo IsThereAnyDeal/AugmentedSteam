@@ -110,6 +110,7 @@
         "js/content/store/FDLCCheckboxes.js",
         "js/content/store/FBadgeProgress.js",
         "js/content/store/FAStatsLink.js",
+        "js/content/store/FAchievementBar.js",
         "js/content/store.js"
       ],
       "css": [

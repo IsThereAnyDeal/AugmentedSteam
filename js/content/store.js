@@ -359,8 +359,6 @@ class AppPageClass extends StorePageClass {
 
         new MediaPage().appPage();
 
-        this.addAchievementBar();
-
         this.showRegionalPricing("app");
 
         this.addReviewToggleButton();
@@ -478,21 +476,6 @@ class AppPageClass extends StorePageClass {
                 <div class="subtitle column">${Localization.str.support}:</div>
                 <div class="summary column" id="es_support_list">${support}</div>
             </div>`);
-    }
-
-    async addAchievementBar() {
-        if (!this.hasAchievements() || !SyncedStorage.get("showachinstore")) { return; }
-
-        let node = document.querySelector("#my_activity");
-        if (!node) { return; }
-
-        let achieveBar = await Stats.getAchievementBar("/my", this.communityAppid);
-        if (!achieveBar) {
-            console.warn("Failed to retrieve achievement stats");
-            return;
-        }
-        
-        HTML.afterBegin(node, `<div class="es-achieveBar-store">${achieveBar}</div>`);
     }
 
     addReviewToggleButton() {
