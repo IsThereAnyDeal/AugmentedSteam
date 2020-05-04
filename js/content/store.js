@@ -249,8 +249,6 @@ class AppPageClass extends StorePageClass {
 
         new MediaPage().appPage();
 
-        this.addSupport();
-
         Highlights.addTitleHighlight(this.appid);
     }    
 
@@ -269,65 +267,7 @@ class AppPageClass extends StorePageClass {
     getFirstSubid() {
         let node = document.querySelector("div.game_area_purchase_game input[name=subid]");
         return node && node.value;
-    }
-
-    async addSupport() {
-        if (this.isDlc() || !SyncedStorage.get("showsupportinfo")) { return; }
-
-        let cache = LocalStorage.get("support_info", null);
-        if (!cache || !cache.expiry || cache.expiry < Date.now()) {
-            cache = {
-                "data": {},
-                "expiry": Date.now() + (31 * 86400 * 1000) // 31 days
-            }
-        }
-
-        let appid = this.appid;
-        let supportInfo = cache[appid];
-        if (!supportInfo) {
-            let response = await Background.action("appdetails", appid, "support_info");
-            if (!response || !response.success) {
-                console.warn("Failed to retrieve support info");
-                return;
-            }
-
-            supportInfo = response.data.support_info;
-
-            cache["data"][appid] = supportInfo;
-            LocalStorage.set("support_info", cache);
-        }
-
-        let url = supportInfo.url;
-        let email = supportInfo.email;
-        if (!email && !url) { return; }
-
-        let support = "";
-        if (url) {
-            support += `<a href="${url}">${Localization.str.website}</a>`;
-        }
-
-        if (email) {
-            if (url) {
-                support += ", ";
-            }
-
-            // From https://emailregex.com/
-            let emailRegex =
-                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-            if (emailRegex.test(email)) {
-                support += `<a href="mailto:${email}">${Localization.str.email}</a>`;
-            } else {
-                support += `<a href="${email}">${Localization.str.contact}</a>`;
-            }
-        }
-
-        HTML.beforeEnd(".glance_ctn .user_reviews",
-            `<div class="release_date">
-                <div class="subtitle column">${Localization.str.support}:</div>
-                <div class="summary column" id="es_support_list">${support}</div>
-            </div>`);
-    }
+    }        
 }
 
 
