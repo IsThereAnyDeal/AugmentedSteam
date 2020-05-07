@@ -1883,8 +1883,8 @@ let InventoryPageClass = (function(){
                         ReloadCommunityInventory();
                     });
                 });
-            });
-        }, [ appid, assetid ]);
+            }, [ appid, assetid ]);
+        });
     }
 
     function makeMarketButton(id, tooltip) {
