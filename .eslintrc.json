@@ -126,7 +126,7 @@
         "one-var-declaration-per-line": "error",
         "operator-assignment": "error",
         "operator-linebreak": ["error", "before"],
-        "padded-blocks": ["warn", { "switches": "never" }, { "allowSingleLineBlocks": true }], // i'd leave this on a programmer
+        "padded-blocks": ["warn", { "switches": "never" }, { "allowSingleLineBlocks": true }],
         "prefer-arrow-callback": "error",
         "prefer-const": "error",
         "prefer-exponentiation-operator": "error",
