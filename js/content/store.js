@@ -2551,6 +2551,8 @@ let RegisterKeyPageClass = (function(){
 
             lines.forEach(line => {
                 let attempt = String(line);
+                // remove all whitespace and non-key characters
+                attempt = attempt.replace(/[^0-9A-Za-z]/g, '');
                 if (attempt === "") { // skip blank rows in the input dialog (including trailing newline)
                     return;
                 }
