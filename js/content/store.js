@@ -126,26 +126,6 @@ class Customizer {
 
 class StorePageClass {}
 
-let AccountPageClass = (function(){
-
-    function AccountPageClass() {
-        this.accountTotalSpent();
-    }
-
-    AccountPageClass.prototype.accountTotalSpent = function() {
-
-        let links = document.querySelectorAll(".account_setting_block:nth-child(2) .account_setting_sub_block:nth-child(2) .account_manage_link");
-        if (links.length < 1) return;
-
-        let lastLink = links[links.length-1];
-        HTML.afterEnd(lastLink.parentNode,
-            `<div><a class='account_manage_link' href='https://help.steampowered.com/accountdata/AccountSpend'>${Localization.str.external_funds}</a></div>`);
-    };
-
-    return AccountPageClass;
-})();
-
-
 let FundsPageClass = (function(){
 
     function FundsPageClass() {
@@ -1621,7 +1601,7 @@ let TabAreaObserver = (function(){
             return;
 
         case /^\/account(\/)?$/.test(path):
-            (new AccountPageClass());
+            new CAccountPage();
             return;
 
         // Match URLs like https://store.steampowered.com/steamaccount/addfundskjdsakjdsakjkjsa since they are still valid
