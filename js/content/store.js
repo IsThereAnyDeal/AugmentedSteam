@@ -1764,7 +1764,7 @@ let TabAreaObserver = (function(){
             break;
 
         case /^\/account\/registerkey(\/.*)?$/.test(path):
-            (new RegisterKeyPageClass());
+            new CRegisterKeyPage();
             return;
 
         case /^\/account(\/)?$/.test(path):

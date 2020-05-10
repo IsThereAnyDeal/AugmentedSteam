@@ -83,6 +83,7 @@
         "js/content/store/CAppPage.js",
         "js/content/store/CSubPage.js",
         "js/content/store/CBundlePage.js",
+        "js/content/store/CRegisterKeyPage.js",
         "js/content/store/common/FExtraLinks.js",
         "js/content/store/common/FITADPrices.js",
         "js/content/store/common/FDRMWarnings.js",
