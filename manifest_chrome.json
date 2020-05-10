@@ -77,6 +77,7 @@
         "js/content/store/CStorePage.js",
         "js/content/store/CAppPage.js",
         "js/content/store/CSubPage.js",
+        "js/content/store/CBundlePage.js",
         "js/content/store/FForceMP4.js",
         "js/content/store/FHDPlayer.js",
         "js/content/store/FReplaceDevPubLinks.js",

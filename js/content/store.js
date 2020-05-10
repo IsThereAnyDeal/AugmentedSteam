@@ -126,18 +126,6 @@ class Customizer {
 
 class StorePageClass {}
 
-class BundlePageClass extends StorePageClass {
-    constructor(url) {
-        super();
-
-        this.bundleid = GameId.getBundleid(url);
-
-        this.addDrmWarnings();
-        this.addPrices();
-        this.addLinks("bundle");
-    }
-}
-
 let RegisterKeyPageClass = (function(){
 
     function RegisterKeyPageClass() {
@@ -1772,7 +1760,7 @@ let TabAreaObserver = (function(){
             break;
 
         case /^\/bundle\/.*/.test(path):
-            (new BundlePageClass(window.location.host + path));
+            new CBundlePage(window.location.host + path);
             break;
 
         case /^\/account\/registerkey(\/.*)?$/.test(path):
