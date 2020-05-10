@@ -121,6 +121,7 @@
         "js/content/store/app/FOwnedActionsButtons.js",
         "js/content/store/app/FSupportInfo.js",
         "js/content/store/sub/FSavingsCheck.js",
+        "js/content/store/registerkey/FMultiProductKeys.js",
         "js/content/store.js"
       ],
       "css": [
