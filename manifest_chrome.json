@@ -80,6 +80,7 @@
         "js/content/store/CBundlePage.js",
         "js/content/store/CRegisterKeyPage.js",
         "js/content/store/CAccountPage.js",
+        "js/content/store/CFundsPage.js",
         "js/content/store/common/FExtraLinks.js",
         "js/content/store/common/FITADPrices.js",
         "js/content/store/common/FDRMWarnings.js",
@@ -119,6 +120,7 @@
         "js/content/store/sub/FSavingsCheck.js",
         "js/content/store/registerkey/FMultiProductKeys.js",
         "js/content/store/account/FTotalSpent.js",
+        "js/content/store/funds/FCustomGiftcardAndWallet.js",
         "js/content/store.js"
       ],
       "css": [
