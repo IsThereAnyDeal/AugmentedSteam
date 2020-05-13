@@ -147,6 +147,7 @@
         "js/content/store/wishlist/WishlistExporter.js",
         "js/content/store/storefront/CStoreFrontPage.js",
         "js/content/store/storefront/FHighlightStoreFront.js",
+        "js/content/store/storefront/FHomePageTab.js",
         "js/content/store.js"
       ],
       "css": [
