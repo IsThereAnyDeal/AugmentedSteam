@@ -77,6 +77,7 @@
         "js/content/ASFeature.js",
         "js/content/ASFeatureManager.js",
         "js/content/FeatureDependencyError.js",
+        "js/content/common/CHighlightable.js",
         "js/content/common/FMediaExpander.js",
         "js/content/common/FHighlightsTags.js",
         "js/content/store/CStorePage.js",

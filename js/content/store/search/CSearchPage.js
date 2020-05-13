@@ -1,9 +1,8 @@
-class CSearchPage extends ASContext {
+class CSearchPage extends CHighlightable {
 
     constructor() {
         super([
             FSearchFilters,
-            FHighlightsTags,
         ]);
 
         this.infiniScrollEnabled = document.querySelector(".search_pagination").style.display === "none";
