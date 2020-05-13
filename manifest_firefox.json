@@ -144,6 +144,7 @@
         "js/content/store/sale/CSalePage.js",
         "js/content/store/wishlist/CWishlistPage.js",
         "js/content/store/wishlist/FWishlistHighlights.js",
+        "js/content/store/wishlist/FWishlistITADPrices.js",
         "js/content/store.js"
       ],
       "css": [

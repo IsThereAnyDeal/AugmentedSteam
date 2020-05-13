@@ -3,6 +3,7 @@ class CWishlistPage extends CallbackContext {
     constructor() {
         super([
             FWishlistHighlights,
+            FWishlistITADPrices,
         ]);
 
         if (!User.isSignedIn) {
