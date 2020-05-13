@@ -71,6 +71,8 @@
         "js/content/ASContext.js",
         "js/content/ASFeature.js",
         "js/content/ASFeatureManager.js",
+        "js/content/CallbackContext.js",
+        "js/content/CallbackFeature.js",
         "js/content/FeatureDependencyError.js",
         "js/content/common/CHighlightable.js",
         "js/content/common/FMediaExpander.js",
@@ -135,6 +137,8 @@
         "js/content/store/stats/CStatsPage.js",
         "js/content/store/stats/FHighlightTopGames.js",
         "js/content/store/sale/CSalePage.js",
+        "js/content/store/wishlist/CWishlistPage.js",
+        "js/content/store/wishlist/FWishlistHighlights.js",
         "js/content/store.js"
       ],
       "css": [

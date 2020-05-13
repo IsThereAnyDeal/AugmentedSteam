@@ -133,45 +133,7 @@ let WishlistPageClass = (function(){
     let myWishlist;
 
     function WishlistPageClass() {
-
-        let that = this;
         userNotes = new UserNotes();
-        myWishlist = isMyWishlist();
-
-        let container = document.querySelector("#wishlist_ctn");
-        let timeout = null, lastRequest = null;
-        let delayedWork = new Set();
-        let observer = new MutationObserver(mutations => {
-            mutations.forEach(record => {
-                if (record.addedNodes.length === 1) {
-                    delayedWork.add(record.addedNodes[0]);
-                }
-            });
-            lastRequest = window.performance.now();
-            if (timeout === null) {
-                timeout = window.setTimeout(async function markWishlist() {
-                    if (window.performance.now() - lastRequest < 40) {
-                        timeout = window.setTimeout(markWishlist, 50);
-                        return;
-                    }
-                    timeout = null;
-                    let promises = [];
-                    for (let node of delayedWork) {
-                        delayedWork.delete(node);
-                        if (node.parentNode !== container) { // Valve detaches wishlist entries that aren't visible
-                            continue;
-                        }
-                        if (myWishlist && SyncedStorage.get("showusernotes")) {
-                            promises.push(that.addUserNote(node));
-                        }
-                        that.highlightApps(node);
-                        that.addPriceHandler(node);
-                    }
-                    await Promise.all(promises);
-                    window.dispatchEvent(new Event("resize"));
-                }, 50);
-            }
-        });
 
         if (SyncedStorage.get("showlowestprice_onwishlist")) {
 
@@ -207,7 +169,7 @@ let WishlistPageClass = (function(){
             });
         }
 
-        observer.observe(container, { 'childList': true, });
+        
 
         let wishlistLoaded = () => {
             this.computeStats();
@@ -230,27 +192,6 @@ let WishlistPageClass = (function(){
             .then(() => { wishlistLoaded(); });
         }
     }
-
-    function isMyWishlist() {
-        if (!User.isSignedIn) { return false; }
-
-        let myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/").replace(/\/$/, "");
-        let myWishlistUrlRegex = new RegExp("^" + myWishlistUrl + "([/#]|$)");
-        return myWishlistUrlRegex.test(window.location.href)
-            || window.location.href.includes("/profiles/" + User.steamId);
-    }
-
-    WishlistPageClass.prototype.highlightApps = function(node) {
-        if (!User.isSignedIn) { return; }
-
-        let options = {};
-        if (myWishlist) {
-            options.wishlisted = false;
-            options.waitlisted = false;
-        }
-
-        return Highlights.highlightAndTag([node], false, options);
-    };
 
     WishlistPageClass.prototype.computeStats = async function() {
         if (!SyncedStorage.get("showwishliststats")) { return; }
@@ -908,7 +849,7 @@ let TabAreaObserver = (function(){
             break;
 
         case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
-            (new WishlistPageClass());
+            new CWishlistPage();
             break;
 
         // Storefront-front only
