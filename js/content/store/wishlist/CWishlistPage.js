@@ -4,6 +4,7 @@ class CWishlistPage extends CallbackContext {
         super([
             FWishlistHighlights,
             FWishlistITADPrices,
+            FWishlistUserNotes,
         ]);
 
         if (!User.isSignedIn) {

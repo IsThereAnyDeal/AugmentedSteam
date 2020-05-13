@@ -405,44 +405,13 @@ let WishlistPageClass = (function(){
     };
 
     WishlistPageClass.prototype.addUserNote = async function(node) {
-        if (node.classList.contains("esi-has-note")) { return; }
-
-        let appid = Number(node.dataset.appId);
-        let noteText;
-        let cssClass;
-        if (await userNotes.exists(appid)) {
-            noteText = `"${await userNotes.get(appid)}"`;
-            cssClass = "esi-user-note";
-        } else {
-            noteText = Localization.str.user_note.add;
-            cssClass = "esi-empty-note";
-        }
-
-        HTML.afterEnd(node.querySelector(".mid_container"),
-            `<div class="esi-note ${cssClass}">${noteText}</div>`);
-        node.classList.add("esi-has-note");
+        
     };
 
     WishlistPageClass.prototype.addUserNotesHandlers = function() {
         if (!myWishlist) { return; }
 
-        let stateHandler = function(node, active) {
-            if (active) {
-                node.classList.remove("esi-empty-note");
-                node.classList.add("esi-user-note");
-            } else {
-                node.classList.remove("esi-user-note");
-                node.classList.add("esi-empty-note");
-            }
-        };
-
-        document.addEventListener("click", e => {
-            if (!e.target.classList.contains("esi-note")) { return; }
-
-            let row = e.target.closest(".wishlist_row");
-            let appid = Number(row.dataset.appId);
-            userNotes.showModalDialog(row.querySelector("a.title").textContent.trim(), appid, `.wishlist_row[data-app-id="${appid}"] div.esi-note`, stateHandler);
-        });
+        
     };
 
     return WishlistPageClass;
