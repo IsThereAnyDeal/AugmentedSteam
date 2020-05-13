@@ -904,7 +904,7 @@ let TabAreaObserver = (function(){
             break;
 
         case /^\/sale\/.*/.test(path):
-            (new StorePageClass()).showRegionalPricing("sale");
+            new CSalePage();
             break;
 
         case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):

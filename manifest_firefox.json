@@ -138,6 +138,7 @@
         "js/content/store/search/ReviewsScoreSearchFilter.js",
         "js/content/store/stats/CStatsPage.js",
         "js/content/store/stats/FHighlightTopGames.js",
+        "js/content/store/sale/CSalePage.js",
         "js/content/store.js"
       ],
       "css": [

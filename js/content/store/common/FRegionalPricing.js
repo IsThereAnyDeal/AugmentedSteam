@@ -17,6 +17,8 @@ class FRegionalPricing extends ASFeature {
 
         if (this.context instanceof CAppPage) {
             type = "app";
+        } else if (this.context instanceof CSalePage) {
+            type = "sale";
         }
 
         for (let subid of this.context.getAllSubids()) {
