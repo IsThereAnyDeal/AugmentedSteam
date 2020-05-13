@@ -1,13 +1,13 @@
 class CallbackContext extends ASContext {
 
-    callbacks = [];
+    _callbacks = [];
 
     registerCallback(fn) {
-        this.callbacks.push(fn);
+        this._callbacks.push(fn);
     }
 
     triggerCallbacks(...params) {
-        for (let callback of this.callbacks) {
+        for (let callback of this._callbacks) {
             callback(...params);
         }
     }

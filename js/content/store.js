@@ -128,67 +128,9 @@ class StorePageClass {}
 
 let WishlistPageClass = (function(){
 
-    let userNotes;
     let myWishlist;
 
-    function WishlistPageClass() {
-        userNotes = new UserNotes();        
-
-        let wishlistLoaded = () => {
-            this.computeStats();
-            this.addExportWishlistButton();
-            this.addEmptyWishlistButton();
-            this.addUserNotesHandlers();
-        };
-
-        if (document.querySelector("#throbber").style.display === "none") {
-            wishlistLoaded();
-        } else {
-            ExtensionLayer.runInPageContext(() => new Promise(resolve => {
-                $J(document).ajaxSuccess((e, xhr, settings) => {
-                    let url = new URL(settings.url);
-                    if (url.origin + url.pathname === `${g_strWishlistBaseURL}wishlistdata/` && g_Wishlist.nPagesToLoad === g_Wishlist.nPagesLoaded) {
-                        resolve();
-                    }
-                });
-            }), null, "wishlistLoaded")
-            .then(() => { wishlistLoaded(); });
-        }
-    }
-
-    WishlistPageClass.prototype.computeStats = async function() {
-        if (!SyncedStorage.get("showwishliststats")) { return; }
-        if (document.getElementById("nothing_to_see_here").style.display !== "none") { return; }
-
-        let appInfo = await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, "appInfo");
-
-        let totalPrice = 0;
-        let totalCount = 0;
-        let totalOnSale = 0;
-        let totalNoPrice = 0;
-
-        for (let data of Object.values(appInfo)) {
-            if (data.subs.length > 0) {
-                totalPrice += data.subs[0].price;
-
-                if (data.subs[0].discount_pct > 0) {
-                    totalOnSale++;
-                }
-            } else {
-                totalNoPrice++;
-            }
-            totalCount++;
-        }
-        totalPrice = new Price(totalPrice / 100);
-
-        HTML.beforeBegin("#wishlist_ctn",
-            `<div id="esi-wishlist-chart-content">
-                <div class="esi-wishlist-stat"><span class="num">${totalPrice}</span>${Localization.str.wl.total_price}</div>
-                <div class="esi-wishlist-stat"><span class="num">${totalCount}</span>${Localization.str.wl.in_wishlist}</div>
-                <div class="esi-wishlist-stat"><span class="num">${totalOnSale}</span>${Localization.str.wl.on_sale}</div>
-                <div class="esi-wishlist-stat"><span class="num">${totalNoPrice}</span>${Localization.str.wl.no_price}</div>
-            </div>`);
-    }
+    function WishlistPageClass() {}
 
     WishlistPageClass.prototype.addEmptyWishlistButton = function() {
         if (!myWishlist || !SyncedStorage.get("showemptywishlist")) { return; }
@@ -402,16 +344,6 @@ let WishlistPageClass = (function(){
                 await ExtensionLayer.runInPageContext(() => g_Wishlist.rgAllApps, null, "apps")
             );
         });
-    };
-
-    WishlistPageClass.prototype.addUserNote = async function(node) {
-        
-    };
-
-    WishlistPageClass.prototype.addUserNotesHandlers = function() {
-        if (!myWishlist) { return; }
-
-        
     };
 
     return WishlistPageClass;

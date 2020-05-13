@@ -5,6 +5,7 @@ class CWishlistPage extends CallbackContext {
             FWishlistHighlights,
             FWishlistITADPrices,
             FWishlistUserNotes,
+            FWishlistStats,
         ]);
 
         if (!User.isSignedIn) {
@@ -15,7 +16,24 @@ class CWishlistPage extends CallbackContext {
             this.myWishlist = myWishlistUrlRegex.test(window.location.href) || window.location.href.includes("/profiles/" + User.steamId);
         }
 
-        this.applyFeatures();
+        this._registerObserver();
+
+        if (document.querySelector("#throbber").style.display === "none") {
+            this.applyFeatures();
+        } else {
+            ExtensionLayer.runInPageContext(() => new Promise(resolve => {
+                $J(document).ajaxSuccess((e, xhr, settings) => {
+                    let url = new URL(settings.url);
+                    if (url.origin + url.pathname === `${g_strWishlistBaseURL}wishlistdata/` && g_Wishlist.nPagesToLoad === g_Wishlist.nPagesLoaded) {
+                        resolve();
+                    }
+                });
+            }), null, true)
+            .then(() => { this.applyFeatures(); });
+        }        
+    }
+
+    _registerObserver() {
 
         let container = document.getElementById("wishlist_ctn");
         let timeout = null, lastRequest = null;
@@ -42,6 +60,11 @@ class CWishlistPage extends CallbackContext {
                     }
 
                     timeout = null;
+
+                    if (that._callbacks.length === 0) {
+                        // Wait until the callbacks have registered
+                        return;
+                    }
 
                     // Valve detaches wishlist entries that aren't visible
                     let arg = Array.from(delayedWork).filter(node => node.parentNode === container);
