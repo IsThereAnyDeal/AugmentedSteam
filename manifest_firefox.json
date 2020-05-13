@@ -147,7 +147,9 @@
         "js/content/store/wishlist/FWishlistITADPrices.js",
         "js/content/store/wishlist/FWishlistUserNotes.js",
         "js/content/store/wishlist/FWishlistStats.js",
+        "js/content/store/wishlist/FExportWishlist.js",
         "js/content/store/wishlist/FEmptyWishlist.js",
+        "js/content/store/wishlist/WishlistExporter.js",
         "js/content/store.js"
       ],
       "css": [

@@ -47,3 +47,5 @@ class FEmptyWishlist extends ASFeature {
         });
     }
 }
+
+FEmptyWishlist.deps = [FExportWishlist];

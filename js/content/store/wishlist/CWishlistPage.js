@@ -7,6 +7,7 @@ class CWishlistPage extends CallbackContext {
             FWishlistUserNotes,
             FWishlistStats,
             FEmptyWishlist,
+            FExportWishlist,
         ]);
 
         if (!User.isSignedIn) {
