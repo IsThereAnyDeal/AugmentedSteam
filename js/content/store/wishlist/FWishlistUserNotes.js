@@ -19,13 +19,8 @@ class FWishlistUserNotes extends CallbackFeature {
                 appid,
                 `.wishlist_row[data-app-id="${appid}"] div.esi-note`,
                 (node, active) => {
-                    if (active) {
-                        node.classList.remove("esi-empty-note");
-                        node.classList.add("esi-user-note");
-                    } else {
-                        node.classList.remove("esi-user-note");
-                        node.classList.add("esi-empty-note");
-                    }
+                    node.classList.toggle("esi-empty-note", !active);
+                    node.classList.toggle("esi-user-note", active);
                 }
             );
         });
