@@ -132,54 +132,6 @@ let WishlistPageClass = (function(){
 
     function WishlistPageClass() {}
 
-    WishlistPageClass.prototype.addEmptyWishlistButton = function() {
-        if (!myWishlist || !SyncedStorage.get("showemptywishlist")) { return; }
-
-        HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_empty_wishlist">${Localization.str.empty_wishlist.title}</div>`);
-
-        document.querySelector("#es_empty_wishlist").addEventListener("click", () => {
-            emptyWishlist();
-        });
-    };
-
-    async function emptyWishlist() {
-
-        function removeApp(appid) {
-
-            let formData = new FormData();
-            formData.append("sessionid", User.getSessionId());
-            formData.append("appid", appid);
-
-            let url = `https://store.steampowered.com/wishlist/profiles/${User.steamId}/remove/`;
-            return RequestData.post(url, formData);
-        }
-
-        await ExtensionLayer.runInPageContext(emptyWishlist => {
-            let prompt = ShowConfirmDialog(emptyWishlist.title, emptyWishlist.confirm);
-
-            return new Promise(resolve => {
-                prompt.done(result => {
-                    if (result === "OK") {
-                        ShowBlockingWaitDialog(emptyWishlist.title, emptyWishlist.removing.replace("__cur__", 1).replace("__total__", g_rgWishlistData.length));
-                        resolve();
-                    }
-                });
-            });
-        }, [ Localization.str.empty_wishlist ], "emptyWishlist");
-
-        let wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
-        if (!wishlistData) { return; }
-
-        let cur = 1;
-        let textNode = document.querySelector(".waiting_dialog_throbber").nextSibling;
-        for (let { appid } of wishlistData) {
-            textNode.textContent = Localization.str.empty_wishlist.removing.replace("__cur__", cur++).replace("__total__", wishlistData.length);
-            await removeApp(appid);
-        }
-        DynamicStore.clear();
-        location.reload();
-    }
-
     class WishlistExporter {
 
         constructor(appInfo, apps) {
