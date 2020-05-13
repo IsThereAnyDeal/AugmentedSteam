@@ -126,20 +126,6 @@ class Customizer {
 
 class StorePageClass {}
 
-let StatsPageClass = (function(){
-
-    function StatsPageClass() {
-        this.highlightTopGames();
-    }
-
-    StatsPageClass.prototype.highlightTopGames = function() {
-        return Highlights.highlightAndTag(document.querySelectorAll(".gameLink"), false);
-    }
-
-    return StatsPageClass;
-})();
-
-
 let WishlistPageClass = (function(){
 
     let cachedPrices = {};
@@ -914,7 +900,7 @@ let TabAreaObserver = (function(){
             break;
 
         case /^\/stats(\/.*)?$/.test(path):
-            (new StatsPageClass());
+            new CStatsPage();
             break;
 
         case /^\/sale\/.*/.test(path):

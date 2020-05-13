@@ -87,6 +87,7 @@
         "js/content/store/CAccountPage.js",
         "js/content/store/CFundsPage.js",
         "js/content/store/CSearchPage.js",
+        "js/content/store/CStatsPage.js",
         "js/content/store/common/FExtraLinks.js",
         "js/content/store/common/FITADPrices.js",
         "js/content/store/common/FDRMWarnings.js",
@@ -136,6 +137,7 @@
         "js/content/store/search/NegativeSearchFilter.js",
         "js/content/store/search/ReviewsCountSearchFilter.js",
         "js/content/store/search/ReviewsScoreSearchFilter.js",
+        "js/content/store/stats/FHighlightTopGames.js",
         "js/content/store.js"
       ],
       "css": [
