@@ -4,6 +4,7 @@ class CStoreFrontPage extends CHighlightable {
         super([
             FHighlightStoreFront,
             FHomePageTab,
+            FCustomizer,
         ]);
 
         this.applyFeatures();
