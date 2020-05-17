@@ -1450,16 +1450,6 @@ let AugmentedSteam = (function() {
         }
     };
 
-    self.alternateLinuxIcon = function() {
-        if (!SyncedStorage.get("show_alternative_linux_icon")) { return; }
-
-        let url = ExtensionResources.getURL("img/alternative_linux_icon.png");
-        let style = document.createElement("style");
-        style.textContent = `span.platform_img.linux { background-image: url("${url}"); }`;
-        document.head.appendChild(style);
-        style = null;
-    };
-
     // Hide Trademark and Copyright symbols in game titles for Community pages
     self.hideTrademarkSymbol = function(community) {
         if (!SyncedStorage.get("hidetmsymbols")) { return; }

@@ -330,7 +330,6 @@ let TabAreaObserver = (function(){
     }
 
     // common for store pages
-    AugmentedSteam.alternateLinuxIcon();
     AugmentedSteam.hideTrademarkSymbol(false);
     TabAreaObserver.observeChanges();
 
