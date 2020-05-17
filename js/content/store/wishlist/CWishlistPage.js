@@ -8,6 +8,7 @@ class CWishlistPage extends CallbackContext {
             FWishlistStats,
             FEmptyWishlist,
             FExportWishlist,
+            FAlternativeLinuxIcon,
         ]);
 
         if (!User.isSignedIn) {
