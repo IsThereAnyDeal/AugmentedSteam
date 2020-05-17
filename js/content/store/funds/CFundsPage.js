@@ -1,4 +1,4 @@
-class CFundsPage extends ASContext {
+class CFundsPage extends CStoreBase {
 
     constructor() {
         super([

@@ -88,6 +88,7 @@
         "js/content/store/common/FCustomizer.js",
         "js/content/store/common/FAlternativeLinuxIcon.js",
         "js/content/store/common/CStoreBase.js",
+        "js/content/store/common/CStoreBaseCallback.js",
         "js/content/store/common/CStorePage.js",
         "js/content/store/app/CAppPage.js",
         "js/content/store/app/FWaitlistDropdown.js",

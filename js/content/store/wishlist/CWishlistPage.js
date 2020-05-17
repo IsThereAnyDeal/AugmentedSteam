@@ -1,4 +1,4 @@
-class CWishlistPage extends CallbackContext {
+class CWishlistPage extends CStoreBaseCallback {
 
     constructor() {
         super([
