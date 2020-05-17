@@ -1,4 +1,4 @@
-class CStorePage extends CHighlightable {
+class CStorePage extends CStoreBase {
 
     getAllSubids() {
         let result = [];

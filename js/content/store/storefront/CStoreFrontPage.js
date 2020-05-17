@@ -1,4 +1,4 @@
-class CStoreFrontPage extends CHighlightable {
+class CStoreFrontPage extends CStoreBase {
 
     constructor() {
         super([
