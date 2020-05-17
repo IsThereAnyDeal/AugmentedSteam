@@ -81,6 +81,7 @@
         "js/content/FeatureDependencyError.js",
         "js/content/common/FMediaExpander.js",
         "js/content/common/FHighlightsTags.js",
+        "js/content/common/FHideTrademarks.js",
         "js/content/store/common/FExtraLinks.js",
         "js/content/store/common/FITADPrices.js",
         "js/content/store/common/FDRMWarnings.js",

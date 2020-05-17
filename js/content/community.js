@@ -4680,5 +4680,5 @@ let EditGuidePageClass = (function(){
             break;
     }
 
-    AugmentedSteam.hideTrademarkSymbol(true);
+    //AugmentedSteam.hideTrademarkSymbol(true);
 })();

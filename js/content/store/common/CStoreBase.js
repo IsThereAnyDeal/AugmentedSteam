@@ -5,6 +5,7 @@ class CStoreBase extends ASContext {
         features.push(
             FHighlightsTags,
             FAlternativeLinuxIcon,
+            FHideTrademarks,
         );
 
         super(features);
