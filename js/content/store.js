@@ -248,25 +248,6 @@ class UserNotes {
     }
 }
 
-let TabAreaObserver = (function(){
-    let self = {};
-
-    self.observeChanges = function() {
-
-        let tabAreaNodes = document.querySelectorAll(".tag_browse_ctn, .tabarea, .browse_ctn_background");
-        if (!tabAreaNodes) { return; }
-
-        let observer = new MutationObserver(() => {
-            Highlights.startHighlightsAndTags();
-            EarlyAccess.showEarlyAccess();
-        });
-
-        tabAreaNodes.forEach(tabAreaNode => observer.observe(tabAreaNode, {childList: true, subtree: true}));
-    };
-
-    return self;
-})();
-
 (async function(){
     if (!document.getElementById("global_header")) { return; }
 
@@ -327,9 +308,8 @@ let TabAreaObserver = (function(){
         case /^\/$/.test(path):
             new CStoreFrontPage();
             break;
+        
+        default:
+            new CStoreBase().applyFeatures();
     }
-
-    // common for store pages
-    TabAreaObserver.observeChanges();
-
 })();
