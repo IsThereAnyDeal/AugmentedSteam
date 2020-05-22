@@ -1,5 +1,3 @@
-import DOMPurify from "dompurify/dist/purify.es";
-
 export const Info = {
     "version": browser.runtime.getManifest().version,
     "db_version": 3,
@@ -411,7 +409,7 @@ export class GameId {
 }
 
 // todo use https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage
-class LocalStorage {
+export class LocalStorage {
     static get(key, defaultValue) {
         let item = localStorage.getItem(key);
         if (!item) return defaultValue;

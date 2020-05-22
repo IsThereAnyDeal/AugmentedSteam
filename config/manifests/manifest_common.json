@@ -104,6 +104,8 @@
     "background": {
       "scripts": [
         "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/idb/with-async-ittr.js",
+        "lib/DOMPurify/purify.js",
         "background.js"
       ],
       "persistent": false

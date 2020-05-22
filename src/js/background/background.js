@@ -1,5 +1,5 @@
 import Config from "../config";
-import { Timestamp } from "../core";
+import { ExtensionResources, GameId, HTMLParser, Info, LocalStorage, LoginError, ServerOutageError, SyncedStorage, Timestamp } from "../core";
 import { Localization } from "../language";
 
 class CacheStorage {
