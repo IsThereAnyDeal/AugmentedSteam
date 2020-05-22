@@ -1,3 +1,5 @@
+import { BackgroundBase, ErrorParser, Info, SyncedStorage } from "../core";
+
 /**
  * Common functions that may be used on any pages
  */
@@ -221,7 +223,7 @@ class ProgressBar {
 ProgressBar._progress = null;
 ProgressBar._failedRequests = 0;
 
-class Background extends BackgroundBase {
+export class Background extends BackgroundBase {
     static async message(message) {
         ProgressBar.startRequest();
 
@@ -548,7 +550,7 @@ let RequestData = (function(){
 })();
 
 
-let User = (function(){
+export let User = (function(){
 
     let self = {};
 
@@ -783,7 +785,7 @@ let CurrencyRegistry = (function() {
 })();
 
 
-let Currency = (function() {
+export let Currency = (function() {
 
     let self = {};
 
@@ -2051,7 +2053,7 @@ let AgeCheck = (function(){
     return self;
 })();
 
-let Common = (function(){
+export let Common = (function(){
 
     let self = {};
 

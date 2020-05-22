@@ -1,4 +1,9 @@
+import Config from "../config";
+import { Timestamp } from "../core";
+import { Localization } from "../language";
+
 class CacheStorage {
+
     static isExpired (timestamp, ttl) {
         if (!timestamp) return true;
         if (typeof ttl != 'number' || ttl < 0) ttl = 0;

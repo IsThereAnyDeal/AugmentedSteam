@@ -1,3 +1,7 @@
+import { SyncedStorage } from "../core.js";
+import { User, Currency, Common } from "./common";
+import { Localization } from "../language";
+
 (async function(){
     if (!document.getElementById("global_header")) { return; }
 

@@ -1,4 +1,6 @@
-const Info = {
+import DOMPurify from "dompurify/dist/purify.es";
+
+export const Info = {
     "version": browser.runtime.getManifest().version,
     "db_version": 3,
 };
@@ -25,7 +27,7 @@ if (typeof Promise.prototype.finally === 'undefined') {
     });
 }
 
-class BackgroundBase {
+export class BackgroundBase {
     static message(message) {
         return browser.runtime.sendMessage(message);
     }
@@ -37,7 +39,7 @@ class BackgroundBase {
     }
 }
 
-class Version {
+export class Version {
     constructor(major, minor=0, patch=0) {
         console.assert([major, minor, patch].filter(Number.isInteger).length === 3, `${major}.${minor}.${patch} must be integers`);
         this.major = major;
@@ -121,7 +123,7 @@ class Version {
     }
 }
 
-class Downloader {
+export class Downloader {
 
     static download(content, filename) {
         let a = document.createElement("a");
@@ -133,7 +135,7 @@ class Downloader {
     }
 }
 
-class UpdateHandler {
+export class UpdateHandler {
 
     static checkVersion(onUpdate) {
         let lastVersion = Version.fromString(SyncedStorage.get("version"));
@@ -313,7 +315,7 @@ class UpdateHandler {
     }
 }
 
-class GameId {
+export class GameId {
     static parseId(id) {
         if (!id) { return null; }
         
@@ -446,7 +448,7 @@ class LocalStorage {
 }
 
 
-class SyncedStorage {
+export class SyncedStorage {
     /**
      * browser.storage.sync limits
      * QUOTA_BYTES = 102400 // 100KB
@@ -743,7 +745,7 @@ SyncedStorage.defaults = {
 };
 
 
-class ExtensionResources {
+export class ExtensionResources {
     static getURL(pathname) {
         return browser.runtime.getURL(pathname);
     }
@@ -808,7 +810,7 @@ class ExtensionResources {
     DOMPurify.setConfig(purifyConfig);
 })();
 
-class HTML {
+export class HTML {
 
     static escape(str) {
         // @see https://stackoverflow.com/a/4835406
@@ -920,7 +922,7 @@ class HTML {
     }
 }
 
-class HTMLParser {
+export class HTMLParser {
     static clearSpecialSymbols(string) {
         return string.replace(/[\u00AE\u00A9\u2122]/g, "");
     }
@@ -970,7 +972,7 @@ class HTMLParser {
     };
 }
 
-class StringUtils {
+export class StringUtils {
 
     // https://stackoverflow.com/a/6969486/7162651
     static escapeRegExp(str) {
@@ -984,7 +986,7 @@ class StringUtils {
  * {@link https://github.com/mozilla/webextension-polyfill/blob/87bdfa844da054d189ac28423cf01b64ebfe1e5b/src/browser-polyfill.js#L418 cut down to only send the message of the error},
  * losing information about the type.
  */
-class ErrorParser {
+export class ErrorParser {
 
     /**
      * Takes an Error string and parses it by splitting it into name and message
@@ -998,27 +1000,27 @@ class ErrorParser {
     }
 }
 
-class LoginError extends Error {
+export class LoginError extends Error {
     constructor(type) {
         super(type);
         this.name = "LoginError";
     }
 }
 
-class ServerOutageError extends Error {
+export class ServerOutageError extends Error {
     constructor(msg) {
         super(msg);
         this.name = "ServerOutageError";
     }
 }
 
-function sleep(duration) {
+export function sleep(duration) {
     return new Promise(function(resolve, reject) {
         setTimeout(function() { resolve(); }, duration);
     });
 }
 
-class Timestamp {
+export class Timestamp {
 
     static now() {
         return Math.trunc(Date.now() / 1000);
@@ -1026,7 +1028,7 @@ class Timestamp {
 }
 
 
-class Debug {
+export class Debug {
 
     static async executionTime(fn, label) {
         let start = performance.now();

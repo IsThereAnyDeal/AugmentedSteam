@@ -1,6 +1,6 @@
 // This is the basic configuration for the Augmented Steam extension
 
-let Config = {
+export default {
 
     ApiServerHost: "https://esapi.isthereanydeal.com",
     CdnHost: "https://es.isthereanydeal.com",

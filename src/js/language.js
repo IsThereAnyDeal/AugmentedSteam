@@ -1,5 +1,7 @@
+import { SyncedStorage, ExtensionResources } from "./core";
+import { Background } from "./content/common";
 
-class Language {
+export class Language {
     static getCurrentSteamLanguage() {
         if (this._currentSteamLanguage != null) {
             return this._currentSteamLanguage;
@@ -65,8 +67,7 @@ Language.languages = {
     "vietnamese": "vi",
 };
 
-  
-class Localization {
+export class Localization {
     static loadLocalization(code) {
         return ExtensionResources.getJSON(`/localization/${code}/strings.json`);
     }

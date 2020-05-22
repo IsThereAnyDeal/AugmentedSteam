@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "build": "node config/scripts/build.cjs"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^6.0.1",
+    "merge-jsons-webpack-plugin": "^1.0.21",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2"
+  }
+}

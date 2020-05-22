@@ -1,6 +1,6 @@
-class CallbackContext extends ASContext {
+export class CallbackContext extends ASContext {
 
-    _callbacks = [];
+    //_callbacks = [];
 
     registerCallback(fn) {
         this._callbacks.push(fn);
