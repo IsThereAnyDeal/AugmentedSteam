@@ -1,5 +1,4 @@
-import { SyncedStorage, ExtensionResources } from "./core";
-import { Background } from "./content/common";
+import { SyncedStorage, ExtensionResources, BackgroundBase } from "./core";
 
 export class Language {
     static getCurrentSteamLanguage() {
@@ -83,7 +82,7 @@ export class Localization {
             if (currentSteamLanguage !== storedSteamLanguage) {
                 storedSteamLanguage = currentSteamLanguage;
                 SyncedStorage.set("language", currentSteamLanguage);
-                Background.action("clearpurchases");
+                BackgroundBase.action("clearpurchases");
             }
         }
 
