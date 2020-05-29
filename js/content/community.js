@@ -462,6 +462,11 @@ let ProfileHomePageClass = (function(){
 
         let links = [
             {
+                "id": "gamedb",
+                "link": `https://gamedb.online/players/${steamId}`,
+                "name": "Game DB",
+            },
+            {
                 "id": "steamrep",
                 "link": `https://steamrep.com/profiles/${steamId}`,
                 "name": "SteamRep",
@@ -1036,6 +1041,11 @@ let GroupHomePageClass = (function(){
         }
 
         let links = [
+            {
+                "id": "gamedb",
+                "link": `https://gamedb.online/groups/${this.groupId}`,
+                "name": "Game DB",
+            },
             {
                 "id": "steamgifts",
                 "link": `https://www.steamgifts.com/go/group/${this.groupId}`,

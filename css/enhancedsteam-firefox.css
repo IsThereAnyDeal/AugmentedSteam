@@ -28,6 +28,10 @@
   background-image: url("moz-extension://__MSG_@@extension_id__/img/bartervg.png");
 }
 
+.gamedb_ico i {
+  background-image: url("moz-extension://__MSG_@@extension_id__/img/gamedb.png");
+}
+
 .youtube_btn i {
   background-image: url("moz-extension://__MSG_@@extension_id__/img/icon-youtube.png");
 }
@@ -97,6 +101,9 @@
 }
 .es_sites_icons.es_bartervg_icon:before {
 	background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/bartervg.png");
+}
+.es_sites_icons.es_gamedb_icon:before {
+	background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/gamedb.png");
 }
 .es_sites_icons.es_astats_icon:before {
   background-image: url("moz-extension://__MSG_@@extension_id__/img/ico/achievementstats.png");
