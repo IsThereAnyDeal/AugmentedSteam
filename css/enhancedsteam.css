@@ -3684,3 +3684,14 @@ label[for="show_common_games"] {
   display: block;
   margin: auto;
 }
+
+/* This fixes group sidebar links */
+.profile_count_link {
+  margin-bottom: 4px;
+  min-height: 29px;
+}
+
+.profile_count_link:last-of-type {
+  margin-bottom: 0;
+  min-height: auto;
+}
