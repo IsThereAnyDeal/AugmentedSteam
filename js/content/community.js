@@ -4136,6 +4136,13 @@ let CommunityAppPageClass = (function(){
                 "SteamDB"));
         }
 
+        if (SyncedStorage.get("showgamedb")) {
+            HTML.beforeEnd(node, makeHeaderLink(
+                "gamedb_ico",
+                `https://gamedb.online/games/${this.appid}`,
+                "Game DB"));
+        }
+
         if (SyncedStorage.get("showitadlinks")) {
             HTML.beforeEnd(node, makeHeaderLink(
                 "itad_ico",

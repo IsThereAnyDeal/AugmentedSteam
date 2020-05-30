@@ -347,6 +347,14 @@ class StorePageClass {
                     Localization.str.view_on_website.replace("__website__", "Barter.vg")));
         }
 
+        if (SyncedStorage.get("showgamedb")) {
+            HTML.afterBegin(node,
+                this.getRightColLinkHtml(
+                    "gamedb_ico",
+                    `https://gamedb.online/${type}s/${gameid}/`,
+                    Localization.str.view_on_website.replace("__website__", "Game DB")));
+        }
+
         if (SyncedStorage.get("showsteamdb")) {
             HTML.afterBegin(node,
                 this.getRightColLinkHtml(
