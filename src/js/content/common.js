@@ -1,9 +1,10 @@
-import { BackgroundBase, ErrorParser, Info, SyncedStorage } from "../core";
+import { BackgroundBase, ErrorParser, ExtensionResources, GameId, HTML, HTMLParser, Info, LocalStorage, StringUtils, SyncedStorage, UpdateHandler } from "../core";
+import { Language, Localization } from "../language";
 
 /**
  * Common functions that may be used on any pages
  */
-class ITAD {
+export class ITAD {
     static async create() {
         if (!await Background.action("itad.isconnected")) { return; }
 
@@ -252,7 +253,7 @@ export class Background extends BackgroundBase {
     }
 }
 
-class HTTPError extends Error {
+export class HTTPError extends Error {
   constructor(code, message) {
     super(message);
     this.code = code;
@@ -275,70 +276,7 @@ function unhandledrejection(ev) {
 
 window.addEventListener('unhandledrejection', unhandledrejection);
 
-let TimeHelper = (function(){
-
-    let self = {};
-
-    self.isExpired = function(updateTime, expiration) {
-        if (!updateTime) { return true; }
-
-        let expireTime = Math.trunc(Date.now() / 1000) - expiration;
-        return updateTime < expireTime;
-    };
-
-    self.timestamp = function() {
-        return Math.trunc(Date.now() / 1000);
-    };
-
-    return self;
-})();
-
-
-let DateParser = (function(){
-
-    let _locale;
-    let _monthShortNames;
-    let _dateRegex;
-    let _timeRegex;
-
-    function DateParser(locale) {
-        _locale = locale;
-
-        switch(locale) {
-            case "en":
-                _monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                _dateRegex = new RegExp("(\\d+)\\s+("+_monthShortNames.join("|")+")(?:,\\s+(\\d+))?");
-                _timeRegex = /(\d+):(\d+)([ap]m)/;
-                break;
-            // FIXME(tomas.fedor) other languages
-        }
-    }
-
-    DateParser.prototype.parseUnlockTime = function(datetime) {
-
-        switch(_locale) {
-            case "en":
-                let date = datetime.match(_dateRegex);
-                let time = datetime.match(_timeRegex);
-                if (!date || !time) { return 0; }
-
-                let year = date[3] ? parseInt(date[3]) : (new Date()).getFullYear();
-                let month = _monthShortNames.indexOf(date[2]);
-                let day = parseInt(date[1]);
-
-                let hour = time[3] === "am" ? parseInt(time[1]) : parseInt(time[1])+12;
-                let minutes = time[2];
-
-                return (new Date(year, month, day, hour, minutes)).getTime();
-        }
-        return 0;
-    };
-
-    return DateParser;
-})();
-
-
-let ExtensionLayer = (function() {
+export let ExtensionLayer = (function() {
 
     let msgCounter = 0;
 
@@ -367,7 +305,7 @@ let ExtensionLayer = (function() {
     return self;
 })();
 
-let DOMHelper = (function(){
+export let DOMHelper = (function(){
 
     let self = {};
 
@@ -418,7 +356,7 @@ let DOMHelper = (function(){
  * This class is meant to simplify communication between extension context and page context.
  * Basically, we have wrapped postMessage API in this class.
  */
-class Messenger {
+export class Messenger {
     static postMessage(msgID, info) {
         window.postMessage({
             type: `es_${msgID}`,
@@ -458,7 +396,7 @@ class Messenger {
     DOMHelper.insertScript({ content: Messenger.toString() });
 })();
 
-class CookieStorage {
+export class CookieStorage {
     static get(name, defaultValue) {
         if (CookieStorage.cache.size === 0) {
             CookieStorage.init();
@@ -499,7 +437,7 @@ class CookieStorage {
 }
 CookieStorage.cache = new Map();
 
-let RequestData = (function(){
+export let RequestData = (function(){
     let self = {};
     let fetchFn = (typeof content !== 'undefined' && content && content.fetch) || fetch;
 
@@ -633,7 +571,7 @@ export let User = (function(){
     return self;
 })();
 
-let CurrencyRegistry = (function() {
+export let CurrencyRegistry = (function() {
     //   { "id": 1, "abbr": "USD", "symbol": "$", "hint": "United States Dollars", "multiplier": 100, "unit": 1, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": "$", "thousand": ",", "decimal": ".", "right": false } },
     class SteamCurrency {
         constructor({
@@ -898,7 +836,7 @@ export let Currency = (function() {
     return self;
 })();
 
-let Price = (function() {
+export let Price = (function() {
     function Price(value = 0, currency = Currency.storeCurrency) {
         this.value = value;
         this.currency = currency;
@@ -946,7 +884,7 @@ let Price = (function() {
 })();
 
 
-let SteamId = (function(){
+export let SteamId = (function(){
 
     let self = {};
     let _steamId = null;
@@ -1075,7 +1013,7 @@ let SteamId = (function(){
 
 
 
-let Viewport = (function(){
+export let Viewport = (function(){
 
     let self = {};
 
@@ -1098,7 +1036,7 @@ let Viewport = (function(){
     return self;
 })();
 
-let Stats = (function() {
+export let Stats = (function() {
 
     let self = {};
 
@@ -1481,7 +1419,7 @@ let AugmentedSteam = (function() {
     return self;
 })();
 
-let EarlyAccess = (function(){
+export let EarlyAccess = (function(){
 
     let self = {};
 
@@ -1619,7 +1557,7 @@ let EarlyAccess = (function(){
 })();
 
 
-let Inventory = (function(){
+export let Inventory = (function(){
 
     let self = {};
 
@@ -1681,7 +1619,7 @@ let Inventory = (function(){
     return self;
 })();
 
-let DynamicStore = (function(){
+export let DynamicStore = (function(){
 
     /*
     * FIXME
@@ -1765,7 +1703,7 @@ let DynamicStore = (function(){
     return self;
 })();
 
-let Prices = (function(){
+export let Prices = (function(){
 
     function Prices() {
         this.appids = [];
@@ -2025,7 +1963,7 @@ let Prices = (function(){
     return Prices;
 })();
 
-let AgeCheck = (function(){
+export let AgeCheck = (function(){
 
     let self = {};
 
@@ -2094,7 +2032,7 @@ export let Common = (function(){
     return self;
 })();
 
-let Clipboard = (function(){
+export let Clipboard = (function(){
 
     let self = {};
 
@@ -2111,7 +2049,7 @@ let Clipboard = (function(){
     return self;
 })();
 
-class MediaPage {
+export class MediaPage {
     workshopPage() {
         this._mediaSliderExpander(HTML.beforeEnd, "#highlight_player_area");
     }        
@@ -2145,7 +2083,7 @@ class HorizontalScroller {
 }
 
 // Most of the code here comes from dselect.js
-class Sortbox {
+export class Sortbox {
 
     static init() {
         this._activeDropLists = {};
@@ -2342,7 +2280,7 @@ class Sortbox {
     }
 }
 
-class ConfirmDialog {
+export class ConfirmDialog {
 
     static open(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton) {
         return ExtensionLayer.runInPageContext((a,b,c,d,e) => {

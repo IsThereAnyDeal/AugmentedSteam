@@ -62,6 +62,7 @@
         ],
         "js": [
           "lib/webextension-polyfill/browser-polyfill.js",
+          "lib/DOMPurify/purify.js",
           "store.js"
         ],
         "css": [
