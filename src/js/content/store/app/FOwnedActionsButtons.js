@@ -1,4 +1,9 @@
-class FOwnedActionsButtons extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { User } from "../../common.js";
+import { HTML, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
+
+export class FOwnedActionsButtons extends ASFeature {
 
     checkPrerequisites() {
         return User.isSignedIn && document.querySelector(".game_area_play_stats .already_owned_actions");

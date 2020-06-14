@@ -1,6 +1,9 @@
-class FYouTubeVideos extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, SyncedStorage } from "../../../core.js";
+import { Language, Localization } from "../../../language.js";
+import { ExtensionLayer } from "../../common.js";
 
-    _tabToMedia;
+export class FYouTubeVideos extends ASFeature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews");

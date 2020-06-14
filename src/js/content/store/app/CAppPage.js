@@ -1,6 +1,51 @@
-class CAppPage extends CStorePage {
+import { CStorePage } from "../common/CStorePage.js";
+
+import { FReplaceDevPubLinks } from "./FReplaceDevPubLinks.js";
+import { FRemoveFromWishlist } from "./FRemoveFromWishlist.js";
+import { FForceMP4 } from "./FForceMP4.js";
+import { FHDPlayer } from "./FHDPlayer.js";
+import { FUserNotes } from "./FUserNotes.js";
+import { FWaitlistDropdown } from "./FWaitlistDropdown.js";
+import { FNewQueue } from "./FNewQueue.js";
+import { FFullscreenScreenshotView } from "./FFullscreenScreenshotView.js";
+import { FShowCoupon } from "./FShowCoupon.js";
+import { FITADPrices } from "../common/FITADPrices.js";
+import { FDLCInfo } from "./FDLCInfo.js";
+import { FDRMWarnings } from "../common/FDRMWarnings.js";
+import { FMetacriticUserScore } from "./FMetacriticUserScore.js";
+import { FOpenCritic } from "./FOpenCritic.js";
+import { FOwnedElsewhere } from "./FOwnedElsewhere.js";
+import { FPurchaseDate } from "./FPurchaseDate.js";
+import { FYouTubeVideos } from "./FYouTubeVideos.js";
+import { FSteamPeek } from "./FSteamPeek.js";
+import { FWidescreenCertification } from "./FWidescreenCertification.js";
+import { FHowLongToBeat } from "./FHowLongToBeat.js";
+import { FExtraLinks } from "../common/FExtraLinks.js";
+import { FFamilySharingNotice } from "./FFamilySharingNotice.js";
+import { FPackBreakdown } from "./FPackBreakdown.js";
+import { FPackageInfoButton } from "./FPackageInfoButton.js";
+import { FSteamChart } from "./FSteamChart.js";
+import { FSteamSpy } from "./FSteamSpy.js";
+import { FSurveyData } from "./FSurveyData.js";
+import { FCustomizer } from "../common/FCustomizer.js";
+import { FDLCCheckboxes } from "./FDLCCheckboxes.js";
+import { FBadgeProgress } from "./FBadgeProgress.js";
+import { FAStatsLink } from "./FAStatsLink.js";
+import { FAchievementBar } from "./FAchievementBar.js";
+import { FRegionalPricing } from "../common/FRegionalPricing.js";
+import { FReviewToggleButton } from "./FReviewToggleButton.js";
+import { FOwnedActionsButtons } from "./FOwnedActionsButtons.js";
+import { FSupportInfo } from "./FSupportInfo.js";
+import { FMediaExpander } from "../../common/FMediaExpander.js";
+
+import { GameId, LocalStorage, SyncedStorage } from "../../../core.js";
+
+import { Background, User } from "../../common.js";
+import { UserNotes } from "../common/UserNotes";
+
+export class CAppPage extends CStorePage {
     
-    constructor(url) {
+    constructor() {
         super([
             FReplaceDevPubLinks,
             FRemoveFromWishlist,
@@ -43,7 +88,7 @@ class CAppPage extends CStorePage {
 
         this.userNotes = new UserNotes();
 
-        this.appid = GameId.getAppid(url);
+        this.appid = GameId.getAppid(window.location.host + window.location.pathname);
         this.storeid = `app/${this.appid}`;
 
         this.hasCards = document.querySelector(`#category_block img[src$="/ico_cards.png"]`) !== null;

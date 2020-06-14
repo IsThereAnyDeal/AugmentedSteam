@@ -1,4 +1,9 @@
-class FFamilySharingNotice extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
+
+export class FFamilySharingNotice extends ASFeature {
+
     async checkPrerequisites() {
         if (!SyncedStorage.get("exfgls")) { return false; }
 

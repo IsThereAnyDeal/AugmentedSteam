@@ -1,4 +1,10 @@
-class FNewQueue extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML } from "../../../core.js";
+import { Localization } from "../../../language.js";
+import { ExtensionLayer } from "../../common.js";
+
+export class FNewQueue extends ASFeature {
+
     checkPrerequisites() {
         return document.querySelector(".finish_queue_text");
     }

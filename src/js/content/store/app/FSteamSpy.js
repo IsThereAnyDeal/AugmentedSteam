@@ -1,6 +1,8 @@
-class FSteamSpy extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
 
-    _data;
+export class FSteamSpy extends ASFeature {
 
     async checkPrerequisites() {
         if (!SyncedStorage.get("show_steamspy_info") || this.context.isDlc() || !document.querySelector(".sys_req")) { return false; }

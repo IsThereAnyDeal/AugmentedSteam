@@ -1,4 +1,8 @@
-class UserNotes {
+import { HTML, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
+import { ExtensionLayer, Messenger } from "../../common.js";
+
+export class UserNotes {
     constructor() {
 
         this._notes = SyncedStorage.get("user_notes") || {};

@@ -1,4 +1,10 @@
-class FWaitlistDropdown extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, SyncedStorage } from "../../../core.js";
+import { Background, ExtensionLayer } from "../../common.js";
+import { Localization } from "../../../language.js";
+
+export class FWaitlistDropdown extends ASFeature {
+
     async checkPrerequisites() {
         return document.querySelector("#add_to_wishlist_area") && SyncedStorage.get("add_to_waitlist") && await Background.action("itad.isconnected");
     }

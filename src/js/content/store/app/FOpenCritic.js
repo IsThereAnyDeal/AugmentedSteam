@@ -1,4 +1,10 @@
-class FOpenCritic extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { ExtensionResources, HTML, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
+import { ExtensionLayer } from "../../common.js";
+
+export class FOpenCritic extends ASFeature {
+
     async checkPrerequisites() {
         if (SyncedStorage.get("showoc")) {
             let result = await this.context.data;

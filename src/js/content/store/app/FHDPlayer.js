@@ -1,4 +1,8 @@
-class FHDPlayer extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, LocalStorage } from "../../../core.js";
+
+export class FHDPlayer extends ASFeature {
+
     checkPrerequisites() {
         return document.querySelector("div.highlight_movie");
     }

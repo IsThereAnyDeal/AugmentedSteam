@@ -1,7 +1,10 @@
-class FMediaExpander extends ASFeature {
+import { ASFeature } from "../ASFeature.js";
+import { CAppPage } from "../store/app/CAppPage.js";
+import { HTML, LocalStorage, SyncedStorage } from "../../core.js";
+import { Localization } from "../../language.js";
+import { ExtensionLayer } from "../common.js";
 
-    _details = null;
-    _detailsBuilt = false;
+export class FMediaExpander extends ASFeature {
 
     checkPrerequisites() {
         this._details = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");
@@ -11,6 +14,7 @@ class FMediaExpander extends ASFeature {
     apply() {
         let selector = null;
 
+        // TODO Replace with less expensive check
         if (this.context instanceof CAppPage) {
             if (SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews")) {
                 selector = ".home_tabs_row";

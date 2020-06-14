@@ -1,4 +1,7 @@
-class FHomePageTab extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { SyncedStorage } from "../../../core.js";
+
+export class FHomePageTab extends ASFeature {
 
     apply() {
         document.querySelector(".home_tabs_row").addEventListener("click", ({ target }) => {

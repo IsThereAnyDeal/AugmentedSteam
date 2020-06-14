@@ -1,4 +1,8 @@
-class FFullscreenScreenshotView extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML } from "../../../core.js";
+
+export class FFullscreenScreenshotView extends ASFeature {
+
     apply() {
         function toggleFullScreen(ev) {
             if (!document.fullscreenElement) {

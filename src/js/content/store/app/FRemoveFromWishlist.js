@@ -1,4 +1,10 @@
-class FRemoveFromWishlist extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { ExtensionLayer, DynamicStore, User } from "../../common.js";
+import { ExtensionResources, HTML } from "../../../core.js";
+import { Localization } from "../../../language.js";
+
+export class FRemoveFromWishlist extends ASFeature {
+
     checkPrerequisites() {
         return User.isSignedIn && !this.context.isOwned();
     }

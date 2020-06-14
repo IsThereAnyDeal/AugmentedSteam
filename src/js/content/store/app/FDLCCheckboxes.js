@@ -1,4 +1,8 @@
-class FDLCCheckboxes extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { ExtensionResources, HTML } from "../../../core.js";
+import { Localization } from "../../../language.js";
+
+export class FDLCCheckboxes extends ASFeature {
 
     checkPrerequisites() {
         return document.querySelector(".game_area_dlc_section .game_area_dlc_list");

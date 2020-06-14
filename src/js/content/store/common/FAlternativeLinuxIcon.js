@@ -1,4 +1,7 @@
-class FAlternativeLinuxIcon extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { ExtensionResources, SyncedStorage } from "../../../core.js";
+
+export class FAlternativeLinuxIcon extends ASFeature {
 
     checkPrerequisites() {
         return SyncedStorage.get("show_alternative_linux_icon");

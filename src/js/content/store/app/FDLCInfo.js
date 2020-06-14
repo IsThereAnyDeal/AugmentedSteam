@@ -1,4 +1,11 @@
-class FDLCInfo extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { Localization } from "../../../language.js";
+import { Background } from "../../common.js";
+import Config from "../../../config.js";
+import { HTML } from "../../../core.js";
+
+export class FDLCInfo extends ASFeature {
+
     checkPrerequisites() {
         return this.context.isDlc();
     }

@@ -1,4 +1,7 @@
-class FForceMP4 extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { SyncedStorage } from "../../../core.js";
+
+export class FForceMP4 extends ASFeature {
     checkPrerequisites() {
         return SyncedStorage.get("mp4video");
     }

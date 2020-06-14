@@ -1,4 +1,9 @@
-class FPackBreakdown extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML } from "../../../core.js";
+import { Localization } from "../../../language.js";
+import { Price } from "../../common.js";
+
+export class FPackBreakdown extends ASFeature {
 
     apply() {
 

@@ -1,32 +1,35 @@
 import { SyncedStorage } from "../core.js";
-import { User, Currency, Common } from "./common";
-import { Localization } from "../language";
+import { User, Currency, Common } from "./common.js";
+import { Localization } from "../language.js";
 
-(async function(){
-    if (!document.getElementById("global_header")) { return; }
+export async function storeCheck() {
 
-    let path = window.location.pathname.replace(/\/+/g, "/");
+    if (!document.getElementById("global_header")) { return false; }
 
-    await SyncedStorage.init().catch(err => console.error(err));
+    await SyncedStorage.init().catch(err => { console.error(err); });
     await Promise.all([Localization, User, Currency]);
 
     Common.init();
 
+    return true;
+}
+
+(async function(){
     switch (true) {
         case /\bagecheck\b/.test(path):
             AgeCheck.sendVerification();
             break;
 
         case /^\/app\/.*/.test(path):
-            new CAppPage(window.location.host + path);
+            new CAppPage();
             break;
 
         case /^\/sub\/.*/.test(path):
-            new CSubPage(window.location.host + path);
+            new CSubPage();
             break;
 
         case /^\/bundle\/.*/.test(path):
-            new CBundlePage(window.location.host + path);
+            new CBundlePage();
             break;
 
         case /^\/account\/registerkey(\/.*)?$/.test(path):
@@ -66,4 +69,5 @@ import { Localization } from "../language";
         default:
             new CStoreBase().applyFeatures();
     }
-})();
+});
+// Intentionally not called

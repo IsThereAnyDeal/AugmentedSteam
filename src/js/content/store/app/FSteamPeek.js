@@ -1,6 +1,10 @@
-class FSteamPeek extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, LocalStorage } from "../../../core.js";
+import { ExtensionLayer } from "../../common.js";
+import { FHighlightsTags } from "../../common/FHighlightsTags.js";
+import { Localization } from "../../../language.js";
 
-    _moreLikeThis;
+export class FSteamPeek extends ASFeature {
 
     checkPrerequisites() {
         this._moreLikeThis = document.querySelector("#recommended_block");
@@ -28,9 +32,7 @@ class FSteamPeek extends ASFeature {
         await ExtensionLayer.runInPageContext(() => new Promise(resolve => { GDynamicStore.OnReady(() => { resolve(); }); }), null, true);
 
         let [steamTab, steamPeekTab, content] = this._moreLikeThis
-            .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");
-
-        
+            .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");        
 
         steamTab.addEventListener("click", () => {
             steamPeekTab.classList.remove("active");

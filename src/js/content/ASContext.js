@@ -1,4 +1,6 @@
-class ASContext {
+import { ASFeatureManager } from "./ASFeatureManager.js";
+
+export class ASContext {
     constructor(features) {
         this.features = features.map(ref => new ref(this));
     }

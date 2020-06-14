@@ -1,4 +1,9 @@
-class FPackageInfoButton extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
+
+export class FPackageInfoButton extends ASFeature {
+
     checkPrerequisites() {
         return SyncedStorage.get("show_package_info");
     }

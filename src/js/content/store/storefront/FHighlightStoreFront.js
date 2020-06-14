@@ -1,4 +1,8 @@
-class FHighlightStoreFront extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { User } from "../../common.js";
+import { FHighlightsTags } from "../../common/FHighlightsTags.js";
+
+export class FHighlightStoreFront extends ASFeature {
 
     checkPrerequisites() {
         return User.isSignedIn; // TODO ITAD status

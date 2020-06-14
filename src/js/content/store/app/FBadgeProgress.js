@@ -1,4 +1,9 @@
-class FBadgeProgress extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { Background, DOMHelper, User } from "../../common.js";
+import { HTML, HTMLParser, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
+
+export class FBadgeProgress extends ASFeature {
 
     checkPrerequisites() {
         return this.context.hasCards && User.isSignedIn && SyncedStorage.get("show_badge_progress");

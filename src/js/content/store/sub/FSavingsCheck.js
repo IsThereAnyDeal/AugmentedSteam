@@ -1,4 +1,9 @@
-class FSavingsCheck extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { DOMHelper, Price } from "../../common.js";
+import { HTML } from "../../../core.js";
+import { Localization } from "../../../language.js";
+
+export class FSavingsCheck extends ASFeature {
 
     apply() {
 

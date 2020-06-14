@@ -1,12 +1,16 @@
-class FExtraLinks extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { CAppPage } from "../app/CAppPage.js";
+import { CSubPage } from "../sub/CSubPage.js";
+import { CBundlePage } from "../bundle/CBundlePage.js";
+import { HTML, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
 
-    _type;
-    _node;
-    _gameid;
+export class FExtraLinks extends ASFeature {
 
     checkPrerequisites() {
         let context = this.context;
 
+        // TODO Replace with less expensive comparison
         if (context instanceof CAppPage) {
             this._type = "app";
             this._gameid = context.appid;

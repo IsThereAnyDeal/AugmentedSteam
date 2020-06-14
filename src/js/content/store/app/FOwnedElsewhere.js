@@ -1,4 +1,10 @@
-class FOwnedElsewhere extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { Background } from "../../common.js";
+import { HTML } from "../../../core.js";
+import { Localization } from "../../../language.js";
+
+export class FOwnedElsewhere extends ASFeature {
+
     async checkPrerequisites() {
         return !this.context.isOwned() && await Background.action("itad.isconnected");
     }

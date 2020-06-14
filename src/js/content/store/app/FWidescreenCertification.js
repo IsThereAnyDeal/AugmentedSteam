@@ -1,6 +1,8 @@
-class FWidescreenCertification extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { ExtensionResources, HTML, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
 
-    _data;
+export class FWidescreenCertification extends ASFeature {
 
     async checkPrerequisites() {
         if (!this.context.isDlc() && SyncedStorage.get("showwsgf")) {

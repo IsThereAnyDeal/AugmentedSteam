@@ -1,4 +1,6 @@
-class CStoreBaseCallback extends CStoreBase {
+import { CStoreBase } from "./CStoreBase.js";
+
+export class CStoreBaseCallback extends CStoreBase {
 
     _callbacks = [];
 

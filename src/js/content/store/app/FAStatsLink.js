@@ -1,5 +1,9 @@
+import { ASFeature } from "../../ASFeature.js";
+import { ExtensionResources, HTML, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
+
 // todo maybe integrate with other useful links?
-class FAStatsLink extends ASFeature {
+export class FAStatsLink extends ASFeature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showastatslink") && this.context.hasAchievements();

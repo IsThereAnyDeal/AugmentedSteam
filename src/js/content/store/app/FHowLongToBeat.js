@@ -1,6 +1,9 @@
-class FHowLongToBeat extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, LocalStorage, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
+import { Background } from "../../common.js";
 
-    _data;
+export class FHowLongToBeat extends ASFeature {
 
     async checkPrerequisites() {
         if (!this.context.isDlc() && SyncedStorage.get("showhltb")) {
@@ -15,7 +18,7 @@ class FHowLongToBeat extends ASFeature {
     apply() {
         let data = this._data;
 
-        let suggestUrl = `${Config.PublicHost}/gamedata/hltb_link_suggest.php`;
+        // let suggestUrl = `${Config.PublicHost}/gamedata/hltb_link_suggest.php`;
         let icoImg = "//store.steampowered.com/public/images/v5/ico_external_link.gif";
 
         let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.hltb.title}</div>

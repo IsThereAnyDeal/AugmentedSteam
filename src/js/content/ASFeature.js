@@ -1,4 +1,4 @@
-class ASFeature {
+export class ASFeature {
     constructor(context) {
         this.context = context;
     }

@@ -1,3 +1,5 @@
+import { FeatureDependencyError } from "./FeatureDependencyError";
+
 // Polyfill from https://gist.github.com/davidbarral/d0d4da70fa9e6f615595d01f54276e0b#file-promises-js
 if (!Promise.allSettled) {
     Promise.allSettled = promises =>
@@ -16,7 +18,7 @@ if (!Promise.allSettled) {
         );
 }
 
-class ASFeatureManager {
+export class ASFeatureManager {
     static async apply(features) {
 
         let promisesMap = new Map();

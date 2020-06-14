@@ -1,4 +1,9 @@
-class FReplaceDevPubLinks extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML } from "../../../core.js";
+import { Localization } from "../../../language.js";
+import { ExtensionLayer } from "../../common.js";
+
+export class FReplaceDevPubLinks extends ASFeature {
 
     apply() {
         let devs = Array.from(document.querySelectorAll("#developers_list > a, .details_block > .dev_row:first-of-type > a"));

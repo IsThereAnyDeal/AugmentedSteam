@@ -1,4 +1,7 @@
-class FReviewToggleButton extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, LocalStorage } from "../../../core.js";
+
+export class FReviewToggleButton extends ASFeature {
 
     checkPrerequisites() {
         return document.querySelector("#review_create h1");

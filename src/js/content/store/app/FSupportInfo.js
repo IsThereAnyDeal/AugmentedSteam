@@ -1,6 +1,9 @@
-class FSupportInfo extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, LocalStorage, SyncedStorage } from "../../../core.js";
+import { Background } from "../../common.js";
+import { Localization } from "../../../language.js";
 
-    _supportInfo;
+export class FSupportInfo extends ASFeature {
 
     async checkPrerequisites() {
         if (this.context.isDlc() || !SyncedStorage.get("showsupportinfo")) { return false; };

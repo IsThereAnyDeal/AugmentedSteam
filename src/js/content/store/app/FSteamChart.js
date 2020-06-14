@@ -1,6 +1,8 @@
-class FSteamChart extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
 
-    _chart;
+export class FSteamChart extends ASFeature {
 
     async checkPrerequisites() {
         if (!SyncedStorage.get("show_steamchart_info") || this.context.isDlc() || !document.querySelector(".sys_req")) { return false; }

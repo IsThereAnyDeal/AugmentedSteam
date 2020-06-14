@@ -1,6 +1,9 @@
-class FPurchaseDate extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { User } from "../../common.js";
+import { SyncedStorage } from "../../../core.js";
+import { Language, Localization } from "../../../language.js";
 
-    _node;
+export class FPurchaseDate extends ASFeature {
 
     checkPrerequisites() {
         if (User.isSignedIn && SyncedStorage.get("purchase_dates")) {

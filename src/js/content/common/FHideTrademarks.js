@@ -1,4 +1,8 @@
-class FHideTrademarks extends ASFeature {
+import { ASFeature } from "../ASFeature.js";
+import { HTML, SyncedStorage } from "../../core.js";
+import { CStoreBase } from "../store/common/CStoreBase.js";
+
+export class FHideTrademarks extends ASFeature {
 
     checkPrerequisites() {
         return SyncedStorage.get("hidetmsymbols");

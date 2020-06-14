@@ -1,4 +1,8 @@
-class FAchievementBar extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, SyncedStorage } from "../../../core.js";
+import { Stats } from "../../common.js";
+
+export class FAchievementBar extends ASFeature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showachinstore") && this.context.hasAchievements() && document.getElementById("my_activity");

@@ -1,4 +1,9 @@
-class FITADPrices extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, SyncedStorage } from "../../../core.js";
+import { Prices } from "../../common.js";
+import { Localization } from "../../../language.js";
+
+export class FITADPrices extends ASFeature {
     checkPrerequisites() {
         return SyncedStorage.get("showlowestprice");
     }

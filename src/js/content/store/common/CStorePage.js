@@ -1,4 +1,6 @@
-class CStorePage extends CStoreBase {
+import { CStoreBase } from "./CStoreBase.js";
+
+export class CStorePage extends CStoreBase {
 
     getAllSubids() {
         let result = [];

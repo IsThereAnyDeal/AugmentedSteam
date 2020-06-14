@@ -1,8 +1,15 @@
-class FDRMWarnings extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML, SyncedStorage } from "../../../core.js";
+import { CAppPage } from "../app/CAppPage.js";
+import { Localization } from "../../../language.js";
+
+export class FDRMWarnings extends ASFeature {
+
     checkPrerequisites() {
         if (!SyncedStorage.get("showdrm")) { return false; };
 
         // Prevent false-positives
+        // TODO Replace this with less expensive check
         return !this.context instanceof CAppPage || (
                 this.context.appid !== 21690    // Resident Evil 5, at Capcom's request
             &&  this.context.appid !== 1157970  // Special K

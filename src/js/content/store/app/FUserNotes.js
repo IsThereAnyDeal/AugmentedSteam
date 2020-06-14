@@ -1,4 +1,10 @@
-class FUserNotes extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { User } from "../../common.js";
+import { HTML, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
+
+export class FUserNotes extends ASFeature {
+
     checkPrerequisites() {
         return User.isSignedIn && SyncedStorage.get("showusernotes");
     }
