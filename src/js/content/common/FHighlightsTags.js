@@ -1,6 +1,7 @@
 import { ASFeature } from "../ASFeature.js";
 import { DynamicStore, ExtensionLayer, Inventory, ITAD } from "../common.js";
 import { GameId, HTML, HTMLParser, SyncedStorage } from "../../core.js";
+import { Localization } from "../../language.js";
 
 export class FHighlightsTags extends ASFeature {
 
