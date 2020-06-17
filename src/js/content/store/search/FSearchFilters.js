@@ -13,12 +13,6 @@ import { EarlyAccess, ExtensionLayer, Messenger } from "../../common.js";
 import { FHighlightsTags } from "../../common/FHighlightsTags.js";
 
 export class FSearchFilters extends ASFeature {
-    
-    _filters;
-    _urlParams;
-    _filterValues;
-
-    results;
 
     apply() {
 

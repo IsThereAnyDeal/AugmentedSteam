@@ -8,6 +8,7 @@ module.exports = {
         "storedefault": "./src/js/content/store/PDefaultStore.js",
         "storefrontpage": "./src/js/content/store/storefront/PStoreFrontPage.js",
         "storesale": "./src/js/content/store/sale/PSalePage.js",
+        "storesearch": "./src/js/content/store/search/PSearchPage.js",
         "storestats": "./src/js/content/store/stats/PStatsPage.js",
         "storewishlist": "./src/js/content/store/wishlist/PWishlistPage.js",
     },

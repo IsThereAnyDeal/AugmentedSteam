@@ -1,13 +1,10 @@
 export class SearchFilter {
 
-    urlParam;
-
-    _value = null;
-    _feature;
-
     constructor(urlParam, feature) {
         this._feature = feature;
         this.urlParam = urlParam;
+
+        this._value = null;
     }
 
     get active() { return false; }
@@ -39,10 +36,6 @@ export class SearchFilter {
 }
 
 export class SimpleSearchFilter extends SearchFilter {
-
-    _localization;
-    _id;
-    _elem;
 
     constructor(urlParam, feature, localization, id) {
         super(urlParam, feature);

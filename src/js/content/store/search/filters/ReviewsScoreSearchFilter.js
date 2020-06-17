@@ -4,18 +4,12 @@ import { Localization } from "../../../../language.js";
 
 export class ReviewsScoreSearchFilter extends SearchFilter {
 
-    _scoreFilter;
-    _minScore;
-    _maxScore;
-    _rangeDisplay;
-
-    _scoreValues = [];
-    _stepSize = 5;
-    _maxStep;
-
     constructor(feature) {
         super("as-reviews-score", feature);
 
+        this._stepSize = 5;
+
+        this._scoreValues = [];
         for (let score = 0; score < 100; score += this._stepSize) {
             this._scoreValues.push(score);
         }

@@ -54,14 +54,6 @@ export default async (context) => {
         case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard(\/.*)?$)/.test(path):
             new CFundsPage();
             break;
-
-        case /^\/search(\/.*)?$/.test(path):
-            new CSearchPage();
-            break;
-
-        case /^\/stats(\/.*)?$/.test(path):
-            new CStatsPage();
-            break;
     }
 });
 // Intentionally not called

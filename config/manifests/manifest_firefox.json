@@ -66,6 +66,21 @@
     },
     {
       "matches": [
+        "*://*.steampowered.com/search",
+        "*://*.steampowered.com/search/*"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/storesearch.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-firefox.css"
+      ]
+    },
+    {
+      "matches": [
         "*://*.steampowered.com/*"
       ],
       "exclude_matches": [
@@ -86,7 +101,9 @@
         "*://*.steampowered.com/wishlist/profiles/*",
         "*://*.steampowered.com/sale/*",
         "*://*.steampowered.com/stats",
-        "*://*.steampowered.com/stats/*"
+        "*://*.steampowered.com/stats/*",
+        "*://*.steampowered.com/search",
+        "*://*.steampowered.com/search/*"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",

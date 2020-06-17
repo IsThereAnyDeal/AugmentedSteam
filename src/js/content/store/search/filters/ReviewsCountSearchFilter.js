@@ -4,13 +4,10 @@ import { Localization } from "../../../../language.js";
 
 export class ReviewsCountSearchFilter extends SearchFilter {
 
-    _minCount;
-    _maxCount;
-
-    _val = null;
-
     constructor(feature) {
         super("as-reviews-count", feature);
+
+        this._val = null;
     }
 
     get active() {
