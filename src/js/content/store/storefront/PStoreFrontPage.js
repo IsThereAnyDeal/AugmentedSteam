@@ -1,3 +1,4 @@
 import { CStoreFrontPage } from "./CStoreFrontPage.js";
+import { storeCheck } from "../../store.js";
 
-new CStoreFrontPage().applyFeatures();
+storeCheck(CStoreFrontPage);

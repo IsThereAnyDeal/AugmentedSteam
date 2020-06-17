@@ -1,3 +1,4 @@
 import { CStoreBase } from "./common/CStoreBase.js";
+import { storeCheck } from "../store.js";
 
-new CStoreBase().applyFeatures();
+storeCheck(CStoreBase);

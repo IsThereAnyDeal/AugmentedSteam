@@ -1,7 +1,5 @@
 import { ASContext, ContextTypes } from "../../ASContext.js";
 
-import { storeCheck } from "../../store.js";
-
 import { EarlyAccess } from "../../common.js";
 import { FHighlightsTags } from "../../common/FHighlightsTags.js";
 import { FAlternativeLinuxIcon } from "./FAlternativeLinuxIcon.js";
@@ -23,25 +21,6 @@ export class CStoreBase extends ASContext {
         this.type = ContextTypes.STORE_DEFAULT;
 
         this._observeChanges();
-    }
-
-    async applyFeatures() {
-        let res;
-
-        try {
-            res = await storeCheck();
-        } catch(err) {
-            console.group("Augmented Steam initialization")
-            console.error("Failed to initiliaze Augmented Steam");
-            console.error(err);
-            console.groupEnd();
-
-            return;
-        }
-
-        if (!res) { return; }
-
-        super.applyFeatures();
     }
 
     _observeChanges() {

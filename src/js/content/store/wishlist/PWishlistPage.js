@@ -1,3 +1,4 @@
 import { CWishlistPage } from "./CWishlistPage.js";
+import { storeCheck } from "../../store.js";
 
-new CWishlistPage().applyFeatures();
+storeCheck(CWishlistPage);

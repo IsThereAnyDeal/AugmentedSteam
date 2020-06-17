@@ -2,16 +2,26 @@ import { SyncedStorage } from "../core.js";
 import { User, Currency, Common } from "./common.js";
 import { Localization } from "../language.js";
 
-export async function storeCheck() {
+export async function storeCheck(context) {
 
-    if (!document.getElementById("global_header")) { return false; }
+    if (!document.getElementById("global_header")) { return; }
 
-    await SyncedStorage.init().catch(err => { console.error(err); });
-    await Promise.all([Localization, User, Currency]);
+    try {
+        // TODO What errors can be "suppressed" here?
+        await SyncedStorage.init().catch(err => { console.error(err); });
+        await Promise.all([Localization, User, Currency]);
+    } catch(err) {
+        console.group("Augmented Steam initialization")
+        console.error("Failed to initiliaze Augmented Steam");
+        console.error(err);
+        console.groupEnd();
+
+        return;
+    }
 
     Common.init();
 
-    return true;
+    return new context().applyFeatures();
 }
 
 (async function(){
