@@ -11,7 +11,7 @@
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
         "lib/DOMPurify/purify.js",
-        "entries/storefrontpage.js"
+        "entries/store/frontpage.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -26,7 +26,7 @@
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
         "lib/DOMPurify/purify.js",
-        "entries/storewishlist.js"
+        "entries/store/wishlist.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -40,7 +40,7 @@
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
         "lib/DOMPurify/purify.js",
-        "entries/storesale.js"
+        "entries/store/sale.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -55,7 +55,7 @@
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
         "lib/DOMPurify/purify.js",
-        "entries/storestats.js"
+        "entries/store/stats.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -70,7 +70,23 @@
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
         "lib/DOMPurify/purify.js",
-        "entries/storesearch.js"
+        "entries/store/search.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css"
+      ]
+    },
+    {
+      "matches": [
+        "*://*.steampowered.com/steamaccount/addfunds*",
+        "*://*.steampowered.com/digitalgiftcards/selectgiftcard",
+        "*://*.steampowered.com/digitalgiftcards/selectgiftcard/*"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/store/funds.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -101,12 +117,15 @@
         "*://*.steampowered.com/stats",
         "*://*.steampowered.com/stats/*",
         "*://*.steampowered.com/search",
-        "*://*.steampowered.com/search/*"
+        "*://*.steampowered.com/search/*",
+        "*://*.steampowered.com/steamaccount/addfunds*",
+        "*://*.steampowered.com/digitalgiftcards/selectgiftcard",
+        "*://*.steampowered.com/digitalgiftcards/selectgiftcard/*"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
         "lib/DOMPurify/purify.js",
-        "entries/storedefault.js"
+        "entries/store/default.js"
       ],
       "css": [
         "css/enhancedsteam.css",
