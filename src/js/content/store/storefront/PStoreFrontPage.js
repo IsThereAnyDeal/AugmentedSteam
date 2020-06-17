@@ -1,4 +1,4 @@
 import { CStoreFrontPage } from "./CStoreFrontPage.js";
-import { storeCheck } from "../../store.js";
+import check from "../../storeCheck.js";
 
-storeCheck(CStoreFrontPage);
+check(CStoreFrontPage);

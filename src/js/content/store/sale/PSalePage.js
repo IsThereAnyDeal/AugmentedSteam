@@ -1,4 +1,4 @@
 import { CSalePage } from "./CSalePage";
-import { storeCheck } from "../../store.js";
+import check from "../../storeCheck.js";
 
-storeCheck(CSalePage);
+check(CSalePage);
