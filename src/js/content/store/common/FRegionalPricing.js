@@ -1,8 +1,8 @@
 import { ASFeature } from "../../ASFeature.js";
+import { ContextTypes } from "../../ASContext.js";
+
 import { HTML, SyncedStorage } from "../../../core.js";
 import { Currency, Price, RequestData, User } from "../../common.js";
-import { CAppPage } from "../app/CAppPage.js";
-import { CSalePage } from "../sale/CSalePage.js";
 import { Localization } from "../../../language.js";
 
 export class FRegionalPricing extends ASFeature {
@@ -22,10 +22,9 @@ export class FRegionalPricing extends ASFeature {
             countries.push(localCountry);
         }
 
-        // TODO Replace with less expensive check
-        if (this.context instanceof CAppPage) {
+        if (this.context.type === ContextTypes.APP) {
             type = "app";
-        } else if (this.context instanceof CSalePage) {
+        } else if (this.context.type === ContextTypes.SALE) {
             type = "sale";
         }
 

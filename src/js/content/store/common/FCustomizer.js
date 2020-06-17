@@ -1,6 +1,6 @@
 import { ASFeature } from "../../ASFeature.js";
-import { CAppPage } from "../app/CAppPage.js";
-import { CStoreFrontPage } from "../storefront/CStoreFrontPage.js";
+import { ContextTypes } from "../../ASContext.js";
+
 import { DOMHelper } from "../../common.js";
 import { HTML, SyncedStorage } from "../../../core.js";
 import { Localization } from "../../../language.js";
@@ -8,11 +8,9 @@ import { Localization } from "../../../language.js";
 export class FCustomizer extends ASFeature {
 
     apply() {
-
-        // TODO Avoid the need to import these classes just for this comparison
-        if (this.context instanceof CAppPage) {
+        if (this.context.type === ContextTypes.APP) {
             this._customizeAppPage();
-        } else if (this.context instanceof CStoreFrontPage) {
+        } else if (this.context.type === ContextTypes.STORE_FRONT) {
             this._customizeFrontPage();
         }
     }

@@ -1,4 +1,9 @@
-class FWishlistHighlights extends CallbackFeature {
+import { CallbackFeature } from "../../CallbackFeature.js";
+
+import { User } from "../../common.js";
+import { FHighlightsTags } from "../../common/FHighlightsTags.js";
+
+export class FWishlistHighlights extends CallbackFeature {
 
     checkPrerequisites() {
         return User.isSignedIn; // TODO ITAD status

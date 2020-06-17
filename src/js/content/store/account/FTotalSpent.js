@@ -1,4 +1,8 @@
-class FTotalSpent extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { HTML } from "../../../core.js";
+import { Localization } from "../../../language.js";
+
+export class FTotalSpent extends ASFeature {
 
     _links;
 

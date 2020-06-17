@@ -1,4 +1,6 @@
 import { ASFeature } from "../../ASFeature.js";
+import { ContextTypes } from "../../ASContext.js";
+
 import { HTML, SyncedStorage } from "../../../core.js";
 import { CAppPage } from "../app/CAppPage.js";
 import { Localization } from "../../../language.js";
@@ -9,8 +11,7 @@ export class FDRMWarnings extends ASFeature {
         if (!SyncedStorage.get("showdrm")) { return false; };
 
         // Prevent false-positives
-        // TODO Replace this with less expensive check
-        return !this.context instanceof CAppPage || (
+        return !this.context.type === ContextTypes.APP || (
                 this.context.appid !== 21690    // Resident Evil 5, at Capcom's request
             &&  this.context.appid !== 1157970  // Special K
         );
@@ -79,12 +80,12 @@ export class FDRMWarnings extends ASFeature {
 
         let drmString;
         if (drmNames.length > 0) {
-            drmString = this.context instanceof CAppPage ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+            drmString = this.context.type === ContextTypes.APP ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
             drmString = drmString.replace("__drmlist__", `(${drmNames.join(", ")})`);
 
         } else { // Detect other DRM
             let regex = /\b(drm|account|steam)\b/i;
-            if (this.context instanceof CAppPage) {
+            if (this.context.type === ContextTypes.APP) {
                 for (let node of document.querySelectorAll("#category_block > .DRM_notice")) {
                     let text = node.textContent;
                     if (regex.test(text)) {

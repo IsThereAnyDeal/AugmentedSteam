@@ -1,4 +1,10 @@
-class FWishlistUserNotes extends CallbackFeature {
+import { CallbackFeature } from "../../CallbackFeature.js";
+
+import { HTML, SyncedStorage } from "../../../core.js";
+import { UserNotes } from "../common/UserNotes.js";
+import { Localization } from "../../../language.js";
+
+export class FWishlistUserNotes extends CallbackFeature {
 
     _userNotes;
 

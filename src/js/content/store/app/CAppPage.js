@@ -1,3 +1,4 @@
+import { ContextTypes } from "../../ASContext";
 import { CStorePage } from "../common/CStorePage.js";
 
 import { FReplaceDevPubLinks } from "./FReplaceDevPubLinks.js";
@@ -85,6 +86,8 @@ export class CAppPage extends CStorePage {
             FSupportInfo,
             FMediaExpander,
         ]);
+
+        this.type = ContextTypes.APP;
 
         this.userNotes = new UserNotes();
 

@@ -1,4 +1,8 @@
-class NegativeSearchFilter extends SimpleSearchFilter {
+import { SimpleSearchFilter } from "./searchfilters.js";
+
+import { Localization } from "../../../../language.js";
+
+export class NegativeSearchFilter extends SimpleSearchFilter {
 
     constructor(feature) {
         super("as-hide", feature, Localization.str.search_filters.hide_negative, "negative");

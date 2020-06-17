@@ -1,4 +1,11 @@
-class FEmptyWishlist extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+
+import { HTML, HTMLParser, SyncedStorage } from "../../../core.js";
+import { Localization } from "../../../language.js";
+import { DynamicStore, ExtensionLayer, RequestData, User } from "../../common.js";
+import { FExportWishlist } from "./FExportWishlist.js";
+
+export class FEmptyWishlist extends ASFeature {
 
     checkPrerequisites() {
         return this.context.myWishlist && SyncedStorage.get("showemptywishlist");

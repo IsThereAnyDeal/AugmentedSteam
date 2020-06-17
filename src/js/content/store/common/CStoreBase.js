@@ -1,6 +1,8 @@
+import { ASContext, ContextTypes } from "../../ASContext.js";
+
 import { storeCheck } from "../../store.js";
+
 import { EarlyAccess } from "../../common.js";
-import { ASContext } from "../../ASContext.js";
 import { FHighlightsTags } from "../../common/FHighlightsTags.js";
 import { FAlternativeLinuxIcon } from "./FAlternativeLinuxIcon.js";
 import { FHideTrademarks } from "../../common/FHideTrademarks.js";
@@ -17,6 +19,8 @@ export class CStoreBase extends ASContext {
         );
 
         super(features);
+
+        this.type = ContextTypes.STORE_DEFAULT;
 
         this._observeChanges();
     }

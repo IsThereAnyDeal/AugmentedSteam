@@ -1,4 +1,18 @@
-class FSearchFilters extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+
+import { CartSearchFilter } from "./filters/CartSearchFilter.js";
+import { EarlyAccessSearchFilter } from "./filters/EarlyAccessSearchFilter.js";
+import { MixedSearchFilter } from "./filters/MixedSearchFilter.js";
+import { NegativeSearchFilter } from "./filters/NegativeSearchFilter";
+import { ReviewsCountSearchFilter } from "./filters/ReviewsCountSearchFilter.js";
+import { ReviewsScoreSearchFilter } from "./filters/ReviewsScoreSearchFilter.js";
+
+import { HTML } from "../../../core.js";
+import { Localization } from "../../../language.js";
+import { EarlyAccess, ExtensionLayer, Messenger } from "../../common.js";
+import { FHighlightsTags } from "../../common/FHighlightsTags.js";
+
+export class FSearchFilters extends ASFeature {
     
     _filters;
     _urlParams;

@@ -1,3 +1,4 @@
+import { ContextTypes } from "../../ASContext.js";
 import { CStorePage } from "../common/CStorePage.js";
 
 import { FExtraLinks } from "../common/FExtraLinks.js";
@@ -13,6 +14,8 @@ export class CBundlePage extends CStorePage {
             FDRMWarnings,
             FITADPrices,
         ]);
+
+        this.type = ContextTypes.BUNDLE;
 
         this.bundleid = GameId.getBundleid(window.location.host + window.location.pathname);
 

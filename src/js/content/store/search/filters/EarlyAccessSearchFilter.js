@@ -1,4 +1,10 @@
-class EarlyAccessSearchFilter extends SimpleSearchFilter {
+import { SimpleSearchFilter } from "./searchfilters.js";
+
+import { Localization } from "../../../../language.js";
+import { SyncedStorage } from "../../../../core.js";
+import { EarlyAccess } from "../../../common.js";
+
+export class EarlyAccessSearchFilter extends SimpleSearchFilter {
 
     constructor(feature) {
         super("as-hide", feature, Localization.str.search_filters.hide_ea, "ea");

@@ -1,4 +1,8 @@
-class MixedSearchFilter extends SimpleSearchFilter {
+import { SimpleSearchFilter } from "./searchfilters.js";
+
+import { Localization } from "../../../../language.js";
+
+export class MixedSearchFilter extends SimpleSearchFilter {
 
     constructor(feature) {
         super("as-hide", feature, Localization.str.search_filters.hide_mixed, "mixed");

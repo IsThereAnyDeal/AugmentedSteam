@@ -1,4 +1,9 @@
-class FCustomGiftcardAndWallet extends ASFeature {
+import { ASFeature } from "../../ASFeature.js";
+import { Currency, CurrencyRegistry } from "../../common.js";
+import { HTML } from "../../../core.js";
+import { Localization } from "../../../language.js";
+
+export class FCustomGiftcardAndWallet extends ASFeature {
 
     apply() {
         

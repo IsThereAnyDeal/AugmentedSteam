@@ -1,5 +1,6 @@
 import { ASFeature } from "../ASFeature.js";
-import { CAppPage } from "../store/app/CAppPage.js";
+import { ContextTypes } from "../ASContext.js";
+
 import { HTML, LocalStorage, SyncedStorage } from "../../core.js";
 import { Localization } from "../../language.js";
 import { ExtensionLayer } from "../common.js";
@@ -14,8 +15,7 @@ export class FMediaExpander extends ASFeature {
     apply() {
         let selector = null;
 
-        // TODO Replace with less expensive check
-        if (this.context instanceof CAppPage) {
+        if (this.context.type === ContextTypes.APP) {
             if (SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews")) {
                 selector = ".home_tabs_row";
             } else {

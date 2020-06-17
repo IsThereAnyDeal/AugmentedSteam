@@ -1,4 +1,15 @@
-class CWishlistPage extends CStoreBaseCallback {
+import { CStoreBaseCallback } from "../common/CStoreBaseCallback.js";
+import { ContextTypes } from "../../ASContext.js";
+
+import { FWishlistHighlights } from "./FWishlistHighlights.js";
+import { FWishlistITADPrices } from "./FWishlistITADPrices.js";
+import { FWishlistUserNotes } from "./FWishlistUserNotes.js";
+import { FWishlistStats } from "./FWishlistStats.js";
+import { FEmptyWishlist } from "./FEmptyWishlist.js";
+import { FExportWishlist } from "./FExportWishlist.js";
+import { FAlternativeLinuxIcon } from "../common/FAlternativeLinuxIcon.js";
+
+export class CWishlistPage extends CStoreBaseCallback {
 
     constructor() {
         super([
@@ -10,6 +21,8 @@ class CWishlistPage extends CStoreBaseCallback {
             FExportWishlist,
             FAlternativeLinuxIcon,
         ]);
+
+        this.type = ContextTypes.WISHLIST;
 
         if (!User.isSignedIn) {
             this.myWishlist = false;

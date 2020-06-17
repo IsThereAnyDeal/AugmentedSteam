@@ -1,7 +1,6 @@
 import { ASFeature } from "../../ASFeature.js";
-import { CAppPage } from "../app/CAppPage.js";
-import { CSubPage } from "../sub/CSubPage.js";
-import { CBundlePage } from "../bundle/CBundlePage.js";
+import { ContextTypes } from "../../ASContext.js";
+
 import { HTML, SyncedStorage } from "../../../core.js";
 import { Localization } from "../../../language.js";
 
@@ -10,16 +9,15 @@ export class FExtraLinks extends ASFeature {
     checkPrerequisites() {
         let context = this.context;
 
-        // TODO Replace with less expensive comparison
-        if (context instanceof CAppPage) {
+        if (context.type === ContextTypes.APP) {
             this._type = "app";
             this._gameid = context.appid;
             this._node = document.querySelector("#ReportAppBtn").parentNode;
-        } else if (context instanceof CSubPage) {
+        } else if (context.type === ContextTypes.SUB) {
             this._type = "sub";
             this._gameid = context.subid;
             this._node = document.querySelector(".share").parentNode;
-        } else if (context instanceof CBundlePage) {
+        } else if (context.type === ContextTypes.BUNDLE) {
             this._type = "bundle";
             this._gameid = context.bundleid;
             this._node = document.querySelector(".share, .rightcol .game_details");

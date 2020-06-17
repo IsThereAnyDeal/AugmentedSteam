@@ -1,4 +1,8 @@
-class ReviewsScoreSearchFilter extends SearchFilter {
+import { SearchFilter } from "./searchfilters.js";
+
+import { Localization } from "../../../../language.js";
+
+export class ReviewsScoreSearchFilter extends SearchFilter {
 
     _scoreFilter;
     _minScore;

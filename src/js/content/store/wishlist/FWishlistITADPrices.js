@@ -1,4 +1,9 @@
-class FWishlistITADPrices extends CallbackFeature {
+import { CallbackFeature } from "../../CallbackFeature.js";
+
+import { SyncedStorage } from "../../../core.js";
+import { ExtensionLayer, Prices } from "../../common.js";
+
+export class FWishlistITADPrices extends CallbackFeature {
 
     _cachedPrices = {};
 
