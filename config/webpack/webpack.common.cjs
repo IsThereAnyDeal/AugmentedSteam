@@ -5,12 +5,12 @@ module.exports = {
     "context": path.resolve(__dirname, "../../"),
     "entry": {
         "background": "./src/js/background/background.js",
-        "storedefault": "./src/js/content/store/PDefaultStore.js",
-        "storefrontpage": "./src/js/content/store/storefront/PStoreFrontPage.js",
-        "storesale": "./src/js/content/store/sale/PSalePage.js",
-        "storesearch": "./src/js/content/store/search/PSearchPage.js",
-        "storestats": "./src/js/content/store/stats/PStatsPage.js",
-        "storewishlist": "./src/js/content/store/wishlist/PWishlistPage.js",
+        "store/default.js": "./src/js/content/store/PDefaultStore.js",
+        "store/frontpage.js": "./src/js/content/store/storefront/PStoreFrontPage.js",
+        "store/sale.js": "./src/js/content/store/sale/PSalePage.js",
+        "store/search.js": "./src/js/content/store/search/PSearchPage.js",
+        "store/stats.js": "./src/js/content/store/stats/PStatsPage.js",
+        "store/wishlist.js": "./src/js/content/store/wishlist/PWishlistPage.js",
     },
     "output": {
         "filename": "entries/[name].js",
