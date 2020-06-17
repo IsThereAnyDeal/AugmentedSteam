@@ -4,9 +4,9 @@ const path = require("path");
 module.exports = {
     "context": path.resolve(__dirname, "../../"),
     "entry": {
-        "storefrontpage": "./src/js/content/store/storefront/PStoreFrontPage.js",
-        "store": "./src/js/content/store.js",
         "background": "./src/js/background/background.js",
+        "storedefault": "./src/js/content/store/PDefaultStore.js",
+        "storefrontpage": "./src/js/content/store/storefront/PStoreFrontPage.js",
     },
     "output": {
         "filename": "entries/[name].js",
@@ -15,14 +15,14 @@ module.exports = {
         new CopyWebpackPlugin({
             "patterns": [
                 {
-                    "context": "./src/",
+                    "context": "src/",
                     "from": "*/**",
                     "globOptions": {
                         "ignore": ["**/js/**"], // TODO Make this only ignore the top level js directory
                     } 
                 },
                 {
-                    "context": "./src/js/",
+                    "context": "src/js/",
                     "from": "lib/**",
                 },
             ]

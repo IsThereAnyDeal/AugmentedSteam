@@ -60,9 +60,6 @@ export async function storeCheck() {
         case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
             new CWishlistPage();
             break;
-        
-        default:
-            new CStoreBase().applyFeatures();
     }
 });
 // Intentionally not called
