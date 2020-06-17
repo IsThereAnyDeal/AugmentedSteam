@@ -10,7 +10,5 @@ export class CAccountPage extends ASContext {
         ]);
 
         this.type = ContextTypes.ACCOUNT;
-
-        this.applyFeatures();
     }
 }

@@ -1,7 +1,7 @@
 import { ASFeature } from "../../ASFeature.js";
 
 import { HTML, SyncedStorage } from "../../../core.js";
-import { ExtensionLayer } from "../../common.js";
+import { ExtensionLayer, Price } from "../../common.js";
 import { Localization } from "../../../language.js";
 
 export class FWishlistStats extends ASFeature {

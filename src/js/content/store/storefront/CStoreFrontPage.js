@@ -15,7 +15,5 @@ export class CStoreFrontPage extends CStoreBase {
         ]);
 
         this.type = ContextTypes.STORE_FRONT;
-
-        this.applyFeatures();
     }
 }

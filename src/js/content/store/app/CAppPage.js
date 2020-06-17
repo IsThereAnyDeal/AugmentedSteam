@@ -116,8 +116,6 @@ export class CAppPage extends CStorePage {
 
         FMediaExpander.dependencies = [ FYouTubeVideos ];
         FMediaExpander.weakDependency = true;
-
-        this.applyFeatures();
     }
 
     storePageDataPromise() {

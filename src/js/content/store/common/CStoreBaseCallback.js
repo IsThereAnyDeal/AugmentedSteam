@@ -2,7 +2,11 @@ import { CStoreBase } from "./CStoreBase.js";
 
 export class CStoreBaseCallback extends CStoreBase {
 
-    _callbacks = [];
+    constructor(features = []) {
+        super(features);
+
+        this._callbacks = [];
+    }
 
     registerCallback(fn) {
         this._callbacks.push(fn);

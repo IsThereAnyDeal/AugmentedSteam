@@ -1,3 +1,3 @@
 import { CStoreFrontPage } from "./CStoreFrontPage.js";
 
-new CStoreFrontPage();
+new CStoreFrontPage().applyFeatures();

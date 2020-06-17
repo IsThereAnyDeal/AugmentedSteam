@@ -5,7 +5,11 @@ import { ExtensionLayer, Prices } from "../../common.js";
 
 export class FWishlistITADPrices extends CallbackFeature {
 
-    _cachedPrices = {};
+    constructor(context) {
+        super(context);
+
+        this._cachedPrices = {};
+    }
 
     checkPrerequisites() {
         return SyncedStorage.get("showlowestprice_onwishlist");

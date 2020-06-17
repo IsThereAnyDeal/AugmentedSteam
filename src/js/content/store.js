@@ -56,10 +56,6 @@ export async function storeCheck() {
         case /^\/sale\/.*/.test(path):
             new CSalePage();
             break;
-
-        case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
-            new CWishlistPage();
-            break;
     }
 });
 // Intentionally not called

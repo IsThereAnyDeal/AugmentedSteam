@@ -9,6 +9,8 @@ import { FEmptyWishlist } from "./FEmptyWishlist.js";
 import { FExportWishlist } from "./FExportWishlist.js";
 import { FAlternativeLinuxIcon } from "../common/FAlternativeLinuxIcon.js";
 
+import { ExtensionLayer, User } from "../../common.js";
+
 export class CWishlistPage extends CStoreBaseCallback {
 
     constructor() {
@@ -33,20 +35,21 @@ export class CWishlistPage extends CStoreBaseCallback {
         }
 
         this._registerObserver();
+    }
 
-        if (document.querySelector("#throbber").style.display === "none") {
-            this.applyFeatures();
-        } else {
-            ExtensionLayer.runInPageContext(() => new Promise(resolve => {
+    async applyFeatures() {
+        if (document.querySelector("#throbber").style.display !== "none") {
+            await ExtensionLayer.runInPageContext(() => new Promise(resolve => {
                 $J(document).ajaxSuccess((e, xhr, settings) => {
                     let url = new URL(settings.url);
                     if (url.origin + url.pathname === `${g_strWishlistBaseURL}wishlistdata/` && g_Wishlist.nPagesToLoad === g_Wishlist.nPagesLoaded) {
                         resolve();
                     }
                 });
-            }), null, true)
-            .then(() => { this.applyFeatures(); });
-        }        
+            }), null, true);
+        }
+
+        super.applyFeatures();
     }
 
     _registerObserver() {

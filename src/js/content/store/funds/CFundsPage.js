@@ -11,7 +11,5 @@ export class CFundsPage extends CStoreBase {
         ]);
 
         this.type = ContextTypes.FUNDS;
-
-        this.applyFeatures();
     }
 }

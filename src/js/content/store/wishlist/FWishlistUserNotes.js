@@ -6,8 +6,6 @@ import { Localization } from "../../../language.js";
 
 export class FWishlistUserNotes extends CallbackFeature {
 
-    _userNotes;
-
     checkPrerequisites() {
         return this.context.myWishlist && SyncedStorage.get("showusernotes");
     }

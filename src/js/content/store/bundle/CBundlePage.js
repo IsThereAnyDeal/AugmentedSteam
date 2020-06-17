@@ -18,7 +18,5 @@ export class CBundlePage extends CStorePage {
         this.type = ContextTypes.BUNDLE;
 
         this.bundleid = GameId.getBundleid(window.location.host + window.location.pathname);
-
-        this.applyFeatures();
     }
 }

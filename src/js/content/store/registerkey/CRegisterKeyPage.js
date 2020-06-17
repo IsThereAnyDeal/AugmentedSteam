@@ -10,7 +10,5 @@ export class CRegisterKeyPage extends ASContext {
         ]);
 
         this.type = ContextTypes.REGISTER_KEY;
-
-        this.applyFeatures();
     }
 }

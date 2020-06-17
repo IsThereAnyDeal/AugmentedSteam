@@ -13,7 +13,5 @@ export class CSearchPage extends CStoreBase {
         this.type = ContextTypes.SEARCH;
 
         this.infiniScrollEnabled = document.querySelector(".search_pagination").style.display === "none";
-
-        this.applyFeatures();
     }
 }

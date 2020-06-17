@@ -11,7 +11,5 @@ export class CSalePage extends CStorePage {
         ]);
 
         this.type = ContextTypes.SALE;
-
-        this.applyFeatures();
     }
 }

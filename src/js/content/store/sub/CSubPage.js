@@ -22,7 +22,5 @@ export class CSubPage extends CStorePage {
         this.type = ContextTypes.SUB;
 
         this.subid = GameId.getSubid(window.location.host + window.location.pathname);
-
-        this.applyFeatures();
     }
 }

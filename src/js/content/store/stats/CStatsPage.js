@@ -11,7 +11,5 @@ export class CStatsPage extends CStoreBase {
         ]);
 
         this.type = ContextTypes.STATS;
-
-        this.applyFeatures();
     }
 }

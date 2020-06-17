@@ -7,6 +7,7 @@ module.exports = {
         "background": "./src/js/background/background.js",
         "storedefault": "./src/js/content/store/PDefaultStore.js",
         "storefrontpage": "./src/js/content/store/storefront/PStoreFrontPage.js",
+        "storewishlist": "./src/js/content/store/wishlist/PWishlistPage.js",
     },
     "output": {
         "filename": "entries/[name].js",
