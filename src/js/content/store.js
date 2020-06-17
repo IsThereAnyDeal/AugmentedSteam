@@ -60,11 +60,6 @@ export async function storeCheck() {
         case /^\/wishlist\/(?:id|profiles)\/.+(\/.*)?/.test(path):
             new CWishlistPage();
             break;
-
-        // Storefront-front only
-        case /^\/$/.test(path):
-            new CStoreFrontPage();
-            break;
         
         default:
             new CStoreBase().applyFeatures();

@@ -11,7 +11,7 @@
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
         "lib/DOMPurify/purify.js",
-        "storefrontpage.js"
+        "entries/storefrontpage.js"
       ],
       "css": [
         "css/enhancedsteam.css",

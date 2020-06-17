@@ -2,11 +2,14 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 
 module.exports = {
-    "context": path.resolve(__dirname, "../.."),
+    "context": path.resolve(__dirname, "../../"),
     "entry": {
         "storefrontpage": "./src/js/content/store/storefront/PStoreFrontPage.js",
         "store": "./src/js/content/store.js",
         "background": "./src/js/background/background.js",
+    },
+    "output": {
+        "filename": "entries/[name].js",
     },
     "plugins": [
         new CopyWebpackPlugin({
