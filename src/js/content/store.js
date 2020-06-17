@@ -62,10 +62,6 @@ export async function storeCheck(context) {
         case /^\/stats(\/.*)?$/.test(path):
             new CStatsPage();
             break;
-
-        case /^\/sale\/.*/.test(path):
-            new CSalePage();
-            break;
     }
 });
 // Intentionally not called
