@@ -5,8 +5,6 @@ import { ExtensionLayer, RequestData, User } from "../../common.js";
 
 export class FMultiProductKeys extends ASFeature {
 
-    _template;
-
     apply() {
 
         this._template = `<div id="es_activate_modal">

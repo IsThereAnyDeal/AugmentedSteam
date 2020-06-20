@@ -112,6 +112,21 @@
     },
     {
       "matches": [
+        "*://*.steampowered.com/account/registerkey",
+        "*://*.steampowered.com/account/registerkey/*"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/store/registerkey.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-firefox.css"
+      ]
+    },
+    {
+      "matches": [
         "*://*.steampowered.com/*"
       ],
       "exclude_matches": [
@@ -139,7 +154,9 @@
         "*://*.steampowered.com/digitalgiftcards/selectgiftcard",
         "*://*.steampowered.com/digitalgiftcards/selectgiftcard/*",
         "*://*.steampowered.com/account",
-        "*://*.steampowered.com/account/"
+        "*://*.steampowered.com/account/",
+        "*://*.steampowered.com/account/registerkey",
+        "*://*.steampowered.com/account/registerkey/*"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",

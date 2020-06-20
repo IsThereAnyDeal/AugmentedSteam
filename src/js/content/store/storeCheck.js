@@ -41,10 +41,6 @@ export default async (context) => {
         case /^\/bundle\/.*/.test(path):
             new CBundlePage();
             break;
-
-        case /^\/account\/registerkey(\/.*)?$/.test(path):
-            new CRegisterKeyPage();
-            return;
     }
 });
 // Intentionally not called

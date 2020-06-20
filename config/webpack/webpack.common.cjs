@@ -9,6 +9,7 @@ module.exports = {
         "store/default": "./src/js/content/store/PDefaultStore.js",
         "store/frontpage": "./src/js/content/store/storefront/PStoreFrontPage.js",
         "store/funds": "./src/js/content/store/funds/PFundsPage.js",
+        "store/registerkey": "./src/js/content/store/registerkey/PRegisterKeyPage.js",
         "store/sale": "./src/js/content/store/sale/PSalePage.js",
         "store/search": "./src/js/content/store/search/PSearchPage.js",
         "store/stats": "./src/js/content/store/stats/PStatsPage.js",
