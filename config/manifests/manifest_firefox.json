@@ -155,6 +155,20 @@
     },
     {
       "matches": [
+        "*://*.steampowered.com/app/*"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/store/app.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-firefox.css"
+      ]
+    },
+    {
+      "matches": [
         "*://*.steampowered.com/*"
       ],
       "exclude_matches": [
@@ -186,7 +200,8 @@
         "*://*.steampowered.com/account/registerkey",
         "*://*.steampowered.com/account/registerkey/*",
         "*://*.steampowered.com/bundle/*",
-        "*://*.steampowered.com/sub/*"
+        "*://*.steampowered.com/sub/*",
+        "*://*.steampowered.com/app/*"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",

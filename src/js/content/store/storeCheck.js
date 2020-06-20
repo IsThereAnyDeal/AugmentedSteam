@@ -29,10 +29,6 @@ export default async function(context) {
         case /\bagecheck\b/.test(path):
             AgeCheck.sendVerification();
             break;
-
-        case /^\/app\/.*/.test(path):
-            new CAppPage();
-            break;
     }
 });
 // Intentionally not called
