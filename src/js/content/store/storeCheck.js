@@ -45,15 +45,6 @@ export default async (context) => {
         case /^\/account\/registerkey(\/.*)?$/.test(path):
             new CRegisterKeyPage();
             return;
-
-        case /^\/account(\/)?$/.test(path):
-            new CAccountPage();
-            return;
-
-        // Match URLs like https://store.steampowered.com/steamaccount/addfundskjdsakjdsakjkjsa since they are still valid
-        case /^\/(steamaccount\/addfunds|digitalgiftcards\/selectgiftcard(\/.*)?$)/.test(path):
-            new CFundsPage();
-            break;
     }
 });
 // Intentionally not called

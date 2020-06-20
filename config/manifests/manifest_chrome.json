@@ -95,6 +95,21 @@
     },
     {
       "matches": [
+        "*://*.steampowered.com/account",
+        "*://*.steampowered.com/account/"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/store/account.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css"
+      ]
+    },
+    {
+      "matches": [
         "*://*.steampowered.com/*"
       ],
       "exclude_matches": [
@@ -120,7 +135,9 @@
         "*://*.steampowered.com/search/*",
         "*://*.steampowered.com/steamaccount/addfunds*",
         "*://*.steampowered.com/digitalgiftcards/selectgiftcard",
-        "*://*.steampowered.com/digitalgiftcards/selectgiftcard/*"
+        "*://*.steampowered.com/digitalgiftcards/selectgiftcard/*",
+        "*://*.steampowered.com/account",
+        "*://*.steampowered.com/account/"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
