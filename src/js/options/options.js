@@ -1,3 +1,7 @@
+import { BackgroundBase, Downloader, ExtensionResources, HTML, sleep, SyncedStorage } from "../core.js";
+import { CountryList } from "./countryList.js";
+import { StoreList } from "./storeList.js";
+import { Language, Localization } from "../language.js";
 
 class SaveIndicator {
 
@@ -799,9 +803,9 @@ document.addEventListener("DOMContentLoaded", Options.init);
     linkEl.type = "text/css";
 
     if (manifest.browser_specific_settings) { // we only include this in firefox manifest
-        linkEl.href = "css/enhancedsteam-firefox.css";
+        linkEl.href = "../css/enhancedsteam-firefox.css";
     } else {
-        linkEl.href = "css/enhancedsteam-chrome.css";
+        linkEl.href = "../css/enhancedsteam-chrome.css";
     }
     document.head.appendChild(linkEl);
 

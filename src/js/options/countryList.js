@@ -1,4 +1,4 @@
-var CountryList = {
+export const CountryList = {
     "": "None",
     "af": "Afghanistan",
     "al": "Albania",

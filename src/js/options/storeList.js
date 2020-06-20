@@ -1,4 +1,4 @@
-var StoreList = [
+export const StoreList = [
     {
         "id": "game2",
         "title": "2game",
