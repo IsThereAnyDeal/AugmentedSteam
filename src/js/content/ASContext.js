@@ -23,4 +23,5 @@ export let ContextTypes = Object.freeze({
     "STORE_FRONT": 10,
     "SUB": 11,
     "WISHLIST": 12,
+    "AGECHECK": 13,
 });

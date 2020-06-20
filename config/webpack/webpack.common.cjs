@@ -6,6 +6,7 @@ module.exports = {
     "entry": {
         "background": "./src/js/background/background.js",
         "store/account": "./src/js/content/store/account/PAccountPage.js",
+        "store/agecheck": "./src/js/content/store/agecheck/PAgecheckPage.js",
         "store/app": "./src/js/content/store/app/PAppPage.js",
         "store/bundle": "./src/js/content/store/bundle/PBundlePage.js",
         "store/default": "./src/js/content/store/PDefaultStore.js",

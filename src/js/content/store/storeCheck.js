@@ -23,12 +23,3 @@ export default async function(context) {
 
     return new context().applyFeatures();
 }
-
-(async function(){
-    switch (true) {
-        case /\bagecheck\b/.test(path):
-            AgeCheck.sendVerification();
-            break;
-    }
-});
-// Intentionally not called
