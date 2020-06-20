@@ -2,7 +2,7 @@ import { SyncedStorage } from "../../core.js";
 import { User, Currency, Common } from "../common.js";
 import { Localization } from "../../language.js";
 
-export default async (context) => {
+export default async function(context) {
 
     if (!document.getElementById("global_header")) { return; }
 
@@ -36,10 +36,6 @@ export default async (context) => {
 
         case /^\/sub\/.*/.test(path):
             new CSubPage();
-            break;
-
-        case /^\/bundle\/.*/.test(path):
-            new CBundlePage();
             break;
     }
 });
