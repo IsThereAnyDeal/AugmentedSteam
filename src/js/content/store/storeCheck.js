@@ -33,10 +33,6 @@ export default async function(context) {
         case /^\/app\/.*/.test(path):
             new CAppPage();
             break;
-
-        case /^\/sub\/.*/.test(path):
-            new CSubPage();
-            break;
     }
 });
 // Intentionally not called

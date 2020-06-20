@@ -7,6 +7,8 @@ import { FITADPrices } from "../common/FITADPrices.js";
 import { FRegionalPricing } from "../common/FRegionalPricing.js";
 import { FSavingsCheck } from "./FSavingsCheck.js";
 
+import { GameId } from "../../../core.js";
+
 export class CSubPage extends CStorePage {
     
     constructor() {

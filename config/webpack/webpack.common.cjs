@@ -14,6 +14,7 @@ module.exports = {
         "store/sale": "./src/js/content/store/sale/PSalePage.js",
         "store/search": "./src/js/content/store/search/PSearchPage.js",
         "store/stats": "./src/js/content/store/stats/PStatsPage.js",
+        "store/sub": "./src/js/content/store/sub/PSubPage.js",
         "store/wishlist": "./src/js/content/store/wishlist/PWishlistPage.js",
     },
     "output": {
