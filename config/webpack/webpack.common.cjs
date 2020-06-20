@@ -40,6 +40,7 @@ module.exports = {
                     "from": "lib/**",
                 },
                 "changelog.txt",
+                "LICENSE",
             ]
         }),
     ],
