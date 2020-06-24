@@ -1,18 +1,8 @@
-import {BackgroundBase, Downloader, ExtensionResources, HTML, SyncedStorage, sleep} from "../core.js";
+import {BackgroundBase, Downloader, ExtensionResources, HTML, Info, SyncedStorage, sleep} from "../core.js";
+
 import {CountryList} from "./countryList.js";
 import {StoreList} from "./storeList.js";
 import {Language, Localization} from "../language.js";
-
-class SaveIndicator {
-
-    static show() {
-        const node = document.getElementById("saved");
-        if (!node) { return; }
-
-        Fader.fadeInFadeOut(node);
-    }
-
-}
 
 class Fader {
 
@@ -26,7 +16,7 @@ class Fader {
         node.style[property] = finalValue;
     }
 
-    static async fadeIn(node, duration = 400) {
+    static fadeIn(node, duration = 400) {
         return Fader.applyCSSTransition(node, "opacity", 0, 1, duration);
     }
 
@@ -47,6 +37,16 @@ class Fader {
     }
 }
 
+class SaveIndicator {
+
+    static show() {
+        const node = document.getElementById("saved");
+        if (!node) { return; }
+
+        Fader.fadeInFadeOut(node);
+    }
+
+}
 
 class CustomLinks {
 
@@ -166,7 +166,7 @@ class Sidebar {
 
     static _handleCategoryClick(e) {
         const category = e.target.closest(".category.sidebar_entry");
-        if (category == null) {
+        if (category === null) {
             return;
         }
 
@@ -253,7 +253,10 @@ class Sidebar {
 
             let subentries = "";
             sections.forEach(section => {
-                subentries += `<li class="sidebar_entry subentry" data-block-sel="#${section.id}">${section.firstElementChild.textContent}</li>`;
+                subentries +=
+                    `<li class="sidebar_entry subentry" data-block-sel="#${section.id}">
+                        ${section.firstElementChild.textContent}
+                    </li>`;
                 Sidebar._contentNodes.push(section);
             });
             HTML.beforeEnd(row, `<ul class="subentries">${subentries}</ul>`);
@@ -322,7 +325,7 @@ class Region {
         const value = [];
         const nodes = document.querySelectorAll(".js-region");
         for (const node of nodes) {
-            if (node.value && node.value != "") {
+            if (node.value && node.value !== "") {
                 value.push(node.value);
             }
         }
@@ -338,7 +341,7 @@ class Region {
     static _addRegionHtml(country) {
         let options = "";
         for (const cc in CountryList) {
-            const selected = (cc.toLowerCase() == country ? " selected='selected'" : "");
+            const selected = (cc.toLowerCase() === country ? " selected='selected'" : "");
             options += `<option value='${cc.toLowerCase()}'${selected}>${CountryList[cc]}</option>`;
         }
 
@@ -365,15 +368,14 @@ class Region {
     }
 }
 
-
-const Options = (function() {
+const Options = (() => {
     const self = {};
 
     const profileLinkImagesSelect = document.getElementById("profile_link_images_dropdown");
 
     function loadStores() {
         const cols = 4;
-        const stores_node = document.getElementById("store_stores");
+        const storesNode = document.getElementById("store_stores");
         const stores = SyncedStorage.get("stores");
 
         const perCol = Math.ceil(StoreList.length / cols);
@@ -384,15 +386,63 @@ const Options = (function() {
             html += "<div class='store_col'>";
             for (let len = Math.min(StoreList.length, (c + 1) * perCol); i < len; ++i) {
                 const id = StoreList[i].id;
-                html += `<div class="option"><input type="checkbox" id="${id}"${(stores.length === 0 || stores.indexOf(id) !== -1) ? " checked" : ""}><label for="${id}">${StoreList[i].title}</label></div>`;
+                html +=
+                    `<div class="option">
+                        <input type="checkbox" id="${id}"${(stores.length === 0 || stores.indexOf(id) !== -1) ? " checked" : ""}>
+                        <label for="${id}">${StoreList[i].title}</label>
+                    </div>`;
             }
             html += "</div>";
         }
 
-        HTML.inner(stores_node, html);
+        HTML.inner(storesNode, html);
     }
 
     async function loadTranslation() {
+
+        function deepCount(obj) {
+            let cnt = 0;
+            for (const key of Object.keys(obj)) {
+                if (!Localization.str[key]) { // don't count "made up" translations
+                    continue;
+                }
+                if (typeof obj[key] === "object") {
+                    cnt += deepCount(obj[key]);
+                } else if (obj[key] !== "") {
+                    cnt++;
+                }
+            }
+            return cnt;
+        }
+
+        const [itadStatus, itadAction] = document.querySelectorAll("#itad_status, #itad_action");
+
+        async function disconnect() {
+            await BackgroundBase.action("itad.disconnect");
+
+            itadStatus.textContent = Localization.str.disconnected;
+            itadStatus.classList.add("disconnected");
+            itadStatus.classList.remove("connected");
+
+            itadAction.textContent = Localization.str.connect;
+            itadAction.removeEventListener("click", disconnect);
+            itadAction.addEventListener("click", connect); // eslint-disable-line no-use-before-define -- Circular dependency
+        }
+
+        async function connect() {
+
+            // Has to be synchronously acquired from a user gesture
+            if (!await browser.permissions.request({"permissions": ["webRequest", "webRequestBlocking"]})) { return; }
+            await BackgroundBase.action("itad.authorize");
+
+            itadStatus.textContent = Localization.str.connected;
+            itadStatus.classList.add("connected");
+            itadStatus.classList.remove("disconnected");
+
+            itadAction.textContent = Localization.str.disconnect;
+            itadAction.removeEventListener("click", connect);
+            itadAction.addEventListener("click", disconnect);
+        }
 
         // When locale files are loaded changed text on page accordingly
         await Localization;
@@ -426,9 +476,9 @@ const Options = (function() {
         nodes = document.querySelectorAll("#warning_language option");
         for (const node of nodes) {
             const lang = node.textContent;
-            const lang_trl = Localization.str.options.lang[node.value.toLowerCase()];
-            if (lang !== lang_trl) {
-                node.textContent = `${lang} (${lang_trl})`;
+            const langTrl = Localization.str.options.lang[node.value.toLowerCase()];
+            if (lang !== langTrl) {
+                node.textContent = `${lang} (${langTrl})`;
             }
         }
 
@@ -448,7 +498,6 @@ const Options = (function() {
             HTML.inner(document.querySelector(`.lang-perc.${lang}`), `${percentage.toFixed(1)}%&nbsp;`);
         }
 
-        const [itadStatus, itadAction] = document.querySelectorAll("#itad_status, #itad_action");
         if (await BackgroundBase.action("itad.isconnected")) {
             itadStatus.textContent = Localization.str.connected;
             itadStatus.classList.add("connected");
@@ -461,46 +510,6 @@ const Options = (function() {
 
             itadAction.textContent = Localization.str.connect;
             itadAction.addEventListener("click", connect);
-        }
-
-        async function disconnect() {
-            await BackgroundBase.action("itad.disconnect");
-
-            itadStatus.textContent = Localization.str.disconnected;
-            itadStatus.classList.add("disconnected");
-            itadStatus.classList.remove("connected");
-
-            itadAction.textContent = Localization.str.connect;
-            itadAction.removeEventListener("click", disconnect);
-            itadAction.addEventListener("click", connect);
-        }
-
-        async function connect() {
-            if (!await browser.permissions.request({"permissions": ["webRequest", "webRequestBlocking"]})) { return; } // Has to be synchronously acquired from a user gesture
-            await BackgroundBase.action("itad.authorize");
-
-            itadStatus.textContent = Localization.str.connected;
-            itadStatus.classList.add("connected");
-            itadStatus.classList.remove("disconnected");
-
-            itadAction.textContent = Localization.str.disconnect;
-            itadAction.removeEventListener("click", connect);
-            itadAction.addEventListener("click", disconnect);
-        }
-
-        function deepCount(obj) {
-            let cnt = 0;
-            for (const key of Object.keys(obj)) {
-                if (!Localization.str[key]) { // don't count "made up" translations
-                    continue;
-                }
-                if (typeof obj[key] === "object") {
-                    cnt += deepCount(obj[key]);
-                } else if (obj[key] !== "") {
-                    cnt++;
-                }
-            }
-            return cnt;
         }
     }
 
@@ -523,7 +532,7 @@ const Options = (function() {
             break;
         }
         case "none": {
-            icons.forEach(icon => icon.style.display = "none");
+            icons.forEach(icon => { icon.style.display = "none"; });
         }
         }
     }
@@ -547,8 +556,10 @@ const Options = (function() {
                 const parentOption = node.closest(".parent_option");
                 if (parentOption) {
                     if (node.id === "stores_all") { value = !value; }
-                    for (let nextSibling = parentOption.nextElementSibling; nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
-                        nextSibling.classList.toggle("disabled", !value);
+
+                    let nxt = parentOption.nextElementSibling;
+                    for (; nxt.classList.contains("sub_option"); nxt = nxt.nextElementSibling) {
+                        nxt.classList.toggle("disabled", !value);
                     }
                 }
             } else if (value) {
@@ -646,19 +657,7 @@ const Options = (function() {
         }
     }
 
-    function saveOptionFromEvent(e) {
-        if (!e.target || !e.target.closest) { return; } // "blur" fires when the window loses focus
-        const node = e.target.closest("[data-setting]");
-        if (!node) {
-            if (e.target.closest("#store_stores")) {
-                saveOption("stores");
-            }
-            return;
-        }
-        saveOption(node.dataset.setting);
-    }
-
-    async function saveOption(option) {
+    function saveOption(option) {
         let value;
 
         if (option === "stores") {
@@ -691,6 +690,18 @@ const Options = (function() {
         SaveIndicator.show();
     }
 
+    function saveOptionFromEvent(e) {
+        if (!e.target || !e.target.closest) { return; } // "blur" fires when the window loses focus
+        const node = e.target.closest("[data-setting]");
+        if (!node) {
+            if (e.target.closest("#store_stores")) {
+                saveOption("stores");
+            }
+            return;
+        }
+        saveOption(node.dataset.setting);
+    }
+
     function setValue(selector, value) {
         const node = document.querySelector(selector);
         node.value = value;
@@ -702,9 +713,10 @@ const Options = (function() {
 
     function addCurrencies(currencies) {
         const select = document.getElementById("override_price");
-        currencies = currencies
+
+        currencies
             .map(cu => cu.abbr)
-            .filter(cu => cu != "USD") // already in HTML
+            .filter(cu => cu !== "USD") // already in HTML
             .sort()
             .forEach(currency => {
                 const el = document.createElement("option");
@@ -714,7 +726,7 @@ const Options = (function() {
             });
     }
 
-    self.init = async function() {
+    self.init = async() => {
         const settings = SyncedStorage.init();
         const currency = ExtensionResources.getJSON("json/currency.json").then(addCurrencies);
         await Promise.all([settings, currency]);
@@ -727,9 +739,11 @@ const Options = (function() {
 
         document.getElementById("profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
 
-        const addHandlerToSetDefaultColor = (key) => {
-            document.getElementById(`${key}_default`).addEventListener("click", () => setValue(`#${key}_color`, Defaults[`${key}_color`]));
-        };
+        function addHandlerToSetDefaultColor(key) {
+            document.getElementById(`${key}_default`)
+                .addEventListener("click", () => { setValue(`#${key}_color`, Defaults[`${key}_color`]); });
+        }
+
         ["highlight_owned",
             "highlight_wishlist",
             "highlight_coupon",
@@ -747,8 +761,10 @@ const Options = (function() {
             "tag_collection",
             "tag_waitlist"].forEach(addHandlerToSetDefaultColor);
 
-        document.getElementById("spamcommentregex_default").addEventListener("click", () => setValue("#spamcommentregex", "[\\u2500-\\u25FF]"));
-        document.getElementById("quickinv_default").addEventListener("click", () => setValue("#quickinv_diff", "-0.01"));
+        document.getElementById("spamcommentregex_default")
+            .addEventListener("click", () => setValue("#spamcommentregex", "[\\u2500-\\u25FF]"));
+        document.getElementById("quickinv_default")
+            .addEventListener("click", () => setValue("#quickinv_diff", "-0.01"));
 
         document.getElementById("quickinv_diff").addEventListener("blur", () => {
             if (isNaN(parseFloat(document.getElementById("quickinv_diff").value))) {
@@ -769,8 +785,9 @@ const Options = (function() {
 
         document.querySelectorAll(".parent_option").forEach(parentOption => {
             parentOption.querySelector("input").addEventListener("change", () => {
-                for (let nextSibling = parentOption.nextElementSibling; nextSibling.classList.contains("sub_option"); nextSibling = nextSibling.nextElementSibling) {
-                    nextSibling.classList.toggle("disabled");
+                let nxt = parentOption.nextElementSibling;
+                for (; nxt.classList.contains("sub_option"); nxt = nxt.nextElementSibling) {
+                    nxt.classList.toggle("disabled");
                 }
             });
         });
@@ -793,7 +810,7 @@ const Options = (function() {
 document.addEventListener("DOMContentLoaded", Options.init);
 
 // add correct version of styles based on browser
-(function() {
+(() => {
     const manifest = browser.runtime.getManifest();
 
     const linkEl = document.createElement("link");
