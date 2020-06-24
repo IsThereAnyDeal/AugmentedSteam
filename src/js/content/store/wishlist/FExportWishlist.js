@@ -1,17 +1,17 @@
-import { ASFeature } from "../../ASFeature.js";
+import {ASFeature} from "../../ASFeature.js";
 
-import { Downloader, HTML, SyncedStorage } from "../../../core.js";
-import { Localization } from "../../../language.js";
-import { Clipboard, ExtensionLayer } from "../../common.js";
+import {Downloader, HTML, SyncedStorage} from "../../../core.js";
+import {Localization} from "../../../language.js";
+import {Clipboard, ExtensionLayer} from "../../common.js";
 
 export class FExportWishlist extends ASFeature {
 
     apply() {
         HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${Localization.str.export.wishlist}</div></div>`);
 
-        document.querySelector("#es_export_wishlist").addEventListener("click", async () => {
+        document.querySelector("#es_export_wishlist").addEventListener("click", async() => {
 
-            let [appInfo, apps] = await ExtensionLayer.runInPageContext(() => [g_rgAppInfo, g_Wishlist.rgAllApps], null, true); 
+            const [appInfo, apps] = await ExtensionLayer.runInPageContext(() => [g_rgAppInfo, g_Wishlist.rgAllApps], null, true);
 
             this._showDialog(appInfo, apps);
         });
@@ -33,10 +33,10 @@ export class FExportWishlist extends ASFeature {
     _showDialog(appInfo, apps) {
 
         function exportWishlist(method) {
-            let type = document.querySelector("input[name='es_wexport_type']:checked").value;
-            let format = document.querySelector("#es-wexport-format").value;
+            const type = document.querySelector("input[name='es_wexport_type']:checked").value;
+            const format = document.querySelector("#es-wexport-format").value;
 
-            let wishlist = new WishlistExporter(appInfo, apps);
+            const wishlist = new WishlistExporter(appInfo, apps);
 
             let result = "";
             let filename = "";
@@ -54,7 +54,7 @@ export class FExportWishlist extends ASFeature {
             if (method === WishlistExporter.method.copyToClipboard) {
                 Clipboard.set(result);
             } else if (method === WishlistExporter.method.download) {
-                Downloader.download(new Blob([result], { type: `${filetype};charset=UTF-8` }), filename);
+                Downloader.download(new Blob([result], {"type": `${filetype};charset=UTF-8`}), filename);
             }
         }
 
@@ -82,19 +82,19 @@ export class FExportWishlist extends ASFeature {
                 null, // use default "Cancel"
                 exportStr.copy_clipboard
             );
-        }, [ Localization.str.export ]);
+        }, [Localization.str.export]);
 
-        let [ dlBtn, copyBtn ] = document.querySelectorAll(".newmodal_buttons > .btn_medium");
+        const [dlBtn, copyBtn] = document.querySelectorAll(".newmodal_buttons > .btn_medium");
 
         dlBtn.classList.remove("btn_green_white_innerfade");
         dlBtn.classList.add("btn_darkblue_white_innerfade");
 
         // Capture this s.t. the CModal doesn't get destroyed before we can grab this information
-        dlBtn.addEventListener("click", () => { exportWishlist(WishlistExporter.method.download) }, true);
-        copyBtn.addEventListener("click", () => { exportWishlist(WishlistExporter.method.copyToClipboard) }, true);
+        dlBtn.addEventListener("click", () => { exportWishlist(WishlistExporter.method.download); }, true);
+        copyBtn.addEventListener("click", () => { exportWishlist(WishlistExporter.method.copyToClipboard); }, true);
 
-        let format = document.querySelector(".es-wexport__format");
-        for (let el of document.getElementsByName("es_wexport_type")) {
+        const format = document.querySelector(".es-wexport__format");
+        for (const el of document.getElementsByName("es_wexport_type")) {
             el.addEventListener("click", e => format.style.display = e.target.value === "json" ? "none" : "");
         }
     }
@@ -109,21 +109,21 @@ class WishlistExporter {
     }
 
     toJson() {
-        let json = {
-            version: "03",
-            data: []
+        const json = {
+            "version": "03",
+            "data": []
         };
 
-        for (let [appid, data] of Object.entries(this.appInfo)) {
+        for (const [appid, data] of Object.entries(this.appInfo)) {
             json.data.push({
-                gameid: ["steam", `app/${appid}`],
-                title: data.name,
-                url: `https://store.steampowered.com/app/${appid}/`,
-                type: data.type,
-                release_date: data.release_string,
-                note: this.notes[appid] || null,
-                price: data.subs[0] ? data.subs[0].price : null,
-                discount: data.subs[0] ? data.subs[0].discount_pct : 0,
+                "gameid": ["steam", `app/${appid}`],
+                "title": data.name,
+                "url": `https://store.steampowered.com/app/${appid}/`,
+                "type": data.type,
+                "release_date": data.release_string,
+                "note": this.notes[appid] || null,
+                "price": data.subs[0] ? data.subs[0].price : null,
+                "discount": data.subs[0] ? data.subs[0].discount_pct : 0,
             });
         }
 
@@ -131,17 +131,17 @@ class WishlistExporter {
     }
 
     toText(format) {
-        let result = [];
-        let parser = new DOMParser();
-        for (let appid of this.apps) {
-            let data = this.appInfo[appid];
+        const result = [];
+        const parser = new DOMParser();
+        for (const appid of this.apps) {
+            const data = this.appInfo[appid];
             let price = "N/A";
             let discount = "0%";
             let base_price = "N/A";
 
             // if it has a price (steam always picks first sub, see https://github.com/SteamDatabase/SteamTracking/blob/f3f38deef1f1a8c6bf5707013adabde3ed873620/store.steampowered.com/public/javascript/wishlist.js#L292)
             if (data.subs[0]) {
-                let block = parser.parseFromString(data.subs[0].discount_block, "text/html");
+                const block = parser.parseFromString(data.subs[0].discount_block, "text/html");
                 price = block.querySelector(".discount_final_price").innerText;
 
                 // if it is discounted
@@ -162,7 +162,7 @@ class WishlistExporter {
                     .replace("%release_date%", data.release_string)
                     .replace("%price%", price)
                     .replace("%discount%", discount)
-                    .replace("%base_price%",  base_price)
+                    .replace("%base_price%", base_price)
                     .replace("%type%", data.type)
                     .replace("%note%", this.notes[appid] || "")
             );

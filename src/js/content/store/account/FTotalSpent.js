@@ -1,6 +1,6 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 export class FTotalSpent extends ASFeature {
 
@@ -10,7 +10,7 @@ export class FTotalSpent extends ASFeature {
     }
 
     apply() {
-        let lastLink = this._links[this._links.length - 1];
+        const lastLink = this._links[this._links.length - 1];
         HTML.afterEnd(lastLink.parentNode,
             `<div><a class="account_manage_link" href="https://help.steampowered.com/accountdata/AccountSpend">${Localization.str.external_funds}</a></div>`);
     }

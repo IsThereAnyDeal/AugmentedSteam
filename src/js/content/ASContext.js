@@ -1,4 +1,4 @@
-import { ASFeatureManager } from "./ASFeatureManager.js";
+import {ASFeatureManager} from "./ASFeatureManager.js";
 
 export class ASContext {
     constructor(features) {
@@ -10,7 +10,7 @@ export class ASContext {
     }
 }
 
-export let ContextTypes = Object.freeze({
+export const ContextTypes = Object.freeze({
     "ACCOUNT": 1,
     "APP": 2,
     "BUNDLE": 3,

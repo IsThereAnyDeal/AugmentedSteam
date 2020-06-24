@@ -1,7 +1,7 @@
-import { ASFeature } from "../../ASFeature.js";
-import { User } from "../../common.js";
-import { SyncedStorage } from "../../../core.js";
-import { Language, Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {User} from "../../common.js";
+import {SyncedStorage} from "../../../core.js";
+import {Language, Localization} from "../../../language.js";
 
 export class FPurchaseDate extends ASFeature {
 
@@ -14,8 +14,8 @@ export class FPurchaseDate extends ASFeature {
     }
 
     async apply() {
-        let appname = this.context.appName.replace(/:/g, "").trim();
-        let date = await User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname);
+        const appname = this.context.appName.replace(/:/g, "").trim();
+        const date = await User.getPurchaseDate(Language.getCurrentSteamLanguage(), appname);
         if (!date) {
             console.warn("Failed to retrieve purchase date");
             return;

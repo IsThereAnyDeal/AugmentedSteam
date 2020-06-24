@@ -21,7 +21,7 @@ export class SearchFilter {
     getHTML() {}
 
     setup(params) {
-        let rows = document.querySelectorAll(".search_result_row");
+        const rows = document.querySelectorAll(".search_result_row");
 
         this.addRowMetadata(rows);
         this.setState(params);
@@ -66,29 +66,30 @@ export class SimpleSearchFilter extends SearchFilter {
 
     setState(params) {
 
-        this.active =
-            params.has(this.urlParam)
-            && params.get(this.urlParam).split(",").includes(this._id);
+        this.active
+            = params.has(this.urlParam)
+            && params.get(this.urlParam).split(",")
+                .includes(this._id);
     }
 
     _onClick() {
 
-        let filter = this._elem;
+        const filter = this._elem;
 
         /**
          * https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L859
          * OnClickClientFilter
          */
-        let savedOffset = filter.getBoundingClientRect().top;
-        
+        const savedOffset = filter.getBoundingClientRect().top;
+
         this.active = filter.classList.toggle("checked");
 
-        let fixScrollOffset = document.scrollTop - savedOffset + filter.getBoundingClientRect().top;
+        const fixScrollOffset = document.scrollTop - savedOffset + filter.getBoundingClientRect().top;
         document.scrollTop = fixScrollOffset;
     }
 
     set active(active) {
-        let filter = this._elem;
+        const filter = this._elem;
         this._active = active;
 
         /**

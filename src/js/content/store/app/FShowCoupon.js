@@ -1,7 +1,7 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Inventory } from "../../common.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Inventory} from "../../common.js";
+import {Localization} from "../../../language.js";
 
 export class FShowCoupon extends ASFeature {
 
@@ -10,10 +10,10 @@ export class FShowCoupon extends ASFeature {
     }
 
     async apply() {
-        let coupon = await Inventory.getCoupon(this.context.appid);
+        const coupon = await Inventory.getCoupon(this.context.appid);
         if (!coupon) { return; }
 
-        let couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, function(m0, m1) { return new Date(m1 * 1000).toLocaleString(); });
+        const couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, (m0, m1) => { return new Date(m1 * 1000).toLocaleString(); });
 
         HTML.beforeBegin("#game_area_purchase",
             `<div class="early_access_header">

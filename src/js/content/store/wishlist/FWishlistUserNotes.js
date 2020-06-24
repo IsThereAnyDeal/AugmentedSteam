@@ -1,8 +1,8 @@
-import { CallbackFeature } from "../../CallbackFeature.js";
+import {CallbackFeature} from "../../CallbackFeature.js";
 
-import { HTML, SyncedStorage } from "../../../core.js";
-import { UserNotes } from "../common/UserNotes.js";
-import { Localization } from "../../../language.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {UserNotes} from "../common/UserNotes.js";
+import {Localization} from "../../../language.js";
 
 export class FWishlistUserNotes extends CallbackFeature {
 
@@ -13,11 +13,11 @@ export class FWishlistUserNotes extends CallbackFeature {
     apply() {
         this._userNotes = new UserNotes();
 
-        document.addEventListener("click", ({ target }) => {
+        document.addEventListener("click", ({target}) => {
             if (!target.classList.contains("esi-note")) { return; }
 
-            let row = target.closest(".wishlist_row");
-            let appid = Number(row.dataset.appId);
+            const row = target.closest(".wishlist_row");
+            const appid = Number(row.dataset.appId);
             this._userNotes.showModalDialog(
                 row.querySelector("a.title").textContent.trim(),
                 appid,
@@ -34,10 +34,10 @@ export class FWishlistUserNotes extends CallbackFeature {
 
     callback(nodes) {
 
-        for (let node of nodes) {
+        for (const node of nodes) {
             if (node.classList.contains("esi-has-note")) { continue; }
 
-            let appid = Number(node.dataset.appId);
+            const appid = Number(node.dataset.appId);
             let noteText;
             let cssClass;
 

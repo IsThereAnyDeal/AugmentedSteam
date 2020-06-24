@@ -1,6 +1,6 @@
-import { SimpleSearchFilter } from "./searchfilters.js";
+import {SimpleSearchFilter} from "./searchfilters.js";
 
-import { Localization } from "../../../../language.js";
+import {Localization} from "../../../../language.js";
 
 export class MixedSearchFilter extends SimpleSearchFilter {
 
@@ -9,7 +9,7 @@ export class MixedSearchFilter extends SimpleSearchFilter {
     }
 
     addRowMetadata(rows) {
-        for (let row of rows) {
+        for (const row of rows) {
             if (row.querySelector(".search_reviewscore span.search_review_summary.mixed")) {
                 row.classList.add("as-hide-mixed");
             }

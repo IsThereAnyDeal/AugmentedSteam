@@ -1,13 +1,13 @@
-import { ASFeature } from "../../ASFeature.js";
-import { ContextTypes } from "../../ASContext.js";
+import {ASFeature} from "../../ASFeature.js";
+import {ContextTypes} from "../../ASContext.js";
 
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 export class FExtraLinks extends ASFeature {
 
     checkPrerequisites() {
-        let context = this.context;
+        const context = this.context;
 
         if (context.type === ContextTypes.APP) {
             this._type = "app";
@@ -44,49 +44,56 @@ export class FExtraLinks extends ASFeature {
                     this._getRightColLinkHtml(
                         "youtube_btn",
                         `https://www.youtube.com/results?search_query=${encodeURIComponent(this.context.appName)}`,
-                        Localization.str.view_on_website.replace("__website__", "YouTube")));
+                        Localization.str.view_on_website.replace("__website__", "YouTube")
+                    ));
             }
-    
+
             if (SyncedStorage.get("showtwitch")) {
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "twitch_btn",
-                        `https://www.twitch.tv/directory/game/${encodeURIComponent(this.context.appName.replace(/(\u2122)/g,"").replace(/(\xAE)/g,""))}`,
-                        Localization.str.view_on_website.replace("__website__", "Twitch")));
+                        `https://www.twitch.tv/directory/game/${encodeURIComponent(this.context.appName.replace(/(\u2122)/g, "").replace(/(\xAE)/g, ""))}`,
+                        Localization.str.view_on_website.replace("__website__", "Twitch")
+                    ));
             }
-    
-    
+
+
             if (SyncedStorage.get("showpcgw")) {
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "pcgw_btn",
                         `https://pcgamingwiki.com/api/appid.php?appid=${this.context.appid}`,
-                        Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki")));
+                        Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki")
+                    ));
             }
-    
+
             if (SyncedStorage.get("showcompletionistme")) {
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "completionistme_btn",
                         `https://completionist.me/steam/app/${this.context.appid}/`,
-                        Localization.str.view_on_website.replace("__website__", "Completionist.me")));
+                        Localization.str.view_on_website.replace("__website__", "Completionist.me")
+                    ));
             }
-    
+
             if (SyncedStorage.get("showprotondb")) {
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "protondb_btn",
                         `https://www.protondb.com/app/${this.context.appid}/`,
-                        Localization.str.view_on_website.replace("__website__", "ProtonDB")));
+                        Localization.str.view_on_website.replace("__website__", "ProtonDB")
+                    ));
             }
-    
+
             if (this.context.hasCards && SyncedStorage.get("showsteamcardexchange")) {
+
                 // FIXME some dlc have card category yet no card
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "cardexchange_btn",
                         `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.communityAppid}/`,
-                        Localization.str.view_on_website.replace("__website__", "Steam Card Exchange")));
+                        Localization.str.view_on_website.replace("__website__", "Steam Card Exchange")
+                    ));
             }
         }
 
@@ -95,7 +102,8 @@ export class FExtraLinks extends ASFeature {
                 this._getRightColLinkHtml(
                     "bartervg_ico",
                     `https://barter.vg/steam/${this._type}/${this._gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Barter.vg")));
+                    Localization.str.view_on_website.replace("__website__", "Barter.vg")
+                ));
         }
 
         if (SyncedStorage.get("showsteamdb")) {
@@ -103,7 +111,8 @@ export class FExtraLinks extends ASFeature {
                 this._getRightColLinkHtml(
                     "steamdb_ico",
                     `https://steamdb.info/${this._type}/${this._gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Steam Database")));
+                    Localization.str.view_on_website.replace("__website__", "Steam Database")
+                ));
         }
 
         if (SyncedStorage.get("showitadlinks")) {
@@ -111,7 +120,8 @@ export class FExtraLinks extends ASFeature {
                 this._getRightColLinkHtml(
                     "itad_ico",
                     `https://isthereanydeal.com/steam/${this._type}/${this._gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal")));
+                    Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal")
+                ));
         }
     }
 
@@ -123,10 +133,10 @@ export class FExtraLinks extends ASFeature {
 
     _moveExtraLinks() {
 
-        let usefulLinks = this._node.parentNode;
+        const usefulLinks = this._node.parentNode;
         usefulLinks.classList.add("es_useful_link");
 
-        let sideDetails = document.querySelector(".es_side_details_wrap");
+        const sideDetails = document.querySelector(".es_side_details_wrap");
         if (sideDetails) {
             sideDetails.insertAdjacentElement("afterend", usefulLinks);
         } else {

@@ -1,10 +1,10 @@
-import { CStoreBase } from "./CStoreBase.js";
+import {CStoreBase} from "./CStoreBase.js";
 
 export class CStorePage extends CStoreBase {
 
     getAllSubids() {
-        let result = [];
-        for (let node of document.querySelectorAll("input[name=subid]")) {
+        const result = [];
+        for (const node of document.querySelectorAll("input[name=subid]")) {
             if (node.value) {
                 result.push(node.value);
             }

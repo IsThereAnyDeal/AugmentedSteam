@@ -1,7 +1,7 @@
-import { ASFeature } from "../../ASFeature.js";
-import { ExtensionLayer, DynamicStore, User } from "../../common.js";
-import { ExtensionResources, HTML } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {DynamicStore, ExtensionLayer, User} from "../../common.js";
+import {ExtensionResources, HTML} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 export class FRemoveFromWishlist extends ASFeature {
 
@@ -13,8 +13,8 @@ export class FRemoveFromWishlist extends ASFeature {
 
         // If game is already wishlisted, add required nodes
         if (!document.getElementById("add_to_wishlist_area")) {
-            let firstButton = document.querySelector(".queue_actions_ctn a.queue_btn_active");
-            let wlSuccessArea = HTML.wrap(firstButton, '<div id="add_to_wishlist_area_success"></div>');
+            const firstButton = document.querySelector(".queue_actions_ctn a.queue_btn_active");
+            const wlSuccessArea = HTML.wrap(firstButton, '<div id="add_to_wishlist_area_success"></div>');
 
             HTML.beforeBegin(wlSuccessArea,
                 `<div id="add_to_wishlist_area" style="display: none;">
@@ -29,13 +29,13 @@ export class FRemoveFromWishlist extends ASFeature {
             document.querySelector("#add_to_wishlist_area > a").href = `javascript:AddToWishlist(${this.context.appid}, 'add_to_wishlist_area', 'add_to_wishlist_area_success', 'add_to_wishlist_area_fail', null, 'add_to_wishlist_area2');`;
         }
 
-        let addBtn = document.getElementById("add_to_wishlist_area");
-        let successBtn = document.getElementById("add_to_wishlist_area_success");
+        const addBtn = document.getElementById("add_to_wishlist_area");
+        const successBtn = document.getElementById("add_to_wishlist_area_success");
 
         // Update tooltip for wishlisted items
         successBtn.querySelector("a").dataset.tooltipText = Localization.str.remove_from_wishlist_tooltip;
 
-        let imgNode = successBtn.querySelector("img:last-child");
+        const imgNode = successBtn.querySelector("img:last-child");
         imgNode.classList.add("es-in-wl");
         HTML.beforeBegin(imgNode,
             `<img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}" style="display: none;">
@@ -44,11 +44,11 @@ export class FRemoveFromWishlist extends ASFeature {
         successBtn.addEventListener("click", async e => {
             e.preventDefault();
 
-            let parent = successBtn.parentNode;
+            const parent = successBtn.parentNode;
             if (!parent.classList.contains("loading")) {
                 parent.classList.add("loading");
 
-                let removeWaitlist = !!document.querySelector(".queue_btn_wishlist + .queue_btn_ignore_menu.owned_elsewhere");
+                const removeWaitlist = Boolean(document.querySelector(".queue_btn_wishlist + .queue_btn_ignore_menu.owned_elsewhere"));
 
                 try {
                     await Promise.all([
@@ -65,7 +65,7 @@ export class FRemoveFromWishlist extends ASFeature {
 
                     // Invalidate dynamic store data cache
                     ExtensionLayer.runInPageContext(() => { GDynamicStore.InvalidateCache(); });
-                } catch(err) {
+                } catch (err) {
                     document.getElementById("add_to_wishlist_area_fail").style.display = "";
                     this.logError(err, "Failed to remove app from wishlist");
                 } finally {
@@ -75,7 +75,7 @@ export class FRemoveFromWishlist extends ASFeature {
             }
         });
 
-        for (let node of document.querySelectorAll("#add_to_wishlist_area, #add_to_wishlist_area_success, .queue_btn_ignore")) {
+        for (const node of document.querySelectorAll("#add_to_wishlist_area, #add_to_wishlist_area_success, .queue_btn_ignore")) {
             node.addEventListener("click", DynamicStore.clear);
         }
     }

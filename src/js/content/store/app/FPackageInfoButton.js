@@ -1,6 +1,6 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 export class FPackageInfoButton extends ASFeature {
 
@@ -9,10 +9,10 @@ export class FPackageInfoButton extends ASFeature {
     }
 
     apply() {
-        for (let node of document.querySelectorAll(".game_area_purchase_game_wrapper:not(.bundle_hidden_by_preferences)")) {
+        for (const node of document.querySelectorAll(".game_area_purchase_game_wrapper:not(.bundle_hidden_by_preferences)")) {
             if (node.querySelector(".btn_packageinfo")) { return; } // TODO is it right to return here or in the if clause below?
 
-            let subid = node.querySelector("input[name=subid]");
+            const subid = node.querySelector("input[name=subid]");
             if (!subid) { return; }
 
             HTML.afterBegin(node.querySelector(".game_purchase_action"),

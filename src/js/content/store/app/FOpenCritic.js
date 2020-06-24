@@ -1,23 +1,23 @@
-import { ASFeature } from "../../ASFeature.js";
-import { ExtensionResources, HTML, SyncedStorage } from "../../../core.js";
-import { Localization } from "../../../language.js";
-import { ExtensionLayer } from "../../common.js";
+import {ASFeature} from "../../ASFeature.js";
+import {ExtensionResources, HTML, SyncedStorage} from "../../../core.js";
+import {Localization} from "../../../language.js";
+import {ExtensionLayer} from "../../common.js";
 
 export class FOpenCritic extends ASFeature {
 
     async checkPrerequisites() {
         if (SyncedStorage.get("showoc")) {
-            let result = await this.context.data;
+            const result = await this.context.data;
             return result && result.oc && result.oc.url;
         }
         return false;
     }
 
     async apply() {
-        let data = (await this.context.data).oc;
+        const data = (await this.context.data).oc;
 
-        let ocImg = ExtensionResources.getURL("img/opencritic.png");
-        let award = data.award || "NA";
+        const ocImg = ExtensionResources.getURL("img/opencritic.png");
+        const award = data.award || "NA";
 
         let node = document.querySelector("#game_area_metascore");
         if (node) {
@@ -44,20 +44,20 @@ export class FOpenCritic extends ASFeature {
             </div>`);
 
         let reviews = "";
-        for (let review of data.reviews) {
-            let date = new Date(review.date).toLocaleDateString();
+        for (const review of data.reviews) {
+            const date = new Date(review.date).toLocaleDateString();
             reviews += `<p>"${review.snippet}"<br>${review.dScore} - <a href="${review.rUrl}" target="_blank" data-tooltip-text="${review.author}, ${date}">${review.name}</a></p>`;
         }
 
         if (reviews) {
-            let html =
-                `<div id="es_opencritic_reviews">
+            const html
+                = `<div id="es_opencritic_reviews">
                     ${reviews}
                     <div class="chart-footer">${Localization.str.read_more_reviews} <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews" target="_blank">OpenCritic.com</a></div>
                 </div>`;
 
             // Add data to the review section in the left column, or create one if that block doesn't exist
-            let reviewsNode = document.getElementById("game_area_reviews");
+            const reviewsNode = document.getElementById("game_area_reviews");
             if (reviewsNode) {
                 HTML.beforeEnd(reviewsNode, html);
             } else {
@@ -68,7 +68,7 @@ export class FOpenCritic extends ASFeature {
                     </div>`);
             }
 
-            ExtensionLayer.runInPageContext(() => { BindTooltips("#game_area_reviews", { tooltipCSSClass: "store_tooltip" }); });
+            ExtensionLayer.runInPageContext(() => { BindTooltips("#game_area_reviews", {"tooltipCSSClass": "store_tooltip"}); });
         }
     }
 }

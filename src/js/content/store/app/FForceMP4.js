@@ -1,5 +1,5 @@
-import { ASFeature } from "../../ASFeature.js";
-import { SyncedStorage } from "../../../core.js";
+import {ASFeature} from "../../ASFeature.js";
+import {SyncedStorage} from "../../../core.js";
 
 export class FForceMP4 extends ASFeature {
     checkPrerequisites() {
@@ -7,15 +7,15 @@ export class FForceMP4 extends ASFeature {
     }
 
     apply() {
-        for (let node of document.querySelectorAll("[data-webm-source]")) {
-            let mp4 = node.dataset.mp4Source;
-            let mp4hd = node.dataset.mp4HdSource;
+        for (const node of document.querySelectorAll("[data-webm-source]")) {
+            const mp4 = node.dataset.mp4Source;
+            const mp4hd = node.dataset.mp4HdSource;
             if (!mp4 || !mp4hd) { continue; }
 
             node.dataset.webmSource = mp4;
             node.dataset.webmHdSource = mp4hd;
 
-            let video = node.querySelector("video");
+            const video = node.querySelector("video");
             if (!video) { continue; }
 
             video.dataset.sdSrc = mp4;

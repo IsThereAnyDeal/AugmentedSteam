@@ -1,7 +1,7 @@
-import { ASFeature } from "../../ASFeature.js";
-import { Localization } from "../../../language.js";
-import { ExtensionResources, HTML } from "../../../core.js";
-import { ExtensionLayer, RequestData, User } from "../../common.js";
+import {ASFeature} from "../../ASFeature.js";
+import {Localization} from "../../../language.js";
+import {ExtensionResources, HTML} from "../../../core.js";
+import {ExtensionLayer, RequestData, User} from "../../common.js";
 
 export class FMultiProductKeys extends ASFeature {
 
@@ -45,78 +45,78 @@ export class FMultiProductKeys extends ASFeature {
 
         // Process activation
 
-        document.addEventListener("click", function(e) {
+        document.addEventListener("click", (e) => {
             if (!e.target.closest(".es_activate_modal_submit")) { return; }
 
             document.querySelector(".es_activate_modal_submit").style.display = "none";
             document.querySelector(".es_activate_modal_close").style.display = "none";
 
-            let keys = [];
+            const keys = [];
 
             // turn textbox into table to display results
-            let lines = document.querySelector("#es_key_input").value.split("\n");
-            let node = document.querySelector("#es_activate_input_text");
+            const lines = document.querySelector("#es_key_input").value.split("\n");
+            const node = document.querySelector("#es_activate_input_text");
             HTML.beforeBegin(node, "<div id='es_activate_results'></div>");
             node.style.display = "none";
 
             lines.forEach(line => {
-                let attempt = String(line);
+                const attempt = String(line);
                 if (attempt === "") { // skip blank rows in the input dialog (including trailing newline)
                     return;
                 }
                 keys.push(attempt);
 
-                let url = ExtensionResources.getURL("img/questionmark.png");
+                const url = ExtensionResources.getURL("img/questionmark.png");
 
                 HTML.beforeEnd("#es_activate_results",
-                    "<div style='margin-bottom: 8px;'><span id='attempt_" + attempt + "_icon'><img src='" + url + "' style='padding-right: 10px; height: 16px;'></span>" + attempt + "</div><div id='attempt_" + attempt + "_result' style='margin-left: 26px; margin-bottom: 10px; margin-top: -5px;'></div>");
+                    `<div style='margin-bottom: 8px;'><span id='attempt_${attempt}_icon'><img src='${url}' style='padding-right: 10px; height: 16px;'></span>${attempt}</div><div id='attempt_${attempt}_result' style='margin-left: 26px; margin-bottom: 10px; margin-top: -5px;'></div>`);
             });
 
             // force recalculation of the modal's position so it doesn't extend off the bottom of the page
-            setTimeout(function(){
+            setTimeout(() => {
                 window.dispatchEvent(new Event("resize"));
             }, 250);
 
             // attempt to activate each key in sequence
-            let promises = [];
+            const promises = [];
 
             for (let i = 0; i < keys.length; i++) {
-                let current_key = keys[i];
+                const current_key = keys[i];
 
-                let formData = new FormData();
+                const formData = new FormData();
                 formData.append("sessionid", User.getSessionId());
                 formData.append("product_key", current_key);
 
-                let request = RequestData.post("https://store.steampowered.com/account/ajaxregisterkey", formData).then(data => {
+                const request = RequestData.post("https://store.steampowered.com/account/ajaxregisterkey", formData).then(data => {
                     data = JSON.parse(data);
-                    let attempted = current_key;
+                    const attempted = current_key;
                     let message = Localization.str.register.default;
-                    if (data["success"] === 1) {
-                        document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionResources.getURL("img/sr/okay.png"));
-                        if (data["purchase_receipt_info"]["line_items"].length > 0) {
-                            document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.register.success.replace("__gamename__", data["purchase_receipt_info"]["line_items"][0]["line_item_description"]);
-                            document.querySelector("#attempt_" + attempted + "_result").style.display = "block";
+                    if (data.success === 1) {
+                        document.querySelector(`#attempt_${attempted}_icon img`).setAttribute("src", ExtensionResources.getURL("img/sr/okay.png"));
+                        if (data.purchase_receipt_info.line_items.length > 0) {
+                            document.querySelector(`#attempt_${attempted}_result`).textContent = Localization.str.register.success.replace("__gamename__", data.purchase_receipt_info.line_items[0].line_item_description);
+                            document.querySelector(`#attempt_${attempted}_result`).style.display = "block";
                         }
                     } else {
-                        switch(data["purchase_result_details"]) {
-                            case 9: message = Localization.str.register.owned; break;
-                            case 13: message = Localization.str.register.notavail; break;
-                            case 14: message = Localization.str.register.invalid; break;
-                            case 15: message = Localization.str.register.already; break;
-                            case 24: message = Localization.str.register.dlc; break;
-                            case 50: message = Localization.str.register.wallet; break;
-                            case 53: message = Localization.str.register.toomany; break;
+                        switch (data.purchase_result_details) {
+                        case 9: message = Localization.str.register.owned; break;
+                        case 13: message = Localization.str.register.notavail; break;
+                        case 14: message = Localization.str.register.invalid; break;
+                        case 15: message = Localization.str.register.already; break;
+                        case 24: message = Localization.str.register.dlc; break;
+                        case 50: message = Localization.str.register.wallet; break;
+                        case 53: message = Localization.str.register.toomany; break;
                         }
                         document.querySelector(`#attempt_${attempted}_icon img`).setAttribute("src", ExtensionResources.getURL("img/sr/banned.png"));
                         document.querySelector(`#attempt_${attempted}_result`).textContent = message;
-                        document.querySelector(`#attempt_${attempted}_result`).style.display="block";
+                        document.querySelector(`#attempt_${attempted}_result`).style.display = "block";
                     }
 
                 }, () => {
-                    let attempted = current_key;
-                    document.querySelector("#attempt_" + attempted + "_icon img").setAttribute("src", ExtensionResources.getURL("img/sr/banned.png"));
-                    document.querySelector("#attempt_" + attempted + "_result").textContent = Localization.str.error;
-                    document.querySelector("#attempt_" + attempted + "_result").style.display = "block";
+                    const attempted = current_key;
+                    document.querySelector(`#attempt_${attempted}_icon img`).setAttribute("src", ExtensionResources.getURL("img/sr/banned.png"));
+                    document.querySelector(`#attempt_${attempted}_result`).textContent = Localization.str.error;
+                    document.querySelector(`#attempt_${attempted}_result`).style.display = "block";
                 });
 
                 promises.push(request);
@@ -130,10 +130,10 @@ export class FMultiProductKeys extends ASFeature {
         });
 
         // Bind the "Cancel" button to close the modal
-        document.addEventListener("click", ({ target }) => {
+        document.addEventListener("click", ({target}) => {
             if (!target.closest(".es_activate_modal_close")) { return; }
             ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
-        })
+        });
     }
 
     _showDialog() {

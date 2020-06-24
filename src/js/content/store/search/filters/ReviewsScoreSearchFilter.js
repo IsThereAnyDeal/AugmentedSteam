@@ -1,6 +1,6 @@
-import { SearchFilter } from "./searchfilters.js";
+import {SearchFilter} from "./searchfilters.js";
 
-import { Localization } from "../../../../language.js";
+import {Localization} from "../../../../language.js";
 
 export class ReviewsScoreSearchFilter extends SearchFilter {
 
@@ -34,20 +34,20 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
     }
 
     setup(params) {
-        
+
         this._scoreFilter = document.querySelector(".js-reviews-score-filter");
         this._minScore = this._scoreFilter.querySelector(".js-reviews-score-lower");
         this._maxScore = this._scoreFilter.querySelector(".js-reviews-score-upper");
         this._rangeDisplay = this._scoreFilter.nextElementSibling;
 
-        for (let input of document.querySelectorAll(".js-reviews-score-input")) {
+        for (const input of document.querySelectorAll(".js-reviews-score-input")) {
 
             let minVal = parseInt(this._minScore.value);
             let maxVal = parseInt(this._maxScore.value);
 
             input.addEventListener("input", () => {
 
-                let maxStep = this._maxStep;
+                const maxStep = this._maxStep;
 
                 minVal = parseInt(this._minScore.value);
                 maxVal = parseInt(this._maxScore.value);
@@ -60,17 +60,16 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
                             this._minScore.value = minVal = maxVal - 1;
                         }
                     }
-                } else {
-                    if (maxVal <= minVal) {
-                        // Happens when the user clicks to the highest step after the max thumb instead of dragging
-                        if (minVal === maxStep) {
-                            this._minScore.value = minVal = maxStep - 1;
-                            this._maxScore.value = maxVal = maxStep;
-                        } else if (maxVal < maxStep) {
-                            this._maxScore.value = maxVal = minVal + 1;
-                        } else {
-                            this._minScore.value = minVal = maxVal - 1;
-                        }
+                } else if (maxVal <= minVal) {
+
+                    // Happens when the user clicks to the highest step after the max thumb instead of dragging
+                    if (minVal === maxStep) {
+                        this._minScore.value = minVal = maxStep - 1;
+                        this._maxScore.value = maxVal = maxStep;
+                    } else if (maxVal < maxStep) {
+                        this._maxScore.value = maxVal = minVal + 1;
+                    } else {
+                        this._minScore.value = minVal = maxVal - 1;
                     }
                 }
 
@@ -81,12 +80,10 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
                     } else {
                         text = Localization.str.search_filters.reviews_score.up_to.replace("__score__", this._scoreValues[maxVal]);
                     }
+                } else if (maxVal === maxStep) {
+                    text = Localization.str.search_filters.reviews_score.from.replace("__score__", this._scoreValues[minVal]);
                 } else {
-                    if (maxVal === maxStep) {
-                        text = Localization.str.search_filters.reviews_score.from.replace("__score__", this._scoreValues[minVal]);
-                    } else {
-                        text = Localization.str.search_filters.reviews_score.between.replace("__lower__", this._scoreValues[minVal]).replace("__upper__", this._scoreValues[maxVal]);
-                    }
+                    text = Localization.str.search_filters.reviews_score.between.replace("__lower__", this._scoreValues[minVal]).replace("__upper__", this._scoreValues[maxVal]);
                 }
 
                 this._rangeDisplay.textContent = text;
@@ -96,9 +93,9 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
                 this.apply();
 
                 let val = null;
-                
+
                 if (minVal !== 0 || maxVal !== this._maxStep) {
-                    val = `${minVal === 0 ? '' : this._scoreValues[minVal]}-${maxVal === this._maxStep ? '' : this._scoreValues[maxVal]}`;
+                    val = `${minVal === 0 ? "" : this._scoreValues[minVal]}-${maxVal === this._maxStep ? "" : this._scoreValues[maxVal]}`;
                 }
 
                 this.value = val;
@@ -115,8 +112,8 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
 
         if (params.has("as-reviews-score")) {
 
-            let val = params.get("as-reviews-score");
-            let match = val.match(/(^\d*)-(\d*)/);
+            const val = params.get("as-reviews-score");
+            const match = val.match(/(^\d*)-(\d*)/);
 
             this._value = val;
 
@@ -140,12 +137,12 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
 
     addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-percentage])")) {
 
-        for (let row of rows) {
+        for (const row of rows) {
             let reviewPercentage = 100;
-        
-            let reviewsNode = row.querySelector(".search_review_summary");
+
+            const reviewsNode = row.querySelector(".search_review_summary");
             if (reviewsNode) {
-                let match = reviewsNode.dataset.tooltipHtml.match(/(\d{1,3})%/);
+                const match = reviewsNode.dataset.tooltipHtml.match(/(\d{1,3})%/);
                 if (match) {
                     reviewPercentage = Number(match[1]);
                 }
@@ -157,13 +154,13 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
 
     apply(rows = document.querySelectorAll(".search_result_row")) {
 
-        let minScore = this._scoreValues[Number(this._minScore.value)];
+        const minScore = this._scoreValues[Number(this._minScore.value)];
 
-        let maxVal = Number(this._maxScore.value);
-        let maxScore = maxVal === this._maxStep ? Infinity : this._scoreValues[maxVal];
+        const maxVal = Number(this._maxScore.value);
+        const maxScore = maxVal === this._maxStep ? Infinity : this._scoreValues[maxVal];
 
-        for (let row of rows) {
-            let rowScore = Number(row.dataset.asReviewPercentage);
+        for (const row of rows) {
+            const rowScore = Number(row.dataset.asReviewPercentage);
             row.classList.toggle("as-reviews-score", rowScore < minScore || rowScore > maxScore);
         }
     }

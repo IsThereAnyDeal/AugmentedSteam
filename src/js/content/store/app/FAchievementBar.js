@@ -1,6 +1,6 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Stats } from "../../common.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Stats} from "../../common.js";
 
 export class FAchievementBar extends ASFeature {
 
@@ -9,12 +9,12 @@ export class FAchievementBar extends ASFeature {
     }
 
     async apply() {
-        let achieveBar = await Stats.getAchievementBar("/my", this.context.communityAppid);
+        const achieveBar = await Stats.getAchievementBar("/my", this.context.communityAppid);
         if (!achieveBar) {
             console.warn("Failed to retrieve achievement stats");
             return;
         }
-        
+
         HTML.afterBegin("#my_activity", `<div class="es-achieveBar-store">${achieveBar}</div>`);
     }
 }

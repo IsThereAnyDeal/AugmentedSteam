@@ -1,6 +1,6 @@
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Localization } from "../../../language.js";
-import { ExtensionLayer, Messenger } from "../../common.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Localization} from "../../../language.js";
+import {ExtensionLayer, Messenger} from "../../common.js";
 
 export class UserNotes {
     constructor() {
@@ -28,32 +28,33 @@ export class UserNotes {
     // TODO data functions should probably be split from presentation, but splitting it to background seems unneccessary
     get(appid) {
         return this._notes[appid];
-    };
+    }
 
     set(appid, note) {
         this._notes[appid] = note;
         SyncedStorage.set("user_notes", this._notes);
-    };
+    }
 
     delete(appid) {
         delete this._notes[appid];
         SyncedStorage.set("user_notes", this._notes);
-    };
+    }
 
     exists(appid) {
         return Boolean(this._notes[appid]);
-    };
+    }
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
-        // Partly copied from shared_global.js
-        let bgClick = ExtensionLayer.runInPageContext((title, template) => {
-            let deferred = new jQuery.Deferred();
-            let fnOK = () => deferred.resolve();
 
-            let Modal = _BuildDialog(title, template, [], fnOK);
+        // Partly copied from shared_global.js
+        const bgClick = ExtensionLayer.runInPageContext((title, template) => {
+            const deferred = new jQuery.Deferred();
+            const fnOK = () => deferred.resolve();
+
+            const Modal = _BuildDialog(title, template, [], fnOK);
             deferred.always(() => Modal.Dismiss());
 
-            let promise = new Promise(resolve => {
+            const promise = new Promise(resolve => {
                 Modal.m_fnBackgroundClick = () => {
                     Messenger.onMessage("noteSaved").then(() => { Modal.Dismiss(); });
                     resolve();
@@ -65,7 +66,7 @@ export class UserNotes {
             // attach the deferred's events to the modal
             deferred.promise(Modal);
 
-            let note_input = document.getElementById("es_note_input");
+            const note_input = document.getElementById("es_note_input");
             note_input.focus();
             note_input.setSelectionRange(0, note_input.textLength);
             note_input.addEventListener("keydown", e => {
@@ -80,8 +81,10 @@ export class UserNotes {
         },
         [
             Localization.str.user_note.add_for_game.replace("__gamename__", appname),
-            this.noteModalTemplate.replace("__appid__", appid).replace("__note__", await this.get(appid) || '').replace("__selector__", encodeURIComponent(nodeSelector)),
-        ], "backgroundClick");
+            this.noteModalTemplate.replace("__appid__", appid).replace("__note__", await this.get(appid) || "")
+                .replace("__selector__", encodeURIComponent(nodeSelector)),
+        ],
+        "backgroundClick");
 
         document.addEventListener("click", clickListener);
 
@@ -95,31 +98,29 @@ export class UserNotes {
                 e.preventDefault();
                 onNoteUpdate.apply(null, saveNote());
                 ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
-            }
-            else if (e.target.closest(".es_note_modal_close")) {
+            } else if (e.target.closest(".es_note_modal_close")) {
                 ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
-            }
-            else {
+            } else {
                 return;
             }
             document.removeEventListener("click", clickListener);
         }
 
-        let saveNote = () => {
-            let modal = document.querySelector("#es_note_modal");
-            let appid = parseInt(modal.dataset.appid, 10);
-            let note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ").substring(0, 512));
-            let node = document.querySelector(decodeURIComponent(modal.dataset.selector));
+        const saveNote = () => {
+            const modal = document.querySelector("#es_note_modal");
+            const appid = parseInt(modal.dataset.appid, 10);
+            const note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ")
+                .substring(0, 512));
+            const node = document.querySelector(decodeURIComponent(modal.dataset.selector));
             if (note.length !== 0) {
                 this.set(appid, note);
                 HTML.inner(node, `"${note}"`);
                 return [node, true];
-            }
-            else {
+            } else {
                 this.delete(appid);
                 node.textContent = Localization.str.user_note.add;
                 return [node, false];
             }
-        }
+        };
     }
 }

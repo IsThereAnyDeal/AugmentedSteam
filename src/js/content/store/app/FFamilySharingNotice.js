@@ -1,13 +1,13 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 export class FFamilySharingNotice extends ASFeature {
 
     async checkPrerequisites() {
         if (!SyncedStorage.get("exfgls")) { return false; }
 
-        let result = await this.context.data;
+        const result = await this.context.data;
         return result && result.exfgls && result.exfgls.excluded;
     }
 

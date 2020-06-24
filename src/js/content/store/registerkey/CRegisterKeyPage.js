@@ -1,6 +1,6 @@
-import { ASContext, ContextTypes } from "../../ASContext.js";
+import {ASContext, ContextTypes} from "../../ASContext.js";
 
-import { FMultiProductKeys } from "./FMultiProductKeys.js";
+import {FMultiProductKeys} from "./FMultiProductKeys.js";
 
 export class CRegisterKeyPage extends ASContext {
 

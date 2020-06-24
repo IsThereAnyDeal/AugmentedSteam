@@ -1,6 +1,6 @@
-import { ASFeature } from "../../ASFeature.js";
-import { ExtensionResources, HTML, SyncedStorage } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {ExtensionResources, HTML, SyncedStorage} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 // todo maybe integrate with other useful links?
 export class FAStatsLink extends ASFeature {
@@ -10,8 +10,8 @@ export class FAStatsLink extends ASFeature {
     }
 
     apply() {
-        let imgUrl = ExtensionResources.getURL("img/ico/astatsnl.png");
-        let url = `https://astats.astats.nl/astats/Steam_Game_Info.php?AppID=${this.context.communityAppid}`;
+        const imgUrl = ExtensionResources.getURL("img/ico/astatsnl.png");
+        const url = `https://astats.astats.nl/astats/Steam_Game_Info.php?AppID=${this.context.communityAppid}`;
 
         HTML.beforeEnd("#achievement_block",
             `<div class="game_area_details_specs">

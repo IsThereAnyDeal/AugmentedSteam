@@ -1,7 +1,7 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML } from "../../../core.js";
-import { Localization } from "../../../language.js";
-import { ExtensionLayer } from "../../common.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML} from "../../../core.js";
+import {Localization} from "../../../language.js";
+import {ExtensionLayer} from "../../common.js";
 
 export class FNewQueue extends ASFeature {
 
@@ -19,14 +19,15 @@ export class FNewQueue extends ASFeature {
 
         ExtensionLayer.runInPageContext(() => {
 
-            $J("#es_new_queue").v_tooltip({"tooltipClass": "store_tooltip", "dataName": 'tooltipText', "defaultType": "text", "replaceExisting": false });
+            $J("#es_new_queue").v_tooltip({"tooltipClass": "store_tooltip", "dataName": "tooltipText", "defaultType": "text", "replaceExisting": false});
 
             $J("#es_new_queue").on("click", () => {
                 $J.ajax({
-                    url: "https://store.steampowered.com/explore/next/" + g_eDiscoveryQueueType + '/',
-                    type: "POST",
-                    data: $J("#next_in_queue_form").serialize(),
-                    success: () => window.location.href = "https://store.steampowered.com/explore/startnew/" + g_eDiscoveryQueueType + '/'
+                    "url": `https://store.steampowered.com/explore/next/${g_eDiscoveryQueueType}/`,
+                    "type": "POST",
+                    "data": $J("#next_in_queue_form").serialize(),
+                    "success": () => window.location.href = `https://store.steampowered.com/explore/startnew/${g_eDiscoveryQueueType}/`
+
                     // TODO error handling, waiting on #231 and #275 to merge
                 });
             });

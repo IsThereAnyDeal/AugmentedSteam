@@ -1,9 +1,9 @@
-import { ASFeature } from "../../ASFeature.js";
-import { ContextTypes } from "../../ASContext.js";
+import {ASFeature} from "../../ASFeature.js";
+import {ContextTypes} from "../../ASContext.js";
 
-import { DOMHelper } from "../../common.js";
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {DOMHelper} from "../../common.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 export class FCustomizer extends ASFeature {
 
@@ -17,7 +17,7 @@ export class FCustomizer extends ASFeature {
 
     _customizeAppPage() {
 
-        let node = DOMHelper.selectLastNode(document, ".purchase_area_spacer");
+        const node = DOMHelper.selectLastNode(document, ".purchase_area_spacer");
         node.style.height = "auto";
 
         HTML.beforeEnd(node,
@@ -35,23 +35,23 @@ export class FCustomizer extends ASFeature {
 
         document.body.addEventListener("click", e => {
             if (e.target.closest("#es_customize_btn")) { return; }
-            let node = document.querySelector("#es_customize_btn .home_customize_btn.active");
+            const node = document.querySelector("#es_customize_btn .home_customize_btn.active");
             if (!node) { return; }
             node.classList.remove("active");
         });
 
-        for (let sel of ["#game_area_description", "#game_area_content_descriptors", ".sys_req", "#game_area_legal"]) {
-            let el = document.querySelector(sel);
+        for (const sel of ["#game_area_description", "#game_area_content_descriptors", ".sys_req", "#game_area_legal"]) {
+            const el = document.querySelector(sel);
             if (!el) { continue; }
-            let parent = el.closest(".game_page_autocollapse_ctn");
+            const parent = el.closest(".game_page_autocollapse_ctn");
             if (!parent) { continue; }
             parent.setAttribute("data-parent-of", sel);
         }
 
-        let workshop = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
-        let greenlight = document.querySelector("[href^='https://steamcommunity.com/greenlight']");
+        const workshop = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
+        const greenlight = document.querySelector("[href^='https://steamcommunity.com/greenlight']");
 
-        let customizer = new FCustomizer.Customizer("customize_apppage");
+        const customizer = new FCustomizer.Customizer("customize_apppage");
         customizer
             .add("franchisenotice", ".franchise_notice", Localization.str.apppage_franchise)
             .add("eaheader", ".early_access_header", Localization.str.apppage_eaheader)
@@ -71,8 +71,8 @@ export class FCustomizer extends ASFeature {
             .add("recommendedbycurators", ".steam_curators_block")
             .add("customerreviews", "#app_reviews_hash");
 
-        if (workshop) customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_workshop);
-        if (greenlight) customizer.add("greenlight", greenlight.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_greenlight);
+        if (workshop) { customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_workshop); }
+        if (greenlight) { customizer.add("greenlight", greenlight.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_greenlight); }
 
         customizer.build();
     }
@@ -90,14 +90,14 @@ export class FCustomizer extends ASFeature {
                 </div>
             </div>`);
 
-        document.querySelector("#es_customize_btn").addEventListener("click", ({ target }) => {
+        document.querySelector("#es_customize_btn").addEventListener("click", ({target}) => {
             target.classList.toggle("active");
         });
 
-        document.body.addEventListener("click", ({ target }) => {
+        document.body.addEventListener("click", ({target}) => {
             if (target.closest("#es_customize_btn")) { return; }
 
-            let node = document.querySelector("#es_customize_btn .home_customize_btn.active");
+            const node = document.querySelector("#es_customize_btn .home_customize_btn.active");
             if (!node) { return; }
 
             node.classList.remove("active");
@@ -105,12 +105,12 @@ export class FCustomizer extends ASFeature {
 
         setTimeout(() => {
 
-            let specialoffers = document.querySelector(".special_offers");
-            let browsesteam = document.querySelector(".big_buttons.home_page_content");
-            let recentlyupdated = document.querySelector(".recently_updated_block");
-            let under = document.querySelector("[class*='specials_under']");
+            const specialoffers = document.querySelector(".special_offers");
+            const browsesteam = document.querySelector(".big_buttons.home_page_content");
+            const recentlyupdated = document.querySelector(".recently_updated_block");
+            const under = document.querySelector("[class*='specials_under']");
 
-            let customizer = new FCustomizer.Customizer("customize_frontpage");
+            const customizer = new FCustomizer.Customizer("customize_frontpage");
             customizer
                 .add("featuredrecommended", ".home_cluster_ctn")
                 .add("trendingamongfriends", ".friends_recently_purchased")
@@ -126,13 +126,13 @@ export class FCustomizer extends ASFeature {
                 .add("steamlabs", ".labs_cluster")
                 .add("homepagesidebar", "body:not(.no_home_gutter) .home_page_gutter", Localization.str.homepage_sidebar);
 
-            if (specialoffers) customizer.add("specialoffers", specialoffers.parentElement);
-            if (browsesteam) customizer.add("browsesteam", browsesteam.parentElement);
-            if (recentlyupdated) customizer.add("recentlyupdated", recentlyupdated.parentElement);
-            if (under) customizer.add("under", under.parentElement.parentElement);
+            if (specialoffers) { customizer.add("specialoffers", specialoffers.parentElement); }
+            if (browsesteam) { customizer.add("browsesteam", browsesteam.parentElement); }
+            if (recentlyupdated) { customizer.add("recentlyupdated", recentlyupdated.parentElement); }
+            if (under) { customizer.add("under", under.parentElement.parentElement); }
 
-            let dynamicNodes = document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer), .home_pagecontent_ctn");
-            for (let node of dynamicNodes) {
+            const dynamicNodes = document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer), .home_pagecontent_ctn");
+            for (const node of dynamicNodes) {
                 if (node.closest(".esi-customizer") || node.querySelector(".esi-customizer") || node.style.display === "none") { continue; }
 
                 customizer.addDynamic(node);
@@ -151,10 +151,10 @@ FCustomizer.Customizer = class {
     }
 
     _textValue(node) {
-        let textNode = node.querySelector("h1, h2, .home_title, .home_section_title");
-        if (!textNode) return "";
+        const textNode = node.querySelector("h1, h2, .home_title, .home_section_title");
+        if (!textNode) { return ""; }
         let str = "";
-        for (let node of textNode.childNodes) {
+        for (const node of textNode.childNodes) {
             if (node.nodeType === Node.TEXT_NODE) {
                 str += node.textContent.trim();
             }
@@ -168,7 +168,7 @@ FCustomizer.Customizer = class {
     }
 
     _getValue(name) {
-        let value = this.settings[name];
+        const value = this.settings[name];
         return (typeof value === "undefined") || value;
     }
 
@@ -184,9 +184,9 @@ FCustomizer.Customizer = class {
             elements = targets ? [targets] : [];
         }
 
-        if (!elements.length) return this;
+        if (!elements.length) { return this; }
 
-        let state = this._getValue(name);
+        const state = this._getValue(name);
 
         let isValid = false;
 
@@ -198,15 +198,15 @@ FCustomizer.Customizer = class {
 
             if (typeof text !== "string" || text === "") {
                 text = this._textValue(element).toLowerCase();
-                if (text === "") return;
+                if (text === "") { return; }
             }
 
             isValid = true;
         });
 
-        if (!isValid) return this;
+        if (!isValid) { return this; }
 
-        for (let element of elements) {
+        for (const element of elements) {
             element.classList.toggle("esi-shown", state);
             element.classList.toggle("esi-hidden", !state);
             element.classList.add("esi-customizer");
@@ -218,30 +218,30 @@ FCustomizer.Customizer = class {
     }
 
     addDynamic(node) {
-        let text = this._textValue(node).toLowerCase();
-        if (text === "") return;
+        const text = this._textValue(node).toLowerCase();
+        if (text === "") { return; }
 
         this.add(`dynamic_${text}`, node, text);
     }
 
     build() {
 
-        let customizerEntries = new Map();
+        const customizerEntries = new Map();
 
-        for (let element of document.querySelectorAll(".esi-customizer")) {
+        for (const element of document.querySelectorAll(".esi-customizer")) {
 
-            let name = element.dataset.es_name;
+            const name = element.dataset.es_name;
 
             if (customizerEntries.has(name)) {
                 customizerEntries.get(name).push(element);
             } else {
 
-                let state = element.classList.contains("esi-shown");
-                let text = element.dataset.es_text;
+                const state = element.classList.contains("esi-shown");
+                const text = element.dataset.es_text;
 
                 HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
                     `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                        <div class="home_viewsettings_checkbox ${state ? 'checked' : ''}"></div>
+                        <div class="home_viewsettings_checkbox ${state ? "checked" : ""}"></div>
                         <div class="home_viewsettings_label">${text}</div>
                     </div>`);
 
@@ -249,12 +249,12 @@ FCustomizer.Customizer = class {
             }
         }
 
-        for (let [name, elements] of customizerEntries) {
-            let checkboxrow = document.getElementById(name);
+        for (const [name, elements] of customizerEntries) {
+            const checkboxrow = document.getElementById(name);
             checkboxrow.addEventListener("click", e => {
-                let state = !checkboxrow.querySelector(".checked");
+                const state = !checkboxrow.querySelector(".checked");
 
-                for (let element of elements) {
+                for (const element of elements) {
                     element.classList.toggle("esi-shown", state);
                     element.classList.toggle("esi-hidden", !state);
                 }
@@ -266,4 +266,4 @@ FCustomizer.Customizer = class {
             });
         }
     }
-}
+};

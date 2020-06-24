@@ -1,8 +1,8 @@
-import { ASFeature } from "../../ASFeature.js";
+import {ASFeature} from "../../ASFeature.js";
 
-import { HTML, SyncedStorage } from "../../../core.js";
-import { ExtensionLayer, Price } from "../../common.js";
-import { Localization } from "../../../language.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {ExtensionLayer, Price} from "../../common.js";
+import {Localization} from "../../../language.js";
 
 export class FWishlistStats extends ASFeature {
 
@@ -12,14 +12,14 @@ export class FWishlistStats extends ASFeature {
 
     async apply() {
 
-        let appInfo = await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, true);
+        const appInfo = await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, true);
 
         let totalPrice = 0;
         let totalCount = 0;
         let totalOnSale = 0;
         let totalNoPrice = 0;
 
-        for (let data of Object.values(appInfo)) {
+        for (const data of Object.values(appInfo)) {
             if (data.subs.length > 0) {
                 totalPrice += data.subs[0].price;
 

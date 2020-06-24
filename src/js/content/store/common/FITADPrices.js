@@ -1,7 +1,7 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Prices } from "../../common.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Prices} from "../../common.js";
+import {Localization} from "../../../language.js";
 
 export class FITADPrices extends ASFeature {
     checkPrerequisites() {
@@ -9,12 +9,12 @@ export class FITADPrices extends ASFeature {
     }
 
     apply() {
-        let prices = new Prices();
+        const prices = new Prices();
 
         prices.subids = this.context.getAllSubids();
 
         prices.bundleids = [];
-        for (let node of document.querySelectorAll("[data-ds-bundleid]")) {
+        for (const node of document.querySelectorAll("[data-ds-bundleid]")) {
             prices.bundleids.push(node.dataset.dsBundleid);
         }
 
@@ -29,9 +29,10 @@ export class FITADPrices extends ASFeature {
                     node = document.querySelector(`.game_area_purchase_game[data-ds-bundleid="${id}"]`);
                     placement = "beforebegin";
                 } else {
+
                     // Move any "Complete your Collection!" banner out of the way
-                    let banner = node.querySelector(".ds_completetheset");
-                    let newParent = node.querySelector(".game_area_purchase_game");
+                    const banner = node.querySelector(".ds_completetheset");
+                    const newParent = node.querySelector(".game_area_purchase_game");
                     if (banner && newParent) {
                         newParent.appendChild(banner);
                     }

@@ -1,5 +1,5 @@
-import { ASFeature } from "../../ASFeature.js";
-import { ExtensionResources, SyncedStorage } from "../../../core.js";
+import {ASFeature} from "../../ASFeature.js";
+import {ExtensionResources, SyncedStorage} from "../../../core.js";
 
 export class FAlternativeLinuxIcon extends ASFeature {
 
@@ -8,11 +8,11 @@ export class FAlternativeLinuxIcon extends ASFeature {
     }
 
     apply() {
-        let url = ExtensionResources.getURL("img/alternative_linux_icon.png");
-        let style = document.createElement("style");
+        const url = ExtensionResources.getURL("img/alternative_linux_icon.png");
+        const style = document.createElement("style");
 
         style.textContent = `span.platform_img.linux { background-image: url("${url}"); }`;
-        
+
         document.head.appendChild(style);
     }
 }

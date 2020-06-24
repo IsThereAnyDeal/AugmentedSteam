@@ -1,7 +1,7 @@
-import { ASFeature } from "../../ASFeature.js";
-import { Background } from "../../common.js";
-import { HTML } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {Background} from "../../common.js";
+import {HTML} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 export class FOwnedElsewhere extends ASFeature {
 
@@ -10,10 +10,10 @@ export class FOwnedElsewhere extends ASFeature {
     }
 
     async apply() {
-        let response = await Background.action("itad.getfromcollection", this.context.storeid);
+        const response = await Background.action("itad.getfromcollection", this.context.storeid);
         if (!response) { return; }
 
-        let storeList = response.map(store => `<strong>${store}</strong>`).join(", ");
+        const storeList = response.map(store => `<strong>${store}</strong>`).join(", ");
 
         HTML.afterEnd(".queue_overflow_ctn",
             `<div class="game_area_already_owned page_content" style="background-image: linear-gradient(to right, #856d0e 0%, #d1a906 100%);">

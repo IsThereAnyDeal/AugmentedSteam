@@ -1,6 +1,6 @@
-import { ASFeature } from "../ASFeature.js";
-import { HTML, SyncedStorage } from "../../core.js";
-import { CStoreBase } from "../store/common/CStoreBase.js";
+import {ASFeature} from "../ASFeature.js";
+import {HTML, SyncedStorage} from "../../core.js";
+import {CStoreBase} from "../store/common/CStoreBase.js";
 
 export class FHideTrademarks extends ASFeature {
 
@@ -20,16 +20,17 @@ export class FHideTrademarks extends ASFeature {
 
         // Replaces "R", "C" and "TM" signs
         function replaceSymbols(node) {
+
             // tfedor I don't trust this won't break any inline JS
             if (!node || !node.innerHTML) { return; }
             HTML.inner(node, node.innerHTML.replace(/[\u00AE\u00A9\u2122]/g, ""));
         }
 
-        for (let node of document.querySelectorAll(selectors)) {
+        for (const node of document.querySelectorAll(selectors)) {
             replaceSymbols(node);
         }
 
-        let observer = new MutationObserver(mutations => {
+        const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 mutation.addedNodes.forEach(node => {
                     replaceSymbols(node);
@@ -37,9 +38,9 @@ export class FHideTrademarks extends ASFeature {
             });
         });
 
-        let nodes = document.querySelectorAll("#game_select_suggestions,#search_suggestion_contents,.tab_content_ctn");
-        for (let node of nodes) {
-            observer.observe(node, { childList: true, subtree: true });
+        const nodes = document.querySelectorAll("#game_select_suggestions,#search_suggestion_contents,.tab_content_ctn");
+        for (const node of nodes) {
+            observer.observe(node, {"childList": true, "subtree": true});
         }
     }
 }

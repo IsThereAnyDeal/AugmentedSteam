@@ -1,5 +1,5 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML, LocalStorage } from "../../../core.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML, LocalStorage} from "../../../core.js";
 
 export class FHDPlayer extends ASFeature {
 
@@ -8,26 +8,26 @@ export class FHDPlayer extends ASFeature {
     }
 
     apply() {
-        let self = this;
-        let movieNode = document.querySelector("div.highlight_movie");
+        const self = this;
+        const movieNode = document.querySelector("div.highlight_movie");
         let playInHD = LocalStorage.get("playback_hd");
 
         // Add HD Control to each video as it's added to the DOM
-        let firstVideoIsPlaying = movieNode.querySelector("video.highlight_movie");
+        const firstVideoIsPlaying = movieNode.querySelector("video.highlight_movie");
         if (firstVideoIsPlaying) {
             addHDControl(firstVideoIsPlaying);
         }
 
-        let observer = new MutationObserver(mutations => {
-            for (let mutation of mutations) {
-                for (let node of mutation.addedNodes) {
+        const observer = new MutationObserver(mutations => {
+            for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
                     if (!node.matches("video.highlight_movie")) { continue; }
                     addHDControl(node);
                 }
             }
         });
-        for (let node of document.querySelectorAll("div.highlight_movie")) {
-            observer.observe(node, { childList: true });
+        for (const node of document.querySelectorAll("div.highlight_movie")) {
+            observer.observe(node, {"childList": true});
         }
 
         // When the "HD" button is clicked change the definition for all videos accordingly
@@ -38,10 +38,10 @@ export class FHDPlayer extends ASFeature {
             ev.preventDefault();
             ev.stopPropagation();
 
-            let videoControl = ev.target.closest("div.highlight_movie").querySelector("video");
-            let playInHD = self.context.toggleVideoDefinition(videoControl);
+            const videoControl = ev.target.closest("div.highlight_movie").querySelector("video");
+            const playInHD = self.context.toggleVideoDefinition(videoControl);
 
-            for (let node of document.querySelectorAll("video.highlight_movie")) {
+            for (const node of document.querySelectorAll("video.highlight_movie")) {
                 if (node === videoControl) { continue; }
                 self.context.toggleVideoDefinition(node, playInHD);
             }
@@ -50,13 +50,13 @@ export class FHDPlayer extends ASFeature {
         }
 
         // When the slider is expanded first time after the page was loaded set videos definition to HD
-        for (let node of document.querySelectorAll(".es_slider_toggle")) {
+        for (const node of document.querySelectorAll(".es_slider_toggle")) {
             node.addEventListener("click", clickInitialHD, false);
         }
         function clickInitialHD(ev) {
             ev.currentTarget.removeEventListener("click", clickInitialHD, false);
             if (!ev.target.classList.contains("es_expanded")) { return; }
-            for (let node of document.querySelectorAll("video.highlight_movie.es_video_sd")) {
+            for (const node of document.querySelectorAll("video.highlight_movie.es_video_sd")) {
                 self.context.toggleVideoDefinition(node, true);
             }
             LocalStorage.set("playback_hd", true);
@@ -66,11 +66,12 @@ export class FHDPlayer extends ASFeature {
             playInHD = LocalStorage.get("playback_hd");
 
             function _addHDControl() {
+
                 // Add "HD" button to the video
                 if (videoControl.dataset.hdSrc) {
-                    let node = videoControl.parentNode.querySelector(".time");
+                    const node = videoControl.parentNode.querySelector(".time");
                     if (node) {
-                        HTML.afterEnd(node, `<div class="es_hd_toggle"><span>HD</span></div>`);
+                        HTML.afterEnd(node, "<div class=\"es_hd_toggle\"><span>HD</span></div>");
                     }
                 }
 
@@ -91,32 +92,30 @@ export class FHDPlayer extends ASFeature {
                 self.context.toggleVideoDefinition(videoControl, playInHD);
             }
             setTimeout(_addHDControl, 150);
+
             // prevents a bug in Chrome which causes videos to stop playing after changing the src
         }
 
         function toggleFullscreen(videoControl) {
-            let fullscreenAvailable = document.fullscreenEnabled || document.mozFullScreenEnabled;
+            const fullscreenAvailable = document.fullscreenEnabled || document.mozFullScreenEnabled;
+
             // Mozilla unprefixed in v64
             if (!fullscreenAvailable) { return; }
 
-            let container = videoControl.parentNode;
-            let isFullscreen = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
-            // Mozilla unprefixed in v64
-            // Chrome unprefixed in v53
+            const container = videoControl.parentNode;
+            const isFullscreen = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+
+            /*
+             * Mozilla unprefixed in v64
+             * Chrome unprefixed in v53
+             */
 
             if (isFullscreen) {
-                if (document.exitFullscreen)
-                    document.exitFullscreen();
-                else if (document.mozCancelFullScreen)
-                    document.mozCancelFullScreen(); // Mozilla unprefixed in v64
+                if (document.exitFullscreen) { document.exitFullscreen(); } else if (document.mozCancelFullScreen) { document.mozCancelFullScreen(); } // Mozilla unprefixed in v64
             } else {
                 let response = null;
-                if (container.requestFullscreen)
-                    response = container.requestFullscreen();
-                else if (container.mozRequestFullScreen)
-                    response = container.mozRequestFullScreen(); // Mozilla unprefixed in v64
-                else if (container.webkitRequestFullscreen)
-                    container.webkitRequestFullscreen(); // Chrome unprefixed in v69, no promise
+                if (container.requestFullscreen) { response = container.requestFullscreen(); } else if (container.mozRequestFullScreen) { response = container.mozRequestFullScreen(); } // Mozilla unprefixed in v64
+                else if (container.webkitRequestFullscreen) { container.webkitRequestFullscreen(); } // Chrome unprefixed in v69, no promise
                 // if response is a promise, catch any errors it throws
                 Promise.resolve(response).catch(err => console.error(err));
             }

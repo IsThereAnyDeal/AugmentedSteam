@@ -1,24 +1,24 @@
-import { ASFeature } from "../../ASFeature.js";
-import { Currency, CurrencyRegistry } from "../../common.js";
-import { HTML } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {Currency, CurrencyRegistry} from "../../common.js";
+import {HTML} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 export class FCustomGiftcardAndWallet extends ASFeature {
 
     apply() {
-        
-        let giftcard = window.location.pathname.startsWith("/digitalgiftcards/");
 
-        let minAmountNode = document.querySelector(giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game");
-        let newel = minAmountNode.cloneNode(true);
+        const giftcard = window.location.pathname.startsWith("/digitalgiftcards/");
+
+        const minAmountNode = document.querySelector(giftcard ? ".giftcard_selection" : ".addfunds_area_purchase_game");
+        const newel = minAmountNode.cloneNode(true);
         newel.classList.add("es_custom_money");
 
-        let priceel = newel.querySelector(giftcard ? ".giftcard_text" : ".price");
-        let price = priceel.textContent.trim();
+        const priceel = newel.querySelector(giftcard ? ".giftcard_text" : ".price");
+        const price = priceel.textContent.trim();
 
-        let currency = CurrencyRegistry.fromType(Currency.storeCurrency);
-        let minValue = currency.valueOf(price);
-        let step = Math.pow(10, -currency.format.decimalPlaces);
+        const currency = CurrencyRegistry.fromType(Currency.storeCurrency);
+        const minValue = currency.valueOf(price);
+        const step = 10 ** -currency.format.decimalPlaces;
 
         let input = `<input type="number" id="es_custom_money_amount" class="es_text_input money" min="${minValue}" step="${step}" value="${minValue}">`;
 
@@ -30,7 +30,7 @@ export class FCustomGiftcardAndWallet extends ASFeature {
         }
 
         if (giftcard) {
-            let styleel = newel.querySelector(".giftcard_style");
+            const styleel = newel.querySelector(".giftcard_style");
             HTML.inner(styleel, Localization.str.wallet.custom_giftcard.replace("__input__", `<span>${input}</span>`));
             newel.querySelector("#es_custom_money_amount").dataset.tooltipText = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
 
@@ -53,7 +53,8 @@ export class FCustomGiftcardAndWallet extends ASFeature {
                 value = minValue; // prevent purchase error
             }
 
-            let customAmount = Number(value).toFixed(2).replace(/[,.]/g, '');
+            const customAmount = Number(value).toFixed(2)
+                .replace(/[,.]/g, "");
 
             if (giftcard) {
                 priceel.textContent = new Price(value);

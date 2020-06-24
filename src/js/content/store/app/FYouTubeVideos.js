@@ -1,7 +1,7 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Language, Localization } from "../../../language.js";
-import { ExtensionLayer } from "../../common.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Language, Localization} from "../../../language.js";
+import {ExtensionLayer} from "../../common.js";
 
 export class FYouTubeVideos extends ASFeature {
 
@@ -13,15 +13,15 @@ export class FYouTubeVideos extends ASFeature {
         let ytTabsHtml = "";
 
         if (SyncedStorage.get("showyoutubegameplay")) {
-            ytTabsHtml +=
-                `<div class="js-tab-yt-gameplay js-tab-yt js-tab es_tab home_tab">
+            ytTabsHtml
+                += `<div class="js-tab-yt-gameplay js-tab-yt js-tab es_tab home_tab">
                     <div class="tab_content">${Localization.str.youtube_gameplay}</div>
                 </div>`;
         }
 
         if (SyncedStorage.get("showyoutubereviews")) {
-            ytTabsHtml +=
-                `<div class="js-tab-yt-review js-tab-yt js-tab es_tab home_tab">
+            ytTabsHtml
+                += `<div class="js-tab-yt-review js-tab-yt js-tab es_tab home_tab">
                     <div class="tab_content">${Localization.str.youtube_reviews}</div>
                 </div>`;
         }
@@ -36,69 +36,71 @@ export class FYouTubeVideos extends ASFeature {
                 </div>
             </div>`);
 
-        /*  The separation of the tabs bar allows us to place the media slider right above the top right corner of the player.
-            This empty div is inserted here in order to keep the same height difference between the left and the right column. */
-        HTML.afterBegin(".rightcol", `<div style="height: 31px;"></div>`);
+        /*
+         *  The separation of the tabs bar allows us to place the media slider right above the top right corner of the player.
+         *  This empty div is inserted here in order to keep the same height difference between the left and the right column.
+         */
+        HTML.afterBegin(".rightcol", "<div style=\"height: 31px;\"></div>");
 
-        let steamTab = document.querySelector(".js-tab-steam");
+        const steamTab = document.querySelector(".js-tab-steam");
 
         this._tabToMedia = new Map([
             [steamTab, document.querySelector(".highlight_overflow")],
         ]);
 
-        steamTab.addEventListener("click", () => { this._setActiveTab(steamTab) });
+        steamTab.addEventListener("click", () => { this._setActiveTab(steamTab); });
 
         if (SyncedStorage.get("showyoutubegameplay")) {
-            let gamePlayTab = document.querySelector(".js-tab-yt-gameplay");
+            const gamePlayTab = document.querySelector(".js-tab-yt-gameplay");
 
             gamePlayTab.addEventListener("click", () => {
                 if (!this._tabToMedia.has(gamePlayTab)) {
-                    let gamePlayMedia = this._getIframe(Localization.str.gameplay);
-    
+                    const gamePlayMedia = this._getIframe(Localization.str.gameplay);
+
                     document.querySelector(".highlight_ctn")
                         .insertAdjacentElement("beforeend", gamePlayMedia);
-    
+
                     this._tabToMedia.set(gamePlayTab, gamePlayMedia);
                 }
-    
+
                 this._setActiveTab(gamePlayTab);
             });
         }
 
         if (SyncedStorage.get("showyoutubereviews")) {
-            let reviewTab = document.querySelector(".js-tab-yt-review");
+            const reviewTab = document.querySelector(".js-tab-yt-review");
 
             reviewTab.addEventListener("click", () => {
                 if (!this._tabToMedia.has(reviewTab)) {
-                    let reviewMedia = this._getIframe(Localization.str.review);
-    
+                    const reviewMedia = this._getIframe(Localization.str.review);
+
                     document.querySelector(".highlight_ctn")
                         .insertAdjacentElement("beforeend", reviewMedia);
-    
+
                     this._tabToMedia.set(reviewTab, reviewMedia);
                 }
-    
+
                 this._setActiveTab(reviewTab);
             });
         }
     }
 
     _setActiveTab(tab) {
-        let activeTab = document.querySelector(".js-tab.active");
+        const activeTab = document.querySelector(".js-tab.active");
         if (activeTab === tab) { return; }
 
-        let media = this._tabToMedia.get(tab);
-        let activeMedia = this._tabToMedia.get(activeTab);
+        const media = this._tabToMedia.get(tab);
+        const activeMedia = this._tabToMedia.get(activeTab);
 
         if (activeTab.classList.contains("js-tab-steam")) {
             ExtensionLayer.runInPageContext(() => { SteamOnWebPanelHidden(); });
         } else if (activeTab.classList.contains("js-tab-yt")) {
-            activeMedia.contentWindow.postMessage(`{"event":"command","func":"pauseVideo","args":""}`, "https://www.youtube.com");
+            activeMedia.contentWindow.postMessage("{\"event\":\"command\",\"func\":\"pauseVideo\",\"args\":\"\"}", "https://www.youtube.com");
         }
 
         activeMedia.style.display = "none";
         activeTab.classList.remove("active");
-        
+
         media.style.display = "block";
         tab.classList.add("active");
 
@@ -109,13 +111,15 @@ export class FYouTubeVideos extends ASFeature {
 
     _getIframe(searchQuery) {
 
-        let listParam = encodeURIComponent(
+        const listParam = encodeURIComponent(
+
             // Remove trademarks etc
-            `intitle:"${this.context.appName.replace(/[\u00AE\u00A9\u2122]/g, "")} ${searchQuery}" "PC"`);
+            `intitle:"${this.context.appName.replace(/[\u00AE\u00A9\u2122]/g, "")} ${searchQuery}" "PC"`
+        );
 
-        let hlParam = encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()));
+        const hlParam = encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()));
 
-        let player = document.createElement("iframe");
+        const player = document.createElement("iframe");
         player.classList.add("es_youtube_player");
         player.type = "text/html";
         player.src = `https://www.youtube.com/embed?listType=search&list=${listParam}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${hlParam}&enablejsapi=1`;

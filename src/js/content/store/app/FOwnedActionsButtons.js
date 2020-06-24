@@ -1,7 +1,7 @@
-import { ASFeature } from "../../ASFeature.js";
-import { User } from "../../common.js";
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {User} from "../../common.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 export class FOwnedActionsButtons extends ASFeature {
 
@@ -11,12 +11,12 @@ export class FOwnedActionsButtons extends ASFeature {
 
     apply() {
 
-        let node = document.querySelector(".game_area_play_stats .already_owned_actions");
-        let appid = this.context.appid;
+        const node = document.querySelector(".game_area_play_stats .already_owned_actions");
+        const appid = this.context.appid;
 
         // handle Install Steam button
-        let btn = node.querySelector("a[href^='https://store.steampowered.com/about/']");
-        let option = SyncedStorage.get("installsteam");
+        const btn = node.querySelector("a[href^='https://store.steampowered.com/about/']");
+        const option = SyncedStorage.get("installsteam");
         if (option === "hide") {
             btn.remove();
         } else if (option === "replace") {

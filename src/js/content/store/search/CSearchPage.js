@@ -1,7 +1,7 @@
-import { CStoreBase } from "../common/CStoreBase.js";
-import { ContextTypes } from "../../ASContext.js";
+import {CStoreBase} from "../common/CStoreBase.js";
+import {ContextTypes} from "../../ASContext.js";
 
-import { FSearchFilters } from "./FSearchFilters.js";
+import {FSearchFilters} from "./FSearchFilters.js";
 
 export class CSearchPage extends CStoreBase {
 

@@ -1,6 +1,6 @@
-import { ASContext, ContextTypes } from "../../ASContext.js";
+import {ASContext, ContextTypes} from "../../ASContext.js";
 
-import { FSkipAgecheck } from "../../common/FSkipAgecheck.js";
+import {FSkipAgecheck} from "../../common/FSkipAgecheck.js";
 
 export class CAgecheckPage extends ASContext {
 

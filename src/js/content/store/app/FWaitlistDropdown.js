@@ -1,7 +1,7 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Background, ExtensionLayer } from "../../common.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Background, ExtensionLayer} from "../../common.js";
+import {Localization} from "../../../language.js";
 
 export class FWaitlistDropdown extends ASFeature {
 
@@ -12,11 +12,11 @@ export class FWaitlistDropdown extends ASFeature {
     async apply() {
 
         // This node will be hidden behind the dropdown menu. Also, it's not really desirable when using dropdown menus to have a permanent div floating nearby
-        let notice = document.querySelector(".wishlist_added_temp_notice");
-        if (notice) notice.remove();
+        const notice = document.querySelector(".wishlist_added_temp_notice");
+        if (notice) { notice.remove(); }
 
-        let wishlistDivs = document.querySelectorAll("#add_to_wishlist_area,#add_to_wishlist_area_success");
-        let [wishlistArea, wishlistSuccessArea] = wishlistDivs;
+        const wishlistDivs = document.querySelectorAll("#add_to_wishlist_area,#add_to_wishlist_area_success");
+        const [wishlistArea, wishlistSuccessArea] = wishlistDivs;
 
         HTML.afterEnd(".queue_actions_ctn :first-child",
             `<div style="position: relative; display: inline-block;">
@@ -24,14 +24,14 @@ export class FWaitlistDropdown extends ASFeature {
             </div>`);
 
         // Creating a common parent for #add_to_wishlist_area and #add_to_wishlist_area_success makes it easier to apply the dropdown menu
-        let wrapper = document.querySelector(".queue_btn_wishlist");
+        const wrapper = document.querySelector(".queue_btn_wishlist");
 
         // Move the wrapper such that there can't be any other elements in between the dropdown and other buttons (see #690)
         document.querySelector(".queue_actions_ctn").insertBefore(wrapper.parentNode, wishlistArea);
 
         wishlistDivs.forEach(div => {
             wrapper.appendChild(div);
-            let button = div.querySelector(".btnv6_blue_hoverfade");
+            const button = div.querySelector(".btnv6_blue_hoverfade");
             button.style.borderTopRightRadius = 0;
             button.style.borderBottomRightRadius = 0;
         });
@@ -70,15 +70,15 @@ export class FWaitlistDropdown extends ASFeature {
         let wishlisted = document.querySelector("#add_to_wishlist_area").style.display === "none";
         let waitlisted = await Background.action("itad.inwaitlist", this.context.storeid);
 
-        let menuArrow = document.querySelector(".queue_ignore_menu_arrow");
-        let menu = document.querySelector(".queue_btn_ignore_menu");
-        let wishlistOption = document.querySelector("#queue_ignore_menu_option_not_interested");
-        let waitlistOption = document.querySelector("#queue_ignore_menu_option_owned_elsewhere");
+        const menuArrow = document.querySelector(".queue_ignore_menu_arrow");
+        const menu = document.querySelector(".queue_btn_ignore_menu");
+        const wishlistOption = document.querySelector("#queue_ignore_menu_option_not_interested");
+        const waitlistOption = document.querySelector("#queue_ignore_menu_option_owned_elsewhere");
 
         updateDiv();
 
         function updateDiv() {
-            let oneActive = Boolean(wishlisted) || Boolean(waitlisted);
+            const oneActive = Boolean(wishlisted) || Boolean(waitlisted);
 
             menuArrow.classList.toggle("queue_btn_active", oneActive);
             menuArrow.classList.toggle("queue_btn_inactive", !oneActive);
@@ -86,8 +86,8 @@ export class FWaitlistDropdown extends ASFeature {
             menu.classList.toggle("not_interested", wishlisted);
             menu.classList.toggle("owned_elsewhere", waitlisted);
 
-            wishlistArea.style.display = oneActive ? "none" : '';
-            wishlistSuccessArea.style.display = oneActive ? '' : "none";
+            wishlistArea.style.display = oneActive ? "none" : "";
+            wishlistSuccessArea.style.display = oneActive ? "" : "none";
 
             let text;
             if (wishlisted && !waitlisted) {
@@ -104,10 +104,10 @@ export class FWaitlistDropdown extends ASFeature {
             document.querySelector("#add_to_wishlist_area_success span").lastChild.textContent = ` ${text}`;
         }
 
-        wishlistArea.querySelector("a").addEventListener("click", async () => {
+        wishlistArea.querySelector("a").addEventListener("click", async() => {
 
             await ExtensionLayer.runInPageContext(() => new Promise(resolve => {
-                $J(document).ajaxComplete(function handler(e, xhr, { url }) {
+                $J(document).ajaxComplete(function handler(e, xhr, {url}) {
                     if (url === "https://store.steampowered.com/api/addtowishlist") {
                         resolve();
                         $J(document).unbind("ajaxComplete", handler);
@@ -124,7 +124,7 @@ export class FWaitlistDropdown extends ASFeature {
             updateDiv();
         };
 
-        wishlistOption.addEventListener("click", async () => {
+        wishlistOption.addEventListener("click", async() => {
             if (wishlisted) {
                 await this.context.removeFromWishlist();
                 wishlisted = !wishlisted;
@@ -134,7 +134,7 @@ export class FWaitlistDropdown extends ASFeature {
             }
         });
 
-        waitlistOption.addEventListener("click", async () => {
+        waitlistOption.addEventListener("click", async() => {
             if (waitlisted) {
                 await this.context.removeFromWaitlist();
             } else {

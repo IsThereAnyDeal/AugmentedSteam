@@ -1,18 +1,18 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML } from "../../../core.js";
-import { Localization } from "../../../language.js";
-import { ExtensionLayer } from "../../common.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML} from "../../../core.js";
+import {Localization} from "../../../language.js";
+import {ExtensionLayer} from "../../common.js";
 
 export class FReplaceDevPubLinks extends ASFeature {
 
     apply() {
-        let devs = Array.from(document.querySelectorAll("#developers_list > a, .details_block > .dev_row:first-of-type > a"));
-        let pubs = Array.from(document.querySelectorAll(".user_reviews > .dev_row:last-of-type a, .details_block > .dev_row:nth-of-type(2) > a"));
+        const devs = Array.from(document.querySelectorAll("#developers_list > a, .details_block > .dev_row:first-of-type > a"));
+        const pubs = Array.from(document.querySelectorAll(".user_reviews > .dev_row:last-of-type a, .details_block > .dev_row:nth-of-type(2) > a"));
         let franchise = document.querySelector(".details_block > .dev_row:nth-of-type(3) > a");
         franchise = franchise ? [franchise] : [];
 
-        for (let node of [...devs, ...pubs, ...franchise]) {
-            let homepageLink = new URL(node.href);
+        for (const node of [...devs, ...pubs, ...franchise]) {
+            const homepageLink = new URL(node.href);
             if (homepageLink.pathname.startsWith("/search/")) { continue; }
 
             let type;
@@ -29,7 +29,7 @@ export class FReplaceDevPubLinks extends ASFeature {
             HTML.afterEnd(node, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
         }
 
-        for (let moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {
+        for (const moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {
             moreBtn.remove();
         }
 

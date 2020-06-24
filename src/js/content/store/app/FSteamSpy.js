@@ -1,13 +1,13 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 export class FSteamSpy extends ASFeature {
 
     async checkPrerequisites() {
         if (!SyncedStorage.get("show_steamspy_info") || this.context.isDlc() || !document.querySelector(".sys_req")) { return false; }
 
-        let result = await this.context.data;
+        const result = await this.context.data;
         if (result && result.steamspy && result.steamspy.owners) {
             this._data = result.steamspy;
         }
@@ -17,11 +17,11 @@ export class FSteamSpy extends ASFeature {
 
     apply() {
 
-        let owners = this._data.owners.split("..");
-        let owners_from = HTML.escape(owners[0].trim());
-        let owners_to = HTML.escape(owners[1].trim());
-        let averageTotal = this._getTimeString(this._data.average_forever);
-        let average2weeks = this._getTimeString(this._data.average_2weeks);
+        const owners = this._data.owners.split("..");
+        const owners_from = HTML.escape(owners[0].trim());
+        const owners_to = HTML.escape(owners[1].trim());
+        const averageTotal = this._getTimeString(this._data.average_forever);
+        const average2weeks = this._getTimeString(this._data.average_2weeks);
 
         HTML.beforeBegin(document.querySelector(".sys_req").parentNode,
             `<div id="steam-spy" class="game_area_description">
@@ -37,13 +37,13 @@ export class FSteamSpy extends ASFeature {
 
     _getTimeString(value) {
 
-        let days = Math.trunc(value / 1440);
+        const days = Math.trunc(value / 1440);
         value -= days * 1440;
 
-        let hours = Math.trunc(value / 60);
+        const hours = Math.trunc(value / 60);
         value -= hours * 60;
 
-        let minutes = value;
+        const minutes = value;
 
         let result = "";
         if (days > 0) { result += `${days}d `; }

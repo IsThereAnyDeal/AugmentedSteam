@@ -7,16 +7,16 @@ export const Info = {
  * Shim for Promise.finally() for browsers (Waterfox/FF 56) that don't have it
  * https://github.com/domenic/promises-unwrapping/issues/18#issuecomment-57801572
  */
-if (typeof Promise.prototype.finally === 'undefined') {
-    Object.defineProperty(Promise.prototype, 'finally', {
-        'value': function(callback) {
-            var constructor = this.constructor;
-            return this.then(function(value) {
-                return constructor.resolve(callback()).then(function(){
+if (typeof Promise.prototype.finally === "undefined") {
+    Object.defineProperty(Promise.prototype, "finally", {
+        "value": function(callback) {
+            const constructor = this.constructor;
+            return this.then((value) => {
+                return constructor.resolve(callback()).then(() => {
                     return value;
                 });
-            }, function(reason) {
-                return constructor.resolve(callback()).then(function(){
+            }, (reason) => {
+                return constructor.resolve(callback()).then(() => {
                     console.error(reason);
                     throw reason;
                 });
@@ -29,16 +29,15 @@ export class BackgroundBase {
     static message(message) {
         return browser.runtime.sendMessage(message);
     }
-    
+
     static action(requested, ...params) {
-        if (!params.length)
-            return this.message({ "action": requested, });
-        return this.message({ "action": requested, "params": params, });
+        if (!params.length) { return this.message({"action": requested}); }
+        return this.message({"action": requested, "params": params});
     }
 }
 
 export class Version {
-    constructor(major, minor=0, patch=0) {
+    constructor(major, minor = 0, patch = 0) {
         console.assert([major, minor, patch].filter(Number.isInteger).length === 3, `${major}.${minor}.${patch} must be integers`);
         this.major = major;
         this.minor = minor;
@@ -49,7 +48,7 @@ export class Version {
         if (version instanceof Version) {
             return new Version(version.major, version.minor, version.patch);
         }
-        if (typeof version == 'string') {
+        if (typeof version == "string") {
             return Version.fromString(version);
         }
         if (Array.isArray(version)) {
@@ -61,7 +60,7 @@ export class Version {
         return new Version(...version.map(v => parseInt(v, 10)));
     }
     static fromString(version) {
-        return Version.fromArray(version.split('.'));
+        return Version.fromArray(version.split("."));
     }
     static coerce(version) {
         if (version instanceof Version) {
@@ -93,9 +92,11 @@ export class Version {
         version = Version.coerce(version);
         if (this.major < version.major) { return true; }
         if (this.major > version.major) { return false; }
+
         // this.major == version.major
         if (this.minor < version.minor) { return true; }
         if (this.minor > version.minor) { return false; }
+
         // this.minor == version.minor
         if (this.patch < version.patch) { return true; }
         return false;
@@ -104,9 +105,11 @@ export class Version {
         version = Version.coerce(version);
         if (this.major < version.major) { return true; }
         if (this.major > version.major) { return false; }
+
         // this.major == version.major
         if (this.minor < version.minor) { return true; }
         if (this.minor > version.minor) { return false; }
+
         // this.minor == version.minor
         if (this.patch > version.patch) { return false; }
         return true;
@@ -124,7 +127,7 @@ export class Version {
 export class Downloader {
 
     static download(content, filename) {
-        let a = document.createElement("a");
+        const a = document.createElement("a");
         a.href = typeof content === "string" ? content : URL.createObjectURL(content);
         a.download = filename;
 
@@ -136,8 +139,8 @@ export class Downloader {
 export class UpdateHandler {
 
     static checkVersion(onUpdate) {
-        let lastVersion = Version.fromString(SyncedStorage.get("version"));
-        let currentVersion = Version.fromString(Info.version);
+        const lastVersion = Version.fromString(SyncedStorage.get("version"));
+        const currentVersion = Version.fromString(Info.version);
 
         if (currentVersion.isAfter(lastVersion)) {
             if (SyncedStorage.get("version_show")) {
@@ -148,24 +151,24 @@ export class UpdateHandler {
         }
 
         SyncedStorage.set("version", Info.version);
-    };
+    }
 
     static async _showChangelog() {
-        let changelog = (await RequestData.getHttp(ExtensionResources.getURL("changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
-        let logo = ExtensionResources.getURL("img/es_128.png");
-        let dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
+        const changelog = (await RequestData.getHttp(ExtensionResources.getURL("changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
+        const logo = ExtensionResources.getURL("img/es_128.png");
+        const dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
 
         ExtensionLayer.runInPageContext(
             (updatedStr, dialog) => { ShowAlertDialog(updatedStr, dialog); },
-            [ Localization.str.update.updated.replace("__version__", Info.version), dialog ]
+            [Localization.str.update.updated.replace("__version__", Info.version), dialog]
         );
 
         if (Version.fromString(Info.version).isSame(new Version(1, 4))) {
-            let connectBtn = document.querySelector("#itad_connect");
+            const connectBtn = document.querySelector("#itad_connect");
             if (await BackgroundBase.action("itad.isconnected")) {
                 itadConnected();
             } else {
-                connectBtn.addEventListener("click", async function() {
+                connectBtn.addEventListener("click", async() => {
                     await BackgroundBase.action("itad.authorize");
                     ITAD.create();
                     itadConnected();
@@ -181,83 +184,84 @@ export class UpdateHandler {
         if (oldVersion.isSameOrBefore("0.9.4")) {
 
             // Remove eu1 region
-            let priceRegions = SyncedStorage.get('regional_countries');
-            let i = priceRegions.includes('eu1');
+            const priceRegions = SyncedStorage.get("regional_countries");
+            const i = priceRegions.includes("eu1");
             if (i !== -1) {
                 priceRegions.splice(i, 1);
-                SyncedStorage.set('regional_countries', priceRegions);
+                SyncedStorage.set("regional_countries", priceRegions);
             }
 
             // Populate customize_frontpage
             let mapping = {
-                'show_featuredrecommended': 'featuredrecommended',
-                'show_specialoffers': 'specialoffers',
-                'show_trendingamongfriends': 'trendingamongfriends',
-                'show_es_discoveryqueue': 'discoveryqueue',
-                'show_browsesteam': 'browsesteam',
-                'show_curators': 'curators',
-                'show_morecuratorrecommendations': 'morecuratorrecommendations',
-                'show_recentlyupdated': 'recentlyupdated',
-                'show_fromdevelopersandpublishersthatyouknow': 'fromdevelopersandpublishersthatyouknow',
-                'show_popularvrgames': 'popularvrgames',
-                'show_es_homepagetab': 'homepagetab',
-                'show_gamesstreamingnow': 'gamesstreamingnow',
-                'show_under': 'under',
-                'show_updatesandoffers': 'updatesandoffers',
-                'show_es_homepagesidebar': 'homepagesidebar',
+                "show_featuredrecommended": "featuredrecommended",
+                "show_specialoffers": "specialoffers",
+                "show_trendingamongfriends": "trendingamongfriends",
+                "show_es_discoveryqueue": "discoveryqueue",
+                "show_browsesteam": "browsesteam",
+                "show_curators": "curators",
+                "show_morecuratorrecommendations": "morecuratorrecommendations",
+                "show_recentlyupdated": "recentlyupdated",
+                "show_fromdevelopersandpublishersthatyouknow": "fromdevelopersandpublishersthatyouknow",
+                "show_popularvrgames": "popularvrgames",
+                "show_es_homepagetab": "homepagetab",
+                "show_gamesstreamingnow": "gamesstreamingnow",
+                "show_under": "under",
+                "show_updatesandoffers": "updatesandoffers",
+                "show_es_homepagesidebar": "homepagesidebar",
             };
-            let settings = SyncedStorage.get('customize_frontpage');
-            for (let [oldkey, newkey] of Object.entries(mapping)) {
+            let settings = SyncedStorage.get("customize_frontpage");
+            for (const [oldkey, newkey] of Object.entries(mapping)) {
                 if (!SyncedStorage.has(oldkey)) { continue; }
                 settings[newkey] = SyncedStorage.get(oldkey);
                 SyncedStorage.remove(oldkey);
             }
-            SyncedStorage.set('customize_frontpage', settings);
-            
+            SyncedStorage.set("customize_frontpage", settings);
+
             // Populate customize_apppage
             mapping = {
-                'show_apppage_reviews': 'reviews',
-                'show_apppage_about': 'about',
-                'show_apppage_surveys': 'surveys',
-                'show_apppage_sysreq': 'sysreq',
-                'show_apppage_legal': 'legal',
-                'show_apppage_morelikethis': 'morelikethis',
-                'show_apppage_recommendedbycurators': 'recommendedbycurators',
-                'show_apppage_customerreviews': 'customerreviews',
+                "show_apppage_reviews": "reviews",
+                "show_apppage_about": "about",
+                "show_apppage_surveys": "surveys",
+                "show_apppage_sysreq": "sysreq",
+                "show_apppage_legal": "legal",
+                "show_apppage_morelikethis": "morelikethis",
+                "show_apppage_recommendedbycurators": "recommendedbycurators",
+                "show_apppage_customerreviews": "customerreviews",
             };
-            settings = SyncedStorage.get('customize_apppage');
-            for (let [oldkey, newkey] of Object.entries(mapping)) {
+            settings = SyncedStorage.get("customize_apppage");
+            for (const [oldkey, newkey] of Object.entries(mapping)) {
                 if (!SyncedStorage.has(oldkey)) { continue; }
                 settings[newkey] = SyncedStorage.get(oldkey);
                 SyncedStorage.remove(oldkey);
             }
-            SyncedStorage.set('customize_apppage', settings);
+            SyncedStorage.set("customize_apppage", settings);
         }
-        
+
         if (oldVersion.isSameOrBefore("0.9.5")) {
             SyncedStorage.remove("version");
             SyncedStorage.remove("showesbg");
             SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
             SyncedStorage.remove("hideinstallsteambutton");
             SyncedStorage.remove("hideaboutmenu");
+
             // Update structure for custom profile links to allow multiple
-            if (SyncedStorage.get('profile_custom_name')) {
-                let custom_link = {
-                    'enabled': SyncedStorage.get('profile_custom'),
-                    'name': SyncedStorage.get('profile_custom_name'),
-                    'url': SyncedStorage.get('profile_custom_url'),
-                    'icon':  SyncedStorage.get('profile_custom_icon'),
+            if (SyncedStorage.get("profile_custom_name")) {
+                const custom_link = {
+                    "enabled": SyncedStorage.get("profile_custom"),
+                    "name": SyncedStorage.get("profile_custom_name"),
+                    "url": SyncedStorage.get("profile_custom_url"),
+                    "icon":  SyncedStorage.get("profile_custom_icon"),
                 };
-                SyncedStorage.set('profile_custom_link', [custom_link,]);
-                SyncedStorage.remove('profile_custom');
-                SyncedStorage.remove('profile_custom_name');
-                SyncedStorage.remove('profile_custom_url');
-                SyncedStorage.remove('profile_custom_icon');
+                SyncedStorage.set("profile_custom_link", [custom_link]);
+                SyncedStorage.remove("profile_custom");
+                SyncedStorage.remove("profile_custom_name");
+                SyncedStorage.remove("profile_custom_url");
+                SyncedStorage.remove("profile_custom_icon");
             }
             SyncedStorage.set("user_notes", SyncedStorage.get("wishlist_notes"));
             SyncedStorage.remove("wishlist_notes");
         }
-        
+
         if (oldVersion.isSameOrBefore("0.9.7")) {
             SyncedStorage.remove("hide_wishlist");
             SyncedStorage.remove("hide_cart");
@@ -267,7 +271,7 @@ export class UpdateHandler {
             SyncedStorage.remove("hide_priceabove");
             SyncedStorage.remove("priceabove_value");
         }
-        
+
         if (oldVersion.isSameOrBefore("1.2.1")) {
             if (!SyncedStorage.get("show_profile_link_images")) {
                 SyncedStorage.set("show_profile_link_images", "none");
@@ -316,39 +320,39 @@ export class UpdateHandler {
 export class GameId {
     static parseId(id) {
         if (!id) { return null; }
-        
-        let intId = parseInt(id);
+
+        const intId = parseInt(id);
         if (!intId) { return null; }
-        
+
         return intId;
     }
-    
+
     static getAppid(text) {
         if (!text) { return null; }
 
         if (text instanceof HTMLElement) {
-            let appid = text.dataset.dsAppid;
-            if (appid) return GameId.parseId(appid);
+            const appid = text.dataset.dsAppid;
+            if (appid) { return GameId.parseId(appid); }
             text = text.href;
-            if (!text) return null;
+            if (!text) { return null; }
         }
 
         // app, market/listing
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(?:app|market\/listings)\/(\d+)\/?/);
+        const m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(?:app|market\/listings)\/(\d+)\/?/);
         return m && GameId.parseId(m[1]);
     }
-    
+
     static getSubid(text) {
         if (!text) { return null; }
 
         if (text instanceof HTMLElement) {
-            let subid = text.dataset.dsPackageid;
-            if (subid) return GameId.parseId(subid);
+            const subid = text.dataset.dsPackageid;
+            if (subid) { return GameId.parseId(subid); }
             text = text.href;
-            if (!text) return null;
+            if (!text) { return null; }
         }
-        
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/sub\/(\d+)\/?/);
+
+        const m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/sub\/(\d+)\/?/);
         return m && GameId.parseId(m[1]);
     }
 
@@ -356,54 +360,54 @@ export class GameId {
         if (!text) { return null; }
 
         if (text instanceof HTMLElement) {
-            let bundleid = text.dataset.dsBundleid;
-            if (bundleid) return GameId.parseId(bundleid);
+            const bundleid = text.dataset.dsBundleid;
+            if (bundleid) { return GameId.parseId(bundleid); }
             text = text.href;
-            if (!text) return null;
+            if (!text) { return null; }
         }
 
-        let m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/bundle\/(\d+)\/?/);
+        const m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/bundle\/(\d+)\/?/);
         return m && GameId.parseId(m[1]);
     }
 
     static trimStoreId(storeId) {
-        return Number(storeId.slice(storeId.indexOf('/') + 1));
+        return Number(storeId.slice(storeId.indexOf("/") + 1));
     }
-    
+
     static getAppidImgSrc(text) {
         if (!text) { return null; }
-        let m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
+        const m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
         return m && GameId.parseId(m[2]);
     }
-    
+
     static getAppidUriQuery(text) {
         if (!text) { return null; }
-        let m = text.match(/appid=(\d+)/);
+        const m = text.match(/appid=(\d+)/);
         return m && GameId.parseId(m[1]);
     }
-    
+
     static getAppids(text) {
-        let regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
-        let res = [];
+        const regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
+        const res = [];
         let m;
         while ((m = regex.exec(text)) != null) {
-            let id = GameId.parseId(m[1]);
+            const id = GameId.parseId(m[1]);
             if (id) {
                 res.push(id);
             }
         }
         return res;
     }
-    
+
     static getAppidFromId(text) {
         if (!text) { return null; }
-        let m = text.match(/game_(\d+)/);
+        const m = text.match(/game_(\d+)/);
         return m && GameId.parseId(m[1]);
     }
-    
+
     static getAppidFromGameCard(text) {
         if (!text) { return null; }
-        let m = text.match(/\/gamecards\/(\d+)/);
+        const m = text.match(/\/gamecards\/(\d+)/);
         return m && GameId.parseId(m[1]);
     }
 }
@@ -411,15 +415,15 @@ export class GameId {
 // todo use https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage
 export class LocalStorage {
     static get(key, defaultValue) {
-        let item = localStorage.getItem(key);
-        if (!item) return defaultValue;
+        const item = localStorage.getItem(key);
+        if (!item) { return defaultValue; }
         try {
             return JSON.parse(item);
         } catch (err) {
             return defaultValue;
         }
     }
-    
+
     static set(key, value) {
         localStorage.setItem(key, JSON.stringify(value));
     }
@@ -427,19 +431,19 @@ export class LocalStorage {
     static has(key) {
         return localStorage.getItem(key) !== null;
     }
-    
+
     static remove(key) {
         localStorage.removeItem(key);
     }
-    
+
     static keys() {
-        let result = [];
+        const result = [];
         for (let i = localStorage.length - 1; i >= 0; --i) {
             result.push(localStorage.key(i));
         }
         return result;
     }
-    
+
     static clear() {
         localStorage.clear();
     }
@@ -447,6 +451,7 @@ export class LocalStorage {
 
 
 export class SyncedStorage {
+
     /**
      * browser.storage.sync limits
      * QUOTA_BYTES = 102400 // 100KB
@@ -459,8 +464,8 @@ export class SyncedStorage {
         return Object.prototype.hasOwnProperty.call(this.cache, key);
     }
     static get(key) {
-        if (typeof this.cache[key] == 'undefined') {
-            if (typeof this.defaults[key] == 'undefined') {
+        if (typeof this.cache[key] == "undefined") {
+            if (typeof this.defaults[key] == "undefined") {
                 console.warn(`Unrecognized SyncedStorage key '${key}'`);
             }
             return this.defaults[key];
@@ -470,12 +475,13 @@ export class SyncedStorage {
 
     static set(key, value) {
         this.cache[key] = value;
-        return this.adapter.set({ [key]: value, });
+        return this.adapter.set({[key]: value});
+
         // this will throw if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
     }
 
     static import(entries) {
-        for (let [key, value] of Object.entries(entries)) {
+        for (const [key, value] of Object.entries(entries)) {
             this.cache[key] = value;
         }
         return this.adapter.set(entries);
@@ -486,10 +492,11 @@ export class SyncedStorage {
             delete this.cache[key];
         }
         return this.adapter.remove(key);
+
         // can throw if MAX_WRITE* is exceeded
     }
 
-    static keys(prefix='') {
+    static keys(prefix = "") {
         return Object.keys(this.cache).filter(k => k.startsWith(prefix));
     }
 
@@ -500,13 +507,14 @@ export class SyncedStorage {
     static clear() {
         this.cache = {};
         return this.adapter.clear();
+
         // can throw if MAX_WRITE* is exceeded
     }
 
     // load whole storage and make local copy
     static async init() {
         browser.storage.onChanged.addListener(changes => {
-            for (let [key, { newValue: val, }] of Object.entries(changes)) {
+            for (const [key, {"newValue": val}] of Object.entries(changes)) {
                 this.cache[key] = val;
             }
             if (typeof ContextMenu === "function" && Object.keys(changes).some(key => key.startsWith("context_"))) {
@@ -514,7 +522,7 @@ export class SyncedStorage {
             }
         });
 
-        let storage = await this.adapter.get(null);
+        const storage = await this.adapter.get(null);
         Object.assign(this.cache, storage);
 
         return this.cache;
@@ -524,102 +532,102 @@ export class SyncedStorage {
     }
 
     static async quota() {
-        let maxBytes = this.adapter.QUOTA_BYTES;
-        let bytes = await this.adapter.getBytesInUse();
+        const maxBytes = this.adapter.QUOTA_BYTES;
+        const bytes = await this.adapter.getBytesInUse();
         return bytes / maxBytes; // float 0.0 (0%) -> 1.0 (100%)
     }
 }
 SyncedStorage.adapter = browser.storage.sync || browser.storage.local;
 SyncedStorage.cache = {};
 SyncedStorage.defaults = {
-    'language': "english",
+    "language": "english",
 
-    'version': Info.version,
-    'version_show': true,
+    "version": Info.version,
+    "version_show": true,
 
-    'highlight_owned_color': "#00ce67",
-    'highlight_wishlist_color': "#0491bf",
-    'highlight_coupon_color': "#a26426",
-    'highlight_inv_gift_color': "#800040",
-    'highlight_inv_guestpass_color': "#513c73",
-    'highlight_notinterested_color': "#4f4f4f",
-    'highlight_collection_color': "#856d0e",
-    'highlight_waitlist_color': "#4c7521",
+    "highlight_owned_color": "#00ce67",
+    "highlight_wishlist_color": "#0491bf",
+    "highlight_coupon_color": "#a26426",
+    "highlight_inv_gift_color": "#800040",
+    "highlight_inv_guestpass_color": "#513c73",
+    "highlight_notinterested_color": "#4f4f4f",
+    "highlight_collection_color": "#856d0e",
+    "highlight_waitlist_color": "#4c7521",
 
-    'tag_owned_color': "#00b75b",
-    'tag_wishlist_color': "#0383b4",
-    'tag_coupon_color': "#c27120",
-    'tag_inv_gift_color': "#b10059",
-    'tag_inv_guestpass_color': "#65449a",
-    'tag_notinterested_color': "#4f4f4f",
-    'tag_collection_color': "#856d0e",
-    'tag_waitlist_color': "#4c7521",
+    "tag_owned_color": "#00b75b",
+    "tag_wishlist_color": "#0383b4",
+    "tag_coupon_color": "#c27120",
+    "tag_inv_gift_color": "#b10059",
+    "tag_inv_guestpass_color": "#65449a",
+    "tag_notinterested_color": "#4f4f4f",
+    "tag_collection_color": "#856d0e",
+    "tag_waitlist_color": "#4c7521",
 
-    'highlight_owned': true,
-    'highlight_wishlist': true,
-    'highlight_coupon': false,
-    'highlight_inv_gift': false,
-    'highlight_inv_guestpass': false,
-    'highlight_notinterested': false,
-    'highlight_excludef2p': false,
-    'highlight_notdiscounted': false,
-    'highlight_collection': true,
-    'highlight_waitlist': true,
+    "highlight_owned": true,
+    "highlight_wishlist": true,
+    "highlight_coupon": false,
+    "highlight_inv_gift": false,
+    "highlight_inv_guestpass": false,
+    "highlight_notinterested": false,
+    "highlight_excludef2p": false,
+    "highlight_notdiscounted": false,
+    "highlight_collection": true,
+    "highlight_waitlist": true,
 
-    'tag_owned': false,
-    'tag_wishlist': false,
-    'tag_coupon': false,
-    'tag_inv_gift': false,
-    'tag_inv_guestpass': false,
-    'tag_notinterested': true,
-    'tag_collection': false,
-    'tag_waitlist': false,
-    'tag_short': false,
+    "tag_owned": false,
+    "tag_wishlist": false,
+    "tag_coupon": false,
+    "tag_inv_gift": false,
+    "tag_inv_guestpass": false,
+    "tag_notinterested": true,
+    "tag_collection": false,
+    "tag_waitlist": false,
+    "tag_short": false,
 
-    'hide_owned': false,
-    'hide_ignored': false,
-    'hide_dlcunownedgames': false,
-    'hide_wishlist': false,
-    'hide_cart': false,
-    'hide_notdiscounted': false,
-    'hide_mixed': false,
-    'hide_negative': false,
-    'hide_priceabove': false,
-    'priceabove_value': "",
-    'hidetmsymbols': false,
+    "hide_owned": false,
+    "hide_ignored": false,
+    "hide_dlcunownedgames": false,
+    "hide_wishlist": false,
+    "hide_cart": false,
+    "hide_notdiscounted": false,
+    "hide_mixed": false,
+    "hide_negative": false,
+    "hide_priceabove": false,
+    "priceabove_value": "",
+    "hidetmsymbols": false,
 
-    'showlowestprice': true,
-    'showlowestprice_onwishlist': true,
-    'showlowestpricecoupon': true,
-    'showallstores': true,
-    'stores': [],
-    'override_price': "auto",
-    'showregionalprice': "mouse",
-    'regional_countries': ["us", "gb", "ru", "br", "au", "jp"],
+    "showlowestprice": true,
+    "showlowestprice_onwishlist": true,
+    "showlowestpricecoupon": true,
+    "showallstores": true,
+    "stores": [],
+    "override_price": "auto",
+    "showregionalprice": "mouse",
+    "regional_countries": ["us", "gb", "ru", "br", "au", "jp"],
 
-    'show_es_homepagetabs': true,
-    'showmarkettotal': false,
-    'showsteamrepapi': true,
-    'showmcus': true,
-    'showoc': true,
-    'showhltb': true,
-    'showyoutube': true,
-    'showtwitch': true,
-    'showpcgw': true,
-    'showcompletionistme': false,
-    'showprotondb': false,
-    'showviewinlibrary': false,
-    'showsteamcardexchange': false,
-    'showitadlinks': true,
-    'showsteamdb': true,
-    'showbartervg': false,
-    'showastatslink': true,
-    'showyoutubegameplay': true,
-    'showyoutubereviews': true,
-    'showwsgf': true,
-    'exfgls': true,
+    "show_es_homepagetabs": true,
+    "showmarkettotal": false,
+    "showsteamrepapi": true,
+    "showmcus": true,
+    "showoc": true,
+    "showhltb": true,
+    "showyoutube": true,
+    "showtwitch": true,
+    "showpcgw": true,
+    "showcompletionistme": false,
+    "showprotondb": false,
+    "showviewinlibrary": false,
+    "showsteamcardexchange": false,
+    "showitadlinks": true,
+    "showsteamdb": true,
+    "showbartervg": false,
+    "showastatslink": true,
+    "showyoutubegameplay": true,
+    "showyoutubereviews": true,
+    "showwsgf": true,
+    "exfgls": true,
 
-    'customize_apppage': {
+    "customize_apppage": {
         "recentupdates": true,
         "reviews": true,
         "about": true,
@@ -634,7 +642,7 @@ SyncedStorage.defaults = {
         "customerreviews": true
     },
 
-    'customize_frontpage': {
+    "customize_frontpage": {
         "featuredrecommended": true,
         "specialoffers": true,
         "trendingamongfriends": true,
@@ -652,94 +660,94 @@ SyncedStorage.defaults = {
         "homepagesidebar": true
     },
 
-    //'show_keylol_links': false, // not in use, option is commented out
-    'show_package_info': false,
-    'show_steamchart_info': true,
-    'show_steamspy_info': true,
-    'show_early_access': true,
-    'show_alternative_linux_icon': false,
-    'show_itad_button': false,
-    'skip_got_steam': false,
+    // 'show_keylol_links': false, // not in use, option is commented out
+    "show_package_info": false,
+    "show_steamchart_info": true,
+    "show_steamspy_info": true,
+    "show_early_access": true,
+    "show_alternative_linux_icon": false,
+    "show_itad_button": false,
+    "skip_got_steam": false,
 
-    'hideaboutlinks': false,
-    'installsteam': "show",
-    'openinnewtab': false,
-    'keepssachecked': false,
-    'showemptywishlist': true,
-    'showusernotes': true,
-    'showwishliststats': true,
-    'user_notes': {},
-    'replaceaccountname': true,
-    'showfakeccwarning': true,
-    'showlanguagewarning': true,
-    'showlanguagewarninglanguage': "english",
-    'homepage_tab_selection': "remember",
-    'homepage_tab_last': null,
-    'send_age_info': true,
-    'mp4video': false,
-    'horizontalscrolling': true,
-    'showsupportinfo': true,
-    'showdrm': true,
-    'regional_hideworld': false,
-    'showinvnav': true,
-    'quickinv': true,
-    'quickinv_diff': -0.01,
-    'community_default_tab': "",
-    'showallachievements': false,
-    'showallstats': true,
-    'showachinstore': true,
-    'showcomparelinks': false,
-    'hideactivelistings': false,
-    'showlowestmarketprice': true,
-    'hidespamcomments': false,
-    'spamcommentregex': "[\\u2500-\\u25FF]",
-    'wlbuttoncommunityapp': true,
-    'removeguideslanguagefilter': false,
-    'disablelinkfilter': false,
-    'showallfriendsthatown': false,
-    'sortfriendsby': "default",
-    'sortreviewsby': "default",
-    'sortgroupsby': "default",
-    'show1clickgoo': true,
-    'show_profile_link_images': "gray",
-    'profile_steamrepcn': true,
-    'profile_steamgifts': true,
-    'profile_steamtrades': true,
-    'profile_bartervg': true,
-    'profile_steamrep': true,
-    'profile_steamdbcalc': true,
-    'profile_astats': true,
-    'profile_backpacktf': true,
-    'profile_astatsnl': true,
-    'profile_steamid': true,
-    'profile_custom_link': [
-        { 'enabled': true, 'name': "Google", 'url': "google.com/search?q=[ID]", 'icon': "www.google.com/images/branding/product/ico/googleg_lodp.ico", },
+    "hideaboutlinks": false,
+    "installsteam": "show",
+    "openinnewtab": false,
+    "keepssachecked": false,
+    "showemptywishlist": true,
+    "showusernotes": true,
+    "showwishliststats": true,
+    "user_notes": {},
+    "replaceaccountname": true,
+    "showfakeccwarning": true,
+    "showlanguagewarning": true,
+    "showlanguagewarninglanguage": "english",
+    "homepage_tab_selection": "remember",
+    "homepage_tab_last": null,
+    "send_age_info": true,
+    "mp4video": false,
+    "horizontalscrolling": true,
+    "showsupportinfo": true,
+    "showdrm": true,
+    "regional_hideworld": false,
+    "showinvnav": true,
+    "quickinv": true,
+    "quickinv_diff": -0.01,
+    "community_default_tab": "",
+    "showallachievements": false,
+    "showallstats": true,
+    "showachinstore": true,
+    "showcomparelinks": false,
+    "hideactivelistings": false,
+    "showlowestmarketprice": true,
+    "hidespamcomments": false,
+    "spamcommentregex": "[\\u2500-\\u25FF]",
+    "wlbuttoncommunityapp": true,
+    "removeguideslanguagefilter": false,
+    "disablelinkfilter": false,
+    "showallfriendsthatown": false,
+    "sortfriendsby": "default",
+    "sortreviewsby": "default",
+    "sortgroupsby": "default",
+    "show1clickgoo": true,
+    "show_profile_link_images": "gray",
+    "profile_steamrepcn": true,
+    "profile_steamgifts": true,
+    "profile_steamtrades": true,
+    "profile_bartervg": true,
+    "profile_steamrep": true,
+    "profile_steamdbcalc": true,
+    "profile_astats": true,
+    "profile_backpacktf": true,
+    "profile_astatsnl": true,
+    "profile_steamid": true,
+    "profile_custom_link": [
+        {"enabled": true, "name": "Google", "url": "google.com/search?q=[ID]", "icon": "www.google.com/images/branding/product/ico/googleg_lodp.ico"},
     ],
-    'group_steamgifts': true,
-    'steamcardexchange': true,
-    'purchase_dates': true,
-    'show_badge_progress': true,
-    'show_coupon': true,
-    'show_wishlist_link': true,
-    'show_wishlist_count': true,
-    'show_progressbar': true,
-    'show_backtotop': false,
+    "group_steamgifts": true,
+    "steamcardexchange": true,
+    "purchase_dates": true,
+    "show_badge_progress": true,
+    "show_coupon": true,
+    "show_wishlist_link": true,
+    "show_wishlist_count": true,
+    "show_progressbar": true,
+    "show_backtotop": false,
 
-    'profile_showcase_twitch': true,
-    'profile_showcase_own_twitch': false,
-    'profile_showcase_twitch_profileonly': false,
+    "profile_showcase_twitch": true,
+    "profile_showcase_own_twitch": false,
+    "profile_showcase_twitch_profileonly": false,
 
-    'itad_import_library': false,
-    'itad_import_wishlist': false,
-    'add_to_waitlist': false,
+    "itad_import_library": false,
+    "itad_import_wishlist": false,
+    "add_to_waitlist": false,
 
-    'context_steam_store': false,
-    'context_steam_market': false,
-    'context_itad': false,
-    'context_bartervg': false,
-    'context_steamdb': false,
-    'context_steamdb_instant': false,
-    'context_steam_keys': false,
+    "context_steam_store": false,
+    "context_steam_market": false,
+    "context_itad": false,
+    "context_bartervg": false,
+    "context_steamdb": false,
+    "context_steamdb_instant": false,
+    "context_steam_keys": false,
 };
 
 
@@ -769,7 +777,7 @@ export class ExtensionResources {
     try {
         await SyncedStorage;
         allowOpenInNewTab = SyncedStorage.get("openinnewtab");
-    } catch(e) {
+    } catch (e) {
         console.error(e);
     }
 
@@ -781,14 +789,14 @@ export class ExtensionResources {
      * We took the original Regex and aded chrome-extension://, moz-extension:// and steam://
      * First two are needed for linking local resources from extension,
      * steam:// protocol is used by Steam store to open their own client (e.g. when you want to launch a game).
-     * 
+     *
      * The addition of the `target` attribute to the allowed attributes is done in order to be able to open links in a new tab.
      * We only allow target="_blank" while adding rel="noreferrer noopener" to prevent child window to access window.opener
      * as described in https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
      */
 
-    let purifyConfig = {
-        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension|steam):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i
+    const purifyConfig = {
+        "ALLOWED_URI_REGEXP": /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension|steam):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i
     };
 
     if (allowOpenInNewTab) {
@@ -811,20 +819,21 @@ export class ExtensionResources {
 export class HTML {
 
     static escape(str) {
+
         // @see https://stackoverflow.com/a/4835406
-        let map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
+        const map = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
         };
 
-        return str.replace(/[&<>"']/g, function(m) { return map[m]; });
+        return str.replace(/[&<>"']/g, (m) => { return map[m]; });
     }
 
     static fragment(html) {
-        let template = document.createElement('template');
+        const template = document.createElement("template");
         template.innerHTML = DOMPurify.sanitize(html);
         return template.content;
     }
@@ -834,7 +843,7 @@ export class HTML {
     }
 
     static inner(node, html) {
-        if (typeof node == 'undefined' || node === null) {
+        if (typeof node == "undefined" || node === null) {
             console.warn(`${node} is not an Element.`);
             return null;
         }
@@ -845,13 +854,13 @@ export class HTML {
             console.warn(`${node} is not an Element.`);
             return null;
         }
-        
+
         node.innerHTML = DOMPurify.sanitize(html);
         return node;
     }
 
     static replace(node, html) {
-        if (typeof node == 'undefined' || node === null) {
+        if (typeof node == "undefined" || node === null) {
             console.warn(`${node} is not an Element.`);
             return null;
         }
@@ -868,7 +877,7 @@ export class HTML {
     }
 
     static wrap(node, html) {
-        if (typeof node == 'undefined' || node === null) {
+        if (typeof node == "undefined" || node === null) {
             console.warn(`${node} is not an Element.`);
             return null;
         }
@@ -880,14 +889,14 @@ export class HTML {
             return null;
         }
 
-        let wrapper = HTML.element(html);
+        const wrapper = HTML.element(html);
         node.replaceWith(wrapper);
         wrapper.append(node);
         return wrapper;
     }
 
     static adjacent(node, position, html) {
-        if (typeof node == 'undefined' || node === null) {
+        if (typeof node == "undefined" || node === null) {
             console.warn(`${node} is not an Element.`);
             return null;
         }
@@ -898,7 +907,7 @@ export class HTML {
             console.warn(`${node} is not an Element.`);
             return null;
         }
-        
+
         node.insertAdjacentHTML(position, DOMPurify.sanitize(html));
         return node;
     }
@@ -924,14 +933,14 @@ export class HTMLParser {
     static clearSpecialSymbols(string) {
         return string.replace(/[\u00AE\u00A9\u2122]/g, "");
     }
-    
+
     static htmlToDOM(html) {
         return HTML.fragment(html);
     }
 
     static htmlToElement(html) {
         return HTML.element(html);
-    };
+    }
 
     static getVariableFromText(text, name, type) {
         let regex;
@@ -946,35 +955,35 @@ export class HTMLParser {
         } else {
             return null;
         }
-        
-        let m = text.match(regex);
+
+        const m = text.match(regex);
         if (m) {
             if (type === "int") {
                 return parseInt(m[1]);
             }
             return JSON.parse(m[1]);
         }
-        
+
         return null;
     }
 
     static getVariableFromDom(variableName, type, dom) {
         dom = dom || document;
-        let nodes = dom.querySelectorAll("script");
-        for (let node of nodes) {
-            let m = HTMLParser.getVariableFromText(node.textContent, variableName, type)
+        const nodes = dom.querySelectorAll("script");
+        for (const node of nodes) {
+            const m = HTMLParser.getVariableFromText(node.textContent, variableName, type);
             if (m) {
                 return m;
             }
         }
-    };
+    }
 }
 
 export class StringUtils {
 
     // https://stackoverflow.com/a/6969486/7162651
     static escapeRegExp(str) {
-        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+        return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
     }
 }
 
@@ -992,9 +1001,9 @@ export class ErrorParser {
      * @returns {{name: String, msg: String}} an object containing information about the error name and its message
      */
     static parse(errStr) {
-        let info = errStr.match(/(.*):\s(.+)/);
+        const info = errStr.match(/(.*):\s(.+)/);
 
-        return { "name": info[1] || "", "msg": info[2] || "" };
+        return {"name": info[1] || "", "msg": info[2] || ""};
     }
 }
 
@@ -1013,9 +1022,9 @@ export class ServerOutageError extends Error {
 }
 
 export function sleep(duration) {
-    return new Promise(function(resolve, reject) {
-        setTimeout(function() { resolve(); }, duration);
-    });
+    return new Promise(((resolve, reject) => {
+        setTimeout(() => { resolve(); }, duration);
+    }));
 }
 
 export class Timestamp {
@@ -1029,12 +1038,11 @@ export class Timestamp {
 export class Debug {
 
     static async executionTime(fn, label) {
-        let start = performance.now();
-        let result = await fn();
-        let end = performance.now();
+        const start = performance.now();
+        const result = await fn();
+        const end = performance.now();
         console.debug("Took", end - start, "ms to execute", label);
         return result;
     }
 }
-
 

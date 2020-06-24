@@ -1,7 +1,7 @@
-import { ASFeature } from "../../ASFeature.js";
-import { User } from "../../common.js";
-import { HTML, SyncedStorage } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {User} from "../../common.js";
+import {HTML, SyncedStorage} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 export class FUserNotes extends ASFeature {
 
@@ -10,7 +10,7 @@ export class FUserNotes extends ASFeature {
     }
 
     async apply() {
-        let userNotes = this.context.userNotes;
+        const userNotes = this.context.userNotes;
 
         let noteText = "";
         let cssClass = "esi-note--hidden";
@@ -40,14 +40,14 @@ export class FUserNotes extends ASFeature {
             `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
 
         function toggleState(node, active) {
-            let button = document.querySelector(".js-user-note-button");
+            const button = document.querySelector(".js-user-note-button");
             button.querySelector("#es_add_note").style.display = active ? "none" : null;
             button.querySelector("#es_update_note").style.display = active ? null : "none";
 
             node.classList.toggle("esi-note--hidden", !active);
         }
 
-        let handler = () => {
+        const handler = () => {
             userNotes.showModalDialog(this.context.appName, this.context.appid, "#esi-store-user-note", toggleState);
         };
 

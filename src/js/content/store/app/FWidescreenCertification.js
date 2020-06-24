@@ -1,12 +1,12 @@
-import { ASFeature } from "../../ASFeature.js";
-import { ExtensionResources, HTML, SyncedStorage } from "../../../core.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {ExtensionResources, HTML, SyncedStorage} from "../../../core.js";
+import {Localization} from "../../../language.js";
 
 export class FWidescreenCertification extends ASFeature {
 
     async checkPrerequisites() {
         if (!this.context.isDlc() && SyncedStorage.get("showwsgf")) {
-            let result = await this.context.data;
+            const result = await this.context.data;
             if (result && result.wsgf) {
                 this._data = result.wsgf;
                 return true;
@@ -17,7 +17,7 @@ export class FWidescreenCertification extends ASFeature {
 
     apply() {
 
-        let {
+        const {
             "Path": path,
             "WideScreenGrade": wsg,
             "MultiMonitorGrade": mmg,
@@ -25,99 +25,105 @@ export class FWidescreenCertification extends ASFeature {
             "UltraWideScreenGrade": uws,
         } = this._data;
 
-        let wsg_icon = "", wsg_text = "", mmg_icon = "", mmg_text = "";
-        let fkg_icon = "", fkg_text = "", uws_icon = "", uws_text = "";
+        let wsg_icon = "",
+            wsg_text = "",
+            mmg_icon = "",
+            mmg_text = "";
+        let fkg_icon = "",
+            fkg_text = "",
+            uws_icon = "",
+            uws_text = "";
 
         switch (wsg) {
-            case "A":
-                wsg_icon = ExtensionResources.getURL("img/wsgf/ws-gold.png");
-                wsg_text = Localization.str.wsgf.gold.replace(/__type__/g, "Widescreen");
-                break;
-            case "B":
-                wsg_icon = ExtensionResources.getURL("img/wsgf/ws-silver.png");
-                wsg_text = Localization.str.wsgf.silver.replace(/__type__/g, "Widescreen");
-                break;
-            case "C":
-                wsg_icon = ExtensionResources.getURL("img/wsgf/ws-limited.png");
-                wsg_text = Localization.str.wsgf.limited.replace(/__type__/g, "Widescreen");
-                break;
-            case "Incomplete":
-                wsg_icon = ExtensionResources.getURL("img/wsgf/ws-incomplete.png");
-                wsg_text = Localization.str.wsgf.incomplete;
-                break;
-            case "Unsupported":
-                wsg_icon = ExtensionResources.getURL("img/wsgf/ws-unsupported.png");
-                wsg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Widescreen");
-                break;
+        case "A":
+            wsg_icon = ExtensionResources.getURL("img/wsgf/ws-gold.png");
+            wsg_text = Localization.str.wsgf.gold.replace(/__type__/g, "Widescreen");
+            break;
+        case "B":
+            wsg_icon = ExtensionResources.getURL("img/wsgf/ws-silver.png");
+            wsg_text = Localization.str.wsgf.silver.replace(/__type__/g, "Widescreen");
+            break;
+        case "C":
+            wsg_icon = ExtensionResources.getURL("img/wsgf/ws-limited.png");
+            wsg_text = Localization.str.wsgf.limited.replace(/__type__/g, "Widescreen");
+            break;
+        case "Incomplete":
+            wsg_icon = ExtensionResources.getURL("img/wsgf/ws-incomplete.png");
+            wsg_text = Localization.str.wsgf.incomplete;
+            break;
+        case "Unsupported":
+            wsg_icon = ExtensionResources.getURL("img/wsgf/ws-unsupported.png");
+            wsg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Widescreen");
+            break;
         }
 
         switch (mmg) {
-            case "A":
-                mmg_icon = ExtensionResources.getURL("img/wsgf/mm-gold.png");
-                mmg_text = Localization.str.wsgf.gold.replace(/__type__/g, "Multi-Monitor");
-                break;
-            case "B":
-                mmg_icon = ExtensionResources.getURL("img/wsgf/mm-silver.png");
-                mmg_text = Localization.str.wsgf.silver.replace(/__type__/g, "Multi-Monitor");
-                break;
-            case "C":
-                mmg_icon = ExtensionResources.getURL("img/wsgf/mm-limited.png");
-                mmg_text = Localization.str.wsgf.limited.replace(/__type__/g, "Multi-Monitor");
-                break;
-            case "Incomplete":
-                mmg_icon = ExtensionResources.getURL("img/wsgf/mm-incomplete.png");
-                mmg_text = Localization.str.wsgf.incomplete;
-                break;
-            case "Unsupported":
-                mmg_icon = ExtensionResources.getURL("img/wsgf/mm-unsupported.png");
-                mmg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Multi-Monitor");
-                break;
+        case "A":
+            mmg_icon = ExtensionResources.getURL("img/wsgf/mm-gold.png");
+            mmg_text = Localization.str.wsgf.gold.replace(/__type__/g, "Multi-Monitor");
+            break;
+        case "B":
+            mmg_icon = ExtensionResources.getURL("img/wsgf/mm-silver.png");
+            mmg_text = Localization.str.wsgf.silver.replace(/__type__/g, "Multi-Monitor");
+            break;
+        case "C":
+            mmg_icon = ExtensionResources.getURL("img/wsgf/mm-limited.png");
+            mmg_text = Localization.str.wsgf.limited.replace(/__type__/g, "Multi-Monitor");
+            break;
+        case "Incomplete":
+            mmg_icon = ExtensionResources.getURL("img/wsgf/mm-incomplete.png");
+            mmg_text = Localization.str.wsgf.incomplete;
+            break;
+        case "Unsupported":
+            mmg_icon = ExtensionResources.getURL("img/wsgf/mm-unsupported.png");
+            mmg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Multi-Monitor");
+            break;
         }
 
         switch (uws) {
-            case "A":
-                uws_icon = ExtensionResources.getURL("img/wsgf/uw-gold.png");
-                uws_text = Localization.str.wsgf.gold.replace(/__type__/g, "Ultra-Widescreen");
-                break;
-            case "B":
-                uws_icon = ExtensionResources.getURL("img/wsgf/uw-silver.png");
-                uws_text = Localization.str.wsgf.silver.replace(/__type__/g, "Ultra-Widescreen");
-                break;
-            case "C":
-                uws_icon = ExtensionResources.getURL("img/wsgf/uw-limited.png");
-                uws_text = Localization.str.wsgf.limited.replace(/__type__/g, "Ultra-Widescreen");
-                break;
-            case "Incomplete":
-                uws_icon = ExtensionResources.getURL("img/wsgf/uw-incomplete.png");
-                uws_text = Localization.str.wsgf.incomplete;
-                break;
-            case "Unsupported":
-                uws_icon = ExtensionResources.getURL("img/wsgf/uw-unsupported.png");
-                uws_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Ultra-Widescreen");
-                break;
+        case "A":
+            uws_icon = ExtensionResources.getURL("img/wsgf/uw-gold.png");
+            uws_text = Localization.str.wsgf.gold.replace(/__type__/g, "Ultra-Widescreen");
+            break;
+        case "B":
+            uws_icon = ExtensionResources.getURL("img/wsgf/uw-silver.png");
+            uws_text = Localization.str.wsgf.silver.replace(/__type__/g, "Ultra-Widescreen");
+            break;
+        case "C":
+            uws_icon = ExtensionResources.getURL("img/wsgf/uw-limited.png");
+            uws_text = Localization.str.wsgf.limited.replace(/__type__/g, "Ultra-Widescreen");
+            break;
+        case "Incomplete":
+            uws_icon = ExtensionResources.getURL("img/wsgf/uw-incomplete.png");
+            uws_text = Localization.str.wsgf.incomplete;
+            break;
+        case "Unsupported":
+            uws_icon = ExtensionResources.getURL("img/wsgf/uw-unsupported.png");
+            uws_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "Ultra-Widescreen");
+            break;
         }
 
         switch (fkg) {
-            case "A":
-                fkg_icon = ExtensionResources.getURL("img/wsgf/4k-gold.png");
-                fkg_text = Localization.str.wsgf.gold.replace(/__type__/g, "4k UHD");
-                break;
-            case "B":
-                fkg_icon = ExtensionResources.getURL("img/wsgf/4k-silver.png");
-                fkg_text = Localization.str.wsgf.silver.replace(/__type__/g, "4k UHD");
-                break;
-            case "C":
-                fkg_icon = ExtensionResources.getURL("img/wsgf/4k-limited.png");
-                fkg_text = Localization.str.wsgf.limited.replace(/__type__/g, "4k UHD");
-                break;
-            case "Incomplete":
-                fkg_icon = ExtensionResources.getURL("img/wsgf/4k-incomplete.png");
-                fkg_text = Localization.str.wsgf.incomplete;
-                break;
-            case "Unsupported":
-                fkg_icon = ExtensionResources.getURL("img/wsgf/4k-unsupported.png");
-                fkg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "4k UHD");
-                break;
+        case "A":
+            fkg_icon = ExtensionResources.getURL("img/wsgf/4k-gold.png");
+            fkg_text = Localization.str.wsgf.gold.replace(/__type__/g, "4k UHD");
+            break;
+        case "B":
+            fkg_icon = ExtensionResources.getURL("img/wsgf/4k-silver.png");
+            fkg_text = Localization.str.wsgf.silver.replace(/__type__/g, "4k UHD");
+            break;
+        case "C":
+            fkg_icon = ExtensionResources.getURL("img/wsgf/4k-limited.png");
+            fkg_text = Localization.str.wsgf.limited.replace(/__type__/g, "4k UHD");
+            break;
+        case "Incomplete":
+            fkg_icon = ExtensionResources.getURL("img/wsgf/4k-incomplete.png");
+            fkg_text = Localization.str.wsgf.incomplete;
+            break;
+        case "Unsupported":
+            fkg_icon = ExtensionResources.getURL("img/wsgf/4k-unsupported.png");
+            fkg_text = Localization.str.wsgf.unsupported.replace(/__type__/g, "4k UHD");
+            break;
         }
 
         let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.wsgf.certifications}</div>

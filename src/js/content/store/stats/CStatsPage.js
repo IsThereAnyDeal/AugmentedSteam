@@ -1,7 +1,7 @@
-import { CStoreBase } from "../common/CStoreBase.js";
-import { ContextTypes } from "../../ASContext.js";
+import {CStoreBase} from "../common/CStoreBase.js";
+import {ContextTypes} from "../../ASContext.js";
 
-import { FHighlightTopGames } from "./FHighlightTopGames.js";
+import {FHighlightTopGames} from "./FHighlightTopGames.js";
 
 export class CStatsPage extends CStoreBase {
 

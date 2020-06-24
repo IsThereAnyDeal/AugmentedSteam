@@ -1,7 +1,7 @@
-import { CallbackFeature } from "../../CallbackFeature.js";
+import {CallbackFeature} from "../../CallbackFeature.js";
 
-import { User } from "../../common.js";
-import { FHighlightsTags } from "../../common/FHighlightsTags.js";
+import {User} from "../../common.js";
+import {FHighlightsTags} from "../../common/FHighlightsTags.js";
 
 export class FWishlistHighlights extends CallbackFeature {
 
@@ -11,7 +11,7 @@ export class FWishlistHighlights extends CallbackFeature {
 
     callback(nodes) {
 
-        let options = {};
+        const options = {};
         if (this.context.myWishlist) {
             options.wishlisted = false;
             options.waitlisted = false;

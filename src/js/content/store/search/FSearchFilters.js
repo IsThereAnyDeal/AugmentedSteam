@@ -1,16 +1,16 @@
-import { ASFeature } from "../../ASFeature.js";
+import {ASFeature} from "../../ASFeature.js";
 
-import { CartSearchFilter } from "./filters/CartSearchFilter.js";
-import { EarlyAccessSearchFilter } from "./filters/EarlyAccessSearchFilter.js";
-import { MixedSearchFilter } from "./filters/MixedSearchFilter.js";
-import { NegativeSearchFilter } from "./filters/NegativeSearchFilter";
-import { ReviewsCountSearchFilter } from "./filters/ReviewsCountSearchFilter.js";
-import { ReviewsScoreSearchFilter } from "./filters/ReviewsScoreSearchFilter.js";
+import {CartSearchFilter} from "./filters/CartSearchFilter.js";
+import {EarlyAccessSearchFilter} from "./filters/EarlyAccessSearchFilter.js";
+import {MixedSearchFilter} from "./filters/MixedSearchFilter.js";
+import {NegativeSearchFilter} from "./filters/NegativeSearchFilter";
+import {ReviewsCountSearchFilter} from "./filters/ReviewsCountSearchFilter.js";
+import {ReviewsScoreSearchFilter} from "./filters/ReviewsScoreSearchFilter.js";
 
-import { HTML } from "../../../core.js";
-import { Localization } from "../../../language.js";
-import { EarlyAccess, ExtensionLayer, Messenger } from "../../common.js";
-import { FHighlightsTags } from "../../common/FHighlightsTags.js";
+import {HTML} from "../../../core.js";
+import {Localization} from "../../../language.js";
+import {EarlyAccess, ExtensionLayer, Messenger} from "../../common.js";
+import {FHighlightsTags} from "../../common/FHighlightsTags.js";
 
 export class FSearchFilters extends ASFeature {
 
@@ -27,8 +27,8 @@ export class FSearchFilters extends ASFeature {
 
         this._urlParams = {};
 
-        for (let filter of this._filters) {
-            let param = filter.urlParam;
+        for (const filter of this._filters) {
+            const param = filter.urlParam;
 
             if (this._urlParams[param]) {
                 this._urlParams[param].push(filter);
@@ -39,7 +39,7 @@ export class FSearchFilters extends ASFeature {
 
         this.results = document.getElementById("search_results");
 
-        let collapseName = "augmented_steam";
+        const collapseName = "augmented_steam";
 
         HTML.afterBegin("#advsearchform .rightcol",
             `<div class="block search_collapse_block" data-collapse-name="${collapseName}">
@@ -49,9 +49,9 @@ export class FSearchFilters extends ASFeature {
                 </div>
             </div>`);
 
-        let params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(window.location.search);
 
-        for (let filter of this._filters) {
+        for (const filter of this._filters) {
             filter.setup(params);
         }
 
@@ -60,9 +60,9 @@ export class FSearchFilters extends ASFeature {
 
         window.addEventListener("popstate", () => {
 
-            let params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams(window.location.search);
 
-            for (let filter of this._filters) {
+            for (const filter of this._filters) {
                 filter.setState(params);
             }
 
@@ -71,13 +71,14 @@ export class FSearchFilters extends ASFeature {
 
         // Allow user to autocollapse the added category block just like any other
         ExtensionLayer.runInPageContext((collapseName, shouldCollapse) => {
+
             /**
              * https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L927
              * InitAutocollapse
              */
-            let prefs = GetCollapsePrefs();
+            const prefs = GetCollapsePrefs();
 
-            let block = $J(`.search_collapse_block[data-collapse-name="${collapseName}"]`);
+            const block = $J(`.search_collapse_block[data-collapse-name="${collapseName}"]`);
             let collapsed;
 
             if (prefs[collapseName] !== undefined) {
@@ -88,7 +89,7 @@ export class FSearchFilters extends ASFeature {
 
             collapsed = collapsed && shouldCollapse;
 
-            block.children(".block_content").css("height", '');
+            block.children(".block_content").css("height", "");
 
             if (collapsed) {
                 block.addClass("collapsed");
@@ -107,7 +108,7 @@ export class FSearchFilters extends ASFeature {
                 block.toggleClass("collapsed");
                 SaveCollapsePrefs(prefs);
             });
-        }, [ collapseName, this._filters.every(filter => !filter.active) ]);
+        }, [collapseName, this._filters.every(filter => !filter.active)]);
 
         this._observeChanges();
     }
@@ -115,14 +116,14 @@ export class FSearchFilters extends ASFeature {
     _observeChanges() {
 
         Messenger.addMessageListener("searchCompleted", filtersChanged => {
-            let newResults = document.querySelectorAll(".search_result_row:not([data-as-review-count])");
+            const newResults = document.querySelectorAll(".search_result_row:not([data-as-review-count])");
 
             EarlyAccess.showEarlyAccess();
             FHighlightsTags.highlightAndTag(newResults);
 
-            let params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams(window.location.search);
 
-            for (let filter of this._filters) {
+            for (const filter of this._filters) {
 
                 filter.addRowMetadata(newResults);
 
@@ -133,7 +134,7 @@ export class FSearchFilters extends ASFeature {
                     filter.apply(newResults);
                 }
             }
-            
+
             this._updateFilterValues();
             this._modifyPageLinks();
         });
@@ -145,9 +146,9 @@ export class FSearchFilters extends ASFeature {
              * https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L614
              */
             function setPageChangeHandler() {
-                let controller = InitInfiniteScroll.oController;
+                const controller = InitInfiniteScroll.oController;
                 if (controller) {
-                    let oldPageHandler = controller.m_fnPageChangedHandler;
+                    const oldPageHandler = controller.m_fnPageChangedHandler;
 
                     controller.SetPageChangedHandler(function() {
                         oldPageHandler(...arguments);
@@ -158,9 +159,10 @@ export class FSearchFilters extends ASFeature {
             }
 
             // https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L264
-            let searchOld = window.ExecuteSearch;
+            const searchOld = window.ExecuteSearch;
 
             window.ExecuteSearch = function(params) {
+
                 /**
                  * The ExecuteSearch function uses the global object g_rgCurrentParameters, that is
                  * filled by GatherSearchParameters(), and compares it to the new search parameters
@@ -171,20 +173,20 @@ export class FSearchFilters extends ASFeature {
                  * https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L273
                  */
 
-                let paramsCopy = {};
+                const paramsCopy = {};
                 Object.assign(paramsCopy, params);
 
-                let currentAsParameters = {};
-                let asParameters = {};
+                const currentAsParameters = {};
+                const asParameters = {};
 
-                for (let filter in g_rgCurrentParameters) {
+                for (const filter in g_rgCurrentParameters) {
                     if (filter.startsWith("as-")) {
                         currentAsParameters[filter] = g_rgCurrentParameters[filter];
                         delete g_rgCurrentParameters[filter];
                     }
                 }
 
-                for (let filter in params) {
+                for (const filter in params) {
                     if (filter.startsWith("as-")) {
                         asParameters[filter] = params[filter];
                         delete params[filter];
@@ -197,7 +199,7 @@ export class FSearchFilters extends ASFeature {
                  * Therefore we can already notify the content script that the search completed.
                  */
                 if (Object.toQueryString(currentAsParameters) !== Object.toQueryString(asParameters)) {
-                        Messenger.postMessage("searchCompleted", true);
+                    Messenger.postMessage("searchCompleted", true);
                 }
 
                 searchOld(params);
@@ -207,7 +209,7 @@ export class FSearchFilters extends ASFeature {
             };
 
             // https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L298
-            let searchCompletedOld = window.SearchCompleted;
+            const searchCompletedOld = window.SearchCompleted;
 
             window.SearchCompleted = function() {
                 searchCompletedOld(...arguments);
@@ -227,7 +229,7 @@ export class FSearchFilters extends ASFeature {
 
     _updateFilterValues() {
         this._filterValues = Object.entries(this._urlParams).map(([param, filters]) => {
-            let value = filters
+            const value = filters
                 .map(filter => filter.value)
                 .filter(val => val !== null)
                 .join(",");
@@ -240,9 +242,9 @@ export class FSearchFilters extends ASFeature {
 
         this._updateFilterValues();
 
-        let curParams = new URLSearchParams(window.location.search);
+        const curParams = new URLSearchParams(window.location.search);
 
-        for (let [param, value] of this._filterValues) {
+        for (const [param, value] of this._filterValues) {
 
             /**
              * This hidden input is required for GatherSearchParameters,
@@ -256,9 +258,10 @@ export class FSearchFilters extends ASFeature {
         this._modifyParams(curParams, this._filterValues);
 
         ExtensionLayer.runInPageContext(params => {
+
             // https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L217
             UpdateUrl(params);
-        }, [ this._paramsToObject(curParams) ]);
+        }, [this._paramsToObject(curParams)]);
 
         this._modifyPageLinks();
     }
@@ -267,16 +270,18 @@ export class FSearchFilters extends ASFeature {
 
         if (this.context.infiniScrollEnabled) { return; }
 
-        for (let linkElement of document.querySelectorAll(".search_pagination_right a")) {
-            
-            let url = new URL(linkElement.href);
-            let params = url.searchParams;
-            
+        for (const linkElement of document.querySelectorAll(".search_pagination_right a")) {
+
+            const url = new URL(linkElement.href);
+            const params = url.searchParams;
+
             this._modifyParams(params, this._filterValues);
 
-            /* We can't simply use URLSearchParams.prototype.toString here, since existing query string parameters
+            /*
+             * We can't simply use URLSearchParams.prototype.toString here, since existing query string parameters
              * would be modified when stringifying back again (e.g. "white%20space" will turn into "white+space" and break links).
-             * Therefore the URLSearchParameters are converted to an object and parsed by Prototype's Object.toQueryString. */
+             * Therefore the URLSearchParameters are converted to an object and parsed by Prototype's Object.toQueryString.
+             */
             ExtensionLayer.runInPageContext(obj => Object.toQueryString(obj), [this._paramsToObject(params)], true)
                 .then(queryString => {
                     url.search = `?${queryString}`;
@@ -286,7 +291,7 @@ export class FSearchFilters extends ASFeature {
     }
 
     _modifyParams(searchParams, entries) {
-        for (let [key, val] of entries) {
+        for (const [key, val] of entries) {
             if (val !== "" && val !== null) {
                 searchParams.set(key, val);
             } else {
@@ -296,8 +301,8 @@ export class FSearchFilters extends ASFeature {
     }
 
     _paramsToObject(params) {
-        let paramsObj = {};
-        for (let [key, val] of params) {
+        const paramsObj = {};
+        for (const [key, val] of params) {
             paramsObj[key] = val;
         }
         return paramsObj;

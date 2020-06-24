@@ -1,4 +1,4 @@
-import { SyncedStorage, ExtensionResources, BackgroundBase } from "./core";
+import {BackgroundBase, ExtensionResources, SyncedStorage} from "./core";
 
 export class Language {
     static getCurrentSteamLanguage() {
@@ -6,11 +6,11 @@ export class Language {
             return this._currentSteamLanguage;
         }
 
-        let nodes = document.querySelectorAll("script[src]");
-        let re = /(?:\?|&(?:amp;)?)l=([^&]+)/;
-        for (let n of nodes) {
-            let src = n.getAttribute("src");
-            let match = src.match(re);
+        const nodes = document.querySelectorAll("script[src]");
+        const re = /(?:\?|&(?:amp;)?)l=([^&]+)/;
+        for (const n of nodes) {
+            const src = n.getAttribute("src");
+            const match = src.match(re);
             if (match) {
                 this._currentSteamLanguage = match[1];
                 return this._currentSteamLanguage;
@@ -18,7 +18,7 @@ export class Language {
         }
 
         // In a Content Context, we can check for a cookie
-        if (typeof CookieStorage != 'undefined') {
+        if (typeof CookieStorage != "undefined") {
             this._currentSteamLanguage = CookieStorage.get("Steam_Language") || null;
         }
 
@@ -26,8 +26,8 @@ export class Language {
     }
 
     static getLanguageCode(language) {
-        let code = Language.languages[language];
-        return code ? code : "en";
+        const code = Language.languages[language];
+        return code || "en";
     }
 
     static isCurrentLanguageOneOf(array) {
@@ -78,17 +78,16 @@ export class Localization {
         let storedSteamLanguage = SyncedStorage.get("language");
         if (currentSteamLanguage === null) {
             currentSteamLanguage = storedSteamLanguage;
-        } else {
-            if (currentSteamLanguage !== storedSteamLanguage) {
-                storedSteamLanguage = currentSteamLanguage;
-                SyncedStorage.set("language", currentSteamLanguage);
-                BackgroundBase.action("clearpurchases");
-            }
+        } else if (currentSteamLanguage !== storedSteamLanguage) {
+            storedSteamLanguage = currentSteamLanguage;
+            SyncedStorage.set("language", currentSteamLanguage);
+            BackgroundBase.action("clearpurchases");
         }
 
         function deepAssign(target, source) {
+
             // Object.assign() but deep-assigning objects recursively
-            for (let [key, val] of Object.entries(source)) {
+            for (const [key, val] of Object.entries(source)) {
                 if (target[key] === undefined) {
                     console.warn("The key %s doesn't exist in the English localization file", key);
                     continue;
@@ -102,14 +101,14 @@ export class Localization {
             return target;
         }
 
-        let local = Language.getLanguageCode(currentSteamLanguage);
-        let codes = ["en",];
+        const local = Language.getLanguageCode(currentSteamLanguage);
+        const codes = ["en"];
         if (local !== null && local !== "en") {
             codes.push(local);
         }
         Localization._promise = Promise.all(
             codes.map(lc => Localization.loadLocalization(lc))
-        ).then(function([english, local]) {
+        ).then(([english, local]) => {
             Localization.str = english;
             if (local) {
                 deepAssign(Localization.str, local);
@@ -124,12 +123,13 @@ export class Localization {
     }
 
     static getString(key) {
+
         // Source: http://stackoverflow.com/a/24221895
-        let path = key.split('.').reverse();
+        const path = key.split(".").reverse();
         let current = Localization.str;
 
         while (path.length) {
-            if (typeof current !== 'object') {
+            if (typeof current !== "object") {
                 return undefined;
             } else {
                 current = current[path.pop()];

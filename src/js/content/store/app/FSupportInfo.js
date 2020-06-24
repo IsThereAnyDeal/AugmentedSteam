@@ -1,12 +1,12 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML, LocalStorage, SyncedStorage } from "../../../core.js";
-import { Background } from "../../common.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML, LocalStorage, SyncedStorage} from "../../../core.js";
+import {Background} from "../../common.js";
+import {Localization} from "../../../language.js";
 
 export class FSupportInfo extends ASFeature {
 
     async checkPrerequisites() {
-        if (this.context.isDlc() || !SyncedStorage.get("showsupportinfo")) { return false; };
+        if (this.context.isDlc() || !SyncedStorage.get("showsupportinfo")) { return false; }
 
         let cache = LocalStorage.get("support_info", null);
 
@@ -15,14 +15,14 @@ export class FSupportInfo extends ASFeature {
             cache = {
                 "data": {},
                 "expiry": Date.now() + (31 * 86400 * 1000) // 31 days
-            }
+            };
         }
 
-        let appid = this.context.appid;
+        const appid = this.context.appid;
         this._supportInfo = cache.data[appid];
-        
+
         if (!this._supportInfo) {
-            let response = await Background.action("appdetails", appid, "support_info");
+            const response = await Background.action("appdetails", appid, "support_info");
             if (!response || !response.success) {
                 console.warn("Failed to retrieve support info");
                 return false;
@@ -39,8 +39,8 @@ export class FSupportInfo extends ASFeature {
 
     apply() {
 
-        let url = this._supportInfo.url;
-        let email = this._supportInfo.email;
+        const url = this._supportInfo.url;
+        const email = this._supportInfo.email;
 
         let support = "";
         if (url) {
@@ -53,8 +53,8 @@ export class FSupportInfo extends ASFeature {
             }
 
             // From https://emailregex.com/
-            let emailRegex =
-                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            const emailRegex
+                = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
             if (emailRegex.test(email)) {
                 support += `<a href="mailto:${email}">${Localization.str.email}</a>`;

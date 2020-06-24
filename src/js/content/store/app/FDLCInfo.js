@@ -1,8 +1,8 @@
-import { ASFeature } from "../../ASFeature.js";
-import { Localization } from "../../../language.js";
-import { Background } from "../../common.js";
+import {ASFeature} from "../../ASFeature.js";
+import {Localization} from "../../../language.js";
+import {Background} from "../../common.js";
 import Config from "../../../config.js";
-import { HTML } from "../../../core.js";
+import {HTML} from "../../../core.js";
 
 export class FDLCInfo extends ASFeature {
 
@@ -16,12 +16,12 @@ export class FDLCInfo extends ASFeature {
                    <div class="block_content"><div class="block_content_inner"><div class="details_block">`;
 
         try {
-            let response = await Background.action("dlcinfo", { "appid": this.context.appid, "appname": this.context.appName });
+            const response = await Background.action("dlcinfo", {"appid": this.context.appid, "appname": this.context.appName});
 
-            for (let item of response) {
-                let iconUrl = `${Config.PublicHost}/gamedata/icons/${encodeURIComponent(item.icon)}`;
-                let title = HTML.escape(item.desc);
-                let name = HTML.escape(item.name);
+            for (const item of response) {
+                const iconUrl = `${Config.PublicHost}/gamedata/icons/${encodeURIComponent(item.icon)}`;
+                const title = HTML.escape(item.desc);
+                const name = HTML.escape(item.name);
 
                 html += `<div class="game_area_details_specs">
                             <div class="icon"><img src="${iconUrl}"></div>
@@ -29,7 +29,7 @@ export class FDLCInfo extends ASFeature {
                         </div>`;
             }
         } finally {
-            let suggestUrl = `${Config.PublicHost}/gamedata/dlc_category_suggest.php?appid=${this.context.appid}&appname=${encodeURIComponent(this.context.appName)}`;
+            const suggestUrl = `${Config.PublicHost}/gamedata/dlc_category_suggest.php?appid=${this.context.appid}&appname=${encodeURIComponent(this.context.appName)}`;
             html += `</div>
                     <br><a class="linkbar" href="${suggestUrl}" target="_blank">${Localization.str.dlc_suggest} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></a>
                     </div></div></div>`;

@@ -1,4 +1,4 @@
-import { CStoreBase } from "./CStoreBase.js";
+import {CStoreBase} from "./CStoreBase.js";
 
 export class CStoreBaseCallback extends CStoreBase {
 
@@ -13,7 +13,7 @@ export class CStoreBaseCallback extends CStoreBase {
     }
 
     triggerCallbacks(...params) {
-        for (let callback of this._callbacks) {
+        for (const callback of this._callbacks) {
             callback(...params);
         }
     }

@@ -1,9 +1,9 @@
-import { ASFeature } from "../ASFeature.js";
-import { ContextTypes } from "../ASContext.js";
+import {ASFeature} from "../ASFeature.js";
+import {ContextTypes} from "../ASContext.js";
 
-import { HTML, LocalStorage, SyncedStorage } from "../../core.js";
-import { Localization } from "../../language.js";
-import { ExtensionLayer } from "../common.js";
+import {HTML, LocalStorage, SyncedStorage} from "../../core.js";
+import {Localization} from "../../language.js";
+import {ExtensionLayer} from "../common.js";
 
 export class FMediaExpander extends ASFeature {
 
@@ -30,16 +30,17 @@ export class FMediaExpander extends ASFeature {
             </div>`);
 
         // Initiate tooltip
-        ExtensionLayer.runInPageContext(() => { $J("[data-slider-tooltip]").v_tooltip({ "tooltipClass": "store_tooltip community_tooltip", "dataName": "sliderTooltip" }); });
+        ExtensionLayer.runInPageContext(() => { $J("[data-slider-tooltip]").v_tooltip({"tooltipClass": "store_tooltip community_tooltip", "dataName": "sliderTooltip"}); });
 
-        var expandSlider = LocalStorage.get("expand_slider", false);
+        const expandSlider = LocalStorage.get("expand_slider", false);
         if (expandSlider) {
             this._buildSideDetails();
 
-            for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
+            for (const node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
                 node.classList.add("es_expanded");
             }
-            for (let node of document.querySelectorAll(".es_side_details_wrap, .es_side_details")) {
+            for (const node of document.querySelectorAll(".es_side_details_wrap, .es_side_details")) {
+
                 // shrunk => expanded
                 node.style.display = null;
                 node.style.opacity = 1;
@@ -58,30 +59,33 @@ export class FMediaExpander extends ASFeature {
         if (this._detailsBuilt) { return; }
         this._detailsBuilt = true;
 
-        let details = this._details;
+        const details = this._details;
         if (!details) { return; }
 
         if (details.matches(".rightcol")) {
+
             // Clone details on a store page
             let detailsClone = details.querySelector(".glance_ctn");
-            if (!detailsClone) return;
+            if (!detailsClone) { return; }
             detailsClone = detailsClone.cloneNode(true);
             detailsClone.classList.add("es_side_details", "block", "responsive_apppage_details_left");
 
-            for (let node of detailsClone.querySelectorAll(".app_tag.add_button, .glance_tags_ctn.your_tags_ctn")) {
+            for (const node of detailsClone.querySelectorAll(".app_tag.add_button, .glance_tags_ctn.your_tags_ctn")) {
+
                 // There are some issues with having duplicates of these on page when trying to add tags
                 node.remove();
             }
 
-            let detailsWrap = HTML.wrap(detailsClone, `<div class="es_side_details_wrap"></div>`);
+            const detailsWrap = HTML.wrap(detailsClone, "<div class=\"es_side_details_wrap\"></div>");
             detailsWrap.style.display = "none";
-            let target = document.querySelector("div.rightcol.game_meta_data");
+            const target = document.querySelector("div.rightcol.game_meta_data");
             if (target) {
                 target.insertAdjacentElement("afterbegin", detailsWrap);
             }
         } else {
+
             // Clone details in the workshop
-            let detailsClone = details.cloneNode(true);
+            const detailsClone = details.cloneNode(true);
             detailsClone.style.display = "none";
             detailsClone.setAttribute("class", "panel es_side_details");
             HTML.adjacent(detailsClone, "afterbegin", `<div class="title">${Localization.str.details}</div><div class="hr padded"></div>`);
@@ -92,11 +96,13 @@ export class FMediaExpander extends ASFeature {
 
             target = document.querySelector(".highlight_ctn");
             if (target) {
-                HTML.wrap(target, `<div class="leftcol" style="width: 638px; float: left; position: relative; z-index: 1;" />`);
+                HTML.wrap(target, "<div class=\"leftcol\" style=\"width: 638px; float: left; position: relative; z-index: 1;\" />");
             }
 
-            // Don't overlap Sketchfab's "X"
-            // Example: https://steamcommunity.com/sharedfiles/filedetails/?id=606009216
+            /*
+             * Don't overlap Sketchfab's "X"
+             * Example: https://steamcommunity.com/sharedfiles/filedetails/?id=606009216
+             */
             target = document.querySelector(".highlight_sketchfab_model");
             if (target) {
                 target = document.getElementById("highlight_player_area");
@@ -109,10 +115,10 @@ export class FMediaExpander extends ASFeature {
                     el.style.top = "32px";
                 });
                 target.addEventListener("mouseleave", () => {
-                    let el = document.querySelector(".es_slider_toggle");
+                    const el = document.querySelector(".es_slider_toggle");
                     if (!el) { return; }
                     el.style.top = null;
-                },);
+                });
             }
         }
     }
@@ -121,25 +127,28 @@ export class FMediaExpander extends ASFeature {
         e.preventDefault();
         e.stopPropagation();
 
-        let el = e.target.closest(".es_slider_toggle");
+        const el = e.target.closest(".es_slider_toggle");
         this._details.style.display = "none";
         this._buildSideDetails();
 
         // Fade In/Out sideDetails
-        let sideDetails = document.querySelector(".es_side_details_wrap, .es_side_details");
+        const sideDetails = document.querySelector(".es_side_details_wrap, .es_side_details");
         if (sideDetails) {
             if (el.classList.contains("es_expanded")) {
+
                 // expanded => shrunk
                 sideDetails.style.opacity = 0;
 
                 setTimeout(() => {
+
                     // Hide after transition completes
                     if (!el.classList.contains("es_expanded")) {
                         sideDetails.style.display = "none";
                     }
                 }, 250);
-                
+
             } else {
+
                 // shrunk => expanded
                 sideDetails.style.display = null;
                 sideDetails.style.opacity = 1;
@@ -147,18 +156,19 @@ export class FMediaExpander extends ASFeature {
         }
 
         // On every animation/transition end check the slider state
-        let container = document.querySelector(".highlight_ctn");
+        const container = document.querySelector(".highlight_ctn");
         container.addEventListener("transitionend", () => { this._saveSlider(); });
 
-        for (let node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
+        for (const node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
             node.classList.toggle("es_expanded");
         }
     }
 
     _saveSlider() {
+
         // Save slider state
         LocalStorage.set("expand_slider", el.classList.contains("es_expanded"));
-        let details = this._details;
+        const details = this._details;
 
         // If slider was contracted show the extended details
         if (!el.classList.contains("es_expanded")) {

@@ -1,8 +1,8 @@
-import { ASFeature } from "../../ASFeature.js";
-import { HTML, LocalStorage } from "../../../core.js";
-import { ExtensionLayer } from "../../common.js";
-import { FHighlightsTags } from "../../common/FHighlightsTags.js";
-import { Localization } from "../../../language.js";
+import {ASFeature} from "../../ASFeature.js";
+import {HTML, LocalStorage} from "../../../core.js";
+import {ExtensionLayer} from "../../common.js";
+import {FHighlightsTags} from "../../common/FHighlightsTags.js";
+import {Localization} from "../../../language.js";
 
 export class FSteamPeek extends ASFeature {
 
@@ -26,13 +26,13 @@ export class FSteamPeek extends ASFeature {
             </div>`);
 
         HTML.beforeEnd(this._moreLikeThis.querySelector(".store_horizontal_autoslider_ctn"),
-            `<div class="block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad" id="es_steampeek_content"></div>`);
+            "<div class=\"block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad\" id=\"es_steampeek_content\"></div>");
 
         // TODO Create a global handler for DS loading
         await ExtensionLayer.runInPageContext(() => new Promise(resolve => { GDynamicStore.OnReady(() => { resolve(); }); }), null, true);
 
-        let [steamTab, steamPeekTab, content] = this._moreLikeThis
-            .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");        
+        const [steamTab, steamPeekTab, content] = this._moreLikeThis
+            .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");
 
         steamTab.addEventListener("click", () => {
             steamPeekTab.classList.remove("active");
@@ -46,7 +46,7 @@ export class FSteamPeek extends ASFeature {
         });
 
         let spLoaded = false;
-        steamPeekTab.addEventListener("click", async () => {
+        steamPeekTab.addEventListener("click", async() => {
             steamPeekTab.classList.add("active");
             steamTab.classList.remove("active");
             content.classList.add("es_sp_active");
@@ -57,23 +57,23 @@ export class FSteamPeek extends ASFeature {
             if (!spLoaded) {
                 spLoaded = true;
 
-                for (let node of content.querySelectorAll(":scope > a")) {
+                for (const node of content.querySelectorAll(":scope > a")) {
                     node.classList.add("es_steam_similar");
                 }
 
-                let data = await Background.action("steampeek", this.context.appid);
+                const data = await Background.action("steampeek", this.context.appid);
                 if (!data) { return; }
 
-                let lastChild = content.querySelector(":scope > :last-child");
+                const lastChild = content.querySelector(":scope > :last-child");
 
-                for (let { title, appid } of data) {
+                for (const {title, appid} of data) {
                     HTML.beforeBegin(lastChild,
                         `<a class="small_cap es_sp_similar" data-ds-appid="${appid}" href="https://store.steampowered.com/app/${appid}/">
                             <img src="https://steamcdn-a.akamaihd.net/steam/apps/${appid}/capsule_184x69.jpg" class="small_cap_img"></img>
                             <h4>${title}</h4>
                         </a>`);
 
-                    ExtensionLayer.runInPageContext(appid => { GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), appid); }, [ appid ]);
+                    ExtensionLayer.runInPageContext(appid => { GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), appid); }, [appid]);
                 }
 
                 ExtensionLayer.runInPageContext(() => { GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar")); });

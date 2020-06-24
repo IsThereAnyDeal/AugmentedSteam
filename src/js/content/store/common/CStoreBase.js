@@ -1,9 +1,9 @@
-import { ASContext, ContextTypes } from "../../ASContext.js";
+import {ASContext, ContextTypes} from "../../ASContext.js";
 
-import { EarlyAccess } from "../../common.js";
-import { FHighlightsTags } from "../../common/FHighlightsTags.js";
-import { FAlternativeLinuxIcon } from "./FAlternativeLinuxIcon.js";
-import { FHideTrademarks } from "../../common/FHideTrademarks.js";
+import {EarlyAccess} from "../../common.js";
+import {FHighlightsTags} from "../../common/FHighlightsTags.js";
+import {FAlternativeLinuxIcon} from "./FAlternativeLinuxIcon.js";
+import {FHideTrademarks} from "../../common/FHideTrademarks.js";
 
 export class CStoreBase extends ASContext {
 
@@ -25,14 +25,14 @@ export class CStoreBase extends ASContext {
 
     _observeChanges() {
 
-        let tabAreaNodes = document.querySelectorAll(".tag_browse_ctn, .tabarea, .browse_ctn_background");
+        const tabAreaNodes = document.querySelectorAll(".tag_browse_ctn, .tabarea, .browse_ctn_background");
         if (!tabAreaNodes) { return; }
 
-        let observer = new MutationObserver(() => {
+        const observer = new MutationObserver(() => {
             FHighlightsTags.highlightAndTag();
             EarlyAccess.showEarlyAccess();
         });
 
-        tabAreaNodes.forEach(tabAreaNode => observer.observe(tabAreaNode, {childList: true, subtree: true}));
+        tabAreaNodes.forEach(tabAreaNode => observer.observe(tabAreaNode, {"childList": true, "subtree": true}));
     }
 }

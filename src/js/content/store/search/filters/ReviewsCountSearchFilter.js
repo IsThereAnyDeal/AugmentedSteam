@@ -1,6 +1,6 @@
-import { SearchFilter } from "./searchfilters.js";
+import {SearchFilter} from "./searchfilters.js";
 
-import { Localization } from "../../../../language.js";
+import {Localization} from "../../../../language.js";
 
 export class ReviewsCountSearchFilter extends SearchFilter {
 
@@ -32,24 +32,25 @@ export class ReviewsCountSearchFilter extends SearchFilter {
         this._minCount = document.querySelector(".js-reviews-count-lower");
         this._maxCount = document.querySelector(".js-reviews-count-upper");
 
-        for (let input of document.querySelectorAll(".js-reviews-count-input")) {
+        for (const input of document.querySelectorAll(".js-reviews-count-input")) {
 
             input.addEventListener("change", () => {
                 this.apply();
 
-                let minVal = this._minCount.value;
-                let maxVal = this._maxCount.value;
+                const minVal = this._minCount.value;
+                const maxVal = this._maxCount.value;
                 let val = null;
 
                 if ((minVal && Number(minVal) !== 0) || maxVal) {
                     val = `${minVal}-${maxVal}`;
                 }
-                
+
                 this.value = val;
             });
 
             input.addEventListener("keydown", e => {
-                if(e.key === "Enter") {
+                if (e.key === "Enter") {
+
                     // Prevents unnecessary submitting of the advanced search form
                     e.preventDefault();
 
@@ -68,8 +69,8 @@ export class ReviewsCountSearchFilter extends SearchFilter {
 
         if (params.has("as-reviews-count")) {
 
-            let val = params.get("as-reviews-count");
-            let match = val.match(/(^\d*)-(\d*)/);
+            const val = params.get("as-reviews-count");
+            const match = val.match(/(^\d*)-(\d*)/);
 
             this._value = val;
 
@@ -97,12 +98,12 @@ export class ReviewsCountSearchFilter extends SearchFilter {
 
     addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-count])")) {
 
-        for (let row of rows) {
+        for (const row of rows) {
             let reviewCount = 0;
 
-            let reviewsNode = row.querySelector(".search_review_summary");
+            const reviewsNode = row.querySelector(".search_review_summary");
             if (reviewsNode) {
-                let match = reviewsNode.dataset.tooltipHtml.match(/\d{1,3}%.*?((?:\d{1,3},?)+)/);
+                const match = reviewsNode.dataset.tooltipHtml.match(/\d{1,3}%.*?((?:\d{1,3},?)+)/);
                 if (match) {
                     reviewCount = Number(match[1].replace(/,/g, ""));
                 }
@@ -114,11 +115,11 @@ export class ReviewsCountSearchFilter extends SearchFilter {
 
     apply(rows = document.querySelectorAll(".search_result_row")) {
 
-        let minCount = Number(this._minCount.value);
-        let maxCount = this._maxCount.value === "" ? Infinity : Number(this._maxCount.value);
+        const minCount = Number(this._minCount.value);
+        const maxCount = this._maxCount.value === "" ? Infinity : Number(this._maxCount.value);
 
-        for (let row of rows) {
-            let rowCount = Number(row.dataset.asReviewCount);
+        for (const row of rows) {
+            const rowCount = Number(row.dataset.asReviewCount);
             row.classList.toggle("as-reviews-count", rowCount < minCount || rowCount > maxCount);
         }
     }

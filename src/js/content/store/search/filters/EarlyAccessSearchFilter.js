@@ -1,8 +1,8 @@
-import { SimpleSearchFilter } from "./searchfilters.js";
+import {SimpleSearchFilter} from "./searchfilters.js";
 
-import { Localization } from "../../../../language.js";
-import { SyncedStorage } from "../../../../core.js";
-import { EarlyAccess } from "../../../common.js";
+import {Localization} from "../../../../language.js";
+import {SyncedStorage} from "../../../../core.js";
+import {EarlyAccess} from "../../../common.js";
 
 export class EarlyAccessSearchFilter extends SimpleSearchFilter {
 
@@ -29,7 +29,7 @@ export class EarlyAccessSearchFilter extends SimpleSearchFilter {
     async addRowMetadata(rows) {
         if (!this.active || SyncedStorage.get("show_early_access")) { return; }
 
-        for (let row of await EarlyAccess.getEaNodes(rows)) {
+        for (const row of await EarlyAccess.getEaNodes(rows)) {
             row.classList.add("es_early_access");
         }
     }

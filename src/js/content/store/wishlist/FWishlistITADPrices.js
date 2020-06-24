@@ -1,7 +1,7 @@
-import { CallbackFeature } from "../../CallbackFeature.js";
+import {CallbackFeature} from "../../CallbackFeature.js";
 
-import { SyncedStorage } from "../../../core.js";
-import { ExtensionLayer, Prices } from "../../common.js";
+import {SyncedStorage} from "../../../core.js";
+import {ExtensionLayer, Prices} from "../../common.js";
 
 export class FWishlistITADPrices extends CallbackFeature {
 
@@ -19,32 +19,32 @@ export class FWishlistITADPrices extends CallbackFeature {
 
         ExtensionLayer.runInPageContext(() => {
             function getNodesBelow(node) {
-                let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
+                const nodes = Array.from(document.querySelectorAll(".wishlist_row"));
 
                 // Limit the selection to the rows that are positioned below the row (not including the row itself) where the price is being shown
                 return nodes.filter(row => parseInt(row.style.top, 10) > parseInt(node.style.top, 10));
             }
 
-            let oldOnScroll = CWishlistController.prototype.OnScroll;
+            const oldOnScroll = CWishlistController.prototype.OnScroll;
 
             CWishlistController.prototype.OnScroll = function() {
                 oldOnScroll.call(g_Wishlist);
 
                 // If the mouse is still inside an entry while scrolling or resizing, wishlist.js's event handler will put back the elements to their original position
-                let hover = document.querySelectorAll(":hover");
+                const hover = document.querySelectorAll(":hover");
                 if (hover.length) {
-                    let activeEntry = hover[hover.length - 1].closest(".wishlist_row");
+                    const activeEntry = hover[hover.length - 1].closest(".wishlist_row");
                     if (activeEntry) {
-                        let priceNode = activeEntry.querySelector(".itad-pricing");
+                        const priceNode = activeEntry.querySelector(".itad-pricing");
 
                         if (priceNode) {
-                            for (let row of getNodesBelow(activeEntry)) {
+                            for (const row of getNodesBelow(activeEntry)) {
                                 row.style.top = `${parseInt(row.style.top) + priceNode.getBoundingClientRect().height}px`;
                             }
                         }
                     }
                 }
-            }
+            };
 
         });
 
@@ -53,11 +53,11 @@ export class FWishlistITADPrices extends CallbackFeature {
 
     callback(nodes) {
 
-        let cachedPrices = this._cachedPrices;
+        const cachedPrices = this._cachedPrices;
 
-        for (let node of nodes) {
+        for (const node of nodes) {
 
-            let appId = node.dataset.appId;
+            const appId = node.dataset.appId;
             if (!appId || typeof cachedPrices[appId] !== "undefined") { return; }
 
             cachedPrices[appId] = null;
@@ -65,29 +65,30 @@ export class FWishlistITADPrices extends CallbackFeature {
             node.addEventListener("mouseenter", () => {
                 if (cachedPrices[appId] === null) {
                     cachedPrices[appId] = new Promise(resolve => {
-                        let prices = new Prices();
+                        const prices = new Prices();
                         prices.appids = [appId];
                         prices.priceCallback = (type, id, contentNode) => {
                             node.insertAdjacentElement("beforeend", contentNode);
-                            let priceNode = node.querySelector(".itad-pricing");
-                            priceNode.style.bottom = -priceNode.getBoundingClientRect().height + "px";
+                            const priceNode = node.querySelector(".itad-pricing");
+                            priceNode.style.bottom = `${-priceNode.getBoundingClientRect().height}px`;
                             resolve();
                         };
                         prices.load();
                     });
                 }
                 cachedPrices[appId].then(() => {
-                        let priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
-                        this._getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) + priceNodeHeight + "px");
+                    const priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
+                    this._getNodesBelow(node).forEach(row => row.style.top = `${parseInt(row.style.top, 10) + priceNodeHeight}px`);
                 });
             });
 
             node.addEventListener("mouseleave", () => {
+
                 // When scrolling really fast, sometimes only this event is called without the invocation of the mouseenter event
                 if (cachedPrices[appId]) {
                     cachedPrices[appId].then(() => {
-                        let priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
-                        this._getNodesBelow(node).forEach(row => row.style.top = parseInt(row.style.top, 10) - priceNodeHeight + "px");
+                        const priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
+                        this._getNodesBelow(node).forEach(row => row.style.top = `${parseInt(row.style.top, 10) - priceNodeHeight}px`);
                     });
                 }
             });
@@ -95,7 +96,7 @@ export class FWishlistITADPrices extends CallbackFeature {
     }
 
     _getNodesBelow(node) {
-        let nodes = Array.from(document.querySelectorAll(".wishlist_row"));
+        const nodes = Array.from(document.querySelectorAll(".wishlist_row"));
 
         // Limit the selection to the rows that are positioned below the row (not including the row itself) where the price is being shown
         return nodes.filter(row => parseInt(row.style.top, 10) > parseInt(node.style.top, 10));
