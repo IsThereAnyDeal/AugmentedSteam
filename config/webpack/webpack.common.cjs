@@ -49,4 +49,16 @@ module.exports = {
             ]
         }),
     ],
+    "module": {
+        "rules": [
+            {
+                "test": /\.js$/,
+                "exclude": [
+                    path.resolve(rootDir, "node_modules/"),
+                    path.resolve(rootDir, "src/js/lib/"),
+                ],
+                "loader": "eslint-loader",
+            }
+        ],
+    },
 };
