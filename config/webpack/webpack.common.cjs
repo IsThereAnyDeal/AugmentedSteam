@@ -52,7 +52,7 @@ module.exports = {
     "module": {
         "rules": [
             {
-                "test": /\.js$/,
+                "test": /\.c?js$/,
                 "exclude": [
                     path.resolve(rootDir, "node_modules/"),
                     path.resolve(rootDir, "src/js/lib/"),
