@@ -1,8 +1,10 @@
 import {BackgroundBase, ExtensionResources, SyncedStorage} from "./core";
 
+import {CookieStorage} from "./content/common.js";
+
 export class Language {
     static getCurrentSteamLanguage() {
-        if (this._currentSteamLanguage != null) {
+        if (this._currentSteamLanguage !== null) {
             return this._currentSteamLanguage;
         }
 
@@ -88,7 +90,7 @@ export class Localization {
 
             // Object.assign() but deep-assigning objects recursively
             for (const [key, val] of Object.entries(source)) {
-                if (target[key] === undefined) {
+                if (typeof target[key] === "undefined") {
                     console.warn("The key %s doesn't exist in the English localization file", key);
                     continue;
                 }
@@ -130,10 +132,9 @@ export class Localization {
 
         while (path.length) {
             if (typeof current !== "object") {
-                return undefined;
-            } else {
-                current = current[path.pop()];
+                return null;
             }
+            current = current[path.pop()];
         }
         return current;
     }
