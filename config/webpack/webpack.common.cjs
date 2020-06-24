@@ -2,8 +2,10 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require("path");
 
+const rootDir = path.resolve(__dirname, "../../");
+
 module.exports = {
-    "context": path.resolve(__dirname, "../../"),
+    "context": rootDir,
     "entry": {
         "background": "./src/js/background/background.js",
         "options": "./src/js/options/options.js",
@@ -23,6 +25,9 @@ module.exports = {
     },
     "output": {
         "filename": "entries/[name].js",
+    },
+    "resolve": {
+        "modules": [path.resolve(rootDir, "src/js/"), path.resolve(rootDir, "src/js/content/")],
     },
     "plugins": [
         new CleanWebpackPlugin(),
