@@ -1319,7 +1319,7 @@ let ProfileEditPageClass = (function(){
     ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
 
         let html =
-            `<div class='group_content group_summary'>
+            `<div class='js-bg-selection group_content group_summary'>
                 <div class='formRow'>
                     ${Localization.str.custom_background}:
                     <span class='formRowHint' data-tooltip-text='${Localization.str.custom_background_help}'>(?)</span>
@@ -1343,43 +1343,65 @@ let ProfileEditPageClass = (function(){
                 </div>
             </div>`;
 
-        HTML.beforeBegin(".group_content_bodytext", html);
-        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
+        
 
-        let response = await Background.action('profile.background.games');
+        let active = false;
 
-        let gameSelectNode = document.querySelector("#es_bg_game");
-        let imgSelectNode = document.querySelector("#es_bg_img");
+        async function checkPage() {
 
-        let gameList = getGameSelectOptions(response);
-        HTML.inner(gameSelectNode, gameList[1]);
-        gameSelectNode.style.display = "block";
+            if (document.querySelector(`[href$="/edit/background"].active`)) {
 
-        let currentImg = ProfileData.getBgImgUrl(622,349);
-        if (currentImg) {
-            document.querySelector("#es_bg_preview").src = currentImg;
-            onGameSelected();
+                if (active) { return; } // Happens because the below code will trigger the observer again
+
+                HTML.beforeEnd(`[class^="profileeditshell_PageContent_"]`, html);
+                active = true;
+
+                ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
+
+                let response = await Background.action("profile.background.games");
+
+                let gameSelectNode = document.querySelector("#es_bg_game");
+                let imgSelectNode = document.querySelector("#es_bg_img");
+
+                let gameList = getGameSelectOptions(response);
+                HTML.inner(gameSelectNode, gameList[1]);
+                gameSelectNode.style.display = "block";
+
+                let currentImg = ProfileData.getBgImgUrl(622,349);
+                if (currentImg) {
+                    document.querySelector("#es_bg_preview").src = currentImg;
+                    onGameSelected();
+                }
+
+                hideBgFormLoading();
+
+                // on game selected
+                gameSelectNode.addEventListener("change", onGameSelected);
+                imgSelectNode.addEventListener("change", onImgSelected);
+
+                document.querySelector("#es_background_remove_btn").addEventListener("click", async function() {
+                    await ProfileData.clearOwn();
+                    window.location.href = Config.ApiServerHost + `/v01/profile/background/edit/delete/`;
+                });
+
+                document.querySelector("#es_background_save_btn").addEventListener("click", async function(e) {
+                    if (e.target.closest("#es_background_save_btn").classList.contains("btn_disabled")) { return; }
+                    await ProfileData.clearOwn();
+
+                    let selectedAppid = encodeURIComponent(gameSelectNode.value);
+                    let selectedImg = encodeURIComponent(imgSelectNode.value);
+                    window.location.href = Config.ApiServerHost+`/v01/profile/background/edit/save/?appid=${selectedAppid}&img=${selectedImg}`;
+                });
+
+            } else if (active) {
+                DOMHelper.remove(".js-bg-selection");
+                active = false;
+            }
         }
 
-        hideBgFormLoading();
+        checkPage();
 
-        // on game selected
-        gameSelectNode.addEventListener("change", onGameSelected);
-        imgSelectNode.addEventListener("change", onImgSelected);
-
-        document.querySelector("#es_background_remove_btn").addEventListener("click", async function() {
-            await ProfileData.clearOwn();
-            window.location.href = Config.ApiServerHost + `/v01/profile/background/edit/delete/`;
-        });
-
-        document.querySelector("#es_background_save_btn").addEventListener("click", async function(e) {
-            if (e.target.closest("#es_background_save_btn").classList.contains("btn_disabled")) { return; }
-            await ProfileData.clearOwn();
-
-            let selectedAppid = encodeURIComponent(gameSelectNode.value);
-            let selectedImg = encodeURIComponent(imgSelectNode.value);
-            window.location.href = Config.ApiServerHost+`/v01/profile/background/edit/save/?appid=${selectedAppid}&img=${selectedImg}`;
-        });
+        new MutationObserver(checkPage).observe(document.querySelector(`[class^="profileeditshell_PageContent_"]`), {"childList": true});
     };
 
     ProfileEditPageClass.prototype.addStyleSelection = function() {
@@ -1427,7 +1449,7 @@ let ProfileEditPageClass = (function(){
 
                 if (active) { return; } // Happens because the below code will trigger the observer again
 
-                HTML.beforeEnd("[class^=profileeditshell_PageContent_", html);
+                HTML.beforeEnd(`[class^="profileeditshell_PageContent_"]`, html);
                 active = true;
 
                 ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
