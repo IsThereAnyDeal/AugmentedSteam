@@ -1384,7 +1384,7 @@ let ProfileEditPageClass = (function(){
 
     ProfileEditPageClass.prototype.addStyleSelection = function() {
         let html =
-            `<div class='group_content group_summary'>
+            `<div class="js-style-selection group_content group_summary">
                 <div class='formRow'>
                     ${Localization.str.custom_style}:
                     <span class='formRowHint' data-tooltip-text='${Localization.str.custom_style_help}'>(?)</span>
@@ -1419,49 +1419,68 @@ let ProfileEditPageClass = (function(){
                 </div>
             </div>`;
 
-        HTML.beforeBegin(".group_content_bodytext", html);
+        let active = false;
 
-        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
+        function checkPage() {
 
-        let styleSelectNode = document.querySelector("#es_style");
+            if (document.querySelector(`[href$="/edit/theme"].active`)) {
 
-        let currentStyle = ProfileData.getStyle();
-        if (currentStyle) {
-            styleSelectNode.value = currentStyle;
+                if (active) { return; } // Happens because the below code will trigger the observer again
 
-            let imgNode = document.querySelector("#es_style_preview");
-            imgNode.src = ExtensionResources.getURL("img/profile_styles/" + currentStyle + "/preview.png");
+                HTML.beforeEnd("[class^=profileeditshell_PageContent_", html);
+                active = true;
 
-            if (currentStyle === "remove") {
-                imgNode.style.display = "none";
+                ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
+
+                let styleSelectNode = document.querySelector("#es_style");
+
+                let currentStyle = ProfileData.getStyle();
+                if (currentStyle) {
+                    styleSelectNode.value = currentStyle;
+
+                    let imgNode = document.querySelector("#es_style_preview");
+                    imgNode.src = ExtensionResources.getURL("img/profile_styles/" + currentStyle + "/preview.png");
+
+                    if (currentStyle === "remove") {
+                        imgNode.style.display = "none";
+                    }
+                }
+
+                styleSelectNode.addEventListener("change", function(){
+                    let imgNode = document.querySelector("#es_style_preview");
+                    if (styleSelectNode.value === "remove") {
+                        imgNode.style.display = "none";
+                    } else {
+                        imgNode.style.display = "block";
+                        imgNode.src = ExtensionResources.getURL("img/profile_styles/" + styleSelectNode.value + "/preview.png");
+                    }
+
+                    // Enable the "save" button
+                    document.querySelector("#es_style_save_btn").classList.remove("btn_disabled");
+                });
+
+                document.querySelector("#es_style_save_btn").addEventListener("click", async function(e) {
+                    if (e.target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
+                    await ProfileData.clearOwn();
+
+                    let selectedStyle = encodeURIComponent(styleSelectNode.value);
+                    window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
+                });
+
+                document.querySelector("#es_style_remove_btn").addEventListener("click", async function(e) {
+                    await ProfileData.clearOwn();
+                    window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
+                });
+
+            } else if (active) {
+                DOMHelper.remove(".js-style-selection");
+                active = false;
             }
         }
 
-        styleSelectNode.addEventListener("change", function(){
-            let imgNode = document.querySelector("#es_style_preview");
-            if (styleSelectNode.value === "remove") {
-                imgNode.style.display = "none";
-            } else {
-                imgNode.style.display = "block";
-                imgNode.src = ExtensionResources.getURL("img/profile_styles/" + styleSelectNode.value + "/preview.png");
-            }
+        checkPage();
 
-            // Enable the "save" button
-            document.querySelector("#es_style_save_btn").classList.remove("btn_disabled");
-        });
-
-        document.querySelector("#es_style_save_btn").addEventListener("click", async function(e) {
-            if (e.target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
-            await ProfileData.clearOwn();
-
-            let selectedStyle = encodeURIComponent(styleSelectNode.value);
-            window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
-        });
-
-        document.querySelector("#es_style_remove_btn").addEventListener("click", async function(e) {
-            await ProfileData.clearOwn();
-            window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
-        });
+        new MutationObserver(checkPage).observe(document.querySelector(`[class^="profileeditshell_PageContent_"]`), {"childList": true});
     };
 
     return ProfileEditPageClass;
