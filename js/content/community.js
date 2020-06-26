@@ -1233,10 +1233,23 @@ let ProfileEditPageClass = (function(){
 
     function ProfileEditPageClass() {
         ProfileData.clearOwn().then(() => {
-            if (!window.location.pathname.includes("/settings")) {
-                this.addBackgroundSelection();
-                this.addStyleSelection();
-            }
+            if (document.querySelector(`[class^="profileeditshell_PageContent_"]`)) { return; }
+
+            return new Promise(resolve => {
+                new MutationObserver((records, observer) => {
+                    for (let { addedNodes } of records) {
+                        for (let node of addedNodes) {
+                            if (node.nodeType !== Node.ELEMENT_NODE || !node.querySelector(`[class^="profileeditshell_PageContent_"]`)) { continue; }
+    
+                            observer.disconnect();
+                            resolve();
+                        }
+                    }
+                }).observe(document.getElementById("application_root"), {"childList": true});
+            });
+        }).then(() => {
+            this.addBackgroundSelection();
+            this.addStyleSelection();
         })
     }
 
