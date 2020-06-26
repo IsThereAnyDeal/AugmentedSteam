@@ -1333,9 +1333,6 @@ let ProfileEditPageClass = (function(){
                     </div>
                     <img id='es_bg_preview' class="es_profile_preview" src=''>
                     <div id="es_bg_buttons" class="es_profile_buttons">
-                        <span id='es_background_remove_btn' class='btn_grey_white_innerfade btn_small'>
-                            <span>${Localization.str.remove}</span>
-                        </span>&nbsp;
                         <span id='es_background_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'>
                             <span>${Localization.str.save}</span>
                         </span>
@@ -1379,18 +1376,19 @@ let ProfileEditPageClass = (function(){
                 gameSelectNode.addEventListener("change", onGameSelected);
                 imgSelectNode.addEventListener("change", onImgSelected);
 
-                document.querySelector("#es_background_remove_btn").addEventListener("click", async function() {
-                    await ProfileData.clearOwn();
-                    window.location.href = Config.ApiServerHost + `/v01/profile/background/edit/delete/`;
-                });
-
                 document.querySelector("#es_background_save_btn").addEventListener("click", async function(e) {
                     if (e.target.closest("#es_background_save_btn").classList.contains("btn_disabled")) { return; }
                     await ProfileData.clearOwn();
 
-                    let selectedAppid = encodeURIComponent(gameSelectNode.value);
-                    let selectedImg = encodeURIComponent(imgSelectNode.value);
-                    window.location.href = Config.ApiServerHost+`/v01/profile/background/edit/save/?appid=${selectedAppid}&img=${selectedImg}`;
+                    if (gameSelectNode.value === "0") {
+                        await ProfileData.clearOwn();
+                        window.location.href = Config.ApiServerHost + `/v01/profile/background/edit/delete/`;
+                    } else {
+                        let selectedAppid = encodeURIComponent(gameSelectNode.value);
+                        let selectedImg = encodeURIComponent(imgSelectNode.value);
+
+                        window.location.href = Config.ApiServerHost+`/v01/profile/background/edit/save/?appid=${selectedAppid}&img=${selectedImg}`;
+                    }                    
                 });
 
             } else if (active) {
