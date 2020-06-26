@@ -1429,9 +1429,6 @@ let ProfileEditPageClass = (function(){
                     </div>
                     <img id='es_style_preview' class="es_profile_preview" src=''>
                     <div id="es_style_buttons" class="es_profile_buttons">
-                        <span id='es_style_remove_btn' class='btn_grey_white_innerfade btn_small'>
-                            <span>${Localization.str.remove}</span>
-                        </span>&nbsp;
                         <span id='es_style_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'>
                             <span>${Localization.str.save}</span>
                         </span>
@@ -1483,13 +1480,12 @@ let ProfileEditPageClass = (function(){
                     if (e.target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
                     await ProfileData.clearOwn();
 
-                    let selectedStyle = encodeURIComponent(styleSelectNode.value);
-                    window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
-                });
-
-                document.querySelector("#es_style_remove_btn").addEventListener("click", async function(e) {
-                    await ProfileData.clearOwn();
-                    window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
+                    if (styleSelectNode.value === "remove") {
+                        window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
+                    } else {
+                        let selectedStyle = encodeURIComponent(styleSelectNode.value);
+                        window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
+                    }
                 });
 
             } else if (active) {
