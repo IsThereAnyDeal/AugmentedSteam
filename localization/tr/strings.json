@@ -1,8 +1,8 @@
 {
-    "steamid_of_user": "__user__ SteamID'si",
+    "steamid_of_user": "__user__ SteamID",
     "click_to_copy": "Kopyalamak için tıkla",
     "copied": "Panoya kopyalandı!",
-    "view_steamid": "SteamID'sini Göster",
+    "view_steamid": "SteamID",
     "more_on_steampeek": "SteamPeek'te daha fazlasını gör",
     "invite_friends": "Arkadaş Davet Et",
     "invite_to_group": "Gruba Davet Et",
@@ -565,13 +565,13 @@
         "add_custom_link": "Özel bağlantı ekle",
         "auto_detect": "Otomatik bul",
         "add_to_waitlist": "Uygulama sayfalarında \"Bekleme Listesine Ekle\" açılır menüsünü göster",
-        "profile_steamid": "Profillerde SteamID'leri göster",
+        "profile_steamid": "Profillerde SteamID göster",
         "settings_mngmt": {
-            "import": "",
-            "import_success": "",
-            "import_fail": "",
-            "export": "",
-            "reset": ""
+            "import": "Yükle",
+            "import_success": "Ayarları yedekten yükleme başarılı",
+            "import_fail": "Ayarları yedekten yükleme başarısız oldu",
+            "export": "Kaydet",
+            "reset": "Sıfırla"
         }
     },
     "ready": {
@@ -729,8 +729,8 @@
         },
         "hide_ea": "Erken Erişim öğelerini gizle",
         "hide_cart": "Sepetimdeki öğeleri gizle",
-        "hide_mixed": "",
-        "hide_negative": ""
+        "hide_mixed": "Karışık derecelendirmeleri gizle",
+        "hide_negative": "Negatif derecelendirmeleri gizle"
     },
     "calc_workshop_size": {
         "file_size": "Dosya sayısı __size__",
@@ -747,6 +747,6 @@
     "visibility": "Görünürlük",
     "processing": "İşleniyor...",
     "wait": "Lütfen bekleyin",
-    "login_warning": "",
-    "youtube_reviews": ""
+    "login_warning": "Augmented Steam'in tüm özelliklerini kullanabilmek için __link__ adresinden oturum açtığınıza emin olun.",
+    "youtube_reviews": "YouTube İncelemeleri"
 }

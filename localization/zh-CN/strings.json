@@ -6,7 +6,7 @@
     "more_on_steampeek": "在 SteamPeek 查看详情",
     "invite_friends": "邀请好友",
     "invite_to_group": "邀请至组",
-    "inverse": "逆序",
+    "inverse": "反选",
     "transactionStatus": "__failed__ 个请求失败。已获取 __size__ / __total__ 笔交易。",
     "custom_tags": "自定义标签",
     "add_tag": "添加标签",
@@ -567,11 +567,11 @@
         "add_to_waitlist": "在商店页面显示“添加到观察列表（Waitlist）”下拉菜单",
         "profile_steamid": "在个人资料页面显示 SteamID",
         "settings_mngmt": {
-            "import": "",
-            "import_success": "",
-            "import_fail": "",
-            "export": "",
-            "reset": ""
+            "import": "导入",
+            "import_success": "导入设置成功",
+            "import_fail": "导入设置失败",
+            "export": "导出",
+            "reset": "重置"
         }
     },
     "ready": {
@@ -729,8 +729,8 @@
         },
         "hide_ea": "隐藏抢先体验物品",
         "hide_cart": "隐藏购物车中的物品",
-        "hide_mixed": "",
-        "hide_negative": ""
+        "hide_mixed": "隐藏褒贬不一物品",
+        "hide_negative": "隐藏差评物品"
     },
     "calc_workshop_size": {
         "file_size": "文件大小 __size__",
@@ -747,6 +747,6 @@
     "visibility": "可见性",
     "processing": "处理中...",
     "wait": "请稍候",
-    "login_warning": "",
-    "youtube_reviews": ""
+    "login_warning": "您必须登录 __link__ 才能使用 Augmented Steam 的全部功能。",
+    "youtube_reviews": "YouTube 评测"
 }

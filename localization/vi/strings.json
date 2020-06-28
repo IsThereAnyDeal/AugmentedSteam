@@ -567,11 +567,11 @@
         "add_to_waitlist": "",
         "profile_steamid": "Hiển thị SteamID trên hồ sơ",
         "settings_mngmt": {
-            "import": "",
-            "import_success": "",
-            "import_fail": "",
-            "export": "",
-            "reset": ""
+            "import": "Nhập",
+            "import_success": "Nhập thành công tùy chọn",
+            "import_fail": "Nhập thất bại tùy chọn",
+            "export": "Xuất",
+            "reset": "Cài lại"
         }
     },
     "ready": {
@@ -622,13 +622,13 @@
         "owned": "Đã sở hữu",
         "notinterested": "Not Interested",
         "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ wish for</a>",
-        "collection": "",
-        "waitlist": ""
+        "collection": "Đã thu thập",
+        "waitlist": "Đã chờ"
     },
     "wallet": {
         "custom_amount": "Add custom amount",
         "custom_amount_text": "Add any amount over __minamount__",
-        "custom_giftcard": ""
+        "custom_giftcard": "Chọn __input__ Thẻ Quà Tặng Tùy Chọn"
     },
     "wsgf": {
         "incomplete": "Incomplete",
@@ -704,22 +704,22 @@
         "unsubscribe_all": "Hủy đăng ký Tất cả",
         "unsubscribe_confirm": "",
         "unsubscribe_loading": "",
-        "finished": "",
-        "failed": ""
+        "finished": "Đã hoàn thành! __thành công__ đã thành công, __thất bại__ đã thất bại. Nhấn OK để tải lại trang",
+        "failed": "__n__ thất bại"
     },
     "this_version": "Phiên bản này",
     "original_authors": "Tác giả gốc",
-    "acknowledgements": "",
+    "acknowledgements": "Công nhận",
     "other": "Khác",
     "images": "Hình ảnh",
     "powered_by": "Được cung cấp bỏi __link__",
-    "help_translate": "",
-    "filters": "",
+    "help_translate": "Giúp chúng tôi chuyển ngữ Augmented Steam tại POEditor",
+    "filters": "Bộ lọc Augmented Steam",
     "search_filters": {
         "reviews_score": {
-            "between": "",
+            "between": "Giữa __thấp hơn__% và __cao hơn__% điểm đánh giá ",
             "any": "Bất kỳ điểm đánh giá nào",
-            "up_to": "",
+            "up_to": "Đến __điểm__% điểm đánh giá",
             "from": "Từ __điểm__% điểm đánh giá"
         },
         "reviews_count": {
@@ -727,10 +727,10 @@
             "min_count": "Tổng số tối thiểu",
             "max_count": "Tổng số tối đa"
         },
-        "hide_ea": "",
-        "hide_cart": "",
-        "hide_mixed": "",
-        "hide_negative": ""
+        "hide_ea": "Ẩn sản phẩm Early Access",
+        "hide_cart": "Ẩn sản phẩm trong giỏ hàng của bạn",
+        "hide_mixed": "Ẩn đánh giá sản phẩm hỗn hợp",
+        "hide_negative": "Ẩn đánh giá sản phẩm tiêu cực"
     },
     "calc_workshop_size": {
         "file_size": "Kích thước tập tin __size__",
@@ -747,6 +747,6 @@
     "visibility": "Hiển thị",
     "processing": "Đang xử lý...",
     "wait": "Xin chờ",
-    "login_warning": "",
-    "youtube_reviews": ""
+    "login_warning": "Đảm bảo bạn đã đăng nhập vào __link__ để sử dụng tất cả các tính năng của Augmented Steam.",
+    "youtube_reviews": "Nhận xét Youtube"
 }

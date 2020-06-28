@@ -511,7 +511,7 @@
         "profile": "Προφίλ",
         "group": "Ομάδα",
         "group_links": "Εμφάνιση συνδέσμων ομάδας στο:",
-        "show_languagewarning": "Εμφάνιση προειδοποίηση αν περιηγήστε σε μια γλώσσα εκτός από",
+        "show_languagewarning": "Εμφάνιση προειδοποίησης αν περιηγείστε σε μια γλώσσα εκτός από",
         "homepage": "Αρχική σελίδα",
         "homepage_default_tab": "Προεπιλεγμένη καρτέλα αρχικής σελίδας",
         "homepage_default_tab_remember": "Θυμηθείτε την προηγούμενη",
@@ -567,11 +567,11 @@
         "add_to_waitlist": "Εμφάνιση του αναπτυσσόμενου μενού \"Προσθήκη στη Λίστα αναμονής\" στις σελίδες εφαρμογών",
         "profile_steamid": "Εμφάνιση του SteamID στα προφίλ",
         "settings_mngmt": {
-            "import": "",
-            "import_success": "",
-            "import_fail": "",
-            "export": "",
-            "reset": ""
+            "import": "Εισαγωγή",
+            "import_success": "Εισαγωγή ρυθμίσεων με επιτυχία",
+            "import_fail": "Αποτυχία εισαγωγής ρυθμίσεων",
+            "export": "Εξαγωγή",
+            "reset": "Επαναφορά"
         }
     },
     "ready": {
@@ -729,8 +729,8 @@
         },
         "hide_ea": "Απόκρυψη αντικειμένων Early Access",
         "hide_cart": "Απόκρυψη αντικειμένων στο καλάθι σας",
-        "hide_mixed": "",
-        "hide_negative": ""
+        "hide_mixed": "Απόκρυψη αντικειμένων μικτής αξιολόγησης",
+        "hide_negative": "Απόκρυψη αντικειμένων αρνητικής αξιολόγησης"
     },
     "calc_workshop_size": {
         "file_size": "Μέγεθος αρχείου __size__",
@@ -747,6 +747,6 @@
     "visibility": "Ορατότητα",
     "processing": "Επεξεργασία...",
     "wait": "Παρακαλώ περιμένετε",
-    "login_warning": "",
-    "youtube_reviews": ""
+    "login_warning": "Βεβαιωθείτε ότι έχετε συνδεθεί στο __link__ για να μπορείτε να χρησιμοποιήσετε όλες τις δυνατότητες του Augmented Steam.",
+    "youtube_reviews": "Κριτικές YouTube"
 }

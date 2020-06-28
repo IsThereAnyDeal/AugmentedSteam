@@ -565,7 +565,7 @@
         "add_custom_link": "Ajouter un lien personnalisé",
         "auto_detect": "Détection automatique",
         "add_to_waitlist": "Afficher la liste déroulante \"Ajouter à la liste d'attente\" dans le magasin",
-        "profile_steamid": "Afficher le lSteamID sur les profils",
+        "profile_steamid": "Afficher le SteamID sur les profils",
         "settings_mngmt": {
             "import": "Importer",
             "import_success": "Paramètres importés avec succès",

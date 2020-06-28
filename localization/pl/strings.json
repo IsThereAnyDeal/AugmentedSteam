@@ -1,7 +1,7 @@
 {
     "steamid_of_user": "SteamID użytkownika __user__",
-    "click_to_copy": "Kliknij, żeby skopiować",
-    "copied": "Skopiowano do schowka",
+    "click_to_copy": "Kliknij, aby skopiować",
+    "copied": "Skopiowano do schowka!",
     "view_steamid": "Zobacz SteamID",
     "more_on_steampeek": "Zobacz więcej na SteamPeek",
     "invite_friends": "Zaproś znajomych",
@@ -101,7 +101,7 @@
     "dlc": "DLC",
     "add_to_wishlist": "Dodaj do listy życzeń",
     "add_to_wishlist_tooltip": "Otrzymaj powiadomienie e-mailem, kiedy produkt na liście życzeń zostanie wydany lub będzie na wyprzedaży",
-    "remove_from_wishlist_tooltip": "Ten produkt już znajduje się na twojej liście życzeń. Kliknij żeby go stamtąd usunąć.",
+    "remove_from_wishlist_tooltip": "Ten produkt już jest na twojej liście życzeń. Kliknij tutaj, aby go z niej usunąć.",
     "add_to_waitlist": "Dodaj do listy oczekujących",
     "language": "Język",
     "theworddefault": "Domyślne",
@@ -139,7 +139,7 @@
     "volume_sold_last_24": "Nakład: Sprzedano __sold__ przez ostatnie 24 godziny",
     "sold_last_24": "Sprzedano __sold__ przez ostatnie 24 godziny",
     "homepage_curators": "Rekomendacje kuratorów Steam",
-    "homepage_topnewreleases": "Najlepsze wydania na Steam",
+    "homepage_topnewreleases": "Największe premiery na Steam",
     "homepage_sidebar": "Pasek boczny",
     "drop_calc": "Kliknij tutaj, aby obliczyć liczbę pozostałych kart",
     "price": "Cena",
@@ -148,7 +148,7 @@
     "load_market_stats": "Wyświetl podsumowanie",
     "card_drops_remaining": "Możesz otrzymać jeszcze __drops__ kart(y)",
     "badges_drops": "Odznaki, które wygenerują karty",
-    "using_language_return": "Kliknij tutaj, aby przeglądać Steam w języku __base__m.",
+    "using_language_return": "Kliknij tutaj, aby zmienić go na __base__.",
     "spam_comment_warn": "Tu są smoki...",
     "guides": "Poradniki",
     "buy_wishlist": "Dodaj do koszyka wszystkie tytuły z listy życzeń",
@@ -180,12 +180,12 @@
     "net_gain": "Dochód:",
     "apppage_recentupdates": "Ostatnie wydarzenia i ogłoszenia",
     "apppage_eaheader": "Informacje o wczesnym dostępie",
-    "apppage_eabanner": "Baner dyskusji o wczesnym dostępie",
+    "apppage_eabanner": "Baner dyskusji wczesnego dostępu",
     "apppage_workshop": "Baner Warsztatu Steam",
     "apppage_greenlight": "Baner Steam Greenlight",
     "apppage_legal": "Informacje prawne",
-    "apppage_franchise": "Więcej tytułów w serii",
-    "apppage_morefromfranchise": "Więcej z tej franczyzy",
+    "apppage_franchise": "Seria",
+    "apppage_morefromfranchise": "Więcej tytułów w serii",
     "bug_feature": "Zgłoś błąd / Zaproponuj nową funkcję",
     "always": "Zawsze",
     "compare": "Porównaj",
@@ -229,13 +229,13 @@
     "avg_price_3cards": "Śr. cena 3 kart kolekcjonerskich: __price__",
     "mods": "Modyfikacje",
     "groups": {
-        "leave_groups_confirm": "Jesteś pewien, że chcesz opuścić __n__ wybranych grup?",
+        "leave_groups_confirm": "Czy na pewno chcesz opuścić wybrane grupy (__n__)?",
         "manage_groups": "Zarządzaj grupami",
-        "action_groups": "Wybierz poniżej grupy, na których chcesz wykonać akcje",
+        "action_groups": "Wybierz grupy, wobec których chcesz podjąć działania.",
         "select": "Wybierz:",
         "leave": "Opuść grupy",
-        "selected": "__n__ wybranych",
-        "leave_admin_confirm": "Jesteś aktualnie administratorem __name__.<br>Czy jesteś pewien, że chcesz opuścić tą grupę?"
+        "selected": "Wybrano: __n__",
+        "leave_admin_confirm": "Jesteś administratorem w grupie: __name__.<br>Czy na pewno chcesz ją opuścić?"
     },
     "export": {
         "wishlist": "Eksportuj listę życzeń",
@@ -423,12 +423,12 @@
         "showallfriendsthatown": "Wyświetlaj „Znajomi, którzy to posiadają”",
         "regional_price_on": "Wyświetlaj porównanie cen regionalnych:",
         "friends_own": "Tytuły, które posiadają znajomi",
-        "horizontalscrolling": "Włącz przewijanie w poziomie za pomocą kółka myszy na stronach aplikacji",
+        "horizontalscrolling": "Włącz przewijanie w poziomie za pomocą kółka myszy",
         "supportinfo": "Wyświetlaj informacje dot. wsparcia dla aplikacji na ich stronach w sklepie",
         "drm": "Wyświetlaj ostrzeżenia o systemach DRM innego producenta",
         "show_regionwarning": "Wyświetlaj ostrzeżenie przy przeglądaniu Sklepu Steam dla innego regionu",
         "foot_link": "Rozszerzenie Augmented Steam",
-        "profile_link_images": "Styl profilowych i grupowych linków",
+        "profile_link_images": "Ikony na stronach profili i grup:",
         "library": "Wyświetlaj odnośnik „Biblioteka” na górnym pasku",
         "show1clickgoo": "Wyświetlaj przycisk „Zamień jednym kliknięciem na klejnoty” na kartach odpowiednich przedmiotów w ekwipunku",
         "hidedlcunownedgames": "DLC do nieposiadanych gier",
@@ -457,8 +457,8 @@
         "inventory_market_text": "Wyświetlaj ceny z rynku na stronach ekwipunku",
         "send_age_info": "Automatycznie potwierdzaj wiek na żądanie",
         "mp4video": "Wymuszaj odtwarzanie wideo ze sklepu w formacie MP4",
-        "youtube": "Pokaż linki YouTube",
-        "twitch": "Pokaż linki Twitch",
+        "youtube": "Wyświetlaj odnośniki do YouTube",
+        "twitch": "Wyświetlaj odnośniki do Twitch",
         "pcgw": "Wyświetlaj odnośniki do PCGamingWiki",
         "completionistme": "Wyświetlaj odnośniki do Completionist.me",
         "protondb": "Wyświetlaj odnośniki do ProtonDB",
@@ -560,18 +560,18 @@
             "thai": "tajski",
             "turkish": "turecki",
             "ukrainian": "ukraiński",
-            "vietnamese": "Wietnamski"
+            "vietnamese": "wietnamski"
         },
         "add_custom_link": "Dodaj niestandardowy odnośnik",
         "auto_detect": "Wykryj automatycznie",
         "add_to_waitlist": "Wyświetlaj listę rozwijaną „Dodaj do listy życzeń” na stronach aplikacji",
-        "profile_steamid": "Pokaż StemID na profilach",
+        "profile_steamid": "Wyświetlaj SteamID na stronach profili",
         "settings_mngmt": {
-            "import": "",
-            "import_success": "",
-            "import_fail": "",
-            "export": "",
-            "reset": ""
+            "import": "Importuj",
+            "import_success": "Pomyślnie zaimportowano ustawienia",
+            "import_fail": "Nie udało się zaimportować ustawień",
+            "export": "Eksportuj",
+            "reset": "Resetuj"
         }
     },
     "ready": {
@@ -622,13 +622,13 @@
         "owned": "Posiadane",
         "notinterested": "Ignorowane",
         "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ znajomych chce tej gry</a>",
-        "collection": "",
-        "waitlist": ""
+        "collection": "W kolekcji",
+        "waitlist": "Na liście oczekujących"
     },
     "wallet": {
         "custom_amount": "Dodaj dowolną kwotę",
-        "custom_amount_text": "Dodaj kwotę przekraczającą __minamount__",
-        "custom_giftcard": ""
+        "custom_amount_text": "Kwota przekraczająca __minamount__",
+        "custom_giftcard": "Wybierz kartę podarunkową o wartości __input__"
     },
     "wsgf": {
         "incomplete": "Niekompletne",
@@ -713,40 +713,40 @@
     "other": "Inne",
     "images": "Ikony",
     "powered_by": "Powered by __link__",
-    "help_translate": "Pomóż nam przetłumaczyć Augmented Steam na POEditor",
-    "filters": "",
+    "help_translate": "Pomóż nam w tłumaczeniu dodatku Augmented Steam w serwisie POEditor",
+    "filters": "Filtry dodatku Augmented Steam",
     "search_filters": {
         "reviews_score": {
-            "between": "",
-            "any": "",
-            "up_to": "",
-            "from": ""
+            "between": "Ocena produktu między __lower__% a __upper__%",
+            "any": "Dowolna ocena produktu",
+            "up_to": "Ocena produktu mniejsza niż __score__%",
+            "from": "Ocena produktu większa niż __score__%"
         },
         "reviews_count": {
-            "count": "",
-            "min_count": "",
-            "max_count": ""
+            "count": "Liczba recenzji:",
+            "min_count": "min. wartość",
+            "max_count": "maks. wartość"
         },
-        "hide_ea": "",
-        "hide_cart": "",
-        "hide_mixed": "",
-        "hide_negative": ""
+        "hide_ea": "Ukryj tytuły z wczesnym dostępem",
+        "hide_cart": "Ukryj tytuły w koszyku",
+        "hide_mixed": "Ukryj tytuły z oceną mieszaną",
+        "hide_negative": "Ukryj tytuły z oceną negatywną"
     },
     "calc_workshop_size": {
-        "file_size": "",
-        "finished": "",
-        "calculating": "",
-        "calc_size": "",
-        "total_size": ""
+        "file_size": "Rozmiar pliku: __size__",
+        "finished": "Zakończono",
+        "calculating": "Trwa obliczanie...",
+        "calc_size": "Oblicz całkowity rozmiar",
+        "total_size": "Całkowity rozmiar: __size__"
     },
-    "date": "",
-    "rating": "",
-    "helpful": "",
-    "funny": "",
-    "length": "",
-    "visibility": "",
-    "processing": "",
-    "wait": "",
-    "login_warning": "",
-    "youtube_reviews": ""
+    "date": "Data",
+    "rating": "Ocena",
+    "helpful": "Przydatność",
+    "funny": "Zabawność",
+    "length": "Liczba znaków",
+    "visibility": "Widoczność",
+    "processing": "Trwa przetwarzanie...",
+    "wait": "Proszę czekać",
+    "login_warning": "Upewnij się, że jesteś zalogowany(-a) na __link__, by w pełni korzystać ze wszystkich funkcji Augmented Steam.",
+    "youtube_reviews": "Wideorecenzja z serwisu YouTube"
 }

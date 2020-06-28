@@ -567,11 +567,11 @@
         "add_to_waitlist": "Mostrar desplegable «Añadir a la lista de espera» en todas las páginas",
         "profile_steamid": "Mostrar SteamID en los perfiles",
         "settings_mngmt": {
-            "import": "",
-            "import_success": "",
-            "import_fail": "",
-            "export": "",
-            "reset": ""
+            "import": "Importar",
+            "import_success": "Ajustes importados con éxito",
+            "import_fail": "Error al importar ajustes",
+            "export": "Exportar",
+            "reset": "Reiniciar"
         }
     },
     "ready": {
@@ -622,13 +622,13 @@
         "owned": "Comprado",
         "notinterested": "No me interesa",
         "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ amigos lo desean</a>",
-        "collection": "",
-        "waitlist": ""
+        "collection": "Coleccionado",
+        "waitlist": "En lista de espera"
     },
     "wallet": {
         "custom_amount": "Añadir valor personalizado",
         "custom_amount_text": "Añadir cualquier valor superior a __minamount__",
-        "custom_giftcard": ""
+        "custom_giftcard": "Seleccionar tarjeta regalo person. __input__"
     },
     "wsgf": {
         "incomplete": "Incompleto",
@@ -714,39 +714,39 @@
     "images": "Imágenes",
     "powered_by": "Proporcionado por __link__",
     "help_translate": "Ayúdanos a traducir Augmented Steam en POEditor",
-    "filters": "",
+    "filters": "Filtros Augmented Steam",
     "search_filters": {
         "reviews_score": {
-            "between": "",
-            "any": "",
-            "up_to": "",
-            "from": ""
+            "between": "Reseñas entre un __lower__ % y un __upper__ %",
+            "any": "Cualquier reseña",
+            "up_to": "Reseñas hasta un __score__ %",
+            "from": "Reseñas desde un __score__ %"
         },
         "reviews_count": {
-            "count": "",
-            "min_count": "",
-            "max_count": ""
+            "count": "Cantidad:",
+            "min_count": "Cant. mín.",
+            "max_count": "Cant. máx."
         },
-        "hide_ea": "",
-        "hide_cart": "",
-        "hide_mixed": "",
-        "hide_negative": ""
+        "hide_ea": "Ocultar elem. anticipados",
+        "hide_cart": "Ocultar elem. en tu carro",
+        "hide_mixed": "Ocultar elem. con reseñas variadas",
+        "hide_negative": "Ocultar elem. con reseñas negativas"
     },
     "calc_workshop_size": {
-        "file_size": "",
-        "finished": "",
-        "calculating": "",
-        "calc_size": "",
-        "total_size": ""
+        "file_size": "Tamaño del archivo __size__",
+        "finished": "Finalizado",
+        "calculating": "Calculando...",
+        "calc_size": "Calcular tamaño total",
+        "total_size": "Tamaño total: __size__"
     },
-    "date": "",
-    "rating": "",
-    "helpful": "",
-    "funny": "",
-    "length": "",
-    "visibility": "",
-    "processing": "",
-    "wait": "",
-    "login_warning": "",
-    "youtube_reviews": ""
+    "date": "Fecha",
+    "rating": "Valoración",
+    "helpful": "Útil",
+    "funny": "Divertido",
+    "length": "Longitud",
+    "visibility": "Visibilidad",
+    "processing": "Procesando...",
+    "wait": "Por favor, espera",
+    "login_warning": "Asegúrate de iniciar sesión en __link__ para disfrutar de las características de Augmented Steam.",
+    "youtube_reviews": "Reseñas de YouTube"
 }
