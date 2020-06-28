@@ -1357,7 +1357,7 @@ let ProfileEditPageClass = (function(){
 
                 for (let key in games) {
                     if (!games.hasOwnProperty(key)) { continue; }
-                    games[key][2] = games[key][1].toLowerCase().replaceAll(/[^a-z0-9 ]/g, "");
+                    games[key][2] = games[key][1].toLowerCase().replace(/[^a-z0-9 ]/g, "");
 
                     if (games[key][0] === _selectedAppid) {
                         selectedGameKey = key;
