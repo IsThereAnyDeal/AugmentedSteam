@@ -857,12 +857,12 @@ let ProfileHomePageClass = (function(){
                     document.head.appendChild(stylesheet);
 
                     let container = document.createElement("div");
-                    container.classList.add("profile_lny_wrapper");
+                    container.classList.add("profile_golden_wrapper");
 
                     let profilePageNode = document.querySelector(".responsive_page_template_content .profile_page");
                     DOMHelper.wrap(container, profilePageNode);
 
-                    profilePageNode.classList.add("lnyprofile");
+                    profilePageNode.classList.add("golden_profile");
 
                     HTML.afterBegin(profilePageNode,
                         `<div class="lny_sides_position">
@@ -888,7 +888,7 @@ let ProfileHomePageClass = (function(){
 
                     HTML.beforeBegin(
                         ".profile_header",
-                        `<div class="lny_header">
+                        `<div class="golden_profile_header">
                             <div class="lny_pig_center"></div>
                         </div>`);
 
