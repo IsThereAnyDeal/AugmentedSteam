@@ -1416,14 +1416,15 @@ let ProfileEditPageClass = (function(){
 
     ProfileEditPageClass.prototype.addStyleSelection = function() {
         let html =
-            `<div class="js-style-selection group_content group_summary">
-                <div class='formRow'>
-                    ${Localization.str.custom_style}:
-                    <span class='formRowHint' data-tooltip-text='${Localization.str.custom_style_help}'>(?)</span>
+            `<div class="js-style-selection as-pd">
+                
+                <div class='as-pd__head' data-tooltip-text='${Localization.str.custom_style_help}'>
+                    ${Localization.str.custom_style} (?)
                 </div>
-                <div class="es_profile_group">
-                    <div id='es_style_select'>
-                        <select name='es_style' id='es_style' class='gray_bevel dynInput'>
+                
+                <div class="as-pd__cnt">
+                    <div>
+                        <select name='es_style' id='es_style' class='gray_bevel dynInput as-pd__select'>
                             <option id='remove' value='remove'>${Localization.str.noneselected}</option>
                             <option id='goldenprofile' value='goldenprofile'>Lunar Sale 2019</option>
                             <option id='holiday2014' value='holiday2014'>Holiday Profile 2014</option>
@@ -1439,12 +1440,11 @@ let ProfileEditPageClass = (function(){
                             <option id='grey' value='grey'>Grey Theme</option>
                         </select>
                     </div>
-                    <img id='es_style_preview' class="es_profile_preview" src=''>
-                    <div id="es_style_buttons" class="es_profile_buttons">
-                        <span id='es_style_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'>
-                            <span>${Localization.str.save}</span>
-                        </span>
-                    </div>
+                    <img id='es_style_preview' class="as-pd__preview" src=''>
+                </div>
+                
+                <div id="es_style_buttons" class="as-pd__buttons">
+                    <button id='es_style_save_btn' class='DialogButton _DialogLayout Primary as-pd__btn'>${Localization.str.save}</button>
                 </div>
             </div>`;
 
