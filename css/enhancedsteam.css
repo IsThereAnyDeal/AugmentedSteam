@@ -3626,12 +3626,43 @@ label[for="show_common_games"] {
   margin-top: 30px;
 }
 
+.as-pd__help {
+  color: #66c0f4;
+}
+
 .as-pd__cnt {
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
   max-height: 600px;
   overflow: auto;
+  margin-top: 15px;
+}
+
+.as-pd__list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.as-pd__item {
+  cursor: pointer;
+}
+.as-pd__item:hover {
+  color: #66C0F4;
+}
+.as-pd__item.is-selected {
+  color: #66C0F4;
+  font-weight: bold;
+}
+
+.as-pd__imgs {
+  display: grid;
+  grid-template-columns: 200px 200px 200px;
+  grid-row-gap: 15px;
+  justify-content: space-between;
+}
+.as-pd__img {
+  width: 100%;
 }
 
 .as-pd__select {
@@ -3646,6 +3677,7 @@ label[for="show_common_games"] {
 
 .as-pd__btn {
   width: 200px !important;
+  margin-left: 12px !important;
 }
 
 .as-pd__preview {
