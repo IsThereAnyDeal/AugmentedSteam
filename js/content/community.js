@@ -1332,28 +1332,27 @@ let ProfileEditPageClass = (function(){
     ProfileEditPageClass.prototype.addBackgroundSelection = async function() {
 
         let html =
-            `<div class='js-bg-selection group_content group_summary'>
-                <div class='formRow'>
+            `<div class='js-bg-selection as-pd'>
+                
+                <div class="DialogLabel as-pd__head">
                     ${Localization.str.custom_background}:
-                    <span class='formRowHint' data-tooltip-text='${Localization.str.custom_background_help}'>(?)</span>
+                    <span data-tooltip-text='${Localization.str.custom_background_help}'>(?)</span>
                 </div>
-                <div id="es_bg" class="es_profile_group">
-                    <div id='es_bg_game_select'><select name='es_bg_game' id='es_bg_game' class='gray_bevel dynInput' style="display:none"></select></div>
-                    <div id='es_bg_img_select'><select name='es_bg_img' id='es_bg_img' class='gray_bevel dynInput' style="display:none"></select></div>
+                
+                <div id="es_bg" class="as-pd__cnt">
+                    <div><select name='es_bg_game' id='es_bg_game' class='gray_bevel dynInput as-pd__select' style="display:none"></select></div>
+                    <div><select name='es_bg_img' id='es_bg_img' class='gray_bevel dynInput as-pd__select' style="display:none"></select></div>
                     <div class='es_loading'>
                         <img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>
                         <span>${Localization.str.loading}</span>
                     </div>
-                    <img id='es_bg_preview' class="es_profile_preview" src=''>
-                    <div id="es_bg_buttons" class="es_profile_buttons">
-                        <span id='es_background_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'>
-                            <span>${Localization.str.save}</span>
-                        </span>
-                    </div>
+                    <img id='es_bg_preview' src='' class="as-pd__preview">
+                </div>
+                
+                <div class="as-pd__buttons">
+                    <button id='es_background_save_btn' class='DialogButton _DialogLayout Primary as-pd__btn'>${Localization.str.save}</button>
                 </div>
             </div>`;
-
-        
 
         let active = false;
 

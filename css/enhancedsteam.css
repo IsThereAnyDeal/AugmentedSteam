@@ -3058,24 +3058,6 @@ label[for="show_common_games"] {
 }
 
 
-.es_profile_group {
-  margin-bottom: 10px;
-}
-
-.es_profile_group select {
-  max-width: 100%;
-}
-
-.es_profile_preview {
-  display: block;
-  margin: auto;
-}
-
-.es_profile_buttons {
-  margin-top: 10px;
-  text-align: right;
-}
-
 .es_hltb a.linkbar > img,
 .es_wsgf a.linkbar > img,
 .es_dlc_info a.linkbar > img,
@@ -3635,4 +3617,38 @@ label[for="show_common_games"] {
 
 .as-reviews-count-filter__input::placeholder {
   text-transform: lowercase;
+}
+
+/*
+ * Profiles
+ */
+.as-pd {
+  margin-top: 30px;
+}
+
+.as-pd__cnt {
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  max-height: 600px;
+  overflow: auto;
+}
+
+.as-pd__select {
+  max-width: 100%;
+}
+
+.as-pd__buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.as-pd__btn {
+  width: 200px !important;
+}
+
+.as-pd__preview {
+  display: block;
+  margin: auto;
 }
