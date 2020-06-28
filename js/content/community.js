@@ -1332,6 +1332,10 @@ let ProfileEditPageClass = (function(){
 
         let active = false;
 
+        function getSafeString(value) {
+            return value.toLowerCase().replace(/[^a-z0-9 ]/g, "");
+        }
+
         async function checkPage() {
 
             if (document.querySelector(`[href$="/edit/background"].active`)) {
@@ -1357,7 +1361,7 @@ let ProfileEditPageClass = (function(){
 
                 for (let key in games) {
                     if (!games.hasOwnProperty(key)) { continue; }
-                    games[key][2] = games[key][1].toLowerCase().replace(/[^a-z0-9 ]/g, "");
+                    games[key][2] = getSafeString(games[key][1]);
 
                     if (games[key][0] === _selectedAppid) {
                         selectedGameKey = key;
@@ -1396,7 +1400,7 @@ let ProfileEditPageClass = (function(){
                     timeout = window.setTimeout(() => {
 
                         const max = 100;
-                        let value = _gameFilterNode.value.toLowerCase();
+                        let value = getSafeString(_gameFilterNode.value);
                         if (value === "") { return; }
 
                         let i = 0;
