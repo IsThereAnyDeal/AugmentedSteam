@@ -1,12 +1,7 @@
-.btn_profile_action {
+.btn_profile_action, .btn_profile_action > span {
 	background: linear-gradient( to bottom, #807B2E 5%, #3D3C28 95%) !important;
 }
-.btn_profile_action > span {
-	background: linear-gradient( to bottom, #807B2E 5%, #3D3C28 95%) !important;
-}
-.btn_profile_action:hover, .btn_profile_action.focus {
-	background: linear-gradient( to bottom, #aea630 5%, #3D3C28 95%) !important;
-}
+.btn_profile_action:hover, .btn_profile_action.focus,
 .btn_profile_action:hover > span, .btn_profile_action.focus > span {
 	background: linear-gradient( to bottom, #aea630 5%, #3D3C28 95%) !important;
 }
@@ -19,4 +14,13 @@
 }
 .profile_customization.customization_edit.none_selected {
 	border: 1px dashed #CCCF54 !important;
+}
+.profile_rightcol {
+	background-color: rgba(255, 255, 0, 0.1);
+}
+body {
+	--gradient-showcase-header-left: rgba(255, 255, 0, 0.247) !important;
+	--gradient-background: rgba(255, 255, 0, 0.2) !important;
+	--gradient-right: rgba(61, 60, 40, 0.301) !important;
+	--color-showcase-header: rgba(61, 60, 40, 0.93) !important;
 }
