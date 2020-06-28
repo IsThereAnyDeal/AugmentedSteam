@@ -909,13 +909,13 @@ let ProfileHomePageClass = (function(){
                 default:
                     let styleUrl = ExtensionResources.getURL("img/profile_styles/" + style + "/style.css");
                     let headerImg = ExtensionResources.getURL("img/profile_styles/" + style + "/header.jpg");
-                    let showcase = ExtensionResources.getURL("img/profile_styles/" + style + "/showcase.png");
+                    //let showcase = ExtensionResources.getURL("img/profile_styles/" + style + "/showcase.png");
 
                     stylesheet.href = styleUrl;
                     document.head.appendChild(stylesheet);
 
                     document.querySelector(".profile_header_bg_texture").style.backgroundImage = "url('" + headerImg + "')";
-                    document.querySelectorAll(".profile_customization").forEach(node => node.style.backgroundImage = "url('" + showcase + "')");
+                    //document.querySelectorAll(".profile_customization").forEach(node => node.style.backgroundImage = "url('" + showcase + "')");
                     break;
             }
             stylesheet = null;
