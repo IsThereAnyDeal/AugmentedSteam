@@ -2463,18 +2463,22 @@ img.astats_icon {
  * User profiles
  * add_profile_style()
  **************************************/
+ .es_profile_style.es_style_clear {
+   --gradient-background: none !important;
+ }
 .es_profile_style.es_style_clear .profile_header_badge {
   background-color: rgba(22, 22, 23, 0.6) !important;
   background-image: none !important;
   box-shadow: none !important;
 }
-.es_profile_style.es_style_clear .profile_content {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
-.es_profile_style.es_style_clear .profile_header_bg,
+.es_profile_style.es_style_clear .profile_content,
 .es_profile_style.es_style_clear .profile_header_bg_texture {
-  background-image: none !important;
+  background: none !important;
+}
+
+.es_profile_style.es_style_clear .profile_rightcol,
+.es_profile_style.es_style_clear .profile_customization {
+  backdrop-filter: none !important;
 }
 
 /***************************************
