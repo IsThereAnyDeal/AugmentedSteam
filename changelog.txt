@@ -1,4 +1,11 @@
-﻿v1.4.5
+﻿v.1.4.6
+------
+- fixed custom styles and custom backgrounds for new Steam settings page
+- updated localization
+
+
+
+v1.4.5
 ------
 - fixed 1-Click convert to gems
 - fixed dropdown on other people's profiles
