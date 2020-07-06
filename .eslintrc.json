@@ -9,6 +9,16 @@
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
+    "overrides": [
+        {
+            "files": "*.cjs",
+            "env": {
+                "node": true,
+                "browser": false,
+                "webextensions": false
+            }
+        }
+    ],
     "rules": {
         "accessor-pairs": "error",
         "array-bracket-newline": ["error", "consistent"],
