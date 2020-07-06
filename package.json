@@ -1,15 +1,17 @@
 {
   "scripts": {
-    "build": "node config/scripts/build.cjs"
+    "build": "node config/scripts/build.cjs",
+    "start": "node config/scripts/start.cjs"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.0.1",
-    "eslint": "^7.3.1",
+    "copy-webpack-plugin": "^6.0.3",
+    "eslint": "^7.4.0",
     "eslint-loader": "^4.0.2",
     "merge-jsons-webpack-plugin": "^1.0.21",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-merge": "^4.2.2"
+    "webpack-cli": "^3.3.12",
+    "webpack-extension-reloader": "^1.1.4",
+    "webpack-merge": "^5.0.7"
   }
 }

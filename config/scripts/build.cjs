@@ -1,5 +1,5 @@
 const webpack = require("webpack");
-const merge = require("webpack-merge");
+const {merge} = require("webpack-merge");
 const MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin");
 
 let browser = "chrome";
