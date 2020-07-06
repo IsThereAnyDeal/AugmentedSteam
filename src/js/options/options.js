@@ -1,8 +1,8 @@
-import {BackgroundBase, Downloader, ExtensionResources, HTML, Info, SyncedStorage, sleep} from "../core.js";
+import {BackgroundBase, Downloader, ExtensionResources, HTML, Info, SyncedStorage, sleep} from "core";
 
-import {CountryList} from "./countryList.js";
-import {StoreList} from "./storeList.js";
-import {Language, Localization} from "../language.js";
+import {CountryList} from "options/countryList";
+import {StoreList} from "options/storeList";
+import {Language, Localization} from "language";
 
 class Fader {
 

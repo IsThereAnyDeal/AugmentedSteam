@@ -1,5 +1,5 @@
-import {ASFeature} from "../../ASFeature.js";
-import {HTML} from "../../../core.js";
+import {ASFeature} from "modules/ASFeature";
+import {HTML} from "core";
 
 export class FFullscreenScreenshotView extends ASFeature {
 

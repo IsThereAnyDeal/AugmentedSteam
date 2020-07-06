@@ -1,6 +1,6 @@
-import {SyncedStorage} from "../../core.js";
-import {Common, Currency, User} from "../common.js";
-import {Localization} from "../../language.js";
+import {SyncedStorage} from "core";
+import {Common, Currency, User} from "common";
+import {Localization} from "language";
 
 export default async function(context) {
 

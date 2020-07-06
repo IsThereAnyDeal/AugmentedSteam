@@ -1,7 +1,7 @@
-import {ASFeature} from "../../ASFeature.js";
-import {DynamicStore, ExtensionLayer, User} from "../../common.js";
-import {ExtensionResources, HTML} from "../../../core.js";
-import {Localization} from "../../../language.js";
+import {ASFeature} from "modules/ASFeature";
+import {DynamicStore, ExtensionLayer, User} from "common";
+import {ExtensionResources, HTML} from "core";
+import {Localization} from "language";
 
 export class FRemoveFromWishlist extends ASFeature {
 

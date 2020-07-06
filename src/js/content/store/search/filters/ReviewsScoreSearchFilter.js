@@ -1,6 +1,6 @@
-import {SearchFilter} from "./searchfilters.js";
+import {SearchFilter} from "store/search/filters/searchfilters";
 
-import {Localization} from "../../../../language.js";
+import {Localization} from "language";
 
 export class ReviewsScoreSearchFilter extends SearchFilter {
 

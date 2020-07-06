@@ -1,7 +1,7 @@
-import {ASFeature} from "../../ASFeature.js";
-import {HTML, SyncedStorage} from "../../../core.js";
-import {Background, ExtensionLayer} from "../../common.js";
-import {Localization} from "../../../language.js";
+import {ASFeature} from "modules/ASFeature";
+import {HTML, SyncedStorage} from "core";
+import {Background, ExtensionLayer} from "common";
+import {Localization} from "language";
 
 export class FWaitlistDropdown extends ASFeature {
 

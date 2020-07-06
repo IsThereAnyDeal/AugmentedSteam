@@ -1,9 +1,9 @@
-import {ASFeature} from "../../ASFeature.js";
-import {ContextTypes} from "../../ASContext.js";
+import {ASFeature} from "modules/ASFeature";
+import {ContextTypes} from "modules/ASContext";
 
-import {DOMHelper} from "../../common.js";
-import {HTML, SyncedStorage} from "../../../core.js";
-import {Localization} from "../../../language.js";
+import {DOMHelper} from "common";
+import {HTML, SyncedStorage} from "core";
+import {Localization} from "language";
 
 export class FCustomizer extends ASFeature {
 

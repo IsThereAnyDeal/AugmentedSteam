@@ -1,6 +1,6 @@
-import {HTML, SyncedStorage} from "../../../core.js";
-import {Localization} from "../../../language.js";
-import {ExtensionLayer, Messenger} from "../../common.js";
+import {HTML, SyncedStorage} from "core";
+import {Localization} from "language";
+import {ExtensionLayer, Messenger} from "common";
 
 export class UserNotes {
     constructor() {

@@ -1,7 +1,7 @@
-import {ASFeature} from "../../ASFeature.js";
-import {Localization} from "../../../language.js";
-import {ExtensionResources, HTML} from "../../../core.js";
-import {ExtensionLayer, RequestData, User} from "../../common.js";
+import {ASFeature} from "modules/ASFeature";
+import {Localization} from "language";
+import {ExtensionResources, HTML} from "core";
+import {ExtensionLayer, RequestData, User} from "common";
 
 export class FMultiProductKeys extends ASFeature {
 

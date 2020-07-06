@@ -1,7 +1,7 @@
-import {ASFeature} from "../../ASFeature.js";
-import {HTML, SyncedStorage} from "../../../core.js";
-import {Language, Localization} from "../../../language.js";
-import {ExtensionLayer} from "../../common.js";
+import {ASFeature} from "modules/ASFeature";
+import {HTML, SyncedStorage} from "core";
+import {Language, Localization} from "language";
+import {ExtensionLayer} from "common";
 
 export class FYouTubeVideos extends ASFeature {
 

@@ -1,6 +1,6 @@
-import {ASFeature} from "../../ASFeature.js";
-import {Localization} from "../../../language.js";
-import {HTML} from "../../../core.js";
+import {ASFeature} from "modules/ASFeature";
+import {Localization} from "language";
+import {HTML} from "core";
 
 export class FSurveyData extends ASFeature {
 

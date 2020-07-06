@@ -1,6 +1,6 @@
-import {ASFeature} from "../../ASFeature.js";
+import {ASFeature} from "modules/ASFeature";
 
-import {FHighlightsTags} from "../../common/FHighlightsTags.js";
+import {FHighlightsTags} from "common/FHighlightsTags";
 
 export class FHighlightTopGames extends ASFeature {
 

@@ -1,4 +1,4 @@
-import {CSubPage} from "./CSubPage.js";
-import check from "../storeCheck.js";
+import {CSubPage} from "store/sub/CSubPage";
+import check from "store/storeCheck";
 
 check(CSubPage);

@@ -1,5 +1,5 @@
-import {ASFeature} from "../../ASFeature.js";
-import {SyncedStorage} from "../../../core.js";
+import {ASFeature} from "modules/ASFeature";
+import {SyncedStorage} from "core";
 
 export class FHomePageTab extends ASFeature {
 

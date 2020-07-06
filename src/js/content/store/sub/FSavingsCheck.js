@@ -1,7 +1,7 @@
-import {ASFeature} from "../../ASFeature.js";
-import {DOMHelper, Price} from "../../common.js";
-import {HTML} from "../../../core.js";
-import {Localization} from "../../../language.js";
+import {ASFeature} from "modules/ASFeature";
+import {DOMHelper, Price} from "common";
+import {HTML} from "core";
+import {Localization} from "language";
 
 export class FSavingsCheck extends ASFeature {
 

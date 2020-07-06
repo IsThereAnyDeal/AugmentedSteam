@@ -1,9 +1,9 @@
-import {ASFeature} from "../../ASFeature.js";
+import {ASFeature} from "modules/ASFeature";
 
-import {HTML, HTMLParser, SyncedStorage} from "../../../core.js";
-import {Localization} from "../../../language.js";
-import {DynamicStore, ExtensionLayer, RequestData, User} from "../../common.js";
-import {FExportWishlist} from "./FExportWishlist.js";
+import {HTML, HTMLParser, SyncedStorage} from "core";
+import {Localization} from "language";
+import {DynamicStore, ExtensionLayer, RequestData, User} from "common";
+import {FExportWishlist} from "store/wishlist/FExportWishlist";
 
 export class FEmptyWishlist extends ASFeature {
 

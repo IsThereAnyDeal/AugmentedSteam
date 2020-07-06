@@ -1,4 +1,4 @@
-import {CAppPage} from "./CAppPage.js";
-import check from "../storeCheck.js";
+import {CAppPage} from "store/app/CAppPage";
+import check from "store/storeCheck";
 
 check(CAppPage);

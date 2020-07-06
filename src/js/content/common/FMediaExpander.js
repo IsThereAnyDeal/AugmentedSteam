@@ -1,9 +1,9 @@
-import {ASFeature} from "../ASFeature.js";
-import {ContextTypes} from "../ASContext.js";
+import {ASFeature} from "modules/ASFeature";
+import {ContextTypes} from "modules/ASContext";
 
-import {HTML, LocalStorage, SyncedStorage} from "../../core.js";
-import {Localization} from "../../language.js";
-import {ExtensionLayer} from "../common.js";
+import {HTML, LocalStorage, SyncedStorage} from "core";
+import {Localization} from "language";
+import {ExtensionLayer} from "common";
 
 export class FMediaExpander extends ASFeature {
 

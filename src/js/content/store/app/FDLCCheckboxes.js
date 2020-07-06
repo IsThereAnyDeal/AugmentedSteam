@@ -1,6 +1,6 @@
-import {ASFeature} from "../../ASFeature.js";
-import {ExtensionResources, HTML} from "../../../core.js";
-import {Localization} from "../../../language.js";
+import {ASFeature} from "modules/ASFeature";
+import {ExtensionResources, HTML} from "core";
+import {Localization} from "language";
 
 export class FDLCCheckboxes extends ASFeature {
 

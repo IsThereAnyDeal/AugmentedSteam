@@ -1,9 +1,9 @@
-import {ASFeature} from "../../ASFeature.js";
-import {ContextTypes} from "../../ASContext.js";
+import {ASFeature} from "modules/ASFeature";
+import {ContextTypes} from "modules/ASContext";
 
-import {HTML, SyncedStorage} from "../../../core.js";
-import {Currency, Price, RequestData, User} from "../../common.js";
-import {Localization} from "../../../language.js";
+import {HTML, SyncedStorage} from "core";
+import {Currency, Price, RequestData, User} from "common";
+import {Localization} from "language";
 
 export class FRegionalPricing extends ASFeature {
 

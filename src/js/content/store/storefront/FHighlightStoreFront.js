@@ -1,6 +1,6 @@
-import {ASFeature} from "../../ASFeature.js";
-import {User} from "../../common.js";
-import {FHighlightsTags} from "../../common/FHighlightsTags.js";
+import {ASFeature} from "modules/ASFeature";
+import {User} from "common";
+import {FHighlightsTags} from "common/FHighlightsTags";
 
 export class FHighlightStoreFront extends ASFeature {
 

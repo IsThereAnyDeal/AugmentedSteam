@@ -1,4 +1,4 @@
-import {CRegisterKeyPage} from "./CRegisterKeyPage";
-import check from "../storeCheck.js";
+import {CRegisterKeyPage} from "store/registerkey/CRegisterKeyPage";
+import check from "store/storeCheck";
 
 check(CRegisterKeyPage);

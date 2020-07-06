@@ -1,7 +1,7 @@
-import {ASFeature} from "../../ASFeature.js";
-import {HTML, LocalStorage, SyncedStorage} from "../../../core.js";
-import {Localization} from "../../../language.js";
-import {Background} from "../../common.js";
+import {ASFeature} from "modules/ASFeature";
+import {HTML, LocalStorage, SyncedStorage} from "core";
+import {Localization} from "language";
+import {Background} from "common";
 
 export class FHowLongToBeat extends ASFeature {
 

@@ -1,4 +1,4 @@
-import {CAgecheckPage} from "./CAgecheckPage.js";
-import check from "../storeCheck.js";
+import {CAgecheckPage} from "store/agecheck/CAgecheckPage";
+import check from "store/storeCheck";
 
 check(CAgecheckPage);

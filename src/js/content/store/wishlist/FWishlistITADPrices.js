@@ -1,7 +1,7 @@
-import {CallbackFeature} from "../../CallbackFeature.js";
+import {CallbackFeature} from "modules/CallbackFeature";
 
-import {SyncedStorage} from "../../../core.js";
-import {ExtensionLayer, Prices} from "../../common.js";
+import {SyncedStorage} from "core";
+import {ExtensionLayer, Prices} from "common";
 
 export class FWishlistITADPrices extends CallbackFeature {
 

@@ -1,4 +1,4 @@
-import {CFundsPage} from "./CFundsPage.js";
-import check from "../storeCheck.js";
+import {CFundsPage} from "store/funds/CFundsPage";
+import check from "store/storeCheck";
 
 check(CFundsPage);

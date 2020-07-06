@@ -1,7 +1,7 @@
-import {CallbackFeature} from "../../CallbackFeature.js";
+import {CallbackFeature} from "modules/CallbackFeature";
 
-import {User} from "../../common.js";
-import {FHighlightsTags} from "../../common/FHighlightsTags.js";
+import {User} from "common";
+import {FHighlightsTags} from "common/FHighlightsTags";
 
 export class FWishlistHighlights extends CallbackFeature {
 

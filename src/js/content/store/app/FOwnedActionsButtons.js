@@ -1,7 +1,7 @@
-import {ASFeature} from "../../ASFeature.js";
-import {User} from "../../common.js";
-import {HTML, SyncedStorage} from "../../../core.js";
-import {Localization} from "../../../language.js";
+import {ASFeature} from "modules/ASFeature";
+import {User} from "common";
+import {HTML, SyncedStorage} from "core";
+import {Localization} from "language";
 
 export class FOwnedActionsButtons extends ASFeature {
 

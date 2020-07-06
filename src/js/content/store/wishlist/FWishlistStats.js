@@ -1,8 +1,8 @@
-import {ASFeature} from "../../ASFeature.js";
+import {ASFeature} from "modules/ASFeature";
 
-import {HTML, SyncedStorage} from "../../../core.js";
-import {ExtensionLayer, Price} from "../../common.js";
-import {Localization} from "../../../language.js";
+import {HTML, SyncedStorage} from "core";
+import {ExtensionLayer, Price} from "common";
+import {Localization} from "language";
 
 export class FWishlistStats extends ASFeature {
 

@@ -1,7 +1,7 @@
-import {ASFeature} from "../../ASFeature.js";
-import {Background} from "../../common.js";
-import {HTML} from "../../../core.js";
-import {Localization} from "../../../language.js";
+import {ASFeature} from "modules/ASFeature";
+import {Background} from "common";
+import {HTML} from "core";
+import {Localization} from "language";
 
 export class FOwnedElsewhere extends ASFeature {
 

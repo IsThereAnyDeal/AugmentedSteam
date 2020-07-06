@@ -1,11 +1,11 @@
-import {ContextTypes} from "../../ASContext.js";
-import {CStorePage} from "../common/CStorePage.js";
+import {ContextTypes} from "modules/ASContext";
+import {CStorePage} from "store/common/CStorePage";
 
-import {FExtraLinks} from "../common/FExtraLinks.js";
-import {FDRMWarnings} from "../common/FDRMWarnings.js";
-import {FITADPrices} from "../common/FITADPrices.js";
+import {FExtraLinks} from "store/common/FExtraLinks";
+import {FDRMWarnings} from "store/common/FDRMWarnings";
+import {FITADPrices} from "store/common/FITADPrices";
 
-import {GameId} from "../../../core.js";
+import {GameId} from "core";
 
 export class CBundlePage extends CStorePage {
     constructor() {

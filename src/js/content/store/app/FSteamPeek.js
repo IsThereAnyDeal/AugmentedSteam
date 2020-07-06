@@ -1,8 +1,8 @@
-import {ASFeature} from "../../ASFeature.js";
-import {HTML, LocalStorage} from "../../../core.js";
-import {ExtensionLayer} from "../../common.js";
-import {FHighlightsTags} from "../../common/FHighlightsTags.js";
-import {Localization} from "../../../language.js";
+import {ASFeature} from "modules/ASFeature";
+import {HTML, LocalStorage} from "core";
+import {ExtensionLayer} from "common";
+import {FHighlightsTags} from "common/FHighlightsTags";
+import {Localization} from "language";
 
 export class FSteamPeek extends ASFeature {
 

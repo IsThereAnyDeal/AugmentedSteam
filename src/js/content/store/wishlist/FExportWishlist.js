@@ -1,8 +1,8 @@
-import {ASFeature} from "../../ASFeature.js";
+import {ASFeature} from "modules/ASFeature";
 
-import {Downloader, HTML, SyncedStorage} from "../../../core.js";
-import {Localization} from "../../../language.js";
-import {Clipboard, ExtensionLayer} from "../../common.js";
+import {Downloader, HTML, SyncedStorage} from "core";
+import {Localization} from "language";
+import {Clipboard, ExtensionLayer} from "common";
 
 export class FExportWishlist extends ASFeature {
 

@@ -1,4 +1,4 @@
-import {CAccountPage} from "./CAccountPage";
-import check from "../storeCheck.js";
+import {CAccountPage} from "store/account/CAccountPage";
+import check from "store/storeCheck";
 
 check(CAccountPage);

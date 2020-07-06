@@ -1,4 +1,4 @@
-import {CStatsPage} from "./CStatsPage.js";
-import check from "../storeCheck.js";
+import {CStatsPage} from "store/stats/CStatsPage";
+import check from "store/storeCheck";
 
 check(CStatsPage);

@@ -1,6 +1,6 @@
-import Config from "../config.js";
-import {ExtensionResources, GameId, HTMLParser, Info, LocalStorage, LoginError, ServerOutageError, SyncedStorage, Timestamp} from "../core.js";
-import {Localization} from "../language.js";
+import Config from "config";
+import {ExtensionResources, GameId, HTMLParser, Info, LocalStorage, LoginError, ServerOutageError, SyncedStorage, Timestamp} from "core";
+import {Localization} from "language";
 
 class CacheStorage {
 

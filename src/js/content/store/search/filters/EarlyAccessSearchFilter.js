@@ -1,8 +1,8 @@
-import {SimpleSearchFilter} from "./searchfilters.js";
+import {SimpleSearchFilter} from "store/search/filters/searchfilters";
 
-import {Localization} from "../../../../language.js";
-import {SyncedStorage} from "../../../../core.js";
-import {EarlyAccess} from "../../../common.js";
+import {Localization} from "language";
+import {SyncedStorage} from "core";
+import {EarlyAccess} from "common";
 
 export class EarlyAccessSearchFilter extends SimpleSearchFilter {
 

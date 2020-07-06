@@ -1,4 +1,4 @@
-import {ASFeatureManager} from "./ASFeatureManager.js";
+import {ASFeatureManager} from "modules/ASFeatureManager";
 
 export class ASContext {
     constructor(features) {

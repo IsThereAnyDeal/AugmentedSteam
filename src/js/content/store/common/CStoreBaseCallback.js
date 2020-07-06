@@ -1,4 +1,4 @@
-import {CStoreBase} from "./CStoreBase.js";
+import {CStoreBase} from "store/common/CStoreBase";
 
 export class CStoreBaseCallback extends CStoreBase {
 

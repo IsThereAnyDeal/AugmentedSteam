@@ -1,6 +1,6 @@
-import {SimpleSearchFilter} from "./searchfilters.js";
+import {SimpleSearchFilter} from "store/search/filters/searchfilters";
 
-import {Localization} from "../../../../language.js";
+import {Localization} from "language";
 
 export class CartSearchFilter extends SimpleSearchFilter {
 

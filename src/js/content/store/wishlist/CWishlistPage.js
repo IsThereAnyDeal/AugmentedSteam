@@ -1,15 +1,15 @@
-import {CStoreBaseCallback} from "../common/CStoreBaseCallback.js";
-import {ContextTypes} from "../../ASContext.js";
+import {CStoreBaseCallback} from "store/common/CStoreBaseCallback";
+import {ContextTypes} from "modules/ASContext";
 
-import {FWishlistHighlights} from "./FWishlistHighlights.js";
-import {FWishlistITADPrices} from "./FWishlistITADPrices.js";
-import {FWishlistUserNotes} from "./FWishlistUserNotes.js";
-import {FWishlistStats} from "./FWishlistStats.js";
-import {FEmptyWishlist} from "./FEmptyWishlist.js";
-import {FExportWishlist} from "./FExportWishlist.js";
-import {FAlternativeLinuxIcon} from "../common/FAlternativeLinuxIcon.js";
+import {FWishlistHighlights} from "store/wishlist/FWishlistHighlights";
+import {FWishlistITADPrices} from "store/wishlist/FWishlistITADPrices";
+import {FWishlistUserNotes} from "store/wishlist/FWishlistUserNotes";
+import {FWishlistStats} from "store/wishlist/FWishlistStats";
+import {FEmptyWishlist} from "store/wishlist/FEmptyWishlist";
+import {FExportWishlist} from "store/wishlist/FExportWishlist";
+import {FAlternativeLinuxIcon} from "store/common/FAlternativeLinuxIcon";
 
-import {ExtensionLayer, User} from "../../common.js";
+import {ExtensionLayer, User} from "common";
 
 export class CWishlistPage extends CStoreBaseCallback {
 

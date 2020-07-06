@@ -1,4 +1,4 @@
-import {ASFeature} from "./ASFeature.js";
+import {ASFeature} from "modules/ASFeature";
 
 export class CallbackFeature extends ASFeature {
 

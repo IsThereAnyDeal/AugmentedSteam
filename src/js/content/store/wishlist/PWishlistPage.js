@@ -1,4 +1,4 @@
-import {CWishlistPage} from "./CWishlistPage.js";
-import check from "../storeCheck.js";
+import {CWishlistPage} from "store/wishlist/CWishlistPage";
+import check from "store/storeCheck";
 
 check(CWishlistPage);

@@ -1,6 +1,6 @@
-import {ASFeature} from "../ASFeature.js";
-import {HTML, SyncedStorage} from "../../core.js";
-import {CStoreBase} from "../store/common/CStoreBase.js";
+import {ASFeature} from "modules/ASFeature";
+import {HTML, SyncedStorage} from "core";
+import {CStoreBase} from "store/common/CStoreBase";
 
 export class FHideTrademarks extends ASFeature {
 

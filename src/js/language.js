@@ -1,6 +1,7 @@
-import {BackgroundBase, ExtensionResources, SyncedStorage} from "./core";
+import {BackgroundBase, ExtensionResources, SyncedStorage} from "core";
 
-import {CookieStorage} from "./content/common.js";
+// FIXME Shouldn't be here as this is also included by the background page
+import {CookieStorage} from "content/common";
 
 export class Language {
     static getCurrentSteamLanguage() {

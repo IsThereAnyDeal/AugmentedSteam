@@ -1,6 +1,6 @@
-import {ASContext, ContextTypes} from "../../ASContext.js";
+import {ASContext, ContextTypes} from "modules/ASContext";
 
-import {FTotalSpent} from "./FTotalSpent.js";
+import {FTotalSpent} from "store/account/FTotalSpent";
 
 export class CAccountPage extends ASContext {
 

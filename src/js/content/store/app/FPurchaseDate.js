@@ -1,7 +1,7 @@
-import {ASFeature} from "../../ASFeature.js";
-import {User} from "../../common.js";
-import {SyncedStorage} from "../../../core.js";
-import {Language, Localization} from "../../../language.js";
+import {ASFeature} from "modules/ASFeature";
+import {User} from "common";
+import {SyncedStorage} from "core";
+import {Language, Localization} from "language";
 
 export class FPurchaseDate extends ASFeature {
 

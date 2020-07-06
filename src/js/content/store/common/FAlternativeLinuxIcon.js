@@ -1,5 +1,5 @@
-import {ASFeature} from "../../ASFeature.js";
-import {ExtensionResources, SyncedStorage} from "../../../core.js";
+import {ASFeature} from "modules/ASFeature";
+import {ExtensionResources, SyncedStorage} from "core";
 
 export class FAlternativeLinuxIcon extends ASFeature {
 

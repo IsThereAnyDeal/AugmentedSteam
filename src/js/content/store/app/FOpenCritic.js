@@ -1,7 +1,7 @@
-import {ASFeature} from "../../ASFeature.js";
-import {ExtensionResources, HTML, SyncedStorage} from "../../../core.js";
-import {Localization} from "../../../language.js";
-import {ExtensionLayer} from "../../common.js";
+import {ASFeature} from "modules/ASFeature";
+import {ExtensionResources, HTML, SyncedStorage} from "core";
+import {Localization} from "language";
+import {ExtensionLayer} from "common";
 
 export class FOpenCritic extends ASFeature {
 

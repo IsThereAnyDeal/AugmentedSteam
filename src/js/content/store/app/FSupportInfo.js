@@ -1,7 +1,7 @@
-import {ASFeature} from "../../ASFeature.js";
-import {HTML, LocalStorage, SyncedStorage} from "../../../core.js";
-import {Background} from "../../common.js";
-import {Localization} from "../../../language.js";
+import {ASFeature} from "modules/ASFeature";
+import {HTML, LocalStorage, SyncedStorage} from "core";
+import {Background} from "common";
+import {Localization} from "language";
 
 export class FSupportInfo extends ASFeature {
 

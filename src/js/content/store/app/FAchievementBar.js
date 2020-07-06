@@ -1,6 +1,6 @@
-import {ASFeature} from "../../ASFeature.js";
-import {HTML, SyncedStorage} from "../../../core.js";
-import {Stats} from "../../common.js";
+import {ASFeature} from "modules/ASFeature";
+import {HTML, SyncedStorage} from "core";
+import {Stats} from "common";
 
 export class FAchievementBar extends ASFeature {
 

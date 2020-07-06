@@ -1,9 +1,9 @@
-import {ASContext, ContextTypes} from "../../ASContext.js";
+import {ASContext, ContextTypes} from "modules/ASContext";
 
-import {EarlyAccess} from "../../common.js";
-import {FHighlightsTags} from "../../common/FHighlightsTags.js";
-import {FAlternativeLinuxIcon} from "./FAlternativeLinuxIcon.js";
-import {FHideTrademarks} from "../../common/FHideTrademarks.js";
+import {EarlyAccess} from "common";
+import {FHighlightsTags} from "common/FHighlightsTags";
+import {FAlternativeLinuxIcon} from "store/common/FAlternativeLinuxIcon";
+import {FHideTrademarks} from "common/FHideTrademarks";
 
 export class CStoreBase extends ASContext {
 

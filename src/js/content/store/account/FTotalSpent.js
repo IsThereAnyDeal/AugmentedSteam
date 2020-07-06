@@ -1,6 +1,6 @@
-import {ASFeature} from "../../ASFeature.js";
-import {HTML} from "../../../core.js";
-import {Localization} from "../../../language.js";
+import {ASFeature} from "modules/ASFeature";
+import {HTML} from "core";
+import {Localization} from "language";
 
 export class FTotalSpent extends ASFeature {
 

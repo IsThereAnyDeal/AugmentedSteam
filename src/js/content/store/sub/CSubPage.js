@@ -1,13 +1,13 @@
-import {CStorePage} from "../common/CStorePage.js";
-import {ContextTypes} from "../../ASContext.js";
+import {CStorePage} from "store/common/CStorePage";
+import {ContextTypes} from "modules/ASContext";
 
-import {FExtraLinks} from "../common/FExtraLinks.js";
-import {FDRMWarnings} from "../common/FDRMWarnings.js";
-import {FITADPrices} from "../common/FITADPrices.js";
-import {FRegionalPricing} from "../common/FRegionalPricing.js";
-import {FSavingsCheck} from "./FSavingsCheck.js";
+import {FExtraLinks} from "store/common/FExtraLinks";
+import {FDRMWarnings} from "store/common/FDRMWarnings";
+import {FITADPrices} from "store/common/FITADPrices";
+import {FRegionalPricing} from "store/common/FRegionalPricing";
+import {FSavingsCheck} from "store/sub/FSavingsCheck";
 
-import {GameId} from "../../../core.js";
+import {GameId} from "core";
 
 export class CSubPage extends CStorePage {
 

@@ -1,6 +1,6 @@
-import {ASFeature} from "../../ASFeature.js";
-import {ExtensionResources, HTML, SyncedStorage} from "../../../core.js";
-import {Localization} from "../../../language.js";
+import {ASFeature} from "modules/ASFeature";
+import {ExtensionResources, HTML, SyncedStorage} from "core";
+import {Localization} from "language";
 
 export class FWidescreenCertification extends ASFeature {
 

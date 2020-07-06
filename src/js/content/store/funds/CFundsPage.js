@@ -1,7 +1,7 @@
-import {CStoreBase} from "../common/CStoreBase.js";
-import {ContextTypes} from "../../ASContext.js";
+import {CStoreBase} from "store/common/CStoreBase";
+import {ContextTypes} from "modules/ASContext";
 
-import {FCustomGiftcardAndWallet} from "./FCustomGiftcardAndWallet.js";
+import {FCustomGiftcardAndWallet} from "store/funds/FCustomGiftcardAndWallet";
 
 export class CFundsPage extends CStoreBase {
 

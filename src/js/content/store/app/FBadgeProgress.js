@@ -1,7 +1,7 @@
-import {ASFeature} from "../../ASFeature.js";
-import {Background, DOMHelper, User} from "../../common.js";
-import {HTML, HTMLParser, SyncedStorage} from "../../../core.js";
-import {Localization} from "../../../language.js";
+import {ASFeature} from "modules/ASFeature";
+import {Background, DOMHelper, User} from "common";
+import {HTML, HTMLParser, SyncedStorage} from "core";
+import {Localization} from "language";
 
 export class FBadgeProgress extends ASFeature {
 

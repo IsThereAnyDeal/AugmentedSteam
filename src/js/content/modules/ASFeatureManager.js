@@ -1,4 +1,4 @@
-import {FeatureDependencyError} from "./FeatureDependencyError";
+import {FeatureDependencyError} from "modules/FeatureDependencyError";
 
 // Polyfill from https://gist.github.com/davidbarral/d0d4da70fa9e6f615595d01f54276e0b#file-promises-js
 if (!Promise.allSettled) {

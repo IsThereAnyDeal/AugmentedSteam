@@ -1,4 +1,4 @@
-import {CSearchPage} from "./CSearchPage.js";
-import check from "../storeCheck.js";
+import {CSearchPage} from "store/search/CSearchPage";
+import check from "store/storeCheck";
 
 check(CSearchPage);

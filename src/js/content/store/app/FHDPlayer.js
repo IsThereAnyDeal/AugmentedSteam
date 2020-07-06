@@ -1,5 +1,5 @@
-import {ASFeature} from "../../ASFeature.js";
-import {HTML, LocalStorage} from "../../../core.js";
+import {ASFeature} from "modules/ASFeature";
+import {HTML, LocalStorage} from "core";
 
 export class FHDPlayer extends ASFeature {
 
