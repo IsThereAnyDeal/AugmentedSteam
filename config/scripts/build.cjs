@@ -1,6 +1,10 @@
 const webpack = require("webpack");
+const path = require("path");
 const {merge} = require("webpack-merge");
+
 const MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin");
+
+const rootDir = path.resolve(__dirname, "../../");
 
 let browser = "chrome";
 let mode = "dev";
@@ -29,6 +33,18 @@ webpack(merge(config, {
             "space": mode === "dev" ? '\t' : null, 
         }),
     ],
+    "module": {
+        "rules": [
+            {
+                "test": /\.c?js$/,
+                "exclude": [
+                    path.resolve(rootDir, "node_modules/"),
+                    path.resolve(rootDir, "src/js/lib/"),
+                ],
+                "loader": "eslint-loader",
+            }
+        ],
+    },
 }), (err, stats) => {
 
     if (err) {
