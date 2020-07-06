@@ -517,6 +517,7 @@ export class SyncedStorage {
             for (const [key, {"newValue": val}] of Object.entries(changes)) {
                 this.cache[key] = val;
             }
+            // FIXME Doesn't work with modules
             if (typeof ContextMenu === "function" && Object.keys(changes).some(key => key.startsWith("context_"))) {
                 ContextMenu.update();
             }
@@ -1046,3 +1047,62 @@ export class Debug {
     }
 }
 
+export class CookieStorage {
+    static get(name, defaultValue) {
+        if (CookieStorage.cache.size === 0) {
+            CookieStorage.init();
+        }
+        name = name.trim();
+        if (!CookieStorage.cache.has(name)) {
+            return defaultValue;
+        }
+        return CookieStorage.cache.get(name);
+    }
+
+    static set(name, val, ttl = 60 * 60 * 24 * 365) {
+        if (CookieStorage.cache.size === 0) {
+            CookieStorage.init();
+        }
+        name = name.trim();
+        val = val.trim();
+        CookieStorage.cache.set(name, val);
+        name = encodeURIComponent(name);
+        val = encodeURIComponent(val);
+        document.cookie = `${name}=${val}; max-age=${ttl}`;
+    }
+
+    static remove(name) {
+        name = name.trim();
+        CookieStorage.cache.delete(name);
+        name = encodeURIComponent(name);
+        document.cookie = `${name}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    }
+
+    static init() {
+        CookieStorage.cache.clear();
+        for (let [key, val] of document.cookie.split(";").map(kv => kv.split("="))) {
+            key = key.trim();
+            CookieStorage.cache.set(key, decodeURIComponent(val));
+        }
+    }
+}
+CookieStorage.cache = new Map();
+
+export class MetaInfo {
+
+    static get contextType() {
+        if (browser.extension.getBackgroundPage) {
+            const bgPage = browser.extension.getBackgroundPage();
+
+            return bgPage === window ? MetaInfo.CONTEXT_TYPES.BACKGROUND : MetaInfo.CONTEXT_TYPES.OPTIONS;
+        }
+
+        return MetaInfo.CONTEXT_TYPES.CONTENT_SCRIPT;
+    }
+}
+
+MetaInfo.CONTEXT_TYPES = Object.freeze({
+    "BACKGROUND": 1,
+    "CONTENT_SCRIPT": 2,
+    "OPTIONS": 3,
+});

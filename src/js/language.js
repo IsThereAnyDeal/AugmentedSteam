@@ -1,7 +1,4 @@
-import {BackgroundBase, ExtensionResources, SyncedStorage} from "core";
-
-// FIXME Shouldn't be here as this is also included by the background page
-import {CookieStorage} from "content/common";
+import {BackgroundBase, CookieStorage, ExtensionResources, MetaInfo, SyncedStorage} from "core";
 
 export class Language {
     static getCurrentSteamLanguage() {
@@ -21,7 +18,7 @@ export class Language {
         }
 
         // In a Content Context, we can check for a cookie
-        if (typeof CookieStorage != "undefined") {
+        if (MetaInfo.contextType === MetaInfo.CONTEXT_TYPES.CONTENT_SCRIPT) {
             this._currentSteamLanguage = CookieStorage.get("Steam_Language") || null;
         }
 
