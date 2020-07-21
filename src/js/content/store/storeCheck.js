@@ -1,6 +1,5 @@
-import {SyncedStorage} from "core";
+import {Localization, SyncedStorage} from "core";
 import {Common, Currency, User} from "common";
-import {Localization} from "language";
 
 export default async function(context) {
 

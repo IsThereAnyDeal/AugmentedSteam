@@ -1,6 +1,6 @@
 import {ASFeature} from "modules/ASFeature";
-import {Localization} from "language";
-import {HTML} from "core";
+
+import {HTML, Localization} from "core";
 
 export class FSurveyData extends ASFeature {
 

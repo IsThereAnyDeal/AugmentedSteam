@@ -1,6 +1,6 @@
 import {ASFeature} from "modules/ASFeature";
-import {Localization} from "language";
-import {ExtensionResources, HTML} from "core";
+
+import {ExtensionResources, HTML, Localization} from "core";
 import {ExtensionLayer, RequestData, User} from "common";
 
 export class FMultiProductKeys extends ASFeature {

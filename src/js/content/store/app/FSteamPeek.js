@@ -1,8 +1,8 @@
 import {ASFeature} from "modules/ASFeature";
-import {HTML, LocalStorage} from "core";
+
+import {HTML, LocalStorage, Localization} from "core";
 import {ExtensionLayer} from "common";
 import {FHighlightsTags} from "common/FHighlightsTags";
-import {Localization} from "language";
 
 export class FSteamPeek extends ASFeature {
 

@@ -1,7 +1,7 @@
 import {ASFeature} from "modules/ASFeature";
+
+import {HTML, Localization} from "core";
 import {DOMHelper, Price} from "common";
-import {HTML} from "core";
-import {Localization} from "language";
 
 export class FSavingsCheck extends ASFeature {
 

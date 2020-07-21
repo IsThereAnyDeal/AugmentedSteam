@@ -1,7 +1,6 @@
 import {ASFeature} from "modules/ASFeature";
 
-import {HTML, HTMLParser, SyncedStorage} from "core";
-import {Localization} from "language";
+import {HTML, HTMLParser, Localization, SyncedStorage} from "core";
 import {DynamicStore, ExtensionLayer, RequestData, User} from "common";
 import {FExportWishlist} from "store/wishlist/FExportWishlist";
 

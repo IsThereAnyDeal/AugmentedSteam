@@ -1,7 +1,6 @@
 import {ASFeature} from "modules/ASFeature";
 import {Background} from "common";
-import {HTML} from "core";
-import {Localization} from "language";
+import {HTML, Localization} from "core";
 
 export class FOwnedElsewhere extends ASFeature {
 

@@ -1,6 +1,6 @@
 import {SearchFilter} from "store/search/filters/searchfilters";
 
-import {Localization} from "language";
+import {Localization} from "core";
 
 export class ReviewsScoreSearchFilter extends SearchFilter {
 

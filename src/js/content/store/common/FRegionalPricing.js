@@ -1,9 +1,8 @@
 import {ASFeature} from "modules/ASFeature";
 import {ContextTypes} from "modules/ASContext";
 
-import {HTML, SyncedStorage} from "core";
+import {HTML, Localization, SyncedStorage} from "core";
 import {Currency, Price, RequestData, User} from "common";
-import {Localization} from "language";
 
 export class FRegionalPricing extends ASFeature {
 

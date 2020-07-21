@@ -1,6 +1,5 @@
 import {ASFeature} from "modules/ASFeature";
-import {HTML, LocalStorage, SyncedStorage} from "core";
-import {Localization} from "language";
+import {HTML, LocalStorage, Localization, SyncedStorage} from "core";
 import {Background} from "common";
 
 export class FHowLongToBeat extends ASFeature {

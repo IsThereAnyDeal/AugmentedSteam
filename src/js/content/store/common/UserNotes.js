@@ -1,5 +1,4 @@
-import {HTML, SyncedStorage} from "core";
-import {Localization} from "language";
+import {HTML, Localization, SyncedStorage} from "core";
 import {ExtensionLayer, Messenger} from "common";
 
 export class UserNotes {

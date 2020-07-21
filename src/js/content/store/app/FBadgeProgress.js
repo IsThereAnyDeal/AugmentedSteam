@@ -1,7 +1,6 @@
 import {ASFeature} from "modules/ASFeature";
 import {Background, DOMHelper, User} from "common";
-import {HTML, HTMLParser, SyncedStorage} from "core";
-import {Localization} from "language";
+import {HTML, HTMLParser, Localization, SyncedStorage} from "core";
 
 export class FBadgeProgress extends ASFeature {
 

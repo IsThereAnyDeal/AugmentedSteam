@@ -1,16 +1,15 @@
 import {ASFeature} from "modules/ASFeature";
 
+import {HTML, Localization} from "core";
+import {EarlyAccess, ExtensionLayer, Messenger} from "common";
+import {FHighlightsTags} from "common/FHighlightsTags";
+
 import {CartSearchFilter} from "store/search/filters/CartSearchFilter";
 import {EarlyAccessSearchFilter} from "store/search/filters/EarlyAccessSearchFilter";
 import {MixedSearchFilter} from "store/search/filters/MixedSearchFilter";
 import {NegativeSearchFilter} from "store/search/filters/NegativeSearchFilter";
 import {ReviewsCountSearchFilter} from "store/search/filters/ReviewsCountSearchFilter";
 import {ReviewsScoreSearchFilter} from "store/search/filters/ReviewsScoreSearchFilter";
-
-import {HTML} from "core";
-import {Localization} from "language";
-import {EarlyAccess, ExtensionLayer, Messenger} from "common";
-import {FHighlightsTags} from "common/FHighlightsTags";
 
 export class FSearchFilters extends ASFeature {
 

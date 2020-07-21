@@ -1,6 +1,5 @@
 import {ASFeature} from "modules/ASFeature";
-import {HTML} from "core";
-import {Localization} from "language";
+import {HTML, Localization} from "core";
 
 export class FTotalSpent extends ASFeature {
 

@@ -1,7 +1,7 @@
 import {ASFeature} from "modules/ASFeature";
-import {HTML, LocalStorage, SyncedStorage} from "core";
+
+import {HTML, LocalStorage, Localization, SyncedStorage} from "core";
 import {Background} from "common";
-import {Localization} from "language";
 
 export class FSupportInfo extends ASFeature {
 

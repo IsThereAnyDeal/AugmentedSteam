@@ -1,6 +1,6 @@
 import {ASFeature} from "modules/ASFeature";
-import {HTML, SyncedStorage} from "core";
-import {Language, Localization} from "language";
+
+import {HTML, Language, Localization, SyncedStorage} from "core";
 import {ExtensionLayer} from "common";
 
 export class FYouTubeVideos extends ASFeature {

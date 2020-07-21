@@ -1,8 +1,7 @@
 import {ASFeature} from "modules/ASFeature";
-import {Localization} from "language";
 import {Background} from "common";
 import Config from "config";
-import {HTML} from "core";
+import {HTML, Localization} from "core";
 
 export class FDLCInfo extends ASFeature {
 

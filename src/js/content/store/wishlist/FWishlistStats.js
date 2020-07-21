@@ -1,8 +1,7 @@
 import {ASFeature} from "modules/ASFeature";
 
-import {HTML, SyncedStorage} from "core";
+import {HTML, Localization, SyncedStorage} from "core";
 import {ExtensionLayer, Price} from "common";
-import {Localization} from "language";
 
 export class FWishlistStats extends ASFeature {
 

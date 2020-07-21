@@ -1,8 +1,6 @@
-import {BackgroundBase, Downloader, ExtensionResources, HTML, Info, SyncedStorage, sleep} from "core";
-
+import {BackgroundBase, Downloader, ExtensionResources, HTML, Info, Language, Localization, SyncedStorage, sleep} from "core";
 import {CountryList} from "options/countryList";
 import {StoreList} from "options/storeList";
-import {Language, Localization} from "language";
 
 class Fader {
 

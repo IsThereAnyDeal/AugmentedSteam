@@ -1,5 +1,4 @@
-import {BackgroundBase, CookieStorage, ErrorParser, ExtensionResources, GameId, HTML, HTMLParser, Info, LocalStorage, StringUtils, SyncedStorage, UpdateHandler} from "core";
-import {Language, Localization} from "language";
+import {BackgroundBase, CookieStorage, ErrorParser, ExtensionResources, GameId, HTML, HTMLParser, Info, Language, LocalStorage, Localization, StringUtils, SyncedStorage, UpdateHandler} from "core";
 
 /**
  * Common functions that may be used on any pages

@@ -1,6 +1,6 @@
 import {ASFeature} from "modules/ASFeature";
-import {HTML} from "core";
-import {Localization} from "language";
+
+import {HTML, Localization} from "core";
 import {ExtensionLayer} from "common";
 
 export class FReplaceDevPubLinks extends ASFeature {

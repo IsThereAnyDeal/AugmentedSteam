@@ -1,9 +1,8 @@
 import {ASFeature} from "modules/ASFeature";
 import {ContextTypes} from "modules/ASContext";
 
+import {HTML, Localization, SyncedStorage} from "core";
 import {DOMHelper} from "common";
-import {HTML, SyncedStorage} from "core";
-import {Localization} from "language";
 
 export class FCustomizer extends ASFeature {
 

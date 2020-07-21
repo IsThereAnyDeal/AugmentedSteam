@@ -1,8 +1,7 @@
 import {ASFeature} from "modules/ASFeature";
 import {ContextTypes} from "modules/ASContext";
 
-import {HTML, LocalStorage, SyncedStorage} from "core";
-import {Localization} from "language";
+import {HTML, LocalStorage, Localization, SyncedStorage} from "core";
 import {ExtensionLayer} from "common";
 
 export class FMediaExpander extends ASFeature {

@@ -1,7 +1,6 @@
 import {ASFeature} from "modules/ASFeature";
 import {DynamicStore, ExtensionLayer, ITAD, Inventory} from "common";
-import {GameId, HTML, HTMLParser, SyncedStorage} from "core";
-import {Localization} from "language";
+import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "core";
 
 export class FHighlightsTags extends ASFeature {
 

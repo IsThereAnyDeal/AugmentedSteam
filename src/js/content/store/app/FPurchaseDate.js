@@ -1,7 +1,7 @@
 import {ASFeature} from "modules/ASFeature";
+
+import {Language, Localization, SyncedStorage} from "core";
 import {User} from "common";
-import {SyncedStorage} from "core";
-import {Language, Localization} from "language";
 
 export class FPurchaseDate extends ASFeature {
 

@@ -1,7 +1,7 @@
 import {ASFeature} from "modules/ASFeature";
+
+import {HTML, Localization, SyncedStorage} from "core";
 import {User} from "common";
-import {HTML, SyncedStorage} from "core";
-import {Localization} from "language";
 
 export class FOwnedActionsButtons extends ASFeature {
 

@@ -1,7 +1,7 @@
 import {ASFeature} from "modules/ASFeature";
-import {HTML, SyncedStorage} from "core";
+
+import {HTML, Localization, SyncedStorage} from "core";
 import {Prices} from "common";
-import {Localization} from "language";
 
 export class FITADPrices extends ASFeature {
     checkPrerequisites() {

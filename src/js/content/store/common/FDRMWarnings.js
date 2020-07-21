@@ -1,8 +1,7 @@
 import {ASFeature} from "modules/ASFeature";
 import {ContextTypes} from "modules/ASContext";
 
-import {HTML, SyncedStorage} from "core";
-import {Localization} from "language";
+import {HTML, Localization, SyncedStorage} from "core";
 
 export class FDRMWarnings extends ASFeature {
 

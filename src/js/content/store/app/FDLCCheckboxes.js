@@ -1,6 +1,5 @@
 import {ASFeature} from "modules/ASFeature";
-import {ExtensionResources, HTML} from "core";
-import {Localization} from "language";
+import {ExtensionResources, HTML, Localization} from "core";
 
 export class FDLCCheckboxes extends ASFeature {
 

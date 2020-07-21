@@ -1,8 +1,7 @@
 import {CallbackFeature} from "modules/CallbackFeature";
 
-import {HTML, SyncedStorage} from "core";
+import {HTML, Localization, SyncedStorage} from "core";
 import {UserNotes} from "store/common/UserNotes";
-import {Localization} from "language";
 
 export class FWishlistUserNotes extends CallbackFeature {
 

@@ -1,6 +1,5 @@
 import Config from "config";
-import {ExtensionResources, GameId, HTMLParser, Info, LocalStorage, LoginError, ServerOutageError, SyncedStorage, Timestamp} from "core";
-import {Localization} from "language";
+import {ExtensionResources, GameId, HTMLParser, Info, LocalStorage, Localization, LoginError, ServerOutageError, SyncedStorage, Timestamp} from "core";
 
 class CacheStorage {
 

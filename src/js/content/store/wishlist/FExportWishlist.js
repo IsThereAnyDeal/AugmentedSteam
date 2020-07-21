@@ -1,7 +1,6 @@
 import {ASFeature} from "modules/ASFeature";
 
-import {Downloader, HTML, SyncedStorage} from "core";
-import {Localization} from "language";
+import {Downloader, HTML, Localization, SyncedStorage} from "core";
 import {Clipboard, ExtensionLayer} from "common";
 
 export class FExportWishlist extends ASFeature {

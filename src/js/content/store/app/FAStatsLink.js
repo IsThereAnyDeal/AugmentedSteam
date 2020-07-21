@@ -1,6 +1,5 @@
 import {ASFeature} from "modules/ASFeature";
-import {ExtensionResources, HTML, SyncedStorage} from "core";
-import {Localization} from "language";
+import {ExtensionResources, HTML, Localization, SyncedStorage} from "core";
 
 // todo maybe integrate with other useful links?
 export class FAStatsLink extends ASFeature {

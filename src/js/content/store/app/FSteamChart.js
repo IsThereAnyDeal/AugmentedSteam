@@ -1,6 +1,6 @@
 import {ASFeature} from "modules/ASFeature";
-import {HTML, SyncedStorage} from "core";
-import {Localization} from "language";
+
+import {HTML, Localization, SyncedStorage} from "core";
 
 export class FSteamChart extends ASFeature {
 
