@@ -24,4 +24,5 @@ export const ContextTypes = Object.freeze({
     "SUB": 11,
     "WISHLIST": 12,
     "AGECHECK": 13,
+    "COMMUNITY_DEFAULT": 14,
 });

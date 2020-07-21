@@ -240,7 +240,8 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js"
+        "lib/DOMPurify/purify.js",
+        "entries/community/default.js"
       ],
       "css": [
         "css/enhancedsteam.css",

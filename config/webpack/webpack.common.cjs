@@ -9,6 +9,7 @@ module.exports = {
     "entry": {
         "background": "./src/js/background/background.js",
         "options": "./src/js/options/options.js",
+        "community/default": "./src/js/content/community/PDefaultCommunity.js",
         "store/account": "./src/js/content/store/account/PAccountPage.js",
         "store/agecheck": "./src/js/content/store/agecheck/PAgecheckPage.js",
         "store/app": "./src/js/content/store/app/PAppPage.js",
