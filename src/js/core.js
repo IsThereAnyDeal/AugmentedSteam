@@ -158,6 +158,7 @@ export class UpdateHandler {
         const logo = ExtensionResources.getURL("img/es_128.png");
         const dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
 
+        // FIXME Shouldn't be used in core.js
         ExtensionLayer.runInPageContext(
             (updatedStr, dialog) => { ShowAlertDialog(updatedStr, dialog); },
             [Localization.str.update.updated.replace("__version__", Info.version), dialog]

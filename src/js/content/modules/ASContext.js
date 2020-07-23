@@ -38,4 +38,5 @@ export const ContextTypes = Object.freeze({
     "COMMUNITY_DEFAULT": 14,
     "WORKSHOP": 15,
     "PROFILE_ACTIVITY": 16,
+    "GAMES": 17,
 });
