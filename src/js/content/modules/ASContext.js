@@ -2,11 +2,22 @@ import {ASFeatureManager} from "modules/ASFeatureManager";
 
 export class ASContext {
     constructor(features) {
+        this._callbacks = [];
         this.features = features.map(ref => new ref(this));
     }
 
     applyFeatures() {
         return ASFeatureManager.apply(this.features);
+    }
+
+    registerCallback(fn) {
+        this._callbacks.push(fn);
+    }
+
+    triggerCallbacks(...params) {
+        for (let callback of this._callbacks) {
+            callback(...params);
+        }
     }
 }
 
@@ -25,4 +36,6 @@ export const ContextTypes = Object.freeze({
     "WISHLIST": 12,
     "AGECHECK": 13,
     "COMMUNITY_DEFAULT": 14,
+    "WORKSHOP": 15,
+    "PROFILE_ACTIVITY": 16,
 });

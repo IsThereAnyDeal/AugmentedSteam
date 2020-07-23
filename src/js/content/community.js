@@ -134,73 +134,6 @@ let CommunityCommon = (function() {
     return self;
 })();
 
-let ProfileActivityPageClass = (function(){
-
-    function ProfileActivityPageClass() {
-        this.highlightFriendsActivity();
-
-        // TODO this is called from Common, refactor Early Access so it
-        // doesn't trying to resolve where we are at, instead page should tell it what nodes to check
-        // EarlyAccess.showEarlyAccess();
-
-        this.observeChanges();
-    }
-
-    ProfileActivityPageClass.prototype.highlightFriendsActivity = async function() {
-        await Promise.all([DynamicStore, User]);
-
-        let blotterBlocks = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
-        blotterBlocks.forEach(node => node.classList.add("es_highlight_checked"));
-
-        let aNodes = Array.from(blotterBlocks).reduce((acc, cur) => {
-            acc.push(...Array.from(cur.querySelectorAll("a:not(.blotter_gamepurchase_logo)")).filter(link =>
-                (GameId.getAppid(link) && link.childElementCount <= 1)
-                &&
-                // https://github.com/tfedor/AugmentedSteam/pull/470#pullrequestreview-284928257
-                (link.childElementCount !== 1 || !link.closest(".vote_header"))
-            ));
-            return acc;
-        }, []);
-
-        await Highlights.highlightAndTag(aNodes, false);
-
-        if (!SyncedStorage.get("showcomparelinks")) { return; }
-        blotterBlocks.forEach(blotter => {
-            blotter.querySelectorAll("a.es_highlighted_owned").forEach(aNode => {
-                addAchievementComparisonLink(aNode);
-            })
-        });
-    };
-
-    function addAchievementComparisonLink(node) {
-        let blotter = node.closest(".blotter_daily_rollup_line");
-        if (!blotter) { return; }
-
-        if (node.parentNode.nextElementSibling.tagName !== "IMG") { return; }
-
-        let friendProfileUrl = blotter.querySelector("a[data-miniprofile]").href + '/';
-        if (friendProfileUrl === User.profileUrl) { return; }
-
-        node.classList.add("es_achievements");
-
-        let compareLink = friendProfileUrl + "/stats/" + GameId.getAppid(node) + "/compare/#es-compare";
-        HTML.afterEnd(blotter.querySelector("span"), `<a class='es_achievement_compare' href='${compareLink}' target='_blank' style='line-height: 32px'>(${Localization.str.compare})</a>`);
-    }
-
-    ProfileActivityPageClass.prototype.observeChanges = function() {
-        let that = this;
-        let observer = new MutationObserver(() => {
-            that.highlightFriendsActivity();
-            EarlyAccess.showEarlyAccess();
-            CommentHandler.hideSpamComments();
-        });
-
-        observer.observe(document.querySelector("#blotter_content"), { subtree: true, childList: true });
-    };
-
-    return ProfileActivityPageClass;
-})();
-
 let ProfileHomePageClass = (function(){
 
     function ProfileHomePageClass() {
@@ -4281,10 +4214,6 @@ let EditGuidePageClass = (function(){
 (async function(){
     
     switch (true) {
-
-        case /^\/(?:id|profiles)\/.+\/(home|myactivity)\/?$/.test(path):
-            (new ProfileActivityPageClass());
-            break;
 
         case /^\/(?:id|profiles)\/.+\/games/.test(path):
             (new GamesPageClass());

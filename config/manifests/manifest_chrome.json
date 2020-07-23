@@ -243,6 +243,23 @@
     },
     {
       "matches": [
+        "*://steamcommunity.com/id/*/home",
+        "*://steamcommunity.com/id/*/home/",
+        "*://steamcommunity.com/profiles/*/myactivity",
+        "*://steamcommunity.com/profiles/*/myactivity/"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/community/profile_activity.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css"
+      ]
+    },
+    {
+      "matches": [
         "*://steamcommunity.com/*"
       ],
       "exclude_matches": [
@@ -252,7 +269,11 @@
         "*://steamcommunity.com/tradeoffer/*",
 
         "*://steamcommunity.com/workshop",
-        "*://steamcommunity.com/workshop/"
+        "*://steamcommunity.com/workshop/",
+        "*://steamcommunity.com/id/*/home",
+        "*://steamcommunity.com/id/*/home/",
+        "*://steamcommunity.com/profiles/*/myactivity",
+        "*://steamcommunity.com/profiles/*/myactivity/"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
