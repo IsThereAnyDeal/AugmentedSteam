@@ -33,7 +33,7 @@ webpack(merge(config, {
             "space": mode === "dev" ? '\t' : null, 
         }),
     ],
-    "module": {
+    /*"module": {
         "rules": [
             {
                 "test": /\.c?js$/,
@@ -44,7 +44,7 @@ webpack(merge(config, {
                 "loader": "eslint-loader",
             }
         ],
-    },
+    },*/
 }), (err, stats) => {
 
     if (err) {
