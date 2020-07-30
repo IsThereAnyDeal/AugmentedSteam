@@ -12,6 +12,7 @@ module.exports = {
         "community/default": "./src/js/content/community/PDefaultCommunity.js",
         "community/games": "./src/js/content/community/games/PGamesPage.js",
         "community/profile_activity": "./src/js/content/community/profile_activity/PProfileActivityPage.js",
+        "community/profile_edit": "./src/js/content/community/profile_edit/PProfileEditPage.js",
         "community/workshop": "./src/js/content/community/workshop/PWorkshopPage.js",
         "store/account": "./src/js/content/store/account/PAccountPage.js",
         "store/agecheck": "./src/js/content/store/agecheck/PAgecheckPage.js",

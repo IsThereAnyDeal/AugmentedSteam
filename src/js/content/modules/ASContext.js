@@ -39,4 +39,5 @@ export const ContextTypes = Object.freeze({
     "WORKSHOP": 15,
     "PROFILE_ACTIVITY": 16,
     "GAMES": 17,
+    "PROFILE_EDIT": 18,
 });
