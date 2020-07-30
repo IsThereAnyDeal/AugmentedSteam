@@ -262,7 +262,8 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/id/*/games*"
+        "*://steamcommunity.com/id/*/games*",
+        "*://steamcommunity.com/profiles/*/games*"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
@@ -290,7 +291,8 @@
         "*://steamcommunity.com/id/*/home/",
         "*://steamcommunity.com/profiles/*/myactivity",
         "*://steamcommunity.com/profiles/*/myactivity/",
-        "*://steamcommunity.com/id/*/games*"
+        "*://steamcommunity.com/id/*/games*",
+        "*://steamcommunity.com/profiles/*/games*"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
