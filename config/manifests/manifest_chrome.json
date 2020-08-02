@@ -307,6 +307,21 @@
     },
     {
       "matches": [
+        "*://steamcommunity.com/id/*/gamecards*",
+        "*://steamcommunity.com/profiles/*/gamecards*"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/community/gamecard.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css"
+      ]
+    },
+    {
+      "matches": [
         "*://steamcommunity.com/*"
       ],
       "exclude_matches": [
@@ -328,7 +343,9 @@
         "*://steamcommunity.com/id/*/badges",
         "*://steamcommunity.com/id/*/badges/",
         "*://steamcommunity.com/profiles/*/badges",
-        "*://steamcommunity.com/profiles/*/badges/"
+        "*://steamcommunity.com/profiles/*/badges/",
+        "*://steamcommunity.com/id/*/gamecards*",
+        "*://steamcommunity.com/profiles/*/gamecards*"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",

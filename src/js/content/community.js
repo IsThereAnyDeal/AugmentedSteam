@@ -1519,103 +1519,6 @@ let InventoryPageClass = (function(){
     return InventoryPageClass;
 })();
 
-let GameCardPageClass = (function(){
-
-    function GameCardPageClass() {
-        this.appid = GameId.getAppidFromGameCard(window.location.pathname);
-        this.isFoil = window.location.search.includes("?border=1");
-
-        CommunityCommon.addCardExchangeLinks(this.appid);
-        this.addMarketLinks();
-        this.addFoilLink();
-        this.addStoreTradeForumLink();
-    }
-
-    GameCardPageClass.prototype.addMarketLinks = async function() {
-        let cost = 0;
-
-        let data;
-        try {
-            data = await Background.action("market.cardprices", {
-                appid: this.appid,
-                currency: Currency.storeCurrency,
-            });
-        } catch (err) {
-            console.error("Failed to load card prices", err);
-            return;
-        }
-
-        for (let node of document.querySelectorAll(".badge_card_set_card")) {
-            let cardName = node
-                .querySelector(".badge_card_set_text").textContent
-                .replace(/&amp;/g, "&")
-                .replace(/\(\d+\)/g, "").trim();
-            let cardData = data[cardName] || data[cardName + " (Trading Card)"];
-            if (this.isFoil) {
-                cardData = data[cardName + " (Foil)"] || data[cardName + " (Foil Trading Card)"];
-            }
-
-            if (cardData) {
-                let marketLink = `https://steamcommunity.com/market/listings/${cardData.url}`;
-                let cardPrice = new Price(cardData.price);
-
-                if (node.classList.contains("unowned")) {
-                    cost += cardPrice.value;
-                }
-
-                if (marketLink && cardPrice) {
-                    HTML.beforeEnd(node, `<a class="es_card_search" href="${marketLink}">${Localization.str.lowest_price} ${cardPrice}</a>`);
-                }
-            }
-        }
-
-        if (cost > 0 && CommunityCommon.currentUserIsOwner()) {
-            cost = new Price(cost);
-            HTML.afterEnd(
-                DOMHelper.selectLastNode(document, ".badge_empty_name"),
-                `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost.replace("__cost__", cost)}</div>`);
-
-            document.querySelector(".badge_empty_right").classList.add("esi-badge");
-        }
-    };
-
-    GameCardPageClass.prototype.addFoilLink = function() {
-        let node = document.querySelector(".gamecards_inventorylink");
-        if (!node) { return; }
-
-        let url = window.location.href;
-        let text;
-        if (this.isFoil) {
-            url = url.replace(/\?border=1/, "");
-            text = Localization.str.view_normal_badge;
-        } else {
-            url += "?border=1";
-            text = Localization.str.view_foil_badge;
-        }
-
-        HTML.beforeEnd(node,
-            `<a class="btn_grey_grey btn_small_thin" href="${url}"><span>${text}</span></a>`);
-    };
-
-    GameCardPageClass.prototype.addStoreTradeForumLink = function() {
-        // TODO certain cards e.g. sale event cards don't have valid forum links
-        let node = document.querySelector(".gamecards_inventorylink");
-        if (!node) { return; }
-
-        HTML.beforeEnd(node,
-            `<div style="float: right;">
-                <a class="btn_grey_grey btn_medium" href="//store.steampowered.com/app/${this.appid}/">
-                    <span>${Localization.str.visit_store}</span>
-                </a>
-                <a class="es_visit_tforum btn_grey_grey btn_medium" href="https://steamcommunity.com/app/${this.appid}/tradingforum/">
-                    <span>${Localization.str.visit_trade_forum}</span>
-                </a>
-            </div>`);
-    };
-
-    return GameCardPageClass;
-})();
-
 let FriendsThatPlayPageClass = (function(){
 
     function FriendsThatPlayPageClass() {
@@ -3201,10 +3104,6 @@ let EditGuidePageClass = (function(){
 (async function(){
     
     switch (true) {
-
-        case /^\/(?:id|profiles)\/.+\/gamecards/.test(path):
-            (new GameCardPageClass());
-            break;
 
         case /^\/(?:id|profiles)\/.+\/friendsthatplay/.test(path):
             (new FriendsThatPlayPageClass());
