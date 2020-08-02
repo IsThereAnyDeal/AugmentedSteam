@@ -4,6 +4,7 @@ import {ContextTypes} from "modules/ASContext";
 import {FBadgeCompletionCost} from "community/badges/FBadgeCompletionCost";
 import {FCardExchangeLinks} from "community/common/FCardExchangeLinks";
 import {FBadgeSortAndFilter} from "community/badges/FBadgeSortAndFilter";
+import {FBadgeDropsCount} from "community/badges/FBadgeDropsCount";
 
 import {HTMLParser} from "core";
 import {DOMHelper, RequestData} from "common";
@@ -16,19 +17,15 @@ export class CBadgesPage extends CCommunityBase {
             FBadgeCompletionCost,
             FCardExchangeLinks,
             FBadgeSortAndFilter,
+            FBadgeDropsCount,
         ]);
 
         this.type = ContextTypes.BADGES;
 
         this.hasMultiplePages = document.querySelector(".pagebtn") !== null;
-
-        /*this.addBadgeSort();
-        this.addBadgeFilter();
-        this.addBadgeViewOptions();
-
-        this.triggerCallbacks();*/
     }
 
+    // TODO Cache this somehow or apply both FBadgeDropsCount & FBadgeSortAndFilter at once when doing these requests
     async eachBadgePage(callback) {
         let baseUrl = "https://steamcommunity.com/" + window.location.pathname + "?p=";
 
