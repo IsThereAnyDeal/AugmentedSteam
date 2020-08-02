@@ -9,6 +9,7 @@ module.exports = {
     "entry": {
         "background": "./src/js/background/background.js",
         "options": "./src/js/options/options.js",
+        "community/badges": "./src/js/content/community/badges/PBadgesPage.js",
         "community/default": "./src/js/content/community/PDefaultCommunity.js",
         "community/games": "./src/js/content/community/games/PGamesPage.js",
         "community/profile_activity": "./src/js/content/community/profile_activity/PProfileActivityPage.js",
