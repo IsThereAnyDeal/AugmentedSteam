@@ -604,9 +604,10 @@ let User = (function(){
             loginPromise = Background.action("logout");
         }
 
-        return _promise = Promise.all([
-            loginPromise.catch(({message}) => console.error(message)),
-            Background.action("country").then(country => {
+        return _promise = loginPromise
+            .then(() => Background.action("country"))
+            .catch(({message}) => { console.error(message); })
+            .then(country => {
                 if (country) {
                     self._country = country;
                     return;
@@ -624,20 +625,30 @@ let User = (function(){
                             break;
                         }
                     }
+
+                    if (!newCountry) {
+                        throw new Error("Script with user store country not found");
+                    }
+
                 } else if (window.location.hostname === "steamcommunity.com") {
                     const config = document.getElementById("application_config");
-                    if (!config || !config.dataset || !config.dataset.config) { return; }
                     
                     newCountry = JSON.parse(config.dataset.config).COUNTRY;
                 }
 
                 if (newCountry) {
                     self._country = newCountry;
-                    return Background.action("country", newCountry);
+                    return Background.action("country", newCountry)
+                        .catch(({message}) => { console.error(message); });
                 }
                 
-            }, ({message}) => console.error(message)),
-        ])
+            })
+            .catch(err => {
+                console.group("Store country detection");
+                console.warn("Failed to detect store country from page");
+                console.error(err);
+                console.groupEnd();
+            });
     };
 
     self.then = function(onDone, onCatch) {

@@ -1044,6 +1044,7 @@ class SteamCommunity extends Api {
     static logout(newLogout = LocalStorage.has("login")) {
         if (newLogout) {
             LocalStorage.remove("login");
+            LocalStorage.remove("country");
             CacheStorage.remove("currency");
         }
     }
