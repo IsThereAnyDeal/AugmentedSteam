@@ -556,21 +556,21 @@ let User = (function(){
     self.profileUrl = false;
     self.profilePath = false;
     self.steamId = null;
-    self._country = null;
+    self._storeCountry = null;
 
     let accountId = false;
     let sessionId = false;
 
     let _promise = null;
 
-    Object.defineProperty(self, "country", { get() {
+    Object.defineProperty(self, "storeCountry", { get() {
         let url = new URL(window.location.href);
 
         let country;
         if (url.searchParams && url.searchParams.has("cc")) {
             country = url.searchParams.get("cc");
         } else {
-            country = self._country;
+            country = self._storeCountry;
             if (!country) {
                 country = CookieStorage.get("steamCountry");
             }
@@ -605,11 +605,11 @@ let User = (function(){
         }
 
         return _promise = loginPromise
-            .then(() => Background.action("country"))
+            .then(() => Background.action("storecountry"))
             .catch(({message}) => { console.error(message); })
             .then(country => {
                 if (country) {
-                    self._country = country;
+                    self._storeCountry = country;
                     return;
                 }
 
@@ -637,8 +637,8 @@ let User = (function(){
                 }
 
                 if (newCountry) {
-                    self._country = newCountry;
-                    return Background.action("country", newCountry)
+                    self._storeCountry = newCountry;
+                    return Background.action("storecountry", newCountry)
                         .catch(({message}) => { console.error(message); });
                 }
                 
@@ -2336,7 +2336,7 @@ let Prices = (function(){
             apiParams.stores = SyncedStorage.get("stores").join(",");
         }
 
-        let cc = User.country;
+        let cc = User.storeCountry;
         if (cc) {
             apiParams.cc = cc;
         }

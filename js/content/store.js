@@ -371,7 +371,7 @@ class StorePageClass {
         let countries = SyncedStorage.get("regional_countries");
         if (!countries || countries.length === 0) { return; }
 
-        let localCountry = User.country.toLowerCase();
+        let localCountry = User.storeCountry.toLowerCase();
         if (!countries.includes(localCountry)) {
             countries.push(localCountry);
         }
@@ -397,7 +397,7 @@ class StorePageClass {
                 .closest(".game_area_purchase_game_wrapper,#game_area_purchase,.sale_page_purchase_item")
                 .querySelector(".game_purchase_action");
 
-            let apiPrice = prices[User.country.toLowerCase()];
+            let apiPrice = prices[User.storeCountry.toLowerCase()];
             let priceLocal;
             try {
                 priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);

@@ -1044,17 +1044,17 @@ class SteamCommunity extends Api {
     static logout(newLogout = LocalStorage.has("login")) {
         if (newLogout) {
             LocalStorage.remove("login");
-            LocalStorage.remove("country");
+            LocalStorage.remove("storeCountry");
             CacheStorage.remove("currency");
         }
     }
 
     // TODO This and (at least) the login calls don't seem appropriate in this class
-    static country(newCountry) {
+    static storeCountry(newCountry) {
         if (newCountry) {
-            LocalStorage.set("country", newCountry);
+            LocalStorage.set("storeCountry", newCountry);
         } else {
-            return LocalStorage.get("country");
+            return LocalStorage.get("storeCountry");
         }
     }
 
@@ -1598,7 +1598,7 @@ let actionCallbacks = new Map([
 
     ["login", SteamCommunity.login],
     ["logout", SteamCommunity.logout],
-    ["country", SteamCommunity.country],
+    ["storecountry", SteamCommunity.storeCountry],
     ["cards", SteamCommunity.cards],
     ["stats", SteamCommunity.stats],
     ["coupon", SteamCommunity.getCoupon],
