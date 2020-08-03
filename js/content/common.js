@@ -626,20 +626,19 @@ let User = (function(){
                         }
                     }
 
-                    if (!newCountry) {
-                        throw new Error("Script with user store country not found");
-                    }
-
                 } else if (window.location.hostname === "steamcommunity.com") {
-                    const config = document.getElementById("application_config");
-                    
-                    newCountry = JSON.parse(config.dataset.config).COUNTRY;
+                    const config = document.querySelector("#webui_config,#application_config");
+                    if (config) {
+                        newCountry = JSON.parse(config.dataset.config).COUNTRY;
+                    }
                 }
 
                 if (newCountry) {
                     self._storeCountry = newCountry;
                     return Background.action("storecountry", newCountry)
                         .catch(({message}) => { console.error(message); });
+                } else {
+                    throw new Error("Script with user store country not found");
                 }
                 
             })
