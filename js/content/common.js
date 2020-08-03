@@ -596,7 +596,36 @@ let User = (function(){
                 if (!login) { return; }
                 self.isSignedIn = true;
                 self.steamId = login.steamId;
-                self._country = login.userCountry;
+            })
+            .then(() => {
+                let country;
+
+                if (window.location.hostname.endsWith("steampowered.com")) {
+
+                    // Search through all scripts in case the order gets changed or a new one gets added
+                    for (let script of document.getElementsByTagName("script")) {
+                        const match = script.textContent.match(/GDynamicStore\.Init\(.+?, '([A-Z]{2})/);
+                        if (match) {
+                            country = match[1];
+                            break;
+                        }
+                    }
+                } else if (window.location.hostname === "steamcommunity.com") {
+                    const config = document.getElementById("application_config");
+                    if (!config || !config.dataset || !config.dataset.config) { return; }
+                    
+                    country = JSON.parse(config.dataset.config).COUNTRY;
+                }
+
+                return country;
+            })
+            .then(country => {
+                if (!country) {
+                    console.warn("Failed to detect store country, falling back to US");
+                    country = "US";
+                }
+
+                self._country = country;
             })
             .catch(err => console.error(err));
     };

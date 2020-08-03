@@ -1033,14 +1033,9 @@ class SteamCommunity extends Api {
             throw new Error("Failed to retrieve steamID from profile");
         }
 
-        let userCountry = await SteamStore.country();
-        if (!userCountry) {
-            throw new Error("Retrieved steamID but failed to detect user country");
-        }
-
         self.logout(true);
 
-        let value = { steamId, profilePath, userCountry };
+        let value = { steamId, profilePath };
         LocalStorage.set("login", value);
 
         return value;
