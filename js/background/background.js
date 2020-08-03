@@ -1048,6 +1048,15 @@ class SteamCommunity extends Api {
         }
     }
 
+    // TODO This and (at least) the login calls don't seem appropriate in this class
+    static country(newCountry) {
+        if (newCountry) {
+            LocalStorage.set("country", newCountry);
+        } else {
+            return LocalStorage.get("country");
+        }
+    }
+
     static getProfile(steamId) { return IndexedDB.get("profiles", steamId, { "params": { "profile": steamId } }); }
     static clearOwn(steamId) { return IndexedDB.delete("profiles", steamId) }
 
@@ -1588,6 +1597,7 @@ let actionCallbacks = new Map([
 
     ["login", SteamCommunity.login],
     ["logout", SteamCommunity.logout],
+    ["country", SteamCommunity.country],
     ["cards", SteamCommunity.cards],
     ["stats", SteamCommunity.stats],
     ["coupon", SteamCommunity.getCoupon],

@@ -584,21 +584,31 @@ let User = (function(){
         if (_promise) { return _promise; }
 
         let avatarNode = document.querySelector("#global_actions > a.user_avatar");
+        let loginPromise;
+
         if (avatarNode) {
             self.profileUrl = avatarNode.href;
             self.profilePath = avatarNode.pathname;
+
+            loginPromise = Background.action("login", self.profilePath)
+                .then(login => {
+                    if (!login) { return; }
+                    self.isSignedIn = true;
+                    self.steamId = login.steamId;
+                });
         } else {
-            return _promise = Background.action("logout");
+            loginPromise = Background.action("logout");
         }
 
-        return _promise = Background.action("login", self.profilePath)
-            .then(login => {
-                if (!login) { return; }
-                self.isSignedIn = true;
-                self.steamId = login.steamId;
-            })
-            .then(() => {
-                let country;
+        return _promise = Promise.all([
+            loginPromise.catch(({message}) => console.error(message)),
+            Background.action("country").then(country => {
+                if (country) {
+                    self._country = country;
+                    return;
+                }
+
+                let newCountry;
 
                 if (window.location.hostname.endsWith("steampowered.com")) {
 
@@ -606,7 +616,7 @@ let User = (function(){
                     for (let script of document.getElementsByTagName("script")) {
                         const match = script.textContent.match(/GDynamicStore\.Init\(.+?, '([A-Z]{2})/);
                         if (match) {
-                            country = match[1];
+                            newCountry = match[1];
                             break;
                         }
                     }
@@ -614,20 +624,19 @@ let User = (function(){
                     const config = document.getElementById("application_config");
                     if (!config || !config.dataset || !config.dataset.config) { return; }
                     
-                    country = JSON.parse(config.dataset.config).COUNTRY;
+                    newCountry = JSON.parse(config.dataset.config).COUNTRY;
                 }
 
-                return country;
-            })
-            .then(country => {
-                if (!country) {
-                    console.warn("Failed to detect store country, falling back to US");
-                    country = "US";
+                if (newCountry) {
+                    self._country = newCountry;
+                    return Background.action("country", newCountry);
                 }
 
-                self._country = country;
-            })
-            .catch(err => console.error(err));
+                console.warn("Failed to detect store country, falling back to US");
+                self._country = "US";
+                
+            }, ({message}) => console.error(message)),
+        ])
     };
 
     self.then = function(onDone, onCatch) {
