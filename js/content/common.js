@@ -576,7 +576,11 @@ let User = (function(){
             }
         }
 
-        if (!country) { return null; }
+        if (!country) {
+            console.warn("Failed to detect store country, falling back to US");
+            country = "US";
+        }
+
         return country.substr(0, 2);
     } });
 
@@ -631,9 +635,6 @@ let User = (function(){
                     self._country = newCountry;
                     return Background.action("country", newCountry);
                 }
-
-                console.warn("Failed to detect store country, falling back to US");
-                self._country = "US";
                 
             }, ({message}) => console.error(message)),
         ])
