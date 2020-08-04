@@ -261,7 +261,7 @@
     "notcommon_label": "自分が所有しているゲームを非表示にする",
     "show_all_steam_releases": "Steam のリリースをすべて表示",
     "wishlist": "ウィッシュリスト",
-    "on_wishlist": "ウィッシュリストに入っています",
+    "on_wishlist": "ウィッシュリストに存在",
     "ignored": "無視した",
     "on_waitlist": "ウェイトリスト内",
     "notdiscounted": "割引していないアイテム",
@@ -608,7 +608,7 @@
     },
     "dlc_select": {
         "select": "選択",
-        "wishlisted_dlc": "ウィッシュリストに入っているDLCを選択",
+        "wishlisted_dlc": "ウィッシュリストに入ったDLCを選択",
         "none": "何も選択しない",
         "unowned_dlc": "未所有のDLCを選択"
     },
