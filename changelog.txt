@@ -1,4 +1,10 @@
-﻿v.1.4.6
+﻿v.1.4.7
+------
+- fixed country detection, which broke some features that relied on detection of login state and country
+
+
+
+v.1.4.6
 ------
 - fixed custom styles and custom backgrounds for new Steam settings page
 - updated localization
