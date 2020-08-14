@@ -2008,6 +2008,7 @@ class AppPageClass extends StorePageClass {
     }
 
     addSurveyData(result) {
+        if (!SyncedStorage.get("show_performance_survey")) { return; }
         if (this.isVideo()) { return; }
         if (!result.survey) { return; }
 

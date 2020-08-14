@@ -740,6 +740,7 @@ SyncedStorage.defaults = {
     'context_steamdb': false,
     'context_steamdb_instant': false,
     'context_steam_keys': false,
+    'show_performance_survey': true
 };
 
 

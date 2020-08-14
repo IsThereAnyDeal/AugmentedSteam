@@ -569,6 +569,7 @@
         "profile_showcase_twitch": "Add a showcase for Twitch.tv if there is a link",
         "profile_showcase_own_twitch": "... including your own profile",
         "profile_showcase_twitch_profileonly": "... only if the link is in the Profile Summary",
+        "show_performance_survey": "Show Performance Survey",
         "lang": {
             "english": "English",
             "brazilian": "Portuguese-Brazil",
