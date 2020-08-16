@@ -1519,86 +1519,6 @@ let InventoryPageClass = (function(){
     return InventoryPageClass;
 })();
 
-let FriendsPageClass = (function(){
-
-    function FriendsPageClass() {
-        this.addSort();
-        this.addFriendsInviteButton();
-    }
-
-    FriendsPageClass.prototype.addSort = function() {
-        let offlineFriends = document.querySelectorAll(".friend_block_v2.persona.offline");
-        if (offlineFriends.length === 0 || !document.querySelector("#manage_friends_control")) { return; }
-
-        let friendsFetched = false;
-
-        offlineFriends.forEach((friend, i) => friend.dataset.esSortDefault = i);
-
-        async function sortFriends(sortBy, reversed) {
-            sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
-
-            if (sortBy === "lastonline" && !friendsFetched) {
-                
-                friendsFetched = true;
-                let data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
-                let dom = HTMLParser.htmlToElement(data);
-
-                for (let friend of dom.querySelectorAll(".friend_block_v2.persona.offline")) {
-                    let lastOnline = friend.querySelector(".friend_last_online_text").textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
-                    let time = Infinity;
-                    if (lastOnline) {
-                        let days = parseInt(lastOnline[1]) || 0;
-                        let hours = parseInt(lastOnline[2]) || 0;
-                        let minutes = parseInt(lastOnline[3]) || 0;
-                        let downtime = (days * 24 + hours) * 60 + minutes;
-                        time = downtime;
-                    }
-                    document.querySelector(`.friend_block_v2.persona.offline[data-steamid="${friend.dataset.steamid}"]`).dataset.esSortTime = time;
-                }
-            }
-
-            let offlineBlock = document.querySelector("#state_offline");
-            let curOfflineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
-
-            let property = `esSort${sortBy === "default" ? "Default" : "Time"}`;
-            curOfflineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
-
-            for (let friend of curOfflineFriends) {
-                if (reversed) {
-                    offlineBlock.insertAdjacentElement("afterend", friend);
-                } else {
-                    offlineBlock.parentElement.appendChild(friend);
-                }
-            }
-        }
-
-        let sortBy = SyncedStorage.get("sortfriendsby");
-        document.querySelector("#manage_friends_control").insertAdjacentElement("beforebegin", Sortbox.get(
-            "friends",
-            [["default", Localization.str.theworddefault], ["lastonline", Localization.str.lastonline]],
-            sortBy,
-            sortFriends,
-            "sortfriendsby")
-        );
-    };
-
-    FriendsPageClass.prototype.addFriendsInviteButton = async function() {
-        let params = new URLSearchParams(window.location.search);
-        if (!params.has("invitegid")) { return; }
-
-        HTML.afterBegin("#manage_friends > div:nth-child(2)", `<span class="manage_action btnv6_lightblue_blue btn_medium" id="invitetogroup"><span>${Localization.str.invite_to_group}</span></span>`);
-        ExtensionLayer.runInPageContext(groupId => {
-            ToggleManageFriends();
-            $J("#invitetogroup").on("click", () => {
-                let friends = GetCheckedAccounts("#search_results > .selectable.selected:visible");
-                InviteUserToGroup(null, groupId, friends);
-            });
-        }, [ params.get("invitegid") ]);
-    };
-
-    return FriendsPageClass;
-})();
-
 class GroupsPageClass {
 
     constructor() {
@@ -2971,10 +2891,6 @@ let EditGuidePageClass = (function(){
 (async function(){
     
     switch (true) {
-
-        case /^\/(?:id|profiles)\/.+\/friends(?:[/#?]|$)/.test(path):
-            (new FriendsPageClass());
-            break;
 
         case /^\/(?:id|profiles)\/.+\/groups(?:[/#?]|$)/.test(path):
             (new GroupsPageClass());

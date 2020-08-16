@@ -11,6 +11,7 @@ module.exports = {
         "options": "./src/js/options/options.js",
         "community/badges": "./src/js/content/community/badges/PBadgesPage.js",
         "community/default": "./src/js/content/community/PDefaultCommunity.js",
+        "community/friends": "./src/js/content/community/friends/PFriendsPage.js",
         "community/friends_that_play": "./src/js/content/community/friends_that_play/PFriendsThatPlayPage.js",
         "community/gamecard": "./src/js/content/community/gamecard/PGameCardPage.js",
         "community/games": "./src/js/content/community/games/PGamesPage.js",

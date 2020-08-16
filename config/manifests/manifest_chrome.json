@@ -337,6 +337,27 @@
     },
     {
       "matches": [
+        "*://steamcommunity.com/id/*/friends",
+        "*://steamcommunity.com/id/*/friends/*",
+        "*://steamcommunity.com/id/*/friends#*",
+        "*://steamcommunity.com/id/*/friends?*",
+        "*://steamcommunity.com/profiles/*/friends",
+        "*://steamcommunity.com/profiles/*/friends/*",
+        "*://steamcommunity.com/profiles/*/friends#*",
+        "*://steamcommunity.com/profiles/*/friends?*"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/community/friends.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css"
+      ]
+    },
+    {
+      "matches": [
         "*://steamcommunity.com/*"
       ],
       "exclude_matches": [
@@ -362,7 +383,15 @@
         "*://steamcommunity.com/id/*/gamecards*",
         "*://steamcommunity.com/profiles/*/gamecards*",
         "*://steamcommunity.com/id/*/friendsthatplay*",
-        "*://steamcommunity.com/profiles/*/friendsthatplay*"
+        "*://steamcommunity.com/profiles/*/friendsthatplay*",
+        "*://steamcommunity.com/id/*/friends",
+        "*://steamcommunity.com/id/*/friends/*",
+        "*://steamcommunity.com/id/*/friends#*",
+        "*://steamcommunity.com/id/*/friends?*",
+        "*://steamcommunity.com/profiles/*/friends",
+        "*://steamcommunity.com/profiles/*/friends/*",
+        "*://steamcommunity.com/profiles/*/friends#*",
+        "*://steamcommunity.com/profiles/*/friends?*"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
