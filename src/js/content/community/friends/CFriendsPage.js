@@ -9,6 +9,7 @@ export class CFriendsPage extends CCommunityBase {
     constructor() {
         super([
             FFriendsSort,
+            FInviteButton,
         ]);
 
         this.type = ContextTypes.FRIENDS;
