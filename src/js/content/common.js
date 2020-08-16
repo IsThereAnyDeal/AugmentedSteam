@@ -393,7 +393,7 @@ export class Messenger {
 
 // Inject the Messenger class into the DOM, providing the same interface for the page context side
 (function() {
-    DOMHelper.insertScript({"content": Messenger.toString()});
+    DOMHelper.insertScript({"content": `window.Messenger = ${Messenger.toString()}`});
 })();
 
 export const RequestData = (function() {

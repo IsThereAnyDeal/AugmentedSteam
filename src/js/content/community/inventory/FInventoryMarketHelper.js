@@ -19,7 +19,7 @@ export class FInventoryMarketHelper extends ASFeature {
                     market_expired = g_ActiveInventory.selectedItem.description.descriptions.reduce((acc, el) => (acc || el.value === "This item can no longer be bought or sold on the Community Market."), false);
                 }
 
-                Messenger.postMessage("sendMessage", [
+                window.Messenger.postMessage("sendMessage", [
                     iActiveSelectView,
                     g_ActiveInventory.selectedItem.description.marketable,
                     g_ActiveInventory.appid,
@@ -346,7 +346,7 @@ export class FInventoryMarketHelper extends ASFeature {
                 );
 
                 ExtensionLayer.runInPageContext((sellPrice, sessionID, global_id, contextID, assetID) => {
-                    Messenger.postMessage("sendFee",
+                    window.Messenger.postMessage("sendFee",
                         {
                             feeInfo: CalculateFeeAmount(sellPrice, 0.10),
                             sessionID,
