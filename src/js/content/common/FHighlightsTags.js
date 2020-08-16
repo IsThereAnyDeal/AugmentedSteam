@@ -11,7 +11,7 @@ export class FHighlightsTags extends ASFeature {
         const searchBoxContents = document.getElementById("search_suggestion_contents");
         if (searchBoxContents) {
             const observer = new MutationObserver(records => {
-                this.highlightAndTag(records[0].addedNodes);
+                FHighlightsTags.highlightAndTag(records[0].addedNodes);
             });
             observer.observe(searchBoxContents, {"childList": true});
         }
