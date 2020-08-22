@@ -390,6 +390,20 @@
     },
     {
       "matches": [
+        "*://steamcommunity.com/market/listings/*"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/community/market_listing.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css"
+      ]
+    },
+    {
+      "matches": [
         "*://steamcommunity.com/*"
       ],
       "exclude_matches": [
@@ -429,7 +443,8 @@
         "*://steamcommunity.com/profiles/*/groups",
         "*://steamcommunity.com/profiles/*/groups/",
         "*://steamcommunity.com/id/*/inventory*",
-        "*://steamcommunity.com/profiles/*/inventory*"
+        "*://steamcommunity.com/profiles/*/inventory*",
+        "*://steamcommunity.com/market/listings/*"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",

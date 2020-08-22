@@ -939,89 +939,6 @@ let RecommendedPageClass = (function(){
     return RecommendedPageClass;
 })();
 
-let MarketListingPageClass = (function(){
-
-    function MarketListingPageClass() {
-        this.appid = GameId.getAppid(window.location.href);
-
-        if (this.appid) {
-            this.addSoldAmountLastDay();
-            this.addBackgroundPreviewLink();
-        }
-
-        this.addBadgePageLink();
-        this.addPriceHistoryZoomControl();
-    }
-
-    MarketListingPageClass.prototype.addSoldAmountLastDay = async function() {
-        let country = User.country;
-        let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
-
-        let link = DOMHelper.selectLastNode(document, ".market_listing_nav a").href;
-        let marketHashName = (link.match(/\/\d+\/(.+)$/) || [])[1];
-
-        let data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?appid=${this.appid}&country=${country}&currency=${currencyNumber}&market_hash_name=${marketHashName}`);
-        if (!data.success) { return; }
-
-        let soldHtml =
-            `<div class="es_sold_amount">
-                ${Localization.str.sold_last_24.replace(`__sold__`, `<span class="market_commodity_orders_header_promote">${data.volume || 0}</span>`)}
-            </div>`;
-
-        HTML.beforeBegin(".market_commodity_buy_button", soldHtml);
-
-        /* TODO where is this observer applied?
-        let observer = new MutationObserver(function(){
-            if (!document.querySelector("#pricehistory .es_sold_amount")) {
-                document.querySelector(".jqplot-title").insertAdjacentHTML("beforeend", soldHtml);
-            }
-            return true;
-        });
-        observer.observe(document, {}); // .jqplot-event-canvas
-        */
-    };
-
-    MarketListingPageClass.prototype.addBadgePageLink = function() {
-        let gameAppId = parseInt((document.URL.match("\/753\/([0-9]+)-") || [0, 0])[1]);
-        let cardType = document.URL.match("Foil(%20Trading%20Card)?%29") ? "?border=1" : "";
-        if (!gameAppId || gameAppId === 753) { return; }
-
-        HTML.beforeEnd("div.market_listing_nav",
-        `<a class="btn_grey_grey btn_medium" href="https://steamcommunity.com/my/gamecards/${gameAppId + cardType}" style="float: right; margin-top: -10px;" target="_blank">
-                <span>
-                    <img src="https://store.steampowered.com/public/images/v6/ico/ico_cards.png" style="margin: 7px 0;" width="24" height="16" border="0" align="top">
-                    ${Localization.str.view_badge}
-                </span>
-            </a>`);
-    };
-
-    MarketListingPageClass.prototype.addBackgroundPreviewLink = function() {
-        if (this.appid !== 753) { return; }
-
-        let viewFullLink = document.querySelector("#largeiteminfo_item_actions a");
-        if (!viewFullLink) { return; }
-
-        let bgLink = viewFullLink.href.match(/images\/items\/(\d+)\/([a-z0-9.]+)/i);
-        if (bgLink) {
-            HTML.afterEnd(viewFullLink,
-                `<a class="es_preview_background btn_small btn_darkblue_white_innerfade" target="_blank" href="${User.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
-                    <span>${Localization.str.preview_background}</span>
-                </a>`);
-        }
-    };
-
-    MarketListingPageClass.prototype.addPriceHistoryZoomControl = function() {
-        HTML.afterEnd(document.querySelectorAll(".zoomopt")[1], `<a class="zoomopt as-zoomcontrol">${Localization.str.year}</a>`);
-        document.querySelector(".as-zoomcontrol").addEventListener("click", function() {
-            ExtensionLayer.runInPageContext(() => {
-                pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
-            });
-        });
-    };
-
-    return MarketListingPageClass;
-})();
-
 let MarketPageClass = (function(){
 
     function MarketPageClass() {
@@ -2105,10 +2022,6 @@ let EditGuidePageClass = (function(){
 (async function(){
     
     switch (true) {
-
-        case /^\/market\/listings\/.*/.test(path):
-            (new MarketListingPageClass());
-            break;
 
         case /^\/market\/.*/.test(path):
             (new MarketPageClass());
