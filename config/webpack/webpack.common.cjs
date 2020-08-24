@@ -17,6 +17,7 @@ module.exports = {
         "community/games": "./src/js/content/community/games/PGamesPage.js",
         "community/groups": "./src/js/content/community/groups/PGroupsPage.js",
         "community/inventory": "./src/js/content/community/inventory/PInventoryPage.js",
+        "community/market": "./src/js/content/community/market/PMarketPage.js",
         "community/market_listing": "./src/js/content/community/market_listing/PMarketListingPage.js",
         "community/profile_activity": "./src/js/content/community/profile_activity/PProfileActivityPage.js",
         "community/profile_edit": "./src/js/content/community/profile_edit/PProfileEditPage.js",

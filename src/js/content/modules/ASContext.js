@@ -47,4 +47,5 @@ export const ContextTypes = Object.freeze({
     "GROUPS": 23,
     "INVENTORY": 24,
     "MARKET_LISTING": 25,
+    "MARKET": 26,
 });
