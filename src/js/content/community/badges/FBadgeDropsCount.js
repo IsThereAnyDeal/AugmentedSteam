@@ -78,6 +78,7 @@ export class FBadgeDropsCount extends ASFeature {
 
                 await this.context.eachBadgePage(countDropsFromDOM);
 
+                // TODO triggerCallbacks ?
                 addDropsCount();
                 completed = true;
             });

@@ -16,8 +16,6 @@ export class CProfileActivityPage extends CCommunityBase {
 
         this.type = ContextTypes.PROFILE_ACTIVITY;
 
-        this.triggerCallbacks();
-
         new MutationObserver(() => {
             // TODO Only apply on new nodes
             this.triggerCallbacks();

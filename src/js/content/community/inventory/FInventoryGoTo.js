@@ -5,14 +5,16 @@ import {DOMHelper, ExtensionLayer} from "common";
 
 export class FInventoryGoTo extends CallbackFeature {
 
-    checkPrerequisites() {
-        return SyncedStorage.get("showinvnav");
+    constructor(context) {
+        super(context, true, () => {
+            new MutationObserver(() => {
+                this.callback();
+            }).observe(document.querySelector("div.games_list_tabs"), {subtree: true, attributes: true});
+        });
     }
 
-    apply() {
-        super.apply();
-
-        this.callback();
+    checkPrerequisites() {
+        return SyncedStorage.get("showinvnav");
     }
 
     callback() {

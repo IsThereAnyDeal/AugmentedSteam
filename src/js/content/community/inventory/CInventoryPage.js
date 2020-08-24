@@ -13,11 +13,5 @@ export class CInventoryPage extends CCommunityBase {
         ]);
 
         this.type = ContextTypes.INVENTORY;
-
-        this.triggerCallbacks();
-
-        new MutationObserver(() => {
-            this.triggerCallbacks();
-        }).observe(document.querySelector("div.games_list_tabs"), {subtree: true, attributes: true});
     }
 }
