@@ -939,19 +939,6 @@ let RecommendedPageClass = (function(){
     return RecommendedPageClass;
 })();
 
-let MarketPageClass = (function(){
-
-    // Show the lowest market price for items you're selling
-    MarketPageClass.prototype.addLowestMarketPrice = function() {
-        if (!User.isSignedIn || !SyncedStorage.get("showlowestmarketprice") || SyncedStorage.get("hideactivelistings")) { return; }
-
-        
-
-    };
-
-    return MarketPageClass;
-})();
-
 let CommunityAppPageClass = (function(){
 
     function CommunityAppPageClass() {
