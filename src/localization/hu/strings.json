@@ -298,7 +298,7 @@
         "historical_low": "Eddigi legalacsonyabb:",
         "bundled": "Csomagban:",
         "with_voucher": "kuponnal __voucher__",
-        "store": "itt: ",
+        "store": "itt __store__",
         "bundle_count": "__count__ alkalommal",
         "info": "infó",
         "more": "több",
@@ -567,11 +567,11 @@
         "add_to_waitlist": "\"Kívánságlistához adás\" lenyíló mutatása app oldalakon",
         "profile_steamid": "SteamID mutatása a profilokon",
         "settings_mngmt": {
-            "import": "",
-            "import_success": "",
-            "import_fail": "",
-            "export": "",
-            "reset": ""
+            "import": "Import",
+            "import_success": "Sikeresen importált beállítások",
+            "import_fail": "Beállítások importálása sikertelen",
+            "export": "Export",
+            "reset": "Visszaállítás"
         }
     },
     "ready": {
@@ -622,13 +622,13 @@
         "owned": "Birtokolt",
         "notinterested": "Nem érdekel",
         "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ szeretné</a>",
-        "collection": "",
-        "waitlist": ""
+        "collection": "Begyűjtött",
+        "waitlist": "Kivánságlistán"
     },
     "wallet": {
         "custom_amount": "Egyéni összeg hozzáadása",
         "custom_amount_text": "Bármilyen __minamount__ fölötti összeg hozzáadása",
-        "custom_giftcard": ""
+        "custom_giftcard": "Válassz __input__ egyedi ajándékkártyát"
     },
     "wsgf": {
         "incomplete": "Nem teljes",
@@ -727,26 +727,26 @@
             "min_count": "Min. darab:",
             "max_count": "Max. darab:"
         },
-        "hide_ea": "",
-        "hide_cart": "",
-        "hide_mixed": "",
-        "hide_negative": ""
+        "hide_ea": "Korai Hozzáférés elemek elrejtése",
+        "hide_cart": "Kosárban lévő elemek elrejtése",
+        "hide_mixed": "Vegyes értékelések elrejtése",
+        "hide_negative": "Negatív értékelések elrejtése"
     },
     "calc_workshop_size": {
-        "file_size": "",
-        "finished": "",
-        "calculating": "",
-        "calc_size": "",
-        "total_size": ""
+        "file_size": "Fájlméret __size__",
+        "finished": "Befejezett",
+        "calculating": "Kiszámítás...",
+        "calc_size": "Teljes méret kiszámítása",
+        "total_size": "Teljes méret: __size__"
     },
-    "date": "",
-    "rating": "",
-    "helpful": "",
-    "funny": "",
-    "length": "",
-    "visibility": "",
-    "processing": "",
-    "wait": "",
-    "login_warning": "",
-    "youtube_reviews": ""
+    "date": "Dátum",
+    "rating": "Értékelés",
+    "helpful": "Hasznos",
+    "funny": "Vicces",
+    "length": "Hossz",
+    "visibility": "Láthatóság",
+    "processing": "Feldolgozás..",
+    "wait": "Kérem várjon",
+    "login_warning": "Győződj meg róla, hogy be vagy jelentkezve __link__, hogy az Augmented Steam összes funkcióját használhasd",
+    "youtube_reviews": "YouTube értékelések"
 }

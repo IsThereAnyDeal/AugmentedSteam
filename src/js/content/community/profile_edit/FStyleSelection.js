@@ -7,21 +7,28 @@ import Config from "config";
 
 export class FStyleSelection extends ASFeature {
 
-    checkPrerequisites() {
-        return window.location.pathname.includes("/settings");
-    }
-
     apply() {
         
-        let html =
-            `<div class='group_content group_summary'>
-                <div class='formRow'>
-                    ${Localization.str.custom_style}:
-                    <span class='formRowHint' data-tooltip-text='${Localization.str.custom_style_help}'>(?)</span>
+        this._active = false;
+
+        this._checkPage();
+
+        new MutationObserver(() => { this._checkPage(); })
+            .observe(document.querySelector(`[class^="profileeditshell_PageContent_"]`), {"childList": true});
+    }
+
+    _checkPage() {
+
+        const html =
+            `<div class="js-style-selection as-pd">
+                
+                <div class='as-pd__head' data-tooltip-text='${Localization.str.custom_style_help}'>
+                    ${Localization.str.custom_style} <span class="as-pd__help">(?)</span>
                 </div>
-                <div class="es_profile_group">
-                    <div id='es_style_select'>
-                        <select name='es_style' id='es_style' class='gray_bevel dynInput'>
+                
+                <div class="as-pd__cnt">
+                    <div>
+                        <select name='es_style' id='es_style' class='gray_bevel dynInput as-pd__select'>
                             <option id='remove' value='remove'>${Localization.str.noneselected}</option>
                             <option id='goldenprofile' value='goldenprofile'>Lunar Sale 2019</option>
                             <option id='holiday2014' value='holiday2014'>Holiday Profile 2014</option>
@@ -37,60 +44,65 @@ export class FStyleSelection extends ASFeature {
                             <option id='grey' value='grey'>Grey Theme</option>
                         </select>
                     </div>
-                    <img id='es_style_preview' class="es_profile_preview" src=''>
-                    <div id="es_style_buttons" class="es_profile_buttons">
-                        <span id='es_style_remove_btn' class='btn_grey_white_innerfade btn_small'>
-                            <span>${Localization.str.remove}</span>
-                        </span>&nbsp;
-                        <span id='es_style_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'>
-                            <span>${Localization.str.save}</span>
-                        </span>
-                    </div>
+                    <img id='es_style_preview' class="as-pd__preview" src=''>
+                </div>
+                
+                <div id="es_style_buttons" class="as-pd__buttons">
+                    <button id='es_style_save_btn' class='DialogButton _DialogLayout Primary as-pd__btn'>${Localization.str.save}</button>
                 </div>
             </div>`;
 
-        HTML.beforeBegin(".group_content_bodytext", html);
+        if (document.querySelector(`[href$="/edit/theme"].active`)) {
 
-        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
+            if (this._active) { return; } // Happens because the below code will trigger the observer again
 
-        let styleSelectNode = document.querySelector("#es_style");
+            HTML.beforeEnd(`[class^="profileeditshell_PageContent_"]`, html);
+            this._active = true;
 
-        let currentStyle = ProfileData.getStyle();
-        if (currentStyle) {
-            styleSelectNode.value = currentStyle;
+            ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
 
-            let imgNode = document.querySelector("#es_style_preview");
-            imgNode.src = ExtensionResources.getURL("img/profile_styles/" + currentStyle + "/preview.png");
+            let styleSelectNode = document.querySelector("#es_style");
 
-            if (currentStyle === "remove") {
-                imgNode.style.display = "none";
+            let currentStyle = ProfileData.getStyle();
+            if (currentStyle) {
+                styleSelectNode.value = currentStyle;
+
+                let imgNode = document.querySelector("#es_style_preview");
+                imgNode.src = ExtensionResources.getURL("img/profile_styles/" + currentStyle + "/preview.png");
+
+                if (currentStyle === "remove") {
+                    imgNode.style.display = "none";
+                }
             }
+
+            styleSelectNode.addEventListener("change", () => {
+                let imgNode = document.querySelector("#es_style_preview");
+                if (styleSelectNode.value === "remove") {
+                    imgNode.style.display = "none";
+                } else {
+                    imgNode.style.display = "block";
+                    imgNode.src = ExtensionResources.getURL("img/profile_styles/" + styleSelectNode.value + "/preview.png");
+                }
+
+                // Enable the "save" button
+                document.querySelector("#es_style_save_btn").classList.remove("btn_disabled");
+            });
+
+            document.querySelector("#es_style_save_btn").addEventListener("click", async ({target}) => {
+                if (target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
+                await ProfileData.clearOwn();
+
+                if (styleSelectNode.value === "remove") {
+                    window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
+                } else {
+                    let selectedStyle = encodeURIComponent(styleSelectNode.value);
+                    window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
+                }
+            });
+
+        } else if (this._active) {
+            DOMHelper.remove(".js-style-selection");
+            this._active = false;
         }
-
-        styleSelectNode.addEventListener("change", function(){
-            let imgNode = document.querySelector("#es_style_preview");
-            if (styleSelectNode.value === "remove") {
-                imgNode.style.display = "none";
-            } else {
-                imgNode.style.display = "block";
-                imgNode.src = ExtensionResources.getURL("img/profile_styles/" + styleSelectNode.value + "/preview.png");
-            }
-
-            // Enable the "save" button
-            document.querySelector("#es_style_save_btn").classList.remove("btn_disabled");
-        });
-
-        document.querySelector("#es_style_save_btn").addEventListener("click", async function(e) {
-            if (e.target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
-            await ProfileData.clearOwn();
-
-            let selectedStyle = encodeURIComponent(styleSelectNode.value);
-            window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
-        });
-
-        document.querySelector("#es_style_remove_btn").addEventListener("click", async function(e) {
-            await ProfileData.clearOwn();
-            window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
-        });
     }
 }

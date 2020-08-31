@@ -136,7 +136,7 @@
     "package_info": "Информация о комплекте",
     "badge_completion_avg": "Средняя стоимость завершения значка: __cost__",
     "using_store": "Сейчас вы используете магазин Steam для __current__ региона.",
-    "volume_sold_last_24": "Количество: __sold__ продано за последние 24 часа",
+    "volume_sold_last_24": "Объём: __sold__ продано за последние 24 часа",
     "sold_last_24": "__sold__ продано за последние 24 часа",
     "homepage_curators": "Рекомендации куратора Steam",
     "homepage_topnewreleases": "Популярные релизы Steam",
@@ -528,7 +528,7 @@
         "show_badge_progress": "Показывать прогресс значка приложения на странице магазина",
         "show_coupon": "Показывать применяемые купоны на страницах магазина",
         "show_wishlist_link": "Показать список пожеланий в профиле",
-        "show_wishlist_count": "Показать количество элементов в Списке Пожеланий",
+        "show_wishlist_count": "Показать количество элементов в списке желаемого",
         "profile_showcase_twitch": "Добавить витрину для Twitch.tv, если есть ссылка",
         "profile_showcase_own_twitch": "...включая ваш профиль",
         "profile_showcase_twitch_profileonly": "...только если эта ссылка есть в описании профиля",
@@ -576,8 +576,8 @@
     },
     "ready": {
         "errormsg": "Ошибка загрузки данных Augmented Steam",
-        "loading": "«Augmented Steam» загружается...",
-        "ready": "\"Augmented Steam\" готов",
+        "loading": "Augmented Steam загружается...",
+        "ready": "Augmented Steam готов",
         "failed": "__amount__ запрос(ов) прошло с ошибкой, проверьте консоль браузера для дополнительной информации",
         "server_outage": "Сервера Augmented Steam сейчас перегружены"
     },
@@ -714,23 +714,23 @@
     "images": "Изображения",
     "powered_by": "Создано __link__",
     "help_translate": "Помогите нам перевести Augmented Steam на сайте POEditor",
-    "filters": "Фильтры Augmented Steam",
+    "filters": "Фильтры Augmented Steam (Скрыть предметы)",
     "search_filters": {
         "reviews_score": {
             "between": "Между __lower__ и __upper__ обзорами",
-            "any": "Любое количество обзоров",
+            "any": "Любое количество положительных обзоров",
             "up_to": "До  __score__% положительных обзоров",
-            "from": "От __score__% обзоров"
+            "from": "От __score__% положительных обзоров"
         },
         "reviews_count": {
             "count": "Количество обзоров:",
             "min_count": "Минимум",
             "max_count": "Максимум"
         },
-        "hide_ea": "Скрыть товары в раннем доступе",
+        "hide_ea": "В раннем доступе",
         "hide_cart": "Из вашей корзины",
-        "hide_mixed": "Скрыть со смешанными отзывами",
-        "hide_negative": "Скрыть с отрицательными отзывами"
+        "hide_mixed": "Со смешанными отзывами",
+        "hide_negative": "С отрицательными отзывами"
     },
     "calc_workshop_size": {
         "file_size": "Размер файла __size__",

@@ -30,12 +30,12 @@ export class FCustomStyle extends ASFeature {
                 document.head.appendChild(stylesheet);
 
                 let container = document.createElement("div");
-                container.classList.add("profile_lny_wrapper");
+                container.classList.add("profile_golden_wrapper");
 
                 let profilePageNode = document.querySelector(".responsive_page_template_content .profile_page");
                 DOMHelper.wrap(container, profilePageNode);
 
-                profilePageNode.classList.add("lnyprofile");
+                profilePageNode.classList.add("golden_profile");
 
                 HTML.afterBegin(profilePageNode,
                     `<div class="lny_sides_position">
@@ -61,7 +61,7 @@ export class FCustomStyle extends ASFeature {
 
                 HTML.beforeBegin(
                     ".profile_header",
-                    `<div class="lny_header">
+                    `<div class="golden_profile_header">
                         <div class="lny_pig_center"></div>
                     </div>`);
 
@@ -82,13 +82,11 @@ export class FCustomStyle extends ASFeature {
             default:
                 let styleUrl = ExtensionResources.getURL("img/profile_styles/" + style + "/style.css");
                 let headerImg = ExtensionResources.getURL("img/profile_styles/" + style + "/header.jpg");
-                let showcase = ExtensionResources.getURL("img/profile_styles/" + style + "/showcase.png");
 
                 stylesheet.href = styleUrl;
                 document.head.appendChild(stylesheet);
 
                 document.querySelector(".profile_header_bg_texture").style.backgroundImage = "url('" + headerImg + "')";
-                document.querySelectorAll(".profile_customization").forEach(node => node.style.backgroundImage = "url('" + showcase + "')");
                 break;
         }
         stylesheet = null;

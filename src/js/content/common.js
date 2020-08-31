@@ -456,27 +456,31 @@ export const User = (function() {
     self.profileUrl = false;
     self.profilePath = false;
     self.steamId = null;
-    self._country = null;
+    self._storeCountry = null;
 
     let accountId = false;
     let sessionId = false;
 
     let _promise = null;
 
-    Object.defineProperty(self, "country", {get() {
+    Object.defineProperty(self, "storeCountry", { get() {
         const url = new URL(window.location.href);
 
         let country;
         if (url.searchParams && url.searchParams.has("cc")) {
             country = url.searchParams.get("cc");
         } else {
-            country = self._country;
+            country = self._storeCountry;
             if (!country) {
                 country = CookieStorage.get("steamCountry");
             }
         }
 
-        if (!country) { return null; }
+        if (!country) {
+            console.warn("Failed to detect store country, falling back to US");
+            country = "US";
+        }
+
         return country.substr(0, 2);
     }});
 
@@ -484,21 +488,66 @@ export const User = (function() {
         if (_promise) { return _promise; }
 
         const avatarNode = document.querySelector("#global_actions > a.user_avatar");
+        let loginPromise;
+
         if (avatarNode) {
             self.profileUrl = avatarNode.href;
             self.profilePath = avatarNode.pathname;
+
+            loginPromise = Background.action("login", self.profilePath)
+                .then(login => {
+                    if (!login) { return; }
+                    self.isSignedIn = true;
+                    self.steamId = login.steamId;
+                });
         } else {
-            return _promise = Background.action("logout");
+            loginPromise = Background.action("logout");
         }
 
-        return _promise = Background.action("login", self.profilePath)
-            .then(login => {
-                if (!login) { return; }
-                self.isSignedIn = true;
-                self.steamId = login.steamId;
-                self._country = login.userCountry;
+        return _promise = loginPromise
+            .then(() => Background.action("storecountry"))
+            .catch(({message}) => { console.error(message); })
+            .then(country => {
+                if (country) {
+                    self._storeCountry = country;
+                    return;
+                }
+
+                let newCountry;
+
+                if (window.location.hostname.endsWith("steampowered.com")) {
+
+                    // Search through all scripts in case the order gets changed or a new one gets added
+                    for (let script of document.getElementsByTagName("script")) {
+                        const match = script.textContent.match(/GDynamicStore\.Init\(.+?, '([A-Z]{2})/);
+                        if (match) {
+                            newCountry = match[1];
+                            break;
+                        }
+                    }
+
+                } else if (window.location.hostname === "steamcommunity.com") {
+                    const config = document.querySelector("#webui_config,#application_config");
+                    if (config) {
+                        newCountry = JSON.parse(config.dataset.config).COUNTRY;
+                    }
+                }
+
+                if (newCountry) {
+                    self._storeCountry = newCountry;
+                    return Background.action("storecountry", newCountry)
+                        .catch(({message}) => { console.error(message); });
+                } else {
+                    throw new Error("Script with user store country not found");
+                }
+                
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.group("Store country detection");
+                console.warn("Failed to detect store country from page");
+                console.error(err);
+                console.groupEnd();
+            });
     };
 
     self.then = function(onDone, onCatch) {
@@ -1697,7 +1746,7 @@ export const Prices = (function() {
             apiParams.stores = SyncedStorage.get("stores").join(",");
         }
 
-        const cc = User.country;
+        const cc = User.storeCountry;
         if (cc) {
             apiParams.cc = cc;
         }

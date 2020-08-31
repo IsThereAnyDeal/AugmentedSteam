@@ -428,7 +428,7 @@
         "drm": "Toon 3de partij DRM waarschuwingen",
         "show_regionwarning": "Toon waarschuwing tijdens browsen in een andere regio",
         "foot_link": "Augmented Steam Extensie",
-        "profile_link_images": "Profiel link plaatjes",
+        "profile_link_images": "Profiel en Groep link plaatjesstijl",
         "library": "Toon Bibliotheek knop in header",
         "show1clickgoo": "Toon \"1-klik zet om in edelstenen...\" knop op in aanmerking komende inventaris artikelen",
         "hidedlcunownedgames": "DLC voor spellen die je niet hebt",
@@ -567,11 +567,11 @@
         "add_to_waitlist": "Toon \"Add to Wachtlijst\" menu op app pagina's",
         "profile_steamid": "Laat SteamID op profielen zien",
         "settings_mngmt": {
-            "import": "",
-            "import_success": "",
-            "import_fail": "",
-            "export": "",
-            "reset": ""
+            "import": "Importeer",
+            "import_success": "Instellingen succesvol geïmporteerd",
+            "import_fail": "Instellingen importeren gefaald",
+            "export": "Exporteren",
+            "reset": "Resetten"
         }
     },
     "ready": {
@@ -622,13 +622,13 @@
         "owned": "In je bezit",
         "notinterested": "Niet geïnteresseerd",
         "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ willen dit</a>",
-        "collection": "",
-        "waitlist": ""
+        "collection": "Verzameld",
+        "waitlist": "In je wachtlijst"
     },
     "wallet": {
         "custom_amount": "Voeg custom getal toe",
-        "custom_amount_text": "Voeg elke hoeveelheid toe over __minamount__",
-        "custom_giftcard": ""
+        "custom_amount_text": "Elke hoeveelheid hoger dan __minamount__",
+        "custom_giftcard": "Selecteer __input__ aangepaste cadeaukaart"
     },
     "wsgf": {
         "incomplete": "Onvolledig ",
@@ -713,40 +713,40 @@
     "other": "Anders",
     "images": "Afbeeldingen",
     "powered_by": "Mede mogelijk gemaakt door __link__",
-    "help_translate": "",
-    "filters": "",
+    "help_translate": "Help on om Augmented Steam te vertalen via POEditor",
+    "filters": "Augmented Steam filters",
     "search_filters": {
         "reviews_score": {
-            "between": "",
-            "any": "",
-            "up_to": "",
-            "from": ""
+            "between": "Tussen __lower__% en __upper__% review score",
+            "any": "Alle review scores",
+            "up_to": "Tot __score__% review score",
+            "from": "Vanaf __score__% review score"
         },
         "reviews_count": {
-            "count": "",
-            "min_count": "",
-            "max_count": ""
+            "count": "Review aantal:",
+            "min_count": "Minimaal aantal",
+            "max_count": "Maximaal aantal"
         },
-        "hide_ea": "",
-        "hide_cart": "",
-        "hide_mixed": "",
-        "hide_negative": ""
+        "hide_ea": "Verberg Early Access items",
+        "hide_cart": "Verberg items in je winkelwagen",
+        "hide_mixed": "Verberg verdeeld beoordeelde items",
+        "hide_negative": "Verberg negatief beoordeelde items"
     },
     "calc_workshop_size": {
-        "file_size": "",
-        "finished": "",
-        "calculating": "",
-        "calc_size": "",
-        "total_size": ""
+        "file_size": "Bestandsgrootte van __size__",
+        "finished": "Klaar",
+        "calculating": "Aan het berekenen...",
+        "calc_size": "Bereken ",
+        "total_size": "Totale grootte: __size__"
     },
-    "date": "",
-    "rating": "",
-    "helpful": "",
-    "funny": "",
-    "length": "",
-    "visibility": "",
-    "processing": "",
-    "wait": "",
-    "login_warning": "",
-    "youtube_reviews": ""
+    "date": "Datum",
+    "rating": "Beoordeling",
+    "helpful": "Nuttig",
+    "funny": "Grappig",
+    "length": "Lengte",
+    "visibility": "Zichtbaarheid",
+    "processing": "Aan het verwerken...",
+    "wait": "Wachten a.u.b.",
+    "login_warning": "Zorg dat je ingelogd bent bij __link__ om geheel gebruik te maken van Augmented Steam",
+    "youtube_reviews": "YouTube Reviews"
 }

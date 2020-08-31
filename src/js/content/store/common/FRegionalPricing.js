@@ -15,7 +15,7 @@ export class FRegionalPricing extends ASFeature {
         let type = "unknown";
         const showRegionalPrice = SyncedStorage.get("showregionalprice");
         const countries = SyncedStorage.get("regional_countries");
-        const localCountry = User.country.toLowerCase();
+        const localCountry = User.storeCountry.toLowerCase();
 
         if (!countries.includes(localCountry)) {
             countries.push(localCountry);
@@ -42,7 +42,7 @@ export class FRegionalPricing extends ASFeature {
                 .closest(".game_area_purchase_game_wrapper,#game_area_purchase,.sale_page_purchase_item")
                 .querySelector(".game_purchase_action");
 
-            const apiPrice = prices[User.country.toLowerCase()];
+            const apiPrice = prices[User.storeCountry.toLowerCase()];
             let priceLocal;
             try {
                 priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);

@@ -91,7 +91,7 @@
     "store": "Loja",
     "view_in_store": "Ver em Loja",
     "view_on_website": "Ver no __website__",
-    "drm_third_party": "Aviso: este título usa DRM de terceiros __drmlist__.",
+    "drm_third_party": "Aviso: este título usa GDD (DRM) de terceiros __drmlist__.",
     "stores": "Lojas",
     "game_transactions": "Transações em jogos",
     "games_installed": "Jogos instalados",
@@ -282,7 +282,7 @@
     "relist_an_item": "Anunciar um item novamente",
     "relist_text": "Você gostaria de anunciar novamente este item com um preço menor?",
     "search_market": "Buscar no Mercado da Comunidade Steam",
-    "drm_third_party_sub": "Aviso: Um ou mais títulos neste pacote usa GDD de terceiros __drmlist__.",
+    "drm_third_party_sub": "Aviso: um ou mais títulos neste pacote usa GDD (DRM) de terceiros __drmlist__.",
     "customize": "Personalizar",
     "custom": "Personalizado",
     "bundle_saving_text": "O quanto você economiza comprando este pacote",
@@ -306,7 +306,7 @@
     },
     "favorited": "Favoritos",
     "followed": "Seguindo",
-    "wrong_try_again": "Algo deu errado. Por favor, tente novamente.",
+    "wrong_try_again": "Algo deu errado. Tente novamente.",
     "join_group": "Entrar no grupo",
     "chat": "Conversa",
     "web_browser_chat": "Conversa (navegador)",
@@ -425,7 +425,7 @@
         "friends_own": "Itens que os seus amigos possuem",
         "horizontalscrolling": "Ativar rolagem horizontal em páginas de aplicativos",
         "supportinfo": "Exibir informações de suporte na loja",
-        "drm": "Exibir avisos para GDD/DRM de terceiros",
+        "drm": "Exibir avisos para GDD (DRM) de terceiros",
         "show_regionwarning": "Exibir aviso caso esteja navegando pela loja em região que não seja da conta",
         "foot_link": "Extensão Augmented Steam",
         "profile_link_images": "Links de imagens do Grupo e Perfil",
@@ -512,11 +512,11 @@
         "group": "Grupo",
         "group_links": "Exibir links de grupos para:",
         "show_languagewarning": "Exibir aviso caso esteja navegando em um idioma que não seja",
-        "homepage": "Início ",
+        "homepage": "Página",
         "homepage_default_tab": "Página inicial padrão",
         "homepage_default_tab_remember": "Lembrar anterior",
-        "homepage_default_tab_newreleases": "Novos lançamentos populares",
-        "homepage_default_tab_allreleases": "Todos os novos lançamentos",
+        "homepage_default_tab_newreleases": "Lançamentos populares",
+        "homepage_default_tab_allreleases": "Todos os lançamentos",
         "homepage_default_tab_topsellers": "Mais vendidos",
         "homepage_default_tab_upcoming": "Em breve",
         "homepage_default_tab_specials": "Ofertas",
@@ -567,11 +567,11 @@
         "add_to_waitlist": "Exibir botão \"Adicionar para Lista de Espera\" nas páginas dos produtos",
         "profile_steamid": "Mostrar ID Steam nos perfis",
         "settings_mngmt": {
-            "import": "",
-            "import_success": "",
-            "import_fail": "",
-            "export": "",
-            "reset": ""
+            "import": "Importar",
+            "import_success": "Configurações importadas com sucesso",
+            "import_fail": "Falha ao importar configurações",
+            "export": "Exportar",
+            "reset": "Redefinir"
         }
     },
     "ready": {
@@ -613,13 +613,13 @@
         "unowned_dlc": "Selecionar ainda não comprados"
     },
     "tag": {
-        "wishlist": "Desejo",
+        "wishlist": "Desejado",
         "friends_own": "__friendcount__ possuem",
         "coupon": "Cupom",
         "friends_rec": "Analisado por <a href=\"http://store.steampowered.com/recommended/byfriends/__appid__\">__friendcount__ amigos",
         "inv_gift": "Presente",
         "inv_guestpass": "Passe",
-        "owned": "Possuo",
+        "owned": "Na conta",
         "notinterested": "Dispensado",
         "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ desejam</a>",
         "collection": "",
@@ -628,7 +628,7 @@
     "wallet": {
         "custom_amount": "Adicionar quantia personalizada",
         "custom_amount_text": "Adicione qualquer quantia acima de __minamount__",
-        "custom_giftcard": ""
+        "custom_giftcard": "Selecionar vale-presente personalizado de __input__"
     },
     "wsgf": {
         "incomplete": "Incompleto",
@@ -665,12 +665,12 @@
         "success": "__gamename__ ativado com sucesso",
         "owned": "Esta conta Steam já possui o(s) produto(s) contido(s) nesta oferta.",
         "notavail": "Lamentamos, mas esse produto não está disponível para compra neste país. O código de produto não foi ativado.",
-        "invalid": "O código de produto inserido não é válido. Por favor, verifique se você o digitou corretamente.",
+        "invalid": "O código de produto inserido não é válido. Verifique se você o digitou corretamente.",
         "already": "O código de produto inserido já foi ativado por uma outra conta Steam.",
         "dlc": "O código de produto inserido requer que você tenha outro produto antes desta ativação.",
         "wallet": "O código inserido é de um vale-presente Steam ou código da Carteira Steam.",
-        "toomany": "Houve muitas tentativas de ativação realizadas a partir desta conta ou endereço IP. Por favor, aguarde e tente usar o seu código de produto novamente mais tarde.",
-        "default": "Um erro inesperado ocorreu. O código de produto não foi ativado. Por favor, tente ativá-lo novamente daqui a 30 minutos."
+        "toomany": "Houve muitas tentativas de ativação realizadas a partir desta conta ou endereço IP. Aguarde e tente novamente mais tarde.",
+        "default": "Ocorreu um erro inesperado. O código de produto não foi ativado. Tente ativá-lo novamente daqui a 30 minutos."
     },
     "wl": {
         "total_price": "preço atual",
@@ -714,7 +714,7 @@
     "images": "Imagens",
     "powered_by": "Distribuído por __link__",
     "help_translate": "Ajude-nos a traduzir o Augmented Steam no POEditor",
-    "filters": "",
+    "filters": "Filtros do Augmented Steam",
     "search_filters": {
         "reviews_score": {
             "between": "",
@@ -723,30 +723,30 @@
             "from": ""
         },
         "reviews_count": {
-            "count": "",
-            "min_count": "",
-            "max_count": ""
+            "count": "Total de análises:",
+            "min_count": "Qtd. mín.",
+            "max_count": "Qtd. máx."
         },
-        "hide_ea": "",
-        "hide_cart": "",
-        "hide_mixed": "",
-        "hide_negative": ""
+        "hide_ea": "Ocultar itens em acesso antecipado",
+        "hide_cart": "Ocultar itens no carrinho",
+        "hide_mixed": "Ocultar itens com análises neutras",
+        "hide_negative": "Ocultar itens com análises negativas"
     },
     "calc_workshop_size": {
-        "file_size": "",
-        "finished": "",
-        "calculating": "",
-        "calc_size": "",
-        "total_size": ""
+        "file_size": "Tamanho __size__",
+        "finished": "Concluído",
+        "calculating": "Calculando...",
+        "calc_size": "Calcular tamanho total",
+        "total_size": "Tamanho total: __size__"
     },
-    "date": "",
-    "rating": "",
-    "helpful": "",
-    "funny": "",
-    "length": "",
-    "visibility": "",
-    "processing": "",
-    "wait": "",
-    "login_warning": "",
-    "youtube_reviews": ""
+    "date": "Data",
+    "rating": "Classificação",
+    "helpful": "Útil",
+    "funny": "Engraçada",
+    "length": "Tamanho",
+    "visibility": "Visibilidade",
+    "processing": "Processando...",
+    "wait": "Aguarde",
+    "login_warning": "Confirme que iniciou a sessão no __link__ para usar todos os recursos do Augmented Steam.",
+    "youtube_reviews": "Análises do YouTube"
 }

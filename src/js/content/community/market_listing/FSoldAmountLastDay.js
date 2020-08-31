@@ -11,7 +11,7 @@ export class FSoldAmountLastDay extends ASFeature {
 
     async apply() {
 
-        let country = User.country;
+        let country = User.storeCountry;
         let currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
 
         let link = DOMHelper.selectLastNode(document, `.market_listing_nav a[href^="https://steamcommunity.com/market/"]`).href;

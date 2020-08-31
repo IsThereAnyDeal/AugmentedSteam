@@ -1,155 +1,200 @@
 import {ASFeature} from "modules/ASFeature";
 
 import {HTML, Localization} from "core";
-import {Background, ExtensionLayer, SteamId} from "common";
+import {Background, DOMHelper, ExtensionLayer, SteamId} from "common";
 import {ProfileData} from "community/common";
 import Config from "config";
 
 export class FBackgroundSelection extends ASFeature {
 
-    checkPrerequisites() {
-        return window.location.pathname.includes("/settings");
-    }
-
     async apply() {
 
-        let html =
-            `<div class='group_content group_summary'>
-                <div class='formRow'>
-                    ${Localization.str.custom_background}:
-                    <span class='formRowHint' data-tooltip-text='${Localization.str.custom_background_help}'>(?)</span>
+        this._active = false;
+
+        this._checkPage();
+
+        new MutationObserver(() => { this._checkPage(); })
+            .observe(document.querySelector(`[class^="profileeditshell_PageContent_"]`), {"childList": true});
+    }
+
+    async _checkPage() {
+
+        const html =
+            `<div class='js-bg-selection as-pd'>
+                
+                <div class="DialogLabel as-pd__head" data-tooltip-text='${Localization.str.custom_background_help}'>
+                    ${Localization.str.custom_background} <span class="as-pd__help">(?)</span>
                 </div>
-                <div id="es_bg" class="es_profile_group">
-                    <div id='es_bg_game_select'><select name='es_bg_game' id='es_bg_game' class='gray_bevel dynInput' style="display:none"></select></div>
-                    <div id='es_bg_img_select'><select name='es_bg_img' id='es_bg_img' class='gray_bevel dynInput' style="display:none"></select></div>
-                    <div class='es_loading'>
-                        <img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>
-                        <span>${Localization.str.loading}</span>
-                    </div>
-                    <img id='es_bg_preview' class="es_profile_preview" src=''>
-                    <div id="es_bg_buttons" class="es_profile_buttons">
-                        <span id='es_background_remove_btn' class='btn_grey_white_innerfade btn_small'>
-                            <span>${Localization.str.remove}</span>
-                        </span>&nbsp;
-                        <span id='es_background_save_btn' class='btn_grey_white_innerfade btn_small btn_disabled'>
-                            <span>${Localization.str.save}</span>
-                        </span>
-                    </div>
+                
+                <div class="DialogInput_Wrapper _DialogLayout">
+                    <input type="text" class="DialogInput DialogInputPlaceholder DialogTextInputBase js-pd-game" value="" placeholder="${Localization.str.game_name}">
+                </div>
+                                
+                <div class="as-pd__cnt">
+                    <div class="as-pd__list js-pd-list"></div>
+                </div>
+                                
+                <div class="as-pd__cnt">
+                    <div class="as-pd__imgs js-pd-imgs"></div>
+                </div>
+                
+                <div class="as-pd__buttons">
+                    <button class='DialogButton _DialogLayout Secondary as-pd__btn js-as-pd-bg-clear'>${Localization.str.thewordclear}</button>
+                    <button class='DialogButton _DialogLayout Primary as-pd__btn js-as-pd-bg-save'>${Localization.str.save}</button>
                 </div>
             </div>`;
 
-        HTML.beforeBegin(".group_content_bodytext", html);
-        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
+        if (document.querySelector(`[href$="/edit/background"].active`)) {
 
-        let response = await Background.action('profile.background.games');
+            if (this._active) { return; } // Happens because the below code will trigger the observer again
 
-        let gameSelectNode = document.querySelector("#es_bg_game");
-        let imgSelectNode = document.querySelector("#es_bg_img");
+            HTML.beforeEnd(`[class^="profileeditshell_PageContent_"]`, html);
 
-        let gameList = this._getGameSelectOptions(response);
-        HTML.inner(gameSelectNode, gameList[1]);
-        gameSelectNode.style.display = "block";
+            this._gameFilterNode = document.querySelector(".js-pd-game");
+            this._listNode = document.querySelector(".js-pd-list");
+            this._imagesNode = document.querySelector(".js-pd-imgs");
 
-        let currentImg = ProfileData.getBgImgUrl(622,349);
-        if (currentImg) {
-            document.querySelector("#es_bg_preview").src = currentImg;
-            this._onGameSelected();
-        }
+            this._active = true;
 
-        this._hideBgFormLoading();
+            ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
 
-        // on game selected
-        gameSelectNode.addEventListener("change", this._onGameSelected);
-        imgSelectNode.addEventListener("change", this._onImgSelected);
+            this._selectedAppid = ProfileData.getBgAppid();
+            let selectedGameKey = null;
 
-        document.querySelector("#es_background_remove_btn").addEventListener("click", async () => {
-            await ProfileData.clearOwn();
-            window.location.href = `${Config.ApiServerHost}/v01/profile/background/edit/delete/`;
-        });
+            this._showBgFormLoading(this._listNode);
 
-        document.querySelector("#es_background_save_btn").addEventListener("click", async e => {
-            if (e.target.closest("#es_background_save_btn").classList.contains("btn_disabled")) { return; }
-            await ProfileData.clearOwn();
+            let games = await Background.action("profile.background.games");
 
-            let selectedAppid = encodeURIComponent(gameSelectNode.value);
-            let selectedImg = encodeURIComponent(imgSelectNode.value);
-            window.location.href = `${Config.ApiServerHost}/v01/profile/background/edit/save/?appid=${selectedAppid}&img=${selectedImg}`;
-        });
-    }
+            for (let key in games) {
+                if (!games.hasOwnProperty(key)) { continue; }
+                games[key][2] = this._getSafeString(games[key][1]);
 
-    _getGameSelectOptions(games) {
-        let selectedAppid = ProfileData.getBgAppid();
-        let selected = false;
-
-        let html = "<option value='0' id='0'>" + Localization.str.noneselected + "</option>";
-        for (let game of games) {
-            let id = parseInt(game[0]);
-            let title = HTML.escape(game[1]);
-
-            let selectedAttr = "";
-            if (selectedAppid === id) {
-                selectedAttr = " selected='selected'";
-                selected = true;
+                if (games[key][0] === this._selectedAppid) {
+                    selectedGameKey = key;
+                }
             }
-            html += `<option value='${id}'${selectedAttr}>${title}</option>`;
-        }
 
-        return [selected, html];
+            this._hideBgFormLoading(this._listNode);
+
+            let timeout = null;
+
+            this._listNode.addEventListener("click", ({target}) => {
+                if (!target.dataset.appid) { return; }
+                this._selectGame(target.dataset.appid);
+            });
+
+            this._imagesNode.addEventListener("click", ({target}) => {
+                let node = target.closest(".js-pd-img");
+
+                if (!node) { return; }
+                this._selectedImage = node.dataset.img;
+
+                let currentSelected = document.querySelector(".js-pd-img.is-selected");
+                if (currentSelected) {
+                    currentSelected.classList.remove("is-selected");
+                }
+
+                node.classList.add("is-selected");
+            });
+
+            this._gameFilterNode.addEventListener("keyup", () => {
+
+                if (timeout) {
+                    window.clearTimeout(timeout);
+                }
+
+                timeout = window.setTimeout(() => {
+
+                    const max = 100;
+                    const value = this._getSafeString(this._gameFilterNode.value);
+                    if (value === "") { return; }
+
+                    let i = 0;
+                    let list = "";
+                    for (let [appid, title, safeTitle] of games) {
+                        if (safeTitle.includes(value)) {
+                            list += `<div class='as-pd__item js-pd-item' data-appid="${appid}">${title}</div>`;
+                            i++;
+                        }
+                        if (i >= max) { break; }
+                    }
+                    HTML.inner(this._listNode, list);
+                }, 200);
+            });
+
+            if (games[selectedGameKey]) {
+                this._gameFilterNode.value = games[selectedGameKey][1];
+
+                if (this._selectedAppid) {
+                    this._selectGame(this._selectedAppid);
+                }
+            }
+
+            document.querySelector(".js-as-pd-bg-clear").addEventListener("click", async () => {
+                await ProfileData.clearOwn();
+                window.location.href = Config.ApiServerHost + `/v01/profile/background/edit/delete/`;
+            });
+
+            document.querySelector(".js-as-pd-bg-save").addEventListener("click", async () => {
+                if (this._selectedImage && this._selectedAppid) {
+                    await ProfileData.clearOwn();
+
+                    let selectedAppid = encodeURIComponent(this._selectedAppid);
+                    let selectedImg = encodeURIComponent(this._selectedImage);
+                    window.location.href = Config.ApiServerHost+`/v01/profile/background/edit/save/?appid=${selectedAppid}&img=${selectedImg}`;
+                }
+            });
+
+        } else if (this._active) {
+            DOMHelper.remove(".js-bg-selection");
+            this._active = false;
+        }
     }
 
-    async _onGameSelected() {
-        let appid = parseInt(document.querySelector("#es_bg_game").value);
+    _getSafeString(value) {
+        return value.toLowerCase().replace(/[^a-z0-9 ]/g, "");
+    }
 
-        let imgSelectNode = document.querySelector("#es_bg_img");
-        imgSelectNode.style.display = "none";
-
-        if (appid === 0) {
-            document.querySelector("#es_bg_preview").src = "";
-            return
-        }
-
-        this._showBgFormLoading();
+    async _selectGame(appid) {
 
         let result = await Background.action("profile.background", {
-            appid: appid,
-            profile: SteamId.getSteamId(),
+            appid,
+            "profile": SteamId.getSteamId(),
         });
 
+        this._selectedAppid = appid;
         let selectedImg = ProfileData.getBgImg();
 
-        let html = "";
-        for (let value of result) {
-            let img = HTML.escape(value[0].toString());
-            let name = HTML.escape(value[1].toString());
-
-            let selectedAttr = "";
-            if (img === selectedImg) {
-                selectedAttr = " selected='selected'";
+        let images = "";
+        for (let [url, title] of result) {
+            let selectedClass = "";
+            if (selectedImg === url) {
+                selectedClass = " is-selected";
             }
 
-            html += `<option value='${img}'${selectedAttr}>${name}</option>`;
+            images +=
+                `<div class="as-pd__item${selectedClass} js-pd-img" data-img="${url}">
+                    <img src="${this._getImageUrl(url)}" class="as-pd__img">
+                    <div>${title}</div>
+                </div>`;
         }
 
-        HTML.inner(imgSelectNode, html);
-        imgSelectNode.style.display="block";
-        this._hideBgFormLoading();
-
-        this._onImgSelected();
-
-        // Enable the "save" button
-        document.querySelector("#es_background_save_btn").classList.remove("btn_disabled");
+        HTML.inner(this._imagesNode, images);
     }
 
-    _showBgFormLoading() {
-        document.querySelector("#es_bg .es_loading").style.display = "block";
+    _getImageUrl(name) {
+        return "https://steamcommunity.com/economy/image/" + name + "/622x349";
     }
 
-    _hideBgFormLoading() {
-        document.querySelector("#es_bg .es_loading").style.display = "none";
+    _showBgFormLoading(node) {
+        HTML.inner(node,
+            `<div class='es_loading'>
+               <img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>
+               <span>${Localization.str.loading}</span>
+             </div>`);
     }
 
-    _onImgSelected() {
-        document.querySelector("#es_bg_preview").src
-            = "https://steamcommunity.com/economy/image/" + document.querySelector("#es_bg_img").value + "/622x349";
+    _hideBgFormLoading(node) {
+        node.querySelector(".es_loading").remove();
     }
 }

@@ -237,7 +237,7 @@ export class FInventoryMarketHelper extends ASFeature {
             `<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>${Localization.str.oneclickgoo}</span></div>`);
 
         // TODO: Add prompt?
-        document.querySelector("#es_quickgrind").addEventListener("click", function(e) {
+        document.querySelector("#es_quickgrind").addEventListener("click", () => {
             ExtensionLayer.runInPageContext((appid, assetid) => {
                 let rgAJAXParams = {
                     sessionid: g_sessionID,
@@ -256,8 +256,8 @@ export class FInventoryMarketHelper extends ASFeature {
                         ReloadCommunityInventory();
                     });
                 });
-            });
-        }, [ appid, assetid ]);
+            }, [appid, assetid]);
+        });
     }
 
     async _addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency) {

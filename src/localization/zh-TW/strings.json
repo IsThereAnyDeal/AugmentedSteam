@@ -1,7 +1,7 @@
 {
     "steamid_of_user": "__user__ 的 SteamID",
-    "click_to_copy": "點擊複製",
-    "copied": "已複製到你的剪貼板！",
+    "click_to_copy": "點擊以複製",
+    "copied": "已複製到剪貼簿！",
     "view_steamid": "檢視 SteamID",
     "more_on_steampeek": "前往 SteamPeek 查看更多",
     "invite_friends": "邀請好友",
@@ -202,7 +202,7 @@
     "visit_store": "造訪商店頁面",
     "all": "全部",
     "total_spent": "消費總額",
-    "external_funds": "使用的外部資金",
+    "external_funds": "外部資金消費紀錄",
     "games_with_drops": "__dropsgames__ 款遊戲還會掉落卡片",
     "binder_view": "簡潔",
     "view_stats": "檢視統計資料",
@@ -235,7 +235,7 @@
         "select": "選擇：",
         "leave": "離開",
         "selected": "已選擇 __n__ 個。",
-        "leave_admin_confirm": "你目前是 __name__ 的管理員。<br>你確定想要離開這個群組嗎？"
+        "leave_admin_confirm": "你目前是 __name__ 的管理員。<br>你確定要離開此群組嗎？"
     },
     "export": {
         "wishlist": "匯出願望清單",
@@ -326,7 +326,7 @@
     "user_score": "使用者評分",
     "user_reviews": "使用者評論",
     "review_summary": "__num__ 篇使用者評論中有 __percent__ 給予好評。",
-    "market_popular_items_toggle": "即時更新熱門物品",
+    "market_popular_items_toggle": "啟用 / 停止即時更新熱門物品",
     "show_progressbar": "顯示 Augmented Steam 的進度條和狀態列",
     "achievements": {
         "option": "在商店頁面中顯示成就",
@@ -413,7 +413,7 @@
         "opencritic": "顯示 Opencritic.com 資訊",
         "hideactivelistings": "預設隱藏市集首頁的所有上架物品清單",
         "showlowestmarketprice": "顯示你的上架物品的市集最低價格",
-        "clear": "你確定要重設所有選項？此動作無法復原。",
+        "clear": "你確定要重設所有選項嗎？此動作無法復原。",
         "profile_api_info": "在個人檔案中顯示使用者 API 連結",
         "coupon": "擁有優惠券的項目",
         "show_package_info": "顯示所有應用程式的套件資訊",
@@ -423,12 +423,12 @@
         "showallfriendsthatown": "顯示「所有擁有的好友」",
         "regional_price_on": "顯示區域價格比較",
         "friends_own": "好友擁有的項目",
-        "horizontalscrolling": "在應用程式頁面啟用滑鼠滾輪水平捲動",
+        "horizontalscrolling": "啟用滑鼠滾輪水平捲動",
         "supportinfo": "在商店頁面中顯示客服資訊",
         "drm": "顯示第三方 DRM 警告",
         "show_regionwarning": "跨區瀏覽時顯示警告",
         "foot_link": "Augmented Steam 擴充套件",
-        "profile_link_images": "個人檔案連結圖片",
+        "profile_link_images": "個人檔案和群組連結圖示樣式",
         "library": "在頁首顯示收藏庫按鈕",
         "show1clickgoo": "在適用的物品庫物品上顯示「一鍵轉換成寶石」按鈕",
         "hidedlcunownedgames": "你尚未擁有的遊戲的 DLC",
@@ -565,13 +565,13 @@
         "add_custom_link": "新增自訂連結",
         "auto_detect": "自動偵測",
         "add_to_waitlist": "在應用程式頁面中顯示「新增至 Waitlist」選單",
-        "profile_steamid": "在個人檔案上顯示 SteamID",
+        "profile_steamid": "在個人檔案中顯示檢視 SteamID 的連結",
         "settings_mngmt": {
-            "import": "",
-            "import_success": "",
-            "import_fail": "",
-            "export": "",
-            "reset": ""
+            "import": "匯入",
+            "import_success": "成功匯入設定",
+            "import_fail": "匯入設定失敗",
+            "export": "匯出",
+            "reset": "重設"
         }
     },
     "ready": {
@@ -622,13 +622,13 @@
         "owned": "已擁有",
         "notinterested": "不感興趣",
         "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 位想要</a>",
-        "collection": "",
-        "waitlist": ""
+        "collection": "已加入 Collection",
+        "waitlist": "已加入 Waitlist"
     },
     "wallet": {
         "custom_amount": "新增自訂金額",
-        "custom_amount_text": "新增大於 __minamount__ 的任意金額",
-        "custom_giftcard": ""
+        "custom_amount_text": "大於 __minamount__ 的任意金額",
+        "custom_giftcard": "選擇 __input__ 自訂禮物卡"
     },
     "wsgf": {
         "incomplete": "不完全",
@@ -713,40 +713,40 @@
     "other": "其他",
     "images": "影像",
     "powered_by": "由 __link__ 提供",
-    "help_translate": "",
-    "filters": "",
+    "help_translate": "於 POEditor 幫助我們翻譯 Augmented Steam",
+    "filters": "Augmented Steam 篩選選項",
     "search_filters": {
         "reviews_score": {
-            "between": "",
-            "any": "",
-            "up_to": "",
-            "from": ""
+            "between": "評論分數介於 __lower__% 和 __upper__%",
+            "any": "評論分數不拘",
+            "up_to": "評論分數最高 __score__%",
+            "from": "評論分數最低 __score__%"
         },
         "reviews_count": {
-            "count": "",
-            "min_count": "",
-            "max_count": ""
+            "count": "評論數：",
+            "min_count": "最低評論數",
+            "max_count": "最高評論數"
         },
-        "hide_ea": "",
-        "hide_cart": "",
-        "hide_mixed": "",
-        "hide_negative": ""
+        "hide_ea": "隱藏搶先體驗項目",
+        "hide_cart": "隱藏購物車中的項目",
+        "hide_mixed": "隱藏褒貶不一的項目",
+        "hide_negative": "隱藏負評的項目"
     },
     "calc_workshop_size": {
-        "file_size": "",
-        "finished": "",
-        "calculating": "",
-        "calc_size": "",
-        "total_size": ""
+        "file_size": "檔案大小 __size__",
+        "finished": "已完成",
+        "calculating": "計算中…",
+        "calc_size": "計算總大小",
+        "total_size": "總大小：__size__"
     },
-    "date": "",
-    "rating": "",
-    "helpful": "",
-    "funny": "",
-    "length": "",
-    "visibility": "",
-    "processing": "",
-    "wait": "",
-    "login_warning": "",
-    "youtube_reviews": ""
+    "date": "日期",
+    "rating": "評價",
+    "helpful": "值得參考",
+    "funny": "搞笑",
+    "length": "長度",
+    "visibility": "隱私設定",
+    "processing": "處理中…",
+    "wait": "請稍候",
+    "login_warning": "請務必登入 __link__ 以使用 Augmented Steam 的完整功能。",
+    "youtube_reviews": "YouTube 評論"
 }

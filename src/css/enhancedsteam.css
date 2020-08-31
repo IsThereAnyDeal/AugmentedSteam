@@ -2463,18 +2463,38 @@ img.astats_icon {
  * User profiles
  * add_profile_style()
  **************************************/
+ .es_profile_style.es_style_clear {
+   --gradient-background: none !important;
+ }
 .es_profile_style.es_style_clear .profile_header_badge {
   background-color: rgba(22, 22, 23, 0.6) !important;
   background-image: none !important;
   box-shadow: none !important;
 }
-.es_profile_style.es_style_clear .profile_content {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
-.es_profile_style.es_style_clear .profile_header_bg,
+.es_profile_style.es_style_clear .profile_content,
 .es_profile_style.es_style_clear .profile_header_bg_texture {
-  background-image: none !important;
+  background: none !important;
+}
+
+.es_profile_style.es_style_clear .profile_rightcol,
+.es_profile_style.es_style_clear .profile_customization {
+  backdrop-filter: none !important;
+}
+
+.es_profile_style.holidayprofile .persona_name,
+.es_profile_style.holidayprofile .profile_customization_header { /* Makes links clickable */
+  position: initial !important; 
+}
+
+.es_profile_style.holidayprofile .profile_customization:not(.none_selected)::before {
+  z-index: -1;
+}
+
+.es_profile_style.holidayprofile .profile_customization {
+  background-position-x: -2px !important;
+}
+.es_profile_style.holidayprofile .profile_customization_header {
+  background: none !important;
 }
 
 /***************************************
@@ -3038,24 +3058,6 @@ label[for="show_common_games"] {
 }
 
 
-.es_profile_group {
-  margin-bottom: 10px;
-}
-
-.es_profile_group select {
-  max-width: 100%;
-}
-
-.es_profile_preview {
-  display: block;
-  margin: auto;
-}
-
-.es_profile_buttons {
-  margin-top: 10px;
-  text-align: right;
-}
-
 .es_hltb a.linkbar > img,
 .es_wsgf a.linkbar > img,
 .es_dlc_info a.linkbar > img,
@@ -3615,4 +3617,70 @@ label[for="show_common_games"] {
 
 .as-reviews-count-filter__input::placeholder {
   text-transform: lowercase;
+}
+
+/*
+ * Profiles
+ */
+.as-pd {
+  margin-top: 30px;
+}
+
+.as-pd__help {
+  color: #66c0f4;
+}
+
+.as-pd__cnt {
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  max-height: 600px;
+  overflow: auto;
+  margin-top: 15px;
+}
+
+.as-pd__list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.as-pd__item {
+  cursor: pointer;
+}
+.as-pd__item:hover {
+  color: #66C0F4;
+}
+.as-pd__item.is-selected {
+  color: #66C0F4;
+  font-weight: bold;
+}
+
+.as-pd__imgs {
+  display: grid;
+  grid-template-columns: 200px 200px 200px;
+  grid-row-gap: 15px;
+  justify-content: space-between;
+}
+.as-pd__img {
+  width: 100%;
+}
+
+.as-pd__select {
+  max-width: 100%;
+}
+
+.as-pd__buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.as-pd__btn {
+  width: 200px !important;
+  margin-left: 12px !important;
+}
+
+.as-pd__preview {
+  display: block;
+  margin: auto;
 }

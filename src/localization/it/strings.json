@@ -296,7 +296,7 @@
     "pricing": {
         "lowest_price": "Prezzo più basso:",
         "historical_low": "Prezzo più basso di sempre:",
-        "bundled": "Nel pacchetto:",
+        "bundled": "In bundle:",
         "with_voucher": "con il codice promozionale __voucher__",
         "store": "su&nbsp;__store__",
         "bundle_count": "__count__ volte",
@@ -729,8 +729,8 @@
         },
         "hide_ea": "Nascondi prodotti ad accesso anticipato",
         "hide_cart": "Nascondi prodotti nel carrello",
-        "hide_mixed": "",
-        "hide_negative": ""
+        "hide_mixed": "Nascondi i prodotti con recensioni nella media",
+        "hide_negative": "Nascondi i prodotti con recensioni negative"
     },
     "calc_workshop_size": {
         "file_size": "Dimensione file __size__",
@@ -748,5 +748,5 @@
     "processing": "Elaborazione in corso...",
     "wait": "Attendere prego",
     "login_warning": "Assicurati di aver effettuato l'accesso a __link__ per poter utilizzare tutte le funzionalità di Augmented Steam.",
-    "youtube_reviews": ""
+    "youtube_reviews": "Recensioni su YouTube"
 }

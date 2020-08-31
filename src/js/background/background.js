@@ -518,21 +518,19 @@ class ContextMenu {
         const query = encodeURIComponent(info.selectionText.trim());
         let url = ContextMenu.queryLinks[info.menuItemId];
         if (!url) { return; }
-
-        url = url.replace("__query__", query);
+        
         if (info.menuItemId === "context_steam_keys") {
-            const steamkeys = info.selectionText.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
-            if (!steamkeys || steamkeys.length === 0) {
+            const steamKeys = query.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
+            if (!steamKeys || steamKeys.length === 0) {
                 window.alert(Localization.str.options.no_keys_found);
                 return;
             }
 
-            steamkeys.forEach(steamkey => {
-                url.replace("__steamkey__", steamkey);
-                browser.tabs.create({url});
-            });
+            for (let steamKey of steamKeys) {
+                browser.tabs.create({"url": url.replace("__steamkey__", steamKey)});
+            }
         } else {
-            browser.tabs.create({url});
+            browser.tabs.create({"url": url.replace("__query__", query)});
         }
     }
 
@@ -1058,22 +1056,16 @@ class SteamCommunity extends Api {
         if (login && login.profilePath === profilePath) { return login; }
 
         const html = await self.getPage(profilePath);
-
-        const steamId = HTMLParser.getVariableFromText(html, "g_steamID", "string");
-        if (!steamId) {
-
-            // Possibly not logged in
-            return;
-        }
-
-        const userCountry = await SteamStore.country();
-        if (!userCountry) {
-            throw new Error("Retrieved steamID but failed to detect user country");
+        const profileData = HTMLParser.getVariableFromText(html, "g_rgProfileData", "object");
+        const steamId = profileData.steamid;
+        
+        if (!steamId) { // this should never happen
+            throw new Error("Failed to retrieve steamID from profile");
         }
 
         self.logout(true);
 
-        const value = {steamId, profilePath, userCountry};
+        const value = { steamId, profilePath };
         LocalStorage.set("login", value);
 
         return value;
@@ -1082,7 +1074,17 @@ class SteamCommunity extends Api {
     static logout(newLogout = LocalStorage.has("login")) {
         if (newLogout) {
             LocalStorage.remove("login");
+            LocalStorage.remove("storeCountry");
             CacheStorage.remove("currency");
+        }
+    }
+
+    // TODO This and (at least) the login calls don't seem appropriate in this class
+    static storeCountry(newCountry) {
+        if (newCountry) {
+            LocalStorage.set("storeCountry", newCountry);
+        } else {
+            return LocalStorage.get("storeCountry");
         }
     }
 
@@ -1623,6 +1625,7 @@ const actionCallbacks = new Map([
 
     ["login", SteamCommunity.login],
     ["logout", SteamCommunity.logout],
+    ["storecountry", SteamCommunity.storeCountry],
     ["cards", SteamCommunity.cards],
     ["stats", SteamCommunity.stats],
     ["coupon", SteamCommunity.getCoupon],

@@ -92,7 +92,7 @@ export class FMarketLowestPrice extends ASFeature {
                 do {
                     try {
                         let data = await RequestData.getJson(
-                            `https://steamcommunity.com/market/priceoverview/?country=${User.country}&currency=${Currency.currencyTypeToNumber(Currency.storeCurrency)}&appid=${appid}&market_hash_name=${marketHashName}`
+                            `https://steamcommunity.com/market/priceoverview/?country=${User.storeCountry}&currency=${Currency.currencyTypeToNumber(Currency.storeCurrency)}&appid=${appid}&market_hash_name=${marketHashName}`
                         );
 
                         await sleep(1000);
