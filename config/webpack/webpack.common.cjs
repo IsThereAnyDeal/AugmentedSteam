@@ -21,6 +21,7 @@ module.exports = {
         "community/market_listing": "./src/js/content/community/market_listing/PMarketListingPage.js",
         "community/profile_activity": "./src/js/content/community/profile_activity/PProfileActivityPage.js",
         "community/profile_edit": "./src/js/content/community/profile_edit/PProfileEditPage.js",
+        "community/profile_home": "./src/js/content/community/profile_home/PProfileHomePage.js",
         "community/workshop": "./src/js/content/community/workshop/PWorkshopPage.js",
         "store/account": "./src/js/content/store/account/PAccountPage.js",
         "store/agecheck": "./src/js/content/store/agecheck/PAgecheckPage.js",

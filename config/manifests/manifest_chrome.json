@@ -421,16 +421,10 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/*"
+        "*://steamcommunity.com/id/*",
+        "*://steamcommunity.com/profiles/*"
       ],
       "exclude_matches": [
-        "*://steamcommunity.com/login/*",
-        "*://steamcommunity.com/openid/*",
-        "*://steamcommunity.com/chat/*",
-        "*://steamcommunity.com/tradeoffer/*",
-
-        "*://steamcommunity.com/workshop",
-        "*://steamcommunity.com/workshop/",
         "*://steamcommunity.com/id/*/home",
         "*://steamcommunity.com/id/*/home/",
         "*://steamcommunity.com/profiles/*/myactivity",
@@ -460,7 +454,32 @@
         "*://steamcommunity.com/profiles/*/groups",
         "*://steamcommunity.com/profiles/*/groups/",
         "*://steamcommunity.com/id/*/inventory*",
-        "*://steamcommunity.com/profiles/*/inventory*",
+        "*://steamcommunity.com/profiles/*/inventory*"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/community/profile_home.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css"
+      ]
+    },
+    {
+      "matches": [
+        "*://steamcommunity.com/*"
+      ],
+      "exclude_matches": [
+        "*://steamcommunity.com/login/*",
+        "*://steamcommunity.com/openid/*",
+        "*://steamcommunity.com/chat/*",
+        "*://steamcommunity.com/tradeoffer/*",
+
+        "*://steamcommunity.com/id/*",
+        "*://steamcommunity.com/profiles/*",
+        "*://steamcommunity.com/workshop",
+        "*://steamcommunity.com/workshop/",
         "*://steamcommunity.com/market/*"
       ],
       "js": [

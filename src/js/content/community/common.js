@@ -1,4 +1,3 @@
-import {ExtensionResources, GameId, HTML, SyncedStorage} from "core";
 import {Background, SteamId, User} from "common";
 
 export class ProfileData {
@@ -7,10 +6,10 @@ export class ProfileData {
         if (!this._promise) {
             let steamId = SteamId.getSteamId();
 
-            _promise = Background.action("profile", steamId)
-                .then(response => { _data = response; return _data; });
+            this._promise = Background.action("profile", steamId)
+                .then(response => this._data = response);
         }
-        return _promise;
+        return this._promise;
     };
 
     static then(onDone, onCatch) {
