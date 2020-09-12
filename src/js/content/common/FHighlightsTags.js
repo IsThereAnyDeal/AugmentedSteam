@@ -17,17 +17,17 @@ export class FHighlightsTags extends ASFeature {
         }
 
         return Promise.all([
-            this._highlightTitle(),
+            FHighlightsTags.highlightTitle(this.context.appid),
             FHighlightsTags.highlightAndTag(),
         ]);
     }
 
-    async _highlightTitle() {
+    static highlightTitle(appid) {
 
         const title = document.querySelector(".apphub_AppName");
         if (!title) { return; }
 
-        title.dataset.dsAppid = this.context.appid;
+        title.dataset.dsAppid = appid;
 
         return FHighlightsTags.highlightAndTag([title], false);
     }

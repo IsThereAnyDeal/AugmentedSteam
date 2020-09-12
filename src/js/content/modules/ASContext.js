@@ -50,4 +50,6 @@ export const ContextTypes = Object.freeze({
     "MARKET": 26,
     "PROFILE_HOME": 27,
     "GROUP_HOME": 28,
+    "GUIDES": 29,
+    "COMMUNITY_APP": 30,
 });

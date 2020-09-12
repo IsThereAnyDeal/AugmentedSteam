@@ -1,13 +1,13 @@
-import {ASFeature} from "modules/ASFeature";
+import {CallbackFeature} from "modules/CallbackFeature";
 import {SyncedStorage} from "core";
 
-export class FSkipAgecheck extends ASFeature {
+export class FSkipAgecheck extends CallbackFeature {
 
     checkPrerequisites() {
         return SyncedStorage.get("send_age_info");
     }
 
-    apply() {
+    callback() {
         const ageYearNode = document.querySelector("#ageYear");
         if (ageYearNode) {
             const myYear = Math.floor(Math.random() * 75) + 10;

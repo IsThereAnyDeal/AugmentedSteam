@@ -9,6 +9,7 @@ module.exports = {
     "entry": {
         "background": "./src/js/background/background.js",
         "options": "./src/js/options/options.js",
+        "community/app": "./src/js/content/community/app/PAppPage.js",
         "community/badges": "./src/js/content/community/badges/PBadgesPage.js",
         "community/default": "./src/js/content/community/PDefaultCommunity.js",
         "community/friends": "./src/js/content/community/friends/PFriendsPage.js",
@@ -17,6 +18,7 @@ module.exports = {
         "community/games": "./src/js/content/community/games/PGamesPage.js",
         "community/group_home": "./src/js/content/community/group_home/PGroupHomePage.js",
         "community/groups": "./src/js/content/community/groups/PGroupsPage.js",
+        "community/guides": "./src/js/content/community/guides/PGuidesPage.js",
         "community/inventory": "./src/js/content/community/inventory/PInventoryPage.js",
         "community/market": "./src/js/content/community/market/PMarketPage.js",
         "community/market_listing": "./src/js/content/community/market_listing/PMarketListingPage.js",
