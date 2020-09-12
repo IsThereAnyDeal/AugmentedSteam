@@ -468,6 +468,20 @@
     },
     {
       "matches": [
+        "*://steamcommunity.com/groups/*"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/community/group_home.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css"
+      ]
+    },
+    {
+      "matches": [
         "*://steamcommunity.com/*"
       ],
       "exclude_matches": [
@@ -480,7 +494,8 @@
         "*://steamcommunity.com/profiles/*",
         "*://steamcommunity.com/workshop",
         "*://steamcommunity.com/workshop/",
-        "*://steamcommunity.com/market/*"
+        "*://steamcommunity.com/market/*",
+        "*://steamcommunity.com/groups/*"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",

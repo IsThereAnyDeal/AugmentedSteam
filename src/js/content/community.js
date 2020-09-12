@@ -1,84 +1,3 @@
-let GroupID = (function(){
-
-    let self = {};
-    let _groupId = null;
-
-    self.getGroupId = function() {
-        if (_groupId) { return _groupId; }
-
-        if (document.querySelector("#leave_group_form")) {
-            _groupId = document.querySelector("input[name=groupId]").value;
-        } else {
-            _groupId = document.querySelector(".joinchat_bg").getAttribute("onclick").split('\'')[1];
-        }
-
-        return _groupId;
-    };
-
-    return self;
-})();
-
-let GroupHomePageClass = (function(){
-
-    function GroupHomePageClass() {
-        this.groupId = GroupID.getGroupId();
-
-        this.addGroupLinks();
-        this.addFriendsInviteButton();
-    }
-
-    GroupHomePageClass.prototype.addGroupLinks = function() {
-
-        let iconType = "none";
-        let images = SyncedStorage.get("show_profile_link_images");
-        if (images !== "none") {
-            iconType = images === "color" ? "color" : "gray";
-        }
-
-        let links = [
-            {
-                "id": "steamgifts",
-                "link": `https://www.steamgifts.com/go/group/${this.groupId}`,
-                "name": "SteamGifts",
-            }
-        ];
-
-        let html = "";
-        for (let link of links) {
-            if (!SyncedStorage.get(`group_${link.id}`)) { continue; }
-            html += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
-        }
-
-        if (html) {
-            let node = document.querySelector(".responsive_hidden > .rightbox");
-            if (node) {
-                HTML.afterEnd(node.parentNode,
-                    `<div class="rightbox_header"></div>
-                    <div class="rightbox">
-                        <div class="content">${html}</div>
-                    </div>
-                    <div class="rightbox_footer"></div>`);
-            }
-        }
-    };
-
-    GroupHomePageClass.prototype.addFriendsInviteButton = function() {
-        if (!User.isSignedIn) { return; }
-
-        let button = document.querySelector(".grouppage_join_area");
-        if (button) { return; }
-
-        HTML.afterEnd("#join_group_form", 
-            `<div class="grouppage_join_area">
-                <a class="btn_blue_white_innerfade btn_medium" href="https://steamcommunity.com/my/friends/?invitegid=${this.groupId}">
-                    <span><img src="//steamcommunity-a.akamaihd.net/public/images/groups/icon_invitefriends.png">&nbsp; ${Localization.str.invite_friends}</span>
-                </a>
-            </div>`);
-    };
-    
-    return GroupHomePageClass;
-})();
-
 let StatsPageClass = (function(){
 
     function StatsPageClass() {
@@ -905,10 +824,6 @@ let EditGuidePageClass = (function(){
 (async function(){
     
     switch (true) {
-
-        case /^\/groups\/[^\/]+\/?$/.test(path):
-            (new GroupHomePageClass());
-            break;
 
         case /^\/app\/[^\/]*\/guides/.test(path):
             (new GuidesPageClass());

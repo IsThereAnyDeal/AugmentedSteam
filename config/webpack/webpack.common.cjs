@@ -15,6 +15,7 @@ module.exports = {
         "community/friends_that_play": "./src/js/content/community/friends_that_play/PFriendsThatPlayPage.js",
         "community/gamecard": "./src/js/content/community/gamecard/PGameCardPage.js",
         "community/games": "./src/js/content/community/games/PGamesPage.js",
+        "community/group_home": "./src/js/content/community/group_home/PGroupHomePage.js",
         "community/groups": "./src/js/content/community/groups/PGroupsPage.js",
         "community/inventory": "./src/js/content/community/inventory/PInventoryPage.js",
         "community/market": "./src/js/content/community/market/PMarketPage.js",
