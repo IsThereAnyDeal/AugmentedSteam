@@ -1,94 +1,3 @@
-let StatsPageClass = (function(){
-
-    function StatsPageClass() {
-
-        // handle compare redirect
-        if (window.location.hash === "#es-compare") {
-            window.location.hash = "";
-            if (/\/stats\/[^\/]+(?!\/compare)\/?$/.test(window.location.pathname)) { // redirect to compare page but only if we're not there yet
-                window.location = window.location.pathname.replace(/\/$/, "")+"/compare";
-            }
-        }
-
-        this.addAchievementSort();
-        this.showEntireDescriptions();
-    }
-
-    let _nodes = {
-        "default": [],
-        "time": []
-    };
-
-    function addSortMetaData(key, achievements) {
-        if (key === "default") {
-            achievements.forEach((row, i) => _nodes.default.push([i, row]));
-            return Promise.resolve();
-        } else if (key === "time") {
-            let url = new URL(window.location.href);
-            url.searchParams.append("xml", 1);
-            return RequestData.getHttp(url.toString()).then(result => {
-                let xmlDoc = new DOMParser().parseFromString(result, "text/xml");
-                let xmlTags = xmlDoc.getElementsByTagName("achievement");
-                for (let i = 0; i < _nodes.default.length; ++i) {
-                    let node = _nodes.default[i][1];
-                    let unlockTime = 0;
-                    let unlockTimestamp = xmlTags[i].querySelector("unlockTimestamp");
-                    if (unlockTimestamp) {
-                        unlockTime = unlockTimestamp.textContent;
-                    }
-                    _nodes.time.push([unlockTime, node]);
-
-                    node.classList.add(unlockTime === 0 ? "esi_ach_locked" : "esi_ach_unlocked");
-                }
-            }).then(() => _nodes.time = _nodes.time.sort((a, b) => {
-                return b[0] - a[0]; // descending sort
-            })).catch(err => console.error("Failed to retrieve timestamps for the achievements", err));
-        }
-    }
-
-    async function sortBy(key, reversed) {
-        let personal = document.querySelector("#personalAchieve");
-        if (key === "time") {
-            if (!_nodes.time.length) {
-                await addSortMetaData(key, personal.querySelectorAll(".achieveRow"));
-            }
-        }
-        
-        for (let br of personal.querySelectorAll(":scope > br")) br.remove();
-        for (let [, node] of _nodes[key]) {
-            personal.insertAdjacentElement(reversed ? "afterbegin" : "beforeend", node);
-        }
-    }
-
-    StatsPageClass.prototype.addAchievementSort = function() {
-        let personal = document.querySelector("#personalAchieve");
-        if (!personal) { return; }
-
-        document.querySelector("#tabs").insertAdjacentElement("beforebegin", Sortbox.get(
-            "achievements",
-            [
-                ["default", Localization.str.theworddefault],
-                ["time", Localization.str.date_unlocked],
-            ],
-            "default",
-            sortBy
-        ));
-
-        addSortMetaData("default", personal.querySelectorAll(".achieveRow"));
-    };
-    
-
-    StatsPageClass.prototype.showEntireDescriptions = function() {
-        // .ellipsis is only added by Steam on personal stats pages
-        let nodes = document.querySelectorAll("h5.ellipsis");
-        for (let node of nodes) {
-            node.classList.remove("ellipsis");
-        }
-    };
-
-    return StatsPageClass;
-})();
-
 let RecommendedPageClass = (function(){
 
     function RecommendedPageClass() {
@@ -658,10 +567,6 @@ let EditGuidePageClass = (function(){
 (async function(){
     
     switch (true) {
-
-        case /^\/(?:id|profiles)\/.+\/stats/.test(path):
-            (new StatsPageClass());
-            break;
 
         case /^\/(?:id|profiles)\/.+\/myworkshopfiles\/?$/.test(path):
             (new MyWorkshopClass());

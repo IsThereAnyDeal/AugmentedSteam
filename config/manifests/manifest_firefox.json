@@ -423,6 +423,21 @@
     },
     {
       "matches": [
+        "*://steamcommunity.com/id/*/stats*",
+        "*://steamcommunity.com/profiles/*/stats*"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/community/stats.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-firefox.css"
+      ]
+    },
+    {
+      "matches": [
         "*://steamcommunity.com/id/*",
         "*://steamcommunity.com/profiles/*"
       ],
@@ -456,7 +471,9 @@
         "*://steamcommunity.com/profiles/*/groups",
         "*://steamcommunity.com/profiles/*/groups/",
         "*://steamcommunity.com/id/*/inventory*",
-        "*://steamcommunity.com/profiles/*/inventory*"
+        "*://steamcommunity.com/profiles/*/inventory*",
+        "*://steamcommunity.com/id/*/stats*",
+        "*://steamcommunity.com/profiles/*/stats*"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",

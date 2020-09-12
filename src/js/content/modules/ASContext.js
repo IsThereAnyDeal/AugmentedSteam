@@ -52,4 +52,5 @@ export const ContextTypes = Object.freeze({
     "GROUP_HOME": 28,
     "GUIDES": 29,
     "COMMUNITY_APP": 30,
+    "COMMUNITY_STATS": 31,
 });
