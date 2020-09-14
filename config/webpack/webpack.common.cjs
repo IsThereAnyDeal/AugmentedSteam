@@ -29,6 +29,7 @@ module.exports = {
         "community/shared_files": "./src/js/content/community/shared_files/PSharedFilesPage.js",
         "community/stats": "./src/js/content/community/stats/PStatsPage.js",
         "community/workshop": "./src/js/content/community/workshop/PWorkshopPage.js",
+        "community/workshop_browse": "./src/js/content/community/workshop_browse/PWorkshopBrowsePage.js",
         "store/account": "./src/js/content/store/account/PAccountPage.js",
         "store/agecheck": "./src/js/content/store/agecheck/PAgecheckPage.js",
         "store/app": "./src/js/content/store/app/PAppPage.js",

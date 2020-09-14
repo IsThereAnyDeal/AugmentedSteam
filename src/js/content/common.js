@@ -433,7 +433,7 @@ export const RequestData = (function() {
         return self.getHttp(url, Object.assign(settings || {}, {
             "method": "POST",
             "body": formData
-        }), returnJSON);
+        }), returnJSON ? "json" : undefined);
     };
 
     self.getJson = function(url, settings) {

@@ -55,4 +55,5 @@ export const ContextTypes = Object.freeze({
     "COMMUNITY_STATS": 31,
     "MY_WORKSHOP": 32,
     "SHARED_FILES": 33,
+    "WORKSHOP_BROWSE": 34,
 });

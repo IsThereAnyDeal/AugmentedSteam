@@ -245,6 +245,20 @@
     },
     {
       "matches": [
+        "*://steamcommunity.com/workshop/browse*"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/community/workshop_browse.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-firefox.css"
+      ]
+    },
+    {
+      "matches": [
         "*://steamcommunity.com/id/*/home",
         "*://steamcommunity.com/id/*/home/",
         "*://steamcommunity.com/profiles/*/myactivity",
@@ -580,6 +594,7 @@
         "*://steamcommunity.com/profiles/*",
         "*://steamcommunity.com/workshop",
         "*://steamcommunity.com/workshop/",
+        "*://steamcommunity.com/workshop/browse*",
         "*://steamcommunity.com/market/*",
         "*://steamcommunity.com/groups/*",
         "*://steamcommunity.com/app/*",
