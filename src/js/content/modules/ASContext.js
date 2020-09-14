@@ -58,4 +58,5 @@ export const ContextTypes = Object.freeze({
     "WORKSHOP_BROWSE": 34,
     "EDIT_GUIDE": 35,
     "RECOMMENDED": 36,
+    "BOOSTER_CREATOR": 37,
 });

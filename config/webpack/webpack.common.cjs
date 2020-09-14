@@ -11,6 +11,7 @@ module.exports = {
         "options": "./src/js/options/options.js",
         "community/app": "./src/js/content/community/app/PAppPage.js",
         "community/badges": "./src/js/content/community/badges/PBadgesPage.js",
+        "community/booster_creator": "./src/js/content/community/booster_creator/PBoosterCreatorPage.js",
         "community/default": "./src/js/content/community/PDefaultCommunity.js",
         "community/edit_guide": "./src/js/content/community/edit_guide/PEditGuidePage.js",
         "community/friends": "./src/js/content/community/friends/PFriendsPage.js",

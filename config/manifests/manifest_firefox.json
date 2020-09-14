@@ -614,6 +614,21 @@
     },
     {
       "matches": [
+        "*://steamcommunity.com/tradingcards/boostercreator",
+        "*://steamcommunity.com/tradingcards/boostercreator/"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/community/booster_creator.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-firefox.css"
+      ]
+    },
+    {
+      "matches": [
         "*://steamcommunity.com/*"
       ],
       "exclude_matches": [
@@ -633,7 +648,9 @@
         "*://steamcommunity.com/sharedfiles/filedetails?id=*",
         "*://steamcommunity.com/sharedfiles/filedetails/?id=*",
         "*://steamcommunity.com/sharedfiles/editguide?id=*",
-        "*://steamcommunity.com/sharedfiles/editguide/?id=*"
+        "*://steamcommunity.com/sharedfiles/editguide/?id=*",
+        "*://steamcommunity.com/tradingcards/boostercreator",
+        "*://steamcommunity.com/tradingcards/boostercreator/"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
