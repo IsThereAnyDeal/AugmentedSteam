@@ -551,6 +551,21 @@
     },
     {
       "matches": [
+        "*://steamcommunity.com/sharedfiles/filedetails?id=*",
+        "*://steamcommunity.com/sharedfiles/filedetails/?id=*"
+      ],
+      "js": [
+        "lib/webextension-polyfill/browser-polyfill.js",
+        "lib/DOMPurify/purify.js",
+        "entries/community/shared_files.js"
+      ],
+      "css": [
+        "css/enhancedsteam.css",
+        "css/enhancedsteam-chrome.css"
+      ]
+    },
+    {
+      "matches": [
         "*://steamcommunity.com/*"
       ],
       "exclude_matches": [
@@ -565,7 +580,9 @@
         "*://steamcommunity.com/workshop/",
         "*://steamcommunity.com/market/*",
         "*://steamcommunity.com/groups/*",
-        "*://steamcommunity.com/app/*"
+        "*://steamcommunity.com/app/*",
+        "*://steamcommunity.com/sharedfiles/filedetails?id=*",
+        "*://steamcommunity.com/sharedfiles/filedetails/?id=*"
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",

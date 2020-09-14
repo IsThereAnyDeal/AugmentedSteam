@@ -14,12 +14,10 @@ export class FMediaExpander extends ASFeature {
     apply() {
         let selector = null;
 
-        if (this.context.type === ContextTypes.APP) {
-            if (SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews")) {
-                selector = ".home_tabs_row";
-            } else {
-                selector = "#highlight_player_area";
-            }
+        if (this.context.type === ContextTypes.APP && (SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews"))) {
+            selector = ".home_tabs_row";
+        } else {
+            selector = "#highlight_player_area";
         }
 
         HTML.beforeEnd(selector,

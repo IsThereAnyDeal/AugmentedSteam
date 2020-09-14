@@ -169,13 +169,6 @@ let RecommendedPageClass = (function(){
     return RecommendedPageClass;
 })();
 
-class SharedFilesPageClass {
-    constructor() {
-        new MediaPage().workshopPage();
-        //media.initHdPlayer();
-    }
-}
-
 let WorkshopBrowseClass = (function(){
 
     function WorkshopBrowseClass() {
@@ -455,10 +448,6 @@ let EditGuidePageClass = (function(){
 (async function(){
     
     switch (true) {
-
-        case /^\/sharedfiles\/filedetails\/?$/.test(path):
-            (new SharedFilesPageClass());
-            break;
 
         case /^\/workshop\/browse/.test(path):
             (new WorkshopBrowseClass());
