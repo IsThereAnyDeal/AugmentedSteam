@@ -12,6 +12,7 @@ module.exports = {
         "community/app": "./src/js/content/community/app/PAppPage.js",
         "community/badges": "./src/js/content/community/badges/PBadgesPage.js",
         "community/default": "./src/js/content/community/PDefaultCommunity.js",
+        "community/edit_guide": "./src/js/content/community/edit_guide/PEditGuidePage.js",
         "community/friends": "./src/js/content/community/friends/PFriendsPage.js",
         "community/friends_that_play": "./src/js/content/community/friends_that_play/PFriendsThatPlayPage.js",
         "community/gamecard": "./src/js/content/community/gamecard/PGameCardPage.js",
