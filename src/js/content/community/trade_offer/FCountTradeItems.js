@@ -1,17 +1,20 @@
+import {ASFeature} from "modules/ASFeature";
 
-let TradeOfferPageClass = (function(){
-    
-    function TradeOfferPageClass() {
-        this.countItems();
-    }
-    
-    TradeOfferPageClass.prototype.countItems = function() {
+import {HTML, Localization} from "core";
+
+export class FCountTradeItems extends ASFeature {
+
+    apply() {
+
         HTML.afterEnd(document.querySelector("#your_slots").parentNode, "<div id='your_slots_count' class='trade_item_box'><span id='your_items_count'></span></div>");
         HTML.afterEnd(document.querySelector("#their_slots").parentNode, "<div id='their_slots_count' class='trade_item_box'><span id='their_items_count'></span></div>");
         
-        let observer = new MutationObserver(mutations => {
-            mutations.forEach(function(mutation) {
+        new MutationObserver(mutations => {
+
+            for (let mutation of mutations) {
+
                 for (let node of mutation.addedNodes) {
+                    
                     if (!node.classList || !node.classList.contains("item")) { continue; }
                     
                     let yourItemsCountNode = document.querySelector("#your_items_count");
@@ -49,17 +52,7 @@ let TradeOfferPageClass = (function(){
                         theirItemsCountNode.classList.add("es_higher");
                     }
                 }
-            });
-        });
-        
-        observer.observe(document, { subtree: true, childList: true });
-    };
-    
-    return TradeOfferPageClass;
-})();
-
-(async function() {
-    await SyncedStorage;
-    await Localization;
-    new TradeOfferPageClass();
-})();
+            }
+        }).observe(document, { subtree: true, childList: true });
+    }
+}

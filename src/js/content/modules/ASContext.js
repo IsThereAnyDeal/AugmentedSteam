@@ -59,4 +59,5 @@ export const ContextTypes = Object.freeze({
     "EDIT_GUIDE": 35,
     "RECOMMENDED": 36,
     "BOOSTER_CREATOR": 37,
+    "TRADE_OFFER": 38,
 });

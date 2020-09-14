@@ -635,8 +635,8 @@
         "*://steamcommunity.com/login/*",
         "*://steamcommunity.com/openid/*",
         "*://steamcommunity.com/chat/*",
-        "*://steamcommunity.com/tradeoffer/*",
 
+        "*://steamcommunity.com/tradeoffer/*",
         "*://steamcommunity.com/id/*",
         "*://steamcommunity.com/profiles/*",
         "*://steamcommunity.com/workshop",
@@ -668,7 +668,8 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js"
+        "lib/DOMPurify/purify.js",
+        "entries/community/trade_offer.js"
       ],
       "css": [
         "css/community/tradeoffer.css"
