@@ -27,6 +27,7 @@ module.exports = {
         "community/profile_activity": "./src/js/content/community/profile_activity/PProfileActivityPage.js",
         "community/profile_edit": "./src/js/content/community/profile_edit/PProfileEditPage.js",
         "community/profile_home": "./src/js/content/community/profile_home/PProfileHomePage.js",
+        "community/recommended": "./src/js/content/community/recommended/PRecommendedPage.js",
         "community/shared_files": "./src/js/content/community/shared_files/PSharedFilesPage.js",
         "community/stats": "./src/js/content/community/stats/PStatsPage.js",
         "community/workshop": "./src/js/content/community/workshop/PWorkshopPage.js",

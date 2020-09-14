@@ -57,4 +57,5 @@ export const ContextTypes = Object.freeze({
     "SHARED_FILES": 33,
     "WORKSHOP_BROWSE": 34,
     "EDIT_GUIDE": 35,
+    "RECOMMENDED": 36,
 });
