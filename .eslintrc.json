@@ -19,6 +19,9 @@
             }
         }
     ],
+    "ignorePatterns": [
+        "/src/js/lib/**"
+    ],
     "rules": {
         "accessor-pairs": "error",
         "array-bracket-newline": ["error", "consistent"],
