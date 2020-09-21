@@ -42,6 +42,10 @@ export default class FRegionalPricing extends Feature {
                 .querySelector(".game_purchase_action");
 
             const apiPrice = prices[User.storeCountry.toLowerCase()];
+
+            // For paid titles that have F2P versions with their own subid (see #894)
+            if (typeof apiPrice === "undefined") { continue; }
+
             let priceLocal;
             try {
                 priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
