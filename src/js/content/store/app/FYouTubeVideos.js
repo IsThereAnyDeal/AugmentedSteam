@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Language, Localization, SyncedStorage} from "core";
 import {ExtensionLayer} from "common";
 
-export class FYouTubeVideos extends Feature {
+export default class FYouTubeVideos extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews");

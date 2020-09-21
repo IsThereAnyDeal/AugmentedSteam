@@ -2,7 +2,7 @@ import {Feature} from "modules";
 
 import {ExtensionLayer} from "common";
 
-export class FShowGemsCost extends Feature {
+export default class FShowGemsCost extends Feature {
 
     apply() {
         ExtensionLayer.runInPageContext(gemWord => {

@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {GameId, HTML, Localization} from "core";
 import {ExtensionLayer, RequestData, User} from "common";
 
-export class FWorkshopSubscriberButtons extends Feature {
+export default class FWorkshopSubscriberButtons extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn;

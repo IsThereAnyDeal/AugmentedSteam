@@ -5,7 +5,7 @@ import {Background, Currency, DOMHelper, Price} from "common";
 import {CommunityCommon} from "community/common";
 
 // TODO Split up
-export class FBadgeCompletionCost extends CallbackFeature {
+export default class FBadgeCompletionCost extends CallbackFeature {
 
     checkPrerequisites() {
         return CommunityCommon.currentUserIsOwner();

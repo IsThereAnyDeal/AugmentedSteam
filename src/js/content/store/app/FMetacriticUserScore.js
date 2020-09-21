@@ -1,7 +1,7 @@
 import {Feature} from "modules";
 import {HTML, Localization, SyncedStorage} from "core";
 
-export class FMetacriticUserScore extends Feature {
+export default class FMetacriticUserScore extends Feature {
 
     async checkPrerequisites() {
         if (SyncedStorage.get("showmcus") && document.querySelector("#game_area_metascore")) {

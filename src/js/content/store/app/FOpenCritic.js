@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {ExtensionResources, HTML, Localization, SyncedStorage} from "core";
 import {ExtensionLayer} from "common";
 
-export class FOpenCritic extends Feature {
+export default class FOpenCritic extends Feature {
 
     async checkPrerequisites() {
         if (SyncedStorage.get("showoc")) {

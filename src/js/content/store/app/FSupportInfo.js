@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, LocalStorage, Localization, SyncedStorage} from "core";
 import {Background} from "common";
 
-export class FSupportInfo extends Feature {
+export default class FSupportInfo extends Feature {
 
     async checkPrerequisites() {
         if (this.context.isDlc() || !SyncedStorage.get("showsupportinfo")) { return false; }

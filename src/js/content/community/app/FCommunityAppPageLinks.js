@@ -2,7 +2,7 @@ import {Feature} from "modules";
 
 import {HTML, SyncedStorage} from "core";
 
-export class FCommunityAppPageLinks extends Feature {
+export default class FCommunityAppPageLinks extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showsteamdb") || SyncedStorage.get("showitadlinks") || SyncedStorage.get("showbartervg");

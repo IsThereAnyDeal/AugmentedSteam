@@ -1,8 +1,8 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
-import {FCustomTags} from "./FCustomTags";
+import FCustomTags from "./FCustomTags";
 
-import {FMultiLanguageGuide} from "./FMultiLanguageGuide";
+import FMultiLanguageGuide from "./FMultiLanguageGuide";
 
 export class CEditGuide extends CCommunityBase {
 

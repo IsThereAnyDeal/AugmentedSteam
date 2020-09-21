@@ -3,7 +3,7 @@ import {Background} from "common";
 import Config from "config";
 import {HTML, Localization} from "core";
 
-export class FDLCInfo extends Feature {
+export default class FDLCInfo extends Feature {
 
     checkPrerequisites() {
         return this.context.isDlc();

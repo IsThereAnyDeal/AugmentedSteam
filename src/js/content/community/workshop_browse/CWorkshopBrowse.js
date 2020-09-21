@@ -1,7 +1,7 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FWorkshopSubscriberButtons} from "./FWorkshopSubscriberButtons";
+import FWorkshopSubscriberButtons from "./FWorkshopSubscriberButtons";
 
 export class CWorkshopBrowse extends CCommunityBase {
 

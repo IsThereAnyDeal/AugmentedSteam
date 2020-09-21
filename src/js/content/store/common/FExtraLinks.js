@@ -2,7 +2,7 @@ import {Feature, ContextTypes} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 
-export class FExtraLinks extends Feature {
+export default class FExtraLinks extends Feature {
 
     checkPrerequisites() {
         const context = this.context;

@@ -5,7 +5,7 @@ import {HTML, Localization} from "core";
 import {ExtensionLayer} from "common";
 import {ProfileData} from "community/common";
 
-export class FSupporterBadges extends Feature {
+export default class FSupporterBadges extends Feature {
 
     async apply() {
 

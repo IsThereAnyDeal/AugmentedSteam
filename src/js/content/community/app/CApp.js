@@ -2,11 +2,11 @@ import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
 import {GameId} from "core";
-import {FHighlightsTags} from "common/FHighlightsTags";
+import FHighlightsTags from "common/FHighlightsTags";
 
-import {FCommunityAppPageLinks} from "./FCommunityAppPageLinks";
-import {FCommunityAppPageWishlist} from "./FCommunityAppPageWishlist";
-import {FSkipAgecheck} from "common/FSkipAgecheck";
+import FCommunityAppPageLinks from "./FCommunityAppPageLinks";
+import FCommunityAppPageWishlist from "./FCommunityAppPageWishlist";
+import FSkipAgecheck from "common/FSkipAgecheck";
 
 export class CApp extends CCommunityBase {
 

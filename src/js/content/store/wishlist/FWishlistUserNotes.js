@@ -3,7 +3,7 @@ import {CallbackFeature} from "modules";
 import {HTML, Localization, SyncedStorage} from "core";
 import {UserNotes} from "store/common/UserNotes";
 
-export class FWishlistUserNotes extends CallbackFeature {
+export default class FWishlistUserNotes extends CallbackFeature {
 
     checkPrerequisites() {
         return this.context.myWishlist && SyncedStorage.get("showusernotes");

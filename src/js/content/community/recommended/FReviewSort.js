@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTMLParser, Localization, SyncedStorage} from "core";
 import {Background, ExtensionLayer, Messenger, Sortbox} from "common";
 
-export class FReviewSort extends Feature {
+export default class FReviewSort extends Feature {
 
     apply() {
 

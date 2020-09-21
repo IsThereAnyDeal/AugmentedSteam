@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {Localization} from "core";
 import {Sortbox} from "common";
 
-export class FFriendsPlaytimeSort extends Feature {
+export default class FFriendsPlaytimeSort extends Feature {
 
     apply() {
 

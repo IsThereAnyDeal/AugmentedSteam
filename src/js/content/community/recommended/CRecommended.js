@@ -1,6 +1,6 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
-import {FReviewSort} from "./FReviewSort";
+import FReviewSort from "./FReviewSort";
 
 export class CRecommended extends CCommunityBase {
 

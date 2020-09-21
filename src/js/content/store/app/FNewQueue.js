@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization} from "core";
 import {ExtensionLayer} from "common";
 
-export class FNewQueue extends Feature {
+export default class FNewQueue extends Feature {
 
     checkPrerequisites() {
         return document.querySelector(".finish_queue_text");

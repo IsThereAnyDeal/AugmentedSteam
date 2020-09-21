@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization, SyncedStorage} from "core";
 import {Background} from "common";
 
-export class FWishlistProfileLink extends Feature {
+export default class FWishlistProfileLink extends Feature {
 
     checkPrerequisites() {
         return document.querySelector("body.profile_page.private_profile") === null

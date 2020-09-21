@@ -1,8 +1,8 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FAchievementSort} from "./FAchievementSort";
-import {FExpandAchievementDesc} from "./FExpandAchievementDesc";
+import FAchievementSort from "./FAchievementSort";
+import FExpandAchievementDesc from "./FExpandAchievementDesc";
 
 export class CStats extends CCommunityBase {
 

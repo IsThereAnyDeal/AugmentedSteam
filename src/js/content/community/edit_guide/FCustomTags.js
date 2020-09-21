@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization, LocalStorage} from "core";
 import {ExtensionLayer, Messenger} from "common";
 
-export class FCustomTags extends Feature {
+export default class FCustomTags extends Feature {
 
     apply() {
         this._addTags();

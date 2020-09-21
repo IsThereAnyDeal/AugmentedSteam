@@ -1,7 +1,7 @@
 import {Feature} from "modules";
 import {HTML, Localization, SyncedStorage} from "core";
 
-export class FFamilySharingNotice extends Feature {
+export default class FFamilySharingNotice extends Feature {
 
     async checkPrerequisites() {
         if (!SyncedStorage.get("exfgls")) { return false; }

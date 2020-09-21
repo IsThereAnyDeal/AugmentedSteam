@@ -2,7 +2,7 @@ import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {EarlyAccess, ExtensionLayer, Messenger} from "common";
-import {FHighlightsTags} from "common/FHighlightsTags";
+import FHighlightsTags from "common/FHighlightsTags";
 
 import {CartSearchFilter} from "store/search/filters/CartSearchFilter";
 import {EarlyAccessSearchFilter} from "store/search/filters/EarlyAccessSearchFilter";
@@ -11,7 +11,7 @@ import {NegativeSearchFilter} from "store/search/filters/NegativeSearchFilter";
 import {ReviewsCountSearchFilter} from "store/search/filters/ReviewsCountSearchFilter";
 import {ReviewsScoreSearchFilter} from "store/search/filters/ReviewsScoreSearchFilter";
 
-export class FSearchFilters extends Feature {
+export default class FSearchFilters extends Feature {
 
     apply() {
 

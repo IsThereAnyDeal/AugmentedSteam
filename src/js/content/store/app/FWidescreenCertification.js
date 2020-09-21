@@ -2,7 +2,7 @@ import {Feature} from "modules";
 
 import {ExtensionResources, HTML, Localization, SyncedStorage} from "core";
 
-export class FWidescreenCertification extends Feature {
+export default class FWidescreenCertification extends Feature {
 
     async checkPrerequisites() {
         if (!this.context.isDlc() && SyncedStorage.get("showwsgf")) {

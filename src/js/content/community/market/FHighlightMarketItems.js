@@ -3,9 +3,9 @@ import {CallbackFeature} from "modules";
 import {SyncedStorage} from "core";
 import {Inventory} from "common";
 
-import {FHighlightsTags} from "common/FHighlightsTags";
+import FHighlightsTags from "common/FHighlightsTags";
 
-export class FHighlightMarketItems extends CallbackFeature {
+export default class FHighlightMarketItems extends CallbackFeature {
 
     constructor(context) {
 

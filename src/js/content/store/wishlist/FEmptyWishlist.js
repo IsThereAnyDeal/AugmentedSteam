@@ -2,9 +2,9 @@ import {Feature} from "modules";
 
 import {HTML, HTMLParser, Localization, SyncedStorage} from "core";
 import {DynamicStore, ExtensionLayer, RequestData, User} from "common";
-import {FExportWishlist} from "./FExportWishlist";
+import FExportWishlist from "./FExportWishlist";
 
-export class FEmptyWishlist extends Feature {
+export default class FEmptyWishlist extends Feature {
 
     checkPrerequisites() {
         return this.context.myWishlist && SyncedStorage.get("showemptywishlist");

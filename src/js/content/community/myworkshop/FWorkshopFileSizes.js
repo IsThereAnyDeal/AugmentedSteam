@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization} from "core";
 import {Background, ExtensionLayer, RequestData} from "common";
 
-export class FWorkshopFileSizes extends Feature {
+export default class FWorkshopFileSizes extends Feature {
 
     async apply() {
         this._addFileSizes();

@@ -2,7 +2,7 @@ import {Feature} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 
-export class FSteamSpy extends Feature {
+export default class FSteamSpy extends Feature {
 
     async checkPrerequisites() {
         if (!SyncedStorage.get("show_steamspy_info") || this.context.isDlc() || !document.querySelector(".sys_req")) { return false; }

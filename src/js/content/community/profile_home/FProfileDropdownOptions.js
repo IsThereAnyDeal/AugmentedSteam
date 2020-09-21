@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization} from "core";
 import {ExtensionLayer, User} from "common";
 
-export class FProfileDropdownOptions extends Feature {
+export default class FProfileDropdownOptions extends Feature {
 
     checkPrerequisites() {
         return document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow") !== null;

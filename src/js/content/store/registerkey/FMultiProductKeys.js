@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {ExtensionResources, HTML, Localization} from "core";
 import {ExtensionLayer, RequestData, User} from "common";
 
-export class FMultiProductKeys extends Feature {
+export default class FMultiProductKeys extends Feature {
 
     apply() {
 

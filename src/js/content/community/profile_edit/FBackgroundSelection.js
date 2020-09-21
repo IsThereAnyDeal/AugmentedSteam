@@ -5,7 +5,7 @@ import {Background, DOMHelper, ExtensionLayer, SteamId} from "common";
 import {ProfileData} from "community/common";
 import Config from "config";
 
-export class FBackgroundSelection extends Feature {
+export default class FBackgroundSelection extends Feature {
 
     async apply() {
 

@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization, SyncedStorage} from "core";
 import {Prices} from "common";
 
-export class FITADPrices extends Feature {
+export default class FITADPrices extends Feature {
     checkPrerequisites() {
         return SyncedStorage.get("showlowestprice");
     }

@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, LocalStorage} from "core";
 import {ExtensionLayer, RequestData} from "common";
 
-export class FBrowseWorkshops extends Feature {
+export default class FBrowseWorkshops extends Feature {
     
     apply() {
 

@@ -4,7 +4,7 @@ import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "core";
 import {Background, Currency, ExtensionLayer, Messenger, Price, RequestData, User} from "common";
 
 // TODO Split this up
-export class FInventoryMarketHelper extends Feature {
+export default class FInventoryMarketHelper extends Feature {
 
     apply() {
 

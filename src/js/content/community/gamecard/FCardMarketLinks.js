@@ -4,7 +4,7 @@ import {HTML, Localization} from "core";
 import {Background, Currency, DOMHelper, Price} from "common";
 import {CommunityCommon} from "community/common";
 
-export class FCardMarketLinks extends Feature {
+export default class FCardMarketLinks extends Feature {
 
     async apply() {
 

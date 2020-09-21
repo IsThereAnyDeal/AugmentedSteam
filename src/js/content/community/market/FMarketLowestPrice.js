@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization, sleep, SyncedStorage} from "core";
 import {Currency, HTTPError, Price, RequestData, User} from "common";
 
-export class FMarketLowestPrice extends Feature {
+export default class FMarketLowestPrice extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn && SyncedStorage.get("showlowestmarketprice") && !SyncedStorage.get("hideactivelistings");

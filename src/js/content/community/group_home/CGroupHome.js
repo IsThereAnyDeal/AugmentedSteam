@@ -1,8 +1,8 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FFriendsInviteButton} from "./FFriendsInviteButton";
-import {FGroupLinks} from "./FGroupLinks";
+import FFriendsInviteButton from "./FFriendsInviteButton";
+import FGroupLinks from "./FGroupLinks";
 
 export class CGroupHome extends CCommunityBase {
 

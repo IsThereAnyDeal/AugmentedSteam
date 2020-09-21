@@ -2,7 +2,7 @@ import {Feature} from "modules";
 import {ExtensionResources, HTML, Localization, SyncedStorage} from "core";
 
 // todo maybe integrate with other useful links?
-export class FAStatsLink extends Feature {
+export default class FAStatsLink extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showastatslink") && this.context.hasAchievements();

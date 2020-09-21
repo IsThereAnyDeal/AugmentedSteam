@@ -2,7 +2,7 @@ import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 
-export class FCountTradeItems extends Feature {
+export default class FCountTradeItems extends Feature {
 
     apply() {
 

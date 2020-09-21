@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization} from "core";
 import {ExtensionLayer} from "common";
 
-export class FInviteButton extends Feature {
+export default class FInviteButton extends Feature {
     
     checkPrerequisites() {
         this._params = new URLSearchParams(window.location.search);

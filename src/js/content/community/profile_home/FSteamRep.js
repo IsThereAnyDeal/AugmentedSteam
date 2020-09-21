@@ -4,7 +4,7 @@ import {ExtensionResources, HTML, SyncedStorage} from "core";
 import {SteamId} from "common";
 import {ProfileData} from "community/common";
 
-export class FSteamRep extends Feature {
+export default class FSteamRep extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showsteamrepapi");

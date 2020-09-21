@@ -1,9 +1,9 @@
 import {CallbackFeature} from "modules";
 
 import {User} from "common";
-import {FHighlightsTags} from "common/FHighlightsTags";
+import FHighlightsTags from "common/FHighlightsTags";
 
-export class FWishlistHighlights extends CallbackFeature {
+export default class FWishlistHighlights extends CallbackFeature {
 
     checkPrerequisites() {
         return User.isSignedIn; // TODO ITAD status

@@ -1,10 +1,10 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FBadgeCompletionCost} from "./FBadgeCompletionCost";
-import {FCardExchangeLinks} from "community/common/FCardExchangeLinks";
-import {FBadgeSortAndFilter} from "./FBadgeSortAndFilter";
-import {FBadgeDropsCount} from "./FBadgeDropsCount";
+import FBadgeCompletionCost from "./FBadgeCompletionCost";
+import FCardExchangeLinks from "community/common/FCardExchangeLinks";
+import FBadgeSortAndFilter from "./FBadgeSortAndFilter";
+import FBadgeDropsCount from "./FBadgeDropsCount";
 
 import {HTMLParser} from "core";
 import {DOMHelper, RequestData} from "common";

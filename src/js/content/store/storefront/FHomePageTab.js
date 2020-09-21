@@ -1,7 +1,7 @@
 import {Feature} from "modules";
 import {SyncedStorage} from "core";
 
-export class FHomePageTab extends Feature {
+export default class FHomePageTab extends Feature {
 
     apply() {
         document.querySelector(".home_tabs_row").addEventListener("click", ({target}) => {

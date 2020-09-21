@@ -1,16 +1,16 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FCommunityProfileLinks} from "./FCommunityProfileLinks";
-import {FWishlistProfileLink} from "./FWishlistProfileLink";
-import {FSupporterBadges} from "./FSupporterBadges";
-import {FCustomBackground} from "./FCustomBackground";
-import {FProfileStoreLinks} from "./FProfileStoreLinks";
-import {FSteamRep} from "./FSteamRep";
-import {FProfileDropdownOptions} from "./FProfileDropdownOptions";
-import {FCustomStyle} from "./FCustomStyle";
-import {FTwitchShowcase} from "./FTwitchShowcase";
-import {FChatDropdownOptions} from "./FChatDropdownOptions";
+import FCommunityProfileLinks from "./FCommunityProfileLinks";
+import FWishlistProfileLink from "./FWishlistProfileLink";
+import FSupporterBadges from "./FSupporterBadges";
+import FCustomBackground from "./FCustomBackground";
+import FProfileStoreLinks from "./FProfileStoreLinks";
+import FSteamRep from "./FSteamRep";
+import FProfileDropdownOptions from "./FProfileDropdownOptions";
+import FCustomStyle from "./FCustomStyle";
+import FTwitchShowcase from "./FTwitchShowcase";
+import FChatDropdownOptions from "./FChatDropdownOptions";
 
 import {ProfileData} from "community/common";
 

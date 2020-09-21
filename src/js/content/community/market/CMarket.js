@@ -1,12 +1,12 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FHighlightMarketItems} from "./FHighlightMarketItems";
-import {FMarketStats} from "./FMarketStats";
-import {FHideActiveListings} from "./FHideActiveListings";
-import {FMarketSort} from "./FMarketSort";
-import {FPopularRefreshToggle} from "./FPopularRefreshToggle";
-import {FMarketLowestPrice} from "./FMarketLowestPrice";
+import FHighlightMarketItems from "./FHighlightMarketItems";
+import FMarketStats from "./FMarketStats";
+import FHideActiveListings from "./FHideActiveListings";
+import FMarketSort from "./FMarketSort";
+import FPopularRefreshToggle from "./FPopularRefreshToggle";
+import FMarketLowestPrice from "./FMarketLowestPrice";
 
 export class CMarket extends CCommunityBase {
 

@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {GameId, HTML, SyncedStorage} from "core";
 import {Stats, Viewport} from "common";
 
-export class FGamelistAchievements extends Feature {
+export default class FGamelistAchievements extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showallachievements");

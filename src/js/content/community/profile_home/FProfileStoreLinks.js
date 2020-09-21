@@ -2,7 +2,7 @@ import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 
-export class FProfileStoreLinks extends Feature {
+export default class FProfileStoreLinks extends Feature {
 
     apply() {
 

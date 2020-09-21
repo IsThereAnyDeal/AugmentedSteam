@@ -2,7 +2,7 @@ import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 
-export class FBadgePageLink extends Feature {
+export default class FBadgePageLink extends Feature {
 
     apply() {
 

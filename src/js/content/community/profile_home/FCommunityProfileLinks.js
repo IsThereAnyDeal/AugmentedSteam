@@ -4,7 +4,7 @@ import {ExtensionResources, HTML, Language, Localization, SyncedStorage} from "c
 import {Clipboard, ExtensionLayer, SteamId} from "common";
 import {CommunityCommon} from "community/common";
 
-export class FCommunityProfileLinks extends Feature {
+export default class FCommunityProfileLinks extends Feature {
 
     apply() {
 

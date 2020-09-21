@@ -4,7 +4,7 @@ import {HTML, Localization} from "core";
 import {RequestData} from "common";
 import {CommunityCommon} from "community/common";
 
-export class FBadgeDropsCount extends Feature {
+export default class FBadgeDropsCount extends Feature {
 
     checkPrerequisites() {
         return CommunityCommon.currentUserIsOwner();

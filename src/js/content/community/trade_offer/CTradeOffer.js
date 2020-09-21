@@ -1,6 +1,6 @@
 import {Context, ContextTypes} from "modules";
 
-import {FCountTradeItems} from "./FCountTradeItems";
+import FCountTradeItems from "./FCountTradeItems";
 
 export class CTradeOffer extends Context {
 

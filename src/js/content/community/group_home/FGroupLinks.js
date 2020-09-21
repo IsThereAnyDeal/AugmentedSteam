@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, SyncedStorage} from "core";
 import {CommunityCommon} from "community/common";
 
-export class FGroupLinks extends Feature {
+export default class FGroupLinks extends Feature {
 
     apply() {
 

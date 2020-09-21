@@ -1,7 +1,7 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FShowGemsCost} from "./FShowGemsCost";
+import FShowGemsCost from "./FShowGemsCost";
 
 export class CBoosterCreator extends CCommunityBase {
 

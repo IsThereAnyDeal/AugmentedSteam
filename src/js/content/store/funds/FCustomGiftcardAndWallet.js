@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization} from "core";
 import {Currency, CurrencyRegistry} from "common";
 
-export class FCustomGiftcardAndWallet extends Feature {
+export default class FCustomGiftcardAndWallet extends Feature {
 
     apply() {
 

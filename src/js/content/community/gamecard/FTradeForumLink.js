@@ -2,7 +2,7 @@ import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 
-export class FTradeForumLink extends Feature {
+export default class FTradeForumLink extends Feature {
 
     checkPrerequisites() {
         return document.querySelector(".gamecards_inventorylink") !== null;

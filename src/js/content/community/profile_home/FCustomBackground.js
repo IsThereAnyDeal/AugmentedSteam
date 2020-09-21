@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML} from "core";
 import {ProfileData} from "community/common";
 
-export class FCustomBackground extends Feature {
+export default class FCustomBackground extends Feature {
 
     async apply() {
 

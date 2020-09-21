@@ -3,7 +3,7 @@ import {Feature, ContextTypes} from "modules";
 import {HTML, Localization, SyncedStorage} from "core";
 import {DOMHelper} from "common";
 
-export class FCustomizer extends Feature {
+export default class FCustomizer extends Feature {
 
     apply() {
         if (this.context.type === ContextTypes.APP) {

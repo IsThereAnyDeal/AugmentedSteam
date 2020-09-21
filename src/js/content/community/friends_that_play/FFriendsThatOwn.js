@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, HTMLParser, Localization, SyncedStorage} from "core";
 import {Background, ExtensionLayer, RequestData} from "common";
 
-export class FFriendsThatOwn extends Feature {
+export default class FFriendsThatOwn extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showallfriendsthatown");

@@ -1,7 +1,7 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FWorkshopFileSizes} from "./FWorkshopFileSizes";
+import FWorkshopFileSizes from "./FWorkshopFileSizes";
 
 export class CMyWorkshop extends CCommunityBase {
 

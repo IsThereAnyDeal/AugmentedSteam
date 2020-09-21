@@ -2,7 +2,7 @@ import {Feature} from "modules";
 
 import {SyncedStorage} from "core";
 
-export class FHideActiveListings extends Feature {
+export default class FHideActiveListings extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("hideactivelistings");

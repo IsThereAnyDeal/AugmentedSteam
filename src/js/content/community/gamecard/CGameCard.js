@@ -1,10 +1,10 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FCardExchangeLinks} from "community/common/FCardExchangeLinks";
-import {FCardMarketLinks} from "./FCardMarketLinks";
-import {FCardFoilLink} from "./FCardFoilLink";
-import {FTradeForumLink} from "./FTradeForumLink";
+import FCardExchangeLinks from "community/common/FCardExchangeLinks";
+import FCardMarketLinks from "./FCardMarketLinks";
+import FCardFoilLink from "./FCardFoilLink";
+import FTradeForumLink from "./FTradeForumLink";
 
 import {GameId} from "core";
 

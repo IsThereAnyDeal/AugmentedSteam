@@ -3,9 +3,9 @@ import {CallbackFeature} from "modules";
 import {GameId, HTML, Localization, SyncedStorage} from "core";
 import {DynamicStore} from "common";
 
-import {FHighlightsTags} from "common/FHighlightsTags";
+import FHighlightsTags from "common/FHighlightsTags";
 
-export class FHighlightFriendsActivity extends CallbackFeature {
+export default class FHighlightFriendsActivity extends CallbackFeature {
 
     async callback() {
         await DynamicStore;

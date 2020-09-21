@@ -2,7 +2,7 @@ import {Feature} from "modules";
 import {HTML, LocalStorage, Localization, SyncedStorage} from "core";
 import {Background} from "common";
 
-export class FHowLongToBeat extends Feature {
+export default class FHowLongToBeat extends Feature {
 
     async checkPrerequisites() {
         if (!this.context.isDlc() && SyncedStorage.get("showhltb")) {

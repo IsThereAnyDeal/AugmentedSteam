@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization} from "core";
 import {DOMHelper, Price} from "common";
 
-export class FSavingsCheck extends Feature {
+export default class FSavingsCheck extends Feature {
 
     apply() {
 

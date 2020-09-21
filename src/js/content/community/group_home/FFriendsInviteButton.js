@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization} from "core";
 import {User} from "common";
 
-export class FFriendsInviteButton extends Feature {
+export default class FFriendsInviteButton extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn && document.querySelector(".grouppage_join_area") === null;

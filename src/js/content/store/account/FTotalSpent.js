@@ -1,7 +1,7 @@
 import {Feature} from "modules";
 import {HTML, Localization} from "core";
 
-export class FTotalSpent extends Feature {
+export default class FTotalSpent extends Feature {
 
     checkPrerequisites() {
         this._links = document.querySelectorAll(".account_setting_block:nth-child(2) .account_setting_sub_block:nth-child(2) .account_manage_link");

@@ -5,7 +5,7 @@ import {ExtensionLayer} from "common";
 import {ProfileData} from "community/common";
 import Config from "config";
 
-export class FStyleSelection extends Feature {
+export default class FStyleSelection extends Feature {
 
     apply() {
         

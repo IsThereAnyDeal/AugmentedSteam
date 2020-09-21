@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, HTMLParser, Localization} from "core";
 import {DOMHelper} from "common";
 
-export class FMarketSort extends Feature {
+export default class FMarketSort extends Feature {
 
     apply() {
 

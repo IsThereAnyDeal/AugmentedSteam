@@ -1,8 +1,8 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FGroupsSort} from "./FGroupsSort";
-import {FGroupsManageButton} from "./FGroupsManageButton";
+import FGroupsSort from "./FGroupsSort";
+import FGroupsManageButton from "./FGroupsManageButton";
 
 import {HTML} from "core";
 

@@ -3,7 +3,7 @@ import {Feature, ContextTypes} from "modules";
 import {HTML, LocalStorage, Localization, SyncedStorage} from "core";
 import {ExtensionLayer} from "common";
 
-export class FMediaExpander extends Feature {
+export default class FMediaExpander extends Feature {
 
     checkPrerequisites() {
         this._details = document.querySelector("#game_highlights .rightcol, .workshop_item_header .col_right");

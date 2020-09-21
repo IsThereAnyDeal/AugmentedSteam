@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, HTMLParser, Localization} from "core";
 import {ExtensionLayer, User} from "common";
 
-export class FChatDropdownOptions extends Feature {
+export default class FChatDropdownOptions extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn;

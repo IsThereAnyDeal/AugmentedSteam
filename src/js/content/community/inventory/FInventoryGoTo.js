@@ -3,7 +3,7 @@ import {CallbackFeature} from "modules";
 import {HTML, Localization, SyncedStorage} from "core";
 import {DOMHelper, ExtensionLayer} from "common";
 
-export class FInventoryGoTo extends CallbackFeature {
+export default class FInventoryGoTo extends CallbackFeature {
 
     constructor(context) {
         super(context, true, () => {

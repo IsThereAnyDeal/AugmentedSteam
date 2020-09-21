@@ -1,9 +1,9 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FFriendsCount} from "./FFriendsCount";
-import {FFriendsPlaytimeSort} from "./FFriendsPlaytimeSort";
-import {FFriendsThatOwn} from "./FFriendsThatOwn";
+import FFriendsCount from "./FFriendsCount";
+import FFriendsPlaytimeSort from "./FFriendsPlaytimeSort";
+import FFriendsThatOwn from "./FFriendsThatOwn";
 
 export class CFriendsThatPlay extends CCommunityBase {
 

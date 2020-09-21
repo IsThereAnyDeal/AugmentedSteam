@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization} from "core";
 import {Price} from "common";
 
-export class FPackBreakdown extends Feature {
+export default class FPackBreakdown extends Feature {
 
     apply() {
 

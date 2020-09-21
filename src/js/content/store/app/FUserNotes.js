@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization, SyncedStorage} from "core";
 import {User} from "common";
 
-export class FUserNotes extends Feature {
+export default class FUserNotes extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn && SyncedStorage.get("showusernotes");

@@ -3,7 +3,7 @@ import {Feature, ContextTypes} from "modules";
 import {HTML, Localization, SyncedStorage} from "core";
 import {Currency, Price, RequestData, User} from "common";
 
-export class FRegionalPricing extends Feature {
+export default class FRegionalPricing extends Feature {
 
     checkPrerequisites() {
         const countries = SyncedStorage.get("regional_countries");

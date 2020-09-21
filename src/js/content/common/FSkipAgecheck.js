@@ -1,7 +1,7 @@
 import {CallbackFeature} from "modules";
 import {SyncedStorage} from "core";
 
-export class FSkipAgecheck extends CallbackFeature {
+export default class FSkipAgecheck extends CallbackFeature {
 
     checkPrerequisites() {
         return SyncedStorage.get("send_age_info");

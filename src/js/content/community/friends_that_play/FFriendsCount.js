@@ -2,7 +2,7 @@ import {Feature} from "modules";
 
 import {HTML} from "core";
 
-export class FFriendsCount extends Feature {
+export default class FFriendsCount extends Feature {
 
     apply() {
         for (let header of document.querySelectorAll(".friendListSectionHeader")) {

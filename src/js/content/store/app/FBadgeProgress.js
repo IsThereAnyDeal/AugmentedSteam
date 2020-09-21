@@ -2,7 +2,7 @@ import {Feature} from "modules";
 import {Background, DOMHelper, User} from "common";
 import {HTML, HTMLParser, Localization, SyncedStorage} from "core";
 
-export class FBadgeProgress extends Feature {
+export default class FBadgeProgress extends Feature {
 
     checkPrerequisites() {
         return this.context.hasCards && User.isSignedIn && SyncedStorage.get("show_badge_progress");

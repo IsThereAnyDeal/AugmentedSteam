@@ -4,7 +4,7 @@ import {ExtensionResources, HTML} from "core";
 import {DOMHelper} from "common";
 import {ProfileData} from "community/common";
 
-export class FCustomStyle extends Feature {
+export default class FCustomStyle extends Feature {
 
     checkPrerequisites() {
         return document.querySelector("body.profile_page.private_profile") === null;

@@ -1,13 +1,13 @@
 import {CStoreBaseCallback} from "store/common/CStoreBaseCallback";
 import {ContextTypes} from "modules";
 
-import {FWishlistHighlights} from "./FWishlistHighlights";
-import {FWishlistITADPrices} from "./FWishlistITADPrices";
-import {FWishlistUserNotes} from "./FWishlistUserNotes";
-import {FWishlistStats} from "./FWishlistStats";
-import {FEmptyWishlist} from "./FEmptyWishlist";
-import {FExportWishlist} from "./FExportWishlist";
-import {FAlternativeLinuxIcon} from "store/common/FAlternativeLinuxIcon";
+import FWishlistHighlights from "./FWishlistHighlights";
+import FWishlistITADPrices from "./FWishlistITADPrices";
+import FWishlistUserNotes from "./FWishlistUserNotes";
+import FWishlistStats from "./FWishlistStats";
+import FEmptyWishlist from "./FEmptyWishlist";
+import FExportWishlist from "./FExportWishlist";
+import FAlternativeLinuxIcon from "store/common/FAlternativeLinuxIcon";
 
 import {ExtensionLayer, User} from "common";
 

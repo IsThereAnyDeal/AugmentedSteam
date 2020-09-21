@@ -3,7 +3,7 @@ import {CallbackFeature} from "modules";
 import {SyncedStorage} from "core";
 import {ExtensionLayer, Prices} from "common";
 
-export class FWishlistITADPrices extends CallbackFeature {
+export default class FWishlistITADPrices extends CallbackFeature {
 
     constructor(context) {
         super(context);

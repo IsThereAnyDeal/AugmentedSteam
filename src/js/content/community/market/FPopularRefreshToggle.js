@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization, LocalStorage} from "core";
 import {ExtensionLayer} from "common";
 
-export class FPopularRefreshToggle extends Feature {
+export default class FPopularRefreshToggle extends Feature {
 
     apply() {
 

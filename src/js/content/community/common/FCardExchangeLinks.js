@@ -2,7 +2,7 @@ import {CallbackFeature} from "modules";
 
 import {ExtensionResources, GameId, HTML, SyncedStorage} from "core";
 
-export class FCardExchangeLinks extends CallbackFeature {
+export default class FCardExchangeLinks extends CallbackFeature {
     
     checkPrerequisites() {
         return SyncedStorage.get("steamcardexchange");

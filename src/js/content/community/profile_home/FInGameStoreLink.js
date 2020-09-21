@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML} from "core";
 import {ExtensionLayer} from "common";
 
-export class FInGameStoreLink extends Feature {
+export default class FInGameStoreLink extends Feature {
 
     checkPrerequisites() {
         const ingameNode = document.querySelector(`input[name="ingameAppID"]`);

@@ -1,7 +1,7 @@
 import {Feature} from "modules";
 import {SyncedStorage} from "core";
 
-export class FForceMP4 extends Feature {
+export default class FForceMP4 extends Feature {
     checkPrerequisites() {
         return SyncedStorage.get("mp4video");
     }

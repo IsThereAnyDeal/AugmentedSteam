@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization} from "core";
 import {Currency, DOMHelper, RequestData, User} from "common";
 
-export class FSoldAmountLastDay extends Feature {
+export default class FSoldAmountLastDay extends Feature {
 
     checkPrerequisites() {
         return this.context.appid !== null;

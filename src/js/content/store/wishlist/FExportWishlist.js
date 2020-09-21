@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {Downloader, HTML, Localization, SyncedStorage} from "core";
 import {Clipboard, ExtensionLayer} from "common";
 
-export class FExportWishlist extends Feature {
+export default class FExportWishlist extends Feature {
 
     apply() {
         HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${Localization.str.export.wishlist}</div></div>`);

@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, HTMLParser, Localization, LocalStorage, sleep, SyncedStorage} from "core";
 import {Price, RequestData, User} from "common";
 
-export class FMarketStats extends Feature {
+export default class FMarketStats extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn;

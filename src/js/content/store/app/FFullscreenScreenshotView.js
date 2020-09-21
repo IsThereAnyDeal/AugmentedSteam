@@ -1,7 +1,7 @@
 import {Feature} from "modules";
 import {HTML} from "core";
 
-export class FFullscreenScreenshotView extends Feature {
+export default class FFullscreenScreenshotView extends Feature {
 
     apply() {
         function toggleFullScreen(ev) {

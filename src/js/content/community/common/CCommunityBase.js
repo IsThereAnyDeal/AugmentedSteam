@@ -1,6 +1,6 @@
 import {Context, ContextTypes} from "modules";
 
-import {FHideTrademarks} from "common/FHideTrademarks";
+import FHideTrademarks from "common/FHideTrademarks";
 
 export class CCommunityBase extends Context {
 

@@ -1,7 +1,7 @@
 import {Feature} from "modules";
 import {HTML, LocalStorage} from "core";
 
-export class FHDPlayer extends Feature {
+export default class FHDPlayer extends Feature {
 
     checkPrerequisites() {
         return document.querySelector("div.highlight_movie");

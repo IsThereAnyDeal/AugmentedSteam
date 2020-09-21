@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {Localization, SyncedStorage} from "core";
 import {Sortbox} from "common";
 
-export class FGroupsSort extends Feature {
+export default class FGroupsSort extends Feature {
 
     apply() {
 

@@ -3,7 +3,7 @@ import {Feature} from "modules";
 import {HTML, Localization, SyncedStorage} from "core";
 import {Background, User} from "common";
 
-export class FTwitchShowcase extends Feature {
+export default class FTwitchShowcase extends Feature {
 
     checkPrerequisites() {
         if (!SyncedStorage.get("profile_showcase_twitch")) { return false; };
