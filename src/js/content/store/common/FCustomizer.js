@@ -1,5 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
-import {ContextTypes} from "modules/ASContext";
+import {ASFeature, ContextTypes} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 import {DOMHelper} from "common";

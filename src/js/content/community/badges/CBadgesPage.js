@@ -1,5 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules/ASContext";
+import {ContextTypes} from "modules";
 
 import {FBadgeCompletionCost} from "community/badges/FBadgeCompletionCost";
 import {FCardExchangeLinks} from "community/common/FCardExchangeLinks";

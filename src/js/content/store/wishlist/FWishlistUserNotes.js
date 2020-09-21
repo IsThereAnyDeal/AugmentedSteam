@@ -1,4 +1,4 @@
-import {CallbackFeature} from "modules/CallbackFeature";
+import {CallbackFeature} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 import {UserNotes} from "store/common/UserNotes";

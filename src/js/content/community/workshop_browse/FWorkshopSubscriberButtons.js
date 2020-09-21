@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 
 import {GameId, HTML, Localization} from "core";
 import {ExtensionLayer, RequestData, User} from "common";

@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 
 export class FMultiLanguageGuide extends ASFeature {
 

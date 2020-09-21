@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 import {SyncedStorage} from "core";
 
 export class FHomePageTab extends ASFeature {

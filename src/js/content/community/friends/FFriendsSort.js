@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 
 import {HTMLParser, Localization, SyncedStorage} from "core";
 import {RequestData, Sortbox} from "common";

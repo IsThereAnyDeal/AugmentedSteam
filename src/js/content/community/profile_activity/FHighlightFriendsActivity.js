@@ -1,4 +1,4 @@
-import {CallbackFeature} from "modules/CallbackFeature";
+import {CallbackFeature} from "modules";
 
 import {GameId, HTML, Localization, SyncedStorage} from "core";
 import {DynamicStore} from "common";

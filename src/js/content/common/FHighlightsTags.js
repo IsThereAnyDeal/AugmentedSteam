@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 import {DynamicStore, ExtensionLayer, ITAD, Inventory} from "common";
 import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "core";
 

@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 
 import {HTML, Localization} from "core";
 import {Background, DOMHelper, ExtensionLayer, SteamId} from "common";

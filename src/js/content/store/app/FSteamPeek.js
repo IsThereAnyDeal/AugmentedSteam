@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 
 import {HTML, LocalStorage, Localization} from "core";
 import {ExtensionLayer} from "common";

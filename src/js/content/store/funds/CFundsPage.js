@@ -1,5 +1,5 @@
 import {CStoreBase} from "store/common/CStoreBase";
-import {ContextTypes} from "modules/ASContext";
+import {ContextTypes} from "modules";
 
 import {FCustomGiftcardAndWallet} from "store/funds/FCustomGiftcardAndWallet";
 

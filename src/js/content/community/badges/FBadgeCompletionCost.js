@@ -1,4 +1,4 @@
-import {CallbackFeature} from "modules/CallbackFeature";
+import {CallbackFeature} from "modules";
 
 import {HTML, Localization} from "core";
 import {Background, Currency, DOMHelper, Price} from "common";

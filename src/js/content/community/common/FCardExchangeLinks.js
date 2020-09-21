@@ -1,4 +1,4 @@
-import {CallbackFeature} from "modules/CallbackFeature";
+import {CallbackFeature} from "modules";
 
 import {ExtensionResources, GameId, HTML, SyncedStorage} from "core";
 

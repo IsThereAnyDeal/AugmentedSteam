@@ -1,4 +1,4 @@
-import {ContextTypes} from "modules/ASContext";
+import {ContextTypes} from "modules";
 import {CStorePage} from "store/common/CStorePage";
 
 import {FExtraLinks} from "store/common/FExtraLinks";

@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 import {User} from "common";
 import {FHighlightsTags} from "common/FHighlightsTags";
 

@@ -1,5 +1,5 @@
 import {CStorePage} from "store/common/CStorePage";
-import {ContextTypes} from "modules/ASContext";
+import {ContextTypes} from "modules";
 
 import {FRegionalPricing} from "store/common/FRegionalPricing";
 

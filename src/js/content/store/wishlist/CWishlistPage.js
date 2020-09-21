@@ -1,5 +1,5 @@
 import {CStoreBaseCallback} from "store/common/CStoreBaseCallback";
-import {ContextTypes} from "modules/ASContext";
+import {ContextTypes} from "modules";
 
 import {FWishlistHighlights} from "store/wishlist/FWishlistHighlights";
 import {FWishlistITADPrices} from "store/wishlist/FWishlistITADPrices";

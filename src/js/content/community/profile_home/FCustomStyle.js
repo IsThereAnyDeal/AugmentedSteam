@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 
 import {ExtensionResources, HTML} from "core";
 import {DOMHelper} from "common";

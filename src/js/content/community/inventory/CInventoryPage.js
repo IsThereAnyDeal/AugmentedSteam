@@ -1,5 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules/ASContext";
+import {ContextTypes} from "modules";
 
 import {FInventoryMarketHelper} from "community/inventory/FInventoryMarketHelper";
 import {FInventoryGoTo} from "community/inventory/FInventoryGoTo";

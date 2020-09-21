@@ -1,5 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules/ASContext";
+import {ContextTypes} from "modules";
 
 import {FSoldAmountLastDay} from "community/market_listing/FSoldAmountLastDay";
 import {FBackgroundPreviewLink} from "community/market_listing/FBackgroundPreviewLink";

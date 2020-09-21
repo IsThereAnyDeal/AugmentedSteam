@@ -1,4 +1,4 @@
-import {ASContext, ContextTypes} from "modules/ASContext";
+import {ASContext, ContextTypes} from "modules";
 
 import {EarlyAccess} from "common";
 import {FHighlightsTags} from "common/FHighlightsTags";

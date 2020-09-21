@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 import {HTML, SyncedStorage} from "core";
 import {Stats} from "common";
 

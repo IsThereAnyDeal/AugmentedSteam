@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 import {HTML} from "core";
 
 export class FFullscreenScreenshotView extends ASFeature {

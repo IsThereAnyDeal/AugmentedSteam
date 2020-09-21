@@ -1,4 +1,4 @@
-import {ASContext, ContextTypes} from "modules/ASContext";
+import {ASContext, ContextTypes} from "modules";
 
 import {FMultiProductKeys} from "store/registerkey/FMultiProductKeys";
 

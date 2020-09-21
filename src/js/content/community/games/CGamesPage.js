@@ -1,5 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules/ASContext";
+import {ContextTypes} from "modules";
 
 import {FGamesStats} from "community/games/FGamesStats";
 import {FCommonGames} from "community/games/FCommonGames";

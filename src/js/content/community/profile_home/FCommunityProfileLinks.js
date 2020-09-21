@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 
 import {ExtensionResources, HTML, Language, Localization, SyncedStorage} from "core";
 import {Clipboard, ExtensionLayer, SteamId} from "common";

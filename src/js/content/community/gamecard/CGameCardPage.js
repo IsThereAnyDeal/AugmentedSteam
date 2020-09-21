@@ -1,5 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules/ASContext";
+import {ContextTypes} from "modules";
 
 import {FCardExchangeLinks} from "community/common/FCardExchangeLinks";
 import {FCardMarketLinks} from "community/gamecard/FCardMarketLinks";

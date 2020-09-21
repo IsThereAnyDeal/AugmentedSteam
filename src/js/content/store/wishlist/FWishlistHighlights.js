@@ -1,4 +1,4 @@
-import {CallbackFeature} from "modules/CallbackFeature";
+import {CallbackFeature} from "modules";
 
 import {User} from "common";
 import {FHighlightsTags} from "common/FHighlightsTags";

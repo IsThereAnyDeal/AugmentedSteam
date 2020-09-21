@@ -1,4 +1,4 @@
-import {CallbackFeature} from "modules/CallbackFeature";
+import {CallbackFeature} from "modules";
 
 import {SyncedStorage} from "core";
 import {ExtensionLayer, Prices} from "common";

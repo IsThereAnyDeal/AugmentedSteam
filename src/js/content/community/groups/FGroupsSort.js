@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 
 import {Localization, SyncedStorage} from "core";
 import {Sortbox} from "common";

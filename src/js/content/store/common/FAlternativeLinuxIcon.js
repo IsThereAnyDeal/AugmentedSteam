@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 import {ExtensionResources, SyncedStorage} from "core";
 
 export class FAlternativeLinuxIcon extends ASFeature {

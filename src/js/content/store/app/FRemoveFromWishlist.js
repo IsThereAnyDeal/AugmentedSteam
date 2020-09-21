@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 
 import {ExtensionResources, HTML, Localization} from "core";
 import {DynamicStore, ExtensionLayer, User} from "common";

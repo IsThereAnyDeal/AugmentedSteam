@@ -1,5 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules/ASContext";
+import {ContextTypes} from "modules";
 
 import {FGroupsSort} from "community/groups/FGroupsSort";
 import {FGroupsManageButton} from "community/groups/FGroupsManageButton";

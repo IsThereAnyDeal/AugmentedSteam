@@ -1,5 +1,5 @@
 import {CAppPage} from "community/app/CAppPage";
-import {ContextTypes} from "modules/ASContext";
+import {ContextTypes} from "modules";
 
 import {FRemoveGuidesLangFilter} from "./FRemoveGuidesLangFilter";
 

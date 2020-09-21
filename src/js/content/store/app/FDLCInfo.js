@@ -1,4 +1,4 @@
-import {ASFeature} from "modules/ASFeature";
+import {ASFeature} from "modules";
 import {Background} from "common";
 import Config from "config";
 import {HTML, Localization} from "core";
