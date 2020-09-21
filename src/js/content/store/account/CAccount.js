@@ -1,6 +1,6 @@
 import {Context, ContextTypes} from "modules";
 
-import {FTotalSpent} from "store/account/FTotalSpent";
+import {FTotalSpent} from "./FTotalSpent";
 
 export class CAccount extends Context {
 

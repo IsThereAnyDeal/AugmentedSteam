@@ -1,9 +1,9 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FGamesStats} from "community/games/FGamesStats";
-import {FCommonGames} from "community/games/FCommonGames";
-import {FGamelistAchievements} from "community/games/FGamelistAchievements";
+import {FGamesStats} from "./FGamesStats";
+import {FCommonGames} from "./FCommonGames";
+import {FGamelistAchievements} from "./FGamelistAchievements";
 
 export class CGames extends CCommunityBase {
 

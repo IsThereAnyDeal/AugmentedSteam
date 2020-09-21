@@ -1,7 +1,7 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FHighlightFriendsActivity} from "community/profile_activity/FHighlightFriendsActivity";
+import {FHighlightFriendsActivity} from "./FHighlightFriendsActivity";
 
 import {EarlyAccess} from "common";
 import {CommentHandler} from "community/common/CommentHandler";

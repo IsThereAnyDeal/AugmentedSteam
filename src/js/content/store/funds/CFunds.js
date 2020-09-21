@@ -1,7 +1,7 @@
 import {CStoreBase} from "store/common/CStoreBase";
 import {ContextTypes} from "modules";
 
-import {FCustomGiftcardAndWallet} from "store/funds/FCustomGiftcardAndWallet";
+import {FCustomGiftcardAndWallet} from "./FCustomGiftcardAndWallet";
 
 export class CFunds extends CStoreBase {
 

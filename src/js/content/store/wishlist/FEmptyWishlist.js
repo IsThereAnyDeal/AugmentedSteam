@@ -2,7 +2,7 @@ import {Feature} from "modules";
 
 import {HTML, HTMLParser, Localization, SyncedStorage} from "core";
 import {DynamicStore, ExtensionLayer, RequestData, User} from "common";
-import {FExportWishlist} from "store/wishlist/FExportWishlist";
+import {FExportWishlist} from "./FExportWishlist";
 
 export class FEmptyWishlist extends Feature {
 

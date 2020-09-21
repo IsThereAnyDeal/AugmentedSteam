@@ -1,10 +1,10 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FSoldAmountLastDay} from "community/market_listing/FSoldAmountLastDay";
-import {FBackgroundPreviewLink} from "community/market_listing/FBackgroundPreviewLink";
-import {FBadgePageLink} from "community/market_listing/FBadgePageLink";
-import {FPriceHistoryZoomControl} from "community/market_listing/FPriceHistoryZoomControl";
+import {FSoldAmountLastDay} from "./FSoldAmountLastDay";
+import {FBackgroundPreviewLink} from "./FBackgroundPreviewLink";
+import {FBadgePageLink} from "./FBadgePageLink";
+import {FPriceHistoryZoomControl} from "./FPriceHistoryZoomControl";
 
 import {GameId} from "core";
 

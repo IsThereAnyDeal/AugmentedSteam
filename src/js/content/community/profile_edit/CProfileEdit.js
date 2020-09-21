@@ -1,8 +1,8 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {FBackgroundSelection} from "community/profile_edit/FBackgroundSelection";
-import {FStyleSelection} from "community/profile_edit/FStyleSelection";
+import {FBackgroundSelection} from "./FBackgroundSelection";
+import {FStyleSelection} from "./FStyleSelection";
 
 import {ProfileData} from "community/common";
 
