@@ -1,7 +1,7 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 import {HTML, Localization, SyncedStorage} from "core";
 
-export class FPackageInfoButton extends ASFeature {
+export class FPackageInfoButton extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("show_package_info");

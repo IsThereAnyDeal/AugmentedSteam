@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 import {Background} from "common";
 import Config from "config";
 import {HTML, Localization} from "core";
 
-export class FDLCInfo extends ASFeature {
+export class FDLCInfo extends Feature {
 
     checkPrerequisites() {
         return this.context.isDlc();

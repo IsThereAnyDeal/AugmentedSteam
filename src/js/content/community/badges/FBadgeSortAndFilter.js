@@ -1,10 +1,10 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {DOMHelper, ExtensionLayer} from "common";
 import {CommunityCommon} from "community/common";
 
-export class FBadgeSortAndFilter extends ASFeature {
+export class FBadgeSortAndFilter extends Feature {
 
     apply() {
         this._addSort();

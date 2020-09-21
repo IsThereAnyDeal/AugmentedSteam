@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, HTMLParser, Localization, SyncedStorage} from "core";
 
-export class FGamesStats extends ASFeature {
+export class FGamesStats extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showallstats");

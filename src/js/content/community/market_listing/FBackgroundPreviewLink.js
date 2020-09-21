@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {User} from "common";
 
-export class FBackgroundPreviewLink extends ASFeature {
+export class FBackgroundPreviewLink extends Feature {
 
     checkPrerequisites() {
         return this.context.appid === 753;

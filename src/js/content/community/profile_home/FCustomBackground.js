@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML} from "core";
 import {ProfileData} from "community/common";
 
-export class FCustomBackground extends ASFeature {
+export class FCustomBackground extends Feature {
 
     async apply() {
 

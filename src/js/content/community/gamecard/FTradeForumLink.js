@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 
-export class FTradeForumLink extends ASFeature {
+export class FTradeForumLink extends Feature {
 
     checkPrerequisites() {
         return document.querySelector(".gamecards_inventorylink") !== null;

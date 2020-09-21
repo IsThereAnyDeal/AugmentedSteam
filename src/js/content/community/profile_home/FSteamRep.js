@@ -1,10 +1,10 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {ExtensionResources, HTML, SyncedStorage} from "core";
 import {SteamId} from "common";
 import {ProfileData} from "community/common";
 
-export class FSteamRep extends ASFeature {
+export class FSteamRep extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showsteamrepapi");

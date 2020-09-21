@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {Currency, CurrencyRegistry} from "common";
 
-export class FCustomGiftcardAndWallet extends ASFeature {
+export class FCustomGiftcardAndWallet extends Feature {
 
     apply() {
 

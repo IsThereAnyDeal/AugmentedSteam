@@ -1,8 +1,8 @@
-import {ASContext, ContextTypes} from "modules";
+import {Context, ContextTypes} from "modules";
 
 import {FSkipAgecheck} from "common/FSkipAgecheck";
 
-export class CAgecheckPage extends ASContext {
+export class CAgecheckPage extends Context {
 
     constructor() {
         super([

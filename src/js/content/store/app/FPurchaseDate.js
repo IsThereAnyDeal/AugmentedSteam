@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {Language, Localization, SyncedStorage} from "core";
 import {User} from "common";
 
-export class FPurchaseDate extends ASFeature {
+export class FPurchaseDate extends Feature {
 
     checkPrerequisites() {
         if (User.isSignedIn && SyncedStorage.get("purchase_dates")) {

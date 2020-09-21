@@ -1,6 +1,6 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
-export class FExpandAchievementDesc extends ASFeature {
+export class FExpandAchievementDesc extends Feature {
 
     apply() {
         // .ellipsis is only added by Steam on personal stats pages

@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 import {User} from "common";
 import {FHighlightsTags} from "common/FHighlightsTags";
 
-export class FHighlightStoreFront extends ASFeature {
+export class FHighlightStoreFront extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn; // TODO ITAD status

@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {ExtensionResources, HTML, Localization, SyncedStorage} from "core";
 import {Background, DynamicStore, User} from "common";
 
-export class FCommunityAppPageWishlist extends ASFeature {
+export class FCommunityAppPageWishlist extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn && SyncedStorage.get("wlbuttoncommunityapp");

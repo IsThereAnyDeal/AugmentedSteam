@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 import {Background} from "common";
 import {HTML, Localization} from "core";
 
-export class FOwnedElsewhere extends ASFeature {
+export class FOwnedElsewhere extends Feature {
 
     async checkPrerequisites() {
         return !this.context.isOwned() && await Background.action("itad.isconnected");

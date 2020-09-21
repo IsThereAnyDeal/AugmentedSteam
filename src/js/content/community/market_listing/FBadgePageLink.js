@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 
-export class FBadgePageLink extends ASFeature {
+export class FBadgePageLink extends Feature {
 
     apply() {
 

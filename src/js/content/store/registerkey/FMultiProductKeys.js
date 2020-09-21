@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {ExtensionResources, HTML, Localization} from "core";
 import {ExtensionLayer, RequestData, User} from "common";
 
-export class FMultiProductKeys extends ASFeature {
+export class FMultiProductKeys extends Feature {
 
     apply() {
 

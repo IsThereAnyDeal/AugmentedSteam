@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTMLParser, Localization, SyncedStorage} from "core";
 import {RequestData, Sortbox} from "common";
 
-export class FFriendsSort extends ASFeature {
+export class FFriendsSort extends Feature {
 
     checkPrerequisites() {
         return document.querySelectorAll(".friend_block_v2.persona.offline").length !== 0 && document.querySelector("#manage_friends_control") !== null;

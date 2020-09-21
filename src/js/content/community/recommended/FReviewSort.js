@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTMLParser, Localization, SyncedStorage} from "core";
 import {Background, ExtensionLayer, Messenger, Sortbox} from "common";
 
-export class FReviewSort extends ASFeature {
+export class FReviewSort extends Feature {
 
     apply() {
 

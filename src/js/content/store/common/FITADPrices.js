@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 import {Prices} from "common";
 
-export class FITADPrices extends ASFeature {
+export class FITADPrices extends Feature {
     checkPrerequisites() {
         return SyncedStorage.get("showlowestprice");
     }

@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 import {Background} from "common";
 
-export class FWishlistProfileLink extends ASFeature {
+export class FWishlistProfileLink extends Feature {
 
     checkPrerequisites() {
         return document.querySelector("body.profile_page.private_profile") === null

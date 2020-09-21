@@ -1,10 +1,10 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {ExtensionResources, HTML, Language, Localization, SyncedStorage} from "core";
 import {Clipboard, ExtensionLayer, SteamId} from "common";
 import {CommunityCommon} from "community/common";
 
-export class FCommunityProfileLinks extends ASFeature {
+export class FCommunityProfileLinks extends Feature {
 
     apply() {
 

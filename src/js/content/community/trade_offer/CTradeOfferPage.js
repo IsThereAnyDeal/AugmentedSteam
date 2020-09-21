@@ -1,8 +1,8 @@
-import {ASContext, ContextTypes} from "modules";
+import {Context, ContextTypes} from "modules";
 
 import {FCountTradeItems} from "./FCountTradeItems";
 
-export class CTradeOfferPage extends ASContext {
+export class CTradeOfferPage extends Context {
 
     constructor() {
         super([

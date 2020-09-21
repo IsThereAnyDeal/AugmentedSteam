@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 import {DynamicStore, ExtensionLayer, ITAD, Inventory} from "common";
 import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "core";
 
-export class FHighlightsTags extends ASFeature {
+export class FHighlightsTags extends Feature {
 
     async apply() {
 

@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {Background, ExtensionLayer, RequestData} from "common";
 
-export class FWorkshopFileSizes extends ASFeature {
+export class FWorkshopFileSizes extends Feature {
 
     async apply() {
         this._addFileSizes();

@@ -1,11 +1,11 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import Config from "config";
 import {HTML, Localization} from "core";
 import {ExtensionLayer} from "common";
 import {ProfileData} from "community/common";
 
-export class FSupporterBadges extends ASFeature {
+export class FSupporterBadges extends Feature {
 
     async apply() {
 

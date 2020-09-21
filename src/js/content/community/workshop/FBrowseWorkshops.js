@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, LocalStorage} from "core";
 import {ExtensionLayer, RequestData} from "common";
 
-export class FBrowseWorkshops extends ASFeature {
+export class FBrowseWorkshops extends Feature {
     
     apply() {
 

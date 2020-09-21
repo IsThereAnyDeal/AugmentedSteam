@@ -1,4 +1,4 @@
-export class ASFeature {
+export class Feature {
 
     constructor(context) {
         this.context = context;
@@ -20,7 +20,7 @@ export class ASFeature {
     }
 }
 
-export class ASContext {
+export class Context {
 
     constructor(features) {
         this._callbacks = [];
@@ -28,7 +28,7 @@ export class ASContext {
     }
 
     applyFeatures() {
-        return ASFeatureManager.apply(this.features);
+        return FeatureManager.apply(this.features);
     }
 
     registerCallback(fn) {
@@ -98,7 +98,7 @@ if (!Promise.allSettled) {
     );
 }
 
-export class ASFeatureManager {
+export class FeatureManager {
     static async apply(features) {
 
         const promisesMap = new Map();
@@ -188,7 +188,7 @@ export class ASFeatureManager {
     }
 }
 
-export class CallbackFeature extends ASFeature {
+export class CallbackFeature extends Feature {
 
     constructor(context, initialCall = true, setupFn) {
 

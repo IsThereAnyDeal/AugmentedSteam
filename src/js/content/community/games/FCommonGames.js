@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, HTMLParser, Localization} from "core";
 import {ExtensionLayer, RequestData, User} from "common";
 
-export class FCommonGames extends ASFeature {
+export class FCommonGames extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn && document.querySelector("label[for='show_common_games']");

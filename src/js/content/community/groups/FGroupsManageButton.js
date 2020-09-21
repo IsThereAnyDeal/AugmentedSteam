@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {ConfirmDialog, ExtensionLayer, RequestData, User} from "common";
 
-export class FGroupsManageButton extends ASFeature {
+export class FGroupsManageButton extends Feature {
 
     checkPrerequisites() {
         return this.context.groups.length !== 0 && this.context.groups[0].querySelector(".actions") !== null;

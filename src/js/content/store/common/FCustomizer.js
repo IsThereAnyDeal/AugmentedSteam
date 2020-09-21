@@ -1,9 +1,9 @@
-import {ASFeature, ContextTypes} from "modules";
+import {Feature, ContextTypes} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 import {DOMHelper} from "common";
 
-export class FCustomizer extends ASFeature {
+export class FCustomizer extends Feature {
 
     apply() {
         if (this.context.type === ContextTypes.APP) {

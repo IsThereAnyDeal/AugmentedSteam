@@ -1,8 +1,8 @@
-import {ASContext, ContextTypes} from "modules";
+import {Context, ContextTypes} from "modules";
 
 import {FMultiProductKeys} from "store/registerkey/FMultiProductKeys";
 
-export class CRegisterKeyPage extends ASContext {
+export class CRegisterKeyPage extends Context {
 
     constructor() {
         super([

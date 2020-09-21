@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 import {User} from "common";
 
-export class FOwnedActionsButtons extends ASFeature {
+export class FOwnedActionsButtons extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn && document.querySelector(".game_area_play_stats .already_owned_actions");

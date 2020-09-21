@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {Price} from "common";
 
-export class FPackBreakdown extends ASFeature {
+export class FPackBreakdown extends Feature {
 
     apply() {
 

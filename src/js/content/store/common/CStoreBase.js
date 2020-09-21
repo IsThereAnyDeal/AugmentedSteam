@@ -1,11 +1,11 @@
-import {ASContext, ContextTypes} from "modules";
+import {Context, ContextTypes} from "modules";
 
 import {EarlyAccess} from "common";
 import {FHighlightsTags} from "common/FHighlightsTags";
 import {FAlternativeLinuxIcon} from "store/common/FAlternativeLinuxIcon";
 import {FHideTrademarks} from "common/FHideTrademarks";
 
-export class CStoreBase extends ASContext {
+export class CStoreBase extends Context {
 
     constructor(features = []) {
 

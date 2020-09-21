@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, SyncedStorage} from "core";
 
-export class FCommunityAppPageLinks extends ASFeature {
+export class FCommunityAppPageLinks extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showsteamdb") || SyncedStorage.get("showitadlinks") || SyncedStorage.get("showbartervg");

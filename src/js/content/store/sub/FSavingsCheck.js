@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {DOMHelper, Price} from "common";
 
-export class FSavingsCheck extends ASFeature {
+export class FSavingsCheck extends Feature {
 
     apply() {
 

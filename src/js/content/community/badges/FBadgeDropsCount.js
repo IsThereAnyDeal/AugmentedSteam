@@ -1,10 +1,10 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {RequestData} from "common";
 import {CommunityCommon} from "community/common";
 
-export class FBadgeDropsCount extends ASFeature {
+export class FBadgeDropsCount extends Feature {
 
     checkPrerequisites() {
         return CommunityCommon.currentUserIsOwner();

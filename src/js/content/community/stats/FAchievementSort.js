@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {Localization} from "core";
 import {RequestData, Sortbox} from "common";
 
-export class FAchievementSort extends ASFeature {
+export class FAchievementSort extends Feature {
 
     checkPrerequisites() {
         return (this._personal = document.getElementById("personalAchieve")) !== null;

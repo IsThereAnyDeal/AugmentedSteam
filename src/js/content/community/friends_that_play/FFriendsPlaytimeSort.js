@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {Localization} from "core";
 import {Sortbox} from "common";
 
-export class FFriendsPlaytimeSort extends ASFeature {
+export class FFriendsPlaytimeSort extends Feature {
 
     apply() {
 

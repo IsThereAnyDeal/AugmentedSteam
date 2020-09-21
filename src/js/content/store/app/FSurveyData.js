@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 
-export class FSurveyData extends ASFeature {
+export class FSurveyData extends Feature {
 
     async checkPrerequisites() {
         if (this.context.isVideo() || this.context.isDlc() || !document.querySelector(".sys_req")) { return false; }

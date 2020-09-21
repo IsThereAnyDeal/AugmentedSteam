@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 import {Inventory} from "common";
 
-export class FShowCoupon extends ASFeature {
+export class FShowCoupon extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("show_coupon");

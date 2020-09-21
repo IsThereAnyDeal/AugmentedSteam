@@ -1,11 +1,11 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {ExtensionResources, HTML, Localization} from "core";
 import {ExtensionLayer} from "common";
 import {ProfileData} from "community/common";
 import Config from "config";
 
-export class FStyleSelection extends ASFeature {
+export class FStyleSelection extends Feature {
 
     apply() {
         

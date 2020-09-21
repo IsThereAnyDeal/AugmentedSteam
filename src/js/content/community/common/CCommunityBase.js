@@ -1,8 +1,8 @@
-import {ASContext, ContextTypes} from "modules";
+import {Context, ContextTypes} from "modules";
 
 import {FHideTrademarks} from "common/FHideTrademarks";
 
-export class CCommunityBase extends ASContext {
+export class CCommunityBase extends Context {
 
     constructor(features = []) {
 

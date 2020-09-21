@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 import {Background, User} from "common";
 
-export class FTwitchShowcase extends ASFeature {
+export class FTwitchShowcase extends Feature {
 
     checkPrerequisites() {
         if (!SyncedStorage.get("profile_showcase_twitch")) { return false; };

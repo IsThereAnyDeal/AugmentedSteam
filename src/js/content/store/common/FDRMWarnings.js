@@ -1,8 +1,8 @@
-import {ASFeature, ContextTypes} from "modules";
+import {Feature, ContextTypes} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 
-export class FDRMWarnings extends ASFeature {
+export class FDRMWarnings extends Feature {
 
     checkPrerequisites() {
         if (!SyncedStorage.get("showdrm")) { return false; }

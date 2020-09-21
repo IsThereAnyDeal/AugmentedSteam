@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML} from "core";
 
-export class FFriendsCount extends ASFeature {
+export class FFriendsCount extends Feature {
 
     apply() {
         for (let header of document.querySelectorAll(".friendListSectionHeader")) {

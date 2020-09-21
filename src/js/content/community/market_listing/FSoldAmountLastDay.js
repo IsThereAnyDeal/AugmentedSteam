@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {Currency, DOMHelper, RequestData, User} from "common";
 
-export class FSoldAmountLastDay extends ASFeature {
+export class FSoldAmountLastDay extends Feature {
 
     checkPrerequisites() {
         return this.context.appid !== null;

@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization, LocalStorage} from "core";
 import {ExtensionLayer, Messenger} from "common";
 
-export class FCustomTags extends ASFeature {
+export class FCustomTags extends Feature {
 
     apply() {
         this._addTags();

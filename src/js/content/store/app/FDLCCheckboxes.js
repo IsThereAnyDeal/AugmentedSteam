@@ -1,7 +1,7 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 import {ExtensionResources, HTML, Localization} from "core";
 
-export class FDLCCheckboxes extends ASFeature {
+export class FDLCCheckboxes extends Feature {
 
     checkPrerequisites() {
         return document.querySelector(".game_area_dlc_section .game_area_dlc_list");

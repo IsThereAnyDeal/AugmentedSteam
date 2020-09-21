@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {GameId, HTML, SyncedStorage} from "core";
 import {Stats, Viewport} from "common";
 
-export class FGamelistAchievements extends ASFeature {
+export class FGamelistAchievements extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showallachievements");

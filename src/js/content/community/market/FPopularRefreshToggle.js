@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization, LocalStorage} from "core";
 import {ExtensionLayer} from "common";
 
-export class FPopularRefreshToggle extends ASFeature {
+export class FPopularRefreshToggle extends Feature {
 
     apply() {
 

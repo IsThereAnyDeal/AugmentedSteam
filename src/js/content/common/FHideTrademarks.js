@@ -1,8 +1,8 @@
-import {ASFeature, ContextTypes} from "modules";
+import {Feature, ContextTypes} from "modules";
 
 import {HTML, SyncedStorage} from "core";
 
-export class FHideTrademarks extends ASFeature {
+export class FHideTrademarks extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("hidetmsymbols");

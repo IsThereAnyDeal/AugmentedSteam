@@ -1,10 +1,10 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, LocalStorage, Localization} from "core";
 import {ExtensionLayer} from "common";
 import {FHighlightsTags} from "common/FHighlightsTags";
 
-export class FSteamPeek extends ASFeature {
+export class FSteamPeek extends Feature {
 
     checkPrerequisites() {
         this._moreLikeThis = document.querySelector("#recommended_block");

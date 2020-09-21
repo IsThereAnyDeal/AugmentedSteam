@@ -1,10 +1,10 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {Background, Currency, DOMHelper, Price} from "common";
 import {CommunityCommon} from "community/common";
 
-export class FCardMarketLinks extends ASFeature {
+export class FCardMarketLinks extends Feature {
 
     async apply() {
 

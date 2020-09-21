@@ -1,9 +1,9 @@
-import {ASFeature, ContextTypes} from "modules";
+import {Feature, ContextTypes} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 import {Currency, Price, RequestData, User} from "common";
 
-export class FRegionalPricing extends ASFeature {
+export class FRegionalPricing extends Feature {
 
     checkPrerequisites() {
         const countries = SyncedStorage.get("regional_countries");

@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 
-export class FCardFoilLink extends ASFeature {
+export class FCardFoilLink extends Feature {
 
     checkPrerequisites() {
         return document.querySelector(".gamecards_inventorylink") !== null;

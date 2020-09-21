@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {ExtensionLayer} from "common";
 
-export class FPriceHistoryZoomControl extends ASFeature {
+export class FPriceHistoryZoomControl extends Feature {
 
     apply() {
         HTML.afterEnd(document.querySelectorAll(".zoomopt")[1], `<a class="zoomopt as-zoomcontrol">${Localization.str.year}</a>`);

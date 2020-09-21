@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {ExtensionLayer} from "common";
 
-export class FReplaceDevPubLinks extends ASFeature {
+export class FReplaceDevPubLinks extends Feature {
 
     apply() {
         const devs = Array.from(document.querySelectorAll("#developers_list > a, .details_block > .dev_row:first-of-type > a"));

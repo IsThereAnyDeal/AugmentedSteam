@@ -1,10 +1,10 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {ExtensionResources, HTML} from "core";
 import {DOMHelper} from "common";
 import {ProfileData} from "community/common";
 
-export class FCustomStyle extends ASFeature {
+export class FCustomStyle extends Feature {
 
     checkPrerequisites() {
         return document.querySelector("body.profile_page.private_profile") === null;

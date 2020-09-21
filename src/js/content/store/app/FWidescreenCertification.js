@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {ExtensionResources, HTML, Localization, SyncedStorage} from "core";
 
-export class FWidescreenCertification extends ASFeature {
+export class FWidescreenCertification extends Feature {
 
     async checkPrerequisites() {
         if (!this.context.isDlc() && SyncedStorage.get("showwsgf")) {

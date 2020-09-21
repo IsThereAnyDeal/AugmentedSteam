@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 import {Background, ExtensionLayer} from "common";
 
-export class FWaitlistDropdown extends ASFeature {
+export class FWaitlistDropdown extends Feature {
 
     async checkPrerequisites() {
         return document.querySelector("#add_to_wishlist_area") && SyncedStorage.get("add_to_waitlist") && await Background.action("itad.isconnected");

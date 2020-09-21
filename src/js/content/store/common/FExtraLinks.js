@@ -1,8 +1,8 @@
-import {ASFeature, ContextTypes} from "modules";
+import {Feature, ContextTypes} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 
-export class FExtraLinks extends ASFeature {
+export class FExtraLinks extends Feature {
 
     checkPrerequisites() {
         const context = this.context;

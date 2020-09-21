@@ -1,4 +1,4 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {EarlyAccess, ExtensionLayer, Messenger} from "common";
@@ -11,7 +11,7 @@ import {NegativeSearchFilter} from "store/search/filters/NegativeSearchFilter";
 import {ReviewsCountSearchFilter} from "store/search/filters/ReviewsCountSearchFilter";
 import {ReviewsScoreSearchFilter} from "store/search/filters/ReviewsScoreSearchFilter";
 
-export class FSearchFilters extends ASFeature {
+export class FSearchFilters extends Feature {
 
     apply() {
 

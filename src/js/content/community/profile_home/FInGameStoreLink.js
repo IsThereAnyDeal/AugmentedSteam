@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML} from "core";
 import {ExtensionLayer} from "common";
 
-export class FInGameStoreLink extends ASFeature {
+export class FInGameStoreLink extends Feature {
 
     checkPrerequisites() {
         const ingameNode = document.querySelector(`input[name="ingameAppID"]`);

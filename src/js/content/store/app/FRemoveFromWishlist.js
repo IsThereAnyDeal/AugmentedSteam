@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {ExtensionResources, HTML, Localization} from "core";
 import {DynamicStore, ExtensionLayer, User} from "common";
 
-export class FRemoveFromWishlist extends ASFeature {
+export class FRemoveFromWishlist extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn && !this.context.isOwned();

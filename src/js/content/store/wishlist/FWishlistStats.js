@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 import {ExtensionLayer, Price} from "common";
 
-export class FWishlistStats extends ASFeature {
+export class FWishlistStats extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showwishliststats") && document.getElementById("nothing_to_see_here").style.display === "none";

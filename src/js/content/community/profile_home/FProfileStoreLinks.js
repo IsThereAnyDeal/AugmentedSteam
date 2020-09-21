@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 
-export class FProfileStoreLinks extends ASFeature {
+export class FProfileStoreLinks extends Feature {
 
     apply() {
 

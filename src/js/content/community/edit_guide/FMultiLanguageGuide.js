@@ -1,6 +1,6 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
-export class FMultiLanguageGuide extends ASFeature {
+export class FMultiLanguageGuide extends Feature {
 
     apply() {
         for (const tag of document.getElementsByName("tags[]")) {

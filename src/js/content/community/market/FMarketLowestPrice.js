@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization, sleep, SyncedStorage} from "core";
 import {Currency, HTTPError, Price, RequestData, User} from "common";
 
-export class FMarketLowestPrice extends ASFeature {
+export class FMarketLowestPrice extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn && SyncedStorage.get("showlowestmarketprice") && !SyncedStorage.get("hideactivelistings");

@@ -1,11 +1,11 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 import {Background, DOMHelper, ExtensionLayer, SteamId} from "common";
 import {ProfileData} from "community/common";
 import Config from "config";
 
-export class FBackgroundSelection extends ASFeature {
+export class FBackgroundSelection extends Feature {
 
     async apply() {
 

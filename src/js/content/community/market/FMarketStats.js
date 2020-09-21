@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, HTMLParser, Localization, LocalStorage, sleep, SyncedStorage} from "core";
 import {Price, RequestData, User} from "common";
 
-export class FMarketStats extends ASFeature {
+export class FMarketStats extends Feature {
 
     checkPrerequisites() {
         return User.isSignedIn;

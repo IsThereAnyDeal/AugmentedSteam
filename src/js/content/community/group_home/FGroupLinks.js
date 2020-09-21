@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, SyncedStorage} from "core";
 import {CommunityCommon} from "community/common";
 
-export class FGroupLinks extends ASFeature {
+export class FGroupLinks extends Feature {
 
     apply() {
 

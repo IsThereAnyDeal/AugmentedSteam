@@ -1,7 +1,7 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 import {ExtensionResources, SyncedStorage} from "core";
 
-export class FAlternativeLinuxIcon extends ASFeature {
+export class FAlternativeLinuxIcon extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("show_alternative_linux_icon");

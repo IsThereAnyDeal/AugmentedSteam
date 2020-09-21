@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
 
-export class FCountTradeItems extends ASFeature {
+export class FCountTradeItems extends Feature {
 
     apply() {
 

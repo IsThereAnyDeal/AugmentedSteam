@@ -1,8 +1,8 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {SyncedStorage} from "core";
 
-export class FRemoveGuidesLangFilter extends ASFeature {
+export class FRemoveGuidesLangFilter extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("removeguideslanguagefilter");

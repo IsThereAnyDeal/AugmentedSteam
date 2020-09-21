@@ -1,8 +1,8 @@
-import {ASContext, ContextTypes} from "modules";
+import {Context, ContextTypes} from "modules";
 
 import {FTotalSpent} from "store/account/FTotalSpent";
 
-export class CAccountPage extends ASContext {
+export class CAccountPage extends Context {
 
     constructor() {
         super([

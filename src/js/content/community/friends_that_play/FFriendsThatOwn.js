@@ -1,9 +1,9 @@
-import {ASFeature} from "modules";
+import {Feature} from "modules";
 
 import {HTML, HTMLParser, Localization, SyncedStorage} from "core";
 import {Background, ExtensionLayer, RequestData} from "common";
 
-export class FFriendsThatOwn extends ASFeature {
+export class FFriendsThatOwn extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showallfriendsthatown");
