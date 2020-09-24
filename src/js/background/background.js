@@ -97,11 +97,13 @@ class Api {
         if (responseHandler) { responseHandler(response); }
         return response.json();
     }
+
     static async getPage(endpoint, query, responseHandler, params = {}) {
         const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "GET"}));
         if (responseHandler) { responseHandler(response); }
         return response.text();
     }
+
     static async postEndpoint(endpoint, query, responseHandler, params = {}) {
         if (!endpoint.endsWith("/")) { endpoint += "/"; }
 
@@ -109,6 +111,7 @@ class Api {
         if (responseHandler) { responseHandler(response); }
         return response.json();
     }
+
     static async deleteEndpoint(endpoint, query, responseHandler, params = {}) {
         if (!endpoint.endsWith("/")) { endpoint += "/"; }
 
@@ -116,6 +119,7 @@ class Api {
         if (responseHandler) { responseHandler(response); }
         return response.json();
     }
+
     static endpointFactory(endpoint, objPath) {
         return async params => {
             let result = await this.getEndpoint(endpoint, params);
@@ -133,6 +137,7 @@ class Api {
             return result;
         };
     }
+
     static endpointFactoryCached(endpoint, storeName, mapFn) {
         return async({params, key} = {}) => {
             let result = await this.getEndpoint(endpoint, params);
@@ -516,9 +521,9 @@ class ContextMenu {
 
     static onClick(info) {
         const query = encodeURIComponent(info.selectionText.trim());
-        let url = ContextMenu.queryLinks[info.menuItemId];
+        const url = ContextMenu.queryLinks[info.menuItemId];
         if (!url) { return; }
-        
+
         if (info.menuItemId === "context_steam_keys") {
             const steamKeys = query.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
             if (!steamKeys || steamKeys.length === 0) {
@@ -526,7 +531,7 @@ class ContextMenu {
                 return;
             }
 
-            for (let steamKey of steamKeys) {
+            for (const steamKey of steamKeys) {
                 browser.tabs.create({"url": url.replace("__steamkey__", steamKey)});
             }
         } else {
@@ -769,6 +774,7 @@ class SteamStore extends Api {
 
         return SteamStore.endpointFactory("api/appdetails/", appid)(params);
     }
+
     static appUserDetails(appid) { return SteamStore.endpointFactory("api/appuserdetails/", appid)({"appids": appid}); }
 }
 SteamStore.origin = "https://store.steampowered.com/";
@@ -1058,14 +1064,14 @@ class SteamCommunity extends Api {
         const html = await self.getPage(profilePath);
         const profileData = HTMLParser.getVariableFromText(html, "g_rgProfileData", "object");
         const steamId = profileData.steamid;
-        
+
         if (!steamId) { // this should never happen
             throw new Error("Failed to retrieve steamID from profile");
         }
 
         self.logout(true);
 
-        const value = { steamId, profilePath };
+        const value = {steamId, profilePath};
         LocalStorage.set("login", value);
 
         return value;
@@ -1112,6 +1118,7 @@ class Steam {
         // https://partner.steamgames.com/doc/store/pricing/currencies
         return ExtensionResources.getJSON("json/currency.json");
     }
+
     static async currencies() {
         const self = Steam;
         if (!self._supportedCurrencies || self._supportedCurrencies.length < 1) {
@@ -1166,6 +1173,7 @@ class IndexedDB {
             .then(db => { IndexedDB.db = db; })
             .then(IndexedDB._deleteOldData);
     }
+
     static then(onDone, onCatch) {
         return IndexedDB.init().then(onDone, onCatch);
     }

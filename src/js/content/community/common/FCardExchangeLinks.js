@@ -3,17 +3,17 @@ import {CallbackFeature} from "modules";
 import {ExtensionResources, GameId, HTML, SyncedStorage} from "core";
 
 export default class FCardExchangeLinks extends CallbackFeature {
-    
+
     checkPrerequisites() {
         return SyncedStorage.get("steamcardexchange");
     }
 
     callback() {
 
-        let ceImg = ExtensionResources.getURL("img/ico/steamcardexchange.png");
+        const ceImg = ExtensionResources.getURL("img/ico/steamcardexchange.png");
 
-        for (let node of document.querySelectorAll(".badge_row:not(.es-has-ce-link")) {
-            let appid = this.context.appid || GameId.getAppidFromGameCard(node.querySelector(".badge_row_overlay").href);
+        for (const node of document.querySelectorAll(".badge_row:not(.es-has-ce-link")) {
+            const appid = this.context.appid || GameId.getAppidFromGameCard(node.querySelector(".badge_row_overlay").href);
             if (!appid) { continue; }
 
             HTML.afterBegin(node,

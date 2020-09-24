@@ -12,7 +12,7 @@ export class CStats extends CCommunityBase {
         if (window.location.hash === "#es-compare") {
             window.location.hash = "";
             if (/\/stats\/[^\/]+(?!\/compare)\/?$/.test(window.location.pathname)) { // redirect to compare page but only if we're not there yet
-                window.location = window.location.pathname.replace(/\/$/, "")+"/compare";
+                window.location = `${window.location.pathname.replace(/\/$/, "")}/compare`;
             }
         }
 

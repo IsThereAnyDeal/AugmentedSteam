@@ -10,6 +10,7 @@ export default class FGamelistAchievements extends Feature {
     }
 
     apply() {
+
         // Path of profile in view to retrieve achievement stats
         this._path = window.location.pathname.replace("/games", "");
 
@@ -22,9 +23,9 @@ export default class FGamelistAchievements extends Feature {
     }
 
     _addAchievements() {
-        let nodes = document.querySelectorAll(".gameListRow:not(.es_achievements_checked)");
+        const nodes = document.querySelectorAll(".gameListRow:not(.es_achievements_checked)");
         let hadNodesInView = false;
-        for (let node of nodes) {
+        for (const node of nodes) {
 
             if (!Viewport.isElementInViewport(node)) {
                 if (hadNodesInView) { break; }
@@ -33,11 +34,11 @@ export default class FGamelistAchievements extends Feature {
 
             hadNodesInView = true;
 
-            let appid = GameId.getAppidFromId(node.id);
+            const appid = GameId.getAppidFromId(node.id);
             node.classList.add("es_achievements_checked");
             if (!node.innerHTML.match(/ico_stats\.png/)) { continue; }
 
-            let hoursNode = node.querySelector("h5.hours_played");
+            const hoursNode = node.querySelector("h5.hours_played");
             if (!hoursNode) { continue; }
 
             HTML.afterEnd(hoursNode, `<div class="es_recentAchievements" id="es_app_${appid}"></div>`);

@@ -251,8 +251,8 @@ class Sidebar {
 
             let subentries = "";
             sections.forEach(section => {
-                subentries +=
-                    `<li class="sidebar_entry subentry" data-block-sel="#${section.id}">
+                subentries
+                    += `<li class="sidebar_entry subentry" data-block-sel="#${section.id}">
                         ${section.firstElementChild.textContent}
                     </li>`;
                 Sidebar._contentNodes.push(section);
@@ -384,8 +384,8 @@ const Options = (() => {
             html += "<div class='store_col'>";
             for (let len = Math.min(StoreList.length, (c + 1) * perCol); i < len; ++i) {
                 const id = StoreList[i].id;
-                html +=
-                    `<div class="option">
+                html
+                    += `<div class="option">
                         <input type="checkbox" id="${id}"${(stores.length === 0 || stores.indexOf(id) !== -1) ? " checked" : ""}>
                         <label for="${id}">${StoreList[i].title}</label>
                     </div>`;

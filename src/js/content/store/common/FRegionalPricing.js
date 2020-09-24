@@ -1,4 +1,4 @@
-import {Feature, ContextTypes} from "modules";
+import {ContextTypes, Feature} from "modules";
 
 import {HTML, Localization, SyncedStorage} from "core";
 import {Currency, Price, RequestData, User} from "common";

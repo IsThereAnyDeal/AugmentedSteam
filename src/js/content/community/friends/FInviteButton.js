@@ -4,7 +4,7 @@ import {HTML, Localization} from "core";
 import {ExtensionLayer} from "common";
 
 export default class FInviteButton extends Feature {
-    
+
     checkPrerequisites() {
         this._params = new URLSearchParams(window.location.search);
         return this._params.has("invitegid");
@@ -16,9 +16,9 @@ export default class FInviteButton extends Feature {
         ExtensionLayer.runInPageContext(groupId => {
             ToggleManageFriends();
             $J("#invitetogroup").on("click", () => {
-                let friends = GetCheckedAccounts("#search_results > .selectable.selected:visible");
+                const friends = GetCheckedAccounts("#search_results > .selectable.selected:visible");
                 InviteUserToGroup(null, groupId, friends);
             });
-        }, [ this._params.get("invitegid") ]);
+        }, [this._params.get("invitegid")]);
     }
 }

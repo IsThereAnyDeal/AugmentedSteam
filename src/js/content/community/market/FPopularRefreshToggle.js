@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, Localization, LocalStorage} from "core";
+import {HTML, LocalStorage, Localization} from "core";
 import {ExtensionLayer} from "common";
 
 export default class FPopularRefreshToggle extends Feature {
@@ -16,7 +16,7 @@ export default class FPopularRefreshToggle extends Feature {
 
         this._toggleRefresh(LocalStorage.get("popular_refresh", false));
 
-        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
     }
 
     _toggleRefresh(state) {

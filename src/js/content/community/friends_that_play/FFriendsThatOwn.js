@@ -11,42 +11,41 @@ export default class FFriendsThatOwn extends Feature {
 
     async apply() {
 
-        let friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
-        let result = await Background.action("appuserdetails", this.context.appid);
+        const friendsPromise = RequestData.getHttp("https://steamcommunity.com/my/friends/");
+        const result = await Background.action("appuserdetails", this.context.appid);
         if (!result || !result.success || !result.data || !result.data.friendsown || !result.data.friendsown.length) { return; }
 
-        let friendsData = await friendsPromise;
-        let friendsHtml = HTMLParser.htmlToDOM(friendsData);
+        const friendsData = await friendsPromise;
+        const friendsHtml = HTMLParser.htmlToDOM(friendsData);
 
-        let friendsOwn = result.data.friendsown;
+        const friendsOwn = result.data.friendsown;
 
         let html = `<div class="mainSectionHeader friendListSectionHeader">
-                        ${Localization.str.all_friends_own.replace('__friendcount__', friendsOwn.length)}
+                        ${Localization.str.all_friends_own.replace("__friendcount__", friendsOwn.length)}
                         <span class="underScoreColor">_</span>
                     </div>`;
 
-        html += '<div class="profile_friends" style="height: ' + (48 * friendsOwn.length / 3) + 'px;">';
+        html += `<div class="profile_friends" style="height: ${48 * friendsOwn.length / 3}px;">`;
 
-        for (let item of friendsOwn) {
-            let miniProfile = item.steamid.slice(4) - 1197960265728; // whaat?
+        for (const item of friendsOwn) {
+            const miniProfile = item.steamid.slice(4) - 1197960265728; // whaat?
 
-            let friendNode = friendsHtml.querySelector(".friend_block_v2[data-miniprofile='"+miniProfile+"']");
+            const friendNode = friendsHtml.querySelector(`.friend_block_v2[data-miniprofile='${miniProfile}']`);
             if (!friendNode) { continue; }
 
-            let profileName = friendNode.querySelector(".friend_block_content").firstChild.textContent;
+            const profileName = friendNode.querySelector(".friend_block_content").firstChild.textContent;
 
             let status = "";
-            if (friendNode.classList.contains("in-game")) { status = "in-game"; }
-            else if (friendNode.classList.contains("online")) { status = "online"; }
+            if (friendNode.classList.contains("in-game")) { status = "in-game"; } else if (friendNode.classList.contains("online")) { status = "online"; }
 
-            let profileLink = friendNode.querySelector("a.selectable_overlay").href;
-            let profileAvatar = friendNode.querySelector(".player_avatar img").src;
-            let playtimeTwoWeeks = Localization.str.hours_short.replace('__hours__', Math.round(item.playtime_twoweeks / 60 * 10) / 10);
-            let playtimeTotal = Localization.str.hours_short.replace('__hours__', Math.round(item.playtime_total / 60 * 10) / 10);
-            let statsLink = profileLink + '/stats/' + this.context.appid + '/compare';
+            const profileLink = friendNode.querySelector("a.selectable_overlay").href;
+            const profileAvatar = friendNode.querySelector(".player_avatar img").src;
+            const playtimeTwoWeeks = Localization.str.hours_short.replace("__hours__", Math.round(item.playtime_twoweeks / 60 * 10) / 10);
+            const playtimeTotal = Localization.str.hours_short.replace("__hours__", Math.round(item.playtime_total / 60 * 10) / 10);
+            const statsLink = `${profileLink}/stats/${this.context.appid}/compare`;
 
-            html +=
-                `<div class="friendBlock persona ${status}" data-miniprofile="${miniProfile}">
+            html
+                += `<div class="friendBlock persona ${status}" data-miniprofile="${miniProfile}">
                     <a class="friendBlockLinkOverlay" href="${profileLink}"></a>
                     <div class="playerAvatar ${status}">
                         <img src="${profileAvatar}">
@@ -60,7 +59,7 @@ export default class FFriendsThatOwn extends Feature {
                 </div>`;
         }
 
-        html += '</div>';
+        html += "</div>";
 
         HTML.beforeEnd(".friends_that_play_content", html);
 

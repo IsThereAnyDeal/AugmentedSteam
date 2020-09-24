@@ -12,14 +12,14 @@ export default class FSupporterBadges extends Feature {
         const data = await ProfileData.promise();
         if (!data || !data.badges) { return; }
 
-        let badgeCount = data.badges.length;
-        if (!badgeCount) { return;}
+        const badgeCount = data.badges.length;
+        if (!badgeCount) { return; }
 
-        let profileBadges = document.querySelector(".profile_badges");
+        const profileBadges = document.querySelector(".profile_badges");
         if (!profileBadges) { return; }
 
-        let html =
-            `<div class="profile_badges" id="es_supporter_badges">
+        let html
+            = `<div class="profile_badges" id="es_supporter_badges">
                 <div class="profile_count_link">
                     <a href="${Config.PublicHost}">
                         <span class="count_link_label">${Localization.str.es_supporter}</span>&nbsp;
@@ -31,16 +31,16 @@ export default class FSupporterBadges extends Feature {
 
         for (const badge of data.badges) {
             if (badge.link) {
-                html += '<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>' + badge.title + '"><a href="' + badge.link + '"><img class="badge_icon small" src="' + badge.img + '"></a></div>';
+                html += `<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>${badge.title}"><a href="${badge.link}"><img class="badge_icon small" src="${badge.img}"></a></div>`;
             } else {
-                html += '<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>' + badge.title + '"><img class="badge_icon small" src="' + badge.img + '"></div>';
+                html += `<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>${badge.title}"><img class="badge_icon small" src="${badge.img}"></div>`;
             }
         }
 
-        html += '</div></div>';
+        html += "</div></div>";
 
         HTML.afterEnd(profileBadges, html);
 
-        ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
+        ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
     }
 }

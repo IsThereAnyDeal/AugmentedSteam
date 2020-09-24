@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, Localization, LocalStorage} from "core";
+import {HTML, LocalStorage, Localization} from "core";
 import {ExtensionLayer, Messenger} from "common";
 
 export default class FCustomTags extends Feature {
@@ -12,13 +12,13 @@ export default class FCustomTags extends Feature {
 
     _addTags() {
 
-        let langSection = document.querySelector("#checkboxgroup_1");
+        const langSection = document.querySelector("#checkboxgroup_1");
         if (!langSection) { return; }
 
         Messenger.addMessageListener("addtag", name => {
             this._addTag(name, true);
         });
-        
+
         HTML.afterEnd(langSection,
             `<div class="tag_category_container" id="checkboxgroup_2">
                 <div class="tag_category_desc">${Localization.str.custom_tags}</div>
@@ -29,12 +29,12 @@ export default class FCustomTags extends Feature {
 
         ExtensionLayer.runInPageContext((customTags, enterTag) => {
             $J("#es_add_tag").on("click", () => {
-                let Modal = ShowConfirmDialog(customTags, 
+                const Modal = ShowConfirmDialog(customTags,
                     `<div class="commentthread_entry_quotebox">
                         <textarea placeholder="${enterTag}" class="commentthread_textarea es_tag" rows="1"></textarea>
                     </div>`);
-                
-                let elem = $J(".es_tag");
+
+                const elem = $J(".es_tag");
                 let tag = elem.val();
 
                 function done() {
@@ -53,24 +53,24 @@ export default class FCustomTags extends Feature {
 
                 Modal.done(done);
             });
-        }, [ Localization.str.custom_tags, Localization.str.enter_tag ]);
+        }, [Localization.str.custom_tags, Localization.str.enter_tag]);
     }
 
     _rememberTags() {
 
-        let submitBtn = document.querySelector("[href*=SubmitGuide]");
+        const submitBtn = document.querySelector("[href*=SubmitGuide]");
         if (!submitBtn) { return; }
 
-        let params = new URLSearchParams(window.location.search);
-        let curId = params.get("id") || "recent";
-        let savedTags = LocalStorage.get("es_guide_tags", {});
+        const params = new URLSearchParams(window.location.search);
+        const curId = params.get("id") || "recent";
+        const savedTags = LocalStorage.get("es_guide_tags", {});
         if (!savedTags[curId]) {
             savedTags[curId] = savedTags.recent || [];
         }
 
-        for (let id in savedTags) {
-            for (let tag of savedTags[id]) {
-                let node = document.querySelector(`[name="tags[]"][value="${tag.replace(/"/g, "\\\"")}"]`);
+        for (const id in savedTags) {
+            for (const tag of savedTags[id]) {
+                const node = document.querySelector(`[name="tags[]"][value="${tag.replace(/"/g, "\\\"")}"]`);
                 if (node && curId == id) {
                     node.checked = true;
                 } else if (!node) {
@@ -90,8 +90,8 @@ export default class FCustomTags extends Feature {
 
     _addTag(name, checked = true) {
         name = HTML.escape(name);
-        let attr = checked ? " checked" : "";
-        let tag = `<div><input type="checkbox" name="tags[]" value="${name}" class="inputTagsFilter"${attr}>${name}</div>`;
+        const attr = checked ? " checked" : "";
+        const tag = `<div><input type="checkbox" name="tags[]" value="${name}" class="inputTagsFilter"${attr}>${name}</div>`;
         HTML.beforeBegin("#es_add_tag", tag);
     }
 }

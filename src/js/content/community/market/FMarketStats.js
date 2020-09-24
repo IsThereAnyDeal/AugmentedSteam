@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, HTMLParser, Localization, LocalStorage, sleep, SyncedStorage} from "core";
+import {HTML, HTMLParser, LocalStorage, Localization, SyncedStorage, sleep} from "core";
 import {Price, RequestData, User} from "common";
 
 export default class FMarketStats extends Feature {
@@ -12,7 +12,7 @@ export default class FMarketStats extends Feature {
     apply() {
 
         HTML.beforeBegin("#findItems",
-                `<div id="es_summary">
+            `<div id="es_summary">
                     <div class="market_search_sidebar_contents">
                         <h2 class="market_section_title">${Localization.str.market_transactions}</h2>
                         <div id="es_market_summary_status"></div>
@@ -20,7 +20,7 @@ export default class FMarketStats extends Feature {
                     </div>
                 </div>`);
 
-        this._node = document.getElementById("es_market_summary_status")
+        this._node = document.getElementById("es_market_summary_status");
         HTML.inner(this._node, `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>${Localization.str.load_market_stats}</span></a>`);
 
         document.querySelector("#es_market_summary_button").addEventListener("click", () => { this._startLoading(); });
@@ -39,23 +39,24 @@ export default class FMarketStats extends Feature {
 
         document.querySelector("#es_market_summary").style.display = null;
 
-        let success = await this._load();
+        const success = await this._load();
         if (this._node && success) {
             this._node.remove();
+
             // this._node.style.display = "none";
         } else {
-            let el = document.getElementById('es_market_summary_throbber');
-            if (el) el.remove();
-            el = document.getElementById('esi_market_stats_progress_description');
-            if (el) el.remove();
+            let el = document.getElementById("es_market_summary_throbber");
+            if (el) { el.remove(); }
+            el = document.getElementById("esi_market_stats_progress_description");
+            if (el) { el.remove(); }
         }
     }
 
     async _load() {
-        
-        let {startListing, purchaseTotal, saleTotal} = LocalStorage.get("market_stats", { startListing: null, purchaseTotal: 0, saleTotal: 0 });
+
+        let {startListing, purchaseTotal, saleTotal} = LocalStorage.get("market_stats", {"startListing": null, "purchaseTotal": 0, "saleTotal": 0});
         let curStartListing = null;
-        let transactions = new Set();
+        const transactions = new Set();
         let stop = false;
 
         // If startListing is missing, reset cached data to avoid inaccurate results.
@@ -66,19 +67,20 @@ export default class FMarketStats extends Feature {
 
         function updatePrices(dom, start) {
 
-            let nodes = dom.querySelectorAll(".market_listing_row");
-            for (let node of nodes) {
+            const nodes = dom.querySelectorAll(".market_listing_row");
+            for (const node of nodes) {
                 if (node.id) {
                     if (transactions.has(node.id)) {
+
                         // Duplicate transaction, don't count in totals twice.
                         continue;
                     } else {
                         transactions.add(node.id);
                     }
                 } else {
-                    console.error('Could not find id of transaction', node);
+                    console.error("Could not find id of transaction", node);
                 }
-                let type = node.querySelector(".market_listing_gainorloss").textContent;
+                const type = node.querySelector(".market_listing_gainorloss").textContent;
                 let isPurchase;
                 if (type.includes("+")) {
                     isPurchase = true;
@@ -90,16 +92,17 @@ export default class FMarketStats extends Feature {
                 if (!curStartListing && start === 0) {
                     curStartListing = node.id;
                 }
+
                 // If reached cached data, then stop.
                 if (node.id === startListing) {
                     stop = true;
                     break;
                 }
 
-                let priceNode = node.querySelector(".market_listing_price");
+                const priceNode = node.querySelector(".market_listing_price");
                 if (!priceNode) { continue; }
 
-                let price = Price.parseFromString(priceNode.textContent);
+                const price = Price.parseFromString(priceNode.textContent);
 
                 if (isPurchase) {
                     purchaseTotal += price.value;
@@ -108,7 +111,7 @@ export default class FMarketStats extends Feature {
                 }
             }
 
-            let net = new Price(saleTotal - purchaseTotal);
+            const net = new Price(saleTotal - purchaseTotal);
             let color = "green";
             let netText = Localization.str.net_gain;
             if (net.value < 0) {
@@ -116,8 +119,8 @@ export default class FMarketStats extends Feature {
                 netText = Localization.str.net_spent;
             }
 
-            let purchaseTotalPrice = new Price(purchaseTotal);
-            let saleTotalPrice = new Price(saleTotal);
+            const purchaseTotalPrice = new Price(purchaseTotal);
+            const saleTotalPrice = new Price(saleTotal);
             HTML.inner(
                 "#es_market_summary",
                 `<div>${Localization.str.purchase_total} <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
@@ -130,54 +133,55 @@ export default class FMarketStats extends Feature {
         let pages = -1;
         let currentPage = 0;
         let totalCount = null;
-        let pageRequests = [];
+        const pageRequests = [];
         let failedRequests = 0;
 
-        let progressNode = document.querySelector("#esi_market_stats_progress");
-        let url = new URL("/market/myhistory/render/", "https://steamcommunity.com/");
-        url.searchParams.set('count', pageSize);
+        const progressNode = document.querySelector("#esi_market_stats_progress");
+        const url = new URL("/market/myhistory/render/", "https://steamcommunity.com/");
+        url.searchParams.set("count", pageSize);
 
         async function nextRequest() {
-            let request = pageRequests.shift();
-            url.searchParams.set('start', request.start);
+            const request = pageRequests.shift();
+            url.searchParams.set("start", request.start);
             request.attempt += 1;
             request.lastAttempt = Date.now();
             if (request.attempt > 1) {
                 await sleep(2000);
             } else if (request.attempt > 4) {
+
                 // Give up after four tries
                 throw new Error("Could not retrieve market transactions.");
             }
-            
-            let data = await RequestData.getJson(url.toString());
-            let dom = HTMLParser.htmlToDOM(data.results_html);
+
+            const data = await RequestData.getJson(url.toString());
+            const dom = HTMLParser.htmlToDOM(data.results_html);
 
             // Request may fail with results_html == "\t\t\t\t\t\t<div class=\"market_listing_table_message\">There was an error loading your market history. Please try again later.</div>\r\n\t"
-            let message = dom.querySelector('.market_listing_table_message');
+            const message = dom.querySelector(".market_listing_table_message");
             if (message && message.textContent.includes("try again later")) {
                 pageRequests.push(request);
                 failedRequests += 1;
                 return;
             }
-            
+
             updatePrices(dom, request.start);
 
             return data.total_count;
         }
 
         try {
-            pageRequests.push({ 'start': 0, 'attempt': 0, 'lastAttempt': 0, });
+            pageRequests.push({"start": 0, "attempt": 0, "lastAttempt": 0});
             while (pageRequests.length > 0 && !stop) {
-                let t = await nextRequest();
+                const t = await nextRequest();
                 if (pages < 0 && t > 0) {
                     totalCount = t;
                     pages = Math.ceil(totalCount / pageSize);
                     for (let start = pageSize; start < totalCount; start += pageSize) {
-                        pageRequests.push({ 'start': start, 'attempt': 0, 'lastAttempt': 0, });
+                        pageRequests.push({"start": start, "attempt": 0, "lastAttempt": 0});
                     }
                 }
 
-                progressNode.textContent = `${++currentPage}${failedRequests > 0 ? -failedRequests : ''}/${pages < 0 ? "?" : pages} (${transactions.size}/${totalCount})`;
+                progressNode.textContent = `${++currentPage}${failedRequests > 0 ? -failedRequests : ""}/${pages < 0 ? "?" : pages} (${transactions.size}/${totalCount})`;
             }
         } catch (err) {
             failedRequests += 1;
@@ -185,12 +189,13 @@ export default class FMarketStats extends Feature {
         }
 
         if (failedRequests === 0) {
-            progressNode.textContent = '';
-            LocalStorage.set("market_stats", { startListing: curStartListing, purchaseTotal, saleTotal });
+            progressNode.textContent = "";
+            LocalStorage.set("market_stats", {"startListing": curStartListing, purchaseTotal, saleTotal});
             return true;
         }
 
-        progressNode.textContent = Localization.str.transactionStatus.replace("__failed__", failedRequests).replace("__size__", transactions.size).replace("__total__", totalCount);
+        progressNode.textContent = Localization.str.transactionStatus.replace("__failed__", failedRequests).replace("__size__", transactions.size)
+            .replace("__total__", totalCount);
         return false;
     }
 }

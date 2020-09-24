@@ -14,7 +14,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
         this._appid = GameId.getAppidUriQuery(window.location.search);
         if (!this._appid) { return; }
 
-        let pagingInfo = document.querySelector(".workshopBrowsePagingInfo");
+        const pagingInfo = document.querySelector(".workshopBrowsePagingInfo");
         if (!pagingInfo) { return; }
 
         this._workshopStr = Localization.str.workshop;
@@ -48,13 +48,13 @@ export default class FWorkshopSubscriberButtons extends Feature {
         this._completed = 0;
         this._failed = 0;
 
-        let statusTitle = this._workshopStr[this._method + "_all"];
-        let statusString = this._workshopStr[this._method + "_confirm"]
+        const statusTitle = this._workshopStr[`${this._method}_all`];
+        const statusString = this._workshopStr[`${this._method}_confirm`]
             .replace("__count__", this._total);
 
         // todo reject when dialog closed
         await ExtensionLayer.runInPageContext((title, confirm) => {
-            let prompt = ShowConfirmDialog(title, confirm);
+            const prompt = ShowConfirmDialog(title, confirm);
 
             return new Promise(resolve => {
                 prompt.done(result => {
@@ -63,31 +63,31 @@ export default class FWorkshopSubscriberButtons extends Feature {
                     }
                 });
             });
-            
-        }, [ statusTitle, statusString ], "startSubscriber");
+
+        }, [statusTitle, statusString], "startSubscriber");
 
         this._updateWaitDialog();
 
-        let parser = new DOMParser();
-        let workshopItems = [];
+        const parser = new DOMParser();
+        const workshopItems = [];
         for (let p = 1; p <= Math.ceil(this._total / 30); p++) {
-            let url = new URL(window.location.href);
+            const url = new URL(window.location.href);
             url.searchParams.set("p", p);
             url.searchParams.set("numperpage", 30);
 
-            let result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+            const result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
             if (!result) {
-                console.error("Failed to request " + url.toString());
+                console.error(`Failed to request ${url.toString()}`);
                 continue;
             }
 
-            let xmlDoc = parser.parseFromString(result, "text/html");
+            const xmlDoc = parser.parseFromString(result, "text/html");
             for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
-                let subNode = node.querySelector(".user_action_history_icon.subscribed");
+                const subNode = node.querySelector(".user_action_history_icon.subscribed");
                 if (this._canSkip(subNode)) { continue; }
-            
+
                 node = node.querySelector(".workshopItemPreviewHolder");
-                workshopItems.push(node.id.replace("sharedfile_", ""))
+                workshopItems.push(node.id.replace("sharedfile_", ""));
             }
         }
 
@@ -100,8 +100,8 @@ export default class FWorkshopSubscriberButtons extends Feature {
 
     _showResults() {
 
-        let statusTitle = this._workshopStr[this._method + "_all"];
-        let statusString = this._workshopStr.finished
+        const statusTitle = this._workshopStr[`${this._method}_all`];
+        const statusString = this._workshopStr.finished
             .replace("__success__", this._completed - this._failed)
             .replace("__fail__", this._failed);
 
@@ -109,30 +109,30 @@ export default class FWorkshopSubscriberButtons extends Feature {
             if (window.dialog) {
                 window.dialog.Dismiss();
             }
-            
+
             window.dialog = ShowConfirmDialog(title, finished)
                 .done(result => {
                     if (result === "OK") {
                         window.location.reload();
                     }
                 });
-        }, [ statusTitle, statusString ]);
+        }, [statusTitle, statusString]);
     }
 
     async _changeSubscription(id) {
 
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append("sessionid", User.getSessionId());
         formData.append("appid", this._appid);
         formData.append("id", id);
 
         try {
-            const res = await RequestData.post("https://steamcommunity.com/sharedfiles/" + this._method, formData, {"withCredentials": true}, true);
+            const res = await RequestData.post(`https://steamcommunity.com/sharedfiles/${this._method}`, formData, {"withCredentials": true}, true);
 
             if (!res || !res.success) {
                 throw new Error("Bad response");
             }
-        } catch(err) {
+        } catch (err) {
             this._failed++;
             console.error(err);
         } finally {
@@ -156,7 +156,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
 
     _updateWaitDialog() {
 
-        let statusString = this._workshopStr[this._method + "_loading"]
+        let statusString = this._workshopStr[`${this._method}_loading`]
             .replace("__i__", this._completed)
             .replace("__count__", this._total);
 
@@ -164,16 +164,16 @@ export default class FWorkshopSubscriberButtons extends Feature {
             statusString += this._workshopStr.failed.replace("__n__", this._failed);
         }
 
-        let modal = document.querySelector(".newmodal_content");
+        const modal = document.querySelector(".newmodal_content");
         if (!modal) {
-            let statusTitle = this._workshopStr[this._method + "_all"];
+            const statusTitle = this._workshopStr[`${this._method}_all`];
             ExtensionLayer.runInPageContext((title, progress) => {
                 if (window.dialog) {
                     window.dialog.Dismiss();
                 }
-                
+
                 window.dialog = ShowBlockingWaitDialog(title, progress);
-            }, [ statusTitle, statusString ]);
+            }, [statusTitle, statusString]);
         } else {
             modal.innerText = statusString;
         }

@@ -8,19 +8,19 @@ import Config from "config";
 export default class FStyleSelection extends Feature {
 
     apply() {
-        
+
         this._active = false;
 
         this._checkPage();
 
         new MutationObserver(() => { this._checkPage(); })
-            .observe(document.querySelector(`[class^="profileeditshell_PageContent_"]`), {"childList": true});
+            .observe(document.querySelector("[class^=\"profileeditshell_PageContent_\"]"), {"childList": true});
     }
 
     _checkPage() {
 
-        const html =
-            `<div class="js-style-selection as-pd">
+        const html
+            = `<div class="js-style-selection as-pd">
                 
                 <div class='as-pd__head' data-tooltip-text='${Localization.str.custom_style_help}'>
                     ${Localization.str.custom_style} <span class="as-pd__help">(?)</span>
@@ -52,23 +52,23 @@ export default class FStyleSelection extends Feature {
                 </div>
             </div>`;
 
-        if (document.querySelector(`[href$="/edit/theme"].active`)) {
+        if (document.querySelector("[href$=\"/edit/theme\"].active")) {
 
             if (this._active) { return; } // Happens because the below code will trigger the observer again
 
-            HTML.beforeEnd(`[class^="profileeditshell_PageContent_"]`, html);
+            HTML.beforeEnd("[class^=\"profileeditshell_PageContent_\"]", html);
             this._active = true;
 
-            ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
+            ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
 
-            let styleSelectNode = document.querySelector("#es_style");
+            const styleSelectNode = document.querySelector("#es_style");
 
-            let currentStyle = ProfileData.getStyle();
+            const currentStyle = ProfileData.getStyle();
             if (currentStyle) {
                 styleSelectNode.value = currentStyle;
 
-                let imgNode = document.querySelector("#es_style_preview");
-                imgNode.src = ExtensionResources.getURL("img/profile_styles/" + currentStyle + "/preview.png");
+                const imgNode = document.querySelector("#es_style_preview");
+                imgNode.src = ExtensionResources.getURL(`img/profile_styles/${currentStyle}/preview.png`);
 
                 if (currentStyle === "remove") {
                     imgNode.style.display = "none";
@@ -76,27 +76,27 @@ export default class FStyleSelection extends Feature {
             }
 
             styleSelectNode.addEventListener("change", () => {
-                let imgNode = document.querySelector("#es_style_preview");
+                const imgNode = document.querySelector("#es_style_preview");
                 if (styleSelectNode.value === "remove") {
                     imgNode.style.display = "none";
                 } else {
                     imgNode.style.display = "block";
-                    imgNode.src = ExtensionResources.getURL("img/profile_styles/" + styleSelectNode.value + "/preview.png");
+                    imgNode.src = ExtensionResources.getURL(`img/profile_styles/${styleSelectNode.value}/preview.png`);
                 }
 
                 // Enable the "save" button
                 document.querySelector("#es_style_save_btn").classList.remove("btn_disabled");
             });
 
-            document.querySelector("#es_style_save_btn").addEventListener("click", async ({target}) => {
+            document.querySelector("#es_style_save_btn").addEventListener("click", async({target}) => {
                 if (target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
                 await ProfileData.clearOwn();
 
                 if (styleSelectNode.value === "remove") {
-                    window.location.href = Config.ApiServerHost + "/v01/profile/style/edit/delete/";
+                    window.location.href = `${Config.ApiServerHost}/v01/profile/style/edit/delete/`;
                 } else {
-                    let selectedStyle = encodeURIComponent(styleSelectNode.value);
-                    window.location.href = Config.ApiServerHost+`/v01/profile/style/edit/save/?style=${selectedStyle}`;
+                    const selectedStyle = encodeURIComponent(styleSelectNode.value);
+                    window.location.href = `${Config.ApiServerHost}/v01/profile/style/edit/save/?style=${selectedStyle}`;
                 }
             });
 

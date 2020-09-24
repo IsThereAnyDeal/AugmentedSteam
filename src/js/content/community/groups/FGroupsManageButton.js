@@ -11,9 +11,9 @@ export default class FGroupsManageButton extends Feature {
 
     apply() {
 
-        let groupsStr = Localization.str.groups;
+        const groupsStr = Localization.str.groups;
 
-        HTML.beforeEnd(".title_bar", 
+        HTML.beforeEnd(".title_bar",
             `<button id="manage_friends_control" class="profile_friends manage_link btnv6_blue_hoverfade btn_medium btn_uppercase">
                 <span>${groupsStr.manage_groups}</span>
             </button>`);
@@ -33,14 +33,14 @@ export default class FGroupsManageButton extends Feature {
                         <span>${groupsStr.leave}</span>
                     </span>
                     <span id="selected_msg_err" class="selected_msg error hidden"></span>
-                    <span id="selected_msg" class="selected_msg hidden">${groupsStr.selected.replace("__n__", `<span id="selected_count"></span>`)}</span>
+                    <span id="selected_msg" class="selected_msg hidden">${groupsStr.selected.replace("__n__", "<span id=\"selected_count\"></span>")}</span>
                 </div>
                 <div class="row"></div>
             </div>`);
 
-        for (let group of this.context.groups) {
+        for (const group of this.context.groups) {
             group.classList.add("selectable");
-            HTML.afterBegin(group, 
+            HTML.afterBegin(group,
                 `<div class="indicator select_friend">
                     <input class="select_friend_checkbox" type="checkbox">
                 </div>`);
@@ -48,7 +48,7 @@ export default class FGroupsManageButton extends Feature {
                 group.classList.toggle("selected");
                 group.querySelector(".select_friend_checkbox").checked = group.classList.contains("selected");
                 ExtensionLayer.runInPageContext(() => { UpdateSelection(); });
-            });    
+            });
         }
 
         document.querySelector("#manage_friends_control").addEventListener("click", () => {
@@ -71,25 +71,26 @@ export default class FGroupsManageButton extends Feature {
     }
 
     async _leaveGroups() {
-        let selected = [];
+        const selected = [];
 
-        for (let group of this.context.groups) {
+        for (const group of this.context.groups) {
             if (!group.classList.contains("selected")) {
                 continue;
             }
 
-            let actions = group.querySelector(".actions");
-            let admin = actions.querySelector("[href*='/edit']");
-            let split = actions.querySelector("[onclick*=ConfirmLeaveGroup]")
-                .getAttribute("onclick").split(/'|"/);
-            let id = split[1];
+            const actions = group.querySelector(".actions");
+            const admin = actions.querySelector("[href*='/edit']");
+            const split = actions.querySelector("[onclick*=ConfirmLeaveGroup]")
+                .getAttribute("onclick")
+                .split(/'|"/);
+            const id = split[1];
 
             if (admin) {
-                let name = split[3];
+                const name = split[3];
 
-                let body = Localization.str.groups.leave_admin_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
-                let result = await ConfirmDialog.open(Localization.str.groups.leave, body);
-                let cont = (result === "OK");
+                const body = Localization.str.groups.leave_admin_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
+                const result = await ConfirmDialog.open(Localization.str.groups.leave, body);
+                const cont = (result === "OK");
                 if (!cont) {
                     group.querySelector(".select_friend").click();
                     continue;
@@ -100,16 +101,16 @@ export default class FGroupsManageButton extends Feature {
         }
 
         if (selected.length > 0) {
-            let body = Localization.str.groups.leave_groups_confirm.replace("__n__", selected.length);
-            let result = await ConfirmDialog.open(Localization.str.groups.leave, body);
+            const body = Localization.str.groups.leave_groups_confirm.replace("__n__", selected.length);
+            const result = await ConfirmDialog.open(Localization.str.groups.leave, body);
 
             if (result === "OK") {
-                for (let tuple of selected) {
-                    let [id, group] = tuple;
-                    let res = await this._leaveGroup(id).catch(err => console.error(err));
+                for (const tuple of selected) {
+                    const [id, group] = tuple;
+                    const res = await this._leaveGroup(id).catch(err => console.error(err));
 
                     if (!res || !res.success) {
-                        console.error("Failed to leave group " + id);
+                        console.error(`Failed to leave group ${id}`);
                         continue;
                     }
 
@@ -121,15 +122,15 @@ export default class FGroupsManageButton extends Feature {
     }
 
     _leaveGroup(id) {
-        let formData = new FormData();
+        const formData = new FormData();
         formData.append("sessionid", User.getSessionId());
         formData.append("steamid", User.steamId);
         formData.append("ajax", 1);
         formData.append("action", "leave_group");
         formData.append("steamids[]", id);
 
-        return RequestData.post(User.profileUrl + "/friends/action", formData, {
-            withCredentials: true
+        return RequestData.post(`${User.profileUrl}/friends/action`, formData, {
+            "withCredentials": true
         }, "json");
     }
 }

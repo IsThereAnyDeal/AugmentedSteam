@@ -9,7 +9,7 @@ export default class FInventoryGoTo extends CallbackFeature {
         super(context, true, () => {
             new MutationObserver(() => {
                 this.callback();
-            }).observe(document.querySelector("div.games_list_tabs"), {subtree: true, attributes: true});
+            }).observe(document.querySelector("div.games_list_tabs"), {"subtree": true, "attributes": true});
         });
     }
 
@@ -25,7 +25,7 @@ export default class FInventoryGoTo extends CallbackFeature {
         DOMHelper.remove("#pagebtn_last");
         DOMHelper.remove("#es_pagego");
 
-        DOMHelper.insertScript({ content:
+        DOMHelper.insertScript({"content":
             `g_ActiveInventory.GoToPage = function(page) {
                 var nPageWidth = this.m_$Inventory.children('.inventory_page:first').width();
                 var iCurPage = this.m_iCurrentPage;
@@ -57,8 +57,7 @@ export default class FInventoryGoTo extends CallbackFeature {
                 var page = $('es_pagenumber').value;
                 if (isNaN(page)) return;
                 g_ActiveInventory.GoToPage(parseInt(page));
-            }`
-        }, "es_gotopage");
+            }`}, "es_gotopage");
 
         // Go to first page
         HTML.afterEnd("#pagebtn_previous", "<a id='pagebtn_first' class='pagebtn pagecontrol_element disabled'>&lt;&lt;</a>");
@@ -72,14 +71,14 @@ export default class FInventoryGoTo extends CallbackFeature {
             ExtensionLayer.runInPageContext(() => { InventoryLastPage(); });
         });
 
-        let pageGo = document.createElement("div");
+        const pageGo = document.createElement("div");
         pageGo.id = "es_pagego";
         pageGo.style.float = "left";
 
         // Page number box
-        let pageNumber = document.createElement("input");
+        const pageNumber = document.createElement("input");
         pageNumber.type = "number";
-        pageNumber.value="1";
+        pageNumber.value = "1";
         pageNumber.classList.add("filter_search_box");
         pageNumber.autocomplete = "off";
         pageNumber.placeholder = "page #";
@@ -90,7 +89,7 @@ export default class FInventoryGoTo extends CallbackFeature {
 
         pageGo.append(pageNumber);
 
-        let gotoButton = document.createElement("a");
+        const gotoButton = document.createElement("a");
         gotoButton.textContent = Localization.str.go;
         gotoButton.id = "gotopage_btn";
         gotoButton.classList.add("pagebtn");
@@ -104,12 +103,12 @@ export default class FInventoryGoTo extends CallbackFeature {
 
         document.querySelector("#inventory_pagecontrols").insertAdjacentElement("beforebegin", pageGo);
 
-        let observer = new MutationObserver(mutations => {
-            mutations.forEach(function(mutation) {
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach((mutation) => {
                 if (mutation.attributeName !== "class") { return; }
                 if (!mutation.target.id) { return; }
 
-                let id = mutation.target.id;
+                const id = mutation.target.id;
                 if (id === "pagebtn_next") {
                     document.querySelector("#pagebtn_last").classList.toggle("disabled", mutation.target.classList.contains("disabled"));
                 } else if (id === "pagebtn_previous") {
@@ -118,7 +117,7 @@ export default class FInventoryGoTo extends CallbackFeature {
 
             });
         });
-        observer.observe(document.querySelector("#pagebtn_next"), { attributes: true });
-        observer.observe(document.querySelector("#pagebtn_previous"), { attributes: true });
+        observer.observe(document.querySelector("#pagebtn_next"), {"attributes": true});
+        observer.observe(document.querySelector("#pagebtn_previous"), {"attributes": true});
     }
 }

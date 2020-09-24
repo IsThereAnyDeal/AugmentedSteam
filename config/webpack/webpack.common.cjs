@@ -1,5 +1,5 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const path = require("path");
 
 const rootDir = path.resolve(__dirname, "../../");
@@ -63,7 +63,7 @@ module.exports = {
                     "from": "*/**",
                     "globOptions": {
                         "ignore": ["**/js/**"], // TODO Make this only ignore the top level js directory
-                    } 
+                    }
                 },
                 {
                     "context": "src/js/",

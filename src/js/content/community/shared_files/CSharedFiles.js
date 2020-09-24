@@ -6,7 +6,7 @@ import FMediaExpander from "common/FMediaExpander";
 export class CSharedFiles extends CCommunityBase {
 
     constructor() {
-        
+
         super([
             FMediaExpander,
         ]);

@@ -16,21 +16,24 @@ export default class FCommunityAppPageLinks extends Feature {
             HTML.beforeEnd(node, this._makeHeaderLink(
                 "steamdb_ico",
                 `https://steamdb.info/app/${this.context.appid}/`,
-                "SteamDB"));
+                "SteamDB"
+            ));
         }
 
         if (SyncedStorage.get("showitadlinks")) {
             HTML.beforeEnd(node, this._makeHeaderLink(
                 "itad_ico",
                 `https://isthereanydeal.com/steam/app/${this.context.appid}/`,
-                "ITAD"));
+                "ITAD"
+            ));
         }
 
         if (SyncedStorage.get("showbartervg")) {
             HTML.beforeEnd(node, this._makeHeaderLink(
                 "bartervg_ico",
                 `https://barter.vg/steam/app/${this.context.appid}/`,
-                "Barter.vg"));
+                "Barter.vg"
+            ));
         }
     }
 

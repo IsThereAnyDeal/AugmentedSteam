@@ -14,11 +14,11 @@ export default class FBadgeSortAndFilter extends Feature {
 
     _addSort() {
 
-        let isOwnProfile = CommunityCommon.currentUserIsOwner();
-        let sorts = ["c", "a", "r"];
+        const isOwnProfile = CommunityCommon.currentUserIsOwner();
+        const sorts = ["c", "a", "r"];
 
-        let sorted = document.querySelector("a.badge_sort_option.active").search.replace("?sort=", "")
-            || (isOwnProfile ? "p": "c");
+        const sorted = document.querySelector("a.badge_sort_option.active").search.replace("?sort=", "")
+            || (isOwnProfile ? "p" : "c");
 
         let linksHtml = "";
 
@@ -27,19 +27,19 @@ export default class FBadgeSortAndFilter extends Feature {
         }
 
         // Build dropdown links HTML
-        let nodes = document.querySelectorAll(".profile_badges_sortoptions a");
-        let i=0;
-        for (let node of nodes) {
+        const nodes = document.querySelectorAll(".profile_badges_sortoptions a");
+        let i = 0;
+        for (const node of nodes) {
             node.style.display = "none";
             linksHtml += `<a class="badge_sort_option popup_menu_item by_${sorts[i]}" data-sort-by="${sorts[i]}" href="?sort=${sorts[i]}">${node.textContent.trim()}</a>`;
             i++;
         }
         if (isOwnProfile) {
-            linksHtml += '<a class="badge_sort_option popup_menu_item by_d" data-sort-by="d" id="es_badge_sort_drops">' + Localization.str.most_drops + '</a>';
-            linksHtml += '<a class="badge_sort_option popup_menu_item by_v" data-sort-by="v" id="es_badge_sort_value">' + Localization.str.drops_value + '</a>';
+            linksHtml += `<a class="badge_sort_option popup_menu_item by_d" data-sort-by="d" id="es_badge_sort_drops">${Localization.str.most_drops}</a>`;
+            linksHtml += `<a class="badge_sort_option popup_menu_item by_v" data-sort-by="v" id="es_badge_sort_value">${Localization.str.drops_value}</a>`;
         }
 
-        let container = document.createElement("span");
+        const container = document.createElement("span");
         container.id = "wishlist_sort_options";
         DOMHelper.wrap(container, document.querySelector(".profile_badges_sortoptions"));
 
@@ -55,7 +55,7 @@ export default class FBadgeSortAndFilter extends Feature {
                 <div class="store_nav">
                     <div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
                         <span class="pulldown">
-                            <div id="es_sort_active" style="display: inline;">` + document.querySelector("#es_sort_flyout a.by_" + sorted).textContent + `</div>
+                            <div id="es_sort_active" style="display: inline;">${document.querySelector(`#es_sort_flyout a.by_${sorted}`).textContent}</div>
                             <span></span>
                         </span>
                     </div>
@@ -73,12 +73,12 @@ export default class FBadgeSortAndFilter extends Feature {
 
                 this._sortBadgeRows(e.target.textContent, (node) => {
                     let content = 0;
-                    let progressInfo = node.innerHTML.match(/progress_info_bold".+(\d+)/);
+                    const progressInfo = node.innerHTML.match(/progress_info_bold".+(\d+)/);
                     if (progressInfo) {
-                        content = parseInt(progressInfo[1])
+                        content = parseInt(progressInfo[1]);
                     }
                     return content;
-                })
+                });
             });
 
             document.querySelector("#es_badge_sort_value").addEventListener("click", async e => {
@@ -89,7 +89,7 @@ export default class FBadgeSortAndFilter extends Feature {
 
                 this._sortBadgeRows(e.target.textContent, (node) => {
                     let content = 0;
-                    let dropWorth = node.querySelector(".es_card_drop_worth");
+                    const dropWorth = node.querySelector(".es_card_drop_worth");
                     if (dropWorth) {
                         content = parseFloat(dropWorth.dataset.esCardWorth);
                     }
@@ -101,7 +101,7 @@ export default class FBadgeSortAndFilter extends Feature {
 
     _addFilter() {
 
-        let html  = `<span>${Localization.str.show}</span>
+        const html = `<span>${Localization.str.show}</span>
             <div class="store_nav">
                 <div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom">
                     <span class="pulldown">
@@ -118,10 +118,10 @@ export default class FBadgeSortAndFilter extends Feature {
             </div>`;
 
         HTML.afterBegin("#wishlist_sort_options",
-            "<div class='es_badge_filter' style='float: right; margin-left: 18px;'>" + html + "</div>");
+            `<div class='es_badge_filter' style='float: right; margin-left: 18px;'>${html}</div>`);
 
         document.querySelector("#es_badge_all").addEventListener("click", () => {
-            for (let badge of document.querySelectorAll(".is_link")) {
+            for (const badge of document.querySelectorAll(".is_link")) {
                 badge.style.display = "block";
             }
             document.querySelector("#es_filter_active").textContent = Localization.str.badges_all;
@@ -137,12 +137,13 @@ export default class FBadgeSortAndFilter extends Feature {
                 await this._loadAllPages();
             }
 
-            for (let node of document.querySelectorAll(".is_link")) {
-                let progress = node.innerHTML.match(/progress_info_bold".+(\d+)/);
+            for (const node of document.querySelectorAll(".is_link")) {
+                const progress = node.innerHTML.match(/progress_info_bold".+(\d+)/);
                 if (!progress || parseInt(progress[1]) === 0) {
                     node.style.display = "none";
                 } else if (node.innerHTML.match(/badge_info_unlocked/) && !node.innerHTML.match(/badge_current/)) {
                     node.style.display = "none";
+
                 // Hide foil badges too
                 } else if (!node.innerHTML.match(/progress_info_bold/)) {
                     node.style.display = "none";
@@ -157,7 +158,7 @@ export default class FBadgeSortAndFilter extends Feature {
 
     _addViewOptions() {
 
-        let html = `<span>${Localization.str.view}</span>
+        const html = `<span>${Localization.str.view}</span>
             <div class="store_nav">
                 <div class="tab flyout_tab" id="es_badgeview_tab" data-flyout="es_badgeview_flyout" data-flyout-align="right" data-flyout-valign="bottom">
                     <span class="pulldown">
@@ -173,11 +174,11 @@ export default class FBadgeSortAndFilter extends Feature {
                 </div>
             </div>`;
 
-        HTML.afterBegin("#wishlist_sort_options",  "<div class='es_badge_view' style='float: right; margin-left: 18px;'>" + html + "</div>");
+        HTML.afterBegin("#wishlist_sort_options", `<div class='es_badge_view' style='float: right; margin-left: 18px;'>${html}</div>`);
 
         // Change hash when selecting view
         document.querySelector("#es_badgeview_flyout").addEventListener("click", ({target}) => {
-            let node = target.closest(".es_bg_view");
+            const node = target.closest(".es_bg_view");
             if (!node) { return; }
             window.location.hash = node.dataset.view;
         });
@@ -193,13 +194,13 @@ export default class FBadgeSortAndFilter extends Feature {
         if (this._hasAllPagesLoaded) { return; }
         this._hasAllPagesLoaded = true;
 
-        let sheetNode = document.querySelector(".badges_sheet");
+        const sheetNode = document.querySelector(".badges_sheet");
 
         // let images = Viewport.getVariableFromDom("g_rgDelayedLoadImages", "object");
 
         await this.context.eachBadgePage(dom => {
-            let nodes = dom.querySelectorAll(".badge_row");
-            for (let node of nodes) {
+            const nodes = dom.querySelectorAll(".badge_row");
+            for (const node of nodes) {
                 sheetNode.append(node);
             }
 
@@ -208,28 +209,30 @@ export default class FBadgeSortAndFilter extends Feature {
             // images = Object.assign(images, Viewport.getVariableFromDom("g_rgDelayedLoadImages", "object", dom));
         });
 
-        let nodes = document.querySelectorAll(".profile_paging");
-        for (let node of nodes) {
+        const nodes = document.querySelectorAll(".profile_paging");
+        for (const node of nodes) {
             node.style.display = "none";
         }
 
-        // TODO this doesn't seem to work, can't figure out why right now. Lazy loader doesn't see updated object?
-        // ExtensionLayer.runInPageContext("function(){g_rgDelayedLoadImages = " + JSON.stringify(images) + ";}");
-        // resetLazyLoader();
+        /*
+         * TODO this doesn't seem to work, can't figure out why right now. Lazy loader doesn't see updated object?
+         * ExtensionLayer.runInPageContext("function(){g_rgDelayedLoadImages = " + JSON.stringify(images) + ";}");
+         * resetLazyLoader();
+         */
     }
 
     _sortBadgeRows(activeText, nodeValueCallback) {
-        let badgeRows = [];
-        let nodes = document.querySelectorAll(".badge_row");
-        for (let node of nodes) {
+        const badgeRows = [];
+        const nodes = document.querySelectorAll(".badge_row");
+        for (const node of nodes) {
             badgeRows.push([node.outerHTML, nodeValueCallback(node)]);
             node.remove();
         }
 
-        badgeRows.sort((a,b) => b[1] - a[1]);
+        badgeRows.sort((a, b) => b[1] - a[1]);
 
-        let sheetNode = document.querySelector(".badges_sheet");
-        for (let row of badgeRows) {
+        const sheetNode = document.querySelector(".badges_sheet");
+        for (const row of badgeRows) {
             HTML.beforeEnd(sheetNode, row[0]);
         }
 
@@ -241,12 +244,14 @@ export default class FBadgeSortAndFilter extends Feature {
     _resetLazyLoader() {
         return; // FIXME this doesn't seem to work
 
-        ExtensionLayer.runInPageContext(function() {
+        ExtensionLayer.runInPageContext(() => {
+
             // Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
             CScrollOffsetWatcher.sm_rgWatchers = [];
 
             // Recreate registered image lazy loader watchers
-            $J('div[id^=image_group_scroll_badge_images_gamebadge_]').each(function(i,e){
+            $J("div[id^=image_group_scroll_badge_images_gamebadge_]").each((i, e) => {
+
                 // LoadImageGroupOnScroll is found in shared_global.js
                 LoadImageGroupOnScroll(e.id, e.id.substr(19));
             });
@@ -258,31 +263,31 @@ export default class FBadgeSortAndFilter extends Feature {
         if (window.location.hash === "#binderview") {
             document.querySelector("div.maincontent").classList.add("es_binder_view");
 
-            let mainNode = document.querySelector("div.maincontent");
+            const mainNode = document.querySelector("div.maincontent");
 
             // Don't attempt changes again if already loaded
             if (!mainNode.classList.contains("es_binder_loaded")) {
                 mainNode.classList.add("es_binder_loaded");
 
-                for (let node of document.querySelectorAll("div.badge_row.is_link")) {
-                    let stats = node.querySelector("span.progress_info_bold");
+                for (const node of document.querySelectorAll("div.badge_row.is_link")) {
+                    const stats = node.querySelector("span.progress_info_bold");
                     if (stats && stats.innerHTML.match(/\d+/)) {
                         HTML.beforeEnd(node.querySelector("div.badge_content"),
-                            "<span class='es_game_stats'>" + stats.outerHTML + "</span>");
+                            `<span class='es_game_stats'>${stats.outerHTML}</span>`);
                     }
 
-                    let infoNode = node.querySelector("div.badge_progress_info");
+                    const infoNode = node.querySelector("div.badge_progress_info");
                     if (infoNode) {
-                        let card = infoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
-                        let text = (card) ? card[1] + " / " + card[2] : '';
-                        HTML.beforeBegin(infoNode,  '<div class="es_badge_progress_info">' + text + '</div>');
+                        const card = infoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
+                        const text = (card) ? `${card[1]} / ${card[2]}` : "";
+                        HTML.beforeBegin(infoNode, `<div class="es_badge_progress_info">${text}</div>`);
                     }
                 }
             }
 
             // Add hash to pagination links
-            for (let node of document.querySelectorAll("div.pageLinks a.pagelink, div.pageLinks a.pagebtn")) {
-                node.href = node.href + "#binderview";
+            for (const node of document.querySelectorAll("div.pageLinks a.pagelink, div.pageLinks a.pagebtn")) {
+                node.href += "#binderview";
             }
 
             // Triggers the loading of out-of-view badge images
@@ -291,7 +296,7 @@ export default class FBadgeSortAndFilter extends Feature {
         } else {
             document.querySelector("div.maincontent").classList.remove("es_binder_view");
 
-            for (let node of document.querySelectorAll("div.pageLinks a.pagelink, div.pageLinks a.pagebtn")) {
+            for (const node of document.querySelectorAll("div.pageLinks a.pagelink, div.pageLinks a.pagebtn")) {
                 node.href = node.href.replace("#binderview", "");
             }
 

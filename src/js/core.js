@@ -56,12 +56,15 @@ export class Version {
         }
         throw `Could not construct a Version from ${version}`;
     }
+
     static fromArray(version) {
         return new Version(...version.map(v => parseInt(v, 10)));
     }
+
     static fromString(version) {
         return Version.fromArray(version.split("."));
     }
+
     static coerce(version) {
         if (version instanceof Version) {
             return version;
@@ -72,9 +75,11 @@ export class Version {
     toString() {
         return `${this.major}.${this.minor}.${this.patch}`;
     }
+
     toArray() {
         return [this.major, this.minor, this.patch];
     }
+
     toJSON() {
         return this.toString();
     }
@@ -82,12 +87,14 @@ export class Version {
     isCurrent() {
         return this.isSameOrAfter(Info.version);
     }
+
     isSame(version) {
         version = Version.coerce(version);
         return this.major === version.major
             && this.minor === version.minor
             && this.patch === version.patch;
     }
+
     isBefore(version) {
         version = Version.coerce(version);
         if (this.major < version.major) { return true; }
@@ -101,6 +108,7 @@ export class Version {
         if (this.patch < version.patch) { return true; }
         return false;
     }
+
     isSameOrBefore(version) {
         version = Version.coerce(version);
         if (this.major < version.major) { return true; }
@@ -114,10 +122,12 @@ export class Version {
         if (this.patch > version.patch) { return false; }
         return true;
     }
+
     isAfter(version) {
         version = Version.coerce(version);
         return version.isBefore(this);
     }
+
     isSameOrAfter(version) {
         version = Version.coerce(version);
         return version.isSameOrBefore(this);
@@ -154,6 +164,7 @@ export class UpdateHandler {
     }
 
     static async _showChangelog() {
+
         // FIXME
         const changelog = (await RequestData.getHttp(ExtensionResources.getURL("changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
         const logo = ExtensionResources.getURL("img/es_128.png");
@@ -465,6 +476,7 @@ export class SyncedStorage {
     static has(key) {
         return Object.prototype.hasOwnProperty.call(this.cache, key);
     }
+
     static get(key) {
         if (typeof this.cache[key] == "undefined") {
             if (typeof this.defaults[key] == "undefined") {
@@ -519,6 +531,7 @@ export class SyncedStorage {
             for (const [key, {"newValue": val}] of Object.entries(changes)) {
                 this.cache[key] = val;
             }
+
             // FIXME Doesn't work with modules
             if (typeof ContextMenu === "function" && Object.keys(changes).some(key => key.startsWith("context_"))) {
                 ContextMenu.update();
@@ -530,6 +543,7 @@ export class SyncedStorage {
 
         return this.cache;
     }
+
     static then(onDone, onCatch) {
         return this.init().then(onDone, onCatch);
     }
@@ -766,6 +780,7 @@ export class ExtensionResources {
     static getJSON(pathname) {
         return ExtensionResources.get(pathname).then(r => r.json());
     }
+
     static getText(pathname) {
         return ExtensionResources.get(pathname).then(r => r.text());
     }

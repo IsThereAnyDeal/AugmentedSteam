@@ -36,7 +36,7 @@ export class Context {
     }
 
     triggerCallbacks(...params) {
-        for (let callback of this._callbacks) {
+        for (const callback of this._callbacks) {
             callback(...params);
         }
     }

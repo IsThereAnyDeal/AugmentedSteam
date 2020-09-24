@@ -5,11 +5,11 @@ import {HTML} from "core";
 export default class FFriendsCount extends Feature {
 
     apply() {
-        for (let header of document.querySelectorAll(".friendListSectionHeader")) {
-            let profileList = header.nextElementSibling;
-            let count = profileList.querySelectorAll('.persona').length;
-            let html = ` <span class='friendcount'>(${count})</span> `;
-            let underscore = header.querySelector('.underscoreColor');
+        for (const header of document.querySelectorAll(".friendListSectionHeader")) {
+            const profileList = header.nextElementSibling;
+            const count = profileList.querySelectorAll(".persona").length;
+            const html = ` <span class='friendcount'>(${count})</span> `;
+            const underscore = header.querySelector(".underscoreColor");
 
             if (underscore) {
                 HTML.beforeBegin(underscore, html);

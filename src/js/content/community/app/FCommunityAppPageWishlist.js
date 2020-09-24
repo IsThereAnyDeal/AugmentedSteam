@@ -24,7 +24,7 @@ export default class FCommunityAppPageWishlist extends Feature {
             activeStyle = "";
         }
 
-        let parent = document.querySelector(".apphub_OtherSiteInfo");
+        const parent = document.querySelector(".apphub_OtherSiteInfo");
         HTML.beforeEnd(parent,
             ` <a id="es_wishlist_add" class="btnv6_blue_hoverfade btn_medium" style="${inactiveStyle}">
                   <span>
@@ -44,14 +44,14 @@ export default class FCommunityAppPageWishlist extends Feature {
                   <b>${Localization.str.error}</b>
               </div>`);
 
-        let addBtn = document.getElementById("es_wishlist_add");
-        let successBtn = document.getElementById("es_wishlist_success");
-        let failNode = document.getElementById("es_wishlist_fail");
+        const addBtn = document.getElementById("es_wishlist_add");
+        const successBtn = document.getElementById("es_wishlist_success");
+        const failNode = document.getElementById("es_wishlist_fail");
 
         addBtn.addEventListener("click", handler);
         successBtn.addEventListener("click", handler);
 
-        let that = this;
+        const that = this;
         async function handler(e) {
             e.preventDefault();
 
@@ -60,18 +60,21 @@ export default class FCommunityAppPageWishlist extends Feature {
             failNode.style.display = "none";
 
             wishlisted = this === successBtn;
-            let action = wishlisted ? "wishlist.remove" : "wishlist.add";
+            const action = wishlisted ? "wishlist.remove" : "wishlist.add";
 
             try {
                 await Background.action(action, that.appid);
-                
+
                 successBtn.style.display = wishlisted ? "none" : "";
                 addBtn.style.display = wishlisted ? "" : "none";
 
                 DynamicStore.clear();
-            } catch(err) {
-                /* We can't (easily) detect whether or not the user is logged in to the store,
-                   therefore we're also not able to provide more details here */
+            } catch (err) {
+
+                /*
+                 * We can't (easily) detect whether or not the user is logged in to the store,
+                 * therefore we're also not able to provide more details here
+                 */
                 console.error("Failed to add to/remove from wishlist");
                 failNode.style.display = "block";
             } finally {

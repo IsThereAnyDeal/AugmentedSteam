@@ -1,4 +1,4 @@
-import {Feature, ContextTypes} from "modules";
+import {ContextTypes, Feature} from "modules";
 
 import {HTML, LocalStorage, Localization, SyncedStorage} from "core";
 import {ExtensionLayer} from "common";

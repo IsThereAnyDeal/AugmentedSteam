@@ -13,14 +13,14 @@ export default class FSteamRep extends Feature {
     async apply() {
 
         const data = await ProfileData;
-        
+
         if (!data.steamrep || data.steamrep.length === 0) { return; }
 
-        let steamId = SteamId.getSteamId();
+        const steamId = SteamId.getSteamId();
         if (!steamId) { return; }
 
         // Build reputation images regexp
-        let repImgs = {
+        const repImgs = {
             "banned": /scammer|banned/gi,
             "valve": /valve admin/gi,
             "caution": /caution/gi,
@@ -30,30 +30,30 @@ export default class FSteamRep extends Feature {
 
         let html = "";
 
-        for (let value of data.steamrep) {
+        for (const value of data.steamrep) {
 
             if (value.trim() === "") { continue; }
 
-            for (let [img, regex] of Object.entries(repImgs)) {
+            for (const [img, regex] of Object.entries(repImgs)) {
                 if (!value.match(regex)) { continue; }
 
-                let imgUrl = ExtensionResources.getURL(`img/sr/${img}.png`);
+                const imgUrl = ExtensionResources.getURL(`img/sr/${img}.png`);
                 let status;
 
                 switch (img) {
-                    case "banned":
-                        status = "bad";
-                        break;
-                    case "caution":
-                        status = "caution";
-                        break;
-                    case "valve":
-                    case "okay":
-                        status = "good";
-                        break;
-                    case "donate":
-                        status = "neutral";
-                        break;
+                case "banned":
+                    status = "bad";
+                    break;
+                case "caution":
+                    status = "caution";
+                    break;
+                case "valve":
+                case "okay":
+                    status = "good";
+                    break;
+                case "donate":
+                    status = "neutral";
+                    break;
                 }
 
                 html += `<div class="${status}"><img src="${imgUrl}"><span> ${value}</span></div>`;

@@ -13,27 +13,28 @@ export default class FCardMarketLinks extends Feature {
         let data;
         try {
             data = await Background.action("market.cardprices", {
-                appid: this.context.appid,
-                currency: Currency.storeCurrency,
+                "appid": this.context.appid,
+                "currency": Currency.storeCurrency,
             });
         } catch (err) {
             console.error("Failed to load card prices", err);
             return;
         }
 
-        for (let node of document.querySelectorAll(".badge_card_set_card")) {
-            let cardName = node
+        for (const node of document.querySelectorAll(".badge_card_set_card")) {
+            const cardName = node
                 .querySelector(".badge_card_set_text").textContent
                 .replace(/&amp;/g, "&")
-                .replace(/\(\d+\)/g, "").trim();
-            let cardData = data[cardName] || data[cardName + " (Trading Card)"];
+                .replace(/\(\d+\)/g, "")
+                .trim();
+            let cardData = data[cardName] || data[`${cardName} (Trading Card)`];
             if (this.context.isFoil) {
-                cardData = data[cardName + " (Foil)"] || data[cardName + " (Foil Trading Card)"];
+                cardData = data[`${cardName} (Foil)`] || data[`${cardName} (Foil Trading Card)`];
             }
 
             if (cardData) {
-                let marketLink = `https://steamcommunity.com/market/listings/${cardData.url}`;
-                let cardPrice = new Price(cardData.price);
+                const marketLink = `https://steamcommunity.com/market/listings/${cardData.url}`;
+                const cardPrice = new Price(cardData.price);
 
                 if (node.classList.contains("unowned")) {
                     cost += cardPrice.value;
@@ -49,7 +50,8 @@ export default class FCardMarketLinks extends Feature {
             cost = new Price(cost);
             HTML.afterEnd(
                 DOMHelper.selectLastNode(document, ".badge_empty_name"),
-                `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost.replace("__cost__", cost)}</div>`);
+                `<div class="badge_empty_name badge_info_unlocked">${Localization.str.badge_completion_cost.replace("__cost__", cost)}</div>`
+            );
 
             document.querySelector(".badge_empty_right").classList.add("esi-badge");
         }

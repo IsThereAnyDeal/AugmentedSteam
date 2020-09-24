@@ -4,7 +4,7 @@ import {HTML, LocalStorage} from "core";
 import {ExtensionLayer, RequestData} from "common";
 
 export default class FBrowseWorkshops extends Feature {
-    
+
     apply() {
 
         let url = new URL(window.location.href);
@@ -14,20 +14,21 @@ export default class FBrowseWorkshops extends Feature {
             return;
         }
 
-        let search = LocalStorage.get("workshop_state");
-        url = new URL("https://steamcommunity.com/workshop/" + search);
-        let query = url.searchParams.get("browsesort");
+        const search = LocalStorage.get("workshop_state");
+        url = new URL(`https://steamcommunity.com/workshop/${search}`);
+        const query = url.searchParams.get("browsesort");
         this._changeTab(query);
 
         ExtensionLayer.runInPageContext(() => {
-            $J(".browseOption").get().forEach(node => node.onclick = () => false);
+            $J(".browseOption").get()
+                .forEach(node => node.onclick = () => false);
         });
 
         document.querySelectorAll(".browseOption").forEach(tab => {
             tab.addEventListener("click", () => {
-                let a = tab.querySelector("a[href]");
-                let url = new URL("https://steamcommunity.com/workshop/" + a.href);
-                let query = url.searchParams.get("browsesort");
+                const a = tab.querySelector("a[href]");
+                const url = new URL(`https://steamcommunity.com/workshop/${a.href}`);
+                const query = url.searchParams.get("browsesort");
                 LocalStorage.set("workshop_state", url.search);
                 window.history.pushState(null, null, url.search);
                 this._changeTab(query);
@@ -36,22 +37,22 @@ export default class FBrowseWorkshops extends Feature {
     }
 
     async _changeTab(query, start = 0, count = 8) {
-        let tab = document.querySelector(`.${query}`);
+        const tab = document.querySelector(`.${query}`);
         if (tab.hasAttribute("disabled")) { return; }
 
         tab.setAttribute("disabled", "disabled");
-        
-        let image = document.querySelector(".browseOptionImage");
+
+        const image = document.querySelector(".browseOptionImage");
         tab.parentNode.insertAdjacentElement("afterbegin", image);
 
         document.querySelectorAll(".browseOption").forEach(tab => tab.classList.add("notSelected"));
         tab.classList.remove("notSelected");
 
-        let container = document.querySelector("#workshop_appsRows");
+        const container = document.querySelector("#workshop_appsRows");
         HTML.inner(container, '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin: 170px auto;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div></div>');
 
-        let url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
-        let result = JSON.parse(await RequestData.getHttp(url));
+        const url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
+        const result = JSON.parse(await RequestData.getHttp(url));
         HTML.inner(container, result.results_html);
         tab.removeAttribute("disabled");
 
@@ -61,6 +62,6 @@ export default class FBrowseWorkshops extends Feature {
             g_oSearchResults.m_cTotalCount = totalCount;
             g_oSearchResults.m_cPageSize = count;
             g_oSearchResults.UpdatePagingDisplay();
-        }, [ query, result.total_count, count ]);
-    };
+        }, [query, result.total_count, count]);
+    }
 }

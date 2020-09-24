@@ -11,15 +11,15 @@ export default class FChatDropdownOptions extends Feature {
 
     apply() {
 
-        let sendButton = document.querySelector("div.profile_header_actions > a[href*=OpenFriendChat]");
+        const sendButton = document.querySelector("div.profile_header_actions > a[href*=OpenFriendChat]");
         if (!sendButton) { return; }
 
-        let m = sendButton.href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
+        const m = sendButton.href.match(/javascript:OpenFriendChat\( '(\d+)'.*\)/);
         if (!m) { return; }
-        let chatId = m[1];
+        const chatId = m[1];
 
-        let rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
-        let friendSteamId = rgProfileData.steamid;
+        const rgProfileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
+        const friendSteamId = rgProfileData.steamid;
 
         HTML.replace(sendButton,
             `<span class="btn_profile_action btn_medium" id="profile_chat_dropdown_link">
@@ -39,7 +39,7 @@ export default class FChatDropdownOptions extends Feature {
             </div>`);
 
         document.querySelector("#btnWebChat").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(chatId => { OpenFriendChatInWebChat(chatId); }, [ chatId ]);
+            ExtensionLayer.runInPageContext(chatId => { OpenFriendChatInWebChat(chatId); }, [chatId]);
         });
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", () => {

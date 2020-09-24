@@ -36,9 +36,9 @@ export default class FAchievementSort extends Feature {
                 await this._addSortMetaData(key, this._personal.querySelectorAll(".achieveRow"));
             }
         }
-        
-        for (let br of this._personal.querySelectorAll(":scope > br")) br.remove();
-        for (let [, node] of this._nodes[key]) {
+
+        for (const br of this._personal.querySelectorAll(":scope > br")) { br.remove(); }
+        for (const [, node] of this._nodes[key]) {
             this._personal.insertAdjacentElement(reversed ? "afterbegin" : "beforeend", node);
         }
     }
@@ -48,21 +48,21 @@ export default class FAchievementSort extends Feature {
         if (key === "default") {
 
             achievements.forEach((row, i) => this._nodes.default.push([i, row]));
-            return;
+
 
         } else if (key === "time") {
 
-            let url = new URL(window.location.href);
+            const url = new URL(window.location.href);
             url.searchParams.append("xml", 1);
 
             const result = await RequestData.getHttp(url.toString());
-            let xmlDoc = new DOMParser().parseFromString(result, "text/xml");
-            let xmlTags = xmlDoc.getElementsByTagName("achievement");
+            const xmlDoc = new DOMParser().parseFromString(result, "text/xml");
+            const xmlTags = xmlDoc.getElementsByTagName("achievement");
 
             for (let i = 0; i < this._nodes.default.length; ++i) {
-                let node = this._nodes.default[i][1];
+                const node = this._nodes.default[i][1];
                 let unlockTime = 0;
-                let unlockTimestamp = xmlTags[i].querySelector("unlockTimestamp");
+                const unlockTimestamp = xmlTags[i].querySelector("unlockTimestamp");
                 if (unlockTimestamp) {
                     unlockTime = unlockTimestamp.textContent;
                 }

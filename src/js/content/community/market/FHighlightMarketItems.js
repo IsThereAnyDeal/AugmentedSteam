@@ -12,7 +12,7 @@ export default class FHighlightMarketItems extends CallbackFeature {
         super(context, true, () => {
             new MutationObserver(mutations => {
                 for (const mutation of mutations) {
-                    for (let node of mutation.addedNodes) {
+                    for (const node of mutation.addedNodes) {
                         if (node.classList && node.classList.contains("market_listing_row_link")) {
                             this.callback();
                             return;
@@ -32,8 +32,8 @@ export default class FHighlightMarketItems extends CallbackFeature {
 
     async callback() {
 
-        for (let node of document.querySelectorAll(".market_listing_row_link")) {
-            let m = node.href.match(/market\/listings\/753\/(.+?)(\?|$)/);
+        for (const node of document.querySelectorAll(".market_listing_row_link")) {
+            const m = node.href.match(/market\/listings\/753\/(.+?)(\?|$)/);
             if (!m) { continue; }
 
             // todo Collect hashes and query them all at once

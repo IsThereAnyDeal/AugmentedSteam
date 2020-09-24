@@ -10,24 +10,24 @@ export default class FGamesStats extends Feature {
 
     apply() {
 
-        let games = HTMLParser.getVariableFromDom("rgGames", "array");
+        const games = HTMLParser.getVariableFromDom("rgGames", "array");
 
-        let countTotal = games.length;
+        const countTotal = games.length;
         let countPlayed = 0;
         let countNeverPlayed = 0;
 
         let time = 0;
-        for (let game of games) {
-            if (!game['hours_forever']) {
+        for (const game of games) {
+            if (!game.hours_forever) {
                 countNeverPlayed++;
                 continue;
             }
 
             countPlayed++;
-            time += parseFloat(game['hours_forever'].replace(",",""));
+            time += parseFloat(game.hours_forever.replace(",", ""));
         }
 
-        let totalTime = Localization.str.hours_short.replace("__hours__", time.toFixed(1));
+        const totalTime = Localization.str.hours_short.replace("__hours__", time.toFixed(1));
 
         HTML.beforeBegin("#mainContents",
             `<div id="esi-collection-chart-content">

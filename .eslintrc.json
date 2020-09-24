@@ -20,7 +20,8 @@
         }
     ],
     "ignorePatterns": [
-        "/src/js/lib/**"
+        "/src/js/lib/**",
+        "/dist/**"
     ],
     "rules": {
         "accessor-pairs": "error",

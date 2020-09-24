@@ -9,7 +9,7 @@ import {CommentHandler} from "community/common/CommentHandler";
 export class CProfileActivity extends CCommunityBase {
 
     constructor() {
-        
+
         super([
             FHighlightFriendsActivity,
         ]);
@@ -17,6 +17,7 @@ export class CProfileActivity extends CCommunityBase {
         this.type = ContextTypes.PROFILE_ACTIVITY;
 
         new MutationObserver(() => {
+
             // TODO Only apply on new nodes
             this.triggerCallbacks();
             EarlyAccess.showEarlyAccess();

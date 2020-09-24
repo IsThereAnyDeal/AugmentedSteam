@@ -8,6 +8,7 @@ import FGamelistAchievements from "./FGamelistAchievements";
 export class CGames extends CCommunityBase {
 
     constructor() {
+
         // Prevent errors if "Game Details" is private & only show stats on the "All Games" tab
         if (document.querySelector(".gameListRow") && window.location.search.includes("?tab=all")) {
             super([
@@ -18,7 +19,7 @@ export class CGames extends CCommunityBase {
         } else {
             super();
         }
-        
+
         this.type = ContextTypes.GAMES;
     }
 }

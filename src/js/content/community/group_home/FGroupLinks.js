@@ -8,12 +8,12 @@ export default class FGroupLinks extends Feature {
     apply() {
 
         let iconType = "none";
-        let images = SyncedStorage.get("show_profile_link_images");
+        const images = SyncedStorage.get("show_profile_link_images");
         if (images !== "none") {
             iconType = images === "color" ? "color" : "gray";
         }
 
-        let links = [
+        const links = [
             {
                 "id": "steamgifts",
                 "link": `https://www.steamgifts.com/go/group/${this.context.groupId}`,
@@ -22,13 +22,13 @@ export default class FGroupLinks extends Feature {
         ];
 
         let html = "";
-        for (let link of links) {
+        for (const link of links) {
             if (!SyncedStorage.get(`group_${link.id}`)) { continue; }
             html += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
         }
 
         if (html) {
-            let node = document.querySelector(".responsive_hidden > .rightbox");
+            const node = document.querySelector(".responsive_hidden > .rightbox");
             if (node) {
                 HTML.afterEnd(node.parentNode,
                     `<div class="rightbox_header"></div>

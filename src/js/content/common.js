@@ -463,7 +463,7 @@ export const User = (function() {
 
     let _promise = null;
 
-    Object.defineProperty(self, "storeCountry", { get() {
+    Object.defineProperty(self, "storeCountry", {get() {
         const url = new URL(window.location.href);
 
         let country;
@@ -518,7 +518,7 @@ export const User = (function() {
                 if (window.location.hostname.endsWith("steampowered.com")) {
 
                     // Search through all scripts in case the order gets changed or a new one gets added
-                    for (let script of document.getElementsByTagName("script")) {
+                    for (const script of document.getElementsByTagName("script")) {
                         const match = script.textContent.match(/GDynamicStore\.Init\(.+?, '([A-Z]{2})/);
                         if (match) {
                             newCountry = match[1];
@@ -540,7 +540,7 @@ export const User = (function() {
                 } else {
                     throw new Error("Script with user store country not found");
                 }
-                
+
             })
             .catch(err => {
                 console.group("Store country detection");
@@ -623,6 +623,7 @@ export const CurrencyRegistry = (function() {
             Object.freeze(this.format);
             Object.freeze(this);
         }
+
         valueOf(price) {
 
             // remove separators
@@ -636,6 +637,7 @@ export const CurrencyRegistry = (function() {
             if (Number.isNaN(value)) { return null; }
             return value; // this.multiplier?
         }
+
         stringify(value, withSymbol = true) {
             const sign = value < 0 ? "-" : "";
             value = Math.abs(value);
@@ -664,6 +666,7 @@ export const CurrencyRegistry = (function() {
             }
             return s.join("");
         }
+
         placeholder() {
             let str = `1${this.format.groupSeparator}`;
             let cur = 2;
@@ -681,6 +684,7 @@ export const CurrencyRegistry = (function() {
             }
             return str;
         }
+
         regExp() {
             let regex = `^(?:\\d{1,${this.format.groupSize}}(?:${StringUtils.escapeRegExp(this.format.groupSeparator)}\\d{${this.format.groupSize}})+|\\d*)`;
 

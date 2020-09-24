@@ -5,7 +5,7 @@ import FReviewSort from "./FReviewSort";
 export class CRecommended extends CCommunityBase {
 
     constructor() {
-        
+
         super([
             FReviewSort,
         ]);

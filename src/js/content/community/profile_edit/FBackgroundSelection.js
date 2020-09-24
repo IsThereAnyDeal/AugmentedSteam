@@ -14,13 +14,13 @@ export default class FBackgroundSelection extends Feature {
         this._checkPage();
 
         new MutationObserver(() => { this._checkPage(); })
-            .observe(document.querySelector(`[class^="profileeditshell_PageContent_"]`), {"childList": true});
+            .observe(document.querySelector("[class^=\"profileeditshell_PageContent_\"]"), {"childList": true});
     }
 
     async _checkPage() {
 
-        const html =
-            `<div class='js-bg-selection as-pd'>
+        const html
+            = `<div class='js-bg-selection as-pd'>
                 
                 <div class="DialogLabel as-pd__head" data-tooltip-text='${Localization.str.custom_background_help}'>
                     ${Localization.str.custom_background} <span class="as-pd__help">(?)</span>
@@ -44,11 +44,11 @@ export default class FBackgroundSelection extends Feature {
                 </div>
             </div>`;
 
-        if (document.querySelector(`[href$="/edit/background"].active`)) {
+        if (document.querySelector("[href$=\"/edit/background\"].active")) {
 
             if (this._active) { return; } // Happens because the below code will trigger the observer again
 
-            HTML.beforeEnd(`[class^="profileeditshell_PageContent_"]`, html);
+            HTML.beforeEnd("[class^=\"profileeditshell_PageContent_\"]", html);
 
             this._gameFilterNode = document.querySelector(".js-pd-game");
             this._listNode = document.querySelector(".js-pd-list");
@@ -56,16 +56,16 @@ export default class FBackgroundSelection extends Feature {
 
             this._active = true;
 
-            ExtensionLayer.runInPageContext(() => { SetupTooltips({ tooltipCSSClass: "community_tooltip" }); });
+            ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
 
             this._selectedAppid = ProfileData.getBgAppid();
             let selectedGameKey = null;
 
             this._showBgFormLoading(this._listNode);
 
-            let games = await Background.action("profile.background.games");
+            const games = await Background.action("profile.background.games");
 
-            for (let key in games) {
+            for (const key in games) {
                 if (!games.hasOwnProperty(key)) { continue; }
                 games[key][2] = this._getSafeString(games[key][1]);
 
@@ -84,12 +84,12 @@ export default class FBackgroundSelection extends Feature {
             });
 
             this._imagesNode.addEventListener("click", ({target}) => {
-                let node = target.closest(".js-pd-img");
+                const node = target.closest(".js-pd-img");
 
                 if (!node) { return; }
                 this._selectedImage = node.dataset.img;
 
-                let currentSelected = document.querySelector(".js-pd-img.is-selected");
+                const currentSelected = document.querySelector(".js-pd-img.is-selected");
                 if (currentSelected) {
                     currentSelected.classList.remove("is-selected");
                 }
@@ -111,7 +111,7 @@ export default class FBackgroundSelection extends Feature {
 
                     let i = 0;
                     let list = "";
-                    for (let [appid, title, safeTitle] of games) {
+                    for (const [appid, title, safeTitle] of games) {
                         if (safeTitle.includes(value)) {
                             list += `<div class='as-pd__item js-pd-item' data-appid="${appid}">${title}</div>`;
                             i++;
@@ -130,18 +130,18 @@ export default class FBackgroundSelection extends Feature {
                 }
             }
 
-            document.querySelector(".js-as-pd-bg-clear").addEventListener("click", async () => {
+            document.querySelector(".js-as-pd-bg-clear").addEventListener("click", async() => {
                 await ProfileData.clearOwn();
-                window.location.href = Config.ApiServerHost + `/v01/profile/background/edit/delete/`;
+                window.location.href = `${Config.ApiServerHost}/v01/profile/background/edit/delete/`;
             });
 
-            document.querySelector(".js-as-pd-bg-save").addEventListener("click", async () => {
+            document.querySelector(".js-as-pd-bg-save").addEventListener("click", async() => {
                 if (this._selectedImage && this._selectedAppid) {
                     await ProfileData.clearOwn();
 
-                    let selectedAppid = encodeURIComponent(this._selectedAppid);
-                    let selectedImg = encodeURIComponent(this._selectedImage);
-                    window.location.href = Config.ApiServerHost+`/v01/profile/background/edit/save/?appid=${selectedAppid}&img=${selectedImg}`;
+                    const selectedAppid = encodeURIComponent(this._selectedAppid);
+                    const selectedImg = encodeURIComponent(this._selectedImage);
+                    window.location.href = `${Config.ApiServerHost}/v01/profile/background/edit/save/?appid=${selectedAppid}&img=${selectedImg}`;
                 }
             });
 
@@ -157,23 +157,23 @@ export default class FBackgroundSelection extends Feature {
 
     async _selectGame(appid) {
 
-        let result = await Background.action("profile.background", {
+        const result = await Background.action("profile.background", {
             appid,
             "profile": SteamId.getSteamId(),
         });
 
         this._selectedAppid = appid;
-        let selectedImg = ProfileData.getBgImg();
+        const selectedImg = ProfileData.getBgImg();
 
         let images = "";
-        for (let [url, title] of result) {
+        for (const [url, title] of result) {
             let selectedClass = "";
             if (selectedImg === url) {
                 selectedClass = " is-selected";
             }
 
-            images +=
-                `<div class="as-pd__item${selectedClass} js-pd-img" data-img="${url}">
+            images
+                += `<div class="as-pd__item${selectedClass} js-pd-img" data-img="${url}">
                     <img src="${this._getImageUrl(url)}" class="as-pd__img">
                     <div>${title}</div>
                 </div>`;
@@ -183,7 +183,7 @@ export default class FBackgroundSelection extends Feature {
     }
 
     _getImageUrl(name) {
-        return "https://steamcommunity.com/economy/image/" + name + "/622x349";
+        return `https://steamcommunity.com/economy/image/${name}/622x349`;
     }
 
     _showBgFormLoading(node) {

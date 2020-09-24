@@ -12,7 +12,7 @@ export default class FHideActiveListings extends Feature {
 
         document.querySelector("#tabContentsMyListings").style.display = "none";
 
-        let node = document.querySelector("#tabMyListings");
+        const node = document.querySelector("#tabMyListings");
         node.classList.remove("market_tab_well_tab_active");
         node.classList.add("market_tab_well_tab_inactive");
     }

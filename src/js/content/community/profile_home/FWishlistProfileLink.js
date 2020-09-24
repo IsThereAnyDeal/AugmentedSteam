@@ -13,7 +13,7 @@ export default class FWishlistProfileLink extends Feature {
 
     async apply() {
 
-        let m = window.location.pathname.match(/^\/(?:profiles|id)\/[^\/]+/);
+        const m = window.location.pathname.match(/^\/(?:profiles|id)\/[^\/]+/);
         if (!m) { return; }
 
         HTML.afterEnd(".profile_item_links .profile_count_link",
@@ -26,8 +26,8 @@ export default class FWishlistProfileLink extends Feature {
 
         if (SyncedStorage.get("show_wishlist_count")) {
 
-            let wishlistNode = document.querySelector(`.gamecollector_showcase .showcase_stat[href$="/wishlist/"]`);
-            let count = wishlistNode ? wishlistNode.textContent.match(/\d+(?:,\d+)?/)[0] : await Background.action("wishlists", window.location.pathname);
+            const wishlistNode = document.querySelector(".gamecollector_showcase .showcase_stat[href$=\"/wishlist/\"]");
+            const count = wishlistNode ? wishlistNode.textContent.match(/\d+(?:,\d+)?/)[0] : await Background.action("wishlists", window.location.pathname);
 
             document.querySelector("#es_wishlist_count").textContent = count;
         }

@@ -30,21 +30,24 @@ webpack(merge(config, {
             "output": {
                 "fileName": "manifest.json",
             },
-            "space": mode === "dev" ? '\t' : null, 
+            "space": mode === "dev" ? "\t" : null,
         }),
     ],
-    /*"module": {
-        "rules": [
-            {
-                "test": /\.c?js$/,
-                "exclude": [
-                    path.resolve(rootDir, "node_modules/"),
-                    path.resolve(rootDir, "src/js/lib/"),
-                ],
-                "loader": "eslint-loader",
-            }
-        ],
-    },*/
+
+    /*
+     *"module": {
+     *  "rules": [
+     *      {
+     *          "test": /\.c?js$/,
+     *          "exclude": [
+     *              path.resolve(rootDir, "node_modules/"),
+     *              path.resolve(rootDir, "src/js/lib/"),
+     *          ],
+     *          "loader": "eslint-loader",
+     *      }
+     *  ],
+     *},
+     */
 }), (err, stats) => {
 
     if (err) {
@@ -56,6 +59,6 @@ webpack(merge(config, {
     }
 
     console.log(stats.toString({
-        colors: true,
+        "colors": true,
     }));
 });

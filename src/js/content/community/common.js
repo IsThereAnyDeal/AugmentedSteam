@@ -4,13 +4,13 @@ export class ProfileData {
 
     static promise() {
         if (!this._promise) {
-            let steamId = SteamId.getSteamId();
+            const steamId = SteamId.getSteamId();
 
             this._promise = Background.action("profile", steamId)
                 .then(response => this._data = response);
         }
         return this._promise;
-    };
+    }
 
     static then(onDone, onCatch) {
         return this.promise().then(onDone, onCatch);
@@ -36,14 +36,14 @@ export class ProfileData {
         if (!this._data.bg || !this._data.bg.img) { return ""; }
 
         if (width && height) {
-            return this._data.bg.img.replace("/\/+$/", "")+`/${width}x${height}`; // also possible ${width}fx${height}f
+            return `${this._data.bg.img.replace("/\/+$/", "")}/${width}x${height}`; // also possible ${width}fx${height}f
         }
 
         return this._data.bg.img;
     }
 
     static getBgImgUrl(width, height) {
-        let img = this.getBgImg(width, height);
+        const img = this.getBgImg(width, height);
         if (!img) { return ""; }
         return `https://steamcommunity.com/economy/image/${img}`;
     }
@@ -65,17 +65,17 @@ ProfileData._data = {};
 
 
 export class CommunityCommon {
-    
+
     static currentUserIsOwner() {
         if (!User.isSignedIn) { return false; }
 
-        let badgeOwnerUrl = document.querySelector(".profile_small_header_texture > a").href + "/";
+        const badgeOwnerUrl = `${document.querySelector(".profile_small_header_texture > a").href}/`;
 
         return badgeOwnerUrl === User.profileUrl;
     }
 
     static makeProfileLink(id, link, name, iconType, iconUrl) {
-        let mainType = iconUrl ? "none" : iconType;
+        const mainType = iconUrl ? "none" : iconType;
         let html = `<div class="es_profile_link profile_count_link">
                    <a class="es_sites_icons es_${id}_icon es_${mainType}" href="${link}" target="_blank">`;
 

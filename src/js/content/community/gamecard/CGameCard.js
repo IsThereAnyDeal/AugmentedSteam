@@ -18,7 +18,7 @@ export class CGameCard extends CCommunityBase {
             FCardFoilLink,
             FTradeForumLink,
         ]);
-        
+
         this.type = ContextTypes.GAME_CARD;
 
         this.appid = GameId.getAppidFromGameCard(window.location.pathname);
