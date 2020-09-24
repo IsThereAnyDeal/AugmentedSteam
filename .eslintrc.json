@@ -58,7 +58,6 @@
         "indent": "error",
         "key-spacing": ["error", { "mode": "minimum" }],
         "keyword-spacing": "error",
-        "linebreak-style": "error",
         "lines-around-comment": ["warn", { "beforeLineComment": true, "beforeBlockComment": true }],
         "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
         "max-depth": "warn",
