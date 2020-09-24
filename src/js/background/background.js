@@ -1093,7 +1093,7 @@ class SteamCommunity extends Api {
 
     static async getPage(endpoint, query) {
         const response = await this._fetchWithDefaults(endpoint, query, {"method": "GET"});
-        if (new URL(response.url).pathname === "/login/") {
+        if (new URL(response.url).pathname === "/login/home/") {
             throw new LoginError("community");
         }
         return response.text();
