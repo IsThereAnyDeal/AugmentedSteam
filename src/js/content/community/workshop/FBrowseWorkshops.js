@@ -20,8 +20,10 @@ export default class FBrowseWorkshops extends Feature {
         this._changeTab(query);
 
         ExtensionLayer.runInPageContext(() => {
-            $J(".browseOption").get()
-                .forEach(node => node.onclick = () => false);
+            // eslint-disable-next-line no-undef
+            $J(".browseOption")
+                .get()
+                .forEach(node => { node.onclick = () => false; });
         });
 
         document.querySelectorAll(".browseOption").forEach(tab => {
@@ -49,7 +51,14 @@ export default class FBrowseWorkshops extends Feature {
         tab.classList.remove("notSelected");
 
         const container = document.querySelector("#workshop_appsRows");
-        HTML.inner(container, '<div class="LoadingWrapper"><div class="LoadingThrobber" style="margin: 170px auto;"><div class="Bar Bar1"></div><div class="Bar Bar2"></div><div class="Bar Bar3"></div></div></div>');
+        HTML.inner(container,
+            `<div class="LoadingWrapper">
+                <div class="LoadingThrobber" style="margin: 170px auto;">
+                    <div class="Bar Bar1"></div>
+                    <div class="Bar Bar2"></div>
+                    <div class="Bar Bar3"></div>
+                </div>
+            </div>`);
 
         const url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
         const result = JSON.parse(await RequestData.getHttp(url));
@@ -57,11 +66,13 @@ export default class FBrowseWorkshops extends Feature {
         tab.removeAttribute("disabled");
 
         ExtensionLayer.runInPageContext((query, totalCount, count) => {
+            /* eslint-disable camelcase, no-undef, new-cap */
             g_oSearchResults.m_iCurrentPage = 0;
             g_oSearchResults.m_strQuery = query;
             g_oSearchResults.m_cTotalCount = totalCount;
             g_oSearchResults.m_cPageSize = count;
             g_oSearchResults.UpdatePagingDisplay();
+            /* eslint-enable camelcase, no-undef, new-cap */
         }, [query, result.total_count, count]);
     }
 }

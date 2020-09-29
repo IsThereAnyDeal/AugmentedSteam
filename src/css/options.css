@@ -202,7 +202,7 @@ li {
 	padding-bottom: 0.5em;
 }
 #region_selects {
-	margin: inherit 
+	margin: inherit
 }
 #region_selects > :last-child {
 	margin-top: 1em;
@@ -294,7 +294,7 @@ a:hover {
 	color:#999;
 }
 
-/**
+/*
  * Custom links
  */
 

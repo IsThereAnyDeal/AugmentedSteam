@@ -22,7 +22,7 @@ export default class FSearchFilters extends Feature {
             NegativeSearchFilter,
             ReviewsScoreSearchFilter,
             ReviewsCountSearchFilter,
-        ].map(ref => new ref(this));
+        ].map(Filter => new Filter(this));
 
         this._urlParams = {};
 
@@ -70,8 +70,9 @@ export default class FSearchFilters extends Feature {
 
         // Allow user to autocollapse the added category block just like any other
         ExtensionLayer.runInPageContext((collapseName, shouldCollapse) => {
+            /* eslint-disable new-cap, no-undef */
 
-            /**
+            /*
              * https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L927
              * InitAutocollapse
              */
@@ -80,10 +81,11 @@ export default class FSearchFilters extends Feature {
             const block = $J(`.search_collapse_block[data-collapse-name="${collapseName}"]`);
             let collapsed;
 
-            if (prefs[collapseName] !== undefined) {
-                collapsed = prefs[collapseName];
+            if (typeof prefs[collapseName] === "undefined") {
+                prefs[collapseName] = false;
+                collapsed = false;
             } else {
-                prefs[collapseName] = collapsed = false;
+                collapsed = prefs[collapseName];
             }
 
             collapsed = collapsed && shouldCollapse;
@@ -107,6 +109,7 @@ export default class FSearchFilters extends Feature {
                 block.toggleClass("collapsed");
                 SaveCollapsePrefs(prefs);
             });
+            /* eslint-enable new-cap, no-undef */
         }, [collapseName, this._filters.every(filter => !filter.active)]);
 
         this._observeChanges();
@@ -139,8 +142,9 @@ export default class FSearchFilters extends Feature {
         });
 
         ExtensionLayer.runInPageContext(() => {
+            /* eslint-disable new-cap, no-undef, camelcase */
 
-            /**
+            /*
              * The handler set by this function is triggered when the page that infiniscroll will display has changed
              * https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L614
              */
@@ -149,8 +153,8 @@ export default class FSearchFilters extends Feature {
                 if (controller) {
                     const oldPageHandler = controller.m_fnPageChangedHandler;
 
-                    controller.SetPageChangedHandler(function() {
-                        oldPageHandler(...arguments);
+                    controller.SetPageChangedHandler((...args) => {
+                        oldPageHandler(...args);
 
                         Messenger.postMessage("searchCompleted", false);
                     });
@@ -162,7 +166,7 @@ export default class FSearchFilters extends Feature {
 
             window.ExecuteSearch = function(params) {
 
-                /**
+                /*
                  * The ExecuteSearch function uses the global object g_rgCurrentParameters, that is
                  * filled by GatherSearchParameters(), and compares it to the new search parameters
                  * (the object passed to this function).
@@ -192,7 +196,7 @@ export default class FSearchFilters extends Feature {
                     }
                 }
 
-                /**
+                /*
                  * If our parameters have changed (this automatically means theirs have not, since
                  * during different states there is only one change in parameters), there won't be new results.
                  * Therefore we can already notify the content script that the search completed.
@@ -210,8 +214,8 @@ export default class FSearchFilters extends Feature {
             // https://github.com/SteamDatabase/SteamTracking/blob/8a120c6dc568670d718f077c735b321a1ac80a29/store.steampowered.com/public/javascript/searchpage.js#L298
             const searchCompletedOld = window.SearchCompleted;
 
-            window.SearchCompleted = function() {
-                searchCompletedOld(...arguments);
+            window.SearchCompleted = function(...args) {
+                searchCompletedOld(...args);
 
                 // https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L319
                 setPageChangeHandler();
@@ -222,7 +226,7 @@ export default class FSearchFilters extends Feature {
 
             // https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L463
             setPageChangeHandler();
-
+            /* eslint-disable new-cap, no-undef, camelcase */
         });
     }
 
@@ -245,7 +249,7 @@ export default class FSearchFilters extends Feature {
 
         for (const [param, value] of this._filterValues) {
 
-            /**
+            /*
              * This hidden input is required for GatherSearchParameters,
              * otherwise AS' inputs are not considered when selecting another Steam native filter.
              * https://github.com/SteamDatabase/SteamTracking/blob/1dfdbd838714d4b868e0221ca812696ca05f0a6b/store.steampowered.com/public/javascript/searchpage.js#L177

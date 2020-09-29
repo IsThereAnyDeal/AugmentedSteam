@@ -33,7 +33,7 @@ export default class FGroupsManageButton extends Feature {
                         <span>${groupsStr.leave}</span>
                     </span>
                     <span id="selected_msg_err" class="selected_msg error hidden"></span>
-                    <span id="selected_msg" class="selected_msg hidden">${groupsStr.selected.replace("__n__", "<span id=\"selected_count\"></span>")}</span>
+                    <span id="selected_msg" class="selected_msg hidden">${groupsStr.selected.replace("__n__", '<span id="selected_count"></span>')}</span>
                 </div>
                 <div class="row"></div>
             </div>`);
@@ -44,27 +44,28 @@ export default class FGroupsManageButton extends Feature {
                 `<div class="indicator select_friend">
                     <input class="select_friend_checkbox" type="checkbox">
                 </div>`);
+            // eslint-disable-next-line no-loop-func -- Only UpdateSelection is accessed, which execute in the page context
             group.querySelector(".select_friend").addEventListener("click", () => {
                 group.classList.toggle("selected");
                 group.querySelector(".select_friend_checkbox").checked = group.classList.contains("selected");
-                ExtensionLayer.runInPageContext(() => { UpdateSelection(); });
+                ExtensionLayer.runInPageContext(() => { UpdateSelection(); }); // eslint-disable-line no-undef, new-cap
             });
         }
 
         document.querySelector("#manage_friends_control").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(() => { ToggleManageFriends(); });
+            ExtensionLayer.runInPageContext(() => { ToggleManageFriends(); }); // eslint-disable-line no-undef, new-cap
         });
 
         document.querySelector("#es_select_all").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(() => { SelectAll(); });
+            ExtensionLayer.runInPageContext(() => { SelectAll(); }); // eslint-disable-line no-undef, new-cap
         });
 
         document.querySelector("#es_select_none").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(() => { SelectNone(); });
+            ExtensionLayer.runInPageContext(() => { SelectNone(); }); // eslint-disable-line no-undef, new-cap
         });
 
         document.querySelector("#es_select_inverse").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(() => { SelectInverse(); });
+            ExtensionLayer.runInPageContext(() => { SelectInverse(); }); // eslint-disable-line no-undef, new-cap
         });
 
         document.querySelector("#es_leave_groups").addEventListener("click", () => { this._leaveGroups(); });
@@ -123,7 +124,7 @@ export default class FGroupsManageButton extends Feature {
 
     _leaveGroup(id) {
         const formData = new FormData();
-        formData.append("sessionid", User.getSessionId());
+        formData.append("sessionid", User.sessionId);
         formData.append("steamid", User.steamId);
         formData.append("ajax", 1);
         formData.append("action", "leave_group");

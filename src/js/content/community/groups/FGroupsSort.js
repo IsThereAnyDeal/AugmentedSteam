@@ -67,6 +67,13 @@ export default class FGroupsSort extends Feature {
             return (a, b) => Number(b.dataset[property]) - Number(a.dataset[property]);
         case "names":
             return (a, b) => a.dataset[property].localeCompare(b.dataset[property]);
+        default:
+            this.logError(
+                new Error("Invalid sorting criteria"),
+                "Can't sort groups by criteria '%s'",
+                sortBy,
+            );
+            return () => 0;
         }
     }
 }

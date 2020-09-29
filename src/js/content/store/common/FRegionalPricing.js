@@ -31,7 +31,9 @@ export default class FRegionalPricing extends Feature {
             const prices = {};
 
             await Promise.all(countries.map(async country => {
-                const result = await RequestData.getJson(`https://store.steampowered.com/api/packagedetails/?packageids=${subid}&cc=${country}`);
+                const result = await RequestData.getJson(
+                    `https://store.steampowered.com/api/packagedetails/?packageids=${subid}&cc=${country}`
+                );
 
                 if (!result || !result[subid] || !result[subid].success || !result[subid].data.price) { return; }
                 prices[country] = result[subid].data.price;
@@ -76,7 +78,10 @@ export default class FRegionalPricing extends Feature {
                     } catch (err) {
                         console.group("Regional pricing");
                         console.error(err);
-                        console.warn("Not able to show converted price and relative price differences for country code \"%s\"", country.toUpperCase());
+                        console.warn(
+                            'Not able to show converted price and relative price differences for country code "%s"',
+                            country.toUpperCase()
+                        );
                         console.groupEnd();
                     }
 

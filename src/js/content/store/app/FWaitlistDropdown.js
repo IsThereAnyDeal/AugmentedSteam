@@ -5,13 +5,18 @@ import {Background, ExtensionLayer} from "common";
 
 export default class FWaitlistDropdown extends Feature {
 
-    async checkPrerequisites() {
-        return document.querySelector("#add_to_wishlist_area") && SyncedStorage.get("add_to_waitlist") && await Background.action("itad.isconnected");
+    checkPrerequisites() {
+        return document.querySelector("#add_to_wishlist_area")
+            && SyncedStorage.get("add_to_waitlist")
+            && Background.action("itad.isconnected");
     }
 
     async apply() {
 
-        // This node will be hidden behind the dropdown menu. Also, it's not really desirable when using dropdown menus to have a permanent div floating nearby
+        /*
+         * This node will be hidden behind the dropdown menu.
+         * Also, it's not really desirable when using dropdown menus to have a permanent div floating nearby
+         */
         const notice = document.querySelector(".wishlist_added_temp_notice");
         if (notice) { notice.remove(); }
 
@@ -23,7 +28,10 @@ export default class FWaitlistDropdown extends Feature {
                 <div class="queue_control_button queue_btn_wishlist"></div>
             </div>`);
 
-        // Creating a common parent for #add_to_wishlist_area and #add_to_wishlist_area_success makes it easier to apply the dropdown menu
+        /*
+         * Creating a common parent for #add_to_wishlist_area and #add_to_wishlist_area_success
+         * makes it easier to apply the dropdown menu
+         */
         const wrapper = document.querySelector(".queue_btn_wishlist");
 
         // Move the wrapper such that there can't be any other elements in between the dropdown and other buttons (see #690)
@@ -75,8 +83,6 @@ export default class FWaitlistDropdown extends Feature {
         const wishlistOption = document.querySelector("#queue_ignore_menu_option_not_interested");
         const waitlistOption = document.querySelector("#queue_ignore_menu_option_owned_elsewhere");
 
-        updateDiv();
-
         function updateDiv() {
             const oneActive = Boolean(wishlisted) || Boolean(waitlisted);
 
@@ -104,15 +110,19 @@ export default class FWaitlistDropdown extends Feature {
             document.querySelector("#add_to_wishlist_area_success span").lastChild.textContent = ` ${text}`;
         }
 
+        updateDiv();
+
         wishlistArea.querySelector("a").addEventListener("click", async() => {
 
             await ExtensionLayer.runInPageContext(() => new Promise(resolve => {
+                /* eslint-disable no-undef */
                 $J(document).ajaxComplete(function handler(e, xhr, {url}) {
                     if (url === "https://store.steampowered.com/api/addtowishlist") {
                         resolve();
                         $J(document).unbind("ajaxComplete", handler);
                     }
                 });
+                /* eslint-enable no-undef */
             }), null, true);
 
             wishlisted = !wishlisted;
@@ -120,7 +130,8 @@ export default class FWaitlistDropdown extends Feature {
         });
 
         this.context.onWishAndWaitlistRemove = () => {
-            wishlisted = waitlisted = false;
+            wishlisted = false;
+            waitlisted = false;
             updateDiv();
         };
 

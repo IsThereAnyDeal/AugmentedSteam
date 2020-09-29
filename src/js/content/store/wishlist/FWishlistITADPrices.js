@@ -18,11 +18,15 @@ export default class FWishlistITADPrices extends CallbackFeature {
     apply() {
 
         ExtensionLayer.runInPageContext(() => {
+            /* eslint-disable no-undef */
             function getNodesBelow(node) {
                 const nodes = Array.from(document.querySelectorAll(".wishlist_row"));
 
-                // Limit the selection to the rows that are positioned below the row (not including the row itself) where the price is being shown
-                return nodes.filter(row => parseInt(row.style.top, 10) > parseInt(node.style.top, 10));
+                /*
+                 * Limit the selection to the rows that are positioned below the row (not
+                 * including the row itself) where the price is being shown
+                 */
+                return nodes.filter(row => parseInt(row.style.top) > parseInt(node.style.top));
             }
 
             const oldOnScroll = CWishlistController.prototype.OnScroll;
@@ -30,7 +34,10 @@ export default class FWishlistITADPrices extends CallbackFeature {
             CWishlistController.prototype.OnScroll = function() {
                 oldOnScroll.call(g_Wishlist);
 
-                // If the mouse is still inside an entry while scrolling or resizing, wishlist.js's event handler will put back the elements to their original position
+                /*
+                 * If the mouse is still inside an entry while scrolling or resizing, wishlist.js's
+                 * event handler will put back the elements to their original position
+                 */
                 const hover = document.querySelectorAll(":hover");
                 if (hover.length) {
                     const activeEntry = hover[hover.length - 1].closest(".wishlist_row");
@@ -45,7 +52,7 @@ export default class FWishlistITADPrices extends CallbackFeature {
                     }
                 }
             };
-
+            /* eslint-enable no-undef */
         });
 
         super.apply();
@@ -78,7 +85,7 @@ export default class FWishlistITADPrices extends CallbackFeature {
                 }
                 cachedPrices[appId].then(() => {
                     const priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
-                    this._getNodesBelow(node).forEach(row => row.style.top = `${parseInt(row.style.top, 10) + priceNodeHeight}px`);
+                    this._getNodesBelow(node).forEach(row => { row.style.top = `${parseInt(row.style.top) + priceNodeHeight}px`; });
                 });
             });
 
@@ -88,7 +95,7 @@ export default class FWishlistITADPrices extends CallbackFeature {
                 if (cachedPrices[appId]) {
                     cachedPrices[appId].then(() => {
                         const priceNodeHeight = node.querySelector(".itad-pricing").getBoundingClientRect().height;
-                        this._getNodesBelow(node).forEach(row => row.style.top = `${parseInt(row.style.top, 10) - priceNodeHeight}px`);
+                        this._getNodesBelow(node).forEach(row => { row.style.top = `${parseInt(row.style.top) - priceNodeHeight}px`; });
                     });
                 }
             });
@@ -98,7 +105,10 @@ export default class FWishlistITADPrices extends CallbackFeature {
     _getNodesBelow(node) {
         const nodes = Array.from(document.querySelectorAll(".wishlist_row"));
 
-        // Limit the selection to the rows that are positioned below the row (not including the row itself) where the price is being shown
-        return nodes.filter(row => parseInt(row.style.top, 10) > parseInt(node.style.top, 10));
+        /*
+         * Limit the selection to the rows that are positioned below the row
+         * (not including the row itself) where the price is being shown
+         */
+        return nodes.filter(row => parseInt(row.style.top) > parseInt(node.style.top));
     }
 }

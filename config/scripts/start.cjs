@@ -27,7 +27,7 @@ webpack(merge(config, {
             "space": "\t",
         }),
 
-        /**
+        /*
          * TODO Once the production dependencies are also handled via npm,
          * this plugin can use the "manifest" key to remove the need of a "entries"
          * property.

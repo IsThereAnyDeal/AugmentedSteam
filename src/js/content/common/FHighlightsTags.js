@@ -6,7 +6,10 @@ export default class FHighlightsTags extends Feature {
 
     async apply() {
 
-        await ExtensionLayer.runInPageContext(() => new Promise(resolve => { GDynamicStore.OnReady(() => { resolve(); }); }), null, true);
+        await ExtensionLayer.runInPageContext(() => new Promise(resolve => {
+            // eslint-disable-next-line no-undef, new-cap
+            GDynamicStore.OnReady(() => { resolve(); });
+        }), null, true);
 
         const searchBoxContents = document.getElementById("search_suggestion_contents");
         if (searchBoxContents) {
@@ -25,7 +28,7 @@ export default class FHighlightsTags extends Feature {
     static highlightTitle(appid) {
 
         const title = document.querySelector(".apphub_AppName");
-        if (!title) { return; }
+        if (!title) { return null; }
 
         title.dataset.dsAppid = appid;
 
@@ -37,12 +40,14 @@ export default class FHighlightsTags extends Feature {
      * or that the user has a gift, a guest pass or coupon for.
      *
      * Additionally hides non-discounted titles if wished by the user.
-     * @param {NodeList|Array} nodes    The nodes that should get highlighted (defaults to all known nodes that are highlightable and taggable)
-     * @param {boolean} hasDsInfo       Whether or not the supplied nodes contain dynamic store info (defaults to true)
-     * @param {Object} options          The highlights/tags that should be applied (defaults to all enabled)
-     * @returns {Promise}               Resolved once the highlighting and tagging completed for the nodes
+     * @param {NodeList|Array} nodes - The nodes that should get highlighted
+     * (defaults to all known nodes that are highlightable and taggable)
+     * @param {boolean} hasDsInfo - Whether or not the supplied nodes contain dynamic store info (defaults to true)
+     * @param {Object} options - The highlights/tags that should be applied (defaults to all enabled)
+     * @returns {Promise} - Resolved once the highlighting and tagging completed for the nodes
      */
-    static async highlightAndTag(nodes = document.querySelectorAll(this._selector), hasDsInfo = true, options) {
+    /* eslint-disable complexity -- FIXME */
+    static async highlightAndTag(nodes = document.querySelectorAll(this._selector), hasDsInfo = true, options = {}) {
 
         const opts = {"owned": true,
             "wishlisted": true,
@@ -63,13 +68,16 @@ export default class FHighlightsTags extends Feature {
                 nodeToHighlight = node.querySelector(".info");
             } else if (node.classList.contains("home_area_spotlight")) {
                 nodeToHighlight = node.querySelector(".spotlight_content");
-            } else if (node.parentNode.classList.contains("steam_curator_recommendation") && node.parentNode.classList.contains("big")) {
+            } else if (node.parentNode.classList.contains("steam_curator_recommendation")
+                && node.parentNode.classList.contains("big")) {
                 nodeToHighlight = node.nextElementSibling;
             } else if (node.parentNode.parentNode.classList.contains("curations")) {
                 nodeToHighlight = node.parentNode;
             } else if (node.classList.contains("special_img_ctn") && node.parentElement.classList.contains("special")) {
                 nodeToHighlight = node.parentElement;
-            } else if (node.classList.contains("blotter_userstats_game")) { // Small game capsules on activity page (e.g. when posting a status about a game)
+            } else if (node.classList.contains("blotter_userstats_game")) {
+
+                // Small game capsules on activity page (e.g. when posting a status about a game)
                 nodeToHighlight = node.parentElement;
             }
 
@@ -122,9 +130,11 @@ export default class FHighlightsTags extends Feature {
 
         const includeDsInfo
             = !hasDsInfo
-            && ((opts.owned && (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned") || SyncedStorage.get("hide_owned")))
+            && ((opts.owned && (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")
+                || SyncedStorage.get("hide_owned")))
                 || (opts.wishlisted && (SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist")))
-                || (opts.ignored && (SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested") || SyncedStorage.get("hide_ignored")))
+                || (opts.ignored && (SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested")
+                || SyncedStorage.get("hide_ignored")))
             );
 
         const [dsStatus, itadStatus, invStatus] = await Promise.all([
@@ -134,21 +144,25 @@ export default class FHighlightsTags extends Feature {
                 "collection": opts.collected && (SyncedStorage.get("highlight_collection") || SyncedStorage.get("tag_collection")),
             }),
             Inventory.getAppStatus(trimmedStoreIds, {
-                "giftsAndPasses": opts.gift && (SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift"))
-                                || opts.guestPass && (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass")),
+                "giftsAndPasses": (opts.gift && (SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift")))
+                    || (opts.guestPass && (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass"))),
                 "coupons": opts.coupon && (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon")),
             }),
         ]);
 
         const it = trimmedStoreIds.values();
         for (const [storeid, nodes] of storeIdsMap) {
+            /* eslint-disable max-statements-per-line -- Clear enough */
             if (dsStatus) {
                 if (opts.owned && dsStatus[storeid].owned) { nodes.forEach(node => { this.highlightOwned(node); }); }
                 if (opts.wishlisted && dsStatus[storeid].wishlisted) { nodes.forEach(node => { this.highlightWishlist(node); }); }
                 if (opts.ignored && dsStatus[storeid].ignored) { nodes.forEach(node => { this.highlightNotInterested(node); }); }
             }
 
-            // Don't need to check for the opts object here, since the result contains false for every property if the highlight has been disabled
+            /*
+             * Don't need to check for the opts object here, since the result contains
+             * false for every property if the highlight has been disabled
+             */
             if (itadStatus) {
                 if (itadStatus[storeid].collected) { nodes.forEach(node => { this.highlightCollection(node); }); }
                 if (itadStatus[storeid].waitlisted) { nodes.forEach(node => { this.highlightWaitlist(node); }); }
@@ -157,9 +171,13 @@ export default class FHighlightsTags extends Feature {
             if (invStatus) {
                 const trimmedId = it.next().value;
                 if (opts.gift && invStatus[trimmedId].gift) { nodes.forEach(node => { this.highlightInvGift(node); }); }
+                // eslint-disable-next-line max-len -- Clear enough
                 if (opts.guestPass && invStatus[trimmedId].guestPass) { nodes.forEach(node => { this.highlightInvGuestpass(node); }); }
-                if (invStatus[trimmedId].coupon) { nodes.forEach(node => { this.highlightCoupon(node); }); } // Same as for the ITAD highlights (don't need to check)
+
+                // Same as for the ITAD highlights (don't need to check)
+                if (invStatus[trimmedId].coupon) { nodes.forEach(node => { this.highlightCoupon(node); }); }
             }
+            /* eslint-enable max-statements-per-line */
         }
     }
 
@@ -240,11 +258,14 @@ export default class FHighlightsTags extends Feature {
             }
         }
     }
+    /* eslint-enable complexity */
 
     static _highlightNode(node) {
         if (SyncedStorage.get("highlight_excludef2p")) {
 
-            if (node.innerHTML.match(/<div class="(tab_price|large_cap_price|col search_price|main_cap_price|price)">\n?(.+)?(Free to Play|Play for Free!)(.+)?<\/div>/i)) {
+            if (node.innerHTML.match(
+                /<div class="(tab_price|large_cap_price|col search_price|main_cap_price|price)">\n?(.+)?(Free to Play|Play for Free!)(.+)?<\/div>/i
+            )) {
                 return;
             }
             if (node.innerHTML.match(/<h5>(Free to Play|Play for Free!)<\/h5>/i)) {
@@ -265,12 +286,21 @@ export default class FHighlightsTags extends Feature {
 
             for (const name of this._types) {
                 const color = SyncedStorage.get(`highlight_${name}_color`);
-                hlCss.push(`
-                    .es_highlighted_${name} { background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important; }
-                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name}, .hero_capsule.es_highlighted_${name}, .blotter_userstatus_game.es_highlighted_${name} { outline: solid ${color}; }
-                    #search_suggestion_contents .focus.es_highlighted_${name} { box-shadow: -5px 0 0 ${color}; }
-                    .apphub_AppName.es_highlighted_${name} { background: none !important; color: ${color}; }
-                `);
+                hlCss.push(
+                    `.es_highlighted_${name} {
+                        background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important;
+                    }
+                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name},
+                    .hero_capsule.es_highlighted_${name}, .blotter_userstatus_game.es_highlighted_${name} {
+                        outline: solid ${color};
+                    }
+                    #search_suggestion_contents .focus.es_highlighted_${name} {
+                        box-shadow: -5px 0 0 ${color};
+                    }
+                    .apphub_AppName.es_highlighted_${name} {
+                        background: none !important; color: ${color};
+                    }`
+                );
             }
 
             let style = document.createElement("style");
@@ -280,43 +310,44 @@ export default class FHighlightsTags extends Feature {
             style = null;
         }
 
+        let _node = node;
+
         // Carousel item
-        if (node.classList.contains("cluster_capsule")) {
-            node = node.querySelector(".main_cap_content").parentNode;
-        } else if (node.classList.contains("large_cap")) {
+        if (_node.classList.contains("cluster_capsule")) {
+            _node = _node.querySelector(".main_cap_content").parentNode;
+        } else if (_node.classList.contains("large_cap")) {
 
             // Genre Carousel items
-            node = node.querySelector(".large_cap_content");
-        } else if (node.parentNode.classList.contains("steam_curator_recommendation") && node.parentNode.classList.contains("big")) {
-            node = node.previousElementSibling;
+            _node = _node.querySelector(".large_cap_content");
+        } else if (_node.parentNode.classList.contains("steam_curator_recommendation")
+            && _node.parentNode.classList.contains("big")) {
+            _node = _node.previousElementSibling;
         }
 
         switch (true) {
 
-            // Recommendations on front page when scrolling down
-        case node.classList.contains("single"):
-            node = node.querySelector(".gamelink");
+        // Recommendations on front page when scrolling down
+        case _node.classList.contains("single"):
+            _node = _node.querySelector(".gamelink");
 
-            // don't break
-
-        case node.parentNode.parentNode.classList.contains("apps_recommended_by_curators_v2"): {
-            let r = node.querySelectorAll(".ds_flag");
+        // eslint-disable-next-line no-fallthrough -- Don't break
+        case _node.parentNode.parentNode.classList.contains("apps_recommended_by_curators_v2"): {
+            let r = _node.querySelectorAll(".ds_flag");
             r.forEach(node => node.remove());
-            r = node.querySelectorAll(".ds_flagged");
+            r = _node.querySelectorAll(".ds_flagged");
             r.forEach(node => node.classList.remove("ds_flagged"));
             break;
         }
 
-        case node.classList.contains("info"):
-        case node.classList.contains("spotlight_content"):
-            node = node.parentElement;
+        case _node.classList.contains("info"):
+        case _node.classList.contains("spotlight_content"):
+            _node = _node.parentElement;
 
-            // don't break
-
+        // eslint-disable-next-line no-fallthrough -- Don't break
         default: {
-            let r = node.querySelector(".ds_flag");
+            let r = _node.querySelector(".ds_flag");
             if (r) { r.remove(); }
-            r = node.querySelector(".ds_flagged");
+            r = _node.querySelector(".ds_flagged");
             if (r) {
                 r.classList.remove("ds_flagged");
             }
@@ -324,7 +355,7 @@ export default class FHighlightsTags extends Feature {
         }
         }
 
-        node.classList.remove("ds_flagged");
+        _node.classList.remove("ds_flagged");
     }
 
     static _highlightItem(node, name) {

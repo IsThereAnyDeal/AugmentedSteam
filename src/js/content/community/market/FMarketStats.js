@@ -54,7 +54,10 @@ export default class FMarketStats extends Feature {
 
     async _load() {
 
-        let {startListing, purchaseTotal, saleTotal} = LocalStorage.get("market_stats", {"startListing": null, "purchaseTotal": 0, "saleTotal": 0});
+        let {startListing, purchaseTotal, saleTotal} = LocalStorage.get(
+            "market_stats",
+            {"startListing": null, "purchaseTotal": 0, "saleTotal": 0}
+        );
         let curStartListing = null;
         const transactions = new Set();
         let stop = false;
@@ -156,12 +159,15 @@ export default class FMarketStats extends Feature {
             const data = await RequestData.getJson(url.toString());
             const dom = HTMLParser.htmlToDOM(data.results_html);
 
-            // Request may fail with results_html == "\t\t\t\t\t\t<div class=\"market_listing_table_message\">There was an error loading your market history. Please try again later.</div>\r\n\t"
+            /*
+             * Request may fail with results_html === "\t\t\t\t\t\t<div class=\"market_listing_table_message\">
+             * There was an error loading your market history. Please try again later.</div>\r\n\t"
+             */
             const message = dom.querySelector(".market_listing_table_message");
             if (message && message.textContent.includes("try again later")) {
                 pageRequests.push(request);
                 failedRequests += 1;
-                return;
+                return null;
             }
 
             updatePrices(dom, request.start);
@@ -171,6 +177,8 @@ export default class FMarketStats extends Feature {
 
         try {
             pageRequests.push({"start": 0, "attempt": 0, "lastAttempt": 0});
+
+            // eslint-disable-next-line no-unmodified-loop-condition -- stop is modified in updatePrices, called by nextRequest
             while (pageRequests.length > 0 && !stop) {
                 const t = await nextRequest();
                 if (pages < 0 && t > 0) {
@@ -194,7 +202,9 @@ export default class FMarketStats extends Feature {
             return true;
         }
 
-        progressNode.textContent = Localization.str.transactionStatus.replace("__failed__", failedRequests).replace("__size__", transactions.size)
+        progressNode.textContent = Localization.str.transactionStatus
+            .replace("__failed__", failedRequests)
+            .replace("__size__", transactions.size)
             .replace("__total__", totalCount);
         return false;
     }

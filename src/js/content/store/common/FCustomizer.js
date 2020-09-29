@@ -69,8 +69,12 @@ export default class FCustomizer extends Feature {
             .add("recommendedbycurators", ".steam_curators_block")
             .add("customerreviews", "#app_reviews_hash");
 
-        if (workshop) { customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_workshop); }
-        if (greenlight) { customizer.add("greenlight", greenlight.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_greenlight); }
+        if (workshop) {
+            customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_workshop);
+        }
+        if (greenlight) {
+            customizer.add("greenlight", greenlight.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_greenlight);
+        }
 
         customizer.build();
     }
@@ -129,9 +133,12 @@ export default class FCustomizer extends Feature {
             if (recentlyupdated) { customizer.add("recentlyupdated", recentlyupdated.parentElement); }
             if (under) { customizer.add("under", under.parentElement.parentElement); }
 
-            const dynamicNodes = document.querySelectorAll(".home_page_body_ctn .home_ctn:not(.esi-customizer), .home_pagecontent_ctn");
-            for (const node of dynamicNodes) {
-                if (node.closest(".esi-customizer") || node.querySelector(".esi-customizer") || node.style.display === "none") { continue; }
+            for (const node of document.querySelectorAll(
+                ".home_page_body_ctn .home_ctn:not(.esi-customizer), .home_pagecontent_ctn"
+            )) {
+                if (node.closest(".esi-customizer")
+                    || node.querySelector(".esi-customizer")
+                    || node.style.display === "none") { continue; }
 
                 customizer.addDynamic(node);
             }
@@ -172,6 +179,7 @@ FCustomizer.Customizer = class {
 
     add(name, targets, text, forceShow) {
 
+        let _text = text;
         let elements;
 
         if (typeof targets === "string") {
@@ -194,9 +202,9 @@ FCustomizer.Customizer = class {
                 return;
             }
 
-            if (typeof text !== "string" || text === "") {
-                text = this._textValue(element).toLowerCase();
-                if (text === "") { return; }
+            if (typeof _text !== "string" || _text === "") {
+                _text = this._textValue(element).toLowerCase();
+                if (_text === "") { return; }
             }
 
             isValid = true;
@@ -208,8 +216,8 @@ FCustomizer.Customizer = class {
             element.classList.toggle("esi-shown", state);
             element.classList.toggle("esi-hidden", !state);
             element.classList.add("esi-customizer");
-            element.dataset.es_name = name;
-            element.dataset.es_text = text;
+            element.dataset.esName = name;
+            element.dataset.esText = text;
         }
 
         return this;
@@ -228,14 +236,14 @@ FCustomizer.Customizer = class {
 
         for (const element of document.querySelectorAll(".esi-customizer")) {
 
-            const name = element.dataset.es_name;
+            const name = element.dataset.esName;
 
             if (customizerEntries.has(name)) {
                 customizerEntries.get(name).push(element);
             } else {
 
                 const state = element.classList.contains("esi-shown");
-                const text = element.dataset.es_text;
+                const text = element.dataset.esText;
 
                 HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
                     `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">

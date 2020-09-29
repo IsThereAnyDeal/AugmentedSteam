@@ -28,6 +28,7 @@ export default class FCustomTags extends Feature {
             </div>`);
 
         ExtensionLayer.runInPageContext((customTags, enterTag) => {
+            /* eslint-disable no-undef, new-cap */
             $J("#es_add_tag").on("click", () => {
                 const Modal = ShowConfirmDialog(customTags,
                     `<div class="commentthread_entry_quotebox">
@@ -53,6 +54,7 @@ export default class FCustomTags extends Feature {
 
                 Modal.done(done);
             });
+            /* eslint-enable no-undef, new-cap */
         }, [Localization.str.custom_tags, Localization.str.enter_tag]);
     }
 
@@ -70,11 +72,11 @@ export default class FCustomTags extends Feature {
 
         for (const id in savedTags) {
             for (const tag of savedTags[id]) {
-                const node = document.querySelector(`[name="tags[]"][value="${tag.replace(/"/g, "\\\"")}"]`);
-                if (node && curId == id) {
+                const node = document.querySelector(`[name="tags[]"][value="${tag.replace(/"/g, '\\"')}"]`);
+                if (node && curId === id) {
                     node.checked = true;
                 } else if (!node) {
-                    this._addTag(tag, curId == id);
+                    this._addTag(tag, curId === id);
                 }
             }
         }
@@ -84,14 +86,15 @@ export default class FCustomTags extends Feature {
             savedTags.recent = [];
             savedTags[curId] = Array.from(document.querySelectorAll("[name='tags[]']:checked")).map(node => node.value);
             LocalStorage.set("es_guide_tags", savedTags);
+            // eslint-disable-next-line no-undef, new-cap
             ExtensionLayer.runInPageContext(() => { SubmitGuide(); });
         });
     }
 
     _addTag(name, checked = true) {
-        name = HTML.escape(name);
+        const _name = HTML.escape(name);
         const attr = checked ? " checked" : "";
-        const tag = `<div><input type="checkbox" name="tags[]" value="${name}" class="inputTagsFilter"${attr}>${name}</div>`;
+        const tag = `<div><input type="checkbox" name="tags[]" value="${_name}" class="inputTagsFilter"${attr}>${_name}</div>`;
         HTML.beforeBegin("#es_add_tag", tag);
     }
 }

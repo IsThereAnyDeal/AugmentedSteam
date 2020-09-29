@@ -1,7 +1,7 @@
 import {Feature} from "modules";
 
 import {ExtensionResources, HTML, Localization} from "core";
-import {ExtensionLayer} from "common";
+import {DOMHelper, ExtensionLayer} from "common";
 import {ProfileData} from "community/common";
 import Config from "config";
 
@@ -14,18 +14,18 @@ export default class FStyleSelection extends Feature {
         this._checkPage();
 
         new MutationObserver(() => { this._checkPage(); })
-            .observe(document.querySelector("[class^=\"profileeditshell_PageContent_\"]"), {"childList": true});
+            .observe(document.querySelector('[class^="profileeditshell_PageContent_"]'), {"childList": true});
     }
 
     _checkPage() {
 
         const html
             = `<div class="js-style-selection as-pd">
-                
+
                 <div class='as-pd__head' data-tooltip-text='${Localization.str.custom_style_help}'>
                     ${Localization.str.custom_style} <span class="as-pd__help">(?)</span>
                 </div>
-                
+
                 <div class="as-pd__cnt">
                     <div>
                         <select name='es_style' id='es_style' class='gray_bevel dynInput as-pd__select'>
@@ -46,19 +46,20 @@ export default class FStyleSelection extends Feature {
                     </div>
                     <img id='es_style_preview' class="as-pd__preview" src=''>
                 </div>
-                
+
                 <div id="es_style_buttons" class="as-pd__buttons">
                     <button id='es_style_save_btn' class='DialogButton _DialogLayout Primary as-pd__btn'>${Localization.str.save}</button>
                 </div>
             </div>`;
 
-        if (document.querySelector("[href$=\"/edit/theme\"].active")) {
+        if (document.querySelector('[href$="/edit/theme"].active')) {
 
             if (this._active) { return; } // Happens because the below code will trigger the observer again
 
-            HTML.beforeEnd("[class^=\"profileeditshell_PageContent_\"]", html);
+            HTML.beforeEnd('[class^="profileeditshell_PageContent_"]', html);
             this._active = true;
 
+            // eslint-disable-next-line no-undef, new-cap
             ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
 
             const styleSelectNode = document.querySelector("#es_style");

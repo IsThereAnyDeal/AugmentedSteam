@@ -14,7 +14,7 @@ export default class FSoldAmountLastDay extends Feature {
         const country = User.storeCountry;
         const currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
 
-        const link = DOMHelper.selectLastNode(document, ".market_listing_nav a[href^=\"https://steamcommunity.com/market/\"]").href;
+        const link = DOMHelper.selectLastNode(document, '.market_listing_nav a[href^="https://steamcommunity.com/market/"]').href;
         const marketHashName = (link.match(/\/\d+\/(.+)$/) || [])[1];
 
         const data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?appid=${this.context.appid}&country=${country}&currency=${currencyNumber}&market_hash_name=${marketHashName}`);

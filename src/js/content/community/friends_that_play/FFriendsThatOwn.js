@@ -36,12 +36,22 @@ export default class FFriendsThatOwn extends Feature {
             const profileName = friendNode.querySelector(".friend_block_content").firstChild.textContent;
 
             let status = "";
-            if (friendNode.classList.contains("in-game")) { status = "in-game"; } else if (friendNode.classList.contains("online")) { status = "online"; }
+            if (friendNode.classList.contains("in-game")) {
+                status = "in-game";
+            } else if (friendNode.classList.contains("online")) {
+                status = "online";
+            }
 
             const profileLink = friendNode.querySelector("a.selectable_overlay").href;
             const profileAvatar = friendNode.querySelector(".player_avatar img").src;
-            const playtimeTwoWeeks = Localization.str.hours_short.replace("__hours__", Math.round(item.playtime_twoweeks / 60 * 10) / 10);
-            const playtimeTotal = Localization.str.hours_short.replace("__hours__", Math.round(item.playtime_total / 60 * 10) / 10);
+            const playtimeTwoWeeks = Localization.str.hours_short.replace(
+                "__hours__",
+                Math.round(item.playtime_twoweeks / 60 * 10) / 10
+            );
+            const playtimeTotal = Localization.str.hours_short.replace(
+                "__hours__",
+                Math.round(item.playtime_total / 60 * 10) / 10
+            );
             const statsLink = `${profileLink}/stats/${this.context.appid}/compare`;
 
             html
@@ -64,6 +74,7 @@ export default class FFriendsThatOwn extends Feature {
         HTML.beforeEnd(".friends_that_play_content", html);
 
         // Reinitialize miniprofiles by injecting the function call.
+        // eslint-disable-next-line no-undef, new-cap
         ExtensionLayer.runInPageContext(() => { InitMiniprofileHovers(); });
     }
 }

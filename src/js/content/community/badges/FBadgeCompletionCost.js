@@ -71,26 +71,18 @@ export default class FBadgeCompletionCost extends CallbackFeature {
             }
 
             if (!isFoil) {
-                const progressBoldNode = node.querySelector(".progress_info_bold");
-                if (progressBoldNode) {
-                    const drops = progressBoldNode.textContent.match(/\d+/);
-                    if (drops) {
-                        const worth = new Price(drops[0] * averagePrice);
-
-                        if (worth.value > 0) {
-                            this._totalWorth += worth.value;
-
-                            HTML.replace(node.querySelector(".how_to_get_card_drops"),
-                                `<span class='es_card_drop_worth' data-es-card-worth='${worth.value}'>${Localization.str.drops_worth_avg} ${worth}</span>`);
-                        }
-                    }
-                }
+                this._addRemainingDropsWorth(node, averagePrice);
             }
 
             if (cost) {
                 const badgeNameBox = DOMHelper.selectLastNode(node, ".badge_empty_name");
                 if (badgeNameBox) {
-                    HTML.afterEnd(badgeNameBox, `<div class='badge_info_unlocked' style='color: #5c5c5c;'>${Localization.str.badge_completion_avg.replace("__cost__", cost)}</div>`);
+                    HTML.afterEnd(
+                        badgeNameBox,
+                        `<div class="badge_info_unlocked" style="color: #5c5c5c;">
+                            ${Localization.str.badge_completion_avg.replace("__cost__", cost)}
+                        </div>`
+                    );
                 }
             }
 
@@ -99,5 +91,22 @@ export default class FBadgeCompletionCost extends CallbackFeature {
         }
 
         document.querySelector("#es_cards_worth").innerText = `${Localization.str.drops_worth_avg} ${new Price(this._totalWorth)}`;
+    }
+
+    _addRemainingDropsWorth(node, averagePrice) {
+
+        const progressBoldNode = node.querySelector(".progress_info_bold");
+        if (!progressBoldNode) { return; }
+
+        const drops = progressBoldNode.textContent.match(/\d+/);
+        if (!drops) { return; }
+
+        const worth = new Price(drops[0] * averagePrice);
+        if (worth.value <= 0) { return; }
+
+        this._totalWorth += worth.value;
+
+        HTML.replace(node.querySelector(".how_to_get_card_drops"),
+            `<span class="es_card_drop_worth" data-es-card-worth="${worth.value}">${Localization.str.drops_worth_avg} ${worth}</span>`);
     }
 }

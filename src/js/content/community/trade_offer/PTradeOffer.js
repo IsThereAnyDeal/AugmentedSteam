@@ -16,5 +16,5 @@ import {Localization, SyncedStorage} from "core";
         return;
     }
 
-    return new CTradeOffer().applyFeatures();
+    new CTradeOffer().applyFeatures();
 })();

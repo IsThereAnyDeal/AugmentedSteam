@@ -3,11 +3,12 @@ export const Info = {
     "db_version": 3,
 };
 
-/**
+/*
  * Shim for Promise.finally() for browsers (Waterfox/FF 56) that don't have it
  * https://github.com/domenic/promises-unwrapping/issues/18#issuecomment-57801572
  */
 if (typeof Promise.prototype.finally === "undefined") {
+    // eslint-disable-next-line no-extend-native
     Object.defineProperty(Promise.prototype, "finally", {
         "value": function(callback) {
             const constructor = this.constructor;
@@ -25,447 +26,9 @@ if (typeof Promise.prototype.finally === "undefined") {
     });
 }
 
-export class BackgroundBase {
-    static message(message) {
-        return browser.runtime.sendMessage(message);
-    }
-
-    static action(requested, ...params) {
-        if (!params.length) { return this.message({"action": requested}); }
-        return this.message({"action": requested, "params": params});
-    }
-}
-
-export class Version {
-    constructor(major, minor = 0, patch = 0) {
-        console.assert([major, minor, patch].filter(Number.isInteger).length === 3, `${major}.${minor}.${patch} must be integers`);
-        this.major = major;
-        this.minor = minor;
-        this.patch = patch;
-    }
-
-    static from(version) {
-        if (version instanceof Version) {
-            return new Version(version.major, version.minor, version.patch);
-        }
-        if (typeof version == "string") {
-            return Version.fromString(version);
-        }
-        if (Array.isArray(version)) {
-            return Version.fromArray(version);
-        }
-        throw `Could not construct a Version from ${version}`;
-    }
-
-    static fromArray(version) {
-        return new Version(...version.map(v => parseInt(v, 10)));
-    }
-
-    static fromString(version) {
-        return Version.fromArray(version.split("."));
-    }
-
-    static coerce(version) {
-        if (version instanceof Version) {
-            return version;
-        }
-        return Version.from(version);
-    }
-
-    toString() {
-        return `${this.major}.${this.minor}.${this.patch}`;
-    }
-
-    toArray() {
-        return [this.major, this.minor, this.patch];
-    }
-
-    toJSON() {
-        return this.toString();
-    }
-
-    isCurrent() {
-        return this.isSameOrAfter(Info.version);
-    }
-
-    isSame(version) {
-        version = Version.coerce(version);
-        return this.major === version.major
-            && this.minor === version.minor
-            && this.patch === version.patch;
-    }
-
-    isBefore(version) {
-        version = Version.coerce(version);
-        if (this.major < version.major) { return true; }
-        if (this.major > version.major) { return false; }
-
-        // this.major == version.major
-        if (this.minor < version.minor) { return true; }
-        if (this.minor > version.minor) { return false; }
-
-        // this.minor == version.minor
-        if (this.patch < version.patch) { return true; }
-        return false;
-    }
-
-    isSameOrBefore(version) {
-        version = Version.coerce(version);
-        if (this.major < version.major) { return true; }
-        if (this.major > version.major) { return false; }
-
-        // this.major == version.major
-        if (this.minor < version.minor) { return true; }
-        if (this.minor > version.minor) { return false; }
-
-        // this.minor == version.minor
-        if (this.patch > version.patch) { return false; }
-        return true;
-    }
-
-    isAfter(version) {
-        version = Version.coerce(version);
-        return version.isBefore(this);
-    }
-
-    isSameOrAfter(version) {
-        version = Version.coerce(version);
-        return version.isSameOrBefore(this);
-    }
-}
-
-export class Downloader {
-
-    static download(content, filename) {
-        const a = document.createElement("a");
-        a.href = typeof content === "string" ? content : URL.createObjectURL(content);
-        a.download = filename;
-
-        // Explicitly dispatching the click event (instead of just a.click()) will make it work in FF
-        a.dispatchEvent(new MouseEvent("click"));
-    }
-}
-
-export class UpdateHandler {
-
-    static checkVersion(onUpdate) {
-        const lastVersion = Version.fromString(SyncedStorage.get("version"));
-        const currentVersion = Version.fromString(Info.version);
-
-        if (currentVersion.isAfter(lastVersion)) {
-            if (SyncedStorage.get("version_show")) {
-                this._showChangelog();
-            }
-            onUpdate();
-            this._migrateSettings(lastVersion);
-        }
-
-        SyncedStorage.set("version", Info.version);
-    }
-
-    static async _showChangelog() {
-
-        // FIXME
-        const changelog = (await RequestData.getHttp(ExtensionResources.getURL("changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
-        const logo = ExtensionResources.getURL("img/es_128.png");
-        const dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
-
-        // FIXME Shouldn't be used in core.js
-        ExtensionLayer.runInPageContext(
-            (updatedStr, dialog) => { ShowAlertDialog(updatedStr, dialog); },
-            [Localization.str.update.updated.replace("__version__", Info.version), dialog]
-        );
-
-        if (Version.fromString(Info.version).isSame(new Version(1, 4))) {
-            const connectBtn = document.querySelector("#itad_connect");
-            if (await BackgroundBase.action("itad.isconnected")) {
-                itadConnected();
-            } else {
-                connectBtn.addEventListener("click", async() => {
-                    await BackgroundBase.action("itad.authorize");
-                    ITAD.create();
-                    itadConnected();
-                });
-            }
-
-            function itadConnected() { connectBtn.replaceWith("✓"); }
-        }
-    }
-
-    static _migrateSettings(oldVersion) {
-
-        if (oldVersion.isSameOrBefore("0.9.4")) {
-
-            // Remove eu1 region
-            const priceRegions = SyncedStorage.get("regional_countries");
-            const i = priceRegions.includes("eu1");
-            if (i !== -1) {
-                priceRegions.splice(i, 1);
-                SyncedStorage.set("regional_countries", priceRegions);
-            }
-
-            // Populate customize_frontpage
-            let mapping = {
-                "show_featuredrecommended": "featuredrecommended",
-                "show_specialoffers": "specialoffers",
-                "show_trendingamongfriends": "trendingamongfriends",
-                "show_es_discoveryqueue": "discoveryqueue",
-                "show_browsesteam": "browsesteam",
-                "show_curators": "curators",
-                "show_morecuratorrecommendations": "morecuratorrecommendations",
-                "show_recentlyupdated": "recentlyupdated",
-                "show_fromdevelopersandpublishersthatyouknow": "fromdevelopersandpublishersthatyouknow",
-                "show_popularvrgames": "popularvrgames",
-                "show_es_homepagetab": "homepagetab",
-                "show_gamesstreamingnow": "gamesstreamingnow",
-                "show_under": "under",
-                "show_updatesandoffers": "updatesandoffers",
-                "show_es_homepagesidebar": "homepagesidebar",
-            };
-            let settings = SyncedStorage.get("customize_frontpage");
-            for (const [oldkey, newkey] of Object.entries(mapping)) {
-                if (!SyncedStorage.has(oldkey)) { continue; }
-                settings[newkey] = SyncedStorage.get(oldkey);
-                SyncedStorage.remove(oldkey);
-            }
-            SyncedStorage.set("customize_frontpage", settings);
-
-            // Populate customize_apppage
-            mapping = {
-                "show_apppage_reviews": "reviews",
-                "show_apppage_about": "about",
-                "show_apppage_surveys": "surveys",
-                "show_apppage_sysreq": "sysreq",
-                "show_apppage_legal": "legal",
-                "show_apppage_morelikethis": "morelikethis",
-                "show_apppage_recommendedbycurators": "recommendedbycurators",
-                "show_apppage_customerreviews": "customerreviews",
-            };
-            settings = SyncedStorage.get("customize_apppage");
-            for (const [oldkey, newkey] of Object.entries(mapping)) {
-                if (!SyncedStorage.has(oldkey)) { continue; }
-                settings[newkey] = SyncedStorage.get(oldkey);
-                SyncedStorage.remove(oldkey);
-            }
-            SyncedStorage.set("customize_apppage", settings);
-        }
-
-        if (oldVersion.isSameOrBefore("0.9.5")) {
-            SyncedStorage.remove("version");
-            SyncedStorage.remove("showesbg");
-            SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
-            SyncedStorage.remove("hideinstallsteambutton");
-            SyncedStorage.remove("hideaboutmenu");
-
-            // Update structure for custom profile links to allow multiple
-            if (SyncedStorage.get("profile_custom_name")) {
-                const custom_link = {
-                    "enabled": SyncedStorage.get("profile_custom"),
-                    "name": SyncedStorage.get("profile_custom_name"),
-                    "url": SyncedStorage.get("profile_custom_url"),
-                    "icon":  SyncedStorage.get("profile_custom_icon"),
-                };
-                SyncedStorage.set("profile_custom_link", [custom_link]);
-                SyncedStorage.remove("profile_custom");
-                SyncedStorage.remove("profile_custom_name");
-                SyncedStorage.remove("profile_custom_url");
-                SyncedStorage.remove("profile_custom_icon");
-            }
-            SyncedStorage.set("user_notes", SyncedStorage.get("wishlist_notes"));
-            SyncedStorage.remove("wishlist_notes");
-        }
-
-        if (oldVersion.isSameOrBefore("0.9.7")) {
-            SyncedStorage.remove("hide_wishlist");
-            SyncedStorage.remove("hide_cart");
-            SyncedStorage.remove("hide_notdiscounted");
-            SyncedStorage.remove("hide_mixed");
-            SyncedStorage.remove("hide_negative");
-            SyncedStorage.remove("hide_priceabove");
-            SyncedStorage.remove("priceabove_value");
-        }
-
-        if (oldVersion.isSameOrBefore("1.2.1")) {
-            if (!SyncedStorage.get("show_profile_link_images")) {
-                SyncedStorage.set("show_profile_link_images", "none");
-            }
-
-            if (SyncedStorage.get("showclient")) {
-                SyncedStorage.set("showviewinlibrary", true);
-                SyncedStorage.set("installsteam", "replace");
-            }
-
-            if (SyncedStorage.has("showlanguagewarninglanguage")) {
-                SyncedStorage.set("showlanguagewarninglanguage", SyncedStorage.get("showlanguagewarninglanguage").toLowerCase());
-            }
-
-            SyncedStorage.remove("html5video");
-            SyncedStorage.remove("showclient");
-        }
-
-        if (oldVersion.isSameOrBefore("1.3.1")) {
-            BackgroundBase.action("cache.clear");
-
-            SyncedStorage.set("horizontalscrolling", SyncedStorage.get("horizontalmediascrolling"));
-            SyncedStorage.remove("horizontalmediascrolling");
-        }
-
-        if (oldVersion.isSameOrBefore("1.4")) {
-            SyncedStorage.remove("show_sysreqcheck");
-        }
-
-        if (oldVersion.isSame("1.4")) {
-            Background.action("migrate.notesToSyncedStorage");
-        }
-
-        if (oldVersion.isSameOrBefore("1.4.1")) {
-            SyncedStorage.set("profile_steamid", SyncedStorage.get("profile_permalink"));
-            SyncedStorage.remove("profile_permalink");
-        }
-
-        if (oldVersion.isSameOrBefore("1.4.3")) {
-            SyncedStorage.remove("contscroll");
-            Background.action("logout");
-        }
-    }
-}
-
-export class GameId {
-    static parseId(id) {
-        if (!id) { return null; }
-
-        const intId = parseInt(id);
-        if (!intId) { return null; }
-
-        return intId;
-    }
-
-    static getAppid(text) {
-        if (!text) { return null; }
-
-        if (text instanceof HTMLElement) {
-            const appid = text.dataset.dsAppid;
-            if (appid) { return GameId.parseId(appid); }
-            text = text.href;
-            if (!text) { return null; }
-        }
-
-        // app, market/listing
-        const m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/(?:app|market\/listings)\/(\d+)\/?/);
-        return m && GameId.parseId(m[1]);
-    }
-
-    static getSubid(text) {
-        if (!text) { return null; }
-
-        if (text instanceof HTMLElement) {
-            const subid = text.dataset.dsPackageid;
-            if (subid) { return GameId.parseId(subid); }
-            text = text.href;
-            if (!text) { return null; }
-        }
-
-        const m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/sub\/(\d+)\/?/);
-        return m && GameId.parseId(m[1]);
-    }
-
-    static getBundleid(text) {
-        if (!text) { return null; }
-
-        if (text instanceof HTMLElement) {
-            const bundleid = text.dataset.dsBundleid;
-            if (bundleid) { return GameId.parseId(bundleid); }
-            text = text.href;
-            if (!text) { return null; }
-        }
-
-        const m = text.match(/(?:store\.steampowered|steamcommunity)\.com\/bundle\/(\d+)\/?/);
-        return m && GameId.parseId(m[1]);
-    }
-
-    static trimStoreId(storeId) {
-        return Number(storeId.slice(storeId.indexOf("/") + 1));
-    }
-
-    static getAppidImgSrc(text) {
-        if (!text) { return null; }
-        const m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
-        return m && GameId.parseId(m[2]);
-    }
-
-    static getAppidUriQuery(text) {
-        if (!text) { return null; }
-        const m = text.match(/appid=(\d+)/);
-        return m && GameId.parseId(m[1]);
-    }
-
-    static getAppids(text) {
-        const regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
-        const res = [];
-        let m;
-        while ((m = regex.exec(text)) != null) {
-            const id = GameId.parseId(m[1]);
-            if (id) {
-                res.push(id);
-            }
-        }
-        return res;
-    }
-
-    static getAppidFromId(text) {
-        if (!text) { return null; }
-        const m = text.match(/game_(\d+)/);
-        return m && GameId.parseId(m[1]);
-    }
-
-    static getAppidFromGameCard(text) {
-        if (!text) { return null; }
-        const m = text.match(/\/gamecards\/(\d+)/);
-        return m && GameId.parseId(m[1]);
-    }
-}
-
-// todo use https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage
-export class LocalStorage {
-    static get(key, defaultValue) {
-        const item = localStorage.getItem(key);
-        if (!item) { return defaultValue; }
-        try {
-            return JSON.parse(item);
-        } catch (err) {
-            return defaultValue;
-        }
-    }
-
-    static set(key, value) {
-        localStorage.setItem(key, JSON.stringify(value));
-    }
-
-    static has(key) {
-        return localStorage.getItem(key) !== null;
-    }
-
-    static remove(key) {
-        localStorage.removeItem(key);
-    }
-
-    static keys() {
-        const result = [];
-        for (let i = localStorage.length - 1; i >= 0; --i) {
-            result.push(localStorage.key(i));
-        }
-        return result;
-    }
-
-    static clear() {
-        localStorage.clear();
-    }
-}
-
-
 export class SyncedStorage {
 
-    /**
+    /*
      * browser.storage.sync limits
      * QUOTA_BYTES = 102400 // 100KB
      * QUOTA_BYTES_PER_ITEM = 8192 // 8KB
@@ -502,7 +65,7 @@ export class SyncedStorage {
     }
 
     static remove(key) {
-        if (typeof this.cache[key]) {
+        if (typeof this.cache[key] !== "undefined") {
             delete this.cache[key];
         }
         return this.adapter.remove(key);
@@ -530,11 +93,6 @@ export class SyncedStorage {
         browser.storage.onChanged.addListener(changes => {
             for (const [key, {"newValue": val}] of Object.entries(changes)) {
                 this.cache[key] = val;
-            }
-
-            // FIXME Doesn't work with modules
-            if (typeof ContextMenu === "function" && Object.keys(changes).some(key => key.startsWith("context_"))) {
-                ContextMenu.update();
             }
         });
 
@@ -738,7 +296,12 @@ SyncedStorage.defaults = {
     "profile_astatsnl": true,
     "profile_steamid": true,
     "profile_custom_link": [
-        {"enabled": true, "name": "Google", "url": "google.com/search?q=[ID]", "icon": "www.google.com/images/branding/product/ico/googleg_lodp.ico"},
+        {
+            "enabled": true,
+            "name": "Google",
+            "url": "google.com/search?q=[ID]",
+            "icon": "www.google.com/images/branding/product/ico/googleg_lodp.ico"
+        },
     ],
     "group_steamgifts": true,
     "steamcardexchange": true,
@@ -766,6 +329,266 @@ SyncedStorage.defaults = {
     "context_steamdb_instant": false,
     "context_steam_keys": false,
 };
+
+export class BackgroundBase {
+    static message(message) {
+        return browser.runtime.sendMessage(message);
+    }
+
+    static action(requested, ...params) {
+        if (!params.length) { return this.message({"action": requested}); }
+        return this.message({"action": requested, "params": params});
+    }
+}
+
+export class Version {
+    constructor(major, minor = 0, patch = 0) {
+        console.assert([major, minor, patch].filter(Number.isInteger).length === 3, `${major}.${minor}.${patch} must be integers`);
+        this.major = major;
+        this.minor = minor;
+        this.patch = patch;
+    }
+
+    static from(version) {
+        if (version instanceof Version) {
+            return new Version(version.major, version.minor, version.patch);
+        }
+        if (typeof version == "string") {
+            return Version.fromString(version);
+        }
+        if (Array.isArray(version)) {
+            return Version.fromArray(version);
+        }
+        throw new Error(`Could not construct a Version from ${version}`);
+    }
+
+    static fromArray(version) {
+        return new Version(...version.map(v => parseInt(v)));
+    }
+
+    static fromString(version) {
+        return Version.fromArray(version.split("."));
+    }
+
+    static coerce(version) {
+        if (version instanceof Version) {
+            return version;
+        }
+        return Version.from(version);
+    }
+
+    toString() {
+        return `${this.major}.${this.minor}.${this.patch}`;
+    }
+
+    toArray() {
+        return [this.major, this.minor, this.patch];
+    }
+
+    toJSON() {
+        return this.toString();
+    }
+
+    isCurrent() {
+        return this.isSameOrAfter(Info.version);
+    }
+
+    isSame(version) {
+        const _version = Version.coerce(version);
+        return this.major === _version.major
+            && this.minor === _version.minor
+            && this.patch === _version.patch;
+    }
+
+    isBefore(version) {
+        const _version = Version.coerce(version);
+        if (this.major < _version.major) { return true; }
+        if (this.major > _version.major) { return false; }
+
+        // this.major == _version.major
+        if (this.minor < _version.minor) { return true; }
+        if (this.minor > _version.minor) { return false; }
+
+        // this.minor == _version.minor
+        if (this.patch < _version.patch) { return true; }
+        return false;
+    }
+
+    isSameOrBefore(version) {
+        const _version = Version.coerce(version);
+        if (this.major < _version.major) { return true; }
+        if (this.major > _version.major) { return false; }
+
+        // this.major == _version.major
+        if (this.minor < _version.minor) { return true; }
+        if (this.minor > _version.minor) { return false; }
+
+        // this.minor == _version.minor
+        if (this.patch > _version.patch) { return false; }
+        return true;
+    }
+
+    isAfter(version) {
+        const _version = Version.coerce(version);
+        return _version.isBefore(this);
+    }
+
+    isSameOrAfter(version) {
+        const _version = Version.coerce(version);
+        return _version.isSameOrBefore(this);
+    }
+}
+
+export class Downloader {
+
+    static download(content, filename) {
+        const a = document.createElement("a");
+        a.href = typeof content === "string" ? content : URL.createObjectURL(content);
+        a.download = filename;
+
+        // Explicitly dispatching the click event (instead of just a.click()) will make it work in FF
+        a.dispatchEvent(new MouseEvent("click"));
+    }
+}
+
+
+export class GameId {
+    static parseId(id) {
+        if (!id) { return null; }
+
+        const intId = parseInt(id);
+        if (!intId) { return null; }
+
+        return intId;
+    }
+
+    static getAppid(text) {
+        let _text = text;
+
+        if (!_text) { return null; }
+
+        if (_text instanceof HTMLElement) {
+            const appid = _text.dataset.dsAppid;
+            if (appid) { return GameId.parseId(appid); }
+            _text = _text.href;
+            if (!_text) { return null; }
+        }
+
+        // app, market/listing
+        const m = _text.match(/(?:store\.steampowered|steamcommunity)\.com\/(?:app|market\/listings)\/(\d+)\/?/);
+        return m && GameId.parseId(m[1]);
+    }
+
+    static getSubid(text) {
+        let _text = text;
+
+        if (!_text) { return null; }
+
+        if (_text instanceof HTMLElement) {
+            const subid = _text.dataset.dsPackageid;
+            if (subid) { return GameId.parseId(subid); }
+            _text = _text.href;
+            if (!_text) { return null; }
+        }
+
+        const m = _text.match(/(?:store\.steampowered|steamcommunity)\.com\/sub\/(\d+)\/?/);
+        return m && GameId.parseId(m[1]);
+    }
+
+    static getBundleid(text) {
+        let _text = text;
+
+        if (!_text) { return null; }
+
+        if (_text instanceof HTMLElement) {
+            const bundleid = _text.dataset.dsBundleid;
+            if (bundleid) { return GameId.parseId(bundleid); }
+            _text = _text.href;
+            if (!_text) { return null; }
+        }
+
+        const m = _text.match(/(?:store\.steampowered|steamcommunity)\.com\/bundle\/(\d+)\/?/);
+        return m && GameId.parseId(m[1]);
+    }
+
+    static trimStoreId(storeId) {
+        return Number(storeId.slice(storeId.indexOf("/") + 1));
+    }
+
+    static getAppidImgSrc(text) {
+        if (!text) { return null; }
+        const m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
+        return m && GameId.parseId(m[2]);
+    }
+
+    static getAppidUriQuery(text) {
+        if (!text) { return null; }
+        const m = text.match(/appid=(\d+)/);
+        return m && GameId.parseId(m[1]);
+    }
+
+    static getAppids(text) {
+        const regex = /(?:store\.steampowered|steamcommunity)\.com\/app\/(\d+)\/?/g;
+        const res = [];
+        let m;
+        while ((m = regex.exec(text)) !== null) {
+            const id = GameId.parseId(m[1]);
+            if (id) {
+                res.push(id);
+            }
+        }
+        return res;
+    }
+
+    static getAppidFromId(text) {
+        if (!text) { return null; }
+        const m = text.match(/game_(\d+)/);
+        return m && GameId.parseId(m[1]);
+    }
+
+    static getAppidFromGameCard(text) {
+        if (!text) { return null; }
+        const m = text.match(/\/gamecards\/(\d+)/);
+        return m && GameId.parseId(m[1]);
+    }
+}
+
+// todo use https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage
+export class LocalStorage {
+    static get(key, defaultValue) {
+        const item = localStorage.getItem(key);
+        if (!item) { return defaultValue; }
+        try {
+            return JSON.parse(item);
+        } catch (err) {
+            return defaultValue;
+        }
+    }
+
+    static set(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    static has(key) {
+        return localStorage.getItem(key) !== null;
+    }
+
+    static remove(key) {
+        localStorage.removeItem(key);
+    }
+
+    static keys() {
+        const result = [];
+        for (let i = localStorage.length - 1; i >= 0; --i) {
+            result.push(localStorage.key(i));
+        }
+        return result;
+    }
+
+    static clear() {
+        localStorage.clear();
+    }
+}
 
 
 export class ExtensionResources {
@@ -799,7 +622,7 @@ export class ExtensionResources {
         console.error(e);
     }
 
-    /**
+    /*
      * NOTE FOR ADDON REVIEWER:
      * We are modifying default DOMPurify settings to allow other protocols in URLs
      * and to allow links to safely open in new tabs.
@@ -814,7 +637,7 @@ export class ExtensionResources {
      */
 
     const purifyConfig = {
-        "ALLOWED_URI_REGEXP": /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension|steam):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i
+        "ALLOWED_URI_REGEXP": /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension|steam):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i
     };
 
     if (allowOpenInNewTab) {
@@ -861,73 +684,81 @@ export class HTML {
     }
 
     static inner(node, html) {
-        if (typeof node == "undefined" || node === null) {
-            console.warn(`${node} is not an Element.`);
+        let _node = node;
+
+        if (typeof _node == "undefined" || _node === null) {
+            console.warn(`${_node} is not an Element.`);
             return null;
         }
-        if (typeof node == "string") {
-            node = document.querySelector(node);
+        if (typeof _node == "string") {
+            _node = document.querySelector(_node);
         }
-        if (!(node instanceof Element)) {
-            console.warn(`${node} is not an Element.`);
+        if (!(_node instanceof Element)) {
+            console.warn(`${_node} is not an Element.`);
             return null;
         }
 
-        node.innerHTML = DOMPurify.sanitize(html);
-        return node;
+        _node.innerHTML = DOMPurify.sanitize(html);
+        return _node;
     }
 
     static replace(node, html) {
-        if (typeof node == "undefined" || node === null) {
-            console.warn(`${node} is not an Element.`);
+        let _node = node;
+
+        if (typeof _node == "undefined" || _node === null) {
+            console.warn(`${_node} is not an Element.`);
             return null;
         }
-        if (typeof node == "string") {
-            node = document.querySelector(node);
+        if (typeof _node == "string") {
+            _node = document.querySelector(_node);
         }
-        if (!(node instanceof Element)) {
-            console.warn(`${node} is not an Element.`);
+        if (!(_node instanceof Element)) {
+            console.warn(`${_node} is not an Element.`);
             return null;
         }
 
-        node.outerHTML = DOMPurify.sanitize(html);
-        return node;
+        _node.outerHTML = DOMPurify.sanitize(html);
+        return _node;
     }
 
     static wrap(node, html) {
-        if (typeof node == "undefined" || node === null) {
-            console.warn(`${node} is not an Element.`);
+        let _node = node;
+
+        if (typeof _node == "undefined" || _node === null) {
+            console.warn(`${_node} is not an Element.`);
             return null;
         }
-        if (typeof node == "string") {
-            node = document.querySelector(node);
+        if (typeof _node == "string") {
+            _node = document.querySelector(_node);
         }
-        if (!(node instanceof Element)) {
-            console.warn(`${node} is not an Element.`);
+        if (!(_node instanceof Element)) {
+            console.warn(`${_node} is not an Element.`);
             return null;
         }
 
         const wrapper = HTML.element(html);
-        node.replaceWith(wrapper);
-        wrapper.append(node);
+        _node.replaceWith(wrapper);
+        wrapper.append(_node);
         return wrapper;
     }
 
     static adjacent(node, position, html) {
-        if (typeof node == "undefined" || node === null) {
-            console.warn(`${node} is not an Element.`);
+        let _node = node;
+
+        if (typeof _node == "undefined" || _node === null) {
+            console.warn(`${_node} is not an Element.`);
             return null;
         }
-        if (typeof node == "string") {
-            node = document.querySelector(node);
+        if (typeof _node == "string") {
+            _node = document.querySelector(_node);
         }
-        if (!(node instanceof Element)) {
-            console.warn(`${node} is not an Element.`);
+        if (!(_node instanceof Element)) {
+            console.warn(`${_node} is not an Element.`);
             return null;
         }
 
-        node.insertAdjacentHTML(position, DOMPurify.sanitize(html));
-        return node;
+        _node.insertAdjacentHTML(position, DOMPurify.sanitize(html));
+        return _node;
     }
 
     static beforeBegin(node, html) {
@@ -986,14 +817,15 @@ export class HTMLParser {
     }
 
     static getVariableFromDom(variableName, type, dom) {
-        dom = dom || document;
-        const nodes = dom.querySelectorAll("script");
+        const _dom = dom || document;
+        const nodes = _dom.querySelectorAll("script");
         for (const node of nodes) {
             const m = HTMLParser.getVariableFromText(node.textContent, variableName, type);
             if (m) {
                 return m;
             }
         }
+        return null;
     }
 }
 
@@ -1005,12 +837,15 @@ export class StringUtils {
     }
 }
 
+/* eslint-disable max-len */
 /**
  * Convenience class for passing errors between contexts.
  * Errors thrown in the context of a message callback on the background page are
- * {@link https://github.com/mozilla/webextension-polyfill/blob/87bdfa844da054d189ac28423cf01b64ebfe1e5b/src/browser-polyfill.js#L418 cut down to only send the message of the error},
+ * {@link https://github.com/mozilla/webextension-polyfill/blob/87bdfa844da054d189ac28423cf01b64ebfe1e5b/src/browser-polyfill.js#L418
+ *  cut down to only send the message of the error},
  * losing information about the type.
  */
+/* eslint-enable max-len */
 export class ErrorParser {
 
     /**
@@ -1040,7 +875,7 @@ export class ServerOutageError extends Error {
 }
 
 export function sleep(duration) {
-    return new Promise(((resolve, reject) => {
+    return new Promise((resolve => {
         setTimeout(() => { resolve(); }, duration);
     }));
 }
@@ -1069,30 +904,30 @@ export class CookieStorage {
         if (CookieStorage.cache.size === 0) {
             CookieStorage.init();
         }
-        name = name.trim();
-        if (!CookieStorage.cache.has(name)) {
+        const _name = name.trim();
+        if (!CookieStorage.cache.has(_name)) {
             return defaultValue;
         }
-        return CookieStorage.cache.get(name);
+        return CookieStorage.cache.get(_name);
     }
 
     static set(name, val, ttl = 60 * 60 * 24 * 365) {
         if (CookieStorage.cache.size === 0) {
             CookieStorage.init();
         }
-        name = name.trim();
-        val = val.trim();
-        CookieStorage.cache.set(name, val);
-        name = encodeURIComponent(name);
-        val = encodeURIComponent(val);
-        document.cookie = `${name}=${val}; max-age=${ttl}`;
+        let _name = name.trim();
+        let _val = val.trim();
+        CookieStorage.cache.set(_name, _val);
+        _name = encodeURIComponent(_name);
+        _val = encodeURIComponent(_val);
+        document.cookie = `${_name}=${_val}; max-age=${ttl}`;
     }
 
     static remove(name) {
-        name = name.trim();
-        CookieStorage.cache.delete(name);
-        name = encodeURIComponent(name);
-        document.cookie = `${name}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+        let _name = name.trim();
+        CookieStorage.cache.delete(_name);
+        _name = encodeURIComponent(_name);
+        document.cookie = `${_name}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     }
 
     static init() {
@@ -1262,4 +1097,3 @@ export class Localization {
     }
 }
 Localization._promise = null;
-

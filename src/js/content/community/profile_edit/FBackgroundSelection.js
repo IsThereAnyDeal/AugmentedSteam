@@ -7,48 +7,48 @@ import Config from "config";
 
 export default class FBackgroundSelection extends Feature {
 
-    async apply() {
+    apply() {
 
         this._active = false;
 
         this._checkPage();
 
         new MutationObserver(() => { this._checkPage(); })
-            .observe(document.querySelector("[class^=\"profileeditshell_PageContent_\"]"), {"childList": true});
+            .observe(document.querySelector('[class^="profileeditshell_PageContent_"]'), {"childList": true});
     }
 
     async _checkPage() {
 
         const html
             = `<div class='js-bg-selection as-pd'>
-                
+
                 <div class="DialogLabel as-pd__head" data-tooltip-text='${Localization.str.custom_background_help}'>
                     ${Localization.str.custom_background} <span class="as-pd__help">(?)</span>
                 </div>
-                
+
                 <div class="DialogInput_Wrapper _DialogLayout">
                     <input type="text" class="DialogInput DialogInputPlaceholder DialogTextInputBase js-pd-game" value="" placeholder="${Localization.str.game_name}">
                 </div>
-                                
+
                 <div class="as-pd__cnt">
                     <div class="as-pd__list js-pd-list"></div>
                 </div>
-                                
+
                 <div class="as-pd__cnt">
                     <div class="as-pd__imgs js-pd-imgs"></div>
                 </div>
-                
+
                 <div class="as-pd__buttons">
                     <button class='DialogButton _DialogLayout Secondary as-pd__btn js-as-pd-bg-clear'>${Localization.str.thewordclear}</button>
                     <button class='DialogButton _DialogLayout Primary as-pd__btn js-as-pd-bg-save'>${Localization.str.save}</button>
                 </div>
             </div>`;
 
-        if (document.querySelector("[href$=\"/edit/background\"].active")) {
+        if (document.querySelector('[href$="/edit/background"].active')) {
 
             if (this._active) { return; } // Happens because the below code will trigger the observer again
 
-            HTML.beforeEnd("[class^=\"profileeditshell_PageContent_\"]", html);
+            HTML.beforeEnd('[class^="profileeditshell_PageContent_"]', html);
 
             this._gameFilterNode = document.querySelector(".js-pd-game");
             this._listNode = document.querySelector(".js-pd-list");
@@ -56,6 +56,7 @@ export default class FBackgroundSelection extends Feature {
 
             this._active = true;
 
+            // eslint-disable-next-line new-cap, no-undef
             ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
 
             this._selectedAppid = ProfileData.getBgAppid();
@@ -66,7 +67,7 @@ export default class FBackgroundSelection extends Feature {
             const games = await Background.action("profile.background.games");
 
             for (const key in games) {
-                if (!games.hasOwnProperty(key)) { continue; }
+                if (!Object.prototype.hasOwnProperty.call(games, key)) { continue; }
                 games[key][2] = this._getSafeString(games[key][1]);
 
                 if (games[key][0] === this._selectedAppid) {

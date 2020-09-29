@@ -1,7 +1,7 @@
 import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
-import {Currency, CurrencyRegistry} from "common";
+import {Currency, CurrencyRegistry, Price} from "common";
 
 export default class FCustomGiftcardAndWallet extends Feature {
 
@@ -32,7 +32,8 @@ export default class FCustomGiftcardAndWallet extends Feature {
         if (giftcard) {
             const styleel = newel.querySelector(".giftcard_style");
             HTML.inner(styleel, Localization.str.wallet.custom_giftcard.replace("__input__", `<span>${input}</span>`));
-            newel.querySelector("#es_custom_money_amount").dataset.tooltipText = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
+            newel.querySelector("#es_custom_money_amount").dataset.tooltipText
+                = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
 
             minAmountNode.insertAdjacentElement("afterend", newel);
 

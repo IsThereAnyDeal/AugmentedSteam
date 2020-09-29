@@ -11,6 +11,7 @@ export default class FWishlistStats extends Feature {
 
     async apply() {
 
+        // eslint-disable-next-line camelcase, no-undef
         const appInfo = await ExtensionLayer.runInPageContext(() => g_rgAppInfo, null, true);
 
         let totalPrice = 0;

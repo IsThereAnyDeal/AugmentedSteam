@@ -94,7 +94,7 @@ export class CApp extends CStore {
         this.appid = GameId.getAppid(window.location.host + window.location.pathname);
         this.storeid = `app/${this.appid}`;
 
-        this.hasCards = document.querySelector("#category_block img[src$=\"/ico_cards.png\"]") !== null;
+        this.hasCards = document.querySelector('#category_block img[src$="/ico_cards.png"]') !== null;
 
         this.onWishAndWaitlistRemove = null;
 
@@ -132,7 +132,7 @@ export class CApp extends CStore {
     }
 
     isVideo() {
-        return document.querySelector(".game_area_purchase_game span[class*=\"streaming\"], div.series_seasons") !== null;
+        return document.querySelector('.game_area_purchase_game span[class*="streaming"], div.series_seasons') !== null;
     }
 
     hasAchievements() {
@@ -140,7 +140,7 @@ export class CApp extends CStore {
     }
 
     removeFromWishlist() {
-        return Background.action("wishlist.remove", this.appid, User.getSessionId());
+        return Background.action("wishlist.remove", this.appid, User.sessionId);
     }
 
     removeFromWaitlist() {
@@ -148,26 +148,30 @@ export class CApp extends CStore {
     }
 
     toggleVideoDefinition(videoControl, setHD) {
-        let videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0, // $J().is(':visible')
-            videoIsHD = false,
+        let videoIsHD = false;
+
+        const videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0,
             loadedSrc = videoControl.classList.contains("es_loaded_src"),
             playInHD = LocalStorage.get("playback_hd") || videoControl.classList.contains("es_video_hd");
 
         const videoPosition = videoControl.currentTime || 0,
             videoPaused = videoControl.paused;
-        if (videoIsVisible) {
-            videoControl.preload = "metadata";
-            videoControl.addEventListener("loadedmetadata", onLoadedMetaData, false);
-        }
 
+        /** @this {HTMLVideoElement} The video element */
         function onLoadedMetaData() {
             this.currentTime = videoPosition;
             if (!videoPaused && videoControl.play) {
 
-                // if response is a promise, suppress any errors it throws
-                Promise.resolve(videoControl.play()).catch(err => {});
+                // FIXME Why?
+                // eslint-disable-next-line no-empty-function -- If response is a promise, suppress any errors it throws
+                Promise.resolve(videoControl.play()).catch(() => {});
             }
             videoControl.removeEventListener("loadedmetadata", onLoadedMetaData, false);
+        }
+
+        if (videoIsVisible) {
+            videoControl.preload = "metadata";
+            videoControl.addEventListener("loadedmetadata", onLoadedMetaData, false);
         }
 
         if ((!playInHD && typeof setHD === "undefined") || setHD === true) {

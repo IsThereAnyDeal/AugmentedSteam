@@ -1,7 +1,7 @@
 import {Feature} from "modules";
 
 import {HTML, LocalStorage, Localization} from "core";
-import {ExtensionLayer} from "common";
+import {Background, ExtensionLayer} from "common";
 import FHighlightsTags from "common/FHighlightsTags";
 
 export default class FSteamPeek extends Feature {
@@ -25,11 +25,16 @@ export default class FSteamPeek extends Feature {
                 </div>
             </div>`);
 
-        HTML.beforeEnd(this._moreLikeThis.querySelector(".store_horizontal_autoslider_ctn"),
-            "<div class=\"block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad\" id=\"es_steampeek_content\"></div>");
+        HTML.beforeEnd(
+            this._moreLikeThis.querySelector(".store_horizontal_autoslider_ctn"),
+            // eslint-disable-next-line max-len
+            '<div class="block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad"id="es_steampeek_content"></div>',
+        );
 
         // TODO Create a global handler for DS loading
-        await ExtensionLayer.runInPageContext(() => new Promise(resolve => { GDynamicStore.OnReady(() => { resolve(); }); }), null, true);
+        await ExtensionLayer.runInPageContext(() => new Promise(resolve => {
+            GDynamicStore.OnReady(() => { resolve(); }); // eslint-disable-line new-cap, no-undef
+        }), null, true);
 
         const [steamTab, steamPeekTab, content] = this._moreLikeThis
             .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");
@@ -73,10 +78,17 @@ export default class FSteamPeek extends Feature {
                             <h4>${title}</h4>
                         </a>`);
 
-                    ExtensionLayer.runInPageContext(appid => { GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), appid); }, [appid]);
+
+                    ExtensionLayer.runInPageContext(appid => { // eslint-disable-line no-loop-func
+                        // eslint-disable-next-line no-undef, new-cap
+                        GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), appid);
+                    }, [appid]);
                 }
 
-                ExtensionLayer.runInPageContext(() => { GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar")); });
+                ExtensionLayer.runInPageContext(() => {
+                    // eslint-disable-next-line new-cap, no-undef
+                    GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar"));
+                });
 
                 FHighlightsTags.highlightAndTag(content.querySelectorAll("a.es_sp_similar"), true);
 
@@ -95,6 +107,7 @@ export default class FSteamPeek extends Feature {
     }
 
     _adjustScroller() {
+        // eslint-disable-next-line no-undef
         ExtensionLayer.runInPageContext(() => { $J("#recommended_block_content").trigger("v_contentschanged"); });
     }
 }

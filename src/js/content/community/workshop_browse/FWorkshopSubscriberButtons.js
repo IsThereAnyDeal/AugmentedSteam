@@ -54,7 +54,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
 
         // todo reject when dialog closed
         await ExtensionLayer.runInPageContext((title, confirm) => {
-            const prompt = ShowConfirmDialog(title, confirm);
+            const prompt = ShowConfirmDialog(title, confirm); // eslint-disable-line new-cap, no-undef
 
             return new Promise(resolve => {
                 prompt.done(result => {
@@ -106,6 +106,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
             .replace("__fail__", this._failed);
 
         ExtensionLayer.runInPageContext((title, finished) => {
+            /* eslint-disable new-cap, no-undef */
             if (window.dialog) {
                 window.dialog.Dismiss();
             }
@@ -116,13 +117,14 @@ export default class FWorkshopSubscriberButtons extends Feature {
                         window.location.reload();
                     }
                 });
+            /* eslint-disable new-cap, no-undef */
         }, [statusTitle, statusString]);
     }
 
     async _changeSubscription(id) {
 
         const formData = new FormData();
-        formData.append("sessionid", User.getSessionId());
+        formData.append("sessionid", User.sessionId);
         formData.append("appid", this._appid);
         formData.append("id", id);
 
@@ -165,7 +167,9 @@ export default class FWorkshopSubscriberButtons extends Feature {
         }
 
         const modal = document.querySelector(".newmodal_content");
-        if (!modal) {
+        if (modal) {
+            modal.innerText = statusString;
+        } else {
             const statusTitle = this._workshopStr[`${this._method}_all`];
             ExtensionLayer.runInPageContext((title, progress) => {
                 if (window.dialog) {
@@ -174,8 +178,6 @@ export default class FWorkshopSubscriberButtons extends Feature {
 
                 window.dialog = ShowBlockingWaitDialog(title, progress);
             }, [statusTitle, statusString]);
-        } else {
-            modal.innerText = statusString;
         }
     }
 }

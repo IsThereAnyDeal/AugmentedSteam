@@ -25,10 +25,7 @@ export default class FITADPrices extends Feature {
                 node = document.querySelector(`input[name=subid][value="${id}"]`).parentNode.parentNode.parentNode;
             } else if (type === "bundle") {
                 node = document.querySelector(`.game_area_purchase_game_wrapper[data-ds-bundleid="${id}"]`);
-                if (!node) {
-                    node = document.querySelector(`.game_area_purchase_game[data-ds-bundleid="${id}"]`);
-                    placement = "beforebegin";
-                } else {
+                if (node) {
 
                     // Move any "Complete your Collection!" banner out of the way
                     const banner = node.querySelector(".ds_completetheset");
@@ -36,6 +33,9 @@ export default class FITADPrices extends Feature {
                     if (banner && newParent) {
                         newParent.appendChild(banner);
                     }
+                } else {
+                    node = document.querySelector(`.game_area_purchase_game[data-ds-bundleid="${id}"]`);
+                    placement = "beforebegin";
                 }
             }
 

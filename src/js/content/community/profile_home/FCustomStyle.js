@@ -19,13 +19,27 @@ export default class FCustomStyle extends Feature {
         let stylesheet = document.createElement("link");
         stylesheet.rel = "stylesheet";
         stylesheet.type = "text/css";
-        const availableStyles = ["clear", "goldenprofile", "green", "holiday2014", "orange", "pink", "purple", "red", "teal", "yellow", "blue", "grey"];
+        const availableStyles = [
+            "clear",
+            "goldenprofile",
+            "green",
+            "holiday2014",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "teal",
+            "yellow",
+            "blue",
+            "grey"
+        ];
+
         if (availableStyles.indexOf(style) === -1) { return; }
 
         document.body.classList.add("es_profile_style");
 
         switch (style) {
-        case "goldenprofile":
+        case "goldenprofile": {
             stylesheet.href = "https://steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css";
             document.head.appendChild(stylesheet);
 
@@ -67,6 +81,7 @@ export default class FCustomStyle extends Feature {
             );
 
             break;
+        }
         case "holiday2014":
             stylesheet.href = "//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css";
             document.head.appendChild(stylesheet);
@@ -80,7 +95,7 @@ export default class FCustomStyle extends Feature {
         case "clear":
             document.body.classList.add("es_style_clear");
             break;
-        default:
+        default: {
             const styleUrl = ExtensionResources.getURL(`img/profile_styles/${style}/style.css`);
             const headerImg = ExtensionResources.getURL(`img/profile_styles/${style}/header.jpg`);
 
@@ -89,6 +104,7 @@ export default class FCustomStyle extends Feature {
 
             document.querySelector(".profile_header_bg_texture").style.backgroundImage = `url('${headerImg}')`;
             break;
+        }
         }
         stylesheet = null;
     }

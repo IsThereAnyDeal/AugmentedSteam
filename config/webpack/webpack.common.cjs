@@ -52,7 +52,11 @@ module.exports = {
         "filename": "entries/[name].js",
     },
     "resolve": {
-        "modules": [path.resolve(rootDir, "src/js/"), path.resolve(rootDir, "src/js/content/"), path.resolve(rootDir, "node_modules/")],
+        "modules": [
+            path.resolve(rootDir, "src/js/"),
+            path.resolve(rootDir, "src/js/content/"),
+            path.resolve(rootDir, "node_modules/")
+        ],
     },
     "plugins": [
         new CleanWebpackPlugin(),

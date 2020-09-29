@@ -10,13 +10,17 @@ export default class FInventoryMarketHelper extends Feature {
 
         ExtensionLayer.runInPageContext(() => {
 
+            /* eslint-disable no-undef, camelcase */
             $J(document).on("click", ".inventory_item_link, .newitem", () => {
                 if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
                     g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
                 }
                 let market_expired = false;
                 if (g_ActiveInventory.selectedItem.description) {
-                    market_expired = g_ActiveInventory.selectedItem.description.descriptions.reduce((acc, el) => (acc || el.value === "This item can no longer be bought or sold on the Community Market."), false);
+                    market_expired = g_ActiveInventory.selectedItem.description.descriptions.reduce(
+                        (acc, el) => (acc || el.value === "This item can no longer be bought or sold on the Community Market."),
+                        false,
+                    );
                 }
 
                 window.Messenger.postMessage("sendMessage", [
@@ -34,17 +38,24 @@ export default class FInventoryMarketHelper extends Feature {
                     market_expired
                 ]);
             });
+            /* eslint-enable no-undef, camelcase */
         });
 
         Messenger.addMessageListener("sendMessage", info => { this._inventoryMarketHelper(info); });
 
-        Messenger.addMessageListener("sendFee", async({feeInfo, sessionID, global_id, contextID, assetID}) => {
+        Messenger.addMessageListener("sendFee", async({
+            feeInfo,
+            "sessionID": sessionId,
+            "global_id": globalId,
+            "contextID": contextId,
+            "assetID": assetId,
+        }) => {
             const sellPrice = feeInfo.amount - feeInfo.fees;
             const formData = new FormData();
-            formData.append("sessionid", sessionID);
-            formData.append("appid", global_id);
-            formData.append("contextid", contextID);
-            formData.append("assetid", assetID);
+            formData.append("sessionid", sessionId);
+            formData.append("appid", globalId);
+            formData.append("contextid", contextId);
+            formData.append("assetid", assetId);
             formData.append("amount", 1);
             formData.append("price", sellPrice);
 
@@ -58,28 +69,41 @@ export default class FInventoryMarketHelper extends Feature {
 
             await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {"withCredentials": true});
 
-            document.querySelector(`#es_instantsell${assetID}`).parentNode.style.display = "none";
+            document.querySelector(`#es_instantsell${assetId}`).parentNode.style.display = "none";
 
-            const node = document.querySelector(`[id="${global_id}_${contextID}_${assetID}"]`);
+            const node = document.querySelector(`[id="${globalId}_${contextId}_${assetId}"]`);
             node.classList.add("btn_disabled", "activeInfo");
             node.style.pointerEvents = "none";
         });
     }
 
-    _inventoryMarketHelper([item, marketable, globalId, hashName, assetType, assetId, sessionId, contextId, walletCurrency, ownerSteamId, restriction, expired]) {
+    _inventoryMarketHelper([
+        item,
+        marketable,
+        globalId,
+        hashName,
+        assetType,
+        assetId,
+        sessionId,
+        contextId,
+        walletCurrency,
+        ownerSteamId,
+        restriction,
+        expired
+    ]) {
 
-        marketable = parseInt(marketable);
-        globalId = parseInt(globalId);
-        contextId = parseInt(contextId);
-        restriction = parseInt(restriction);
+        const _marketable = parseInt(marketable);
+        const _globalId = parseInt(globalId);
+        const _contextId = parseInt(contextId);
+        const _restriction = parseInt(restriction);
         const isGift = assetType && /Gift/i.test(assetType);
         const isBooster = hashName && /Booster Pack/i.test(hashName);
         const ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
 
-        let hm;
-        const appid = (hm = hashName.match(/^([0-9]+)-/)) ? hm[1] : null;
+        const hm = hashName.match(/^([0-9]+)-/);
+        const appid = hm ? hm[1] : null;
 
-        const thisItem = document.querySelector(`[id="${globalId}_${contextId}_${assetId}"]`);
+        const thisItem = document.querySelector(`[id="${_globalId}_${_contextId}_${assetId}"]`);
         const itemActions = document.querySelector(`#iteminfo${item}_item_actions`);
         const marketActions = document.querySelector(`#iteminfo${item}_item_market_actions`);
         marketActions.style.overflow = "hidden";
@@ -103,11 +127,20 @@ export default class FInventoryMarketHelper extends Feature {
             }
 
             this._addOneClickGemsOption(item, appid, assetId);
-            this._addQuickSellOptions(marketActions, thisItem, marketable, contextId, globalId, assetId, sessionId, walletCurrency);
+            this._addQuickSellOptions(
+                marketActions,
+                thisItem,
+                _marketable,
+                _contextId,
+                _globalId,
+                assetId,
+                sessionId,
+                walletCurrency
+            );
         }
 
-        if ((ownsInventory && restriction > 0 && !marketable && !expired && hashName !== "753-Gems") || marketable) {
-            this._showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrency);
+        if ((ownsInventory && _restriction > 0 && !_marketable && !expired && hashName !== "753-Gems") || _marketable) {
+            this._showMarketOverview(thisItem, marketActions, _globalId, hashName, appid, isBooster, walletCurrency);
         }
     }
 
@@ -147,10 +180,13 @@ export default class FInventoryMarketHelper extends Feature {
             const result = await RequestData.getHttp(`${User.profileUrl}/edit`);
 
             // Make sure the background we are trying to set is not set already
-            const m = result.match(/SetCurrentBackground\( {\"communityitemid\":\"(\d+)\"/i);
+            const m = result.match(/SetCurrentBackground\( {"communityitemid":"(\d+)"/i);
             const currentBg = m ? m[1] : false;
 
-            if (currentBg !== assetId) {
+            if (currentBg === assetId) {
+                el.classList.add("btn_disabled");
+                loading.classList.remove("esi-shown");
+            } else {
                 const dom = HTMLParser.htmlToDOM(result);
 
                 dom.querySelector("#profile_background").value = assetId;
@@ -170,9 +206,6 @@ export default class FInventoryMarketHelper extends Feature {
                     .finally(() => {
                         loading.classList.remove("esi-shown");
                     });
-            } else {
-                el.classList.add("btn_disabled");
-                loading.classList.remove("esi-shown");
             }
         });
     }
@@ -244,6 +277,7 @@ export default class FInventoryMarketHelper extends Feature {
         // TODO: Add prompt?
         document.querySelector("#es_quickgrind").addEventListener("click", () => {
             ExtensionLayer.runInPageContext((appid, assetid) => {
+                /* eslint-disable no-undef, new-cap, camelcase */
                 const rgAJAXParams = {
                     "sessionid": g_sessionID,
                     appid,
@@ -261,6 +295,7 @@ export default class FInventoryMarketHelper extends Feature {
                         ReloadCommunityInventory();
                     });
                 });
+                /* eslint-enable no-undef, new-cap, camelcase */
             }, [appid, assetid]);
         });
     }
@@ -285,6 +320,7 @@ export default class FInventoryMarketHelper extends Feature {
             HTML.beforeEnd(marketActions, this._makeMarketButton(`es_quicksell${assetId}`, Localization.str.quick_sell_desc.replace("__modifier__", diff)));
             HTML.beforeEnd(marketActions, this._makeMarketButton(`es_instantsell${assetId}`, Localization.str.instant_sell_desc));
 
+            // eslint-disable-next-line no-undef, new-cap
             ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
 
             // Check if price is stored in data
@@ -336,6 +372,7 @@ export default class FInventoryMarketHelper extends Feature {
 
         const nodes = document.querySelectorAll(`#es_quicksell${assetId}, #es_instantsell${assetId}`);
         for (const node of nodes) {
+            // eslint-disable-next-line no-loop-func -- Only CalculateFeeAmount is accessed, which isn't an unsafe reference
             node.addEventListener("click", (e) => {
                 e.preventDefault();
 
@@ -355,12 +392,12 @@ export default class FInventoryMarketHelper extends Feature {
                     `<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>${Localization.str.selling}</div>`
                 );
 
-                ExtensionLayer.runInPageContext((sellPrice, sessionID, global_id, contextID, assetID) => {
+                ExtensionLayer.runInPageContext((sellPrice, sessionID, globalId, contextID, assetID) => {
                     window.Messenger.postMessage("sendFee",
                         {
-                            "feeInfo": CalculateFeeAmount(sellPrice, 0.10),
+                            "feeInfo": CalculateFeeAmount(sellPrice, 0.10), // eslint-disable-line no-undef, new-cap
                             sessionID,
-                            global_id,
+                            "global_id": globalId,
                             contextID,
                             assetID,
                         });
@@ -391,14 +428,22 @@ export default class FInventoryMarketHelper extends Feature {
         // Add Quick Sell button
         if (quickSell && priceHighValue && priceHighValue > priceLowValue) {
             quickSell.dataset.price = priceHighValue;
-            quickSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.quick_sell.replace("__amount__", new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency)));
+            quickSell.querySelector(".item_market_action_button_contents").textContent
+                = Localization.str.quick_sell.replace(
+                    "__amount__",
+                    new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency))
+                );
             quickSell.style.display = "block";
         }
 
         // Add Instant Sell button
         if (instantSell && priceLowValue) {
             instantSell.dataset.price = priceLowValue;
-            instantSell.querySelector(".item_market_action_button_contents").textContent = Localization.str.instant_sell.replace("__amount__", new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency)));
+            instantSell.querySelector(".item_market_action_button_contents").textContent
+                = Localization.str.instant_sell.replace(
+                    "__amount__",
+                    new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency))
+                );
             instantSell.style.display = "block";
         }
     }
@@ -417,7 +462,8 @@ export default class FInventoryMarketHelper extends Feature {
 
         // Check if price is stored in data
         if (!thisItem.dataset.lowestPrice) {
-            firstDiv.innerHTML = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
+            firstDiv.innerHTML
+                = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
 
             const overviewPromise = RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?currency=${walletCurrencyNumber}&appid=${globalId}&market_hash_name=${encodeURIComponent(hashName)}`);
 

@@ -13,7 +13,8 @@ export default class FMediaExpander extends Feature {
     apply() {
         let selector = null;
 
-        if (this.context.type === ContextTypes.APP && (SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews"))) {
+        if (this.context.type === ContextTypes.APP
+            && (SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews"))) {
             selector = ".home_tabs_row";
         } else {
             selector = "#highlight_player_area";
@@ -26,13 +27,18 @@ export default class FMediaExpander extends Feature {
             </div>`);
 
         // Initiate tooltip
-        ExtensionLayer.runInPageContext(() => { $J("[data-slider-tooltip]").v_tooltip({"tooltipClass": "store_tooltip community_tooltip", "dataName": "sliderTooltip"}); });
+        ExtensionLayer.runInPageContext(() => {
+            // eslint-disable-next-line no-undef
+            $J("[data-slider-tooltip]").v_tooltip({"tooltipClass": "store_tooltip community_tooltip", "dataName": "sliderTooltip"});
+        });
 
         const expandSlider = LocalStorage.get("expand_slider", false);
         if (expandSlider) {
             this._buildSideDetails();
 
-            for (const node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
+            for (const node of document.querySelectorAll(
+                ".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap"
+            )) {
                 node.classList.add("es_expanded");
             }
             for (const node of document.querySelectorAll(".es_side_details_wrap, .es_side_details")) {
@@ -72,7 +78,7 @@ export default class FMediaExpander extends Feature {
                 node.remove();
             }
 
-            const detailsWrap = HTML.wrap(detailsClone, "<div class=\"es_side_details_wrap\"></div>");
+            const detailsWrap = HTML.wrap(detailsClone, '<div class="es_side_details_wrap"></div>');
             detailsWrap.style.display = "none";
             const target = document.querySelector("div.rightcol.game_meta_data");
             if (target) {
@@ -92,7 +98,7 @@ export default class FMediaExpander extends Feature {
 
             target = document.querySelector(".highlight_ctn");
             if (target) {
-                HTML.wrap(target, "<div class=\"leftcol\" style=\"width: 638px; float: left; position: relative; z-index: 1;\" />");
+                HTML.wrap(target, '<div class="leftcol" style="width: 638px; float: left; position: relative; z-index: 1;"/>');
             }
 
             /*
@@ -102,10 +108,10 @@ export default class FMediaExpander extends Feature {
             target = document.querySelector(".highlight_sketchfab_model");
             if (target) {
                 target = document.getElementById("highlight_player_area");
-                target.addEventListener("mouseenter", function() {
-                    let el = this.querySelector(".highlight_sketchfab_model");
+                target.addEventListener("mouseenter", () => {
+                    let el = target.querySelector(".highlight_sketchfab_model");
                     if (!el) { return; }
-                    if (el.style.display == "none") { return; }
+                    if (el.style.display === "none") { return; }
                     el = document.querySelector(".es_slider_toggle");
                     if (!el) { return; }
                     el.style.top = "32px";
@@ -153,31 +159,31 @@ export default class FMediaExpander extends Feature {
 
         // On every animation/transition end check the slider state
         const container = document.querySelector(".highlight_ctn");
-        container.addEventListener("transitionend", () => { this._saveSlider(); });
+        container.addEventListener("transitionend", () => {
 
-        for (const node of document.querySelectorAll(".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap")) {
+            // Save slider state
+            LocalStorage.set("expand_slider", el.classList.contains("es_expanded"));
+            const details = this._details;
+
+            // If slider was contracted show the extended details
+            if (!el.classList.contains("es_expanded")) {
+                details.style.transition = "";
+                details.style.opacity = "0";
+                details.style.transition = "opacity 250ms";
+                details.style.display = null;
+                details.style.opacity = "1";
+            }
+
+            // Triggers the adjustment of the slider scroll bar
+            setTimeout(() => {
+                window.dispatchEvent(new Event("resize"));
+            }, 250);
+        });
+
+        for (const node of document.querySelectorAll(
+            ".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap"
+        )) {
             node.classList.toggle("es_expanded");
         }
-    }
-
-    _saveSlider() {
-
-        // Save slider state
-        LocalStorage.set("expand_slider", el.classList.contains("es_expanded"));
-        const details = this._details;
-
-        // If slider was contracted show the extended details
-        if (!el.classList.contains("es_expanded")) {
-            details.style.transition = "";
-            details.style.opacity = "0";
-            details.style.transition = "opacity 250ms";
-            details.style.display = null;
-            details.style.opacity = "1";
-        }
-
-        // Triggers the adjustment of the slider scroll bar
-        setTimeout(() => {
-            window.dispatchEvent(new Event("resize"));
-        }, 250);
     }
 }

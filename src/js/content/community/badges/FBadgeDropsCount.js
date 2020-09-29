@@ -60,7 +60,7 @@ export default class FBadgeDropsCount extends Feature {
             }
 
             const boosterGames = response.match(/class="booster_eligibility_game"/g);
-            const boosterCount = boosterGames && boosterGames.length || 0;
+            const boosterCount = (boosterGames && boosterGames.length) || 0;
 
             HTML.beforeEnd("#es_calculations",
                 `<br>${Localization.str.games_with_booster.replace("__boostergames__", boosterCount)}`);

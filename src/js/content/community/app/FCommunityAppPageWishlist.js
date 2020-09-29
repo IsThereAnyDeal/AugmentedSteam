@@ -25,7 +25,8 @@ export default class FCommunityAppPageWishlist extends Feature {
         }
 
         const parent = document.querySelector(".apphub_OtherSiteInfo");
-        HTML.beforeEnd(parent,
+        HTML.beforeEnd(
+            parent,
             ` <a id="es_wishlist_add" class="btnv6_blue_hoverfade btn_medium" style="${inactiveStyle}">
                   <span>
                       <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">
@@ -42,16 +43,15 @@ export default class FCommunityAppPageWishlist extends Feature {
               </a>
               <div id="es_wishlist_fail" style="display: none;">
                   <b>${Localization.str.error}</b>
-              </div>`);
+              </div>`
+        );
 
         const addBtn = document.getElementById("es_wishlist_add");
         const successBtn = document.getElementById("es_wishlist_success");
         const failNode = document.getElementById("es_wishlist_fail");
 
-        addBtn.addEventListener("click", handler);
-        successBtn.addEventListener("click", handler);
-
         const that = this;
+
         async function handler(e) {
             e.preventDefault();
 
@@ -59,7 +59,7 @@ export default class FCommunityAppPageWishlist extends Feature {
             parent.classList.add("loading");
             failNode.style.display = "none";
 
-            wishlisted = this === successBtn;
+            wishlisted = e.currentTarget === successBtn;
             const action = wishlisted ? "wishlist.remove" : "wishlist.add";
 
             try {
@@ -81,5 +81,10 @@ export default class FCommunityAppPageWishlist extends Feature {
                 parent.classList.remove("loading");
             }
         }
+
+        addBtn.addEventListener("click", handler);
+        successBtn.addEventListener("click", handler);
+
+
     }
 }

@@ -22,18 +22,18 @@ export default class FCommonGames extends Feature {
         commonCheckbox.addEventListener("change", async({target}) => {
             await this._loadCommonGames();
             rows.classList.toggle("esi-hide-notcommon", target.checked);
-            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); });
+            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); }); // eslint-disable-line no-undef, new-cap
         });
 
         notCommonCheckbox.addEventListener("change", async({target}) => {
             await this._loadCommonGames();
             rows.classList.toggle("esi-hide-common", target.checked);
-            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); });
+            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); }); // eslint-disable-line no-undef, new-cap
         });
     }
 
     async _loadCommonGames() {
-        if (this._commonGames != null) { return; }
+        if (this._commonGames !== null) { return; }
 
         const commonUrl = `${window.location.href}&games_in_common=1`;
         const data = await RequestData.getHttp(commonUrl);

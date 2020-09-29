@@ -6,14 +6,15 @@ import {RequestData, Sortbox} from "common";
 export default class FFriendsSort extends Feature {
 
     checkPrerequisites() {
-        return document.querySelectorAll(".friend_block_v2.persona.offline").length !== 0 && document.querySelector("#manage_friends_control") !== null;
+        return document.querySelectorAll(".friend_block_v2.persona.offline").length !== 0
+            && document.querySelector("#manage_friends_control") !== null;
     }
 
     apply() {
 
         const offlineFriends = document.querySelectorAll(".friend_block_v2.persona.offline");
 
-        offlineFriends.forEach((friend, i) => friend.dataset.esSortDefault = i);
+        offlineFriends.forEach((friend, i) => { friend.dataset.esSortDefault = i; });
 
         const sortBy = SyncedStorage.get("sortfriendsby");
 
@@ -28,9 +29,9 @@ export default class FFriendsSort extends Feature {
 
     async _sortFriends(sortBy, reversed) {
 
-        sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
+        const _sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
 
-        if (sortBy === "lastonline" && !this._friendsFetched) {
+        if (_sortBy === "lastonline" && !this._friendsFetched) {
 
             this._friendsFetched = true;
             const data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
@@ -43,7 +44,7 @@ export default class FFriendsSort extends Feature {
                     const days = parseInt(lastOnline[1]) || 0;
                     const hours = parseInt(lastOnline[2]) || 0;
                     const minutes = parseInt(lastOnline[3]) || 0;
-                    const downtime = (days * 24 + hours) * 60 + minutes;
+                    const downtime = (((days * 24) + hours) * 60) + minutes;
                     time = downtime;
                 }
                 document.querySelector(`.friend_block_v2.persona.offline[data-steamid="${friend.dataset.steamid}"]`).dataset.esSortTime = time;
@@ -53,7 +54,7 @@ export default class FFriendsSort extends Feature {
         const offlineBlock = document.querySelector("#state_offline");
         const curOfflineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
 
-        const property = `esSort${sortBy === "default" ? "Default" : "Time"}`;
+        const property = `esSort${_sortBy === "default" ? "Default" : "Time"}`;
         curOfflineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
 
         for (const friend of curOfflineFriends) {

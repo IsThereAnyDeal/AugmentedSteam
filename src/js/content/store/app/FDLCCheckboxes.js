@@ -1,5 +1,7 @@
 import {Feature} from "modules";
+
 import {ExtensionResources, HTML, Localization} from "core";
+import {User} from "common";
 
 export default class FDLCCheckboxes extends Feature {
 
@@ -117,7 +119,7 @@ export default class FDLCCheckboxes extends Feature {
             const inputSessionId = document.createElement("input");
             inputSessionId.type = "hidden";
             inputSessionId.name = "sessionid";
-            inputSessionId.value = User.getSessionId();
+            inputSessionId.value = User.sessionId;
 
             cartForm.append(inputAction, inputSessionId);
 

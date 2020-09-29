@@ -6,7 +6,7 @@ export default class FBadgePageLink extends Feature {
 
     apply() {
 
-        const gameAppId = parseInt((document.URL.match("\/753\/([0-9]+)-") || [0, 0])[1]);
+        const gameAppId = parseInt((document.URL.match(/\/753\/([0-9]+)-/) || [0, 0])[1]);
         const cardType = document.URL.match("Foil(%20Trading%20Card)?%29") ? "?border=1" : "";
         if (!gameAppId || gameAppId === 753) { return; }
 

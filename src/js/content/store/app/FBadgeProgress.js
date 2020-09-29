@@ -57,19 +57,19 @@ export default class FBadgeProgress extends Feature {
         blockSel.append(badge);
 
         // count card
-        const card_num_owned = badgeNode.querySelectorAll(".badge_detail_tasks .owned").length;
-        const card_num_total = badgeNode.querySelectorAll(".badge_detail_tasks .badge_card_set_card").length;
+        const cardNumOwned = badgeNode.querySelectorAll(".badge_detail_tasks .owned").length;
+        const cardNumTotal = badgeNode.querySelectorAll(".badge_detail_tasks .badge_card_set_card").length;
 
         // check if badge is completed
         const progress = badgeNode.querySelector(".gamecard_badge_progress");
-        const progress_text_length = progress ? progress.textContent.trim().length : 0;
-        const next_level_empty_badge = badgeNode.querySelectorAll(".gamecard_badge_progress .badge_info").length;
-        const badge_completed = (progress_text_length > 0 && next_level_empty_badge === 0);
+        const progressTextLength = progress ? progress.textContent.trim().length : 0;
+        const nextLevelEmptyBadge = badgeNode.querySelectorAll(".gamecard_badge_progress .badge_info").length;
+        const badgeCompleted = (progressTextLength > 0 && nextLevelEmptyBadge === 0);
 
-        const show_card_num = (card_num_owned > 0 && !badge_completed);
-        const is_normal_badge = targetSelector === ".es_normal_badge_progress";
+        const showCardNum = (cardNumOwned > 0 && !badgeCompleted);
+        const isNormalBadge = targetSelector === ".es_normal_badge_progress";
 
-        if (is_normal_badge || (card_num_owned > 0 || !blockSel.querySelector(".badge_empty_circle"))) {
+        if (isNormalBadge || (cardNumOwned > 0 || !blockSel.querySelector(".badge_empty_circle"))) {
             blockSel.parentNode.style.display = "block";
             blockSel.style.display = "block";
 
@@ -81,12 +81,12 @@ export default class FBadgeProgress extends Feature {
                 </div>
                 <div class="game_area_details_specs">
                     <div class="icon"><img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png" class="category_icon"></div>
-                    <a href="//steamcommunity.com/my/gamecards/${this.context.communityAppid}${is_normal_badge ? "/" : "?border=1"}" class="name">${badge_completed ? Localization.str.view_badge : Localization.str.view_badge_progress}</a>
+                    <a href="//steamcommunity.com/my/gamecards/${this.context.communityAppid}${isNormalBadge ? "/" : "?border=1"}" class="name">${badgeCompleted ? Localization.str.view_badge : Localization.str.view_badge_progress}</a>
                 </div>`);
 
-            if (show_card_num) {
+            if (showCardNum) {
                 HTML.beforeEnd(blockSel.querySelector(".es_cards_numbers"),
-                    `<div class="es_cards_owned">${Localization.str.cards_owned.replace("__owned__", card_num_owned).replace("__possible__", card_num_total)}</div>`);
+                    `<div class="es_cards_owned">${Localization.str.cards_owned.replace("__owned__", cardNumOwned).replace("__possible__", cardNumTotal)}</div>`);
             }
 
             const last = blockSel.querySelector(".badge_empty_right div:last-child");

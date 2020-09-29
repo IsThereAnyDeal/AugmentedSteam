@@ -81,24 +81,24 @@ export default class FMultiProductKeys extends Feature {
             const promises = [];
 
             for (let i = 0; i < keys.length; i++) {
-                const current_key = keys[i];
+                const currentKey = keys[i];
 
                 const formData = new FormData();
-                formData.append("sessionid", User.getSessionId());
-                formData.append("product_key", current_key);
+                formData.append("sessionid", User.sessionId);
+                formData.append("product_key", currentKey);
 
                 const request = RequestData.post("https://store.steampowered.com/account/ajaxregisterkey", formData).then(data => {
-                    data = JSON.parse(data);
-                    const attempted = current_key;
+                    const _data = JSON.parse(data);
+                    const attempted = currentKey;
                     let message = Localization.str.register.default;
-                    if (data.success === 1) {
+                    if (_data.success === 1) {
                         document.querySelector(`#attempt_${attempted}_icon img`).setAttribute("src", ExtensionResources.getURL("img/sr/okay.png"));
-                        if (data.purchase_receipt_info.line_items.length > 0) {
-                            document.querySelector(`#attempt_${attempted}_result`).textContent = Localization.str.register.success.replace("__gamename__", data.purchase_receipt_info.line_items[0].line_item_description);
+                        if (_data.purchase_receipt_info.line_items.length > 0) {
+                            document.querySelector(`#attempt_${attempted}_result`).textContent = Localization.str.register.success.replace("__gamename__", _data.purchase_receipt_info.line_items[0].line_item_description);
                             document.querySelector(`#attempt_${attempted}_result`).style.display = "block";
                         }
                     } else {
-                        switch (data.purchase_result_details) {
+                        switch (_data.purchase_result_details) {
                         case 9: message = Localization.str.register.owned; break;
                         case 13: message = Localization.str.register.notavail; break;
                         case 14: message = Localization.str.register.invalid; break;
@@ -113,7 +113,7 @@ export default class FMultiProductKeys extends Feature {
                     }
 
                 }, () => {
-                    const attempted = current_key;
+                    const attempted = currentKey;
                     document.querySelector(`#attempt_${attempted}_icon img`).setAttribute("src", ExtensionResources.getURL("img/sr/banned.png"));
                     document.querySelector(`#attempt_${attempted}_result`).textContent = Localization.str.error;
                     document.querySelector(`#attempt_${attempted}_result`).style.display = "block";
@@ -132,17 +132,17 @@ export default class FMultiProductKeys extends Feature {
         // Bind the "Cancel" button to close the modal
         document.addEventListener("click", ({target}) => {
             if (!target.closest(".es_activate_modal_close")) { return; }
-            ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
+            ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
         });
     }
 
     _showDialog() {
         ExtensionLayer.runInPageContext((header, template) => {
-            ShowDialog(header, template);
+            ShowDialog(header, template); // eslint-disable-line no-undef, new-cap
         },
         [
             Localization.str.activate_multiple_header,
-            this._template.replace("__alreadyentered__", document.getElementById("product_key").value.replace(/\,/g, "\n")),
+            this._template.replace("__alreadyentered__", document.getElementById("product_key").value.replace(/,/g, "\n")),
         ]);
     }
 }

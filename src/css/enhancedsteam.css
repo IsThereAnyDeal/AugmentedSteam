@@ -1996,7 +1996,7 @@ img.astats_icon {
   display: block !important;
 }
 
-/**
+/*
  * Regional price comparison item
  */
 
@@ -2483,7 +2483,7 @@ img.astats_icon {
 
 .es_profile_style.holidayprofile .persona_name,
 .es_profile_style.holidayprofile .profile_customization_header { /* Makes links clickable */
-  position: initial !important; 
+  position: initial !important;
 }
 
 .es_profile_style.holidayprofile .profile_customization:not(.none_selected)::before {
@@ -3010,7 +3010,7 @@ label[for="show_common_games"] {
   display: none;
 }
 .esi-hide-common .esi-common,
-.esi-hide-notcommon .esi-notcommon { 
+.esi-hide-notcommon .esi-notcommon {
   display: none !important;
 }
 
@@ -3175,7 +3175,7 @@ label[for="show_common_games"] {
 
 /***************************************
  * addCustomTags() to community guides
- * 
+ *
  **************************************/
 .es_tag {
 	text-transform: capitalize;
@@ -3184,7 +3184,7 @@ label[for="show_common_games"] {
 	text-transform: none;
 }
 
-/**
+/*
  * Flags
  */
 .es-flag {
@@ -3549,7 +3549,7 @@ label[for="show_common_games"] {
 
 /* || SEARCH PAGE FILTERS */
 
-/**
+/*
  * https://github.com/SteamDatabase/SteamTracking/blob/3d3de779d93086bba59d32864526c0ced6dc856e/store.steampowered.com/public/css/v6/search.css#L250
  * Hide search results
 */
@@ -3574,7 +3574,7 @@ label[for="show_common_games"] {
   grid-column-start: 1;
 }
 
-/* 
+/*
  * https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/css/v6/browse.css#L206
  * Allows wraps at white spaces for long texts in the range display
  */

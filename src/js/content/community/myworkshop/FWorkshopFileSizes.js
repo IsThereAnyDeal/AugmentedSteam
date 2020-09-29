@@ -5,7 +5,7 @@ import {Background, ExtensionLayer, RequestData} from "common";
 
 export default class FWorkshopFileSizes extends Feature {
 
-    async apply() {
+    apply() {
         this._addFileSizes();
         this._addTotalSizeButton();
     }
@@ -41,7 +41,7 @@ export default class FWorkshopFileSizes extends Feature {
         document.getElementById("es_calc_size").addEventListener("click", async() => {
 
             ExtensionLayer.runInPageContext((calculating, totalSize) => {
-                ShowBlockingWaitDialog(calculating, totalSize);
+                ShowBlockingWaitDialog(calculating, totalSize); // eslint-disable-line no-undef, new-cap
             },
             [
                 Localization.str.calc_workshop_size.calculating,
@@ -82,9 +82,12 @@ export default class FWorkshopFileSizes extends Feature {
 
                     totalSize += size;
 
+                    // eslint-disable-next-line no-loop-func -- Page context
                     ExtensionLayer.runInPageContext((calculating, totalSize) => {
+                        /* eslint-disable no-undef, new-cap */
                         CModal.DismissActiveModal();
                         ShowBlockingWaitDialog(calculating, totalSize);
+                        /* eslint-enable no-undef, new-cap */
                     },
                     [
                         Localization.str.calc_workshop_size.calculating,
@@ -96,8 +99,10 @@ export default class FWorkshopFileSizes extends Feature {
             this._addFileSizes();
 
             ExtensionLayer.runInPageContext((finished, totalSize) => {
+                /* eslint-disable no-undef, new-cap */
                 CModal.DismissActiveModal();
                 ShowAlertDialog(finished, totalSize);
+                /* eslint-enable no-undef, new-cap */
             },
             [
                 Localization.str.calc_workshop_size.finished,
@@ -109,7 +114,7 @@ export default class FWorkshopFileSizes extends Feature {
     _getFileSizeStr(size) {
         const units = ["TB", "GB", "MB", "KB"];
 
-        const index = units.findIndex((unit, i) => size / 1000 ** (units.length - (i + 1)) >= 1);
-        return `${(size / 1000 ** (units.length - (index + 1))).toFixed(2)} ${units[index]}`;
+        const index = units.findIndex((unit, i) => size / (1000 ** (units.length - (i + 1))) >= 1);
+        return `${(size / (1000 ** (units.length - (index + 1)))).toFixed(2)} ${units[index]}`;
     }
 }

@@ -5,7 +5,11 @@ import {HTML, Localization, SyncedStorage} from "core";
 export default class FSteamSpy extends Feature {
 
     async checkPrerequisites() {
-        if (!SyncedStorage.get("show_steamspy_info") || this.context.isDlc() || !document.querySelector(".sys_req")) { return false; }
+        if (!SyncedStorage.get("show_steamspy_info")
+            || this.context.isDlc()
+            || !document.querySelector(".sys_req")) {
+            return false;
+        }
 
         const result = await this.context.data;
         if (result && result.steamspy && result.steamspy.owners) {
@@ -18,8 +22,8 @@ export default class FSteamSpy extends Feature {
     apply() {
 
         const owners = this._data.owners.split("..");
-        const owners_from = HTML.escape(owners[0].trim());
-        const owners_to = HTML.escape(owners[1].trim());
+        const ownersFrom = HTML.escape(owners[0].trim());
+        const ownersTo = HTML.escape(owners[1].trim());
         const averageTotal = this._getTimeString(this._data.average_forever);
         const average2weeks = this._getTimeString(this._data.average_2weeks);
 
@@ -27,7 +31,7 @@ export default class FSteamSpy extends Feature {
             `<div id="steam-spy" class="game_area_description">
                 <h2>${Localization.str.spy.player_data}</h2>
                 <div class="chart-content">
-                    <div class="chart-stat"><span class="num">${owners_from}<br>-<br>${owners_to}</span><br>${Localization.str.spy.owners}</div>
+                    <div class="chart-stat"><span class="num">${ownersFrom}<br>-<br>${ownersTo}</span><br>${Localization.str.spy.owners}</div>
                     <div class="chart-stat"><span class="num">${averageTotal}</span><br>${Localization.str.spy.average_playtime}</div>
                     <div class="chart-stat"><span class="num">${average2weeks}</span><br>${Localization.str.spy.average_playtime_2weeks}</div>
                 </div>
@@ -38,12 +42,13 @@ export default class FSteamSpy extends Feature {
     _getTimeString(value) {
 
         const days = Math.trunc(value / 1440);
-        value -= days * 1440;
+        let _value = value;
+        _value -= days * 1440;
 
-        const hours = Math.trunc(value / 60);
-        value -= hours * 60;
+        const hours = Math.trunc(_value / 60);
+        _value -= hours * 60;
 
-        const minutes = value;
+        const minutes = _value;
 
         let result = "";
         if (days > 0) { result += `${days}d `; }

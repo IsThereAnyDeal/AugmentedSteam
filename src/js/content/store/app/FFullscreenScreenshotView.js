@@ -4,11 +4,12 @@ import {HTML} from "core";
 export default class FFullscreenScreenshotView extends Feature {
 
     apply() {
+
         function toggleFullScreen(ev) {
-            if (!document.fullscreenElement) {
-                ev.target.closest(".screenshot_popup_modal_content").requestFullscreen();
-            } else {
+            if (document.fullscreenElement) {
                 document.exitFullscreen();
+            } else {
+                ev.target.closest(".screenshot_popup_modal_content").requestFullscreen();
             }
         }
 

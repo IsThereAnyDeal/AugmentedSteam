@@ -39,10 +39,12 @@ export default class FHowLongToBeat extends Feature {
                     <a class="linkbar" href="${HTML.escape(data.url)}" target="_blank">${Localization.str.more_information} <img src="${icoImg}"></a>
                     <a class="linkbar" href="${HTML.escape(data.submit_url)}" target="_blank">${Localization.str.hltb.submit} <img src="${icoImg}"></a>`;
 
+            // eslint-disable-next-line max-len
             // FIXME <a class="linkbar" href="${suggestUrl}" id="suggest">${Localization.str.hltb.wrong}-${Localization.str.hltb.help} <img src="${icoImg}"></a>
         } else {
             html += `${Localization.str.hltb.no_data}</div>`;
 
+            // eslint-disable-next-line max-len
             // FIXME <a class="linkbar" href="${suggestUrl}" id="suggest">${Localization.str.hltb.wrong}-${Localization.str.hltb.help} <img src="${icoImg}"></a>
         }
         html += "</div></div></div>";

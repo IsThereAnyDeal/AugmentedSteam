@@ -26,12 +26,12 @@ export class CWishlist extends CStoreBaseCallback {
 
         this.type = ContextTypes.WISHLIST;
 
-        if (!User.isSignedIn) {
-            this.myWishlist = false;
-        } else {
+        if (User.isSignedIn) {
             const myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/").replace(/\/$/, "");
             const myWishlistUrlRegex = new RegExp(`^${myWishlistUrl}([/#]|$)`);
             this.myWishlist = myWishlistUrlRegex.test(window.location.href) || window.location.href.includes(`/profiles/${User.steamId}`);
+        } else {
+            this.myWishlist = false;
         }
 
         this._registerObserver();
@@ -40,12 +40,14 @@ export class CWishlist extends CStoreBaseCallback {
     async applyFeatures() {
         if (document.querySelector("#throbber").style.display !== "none") {
             await ExtensionLayer.runInPageContext(() => new Promise(resolve => {
+                /* eslint-disable no-undef, camelcase */
                 $J(document).ajaxSuccess((e, xhr, settings) => {
                     const url = new URL(settings.url);
                     if (url.origin + url.pathname === `${g_strWishlistBaseURL}wishlistdata/` && g_Wishlist.nPagesToLoad === g_Wishlist.nPagesLoaded) {
                         resolve();
                     }
                 });
+                /* eslint-enable no-undef, camelcase */
             }), null, true);
         }
 
@@ -73,7 +75,7 @@ export class CWishlist extends CStoreBaseCallback {
 
                 const that = this;
 
-                timeout = window.setTimeout(async function markWishlist() {
+                timeout = window.setTimeout(function markWishlist() {
                     if (window.performance.now() - lastRequest < 40) {
                         timeout = window.setTimeout(markWishlist, 50);
                         return;

@@ -1,10 +1,12 @@
-const g_rgAnimationDefaults = {
+/* globals ANIMATION_TICK_RATE:writable, CAnimation:writable, $J */
+
+const animationDefaults = {
     "height": 130,
     "width": 130,
     "fps": 30
 };
 
-const g_rgAnimations = [
+const animations = [
     {
         "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/ball_blink_1170_9_69.png",
         "cols": 9,
@@ -79,89 +81,94 @@ const g_rgAnimations = [
 
 ANIMATION_TICK_RATE = 11;
 
-CAnimation = function(rgAnimation, $Parent, x, y) {
-    this.m_rgAnimation = $J.extend({}, g_rgAnimationDefaults, rgAnimation);
-    this.m_x = x;
-    this.m_y = y;
+CAnimation = class {
 
-    this.m_$Element = $J("<div/>", {"class": "holidayprofile_animation"});
-    this.m_$Element.css("height", `${this.m_rgAnimation.height}px`);
-    this.m_$Element.css("width", `${this.m_rgAnimation.width}px`);
-    this.m_$Element.css("background", `url( '${this.m_rgAnimation.image}') no-repeat`);
-    this.m_$Element.appendTo($Parent);
-    this.m_$Element.offset({"left": x, "top": y});
-    this.m_$Element.show();
+    constructor(animation, parent, x, y) {
+        this._animation = $J.extend({}, animationDefaults, animation);
+        this._x = x;
+        this._y = y;
 
-    this.m_frame = 0;
-    this.m_start = 0;
-    this.m_rate = 1000 / this.m_rgAnimation.fps;
+        this.element = $J("<div/>", {"class": "holidayprofile_animation"});
+        this.element.css("height", `${this._animation.height}px`);
+        this.element.css("width", `${this._animation.width}px`);
+        this.element.css("background", `url( '${this._animation.image}') no-repeat`);
+        this.element.appendTo(parent);
+        this.element.offset({"left": x, "top": y});
+        this.element.show();
 
-    this.m_interval = 0;
-};
+        this._frame = 0;
+        this._start = 0;
+        this._rate = 1000 / this._animation.fps;
 
-CAnimation.sm_cAnimationsRunning = 0;
+        this._interval = 0;
+    }
 
-CAnimation.prototype.Start = function() {
-    this.m_start = $J.now();
-    this.m_interval = window.setInterval($J.proxy(this.Tick, this), ANIMATION_TICK_RATE);
-    CAnimation.sm_cAnimationsRunning++;
-};
+    start() {
+        this._start = $J.now();
+        this._interval = window.setInterval($J.proxy(this.tick, this), ANIMATION_TICK_RATE);
+        CAnimation.animationsRunning++;
+    }
 
-CAnimation.prototype.Tick = function() {
-    const sElapsed = $J.now() - this.m_start;
-    const iCurFrame = Math.floor(sElapsed / this.m_rate);
-    if (iCurFrame != this.m_frame) {
-        this.m_frame = iCurFrame;
-        if (this.m_frame <= this.m_rgAnimation.frames) {
-            const nBackgroundX = (this.m_frame % this.m_rgAnimation.cols) * this.m_rgAnimation.width;
-            const nBackgroundY = Math.floor(this.m_frame / this.m_rgAnimation.cols) * this.m_rgAnimation.height;
-            this.m_$Element.css("background-position", `-${nBackgroundX}px -${nBackgroundY}px`);
-        } else {
-            this.Destroy();
+    tick() {
+        const sElapsed = $J.now() - this._start;
+        const iCurFrame = Math.floor(sElapsed / this._rate);
+        if (iCurFrame !== this._frame) {
+            this._frame = iCurFrame;
+            if (this._frame <= this._animation.frames) {
+                const nBackgroundX = (this._frame % this._animation.cols) * this._animation.width;
+                const nBackgroundY = Math.floor(this._frame / this._animation.cols) * this._animation.height;
+                this._element.css("background-position", `-${nBackgroundX}px -${nBackgroundY}px`);
+            } else {
+                this.destroy();
+            }
         }
+    }
+
+    destroy() {
+        if (this._interval) { window.clearInterval(this._interval); }
+        this._element.remove();
+        CAnimation.animationsRunning--;
     }
 };
 
-CAnimation.prototype.Destroy = function() {
-    if (this.m_interval) { window.clearInterval(this.m_interval); }
-    this.m_$Element.remove();
-    CAnimation.sm_cAnimationsRunning--;
-};
+CAnimation.animationsRunning = 0;
 
-function StartAnimation() {
+function animationForShowcase($Showcase) {
+    const nAnimation = Math.floor(Math.random() * animations.length);
+    const pos = $Showcase.offset();
+    const xpad = 100;
+    const x = Math.floor(Math.random() * ($Showcase.width() - (2 * xpad))) + (xpad / 2);
+    const Animation = new CAnimation(animations[nAnimation], $Showcase, pos.left + x, pos.top - 120);
+    Animation.start();
+}
+
+function startAnimation() {
     const $Showcases = $J(".profile_customization:not(.none_selected)");
     if (!$Showcases.length) { return; }
 
-    AnimationForShowcase($J($Showcases[0]));
+    animationForShowcase($J($Showcases[0]));
 
     $Showcases.click(function() {
-        AnimationForShowcase($J(this));
+        // eslint-disable-next-line no-invalid-this -- this is the HTML element
+        animationForShowcase($J(this));
     });
 
     window.setInterval(() => {
-        if (CAnimation.sm_cAnimationsRunning == 0 && Math.random() < 0.25) {
+        if (CAnimation.animationsRunning === 0 && Math.random() < 0.25) {
             const nScrollY = window.scrollY;
             const nWindowHeight = $J(window).height();
             const $VisibleShowcases = $Showcases.filter(function() {
+                // eslint-disable-next-line no-invalid-this -- this is the HTML element
                 const $Showcase = $J(this);
                 const nShowcaseTop = $Showcase.offset().top;
                 return nShowcaseTop >= nScrollY + 100 && nShowcaseTop < (nScrollY + nWindowHeight);
             });
             if ($VisibleShowcases.length) {
                 const nShowcase = Math.floor(Math.random() * $VisibleShowcases.length);
-                AnimationForShowcase($J($VisibleShowcases[nShowcase]));
+                animationForShowcase($J($VisibleShowcases[nShowcase]));
             }
         }
     }, 1500);
 }
 
-function AnimationForShowcase($Showcase) {
-    const nAnimation = Math.floor(Math.random() * g_rgAnimations.length);
-    const pos = $Showcase.offset();
-    const xpad = 100;
-    const x = Math.floor(Math.random() * ($Showcase.width() - 2 * xpad)) + (xpad / 2);
-    const Animation = new CAnimation(g_rgAnimations[nAnimation], $Showcase, pos.left + x, pos.top - 120);
-    Animation.Start();
-}
-
-StartAnimation();
+startAnimation();

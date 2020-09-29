@@ -46,8 +46,8 @@ export default class FBadgeSortAndFilter extends Feature {
         // Insert dropdown options links
         HTML.beforeEnd(".profile_badges_sortoptions",
             `<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
-			    <div class="popup_body popup_menu">${linksHtml}</div>
-		    </div>`);
+                <div class="popup_body popup_menu">${linksHtml}</div>
+            </div>`);
 
         // Insert dropdown button
         HTML.afterEnd(".profile_badges_sortoptions span",
@@ -62,6 +62,7 @@ export default class FBadgeSortAndFilter extends Feature {
                 </div>
             </span>`);
 
+        // eslint-disable-next-line no-undef, new-cap
         ExtensionLayer.runInPageContext(() => { BindAutoFlyoutEvents(); });
 
         if (isOwnProfile) {
@@ -242,20 +243,23 @@ export default class FBadgeSortAndFilter extends Feature {
     }
 
     _resetLazyLoader() {
-        return; // FIXME this doesn't seem to work
 
-        ExtensionLayer.runInPageContext(() => {
+        // FIXME this doesn't seem to work
 
-            // Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
-            CScrollOffsetWatcher.sm_rgWatchers = [];
-
-            // Recreate registered image lazy loader watchers
-            $J("div[id^=image_group_scroll_badge_images_gamebadge_]").each((i, e) => {
-
-                // LoadImageGroupOnScroll is found in shared_global.js
-                LoadImageGroupOnScroll(e.id, e.id.substr(19));
-            });
-        });
+        /*
+         * ExtensionLayer.runInPageContext(() => {
+         *
+         *  // Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
+         *  CScrollOffsetWatcher.sm_rgWatchers = [];
+         *
+         *  // Recreate registered image lazy loader watchers
+         *  $J("div[id^=image_group_scroll_badge_images_gamebadge_]").each((i, e) => {
+         *
+         *      // LoadImageGroupOnScroll is found in shared_global.js
+         *      LoadImageGroupOnScroll(e.id, e.id.substr(19));
+         *  });
+         * });
+         */
     }
 
     _toggleBinderView() {

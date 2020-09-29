@@ -55,21 +55,28 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
                 if (input === this._maxScore) {
                     if (minVal >= maxVal) {
                         if (minVal <= 0) {
-                            this._maxScore.value = maxVal = 1;
+                            this._maxScore.value = 1;
+                            maxVal = 1;
                         } else {
-                            this._minScore.value = minVal = maxVal - 1;
+                            this._minScore.value = maxVal - 1;
+                            minVal = maxVal - 1;
                         }
                     }
                 } else if (maxVal <= minVal) {
 
                     // Happens when the user clicks to the highest step after the max thumb instead of dragging
                     if (minVal === maxStep) {
-                        this._minScore.value = minVal = maxStep - 1;
-                        this._maxScore.value = maxVal = maxStep;
+                        this._minScore.value = maxStep - 1;
+                        minVal = maxStep - 1;
+
+                        this._maxScore.value = maxStep;
+                        maxVal = maxStep;
                     } else if (maxVal < maxStep) {
-                        this._maxScore.value = maxVal = minVal + 1;
+                        this._maxScore.value = minVal + 1;
+                        maxVal = minVal + 1;
                     } else {
-                        this._minScore.value = minVal = maxVal - 1;
+                        this._minScore.value = maxVal - 1;
+                        minVal = maxVal - 1;
                     }
                 }
 
@@ -81,9 +88,12 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
                         text = Localization.str.search_filters.reviews_score.up_to.replace("__score__", this._scoreValues[maxVal]);
                     }
                 } else if (maxVal === maxStep) {
-                    text = Localization.str.search_filters.reviews_score.from.replace("__score__", this._scoreValues[minVal]);
+                    text = Localization.str.search_filters.reviews_score.from
+                        .replace("__score__", this._scoreValues[minVal]);
                 } else {
-                    text = Localization.str.search_filters.reviews_score.between.replace("__lower__", this._scoreValues[minVal]).replace("__upper__", this._scoreValues[maxVal]);
+                    text = Localization.str.search_filters.reviews_score.between
+                        .replace("__lower__", this._scoreValues[minVal])
+                        .replace("__upper__", this._scoreValues[maxVal]);
                 }
 
                 this._rangeDisplay.textContent = text;

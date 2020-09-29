@@ -13,9 +13,14 @@ export default class FHideTrademarks extends Feature {
         // TODO I would try to reduce number of selectors here
         let selectors = "title, .apphub_AppName, .breadcrumbs, h1, h4";
         if (this.context.type === ContextTypes.STORE_DEFAULT) {
-            selectors += ".game_area_already_owned, .details_block, .game_description_snippet, .game_area_description p, .glance_details, .game_area_dlc_bubble game_area_bubble, .package_contents, .game_area_dlc_name, .tab_desc, .tab_item_name";
+            selectors
+                += ".game_area_already_owned, .details_block, .game_description_snippet, "
+                + ".game_area_description p, .glance_details, .game_area_dlc_bubble game_area_bubble, .package_contents, "
+                + ".game_area_dlc_name, .tab_desc, .tab_item_name";
         } else {
-            selectors += ".game_suggestion, .appHubShortcut_Title, .apphub_CardContentNewsTitle, .apphub_CardTextContent, .apphub_CardContentAppName, .apphub_AppName";
+            selectors
+                += ".game_suggestion, .appHubShortcut_Title, .apphub_CardContentNewsTitle, "
+                + ".apphub_CardTextContent, .apphub_CardContentAppName, .apphub_AppName";
         }
 
         // Replaces "R", "C" and "TM" signs

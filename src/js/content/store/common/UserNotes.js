@@ -47,10 +47,11 @@ export class UserNotes {
 
         // Partly copied from shared_global.js
         const bgClick = ExtensionLayer.runInPageContext((title, template) => {
+            /* eslint-disable no-undef, new-cap, camelcase */
             const deferred = new jQuery.Deferred();
-            const fnOK = () => deferred.resolve();
+            function fnOk() { deferred.resolve(); }
 
-            const Modal = _BuildDialog(title, template, [], fnOK);
+            const Modal = _BuildDialog(title, template, [], fnOk);
             deferred.always(() => Modal.Dismiss());
 
             const promise = new Promise(resolve => {
@@ -77,6 +78,7 @@ export class UserNotes {
             });
 
             return promise;
+            /* eslint-enable no-undef */
         },
         [
             Localization.str.user_note.add_for_game.replace("__gamename__", appname),
@@ -85,41 +87,42 @@ export class UserNotes {
         ],
         "backgroundClick");
 
-        document.addEventListener("click", clickListener);
+        const saveNote = () => {
+            const modal = document.querySelector("#es_note_modal");
+            const appid = parseInt(modal.dataset.appid);
+            const note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ")
+                .substring(0, 512));
+            const node = document.querySelector(decodeURIComponent(modal.dataset.selector));
 
-        bgClick.then(() => {
-            onNoteUpdate.apply(null, saveNote());
-            Messenger.postMessage("noteSaved");
-        });
+            if (note.length === 0) {
+                this.delete(appid);
+                node.textContent = Localization.str.user_note.add;
+                return [node, false];
+            }
+
+            this.set(appid, note);
+            HTML.inner(node, `"${note}"`);
+            return [node, true];
+        };
 
         function clickListener(e) {
             if (e.target.closest(".es_note_modal_submit")) {
                 e.preventDefault();
-                onNoteUpdate.apply(null, saveNote());
-                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
+                onNoteUpdate(...saveNote());
+                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
             } else if (e.target.closest(".es_note_modal_close")) {
-                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); });
+                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
             } else {
                 return;
             }
             document.removeEventListener("click", clickListener);
         }
 
-        const saveNote = () => {
-            const modal = document.querySelector("#es_note_modal");
-            const appid = parseInt(modal.dataset.appid, 10);
-            const note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ")
-                .substring(0, 512));
-            const node = document.querySelector(decodeURIComponent(modal.dataset.selector));
-            if (note.length !== 0) {
-                this.set(appid, note);
-                HTML.inner(node, `"${note}"`);
-                return [node, true];
-            } else {
-                this.delete(appid);
-                node.textContent = Localization.str.user_note.add;
-                return [node, false];
-            }
-        };
+        document.addEventListener("click", clickListener);
+
+        bgClick.then(() => {
+            onNoteUpdate(...saveNote());
+            Messenger.postMessage("noteSaved");
+        });
     }
 }

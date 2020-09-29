@@ -42,45 +42,6 @@ export default class FMarketSort extends Feature {
                 `<span id='es_marketsort_game' class='es_marketsort market_sortable_column'><span>${Localization.str.game_name.toUpperCase()}</span></span>`);
         }
 
-        buildButtons();
-
-        // add header click handlers
-        const tableHeader = container.querySelector(".market_listing_table_header");
-        if (!tableHeader) { return; }
-
-        tableHeader.addEventListener("click", ({target}) => {
-            const sortNode = target.closest(".es_marketsort");
-            if (!sortNode) { return; }
-
-            const isAsc = sortNode.classList.contains("asc");
-
-            document.querySelector(".es_marketsort.active").classList.remove("active");
-
-            sortNode.classList.add("active");
-            sortNode.classList.toggle("asc", !isAsc);
-            sortNode.classList.toggle("desc", isAsc);
-
-            // set default position
-            if (!container.querySelector(".market_listing_row[data-esi-default-position]")) {
-                const nodes = container.querySelectorAll(".market_listing_row");
-                let i = 0;
-                for (const node of nodes) {
-                    node.dataset.esiDefaultPosition = i++;
-                }
-            }
-
-            sortRows(sortNode.id, isAsc);
-        });
-
-        container.addEventListener("click", (e) => {
-            if (!e.target.closest(".market_paging_controls span")) { return; }
-            document.querySelector(".es_marketsort.active").classList.remove("active");
-
-            const dateNode = document.querySelector("#es_marketsort_date");
-            dateNode.classList.remove("desc");
-            dateNode.classList.add("active asc");
-        });
-
         function sortRows(sortBy, asc) {
             let selector;
             let dataname;
@@ -132,6 +93,45 @@ export default class FMarketSort extends Feature {
                 container.append(row[1]);
             }
         }
+
+        buildButtons();
+
+        // add header click handlers
+        const tableHeader = container.querySelector(".market_listing_table_header");
+        if (!tableHeader) { return; }
+
+        tableHeader.addEventListener("click", ({target}) => {
+            const sortNode = target.closest(".es_marketsort");
+            if (!sortNode) { return; }
+
+            const isAsc = sortNode.classList.contains("asc");
+
+            document.querySelector(".es_marketsort.active").classList.remove("active");
+
+            sortNode.classList.add("active");
+            sortNode.classList.toggle("asc", !isAsc);
+            sortNode.classList.toggle("desc", isAsc);
+
+            // set default position
+            if (!container.querySelector(".market_listing_row[data-esi-default-position]")) {
+                const nodes = container.querySelectorAll(".market_listing_row");
+                let i = 0;
+                for (const node of nodes) {
+                    node.dataset.esiDefaultPosition = i++;
+                }
+            }
+
+            sortRows(sortNode.id, isAsc);
+        });
+
+        container.addEventListener("click", (e) => {
+            if (!e.target.closest(".market_paging_controls span")) { return; }
+            document.querySelector(".es_marketsort.active").classList.remove("active");
+
+            const dateNode = document.querySelector("#es_marketsort_date");
+            dateNode.classList.remove("desc");
+            dateNode.classList.add("active asc");
+        });
 
         /*
          * TODO when do we need this?

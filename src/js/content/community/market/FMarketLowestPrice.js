@@ -79,50 +79,56 @@ export default class FMarketLowestPrice extends Feature {
 
             const m = linkNode.href.match(/\/(\d+)\/(.+)$/);
             if (!m) { continue; }
-            const appid = parseInt(m[1]);
             const marketHashName = m[2];
 
-            let allowInsert = true;
-
             let priceData;
-            let done;
+
             if (this._loadedMarketPrices[marketHashName]) {
                 priceData = this._loadedMarketPrices[marketHashName];
             } else {
-                do {
-                    try {
-                        const data = await RequestData.getJson(
-                            `https://steamcommunity.com/market/priceoverview/?country=${User.storeCountry}&currency=${Currency.currencyTypeToNumber(Currency.storeCurrency)}&appid=${appid}&market_hash_name=${marketHashName}`
-                        );
-
-                        await sleep(1000);
-
-                        done = true;
-                        this._loadedMarketPrices[marketHashName] = data;
-                        priceData = data;
-                    } catch (err) {
-
-                        // Too Many Requests
-                        if (err instanceof HTTPError && err.code === 429) {
-                            await sleep(30000);
-                            if (node) {
-                                done = false;
-                            } else {
-                                return;
-                            }
-                        } else {
-                            console.error("Failed to retrieve price overview for item %s!", marketHashName);
-                            allowInsert = false;
-                            break;
-                        }
-
-                    }
-                } while (!done);
+                priceData = await this._getPriceOverview(node, parseInt(m[1]), marketHashName);
             }
 
-            if (allowInsert) {
+            if (priceData !== null) {
                 this._insertPrice(node, priceData);
             }
         }
+    }
+
+    async _getPriceOverview(node, appid, marketHashName) {
+
+        let done = false;
+        let priceData = null;
+
+        do {
+            try {
+                const data = await RequestData.getJson(
+                    `https://steamcommunity.com/market/priceoverview/?country=${User.storeCountry}&currency=${Currency.currencyTypeToNumber(Currency.storeCurrency)}&appid=${appid}&market_hash_name=${marketHashName}`
+                );
+
+                await sleep(1000);
+
+                done = true;
+                this._loadedMarketPrices[marketHashName] = data;
+                priceData = data;
+            } catch (err) {
+
+                // Too Many Requests
+                if (err instanceof HTTPError && err.code === 429) {
+                    await sleep(30000);
+                    if (node) { // If the node still exists after this timeout
+                        done = false;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    console.error("Failed to retrieve price overview for item %s!", marketHashName);
+                    break;
+                }
+
+            }
+        } while (!done);
+
+        return priceData;
     }
 }

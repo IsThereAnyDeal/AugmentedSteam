@@ -63,21 +63,26 @@ export default class FDRMWarnings extends Feature {
         // Microsoft Xbox Live account detection
         const xbox = text.includes("xbox live");
 
-        const drmNames = [];
-        if (gfwl) { drmNames.push("Games for Windows Live"); }
-        if (uplay) { drmNames.push("Ubisoft Uplay"); }
-        if (securom) { drmNames.push("SecuROM"); }
-        if (tages) { drmNames.push("Tages"); }
-        if (stardock) { drmNames.push("Stardock Account Required"); }
-        if (rockstar) { drmNames.push("Rockstar Social Club"); }
-        if (kalypso) { drmNames.push("Kalypso Launcher"); }
-        if (denuvo) { drmNames.push("Denuvo Anti-tamper"); }
-        if (origin) { drmNames.push("EA Origin"); }
-        if (xbox) { drmNames.push("Microsoft Xbox Live"); }
+        const drmNames = [
+            [gfwl, "Games for Windows Live"],
+            [uplay, "Ubisoft Uplay"],
+            [securom, "SecuROM"],
+            [tages, "Tages"],
+            [stardock, "Stardock Account Required"],
+            [rockstar, "Rockstar Social Club"],
+            [kalypso, "Kalypso Launcher"],
+            [denuvo, "Denuvo Anti-tamper"],
+            [origin, "EA Origin"],
+            [xbox, "Microsoft Xbox Live"],
+        ].filter(([enabled]) => enabled)
+            .map(([, name]) => name);
 
         let drmString;
         if (drmNames.length > 0) {
-            drmString = this.context.type === ContextTypes.APP ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
+            drmString = this.context.type === ContextTypes.APP
+                ? Localization.str.drm_third_party
+                : Localization.str.drm_third_party_sub;
+
             drmString = drmString.replace("__drmlist__", `(${drmNames.join(", ")})`);
 
         } else { // Detect other DRM

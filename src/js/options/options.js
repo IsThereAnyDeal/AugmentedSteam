@@ -1,3 +1,5 @@
+/* eslint-disable no-alert -- TODO */
+
 import {BackgroundBase, Downloader, ExtensionResources, HTML, Info, Language, Localization, SyncedStorage, sleep} from "core";
 import {CountryList} from "options/countryList";
 import {StoreList} from "options/storeList";
@@ -64,10 +66,10 @@ class CustomLinks {
         if (url && !url.includes("[ID]")) {
             url += "[ID]";
         }
-        node.querySelector("[name=\"profile_custom_enabled\"]").checked = link.enabled;
-        node.querySelector("[name=\"profile_custom_name\"]").value = link.name;
-        node.querySelector("[name=\"profile_custom_url\"]").value = url;
-        node.querySelector("[name=\"profile_custom_icon\"]").value = link.icon;
+        node.querySelector('[name="profile_custom_enabled"]').checked = link.enabled;
+        node.querySelector('[name="profile_custom_name"]').value = link.name;
+        node.querySelector('[name="profile_custom_url"]').value = url;
+        node.querySelector('[name="profile_custom_icon"]').value = link.icon;
 
         const insertionPoint = document.getElementById("add-custom-link").closest("div");
         node = insertionPoint.insertAdjacentElement("beforebegin", node);
@@ -84,10 +86,10 @@ class CustomLinks {
 
     static read(node) {
         return {
-            "enabled": node.querySelector("[name=\"profile_custom_enabled\"]").checked,
-            "name": node.querySelector("[name=\"profile_custom_name\"]").value,
-            "url": node.querySelector("[name=\"profile_custom_url\"]").value,
-            "icon": node.querySelector("[name=\"profile_custom_icon\"]").value,
+            "enabled": node.querySelector('[name="profile_custom_enabled"]').checked,
+            "name": node.querySelector('[name="profile_custom_name"]').value,
+            "url": node.querySelector('[name="profile_custom_url"]').value,
+            "icon": node.querySelector('[name="profile_custom_icon"]').value,
         };
     }
 
@@ -247,7 +249,7 @@ class Sidebar {
 
             row.classList.add(row.classList.contains("selected") ? "expanded" : "collapsed");
 
-            HTML.beforeEnd(row.firstElementChild, "<div class=\"category__triangle\">&#9664;</div>");
+            HTML.beforeEnd(row.firstElementChild, '<div class="category__triangle">&#9664;</div>');
 
             let subentries = "";
             sections.forEach(section => {

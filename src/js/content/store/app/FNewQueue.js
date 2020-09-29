@@ -19,18 +19,25 @@ export default class FNewQueue extends Feature {
 
         ExtensionLayer.runInPageContext(() => {
 
-            $J("#es_new_queue").v_tooltip({"tooltipClass": "store_tooltip", "dataName": "tooltipText", "defaultType": "text", "replaceExisting": false});
+            /* eslint-disable no-undef, camelcase */
+            $J("#es_new_queue").v_tooltip({
+                "tooltipClass": "store_tooltip",
+                "dataName": "tooltipText",
+                "defaultType": "text",
+                "replaceExisting": false
+            });
 
             $J("#es_new_queue").on("click", () => {
                 $J.ajax({
                     "url": `https://store.steampowered.com/explore/next/${g_eDiscoveryQueueType}/`,
                     "type": "POST",
                     "data": $J("#next_in_queue_form").serialize(),
-                    "success": () => window.location.href = `https://store.steampowered.com/explore/startnew/${g_eDiscoveryQueueType}/`
+                    "success": () => { window.location.href = `https://store.steampowered.com/explore/startnew/${g_eDiscoveryQueueType}/`; }
 
                     // TODO error handling, waiting on #231 and #275 to merge
                 });
             });
+            /* eslint-enable no-undef, camelcase */
         });
     }
 }

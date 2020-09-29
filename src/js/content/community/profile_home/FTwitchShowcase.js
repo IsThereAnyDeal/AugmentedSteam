@@ -9,7 +9,9 @@ export default class FTwitchShowcase extends Feature {
         if (!SyncedStorage.get("profile_showcase_twitch")) { return false; }
 
         // Don't show our Twitch.tv showcase on our own profile
-        return !User.isSignedIn || SyncedStorage.get("profile_showcase_own_twitch") || window.location.pathname !== User.profilePath;
+        return !User.isSignedIn
+            || SyncedStorage.get("profile_showcase_own_twitch")
+            || window.location.pathname !== User.profilePath;
     }
 
     async apply() {

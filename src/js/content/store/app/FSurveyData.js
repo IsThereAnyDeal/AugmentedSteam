@@ -45,13 +45,13 @@ export default class FSurveyData extends Feature {
                 html += ` <span style="color: #8f0e10;">${Localization.str.survey.gs_n}</span></p>`;
             }
 
-            if (survey.nvidia !== undefined || survey.amd !== undefined || survey.intel !== undefined || survey.other !== undefined) {
+            if (["nvidia", "amd", "intel", "other"].some(key => key in survey)) {
                 html += `<p><b>${Localization.str.survey.satisfaction}</b>:</p><div class="performance-graph">`;
 
-                if (survey.nvidia !== undefined) { html += this._getBarHtml("Nvidia", survey.nvidia); }
-                if (survey.amd !== undefined) { html += this._getBarHtml("AMD", survey.amd); }
-                if (survey.intel !== undefined) { html += this._getBarHtml("Intel", survey.intel); }
-                if (survey.other !== undefined) { html += this._getBarHtml("Other", survey.other); }
+                if ("nvidia" in survey) { html += this._getBarHtml("Nvidia", survey.nvidia); }
+                if ("amd" in survey) { html += this._getBarHtml("AMD", survey.amd); }
+                if ("intel" in survey) { html += this._getBarHtml("Intel", survey.intel); }
+                if ("other" in survey) { html += this._getBarHtml("Other", survey.other); }
 
                 html += "</div>";
             }
@@ -62,7 +62,8 @@ export default class FSurveyData extends Feature {
         /*
          * FIXME
          * if (this.context.isOwned() && document.getElementById("my_activity")) {
-         *   html += `<a class="btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs" href="${Config.PublicHost}/survey/?appid=${this.context.appid}"><span>${Localization.str.survey.take}</span></a>`;
+         *   html += `<a class="btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs"
+         *      href="${Config.PublicHost}/survey/?appid=${this.context.appid}"><span>${Localization.str.survey.take}</span></a>`;
          * }
          */
 

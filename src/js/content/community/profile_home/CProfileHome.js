@@ -19,7 +19,10 @@ export class CProfileHome extends CCommunityBase {
     constructor() {
 
         // If there is an error message, like profile does not exists.
-        if (document.getElementById("message")) { return; }
+        if (document.getElementById("message")) {
+            super();
+            return;
+        }
 
         if (window.location.hash === "#as-success") {
 

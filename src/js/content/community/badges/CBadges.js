@@ -30,7 +30,7 @@ export class CBadges extends CCommunityBase {
         const baseUrl = `https://steamcommunity.com/${window.location.pathname}?p=`;
 
         let skip = 1;
-        const m = window.location.search.match("p=(\d+)");
+        const m = window.location.search.match(/p=(\d+)/);
         if (m) {
             skip = parseInt(m[1]);
         }

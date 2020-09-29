@@ -35,11 +35,11 @@ export default class FPackBreakdown extends Feature {
     }
 
     _splitPack(node, ways) {
-        let price_text = node.querySelector(".game_purchase_price, .discount_final_price").textContent;
-        if (price_text.match(/,\d\d(?!\d)/)) {
-            price_text = price_text.replace(",", ".");
+        let priceText = node.querySelector(".game_purchase_price, .discount_final_price").textContent;
+        if (priceText.match(/,\d\d(?!\d)/)) {
+            priceText = priceText.replace(",", ".");
         }
-        let price = (Number(price_text.replace(/[^0-9\.]+/g, ""))) / ways;
+        let price = (Number(priceText.replace(/[^0-9.]+/g, ""))) / ways;
         price = new Price(Math.ceil(price * 100) / 100);
 
         HTML.afterBegin(node.querySelector(".game_purchase_action_bg"),

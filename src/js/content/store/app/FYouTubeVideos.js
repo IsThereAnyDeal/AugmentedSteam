@@ -40,7 +40,7 @@ export default class FYouTubeVideos extends Feature {
          *  The separation of the tabs bar allows us to place the media slider right above the top right corner of the player.
          *  This empty div is inserted here in order to keep the same height difference between the left and the right column.
          */
-        HTML.afterBegin(".rightcol", "<div style=\"height: 31px;\"></div>");
+        HTML.afterBegin(".rightcol", '<div style="height: 31px;"></div>');
 
         const steamTab = document.querySelector(".js-tab-steam");
 
@@ -93,9 +93,9 @@ export default class FYouTubeVideos extends Feature {
         const activeMedia = this._tabToMedia.get(activeTab);
 
         if (activeTab.classList.contains("js-tab-steam")) {
-            ExtensionLayer.runInPageContext(() => { SteamOnWebPanelHidden(); });
+            ExtensionLayer.runInPageContext(() => { SteamOnWebPanelHidden(); }); // eslint-disable-line no-undef, new-cap
         } else if (activeTab.classList.contains("js-tab-yt")) {
-            activeMedia.contentWindow.postMessage("{\"event\":\"command\",\"func\":\"pauseVideo\",\"args\":\"\"}", "https://www.youtube.com");
+            activeMedia.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "https://www.youtube.com");
         }
 
         activeMedia.style.display = "none";
@@ -105,7 +105,7 @@ export default class FYouTubeVideos extends Feature {
         tab.classList.add("active");
 
         if (tab.classList.contains("js-tab-steam")) {
-            ExtensionLayer.runInPageContext(() => { SteamOnWebPanelShown(); });
+            ExtensionLayer.runInPageContext(() => { SteamOnWebPanelShown(); }); // eslint-disable-line no-undef, new-cap
         }
     }
 

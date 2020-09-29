@@ -48,7 +48,9 @@ export default class FRemoveFromWishlist extends Feature {
             if (!parent.classList.contains("loading")) {
                 parent.classList.add("loading");
 
-                const removeWaitlist = Boolean(document.querySelector(".queue_btn_wishlist + .queue_btn_ignore_menu.owned_elsewhere"));
+                const removeWaitlist = Boolean(
+                    document.querySelector(".queue_btn_wishlist + .queue_btn_ignore_menu.owned_elsewhere")
+                );
 
                 try {
                     await Promise.all([
@@ -64,6 +66,7 @@ export default class FRemoveFromWishlist extends Feature {
                     DynamicStore.clear();
 
                     // Invalidate dynamic store data cache
+                    // eslint-disable-next-line new-cap, no-undef
                     ExtensionLayer.runInPageContext(() => { GDynamicStore.InvalidateCache(); });
                 } catch (err) {
                     document.getElementById("add_to_wishlist_area_fail").style.display = "";

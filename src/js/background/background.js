@@ -1,12 +1,468 @@
 import Config from "config";
-import {ExtensionResources, GameId, HTMLParser, Info, LocalStorage, Localization, LoginError, ServerOutageError, SyncedStorage, Timestamp} from "core";
+import {
+    ExtensionResources, GameId, HTMLParser, Info, LocalStorage, Localization,
+    LoginError, ServerOutageError, SyncedStorage, Timestamp
+} from "core";
+
+/* global idb */
+
+class IndexedDB {
+    static init() {
+        if (IndexedDB._promise) { return IndexedDB._promise; }
+        IndexedDB._promise = idb.openDB("Augmented Steam", Info.db_version, {
+            upgrade(db, oldVersion, newVersion, tx) {
+                if (oldVersion < 1) {
+                    db.createObjectStore("coupons").createIndex("appid", "appids", {"unique": false, "multiEntry": true});
+                    db.createObjectStore("giftsAndPasses").createIndex("appid", "", {"unique": false, "multiEntry": true});
+                    db.createObjectStore("items");
+                    db.createObjectStore("earlyAccessAppids");
+                    db.createObjectStore("purchases");
+                    db.createObjectStore("dynamicStore").createIndex("appid", "", {"unique": false, "multiEntry": true});
+                    db.createObjectStore("packages").createIndex("expiry", "expiry");
+                    db.createObjectStore("storePageData").createIndex("expiry", "expiry");
+                    db.createObjectStore("profiles").createIndex("expiry", "expiry");
+                    db.createObjectStore("rates");
+                    db.createObjectStore("notes");
+                    db.createObjectStore("collection");
+                    db.createObjectStore("waitlist");
+                    db.createObjectStore("itadImport");
+                }
+
+                if (oldVersion < 2) {
+                    db.createObjectStore("workshopFileSizes").createIndex("expiry", "expiry");
+                    db.createObjectStore("reviews").createIndex("expiry", "expiry");
+                }
+
+                if (oldVersion < 3) {
+                    db.createObjectStore("expiries").createIndex("expiry", "");
+
+                    tx.objectStore("packages").deleteIndex("expiry");
+                    tx.objectStore("storePageData").deleteIndex("expiry");
+                    tx.objectStore("profiles").deleteIndex("expiry");
+                    tx.objectStore("workshopFileSizes").deleteIndex("expiry");
+                    tx.objectStore("reviews").deleteIndex("expiry");
+                }
+            },
+            blocked() {
+                console.error("Failed to upgrade database, there is already an open connection");
+            },
+        })
+            .then(db => { IndexedDB.db = db; })
+            .then(IndexedDB._deleteOldData);
+
+        return IndexedDB._promise;
+    }
+
+    static then(onDone, onCatch) {
+        return IndexedDB.init().then(onDone, onCatch);
+    }
+
+    static async _deleteOldData() {
+        const expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
+        let cursor = await expiryStore.index("expiry").openCursor(IDBKeyRange.upperBound(Timestamp.now()));
+        const expired = [];
+        const stores = {};
+        const promises = [];
+
+        while (cursor) {
+            expired.push(cursor.primaryKey);
+            promises.push(expiryStore.delete(cursor.primaryKey));
+            cursor = await cursor.continue();
+        }
+
+        for (const expiryKey of expired) {
+            const [storeName, key] = expiryKey.split(/_/);
+            if (!stores[storeName]) {
+                stores[storeName] = [];
+            }
+
+            if (key) {
+                stores[storeName].push(key);
+            }
+        }
+
+        for (const [storeName, keys] of Object.entries(stores)) {
+
+            const dataStore = IndexedDB.db.transaction(storeName, "readwrite").store;
+
+            if (IndexedDB.timestampedStores.has(storeName)) {
+                promises.push(dataStore.clear());
+            } else {
+                promises.push(Promise.all(keys.map(key => {
+
+                    const strKeyPromise = dataStore.delete(key);
+
+                    const nmbKey = Number(key);
+                    if (nmbKey) {
+                        return Promise.all([
+                            strKeyPromise,
+                            dataStore.delete(nmbKey),
+                        ]);
+                    }
+
+                    return strKeyPromise;
+                })));
+            }
+        }
+
+        return Promise.all(promises);
+    }
+
+    static async put(storeName, data, {ttl, multiple = typeof data === "object"} = {}) {
+        const tx = IndexedDB.db.transaction(storeName, "readwrite");
+
+        let expiry;
+        const expiryKeys = [];
+
+        const cached = IndexedDB.cacheObjectStores.has(storeName);
+        const timestampedEntry = IndexedDB.timestampedEntriesStores.has(storeName);
+
+        function nonAssociativeData(data) {
+            let promise;
+            if (tx.store.autoIncrement || tx.store.keyPath !== null) {
+                promise = tx.store.put(data);
+            } else {
+                promise = tx.store.put(null, data);
+            }
+            promise.then(key => {
+                if (timestampedEntry) { expiryKeys.push(`${storeName}_${key}`); }
+            });
+        }
+
+        if (cached) {
+            const _ttl = ttl || IndexedDB.cacheObjectStores.get(storeName);
+            expiry = Timestamp.now() + _ttl;
+
+            if (!timestampedEntry) {
+                expiryKeys.push(storeName);
+            }
+        }
+
+        if (multiple) {
+            if (Array.isArray(data)) {
+                data.forEach(nonAssociativeData);
+            } else if (typeof data === "object") {
+                const entries = data instanceof Map ? data.entries() : Object.entries(data);
+                for (const [key, value] of entries) {
+                    tx.store.put(value, key).then(key => {
+                        if (timestampedEntry) { expiryKeys.push(`${storeName}_${key}`); }
+                    });
+                }
+            } else {
+                console.warn("multiple parameter specified but the data is a primitive");
+            }
+        } else {
+            nonAssociativeData(data);
+        }
+
+        await tx.done;
+
+        const expiryTx = IndexedDB.db.transaction("expiries", "readwrite");
+
+        for (const key of expiryKeys) {
+            expiryTx.store.put(expiry, key);
+        }
+
+        return expiryTx;
+    }
+
+    static async get(storeName, key, options = {}) {
+        const keys = IndexedDB._asArray(key);
+
+        await Promise.all([
+            IndexedDB.checkStoreExpiry(storeName, options),
+            IndexedDB.checkEntryExpiry(storeName, keys, options),
+        ]);
+
+        const store = IndexedDB.db.transaction(storeName).store;
+        const values = await Promise.all(keys.map(key => store.get(key)));
+
+        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
+    }
+
+    static async getAll(storeName, options = {}) {
+        const keys = [];
+        const values = [];
+        let cursor;
+
+        await IndexedDB.checkStoreExpiry(storeName, options);
+
+        if (IndexedDB.timestampedEntriesStores.has(storeName)) {
+            await IndexedDB.checkEntryExpiry(storeName, await IndexedDB.db.getAllKeys(storeName), options);
+        }
+
+        cursor = await IndexedDB.db.transaction(storeName).store.openCursor();
+
+        while (cursor) {
+            keys.push(cursor.key);
+            values.push(cursor.value);
+
+            cursor = await cursor.continue();
+        }
+
+        return IndexedDB._resultsAsObject(keys, await Promise.all(values));
+    }
+
+    static async getFromIndex(storeName, indexName, key, options = {}) {
+
+        // It doesn't make sense to query on an index from a timestamped entry store, since the data is not complete
+        if (IndexedDB.timestampedEntriesStores.has(storeName)) { return null; }
+
+        await IndexedDB.checkStoreExpiry(storeName, options);
+
+        const keys = IndexedDB._asArray(key);
+        const index = IndexedDB.db.transaction(storeName).store.index(indexName);
+
+        const values = await Promise.all(keys.map(key => {
+            if (options.asKey) {
+                if (options.all) {
+                    return index.getAllKeys(key);
+                }
+                return index.getKey(key);
+            }
+
+            if (options.all) {
+                return index.getAll(key);
+            }
+
+            return index.get(key);
+        }));
+
+        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
+    }
+
+    static async indexContainsKey(storeName, indexName, key, options = {}) {
+
+        // It doesn't make sense to query on an index from a timestamped entry store, since the data is not complete
+        if (IndexedDB.timestampedEntriesStores.has(storeName)) { return null; }
+
+        await IndexedDB.checkStoreExpiry(storeName, options);
+
+        const keys = IndexedDB._asArray(key);
+        const index = IndexedDB.db.transaction(storeName).store.index(indexName);
+
+        const values = await Promise.all(keys.map(key => index.openKeyCursor(key)
+            .then(cursor => Boolean(cursor))));
+
+        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
+    }
+
+    static delete(storeName, key) {
+
+        const keys = IndexedDB._asArray(key);
+        const dataStore = IndexedDB.db.transaction(storeName, "readwrite").store;
+        let expiryStore;
+
+        if (IndexedDB.cacheObjectStores.has(storeName)) {
+            expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
+        }
+
+        return Promise.all(keys.map(key => {
+            const dataPromise = dataStore.delete(key);
+            if (expiryStore) {
+                return Promise.all([
+                    dataPromise,
+                    expiryStore.delete(IndexedDB.timestampedStores.has(storeName) ? storeName : `${storeName}_${key}`)
+                ]);
+            }
+            return dataPromise;
+        }));
+    }
+
+    static clear(storeName = Array.from(IndexedDB.cacheObjectStores.keys())) {
+        const storeNames = IndexedDB._asArray(storeName);
+        let expiryStore;
+
+        if (storeNames.some(storeName => IndexedDB.cacheObjectStores.has(storeName))) {
+            expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
+        }
+
+        return Promise.all(storeNames.map(storeName => {
+            const clearPromise = IndexedDB.db.clear(storeName);
+
+            if (IndexedDB.cacheObjectStores.has(storeName)) {
+
+                let expiryKey;
+                if (IndexedDB.timestampedStores.has(storeName)) {
+                    expiryKey = storeName;
+                } else {
+                    expiryKey = IDBKeyRange.bound(
+                        `${storeName}_`,
+                        `${storeName}${String.fromCharCode("_".charCodeAt(0) + 1)}`,
+                        false,
+                        true
+                    );
+                }
+
+                return Promise.all([
+                    clearPromise,
+                    expiryStore.delete(expiryKey),
+                ]);
+            }
+
+            return clearPromise;
+        }));
+    }
+
+    static async contains(storeName, key, options = {}) {
+        const keys = IndexedDB._asArray(key);
+
+        await Promise.all([
+            IndexedDB.checkStoreExpiry(storeName, options),
+            IndexedDB.checkEntryExpiry(storeName, keys, options),
+        ]);
+
+        const store = IndexedDB.db.transaction(storeName).store;
+
+        const values = await Promise.all(keys.map(key => store.openCursor(key)
+            .then(cursor => Boolean(cursor))));
+
+        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
+    }
+
+    static async checkEntryExpiry(storeName, keys, options = {}) {
+
+        if (!IndexedDB.timestampedEntriesStores.has(storeName)) { return null; }
+
+        const tx = IndexedDB.db.transaction("expiries");
+        const expired = [];
+
+        for (const key of keys) {
+            tx.store.get(`${storeName}_${key}`).then(expiry => {
+                if (!expiry || IndexedDB.isExpired(expiry)) {
+                    expired.push(key);
+                }
+            });
+        }
+
+        await tx.done;
+
+        if (options.preventFetch) {
+            const dataTx = IndexedDB.db.transaction(storeName, "readwrite");
+
+            for (const key of expired) {
+                dataTx.store.delete(key);
+            }
+
+            return dataTx.done;
+        }
+
+        return Promise.all(expired.map(key => IndexedDB.fetchUpdatedData(storeName, key, options.params)));
+    }
+
+    static async checkStoreExpiry(storeName, options = {}) {
+
+        if (!IndexedDB.timestampedStores.has(storeName)) { return null; }
+
+        const expiry = await IndexedDB.db.get("expiries", storeName);
+        let expired = true;
+
+        if (expiry) {
+            expired = IndexedDB.isExpired(expiry);
+        }
+
+        if (expired) {
+            await IndexedDB.clear(storeName);
+            if (!options.preventFetch) {
+                return IndexedDB.fetchUpdatedData(storeName, null, options.params);
+            }
+        }
+
+        return null;
+    }
+
+    static fetchUpdatedData(storeName, key, params) {
+
+        const requestKey = key ? `${storeName}_${key}` : storeName;
+        if (IndexedDB._ongoingRequests.has(requestKey)) {
+            return IndexedDB._ongoingRequests.get(requestKey);
+        }
+
+        let req;
+        const timestampedStore = IndexedDB.timestampedStores.has(storeName);
+        if (timestampedStore) {
+            req = IndexedDB.objStoreFetchFns.get(storeName)({params});
+        } else {
+            req = IndexedDB.objStoreFetchFns.get(storeName)({params, key});
+        }
+        req = req
+            .catch(async err => {
+                console.group("Object store data");
+                if (key) {
+                    console.error("Failed to update key %s of object store %s", key, storeName);
+                } else {
+                    console.error("Failed to update object store %s", storeName);
+                }
+                console.error(err);
+                console.groupEnd();
+
+                // Wait some seconds before retrying
+                await IndexedDB.db.put("expiries", Timestamp.now() + 60, timestampedStore ? storeName : `${storeName}_${key}`);
+
+                throw err;
+            })
+            .finally(() => IndexedDB._ongoingRequests.delete(requestKey));
+        IndexedDB._ongoingRequests.set(requestKey, req);
+        return req;
+    }
+
+    static isExpired(expiry) {
+        return expiry <= Timestamp.now();
+    }
+
+    static _asArray(key) {
+        return Array.isArray(key) ? key : [key];
+    }
+
+    static _resultsAsObject(keys, values) {
+        return keys.reduce((acc, key, i) => {
+            acc[key] = values[i];
+            return acc;
+        }, {});
+    }
+}
+IndexedDB._promise = null;
+IndexedDB._ongoingRequests = new Map();
+
+/*
+ *  Object stores in this map won't get checked
+ *  for timestamps if cached.
+ *  Instead of checking the single entry, the object store itself has
+ *  a entry named "expiry".
+ *
+ *  This allows us to reduce the overhead of having one timestamp for
+ *  each individual entry, although they're basically fetched during
+ *  the same time.
+ */
+IndexedDB.timestampedStores = new Map([
+    ["coupons", 60 * 60],
+    ["giftsAndPasses", 60 * 60],
+    ["items", 60 * 60],
+    ["earlyAccessAppids", 60 * 60],
+    ["purchases", 24 * 60 * 60],
+    ["dynamicStore", 15 * 60],
+    ["rates", 60 * 60],
+    ["collection", 15 * 60],
+    ["waitlist", 15 * 60],
+]);
+
+IndexedDB.timestampedEntriesStores = new Map([
+    ["packages", 7 * 24 * 60 * 60],
+    ["storePageData", 60 * 60],
+    ["profiles", 24 * 60 * 60],
+    ["workshopFileSizes", 5 * 24 * 60 * 60],
+    ["reviews", 60 * 60],
+]);
+
+IndexedDB.cacheObjectStores = new Map([...IndexedDB.timestampedStores, ...IndexedDB.timestampedEntriesStores]);
 
 class CacheStorage {
 
     static isExpired(timestamp, ttl) {
+        let _ttl = ttl;
         if (!timestamp) { return true; }
-        if (typeof ttl != "number" || ttl < 0) { ttl = 0; }
-        return timestamp + ttl <= Timestamp.now();
+        if (typeof ttl !== "number" || _ttl < 0) { _ttl = 0; }
+        return timestamp + _ttl <= Timestamp.now();
     }
 
     static get(key, ttl, defaultValue) {
@@ -75,25 +531,26 @@ class Api {
      */
     static _fetchWithDefaults(endpoint, query = {}, params = {}) {
         const url = new URL(endpoint, this.origin);
-        params = {...this.params, ...params};
-        if (params && params.method === "POST" && !params.body) {
+        const _params = {...this.params, ...params};
+        if (_params && _params.method === "POST" && !_params.body) {
             const formData = new FormData();
             for (const [k, v] of Object.entries(query)) {
                 formData.append(k, v);
             }
-            params.body = formData;
+            _params.body = formData;
         } else {
             for (const [k, v] of Object.entries(query)) {
                 url.searchParams.append(k, v);
             }
         }
-        return fetch(url, params);
+        return fetch(url, _params);
     }
 
     static async getEndpoint(endpoint, query, responseHandler, params = {}) {
-        if (!endpoint.endsWith("/")) { endpoint += "/"; }
+        let _endpoint = endpoint;
+        if (!endpoint.endsWith("/")) { _endpoint += "/"; }
 
-        const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "GET"}));
+        const response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "GET"}));
         if (responseHandler) { responseHandler(response); }
         return response.json();
     }
@@ -105,17 +562,19 @@ class Api {
     }
 
     static async postEndpoint(endpoint, query, responseHandler, params = {}) {
-        if (!endpoint.endsWith("/")) { endpoint += "/"; }
+        let _endpoint = endpoint;
+        if (!endpoint.endsWith("/")) { _endpoint += "/"; }
 
-        const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "POST"}));
+        const response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "POST"}));
         if (responseHandler) { responseHandler(response); }
         return response.json();
     }
 
     static async deleteEndpoint(endpoint, query, responseHandler, params = {}) {
-        if (!endpoint.endsWith("/")) { endpoint += "/"; }
+        let _endpoint = endpoint;
+        if (!endpoint.endsWith("/")) { _endpoint += "/"; }
 
-        const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "DELETE"}));
+        const response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "DELETE"}));
         if (responseHandler) { responseHandler(response); }
         return response.json();
     }
@@ -148,7 +607,7 @@ class Api {
                 result = result.data;
             }
 
-            return IndexedDB.put(storeName, typeof key !== "undefined" ? new Map([[key, result]]) : result);
+            return IndexedDB.put(storeName, typeof key === "undefined" ? result : new Map([[key, result]]));
         };
     }
 }
@@ -166,8 +625,13 @@ class AugmentedSteamApi extends Api {
         const json = await super.getEndpoint(endpoint, query, response => {
             if (response.status === 500) {
 
-                // Beautify HTTP 500: "User 'p_enhsteam' has exceeded the 'max_user_connections' resource (current value: XX)", which would result in a SyntaxError due to JSON.parse
-                throw new ServerOutageError(`Augmented Steam servers are currently overloaded, failed to fetch endpoint "${endpoint}"`);
+                /*
+                 * Beautify HTTP 500: "User 'p_enhsteam' has exceeded the 'max_user_connections' resource (current value: XX)",
+                 * which would result in a SyntaxError due to JSON.parse
+                 */
+                throw new ServerOutageError(
+                    `Augmented Steam servers are currently overloaded, failed to fetch endpoint "${endpoint}"`
+                );
             }
         });
         if (!json.result || json.result !== "success") {
@@ -203,7 +667,7 @@ class AugmentedSteamApi extends Api {
 AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();
 
-class ITAD_Api extends Api {
+class ITADApi extends Api {
 
     static async authorize() {
         const rnd = crypto.getRandomValues(new Uint32Array(1))[0];
@@ -216,7 +680,8 @@ class ITAD_Api extends Api {
          * Preventing event page from unloading by using iframe
          * https://stackoverflow.com/a/58577052
          */
-        function noop() {} // so we can removeListener
+        // eslint-disable-next-line no-empty-function -- So we can removeListener
+        function noop() {}
         browser.runtime.onConnect.addListener(noop);
 
         /*
@@ -226,11 +691,11 @@ class ITAD_Api extends Api {
          */
         document.body.appendChild(document.createElement("iframe")).src = "authorizationFrame.html";
 
-        const authUrl = new URL(`${Config.ITAD_ApiServerHost}/oauth/authorize/`);
-        authUrl.searchParams.set("client_id", Config.ITAD_ClientID);
+        const authUrl = new URL(`${Config.ITADApiServerHost}/oauth/authorize/`);
+        authUrl.searchParams.set("client_id", Config.ITADClientId);
         authUrl.searchParams.set("response_type", "token");
         authUrl.searchParams.set("state", rnd);
-        authUrl.searchParams.set("scope", ITAD_Api.requiredScopes.join(" "));
+        authUrl.searchParams.set("scope", ITADApi.requiredScopes.join(" "));
         authUrl.searchParams.set("redirect_uri", redirectURI);
 
         const tab = await browser.tabs.create({"url": authUrl.toString()});
@@ -242,6 +707,7 @@ class ITAD_Api extends Api {
                     resolve(url);
 
                     browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
+                    // eslint-disable-next-line no-use-before-define -- Circular dependency
                     browser.tabs.onRemoved.removeListener(tabsListener);
 
                     browser.tabs.remove(tab.id);
@@ -261,7 +727,7 @@ class ITAD_Api extends Api {
                     webRequestListener,
                     {
                         "urls": [
-                            redirectURI, // For Chrome, seems to not support match patterns (probably a problem with the Polyfill?)
+                            redirectURI, // For Chrome, seems to not support match patterns (a problem with the Polyfill?)
                             `${redirectURI}#*` // For Firefox
                         ],
                         "tabId": tab.id
@@ -291,7 +757,7 @@ class ITAD_Api extends Api {
 
         LocalStorage.set("access_token", {
             "token": accessToken,
-            "expiry": Timestamp.now() + parseInt(expiresIn, 10)
+            "expiry": Timestamp.now() + parseInt(expiresIn)
         });
     }
 
@@ -309,23 +775,26 @@ class ITAD_Api extends Api {
             LocalStorage.remove("access_token");
             return false;
         }
-        ITAD_Api.accessToken = lsEntry.token;
+        ITADApi.accessToken = lsEntry.token;
 
         return true;
     }
 
     static endpointFactoryCached(endpoint, storeName, resultFn) {
-        return async({params = {}, key} = {}) => {
-            if (ITAD_Api.isConnected()) {
-                return super.endpointFactoryCached(endpoint, storeName, resultFn)({"params": Object.assign(params, {"access_token": ITAD_Api.accessToken}), key});
+        return ({params = {}, key} = {}) => {
+            if (ITADApi.isConnected()) {
+                return super.endpointFactoryCached(endpoint, storeName, resultFn)(
+                    {"params": Object.assign(params, {"access_token": ITADApi.accessToken}), key}
+                );
             }
+            return null;
         };
     }
 
     static async addToWaitlist(appids) {
         if (!appids || (Array.isArray(appids) && !appids.length)) {
             console.warn("Can't add nothing to ITAD waitlist");
-            return;
+            return null;
         }
 
         const waitlistJSON = {
@@ -350,7 +819,13 @@ class ITAD_Api extends Api {
             storeids[id] = null;
         }
 
-        await ITAD_Api.postEndpoint("v01/waitlist/import/", {"access_token": ITAD_Api.accessToken}, null, {"body": JSON.stringify(waitlistJSON)});
+        await ITADApi.postEndpoint(
+            "v01/waitlist/import/",
+            {"access_token": ITADApi.accessToken},
+            null,
+            {"body": JSON.stringify(waitlistJSON)}
+        );
+
         return IndexedDB.put("waitlist", storeids);
     }
 
@@ -359,17 +834,21 @@ class ITAD_Api extends Api {
             throw new Error("Can't remove nothing from ITAD Waitlist!");
         }
 
-        appids = Array.isArray(appids) ? appids : [appids];
-        const storeids = appids.map(appid => `app/${appid}`);
+        const _appids = Array.isArray(appids) ? appids : [appids];
+        const storeids = _appids.map(appid => `app/${appid}`);
 
-        await ITAD_Api.deleteEndpoint("v02/user/wait/remove/", {"access_token": ITAD_Api.accessToken, "shop": "steam", "ids": storeids.join()});
+        await ITADApi.deleteEndpoint(
+            "v02/user/wait/remove/",
+            {"access_token": ITADApi.accessToken, "shop": "steam", "ids": storeids.join()}
+        );
+
         return IndexedDB.delete("waitlist", storeids);
     }
 
     static addToCollection(appids, subids) {
         if ((!appids || (Array.isArray(appids) && !appids.length)) && (!subids || (Array.isArray(subids) && !subids.length))) {
             console.warn("Can't add nothing to ITAD collection");
-            return;
+            return null;
         }
 
         const collectionJSON = {
@@ -377,10 +856,25 @@ class ITAD_Api extends Api {
             "data": [],
         };
 
-        appids = Array.isArray(appids) ? appids : (appids ? [appids] : []);
-        subids = Array.isArray(subids) ? subids : (subids ? [subids] : []);
+        let _appids;
+        if (Array.isArray(appids)) {
+            _appids = appids;
+        } else if (appids) {
+            _appids = [appids];
+        } else {
+            _appids = [];
+        }
 
-        const storeids = appids.map(appid => `app/${appid}`).concat(subids.map(subid => `sub/${subid}`));
+        let _subids;
+        if (Array.isArray(subids)) {
+            _subids = subids;
+        } else if (subids) {
+            _subids = [subids];
+        } else {
+            _subids = [];
+        }
+
+        const storeids = _appids.map(appid => `app/${appid}`).concat(_subids.map(subid => `sub/${subid}`));
         for (const storeid of storeids) {
             collectionJSON.data.push({
                 "gameid": ["steam", storeid],
@@ -392,7 +886,12 @@ class ITAD_Api extends Api {
             });
         }
 
-        return ITAD_Api.postEndpoint("v01/collection/import/", {"access_token": ITAD_Api.accessToken}, null, {"body": JSON.stringify(collectionJSON)});
+        return ITADApi.postEndpoint(
+            "v01/collection/import/",
+            {"access_token": ITADApi.accessToken},
+            null,
+            {"body": JSON.stringify(collectionJSON)}
+        );
     }
 
     static async import(force) {
@@ -402,7 +901,7 @@ class ITAD_Api extends Api {
         } else {
             const lastImport = LocalStorage.get("lastItadImport");
 
-            if (lastImport && lastImport.to && !IndexedDB.isExpired(lastImport.to + 12 * 60 * 60)) { return; }
+            if (lastImport && lastImport.to && !IndexedDB.isExpired(lastImport.to + (12 * 60 * 60))) { return; }
         }
 
         const dsKeys = [];
@@ -435,7 +934,7 @@ class ITAD_Api extends Api {
             const newOwnedApps = removeDuplicates(ownedApps, lastOwnedApps);
             const newOwnedPackages = removeDuplicates(ownedPackages, lastOwnedPackages);
             if (newOwnedApps.length || newOwnedPackages.length) {
-                promises.push(ITAD_Api.addToCollection(newOwnedApps, newOwnedPackages)
+                promises.push(ITADApi.addToCollection(newOwnedApps, newOwnedPackages)
                     .then(() => IndexedDB.put("itadImport", {
                         "lastOwnedApps": ownedApps,
                         "lastOwnedPackages": ownedPackages,
@@ -447,7 +946,7 @@ class ITAD_Api extends Api {
             const [{wishlisted}, {lastWishlisted}] = result;
             const newWishlisted = removeDuplicates(wishlisted, lastWishlisted);
             if (newWishlisted.length) {
-                promises.push(ITAD_Api.addToWaitlist(newWishlisted)
+                promises.push(ITADApi.addToWaitlist(newWishlisted)
                     .then(() => IndexedDB.put("itadImport", {"lastWishlisted": wishlisted})));
             }
         }
@@ -461,23 +960,31 @@ class ITAD_Api extends Api {
 
     static async sync() {
         await Promise.all([
-            ITAD_Api.import(true),
-            IndexedDB.clear("waitlist").then(() => IndexedDB.objStoreFetchFns.get("waitlist")({"params": {"shop": "steam", "optional": "gameid"}})),
-            IndexedDB.clear("collection").then(() => IndexedDB.objStoreFetchFns.get("collection")({"params": {"shop": "steam", "optional": "gameid,copy_type"}})),
+            ITADApi.import(true),
+            IndexedDB.clear("waitlist").then(
+                () => IndexedDB.objStoreFetchFns.get("waitlist")(
+                    {"params": {"shop": "steam", "optional": "gameid"}}
+                )
+            ),
+            IndexedDB.clear("collection").then(
+                () => IndexedDB.objStoreFetchFns.get("collection")(
+                    {"params": {"shop": "steam", "optional": "gameid,copy_type"}}
+                )
+            ),
         ]);
     }
 
     static lastImport() { return LocalStorage.get("lastItadImport"); }
 
     static mapCollection(result) {
-        if (!result) { return; }
+        if (!result) { return null; }
         const {games, typemap} = result;
 
         const collection = {};
         games.forEach(({gameid, types}) => {
-            types = types.map(type => typemap[type]);
+            const _types = types.map(type => typemap[type]);
 
-            collection[gameid] = types;
+            collection[gameid] = _types;
         });
 
         const lastImport = LocalStorage.get("lastItadImport") || {};
@@ -488,7 +995,7 @@ class ITAD_Api extends Api {
     }
 
     static mapWaitlist(result) {
-        if (!result) { return; }
+        if (!result) { return null; }
 
         const waitlist = [];
         for (const {gameid} of Object.values(result)) {
@@ -502,20 +1009,28 @@ class ITAD_Api extends Api {
         return waitlist;
     }
 
-    static inWaitlist(storeIds) { return IndexedDB.contains("waitlist", storeIds, {"params": {"shop": "steam", "optional": "gameid"}}); }
-    static inCollection(storeIds) { return IndexedDB.contains("collection", storeIds, {"params": {"shop": "steam", "optional": "gameid,copy_type"}}); }
-    static getFromCollection(storeId) { return IndexedDB.get("collection", storeId, {"params": {"shop": "steam", "optional": "gameid,copy_type"}}); }
+    static inWaitlist(storeIds) {
+        return IndexedDB.contains("waitlist", storeIds, {"params": {"shop": "steam", "optional": "gameid"}});
+    }
+
+    static inCollection(storeIds) {
+        return IndexedDB.contains("collection", storeIds, {"params": {"shop": "steam", "optional": "gameid,copy_type"}});
+    }
+
+    static getFromCollection(storeId) {
+        return IndexedDB.get("collection", storeId, {"params": {"shop": "steam", "optional": "gameid,copy_type"}});
+    }
 }
-ITAD_Api.accessToken = null;
-ITAD_Api.requiredScopes = [
+ITADApi.accessToken = null;
+ITADApi.requiredScopes = [
     "wait_read",
     "wait_write",
     "coll_read",
     "coll_write",
 ];
 
-ITAD_Api.origin = Config.ITAD_ApiServerHost;
-ITAD_Api._progressingRequests = new Map();
+ITADApi.origin = Config.ITADApiServerHost;
+ITADApi._progressingRequests = new Map();
 
 class ContextMenu {
 
@@ -527,6 +1042,8 @@ class ContextMenu {
         if (info.menuItemId === "context_steam_keys") {
             const steamKeys = query.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
             if (!steamKeys || steamKeys.length === 0) {
+
+                // eslint-disable-next-line no-alert -- TODO Find a better way
                 window.alert(Localization.str.options.no_keys_found);
                 return;
             }
@@ -552,7 +1069,8 @@ class ContextMenu {
             },
 
             /*
-             * TODO don't recreate the context menu entries on each change, only update the affected entry (which should also prevent this error)
+             * TODO don't recreate the context menu entries on each change, only update
+             * the affected entry (which should also prevent this error)
              * Error when you create an entry with duplicate id
              */
             () => chrome.runtime.lastError);
@@ -574,6 +1092,31 @@ ContextMenu.queryLinks = {
     "context_steam_keys": "https://store.steampowered.com/account/registerkey?key=__steamkey__"
 };
 
+browser.storage.onChanged.addListener(changes => {
+    if (Object.keys(changes).some(key => key.startsWith("context_"))) {
+        ContextMenu.update();
+    }
+});
+
+class Steam {
+
+    // static _supportedCurrencies = null;
+
+    static fetchCurrencies() {
+
+        // https://partner.steamgames.com/doc/store/pricing/currencies
+        return ExtensionResources.getJSON("json/currency.json");
+    }
+
+    static async currencies() {
+        const self = Steam;
+        if (!self._supportedCurrencies || self._supportedCurrencies.length < 1) {
+            self._supportedCurrencies = await self.fetchCurrencies();
+        }
+        return self._supportedCurrencies;
+    }
+}
+Steam._supportedCurrencies = null;
 
 class SteamStore extends Api {
 
@@ -616,12 +1159,13 @@ class SteamStore extends Api {
 
     static async wishlistRemove(appid, sessionid) {
         let res;
+        let _sessionid = sessionid;
 
-        if (!sessionid) {
-            sessionid = await SteamStore.sessionId();
+        if (!_sessionid) {
+            _sessionid = await SteamStore.sessionId();
         }
-        if (sessionid) {
-            res = await SteamStore.postEndpoint("/api/removefromwishlist", {sessionid, appid});
+        if (_sessionid) {
+            res = await SteamStore.postEndpoint("/api/removefromwishlist", {"sessionid": _sessionid, appid});
         }
 
         if (!res || !res.success) {
@@ -662,7 +1206,7 @@ class SteamStore extends Api {
         return currency;
     }
 
-    /**
+    /*
      * Invoked if we were previously logged out and are now logged in
      */
     static async country() {
@@ -765,7 +1309,6 @@ class SteamStore extends Api {
 
     static async clearDynamicStore() {
         await IndexedDB.clear("dynamicStore");
-        Steam._dynamicstore_promise = null;
     }
 
     static appDetails(appid, filter) {
@@ -801,15 +1344,15 @@ class SteamCommunity extends Api {
         const login = LocalStorage.get("login");
         if (!login) {
             console.warn("Must be signed in to access Inventory");
-            return;
+            return null;
         }
 
         const params = {"l": "english", "count": 2000};
         let data = null;
-        let result, last_assetid;
+        let result, lastAssetid;
 
         do {
-            const thisParams = Object.assign(params, last_assetid ? {"start_assetid": last_assetid} : null);
+            const thisParams = Object.assign(params, lastAssetid ? {"start_assetid": lastAssetid} : null);
             result = await SteamCommunity.getEndpoint(`/inventory/${login.steamId}/753/${contextId}`, thisParams, res => {
                 if (res.status === 403) {
                     throw new LoginError("community");
@@ -819,7 +1362,7 @@ class SteamCommunity extends Api {
                 if (!data) { data = {"assets": [], "descriptions": []}; }
                 if (result.assets) { data.assets = data.assets.concat(result.assets); }
                 if (result.descriptions) { data.descriptions = data.descriptions.concat(result.descriptions); }
-                last_assetid = result.last_assetid;
+                lastAssetid = result.last_assetid;
             }
         } while (result.more_items);
 
@@ -829,13 +1372,13 @@ class SteamCommunity extends Api {
         return data;
     }
 
-    /**
+    /*
      * Inventory functions, must be signed in to function correctly
      */
     static async coupons() { // context#3
         const coupons = new Map();
         const data = await SteamCommunity.getInventory(3);
-        if (!data) { return; }
+        if (!data) { return null; }
 
         for (const description of data.descriptions) {
             if (!description.type || description.type !== "Coupon") { continue; }
@@ -900,28 +1443,36 @@ class SteamCommunity extends Api {
         const gifts = [];
         const passes = [];
 
+        let isPackage;
+
         let data = await SteamCommunity.getInventory(1);
-        if (!data) { return; }
+        if (!data) { return null; }
+
+        function addGiftsAndPasses(description, desc) {
+            const appids = GameId.getAppids(desc.value);
+
+            // Gift package with multiple apps
+            isPackage = true;
+
+            for (const appid of appids) {
+                if (!appid) { continue; }
+                if (description.type === "Gift") {
+                    gifts.push(appid);
+                } else {
+                    passes.push(appid);
+                }
+            }
+        }
 
         for (const description of data.descriptions) {
-            let isPackage = false;
+            isPackage = false;
             if (description.descriptions) {
                 for (const desc of description.descriptions) {
-                    if (desc.type === "html") {
-                        const appids = GameId.getAppids(desc.value);
+                    if (desc.type !== "html") { continue; }
 
-                        // Gift package with multiple apps
-                        isPackage = true;
-                        for (const appid of appids) {
-                            if (!appid) { continue; }
-                            if (description.type === "Gift") {
-                                gifts.push(appid);
-                            } else {
-                                passes.push(appid);
-                            }
-                        }
-                        break;
-                    }
+                    addGiftsAndPasses(desc);
+
+                    break;
                 }
             }
 
@@ -946,7 +1497,9 @@ class SteamCommunity extends Api {
         return IndexedDB.put("giftsAndPasses", data);
     }
 
-    static async hasGiftsAndPasses(appid) { return IndexedDB.getFromIndex("giftsAndPasses", "appid", appid, {"all": true, "asKey": true}); }
+    static hasGiftsAndPasses(appid) {
+        return IndexedDB.getFromIndex("giftsAndPasses", "appid", appid, {"all": true, "asKey": true});
+    }
 
     static async items() { // context#6, community items
         // only used for market highlighting
@@ -954,6 +1507,7 @@ class SteamCommunity extends Api {
         if (data) {
             return IndexedDB.put("items", data.descriptions.map(item => item.market_hash_name));
         }
+        return null;
     }
 
     static hasItem(hashes) { return IndexedDB.contains("items", hashes); }
@@ -964,7 +1518,9 @@ class SteamCommunity extends Api {
         const doc = parser.parseFromString(res, "text/html");
 
         const details = doc.querySelector(".detailsStatRight");
-        if (!details || !details.innerText.includes("MB")) { throw new Error("Couldn't find details block for workshop file size"); }
+        if (!details || !details.innerText.includes("MB")) {
+            throw new Error("Couldn't find details block for workshop file size");
+        }
 
         const text = details.innerText.split(" ")[0].trim();
         const size = parseFloat(text.replace(/,/g, ""));
@@ -979,7 +1535,10 @@ class SteamCommunity extends Api {
     static _getReviewId(node) {
         const input = node.querySelector("input");
 
-        // Only exists when the requested profile is yours (these are the input fields where you can change visibility and language of the review)
+        /*
+         * Only exists when the requested profile is yours
+         * (these are the input fields where you can change visibility and language of the review)
+         */
         if (input) {
             return Number(input.id.replace("ReviewVisibility", ""));
         }
@@ -1009,7 +1568,16 @@ class SteamCommunity extends Api {
                 const visibility = visibilityNode ? visibilityNode.textContent : "Public";
                 const playtime = playtimeText ? parseFloat(playtimeText[0].split(",").join("")) : 0.0;
 
-                reviews.push({rating, helpful, funny, length, visibility, playtime, "node": DOMPurify.sanitize(node.outerHTML), id});
+                reviews.push({
+                    rating,
+                    helpful,
+                    funny,
+                    length,
+                    visibility,
+                    playtime,
+                    "node": DOMPurify.sanitize(node.outerHTML),
+                    id
+                });
             }
         }
 
@@ -1022,7 +1590,7 @@ class SteamCommunity extends Api {
         const node = doc.querySelector(".review_box");
         const id = SteamCommunity._getReviewId(node);
 
-        if (!await IndexedDB.contains("reviews", steamId, {"preventFetch": true})) { return; }
+        if (!await IndexedDB.contains("reviews", steamId, {"preventFetch": true})) { return null; }
 
         const reviews = await IndexedDB.get("reviews", steamId, {"params": reviewCount});
 
@@ -1037,17 +1605,16 @@ class SteamCommunity extends Api {
         return IndexedDB.put("reviews", {[steamId]: reviews});
     }
 
-    static async getReviews(steamId, reviewCount) {
+    static getReviews(steamId, reviewCount) {
         return IndexedDB.get("reviews", steamId, {"params": {reviewCount}});
     }
 
-    /**
+    /*
      * Invoked when the content script thinks the user is logged in
      * If we don't know the user's steamId, fetch their community profile
      */
     static async login(profilePath) {
         const self = SteamCommunity;
-        let login;
 
         if (!profilePath) {
             self.logout();
@@ -1058,7 +1625,7 @@ class SteamCommunity extends Api {
             throw new Error(`Could not interpret ${profilePath} as a valid profile path`);
         }
 
-        login = LocalStorage.get("login");
+        const login = LocalStorage.get("login");
         if (login && login.profilePath === profilePath) { return login; }
 
         const html = await self.getPage(profilePath);
@@ -1089,6 +1656,7 @@ class SteamCommunity extends Api {
     static storeCountry(newCountry) {
         if (newCountry) {
             LocalStorage.set("storeCountry", newCountry);
+            return null;
         } else {
             return LocalStorage.get("storeCountry");
         }
@@ -1108,478 +1676,6 @@ class SteamCommunity extends Api {
 SteamCommunity.origin = "https://steamcommunity.com/";
 SteamCommunity.params = {"credentials": "include"};
 
-
-class Steam {
-
-    // static _supportedCurrencies = null;
-
-    static fetchCurrencies() {
-
-        // https://partner.steamgames.com/doc/store/pricing/currencies
-        return ExtensionResources.getJSON("json/currency.json");
-    }
-
-    static async currencies() {
-        const self = Steam;
-        if (!self._supportedCurrencies || self._supportedCurrencies.length < 1) {
-            self._supportedCurrencies = await self.fetchCurrencies();
-        }
-        return self._supportedCurrencies;
-    }
-}
-Steam._supportedCurrencies = null;
-
-class IndexedDB {
-    static init() {
-        if (IndexedDB._promise) { return IndexedDB._promise; }
-        return IndexedDB._promise = idb.openDB("Augmented Steam", Info.db_version, {
-            upgrade(db, oldVersion, newVersion, tx) {
-                if (oldVersion < 1) {
-                    db.createObjectStore("coupons").createIndex("appid", "appids", {"unique": false, "multiEntry": true});
-                    db.createObjectStore("giftsAndPasses").createIndex("appid", "", {"unique": false, "multiEntry": true});
-                    db.createObjectStore("items");
-                    db.createObjectStore("earlyAccessAppids");
-                    db.createObjectStore("purchases");
-                    db.createObjectStore("dynamicStore").createIndex("appid", "", {"unique": false, "multiEntry": true});
-                    db.createObjectStore("packages").createIndex("expiry", "expiry");
-                    db.createObjectStore("storePageData").createIndex("expiry", "expiry");
-                    db.createObjectStore("profiles").createIndex("expiry", "expiry");
-                    db.createObjectStore("rates");
-                    db.createObjectStore("notes");
-                    db.createObjectStore("collection");
-                    db.createObjectStore("waitlist");
-                    db.createObjectStore("itadImport");
-                }
-
-                if (oldVersion < 2) {
-                    db.createObjectStore("workshopFileSizes").createIndex("expiry", "expiry");
-                    db.createObjectStore("reviews").createIndex("expiry", "expiry");
-                }
-
-                if (oldVersion < 3) {
-                    db.createObjectStore("expiries").createIndex("expiry", "");
-
-                    tx.objectStore("packages").deleteIndex("expiry");
-                    tx.objectStore("storePageData").deleteIndex("expiry");
-                    tx.objectStore("profiles").deleteIndex("expiry");
-                    tx.objectStore("workshopFileSizes").deleteIndex("expiry");
-                    tx.objectStore("reviews").deleteIndex("expiry");
-                }
-            },
-            blocked() {
-                console.error("Failed to upgrade database, there is already an open connection");
-            },
-        })
-            .then(db => { IndexedDB.db = db; })
-            .then(IndexedDB._deleteOldData);
-    }
-
-    static then(onDone, onCatch) {
-        return IndexedDB.init().then(onDone, onCatch);
-    }
-
-    static async _deleteOldData() {
-        const expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
-        let cursor = await expiryStore.index("expiry").openCursor(IDBKeyRange.upperBound(Timestamp.now()));
-        const expired = [];
-        const stores = {};
-        const promises = [];
-
-        while (cursor) {
-            expired.push(cursor.primaryKey);
-            promises.push(expiryStore.delete(cursor.primaryKey));
-            cursor = await cursor.continue();
-        }
-
-        for (const expiryKey of expired) {
-            const [storeName, key] = expiryKey.split(/_/);
-            if (!stores[storeName]) {
-                stores[storeName] = [];
-            }
-
-            if (key) {
-                stores[storeName].push(key);
-            }
-        }
-
-        for (const [storeName, keys] of Object.entries(stores)) {
-
-            const dataStore = IndexedDB.db.transaction(storeName, "readwrite").store;
-
-            if (IndexedDB.timestampedStores.has(storeName)) {
-                promises.push(dataStore.clear());
-            } else {
-                promises.push(Promise.all(keys.map(key => {
-
-                    const strKeyPromise = dataStore.delete(key);
-
-                    const nmbKey = Number(key);
-                    if (nmbKey) {
-                        return Promise.all([
-                            strKeyPromise,
-                            dataStore.delete(nmbKey),
-                        ]);
-                    }
-
-                    return strKeyPromise;
-                })));
-            }
-        }
-
-        return Promise.all(promises);
-    }
-
-    static async put(storeName, data, {ttl, multiple = typeof data === "object"} = {}) {
-        const tx = IndexedDB.db.transaction(storeName, "readwrite");
-        let expiryTx;
-
-        let expiry;
-        const expiryKeys = [];
-
-        const cached = IndexedDB.cacheObjectStores.has(storeName);
-        const timestampedEntry = IndexedDB.timestampedEntriesStores.has(storeName);
-
-        function nonAssociativeData(data) {
-            let promise;
-            if (tx.store.autoIncrement || tx.store.keyPath !== null) {
-                promise = tx.store.put(data);
-            } else {
-                promise = tx.store.put(null, data);
-            }
-            promise.then(key => { if (timestampedEntry) { expiryKeys.push(`${storeName}_${key}`); } });
-        }
-
-        if (cached) {
-            ttl = ttl || IndexedDB.cacheObjectStores.get(storeName);
-            expiry = Timestamp.now() + ttl;
-
-            if (!timestampedEntry) {
-                expiryKeys.push(storeName);
-            }
-        }
-
-        if (multiple) {
-            if (Array.isArray(data)) {
-                data.forEach(nonAssociativeData);
-            } else if (typeof data === "object") {
-                const entries = data instanceof Map ? data.entries() : Object.entries(data);
-                for (const [key, value] of entries) {
-                    tx.store.put(value, key).then(key => { if (timestampedEntry) { expiryKeys.push(`${storeName}_${key}`); } });
-                }
-            } else {
-                console.warn("multiple parameter specified but the data is a primitive");
-            }
-        } else {
-            nonAssociativeData(data);
-        }
-
-        await tx.done;
-
-        expiryTx = IndexedDB.db.transaction("expiries", "readwrite");
-
-        for (const key of expiryKeys) {
-            expiryTx.store.put(expiry, key);
-        }
-
-        return expiryTx;
-    }
-
-    static async get(storeName, key, options = {}) {
-        const keys = IndexedDB._asArray(key);
-        let values;
-        let store;
-
-        await Promise.all([
-            IndexedDB.checkStoreExpiry(storeName, options),
-            IndexedDB.checkEntryExpiry(storeName, keys, options),
-        ]);
-
-        store = IndexedDB.db.transaction(storeName).store;
-
-        values = await Promise.all(keys.map(key => store.get(key)));
-
-        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
-    }
-
-    static async getAll(storeName, options = {}) {
-        const keys = [];
-        const values = [];
-        let cursor;
-
-        await IndexedDB.checkStoreExpiry(storeName, options);
-
-        if (IndexedDB.timestampedEntriesStores.has(storeName)) {
-            await checkEntryExpiry(storeName, await IndexedDB.db.getAllKeys(storeName), options);
-        }
-
-        cursor = await IndexedDB.db.transaction(storeName).store.openCursor();
-
-        while (cursor) {
-            keys.push(cursor.key);
-            values.push(cursor.value);
-
-            cursor = await cursor.continue();
-        }
-
-        return IndexedDB._resultsAsObject(keys, await Promise.all(values));
-    }
-
-    static async getFromIndex(storeName, indexName, key, options = {}) {
-
-        // It doesn't make sense to query on an index from a timestamped entry store, since the data is not complete
-        if (IndexedDB.timestampedEntriesStores.has(storeName)) { return; }
-
-        const keys = IndexedDB._asArray(key);
-        let values;
-        let index;
-
-        await IndexedDB.checkStoreExpiry(storeName, options);
-
-        index = IndexedDB.db.transaction(storeName).store.index(indexName);
-
-        values = await Promise.all(keys.map(key => {
-            if (options.asKey) {
-                if (options.all) {
-                    return index.getAllKeys(key);
-                }
-                return index.getKey(key);
-            }
-
-            if (options.all) {
-                return index.getAll(key);
-            }
-
-            return index.get(key);
-        }));
-
-        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
-    }
-
-    static async indexContainsKey(storeName, indexName, key, options = {}) {
-
-        // It doesn't make sense to query on an index from a timestamped entry store, since the data is not complete
-        if (IndexedDB.timestampedEntriesStores.has(storeName)) { return; }
-
-        const keys = IndexedDB._asArray(key);
-        let values;
-        let index;
-
-        await IndexedDB.checkStoreExpiry(storeName, options);
-
-        index = IndexedDB.db.transaction(storeName).store.index(indexName);
-
-        values = await Promise.all(keys.map(key => index.openKeyCursor(key)
-            .then(cursor => Boolean(cursor))));
-
-        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
-    }
-
-    static delete(storeName, key) {
-
-        const keys = IndexedDB._asArray(key);
-        const dataStore = IndexedDB.db.transaction(storeName, "readwrite").store;
-        let expiryStore;
-
-        if (IndexedDB.cacheObjectStores.has(storeName)) {
-            expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
-        }
-
-        return Promise.all(keys.map(key => {
-            const dataPromise = dataStore.delete(key);
-            if (expiryStore) {
-                return Promise.all([
-                    dataPromise,
-                    expiryStore.delete(IndexedDB.timestampedStores.has(storeName) ? storeName : `${storeName}_${key}`)
-                ]);
-            }
-            return dataPromise;
-        }));
-    }
-
-    static clear(storeName = Array.from(IndexedDB.cacheObjectStores.keys())) {
-        const storeNames = IndexedDB._asArray(storeName);
-        let expiryStore;
-
-        if (storeNames.some(storeName => IndexedDB.cacheObjectStores.has(storeName))) {
-            expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
-        }
-
-        return Promise.all(storeNames.map(storeName => {
-            const clearPromise = IndexedDB.db.clear(storeName);
-
-            if (IndexedDB.cacheObjectStores.has(storeName)) {
-
-                let expiryKey;
-                if (IndexedDB.timestampedStores.has(storeName)) {
-                    expiryKey = storeName;
-                } else {
-                    expiryKey = IDBKeyRange.bound(`${storeName}_`, `${storeName}${String.fromCharCode("_".charCodeAt(0) + 1)}`, false, true);
-                }
-
-                return Promise.all([
-                    clearPromise,
-                    expiryStore.delete(expiryKey),
-                ]);
-            }
-
-            return clearPromise;
-        }));
-    }
-
-    static async contains(storeName, key, options = {}) {
-        const keys = IndexedDB._asArray(key);
-        let values;
-        let store;
-
-        await Promise.all([
-            IndexedDB.checkStoreExpiry(storeName, options),
-            IndexedDB.checkEntryExpiry(storeName, keys, options),
-        ]);
-
-        store = IndexedDB.db.transaction(storeName).store;
-
-        values = await Promise.all(keys.map(key => store.openCursor(key)
-            .then(cursor => Boolean(cursor))));
-
-        return Array.isArray(key) ? IndexedDB._resultsAsObject(keys, values) : values[0];
-    }
-
-    static async checkEntryExpiry(storeName, keys, options = {}) {
-        let tx;
-        let expired;
-
-        if (!IndexedDB.timestampedEntriesStores.has(storeName)) { return; }
-
-        tx = IndexedDB.db.transaction("expiries");
-        expired = [];
-
-        for (const key of keys) {
-            tx.store.get(`${storeName}_${key}`).then(expiry => {
-                if (!expiry || IndexedDB.isExpired(expiry)) {
-                    expired.push(key);
-                }
-            });
-        }
-
-        await tx.done;
-
-        if (options.preventFetch) {
-            const dataTx = IndexedDB.db.transaction(storeName, "readwrite");
-
-            for (const key of expired) {
-                dataTx.store.delete(key);
-            }
-
-            return dataTx.done;
-        }
-
-        return Promise.all(expired.map(key => IndexedDB.fetchUpdatedData(storeName, key, options.params)));
-    }
-
-    static async checkStoreExpiry(storeName, options = {}) {
-
-        if (!IndexedDB.timestampedStores.has(storeName)) { return; }
-
-        const expiry = await IndexedDB.db.get("expiries", storeName);
-        let expired = true;
-
-        if (expiry) {
-            expired = IndexedDB.isExpired(expiry);
-        }
-
-        if (expired) {
-            await IndexedDB.clear(storeName);
-            if (!options.preventFetch) {
-                return IndexedDB.fetchUpdatedData(storeName, null, options.params);
-            }
-        }
-    }
-
-    static fetchUpdatedData(storeName, key, params) {
-
-        const requestKey = key ? `${storeName}_${key}` : storeName;
-        if (IndexedDB._ongoingRequests.has(requestKey)) {
-            return IndexedDB._ongoingRequests.get(requestKey);
-        }
-
-        let req;
-        const timestampedStore = IndexedDB.timestampedStores.has(storeName);
-        if (timestampedStore) {
-            req = IndexedDB.objStoreFetchFns.get(storeName)({params});
-        } else {
-            req = IndexedDB.objStoreFetchFns.get(storeName)({params, key});
-        }
-        req = req
-            .catch(async err => {
-                console.group("Object store data");
-                if (key) {
-                    console.error("Failed to update key %s of object store %s", key, storeName);
-                } else {
-                    console.error("Failed to update object store %s", storeName);
-                }
-                console.error(err);
-                console.groupEnd();
-
-                // Wait some seconds before retrying
-                await IndexedDB.db.put("expiries", Timestamp.now() + 60, timestampedStore ? storeName : `${storeName}_${key}`);
-
-                throw err;
-            })
-            .finally(() => IndexedDB._ongoingRequests.delete(requestKey));
-        IndexedDB._ongoingRequests.set(requestKey, req);
-        return req;
-    }
-
-    static isExpired(expiry) {
-        return expiry <= Timestamp.now();
-    }
-
-    static _asArray(key) {
-        return Array.isArray(key) ? key : [key];
-    }
-
-    static _resultsAsObject(keys, values) {
-        return keys.reduce((acc, key, i) => {
-            acc[key] = values[i];
-            return acc;
-        }, {});
-    }
-}
-IndexedDB._promise = null;
-IndexedDB._ongoingRequests = new Map();
-
-/*
- *  Object stores in this map won't get checked
- *  for timestamps if cached.
- *  Instead of checking the single entry, the object store itself has
- *  a entry named "expiry".
- *
- *  This allows us to reduce the overhead of having one timestamp for
- *  each individual entry, although they're basically fetched during
- *  the same time.
- */
-IndexedDB.timestampedStores = new Map([
-    ["coupons", 60 * 60],
-    ["giftsAndPasses", 60 * 60],
-    ["items", 60 * 60],
-    ["earlyAccessAppids", 60 * 60],
-    ["purchases", 24 * 60 * 60],
-    ["dynamicStore", 15 * 60],
-    ["rates", 60 * 60],
-    ["collection", 15 * 60],
-    ["waitlist", 15 * 60],
-]);
-
-IndexedDB.timestampedEntriesStores = new Map([
-    ["packages", 7 * 24 * 60 * 60],
-    ["storePageData", 60 * 60],
-    ["profiles", 24 * 60 * 60],
-    ["workshopFileSizes", 5 * 24 * 60 * 60],
-    ["reviews", 60 * 60],
-]);
-
-IndexedDB.cacheObjectStores = new Map([...IndexedDB.timestampedStores, ...IndexedDB.timestampedEntriesStores]);
-
 // Functions that are called when an object store (or one of its entries) has expired
 IndexedDB.objStoreFetchFns = new Map([
     ["coupons", SteamCommunity.coupons],
@@ -1594,8 +1690,8 @@ IndexedDB.objStoreFetchFns = new Map([
     ["storePageData", AugmentedSteamApi.endpointFactoryCached("v01/storepagedata", "storePageData")],
     ["profiles", AugmentedSteamApi.endpointFactoryCached("v01/profile/profile", "profiles")],
     ["rates", AugmentedSteamApi.endpointFactoryCached("v01/rates", "rates")],
-    ["collection", ITAD_Api.endpointFactoryCached("v02/user/coll/all", "collection", ITAD_Api.mapCollection)],
-    ["waitlist", ITAD_Api.endpointFactoryCached("v01/user/wait/all", "waitlist", ITAD_Api.mapWaitlist)],
+    ["collection", ITADApi.endpointFactoryCached("v02/user/coll/all", "collection", ITADApi.mapCollection)],
+    ["waitlist", ITADApi.endpointFactoryCached("v01/user/wait/all", "waitlist", ITADApi.mapWaitlist)],
 ]);
 
 const actionCallbacks = new Map([
@@ -1646,17 +1742,17 @@ const actionCallbacks = new Map([
     ["reviews", SteamCommunity.getReviews],
     ["updatereviewnode", SteamCommunity.updateReviewNode],
 
-    ["itad.authorize", ITAD_Api.authorize],
-    ["itad.disconnect", ITAD_Api.disconnect],
-    ["itad.isconnected", ITAD_Api.isConnected],
-    ["itad.import", ITAD_Api.import],
-    ["itad.sync", ITAD_Api.sync],
-    ["itad.lastimport", ITAD_Api.lastImport],
-    ["itad.inwaitlist", ITAD_Api.inWaitlist],
-    ["itad.addtowaitlist", ITAD_Api.addToWaitlist],
-    ["itad.removefromwaitlist", ITAD_Api.removeFromWaitlist],
-    ["itad.incollection", ITAD_Api.inCollection],
-    ["itad.getfromcollection", ITAD_Api.getFromCollection],
+    ["itad.authorize", ITADApi.authorize],
+    ["itad.disconnect", ITADApi.disconnect],
+    ["itad.isconnected", ITADApi.isConnected],
+    ["itad.import", ITADApi.import],
+    ["itad.sync", ITADApi.sync],
+    ["itad.lastimport", ITADApi.lastImport],
+    ["itad.inwaitlist", ITADApi.inWaitlist],
+    ["itad.addtowaitlist", ITADApi.addToWaitlist],
+    ["itad.removefromwaitlist", ITADApi.removeFromWaitlist],
+    ["itad.incollection", ITADApi.inCollection],
+    ["itad.getfromcollection", ITADApi.getFromCollection],
 
     ["error.test", () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
@@ -1667,8 +1763,8 @@ const actionCallbacks = new Map([
  */
 
 browser.runtime.onMessage.addListener(async(message, sender) => {
-    if (!sender || !sender.tab) { return; } // not from a tab, ignore
-    if (!message || !message.action) { return; }
+    if (!sender || !sender.tab) { return null; } // not from a tab, ignore
+    if (!message || !message.action) { return null; }
 
     const callback = actionCallbacks.get(message.action);
     if (!callback) {
@@ -1684,11 +1780,11 @@ browser.runtime.onMessage.addListener(async(message, sender) => {
         res = await callback(...message.params);
     } catch (err) {
         console.group(`Callback: "${message.action}"`);
-        console.error("Failed to execute callback \"%s\" with params %o", message.action, message.params);
+        console.error('Failed to execute callback "%s" with params %o', message.action, message.params);
         console.error(err);
         console.groupEnd();
 
-        throw {"message": err.toString()};
+        throw new Error(err.toString());
     }
     return res;
 });

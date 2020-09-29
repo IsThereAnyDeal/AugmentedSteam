@@ -41,6 +41,7 @@ export default class FSupporterBadges extends Feature {
 
         HTML.afterEnd(profileBadges, html);
 
+        // eslint-disable-next-line new-cap, no-undef
         ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
     }
 }

@@ -26,8 +26,14 @@ export default class FExtraLinks extends Feature {
         }
 
         return this._node !== null && (
-            this._type === "app" // Even if the user doesn't want to see any extra links, the place of the native links is changed (see _moveExtraLinks)
-            || (SyncedStorage.get("showbartervg") || SyncedStorage.get("showsteamdb") || SyncedStorage.get("showitadlinks")) // Preferences for links shown on all pages
+
+            // Even if the user doesn't want to see any extra links, the place of the native links is changed (see _moveExtraLinks)
+            this._type === "app"
+
+            // Preferences for links shown on all pages
+            || (SyncedStorage.get("showbartervg")
+            || SyncedStorage.get("showsteamdb")
+            || SyncedStorage.get("showitadlinks"))
         );
     }
 
@@ -50,7 +56,8 @@ export default class FExtraLinks extends Feature {
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "twitch_btn",
-                        `https://www.twitch.tv/directory/game/${encodeURIComponent(this.context.appName.replace(/(\u2122)/g, "").replace(/(\xAE)/g, ""))}`,
+                        `https://www.twitch.tv/directory/game/${encodeURIComponent(this.context.appName.replace(/(\u2122)/g, "")
+                            .replace(/(\xAE)/g, ""))}`,
                         Localization.str.view_on_website.replace("__website__", "Twitch")
                     ));
             }

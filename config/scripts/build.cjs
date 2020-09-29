@@ -1,10 +1,7 @@
 const webpack = require("webpack");
-const path = require("path");
 const {merge} = require("webpack-merge");
 
 const MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin");
-
-const rootDir = path.resolve(__dirname, "../../");
 
 let browser = "chrome";
 let mode = "dev";

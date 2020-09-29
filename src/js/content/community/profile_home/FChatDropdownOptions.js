@@ -39,11 +39,19 @@ export default class FChatDropdownOptions extends Feature {
             </div>`);
 
         document.querySelector("#btnWebChat").addEventListener("click", () => {
+            // eslint-disable-next-line no-undef, new-cap
             ExtensionLayer.runInPageContext(chatId => { OpenFriendChatInWebChat(chatId); }, [chatId]);
         });
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(() => { ShowMenu(document.querySelector("#profile_chat_dropdown_link"), "profile_chat_dropdown", "right"); });
+            ExtensionLayer.runInPageContext(() => {
+                // eslint-disable-next-line no-undef, new-cap
+                ShowMenu(
+                    document.querySelector("#profile_chat_dropdown_link"),
+                    "profile_chat_dropdown",
+                    "right"
+                );
+            });
         });
     }
 }

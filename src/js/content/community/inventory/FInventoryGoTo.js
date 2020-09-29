@@ -62,13 +62,13 @@ export default class FInventoryGoTo extends CallbackFeature {
         // Go to first page
         HTML.afterEnd("#pagebtn_previous", "<a id='pagebtn_first' class='pagebtn pagecontrol_element disabled'>&lt;&lt;</a>");
         document.querySelector("#pagebtn_first").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(() => { InventoryFirstPage(); });
+            ExtensionLayer.runInPageContext(() => { InventoryFirstPage(); }); // eslint-disable-line no-undef, new-cap
         });
 
         // Go to last page
         HTML.beforeBegin("#pagebtn_next", "<a id='pagebtn_last' class='pagebtn pagecontrol_element'>&gt;&gt;</a>");
         document.querySelector("#pagebtn_last").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(() => { InventoryLastPage(); });
+            ExtensionLayer.runInPageContext(() => { InventoryLastPage(); }); // eslint-disable-line no-undef, new-cap
         });
 
         const pageGo = document.createElement("div");
@@ -93,6 +93,7 @@ export default class FInventoryGoTo extends CallbackFeature {
         gotoButton.textContent = Localization.str.go;
         gotoButton.id = "gotopage_btn";
         gotoButton.classList.add("pagebtn");
+        // eslint-disable-next-line no-script-url -- Using it the way Steam does too
         gotoButton.href = "javascript:InventoryGoToPage();";
         gotoButton.style.width = "32px";
         gotoButton.style.padding = "0";
@@ -110,9 +111,15 @@ export default class FInventoryGoTo extends CallbackFeature {
 
                 const id = mutation.target.id;
                 if (id === "pagebtn_next") {
-                    document.querySelector("#pagebtn_last").classList.toggle("disabled", mutation.target.classList.contains("disabled"));
+                    document.querySelector("#pagebtn_last").classList.toggle(
+                        "disabled",
+                        mutation.target.classList.contains("disabled")
+                    );
                 } else if (id === "pagebtn_previous") {
-                    document.querySelector("#pagebtn_first").classList.toggle("disabled", mutation.target.classList.contains("disabled"));
+                    document.querySelector("#pagebtn_first").classList.toggle(
+                        "disabled",
+                        mutation.target.classList.contains("disabled")
+                    );
                 }
 
             });

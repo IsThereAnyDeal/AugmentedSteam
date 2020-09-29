@@ -9,16 +9,13 @@ export class SearchFilter {
 
     get active() { return false; }
 
+    get value() { return this._value; }
     set value(newVal) {
         if (newVal === this._value) { return; }
 
         this._value = newVal;
         this._feature.updateURLs();
     }
-
-    get value() { return this._value; }
-
-    getHTML() {}
 
     setup(params) {
         const rows = document.querySelectorAll(".search_result_row");
@@ -27,12 +24,6 @@ export class SearchFilter {
         this.setState(params);
         this.apply(rows);
     }
-
-    setState(params) {}
-
-    addRowMetadata(rows) {}
-
-    apply(rows) {}
 }
 
 export class SimpleSearchFilter extends SearchFilter {
@@ -76,7 +67,7 @@ export class SimpleSearchFilter extends SearchFilter {
 
         const filter = this._elem;
 
-        /**
+        /*
          * https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L859
          * OnClickClientFilter
          */
@@ -88,11 +79,12 @@ export class SimpleSearchFilter extends SearchFilter {
         document.scrollTop = fixScrollOffset;
     }
 
+    get active() { return this._active; }
     set active(active) {
         const filter = this._elem;
         this._active = active;
 
-        /**
+        /*
          * https://github.com/SteamDatabase/SteamTracking/blob/0705b45875511f8dd802002622ad3d7abcabfc6e/store.steampowered.com/public/javascript/searchpage.js#L815
          * EnableClientSideFilters
          */
@@ -101,9 +93,5 @@ export class SimpleSearchFilter extends SearchFilter {
         filter.parentElement.classList.toggle("checked", active);
 
         this.value = this._active ? this._id : null;
-    }
-
-    get active() {
-        return this._active;
     }
 }

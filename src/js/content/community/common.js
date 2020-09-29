@@ -7,7 +7,10 @@ export class ProfileData {
             const steamId = SteamId.getSteamId();
 
             this._promise = Background.action("profile", steamId)
-                .then(response => this._data = response);
+                .then(response => {
+                    this._data = response;
+                    return this._data;
+                });
         }
         return this._promise;
     }
@@ -17,44 +20,40 @@ export class ProfileData {
     }
 
     static getBadges() {
-        if (this._promise == null) { console.warn("ProfileData were not initialized"); }
+        if (this._promise === null) { console.warn("ProfileData were not initialized"); }
         return this._data.badges;
     }
 
     static getSteamRep() {
-        if (this._promise == null) { console.warn("ProfileData were not initialized"); }
+        if (this._promise === null) { console.warn("ProfileData were not initialized"); }
         return this._data.steamrep;
     }
 
     static getStyle() {
-        if (this._promise == null) { console.warn("ProfileData were not initialized"); }
+        if (this._promise === null) { console.warn("ProfileData were not initialized"); }
         return this._data.style;
     }
 
-    static getBgImg(width, height) {
-        if (this._promise == null) { console.warn("ProfileData were not initialized"); }
+    static getBgImg() {
+        if (this._promise === null) { console.warn("ProfileData were not initialized"); }
         if (!this._data.bg || !this._data.bg.img) { return ""; }
-
-        if (width && height) {
-            return `${this._data.bg.img.replace("/\/+$/", "")}/${width}x${height}`; // also possible ${width}fx${height}f
-        }
 
         return this._data.bg.img;
     }
 
-    static getBgImgUrl(width, height) {
-        const img = this.getBgImg(width, height);
+    static getBgImgUrl() {
+        const img = this.getBgImg();
         if (!img) { return ""; }
         return `https://steamcommunity.com/economy/image/${img}`;
     }
 
     static getBgAppid() {
-        if (this._promise == null) { console.warn("ProfileData were not initialized"); }
+        if (this._promise === null) { console.warn("ProfileData were not initialized"); }
         return this._data.bg && this._data.bg.appid ? parseInt(this._data.bg.appid) : null;
     }
 
     static async clearOwn() {
-        if (!User.isSignedIn) { return; }
+        if (!User.isSignedIn) { return null; }
         await Background.action("clearownprofile", User.steamId);
         this._promise = null;
         return this.promise();

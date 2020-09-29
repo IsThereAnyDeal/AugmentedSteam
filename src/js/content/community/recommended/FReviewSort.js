@@ -27,6 +27,7 @@ export default class FReviewSort extends Feature {
             const delayer = setTimeout(
                 () => {
                     ExtensionLayer.runInPageContext(
+                        // eslint-disable-next-line no-undef, new-cap
                         (processing, wait) => { ShowBlockingWaitDialog(processing, wait); },
                         [
                             Localization.str.processing,
@@ -50,7 +51,7 @@ export default class FReviewSort extends Feature {
 
                 if (modalActive) {
                     ExtensionLayer.runInPageContext(() => {
-                        CModal.DismissActiveModal();
+                        CModal.DismissActiveModal(); // eslint-disable-line no-undef, new-cap
                     });
                 }
             }
@@ -73,14 +74,23 @@ export default class FReviewSort extends Feature {
                 case "length":
                 case "playtime":
                     return b[sortBy] - a[sortBy];
-                case "visibility":
-                    a = a[sortBy].toLowerCase();
-                    b = b[sortBy].toLowerCase();
-                    if (a > b) { return -1; }
-                    if (a < b) { return 1; }
+                case "visibility": {
+                    const _a = a[sortBy].toLowerCase();
+                    const _b = b[sortBy].toLowerCase();
+                    if (_a > _b) { return -1; }
+                    if (_a < _b) { return 1; }
                     return 0;
+                }
                 case "default":
                     return a[sortBy] - b[sortBy];
+                default:
+                    // eslint-disable-next-line no-invalid-this -- this is binded to an instance of FReviewSort
+                    this.logError(
+                        new Error("Invalid sorting criteria"),
+                        "Can't sort reviews by criteria '%s'",
+                        sortBy,
+                    );
+                    return 0;
                 }
             });
 
@@ -102,7 +112,10 @@ export default class FReviewSort extends Feature {
 
                     const containers = node.querySelectorAll(".dselect_container");
 
-                    // Only exists when the requested profile is yours (these are the input fields where you can change visibility and language of the review)
+                    /*
+                     * Only exists when the requested profile is yours (these are the input
+                     * fields where you can change visibility and language of the review)
+                     */
                     if (containers.length) {
                         for (const container of node.querySelectorAll(".dselect_container")) {
                             const type = container.id.startsWith("ReviewVisibility") ? "Visibility" : "Language";
@@ -112,6 +125,9 @@ export default class FReviewSort extends Feature {
 
                             input.onchange = () => { window[`OnReview${type}Change`](id, `Review${type}${id}`); };
 
+                            /* eslint-disable no-script-url, no-undef, new-cap, no-loop-func --
+                             * The D* functions are not actual references in this context,
+                             * they're functions in the page context. */
                             trigger.href = "javascript:DSelectNoop();";
                             trigger.onfocus = () => DSelectOnFocus(`Review${type}${id}`);
                             trigger.onblur = () => DSelectOnBlur(`Review${type}${id}`);
@@ -122,6 +138,7 @@ export default class FReviewSort extends Feature {
                                 selection.onmouseover = () => DHighlightItem(`Review${type}${id}`, selIndex, false);
                                 selection.onclick = () => DHighlightItem(`Review${type}${id}`, selIndex, true);
                             });
+                            /* eslint-enable no-script-url, no-undef, new-cap, no-loop-func */
                         }
 
                     // Otherwise you have buttons to vote for the review (Was it helpful or not, was it funny?)
@@ -132,12 +149,14 @@ export default class FReviewSort extends Feature {
                         const [upvote, downvote, funny] = btns;
 
                         for (const btn of btns) {
-                            btn.href = "javascript:void(0)";
+                            btn.href = "javascript:void(0)"; // eslint-disable-line no-script-url
                         }
 
+                        /* eslint-disable new-cap, no-undef */
                         upvote.onclick = () => UserReviewVoteUp(id);
                         downvote.onclick = () => UserReviewVoteDown(id);
                         funny.onclick = () => UserReviewVoteTag(id, 1, `RecommendationVoteTagBtn${id}_1`);
+                        /* eslint-enable new-cap, no-undef */
                     }
                 });
             }, [displayedReviews.map(review => review.id)]);
@@ -148,24 +167,35 @@ export default class FReviewSort extends Feature {
         });
 
         ExtensionLayer.runInPageContext(() => {
-            $J(document).ajaxSuccess((event, xhr, {url}) => {
+            $J(document).ajaxSuccess((event, xhr, {url}) => { // eslint-disable-line no-undef
                 const pathname = new URL(url).pathname;
-                if (pathname.startsWith("/userreviews/rate/") || pathname.startsWith("/userreviews/votetag/") || pathname.startsWith("/userreviews/update/")) {
+                if (pathname.startsWith("/userreviews/rate/")
+                    || pathname.startsWith("/userreviews/votetag/")
+                    || pathname.startsWith("/userreviews/update/")) {
+
                     const id = pathname.split("/").pop();
                     Messenger.postMessage("updateReview", id);
                 }
             });
         });
 
-        document.querySelector(".review_list h1").insertAdjacentElement("beforebegin",
-            Sortbox.get("reviews", [
-                ["default", Localization.str.date],
-                ["rating", Localization.str.rating],
-                ["helpful", Localization.str.helpful],
-                ["funny", Localization.str.funny],
-                ["length", Localization.str.length],
-                ["visibility", Localization.str.visibility],
-                ["playtime", Localization.str.playtime],
-            ], SyncedStorage.get("sortreviewsby"), sortReviews, "sortreviewsby"));
+        document.querySelector(".review_list h1").insertAdjacentElement(
+            "beforebegin",
+            Sortbox.get(
+                "reviews",
+                [
+                    ["default", Localization.str.date],
+                    ["rating", Localization.str.rating],
+                    ["helpful", Localization.str.helpful],
+                    ["funny", Localization.str.funny],
+                    ["length", Localization.str.length],
+                    ["visibility", Localization.str.visibility],
+                    ["playtime", Localization.str.playtime],
+                ],
+                SyncedStorage.get("sortreviewsby"),
+                sortReviews.bind(this),
+                "sortreviewsby"
+            )
+        );
     }
 }

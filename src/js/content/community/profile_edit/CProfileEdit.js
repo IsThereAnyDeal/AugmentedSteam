@@ -22,12 +22,13 @@ export class CProfileEdit extends CCommunityBase {
 
         await ProfileData.clearOwn();
 
-        if (!document.querySelector("[class^=\"profileeditshell_PageContent_\"]")) {
+        if (!document.querySelector('[class^="profileeditshell_PageContent_"]')) {
             await new Promise(resolve => {
                 new MutationObserver((records, observer) => {
                     for (const {addedNodes} of records) {
                         for (const node of addedNodes) {
-                            if (node.nodeType !== Node.ELEMENT_NODE || !node.querySelector("[class^=\"profileeditshell_PageContent_\"]")) { continue; }
+                            if (node.nodeType !== Node.ELEMENT_NODE
+                                || !node.querySelector('[class^="profileeditshell_PageContent_"]')) { continue; }
 
                             observer.disconnect();
                             resolve();

@@ -8,6 +8,60 @@ export default class FCommunityProfileLinks extends Feature {
 
     apply() {
 
+        function copySteamId(e) {
+            const elem = e.target.closest(".es-copy");
+            if (!elem) { return; }
+
+            Clipboard.set(elem.querySelector(".es-copy__id").innerText);
+
+            const lastCopied = document.querySelector(".es-copy.is-copied");
+            if (lastCopied) {
+                lastCopied.classList.remove("is-copied");
+            }
+
+            elem.classList.add("is-copied");
+            window.setTimeout(() => { elem.classList.remove("is-copied"); }, 2000);
+        }
+
+        function showSteamIdDialog() {
+            document.addEventListener("click", copySteamId);
+
+            const imgUrl = ExtensionResources.getURL("img/clippy.svg");
+
+            const steamId = new SteamId.Detail(SteamId.getSteamId());
+            const ids = [
+                steamId.id2,
+                steamId.id3,
+                steamId.id64,
+                `https://steamcommunity.com/profiles/${steamId.id64}`
+            ];
+
+            const copied = Localization.str.copied;
+            let html = "";
+            for (const id of ids) {
+                if (!id) { continue; }
+                html += `<p><a class="es-copy"><span class="es-copy__id">${id}</span><img src='${imgUrl}' class="es-copy__icon"><span class="es-copy__copied">${copied}</span></a></p>`;
+            }
+
+            ExtensionLayer.runInPageContext((steamidOfUser, html, close) => {
+                /* eslint-disable no-undef, new-cap, camelcase */
+                HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
+                const dialog = ShowAlertDialog(steamidOfUser.replace("__user__", g_rgProfileData.personaname), html, close);
+
+                return new Promise(resolve => {
+                    dialog.done(() => { resolve(); });
+                });
+                /* eslint-enable no-undef, new-cap, camelcase */
+            },
+            [
+                Localization.str.steamid_of_user,
+                html,
+                Localization.str.close,
+            ],
+            "closeDialog")
+                .then(() => { document.removeEventListener("click", copySteamId); });
+        }
+
         const steamId = SteamId.getSteamId();
 
         let iconType = "none";
@@ -133,54 +187,6 @@ export default class FCommunityProfileLinks extends Feature {
             }
         }
 
-        function copySteamId(e) {
-            const elem = e.target.closest(".es-copy");
-            if (!elem) { return; }
 
-            Clipboard.set(elem.querySelector(".es-copy__id").innerText);
-
-            const lastCopied = document.querySelector(".es-copy.is-copied");
-            if (lastCopied) {
-                lastCopied.classList.remove("is-copied");
-            }
-
-            elem.classList.add("is-copied");
-            window.setTimeout(() => { elem.classList.remove("is-copied"); }, 2000);
-        }
-
-        function showSteamIdDialog() {
-            document.addEventListener("click", copySteamId);
-
-            const imgUrl = ExtensionResources.getURL("img/clippy.svg");
-
-            const steamId = new SteamId.Detail(SteamId.getSteamId());
-            const ids = [
-                steamId.id2,
-                steamId.id3,
-                steamId.id64,
-                `https://steamcommunity.com/profiles/${steamId.id64}`
-            ];
-
-            const copied = Localization.str.copied;
-            let html = "";
-            for (const id of ids) {
-                if (!id) { continue; }
-                html += `<p><a class="es-copy"><span class="es-copy__id">${id}</span><img src='${imgUrl}' class="es-copy__icon"><span class="es-copy__copied">${copied}</span></a></p>`;
-            }
-
-            ExtensionLayer.runInPageContext((steamidOfUser, html, close) => {
-                HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
-                const dialog = ShowAlertDialog(steamidOfUser.replace("__user__", g_rgProfileData.personaname), html, close);
-
-                return new Promise(resolve => { dialog.done(() => { resolve(); }); });
-            },
-            [
-                Localization.str.steamid_of_user,
-                html,
-                Localization.str.close,
-            ],
-            "closeDialog")
-                .then(() => { document.removeEventListener("click", copySteamId); });
-        }
     }
 }

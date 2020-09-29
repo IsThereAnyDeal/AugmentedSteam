@@ -80,7 +80,7 @@ export class CommentHandler {
         const modalWait = document.querySelector("#modalContentWait");
         if (!modalWait) { return; }
 
-        const observer = new MutationObserver(mutation => {
+        const observer = new MutationObserver(() => {
             const modalContainer = document.querySelector("#modalContentFrameContainer");
             if (!modalContainer) { return; }
 
@@ -121,6 +121,7 @@ export class CommentHandler {
         ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon);
     }
 
+    // eslint-disable-next-line no-unused-vars -- TODO Is this feature not yet implemented
     static _clickFavEmoticon(ev, emoticonPopup, favRemove) {
         const name = ev.target.closest(".emoticon_option").dataset.emoticon;
         const noFav = emoticonPopup.querySelector(`[data-emoticon=${name}]:not(.es_fav)`);
@@ -129,10 +130,10 @@ export class CommentHandler {
 
     static _buildFavBox(favs = []) {
         let favsHtml;
-        if (!favs.length) {
-            favsHtml = Localization.str.fav_emoticons_dragging;
-        } else {
+        if (favs.length) {
             favsHtml = favs.map(fav => this._buildEmoticonOption(fav)).join("");
+        } else {
+            favsHtml = Localization.str.fav_emoticons_dragging;
         }
         return favsHtml;
     }
@@ -165,20 +166,20 @@ export class CommentHandler {
             const favRemove = emoticonPopup.querySelector("#es_fav_remove");
             this._updateFavs(favs, emoticonPopup, favBox, favRemove);
 
-            favBox.addEventListener("dragover", (ev) => {
+            favBox.addEventListener("dragover", ev => {
                 ev.preventDefault();
                 favBox.style.backgroundColor = "black";
             });
 
-            favBox.addEventListener("dragenter", (ev) => {
+            favBox.addEventListener("dragenter", () => {
                 favBox.style.backgroundColor = "black";
             });
 
-            favBox.addEventListener("dragleave", (ev) => {
+            favBox.addEventListener("dragleave", () => {
                 favBox.style.backgroundColor = null;
             });
 
-            favBox.addEventListener("drop", (ev) => {
+            favBox.addEventListener("drop", ev => {
                 ev.preventDefault();
 
                 favBox.style.backgroundColor = null;
@@ -189,20 +190,20 @@ export class CommentHandler {
                 this._updateFavs(favs, emoticonPopup, favBox, favRemove, name);
             });
 
-            favRemove.addEventListener("dragover", (ev) => {
+            favRemove.addEventListener("dragover", ev => {
                 ev.preventDefault();
                 favRemove.style.backgroundColor = "black";
             });
 
-            favRemove.addEventListener("dragenter", (ev) => {
+            favRemove.addEventListener("dragenter", () => {
                 favRemove.style.backgroundColor = "black";
             });
 
-            favRemove.addEventListener("dragleave", (ev) => {
+            favRemove.addEventListener("dragleave", () => {
                 favRemove.style.backgroundColor = null;
             });
 
-            favRemove.addEventListener("drop", (ev) => {
+            favRemove.addEventListener("drop", ev => {
                 ev.preventDefault();
 
                 favRemove.style.backgroundColor = null;

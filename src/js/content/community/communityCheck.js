@@ -2,7 +2,7 @@ import {Localization, SyncedStorage} from "core";
 import {Common, Currency, User} from "common";
 import {CommentHandler} from "community/common/CommentHandler";
 
-export default async function(context) {
+export default async function(Context) {
 
     if (!document.getElementById("global_header")) { return; }
 
@@ -25,5 +25,5 @@ export default async function(context) {
     CommentHandler.hideSpamComments();
     CommentHandler.addFavoriteEmoticons();
 
-    return new context().applyFeatures();
+    new Context().applyFeatures();
 }
