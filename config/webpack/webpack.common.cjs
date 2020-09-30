@@ -73,6 +73,11 @@ module.exports = {
                     "context": "src/js/",
                     "from": "lib/**",
                 },
+                {
+                    "context": "src/js/steam/",
+                    "from": "**",
+                    "to": "scripts/",
+                },
                 "changelog.txt",
                 "LICENSE",
             ]

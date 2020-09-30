@@ -88,13 +88,13 @@ CAnimation = class {
         this._x = x;
         this._y = y;
 
-        this.element = $J("<div/>", {"class": "holidayprofile_animation"});
-        this.element.css("height", `${this._animation.height}px`);
-        this.element.css("width", `${this._animation.width}px`);
-        this.element.css("background", `url( '${this._animation.image}') no-repeat`);
-        this.element.appendTo(parent);
-        this.element.offset({"left": x, "top": y});
-        this.element.show();
+        this._element = $J("<div/>", {"class": "holidayprofile_animation"});
+        this._element.css("height", `${this._animation.height}px`);
+        this._element.css("width", `${this._animation.width}px`);
+        this._element.css("background", `url( '${this._animation.image}') no-repeat`);
+        this._element.appendTo(parent);
+        this._element.offset({"left": x, "top": y});
+        this._element.show();
 
         this._frame = 0;
         this._start = 0;

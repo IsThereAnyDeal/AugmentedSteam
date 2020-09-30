@@ -39,7 +39,7 @@
       "img/profile_styles/*/style.css",
       "img/profile_styles/*/preview.png",
       "localization/*/strings.json",
-      "js/steam/holidayprofile.js"
+      "scripts/holidayprofile.js"
     ],
     "homepage_url": "https://es.isthereanydeal.com/",
     "background": {
@@ -51,4 +51,3 @@
       ]
     }
 }
-  

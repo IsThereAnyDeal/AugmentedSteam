@@ -89,7 +89,7 @@ export default class FCustomStyle extends Feature {
             HTML.beforeEnd(".profile_header_bg_texture", "<div class='holidayprofile_header_overlay'></div>");
             document.querySelector(".profile_page").classList.add("holidayprofile");
 
-            DOMHelper.insertScript({"src": ExtensionResources.getURL("js/steam/holidayprofile.js")});
+            DOMHelper.insertScript({"src": ExtensionResources.getURL("scripts/holidayprofile.js")});
 
             break;
         case "clear":
