@@ -28,7 +28,7 @@ So if you wanted to build a release version for Firefox, you'd run `npm run buil
 3. Terminate the server and reload the extension manually
 4. Run `npm run start` to start the Hot Extension Reload Server
 
-Now, for every change you make in the source code, the server will rebuild and reload the extension and reload all affected pages automatically.
+Now, for every change you make in the source code, the server will rebuild and reload the extension and refresh all affected pages automatically.
 
 Steps 2 & 3 only have to be done for the initial setup, afterwards step 4 will suffice.
 
