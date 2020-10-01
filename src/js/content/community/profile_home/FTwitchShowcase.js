@@ -41,20 +41,20 @@ export default class FTwitchShowcase extends Feature {
 
         HTML.afterBegin(".profile_leftcol",
             `<div class='profile_customization' id='es_twitch'>
-                    <div class='profile_customization_header'>
-                        ${Localization.str.twitch.now_streaming.replace("__username__", channelUsername)}
+                <div class='profile_customization_header'>
+                    ${Localization.str.twitch.now_streaming.replace("__username__", channelUsername)}
+                </div>
+                <a class="esi-stream" href="${channelUrl}">
+                    <div class="esi-stream__preview">
+                        <img src="${previewUrl}">
+                        <img src="https://steamstore-a.akamaihd.net/public/shared/images/apphubs/play_icon80.png" class="esi-stream__play">
+                        <div class="esi-stream__live">Live on <span class="esi-stream__twitch">Twitch</span></div>
                     </div>
-                    <a class="esi-stream" href="${channelUrl}">
-                        <div class="esi-stream__preview">
-                            <img src="${previewUrl}">
-                            <img src="https://steamstore-a.akamaihd.net/public/shared/images/apphubs/play_icon80.png" class="esi-stream__play">
-                            <div class="esi-stream__live">Live on <span class="esi-stream__twitch">Twitch</span></div>
-                        </div>
-                        <div class="esi-stream__title">
-                            <span class="live_stream_app">${channelGame}</span>
-                            <span class="live_steam_viewers">${channelViewers} ${Localization.str.twitch.viewers}</span>
-                        </div>
-                    </a>
-                </div>`);
+                    <div class="esi-stream__title">
+                        <span class="live_stream_app">${channelGame}</span>
+                        <span class="live_steam_viewers">${channelViewers} ${Localization.str.twitch.viewers}</span>
+                    </div>
+                </a>
+            </div>`);
     }
 }

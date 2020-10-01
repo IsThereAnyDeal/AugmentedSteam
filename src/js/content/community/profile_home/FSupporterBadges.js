@@ -20,13 +20,13 @@ export default class FSupporterBadges extends Feature {
 
         let html
             = `<div class="profile_badges" id="es_supporter_badges">
-                <div class="profile_count_link">
-                    <a href="${Config.PublicHost}">
-                        <span class="count_link_label">${Localization.str.es_supporter}</span>&nbsp;
-                        <span class="profile_count_link_total">${badgeCount}</span>
-                    </a>
-                </div>
-                <div class="profile_count_link_preview">`;
+                    <div class="profile_count_link">
+                        <a href="${Config.PublicHost}">
+                            <span class="count_link_label">${Localization.str.es_supporter}</span>&nbsp;
+                            <span class="profile_count_link_total">${badgeCount}</span>
+                        </a>
+                    </div>
+                    <div class="profile_count_link_preview">`;
 
 
         for (const badge of data.badges) {

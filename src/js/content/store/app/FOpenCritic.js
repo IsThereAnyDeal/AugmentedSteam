@@ -51,10 +51,10 @@ export default class FOpenCritic extends Feature {
 
         if (reviews) {
             const html
-                = `<div id="es_opencritic_reviews">
-                    ${reviews}
-                    <div class="chart-footer">${Localization.str.read_more_reviews} <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews" target="_blank">OpenCritic.com</a></div>
-                </div>`;
+                = ` <div id="es_opencritic_reviews">
+                        ${reviews}
+                        <div class="chart-footer">${Localization.str.read_more_reviews} <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews" target="_blank">OpenCritic.com</a></div>
+                    </div>`;
 
             // Add data to the review section in the left column, or create one if that block doesn't exist
             const reviewsNode = document.getElementById("game_area_reviews");

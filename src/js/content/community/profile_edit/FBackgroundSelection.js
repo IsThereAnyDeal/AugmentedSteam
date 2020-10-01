@@ -175,9 +175,9 @@ export default class FBackgroundSelection extends Feature {
 
             images
                 += `<div class="as-pd__item${selectedClass} js-pd-img" data-img="${url}">
-                    <img src="${this._getImageUrl(url)}" class="as-pd__img">
-                    <div>${title}</div>
-                </div>`;
+                        <img src="${this._getImageUrl(url)}" class="as-pd__img">
+                        <div>${title}</div>
+                    </div>`;
         }
 
         HTML.inner(this._imagesNode, images);

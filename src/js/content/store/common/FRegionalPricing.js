@@ -100,15 +100,15 @@ export default class FRegionalPricing extends Feature {
 
                         html
                             += `<span class="es-regprice__converted">${priceUser}</span>
-                            <span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`;
+                                <span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`;
                     }
 
                     html += "</div>";
                 } else {
                     html
-                        = `<div class="es-regprice es-flag es-flag--${country}">
-                            <span class="es-regprice__none">${Localization.str.region_unavailable}</span>
-                        </div>`;
+                        = ` <div class="es-regprice es-flag es-flag--${country}">
+                                <span class="es-regprice__none">${Localization.str.region_unavailable}</span>
+                            </div>`;
                 }
 
                 HTML.beforeEnd(pricingDiv, html);

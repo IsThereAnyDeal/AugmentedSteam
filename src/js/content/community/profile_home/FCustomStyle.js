@@ -53,31 +53,31 @@ export default class FCustomStyle extends Feature {
 
             HTML.afterBegin(profilePageNode,
                 `<div class="lny_sides_position">
-                        <div class="lny_side left">
-                            <div class="lny_side_background"></div>
-                            <div class="lny_top"></div>
-                            <div class="lny_pig"></div>
-                            <div class="lny_pendulum">
-                                <div class="lny_strings"></div>
-                                <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern1.png">
-                            </div>
+                    <div class="lny_side left">
+                        <div class="lny_side_background"></div>
+                        <div class="lny_top"></div>
+                        <div class="lny_pig"></div>
+                        <div class="lny_pendulum">
+                            <div class="lny_strings"></div>
+                            <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern1.png">
                         </div>
-                        <div class="lny_side right">
-                            <div class="lny_side_background"></div>
-                            <div class="lny_top"></div>
-                            <div class="lny_pig"></div>
-                            <div class="lny_pendulum">
-                                <div class="lny_strings"></div>
-                                <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern2.png">
-                            </div>
+                    </div>
+                    <div class="lny_side right">
+                        <div class="lny_side_background"></div>
+                        <div class="lny_top"></div>
+                        <div class="lny_pig"></div>
+                        <div class="lny_pendulum">
+                            <div class="lny_strings"></div>
+                            <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern2.png">
                         </div>
-                    </div>`);
+                    </div>
+                </div>`);
 
             HTML.beforeBegin(
                 ".profile_header",
                 `<div class="golden_profile_header">
-                        <div class="lny_pig_center"></div>
-                    </div>`
+                    <div class="lny_pig_center"></div>
+                </div>`
             );
 
             break;

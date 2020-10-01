@@ -102,21 +102,22 @@ export default class FBadgeSortAndFilter extends Feature {
 
     _addFilter() {
 
-        const html = `<span>${Localization.str.show}</span>
-            <div class="store_nav">
-                <div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom">
-                    <span class="pulldown">
-                        <div id="es_filter_active" style="display: inline;">${Localization.str.badges_all}</div>
-                        <span></span>
-                    </span>
+        const html
+            = ` <span>${Localization.str.show}</span>
+                <div class="store_nav">
+                    <div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+                        <span class="pulldown">
+                            <div id="es_filter_active" style="display: inline;">${Localization.str.badges_all}</div>
+                            <span></span>
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
-                <div class="popup_body popup_menu">
-                    <a class="popup_menu_item es_bg_filter" id="es_badge_all">${Localization.str.badges_all}</a>
-                    <a class="popup_menu_item es_bg_filter" id="es_badge_drops">${Localization.str.badges_drops}</a>
-                </div>
-            </div>`;
+                <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+                    <div class="popup_body popup_menu">
+                        <a class="popup_menu_item es_bg_filter" id="es_badge_all">${Localization.str.badges_all}</a>
+                        <a class="popup_menu_item es_bg_filter" id="es_badge_drops">${Localization.str.badges_drops}</a>
+                    </div>
+                </div>`;
 
         HTML.afterBegin("#wishlist_sort_options",
             `<div class='es_badge_filter' style='float: right; margin-left: 18px;'>${html}</div>`);
@@ -159,21 +160,22 @@ export default class FBadgeSortAndFilter extends Feature {
 
     _addViewOptions() {
 
-        const html = `<span>${Localization.str.view}</span>
-            <div class="store_nav">
-                <div class="tab flyout_tab" id="es_badgeview_tab" data-flyout="es_badgeview_flyout" data-flyout-align="right" data-flyout-valign="bottom">
-                    <span class="pulldown">
-                        <div id="es_badgeview_active" style="display: inline;">${Localization.str.theworddefault}</div>
-                        <span></span>
-                    </span>
+        const html
+            = ` <span>${Localization.str.view}</span>
+                <div class="store_nav">
+                    <div class="tab flyout_tab" id="es_badgeview_tab" data-flyout="es_badgeview_flyout" data-flyout-align="right" data-flyout-valign="bottom">
+                        <span class="pulldown">
+                            <div id="es_badgeview_active" style="display: inline;">${Localization.str.theworddefault}</div>
+                            <span></span>
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_badgeview_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
-                <div class="popup_body popup_menu">
-                    <a class="popup_menu_item es_bg_view" data-view="defaultview">${Localization.str.theworddefault}</a>
-                    <a class="popup_menu_item es_bg_view" data-view="binderview">${Localization.str.binder_view}</a>
-                </div>
-            </div>`;
+                <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_badgeview_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+                    <div class="popup_body popup_menu">
+                        <a class="popup_menu_item es_bg_view" data-view="defaultview">${Localization.str.theworddefault}</a>
+                        <a class="popup_menu_item es_bg_view" data-view="binderview">${Localization.str.binder_view}</a>
+                    </div>
+                </div>`;
 
         HTML.afterBegin("#wishlist_sort_options", `<div class='es_badge_view' style='float: right; margin-left: 18px;'>${html}</div>`);
 

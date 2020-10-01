@@ -255,8 +255,8 @@ class Sidebar {
             sections.forEach(section => {
                 subentries
                     += `<li class="sidebar_entry subentry" data-block-sel="#${section.id}">
-                        ${section.firstElementChild.textContent}
-                    </li>`;
+                            ${section.firstElementChild.textContent}
+                        </li>`;
                 Sidebar._contentNodes.push(section);
             });
             HTML.beforeEnd(row, `<ul class="subentries">${subentries}</ul>`);
@@ -350,11 +350,12 @@ class Region {
             countryClass = `es-flag--${country}`;
         }
 
-        const html = `<div class="country_parent js-region-parent">
-                <span class='es-flag ${countryClass}'></span>
-                <select class='regional_country js-region'>${options}</select>
-                <button type="button" class="custom-link__close js-region-remove"></button>
-            </div>`;
+        const html
+            = ` <div class="country_parent js-region-parent">
+                    <span class='es-flag ${countryClass}'></span>
+                    <select class='regional_country js-region'>${options}</select>
+                    <button type="button" class="custom-link__close js-region-remove"></button>
+                </div>`;
 
         HTML.beforeEnd(this._container, html);
     }
@@ -388,9 +389,9 @@ const Options = (() => {
                 const id = StoreList[i].id;
                 html
                     += `<div class="option">
-                        <input type="checkbox" id="${id}"${(stores.length === 0 || stores.indexOf(id) !== -1) ? " checked" : ""}>
-                        <label for="${id}">${StoreList[i].title}</label>
-                    </div>`;
+                            <input type="checkbox" id="${id}"${(stores.length === 0 || stores.indexOf(id) !== -1) ? " checked" : ""}>
+                            <label for="${id}">${StoreList[i].title}</label>
+                        </div>`;
             }
             html += "</div>";
         }

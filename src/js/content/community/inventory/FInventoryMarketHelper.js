@@ -156,10 +156,15 @@ export default class FInventoryMarketHelper extends Feature {
 
         const linkClass = thisItem.classList.contains("es_isset_background") ? "btn_disabled" : "";
         HTML.afterEnd(viewFullBtn,
-            `<a class="es_set_background btn_small btn_darkblue_white_innerfade ${linkClass}"><span>${Localization.str.set_as_background}</span></a>
-                  <img class="es_background_loading" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">`);
+            `<a class="es_set_background btn_small btn_darkblue_white_innerfade ${linkClass}">
+                <span>${Localization.str.set_as_background}</span>#
+            </a>
+            <img class="es_background_loading" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">`);
 
-        viewFullBtn.parentNode.querySelector(".es_set_background").addEventListener("click", async(e) => {
+        HTML.afterEnd(viewFullBtn,
+            viewFullBtn);
+
+        viewFullBtn.parentNode.querySelector(".es_set_background").addEventListener("click", async e => {
             e.preventDefault();
             const el = e.target.closest(".es_set_background");
 

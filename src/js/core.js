@@ -43,7 +43,7 @@ export class SyncedStorage {
     static get(key) {
         if (typeof this.cache[key] == "undefined") {
             if (typeof this.defaults[key] == "undefined") {
-                console.warn(`Unrecognized SyncedStorage key '${key}'`);
+                console.warn(`Unrecognized SyncedStorage key "${key}"`);
             }
             return this.defaults[key];
         }

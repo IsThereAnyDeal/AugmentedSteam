@@ -15,15 +15,15 @@ export default class FYouTubeVideos extends Feature {
         if (SyncedStorage.get("showyoutubegameplay")) {
             ytTabsHtml
                 += `<div class="js-tab-yt-gameplay js-tab-yt js-tab es_tab home_tab">
-                    <div class="tab_content">${Localization.str.youtube_gameplay}</div>
-                </div>`;
+                        <div class="tab_content">${Localization.str.youtube_gameplay}</div>
+                    </div>`;
         }
 
         if (SyncedStorage.get("showyoutubereviews")) {
             ytTabsHtml
                 += `<div class="js-tab-yt-review js-tab-yt js-tab es_tab home_tab">
-                    <div class="tab_content">${Localization.str.youtube_reviews}</div>
-                </div>`;
+                        <div class="tab_content">${Localization.str.youtube_reviews}</div>
+                    </div>`;
         }
 
         HTML.afterBegin(".leftcol",

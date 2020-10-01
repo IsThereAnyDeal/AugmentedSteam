@@ -38,6 +38,6 @@ export default class FProfileDropdownOptions extends Feature {
         HTML.afterEnd(node,
             `<a class='popup_menu_item' id='es_posthistory' href='${window.location.pathname}/posthistory'>
                 <img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; ${Localization.str.post_history}
-                </a>`);
+            </a>`);
     }
 }

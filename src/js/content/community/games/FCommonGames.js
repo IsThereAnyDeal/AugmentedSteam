@@ -13,7 +13,7 @@ export default class FCommonGames extends Feature {
 
         HTML.afterEnd("label[for='show_common_games']",
             `<label for="es_gl_show_common_games"><input type="checkbox" id="es_gl_show_common_games">${Localization.str.common_label}</label>
-            <label for="es_gl_show_notcommon_games"><input type="checkbox" id="es_gl_show_notcommon_games">${Localization.str.notcommon_label}</label>`);
+             <label for="es_gl_show_notcommon_games"><input type="checkbox" id="es_gl_show_notcommon_games">${Localization.str.notcommon_label}</label>`);
 
         const commonCheckbox = document.getElementById("es_gl_show_common_games");
         const notCommonCheckbox = document.getElementById("es_gl_show_notcommon_games");

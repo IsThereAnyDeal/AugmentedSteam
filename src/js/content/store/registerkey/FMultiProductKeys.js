@@ -7,21 +7,22 @@ export default class FMultiProductKeys extends Feature {
 
     apply() {
 
-        this._template = `<div id="es_activate_modal">
-                <div id="es_activate_modal_content">
-                    <div class="newmodal_prompt_with_textarea gray_bevel fullwidth" id="es_activate_input_text">
-                        <textarea name="es_key_input" id="es_key_input" rows="24" cols="12" maxlength="1080">__alreadyentered__</textarea>
-                    </div>
-                    <div class="es_activate_buttons" style="float: right">
-                        <div class="btn_green_white_innerfade btn_medium es_activate_modal_submit">
-                            <span>${Localization.str.activate_products}</span>
+        this._template
+            = ` <div id="es_activate_modal">
+                    <div id="es_activate_modal_content">
+                        <div class="newmodal_prompt_with_textarea gray_bevel fullwidth" id="es_activate_input_text">
+                            <textarea name="es_key_input" id="es_key_input" rows="24" cols="12" maxlength="1080">__alreadyentered__</textarea>
                         </div>
-                        <div class="es_activate_modal_close btn_grey_white_innerfade btn_medium">
-                            <span>${Localization.str.cancel}</span>
+                        <div class="es_activate_buttons" style="float: right">
+                            <div class="btn_green_white_innerfade btn_medium es_activate_modal_submit">
+                                <span>${Localization.str.activate_products}</span>
+                            </div>
+                            <div class="es_activate_modal_close btn_grey_white_innerfade btn_medium">
+                                <span>${Localization.str.cancel}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>`;
+                </div>`;
 
         document.querySelector("#register_btn").addEventListener("click", e => {
             if (document.getElementById("product_key").value.indexOf(",") > 0) {

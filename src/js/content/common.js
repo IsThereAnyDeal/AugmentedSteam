@@ -281,12 +281,14 @@ export class ITAD {
         async function updateLastImport() {
             const {from, to} = await Background.action("itad.lastimport");
 
-            let htmlStr = `<div>${Localization.str.itad.from}</div>
-                <div>${from ? new Date(from * 1000).toLocaleString() : Localization.str.never}</div>`;
+            let htmlStr
+                = `<div>${Localization.str.itad.from}</div>
+                   <div>${from ? new Date(from * 1000).toLocaleString() : Localization.str.never}</div>`;
 
             if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
-                htmlStr += `<div>${Localization.str.itad.to}</div>
-                    <div>${to ? new Date(to * 1000).toLocaleString() : Localization.str.never}</div>`;
+                htmlStr
+                    += `<div>${Localization.str.itad.to}</div>
+                        <div>${to ? new Date(to * 1000).toLocaleString() : Localization.str.never}</div>`;
             }
 
             HTML.inner(".es-itad-hover__last-import", htmlStr);
@@ -1496,7 +1498,7 @@ class AugmentedSteam {
         HTML.beforeEnd(
             "#es_popup .popup_menu",
             `<div class="hr"></div>
-            <a id="es_random_game" class="popup_menu_item" style="cursor: pointer;">${Localization.str.launch_random}</a>`
+             <a id="es_random_game" class="popup_menu_item" style="cursor: pointer;">${Localization.str.launch_random}</a>`
         );
 
         document.querySelector("#es_random_game").addEventListener("click", async() => {
@@ -1996,15 +1998,17 @@ export class Prices {
 
             if (bundle.page) {
                 const bundlePage = Localization.str.buy_package.replace("__package__", `${bundle.page} ${bundle.title}`);
-                purchase += `<div class="game_area_purchase_game">
-                    <div class="game_area_purchase_platform"></div>
-                    <h1>${bundlePage}</h1>`;
+                purchase
+                    += `<div class="game_area_purchase_game">
+                            <div class="game_area_purchase_platform"></div>
+                            <h1>${bundlePage}</h1>`;
             } else {
                 const bundleTitle = Localization.str.buy_package.replace("__package__", bundle.title);
-                purchase += `<div class="game_area_purchase_game_wrapper">
-                    <div class="game_area_purchase_game"></div>
-                    <div class="game_area_purchase_platform"></div>
-                    <h1>${bundleTitle}</h1>`;
+                purchase
+                    += `<div class="game_area_purchase_game_wrapper">
+                            <div class="game_area_purchase_game"></div>
+                            <div class="game_area_purchase_platform"></div>
+                            <h1>${bundleTitle}</h1>`;
             }
 
             if (endDate) {
@@ -2463,16 +2467,16 @@ export class Sortbox {
 
         const box = HTML.element(
             `<div class="es-sortbox es-sortbox--${name}">
-            <div class="es-sortbox__label">${Localization.str.sort_by}</div>
-            <div class="es-sortbox__container">
-                <input id="${id}" type="hidden" name="${name}" value="${initialOption}">
-                <a class="trigger" id="${id}_trigger"></a>
-                <div class="es-dropdown">
-                    <ul id="${id}_droplist" class="es-dropdown__list dropdownhidden"></ul>
+                <div class="es-sortbox__label">${Localization.str.sort_by}</div>
+                <div class="es-sortbox__container">
+                    <input id="${id}" type="hidden" name="${name}" value="${initialOption}">
+                    <a class="trigger" id="${id}_trigger"></a>
+                    <div class="es-dropdown">
+                        <ul id="${id}_droplist" class="es-dropdown__list dropdownhidden"></ul>
+                    </div>
                 </div>
-            </div>
-            <span class="es-sortbox__reverse">${arrowDown}</span>
-        </div>`
+                <span class="es-sortbox__reverse">${arrowDown}</span>
+            </div>`
         );
 
         const input = box.querySelector(`#${id}`);
