@@ -2102,8 +2102,8 @@ export class UpdateHandler {
             if (SyncedStorage.get("version_show")) {
                 this._showChangelog();
             }
-            onUpdate();
             this._migrateSettings(lastVersion);
+            onUpdate();
         }
 
         SyncedStorage.set("version", Info.version);
@@ -2140,115 +2140,6 @@ export class UpdateHandler {
 
     static _migrateSettings(oldVersion) {
 
-        if (oldVersion.isSameOrBefore("0.9.4")) {
-
-            // Remove eu1 region
-            const priceRegions = SyncedStorage.get("regional_countries");
-            const i = priceRegions.includes("eu1");
-            if (i !== -1) {
-                priceRegions.splice(i, 1);
-                SyncedStorage.set("regional_countries", priceRegions);
-            }
-
-            // Populate customize_frontpage
-            let mapping = {
-                "show_featuredrecommended": "featuredrecommended",
-                "show_specialoffers": "specialoffers",
-                "show_trendingamongfriends": "trendingamongfriends",
-                "show_es_discoveryqueue": "discoveryqueue",
-                "show_browsesteam": "browsesteam",
-                "show_curators": "curators",
-                "show_morecuratorrecommendations": "morecuratorrecommendations",
-                "show_recentlyupdated": "recentlyupdated",
-                "show_fromdevelopersandpublishersthatyouknow": "fromdevelopersandpublishersthatyouknow",
-                "show_popularvrgames": "popularvrgames",
-                "show_es_homepagetab": "homepagetab",
-                "show_gamesstreamingnow": "gamesstreamingnow",
-                "show_under": "under",
-                "show_updatesandoffers": "updatesandoffers",
-                "show_es_homepagesidebar": "homepagesidebar",
-            };
-            let settings = SyncedStorage.get("customize_frontpage");
-            for (const [oldkey, newkey] of Object.entries(mapping)) {
-                if (!SyncedStorage.has(oldkey)) { continue; }
-                settings[newkey] = SyncedStorage.get(oldkey);
-                SyncedStorage.remove(oldkey);
-            }
-            SyncedStorage.set("customize_frontpage", settings);
-
-            // Populate customize_apppage
-            mapping = {
-                "show_apppage_reviews": "reviews",
-                "show_apppage_about": "about",
-                "show_apppage_surveys": "surveys",
-                "show_apppage_sysreq": "sysreq",
-                "show_apppage_legal": "legal",
-                "show_apppage_morelikethis": "morelikethis",
-                "show_apppage_recommendedbycurators": "recommendedbycurators",
-                "show_apppage_customerreviews": "customerreviews",
-            };
-            settings = SyncedStorage.get("customize_apppage");
-            for (const [oldkey, newkey] of Object.entries(mapping)) {
-                if (!SyncedStorage.has(oldkey)) { continue; }
-                settings[newkey] = SyncedStorage.get(oldkey);
-                SyncedStorage.remove(oldkey);
-            }
-            SyncedStorage.set("customize_apppage", settings);
-        }
-
-        if (oldVersion.isSameOrBefore("0.9.5")) {
-            SyncedStorage.remove("version");
-            SyncedStorage.remove("showesbg");
-            SyncedStorage.set("hideaboutlinks", SyncedStorage.get("hideinstallsteambutton") && SyncedStorage.get("hideaboutmenu"));
-            SyncedStorage.remove("hideinstallsteambutton");
-            SyncedStorage.remove("hideaboutmenu");
-
-            // Update structure for custom profile links to allow multiple
-            if (SyncedStorage.get("profile_custom_name")) {
-                const customLink = {
-                    "enabled": SyncedStorage.get("profile_custom"),
-                    "name": SyncedStorage.get("profile_custom_name"),
-                    "url": SyncedStorage.get("profile_custom_url"),
-                    "icon":  SyncedStorage.get("profile_custom_icon"),
-                };
-                SyncedStorage.set("profile_custom_link", [customLink]);
-                SyncedStorage.remove("profile_custom");
-                SyncedStorage.remove("profile_custom_name");
-                SyncedStorage.remove("profile_custom_url");
-                SyncedStorage.remove("profile_custom_icon");
-            }
-            SyncedStorage.set("user_notes", SyncedStorage.get("wishlist_notes"));
-            SyncedStorage.remove("wishlist_notes");
-        }
-
-        if (oldVersion.isSameOrBefore("0.9.7")) {
-            SyncedStorage.remove("hide_wishlist");
-            SyncedStorage.remove("hide_cart");
-            SyncedStorage.remove("hide_notdiscounted");
-            SyncedStorage.remove("hide_mixed");
-            SyncedStorage.remove("hide_negative");
-            SyncedStorage.remove("hide_priceabove");
-            SyncedStorage.remove("priceabove_value");
-        }
-
-        if (oldVersion.isSameOrBefore("1.2.1")) {
-            if (!SyncedStorage.get("show_profile_link_images")) {
-                SyncedStorage.set("show_profile_link_images", "none");
-            }
-
-            if (SyncedStorage.get("showclient")) {
-                SyncedStorage.set("showviewinlibrary", true);
-                SyncedStorage.set("installsteam", "replace");
-            }
-
-            if (SyncedStorage.has("showlanguagewarninglanguage")) {
-                SyncedStorage.set("showlanguagewarninglanguage", SyncedStorage.get("showlanguagewarninglanguage").toLowerCase());
-            }
-
-            SyncedStorage.remove("html5video");
-            SyncedStorage.remove("showclient");
-        }
-
         if (oldVersion.isSameOrBefore("1.3.1")) {
             BackgroundBase.action("cache.clear");
 
@@ -2272,6 +2163,13 @@ export class UpdateHandler {
         if (oldVersion.isSameOrBefore("1.4.3")) {
             SyncedStorage.remove("contscroll");
             Background.action("logout");
+        }
+
+        if (oldVersion.isSameOrBefore("1.4.7")) {
+            const emoticons = LocalStorage.get("fav_emoticons");
+            if (Array.isArray(emoticons)) {
+                SyncedStorage.set("fav_emoticons", emoticons);
+            }
         }
     }
 }

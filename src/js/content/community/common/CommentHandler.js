@@ -1,4 +1,4 @@
-import {HTML, LocalStorage, Localization, SyncedStorage} from "core";
+import {HTML, Localization, SyncedStorage} from "core";
 
 export class CommentHandler {
 
@@ -91,7 +91,7 @@ export class CommentHandler {
     }
 
     static _updateFavs(favs, emoticonPopup, favBox, favRemove, name) {
-        LocalStorage.set("fav_emoticons", favs);
+        SyncedStorage.set("fav_emoticons", favs);
 
         if (name && favs.includes(name) && favs.length > 1) {
             HTML.beforeEnd(favBox, this._buildEmoticonOption(name));
@@ -155,7 +155,7 @@ export class CommentHandler {
                 node.addEventListener("dragstart", ev => ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon));
             });
 
-            let favs = LocalStorage.get("fav_emoticons", []);
+            let favs = SyncedStorage.get("fav_emoticons");
             HTML.afterBegin(emoticonPopup,
                 `<div style="margin-bottom:10px;min-height:32px;line-height:32px;text-align:center;max-height:none;display:flex;" class="emoticon_popup_content">
                     <div style="width:10%;background-image:url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);background-repeat:no-repeat;background-position:center center;" class="commentthread_entry_quotebox" id="es_fav_remove"></div>

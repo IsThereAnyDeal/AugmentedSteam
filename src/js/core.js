@@ -303,6 +303,7 @@ SyncedStorage.defaults = {
             "icon": "www.google.com/images/branding/product/ico/googleg_lodp.ico"
         },
     ],
+    "fav_emoticons": [],
     "group_steamgifts": true,
     "steamcardexchange": true,
     "purchase_dates": true,
