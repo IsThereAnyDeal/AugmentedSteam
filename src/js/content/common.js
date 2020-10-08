@@ -247,7 +247,7 @@ export class User {
     }
 
     static get sessionId() {
-        if (User._sessionId === false) { // TODO Why false?
+        if (!User._sessionId) {
             User._sessionId = HTMLParser.getVariableFromDom("g_sessionID", "string");
         }
         return User._sessionId;
