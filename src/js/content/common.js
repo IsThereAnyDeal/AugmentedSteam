@@ -1551,7 +1551,7 @@ class AugmentedSteam {
     }
 
     static keepSteamSubscriberAgreementState() {
-        const nodes = document.querySelectorAll("#market_sell_dialog_accept_ssa,#market_buynow_dialog_accept_ssa,#accept_ssa");
+        const nodes = document.querySelectorAll("#market_sell_dialog_accept_ssa,#market_buyorder_dialog_accept_ssa,#accept_ssa");
         for (const node of nodes) {
             node.checked = SyncedStorage.get("keepssachecked");
 
