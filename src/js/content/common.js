@@ -1223,7 +1223,7 @@ class AugmentedSteam {
                 <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
                 <div id="es_popup" class="popup_block_new">
                     <div class="popup_body popup_menu">
-                        <a class="popup_menu_item" target="_blank" href="${ExtensionResources.getURL("options.html")}">${Localization.str.thewordoptions}</a>
+                        <a class="popup_menu_item" target="_blank" href="${ExtensionResources.getURL("html/options.html")}">${Localization.str.thewordoptions}</a>
                         <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
                         <div class="hr"></div>
                         <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/AugmentedSteam">${Localization.str.contribute}</a>
@@ -2112,7 +2112,7 @@ export class UpdateHandler {
     static async _showChangelog() {
 
         // FIXME
-        const changelog = (await RequestData.getHttp(ExtensionResources.getURL("changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
+        const changelog = (await RequestData.getHttp(ExtensionResources.getURL("html/changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
         const logo = ExtensionResources.getURL("img/es_128.png");
         const dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
 
