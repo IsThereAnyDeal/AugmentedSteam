@@ -16,12 +16,12 @@
     },
     "permissions": [
       "storage",
-      "contextMenus",
       "*://*.steampowered.com/*",
       "*://steamcommunity.com/*",
       "*://*.isthereanydeal.com/"
     ],
     "optional_permissions": [
+      "contextMenus",
       "webRequest",
       "webRequestBlocking"
     ],

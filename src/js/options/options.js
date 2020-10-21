@@ -1,6 +1,9 @@
 /* eslint-disable no-alert -- TODO */
 
-import {BackgroundBase, Downloader, ExtensionResources, HTML, Info, Language, Localization, SyncedStorage, sleep} from "core";
+import {
+    BackgroundBase, Downloader, ExtensionResources, HTML, Info, Language,
+    Localization, Permissions, SyncedStorage, sleep
+} from "core";
 import {CountryList} from "options/countryList";
 import {StoreList} from "options/storeList";
 
@@ -433,8 +436,9 @@ const Options = (() => {
         async function connect() {
 
             // Has to be synchronously acquired from a user gesture
-            if (!await browser.permissions.request({"permissions": ["webRequest", "webRequestBlocking"]})) { return; }
+            if (!await Permissions.request("itad_connect")) { return; }
             await BackgroundBase.action("itad.authorize");
+            await Permissions.remove("itad_connect");
 
             itadStatus.textContent = Localization.str.connected;
             itadStatus.classList.add("connected");
@@ -658,7 +662,7 @@ const Options = (() => {
         }
     }
 
-    function saveOption(option) {
+    async function saveOption(option) {
         let value;
 
         if (option === "stores") {
@@ -684,6 +688,31 @@ const Options = (() => {
 
             if (option === "quickinv_diff") {
                 value = parseFloat(value.trim()).toFixed(2);
+            }
+
+            const permKey = `opt_${option}`;
+
+            if (Permissions.containsKey(permKey)) {
+                try {
+                    let success;
+                    if (value) {
+                        success = await Permissions.request(permKey);
+                    } else {
+                        success = await Permissions.remove(permKey);
+                    }
+
+                    if (!success) {
+                        throw new Error("Could not grant / remove the permissions");
+                    }
+                } catch (err) {
+                    console.error(err);
+
+                    // Don't save option
+                    if (node.type && node.type === "checkbox") {
+                        node.checked = !value;
+                    }
+                    return;
+                }
             }
         }
 
