@@ -61,7 +61,11 @@ export default class FMultiProductKeys extends Feature {
             node.style.display = "none";
 
             lines.forEach(line => {
-                const attempt = String(line);
+                let attempt = String(line);
+
+                // remove all whitespace and non-key characters
+                attempt = attempt.replace(/[^0-9A-Za-z]/g, "");
+
                 if (attempt === "") { // skip blank rows in the input dialog (including trailing newline)
                     return;
                 }
