@@ -25,7 +25,7 @@ class HTML {
         return HTML.fragment(html).firstElementChild;
     }
 
-    static inner(node, html) {
+    static _getNode(node) {
         let _node = node;
 
         if (typeof _node == "undefined" || _node === null) {
@@ -40,66 +40,46 @@ class HTML {
             return null;
         }
 
-        _node.innerHTML = DOMPurify.sanitize(html);
+        return _node;
+    }
+
+    static inner(node, html) {
+        const _node = HTML._getNode(node);
+
+        if (_node) {
+            _node.innerHTML = DOMPurify.sanitize(html);
+        }
         return _node;
     }
 
     static replace(node, html) {
-        let _node = node;
+        const _node = HTML._getNode(node);
 
-        if (typeof _node == "undefined" || _node === null) {
-            console.warn(`${_node} is not an Element.`);
-            return null;
+        if (_node) {
+            _node.outerHTML = DOMPurify.sanitize(html);
         }
-        if (typeof _node == "string") {
-            _node = document.querySelector(_node);
-        }
-        if (!(_node instanceof Element)) {
-            console.warn(`${_node} is not an Element.`);
-            return null;
-        }
-
-        _node.outerHTML = DOMPurify.sanitize(html);
         return _node;
     }
 
     static wrap(node, html) {
-        let _node = node;
+        const _node = HTML._getNode(node);
 
-        if (typeof _node == "undefined" || _node === null) {
-            console.warn(`${_node} is not an Element.`);
-            return null;
+        if (_node) {
+            const wrapper = HTML.element(html);
+            _node.replaceWith(wrapper);
+            wrapper.append(_node);
+            return wrapper;
+        } else {
+            return _node;
         }
-        if (typeof _node == "string") {
-            _node = document.querySelector(_node);
-        }
-        if (!(_node instanceof Element)) {
-            console.warn(`${_node} is not an Element.`);
-            return null;
-        }
-
-        const wrapper = HTML.element(html);
-        _node.replaceWith(wrapper);
-        wrapper.append(_node);
-        return wrapper;
     }
 
     static adjacent(node, position, html) {
-        let _node = node;
+        const _node = HTML._getNode(node);
 
-        if (typeof _node == "undefined" || _node === null) {
-            console.warn(`${_node} is not an Element.`);
-            return null;
+        if (_node) {
+            _node.insertAdjacentHTML(position, DOMPurify.sanitize(html));
         }
-        if (typeof _node == "string") {
-            _node = document.querySelector(_node);
-        }
-        if (!(_node instanceof Element)) {
-            console.warn(`${_node} is not an Element.`);
-            return null;
-        }
-
-        _node.insertAdjacentHTML(position, DOMPurify.sanitize(html));
         return _node;
     }
 
