@@ -38,7 +38,9 @@ class Permissions {
     }
 }
 
-Permissions.options = {
+// TODO We should use "enum" like class for defining options - for easier tracking in code and avoiding typos
+
+Permissions.options = Object.freeze({
     "opt_context_steam_store":      ["contextMenus"],
     "opt_context_steam_market":     ["contextMenus"],
     "opt_context_itad":             ["contextMenus"],
@@ -47,7 +49,7 @@ Permissions.options = {
     "opt_context_steamdb_instant":  ["contextMenus"],
     "opt_context_steam_keys":       ["contextMenus"],
     "itad_connect":                 ["webRequest", "webRequestBlocking"],
-};
+});
 
 
 export {Permissions};
