@@ -1,8 +1,8 @@
 import Config from "config";
 import {
     ExtensionResources, GameId, HTMLParser, Info, LocalStorage, Localization,
-    LoginError, ServerOutageError, SyncedStorage, Timestamp
-} from "core";
+    Errors, SyncedStorage, TimeUtils
+} from "../core_modules";
 
 /* global idb */
 
@@ -59,7 +59,7 @@ class IndexedDB {
 
     static async _deleteOldData() {
         const expiryStore = IndexedDB.db.transaction("expiries", "readwrite").store;
-        let cursor = await expiryStore.index("expiry").openCursor(IDBKeyRange.upperBound(Timestamp.now()));
+        let cursor = await expiryStore.index("expiry").openCursor(IDBKeyRange.upperBound(TimeUtils.now()));
         const expired = [];
         const stores = {};
         const promises = [];
@@ -131,7 +131,7 @@ class IndexedDB {
 
         if (cached) {
             const _ttl = ttl || IndexedDB.cacheObjectStores.get(storeName);
-            expiry = Timestamp.now() + _ttl;
+            expiry = TimeUtils.now() + _ttl;
 
             if (!timestampedEntry) {
                 expiryKeys.push(storeName);
@@ -397,7 +397,7 @@ class IndexedDB {
                 console.groupEnd();
 
                 // Wait some seconds before retrying
-                await IndexedDB.db.put("expiries", Timestamp.now() + 60, timestampedStore ? storeName : `${storeName}_${key}`);
+                await IndexedDB.db.put("expiries", TimeUtils.now() + 60, timestampedStore ? storeName : `${storeName}_${key}`);
 
                 throw err;
             })
@@ -407,7 +407,7 @@ class IndexedDB {
     }
 
     static isExpired(expiry) {
-        return expiry <= Timestamp.now();
+        return expiry <= TimeUtils.now();
     }
 
     static _asArray(key) {
@@ -462,7 +462,7 @@ class CacheStorage {
         let _ttl = ttl;
         if (!timestamp) { return true; }
         if (typeof ttl !== "number" || _ttl < 0) { _ttl = 0; }
-        return timestamp + _ttl <= Timestamp.now();
+        return timestamp + _ttl <= TimeUtils.now();
     }
 
     static get(key, ttl, defaultValue) {
@@ -479,7 +479,7 @@ class CacheStorage {
     }
 
     static set(key, value) {
-        localStorage.setItem(`cache_${key}`, JSON.stringify({"data": value, "timestamp": Timestamp.now()}));
+        localStorage.setItem(`cache_${key}`, JSON.stringify({"data": value, "timestamp": TimeUtils.now()}));
     }
 
     static remove(key) {
@@ -629,7 +629,7 @@ class AugmentedSteamApi extends Api {
                  * Beautify HTTP 500: "User 'p_enhsteam' has exceeded the 'max_user_connections' resource (current value: XX)",
                  * which would result in a SyntaxError due to JSON.parse
                  */
-                throw new ServerOutageError(
+                throw new Errors.ServerOutageError(
                     `Augmented Steam servers are currently overloaded, failed to fetch endpoint "${endpoint}"`
                 );
             }
@@ -757,7 +757,7 @@ class ITADApi extends Api {
 
         LocalStorage.set("access_token", {
             "token": accessToken,
-            "expiry": Timestamp.now() + parseInt(expiresIn)
+            "expiry": TimeUtils.now() + parseInt(expiresIn)
         });
     }
 
@@ -771,7 +771,7 @@ class ITADApi extends Api {
         const lsEntry = LocalStorage.get("access_token");
         if (!lsEntry) { return false; }
 
-        if (lsEntry.expiry <= Timestamp.now()) {
+        if (lsEntry.expiry <= TimeUtils.now()) {
             LocalStorage.remove("access_token");
             return false;
         }
@@ -954,7 +954,7 @@ class ITADApi extends Api {
         await Promise.all(promises);
 
         const lastImport = LocalStorage.get("lastItadImport") || {};
-        lastImport.to = Timestamp.now();
+        lastImport.to = TimeUtils.now();
         LocalStorage.set("lastItadImport", lastImport);
     }
 
@@ -988,7 +988,7 @@ class ITADApi extends Api {
         });
 
         const lastImport = LocalStorage.get("lastItadImport") || {};
-        lastImport.from = Timestamp.now();
+        lastImport.from = TimeUtils.now();
         LocalStorage.set("lastItadImport", lastImport);
 
         return collection;
@@ -1003,7 +1003,7 @@ class ITADApi extends Api {
         }
 
         const lastImport = LocalStorage.get("lastItadImport") || {};
-        lastImport.from = Timestamp.now();
+        lastImport.from = TimeUtils.now();
         LocalStorage.set("lastItadImport", lastImport);
 
         return waitlist;
@@ -1213,7 +1213,7 @@ class SteamStore extends Api {
         const self = SteamStore;
         const html = await self.getPage("/account/change_country/", {}, res => {
             if (new URL(res.url).pathname === "/login/") {
-                throw new LoginError("store");
+                throw new Errors.LoginError("store");
             }
         });
         const dummyPage = HTMLParser.htmlToDOM(html);
@@ -1355,7 +1355,7 @@ class SteamCommunity extends Api {
             const thisParams = Object.assign(params, lastAssetid ? {"start_assetid": lastAssetid} : null);
             result = await SteamCommunity.getEndpoint(`/inventory/${login.steamId}/753/${contextId}`, thisParams, res => {
                 if (res.status === 403) {
-                    throw new LoginError("community");
+                    throw new Errors.LoginError("community");
                 }
             });
             if (result && result.success) {
@@ -1668,7 +1668,7 @@ class SteamCommunity extends Api {
     static async getPage(endpoint, query) {
         const response = await this._fetchWithDefaults(endpoint, query, {"method": "GET"});
         if (new URL(response.url).pathname === "/login/home/") {
-            throw new LoginError("community");
+            throw new Errors.LoginError("community");
         }
         return response.text();
     }

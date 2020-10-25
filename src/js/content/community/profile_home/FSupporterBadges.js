@@ -1,7 +1,7 @@
 import {Feature} from "modules";
 
 import Config from "config";
-import {HTML, Localization} from "core";
+import {HTML, Localization} from "../../../core_modules";
 import {ExtensionLayer} from "common";
 import {ProfileData} from "community/common";
 

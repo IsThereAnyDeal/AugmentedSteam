@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {GameId, HTML, Localization} from "core";
+import {GameId, HTML, Localization} from "../../../core_modules";
 import {ExtensionLayer, RequestData, User} from "common";
 
 export default class FWorkshopSubscriberButtons extends Feature {

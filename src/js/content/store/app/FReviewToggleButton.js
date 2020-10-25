@@ -1,5 +1,5 @@
 import {Feature} from "modules";
-import {HTML, LocalStorage} from "core";
+import {HTML, LocalStorage} from "../../../core_modules";
 
 export default class FReviewToggleButton extends Feature {
 

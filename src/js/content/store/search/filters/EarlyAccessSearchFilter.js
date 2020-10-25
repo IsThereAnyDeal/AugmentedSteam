@@ -1,6 +1,6 @@
 import {SimpleSearchFilter} from "store/search/filters/searchfilters";
 
-import {Localization, SyncedStorage} from "core";
+import {Localization, SyncedStorage} from "../../../../core_modules";
 import {EarlyAccess} from "common";
 
 export class EarlyAccessSearchFilter extends SimpleSearchFilter {

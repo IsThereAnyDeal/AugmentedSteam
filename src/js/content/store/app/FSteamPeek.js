@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, LocalStorage, Localization} from "core";
+import {HTML, LocalStorage, Localization} from "../../../core_modules";
 import {Background, ExtensionLayer} from "common";
 import FHighlightsTags from "common/FHighlightsTags";
 

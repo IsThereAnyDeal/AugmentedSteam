@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {ExtensionResources, HTML, SyncedStorage} from "core";
+import {ExtensionResources, HTML, SyncedStorage} from "../../../core_modules";
 import {SteamId} from "common";
 import {ProfileData} from "community/common";
 

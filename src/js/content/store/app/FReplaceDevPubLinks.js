@@ -1,6 +1,6 @@
 import {Feature} from "modules";
-
-import {HTML, Localization} from "core";
+import {HTML} from "../../../Core/Html/Html";
+import {Localization} from "../../../Core/Localization/Localization";
 import {ExtensionLayer} from "common";
 
 export default class FReplaceDevPubLinks extends Feature {

@@ -7,7 +7,7 @@ import FITADPrices from "store/common/FITADPrices";
 import FRegionalPricing from "store/common/FRegionalPricing";
 import FSavingsCheck from "./FSavingsCheck";
 
-import {GameId} from "core";
+import {GameId} from "../../../Core/GameId";
 
 export class CSub extends CStore {
 

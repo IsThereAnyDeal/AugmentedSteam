@@ -1,6 +1,6 @@
 import {SimpleSearchFilter} from "store/search/filters/searchfilters";
 
-import {Localization} from "core";
+import {Localization} from "../../../../Core/Localization/Localization";
 
 export class NegativeSearchFilter extends SimpleSearchFilter {
 

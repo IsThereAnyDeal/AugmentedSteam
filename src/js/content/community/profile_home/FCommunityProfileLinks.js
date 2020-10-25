@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {ExtensionResources, HTML, Language, Localization, SyncedStorage} from "core";
+import {ExtensionResources, HTML, Language, Localization, SyncedStorage} from "../../../core_modules";
 import {Clipboard, ExtensionLayer, SteamId} from "common";
 import {CommunityCommon} from "community/common";
 

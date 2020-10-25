@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, Localization} from "core";
+import {HTML, Localization} from "../../../core_modules";
 import {DOMHelper, Price} from "common";
 
 export default class FSavingsCheck extends Feature {

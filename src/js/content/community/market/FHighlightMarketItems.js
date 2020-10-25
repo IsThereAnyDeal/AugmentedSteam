@@ -1,6 +1,6 @@
 import {CallbackFeature} from "modules";
 
-import {SyncedStorage} from "core";
+import {SyncedStorage} from "../../../Core/Storage/SyncedStorage";
 import {Inventory} from "common";
 
 import FHighlightsTags from "common/FHighlightsTags";

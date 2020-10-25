@@ -5,7 +5,7 @@ import FExtraLinks from "store/common/FExtraLinks";
 import FDRMWarnings from "store/common/FDRMWarnings";
 import FITADPrices from "store/common/FITADPrices";
 
-import {GameId} from "core";
+import {GameId} from "../../../Core/GameId";
 
 export class CBundle extends CStore {
     constructor() {

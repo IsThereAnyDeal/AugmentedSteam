@@ -1,7 +1,7 @@
 import {
-    BackgroundBase, CookieStorage, ErrorParser, ExtensionResources, GameId, HTML, HTMLParser,
+    BackgroundUtils, CookieStorage, ErrorParser, ExtensionResources, GameId, HTML, HTMLParser,
     Info, Language, LocalStorage, Localization, StringUtils, SyncedStorage, Version
-} from "core";
+} from "../core_modules";
 
 /**
  * Common functions that may be used on any pages
@@ -108,7 +108,7 @@ class ProgressBar {
 ProgressBar._progress = null;
 ProgressBar._failedRequests = 0;
 
-export class Background extends BackgroundBase {
+export class Background extends BackgroundUtils {
     static async message(message) {
         ProgressBar.startRequest();
 
@@ -2126,11 +2126,11 @@ export class UpdateHandler {
 
         if (Version.fromString(Info.version).isSame(new Version(1, 4))) {
 
-            if (await BackgroundBase.action("itad.isconnected")) {
+            if (await BackgroundUtils.action("itad.isconnected")) {
                 itadConnected();
             } else {
                 connectBtn.addEventListener("click", async() => {
-                    await BackgroundBase.action("itad.authorize");
+                    await BackgroundUtils.action("itad.authorize");
                     ITAD.create();
                     itadConnected();
                 });
@@ -2141,7 +2141,7 @@ export class UpdateHandler {
     static _migrateSettings(oldVersion) {
 
         if (oldVersion.isSameOrBefore("1.3.1")) {
-            BackgroundBase.action("cache.clear");
+            BackgroundUtils.action("cache.clear");
 
             SyncedStorage.set("horizontalscrolling", SyncedStorage.get("horizontalmediascrolling"));
             SyncedStorage.remove("horizontalmediascrolling");

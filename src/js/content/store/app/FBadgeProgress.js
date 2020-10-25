@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 import {Background, DOMHelper, User} from "common";
-import {HTML, HTMLParser, Localization, SyncedStorage} from "core";
+import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
 
 export default class FBadgeProgress extends Feature {
 

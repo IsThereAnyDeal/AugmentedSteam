@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {GameId, HTML, SyncedStorage} from "core";
+import {GameId, HTML, SyncedStorage} from "../../../core_modules";
 import {Stats, Viewport} from "common";
 
 export default class FGamelistAchievements extends Feature {

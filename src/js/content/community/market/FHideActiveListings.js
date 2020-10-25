@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {SyncedStorage} from "core";
+import {SyncedStorage} from "../../../core_modules";
 
 export default class FHideActiveListings extends Feature {
 

@@ -6,7 +6,7 @@ import FBackgroundPreviewLink from "./FBackgroundPreviewLink";
 import FBadgePageLink from "./FBadgePageLink";
 import FPriceHistoryZoomControl from "./FPriceHistoryZoomControl";
 
-import {GameId} from "core";
+import {GameId} from "../../../Core/GameId";
 
 export class CMarketListing extends CCommunityBase {
 

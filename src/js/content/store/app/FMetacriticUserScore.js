@@ -1,5 +1,7 @@
 import {Feature} from "modules";
-import {HTML, Localization, SyncedStorage} from "core";
+import {HTML} from "../../../Core/Html/Html";
+import {Localization} from "../../../Core/Localization/Localization";
+import {SyncedStorage} from "../../../Core/Storage/SyncedStorage";
 
 export default class FMetacriticUserScore extends Feature {
 

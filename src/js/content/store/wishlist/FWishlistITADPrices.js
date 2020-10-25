@@ -1,6 +1,6 @@
 import {CallbackFeature} from "modules";
 
-import {SyncedStorage} from "core";
+import {SyncedStorage} from "../../../core_modules";
 import {ExtensionLayer, Prices} from "common";
 
 export default class FWishlistITADPrices extends CallbackFeature {

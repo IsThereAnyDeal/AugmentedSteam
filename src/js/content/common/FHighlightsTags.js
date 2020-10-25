@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 import {DynamicStore, ExtensionLayer, ITAD, Inventory} from "common";
-import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "core";
+import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../core_modules";
 
 export default class FHighlightsTags extends Feature {
 

@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, HTMLParser, Localization} from "core";
+import {HTML, HTMLParser, Localization} from "../../../core_modules";
 import {ExtensionLayer, User} from "common";
 
 export default class FChatDropdownOptions extends Feature {

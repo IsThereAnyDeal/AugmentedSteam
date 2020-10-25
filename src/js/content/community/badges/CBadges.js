@@ -6,7 +6,7 @@ import FCardExchangeLinks from "community/common/FCardExchangeLinks";
 import FBadgeSortAndFilter from "./FBadgeSortAndFilter";
 import FBadgeDropsCount from "./FBadgeDropsCount";
 
-import {HTMLParser} from "core";
+import {HTMLParser} from "../../../Core/Html/HtmlParser";
 import {DOMHelper, RequestData} from "common";
 
 export class CBadges extends CCommunityBase {

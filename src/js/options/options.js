@@ -1,9 +1,9 @@
 /* eslint-disable no-alert -- TODO */
 
 import {
-    BackgroundBase, Downloader, ExtensionResources, HTML, Info, Language,
-    Localization, Permissions, SyncedStorage, sleep
-} from "core";
+    BackgroundUtils, Downloader, ExtensionResources, HTML, Info, Language,
+    Localization, Permissions, SyncedStorage, TimeUtils
+} from "../core_modules";
 import {CountryList} from "options/countryList";
 import {StoreList} from "options/storeList";
 
@@ -13,7 +13,7 @@ class Fader {
         node.style.transition = "";
         node.style[property] = initialValue;
 
-        await sleep(0);
+        await TimeUtils.sleep(0);
 
         node.style.transition = `${property} ${durationMs}ms`;
         node.style[property] = finalValue;
@@ -32,7 +32,7 @@ class Fader {
         node.dataset.fadeControl = controlId;
 
         Fader.fadeIn(node, fadeInDuration);
-        await sleep(fadeInDuration + idleDuration);
+        await TimeUtils.sleep(fadeInDuration + idleDuration);
 
         if (node.dataset.fadeControl === controlId) {
             Fader.fadeOut(node, fadeOutDuration);
@@ -422,7 +422,7 @@ const Options = (() => {
         const [itadStatus, itadAction] = document.querySelectorAll("#itad_status, #itad_action");
 
         async function disconnect() {
-            await BackgroundBase.action("itad.disconnect");
+            await BackgroundUtils.action("itad.disconnect");
 
             itadStatus.textContent = Localization.str.disconnected;
             itadStatus.classList.add("disconnected");
@@ -437,7 +437,7 @@ const Options = (() => {
 
             // Has to be synchronously acquired from a user gesture
             if (!await Permissions.request("itad_connect")) { return; }
-            await BackgroundBase.action("itad.authorize");
+            await BackgroundUtils.action("itad.authorize");
             await Permissions.remove("itad_connect");
 
             itadStatus.textContent = Localization.str.connected;
@@ -503,7 +503,7 @@ const Options = (() => {
             HTML.inner(document.querySelector(`.lang-perc.${lang}`), `${percentage.toFixed(1)}%&nbsp;`);
         }
 
-        if (await BackgroundBase.action("itad.isconnected")) {
+        if (await BackgroundUtils.action("itad.isconnected")) {
             itadStatus.textContent = Localization.str.connected;
             itadStatus.classList.add("connected");
 

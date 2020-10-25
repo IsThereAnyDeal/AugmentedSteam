@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {Localization, SyncedStorage} from "core";
+import {Localization, SyncedStorage} from "../../../core_modules";
 import {Sortbox} from "common";
 
 export default class FGroupsSort extends Feature {

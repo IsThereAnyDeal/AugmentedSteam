@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, Localization} from "core";
+import {HTML, Localization} from "../../../core_modules";
 import {Background, Currency, DOMHelper, Price} from "common";
 import {CommunityCommon} from "community/common";
 

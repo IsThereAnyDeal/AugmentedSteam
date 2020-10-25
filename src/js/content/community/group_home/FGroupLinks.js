@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, SyncedStorage} from "core";
+import {HTML, SyncedStorage} from "../../../core_modules";
 import {CommunityCommon} from "community/common";
 
 export default class FGroupLinks extends Feature {

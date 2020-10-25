@@ -1,5 +1,5 @@
 import {Feature} from "modules";
-import {HTML, Localization, SyncedStorage} from "core";
+import {HTML, Localization, SyncedStorage} from "../../../core_modules";
 
 export default class FFamilySharingNotice extends Feature {
 

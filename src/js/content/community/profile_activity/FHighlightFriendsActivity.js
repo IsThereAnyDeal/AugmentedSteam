@@ -1,6 +1,6 @@
 import {CallbackFeature} from "modules";
 
-import {GameId, HTML, Localization, SyncedStorage} from "core";
+import {GameId, HTML, Localization, SyncedStorage} from "../../../core_modules";
 import {DynamicStore, User} from "common";
 
 import FHighlightsTags from "common/FHighlightsTags";

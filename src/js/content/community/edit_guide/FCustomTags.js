@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, LocalStorage, Localization} from "core";
+import {HTML, LocalStorage, Localization} from "../../../core_modules";
 import {ExtensionLayer, Messenger} from "common";
 
 export default class FCustomTags extends Feature {

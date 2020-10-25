@@ -1,5 +1,5 @@
 import {CallbackFeature} from "modules";
-import {SyncedStorage} from "core";
+import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
 
 export default class FSkipAgecheck extends CallbackFeature {
 

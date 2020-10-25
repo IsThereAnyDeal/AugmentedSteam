@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {Downloader, HTML, Localization, SyncedStorage} from "core";
+import {Downloader, HTML, Localization, SyncedStorage} from "../../../core_modules";
 import {Clipboard, ExtensionLayer} from "common";
 
 class WishlistExporter {

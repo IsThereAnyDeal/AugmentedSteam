@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {Localization} from "core";
+import {Localization} from "../../../core_modules";
 import {RequestData, Sortbox} from "common";
 
 export default class FAchievementSort extends Feature {

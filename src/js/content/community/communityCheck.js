@@ -1,4 +1,4 @@
-import {Localization, SyncedStorage} from "core";
+import {Localization, SyncedStorage} from "../../core_modules";
 import {Common, Currency, User} from "common";
 import {CommentHandler} from "community/common/CommentHandler";
 

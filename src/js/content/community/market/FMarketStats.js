@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, HTMLParser, LocalStorage, Localization, SyncedStorage, sleep} from "core";
+import {HTML, HTMLParser, LocalStorage, Localization, SyncedStorage, TimeUtils} from "../../../core_modules";
 import {Price, RequestData, User} from "common";
 
 export default class FMarketStats extends Feature {
@@ -149,7 +149,7 @@ export default class FMarketStats extends Feature {
             request.attempt += 1;
             request.lastAttempt = Date.now();
             if (request.attempt > 1) {
-                await sleep(2000);
+                await TimeUtils.sleep(2000);
             } else if (request.attempt > 4) {
 
                 // Give up after four tries

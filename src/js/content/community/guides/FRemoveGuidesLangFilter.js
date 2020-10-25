@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {SyncedStorage} from "core";
+import {SyncedStorage} from "../../../Core/Storage/SyncedStorage";
 
 export default class FRemoveGuidesLangFilter extends Feature {
 

@@ -4,7 +4,7 @@ import {ContextTypes} from "modules";
 import FGroupsSort from "./FGroupsSort";
 import FGroupsManageButton from "./FGroupsManageButton";
 
-import {HTML} from "core";
+import {HTML} from "../../../Core/Html/Html";
 
 export class CGroups extends CCommunityBase {
 

@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, Localization, SyncedStorage, sleep} from "core";
+import {HTML, Localization, SyncedStorage, TimeUtils} from "../../../core_modules";
 import {Currency, HTTPError, Price, RequestData, User} from "common";
 
 export default class FMarketLowestPrice extends Feature {
@@ -106,7 +106,7 @@ export default class FMarketLowestPrice extends Feature {
                     `https://steamcommunity.com/market/priceoverview/?country=${User.storeCountry}&currency=${Currency.currencyTypeToNumber(Currency.storeCurrency)}&appid=${appid}&market_hash_name=${marketHashName}`
                 );
 
-                await sleep(1000);
+                await TimeUtils.sleep(1000);
 
                 done = true;
                 this._loadedMarketPrices[marketHashName] = data;
@@ -115,7 +115,7 @@ export default class FMarketLowestPrice extends Feature {
 
                 // Too Many Requests
                 if (err instanceof HTTPError && err.code === 429) {
-                    await sleep(30000);
+                    await TimeUtils.sleep(30000);
                     if (node) { // If the node still exists after this timeout
                         done = false;
                     } else {

@@ -1,6 +1,6 @@
 import {CallbackFeature} from "modules";
 
-import {ExtensionResources, GameId, HTML, SyncedStorage} from "core";
+import {ExtensionResources, GameId, HTML, SyncedStorage} from "../../../core_modules";
 
 export default class FCardExchangeLinks extends CallbackFeature {
 

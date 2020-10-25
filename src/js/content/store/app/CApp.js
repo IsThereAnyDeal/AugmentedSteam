@@ -39,7 +39,7 @@ import FOwnedActionsButtons from "./FOwnedActionsButtons";
 import FSupportInfo from "./FSupportInfo";
 import FMediaExpander from "common/FMediaExpander";
 
-import {GameId, LocalStorage, SyncedStorage} from "core";
+import {GameId, LocalStorage, SyncedStorage} from "../../../core_modules";
 
 import {Background, User} from "common";
 import {UserNotes} from "store/common/UserNotes";

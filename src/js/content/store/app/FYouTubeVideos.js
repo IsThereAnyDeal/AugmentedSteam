@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, Language, Localization, SyncedStorage} from "core";
+import {HTML, Language, Localization, SyncedStorage} from "../../../core_modules";
 import {ExtensionLayer} from "common";
 
 export default class FYouTubeVideos extends Feature {

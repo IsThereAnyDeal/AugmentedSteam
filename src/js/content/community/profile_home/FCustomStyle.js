@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {ExtensionResources, HTML} from "core";
+import {ExtensionResources, HTML} from "../../../core_modules";
 import {DOMHelper} from "common";
 import {ProfileData} from "community/common";
 

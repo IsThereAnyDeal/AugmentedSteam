@@ -1,6 +1,6 @@
 import {Feature} from "modules";
 
-import {HTML, HTMLParser, Localization, SyncedStorage} from "core";
+import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
 import {DynamicStore, ExtensionLayer, RequestData, User} from "common";
 import FExportWishlist from "./FExportWishlist";
 

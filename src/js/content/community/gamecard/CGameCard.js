@@ -6,7 +6,7 @@ import FCardMarketLinks from "./FCardMarketLinks";
 import FCardFoilLink from "./FCardFoilLink";
 import FTradeForumLink from "./FTradeForumLink";
 
-import {GameId} from "core";
+import {GameId} from "../../../Core/GameId";
 
 export class CGameCard extends CCommunityBase {
 
