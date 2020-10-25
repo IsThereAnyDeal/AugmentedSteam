@@ -75,17 +75,7 @@ class Version {
     }
 
     isSameOrBefore(version) {
-        const _version = Version.coerce(version);
-        if (this.major < _version.major) { return true; }
-        if (this.major > _version.major) { return false; }
-
-        // this.major == _version.major
-        if (this.minor < _version.minor) { return true; }
-        if (this.minor > _version.minor) { return false; }
-
-        // this.minor == _version.minor
-        if (this.patch > _version.patch) { return false; }
-        return true;
+        return this.isSame(version) || this.isBefore(version);
     }
 
     isAfter(version) {
