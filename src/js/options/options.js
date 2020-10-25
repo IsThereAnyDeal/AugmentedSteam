@@ -643,7 +643,7 @@ const Options = (() => {
     }
 
     function exportSettings() {
-        Downloader.download(new Blob([JSON.stringify(SyncedStorage.cache)]), `AugmentedSteam_v${Info.version}.json`);
+        Downloader.download(new Blob([SyncedStorage.toJson()]), `AugmentedSteam_v${Info.version}.json`);
     }
 
     function clearSettings() {

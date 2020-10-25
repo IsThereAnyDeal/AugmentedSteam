@@ -11,53 +11,53 @@ class SyncedStorage {
      * MAX_WRITE_OPERATIONS_PER_MINUTE = 120
      */
     static has(key) {
-        return Object.prototype.hasOwnProperty.call(this.cache, key);
+        return Object.prototype.hasOwnProperty.call(this._cache, key);
     }
 
     static get(key) {
-        if (typeof this.cache[key] == "undefined") {
+        if (typeof this._cache[key] == "undefined") {
             if (typeof this.defaults[key] == "undefined") {
                 console.warn(`Unrecognized SyncedStorage key "${key}"`);
             }
             return this.defaults[key];
         }
-        return this.cache[key];
+        return this._cache[key];
     }
 
     static set(key, value) {
-        this.cache[key] = value;
-        return this.adapter.set({[key]: value});
+        this._cache[key] = value;
+        return this._adapter.set({[key]: value});
 
         // this will throw if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
     }
 
     static import(entries) {
         for (const [key, value] of Object.entries(entries)) {
-            this.cache[key] = value;
+            this._cache[key] = value;
         }
-        return this.adapter.set(entries);
+        return this._adapter.set(entries);
     }
 
     static remove(key) {
-        if (typeof this.cache[key] !== "undefined") {
-            delete this.cache[key];
+        if (typeof this._cache[key] !== "undefined") {
+            delete this._cache[key];
         }
-        return this.adapter.remove(key);
+        return this._adapter.remove(key);
 
         // can throw if MAX_WRITE* is exceeded
     }
 
     static keys(prefix = "") {
-        return Object.keys(this.cache).filter(k => k.startsWith(prefix));
+        return Object.keys(this._cache).filter(k => k.startsWith(prefix));
     }
 
     static entries() {
-        return Object.entries(this.cache);
+        return Object.entries(this._cache);
     }
 
     static clear() {
-        this.cache = {};
-        return this.adapter.clear();
+        this._cache = {};
+        return this._adapter.clear();
 
         // can throw if MAX_WRITE* is exceeded
     }
@@ -66,14 +66,14 @@ class SyncedStorage {
     static async init() {
         browser.storage.onChanged.addListener(changes => {
             for (const [key, {"newValue": val}] of Object.entries(changes)) {
-                this.cache[key] = val;
+                this._cache[key] = val;
             }
         });
 
-        const storage = await this.adapter.get(null);
-        Object.assign(this.cache, storage);
+        const storage = await this._adapter.get(null);
+        Object.assign(this._cache, storage);
 
-        return this.cache;
+        return this._cache;
     }
 
     static then(onDone, onCatch) {
@@ -81,14 +81,19 @@ class SyncedStorage {
     }
 
     static async quota() {
-        const maxBytes = this.adapter.QUOTA_BYTES;
-        const bytes = await this.adapter.getBytesInUse();
+        const maxBytes = this._adapter.QUOTA_BYTES;
+        const bytes = await this._adapter.getBytesInUse();
         return bytes / maxBytes; // float 0.0 (0%) -> 1.0 (100%)
     }
+
+    static toJson() {
+        return JSON.stringify(this._cache);
+    }
 }
-SyncedStorage.adapter = browser.storage.sync || browser.storage.local;
-SyncedStorage.cache = {};
-SyncedStorage.defaults = {
+
+SyncedStorage._adapter = browser.storage.sync || browser.storage.local;
+SyncedStorage._cache = {};
+SyncedStorage.defaults = Object.freeze({
     "language": "english",
 
     "version": Info.version,
@@ -303,6 +308,6 @@ SyncedStorage.defaults = {
     "context_steamdb": false,
     "context_steamdb_instant": false,
     "context_steam_keys": false,
-};
+});
 
 export {SyncedStorage};

@@ -1,5 +1,5 @@
 
-// todo use https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage
+// TODO use https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage
 class LocalStorage {
     static get(key, defaultValue) {
         const item = localStorage.getItem(key);
