@@ -1,4 +1,4 @@
-import {BackgroundUtils} from "../Utils/BackgroundUtils";
+import {BackgroundSimple} from "../BackgroundSimple";
 import {ExtensionResources} from "../ExtensionResources";
 import {Language} from "./Language";
 import {SyncedStorage} from "../Storage/SyncedStorage";
@@ -19,7 +19,7 @@ class Localization {
             currentSteamLanguage = storedSteamLanguage;
         } else if (currentSteamLanguage !== storedSteamLanguage) {
             SyncedStorage.set("language", currentSteamLanguage);
-            BackgroundUtils.action("clearpurchases");
+            BackgroundSimple.action("clearpurchases");
         }
 
         function deepAssign(target, source) {

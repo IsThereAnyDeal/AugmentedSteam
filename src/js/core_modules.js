@@ -7,7 +7,7 @@ import {Localization} from "./Core/Localization/Localization";
 import {CookieStorage} from "./Core/Storage/CookieStorage";
 import {LocalStorage} from "./Core/Storage/LocalStorage";
 import {SyncedStorage} from "./Core/Storage/SyncedStorage";
-import {BackgroundUtils} from "./Core/Utils/BackgroundUtils";
+import {BackgroundSimple} from "./Core/BackgroundSimple";
 import {StringUtils} from "./Core/Utils/StringUtils";
 import {TimeUtils} from "./Core/Utils/TimeUtils";
 import {Debug} from "./Core/Debug";
@@ -24,7 +24,7 @@ export {
     HTML, HTMLParser,
     Language, Localization,
     CookieStorage, LocalStorage, SyncedStorage,
-    BackgroundUtils, StringUtils, TimeUtils,
+    BackgroundSimple, StringUtils, TimeUtils,
     Debug,
     Downloader,
     Environment,

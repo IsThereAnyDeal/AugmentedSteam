@@ -1,5 +1,5 @@
 
-class BackgroundUtils {
+class BackgroundSimple {
     static message(message) {
         return browser.runtime.sendMessage(message);
     }
@@ -10,4 +10,4 @@ class BackgroundUtils {
     }
 }
 
-export {BackgroundUtils};
+export {BackgroundSimple};

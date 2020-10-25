@@ -1,7 +1,7 @@
 /* eslint-disable no-alert -- TODO */
 
 import {
-    BackgroundUtils, Downloader, ExtensionResources, HTML, Info, Language,
+    BackgroundSimple, Downloader, ExtensionResources, HTML, Info, Language,
     Localization, Permissions, SyncedStorage, TimeUtils
 } from "../core_modules";
 import {CountryList} from "options/countryList";
@@ -422,7 +422,7 @@ const Options = (() => {
         const [itadStatus, itadAction] = document.querySelectorAll("#itad_status, #itad_action");
 
         async function disconnect() {
-            await BackgroundUtils.action("itad.disconnect");
+            await BackgroundSimple.action("itad.disconnect");
 
             itadStatus.textContent = Localization.str.disconnected;
             itadStatus.classList.add("disconnected");
@@ -437,7 +437,7 @@ const Options = (() => {
 
             // Has to be synchronously acquired from a user gesture
             if (!await Permissions.request("itad_connect")) { return; }
-            await BackgroundUtils.action("itad.authorize");
+            await BackgroundSimple.action("itad.authorize");
             await Permissions.remove("itad_connect");
 
             itadStatus.textContent = Localization.str.connected;
@@ -503,7 +503,7 @@ const Options = (() => {
             HTML.inner(document.querySelector(`.lang-perc.${lang}`), `${percentage.toFixed(1)}%&nbsp;`);
         }
 
-        if (await BackgroundUtils.action("itad.isconnected")) {
+        if (await BackgroundSimple.action("itad.isconnected")) {
             itadStatus.textContent = Localization.str.connected;
             itadStatus.classList.add("connected");
 
