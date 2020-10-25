@@ -17,17 +17,11 @@
                 "browser": false,
                 "webextensions": false
             }
-        },
-        {
-            "files": [
-                "src/js/@(background|content)/**",
-                "src/js/core.js"
-            ],
-            "globals": {
-                "DOMPurify": "readonly"
-            }
         }
     ],
+    "globals": {
+        "DOMPurify": "readonly"
+    },
     "ignorePatterns": [
         "/src/js/lib/**",
         "/dist/**"
@@ -103,7 +97,7 @@
         "no-multi-assign": "error",
         "no-multi-spaces": "error",
         "no-multi-str": "error",
-        "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1, "maxBOF": 0 }],
+        "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1, "maxBOF": 1 }],
         "no-negated-condition": "error",
         "no-nested-ternary": "error",
         "no-new": "error",
@@ -124,7 +118,7 @@
         "no-tabs": "error",
         "no-template-curly-in-string": "error",
         "no-throw-literal": "error",
-        "no-trailing-spaces": "error",
+        "no-trailing-spaces": ["error", { "skipBlankLines": true }],
         "no-undef-init": "error",
         "no-undefined": "error",
         "no-unmodified-loop-condition": "error",
