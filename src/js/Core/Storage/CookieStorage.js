@@ -2,10 +2,8 @@
 class CookieStorage {
 
     static get(name, defaultValue) {
-        if (CookieStorage.cache.size === 0) {
-            CookieStorage.init();
-        }
         const _name = name.trim();
+
         if (!CookieStorage.cache.has(_name)) {
             return defaultValue;
         }
@@ -13,12 +11,11 @@ class CookieStorage {
     }
 
     static set(name, val, ttl = 60 * 60 * 24 * 365) {
-        if (CookieStorage.cache.size === 0) {
-            CookieStorage.init();
-        }
         let _name = name.trim();
         let _val = val.trim();
+
         CookieStorage.cache.set(_name, _val);
+
         _name = encodeURIComponent(_name);
         _val = encodeURIComponent(_val);
         document.cookie = `${_name}=${_val}; max-age=${ttl}`;
@@ -32,7 +29,7 @@ class CookieStorage {
     }
 
     static init() {
-        CookieStorage.cache.clear();
+        CookieStorage.cache = new Map();
         for (let [key, val] of document.cookie.split(";").map(kv => kv.split("="))) {
             key = key.trim();
             CookieStorage.cache.set(key, decodeURIComponent(val));
@@ -40,6 +37,6 @@ class CookieStorage {
     }
 }
 
-CookieStorage.cache = new Map();
+CookieStorage.init();
 
 export {CookieStorage};
