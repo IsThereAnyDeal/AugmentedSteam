@@ -1,24 +1,34 @@
 
-class Environment {
-
-    static get contextType() {
-        if (browser.extension.getBackgroundPage) {
-            const bgPage = browser.extension.getBackgroundPage();
-
-            return bgPage === window
-                ? Environment.ContextType.BACKGROUND
-                : Environment.ContextType.OPTIONS;
-        }
-
-        return Environment.ContextType.CONTENT_SCRIPT;
-    }
-}
-
-Environment.ContextType = Object.freeze({
+const ContextType = Object.freeze({
     "BACKGROUND": 1,
     "CONTENT_SCRIPT": 2,
     "OPTIONS": 3,
 });
 
+let currentContext;
+if (browser.extension.getBackgroundPage) {
+    const bgPage = browser.extension.getBackgroundPage();
+
+    currentContext = (bgPage === window)
+        ? ContextType.BACKGROUND
+        : ContextType.OPTIONS;
+} else {
+    currentContext = ContextType.CONTENT_SCRIPT;
+}
+
+class Environment {
+
+    static isBackgroundScript() {
+        return currentContext === ContextType.BACKGROUND;
+    }
+
+    static isContentScript() {
+        return currentContext === ContextType.CONTENT_SCRIPT;
+    }
+
+    static isOptions() {
+        return currentContext === ContextType.OPTIONS;
+    }
+}
 
 export {Environment};

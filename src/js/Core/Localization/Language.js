@@ -14,14 +14,14 @@ class Language {
             const src = n.getAttribute("src");
             const match = src.match(re);
             if (match) {
-                this._currentSteamLanguage = match[1];
+                Language._currentSteamLanguage = match[1];
                 return this._currentSteamLanguage;
             }
         }
 
         // In a Content Context, we can check for a cookie
-        if (Environment.contextType === Environment.ContextType.CONTENT_SCRIPT) {
-            this._currentSteamLanguage = CookieStorage.get("Steam_Language") || null;
+        if (Environment.isContentScript()) {
+            Language._currentSteamLanguage = CookieStorage.get("Steam_Language") || null;
         }
 
         return this._currentSteamLanguage;
