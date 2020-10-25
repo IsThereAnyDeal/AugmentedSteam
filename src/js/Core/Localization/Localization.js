@@ -1,24 +1,25 @@
-import {BackgroundBase, ExtensionResources} from "../../core";
+import {BackgroundUtils} from "../Utils/BackgroundUtils";
+import {ExtensionResources} from "../ExtensionResources";
 import {Language} from "./Language";
 import {SyncedStorage} from "../Storage/SyncedStorage";
 
 
 class Localization {
+
     static loadLocalization(code) {
-        return ExtensionResources.getJSON(`/localization/${code}/strings.json`);
+        return ExtensionResources.getJSON(`/localization/${code}.json`);
     }
 
     static init() {
         if (Localization._promise) { return Localization._promise; }
 
         let currentSteamLanguage = Language.getCurrentSteamLanguage();
-        let storedSteamLanguage = SyncedStorage.get("language");
+        const storedSteamLanguage = SyncedStorage.get("language");
         if (currentSteamLanguage === null) {
             currentSteamLanguage = storedSteamLanguage;
         } else if (currentSteamLanguage !== storedSteamLanguage) {
-            storedSteamLanguage = currentSteamLanguage;
             SyncedStorage.set("language", currentSteamLanguage);
-            BackgroundBase.action("clearpurchases");
+            BackgroundUtils.action("clearpurchases");
         }
 
         function deepAssign(target, source) {
