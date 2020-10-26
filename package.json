@@ -13,5 +13,8 @@
     "webpack-cli": "^3.3.12",
     "webpack-extension-reloader": "^1.1.4",
     "webpack-merge": "^5.0.7"
+  },
+  "dependencies": {
+    "dompurify": "~2.0.2"
   }
 }

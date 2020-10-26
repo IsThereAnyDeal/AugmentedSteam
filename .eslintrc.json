@@ -19,9 +19,6 @@
             }
         }
     ],
-    "globals": {
-        "DOMPurify": "readonly"
-    },
     "ignorePatterns": [
         "/src/js/lib/**",
         "/dist/**"

@@ -10,7 +10,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/frontpage.js"
       ],
       "css": [
@@ -25,7 +24,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/wishlist.js"
       ],
       "css": [
@@ -39,7 +37,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/sale.js"
       ],
       "css": [
@@ -54,7 +51,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/stats.js"
       ],
       "css": [
@@ -69,7 +65,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/search.js"
       ],
       "css": [
@@ -85,7 +80,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/funds.js"
       ],
       "css": [
@@ -100,7 +94,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/account.js"
       ],
       "css": [
@@ -115,7 +108,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/registerkey.js"
       ],
       "css": [
@@ -129,7 +121,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/bundle.js"
       ],
       "css": [
@@ -143,7 +134,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/sub.js"
       ],
       "css": [
@@ -157,7 +147,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/app.js"
       ],
       "css": [
@@ -171,7 +160,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/agecheck.js"
       ],
       "css": [
@@ -218,7 +206,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/store/default.js"
       ],
       "css": [
@@ -233,7 +220,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/workshop.js"
       ],
       "css": [
@@ -247,7 +233,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/workshop_browse.js"
       ],
       "css": [
@@ -264,7 +249,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/profile_activity.js"
       ],
       "css": [
@@ -279,7 +263,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/games.js"
       ],
       "css": [
@@ -294,7 +277,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/profile_edit.js"
       ],
       "css": [
@@ -311,7 +293,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/badges.js"
       ],
       "css": [
@@ -326,7 +307,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/gamecard.js"
       ],
       "css": [
@@ -341,7 +321,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/friends_that_play.js"
       ],
       "css": [
@@ -362,7 +341,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/friends.js"
       ],
       "css": [
@@ -379,7 +357,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/groups.js"
       ],
       "css": [
@@ -394,7 +371,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/inventory.js"
       ],
       "css": [
@@ -408,7 +384,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/market_listing.js"
       ],
       "css": [
@@ -425,7 +400,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/market.js"
       ],
       "css": [
@@ -440,7 +414,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/stats.js"
       ],
       "css": [
@@ -457,7 +430,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/myworkshop.js"
       ],
       "css": [
@@ -472,7 +444,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/recommended.js"
       ],
       "css": [
@@ -527,7 +498,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/profile_home.js"
       ],
       "css": [
@@ -541,7 +511,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/group_home.js"
       ],
       "css": [
@@ -555,7 +524,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/guides.js"
       ],
       "css": [
@@ -572,7 +540,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/app.js"
       ],
       "css": [
@@ -587,7 +554,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/shared_files.js"
       ],
       "css": [
@@ -602,7 +568,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/edit_guide.js"
       ],
       "css": [
@@ -617,7 +582,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/booster_creator.js"
       ],
       "css": [
@@ -652,7 +616,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/default.js"
       ],
       "css": [
@@ -666,7 +629,6 @@
       ],
       "js": [
         "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/DOMPurify/purify.js",
         "entries/community/trade_offer.js"
       ],
       "css": [

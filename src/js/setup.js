@@ -1,3 +1,4 @@
+import DOMPurify from "dompurify";
 import {SyncedStorage} from "./Core/Storage/SyncedStorage";
 
 /*

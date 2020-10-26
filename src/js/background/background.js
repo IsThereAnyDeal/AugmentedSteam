@@ -1,7 +1,8 @@
+import DOMPurify from "dompurify";
 import Config from "config";
 import {
-    ExtensionResources, GameId, HTMLParser, Info, LocalStorage, Localization,
-    Errors, SyncedStorage, TimeUtils
+    Errors, ExtensionResources, GameId, HTMLParser, Info, LocalStorage,
+    Localization, SyncedStorage, TimeUtils
 } from "../core_modules";
 
 /* global idb */
