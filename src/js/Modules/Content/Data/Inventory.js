@@ -1,7 +1,6 @@
-import {Background} from "../../Content/common";
+import {Background} from "../Background";
 
-
-export class Inventory {
+class Inventory {
 
     static getCoupon(appid) {
         return Background.action("coupon", appid);
@@ -58,3 +57,5 @@ export class Inventory {
         return Background.action("hasitem", marketHashes);
     }
 }
+
+export {Inventory};

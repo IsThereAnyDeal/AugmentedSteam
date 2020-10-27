@@ -1,7 +1,9 @@
 import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
-import {Background} from "../../../Content/common";
+import {ExtensionLayer} from "../ExtensionLayer";
+import {CurrencyRegistry} from "./CurrencyRegistry";
+import {Background} from "../Background";
 
-export class Currency {
+class Currency {
 
     static _getCurrencyFromDom() {
         const currencyNode = document.querySelector('meta[itemprop="priceCurrency"]');
@@ -11,7 +13,7 @@ export class Currency {
         return null;
     }
 
-    static async _getCurrencyFromWallet() {
+    static async _getCurrencyromWallet() {
         const walletCurrency = await ExtensionLayer.runInPageContext(
             // eslint-disable-next-line no-undef, camelcase
             () => (typeof g_rgWalletInfo !== "undefined" && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null),
@@ -108,3 +110,5 @@ export class Currency {
         return CurrencyRegistry.fromNumber(number).abbr;
     }
 }
+
+export {Currency};

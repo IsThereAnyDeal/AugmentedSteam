@@ -1,7 +1,8 @@
-import {GameId} from "../Core/GameId";
-import {Background} from "../../Content/common";
+import {GameId} from "../../Core/GameId";
+import {Background} from "../Background";
+import {User} from "../User";
 
-export class DynamicStore {
+class DynamicStore {
 
     /*
      * FIXME
@@ -80,3 +81,4 @@ export class DynamicStore {
     }
 }
 
+export {DynamicStore};

@@ -1,6 +1,6 @@
 import {HTMLParser} from "../Core/Html/HtmlParser";
 
-export class SteamId {
+class SteamId {
 
     static getSteamId() {
         if (SteamId._steamId) { return SteamId._steamId; }
@@ -119,3 +119,5 @@ SteamId.Detail = class {
         return this._steamId64;
     }
 };
+
+export {SteamId};

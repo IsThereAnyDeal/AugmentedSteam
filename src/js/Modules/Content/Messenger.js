@@ -4,7 +4,7 @@
  * This class is meant to simplify communication between extension context and page context.
  * Basically, we have wrapped postMessage API in this class.
  */
-export class Messenger {
+class Messenger {
     static postMessage(msgID, info) {
         window.postMessage({
             "type": `es_${msgID}`,
@@ -38,3 +38,5 @@ export class Messenger {
         });
     }
 }
+
+export {Messenger};

@@ -2,9 +2,10 @@ import {HTML} from "../Core/Html/Html";
 import {ExtensionResources} from "../Core/ExtensionResources";
 import {SyncedStorage} from "../Core/Storage/SyncedStorage";
 import {Localization} from "../Core/Localization/Localization";
-import {Background} from "../../Content/common";
+import {Background} from "./Background";
+import {User} from "./User";
 
-export class ITAD {
+class ITAD {
     static async create() {
         if (!await Background.action("itad.isconnected")) { return; }
 
@@ -135,3 +136,5 @@ export class ITAD {
         }
     }
 }
+
+export {ITAD};

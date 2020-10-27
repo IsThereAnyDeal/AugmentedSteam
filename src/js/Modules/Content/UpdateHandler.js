@@ -4,10 +4,12 @@ import {Info} from "../Core/Info";
 import {ExtensionResources} from "../Core/ExtensionResources";
 import {Localization} from "../Core/Localization/Localization";
 import {BackgroundSimple} from "../Core/BackgroundSimple";
+import {Background} from "./Background";
 import {LocalStorage} from "../Core/Storage/LocalStorage";
-import {Background, ITAD} from "../../Content/common";
+import {RequestData} from "./RequestData";
+import {ExtensionLayer} from "./ExtensionLayer";
 
-export class UpdateHandler {
+class UpdateHandler {
 
     static checkVersion(onUpdate) {
         const lastVersion = Version.fromString(SyncedStorage.get("version"));
@@ -88,3 +90,5 @@ export class UpdateHandler {
         }
     }
 }
+
+export {UpdateHandler};

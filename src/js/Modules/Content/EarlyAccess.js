@@ -4,9 +4,10 @@ import {Localization} from "../Core/Localization/Localization";
 import {SyncedStorage} from "../Core/Storage/SyncedStorage";
 import {Language} from "../Core/Localization/Language";
 import {ExtensionResources} from "../Core/ExtensionResources";
-import {Background} from "../../Content/common";
+import {Background} from "./Background";
+import {DOMHelper} from "./DOMHelper";
 
-export class EarlyAccess {
+class EarlyAccess {
 
     static async getEaNodes(nodes, selectorModifier) {
 
@@ -165,3 +166,5 @@ export class EarlyAccess {
         }
     }
 }
+
+export {EarlyAccess};

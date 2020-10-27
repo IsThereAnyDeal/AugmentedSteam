@@ -1,8 +1,8 @@
 import {HTMLParser} from "../Core/Html/HtmlParser";
 import {Localization} from "../Core/Localization/Localization";
-import {Background} from "../../Content/common";
+import {Background} from "./Background";
 
-export class Stats {
+class Stats {
 
     static async getAchievementBar(path, appid) {
 
@@ -38,3 +38,5 @@ export class Stats {
                 </div>`;
     }
 }
+
+export {Stats};

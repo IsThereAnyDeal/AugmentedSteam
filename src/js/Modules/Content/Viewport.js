@@ -1,6 +1,5 @@
 
-
-export class Viewport {
+class Viewport {
 
     // only concerned with vertical at this point
     static isElementInViewport(elem) {
@@ -18,3 +17,5 @@ export class Viewport {
         return (elemBottom <= viewportBottom && elemTop >= viewportTop);
     }
 }
+
+export {Viewport};

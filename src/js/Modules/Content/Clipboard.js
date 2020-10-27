@@ -1,5 +1,5 @@
 
-export class Clipboard {
+class Clipboard {
 
     static set(content) {
 
@@ -13,3 +13,5 @@ export class Clipboard {
         document.oncopy = null;
     }
 }
+
+export {Clipboard};

@@ -1,6 +1,7 @@
+import {Currency} from "./Currency/Currency";
+import {CurrencyRegistry} from "./Currency/CurrencyRegistry";
 
-
-export class Price {
+class Price {
 
     constructor(value = 0, currency = Currency.storeCurrency) {
         this.value = value;
@@ -48,3 +49,5 @@ export class Price {
         return value;
     }
 }
+
+export {Price};

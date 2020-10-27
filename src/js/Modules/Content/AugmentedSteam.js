@@ -4,8 +4,11 @@ import {Localization} from "../Core/Localization/Localization";
 import {SyncedStorage} from "../Core/Storage/SyncedStorage";
 import {Language} from "../Core/Localization/Language";
 import {LocalStorage} from "../Core/Storage/LocalStorage";
-import {Background} from "../../Content/common";
-
+import {Background} from "./Background";
+import {DOMHelper} from "./DOMHelper";
+import {HorizontalScroller} from "./Widgets/HorizontalScroller";
+import {ExtensionLayer} from "./ExtensionLayer";
+import {DynamicStore} from "./Data/DynamicStore";
 
 class AugmentedSteam {
 
@@ -312,25 +315,25 @@ class AugmentedSteam {
                 }
 
                 ExtensionLayer.runInPageContext((playGameStr, gameid, visitStore) => {
-                        // eslint-disable-next-line no-undef, new-cap
-                        const prompt = ShowConfirmDialog(
-                            playGameStr,
-                            `<img src="//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg">`,
-                            null,
-                            null,
-                            visitStore
-                        );
+                    // eslint-disable-next-line no-undef, new-cap
+                    const prompt = ShowConfirmDialog(
+                        playGameStr,
+                        `<img src="//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg">`,
+                        null,
+                        null,
+                        visitStore
+                    );
 
-                        prompt.done(result => {
-                            if (result === "OK") { window.location.assign(`steam://run/${gameid}`); }
-                            if (result === "SECONDARY") { window.location.assign(`//store.steampowered.com/app/${gameid}`); }
-                        });
-                    },
-                    [
-                        Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim()),
-                        gameid,
-                        Localization.str.visit_store,
-                    ]);
+                    prompt.done(result => {
+                        if (result === "OK") { window.location.assign(`steam://run/${gameid}`); }
+                        if (result === "SECONDARY") { window.location.assign(`//store.steampowered.com/app/${gameid}`); }
+                    });
+                },
+                [
+                    Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim()),
+                    gameid,
+                    Localization.str.visit_store,
+                ]);
             });
         });
     }
@@ -381,3 +384,5 @@ class AugmentedSteam {
         }
     }
 }
+
+export {AugmentedSteam};

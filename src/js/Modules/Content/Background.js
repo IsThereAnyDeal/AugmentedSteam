@@ -1,7 +1,8 @@
 import {BackgroundSimple} from "../Core/BackgroundSimple";
 import {ErrorParser} from "../Core/Errors/ErrorParser";
+import {ProgressBar} from "./Widgets/ProgressBar";
 
-export class Background extends BackgroundSimple {
+class Background extends BackgroundSimple {
     static async message(message) {
         ProgressBar.startRequest();
 
@@ -35,10 +36,12 @@ export class Background extends BackgroundSimple {
      */
 
     /**
-     * @param {registerErrorHandlerCallback} - The callback that will (eventually) handle the error
+     * @param {registerErrorHandlerCallback} handler - The callback that will (eventually) handle the error
      */
     static registerErrorHandler(handler) {
         Background._errorHandlers.push(handler);
     }
 }
 Background._errorHandlers = [];
+
+export {Background};

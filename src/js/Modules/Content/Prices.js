@@ -1,9 +1,12 @@
 import {SyncedStorage} from "../Core/Storage/SyncedStorage";
 import {Localization} from "../Core/Localization/Localization";
 import {HTML} from "../Core/Html/Html";
-import {Background} from "../../Content/common";
+import {Background} from "./Background";
+import {User} from "./User";
+import {Price} from "./Price";
+import {Currency} from "./Currency/Currency";
 
-export class Prices {
+class Prices {
 
     constructor() {
         this.appids = [];
@@ -277,3 +280,5 @@ export class Prices {
         });
     }
 }
+
+export {Prices};

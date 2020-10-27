@@ -1,6 +1,6 @@
-import {Messenger} from "../../Content/common";
+import {Messenger} from "./Messenger";
 
-export class ExtensionLayer {
+class ExtensionLayer {
 
     /*
      * NOTE: use cautiously!
@@ -25,3 +25,5 @@ export class ExtensionLayer {
     }
 }
 ExtensionLayer._msgCounter = 0;
+
+export {ExtensionLayer};

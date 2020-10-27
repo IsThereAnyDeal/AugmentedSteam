@@ -1,6 +1,6 @@
 import {CookieStorage} from "../Core/Storage/CookieStorage";
 import {HTMLParser} from "../Core/Html/HtmlParser";
-import {Background} from "../../Content/common";
+import {Background} from "./Background";
 
 class User {
 

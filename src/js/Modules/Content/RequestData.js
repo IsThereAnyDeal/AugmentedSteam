@@ -1,6 +1,7 @@
 import {HTTPError} from "../../Content/common";
+import {ProgressBar} from "./Widgets/ProgressBar";
 
-export class RequestData {
+class RequestData {
 
     static getHttp(url, settings, responseType = "text") {
 
@@ -63,3 +64,5 @@ RequestData._fetchFn
     // eslint-disable-next-line no-undef -- content is only available in FF environments
     = (typeof content !== "undefined" && content && content.fetch)
     || fetch.bind(window);
+
+export {RequestData};

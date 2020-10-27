@@ -1,44 +1,6 @@
 import {StringUtils} from "../../Core/Utils/StringUtils";
 import {Background} from "../../../Content/common";
 
-export class CurrencyRegistry {
-
-    static fromType(type) {
-        return CurrencyRegistry._indices.abbr[type] || CurrencyRegistry._defaultCurrency;
-    }
-
-    static fromNumber(number) {
-        return CurrencyRegistry._indices.id[number] || CurrencyRegistry._defaultCurrency;
-    }
-
-    static async init() {
-
-        const currencies = await Background.action("steam.currencies");
-
-        for (let currency of currencies) {
-
-            currency = new CurrencyRegistry.SteamCurrency(currency);
-            CurrencyRegistry._indices.abbr[currency.abbr] = currency;
-            CurrencyRegistry._indices.id[currency.id] = currency;
-
-            if (currency.symbol) { // CNY && JPY use the same symbol
-                CurrencyRegistry._indices.symbols[currency.symbol] = currency;
-            }
-        }
-        CurrencyRegistry._defaultCurrency = CurrencyRegistry._indices.id[1]; // USD
-    }
-
-    static then(onDone, onCatch) {
-        return CurrencyRegistry.init().then(onDone, onCatch);
-    }
-}
-
-CurrencyRegistry._indices = {
-    "id": {},
-    "abbr": {},
-    "symbols": {},
-};
-
 /*
  * Example:
  * {
@@ -58,25 +20,25 @@ CurrencyRegistry._indices = {
  *  }
  * }
  */
-CurrencyRegistry.SteamCurrency = class {
+class SteamCurrency {
 
     constructor({
-                    id,
-                    abbr = "USD",
-                    symbol = "$",
-                    hint = "Default Currency",
-                    multiplier = 100,
-                    unit = 1,
-                    "format": {
-                        "places": formatPlaces = 2,
-                        "hidePlacesWhenZero": formatHidePlaces = false,
-                        "symbolFormat": formatSymbol = "$",
-                        "thousand": formatGroupSeparator = ",",
-                        "group": formatGroupSize = 3,
-                        "decimal": formatDecimalSeparator = ".",
-                        "right": formatPostfixSymbol = false,
-                    },
-                }) {
+        id,
+        abbr = "USD",
+        symbol = "$",
+        hint = "Default Currency",
+        multiplier = 100,
+        unit = 1,
+        "format": {
+            "places": formatPlaces = 2,
+            "hidePlacesWhenZero": formatHidePlaces = false,
+            "symbolFormat": formatSymbol = "$",
+            "thousand": formatGroupSeparator = ",",
+            "group": formatGroupSize = 3,
+            "decimal": formatDecimalSeparator = ".",
+            "right": formatPostfixSymbol = false,
+        },
+    }) {
 
         // console.assert(id && Number.isInteger(id))
         Object.assign(this, {
@@ -183,4 +145,50 @@ CurrencyRegistry.SteamCurrency = class {
 
         return new RegExp(regex);
     }
+}
+
+class CurrencyRegistry {
+
+    /**
+     * @return SteamCurrency
+     */
+    static fromType(type) {
+        return CurrencyRegistry._indices.abbr[type] || CurrencyRegistry._defaultCurrency;
+    }
+
+    /**
+     * @return SteamCurrency
+     */
+    static fromNumber(number) {
+        return CurrencyRegistry._indices.id[number] || CurrencyRegistry._defaultCurrency;
+    }
+
+    static async init() {
+
+        const currencies = await Background.action("steam.currencies");
+
+        for (let currency of currencies) {
+
+            currency = new SteamCurrency(currency);
+            CurrencyRegistry._indices.abbr[currency.abbr] = currency;
+            CurrencyRegistry._indices.id[currency.id] = currency;
+
+            if (currency.symbol) { // CNY && JPY use the same symbol
+                CurrencyRegistry._indices.symbols[currency.symbol] = currency;
+            }
+        }
+        CurrencyRegistry._defaultCurrency = CurrencyRegistry._indices.id[1]; // USD
+    }
+
+    static then(onDone, onCatch) {
+        return CurrencyRegistry.init().then(onDone, onCatch);
+    }
+}
+
+CurrencyRegistry._indices = {
+    "id": {},
+    "abbr": {},
+    "symbols": {},
 };
+
+export {CurrencyRegistry};

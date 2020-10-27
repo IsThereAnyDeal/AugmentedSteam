@@ -4,7 +4,7 @@ import {HTML} from "../../Core/Html/Html";
 import {Localization} from "../../Core/Localization/Localization";
 import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
 
-export class Sortbox {
+class Sortbox {
 
     static init() {
         this._activeDropLists = {};
@@ -203,3 +203,5 @@ export class Sortbox {
         return box;
     }
 }
+
+export {Sortbox};
