@@ -1,5 +1,5 @@
-import {BackgroundSimple} from "../../Core/BackgroundSimple";
-import {ErrorParser} from "../../Core/Errors/ErrorParser";
+import {BackgroundSimple} from "../../Modules/Core/BackgroundSimple";
+import {ErrorParser} from "../../Modules/Core/Errors/ErrorParser";
 
 export class Background extends BackgroundSimple {
     static async message(message) {

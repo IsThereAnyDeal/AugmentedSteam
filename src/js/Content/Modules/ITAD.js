@@ -1,7 +1,7 @@
-import {HTML} from "../../Core/Html/Html";
-import {ExtensionResources} from "../../Core/ExtensionResources";
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
-import {Localization} from "../../Core/Localization/Localization";
+import {HTML} from "../../Modules/Core/Html/Html";
+import {ExtensionResources} from "../../Modules/Core/ExtensionResources";
+import {SyncedStorage} from "../../Modules/Core/Storage/SyncedStorage";
+import {Localization} from "../../Modules/Core/Localization/Localization";
 import {Background} from "../common";
 
 export class ITAD {

@@ -1,8 +1,8 @@
 import {Feature} from "modules";
 
-import {Language} from "../../../Core/Localization/Language";
-import {Localization} from "../../../Core/Localization/Localization";
-import {SyncedStorage} from "../../../Core/Storage/SyncedStorage";
+import {Language} from "../../../Modules/Core/Localization/Language";
+import {Localization} from "../../../Modules/Core/Localization/Localization";
+import {SyncedStorage} from "../../../Modules/Core/Storage/SyncedStorage";
 
 import {User} from "common";
 

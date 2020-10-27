@@ -1,5 +1,5 @@
 import DOMPurify from "dompurify";
-import {SyncedStorage} from "./Core/Storage/SyncedStorage";
+import {SyncedStorage} from "./Modules/Core/Storage/SyncedStorage";
 
 /*
  * Shim for Promise.finally() for browsers (Waterfox/FF 56) that don't have it

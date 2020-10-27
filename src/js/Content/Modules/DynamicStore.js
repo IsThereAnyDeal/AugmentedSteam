@@ -1,4 +1,4 @@
-import {GameId} from "../../Core/GameId";
+import {GameId} from "../../Modules/Core/GameId";
 import {Background} from "../common";
 
 export class DynamicStore {

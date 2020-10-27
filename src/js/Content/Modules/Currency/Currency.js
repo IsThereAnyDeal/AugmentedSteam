@@ -1,4 +1,4 @@
-import {SyncedStorage} from "../../../Core/Storage/SyncedStorage";
+import {SyncedStorage} from "../../../Modules/Core/Storage/SyncedStorage";
 import {Background} from "../../common";
 
 export class Currency {

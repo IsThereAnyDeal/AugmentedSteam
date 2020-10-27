@@ -1,7 +1,7 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
 import {ContextTypes} from "modules";
 
-import {GameId} from "../../../Core/GameId";
+import {GameId} from "../../../Modules/Core/GameId";
 import FHighlightsTags from "common/FHighlightsTags";
 
 import FCommunityAppPageLinks from "./FCommunityAppPageLinks";

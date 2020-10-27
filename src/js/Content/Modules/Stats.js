@@ -1,5 +1,5 @@
-import {HTMLParser} from "../../Core/Html/HtmlParser";
-import {Localization} from "../../Core/Localization/Localization";
+import {HTMLParser} from "../../Modules/Core/Html/HtmlParser";
+import {Localization} from "../../Modules/Core/Localization/Localization";
 import {Background} from "../common";
 
 export class Stats {

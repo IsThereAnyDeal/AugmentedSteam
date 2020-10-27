@@ -1,10 +1,10 @@
-import {Version} from "../../Core/Version";
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
-import {Info} from "../../Core/Info";
-import {ExtensionResources} from "../../Core/ExtensionResources";
-import {Localization} from "../../Core/Localization/Localization";
-import {BackgroundSimple} from "../../Core/BackgroundSimple";
-import {LocalStorage} from "../../Core/Storage/LocalStorage";
+import {Version} from "../../Modules/Core/Version";
+import {SyncedStorage} from "../../Modules/Core/Storage/SyncedStorage";
+import {Info} from "../../Modules/Core/Info";
+import {ExtensionResources} from "../../Modules/Core/ExtensionResources";
+import {Localization} from "../../Modules/Core/Localization/Localization";
+import {BackgroundSimple} from "../../Modules/Core/BackgroundSimple";
+import {LocalStorage} from "../../Modules/Core/Storage/LocalStorage";
 import {Background, ITAD} from "../common";
 
 export class UpdateHandler {

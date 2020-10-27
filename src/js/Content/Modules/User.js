@@ -1,5 +1,5 @@
-import {CookieStorage} from "../../Core/Storage/CookieStorage";
-import {HTMLParser} from "../../Core/Html/HtmlParser";
+import {CookieStorage} from "../../Modules/Core/Storage/CookieStorage";
+import {HTMLParser} from "../../Modules/Core/Html/HtmlParser";
 import {Background} from "../common";
 
 class User {

@@ -1,4 +1,4 @@
-import {StringUtils} from "../../../Core/Utils/StringUtils";
+import {StringUtils} from "../../../Modules/Core/Utils/StringUtils";
 import {Background} from "../../common";
 
 export class CurrencyRegistry {

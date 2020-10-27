@@ -1,7 +1,7 @@
 import {Feature} from "modules";
 
-import {ExtensionResources} from "../../../Core/ExtensionResources";
-import {SyncedStorage} from "../../../Core/Storage/SyncedStorage";
+import {ExtensionResources} from "../../../Modules/Core/ExtensionResources";
+import {SyncedStorage} from "../../../Modules/Core/Storage/SyncedStorage";
 
 export default class FAlternativeLinuxIcon extends Feature {
 

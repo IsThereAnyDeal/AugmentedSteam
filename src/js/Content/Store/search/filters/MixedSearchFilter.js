@@ -1,6 +1,6 @@
 import {SimpleSearchFilter} from "store/search/filters/searchfilters";
 
-import {Localization} from "../../../../Core/Localization/Localization";
+import {Localization} from "../../../../Modules/Core/Localization/Localization";
 
 export class MixedSearchFilter extends SimpleSearchFilter {
 

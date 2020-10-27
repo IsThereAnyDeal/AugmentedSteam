@@ -1,4 +1,4 @@
-import {HTMLParser} from "../../Core/Html/HtmlParser";
+import {HTMLParser} from "../../Modules/Core/Html/HtmlParser";
 
 export class SteamId {
 
