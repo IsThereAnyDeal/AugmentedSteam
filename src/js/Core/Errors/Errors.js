@@ -13,9 +13,17 @@ class ServerOutageError extends Error {
     }
 }
 
+export class HTTPError extends Error {
+    constructor(code, message) {
+        super(message);
+        this.code = code;
+    }
+}
+
 const Errors = {
     "LoginError": LoginError,
-    "ServerOutageError": ServerOutageError
+    "ServerOutageError": ServerOutageError,
+    "HTTPError": HTTPError
 };
 
 export {Errors};

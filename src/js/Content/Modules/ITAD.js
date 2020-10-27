@@ -1,0 +1,137 @@
+import {HTML} from "../../Core/Html/Html";
+import {ExtensionResources} from "../../Core/ExtensionResources";
+import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
+import {Localization} from "../../Core/Localization/Localization";
+import {Background} from "../common";
+
+export class ITAD {
+    static async create() {
+        if (!await Background.action("itad.isconnected")) { return; }
+
+        HTML.afterBegin("#global_action_menu",
+            `<div id="es_itad">
+                <img id="es_itad_logo" src="${ExtensionResources.getURL("img/itad.png")}" height="20px">
+                <span id="es_itad_status">✓</span>
+            </div>`);
+
+        document.querySelector("#es_itad").addEventListener("mouseenter", ITAD.onHover);
+
+        if (User.isSignedIn && (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist"))) {
+            Background.action("itad.import");
+        }
+    }
+
+    static async onHover() {
+
+        async function updateLastImport() {
+            const {from, to} = await Background.action("itad.lastimport");
+
+            let htmlStr
+                = `<div>${Localization.str.itad.from}</div>
+                   <div>${from ? new Date(from * 1000).toLocaleString() : Localization.str.never}</div>`;
+
+            if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
+                htmlStr
+                    += `<div>${Localization.str.itad.to}</div>
+                        <div>${to ? new Date(to * 1000).toLocaleString() : Localization.str.never}</div>`;
+            }
+
+            HTML.inner(".es-itad-hover__last-import", htmlStr);
+        }
+
+        if (!document.querySelector(".es-itad-hover")) {
+            HTML.afterEnd("#es_itad_status",
+                `<div class="es-itad-hover">
+                    <div class="es-itad-hover__content">
+                        <h4>${Localization.str.itad.last_import}</h4>
+                        <div class="es-itad-hover__last-import"></div>
+                        <div class="es-itad-hover__sync-now">
+                            <span class="es-itad-hover__sync-now-text">${Localization.str.itad.sync_now}</span>
+                            <div class="loader"></div>
+                            <span class="es-itad-hover__sync-failed">&#10060;</span>
+                            <span class="es-itad-hover__sync-success">&#10003;</span>
+                        </div>
+                    </div>
+                    <div class="es-itad-hover__arrow"></div>
+                </div>`);
+
+            const hover = document.querySelector(".es-itad-hover");
+
+            const syncDiv = document.querySelector(".es-itad-hover__sync-now");
+            document.querySelector(".es-itad-hover__sync-now-text").addEventListener("click", async() => {
+                syncDiv.classList.remove("es-itad-hover__sync-now--failed", "es-itad-hover__sync-now--success");
+                syncDiv.classList.add("es-itad-hover__sync-now--loading");
+                hover.style.display = "block";
+
+                let timeout;
+
+                try {
+                    await Background.action("itad.sync");
+                    syncDiv.classList.add("es-itad-hover__sync-now--success");
+                    await updateLastImport();
+
+                    timeout = 1000;
+                } catch (err) {
+                    syncDiv.classList.add("es-itad-hover__sync-now--failed");
+
+                    console.group("ITAD sync");
+                    console.error("Failed to sync with ITAD");
+                    console.error(err);
+                    console.groupEnd();
+
+                    timeout = 3000;
+                } finally {
+                    setTimeout(() => { hover.style.display = ""; }, timeout);
+                    syncDiv.classList.remove("es-itad-hover__sync-now--loading");
+                }
+            });
+        }
+
+        await updateLastImport();
+    }
+
+    static async getAppStatus(storeIds, options) {
+        const opts = {"waitlist": true,
+            "collection": true,
+            ...options};
+
+        if (!opts.collection && !opts.waitlist) { return null; }
+
+        const multiple = Array.isArray(storeIds);
+        const promises = [];
+        const resolved = Promise.resolve(multiple ? {} : false);
+
+        if (await Background.action("itad.isconnected")) {
+            if (opts.collection) {
+                promises.push(Background.action("itad.incollection", storeIds));
+            } else {
+                promises.push(resolved);
+            }
+            if (opts.waitlist) {
+                promises.push(Background.action("itad.inwaitlist", storeIds));
+            } else {
+                promises.push(resolved);
+            }
+        } else {
+            promises.push(resolved, resolved);
+        }
+
+        const [inCollection, inWaitlist] = await Promise.all(promises);
+
+        if (multiple) {
+            const result = {};
+            for (const id of storeIds) {
+                result[id] = {
+                    "collected": inCollection[id],
+                    "waitlisted": inWaitlist[id],
+                };
+            }
+            return result;
+        } else {
+            return {
+                "collected": inCollection,
+                "waitlisted": inWaitlist,
+            };
+        }
+    }
+}
