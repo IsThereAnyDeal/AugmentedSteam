@@ -56,7 +56,7 @@
         "generator-star-spacing": "error",
         "grouped-accessor-pairs": ["error", "getBeforeSet"],
         "implicit-arrow-linebreak": "error",
-        "indent": "error",
+        "indent": ["error", 4, {"SwitchCase": 1}],
         "key-spacing": ["error", { "mode": "minimum" }],
         "keyword-spacing": "error",
         "lines-around-comment": ["warn", { "beforeLineComment": true, "beforeBlockComment": true }],
