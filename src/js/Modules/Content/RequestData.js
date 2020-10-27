@@ -1,4 +1,4 @@
-import {HTTPError} from "../common";
+import {HTTPError} from "../../Content/common";
 
 export class RequestData {
 

@@ -1,5 +1,5 @@
-import {StringUtils} from "../../../Modules/Core/Utils/StringUtils";
-import {Background} from "../../common";
+import {StringUtils} from "../../Core/Utils/StringUtils";
+import {Background} from "../../../Content/common";
 
 export class CurrencyRegistry {
 

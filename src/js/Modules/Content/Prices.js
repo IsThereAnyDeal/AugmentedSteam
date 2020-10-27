@@ -1,7 +1,7 @@
-import {SyncedStorage} from "../../Modules/Core/Storage/SyncedStorage";
-import {Localization} from "../../Modules/Core/Localization/Localization";
-import {HTML} from "../../Modules/Core/Html/Html";
-import {Background} from "../common";
+import {SyncedStorage} from "../Core/Storage/SyncedStorage";
+import {Localization} from "../Core/Localization/Localization";
+import {HTML} from "../Core/Html/Html";
+import {Background} from "../../Content/common";
 
 export class Prices {
 

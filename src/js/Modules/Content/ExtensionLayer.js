@@ -1,4 +1,4 @@
-import {Messenger} from "../common";
+import {Messenger} from "../../Content/common";
 
 export class ExtensionLayer {
 

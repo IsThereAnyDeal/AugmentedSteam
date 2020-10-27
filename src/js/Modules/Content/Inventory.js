@@ -1,4 +1,4 @@
-import {Background} from "../common";
+import {Background} from "../../Content/common";
 
 
 export class Inventory {

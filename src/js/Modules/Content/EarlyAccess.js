@@ -1,10 +1,10 @@
-import {GameId} from "../../Modules/Core/GameId";
-import {HTML} from "../../Modules/Core/Html/Html";
-import {Localization} from "../../Modules/Core/Localization/Localization";
-import {SyncedStorage} from "../../Modules/Core/Storage/SyncedStorage";
-import {Language} from "../../Modules/Core/Localization/Language";
-import {ExtensionResources} from "../../Modules/Core/ExtensionResources";
-import {Background} from "../common";
+import {GameId} from "../Core/GameId";
+import {HTML} from "../Core/Html/Html";
+import {Localization} from "../Core/Localization/Localization";
+import {SyncedStorage} from "../Core/Storage/SyncedStorage";
+import {Language} from "../Core/Localization/Language";
+import {ExtensionResources} from "../Core/ExtensionResources";
+import {Background} from "../../Content/common";
 
 export class EarlyAccess {
 

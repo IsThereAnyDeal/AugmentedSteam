@@ -1,10 +1,10 @@
-import {HTML} from "../../Modules/Core/Html/Html";
-import {ExtensionResources} from "../../Modules/Core/ExtensionResources";
-import {Localization} from "../../Modules/Core/Localization/Localization";
-import {SyncedStorage} from "../../Modules/Core/Storage/SyncedStorage";
-import {Language} from "../../Modules/Core/Localization/Language";
-import {LocalStorage} from "../../Modules/Core/Storage/LocalStorage";
-import {Background} from "../common";
+import {HTML} from "../Core/Html/Html";
+import {ExtensionResources} from "../Core/ExtensionResources";
+import {Localization} from "../Core/Localization/Localization";
+import {SyncedStorage} from "../Core/Storage/SyncedStorage";
+import {Language} from "../Core/Localization/Language";
+import {LocalStorage} from "../Core/Storage/LocalStorage";
+import {Background} from "../../Content/common";
 
 
 class AugmentedSteam {
