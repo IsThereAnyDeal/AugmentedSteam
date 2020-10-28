@@ -13,7 +13,7 @@ import {User} from "./User";
 
 class AugmentedSteam {
 
-    static addMenu() {
+    static _addMenu() {
 
         HTML.afterBegin("#global_action_menu",
             `<div id="es_menu">
@@ -56,7 +56,7 @@ class AugmentedSteam {
         });
     }
 
-    static addBackToTop() {
+    static _addBackToTop() {
         if (!SyncedStorage.get("show_backtotop")) { return; }
 
         // Remove Steam's back-to-top button
@@ -94,14 +94,7 @@ class AugmentedSteam {
         });
     }
 
-    static clearCache() {
-        localStorage.clear();
-        SyncedStorage.remove("user_currency");
-        SyncedStorage.remove("store_sessionid");
-        Background.action("cache.clear");
-    }
-
-    static bindLogout() {
+    static _bindLogout() {
 
         // TODO there should be a better detection of logout, probably
         const logoutNode = document.querySelector("a[href$='javascript:Logout();']");
@@ -140,7 +133,7 @@ class AugmentedSteam {
     /**
      * Display warning if browsing using a different language
      */
-    static addLanguageWarning() {
+    static _addLanguageWarning() {
         if (!SyncedStorage.get("showlanguagewarning")) { return; }
 
         const currentLanguage = Language.getCurrentSteamLanguage();
@@ -171,30 +164,7 @@ class AugmentedSteam {
         });
     }
 
-    static addLoginWarning(type) {
-        if (AugmentedSteam._loginWarningAdded || LocalStorage.get(`hide_login_warn_${type}`)) { return; }
-
-        let host;
-
-        if (type === "store") {
-            host = "store.steampowered.com";
-        } else if (type === "community") {
-            host = "steamcommunity.com";
-        } else {
-            console.warn("Unknown login warning type %s", type);
-            return;
-        }
-
-        AugmentedSteam._addWarning(
-            `${Localization.str.login_warning.replace("__link__", `<a href="https://${host}/login/">${host}</a>`)}`,
-            () => { LocalStorage.set(`hide_login_warn_${type}`, true); }
-        );
-        AugmentedSteam._loginWarningAdded = true;
-
-        console.warn("Are you logged into %s?", host);
-    }
-
-    static handleInstallSteamButton() {
+    static _handleInstallSteamButton() {
         const option = SyncedStorage.get("installsteam");
         if (option === "hide") {
             DOMHelper.remove("div.header_installsteam_btn");
@@ -206,13 +176,13 @@ class AugmentedSteam {
         }
     }
 
-    static removeAboutLinks() {
+    static _removeAboutLinks() {
         if (!SyncedStorage.get("hideaboutlinks")) { return; }
 
         DOMHelper.remove("#global_header a[href^='https://store.steampowered.com/about/']");
     }
 
-    static addUsernameSubmenuLinks() {
+    static _addUsernameSubmenuLinks() {
         const node = document.querySelector(".supernav_container .submenu_username");
 
         HTML.afterEnd(
@@ -229,7 +199,7 @@ class AugmentedSteam {
         );
     }
 
-    static disableLinkFilter() {
+    static _disableLinkFilter() {
         if (!SyncedStorage.get("disablelinkfilter")) { return; }
 
         // TODO Way too nested
@@ -261,14 +231,14 @@ class AugmentedSteam {
         observer.observe(document, {"childList": true, "subtree": true});
     }
 
-    static addRedeemLink() {
+    static _addRedeemLink() {
         HTML.beforeBegin(
             "#account_language_pulldown",
             `<a class="popup_menu_item" href="https://store.steampowered.com/account/registerkey">${Localization.str.activate}</a>`
         );
     }
 
-    static replaceAccountName() {
+    static _replaceAccountName() {
         if (!SyncedStorage.get("replaceaccountname")) { return; }
 
         const accountNameNode = document.querySelector("#account_pulldown");
@@ -290,7 +260,7 @@ class AugmentedSteam {
         }
     }
 
-    static launchRandomButton() {
+    static _launchRandomButton() {
 
         HTML.beforeEnd(
             "#es_popup .popup_menu",
@@ -339,7 +309,7 @@ class AugmentedSteam {
         });
     }
 
-    static skipGotSteam() {
+    static _skipGotSteam() {
         if (!SyncedStorage.get("skip_got_steam")) { return; }
 
         for (const node of document.querySelectorAll("a[href^='javascript:ShowGotSteamModal']")) {
@@ -347,7 +317,7 @@ class AugmentedSteam {
         }
     }
 
-    static keepSteamSubscriberAgreementState() {
+    static _keepSteamSubscriberAgreementState() {
         const nodes = document.querySelectorAll("#market_sell_dialog_accept_ssa,#market_buyorder_dialog_accept_ssa,#accept_ssa");
         for (const node of nodes) {
             node.checked = SyncedStorage.get("keepssachecked");
@@ -358,7 +328,7 @@ class AugmentedSteam {
         }
     }
 
-    static defaultCommunityTab() {
+    static _defaultCommunityTab() {
         const tab = SyncedStorage.get("community_default_tab");
         if (!tab) { return; }
 
@@ -373,7 +343,7 @@ class AugmentedSteam {
         }
     }
 
-    static horizontalScrolling() {
+    static _horizontalScrolling() {
         if (!SyncedStorage.get("horizontalscrolling")) { return; }
 
         for (const node of document.querySelectorAll(".slider_ctn:not(.spotlight)")) {
@@ -382,6 +352,57 @@ class AugmentedSteam {
                 node.querySelector(".slider_left"),
                 node.querySelector(".slider_right"),
             );
+        }
+    }
+
+    static addLoginWarning(type) {
+        if (AugmentedSteam._loginWarningAdded || LocalStorage.get(`hide_login_warn_${type}`)) { return; }
+
+        let host;
+
+        if (type === "store") {
+            host = "store.steampowered.com";
+        } else if (type === "community") {
+            host = "steamcommunity.com";
+        } else {
+            console.warn("Unknown login warning type %s", type);
+            return;
+        }
+
+        AugmentedSteam._addWarning(
+            `${Localization.str.login_warning.replace("__link__", `<a href="https://${host}/login/">${host}</a>`)}`,
+            () => { LocalStorage.set(`hide_login_warn_${type}`, true); }
+        );
+        AugmentedSteam._loginWarningAdded = true;
+
+        console.warn("Are you logged into %s?", host);
+    }
+
+    static clearCache() {
+        localStorage.clear();
+        SyncedStorage.remove("user_currency");
+        SyncedStorage.remove("store_sessionid");
+        Background.action("cache.clear");
+    }
+
+    static init() {
+        AugmentedSteam._addBackToTop();
+        AugmentedSteam._addMenu();
+        AugmentedSteam._addLanguageWarning();
+        AugmentedSteam._handleInstallSteamButton();
+        AugmentedSteam._removeAboutLinks();
+        AugmentedSteam._disableLinkFilter();
+        AugmentedSteam._skipGotSteam();
+        AugmentedSteam._keepSteamSubscriberAgreementState();
+        AugmentedSteam._defaultCommunityTab();
+        AugmentedSteam._horizontalScrolling();
+
+        if (User.isSignedIn) {
+            AugmentedSteam._addUsernameSubmenuLinks();
+            AugmentedSteam._addRedeemLink();
+            AugmentedSteam._replaceAccountName();
+            AugmentedSteam._launchRandomButton();
+            AugmentedSteam._bindLogout();
         }
     }
 }
