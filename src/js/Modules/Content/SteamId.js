@@ -20,7 +20,7 @@ class SteamId {
     }
 }
 
-SteamId.Detail = class {
+class SteamIdDetail {
 
     /*
      * @see https://developer.valvesoftware.com/wiki/SteamID
@@ -118,6 +118,6 @@ SteamId.Detail = class {
     get id64() {
         return this._steamId64;
     }
-};
+}
 
-export {SteamId};
+export {SteamId, SteamIdDetail};
