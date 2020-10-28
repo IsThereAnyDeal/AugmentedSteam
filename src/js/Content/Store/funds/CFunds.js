@@ -1,5 +1,5 @@
 import {CStoreBase} from "store/common/CStoreBase";
-import {ContextTypes} from "modules";
+import ContextType from "../../../Modules/Content/Context/ContextType";
 
 import FCustomGiftcardAndWallet from "./FCustomGiftcardAndWallet";
 
@@ -10,6 +10,6 @@ export class CFunds extends CStoreBase {
             FCustomGiftcardAndWallet,
         ]);
 
-        this.type = ContextTypes.FUNDS;
+        this.type = ContextType.FUNDS;
     }
 }

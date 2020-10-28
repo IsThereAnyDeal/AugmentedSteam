@@ -1,5 +1,4 @@
-import {Context, ContextTypes} from "modules";
-
+import {Context, ContextType} from "../../../Modules/content";
 import FMultiProductKeys from "./FMultiProductKeys";
 
 export class CRegisterKey extends Context {
@@ -9,6 +8,6 @@ export class CRegisterKey extends Context {
             FMultiProductKeys,
         ]);
 
-        this.type = ContextTypes.REGISTER_KEY;
+        this.type = ContextType.REGISTER_KEY;
     }
 }

@@ -1,5 +1,4 @@
-import {Feature} from "modules";
-
+import {Feature} from "../../../Modules/Content/Feature/Feature";
 import FHighlightsTags from "common/FHighlightsTags";
 
 export default class FHighlightTopGames extends Feature {

@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
-import {HTML, Localization, SyncedStorage, TimeUtils} from "../../../core_modules";
-import {Currency, HTTPError, Price, RequestData, User} from "common";
+import {Errors, HTML, Localization, SyncedStorage, TimeUtils} from "../../../core_modules";
+import {CurrencyManager, Feature, Price, RequestData, User} from "../../../Modules/content";
 
 export default class FMarketLowestPrice extends Feature {
 
@@ -103,7 +101,10 @@ export default class FMarketLowestPrice extends Feature {
         do {
             try {
                 const data = await RequestData.getJson(
-                    `https://steamcommunity.com/market/priceoverview/?country=${User.storeCountry}&currency=${Currency.currencyTypeToNumber(Currency.storeCurrency)}&appid=${appid}&market_hash_name=${marketHashName}`
+                    `https://steamcommunity.com/market/priceoverview/?country=${User.storeCountry}`
+                    + `&currency=${CurrencyManager.currencyTypeToNumber(CurrencyManager.storeCurrency)}`
+                    + `&appid=${appid}`
+                    + `&market_hash_name=${marketHashName}`
                 );
 
                 await TimeUtils.sleep(1000);
@@ -114,7 +115,7 @@ export default class FMarketLowestPrice extends Feature {
             } catch (err) {
 
                 // Too Many Requests
-                if (err instanceof HTTPError && err.code === 429) {
+                if (err instanceof Errors.HTTPError && err.code === 429) {
                     await TimeUtils.sleep(30000);
                     if (node) { // If the node still exists after this timeout
                         done = false;

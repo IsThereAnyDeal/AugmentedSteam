@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, Localization} from "../../../core_modules";
-import {DOMHelper, ExtensionLayer} from "common";
+import {DOMHelper, ExtensionLayer, Feature} from "../../../Modules/content";
 import {CommunityCommon} from "community/common";
 
 export default class FBadgeSortAndFilter extends Feature {

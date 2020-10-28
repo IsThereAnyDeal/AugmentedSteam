@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, LocalStorage} from "../../../core_modules";
-import {ExtensionLayer, RequestData} from "common";
+import {ExtensionLayer, Feature, RequestData} from "../../../Modules/content";
 
 export default class FBrowseWorkshops extends Feature {
 

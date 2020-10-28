@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {Background} from "common";
+import {Background, Feature} from "../../../Modules/content";
 
 export default class FWishlistProfileLink extends Feature {
 

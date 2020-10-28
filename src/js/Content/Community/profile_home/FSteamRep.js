@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {ExtensionResources, HTML, SyncedStorage} from "../../../core_modules";
-import {SteamId} from "common";
+import {Feature, SteamId} from "../../../Modules/content";
 import {ProfileData} from "community/common";
 
 export default class FSteamRep extends Feature {
@@ -41,19 +39,19 @@ export default class FSteamRep extends Feature {
                 let status;
 
                 switch (img) {
-                case "banned":
-                    status = "bad";
-                    break;
-                case "caution":
-                    status = "caution";
-                    break;
-                case "valve":
-                case "okay":
-                    status = "good";
-                    break;
-                case "donate":
-                    status = "neutral";
-                    break;
+                    case "banned":
+                        status = "bad";
+                        break;
+                    case "caution":
+                        status = "caution";
+                        break;
+                    case "valve":
+                    case "okay":
+                        status = "good";
+                        break;
+                    case "donate":
+                        status = "neutral";
+                        break;
                 }
 
                 html += `<div class="${status}"><img src="${imgUrl}"><span> ${value}</span></div>`;

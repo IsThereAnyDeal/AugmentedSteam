@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {ExtensionLayer, Price} from "common";
+import {ExtensionLayer, Feature, Price} from "../../../Modules/content";
 
 export default class FWishlistStats extends Feature {
 

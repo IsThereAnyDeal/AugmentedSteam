@@ -1,5 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules";
+import ContextType from "../../../Modules/Content/Context/ContextType";
 
 import FHighlightFriendsActivity from "./FHighlightFriendsActivity";
 
@@ -14,7 +14,7 @@ export class CProfileActivity extends CCommunityBase {
             FHighlightFriendsActivity,
         ]);
 
-        this.type = ContextTypes.PROFILE_ACTIVITY;
+        this.type = ContextType.PROFILE_ACTIVITY;
 
         new MutationObserver(() => {
 

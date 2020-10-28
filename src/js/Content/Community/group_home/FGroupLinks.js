@@ -1,5 +1,4 @@
-import {Feature} from "modules";
-
+import {Feature} from "../../../Modules/Content/Feature/Feature";
 import {HTML, SyncedStorage} from "../../../core_modules";
 import {CommunityCommon} from "community/common";
 

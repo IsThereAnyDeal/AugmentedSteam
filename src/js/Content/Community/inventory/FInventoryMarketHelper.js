@@ -1,7 +1,7 @@
-import {Feature} from "modules";
-
 import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
-import {Background, Currency, ExtensionLayer, Messenger, Price, RequestData, User} from "common";
+import {Background, CurrencyManager,
+    ExtensionLayer, Feature, Messenger, Price, RequestData, User
+} from "../../../Modules/content";
 
 // TODO Split this up
 export default class FInventoryMarketHelper extends Feature {
@@ -436,7 +436,7 @@ export default class FInventoryMarketHelper extends Feature {
             quickSell.querySelector(".item_market_action_button_contents").textContent
                 = Localization.str.quick_sell.replace(
                     "__amount__",
-                    new Price(priceHighValue, Currency.currencyNumberToType(walletCurrency))
+                    new Price(priceHighValue, CurrencyManager.currencyNumberToType(walletCurrency))
                 );
             quickSell.style.display = "block";
         }
@@ -447,7 +447,7 @@ export default class FInventoryMarketHelper extends Feature {
             instantSell.querySelector(".item_market_action_button_contents").textContent
                 = Localization.str.instant_sell.replace(
                     "__amount__",
-                    new Price(priceLowValue, Currency.currencyNumberToType(walletCurrency))
+                    new Price(priceLowValue, CurrencyManager.currencyNumberToType(walletCurrency))
                 );
             instantSell.style.display = "block";
         }
@@ -476,7 +476,7 @@ export default class FInventoryMarketHelper extends Feature {
                 thisItem.dataset.cardsPrice = "nodata";
 
                 try {
-                    const walletCurrency = Currency.currencyNumberToType(walletCurrencyNumber);
+                    const walletCurrency = CurrencyManager.currencyNumberToType(walletCurrencyNumber);
                     const result = await Background.action("market.averagecardprice", {"appid": appid, "currency": walletCurrency});
                     thisItem.dataset.cardsPrice = new Price(result.average, walletCurrency);
                 } catch (error) {

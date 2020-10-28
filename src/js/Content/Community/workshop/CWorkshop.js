@@ -1,5 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules";
+import ContextType from "../../../Modules/Content/Context/ContextType";
 
 import FBrowseWorkshops from "./FBrowseWorkshops";
 
@@ -10,6 +10,6 @@ export class CWorkshop extends CCommunityBase {
             FBrowseWorkshops,
         ]);
 
-        this.type = ContextTypes.WORKSHOP;
+        this.type = ContextType.WORKSHOP;
     }
 }

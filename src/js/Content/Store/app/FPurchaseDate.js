@@ -1,4 +1,4 @@
-import {Feature} from "modules";
+import {Feature} from "../../../Modules/Content/Feature/Feature";
 
 import {Language} from "../../../Modules/Core/Localization/Language";
 import {Localization} from "../../../Modules/Core/Localization/Localization";

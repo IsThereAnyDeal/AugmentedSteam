@@ -1,4 +1,4 @@
-import {Feature} from "modules";
+import {Feature} from "../../../Modules/Content/Feature/Feature";
 
 export default class FExpandAchievementDesc extends Feature {
 

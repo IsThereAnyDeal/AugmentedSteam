@@ -1,8 +1,5 @@
-import {CallbackFeature} from "modules";
-
 import {SyncedStorage} from "../../../Modules/Core/Storage/SyncedStorage";
-import {Inventory} from "common";
-
+import {CallbackFeature, Inventory} from "../../../Modules/content";
 import FHighlightsTags from "common/FHighlightsTags";
 
 export default class FHighlightMarketItems extends CallbackFeature {

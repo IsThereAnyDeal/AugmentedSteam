@@ -1,6 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules";
-
+import ContextType from "../../../Modules/Content/Context/ContextType";
 import FInventoryMarketHelper from "./FInventoryMarketHelper";
 import FInventoryGoTo from "./FInventoryGoTo";
 
@@ -12,6 +11,6 @@ export class CInventory extends CCommunityBase {
             FInventoryGoTo,
         ]);
 
-        this.type = ContextTypes.INVENTORY;
+        this.type = ContextType.INVENTORY;
     }
 }

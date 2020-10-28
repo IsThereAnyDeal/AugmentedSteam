@@ -1,9 +1,7 @@
-import {Feature} from "modules";
-
 import {HTML} from "../../../Modules/Core/Html/Html";
 import {Localization} from "../../../Modules/Core/Localization/Localization";
 import {SyncedStorage} from "../../../Modules/Core/Storage/SyncedStorage";
-import {Prices} from "common";
+import {Prices, Feature} from "../../../Modules/content";
 
 export default class FITADPrices extends Feature {
     checkPrerequisites() {

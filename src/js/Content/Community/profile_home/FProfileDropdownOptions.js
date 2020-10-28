@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, Localization} from "../../../core_modules";
-import {ExtensionLayer, User} from "common";
+import {ExtensionLayer, Feature, User} from "../../../Modules/content";
 
 export default class FProfileDropdownOptions extends Feature {
 

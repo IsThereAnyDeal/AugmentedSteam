@@ -1,4 +1,4 @@
-import {Feature} from "modules";
+import {Feature} from "../../../Modules/Content/Feature/Feature";
 
 import {HTML} from "../../../Modules/Core/Html/Html";
 import {ProfileData} from "community/common";

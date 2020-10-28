@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, Localization} from "../../../core_modules";
-import {EarlyAccess, ExtensionLayer, Messenger} from "common";
+import {EarlyAccess, ExtensionLayer, Feature, Messenger} from "../../../Modules/content";;
 import FHighlightsTags from "common/FHighlightsTags";
 
 import {CartSearchFilter} from "store/search/filters/CartSearchFilter";

@@ -1,6 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules";
-
+import ContextType from "../../../Modules/Content/Context/ContextType";
 import FFriendsInviteButton from "./FFriendsInviteButton";
 import FGroupLinks from "./FGroupLinks";
 
@@ -12,7 +11,7 @@ export class CGroupHome extends CCommunityBase {
             FGroupLinks,
         ]);
 
-        this.type = ContextTypes.GROUP_HOME;
+        this.type = ContextType.GROUP_HOME;
     }
 
     get groupId() {

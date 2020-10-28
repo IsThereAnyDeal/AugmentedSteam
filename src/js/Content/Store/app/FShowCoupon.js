@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {Inventory} from "common";
+import {Feature, Inventory} from "../../../Modules/content";
 
 export default class FShowCoupon extends Feature {
 

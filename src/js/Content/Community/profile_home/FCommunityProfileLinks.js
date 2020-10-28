@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {ExtensionResources, HTML, Language, Localization, SyncedStorage} from "../../../core_modules";
-import {Clipboard, ExtensionLayer, SteamId} from "common";
+import {Clipboard, ExtensionLayer, Feature, SteamId} from "../../../Modules/content";
 import {CommunityCommon} from "community/common";
 
 export default class FCommunityProfileLinks extends Feature {

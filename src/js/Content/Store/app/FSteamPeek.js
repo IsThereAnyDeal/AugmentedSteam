@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, LocalStorage, Localization} from "../../../core_modules";
-import {Background, ExtensionLayer} from "common";
+import {Background, ExtensionLayer, Feature} from "../../../Modules/content";
 import FHighlightsTags from "common/FHighlightsTags";
 
 export default class FSteamPeek extends Feature {

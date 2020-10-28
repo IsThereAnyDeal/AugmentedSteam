@@ -1,4 +1,3 @@
-import {ContextTypes} from "modules";
 import {CStore} from "store/common/CStore";
 
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
@@ -41,7 +40,7 @@ import FMediaExpander from "common/FMediaExpander";
 
 import {GameId, LocalStorage, SyncedStorage} from "../../../core_modules";
 
-import {Background, User} from "common";
+import {Background, ContextType, User} from "../../../Modules/content";
 import {UserNotes} from "store/common/UserNotes";
 
 export class CApp extends CStore {
@@ -87,7 +86,7 @@ export class CApp extends CStore {
             FMediaExpander,
         ]);
 
-        this.type = ContextTypes.APP;
+        this.type = ContextType.APP;
 
         this.userNotes = new UserNotes();
 

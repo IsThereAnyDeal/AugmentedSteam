@@ -1,5 +1,5 @@
 import {CStoreBase} from "store/common/CStoreBase";
-import {ContextTypes} from "modules";
+import ContextType from "../../../Modules/Content/Context/ContextType";
 
 import FHighlightTopGames from "./FHighlightTopGames";
 
@@ -10,6 +10,6 @@ export class CStats extends CStoreBase {
             FHighlightTopGames,
         ]);
 
-        this.type = ContextTypes.STATS;
+        this.type = ContextType.STATS;
     }
 }

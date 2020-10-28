@@ -1,4 +1,4 @@
-import {ContextTypes, Feature} from "modules";
+import {ContextType, Feature} from "../../../Modules/content";
 
 import {HTML} from "../../../Modules/Core/Html/Html";
 import {Localization} from "../../../Modules/Core/Localization/Localization";
@@ -10,7 +10,7 @@ export default class FDRMWarnings extends Feature {
         if (!SyncedStorage.get("showdrm")) { return false; }
 
         // Prevent false-positives
-        return !this.context.type === ContextTypes.APP || (
+        return !this.context.type === ContextType.APP || (
             this.context.appid !== 21690 // Resident Evil 5, at Capcom's request
             && this.context.appid !== 1157970 // Special K
         );
@@ -81,7 +81,7 @@ export default class FDRMWarnings extends Feature {
 
         let drmString;
         if (drmNames.length > 0) {
-            drmString = this.context.type === ContextTypes.APP
+            drmString = this.context.type === ContextType.APP
                 ? Localization.str.drm_third_party
                 : Localization.str.drm_third_party_sub;
 
@@ -89,7 +89,7 @@ export default class FDRMWarnings extends Feature {
 
         } else { // Detect other DRM
             const regex = /\b(drm|account|steam)\b/i;
-            if (this.context.type === ContextTypes.APP) {
+            if (this.context.type === ContextType.APP) {
                 for (const node of document.querySelectorAll("#category_block > .DRM_notice")) {
                     const text = node.textContent;
                     if (regex.test(text)) {

@@ -1,20 +1,19 @@
-import {Currency} from "./Currency/Currency";
-import {CurrencyRegistry} from "./Currency/CurrencyRegistry";
+import {CurrencyManager} from "./CurrencyManager";
 
 class Price {
 
-    constructor(value = 0, currency = Currency.storeCurrency) {
+    constructor(value = 0, currency = CurrencyManager.storeCurrency) {
         this.value = value;
         this.currency = currency;
         Object.freeze(this);
     }
 
     formattedValue() {
-        return CurrencyRegistry.fromType(this.currency).stringify(this.value, false);
+        return CurrencyManager.fromType(this.currency).stringify(this.value, false);
     }
 
     toString() {
-        return CurrencyRegistry.fromType(this.currency).stringify(this.value);
+        return CurrencyManager.fromType(this.currency).stringify(this.value);
     }
 
     /*
@@ -33,15 +32,15 @@ class Price {
         if (this.currency === desiredCurrency) {
             return new Price(this.value, this.currency);
         }
-        const rate = Currency.getRate(this.currency, desiredCurrency);
+        const rate = CurrencyManager.getRate(this.currency, desiredCurrency);
         if (!rate) {
             throw new Error(`Could not establish conversion rate between ${this.currency} and ${desiredCurrency}`);
         }
         return new Price(this.value * rate, desiredCurrency);
     }
 
-    static parseFromString(str, currencyType = Currency.storeCurrency) {
-        const currency = CurrencyRegistry.fromType(currencyType);
+    static parseFromString(str, currencyType = CurrencyManager.storeCurrency) {
+        const currency = CurrencyManager.fromType(currencyType);
         let value = currency.valueOf(str);
         if (value !== null) {
             value = new Price(value, currencyType);

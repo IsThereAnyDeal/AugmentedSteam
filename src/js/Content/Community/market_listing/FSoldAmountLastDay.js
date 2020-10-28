@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, Localization} from "../../../core_modules";
-import {Currency, DOMHelper, RequestData, User} from "common";
+import {CurrencyManager, DOMHelper, Feature, RequestData, User} from "../../../Modules/content";
 
 export default class FSoldAmountLastDay extends Feature {
 
@@ -12,7 +10,7 @@ export default class FSoldAmountLastDay extends Feature {
     async apply() {
 
         const country = User.storeCountry;
-        const currencyNumber = Currency.currencyTypeToNumber(Currency.storeCurrency);
+        const currencyNumber = CurrencyManager.currencyTypeToNumber(CurrencyManager.storeCurrency);
 
         const link = DOMHelper.selectLastNode(document, '.market_listing_nav a[href^="https://steamcommunity.com/market/"]').href;
         const marketHashName = (link.match(/\/\d+\/(.+)$/) || [])[1];

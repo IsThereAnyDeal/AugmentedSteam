@@ -1,5 +1,4 @@
-import {Feature} from "modules";
-import {Background} from "common";
+import {Background, Feature} from "../../../Modules/content";;
 import Config from "config";
 import {HTML, Localization} from "../../../core_modules";
 

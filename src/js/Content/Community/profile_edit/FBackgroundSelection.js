@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, Localization} from "../../../core_modules";
-import {Background, DOMHelper, ExtensionLayer, SteamId} from "common";
+import {Background, DOMHelper, ExtensionLayer, Feature, SteamId} from "../../../Modules/content";
 import {ProfileData} from "community/common";
 import Config from "config";
 

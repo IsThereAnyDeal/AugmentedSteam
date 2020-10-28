@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, HTMLParser, Localization} from "../../../core_modules";
-import {DOMHelper} from "common";
+import {DOMHelper, Feature} from "../../../Modules/content";
 
 export default class FMarketSort extends Feature {
 

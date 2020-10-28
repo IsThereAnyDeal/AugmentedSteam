@@ -1,7 +1,5 @@
-import {CallbackFeature} from "modules";
-
 import {HTML, Localization} from "../../../core_modules";
-import {Background, Currency, DOMHelper, Price} from "common";
+import {Background, CallbackFeature, CurrencyManager, DOMHelper, Price} from "../../../Modules/content";
 import {CommunityCommon} from "community/common";
 
 // TODO Split up
@@ -40,7 +38,7 @@ export default class FBadgeCompletionCost extends CallbackFeature {
         let data;
         try {
             data = await Background.action("market.averagecardprices", {
-                "currency": Currency.storeCurrency,
+                "currency": CurrencyManager.storeCurrency,
                 "appids": appids.join(","),
                 "foilappids": foilAppids.join(","),
             });

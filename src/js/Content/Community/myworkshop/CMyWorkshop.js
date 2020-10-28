@@ -1,5 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules";
+import ContextType from "../../../Modules/Content/Context/ContextType";
 
 import FWorkshopFileSizes from "./FWorkshopFileSizes";
 
@@ -11,6 +11,6 @@ export class CMyWorkshop extends CCommunityBase {
             FWorkshopFileSizes,
         ]);
 
-        this.type = ContextTypes.MY_WORKSHOP;
+        this.type = ContextType.MY_WORKSHOP;
     }
 }

@@ -1,5 +1,4 @@
-import {Context, ContextTypes} from "modules";
-
+import {Context, ContextType} from "../../../Modules/content";
 import FTotalSpent from "./FTotalSpent";
 
 export class CAccount extends Context {
@@ -9,6 +8,6 @@ export class CAccount extends Context {
             FTotalSpent,
         ]);
 
-        this.type = ContextTypes.ACCOUNT;
+        this.type = ContextType.ACCOUNT;
     }
 }

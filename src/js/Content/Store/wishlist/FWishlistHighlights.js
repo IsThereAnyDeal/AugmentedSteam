@@ -1,7 +1,7 @@
-import {CallbackFeature} from "modules";
 
-import {User} from "common";
-import FHighlightsTags from "common/FHighlightsTags";
+import FHighlightsTags from "../../common/FHighlightsTags";
+import {User} from "../../../Modules/Content/User";
+import {CallbackFeature} from "../../../Modules/Content/Feature/CallbackFeature";
 
 export default class FWishlistHighlights extends CallbackFeature {
 

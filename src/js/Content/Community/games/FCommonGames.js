@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, HTMLParser, Localization} from "../../../core_modules";
-import {ExtensionLayer, RequestData, User} from "common";
+import {ExtensionLayer, Feature, RequestData, User} from "../../../Modules/content";
 
 export default class FCommonGames extends Feature {
 

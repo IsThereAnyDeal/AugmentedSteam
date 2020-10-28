@@ -1,5 +1,4 @@
-import {Feature} from "modules";
-
+import {Feature} from "../../../Modules/Content/Feature/Feature";
 import {HTML, Localization, SyncedStorage} from "../../../core_modules";
 
 export default class FSteamChart extends Feature {

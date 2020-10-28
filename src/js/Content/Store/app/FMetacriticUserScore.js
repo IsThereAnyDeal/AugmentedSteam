@@ -1,4 +1,4 @@
-import {Feature} from "modules";
+import {Feature} from "../../../Modules/Content/Feature/Feature";
 import {HTML} from "../../../Modules/Core/Html/Html";
 import {Localization} from "../../../Modules/Core/Localization/Localization";
 import {SyncedStorage} from "../../../Modules/Core/Storage/SyncedStorage";

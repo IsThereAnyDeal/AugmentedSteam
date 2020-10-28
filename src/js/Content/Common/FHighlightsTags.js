@@ -1,6 +1,5 @@
-import {Feature} from "modules";
-import {DynamicStore, ExtensionLayer, ITAD, Inventory} from "common";
 import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../core_modules";
+import {DynamicStore, ExtensionLayer, Feature, ITAD, Inventory} from "../../Modules/content";
 
 export default class FHighlightsTags extends Feature {
 
@@ -326,33 +325,33 @@ export default class FHighlightsTags extends Feature {
 
         switch (true) {
 
-        // Recommendations on front page when scrolling down
-        case _node.classList.contains("single"):
-            _node = _node.querySelector(".gamelink");
+            // Recommendations on front page when scrolling down
+            case _node.classList.contains("single"):
+                _node = _node.querySelector(".gamelink");
 
-        // eslint-disable-next-line no-fallthrough -- Don't break
-        case _node.parentNode.parentNode.classList.contains("apps_recommended_by_curators_v2"): {
-            let r = _node.querySelectorAll(".ds_flag");
-            r.forEach(node => node.remove());
-            r = _node.querySelectorAll(".ds_flagged");
-            r.forEach(node => node.classList.remove("ds_flagged"));
-            break;
-        }
-
-        case _node.classList.contains("info"):
-        case _node.classList.contains("spotlight_content"):
-            _node = _node.parentElement;
-
-        // eslint-disable-next-line no-fallthrough -- Don't break
-        default: {
-            let r = _node.querySelector(".ds_flag");
-            if (r) { r.remove(); }
-            r = _node.querySelector(".ds_flagged");
-            if (r) {
-                r.classList.remove("ds_flagged");
+            // eslint-disable-next-line no-fallthrough -- Don't break
+            case _node.parentNode.parentNode.classList.contains("apps_recommended_by_curators_v2"): {
+                let r = _node.querySelectorAll(".ds_flag");
+                r.forEach(node => node.remove());
+                r = _node.querySelectorAll(".ds_flagged");
+                r.forEach(node => node.classList.remove("ds_flagged"));
+                break;
             }
-            break;
-        }
+
+            case _node.classList.contains("info"):
+            case _node.classList.contains("spotlight_content"):
+                _node = _node.parentElement;
+
+            // eslint-disable-next-line no-fallthrough -- Don't break
+            default: {
+                let r = _node.querySelector(".ds_flag");
+                if (r) { r.remove(); }
+                r = _node.querySelector(".ds_flagged");
+                if (r) {
+                    r.classList.remove("ds_flagged");
+                }
+                break;
+            }
         }
 
         _node.classList.remove("ds_flagged");

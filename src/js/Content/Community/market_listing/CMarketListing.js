@@ -1,5 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules";
+import ContextType from "../../../Modules/Content/Context/ContextType";
 
 import FSoldAmountLastDay from "./FSoldAmountLastDay";
 import FBackgroundPreviewLink from "./FBackgroundPreviewLink";
@@ -18,7 +18,7 @@ export class CMarketListing extends CCommunityBase {
             FPriceHistoryZoomControl,
         ]);
 
-        this.type = ContextTypes.MARKET_LISTING;
+        this.type = ContextType.MARKET_LISTING;
 
         this.appid = GameId.getAppid(window.location.href);
     }

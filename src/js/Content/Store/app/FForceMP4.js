@@ -1,4 +1,4 @@
-import {Feature} from "modules";
+import {Feature} from "../../../Modules/Content/Feature/Feature";
 import {SyncedStorage} from "../../../Modules/Core/Storage/SyncedStorage";
 
 export default class FForceMP4 extends Feature {

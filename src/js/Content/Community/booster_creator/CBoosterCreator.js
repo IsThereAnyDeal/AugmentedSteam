@@ -1,6 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules";
-
+import ContextType from "../../../Modules/Content/Context/ContextType";
 import FShowGemsCost from "./FShowGemsCost";
 
 export class CBoosterCreator extends CCommunityBase {
@@ -11,6 +10,6 @@ export class CBoosterCreator extends CCommunityBase {
             FShowGemsCost,
         ]);
 
-        this.type = ContextTypes.BOOSTER_CREATOR;
+        this.type = ContextType.BOOSTER_CREATOR;
     }
 }

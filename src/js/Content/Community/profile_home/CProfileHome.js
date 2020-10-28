@@ -1,6 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules";
-
+import ContextType from "../../../Modules/Content/Context/ContextType";
 import FCommunityProfileLinks from "./FCommunityProfileLinks";
 import FWishlistProfileLink from "./FWishlistProfileLink";
 import FSupporterBadges from "./FSupporterBadges";
@@ -52,6 +51,6 @@ export class CProfileHome extends CCommunityBase {
             FChatDropdownOptions,
         ]);
 
-        this.type = ContextTypes.PROFILE_HOME;
+        this.type = ContextType.PROFILE_HOME;
     }
 }

@@ -1,5 +1,4 @@
 import {CStoreBaseCallback} from "store/common/CStoreBaseCallback";
-import {ContextTypes} from "modules";
 
 import FWishlistHighlights from "./FWishlistHighlights";
 import FWishlistITADPrices from "./FWishlistITADPrices";
@@ -8,8 +7,9 @@ import FWishlistStats from "./FWishlistStats";
 import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
 import FAlternativeLinuxIcon from "store/common/FAlternativeLinuxIcon";
+import ContextType from "../../../Modules/Content/Context/ContextType";
 
-import {ExtensionLayer, User} from "common";
+import {ExtensionLayer, User} from "../../../Modules/content";
 
 export class CWishlist extends CStoreBaseCallback {
 
@@ -24,7 +24,7 @@ export class CWishlist extends CStoreBaseCallback {
             FAlternativeLinuxIcon,
         ]);
 
-        this.type = ContextTypes.WISHLIST;
+        this.type = ContextType.WISHLIST;
 
         if (User.isSignedIn) {
             const myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/").replace(/\/$/, "");

@@ -1,6 +1,5 @@
-import {Feature} from "modules";
 import {HTML, LocalStorage, Localization, SyncedStorage} from "../../../core_modules";
-import {Background} from "common";
+import {Background, Feature} from "../../../Modules/content";
 
 export default class FHowLongToBeat extends Feature {
 

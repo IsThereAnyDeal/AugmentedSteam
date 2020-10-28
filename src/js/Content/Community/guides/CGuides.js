@@ -1,5 +1,5 @@
 import {CApp} from "community/app/CApp";
-import {ContextTypes} from "modules";
+import ContextType from "../../../Modules/Content/Context/ContextType";
 
 import FRemoveGuidesLangFilter from "./FRemoveGuidesLangFilter";
 
@@ -10,6 +10,6 @@ export class CGuides extends CApp {
             FRemoveGuidesLangFilter,
         ]);
 
-        this.type = ContextTypes.GUIDES;
+        this.type = ContextType.GUIDES;
     }
 }

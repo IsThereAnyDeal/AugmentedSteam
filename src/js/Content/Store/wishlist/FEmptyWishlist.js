@@ -1,8 +1,11 @@
-import {Feature} from "modules";
 
 import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
-import {DynamicStore, ExtensionLayer, RequestData, User} from "common";
 import FExportWishlist from "./FExportWishlist";
+import {Feature} from "../../../Modules/Content/Feature/Feature";
+import {ExtensionLayer} from "../../../Modules/Content/ExtensionLayer";
+import {DynamicStore} from "../../../Modules/Content/Data/DynamicStore";
+import {RequestData} from "../../../Modules/Content/RequestData";
+import {User} from "../../../Modules/Content/User";
 
 export default class FEmptyWishlist extends Feature {
 

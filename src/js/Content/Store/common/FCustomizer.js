@@ -1,5 +1,4 @@
-import {ContextTypes, Feature} from "modules";
-
+import {ContextType, Feature} from "../../../Modules/content";
 import {HTML} from "../../../Modules/Core/Html/Html";
 import {Localization} from "../../../Modules/Core/Localization/Localization";
 import {SyncedStorage} from "../../../Modules/Core/Storage/SyncedStorage";
@@ -9,9 +8,9 @@ import {DOMHelper} from "common";
 export default class FCustomizer extends Feature {
 
     apply() {
-        if (this.context.type === ContextTypes.APP) {
+        if (this.context.type === ContextType.APP) {
             this._customizeAppPage();
-        } else if (this.context.type === ContextTypes.STORE_FRONT) {
+        } else if (this.context.type === ContextType.STORE_FRONT) {
             this._customizeFrontPage();
         }
     }

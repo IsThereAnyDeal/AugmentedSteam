@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, LocalStorage, Localization} from "../../../core_modules";
-import {ExtensionLayer} from "common";
+import {ExtensionLayer, Feature} from "../../../Modules/content";
 
 export default class FPopularRefreshToggle extends Feature {
 

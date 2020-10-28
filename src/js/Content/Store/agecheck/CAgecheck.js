@@ -1,5 +1,4 @@
-import {Context, ContextTypes} from "modules";
-
+import {Context, ContextTypes} from "../../../Modules/content";
 import FSkipAgecheck from "common/FSkipAgecheck";
 
 export class CAgecheck extends Context {

@@ -1,9 +1,7 @@
-import {ContextTypes, Feature} from "modules";
-
 import {HTML} from "../../../Modules/Core/Html/Html";
 import {Localization} from "../../../Modules/Core/Localization/Localization";
 import {SyncedStorage} from "../../../Modules/Core/Storage/SyncedStorage";
-import {Currency, Price, RequestData, User} from "common";
+import {ContextType, CurrencyManager, Feature, Price, RequestData, User} from "../../../Modules/content";
 
 export default class FRegionalPricing extends Feature {
 
@@ -22,9 +20,9 @@ export default class FRegionalPricing extends Feature {
             countries.push(localCountry);
         }
 
-        if (this.context.type === ContextTypes.APP) {
+        if (this.context.type === ContextType.APP) {
             type = "app";
-        } else if (this.context.type === ContextTypes.SALE) {
+        } else if (this.context.type === ContextType.SALE) {
             type = "sale";
         }
 
@@ -52,7 +50,7 @@ export default class FRegionalPricing extends Feature {
 
             let priceLocal;
             try {
-                priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(Currency.customCurrency);
+                priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(CurrencyManager.customCurrency);
             } catch (err) {
                 console.group("Regional pricing");
                 console.error(err);
@@ -76,7 +74,7 @@ export default class FRegionalPricing extends Feature {
                     const priceRegion = new Price(apiPrice.final / 100, apiPrice.currency);
                     let priceUser;
                     try {
-                        priceUser = priceRegion.inCurrency(Currency.customCurrency);
+                        priceUser = priceRegion.inCurrency(CurrencyManager.customCurrency);
                     } catch (err) {
                         console.group("Regional pricing");
                         console.error(err);

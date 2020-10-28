@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, Localization} from "../../../core_modules";
-import {ConfirmDialog, ExtensionLayer, RequestData, User} from "common";
+import {ConfirmDialog, ExtensionLayer, Feature, RequestData, User} from "../../../Modules/content";
 
 export default class FGroupsManageButton extends Feature {
 

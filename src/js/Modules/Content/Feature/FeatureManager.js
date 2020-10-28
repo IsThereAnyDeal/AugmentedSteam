@@ -126,4 +126,4 @@ class FeatureManager {
     }
 }
 
-export {FeatureManager}
+export {FeatureManager};

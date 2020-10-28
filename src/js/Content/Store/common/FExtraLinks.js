@@ -1,4 +1,4 @@
-import {ContextTypes, Feature} from "modules";
+import {ContextType, Feature} from "../../../Modules/content";
 
 import {HTML} from "../../../Modules/Core/Html/Html";
 import {Localization} from "../../../Modules/Core/Localization/Localization";
@@ -9,15 +9,15 @@ export default class FExtraLinks extends Feature {
     checkPrerequisites() {
         const context = this.context;
 
-        if (context.type === ContextTypes.APP) {
+        if (context.type === ContextType.APP) {
             this._type = "app";
             this._gameid = context.appid;
             this._node = document.querySelector("#ReportAppBtn").parentNode;
-        } else if (context.type === ContextTypes.SUB) {
+        } else if (context.type === ContextType.SUB) {
             this._type = "sub";
             this._gameid = context.subid;
             this._node = document.querySelector(".share").parentNode;
-        } else if (context.type === ContextTypes.BUNDLE) {
+        } else if (context.type === ContextType.BUNDLE) {
             this._type = "bundle";
             this._gameid = context.bundleid;
             this._node = document.querySelector(".share, .rightcol .game_details");

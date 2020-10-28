@@ -1,6 +1,4 @@
-import {Context, ContextTypes} from "modules";
-
-import {EarlyAccess} from "common";
+import {Context, ContextType, EarlyAccess} from "../../../Modules/content";;
 import FHighlightsTags from "common/FHighlightsTags";
 import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
 import FHideTrademarks from "common/FHideTrademarks";
@@ -18,7 +16,7 @@ export class CStoreBase extends Context {
 
         super(features);
 
-        this.type = ContextTypes.STORE_DEFAULT;
+        this.type = ContextType.STORE_DEFAULT;
 
         this._observeChanges();
     }

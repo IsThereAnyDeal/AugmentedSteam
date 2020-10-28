@@ -1,4 +1,4 @@
-import {ContextTypes} from "modules";
+import ContextType from "../../../Modules/Content/Context/ContextType";
 import {CStore} from "store/common/CStore";
 
 import FExtraLinks from "store/common/FExtraLinks";
@@ -15,7 +15,7 @@ export class CBundle extends CStore {
             FITADPrices,
         ]);
 
-        this.type = ContextTypes.BUNDLE;
+        this.type = ContextType.BUNDLE;
 
         this.bundleid = GameId.getBundleid(window.location.host + window.location.pathname);
     }

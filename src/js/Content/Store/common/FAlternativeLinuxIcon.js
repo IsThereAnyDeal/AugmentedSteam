@@ -1,5 +1,4 @@
-import {Feature} from "modules";
-
+import {Feature} from "../../../Modules/Content/Feature/Feature";
 import {ExtensionResources} from "../../../Modules/Core/ExtensionResources";
 import {SyncedStorage} from "../../../Modules/Core/Storage/SyncedStorage";
 

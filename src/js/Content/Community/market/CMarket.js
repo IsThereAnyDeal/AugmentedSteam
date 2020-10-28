@@ -1,6 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules";
-
+import ContextType from "../../../Modules/Content/Context/ContextType";
 import FHighlightMarketItems from "./FHighlightMarketItems";
 import FMarketStats from "./FMarketStats";
 import FHideActiveListings from "./FHideActiveListings";
@@ -29,6 +28,6 @@ export class CMarket extends CCommunityBase {
 
         super(features);
 
-        this.type = ContextTypes.MARKET;
+        this.type = ContextType.MARKET;
     }
 }

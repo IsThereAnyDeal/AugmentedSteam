@@ -1,5 +1,5 @@
 import {CStore} from "store/common/CStore";
-import {ContextTypes} from "modules";
+import ContextType from "../../../Modules/Content/Context/ContextType";
 
 import FExtraLinks from "store/common/FExtraLinks";
 import FDRMWarnings from "store/common/FDRMWarnings";
@@ -21,7 +21,7 @@ export class CSub extends CStore {
             FSavingsCheck,
         ]);
 
-        this.type = ContextTypes.SUB;
+        this.type = ContextType.SUB;
 
         this.subid = GameId.getSubid(window.location.host + window.location.pathname);
     }

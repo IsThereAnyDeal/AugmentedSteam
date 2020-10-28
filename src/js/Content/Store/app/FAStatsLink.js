@@ -1,4 +1,4 @@
-import {Feature} from "modules";
+import {Feature} from "../../../Modules/Content/Feature/Feature";
 import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../core_modules";
 
 // todo maybe integrate with other useful links?

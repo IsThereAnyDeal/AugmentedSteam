@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {ExtensionResources, HTML, Localization} from "../../../core_modules";
-import {DynamicStore, ExtensionLayer, User} from "common";
+import {DynamicStore, ExtensionLayer, Feature, User} from "../../../Modules/content";;
 
 export default class FRemoveFromWishlist extends Feature {
 

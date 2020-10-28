@@ -1,5 +1,5 @@
 import {CCommunityBase} from "community/common/CCommunityBase";
-import {ContextTypes} from "modules";
+import ContextType from "../../../Modules/Content/Context/ContextType";
 import FReviewSort from "./FReviewSort";
 
 export class CRecommended extends CCommunityBase {
@@ -10,6 +10,6 @@ export class CRecommended extends CCommunityBase {
             FReviewSort,
         ]);
 
-        this.type = ContextTypes.RECOMMENDED;
+        this.type = ContextType.RECOMMENDED;
     }
 }

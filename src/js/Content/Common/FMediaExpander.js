@@ -1,7 +1,5 @@
-import {ContextTypes, Feature} from "modules";
-
 import {HTML, LocalStorage, Localization, SyncedStorage} from "../../core_modules";
-import {ExtensionLayer} from "common";
+import {ContextType, ExtensionLayer, Feature} from "../../Modules/content";
 
 export default class FMediaExpander extends Feature {
 
@@ -13,7 +11,7 @@ export default class FMediaExpander extends Feature {
     apply() {
         let selector = null;
 
-        if (this.context.type === ContextTypes.APP
+        if (this.context.type === ContextType.APP
             && (SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews"))) {
             selector = ".home_tabs_row";
         } else {

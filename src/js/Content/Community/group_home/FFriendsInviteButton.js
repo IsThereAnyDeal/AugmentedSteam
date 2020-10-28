@@ -1,7 +1,5 @@
-import {Feature} from "modules";
-
 import {HTML, Localization} from "../../../core_modules";
-import {User} from "common";
+import {Feature, User} from "../../../Modules/content";
 
 export default class FFriendsInviteButton extends Feature {
 

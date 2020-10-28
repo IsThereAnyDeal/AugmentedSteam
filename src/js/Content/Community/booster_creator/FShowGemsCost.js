@@ -1,6 +1,4 @@
-import {Feature} from "modules";
-
-import {ExtensionLayer} from "common";
+import {ExtensionLayer, Feature} from "../../../Modules/content";
 
 export default class FShowGemsCost extends Feature {
 

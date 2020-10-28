@@ -4,7 +4,7 @@ import {HTML} from "../Core/Html/Html";
 import {Background} from "./Background";
 import {User} from "./User";
 import {Price} from "./Price";
-import {Currency} from "./Currency/Currency";
+import {CurrencyManager} from "./CurrencyManager";
 
 class Prices {
 
@@ -51,8 +51,8 @@ class Prices {
      */
     _getPricingStrings(priceData, price, pricingStr) {
         let prices = price.toString();
-        if (Currency.customCurrency !== Currency.storeCurrency) {
-            const priceAlt = price.inCurrency(Currency.storeCurrency);
+        if (CurrencyManager.customCurrency !== CurrencyManager.storeCurrency) {
+            const priceAlt = price.inCurrency(CurrencyManager.storeCurrency);
             prices += ` (${priceAlt.toString()})`;
         }
         const pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
@@ -101,7 +101,7 @@ class Prices {
                 lowest = new Price(priceData.price, meta.currency);
             }
 
-            lowest = lowest.inCurrency(Currency.customCurrency);
+            lowest = lowest.inCurrency(CurrencyManager.customCurrency);
             const [pricesStr, cutStr, storeStr] = this._getPricingStrings(priceData, lowest, pricingStr);
 
             let drmStr = "";
@@ -124,7 +124,7 @@ class Prices {
         if (lowestData) {
             hasData = true;
 
-            const historical = new Price(lowestData.price, meta.currency).inCurrency(Currency.customCurrency);
+            const historical = new Price(lowestData.price, meta.currency).inCurrency(CurrencyManager.customCurrency);
             const [pricesStr, cutStr, storeStr] = this._getPricingStrings(lowestData, historical, pricingStr);
             const dateStr = new Date(lowestData.recorded * 1000).toLocaleDateString();
 
@@ -214,7 +214,7 @@ class Prices {
                 purchase += "<b>";
                 if (tiers.length > 1) {
                     const tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    const tierPrice = (new Price(tier.price, meta.currency).inCurrency(Currency.customCurrency))
+                    const tierPrice = (new Price(tier.price, meta.currency).inCurrency(CurrencyManager.customCurrency))
                         .toString();
 
                     purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice)
@@ -247,7 +247,7 @@ class Prices {
                             <div class="game_purchase_action_bg">`;
 
             if (bundlePrice && bundlePrice > 0) {
-                bundlePrice = (new Price(bundlePrice, meta.currency).inCurrency(Currency.customCurrency))
+                bundlePrice = (new Price(bundlePrice, meta.currency).inCurrency(CurrencyManager.customCurrency))
                     .toString();
                 purchase += `<div class="game_purchase_price price" itemprop="price">${bundlePrice}</div>`;
             }
