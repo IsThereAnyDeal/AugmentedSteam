@@ -21,7 +21,8 @@
     ],
     "ignorePatterns": [
         "/src/js/lib/**",
-        "/dist/**"
+        "/dist/**",
+        "/releases/**"
     ],
     "rules": {
         "accessor-pairs": "error",
