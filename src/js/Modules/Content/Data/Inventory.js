@@ -53,7 +53,7 @@ class Inventory {
         }
     }
 
-    static hasInInventory6(marketHashes) {
+    static hasInMarketInventory(marketHashes) {
         return Background.action("hasitem", marketHashes);
     }
 }

@@ -8,6 +8,7 @@ import {Background} from "./Background";
 import {LocalStorage} from "../Core/Storage/LocalStorage";
 import {RequestData} from "./RequestData";
 import {ExtensionLayer} from "./ExtensionLayer";
+import {ITAD} from "./ITAD";
 
 class UpdateHandler {
 
@@ -29,7 +30,7 @@ class UpdateHandler {
     static async _showChangelog() {
 
         // FIXME
-        const changelog = (await RequestData.getHttp(ExtensionResources.getURL("html/changelog_new.html"))).replace(/\r|\n/g, "").replace(/'/g, "\\'");
+        const changelog = (await RequestData.getHttp(ExtensionResources.getURL("html/changelog_new.html"))).replace(/[\r\n]/g, "").replace(/'/g, "\\'");
         const logo = ExtensionResources.getURL("img/es_128.png");
         const dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
 

@@ -2509,10 +2509,11 @@ img.astats_icon {
   align-items: center;
   margin-right: 1em;
 }
-#es_itad_status {
-	color: rgb(81, 119, 29);
+#es_itad_logo {
+  height: 20px;
 }
 #es_itad_status {
+	color: rgb(81, 119, 29);
 	margin-left: 0.4em;
 }
 #es_popup {

@@ -9,6 +9,7 @@ import {DOMHelper} from "./DOMHelper";
 import {HorizontalScroller} from "./Widgets/HorizontalScroller";
 import {ExtensionLayer} from "./ExtensionLayer";
 import {DynamicStore} from "./Data/DynamicStore";
+import {User} from "./User";
 
 class AugmentedSteam {
 

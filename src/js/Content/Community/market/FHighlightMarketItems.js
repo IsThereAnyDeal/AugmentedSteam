@@ -37,7 +37,7 @@ export default class FHighlightMarketItems extends CallbackFeature {
             if (!m) { continue; }
 
             // todo Collect hashes and query them all at once
-            if (await Inventory.hasInInventory6(decodeURIComponent(m[1]))) {
+            if (await Inventory.hasInMarketInventory(decodeURIComponent(m[1]))) {
                 FHighlightsTags.highlightOwned(node.querySelector("div"));
             }
         }

@@ -59,10 +59,8 @@ class RequestData {
  * See https://bugzilla.mozilla.org/show_bug.cgi?id=1579347#c5
  */
 RequestData._fetchFn
-
-    // content.fetch is already bound
-    // eslint-disable-next-line no-undef -- content is only available in FF environments
-    = (typeof content !== "undefined" && content && content.fetch)
+    // eslint-disable-next-line no-undef
+    = (typeof content !== "undefined" && content && content.fetch) // content is only available in FF environments
     || fetch.bind(window);
 
 export {RequestData};

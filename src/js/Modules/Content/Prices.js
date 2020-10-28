@@ -44,6 +44,28 @@ class Prices {
         return apiParams;
     }
 
+    /**
+     * @param priceData
+     * @param {Price} price
+     * @param {string} pricingStr
+     */
+    _getPricingStrings(priceData, price, pricingStr) {
+        let prices = price.toString();
+        if (Currency.customCurrency !== Currency.storeCurrency) {
+            const priceAlt = price.inCurrency(Currency.storeCurrency);
+            prices += ` (${priceAlt.toString()})`;
+        }
+        const pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
+
+        let cutStr = "";
+        if (priceData.cut > 0) {
+            cutStr = `<span class="itad-pricing__cut">-${priceData.cut}%</span> `;
+        }
+
+        const storeStr = pricingStr.store.replace("__store__", priceData.store);
+        return [pricesStr, cutStr, storeStr];
+    }
+
     _processPrices(gameid, meta, info) {
         if (!this.priceCallback) { return; }
 
@@ -80,19 +102,7 @@ class Prices {
             }
 
             lowest = lowest.inCurrency(Currency.customCurrency);
-            let prices = lowest.toString();
-            if (Currency.customCurrency !== Currency.storeCurrency) {
-                const lowestAlt = lowest.inCurrency(Currency.storeCurrency);
-                prices += ` (${lowestAlt.toString()})`;
-            }
-            const pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
-
-            let cutStr = "";
-            if (priceData.cut > 0) {
-                cutStr = `<span class="itad-pricing__cut">-${priceData.cut}%</span> `;
-            }
-
-            const storeStr = pricingStr.store.replace("__store__", priceData.store);
+            const [pricesStr, cutStr, storeStr] = this._getPricingStrings(priceData, lowest, pricingStr);
 
             let drmStr = "";
             if (priceData.drm.length > 0 && priceData.store !== "Steam") {
@@ -115,19 +125,7 @@ class Prices {
             hasData = true;
 
             const historical = new Price(lowestData.price, meta.currency).inCurrency(Currency.customCurrency);
-            let prices = historical.toString();
-            if (Currency.customCurrency !== Currency.storeCurrency) {
-                const historicalAlt = historical.inCurrency(Currency.storeCurrency);
-                prices += ` (${historicalAlt.toString()})`;
-            }
-            const pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
-
-            let cutStr = "";
-            if (lowestData.cut > 0) {
-                cutStr = `<span class="itad-pricing__cut">-${lowestData.cut}%</span> `;
-            }
-
-            const storeStr = pricingStr.store.replace("__store__", lowestData.store);
+            const [pricesStr, cutStr, storeStr] = this._getPricingStrings(lowestData, historical, pricingStr);
             const dateStr = new Date(lowestData.recorded * 1000).toLocaleDateString();
 
             const infoUrl = HTML.escape(urlData.history);
