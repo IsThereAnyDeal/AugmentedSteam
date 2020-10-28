@@ -1,26 +1,29 @@
-import {StringUtils} from "../../Core/Utils/StringUtils";
-import {Background} from "../../../Content/common";
+import {SyncedStorage} from "../Core/Storage/SyncedStorage";
+import {StringUtils} from "../Core/Utils/StringUtils";
+import {Background} from "./Background";
+import {ExtensionLayer} from "./ExtensionLayer";
 
-/*
- * Example:
- * {
- *  "id": 1,
- *  "abbr": "USD",
- *  "symbol": "$",
- *  "hint": "United States Dollars",
- *  "multiplier": 100,
- *  "unit": 1,
- *  "format": {
- *      "places": 2,
- *      "hidePlacesWhenZero": false,
- *      "symbolFormat": "$",
- *      "thousand": ",",
- *      "decimal": ".",
- *      "right": false
- *  }
- * }
- */
 class SteamCurrency {
+
+    /*
+     * Example:
+     * {
+     *  "id": 1,
+     *  "abbr": "USD",
+     *  "symbol": "$",
+     *  "hint": "United States Dollars",
+     *  "multiplier": 100,
+     *  "unit": 1,
+     *  "format": {
+     *      "places": 2,
+     *      "hidePlacesWhenZero": false,
+     *      "symbolFormat": "$",
+     *      "thousand": ",",
+     *      "decimal": ".",
+     *      "right": false
+     *  }
+     * }
+     */
 
     constructor({
         id,
@@ -147,48 +150,143 @@ class SteamCurrency {
     }
 }
 
-class CurrencyRegistry {
+class CurrencyManager {
+
+    static _getCurrencyFromDom() {
+        const currencyNode = document.querySelector('meta[itemprop="priceCurrency"]');
+        if (currencyNode && currencyNode.hasAttribute("content")) {
+            return currencyNode.getAttribute("content");
+        }
+        return null;
+    }
+
+    static async _getCurrencyFromWallet() {
+        const walletCurrency = await ExtensionLayer.runInPageContext(
+            // eslint-disable-next-line no-undef, camelcase
+            () => (typeof g_rgWalletInfo !== "undefined" && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null),
+            null,
+            "walletCurrency"
+        );
+
+        if (walletCurrency) {
+            return CurrencyManager.currencyNumberToType(walletCurrency);
+        }
+        return null;
+    }
+
+    static async _getStoreCurrency() {
+        let currency = CurrencyManager._getCurrencyFromDom();
+
+        if (!currency) {
+            currency = await CurrencyManager._getCurrencyFromWallet();
+        }
+
+        if (!currency) {
+            try {
+                currency = await Background.action("currency");
+            } catch (error) {
+                console.error(`Couldn't load currency${error}`);
+            }
+        }
+
+        if (!currency) {
+            currency = "USD"; // fallback
+        }
+
+        return currency;
+    }
+
+    static getRate(from, to) {
+        if (from === to) { return 1; }
+
+        if (CurrencyManager._rates[from] && CurrencyManager._rates[from][to]) {
+            return CurrencyManager._rates[from][to];
+        }
+
+        return null;
+    }
+
+    static getCurrencySymbolFromString(str) {
+        const re = /(?:R\$|S\$|\$|RM|kr|Rp|€|¥|£|฿|pуб|P|₫|₩|TL|₴|Mex\$|CDN\$|A\$|HK\$|NT\$|₹|SR|R |DH|CHF|CLP\$|S\/\.|COL\$|NZ\$|ARS\$|₡|₪|₸|KD|zł|QR|\$U)/;
+        const match = str.match(re);
+        return match ? match[0] : "";
+    }
+
+    static currencyTypeToNumber(type) {
+        return CurrencyManager.fromType(type).id;
+    }
+
+    static currencyNumberToType(number) {
+        return CurrencyManager.fromNumber(number).abbr;
+    }
 
     /**
      * @return SteamCurrency
      */
     static fromType(type) {
-        return CurrencyRegistry._indices.abbr[type] || CurrencyRegistry._defaultCurrency;
+        return CurrencyManager._indices.abbr[type] || CurrencyManager._defaultCurrency;
     }
 
     /**
      * @return SteamCurrency
      */
     static fromNumber(number) {
-        return CurrencyRegistry._indices.id[number] || CurrencyRegistry._defaultCurrency;
+        return CurrencyManager._indices.id[number] || CurrencyManager._defaultCurrency;
+    }
+
+    static async _loadCurrency() {
+        CurrencyManager.storeCurrency = await CurrencyManager._getStoreCurrency();
+        const currencySetting = SyncedStorage.get("override_price");
+        CurrencyManager.customCurrency = (currencySetting === "auto")
+            ? CurrencyManager.storeCurrency
+            : currencySetting;
+    }
+
+    static async _loadRates() {
+        const toCurrencies = [CurrencyManager.storeCurrency];
+        if (CurrencyManager.customCurrency !== CurrencyManager.storeCurrency) {
+            toCurrencies.push(CurrencyManager.customCurrency);
+        }
+        CurrencyManager._rates = await Background.action("rates", toCurrencies);
     }
 
     static async init() {
+        if (CurrencyManager._isInitialized) { return; }
 
         const currencies = await Background.action("steam.currencies");
 
         for (let currency of currencies) {
 
             currency = new SteamCurrency(currency);
-            CurrencyRegistry._indices.abbr[currency.abbr] = currency;
-            CurrencyRegistry._indices.id[currency.id] = currency;
+            CurrencyManager._indices.abbr[currency.abbr] = currency;
+            CurrencyManager._indices.id[currency.id] = currency;
 
             if (currency.symbol) { // CNY && JPY use the same symbol
-                CurrencyRegistry._indices.symbols[currency.symbol] = currency;
+                CurrencyManager._indices.symbols[currency.symbol] = currency;
             }
         }
-        CurrencyRegistry._defaultCurrency = CurrencyRegistry._indices.id[1]; // USD
+        CurrencyManager._defaultCurrency = CurrencyManager._indices.id[1]; // USD
+
+        try {
+            await CurrencyManager._loadCurrency();
+            await CurrencyManager._loadRates();
+        } catch (e) {
+            console.error("Failed to initialize Currency");
+            console.error(e);
+        }
+
+        CurrencyManager._isInitialized = true;
     }
 
     static then(onDone, onCatch) {
-        return CurrencyRegistry.init().then(onDone, onCatch);
+        return CurrencyManager.init().then(onDone, onCatch);
     }
 }
-
-CurrencyRegistry._indices = {
+CurrencyManager._isInitialized = false;
+CurrencyManager._indices = {
     "id": {},
     "abbr": {},
     "symbols": {},
 };
 
-export {CurrencyRegistry};
+export {CurrencyManager};
