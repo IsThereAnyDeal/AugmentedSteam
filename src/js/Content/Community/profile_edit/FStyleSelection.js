@@ -1,5 +1,5 @@
 import {ExtensionResources, HTML, Localization} from "../../../core_modules";
-import {DOMHelper, ExtensionLayer, Feature} from "../../../Modules/content";
+import {DOMHelper, Feature} from "../../../Modules/content";
 import {ProfileData} from "community/common";
 import Config from "config";
 
@@ -58,7 +58,7 @@ export default class FStyleSelection extends Feature {
             this._active = true;
 
             // eslint-disable-next-line no-undef, new-cap
-            ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+            this.context.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
 
             const styleSelectNode = document.querySelector("#es_style");
 

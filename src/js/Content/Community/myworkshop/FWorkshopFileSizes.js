@@ -1,5 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {Background, ExtensionLayer, Feature, RequestData} from "../../../Modules/content";
+import {Background, Feature, RequestData} from "../../../Modules/content";
 
 export default class FWorkshopFileSizes extends Feature {
 
@@ -38,7 +38,7 @@ export default class FWorkshopFileSizes extends Feature {
 
         document.getElementById("es_calc_size").addEventListener("click", async() => {
 
-            ExtensionLayer.runInPageContext((calculating, totalSize) => {
+            this.context.runInPageContext((calculating, totalSize) => {
                 ShowBlockingWaitDialog(calculating, totalSize); // eslint-disable-line no-undef, new-cap
             },
             [
@@ -81,7 +81,7 @@ export default class FWorkshopFileSizes extends Feature {
                     totalSize += size;
 
                     // eslint-disable-next-line no-loop-func -- Page context
-                    ExtensionLayer.runInPageContext((calculating, totalSize) => {
+                    this.context.runInPageContext((calculating, totalSize) => {
                         /* eslint-disable no-undef, new-cap */
                         CModal.DismissActiveModal();
                         ShowBlockingWaitDialog(calculating, totalSize);
@@ -96,7 +96,7 @@ export default class FWorkshopFileSizes extends Feature {
 
             this._addFileSizes();
 
-            ExtensionLayer.runInPageContext((finished, totalSize) => {
+            this.context.runInPageContext((finished, totalSize) => {
                 /* eslint-disable no-undef, new-cap */
                 CModal.DismissActiveModal();
                 ShowAlertDialog(finished, totalSize);

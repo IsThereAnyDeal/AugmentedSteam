@@ -1,5 +1,5 @@
 import {HTML, HTMLParser, Localization} from "../../../core_modules";
-import {ExtensionLayer, Feature, RequestData, User} from "../../../Modules/content";
+import {Feature, RequestData, User} from "../../../Modules/content";
 
 export default class FCommonGames extends Feature {
 
@@ -20,13 +20,13 @@ export default class FCommonGames extends Feature {
         commonCheckbox.addEventListener("change", async({target}) => {
             await this._loadCommonGames();
             rows.classList.toggle("esi-hide-notcommon", target.checked);
-            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); }); // eslint-disable-line no-undef, new-cap
+            this.context.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); }); // eslint-disable-line no-undef, new-cap
         });
 
         notCommonCheckbox.addEventListener("change", async({target}) => {
             await this._loadCommonGames();
             rows.classList.toggle("esi-hide-common", target.checked);
-            ExtensionLayer.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); }); // eslint-disable-line no-undef, new-cap
+            this.context.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); }); // eslint-disable-line no-undef, new-cap
         });
     }
 

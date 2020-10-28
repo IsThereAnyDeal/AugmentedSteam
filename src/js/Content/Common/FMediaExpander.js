@@ -1,5 +1,5 @@
 import {HTML, LocalStorage, Localization, SyncedStorage} from "../../core_modules";
-import {ContextType, ExtensionLayer, Feature} from "../../Modules/content";
+import {ContextType, Feature} from "../../Modules/content";
 
 export default class FMediaExpander extends Feature {
 
@@ -25,7 +25,7 @@ export default class FMediaExpander extends Feature {
             </div>`);
 
         // Initiate tooltip
-        ExtensionLayer.runInPageContext(() => {
+        this.context.runInPageContext(() => {
             // eslint-disable-next-line no-undef
             $J("[data-slider-tooltip]").v_tooltip({"tooltipClass": "store_tooltip community_tooltip", "dataName": "sliderTooltip"});
         });

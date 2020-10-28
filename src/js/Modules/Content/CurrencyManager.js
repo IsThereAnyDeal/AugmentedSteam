@@ -1,7 +1,6 @@
 import {SyncedStorage} from "../Core/Storage/SyncedStorage";
 import {StringUtils} from "../Core/Utils/StringUtils";
 import {Background} from "./Background";
-import {ExtensionLayer} from "./ExtensionLayer";
 
 class SteamCurrency {
 
@@ -160,8 +159,8 @@ class CurrencyManager {
         return null;
     }
 
-    static async _getCurrencyFromWallet() {
-        const walletCurrency = await ExtensionLayer.runInPageContext(
+    static async _getCurrencyFromWallet(context) {
+        const walletCurrency = await context.runInPageContext(
             // eslint-disable-next-line no-undef, camelcase
             () => (typeof g_rgWalletInfo !== "undefined" && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null),
             null,
@@ -174,11 +173,11 @@ class CurrencyManager {
         return null;
     }
 
-    static async _getStoreCurrency() {
+    static async _getStoreCurrency(context) {
         let currency = CurrencyManager._getCurrencyFromDom();
 
         if (!currency) {
-            currency = await CurrencyManager._getCurrencyFromWallet();
+            currency = await CurrencyManager._getCurrencyFromWallet(context);
         }
 
         if (!currency) {
@@ -234,8 +233,8 @@ class CurrencyManager {
         return CurrencyManager._indices.id[number] || CurrencyManager._defaultCurrency;
     }
 
-    static async _loadCurrency() {
-        CurrencyManager.storeCurrency = await CurrencyManager._getStoreCurrency();
+    static async _loadCurrency(context) {
+        CurrencyManager.storeCurrency = await CurrencyManager._getStoreCurrency(context);
         const currencySetting = SyncedStorage.get("override_price");
         CurrencyManager.customCurrency = (currencySetting === "auto")
             ? CurrencyManager.storeCurrency
@@ -250,7 +249,7 @@ class CurrencyManager {
         CurrencyManager._rates = await Background.action("rates", toCurrencies);
     }
 
-    static async init() {
+    static async init(context) {
         if (CurrencyManager._isInitialized) { return; }
 
         const currencies = await Background.action("steam.currencies");
@@ -268,7 +267,7 @@ class CurrencyManager {
         CurrencyManager._defaultCurrency = CurrencyManager._indices.id[1]; // USD
 
         try {
-            await CurrencyManager._loadCurrency();
+            await CurrencyManager._loadCurrency(context);
             await CurrencyManager._loadRates();
         } catch (e) {
             console.error("Failed to initialize Currency");
@@ -276,10 +275,6 @@ class CurrencyManager {
         }
 
         CurrencyManager._isInitialized = true;
-    }
-
-    static then(onDone, onCatch) {
-        return CurrencyManager.init().then(onDone, onCatch);
     }
 }
 CurrencyManager._isInitialized = false;

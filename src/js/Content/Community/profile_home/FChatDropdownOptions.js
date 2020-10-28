@@ -1,5 +1,5 @@
 import {HTML, HTMLParser, Localization} from "../../../core_modules";
-import {ExtensionLayer, Feature, User} from "../../../Modules/content";
+import {Feature, User} from "../../../Modules/content";
 
 export default class FChatDropdownOptions extends Feature {
 
@@ -38,11 +38,11 @@ export default class FChatDropdownOptions extends Feature {
 
         document.querySelector("#btnWebChat").addEventListener("click", () => {
             // eslint-disable-next-line no-undef, new-cap
-            ExtensionLayer.runInPageContext(chatId => { OpenFriendChatInWebChat(chatId); }, [chatId]);
+            this.context.runInPageContext(chatId => { OpenFriendChatInWebChat(chatId); }, [chatId]);
         });
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", () => {
-            ExtensionLayer.runInPageContext(() => {
+            this.context.runInPageContext(() => {
                 // eslint-disable-next-line no-undef, new-cap
                 ShowMenu(
                     document.querySelector("#profile_chat_dropdown_link"),

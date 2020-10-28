@@ -1,5 +1,5 @@
 import {GameId, HTML, Localization} from "../../../core_modules";
-import {ExtensionLayer, Feature, RequestData, User} from "../../../Modules/content";
+import {Feature, RequestData, User} from "../../../Modules/content";
 
 export default class FWorkshopSubscriberButtons extends Feature {
 
@@ -51,7 +51,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
             .replace("__count__", this._total);
 
         // todo reject when dialog closed
-        await ExtensionLayer.runInPageContext((title, confirm) => {
+        await this.context.runInPageContext((title, confirm) => {
             const prompt = ShowConfirmDialog(title, confirm); // eslint-disable-line new-cap, no-undef
 
             return new Promise(resolve => {
@@ -103,7 +103,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
             .replace("__success__", this._completed - this._failed)
             .replace("__fail__", this._failed);
 
-        ExtensionLayer.runInPageContext((title, finished) => {
+        this.context.runInPageContext((title, finished) => {
             /* eslint-disable new-cap, no-undef */
             if (window.dialog) {
                 window.dialog.Dismiss();
@@ -169,7 +169,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
             modal.innerText = statusString;
         } else {
             const statusTitle = this._workshopStr[`${this._method}_all`];
-            ExtensionLayer.runInPageContext((title, progress) => {
+            this.context.runInPageContext((title, progress) => {
                 if (window.dialog) {
                     window.dialog.Dismiss();
                 }

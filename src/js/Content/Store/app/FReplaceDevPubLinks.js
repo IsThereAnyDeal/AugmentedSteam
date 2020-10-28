@@ -1,6 +1,6 @@
 import {HTML} from "../../../Modules/Core/Html/Html";
 import {Localization} from "../../../Modules/Core/Localization/Localization";
-import {ExtensionLayer, Feature} from "../../../Modules/content";
+import {Feature} from "../../../Modules/content";
 
 export default class FReplaceDevPubLinks extends Feature {
 
@@ -37,6 +37,6 @@ export default class FReplaceDevPubLinks extends Feature {
         }
 
         // eslint-disable-next-line new-cap, no-undef
-        ExtensionLayer.runInPageContext(() => { CollapseLongStrings(".dev_row .summary.column"); });
+        this.context.runInPageContext(() => { CollapseLongStrings(".dev_row .summary.column"); });
     }
 }

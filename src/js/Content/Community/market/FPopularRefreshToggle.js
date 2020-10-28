@@ -1,5 +1,5 @@
 import {HTML, LocalStorage, Localization} from "../../../core_modules";
-import {ExtensionLayer, Feature} from "../../../Modules/content";
+import {Feature} from "../../../Modules/content";
 
 export default class FPopularRefreshToggle extends Feature {
 
@@ -15,13 +15,13 @@ export default class FPopularRefreshToggle extends Feature {
         this._toggleRefresh(LocalStorage.get("popular_refresh", false));
 
         // eslint-disable-next-line no-undef, new-cap
-        ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+        this.context.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
     }
 
     _toggleRefresh(state) {
         document.querySelector("#es_popular_refresh_toggle").classList.toggle("es_refresh_off", !state);
         LocalStorage.set("popular_refresh", state);
         // eslint-disable-next-line camelcase, no-undef
-        ExtensionLayer.runInPageContext(state => { g_bMarketWindowHidden = state; }, [state]);
+        this.context.runInPageContext(state => { g_bMarketWindowHidden = state; }, [state]);
     }
 }

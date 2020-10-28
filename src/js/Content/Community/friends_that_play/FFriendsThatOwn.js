@@ -1,5 +1,5 @@
 import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
-import {Background, ExtensionLayer, Feature, RequestData} from "../../../Modules/content";
+import {Background, Feature, RequestData} from "../../../Modules/content";
 
 export default class FFriendsThatOwn extends Feature {
 
@@ -73,6 +73,6 @@ export default class FFriendsThatOwn extends Feature {
 
         // Reinitialize miniprofiles by injecting the function call.
         // eslint-disable-next-line no-undef, new-cap
-        ExtensionLayer.runInPageContext(() => { InitMiniprofileHovers(); });
+        this.context.runInPageContext(() => { InitMiniprofileHovers(); });
     }
 }

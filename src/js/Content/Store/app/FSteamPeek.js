@@ -1,5 +1,5 @@
 import {HTML, LocalStorage, Localization} from "../../../core_modules";
-import {Background, ExtensionLayer, Feature} from "../../../Modules/content";
+import {Background, Feature} from "../../../Modules/content";
 import FHighlightsTags from "common/FHighlightsTags";
 
 export default class FSteamPeek extends Feature {
@@ -30,7 +30,7 @@ export default class FSteamPeek extends Feature {
         );
 
         // TODO Create a global handler for DS loading
-        await ExtensionLayer.runInPageContext(() => new Promise(resolve => {
+        await this.context.runInPageContext(() => new Promise(resolve => {
             GDynamicStore.OnReady(() => { resolve(); }); // eslint-disable-line new-cap, no-undef
         }), null, true);
 
@@ -77,13 +77,13 @@ export default class FSteamPeek extends Feature {
                         </a>`);
 
 
-                    ExtensionLayer.runInPageContext(appid => { // eslint-disable-line no-loop-func
+                    this.context.runInPageContext(appid => { // eslint-disable-line no-loop-func
                         // eslint-disable-next-line no-undef, new-cap
                         GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), appid);
                     }, [appid]);
                 }
 
-                ExtensionLayer.runInPageContext(() => {
+                this.context.runInPageContext(() => {
                     // eslint-disable-next-line new-cap, no-undef
                     GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar"));
                 });
@@ -106,6 +106,6 @@ export default class FSteamPeek extends Feature {
 
     _adjustScroller() {
         // eslint-disable-next-line no-undef
-        ExtensionLayer.runInPageContext(() => { $J("#recommended_block_content").trigger("v_contentschanged"); });
+        this.context.runInPageContext(() => { $J("#recommended_block_content").trigger("v_contentschanged"); });
     }
 }

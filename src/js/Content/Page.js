@@ -44,11 +44,13 @@ class Page {
 
         if (!document.getElementById("global_header")) { return; }
 
+        const context = new Context();
+
         try {
 
             // TODO What errors can be "suppressed" here?
             await SyncedStorage.init().catch(err => { console.error(err); });
-            await Promise.all([Localization, User, CurrencyManager]);
+            await Promise.all([Localization, User, CurrencyManager.init(context)]);
         } catch (err) {
             console.group("Augmented Steam initialization");
             console.error("Failed to initiliaze Augmented Steam");
@@ -65,14 +67,14 @@ class Page {
             "",
         );
 
-        AugmentedSteam.init();
-        UpdateHandler.checkVersion(AugmentedSteam.clearCache);
+        AugmentedSteam.init(context);
+        UpdateHandler.checkVersion(context, AugmentedSteam.clearCache);
         EarlyAccess.showEarlyAccess();
         ITAD.create();
         Sortbox.init();
         this.pageSpecificFeatures();
 
-        (new Context()).applyFeatures();
+        context.applyFeatures();
     }
 
     _pageSpecificFeatures() {

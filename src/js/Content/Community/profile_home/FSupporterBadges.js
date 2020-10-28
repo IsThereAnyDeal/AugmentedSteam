@@ -1,6 +1,6 @@
 import Config from "config";
 import {HTML, Localization} from "../../../core_modules";
-import {ExtensionLayer, Feature} from "../../../Modules/content";
+import {Feature} from "../../../Modules/content";
 import {ProfileData} from "community/common";
 
 export default class FSupporterBadges extends Feature {
@@ -40,6 +40,6 @@ export default class FSupporterBadges extends Feature {
         HTML.afterEnd(profileBadges, html);
 
         // eslint-disable-next-line new-cap, no-undef
-        ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+        this.context.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
     }
 }

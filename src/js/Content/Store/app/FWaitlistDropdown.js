@@ -1,5 +1,5 @@
 import {HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {Background, ExtensionLayer, Feature} from "../../../Modules/content";
+import {Background, Feature} from "../../../Modules/content";
 
 export default class FWaitlistDropdown extends Feature {
 
@@ -112,7 +112,7 @@ export default class FWaitlistDropdown extends Feature {
 
         wishlistArea.querySelector("a").addEventListener("click", async() => {
 
-            await ExtensionLayer.runInPageContext(() => new Promise(resolve => {
+            await this.context.runInPageContext(() => new Promise(resolve => {
                 /* eslint-disable no-undef */
                 $J(document).ajaxComplete(function handler(e, xhr, {url}) {
                     if (url === "https://store.steampowered.com/api/addtowishlist") {

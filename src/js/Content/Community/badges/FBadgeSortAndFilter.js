@@ -1,5 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {DOMHelper, ExtensionLayer, Feature} from "../../../Modules/content";
+import {DOMHelper, Feature} from "../../../Modules/content";
 import {CommunityCommon} from "community/common";
 
 export default class FBadgeSortAndFilter extends Feature {
@@ -61,7 +61,7 @@ export default class FBadgeSortAndFilter extends Feature {
             </span>`);
 
         // eslint-disable-next-line no-undef, new-cap
-        ExtensionLayer.runInPageContext(() => { BindAutoFlyoutEvents(); });
+        this.context.runInPageContext(() => { BindAutoFlyoutEvents(); });
 
         if (isOwnProfile) {
             document.querySelector("#es_badge_sort_drops").addEventListener("click", async e => {

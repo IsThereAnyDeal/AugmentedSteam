@@ -1,6 +1,9 @@
 
 class Feature {
 
+    /**
+     * @param {Context} context
+     */
     constructor(context) {
         this.context = context;
     }

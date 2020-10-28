@@ -4,7 +4,7 @@ import FTotalSpent from "./FTotalSpent";
 export class CAccount extends Context {
 
     constructor() {
-        super(ContextType.ACCOUNT,[
+        super(ContextType.ACCOUNT, [
             FTotalSpent,
         ]);
     }

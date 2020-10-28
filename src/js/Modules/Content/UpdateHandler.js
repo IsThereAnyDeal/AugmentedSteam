@@ -7,18 +7,17 @@ import {BackgroundSimple} from "../Core/BackgroundSimple";
 import {Background} from "./Background";
 import {LocalStorage} from "../Core/Storage/LocalStorage";
 import {RequestData} from "./RequestData";
-import {ExtensionLayer} from "./ExtensionLayer";
 import {ITAD} from "./ITAD";
 
 class UpdateHandler {
 
-    static checkVersion(onUpdate) {
+    static checkVersion(context, onUpdate) {
         const lastVersion = Version.fromString(SyncedStorage.get("version"));
         const currentVersion = Version.fromString(Info.version);
 
         if (currentVersion.isAfter(lastVersion)) {
             if (SyncedStorage.get("version_show")) {
-                this._showChangelog();
+                this._showChangelog(context);
             }
             this._migrateSettings(lastVersion);
             onUpdate();
@@ -27,7 +26,7 @@ class UpdateHandler {
         SyncedStorage.set("version", Info.version);
     }
 
-    static async _showChangelog() {
+    static async _showChangelog(context) {
 
         // FIXME
         const changelog = (await RequestData.getHttp(ExtensionResources.getURL("html/changelog_new.html"))).replace(/[\r\n]/g, "").replace(/'/g, "\\'");
@@ -37,7 +36,7 @@ class UpdateHandler {
         const connectBtn = document.querySelector("#itad_connect");
         function itadConnected() { connectBtn.replaceWith("✓"); }
 
-        ExtensionLayer.runInPageContext(
+        context.runInPageContext(
             (updatedStr, dialog) => { ShowAlertDialog(updatedStr, dialog); }, // eslint-disable-line new-cap, no-undef
             [Localization.str.update.updated.replace("__version__", Info.version), dialog]
         );

@@ -1,5 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {Background, DOMHelper, ExtensionLayer, Feature, SteamId} from "../../../Modules/content";
+import {Background, DOMHelper, Feature, SteamId} from "../../../Modules/content";
 import {ProfileData} from "community/common";
 import Config from "config";
 
@@ -55,7 +55,7 @@ export default class FBackgroundSelection extends Feature {
             this._active = true;
 
             // eslint-disable-next-line new-cap, no-undef
-            ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+            this.context.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
 
             this._selectedAppid = ProfileData.getBgAppid();
             let selectedGameKey = null;

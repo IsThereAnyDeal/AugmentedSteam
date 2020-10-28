@@ -46,7 +46,9 @@ export default class FUserNotes extends Feature {
         }
 
         const handler = () => {
-            userNotes.showModalDialog(this.context.appName, this.context.appid, "#esi-store-user-note", toggleState);
+            userNotes.showModalDialog(
+                this.context, this.context.appName, this.context.appid, "#esi-store-user-note", toggleState
+            );
         };
 
         document.querySelector(".js-user-note-button").addEventListener("click", handler);

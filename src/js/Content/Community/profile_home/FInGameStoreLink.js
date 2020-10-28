@@ -1,7 +1,6 @@
 import {Feature} from "modules";
 
 import {HTML, Localization} from "core";
-import {ExtensionLayer} from "common";
 
 export default class FInGameStoreLink extends Feature {
 
@@ -17,6 +16,6 @@ export default class FInGameStoreLink extends Feature {
 
         HTML.inner(node, `<a data-tooltip-html="${tooltip}" href="//store.steampowered.com/app/${document.querySelector('input[name="ingameAppID"]').value}" target="_blank">${node.textContent}</a>`);
         // eslint-disable-next-line new-cap, no-undef
-        ExtensionLayer.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+        this.context.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
     }
 }

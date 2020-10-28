@@ -1,9 +1,9 @@
-import {ExtensionLayer, Feature} from "../../../Modules/content";
+import {Feature} from "../../../Modules/content";
 
 export default class FShowGemsCost extends Feature {
 
     apply() {
-        ExtensionLayer.runInPageContext(gemWord => {
+        this.context.runInPageContext(gemWord => {
             /* eslint-disable no-undef, new-cap, no-invalid-this */
             $J("#booster_game_selector option").each(function() {
                 if ($J(this).val()) {

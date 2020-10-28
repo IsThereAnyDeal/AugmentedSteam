@@ -1,5 +1,5 @@
 import {HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {ExtensionLayer, Messenger} from "../../../Modules/content";
+import {Messenger} from "../../../Modules/content";
 
 export class UserNotes {
     constructor() {
@@ -43,10 +43,10 @@ export class UserNotes {
         return Boolean(this._notes[appid]);
     }
 
-    async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
+    async showModalDialog(context, appname, appid, nodeSelector, onNoteUpdate) {
 
         // Partly copied from shared_global.js
-        const bgClick = ExtensionLayer.runInPageContext((title, template) => {
+        const bgClick = context.runInPageContext((title, template) => {
             /* eslint-disable no-undef, new-cap, camelcase */
             const deferred = new jQuery.Deferred();
             function fnOk() { deferred.resolve(); }
@@ -109,9 +109,9 @@ export class UserNotes {
             if (e.target.closest(".es_note_modal_submit")) {
                 e.preventDefault();
                 onNoteUpdate(...saveNote());
-                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
+                context.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
             } else if (e.target.closest(".es_note_modal_close")) {
-                ExtensionLayer.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
+                context.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
             } else {
                 return;
             }

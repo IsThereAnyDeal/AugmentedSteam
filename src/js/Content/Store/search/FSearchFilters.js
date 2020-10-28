@@ -1,5 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {EarlyAccess, ExtensionLayer, Feature, Messenger} from "../../../Modules/content";
+import {EarlyAccess, Feature, Messenger} from "../../../Modules/content";
 import FHighlightsTags from "../../common/FHighlightsTags";
 
 import {CartSearchFilter} from "./filters/CartSearchFilter";
@@ -67,7 +67,7 @@ export default class FSearchFilters extends Feature {
         });
 
         // Allow user to autocollapse the added category block just like any other
-        ExtensionLayer.runInPageContext((collapseName, shouldCollapse) => {
+        this.context.runInPageContext((collapseName, shouldCollapse) => {
             /* eslint-disable new-cap, no-undef */
 
             /*
@@ -139,7 +139,7 @@ export default class FSearchFilters extends Feature {
             this._modifyPageLinks();
         });
 
-        ExtensionLayer.runInPageContext(() => {
+        this.context.runInPageContext(() => {
             /* eslint-disable new-cap, no-undef, camelcase */
 
             /*
@@ -258,7 +258,7 @@ export default class FSearchFilters extends Feature {
         // Update the current URL
         this._modifyParams(curParams, this._filterValues);
 
-        ExtensionLayer.runInPageContext(params => {
+        this.context.runInPageContext(params => {
 
             // https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L217
             UpdateUrl(params);
@@ -283,7 +283,7 @@ export default class FSearchFilters extends Feature {
              * would be modified when stringifying back again (e.g. "white%20space" will turn into "white+space" and break links).
              * Therefore the URLSearchParameters are converted to an object and parsed by Prototype's Object.toQueryString.
              */
-            ExtensionLayer.runInPageContext(obj => Object.toQueryString(obj), [this._paramsToObject(params)], true)
+            this.context.runInPageContext(obj => Object.toQueryString(obj), [this._paramsToObject(params)], true)
                 .then(queryString => {
                     url.search = `?${queryString}`;
                     linkElement.href = url.href;

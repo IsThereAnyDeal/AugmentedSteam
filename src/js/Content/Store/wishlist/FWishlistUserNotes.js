@@ -17,6 +17,7 @@ export default class FWishlistUserNotes extends CallbackFeature {
             const row = target.closest(".wishlist_row");
             const appid = Number(row.dataset.appId);
             this._userNotes.showModalDialog(
+                this.context,
                 row.querySelector("a.title").textContent.trim(),
                 appid,
                 `.wishlist_row[data-app-id="${appid}"] div.esi-note`,

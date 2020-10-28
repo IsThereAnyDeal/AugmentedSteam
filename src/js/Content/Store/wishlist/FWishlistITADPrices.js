@@ -1,7 +1,6 @@
 
 import {SyncedStorage} from "../../../core_modules";
 import {CallbackFeature} from "../../../Modules/Content/Feature/CallbackFeature";
-import {ExtensionLayer} from "../../../Modules/Content/ExtensionLayer";
 import {Prices} from "../../../Modules/Content/Prices";
 
 export default class FWishlistITADPrices extends CallbackFeature {
@@ -18,7 +17,7 @@ export default class FWishlistITADPrices extends CallbackFeature {
 
     apply() {
 
-        ExtensionLayer.runInPageContext(() => {
+        this.context.runInPageContext(() => {
             /* eslint-disable no-undef */
             function getNodesBelow(node) {
                 const nodes = Array.from(document.querySelectorAll(".wishlist_row"));

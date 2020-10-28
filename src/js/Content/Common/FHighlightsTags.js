@@ -1,11 +1,11 @@
 import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../core_modules";
-import {DynamicStore, ExtensionLayer, Feature, ITAD, Inventory} from "../../Modules/content";
+import {DynamicStore, Feature, ITAD, Inventory} from "../../Modules/content";
 
 export default class FHighlightsTags extends Feature {
 
     async apply() {
 
-        await ExtensionLayer.runInPageContext(() => new Promise(resolve => {
+        await this.context.runInPageContext(() => new Promise(resolve => {
             // eslint-disable-next-line no-undef, new-cap
             GDynamicStore.OnReady(() => { resolve(); });
         }), null, true);
