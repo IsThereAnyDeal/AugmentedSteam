@@ -1,35 +1,21 @@
-export class Feature {
+import {Errors} from "../../Core/Errors/Errors";
 
-    constructor(context) {
-        this.context = context;
-    }
-
-    checkPrerequisites() {
-        return true;
-    }
-
-    apply() {
-        throw new Error("Stub");
-    }
-
-    logError(err, msg, ...args) {
-        console.group(this.constructor.name);
-        console.error(msg, ...args);
-        console.error(err);
-        console.groupEnd();
-    }
+// Polyfill from https://gist.github.com/davidbarral/d0d4da70fa9e6f615595d01f54276e0b#file-promises-js
+if (!Promise.allSettled) {
+    Promise.allSettled = promises => Promise.all(
+        promises.map(promise => promise
+            .then(value => ({
+                "status": "fulfilled",
+                value,
+            }))
+            .catch(reason => ({
+                "status": "rejected",
+                reason,
+            })))
+    );
 }
 
-
-export class FeatureDependencyError extends Error {
-    constructor(msg, featureName) {
-        super(msg);
-        this.featureName = featureName;
-    }
-}
-
-
-export class FeatureManager {
+class FeatureManager {
     static async apply(features) {
 
         this._promisesMap = new Map();
@@ -118,7 +104,7 @@ export class FeatureManager {
 
                 const featureName = feature.constructor.name;
 
-                if (err instanceof FeatureDependencyError) {
+                if (err instanceof Errors.FeatureDependencyError) {
                     console.warn(
                         "Not applying feature %s due to an error in the dependency chain (namely %s)",
                         featureName,
@@ -134,109 +120,10 @@ export class FeatureManager {
                 console.groupEnd();
 
                 ++this._stats.failed;
-                throw new FeatureDependencyError("Failed to apply", featureName);
+                throw new Errors.FeatureDependencyError("Failed to apply", featureName);
             });
 
     }
 }
 
-
-export class Context {
-
-    constructor(features) {
-        this._callbacks = [];
-        this.features = features.map(Ref => new Ref(this));
-    }
-
-    applyFeatures() {
-        return FeatureManager.apply(this.features);
-    }
-
-    registerCallback(fn) {
-        this._callbacks.push(fn);
-    }
-
-    triggerCallbacks(...params) {
-        for (const callback of this._callbacks) {
-            callback(...params);
-        }
-    }
-}
-
-export const ContextTypes = Object.freeze({
-    "ACCOUNT": 1,
-    "APP": 2,
-    "BUNDLE": 3,
-    "STORE_DEFAULT": 4,
-    "FUNDS": 5,
-    "REGISTER_KEY": 6,
-    "SALE": 7,
-    "SEARCH": 8,
-    "STATS": 9,
-    "STORE_FRONT": 10,
-    "SUB": 11,
-    "WISHLIST": 12,
-    "AGECHECK": 13,
-    "COMMUNITY_DEFAULT": 14,
-    "WORKSHOP": 15,
-    "PROFILE_ACTIVITY": 16,
-    "GAMES": 17,
-    "PROFILE_EDIT": 18,
-    "BADGES": 19,
-    "GAME_CARD": 20,
-    "FRIENDS_THAT_PLAY": 21,
-    "FRIENDS": 22,
-    "GROUPS": 23,
-    "INVENTORY": 24,
-    "MARKET_LISTING": 25,
-    "MARKET": 26,
-    "PROFILE_HOME": 27,
-    "GROUP_HOME": 28,
-    "GUIDES": 29,
-    "COMMUNITY_APP": 30,
-    "COMMUNITY_STATS": 31,
-    "MY_WORKSHOP": 32,
-    "SHARED_FILES": 33,
-    "WORKSHOP_BROWSE": 34,
-    "EDIT_GUIDE": 35,
-    "RECOMMENDED": 36,
-    "BOOSTER_CREATOR": 37,
-    "TRADE_OFFER": 38,
-});
-
-// Polyfill from https://gist.github.com/davidbarral/d0d4da70fa9e6f615595d01f54276e0b#file-promises-js
-if (!Promise.allSettled) {
-    Promise.allSettled = promises => Promise.all(
-        promises.map(promise => promise
-            .then(value => ({
-                "status": "fulfilled",
-                value,
-            }))
-            .catch(reason => ({
-                "status": "rejected",
-                reason,
-            })))
-    );
-}
-
-export class CallbackFeature extends Feature {
-
-    constructor(context, initialCall = true, setupFn = null) {
-
-        super(context);
-
-        this.initialCall = initialCall;
-
-        if (typeof setupFn === "function") {
-            setupFn();
-        }
-    }
-
-    apply() {
-        this.context.registerCallback((...params) => { this.callback(...params); });
-
-        if (this.initialCall) {
-            this.callback();
-        }
-    }
-}
+export {FeatureManager}
