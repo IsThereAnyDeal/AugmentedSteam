@@ -1,13 +1,13 @@
 import {HTML, Localization} from "../../../core_modules";
-import {EarlyAccess, ExtensionLayer, Feature, Messenger} from "../../../Modules/content";;
-import FHighlightsTags from "common/FHighlightsTags";
+import {EarlyAccess, ExtensionLayer, Feature, Messenger} from "../../../Modules/content";
+import FHighlightsTags from "../../common/FHighlightsTags";
 
-import {CartSearchFilter} from "store/search/filters/CartSearchFilter";
-import {EarlyAccessSearchFilter} from "store/search/filters/EarlyAccessSearchFilter";
-import {MixedSearchFilter} from "store/search/filters/MixedSearchFilter";
-import {NegativeSearchFilter} from "store/search/filters/NegativeSearchFilter";
-import {ReviewsCountSearchFilter} from "store/search/filters/ReviewsCountSearchFilter";
-import {ReviewsScoreSearchFilter} from "store/search/filters/ReviewsScoreSearchFilter";
+import {CartSearchFilter} from "./filters/CartSearchFilter";
+import {EarlyAccessSearchFilter} from "./filters/EarlyAccessSearchFilter";
+import {MixedSearchFilter} from "./filters/MixedSearchFilter";
+import {NegativeSearchFilter} from "./filters/NegativeSearchFilter";
+import {ReviewsCountSearchFilter} from "./filters/ReviewsCountSearchFilter";
+import {ReviewsScoreSearchFilter} from "./filters/ReviewsScoreSearchFilter";
 
 export default class FSearchFilters extends Feature {
 

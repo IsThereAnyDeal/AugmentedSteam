@@ -4,8 +4,8 @@ import {
     BackgroundSimple, Downloader, ExtensionResources, HTML, Info, Language,
     Localization, Permissions, SyncedStorage, TimeUtils
 } from "../core_modules";
-import {CountryList} from "options/countryList";
-import {StoreList} from "options/storeList";
+import {CountryList} from "./countryList";
+import {StoreList} from "./storeList";
 
 class Fader {
 
@@ -522,23 +522,23 @@ const Options = (() => {
 
         const icons = document.querySelectorAll(".es_sites_icons");
         switch (profileLinkImagesSelect.value) {
-        case "color": {
-            icons.forEach(icon => {
-                icon.classList.toggle("es_gray", false);
-                icon.style.display = "";
-            });
-            break;
-        }
-        case "gray": {
-            icons.forEach(icon => {
-                icon.classList.toggle("es_gray", true);
-                icon.style.display = "";
-            });
-            break;
-        }
-        case "none": {
-            icons.forEach(icon => { icon.style.display = "none"; });
-        }
+            case "color": {
+                icons.forEach(icon => {
+                    icon.classList.toggle("es_gray", false);
+                    icon.style.display = "";
+                });
+                break;
+            }
+            case "gray": {
+                icons.forEach(icon => {
+                    icon.classList.toggle("es_gray", true);
+                    icon.style.display = "";
+                });
+                break;
+            }
+            case "none": {
+                icons.forEach(icon => { icon.style.display = "none"; });
+            }
         }
     }
 

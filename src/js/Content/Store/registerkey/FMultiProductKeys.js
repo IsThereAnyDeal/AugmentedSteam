@@ -1,5 +1,5 @@
 import {ExtensionResources, HTML, Localization} from "../../../core_modules";
-import {ExtensionLayer, Feature, RequestData, User} from "../../../Modules/content";;
+import {ExtensionLayer, Feature, RequestData, User} from "../../../Modules/content";
 
 export default class FMultiProductKeys extends Feature {
 
@@ -102,13 +102,13 @@ export default class FMultiProductKeys extends Feature {
                         }
                     } else {
                         switch (_data.purchase_result_details) {
-                        case 9: message = Localization.str.register.owned; break;
-                        case 13: message = Localization.str.register.notavail; break;
-                        case 14: message = Localization.str.register.invalid; break;
-                        case 15: message = Localization.str.register.already; break;
-                        case 24: message = Localization.str.register.dlc; break;
-                        case 50: message = Localization.str.register.wallet; break;
-                        case 53: message = Localization.str.register.toomany; break;
+                            case 9: message = Localization.str.register.owned; break;
+                            case 13: message = Localization.str.register.notavail; break;
+                            case 14: message = Localization.str.register.invalid; break;
+                            case 15: message = Localization.str.register.already; break;
+                            case 24: message = Localization.str.register.dlc; break;
+                            case 50: message = Localization.str.register.wallet; break;
+                            case 53: message = Localization.str.register.toomany; break;
                         }
                         document.querySelector(`#attempt_${attempted}_icon img`).setAttribute("src", ExtensionResources.getURL("img/sr/banned.png"));
                         document.querySelector(`#attempt_${attempted}_result`).textContent = message;

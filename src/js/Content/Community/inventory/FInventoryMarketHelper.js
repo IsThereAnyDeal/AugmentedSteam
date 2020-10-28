@@ -1,7 +1,6 @@
 import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
 import {Background, CurrencyManager,
-    ExtensionLayer, Feature, Messenger, Price, RequestData, User
-} from "../../../Modules/content";
+    ExtensionLayer, Feature, Messenger, Price, RequestData, User} from "../../../Modules/content";
 
 // TODO Split this up
 export default class FInventoryMarketHelper extends Feature {

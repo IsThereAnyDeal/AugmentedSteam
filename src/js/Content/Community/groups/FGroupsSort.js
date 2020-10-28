@@ -59,19 +59,19 @@ export default class FGroupsSort extends Feature {
     _getSortFunc(sortBy) {
         const property = `esSort${sortBy}`;
         switch (sortBy) {
-        case "default":
-            return (a, b) => Number(a.dataset[property]) - Number(b.dataset[property]);
-        case "members":
-            return (a, b) => Number(b.dataset[property]) - Number(a.dataset[property]);
-        case "names":
-            return (a, b) => a.dataset[property].localeCompare(b.dataset[property]);
-        default:
-            this.logError(
-                new Error("Invalid sorting criteria"),
-                "Can't sort groups by criteria '%s'",
-                sortBy,
-            );
-            return () => 0;
+            case "default":
+                return (a, b) => Number(a.dataset[property]) - Number(b.dataset[property]);
+            case "members":
+                return (a, b) => Number(b.dataset[property]) - Number(a.dataset[property]);
+            case "names":
+                return (a, b) => a.dataset[property].localeCompare(b.dataset[property]);
+            default:
+                this.logError(
+                    new Error("Invalid sorting criteria"),
+                    "Can't sort groups by criteria '%s'",
+                    sortBy,
+                );
+                return () => 0;
         }
     }
 }

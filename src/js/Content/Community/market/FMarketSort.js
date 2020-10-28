@@ -45,19 +45,19 @@ export default class FMarketSort extends Feature {
             let dataname;
             let isNumber = false;
             switch (sortBy) {
-            case "es_marketsort_name":
-                selector = ".market_listing_item_name";
-                break;
-            case "es_marketsort_date":
-                dataname = "esiDefaultPosition";
-                isNumber = true;
-                break;
-            case "es_marketsort_price":
-                selector = ".market_listing_price";
-                break;
-            case "es_marketsort_game":
-                selector = ".market_listing_game_name";
-                break;
+                case "es_marketsort_name":
+                    selector = ".market_listing_item_name";
+                    break;
+                case "es_marketsort_date":
+                    dataname = "esiDefaultPosition";
+                    isNumber = true;
+                    break;
+                case "es_marketsort_price":
+                    selector = ".market_listing_price";
+                    break;
+                case "es_marketsort_game":
+                    selector = ".market_listing_game_name";
+                    break;
             }
 
             const rows = [];

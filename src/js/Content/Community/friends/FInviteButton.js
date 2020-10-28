@@ -1,5 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {ExtensionLayer, Features} from "../../../Modules/content";
+import {ExtensionLayer, Feature} from "../../../Modules/content";
 
 export default class FInviteButton extends Feature {
 

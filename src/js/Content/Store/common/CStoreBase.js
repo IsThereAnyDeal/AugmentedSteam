@@ -1,7 +1,7 @@
-import {Context, ContextType, EarlyAccess} from "../../../Modules/content";;
-import FHighlightsTags from "common/FHighlightsTags";
+import {Context, ContextType, EarlyAccess} from "../../../Modules/content";
+import FHighlightsTags from "../../common/FHighlightsTags";
+import FHideTrademarks from "../../common/FHideTrademarks";
 import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
-import FHideTrademarks from "common/FHideTrademarks";
 
 export class CStoreBase extends Context {
 

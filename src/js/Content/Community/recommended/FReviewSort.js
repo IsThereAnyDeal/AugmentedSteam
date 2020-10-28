@@ -66,29 +66,29 @@ export default class FReviewSort extends Feature {
 
             let displayedReviews = reviews.sort((a, b) => {
                 switch (sortBy) {
-                case "rating":
-                case "helpful":
-                case "funny":
-                case "length":
-                case "playtime":
-                    return b[sortBy] - a[sortBy];
-                case "visibility": {
-                    const _a = a[sortBy].toLowerCase();
-                    const _b = b[sortBy].toLowerCase();
-                    if (_a > _b) { return -1; }
-                    if (_a < _b) { return 1; }
-                    return 0;
-                }
-                case "default":
-                    return a[sortBy] - b[sortBy];
-                default:
+                    case "rating":
+                    case "helpful":
+                    case "funny":
+                    case "length":
+                    case "playtime":
+                        return b[sortBy] - a[sortBy];
+                    case "visibility": {
+                        const _a = a[sortBy].toLowerCase();
+                        const _b = b[sortBy].toLowerCase();
+                        if (_a > _b) { return -1; }
+                        if (_a < _b) { return 1; }
+                        return 0;
+                    }
+                    case "default":
+                        return a[sortBy] - b[sortBy];
+                    default:
                     // eslint-disable-next-line no-invalid-this -- this is binded to an instance of FReviewSort
-                    this.logError(
-                        new Error("Invalid sorting criteria"),
-                        "Can't sort reviews by criteria '%s'",
-                        sortBy,
-                    );
-                    return 0;
+                        this.logError(
+                            new Error("Invalid sorting criteria"),
+                            "Can't sort reviews by criteria '%s'",
+                            sortBy,
+                        );
+                        return 0;
                 }
             });
 
