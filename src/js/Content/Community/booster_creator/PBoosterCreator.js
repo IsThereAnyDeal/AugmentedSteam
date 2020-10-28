@@ -1,4 +1,4 @@
+import {CommunityPage} from "../../CommunityPage";
 import {CBoosterCreator} from "./CBoosterCreator";
-import check from "community/communityCheck";
 
-check(CBoosterCreator);
+(new CommunityPage()).run(CBoosterCreator);

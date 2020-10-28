@@ -1,4 +1,5 @@
-import {CBundle} from "store/bundle/CBundle";
-import check from "store/storeCheck";
+import {StorePage} from "../../StorePage";
+import {CBundle} from "./CBundle";
 
-check(CBundle);
+(new StorePage()).run(CBundle);
+

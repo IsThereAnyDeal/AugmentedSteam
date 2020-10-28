@@ -1,4 +1,4 @@
+import {CommunityPage} from "../../CommunityPage";
 import {CEditGuide} from "./CEditGuide";
-import check from "community/communityCheck";
 
-check(CEditGuide);
+(new CommunityPage()).run(CEditGuide);

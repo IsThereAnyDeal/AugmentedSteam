@@ -1,4 +1,5 @@
-import {CSub} from "store/sub/CSub";
-import check from "store/storeCheck";
+import {StorePage} from "../../StorePage";
+import {CSub} from "./CSub";
 
-check(CSub);
+(new StorePage()).run(CSub);
+

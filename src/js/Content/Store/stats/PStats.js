@@ -1,4 +1,4 @@
-import {CStats} from "store/stats/CStats";
-import check from "store/storeCheck";
+import {StorePage} from "../../StorePage";
+import {CStats} from "./CStats";
 
-check(CStats);
+(new StorePage()).run(CStats);

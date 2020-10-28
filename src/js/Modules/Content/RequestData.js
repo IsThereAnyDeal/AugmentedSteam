@@ -1,5 +1,5 @@
-import {HTTPError} from "../../Content/common";
 import {ProgressBar} from "./Widgets/ProgressBar";
+import {Errors} from "../Core/Errors/Errors";
 
 class RequestData {
 
@@ -25,7 +25,7 @@ class RequestData {
             ProgressBar.finishRequest();
 
             if (!response.ok) {
-                throw new HTTPError(response.status, `HTTP ${response.status} ${response.statusText} for ${response.url}`);
+                throw new Errors.HTTPError(response.status, `HTTP ${response.status} ${response.statusText} for ${response.url}`);
             }
 
             return response[responseType]();

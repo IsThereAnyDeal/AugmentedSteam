@@ -1,4 +1,4 @@
-import {CProfileActivity} from "community/profile_activity/CProfileActivity";
-import check from "community/communityCheck";
+import {CommunityPage} from "../../CommunityPage";
+import {CProfileActivity} from "./CProfileActivity";
 
-check(CProfileActivity);
+(new CommunityPage()).run(CProfileActivity);

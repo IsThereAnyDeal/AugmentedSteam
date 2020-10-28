@@ -1,4 +1,5 @@
-import {CInventory} from "community/inventory/CInventory";
-import check from "community/communityCheck";
+import {CommunityPage} from "../../CommunityPage";
+import {CInventory} from "./CInventory";
 
-check(CInventory);
+(new CommunityPage()).run(CInventory);
+

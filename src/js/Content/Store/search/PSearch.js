@@ -1,4 +1,5 @@
-import {CSearch} from "store/search/CSearch";
-import check from "store/storeCheck";
+import {StorePage} from "../../StorePage";
+import {CSearch} from "./CSearch";
 
-check(CSearch);
+(new StorePage()).run(CSearch);
+

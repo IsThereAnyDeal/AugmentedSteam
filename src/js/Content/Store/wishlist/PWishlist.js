@@ -1,4 +1,4 @@
-import {CWishlist} from "store/wishlist/CWishlist";
-import check from "store/storeCheck";
+import {StorePage} from "../../StorePage";
+import {CWishlist} from "./CWishlist";
 
-check(CWishlist);
+(new StorePage()).run(CWishlist);

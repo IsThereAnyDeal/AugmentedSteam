@@ -1,4 +1,5 @@
+import {CommunityPage} from "../../CommunityPage";
 import {CWorkshopBrowse} from "./CWorkshopBrowse";
-import check from "community/communityCheck";
 
-check(CWorkshopBrowse);
+(new CommunityPage()).run(CWorkshopBrowse);
+

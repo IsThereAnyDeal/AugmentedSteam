@@ -1,4 +1,4 @@
-import {CFunds} from "store/funds/CFunds";
-import check from "store/storeCheck";
+import {StorePage} from "../../StorePage";
+import {CFunds} from "./CFunds";
 
-check(CFunds);
+(new StorePage()).run(CFunds);

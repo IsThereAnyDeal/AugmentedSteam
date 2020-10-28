@@ -1,9 +1,5 @@
-import {ContextType, Feature} from "../../../Modules/content";
-import {HTML} from "../../../Modules/Core/Html/Html";
-import {Localization} from "../../../Modules/Core/Localization/Localization";
-import {SyncedStorage} from "../../../Modules/Core/Storage/SyncedStorage";
-
-import {DOMHelper} from "common";
+import {HTML, Localization, SyncedStorage} from "../../../core_modules";
+import {ContextType, Feature, DOMHelper} from "../../../Modules/content";
 
 export default class FCustomizer extends Feature {
 

@@ -1,4 +1,4 @@
-import {CGames} from "community/games/CGames";
-import check from "community/communityCheck";
+import {CommunityPage} from "../../CommunityPage";
+import {CGames} from "./CGames";
 
-check(CGames);
+(new CommunityPage()).run(CGames);

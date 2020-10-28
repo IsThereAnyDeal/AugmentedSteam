@@ -1,4 +1,5 @@
-import {CMarket} from "community/market/CMarket";
-import check from "community/communityCheck";
+import {CommunityPage} from "../../CommunityPage";
+import {CMarket} from "./CMarket";
 
-check(CMarket);
+(new CommunityPage()).run(CMarket);
+

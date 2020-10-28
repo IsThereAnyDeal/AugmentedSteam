@@ -1,5 +1,5 @@
 import {HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {ExtensionLayer, Messenger} from "common";
+import {ExtensionLayer, Messenger} from "../../../Modules/content";
 
 export class UserNotes {
     constructor() {

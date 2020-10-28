@@ -1,4 +1,4 @@
-import {CRegisterKey} from "store/registerkey/CRegisterKey";
-import check from "store/storeCheck";
+import {StorePage} from "../../StorePage";
+import {CRegisterKey} from "./CRegisterKey";
 
-check(CRegisterKey);
+(new StorePage()).run(CRegisterKey);

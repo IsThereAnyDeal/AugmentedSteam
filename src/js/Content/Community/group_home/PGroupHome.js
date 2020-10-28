@@ -1,10 +1,12 @@
+import {CommunityPage} from "../../CommunityPage";
 import {CGroupHome} from "./CGroupHome";
-import {CCommunityBase} from "community/common/CCommunityBase";
-import check from "community/communityCheck";
+import {CCommunityBase} from "../common/CCommunityBase";
+
+const page = new CommunityPage();
 
 // This regex can't be translated to a match pattern / glob combination in the manifest
 if (/^\/groups\/[^/]+\/?$/.test(window.location.pathname)) {
-    check(CGroupHome);
+    page.run(CGroupHome);
 } else {
-    check(CCommunityBase);
+    page.run(CCommunityBase);
 }

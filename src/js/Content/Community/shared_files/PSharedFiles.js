@@ -1,4 +1,4 @@
-import {CSharedFiles} from "community/shared_files/CSharedFiles";
-import check from "community/communityCheck";
+import {CommunityPage} from "../../CommunityPage";
+import {CSharedFiles} from "./CSharedFiles";
 
-check(CSharedFiles);
+(new CommunityPage()).run(CSharedFiles);

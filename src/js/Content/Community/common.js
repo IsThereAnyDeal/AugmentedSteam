@@ -1,4 +1,4 @@
-import {Background, SteamId, User} from "common";
+import {Background, SteamId, User} from "../../Modules/content";
 
 export class ProfileData {
 

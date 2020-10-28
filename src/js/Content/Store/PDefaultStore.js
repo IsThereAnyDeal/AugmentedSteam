@@ -1,4 +1,4 @@
-import {CStoreBase} from "store/common/CStoreBase";
-import check from "store/storeCheck";
+import {CStoreBase} from "./common/CStoreBase";
+import {StorePage} from "../StorePage";
 
-check(CStoreBase);
+(new StorePage()).run(CStoreBase);

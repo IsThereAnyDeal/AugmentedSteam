@@ -1,4 +1,4 @@
-import {CApp} from "store/app/CApp";
-import check from "store/storeCheck";
+import {StorePage} from "../../StorePage";
+import {CApp} from "./CApp";
 
-check(CApp);
+(new StorePage()).run(CApp);

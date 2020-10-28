@@ -1,4 +1,4 @@
-import {CAccount} from "store/account/CAccount";
-import check from "store/storeCheck";
+import {CAccount} from "./CAccount";
+import {StorePage} from "../../StorePage";
 
-check(CAccount);
+(new StorePage()).run(CAccount);

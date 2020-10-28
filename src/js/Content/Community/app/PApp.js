@@ -1,4 +1,4 @@
+import {CommunityPage} from "../../CommunityPage";
 import {CApp} from "./CApp";
-import check from "community/communityCheck";
 
-check(CApp);
+(new CommunityPage()).run(CApp);

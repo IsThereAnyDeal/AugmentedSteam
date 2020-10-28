@@ -1,4 +1,4 @@
-import {CGroups} from "community/groups/CGroups";
-import check from "community/communityCheck";
+import {CommunityPage} from "../../CommunityPage";
+import {CGroups} from "./CGroups";
 
-check(CGroups);
+(new CommunityPage()).run(CGroups);

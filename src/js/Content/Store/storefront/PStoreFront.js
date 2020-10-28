@@ -1,4 +1,5 @@
-import {CStoreFront} from "store/storefront/CStoreFront";
-import check from "store/storeCheck";
+import {StorePage} from "../../StorePage";
+import {CStoreFront} from "./CStoreFront";
 
-check(CStoreFront);
+(new StorePage()).run(CStoreFront);
+

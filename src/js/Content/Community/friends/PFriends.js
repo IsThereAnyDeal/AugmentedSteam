@@ -1,4 +1,4 @@
-import {CFriends} from "community/friends/CFriends";
-import check from "community/communityCheck";
+import {CommunityPage} from "../../CommunityPage";
+import {CFriends} from "./CFriends";
 
-check(CFriends);
+(new CommunityPage()).run(CFriends);

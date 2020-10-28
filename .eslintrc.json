@@ -59,7 +59,7 @@
         "indent": ["error", 4, {"SwitchCase": 1}],
         "key-spacing": ["error", { "mode": "minimum" }],
         "keyword-spacing": "error",
-        "lines-around-comment": ["warn", { "beforeLineComment": true, "beforeBlockComment": true }],
+        "lines-around-comment": ["warn", { "beforeLineComment": false, "beforeBlockComment": true }],
         "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
         "max-depth": "warn",
         "max-len": ["warn", { "code": 132, "ignoreTemplateLiterals": true, "ignoreRegExpLiterals": true, "ignoreUrls": true }],

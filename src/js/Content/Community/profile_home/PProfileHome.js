@@ -1,10 +1,12 @@
-import {CProfileHome} from "community/profile_home/CProfileHome";
-import {CCommunityBase} from "community/common/CCommunityBase";
-import check from "community/communityCheck";
+import {CommunityPage} from "../../CommunityPage";
+import {CProfileHome} from "./CProfileHome";
+import {CCommunityBase} from "../common/CCommunityBase";
+
+const page = new CommunityPage();
 
 // This regex can't be translated to a match pattern / glob combination in the manifest
 if (/^\/(?:id|profiles)\/[^/]+\/?$/.test(window.location.pathname)) {
-    check(CProfileHome);
+    page.run(CProfileHome);
 } else {
-    check(CCommunityBase);
+    page.run(CCommunityBase);
 }

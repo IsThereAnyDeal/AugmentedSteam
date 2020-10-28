@@ -1,4 +1,5 @@
-import {CMarketListing} from "community/market_listing/CMarketListing";
-import check from "community/communityCheck";
+import {CommunityPage} from "../../CommunityPage";
+import {CMarketListing} from "./CMarketListing";
 
-check(CMarketListing);
+(new CommunityPage()).run(CMarketListing);
+

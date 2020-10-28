@@ -1,10 +1,7 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
-import ContextType from "../../../Modules/Content/Context/ContextType";
-
+import {ContextType, EarlyAccess} from "../../../Modules/content";
+import {CCommunityBase} from "../common/CCommunityBase";
+import {CommentHandler} from "../common/CommentHandler";
 import FHighlightFriendsActivity from "./FHighlightFriendsActivity";
-
-import {EarlyAccess} from "common";
-import {CommentHandler} from "community/common/CommentHandler";
 
 export class CProfileActivity extends CCommunityBase {
 

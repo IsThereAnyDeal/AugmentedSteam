@@ -1,4 +1,4 @@
-import {CAgecheck} from "store/agecheck/CAgecheck";
-import check from "store/storeCheck";
+import {StorePage} from "../../StorePage";
+import {CAgeCheck} from "./CAgeCheck";
 
-check(CAgecheck);
+(new StorePage()).run(CAgeCheck);

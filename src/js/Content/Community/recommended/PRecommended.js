@@ -1,4 +1,4 @@
+import {CommunityPage} from "../../CommunityPage";
 import {CRecommended} from "./CRecommended";
-import check from "community/communityCheck";
 
-check(CRecommended);
+(new CommunityPage()).run(CRecommended);

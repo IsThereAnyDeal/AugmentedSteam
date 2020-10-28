@@ -1,4 +1,4 @@
+import {CommunityPage} from "../../CommunityPage";
 import {CMyWorkshop} from "./CMyWorkshop";
-import check from "community/communityCheck";
 
-check(CMyWorkshop);
+(new CommunityPage()).run(CMyWorkshop);

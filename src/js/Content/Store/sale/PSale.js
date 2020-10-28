@@ -1,4 +1,4 @@
-import {CSale} from "store/sale/CSale";
-import check from "store/storeCheck";
+import {StorePage} from "../../StorePage";
+import {CSale} from "./CSale";
 
-check(CSale);
+(new StorePage()).run(CSale);

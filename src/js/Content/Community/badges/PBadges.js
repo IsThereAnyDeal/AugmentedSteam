@@ -1,4 +1,4 @@
-import {CBadges} from "community/badges/CBadges";
-import check from "community/communityCheck";
+import {CommunityPage} from "../../CommunityPage";
+import {CBadges} from "./CBadges";
 
-check(CBadges);
+(new CommunityPage()).run(CBadges);

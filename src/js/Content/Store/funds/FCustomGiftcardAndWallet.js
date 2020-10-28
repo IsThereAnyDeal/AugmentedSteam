@@ -1,5 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {Currency, CurrencyRegistry, Feature, Price} from "../../../Modules/content";;
+import {CurrencyManager, Feature, Price} from "../../../Modules/content";
 
 export default class FCustomGiftcardAndWallet extends Feature {
 
@@ -14,7 +14,7 @@ export default class FCustomGiftcardAndWallet extends Feature {
         const priceel = newel.querySelector(giftcard ? ".giftcard_text" : ".price");
         const price = priceel.textContent.trim();
 
-        const currency = CurrencyRegistry.fromType(Currency.storeCurrency);
+        const currency = CurrencyManager.fromType(CurrencyManager.storeCurrency);
         const minValue = currency.valueOf(price);
         const step = 10 ** -currency.format.decimalPlaces;
 

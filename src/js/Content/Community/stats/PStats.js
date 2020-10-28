@@ -1,4 +1,5 @@
-import {CStats} from "community/stats/CStats";
-import check from "community/communityCheck";
+import {CommunityPage} from "../../CommunityPage";
+import {CStats} from "./CStats";
 
-check(CStats);
+(new CommunityPage()).run(CStats);
+

@@ -1,4 +1,4 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
-import check from "community/communityCheck";
+import {CommunityPage} from "../CommunityPage";
+import {CCommunityBase} from "./common/CCommunityBase";
 
-check(CCommunityBase);
+(new CommunityPage()).run(CCommunityBase);

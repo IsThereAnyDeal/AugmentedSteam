@@ -1,5 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {Background, Currency, Feature, DOMHelper, Price} from "../../../Modules/content";
+import {Background, CurrencyManager, DOMHelper, Feature, Price} from "../../../Modules/content";
 import {CommunityCommon} from "community/common";
 
 export default class FCardMarketLinks extends Feature {
@@ -12,7 +12,7 @@ export default class FCardMarketLinks extends Feature {
         try {
             data = await Background.action("market.cardprices", {
                 "appid": this.context.appid,
-                "currency": Currency.storeCurrency,
+                "currency": CurrencyManager.storeCurrency,
             });
         } catch (err) {
             console.error("Failed to load card prices", err);

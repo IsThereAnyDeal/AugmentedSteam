@@ -1,4 +1,4 @@
-import {CGameCard} from "community/gamecard/CGameCard";
-import check from "community/communityCheck";
+import {CommunityPage} from "../../CommunityPage";
+import {CGameCard} from "./CGameCard";
 
-check(CGameCard);
+(new CommunityPage()).run(CGameCard);
