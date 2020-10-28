@@ -9,8 +9,6 @@ export class CCommunityBase extends Context {
             FHideTrademarks,
         );
 
-        super(features);
-
-        this.type = ContextType.COMMUNITY_DEFAULT;
+        super(ContextType.COMMUNITY_DEFAULT, features);
     }
 }

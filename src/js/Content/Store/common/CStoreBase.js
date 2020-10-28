@@ -14,9 +14,7 @@ export class CStoreBase extends Context {
             FHideTrademarks,
         );
 
-        super(features);
-
-        this.type = ContextType.STORE_DEFAULT;
+        super(ContextType.STORE_DEFAULT, features);
 
         this._observeChanges();
     }

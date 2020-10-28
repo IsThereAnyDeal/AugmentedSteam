@@ -4,10 +4,8 @@ import FMultiProductKeys from "./FMultiProductKeys";
 export class CRegisterKey extends Context {
 
     constructor() {
-        super([
+        super(ContextType.REGISTER_KEY,[
             FMultiProductKeys,
         ]);
-
-        this.type = ContextType.REGISTER_KEY;
     }
 }

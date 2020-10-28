@@ -7,11 +7,9 @@ export class CProfileActivity extends CCommunityBase {
 
     constructor() {
 
-        super([
+        super(ContextType.PROFILE_ACTIVITY, [
             FHighlightFriendsActivity,
         ]);
-
-        this.type = ContextType.PROFILE_ACTIVITY;
 
         new MutationObserver(() => {
 

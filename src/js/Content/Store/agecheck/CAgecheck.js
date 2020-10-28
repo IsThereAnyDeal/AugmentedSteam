@@ -4,10 +4,8 @@ import FSkipAgecheck from "../../common/FSkipAgecheck";
 export class CAgeCheck extends Context {
 
     constructor() {
-        super([
+        super(ContextType.AGECHECK, [
             FSkipAgecheck,
         ]);
-
-        this.type = ContextType.AGECHECK;
     }
 }

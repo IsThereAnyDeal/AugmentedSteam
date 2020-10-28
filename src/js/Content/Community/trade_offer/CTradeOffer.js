@@ -4,10 +4,8 @@ import FCountTradeItems from "./FCountTradeItems";
 export class CTradeOffer extends Context {
 
     constructor() {
-        super([
+        super(ContextType.TRADE_OFFER, [
             FCountTradeItems,
         ]);
-
-        this.type = ContextType.TRADE_OFFER;
     }
 }

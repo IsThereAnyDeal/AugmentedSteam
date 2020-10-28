@@ -46,7 +46,7 @@ import {UserNotes} from "store/common/UserNotes";
 export class CApp extends CStore {
 
     constructor() {
-        super([
+        super(ContextType.APP, [
             FReplaceDevPubLinks,
             FRemoveFromWishlist,
             FForceMP4,
@@ -85,8 +85,6 @@ export class CApp extends CStore {
             FSupportInfo,
             FMediaExpander,
         ]);
-
-        this.type = ContextType.APP;
 
         this.userNotes = new UserNotes();
 

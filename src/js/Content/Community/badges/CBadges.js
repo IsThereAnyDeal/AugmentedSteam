@@ -10,14 +10,12 @@ export class CBadges extends CCommunityBase {
 
     constructor() {
 
-        super([
+        super(ContextType.BADGES, [
             FBadgeCompletionCost,
             FCardExchangeLinks,
             FBadgeSortAndFilter,
             FBadgeDropsCount,
         ]);
-
-        this.type = ContextType.BADGES;
 
         this.hasMultiplePages = document.querySelector(".pagebtn") !== null;
     }

@@ -2,8 +2,9 @@ import {FeatureManager} from "../Feature/FeatureManager";
 
 class Context {
 
-    constructor(features) {
+    constructor(type, features) {
         this._callbacks = [];
+        this.type = type;
         this.features = features.map(Ref => new Ref(this));
     }
 
