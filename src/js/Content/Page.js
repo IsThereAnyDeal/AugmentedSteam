@@ -43,21 +43,22 @@ class Page {
     async run(ContextRef) {
         if (!document.getElementById("global_header")) { return; }
 
-        const context = new ContextRef();
-
         try {
 
             // TODO What errors can be "suppressed" here?
             await SyncedStorage.init().catch(err => { console.error(err); });
-            await Promise.all([Localization, User, CurrencyManager.init(context)]);
+            await Promise.all([Localization, User]);
         } catch (err) {
             console.group("Augmented Steam initialization");
             console.error("Failed to initiliaze Augmented Steam");
             console.error(err);
             console.groupEnd();
-
             return;
         }
+
+        // FIXME, probably back up from context handling runInPageContext?
+        const context = new ContextRef();
+        await CurrencyManager.init(context);
 
         console.log(
             `%c Augmented %cSteam v${Info.version} %c https://es.isthereanydeal.com/`,
@@ -66,12 +67,14 @@ class Page {
             "",
         );
 
+        ProgressBar.create();
+        ProgressBar.loading();
         AugmentedSteam.init(context);
         UpdateHandler.checkVersion(context, AugmentedSteam.clearCache);
         EarlyAccess.showEarlyAccess();
         ITAD.create();
         Sortbox.init();
-        this.pageSpecificFeatures();
+        this._pageSpecificFeatures();
 
         context.applyFeatures();
     }

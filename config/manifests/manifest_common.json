@@ -37,7 +37,7 @@
       "img/profile_styles/*/showcase.png",
       "img/profile_styles/*/style.css",
       "img/profile_styles/*/preview.png",
-      "localization/*/strings.json",
+      "localization/*.json",
       "scripts/holidayprofile.js"
     ],
     "homepage_url": "https://es.isthereanydeal.com/",
