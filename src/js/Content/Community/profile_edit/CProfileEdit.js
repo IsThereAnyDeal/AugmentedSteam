@@ -1,20 +1,17 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
+import {CCommunityBase} from "../common/CCommunityBase";
+import {ProfileData} from "../common";
 import FBackgroundSelection from "./FBackgroundSelection";
 import FStyleSelection from "./FStyleSelection";
-
-import {ProfileData} from "community/common";
 
 export class CProfileEdit extends CCommunityBase {
 
     constructor() {
 
-        super([
+        super(ContextType.PROFILE_EDIT, [
             FBackgroundSelection,
             FStyleSelection,
         ]);
-
-        this.type = ContextType.PROFILE_EDIT;
     }
 
     async applyFeatures() {

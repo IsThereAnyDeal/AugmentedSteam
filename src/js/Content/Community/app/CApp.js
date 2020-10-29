@@ -1,10 +1,10 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
 import {GameId} from "../../../Modules/Core/GameId";
-import FHighlightsTags from "common/FHighlightsTags";
+import FHighlightsTags from "../../common/FHighlightsTags";
+import FSkipAgecheck from "../../common/FSkipAgecheck";
+import {CCommunityBase} from "../common/CCommunityBase";
 import FCommunityAppPageLinks from "./FCommunityAppPageLinks";
 import FCommunityAppPageWishlist from "./FCommunityAppPageWishlist";
-import FSkipAgecheck from "common/FSkipAgecheck";
 
 export class CApp extends CCommunityBase {
 
@@ -16,9 +16,7 @@ export class CApp extends CCommunityBase {
             FSkipAgecheck,
         );
 
-        super(features);
-
-        this.type = ContextType.COMMUNITY_APP;
+        super(ContextType.COMMUNITY_APP, features);
 
         this.appid = GameId.getAppid(window.location.href);
 

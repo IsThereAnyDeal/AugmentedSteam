@@ -1,5 +1,5 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
+import {CCommunityBase} from "../common/CCommunityBase";
 import FHighlightMarketItems from "./FHighlightMarketItems";
 import FMarketStats from "./FMarketStats";
 import FHideActiveListings from "./FHideActiveListings";
@@ -26,8 +26,6 @@ export class CMarket extends CCommunityBase {
             );
         }
 
-        super(features);
-
-        this.type = ContextType.MARKET;
+        super(ContextType.MARKET, features);
     }
 }

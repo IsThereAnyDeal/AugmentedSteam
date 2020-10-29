@@ -1,24 +1,20 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
-
+import {GameId} from "../../../Modules/Core/GameId";
+import {CCommunityBase} from "../common/CCommunityBase";
 import FSoldAmountLastDay from "./FSoldAmountLastDay";
 import FBackgroundPreviewLink from "./FBackgroundPreviewLink";
 import FBadgePageLink from "./FBadgePageLink";
 import FPriceHistoryZoomControl from "./FPriceHistoryZoomControl";
 
-import {GameId} from "../../../Modules/Core/GameId";
-
 export class CMarketListing extends CCommunityBase {
 
     constructor() {
-        super([
+        super(ContextType.MARKET_LISTING, [
             FSoldAmountLastDay,
             FBackgroundPreviewLink,
             FBadgePageLink,
             FPriceHistoryZoomControl,
         ]);
-
-        this.type = ContextType.MARKET_LISTING;
 
         this.appid = GameId.getAppid(window.location.href);
     }

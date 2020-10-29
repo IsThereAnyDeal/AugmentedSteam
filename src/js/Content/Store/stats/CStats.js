@@ -1,15 +1,12 @@
-import {CStoreBase} from "store/common/CStoreBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
-
+import {CStoreBase} from "../common/CStoreBase";
 import FHighlightTopGames from "./FHighlightTopGames";
 
 export class CStats extends CStoreBase {
 
     constructor() {
-        super([
+        super(ContextType.STATS, [
             FHighlightTopGames,
         ]);
-
-        this.type = ContextType.STATS;
     }
 }

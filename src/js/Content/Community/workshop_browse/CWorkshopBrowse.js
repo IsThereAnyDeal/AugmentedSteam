@@ -1,15 +1,12 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
-
+import {CCommunityBase} from "../common/CCommunityBase";
 import FWorkshopSubscriberButtons from "./FWorkshopSubscriberButtons";
 
 export class CWorkshopBrowse extends CCommunityBase {
 
     constructor() {
-        super([
+        super(ContextType.WORKSHOP_BROWSE, [
             FWorkshopSubscriberButtons,
         ]);
-
-        this.type = ContextType.WORKSHOP_BROWSE;
     }
 }

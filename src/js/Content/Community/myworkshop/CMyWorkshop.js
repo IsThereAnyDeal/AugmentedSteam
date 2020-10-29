@@ -1,5 +1,5 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
+import {CCommunityBase} from "../common/CCommunityBase";
 
 import FWorkshopFileSizes from "./FWorkshopFileSizes";
 
@@ -7,10 +7,8 @@ export class CMyWorkshop extends CCommunityBase {
 
     constructor() {
 
-        super([
+        super(ContextType.MY_WORKSHOP, [
             FWorkshopFileSizes,
         ]);
-
-        this.type = ContextType.MY_WORKSHOP;
     }
 }

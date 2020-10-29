@@ -1,16 +1,13 @@
-import {CStoreBase} from "store/common/CStoreBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
-
+import {CStoreBase} from "../common/CStoreBase";
 import FSearchFilters from "./FSearchFilters";
 
 export class CSearch extends CStoreBase {
 
     constructor() {
-        super([
+        super(ContextType.SEARCH, [
             FSearchFilters,
         ]);
-
-        this.type = ContextType.SEARCH;
 
         this.infiniScrollEnabled = document.querySelector(".search_pagination").style.display === "none";
     }

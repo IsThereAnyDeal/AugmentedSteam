@@ -1,5 +1,5 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
+import {CCommunityBase} from "../common/CCommunityBase";
 import FCustomTags from "./FCustomTags";
 
 import FMultiLanguageGuide from "./FMultiLanguageGuide";
@@ -7,11 +7,9 @@ import FMultiLanguageGuide from "./FMultiLanguageGuide";
 export class CEditGuide extends CCommunityBase {
 
     constructor() {
-        super([
+        super(ContextType.EDIT_GUIDE, [
             FMultiLanguageGuide,
             FCustomTags,
         ]);
-
-        this.type = ContextType.EDIT_GUIDE;
     }
 }

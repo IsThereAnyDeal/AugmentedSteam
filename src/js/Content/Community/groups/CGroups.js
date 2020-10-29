@@ -1,5 +1,5 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
+import {CCommunityBase} from "../common/CCommunityBase";
 import FGroupsSort from "./FGroupsSort";
 import FGroupsManageButton from "./FGroupsManageButton";
 
@@ -8,12 +8,10 @@ import {HTML} from "../../../Modules/Core/Html/Html";
 export class CGroups extends CCommunityBase {
 
     constructor() {
-        super([
+        super(ContextType.GROUPS, [
             FGroupsSort,
             FGroupsManageButton,
         ]);
-
-        this.type = ContextType.GROUPS;
 
         this.groups = Array.from(document.querySelectorAll(".group_block"));
 

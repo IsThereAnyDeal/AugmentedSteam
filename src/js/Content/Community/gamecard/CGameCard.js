@@ -1,6 +1,6 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
-import FCardExchangeLinks from "community/common/FCardExchangeLinks";
+import {CCommunityBase} from "../common/CCommunityBase";
+import FCardExchangeLinks from "../common/FCardExchangeLinks";
 import FCardMarketLinks from "./FCardMarketLinks";
 import FCardFoilLink from "./FCardFoilLink";
 import FTradeForumLink from "./FTradeForumLink";
@@ -11,14 +11,12 @@ export class CGameCard extends CCommunityBase {
 
     constructor() {
 
-        super([
+        super(ContextType.GAME_CARD, [
             FCardExchangeLinks,
             FCardMarketLinks,
             FCardFoilLink,
             FTradeForumLink,
         ]);
-
-        this.type = ContextType.GAME_CARD;
 
         this.appid = GameId.getAppidFromGameCard(window.location.pathname);
         this.isFoil = window.location.search.includes("?border=1");

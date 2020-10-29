@@ -1,5 +1,6 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
+import {CCommunityBase} from "../common/CCommunityBase";
+import {ProfileData} from "../common";
 import FCommunityProfileLinks from "./FCommunityProfileLinks";
 import FWishlistProfileLink from "./FWishlistProfileLink";
 import FSupporterBadges from "./FSupporterBadges";
@@ -10,8 +11,6 @@ import FProfileDropdownOptions from "./FProfileDropdownOptions";
 import FCustomStyle from "./FCustomStyle";
 import FTwitchShowcase from "./FTwitchShowcase";
 import FChatDropdownOptions from "./FChatDropdownOptions";
-
-import {ProfileData} from "community/common";
 
 export class CProfileHome extends CCommunityBase {
 
@@ -38,7 +37,7 @@ export class CProfileHome extends CCommunityBase {
 
         ProfileData.promise();
 
-        super([
+        super(ContextType.PROFILE_HOME, [
             FCommunityProfileLinks,
             FWishlistProfileLink,
             FSupporterBadges,
@@ -50,7 +49,5 @@ export class CProfileHome extends CCommunityBase {
             FTwitchShowcase,
             FChatDropdownOptions,
         ]);
-
-        this.type = ContextType.PROFILE_HOME;
     }
 }

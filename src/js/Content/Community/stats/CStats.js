@@ -1,6 +1,5 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
-
+import {CCommunityBase} from "../common/CCommunityBase";
 import FAchievementSort from "./FAchievementSort";
 import FExpandAchievementDesc from "./FExpandAchievementDesc";
 
@@ -16,11 +15,9 @@ export class CStats extends CCommunityBase {
             }
         }
 
-        super([
+        super(ContextType.COMMUNITY_STATS, [
             FAchievementSort,
             FExpandAchievementDesc,
         ]);
-
-        this.type = ContextType.COMMUNITY_STATS;
     }
 }

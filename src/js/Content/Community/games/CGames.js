@@ -1,5 +1,5 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
 import ContextType from "../../../Modules/Content/Context/ContextType";
+import {CCommunityBase} from "../common/CCommunityBase";
 import FGamesStats from "./FGamesStats";
 import FCommonGames from "./FCommonGames";
 import FGamelistAchievements from "./FGamelistAchievements";
@@ -10,15 +10,13 @@ export class CGames extends CCommunityBase {
 
         // Prevent errors if "Game Details" is private & only show stats on the "All Games" tab
         if (document.querySelector(".gameListRow") && window.location.search.includes("?tab=all")) {
-            super([
+            super(ContextType.GAMES, [
                 FGamesStats,
                 FCommonGames,
                 FGamelistAchievements,
             ]);
         } else {
-            super();
+            super(ContextType.GAMES);
         }
-
-        this.type = ContextType.GAMES;
     }
 }

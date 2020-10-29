@@ -1,15 +1,12 @@
-import {CStore} from "store/common/CStore";
 import ContextType from "../../../Modules/Content/Context/ContextType";
-
-import FRegionalPricing from "store/common/FRegionalPricing";
+import {CStore} from "../common/CStore";
+import FRegionalPricing from "../common/FRegionalPricing";
 
 export class CSale extends CStore {
 
     constructor() {
-        super([
+        super(ContextType.SALE, [
             FRegionalPricing,
         ]);
-
-        this.type = ContextType.SALE;
     }
 }
