@@ -3,6 +3,9 @@
   "background": {
     "persistent": false
   },
+  "optional_permissions": [
+    "contextMenus"
+  ],
   "content_scripts": [
     {
       "matches": [

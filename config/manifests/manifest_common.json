@@ -21,7 +21,6 @@
       "*://*.isthereanydeal.com/"
     ],
     "optional_permissions": [
-      "contextMenus",
       "webRequest",
       "webRequestBlocking"
     ],

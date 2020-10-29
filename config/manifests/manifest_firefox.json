@@ -5,6 +5,9 @@
       "strict_min_version": "57.0"
     }
   },
+  "permissions": [
+    "contextMenus"
+  ],
   "content_scripts": [
     {
       "matches": [
