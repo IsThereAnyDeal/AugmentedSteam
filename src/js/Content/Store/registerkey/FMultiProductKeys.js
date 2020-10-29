@@ -1,5 +1,6 @@
 import {ExtensionResources, HTML, Localization} from "../../../core_modules";
 import {Feature, RequestData, User} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FMultiProductKeys extends Feature {
 
@@ -135,12 +136,12 @@ export default class FMultiProductKeys extends Feature {
         // Bind the "Cancel" button to close the modal
         document.addEventListener("click", ({target}) => {
             if (!target.closest(".es_activate_modal_close")) { return; }
-            this.context.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
         });
     }
 
     _showDialog() {
-        this.context.runInPageContext((header, template) => {
+        Page.runInPageContext((header, template) => {
             ShowDialog(header, template); // eslint-disable-line no-undef, new-cap
         },
         [

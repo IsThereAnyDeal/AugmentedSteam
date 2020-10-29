@@ -1,5 +1,6 @@
 import {HTML, Localization} from "../../../core_modules";
 import {Feature, User} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FProfileDropdownOptions extends Feature {
 
@@ -22,7 +23,7 @@ export default class FProfileDropdownOptions extends Feature {
                 HTML.afterEnd(node, `<a class="popup_menu_item" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`);
 
                 node.parentNode.querySelector("#es_nickname").addEventListener("click", () => {
-                    this.context.runInPageContext(() => {
+                    Page.runInPageContext(() => {
                         /* eslint-disable new-cap, no-undef */
                         ShowNicknameModal();
                         HideMenu("profile_action_dropdown_link", "profile_action_dropdown");

@@ -1,5 +1,6 @@
 import {HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
 import {Background, Feature, Messenger, Sortbox} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FReviewSort extends Feature {
 
@@ -17,8 +18,6 @@ export default class FReviewSort extends Feature {
         const pageCount = 10;
         let reviews;
 
-        const that = this;
-
         async function getReviews() {
 
             let modalActive = false;
@@ -26,7 +25,7 @@ export default class FReviewSort extends Feature {
             // Delay half a second to avoid dialog flicker when grabbing cache
             const delayer = setTimeout(
                 () => {
-                    that.context.runInPageContext(
+                    Page.runInPageContext(
                         // eslint-disable-next-line no-undef, new-cap
                         (processing, wait) => { ShowBlockingWaitDialog(processing, wait); },
                         [
@@ -50,7 +49,7 @@ export default class FReviewSort extends Feature {
                 clearTimeout(delayer);
 
                 if (modalActive) {
-                    that.context.runInPageContext(() => {
+                    Page.runInPageContext(() => {
                         CModal.DismissActiveModal(); // eslint-disable-line no-undef, new-cap
                     });
                 }
@@ -106,7 +105,7 @@ export default class FReviewSort extends Feature {
             }
 
             // Add back sanitized event handlers
-            that.context.runInPageContext(ids => {
+            Page.runInPageContext(ids => {
                 Array.from(document.querySelectorAll(".review_box")).forEach((node, boxIndex) => {
                     const id = ids[boxIndex];
 
@@ -166,7 +165,7 @@ export default class FReviewSort extends Feature {
             Background.action("updatereviewnode", steamId, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, numReviews).then(getReviews);
         });
 
-        this.context.runInPageContext(() => {
+        Page.runInPageContext(() => {
             $J(document).ajaxSuccess((event, xhr, {url}) => { // eslint-disable-line no-undef
                 const pathname = new URL(url).pathname;
                 if (pathname.startsWith("/userreviews/rate/")

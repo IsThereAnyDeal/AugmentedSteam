@@ -1,10 +1,8 @@
 
 import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
+import {DynamicStore, Feature, RequestData, User} from "../../../Modules/content";
 import FExportWishlist from "./FExportWishlist";
-import {Feature} from "../../../Modules/Content/Feature/Feature";
-import {DynamicStore} from "../../../Modules/Content/Data/DynamicStore";
-import {RequestData} from "../../../Modules/Content/RequestData";
-import {User} from "../../../Modules/Content/User";
+import {Page} from "../../Page";
 
 export default class FEmptyWishlist extends Feature {
 
@@ -17,7 +15,7 @@ export default class FEmptyWishlist extends Feature {
 
         document.getElementById("es_empty_wishlist").addEventListener("click", async() => {
 
-            await this.context.runInPageContext(emptyWishlist => {
+            await Page.runInPageContext(emptyWishlist => {
                 /* eslint-disable no-undef, new-cap, camelcase */
                 const prompt = ShowConfirmDialog(emptyWishlist.title, emptyWishlist.confirm);
 

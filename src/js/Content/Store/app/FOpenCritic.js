@@ -1,5 +1,6 @@
 import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../core_modules";
 import {Feature} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FOpenCritic extends Feature {
 
@@ -67,7 +68,7 @@ export default class FOpenCritic extends Feature {
             }
 
             // eslint-disable-next-line new-cap, no-undef
-            this.context.runInPageContext(() => { BindTooltips("#game_area_reviews", {"tooltipCSSClass": "store_tooltip"}); });
+            Page.runInPageContext(() => { BindTooltips("#game_area_reviews", {"tooltipCSSClass": "store_tooltip"}); });
         }
     }
 }

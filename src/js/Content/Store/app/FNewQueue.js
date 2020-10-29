@@ -1,5 +1,6 @@
 import {HTML, Localization} from "../../../core_modules";
 import {Feature} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FNewQueue extends Feature {
 
@@ -15,7 +16,7 @@ export default class FNewQueue extends Feature {
                 </div>
             </div>`);
 
-        this.context.runInPageContext(() => {
+        Page.runInPageContext(() => {
 
             /* eslint-disable no-undef, camelcase */
             $J("#es_new_queue").v_tooltip({

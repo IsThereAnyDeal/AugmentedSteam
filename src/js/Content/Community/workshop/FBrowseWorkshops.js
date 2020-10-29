@@ -1,5 +1,6 @@
 import {HTML, LocalStorage} from "../../../core_modules";
 import {Feature, RequestData} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FBrowseWorkshops extends Feature {
 
@@ -17,7 +18,7 @@ export default class FBrowseWorkshops extends Feature {
         const query = url.searchParams.get("browsesort");
         this._changeTab(query);
 
-        this.context.runInPageContext(() => {
+        Page.runInPageContext(() => {
             // eslint-disable-next-line no-undef
             $J(".browseOption")
                 .get()
@@ -63,7 +64,7 @@ export default class FBrowseWorkshops extends Feature {
         HTML.inner(container, result.results_html);
         tab.removeAttribute("disabled");
 
-        this.context.runInPageContext((query, totalCount, count) => {
+        Page.runInPageContext((query, totalCount, count) => {
             /* eslint-disable camelcase, no-undef, new-cap */
             g_oSearchResults.m_iCurrentPage = 0;
             g_oSearchResults.m_strQuery = query;

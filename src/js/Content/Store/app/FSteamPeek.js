@@ -1,6 +1,7 @@
 import {HTML, LocalStorage, Localization} from "../../../core_modules";
 import {Background, Feature} from "../../../Modules/content";
 import FHighlightsTags from "common/FHighlightsTags";
+import {Page} from "../../Page";
 
 export default class FSteamPeek extends Feature {
 
@@ -30,7 +31,7 @@ export default class FSteamPeek extends Feature {
         );
 
         // TODO Create a global handler for DS loading
-        await this.context.runInPageContext(() => new Promise(resolve => {
+        await Page.runInPageContext(() => new Promise(resolve => {
             GDynamicStore.OnReady(() => { resolve(); }); // eslint-disable-line new-cap, no-undef
         }), null, true);
 
@@ -77,13 +78,13 @@ export default class FSteamPeek extends Feature {
                         </a>`);
 
 
-                    this.context.runInPageContext(appid => { // eslint-disable-line no-loop-func
+                    Page.runInPageContext(appid => { // eslint-disable-line no-loop-func
                         // eslint-disable-next-line no-undef, new-cap
                         GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), appid);
                     }, [appid]);
                 }
 
-                this.context.runInPageContext(() => {
+                Page.runInPageContext(() => {
                     // eslint-disable-next-line new-cap, no-undef
                     GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar"));
                 });
@@ -106,6 +107,6 @@ export default class FSteamPeek extends Feature {
 
     _adjustScroller() {
         // eslint-disable-next-line no-undef
-        this.context.runInPageContext(() => { $J("#recommended_block_content").trigger("v_contentschanged"); });
+        Page.runInPageContext(() => { $J("#recommended_block_content").trigger("v_contentschanged"); });
     }
 }

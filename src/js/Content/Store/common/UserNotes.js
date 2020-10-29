@@ -1,5 +1,6 @@
 import {HTML, Localization, SyncedStorage} from "../../../core_modules";
 import {Messenger} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export class UserNotes {
     constructor() {
@@ -43,10 +44,10 @@ export class UserNotes {
         return Boolean(this._notes[appid]);
     }
 
-    async showModalDialog(context, appname, appid, nodeSelector, onNoteUpdate) {
+    async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
 
         // Partly copied from shared_global.js
-        const bgClick = context.runInPageContext((title, template) => {
+        const bgClick = Page.runInPageContext((title, template) => {
             /* eslint-disable no-undef, new-cap, camelcase */
             const deferred = new jQuery.Deferred();
             function fnOk() { deferred.resolve(); }
@@ -109,9 +110,9 @@ export class UserNotes {
             if (e.target.closest(".es_note_modal_submit")) {
                 e.preventDefault();
                 onNoteUpdate(...saveNote());
-                context.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
+                Page.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
             } else if (e.target.closest(".es_note_modal_close")) {
-                context.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
+                Page.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
             } else {
                 return;
             }

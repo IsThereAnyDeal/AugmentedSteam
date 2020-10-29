@@ -1,5 +1,6 @@
 import {HTML, Localization, SyncedStorage} from "../../../core_modules";
 import {CallbackFeature, DOMHelper} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FInventoryGoTo extends CallbackFeature {
 
@@ -60,13 +61,13 @@ export default class FInventoryGoTo extends CallbackFeature {
         // Go to first page
         HTML.afterEnd("#pagebtn_previous", "<a id='pagebtn_first' class='pagebtn pagecontrol_element disabled'>&lt;&lt;</a>");
         document.querySelector("#pagebtn_first").addEventListener("click", () => {
-            this.context.runInPageContext(() => { InventoryFirstPage(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { InventoryFirstPage(); }); // eslint-disable-line no-undef, new-cap
         });
 
         // Go to last page
         HTML.beforeBegin("#pagebtn_next", "<a id='pagebtn_last' class='pagebtn pagecontrol_element'>&gt;&gt;</a>");
         document.querySelector("#pagebtn_last").addEventListener("click", () => {
-            this.context.runInPageContext(() => { InventoryLastPage(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { InventoryLastPage(); }); // eslint-disable-line no-undef, new-cap
         });
 
         const pageGo = document.createElement("div");

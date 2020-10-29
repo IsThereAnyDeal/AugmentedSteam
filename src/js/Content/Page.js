@@ -40,14 +40,35 @@ Background.registerErrorHandler(({name, msg}) => {
 
 class Page {
 
-    async run(ContextRef) {
+    /*
+     * NOTE: use cautiously!
+     * Run script in the context of the current tab
+     */
+    static runInPageContext(fun, args, withPromise) {
+        const script = document.createElement("script");
+        let promise;
+        const argsString = Array.isArray(args) ? JSON.stringify(args) : "[]";
+
+        if (withPromise) {
+            const msgId = `msg_${++Page._msgCounter}`;
+            promise = Messenger.onMessage(msgId);
+            script.textContent = `(async () => { Messenger.postMessage("${msgId}", await (${fun})(...${argsString})); })();`;
+        } else {
+            script.textContent = `(${fun})(...${argsString});`;
+        }
+
+        document.documentElement.appendChild(script);
+        script.parentNode.removeChild(script);
+        return promise;
+    }
+
+    async run(ContextClass) {
         if (!document.getElementById("global_header")) { return; }
 
         try {
-
             // TODO What errors can be "suppressed" here?
             await SyncedStorage.init().catch(err => { console.error(err); });
-            await Promise.all([Localization, User]);
+            await Promise.all([Localization, User, CurrencyManager]);
         } catch (err) {
             console.group("Augmented Steam initialization");
             console.error("Failed to initiliaze Augmented Steam");
@@ -55,10 +76,6 @@ class Page {
             console.groupEnd();
             return;
         }
-
-        // FIXME, probably back up from context handling runInPageContext?
-        const context = new ContextRef();
-        await CurrencyManager.init(context);
 
         console.log(
             `%c Augmented %cSteam v${Info.version} %c https://es.isthereanydeal.com/`,
@@ -69,13 +86,14 @@ class Page {
 
         ProgressBar.create();
         ProgressBar.loading();
-        AugmentedSteam.init(context);
-        UpdateHandler.checkVersion(context, AugmentedSteam.clearCache);
+        AugmentedSteam.init();
+        UpdateHandler.checkVersion(AugmentedSteam.clearCache);
         EarlyAccess.showEarlyAccess();
         ITAD.create();
         Sortbox.init();
         this._pageSpecificFeatures();
 
+        const context = new ContextClass();
         context.applyFeatures();
     }
 
@@ -83,5 +101,6 @@ class Page {
         // left for overrides
     }
 }
+Page._msgCounter = 0;
 
 export {Page};

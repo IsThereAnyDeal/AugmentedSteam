@@ -1,5 +1,6 @@
 import {HTML, LocalStorage, Localization} from "../../../core_modules";
 import {Feature, Messenger} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FCustomTags extends Feature {
 
@@ -25,7 +26,7 @@ export default class FCustomTags extends Feature {
                 </a></div>
             </div>`);
 
-        this.context.runInPageContext((customTags, enterTag) => {
+        Page.runInPageContext((customTags, enterTag) => {
             /* eslint-disable no-undef, new-cap */
             $J("#es_add_tag").on("click", () => {
                 const Modal = ShowConfirmDialog(customTags,
@@ -85,7 +86,7 @@ export default class FCustomTags extends Feature {
             savedTags[curId] = Array.from(document.querySelectorAll("[name='tags[]']:checked")).map(node => node.value);
             LocalStorage.set("es_guide_tags", savedTags);
             // eslint-disable-next-line no-undef, new-cap
-            this.context.runInPageContext(() => { SubmitGuide(); });
+            Page.runInPageContext(() => { SubmitGuide(); });
         });
     }
 

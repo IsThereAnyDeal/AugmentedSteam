@@ -1,9 +1,10 @@
 import {Feature} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FShowGemsCost extends Feature {
 
     apply() {
-        this.context.runInPageContext(gemWord => {
+        Page.runInPageContext(gemWord => {
             /* eslint-disable no-undef, new-cap, no-invalid-this */
             $J("#booster_game_selector option").each(function() {
                 if ($J(this).val()) {

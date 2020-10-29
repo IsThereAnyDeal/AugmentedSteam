@@ -1,6 +1,7 @@
 import {SyncedStorage} from "../Core/Storage/SyncedStorage";
 import {StringUtils} from "../Core/Utils/StringUtils";
 import {Background} from "./Background";
+import {Page} from "../../content/Page";
 
 class SteamCurrency {
 
@@ -159,8 +160,8 @@ class CurrencyManager {
         return null;
     }
 
-    static async _getCurrencyFromWallet(context) {
-        const walletCurrency = await context.runInPageContext(
+    static async _getCurrencyFromWallet() {
+        const walletCurrency = await Page.runInPageContext(
             // eslint-disable-next-line no-undef, camelcase
             () => (typeof g_rgWalletInfo !== "undefined" && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null),
             null,

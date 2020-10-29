@@ -1,6 +1,7 @@
 import {HTML, Localization} from "../../../core_modules";
 import {DOMHelper, Feature} from "../../../Modules/content";
 import {CommunityCommon} from "community/common";
+import {Page} from "../../Page";
 
 export default class FBadgeSortAndFilter extends Feature {
 
@@ -61,7 +62,7 @@ export default class FBadgeSortAndFilter extends Feature {
             </span>`);
 
         // eslint-disable-next-line no-undef, new-cap
-        this.context.runInPageContext(() => { BindAutoFlyoutEvents(); });
+        Page.runInPageContext(() => { BindAutoFlyoutEvents(); });
 
         if (isOwnProfile) {
             document.querySelector("#es_badge_sort_drops").addEventListener("click", async e => {

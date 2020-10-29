@@ -8,6 +8,7 @@ import {MixedSearchFilter} from "./filters/MixedSearchFilter";
 import {NegativeSearchFilter} from "./filters/NegativeSearchFilter";
 import {ReviewsCountSearchFilter} from "./filters/ReviewsCountSearchFilter";
 import {ReviewsScoreSearchFilter} from "./filters/ReviewsScoreSearchFilter";
+import {Page} from "../../Page";
 
 export default class FSearchFilters extends Feature {
 
@@ -67,7 +68,7 @@ export default class FSearchFilters extends Feature {
         });
 
         // Allow user to autocollapse the added category block just like any other
-        this.context.runInPageContext((collapseName, shouldCollapse) => {
+        Page.runInPageContext((collapseName, shouldCollapse) => {
             /* eslint-disable new-cap, no-undef */
 
             /*
@@ -139,7 +140,7 @@ export default class FSearchFilters extends Feature {
             this._modifyPageLinks();
         });
 
-        this.context.runInPageContext(() => {
+        Page.runInPageContext(() => {
             /* eslint-disable new-cap, no-undef, camelcase */
 
             /*
@@ -258,7 +259,7 @@ export default class FSearchFilters extends Feature {
         // Update the current URL
         this._modifyParams(curParams, this._filterValues);
 
-        this.context.runInPageContext(params => {
+        Page.runInPageContext(params => {
 
             // https://github.com/SteamDatabase/SteamTracking/blob/a4cdd621a781f2c95d75edecb35c72f6781c01cf/store.steampowered.com/public/javascript/searchpage.js#L217
             UpdateUrl(params);
@@ -283,7 +284,7 @@ export default class FSearchFilters extends Feature {
              * would be modified when stringifying back again (e.g. "white%20space" will turn into "white+space" and break links).
              * Therefore the URLSearchParameters are converted to an object and parsed by Prototype's Object.toQueryString.
              */
-            this.context.runInPageContext(obj => Object.toQueryString(obj), [this._paramsToObject(params)], true)
+            Page.runInPageContext(obj => Object.toQueryString(obj), [this._paramsToObject(params)], true)
                 .then(queryString => {
                     url.search = `?${queryString}`;
                     linkElement.href = url.href;

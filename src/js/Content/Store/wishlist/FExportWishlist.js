@@ -1,5 +1,6 @@
 import {Downloader, HTML, Localization, SyncedStorage} from "../../../core_modules";
 import {Clipboard, Feature} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 class WishlistExporter {
 
@@ -84,7 +85,7 @@ export default class FExportWishlist extends Feature {
         document.querySelector("#es_export_wishlist").addEventListener("click", async() => {
 
             // eslint-disable-next-line camelcase, no-undef
-            const [appInfo, apps] = await this.context.runInPageContext(() => [g_rgAppInfo, g_Wishlist.rgAllApps], null, true);
+            const [appInfo, apps] = await Page.runInPageContext(() => [g_rgAppInfo, g_Wishlist.rgAllApps], null, true);
 
             this._showDialog(appInfo, apps);
         });
@@ -131,7 +132,7 @@ export default class FExportWishlist extends Feature {
             }
         }
 
-        this.context.runInPageContext(exportStr => {
+        Page.runInPageContext(exportStr => {
             ShowConfirmDialog( // eslint-disable-line new-cap, no-undef
                 exportStr.wishlist,
                 `<div id='es_export_form'>

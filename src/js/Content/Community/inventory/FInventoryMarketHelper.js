@@ -1,13 +1,16 @@
 import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
-import {Background, CurrencyManager,
-    Feature, Messenger, Price, RequestData, User} from "../../../Modules/content";
+import {
+    Background, CurrencyManager,
+    Feature, Messenger, Price, RequestData, User
+} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 // TODO Split this up
 export default class FInventoryMarketHelper extends Feature {
 
     apply() {
 
-        this.context.runInPageContext(() => {
+        Page.runInPageContext(() => {
 
             /* eslint-disable no-undef, camelcase */
             $J(document).on("click", ".inventory_item_link, .newitem", () => {
@@ -280,7 +283,7 @@ export default class FInventoryMarketHelper extends Feature {
 
         // TODO: Add prompt?
         document.querySelector("#es_quickgrind").addEventListener("click", () => {
-            this.context.runInPageContext((appid, assetid) => {
+            Page.runInPageContext((appid, assetid) => {
                 /* eslint-disable no-undef, new-cap, camelcase */
                 const rgAJAXParams = {
                     "sessionid": g_sessionID,
@@ -325,7 +328,7 @@ export default class FInventoryMarketHelper extends Feature {
             HTML.beforeEnd(marketActions, this._makeMarketButton(`es_instantsell${assetId}`, Localization.str.instant_sell_desc));
 
             // eslint-disable-next-line no-undef, new-cap
-            this.context.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+            Page.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
 
             // Check if price is stored in data
             if (thisItem.classList.contains("es-price-loaded")) {
@@ -396,7 +399,7 @@ export default class FInventoryMarketHelper extends Feature {
                     `<div class='es_loading' style='min-height: 66px;'><img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'><span>${Localization.str.selling}</div>`
                 );
 
-                this.context.runInPageContext((sellPrice, sessionID, globalId, contextID, assetID) => {
+                Page.runInPageContext((sellPrice, sessionID, globalId, contextID, assetID) => {
                     window.Messenger.postMessage("sendFee",
                         {
                             "feeInfo": CalculateFeeAmount(sellPrice, 0.10), // eslint-disable-line no-undef, new-cap

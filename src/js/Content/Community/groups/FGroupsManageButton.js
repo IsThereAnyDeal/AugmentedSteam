@@ -1,5 +1,6 @@
 import {HTML, Localization} from "../../../core_modules";
 import {ConfirmDialog, Feature, RequestData, User} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FGroupsManageButton extends Feature {
 
@@ -46,24 +47,24 @@ export default class FGroupsManageButton extends Feature {
             group.querySelector(".select_friend").addEventListener("click", () => {
                 group.classList.toggle("selected");
                 group.querySelector(".select_friend_checkbox").checked = group.classList.contains("selected");
-                this.context.runInPageContext(() => { UpdateSelection(); }); // eslint-disable-line no-undef, new-cap
+                Page.runInPageContext(() => { UpdateSelection(); }); // eslint-disable-line no-undef, new-cap
             });
         }
 
         document.querySelector("#manage_friends_control").addEventListener("click", () => {
-            this.context.runInPageContext(() => { ToggleManageFriends(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { ToggleManageFriends(); }); // eslint-disable-line no-undef, new-cap
         });
 
         document.querySelector("#es_select_all").addEventListener("click", () => {
-            this.context.runInPageContext(() => { SelectAll(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { SelectAll(); }); // eslint-disable-line no-undef, new-cap
         });
 
         document.querySelector("#es_select_none").addEventListener("click", () => {
-            this.context.runInPageContext(() => { SelectNone(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { SelectNone(); }); // eslint-disable-line no-undef, new-cap
         });
 
         document.querySelector("#es_select_inverse").addEventListener("click", () => {
-            this.context.runInPageContext(() => { SelectInverse(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { SelectInverse(); }); // eslint-disable-line no-undef, new-cap
         });
 
         document.querySelector("#es_leave_groups").addEventListener("click", () => { this._leaveGroups(); });
@@ -88,7 +89,7 @@ export default class FGroupsManageButton extends Feature {
                 const name = split[3];
 
                 const body = Localization.str.groups.leave_admin_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
-                const result = await ConfirmDialog.open(this.context, Localization.str.groups.leave, body);
+                const result = await ConfirmDialog.open(Localization.str.groups.leave, body);
                 const cont = (result === "OK");
                 if (!cont) {
                     group.querySelector(".select_friend").click();
@@ -101,7 +102,7 @@ export default class FGroupsManageButton extends Feature {
 
         if (selected.length > 0) {
             const body = Localization.str.groups.leave_groups_confirm.replace("__n__", selected.length);
-            const result = await ConfirmDialog.open(this.context, Localization.str.groups.leave, body);
+            const result = await ConfirmDialog.open(Localization.str.groups.leave, body);
 
             if (result === "OK") {
                 for (const tuple of selected) {

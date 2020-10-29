@@ -1,5 +1,6 @@
 import {ExtensionResources, HTML, Localization} from "../../../core_modules";
 import {DynamicStore, Feature, User} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FRemoveFromWishlist extends Feature {
 
@@ -65,7 +66,7 @@ export default class FRemoveFromWishlist extends Feature {
 
                     // Invalidate dynamic store data cache
                     // eslint-disable-next-line new-cap, no-undef
-                    this.context.runInPageContext(() => { GDynamicStore.InvalidateCache(); });
+                    Page.runInPageContext(() => { GDynamicStore.InvalidateCache(); });
                 } catch (err) {
                     document.getElementById("add_to_wishlist_area_fail").style.display = "";
                     this.logError(err, "Failed to remove app from wishlist");

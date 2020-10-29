@@ -1,5 +1,6 @@
 import {GameId, HTML, Localization} from "../../../core_modules";
 import {Feature, RequestData, User} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FWorkshopSubscriberButtons extends Feature {
 
@@ -51,7 +52,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
             .replace("__count__", this._total);
 
         // todo reject when dialog closed
-        await this.context.runInPageContext((title, confirm) => {
+        await Page.runInPageContext((title, confirm) => {
             const prompt = ShowConfirmDialog(title, confirm); // eslint-disable-line new-cap, no-undef
 
             return new Promise(resolve => {
@@ -103,7 +104,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
             .replace("__success__", this._completed - this._failed)
             .replace("__fail__", this._failed);
 
-        this.context.runInPageContext((title, finished) => {
+        Page.runInPageContext((title, finished) => {
             /* eslint-disable new-cap, no-undef */
             if (window.dialog) {
                 window.dialog.Dismiss();
@@ -169,7 +170,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
             modal.innerText = statusString;
         } else {
             const statusTitle = this._workshopStr[`${this._method}_all`];
-            this.context.runInPageContext((title, progress) => {
+            Page.runInPageContext((title, progress) => {
                 if (window.dialog) {
                     window.dialog.Dismiss();
                 }

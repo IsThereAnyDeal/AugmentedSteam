@@ -1,6 +1,6 @@
-import {Feature} from "modules";
-
-import {HTML, Localization} from "core";
+import {HTML, Localization} from "../../../core_modules";
+import {Feature} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FInGameStoreLink extends Feature {
 
@@ -16,6 +16,6 @@ export default class FInGameStoreLink extends Feature {
 
         HTML.inner(node, `<a data-tooltip-html="${tooltip}" href="//store.steampowered.com/app/${document.querySelector('input[name="ingameAppID"]').value}" target="_blank">${node.textContent}</a>`);
         // eslint-disable-next-line new-cap, no-undef
-        this.context.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+        Page.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
     }
 }

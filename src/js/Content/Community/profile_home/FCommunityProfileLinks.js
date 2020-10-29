@@ -1,12 +1,11 @@
 import {ExtensionResources, HTML, Language, Localization, SyncedStorage} from "../../../core_modules";
 import {Clipboard, Feature, SteamId} from "../../../Modules/content";
-import {CommunityCommon} from "community/common";
+import {CommunityCommon} from "../common";
+import {Page} from "../../Page";
 
 export default class FCommunityProfileLinks extends Feature {
 
     apply() {
-        const that = this;
-
         function copySteamId(e) {
             const elem = e.target.closest(".es-copy");
             if (!elem) { return; }
@@ -42,7 +41,7 @@ export default class FCommunityProfileLinks extends Feature {
                 html += `<p><a class="es-copy"><span class="es-copy__id">${id}</span><img src='${imgUrl}' class="es-copy__icon"><span class="es-copy__copied">${copied}</span></a></p>`;
             }
 
-            that.context.runInPageContext((steamidOfUser, html, close) => {
+            Page.runInPageContext((steamidOfUser, html, close) => {
                 /* eslint-disable no-undef, new-cap, camelcase */
                 HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
                 const dialog = ShowAlertDialog(steamidOfUser.replace("__user__", g_rgProfileData.personaname), html, close);

@@ -1,5 +1,6 @@
 import {HTML, Localization, SyncedStorage} from "../../../core_modules";
 import {Feature, Price} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FWishlistStats extends Feature {
 
@@ -10,7 +11,7 @@ export default class FWishlistStats extends Feature {
     async apply() {
 
         // eslint-disable-next-line camelcase, no-undef
-        const appInfo = await this.context.runInPageContext(() => g_rgAppInfo, null, true);
+        const appInfo = await Page.runInPageContext(() => g_rgAppInfo, null, true);
 
         let totalPrice = 0;
         let totalCount = 0;

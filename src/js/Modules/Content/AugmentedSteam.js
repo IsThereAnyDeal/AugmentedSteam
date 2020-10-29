@@ -9,10 +9,11 @@ import {DOMHelper} from "./DOMHelper";
 import {HorizontalScroller} from "./Widgets/HorizontalScroller";
 import {DynamicStore} from "./Data/DynamicStore";
 import {User} from "./User";
+import {Page} from "../../content/Page";
 
 class AugmentedSteam {
 
-    static _addMenu(context) {
+    static _addMenu() {
 
         HTML.afterBegin("#global_action_menu",
             `<div id="es_menu">
@@ -36,7 +37,7 @@ class AugmentedSteam {
 
         document.querySelector("#es_pulldown").addEventListener("click", () => {
             // eslint-disable-next-line no-undef, new-cap
-            context.runInPageContext(() => { ShowMenu("es_pulldown", "es_popup", "right", "bottom", true); });
+            Page.runInPageContext(() => { ShowMenu("es_pulldown", "es_popup", "right", "bottom", true); });
         });
 
         document.querySelector("#es_menu").addEventListener("click", (e) => {
@@ -132,7 +133,7 @@ class AugmentedSteam {
     /**
      * Display warning if browsing using a different language
      */
-    static _addLanguageWarning(context) {
+    static _addLanguageWarning() {
         if (!SyncedStorage.get("showlanguagewarning")) { return; }
 
         const currentLanguage = Language.getCurrentSteamLanguage();
@@ -158,7 +159,7 @@ class AugmentedSteam {
             document.querySelector("#es_reset_language_code").addEventListener("click", (e) => {
                 e.preventDefault();
                 // eslint-disable-next-line no-undef, new-cap
-                context.runInPageContext(warningLanguage => { ChangeLanguage(warningLanguage); }, [warningLanguage]);
+                Page.runInPageContext(warningLanguage => { ChangeLanguage(warningLanguage); }, [warningLanguage]);
             });
         });
     }
@@ -259,7 +260,7 @@ class AugmentedSteam {
         }
     }
 
-    static _launchRandomButton(context) {
+    static _launchRandomButton() {
 
         HTML.beforeEnd(
             "#es_popup .popup_menu",
@@ -284,7 +285,7 @@ class AugmentedSteam {
                     gamename = data.name;
                 }
 
-                context.runInPageContext((playGameStr, gameid, visitStore) => {
+                Page.runInPageContext((playGameStr, gameid, visitStore) => {
                     // eslint-disable-next-line no-undef, new-cap
                     const prompt = ShowConfirmDialog(
                         playGameStr,
@@ -384,10 +385,10 @@ class AugmentedSteam {
         Background.action("cache.clear");
     }
 
-    static init(context) {
+    static init() {
         AugmentedSteam._addBackToTop();
-        AugmentedSteam._addMenu(context);
-        AugmentedSteam._addLanguageWarning(context);
+        AugmentedSteam._addMenu();
+        AugmentedSteam._addLanguageWarning();
         AugmentedSteam._handleInstallSteamButton();
         AugmentedSteam._removeAboutLinks();
         AugmentedSteam._disableLinkFilter();
@@ -400,7 +401,7 @@ class AugmentedSteam {
             AugmentedSteam._addUsernameSubmenuLinks();
             AugmentedSteam._addRedeemLink();
             AugmentedSteam._replaceAccountName();
-            AugmentedSteam._launchRandomButton(context);
+            AugmentedSteam._launchRandomButton();
             AugmentedSteam._bindLogout();
         }
     }

@@ -1,5 +1,6 @@
 import {HTML, Localization} from "../../../core_modules";
 import {Feature} from "../../../Modules/content";
+import {Page} from "../../Page";
 
 export default class FPriceHistoryZoomControl extends Feature {
 
@@ -7,7 +8,7 @@ export default class FPriceHistoryZoomControl extends Feature {
         HTML.afterEnd(document.querySelectorAll(".zoomopt")[1], `<a class="zoomopt as-zoomcontrol">${Localization.str.year}</a>`);
 
         document.querySelector(".as-zoomcontrol").addEventListener("click", () => {
-            this.context.runInPageContext(() => {
+            Page.runInPageContext(() => {
                 // eslint-disable-next-line no-undef
                 pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
             });

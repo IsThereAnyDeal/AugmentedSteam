@@ -1,5 +1,4 @@
-import ContextType from "../../../Modules/Content/Context/ContextType";
-import {User} from "../../../Modules/content";
+import {ContextType, User} from "../../../Modules/content";
 import {CStoreBaseCallback} from "../common/CStoreBaseCallback";
 import FAlternativeLinuxIcon from "../common/FAlternativeLinuxIcon";
 import FWishlistHighlights from "./FWishlistHighlights";
@@ -8,6 +7,7 @@ import FWishlistUserNotes from "./FWishlistUserNotes";
 import FWishlistStats from "./FWishlistStats";
 import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
+import {Page} from "../../Page";
 
 export class CWishlist extends CStoreBaseCallback {
 
@@ -35,7 +35,7 @@ export class CWishlist extends CStoreBaseCallback {
 
     async applyFeatures() {
         if (document.querySelector("#throbber").style.display !== "none") {
-            await this.context.runInPageContext(() => new Promise(resolve => {
+            await Page.runInPageContext(() => new Promise(resolve => {
                 /* eslint-disable no-undef, camelcase */
                 $J(document).ajaxSuccess((e, xhr, settings) => {
                     const url = new URL(settings.url);

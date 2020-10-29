@@ -1,7 +1,8 @@
 import Config from "config";
 import {HTML, Localization} from "../../../core_modules";
 import {Feature} from "../../../Modules/content";
-import {ProfileData} from "community/common";
+import {ProfileData} from "../common";
+import {Page} from "../../Page";
 
 export default class FSupporterBadges extends Feature {
 
@@ -40,6 +41,6 @@ export default class FSupporterBadges extends Feature {
         HTML.afterEnd(profileBadges, html);
 
         // eslint-disable-next-line new-cap, no-undef
-        this.context.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+        Page.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
     }
 }
