@@ -49,6 +49,7 @@ module.exports = {
         "store/wishlist": "./src/js/content/store/wishlist/PWishlist.js",
     },
     "output": {
+        "path": `${rootDir}/dist`,
         "filename": "entries/[name].js",
     },
     "resolve": {
