@@ -20,7 +20,6 @@ import {Clipboard} from "./Content/Clipboard";
 import {CurrencyManager} from "./Content/CurrencyManager";
 import {DOMHelper} from "./Content/DOMHelper";
 import {EarlyAccess} from "./Content/EarlyAccess";
-import {ExtensionLayer} from "./Content/ExtensionLayer";
 import {ITAD} from "./Content/ITAD";
 import {Messenger} from "./Content/Messenger";
 import {Price} from "./Content/Price";
@@ -43,7 +42,6 @@ export {
     CurrencyManager,
     DOMHelper,
     EarlyAccess,
-    ExtensionLayer,
     ITAD,
     Messenger,
     Price,
