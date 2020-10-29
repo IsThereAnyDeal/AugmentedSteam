@@ -277,6 +277,10 @@ class CurrencyManager {
 
         CurrencyManager._isInitialized = true;
     }
+
+    static then(onSuccess, onFailure) {
+        return CurrencyManager.init().then(onSuccess, onFailure);
+    }
 }
 CurrencyManager._isInitialized = false;
 CurrencyManager._indices = {
