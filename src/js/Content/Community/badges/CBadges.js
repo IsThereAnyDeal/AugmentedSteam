@@ -1,10 +1,10 @@
-import {CCommunityBase} from "community/common/CCommunityBase";
-import FBadgeCompletionCost from "./FBadgeCompletionCost";
-import FCardExchangeLinks from "community/common/FCardExchangeLinks";
-import FBadgeSortAndFilter from "./FBadgeSortAndFilter";
-import FBadgeDropsCount from "./FBadgeDropsCount";
 import {HTMLParser} from "../../../Modules/Core/Html/HtmlParser";
 import {ContextType, DOMHelper, RequestData} from "../../../Modules/content";
+import {CCommunityBase} from "../common/CCommunityBase";
+import FCardExchangeLinks from "../common/FCardExchangeLinks";
+import FBadgeCompletionCost from "./FBadgeCompletionCost";
+import FBadgeSortAndFilter from "./FBadgeSortAndFilter";
+import FBadgeDropsCount from "./FBadgeDropsCount";
 
 export class CBadges extends CCommunityBase {
 

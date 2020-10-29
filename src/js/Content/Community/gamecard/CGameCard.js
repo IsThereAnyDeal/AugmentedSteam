@@ -1,11 +1,10 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
+import {GameId} from "../../../Modules/Core/GameId";
 import {CCommunityBase} from "../common/CCommunityBase";
 import FCardExchangeLinks from "../common/FCardExchangeLinks";
 import FCardMarketLinks from "./FCardMarketLinks";
 import FCardFoilLink from "./FCardFoilLink";
 import FTradeForumLink from "./FTradeForumLink";
-
-import {GameId} from "../../../Modules/Core/GameId";
 
 export class CGameCard extends CCommunityBase {
 

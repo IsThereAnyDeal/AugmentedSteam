@@ -40,11 +40,10 @@ Background.registerErrorHandler(({name, msg}) => {
 
 class Page {
 
-    async run(Context) {
-
+    async run(ContextRef) {
         if (!document.getElementById("global_header")) { return; }
 
-        const context = new Context();
+        const context = new ContextRef();
 
         try {
 

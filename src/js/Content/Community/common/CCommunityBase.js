@@ -3,12 +3,12 @@ import {Context, ContextType} from "../../../Modules/content";
 
 export class CCommunityBase extends Context {
 
-    constructor(features = []) {
+    constructor(type = ContextType.COMMUNITY_DEFAULT, features = []) {
 
         features.push(
             FHideTrademarks,
         );
 
-        super(ContextType.COMMUNITY_DEFAULT, features);
+        super(type, features);
     }
 }

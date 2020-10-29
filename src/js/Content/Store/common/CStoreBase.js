@@ -5,7 +5,7 @@ import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
 
 export class CStoreBase extends Context {
 
-    constructor(features = []) {
+    constructor(type = ContextType.STORE_DEFAULT, features = []) {
 
         // TODO Split this up into the relevant contexts
         features.push(
@@ -14,7 +14,7 @@ export class CStoreBase extends Context {
             FHideTrademarks,
         );
 
-        super(ContextType.STORE_DEFAULT, features);
+        super(type, features);
 
         this._observeChanges();
     }

@@ -1,5 +1,4 @@
-import {CStore} from "store/common/CStore";
-
+import {CStore} from "../common/CStore";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
 import FRemoveFromWishlist from "./FRemoveFromWishlist";
 import FForceMP4 from "./FForceMP4";
@@ -9,9 +8,9 @@ import FWaitlistDropdown from "./FWaitlistDropdown";
 import FNewQueue from "./FNewQueue";
 import FFullscreenScreenshotView from "./FFullscreenScreenshotView";
 import FShowCoupon from "./FShowCoupon";
-import FITADPrices from "store/common/FITADPrices";
+import FITADPrices from "../common/FITADPrices";
 import FDLCInfo from "./FDLCInfo";
-import FDRMWarnings from "store/common/FDRMWarnings";
+import FDRMWarnings from "../common/FDRMWarnings";
 import FMetacriticUserScore from "./FMetacriticUserScore";
 import FOpenCritic from "./FOpenCritic";
 import FOwnedElsewhere from "./FOwnedElsewhere";
@@ -20,28 +19,26 @@ import FYouTubeVideos from "./FYouTubeVideos";
 import FSteamPeek from "./FSteamPeek";
 import FWidescreenCertification from "./FWidescreenCertification";
 import FHowLongToBeat from "./FHowLongToBeat";
-import FExtraLinks from "store/common/FExtraLinks";
+import FExtraLinks from "../common/FExtraLinks";
 import FFamilySharingNotice from "./FFamilySharingNotice";
 import FPackBreakdown from "./FPackBreakdown";
 import FPackageInfoButton from "./FPackageInfoButton";
 import FSteamChart from "./FSteamChart";
 import FSteamSpy from "./FSteamSpy";
 import FSurveyData from "./FSurveyData";
-import FCustomizer from "store/common/FCustomizer";
+import FCustomizer from "../common/FCustomizer";
 import FDLCCheckboxes from "./FDLCCheckboxes";
 import FBadgeProgress from "./FBadgeProgress";
 import FAStatsLink from "./FAStatsLink";
 import FAchievementBar from "./FAchievementBar";
-import FRegionalPricing from "store/common/FRegionalPricing";
+import FRegionalPricing from "../common/FRegionalPricing";
 import FReviewToggleButton from "./FReviewToggleButton";
 import FOwnedActionsButtons from "./FOwnedActionsButtons";
 import FSupportInfo from "./FSupportInfo";
-import FMediaExpander from "common/FMediaExpander";
-
+import FMediaExpander from "../../common/FMediaExpander";
 import {GameId, LocalStorage, SyncedStorage} from "../../../core_modules";
-
 import {Background, ContextType, User} from "../../../Modules/content";
-import {UserNotes} from "store/common/UserNotes";
+import {UserNotes} from "../common/UserNotes";
 
 export class CApp extends CStore {
 

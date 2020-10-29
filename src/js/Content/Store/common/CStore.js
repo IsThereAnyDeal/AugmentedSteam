@@ -1,4 +1,4 @@
-import {CStoreBase} from "store/common/CStoreBase";
+import {CStoreBase} from "./CStoreBase";
 
 export class CStore extends CStoreBase {
 
