@@ -1,4 +1,9 @@
-﻿v.1.4.7
+﻿v.1.4.8
+------
+- updated DOMPurify library
+
+
+v.1.4.7
 ------
 - fixed country detection, which broke some features that relied on detection of login state and country
 
