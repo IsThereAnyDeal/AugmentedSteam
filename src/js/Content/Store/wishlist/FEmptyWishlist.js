@@ -16,23 +16,22 @@ export default class FEmptyWishlist extends Feature {
         document.getElementById("es_empty_wishlist").addEventListener("click", async() => {
 
             await Page.runInPageContext(emptyWishlist => {
-                /* eslint-disable no-undef, new-cap, camelcase */
-                const prompt = ShowConfirmDialog(emptyWishlist.title, emptyWishlist.confirm);
+                const f = window.SteamFacade;
+                const prompt = f.showConfirmDialog(emptyWishlist.title, emptyWishlist.confirm);
 
                 return new Promise(resolve => {
                     prompt.done(result => {
                         if (result === "OK") {
-                            ShowBlockingWaitDialog(
+                            f.showBlockingWaitDialog(
                                 emptyWishlist.title,
                                 emptyWishlist.removing
                                     .replace("__cur__", 1)
-                                    .replace("__total__", g_rgWishlistData.length)
+                                    .replace("__total__", f.global("g_rgWishlistData").length)
                             );
                             resolve();
                         }
                     });
                 });
-                /* eslint-enable no-undef, new-cap, camelcase */
             }, [Localization.str.empty_wishlist], true);
 
             const wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");

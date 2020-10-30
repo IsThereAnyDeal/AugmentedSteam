@@ -65,8 +65,7 @@ export default class FRemoveFromWishlist extends Feature {
                     DynamicStore.clear();
 
                     // Invalidate dynamic store data cache
-                    // eslint-disable-next-line new-cap, no-undef
-                    Page.runInPageContext(() => { GDynamicStore.InvalidateCache(); });
+                    Page.runInPageContext(() => { window.SteamFacade.dynamicStoreInvalidateCache(); });
                 } catch (err) {
                     document.getElementById("add_to_wishlist_area_fail").style.display = "";
                     this.logError(err, "Failed to remove app from wishlist");

@@ -15,14 +15,14 @@ export default class FPopularRefreshToggle extends Feature {
 
         this._toggleRefresh(LocalStorage.get("popular_refresh", false));
 
-        // eslint-disable-next-line no-undef, new-cap
-        Page.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+        Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
     }
 
     _toggleRefresh(state) {
         document.querySelector("#es_popular_refresh_toggle").classList.toggle("es_refresh_off", !state);
         LocalStorage.set("popular_refresh", state);
-        // eslint-disable-next-line camelcase, no-undef
-        Page.runInPageContext(state => { g_bMarketWindowHidden = state; }, [state]);
+        Page.runInPageContext(state => {
+            window.SteamFacade.globalSet("g_bMarketWindowHidden", state);
+        }, [state]);
     }
 }

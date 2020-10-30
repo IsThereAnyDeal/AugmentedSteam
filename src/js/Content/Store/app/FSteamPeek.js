@@ -26,13 +26,13 @@ export default class FSteamPeek extends Feature {
 
         HTML.beforeEnd(
             this._moreLikeThis.querySelector(".store_horizontal_autoslider_ctn"),
-            // eslint-disable-next-line max-len
-            '<div class="block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad"id="es_steampeek_content"></div>',
+            `<div class="block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad"
+                        id="es_steampeek_content"></div>`,
         );
 
         // TODO Create a global handler for DS loading
         await Page.runInPageContext(() => new Promise(resolve => {
-            GDynamicStore.OnReady(() => { resolve(); }); // eslint-disable-line new-cap, no-undef
+            window.SteamFacade.onDynamicStoreReady(() => { resolve(); });
         }), null, true);
 
         const [steamTab, steamPeekTab, content] = this._moreLikeThis
@@ -78,15 +78,13 @@ export default class FSteamPeek extends Feature {
                         </a>`);
 
 
-                    Page.runInPageContext(appid => { // eslint-disable-line no-loop-func
-                        // eslint-disable-next-line no-undef, new-cap
-                        GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), appid);
+                    Page.runInPageContext(appid => {
+                        window.SteamFacade.storeItemDataBindHover("#recommended_block_content > a:last-of-type", appid);
                     }, [appid]);
                 }
 
                 Page.runInPageContext(() => {
-                    // eslint-disable-next-line new-cap, no-undef
-                    GDynamicStore.DecorateDynamicItems($J("#recommended_block_content > a.es_sp_similar"));
+                    window.SteamFacade.dynamicStoreDecorateItems("#recommended_block_content > a.es_sp_similar");
                 });
 
                 FHighlightsTags.highlightAndTag(content.querySelectorAll("a.es_sp_similar"), true);
@@ -106,7 +104,8 @@ export default class FSteamPeek extends Feature {
     }
 
     _adjustScroller() {
-        // eslint-disable-next-line no-undef
-        Page.runInPageContext(() => { $J("#recommended_block_content").trigger("v_contentschanged"); });
+        Page.runInPageContext(() => {
+            window.SteamFacade.jq("#recommended_block_content").trigger("v_contentschanged");
+        });
     }
 }

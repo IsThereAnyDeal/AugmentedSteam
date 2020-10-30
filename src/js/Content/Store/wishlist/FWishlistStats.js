@@ -10,8 +10,7 @@ export default class FWishlistStats extends Feature {
 
     async apply() {
 
-        // eslint-disable-next-line camelcase, no-undef
-        const appInfo = await Page.runInPageContext(() => g_rgAppInfo, null, true);
+        const appInfo = await Page.runInPageContext(() => window.SteamFacade.global("g_rgAppInfo"), null, true);
 
         let totalPrice = 0;
         let totalCount = 0;

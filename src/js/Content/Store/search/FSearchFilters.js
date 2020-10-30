@@ -77,7 +77,7 @@ export default class FSearchFilters extends Feature {
              */
             const prefs = GetCollapsePrefs();
 
-            const block = $J(`.search_collapse_block[data-collapse-name="${collapseName}"]`);
+            const block = window.SteamFacade.jq(`.search_collapse_block[data-collapse-name="${collapseName}"]`);
             let collapsed;
 
             if (typeof prefs[collapseName] === "undefined") {

@@ -3,6 +3,18 @@ import {Feature} from "../../../Modules/Content/Feature/Feature";
 
 export default class FWidescreenCertification extends Feature {
 
+    constructor(context) {
+        super(context);
+
+        this._levelMap = {
+            "A": "gold",
+            "B": "silver",
+            "C": "limited",
+            "Incomplete": "incomplete",
+            "Unsupported": "unsupported"
+        };
+    }
+
     async checkPrerequisites() {
         if (!this.context.isDlc() && SyncedStorage.get("showwsgf")) {
             const result = await this.context.data;
@@ -14,7 +26,19 @@ export default class FWidescreenCertification extends Feature {
         return false;
     }
 
-    // eslint-disable-next-line complexity -- Most paths are very similar and thus clear to the reader
+    _getType(value, imgPrefix, typeName) {
+
+        let icon = "";
+        let text = "";
+
+        const level = this._levelMap[value];
+        if (level) {
+            icon = ExtensionResources.getURL(`img/wsgf/${imgPrefix}-${level}.png`);
+            text = Localization.str.wsgf[level].replace(/__type__/g, typeName);
+        }
+        return [icon, text];
+    }
+
     apply() {
 
         const {
@@ -25,106 +49,10 @@ export default class FWidescreenCertification extends Feature {
             "UltraWideScreenGrade": uws,
         } = this._data;
 
-        let wsgIcon = "",
-            wsgText = "",
-            mmgIcon = "",
-            mmgText = "";
-        let fkgIcon = "",
-            fkgText = "",
-            uwsIcon = "",
-            uwsText = "";
-
-        switch (wsg) {
-            case "A":
-                wsgIcon = ExtensionResources.getURL("img/wsgf/ws-gold.png");
-                wsgText = Localization.str.wsgf.gold.replace(/__type__/g, "Widescreen");
-                break;
-            case "B":
-                wsgIcon = ExtensionResources.getURL("img/wsgf/ws-silver.png");
-                wsgText = Localization.str.wsgf.silver.replace(/__type__/g, "Widescreen");
-                break;
-            case "C":
-                wsgIcon = ExtensionResources.getURL("img/wsgf/ws-limited.png");
-                wsgText = Localization.str.wsgf.limited.replace(/__type__/g, "Widescreen");
-                break;
-            case "Incomplete":
-                wsgIcon = ExtensionResources.getURL("img/wsgf/ws-incomplete.png");
-                wsgText = Localization.str.wsgf.incomplete;
-                break;
-            case "Unsupported":
-                wsgIcon = ExtensionResources.getURL("img/wsgf/ws-unsupported.png");
-                wsgText = Localization.str.wsgf.unsupported.replace(/__type__/g, "Widescreen");
-                break;
-        }
-
-        switch (mmg) {
-            case "A":
-                mmgIcon = ExtensionResources.getURL("img/wsgf/mm-gold.png");
-                mmgText = Localization.str.wsgf.gold.replace(/__type__/g, "Multi-Monitor");
-                break;
-            case "B":
-                mmgIcon = ExtensionResources.getURL("img/wsgf/mm-silver.png");
-                mmgText = Localization.str.wsgf.silver.replace(/__type__/g, "Multi-Monitor");
-                break;
-            case "C":
-                mmgIcon = ExtensionResources.getURL("img/wsgf/mm-limited.png");
-                mmgText = Localization.str.wsgf.limited.replace(/__type__/g, "Multi-Monitor");
-                break;
-            case "Incomplete":
-                mmgIcon = ExtensionResources.getURL("img/wsgf/mm-incomplete.png");
-                mmgText = Localization.str.wsgf.incomplete;
-                break;
-            case "Unsupported":
-                mmgIcon = ExtensionResources.getURL("img/wsgf/mm-unsupported.png");
-                mmgText = Localization.str.wsgf.unsupported.replace(/__type__/g, "Multi-Monitor");
-                break;
-        }
-
-        switch (uws) {
-            case "A":
-                uwsIcon = ExtensionResources.getURL("img/wsgf/uw-gold.png");
-                uwsText = Localization.str.wsgf.gold.replace(/__type__/g, "Ultra-Widescreen");
-                break;
-            case "B":
-                uwsIcon = ExtensionResources.getURL("img/wsgf/uw-silver.png");
-                uwsText = Localization.str.wsgf.silver.replace(/__type__/g, "Ultra-Widescreen");
-                break;
-            case "C":
-                uwsIcon = ExtensionResources.getURL("img/wsgf/uw-limited.png");
-                uwsText = Localization.str.wsgf.limited.replace(/__type__/g, "Ultra-Widescreen");
-                break;
-            case "Incomplete":
-                uwsIcon = ExtensionResources.getURL("img/wsgf/uw-incomplete.png");
-                uwsText = Localization.str.wsgf.incomplete;
-                break;
-            case "Unsupported":
-                uwsIcon = ExtensionResources.getURL("img/wsgf/uw-unsupported.png");
-                uwsText = Localization.str.wsgf.unsupported.replace(/__type__/g, "Ultra-Widescreen");
-                break;
-        }
-
-        switch (fkg) {
-            case "A":
-                fkgIcon = ExtensionResources.getURL("img/wsgf/4k-gold.png");
-                fkgText = Localization.str.wsgf.gold.replace(/__type__/g, "4k UHD");
-                break;
-            case "B":
-                fkgIcon = ExtensionResources.getURL("img/wsgf/4k-silver.png");
-                fkgText = Localization.str.wsgf.silver.replace(/__type__/g, "4k UHD");
-                break;
-            case "C":
-                fkgIcon = ExtensionResources.getURL("img/wsgf/4k-limited.png");
-                fkgText = Localization.str.wsgf.limited.replace(/__type__/g, "4k UHD");
-                break;
-            case "Incomplete":
-                fkgIcon = ExtensionResources.getURL("img/wsgf/4k-incomplete.png");
-                fkgText = Localization.str.wsgf.incomplete;
-                break;
-            case "Unsupported":
-                fkgIcon = ExtensionResources.getURL("img/wsgf/4k-unsupported.png");
-                fkgText = Localization.str.wsgf.unsupported.replace(/__type__/g, "4k UHD");
-                break;
-        }
+        const [wsgIcon, wsgText] = this._getType(wsg, "ws", "Widescreen");
+        const [mmgIcon, mmgText] = this._getType(mmg, "mm", "Multi-Monitor");
+        const [uwsIcon, uwsText] = this._getType(uws, "uw", "Ultra-Widescreen");
+        const [fkgIcon, fkgText] = this._getType(fkg, "4k", "4k UHD");
 
         let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.wsgf.certifications}</div>
                     <div class="block underlined_links es_wsgf">

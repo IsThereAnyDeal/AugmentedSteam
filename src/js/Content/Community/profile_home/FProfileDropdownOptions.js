@@ -24,10 +24,9 @@ export default class FProfileDropdownOptions extends Feature {
 
                 node.parentNode.querySelector("#es_nickname").addEventListener("click", () => {
                     Page.runInPageContext(() => {
-                        /* eslint-disable new-cap, no-undef */
-                        ShowNicknameModal();
-                        HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
-                        /* eslint-enable new-cap, no-undef */
+                        const f = window.SteamFacade;
+                        f.showNicknameModal();
+                        f.hideMenu("profile_action_dropdown_link", "profile_action_dropdown");
                     });
                 });
             }

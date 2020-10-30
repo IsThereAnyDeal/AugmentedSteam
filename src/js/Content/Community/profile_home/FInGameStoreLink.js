@@ -15,7 +15,6 @@ export default class FInGameStoreLink extends Feature {
         const node = document.querySelector(".profile_in_game_name");
 
         HTML.inner(node, `<a data-tooltip-html="${tooltip}" href="//store.steampowered.com/app/${document.querySelector('input[name="ingameAppID"]').value}" target="_blank">${node.textContent}</a>`);
-        // eslint-disable-next-line new-cap, no-undef
-        Page.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+        Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
     }
 }

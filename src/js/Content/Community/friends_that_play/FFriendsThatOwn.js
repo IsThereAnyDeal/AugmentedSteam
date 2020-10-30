@@ -73,7 +73,6 @@ export default class FFriendsThatOwn extends Feature {
         HTML.beforeEnd(".friends_that_play_content", html);
 
         // Reinitialize miniprofiles by injecting the function call.
-        // eslint-disable-next-line no-undef, new-cap
-        Page.runInPageContext(() => { InitMiniprofileHovers(); });
+        Page.runInPageContext(() => { window.SteamFacade.initMiniprofileHovers(); });
     }
 }

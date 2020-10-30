@@ -26,8 +26,7 @@ export default class FReviewSort extends Feature {
             const delayer = setTimeout(
                 () => {
                     Page.runInPageContext(
-                        // eslint-disable-next-line no-undef, new-cap
-                        (processing, wait) => { ShowBlockingWaitDialog(processing, wait); },
+                        (processing, wait) => { window.SteamFacade.showBlockingWaitDialog(processing, wait); },
                         [
                             Localization.str.processing,
                             Localization.str.wait
@@ -50,7 +49,7 @@ export default class FReviewSort extends Feature {
 
                 if (modalActive) {
                     Page.runInPageContext(() => {
-                        CModal.DismissActiveModal(); // eslint-disable-line no-undef, new-cap
+                        window.SteamFacade.dismissActiveModal();
                     });
                 }
             }
@@ -83,7 +82,7 @@ export default class FReviewSort extends Feature {
                     case "default":
                         return a[sortBy] - b[sortBy];
                     default:
-                    // eslint-disable-next-line no-invalid-this -- this is binded to an instance of FReviewSort
+                        // eslint-disable-next-line no-invalid-this -- this is binded to an instance of FReviewSort
                         this.logError(
                             new Error("Invalid sorting criteria"),
                             "Can't sort reviews by criteria '%s'",
@@ -166,7 +165,7 @@ export default class FReviewSort extends Feature {
         });
 
         Page.runInPageContext(() => {
-            $J(document).ajaxSuccess((event, xhr, {url}) => { // eslint-disable-line no-undef
+            window.SteamFacade.jq(document).ajaxSuccess((event, xhr, {url}) => {
                 const pathname = new URL(url).pathname;
                 if (pathname.startsWith("/userreviews/rate/")
                     || pathname.startsWith("/userreviews/votetag/")

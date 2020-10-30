@@ -53,7 +53,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
 
         // todo reject when dialog closed
         await Page.runInPageContext((title, confirm) => {
-            const prompt = ShowConfirmDialog(title, confirm); // eslint-disable-line new-cap, no-undef
+            const prompt = window.SteamFacade.showConfirmDialog(title, confirm);
 
             return new Promise(resolve => {
                 prompt.done(result => {
@@ -105,18 +105,17 @@ export default class FWorkshopSubscriberButtons extends Feature {
             .replace("__fail__", this._failed);
 
         Page.runInPageContext((title, finished) => {
-            /* eslint-disable new-cap, no-undef */
             if (window.dialog) {
+                // eslint-disable-next-line new-cap
                 window.dialog.Dismiss();
             }
 
-            window.dialog = ShowConfirmDialog(title, finished)
+            window.dialog = window.SteamFacade.showConfirmDialog(title, finished)
                 .done(result => {
                     if (result === "OK") {
                         window.location.reload();
                     }
                 });
-            /* eslint-disable new-cap, no-undef */
         }, [statusTitle, statusString]);
     }
 
@@ -172,10 +171,11 @@ export default class FWorkshopSubscriberButtons extends Feature {
             const statusTitle = this._workshopStr[`${this._method}_all`];
             Page.runInPageContext((title, progress) => {
                 if (window.dialog) {
+                    // eslint-disable-next-line new-cap
                     window.dialog.Dismiss();
                 }
 
-                window.dialog = ShowBlockingWaitDialog(title, progress);
+                window.dialog = window.SteamFacade.showBlockingWaitDialog(title, progress);
             }, [statusTitle, statusString]);
         }
     }

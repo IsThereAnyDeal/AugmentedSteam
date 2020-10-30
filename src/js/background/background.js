@@ -681,8 +681,9 @@ class ITADApi extends Api {
          * Preventing event page from unloading by using iframe
          * https://stackoverflow.com/a/58577052
          */
-        // eslint-disable-next-line no-empty-function -- So we can removeListener
-        function noop() {}
+        function noop() {
+            // intentionally empty to allow removing listener
+        }
         browser.runtime.onConnect.addListener(noop);
 
         /*

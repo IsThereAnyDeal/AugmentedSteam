@@ -21,13 +21,13 @@ export default class FCommonGames extends Feature {
         commonCheckbox.addEventListener("change", async({target}) => {
             await this._loadCommonGames();
             rows.classList.toggle("esi-hide-notcommon", target.checked);
-            Page.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { window.SteamFacade.scrollOffsetForceRecalc(); });
         });
 
         notCommonCheckbox.addEventListener("change", async({target}) => {
             await this._loadCommonGames();
             rows.classList.toggle("esi-hide-common", target.checked);
-            Page.runInPageContext(() => { CScrollOffsetWatcher.ForceRecalc(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { window.SteamFacade.scrollOffsetForceRecalc(); });
         });
     }
 

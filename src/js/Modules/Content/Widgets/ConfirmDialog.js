@@ -4,8 +4,7 @@ class ConfirmDialog {
 
     static open(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton) {
         return Page.runInPageContext((a, b, c, d, e) => {
-            // eslint-disable-next-line no-undef, new-cap
-            const prompt = ShowConfirmDialog(a, b, c, d, e);
+            const prompt = window.SteamFacade.showConfirmDialog(a, b, c, d, e);
 
             return new Promise((resolve) => {
                 prompt.done(result => {

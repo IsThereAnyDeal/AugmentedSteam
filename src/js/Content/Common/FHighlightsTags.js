@@ -7,8 +7,7 @@ export default class FHighlightsTags extends Feature {
     async apply() {
 
         await Page.runInPageContext(() => new Promise(resolve => {
-            // eslint-disable-next-line no-undef, new-cap
-            GDynamicStore.OnReady(() => { resolve(); });
+            window.SteamFacade.onDynamicStoreReady(() => { resolve(); });
         }), null, true);
 
         const searchBoxContents = document.getElementById("search_suggestion_contents");
@@ -152,11 +151,16 @@ export default class FHighlightsTags extends Feature {
 
         const it = trimmedStoreIds.values();
         for (const [storeid, nodes] of storeIdsMap) {
-            /* eslint-disable max-statements-per-line -- Clear enough */
             if (dsStatus) {
-                if (opts.owned && dsStatus[storeid].owned) { nodes.forEach(node => { this.highlightOwned(node); }); }
-                if (opts.wishlisted && dsStatus[storeid].wishlisted) { nodes.forEach(node => { this.highlightWishlist(node); }); }
-                if (opts.ignored && dsStatus[storeid].ignored) { nodes.forEach(node => { this.highlightNotInterested(node); }); }
+                if (opts.owned && dsStatus[storeid].owned) {
+                    nodes.forEach(node => { this.highlightOwned(node); });
+                }
+                if (opts.wishlisted && dsStatus[storeid].wishlisted) {
+                    nodes.forEach(node => { this.highlightWishlist(node); });
+                }
+                if (opts.ignored && dsStatus[storeid].ignored) {
+                    nodes.forEach(node => { this.highlightNotInterested(node); });
+                }
             }
 
             /*
@@ -164,20 +168,29 @@ export default class FHighlightsTags extends Feature {
              * false for every property if the highlight has been disabled
              */
             if (itadStatus) {
-                if (itadStatus[storeid].collected) { nodes.forEach(node => { this.highlightCollection(node); }); }
-                if (itadStatus[storeid].waitlisted) { nodes.forEach(node => { this.highlightWaitlist(node); }); }
+                if (itadStatus[storeid].collected) {
+                    nodes.forEach(node => { this.highlightCollection(node); });
+                }
+                if (itadStatus[storeid].waitlisted) {
+                    nodes.forEach(node => { this.highlightWaitlist(node); });
+                }
             }
 
             if (invStatus) {
                 const trimmedId = it.next().value;
-                if (opts.gift && invStatus[trimmedId].gift) { nodes.forEach(node => { this.highlightInvGift(node); }); }
-                // eslint-disable-next-line max-len -- Clear enough
-                if (opts.guestPass && invStatus[trimmedId].guestPass) { nodes.forEach(node => { this.highlightInvGuestpass(node); }); }
+                if (opts.gift && invStatus[trimmedId].gift) {
+                    nodes.forEach(node => { this.highlightInvGift(node); });
+                }
+
+                if (opts.guestPass && invStatus[trimmedId].guestPass) {
+                    nodes.forEach(node => { this.highlightInvGuestpass(node); });
+                }
 
                 // Same as for the ITAD highlights (don't need to check)
-                if (invStatus[trimmedId].coupon) { nodes.forEach(node => { this.highlightCoupon(node); }); }
+                if (invStatus[trimmedId].coupon) {
+                    nodes.forEach(node => { this.highlightCoupon(node); });
+                }
             }
-            /* eslint-enable max-statements-per-line */
         }
     }
 
@@ -324,34 +337,27 @@ export default class FHighlightsTags extends Feature {
             _node = _node.previousElementSibling;
         }
 
-        switch (true) {
+        // Recommendations on front page when scrolling down
+        if (_node.classList.contains("single")) {
+            _node = _node.querySelector(".gamelink");
+        }
 
-            // Recommendations on front page when scrolling down
-            case _node.classList.contains("single"):
-                _node = _node.querySelector(".gamelink");
+        if (_node.parentNode.parentNode.classList.contains("apps_recommended_by_curators_v2")) {
+            let r = _node.querySelectorAll(".ds_flag");
+            r.forEach(node => node.remove());
+            r = _node.querySelectorAll(".ds_flagged");
+            r.forEach(node => node.classList.remove("ds_flagged"));
+        } else {
 
-            // eslint-disable-next-line no-fallthrough -- Don't break
-            case _node.parentNode.parentNode.classList.contains("apps_recommended_by_curators_v2"): {
-                let r = _node.querySelectorAll(".ds_flag");
-                r.forEach(node => node.remove());
-                r = _node.querySelectorAll(".ds_flagged");
-                r.forEach(node => node.classList.remove("ds_flagged"));
-                break;
+            if (_node.classList.contains("info") || _node.classList.contains("spotlight_content")) {
+                _node = _node.parentElement;
             }
 
-            case _node.classList.contains("info"):
-            case _node.classList.contains("spotlight_content"):
-                _node = _node.parentElement;
-
-            // eslint-disable-next-line no-fallthrough -- Don't break
-            default: {
-                let r = _node.querySelector(".ds_flag");
-                if (r) { r.remove(); }
-                r = _node.querySelector(".ds_flagged");
-                if (r) {
-                    r.classList.remove("ds_flagged");
-                }
-                break;
+            let r = _node.querySelector(".ds_flag");
+            if (r) { r.remove(); }
+            r = _node.querySelector(".ds_flagged");
+            if (r) {
+                r.classList.remove("ds_flagged");
             }
         }
 

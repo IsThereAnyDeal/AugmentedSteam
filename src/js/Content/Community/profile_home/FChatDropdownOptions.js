@@ -38,14 +38,12 @@ export default class FChatDropdownOptions extends Feature {
             </div>`);
 
         document.querySelector("#btnWebChat").addEventListener("click", () => {
-            // eslint-disable-next-line no-undef, new-cap
-            Page.runInPageContext(chatId => { OpenFriendChatInWebChat(chatId); }, [chatId]);
+            Page.runInPageContext(chatId => { window.SteamFacade.openFriendChatInWebChat(chatId); }, [chatId]);
         });
 
         document.querySelector("#profile_chat_dropdown_link").addEventListener("click", () => {
             Page.runInPageContext(() => {
-                // eslint-disable-next-line no-undef, new-cap
-                ShowMenu(
+                window.SteamFacade.showMenu(
                     document.querySelector("#profile_chat_dropdown_link"),
                     "profile_chat_dropdown",
                     "right"

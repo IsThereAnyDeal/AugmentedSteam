@@ -19,8 +19,7 @@ export default class FBrowseWorkshops extends Feature {
         this._changeTab(query);
 
         Page.runInPageContext(() => {
-            // eslint-disable-next-line no-undef
-            $J(".browseOption")
+            window.SteamFacade.jq(".browseOption")
                 .get()
                 .forEach(node => { node.onclick = () => false; });
         });

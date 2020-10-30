@@ -133,7 +133,7 @@ export default class FExportWishlist extends Feature {
         }
 
         Page.runInPageContext(exportStr => {
-            ShowConfirmDialog( // eslint-disable-line new-cap, no-undef
+            window.SteamFacade.showConfirmDialog(
                 exportStr.wishlist,
                 `<div id='es_export_form'>
                     <div class="es-wexport">

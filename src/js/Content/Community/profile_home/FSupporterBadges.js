@@ -40,7 +40,6 @@ export default class FSupporterBadges extends Feature {
 
         HTML.afterEnd(profileBadges, html);
 
-        // eslint-disable-next-line new-cap, no-undef
-        Page.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+        Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
     }
 }

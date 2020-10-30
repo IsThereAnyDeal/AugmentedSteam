@@ -67,8 +67,9 @@ export default class FOpenCritic extends Feature {
                     </div>`);
             }
 
-            // eslint-disable-next-line new-cap, no-undef
-            Page.runInPageContext(() => { BindTooltips("#game_area_reviews", {"tooltipCSSClass": "store_tooltip"}); });
+            Page.runInPageContext(() => {
+                window.SteamFacade.bindTooltips("#game_area_reviews", {"tooltipCSSClass": "store_tooltip"});
+            });
         }
     }
 }

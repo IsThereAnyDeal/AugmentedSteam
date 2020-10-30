@@ -136,13 +136,13 @@ export default class FMultiProductKeys extends Feature {
         // Bind the "Cancel" button to close the modal
         document.addEventListener("click", ({target}) => {
             if (!target.closest(".es_activate_modal_close")) { return; }
-            Page.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { window.SteamFacade.dismissActiveModal(); });
         });
     }
 
     _showDialog() {
         Page.runInPageContext((header, template) => {
-            ShowDialog(header, template); // eslint-disable-line no-undef, new-cap
+            window.SteamFacade.showDialog(header, template);
         },
         [
             Localization.str.activate_multiple_header,

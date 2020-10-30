@@ -156,9 +156,11 @@ export class CApp extends CStore {
             this.currentTime = videoPosition;
             if (!videoPaused && videoControl.play) {
 
-                // FIXME Why?
-                // eslint-disable-next-line no-empty-function -- If response is a promise, suppress any errors it throws
-                Promise.resolve(videoControl.play()).catch(() => {});
+                Promise.resolve(videoControl.play()).catch(() => {
+                    // FIXME Why?
+
+                    // If response is a promise, suppress any errors it throws
+                });
             }
             videoControl.removeEventListener("loadedmetadata", onLoadedMetaData, false);
         }

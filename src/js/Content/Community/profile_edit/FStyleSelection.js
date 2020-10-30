@@ -58,8 +58,7 @@ export default class FStyleSelection extends Feature {
             HTML.beforeEnd('[class^="profileeditshell_PageContent_"]', html);
             this._active = true;
 
-            // eslint-disable-next-line no-undef, new-cap
-            Page.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+            Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
 
             const styleSelectNode = document.querySelector("#es_style");
 

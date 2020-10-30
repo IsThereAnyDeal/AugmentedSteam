@@ -43,28 +43,28 @@ export default class FGroupsManageButton extends Feature {
                 `<div class="indicator select_friend">
                     <input class="select_friend_checkbox" type="checkbox">
                 </div>`);
-            // eslint-disable-next-line no-loop-func -- Only UpdateSelection is accessed, which execute in the page context
+
             group.querySelector(".select_friend").addEventListener("click", () => {
                 group.classList.toggle("selected");
                 group.querySelector(".select_friend_checkbox").checked = group.classList.contains("selected");
-                Page.runInPageContext(() => { UpdateSelection(); }); // eslint-disable-line no-undef, new-cap
+                Page.runInPageContext(() => { window.SteamFacade.updateSelection(); });
             });
         }
 
         document.querySelector("#manage_friends_control").addEventListener("click", () => {
-            Page.runInPageContext(() => { ToggleManageFriends(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { window.SteamFacade.toggleManageFriends(); });
         });
 
         document.querySelector("#es_select_all").addEventListener("click", () => {
-            Page.runInPageContext(() => { SelectAll(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { window.SteamFacade.selectAll(); });
         });
 
         document.querySelector("#es_select_none").addEventListener("click", () => {
-            Page.runInPageContext(() => { SelectNone(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { window.SteamFacade.selectNone(); });
         });
 
         document.querySelector("#es_select_inverse").addEventListener("click", () => {
-            Page.runInPageContext(() => { SelectInverse(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { window.SteamFacade.selectInverse(); });
         });
 
         document.querySelector("#es_leave_groups").addEventListener("click", () => { this._leaveGroups(); });

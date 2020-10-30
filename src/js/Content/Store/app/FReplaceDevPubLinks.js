@@ -37,7 +37,8 @@ export default class FReplaceDevPubLinks extends Feature {
             moreBtn.remove();
         }
 
-        // eslint-disable-next-line new-cap, no-undef
-        Page.runInPageContext(() => { CollapseLongStrings(".dev_row .summary.column"); });
+        Page.runInPageContext(() => {
+            window.SteamFacade.collapseLongStrings(".dev_row .summary.column");
+        });
     }
 }

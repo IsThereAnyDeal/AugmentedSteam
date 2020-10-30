@@ -27,8 +27,10 @@ export default class FMediaExpander extends Feature {
 
         // Initiate tooltip
         Page.runInPageContext(() => {
-            // eslint-disable-next-line no-undef
-            $J("[data-slider-tooltip]").v_tooltip({"tooltipClass": "store_tooltip community_tooltip", "dataName": "sliderTooltip"});
+            window.SteamFacade.vTooltip("[data-slider-tooltip]", {
+                "tooltipClass": "store_tooltip community_tooltip",
+                "dataName": "sliderTooltip"
+            });
         });
 
         const expandSlider = LocalStorage.get("expand_slider", false);

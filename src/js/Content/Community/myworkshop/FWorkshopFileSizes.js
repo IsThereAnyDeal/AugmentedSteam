@@ -40,7 +40,7 @@ export default class FWorkshopFileSizes extends Feature {
         document.getElementById("es_calc_size").addEventListener("click", async() => {
 
             Page.runInPageContext((calculating, totalSize) => {
-                ShowBlockingWaitDialog(calculating, totalSize); // eslint-disable-line no-undef, new-cap
+                window.SteamFacade.showBlockingWaitDialog(calculating, totalSize);
             },
             [
                 Localization.str.calc_workshop_size.calculating,
@@ -81,12 +81,10 @@ export default class FWorkshopFileSizes extends Feature {
 
                     totalSize += size;
 
-                    // eslint-disable-next-line no-loop-func -- Page context
                     Page.runInPageContext((calculating, totalSize) => {
-                        /* eslint-disable no-undef, new-cap */
-                        CModal.DismissActiveModal();
-                        ShowBlockingWaitDialog(calculating, totalSize);
-                        /* eslint-enable no-undef, new-cap */
+                        const f = window.SteamFacade;
+                        f.dismissActiveModal();
+                        f.showBlockingWaitDialog(calculating, totalSize);
                     },
                     [
                         Localization.str.calc_workshop_size.calculating,
@@ -98,10 +96,9 @@ export default class FWorkshopFileSizes extends Feature {
             this._addFileSizes();
 
             Page.runInPageContext((finished, totalSize) => {
-                /* eslint-disable no-undef, new-cap */
-                CModal.DismissActiveModal();
-                ShowAlertDialog(finished, totalSize);
-                /* eslint-enable no-undef, new-cap */
+                const f = window.SteamFacade;
+                f.dismissActiveModal();
+                f.showAlertDialog(finished, totalSize);
             },
             [
                 Localization.str.calc_workshop_size.finished,

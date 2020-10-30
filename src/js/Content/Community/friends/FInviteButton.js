@@ -13,13 +13,12 @@ export default class FInviteButton extends Feature {
         HTML.afterBegin("#manage_friends > div:nth-child(2)", `<span class="manage_action btnv6_lightblue_blue btn_medium" id="invitetogroup"><span>${Localization.str.invite_to_group}</span></span>`);
 
         Page.runInPageContext(groupId => {
-            /* eslint-disable no-undef, new-cap */
-            ToggleManageFriends();
-            $J("#invitetogroup").on("click", () => {
-                const friends = GetCheckedAccounts("#search_results > .selectable.selected:visible");
-                InviteUserToGroup(null, groupId, friends);
+            const f = window.SteamFacade;
+            f.toggleManageFriends();
+            f.jqOnClick("#invitetogroup", () => {
+                const friends = f.getCheckedAccounts("#search_results > .selectable.selected:visible");
+                f.inviteUserToGroup(null, groupId, friends);
             });
-            /* eslint-enable no-undef, new-cap */
         }, [this._params.get("invitegid")]);
     }
 }

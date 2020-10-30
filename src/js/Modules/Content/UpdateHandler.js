@@ -38,7 +38,9 @@ class UpdateHandler {
         function itadConnected() { connectBtn.replaceWith("✓"); }
 
         Page.runInPageContext(
-            (updatedStr, dialog) => { ShowAlertDialog(updatedStr, dialog); }, // eslint-disable-line new-cap, no-undef
+            (updatedStr, dialog) => {
+                window.SteamFacade.showAlertDialog(updatedStr, dialog);
+            },
             [Localization.str.update.updated.replace("__version__", Info.version), dialog]
         );
 

@@ -9,6 +9,7 @@ import {
     UpdateHandler,
     User
 } from "../Modules/content";
+import {SteamFacade} from "../Modules/Content/SteamFacade";
 
 /**
  * Event handler for uncaught Background errors
@@ -26,9 +27,10 @@ function unhandledrejection(ev) {
 window.addEventListener("unhandledrejection", unhandledrejection);
 
 /**
- *  Inject the Messenger class into the DOM, providing the same interface for the page context side
+ *  Inject the Messenger, SteamFacade class into the DOM, providing the same interface for the page context side
  */
 DOMHelper.insertScript({"content": `window.Messenger = ${Messenger.toString()}`});
+DOMHelper.insertScript({"content": `window.SteamFacade = ${SteamFacade.toString()}`});
 
 Background.registerErrorHandler(({name, msg}) => {
     if (name !== "LoginError") { return false; }

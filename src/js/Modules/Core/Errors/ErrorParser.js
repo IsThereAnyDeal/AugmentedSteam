@@ -1,5 +1,4 @@
 
-/* eslint-disable max-len */
 /**
  * Convenience class for passing errors between contexts.
  * Errors thrown in the context of a message callback on the background page are

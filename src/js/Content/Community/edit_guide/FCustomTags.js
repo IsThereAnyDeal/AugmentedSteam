@@ -27,14 +27,14 @@ export default class FCustomTags extends Feature {
             </div>`);
 
         Page.runInPageContext((customTags, enterTag) => {
-            /* eslint-disable no-undef, new-cap */
-            $J("#es_add_tag").on("click", () => {
-                const Modal = ShowConfirmDialog(customTags,
+            const jq = window.SteamFacade.jq;
+            jq("#es_add_tag").on("click", () => {
+                const modal = window.SteamFacade.showConfirmDialog(customTags,
                     `<div class="commentthread_entry_quotebox">
                         <textarea placeholder="${enterTag}" class="commentthread_textarea es_tag" rows="1"></textarea>
                     </div>`);
 
-                const elem = $J(".es_tag");
+                const elem = jq(".es_tag");
                 let tag = elem.val();
 
                 function done() {
@@ -46,14 +46,13 @@ export default class FCustomTags extends Feature {
                 elem.on("keydown paste input", e => {
                     tag = elem.val();
                     if (e.key === "Enter") {
-                        Modal.Dismiss();
+                        modal.Dismiss(); // eslint-disable-line new-cap
                         done();
                     }
                 });
 
-                Modal.done(done);
+                modal.done(done);
             });
-            /* eslint-enable no-undef, new-cap */
         }, [Localization.str.custom_tags, Localization.str.enter_tag]);
     }
 
@@ -85,8 +84,7 @@ export default class FCustomTags extends Feature {
             savedTags.recent = [];
             savedTags[curId] = Array.from(document.querySelectorAll("[name='tags[]']:checked")).map(node => node.value);
             LocalStorage.set("es_guide_tags", savedTags);
-            // eslint-disable-next-line no-undef, new-cap
-            Page.runInPageContext(() => { SubmitGuide(); });
+            Page.runInPageContext(() => { window.SteamFacade.submitGuide(); });
         });
     }
 

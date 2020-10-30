@@ -55,8 +55,7 @@ export default class FBackgroundSelection extends Feature {
 
             this._active = true;
 
-            // eslint-disable-next-line new-cap, no-undef
-            Page.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+            Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
 
             this._selectedAppid = ProfileData.getBgAppid();
             let selectedGameKey = null;

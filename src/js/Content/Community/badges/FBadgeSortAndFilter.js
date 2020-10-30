@@ -1,6 +1,6 @@
 import {HTML, Localization} from "../../../core_modules";
 import {DOMHelper, Feature} from "../../../Modules/content";
-import {CommunityCommon} from "community/common";
+import {CommunityCommon} from "../common";
 import {Page} from "../../Page";
 
 export default class FBadgeSortAndFilter extends Feature {
@@ -61,8 +61,7 @@ export default class FBadgeSortAndFilter extends Feature {
                 </div>
             </span>`);
 
-        // eslint-disable-next-line no-undef, new-cap
-        Page.runInPageContext(() => { BindAutoFlyoutEvents(); });
+        Page.runInPageContext(() => { window.SteamFacade.bindAutoFlyoutEvents(); });
 
         if (isOwnProfile) {
             document.querySelector("#es_badge_sort_drops").addEventListener("click", async e => {

@@ -114,14 +114,13 @@ export default class FWaitlistDropdown extends Feature {
         wishlistArea.querySelector("a").addEventListener("click", async() => {
 
             await Page.runInPageContext(() => new Promise(resolve => {
-                /* eslint-disable no-undef */
-                $J(document).ajaxComplete(function handler(e, xhr, {url}) {
+                const d = window.SteamFacade.jq(document);
+                d.ajaxComplete(function handler(e, xhr, {url}) {
                     if (url === "https://store.steampowered.com/api/addtowishlist") {
                         resolve();
-                        $J(document).unbind("ajaxComplete", handler);
+                        d.unbind("ajaxComplete", handler);
                     }
                 });
-                /* eslint-enable no-undef */
             }), null, true);
 
             wishlisted = !wishlisted;

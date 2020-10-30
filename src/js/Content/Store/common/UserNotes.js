@@ -110,9 +110,9 @@ export class UserNotes {
             if (e.target.closest(".es_note_modal_submit")) {
                 e.preventDefault();
                 onNoteUpdate(...saveNote());
-                Page.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
+                Page.runInPageContext(() => { window.SteamFacade.dismissActiveModal(); });
             } else if (e.target.closest(".es_note_modal_close")) {
-                Page.runInPageContext(() => { CModal.DismissActiveModal(); }); // eslint-disable-line no-undef, new-cap
+                Page.runInPageContext(() => { window.SteamFacade.dismissActiveModal(); });
             } else {
                 return;
             }

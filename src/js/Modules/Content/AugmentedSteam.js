@@ -36,8 +36,9 @@ class AugmentedSteam {
         const popup = document.querySelector("#es_popup");
 
         document.querySelector("#es_pulldown").addEventListener("click", () => {
-            // eslint-disable-next-line no-undef, new-cap
-            Page.runInPageContext(() => { ShowMenu("es_pulldown", "es_popup", "right", "bottom", true); });
+            Page.runInPageContext(() => {
+                window.SteamFacade.showMenu("es_pulldown", "es_popup", "right", "bottom", true);
+            });
         });
 
         document.querySelector("#es_menu").addEventListener("click", (e) => {
@@ -286,8 +287,7 @@ class AugmentedSteam {
                 }
 
                 Page.runInPageContext((playGameStr, gameid, visitStore) => {
-                    // eslint-disable-next-line no-undef, new-cap
-                    const prompt = ShowConfirmDialog(
+                    const prompt = window.SteamFacade.showConfirmDialog(
                         playGameStr,
                         `<img src="//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg">`,
                         null,

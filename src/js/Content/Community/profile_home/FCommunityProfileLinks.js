@@ -42,14 +42,18 @@ export default class FCommunityProfileLinks extends Feature {
             }
 
             Page.runInPageContext((steamidOfUser, html, close) => {
-                /* eslint-disable no-undef, new-cap, camelcase */
-                HideMenu("profile_action_dropdown_link", "profile_action_dropdown");
-                const dialog = ShowAlertDialog(steamidOfUser.replace("__user__", g_rgProfileData.personaname), html, close);
+                const f = window.SteamFacade;
+                f.hideMenu("profile_action_dropdown_link", "profile_action_dropdown");
+
+                const dialog = f.showAlertDialog(
+                    steamidOfUser.replace("__user__", f.global("g_rgProfileData").personaname),
+                    html,
+                    close
+                );
 
                 return new Promise(resolve => {
                     dialog.done(() => { resolve(); });
                 });
-                /* eslint-enable no-undef, new-cap, camelcase */
             },
             [
                 Localization.str.steamid_of_user,

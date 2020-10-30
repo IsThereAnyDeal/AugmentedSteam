@@ -176,6 +176,10 @@ export default class FMarketStats extends Feature {
         try {
             pageRequests.push({"start": 0, "attempt": 0, "lastAttempt": 0});
 
+            /*
+             * TODO this should be rewritten, this disable here is not necessary. Also functions should be split,
+             *  they are intervowen between regular code
+             */
             // eslint-disable-next-line no-unmodified-loop-condition -- stop is modified in updatePrices, called by nextRequest
             while (pageRequests.length > 0 && !stop) {
                 const t = await nextRequest();

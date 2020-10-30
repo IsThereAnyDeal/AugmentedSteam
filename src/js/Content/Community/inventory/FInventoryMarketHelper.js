@@ -13,7 +13,7 @@ export default class FInventoryMarketHelper extends Feature {
         Page.runInPageContext(() => {
 
             /* eslint-disable no-undef, camelcase */
-            $J(document).on("click", ".inventory_item_link, .newitem", () => {
+            window.SteamFacade.jq(document).on("click", ".inventory_item_link, .newitem", () => {
                 if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
                     g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
                 }
@@ -284,25 +284,27 @@ export default class FInventoryMarketHelper extends Feature {
         // TODO: Add prompt?
         document.querySelector("#es_quickgrind").addEventListener("click", () => {
             Page.runInPageContext((appid, assetid) => {
-                /* eslint-disable no-undef, new-cap, camelcase */
+                const g = window.SteamFacade.global;
                 const rgAJAXParams = {
-                    "sessionid": g_sessionID,
+                    "sessionid": g("g_sessionID"),
                     appid,
                     assetid,
                     "contextid": 6
                 };
 
-                let strActionURL = `${g_strProfileURL}/ajaxgetgoovalue/`;
+                let strActionURL = `${g("g_strProfileURL")}/ajaxgetgoovalue/`;
 
-                $J.get(strActionURL, rgAJAXParams).done(data => {
-                    strActionURL = `${g_strProfileURL}/ajaxgrindintogoo/`;
+                const jq = window.SteamFacade.jq;
+                jq.get(strActionURL, rgAJAXParams).done(data => {
+                    strActionURL = `${g("g_strProfileURL")}/ajaxgrindintogoo/`;
+                    // eslint-disable-next-line camelcase
                     rgAJAXParams.goo_value_expected = data.goo_value;
 
-                    $J.post(strActionURL, rgAJAXParams).done(() => {
+                    jq.post(strActionURL, rgAJAXParams).done(() => {
+                        // eslint-disable-next-line new-cap,no-undef
                         ReloadCommunityInventory();
                     });
                 });
-                /* eslint-enable no-undef, new-cap, camelcase */
             }, [appid, assetid]);
         });
     }
@@ -327,8 +329,7 @@ export default class FInventoryMarketHelper extends Feature {
             HTML.beforeEnd(marketActions, this._makeMarketButton(`es_quicksell${assetId}`, Localization.str.quick_sell_desc.replace("__modifier__", diff)));
             HTML.beforeEnd(marketActions, this._makeMarketButton(`es_instantsell${assetId}`, Localization.str.instant_sell_desc));
 
-            // eslint-disable-next-line no-undef, new-cap
-            Page.runInPageContext(() => { SetupTooltips({"tooltipCSSClass": "community_tooltip"}); });
+            Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
 
             // Check if price is stored in data
             if (thisItem.classList.contains("es-price-loaded")) {
@@ -402,7 +403,7 @@ export default class FInventoryMarketHelper extends Feature {
                 Page.runInPageContext((sellPrice, sessionID, globalId, contextID, assetID) => {
                     window.Messenger.postMessage("sendFee",
                         {
-                            "feeInfo": CalculateFeeAmount(sellPrice, 0.10), // eslint-disable-line no-undef, new-cap
+                            "feeInfo": window.SteamFacade.calculateFeeAmount(sellPrice, 0.10),
                             sessionID,
                             "global_id": globalId,
                             contextID,
