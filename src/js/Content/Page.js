@@ -10,6 +10,7 @@ import {
     User
 } from "../Modules/content";
 import {SteamFacade} from "../Modules/Content/SteamFacade";
+import setup from "../setup";
 
 /**
  * Event handler for uncaught Background errors
@@ -69,7 +70,13 @@ class Page {
 
         try {
             // TODO What errors can be "suppressed" here?
-            await SyncedStorage.init().catch(err => { console.error(err); });
+            try {
+                await SyncedStorage;
+                setup();
+            } catch (err) {
+                console.error(err);
+            }
+
             await Promise.all([Localization, User, CurrencyManager]);
         } catch (err) {
             console.group("Augmented Steam initialization");

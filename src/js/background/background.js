@@ -4,6 +4,7 @@ import {
     Errors, ExtensionResources, GameId, HTMLParser, Info, LocalStorage,
     Localization, SyncedStorage, TimeUtils
 } from "../core_modules";
+import setup from "../setup";
 
 /* global idb */
 
@@ -1778,7 +1779,7 @@ browser.runtime.onMessage.addListener(async(message, sender) => {
     message.params = message.params || [];
     let res;
     try {
-        await Promise.all([IndexedDB, SyncedStorage]);
+        await Promise.all([IndexedDB, SyncedStorage.then(() => { setup(); })]);
         res = await callback(...message.params);
     } catch (err) {
         console.group(`Callback: "${message.action}"`);

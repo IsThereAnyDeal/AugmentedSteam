@@ -24,19 +24,18 @@ if (typeof Promise.prototype.finally === "undefined") {
     });
 }
 
+let initialized = false;
 
 /**
  * DOMPurify setup
  * @see https://github.com/cure53/DOMPurify
  */
-(async function() {
-    let allowOpenInNewTab = SyncedStorage.defaults.openinnewtab;
-    try {
-        await SyncedStorage;
-        allowOpenInNewTab = SyncedStorage.get("openinnewtab");
-    } catch (e) {
-        console.error(e);
-    }
+export default function() {
+
+    if (initialized) { return; }
+    initialized = true;
+
+    const allowOpenInNewTab = SyncedStorage.get("openinnewtab");
 
     /*
      * NOTE FOR ADDON REVIEWER:
@@ -71,4 +70,4 @@ if (typeof Promise.prototype.finally === "undefined") {
     }
 
     DOMPurify.setConfig(purifyConfig);
-})();
+}
