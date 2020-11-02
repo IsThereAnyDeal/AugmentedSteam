@@ -1,30 +1,4 @@
-export class SearchFilter {
-
-    constructor(urlParam, feature) {
-        this._feature = feature;
-        this.urlParam = urlParam;
-
-        this._value = null;
-    }
-
-    get active() { return false; }
-
-    get value() { return this._value; }
-    set value(newVal) {
-        if (newVal === this._value) { return; }
-
-        this._value = newVal;
-        this._feature.updateURLs();
-    }
-
-    setup(params) {
-        const rows = document.querySelectorAll(".search_result_row");
-
-        this.addRowMetadata(rows);
-        this.setState(params);
-        this.apply(rows);
-    }
-}
+import {SearchFilter} from "./SearchFilter";
 
 export class SimpleSearchFilter extends SearchFilter {
 
@@ -55,7 +29,7 @@ export class SimpleSearchFilter extends SearchFilter {
         super.setup(params);
     }
 
-    setState(params) {
+    _setState(params) {
 
         this.active
             = params.has(this.urlParam)
@@ -75,11 +49,13 @@ export class SimpleSearchFilter extends SearchFilter {
 
         this.active = filter.classList.toggle("checked");
 
-        const fixScrollOffset = document.scrollTop - savedOffset + filter.getBoundingClientRect().top;
-        document.scrollTop = fixScrollOffset;
+        document.scrollTop = document.scrollTop - savedOffset + filter.getBoundingClientRect().top;
     }
 
-    get active() { return this._active; }
+    get active() {
+        return this._active;
+    }
+
     set active(active) {
         const filter = this._elem;
         this._active = active;

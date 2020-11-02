@@ -1,5 +1,5 @@
 import {Background, Feature} from "../../../Modules/Content";
-import Config from "config";
+import Config from "../../../config";
 import {HTML, Localization} from "../../../core_modules";
 
 export default class FDLCInfo extends Feature {

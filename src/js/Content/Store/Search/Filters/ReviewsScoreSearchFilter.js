@@ -1,6 +1,5 @@
-import {SearchFilter} from "store/search/filters/searchfilters";
-
 import {Localization} from "../../../../Modules/Core/Localization/Localization";
+import {SearchFilter} from "./SearchFilter";
 
 export class ReviewsScoreSearchFilter extends SearchFilter {
 
@@ -100,7 +99,7 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
             });
 
             input.addEventListener("change", () => {
-                this.apply();
+                this._apply();
 
                 let val = null;
 
@@ -115,7 +114,7 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
         super.setup(params);
     }
 
-    setState(params) {
+    _setState(params) {
 
         let lowerScoreVal = "0";
         let upperScoreVal = this._maxStep.toString();
@@ -145,7 +144,7 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
         this._maxScore.value = upperScoreVal;
     }
 
-    addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-percentage])")) {
+    _addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-percentage])")) {
 
         for (const row of rows) {
             let reviewPercentage = 100;
@@ -162,7 +161,7 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
         }
     }
 
-    apply(rows = document.querySelectorAll(".search_result_row")) {
+    _apply(rows = document.querySelectorAll(".search_result_row")) {
 
         const minScore = this._scoreValues[Number(this._minScore.value)];
 

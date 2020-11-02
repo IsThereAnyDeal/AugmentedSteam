@@ -1,4 +1,4 @@
-import {SimpleSearchFilter} from "store/search/filters/searchfilters";
+import {SimpleSearchFilter} from "./SimpleSearchFilter";
 import {Localization} from "../../../../Modules/Core/Localization/Localization";
 
 export class CartSearchFilter extends SimpleSearchFilter {

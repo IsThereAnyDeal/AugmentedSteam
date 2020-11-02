@@ -1,6 +1,6 @@
 import {Localization, SyncedStorage} from "../../../../core_modules";
 import {EarlyAccess} from "../../../../Modules/Content/EarlyAccess";
-import {SimpleSearchFilter} from "./searchfilters";
+import {SimpleSearchFilter} from "./SimpleSearchFilter";
 
 export class EarlyAccessSearchFilter extends SimpleSearchFilter {
 
@@ -8,11 +8,11 @@ export class EarlyAccessSearchFilter extends SimpleSearchFilter {
         super("as-hide", feature, Localization.str.search_filters.hide_ea, "ea");
     }
 
-    setState(params) {
-        super.setState(params);
+    _setState(params) {
+        super._setState(params);
 
         if (this.active) {
-            this.addRowMetadata(document.querySelectorAll(".search_result_row:not(.es_ea_checked)"));
+            this._addRowMetadata(document.querySelectorAll(".search_result_row:not(.es_ea_checked)"));
         }
     }
 
@@ -20,11 +20,11 @@ export class EarlyAccessSearchFilter extends SimpleSearchFilter {
         super._onClick();
 
         if (this.active) {
-            this.addRowMetadata(document.querySelectorAll(".search_result_row:not(.es_ea_checked)"));
+            this._addRowMetadata(document.querySelectorAll(".search_result_row:not(.es_ea_checked)"));
         }
     }
 
-    async addRowMetadata(rows) {
+    async _addRowMetadata(rows) {
         if (!this.active || SyncedStorage.get("show_early_access")) { return; }
 
         for (const row of await EarlyAccess.getEaNodes(rows)) {

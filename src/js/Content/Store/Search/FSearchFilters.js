@@ -2,12 +2,12 @@ import {HTML, Localization} from "../../../core_modules";
 import {EarlyAccess, Feature, Messenger} from "../../../Modules/Content";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 import {Page} from "../../Page";
-import {CartSearchFilter} from "./filters/CartSearchFilter";
-import {EarlyAccessSearchFilter} from "./filters/EarlyAccessSearchFilter";
-import {MixedSearchFilter} from "./filters/MixedSearchFilter";
-import {NegativeSearchFilter} from "./filters/NegativeSearchFilter";
-import {ReviewsCountSearchFilter} from "./filters/ReviewsCountSearchFilter";
-import {ReviewsScoreSearchFilter} from "./filters/ReviewsScoreSearchFilter";
+import {CartSearchFilter} from "./Filters/CartSearchFilter";
+import {EarlyAccessSearchFilter} from "./Filters/EarlyAccessSearchFilter";
+import {MixedSearchFilter} from "./Filters/MixedSearchFilter";
+import {NegativeSearchFilter} from "./Filters/NegativeSearchFilter";
+import {ReviewsCountSearchFilter} from "./Filters/ReviewsCountSearchFilter";
+import {ReviewsScoreSearchFilter} from "./Filters/ReviewsScoreSearchFilter";
 
 export default class FSearchFilters extends Feature {
 
@@ -60,7 +60,7 @@ export default class FSearchFilters extends Feature {
             const params = new URLSearchParams(window.location.search);
 
             for (const filter of this._filters) {
-                filter.setState(params);
+                filter._setState(params);
             }
 
             this._updateFilterValues();
@@ -125,10 +125,10 @@ export default class FSearchFilters extends Feature {
 
             for (const filter of this._filters) {
 
-                filter.addRowMetadata(newResults);
+                filter._addRowMetadata(newResults);
 
                 if (filtersChanged) {
-                    filter.setState(params);
+                    filter._setState(params);
                     filter.apply(document.querySelectorAll(".search_result_row"));
                 } else {
                     filter.apply(newResults);

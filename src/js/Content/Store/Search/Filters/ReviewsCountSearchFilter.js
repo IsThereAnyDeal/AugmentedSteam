@@ -1,6 +1,5 @@
-import {SearchFilter} from "store/search/filters/searchfilters";
-
 import {Localization} from "../../../../Modules/Core/Localization/Localization";
+import {SearchFilter} from "./SearchFilter";
 
 export class ReviewsCountSearchFilter extends SearchFilter {
 
@@ -35,7 +34,7 @@ export class ReviewsCountSearchFilter extends SearchFilter {
         for (const input of document.querySelectorAll(".js-reviews-count-input")) {
 
             input.addEventListener("change", () => {
-                this.apply();
+                this._apply();
 
                 const minVal = this._minCount.value;
                 const maxVal = this._maxCount.value;
@@ -62,7 +61,7 @@ export class ReviewsCountSearchFilter extends SearchFilter {
         super.setup(params);
     }
 
-    setState(params) {
+    _setState(params) {
 
         let lowerCountVal = "";
         let upperCountVal = "";
@@ -96,7 +95,7 @@ export class ReviewsCountSearchFilter extends SearchFilter {
         }
     }
 
-    addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-count])")) {
+    _addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-count])")) {
 
         for (const row of rows) {
             let reviewCount = 0;
@@ -113,7 +112,7 @@ export class ReviewsCountSearchFilter extends SearchFilter {
         }
     }
 
-    apply(rows = document.querySelectorAll(".search_result_row")) {
+ _ply(rows = document.querySelectorAll(".search_result_row")) {
 
         const minCount = Number(this._minCount.value);
         const maxCount = this._maxCount.value === "" ? Infinity : Number(this._maxCount.value);
