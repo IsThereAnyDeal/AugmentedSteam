@@ -1,6 +1,6 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
-import {CStore} from "../common/CStore";
-import FRegionalPricing from "../common/FRegionalPricing";
+import {CStore} from "../Common/CStore";
+import FRegionalPricing from "../Common/FRegionalPricing";
 
 export class CSale extends CStore {
 

@@ -1,8 +1,8 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
-import {CStoreBase} from "../common/CStoreBase";
+import {CStoreBase} from "../Common/CStoreBase";
 import FHighlightStoreFront from "./FHighlightStoreFront";
 import FHomePageTab from "./FHomePageTab";
-import FCustomizer from "../common/FCustomizer";
+import FCustomizer from "../Common/FCustomizer";
 
 export class CStoreFront extends CStoreBase {
 

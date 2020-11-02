@@ -1,5 +1,5 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
-import {CStoreBase} from "../common/CStoreBase";
+import {CStoreBase} from "../Common/CStoreBase";
 import FSearchFilters from "./FSearchFilters";
 
 export class CSearch extends CStoreBase {

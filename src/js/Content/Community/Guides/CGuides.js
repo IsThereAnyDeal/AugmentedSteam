@@ -1,5 +1,5 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
-import {CApp} from "../app/CApp";
+import {CApp} from "../App/CApp";
 
 import FRemoveGuidesLangFilter from "./FRemoveGuidesLangFilter";
 

@@ -1,9 +1,9 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
 import {GameId} from "../../../Modules/Core/GameId";
-import {CStore} from "../common/CStore";
-import FExtraLinks from "../common/FExtraLinks";
-import FDRMWarnings from "../common/FDRMWarnings";
-import FITADPrices from "../common/FITADPrices";
+import {CStore} from "../Common/CStore";
+import FExtraLinks from "../Common/FExtraLinks";
+import FDRMWarnings from "../Common/FDRMWarnings";
+import FITADPrices from "../Common/FITADPrices";
 
 export class CBundle extends CStore {
     constructor() {

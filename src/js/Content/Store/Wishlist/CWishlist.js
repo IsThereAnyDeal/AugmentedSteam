@@ -1,6 +1,6 @@
 import {ContextType, User} from "../../../Modules/content";
-import {CStoreBaseCallback} from "../common/CStoreBaseCallback";
-import FAlternativeLinuxIcon from "../common/FAlternativeLinuxIcon";
+import {CStoreBaseCallback} from "../Common/CStoreBaseCallback";
+import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
 import FWishlistHighlights from "./FWishlistHighlights";
 import FWishlistITADPrices from "./FWishlistITADPrices";
 import FWishlistUserNotes from "./FWishlistUserNotes";
