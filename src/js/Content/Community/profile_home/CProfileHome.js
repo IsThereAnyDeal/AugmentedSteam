@@ -1,5 +1,5 @@
 import {ContextType, ProfileData} from "../../../Modules/content";
-import {CCommunityBase} from "../common/CCommunityBase";
+import {CCommunityBase} from "../CCommunityBase";
 import FCommunityProfileLinks from "./FCommunityProfileLinks";
 import FWishlistProfileLink from "./FWishlistProfileLink";
 import FSupporterBadges from "./FSupporterBadges";

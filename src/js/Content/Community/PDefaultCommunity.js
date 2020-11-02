@@ -1,4 +1,4 @@
 import {CommunityPage} from "../CommunityPage";
-import {CCommunityBase} from "./common/CCommunityBase";
+import {CCommunityBase} from "./CCommunityBase";
 
 (new CommunityPage()).run(CCommunityBase);

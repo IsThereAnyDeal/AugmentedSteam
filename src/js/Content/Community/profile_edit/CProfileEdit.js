@@ -1,5 +1,5 @@
 import {ContextType, ProfileData} from "../../../Modules/content";
-import {CCommunityBase} from "../common/CCommunityBase";
+import {CCommunityBase} from "../CCommunityBase";
 import FBackgroundSelection from "./FBackgroundSelection";
 import FStyleSelection from "./FStyleSelection";
 

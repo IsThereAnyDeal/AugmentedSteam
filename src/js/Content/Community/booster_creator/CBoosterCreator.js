@@ -1,5 +1,5 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
-import {CCommunityBase} from "../common/CCommunityBase";
+import {CCommunityBase} from "../CCommunityBase";
 import FShowGemsCost from "./FShowGemsCost";
 
 export class CBoosterCreator extends CCommunityBase {

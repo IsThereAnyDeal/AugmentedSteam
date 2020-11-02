@@ -1,6 +1,6 @@
 import {CommunityPage} from "../../CommunityPage";
 import {CGroupHome} from "./CGroupHome";
-import {CCommunityBase} from "../common/CCommunityBase";
+import {CCommunityBase} from "../CCommunityBase";
 
 const page = new CommunityPage();
 

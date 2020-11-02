@@ -1,5 +1,5 @@
 import {Page} from "./Page";
-import {CommentHandler} from "./community/common/CommentHandler";
+import {CommentHandler} from "../Modules/Content/Community/CommentHandler";
 
 class CommunityPage extends Page {
 

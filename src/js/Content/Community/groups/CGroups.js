@@ -1,6 +1,6 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
 import {HTML} from "../../../Modules/Core/Html/Html";
-import {CCommunityBase} from "../common/CCommunityBase";
+import {CCommunityBase} from "../CCommunityBase";
 import FGroupsSort from "./FGroupsSort";
 import FGroupsManageButton from "./FGroupsManageButton";
 

@@ -1,5 +1,5 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
-import {CCommunityBase} from "../common/CCommunityBase";
+import {CCommunityBase} from "../CCommunityBase";
 import FFriendsCount from "./FFriendsCount";
 import FFriendsPlaytimeSort from "./FFriendsPlaytimeSort";
 import FFriendsThatOwn from "./FFriendsThatOwn";

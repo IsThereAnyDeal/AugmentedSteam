@@ -1,6 +1,6 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
 import {GameId} from "../../../Modules/Core/GameId";
-import {CCommunityBase} from "../common/CCommunityBase";
+import {CCommunityBase} from "../CCommunityBase";
 import FSoldAmountLastDay from "./FSoldAmountLastDay";
 import FBackgroundPreviewLink from "./FBackgroundPreviewLink";
 import FBadgePageLink from "./FBadgePageLink";

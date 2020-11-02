@@ -1,5 +1,5 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
-import {CCommunityBase} from "../common/CCommunityBase";
+import {CCommunityBase} from "../CCommunityBase";
 import FGamesStats from "./FGamesStats";
 import FCommonGames from "./FCommonGames";
 import FGamelistAchievements from "./FGamelistAchievements";

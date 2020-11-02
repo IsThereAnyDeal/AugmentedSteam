@@ -1,7 +1,7 @@
 import {HTMLParser} from "../../../Modules/Core/Html/HtmlParser";
 import {ContextType, DOMHelper, RequestData} from "../../../Modules/content";
-import {CCommunityBase} from "../common/CCommunityBase";
-import FCardExchangeLinks from "../common/FCardExchangeLinks";
+import {CCommunityBase} from "../CCommunityBase";
+import FCardExchangeLinks from "../FCardExchangeLinks";
 import FBadgeCompletionCost from "./FBadgeCompletionCost";
 import FBadgeSortAndFilter from "./FBadgeSortAndFilter";
 import FBadgeDropsCount from "./FBadgeDropsCount";

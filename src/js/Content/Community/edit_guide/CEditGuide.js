@@ -1,5 +1,5 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
-import {CCommunityBase} from "../common/CCommunityBase";
+import {CCommunityBase} from "../CCommunityBase";
 import FCustomTags from "./FCustomTags";
 
 import FMultiLanguageGuide from "./FMultiLanguageGuide";
