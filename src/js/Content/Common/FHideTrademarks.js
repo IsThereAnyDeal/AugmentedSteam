@@ -1,5 +1,5 @@
 import {HTML, SyncedStorage} from "../../core_modules";
-import {ContextType, Feature} from "../../Modules/content";
+import {ContextType, Feature} from "../../Modules/Content";
 
 export default class FHideTrademarks extends Feature {
 

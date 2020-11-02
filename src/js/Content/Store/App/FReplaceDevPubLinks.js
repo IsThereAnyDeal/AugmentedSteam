@@ -1,6 +1,6 @@
 import {HTML} from "../../../Modules/Core/Html/Html";
 import {Localization} from "../../../Modules/Core/Localization/Localization";
-import {Feature} from "../../../Modules/content";
+import {Feature} from "../../../Modules/Content";
 import {Page} from "../../Page";
 
 export default class FReplaceDevPubLinks extends Feature {

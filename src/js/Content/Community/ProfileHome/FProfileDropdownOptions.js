@@ -1,5 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {Feature, User} from "../../../Modules/content";
+import {Feature, User} from "../../../Modules/Content";
 import {Page} from "../../Page";
 
 export default class FProfileDropdownOptions extends Feature {

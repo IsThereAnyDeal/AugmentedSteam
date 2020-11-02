@@ -1,6 +1,6 @@
 
 import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
-import {DynamicStore, Feature, RequestData, User} from "../../../Modules/content";
+import {DynamicStore, Feature, RequestData, User} from "../../../Modules/Content";
 import FExportWishlist from "./FExportWishlist";
 import {Page} from "../../Page";
 

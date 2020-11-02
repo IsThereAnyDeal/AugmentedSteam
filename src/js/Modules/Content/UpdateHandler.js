@@ -8,7 +8,7 @@ import {Background} from "./Background";
 import {LocalStorage} from "../Core/Storage/LocalStorage";
 import {RequestData} from "./RequestData";
 import {ITAD} from "./ITAD";
-import {Page} from "../../content/Page";
+import {Page} from "../../Content/Page";
 
 class UpdateHandler {
 

@@ -2,7 +2,7 @@ import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../../co
 import {
     Background, CurrencyManager,
     Feature, Messenger, Price, RequestData, User
-} from "../../../Modules/content";
+} from "../../../Modules/Content";
 import {Page} from "../../Page";
 
 // TODO Split this up

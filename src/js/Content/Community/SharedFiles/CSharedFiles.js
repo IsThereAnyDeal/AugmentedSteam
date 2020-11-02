@@ -1,5 +1,5 @@
 import ContextType from "../../../Modules/Content/Context/ContextType";
-import FMediaExpander from "../../common/FMediaExpander";
+import FMediaExpander from "../../Common/FMediaExpander";
 import {CCommunityBase} from "../CCommunityBase";
 
 export class CSharedFiles extends CCommunityBase {

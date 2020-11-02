@@ -1,5 +1,5 @@
 import {HTML, HTMLParser, Localization} from "../../../core_modules";
-import {Feature, RequestData, User} from "../../../Modules/content";
+import {Feature, RequestData, User} from "../../../Modules/Content";
 import {Page} from "../../Page";
 
 export default class FCommonGames extends Feature {

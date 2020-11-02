@@ -1,5 +1,5 @@
 import {HTML, HTMLParser, LocalStorage, Localization, SyncedStorage, TimeUtils} from "../../../core_modules";
-import {Feature, Price, RequestData, User} from "../../../Modules/content";
+import {Feature, Price, RequestData, User} from "../../../Modules/Content";
 
 export default class FMarketStats extends Feature {
 

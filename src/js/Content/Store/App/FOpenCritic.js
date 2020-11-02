@@ -1,5 +1,5 @@
 import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {Feature} from "../../../Modules/content";
+import {Feature} from "../../../Modules/Content";
 import {Page} from "../../Page";
 
 export default class FOpenCritic extends Feature {

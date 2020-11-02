@@ -1,5 +1,5 @@
 import {ExtensionResources, HTML, Localization} from "../../../core_modules";
-import {Feature, User} from "../../../Modules/content";
+import {Feature, User} from "../../../Modules/Content";
 
 export default class FDLCCheckboxes extends Feature {
 

@@ -1,5 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {CurrencyManager, Feature, Price} from "../../../Modules/content";
+import {CurrencyManager, Feature, Price} from "../../../Modules/Content";
 
 export default class FCustomGiftcardAndWallet extends Feature {
 

@@ -1,7 +1,7 @@
 import {SyncedStorage} from "../Core/Storage/SyncedStorage";
 import {StringUtils} from "../Core/Utils/StringUtils";
 import {Background} from "./Background";
-import {Page} from "../../content/Page";
+import {Page} from "../../Content/Page";
 
 class SteamCurrency {
 

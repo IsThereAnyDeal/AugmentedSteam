@@ -1,5 +1,5 @@
 import {Downloader, HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {Clipboard, Feature} from "../../../Modules/content";
+import {Clipboard, Feature} from "../../../Modules/Content";
 import {Page} from "../../Page";
 
 class WishlistExporter {

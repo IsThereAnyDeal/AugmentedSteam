@@ -1,4 +1,4 @@
-import {Page} from "../../../content/Page";
+import {Page} from "../../../Content/Page";
 
 class ConfirmDialog {
 

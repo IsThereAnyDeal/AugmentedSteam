@@ -1,5 +1,5 @@
 import {HTML, LocalStorage, Localization} from "../../../core_modules";
-import {Feature, Messenger} from "../../../Modules/content";
+import {Feature, Messenger} from "../../../Modules/Content";
 import {Page} from "../../Page";
 
 export default class FCustomTags extends Feature {

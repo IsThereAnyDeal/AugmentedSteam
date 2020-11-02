@@ -1,5 +1,5 @@
 import {HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {Feature, User} from "../../../Modules/content";
+import {Feature, User} from "../../../Modules/Content";
 
 export default class FUserNotes extends Feature {
 

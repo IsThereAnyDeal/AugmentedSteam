@@ -1,5 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {CommunityUtils, Feature, RequestData} from "../../../Modules/content";
+import {CommunityUtils, Feature, RequestData} from "../../../Modules/Content";
 
 export default class FBadgeDropsCount extends Feature {
 

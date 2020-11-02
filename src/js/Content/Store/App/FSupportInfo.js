@@ -1,5 +1,5 @@
 import {HTML, LocalStorage, Localization, SyncedStorage} from "../../../core_modules";
-import {Background, Feature} from "../../../Modules/content";
+import {Background, Feature} from "../../../Modules/Content";
 
 export default class FSupportInfo extends Feature {
 

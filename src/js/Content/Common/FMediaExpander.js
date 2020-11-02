@@ -1,5 +1,5 @@
 import {HTML, LocalStorage, Localization, SyncedStorage} from "../../core_modules";
-import {ContextType, Feature} from "../../Modules/content";
+import {ContextType, Feature} from "../../Modules/Content";
 import {Page} from "../Page";
 
 export default class FMediaExpander extends Feature {

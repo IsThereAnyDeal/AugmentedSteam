@@ -1,4 +1,4 @@
-import {ContextType, ProfileData} from "../../../Modules/content";
+import {ContextType, ProfileData} from "../../../Modules/Content";
 import {CCommunityBase} from "../CCommunityBase";
 import FCommunityProfileLinks from "./FCommunityProfileLinks";
 import FWishlistProfileLink from "./FWishlistProfileLink";

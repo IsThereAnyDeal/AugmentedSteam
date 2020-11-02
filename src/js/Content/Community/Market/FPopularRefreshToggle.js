@@ -1,5 +1,5 @@
 import {HTML, LocalStorage, Localization} from "../../../core_modules";
-import {Feature} from "../../../Modules/content";
+import {Feature} from "../../../Modules/Content";
 import {Page} from "../../Page";
 
 export default class FPopularRefreshToggle extends Feature {

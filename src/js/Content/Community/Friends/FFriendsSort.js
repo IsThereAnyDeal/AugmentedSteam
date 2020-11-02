@@ -1,5 +1,5 @@
 import {HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
-import {Feature, RequestData, Sortbox} from "../../../Modules/content";
+import {Feature, RequestData, Sortbox} from "../../../Modules/Content";
 
 export default class FFriendsSort extends Feature {
 

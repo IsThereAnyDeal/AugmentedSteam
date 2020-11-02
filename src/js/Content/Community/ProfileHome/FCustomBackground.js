@@ -1,5 +1,5 @@
 import {HTML} from "../../../core_modules";
-import {Feature, ProfileData} from "../../../Modules/content";
+import {Feature, ProfileData} from "../../../Modules/Content";
 
 export default class FCustomBackground extends Feature {
 

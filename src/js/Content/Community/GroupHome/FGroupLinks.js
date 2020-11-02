@@ -1,4 +1,4 @@
-import {CommunityUtils, Feature} from "../../../Modules/content";
+import {CommunityUtils, Feature} from "../../../Modules/Content";
 import {HTML, SyncedStorage} from "../../../core_modules";
 
 export default class FGroupLinks extends Feature {

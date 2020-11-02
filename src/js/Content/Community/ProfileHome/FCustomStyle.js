@@ -1,5 +1,5 @@
 import {ExtensionResources, HTML} from "../../../core_modules";
-import {DOMHelper, Feature, ProfileData} from "../../../Modules/content";
+import {DOMHelper, Feature, ProfileData} from "../../../Modules/Content";
 
 export default class FCustomStyle extends Feature {
 

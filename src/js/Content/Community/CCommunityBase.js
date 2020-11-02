@@ -1,4 +1,4 @@
-import {Context, ContextType} from "../../Modules/content";
+import {Context, ContextType} from "../../Modules/Content";
 import FHideTrademarks from "../Common/FHideTrademarks";
 
 export class CCommunityBase extends Context {

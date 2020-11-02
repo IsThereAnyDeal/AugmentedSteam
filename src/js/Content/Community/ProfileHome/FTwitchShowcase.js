@@ -1,5 +1,5 @@
 import {HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {Background, Feature, User} from "../../../Modules/content";
+import {Background, Feature, User} from "../../../Modules/Content";
 
 export default class FTwitchShowcase extends Feature {
 

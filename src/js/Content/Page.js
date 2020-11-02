@@ -8,7 +8,7 @@ import {
     Sortbox,
     UpdateHandler,
     User
-} from "../Modules/content";
+} from "../Modules/Content";
 import {SteamFacade} from "../Modules/Content/SteamFacade";
 import setup from "../setup";
 

@@ -1,4 +1,4 @@
-import {Feature} from "../../../Modules/content";
+import {Feature} from "../../../Modules/Content";
 import {Page} from "../../Page";
 
 export default class FShowGemsCost extends Feature {

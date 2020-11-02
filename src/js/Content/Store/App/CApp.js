@@ -1,3 +1,10 @@
+import {GameId, LocalStorage, SyncedStorage} from "../../../core_modules";
+import {Background, ContextType, User} from "../../../Modules/Content";
+import FMediaExpander from "../../Common/FMediaExpander";
+import FITADPrices from "../Common/FITADPrices";
+import FDRMWarnings from "../Common/FDRMWarnings";
+import FExtraLinks from "../Common/FExtraLinks";
+import {UserNotes} from "../Common/UserNotes";
 import {CStore} from "../Common/CStore";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
 import FRemoveFromWishlist from "./FRemoveFromWishlist";
@@ -8,9 +15,7 @@ import FWaitlistDropdown from "./FWaitlistDropdown";
 import FNewQueue from "./FNewQueue";
 import FFullscreenScreenshotView from "./FFullscreenScreenshotView";
 import FShowCoupon from "./FShowCoupon";
-import FITADPrices from "../Common/FITADPrices";
 import FDLCInfo from "./FDLCInfo";
-import FDRMWarnings from "../Common/FDRMWarnings";
 import FMetacriticUserScore from "./FMetacriticUserScore";
 import FOpenCritic from "./FOpenCritic";
 import FOwnedElsewhere from "./FOwnedElsewhere";
@@ -19,7 +24,6 @@ import FYouTubeVideos from "./FYouTubeVideos";
 import FSteamPeek from "./FSteamPeek";
 import FWidescreenCertification from "./FWidescreenCertification";
 import FHowLongToBeat from "./FHowLongToBeat";
-import FExtraLinks from "../Common/FExtraLinks";
 import FFamilySharingNotice from "./FFamilySharingNotice";
 import FPackBreakdown from "./FPackBreakdown";
 import FPackageInfoButton from "./FPackageInfoButton";
@@ -35,10 +39,6 @@ import FRegionalPricing from "../Common/FRegionalPricing";
 import FReviewToggleButton from "./FReviewToggleButton";
 import FOwnedActionsButtons from "./FOwnedActionsButtons";
 import FSupportInfo from "./FSupportInfo";
-import FMediaExpander from "../../common/FMediaExpander";
-import {GameId, LocalStorage, SyncedStorage} from "../../../core_modules";
-import {Background, ContextType, User} from "../../../Modules/content";
-import {UserNotes} from "../Common/UserNotes";
 
 export class CApp extends CStore {
 

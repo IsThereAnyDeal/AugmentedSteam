@@ -1,5 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {Feature, Price} from "../../../Modules/content";
+import {Feature, Price} from "../../../Modules/Content";
 
 export default class FPackBreakdown extends Feature {
 

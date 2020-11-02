@@ -1,5 +1,5 @@
 import {Errors, HTML, Localization, SyncedStorage, TimeUtils} from "../../../core_modules";
-import {CurrencyManager, Feature, Price, RequestData, User} from "../../../Modules/content";
+import {CurrencyManager, Feature, Price, RequestData, User} from "../../../Modules/Content";
 
 export default class FMarketLowestPrice extends Feature {
 
