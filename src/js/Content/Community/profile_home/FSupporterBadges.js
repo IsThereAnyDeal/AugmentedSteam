@@ -1,7 +1,6 @@
 import Config from "config";
 import {HTML, Localization} from "../../../core_modules";
-import {Feature} from "../../../Modules/content";
-import {ProfileData} from "../common";
+import {Feature, ProfileData} from "../../../Modules/content";
 import {Page} from "../../Page";
 
 export default class FSupporterBadges extends Feature {

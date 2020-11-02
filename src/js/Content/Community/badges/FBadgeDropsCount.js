@@ -1,11 +1,10 @@
 import {HTML, Localization} from "../../../core_modules";
-import {Feature, RequestData} from "../../../Modules/content";
-import {CommunityCommon} from "community/common";
+import {CommunityUtils, Feature, RequestData} from "../../../Modules/content";
 
 export default class FBadgeDropsCount extends Feature {
 
     checkPrerequisites() {
-        return CommunityCommon.currentUserIsOwner();
+        return CommunityUtils.currentUserIsOwner();
     }
 
     apply() {

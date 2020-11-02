@@ -1,6 +1,5 @@
 import {ExtensionResources, HTML, Language, Localization, SyncedStorage} from "../../../core_modules";
-import {Clipboard, Feature, SteamId} from "../../../Modules/content";
-import {CommunityCommon} from "../common";
+import {Clipboard, CommunityUtils, Feature, SteamId} from "../../../Modules/content";
 import {Page} from "../../Page";
 
 export default class FCommunityProfileLinks extends Feature {
@@ -130,7 +129,7 @@ export default class FCommunityProfileLinks extends Feature {
 
         for (const link of links) {
             if (!SyncedStorage.get(`profile_${link.id}`)) { continue; }
-            htmlstr += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+            htmlstr += CommunityUtils.makeProfileLink(link.id, link.link, link.name, iconType);
         }
 
         // custom profile link
@@ -153,7 +152,7 @@ export default class FCommunityProfileLinks extends Feature {
                 iconType = "none";
             }
 
-            htmlstr += CommunityCommon.makeProfileLink("custom", link, name, iconType, icon);
+            htmlstr += CommunityUtils.makeProfileLink("custom", link, name, iconType, icon);
         }
 
         // profile steamid

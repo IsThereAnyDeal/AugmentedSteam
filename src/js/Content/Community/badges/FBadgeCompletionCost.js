@@ -1,12 +1,11 @@
 import {HTML, Localization} from "../../../core_modules";
-import {Background, CallbackFeature, CurrencyManager, DOMHelper, Price} from "../../../Modules/content";
-import {CommunityCommon} from "community/common";
+import {Background, CallbackFeature, CommunityUtils, CurrencyManager, DOMHelper, Price} from "../../../Modules/content";
 
 // TODO Split up
 export default class FBadgeCompletionCost extends CallbackFeature {
 
     checkPrerequisites() {
-        return CommunityCommon.currentUserIsOwner();
+        return CommunityUtils.currentUserIsOwner();
     }
 
     async callback() {

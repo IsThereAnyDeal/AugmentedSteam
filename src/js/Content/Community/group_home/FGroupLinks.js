@@ -1,6 +1,5 @@
-import {Feature} from "../../../Modules/Content/Feature/Feature";
+import {CommunityUtils, Feature} from "../../../Modules/content";
 import {HTML, SyncedStorage} from "../../../core_modules";
-import {CommunityCommon} from "community/common";
 
 export default class FGroupLinks extends Feature {
 
@@ -23,7 +22,7 @@ export default class FGroupLinks extends Feature {
         let html = "";
         for (const link of links) {
             if (!SyncedStorage.get(`group_${link.id}`)) { continue; }
-            html += CommunityCommon.makeProfileLink(link.id, link.link, link.name, iconType);
+            html += CommunityUtils.makeProfileLink(link.id, link.link, link.name, iconType);
         }
 
         if (html) {

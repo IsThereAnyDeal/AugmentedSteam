@@ -1,6 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {Background, CurrencyManager, DOMHelper, Feature, Price} from "../../../Modules/content";
-import {CommunityCommon} from "community/common";
+import {Background, CommunityUtils, CurrencyManager, DOMHelper, Feature, Price} from "../../../Modules/content";
 
 export default class FCardMarketLinks extends Feature {
 
@@ -44,7 +43,7 @@ export default class FCardMarketLinks extends Feature {
             }
         }
 
-        if (cost > 0 && CommunityCommon.currentUserIsOwner()) {
+        if (cost > 0 && CommunityUtils.currentUserIsOwner()) {
             cost = new Price(cost);
             HTML.afterEnd(
                 DOMHelper.selectLastNode(document, ".badge_empty_name"),

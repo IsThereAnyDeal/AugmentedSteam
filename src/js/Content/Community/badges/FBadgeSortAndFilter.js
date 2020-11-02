@@ -1,6 +1,5 @@
 import {HTML, Localization} from "../../../core_modules";
-import {DOMHelper, Feature} from "../../../Modules/content";
-import {CommunityCommon} from "../common";
+import {CommunityUtils, DOMHelper, Feature} from "../../../Modules/content";
 import {Page} from "../../Page";
 
 export default class FBadgeSortAndFilter extends Feature {
@@ -13,7 +12,7 @@ export default class FBadgeSortAndFilter extends Feature {
 
     _addSort() {
 
-        const isOwnProfile = CommunityCommon.currentUserIsOwner();
+        const isOwnProfile = CommunityUtils.currentUserIsOwner();
         const sorts = ["c", "a", "r"];
 
         const sorted = document.querySelector("a.badge_sort_option.active").search.replace("?sort=", "")

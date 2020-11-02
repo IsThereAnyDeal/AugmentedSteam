@@ -1,6 +1,5 @@
 import {ExtensionResources, HTML, Localization} from "../../../core_modules";
-import {DOMHelper, Feature} from "../../../Modules/content";
-import {ProfileData} from "../common";
+import {DOMHelper, Feature, ProfileData} from "../../../Modules/content";
 import Config from "config";
 import {Page} from "../../Page";
 

@@ -1,4 +1,7 @@
 
+import {CommunityUtils} from "./Content/Community/CommunityUtils";
+import {ProfileData} from "./Content/Community/ProfileData";
+
 import {Context} from "./Content/Context/Context";
 import ContextType from "./Content/Context/ContextType";
 
@@ -32,6 +35,7 @@ import {User} from "./Content/User";
 import {Viewport} from "./Content/Viewport";
 
 export {
+    CommunityUtils, ProfileData,
     Context, ContextType,
     DynamicStore, Inventory,
     CallbackFeature, Feature, FeatureManager,
