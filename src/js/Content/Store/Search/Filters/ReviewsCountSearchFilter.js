@@ -112,8 +112,8 @@ export class ReviewsCountSearchFilter extends SearchFilter {
         }
     }
 
- _ply(rows = document.querySelectorAll(".search_result_row")) {
-
+    _apply(rows = document.querySelectorAll(".search_result_row")) {
+        
         const minCount = Number(this._minCount.value);
         const maxCount = this._maxCount.value === "" ? Infinity : Number(this._maxCount.value);
 
