@@ -8,8 +8,8 @@ const rootDir = path.resolve(__dirname, "../../");
 module.exports = {
     "context": rootDir,
     "entry": {
-        "authorization": "./src/js/background/authorization.js",
-        "background": "./src/js/background/background.js",
+        "authorization": "./src/js/Background/authorization.js",
+        "background": "./src/js/Background/background.js",
         "options": "./src/js/options/options.js",
         "community/app": "./src/js/Content/Community/App/PApp.js",
         "community/badges": "./src/js/Content/Community/Badges/PBadges.js",
