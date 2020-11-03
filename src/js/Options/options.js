@@ -1,5 +1,3 @@
-/* eslint-disable no-alert -- TODO */
-
 import {
     BackgroundSimple, Downloader, ExtensionResources, HTML, Info, Language,
     Localization, Permissions, SyncedStorage, TimeUtils
@@ -618,6 +616,8 @@ const Options = (() => {
                 console.error(err);
                 console.groupEnd();
 
+                // TODO do not use alert
+                // eslint-disable-next-line no-alert
                 window.alert(Localization.str.options.settings_mngmt.import_fail);
                 return;
             }
@@ -632,10 +632,14 @@ const Options = (() => {
                 console.error(err);
                 console.groupEnd();
 
+                // TODO do not use alert
+                // eslint-disable-next-line no-alert
                 window.alert(Localization.str.options.settings_mngmt.import_fail);
                 return;
             }
 
+            // TODO do not use alert
+            // eslint-disable-next-line no-alert
             window.alert(Localization.str.options.settings_mngmt.import_success);
             window.location.reload();
         });
@@ -647,7 +651,9 @@ const Options = (() => {
     }
 
     function clearSettings() {
-        if (!confirm(Localization.str.options.clear)) { return; }
+        // TODO do not use confirm
+        // eslint-disable-next-line no-alert
+        if (!window.confirm(Localization.str.options.clear)) { return; }
         SyncedStorage.clear();
 
         for (const el of document.querySelectorAll(".custom-link__close")) {
