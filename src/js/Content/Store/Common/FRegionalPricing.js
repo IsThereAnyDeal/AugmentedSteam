@@ -1,7 +1,7 @@
 import {HTML} from "../../../Modules/Core/Html/Html";
 import {Localization} from "../../../Modules/Core/Localization/Localization";
 import {SyncedStorage} from "../../../Modules/Core/Storage/SyncedStorage";
-import {ContextType, CurrencyManager, Feature, Price, RequestData, User} from "../../../Modules/Content";
+import {ContextType, CurrencyManager, Feature, Price, RequestData, User} from "../../../modulesContent";
 
 export default class FRegionalPricing extends Feature {
 

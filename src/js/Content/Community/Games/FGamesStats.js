@@ -1,5 +1,5 @@
 import {Feature} from "../../../Modules/Content/Feature/Feature";
-import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
+import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../modulesCore";
 
 export default class FGamesStats extends Feature {
 

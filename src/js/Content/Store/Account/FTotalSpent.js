@@ -1,5 +1,5 @@
 import {Feature} from "../../../Modules/Content/Feature/Feature";
-import {HTML, Localization} from "../../../core_modules";
+import {HTML, Localization} from "../../../modulesCore";
 
 export default class FTotalSpent extends Feature {
 

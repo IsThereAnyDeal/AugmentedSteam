@@ -1,4 +1,4 @@
-import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../core_modules";
+import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../modulesCore";
 import {Feature} from "../../../Modules/Content/Feature/Feature";
 
 export default class FWidescreenCertification extends Feature {

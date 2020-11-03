@@ -1,5 +1,5 @@
-import {GameId, HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {CallbackFeature, DynamicStore, User} from "../../../Modules/Content";
+import {GameId, HTML, Localization, SyncedStorage} from "../../../modulesCore";
+import {CallbackFeature, DynamicStore, User} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 
 export default class FHighlightFriendsActivity extends CallbackFeature {

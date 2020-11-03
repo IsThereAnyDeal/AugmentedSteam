@@ -1,4 +1,4 @@
-import {HTML, SyncedStorage} from "../../../core_modules";
+import {HTML, SyncedStorage} from "../../../modulesCore";
 import {Feature} from "../../../Modules/Content/Feature/Feature";
 
 export default class FCommunityAppPageLinks extends Feature {

@@ -1,4 +1,4 @@
-import {HTML, Localization, SyncedStorage} from "../../../core_modules";
+import {HTML, Localization, SyncedStorage} from "../../../modulesCore";
 
 export class CommentHandler {
 

@@ -1,4 +1,4 @@
-import {Localization, SyncedStorage} from "../../../../core_modules";
+import {Localization, SyncedStorage} from "../../../../modulesCore";
 import {EarlyAccess} from "../../../../Modules/Content/EarlyAccess";
 import {SimpleSearchFilter} from "./SimpleSearchFilter";
 

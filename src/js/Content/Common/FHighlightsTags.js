@@ -1,5 +1,5 @@
-import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../core_modules";
-import {DynamicStore, Feature, ITAD, Inventory} from "../../Modules/Content";
+import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../modulesCore";
+import {DynamicStore, Feature, ITAD, Inventory} from "../../modulesContent";
 import {Page} from "../Page";
 
 export default class FHighlightsTags extends Feature {

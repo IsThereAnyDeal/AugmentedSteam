@@ -1,5 +1,5 @@
-import {HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {Messenger} from "../../../Modules/Content";
+import {HTML, Localization, SyncedStorage} from "../../../modulesCore";
+import {Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export class UserNotes {

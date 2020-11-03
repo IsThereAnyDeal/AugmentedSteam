@@ -3,7 +3,7 @@
 import {
     BackgroundSimple, Downloader, ExtensionResources, HTML, Info, Language,
     Localization, Permissions, SyncedStorage, TimeUtils
-} from "../core_modules";
+} from "../modulesCore";
 import {CountryList} from "./countryList";
 import {StoreList} from "./storeList";
 

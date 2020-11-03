@@ -1,5 +1,5 @@
-import {ExtensionResources, HTML, Language, Localization, SyncedStorage} from "../../../core_modules";
-import {Clipboard, CommunityUtils, Feature, SteamId} from "../../../Modules/Content";
+import {ExtensionResources, HTML, Language, Localization, SyncedStorage} from "../../../modulesCore";
+import {Clipboard, CommunityUtils, Feature, SteamId} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FCommunityProfileLinks extends Feature {

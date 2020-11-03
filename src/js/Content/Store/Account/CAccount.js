@@ -1,4 +1,4 @@
-import {Context, ContextType} from "../../../Modules/Content";
+import {Context, ContextType} from "../../../modulesContent";
 import FTotalSpent from "./FTotalSpent";
 
 export class CAccount extends Context {

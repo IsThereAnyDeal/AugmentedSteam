@@ -1,5 +1,5 @@
-import {Language, Localization, SyncedStorage} from "../../../core_modules";
-import {Feature, User} from "../../../Modules/Content";
+import {Language, Localization, SyncedStorage} from "../../../modulesCore";
+import {Feature, User} from "../../../modulesContent";
 
 export default class FPurchaseDate extends Feature {
 

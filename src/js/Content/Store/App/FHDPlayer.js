@@ -1,5 +1,5 @@
 import {Feature} from "../../../Modules/Content/Feature/Feature";
-import {HTML, LocalStorage} from "../../../core_modules";
+import {HTML, LocalStorage} from "../../../modulesCore";
 
 export default class FHDPlayer extends Feature {
 

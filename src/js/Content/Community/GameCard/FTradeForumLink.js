@@ -1,4 +1,4 @@
-import {HTML, Localization} from "../../../core_modules";
+import {HTML, Localization} from "../../../modulesCore";
 import {Feature} from "../../../Modules/Content/Feature/Feature";
 
 export default class FTradeForumLink extends Feature {

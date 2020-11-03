@@ -1,5 +1,5 @@
-import {ExtensionResources, HTML, SyncedStorage} from "../../../core_modules";
-import {Feature, ProfileData, SteamId} from "../../../Modules/Content";
+import {ExtensionResources, HTML, SyncedStorage} from "../../../modulesCore";
+import {Feature, ProfileData, SteamId} from "../../../modulesContent";
 
 export default class FSteamRep extends Feature {
 

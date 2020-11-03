@@ -1,5 +1,5 @@
 import {Feature} from "../../../Modules/Content/Feature/Feature";
-import {HTML} from "../../../core_modules";
+import {HTML} from "../../../modulesCore";
 
 export default class FFullscreenScreenshotView extends Feature {
 

@@ -1,4 +1,4 @@
-import {Feature, User} from "../../../Modules/Content";
+import {Feature, User} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 
 export default class FHighlightStoreFront extends Feature {

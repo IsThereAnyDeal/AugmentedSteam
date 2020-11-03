@@ -1,5 +1,5 @@
-import {HTML, Localization} from "../../../core_modules";
-import {Background, CallbackFeature, CommunityUtils, CurrencyManager, DOMHelper, Price} from "../../../Modules/Content";
+import {HTML, Localization} from "../../../modulesCore";
+import {Background, CallbackFeature, CommunityUtils, CurrencyManager, DOMHelper, Price} from "../../../modulesContent";
 
 // TODO Split up
 export default class FBadgeCompletionCost extends CallbackFeature {

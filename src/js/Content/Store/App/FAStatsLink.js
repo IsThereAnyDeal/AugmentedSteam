@@ -1,5 +1,5 @@
 import {Feature} from "../../../Modules/Content/Feature/Feature";
-import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../core_modules";
+import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../modulesCore";
 
 // todo maybe integrate with other useful links?
 export default class FAStatsLink extends Feature {

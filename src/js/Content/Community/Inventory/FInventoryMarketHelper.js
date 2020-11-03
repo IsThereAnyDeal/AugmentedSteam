@@ -1,8 +1,8 @@
-import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
+import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../../modulesCore";
 import {
     Background, CurrencyManager,
     Feature, Messenger, Price, RequestData, User
-} from "../../../Modules/Content";
+} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 // TODO Split this up

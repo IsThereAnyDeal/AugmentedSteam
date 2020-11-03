@@ -1,5 +1,5 @@
-import {HTML, Localization} from "../../../core_modules";
-import {Feature} from "../../../Modules/Content";
+import {HTML, Localization} from "../../../modulesCore";
+import {Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FInGameStoreLink extends Feature {

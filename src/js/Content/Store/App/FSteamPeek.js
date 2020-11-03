@@ -1,5 +1,5 @@
-import {HTML, LocalStorage, Localization} from "../../../core_modules";
-import {Background, Feature} from "../../../Modules/Content";
+import {HTML, LocalStorage, Localization} from "../../../modulesCore";
+import {Background, Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 

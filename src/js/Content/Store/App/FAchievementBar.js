@@ -1,5 +1,5 @@
-import {HTML, SyncedStorage} from "../../../core_modules";
-import {Feature, Stats} from "../../../Modules/Content";
+import {HTML, SyncedStorage} from "../../../modulesCore";
+import {Feature, Stats} from "../../../modulesContent";
 
 export default class FAchievementBar extends Feature {
 

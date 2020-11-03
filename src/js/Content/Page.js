@@ -1,4 +1,4 @@
-import {Info, Localization, SyncedStorage} from "../core_modules";
+import {Info, Localization, SyncedStorage} from "../modulesCore";
 import {
     AugmentedSteam, Background,
     CurrencyManager,
@@ -8,7 +8,7 @@ import {
     Sortbox,
     UpdateHandler,
     User
-} from "../Modules/Content";
+} from "../modulesContent";
 import {SteamFacade} from "../Modules/Content/SteamFacade";
 import setup from "../setup";
 

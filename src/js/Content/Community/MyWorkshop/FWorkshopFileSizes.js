@@ -1,5 +1,5 @@
-import {HTML, Localization} from "../../../core_modules";
-import {Background, Feature, RequestData} from "../../../Modules/Content";
+import {HTML, Localization} from "../../../modulesCore";
+import {Background, Feature, RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FWorkshopFileSizes extends Feature {

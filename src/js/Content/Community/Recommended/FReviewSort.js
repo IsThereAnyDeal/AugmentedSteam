@@ -1,5 +1,5 @@
-import {HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
-import {Background, Feature, Messenger, Sortbox} from "../../../Modules/Content";
+import {HTMLParser, Localization, SyncedStorage} from "../../../modulesCore";
+import {Background, Feature, Messenger, Sortbox} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FReviewSort extends Feature {

@@ -1,6 +1,6 @@
 import {CTradeOffer} from "./CTradeOffer";
 
-import {Localization, SyncedStorage} from "../../../core_modules";
+import {Localization, SyncedStorage} from "../../../modulesCore";
 
 (async function() {
 

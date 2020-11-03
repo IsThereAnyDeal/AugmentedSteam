@@ -1,5 +1,5 @@
-import {GameId, LocalStorage, SyncedStorage} from "../../../core_modules";
-import {Background, ContextType, User} from "../../../Modules/Content";
+import {GameId, LocalStorage, SyncedStorage} from "../../../modulesCore";
+import {Background, ContextType, User} from "../../../modulesContent";
 import FMediaExpander from "../../Common/FMediaExpander";
 import FITADPrices from "../Common/FITADPrices";
 import FDRMWarnings from "../Common/FDRMWarnings";

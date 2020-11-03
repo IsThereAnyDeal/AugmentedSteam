@@ -1,5 +1,5 @@
-import {HTML, Localization} from "../../../core_modules";
-import {CurrencyManager, DOMHelper, Feature, RequestData, User} from "../../../Modules/Content";
+import {HTML, Localization} from "../../../modulesCore";
+import {CurrencyManager, DOMHelper, Feature, RequestData, User} from "../../../modulesContent";
 
 export default class FSoldAmountLastDay extends Feature {
 

@@ -1,5 +1,5 @@
 import setup from "../setup";
-import {SyncedStorage} from "../core_modules";
+import {SyncedStorage} from "../modulesCore";
 import {ContextMenu} from "../Modules/Background/ContextMenu";
 import {IndexedDB} from "../Modules/Background/IndexedDB";
 import {SteamCommunityApi} from "../Modules/Background/SteamCommunityApi";

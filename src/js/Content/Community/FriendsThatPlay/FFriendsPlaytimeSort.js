@@ -1,5 +1,5 @@
 import {Localization} from "../../../Modules/Core/Localization/Localization";
-import {Feature, Sortbox} from "../../../Modules/Content";
+import {Feature, Sortbox} from "../../../modulesContent";
 
 export default class FFriendsPlaytimeSort extends Feature {
 

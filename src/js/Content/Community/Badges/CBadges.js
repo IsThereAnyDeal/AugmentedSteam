@@ -1,5 +1,5 @@
 import {HTMLParser} from "../../../Modules/Core/Html/HtmlParser";
-import {ContextType, DOMHelper, RequestData} from "../../../Modules/Content";
+import {ContextType, DOMHelper, RequestData} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
 import FCardExchangeLinks from "../FCardExchangeLinks";
 import FBadgeCompletionCost from "./FBadgeCompletionCost";

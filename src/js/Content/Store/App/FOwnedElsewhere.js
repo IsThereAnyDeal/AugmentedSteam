@@ -1,5 +1,5 @@
-import {Background, Feature} from "../../../Modules/Content";
-import {HTML, Localization} from "../../../core_modules";
+import {Background, Feature} from "../../../modulesContent";
+import {HTML, Localization} from "../../../modulesCore";
 
 export default class FOwnedElsewhere extends Feature {
 

@@ -1,4 +1,4 @@
-import {ContextType, User} from "../../../Modules/Content";
+import {ContextType, User} from "../../../modulesContent";
 import {CStoreBaseCallback} from "../Common/CStoreBaseCallback";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
 import FWishlistHighlights from "./FWishlistHighlights";

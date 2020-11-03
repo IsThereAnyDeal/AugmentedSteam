@@ -1,5 +1,5 @@
-import {Localization, SyncedStorage} from "../../../core_modules";
-import {Feature, Sortbox} from "../../../Modules/Content";
+import {Localization, SyncedStorage} from "../../../modulesCore";
+import {Feature, Sortbox} from "../../../modulesContent";
 
 export default class FGroupsSort extends Feature {
 

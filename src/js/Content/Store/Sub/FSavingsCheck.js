@@ -1,5 +1,5 @@
 
-import {HTML, Localization} from "../../../core_modules";
+import {HTML, Localization} from "../../../modulesCore";
 import {Feature} from "../../../Modules/Content/Feature/Feature";
 import {DOMHelper} from "../../../Modules/Content/DOMHelper";
 import {Price} from "../../../Modules/Content/Price";

@@ -1,4 +1,4 @@
-import {ContextType, ProfileData} from "../../../Modules/Content";
+import {ContextType, ProfileData} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
 import FBackgroundSelection from "./FBackgroundSelection";
 import FStyleSelection from "./FStyleSelection";

@@ -1,4 +1,4 @@
-import {ContextType, Feature} from "../../../Modules/Content";
+import {ContextType, Feature} from "../../../modulesContent";
 
 import {HTML} from "../../../Modules/Core/Html/Html";
 import {Localization} from "../../../Modules/Core/Localization/Localization";

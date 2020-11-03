@@ -1,5 +1,5 @@
-import {HTML, Localization} from "../../../core_modules";
-import {EarlyAccess, Feature, Messenger} from "../../../Modules/Content";
+import {HTML, Localization} from "../../../modulesCore";
+import {EarlyAccess, Feature, Messenger} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 import {Page} from "../../Page";
 import {CartSearchFilter} from "./Filters/CartSearchFilter";

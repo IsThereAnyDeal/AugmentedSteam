@@ -1,5 +1,5 @@
-import {HTML, Localization} from "../../../core_modules";
-import {Background, DOMHelper, Feature, ProfileData, SteamId} from "../../../Modules/Content";
+import {HTML, Localization} from "../../../modulesCore";
+import {Background, DOMHelper, Feature, ProfileData, SteamId} from "../../../modulesContent";
 import Config from "config";
 import {Page} from "../../Page";
 

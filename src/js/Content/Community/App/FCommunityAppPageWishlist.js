@@ -1,5 +1,5 @@
-import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {Background, DynamicStore, Feature, User} from "../../../Modules/Content";
+import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../modulesCore";
+import {Background, DynamicStore, Feature, User} from "../../../modulesContent";
 
 export default class FCommunityAppPageWishlist extends Feature {
 

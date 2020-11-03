@@ -1,5 +1,5 @@
-import {HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {Feature, User} from "../../../Modules/Content";
+import {HTML, Localization, SyncedStorage} from "../../../modulesCore";
+import {Feature, User} from "../../../modulesContent";
 
 export default class FOwnedActionsButtons extends Feature {
 

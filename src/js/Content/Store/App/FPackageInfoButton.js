@@ -1,5 +1,5 @@
 import {Feature} from "../../../Modules/Content/Feature/Feature";
-import {HTML, Localization, SyncedStorage} from "../../../core_modules";
+import {HTML, Localization, SyncedStorage} from "../../../modulesCore";
 
 export default class FPackageInfoButton extends Feature {
 

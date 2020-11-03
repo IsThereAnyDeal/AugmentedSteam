@@ -1,4 +1,4 @@
-import {Context, ContextType, EarlyAccess} from "../../../Modules/Content";
+import {Context, ContextType, EarlyAccess} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 import FHideTrademarks from "../../Common/FHideTrademarks";
 import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";

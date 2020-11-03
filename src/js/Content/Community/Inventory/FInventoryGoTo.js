@@ -1,5 +1,5 @@
-import {HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {CallbackFeature, DOMHelper} from "../../../Modules/Content";
+import {HTML, Localization, SyncedStorage} from "../../../modulesCore";
+import {CallbackFeature, DOMHelper} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FInventoryGoTo extends CallbackFeature {

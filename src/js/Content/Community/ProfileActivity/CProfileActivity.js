@@ -1,4 +1,4 @@
-import {ContextType, EarlyAccess} from "../../../Modules/Content";
+import {ContextType, EarlyAccess} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
 import {CommentHandler} from "../../../Modules/Content/Community/CommentHandler";
 import FHighlightFriendsActivity from "./FHighlightFriendsActivity";

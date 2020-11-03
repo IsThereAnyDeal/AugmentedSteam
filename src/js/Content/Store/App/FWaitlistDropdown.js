@@ -1,5 +1,5 @@
-import {HTML, Localization, SyncedStorage} from "../../../core_modules";
-import {Background, Feature} from "../../../Modules/Content";
+import {HTML, Localization, SyncedStorage} from "../../../modulesCore";
+import {Background, Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FWaitlistDropdown extends Feature {

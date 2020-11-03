@@ -1,5 +1,5 @@
-import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../core_modules";
-import {Background, Feature, RequestData} from "../../../Modules/Content";
+import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../modulesCore";
+import {Background, Feature, RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FFriendsThatOwn extends Feature {

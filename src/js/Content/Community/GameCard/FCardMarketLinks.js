@@ -1,5 +1,5 @@
-import {HTML, Localization} from "../../../core_modules";
-import {Background, CommunityUtils, CurrencyManager, DOMHelper, Feature, Price} from "../../../Modules/Content";
+import {HTML, Localization} from "../../../modulesCore";
+import {Background, CommunityUtils, CurrencyManager, DOMHelper, Feature, Price} from "../../../modulesContent";
 
 export default class FCardMarketLinks extends Feature {
 

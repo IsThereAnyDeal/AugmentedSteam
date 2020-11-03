@@ -1,5 +1,5 @@
 
-import {SyncedStorage} from "../../../core_modules";
+import {SyncedStorage} from "../../../modulesCore";
 import {CallbackFeature} from "../../../Modules/Content/Feature/CallbackFeature";
 import {Prices} from "../../../Modules/Content/Prices";
 import {Page} from "../../Page";
