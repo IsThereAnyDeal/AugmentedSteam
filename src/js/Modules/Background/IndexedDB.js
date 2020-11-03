@@ -1,12 +1,12 @@
 import {Info} from "../Core/Info";
 import {TimeUtils} from "../Core/Utils/TimeUtils";
-import idb from "idb";
+import {openDB} from "idb";
 
 class IndexedDB {
 
     static init() {
         if (IndexedDB._promise) { return IndexedDB._promise; }
-        IndexedDB._promise = idb.openDB("Augmented Steam", Info.db_version, {
+        IndexedDB._promise = openDB("Augmented Steam", Info.db_version, {
             upgrade(db, oldVersion, newVersion, tx) {
                 if (oldVersion < 1) {
                     db.createObjectStore("coupons").createIndex("appid", "appids", {"unique": false, "multiEntry": true});
