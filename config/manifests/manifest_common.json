@@ -43,8 +43,6 @@
     "homepage_url": "https://es.isthereanydeal.com/",
     "background": {
       "scripts": [
-        "lib/webextension-polyfill/browser-polyfill.js",
-        "lib/idb/with-async-ittr.js",
         "entries/background.js"
       ]
     }

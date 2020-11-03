@@ -14,7 +14,6 @@
         "*://store.steampowered.com/"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/frontpage.js"
       ],
       "css": [
@@ -28,7 +27,6 @@
         "*://*.steampowered.com/wishlist/profiles/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/wishlist.js"
       ],
       "css": [
@@ -41,7 +39,6 @@
         "*://*.steampowered.com/sale/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/sale.js"
       ],
       "css": [
@@ -55,7 +52,6 @@
         "*://*.steampowered.com/stats/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/stats.js"
       ],
       "css": [
@@ -69,7 +65,6 @@
         "*://*.steampowered.com/search/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/search.js"
       ],
       "css": [
@@ -84,7 +79,6 @@
         "*://*.steampowered.com/digitalgiftcards/selectgiftcard/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/funds.js"
       ],
       "css": [
@@ -98,7 +92,6 @@
         "*://*.steampowered.com/account/"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/account.js"
       ],
       "css": [
@@ -112,7 +105,6 @@
         "*://*.steampowered.com/account/registerkey/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/registerkey.js"
       ],
       "css": [
@@ -125,7 +117,6 @@
         "*://*.steampowered.com/bundle/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/bundle.js"
       ],
       "css": [
@@ -138,7 +129,6 @@
         "*://*.steampowered.com/sub/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/sub.js"
       ],
       "css": [
@@ -151,7 +141,6 @@
         "*://*.steampowered.com/app/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/app.js"
       ],
       "css": [
@@ -164,7 +153,6 @@
         "*://*.steampowered.com/agecheck/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/agecheck.js"
       ],
       "css": [
@@ -210,7 +198,6 @@
         "*://*.steampowered.com/agecheck/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/store/default.js"
       ],
       "css": [
@@ -224,7 +211,6 @@
         "*://steamcommunity.com/workshop/"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/workshop.js"
       ],
       "css": [
@@ -237,7 +223,6 @@
         "*://steamcommunity.com/workshop/browse*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/workshop_browse.js"
       ],
       "css": [
@@ -253,7 +238,6 @@
         "*://steamcommunity.com/profiles/*/myactivity/"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/profile_activity.js"
       ],
       "css": [
@@ -267,7 +251,6 @@
         "*://steamcommunity.com/profiles/*/games*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/games.js"
       ],
       "css": [
@@ -281,7 +264,6 @@
         "*://steamcommunity.com/profiles/*/edit*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/profile_edit.js"
       ],
       "css": [
@@ -297,7 +279,6 @@
         "*://steamcommunity.com/profiles/*/badges/"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/badges.js"
       ],
       "css": [
@@ -311,7 +292,6 @@
         "*://steamcommunity.com/profiles/*/gamecards*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/gamecard.js"
       ],
       "css": [
@@ -325,7 +305,6 @@
         "*://steamcommunity.com/profiles/*/friendsthatplay*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/friends_that_play.js"
       ],
       "css": [
@@ -345,7 +324,6 @@
         "*://steamcommunity.com/profiles/*/friends?*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/friends.js"
       ],
       "css": [
@@ -361,7 +339,6 @@
         "*://steamcommunity.com/profiles/*/groups/"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/groups.js"
       ],
       "css": [
@@ -375,7 +352,6 @@
         "*://steamcommunity.com/profiles/*/inventory*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/inventory.js"
       ],
       "css": [
@@ -388,7 +364,6 @@
         "*://steamcommunity.com/market/listings/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/market_listing.js"
       ],
       "css": [
@@ -404,7 +379,6 @@
         "*://steamcommunity.com/market/listings/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/market.js"
       ],
       "css": [
@@ -418,7 +392,6 @@
         "*://steamcommunity.com/profiles/*/stats*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/stats.js"
       ],
       "css": [
@@ -434,7 +407,6 @@
         "*://steamcommunity.com/profiles/*/myworkshopfiles/?*browsefilter=mysubscriptions*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/myworkshop.js"
       ],
       "css": [
@@ -448,7 +420,6 @@
         "*://steamcommunity.com/profiles/*/recommended*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/recommended.js"
       ],
       "css": [
@@ -502,7 +473,6 @@
         "*://steamcommunity.com/profiles/*/recommended*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/profile_home.js"
       ],
       "css": [
@@ -515,7 +485,6 @@
         "*://steamcommunity.com/groups/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/group_home.js"
       ],
       "css": [
@@ -528,7 +497,6 @@
         "*://steamcommunity.com/app/*/guides*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/guides.js"
       ],
       "css": [
@@ -544,7 +512,6 @@
         "*://steamcommunity.com/app/*/guides*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/app.js"
       ],
       "css": [
@@ -558,7 +525,6 @@
         "*://steamcommunity.com/sharedfiles/filedetails/?id=*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/shared_files.js"
       ],
       "css": [
@@ -572,7 +538,6 @@
         "*://steamcommunity.com/sharedfiles/editguide/?id=*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/edit_guide.js"
       ],
       "css": [
@@ -586,7 +551,6 @@
         "*://steamcommunity.com/tradingcards/boostercreator/"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/booster_creator.js"
       ],
       "css": [
@@ -620,7 +584,6 @@
         "*://steamcommunity.com/tradingcards/boostercreator/"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/default.js"
       ],
       "css": [
@@ -633,7 +596,6 @@
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
-        "lib/webextension-polyfill/browser-polyfill.js",
         "entries/community/trade_offer.js"
       ],
       "css": [

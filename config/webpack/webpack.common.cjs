@@ -1,5 +1,6 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
+const webpack = require("webpack");
 const path = require("path");
 
 const rootDir = path.resolve(__dirname, "../../");
@@ -7,6 +8,7 @@ const rootDir = path.resolve(__dirname, "../../");
 module.exports = {
     "context": rootDir,
     "entry": {
+        "authorization": "./src/js/background/authorization.js",
         "background": "./src/js/background/background.js",
         "options": "./src/js/options/options.js",
         "community/app": "./src/js/Content/Community/App/PApp.js",
@@ -60,6 +62,9 @@ module.exports = {
         ],
     },
     "plugins": [
+        new webpack.ProvidePlugin({
+            "browser": "webextension-polyfill"
+        }),
         new CleanWebpackPlugin(),
         new CopyWebpackPlugin({
             "patterns": [
@@ -69,10 +74,6 @@ module.exports = {
                     "globOptions": {
                         "ignore": ["**/js/**"], // TODO Make this only ignore the top level js directory
                     }
-                },
-                {
-                    "context": "src/js/",
-                    "from": "lib/**",
                 },
                 {
                     "context": "src/js/steam/",

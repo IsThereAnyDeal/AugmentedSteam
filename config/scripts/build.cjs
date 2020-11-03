@@ -30,21 +30,6 @@ webpack(merge(config, {
             "space": mode === "dev" ? "\t" : null,
         }),
     ],
-
-    /*
-     *"module": {
-     *  "rules": [
-     *      {
-     *          "test": /\.c?js$/,
-     *          "exclude": [
-     *              path.resolve(rootDir, "node_modules/"),
-     *              path.resolve(rootDir, "src/js/lib/"),
-     *          ],
-     *          "loader": "eslint-loader",
-     *      }
-     *  ],
-     *},
-     */
 }), (err, stats) => {
 
     if (err) {

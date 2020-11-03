@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "dompurify": "~2.0.2",
-    "idb": "^5.0.7"
+    "idb": "^5.0.7",
+    "webextension-polyfill": "^0.6.0"
   }
 }

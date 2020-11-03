@@ -20,7 +20,6 @@
         }
     ],
     "ignorePatterns": [
-        "/src/js/lib/**",
         "/dist/**",
         "/releases/**"
     ],
