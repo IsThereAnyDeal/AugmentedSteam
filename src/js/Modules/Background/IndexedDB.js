@@ -1,5 +1,6 @@
 import {Info} from "../Core/Info";
 import {TimeUtils} from "../Core/Utils/TimeUtils";
+import idb from "idb";
 
 class IndexedDB {
 
