@@ -1,13 +1,13 @@
 import setup from "../setup";
 import {SyncedStorage} from "../modulesCore";
-import {ContextMenu} from "../Modules/Background/ContextMenu";
-import {IndexedDB} from "../Modules/Background/IndexedDB";
-import {SteamCommunityApi} from "../Modules/Background/SteamCommunityApi";
-import {SteamStoreApi} from "../Modules/Background/SteamStoreApi";
-import {StaticResources} from "../Modules/Background/StaticResources";
-import {ITADApi} from "../Modules/Background/ITADApi";
-import {AugmentedSteamApi} from "../Modules/Background/AugmentedSteamApi";
-import {ExtensionData} from "../Modules/Background/ExtensionData";
+import {ContextMenu} from "./Modules/ContextMenu";
+import {IndexedDB} from "./Modules/IndexedDB";
+import {SteamCommunityApi} from "./Modules/SteamCommunityApi";
+import {SteamStoreApi} from "./Modules/SteamStoreApi";
+import {StaticResources} from "./Modules/StaticResources";
+import {ITADApi} from "./Modules/ITADApi";
+import {AugmentedSteamApi} from "./Modules/AugmentedSteamApi";
+import {ExtensionData} from "./Modules/ExtensionData";
 
 // Functions that are called when an object store (or one of its entries) has expired
 IndexedDB.objStoreFetchFns = new Map([

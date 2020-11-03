@@ -1,13 +1,13 @@
-import {CustomLinks} from "../Modules/Options/CustomLinks";
-import {Fader} from "../Modules/Options/Fader";
-import {Region} from "../Modules/Options/Region";
-import {SaveIndicator} from "../Modules/Options/SaveIndicator";
-import {Sidebar} from "../Modules/Options/Sidebar";
+import {CustomLinks} from "./Modules/CustomLinks";
+import {Fader} from "./Modules/Fader";
+import {Region} from "./Modules/Region";
+import {SaveIndicator} from "./Modules/SaveIndicator";
+import {Sidebar} from "./Modules/Sidebar";
 import {
     BackgroundSimple, Downloader, ExtensionResources, HTML, Info, Language,
     Localization, Permissions, SyncedStorage
 } from "../modulesCore";
-import {StoreList} from "../Modules/Options/Data/StoreList";
+import {StoreList} from "./Modules/Data/StoreList";
 
 const Options = (() => {
     const self = {};
