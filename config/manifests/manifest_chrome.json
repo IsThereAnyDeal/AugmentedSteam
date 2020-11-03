@@ -12,7 +12,7 @@
         "*://store.steampowered.com/"
       ],
       "js": [
-        "entries/store/frontpage.js"
+        "js/store/frontpage.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -25,7 +25,7 @@
         "*://*.steampowered.com/wishlist/profiles/*"
       ],
       "js": [
-        "entries/store/wishlist.js"
+        "js/store/wishlist.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -37,7 +37,7 @@
         "*://*.steampowered.com/sale/*"
       ],
       "js": [
-        "entries/store/sale.js"
+        "js/store/sale.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -50,7 +50,7 @@
         "*://*.steampowered.com/stats/*"
       ],
       "js": [
-        "entries/store/stats.js"
+        "js/store/stats.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -63,7 +63,7 @@
         "*://*.steampowered.com/search/*"
       ],
       "js": [
-        "entries/store/search.js"
+        "js/store/search.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -77,7 +77,7 @@
         "*://*.steampowered.com/digitalgiftcards/selectgiftcard/*"
       ],
       "js": [
-        "entries/store/funds.js"
+        "js/store/funds.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -90,7 +90,7 @@
         "*://*.steampowered.com/account/"
       ],
       "js": [
-        "entries/store/account.js"
+        "js/store/account.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -103,7 +103,7 @@
         "*://*.steampowered.com/account/registerkey/*"
       ],
       "js": [
-        "entries/store/registerkey.js"
+        "js/store/registerkey.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -115,7 +115,7 @@
         "*://*.steampowered.com/bundle/*"
       ],
       "js": [
-        "entries/store/bundle.js"
+        "js/store/bundle.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -127,7 +127,7 @@
         "*://*.steampowered.com/sub/*"
       ],
       "js": [
-        "entries/store/sub.js"
+        "js/store/sub.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -139,7 +139,7 @@
         "*://*.steampowered.com/app/*"
       ],
       "js": [
-        "entries/store/app.js"
+        "js/store/app.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -151,7 +151,7 @@
         "*://*.steampowered.com/agecheck/*"
       ],
       "js": [
-        "entries/store/agecheck.js"
+        "js/store/agecheck.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -196,7 +196,7 @@
         "*://*.steampowered.com/agecheck/*"
       ],
       "js": [
-        "entries/store/default.js"
+        "js/store/default.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -209,7 +209,7 @@
         "*://steamcommunity.com/workshop/"
       ],
       "js": [
-        "entries/community/workshop.js"
+        "js/community/workshop.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -221,7 +221,7 @@
         "*://steamcommunity.com/workshop/browse*"
       ],
       "js": [
-        "entries/community/workshop_browse.js"
+        "js/community/workshop_browse.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -236,7 +236,7 @@
         "*://steamcommunity.com/profiles/*/myactivity/"
       ],
       "js": [
-        "entries/community/profile_activity.js"
+        "js/community/profile_activity.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -249,7 +249,7 @@
         "*://steamcommunity.com/profiles/*/games*"
       ],
       "js": [
-        "entries/community/games.js"
+        "js/community/games.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -262,7 +262,7 @@
         "*://steamcommunity.com/profiles/*/edit*"
       ],
       "js": [
-        "entries/community/profile_edit.js"
+        "js/community/profile_edit.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -277,7 +277,7 @@
         "*://steamcommunity.com/profiles/*/badges/"
       ],
       "js": [
-        "entries/community/badges.js"
+        "js/community/badges.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -290,7 +290,7 @@
         "*://steamcommunity.com/profiles/*/gamecards*"
       ],
       "js": [
-        "entries/community/gamecard.js"
+        "js/community/gamecard.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -303,7 +303,7 @@
         "*://steamcommunity.com/profiles/*/friendsthatplay*"
       ],
       "js": [
-        "entries/community/friends_that_play.js"
+        "js/community/friends_that_play.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -322,7 +322,7 @@
         "*://steamcommunity.com/profiles/*/friends?*"
       ],
       "js": [
-        "entries/community/friends.js"
+        "js/community/friends.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -337,7 +337,7 @@
         "*://steamcommunity.com/profiles/*/groups/"
       ],
       "js": [
-        "entries/community/groups.js"
+        "js/community/groups.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -350,7 +350,7 @@
         "*://steamcommunity.com/profiles/*/inventory*"
       ],
       "js": [
-        "entries/community/inventory.js"
+        "js/community/inventory.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -362,7 +362,7 @@
         "*://steamcommunity.com/market/listings/*"
       ],
       "js": [
-        "entries/community/market_listing.js"
+        "js/community/market_listing.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -377,7 +377,7 @@
         "*://steamcommunity.com/market/listings/*"
       ],
       "js": [
-        "entries/community/market.js"
+        "js/community/market.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -390,7 +390,7 @@
         "*://steamcommunity.com/profiles/*/stats*"
       ],
       "js": [
-        "entries/community/stats.js"
+        "js/community/stats.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -405,7 +405,7 @@
         "*://steamcommunity.com/profiles/*/myworkshopfiles/?*browsefilter=mysubscriptions*"
       ],
       "js": [
-        "entries/community/myworkshop.js"
+        "js/community/myworkshop.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -418,7 +418,7 @@
         "*://steamcommunity.com/profiles/*/recommended*"
       ],
       "js": [
-        "entries/community/recommended.js"
+        "js/community/recommended.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -471,7 +471,7 @@
         "*://steamcommunity.com/profiles/*/recommended*"
       ],
       "js": [
-        "entries/community/profile_home.js"
+        "js/community/profile_home.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -483,7 +483,7 @@
         "*://steamcommunity.com/groups/*"
       ],
       "js": [
-        "entries/community/group_home.js"
+        "js/community/group_home.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -495,7 +495,7 @@
         "*://steamcommunity.com/app/*/guides*"
       ],
       "js": [
-        "entries/community/guides.js"
+        "js/community/guides.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -510,7 +510,7 @@
         "*://steamcommunity.com/app/*/guides*"
       ],
       "js": [
-        "entries/community/app.js"
+        "js/community/app.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -523,7 +523,7 @@
         "*://steamcommunity.com/sharedfiles/filedetails/?id=*"
       ],
       "js": [
-        "entries/community/shared_files.js"
+        "js/community/shared_files.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -536,7 +536,7 @@
         "*://steamcommunity.com/sharedfiles/editguide/?id=*"
       ],
       "js": [
-        "entries/community/edit_guide.js"
+        "js/community/edit_guide.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -549,7 +549,7 @@
         "*://steamcommunity.com/tradingcards/boostercreator/"
       ],
       "js": [
-        "entries/community/booster_creator.js"
+        "js/community/booster_creator.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -582,7 +582,7 @@
         "*://steamcommunity.com/tradingcards/boostercreator/"
       ],
       "js": [
-        "entries/community/default.js"
+        "js/community/default.js"
       ],
       "css": [
         "css/enhancedsteam.css",
@@ -594,7 +594,7 @@
         "*://steamcommunity.com/tradeoffer/*"
       ],
       "js": [
-        "entries/community/trade_offer.js"
+        "js/community/trade_offer.js"
       ],
       "css": [
         "css/community/tradeoffer.css"

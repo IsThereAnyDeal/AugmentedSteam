@@ -49,10 +49,11 @@ module.exports = {
         "store/stats": "./src/js/Content/Features/Store/Stats/PStats.js",
         "store/sub": "./src/js/Content/Features/Store/Sub/PSub.js",
         "store/wishlist": "./src/js/Content/Features/Store/Wishlist/PWishlist.js",
+        "extra/holidayprofile": "./src/js/Steam/holidayprofile.js",
     },
     "output": {
         "path": `${rootDir}/dist`,
-        "filename": "entries/[name].js",
+        "filename": "js/[name].js",
     },
     "resolve": {
         "modules": [
@@ -74,11 +75,6 @@ module.exports = {
                     "globOptions": {
                         "ignore": ["**/js/**"], // TODO Make this only ignore the top level js directory
                     }
-                },
-                {
-                    "context": "src/js/steam/",
-                    "from": "**",
-                    "to": "scripts/",
                 },
                 "changelog.txt",
                 "LICENSE",
