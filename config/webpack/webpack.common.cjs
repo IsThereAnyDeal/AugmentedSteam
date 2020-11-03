@@ -1,5 +1,6 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const JsonMinimizerPlugin = require("json-minimizer-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const webpack = require("webpack");
 const path = require("path");
@@ -86,6 +87,7 @@ module.exports = {
         "minimizer": [
             "...",
             new JsonMinimizerPlugin(),
+            new CssMinimizerPlugin(),
         ],
     },
 };
