@@ -24,7 +24,6 @@
         "/releases/**"
     ],
     "rules": {
-        "accessor-pairs": "error",
         "array-bracket-newline": ["error", "consistent"],
         "array-bracket-spacing": ["error", "never"],
         "array-callback-return": "error",

@@ -14,7 +14,7 @@ Visit [extension's page](https://es.isthereanydeal.com/) or our [Discord channel
 
 ### Manual building
 
-2. Run `npm run build` to build the extension
+1. Run `npm run build` to build the extension
 
 You can supply the `build` script with extra parameters:
 - The browser you want to build the extension for (`chrome` (default) or `firefox`)
@@ -24,9 +24,9 @@ So if you wanted to build a release version for Firefox, you'd run `npm run buil
 
 ### Automatic rebuilding
 
-2. Run `npm run start` in order to build the extension that will communicate with the Hot Extension Reload Server
-3. Terminate the server and reload the extension manually
-4. Run `npm run start` to start the Hot Extension Reload Server
+1. Run `npm run start` in order to build the extension that will communicate with the Hot Extension Reload Server
+2. Terminate the server and reload the extension manually
+3. Run `npm run start` to start the Hot Extension Reload Server
 
 Now, for every change you make in the source code, the server will rebuild and reload the extension and refresh all affected pages automatically.
 
