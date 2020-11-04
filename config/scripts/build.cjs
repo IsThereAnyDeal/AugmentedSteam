@@ -17,6 +17,9 @@ if (process.argv.includes("prod")) {
 const config = require(`../webpack/webpack.${mode}.cjs`);
 
 webpack(merge(config, {
+    "entry": {
+        "css/augmentedsteam": `./src/css/augmentedsteam-${browser}.css`
+    },
     "plugins": [
         new MergeJsonWebpackPlugin({
             "files": [

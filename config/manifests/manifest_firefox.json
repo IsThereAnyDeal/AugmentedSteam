@@ -17,8 +17,7 @@
         "js/store/frontpage.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -30,8 +29,7 @@
         "js/store/wishlist.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -42,8 +40,7 @@
         "js/store/sale.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -55,8 +52,7 @@
         "js/store/stats.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -68,8 +64,7 @@
         "js/store/search.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -82,8 +77,7 @@
         "js/store/funds.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -95,8 +89,7 @@
         "js/store/account.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -108,8 +101,7 @@
         "js/store/registerkey.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -120,8 +112,7 @@
         "js/store/bundle.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -132,8 +123,7 @@
         "js/store/sub.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -144,8 +134,7 @@
         "js/store/app.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -156,8 +145,7 @@
         "js/store/agecheck.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -201,8 +189,7 @@
         "js/store/default.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -214,8 +201,7 @@
         "js/community/workshop.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -226,8 +212,7 @@
         "js/community/workshop_browse.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -241,8 +226,7 @@
         "js/community/profile_activity.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -254,8 +238,7 @@
         "js/community/games.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -267,8 +250,7 @@
         "js/community/profile_edit.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -282,8 +264,7 @@
         "js/community/badges.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -295,8 +276,7 @@
         "js/community/gamecard.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -308,8 +288,7 @@
         "js/community/friends_that_play.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -327,8 +306,7 @@
         "js/community/friends.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -342,8 +320,7 @@
         "js/community/groups.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -355,8 +332,7 @@
         "js/community/inventory.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -367,8 +343,7 @@
         "js/community/market_listing.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -382,8 +357,7 @@
         "js/community/market.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -395,8 +369,7 @@
         "js/community/stats.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -410,8 +383,7 @@
         "js/community/myworkshop.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -423,8 +395,7 @@
         "js/community/recommended.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -476,8 +447,7 @@
         "js/community/profile_home.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -488,8 +458,7 @@
         "js/community/group_home.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -500,8 +469,7 @@
         "js/community/guides.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -515,8 +483,7 @@
         "js/community/app.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -528,8 +495,7 @@
         "js/community/shared_files.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -541,8 +507,7 @@
         "js/community/edit_guide.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -554,8 +519,7 @@
         "js/community/booster_creator.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {
@@ -587,8 +551,7 @@
         "js/community/default.js"
       ],
       "css": [
-        "css/enhancedsteam.css",
-        "css/enhancedsteam-firefox.css"
+        "css/augmentedsteam.css"
       ]
     },
     {

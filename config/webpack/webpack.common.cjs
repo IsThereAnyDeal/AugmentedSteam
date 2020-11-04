@@ -1,15 +1,41 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const JsonMinimizerPlugin = require("json-minimizer-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const webpack = require("webpack");
 const path = require("path");
 
 const rootDir = path.resolve(__dirname, "../../");
 
+
+/**
+ * Cleanup empty js modules created after compiling .css
+ * see: https://github.com/webpack/webpack/issues/11671
+ */
+class MiniCssExtractPluginCleanup {
+    apply(compiler) {
+        compiler.hooks.emit.tapAsync("MiniCssExtractPluginCleanup", (compilation, callback) => {
+            Object.keys(compilation.assets)
+                .filter(asset => {
+                    return /^css\/.+\.js(\.map)?/.test(asset);
+                })
+                .forEach(asset => {
+                    delete compilation.assets[asset];
+                });
+
+            callback();
+        });
+    }
+}
+
 module.exports = {
     "context": rootDir,
     "entry": {
+        // stylesheets - NOTE: main stylesheet added during build, based on browser
+        "css/community/tradeoffer": "./src/css/community/tradeoffer.css",
+        "css/options": "./src/css/options.css",
+        // pages
         "authorization": "./src/js/Background/authorization.js",
         "background": "./src/js/Background/background.js",
         "options": "./src/js/options/options.js",
@@ -55,13 +81,26 @@ module.exports = {
     },
     "output": {
         "path": `${rootDir}/dist`,
-        "filename": "js/[name].js",
+        "filename": "[name].js",
     },
     "resolve": {
         "modules": [
             path.resolve(rootDir, "src/js/"),
             path.resolve(rootDir, "src/js/Content/Features/"),
             path.resolve(rootDir, "node_modules/")
+        ],
+    },
+    "module": {
+        "rules": [
+            {
+                "test": /\.css$/,
+                "use": [MiniCssExtractPlugin.loader, {
+                    "loader": "css-loader",
+                    "options": {
+                        "url": false
+                    }
+                }],
+            },
         ],
     },
     "plugins": [
@@ -75,13 +114,23 @@ module.exports = {
                     "context": "src/",
                     "from": "*/**",
                     "globOptions": {
-                        "ignore": ["**/js/**"], // TODO Make this only ignore the top level js directory
+                        "ignore": [
+                            "**/js/**", // TODO Make this only ignore the top level js directory
+                            "**/css/**"
+                        ],
                     }
                 },
                 "changelog.txt",
                 "LICENSE",
             ]
         }),
+        new MiniCssExtractPlugin({
+            "filename": "[name].css",
+            "options": {
+                "url": false
+            }
+        }),
+        new MiniCssExtractPluginCleanup()
     ],
     "optimization": {
         "minimizer": [

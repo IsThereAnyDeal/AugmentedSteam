@@ -483,20 +483,3 @@ const Options = (() => {
 })();
 
 document.addEventListener("DOMContentLoaded", Options.init);
-
-// add correct version of styles based on browser
-(() => {
-    const manifest = browser.runtime.getManifest();
-
-    const linkEl = document.createElement("link");
-    linkEl.rel = "stylesheet";
-    linkEl.type = "text/css";
-
-    if (manifest.browser_specific_settings) { // we only include this in firefox manifest
-        linkEl.href = "../css/enhancedsteam-firefox.css";
-    } else {
-        linkEl.href = "../css/enhancedsteam-chrome.css";
-    }
-    document.head.appendChild(linkEl);
-
-})();
