@@ -26,7 +26,8 @@ To see all available options, run `npm run build -- --help`.
 During development, it might be convenient to run hot reload server, so you don't need to reload extension manually
 after each build.
 
-To do that, run build with `--server` argument. Make sure to manually reload extension first time after the build.
+To do that, run build with `--server` argument. Make sure to manually reload extension first time after the build.  
+Example: `npm run build -- firefox --server`
 
 Now, for every change you make in the source code, the server will rebuild and reload the extension
 and refresh all affected pages automatically.

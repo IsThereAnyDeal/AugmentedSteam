@@ -1,12 +1,14 @@
 const WebpackRunner = require("../webpack/WebpackRunner.cjs");
 const argparse = require("argparse");
 
+const browsers = Object.freeze(["chrome", "firefox"]);
+
 const parser = new argparse.ArgumentParser({
     "add_help": true
 });
 parser.add_argument("browser", {
     "type": "str",
-    "choices": ["chrome", "firefox"],
+    "choices": ["all"].concat(browsers),
     "help": "Browser for which to build the extension"
 });
 parser.add_argument("-p", "--production", {
@@ -22,7 +24,20 @@ parser.add_argument("-s", "--server", {
 
 const args = parser.parse_args();
 
-const runner = new WebpackRunner(args.browser);
-runner.development = !args.production;
-runner.server = args.server;
-runner.run();
+let run = [];
+if (args.browser === "all") {
+    if (args.server) {
+        throw new Error("Running hot reload server is supported only for single browser instance");
+    }
+
+    run = browsers;
+} else {
+    run = [args.browser];
+}
+
+for (const browser of run) {
+    const runner = new WebpackRunner(browser);
+    runner.development = !args.production;
+    runner.server = args.server;
+    runner.run();
+}
