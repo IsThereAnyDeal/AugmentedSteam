@@ -1,6 +1,28 @@
 const WebpackRunner = require("../webpack/WebpackRunner.cjs");
+const argparse = require("argparse");
 
-const browser = process.argv.includes("firefox") ? "firefox" : "chrome";
-const runner = new WebpackRunner(browser);
-runner.development = !process.argv.includes("prod");
+const parser = new argparse.ArgumentParser({
+    "add_help": true
+});
+parser.add_argument("browser", {
+    "type": "str",
+    "choices": ["chrome", "firefox"],
+    "help": "Browser for which to build the extension"
+});
+parser.add_argument("-p", "--production", {
+    "action": argparse.BooleanOptionalAction,
+    "help": "Build for production",
+    "default": false
+});
+parser.add_argument("-s", "--server", {
+    "action": argparse.BooleanOptionalAction,
+    "help": "Build with hot reload support and run server (only development)",
+    "default": false
+});
+
+const args = parser.parse_args();
+
+const runner = new WebpackRunner(args.browser);
+runner.development = !args.production;
+runner.server = args.server;
 runner.run();

@@ -13,15 +13,17 @@ class WebpackRunner {
         }
 
         this._development = true;
-        this._hotReload = false;
+        this._server = false;
+
+        this._config = require("../webpack/webpack.common.cjs");
     }
 
     set development(value) {
         this._development = value;
     }
 
-    set hotReload(value) {
-        this._hotReload = value;
+    set server(value) {
+        this._server = value;
     }
 
     get _mode() {
@@ -57,7 +59,7 @@ class WebpackRunner {
             })
         ];
 
-        if (this._hotReload) {
+        if (this._server) {
             options.watch = true;
             options.plugins.push(
                 new ExtensionReloader({
@@ -76,15 +78,14 @@ class WebpackRunner {
     }
 
     run() {
-        if (!this._development && this._hotReload) {
-            throw new Error("HotReload support requires development mode");
+        if (!this._development && this._server) {
+            throw new Error("Hot reload server requires development mode");
         }
 
-        const config = require("../webpack/webpack.common.cjs");
         const options = this._buildOptions();
 
         webpack(
-            merge(config, options),
+            merge(this._config, options),
             (err, stats) => {
                 if (err) {
                     console.error(err.stack || err);
