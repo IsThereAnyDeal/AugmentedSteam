@@ -81,7 +81,7 @@ module.exports = {
     },
     "output": {
         "path": `${rootDir}/dist`,
-        "filename": "[name].js",
+        "filename": "js/[name].js",
     },
     "resolve": {
         "modules": [
