@@ -59,9 +59,6 @@ module.exports = {
         "store/wishlist": "./src/js/Content/Features/Store/Wishlist/PWishlist.js",
         "extra/holidayprofile": "./src/js/Steam/holidayprofile.js",
         // libs
-        "browser-polyfill": {
-            "import": "webextension-polyfill"
-        },
         "dompurify": {
             "import": "dompurify",
         }
@@ -103,6 +100,10 @@ module.exports = {
                             "**/css/**"
                         ],
                     }
+                },
+                {
+                    "from": "node_modules/webextension-polyfill/dist/browser-polyfill.js",
+                    "to": "js/browser-polyfill.js"
                 },
                 "changelog.txt",
                 "LICENSE",
