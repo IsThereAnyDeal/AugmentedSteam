@@ -1,33 +1,13 @@
+const webpack = require("webpack");
+const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const JsonMinimizerPlugin = require("json-minimizer-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractCleanupPlugin = require("./Plugins/MiniCssExtractCleanupPlugin.cjs");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
-const webpack = require("webpack");
-const path = require("path");
 
 const rootDir = path.resolve(__dirname, "../../");
-
-
-/**
- * Cleanup empty js modules created after compiling .css
- * see: https://github.com/webpack/webpack/issues/11671
- */
-class MiniCssExtractPluginCleanup {
-    apply(compiler) {
-        compiler.hooks.emit.tapAsync("MiniCssExtractPluginCleanup", (compilation, callback) => {
-            Object.keys(compilation.assets)
-                .filter(asset => {
-                    return /^css\/.+\.js(\.map)?/.test(asset);
-                })
-                .forEach(asset => {
-                    delete compilation.assets[asset];
-                });
-
-            callback();
-        });
-    }
-}
 
 module.exports = {
     "context": rootDir,
@@ -78,6 +58,13 @@ module.exports = {
         "store/sub": "./src/js/Content/Features/Store/Sub/PSub.js",
         "store/wishlist": "./src/js/Content/Features/Store/Wishlist/PWishlist.js",
         "extra/holidayprofile": "./src/js/Steam/holidayprofile.js",
+        // libs
+        "browser-polyfill": {
+            "import": "webextension-polyfill"
+        },
+        "dompurify": {
+            "import": "dompurify",
+        }
     },
     "output": {
         "path": `${rootDir}/dist`,
@@ -130,7 +117,7 @@ module.exports = {
                 "url": false
             }
         }),
-        new MiniCssExtractPluginCleanup()
+        new MiniCssExtractCleanupPlugin()
     ],
     "optimization": {
         "minimizer": [
