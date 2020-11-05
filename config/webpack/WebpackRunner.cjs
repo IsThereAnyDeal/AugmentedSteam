@@ -3,6 +3,7 @@ const {merge} = require("webpack-merge");
 const path = require("path");
 const MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin");
 const ExtensionReloader = require("webpack-extension-reloader");
+const ZipPlugin = require('zip-webpack-plugin');
 
 class WebpackRunner {
 
@@ -75,6 +76,15 @@ class WebpackRunner {
                             Object.keys(this._config.entry)
                                 .filter(entry => entry !== "background" && entry !== "options"),
                     }
+                })
+            );
+        }
+
+        if (!this._development) {
+            options.plugins.push(
+                new ZipPlugin({
+                    "path": this._config.output.path,
+                    "filename": `${this._browser}.zip`
                 })
             );
         }
