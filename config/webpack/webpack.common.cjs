@@ -91,9 +91,6 @@ module.exports = {
         ],
     },
     "plugins": [
-        new webpack.ProvidePlugin({
-            "browser": "webextension-polyfill"
-        }),
         new CleanWebpackPlugin(),
         new CopyWebpackPlugin({
             "patterns": [
