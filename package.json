@@ -20,7 +20,7 @@
     "zip-webpack-plugin": "^3.0.0"
   },
   "dependencies": {
-    "dompurify": "~2.0.2",
+    "dompurify": "^2.2.2",
     "idb": "^5.0.7",
     "webextension-polyfill": "^0.6.0"
   }
