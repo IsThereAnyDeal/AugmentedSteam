@@ -1,7 +1,6 @@
 import {LocalStorage} from "../../Core/Storage/LocalStorage";
 import {Errors} from "../../Core/Errors/Errors";
 import {GameId} from "../../Core/GameId";
-import DOMPurify from "dompurify";
 import {HTMLParser} from "../../Core/Html/HtmlParser";
 import {Api} from "./Api";
 import {IndexedDB} from "./IndexedDB";

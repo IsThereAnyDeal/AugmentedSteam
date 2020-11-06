@@ -1,4 +1,3 @@
-import DOMPurify from "dompurify";
 
 class HTML {
 

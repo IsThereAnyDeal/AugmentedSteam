@@ -1,4 +1,3 @@
-const webpack = require("webpack");
 const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const JsonMinimizerPlugin = require("json-minimizer-webpack-plugin");
@@ -57,11 +56,7 @@ module.exports = {
         "store/stats": "./src/js/Content/Features/Store/Stats/PStats.js",
         "store/sub": "./src/js/Content/Features/Store/Sub/PSub.js",
         "store/wishlist": "./src/js/Content/Features/Store/Wishlist/PWishlist.js",
-        "extra/holidayprofile": "./src/js/Steam/holidayprofile.js",
-        // libs
-        "dompurify": {
-            "import": "dompurify",
-        }
+        "extra/holidayprofile": "./src/js/Steam/holidayprofile.js"
     },
     "output": {
         "path": `${rootDir}/dist`,
@@ -104,6 +99,10 @@ module.exports = {
                 {
                     "from": "node_modules/webextension-polyfill/dist/browser-polyfill.js",
                     "to": "js/browser-polyfill.js"
+                },
+                {
+                    "from": "node_modules/dompurify/dist/purify.js",
+                    "to": "js/dompurify.js"
                 },
                 "changelog.txt",
                 "LICENSE",
