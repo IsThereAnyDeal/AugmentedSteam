@@ -1,5 +1,6 @@
 import {Localization} from "../../Core/Localization/Localization";
 import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
+import {Permissions} from "../../modulesCore";
 
 class ContextMenu {
 
@@ -47,8 +48,11 @@ class ContextMenu {
     }
 
     static update() {
-        if (!browser.contextMenus || !browser.contextMenus.removeAll) { return; }
-        browser.contextMenus.removeAll().then(ContextMenu.build);
+        Permissions.contains(["contextMenus"]).then(resolve => {
+            if (resolve) {
+                browser.contextMenus.removeAll().then(ContextMenu.build);
+            }
+        });
     }
 }
 

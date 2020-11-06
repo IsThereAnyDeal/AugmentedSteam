@@ -55,6 +55,9 @@ class Permissions {
      * @return Promise
      */
     static remove(permissionList) {
+        if (permissionList.includes("contextMenus")) {
+            browser.contextMenus.removeAll();
+        }
         return browser.permissions.remove({"permissions": permissionList});
     }
 
