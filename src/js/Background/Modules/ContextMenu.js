@@ -66,10 +66,4 @@ ContextMenu.queryLinks = {
     "context_steam_keys": "https://store.steampowered.com/account/registerkey?key=__steamkey__"
 };
 
-browser.storage.onChanged.addListener(changes => {
-    if (Object.keys(changes).some(key => key.startsWith("context_"))) {
-        ContextMenu.update();
-    }
-});
-
 export {ContextMenu};

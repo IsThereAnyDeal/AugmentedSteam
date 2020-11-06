@@ -8,6 +8,7 @@ import {
     Localization, PermissionOptions, Permissions, SyncedStorage
 } from "../modulesCore";
 import {StoreList} from "./Modules/Data/StoreList";
+import {ContextMenu} from "../Background/Modules/ContextMenu";
 
 const Options = (() => {
     const self = {};
@@ -346,6 +347,10 @@ const Options = (() => {
 
                     if (!success) {
                         throw new Error("Could not grant / remove the permissions");
+                    }
+
+                    if (PermissionOptions[option].permissions.includes("contextMenus")) {
+                        ContextMenu.update();
                     }
                 } catch (err) {
                     console.error(err);
