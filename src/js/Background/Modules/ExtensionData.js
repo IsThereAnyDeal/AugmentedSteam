@@ -1,5 +1,6 @@
 import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
 import {IndexedDB} from "./IndexedDB";
+import {CacheStorage} from "./CacheStorage";
 
 class ExtensionData {
     static clearCache() {
