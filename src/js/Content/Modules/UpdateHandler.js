@@ -30,7 +30,7 @@ class UpdateHandler {
     static async _showChangelog() {
 
         // FIXME
-        let changelog = (await RequestData.getHttp(ExtensionResources.getURL("html/changelog_new.html"))).replace(/[\r\n]/g, "").replace(/'/g, "\\'");
+        const changelog = (await RequestData.getHttp(ExtensionResources.getURL("html/changelog_new.html"))).replace(/[\r\n]/g, "").replace(/'/g, "\\'");
         const logo = ExtensionResources.getURL("img/logo/as128.png");
         const dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
 
