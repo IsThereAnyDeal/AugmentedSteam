@@ -5,7 +5,7 @@ import {SaveIndicator} from "./Modules/SaveIndicator";
 import {Sidebar} from "./Modules/Sidebar";
 import {
     BackgroundSimple, Downloader, ExtensionResources, HTML, Info, Language,
-    Localization, Permissions, SyncedStorage
+    Localization, PermissionOptions, Permissions, SyncedStorage
 } from "../modulesCore";
 import {StoreList} from "./Modules/Data/StoreList";
 
@@ -73,9 +73,9 @@ const Options = (() => {
         async function connect() {
 
             // Has to be synchronously acquired from a user gesture
-            if (!await Permissions.request("itad_connect")) { return; }
+            if (!await Permissions.requestOption("itad_connect")) { return; }
             await BackgroundSimple.action("itad.authorize");
-            await Permissions.remove("itad_connect");
+            await Permissions.removeOption("itad_connect");
 
             itadStatus.textContent = Localization.str.connected;
             itadStatus.classList.add("connected");
@@ -335,15 +335,13 @@ const Options = (() => {
                 value = parseFloat(value.trim()).toFixed(2);
             }
 
-            const permKey = `opt_${option}`;
-
-            if (Permissions.containsKey(permKey)) {
+            if (PermissionOptions[option]) {
                 try {
                     let success;
                     if (value) {
-                        success = await Permissions.request(permKey);
+                        success = await Permissions.requestOption(option);
                     } else {
-                        success = await Permissions.remove(permKey);
+                        success = await Permissions.removeOption(option);
                     }
 
                     if (!success) {

@@ -16,7 +16,7 @@ import {Environment} from "./Core/Environment";
 import {ExtensionResources} from "./Core/ExtensionResources";
 import {GameId} from "./Core/GameId";
 import {Info} from "./Core/Info";
-import {Permissions} from "./Core/Permissions";
+import {PermissionOptions, Permissions} from "./Core/Permissions";
 import {Version} from "./Core/Version";
 
 export {
@@ -31,6 +31,6 @@ export {
     ExtensionResources,
     GameId,
     Info,
-    Permissions,
+    Permissions, PermissionOptions,
     Version
 };

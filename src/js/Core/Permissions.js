@@ -1,55 +1,121 @@
 import {SyncedStorage} from "./Storage/SyncedStorage";
 
+const PermissionOptions = Object.freeze({
+    "context_steam_store": {
+        "persistent": true,
+        "permissions": ["contextMenus"]
+    },
+    "context_steam_market": {
+        "persistent": true,
+        "permissions": ["contextMenus"]
+    },
+    "context_itad": {
+        "persistent": true,
+        "permissions": ["contextMenus"]
+    },
+    "context_bartervg": {
+        "persistent": true,
+        "permissions": ["contextMenus"]
+    },
+    "context_steamdb": {
+        "persistent": true,
+        "permissions": ["contextMenus"]
+    },
+    "context_steamdb_instant": {
+        "persistent": true,
+        "permissions": ["contextMenus"]
+    },
+    "context_steam_keys": {
+        "persistent": true,
+        "permissions": ["contextMenus"]
+    },
+    "itad_connect": {
+        "persistent": false,
+        "permissions": ["webRequest", "webRequestBlocking"],
+    },
+});
+
 class Permissions {
 
-    static isInUse(key) {
-        for (const [option, optionPermissions] of Object.entries(this.options)) {
-            if (option === key || (key.startsWith("opt_") && !SyncedStorage.get(key.substring(4)))) {
-                continue;
-            }
+    /**
+     * @return Promise
+     */
+    static contains(permissionList) {
+        return browser.permissions.contains({"permissions": permissionList});
+    }
 
-            if (optionPermissions.filter(permission => this.options[key].includes(permission)).length > 0) {
-                return true;
+    /**
+     * @return Promise
+     */
+    static request(permissionList) {
+        return browser.permissions.request({"permissions": permissionList});
+    }
+
+    /**
+     * @return Promise
+     */
+    static remove(permissionList) {
+        return browser.permissions.remove({"permissions": permissionList});
+    }
+
+    static async when(permission, onAdded, onRemoved) {
+        if (onAdded) {
+            if (await Permissions.contains([permission])) {
+                onAdded();
+            } else {
+                browser.permissions.onAdded.addListener((p) => {
+                    if (p.Permissions.permissions.includes(permission)) {
+                        onAdded();
+                    }
+                });
             }
         }
-        return false;
+
+        if (onRemoved) {
+            browser.permissions.onRemoved.addListener((p) => {
+                if (p.Permissions.permissions.includes(permission)) {
+                    onRemoved();
+                }
+            });
+        }
     }
 
-    static contains(key) {
-        return browser.permissions.contains({"permissions": this.options[key]});
+    static requestOption(option) {
+        return Permissions.request(PermissionOptions[option].permissions);
     }
 
-    static containsKey(key) {
-        return key in this.options;
-    }
-
-    static request(key) {
-        return browser.permissions.request({"permissions": this.options[key]});
-    }
-
-    static remove(key) {
+    static removeOption(optionToRemove) {
 
         // If any of the permissions is in use by another option, don't remove.
-        if (this.isInUse(key)) {
+        const unusedPermissions = Permissions._getUnusedPermissions(optionToRemove);
+        if (unusedPermissions.length === 0) {
             return Promise.resolve(true);
         }
 
-        return browser.permissions.remove({"permissions": this.options[key]});
+        return Permissions.remove(unusedPermissions);
+    }
+
+    static _getUnusedPermissions(option) {
+        const used = new Set();
+        for (const [key, setup] of Object.entries(PermissionOptions)) {
+            if (option === key || (setup.persistent && !SyncedStorage.get(key))) {
+                continue;
+            }
+
+            for (const p of setup.permissions) {
+                used.add(p);
+            }
+        }
+
+        const unused = new Set();
+        for (const p of PermissionOptions[option].permissions) {
+            if (!used.has(p)) {
+                unused.add(p);
+            }
+        }
+
+        return Array.from(unused.values());
     }
 }
 
-// TODO We should use "enum" like class for defining options - for easier tracking in code and avoiding typos
-
-Permissions.options = Object.freeze({
-    "opt_context_steam_store":      ["contextMenus"],
-    "opt_context_steam_market":     ["contextMenus"],
-    "opt_context_itad":             ["contextMenus"],
-    "opt_context_bartervg":         ["contextMenus"],
-    "opt_context_steamdb":          ["contextMenus"],
-    "opt_context_steamdb_instant":  ["contextMenus"],
-    "opt_context_steam_keys":       ["contextMenus"],
-    "itad_connect":                 ["webRequest", "webRequestBlocking"],
-});
-
-
-export {Permissions};
+export {PermissionOptions, Permissions};

@@ -47,6 +47,7 @@ class ContextMenu {
     }
 
     static update() {
+        if (!browser.contextMenus || !browser.contextMenus.removeAll) { return; }
         browser.contextMenus.removeAll().then(ContextMenu.build);
     }
 }

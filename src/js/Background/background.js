@@ -1,5 +1,5 @@
 import setup from "../setup";
-import {SyncedStorage} from "../modulesCore";
+import {Permissions, SyncedStorage} from "../modulesCore";
 import {ContextMenu} from "./Modules/ContextMenu";
 import {IndexedDB} from "./Modules/IndexedDB";
 import {SteamCommunityApi} from "./Modules/SteamCommunityApi";
@@ -126,7 +126,8 @@ browser.runtime.onMessage.addListener(async(message, sender) => {
     return res;
 });
 
-browser.runtime.onStartup.addListener(ContextMenu.update);
-browser.runtime.onInstalled.addListener(ContextMenu.update);
-
-browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
+Permissions.when("contextMenus", () => {
+    browser.runtime.onStartup.addListener(ContextMenu.update);
+    browser.runtime.onInstalled.addListener(ContextMenu.update);
+    browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
+});
