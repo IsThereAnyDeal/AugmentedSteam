@@ -28,6 +28,7 @@ class ContextMenu {
 
     static async build() {
         await Localization;
+        await SyncedStorage;
 
         for (const option of Object.keys(ContextMenu.queryLinks)) {
             if (!SyncedStorage.get(option)) { continue; }
