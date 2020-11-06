@@ -65,18 +65,18 @@ class Permissions {
         if (onAdded) {
             if (await Permissions.contains([permission])) {
                 onAdded();
-            } else {
-                browser.permissions.onAdded.addListener((p) => {
-                    if (p.Permissions.permissions.includes(permission)) {
-                        onAdded();
-                    }
-                });
             }
+
+            browser.permissions.onAdded.addListener((p) => {
+                if (p.permissions.includes(permission)) {
+                    onAdded();
+                }
+            });
         }
 
         if (onRemoved) {
             browser.permissions.onRemoved.addListener((p) => {
-                if (p.Permissions.permissions.includes(permission)) {
+                if (p.permissions.includes(permission)) {
                     onRemoved();
                 }
             });
