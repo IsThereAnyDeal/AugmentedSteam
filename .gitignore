@@ -2,4 +2,5 @@
 .old
 releases
 debug.log
-manifest.json
+/node_modules/
+/dist/
