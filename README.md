@@ -10,16 +10,17 @@ Visit [extension's page](https://es.isthereanydeal.com/) or our [Discord channel
 
 ## Development Setup
 
-1. Run `npm i` to install the required packages
+Run `npm install` to install the required packages.
 
 ### Building Extension
 
-To build the extension run `npm run build firefox`
-or `npm run build chrome` for development Firefox or Chrome build respesctively.
+**Development build**  
+Run `npm run build firefox` or `npm run build chrome`
 
-You can build for production by adding `-- --production`.
+**Production build**  
+Run `npm run build firefox -- --production` or `npm run build chrome -- --production`  
 
-To see all available options, run `npm run build -- --help`. 
+> *Note:* Run `npm run build -- --help` to see all available build options 
 
 ### Hot Reload
 
@@ -27,7 +28,7 @@ During development, it might be convenient to run hot reload server, so you don'
 after each build.
 
 To do that, run build with `--server` argument. Make sure to manually reload extension first time after the build.  
-Example: `npm run build -- firefox --server`
+> *Example:* `npm run build -- firefox --server`
 
 Now, for every change you make in the source code, the server will rebuild and reload the extension
 and refresh all affected pages automatically.
