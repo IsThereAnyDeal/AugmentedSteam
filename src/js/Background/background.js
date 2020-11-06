@@ -130,9 +130,4 @@ Permissions.when("contextMenus", () => {
     browser.runtime.onStartup.addListener(ContextMenu.update);
     browser.runtime.onInstalled.addListener(ContextMenu.update);
     browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
-    ContextMenu.update();
-}, () => {
-    browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
-}, () => {
-    browser.contextMenus.onClicked.removeListener(ContextMenu.onClick);
 });

@@ -61,12 +61,12 @@ class Permissions {
         return browser.permissions.remove({"permissions": permissionList});
     }
 
-    static async when(permission, onPermissionAtInit, onAdded, onRemoved) {
-        if (onPermissionAtInit && await Permissions.contains([permission])) {
-            onPermissionAtInit();
-        }
-
+    static async when(permission, onAdded, onRemoved) {
         if (onAdded) {
+            if (await Permissions.contains([permission])) {
+                onAdded();
+            }
+
             browser.permissions.onAdded.addListener(p => {
                 if (p.permissions.includes(permission)) {
                     onAdded();
