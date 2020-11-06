@@ -47,12 +47,11 @@ class ContextMenu {
         }
     }
 
-    static update() {
-        Permissions.contains(["contextMenus"]).then(resolve => {
-            if (resolve) {
-                browser.contextMenus.removeAll().then(ContextMenu.build);
-            }
-        });
+    static async update() {
+        if (!await Permissions.contains(["contextMenus"])) { return null; }
+
+        await browser.contextMenus.removeAll();
+        return ContextMenu.build();
     }
 }
 
