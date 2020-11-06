@@ -1,4 +1,4 @@
-name: eslint-check
+name: eslint
 on: [push]
 jobs:
   run-eslint:

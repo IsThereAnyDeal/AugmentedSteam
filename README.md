@@ -1,5 +1,7 @@
 # Augmented Steam
 
+![eslint](https://github.com/tfedor/AugmentedSteam/workflows/eslint/badge.svg)
+
 Enhanced Steam fork by IsThereAnyDeal.
 
 This is an extension repository, find [server repository here](https://github.com/tfedor/AugmentedSteam_Server).
