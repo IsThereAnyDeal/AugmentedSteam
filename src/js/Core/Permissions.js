@@ -67,7 +67,7 @@ class Permissions {
                 onAdded();
             }
 
-            browser.permissions.onAdded.addListener((p) => {
+            browser.permissions.onAdded.addListener(p => {
                 if (p.permissions.includes(permission)) {
                     onAdded();
                 }
@@ -75,7 +75,7 @@ class Permissions {
         }
 
         if (onRemoved) {
-            browser.permissions.onRemoved.addListener((p) => {
+            browser.permissions.onRemoved.addListener(p => {
                 if (p.permissions.includes(permission)) {
                     onRemoved();
                 }
