@@ -84,9 +84,9 @@ class Region {
         }
 
         const html
-            = ` <div class="country_parent js-region-parent">
+            = ` <div class="option js-region-parent">
                     <span class='es-flag ${countryClass}'></span>
-                    <select class='regional_country js-region'>${options}</select>
+                    <select class='option__region js-region'>${options}</select>
                     <button type="button" class="custom-link__close js-region-remove"></button>
                 </div>`;
 

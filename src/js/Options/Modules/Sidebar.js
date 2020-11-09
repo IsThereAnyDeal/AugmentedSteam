@@ -1,92 +1,84 @@
 import {HTML} from "../../Core/Html/Html";
+import {Localization} from "../../Core/Localization/Localization";
 
 class Sidebar {
 
-    static _scrollTo(selector) {
-        const node = document.querySelector(selector);
+    static _scrollTo(node) {
         if (!node) { return; }
         const topOffset = window.scrollY + node.getBoundingClientRect().top - 50;
         window.scrollTo({"top": topOffset, "left": 0, "behavior": "smooth"});
     }
 
-    static _highlight(node) {
-        const currentSelected = document.querySelector(".subentry.is-selected");
+    static _highlight(contentNode, sidebarNode) {
+        const currentSelected = document.querySelector(".js-sb-sec.is-selected");
 
-        if (!node.id) {
-            if (currentSelected) {
-                currentSelected.classList.remove(".is-selected");
-            }
-            return;
-        }
-
-        const sidebarEntry = document.querySelector(`.subentry[data-block-sel='#${node.id}']`);
-        if (!sidebarEntry) { return; }
-
-        if (currentSelected === sidebarEntry) {
+        if (currentSelected === sidebarNode) {
             return;
         } else if (currentSelected) {
             currentSelected.classList.remove("is-selected");
         }
 
-        sidebarEntry.classList.add("is-selected");
+        sidebarNode.classList.add("is-selected");
 
-        const currentHighlight = document.querySelector(".content_section.is-highlighted");
+        const currentHighlight = document.querySelector(".js-section.is-highlighted");
         if (currentHighlight) {
             currentHighlight.classList.remove("is-highlighted");
         }
-        node.classList.add("is-highlighted");
+        contentNode.classList.add("is-highlighted");
     }
 
     static _handleClick(e) {
         Sidebar._handleCategoryClick(e);
-        Sidebar._handleSubentryClick(e);
+        Sidebar._handleSectionClick(e);
     }
 
     static _handleCategoryClick(e) {
-        const category = e.target.closest(".category.sidebar_entry");
+        const category = e.target.closest(".js-sb-cat");
         if (category === null) {
             return;
         }
 
-        const row = category.closest(".tab_row");
+        const contentId = category.dataset.id;
+        const newPage = document.querySelector(`.js-content[data-id='${contentId}']`).closest(".js-page");
+        const currentPage = document.querySelector(".js-page.is-open");
 
-        const contentNode = document.querySelector(row.dataset.blockSel);
-        const selectedContent = document.querySelector(".content.selected");
-        const newContent = contentNode.closest(".content");
+        const group = category.closest(".js-sb-grp");
+        const hasSections = group.querySelector(".js-sb-sections");
 
-        const hasSubentries = row.querySelector(".subentries");
+        if (newPage !== currentPage) {
+            currentPage.classList.remove("is-open");
+            newPage.classList.add("is-open");
 
-        if (newContent !== selectedContent) {
-            selectedContent.classList.remove("selected");
-
-            const nodes = document.querySelectorAll(".tab_row.expanded");
+            const nodes = document.querySelectorAll(".js-sb-grp.is-selected");
             for (const node of nodes) {
-                node.classList.remove("expanded");
+                node.classList.remove("is-selected");
             }
 
-            newContent.classList.add("selected");
-
             // scroll only when changing content
-            if (hasSubentries) {
-                Sidebar._scrollTo(row.dataset.blockSel);
+            if (hasSections) {
+                Sidebar._scrollTo(newPage);
             } else {
                 window.scrollTo(0, 0);
             }
         }
 
-        const wasExpanded = row.classList.toggle("expanded", !row.classList.contains("expanded") || !hasSubentries);
-        row.classList.toggle("collapsed", !wasExpanded);
+        group.classList.toggle("is-selected");
     }
 
-    static _handleSubentryClick(e) {
+    static _handleSectionClick(e) {
 
-        const subentry = e.target.closest(".subentry");
-        if (!subentry) { return; }
+        const section = e.target.closest(".js-sb-sec");
+        if (!section) { return; }
 
-        const row = subentry.closest(".tab_row");
+        const row = section.closest(".js-sb-grp");
         if (!row) { return; }
 
-        Sidebar._scrollTo(subentry.dataset.blockSel);
+        for (const [contentNode, sidebarNode] of Sidebar._contentNodes) {
+            if (sidebarNode === section) {
+                Sidebar._scrollTo(contentNode);
+                return;
+            }
+        }
     }
 
     static _scrollHandler() {
@@ -98,11 +90,11 @@ class Sidebar {
         Sidebar._scrollTimeout = window.setTimeout(() => {
             Sidebar._scrollTimeout = null;
 
-            for (const node of Sidebar._contentNodes) {
-                const rect = node.getBoundingClientRect();
+            for (const [contentNode, sidebarNode] of Sidebar._contentNodes) {
+                const rect = contentNode.getBoundingClientRect();
 
                 if ((rect.top < 0 && rect.bottom > window.innerHeight) || rect.top > 0) {
-                    Sidebar._highlight(node);
+                    Sidebar._highlight(contentNode, sidebarNode);
                     return;
                 }
             }
@@ -113,34 +105,61 @@ class Sidebar {
 
         Sidebar._contentNodes = [];
 
-        document.querySelectorAll(".tab_row").forEach(row => {
+        const categories = [
+            ["general", "options.general"],
+            ["store", "store"],
+            ["price", "price"],
+            ["community", "community"],
+            ["news", "news"],
+            ["about", "about"],
+        ];
 
-            const block = document.querySelector(row.dataset.blockSel);
-            if (!block) {
-                console.warn("Missing data-block-sel attribute on sidebar entry");
-                return;
+        const sidebarEl = document.querySelector(".js-sb");
+
+        for (const [contentId, localeKey] of categories) {
+            const contentEl = document.querySelector(`.js-content[data-id='${contentId}']`);
+
+            let multiClass = "";
+            let sectionsNode = null;
+
+            if (contentEl) {
+
+                const sections = contentEl.querySelectorAll(".js-section");
+                if (sections.length > 0) {
+                    sectionsNode = document.createElement("ul");
+                    sectionsNode.classList.add("sidebar__children", "js-sb-sections");
+
+                    multiClass = " sidebar__item--multi";
+                    sections.forEach(section => {
+                        const sectionMenu = document.createElement("li");
+                        sectionMenu.classList.add("sidebar__item", "sidebar__item--child", "js-sb-sec");
+                        sectionMenu.innerText = section.querySelector(".js-section-head").textContent;
+
+                        sectionsNode.append(sectionMenu);
+                        Sidebar._contentNodes.push([section, sectionMenu]);
+                    });
+                }
+
+            } else {
+                console.warn("Content for sidebar entry not found");
             }
 
-            // Only create subentries for the settings
-            const sections = block.querySelectorAll(".settings .content_section");
-            if (sections.length === 0) { return; }
+            const groupNode = HTML.element(
+                `<div class="sidebar__group js-sb-grp">
+                    <a class="sidebar__item sidebar__item--cat${multiClass} js-sb-cat" data-id="${contentId}">
+                        ${Localization.getString(localeKey)}
+                    </a>
+                </div>`
+            );
 
-            row.classList.add(row.classList.contains("selected") ? "expanded" : "collapsed");
+            if (sectionsNode) {
+                groupNode.append(sectionsNode);
+            }
 
-            HTML.beforeEnd(row.firstElementChild, '<div class="category__triangle">&#9664;</div>');
+            sidebarEl.append(groupNode);
+        }
 
-            let subentries = "";
-            sections.forEach(section => {
-                subentries
-                    += `<li class="sidebar_entry subentry" data-block-sel="#${section.id}">
-                            ${section.firstElementChild.textContent}
-                        </li>`;
-                Sidebar._contentNodes.push(section);
-            });
-            HTML.beforeEnd(row, `<ul class="subentries">${subentries}</ul>`);
-        });
-
-        document.querySelector("#side_bar").addEventListener("click", Sidebar._handleClick);
+        sidebarEl.addEventListener("click", Sidebar._handleClick);
         document.addEventListener("scroll", Sidebar._scrollHandler);
         Sidebar._scrollHandler();
     }

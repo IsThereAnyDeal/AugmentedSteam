@@ -1,159 +1,41 @@
 import {CustomLinks} from "./Modules/CustomLinks";
 import {Fader} from "./Modules/Fader";
+import {ITADConnectionManager} from "./Modules/ITADConnectionManager";
+import {LocaleCreditsBuilder} from "./Modules/LocaleCreditsBuilder";
+import {OptionsBuilder} from "./Modules/OptionsBuilder";
+import {OptionsTranslator} from "./Modules/OptionsTranslator";
 import {Region} from "./Modules/Region";
 import {SaveIndicator} from "./Modules/SaveIndicator";
 import {Sidebar} from "./Modules/Sidebar";
 import {
-    BackgroundSimple, Downloader, ExtensionResources, HTML, Info, Language,
+    Downloader, ExtensionResources, HTML, Info,
     Localization, PermissionOptions, Permissions, SyncedStorage
 } from "../modulesCore";
 import {StoreList} from "./Modules/Data/StoreList";
 import {ContextMenu} from "../Background/Modules/ContextMenu";
 
+// TODO this needs to be refactored and cleaned up
+
 const Options = (() => {
     const self = {};
 
-    const profileLinkImagesSelect = document.getElementById("profile_link_images_dropdown");
+    let profileLinkImagesSelect;
 
     function loadStores() {
-        const cols = 4;
-        const storesNode = document.getElementById("store_stores");
+        const storesNode = document.querySelector(".js-store-stores");
         const stores = SyncedStorage.get("stores");
 
-        const perCol = Math.ceil(StoreList.length / cols);
-
         let html = "";
-        let i = 0;
-        for (let c = 0; c < cols; c++) {
-            html += "<div class='store_col'>";
-            for (let len = Math.min(StoreList.length, (c + 1) * perCol); i < len; ++i) {
-                const id = StoreList[i].id;
-                html
-                    += `<div class="option">
-                            <input type="checkbox" id="${id}"${(stores.length === 0 || stores.indexOf(id) !== -1) ? " checked" : ""}>
-                            <label for="${id}">${StoreList[i].title}</label>
-                        </div>`;
-            }
-            html += "</div>";
+
+        for (const store of StoreList) {
+            const id = store.id;
+            html += `<div class="option option--store">
+                        <input type="checkbox" id="${id}"${(stores.length === 0 || stores.indexOf(id) !== -1) ? " checked" : ""}>
+                        <label for="${id}">${store.title}</label>
+                    </div>`;
         }
 
         HTML.inner(storesNode, html);
-    }
-
-    async function loadTranslation() {
-
-        function deepCount(obj) {
-            let cnt = 0;
-            for (const key of Object.keys(obj)) {
-                if (!Localization.str[key]) { // don't count "made up" translations
-                    continue;
-                }
-                if (typeof obj[key] === "object") {
-                    cnt += deepCount(obj[key]);
-                } else if (obj[key] !== "") {
-                    cnt++;
-                }
-            }
-            return cnt;
-        }
-
-        const [itadStatus, itadAction] = document.querySelectorAll("#itad_status, #itad_action");
-
-        async function disconnect() {
-            await BackgroundSimple.action("itad.disconnect");
-
-            itadStatus.textContent = Localization.str.disconnected;
-            itadStatus.classList.add("disconnected");
-            itadStatus.classList.remove("connected");
-
-            itadAction.textContent = Localization.str.connect;
-            itadAction.removeEventListener("click", disconnect);
-            itadAction.addEventListener("click", connect); // eslint-disable-line no-use-before-define -- Circular dependency
-        }
-
-        async function connect() {
-
-            // Has to be synchronously acquired from a user gesture
-            if (!await Permissions.requestOption("itad_connect")) { return; }
-            await BackgroundSimple.action("itad.authorize");
-            await Permissions.removeOption("itad_connect");
-
-            itadStatus.textContent = Localization.str.connected;
-            itadStatus.classList.add("connected");
-            itadStatus.classList.remove("disconnected");
-
-            itadAction.textContent = Localization.str.disconnect;
-            itadAction.removeEventListener("click", connect);
-            itadAction.addEventListener("click", disconnect);
-        }
-
-        // When locale files are loaded changed text on page accordingly
-        await Localization;
-
-        document.title = `Augmented Steam ${Localization.str.thewordoptions}`;
-
-        // Localize elements with text
-        let nodes = document.querySelectorAll("[data-locale-text]");
-        for (const node of nodes) {
-            let translation = Localization.getString(node.dataset.localeText);
-            if (node.dataset.localeText.startsWith("options.context_")) {
-                translation = translation.replace("__query__", "...");
-            }
-            if (translation) {
-                node.textContent = translation;
-            } else {
-                console.warn(`Missing translation ${node.dataset.localeText}`);
-            }
-        }
-
-        nodes = document.querySelectorAll("[data-locale-html]");
-        for (const node of nodes) {
-            const translation = Localization.getString(node.dataset.localeHtml);
-            if (translation) {
-                HTML.inner(node, translation);
-            } else {
-                console.warn(`Missing translation ${node.dataset.localeHtml}`);
-            }
-        }
-
-        nodes = document.querySelectorAll("#warning_language option");
-        for (const node of nodes) {
-            const lang = node.textContent;
-            const langTrl = Localization.str.options.lang[node.value.toLowerCase()];
-            if (lang !== langTrl) {
-                node.textContent = `${lang} (${langTrl})`;
-            }
-        }
-
-        const total = deepCount(Localization.str);
-        for (const lang of Object.keys(Localization.str.options.lang)) {
-            const node = document.querySelector(`.language.${lang}`);
-            if (node) {
-                node.textContent = `${Localization.str.options.lang[lang]}:`;
-            }
-
-            if (lang === "english") { continue; }
-            const code = Language.languages[lang];
-            const locale = await Localization.loadLocalization(code);
-            const count = deepCount(locale);
-            const percentage = 100 * count / total;
-
-            HTML.inner(document.querySelector(`.lang-perc.${lang}`), `${percentage.toFixed(1)}%&nbsp;`);
-        }
-
-        if (await BackgroundSimple.action("itad.isconnected")) {
-            itadStatus.textContent = Localization.str.connected;
-            itadStatus.classList.add("connected");
-
-            itadAction.textContent = Localization.str.disconnect;
-            itadAction.addEventListener("click", disconnect);
-        } else {
-            itadStatus.textContent = Localization.str.disconnected;
-            itadStatus.classList.add("disconnected");
-
-            itadAction.textContent = Localization.str.connect;
-            itadAction.addEventListener("click", connect);
-        }
     }
 
     function loadProfileLinkImages() {
@@ -198,11 +80,11 @@ const Options = (() => {
 
                 const parentOption = node.closest(".parent_option");
                 if (parentOption) {
-                    if (node.id === "stores_all") { value = !value; }
+                    if (node.id === "showallstores") { value = !value; }
 
                     let nxt = parentOption.nextElementSibling;
-                    for (; nxt.classList.contains("sub_option"); nxt = nxt.nextElementSibling) {
-                        nxt.classList.toggle("disabled", !value);
+                    for (; nxt.classList.contains("js-sub-option"); nxt = nxt.nextElementSibling) {
+                        nxt.classList.toggle("is-disabled", !value);
                     }
                 }
             } else if (value) {
@@ -210,12 +92,11 @@ const Options = (() => {
             }
         }
 
-        if (SyncedStorage.get("showregionalprice")) {
-            document.getElementById("region_selects").style.display = "block";
-        }
-        if (SyncedStorage.get("showregionalprice") !== "mouse") {
-            document.getElementById("regional_price_hideworld").style.display = "block";
-        }
+        document.querySelector(".js-region-select")
+            .classList.toggle("is-hidden", SyncedStorage.get("showregionalprice") === "off");
+
+        document.querySelector(".js-region-world")
+            .classList.toggle("is-hidden", SyncedStorage.get("showregionalprice") !== "mouse");
 
         const language = SyncedStorage.get("language");
         if (language !== "schinese" && language !== "tchinese") {
@@ -302,7 +183,7 @@ const Options = (() => {
 
         SyncedStorage.then(loadOptions);
 
-        const node = document.getElementById("reset_note");
+        const node = document.querySelector(".js-options-reset");
         if (node) {
             Fader.fadeInFadeOut(node);
         }
@@ -314,7 +195,7 @@ const Options = (() => {
         if (option === "stores") {
 
             value = [];
-            const nodes = document.querySelectorAll("#store_stores input[type=checkbox]");
+            const nodes = document.querySelectorAll(".js-store-stores input[type=checkbox]");
             for (const node of nodes) {
                 if (node.checked) {
                     value.push(node.id);
@@ -372,7 +253,7 @@ const Options = (() => {
         if (!e.target || !e.target.closest) { return; } // "blur" fires when the window loses focus
         const node = e.target.closest("[data-setting]");
         if (!node) {
-            if (e.target.closest("#store_stores")) {
+            if (e.target.closest(".js-store-stores")) {
                 saveOption("stores");
             }
             return;
@@ -412,10 +293,21 @@ const Options = (() => {
 
         Region.init();
 
-        loadOptions();
-        loadTranslation().then(Sidebar.create);
+        await Localization;
 
-        document.getElementById("profile_link_images_dropdown").addEventListener("change", loadProfileLinkImages);
+        OptionsBuilder.build();
+
+        profileLinkImagesSelect = document.querySelector("select[data-setting='show_profile_link_images']");
+        profileLinkImagesSelect.addEventListener("change", loadProfileLinkImages);
+
+        loadOptions();
+
+        await OptionsTranslator.translate();
+        Sidebar.create();
+
+        await (new ITADConnectionManager()).run();
+
+        (new LocaleCreditsBuilder()).build();
 
         function addHandlerToSetDefaultColor(key) {
             document.getElementById(`${key}_default`)
@@ -454,18 +346,20 @@ const Options = (() => {
             CustomLinks.create(SyncedStorage.defaults.profile_custom_link[0]);
         });
 
-        document.getElementById("regional_price_on").addEventListener("change", e => {
-            const node = e.target.closest("#regional_price_on");
+        document.querySelector("select[data-setting='showregionalprice']").addEventListener("change", e => {
+            const node = e.target;
 
-            document.getElementById("region_selects").style.display = node.value === "off" ? "none" : "block";
-            document.getElementById("regional_price_hideworld").style.display = node.value === "mouse" ? "flex" : "none";
+            document.querySelector(".js-region-select")
+                .classList.toggle("is-hidden", node.value === "off");
+            document.querySelector(".js-region-world")
+                .classList.toggle("is-hidden", node.value !== "mouse");
         });
 
         document.querySelectorAll(".parent_option").forEach(parentOption => {
             parentOption.querySelector("input").addEventListener("change", () => {
                 let nxt = parentOption.nextElementSibling;
-                for (; nxt.classList.contains("sub_option"); nxt = nxt.nextElementSibling) {
-                    nxt.classList.toggle("disabled");
+                for (; nxt.classList.contains("js-sub-option"); nxt = nxt.nextElementSibling) {
+                    nxt.classList.toggle("is-disabled");
                 }
             });
         });
@@ -475,7 +369,7 @@ const Options = (() => {
         importInput.addEventListener("change", importSettings, false);
         document.getElementById("import").addEventListener("click", () => { importInput.click(); });
         document.getElementById("export").addEventListener("click", exportSettings);
-        document.getElementById("reset").addEventListener("click", clearSettings);
+        document.querySelector(".js-reset").addEventListener("click", clearSettings);
 
         document.addEventListener("change", saveOptionFromEvent);
         document.addEventListener("blur", saveOptionFromEvent);
