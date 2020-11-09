@@ -6,7 +6,6 @@ import {Localization} from "../../Core/Localization/Localization";
 import {BackgroundSimple} from "../../Core/BackgroundSimple";
 import {Background} from "./Background";
 import {LocalStorage} from "../../Core/Storage/LocalStorage";
-import {RequestData} from "./RequestData";
 import {ITAD} from "./ITAD";
 import {Page} from "../Features/Page";
 
@@ -29,10 +28,12 @@ class UpdateHandler {
 
     static async _showChangelog() {
 
-        // FIXME
-        const changelog = (await RequestData.getHttp(ExtensionResources.getURL("html/changelog_new.html"))).replace(/[\r\n]/g, "").replace(/'/g, "\\'");
+        const changelog = await ExtensionResources.getJSON("changelog.json");
+        const html = changelog[Info.version];
+        if (!html) { return; }
+
         const logo = ExtensionResources.getURL("img/logo/as128.png");
-        const dialog = `<div class="es_changelog"><img src="${logo}"><div>${changelog}</div></div>`;
+        const dialog = `<div class="es_changelog"><img src="${logo}"><div>${html}</div></div>`;
 
         const connectBtn = document.querySelector("#itad_connect");
         function itadConnected() { connectBtn.replaceWith("✓"); }

@@ -1,3 +1,4 @@
+import {ChangelogBuilder} from "./Modules/ChangelogBuilder";
 import {CustomLinks} from "./Modules/CustomLinks";
 import {Fader} from "./Modules/Fader";
 import {ITADConnectionManager} from "./Modules/ITADConnectionManager";
@@ -109,13 +110,7 @@ const Options = (() => {
         }
 
         if (!changelogLoaded) {
-            ExtensionResources.getText("changelog.txt")
-                .then(data => {
-                    HTML.inner(
-                        document.getElementById("changelog_text"),
-                        data.replace(/\n/g, "\n<br>")
-                    );
-                });
+            (new ChangelogBuilder()).build();
             changelogLoaded = true;
         }
 

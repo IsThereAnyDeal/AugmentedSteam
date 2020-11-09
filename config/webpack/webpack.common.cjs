@@ -104,7 +104,6 @@ module.exports = {
                     "from": "node_modules/dompurify/dist/purify.js",
                     "to": "js/dompurify.js"
                 },
-                "changelog.txt",
                 "LICENSE",
             ]
         }),

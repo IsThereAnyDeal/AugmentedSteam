@@ -12,7 +12,7 @@ class UpdateManifestScriptsPlugin {
     }
 
     apply(compiler) {
-        compiler.hooks.emit.tapAsync("ManifestEntriesPlugin", (compilation, callback) => {
+        compiler.hooks.emit.tapAsync(this.constructor.name, (compilation, callback) => {
             const asset = compilation.getAsset("manifest.json");
             const source = asset.source;
 

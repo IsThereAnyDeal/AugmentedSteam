@@ -30,14 +30,14 @@
     "img/*.svg",
     "css/*.css",
     "html/options.html",
-    "html/changelog_new.html",
     "img/*/*.png",
     "img/profile_styles/*/header.jpg",
     "img/profile_styles/*/showcase.png",
     "img/profile_styles/*/style.css",
     "img/profile_styles/*/preview.png",
     "localization/*.json",
-    "js/extra/holidayprofile.js"
+    "js/extra/holidayprofile.js",
+    "changelog.json"
   ],
   "homepage_url": "https://es.isthereanydeal.com/",
   "background": {

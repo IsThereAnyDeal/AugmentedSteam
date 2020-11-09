@@ -5,6 +5,7 @@ const MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin");
 const ExtensionReloader = require("webpack-extension-reloader");
 const ZipPlugin = require("zip-webpack-plugin");
 const UpdateManifestScriptsPlugin = require("./Plugins/UpdateManifestScriptsPlugin.cjs");
+const PreprocessChangelogPlugin = require("./Plugins/PreprocessChangelogPlugin.cjs");
 
 class WebpackRunner {
 
@@ -66,6 +67,9 @@ class WebpackRunner {
             }),
             new UpdateManifestScriptsPlugin({
                 "js": ["js/browser-polyfill.js", "js/dompurify.js"]
+            }),
+            new PreprocessChangelogPlugin({
+                "path": path.resolve(__dirname, "../../changelog.yml")
             })
         ];
 
