@@ -48,7 +48,6 @@
     "remove": "Remove",
     "get_help": "Get Help",
     "add_selected_dlc_to_cart": "Add selected DLC to cart",
-    "credits": "Credits",
     "store_transactions": "Store Purchases",
     "sign_in": "Sign in",
     "games_coupon": "Games With Coupons",
@@ -300,7 +299,6 @@
     "cancel": "Cancel",
     "wiki_article": "View __pcgw__ Article",
     "view_all": "VIEW ALL",
-    "programming": "Programming",
     "games_with_booster": "__boostergames__ games eligible for booster packs",
     "sort_by": "Sort by:",
     "sort_by_keyword": "Sort by __keyword__",
@@ -601,7 +599,10 @@
         },
         "add_custom_link": "Add custom link",
         "auto_detect": "Auto-detect",
-        "add_to_waitlist": "Show \"Add to Waitlist\" dropdown on app pages"
+        "add_to_waitlist": "Show \"Add to Waitlist\" dropdown on app pages",
+        "maintainers": "Project Maintainers",
+        "with_help_of": "with a lot of help by our __contributors__",
+        "contributors": "wonderful contributors"
     },
     "ready": {
         "errormsg": "Error loading Augmented Steam data",
@@ -736,7 +737,6 @@
         "finished": "Finished! __success__ successful, __fail__ failed. Click OK to refresh the page",
         "failed": "__n__ failed"
     },
-    "this_version": "This version",
     "original_authors": "Original authors",
     "acknowledgements": "Acknowledgments",
     "other": "Other",
