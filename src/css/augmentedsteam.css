@@ -1444,14 +1444,14 @@ img.astats_icon {
  * App pages and Games page
  * addAchievementBar(), addGamelistAchievements()
  **************************************/
-.es_recentAchievements {
+.es-achieveBar-gl {
   position: absolute;
   right: 4px;
   width: 205px;
   font-size: 10px;
   font-weight: normal;
 }
-.clientConnItemBlock ~ * .es_recentAchievements {
+.clientConnItemBlock ~ * .es-achieveBar-gl {
   bottom: 0;
 }
 .es-achieveBar-store {
@@ -1459,14 +1459,14 @@ img.astats_icon {
 }
 /* Taken from: https://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css */
 .es-achieveBar-store .achieveBar,
-.es_recentAchievements .achieveBar {
+.es-achieveBar-gl .achieveBar {
   background: #3a3a3a;
   padding: 1px;
   border: 1px solid #aeaeae;
   width: 176.9px;
 }
 .es-achieveBar-store .achieveBarProgress,
-.es_recentAchievements .achieveBarProgress {
+.es-achieveBar-gl .achieveBarProgress {
   height: 8px;
   background-color: #aeaeae;
 }
