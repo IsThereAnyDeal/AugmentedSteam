@@ -13,9 +13,7 @@ export default class FGamelistAchievements extends Feature {
         this._path = window.location.pathname.replace("/games", "");
 
         this._observer = new IntersectionObserver(entries => { this._addAchievementBars(entries); }, {
-            "root": null, // Viewport
-            "rootMargin": "0px",
-            "threshold": 0.0,
+            "threshold": 0.7,
         });
 
         for (const node of document.querySelectorAll(".gameListRow")) {
