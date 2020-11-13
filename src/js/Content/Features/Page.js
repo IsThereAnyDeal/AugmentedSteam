@@ -87,7 +87,7 @@ class Page {
         }
 
         console.log(
-            `%c Augmented %cSteam v${Info.version} %c https://es.isthereanydeal.com/`,
+            `%c Augmented %cSteam v${Info.version} %c https://augmentedsteam.com/`,
             "background: #000000; color: #046eb2",
             "background: #000000; color: #ffffff",
             "",

@@ -13,7 +13,7 @@ This is an extension repository, find [server repository here](https://github.co
 
 We are commited to continue it's development, after the [original extension](https://github.com/jshackles/Enhanced_Steam) has ended its life.
 
-Visit [extension's page](https://es.isthereanydeal.com/) or our [Discord channel](https://discord.gg/yn57q7f) for more info.
+Visit [extension's page](https://augmentedsteam.com/) or our [Discord channel](https://discord.gg/yn57q7f) for more info.
 
 ## Development Setup
 
@@ -21,20 +21,20 @@ Run `npm install` to install the required packages.
 
 ### Building Extension
 
-**Development build**  
+**Development build**
 Run `npm run build firefox` or `npm run build chrome`
 
-**Production build**  
-Run `npm run build firefox -- --production` or `npm run build chrome -- --production`  
+**Production build**
+Run `npm run build firefox -- --production` or `npm run build chrome -- --production`
 
-> *Note:* Run `npm run build -- --help` to see all available build options 
+> *Note:* Run `npm run build -- --help` to see all available build options
 
 ### Hot Reload
 
 During development, it might be convenient to run hot reload server, so you don't need to reload extension manually
 after each build.
 
-To do that, run build with `--server` argument. Make sure to manually reload extension first time after the build.  
+To do that, run build with `--server` argument. Make sure to manually reload extension first time after the build.
 > *Example:* `npm run build -- firefox --server`
 
 Now, for every change you make in the source code, the server will rebuild and reload the extension
@@ -44,5 +44,5 @@ In case the hot reload does not work or stops working, try restarting server and
 
 ## License
 
-Enhanced Steam is Copyright 2012-2018 Jason Shackles.  
+Enhanced Steam is Copyright 2012-2018 Jason Shackles.
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License v3 or newer as published by the Free Software Foundation.  A copy of the GNU General Public License v3 can be found in [LICENSE](LICENSE) or at https://www.gnu.org/licenses/gpl-3.0.html.

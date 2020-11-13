@@ -39,7 +39,7 @@
     "js/extra/holidayprofile.js",
     "changelog.json"
   ],
-  "homepage_url": "https://es.isthereanydeal.com/",
+  "homepage_url": "https://augmentedsteam.com/",
   "background": {
     "scripts": [
       "js/browser-polyfill.js",

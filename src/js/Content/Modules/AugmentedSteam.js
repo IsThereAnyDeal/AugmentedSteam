@@ -26,7 +26,7 @@ class AugmentedSteam {
                         <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/AugmentedSteam">${Localization.str.contribute}</a>
                         <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/AugmentedSteam/issues">${Localization.str.bug_feature}</a>
                         <div class="hr"></div>
-                        <a class="popup_menu_item" target="_blank" href="https://es.isthereanydeal.com/">${Localization.str.website}</a>
+                        <a class="popup_menu_item" target="_blank" href="https://augmentedsteam.com/">${Localization.str.website}</a>
                         <a class="popup_menu_item" target="_blank" href="https://isthereanydeal.com/">IsThereAnyDeal</a>
                         <a class="popup_menu_item" target="_blank" href="https://discord.gg/yn57q7f">Discord</a>
                     </div>
