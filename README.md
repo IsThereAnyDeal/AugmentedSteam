@@ -2,6 +2,11 @@
 
 ![eslint](https://github.com/tfedor/AugmentedSteam/workflows/eslint/badge.svg)
 
+![chrome users](https://img.shields.io/chrome-web-store/users/dnhpnfgdlenaccegplpojghhmaamnnfp?label=chrome%20users)
+![chrome rating](https://img.shields.io/chrome-web-store/stars/dnhpnfgdlenaccegplpojghhmaamnnfp?label=chrome%20rating)  
+![firefox users](https://img.shields.io/amo/users/enhanced-steam-an-itad-fork?label=firefox%20users&color=4c1)
+![firefox rating](https://img.shields.io/amo/stars/enhanced-steam-an-itad-fork?label=firefox%20rating)
+
 Enhanced Steam fork by IsThereAnyDeal.
 
 This is an extension repository, find [server repository here](https://github.com/tfedor/AugmentedSteam_Server).
