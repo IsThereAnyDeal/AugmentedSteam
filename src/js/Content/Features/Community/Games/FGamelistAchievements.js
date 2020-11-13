@@ -26,7 +26,7 @@ export default class FGamelistAchievements extends Feature {
     async _addAchievementBars(entries) {
 
         for (const entry of entries) {
-            if (!entry.isIntersecting && !(entry.boundingClientRect.top >= 0 && entry.boundingClientRect.bottom <= window.innerHeight)) {
+            if (!entry.isIntersecting) {
                 continue;
             }
 
