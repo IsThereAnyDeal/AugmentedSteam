@@ -11,6 +11,7 @@ import {
 } from "../modulesContent";
 import {SteamFacade} from "../Modules/SteamFacade";
 import setup from "../../setup";
+import config from "../../config";
 
 /**
  * Event handler for uncaught Background errors
@@ -87,7 +88,7 @@ class Page {
         }
 
         console.log(
-            `%c Augmented %cSteam v${Info.version} %c https://augmentedsteam.com/`,
+            `%c Augmented %cSteam v${Info.version} %c ${config.PublicHost}`,
             "background: #000000; color: #046eb2",
             "background: #000000; color: #ffffff",
             "",
