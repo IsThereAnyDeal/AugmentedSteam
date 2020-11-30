@@ -72,6 +72,7 @@ export default {
     "showwishliststats": "options.show_wishlist_stats",
     "showusernotes": "options.show_user_notes",
     "send_age_info": "options.send_age_info",
+    "removebroadcasts": "options.removebroadcasts",
     "mp4video": "options.mp4video",
     "horizontalscrolling": "options.horizontalscrolling",
     "showsupportinfo": "options.supportinfo",

@@ -39,6 +39,7 @@ import FRegionalPricing from "../Common/FRegionalPricing";
 import FReviewToggleButton from "./FReviewToggleButton";
 import FOwnedActionsButtons from "./FOwnedActionsButtons";
 import FSupportInfo from "./FSupportInfo";
+import FRemoveBroadcasts from "./FRemoveBroadcasts";
 
 export class CApp extends CStore {
 
@@ -81,6 +82,7 @@ export class CApp extends CStore {
             FOwnedActionsButtons,
             FSupportInfo,
             FMediaExpander,
+            FRemoveBroadcasts,
         ]);
 
         this.userNotes = new UserNotes();
