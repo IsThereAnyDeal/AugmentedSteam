@@ -204,33 +204,24 @@ class AugmentedSteam {
     static _disableLinkFilter() {
         if (!SyncedStorage.get("disablelinkfilter")) { return; }
 
-        // TODO Way too nested
-        function removeLinksFilter(mutations) {
+        function removeLinkFilter(parent = document) {
             const selector = "a[href*='/linkfilter/']";
-            if (mutations) {
-                mutations.forEach(mutation => {
-                    mutation.addedNodes.forEach(node => {
-                        if (node.nodeType === Node.ELEMENT_NODE) {
-                            node.querySelectorAll(selector).forEach(matchedNode => {
-                                matchedNode.setAttribute(
-                                    "href",
-                                    matchedNode.getAttribute("href").replace(/^.+?\/linkfilter\/\?url=/, "")
-                                );
-                            });
-                        }
-                    });
-                });
-            } else {
-                document.querySelectorAll(selector).forEach(node => {
-                    node.setAttribute("href", node.getAttribute("href").replace(/^.+?\/linkfilter\/\?url=/, ""));
-                });
+
+            for (const node of parent.querySelectorAll(selector)) {
+                node.href = node.href.replace(/^.+?\/linkfilter\/\?url=/, "");
             }
         }
 
-        removeLinksFilter();
+        removeLinkFilter();
 
-        const observer = new MutationObserver(removeLinksFilter);
-        observer.observe(document, {"childList": true, "subtree": true});
+        new MutationObserver(mutations => {
+            for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
+                    if (node.nodeType !== Node.ELEMENT_NODE) { continue; }
+                    removeLinkFilter(node);
+                }
+            }
+        }).observe(document, {"childList": true, "subtree": true});
     }
 
     static _addRedeemLink() {
