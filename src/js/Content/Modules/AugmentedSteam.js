@@ -34,20 +34,14 @@ class AugmentedSteam {
                 </div>
             </div>`);
 
-        const popup = document.querySelector("#es_popup");
-
         document.querySelector("#es_pulldown").addEventListener("click", () => {
             Page.runInPageContext(() => {
                 window.SteamFacade.showMenu("es_pulldown", "es_popup", "right", "bottom", true);
             });
         });
 
-        document.querySelector("#es_menu").addEventListener("click", (e) => {
+        document.querySelector("#es_menu").addEventListener("click", e => {
             e.stopPropagation();
-        });
-
-        document.addEventListener("click", () => {
-            popup.classList.remove("open");
         });
 
         document.querySelector("#es_clear_cache").addEventListener("click", e => {
