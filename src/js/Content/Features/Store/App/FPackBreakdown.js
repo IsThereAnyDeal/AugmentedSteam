@@ -22,13 +22,32 @@ export default class FPackBreakdown extends Feature {
                 || title.includes("two pack")
                 || title.includes("tower wars friend pack")
                 || text.includes("gift copy")
-                || text.includes("extra copy")) { this._splitPack(node, 2); } else if (title.includes("3 pack")
+                || text.includes("extra copy")) {
+
+                this._splitPack(node, 2);
+
+            } else if (title.includes("3 pack")
                 || title.includes("three pack")
-                || title.includes("tower wars team pack")) { this._splitPack(node, 3); } else if (title.includes("4 pack")
+                || title.includes("tower wars team pack")) {
+
+                this._splitPack(node, 3);
+
+            } else if (title.includes("4 pack")
                 || title.includes("four pack")
-                || title.includes("clan pack")) { this._splitPack(node, 4); } else if (title.includes("5 pack")
-                || title.includes("five pack")) { this._splitPack(node, 5); } else if (title.includes("6 pack")
-                || title.includes("six pack")) { this._splitPack(node, 6); }
+                || title.includes("clan pack")) {
+
+                this._splitPack(node, 4);
+
+            } else if (title.includes("5 pack")
+                || title.includes("five pack")) {
+
+                this._splitPack(node, 5);
+
+            } else if (title.includes("6 pack")
+                || title.includes("six pack")) {
+
+                this._splitPack(node, 6);
+            }
         }
     }
 
