@@ -3,6 +3,10 @@ import {Feature, Sortbox} from "../../../modulesContent";
 
 export default class FGroupsSort extends Feature {
 
+    checkPrerequisites() {
+        return this.context.groups.length > 1;
+    }
+
     apply() {
 
         this._initSort = true;
@@ -27,7 +31,6 @@ export default class FGroupsSort extends Feature {
     }
 
     _sortGroups(sortBy, reversed) {
-        if (this.context.groups.length === 0) { return; }
 
         if (this._initSort) {
 
