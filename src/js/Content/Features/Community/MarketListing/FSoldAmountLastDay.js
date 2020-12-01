@@ -16,7 +16,10 @@ export default class FSoldAmountLastDay extends Feature {
                    ${Localization.str.sold_last_24.replace("__sold__", `<span class="market_commodity_orders_header_promote">${data.volume || 0}</span>`)}
                </div>`;
 
-        HTML.beforeBegin(".market_commodity_buy_button", soldHtml);
+        const nodes = document.querySelectorAll("#market_commodity_order_spread > :nth-child(2) .market_commodity_orders_header, #pricehistory .jqplot-title, #listings .market_section_title");
+        for (const node of nodes) {
+            HTML.beforeEnd(node, soldHtml);
+        }
 
         /*
          * TODO where is this observer applied?
