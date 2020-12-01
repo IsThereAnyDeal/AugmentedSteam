@@ -50,7 +50,7 @@ export default class FCustomizer extends Feature {
         const customizer = new FCustomizer.Customizer("customize_apppage");
         customizer
             .add("franchisenotice", ".franchise_notice", Localization.str.apppage_franchise)
-            .add("eaheader", ".early_access_header", Localization.str.apppage_eaheader)
+            .add("eaheader", ".early_access_header:not(.es_coupon_info)", Localization.str.apppage_eaheader)
             .add("eabanner", ".early_access_banner", Localization.str.apppage_eabanner)
             .add("recentupdates", "#events_root", Localization.str.apppage_recentupdates)
             .add("reviews", "#game_area_reviews")
