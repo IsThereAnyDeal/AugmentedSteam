@@ -206,7 +206,7 @@ class AugmentedSteam {
 
         // TODO Way too nested
         function removeLinksFilter(mutations) {
-            const selector = "a.bb_link[href*='/linkfilter/'], div.weblink a[href*='/linkfilter/']";
+            const selector = "a[href*='/linkfilter/']";
             if (mutations) {
                 mutations.forEach(mutation => {
                     mutation.addedNodes.forEach(node => {
