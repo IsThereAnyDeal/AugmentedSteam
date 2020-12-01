@@ -2848,7 +2848,7 @@ input[type=checkbox].es_dlc_selection:checked + label {
 
 /***************************************
  * Market listings pages
- * add_sold_amount()
+ * FSoldAmountLastDay
  **************************************/
 #market_commodity_orders_header {
   position: relative;
@@ -2870,6 +2870,23 @@ input[type=checkbox].es_dlc_selection:checked + label {
 .market_section_title .es_sold_amount:after {
   content: ")";
 }
+
+/***************************************
+ * Market listings pages
+ * FBadgePageLink
+ **************************************/
+.es_marketlistings_btn {
+  float: right;
+  margin-top: -10px;
+}
+.es_marketlistings_btn img[src$="/ico_cards.png"] {
+  margin: 7px 0;
+  width: 26px;
+  height: 16px;
+  border: 0;
+  vertical-align: top;
+}
+
 
 /* right column 3rd party sites buttons */
 .rightcol.game_meta_data .es_app_btn {

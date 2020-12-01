@@ -14,12 +14,12 @@ export default class FBadgePageLink extends Feature {
 
         const cardType = /Foil(%20Trading%20Card)?%29/.test(this.context.marketHashName) ? "?border=1" : "";
 
-        HTML.beforeEnd("div.market_listing_nav",
-            `<a class="btn_grey_grey btn_medium" href="https://steamcommunity.com/my/gamecards/${gameAppId + cardType}" style="float: right; margin-top: -10px;" target="_blank">
-            <span>
-                <img src="https://store.steampowered.com/public/images/v6/ico/ico_cards.png" style="margin: 7px 0;" width="24" height="16" border="0" align="top">
-                ${Localization.str.view_badge}
-            </span>
-        </a>`);
+        HTML.beforeEnd("#mainContents .market_listing_nav",
+            `<a class="es_marketlistings_btn btn_grey_grey btn_medium" href="//steamcommunity.com/my/gamecards/${gameAppId + cardType}" target="_blank">
+                <span>
+                    <img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png">
+                    ${Localization.str.view_badge}
+                </span>
+            </a>`);
     }
 }
