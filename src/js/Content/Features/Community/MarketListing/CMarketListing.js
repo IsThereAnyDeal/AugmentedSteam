@@ -1,5 +1,4 @@
 import ContextType from "../../../Modules/Context/ContextType";
-import {GameId} from "../../../../Core/GameId";
 import {CCommunityBase} from "../CCommunityBase";
 import FSoldAmountLastDay from "./FSoldAmountLastDay";
 import FBackgroundPreviewLink from "./FBackgroundPreviewLink";
@@ -16,6 +15,8 @@ export class CMarketListing extends CCommunityBase {
             FPriceHistoryZoomControl,
         ]);
 
-        this.appid = GameId.getAppid(window.location.href);
+        const m = window.location.href.match(/\/(\d+)\/(.+)$/);
+        this.appid = Number(m[1]);
+        this.marketHashName = m[2];
     }
 }

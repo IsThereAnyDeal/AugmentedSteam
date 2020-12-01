@@ -1,21 +1,14 @@
 import {HTML, Localization} from "../../../../modulesCore";
-import {CurrencyManager, DOMHelper, Feature, RequestData, User} from "../../../modulesContent";
+import {CurrencyManager, Feature, RequestData, User} from "../../../modulesContent";
 
 export default class FSoldAmountLastDay extends Feature {
-
-    checkPrerequisites() {
-        return this.context.appid !== null;
-    }
 
     async apply() {
 
         const country = User.storeCountry;
         const currencyNumber = CurrencyManager.currencyTypeToNumber(CurrencyManager.storeCurrency);
 
-        const link = DOMHelper.selectLastNode(document, '.market_listing_nav a[href^="https://steamcommunity.com/market/"]').href;
-        const marketHashName = (link.match(/\/\d+\/(.+)$/) || [])[1];
-
-        const data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?appid=${this.context.appid}&country=${country}&currency=${currencyNumber}&market_hash_name=${marketHashName}`);
+        const data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?appid=${this.context.appid}&country=${country}&currency=${currencyNumber}&market_hash_name=${this.context.marketHashName}`);
         if (!data.success) { return; }
 
         const soldHtml

@@ -5,9 +5,10 @@ export default class FBadgePageLink extends Feature {
 
     apply() {
 
-        const gameAppId = parseInt((document.URL.match(/\/753\/([0-9]+)-/) || [0, 0])[1]);
-        const cardType = document.URL.match("Foil(%20Trading%20Card)?%29") ? "?border=1" : "";
+        const gameAppId = parseInt(this.context.marketHashName);
         if (!gameAppId || gameAppId === 753) { return; }
+
+        const cardType = /Foil(%20Trading%20Card)?%29/.test(this.context.marketHashName) ? "?border=1" : "";
 
         HTML.beforeEnd("div.market_listing_nav",
             `<a class="btn_grey_grey btn_medium" href="https://steamcommunity.com/my/gamecards/${gameAppId + cardType}" style="float: right; margin-top: -10px;" target="_blank">
