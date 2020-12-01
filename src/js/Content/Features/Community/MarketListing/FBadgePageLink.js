@@ -3,6 +3,10 @@ import {HTML, Localization} from "../../../../modulesCore";
 
 export default class FBadgePageLink extends Feature {
 
+    checkPrerequisites() {
+        return this.context.appid === 753;
+    }
+
     apply() {
 
         const gameAppId = parseInt(this.context.marketHashName);
