@@ -24,7 +24,7 @@ export default class FShowCoupon extends Feature {
                     <div style="display:flex;padding-top:10px">
                         <img src="//steamcommunity-a.akamaihd.net/economy/image/${coupon.image_url}" style="width:96px;height:64px;">
                         <div style="display:flex;flex-direction:column;margin-left:10px">
-                            <h1>${coupon.title}</h1>
+                            <h1 style="margin-top:2px">${coupon.title}</h1>
                             <div>${coupon.discount_note || ""}</div>
                             <div style="color:#a75124">${couponDate}</div>
                         </div>
