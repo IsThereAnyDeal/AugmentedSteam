@@ -1,5 +1,5 @@
 import {HTML, Localization} from "../../../../modulesCore";
-import {Feature, Price} from "../../../modulesContent";
+import {CurrencyManager, Feature, Price} from "../../../modulesContent";
 
 export default class FPackBreakdown extends Feature {
 
@@ -33,16 +33,18 @@ export default class FPackBreakdown extends Feature {
     }
 
     _splitPack(node, ways) {
-        let priceText = node.querySelector(".game_purchase_price, .discount_final_price").textContent;
-        if (priceText.match(/,\d\d(?!\d)/)) {
-            priceText = priceText.replace(",", ".");
-        }
-        let price = (Number(priceText.replace(/[^0-9.]+/g, ""))) / ways;
-        price = new Price(Math.ceil(price * 100) / 100);
+        const priceNode = node.querySelector("[data-price-final]");
+        if (!priceNode) { return; }
+
+        const currency = CurrencyManager.fromType(CurrencyManager.storeCurrency);
+        const scaleFactor = 10 ** currency.format.decimalPlaces;
+
+        let unitPrice = Number(priceNode.dataset.priceFinal) / 100 / ways;
+        unitPrice = Math.ceil(unitPrice * scaleFactor) / scaleFactor;
 
         HTML.afterBegin(node.querySelector(".game_purchase_action_bg"),
             `<div class="es_each_box">
-                <div class="es_each_price">${price}</div>
+                <div class="es_each_price">${new Price(unitPrice)}</div>
                 <div class="es_each">${Localization.str.each}</div>
             </div>`);
     }
