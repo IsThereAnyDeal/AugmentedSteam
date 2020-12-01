@@ -21,15 +21,11 @@ export default class FSoldAmountLastDay extends Feature {
             HTML.beforeEnd(node, soldHtml);
         }
 
-        /*
-         * TODO where is this observer applied?
-         * let observer = new MutationObserver(function(){
-         *  if (!document.querySelector("#pricehistory .es_sold_amount")) {
-         *      document.querySelector(".jqplot-title").insertAdjacentHTML("beforeend", soldHtml);
-         *  }
-         *  return true;
-         * });
-         * observer.observe(document, {}); // .jqplot-event-canvas
-         */
+        // retain sold amount info after changing zoom controls
+        new MutationObserver(() => {
+            if (!document.querySelector("#pricehistory .es_sold_amount")) {
+                HTML.beforeEnd("#pricehistory .jqplot-title", soldHtml);
+            }
+        }).observe(document.querySelector("#pricehistory"), {"childList": true});
     }
 }
