@@ -44,6 +44,12 @@ class AugmentedSteam {
             e.stopPropagation();
         });
 
+        document.querySelector("#es_popup").addEventListener("click", () => {
+            Page.runInPageContext(() => {
+                window.SteamFacade.hideMenu("es_pulldown", "es_popup");
+            });
+        });
+
         document.querySelector("#es_clear_cache").addEventListener("click", e => {
             e.preventDefault();
 
