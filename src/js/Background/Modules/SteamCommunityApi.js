@@ -3,6 +3,7 @@ import {Errors} from "../../Core/Errors/Errors";
 import {GameId} from "../../Core/GameId";
 import {HTMLParser} from "../../Core/Html/HtmlParser";
 import {Api} from "./Api";
+import {CacheStorage} from "./CacheStorage";
 import {IndexedDB} from "./IndexedDB";
 
 class SteamCommunityApi extends Api {
