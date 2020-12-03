@@ -993,11 +993,11 @@ img.astats_icon {
   right: 0px;
 }
 
-.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-in-wl,
+.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success > a:hover .es-in-wl,
 .apphub_OtherSiteInfo:not(.loading) #es_wishlist_success:hover .es-in-wl {
   display: none !important;
 }
-.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success:hover .es-remove-wl,
+.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success > a:hover .es-remove-wl,
 .apphub_OtherSiteInfo:not(.loading) #es_wishlist_success:hover .es-remove-wl {
   display: inline !important;
 }
