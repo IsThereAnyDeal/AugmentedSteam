@@ -66,7 +66,6 @@ export default class FMediaExpander extends Feature {
         this._detailsBuilt = true;
 
         const details = this._details;
-        if (!details) { return; }
 
         if (details.matches(".rightcol")) {
 
@@ -83,7 +82,6 @@ export default class FMediaExpander extends Feature {
             }
 
             const detailsWrap = HTML.wrap(detailsClone, '<div class="es_side_details_wrap"></div>');
-            detailsWrap.style.display = "none";
             const target = document.querySelector("div.rightcol.game_meta_data");
             if (target) {
                 target.insertAdjacentElement("afterbegin", detailsWrap);
@@ -92,17 +90,17 @@ export default class FMediaExpander extends Feature {
 
             // Clone details in the workshop
             const detailsClone = details.cloneNode(true);
-            detailsClone.style.display = "none";
-            detailsClone.setAttribute("class", "panel es_side_details");
-            HTML.adjacent(detailsClone, "afterbegin", `<div class="title">${Localization.str.details}</div><div class="hr padded"></div>`);
+            detailsClone.classList.add("panel", "es_side_details");
+            HTML.afterBegin(detailsClone, `<div class="title">${Localization.str.details}</div><div class="hr padded"></div>`);
             let target = document.querySelector(".sidebar");
             if (target) {
                 target.insertAdjacentElement("afterbegin", detailsClone);
             }
 
+            // Sometimes for a split second the slider pushes the details down, this fixes it
             target = document.querySelector(".highlight_ctn");
             if (target) {
-                HTML.wrap(target, '<div class="leftcol" style="width: 638px; float: left; position: relative; z-index: 1;"/>');
+                HTML.wrap(target, '<div class="leftcol"></div>');
             }
 
             /*
@@ -134,7 +132,6 @@ export default class FMediaExpander extends Feature {
         e.stopPropagation();
 
         const el = e.target.closest(".es_slider_toggle");
-        this._details.style.display = "none";
         this._buildSideDetails();
 
         // Fade In/Out sideDetails
@@ -160,8 +157,7 @@ export default class FMediaExpander extends Feature {
         }
 
         // On every animation/transition end check the slider state
-        const container = document.querySelector(".highlight_ctn");
-        container.addEventListener("transitionend", () => {
+        document.querySelector(".highlight_ctn").addEventListener("transitionend", () => {
 
             // Save slider state
             LocalStorage.set("expand_slider", el.classList.contains("es_expanded"));
