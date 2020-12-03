@@ -25,14 +25,17 @@ export default class FRemoveFromWishlist extends Feature {
                     <b>${Localization.str.error}</b>
                 </div>`);
 
-            document.querySelector("#add_to_wishlist_area > a").href = `javascript:AddToWishlist(${this.context.appid}, 'add_to_wishlist_area', 'add_to_wishlist_area_success', 'add_to_wishlist_area_fail', null, 'add_to_wishlist_area2');`;
+            document.querySelector("#add_to_wishlist_area > a").addEventListener("click", () => {
+                Page.runInPageContext(appid => {
+                    window.SteamFacade.addToWishlist(appid);
+                }, [this.context.appid]);
+            });
         }
 
-        const addBtn = document.getElementById("add_to_wishlist_area");
-        const successBtn = document.getElementById("add_to_wishlist_area_success");
+        const successBtn = document.querySelector("#add_to_wishlist_area_success > a");
 
         // Update tooltip for wishlisted items
-        successBtn.querySelector("a").dataset.tooltipText = Localization.str.remove_from_wishlist_tooltip;
+        successBtn.dataset.tooltipText = Localization.str.remove_from_wishlist_tooltip;
 
         const imgNode = successBtn.querySelector("img:last-child");
         imgNode.classList.add("es-in-wl");
@@ -43,36 +46,33 @@ export default class FRemoveFromWishlist extends Feature {
         successBtn.addEventListener("click", async e => {
             e.preventDefault();
 
-            const parent = successBtn.parentNode;
-            if (!parent.classList.contains("loading")) {
-                parent.classList.add("loading");
+            const parent = successBtn.closest(".queue_actions_ctn");
+            if (parent.classList.contains("loading")) { return; }
+            parent.classList.add("loading");
 
-                const removeWaitlist = Boolean(
-                    document.querySelector(".queue_btn_wishlist + .queue_btn_ignore_menu.owned_elsewhere")
-                );
+            const removeWaitlist = Boolean(
+                document.querySelector(".queue_btn_wishlist + .queue_btn_ignore_menu.owned_elsewhere")
+            );
 
-                try {
-                    await Promise.all([
-                        this.context.removeFromWishlist(),
-                        removeWaitlist ? this.context.removeFromWaitlist() : Promise.resolve(),
-                    ]);
+            try {
+                await Promise.all([
+                    this.context.removeFromWishlist(),
+                    removeWaitlist ? this.context.removeFromWaitlist() : Promise.resolve(),
+                ]);
 
-                    if (this.context.onWishAndWaitlistRemove) { this.context.onWishAndWaitlistRemove(); }
+                if (this.context.onWishAndWaitlistRemove) { this.context.onWishAndWaitlistRemove(); }
 
-                    addBtn.style.display = "";
+                document.getElementById("add_to_wishlist_area").style.display = "";
 
-                    // Clear dynamicstore cache
-                    DynamicStore.clear();
+                DynamicStore.clear();
 
-                    // Invalidate dynamic store data cache
-                    Page.runInPageContext(() => { window.SteamFacade.dynamicStoreInvalidateCache(); });
-                } catch (err) {
-                    document.getElementById("add_to_wishlist_area_fail").style.display = "";
-                    this.logError(err, "Failed to remove app from wishlist");
-                } finally {
-                    successBtn.style.display = "none";
-                    parent.classList.remove("loading");
-                }
+                Page.runInPageContext(() => { window.SteamFacade.dynamicStoreInvalidateCache(); });
+            } catch (err) {
+                document.getElementById("add_to_wishlist_area_fail").style.display = "";
+                this.logError(err, "Failed to remove app from wishlist");
+            } finally {
+                document.getElementById("add_to_wishlist_area_success").style.display = "none";
+                parent.classList.remove("loading");
             }
         });
 

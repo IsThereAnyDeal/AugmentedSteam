@@ -50,10 +50,14 @@ class SteamFacade {
         return HideMenu(elemLink, elemPopup);
     }
 
-    // strings
+    // app pages
 
     static collapseLongStrings(selector) {
         return CollapseLongStrings(selector);
+    }
+
+    static addToWishlist(appid) {
+        return AddToWishlist(appid, "add_to_wishlist_area", "add_to_wishlist_area_success", "add_to_wishlist_area_fail", null, "add_to_wishlist_area2");
     }
 
     // events
