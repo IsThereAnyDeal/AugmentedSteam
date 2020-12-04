@@ -705,6 +705,28 @@ img.astats_icon {
   vertical-align: middle;
 }
 
+/***************************************
+ * User Inventory
+ * FInventoryGoTo
+ **************************************/
+#pagebtn_first,
+#pagebtn_last {
+  margin: 0 3px;
+}
+#es_pagego {
+  float: left;
+}
+#es_pagenumber {
+  width: 50px;
+}
+#es_gotopage_btn {
+  width: 32px;
+  padding: 0;
+  margin: 0 6px;
+  text-align: center;
+  display: inline-table; /** https://github.com/jshackles/Enhanced_Steam/pull/1624 */
+}
+
 /**************************************
  * Apps page, workshop items
  * media_slider_expander()
@@ -2214,11 +2236,6 @@ label[for="show_common_games"] {
 }
 .store_capsule .es_overlay_container > img {
   width: 100%;
-}
-
-#pagebtn_first,
-#pagebtn_last {
-  margin: 0 3px;
 }
 
 /***************************************
