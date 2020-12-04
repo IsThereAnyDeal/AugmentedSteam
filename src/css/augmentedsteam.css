@@ -2722,6 +2722,12 @@ label[for="show_common_games"] {
 .es-sortbox--reviews {
   padding: 20px 0 5px 0;
 }
+.es-sortbox--groups {
+  flex-grow: 2;
+  margin-right: 20px;
+  margin-top: 0px;
+  text-align: right;
+}
 
 .es-sortbox__label {
   font-size: 12px;
