@@ -20,6 +20,7 @@ export default class FRemoveBroadcasts extends Feature {
         Page.runInPageContext(() => {
             const bcStore = window.uiBroadcastWatchStore;
             if (bcStore && bcStore.m_activeVideo) {
+                // eslint-disable-next-line new-cap
                 bcStore.StopVideo(bcStore.m_activeVideo);
             }
         });
