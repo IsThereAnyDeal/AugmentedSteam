@@ -55,17 +55,6 @@
   background-image: url('chrome-extension://__MSG_@@extension_id__/img/screenshot_open.png');
 }
 
-.es_user_note:before {
-  background-image: url("chrome-extension://__MSG_@@extension_id__/img/pinn.png");
-}
-
-.es_birthday #logo_holder img {
-  background-image: url("chrome-extension://__MSG_@@extension_id__/img/birthday_logo_bg.gif");
-}
-.es_birthday.es_store_front #global_header:before {
-  background-image: url("chrome-extension://__MSG_@@extension_id__/img/birthday_bg.png");
-}
-
 .es_regional_icon {
   background-image: url("chrome-extension://__MSG_@@extension_id__/img/flags/world.png") !important;
 }
