@@ -4,7 +4,7 @@ import {Feature, User} from "../../../modulesContent";
 export default class FBackgroundPreviewLink extends Feature {
 
     checkPrerequisites() {
-        return this.context.appid === 753;
+        return this.context.appid === 753 && User.isSignedIn;
     }
 
     apply() {
