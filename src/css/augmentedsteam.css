@@ -2155,6 +2155,16 @@ input[type=checkbox].es_dlc_selection:checked + label {
   font-weight: 300;
 }
 
+.es_note_prompt {
+  /* Long app titles stretch the modal but this element doesn't scale since it's width is 500 px at max */
+  width: auto !important;
+}
+
+#es_note_input {
+  height: 112px;
+  font-size: 14px !important;
+}
+
 .esi-note {
   font-size: 11px;
   height: fit-content;
