@@ -14,7 +14,9 @@ export class CGroups extends CCommunityBase {
 
         this.groups = Array.from(document.querySelectorAll(".group_block"));
 
-        this._moveSearchBar();
+        if (this.groups.length > 1) {
+            this._moveSearchBar();
+        }
     }
 
     _moveSearchBar() {

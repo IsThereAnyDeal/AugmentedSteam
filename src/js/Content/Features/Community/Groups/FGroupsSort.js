@@ -3,6 +3,10 @@ import {Feature, Sortbox} from "../../../modulesContent";
 
 export default class FGroupsSort extends Feature {
 
+    checkPrerequisites() {
+        return this.context.groups.length > 1;
+    }
+
     apply() {
 
         this._initSort = true;
@@ -18,16 +22,9 @@ export default class FGroupsSort extends Feature {
             (sortBy, reversed) => { this._sortGroups(sortBy, reversed); },
             "sortgroupsby"
         ));
-
-        const sortbox = document.querySelector("div.es-sortbox");
-        sortbox.style.flexGrow = "2";
-        sortbox.style.marginRight = "20px";
-        sortbox.style.marginTop = "0";
-        sortbox.style.textAlign = "right";
     }
 
     _sortGroups(sortBy, reversed) {
-        if (this.context.groups.length === 0) { return; }
 
         if (this._initSort) {
 
