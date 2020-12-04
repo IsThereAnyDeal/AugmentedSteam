@@ -171,28 +171,6 @@
   color: #67c1f5;
 }
 
-.popup_menu .hr {
-  height: 1px;
-  background-color: #82807c;
-  width: 90%;
-  margin: auto;
-}
-
-/* https://www.w3schools.com/howto/howto_css_loader.asp */
-.loader {
-  border: 1px solid #f3f3f3;
-  border-top: 1px solid #3498db;
-  border-radius: 50%;
-  width: 15px;
-  height: 15px;
-  animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 img.astats_icon {
   width: 16px;
   margin-left: 4px;
@@ -367,11 +345,6 @@ img.astats_icon {
 
 .browse_tag_game {
   margin-bottom: 4px;
-}
-
-#es_popup .hr {
-  margin-top: 2px;
-  margin-bottom: 2px;
 }
 
 #es_market_summary span, .es_loading span {
@@ -1744,12 +1717,28 @@ img.astats_icon {
 }
 
 /***************************************
- * Site wide
- * add_enhanced_steam_options()
+ * Augmented Steam and ITAD menu
  **************************************/
 #es_menu {
   display: inline-block;
 }
+#es_pulldown {
+  vertical-align: middle;
+  display: inline-block;
+  margin: 1px;
+  padding-left: 4px;
+  line-height: 19px;
+}
+#es_popup {
+  display: none;
+}
+#es_popup .popup_menu .hr {
+  height: 1px;
+  background-color: #82807c;
+  width: 90%;
+  margin: 2px 12px;
+}
+
 #es_itad {
   display: inline-flex;
   align-items: center;
@@ -1759,18 +1748,8 @@ img.astats_icon {
   height: 20px;
 }
 #es_itad_status {
-	color: rgb(81, 119, 29);
-	margin-left: 0.4em;
-}
-#es_popup {
-  display: none;
-}
-#es_pulldown {
-  vertical-align: middle;
-  display: inline-block;
-  margin: 1px;
-  padding-left: 4px;
-  line-height: 19px;
+  color: rgb(81, 119, 29);
+  margin-left: 0.4em;
 }
 .es-itad-hover {
   display: none;
@@ -1817,11 +1796,30 @@ img.astats_icon {
 .es-itad-hover__sync-success {
   color: rgb(81, 119, 29);
 }
-.es-itad-hover__sync-now .loader, .es-itad-hover__sync-failed, .es-itad-hover__sync-success {
+.es-itad-hover__sync-now .loader,
+.es-itad-hover__sync-failed,
+.es-itad-hover__sync-success {
   display: none;
 }
-.es-itad-hover__sync-now--failed .es-itad-hover__sync-failed, .es-itad-hover__sync-now--success .es-itad-hover__sync-success, .es-itad-hover__sync-now--loading .loader {
+.es-itad-hover__sync-now--failed .es-itad-hover__sync-failed,
+.es-itad-hover__sync-now--success .es-itad-hover__sync-success,
+.es-itad-hover__sync-now--loading .loader {
   display: block;
+}
+
+/* https://www.w3schools.com/howto/howto_css_loader.asp */
+.loader {
+  border: 1px solid #f3f3f3;
+  border-top: 1px solid #3498db;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /***************************************
