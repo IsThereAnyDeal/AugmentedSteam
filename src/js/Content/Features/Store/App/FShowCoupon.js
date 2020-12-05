@@ -1,5 +1,5 @@
 import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
-import {Feature, Inventory} from "../../../modulesContent";
+import {CurrencyManager, Feature, Inventory, Price} from "../../../modulesContent";
 
 export default class FShowCoupon extends Feature {
 
@@ -32,6 +32,31 @@ export default class FShowCoupon extends Feature {
                 </div>
             </div>`);
 
-        // TODO show price in purchase box
+        // Update the purchase box with the discounted price
+        const purchaseDiv = document.querySelector(".game_area_purchase_game_wrapper .game_purchase_action");
+        if (!purchaseDiv) { return; }
+
+        if (purchaseDiv.querySelector(".game_purchase_discount") && coupon.discount_doesnt_stack) {
+            return;
+        }
+
+        const priceNode = purchaseDiv.querySelector("[data-price-final]");
+        if (!priceNode) { return; }
+
+        const currency = CurrencyManager.fromType(CurrencyManager.storeCurrency);
+        const scaleFactor = 10 ** currency.format.decimalPlaces;
+
+        const originalPrice = Number(priceNode.dataset.priceFinal) / 100;
+        let newFinalPrice = originalPrice - (originalPrice * coupon.discount / 100);
+        newFinalPrice = Math.floor(newFinalPrice * scaleFactor) / scaleFactor;
+
+        HTML.replace(priceNode,
+            `<div class="discount_block game_purchase_discount">
+                <div class="discount_pct">-${coupon.discount}%</div>
+                <div class="discount_prices">
+                    <div class="discount_original_price">${new Price(originalPrice)}</div>
+                    <div class="discount_final_price">${new Price(newFinalPrice)}</div>
+                </div>
+            </div>`);
     }
 }
