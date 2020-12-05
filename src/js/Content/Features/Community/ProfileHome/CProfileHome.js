@@ -10,6 +10,7 @@ import FProfileDropdownOptions from "./FProfileDropdownOptions";
 import FCustomStyle from "./FCustomStyle";
 import FTwitchShowcase from "./FTwitchShowcase";
 import FChatDropdownOptions from "./FChatDropdownOptions";
+import FViewSteamId from "./FViewSteamId";
 
 export class CProfileHome extends CCommunityBase {
 
@@ -47,6 +48,7 @@ export class CProfileHome extends CCommunityBase {
             FCustomStyle,
             FTwitchShowcase,
             FChatDropdownOptions,
+            FViewSteamId,
         ]);
     }
 }
