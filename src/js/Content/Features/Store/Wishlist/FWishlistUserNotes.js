@@ -4,12 +4,17 @@ import {UserNotes} from "../Common/UserNotes";
 
 export default class FWishlistUserNotes extends CallbackFeature {
 
+    constructor(context) {
+        super(context, false);
+
+        this._userNotes = new UserNotes();
+    }
+
     checkPrerequisites() {
         return this.context.myWishlist && SyncedStorage.get("showusernotes");
     }
 
     apply() {
-        this._userNotes = new UserNotes();
 
         document.addEventListener("click", ({target}) => {
             if (!target.classList.contains("esi-note")) { return; }

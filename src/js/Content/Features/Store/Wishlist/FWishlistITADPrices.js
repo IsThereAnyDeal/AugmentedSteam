@@ -7,7 +7,7 @@ import {Page} from "../../Page";
 export default class FWishlistITADPrices extends CallbackFeature {
 
     constructor(context) {
-        super(context);
+        super(context, false);
 
         this._cachedPrices = {};
     }

@@ -2,8 +2,8 @@ import {CStoreBase} from "./CStoreBase";
 
 export class CStoreBaseCallback extends CStoreBase {
 
-    constructor(features = []) {
-        super(features);
+    constructor(context, features = []) {
+        super(context, features);
 
         this._callbacks = [];
     }
