@@ -215,7 +215,7 @@ FCustomizer.Customizer = class {
             element.classList.toggle("esi-hidden", !state);
             element.classList.add("esi-customizer");
             element.dataset.esName = name;
-            element.dataset.esText = text;
+            element.dataset.esText = _text;
         }
 
         return this;
