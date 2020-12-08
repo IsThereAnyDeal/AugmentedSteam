@@ -54,7 +54,7 @@ export default class FYouTubeVideos extends Feature {
 
             gamePlayTab.addEventListener("click", () => {
                 if (!this._tabToMedia.has(gamePlayTab)) {
-                    const gamePlayMedia = this._getIframe(Localization.str.gameplay);
+                    const gamePlayMedia = this._getIframe();
 
                     document.querySelector(".highlight_ctn")
                         .insertAdjacentElement("beforeend", gamePlayMedia);
@@ -71,7 +71,7 @@ export default class FYouTubeVideos extends Feature {
 
             reviewTab.addEventListener("click", () => {
                 if (!this._tabToMedia.has(reviewTab)) {
-                    const reviewMedia = this._getIframe(Localization.str.review);
+                    const reviewMedia = this._getIframe();
 
                     document.querySelector(".highlight_ctn")
                         .insertAdjacentElement("beforeend", reviewMedia);
@@ -112,20 +112,14 @@ export default class FYouTubeVideos extends Feature {
         }
     }
 
-    _getIframe(searchQuery) {
-
-        const listParam = encodeURIComponent(
-
-            // Remove trademarks etc
-            `intitle:"${this.context.appName.replace(/[\u00AE\u00A9\u2122]/g, "")} ${searchQuery}" "PC"`
-        );
+    _getIframe() {
 
         const hlParam = encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()));
 
         const player = document.createElement("iframe");
         player.classList.add("es_youtube_player");
         player.type = "text/html";
-        player.src = `https://www.youtube.com/embed?listType=search&list=${listParam}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${hlParam}&enablejsapi=1`;
+        player.src = `https://www.youtube.com/embed?playlist=FD0h-s6NUeM,iThREFl8pxc&origin=https://store.steampowered.com&widget_referrer=https://augmentedsteam.com&hl=${hlParam}&enablejsapi=1`;
         player.allowFullscreen = true;
 
         return player;
