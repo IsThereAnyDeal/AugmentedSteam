@@ -16,9 +16,8 @@ export default class FProfileDropdownOptions extends Feature {
         // add nickname option for non-friends
         if (User.isSignedIn) {
 
-            // check whether we can chat => if we can we are friends => we have nickname option
-            const canAddFriend = document.querySelector("#btn_add_friend");
-            if (canAddFriend) {
+            // Selects the "Add Friend" button (ID selector for unblocked, class selector for blocked users)
+            if (document.querySelector("#btn_add_friend, .profile_header_actions > .btn_profile_action_disabled")) {
 
                 HTML.afterEnd(node, `<a class="popup_menu_item" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`);
 
