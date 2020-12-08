@@ -4,9 +4,8 @@ import {Page} from "../../Page";
 
 class WishlistExporter {
 
-    constructor(appInfo, apps) {
-        this.appInfo = appInfo;
-        this.apps = apps;
+    constructor(wl) {
+        this.wl = wl;
         this.notes = SyncedStorage.get("user_notes") || {};
     }
 
@@ -16,7 +15,7 @@ class WishlistExporter {
             "data": []
         };
 
-        for (const [appid, data] of Object.entries(this.appInfo)) {
+        for (const [appid, data] of Object.entries(this.wl)) {
             json.data.push({
                 "gameid": ["steam", `app/${appid}`],
                 "title": data.name,
@@ -35,8 +34,7 @@ class WishlistExporter {
     toText(format) {
         const result = [];
         const parser = new DOMParser();
-        for (const appid of this.apps) {
-            const data = this.appInfo[appid];
+        for (const [appid, data] of Object.entries(this.wl)) {
             let price = "N/A";
             let discount = "0%";
             let basePrice = "N/A";
@@ -84,10 +82,16 @@ export default class FExportWishlist extends Feature {
 
         document.querySelector("#es_export_wishlist").addEventListener("click", async() => {
 
-            // eslint-disable-next-line camelcase, no-undef
-            const [appInfo, apps] = await Page.runInPageContext(() => [g_rgAppInfo, g_Wishlist.rgAllApps], null, true);
+            const wl = await Page.runInPageContext(() => {
+                /* eslint-disable camelcase, no-undef */
+                return g_Wishlist.rgVisibleApps.reduce((wl, appid) => {
+                    wl[appid] = g_rgAppInfo[appid];
+                    return wl;
+                }, {});
+                /* eslint-enable camelcase, no-undef */
+            }, null, true);
 
-            this._showDialog(appInfo, apps);
+            this._showDialog(wl);
         });
     }
 
@@ -104,13 +108,13 @@ export default class FExportWishlist extends Feature {
      *
      * Final solution is to query the action buttons of the dialog and adding some extra click handlers on the content script side.
      */
-    _showDialog(appInfo, apps) {
+    _showDialog(wl) {
 
         function exportWishlist(method) {
             const type = document.querySelector("input[name='es_wexport_type']:checked").value;
             const format = document.querySelector("#es-wexport-format").value;
 
-            const wishlist = new WishlistExporter(appInfo, apps);
+            const wishlist = new WishlistExporter(wl);
 
             let result = "";
             let filename = "";
