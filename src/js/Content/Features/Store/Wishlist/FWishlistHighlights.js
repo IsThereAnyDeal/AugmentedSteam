@@ -5,10 +5,6 @@ import FHighlightsTags from "../../Common/FHighlightsTags";
 
 export default class FWishlistHighlights extends CallbackFeature {
 
-    constructor(context) {
-        super(context, false);
-    }
-
     checkPrerequisites() {
         return User.isSignedIn; // TODO ITAD status
     }

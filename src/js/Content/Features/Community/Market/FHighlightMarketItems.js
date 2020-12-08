@@ -4,7 +4,7 @@ import FHighlightsTags from "../../Common/FHighlightsTags";
 
 export default class FHighlightMarketItems extends CallbackFeature {
 
-    apply() {
+    setup() {
 
         new MutationObserver(mutations => {
             for (const mutation of mutations) {
@@ -20,7 +20,7 @@ export default class FHighlightMarketItems extends CallbackFeature {
             {"childList": true, "subtree": true},
         );
 
-        super.apply();
+        this.callback();
     }
 
     checkPrerequisites() {

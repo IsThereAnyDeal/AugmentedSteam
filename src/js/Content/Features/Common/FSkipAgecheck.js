@@ -7,6 +7,10 @@ export default class FSkipAgecheck extends CallbackFeature {
         return SyncedStorage.get("send_age_info");
     }
 
+    setup() {
+        this.callback();
+    }
+
     callback() {
         const ageYearNode = document.querySelector("#ageYear");
         if (ageYearNode) {

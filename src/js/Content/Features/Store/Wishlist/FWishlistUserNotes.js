@@ -4,15 +4,11 @@ import {UserNotes} from "../Common/UserNotes";
 
 export default class FWishlistUserNotes extends CallbackFeature {
 
-    constructor(context) {
-        super(context, false);
-    }
-
     checkPrerequisites() {
         return this.context.myWishlist && SyncedStorage.get("showusernotes");
     }
 
-    apply() {
+    setup() {
         this._userNotes = new UserNotes();
 
         document.addEventListener("click", ({target}) => {
@@ -30,8 +26,6 @@ export default class FWishlistUserNotes extends CallbackFeature {
                 }
             );
         });
-
-        super.apply();
     }
 
     callback(nodes) {

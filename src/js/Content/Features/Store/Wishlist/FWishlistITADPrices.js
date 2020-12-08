@@ -6,17 +6,13 @@ import {Page} from "../../Page";
 
 export default class FWishlistITADPrices extends CallbackFeature {
 
-    constructor(context) {
-        super(context, false);
-
-        this._cachedPrices = {};
-    }
-
     checkPrerequisites() {
         return SyncedStorage.get("showlowestprice_onwishlist");
     }
 
-    apply() {
+    setup() {
+
+        this._cachedPrices = {};
 
         Page.runInPageContext(() => {
             /* eslint-disable no-undef */
@@ -55,8 +51,6 @@ export default class FWishlistITADPrices extends CallbackFeature {
             };
             /* eslint-enable no-undef */
         });
-
-        super.apply();
     }
 
     callback(nodes) {

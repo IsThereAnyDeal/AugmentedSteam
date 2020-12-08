@@ -8,6 +8,10 @@ export default class FBadgeCompletionCost extends CallbackFeature {
         return CommunityUtils.currentUserIsOwner();
     }
 
+    setup() {
+        this.callback();
+    }
+
     async callback() {
 
         const appids = [];
