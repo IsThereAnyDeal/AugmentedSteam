@@ -4,6 +4,10 @@ import {UserNotes} from "../Common/UserNotes";
 
 export default class FWishlistUserNotes extends CallbackFeature {
 
+    constructor(context) {
+        super(context, false);
+    }
+
     checkPrerequisites() {
         return this.context.myWishlist && SyncedStorage.get("showusernotes");
     }
