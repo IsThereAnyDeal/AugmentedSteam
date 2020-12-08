@@ -4,23 +4,23 @@ import FHighlightsTags from "../../Common/FHighlightsTags";
 
 export default class FHighlightMarketItems extends CallbackFeature {
 
-    constructor(context) {
+    apply() {
 
-        super(context, true, () => {
-            new MutationObserver(mutations => {
-                for (const mutation of mutations) {
-                    for (const node of mutation.addedNodes) {
-                        if (node.classList && node.classList.contains("market_listing_row_link")) {
-                            this.callback();
-                            return;
-                        }
+        new MutationObserver(mutations => {
+            for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
+                    if (node.classList && node.classList.contains("market_listing_row_link")) {
+                        this.callback();
+                        return;
                     }
                 }
-            }).observe(
-                document.getElementById("mainContents"),
-                {"childList": true, "subtree": true},
-            );
-        });
+            }
+        }).observe(
+            document.getElementById("mainContents"),
+            {"childList": true, "subtree": true},
+        );
+
+        super.apply();
     }
 
     checkPrerequisites() {

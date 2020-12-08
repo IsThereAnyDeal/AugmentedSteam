@@ -2,15 +2,11 @@ import {Feature} from "./Feature";
 
 class CallbackFeature extends Feature {
 
-    constructor(context, initialCall = true, setupFn = null) {
+    constructor(context, initialCall = true) {
 
         super(context);
 
         this.initialCall = initialCall;
-
-        if (typeof setupFn === "function") {
-            setupFn();
-        }
     }
 
     apply() {

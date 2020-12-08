@@ -4,12 +4,13 @@ import {Page} from "../../Page";
 
 export default class FInventoryGoTo extends CallbackFeature {
 
-    constructor(context) {
-        super(context, true, () => {
-            new MutationObserver(() => {
-                this.callback();
-            }).observe(document.querySelector("div.games_list_tabs"), {"subtree": true, "attributes": true});
-        });
+    apply() {
+
+        new MutationObserver(() => {
+            this.callback();
+        }).observe(document.querySelector("div.games_list_tabs"), {"subtree": true, "attributes": true});
+
+        super.apply();
     }
 
     checkPrerequisites() {
