@@ -2433,6 +2433,21 @@ label[for="show_common_games"] {
 }
 
 /***************************************
+ * User profiles
+ * FChatDropdownOptions
+ **************************************/
+#profile_chat_dropdown {
+  display: none;
+}
+#profile_chat_dropdown .shadow_content {
+  box-shadow: 0 0 12px #000;
+}
+#profile_chat_dropdown .popup_menu_item img {
+  position: relative;
+  top: 3px;
+}
+
+/***************************************
  * addCustomTags() to community guides
  *
  **************************************/
