@@ -1,9 +1,10 @@
 import {CStoreBase} from "./CStoreBase";
+import {ContextType} from "../../../modulesContent";
 
 export class CStoreBaseCallback extends CStoreBase {
 
-    constructor(features = []) {
-        super(features);
+    constructor(type = ContextType.STORE_DEFAULT, features = []) {
+        super(type, features);
 
         this._callbacks = [];
     }
