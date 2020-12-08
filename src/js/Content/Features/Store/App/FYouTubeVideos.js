@@ -1,5 +1,6 @@
 import {HTML, Language, Localization, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
+import {Page} from "../../Page";
 
 export default class FYouTubeVideos extends Feature {
 
@@ -91,7 +92,9 @@ export default class FYouTubeVideos extends Feature {
         const activeMedia = this._tabToMedia.get(activeTab);
 
         if (activeTab.classList.contains("js-tab-steam")) {
-            Page.runInPageContext(() => { SteamOnWebPanelHidden(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => {
+                SteamOnWebPanelHidden(); // eslint-disable-line no-undef, new-cap
+            });
         } else if (activeTab.classList.contains("js-tab-yt")) {
             activeMedia.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "https://www.youtube.com");
         }
@@ -103,7 +106,9 @@ export default class FYouTubeVideos extends Feature {
         tab.classList.add("active");
 
         if (tab.classList.contains("js-tab-steam")) {
-            Page.runInPageContext(() => { SteamOnWebPanelShown(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => {
+                SteamOnWebPanelShown(); // eslint-disable-line no-undef, new-cap
+            });
         }
     }
 
