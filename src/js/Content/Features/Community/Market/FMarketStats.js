@@ -11,17 +11,17 @@ export default class FMarketStats extends Feature {
 
         HTML.beforeBegin("#findItems",
             `<div id="es_summary">
-                    <div class="market_search_sidebar_contents">
-                        <h2 class="market_section_title">${Localization.str.market_transactions}</h2>
-                        <div id="es_market_summary_status"></div>
-                        <div class="market_search_game_button_group" id="es_market_summary" style="display:none;"></div>
+                <div class="market_search_sidebar_contents">
+                    <h2 class="market_section_title">${Localization.str.market_transactions}</h2>
+                    <div id="es_market_summary_status">
+                        <a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button">
+                            <span>${Localization.str.load_market_stats}</span>
+                        </a>
                     </div>
-                </div>`);
+                </div>
+            </div>`);
 
-        this._node = document.getElementById("es_market_summary_status");
-        HTML.inner(this._node, `<a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button"><span>${Localization.str.load_market_stats}</span></a>`);
-
-        document.querySelector("#es_market_summary_button").addEventListener("click", () => { this._startLoading(); });
+        document.getElementById("es_market_summary_button").addEventListener("click", () => { this._startLoading(); });
 
         if (SyncedStorage.get("showmarkettotal")) {
             this._startLoading();
@@ -30,23 +30,22 @@ export default class FMarketStats extends Feature {
 
     async _startLoading() {
 
-        HTML.inner(this._node,
-            `<img id="es_market_summary_throbber" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
-                <span><span id="esi_market_stats_progress_description">${Localization.str.loading} </span><span id="esi_market_stats_progress"></span>
+        const statusNode = document.getElementById("es_market_summary_status");
+
+        HTML.inner(statusNode,
+            `<img id="es_market_summary_throbber" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
+            <span>
+                <span id="esi_market_stats_progress_description">${Localization.str.loading} </span>
+                <span id="esi_market_stats_progress"></span>
             </span>`);
 
-        document.querySelector("#es_market_summary").style.display = null;
+        HTML.afterEnd(statusNode, '<div class="market_search_game_button_group" id="es_market_summary"></div>');
 
-        const success = await this._load();
-        if (this._node && success) {
-            this._node.remove();
-
-            // this._node.style.display = "none";
+        if (await this._load()) {
+            statusNode.remove();
         } else {
-            let el = document.getElementById("es_market_summary_throbber");
-            if (el) { el.remove(); }
-            el = document.getElementById("esi_market_stats_progress_description");
-            if (el) { el.remove(); }
+            document.getElementById("es_market_summary_throbber").remove();
+            document.getElementById("esi_market_stats_progress_description").remove();
         }
     }
 
@@ -122,12 +121,19 @@ export default class FMarketStats extends Feature {
 
             const purchaseTotalPrice = new Price(purchaseTotal);
             const saleTotalPrice = new Price(saleTotal);
-            HTML.inner(
-                "#es_market_summary",
-                `<div>${Localization.str.purchase_total} <span class='es_market_summary_item'>${purchaseTotalPrice}</span></div>
-                <div>${Localization.str.sales_total} <span class='es_market_summary_item'>${saleTotalPrice}</span></div>
-                <div>${netText}<span class='es_market_summary_item' style="color:${color}">${net}</span></div>`
-            );
+            HTML.inner("#es_market_summary",
+                `<div>
+                    ${Localization.str.purchase_total}
+                    <span class="es_market_summary_item">${purchaseTotalPrice}</span>
+                </div>
+                <div>
+                    ${Localization.str.sales_total}
+                    <span class="es_market_summary_item">${saleTotalPrice}</span>
+                </div>
+                <div>
+                    ${netText}
+                    <span class="es_market_summary_item" style="color: ${color};">${net}</span>
+                </div>`);
         }
 
         const pageSize = 500;
