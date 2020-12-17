@@ -28,16 +28,13 @@ class FeatureManager {
 
         while (features.length > 0) {
 
-            // Iterate backwards so that splice doesn't mess up indices
-            for (let i = features.length - 1; i >= 0; i--) {
-                const feature = features[i];
-                const promise = this._generateFeatureChain(feature);
+            const feature = features.pop();
+            const promise = this._generateFeatureChain(feature);
 
-                if (promise !== null) {
-                    this._promisesMap.set(feature.constructor, promise);
-                }
-
-                features.splice(i, 1);
+            if (promise === null) {
+                features.unshift(feature);
+            } else {
+                this._promisesMap.set(feature.constructor, promise);
             }
         }
 
