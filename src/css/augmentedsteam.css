@@ -2360,16 +2360,6 @@ label[for="show_common_games"] {
   width: 100%;
 }
 
-/***************************************
- * Layout around Customizer on App Pages
- **************************************/
-.game_page_autocollapse_ctn {
-  margin-top: 30px;
-}
-.game_page_autocollapse_ctn .game_area_description {
-  margin-top: 0;
-}
-
 #pagebtn_first,
 #pagebtn_last {
   margin: 0 3px;
