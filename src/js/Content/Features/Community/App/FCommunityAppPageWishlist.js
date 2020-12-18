@@ -11,7 +11,9 @@ export default class FCommunityAppPageWishlist extends Feature {
 
         await DynamicStore;
 
-        let {owned, wishlisted} = await DynamicStore.getAppStatus(`app/${this.context.appid}`);
+        const appid = this.context.appid;
+
+        let {owned, wishlisted} = await DynamicStore.getAppStatus(`app/${appid}`);
         if (owned) { return; }
 
         let inactiveStyle = "";
@@ -48,8 +50,6 @@ export default class FCommunityAppPageWishlist extends Feature {
         const successBtn = document.getElementById("es_wishlist_success");
         const failNode = document.getElementById("es_wishlist_fail");
 
-        const that = this;
-
         async function handler(e) {
             e.preventDefault();
 
@@ -61,7 +61,7 @@ export default class FCommunityAppPageWishlist extends Feature {
             const action = wishlisted ? "wishlist.remove" : "wishlist.add";
 
             try {
-                await Background.action(action, that.appid);
+                await Background.action(action, appid);
 
                 successBtn.style.display = wishlisted ? "none" : "";
                 addBtn.style.display = wishlisted ? "" : "none";
