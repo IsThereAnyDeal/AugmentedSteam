@@ -36,16 +36,10 @@ export default class FCustomizer extends Feature {
             node.classList.remove("active");
         });
 
-        for (const sel of ["#game_area_description", "#game_area_content_descriptors", ".sys_req", "#game_area_legal"]) {
-            const el = document.querySelector(sel);
-            if (!el) { continue; }
-            const parent = el.closest(".game_page_autocollapse_ctn");
-            if (!parent) { continue; }
-            parent.setAttribute("data-parent-of", sel);
+        function getParentEl(selector) {
+            const el = document.querySelector(selector);
+            return el && el.closest(".game_page_autocollapse_ctn");
         }
-
-        const workshop = document.querySelector("[href^='https://steamcommunity.com/workshop/browse']");
-        const greenlight = document.querySelector("[href^='https://steamcommunity.com/greenlight']");
 
         const customizer = new FCustomizer.Customizer("customize_apppage");
         customizer
@@ -54,25 +48,20 @@ export default class FCustomizer extends Feature {
             .add("eabanner", ".early_access_banner", Localization.str.apppage_eabanner)
             .add("recentupdates", "#events_root", Localization.str.apppage_recentupdates)
             .add("reviews", "#game_area_reviews")
-            .add("about", "[data-parent-of='#game_area_description']")
-            .add("contentwarning", "[data-parent-of='#game_area_content_descriptors']")
+            .add("about", getParentEl("#game_area_description"))
+            .add("contentwarning", getParentEl("#game_area_content_descriptors"))
             .add("steamchart", "#steam-charts")
             .add("surveys", "#performance_survey")
             .add("steamspy", "#steam-spy")
-            .add("sysreq", "[data-parent-of='.sys_req']")
-            .add("legal", "[data-parent-of='#game_area_legal']", Localization.str.apppage_legal)
+            .add("sysreq", getParentEl(".sys_req"))
+            .add("legal", getParentEl("#game_area_legal"), Localization.str.apppage_legal)
             .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
             .add("franchise", "#franchise_block", Localization.str.apppage_morefromfranchise)
             .add("morelikethis", "#recommended_block")
             .add("recommendedbycurators", ".steam_curators_block")
-            .add("customerreviews", "#app_reviews_hash");
-
-        if (workshop) {
-            customizer.add("workshop", workshop.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_workshop);
-        }
-        if (greenlight) {
-            customizer.add("greenlight", greenlight.closest(".game_page_autocollapse_ctn"), Localization.str.apppage_greenlight);
-        }
+            .add("customerreviews", "#app_reviews_hash")
+            .add("workshop", getParentEl("[href^='https://steamcommunity.com/workshop/browse']"), Localization.str.apppage_workshop)
+            .add("greenlight", getParentEl("[href^='https://steamcommunity.com/greenlight']"), Localization.str.apppage_greenlight);
 
         customizer.build();
     }
@@ -103,12 +92,12 @@ export default class FCustomizer extends Feature {
             node.classList.remove("active");
         });
 
-        setTimeout(() => {
+        function getParentEl(selector) {
+            const el = document.querySelector(selector);
+            return el && el.closest(".home_ctn");
+        }
 
-            const specialoffers = document.querySelector(".special_offers");
-            const browsesteam = document.querySelector(".big_buttons.home_page_content");
-            const recentlyupdated = document.querySelector(".recently_updated_block");
-            const under = document.querySelector("[class*='specials_under']");
+        setTimeout(() => {
 
             const customizer = new FCustomizer.Customizer("customize_frontpage");
             customizer
@@ -124,12 +113,11 @@ export default class FCustomizer extends Feature {
                 .add("updatesandoffers", ".marketingmessage_area", "", true)
                 .add("topnewreleases", ".top_new_releases", Localization.str.homepage_topnewreleases)
                 .add("steamlabs", ".labs_cluster")
-                .add("homepagesidebar", "body:not(.no_home_gutter) .home_page_gutter", Localization.str.homepage_sidebar);
-
-            if (specialoffers) { customizer.add("specialoffers", specialoffers.parentElement); }
-            if (browsesteam) { customizer.add("browsesteam", browsesteam.parentElement); }
-            if (recentlyupdated) { customizer.add("recentlyupdated", recentlyupdated.parentElement); }
-            if (under) { customizer.add("under", under.parentElement.parentElement); }
+                .add("homepagesidebar", "body:not(.no_home_gutter) .home_page_gutter", Localization.str.homepage_sidebar)
+                .add("specialoffers", getParentEl(".special_offers"))
+                .add("browsesteam", getParentEl(".big_buttons.home_page_content"))
+                .add("recentlyupdated", getParentEl(".recently_updated_block"))
+                .add("under", getParentEl("[class*='specials_under']"));
 
             for (const node of document.querySelectorAll(
                 ".home_page_body_ctn .home_ctn:not(.esi-customizer), .home_pagecontent_ctn"
