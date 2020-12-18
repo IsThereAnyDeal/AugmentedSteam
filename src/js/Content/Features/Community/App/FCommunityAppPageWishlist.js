@@ -9,42 +9,31 @@ export default class FCommunityAppPageWishlist extends Feature {
 
     async apply() {
 
-        await DynamicStore;
-
         const appid = this.context.appid;
 
         let {owned, wishlisted} = await DynamicStore.getAppStatus(`app/${appid}`);
         if (owned) { return; }
 
-        let inactiveStyle = "";
-        let activeStyle = "display: none;";
-
-        if (wishlisted) {
-            inactiveStyle = "display: none;";
-            activeStyle = "";
-        }
-
         const parent = document.querySelector(".apphub_OtherSiteInfo");
-        HTML.beforeEnd(
-            parent,
-            ` <a id="es_wishlist_add" class="btnv6_blue_hoverfade btn_medium" style="${inactiveStyle}">
-                  <span>
-                      <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">
-                      ${Localization.str.add_to_wishlist}
-                  </span>
-              </a>
-              <a id="es_wishlist_success" class="btnv6_blue_hoverfade btn_medium" style="${activeStyle}">
-                  <span>
-                      <img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}" style="display: none;">
-                      <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">
-                      <img class="es-in-wl" src="//steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected.png" border="0">
-                      ${Localization.str.on_wishlist}
-                  </span>
-              </a>
-              <div id="es_wishlist_fail" style="display: none;">
-                  <b>${Localization.str.error}</b>
-              </div>`
-        );
+
+        HTML.beforeEnd(parent,
+            ` <a id="es_wishlist_add" class="btnv6_blue_hoverfade btn_medium" style="${wishlisted ? "display: none;" : ""}">
+                <span>
+                    <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">
+                    ${Localization.str.add_to_wishlist}
+                </span>
+            </a>
+            <a id="es_wishlist_success" class="btnv6_blue_hoverfade btn_medium" style="${wishlisted ? "" : "display: none;"}">
+                <span>
+                    <img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}" style="display: none;">
+                    <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">
+                    <img class="es-in-wl" src="//steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected.png" border="0">
+                    ${Localization.str.on_wishlist}
+                </span>
+            </a>
+            <div id="es_wishlist_fail" style="display: none;">
+                <b>${Localization.str.error}</b>
+            </div>`);
 
         const addBtn = document.getElementById("es_wishlist_add");
         const successBtn = document.getElementById("es_wishlist_success");
@@ -66,7 +55,6 @@ export default class FCommunityAppPageWishlist extends Feature {
                 successBtn.style.display = wishlisted ? "none" : "";
                 addBtn.style.display = wishlisted ? "" : "none";
 
-                DynamicStore.clear();
             } catch (err) {
 
                 /*
@@ -82,7 +70,5 @@ export default class FCommunityAppPageWishlist extends Feature {
 
         addBtn.addEventListener("click", handler);
         successBtn.addEventListener("click", handler);
-
-
     }
 }
