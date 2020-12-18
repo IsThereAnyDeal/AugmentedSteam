@@ -14,13 +14,13 @@ export default class FInventoryGoTo extends Feature {
         // Go to first page
         HTML.afterEnd("#pagebtn_previous", '<a id="pagebtn_first" class="pagebtn pagecontrol_element disabled">&lt;&lt;</a>');
         document.getElementById("pagebtn_first").addEventListener("click", () => {
-            Page.runInPageContext(() => { InventoryFirstPage(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { window.SteamFacade.firstPage(); });
         });
 
         // Go to last page
         HTML.beforeBegin("#pagebtn_next", '<a id="pagebtn_last" class="pagebtn pagecontrol_element">&gt;&gt;</a>');
         document.getElementById("pagebtn_last").addEventListener("click", () => {
-            Page.runInPageContext(() => { InventoryLastPage(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { window.SteamFacade.lastPage(); });
         });
 
         // Page number box
@@ -31,7 +31,7 @@ export default class FInventoryGoTo extends Feature {
                 <a id="es_gotopage_btn" class="pagebtn">${Localization.str.go}</a>
             </div>`);
         document.getElementById("es_gotopage_btn").addEventListener("click", () => {
-            Page.runInPageContext(() => { InventoryGoToPage(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => { window.SteamFacade.goToPage(); });
         });
         // Update the input's max value when the number of pages changes
         new MutationObserver(() => {
