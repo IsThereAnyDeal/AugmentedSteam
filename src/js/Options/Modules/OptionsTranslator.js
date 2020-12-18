@@ -21,7 +21,7 @@ class OptionsTranslator {
         for (const node of nodes) {
             const translation = this.getTranslation(node.dataset.localeText);
             if (translation) {
-                node.text = translation;
+                node.textContent = translation;
             }
         }
     }
