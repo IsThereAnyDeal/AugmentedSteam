@@ -3,17 +3,16 @@ import {Localization} from "../../Core/Localization/Localization";
 
 class OptionsTranslator {
 
-    static getTranslation(locale) {
-        let translation = Localization.getString(locale);
-        if (locale.startsWith("options.context_")) {
+    static getTranslation(key) {
+        let translation = Localization.getString(key);
+        if (!translation) {
+            console.error("Missing translation for %s", key);
+            return null;
+        }
+        if (key.startsWith("options.context_")) {
             translation = translation.replace("__query__", "...");
         }
-        if (translation) {
-            return translation;
-        } else {
-            console.warn(`Missing translation ${locale}`);
-        }
-        return null;
+        return translation;
     }
 
     static _localizeText() {
@@ -29,11 +28,9 @@ class OptionsTranslator {
     static _localizeHtml() {
         const nodes = document.querySelectorAll("[data-locale-html]");
         for (const node of nodes) {
-            const translation = Localization.getString(node.dataset.localeHtml);
+            const translation = this.getTranslation(node.dataset.localeHtml);
             if (translation) {
                 HTML.inner(node, translation);
-            } else {
-                console.warn(`Missing translation ${node.dataset.localeHtml}`);
             }
         }
     }
