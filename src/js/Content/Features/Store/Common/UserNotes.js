@@ -6,22 +6,11 @@ export class UserNotes {
     constructor() {
 
         this._notes = SyncedStorage.get("user_notes") || {};
+        this._str = Localization.str.user_note;
 
-        this.noteModalTemplate = `
-            <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
-                <div id="es_note_modal_content">
-                    <div class="es_note_prompt newmodal_prompt_with_textarea gray_bevel fullwidth">
-                        <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
-                    </div>
-                    <div class="es_note_buttons" style="float: right">
-                        <div class="es_note_modal_submit btn_green_white_innerfade btn_medium">
-                            <span>${Localization.str.save}</span>
-                        </div>
-                        <div class="es_note_modal_close btn_grey_white_innerfade btn_medium">
-                            <span>${Localization.str.cancel}</span>
-                        </div>
-                    </div>
-                </div>
+        this.noteModalTemplate
+            = `<div class="es_note_prompt newmodal_prompt_with_textarea gray_bevel fullwidth">
+                <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
             </div>`;
     }
 
@@ -31,8 +20,24 @@ export class UserNotes {
     }
 
     set(appid, note) {
+
+        const oldNote = this._notes[appid];
         this._notes[appid] = note;
+
+        const storageUsage = this._getNotesSize() / SyncedStorage.QUOTA_BYTES_PER_ITEM;
+        if (storageUsage > 1) {
+            this._notes[appid] = oldNote;
+            this._showCloudStorageDialog(true, storageUsage);
+            return false;
+        }
+
         SyncedStorage.set("user_notes", this._notes);
+
+        if (storageUsage > 0.85) {
+            this._showCloudStorageDialog(false, storageUsage);
+        }
+
+        return true;
     }
 
     delete(appid) {
@@ -47,83 +52,107 @@ export class UserNotes {
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
 
         // Partly copied from shared_global.js
-        const bgClick = Page.runInPageContext((title, template) => {
+        Page.runInPageContext((title, template, strSave, strCancel) => {
             /* eslint-disable no-undef, new-cap, camelcase */
+
             const deferred = new jQuery.Deferred();
-            function fnOk() { deferred.resolve(); }
+            function fnOk() {
+                deferred.resolve(
+                    document.querySelector("#es_note_input").value
+                        .trim()
+                        .replace(/\s\s+/g, " ")
+                        .substring(0, 512)
+                );
+            }
 
-            const Modal = _BuildDialog(title, template, [], fnOk);
-            deferred.always(() => Modal.Dismiss());
+            function fnCancel() {
+                deferred.reject();
+            }
 
-            const promise = new Promise(resolve => {
-                Modal.m_fnBackgroundClick = () => {
-                    Messenger.onMessage("noteSaved").then(() => { Modal.Dismiss(); });
-                    resolve();
-                };
-            });
+            const buttons = [];
 
-            Modal.Show();
+            const okBtn = _BuildDialogButton(strSave, true);
+            okBtn.click(fnOk);
+            buttons.push(okBtn);
 
-            // attach the deferred's events to the modal
-            deferred.promise(Modal);
+            const cancelBtn = _BuildDialogButton(strCancel, false);
+            cancelBtn.click(fnCancel);
+            buttons.push(cancelBtn);
 
-            const note_input = document.getElementById("es_note_input");
-            note_input.focus();
-            note_input.setSelectionRange(0, note_input.textLength);
-            note_input.addEventListener("keydown", e => {
-                if (e.key === "Enter") {
-                    $J(".es_note_modal_submit").click();
-                } else if (e.key === "Escape") {
-                    Modal.Dismiss();
-                }
-            });
+            const modal = _BuildDialog(title, template, buttons, fnCancel);
 
-            return promise;
+            _BindOnEnterKeyPressForDialog(modal, deferred, fnOk);
+            deferred.always(() => modal.Dismiss());
+
+            const noteInput = document.getElementById("es_note_input");
+            noteInput.focus();
+            noteInput.setSelectionRange(0, noteInput.textLength);
+
+            deferred.promise(modal);
+
+            modal
+                .done(note => {
+                    window.Messenger.postMessage("noteClosed", note);
+                })
+                .fail(() => {
+                    window.Messenger.postMessage("noteClosed", null);
+                });
+
+            modal.Show();
             /* eslint-enable no-undef */
         },
         [
-            Localization.str.user_note.add_for_game.replace("__gamename__", appname),
-            this.noteModalTemplate.replace("__appid__", appid).replace("__note__", await this.get(appid) || "")
+            this._str.add_for_game.replace("__gamename__", appname),
+            this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.get(appid) || "")
                 .replace("__selector__", encodeURIComponent(nodeSelector)),
+            Localization.str.save,
+            Localization.str.cancel,
         ],
-        "backgroundClick");
+        true);
 
-        const saveNote = () => {
-            const modal = document.querySelector("#es_note_modal");
-            const appid = parseInt(modal.dataset.appid);
-            const note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ")
-                .substring(0, 512));
-            const node = document.querySelector(decodeURIComponent(modal.dataset.selector));
+        const note = await Messenger.onMessage("noteClosed");
+        if (note === null) { return; }
 
-            if (note.length === 0) {
-                this.delete(appid);
-                node.textContent = Localization.str.user_note.add;
-                return [node, false];
-            }
+        const _note = HTML.escape(note);
+        if (_note === (this.get(appid) || "")) { return; }
 
-            this.set(appid, note);
+        const node = document.querySelector(nodeSelector);
+
+        if (_note.length === 0) {
+            this.delete(appid);
+            node.textContent = this._str.add;
+        } else {
+            const success = this.set(appid, note);
+            if (!success) { return; }
             HTML.inner(node, `"${note}"`);
-            return [node, true];
-        };
-
-        function clickListener(e) {
-            if (e.target.closest(".es_note_modal_submit")) {
-                e.preventDefault();
-                onNoteUpdate(...saveNote());
-                Page.runInPageContext(() => { window.SteamFacade.dismissActiveModal(); });
-            } else if (e.target.closest(".es_note_modal_close")) {
-                Page.runInPageContext(() => { window.SteamFacade.dismissActiveModal(); });
-            } else {
-                return;
-            }
-            document.removeEventListener("click", clickListener);
         }
 
-        document.addEventListener("click", clickListener);
+        onNoteUpdate(node, _note.length !== 0);
+    }
 
-        bgClick.then(() => {
-            onNoteUpdate(...saveNote());
-            Messenger.postMessage("noteSaved");
-        });
+    async _showCloudStorageDialog(exceeded, perc) {
+
+        const str = this._str;
+
+        const desc
+            = `${(exceeded ? str.not_enough_space_desc : str.close_on_storage_desc).replace("__perc__", (perc * 100).toFixed(0))}
+            <br>
+            ${str.storage_warning_desc}`;
+
+        await Page.runInPageContext((title, desc, strCloudStorage, strCancel, strLocalStorage) => {
+            window.SteamFacade.showConfirmDialog(title, desc, strCloudStorage, strCancel, strLocalStorage);
+        },
+        [
+            exceeded ? str.not_enough_space : str.close_on_storage,
+            desc,
+            str.save_itad,
+            str.save_synced_storage,
+            str.save_local,
+        ],
+        true);
+    }
+
+    _getNotesSize() {
+        return "user_notes".length + JSON.stringify(this._notes).length;
     }
 }
