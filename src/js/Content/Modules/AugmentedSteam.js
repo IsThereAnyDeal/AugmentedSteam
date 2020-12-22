@@ -234,17 +234,19 @@ class AugmentedSteam {
     static _replaceAccountName() {
         if (!SyncedStorage.get("replaceaccountname")) { return; }
 
-        const accountNameNode = document.querySelector("#account_pulldown");
-        const accountName = accountNameNode.textContent.trim();
-        const communityName = document.querySelector("#global_header .username").textContent.trim();
+        const logoutNode = document.querySelector("#account_dropdown .persona.online");
+        const accountName = logoutNode.textContent.trim();
+        const communityName = document.querySelector("#account_pulldown").textContent.trim();
 
-        // Present on https://store.steampowered.com/account/history/
-        const pageHeader = document.querySelector("h2.pageheader");
-        if (pageHeader) {
-            pageHeader.textContent = pageHeader.textContent.replace(accountName, communityName);
+        logoutNode.textContent = communityName;
+
+        // Replace page header on account related pages
+        if (location.href.startsWith("https://store.steampowered.com/account")) {
+            const pageHeader = document.querySelector("h2.pageheader");
+            if (pageHeader) {
+                pageHeader.textContent = pageHeader.textContent.replace(new RegExp(accountName, "i"), communityName);
+            }
         }
-
-        accountNameNode.textContent = communityName;
 
         // Don't replace title on user pages that aren't mine
         const isUserPage = /.*(id|profiles)\/.+/g.test(location.pathname);
