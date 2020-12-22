@@ -28,13 +28,12 @@ export default class FBadgeSortAndFilter extends Feature {
         const nodes = document.querySelectorAll(".profile_badges_sortoptions a");
         let i = 0;
         for (const node of nodes) {
-            node.style.display = "none";
-            linksHtml += `<a class="badge_sort_option popup_menu_item by_${sorts[i]}" data-sort-by="${sorts[i]}" href="?sort=${sorts[i]}">${node.textContent.trim()}</a>`;
+            linksHtml += `<a class="popup_menu_item by_${sorts[i]}" data-sort-by="${sorts[i]}" href="?sort=${sorts[i]}">${node.textContent.trim()}</a>`;
             i++;
         }
         if (isOwnProfile) {
-            linksHtml += `<a class="badge_sort_option popup_menu_item by_d" data-sort-by="d" id="es_badge_sort_drops">${Localization.str.most_drops}</a>`;
-            linksHtml += `<a class="badge_sort_option popup_menu_item by_v" data-sort-by="v" id="es_badge_sort_value">${Localization.str.drops_value}</a>`;
+            linksHtml += `<a class="popup_menu_item by_d" data-sort-by="d" id="es_badge_sort_drops">${Localization.str.most_drops}</a>`;
+            linksHtml += `<a class="popup_menu_item by_v" data-sort-by="v" id="es_badge_sort_value">${Localization.str.drops_value}</a>`;
         }
 
         const container = document.createElement("span");
@@ -43,7 +42,7 @@ export default class FBadgeSortAndFilter extends Feature {
 
         // Insert dropdown options links
         HTML.beforeEnd(".profile_badges_sortoptions",
-            `<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+            `<div id="es_sort_flyout" class="popup_block_new flyout_tab_flyout responsive_slidedown">
                 <div class="popup_body popup_menu">${linksHtml}</div>
             </div>`);
 
@@ -53,7 +52,7 @@ export default class FBadgeSortAndFilter extends Feature {
                 <div class="store_nav">
                     <div class="tab flyout_tab" id="es_sort_tab" data-flyout="es_sort_flyout" data-flyout-align="right" data-flyout-valign="bottom">
                         <span class="pulldown">
-                            <div id="es_sort_active" style="display: inline;">${document.querySelector(`#es_sort_flyout a.by_${sorted}`).textContent}</div>
+                            <div id="es_sort_active">${document.querySelector(`#es_sort_flyout a.by_${sorted}`).textContent}</div>
                             <span></span>
                         </span>
                     </div>
@@ -104,12 +103,12 @@ export default class FBadgeSortAndFilter extends Feature {
                 <div class="store_nav">
                     <div class="tab flyout_tab" id="es_filter_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom">
                         <span class="pulldown">
-                            <div id="es_filter_active" style="display: inline;">${Localization.str.badges_all}</div>
+                            <div id="es_filter_active">${Localization.str.badges_all}</div>
                             <span></span>
                         </span>
                     </div>
                 </div>
-                <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+                <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout">
                     <div class="popup_body popup_menu">
                         <a class="popup_menu_item es_bg_filter" id="es_badge_all">${Localization.str.badges_all}</a>
                         <a class="popup_menu_item es_bg_filter" id="es_badge_drops">${Localization.str.badges_drops}</a>
@@ -117,7 +116,7 @@ export default class FBadgeSortAndFilter extends Feature {
                 </div>`;
 
         HTML.afterBegin("#wishlist_sort_options",
-            `<div class='es_badge_filter' style='float: right; margin-left: 18px;'>${html}</div>`);
+            `<div class='es_badge_filter'>${html}</div>`);
 
         document.querySelector("#es_badge_all").addEventListener("click", () => {
             for (const badge of document.querySelectorAll(".is_link")) {
@@ -162,19 +161,19 @@ export default class FBadgeSortAndFilter extends Feature {
                 <div class="store_nav">
                     <div class="tab flyout_tab" id="es_badgeview_tab" data-flyout="es_badgeview_flyout" data-flyout-align="right" data-flyout-valign="bottom">
                         <span class="pulldown">
-                            <div id="es_badgeview_active" style="display: inline;">${Localization.str.theworddefault}</div>
+                            <div id="es_badgeview_active">${Localization.str.theworddefault}</div>
                             <span></span>
                         </span>
                     </div>
                 </div>
-                <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_badgeview_flyout" style="visibility: visible; top: 42px; left: 305px; display: none; opacity: 1;">
+                <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_badgeview_flyout">
                     <div class="popup_body popup_menu">
                         <a class="popup_menu_item es_bg_view" data-view="defaultview">${Localization.str.theworddefault}</a>
                         <a class="popup_menu_item es_bg_view" data-view="binderview">${Localization.str.binder_view}</a>
                     </div>
                 </div>`;
 
-        HTML.afterBegin("#wishlist_sort_options", `<div class='es_badge_view' style='float: right; margin-left: 18px;'>${html}</div>`);
+        HTML.afterBegin("#wishlist_sort_options", `<div class='es_badge_view'>${html}</div>`);
 
         // Change hash when selecting view
         document.querySelector("#es_badgeview_flyout").addEventListener("click", ({target}) => {

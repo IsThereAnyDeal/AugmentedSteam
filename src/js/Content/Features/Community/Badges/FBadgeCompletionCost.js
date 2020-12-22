@@ -80,7 +80,7 @@ export default class FBadgeCompletionCost extends CallbackFeature {
                 if (badgeNameBox) {
                     HTML.afterEnd(
                         badgeNameBox,
-                        `<div class="badge_info_unlocked" style="color: #5c5c5c;">
+                        `<div class="badge_info_unlocked">
                             ${Localization.str.badge_completion_avg.replace("__cost__", cost)}
                         </div>`
                     );

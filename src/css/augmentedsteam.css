@@ -575,12 +575,13 @@ img.astats_icon {
 }
 
 /***************************************
- * Badges page
- * add_badge_view_options()
+ * Badges and Game Cards page
  **************************************/
-
 .esi-badge .badge_empty_right {
   margin-top: 7px;
+}
+.esi-badge .badge_info_unlocked {
+  color: #5c5c5c;
 }
 .esi-badge .gamecard_badge_progress .badge_info {
   width: 296px;
@@ -601,6 +602,23 @@ img.astats_icon {
   padding-right: 44px;
 }
 
+/***************************************
+ * Badges page
+ * FBadgeDropsCount
+ **************************************/
+.profile_xp_block_right {
+  width: 280px !important;
+  text-align: right !important;
+  cursor: auto;
+}
+.es_faq_cards {
+  margin-top: 4px;
+}
+
+/***************************************
+ * Badges page
+ * FBadgeSortAndFilter
+ **************************************/
 .es_binder_view .badges_sheet {
   overflow: hidden;
 }
@@ -1111,9 +1129,24 @@ img.astats_icon {
 }
 
 /***************************************
- * Drop down menus
- * add_wishlist_sorts()
+ * Badges page
+ * FBadgeSortAndFilter/Drop down menus
  **************************************/
+.profile_badges_sortoptions > a {
+  display: none; /* hide Steam's badge sort options */
+}
+#wishlist_sort_options .es_badge_filter,
+#wishlist_sort_options .es_badge_view {
+  float: right;
+  margin-left: 18px;
+}
+#es_sort_flyout, #es_filter_flyout, #es_badgeview_flyout {
+  display: none;
+}
+#es_sort_active, #es_filter_active, #es_badgeview_active {
+  display: inline;
+}
+
 /* Taken from: http://store.akamai.steamstatic.com/public/css/v6/store.css */
 #wishlist_sort_options .store_nav .tab {
   padding: 1px;
@@ -1155,7 +1188,8 @@ img.astats_icon {
   cursor: pointer;
   vertical-align: text-bottom;
 }
-#wishlist_sort_options .store_nav .tab:hover > span.pulldown > span {
+#wishlist_sort_options .store_nav .tab:hover > span.pulldown > span,
+#wishlist_sort_options .store_nav .tab.focus > span.pulldown > span {
   background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png');
 }
 #wishlist_sort_options .popup_block_new .popup_body {
@@ -1166,6 +1200,7 @@ img.astats_icon {
 }
 #wishlist_sort_options .popup_menu_item {
   color: #e5e4dc;
+  margin: 0 8px;
 }
 #wishlist_sort_options .tab {
   float: none;
@@ -1589,19 +1624,6 @@ img.astats_icon {
 }
 .es_progress__wrap:hover .es_progress__error, .es_progress__wrap:hover .es_progress__warning {
   display: block !important;
-}
-
-/***************************************
- * Badges pages
- * add_badge_completion_cost()
- **************************************/
-.profile_xp_block_right {
-  width: 280px !important;
-  text-align: right !important;
-  cursor: auto;
-}
-.es_faq_cards {
-  margin-top: 4px;
 }
 
 /***************************************
