@@ -227,6 +227,7 @@ SyncedStorage.defaults = Object.freeze({
     "showusernotes": true,
     "showwishliststats": true,
     "user_notes": {},
+    "user_notes_adapter": "synced_storage",
     "replaceaccountname": true,
     "showfakeccwarning": true,
     "showlanguagewarning": true,

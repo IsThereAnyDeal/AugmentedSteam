@@ -1,12 +1,12 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {HTML, Localization} from "../../../../modulesCore";
 import {Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
+import {UserNotesAdapter} from "./UserNotesAdapter";
 
-export class UserNotes {
+class UserNotes {
     constructor() {
-
-        this._notes = SyncedStorage.get("user_notes") || {};
         this._str = Localization.str.user_note;
+        this._adapter = UserNotesAdapter.adapter;
 
         this.noteModalTemplate
             = `<div class="es_note_prompt newmodal_prompt_with_textarea gray_bevel fullwidth">
@@ -14,40 +14,10 @@ export class UserNotes {
             </div>`;
     }
 
-    // TODO data functions should probably be split from presentation, but splitting it to background seems unneccessary
-    get(appid) {
-        return this._notes[appid];
-    }
-
-    set(appid, note) {
-
-        const oldNote = this._notes[appid];
-        this._notes[appid] = note;
-
-        const storageUsage = this._getNotesSize() / SyncedStorage.QUOTA_BYTES_PER_ITEM;
-        if (storageUsage > 1) {
-            this._notes[appid] = oldNote;
-            this._showCloudStorageDialog(true, storageUsage);
-            return false;
-        }
-
-        SyncedStorage.set("user_notes", this._notes);
-
-        if (storageUsage > 0.85) {
-            this._showCloudStorageDialog(false, storageUsage);
-        }
-
-        return true;
-    }
-
-    delete(appid) {
-        delete this._notes[appid];
-        SyncedStorage.set("user_notes", this._notes);
-    }
-
-    exists(appid) {
-        return Boolean(this._notes[appid]);
-    }
+    get(...args) { return this._adapter.get(...args); }
+    set(...args) { return this._adapter.set(...args); }
+    delete(...args) { return this._adapter.delete(...args); }
+    exists(...args) { return this._adapter.exists(...args); }
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
 
@@ -91,12 +61,8 @@ export class UserNotes {
             deferred.promise(modal);
 
             modal
-                .done(note => {
-                    window.Messenger.postMessage("noteClosed", note);
-                })
-                .fail(() => {
-                    window.Messenger.postMessage("noteClosed", null);
-                });
+                .done(note => { window.Messenger.postMessage("noteClosed", note); })
+                .fail(() => { window.Messenger.postMessage("noteClosed", null); });
 
             modal.Show();
             /* eslint-enable no-undef */
@@ -139,8 +105,12 @@ export class UserNotes {
             <br>
             ${str.storage_warning_desc}`;
 
-        await Page.runInPageContext((title, desc, strCloudStorage, strCancel, strLocalStorage) => {
-            window.SteamFacade.showConfirmDialog(title, desc, strCloudStorage, strCancel, strLocalStorage);
+        Page.runInPageContext((title, desc, strCloudStorage, strCancel, strLocalStorage) => {
+            const modal = window.SteamFacade.showConfirmDialog(title, desc, strCloudStorage, strCancel, strLocalStorage);
+
+            modal
+                .done(res => window.Messenger.postMessage("storageOption", res))
+                .fail(() => window.Messenger.postMessage("storageOption", null));
         },
         [
             exceeded ? str.not_enough_space : str.close_on_storage,
@@ -148,11 +118,16 @@ export class UserNotes {
             str.save_itad,
             str.save_synced_storage,
             str.save_local,
-        ],
-        true);
-    }
+        ]);
 
-    _getNotesSize() {
-        return "user_notes".length + JSON.stringify(this._notes).length;
+        const buttonPressed = await Messenger.onMessage("storageOption");
+
+        if (buttonPressed === "OK") {
+            // Save on ITAD server
+        } else if (buttonPressed === "SECONDARY") {
+            // Save locally
+        }
     }
 }
+
+export {UserNotes};

@@ -1,0 +1,88 @@
+import {SyncedStorage} from "../../../../modulesCore";
+
+class UserNotesAdapter {
+
+    static get adapter() {
+
+        let adapter = new UserNotesAdapter.adapters[SyncedStorage.get("user_notes_adapter")]();
+
+        if (typeof adapter === "undefined") {
+            SyncedStorage.remove("user_notes_adapter");
+            adapter = new UserNotesAdapter.adapters[SyncedStorage.defaults.user_notes_adapter]();
+        }
+
+        return adapter;
+    }
+}
+
+class OutOfCapacityError extends Error {
+    constructor(message = "User notes storage adapter is out of capacity", ...params) {
+        super(message, ...params);
+
+        this.name = this.constructor.name;
+    }
+}
+
+class CapacityInfo {
+    constructor(closeToFull = false, utilization = null) {
+        this.closeToFull = closeToFull;
+        this.utilization = utilization;
+    }
+}
+
+class SyncedStorageAdapter {
+
+    constructor() {
+        this._notes = SyncedStorage.get("user_notes");
+    }
+
+    get(appid) {
+        return this._notes[appid];
+    }
+
+    set(appid, note) {
+
+        const oldNote = this._notes[appid];
+        this._notes[appid] = note;
+
+        const storageUsage = this._getNotesSize() / SyncedStorage.QUOTA_BYTES_PER_ITEM;
+        if (storageUsage > 1) {
+            this._notes[appid] = oldNote;
+            throw new OutOfCapacityError();
+        }
+
+        SyncedStorage.set("user_notes", this._notes);
+
+        return new CapacityInfo(storageUsage > 0.85, storageUsage);
+    }
+
+    delete(appid) {
+        delete this._notes[appid];
+        SyncedStorage.set("user_notes", this._notes);
+    }
+
+    exists(appid) {
+        return Boolean(this._notes[appid]);
+    }
+
+    _getNotesSize() {
+        return "user_notes".length + JSON.stringify(this._notes).length;
+    }
+}
+
+class IdbAdapter {
+
+
+}
+
+class ItadAdapter extends IdbAdapter {
+
+}
+
+UserNotesAdapter.adapters = Object.freeze({
+    "synced_storage": SyncedStorageAdapter,
+    "idb": IdbAdapter,
+    "itad": ItadAdapter,
+});
+
+export {UserNotesAdapter};
