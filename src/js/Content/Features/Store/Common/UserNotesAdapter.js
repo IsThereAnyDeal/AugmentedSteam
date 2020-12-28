@@ -38,10 +38,10 @@ class SyncedStorageAdapter {
     }
 
     get(appid) {
-        return this._notes[appid];
+        return this._notes[appid] || null;
     }
 
-    set(appid, note) {
+    async set(appid, note) {
 
         const oldNote = this._notes[appid];
         this._notes[appid] = note;
@@ -52,21 +52,21 @@ class SyncedStorageAdapter {
             throw new OutOfCapacityError("Can't set this user note, out of capacity");
         }
 
-        SyncedStorage.set("user_notes", this._notes);
+        await SyncedStorage.set("user_notes", this._notes);
 
         return new CapacityInfo(storageUsage > 0.85, storageUsage);
     }
 
     delete(appid) {
         delete this._notes[appid];
-        SyncedStorage.set("user_notes", this._notes);
+        return SyncedStorage.set("user_notes", this._notes);
     }
 
-    get data() {
+    export() {
         return this._notes;
     }
 
-    set data(notes) {
+    import(notes) {
 
         const storageUsage = this._getNotesSize(notes) / SyncedStorage.QUOTA_BYTES_PER_ITEM;
         if (storageUsage > 1) {
@@ -74,7 +74,11 @@ class SyncedStorageAdapter {
         }
 
         this._notes = notes;
-        SyncedStorage.set("user_notes", this._notes);
+        return SyncedStorage.set("user_notes", this._notes);
+    }
+
+    clear() {
+        return SyncedStorage.remove("user_notes");
     }
 
     _getNotesSize(notes = this._notes) {
