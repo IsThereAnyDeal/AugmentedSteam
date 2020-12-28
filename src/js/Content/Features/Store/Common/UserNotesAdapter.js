@@ -19,6 +19,22 @@ class UserNotesAdapter {
 
         return UserNotesAdapter._adapter;
     }
+
+    static async changeAdapter(toType) {
+
+        const currentAdapter = UserNotesAdapter._adapter;
+        const newAdapter = new UserNotesAdapter.adapters[toType]();
+
+        await Promise.all([
+            newAdapter.import(await currentAdapter.export()),
+            currentAdapter.clear(),
+        ]);
+
+        await SyncedStorage.set("user_notes_adapter", toType);
+
+        UserNotesAdapter._adapter = newAdapter;
+        return UserNotesAdapter._adapter;
+    }
 }
 
 class OutOfCapacityError extends Error {
