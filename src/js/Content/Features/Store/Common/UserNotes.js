@@ -15,7 +15,26 @@ class UserNotes {
     }
 
     get(...args) { return this._adapter.get(...args); }
-    set(...args) { return this._adapter.set(...args); }
+
+    async set(...args) {
+
+        let capInfo;
+
+        try {
+            capInfo = await this._adapter.set(...args);
+        } catch (err) {
+            if (err instanceof OutOfCapacityError) {
+                this._showCloudStorageDialog(true, err.ratio);
+            } else {
+                throw err;
+            }
+        }
+
+        if (capInfo instanceof CapacityInfo && capInfo.closeToFull) {
+            this._showCloudStorageDialog(false, capInfo.utilization);
+        }
+    }
+
     delete(...args) { return this._adapter.delete(...args); }
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
