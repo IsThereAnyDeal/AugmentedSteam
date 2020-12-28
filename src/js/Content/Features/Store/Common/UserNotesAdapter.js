@@ -38,10 +38,12 @@ class UserNotesAdapter {
 }
 
 class OutOfCapacityError extends Error {
-    constructor(...params) {
+    constructor(ratio, ...params) {
         super(...params);
 
         this.name = this.constructor.name;
+
+        this.ratio = ratio;
     }
 }
 
@@ -70,7 +72,7 @@ class SyncedStorageAdapter {
         const storageUsage = this._getNotesSize() / SyncedStorage.QUOTA_BYTES_PER_ITEM;
         if (storageUsage > 1) {
             this._notes[appid] = oldNote;
-            throw new OutOfCapacityError("Can't set this user note, out of capacity");
+            throw new OutOfCapacityError(storageUsage, "Can't set this user note, out of capacity");
         }
 
         await SyncedStorage.set("user_notes", this._notes);
@@ -91,7 +93,7 @@ class SyncedStorageAdapter {
 
         const storageUsage = this._getNotesSize(notes) / SyncedStorage.QUOTA_BYTES_PER_ITEM;
         if (storageUsage > 1) {
-            throw new OutOfCapacityError("Import to synced storage failed, too much data for this adapter");
+            throw new OutOfCapacityError(storageUsage, "Import to synced storage failed, too much data for this adapter");
         }
 
         this._notes = notes;
@@ -144,4 +146,4 @@ UserNotesAdapter.adapters = Object.freeze({
     "itad": ItadAdapter,
 });
 
-export {UserNotesAdapter};
+export {CapacityInfo, OutOfCapacityError, UserNotesAdapter};

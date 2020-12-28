@@ -1,7 +1,7 @@
 import {HTML, Localization} from "../../../../modulesCore";
 import {Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
-import {UserNotesAdapter} from "./UserNotesAdapter";
+import {CapacityInfo, OutOfCapacityError, UserNotesAdapter} from "./UserNotesAdapter";
 
 class UserNotes {
     constructor() {
@@ -38,6 +38,8 @@ class UserNotes {
     delete(...args) { return this._adapter.delete(...args); }
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
+
+        let note = await this.get(appid) || "";
 
         // Partly copied from shared_global.js
         Page.runInPageContext((title, template, strSave, strCancel) => {
@@ -87,22 +89,24 @@ class UserNotes {
         },
         [
             this._str.add_for_game.replace("__gamename__", appname),
-            this.noteModalTemplate.replace("__appid__", appid).replace("__note__", this.get(appid) || "")
+            this.noteModalTemplate.replace("__appid__", appid).replace("__note__", note)
                 .replace("__selector__", encodeURIComponent(nodeSelector)),
             Localization.str.save,
             Localization.str.cancel,
         ],
         true);
 
-        const note = await Messenger.onMessage("noteClosed");
+        const oldNote = note;
+
+        note = await Messenger.onMessage("noteClosed");
         if (note === null) { return; }
 
-        const _note = HTML.escape(note);
-        if (_note === (this.get(appid) || "")) { return; }
+        note = HTML.escape(note);
+        if (note === oldNote) { return; }
 
         const node = document.querySelector(nodeSelector);
 
-        if (_note.length === 0) {
+        if (note.length === 0) {
             this.delete(appid);
             node.textContent = this._str.add;
         } else {
@@ -111,15 +115,15 @@ class UserNotes {
             HTML.inner(node, `"${note}"`);
         }
 
-        onNoteUpdate(node, _note.length !== 0);
+        onNoteUpdate(node, note.length !== 0);
     }
 
-    async _showCloudStorageDialog(exceeded, perc) {
+    async _showCloudStorageDialog(exceeded, ratio) {
 
         const str = this._str;
 
         const desc
-            = `${(exceeded ? str.not_enough_space_desc : str.close_on_storage_desc).replace("__perc__", (perc * 100).toFixed(0))}
+            = `${(exceeded ? str.not_enough_space_desc : str.close_on_storage_desc).replace("__perc__", (ratio * 100).toFixed(0))}
             <br>
             ${str.storage_warning_desc}`;
 
