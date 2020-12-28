@@ -17,7 +17,6 @@ class UserNotes {
     get(...args) { return this._adapter.get(...args); }
     set(...args) { return this._adapter.set(...args); }
     delete(...args) { return this._adapter.delete(...args); }
-    exists(...args) { return this._adapter.exists(...args); }
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
 

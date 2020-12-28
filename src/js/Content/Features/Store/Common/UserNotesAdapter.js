@@ -61,10 +61,6 @@ class SyncedStorageAdapter {
         SyncedStorage.set("user_notes", this._notes);
     }
 
-    exists(appid) {
-        return Boolean(this._notes[appid]);
-    }
-
     get data() {
         return this._notes;
     }

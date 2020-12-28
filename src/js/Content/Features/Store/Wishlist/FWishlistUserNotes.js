@@ -37,12 +37,14 @@ export default class FWishlistUserNotes extends CallbackFeature {
             let noteText;
             let cssClass;
 
-            if (this._userNotes.exists(appid)) {
-                noteText = `"${this._userNotes.get(appid)}"`;
-                cssClass = "esi-user-note";
-            } else {
+            const note = this._userNotes.get(appid);
+
+            if (note === null) {
                 noteText = Localization.str.user_note.add;
                 cssClass = "esi-empty-note";
+            } else {
+                noteText = `"${note}"`;
+                cssClass = "esi-user-note";
             }
 
             HTML.afterEnd(node.querySelector(".mid_container"), `<div class="esi-note ${cssClass}">${noteText}</div>`);

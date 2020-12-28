@@ -16,8 +16,10 @@ export default class FUserNotes extends Feature {
         let inactiveStyle = "";
         let activeStyle = "display:none;";
 
-        if (await userNotes.exists(this.context.appid)) {
-            noteText = `"${await userNotes.get(this.context.appid)}"`;
+        const note = await userNotes.get(this.context.appid);
+
+        if (note !== null) {
+            noteText = `"${note}"`;
             cssClass = "";
 
             inactiveStyle = "display:none;";
