@@ -3,16 +3,21 @@ import {Background} from "../../../modulesContent";
 
 class UserNotesAdapter {
 
-    static get adapter() {
+    static getAdapter() {
 
-        let adapter = new UserNotesAdapter.adapters[SyncedStorage.get("user_notes_adapter")]();
+        if (typeof UserNotesAdapter._adapter === "undefined") {
 
-        if (typeof adapter === "undefined") {
-            SyncedStorage.remove("user_notes_adapter");
-            adapter = new UserNotesAdapter.adapters[SyncedStorage.defaults.user_notes_adapter]();
+            let adapter = new UserNotesAdapter.adapters[SyncedStorage.get("user_notes_adapter")]();
+
+            if (typeof adapter === "undefined") {
+                SyncedStorage.remove("user_notes_adapter");
+                adapter = new UserNotesAdapter.adapters[SyncedStorage.defaults.user_notes_adapter]();
+            }
+
+            UserNotesAdapter._adapter = adapter;
         }
 
-        return adapter;
+        return UserNotesAdapter._adapter;
     }
 }
 

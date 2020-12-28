@@ -6,7 +6,7 @@ import {UserNotesAdapter} from "./UserNotesAdapter";
 class UserNotes {
     constructor() {
         this._str = Localization.str.user_note;
-        this._adapter = UserNotesAdapter.adapter;
+        this._adapter = UserNotesAdapter.getAdapter();
 
         this.noteModalTemplate
             = `<div class="es_note_prompt newmodal_prompt_with_textarea gray_bevel fullwidth">
