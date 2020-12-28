@@ -122,9 +122,9 @@ class UserNotes {
         const buttonPressed = await Messenger.onMessage("storageOption");
 
         if (buttonPressed === "OK") {
-            // Save on ITAD server
+            this._adapter = await UserNotesAdapter.changeAdapter("itad");
         } else if (buttonPressed === "SECONDARY") {
-            // Save locally
+            this._adapter = await UserNotesAdapter.changeAdapter("idb");
         }
     }
 }

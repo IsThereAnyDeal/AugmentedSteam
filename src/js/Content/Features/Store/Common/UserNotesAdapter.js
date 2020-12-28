@@ -1,4 +1,5 @@
 import {SyncedStorage} from "../../../../modulesCore";
+import {Background} from "../../../modulesContent";
 
 class UserNotesAdapter {
 
@@ -83,7 +84,29 @@ class SyncedStorageAdapter {
 
 class IdbAdapter {
 
+    get(appid) {
+        return Background.action("notes.get", appid);
+    }
 
+    set(appid, note) {
+        return Background.action("notes.set", appid, note);
+    }
+
+    delete(appid) {
+        return Background.action("notes.delete", appid);
+    }
+
+    export() {
+        return Background.action("notes.getall");
+    }
+
+    import(notes) {
+        return Background.action("notes.setall", notes);
+    }
+
+    clear() {
+        return Background.action("notes.clear");
+    }
 }
 
 class ItadAdapter extends IdbAdapter {
