@@ -25,10 +25,8 @@ class UserNotesAdapter {
         const currentAdapter = UserNotesAdapter.getAdapter();
         const newAdapter = new UserNotesAdapter.adapters[toType]();
 
-        await Promise.all([
-            newAdapter.import(await currentAdapter.export()),
-            currentAdapter.clear(),
-        ]);
+        await newAdapter.import(await currentAdapter.export());
+        await currentAdapter.clear();
 
         UserNotesAdapter._adapter = newAdapter;
         return UserNotesAdapter._adapter;
