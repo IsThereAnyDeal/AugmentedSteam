@@ -56,6 +56,10 @@ export default {
         ]
     ],
 
+    // store user notes
+    "user_notes_app": "options.user_notes_app",
+    "user_notes_wishlist": "options.user_notes_wishlist",
+
     // store homepage
     "homepage_tab_selection": [
         "options.homepage_default_tab",
@@ -70,7 +74,6 @@ export default {
     // store general
     "showemptywishlist": "options.show_empty_wishlist",
     "showwishliststats": "options.show_wishlist_stats",
-    "showusernotes": "options.show_user_notes",
     "send_age_info": "options.send_age_info",
     "removebroadcasts": "options.removebroadcasts",
     "mp4video": "options.mp4video",

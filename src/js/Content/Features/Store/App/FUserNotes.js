@@ -4,7 +4,7 @@ import {Feature, User} from "../../../modulesContent";
 export default class FUserNotes extends Feature {
 
     checkPrerequisites() {
-        return User.isSignedIn && SyncedStorage.get("showusernotes");
+        return User.isSignedIn && SyncedStorage.get("user_notes_app");
     }
 
     async apply() {

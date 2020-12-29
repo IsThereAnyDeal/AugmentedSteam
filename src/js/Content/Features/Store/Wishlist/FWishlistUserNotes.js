@@ -5,7 +5,7 @@ import {UserNotes} from "../Common/UserNotes";
 export default class FWishlistUserNotes extends CallbackFeature {
 
     checkPrerequisites() {
-        return this.context.myWishlist && SyncedStorage.get("showusernotes");
+        return this.context.myWishlist && SyncedStorage.get("user_notes_wishlist");
     }
 
     setup() {

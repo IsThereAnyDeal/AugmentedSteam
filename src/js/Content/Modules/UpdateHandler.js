@@ -92,6 +92,15 @@ class UpdateHandler {
                 SyncedStorage.set("fav_emoticons", emoticons);
             }
         }
+
+        if (oldVersion.isSameOrBefore("1.4.8")) {
+            if (SyncedStorage.has("showusernotes")) {
+                const val = SyncedStorage.get("showusernotes");
+                SyncedStorage.set("user_notes_app", val);
+                SyncedStorage.set("user_notes_wishlist", val);
+                SyncedStorage.remove("showusernotes");
+            }
+        }
     }
 }
 
