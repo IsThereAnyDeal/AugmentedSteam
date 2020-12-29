@@ -1,5 +1,5 @@
-import {SyncedStorage} from "../../../../modulesCore";
-import {Background} from "../../../modulesContent";
+import {SyncedStorage} from "../../modulesCore";
+import {BackgroundSimple} from "../BackgroundSimple";
 
 class UserNotesAdapter {
 
@@ -22,15 +22,13 @@ class UserNotesAdapter {
 
     static async changeAdapter(toType) {
 
-        const currentAdapter = UserNotesAdapter._adapter;
+        const currentAdapter = UserNotesAdapter.getAdapter();
         const newAdapter = new UserNotesAdapter.adapters[toType]();
 
         await Promise.all([
             newAdapter.import(await currentAdapter.export()),
             currentAdapter.clear(),
         ]);
-
-        await SyncedStorage.set("user_notes_adapter", toType);
 
         UserNotesAdapter._adapter = newAdapter;
         return UserNotesAdapter._adapter;
@@ -112,27 +110,27 @@ class SyncedStorageAdapter {
 class IdbAdapter {
 
     get(appid) {
-        return Background.action("notes.get", appid);
+        return BackgroundSimple.action("notes.get", appid);
     }
 
     set(appid, note) {
-        return Background.action("notes.set", appid, note);
+        return BackgroundSimple.action("notes.set", appid, note);
     }
 
     delete(appid) {
-        return Background.action("notes.delete", appid);
+        return BackgroundSimple.action("notes.delete", appid);
     }
 
     export() {
-        return Background.action("notes.getall");
+        return BackgroundSimple.action("notes.getall");
     }
 
     import(notes) {
-        return Background.action("notes.setall", notes);
+        return BackgroundSimple.action("notes.setall", notes);
     }
 
     clear() {
-        return Background.action("notes.clear");
+        return BackgroundSimple.action("notes.clear");
     }
 }
 

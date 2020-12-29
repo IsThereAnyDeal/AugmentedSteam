@@ -536,8 +536,14 @@
         "replace_view_client": "Replace with \"View in Client\"",
         "show_empty_wishlist": "Show \"Empty Wishlist\" button",
         "show_wishlist_stats": "Show wishlist stats on wishlist",
-        "user_notes_app": "On app pages",
-        "user_notes_wishlist": "On my wishlist",
+        "user_notes": {
+            "app": "On app pages",
+            "wishlist": "On my wishlist",
+            "loc": "Storage location",
+            "synced_storage": "Synced/Local storage",
+            "local": "Local database",
+            "itad": "IsThereAnyDeal server"
+        },
         "inventory_nav_text": "Show advanced navigation on inventory page",
         "carousel_description": "Show app descriptions on storefront carousel",
         "market_total": "Show transaction summary on Market",

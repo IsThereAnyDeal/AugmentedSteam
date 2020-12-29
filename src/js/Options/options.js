@@ -14,6 +14,7 @@ import {
 } from "../modulesCore";
 import {StoreList} from "./Modules/Data/StoreList";
 import {ContextMenu} from "../Background/Modules/ContextMenu";
+import {UserNotesAdapter} from "../Core/Storage/UserNotesAdapter";
 
 // TODO this needs to be refactored and cleaned up
 
@@ -238,6 +239,10 @@ const Options = (() => {
                     return;
                 }
             }
+        }
+
+        if (option === "user_notes_adapter") {
+            await UserNotesAdapter.changeAdapter(value);
         }
 
         SyncedStorage.set(option, value);

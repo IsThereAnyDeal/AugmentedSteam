@@ -57,8 +57,16 @@ export default {
     ],
 
     // store user notes
-    "user_notes_app": "options.user_notes_app",
-    "user_notes_wishlist": "options.user_notes_wishlist",
+    "user_notes_app": "options.user_notes.app",
+    "user_notes_wishlist": "options.user_notes.wishlist",
+    "user_notes_adapter": [
+        "options.user_notes.loc",
+        [
+            ["synced_storage", "options.user_notes.synced_storage"],
+            ["idb", "options.user_notes.local"],
+            ["itad", "options.user_notes.itad"],
+        ],
+    ],
 
     // store homepage
     "homepage_tab_selection": [

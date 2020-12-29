@@ -1,7 +1,8 @@
 import {HTML, Localization} from "../../../../modulesCore";
 import {Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
-import {CapacityInfo, OutOfCapacityError, UserNotesAdapter} from "./UserNotesAdapter";
+import {CapacityInfo, OutOfCapacityError, UserNotesAdapter} from "../../../../Core/Storage/UserNotesAdapter";
+import {SyncedStorage} from "../../../../Core/Storage/SyncedStorage";
 
 class UserNotes {
     constructor() {
@@ -143,12 +144,18 @@ class UserNotes {
         ]);
 
         const buttonPressed = await Messenger.onMessage("storageOption");
+        let adapterType;
 
         if (buttonPressed === "OK") {
-            this._adapter = await UserNotesAdapter.changeAdapter("itad");
+            adapterType = "itad";
         } else if (buttonPressed === "SECONDARY") {
-            this._adapter = await UserNotesAdapter.changeAdapter("idb");
+            adapterType = "idb";
+        } else {
+            return null;
         }
+
+        this._adapter = await UserNotesAdapter.changeAdapter(adapterType);
+        return SyncedStorage.set("user_notes_adapter", adapterType);
     }
 }
 
