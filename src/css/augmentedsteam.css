@@ -1965,72 +1965,73 @@ img.astats_icon {
 
 /***************************************
  * Store app pages
- * addDlcCheckboxes()
+ * FDLCCheckboxes
  **************************************/
 #es_selected_btn {
   float: left;
   margin-top: 4px;
   display: none;
 }
-#es_dlc_option_button {
-  float: right;
-  margin-right: 8px;
-  line-height: normal;
-  text-decoration: none;
+#game_area_dlc_expanded + #es_selected_btn {
+  margin-bottom: 10px;
 }
-#es_dlc_option_button:hover {
-  cursor: pointer;
-}
+
 #es_dlc_option_panel {
-  background: url('https://steamcommunity-a.akamaihd.net/public/images/profile/profile_header_bg_texture.jpg');
+  background-color: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid black;
   height: 28px;
   padding-left: 15px;
-  display: none;
 }
 .es_dlc_option {
   display: inline-block;
-  margin-right: 10px;
+  line-height: 19px;
+  padding: 0 7px;
+  color: #67c1f5;
+  background-color: rgba(103, 193, 245, 0.2);
+  box-shadow: none;
+  margin-right: 2px;
+  border-radius: 2px;
+  cursor: pointer;
   margin-top: 5px;
   font-size: 11px;
-  color: #ffffff;
 }
 .es_dlc_option:hover {
-  text-decoration: underline;
-  cursor: pointer;
+  text-decoration: none;
+  color: #ffffff;
+  background: linear-gradient(135deg, #67c1f5 0%, #417a9b 100%);
 }
 
-/* hide dlc flag due to checkboxes */
 .game_area_dlc_row:hover .ds_flag {
-  display: none;
+  display: none; /* hide dlc flag due to checkboxes (if highlighting is disabled) */
 }
 
-.es_dlc_selection {
-  cursor: default;
+.game_area_dlc_name {
+  margin-left: 23px; /* move title out of the way */
 }
-input[type=checkbox].es_dlc_selection {
+
+label.es_dlc_label {
   position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
+  padding: 4px 11px 1px;
+  top: 0px;
+  left: 1px;
 }
-input[type=checkbox].es_dlc_selection + label {
-  padding-left: 20px;
-  height: 13px;
-  display: inline-block;
-  line-height: 13px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  vertical-align: middle;
-  cursor: default;
-  z-index: 99;
+label.es_dlc_label > input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #545454;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #343434;
+  outline: none;
 }
-input[type=checkbox].es_dlc_selection:checked + label {
-  background-position: 0 -13px;
+label.es_dlc_label > input:checked::after {
+  content: "✔";
+  color: #8bc53f;
+  font-size: 12px;
+  position: absolute;
+  bottom: 3px;
+  left: 14px;
 }
 
 /***************************************
