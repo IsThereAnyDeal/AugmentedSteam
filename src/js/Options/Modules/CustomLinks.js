@@ -58,7 +58,7 @@ class CustomLinks {
         }
 
         SyncedStorage.set("profile_custom_link", links);
-        SaveIndicator.show();
+        SaveIndicator.saved();
     }
 
     static remove(ev) {

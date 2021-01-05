@@ -186,6 +186,9 @@ const Options = (() => {
     }
 
     async function saveOption(option) {
+
+        SaveIndicator.saving();
+
         let value;
 
         if (option === "stores") {
@@ -246,7 +249,7 @@ const Options = (() => {
         }
 
         SyncedStorage.set(option, value);
-        SaveIndicator.show();
+        SaveIndicator.saved();
     }
 
     function saveOptionFromEvent(e) {

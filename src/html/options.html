@@ -390,9 +390,15 @@
         </div>
     </div>
 
-    <div class="notification js-options-saved">
-        <img class="notification__img" src="../img/save.svg">
-        <span data-locale-text="options.saved_note">Options saved</span>
+    <div class="notification js-options-save">
+        <div class="notification notification-save js-options-saving">
+            <div class="notification__img lds-dual-ring"></div>
+            <span data-locale-text="options.saving">Saving...</span>
+        </div>
+        <div class="notification notification-save js-options-saved">
+            <img class="notification__img" src="../img/save.svg">
+            <span data-locale-text="options.saved_note">Options saved</span>
+        </div>
     </div>
 
     <div class="notification js-options-reset">
