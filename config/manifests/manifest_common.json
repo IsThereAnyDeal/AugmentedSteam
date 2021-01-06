@@ -333,11 +333,9 @@
       "matches": [
         "*://steamcommunity.com/id/*/friends",
         "*://steamcommunity.com/id/*/friends/*",
-        "*://steamcommunity.com/id/*/friends#*",
         "*://steamcommunity.com/id/*/friends?*",
         "*://steamcommunity.com/profiles/*/friends",
         "*://steamcommunity.com/profiles/*/friends/*",
-        "*://steamcommunity.com/profiles/*/friends#*",
         "*://steamcommunity.com/profiles/*/friends?*"
       ],
       "js": [
@@ -464,11 +462,9 @@
         "*://steamcommunity.com/profiles/*/friendsthatplay*",
         "*://steamcommunity.com/id/*/friends",
         "*://steamcommunity.com/id/*/friends/*",
-        "*://steamcommunity.com/id/*/friends#*",
         "*://steamcommunity.com/id/*/friends?*",
         "*://steamcommunity.com/profiles/*/friends",
         "*://steamcommunity.com/profiles/*/friends/*",
-        "*://steamcommunity.com/profiles/*/friends#*",
         "*://steamcommunity.com/profiles/*/friends?*",
         "*://steamcommunity.com/id/*/groups",
         "*://steamcommunity.com/id/*/groups/",
