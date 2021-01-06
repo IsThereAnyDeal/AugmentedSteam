@@ -290,9 +290,13 @@
     {
       "matches": [
         "*://steamcommunity.com/id/*/badges",
+        "*://steamcommunity.com/id/*/badges?sort=*",
         "*://steamcommunity.com/id/*/badges/",
+        "*://steamcommunity.com/id/*/badges/?sort=*",
         "*://steamcommunity.com/profiles/*/badges",
-        "*://steamcommunity.com/profiles/*/badges/"
+        "*://steamcommunity.com/profiles/*/badges?sort=*",
+        "*://steamcommunity.com/profiles/*/badges/",
+        "*://steamcommunity.com/profiles/*/badges/?sort=*"
       ],
       "js": [
         "js/community/badges.js"
@@ -447,9 +451,13 @@
         "*://steamcommunity.com/id/*/edit*",
         "*://steamcommunity.com/profiles/*/edit*",
         "*://steamcommunity.com/id/*/badges",
+        "*://steamcommunity.com/id/*/badges?sort=*",
         "*://steamcommunity.com/id/*/badges/",
+        "*://steamcommunity.com/id/*/badges/?sort=*",
         "*://steamcommunity.com/profiles/*/badges",
+        "*://steamcommunity.com/profiles/*/badges?sort=*",
         "*://steamcommunity.com/profiles/*/badges/",
+        "*://steamcommunity.com/profiles/*/badges/?sort=*",
         "*://steamcommunity.com/id/*/gamecards*",
         "*://steamcommunity.com/profiles/*/gamecards*",
         "*://steamcommunity.com/id/*/friendsthatplay*",
