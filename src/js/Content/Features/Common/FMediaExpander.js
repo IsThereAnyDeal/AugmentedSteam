@@ -1,5 +1,5 @@
-import {HTML, LocalStorage, Localization, SyncedStorage} from "../../../modulesCore";
-import {ContextType, Feature} from "../../modulesContent";
+import {HTML, LocalStorage, Localization} from "../../../modulesCore";
+import {Feature} from "../../modulesContent";
 import {Page} from "../Page";
 
 export default class FMediaExpander extends Feature {
@@ -12,12 +12,15 @@ export default class FMediaExpander extends Feature {
     apply() {
         let selector = null;
 
-        if (this.context.type === ContextType.APP
-            && (SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews"))) {
-            selector = ".home_tabs_row";
-        } else {
-            selector = "#highlight_player_area";
-        }
+        /*
+         * TODO Remove comment when YT has been fixed
+         * if (this.context.type === ContextType.APP
+         *  && (SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews"))) {
+         *  selector = ".home_tabs_row";
+         * } else {
+         */
+        selector = "#highlight_player_area";
+        // }
 
         HTML.beforeEnd(selector,
             `<div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
