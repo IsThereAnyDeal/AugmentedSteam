@@ -156,7 +156,7 @@ class Sortbox {
             if (storageOption) { SyncedStorage.set(storageOption, `${_val}_${reversed ? "DESC" : "ASC"}`); }
         }
 
-        input.addEventListener("change", () => { onChange(this.value.replace(`${id}_`, ""), reversed); });
+        input.addEventListener("change", () => { onChange(input.value.replace(`${id}_`, ""), reversed); });
 
         // Trigger changeFn for initial option
         if (initialOption !== "default_ASC") {
