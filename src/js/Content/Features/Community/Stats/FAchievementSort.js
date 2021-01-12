@@ -35,7 +35,9 @@ export default class FAchievementSort extends Feature {
             }
         }
 
-        for (const br of this._personal.querySelectorAll(":scope > br")) { br.remove(); }
+        // Remove all linebreaks separating the block of unlocked from the block of locked achievements
+        for (const br of this._personal.querySelectorAll(".achieveRow ~ br")) { br.remove(); }
+
         for (const [, node] of this._nodes[key]) {
             this._personal.insertAdjacentElement(reversed ? "afterbegin" : "beforeend", node);
         }
