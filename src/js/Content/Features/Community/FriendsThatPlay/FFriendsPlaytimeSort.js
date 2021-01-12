@@ -45,6 +45,6 @@ export default class FFriendsPlaytimeSort extends Feature {
         document.querySelector(".friendListSectionHeader").insertAdjacentElement("beforeend", Sortbox.get("friends_that_play", [
             ["default", Localization.str.theworddefault],
             ["playtime", Localization.str.playtime],
-        ], "default", onChange));
+        ], "default_ASC", onChange));
     }
 }

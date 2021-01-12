@@ -20,7 +20,7 @@ export default class FAchievementSort extends Feature {
                 ["default", Localization.str.theworddefault],
                 ["time", Localization.str.date_unlocked],
             ],
-            "default",
+            "default_ASC",
             (key, reversed) => { this._sortBy(key, reversed); },
         ));
 
