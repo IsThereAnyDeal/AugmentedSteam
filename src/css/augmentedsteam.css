@@ -1829,28 +1829,25 @@ img.astats_icon {
 }
 
 /***************************************
- * User's SteamIDs
+ * User profiles
+ * FViewSteamId
  **************************************/
 .es-copy {
   display: flex;
   align-items: baseline;
 }
-
-.es-copy:hover .es-copy__id{
+.es-copy:hover .es-copy__id {
   text-decoration: underline;
 }
-
 .es-copy:hover .es-copy__icon {
   opacity: 1;
 }
-
 .es-copy .es-copy__icon {
   filter: invert(55%);
   height: 1.2em;
   margin-left: 5px;
   opacity: 0;
 }
-
 .es-copy__copied {
   opacity: 0;
   transition: opacity 200ms;
@@ -1861,7 +1858,6 @@ img.astats_icon {
 .es-copy.is-copied .es-copy__copied {
   opacity: 1;
 }
-
 
 /***************************************
  * Users profiles
