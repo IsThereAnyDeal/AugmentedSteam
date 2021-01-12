@@ -98,7 +98,7 @@ export default class FExtraLinks extends Feature {
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "cardexchange_btn",
-                        `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.communityAppid}/`,
+                        `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.context.communityAppid}/`,
                         Localization.str.view_on_website.replace("__website__", "Steam Card Exchange")
                     ));
             }
