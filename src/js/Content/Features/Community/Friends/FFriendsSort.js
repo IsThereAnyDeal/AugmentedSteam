@@ -36,7 +36,13 @@ export default class FFriendsSort extends Feature {
             const dom = HTMLParser.htmlToElement(data);
 
             for (const friend of dom.querySelectorAll(".friend_block_v2.persona.offline")) {
-                const lastOnline = friend.querySelector(".friend_last_online_text").textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
+                let lastOnline = friend.querySelector(".friend_last_online_text");
+
+                // Doesn't exist when profile is private
+                if (lastOnline) {
+                    lastOnline = lastOnline.textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
+                }
+
                 let time = Infinity;
                 if (lastOnline) {
                     const days = parseInt(lastOnline[1]) || 0;
