@@ -37,6 +37,7 @@ export default class FCommunityAppPageLinks extends Feature {
     }
 
     _makeHeaderLink(cls, url, str) {
+        // First whitespace intended, separates buttons
         return ` <a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}">
                    <span><i class="ico16"></i>&nbsp;${str}</span>
                </a>`;

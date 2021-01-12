@@ -17,6 +17,7 @@ export default class FCommunityAppPageWishlist extends Feature {
         const parent = document.querySelector(".apphub_OtherSiteInfo");
 
         HTML.beforeEnd(parent,
+            // First whitespace intended, separates buttons
             ` <a id="es_wishlist_add" class="btnv6_blue_hoverfade btn_medium" style="${wishlisted ? "display: none;" : ""}">
                 <span>
                     <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">
