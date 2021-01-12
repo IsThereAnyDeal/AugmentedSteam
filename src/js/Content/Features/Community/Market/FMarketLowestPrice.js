@@ -107,7 +107,7 @@ export default class FMarketLowestPrice extends Feature {
                     + `&market_hash_name=${marketHashName}`
                 );
 
-                await TimeUtils.sleep(1000);
+                await TimeUtils.timer(1000);
 
                 done = true;
                 this._loadedMarketPrices[marketHashName] = data;
@@ -116,7 +116,7 @@ export default class FMarketLowestPrice extends Feature {
 
                 // Too Many Requests
                 if (err instanceof Errors.HTTPError && err.code === 429) {
-                    await TimeUtils.sleep(30000);
+                    await TimeUtils.timer(30000);
                     if (node) { // If the node still exists after this timeout
                         done = false;
                     } else {

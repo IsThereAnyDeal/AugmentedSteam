@@ -1,4 +1,4 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {HTML, Localization, TimeUtils} from "../../../../modulesCore";
 import {Background, DOMHelper, Feature, ProfileData, SteamId} from "../../../modulesContent";
 import Config from "config";
 import {Page} from "../../Page";
@@ -74,7 +74,7 @@ export default class FBackgroundSelection extends Feature {
 
             this._hideBgFormLoading(this._listNode);
 
-            let timeout = null;
+            let timer = null;
 
             this._listNode.addEventListener("click", ({target}) => {
                 if (!target.dataset.appid) { return; }
@@ -97,27 +97,27 @@ export default class FBackgroundSelection extends Feature {
 
             this._gameFilterNode.addEventListener("keyup", () => {
 
-                if (timeout) {
-                    window.clearTimeout(timeout);
+                if (!timer) {
+                    timer = TimeUtils.resettableTimer(() => {
+
+                        const max = 100;
+                        const value = this._getSafeString(this._gameFilterNode.value);
+                        if (value === "") { return; }
+
+                        let i = 0;
+                        let list = "";
+                        for (const [appid, title, safeTitle] of games) {
+                            if (safeTitle.includes(value)) {
+                                list += `<div class='as-pd__item js-pd-item' data-appid="${appid}">${title}</div>`;
+                                i++;
+                            }
+                            if (i >= max) { break; }
+                        }
+                        HTML.inner(this._listNode, list);
+                    }, 200);
                 }
 
-                timeout = window.setTimeout(() => {
-
-                    const max = 100;
-                    const value = this._getSafeString(this._gameFilterNode.value);
-                    if (value === "") { return; }
-
-                    let i = 0;
-                    let list = "";
-                    for (const [appid, title, safeTitle] of games) {
-                        if (safeTitle.includes(value)) {
-                            list += `<div class='as-pd__item js-pd-item' data-appid="${appid}">${title}</div>`;
-                            i++;
-                        }
-                        if (i >= max) { break; }
-                    }
-                    HTML.inner(this._listNode, list);
-                }, 200);
+                timer.reset();
             });
 
             if (games[selectedGameKey]) {

@@ -1,4 +1,4 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {HTML, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
 import {ContextType, DOMHelper, Feature} from "../../../modulesContent";
 
 export default class FCustomizer extends Feature {
@@ -77,7 +77,7 @@ export default class FCustomizer extends Feature {
         customizer.build();
     }
 
-    _customizeFrontPage() {
+    async _customizeFrontPage() {
 
         // TODO position when takeover link is active (big banner at the top of the front page)
         HTML.beforeEnd(".home_page_content",
@@ -103,46 +103,46 @@ export default class FCustomizer extends Feature {
             node.classList.remove("active");
         });
 
-        setTimeout(() => {
+        // TODO Need a more consistent solution here
+        await TimeUtils.timer(1000);
 
-            const specialoffers = document.querySelector(".special_offers");
-            const browsesteam = document.querySelector(".big_buttons.home_page_content");
-            const recentlyupdated = document.querySelector(".recently_updated_block");
-            const under = document.querySelector("[class*='specials_under']");
+        const specialoffers = document.querySelector(".special_offers");
+        const browsesteam = document.querySelector(".big_buttons.home_page_content");
+        const recentlyupdated = document.querySelector(".recently_updated_block");
+        const under = document.querySelector("[class*='specials_under']");
 
-            const customizer = new FCustomizer.Customizer("customize_frontpage");
-            customizer
-                .add("featuredrecommended", ".home_cluster_ctn")
-                .add("trendingamongfriends", ".friends_recently_purchased")
-                .add("discoveryqueue", ".discovery_queue_ctn")
-                .add("curators", ".steam_curators_ctn", Localization.str.homepage_curators)
-                .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn", Localization.str.homepage_curators)
-                .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
-                .add("popularvrgames", ".best_selling_vr_ctn")
-                .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
-                .add("gamesstreamingnow", ".live_streams_ctn", "", true)
-                .add("updatesandoffers", ".marketingmessage_area", "", true)
-                .add("topnewreleases", ".top_new_releases", Localization.str.homepage_topnewreleases)
-                .add("steamlabs", ".labs_cluster")
-                .add("homepagesidebar", "body:not(.no_home_gutter) .home_page_gutter", Localization.str.homepage_sidebar);
+        const customizer = new FCustomizer.Customizer("customize_frontpage");
+        customizer
+            .add("featuredrecommended", ".home_cluster_ctn")
+            .add("trendingamongfriends", ".friends_recently_purchased")
+            .add("discoveryqueue", ".discovery_queue_ctn")
+            .add("curators", ".steam_curators_ctn", Localization.str.homepage_curators)
+            .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn", Localization.str.homepage_curators)
+            .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
+            .add("popularvrgames", ".best_selling_vr_ctn")
+            .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
+            .add("gamesstreamingnow", ".live_streams_ctn", "", true)
+            .add("updatesandoffers", ".marketingmessage_area", "", true)
+            .add("topnewreleases", ".top_new_releases", Localization.str.homepage_topnewreleases)
+            .add("steamlabs", ".labs_cluster")
+            .add("homepagesidebar", "body:not(.no_home_gutter) .home_page_gutter", Localization.str.homepage_sidebar);
 
-            if (specialoffers) { customizer.add("specialoffers", specialoffers.parentElement); }
-            if (browsesteam) { customizer.add("browsesteam", browsesteam.parentElement); }
-            if (recentlyupdated) { customizer.add("recentlyupdated", recentlyupdated.parentElement); }
-            if (under) { customizer.add("under", under.parentElement.parentElement); }
+        if (specialoffers) { customizer.add("specialoffers", specialoffers.parentElement); }
+        if (browsesteam) { customizer.add("browsesteam", browsesteam.parentElement); }
+        if (recentlyupdated) { customizer.add("recentlyupdated", recentlyupdated.parentElement); }
+        if (under) { customizer.add("under", under.parentElement.parentElement); }
 
-            for (const node of document.querySelectorAll(
-                ".home_page_body_ctn .home_ctn:not(.esi-customizer), .home_pagecontent_ctn"
-            )) {
-                if (node.closest(".esi-customizer")
-                    || node.querySelector(".esi-customizer")
-                    || node.style.display === "none") { continue; }
+        for (const node of document.querySelectorAll(
+            ".home_page_body_ctn .home_ctn:not(.esi-customizer), .home_pagecontent_ctn"
+        )) {
+            if (node.closest(".esi-customizer")
+                || node.querySelector(".esi-customizer")
+                || node.style.display === "none") { continue; }
 
-                customizer.addDynamic(node);
-            }
+            customizer.addDynamic(node);
+        }
 
-            customizer.build();
-        }, 1000); // TODO Need a more consistent solution here
+        customizer.build();
     }
 }
 

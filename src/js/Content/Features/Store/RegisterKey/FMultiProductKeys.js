@@ -1,4 +1,4 @@
-import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
+import {ExtensionResources, HTML, Localization, TimeUtils} from "../../../../modulesCore";
 import {Feature, RequestData, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -77,9 +77,7 @@ export default class FMultiProductKeys extends Feature {
             });
 
             // force recalculation of the modal's position so it doesn't extend off the bottom of the page
-            setTimeout(() => {
-                window.dispatchEvent(new Event("resize"));
-            }, 250);
+            TimeUtils.timer(250).then(() => { window.dispatchEvent(new Event("resize")); });
 
             // attempt to activate each key in sequence
             const promises = [];

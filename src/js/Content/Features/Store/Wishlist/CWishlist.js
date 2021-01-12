@@ -8,6 +8,7 @@ import FWishlistStats from "./FWishlistStats";
 import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
 import {Page} from "../../Page";
+import {TimeUtils} from "../../../../modulesCore";
 
 export class CWishlist extends CStoreBaseCallback {
 
@@ -53,8 +54,7 @@ export class CWishlist extends CStoreBaseCallback {
     _registerObserver() {
 
         const container = document.getElementById("wishlist_ctn");
-        let timeout = null,
-            lastRequest = null;
+        let timer = null;
         const delayedWork = new Set();
 
         new MutationObserver(mutations => {
@@ -65,21 +65,11 @@ export class CWishlist extends CStoreBaseCallback {
                 }
             }
 
-            lastRequest = window.performance.now();
+            if (timer === null) {
 
-            if (timeout === null) {
+                timer = TimeUtils.resettableTimer(() => {
 
-                const that = this;
-
-                timeout = window.setTimeout(function markWishlist() {
-                    if (window.performance.now() - lastRequest < 40) {
-                        timeout = window.setTimeout(markWishlist, 50);
-                        return;
-                    }
-
-                    timeout = null;
-
-                    if (that._callbacks.length === 0) {
+                    if (this._callbacks.length === 0) {
 
                         // Wait until the callbacks have registered
                         return;
@@ -89,10 +79,12 @@ export class CWishlist extends CStoreBaseCallback {
                     const arg = Array.from(delayedWork).filter(node => node.parentNode === container);
                     delayedWork.clear();
 
-                    that.triggerCallbacks(arg);
+                    this.triggerCallbacks(arg);
 
                     window.dispatchEvent(new Event("resize"));
                 }, 50);
+            } else {
+                timer.reset();
             }
         }).observe(container, {"childList": true});
     }

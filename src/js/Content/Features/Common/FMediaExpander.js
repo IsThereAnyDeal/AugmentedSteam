@@ -1,4 +1,4 @@
-import {HTML, LocalStorage, Localization} from "../../../modulesCore";
+import {HTML, LocalStorage, Localization, TimeUtils} from "../../../modulesCore";
 import {Feature} from "../../modulesContent";
 import {Page} from "../Page";
 
@@ -53,9 +53,9 @@ export default class FMediaExpander extends Feature {
             }
 
             // Triggers the adjustment of the slider scroll bar
-            setTimeout(() => {
+            TimeUtils.timer(250).then(() => {
                 window.dispatchEvent(new Event("resize"));
-            }, 250);
+            });
         }
 
         document.querySelector(".es_slider_toggle").addEventListener("click", (e) => { this._clickSliderToggle(e); });
@@ -145,14 +145,12 @@ export default class FMediaExpander extends Feature {
                 // expanded => shrunk
                 sideDetails.style.opacity = 0;
 
-                setTimeout(() => {
-
+                TimeUtils.timer(250).then(() => {
                     // Hide after transition completes
                     if (!el.classList.contains("es_expanded")) {
                         sideDetails.style.display = "none";
                     }
-                }, 250);
-
+                });
             } else {
 
                 // shrunk => expanded
@@ -178,10 +176,10 @@ export default class FMediaExpander extends Feature {
                 details.style.opacity = "1";
             }
 
-            // Triggers the adjustment of the slider scroll bar
-            setTimeout(() => {
+            TimeUtils.timer(250).then(() => {
+                // Triggers the adjustment of the slider scroll bar
                 window.dispatchEvent(new Event("resize"));
-            }, 250);
+            });
         });
 
         for (const node of document.querySelectorAll(

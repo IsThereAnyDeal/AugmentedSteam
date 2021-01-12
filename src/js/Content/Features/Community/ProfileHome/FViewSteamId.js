@@ -1,4 +1,4 @@
-import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {ExtensionResources, HTML, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
 import {Clipboard, Feature, SteamId, SteamIdDetail} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -10,7 +10,7 @@ export default class FViewSteamId extends Feature {
 
     apply() {
 
-        function copySteamId(e) {
+        async function copySteamId(e) {
             const elem = e.target.closest(".es-copy");
             if (!elem) { return; }
 
@@ -22,7 +22,8 @@ export default class FViewSteamId extends Feature {
             }
 
             elem.classList.add("is-copied");
-            window.setTimeout(() => { elem.classList.remove("is-copied"); }, 2000);
+            await TimeUtils.timer(2000);
+            elem.classList.remove("is-copied");
         }
 
         function showSteamIdDialog() {
