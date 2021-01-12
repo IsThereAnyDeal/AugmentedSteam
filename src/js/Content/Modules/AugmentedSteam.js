@@ -67,7 +67,6 @@ class AugmentedSteam {
         const btn = document.createElement("div");
         btn.classList.add("es_btt");
         btn.textContent = "▲";
-        btn.style.visibility = "hidden";
 
         document.body.append(btn);
 
@@ -77,18 +76,6 @@ class AugmentedSteam {
                 "left": 0,
                 "behavior": "smooth"
             });
-        });
-
-        btn.addEventListener("transitionstart", () => {
-            if (btn.style.visibility === "hidden") {
-                btn.style.visibility = "visible";
-            } else {
-
-                // transition: opacity 200ms ease-in-out;
-                setTimeout(() => {
-                    btn.style.visibility = "hidden";
-                }, 200);
-            }
         });
 
         window.addEventListener("scroll", () => {
