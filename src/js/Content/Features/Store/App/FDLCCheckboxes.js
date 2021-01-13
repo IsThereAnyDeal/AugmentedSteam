@@ -4,7 +4,8 @@ import {Feature, Price, User} from "../../../modulesContent";
 export default class FDLCCheckboxes extends Feature {
 
     checkPrerequisites() {
-        return document.querySelector(".game_area_dlc_section .game_area_dlc_list") !== null;
+        // check if the page has at least one purchasable DLC available
+        return document.querySelector(".game_area_dlc_section .game_area_dlc_list input[name^=subid]") !== null;
     }
 
     apply() {
