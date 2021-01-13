@@ -39,7 +39,7 @@ export default class FDLCCheckboxes extends Feature {
             });
 
             label.append(checkbox);
-            dlcRow.prepend(label);
+            dlcRow.querySelector(".game_area_dlc_name").prepend(label);
         }
 
         const html = `<div class="game_purchase_action game_purchase_action_bg" id="es_selected_btn">
