@@ -25,7 +25,7 @@ export default class FCustomBackground extends Feature {
             return;
         }
 
-        if (document.querySelector(".profile_page.private_profile")) {
+        if (this.context.isPrivateProfile) {
             return;
         }
 

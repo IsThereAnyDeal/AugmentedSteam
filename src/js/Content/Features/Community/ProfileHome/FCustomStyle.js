@@ -4,7 +4,7 @@ import {DOMHelper, Feature, ProfileData} from "../../../modulesContent";
 export default class FCustomStyle extends Feature {
 
     checkPrerequisites() {
-        return document.querySelector("body.profile_page.private_profile") === null;
+        return !this.context.isPrivateProfile;
     }
 
     async apply() {
