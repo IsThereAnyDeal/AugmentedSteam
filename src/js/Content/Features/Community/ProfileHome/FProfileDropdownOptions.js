@@ -5,13 +5,11 @@ import {Page} from "../../Page";
 export default class FProfileDropdownOptions extends Feature {
 
     checkPrerequisites() {
-        return document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow") !== null;
+        this._node = document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow");
+        return this._node !== null;
     }
 
     apply() {
-
-        const node = document.querySelector("#profile_action_dropdown .popup_body .profile_actions_follow");
-        if (!node) { return; }
 
         // add nickname option for non-friends
         if (User.isSignedIn) {
@@ -19,9 +17,12 @@ export default class FProfileDropdownOptions extends Feature {
             // Selects the "Add Friend" button (ID selector for unblocked, class selector for blocked users)
             if (document.querySelector("#btn_add_friend, .profile_header_actions > .btn_profile_action_disabled")) {
 
-                HTML.afterEnd(node, `<a class="popup_menu_item" id="es_nickname"><img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}</a>`);
+                HTML.afterEnd(this._node,
+                    `<a class="popup_menu_item" id="es_nickname">
+                        <img src="//steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}
+                    </a>`);
 
-                node.parentNode.querySelector("#es_nickname").addEventListener("click", () => {
+                document.querySelector("#es_nickname").addEventListener("click", () => {
                     Page.runInPageContext(() => {
                         const f = window.SteamFacade;
                         f.showNicknameModal();
@@ -31,10 +32,10 @@ export default class FProfileDropdownOptions extends Feature {
             }
         }
 
-        // post history link
-        HTML.afterEnd(node,
-            `<a class='popup_menu_item' id='es_posthistory' href='${window.location.pathname}/posthistory'>
-                <img src='//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png'>&nbsp; ${Localization.str.post_history}
+        // add post history link
+        HTML.afterEnd(this._node,
+            `<a class="popup_menu_item" href="${window.location.pathname}/posthistory">
+                <img src="//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">&nbsp; ${Localization.str.post_history}
             </a>`);
     }
 }
