@@ -60,7 +60,7 @@
 }
 
 .es_screenshot_open_btn i {
-  background-image: url('chrome-extension://__MSG_@@extension_id__/img/screenshot_open.png');
+  background-image: url("moz-extension://__MSG_@@extension_id__/img/screenshot_open.png");
 }
 
 .es_regional_icon {
