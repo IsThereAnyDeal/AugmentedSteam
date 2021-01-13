@@ -9,6 +9,7 @@ export default class FBadgeCompletionCost extends CallbackFeature {
     }
 
     setup() {
+        this._totalWorth = 0;
         this.callback();
     }
 
