@@ -36,7 +36,7 @@ export default class FCommunityProfileLinks extends Feature {
             },
             {
                 "id": "bartervg",
-                "link": `//barter.vg/steam/${steamId}`,
+                "link": `https://barter.vg/steam/${steamId}`,
                 "name": "Barter.vg",
             },
             {
@@ -61,7 +61,7 @@ export default class FCommunityProfileLinks extends Feature {
         if ((language === "schinese" || language === "tchinese") && SyncedStorage.get("profile_steamrepcn")) {
             links.push({
                 "id": "steamrepcn",
-                "link": `//steamrepcn.com/profiles/${steamId}`,
+                "link": `https://steamrepcn.com/profiles/${steamId}`,
                 "name": (language === "schinese" ? "查看信誉记录" : "確認信譽記錄")
             });
         }
