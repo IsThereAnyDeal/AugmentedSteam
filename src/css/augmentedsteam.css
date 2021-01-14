@@ -2430,17 +2430,17 @@ label[for="show_common_games"] {
   backdrop-filter: none !important;
 }
 
-.es_profile_style.holidayprofile .persona_name,
-.es_profile_style.holidayprofile .profile_customization_header { /* Makes links clickable */
+.es_profile_style .holidayprofile .persona_name,
+.es_profile_style .holidayprofile .profile_customization_header { /* Makes links clickable */
   position: initial !important;
 }
-.es_profile_style.holidayprofile .profile_customization:not(.none_selected)::before {
+.es_profile_style .holidayprofile .profile_customization:not(.none_selected)::before {
   z-index: -1;
 }
-.es_profile_style.holidayprofile .profile_customization {
+.es_profile_style .holidayprofile .profile_customization {
   background-position-x: -2px !important;
 }
-.es_profile_style.holidayprofile .profile_customization_header {
+.es_profile_style .holidayprofile .profile_customization_header {
   background: none !important;
 }
 
