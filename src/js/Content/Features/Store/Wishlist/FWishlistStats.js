@@ -5,7 +5,7 @@ import {Page} from "../../Page";
 export default class FWishlistStats extends Feature {
 
     checkPrerequisites() {
-        return SyncedStorage.get("showwishliststats") && document.getElementById("nothing_to_see_here").style.display === "none";
+        return SyncedStorage.get("showwishliststats");
     }
 
     async apply() {
