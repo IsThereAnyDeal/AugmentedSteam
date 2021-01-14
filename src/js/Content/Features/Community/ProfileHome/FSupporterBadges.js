@@ -5,39 +5,39 @@ import {Page} from "../../Page";
 
 export default class FSupporterBadges extends Feature {
 
+    checkPrerequisites() {
+        return !this.context.isPrivateProfile;
+    }
+
     async apply() {
 
-        const data = await ProfileData.promise();
-        if (!data || !data.badges) { return; }
+        const {badges} = await ProfileData || {};
+        if (!badges || !badges.length) { return; }
 
-        const badgeCount = data.badges.length;
-        if (!badgeCount) { return; }
+        let html = `<div class="profile_badges" id="es_supporter_badges">
+            <div class="profile_count_link">
+                <a href="${Config.PublicHost}">
+                    <span class="count_link_label">${Localization.str.es_supporter}</span>&nbsp;
+                    <span class="profile_count_link_total">${badges.length}</span>
+                </a>
+            </div>
+            <div class="profile_count_link_preview">`;
 
-        const profileBadges = document.querySelector(".profile_badges");
-        if (!profileBadges) { return; }
-
-        let html
-            = `<div class="profile_badges" id="es_supporter_badges">
-                    <div class="profile_count_link">
-                        <a href="${Config.PublicHost}">
-                            <span class="count_link_label">${Localization.str.es_supporter}</span>&nbsp;
-                            <span class="profile_count_link_total">${badgeCount}</span>
-                        </a>
-                    </div>
-                    <div class="profile_count_link_preview">`;
-
-
-        for (const badge of data.badges) {
+        for (const badge of badges) {
             if (badge.link) {
-                html += `<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>${badge.title}"><a href="${badge.link}"><img class="badge_icon small" src="${badge.img}"></a></div>`;
+                html += `<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>${badge.title}">
+                            <a href="${badge.link}"><img class="badge_icon small" src="${badge.img}"></a>
+                        </div>`;
             } else {
-                html += `<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>${badge.title}"><img class="badge_icon small" src="${badge.img}"></div>`;
+                html += `<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>${badge.title}">
+                            <img class="badge_icon small" src="${badge.img}">
+                        </div>`;
             }
         }
 
         html += "</div></div>";
 
-        HTML.afterEnd(profileBadges, html);
+        HTML.afterEnd(".profile_badges", html);
 
         Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
     }
