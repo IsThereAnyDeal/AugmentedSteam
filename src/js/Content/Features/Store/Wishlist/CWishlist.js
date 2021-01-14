@@ -7,7 +7,6 @@ import FWishlistUserNotes from "./FWishlistUserNotes";
 import FWishlistStats from "./FWishlistStats";
 import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
-import {Page} from "../../Page";
 import {TimeUtils} from "../../../../modulesCore";
 
 export class CWishlist extends CStoreBaseCallback {
@@ -35,17 +34,14 @@ export class CWishlist extends CStoreBaseCallback {
     }
 
     async applyFeatures() {
-        if (document.querySelector("#throbber").style.display !== "none") {
-            await Page.runInPageContext(() => new Promise(resolve => {
-                /* eslint-disable no-undef, camelcase */
-                $J(document).ajaxSuccess((e, xhr, settings) => {
-                    const url = new URL(settings.url);
-                    if (url.origin + url.pathname === `${g_strWishlistBaseURL}wishlistdata/` && g_Wishlist.nPagesToLoad === g_Wishlist.nPagesLoaded) {
-                        resolve();
-                    }
-                });
-                /* eslint-enable no-undef, camelcase */
-            }), null, true);
+        const throbber = document.getElementById("throbber");
+        if (throbber.style.display !== "none") {
+            await new Promise(resolve => {
+                new MutationObserver((mutations, observer) => {
+                    observer.disconnect();
+                    resolve();
+                }).observe(throbber, {"attributes": true});
+            });
         }
 
         super.applyFeatures();
