@@ -36,6 +36,9 @@ export class CWishlist extends CStoreBaseCallback {
             this.myWishlist = false;
         }
 
+        // Cache wishlist rows that have rendered already
+        this.renderedWishlistRows = document.querySelectorAll(".wishlist_row");
+
         this._registerObserver();
     }
 

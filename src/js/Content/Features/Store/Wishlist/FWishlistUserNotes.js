@@ -26,6 +26,8 @@ export default class FWishlistUserNotes extends CallbackFeature {
                 }
             );
         });
+
+        this.callback(this.context.renderedWishlistRows);
     }
 
     callback(nodes) {

@@ -1,7 +1,5 @@
-
 import {SyncedStorage} from "../../../../modulesCore";
-import {CallbackFeature} from "../../../Modules/Feature/CallbackFeature";
-import {Prices} from "../../../Modules/Prices";
+import {CallbackFeature, Prices} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FWishlistITADPrices extends CallbackFeature {
@@ -51,6 +49,8 @@ export default class FWishlistITADPrices extends CallbackFeature {
             };
             /* eslint-enable no-undef */
         });
+
+        this.callback(this.context.renderedWishlistRows);
     }
 
     callback(nodes) {
