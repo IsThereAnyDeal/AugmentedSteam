@@ -2447,14 +2447,6 @@ label[for="show_common_games"] {
   background: none !important;
 }
 
-.es_profile_style .holidayprofile .persona_name.persona_name_spacer {
-  pointer-events: none; /* fixes username and alias dropdown not being clickable */
-}
-.es_profile_style .holidayprofile .profile_content {
-  margin-top: -66px !important;
-  padding-top: 24px !important;
-}
-
 /***************************************
  * addCustomTags() to community guides
  *
