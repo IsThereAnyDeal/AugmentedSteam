@@ -1707,44 +1707,6 @@ img.astats_icon {
 }
 
 /***************************************
- * User profiles
- * add_profile_style()
- **************************************/
- .es_profile_style.es_style_clear {
-   --gradient-background: none !important;
- }
-.es_profile_style.es_style_clear .profile_header_badge {
-  background-color: rgba(22, 22, 23, 0.6) !important;
-  background-image: none !important;
-  box-shadow: none !important;
-}
-.es_profile_style.es_style_clear .profile_content,
-.es_profile_style.es_style_clear .profile_header_bg_texture {
-  background: none !important;
-}
-
-.es_profile_style.es_style_clear .profile_rightcol,
-.es_profile_style.es_style_clear .profile_customization {
-  backdrop-filter: none !important;
-}
-
-.es_profile_style.holidayprofile .persona_name,
-.es_profile_style.holidayprofile .profile_customization_header { /* Makes links clickable */
-  position: initial !important;
-}
-
-.es_profile_style.holidayprofile .profile_customization:not(.none_selected)::before {
-  z-index: -1;
-}
-
-.es_profile_style.holidayprofile .profile_customization {
-  background-position-x: -2px !important;
-}
-.es_profile_style.holidayprofile .profile_customization_header {
-  background: none !important;
-}
-
-/***************************************
  * Augmented Steam and ITAD menu
  **************************************/
 #es_menu {
@@ -1848,49 +1810,6 @@ img.astats_icon {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-/***************************************
- * User profiles
- * FViewSteamId
- **************************************/
-.es-copy {
-  display: flex;
-  align-items: baseline;
-}
-.es-copy:hover .es-copy__id {
-  text-decoration: underline;
-}
-.es-copy:hover .es-copy__icon {
-  opacity: 1;
-}
-.es-copy .es-copy__icon {
-  filter: invert(55%);
-  height: 1.2em;
-  margin-left: 5px;
-  opacity: 0;
-}
-.es-copy__copied {
-  opacity: 0;
-  transition: opacity 200ms;
-  margin-left: 20px;
-  color: #999;
-  font-size: 0.95em;
-}
-.es-copy.is-copied .es-copy__copied {
-  opacity: 1;
-}
-
-/***************************************
- * Users profiles
- * add_profile_style()
- **************************************/
-.es_profile_style .holidayprofile .persona_name.persona_name_spacer {
-  pointer-events: none; /* fixes username and alias dropdown not being clickable */
-}
-.es_profile_style .holidayprofile .profile_content {
-  margin-top: -66px !important;
-  padding-top: 24px !important;
 }
 
 /***************************************
@@ -2076,33 +1995,6 @@ label.es_dlc_label > input:checked::after {
 }
 
 /***************************************
- * SteamRep
- * add_steamrep_api()
- **************************************/
-#es_steamrep {
-  display: grid;
-  grid-template-columns: auto auto;
-  margin-bottom: 10px;
-  font-size: 13px;
-  font-family: Verdana;
-}
-#es_steamrep div {
-  margin: 0 8px;
-}
-#es_steamrep .bad span {
-  color: red;
-}
-#es_steamrep .caution span {
-  color: orangered;
-}
-#es_steamrep .good span {
-  color: green;
-}
-#es_steamrep .neutral span {
-  color: gray;
-}
-
-/***************************************
  * Market listings pages
  * FSoldAmountLastDay
  **************************************/
@@ -2237,19 +2129,6 @@ label.es_dlc_label > input:checked::after {
   margin-right: -10px;
 }
 
-#es_supporter_badges .profile_badges_badge:nth-child(4n) {
-  margin-right: 0;
-}
-#es_supporter_badges .profile_badges_badge:nth-child(4n+1) {
-  margin-bottom: 16px;
-}
-#es_supporter_badges .profile_count_link_preview {
-  display: flex;
-  flex-wrap: wrap;
-}
-#es_supporter_badges .profile_badges_badge {
-  float: none;
-}
 
 /** spam comments */
 .esi_commentthread_button {
@@ -2296,49 +2175,6 @@ label[for="show_common_games"] {
 .esi-hide-common .esi-common,
 .esi-hide-notcommon .esi-notcommon {
   display: none !important;
-}
-
-.esi-stream {
-  position: relative;
-  display: block;
-  background: #396685;
-  margin: 0 -10px -10px -10px;
-}
-
-.esi-stream__play {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  z-index: 2;
-}
-
-.esi-stream__live {
-  white-space: nowrap;
-  height: 13px;
-  position: absolute;
-  top: 15px;
-  left: 0;
-  overflow: hidden;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-size: 12px;
-  padding: 3px 6px 3px 20px;
-  box-shadow: 0 0 7px #a94847;
-  background: black;
-}
-
-.esi-stream__twitch {
-  color: #4b367c;
-  font-weight: bold;
-}
-
-.esi-stream__title {
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 10px;
 }
 
 
@@ -2413,15 +2249,14 @@ label[for="show_common_games"] {
 }
 
 /***************************************
- * Users profiles
- * add_community_profile_links()
+ * User profiles
+ * FCommunityProfileLinks
  **************************************/
 .es_sites_icons {
   display: inline-flex;
   align-items: center;
 }
-
-.es_sites_icons:not(.es_none):before, .es_sites_custom_icon {
+.es_sites_icons:not(.es_none)::before, .es_sites_custom_icon {
   content: "";
   display: inline-block;
   width: 16px;
@@ -2433,11 +2268,10 @@ label[for="show_common_games"] {
   background-position: 2px 2px !important;
   padding: 2px;
   border-radius: 3px;
-  box-shadow: inset 0 0 1px 1px rgb(0, 0, 0),
-  0 0 0 1px rgba(193, 193, 193, 0.17);
+  box-shadow: inset 0 0 1px 1px rgb(0, 0, 0), 0 0 0 1px rgba(193, 193, 193, 0.17);
   vertical-align: top;
 }
-.es_sites_icons.es_gray:before, .es_sites_icons .es_gray {
+.es_sites_icons.es_gray::before, .es_sites_icons .es_gray {
   filter: grayscale(100%);
 }
 
@@ -2454,6 +2288,168 @@ label[for="show_common_games"] {
 #profile_chat_dropdown .popup_menu_item img {
   position: relative;
   top: 3px;
+}
+
+/***************************************
+ * User profiles
+ * FTwitchShowcase
+ **************************************/
+.esi-stream {
+  position: relative;
+  display: block;
+  background: #396685;
+  margin: 0 -10px -10px -10px;
+}
+.esi-stream__play {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 2;
+}
+.esi-stream__live {
+  white-space: nowrap;
+  height: 13px;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+  padding: 3px 6px 3px 20px;
+  box-shadow: 0 0 7px #a94847;
+  background: black;
+}
+.esi-stream__twitch {
+  color: #4b367c;
+  font-weight: bold;
+}
+.esi-stream__title {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+}
+
+/***************************************
+ * User profiles
+ * FSupporterBadges
+ **************************************/
+#es_supporter_badges .profile_badges_badge:nth-child(4n) {
+  margin-right: 0;
+}
+#es_supporter_badges .profile_badges_badge:nth-child(4n+1) {
+  margin-bottom: 16px;
+}
+#es_supporter_badges .profile_count_link_preview {
+  display: flex;
+  flex-wrap: wrap;
+}
+#es_supporter_badges .profile_badges_badge {
+  float: none;
+}
+
+/***************************************
+ * User profiles
+ * FSteamRep
+ **************************************/
+#es_steamrep {
+  display: grid;
+  grid-template-columns: auto auto;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-family: Verdana;
+}
+#es_steamrep div {
+  margin: 0 8px;
+}
+#es_steamrep .bad span {
+  color: red;
+}
+#es_steamrep .caution span {
+  color: orangered;
+}
+#es_steamrep .good span {
+  color: green;
+}
+#es_steamrep .neutral span {
+  color: gray;
+}
+
+/***************************************
+ * User profiles
+ * FViewSteamId
+ **************************************/
+.es-copy {
+  display: flex;
+  align-items: baseline;
+}
+.es-copy:hover .es-copy__id {
+  text-decoration: underline;
+}
+.es-copy:hover .es-copy__icon {
+  opacity: 1;
+}
+.es-copy .es-copy__icon {
+  filter: invert(55%);
+  height: 1.2em;
+  margin-left: 5px;
+  opacity: 0;
+}
+.es-copy__copied {
+  opacity: 0;
+  transition: opacity 200ms;
+  margin-left: 20px;
+  color: #999;
+  font-size: 0.95em;
+}
+.es-copy.is-copied .es-copy__copied {
+  opacity: 1;
+}
+
+/***************************************
+ * User profiles
+ * FCustomStyle
+ **************************************/
+.es_profile_style.es_style_clear {
+  --gradient-background: none !important;
+}
+.es_profile_style.es_style_clear .profile_header_badge {
+  background-color: rgba(22, 22, 23, 0.6) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+.es_profile_style.es_style_clear .profile_content,
+.es_profile_style.es_style_clear .profile_header_bg_texture {
+  background: none !important;
+}
+.es_profile_style.es_style_clear .profile_rightcol,
+.es_profile_style.es_style_clear .profile_customization {
+  backdrop-filter: none !important;
+}
+
+.es_profile_style.holidayprofile .persona_name,
+.es_profile_style.holidayprofile .profile_customization_header { /* Makes links clickable */
+  position: initial !important;
+}
+.es_profile_style.holidayprofile .profile_customization:not(.none_selected)::before {
+  z-index: -1;
+}
+.es_profile_style.holidayprofile .profile_customization {
+  background-position-x: -2px !important;
+}
+.es_profile_style.holidayprofile .profile_customization_header {
+  background: none !important;
+}
+
+.es_profile_style .holidayprofile .persona_name.persona_name_spacer {
+  pointer-events: none; /* fixes username and alias dropdown not being clickable */
+}
+.es_profile_style .holidayprofile .profile_content {
+  margin-top: -66px !important;
+  padding-top: 24px !important;
 }
 
 /***************************************
