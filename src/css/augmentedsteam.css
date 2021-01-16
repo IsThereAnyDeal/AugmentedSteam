@@ -2337,6 +2337,9 @@ label[for="show_common_games"] {
  * User profiles
  * FSupporterBadges
  **************************************/
+#es_supporter_badges {
+  margin-top: -40px; /* Remove excessive space between profile badges and es-supporter badges */
+}
 #es_supporter_badges .profile_badges_badge:nth-child(4n) {
   margin-right: 0;
 }
