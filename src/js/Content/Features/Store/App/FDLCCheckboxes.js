@@ -1,4 +1,4 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
 import {Feature, Price, User} from "../../../modulesContent";
 
 export default class FDLCCheckboxes extends Feature {
@@ -16,30 +16,28 @@ export default class FDLCCheckboxes extends Feature {
             const subidNode = dlcRow.querySelector("input[name^=subid]");
             if (!subidNode) { continue; }
 
-            const label = document.createElement("label");
-            label.classList.add("es_dlc_label");
+            const subid = subidNode.value;
 
-            const checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.classList.add("es_dlc_checkbox");
+            HTML.afterBegin(
+                dlcRow.querySelector(".game_area_dlc_name"),
+                `<input type="checkbox" class="es_dlc_selection" id="es_select_dlc_${subid}" value="${subid}">
+                <label for="es_select_dlc_${subid}" style="background-image: url(${ExtensionResources.getURL("img/check_sheet.png")});"></label>`
+            );
 
-            checkbox.addEventListener("change", () => {
-                if (checkbox.checked) {
+            dlcRow.querySelector("input").addEventListener("change", ({target}) => {
+                if (target.checked) {
                     const priceNode = dlcRow.querySelector(".discount_final_price")
                         || dlcRow.querySelector(".game_area_dlc_price");
 
                     const price = Price.parseFromString(priceNode.textContent);
 
                     if (price !== null) {
-                        selectedDlcs.set(subidNode.value, price.value);
+                        selectedDlcs.set(subid, price.value);
                     }
                 } else {
-                    selectedDlcs.delete(subidNode.value);
+                    selectedDlcs.delete(subid);
                 }
             });
-
-            label.append(checkbox);
-            dlcRow.prepend(label);
         }
 
         const html = `<div class="game_purchase_action game_purchase_action_bg" id="es_selected_btn">
@@ -114,7 +112,7 @@ export default class FDLCCheckboxes extends Feature {
         const inputSessionId = createHiddenInput("sessionid", User.sessionId);
 
         dlcSection.addEventListener("change", ({target}) => {
-            if (!target.classList.contains("es_dlc_checkbox")) { return; }
+            if (!target.classList.contains("es_dlc_selection")) { return; }
 
             cartForm.innerHTML = "";
             cartForm.append(inputAction, inputSessionId);
