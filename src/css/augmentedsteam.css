@@ -270,12 +270,6 @@ img.astats_icon {
   margin-top: 10px;
 }
 
-.es_card_search {
-  padding: 0px 2px;
-  margin-top: 2px;
-  display: block;
-  width: 220px;
-}
 .es_text_input {
   background-color: #4d4b49;
   border: 1px solid #82807c;
@@ -565,6 +559,17 @@ img.astats_icon {
 /***************************************
  * Game Cards page
  **************************************/
+.es_card_search {
+  padding: 0px 2px;
+  margin-top: 2px;
+  display: block;
+  width: 220px;
+}
+
+.es_gamecards_links {
+  float: right;
+}
+
 /* Layout for the case when zoomed in (and the buttons are wrapped) */
 .badge_detail_tasks .gamecards_inventorylink {
   overflow: auto;
