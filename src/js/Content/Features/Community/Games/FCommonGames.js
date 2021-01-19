@@ -32,22 +32,23 @@ export default class FCommonGames extends Feature {
     }
 
     async _loadCommonGames() {
-        if (this._commonGames !== null) { return; }
+        if (this._hasCommonGamesLoaded) { return; }
+        this._hasCommonGamesLoaded = true;
 
         const commonUrl = `${window.location.href}&games_in_common=1`;
         const data = await RequestData.getHttp(commonUrl);
 
         const games = HTMLParser.getVariableFromText(data, "rgGames", "array");
-        this._commonGames = new Set();
+        const _commonGames = new Set();
         for (const game of games) {
-            this._commonGames.add(parseInt(game.appid));
+            _commonGames.add(parseInt(game.appid));
         }
 
         const nodes = document.querySelectorAll(".gameListRow");
         for (const node of nodes) {
             const appid = parseInt(node.id.split("_")[1]);
 
-            if (this._commonGames.has(appid)) {
+            if (_commonGames.has(appid)) {
                 node.classList.add("esi-common");
             } else {
                 node.classList.add("esi-notcommon");
