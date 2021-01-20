@@ -467,8 +467,7 @@ export default class FInventoryMarketHelper extends Feature {
 
         // Check if price is stored in data
         if (!thisItem.dataset.lowestPrice) {
-            firstDiv.innerHTML
-                = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
+            HTML.inner(firstDiv, "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>");
 
 
             if (isBooster) {
