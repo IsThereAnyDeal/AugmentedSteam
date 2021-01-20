@@ -1965,8 +1965,7 @@ img.astats_icon {
 label.es_dlc_label {
   position: absolute;
   padding: 4px 11px 1px;
-  top: 0px;
-  left: 1px;
+  z-index: 999;
 }
 label.es_dlc_label > input {
   -webkit-appearance: none;
@@ -1983,8 +1982,8 @@ label.es_dlc_label > input:checked::after {
   color: #8bc53f;
   font-size: 12px;
   position: absolute;
-  bottom: 3px;
-  left: 14px;
+  bottom: 4px;
+  left: 13px;
 }
 
 /***************************************

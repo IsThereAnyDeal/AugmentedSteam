@@ -20,6 +20,18 @@ export default class FDLCCheckboxes extends Feature {
             const label = document.createElement("label");
             label.classList.add("es_dlc_label");
 
+            // Add dsinfo to label for use with select/unselect all
+            if (dlcRow.classList.contains("ds_wishlist")) {
+                label.classList.add("es_dlc_wishlist");
+            } else if (dlcRow.classList.contains("ds_owned")) {
+                label.classList.add("es_dlc_owned");
+            }
+
+            // Toggle dsinfo when adding/removing wishlist via ds_options dropdown
+            new MutationObserver(() => {
+                label.classList.toggle("es_dlc_wishlist", dlcRow.classList.contains("ds_wishlist"));
+            }).observe(dlcRow, {"attributeFilter": ["class"]});
+
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.classList.add("es_dlc_checkbox");
@@ -40,7 +52,7 @@ export default class FDLCCheckboxes extends Feature {
             });
 
             label.append(checkbox);
-            dlcRow.prepend(label);
+            dlcRow.insertAdjacentElement("beforebegin", label);
         }
 
         const html = `<div class="game_purchase_action game_purchase_action_bg" id="es_selected_btn">
@@ -79,7 +91,7 @@ export default class FDLCCheckboxes extends Feature {
         const change = new Event("change", {"bubbles": true});
 
         dlcSection.querySelector("#unowned_dlc_check").addEventListener("click", () => {
-            const nodes = dlcSection.querySelectorAll(".game_area_dlc_row:not(.ds_owned) input:not(:checked)");
+            const nodes = dlcSection.querySelectorAll(".es_dlc_label:not(.es_dlc_owned) > input:not(:checked)");
             for (const node of nodes) {
                 node.checked = true;
                 node.dispatchEvent(change);
@@ -87,7 +99,7 @@ export default class FDLCCheckboxes extends Feature {
         });
 
         dlcSection.querySelector("#wl_dlc_check").addEventListener("click", () => {
-            const nodes = dlcSection.querySelectorAll(".game_area_dlc_row.ds_wishlist input:not(:checked)");
+            const nodes = dlcSection.querySelectorAll(".es_dlc_label.es_dlc_wishlist > input:not(:checked)");
             for (const node of nodes) {
                 node.checked = true;
                 node.dispatchEvent(change);
@@ -95,7 +107,7 @@ export default class FDLCCheckboxes extends Feature {
         });
 
         dlcSection.querySelector("#no_dlc_check").addEventListener("click", () => {
-            const nodes = dlcSection.querySelectorAll(".game_area_dlc_row input:checked");
+            const nodes = dlcSection.querySelectorAll(".es_dlc_label > input:checked");
             for (const node of nodes) {
                 node.checked = false;
                 node.dispatchEvent(change);
