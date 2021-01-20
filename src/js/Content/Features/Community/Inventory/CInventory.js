@@ -6,6 +6,12 @@ import FInventoryGoTo from "./FInventoryGoTo";
 export class CInventory extends CCommunityBase {
 
     constructor() {
+        // Don't apply features on empty or private inventories
+        if (document.getElementById("no_inventories")) {
+            super();
+            return;
+        }
+
         super(ContextType.INVENTORY, [
             FInventoryMarketHelper,
             FInventoryGoTo,
