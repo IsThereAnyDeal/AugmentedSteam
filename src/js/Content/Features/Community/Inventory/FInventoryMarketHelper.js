@@ -499,6 +499,7 @@ export default class FInventoryMarketHelper extends Feature {
         }
 
         html += this._getMarketOverviewHtml(thisItem);
+        html += "<div class='market_item_action_buyback_at_price'></div>"; // Steam spacing
 
         HTML.inner(firstDiv, html);
     }
