@@ -470,7 +470,6 @@ export default class FInventoryMarketHelper extends Feature {
             firstDiv.innerHTML
                 = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
 
-            const overviewPromise = RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?currency=${walletCurrencyNumber}&appid=${globalId}&market_hash_name=${encodeURIComponent(hashName)}`);
 
             if (isBooster) {
                 thisItem.dataset.cardsPrice = "nodata";
@@ -485,12 +484,12 @@ export default class FInventoryMarketHelper extends Feature {
             }
 
             try {
-                const data = await overviewPromise;
+                const overviewUrl = `https://steamcommunity.com/market/priceoverview/?currency=${walletCurrencyNumber}&appid=${globalId}&market_hash_name=${encodeURIComponent(hashName)}`;
+                const data = await RequestData.getJson(overviewUrl);
 
-                thisItem.dataset.lowestPrice = "nodata";
                 if (data && data.success) {
                     thisItem.dataset.lowestPrice = data.lowest_price || "nodata";
-                    thisItem.dataset.soldVolume = data.volume;
+                    thisItem.dataset.soldVolume = data.volume || "nodata";
                 }
             } catch (error) {
                 console.error("Couldn't load price overview from market", error);
@@ -511,8 +510,8 @@ export default class FInventoryMarketHelper extends Feature {
         if (node.dataset.lowestPrice && node.dataset.lowestPrice !== "nodata") {
             html += Localization.str.starting_at.replace("__price__", node.dataset.lowestPrice);
 
-            if (node.dataset.dataSold) {
-                html += `<br>${Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.dataSold)}`;
+            if (node.dataset.soldVolume && node.dataset.soldVolume !== "nodata") {
+                html += `<br>${Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.soldVolume)}`;
             }
 
             if (node.dataset.cardsPrice) {
