@@ -127,7 +127,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
         formData.append("id", id);
 
         try {
-            const res = await RequestData.post(`https://steamcommunity.com/sharedfiles/${this._method}`, formData, {"withCredentials": true}, true);
+            const res = await RequestData.post(`https://steamcommunity.com/sharedfiles/${this._method}`, formData, {}, true);
 
             if (!res || !res.success) {
                 throw new Error("Bad response");

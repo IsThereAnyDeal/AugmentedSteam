@@ -69,7 +69,7 @@ export default class FInventoryMarketHelper extends Feature {
              * referrer: window.location.origin + window.location.pathname
              */
 
-            await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {"withCredentials": true});
+            await RequestData.post("https://steamcommunity.com/market/sellitem/", formData);
 
             document.querySelector(`#es_instantsell${assetId}`).parentNode.style.display = "none";
 
@@ -197,7 +197,7 @@ export default class FInventoryMarketHelper extends Feature {
                 const form = dom.querySelector("#editForm");
                 const formData = new FormData(form);
 
-                RequestData.post(`${User.profileUrl}/edit`, formData, {"withCredentials": true}).then(result => {
+                RequestData.post(`${User.profileUrl}/edit`, formData).then(result => {
 
                     // Check if it was truly a succesful change
                     if (/"saved_changes_msg"/i.test(result)) {
