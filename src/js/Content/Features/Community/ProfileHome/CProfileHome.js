@@ -52,5 +52,7 @@ export class CProfileHome extends CCommunityBase {
             FChatDropdownOptions,
             FViewSteamId,
         ]);
+
+        this.isPrivateProfile = document.body.classList.contains("private_profile");
     }
 }
