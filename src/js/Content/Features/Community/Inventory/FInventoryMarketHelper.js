@@ -268,7 +268,7 @@ export default class FInventoryMarketHelper extends Feature {
     }
 
     _addBoosterPackProgress(item, appid) {
-        HTML.afterBegin(`#iteminfo${item}_item_owner_actions`,
+        HTML.beforeEnd(`#iteminfo${item}_item_owner_actions`,
             `<a class="btn_small btn_grey_white_innerfade" href="https://steamcommunity.com/my/gamecards/${appid}/"><span>${Localization.str.view_badge_progress}</span></a>`);
     }
 
