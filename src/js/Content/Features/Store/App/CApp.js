@@ -44,6 +44,12 @@ import FRemoveBroadcasts from "./FRemoveBroadcasts";
 export class CApp extends CStore {
 
     constructor() {
+        // Don't apply features if there's an error message (e.g. region-locked, age-gated)
+        if (document.getElementById("error_box")) {
+            super();
+            return;
+        }
+
         super(ContextType.APP, [
             FReplaceDevPubLinks,
             FRemoveFromWishlist,
