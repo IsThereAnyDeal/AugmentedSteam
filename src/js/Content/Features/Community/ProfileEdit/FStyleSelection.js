@@ -20,33 +20,33 @@ export default class FStyleSelection extends Feature {
         const html
             = `<div class="js-style-selection as-pd">
 
-                <div class='as-pd__head' data-tooltip-text='${Localization.str.custom_style_help}'>
+                <div class="as-pd__head" data-tooltip-text="${Localization.str.custom_style_help}">
                     ${Localization.str.custom_style} <span class="as-pd__help">(?)</span>
                 </div>
 
                 <div class="as-pd__cnt">
                     <div>
-                        <select name='es_style' id='es_style' class='gray_bevel dynInput as-pd__select'>
-                            <option id='remove' value='remove'>${Localization.str.noneselected}</option>
-                            <option id='goldenprofile' value='goldenprofile'>Lunar Sale 2019</option>
-                            <option id='holiday2014' value='holiday2014'>Holiday Profile 2014</option>
-                            <option id='blue' value='blue'>Blue Theme</option>
-                            <option id='clear' value='clear'>Clear Theme</option>
-                            <option id='green' value='green'>Green Theme</option>
-                            <option id='orange' value='orange'>Orange Theme</option>
-                            <option id='pink' value='pink'>Pink Theme</option>
-                            <option id='purple' value='purple'>Purple Theme</option>
-                            <option id='red' value='red'>Red Theme</option>
-                            <option id='teal' value='teal'>Teal Theme</option>
-                            <option id='yellow' value='yellow'>Yellow Theme</option>
-                            <option id='grey' value='grey'>Grey Theme</option>
+                        <select name="es_style" id="es_style" class="gray_bevel dynInput as-pd__select">
+                            <option value="remove">${Localization.str.noneselected}</option>
+                            <option value="goldenprofile">Lunar Sale 2019</option>
+                            <option value="holiday2014">Holiday Profile 2014</option>
+                            <option value="blue">Blue Theme</option>
+                            <option value="clear">Clear Theme</option>
+                            <option value="green">Green Theme</option>
+                            <option value="orange">Orange Theme</option>
+                            <option value="pink">Pink Theme</option>
+                            <option value="purple">Purple Theme</option>
+                            <option value="red">Red Theme</option>
+                            <option value="teal">Teal Theme</option>
+                            <option value="yellow">Yellow Theme</option>
+                            <option value="grey">Grey Theme</option>
                         </select>
                     </div>
-                    <img id='es_style_preview' class="as-pd__preview" src=''>
+                    <img id="es_style_preview" class="as-pd__preview" src="">
                 </div>
 
                 <div id="es_style_buttons" class="as-pd__buttons">
-                    <button id='es_style_save_btn' class='DialogButton _DialogLayout Primary as-pd__btn'>${Localization.str.save}</button>
+                    <button id="es_style_save_btn" class="DialogButton _DialogLayout Primary as-pd__btn">${Localization.str.save}</button>
                 </div>
             </div>`;
 

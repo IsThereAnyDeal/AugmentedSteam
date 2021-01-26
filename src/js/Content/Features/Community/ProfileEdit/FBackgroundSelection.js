@@ -18,9 +18,9 @@ export default class FBackgroundSelection extends Feature {
     async _checkPage() {
 
         const html
-            = `<div class='js-bg-selection as-pd'>
+            = `<div class="js-bg-selection as-pd">
 
-                <div class="DialogLabel as-pd__head" data-tooltip-text='${Localization.str.custom_background_help}'>
+                <div class="DialogLabel as-pd__head" data-tooltip-text="${Localization.str.custom_background_help}">
                     ${Localization.str.custom_background} <span class="as-pd__help">(?)</span>
                 </div>
 
@@ -37,8 +37,8 @@ export default class FBackgroundSelection extends Feature {
                 </div>
 
                 <div class="as-pd__buttons">
-                    <button class='DialogButton _DialogLayout Secondary as-pd__btn js-as-pd-bg-clear'>${Localization.str.thewordclear}</button>
-                    <button class='DialogButton _DialogLayout Primary as-pd__btn js-as-pd-bg-save'>${Localization.str.save}</button>
+                    <button class="DialogButton _DialogLayout Secondary as-pd__btn js-as-pd-bg-clear">${Localization.str.thewordclear}</button>
+                    <button class="DialogButton _DialogLayout Primary as-pd__btn js-as-pd-bg-save">${Localization.str.save}</button>
                 </div>
             </div>`;
 
@@ -108,7 +108,7 @@ export default class FBackgroundSelection extends Feature {
                         let list = "";
                         for (const [appid, title, safeTitle] of games) {
                             if (safeTitle.includes(value)) {
-                                list += `<div class='as-pd__item js-pd-item' data-appid="${appid}">${title}</div>`;
+                                list += `<div class="as-pd__item js-pd-item" data-appid="${appid}">${title}</div>`;
                                 i++;
                             }
                             if (i >= max) { break; }
@@ -186,10 +186,10 @@ export default class FBackgroundSelection extends Feature {
 
     _showBgFormLoading(node) {
         HTML.inner(node,
-            `<div class='es_loading'>
-               <img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>
-               <span>${Localization.str.loading}</span>
-             </div>`);
+            `<div class="es_loading">
+                <img src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
+                <span>${Localization.str.loading}</span>
+            </div>`);
     }
 
     _hideBgFormLoading(node) {
