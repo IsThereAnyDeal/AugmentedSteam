@@ -28,6 +28,7 @@ export default class FStyleSelection extends Feature {
                         <select name="es_style" id="es_style" class="gray_bevel dynInput as-pd__select">
                             <option value="remove">${Localization.str.noneselected}</option>
                             <option value="goldenprofile2020">Lunar Sale 2020</option>
+                            <option value="winter2019">Winter Sale 2019</option>
                             <option value="goldenprofile">Lunar Sale 2019</option>
                             <option value="holiday2014">Holiday Profile 2014</option>
                             <option value="blue">Blue Theme</option>
