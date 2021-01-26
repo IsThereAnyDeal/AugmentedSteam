@@ -73,7 +73,7 @@ class SteamFacade {
     }
 
     static dynamicStoreDecorateItems(selector, bForceRecalculate) {
-        return DecorateDynamicItems($J(selector), bForceRecalculate);
+        return GDynamicStore.DecorateDynamicItems($J(selector), bForceRecalculate);
     }
 
     static onDynamicStoreReady(callback) {
