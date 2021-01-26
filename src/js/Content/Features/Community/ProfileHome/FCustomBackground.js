@@ -1,5 +1,4 @@
-import {HTML} from "../../../../modulesCore";
-import {Feature, ProfileData} from "../../../modulesContent";
+import {DOMHelper, Feature, ProfileData} from "../../../modulesContent";
 
 export default class FCustomBackground extends Feature {
 
@@ -16,10 +15,8 @@ export default class FCustomBackground extends Feature {
 
             // Make sure the url is for a valid background image
             testImg.addEventListener("load", () => {
-                const nodes = document.querySelectorAll(".no_header.profile_page, .profile_background_image_content");
-                for (const node of nodes) {
-                    node.style.backgroundImage = `url(${imgUrl})`;
-                }
+                DOMHelper.remove(".profile_animated_background"); // Animated BGs will interfere with static BGs
+                this._setProfileBg(imgUrl);
                 testImg.remove();
             });
 
@@ -35,21 +32,16 @@ export default class FCustomBackground extends Feature {
         const bg = ProfileData.getBgImgUrl();
         if (!bg) { return; }
 
-        const profilePage = document.querySelector(".no_header.profile_page");
-        profilePage.style.backgroundImage = `url(${bg})`;
+        this._setProfileBg(bg);
+    }
 
-        let node = profilePage.querySelector(".profile_background_image_content");
-        if (node) {
-            node.style.backgroundImage = `url(${bg})`;
-        } else {
-            profilePage.classList.add("has_profile_background");
-            node = profilePage.querySelector(".profile_content");
-            node.classList.add("has_profile_background");
-            HTML.afterBegin(node,
-                `<div class="profile_background_holder_content">
-                    <div class="profile_background_overlay_content"></div>
-                    <div class="profile_background_image_content" style="background-image: url(${bg});"></div>
-                </div>`);
-        }
+    _setProfileBg(imgUrl) {
+        document.body.classList.add("has_profile_background");
+
+        const profilePage = document.querySelector(".no_header.profile_page");
+        profilePage.classList.add("has_profile_background");
+        profilePage.style.backgroundImage = `url(${imgUrl})`;
+
+        profilePage.querySelector(".profile_content").classList.add("has_profile_background");
     }
 }
