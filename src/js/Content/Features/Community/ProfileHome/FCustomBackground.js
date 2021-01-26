@@ -1,4 +1,4 @@
-import {Feature, ProfileData} from "../../../modulesContent";
+import {DOMHelper, Feature, ProfileData} from "../../../modulesContent";
 
 export default class FCustomBackground extends Feature {
 
@@ -15,6 +15,7 @@ export default class FCustomBackground extends Feature {
 
             // Make sure the url is for a valid background image
             testImg.addEventListener("load", () => {
+                DOMHelper.remove(".profile_animated_background"); // Animated BGs will interfere with static BGs
                 this._setProfileBg(imgUrl);
                 testImg.remove();
             });
