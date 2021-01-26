@@ -123,12 +123,13 @@ export default class FInventoryMarketHelper extends Feature {
 
         if (ownsInventory) {
 
-            // If is a booster pack add the average price of three cards
+            // Show link to view badge progress for booster packs
             if (isBooster) {
                 this._addBoosterPackProgress(item, appid);
             }
 
             this._addOneClickGemsOption(item, appid, assetId);
+
             this._addQuickSellOptions(
                 marketActions,
                 thisItem,
@@ -141,6 +142,11 @@ export default class FInventoryMarketHelper extends Feature {
             );
         }
 
+        /*
+         * If the item in user's inventory is not marketable due to market restrictions,
+         * or if not in own inventory but the item is marketable, build the HTML for showing info
+         * TODO Fix the second condition: only add average price of three cards for booster packs in own inventory
+         */
         if ((ownsInventory && _restriction > 0 && !_marketable && !expired && hashName !== "753-Gems") || _marketable) {
             this._showMarketOverview(thisItem, marketActions, _globalId, hashName, appid, isBooster, walletCurrency);
         }
@@ -467,11 +473,9 @@ export default class FInventoryMarketHelper extends Feature {
 
         // Check if price is stored in data
         if (!thisItem.dataset.lowestPrice) {
-            firstDiv.innerHTML
-                = "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif' />";
+            HTML.inner(firstDiv, "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>");
 
-            const overviewPromise = RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?currency=${walletCurrencyNumber}&appid=${globalId}&market_hash_name=${encodeURIComponent(hashName)}`);
-
+            // If is a booster pack add the average price of three cards
             if (isBooster) {
                 thisItem.dataset.cardsPrice = "nodata";
 
@@ -485,12 +489,12 @@ export default class FInventoryMarketHelper extends Feature {
             }
 
             try {
-                const data = await overviewPromise;
+                const overviewUrl = `https://steamcommunity.com/market/priceoverview/?currency=${walletCurrencyNumber}&appid=${globalId}&market_hash_name=${encodeURIComponent(hashName)}`;
+                const data = await RequestData.getJson(overviewUrl);
 
-                thisItem.dataset.lowestPrice = "nodata";
                 if (data && data.success) {
                     thisItem.dataset.lowestPrice = data.lowest_price || "nodata";
-                    thisItem.dataset.soldVolume = data.volume;
+                    thisItem.dataset.soldVolume = data.volume || "nodata";
                 }
             } catch (error) {
                 console.error("Couldn't load price overview from market", error);
@@ -500,6 +504,7 @@ export default class FInventoryMarketHelper extends Feature {
         }
 
         html += this._getMarketOverviewHtml(thisItem);
+        html += "<div class='market_item_action_buyback_at_price'></div>"; // Steam spacing
 
         HTML.inner(firstDiv, html);
     }
@@ -511,8 +516,8 @@ export default class FInventoryMarketHelper extends Feature {
         if (node.dataset.lowestPrice && node.dataset.lowestPrice !== "nodata") {
             html += Localization.str.starting_at.replace("__price__", node.dataset.lowestPrice);
 
-            if (node.dataset.dataSold) {
-                html += `<br>${Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.dataSold)}`;
+            if (node.dataset.soldVolume && node.dataset.soldVolume !== "nodata") {
+                html += `<br>${Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.soldVolume)}`;
             }
 
             if (node.dataset.cardsPrice) {
