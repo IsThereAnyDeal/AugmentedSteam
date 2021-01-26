@@ -16,10 +16,9 @@ import FViewSteamId from "./FViewSteamId";
 export class CProfileHome extends CCommunityBase {
 
     constructor() {
-
         // If there is an error message, like profile does not exists.
         if (document.getElementById("message")) {
-            super();
+            super(ContextType.PROFILE_HOME);
             return;
         }
 

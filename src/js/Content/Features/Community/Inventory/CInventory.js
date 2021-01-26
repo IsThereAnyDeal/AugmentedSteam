@@ -8,7 +8,7 @@ export class CInventory extends CCommunityBase {
     constructor() {
         // Don't apply features on empty or private inventories
         if (document.getElementById("no_inventories")) {
-            super();
+            super(ContextType.INVENTORY);
             return;
         }
 

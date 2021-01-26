@@ -14,7 +14,7 @@ export class CWishlist extends CStoreBaseCallback {
     constructor() {
         // Don't apply features on empty or private wishlists
         if (document.getElementById("nothing_to_see_here").style.display !== "none") {
-            super();
+            super(ContextType.WISHLIST);
             return;
         }
 
