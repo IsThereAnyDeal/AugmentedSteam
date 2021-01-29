@@ -2,19 +2,17 @@ import {HTMLParser} from "../../../../Core/Html/HtmlParser";
 import {ContextType, DOMHelper, RequestData} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
 import FCardExchangeLinks from "../FCardExchangeLinks";
-import FBadgeCompletionCost from "./FBadgeCompletionCost";
 import FBadgeSortAndFilter from "./FBadgeSortAndFilter";
-import FBadgeDropsCount from "./FBadgeDropsCount";
+import FBadgeCalculations from "./FBadgeCalculations";
 
 export class CBadges extends CCommunityBase {
 
     constructor() {
 
         super(ContextType.BADGES, [
-            FBadgeCompletionCost,
             FCardExchangeLinks,
             FBadgeSortAndFilter,
-            FBadgeDropsCount,
+            FBadgeCalculations,
         ]);
 
         this.hasMultiplePages = document.querySelector(".pagebtn") !== null;
