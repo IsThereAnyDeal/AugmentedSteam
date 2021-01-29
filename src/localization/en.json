@@ -1,4 +1,11 @@
 {
+    "addtocart_dialog": {
+        "error_desc": "An error occurred while adding your item to Cart.",
+        "cont_title": "Added to Shopping Cart",
+        "cont_desc": "The item was added to your shopping cart.<br><br>Would you like to Checkout now or Continue Shopping?",
+        "cont_checkout": "Checkout",
+        "cont_continue": "Continue Shopping"
+    },
     "calc_workshop_size": {
         "file_size": "File size __size__",
         "finished": "Finished",
@@ -561,6 +568,7 @@
         "wishlist": "Items on your wishlist",
         "add_another_region": "Add",
         "skip_got_steam": "Skip the \"Got Steam?\" window",
+        "addtocart_no_redirect": "Show a dialog with an option to continue shopping when adding items to Cart",
         "store_general_thirdparty": "Options for information from 3rd-party sites",
         "purchase_dates": "Show purchase date",
         "show_badge_progress": "Show badge progress",

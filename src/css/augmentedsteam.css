@@ -1358,10 +1358,6 @@ img.astats_icon {
   overflow-x: initial !important;
   overflow: visible !important;
 }
-.es_regional_prices.game_area_purchase_game:hover,
-.es_regional_prices.sale_page_purchase_item:hover {
-  z-index: 9999;
-}
 .es_regional_prices.sale_page_purchase_item {
   height: auto;
   min-height: 136px;

@@ -107,6 +107,7 @@ export default {
     "show_early_access": "options.show_early_access",
     "show_alternative_linux_icon": "options.show_alternative_linux_icon",
     "skip_got_steam": "options.skip_got_steam",
+    "addtocart_no_redirect": "options.addtocart_no_redirect",
 
     // price
     "showlowestprice": "options.lowestprice",

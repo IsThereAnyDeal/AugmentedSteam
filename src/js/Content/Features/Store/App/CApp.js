@@ -4,6 +4,7 @@ import FMediaExpander from "../../Common/FMediaExpander";
 import FITADPrices from "../Common/FITADPrices";
 import FDRMWarnings from "../Common/FDRMWarnings";
 import FExtraLinks from "../Common/FExtraLinks";
+import FAddToCartNoRedirect from "../Common/FAddToCartNoRedirect";
 import {UserNotes} from "../Common/UserNotes";
 import {CStore} from "../Common/CStore";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
@@ -89,6 +90,7 @@ export class CApp extends CStore {
             FSupportInfo,
             FMediaExpander,
             FRemoveBroadcasts,
+            FAddToCartNoRedirect,
         ]);
 
         this.userNotes = new UserNotes();

@@ -6,6 +6,11 @@ class RequestData {
     static async getHttp(url, settings = {}, responseType = "text") {
 
         let _url = url;
+        if (_url.startsWith("//")) { // TODO remove when not needed
+            _url = window.location.protocol + url;
+            console.warn("Requesting URL without protocol, please update");
+        }
+
         const _settings = {
             "method": "GET",
             "credentials": "include",
@@ -15,11 +20,6 @@ class RequestData {
         };
 
         ProgressBar.startRequest();
-
-        if (_url.startsWith("//")) { // TODO remove when not needed
-            _url = window.location.protocol + url;
-            console.warn("Requesting URL without protocol, please update");
-        }
 
         let response;
 
@@ -36,14 +36,27 @@ class RequestData {
 
         ProgressBar.finishRequest();
 
-        return response[responseType]();
+        return responseType === "none" ? response : response[responseType]();
     }
 
-    static post(url, formData, settings, returnJSON) {
-        return RequestData.getHttp(url, Object.assign(settings || {}, {
+    static post(url, formData, settings = {}, returnJSON = false) {
+
+        const _settings = {
+            ...settings,
             "method": "POST",
             "body": formData
-        }), returnJSON ? "json" : "text");
+        };
+
+        let _responseType;
+        if (typeof returnJSON === "string") {
+            _responseType = returnJSON;
+        } else if (returnJSON) {
+            _responseType = "json";
+        } else {
+            _responseType = "text";
+        }
+        
+        return RequestData.getHttp(url, _settings, _responseType);
     }
 
     static getJson(url, settings) {
