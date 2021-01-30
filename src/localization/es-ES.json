@@ -113,7 +113,7 @@
     "search": "Buscar",
     "es_supporter": "Seguidor de Enhanced Steam",
     "view_to_scale": "Ver a escala",
-    "videos": "Vídeos / Avances",
+    "videos": "Vídeos / Trailers",
     "community": "Comunidad",
     "dlc_data_header": "Detalles del contenido descargable",
     "graphics": "Gráficos",
@@ -428,7 +428,7 @@
         "drm": "Mostrar advertencias de DRM de terceros",
         "show_regionwarning": "Mostrar un aviso si estás en una región sin cuenta",
         "foot_link": "Extensión Augmented Steam",
-        "profile_link_images": "Imagenes de los enlaces en el perfil",
+        "profile_link_images": "Imágenes de los enlaces en el perfil",
         "library": "Motrar botón de «Biblioteca» en el encabezado",
         "show1clickgoo": "Mostrar botón «Cambiar a gemas con 1 clic...» en los artículos del inventario compatibles",
         "hidedlcunownedgames": "DLC de juegos que no tienes",
@@ -508,7 +508,7 @@
         "general": "General",
         "market": "Mercado",
         "inventory": "Inventario",
-        "profile": "Perfíl",
+        "profile": "Perfil",
         "group": "Grupo",
         "group_links": "Mostrar enlaces del grupo a:",
         "show_languagewarning": "Mostrar un aviso si se está navegando en otro idioma que no sea",
@@ -675,7 +675,7 @@
     "wl": {
         "total_price": "valor actual",
         "in_wishlist": "en la lista de deseados",
-        "on_sale": "en venta",
+        "on_sale": "en oferta",
         "no_price": "sin precio"
     },
     "coll": {
