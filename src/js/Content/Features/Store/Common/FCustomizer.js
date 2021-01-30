@@ -153,52 +153,46 @@ FCustomizer.Customizer = class {
         return str;
     }
 
-    _updateValue(name, value) {
-        this.settings[name] = value;
+    _updateState(name, state) {
+        this.settings[name] = state;
         SyncedStorage.set(this.settingsName, this.settings);
     }
 
-    _getValue(name) {
-        const value = this.settings[name];
-        return (typeof value === "undefined") || value;
+    _getState(name) {
+        const state = this.settings[name];
+        return (typeof state === "undefined") || state;
     }
 
-    add(name, targets, text, forceShow) {
+    add(name, targets, text, forceShow = false) {
 
         let _text = text;
         let elements;
 
         if (typeof targets === "string") {
-            elements = Array.from(document.querySelectorAll(targets));
+            elements = document.querySelectorAll(targets);
+        } else if (targets instanceof Element) {
+            elements = [targets];
         } else if (targets instanceof NodeList) {
-            elements = Array.from(targets);
+            elements = targets;
         } else {
-            elements = targets ? [targets] : [];
+            return this;
         }
 
         if (!elements.length) { return this; }
 
-        const state = this._getValue(name);
+        const state = this._getState(name);
 
-        let isValid = false;
+        for (const element of elements) {
 
-        elements.forEach((element, i) => {
             if (getComputedStyle(element).display === "none" && !forceShow) {
-                elements.splice(i, 1);
-                return;
+                continue;
             }
 
             if (typeof _text !== "string" || _text === "") {
                 _text = this._textValue(element).toLowerCase();
-                if (_text === "") { return; }
+                if (_text === "") { continue; }
             }
-
-            isValid = true;
-        });
-
-        if (!isValid) { return this; }
-
-        for (const element of elements) {
+ 
             element.classList.toggle("esi-shown", state);
             element.classList.toggle("esi-hidden", !state);
             element.classList.add("esi-customizer");
@@ -254,7 +248,7 @@ FCustomizer.Customizer = class {
                 e.target.closest(".home_viewsettings_checkboxrow")
                     .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
 
-                this._updateValue(name, state);
+                this._updateState(name, state);
             });
         }
     }
