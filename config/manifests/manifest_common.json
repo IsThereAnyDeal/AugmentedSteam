@@ -117,8 +117,7 @@
     },
     {
       "matches": [
-        "*://*.steampowered.com/account",
-        "*://*.steampowered.com/account/"
+        "*://*.steampowered.com/account"
       ],
       "js": [
         "js/store/account.js"
@@ -129,8 +128,7 @@
     },
     {
       "matches": [
-        "*://*.steampowered.com/account/registerkey",
-        "*://*.steampowered.com/account/registerkey/*"
+        "*://*.steampowered.com/account/registerkey"
       ],
       "js": [
         "js/store/registerkey.js"
@@ -211,9 +209,7 @@
         "*://*.steampowered.com/digitalgiftcards/selectgiftcard",
         "*://*.steampowered.com/digitalgiftcards/selectgiftcard/*",
         "*://*.steampowered.com/account",
-        "*://*.steampowered.com/account/",
         "*://*.steampowered.com/account/registerkey",
-        "*://*.steampowered.com/account/registerkey/*",
         "*://*.steampowered.com/bundle/*",
         "*://*.steampowered.com/sub/*",
         "*://*.steampowered.com/app/*",
@@ -228,8 +224,7 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/workshop",
-        "*://steamcommunity.com/workshop/"
+        "*://steamcommunity.com/workshop"
       ],
       "js": [
         "js/community/workshop.js"
@@ -252,9 +247,7 @@
     {
       "matches": [
         "*://steamcommunity.com/id/*/home",
-        "*://steamcommunity.com/id/*/home/",
-        "*://steamcommunity.com/profiles/*/myactivity",
-        "*://steamcommunity.com/profiles/*/myactivity/"
+        "*://steamcommunity.com/profiles/*/myactivity"
       ],
       "js": [
         "js/community/profile_activity.js"
@@ -290,9 +283,7 @@
     {
       "matches": [
         "*://steamcommunity.com/id/*/badges",
-        "*://steamcommunity.com/id/*/badges/",
-        "*://steamcommunity.com/profiles/*/badges",
-        "*://steamcommunity.com/profiles/*/badges/"
+        "*://steamcommunity.com/profiles/*/badges"
       ],
       "js": [
         "js/community/badges.js"
@@ -329,12 +320,8 @@
       "matches": [
         "*://steamcommunity.com/id/*/friends",
         "*://steamcommunity.com/id/*/friends/*",
-        "*://steamcommunity.com/id/*/friends#*",
-        "*://steamcommunity.com/id/*/friends?*",
         "*://steamcommunity.com/profiles/*/friends",
-        "*://steamcommunity.com/profiles/*/friends/*",
-        "*://steamcommunity.com/profiles/*/friends#*",
-        "*://steamcommunity.com/profiles/*/friends?*"
+        "*://steamcommunity.com/profiles/*/friends/*"
       ],
       "js": [
         "js/community/friends.js"
@@ -346,9 +333,7 @@
     {
       "matches": [
         "*://steamcommunity.com/id/*/groups",
-        "*://steamcommunity.com/id/*/groups/",
-        "*://steamcommunity.com/profiles/*/groups",
-        "*://steamcommunity.com/profiles/*/groups/"
+        "*://steamcommunity.com/profiles/*/groups"
       ],
       "js": [
         "js/community/groups.js"
@@ -439,33 +424,23 @@
       ],
       "exclude_matches": [
         "*://steamcommunity.com/id/*/home",
-        "*://steamcommunity.com/id/*/home/",
         "*://steamcommunity.com/profiles/*/myactivity",
-        "*://steamcommunity.com/profiles/*/myactivity/",
         "*://steamcommunity.com/id/*/games*",
         "*://steamcommunity.com/profiles/*/games*",
         "*://steamcommunity.com/id/*/edit*",
         "*://steamcommunity.com/profiles/*/edit*",
         "*://steamcommunity.com/id/*/badges",
-        "*://steamcommunity.com/id/*/badges/",
         "*://steamcommunity.com/profiles/*/badges",
-        "*://steamcommunity.com/profiles/*/badges/",
         "*://steamcommunity.com/id/*/gamecards*",
         "*://steamcommunity.com/profiles/*/gamecards*",
         "*://steamcommunity.com/id/*/friendsthatplay*",
         "*://steamcommunity.com/profiles/*/friendsthatplay*",
         "*://steamcommunity.com/id/*/friends",
         "*://steamcommunity.com/id/*/friends/*",
-        "*://steamcommunity.com/id/*/friends#*",
-        "*://steamcommunity.com/id/*/friends?*",
         "*://steamcommunity.com/profiles/*/friends",
         "*://steamcommunity.com/profiles/*/friends/*",
-        "*://steamcommunity.com/profiles/*/friends#*",
-        "*://steamcommunity.com/profiles/*/friends?*",
         "*://steamcommunity.com/id/*/groups",
-        "*://steamcommunity.com/id/*/groups/",
         "*://steamcommunity.com/profiles/*/groups",
-        "*://steamcommunity.com/profiles/*/groups/",
         "*://steamcommunity.com/id/*/inventory*",
         "*://steamcommunity.com/profiles/*/inventory*",
         "*://steamcommunity.com/id/*/stats*",
@@ -546,8 +521,7 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/tradingcards/boostercreator",
-        "*://steamcommunity.com/tradingcards/boostercreator/"
+        "*://steamcommunity.com/tradingcards/boostercreator"
       ],
       "js": [
         "js/community/booster_creator.js"
@@ -568,7 +542,6 @@
         "*://steamcommunity.com/id/*",
         "*://steamcommunity.com/profiles/*",
         "*://steamcommunity.com/workshop",
-        "*://steamcommunity.com/workshop/",
         "*://steamcommunity.com/workshop/browse*",
         "*://steamcommunity.com/market/*",
         "*://steamcommunity.com/groups/*",
@@ -577,8 +550,7 @@
         "*://steamcommunity.com/sharedfiles/filedetails/?id=*",
         "*://steamcommunity.com/sharedfiles/editguide?id=*",
         "*://steamcommunity.com/sharedfiles/editguide/?id=*",
-        "*://steamcommunity.com/tradingcards/boostercreator",
-        "*://steamcommunity.com/tradingcards/boostercreator/"
+        "*://steamcommunity.com/tradingcards/boostercreator"
       ],
       "js": [
         "js/community/default.js"
