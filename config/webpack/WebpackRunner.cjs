@@ -12,7 +12,7 @@ class WebpackRunner {
     constructor(browser) {
         this._browser = browser;
 
-        if (!["firefox", "chrome"].includes(this._browser)) {
+        if (!["firefox", "chrome", "edge"].includes(this._browser)) {
             throw new Error(`Unknown browser ${this._browser}`);
         }
 
