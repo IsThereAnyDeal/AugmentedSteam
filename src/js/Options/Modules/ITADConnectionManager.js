@@ -18,8 +18,8 @@ class ITADConnectionManager {
         this._itadStatus.classList.remove("itad-status--connected");
 
         this._itadAction.textContent = Localization.str.connect;
-        this._itadAction.removeEventListener("click", this._disconnect);
-        this._itadAction.addEventListener("click", this._connect);
+        this._itadAction.removeEventListener("click", () => { this._disconnect(); });
+        this._itadAction.addEventListener("click", () => { this._connect(); });
     }
 
     async _connect() {
@@ -34,8 +34,8 @@ class ITADConnectionManager {
         this._itadStatus.classList.remove("itad-status--disconnected");
 
         this._itadAction.textContent = Localization.str.disconnect;
-        this._itadAction.removeEventListener("click", this._connect);
-        this._itadAction.addEventListener("click", this._disconnect);
+        this._itadAction.removeEventListener("click", () => { this._connect(); });
+        this._itadAction.addEventListener("click", () => { this._disconnect(); });
     }
 
     async run() {
@@ -45,13 +45,13 @@ class ITADConnectionManager {
             this._itadStatus.classList.add("itad-status--connected");
 
             this._itadAction.textContent = Localization.str.disconnect;
-            this._itadAction.addEventListener("click", this._disconnect);
+            this._itadAction.addEventListener("click", () => { this._disconnect(); });
         } else {
             this._itadStatus.textContent = Localization.str.disconnected;
             this._itadStatus.classList.add("itad-status--disconnected");
 
             this._itadAction.textContent = Localization.str.connect;
-            this._itadAction.addEventListener("click", this._connect);
+            this._itadAction.addEventListener("click", () => { this._connect(); });
         }
     }
 }
