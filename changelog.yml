@@ -1,3 +1,29 @@
+2.0.0: |
+  A new major version! If you're going to read a changelog, you might wonder what did we do to deserve the version 2.
+  Well, we have completely overhauled our code base, so Augmented Steam is now much easier to maintain and iterate upon.
+  We apologize for a long wait :)
+
+  What's new:
+  - We have much nicer logo now (priorities!)
+  - You can now completely remove broadcasts from app pages
+  - When exporting wishlists, we will respect your filter selection, you deserve it
+
+  What's fixed:
+  - Improved replacement of your account name with your community name
+  - Fixed rendering bugs on achievement comparison page
+  - Features on wishlist page should now work all the time, we had a talk
+  - Background preview will now work, even when background is animated
+  - Fixed silent fails of key activation dialog
+  - We will now remember your agreement with Steam Subscriber agreement on Community Market
+  - Fixed monochrome Tux icon
+
+  Known issues:
+  - YouTube deprecated the method we were using to display review and gameplay videos.
+    We have yet to implement an alternative method, until then the YouTube features are disabled.
+  - If you are not able to save any new user notes, this is because you are running out of storage limits.
+    We have a plan to fix that, but it's not yet implemented.
+
+
 1.4.8: |
   - updated DOMPurify library
 
