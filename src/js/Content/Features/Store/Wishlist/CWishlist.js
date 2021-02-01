@@ -1,5 +1,5 @@
 import {ContextType, User} from "../../../modulesContent";
-import {CStoreBaseCallback} from "../Common/CStoreBaseCallback";
+import {CStoreBase} from "../Common/CStoreBase";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
 import FWishlistHighlights from "./FWishlistHighlights";
 import FWishlistITADPrices from "./FWishlistITADPrices";
@@ -9,7 +9,7 @@ import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
 import {TimeUtils} from "../../../../modulesCore";
 
-export class CWishlist extends CStoreBaseCallback {
+export class CWishlist extends CStoreBase {
 
     constructor() {
         // Don't apply features on empty or private wishlists
