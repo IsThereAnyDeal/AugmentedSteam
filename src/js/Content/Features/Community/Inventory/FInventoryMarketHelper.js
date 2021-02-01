@@ -275,39 +275,41 @@ export default class FInventoryMarketHelper extends Feature {
     _addOneClickGemsOption(item, appid, assetid) {
         if (!SyncedStorage.get("show1clickgoo")) { return; }
 
-        const quickGrind = document.querySelector("#es_quickgrind");
-        if (quickGrind) { quickGrind.parentNode.remove(); }
+        // scrap link is always present, just hidden if the item cannot be turned into gems
+        const scrapLink = document.querySelector(`#iteminfo${item}_item_scrap_link`);
+        if (scrapLink.classList.contains("esi-show1clickgoo")) { return; }
 
-        const scrapActions = document.querySelector(`#iteminfo${item}_item_scrap_actions`);
+        scrapLink.classList.add("esi-show1clickgoo");
+        scrapLink.querySelector("span").textContent = Localization.str.oneclickgoo;
 
-        const divs = scrapActions.querySelectorAll("div");
-        HTML.beforeBegin(divs[divs.length - 1],
-            `<div><a class='btn_small btn_green_white_innerfade' id='es_quickgrind'><span>${Localization.str.oneclickgoo}</span></div>`);
+        scrapLink.addEventListener("click", e => {
+            e.preventDefault();
 
-        // TODO: Add prompt?
-        document.querySelector("#es_quickgrind").addEventListener("click", () => {
+            /*
+             * Modified version of GrindIntoGoo from badges.js
+             * https://github.com/SteamDatabase/SteamTracking/blob/ca5145acba077bee42de2593f6b17a6ed045b5f6/steamcommunity.com/public/javascript/badges.js#L521
+             */
             Page.runInPageContext((appid, assetid) => {
-                const g = window.SteamFacade.global;
+
+                /* eslint-disable new-cap, no-undef, camelcase */
                 const rgAJAXParams = {
-                    "sessionid": g("g_sessionID"),
+                    "sessionid": g_sessionID,
                     appid,
                     assetid,
                     "contextid": 6
                 };
 
-                let strActionURL = `${g("g_strProfileURL")}/ajaxgetgoovalue/`;
+                let strActionURL = `${g_strProfileURL}/ajaxgetgoovalue/`;
 
-                const jq = window.SteamFacade.jq;
-                jq.get(strActionURL, rgAJAXParams).done(data => {
-                    strActionURL = `${g("g_strProfileURL")}/ajaxgrindintogoo/`;
-                    // eslint-disable-next-line camelcase
+                $J.get(strActionURL, rgAJAXParams).done(data => {
+                    strActionURL = `${g_strProfileURL}/ajaxgrindintogoo/`;
                     rgAJAXParams.goo_value_expected = data.goo_value;
 
-                    jq.post(strActionURL, rgAJAXParams).done(() => {
-                        // eslint-disable-next-line new-cap,no-undef
+                    $J.post(strActionURL, rgAJAXParams).done(() => {
                         ReloadCommunityInventory();
                     });
                 });
+                /* eslint-enable new-cap, no-undef, camelcase */
             }, [appid, assetid]);
         });
     }
