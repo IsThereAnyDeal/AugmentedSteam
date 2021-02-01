@@ -6,6 +6,18 @@ export default {
     "replaceaccountname": "options.replace_account_name",
     "showfakeccwarning": "options.show_regionwarning",
     "show_backtotop": "options.show_backtotop",
+    "disablelinkfilter": "options.disablelinkfilter",
+    "send_age_info": "options.send_age_info",
+    "openinnewtab": "options.openinnewtab",
+    "hideaboutlinks": "options.hide_about_links",
+    "installsteam": [
+        "options.install_steam_button",
+        [
+            ["show", "show"],
+            ["hide", "hide"],
+            ["replace", "options.replace_view_client"]
+        ]
+    ],
 
     // context menu
     "context_steam_store": "options.context_steam_store",
@@ -46,15 +58,6 @@ export default {
     "hide_owned": "options.hide_owned",
     "hide_ignored": "options.hide_ignored",
     "hidetmsymbols": "options.hidetmsymbols",
-    "hideaboutlinks": "options.hide_about_links",
-    "installsteam": [
-        "options.install_steam_button",
-        [
-            ["show", "show"],
-            ["hide", "hide"],
-            ["replace", "options.replace_view_client"]
-        ]
-    ],
 
     // store homepage
     "homepage_tab_selection": [
@@ -103,9 +106,7 @@ export default {
 
     // store general
     "showusernotes": "options.show_user_notes",
-    "send_age_info": "options.send_age_info",
     "horizontalscrolling": "options.horizontalscrolling",
-    "openinnewtab": "options.openinnewtab",
     "show_early_access": "options.show_early_access",
     "show_alternative_linux_icon": "options.show_alternative_linux_icon",
     "skip_got_steam": "options.skip_got_steam",
@@ -177,6 +178,5 @@ export default {
     "steamcardexchange": "options.steamcardexchange",
     "wlbuttoncommunityapp": "options.wlbuttoncommunityapp",
     "removeguideslanguagefilter": "options.removeguideslanguagefilter",
-    "disablelinkfilter": "options.disablelinkfilter",
     "showallfriendsthatown": "options.showallfriendsthatown",
 };
