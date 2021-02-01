@@ -67,28 +67,21 @@ export default {
         ]
     ],
 
-    // store general
+    // store wishlist
     "showemptywishlist": "options.show_empty_wishlist",
     "showwishliststats": "options.show_wishlist_stats",
-    "showusernotes": "options.show_user_notes",
-    "send_age_info": "options.send_age_info",
+
+    // store app page
     "removebroadcasts": "options.removebroadcasts",
     "mp4video": "options.mp4video",
-    "horizontalscrolling": "options.horizontalscrolling",
     "showsupportinfo": "options.supportinfo",
     "showdrm": "options.drm",
-    "openinnewtab": "options.openinnewtab",
     "showviewinlibrary": "options.show_view_in_library",
     "show_package_info": "options.show_package_info",
-    "show_early_access": "options.show_early_access",
     "showachinstore": "achievements.option",
     "purchase_dates": "options.purchase_dates",
     "show_badge_progress": "options.show_badge_progress",
     "show_coupon": "options.show_coupon",
-    "show_alternative_linux_icon": "options.show_alternative_linux_icon",
-    "skip_got_steam": "options.skip_got_steam",
-
-    // store 3rdparty
     "showmcus": "options.metacritic",
     "showoc": "options.opencritic",
     "showhltb": "options.hltb",
@@ -107,6 +100,15 @@ export default {
     "showsteamcardexchange": "options.store_steamcards",
     "show_steamchart_info": "options.show_steamchart_info",
     "show_steamspy_info": "options.show_steamspy_info",
+
+    // store general
+    "showusernotes": "options.show_user_notes",
+    "send_age_info": "options.send_age_info",
+    "horizontalscrolling": "options.horizontalscrolling",
+    "openinnewtab": "options.openinnewtab",
+    "show_early_access": "options.show_early_access",
+    "show_alternative_linux_icon": "options.show_alternative_linux_icon",
+    "skip_got_steam": "options.skip_got_steam",
 
     // price
     "showlowestprice": "options.lowestprice",
