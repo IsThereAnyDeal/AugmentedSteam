@@ -69,6 +69,7 @@ export default {
     // store wishlist
     "showemptywishlist": "options.show_empty_wishlist",
     "showwishliststats": "options.show_wishlist_stats",
+    "oneclickremovewl": "options.oneclickremovewl",
 
     // store app page
     "mp4video": "options.mp4video",
