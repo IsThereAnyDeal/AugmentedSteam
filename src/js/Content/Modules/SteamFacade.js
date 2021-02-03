@@ -140,6 +140,20 @@ class SteamFacade {
         CScrollOffsetWatcher.ForceRecalc();
     }
 
+    // inventory
+
+    static firstPage() {
+        return InventoryFirstPage();
+    }
+
+    static lastPage() {
+        return InventoryLastPage();
+    }
+
+    static goToPage() {
+        return InventoryGoToPage();
+    }
+
     // selections
 
     static updateSelection() {
