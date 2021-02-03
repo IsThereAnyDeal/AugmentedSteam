@@ -51,6 +51,13 @@ export class CWishlist extends CStoreBaseCallback {
         }
 
         super.applyFeatures();
+
+        const alreadyLoaded = document.querySelectorAll(".wishlist_row");
+        if (alreadyLoaded !== null) {
+            this.triggerCallbacks(alreadyLoaded);
+        }
+
+        this._registerObserver();
     }
 
     _registerObserver() {
@@ -70,12 +77,6 @@ export class CWishlist extends CStoreBaseCallback {
             if (timer === null) {
 
                 timer = TimeUtils.resettableTimer(() => {
-
-                    if (this._callbacks.length === 0) {
-
-                        // Wait until the callbacks have registered
-                        return;
-                    }
 
                     // Valve detaches wishlist entries that aren't visible
                     const arg = Array.from(delayedWork).filter(node => node.parentNode === container);
