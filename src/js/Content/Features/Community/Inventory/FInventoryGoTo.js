@@ -59,6 +59,7 @@ export default class FInventoryGoTo extends Feature {
     _insertScript() {
 
         DOMHelper.insertScript({"content":
+            // g_ActiveInventory is sometimes set to null or a different inventory, thus clearing our GoToPage fn
             `function ensureFn() {
                 if (typeof g_ActiveInventory.GoToPage === "function") { return; }
                 g_ActiveInventory.GoToPage = function(page) {
