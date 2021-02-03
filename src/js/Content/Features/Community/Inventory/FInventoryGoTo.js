@@ -44,11 +44,7 @@ export default class FInventoryGoTo extends Feature {
 
                 // Hide page number box when page controls are hidden
                 if (id === "inventory_pagecontrols") {
-                    if (target.style.visibility === "hidden") {
-                        document.getElementById("es_pagego").style.visibility = "hidden";
-                    } else {
-                        document.getElementById("es_pagego").style.visibility = "visible";
-                    }
+                    document.getElementById("es_pagego").style.visibility = target.style.visibility;
                 }
 
                 if (id === "pagebtn_next") {
