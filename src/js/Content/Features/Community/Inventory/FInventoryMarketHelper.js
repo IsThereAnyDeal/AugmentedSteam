@@ -17,6 +17,13 @@ export default class FInventoryMarketHelper extends Feature {
                 if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
                     g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
                 }
+                let marketRestriction = false;
+                if (g_ActiveInventory.selectedItem.description.owner_descriptions) {
+                    marketRestriction = g_ActiveInventory.selectedItem.description.owner_descriptions.reduce(
+                        (acc, el) => (acc || (/\[date\]\d+\[\/date\]/.test(el.value) && el.color === "A75124")),
+                        false,
+                    );
+                }
 
                 // https://github.com/SteamDatabase/SteamTracking/blob/f26cfc1ec42b8a0c27ca11f4343edbd8dd293255/steamcommunity.com/public/javascript/economy_v2.js#L4468
                 const publisherFee = (typeof g_ActiveInventory.selectedItem.description.market_fee !== "undefined" && g_ActiveInventory.selectedItem.description.market_fee !== null)
@@ -35,7 +42,7 @@ export default class FInventoryMarketHelper extends Feature {
                     g_rgWalletInfo.wallet_currency,
                     publisherFee,
                     g_ActiveInventory.m_owner.strSteamId,
-                    g_ActiveInventory.selectedItem.description.market_marketable_restriction,
+                    marketRestriction,
                 ]);
             });
             /* eslint-enable no-undef, camelcase */
@@ -62,7 +69,6 @@ export default class FInventoryMarketHelper extends Feature {
         const _marketable = parseInt(marketable);
         const _globalId = parseInt(globalId);
         const _contextId = parseInt(contextId);
-        const _restriction = parseInt(restriction);
         const isGift = assetType && /Gift/i.test(assetType);
         const isBooster = hashName && /Booster Pack/i.test(hashName);
         const ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
@@ -119,7 +125,7 @@ export default class FInventoryMarketHelper extends Feature {
          * or if not in own inventory but the item is marketable, build the HTML for showing info
          * TODO Fix the second condition: only add average price of three cards for booster packs in own inventory
          */
-        if ((ownsInventory && _restriction > 0 && !_marketable && hashName !== "753-Gems") || _marketable) {
+        if ((ownsInventory && restriction && !_marketable && hashName !== "753-Gems") || _marketable) {
             this._showMarketOverview(thisItem, marketActions, _globalId, hashName, appid, isBooster, walletCurrency);
         }
     }
