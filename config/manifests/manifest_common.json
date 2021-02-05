@@ -247,6 +247,8 @@
     {
       "matches": [
         "*://steamcommunity.com/id/*/home",
+        "*://steamcommunity.com/profiles/*/home",
+        "*://steamcommunity.com/id/*/myactivity",
         "*://steamcommunity.com/profiles/*/myactivity"
       ],
       "js": [
@@ -424,6 +426,8 @@
       ],
       "exclude_matches": [
         "*://steamcommunity.com/id/*/home",
+        "*://steamcommunity.com/profiles/*/home",
+        "*://steamcommunity.com/id/*/myactivity",
         "*://steamcommunity.com/profiles/*/myactivity",
         "*://steamcommunity.com/id/*/games*",
         "*://steamcommunity.com/profiles/*/games*",
