@@ -365,23 +365,25 @@ export default class FInventoryMarketHelper extends Feature {
 
         // Show Quick Sell button
         if (priceHighValue && priceLowValue && priceHighValue > priceLowValue) {
+
+            Page.runInPageContext((price, type) => window.SteamFacade.vCurrencyFormat(price, type), [priceHighValue, currencyType], true)
+                .then(formattedPrice => {
+                    quickSell.querySelector(".item_market_action_button_contents").textContent
+                        = Localization.str.quick_sell.replace("__amount__", formattedPrice);
+                });
             quickSell.dataset.price = priceHighValue;
-            quickSell.querySelector(".item_market_action_button_contents").textContent
-                = Localization.str.quick_sell.replace(
-                    "__amount__",
-                    new Price(priceHighValue / 100, currencyType)
-                );
             quickSell.style.display = "block";
         }
 
         // Show Instant Sell button
         if (priceLowValue) {
+
+            Page.runInPageContext((price, type) => window.SteamFacade.vCurrencyFormat(price, type), [priceLowValue, currencyType], true)
+                .then(formattedPrice => {
+                    instantSell.querySelector(".item_market_action_button_contents").textContent
+                        = Localization.str.instant_sell.replace("__amount__", formattedPrice);
+                });
             instantSell.dataset.price = priceLowValue;
-            instantSell.querySelector(".item_market_action_button_contents").textContent
-                = Localization.str.instant_sell.replace(
-                    "__amount__",
-                    new Price(priceLowValue / 100, currencyType)
-                );
             instantSell.style.display = "block";
         }
 
