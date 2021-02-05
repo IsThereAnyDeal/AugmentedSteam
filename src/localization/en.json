@@ -542,6 +542,7 @@
         "market_total": "Show transaction summary on Market",
         "lowestprice_coupon": "Include coupon codes in price comparison",
         "general": "General",
+        "apppage": "App page",
         "market": "Market",
         "inventory": "Inventory",
         "profile": "Profile",
