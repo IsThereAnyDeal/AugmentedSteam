@@ -35,8 +35,6 @@ export class CWishlist extends CStoreBase {
         } else {
             this.myWishlist = false;
         }
-
-        this._registerObserver();
     }
 
     async applyFeatures() {
@@ -50,10 +48,10 @@ export class CWishlist extends CStoreBase {
             });
         }
 
-        super.applyFeatures();
+        await super.applyFeatures();
 
         const alreadyLoaded = document.querySelectorAll(".wishlist_row");
-        if (alreadyLoaded !== null) {
+        if (alreadyLoaded.length !== 0) {
             this.triggerCallbacks(alreadyLoaded);
         }
 
