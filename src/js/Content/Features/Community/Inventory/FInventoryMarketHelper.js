@@ -125,7 +125,7 @@ export default class FInventoryMarketHelper extends Feature {
          * or if not in own inventory but the item is marketable, build the HTML for showing info
          * TODO Fix the second condition: only add average price of three cards for booster packs in own inventory
          */
-        if ((ownsInventory && restriction && !_marketable && hashName !== "753-Gems") || _marketable) {
+        if ((ownsInventory && restriction && !_marketable) || _marketable) {
             this._showMarketOverview(thisItem, marketActions, _globalId, hashName, appid, isBooster, walletCurrency);
         }
     }
