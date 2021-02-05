@@ -17,13 +17,6 @@ export default class FInventoryMarketHelper extends Feature {
                 if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
                     g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
                 }
-                let market_expired = false;
-                if (g_ActiveInventory.selectedItem.description) {
-                    market_expired = g_ActiveInventory.selectedItem.description.descriptions.reduce(
-                        (acc, el) => (acc || el.value === "This item can no longer be bought or sold on the Community Market."),
-                        false,
-                    );
-                }
 
                 // https://github.com/SteamDatabase/SteamTracking/blob/f26cfc1ec42b8a0c27ca11f4343edbd8dd293255/steamcommunity.com/public/javascript/economy_v2.js#L4468
                 const publisherFee = (typeof g_ActiveInventory.selectedItem.description.market_fee !== "undefined" && g_ActiveInventory.selectedItem.description.market_fee !== null)
@@ -43,7 +36,6 @@ export default class FInventoryMarketHelper extends Feature {
                     publisherFee,
                     g_ActiveInventory.m_owner.strSteamId,
                     g_ActiveInventory.selectedItem.description.market_marketable_restriction,
-                    market_expired
                 ]);
             });
             /* eslint-enable no-undef, camelcase */
@@ -65,7 +57,6 @@ export default class FInventoryMarketHelper extends Feature {
         publisherFee,
         ownerSteamId,
         restriction,
-        expired
     ]) {
 
         const _marketable = parseInt(marketable);
@@ -128,7 +119,7 @@ export default class FInventoryMarketHelper extends Feature {
          * or if not in own inventory but the item is marketable, build the HTML for showing info
          * TODO Fix the second condition: only add average price of three cards for booster packs in own inventory
          */
-        if ((ownsInventory && _restriction > 0 && !_marketable && !expired && hashName !== "753-Gems") || _marketable) {
+        if ((ownsInventory && _restriction > 0 && !_marketable && hashName !== "753-Gems") || _marketable) {
             this._showMarketOverview(thisItem, marketActions, _globalId, hashName, appid, isBooster, walletCurrency);
         }
     }
