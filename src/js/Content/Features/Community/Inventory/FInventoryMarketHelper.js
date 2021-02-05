@@ -1,4 +1,4 @@
-import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../../../modulesCore";
+import {GameId, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {
     Background, CurrencyManager,
     Feature, Messenger, Price, RequestData, User
@@ -112,7 +112,7 @@ export default class FInventoryMarketHelper extends Feature {
 
         // Set as background option
         if (ownsInventory) {
-            this._setBackgroundOption(thisItem, assetId, itemActions);
+            this._setBackgroundOption(thisItem, itemActions);
         }
 
         // Show prices for gifts
@@ -152,70 +152,78 @@ export default class FInventoryMarketHelper extends Feature {
         }
     }
 
-    _setBackgroundOption(thisItem, assetId, itemActions) {
+    async _setBackgroundOption(thisItem, itemActions) {
 
-        if (!document.querySelector(".inventory_links")) { return; }
         if (itemActions.querySelector(".es_set_background")) { return; }
 
+        // Make sure the selected item is a background
         const viewFullBtn = itemActions.querySelector("a");
-        if (!viewFullBtn) { return; }
+        const m = viewFullBtn && viewFullBtn.href.match(/images\/(items\/\d+\/[a-z0-9.]+)/i);
+        const bgUrl = m && m[1];
+        if (!bgUrl) { return; }
 
-        if (!/public\/images\/items/.test(viewFullBtn.href)) { return; }
+        // Get owned backgrounds and the communityitemid for equipped background
+        if (!this.profileBgsOwned) {
 
-        const linkClass = thisItem.classList.contains("es_isset_background") ? "btn_disabled" : "";
+            this.userToken = await User.getUserToken();
+
+            try {
+                const [equipped, owned] = await Promise.all([
+                    RequestData.getJson(`https://api.steampowered.com/IPlayerService/GetProfileItemsEquipped/v1?access_token=${this.userToken}&steamid=${User.steamId}`, {"credentials": "omit"}),
+                    RequestData.getJson(`https://api.steampowered.com/IPlayerService/GetProfileItemsOwned/v1?access_token=${this.userToken}`, {"credentials": "omit"})
+                ]);
+
+                this.profileBgItemId = equipped.response.profile_background.communityitemid; // undefined if background unset
+                this.profileBgsOwned = owned.response.profile_backgrounds;
+            } catch (err) {
+                console.error(err);
+                return;
+            }
+        }
+
+        // Loop through owned backgrounds to find the communityitemid for selected background
+        if (!thisItem.dataset.communityitemid) {
+            for (const bg of this.profileBgsOwned) {
+                if (bg.image_large === bgUrl) {
+                    thisItem.dataset.communityitemid = bg.communityitemid;
+                    break;
+                }
+            }
+
+            if (!thisItem.dataset.communityitemid) {
+                console.error("Failed to find communityitemid for selected background");
+                return;
+            }
+        }
+
+        // Make sure the background we are trying to set is not set already
+        const linkClass = thisItem.dataset.communityitemid === this.profileBgItemId ? "btn_disabled" : "";
+
         HTML.afterEnd(viewFullBtn,
             `<a class="es_set_background btn_small btn_darkblue_white_innerfade ${linkClass}">
                 <span>${Localization.str.set_as_background}</span>
-            </a>
-            <img class="es_background_loading" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">`);
+            </a>`);
 
-        viewFullBtn.parentNode.querySelector(".es_set_background").addEventListener("click", async e => {
+        // TODO Add prompt so users can set equip options for the background through IPlayerService/SetEquippedProfileItemFlags
+        itemActions.querySelector(".es_set_background").addEventListener("click", async e => {
             e.preventDefault();
             const el = e.target.closest(".es_set_background");
 
-            if (el.classList.contains("btn_disabled")) { return; }
+            if (el.classList.contains("es_background_loading") || el.classList.contains("btn_disabled")) { return; }
+            el.classList.add("es_background_loading");
 
-            const loading = viewFullBtn.parentNode.querySelector(".es_background_loading");
-            if (loading.classList.contains("esi-shown")) { return; }
+            const formData = new FormData();
+            formData.append("communityitemid", thisItem.dataset.communityitemid);
 
-            loading.classList.add("esi-shown");
+            try {
+                await RequestData.post(`https://api.steampowered.com/IPlayerService/SetProfileBackground/v1?access_token=${this.userToken}`, formData, {"credentials": "omit"});
 
-            // Do nothing if loading or already done
-            const setBackground = document.querySelector(".es_isset_background");
-            if (setBackground) {
-                setBackground.classList.remove("es_isset_background");
-            }
-            thisItem.classList.add("es_isset_background");
-
-            const result = await RequestData.getHttp(`${User.profileUrl}/edit`);
-
-            // Make sure the background we are trying to set is not set already
-            const m = result.match(/SetCurrentBackground\( {"communityitemid":"(\d+)"/i);
-            const currentBg = m ? m[1] : false;
-
-            if (currentBg === assetId) {
                 el.classList.add("btn_disabled");
-                loading.classList.remove("esi-shown");
-            } else {
-                const dom = HTMLParser.htmlToDOM(result);
-
-                dom.querySelector("#profile_background").value = assetId;
-                const form = dom.querySelector("#editForm");
-                const formData = new FormData(form);
-
-                RequestData.post(`${User.profileUrl}/edit`, formData).then(result => {
-
-                    // Check if it was truly a succesful change
-                    if (/"saved_changes_msg"/i.test(result)) {
-                        el.classList.add("btn_disabled");
-                    }
-                })
-                    .catch(() => {
-                        console.error("Edit background failed");
-                    })
-                    .finally(() => {
-                        loading.classList.remove("esi-shown");
-                    });
+                this.profileBgItemId = thisItem.dataset.communityitemid;
+            } catch (err) {
+                console.error("Failed to set selected background", err);
+            } finally {
+                el.classList.remove("es_background_loading");
             }
         });
     }
