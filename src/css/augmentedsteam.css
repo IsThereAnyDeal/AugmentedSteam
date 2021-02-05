@@ -695,17 +695,6 @@ img.astats_icon {
 }
 
 /***************************************
- * Steam inventory
- * inventory_market_helper()
- **************************************/
-.es_background_loading {
-  display: none;
-  width: 16px;
-  margin-left: -8px;
-  vertical-align: middle;
-}
-
-/***************************************
  * User Inventory
  * FInventoryGoTo
  **************************************/

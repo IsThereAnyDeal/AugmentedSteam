@@ -202,20 +202,15 @@ export default class FInventoryMarketHelper extends Feature {
         HTML.afterEnd(viewFullBtn,
             `<a class="es_set_background btn_small btn_darkblue_white_innerfade ${linkClass}">
                 <span>${Localization.str.set_as_background}</span>
-            </a>
-            <img class="es_background_loading" src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">`);
+            </a>`);
 
         // TODO Add prompt so users can set equip options for the background through IPlayerService/SetEquippedProfileItemFlags
         itemActions.querySelector(".es_set_background").addEventListener("click", async e => {
             e.preventDefault();
             const el = e.target.closest(".es_set_background");
 
-            if (el.classList.contains("btn_disabled")) { return; }
-
-            const loading = itemActions.querySelector(".es_background_loading");
-            if (loading.classList.contains("esi-shown")) { return; }
-
-            loading.classList.add("esi-shown");
+            if (el.classList.contains("es_background_loading") || el.classList.contains("btn_disabled")) { return; }
+            el.classList.add("es_background_loading");
 
             const formData = new FormData();
             formData.append("communityitemid", thisItem.dataset.communityitemid);
@@ -228,7 +223,7 @@ export default class FInventoryMarketHelper extends Feature {
             } catch (err) {
                 console.error("Failed to set selected background", err);
             } finally {
-                loading.classList.remove("esi-shown");
+                el.classList.remove("es_background_loading");
             }
         });
     }
