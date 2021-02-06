@@ -716,6 +716,20 @@ img.astats_icon {
   display: inline-table; /** https://github.com/jshackles/Enhanced_Steam/pull/1624 */
 }
 
+/***************************************
+ * User Inventory
+ * Quicksell/instantsell action buttons
+ **************************************/
+.item_market_actions {
+  display: flex !important;
+  flex-direction: column;
+}
+.item_market_action_button {
+  margin-bottom: 4px;
+  overflow: hidden;
+  width: max-content;
+}
+
 /**************************************
  * Apps page, workshop items
  * media_slider_expander()
@@ -2167,16 +2181,6 @@ img.astats_icon {
 
 .esi_ach_unlocked + .esi_ach_locked {
   margin-top: 72px;
-}
-
-/* market action buttons */
-.item_market_actions {
-  display: flex;
-  flex-direction: column;
-}
-.item_market_action_button {
-  margin-bottom: 4px;
-  overflow: hidden;
 }
 
 /* hide Steam's option on "All Games" page */
