@@ -58,7 +58,25 @@ export default class FMediaExpander extends Feature {
             });
         }
 
-        document.querySelector(".es_slider_toggle").addEventListener("click", (e) => { this._clickSliderToggle(e); });
+        const sliderToggle = document.querySelector(".es_slider_toggle");
+
+        sliderToggle.addEventListener("click", (e) => { this._clickSliderToggle(e); });
+
+        /*
+         * Prevent the slider toggle from overlapping a sketchfab model's "X"
+         * Example: https://steamcommunity.com/sharedfiles/filedetails/?id=606009216
+         */
+        const sketchfabNode = document.querySelector(".highlight_sketchfab_model");
+        if (sketchfabNode) {
+            const container = document.getElementById("highlight_player_area");
+            container.addEventListener("mouseenter", () => {
+                if (sketchfabNode.style.display === "none") { return; }
+                sliderToggle.style.top = "32px";
+            });
+            container.addEventListener("mouseleave", () => {
+                sliderToggle.style.top = null;
+            });
+        }
     }
 
     _buildSideDetails() {
@@ -101,28 +119,6 @@ export default class FMediaExpander extends Feature {
             target = document.querySelector(".highlight_ctn");
             if (target) {
                 HTML.wrap(target, '<div class="leftcol"></div>');
-            }
-
-            /*
-             * Don't overlap Sketchfab's "X"
-             * Example: https://steamcommunity.com/sharedfiles/filedetails/?id=606009216
-             */
-            target = document.querySelector(".highlight_sketchfab_model");
-            if (target) {
-                target = document.getElementById("highlight_player_area");
-                target.addEventListener("mouseenter", () => {
-                    let el = target.querySelector(".highlight_sketchfab_model");
-                    if (!el) { return; }
-                    if (el.style.display === "none") { return; }
-                    el = document.querySelector(".es_slider_toggle");
-                    if (!el) { return; }
-                    el.style.top = "32px";
-                });
-                target.addEventListener("mouseleave", () => {
-                    const el = document.querySelector(".es_slider_toggle");
-                    if (!el) { return; }
-                    el.style.top = null;
-                });
             }
         }
     }
