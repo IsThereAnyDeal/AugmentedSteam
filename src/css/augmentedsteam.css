@@ -802,6 +802,12 @@ img.astats_icon {
 .workshop_item_header .es_slider_toggle {
   display: block;
 }
+.workshop_item_header .leftcol {
+  width: 638px;
+  float: left;
+  position: relative;
+  z-index: 1;
+}
 .highlight_overflow {
   z-index: 5;
 }

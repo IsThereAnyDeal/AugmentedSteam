@@ -58,7 +58,25 @@ export default class FMediaExpander extends Feature {
             });
         }
 
-        document.querySelector(".es_slider_toggle").addEventListener("click", (e) => { this._clickSliderToggle(e); });
+        const sliderToggle = document.querySelector(".es_slider_toggle");
+
+        sliderToggle.addEventListener("click", (e) => { this._clickSliderToggle(e); });
+
+        /*
+         * Prevent the slider toggle from overlapping a sketchfab model's "X"
+         * Example: https://steamcommunity.com/sharedfiles/filedetails/?id=606009216
+         */
+        const sketchfabNode = document.querySelector(".highlight_sketchfab_model");
+        if (sketchfabNode) {
+            const container = document.getElementById("highlight_player_area");
+            container.addEventListener("mouseenter", () => {
+                if (sketchfabNode.style.display === "none") { return; }
+                sliderToggle.style.top = "32px";
+            });
+            container.addEventListener("mouseleave", () => {
+                sliderToggle.style.top = null;
+            });
+        }
     }
 
     _buildSideDetails() {
@@ -66,7 +84,6 @@ export default class FMediaExpander extends Feature {
         this._detailsBuilt = true;
 
         const details = this._details;
-        if (!details) { return; }
 
         if (details.matches(".rightcol")) {
 
@@ -83,7 +100,6 @@ export default class FMediaExpander extends Feature {
             }
 
             const detailsWrap = HTML.wrap(detailsClone, '<div class="es_side_details_wrap"></div>');
-            detailsWrap.style.display = "none";
             const target = document.querySelector("div.rightcol.game_meta_data");
             if (target) {
                 target.insertAdjacentElement("afterbegin", detailsWrap);
@@ -92,39 +108,17 @@ export default class FMediaExpander extends Feature {
 
             // Clone details in the workshop
             const detailsClone = details.cloneNode(true);
-            detailsClone.style.display = "none";
-            detailsClone.setAttribute("class", "panel es_side_details");
-            HTML.adjacent(detailsClone, "afterbegin", `<div class="title">${Localization.str.details}</div><div class="hr padded"></div>`);
+            detailsClone.classList.add("panel", "es_side_details");
+            HTML.afterBegin(detailsClone, `<div class="title">${Localization.str.details}</div><div class="hr padded"></div>`);
             let target = document.querySelector(".sidebar");
             if (target) {
                 target.insertAdjacentElement("afterbegin", detailsClone);
             }
 
+            // Sometimes for a split second the slider pushes the details down, this fixes it
             target = document.querySelector(".highlight_ctn");
             if (target) {
-                HTML.wrap(target, '<div class="leftcol" style="width: 638px; float: left; position: relative; z-index: 1;"/>');
-            }
-
-            /*
-             * Don't overlap Sketchfab's "X"
-             * Example: https://steamcommunity.com/sharedfiles/filedetails/?id=606009216
-             */
-            target = document.querySelector(".highlight_sketchfab_model");
-            if (target) {
-                target = document.getElementById("highlight_player_area");
-                target.addEventListener("mouseenter", () => {
-                    let el = target.querySelector(".highlight_sketchfab_model");
-                    if (!el) { return; }
-                    if (el.style.display === "none") { return; }
-                    el = document.querySelector(".es_slider_toggle");
-                    if (!el) { return; }
-                    el.style.top = "32px";
-                });
-                target.addEventListener("mouseleave", () => {
-                    const el = document.querySelector(".es_slider_toggle");
-                    if (!el) { return; }
-                    el.style.top = null;
-                });
+                HTML.wrap(target, '<div class="leftcol"></div>');
             }
         }
     }
@@ -134,7 +128,6 @@ export default class FMediaExpander extends Feature {
         e.stopPropagation();
 
         const el = e.target.closest(".es_slider_toggle");
-        this._details.style.display = "none";
         this._buildSideDetails();
 
         // Fade In/Out sideDetails
@@ -160,8 +153,7 @@ export default class FMediaExpander extends Feature {
         }
 
         // On every animation/transition end check the slider state
-        const container = document.querySelector(".highlight_ctn");
-        container.addEventListener("transitionend", () => {
+        document.querySelector(".highlight_ctn").addEventListener("transitionend", () => {
 
             // Save slider state
             LocalStorage.set("expand_slider", el.classList.contains("es_expanded"));
