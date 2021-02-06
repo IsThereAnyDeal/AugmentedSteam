@@ -2206,10 +2206,19 @@ label[for="show_common_games"] {
   float: right;
 }
 
+.es_wsgf .details_block {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  margin-top: -10px;
+  margin-right: -10px;
+}
 .es_wsgf .details_block img {
   border: 0;
   height: 120px;
   cursor: help;
+  margin-top: 10px;
+  margin-right: 10px;
 }
 
 .es_dlc_info .details_block img {
