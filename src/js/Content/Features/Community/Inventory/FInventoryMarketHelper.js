@@ -14,9 +14,10 @@ export default class FInventoryMarketHelper extends Feature {
 
             /* eslint-disable no-undef, camelcase */
             window.SteamFacade.jq(document).on("click", ".inventory_item_link, .newitem", () => {
-                if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
-                    g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
-                }
+
+                // https://github.com/SteamDatabase/SteamTracking/blob/b3abe9c82f9e9d260265591320cac6304e500e58/steamcommunity.com/public/javascript/economy_common.js#L161
+                const marketHashName = window.SteamFacade.getMarketHashName(g_ActiveInventory.selectedItem.description);
+
                 let marketRestriction = false;
                 if (g_ActiveInventory.selectedItem.description.owner_descriptions) {
                     marketRestriction = g_ActiveInventory.selectedItem.description.owner_descriptions.reduce(
@@ -34,7 +35,7 @@ export default class FInventoryMarketHelper extends Feature {
                     iActiveSelectView,
                     g_ActiveInventory.selectedItem.description.marketable,
                     g_ActiveInventory.appid,
-                    g_ActiveInventory.selectedItem.description.market_hash_name,
+                    marketHashName,
                     g_ActiveInventory.selectedItem.description.type,
                     g_ActiveInventory.selectedItem.assetid,
                     g_sessionID,
