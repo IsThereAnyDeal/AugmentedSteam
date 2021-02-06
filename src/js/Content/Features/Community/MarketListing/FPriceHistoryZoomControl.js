@@ -4,6 +4,10 @@ import {Page} from "../../Page";
 
 export default class FPriceHistoryZoomControl extends Feature {
 
+    checkPrerequisites() {
+        return document.getElementById("pricehistory") !== null;
+    }
+
     apply() {
         HTML.afterEnd(document.querySelectorAll(".zoomopt")[1], `<a class="zoomopt as-zoomcontrol">${Localization.str.year}</a>`);
 
