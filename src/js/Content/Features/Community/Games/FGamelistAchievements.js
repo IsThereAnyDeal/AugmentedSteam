@@ -24,21 +24,20 @@ export default class FGamelistAchievements extends Feature {
     async _addAchievementBars(entries) {
 
         for (const entry of entries) {
-            if (!entry.isIntersecting) {
-                continue;
-            }
+            if (!entry.isIntersecting) { continue; }
 
             const node = entry.target;
             this._observer.unobserve(node);
 
-            const hoursNode = node.querySelector("h5.hours_played");
-            if (!hoursNode) { continue; }
+            if (node.querySelector(".recentAchievements") || !node.querySelector("img[src$='/ico_stats.png']")) {
+                continue;
+            }
 
             const appid = GameId.getAppidFromId(node.id);
-            const achieveBar = await Stats.getAchievementBar(this._path, appid);
+            const achieveBar = await Stats.getAchievementBarForGamelist(this._path, appid);
             if (!achieveBar) { continue; }
 
-            HTML.afterEnd(hoursNode, `<div class="es-achieveBar-gl">${achieveBar}</div>`);
+            HTML.afterBegin(node.querySelector(".gameListRowItem"), achieveBar);
         }
     }
 }
