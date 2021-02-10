@@ -264,14 +264,14 @@ export default class FInventoryMarketHelper extends Feature {
     _addOneClickGemsOption(item, appid, assetid) {
         if (!SyncedStorage.get("show1clickgoo")) { return; }
 
-        // scrap link is always present, just hidden if the item cannot be turned into gems
-        const scrapLink = document.querySelector(`#iteminfo${item}_item_scrap_link`);
-        if (scrapLink.classList.contains("esi-show1clickgoo")) { return; }
+        // scrap link is always present, replace the link to avoid attaching multiple listeners
+        const scrapLink = document.getElementById(`iteminfo${item}_item_scrap_link`);
+        const newScrapLink = scrapLink.cloneNode(true);
+        scrapLink.replaceWith(newScrapLink);
 
-        scrapLink.classList.add("esi-show1clickgoo");
-        scrapLink.querySelector("span").textContent = Localization.str.oneclickgoo;
+        newScrapLink.querySelector("span").textContent = Localization.str.oneclickgoo;
 
-        scrapLink.addEventListener("click", e => {
+        newScrapLink.addEventListener("click", e => {
             e.preventDefault();
 
             /*
