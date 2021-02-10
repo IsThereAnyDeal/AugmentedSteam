@@ -940,32 +940,20 @@ img.astats_icon {
 }
 
 /***************************************
- * App pages and Games page
- * addAchievementBar(), addGamelistAchievements()
+ * App pages
+ * FAchievementBar
  **************************************/
-.es-achieveBar-gl {
-  position: absolute;
-  right: 4px;
-  width: 205px;
-  font-size: 10px;
-  font-weight: normal;
-}
-.clientConnItemBlock ~ * .es-achieveBar-gl {
-  bottom: 0;
-}
 .es-achieveBar-store {
   float: right;
 }
 /* Taken from: https://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css */
-.es-achieveBar-store .achieveBar,
-.es-achieveBar-gl .achieveBar {
+.es-achieveBar-store .achieveBar {
   background: #3a3a3a;
   padding: 1px;
   border: 1px solid #aeaeae;
   width: 176.9px;
 }
-.es-achieveBar-store .achieveBarProgress,
-.es-achieveBar-gl .achieveBarProgress {
+.es-achieveBar-store .achieveBarProgress {
   height: 8px;
   background-color: #aeaeae;
 }
