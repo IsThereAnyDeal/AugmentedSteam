@@ -18,13 +18,9 @@ export default class FInventoryMarketHelper extends Feature {
                 // https://github.com/SteamDatabase/SteamTracking/blob/b3abe9c82f9e9d260265591320cac6304e500e58/steamcommunity.com/public/javascript/economy_common.js#L161
                 const marketHashName = window.SteamFacade.getMarketHashName(g_ActiveInventory.selectedItem.description);
 
-                let marketRestriction = false;
-                if (g_ActiveInventory.selectedItem.description.owner_descriptions) {
-                    marketRestriction = g_ActiveInventory.selectedItem.description.owner_descriptions.reduce(
-                        (acc, el) => (acc || (/\[date\]\d+\[\/date\]/.test(el.value) && el.color === "A75124")),
-                        false,
-                    );
-                }
+                const marketRestriction = Array.isArray(g_ActiveInventory.selectedItem.description.owner_descriptions)
+                    ? g_ActiveInventory.selectedItem.description.owner_descriptions.some(el => /\[date\]\d+\[\/date\]/.test(el.value) && el.color === "A75124")
+                    : false;
 
                 // https://github.com/SteamDatabase/SteamTracking/blob/f26cfc1ec42b8a0c27ca11f4343edbd8dd293255/steamcommunity.com/public/javascript/economy_v2.js#L4468
                 const publisherFee = (typeof g_ActiveInventory.selectedItem.description.market_fee !== "undefined" && g_ActiveInventory.selectedItem.description.market_fee !== null)
@@ -160,19 +156,16 @@ export default class FInventoryMarketHelper extends Feature {
             }
         }
 
-        // Loop through owned backgrounds to find the communityitemid for selected background
+        // Find the communityitemid for selected background
         if (!thisItem.dataset.communityitemid) {
-            for (const bg of this.profileBgsOwned) {
-                if (bg.image_large === bgUrl) {
-                    thisItem.dataset.communityitemid = bg.communityitemid;
-                    break;
-                }
-            }
 
-            if (!thisItem.dataset.communityitemid) {
+            const bg = this.profileBgsOwned.find(bg => bg.image_large === bgUrl);
+            if (!bg) {
                 console.error("Failed to find communityitemid for selected background");
                 return;
             }
+
+            thisItem.dataset.communityitemid = bg.communityitemid;
         }
 
         // Make sure the background we are trying to set is not set already
