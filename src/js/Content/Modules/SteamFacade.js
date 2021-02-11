@@ -186,6 +186,10 @@ class SteamFacade {
     static jqOnClick(selector, callback) {
         $J(selector).on("click", callback);
     }
+
+    static jqAjax(settings) {
+        return $J.ajax(settings);
+    }
 }
 
 export {SteamFacade};
