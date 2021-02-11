@@ -13,7 +13,8 @@ export default class FInventoryMarketHelper extends Feature {
         Page.runInPageContext(() => {
 
             /* eslint-disable no-undef, camelcase */
-            window.SteamFacade.jq(document).on("click", ".inventory_item_link, .newitem", () => {
+            document.addEventListener("click", ({target}) => {
+                if (!target.matches("a.inventory_item_link, a.newitem")) { return; }
 
                 // https://github.com/SteamDatabase/SteamTracking/blob/b3abe9c82f9e9d260265591320cac6304e500e58/steamcommunity.com/public/javascript/economy_common.js#L161
                 const marketHashName = window.SteamFacade.getMarketHashName(g_ActiveInventory.selectedItem.description);
