@@ -71,12 +71,11 @@ export default class FInventoryMarketHelper extends Feature {
         const isBooster = hashName && /Booster Pack/i.test(hashName);
         const ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
 
-        const hm = hashName.match(/^([0-9]+)-/);
-        const appid = hm ? hm[1] : null;
+        const appid = parseInt(hashName) || null;
 
-        const thisItem = document.querySelector(`[id="${_globalId}_${_contextId}_${assetId}"]`);
-        const itemActions = document.querySelector(`#iteminfo${item}_item_actions`);
-        const marketActions = document.querySelector(`#iteminfo${item}_item_market_actions`);
+        const thisItem = document.getElementById(`${_globalId}_${_contextId}_${assetId}`);
+        const itemActions = document.getElementById(`iteminfo${item}_item_actions`);
+        const marketActions = document.getElementById(`iteminfo${item}_item_market_actions`);
 
         // Set as background option
         if (ownsInventory) {
