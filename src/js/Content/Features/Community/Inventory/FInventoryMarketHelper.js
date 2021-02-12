@@ -33,7 +33,6 @@ export default class FInventoryMarketHelper extends Feature {
                     g_ActiveInventory.selectedItem.description.marketable,
                     g_ActiveInventory.appid,
                     marketHashName,
-                    g_ActiveInventory.selectedItem.description.type,
                     g_ActiveInventory.selectedItem.assetid,
                     g_sessionID,
                     g_ActiveInventory.selectedItem.contextid,
@@ -54,7 +53,6 @@ export default class FInventoryMarketHelper extends Feature {
         marketable,
         globalId,
         hashName,
-        assetType,
         assetId,
         sessionId,
         contextId,
@@ -67,7 +65,6 @@ export default class FInventoryMarketHelper extends Feature {
         const _marketable = parseInt(marketable);
         const _globalId = parseInt(globalId);
         const _contextId = parseInt(contextId);
-        const isGift = assetType && /Gift/i.test(assetType);
         const isBooster = hashName && /Booster Pack/i.test(hashName);
         const ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
 
@@ -77,18 +74,14 @@ export default class FInventoryMarketHelper extends Feature {
         const itemActions = document.getElementById(`iteminfo${item}_item_actions`);
         const marketActions = document.getElementById(`iteminfo${item}_item_market_actions`);
 
-        // Set as background option
-        if (ownsInventory) {
-            this._setBackgroundOption(thisItem, itemActions);
-        }
-
-        // Show prices for gifts
-        if (isGift) {
+        if (_contextId === 1 && _globalId === 753) {
             this._addPriceToGifts(itemActions);
-            return;
+            return; // Steam gifts are unmarketable, so return early
         }
 
         if (ownsInventory) {
+
+            this._setBackgroundOption(thisItem, itemActions);
 
             // Show link to view badge progress for booster packs
             if (isBooster) {
@@ -201,14 +194,12 @@ export default class FInventoryMarketHelper extends Feature {
     }
 
     async _addPriceToGifts(itemActions) {
-
-        const action = itemActions.querySelector("a");
-        if (!action) { return; }
-
-        const giftAppid = GameId.getAppid(action.href);
-        if (!giftAppid) { return; }
-
         // TODO: Add support for package(sub)
+        const viewStoreBtn = itemActions.querySelector("a");
+        if (!viewStoreBtn || !viewStoreBtn.href.startsWith("https://store.steampowered.com/app/")) { return; }
+
+        const giftAppid = GameId.getAppid(viewStoreBtn.href);
+        if (!giftAppid) { return; }
 
         const result = await Background.action("appdetails", giftAppid, "price_overview");
         if (!result || !result.success) { return; }
