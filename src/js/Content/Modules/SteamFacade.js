@@ -105,7 +105,7 @@ class SteamFacade {
     }
 
     static boosterCreatorData() {
-        return CBoosterCreator.sm_rgBoosterData;
+        return CBoosterCreatorPage.sm_rgBoosterData;
     }
 
     static vCurrencyFormat(amount, currencyCode) {
