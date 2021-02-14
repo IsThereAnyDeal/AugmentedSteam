@@ -101,7 +101,7 @@ export default class FInventoryMarketHelper extends Feature {
                 this._addBoosterPackProgress(item, appid);
             }
 
-            this._addOneClickGemsOption(item, appid, assetId);
+            this._addOneClickGemsOption(item, appid, assetId, sessionId);
 
             /*
              * 753 is the appid for "Steam" in the Steam Inventory
@@ -261,7 +261,7 @@ export default class FInventoryMarketHelper extends Feature {
             `<a class="btn_small btn_grey_white_innerfade" href="https://steamcommunity.com/my/gamecards/${appid}/"><span>${Localization.str.view_badge_progress}</span></a>`);
     }
 
-    _addOneClickGemsOption(item, appid, assetid) {
+    _addOneClickGemsOption(item, appid, assetid, sessionid) {
         if (!SyncedStorage.get("show1clickgoo")) { return; }
 
         // scrap link is always present, replace the link to avoid attaching multiple listeners
@@ -278,28 +278,27 @@ export default class FInventoryMarketHelper extends Feature {
              * Modified version of GrindIntoGoo from badges.js
              * https://github.com/SteamDatabase/SteamTracking/blob/ca5145acba077bee42de2593f6b17a6ed045b5f6/steamcommunity.com/public/javascript/badges.js#L521
              */
-            Page.runInPageContext((appid, assetid) => {
+            Page.runInPageContext((appid, assetid, sessionid) => {
+                const f = window.SteamFacade;
 
-                /* eslint-disable new-cap, no-undef, camelcase */
-                const rgAJAXParams = {
-                    "sessionid": g_sessionID,
+                const params = {
+                    sessionid,
                     appid,
                     assetid,
                     "contextid": 6
                 };
 
-                let strActionURL = `${g_strProfileURL}/ajaxgetgoovalue/`;
+                const profileUrl = f.global("g_strProfileURL");
 
-                $J.get(strActionURL, rgAJAXParams).done(data => {
-                    strActionURL = `${g_strProfileURL}/ajaxgrindintogoo/`;
-                    rgAJAXParams.goo_value_expected = data.goo_value;
+                f.jqGet(`${profileUrl}/ajaxgetgoovalue/`, params).done(data => {
+                    // eslint-disable-next-line camelcase
+                    params.goo_value_expected = data.goo_value;
 
-                    $J.post(strActionURL, rgAJAXParams).done(() => {
-                        ReloadCommunityInventory();
+                    f.jqPost(`${profileUrl}/ajaxgrindintogoo/`, params).done(() => {
+                        f.reloadCommunityInventory();
                     });
                 });
-                /* eslint-enable new-cap, no-undef, camelcase */
-            }, [appid, assetid]);
+            }, [appid, assetid, sessionid]);
         });
     }
 

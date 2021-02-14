@@ -158,6 +158,10 @@ class SteamFacade {
         return InventoryGoToPage();
     }
 
+    static reloadCommunityInventory() {
+        return ReloadCommunityInventory();
+    }
+
     // selections
 
     static updateSelection() {
@@ -189,6 +193,14 @@ class SteamFacade {
 
     static jqAjax(settings) {
         return $J.ajax(settings);
+    }
+
+    static jqGet(url, settings) {
+        return $J.get(url, settings);
+    }
+
+    static jqPost(url, settings) {
+        return $J.post(url, settings);
     }
 }
 
