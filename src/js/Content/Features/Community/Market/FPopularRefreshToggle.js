@@ -15,7 +15,7 @@ export default class FPopularRefreshToggle extends Feature {
 
         this._toggleRefresh(LocalStorage.get("popular_refresh", false));
 
-        Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
+        Page.runInPageContext(() => { window.SteamFacade.vTooltip("#es_popular_refresh_toggle"); });
     }
 
     _toggleRefresh(state) {

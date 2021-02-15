@@ -18,12 +18,7 @@ export default class FNewQueue extends Feature {
 
         Page.runInPageContext(() => {
             const f = window.SteamFacade;
-            f.vTooltip("#es_new_queue", {
-                "tooltipClass": "store_tooltip",
-                "dataName": "tooltipText",
-                "defaultType": "text",
-                "replaceExisting": false
-            });
+            f.vTooltip("#es_new_queue", true);
 
             f.jqOnClick("#es_new_queue", () => {
                 const jq = f.jq;

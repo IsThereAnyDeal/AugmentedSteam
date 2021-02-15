@@ -1,7 +1,6 @@
 import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
 import {DOMHelper, Feature, ProfileData} from "../../../modulesContent";
 import Config from "../../../../config";
-import {Page} from "../../Page";
 
 export default class FStyleSelection extends Feature {
 
@@ -56,8 +55,6 @@ export default class FStyleSelection extends Feature {
 
             HTML.beforeEnd('[class^="profileeditshell_PageContent_"]', html);
             this._active = true;
-
-            Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
 
             const styleSelectNode = document.querySelector("#es_style");
 
