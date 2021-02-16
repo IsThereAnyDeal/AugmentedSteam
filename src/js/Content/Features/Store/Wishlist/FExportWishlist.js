@@ -139,15 +139,14 @@ export default class FExportWishlist extends Feature {
         Page.runInPageContext(exportStr => {
             window.SteamFacade.showConfirmDialog(
                 exportStr.wishlist,
-                `<div id='es_export_form'>
+                `<div id="es_export_form">
                     <div class="es-wexport">
-                    <h2>${exportStr.type}</h2>
-                    <div>
-                        <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${exportStr.text}</label>
-                        <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
+                        <h2>${exportStr.type}</h2>
+                        <div>
+                            <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${exportStr.text}</label>
+                            <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
+                        </div>
                     </div>
-                    </div>
-
                     <div class="es-wexport es-wexport__format">
                         <h2>${exportStr.format}</h2>
                         <div>
@@ -173,7 +172,9 @@ export default class FExportWishlist extends Feature {
 
         const format = document.querySelector(".es-wexport__format");
         for (const el of document.getElementsByName("es_wexport_type")) {
-            el.addEventListener("click", e => { format.style.display = e.target.value === "json" ? "none" : ""; });
+            el.addEventListener("click", ({target}) => {
+                format.classList.toggle("es-grayout", target.value === "json");
+            });
         }
     }
 }

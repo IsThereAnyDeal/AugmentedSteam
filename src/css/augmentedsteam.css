@@ -1082,16 +1082,14 @@ img.astats_icon {
   color: white;
 }
 
-
 /***************************************
  * Wishlist
+ * FEmptyWishlist/FExportWishlist
  **************************************/
-
 #cart_status_data {
   display: flex;
   align-items: center;
 }
-
 
 .es-wbtn {
   color: #fff;
@@ -1102,7 +1100,6 @@ img.astats_icon {
   padding: 0 25px;
   line-height: 20px;
 }
-
 #es_empty_wishlist {
   margin-right: 3px;
   background-color: #bf5a5a;
@@ -1111,7 +1108,6 @@ img.astats_icon {
   background-color: #ffd1d1;
   color: black;
 }
-
 #es_export_wishlist {
   background-color: #6c94a0;
   margin-right: 15px;
@@ -1121,21 +1117,17 @@ img.astats_icon {
   color: black;
 }
 
-
 .es-wexport {
   margin-bottom: 30px;
 }
-
 .es-wexport__label {
   margin-right: 30px;
   vertical-align: baseline;
 }
-
 .es-wexport__label input[type=radio] {
   position: relative;
   top: 2px;
 }
-
 .es-wexport__input {
   width: 400px;
   color: #b9bfc6;
@@ -1146,10 +1138,15 @@ img.astats_icon {
   padding: 3px 4px;
   border: none;
 }
-
 .es-wexport__symbols {
   margin-top: 2px;
   font-size: 11px;
+}
+.es-wexport__format.es-grayout {
+  opacity: 0.4;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;   
 }
 
 /***************************************
