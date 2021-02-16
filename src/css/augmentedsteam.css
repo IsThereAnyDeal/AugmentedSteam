@@ -960,6 +960,28 @@ img.astats_icon {
 
 /***************************************
  * App pages
+ * FReviewToggleButton
+ **************************************/
+.es_review_section {
+  overflow: hidden;
+}
+#review_create.es_contracted .es_review_section {
+  max-height: 0;
+}
+#es_review_toggle {
+  float: right;
+}
+#review_create.es_contracted .es_review_contract,
+#review_create:not(.es_contracted) .es_review_expand {
+  display: none;
+}
+#review_create.es_contracted .es_review_expand,
+#review_create:not(.es_contracted) .es_review_contract {
+  display: block;
+}
+
+/***************************************
+ * App pages
  * addFullscreenScreenshotView()
  **************************************/
 .es_screenshot_fullscreen_toggle {
@@ -2071,10 +2093,6 @@ img.astats_icon {
 /* Ensures that the top most shown section always has the same margin */
 .esi-hidden ~ .esi-shown {
   margin-top: 32px;
-}
-
-#es_review_section {
-  overflow: hidden;
 }
 
 #esi-wishlist-chart-content,
