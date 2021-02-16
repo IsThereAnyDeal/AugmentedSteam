@@ -13,10 +13,10 @@ export default class FMultiProductKeys extends Feature {
                             <textarea name="es_key_input" id="es_key_input" rows="24" cols="12" maxlength="1080">__alreadyentered__</textarea>
                         </div>
                         <div class="es_activate_buttons" style="float: right">
-                            <div class="btn_green_white_innerfade btn_medium es_activate_modal_submit">
+                            <div class="es_activate_modal_submit btn_green_steamui btn_medium">
                                 <span>${Localization.str.activate_products}</span>
                             </div>
-                            <div class="es_activate_modal_close btn_grey_white_innerfade btn_medium">
+                            <div class="es_activate_modal_close btn_grey_steamui btn_medium">
                                 <span>${Localization.str.cancel}</span>
                             </div>
                         </div>

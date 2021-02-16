@@ -14,10 +14,10 @@ export class UserNotes {
                         <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
                     </div>
                     <div class="es_note_buttons" style="float: right">
-                        <div class="es_note_modal_submit btn_green_white_innerfade btn_medium">
+                        <div class="es_note_modal_submit btn_green_steamui btn_medium">
                             <span>${Localization.str.save}</span>
                         </div>
-                        <div class="es_note_modal_close btn_grey_white_innerfade btn_medium">
+                        <div class="es_note_modal_close btn_grey_steamui btn_medium">
                             <span>${Localization.str.cancel}</span>
                         </div>
                     </div>
