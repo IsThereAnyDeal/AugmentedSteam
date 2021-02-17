@@ -140,6 +140,10 @@ class SteamFacade {
         return GetCheckedAccounts(selector);
     }
 
+    static execFriendAction(action, navid) {
+        return ExecFriendAction(action, navid);
+    }
+
     static scrollOffsetForceRecalc() {
         CScrollOffsetWatcher.ForceRecalc();
     }
