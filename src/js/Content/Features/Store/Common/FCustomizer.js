@@ -46,7 +46,7 @@ export default class FCustomizer extends Feature {
             .add("franchisenotice", ".franchise_notice", Localization.str.apppage_franchise)
             .add("eaheader", ".early_access_header:not(.es_coupon_info)", Localization.str.apppage_eaheader)
             .add("eabanner", ".early_access_banner", Localization.str.apppage_eabanner)
-            .add("recentupdates", "#events_root", Localization.str.apppage_recentupdates)
+            .add("recentupdates", "[data-featuretarget=events-row]", Localization.str.apppage_recentupdates)
             .add("reviews", "#game_area_reviews")
             .add("about", getParentEl("#game_area_description"))
             .add("contentwarning", getParentEl("#game_area_content_descriptors"))
@@ -103,7 +103,7 @@ export default class FCustomizer extends Feature {
         const customizer = new FCustomizer.Customizer("customize_frontpage");
         customizer
             .add("featuredrecommended", ".home_cluster_ctn")
-            .add("trendingamongfriends", ".friends_recently_purchased")
+            .add("trendingamongfriends", ".friends_recently_purchased", "", true)
             .add("discoveryqueue", ".discovery_queue_ctn")
             .add("curators", ".steam_curators_ctn", Localization.str.homepage_curators)
             .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn", Localization.str.homepage_curators)
@@ -113,7 +113,6 @@ export default class FCustomizer extends Feature {
             .add("gamesstreamingnow", ".live_streams_ctn", "", true)
             .add("updatesandoffers", ".marketingmessage_area", "", true)
             .add("topnewreleases", ".top_new_releases", Localization.str.homepage_topnewreleases)
-            .add("steamlabs", ".labs_cluster")
             .add("homepagesidebar", "body:not(.no_home_gutter) .home_page_gutter", Localization.str.homepage_sidebar)
             .add("specialoffers", getParentEl(".special_offers"))
             .add("browsesteam", getParentEl(".big_buttons.home_page_content"))
