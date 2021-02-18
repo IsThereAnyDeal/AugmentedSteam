@@ -4,6 +4,10 @@ import {Page} from "../../Page";
 
 export default class FInviteButton extends Feature {
 
+    checkPrerequisites() {
+        return document.querySelector("#manage_friends_control") !== null;
+    }
+
     apply() {
 
         HTML.afterBegin("#manage_friends > div:nth-child(2)",
