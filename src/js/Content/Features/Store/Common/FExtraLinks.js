@@ -26,7 +26,7 @@ export default class FExtraLinks extends Feature {
 
         return this._node !== null && (
 
-            // Even if the user doesn't want to see any extra links, the place of the native links is changed (see _moveExtraLinks)
+            // Even if the user doesn't want to see any extra links, they may want to change the placement of native links (see _moveExtraLinks)
             this._type === "app"
 
             // Preferences for links shown on all pages
@@ -136,6 +136,7 @@ export default class FExtraLinks extends Feature {
     }
 
     _moveExtraLinks() {
+        if (!SyncedStorage.get("moveextralinks")) { return; }
 
         const usefulLinks = this._node.parentNode;
         usefulLinks.classList.add("es_useful_link");

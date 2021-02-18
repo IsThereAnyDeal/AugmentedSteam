@@ -180,6 +180,7 @@ SyncedStorage.defaults = Object.freeze({
     "showyoutubereviews": true,
     "showwsgf": true,
     "exfgls": true,
+    "moveextralinks": true,
 
     "customize_apppage": {
         "recentupdates": true,

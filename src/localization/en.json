@@ -491,6 +491,7 @@
         "inventory_market_text": "Show Market price on inventory page",
         "send_age_info": "Automatically send age verification and skip mature content warnings",
         "removebroadcasts": "Completely remove any live broadcast",
+        "moveextralinks": "Show share link and 3rd party links at the top of the right-hand column",
         "mp4video": "Force videos to be in MP4 format",
         "youtube": "Show YouTube links",
         "twitch": "Show Twitch links",
