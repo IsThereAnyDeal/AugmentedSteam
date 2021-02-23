@@ -1,10 +1,10 @@
 import {HTML, Localization} from "../../../../modulesCore";
-import {Background, CommunityUtils, CurrencyManager, DOMHelper, Feature, Price, RequestData} from "../../../modulesContent";
+import {Background, CurrencyManager, DOMHelper, Feature, Price, RequestData} from "../../../modulesContent";
 
 export default class FBadgeCalculations extends Feature {
 
     checkPrerequisites() {
-        return CommunityUtils.currentUserIsOwner();
+        return this.context.myProfile;
     }
 
     apply() {
