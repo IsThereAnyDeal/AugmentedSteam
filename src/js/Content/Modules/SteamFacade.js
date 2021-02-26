@@ -158,6 +158,14 @@ class SteamFacade {
         return InventoryGoToPage();
     }
 
+    static reloadCommunityInventory() {
+        return ReloadCommunityInventory();
+    }
+
+    static getMarketHashName(itemDesc) {
+        return GetMarketHashName(itemDesc);
+    }
+
     static zoomYear() {
         pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
     }
@@ -165,7 +173,7 @@ class SteamFacade {
     static zoomYearForSellDialog() {
         pricehistory_zoomDays(SellItemDialog.m_plotPriceHistory, SellItemDialog.m_timePriceHistoryEarliest, SellItemDialog.m_timePriceHistoryLatest, 365);
     }
-
+      
     // selections
 
     static updateSelection() {
@@ -193,6 +201,18 @@ class SteamFacade {
 
     static jqOnClick(selector, callback) {
         $J(selector).on("click", callback);
+    }
+
+    static jqAjax(settings) {
+        return $J.ajax(settings);
+    }
+
+    static jqGet(url, settings) {
+        return $J.get(url, settings);
+    }
+
+    static jqPost(url, settings) {
+        return $J.post(url, settings);
     }
 }
 

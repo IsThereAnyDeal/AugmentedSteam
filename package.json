@@ -11,7 +11,7 @@
     "eslint": "^7.4.0",
     "eslint-loader": "^4.0.2",
     "json-minimizer-webpack-plugin": "^1.0.1",
-    "marked": "^1.2.3",
+    "marked": "^2.0.0",
     "merge-jsons-webpack-plugin": "^1.0.21",
     "mini-css-extract-plugin": "^1.2.1",
     "webpack": "^5.3.2",

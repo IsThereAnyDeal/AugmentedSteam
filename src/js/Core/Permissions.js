@@ -29,10 +29,6 @@ const PermissionOptions = Object.freeze({
         "persistent": true,
         "permissions": ["contextMenus"]
     },
-    "itad_connect": {
-        "persistent": false,
-        "permissions": ["webRequest", "webRequestBlocking"],
-    },
 });
 
 class Permissions {

@@ -1,6 +1,5 @@
 import {BackgroundSimple} from "../../Core/BackgroundSimple";
 import {Localization} from "../../Core/Localization/Localization";
-import {Permissions} from "../../Core/Permissions";
 
 class ITADConnectionManager {
 
@@ -24,10 +23,7 @@ class ITADConnectionManager {
 
     async _connect() {
 
-        // Has to be synchronously acquired from a user gesture
-        if (!await Permissions.requestOption("itad_connect")) { return; }
         await BackgroundSimple.action("itad.authorize");
-        await Permissions.removeOption("itad_connect");
 
         this._itadStatus.textContent = Localization.str.connected;
         this._itadStatus.classList.add("itad-status--connected");

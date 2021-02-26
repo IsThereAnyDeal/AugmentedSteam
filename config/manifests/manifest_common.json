@@ -17,9 +17,7 @@
     "storage",
     "*://*.steampowered.com/*",
     "*://steamcommunity.com/*",
-    "*://*.isthereanydeal.com/"
-  ],
-  "optional_permissions": [
+    "*://*.isthereanydeal.com/",
     "webRequest",
     "webRequestBlocking"
   ],
@@ -41,6 +39,7 @@
   ],
   "homepage_url": "https://augmentedsteam.com/",
   "background": {
+    "persistent": true,
     "scripts": [
       "js/browser-polyfill.js",
       "js/dompurify.js",

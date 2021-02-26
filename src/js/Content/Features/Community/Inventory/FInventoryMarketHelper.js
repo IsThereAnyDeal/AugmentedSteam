@@ -13,17 +13,15 @@ export default class FInventoryMarketHelper extends Feature {
         Page.runInPageContext(() => {
 
             /* eslint-disable no-undef, camelcase */
-            window.SteamFacade.jq(document).on("click", ".inventory_item_link, .newitem", () => {
-                if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
-                    g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
-                }
-                let market_expired = false;
-                if (g_ActiveInventory.selectedItem.description) {
-                    market_expired = g_ActiveInventory.selectedItem.description.descriptions.reduce(
-                        (acc, el) => (acc || el.value === "This item can no longer be bought or sold on the Community Market."),
-                        false,
-                    );
-                }
+            document.addEventListener("click", ({target}) => {
+                if (!target.matches("a.inventory_item_link, a.newitem")) { return; }
+
+                // https://github.com/SteamDatabase/SteamTracking/blob/b3abe9c82f9e9d260265591320cac6304e500e58/steamcommunity.com/public/javascript/economy_common.js#L161
+                const marketHashName = window.SteamFacade.getMarketHashName(g_ActiveInventory.selectedItem.description);
+
+                const marketRestriction = Array.isArray(g_ActiveInventory.selectedItem.description.owner_descriptions)
+                    ? g_ActiveInventory.selectedItem.description.owner_descriptions.some(el => /\[date\]\d+\[\/date\]/.test(el.value) && el.color === "A75124")
+                    : false;
 
                 // https://github.com/SteamDatabase/SteamTracking/blob/f26cfc1ec42b8a0c27ca11f4343edbd8dd293255/steamcommunity.com/public/javascript/economy_v2.js#L4468
                 const publisherFee = (typeof g_ActiveInventory.selectedItem.description.market_fee !== "undefined" && g_ActiveInventory.selectedItem.description.market_fee !== null)
@@ -34,16 +32,14 @@ export default class FInventoryMarketHelper extends Feature {
                     iActiveSelectView,
                     g_ActiveInventory.selectedItem.description.marketable,
                     g_ActiveInventory.appid,
-                    g_ActiveInventory.selectedItem.description.market_hash_name,
-                    g_ActiveInventory.selectedItem.description.type,
+                    marketHashName,
                     g_ActiveInventory.selectedItem.assetid,
                     g_sessionID,
                     g_ActiveInventory.selectedItem.contextid,
                     g_rgWalletInfo.wallet_currency,
                     publisherFee,
                     g_ActiveInventory.m_owner.strSteamId,
-                    g_ActiveInventory.selectedItem.description.market_marketable_restriction,
-                    market_expired
+                    marketRestriction,
                 ]);
             });
             /* eslint-enable no-undef, camelcase */
@@ -57,7 +53,6 @@ export default class FInventoryMarketHelper extends Feature {
         marketable,
         globalId,
         hashName,
-        assetType,
         assetId,
         sessionId,
         contextId,
@@ -65,43 +60,35 @@ export default class FInventoryMarketHelper extends Feature {
         publisherFee,
         ownerSteamId,
         restriction,
-        expired
     ]) {
 
         const _marketable = parseInt(marketable);
         const _globalId = parseInt(globalId);
         const _contextId = parseInt(contextId);
-        const _restriction = parseInt(restriction);
-        const isGift = assetType && /Gift/i.test(assetType);
         const isBooster = hashName && /Booster Pack/i.test(hashName);
         const ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
 
-        const hm = hashName.match(/^([0-9]+)-/);
-        const appid = hm ? hm[1] : null;
+        const appid = parseInt(hashName) || null;
 
-        const thisItem = document.querySelector(`[id="${_globalId}_${_contextId}_${assetId}"]`);
-        const itemActions = document.querySelector(`#iteminfo${item}_item_actions`);
-        const marketActions = document.querySelector(`#iteminfo${item}_item_market_actions`);
+        const thisItem = document.getElementById(`${_globalId}_${_contextId}_${assetId}`);
+        const itemActions = document.getElementById(`iteminfo${item}_item_actions`);
+        const marketActions = document.getElementById(`iteminfo${item}_item_market_actions`);
 
-        // Set as background option
-        if (ownsInventory) {
-            this._setBackgroundOption(thisItem, itemActions);
-        }
-
-        // Show prices for gifts
-        if (isGift) {
+        if (_contextId === 1 && _globalId === 753) {
             this._addPriceToGifts(itemActions);
-            return;
+            return; // Steam gifts are unmarketable, so return early
         }
 
         if (ownsInventory) {
+
+            this._setBackgroundOption(thisItem, itemActions);
 
             // Show link to view badge progress for booster packs
             if (isBooster) {
                 this._addBoosterPackProgress(item, appid);
             }
 
-            this._addOneClickGemsOption(item, appid, assetId);
+            this._addOneClickGemsOption(item, appid, assetId, sessionId);
 
             /*
              * 753 is the appid for "Steam" in the Steam Inventory
@@ -126,9 +113,8 @@ export default class FInventoryMarketHelper extends Feature {
         /*
          * If the item in user's inventory is not marketable due to market restrictions,
          * or if not in own inventory but the item is marketable, build the HTML for showing info
-         * TODO Fix the second condition: only add average price of three cards for booster packs in own inventory
          */
-        if ((ownsInventory && _restriction > 0 && !_marketable && !expired && hashName !== "753-Gems") || _marketable) {
+        if ((ownsInventory && restriction && !_marketable) || _marketable) {
             this._showMarketOverview(thisItem, marketActions, _globalId, hashName, appid, isBooster, walletCurrency);
         }
     }
@@ -162,19 +148,16 @@ export default class FInventoryMarketHelper extends Feature {
             }
         }
 
-        // Loop through owned backgrounds to find the communityitemid for selected background
+        // Find the communityitemid for selected background
         if (!thisItem.dataset.communityitemid) {
-            for (const bg of this.profileBgsOwned) {
-                if (bg.image_large === bgUrl) {
-                    thisItem.dataset.communityitemid = bg.communityitemid;
-                    break;
-                }
-            }
 
-            if (!thisItem.dataset.communityitemid) {
+            const bg = this.profileBgsOwned.find(bg => bg.image_large === bgUrl);
+            if (!bg) {
                 console.error("Failed to find communityitemid for selected background");
                 return;
             }
+
+            thisItem.dataset.communityitemid = bg.communityitemid;
         }
 
         // Make sure the background we are trying to set is not set already
@@ -210,14 +193,12 @@ export default class FInventoryMarketHelper extends Feature {
     }
 
     async _addPriceToGifts(itemActions) {
-
-        const action = itemActions.querySelector("a");
-        if (!action) { return; }
-
-        const giftAppid = GameId.getAppid(action.href);
-        if (!giftAppid) { return; }
-
         // TODO: Add support for package(sub)
+        const viewStoreBtn = itemActions.querySelector("a");
+        if (!viewStoreBtn || !viewStoreBtn.href.startsWith("https://store.steampowered.com/app/")) { return; }
+
+        const giftAppid = GameId.getAppid(viewStoreBtn.href);
+        if (!giftAppid) { return; }
 
         const result = await Background.action("appdetails", giftAppid, "price_overview");
         if (!result || !result.success) { return; }
@@ -258,10 +239,12 @@ export default class FInventoryMarketHelper extends Feature {
 
     _addBoosterPackProgress(item, appid) {
         HTML.beforeEnd(`#iteminfo${item}_item_owner_actions`,
-            `<a class="btn_small btn_grey_white_innerfade" href="https://steamcommunity.com/my/gamecards/${appid}/"><span>${Localization.str.view_badge_progress}</span></a>`);
+            `<a class="btn_small btn_grey_white_innerfade" href="//steamcommunity.com/my/gamecards/${appid}/">
+                <span>${Localization.str.view_badge_progress}</span>
+            </a>`);
     }
 
-    _addOneClickGemsOption(item, appid, assetid) {
+    _addOneClickGemsOption(item, appid, assetid, sessionid) {
         if (!SyncedStorage.get("show1clickgoo")) { return; }
 
         // scrap link is always present, replace the link to avoid attaching multiple listeners
@@ -278,28 +261,27 @@ export default class FInventoryMarketHelper extends Feature {
              * Modified version of GrindIntoGoo from badges.js
              * https://github.com/SteamDatabase/SteamTracking/blob/ca5145acba077bee42de2593f6b17a6ed045b5f6/steamcommunity.com/public/javascript/badges.js#L521
              */
-            Page.runInPageContext((appid, assetid) => {
+            Page.runInPageContext((appid, assetid, sessionid) => {
+                const f = window.SteamFacade;
 
-                /* eslint-disable new-cap, no-undef, camelcase */
-                const rgAJAXParams = {
-                    "sessionid": g_sessionID,
+                const params = {
+                    sessionid,
                     appid,
                     assetid,
                     "contextid": 6
                 };
 
-                let strActionURL = `${g_strProfileURL}/ajaxgetgoovalue/`;
+                const profileUrl = f.global("g_strProfileURL");
 
-                $J.get(strActionURL, rgAJAXParams).done(data => {
-                    strActionURL = `${g_strProfileURL}/ajaxgrindintogoo/`;
-                    rgAJAXParams.goo_value_expected = data.goo_value;
+                f.jqGet(`${profileUrl}/ajaxgetgoovalue/`, params).done(data => {
+                    // eslint-disable-next-line camelcase
+                    params.goo_value_expected = data.goo_value;
 
-                    $J.post(strActionURL, rgAJAXParams).done(() => {
-                        ReloadCommunityInventory();
+                    f.jqPost(`${profileUrl}/ajaxgrindintogoo/`, params).done(() => {
+                        f.reloadCommunityInventory();
                     });
                 });
-                /* eslint-enable new-cap, no-undef, camelcase */
-            }, [appid, assetid]);
+            }, [appid, assetid, sessionid]);
         });
     }
 
@@ -440,38 +422,66 @@ export default class FInventoryMarketHelper extends Feature {
                 </a>`;
     }
 
-    async _showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrencyNumber) {
+    async _showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrency) {
 
-        marketActions.style.display = "block";
-        let firstDiv = marketActions.querySelector("div");
-        if (!firstDiv) {
-            firstDiv = document.createElement("div");
-            marketActions.insertAdjacentElement("afterbegin", firstDiv);
+        // If is a booster pack get the average price of three cards
+        if (isBooster && !thisItem.dataset.cardsPrice) {
+            if (thisItem.classList.contains("es_avgprice_loading")) { return; }
+            thisItem.classList.add("es_avgprice_loading");
+
+            thisItem.dataset.cardsPrice = "nodata";
+
+            try {
+                const currency = CurrencyManager.currencyNumberToType(walletCurrency);
+                const result = await Background.action("market.averagecardprice", {appid, currency});
+
+                const avgPrice = result.average.toFixed(2) * 100;
+
+                thisItem.dataset.cardsPrice = await Page.runInPageContext((price, type) => {
+                    return window.SteamFacade.vCurrencyFormat(price, type);
+                }, [avgPrice, currency], true);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                thisItem.classList.remove("es_avgprice_loading");
+            }
         }
 
+        let firstDiv = marketActions.querySelector(":scope > div");
+        if (firstDiv) {
+
+            // In own inventory, only add the average price of three cards to booster packs
+            if (thisItem.dataset.cardsPrice && thisItem.dataset.cardsPrice !== "nodata") {
+
+                firstDiv.querySelector("div:nth-child(2)")
+                    .append(Localization.str.avg_price_3cards.replace("__price__", thisItem.dataset.cardsPrice));
+            }
+
+            return;
+        }
+
+        firstDiv = document.createElement("div");
+        marketActions.insertAdjacentElement("afterbegin", firstDiv);
+        marketActions.style.display = "block";
+
+        const _hashName = encodeURIComponent(hashName);
+
         // "View in market" link
-        let html = `<div style="height:24px;"><a href="https://steamcommunity.com/market/listings/${globalId}/${encodeURIComponent(hashName)}">${Localization.str.view_in_market}</a></div>`;
+        let html = `<div style="height:24px;">
+                        <a href="//steamcommunity.com/market/listings/${globalId}/${_hashName}">${Localization.str.view_in_market}</a>
+                    </div>`;
 
         // Check if price is stored in data
         if (!thisItem.dataset.lowestPrice) {
-            HTML.inner(firstDiv, "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>");
+            if (firstDiv.querySelector("img.es_loading") !== null) { return; }
 
-            // If is a booster pack add the average price of three cards
-            if (isBooster) {
-                thisItem.dataset.cardsPrice = "nodata";
+            HTML.inner(firstDiv, "<img class='es_loading' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>");
 
-                try {
-                    const walletCurrency = CurrencyManager.currencyNumberToType(walletCurrencyNumber);
-                    const result = await Background.action("market.averagecardprice", {"appid": appid, "currency": walletCurrency});
-                    thisItem.dataset.cardsPrice = new Price(result.average, walletCurrency);
-                } catch (error) {
-                    console.error(error);
-                }
-            }
+            thisItem.dataset.lowestPrice = "nodata";
+            thisItem.dataset.soldVolume = "nodata";
 
             try {
-                const overviewUrl = `https://steamcommunity.com/market/priceoverview/?currency=${walletCurrencyNumber}&appid=${globalId}&market_hash_name=${encodeURIComponent(hashName)}`;
-                const data = await RequestData.getJson(overviewUrl);
+                const data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?currency=${walletCurrency}&appid=${globalId}&market_hash_name=${_hashName}`);
 
                 if (data && data.success) {
                     thisItem.dataset.lowestPrice = data.lowest_price || "nodata";
@@ -498,11 +508,14 @@ export default class FInventoryMarketHelper extends Feature {
             html += Localization.str.starting_at.replace("__price__", node.dataset.lowestPrice);
 
             if (node.dataset.soldVolume && node.dataset.soldVolume !== "nodata") {
-                html += `<br>${Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.soldVolume)}`;
+                html += "<br>";
+                html += Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.soldVolume);
             }
 
-            if (node.dataset.cardsPrice) {
-                html += `<br>${Localization.str.avg_price_3cards.replace("__price__", node.dataset.cardsPrice)}`;
+            // cards price data is only fetched for booster packs
+            if (node.dataset.cardsPrice && node.dataset.cardsPrice !== "nodata") {
+                html += "<br>";
+                html += Localization.str.avg_price_3cards.replace("__price__", node.dataset.cardsPrice);
             }
         } else {
             html += Localization.str.no_price_data;
