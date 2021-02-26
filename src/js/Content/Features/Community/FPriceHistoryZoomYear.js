@@ -16,14 +16,12 @@ export default class FPriceHistoryZoomYear extends Feature {
 
         document.querySelectorAll(".zoomopt")[2].insertAdjacentElement("beforebegin", zoomYear);
 
-        if (this.context.type === ContextType.MARKET_LISTING) {
-            zoomYear.addEventListener("click", () => {
+        zoomYear.addEventListener("click", () => {
+            if (this.context.type === ContextType.MARKET_LISTING) {
                 Page.runInPageContext(() => { window.SteamFacade.zoomYear(); });
-            });
-        } else if (this.context.type === ContextType.INVENTORY) {
-            zoomYear.addEventListener("click", () => {
+            } else if (this.context.type === ContextType.INVENTORY) {
                 Page.runInPageContext(() => { window.SteamFacade.zoomYearForSellDialog(); });
-            });
-        }
+            }
+        });
     }
 }
