@@ -20,21 +20,12 @@ export default class FReviewSort extends Feature {
 
         async function getReviews() {
 
-            let modalActive = false;
-
             // Delay half a second to avoid dialog flicker when grabbing cache
-            const timer = TimeUtils.timer(500).then(
-                () => {
-                    Page.runInPageContext(
-                        (processing, wait) => { window.SteamFacade.showBlockingWaitDialog(processing, wait); },
-                        [
-                            Localization.str.processing,
-                            Localization.str.wait
-                        ]
-                    );
-                    modalActive = true;
-                }
-            );
+            await TimeUtils.timer(500);
+
+            Page.runInPageContext((processing, wait) => {
+                window.SteamFacade.showBlockingWaitDialog(processing, wait);
+            }, [Localization.str.processing, Localization.str.wait]);
 
             try {
                 reviews = await Background.action("reviews", steamId, numReviews);
@@ -44,13 +35,9 @@ export default class FReviewSort extends Feature {
                     return review;
                 });
             } finally {
-                timer.clear();
-
-                if (modalActive) {
-                    Page.runInPageContext(() => {
-                        window.SteamFacade.dismissActiveModal();
-                    });
-                }
+                Page.runInPageContext(() => {
+                    window.SteamFacade.dismissActiveModal();
+                });
             }
         }
 
