@@ -158,6 +158,10 @@ class SteamFacade {
         return InventoryGoToPage();
     }
 
+    static reloadCommunityInventory() {
+        return ReloadCommunityInventory();
+    }
+
     static getMarketHashName(itemDesc) {
         return GetMarketHashName(itemDesc);
     }
@@ -189,6 +193,18 @@ class SteamFacade {
 
     static jqOnClick(selector, callback) {
         $J(selector).on("click", callback);
+    }
+
+    static jqAjax(settings) {
+        return $J.ajax(settings);
+    }
+
+    static jqGet(url, settings) {
+        return $J.get(url, settings);
+    }
+
+    static jqPost(url, settings) {
+        return $J.post(url, settings);
     }
 }
 
