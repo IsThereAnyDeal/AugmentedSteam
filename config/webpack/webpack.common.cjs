@@ -15,7 +15,6 @@ module.exports = {
         "css/community/tradeoffer": "./src/css/community/tradeoffer.css",
         "css/options": "./src/css/options.css",
         // pages
-        "js/authorization": "./src/js/Background/authorization.js",
         "js/background": "./src/js/Background/background.js",
         "js/options": "./src/js/options/options.js",
         "js/community/app": "./src/js/Content/Features/Community/App/PApp.js",
