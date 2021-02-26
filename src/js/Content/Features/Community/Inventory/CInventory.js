@@ -2,6 +2,7 @@ import ContextType from "../../../Modules/Context/ContextType";
 import {CCommunityBase} from "../CCommunityBase";
 import FInventoryMarketHelper from "./FInventoryMarketHelper";
 import FInventoryGoTo from "./FInventoryGoTo";
+import FPriceHistoryZoomYear from "../FPriceHistoryZoomYear";
 
 export class CInventory extends CCommunityBase {
 
@@ -15,6 +16,7 @@ export class CInventory extends CCommunityBase {
         super(ContextType.INVENTORY, [
             FInventoryMarketHelper,
             FInventoryGoTo,
+            FPriceHistoryZoomYear,
         ]);
     }
 }

@@ -166,6 +166,14 @@ class SteamFacade {
         return GetMarketHashName(itemDesc);
     }
 
+    static zoomYear() {
+        pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
+    }
+
+    static zoomYearForSellDialog() {
+        pricehistory_zoomDays(SellItemDialog.m_plotPriceHistory, SellItemDialog.m_timePriceHistoryEarliest, SellItemDialog.m_timePriceHistoryLatest, 365);
+    }
+      
     // selections
 
     static updateSelection() {
