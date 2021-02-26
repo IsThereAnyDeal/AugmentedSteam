@@ -162,6 +162,10 @@ class SteamFacade {
         return ReloadCommunityInventory();
     }
 
+    static getMarketHashName(itemDesc) {
+        return GetMarketHashName(itemDesc);
+    }
+
     // selections
 
     static updateSelection() {

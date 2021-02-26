@@ -1,7 +1,4 @@
 {
-  "background": {
-    "persistent": false
-  },
   "optional_permissions": [
     "contextMenus"
   ]
