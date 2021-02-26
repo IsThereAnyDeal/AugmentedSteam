@@ -126,7 +126,6 @@ export default class FInventoryMarketHelper extends Feature {
         /*
          * If the item in user's inventory is not marketable due to market restrictions,
          * or if not in own inventory but the item is marketable, build the HTML for showing info
-         * TODO Fix the second condition: only add average price of three cards for booster packs in own inventory
          */
         if ((ownsInventory && _restriction > 0 && !_marketable && !expired && hashName !== "753-Gems") || _marketable) {
             this._showMarketOverview(thisItem, marketActions, _globalId, hashName, appid, isBooster, walletCurrency);
@@ -258,7 +257,9 @@ export default class FInventoryMarketHelper extends Feature {
 
     _addBoosterPackProgress(item, appid) {
         HTML.beforeEnd(`#iteminfo${item}_item_owner_actions`,
-            `<a class="btn_small btn_grey_white_innerfade" href="https://steamcommunity.com/my/gamecards/${appid}/"><span>${Localization.str.view_badge_progress}</span></a>`);
+            `<a class="btn_small btn_grey_white_innerfade" href="//steamcommunity.com/my/gamecards/${appid}/">
+                <span>${Localization.str.view_badge_progress}</span>
+            </a>`);
     }
 
     _addOneClickGemsOption(item, appid, assetid) {
@@ -440,38 +441,66 @@ export default class FInventoryMarketHelper extends Feature {
                 </a>`;
     }
 
-    async _showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrencyNumber) {
+    async _showMarketOverview(thisItem, marketActions, globalId, hashName, appid, isBooster, walletCurrency) {
 
-        marketActions.style.display = "block";
-        let firstDiv = marketActions.querySelector("div");
-        if (!firstDiv) {
-            firstDiv = document.createElement("div");
-            marketActions.insertAdjacentElement("afterbegin", firstDiv);
+        // If is a booster pack get the average price of three cards
+        if (isBooster && !thisItem.dataset.cardsPrice) {
+            if (thisItem.classList.contains("es_avgprice_loading")) { return; }
+            thisItem.classList.add("es_avgprice_loading");
+
+            thisItem.dataset.cardsPrice = "nodata";
+
+            try {
+                const currency = CurrencyManager.currencyNumberToType(walletCurrency);
+                const result = await Background.action("market.averagecardprice", {appid, currency});
+
+                const avgPrice = result.average.toFixed(2) * 100;
+
+                thisItem.dataset.cardsPrice = await Page.runInPageContext((price, type) => {
+                    return window.SteamFacade.vCurrencyFormat(price, type);
+                }, [avgPrice, currency], true);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                thisItem.classList.remove("es_avgprice_loading");
+            }
         }
 
+        let firstDiv = marketActions.querySelector(":scope > div");
+        if (firstDiv) {
+
+            // In own inventory, only add the average price of three cards to booster packs
+            if (thisItem.dataset.cardsPrice && thisItem.dataset.cardsPrice !== "nodata") {
+
+                firstDiv.querySelector("div:nth-child(2)")
+                    .append(Localization.str.avg_price_3cards.replace("__price__", thisItem.dataset.cardsPrice));
+            }
+
+            return;
+        }
+
+        firstDiv = document.createElement("div");
+        marketActions.insertAdjacentElement("afterbegin", firstDiv);
+        marketActions.style.display = "block";
+
+        const _hashName = encodeURIComponent(hashName);
+
         // "View in market" link
-        let html = `<div style="height:24px;"><a href="https://steamcommunity.com/market/listings/${globalId}/${encodeURIComponent(hashName)}">${Localization.str.view_in_market}</a></div>`;
+        let html = `<div style="height:24px;">
+                        <a href="//steamcommunity.com/market/listings/${globalId}/${_hashName}">${Localization.str.view_in_market}</a>
+                    </div>`;
 
         // Check if price is stored in data
         if (!thisItem.dataset.lowestPrice) {
-            HTML.inner(firstDiv, "<img class='es_loading' src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>");
+            if (firstDiv.querySelector("img.es_loading") !== null) { return; }
 
-            // If is a booster pack add the average price of three cards
-            if (isBooster) {
-                thisItem.dataset.cardsPrice = "nodata";
+            HTML.inner(firstDiv, "<img class='es_loading' src='//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>");
 
-                try {
-                    const walletCurrency = CurrencyManager.currencyNumberToType(walletCurrencyNumber);
-                    const result = await Background.action("market.averagecardprice", {"appid": appid, "currency": walletCurrency});
-                    thisItem.dataset.cardsPrice = new Price(result.average, walletCurrency);
-                } catch (error) {
-                    console.error(error);
-                }
-            }
+            thisItem.dataset.lowestPrice = "nodata";
+            thisItem.dataset.soldVolume = "nodata";
 
             try {
-                const overviewUrl = `https://steamcommunity.com/market/priceoverview/?currency=${walletCurrencyNumber}&appid=${globalId}&market_hash_name=${encodeURIComponent(hashName)}`;
-                const data = await RequestData.getJson(overviewUrl);
+                const data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?currency=${walletCurrency}&appid=${globalId}&market_hash_name=${_hashName}`);
 
                 if (data && data.success) {
                     thisItem.dataset.lowestPrice = data.lowest_price || "nodata";
@@ -498,11 +527,14 @@ export default class FInventoryMarketHelper extends Feature {
             html += Localization.str.starting_at.replace("__price__", node.dataset.lowestPrice);
 
             if (node.dataset.soldVolume && node.dataset.soldVolume !== "nodata") {
-                html += `<br>${Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.soldVolume)}`;
+                html += "<br>";
+                html += Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.soldVolume);
             }
 
-            if (node.dataset.cardsPrice) {
-                html += `<br>${Localization.str.avg_price_3cards.replace("__price__", node.dataset.cardsPrice)}`;
+            // cards price data is only fetched for booster packs
+            if (node.dataset.cardsPrice && node.dataset.cardsPrice !== "nodata") {
+                html += "<br>";
+                html += Localization.str.avg_price_3cards.replace("__price__", node.dataset.cardsPrice);
             }
         } else {
             html += Localization.str.no_price_data;
