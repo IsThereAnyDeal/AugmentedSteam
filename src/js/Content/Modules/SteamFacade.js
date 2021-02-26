@@ -158,6 +158,10 @@ class SteamFacade {
         return InventoryGoToPage();
     }
 
+    static getMarketHashName(itemDesc) {
+        return GetMarketHashName(itemDesc);
+    }
+
     // selections
 
     static updateSelection() {

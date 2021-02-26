@@ -13,17 +13,15 @@ export default class FInventoryMarketHelper extends Feature {
         Page.runInPageContext(() => {
 
             /* eslint-disable no-undef, camelcase */
-            window.SteamFacade.jq(document).on("click", ".inventory_item_link, .newitem", () => {
-                if (!g_ActiveInventory.selectedItem.description.market_hash_name) {
-                    g_ActiveInventory.selectedItem.description.market_hash_name = g_ActiveInventory.selectedItem.description.name;
-                }
-                let market_expired = false;
-                if (g_ActiveInventory.selectedItem.description) {
-                    market_expired = g_ActiveInventory.selectedItem.description.descriptions.reduce(
-                        (acc, el) => (acc || el.value === "This item can no longer be bought or sold on the Community Market."),
-                        false,
-                    );
-                }
+            document.addEventListener("click", ({target}) => {
+                if (!target.matches("a.inventory_item_link, a.newitem")) { return; }
+
+                // https://github.com/SteamDatabase/SteamTracking/blob/b3abe9c82f9e9d260265591320cac6304e500e58/steamcommunity.com/public/javascript/economy_common.js#L161
+                const marketHashName = window.SteamFacade.getMarketHashName(g_ActiveInventory.selectedItem.description);
+
+                const marketRestriction = Array.isArray(g_ActiveInventory.selectedItem.description.owner_descriptions)
+                    ? g_ActiveInventory.selectedItem.description.owner_descriptions.some(el => /\[date\]\d+\[\/date\]/.test(el.value) && el.color === "A75124")
+                    : false;
 
                 // https://github.com/SteamDatabase/SteamTracking/blob/f26cfc1ec42b8a0c27ca11f4343edbd8dd293255/steamcommunity.com/public/javascript/economy_v2.js#L4468
                 const publisherFee = (typeof g_ActiveInventory.selectedItem.description.market_fee !== "undefined" && g_ActiveInventory.selectedItem.description.market_fee !== null)
@@ -34,16 +32,14 @@ export default class FInventoryMarketHelper extends Feature {
                     iActiveSelectView,
                     g_ActiveInventory.selectedItem.description.marketable,
                     g_ActiveInventory.appid,
-                    g_ActiveInventory.selectedItem.description.market_hash_name,
-                    g_ActiveInventory.selectedItem.description.type,
+                    marketHashName,
                     g_ActiveInventory.selectedItem.assetid,
                     g_sessionID,
                     g_ActiveInventory.selectedItem.contextid,
                     g_rgWalletInfo.wallet_currency,
                     publisherFee,
                     g_ActiveInventory.m_owner.strSteamId,
-                    g_ActiveInventory.selectedItem.description.market_marketable_restriction,
-                    market_expired
+                    marketRestriction,
                 ]);
             });
             /* eslint-enable no-undef, camelcase */
@@ -57,7 +53,6 @@ export default class FInventoryMarketHelper extends Feature {
         marketable,
         globalId,
         hashName,
-        assetType,
         assetId,
         sessionId,
         contextId,
@@ -65,36 +60,28 @@ export default class FInventoryMarketHelper extends Feature {
         publisherFee,
         ownerSteamId,
         restriction,
-        expired
     ]) {
 
         const _marketable = parseInt(marketable);
         const _globalId = parseInt(globalId);
         const _contextId = parseInt(contextId);
-        const _restriction = parseInt(restriction);
-        const isGift = assetType && /Gift/i.test(assetType);
         const isBooster = hashName && /Booster Pack/i.test(hashName);
         const ownsInventory = User.isSignedIn && (ownerSteamId === User.steamId);
 
-        const hm = hashName.match(/^([0-9]+)-/);
-        const appid = hm ? hm[1] : null;
+        const appid = parseInt(hashName) || null;
 
-        const thisItem = document.querySelector(`[id="${_globalId}_${_contextId}_${assetId}"]`);
-        const itemActions = document.querySelector(`#iteminfo${item}_item_actions`);
-        const marketActions = document.querySelector(`#iteminfo${item}_item_market_actions`);
+        const thisItem = document.getElementById(`${_globalId}_${_contextId}_${assetId}`);
+        const itemActions = document.getElementById(`iteminfo${item}_item_actions`);
+        const marketActions = document.getElementById(`iteminfo${item}_item_market_actions`);
 
-        // Set as background option
-        if (ownsInventory) {
-            this._setBackgroundOption(thisItem, itemActions);
-        }
-
-        // Show prices for gifts
-        if (isGift) {
+        if (_contextId === 1 && _globalId === 753) {
             this._addPriceToGifts(itemActions);
-            return;
+            return; // Steam gifts are unmarketable, so return early
         }
 
         if (ownsInventory) {
+
+            this._setBackgroundOption(thisItem, itemActions);
 
             // Show link to view badge progress for booster packs
             if (isBooster) {
@@ -127,7 +114,7 @@ export default class FInventoryMarketHelper extends Feature {
          * If the item in user's inventory is not marketable due to market restrictions,
          * or if not in own inventory but the item is marketable, build the HTML for showing info
          */
-        if ((ownsInventory && _restriction > 0 && !_marketable && !expired && hashName !== "753-Gems") || _marketable) {
+        if ((ownsInventory && restriction && !_marketable) || _marketable) {
             this._showMarketOverview(thisItem, marketActions, _globalId, hashName, appid, isBooster, walletCurrency);
         }
     }
@@ -161,19 +148,16 @@ export default class FInventoryMarketHelper extends Feature {
             }
         }
 
-        // Loop through owned backgrounds to find the communityitemid for selected background
+        // Find the communityitemid for selected background
         if (!thisItem.dataset.communityitemid) {
-            for (const bg of this.profileBgsOwned) {
-                if (bg.image_large === bgUrl) {
-                    thisItem.dataset.communityitemid = bg.communityitemid;
-                    break;
-                }
-            }
 
-            if (!thisItem.dataset.communityitemid) {
+            const bg = this.profileBgsOwned.find(bg => bg.image_large === bgUrl);
+            if (!bg) {
                 console.error("Failed to find communityitemid for selected background");
                 return;
             }
+
+            thisItem.dataset.communityitemid = bg.communityitemid;
         }
 
         // Make sure the background we are trying to set is not set already
@@ -209,14 +193,12 @@ export default class FInventoryMarketHelper extends Feature {
     }
 
     async _addPriceToGifts(itemActions) {
-
-        const action = itemActions.querySelector("a");
-        if (!action) { return; }
-
-        const giftAppid = GameId.getAppid(action.href);
-        if (!giftAppid) { return; }
-
         // TODO: Add support for package(sub)
+        const viewStoreBtn = itemActions.querySelector("a");
+        if (!viewStoreBtn || !viewStoreBtn.href.startsWith("https://store.steampowered.com/app/")) { return; }
+
+        const giftAppid = GameId.getAppid(viewStoreBtn.href);
+        if (!giftAppid) { return; }
 
         const result = await Background.action("appdetails", giftAppid, "price_overview");
         if (!result || !result.success) { return; }
