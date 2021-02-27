@@ -982,6 +982,26 @@ img.astats_icon {
 
 /***************************************
  * App pages
+ * FWaitlistDropdown
+ **************************************/
+.queue_control_button.as_btn_wishlist_menu {
+  display: inline;
+}
+.as_btn_wishlist .btnv6_blue_hoverfade {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.queue_btn_menu.on_wishlist #queue_menu_option_on_wishlist .queue_ignore_menu_option_image.selected,
+.queue_btn_menu.on_waitlist #queue_menu_option_on_waitlist .queue_ignore_menu_option_image.selected {
+  display: inline-block;
+}
+.queue_btn_menu.on_wishlist #queue_menu_option_on_wishlist .queue_ignore_menu_option_image.unselected,
+.queue_btn_menu.on_waitlist #queue_menu_option_on_waitlist .queue_ignore_menu_option_image.unselected {
+  display: none;
+}
+
+/***************************************
+ * App pages
  * addFullscreenScreenshotView()
  **************************************/
 .es_screenshot_fullscreen_toggle {
