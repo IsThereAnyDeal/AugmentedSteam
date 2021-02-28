@@ -4,7 +4,6 @@ export default {
     "show_progressbar": "show_progressbar",
     "version_show": "options.version_show",
     "replaceaccountname": "options.replace_account_name",
-    "showfakeccwarning": "options.show_regionwarning",
     "show_backtotop": "options.show_backtotop",
     "disablelinkfilter": "options.disablelinkfilter",
     "send_age_info": "options.send_age_info",
