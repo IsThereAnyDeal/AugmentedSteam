@@ -37,7 +37,8 @@
 }
 #es_customize_btn .es_customize_title {
   display: inline-block;
-  padding: 0 8px;
+  padding-right: 3px;
+  padding-left: 8px;
   margin: 0 1px;
   line-height: 20px;
   text-align: center;
@@ -65,11 +66,12 @@
   right: 0px;
   opacity: 0;
   visibility: hidden;
-  transition: visibility, opacity 0.2s ease-in-out;
+  transition: visibility 0s 0.2s, opacity 0.2s ease-in-out;
 }
-#es_customize_btn:hover .home_viewsettings_popup {
+#es_customize_btn.active .home_viewsettings_popup {
   opacity: 1;
   visibility: visible;
+  transition: visibility, opacity 0.2s ease-in-out;
 }
 #es_customize_btn .home_viewsettings_instructions {
   margin-bottom: 12px;

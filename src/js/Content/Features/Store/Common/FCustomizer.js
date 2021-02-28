@@ -13,6 +13,20 @@ export default class FCustomizer extends Feature {
                 </div>
             </div>`);
 
+        const customizeBtn = document.getElementById("es_customize_btn");
+
+        customizeBtn.addEventListener("click", () => {
+            customizeBtn.classList.toggle("active");
+        });
+
+        customizeBtn.querySelector(".home_viewsettings_popup").addEventListener("click", e => {
+            e.stopPropagation();
+        });
+
+        customizeBtn.addEventListener("mouseleave", () => {
+            customizeBtn.classList.remove("active");
+        });
+
         if (this.context.type === ContextType.APP) {
             this._customizeAppPage();
         } else if (this.context.type === ContextType.STORE_FRONT) {
