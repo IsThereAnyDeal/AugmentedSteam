@@ -1,43 +1,36 @@
 import {Feature} from "../../../Modules/Feature/Feature";
-import {HTML, LocalStorage} from "../../../../modulesCore";
+import {HTML, LocalStorage, Localization} from "../../../../modulesCore";
 
 export default class FReviewToggleButton extends Feature {
 
     checkPrerequisites() {
-        return document.querySelector("#review_create h1");
+        return document.getElementById("review_create") !== null;
     }
 
     apply() {
         const head = document.querySelector("#review_create h1");
 
-        HTML.beforeEnd(
-            head,
-            `<div style="float: right;">
-                <a class="btnv6_lightblue_blue btn_mdium" id="es_review_toggle">
-                    <span>▲</span>
-                </a>
-            </div>`
+        // Reparent review section nodes
+        const newParent = document.createElement("div");
+        newParent.classList.add("es_review_section");
+        newParent.append(
+            ...document.getElementById("review_create").querySelectorAll("p, .avatar_block, .content")
         );
 
-        const reviewSectionNode = document.createElement("div");
-        reviewSectionNode.setAttribute("id", "es_review_section");
+        head.insertAdjacentElement("afterend", newParent);
 
-        const nodes = document.querySelector("#review_container").querySelectorAll("p, .avatar_block, .content");
-        for (const node of nodes) {
-            reviewSectionNode.append(node);
-        }
+        // Insert review toggle button
+        HTML.beforeEnd(head,
+            `<div class="btnv6_lightblue_blue btn_medium" id="es_review_toggle">
+                <div data-tooltip-text="${Localization.str.expand_slider}" class="es_review_expand">▼</div>
+                <div data-tooltip-text="${Localization.str.contract_slider}" class="es_review_contract">▲</div>
+            </div>`);
 
-        head.insertAdjacentElement("afterend", reviewSectionNode);
+        document.querySelector("#es_review_toggle").addEventListener("click", () => {
+            this._toggleReviews();
+        });
 
         this._toggleReviews(LocalStorage.get("show_review_section", true));
-
-        const node = document.querySelector("#review_create");
-        if (node) {
-            node.addEventListener("click", ({target}) => {
-                if (!target.closest("#es_review_toggle")) { return; }
-                this._toggleReviews();
-            });
-        }
     }
 
     _toggleReviews(state) {
@@ -48,12 +41,7 @@ export default class FReviewToggleButton extends Feature {
             _state = !LocalStorage.get("show_review_section", true);
             LocalStorage.set("show_review_section", _state);
         }
-        if (_state) {
-            document.querySelector("#es_review_toggle span").textContent = "▲";
-            document.querySelector("#es_review_section").style.maxHeight = null;
-        } else {
-            document.querySelector("#es_review_toggle span").textContent = "▼";
-            document.querySelector("#es_review_section").style.maxHeight = 0;
-        }
+
+        document.getElementById("review_create").classList.toggle("es_contracted", !_state);
     }
 }
