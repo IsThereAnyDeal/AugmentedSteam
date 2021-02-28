@@ -2769,7 +2769,7 @@ label[for="show_common_games"] {
 .es-sortbox--reviews {
   padding: 20px 0 5px 0;
 }
-.es-sortbox--groups {
+.es-sortbox--friends, .es-sortbox--groups {
   flex-grow: 2;
   margin-right: 20px;
   margin-top: 0px;
@@ -2787,6 +2787,7 @@ label[for="show_common_games"] {
   width: 120px;
   position: relative;
   font-size: 12px;
+  text-align: left;
 }
 .es-sortbox__reverse {
   cursor: pointer;
