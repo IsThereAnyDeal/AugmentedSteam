@@ -115,6 +115,7 @@ export class CApp extends CStore {
 
         // The customizer has to wait on this data to be added in order to find the HTML elements
         FCustomizer.dependencies = [FSteamSpy, FSteamChart, FSurveyData];
+        FCustomizer.weakDependency = true;
 
         /*
          * FMediaExpander.dependencies = [FYouTubeVideos];
