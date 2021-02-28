@@ -36,34 +36,27 @@
  * Taken from: https://steamstore-a.akamaihd.net/public/css/v6/home.css
  */
 #es_customize_btn {
-  float: right;
-  position: relative;
-  visibility: visible;
+  text-align: left;
 }
-#es_customize_btn .home_customize_btn {
+#es_customize_btn .es_customize_title {
   display: inline-block;
-  background: rgba(103, 193, 245, 0.2);
-  color: #67c1f5;
-  border-radius: 1px;
-  font-size: 11px;
+  padding-right: 3px;
+  padding-left: 8px;
+  margin: 0 1px;
   line-height: 20px;
-  padding: 0 8px;
-  margin-left: 4px;
+  text-align: center;
+  font-size: 11px;
   cursor: pointer;
-  position: relative;
-  z-index: 11;
-  margin-right: 2px;
-}
-#es_customize_btn .home_customize_btn:hover {
   color: #ffffff;
-  background: linear-gradient(-60deg, #67c1f5 0%, #417a9b 100%);
 }
-#es_customize_btn .home_customize_btn.active {
-  background: #e3eaef;
-  color: #384959;
+#es_customize_btn .es_customize_title img {
+  vertical-align: text-bottom;
 }
-#es_customize_btn .home_customize_btn.active:hover {
-  background: #e3eaef;
+#es_customize_btn:hover .es_customize_title {
+  text-decoration: none;
+  color: #111111;
+  border-radius: 1px;
+  background: linear-gradient(135deg, #ffffff 0%, #919aa3 100%);
 }
 #es_customize_btn .home_viewsettings_popup {
   position: absolute;
@@ -73,14 +66,15 @@
   z-index: 10;
   box-shadow: 0 0 12px #000000;
   background: linear-gradient(to bottom, #e3eaef 5%, #c7d5e0 95%);
-  right: 2px;
+  right: 0px;
   opacity: 0;
   visibility: hidden;
-  transition: visibility, opacity 0.2s ease-in-out;
+  transition: visibility 0s 0.2s, opacity 0.2s ease-in-out;
 }
-#es_customize_btn .active + .home_viewsettings_popup {
+#es_customize_btn.active .home_viewsettings_popup {
   opacity: 1;
   visibility: visible;
+  transition: visibility, opacity 0.2s ease-in-out;
 }
 #es_customize_btn .home_viewsettings_instructions {
   margin-bottom: 12px;
@@ -113,15 +107,6 @@
 }
 #es_customize_btn .home_viewsettings_label {
   text-transform: capitalize;
-}
-.es_customize_homepage_ctn {
-  margin-bottom: 5px;
-  margin-top: 3px;
-}
-.es_customize_homepage_ctn::after {
-  content: "";
-  display: block;
-  clear: both;
 }
 
 .es_tabs {

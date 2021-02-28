@@ -1,9 +1,32 @@
 import {HTML, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
-import {ContextType, DOMHelper, Feature} from "../../../modulesContent";
+import {ContextType, Feature} from "../../../modulesContent";
 
 export default class FCustomizer extends Feature {
 
     apply() {
+
+        HTML.afterBegin("#cart_status_data",
+            `<div class="store_header_btn_gray store_header_btn" id="es_customize_btn">
+                <div class="es_customize_title">${Localization.str.customize}<img src="//steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png"></div>
+                <div class="home_viewsettings_popup">
+                    <div class="home_viewsettings_instructions">${Localization.str.apppage_sections}</div>
+                </div>
+            </div>`);
+
+        const customizeBtn = document.getElementById("es_customize_btn");
+
+        customizeBtn.addEventListener("click", () => {
+            customizeBtn.classList.toggle("active");
+        });
+
+        customizeBtn.querySelector(".home_viewsettings_popup").addEventListener("click", e => {
+            e.stopPropagation();
+        });
+
+        customizeBtn.addEventListener("mouseleave", () => {
+            customizeBtn.classList.remove("active");
+        });
+
         if (this.context.type === ContextType.APP) {
             this._customizeAppPage();
         } else if (this.context.type === ContextType.STORE_FRONT) {
@@ -12,29 +35,6 @@ export default class FCustomizer extends Feature {
     }
 
     _customizeAppPage() {
-
-        const node = DOMHelper.selectLastNode(document, ".purchase_area_spacer");
-        node.style.height = "auto";
-
-        HTML.beforeEnd(node,
-            `<div id="es_customize_btn">
-                <div class="home_btn home_customize_btn">${Localization.str.customize}</div>
-                <div class='home_viewsettings_popup'>
-                    <div class="home_viewsettings_instructions">${Localization.str.apppage_sections}</div>
-                </div>
-            </div>
-            <div style="clear: both;"></div>`);
-
-        document.querySelector("#es_customize_btn").addEventListener("click", e => {
-            e.target.classList.toggle("active");
-        });
-
-        document.body.addEventListener("click", e => {
-            if (e.target.closest("#es_customize_btn")) { return; }
-            const node = document.querySelector("#es_customize_btn .home_customize_btn.active");
-            if (!node) { return; }
-            node.classList.remove("active");
-        });
 
         function getParentEl(selector) {
             const el = document.querySelector(selector);
@@ -67,30 +67,6 @@ export default class FCustomizer extends Feature {
     }
 
     async _customizeFrontPage() {
-
-        // TODO position when takeover link is active (big banner at the top of the front page)
-        HTML.beforeEnd(".home_page_content",
-            `<div class="es_customize_homepage_ctn">
-                <div id="es_customize_btn">
-                    <div class="home_btn home_customize_btn">${Localization.str.customize}</div>
-                    <div class="home_viewsettings_popup">
-                        <div class="home_viewsettings_instructions">${Localization.str.apppage_sections}</div>
-                    </div>
-                </div>
-            </div>`);
-
-        document.querySelector("#es_customize_btn").addEventListener("click", ({target}) => {
-            target.classList.toggle("active");
-        });
-
-        document.body.addEventListener("click", ({target}) => {
-            if (target.closest("#es_customize_btn")) { return; }
-
-            const node = document.querySelector("#es_customize_btn .home_customize_btn.active");
-            if (!node) { return; }
-
-            node.classList.remove("active");
-        });
 
         // TODO Need a more consistent solution here
         await TimeUtils.timer(1000);
