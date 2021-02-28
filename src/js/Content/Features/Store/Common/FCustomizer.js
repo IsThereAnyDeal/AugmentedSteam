@@ -5,7 +5,7 @@ export default class FCustomizer extends Feature {
 
     apply() {
 
-        HTML.beforeEnd("#cart_status_data",
+        HTML.afterBegin("#cart_status_data",
             `<div class="store_header_btn_gray store_header_btn" id="es_customize_btn">
                 <div class="es_customize_title">${Localization.str.customize}<img src="//steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png"></div>
                 <div class="home_viewsettings_popup">
