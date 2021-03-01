@@ -163,7 +163,8 @@ class SteamStoreApi extends Api {
     static clearPurchases() { return IndexedDB.clear("purchases"); }
 
     static async dynamicStore() {
-        const {rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist} = await SteamStoreApi.getEndpoint("dynamicstore/userdata");
+        const store = await SteamStoreApi.getEndpoint("dynamicstore/userdata", {}, null, {"cache": "no-cache"});
+        const {rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist} = store;
 
         const dynamicStore = {
             "ignored": Object.keys(rgIgnoredApps).map(key => Number(key)),
