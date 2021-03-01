@@ -100,6 +100,7 @@ export default class FInventoryMarketHelper extends Feature {
                     item,
                     thisItem,
                     marketActions,
+                    hashName,
                     _contextId,
                     _globalId,
                     assetId,
@@ -285,7 +286,7 @@ export default class FInventoryMarketHelper extends Feature {
         });
     }
 
-    async _addQuickSellOptions(item, thisItem, marketActions, contextId, globalId, assetId, sessionId, walletCurrency, publisherFee) {
+    async _addQuickSellOptions(item, thisItem, marketActions, hashName, contextId, globalId, assetId, sessionId, walletCurrency, publisherFee) {
         if (!SyncedStorage.get("quickinv")) { return; }
 
         const diff = SyncedStorage.get("quickinv_diff");
@@ -307,7 +308,7 @@ export default class FInventoryMarketHelper extends Feature {
             thisItem.dataset.priceHigh = "nodata";
 
             // Get item_nameid of selected item, which can only be found on the item's marketlistings page
-            const result = await RequestData.getHttp(marketActions.querySelector("a").href);
+            const result = await RequestData.getHttp(`https://steamcommunity.com/market/listings/${globalId}/${encodeURIComponent(hashName)}`);
 
             const m = result.match(/Market_LoadOrderSpread\( (\d+) \)/);
 
