@@ -708,14 +708,11 @@ img.astats_icon {
  * User Inventory
  * Quicksell/instantsell action buttons
  **************************************/
-.item_market_actions {
-  display: flex !important;
-  flex-direction: column;
-}
-.item_market_action_button {
+.item_market_actions a.item_market_action_button {
   margin-bottom: 4px;
   overflow: hidden;
   width: max-content;
+  display: block;
 }
 
 /**************************************
