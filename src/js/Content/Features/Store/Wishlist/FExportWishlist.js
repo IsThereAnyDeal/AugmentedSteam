@@ -15,7 +15,7 @@ class WishlistExporter {
             "data": []
         };
 
-        for (const [appid, data] of Object.entries(this.wl)) {
+        for (const [appid, data] of this.wl) {
             json.data.push({
                 "gameid": ["steam", `app/${appid}`],
                 "title": data.name,
@@ -34,7 +34,7 @@ class WishlistExporter {
     toText(format) {
         const result = [];
         const parser = new DOMParser();
-        for (const [appid, data] of Object.entries(this.wl)) {
+        for (const [appid, data] of this.wl) {
             let price = "N/A";
             let discount = "0%";
             let basePrice = "N/A";
@@ -83,12 +83,11 @@ export default class FExportWishlist extends Feature {
         document.querySelector("#es_export_wishlist").addEventListener("click", async() => {
 
             const wl = await Page.runInPageContext(() => {
-                /* eslint-disable camelcase, no-undef */
-                return g_Wishlist.rgVisibleApps.reduce((wl, appid) => {
-                    wl[appid] = g_rgAppInfo[appid];
-                    return wl;
-                }, {});
-                /* eslint-enable camelcase, no-undef */
+                const f = window.SteamFacade;
+
+                return f.global("g_Wishlist").rgVisibleApps.map(
+                    appid => [appid, f.global("g_rgAppInfo")[appid]]
+                );
             }, null, true);
 
             this._showDialog(wl);
