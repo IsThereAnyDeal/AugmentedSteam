@@ -136,7 +136,7 @@ export default class FBadgeCalculations extends Feature {
             if (worth) {
                 HTML.replace(
                     node.querySelector(".how_to_get_card_drops"),
-                    `<span class="es_card_drop_worth" data-es-card-worth="${worth.value}">${Localization.str.drops_worth_avg} ${worth}</span>`
+                    `<span class="es_card_drop_worth" data-es-card-worth="${worth.toFixed(2)}">${Localization.str.drops_worth_avg} ${new Price(worth)}</span>`
                 );
             }
 
