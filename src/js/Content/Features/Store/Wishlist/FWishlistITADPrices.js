@@ -2,7 +2,6 @@
 import {SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature} from "../../../Modules/Feature/CallbackFeature";
 import {Prices} from "../../../Modules/Prices";
-import {Page} from "../../Page";
 
 export default class FWishlistITADPrices extends CallbackFeature {
 
@@ -14,43 +13,29 @@ export default class FWishlistITADPrices extends CallbackFeature {
 
         this._cachedPrices = {};
 
-        Page.runInPageContext(() => {
-            /* eslint-disable no-undef */
-            function getNodesBelow(node) {
-                const nodes = Array.from(document.querySelectorAll(".wishlist_row"));
+        window.addEventListener("scroll", () => { this._scrollResizeHandler(); });
+        window.addEventListener("resize", () => { this._scrollResizeHandler(); });
+    }
 
-                /*
-                 * Limit the selection to the rows that are positioned below the row (not
-                 * including the row itself) where the price is being shown
-                 */
-                return nodes.filter(row => parseInt(row.style.top) > parseInt(node.style.top));
-            }
+    _scrollResizeHandler() {
 
-            const oldOnScroll = CWishlistController.prototype.OnScroll;
+        /*
+         * If the mouse is still inside an entry while scrolling or resizing, wishlist.js's
+         * event handler will put back the elements to their original position
+         */
+        const hover = document.querySelectorAll(":hover");
+        if (hover.length) {
+            const activeEntry = hover[hover.length - 1].closest(".wishlist_row");
+            if (activeEntry) {
+                const priceNode = activeEntry.querySelector(".itad-pricing");
 
-            CWishlistController.prototype.OnScroll = function() {
-                oldOnScroll.call(g_Wishlist);
-
-                /*
-                 * If the mouse is still inside an entry while scrolling or resizing, wishlist.js's
-                 * event handler will put back the elements to their original position
-                 */
-                const hover = document.querySelectorAll(":hover");
-                if (hover.length) {
-                    const activeEntry = hover[hover.length - 1].closest(".wishlist_row");
-                    if (activeEntry) {
-                        const priceNode = activeEntry.querySelector(".itad-pricing");
-
-                        if (priceNode) {
-                            for (const row of getNodesBelow(activeEntry)) {
-                                row.style.top = `${parseInt(row.style.top) + priceNode.getBoundingClientRect().height}px`;
-                            }
-                        }
+                if (priceNode) {
+                    for (const row of this._getNodesBelow(activeEntry)) {
+                        row.style.top = `${parseInt(row.style.top) + priceNode.getBoundingClientRect().height}px`;
                     }
                 }
-            };
-            /* eslint-enable no-undef */
-        });
+            }
+        }
     }
 
     callback(nodes) {
