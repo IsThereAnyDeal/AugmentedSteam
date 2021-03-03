@@ -48,12 +48,12 @@ export default class FCustomizer extends Feature {
 
                 // eslint-disable-next-line no-undef
                 GHomepage = new Proxy(GHomepage, {
-                    set(target, prop, value) {
+                    set(target, prop, value, ...args) {
                         if (prop === "bInitialRenderComplete" && value === true) {
                             window.Messenger.postMessage("renderComplete");
                         }
 
-                        return Reflect.set(...arguments);
+                        return Reflect.set(target, prop, value, ...args);
                     }
                 });
             });
