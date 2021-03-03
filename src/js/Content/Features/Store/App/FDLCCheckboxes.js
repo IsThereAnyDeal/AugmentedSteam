@@ -1,44 +1,55 @@
-import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
+import {HTML, Localization} from "../../../../modulesCore";
 import {Feature, Price, User} from "../../../modulesContent";
 
 export default class FDLCCheckboxes extends Feature {
 
     checkPrerequisites() {
-        return document.querySelector(".game_area_dlc_section .game_area_dlc_list") !== null;
+        // check if the page has at least one purchasable DLC available
+        return document.querySelector(".game_area_dlc_section .game_area_dlc_list input[name^=subid]") !== null;
     }
 
     apply() {
 
         const dlcSection = document.querySelector(".game_area_dlc_section");
-        const selectedDlcs = new Map();
 
         for (const dlcRow of dlcSection.querySelectorAll(".game_area_dlc_row")) {
             const subidNode = dlcRow.querySelector("input[name^=subid]");
             if (!subidNode) { continue; }
 
-            const subid = subidNode.value;
+            const label = document.createElement("label");
+            label.classList.add("es_dlc_label");
 
-            HTML.afterBegin(
-                dlcRow.querySelector(".game_area_dlc_name"),
-                `<input type="checkbox" class="es_dlc_selection" id="es_select_dlc_${subid}" value="${subid}">
-                <label for="es_select_dlc_${subid}" style="background-image: url(${ExtensionResources.getURL("img/check_sheet.png")});"></label>`
-            );
+            // Add dsinfo to label for use with select/unselect all
+            if (dlcRow.classList.contains("ds_wishlist")) {
+                label.classList.add("es_dlc_wishlist");
+            } else if (dlcRow.classList.contains("ds_owned")) {
+                label.classList.add("es_dlc_owned");
+            }
 
-            dlcRow.querySelector("input").addEventListener("change", ({target}) => {
-                if (target.checked) {
-                    const priceNode = dlcRow.querySelector(".discount_final_price")
-                        || dlcRow.querySelector(".game_area_dlc_price");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.dataset.esDlcSubid = subidNode.value;
 
-                    const price = Price.parseFromString(priceNode.textContent);
+            // Must check ".discount_final_price" first to get the correct price
+            const priceNode = dlcRow.querySelector(".discount_final_price")
+                || dlcRow.querySelector(".game_area_dlc_price");
 
-                    if (price !== null) {
-                        selectedDlcs.set(subid, price.value);
-                    }
-                } else {
-                    selectedDlcs.delete(subid);
-                }
-            });
+            const price = Price.parseFromString(priceNode.textContent);
+            if (price !== null) {
+                checkbox.dataset.esDlcPrice = price.value;
+            }
+
+            label.append(checkbox);
+            dlcRow.insertAdjacentElement("beforebegin", label);
         }
+
+        // Toggle dsinfo on label when adding/removing wishlist via ds_options dropdown
+        new MutationObserver(mutations => {
+            for (const {target} of mutations) {
+                if (!target.classList.contains("game_area_dlc_row")) { continue; }
+                target.previousElementSibling.classList.toggle("es_dlc_wishlist", target.classList.contains("ds_wishlist"));
+            }
+        }).observe(dlcSection.querySelector(".gameDlcBlocks"), {"subtree": true, "attributeFilter": ["class"]});
 
         const html = `<div class="game_purchase_action game_purchase_action_bg" id="es_selected_btn">
                 <div class="game_purchase_price price"></div>
@@ -73,30 +84,28 @@ export default class FDLCCheckboxes extends Feature {
                 <div class="es_dlc_option" id="no_dlc_check">${Localization.str.dlc_select.none}</div>
             </div>`);
 
-        const change = new Event("change", {"bubbles": true});
-
         dlcSection.querySelector("#unowned_dlc_check").addEventListener("click", () => {
-            const nodes = dlcSection.querySelectorAll(".game_area_dlc_row:not(.ds_owned) input:not(:checked)");
+            const nodes = dlcSection.querySelectorAll(".es_dlc_label:not(.es_dlc_owned) > input");
             for (const node of nodes) {
                 node.checked = true;
-                node.dispatchEvent(change);
             }
+            dlcSection.dispatchEvent(new Event("change"));
         });
 
         dlcSection.querySelector("#wl_dlc_check").addEventListener("click", () => {
-            const nodes = dlcSection.querySelectorAll(".game_area_dlc_row.ds_wishlist input:not(:checked)");
+            const nodes = dlcSection.querySelectorAll(".es_dlc_label.es_dlc_wishlist > input");
             for (const node of nodes) {
                 node.checked = true;
-                node.dispatchEvent(change);
             }
+            dlcSection.dispatchEvent(new Event("change"));
         });
 
         dlcSection.querySelector("#no_dlc_check").addEventListener("click", () => {
-            const nodes = dlcSection.querySelectorAll(".game_area_dlc_row input:checked");
+            const nodes = dlcSection.querySelectorAll(".es_dlc_label > input:checked");
             for (const node of nodes) {
                 node.checked = false;
-                node.dispatchEvent(change);
             }
+            dlcSection.dispatchEvent(new Event("change"));
         });
 
         function createHiddenInput(name, value) {
@@ -111,16 +120,19 @@ export default class FDLCCheckboxes extends Feature {
         const inputAction = createHiddenInput("action", "add_to_cart");
         const inputSessionId = createHiddenInput("sessionid", User.sessionId);
 
-        dlcSection.addEventListener("change", ({target}) => {
-            if (!target.classList.contains("es_dlc_selection")) { return; }
+        dlcSection.addEventListener("change", () => {
 
             cartForm.innerHTML = "";
             cartForm.append(inputAction, inputSessionId);
 
             let total = 0;
-            for (const [subId, price] of selectedDlcs) {
-                cartForm.append(createHiddenInput("subid[]", subId));
-                total += price;
+            for (const node of dlcSection.querySelectorAll(".es_dlc_label > input:checked")) {
+
+                cartForm.append(createHiddenInput("subid[]", node.dataset.esDlcSubid));
+
+                if (node.dataset.esDlcPrice) {
+                    total += Number(node.dataset.esDlcPrice);
+                }
             }
 
             if (total > 0) {
