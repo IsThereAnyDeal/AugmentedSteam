@@ -104,10 +104,6 @@ class SteamFacade {
         return CalculateFeeAmount(amount, publisherFee);
     }
 
-    static boosterCreatorData() {
-        return CBoosterCreator.sm_rgBoosterData;
-    }
-
     static vCurrencyFormat(amount, currencyCode) {
         return v_currencyformat(amount, currencyCode);
     }
