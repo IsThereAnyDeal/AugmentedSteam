@@ -1,6 +1,5 @@
 import {HTML, LocalStorage, Localization, TimeUtils} from "../../../modulesCore";
 import {Feature} from "../../modulesContent";
-import {Page} from "../Page";
 
 export default class FMediaExpander extends Feature {
 
@@ -24,17 +23,9 @@ export default class FMediaExpander extends Feature {
 
         HTML.beforeEnd(selector,
             `<div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
-                <div data-slider-tooltip="${Localization.str.expand_slider}" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
-                <div data-slider-tooltip="${Localization.str.contract_slider}" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
+                <div data-tooltip-text="${Localization.str.expand_slider}" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
+                <div data-tooltip-text="${Localization.str.contract_slider}" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
             </div>`);
-
-        // Initiate tooltip
-        Page.runInPageContext(() => {
-            window.SteamFacade.vTooltip("[data-slider-tooltip]", {
-                "tooltipClass": "store_tooltip community_tooltip",
-                "dataName": "sliderTooltip"
-            });
-        });
 
         const expandSlider = LocalStorage.get("expand_slider", false);
         if (expandSlider) {

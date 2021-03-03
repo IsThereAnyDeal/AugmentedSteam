@@ -1,7 +1,6 @@
 import Config from "../../../../config";
 import {HTML, Localization} from "../../../../modulesCore";
 import {Feature, ProfileData} from "../../../modulesContent";
-import {Page} from "../../Page";
 
 export default class FSupporterBadges extends Feature {
 
@@ -38,7 +37,5 @@ export default class FSupporterBadges extends Feature {
         html += "</div></div>";
 
         HTML.afterEnd(".profile_badges", html);
-
-        Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
     }
 }

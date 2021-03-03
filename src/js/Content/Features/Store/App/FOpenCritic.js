@@ -1,6 +1,5 @@
 import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
-import {Page} from "../../Page";
 
 export default class FOpenCritic extends Feature {
 
@@ -66,10 +65,6 @@ export default class FOpenCritic extends Feature {
                         ${html}
                     </div>`);
             }
-
-            Page.runInPageContext(() => {
-                window.SteamFacade.bindTooltips("#game_area_reviews", {"tooltipCSSClass": "store_tooltip"});
-            });
         }
     }
 }

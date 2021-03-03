@@ -82,16 +82,15 @@ class SteamFacade {
 
     // tooltips
 
-    static bindTooltips(selector, rgOptions) {
-        BindTooltips(selector, rgOptions);
-    }
+    static vTooltip(selector, isHtml = false) {
+        const isStore = window.location.host === "store.steampowered.com";
 
-    static setupTooltips(className = "community_tooltip") {
-        return SetupTooltips({"tooltipCSSClass": className});
-    }
-
-    static vTooltip(selector, method) {
-        $J(selector).v_tooltip(method);
+        $J(selector).v_tooltip({
+            "tooltipClass": isStore ? "store_tooltip" : "community_tooltip",
+            "dataName": isHtml ? "tooltipHtml" : "tooltipText",
+            "defaultType": isHtml ? "html" : "text",
+            "replaceExisting": false
+        });
     }
 
     // market
