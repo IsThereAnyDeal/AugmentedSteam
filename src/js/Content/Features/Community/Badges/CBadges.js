@@ -21,22 +21,27 @@ export class CBadges extends CCommunityBase {
 
     // TODO Cache this somehow or apply both FBadgeDropsCount & FBadgeSortAndFilter at once when doing these requests
     async eachBadgePage(callback) {
-        const baseUrl = `https://steamcommunity.com/${window.location.pathname}?p=`;
 
+        const url = new URL(window.location.origin + window.location.pathname);
         const skip = parseInt(new URLSearchParams(window.location.search).get("p")) || 1;
-
         const lastPage = parseInt(DOMHelper.selectLastNode(document, ".pagelink").textContent);
+
         for (let p = 1; p <= lastPage; p++) { // doing one page at a time to prevent too many requests at once
             if (p === skip) { continue; }
-            try {
-                const response = await RequestData.getHttp(baseUrl + p);
 
+            url.searchParams.set("p", p);
+
+            try {
+                const response = await RequestData.getHttp(url.toString());
+
+                const delayedLoadImages = HTMLParser.getVariableFromText(response, "g_rgDelayedLoadImages", "object");
                 const dom = HTMLParser.htmlToDOM(response);
-                await callback(dom);
+
+                await callback(dom, delayedLoadImages);
 
             } catch (err) {
-                console.error(`Failed to load ${baseUrl}${p}: ${err}`);
-                return;
+                console.error(`Failed to request ${url.toString()}: ${err}`);
+                continue;
             }
         }
     }

@@ -1,4 +1,4 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {HTML, HTMLParser, Localization} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -109,7 +109,7 @@ export default class FBadgeSortAndFilter extends Feature {
 
             document.querySelector("#es_filter_active").textContent = Localization.str.badges_all;
             document.querySelector("#es_filter_flyout").style.display = "none";
-            this._resetLazyLoader();
+            this._recalcLazyLoaderOffset();
         });
 
         document.querySelector("#es_badge_drops").addEventListener("click", async e => {
@@ -130,7 +130,7 @@ export default class FBadgeSortAndFilter extends Feature {
 
             document.querySelector("#es_filter_active").textContent = Localization.str.badges_drops;
             document.querySelector("#es_filter_flyout").style.display = "none";
-            this._resetLazyLoader();
+            this._recalcLazyLoaderOffset();
         });
     }
 
@@ -175,67 +175,77 @@ export default class FBadgeSortAndFilter extends Feature {
         this._hasAllPagesLoaded = true;
 
         const sheetNode = document.querySelector(".badges_sheet");
+        let images = HTMLParser.getVariableFromDom("g_rgDelayedLoadImages", "object");
 
-        // let images = Viewport.getVariableFromDom("g_rgDelayedLoadImages", "object");
-
-        await this.context.eachBadgePage(dom => {
-            for (const node of dom.querySelectorAll(".badge_row")) {
-                sheetNode.append(node);
-            }
+        await this.context.eachBadgePage((dom, delayedLoadImages) => {
+            sheetNode.append(...dom.querySelector(".badges_sheet").children);
+            images = Object.assign(images, delayedLoadImages);
 
             this.context.triggerCallbacks();
-
-            // images = Object.assign(images, Viewport.getVariableFromDom("g_rgDelayedLoadImages", "object", dom));
         });
 
         for (const node of document.querySelectorAll(".profile_paging")) {
             node.style.display = "none";
         }
 
-        /*
-         * TODO this doesn't seem to work, can't figure out why right now. Lazy loader doesn't see updated object?
-         * ExtensionLayer.runInPageContext("function(){g_rgDelayedLoadImages = " + JSON.stringify(images) + ";}");
-         * resetLazyLoader();
-         */
+        Page.runInPageContext(images => {
+            const f = window.SteamFacade;
+
+            f.globalSet("g_rgDelayedLoadImages", images);
+
+            // Clear registered image lazy loader watchers
+            CScrollOffsetWatcher.sm_rgWatchers = []; // eslint-disable-line no-undef, camelcase
+
+            // Recreate image lazy loader watchers
+            for (const node of document.querySelectorAll("div[id^=image_group_scroll_badge_images_]")) {
+                f.loadImageGroupOnScroll(node.id, node.id.slice(19));
+            }
+        }, [images]);
     }
 
     _sortBadgeRows(activeText, nodeValueCallback) {
+        const sheetNode = document.querySelector(".badges_sheet");
+
+        // Remove script tags that'll get in the way of associating rows with their scroll elements
+        for (const script of sheetNode.querySelectorAll(":scope > script")) {
+            script.remove();
+        }
+
         const badgeRows = [];
-        for (const node of document.querySelectorAll(".badge_row")) {
-            badgeRows.push([node.outerHTML, nodeValueCallback(node)]);
-            node.remove();
+        for (const node of sheetNode.querySelectorAll(".badge_row")) {
+            const scrollEl = node.previousElementSibling;
+            if (!scrollEl.id.startsWith("image_group_")) { continue; }
+
+            badgeRows.push([[scrollEl, node], nodeValueCallback(node)]);
         }
 
         badgeRows.sort((a, b) => b[1] - a[1]);
 
-        const sheetNode = document.querySelector(".badges_sheet");
         for (const row of badgeRows) {
-            HTML.beforeEnd(sheetNode, row[0]);
+            sheetNode.append(...row[0]);
         }
 
-        this._resetLazyLoader();
         document.querySelector("#es_sort_active").textContent = activeText;
         document.querySelector("#es_sort_flyout").style.display = "none";
+        this._recalcLazyLoaderOffset();
     }
 
-    _resetLazyLoader() {
+    _recalcLazyLoaderOffset() {
 
-        // FIXME this doesn't seem to work
+        Page.runInPageContext(() => {
+            /* eslint-disable no-undef, new-cap */
 
-        /*
-         * ExtensionLayer.runInPageContext(() => {
-         *
-         *  // Clear registered image lazy loader watchers (CScrollOffsetWatcher is found in shared_global.js)
-         *  CScrollOffsetWatcher.sm_rgWatchers = [];
-         *
-         *  // Recreate registered image lazy loader watchers
-         *  $J("div[id^=image_group_scroll_badge_images_gamebadge_]").each((i, e) => {
-         *
-         *      // LoadImageGroupOnScroll is found in shared_global.js
-         *      LoadImageGroupOnScroll(e.id, e.id.substr(19));
-         *  });
-         * });
-         */
+            // Recalculate offsets for each watcher
+            CScrollOffsetWatcher.sm_rgWatchers.forEach(watcher => { watcher.Recalc(); });
+
+            // CScrollOffsetWatcher.OnScroll() expects watchers to be sorted by offset trigger
+            CScrollOffsetWatcher.sm_rgWatchers.sort((a, b) => a.nOffsetTopTrigger - b.nOffsetTopTrigger);
+
+            // Start loading images that meet their thresholds immediately
+            CScrollOffsetWatcher.OnScroll();
+
+            /* eslint-enable no-undef, new-cap */
+        });
     }
 
     _toggleBinderView() {
