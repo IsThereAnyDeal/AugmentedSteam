@@ -1,4 +1,4 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {GameId, HTML, HTMLParser, Localization} from "../../../../modulesCore";
 import {Background, CurrencyManager, DOMHelper, Feature, Price, RequestData} from "../../../modulesContent";
 
 export default class FBadgeCalculations extends Feature {
@@ -18,14 +18,11 @@ export default class FBadgeCalculations extends Feature {
 
     _updateHead() {
 
-        // Move FAQ to the middle
         const xpBlockRight = document.querySelector(".profile_xp_block_right");
 
-        HTML.beforeEnd(
-            document.querySelector(".profile_xp_block_mid"),
-            `<div class="es_faq_cards">${xpBlockRight.innerHTML}</div>`
-        );
-        xpBlockRight.innerHTML = "<div id='es_cards_worth'></div>";
+        // Move FAQ to the middle
+        HTML.beforeEnd(document.querySelector(".profile_xp_block_mid"), `<div class="es_faq_cards">${xpBlockRight.innerHTML}</div>`);
+        HTML.inner(xpBlockRight, '<div id="es_cards_worth"></div>');
     }
 
     async _addCalculations() {
@@ -55,8 +52,7 @@ export default class FBadgeCalculations extends Feature {
             });
 
         } else {
-            HTML.afterBegin(".profile_xp_block_right",
-                `<div id="es_calculations">${Localization.str.drop_calc}</div>`);
+            HTML.afterBegin(".profile_xp_block_right", `<div id="es_calculations">${Localization.str.loading}</div>`);
 
             await this._countFromDOM();
             this._addData();
@@ -74,21 +70,20 @@ export default class FBadgeCalculations extends Feature {
         const nodes = [];
         const foilAppids = [];
 
-        const rows = dom.querySelectorAll(".badge_row.is_link");
-        for (const node of rows) {
-            const game = node.querySelector(".badge_row_overlay").href.match(/gamecards\/(\d+)\//);
-            if (!game) { continue; }
+        for (const node of dom.querySelectorAll(".badge_row.is_link")) {
+            const link = node.querySelector(".badge_row_overlay").href;
 
-            const appid = parseInt(game[1]);
+            const appid = GameId.getAppidFromGameCard(link);
+            if (!appid) { continue; }
 
-            const foil = /\?border=1/.test(node.querySelector("a:last-of-type").href);
-            nodes.push([appid, node, foil]);
-
+            const foil = new URL(link).searchParams.has("border");
             if (foil) {
                 foilAppids.push(appid);
             } else {
                 appids.push(appid);
             }
+
+            nodes.push([appid, node, foil]);
         }
 
         if (appids.length === 0 && foilAppids.length === 0) {
@@ -102,8 +97,8 @@ export default class FBadgeCalculations extends Feature {
                 "appids": appids.join(","),
                 "foilappids": foilAppids.join(","),
             });
-        } catch (exception) {
-            console.error("Couldn't retrieve average card prices", exception);
+        } catch (err) {
+            console.error("Failed to retrieve average card prices", err);
             return;
         }
 
@@ -116,9 +111,9 @@ export default class FBadgeCalculations extends Feature {
 
             const averagePrice = data[appid][key].average;
 
-            const progressInfoNode = node.querySelector("div.badge_progress_info");
+            const progressInfoNode = node.querySelector(".badge_progress_info");
             if (progressInfoNode) {
-                const card = progressInfoNode.textContent.trim().match(/(\d+)\D*(\d+)/);
+                const card = progressInfoNode.textContent.match(/(\d+)\D*(\d+)/);
                 if (card) {
                     const need = card[2] - card[1];
                     cost = new Price(averagePrice * need);
@@ -135,7 +130,7 @@ export default class FBadgeCalculations extends Feature {
 
             if (worth) {
                 HTML.afterEnd(node.querySelector(".progress_info_bold"),
-                    `<span class="es_card_drop_worth" data-es-card-worth="${worth.toFixed(2)}">
+                    `<span data-es-card-worth="${worth.toFixed(2)}">
                         (${Localization.str.drops_worth_avg} ${new Price(worth)})
                     </span>`);
             }
@@ -143,12 +138,10 @@ export default class FBadgeCalculations extends Feature {
             if (cost) {
                 const badgeNameBox = DOMHelper.selectLastNode(node, ".badge_empty_name");
                 if (badgeNameBox) {
-                    HTML.afterEnd(
-                        badgeNameBox,
+                    HTML.afterEnd(badgeNameBox,
                         `<div class="badge_info_unlocked">
                             ${Localization.str.badge_completion_avg.replace("__cost__", cost)}
-                        </div>`
-                    );
+                        </div>`);
                 }
             }
 
@@ -158,16 +151,18 @@ export default class FBadgeCalculations extends Feature {
 
     _countDropsFromDOM(dom) {
 
+        // The selector must be more specific here to prevent matching other progress info like "x of y tasks completed"
         for (const node of dom.querySelectorAll(".badge_title_stats_drops .progress_info_bold")) {
-            const count = node.innerText.match(/(\d+)/);
+            const count = node.textContent.match(/\d+/);
             if (!count) { continue; }
 
             this._dropsGames++;
-            this._dropsCount += Number(count[1]);
+            this._dropsCount += Number(count[0]);
         }
     }
 
     async _addData() {
+
         HTML.inner(
             "#es_calculations",
             `${Localization.str.card_drops_remaining.replace("__drops__", this._dropsCount)}
@@ -175,21 +170,20 @@ export default class FBadgeCalculations extends Feature {
             ${Localization.str.games_with_drops.replace("__dropsgames__", this._dropsGames)}`
         );
 
-        document.querySelector("#es_cards_worth").innerText = `${Localization.str.drops_worth_avg} ${new Price(this._totalWorth)}`;
+        document.querySelector("#es_cards_worth").textContent = `${Localization.str.drops_worth_avg} ${new Price(this._totalWorth)}`;
 
         let response;
         try {
             response = await RequestData.getHttp("https://steamcommunity.com/my/ajaxgetboostereligibility/");
-        } catch (exception) {
-            console.error("Failed to load booster eligibility", exception);
+        } catch (err) {
+            console.error("Failed to load booster eligibility", err);
             return;
         }
 
-        const boosterGames = response.match(/class="booster_eligibility_game"/g);
-        const boosterCount = (boosterGames && boosterGames.length) || 0;
+        const dummyPage = HTMLParser.htmlToDOM(response);
+        const boosterCount = dummyPage.querySelectorAll(".booster_eligibility_game").length;
 
-        HTML.beforeEnd("#es_calculations",
-            `<br>${Localization.str.games_with_booster.replace("__boostergames__", boosterCount)}`);
+        HTML.beforeEnd("#es_calculations", `<br>${Localization.str.games_with_booster.replace("__boostergames__", boosterCount)}`);
     }
 
     _getRemainingDropsWorth(node, averagePrice) {
