@@ -208,7 +208,7 @@ export default class FInventoryMarketHelper extends Feature {
         if (!overview) { return; }
 
         const discount = overview.discount_percent;
-        const price = new Price(overview.final / 100, overview.currency);
+        const finalPrice = new Price(overview.final / 100, overview.currency);
 
         itemActions.style.display = "flex";
         itemActions.style.alignItems = "center";
@@ -217,22 +217,20 @@ export default class FInventoryMarketHelper extends Feature {
         if (discount > 0) {
             const originalPrice = new Price(overview.initial / 100, overview.currency);
             HTML.beforeEnd(itemActions,
-                `<div class='es_game_purchase_action' style='margin-bottom:16px'>
-                    <div class='es_game_purchase_action_bg'>
-                        <div class='es_discount_block es_game_purchase_discount'>
-                            <div class='es_discount_pct'>-${discount}%</div>
-                            <div class='es_discount_prices'>
-                                <div class='es_discount_original_price'>${originalPrice}</div>
-                                <div class='es_discount_final_price'>${price}</div>
-                            </div>
+                `<div class="es_game_purchase_action">
+                    <div class="es_game_purchase_action_bg">
+                        <div class="es_game_purchase_discount">
+                            <div class="es_discount_pct">-${discount}%</div>
+                            <div class="es_discount_original_price">${originalPrice}</div>
+                            <div class="es_discount_final_price">${finalPrice}</div>
                         </div>
                     </div>
                 </div>`);
         } else {
             HTML.beforeEnd(itemActions,
-                `<div class='es_game_purchase_action' style='margin-bottom:16px'>
-                    <div class='es_game_purchase_action_bg'>
-                        <div class='es_game_purchase_price es_price'>${price}</div>
+                `<div class="es_game_purchase_action">
+                    <div class="es_game_purchase_action_bg">
+                        <div class="es_game_purchase_price">${finalPrice}</div>
                     </div>
                 </div>`);
         }
