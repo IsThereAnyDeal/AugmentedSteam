@@ -95,6 +95,7 @@ class UpdateHandler {
 
         if (oldVersion.isSameOrBefore("2.0.0")) {
             SyncedStorage.remove("showfakeccwarning");
+            SyncedStorage.remove("hideaboutlinks");
         }
     }
 }
