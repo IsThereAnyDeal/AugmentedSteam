@@ -666,7 +666,7 @@ img.astats_icon {
 .es_binder_view .badge_content {
   padding-top: 0 !important;
 }
-.es_binder_view .is_link {
+.es_binder_view .badge_row {
   width: 160px !important;
   height: 195px !important;
   float: left;
@@ -687,10 +687,81 @@ img.astats_icon {
 .es_binder_view .es_game_stats {
   display: block !important;
 }
-.badge_content .es_game_stats {
+.es_binder_view .es_game_stats {
   color: #5491cf;
   font-size: 12px;
   white-space: nowrap;
+}
+
+.profile_badges_sortoptions > a {
+  display: none; /* hide Steam's badge sort options */
+}
+.profile_badges_header .es_badge_filter,
+.profile_badges_header .es_badge_view {
+  float: right;
+  margin-left: 18px;
+}
+#es_sort_flyout, #es_filter_flyout, #es_badgeview_flyout {
+  display: none;
+}
+#es_sort_active, #es_filter_active, #es_badgeview_active {
+  display: inline;
+}
+
+/** Flyout menus, taken from https://steamstore-a.akamaihd.net/public/css/v6/store.css */
+.profile_badges_header .store_nav {
+  display: inline;
+  float: none;
+  margin-left: 5px;
+}
+.profile_badges_header .store_nav .tab {
+  float: none;
+  padding: 1px;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  background: rgba(103, 193, 245, 0.4);
+}
+.profile_badges_header .store_nav .tab > span.pulldown {
+  font-size: 12px;
+  color: #67c1f5;
+  line-height: 29px;
+  padding: 0 7px 0 15px;
+  display: block;
+  background: none;
+}
+.profile_badges_header .store_nav .tab:hover > span.pulldown,
+.profile_badges_header .store_nav .tab:hover,
+.profile_badges_header .store_nav .tab.focus > span.pulldown,
+.profile_badges_header .store_nav .tab.focus {
+  filter: none;
+  color: #ffffff;
+  background: linear-gradient(-60deg, #67c1f5 0%, #417a9b 100%);
+}
+.profile_badges_header .store_nav .tab > span.pulldown > span {
+  width: 19px;
+  height: 12px;
+  padding: 0;
+  display: inline-block;
+  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  vertical-align: text-bottom;
+}
+.profile_badges_header .store_nav .tab:hover > span.pulldown > span,
+.profile_badges_header .store_nav .tab.focus > span.pulldown > span {
+  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png');
+}
+.profile_badges_header .popup_block_new .popup_body {
+  border: none;
+  position: relative;
+  background: #417a9b;
+  padding: 6px 0;
+}
+.profile_badges_header .popup_menu .popup_menu_item {
+  color: #e5e4dc;
+  margin: 0 8px;
 }
 
 /***************************************
@@ -1998,29 +2069,32 @@ img.astats_icon {
   display: none; /* hide dlc flag due to checkboxes (if highlighting is disabled) */
 }
 
-.es_dlc_selection {
+.game_area_dlc_name {
+  margin-left: 23px; /* move title out of the way */
+}
+
+label.es_dlc_label {
   position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
+  padding: 4px 11px 1px;
+  z-index: 999;
 }
-.es_dlc_selection + label {
-  padding-left: 20px;
-  height: 13px;
-  display: inline-block;
-  line-height: 13px;
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  vertical-align: middle;
-  cursor: default;
-  z-index: 99;
+label.es_dlc_label > input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #545454;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #343434;
+  outline: none;
 }
-.es_dlc_selection:checked + label {
-  background-position: 0 -13px;
+label.es_dlc_label > input:checked::after {
+  content: "✔";
+  color: #8bc53f;
+  font-size: 12px;
+  position: absolute;
+  bottom: 4px;
+  left: 13px;
 }
 
 /***************************************

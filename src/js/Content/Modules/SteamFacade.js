@@ -56,10 +56,6 @@ class SteamFacade {
         return CollapseLongStrings(selector);
     }
 
-    static addToWishlist(appid) {
-        return AddToWishlist(appid, "add_to_wishlist_area", "add_to_wishlist_area_success", "add_to_wishlist_area_fail", null, "add_to_wishlist_area2");
-    }
-
     // events
 
     static bindAutoFlyoutEvents() {
@@ -86,26 +82,21 @@ class SteamFacade {
 
     // tooltips
 
-    static bindTooltips(selector, rgOptions) {
-        BindTooltips(selector, rgOptions);
-    }
+    static vTooltip(selector, isHtml = false) {
+        const isStore = window.location.host === "store.steampowered.com";
 
-    static setupTooltips(className = "community_tooltip") {
-        return SetupTooltips({"tooltipCSSClass": className});
-    }
-
-    static vTooltip(selector, method) {
-        $J(selector).v_tooltip(method);
+        $J(selector).v_tooltip({
+            "tooltipClass": isStore ? "store_tooltip" : "community_tooltip",
+            "dataName": isHtml ? "tooltipHtml" : "tooltipText",
+            "defaultType": isHtml ? "html" : "text",
+            "replaceExisting": false
+        });
     }
 
     // market
 
     static calculateFeeAmount(amount, publisherFee) {
         return CalculateFeeAmount(amount, publisherFee);
-    }
-
-    static boosterCreatorData() {
-        return CBoosterCreator.sm_rgBoosterData;
     }
 
     static vCurrencyFormat(amount, currencyCode) {

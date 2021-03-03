@@ -296,7 +296,9 @@ export default class FInventoryMarketHelper extends Feature {
             this._makeMarketButton(`es_quicksell${item}`, Localization.str.quick_sell_desc.replace("__modifier__", diff))
             + this._makeMarketButton(`es_instantsell${item}`, Localization.str.instant_sell_desc));
 
-        Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
+        Page.runInPageContext(item => {
+            window.SteamFacade.vTooltip(`#es_quicksell${item}, #es_instantsell${item}`);
+        }, [item]);
 
         // Check if price is stored in data
         if (!thisItem.dataset.priceLow) {

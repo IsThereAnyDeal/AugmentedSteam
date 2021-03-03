@@ -1,7 +1,6 @@
 import {HTML, Localization, TimeUtils} from "../../../../modulesCore";
 import {Background, DOMHelper, Feature, ProfileData, SteamId} from "../../../modulesContent";
-import Config from "config";
-import {Page} from "../../Page";
+import Config from "../../../../config";
 
 export default class FBackgroundSelection extends Feature {
 
@@ -53,8 +52,6 @@ export default class FBackgroundSelection extends Feature {
             this._imagesNode = document.querySelector(".js-pd-imgs");
 
             this._active = true;
-
-            Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
 
             this._selectedAppid = ProfileData.getBgAppid();
             let selectedGameKey = null;

@@ -1,5 +1,6 @@
-import {HTML, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
-import {ContextType, Feature} from "../../../modulesContent";
+import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {ContextType, Feature, Messenger} from "../../../modulesContent";
+import {Page} from "../../Page";
 
 export default class FCustomizer extends Feature {
 
@@ -30,7 +31,32 @@ export default class FCustomizer extends Feature {
         if (this.context.type === ContextType.APP) {
             this._customizeAppPage();
         } else if (this.context.type === ContextType.STORE_FRONT) {
-            this._customizeFrontPage();
+
+            Messenger.onMessage("renderComplete").then(() => { this._customizeFrontPage(); });
+
+            /*
+             * Run our customizer when GHomepage.bInitialRenderComplete is set to `true`
+             * https://github.com/SteamDatabase/SteamTracking/blob/d22d8df5db80e844f7ae1157dbb8b59532dfe4f8/store.steampowered.com/public/javascript/home.js#L432
+             */
+            Page.runInPageContext(() => {
+
+                // eslint-disable-next-line no-undef
+                if (GHomepage.bInitialRenderComplete) {
+                    window.Messenger.postMessage("renderComplete");
+                    return;
+                }
+
+                // eslint-disable-next-line no-undef
+                GHomepage = new Proxy(GHomepage, {
+                    set(target, prop, value, ...args) {
+                        if (prop === "bInitialRenderComplete" && value === true) {
+                            window.Messenger.postMessage("renderComplete");
+                        }
+
+                        return Reflect.set(target, prop, value, ...args);
+                    }
+                });
+            });
         }
     }
 
@@ -66,10 +92,7 @@ export default class FCustomizer extends Feature {
         customizer.build();
     }
 
-    async _customizeFrontPage() {
-
-        // TODO Need a more consistent solution here
-        await TimeUtils.timer(1000);
+    _customizeFrontPage() {
 
         function getParentEl(selector) {
             const el = document.querySelector(selector);

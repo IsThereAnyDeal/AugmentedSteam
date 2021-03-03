@@ -1,6 +1,5 @@
 import {HTML, Localization} from "../../../../modulesCore";
 import {Feature, User} from "../../../modulesContent";
-import {Page} from "../../Page";
 
 export default class FInGameStoreLink extends Feature {
 
@@ -16,8 +15,9 @@ export default class FInGameStoreLink extends Feature {
 
         const node = document.querySelector(".profile_in_game_name");
 
-        HTML.inner(node, `<a data-tooltip-html="${Localization.str.view_in_store}" href="//store.steampowered.com/app/${ingameNode.value}" target="_blank">${node.textContent}</a>`);
-
-        Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
+        HTML.inner(node,
+            `<a href="//store.steampowered.com/app/${ingameNode.value}" target="_blank">
+                <span data-tooltip-text="${Localization.str.view_in_store}">${node.textContent}</span>
+            </a>`);
     }
 }
