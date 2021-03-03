@@ -8,7 +8,6 @@ export default {
     "disablelinkfilter": "options.disablelinkfilter",
     "send_age_info": "options.send_age_info",
     "openinnewtab": "options.openinnewtab",
-    "hideaboutlinks": "options.hide_about_links",
     "installsteam": [
         "options.install_steam_button",
         [

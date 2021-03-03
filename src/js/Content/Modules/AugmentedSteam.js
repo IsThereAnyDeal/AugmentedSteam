@@ -165,12 +165,6 @@ class AugmentedSteam {
         }
     }
 
-    static _removeAboutLinks() {
-        if (!SyncedStorage.get("hideaboutlinks")) { return; }
-
-        DOMHelper.remove("#global_header a[href^='https://store.steampowered.com/about/']");
-    }
-
     static _addUsernameSubmenuLinks() {
         const node = document.querySelector(".supernav_container .submenu_username");
 
