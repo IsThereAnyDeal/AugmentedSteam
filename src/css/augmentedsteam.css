@@ -1,3 +1,30 @@
+/**
+ * https://github.com/jshackles/Enhanced_Steam/issues/1173
+ * Better display for locked achievements on global achievement stats page
+ */
+.achieveRow:not(.unlocked) > .compareImg > img:not(:hover) {
+  opacity: 0.15;
+  filter: grayscale(75%);
+  transition: opacity 0.25s ease-in-out;
+}
+/**
+ * https://github.com/tfedor/AugmentedSteam/issues/485
+ * Always show "View all comments" links on friends activity page
+ */
+.blotter_viewallcomments_container {
+  display: block !important;
+}
+/**
+ * https://github.com/tfedor/AugmentedSteam/issues/397
+ * https://github.com/tfedor/AugmentedSteam/issues/545
+ * Fix long-shaped artwork thumbnails
+ */
+.publishedfile_popup_screenshot, .publishedfile_popup_screenshot > img, .profile_media_item, .imgWallItem {
+  min-height: 30px;
+}
+#modalContent.modal_frame {
+  min-width: 720px !important;
+}
 
 /* Back To Top button */
 .es_btt {
@@ -342,18 +369,6 @@ img.astats_icon {
   opacity: 1;
 }
 
-.browse_tag_game_name {
-  margin-left: 8px;
-}
-
-.browse_tag_game_price {
-  margin-left: 8px;
-}
-
-.browse_tag_game {
-  margin-bottom: 4px;
-}
-
 #es_market_summary span, .es_loading span {
   vertical-align: top;
   line-height: 32px;
@@ -501,10 +516,6 @@ img.astats_icon {
 }
 .performance-graph .right-bar span {
   padding-left: 5px;
-}
-
-.search_suggest .match.focus {
-  background: #212d3d !important;
 }
 
 /***************************************
@@ -1260,8 +1271,8 @@ img.astats_icon {
 }
 
 /***************************************
- * Regional Price Comparison
- * show_regional_pricing()
+ * App pages
+ * Common/FRegionalPricing
  **************************************/
 .es_regional_prices .game_purchase_action,
 .es_regional_prices .discount_block.game_purchase_discount {
@@ -1313,7 +1324,7 @@ img.astats_icon {
   top: 20px;
   right: 100%;
 }
-.es_regional_always:after {
+.es_regional_always::after {
   content: "";
   display: block;
   clear: both;
@@ -1332,17 +1343,13 @@ img.astats_icon {
   display: block !important;
 }
 
-/*
- * Regional price comparison item
- */
-
+/** Regional price comparison popup */
 .es-regprice {
   display: flex;
   align-items: baseline;
   font-size: 14px;
   white-space: nowrap;
 }
-
 .es-regprice__converted {
   font-size: 12px;
   text-align: right;
@@ -1350,14 +1357,13 @@ img.astats_icon {
   min-width: 60px;
   margin-left: 5px
 }
-
 .es-regprice__perc {
   font-size: 12px;
   margin-left: 5px;
   width: 60px;
   text-align: right;
 }
-.es-regprice__perc:after {
+.es-regprice__perc::after {
   content: "";
   width: 0;
   height: 0;
@@ -1368,7 +1374,6 @@ img.astats_icon {
   border-color: transparent;
   border-style: solid;
 }
-
 .es-regprice__perc--higher {
   color: #ff1717;
 }
@@ -1378,28 +1383,26 @@ img.astats_icon {
 .es-regprice__perc--lower {
   color: #60ad0a;
 }
-
-.es-regprice__perc--higher:after {
+.es-regprice__perc--higher::after {
   border-width: 0 5px 5px 5px;
   border-bottom-color: #ff1717;
 }
-.es-regprice__perc--equal:after {
+.es-regprice__perc--equal::after {
   width: 6px;
   content: "=";
 }
-.es-regprice__perc--lower:after {
+.es-regprice__perc--lower::after {
   border-width: 5px 5px 0 5px;
   border-top-color: #60ad0a;
 }
-
-
 .es-regprice__none {
   font-size: 12px;
 }
 
-/***************************************
- * Regional Price Bugfix
- **************************************/
+/**
+ * https://github.com/tfedor/AugmentedSteam/issues/389
+ * Fix unclickable dropdowns
+ */
 .ds_options_tooltip {
   z-index: 99999 !important;
 }
@@ -1428,21 +1431,8 @@ img.astats_icon {
 }
 
 /***************************************
- * Store front page recommendations
- * highlight_recommendations()
- **************************************/
-#content_more .home_content_item {
-  padding: 3px;
-  margin-right: 5px;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-}
-#content_more .home_content_item:last-child {
-  margin-right: 0;
-}
-
-/***************************************
- * Store pages
- * add_tag()
+ * Common
+ * FHighlightsTags
  **************************************/
 .es_tags {
   position: relative;
@@ -1466,7 +1456,7 @@ img.astats_icon {
 .es_tags.es_tags_short:not(:hover) span {
   font-size: 0;
 }
-.es_tags.es_tags_short span:first-letter {
+.es_tags.es_tags_short span::first-letter {
   font-size: 10px;
 }
 .browse_tag_game .es_tags {
@@ -1504,6 +1494,18 @@ img.astats_icon {
   float: right;
   margin-left: 5px;
 }
+
+/** layout for tag pages */
+.browse_tag_game_name {
+  margin-left: 8px;
+}
+.browse_tag_game_price {
+  margin-left: 8px;
+}
+.browse_tag_game {
+  margin-bottom: 4px;
+}
+
 /*.es_highlighted div:not(.discount_pct):not(.discount_final_price):not(.discount_original_price):not(.main_cap_status):not(.search_released):not(.tab_item_top_tags):not(.tab_item_details) {
 	color: rgba(255, 255, 255, 0.8) !important;
 }*/
@@ -1525,6 +1527,31 @@ img.astats_icon {
 }
 .es_highlighted_owned ~ .ds_owned_flag {
   display: none;
+}
+
+/** layout for app info box on community hub */
+.apphub_StoreInfoHeader.es_highlighted .price,
+.apphub_StoreInfoHeader.es_highlighted .discount_final_price,
+.apphub_StoreInfoHeader.es_highlighted .apphub_StoreAppText {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/** layout for recommendations at the bottom of the storefront */
+#content_more .home_content_item {
+  padding: 3px;
+  margin-right: 5px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+#content_more .home_content_item:last-child {
+  margin-right: 0;
+}
+
+/**
+ * https://github.com/jshackles/Enhanced_Steam/issues/778
+ * Use original selection background color for live search entries that are both selected and highlighted
+ */
+.search_suggest .match.focus {
+  background: #212d3d !important;
 }
 
 /***************************************
@@ -1696,16 +1723,6 @@ img.astats_icon {
 }
 
 /***************************************
- * Apps community hub
- * add_app_page_wishlist()
- **************************************/
-.apphub_StoreInfoHeader.es_highlighted .price,
-.apphub_StoreInfoHeader.es_highlighted .discount_final_price,
-.apphub_StoreInfoHeader.es_highlighted .apphub_StoreAppText {
-  color: rgba(255, 255, 255, 0.65);
-}
-
-/***************************************
  * Market
  * add_market_sort()
  **************************************/
@@ -1743,15 +1760,6 @@ img.astats_icon {
 }
 .market_listing_listed_position {
   display: none;
-}
-
-/***************************************
- * Global Achievements pages
- **************************************/
-.achieveRow:not(.unlocked) > .compareImg > img:not(:hover) {
-  opacity: 0.15;
-  filter: grayscale(75%);
-  transition: opacity 0.25s ease-in-out;
 }
 
 /***************************************
@@ -2252,25 +2260,6 @@ label[for="show_common_games"] {
 }
 .store_capsule .es_overlay_container > img {
   width: 100%;
-}
-
-/***************************************
- * Shows all "View all comments" links
- * on the friends activity page
- **************************************/
-.blotter_viewallcomments_container {
-  display: block !important;
-}
-
-/***************************************
- * Fix long-shaped artwork thumbnails
- **************************************/
-.publishedfile_popup_screenshot, .publishedfile_popup_screenshot > img, .profile_media_item, .imgWallItem {
-  min-height: 30px;
-}
-
-#modalContent.modal_frame {
-  min-width: 720px !important;
 }
 
 /***************************************
