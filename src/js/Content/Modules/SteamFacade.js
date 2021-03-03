@@ -86,7 +86,9 @@ class SteamFacade {
 
     // tooltips
 
-    static vTooltip(selector, isStore = false, isHtml = false) {
+    static vTooltip(selector, isHtml = false) {
+        const isStore = window.location.host === "store.steampowered.com";
+
         $J(selector).v_tooltip({
             "tooltipClass": isStore ? "store_tooltip" : "community_tooltip",
             "dataName": isHtml ? "tooltipHtml" : "tooltipText",
