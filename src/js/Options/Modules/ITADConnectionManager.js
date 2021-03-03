@@ -9,46 +9,36 @@ class ITADConnectionManager {
         this._itadAction = itadAction;
     }
 
-    async _disconnect() {
-        await BackgroundSimple.action("itad.disconnect");
+    async _clickHandler() {
 
-        this._itadStatus.textContent = Localization.str.disconnected;
-        this._itadStatus.classList.add("itad-status--disconnected");
-        this._itadStatus.classList.remove("itad-status--connected");
+        const connect = this._itadStatus.classList.contains("itad-status--disconnected");
 
-        this._itadAction.textContent = Localization.str.connect;
-        this._itadAction.removeEventListener("click", () => { this._disconnect(); });
-        this._itadAction.addEventListener("click", () => { this._connect(); });
-    }
+        if (connect) {
+            await BackgroundSimple.action("itad.authorize");
+        } else {
+            await BackgroundSimple.action("itad.disconnect");
+        }
 
-    async _connect() {
+        this._itadStatus.textContent = connect ? Localization.str.connected : Localization.str.disconnected;
+        this._itadAction.textContent = connect ? Localization.str.disconnect : Localization.str.connect;
 
-        await BackgroundSimple.action("itad.authorize");
-
-        this._itadStatus.textContent = Localization.str.connected;
-        this._itadStatus.classList.add("itad-status--connected");
-        this._itadStatus.classList.remove("itad-status--disconnected");
-
-        this._itadAction.textContent = Localization.str.disconnect;
-        this._itadAction.removeEventListener("click", () => { this._connect(); });
-        this._itadAction.addEventListener("click", () => { this._disconnect(); });
+        this._itadStatus.classList.toggle("itad-status--disconnected", !connect);
+        this._itadStatus.classList.toggle("itad-status--connected", connect);
     }
 
     async run() {
 
         if (await BackgroundSimple.action("itad.isconnected")) {
             this._itadStatus.textContent = Localization.str.connected;
-            this._itadStatus.classList.add("itad-status--connected");
-
             this._itadAction.textContent = Localization.str.disconnect;
-            this._itadAction.addEventListener("click", () => { this._disconnect(); });
+            this._itadStatus.classList.add("itad-status--connected");
         } else {
             this._itadStatus.textContent = Localization.str.disconnected;
-            this._itadStatus.classList.add("itad-status--disconnected");
-
             this._itadAction.textContent = Localization.str.connect;
-            this._itadAction.addEventListener("click", () => { this._connect(); });
+            this._itadStatus.classList.add("itad-status--disconnected");
         }
+
+        this._itadAction.addEventListener("click", () => { this._clickHandler(); });
     }
 }
 
