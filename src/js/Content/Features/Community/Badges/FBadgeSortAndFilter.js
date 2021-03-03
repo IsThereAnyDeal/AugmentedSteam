@@ -31,7 +31,7 @@ export default class FBadgeSortAndFilter extends Feature {
             html += `<a class="popup_menu_item" id="es_badge_sort_value">${Localization.str.drops_value}</a>`;
         }
 
-        const activeText = sortOptions.querySelector("a.active").textContent.trim();
+        const activeText = sortOptions.querySelector(".active").textContent.trim();
 
         HTML.afterEnd(sortOptions.querySelector("span"),
             `<div class="store_nav">

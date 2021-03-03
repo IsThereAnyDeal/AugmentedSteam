@@ -25,7 +25,7 @@ export class CBadges extends CCommunityBase {
 
         const skip = parseInt(new URLSearchParams(window.location.search).get("p")) || 1;
 
-        const lastPage = parseInt(DOMHelper.selectLastNode(document, "a.pagelink").textContent);
+        const lastPage = parseInt(DOMHelper.selectLastNode(document, ".pagelink").textContent);
         for (let p = 1; p <= lastPage; p++) { // doing one page at a time to prevent too many requests at once
             if (p === skip) { continue; }
             try {
