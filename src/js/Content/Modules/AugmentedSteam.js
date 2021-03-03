@@ -365,7 +365,6 @@ class AugmentedSteam {
         AugmentedSteam._addMenu();
         AugmentedSteam._addLanguageWarning();
         AugmentedSteam._handleInstallSteamButton();
-        AugmentedSteam._removeAboutLinks();
         AugmentedSteam._disableLinkFilter();
         AugmentedSteam._skipGotSteam();
         AugmentedSteam._keepSteamSubscriberAgreementState();
