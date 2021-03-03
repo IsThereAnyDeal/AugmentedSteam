@@ -27,11 +27,6 @@ export default class FDLCCheckboxes extends Feature {
                 label.classList.add("es_dlc_owned");
             }
 
-            // Toggle dsinfo when adding/removing wishlist via ds_options dropdown
-            new MutationObserver(() => {
-                label.classList.toggle("es_dlc_wishlist", dlcRow.classList.contains("ds_wishlist"));
-            }).observe(dlcRow, {"attributeFilter": ["class"]});
-
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.classList.add("es_dlc_checkbox");
@@ -54,6 +49,14 @@ export default class FDLCCheckboxes extends Feature {
             label.append(checkbox);
             dlcRow.insertAdjacentElement("beforebegin", label);
         }
+
+        // Toggle dsinfo on label when adding/removing wishlist via ds_options dropdown
+        new MutationObserver(mutations => {
+            for (const {target} of mutations) {
+                if (!target.classList.contains("game_area_dlc_row")) { continue; }
+                target.previousElementSibling.classList.toggle("es_dlc_wishlist", target.classList.contains("ds_wishlist"));
+            }
+        }).observe(dlcSection.querySelector(".gameDlcBlocks"), {"subtree": true, "attributeFilter": ["class"]});
 
         const html = `<div class="game_purchase_action game_purchase_action_bg" id="es_selected_btn">
                 <div class="game_purchase_price price"></div>
