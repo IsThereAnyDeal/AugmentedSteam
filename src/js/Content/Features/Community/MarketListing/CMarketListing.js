@@ -15,7 +15,7 @@ export class CMarketListing extends CCommunityBase {
             FPriceHistoryZoomYear,
         ]);
 
-        const m = window.location.href.match(/\/(\d+)\/(.+)$/);
+        const m = window.location.pathname.match(/\/(\d+)\/(.+)$/);
         this.appid = Number(m[1]);
         this.marketHashName = m[2];
     }

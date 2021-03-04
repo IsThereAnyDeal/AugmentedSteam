@@ -75,7 +75,7 @@ export default class FMarketLowestPrice extends Feature {
             const linkNode = node.querySelector(".market_listing_item_name_link");
             if (!linkNode) { continue; }
 
-            const m = linkNode.href.match(/\/(\d+)\/(.+)$/);
+            const m = linkNode.pathname.match(/\/(\d+)\/(.+)$/);
             if (!m) { continue; }
             const marketHashName = m[2];
 
