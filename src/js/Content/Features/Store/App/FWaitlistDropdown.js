@@ -4,10 +4,10 @@ import {Page} from "../../Page";
 
 export default class FWaitlistDropdown extends Feature {
 
-    checkPrerequisites() {
+    async checkPrerequisites() {
         return SyncedStorage.get("add_to_waitlist")
             && document.querySelector("#add_to_wishlist_area") !== null
-            && Background.action("itad.isconnected");
+            && (await Background.action("itad.isconnected")) === true;
     }
 
     async apply() {
