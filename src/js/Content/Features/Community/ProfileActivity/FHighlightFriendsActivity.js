@@ -1,5 +1,5 @@
 import {GameId, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
-import {CallbackFeature, DynamicStore, User} from "../../../modulesContent";
+import {CallbackFeature, DOMHelper, User} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 
 export default class FHighlightFriendsActivity extends CallbackFeature {
@@ -9,7 +9,6 @@ export default class FHighlightFriendsActivity extends CallbackFeature {
     }
 
     async callback() {
-        await DynamicStore;
 
         const blotterBlocks = document.querySelectorAll(".blotter_block:not(.es_highlight_checked)");
         blotterBlocks.forEach(node => node.classList.add("es_highlight_checked"));
@@ -42,12 +41,19 @@ export default class FHighlightFriendsActivity extends CallbackFeature {
 
         if (node.parentNode.nextElementSibling.tagName !== "IMG") { return; }
 
-        const friendProfileUrl = `${blotter.querySelector("a[data-miniprofile]").href}/`;
+        let friendProfileUrl = blotter.querySelector("a[data-miniprofile]").href;
+        if (!friendProfileUrl.endsWith("/")) {
+            friendProfileUrl += "/";
+        }
+
         if (friendProfileUrl === User.profileUrl) { return; }
 
         node.classList.add("es_achievements");
 
-        const compareLink = `${friendProfileUrl}/stats/${GameId.getAppid(node)}/compare/#es-compare`;
-        HTML.afterEnd(blotter.querySelector("span"), `<a class='es_achievement_compare' href='${compareLink}' target='_blank' style='line-height: 32px'>(${Localization.str.compare})</a>`);
+        const compareLink = `${friendProfileUrl}stats/${GameId.getAppid(node)}/compare/#es-compare`;
+        HTML.beforeBegin(
+            DOMHelper.selectLastNode(blotter, "div"),
+            `<a class="es_achievement_compare" href="${compareLink}" target="_blank">(${Localization.str.compare})</a>`
+        );
     }
 }

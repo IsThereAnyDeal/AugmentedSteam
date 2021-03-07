@@ -1770,7 +1770,7 @@ img.astats_icon {
 
 /***************************************
  * Activity pages
- * add_achievement_comparison_link()
+ * FHighlightFriendsActivity
  **************************************/
 .blotter_block a.es_highlighted {
   color: rgba(255, 255, 255, 0.80);
@@ -1782,8 +1782,9 @@ img.astats_icon {
 }
 .es_achievement_compare {
   font-size: 10px;
-  float: right;
-  margin-right: 6px;
+  margin-left: 6px;
+  line-height: 32px;
+  vertical-align: top;
 }
 .es_achievements {
   margin-top: 0 !important;
