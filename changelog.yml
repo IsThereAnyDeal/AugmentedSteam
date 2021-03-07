@@ -1,3 +1,25 @@
+2.0.1: |
+  A good ol' bugfix release
+  
+  - Fixed Augmented Steam not working on some profile pages and activity pages
+  - Fixed "Add to wishlist" dropdown menu
+  - Fixed wishlist export not respecting sort order
+  - Fixed wishlist stats not being updated when using filters
+  - Fixed price info not showing on Wishlist sometimes
+  - Fixed linking with IsThereAnyDeal in Microsoft Edge
+  - Fixed 1-click gems option
+  - Fixed "set background" option in Inventory
+  - Fixed filters on search page not working
+  - Fixed YouTube links option not being disabled
+  - Fixed customizer button not appearing if SteamCharts/SteamSpy info is disabled
+  - Fixed undismissable dialog when sorting reviews
+  - Improved age check skip
+  - Improved organization of Options page
+  - Improved achievement bar display in game list
+  - Improved reliability of market functions
+  - Multiple other smaller fixes, tweaks and improvements
+
+
 2.0.0: |
   A new major version! If you're going to read a changelog, you might wonder what did we do to deserve the version 2.
   Well, we have completely overhauled our code base, so Augmented Steam is now much easier to maintain and iterate upon.
