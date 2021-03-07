@@ -30,6 +30,10 @@ export default class FWaitlistDropdown extends Feature {
          * makes it easier to apply the dropdown menu
          */
         const wrapper = document.querySelector(".as_btn_wishlist");
+
+        // Move the wrapper such that there can't be any other elements in between the dropdown and other buttons (see #690)
+        document.querySelector(".queue_actions_ctn").insertBefore(wrapper.parentNode, wishlistArea);
+
         wrapper.append(...wishlistDivs);
 
         HTML.afterEnd(wrapper,
