@@ -6,8 +6,8 @@ export default class FWaitlistDropdown extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("add_to_waitlist")
-            && Background.action("itad.isconnected")
-            && document.querySelector("#add_to_wishlist_area") !== null;
+            && document.querySelector("#add_to_wishlist_area") !== null
+            && Background.action("itad.isconnected");
     }
 
     async apply() {
