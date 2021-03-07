@@ -572,7 +572,12 @@
             "import_fail": "Impossible d'importer les paramètres",
             "export": "Exporter",
             "reset": "Réinitialiser"
-        }
+        },
+        "removebroadcasts": "Supprimer complètement toute diffusion en direct sur les pages du magasin",
+        "maintainers": "Mainteneurs de projet",
+        "with_help_of": "avec beaucoup d'aide de nos __contributors__",
+        "contributors": "merveilleux contributeurs",
+        "apppage": "Pages du magasin"
     },
     "ready": {
         "errormsg": "Erreur lors du chargement des données d'Augmented Steam",

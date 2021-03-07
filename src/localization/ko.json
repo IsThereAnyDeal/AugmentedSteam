@@ -572,7 +572,12 @@
             "import_fail": "",
             "export": "",
             "reset": ""
-        }
+        },
+        "removebroadcasts": "",
+        "maintainers": "",
+        "with_help_of": "",
+        "contributors": "",
+        "apppage": ""
     },
     "ready": {
         "errormsg": "Augmented Steam 데이터 로딩 오류",

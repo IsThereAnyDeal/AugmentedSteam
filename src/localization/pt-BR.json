@@ -565,14 +565,19 @@
         "add_custom_link": "Adicionar link personalizado",
         "auto_detect": "Detectar automaticamente",
         "add_to_waitlist": "Exibir botão \"Adicionar para Lista de Espera\" nas páginas dos produtos",
-        "profile_steamid": "Mostrar ID Steam nos perfis",
+        "profile_steamid": "Exibir ID Steam nos perfis",
         "settings_mngmt": {
             "import": "Importar",
             "import_success": "Configurações importadas com sucesso",
             "import_fail": "Falha ao importar configurações",
             "export": "Exportar",
             "reset": "Redefinir"
-        }
+        },
+        "removebroadcasts": "",
+        "maintainers": "",
+        "with_help_of": "",
+        "contributors": "",
+        "apppage": ""
     },
     "ready": {
         "errormsg": "Erro ao carregar dados do Augmented Steam",

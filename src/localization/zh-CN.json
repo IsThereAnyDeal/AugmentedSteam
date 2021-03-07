@@ -572,7 +572,12 @@
             "import_fail": "导入设置失败",
             "export": "导出",
             "reset": "重置"
-        }
+        },
+        "removebroadcasts": "完全删除商店页面的实况直播",
+        "maintainers": "项目维护者",
+        "with_help_of": "此项目离不开所有__contributors__的帮助",
+        "contributors": "了不起的贡献者们",
+        "apppage": "商店页面"
     },
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",

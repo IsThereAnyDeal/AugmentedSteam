@@ -572,7 +572,12 @@
             "import_fail": "Αποτυχία εισαγωγής ρυθμίσεων",
             "export": "Εξαγωγή",
             "reset": "Επαναφορά"
-        }
+        },
+        "removebroadcasts": "",
+        "maintainers": "",
+        "with_help_of": "",
+        "contributors": "",
+        "apppage": ""
     },
     "ready": {
         "errormsg": "Σφάλμα κατά τη φόρτωση δεδομένων Augmented Steam",

@@ -572,7 +572,12 @@
             "import_fail": "Помилка імортування налаштувань",
             "export": "Eкспорт",
             "reset": "Скинути"
-        }
+        },
+        "removebroadcasts": "Цілком видалити усі трансляції наживо на сторінках крамниці",
+        "maintainers": "Супровідники проекту",
+        "with_help_of": "з великою допомогою наших __contributors__",
+        "contributors": "чудових помічників",
+        "apppage": ""
     },
     "ready": {
         "errormsg": "Помилка завантаження даних Augmented Steam",
