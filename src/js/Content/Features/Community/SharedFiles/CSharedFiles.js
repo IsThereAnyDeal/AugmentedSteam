@@ -1,3 +1,4 @@
+import {GameId} from "../../../../modulesCore";
 import ContextType from "../../../Modules/Context/ContextType";
 import {CCommunityBase} from "../CCommunityBase";
 import FMediaExpander from "../../Common/FMediaExpander";
@@ -19,6 +20,6 @@ export class CSharedFiles extends CCommunityBase {
             FSubscribeAllDependencies,
         ]);
 
-        this.appid = Number(document.querySelector(".apphub_OtherSiteInfo [data-appid]").dataset.appid);
+        this.appid = GameId.getAppid(document.querySelector(".apphub_sectionTabs > a").href);
     }
 }
