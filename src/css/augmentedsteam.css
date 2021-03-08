@@ -952,6 +952,10 @@ img.astats_icon {
   }
 }
 
+.requiredItem .loader {
+  float: right;
+}
+
 /***************************************
  * Store pages, Community
  * check_early_access()
