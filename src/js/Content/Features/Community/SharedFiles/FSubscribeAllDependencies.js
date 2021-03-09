@@ -17,7 +17,16 @@ export default class FSubscribeAllDependencies extends Feature {
                 </div>`
             );
 
+            document.querySelector(".newmodal .btn_green_steamui").insertAdjacentElement("beforebegin", subBtn);
+
+            const continueBtn = subBtn.nextElementSibling;
+
             subBtn.addEventListener("click", async() => {
+
+                // Prevent closing the dialog via the "Continue" button
+                continueBtn.classList.add("btn_disabled");
+                continueBtn.addEventListener("click", e => { e.stopImmediatePropagation(); }, true);
+
                 const items = document.querySelectorAll(".newmodal #RequiredItems > a");
 
                 const loader = HTML.element("<div class='loader'></div>");
@@ -48,8 +57,6 @@ export default class FSubscribeAllDependencies extends Feature {
 
                 loader.remove();
             });
-
-            document.querySelector(".newmodal .btn_green_steamui").insertAdjacentElement("beforebegin", subBtn);
         });
     }
 }
