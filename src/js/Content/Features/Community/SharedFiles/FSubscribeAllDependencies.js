@@ -57,7 +57,12 @@ export default class FSubscribeAllDependencies extends Feature {
 
                     try {
                         await Workshop.changeSubscription(id, this.context.appid, "subscribe");
+
                         div.classList.add("es_required_item--success");
+                        HTML.beforeEnd(div,
+                            `<div class="requiredItemSubscribed">
+                                <img src="https://community.akamai.steamstatic.com/public/images//sharedfiles/check_header_large.png">
+                            </div>`);
                     } catch (err) {
                         failed = true;
                         HTML.beforeEnd(div, `<p>${err.message}</p>`);
