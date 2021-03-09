@@ -23,11 +23,25 @@ export default class FSubscribeAllDependencies extends Feature {
                 const loader = HTML.element("<div class='loader'></div>");
 
                 for (const item of items) {
+
+                    // If the user has pressed the "Cancel" button
+                    if (!subBtn.isConnected) { return; }
+
                     item.querySelector(".requiredItem").insertAdjacentElement("beforeend", loader);
 
                     const id = new URL(item.href).searchParams.get("id");
-                    await Workshop.changeSubscription(id, this.context.appid, "subscribe");
+                    const div = item.firstElementChild;
+
+                    try {
+                        await Workshop.changeSubscription(id, this.context.appid, "subscribe");
+                        div.classList.add("es_required_item--success");
+                    } catch (err) {
+                        console.error(err);
+                        div.classList.add("es_required_item--error");
+                    }
                 }
+
+                loader.remove();
             });
 
             document.querySelector(".newmodal .btn_green_steamui").insertAdjacentElement("beforebegin", subBtn);
