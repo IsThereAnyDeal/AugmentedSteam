@@ -11,6 +11,8 @@ export default class FSubscribeAllDependencies extends Feature {
     apply() {
         document.getElementById("SubscribeItemBtn").addEventListener("click", () => {
 
+            if (document.querySelector(".newmodal") === null) { return; }
+
             const subBtn = HTML.element(
                 `<div class="btn_blue_steamui btn_medium">
                     <span>${Localization.str.workshop.subscribe_all}</span>
