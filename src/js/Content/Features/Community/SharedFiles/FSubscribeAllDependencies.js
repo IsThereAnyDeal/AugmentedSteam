@@ -28,15 +28,14 @@ export default class FSubscribeAllDependencies extends Feature {
                 if (active) { return; }
                 active = true;
 
+                const items = document.querySelectorAll(".newmodal #RequiredItems > a");
+                const loader = HTML.element("<div class='loader'></div>");
+
                 subBtn.classList.add("btn_disabled");
                 continueBtn.classList.add("btn_disabled");
 
                 // Prevent closing the dialog via the "Continue" button
                 continueBtn.addEventListener("click", e => { e.stopImmediatePropagation(); }, true);
-
-                const items = document.querySelectorAll(".newmodal #RequiredItems > a");
-
-                const loader = HTML.element("<div class='loader'></div>");
 
                 for (const item of items) {
 
@@ -57,7 +56,7 @@ export default class FSubscribeAllDependencies extends Feature {
                         await Workshop.changeSubscription(id, this.context.appid, "subscribe");
                         div.classList.add("es_required_item--success");
                     } catch (err) {
-                        console.error(err);
+                        HTML.beforeEnd(div, `<p>${err.message}</p>`);
                         div.classList.add("es_required_item--error");
                     }
                 }
