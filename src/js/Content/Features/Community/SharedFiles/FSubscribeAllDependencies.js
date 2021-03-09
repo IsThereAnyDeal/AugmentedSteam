@@ -12,7 +12,7 @@ export default class FSubscribeAllDependencies extends Feature {
         document.getElementById("SubscribeItemBtn").addEventListener("click", () => {
 
             const subBtn = HTML.element(
-                `<div class="btn_green_steamui btn_medium">
+                `<div class="btn_blue_steamui btn_medium">
                     <span>${Localization.str.workshop.subscribe_all}</span>
                 </div>`
             );
