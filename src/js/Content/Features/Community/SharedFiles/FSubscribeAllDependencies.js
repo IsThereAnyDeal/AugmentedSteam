@@ -30,12 +30,15 @@ export default class FSubscribeAllDependencies extends Feature {
 
                 const items = document.querySelectorAll(".newmodal #RequiredItems > a");
                 const loader = HTML.element("<div class='loader'></div>");
+                let failed = false;
+
+                function cancelFn(e) { e.stopImmediatePropagation(); }
 
                 subBtn.classList.add("btn_disabled");
                 continueBtn.classList.add("btn_disabled");
 
                 // Prevent closing the dialog via the "Continue" button
-                continueBtn.addEventListener("click", e => { e.stopImmediatePropagation(); }, true);
+                continueBtn.addEventListener("click", cancelFn, true);
 
                 for (const item of items) {
 
@@ -56,12 +59,20 @@ export default class FSubscribeAllDependencies extends Feature {
                         await Workshop.changeSubscription(id, this.context.appid, "subscribe");
                         div.classList.add("es_required_item--success");
                     } catch (err) {
+                        failed = true;
                         HTML.beforeEnd(div, `<p>${err.message}</p>`);
                         div.classList.add("es_required_item--error");
                     }
                 }
 
                 loader.remove();
+
+                continueBtn.removeEventListener("click", cancelFn, true);
+                continueBtn.classList.remove("btn_disabled");
+
+                if (!failed) {
+                    continueBtn.dispatchEvent(new Event("click"));
+                }
             });
         });
     }
