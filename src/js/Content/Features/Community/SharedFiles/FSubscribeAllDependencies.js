@@ -30,6 +30,7 @@ export default class FSubscribeAllDependencies extends Feature {
 
                 const items = document.querySelectorAll(".newmodal #RequiredItems > a");
                 const loader = HTML.element("<div class='loader'></div>");
+                const originalContainer = document.querySelector("#rightContents #RequiredItems");
                 let failed = false;
 
                 function cancelFn(e) { e.stopImmediatePropagation(); }
@@ -57,17 +58,22 @@ export default class FSubscribeAllDependencies extends Feature {
 
                     try {
                         await Workshop.changeSubscription(id, this.context.appid, "subscribe");
-
-                        div.classList.add("es_required_item--success");
-                        HTML.beforeEnd(div,
-                            `<div class="requiredItemSubscribed">
-                                <img src="https://community.akamai.steamstatic.com/public/images//sharedfiles/check_header_large.png">
-                            </div>`);
                     } catch (err) {
                         failed = true;
                         HTML.beforeEnd(div, `<p>${err.message}</p>`);
                         div.classList.add("es_required_item--error");
+
+                        continue;
                     }
+
+                    const checkmarkHtml
+                         = `<div class="requiredItemSubscribed">
+                                <img src="https://community.akamai.steamstatic.com/public/images//sharedfiles/check_header_large.png">
+                            </div>`;
+
+                    div.classList.add("es_required_item--success");
+                    HTML.beforeEnd(div, checkmarkHtml);
+                    HTML.beforeEnd(originalContainer.querySelector(`[href="${item.href}"] .requiredItem`), checkmarkHtml);
                 }
 
                 loader.remove();
