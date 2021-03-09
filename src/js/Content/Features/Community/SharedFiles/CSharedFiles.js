@@ -1,7 +1,9 @@
+import {GameId} from "../../../../modulesCore";
 import ContextType from "../../../Modules/Context/ContextType";
 import {CCommunityBase} from "../CCommunityBase";
 import FMediaExpander from "../../Common/FMediaExpander";
 import FSkipAgecheck from "../../Common/FSkipAgecheck";
+import FSubscribeAllDependencies from "./FSubscribeAllDependencies";
 
 export class CSharedFiles extends CCommunityBase {
 
@@ -15,6 +17,9 @@ export class CSharedFiles extends CCommunityBase {
         super(ContextType.SHARED_FILES, [
             FMediaExpander,
             FSkipAgecheck,
+            FSubscribeAllDependencies,
         ]);
+
+        this.appid = GameId.getAppid(document.querySelector(".apphub_sectionTabs > a").href);
     }
 }
