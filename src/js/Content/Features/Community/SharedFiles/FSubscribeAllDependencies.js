@@ -17,14 +17,21 @@ export default class FSubscribeAllDependencies extends Feature {
                 </div>`
             );
 
+            let active = false;
+
             document.querySelector(".newmodal .btn_green_steamui").insertAdjacentElement("beforebegin", subBtn);
 
             const continueBtn = subBtn.nextElementSibling;
 
             subBtn.addEventListener("click", async() => {
 
-                // Prevent closing the dialog via the "Continue" button
+                if (active) { return; }
+                active = true;
+
+                subBtn.classList.add("btn_disabled");
                 continueBtn.classList.add("btn_disabled");
+
+                // Prevent closing the dialog via the "Continue" button
                 continueBtn.addEventListener("click", e => { e.stopImmediatePropagation(); }, true);
 
                 const items = document.querySelectorAll(".newmodal #RequiredItems > a");
