@@ -32,6 +32,11 @@ export default class FSubscribeAllDependencies extends Feature {
                     const id = new URL(item.href).searchParams.get("id");
                     const div = item.firstElementChild;
 
+                    if (div.querySelector(".requiredItemSubscribed") !== null) {
+                        div.classList.add("es_required_item--success");
+                        continue;
+                    }
+
                     try {
                         await Workshop.changeSubscription(id, this.context.appid, "subscribe");
                         div.classList.add("es_required_item--success");
