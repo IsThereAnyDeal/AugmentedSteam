@@ -145,6 +145,13 @@ class UpdateHandler {
         if (oldVersion.isSameOrBefore("2.2.1")) {
             Background.action("migrate.cachestorage");
         }
+
+        if (oldVersion.isSameOrBefore("2.3.2")) {
+            const {steamchart, steamspy, surveys} = SyncedStorage.get("customize_apppage");
+            SyncedStorage.set("show_steamchart_info", steamchart);
+            SyncedStorage.set("show_steamspy_info", steamspy);
+            SyncedStorage.set("show_survey_info", surveys);
+        }
     }
 }
 

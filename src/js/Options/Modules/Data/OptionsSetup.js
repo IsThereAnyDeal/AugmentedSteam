@@ -103,6 +103,7 @@ export default {
     "showwsgf": "options.wsgf",
     "show_steamchart_info": "options.show_steamchart_info",
     "show_steamspy_info": "options.show_steamspy_info",
+    "show_survey_info": "options.show_survey_info",
     "showastatslink": "options.show_astatslink",
     "showitadlinks": "options.itadlinks",
     "showsteamdb": "options.steamdb",
