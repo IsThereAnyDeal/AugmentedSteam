@@ -341,13 +341,13 @@ export default class FInventoryMarketHelper extends Feature {
         const quickSell = document.getElementById(`es_quicksell${item}`);
         const instantSell = document.getElementById(`es_instantsell${item}`);
 
-        const priceHighValue = thisItem.dataset.priceHigh !== "nodata" && thisItem.dataset.priceHigh;
-        const priceLowValue = thisItem.dataset.priceLow !== "nodata" && thisItem.dataset.priceLow;
+        const priceHighValue = Number(thisItem.dataset.priceHigh) || 0;
+        const priceLowValue = Number(thisItem.dataset.priceLow) || 0;
 
         const currencyType = CurrencyManager.currencyNumberToType(walletCurrency);
 
         // Show Quick Sell button
-        if (priceHighValue && priceLowValue && priceHighValue > priceLowValue) {
+        if (priceHighValue && priceHighValue > priceLowValue) {
 
             Page.runInPageContext((price, type) => window.SteamFacade.vCurrencyFormat(price, type), [priceHighValue, currencyType], true)
                 .then(formattedPrice => {
