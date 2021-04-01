@@ -25,15 +25,17 @@ class UserNotes {
             capInfo = await this._adapter.set(...args);
         } catch (err) {
             if (err instanceof OutOfCapacityError) {
-                this._showCloudStorageDialog(true, err.ratio);
+                return this._showCloudStorageDialog(true, err.ratio);
             } else {
                 throw err;
             }
         }
 
         if (capInfo instanceof CapacityInfo && capInfo.closeToFull) {
-            this._showCloudStorageDialog(false, capInfo.utilization);
+            return this._showCloudStorageDialog(false, capInfo.utilization);
         }
+
+        return true;
     }
 
     delete(...args) { return this._adapter.delete(...args); }
@@ -111,8 +113,7 @@ class UserNotes {
             this.delete(appid);
             node.textContent = this._str.add;
         } else {
-            const success = this.set(appid, note);
-            if (!success) { return; }
+            if (!await this.set(appid, note)) { return; }
             HTML.inner(node, `"${note}"`);
         }
 
@@ -151,11 +152,12 @@ class UserNotes {
         } else if (buttonPressed === "SECONDARY") {
             adapterType = "idb";
         } else {
-            return null;
+            return false;
         }
 
         this._adapter = await UserNotesAdapter.changeAdapter(adapterType);
-        return SyncedStorage.set("user_notes_adapter", adapterType);
+        await SyncedStorage.set("user_notes_adapter", adapterType);
+        return true;
     }
 }
 
