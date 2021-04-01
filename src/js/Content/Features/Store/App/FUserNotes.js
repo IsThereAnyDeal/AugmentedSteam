@@ -37,7 +37,7 @@ export default class FUserNotes extends Feature {
             </div>`);
 
         HTML.beforeEnd(".queue_actions_ctn",
-            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
+            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass} ellipsis'>${noteText}</div>`);
 
         function toggleState(node, active) {
             const button = document.querySelector(".js-user-note-button");

@@ -48,7 +48,7 @@ export default class FWishlistUserNotes extends CallbackFeature {
                     cssClass = "esi-user-note";
                 }
 
-                HTML.afterEnd(node.querySelector(".mid_container"), `<div class="esi-note ${cssClass}">${noteText}</div>`);
+                HTML.afterEnd(node.querySelector(".mid_container"), `<div class="esi-note ${cssClass} ellipsis">${noteText}</div>`);
                 node.classList.add("esi-has-note");
             })();
 
