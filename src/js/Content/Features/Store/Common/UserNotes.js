@@ -11,7 +11,7 @@ class UserNotes {
 
         this.noteModalTemplate
             = `<div class="es_note_prompt newmodal_prompt_with_textarea gray_bevel fullwidth">
-                <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
+                <textarea name="es_note_input" id="es_note_input" rows="6" cols="12">__note__</textarea>
             </div>`;
     }
 
@@ -54,7 +54,6 @@ class UserNotes {
                     document.querySelector("#es_note_input").value
                         .trim()
                         .replace(/\s\s+/g, " ")
-                        .substring(0, 512)
                 );
             }
 
