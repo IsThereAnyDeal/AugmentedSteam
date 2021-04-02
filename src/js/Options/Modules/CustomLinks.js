@@ -1,43 +1,77 @@
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
+import {HTML, Localization, SyncedStorage} from "../../modulesCore";
 import {SaveIndicator} from "./SaveIndicator";
 
 class CustomLinks {
 
     static init() {
+
+        this._container = document.querySelector(".js-customlinks");
+
+        this._template = HTML.element(
+            `<div class="custom-link option js-custom-link">
+                <input type="checkbox" name="profile_custom_enabled">
+                <div>
+                    <div>
+                        <label class="custom-link__label">${Localization.str.options.name}</label>
+                        <input class="custom-link__input" type="text" name="profile_custom_name" maxlength="30">
+                    </div>
+                    <div>
+                        <label class="custom-link__label">URL</label>
+                        <input class="custom-link__input" type="text" name="profile_custom_url">
+                    </div>
+                    <div>
+                        <label class="custom-link__label">${Localization.str.options.icon}</label>
+                        <input class="custom-link__input" type="text" name="profile_custom_icon">
+                    </div>
+                </div>
+                <button class="custom-link__close js-custom-link-remove"></button>
+            </div>`
+        );
+
+        this._container.addEventListener("click", ({target}) => {
+            if (!target.classList || !target.classList.contains("js-custom-link-remove")) { return; }
+            target.closest(".js-custom-link").remove();
+            CustomLinks._save();
+        });
+
+        this._container.addEventListener("change", ({target}) => {
+            if (!target.closest(".js-custom-link")) { return; }
+            CustomLinks._save();
+        });
+
+        document.querySelector(".js-custom-link-add").addEventListener("click", () => {
+            CustomLinks._create(SyncedStorage.defaults.profile_custom_link[0]);
+            CustomLinks._save();
+        });
+    }
+
+    static populate() {
+        HTML.inner(this._container, "");
+
         const links = SyncedStorage.get("profile_custom_link");
         for (const link of links) {
-            CustomLinks.show(link);
+            CustomLinks._create(link);
         }
     }
 
     // TODO (KarlCastle?) Want to replace this with a CustomElement when the support is wider. CustomElements were added in FF63.
-    static show(link) {
-        const customLinkTemplate = document.getElementById("add_custom_profile_link");
-        let node = document.importNode(customLinkTemplate.content, true).firstElementChild;
+    static _create(link) {
+        const node = this._template.cloneNode(true);
 
         let url = link.url;
         if (url && !url.includes("[ID]")) {
             url += "[ID]";
         }
+
         node.querySelector('[name="profile_custom_enabled"]').checked = link.enabled;
         node.querySelector('[name="profile_custom_name"]').value = link.name;
         node.querySelector('[name="profile_custom_url"]').value = url;
         node.querySelector('[name="profile_custom_icon"]').value = link.icon;
 
-        const insertionPoint = document.getElementById("add-custom-link").closest("div");
-        node = insertionPoint.insertAdjacentElement("beforebegin", node);
-
-        node.addEventListener("change", CustomLinks.save);
-        node.querySelector(".js-custom-link-remove")
-            .addEventListener("click", CustomLinks.remove, false);
+        this._container.append(node);
     }
 
-    static create(link) {
-        CustomLinks.show(link);
-        CustomLinks.save();
-    }
-
-    static read(node) {
+    static _read(node) {
         return {
             "enabled": node.querySelector('[name="profile_custom_enabled"]').checked,
             "name": node.querySelector('[name="profile_custom_name"]').value,
@@ -46,11 +80,11 @@ class CustomLinks {
         };
     }
 
-    static save() {
+    static _save() {
         const customLinks = document.querySelectorAll(".js-custom-link");
         const links = [];
         for (const row of customLinks) {
-            const link = CustomLinks.read(row);
+            const link = CustomLinks._read(row);
             if (!link.enabled && !link.name && !link.url && !link.icon) {
                 continue;
             }
@@ -60,19 +94,6 @@ class CustomLinks {
         SyncedStorage.set("profile_custom_link", links);
         SaveIndicator.show();
     }
-
-    static remove(ev) {
-        if (!ev.target || !(ev.target instanceof Element)) { return; }
-
-        let row = ev.target.closest(".js-custom-link");
-        if (row) {
-            row.remove();
-            row = null;
-        }
-
-        CustomLinks.save();
-    }
-
 }
 
 export {CustomLinks};

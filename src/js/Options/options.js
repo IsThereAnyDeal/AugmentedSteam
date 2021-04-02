@@ -68,8 +68,6 @@ const Options = (() => {
 
     function loadOptions() {
 
-        CustomLinks.init();
-
         // Set the value or state for each input
         const nodes = document.querySelectorAll("[data-setting]");
         for (const node of nodes) {
@@ -118,6 +116,7 @@ const Options = (() => {
         loadStores();
 
         Region.populate();
+        CustomLinks.populate();
     }
 
     function importSettings({"target": input}) {
@@ -171,10 +170,6 @@ const Options = (() => {
         // eslint-disable-next-line no-alert
         if (!window.confirm(Localization.str.options.clear)) { return; }
         SyncedStorage.clear();
-
-        for (const el of document.querySelectorAll(".custom-link__close")) {
-            el.click();
-        }
 
         SyncedStorage.then(loadOptions);
 
@@ -281,14 +276,14 @@ const Options = (() => {
     }
 
     self.init = async() => {
-        const settings = SyncedStorage.init();
+        await SyncedStorage;
+
         const currency = ExtensionResources.getJSON("json/currency.json").then(addCurrencies);
-        await Promise.all([settings, currency]);
+        await Promise.all([Localization, currency]);
         const Defaults = SyncedStorage.defaults;
 
         Region.init();
-
-        await Localization;
+        CustomLinks.init();
 
         OptionsBuilder.build();
 
@@ -335,10 +330,6 @@ const Options = (() => {
             if (isNaN(parseFloat(document.getElementById("quickinv_diff").value))) {
                 setValue("#quickinv_diff", "-0.01");
             }
-        });
-
-        document.getElementById("add-custom-link").addEventListener("click", () => {
-            CustomLinks.create(SyncedStorage.defaults.profile_custom_link[0]);
         });
 
         document.querySelector("select[data-setting='showregionalprice']").addEventListener("change", e => {
