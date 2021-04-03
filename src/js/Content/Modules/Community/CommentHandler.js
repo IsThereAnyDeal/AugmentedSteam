@@ -90,13 +90,13 @@ export class CommentHandler {
         observer.observe(modalWait, {"attributes": true});
     }
 
-    static _updateFavs(favs, emoticonPopup, favBox, favRemove, name) {
+    static _updateFavs(favs, emoticonPopup, favBox, name) {
         SyncedStorage.set("fav_emoticons", favs);
 
         if (name && favs.includes(name) && favs.length > 1) {
             HTML.beforeEnd(favBox, this._buildEmoticonOption(name));
             const node = favBox.querySelector(`[data-emoticon="${name}"]`);
-            this._finalizeFav(node, emoticonPopup, favRemove);
+            this._finalizeFav(node, emoticonPopup);
         } else if (name && !favs.includes(name) && favs.length > 0) {
             const node = favBox.querySelector(`[data-emoticon="${name}"]`);
             if (!node) { return; }
@@ -105,24 +105,23 @@ export class CommentHandler {
             const favsHtml = this._buildFavBox(favs);
             HTML.inner(favBox, favsHtml);
             for (const node of favBox.querySelectorAll(".emoticon_option")) {
-                this._finalizeFav(node, emoticonPopup, favRemove);
+                this._finalizeFav(node, emoticonPopup);
             }
         }
     }
 
-    static _finalizeFav(node, emoticonPopup, favRemove) {
+    static _finalizeFav(node, emoticonPopup) {
         node.draggable = true;
         node.querySelector("img").draggable = false;
         node.addEventListener("dragstart", (ev) => this._dragFavEmoticon(ev));
-        node.addEventListener("click", (ev) => this._clickFavEmoticon(ev, emoticonPopup, favRemove));
+        node.addEventListener("click", (ev) => this._clickFavEmoticon(ev, emoticonPopup));
     }
 
     static _dragFavEmoticon(ev) {
         ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon);
     }
 
-    // eslint-disable-next-line no-unused-vars -- TODO Is this feature not yet implemented
-    static _clickFavEmoticon(ev, emoticonPopup, favRemove) {
+    static _clickFavEmoticon(ev, emoticonPopup) {
         const name = ev.target.closest(".emoticon_option").dataset.emoticon;
         const noFav = emoticonPopup.querySelector(`[data-emoticon=${name}]:not(.es_fav)`);
         noFav.click();
@@ -164,7 +163,7 @@ export class CommentHandler {
 
             const favBox = emoticonPopup.querySelector("#es_fav_emoticons");
             const favRemove = emoticonPopup.querySelector("#es_fav_remove");
-            this._updateFavs(favs, emoticonPopup, favBox, favRemove);
+            this._updateFavs(favs, emoticonPopup, favBox);
 
             favBox.addEventListener("dragover", ev => {
                 ev.preventDefault();
@@ -187,7 +186,7 @@ export class CommentHandler {
                 if (favs.includes(name)) { return; }
 
                 favs.push(name);
-                this._updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+                this._updateFavs(favs, emoticonPopup, favBox, name);
             });
 
             favRemove.addEventListener("dragover", ev => {
@@ -209,7 +208,7 @@ export class CommentHandler {
                 favRemove.style.backgroundColor = null;
                 const name = ev.dataTransfer.getData("emoticon");
                 favs = favs.filter(fav => fav !== name);
-                this._updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+                this._updateFavs(favs, emoticonPopup, favBox, name);
             });
         });
 
