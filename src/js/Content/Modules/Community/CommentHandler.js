@@ -100,13 +100,13 @@ export class CommentHandler {
         } else if (name && !favs.includes(name) && favs.length > 0) {
             const node = favBox.querySelector(`[data-emoticon="${name}"]`);
             if (!node) { return; }
-            node.parentNode.removeChild(node);
+            node.remove();
         } else {
             const favsHtml = this._buildFavBox(favs);
             HTML.inner(favBox, favsHtml);
-            favBox.querySelectorAll(".emoticon_option").forEach(node => {
+            for (const node of favBox.querySelectorAll(".emoticon_option")) {
                 this._finalizeFav(node, emoticonPopup, favRemove);
-            });
+            }
         }
     }
 
@@ -149,11 +149,11 @@ export class CommentHandler {
 
             emoticonPopup.classList.add("es_emoticons");
             emoticonPopup.style.maxWidth = "352px";
-            emoticonPopup.querySelectorAll(".emoticon_option").forEach((node) => {
+            for (const node of emoticonPopup.querySelectorAll(".emoticon_option")) {
                 node.draggable = true;
                 node.querySelector("img").draggable = false;
-                node.addEventListener("dragstart", ev => ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon));
-            });
+                node.addEventListener("dragstart", (ev) => this._dragFavEmoticon(ev));
+            }
 
             let favs = SyncedStorage.get("fav_emoticons");
             HTML.afterBegin(emoticonPopup,
