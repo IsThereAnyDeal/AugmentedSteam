@@ -148,7 +148,7 @@ export class CommentHandler {
             if (!emoticonPopup) { return; }
 
             emoticonPopup.classList.add("es_emoticons");
-            emoticonPopup.style.maxWidth = "352px";
+
             for (const node of emoticonPopup.querySelectorAll(".emoticon_option")) {
                 node.draggable = true;
                 node.querySelector("img").draggable = false;
@@ -157,9 +157,9 @@ export class CommentHandler {
 
             let favs = SyncedStorage.get("fav_emoticons");
             HTML.afterBegin(emoticonPopup,
-                `<div style="margin-bottom:10px;min-height:32px;line-height:32px;text-align:center;max-height:none;display:flex;" class="emoticon_popup_content">
-                    <div style="width:10%;background-image:url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);background-repeat:no-repeat;background-position:center center;" class="commentthread_entry_quotebox" id="es_fav_remove"></div>
-                    <div style="width:90%;" class="commentthread_entry_quotebox" id="es_fav_emoticons"></div>
+                `<div class="emoticon_popup_content es_emoticons_content">
+                    <div class="commentthread_entry_quotebox" id="es_fav_remove"></div>
+                    <div class="commentthread_entry_quotebox" id="es_fav_emoticons"></div>
                 </div>`);
 
             const favBox = emoticonPopup.querySelector("#es_fav_emoticons");
