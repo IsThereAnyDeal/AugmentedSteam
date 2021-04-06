@@ -73,7 +73,6 @@ export default {
     "showwishliststats": "options.show_wishlist_stats",
 
     // store app page
-    "removebroadcasts": "options.removebroadcasts",
     "mp4video": "options.mp4video",
     "showsupportinfo": "options.supportinfo",
     "showdrm": "options.drm",
@@ -83,6 +82,8 @@ export default {
     "purchase_dates": "options.purchase_dates",
     "show_badge_progress": "options.show_badge_progress",
     "show_coupon": "options.show_coupon",
+    "removebroadcasts": "options.removebroadcasts",
+    "exfgls": "options.exfgls",
     "showmcus": "options.metacritic",
     "showoc": "options.opencritic",
     "showhltb": "options.hltb",
