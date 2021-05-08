@@ -4,8 +4,21 @@ import {Page} from "../../Page";
 
 export default class FYouTubeVideos extends Feature {
 
-    checkPrerequisites() {
-        return SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews");
+    async checkPrerequisites() {
+        if (!SyncedStorage.get("showyoutubegameplay") && !SyncedStorage.get("showyoutubereviews")) { return false; }
+
+        const data = await this.context.data;
+        if (
+            data && data.youtube
+            && (
+                (SyncedStorage.get("showyoutubegameplay") && data.youtube.gameplay)
+                || (SyncedStorage.get("showyoutubereviews") && data.youtube.reviews)
+            )
+        ) {
+            this._data = data.youtube;
+            return true;
+        }
+        return false;
     }
 
     apply() {
@@ -54,7 +67,7 @@ export default class FYouTubeVideos extends Feature {
 
             gamePlayTab.addEventListener("click", () => {
                 if (!this._tabToMedia.has(gamePlayTab)) {
-                    const gamePlayMedia = this._getIframe();
+                    const gamePlayMedia = this._getIframe("gameplay");
 
                     document.querySelector(".highlight_ctn")
                         .insertAdjacentElement("beforeend", gamePlayMedia);
@@ -71,7 +84,7 @@ export default class FYouTubeVideos extends Feature {
 
             reviewTab.addEventListener("click", () => {
                 if (!this._tabToMedia.has(reviewTab)) {
-                    const reviewMedia = this._getIframe();
+                    const reviewMedia = this._getIframe("reviews");
 
                     document.querySelector(".highlight_ctn")
                         .insertAdjacentElement("beforeend", reviewMedia);
@@ -112,14 +125,17 @@ export default class FYouTubeVideos extends Feature {
         }
     }
 
-    _getIframe() {
+    _getIframe(type) {
+
+        const videoIds = this._data[type];
+        if (!videoIds) { return null; }
 
         const hlParam = encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()));
 
         const player = document.createElement("iframe");
         player.classList.add("es_youtube_player");
         player.type = "text/html";
-        player.src = `https://www.youtube.com/embed?playlist=FD0h-s6NUeM,iThREFl8pxc&origin=https://store.steampowered.com&widget_referrer=https://augmentedsteam.com&hl=${hlParam}&enablejsapi=1`;
+        player.src = `https://www.youtube.com/embed?playlist=${videoIds}&origin=https://store.steampowered.com&widget_referrer=https://augmentedsteam.com&hl=${hlParam}&enablejsapi=1`;
         player.allowFullscreen = true;
 
         return player;
