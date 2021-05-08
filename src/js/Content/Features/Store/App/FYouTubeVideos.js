@@ -8,17 +8,12 @@ export default class FYouTubeVideos extends Feature {
         if (!SyncedStorage.get("showyoutubegameplay") && !SyncedStorage.get("showyoutubereviews")) { return false; }
 
         const data = await this.context.data;
-        if (
-            data && data.youtube
-            && (
-                (SyncedStorage.get("showyoutubegameplay") && data.youtube.gameplay)
-                || (SyncedStorage.get("showyoutubereviews") && data.youtube.reviews)
-            )
-        ) {
+        if (data && data.youtube) {
             this._data = data.youtube;
-            return true;
+        } else {
+            this._data = null;
         }
-        return false;
+        return true;
     }
 
     apply() {
@@ -69,13 +64,17 @@ export default class FYouTubeVideos extends Feature {
                 if (!this._tabToMedia.has(gamePlayTab)) {
                     const gamePlayMedia = this._getIframe("gameplay");
 
+                    this._tabToMedia.set(gamePlayTab, gamePlayMedia);
+
+                    if (gamePlayMedia === null) { return; }
+
                     document.querySelector(".highlight_ctn")
                         .insertAdjacentElement("beforeend", gamePlayMedia);
-
-                    this._tabToMedia.set(gamePlayTab, gamePlayMedia);
                 }
 
-                this._setActiveTab(gamePlayTab);
+                if (this._tabToMedia.get(gamePlayTab) !== null) {
+                    this._setActiveTab(gamePlayTab);
+                }
             });
         }
 
@@ -86,18 +85,24 @@ export default class FYouTubeVideos extends Feature {
                 if (!this._tabToMedia.has(reviewTab)) {
                     const reviewMedia = this._getIframe("reviews");
 
+                    this._tabToMedia.set(reviewTab, reviewMedia);
+
+                    if (reviewMedia === null) { return; }
+
                     document.querySelector(".highlight_ctn")
                         .insertAdjacentElement("beforeend", reviewMedia);
-
-                    this._tabToMedia.set(reviewTab, reviewMedia);
                 }
 
-                this._setActiveTab(reviewTab);
+                if (this._tabToMedia.get(reviewTab) !== null) {
+                    this._setActiveTab(reviewTab);
+                }
             });
         }
     }
 
     _setActiveTab(tab) {
+        if (!tab) { return; }
+
         const activeTab = document.querySelector(".js-tab.active");
         if (activeTab === tab) { return; }
 
@@ -127,7 +132,7 @@ export default class FYouTubeVideos extends Feature {
 
     _getIframe(type) {
 
-        const videoIds = this._data[type];
+        const videoIds = this._data && this._data[type];
         if (!videoIds) { return null; }
 
         const hlParam = encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()));
