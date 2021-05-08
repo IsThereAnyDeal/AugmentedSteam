@@ -11,25 +11,6 @@ class ITADApi extends Api {
         const rnd = crypto.getRandomValues(new Uint32Array(1))[0];
         const redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
 
-        /*
-         * How to use webRequest with event pages:
-         * https://groups.google.com/a/chromium.org/d/msg/chromium-extensions/K8njaUCU81c/eUxMIEACAQAJ
-         *
-         * Preventing event page from unloading by using iframe
-         * https://stackoverflow.com/a/58577052
-         */
-        function noop() {
-            // intentionally empty to allow removing listener
-        }
-        browser.runtime.onConnect.addListener(noop);
-
-        /*
-         * For some reason the scripts are not inserted on FF,
-         * but this doesn't really matter since FF doesn't support event pages.
-         * Therefore the event listeners never gets unloaded.
-         */
-        document.body.appendChild(document.createElement("iframe")).src = "authorizationFrame.html";
-
         const authUrl = new URL(`${Config.ITADApiServerHost}/oauth/authorize/`);
         authUrl.searchParams.set("client_id", Config.ITADClientId);
         authUrl.searchParams.set("response_type", "token");
@@ -39,46 +20,40 @@ class ITADApi extends Api {
 
         const tab = await browser.tabs.create({"url": authUrl.toString()});
 
-        let url;
-        try {
-            url = await new Promise((resolve, reject) => {
-                function webRequestListener({url}) {
-                    resolve(url);
+        const url = await new Promise((resolve, reject) => {
+            function webRequestListener({url}) {
+                resolve(url);
+
+                browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
+                // eslint-disable-next-line no-use-before-define -- Circular dependency
+                browser.tabs.onRemoved.removeListener(tabsListener);
+
+                browser.tabs.remove(tab.id);
+                return {"cancel": true};
+            }
+
+            function tabsListener(tabId) {
+                if (tabId === tab.id) {
+                    reject(new Error("Authorization tab closed"));
 
                     browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
-                    // eslint-disable-next-line no-use-before-define -- Circular dependency
                     browser.tabs.onRemoved.removeListener(tabsListener);
-
-                    browser.tabs.remove(tab.id);
-                    return {"cancel": true};
                 }
+            }
 
-                function tabsListener(tabId) {
-                    if (tabId === tab.id) {
-                        reject(new Error("Authorization tab closed"));
-
-                        browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
-                        browser.tabs.onRemoved.removeListener(tabsListener);
-                    }
-                }
-
-                browser.webRequest.onBeforeRequest.addListener(
-                    webRequestListener,
-                    {
-                        "urls": [
-                            redirectURI, // For Chrome, seems to not support match patterns (a problem with the Polyfill?)
-                            `${redirectURI}#*` // For Firefox
-                        ],
-                        "tabId": tab.id
-                    },
-                    ["blocking"]
-                );
-                browser.tabs.onRemoved.addListener(tabsListener);
-            });
-        } finally {
-            browser.runtime.onConnect.removeListener(noop);
-            document.querySelector("iframe").remove();
-        }
+            browser.webRequest.onBeforeRequest.addListener(
+                webRequestListener,
+                {
+                    "urls": [
+                        redirectURI, // For Chrome, seems to not support match patterns (a problem with the Polyfill?)
+                        `${redirectURI}#*` // For Firefox
+                    ],
+                    "tabId": tab.id
+                },
+                ["blocking"]
+            );
+            browser.tabs.onRemoved.addListener(tabsListener);
+        });
 
         const hashFragment = new URL(url).hash;
         const params = new URLSearchParams(hashFragment.substr(1));

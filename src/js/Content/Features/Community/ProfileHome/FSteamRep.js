@@ -9,30 +9,26 @@ export default class FSteamRep extends Feature {
 
     async apply() {
 
-        const data = await ProfileData;
-
-        if (!data.steamrep || data.steamrep.length === 0) { return; }
-
-        const steamId = SteamId.getSteamId();
-        if (!steamId) { return; }
+        const {steamrep} = await ProfileData || {};
+        if (!steamrep || !steamrep.length) { return; }
 
         // Build reputation images regexp
         const repImgs = {
-            "banned": /scammer|banned/gi,
-            "valve": /valve admin/gi,
-            "caution": /caution/gi,
-            "okay": /admin|middleman/gi,
-            "donate": /donator/gi
+            "banned": /scammer|banned/i,
+            "valve": /valve admin/i,
+            "caution": /caution/i,
+            "okay": /admin|middleman/i,
+            "donate": /donator/i
         };
 
         let html = "";
 
-        for (const value of data.steamrep) {
+        for (const value of steamrep) {
 
             if (value.trim() === "") { continue; }
 
             for (const [img, regex] of Object.entries(repImgs)) {
-                if (!value.match(regex)) { continue; }
+                if (!regex.test(value)) { continue; }
 
                 const imgUrl = ExtensionResources.getURL(`img/sr/${img}.png`);
                 let status;
@@ -58,6 +54,7 @@ export default class FSteamRep extends Feature {
         }
 
         if (html) {
+            const steamId = SteamId.getSteamId();
 
             HTML.afterBegin(".profile_rightcol",
                 `<a id="es_steamrep" href="https://steamrep.com/profiles/${steamId}" target="_blank">

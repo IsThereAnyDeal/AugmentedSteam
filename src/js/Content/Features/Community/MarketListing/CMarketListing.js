@@ -3,7 +3,7 @@ import {CCommunityBase} from "../CCommunityBase";
 import FSoldAmountLastDay from "./FSoldAmountLastDay";
 import FBackgroundPreviewLink from "./FBackgroundPreviewLink";
 import FBadgePageLink from "./FBadgePageLink";
-import FPriceHistoryZoomControl from "./FPriceHistoryZoomControl";
+import FPriceHistoryZoomYear from "../FPriceHistoryZoomYear";
 
 export class CMarketListing extends CCommunityBase {
 
@@ -12,10 +12,10 @@ export class CMarketListing extends CCommunityBase {
             FSoldAmountLastDay,
             FBackgroundPreviewLink,
             FBadgePageLink,
-            FPriceHistoryZoomControl,
+            FPriceHistoryZoomYear,
         ]);
 
-        const m = window.location.href.match(/\/(\d+)\/(.+)$/);
+        const m = window.location.pathname.match(/\/(\d+)\/(.+)$/);
         this.appid = Number(m[1]);
         this.marketHashName = m[2];
     }

@@ -8,7 +8,7 @@ export default class FWishlistUserNotes extends CallbackFeature {
         return this.context.myWishlist && SyncedStorage.get("showusernotes");
     }
 
-    apply() {
+    setup() {
         this._userNotes = new UserNotes();
 
         document.addEventListener("click", ({target}) => {
@@ -26,8 +26,6 @@ export default class FWishlistUserNotes extends CallbackFeature {
                 }
             );
         });
-
-        super.apply();
     }
 
     callback(nodes) {

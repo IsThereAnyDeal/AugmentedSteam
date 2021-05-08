@@ -7,6 +7,10 @@ export default class FCardExchangeLinks extends CallbackFeature {
         return SyncedStorage.get("steamcardexchange");
     }
 
+    setup() {
+        this.callback();
+    }
+
     callback() {
 
         const ceImg = ExtensionResources.getURL("img/ico/steamcardexchange.png");

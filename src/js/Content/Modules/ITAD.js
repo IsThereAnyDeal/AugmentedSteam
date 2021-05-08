@@ -4,6 +4,7 @@ import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
 import {Localization} from "../../Core/Localization/Localization";
 import {Background} from "./Background";
 import {User} from "./User";
+import {TimeUtils} from "../../modulesCore";
 
 class ITAD {
     static async create() {
@@ -82,7 +83,7 @@ class ITAD {
 
                     timeout = 3000;
                 } finally {
-                    setTimeout(() => { hover.style.display = ""; }, timeout);
+                    TimeUtils.timer(timeout).then(() => { hover.style.display = ""; });
                     syncDiv.classList.remove("es-itad-hover__sync-now--loading");
                 }
             });

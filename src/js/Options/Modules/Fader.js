@@ -6,7 +6,7 @@ class Fader {
         node.style.transition = "";
         node.style[property] = initialValue;
 
-        await TimeUtils.sleep(0);
+        await TimeUtils.timer(0);
 
         node.style.transition = `${property} ${durationMs}ms`;
         node.style[property] = finalValue;
@@ -25,7 +25,7 @@ class Fader {
         node.dataset.fadeControl = controlId;
 
         Fader.fadeIn(node, fadeInDuration);
-        await TimeUtils.sleep(fadeInDuration + idleDuration);
+        await TimeUtils.timer(fadeInDuration + idleDuration);
 
         if (node.dataset.fadeControl === controlId) {
             Fader.fadeOut(node, fadeOutDuration);

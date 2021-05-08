@@ -1,4 +1,4 @@
-import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
+import {ExtensionResources, HTML, Localization, TimeUtils} from "../../../../modulesCore";
 import {Feature, RequestData, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -13,10 +13,10 @@ export default class FMultiProductKeys extends Feature {
                             <textarea name="es_key_input" id="es_key_input" rows="24" cols="12" maxlength="1080">__alreadyentered__</textarea>
                         </div>
                         <div class="es_activate_buttons" style="float: right">
-                            <div class="btn_green_white_innerfade btn_medium es_activate_modal_submit">
+                            <div class="es_activate_modal_submit btn_green_steamui btn_medium">
                                 <span>${Localization.str.activate_products}</span>
                             </div>
-                            <div class="es_activate_modal_close btn_grey_white_innerfade btn_medium">
+                            <div class="es_activate_modal_close btn_grey_steamui btn_medium">
                                 <span>${Localization.str.cancel}</span>
                             </div>
                         </div>
@@ -77,9 +77,7 @@ export default class FMultiProductKeys extends Feature {
             });
 
             // force recalculation of the modal's position so it doesn't extend off the bottom of the page
-            setTimeout(() => {
-                window.dispatchEvent(new Event("resize"));
-            }, 250);
+            TimeUtils.timer(250).then(() => { window.dispatchEvent(new Event("resize")); });
 
             // attempt to activate each key in sequence
             const promises = [];

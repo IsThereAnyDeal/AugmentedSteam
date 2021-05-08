@@ -4,8 +4,18 @@ export default {
     "show_progressbar": "show_progressbar",
     "version_show": "options.version_show",
     "replaceaccountname": "options.replace_account_name",
-    "showfakeccwarning": "options.show_regionwarning",
     "show_backtotop": "options.show_backtotop",
+    "disablelinkfilter": "options.disablelinkfilter",
+    "send_age_info": "options.send_age_info",
+    "openinnewtab": "options.openinnewtab",
+    "installsteam": [
+        "options.install_steam_button",
+        [
+            ["show", "show"],
+            ["hide", "hide"],
+            ["replace", "options.replace_view_client"]
+        ]
+    ],
 
     // context menu
     "context_steam_store": "options.context_steam_store",
@@ -46,15 +56,6 @@ export default {
     "hide_owned": "options.hide_owned",
     "hide_ignored": "options.hide_ignored",
     "hidetmsymbols": "options.hidetmsymbols",
-    "hideaboutlinks": "options.hide_about_links",
-    "installsteam": [
-        "options.install_steam_button",
-        [
-            ["show", "show"],
-            ["hide", "hide"],
-            ["replace", "options.replace_view_client"]
-        ]
-    ],
 
     // store homepage
     "homepage_tab_selection": [
@@ -67,28 +68,22 @@ export default {
         ]
     ],
 
-    // store general
+    // store wishlist
     "showemptywishlist": "options.show_empty_wishlist",
     "showwishliststats": "options.show_wishlist_stats",
-    "showusernotes": "options.show_user_notes",
-    "send_age_info": "options.send_age_info",
-    "removebroadcasts": "options.removebroadcasts",
+
+    // store app page
     "mp4video": "options.mp4video",
-    "horizontalscrolling": "options.horizontalscrolling",
     "showsupportinfo": "options.supportinfo",
     "showdrm": "options.drm",
-    "openinnewtab": "options.openinnewtab",
     "showviewinlibrary": "options.show_view_in_library",
     "show_package_info": "options.show_package_info",
-    "show_early_access": "options.show_early_access",
     "showachinstore": "achievements.option",
     "purchase_dates": "options.purchase_dates",
     "show_badge_progress": "options.show_badge_progress",
     "show_coupon": "options.show_coupon",
-    "show_alternative_linux_icon": "options.show_alternative_linux_icon",
-    "skip_got_steam": "options.skip_got_steam",
-
-    // store 3rdparty
+    "removebroadcasts": "options.removebroadcasts",
+    "exfgls": "options.exfgls",
     "showmcus": "options.metacritic",
     "showoc": "options.opencritic",
     "showhltb": "options.hltb",
@@ -107,6 +102,13 @@ export default {
     "showsteamcardexchange": "options.store_steamcards",
     "show_steamchart_info": "options.show_steamchart_info",
     "show_steamspy_info": "options.show_steamspy_info",
+
+    // store general
+    "showusernotes": "options.show_user_notes",
+    "horizontalscrolling": "options.horizontalscrolling",
+    "show_early_access": "options.show_early_access",
+    "show_alternative_linux_icon": "options.show_alternative_linux_icon",
+    "skip_got_steam": "options.skip_got_steam",
 
     // price
     "showlowestprice": "options.lowestprice",
@@ -175,6 +177,5 @@ export default {
     "steamcardexchange": "options.steamcardexchange",
     "wlbuttoncommunityapp": "options.wlbuttoncommunityapp",
     "removeguideslanguagefilter": "options.removeguideslanguagefilter",
-    "disablelinkfilter": "options.disablelinkfilter",
     "showallfriendsthatown": "options.showallfriendsthatown",
 };

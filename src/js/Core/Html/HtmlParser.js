@@ -1,6 +1,7 @@
 import {HTML} from "./Html";
 
 class HTMLParser {
+
     static clearSpecialSymbols(string) {
         return string.replace(/[\u00AE\u00A9\u2122]/g, "");
     }
@@ -17,7 +18,7 @@ class HTMLParser {
         let regex;
         if (type === "object") {
             regex = new RegExp(`${name}\\s*=\\s*(\\{.+?\\});`);
-        } else if (type === "array") { // otherwise array
+        } else if (type === "array") {
             regex = new RegExp(`${name}\\s*=\\s*(\\[.+?\\]);`);
         } else if (type === "int") {
             regex = new RegExp(`${name}\\s*=\\s*(.+?);`);
@@ -38,15 +39,15 @@ class HTMLParser {
         return null;
     }
 
-    static getVariableFromDom(variableName, type, dom) {
-        const _dom = dom || document;
-        const nodes = _dom.querySelectorAll("script");
-        for (const node of nodes) {
-            const m = HTMLParser.getVariableFromText(node.textContent, variableName, type);
-            if (m) {
-                return m;
+    static getVariableFromDom(name, type, dom = document) {
+        for (const node of dom.querySelectorAll("script")) {
+            const value = HTMLParser.getVariableFromText(node.textContent, name, type);
+
+            if (value !== null) {
+                return value;
             }
         }
+
         return null;
     }
 }

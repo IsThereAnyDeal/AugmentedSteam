@@ -50,7 +50,7 @@ class SteamFacade {
         return HideMenu(elemLink, elemPopup);
     }
 
-    // strings
+    // app pages
 
     static collapseLongStrings(selector) {
         return CollapseLongStrings(selector);
@@ -69,7 +69,7 @@ class SteamFacade {
     }
 
     static dynamicStoreDecorateItems(selector, bForceRecalculate) {
-        return DecorateDynamicItems($J(selector), bForceRecalculate);
+        return GDynamicStore.DecorateDynamicItems($J(selector), bForceRecalculate);
     }
 
     static onDynamicStoreReady(callback) {
@@ -82,16 +82,15 @@ class SteamFacade {
 
     // tooltips
 
-    static bindTooltips(selector, rgOptions) {
-        BindTooltips(selector, rgOptions);
-    }
+    static vTooltip(selector, isHtml = false) {
+        const isStore = window.location.host === "store.steampowered.com";
 
-    static setupTooltips(className = "community_tooltip") {
-        return SetupTooltips({"tooltipCSSClass": className});
-    }
-
-    static vTooltip(selector, method) {
-        $J(selector).v_tooltip(method);
+        $J(selector).v_tooltip({
+            "tooltipClass": isStore ? "store_tooltip" : "community_tooltip",
+            "dataName": isHtml ? "tooltipHtml" : "tooltipText",
+            "defaultType": isHtml ? "html" : "text",
+            "replaceExisting": false
+        });
     }
 
     // market
@@ -100,8 +99,8 @@ class SteamFacade {
         return CalculateFeeAmount(amount, publisherFee);
     }
 
-    static boosterCreatorData() {
-        return CBoosterCreator.sm_rgBoosterData;
+    static vCurrencyFormat(amount, currencyCode) {
+        return v_currencyformat(amount, currencyCode);
     }
 
     // friends
@@ -132,10 +131,44 @@ class SteamFacade {
         return GetCheckedAccounts(selector);
     }
 
+    static execFriendAction(action, navid) {
+        return ExecFriendAction(action, navid);
+    }
+
     static scrollOffsetForceRecalc() {
         CScrollOffsetWatcher.ForceRecalc();
     }
 
+    // inventory
+
+    static firstPage() {
+        return InventoryFirstPage();
+    }
+
+    static lastPage() {
+        return InventoryLastPage();
+    }
+
+    static goToPage() {
+        return InventoryGoToPage();
+    }
+
+    static reloadCommunityInventory() {
+        return ReloadCommunityInventory();
+    }
+
+    static getMarketHashName(itemDesc) {
+        return GetMarketHashName(itemDesc);
+    }
+
+    static zoomYear() {
+        pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
+    }
+
+    static zoomYearForSellDialog() {
+        pricehistory_zoomDays(SellItemDialog.m_plotPriceHistory, SellItemDialog.m_timePriceHistoryEarliest, SellItemDialog.m_timePriceHistoryLatest, 365);
+    }
+      
     // selections
 
     static updateSelection() {
@@ -163,6 +196,18 @@ class SteamFacade {
 
     static jqOnClick(selector, callback) {
         $J(selector).on("click", callback);
+    }
+
+    static jqAjax(settings) {
+        return $J.ajax(settings);
+    }
+
+    static jqGet(url, settings) {
+        return $J.get(url, settings);
+    }
+
+    static jqPost(url, settings) {
+        return $J.post(url, settings);
     }
 }
 

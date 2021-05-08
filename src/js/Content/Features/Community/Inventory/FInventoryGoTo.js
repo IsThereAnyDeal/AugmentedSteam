@@ -1,129 +1,101 @@
 import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
-import {CallbackFeature, DOMHelper} from "../../../modulesContent";
+import {DOMHelper, Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
-export default class FInventoryGoTo extends CallbackFeature {
-
-    constructor(context) {
-        super(context, true, () => {
-            new MutationObserver(() => {
-                this.callback();
-            }).observe(document.querySelector("div.games_list_tabs"), {"subtree": true, "attributes": true});
-        });
-    }
+export default class FInventoryGoTo extends Feature {
 
     checkPrerequisites() {
         return SyncedStorage.get("showinvnav");
     }
 
-    callback() {
-
-        // todo can this be circumvented?
-        DOMHelper.remove("#es_gotopage");
-        DOMHelper.remove("#pagebtn_first");
-        DOMHelper.remove("#pagebtn_last");
-        DOMHelper.remove("#es_pagego");
-
-        DOMHelper.insertScript({"content":
-            `g_ActiveInventory.GoToPage = function(page) {
-                var nPageWidth = this.m_$Inventory.children('.inventory_page:first').width();
-                var iCurPage = this.m_iCurrentPage;
-                var iNextPage = Math.min(Math.max(0, --page), this.m_cPages-1);
-                var iPages = this.m_cPages
-                var _this = this;
-                if (iCurPage < iNextPage) {
-                    if (iCurPage < iPages - 1) {
-                        this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
-                        this.m_$Inventory.css( 'left', '0' );
-                        this.m_$Inventory.animate( {left: -nPageWidth}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
-                    }
-                } else if (iCurPage > iNextPage) {
-                    if (iCurPage > 0) {
-                        this.PrepPageTransition( nPageWidth, iCurPage, iNextPage );
-                        this.m_$Inventory.css( 'left', '-' + nPageWidth + 'px' );
-                        this.m_$Inventory.animate( {left: 0}, 250, null, function() { _this.FinishPageTransition( iCurPage, iNextPage ); } );
-                    }
-                }
-            };
-
-            function InventoryLastPage(){
-                g_ActiveInventory.GoToPage(g_ActiveInventory.m_cPages);
-            }
-            function InventoryFirstPage(){
-                g_ActiveInventory.GoToPage(1);
-            }
-            function InventoryGoToPage(){
-                var page = $('es_pagenumber').value;
-                if (isNaN(page)) return;
-                g_ActiveInventory.GoToPage(parseInt(page));
-            }`}, "es_gotopage");
+    apply() {
+        this._insertScript();
 
         // Go to first page
-        HTML.afterEnd("#pagebtn_previous", "<a id='pagebtn_first' class='pagebtn pagecontrol_element disabled'>&lt;&lt;</a>");
-        document.querySelector("#pagebtn_first").addEventListener("click", () => {
-            Page.runInPageContext(() => { InventoryFirstPage(); }); // eslint-disable-line no-undef, new-cap
+        HTML.afterEnd("#pagebtn_previous", '<a id="pagebtn_first" class="pagebtn pagecontrol_element disabled">&lt;&lt;</a>');
+        document.getElementById("pagebtn_first").addEventListener("click", () => {
+            Page.runInPageContext(() => { window.SteamFacade.firstPage(); });
         });
 
         // Go to last page
-        HTML.beforeBegin("#pagebtn_next", "<a id='pagebtn_last' class='pagebtn pagecontrol_element'>&gt;&gt;</a>");
-        document.querySelector("#pagebtn_last").addEventListener("click", () => {
-            Page.runInPageContext(() => { InventoryLastPage(); }); // eslint-disable-line no-undef, new-cap
+        HTML.beforeBegin("#pagebtn_next", '<a id="pagebtn_last" class="pagebtn pagecontrol_element">&gt;&gt;</a>');
+        document.getElementById("pagebtn_last").addEventListener("click", () => {
+            Page.runInPageContext(() => { window.SteamFacade.lastPage(); });
         });
-
-        const pageGo = document.createElement("div");
-        pageGo.id = "es_pagego";
-        pageGo.style.float = "left";
 
         // Page number box
-        const pageNumber = document.createElement("input");
-        pageNumber.type = "number";
-        pageNumber.value = "1";
-        pageNumber.classList.add("filter_search_box");
-        pageNumber.autocomplete = "off";
-        pageNumber.placeholder = "page #";
-        pageNumber.id = "es_pagenumber";
-        pageNumber.style.width = "50px";
-        pageNumber.min = 1;
-        pageNumber.max = document.querySelector("#pagecontrol_max").textContent;
+        const pageMax = document.getElementById("pagecontrol_max");
+        HTML.beforeBegin("#inventory_pagecontrols",
+            `<div id="es_pagego">
+                <input type="number" id="es_pagenumber" class="filter_search_box" value="1" min="1" max="${pageMax.textContent}">
+                <a id="es_gotopage_btn" class="pagebtn">${Localization.str.go}</a>
+            </div>`);
+        document.getElementById("es_gotopage_btn").addEventListener("click", () => {
+            Page.runInPageContext(() => { window.SteamFacade.goToPage(); });
+        });
+        // Update the input's max value when the number of pages changes
+        new MutationObserver(() => {
+            document.getElementById("es_pagenumber").max = pageMax.textContent;
+        }).observe(pageMax, {"subtree": true, "childList": true});
 
-        pageGo.append(pageNumber);
+        new MutationObserver(mutations => {
+            for (const {target} of mutations) {
+                const id = target.id;
 
-        const gotoButton = document.createElement("a");
-        gotoButton.textContent = Localization.str.go;
-        gotoButton.id = "gotopage_btn";
-        gotoButton.classList.add("pagebtn");
-        // eslint-disable-next-line no-script-url -- Using it the way Steam does too
-        gotoButton.href = "javascript:InventoryGoToPage();";
-        gotoButton.style.width = "32px";
-        gotoButton.style.padding = "0";
-        gotoButton.style.margin = "0 6px";
-        gotoButton.style.textAlign = "center";
-
-        pageGo.append(gotoButton);
-
-        document.querySelector("#inventory_pagecontrols").insertAdjacentElement("beforebegin", pageGo);
-
-        const observer = new MutationObserver(mutations => {
-            mutations.forEach((mutation) => {
-                if (mutation.attributeName !== "class") { return; }
-                if (!mutation.target.id) { return; }
-
-                const id = mutation.target.id;
-                if (id === "pagebtn_next") {
-                    document.querySelector("#pagebtn_last").classList.toggle(
-                        "disabled",
-                        mutation.target.classList.contains("disabled")
-                    );
-                } else if (id === "pagebtn_previous") {
-                    document.querySelector("#pagebtn_first").classList.toggle(
-                        "disabled",
-                        mutation.target.classList.contains("disabled")
-                    );
+                // Hide page number box when page controls are hidden
+                if (id === "inventory_pagecontrols") {
+                    document.getElementById("es_pagego").style.visibility = target.style.visibility;
                 }
 
-            });
-        });
-        observer.observe(document.querySelector("#pagebtn_next"), {"attributes": true});
-        observer.observe(document.querySelector("#pagebtn_previous"), {"attributes": true});
+                if (id === "pagebtn_next") {
+                    document.getElementById("pagebtn_last").classList.toggle("disabled", target.classList.contains("disabled"));
+                } else if (id === "pagebtn_previous") {
+                    document.getElementById("pagebtn_first").classList.toggle("disabled", target.classList.contains("disabled"));
+                }
+            }
+        }).observe(document.getElementById("inventory_pagecontrols"), {"subtree": true, "attributes": true});
+    }
+
+    _insertScript() {
+
+        DOMHelper.insertScript({"content":
+            // g_ActiveInventory is sometimes set to null or a different inventory, thus clearing our GoToPage fn
+            `function ensureFn() {
+                if (typeof g_ActiveInventory.GoToPage === "function") { return; }
+                g_ActiveInventory.GoToPage = function(page) {
+                    const nPageWidth = this.m_$Inventory.children(".inventory_page:first").width();
+                    const iCurPage = this.m_iCurrentPage;
+                    const iNextPage = Math.min(Math.max(0, --page), this.m_cPages - 1);
+                    const iPages = this.m_cPages;
+                    if (iCurPage < iNextPage) {
+                        if (iCurPage < iPages - 1) {
+                            this.PrepPageTransition(nPageWidth, iCurPage, iNextPage);
+                            this.m_$Inventory.css("left", "0");
+                            this.m_$Inventory.animate({"left": -nPageWidth}, 250, null, () => this.FinishPageTransition(iCurPage, iNextPage));
+                        }
+                    } else if (iCurPage > iNextPage) {
+                        if (iCurPage > 0) {
+                            this.PrepPageTransition(nPageWidth, iCurPage, iNextPage);
+                            this.m_$Inventory.css("left", "-" + nPageWidth + "px");
+                            this.m_$Inventory.animate({"left": 0}, 250, null, () => this.FinishPageTransition(iCurPage, iNextPage));
+                        }
+                    }
+                };
+            }
+
+            function InventoryLastPage() {
+                ensureFn();
+                g_ActiveInventory.GoToPage(g_ActiveInventory.m_cPages);
+            }
+            function InventoryFirstPage() {
+                ensureFn();
+                g_ActiveInventory.GoToPage(1);
+            }
+            function InventoryGoToPage() {
+                ensureFn();
+                const page = $("es_pagenumber").value;
+                if (isNaN(page)) { return; }
+                g_ActiveInventory.GoToPage(parseInt(page));
+            }`});
     }
 }

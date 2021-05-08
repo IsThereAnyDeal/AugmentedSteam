@@ -1,5 +1,5 @@
 import {Feature} from "../../../Modules/Feature/Feature";
-import {HTML, LocalStorage} from "../../../../modulesCore";
+import {HTML, LocalStorage, TimeUtils} from "../../../../modulesCore";
 
 export default class FHDPlayer extends Feature {
 
@@ -48,38 +48,36 @@ export default class FHDPlayer extends Feature {
             }
         }
 
-        function addHDControl(videoControl) {
+        async function addHDControl(videoControl) {
 
             playInHD = LocalStorage.get("playback_hd");
 
-            setTimeout(() => {
-
-                // Add "HD" button to the video
-                if (videoControl.dataset.hdSrc) {
-                    const node = videoControl.parentNode.querySelector(".time");
-                    if (node) {
-                        HTML.afterEnd(node, '<div class="es_hd_toggle"><span>HD</span></div>');
-                    }
-                }
-
-                // Override Valve's auto switch to HD when putting a video in fullscreen
-                let node = videoControl.parentNode.querySelector(".fullscreen_button");
-                if (node) {
-                    let newNode = document.createElement("div");
-                    newNode.classList.add("fullscreen_button");
-                    newNode.addEventListener("click", (() => toggleFullscreen(videoControl)), false);
-                    node.replaceWith(newNode);
-                    node = null; // prevent memory leak
-                    newNode = null;
-                }
-
-                // Toggle fullscreen on video double click
-                videoControl.addEventListener("dblclick", (() => toggleFullscreen(videoControl)), false);
-
-                that.context.toggleVideoDefinition(videoControl, playInHD);
-            }, 150);
-
             // prevents a bug in Chrome which causes videos to stop playing after changing the src
+            await TimeUtils.timer(150);
+
+            // Add "HD" button to the video
+            if (videoControl.dataset.hdSrc) {
+                const node = videoControl.parentNode.querySelector(".time");
+                if (node) {
+                    HTML.afterEnd(node, '<div class="es_hd_toggle"><span>HD</span></div>');
+                }
+            }
+
+            // Override Valve's auto switch to HD when putting a video in fullscreen
+            let node = videoControl.parentNode.querySelector(".fullscreen_button");
+            if (node) {
+                let newNode = document.createElement("div");
+                newNode.classList.add("fullscreen_button");
+                newNode.addEventListener("click", (() => toggleFullscreen(videoControl)), false);
+                node.replaceWith(newNode);
+                node = null; // prevent memory leak
+                newNode = null;
+            }
+
+            // Toggle fullscreen on video double click
+            videoControl.addEventListener("dblclick", (() => toggleFullscreen(videoControl)), false);
+
+            that.context.toggleVideoDefinition(videoControl, playInHD);
         }
 
         // Add HD Control to each video as it's added to the DOM

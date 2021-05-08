@@ -4,6 +4,10 @@ import FHighlightsTags from "../../Common/FHighlightsTags";
 
 export default class FHighlightFriendsActivity extends CallbackFeature {
 
+    setup() {
+        this.callback();
+    }
+
     async callback() {
         await DynamicStore;
 

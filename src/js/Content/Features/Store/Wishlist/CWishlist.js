@@ -1,5 +1,5 @@
 import {ContextType, User} from "../../../modulesContent";
-import {CStoreBaseCallback} from "../Common/CStoreBaseCallback";
+import {CStoreBase} from "../Common/CStoreBase";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
 import FWishlistHighlights from "./FWishlistHighlights";
 import FWishlistITADPrices from "./FWishlistITADPrices";
@@ -7,11 +7,17 @@ import FWishlistUserNotes from "./FWishlistUserNotes";
 import FWishlistStats from "./FWishlistStats";
 import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
-import {Page} from "../../Page";
+import {TimeUtils} from "../../../../modulesCore";
 
-export class CWishlist extends CStoreBaseCallback {
+export class CWishlist extends CStoreBase {
 
     constructor() {
+        // Don't apply features on empty or private wishlists
+        if (document.getElementById("nothing_to_see_here").style.display !== "none") {
+            super(ContextType.WISHLIST);
+            return;
+        }
+
         super(ContextType.WISHLIST, [
             FWishlistHighlights,
             FWishlistITADPrices,
@@ -29,32 +35,35 @@ export class CWishlist extends CStoreBaseCallback {
         } else {
             this.myWishlist = false;
         }
-
-        this._registerObserver();
     }
 
     async applyFeatures() {
-        if (document.querySelector("#throbber").style.display !== "none") {
-            await Page.runInPageContext(() => new Promise(resolve => {
-                /* eslint-disable no-undef, camelcase */
-                $J(document).ajaxSuccess((e, xhr, settings) => {
-                    const url = new URL(settings.url);
-                    if (url.origin + url.pathname === `${g_strWishlistBaseURL}wishlistdata/` && g_Wishlist.nPagesToLoad === g_Wishlist.nPagesLoaded) {
-                        resolve();
-                    }
-                });
-                /* eslint-enable no-undef, camelcase */
-            }), null, true);
+        const throbber = document.getElementById("throbber");
+        if (throbber.style.display !== "none") {
+            await new Promise(resolve => {
+                new MutationObserver((mutations, observer) => {
+                    observer.disconnect();
+                    resolve();
+                }).observe(throbber, {"attributes": true});
+            });
         }
 
-        super.applyFeatures();
+        await super.applyFeatures();
+
+        const alreadyLoaded = document.querySelectorAll(".wishlist_row");
+        if (alreadyLoaded.length !== 0) {
+            this.triggerCallbacks(alreadyLoaded);
+
+            window.dispatchEvent(new Event("resize"));
+        }
+
+        this._registerObserver();
     }
 
     _registerObserver() {
 
         const container = document.getElementById("wishlist_ctn");
-        let timeout = null,
-            lastRequest = null;
+        let timer = null;
         const delayedWork = new Set();
 
         new MutationObserver(mutations => {
@@ -65,34 +74,20 @@ export class CWishlist extends CStoreBaseCallback {
                 }
             }
 
-            lastRequest = window.performance.now();
+            if (timer === null) {
 
-            if (timeout === null) {
-
-                const that = this;
-
-                timeout = window.setTimeout(function markWishlist() {
-                    if (window.performance.now() - lastRequest < 40) {
-                        timeout = window.setTimeout(markWishlist, 50);
-                        return;
-                    }
-
-                    timeout = null;
-
-                    if (that._callbacks.length === 0) {
-
-                        // Wait until the callbacks have registered
-                        return;
-                    }
+                timer = TimeUtils.resettableTimer(() => {
 
                     // Valve detaches wishlist entries that aren't visible
                     const arg = Array.from(delayedWork).filter(node => node.parentNode === container);
                     delayedWork.clear();
 
-                    that.triggerCallbacks(arg);
+                    this.triggerCallbacks(arg);
 
                     window.dispatchEvent(new Event("resize"));
                 }, 50);
+            } else {
+                timer.reset();
             }
         }).observe(container, {"childList": true});
     }

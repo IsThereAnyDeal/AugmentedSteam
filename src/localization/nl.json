@@ -572,7 +572,12 @@
             "import_fail": "Instellingen importeren gefaald",
             "export": "Exporteren",
             "reset": "Resetten"
-        }
+        },
+        "removebroadcasts": "",
+        "maintainers": "",
+        "with_help_of": "",
+        "contributors": "",
+        "apppage": ""
     },
     "ready": {
         "errormsg": "Fout tijdens het laden van Augmented Steam gegevens",

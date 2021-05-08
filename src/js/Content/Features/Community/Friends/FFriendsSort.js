@@ -4,22 +4,24 @@ import {Feature, RequestData, Sortbox} from "../../../modulesContent";
 export default class FFriendsSort extends Feature {
 
     checkPrerequisites() {
-        return document.querySelectorAll(".friend_block_v2.persona.offline").length !== 0
-            && document.querySelector("#manage_friends_control") !== null;
+        // Only add sort options if on own friends page
+        if (!document.querySelector("#manage_friends_control")) { return false; }
+
+        this.offlineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
+        return this.offlineFriends.length > 1;
     }
 
     apply() {
 
-        const offlineFriends = document.querySelectorAll(".friend_block_v2.persona.offline");
-
-        offlineFriends.forEach((friend, i) => { friend.dataset.esSortDefault = i; });
-
-        const sortBy = SyncedStorage.get("sortfriendsby");
+        this.offlineFriends.forEach((friend, i) => { friend.dataset.esSortDefault = i; });
 
         document.querySelector("#manage_friends_control").insertAdjacentElement("beforebegin", Sortbox.get(
             "friends",
-            [["default", Localization.str.theworddefault], ["lastonline", Localization.str.lastonline]],
-            sortBy,
+            [
+                ["default", Localization.str.theworddefault],
+                ["lastonline", Localization.str.lastonline]
+            ],
+            SyncedStorage.get("sortfriendsby"),
             (sortBy, reversed) => { this._sortFriends(sortBy, reversed); },
             "sortfriendsby"
         ));
@@ -36,26 +38,29 @@ export default class FFriendsSort extends Feature {
             const dom = HTMLParser.htmlToElement(data);
 
             for (const friend of dom.querySelectorAll(".friend_block_v2.persona.offline")) {
-                const lastOnline = friend.querySelector(".friend_last_online_text").textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
-                let time = Infinity;
+                let lastOnline = friend.querySelector(".friend_last_online_text");
+
+                // Doesn't exist when profile is private
+                if (lastOnline) {
+                    lastOnline = lastOnline.textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
+                }
+
+                let downtime = Infinity;
                 if (lastOnline) {
                     const days = parseInt(lastOnline[1]) || 0;
                     const hours = parseInt(lastOnline[2]) || 0;
                     const minutes = parseInt(lastOnline[3]) || 0;
-                    const downtime = (((days * 24) + hours) * 60) + minutes;
-                    time = downtime;
+                    downtime = (((days * 24) + hours) * 60) + minutes;
                 }
-                document.querySelector(`.friend_block_v2.persona.offline[data-steamid="${friend.dataset.steamid}"]`).dataset.esSortTime = time;
+                document.querySelector(`.friend_block_v2.persona.offline[data-steamid="${friend.dataset.steamid}"]`).dataset.esSortTime = downtime;
             }
         }
 
-        const offlineBlock = document.querySelector("#state_offline");
-        const curOfflineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
-
         const property = `esSort${_sortBy === "default" ? "Default" : "Time"}`;
-        curOfflineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
+        this.offlineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
 
-        for (const friend of curOfflineFriends) {
+        const offlineBlock = document.querySelector("#state_offline");
+        for (const friend of this.offlineFriends) {
             if (reversed) {
                 offlineBlock.insertAdjacentElement("afterend", friend);
             } else {

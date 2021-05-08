@@ -4,68 +4,61 @@ import {Page} from "../../Page";
 
 export default class FWaitlistDropdown extends Feature {
 
-    checkPrerequisites() {
-        return document.querySelector("#add_to_wishlist_area")
-            && SyncedStorage.get("add_to_waitlist")
-            && Background.action("itad.isconnected");
+    async checkPrerequisites() {
+        return SyncedStorage.get("add_to_waitlist")
+            && document.querySelector("#add_to_wishlist_area") !== null
+            && (await Background.action("itad.isconnected")) === true;
     }
 
     async apply() {
 
-        /*
-         * This node will be hidden behind the dropdown menu.
-         * Also, it's not really desirable when using dropdown menus to have a permanent div floating nearby
-         */
-        const notice = document.querySelector(".wishlist_added_temp_notice");
-        if (notice) { notice.remove(); }
+        // Remove Steam's temp notice and native dropdown menu
+        for (const node of document.querySelectorAll("#add_to_wishlist_area_success > div")) {
+            node.remove();
+        }
 
         const wishlistDivs = document.querySelectorAll("#add_to_wishlist_area,#add_to_wishlist_area_success");
         const [wishlistArea, wishlistSuccessArea] = wishlistDivs;
 
         HTML.afterEnd(".queue_actions_ctn :first-child",
             `<div style="position: relative; display: inline-block;">
-                <div class="queue_control_button queue_btn_wishlist"></div>
+                <div class="queue_control_button as_btn_wishlist"></div>
             </div>`);
 
         /*
          * Creating a common parent for #add_to_wishlist_area and #add_to_wishlist_area_success
          * makes it easier to apply the dropdown menu
          */
-        const wrapper = document.querySelector(".queue_btn_wishlist");
+        const wrapper = document.querySelector(".as_btn_wishlist");
 
         // Move the wrapper such that there can't be any other elements in between the dropdown and other buttons (see #690)
         document.querySelector(".queue_actions_ctn").insertBefore(wrapper.parentNode, wishlistArea);
 
-        wishlistDivs.forEach(div => {
-            wrapper.appendChild(div);
-            const button = div.querySelector(".btnv6_blue_hoverfade");
-            button.style.borderTopRightRadius = 0;
-            button.style.borderBottomRightRadius = 0;
-        });
+        wrapper.append(...wishlistDivs);
 
         HTML.afterEnd(wrapper,
-            `<div class="queue_control_button queue_btn_ignore_menu" style="display: inline;">
-                <div class="queue_ignore_menu_arrow btn_medium">
+            `<div class="queue_control_button queue_btn_menu as_btn_wishlist_menu">
+                <div class="queue_menu_arrow btn_medium">
                     <span><img src="https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded.png"></span>
                 </div>
-                <div class="queue_ignore_menu_flyout">
-                    <div class="queue_ignore_menu_flyout_content">
-                        <div class="queue_ignore_menu_option" id="queue_ignore_menu_option_not_interested">
+                <div class="queue_menu_flyout">
+                    <div class="queue_menu_flyout_content">
+                        <div class="queue_menu_option" id="queue_menu_option_on_wishlist">
                             <div>
                                 <img class="queue_ignore_menu_option_image selected" src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected_bright.png">
                                 <img class="queue_ignore_menu_option_image unselected" src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_unselected_bright.png">
                             </div>
-                            <div class="queue_ignore_menu_option_label">
+                            <div class="queue_menu_option_label">
                                 <div class="option_title">${Localization.str.wishlist} (${Localization.str.theworddefault})</div>
                                 <div class="option_subtitle">${Localization.str.add_to_wishlist}</div>
                             </div>
                         </div>
-                        <div class="queue_ignore_menu_option" id="queue_ignore_menu_option_owned_elsewhere">
+                        <div class="queue_menu_option" id="queue_menu_option_on_waitlist">
                             <div>
                                 <img class="queue_ignore_menu_option_image selected" src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected_bright.png">
                                 <img class="queue_ignore_menu_option_image unselected" src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_unselected_bright.png">
                             </div>
-                            <div class="queue_ignore_menu_option_label">
+                            <div class="queue_menu_option_label">
                                 <div class="option_title">Waitlist</div>
                                 <div class="option_subtitle">${Localization.str.add_to_waitlist}</div>
                             </div>
@@ -77,19 +70,18 @@ export default class FWaitlistDropdown extends Feature {
         let wishlisted = document.querySelector("#add_to_wishlist_area").style.display === "none";
         let waitlisted = await Background.action("itad.inwaitlist", this.context.storeid);
 
-        const menuArrow = document.querySelector(".queue_ignore_menu_arrow");
-        const menu = document.querySelector(".queue_btn_ignore_menu");
-        const wishlistOption = document.querySelector("#queue_ignore_menu_option_not_interested");
-        const waitlistOption = document.querySelector("#queue_ignore_menu_option_owned_elsewhere");
+        const menu = document.querySelector(".as_btn_wishlist_menu");
+        const menuArrow = menu.querySelector(".queue_menu_arrow");
+        const wishlistOption = document.querySelector("#queue_menu_option_on_wishlist");
+        const waitlistOption = document.querySelector("#queue_menu_option_on_waitlist");
 
         function updateDiv() {
             const oneActive = Boolean(wishlisted) || Boolean(waitlisted);
 
             menuArrow.classList.toggle("queue_btn_active", oneActive);
-            menuArrow.classList.toggle("queue_btn_inactive", !oneActive);
 
-            menu.classList.toggle("not_interested", wishlisted);
-            menu.classList.toggle("owned_elsewhere", waitlisted);
+            menu.classList.toggle("on_wishlist", wishlisted);
+            menu.classList.toggle("on_waitlist", waitlisted);
 
             wishlistArea.style.display = oneActive ? "none" : "";
             wishlistSuccessArea.style.display = oneActive ? "" : "none";

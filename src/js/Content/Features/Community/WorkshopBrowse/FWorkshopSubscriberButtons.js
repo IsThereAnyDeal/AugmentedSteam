@@ -1,6 +1,7 @@
 import {GameId, HTML, Localization} from "../../../../modulesCore";
 import {Feature, RequestData, User} from "../../../modulesContent";
 import {Page} from "../../Page";
+import {Workshop} from "../Workshop";
 
 export default class FWorkshopSubscriberButtons extends Feature {
 
@@ -93,8 +94,19 @@ export default class FWorkshopSubscriberButtons extends Feature {
         this._total = workshopItems.length;
         this._updateWaitDialog();
 
-        return Promise.all(workshopItems.map(id => this._changeSubscription(id)))
-            .finally(() => { this._showResults(); });
+        const promises = workshopItems.map(
+            id => Workshop.changeSubscription(id, this._appid, this._method)
+                .catch(err => {
+                    this._failed++;
+                    console.error(err);
+                })
+                .finally(() => {
+                    this._completed++;
+                    this._updateWaitDialog();
+                })
+        );
+
+        return Promise.all(promises).finally(() => { this._showResults(); });
     }
 
     _showResults() {
@@ -117,28 +129,6 @@ export default class FWorkshopSubscriberButtons extends Feature {
                     }
                 });
         }, [statusTitle, statusString]);
-    }
-
-    async _changeSubscription(id) {
-
-        const formData = new FormData();
-        formData.append("sessionid", User.sessionId);
-        formData.append("appid", this._appid);
-        formData.append("id", id);
-
-        try {
-            const res = await RequestData.post(`https://steamcommunity.com/sharedfiles/${this._method}`, formData, {"withCredentials": true}, true);
-
-            if (!res || !res.success) {
-                throw new Error("Bad response");
-            }
-        } catch (err) {
-            this._failed++;
-            console.error(err);
-        } finally {
-            this._completed++;
-            this._updateWaitDialog();
-        }
     }
 
     _canSkip(node) {

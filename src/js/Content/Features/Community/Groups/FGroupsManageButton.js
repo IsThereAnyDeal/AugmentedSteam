@@ -129,8 +129,6 @@ export default class FGroupsManageButton extends Feature {
         formData.append("action", "leave_group");
         formData.append("steamids[]", id);
 
-        return RequestData.post(`${User.profileUrl}/friends/action`, formData, {
-            "withCredentials": true
-        }, "json");
+        return RequestData.post(`${User.profileUrl}/friends/action`, formData, {}, true);
     }
 }

@@ -1,5 +1,6 @@
 import {HTML} from "../../Core/Html/Html";
 import {Localization} from "../../Core/Localization/Localization";
+import {TimeUtils} from "../../modulesCore";
 
 class Sidebar {
 
@@ -83,22 +84,20 @@ class Sidebar {
 
     static _scrollHandler() {
 
-        if (Sidebar._scrollTimeout) {
-            return;
-        }
+        if (!this._timer) {
+            this._timer = TimeUtils.resettableTimer(() => {
+                for (const [contentNode, sidebarNode] of Sidebar._contentNodes) {
+                    const rect = contentNode.getBoundingClientRect();
 
-        Sidebar._scrollTimeout = window.setTimeout(() => {
-            Sidebar._scrollTimeout = null;
-
-            for (const [contentNode, sidebarNode] of Sidebar._contentNodes) {
-                const rect = contentNode.getBoundingClientRect();
-
-                if ((rect.top < 0 && rect.bottom > window.innerHeight) || rect.top > 0) {
-                    Sidebar._highlight(contentNode, sidebarNode);
-                    return;
+                    if ((rect.top < 0 && rect.bottom > window.innerHeight) || rect.top > 0) {
+                        Sidebar._highlight(contentNode, sidebarNode);
+                        return;
+                    }
                 }
-            }
-        }, 100);
+            }, 100);
+        } else if (!this._timer.running) {
+            this._timer.reset();
+        }
     }
 
     static create() {

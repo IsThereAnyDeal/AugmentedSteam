@@ -3,15 +3,16 @@ import {Errors} from "../../Core/Errors/Errors";
 
 class RequestData {
 
-    static getHttp(url, settings, responseType = "text") {
+    static async getHttp(url, settings = {}, responseType = "text") {
 
         let _url = url;
-        const _settings = settings || {};
-
-        _settings.method = _settings.method || "GET";
-        _settings.credentials = _settings.credentials || "include";
-        _settings.headers = _settings.headers || {"origin": window.location.origin};
-        _settings.referrer = _settings.referrer || window.location.origin + window.location.pathname;
+        const _settings = {
+            "method": "GET",
+            "credentials": "include",
+            "headers": {"origin": window.location.origin},
+            "referrer": window.location.origin + window.location.pathname,
+            ...settings
+        };
 
         ProgressBar.startRequest();
 
@@ -20,21 +21,22 @@ class RequestData {
             console.warn("Requesting URL without protocol, please update");
         }
 
-        return RequestData._fetchFn(_url, _settings).then(response => {
+        let response;
 
-            ProgressBar.finishRequest();
+        try {
+            response = await RequestData._fetchFn(_url, _settings);
 
             if (!response.ok) {
                 throw new Errors.HTTPError(response.status, `HTTP ${response.status} ${response.statusText} for ${response.url}`);
             }
+        } catch (err) {
+            ProgressBar.failed();
+            throw err;
+        }
 
-            return response[responseType]();
+        ProgressBar.finishRequest();
 
-        })
-            .catch(err => {
-                ProgressBar.failed();
-                throw err;
-            });
+        return response[responseType]();
     }
 
     static post(url, formData, settings, returnJSON) {

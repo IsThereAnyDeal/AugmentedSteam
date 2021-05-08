@@ -92,6 +92,11 @@ class UpdateHandler {
                 SyncedStorage.set("fav_emoticons", emoticons);
             }
         }
+
+        if (oldVersion.isSameOrBefore("2.0.0")) {
+            SyncedStorage.remove("showfakeccwarning");
+            SyncedStorage.remove("hideaboutlinks");
+        }
     }
 }
 

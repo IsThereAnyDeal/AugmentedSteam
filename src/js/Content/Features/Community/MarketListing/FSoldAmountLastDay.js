@@ -3,6 +3,10 @@ import {CurrencyManager, Feature, RequestData, User} from "../../../modulesConte
 
 export default class FSoldAmountLastDay extends Feature {
 
+    checkPrerequisites() {
+        return document.getElementById("pricehistory") !== null;
+    }
+
     async apply() {
 
         const country = User.storeCountry;

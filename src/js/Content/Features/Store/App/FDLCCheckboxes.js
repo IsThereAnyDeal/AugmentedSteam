@@ -1,138 +1,146 @@
-import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
-import {Feature, User} from "../../../modulesContent";
+import {HTML, Localization} from "../../../../modulesCore";
+import {Feature, Price, User} from "../../../modulesContent";
 
 export default class FDLCCheckboxes extends Feature {
 
     checkPrerequisites() {
-        return document.querySelector(".game_area_dlc_section .game_area_dlc_list");
+        // check if the page has at least one purchasable DLC available
+        return document.querySelector(".game_area_dlc_section .game_area_dlc_list input[name^=subid]") !== null;
     }
 
     apply() {
 
-        const dlcs = document.querySelector(".game_area_dlc_section");
-        const imgUrl = ExtensionResources.getURL("img/check_sheet.png");
+        const dlcSection = document.querySelector(".game_area_dlc_section");
 
-        for (const dlc of dlcs.querySelectorAll(".game_area_dlc_row")) {
-            if (dlc.querySelector("input")) {
-                const value = dlc.querySelector("input").value;
+        for (const dlcRow of dlcSection.querySelectorAll(".game_area_dlc_row")) {
+            const subidNode = dlcRow.querySelector("input[name^=subid]");
+            if (!subidNode) { continue; }
 
-                HTML.afterBegin(dlc.querySelector(".game_area_dlc_name"),
-                    `<input type="checkbox" class="es_dlc_selection" id="es_select_dlc_${value}" value="${value}">
-                    <label for="es_select_dlc_${value}" style="background-image: url(${imgUrl});"></label>`);
-            } else {
-                dlc.querySelector(".game_area_dlc_name").style.marginLeft = "23px";
+            const label = document.createElement("label");
+            label.classList.add("es_dlc_label");
+
+            // Add dsinfo to label for use with select/unselect all
+            if (dlcRow.classList.contains("ds_wishlist")) {
+                label.classList.add("es_dlc_wishlist");
+            } else if (dlcRow.classList.contains("ds_owned")) {
+                label.classList.add("es_dlc_owned");
             }
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.dataset.esDlcSubid = subidNode.value;
+
+            // Must check ".discount_final_price" first to get the correct price
+            const priceNode = dlcRow.querySelector(".discount_final_price")
+                || dlcRow.querySelector(".game_area_dlc_price");
+
+            const price = Price.parseFromString(priceNode.textContent);
+            if (price !== null) {
+                checkbox.dataset.esDlcPrice = price.value;
+            }
+
+            label.append(checkbox);
+            dlcRow.insertAdjacentElement("beforebegin", label);
         }
 
-        const expandedNode = dlcs.querySelector("#game_area_dlc_expanded");
+        // Toggle dsinfo on label when adding/removing wishlist via ds_options dropdown
+        new MutationObserver(mutations => {
+            for (const {target} of mutations) {
+                if (!target.classList.contains("game_area_dlc_row")) { continue; }
+                target.previousElementSibling.classList.toggle("es_dlc_wishlist", target.classList.contains("ds_wishlist"));
+            }
+        }).observe(dlcSection.querySelector(".gameDlcBlocks"), {"subtree": true, "attributeFilter": ["class"]});
+
+        const html = `<div class="game_purchase_action game_purchase_action_bg" id="es_selected_btn">
+                <div class="game_purchase_price price"></div>
+                <div class="btn_addtocart">
+                    <a class="btn_green_steamui btn_medium">
+                        <span>${Localization.str.add_selected_dlc_to_cart}</span>
+                    </a>
+                </div>
+            </div>`;
+
+        const expandedNode = dlcSection.querySelector("#game_area_dlc_expanded");
         if (expandedNode) {
-            HTML.afterEnd(expandedNode,
-                `<div class="game_purchase_action game_purchase_action_bg" style="margin-bottom: 10px;" id="es_selected_btn">
-                    <div class="btn_addtocart">
-                        <a class="btnv6_green_white_innerfade btn_medium">
-                            <span>${Localization.str.add_selected_dlc_to_cart}</span>
-                        </a>
-                    </div>
-                </div>`);
-
-            HTML.afterEnd(dlcs, '<div style="clear: both;"></div>');
+            HTML.afterEnd(expandedNode, html);
+            HTML.afterEnd(dlcSection, '<div style="clear: both;"></div>');
         } else {
-            HTML.afterEnd(dlcs.querySelector(".gameDlcBlocks"),
-                `<div class="game_purchase_action game_purchase_action_bg" id="es_selected_btn">
-                    <div class="btn_addtocart">
-                        <a class="btnv6_green_white_innerfade btn_medium">
-                            <span>${Localization.str.add_selected_dlc_to_cart}</span>
-                        </a>
-                    </div>
-                </div>`);
+            HTML.afterEnd(dlcSection.querySelector(".gameDlcBlocks"), html);
         }
 
-        const form = document.createElement("form");
-        form.setAttribute("name", "add_selected_dlc_to_cart");
-        form.setAttribute("action", "/cart/");
-        form.setAttribute("method", "POST");
-        form.setAttribute("id", "es_selected_cart");
+        const cartForm = document.createElement("form");
+        cartForm.name = "add_selected_dlc_to_cart";
+        cartForm.action = "/cart/";
+        cartForm.method = "POST";
 
-        const cartBtn = dlcs.querySelector("#es_selected_btn");
-        cartBtn.insertAdjacentElement("beforebegin", form);
-        cartBtn.addEventListener("click", () => {
-            form.submit();
-        });
+        const cartBtn = dlcSection.querySelector("#es_selected_btn");
+        cartBtn.insertAdjacentElement("beforebegin", cartForm);
+        cartBtn.addEventListener("click", () => { cartForm.submit(); });
 
-        HTML.afterEnd(dlcs.querySelector(".gradientbg"),
+        HTML.afterEnd(dlcSection.querySelector(".gradientbg"),
             `<div id="es_dlc_option_panel">
                 <div class="es_dlc_option" id="unowned_dlc_check">${Localization.str.dlc_select.unowned_dlc}</div>
                 <div class="es_dlc_option" id="wl_dlc_check">${Localization.str.dlc_select.wishlisted_dlc}</div>
                 <div class="es_dlc_option" id="no_dlc_check">${Localization.str.dlc_select.none}</div>
             </div>`);
 
-        const change = new Event("change", {"bubbles": true});
-
-        dlcs.querySelector("#unowned_dlc_check").addEventListener("click", () => {
-            const nodes = dlcs.querySelectorAll(".game_area_dlc_row:not(.ds_owned) input:not(:checked)");
+        dlcSection.querySelector("#unowned_dlc_check").addEventListener("click", () => {
+            const nodes = dlcSection.querySelectorAll(".es_dlc_label:not(.es_dlc_owned) > input");
             for (const node of nodes) {
                 node.checked = true;
-                node.dispatchEvent(change);
             }
+            dlcSection.dispatchEvent(new Event("change"));
         });
 
-        dlcs.querySelector("#wl_dlc_check").addEventListener("click", () => {
-            const nodes = dlcs.querySelectorAll(".ds_wishlist input:not(:checked)");
+        dlcSection.querySelector("#wl_dlc_check").addEventListener("click", () => {
+            const nodes = dlcSection.querySelectorAll(".es_dlc_label.es_dlc_wishlist > input");
             for (const node of nodes) {
                 node.checked = true;
-                node.dispatchEvent(change);
             }
+            dlcSection.dispatchEvent(new Event("change"));
         });
 
-        dlcs.querySelector("#no_dlc_check").addEventListener("click", () => {
-            const nodes = dlcs.querySelectorAll(".game_area_dlc_row input:checked");
+        dlcSection.querySelector("#no_dlc_check").addEventListener("click", () => {
+            const nodes = dlcSection.querySelectorAll(".es_dlc_label > input:checked");
             for (const node of nodes) {
                 node.checked = false;
-                node.dispatchEvent(change);
             }
+            dlcSection.dispatchEvent(new Event("change"));
         });
 
-        HTML.beforeEnd(dlcs.querySelector(".gradientbg"),
-            `<a id="es_dlc_option_button">${Localization.str.dlc_select.select} ▼</a>`);
+        function createHiddenInput(name, value) {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = name;
+            input.value = value;
 
-        dlcs.querySelector("#es_dlc_option_button").addEventListener("click", e => {
-            dlcs.querySelector("#es_dlc_option_panel").classList.toggle("esi-shown");
+            return input;
+        }
 
-            e.target.textContent = e.target.textContent.includes("▼")
-                ? `${Localization.str.dlc_select.select} ▲`
-                : `${Localization.str.dlc_select.select} ▼`;
-        });
+        const inputAction = createHiddenInput("action", "add_to_cart");
+        const inputSessionId = createHiddenInput("sessionid", User.sessionId);
 
-        dlcs.addEventListener("change", e => {
-            if (!e.target.classList.contains("es_dlc_selection")) { return; }
+        dlcSection.addEventListener("change", () => {
 
-            const cartForm = dlcs.querySelector("#es_selected_cart");
             cartForm.innerHTML = "";
-
-            const inputAction = document.createElement("input");
-            inputAction.type = "hidden";
-            inputAction.name = "action";
-            inputAction.value = "add_to_cart";
-
-            const inputSessionId = document.createElement("input");
-            inputSessionId.type = "hidden";
-            inputSessionId.name = "sessionid";
-            inputSessionId.value = User.sessionId;
-
             cartForm.append(inputAction, inputSessionId);
 
-            const nodes = dlcs.querySelectorAll(".es_dlc_selection:checked");
-            for (const node of nodes) {
+            let total = 0;
+            for (const node of dlcSection.querySelectorAll(".es_dlc_label > input:checked")) {
 
-                const inputSubId = document.createElement("input");
-                inputSubId.type = "hidden";
-                inputSubId.name = "subid[]";
-                inputSubId.value = node.value;
+                cartForm.append(createHiddenInput("subid[]", node.dataset.esDlcSubid));
 
-                cartForm.append(inputSubId);
+                if (node.dataset.esDlcPrice) {
+                    total += Number(node.dataset.esDlcPrice);
+                }
             }
 
-            cartBtn.style.display = nodes.length > 0 ? "block" : "none";
+            if (total > 0) {
+                cartBtn.querySelector(".game_purchase_price").textContent = new Price(total);
+                cartBtn.style.display = "block";
+            } else {
+                cartBtn.style.display = "none";
+            }
         });
     }
 }

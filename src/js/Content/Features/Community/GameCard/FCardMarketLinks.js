@@ -3,6 +3,10 @@ import {Background, CommunityUtils, CurrencyManager, DOMHelper, Feature, Price} 
 
 export default class FCardMarketLinks extends Feature {
 
+    checkPrerequisites() {
+        return !this.context.saleAppids.includes(this.context.appid);
+    }
+
     async apply() {
 
         let cost = 0;

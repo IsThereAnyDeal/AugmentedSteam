@@ -4,9 +4,8 @@ import {Page} from "../../Page";
 
 class WishlistExporter {
 
-    constructor(appInfo, apps) {
-        this.appInfo = appInfo;
-        this.apps = apps;
+    constructor(wl) {
+        this.wl = wl;
         this.notes = SyncedStorage.get("user_notes") || {};
     }
 
@@ -16,7 +15,7 @@ class WishlistExporter {
             "data": []
         };
 
-        for (const [appid, data] of Object.entries(this.appInfo)) {
+        for (const [appid, data] of this.wl) {
             json.data.push({
                 "gameid": ["steam", `app/${appid}`],
                 "title": data.name,
@@ -35,8 +34,7 @@ class WishlistExporter {
     toText(format) {
         const result = [];
         const parser = new DOMParser();
-        for (const appid of this.apps) {
-            const data = this.appInfo[appid];
+        for (const [appid, data] of this.wl) {
             let price = "N/A";
             let discount = "0%";
             let basePrice = "N/A";
@@ -84,10 +82,15 @@ export default class FExportWishlist extends Feature {
 
         document.querySelector("#es_export_wishlist").addEventListener("click", async() => {
 
-            // eslint-disable-next-line camelcase, no-undef
-            const [appInfo, apps] = await Page.runInPageContext(() => [g_rgAppInfo, g_Wishlist.rgAllApps], null, true);
+            const wl = await Page.runInPageContext(() => {
+                const f = window.SteamFacade;
 
-            this._showDialog(appInfo, apps);
+                return f.global("g_Wishlist").rgVisibleApps.map(
+                    appid => [appid, f.global("g_rgAppInfo")[appid]]
+                );
+            }, null, true);
+
+            this._showDialog(wl);
         });
     }
 
@@ -104,13 +107,13 @@ export default class FExportWishlist extends Feature {
      *
      * Final solution is to query the action buttons of the dialog and adding some extra click handlers on the content script side.
      */
-    _showDialog(appInfo, apps) {
+    _showDialog(wl) {
 
         function exportWishlist(method) {
             const type = document.querySelector("input[name='es_wexport_type']:checked").value;
             const format = document.querySelector("#es-wexport-format").value;
 
-            const wishlist = new WishlistExporter(appInfo, apps);
+            const wishlist = new WishlistExporter(wl);
 
             let result = "";
             let filename = "";
@@ -135,15 +138,14 @@ export default class FExportWishlist extends Feature {
         Page.runInPageContext(exportStr => {
             window.SteamFacade.showConfirmDialog(
                 exportStr.wishlist,
-                `<div id='es_export_form'>
+                `<div id="es_export_form">
                     <div class="es-wexport">
-                    <h2>${exportStr.type}</h2>
-                    <div>
-                        <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${exportStr.text}</label>
-                        <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
+                        <h2>${exportStr.type}</h2>
+                        <div>
+                            <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${exportStr.text}</label>
+                            <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
+                        </div>
                     </div>
-                    </div>
-
                     <div class="es-wexport es-wexport__format">
                         <h2>${exportStr.format}</h2>
                         <div>
@@ -160,8 +162,8 @@ export default class FExportWishlist extends Feature {
 
         const [dlBtn, copyBtn] = document.querySelectorAll(".newmodal_buttons > .btn_medium");
 
-        dlBtn.classList.remove("btn_green_white_innerfade");
-        dlBtn.classList.add("btn_darkblue_white_innerfade");
+        // Update button to new style, remove when not needed
+        copyBtn.classList.replace("btn_darkblue_white_innerfade", "btn_blue_steamui");
 
         // Capture this s.t. the CModal doesn't get destroyed before we can grab this information
         dlBtn.addEventListener("click", () => { exportWishlist(WishlistExporter.method.download); }, true);
@@ -169,7 +171,9 @@ export default class FExportWishlist extends Feature {
 
         const format = document.querySelector(".es-wexport__format");
         for (const el of document.getElementsByName("es_wexport_type")) {
-            el.addEventListener("click", e => { format.style.display = e.target.value === "json" ? "none" : ""; });
+            el.addEventListener("click", ({target}) => {
+                format.classList.toggle("es-grayout", target.value === "json");
+            });
         }
     }
 }
