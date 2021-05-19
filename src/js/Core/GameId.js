@@ -65,8 +65,8 @@ class GameId {
 
     static getAppidImgSrc(text) {
         if (!text) { return null; }
-        const m = text.match(/(steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
-        return m && GameId.parseId(m[2]);
+        const m = text.match(/(?:cdn\.akamai\.steamstatic\.com\/steam|steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
+        return m && GameId.parseId(m[1]);
     }
 
     static getAppidUriQuery(text) {

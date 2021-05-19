@@ -1,4 +1,4 @@
-import {HTML, LocalStorage} from "../../../../modulesCore";
+import {GameId, HTML, LocalStorage} from "../../../../modulesCore";
 import {Feature, RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -61,6 +61,15 @@ export default class FBrowseWorkshops extends Feature {
         const url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
         const result = JSON.parse(await RequestData.getHttp(url));
         HTML.inner(container, result.results_html);
+
+        // Restore onclick attribute
+        for (const img of document.querySelectorAll(".appCover img")) {
+            const appid = GameId.getAppidImgSrc(img.src);
+            img.closest(".app").addEventListener("click", () => {
+                top.location.href = `https://steamcommunity.com/app/${appid}/workshop/`;
+            });
+        }
+
         tab.removeAttribute("disabled");
 
         Page.runInPageContext((query, totalCount, count) => {
