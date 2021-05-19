@@ -10,13 +10,12 @@ export default class FBrowseWorkshops extends Feature {
 
         if (url.searchParams && url.searchParams.has("browsesort")) {
             LocalStorage.set("workshop_state", url.search);
-            return;
+        } else {
+            const search = LocalStorage.get("workshop_state");
+            url = new URL(`https://steamcommunity.com/workshop/${search}`);
+            const query = url.searchParams.get("browsesort");
+            this._changeTab(query);
         }
-
-        const search = LocalStorage.get("workshop_state");
-        url = new URL(`https://steamcommunity.com/workshop/${search}`);
-        const query = url.searchParams.get("browsesort");
-        this._changeTab(query);
 
         Page.runInPageContext(() => {
             window.SteamFacade.jq(".browseOption")
