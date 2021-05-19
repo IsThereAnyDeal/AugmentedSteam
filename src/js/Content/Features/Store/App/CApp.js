@@ -20,7 +20,7 @@ import FMetacriticUserScore from "./FMetacriticUserScore";
 import FOpenCritic from "./FOpenCritic";
 import FOwnedElsewhere from "./FOwnedElsewhere";
 import FPurchaseDate from "./FPurchaseDate";
-// import FYouTubeVideos from "./FYouTubeVideos";
+import FYouTubeVideos from "./FYouTubeVideos";
 import FSteamPeek from "./FSteamPeek";
 import FWidescreenCertification from "./FWidescreenCertification";
 import FHowLongToBeat from "./FHowLongToBeat";
@@ -67,7 +67,7 @@ export class CApp extends CStore {
             FOpenCritic,
             FOwnedElsewhere,
             FPurchaseDate,
-            // FYouTubeVideos,
+            FYouTubeVideos,
             FSteamPeek,
             FWidescreenCertification,
             FHowLongToBeat,
@@ -117,10 +117,8 @@ export class CApp extends CStore {
         FCustomizer.dependencies = [FSteamSpy, FSteamChart, FSurveyData];
         FCustomizer.weakDependency = true;
 
-        /*
-         * FMediaExpander.dependencies = [FYouTubeVideos];
-         * FMediaExpander.weakDependency = true;
-         */
+        FMediaExpander.dependencies = [FYouTubeVideos];
+        FMediaExpander.weakDependency = true;
     }
 
     storePageDataPromise() {
