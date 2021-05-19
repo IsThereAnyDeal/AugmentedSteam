@@ -1,7 +1,7 @@
 import {GameId, HTML, Localization} from "../../../../modulesCore";
 import {Feature, RequestData, User} from "../../../modulesContent";
 import {Page} from "../../Page";
-import {Workshop} from "../Workshop";
+import Workshop from "../Workshop";
 
 export default class FWorkshopSubscriberButtons extends Feature {
 
