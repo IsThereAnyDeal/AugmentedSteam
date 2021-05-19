@@ -117,10 +117,8 @@ export class CApp extends CStore {
         FCustomizer.dependencies = [FSteamSpy, FSteamChart, FSurveyData];
         FCustomizer.weakDependency = true;
 
-        /*
-         * FMediaExpander.dependencies = [FYouTubeVideos];
-         * FMediaExpander.weakDependency = true;
-         */
+        FMediaExpander.dependencies = [FYouTubeVideos];
+        FMediaExpander.weakDependency = true;
     }
 
     storePageDataPromise() {
