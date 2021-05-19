@@ -47,8 +47,8 @@ export default class FShowCoupon extends Feature {
         const scaleFactor = 10 ** currency.format.decimalPlaces;
 
         const originalPrice = Number(priceNode.dataset.priceFinal) / 100;
-        let newFinalPrice = originalPrice - (originalPrice * coupon.discount / 100);
-        newFinalPrice = Math.floor(newFinalPrice * scaleFactor) / scaleFactor;
+        const discountPrice = Math.floor(originalPrice * (coupon.discount / 100) * scaleFactor) / scaleFactor;
+        const newFinalPrice = originalPrice - discountPrice;
 
         HTML.replace(priceNode,
             `<div class="discount_block game_purchase_discount">
