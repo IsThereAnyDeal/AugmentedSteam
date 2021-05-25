@@ -698,6 +698,23 @@ img.astats_icon {
 }
 
 /***************************************
+ * Games page
+ * FCommonGames
+ **************************************/
+input[id="show_common_games"],
+label[for="show_common_games"] {
+  display: none; /* hide Steam's checkbox */
+}
+.esi-hide-common .esi-common,
+.esi-hide-notcommon .esi-notcommon {
+  display: none !important;
+}
+.es_games_filter {
+  display: inline-block;
+  margin-left: 20px;
+}
+
+/***************************************
  * User Inventory
  * FInventoryGoTo
  **************************************/
@@ -2201,16 +2218,6 @@ label.es_dlc_label > input:checked::after {
 
 .esi_ach_unlocked + .esi_ach_locked {
   margin-top: 72px;
-}
-
-/* hide Steam's option on "All Games" page */
-input[id="show_common_games"],
-label[for="show_common_games"] {
-  display: none;
-}
-.esi-hide-common .esi-common,
-.esi-hide-notcommon .esi-notcommon {
-  display: none !important;
 }
 
 

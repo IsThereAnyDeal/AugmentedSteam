@@ -176,6 +176,8 @@
     "add_to_cart": "Add to Cart",
     "view": "View",
     "games_all": "All Games",
+    "games_common": "Games that you own",
+    "games_notcommon": "Games that you do not own",
     "game_name": "Game Name",
     "gift_transactions": "Gift Purchases",
     "demos": "Demos",
