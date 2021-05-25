@@ -116,9 +116,9 @@ class User {
      * Can also be retrieved from the discussions page for apps and the points shop
      */
     static async getUserToken() {
-        const html = await RequestData.getHttp(User.profileUrl);
+        const html = await RequestData.getHttp(`${User.profileUrl}edit/info`);
         const dummyPage = HTMLParser.htmlToDOM(html);
-        const config = dummyPage.getElementById("application_config").dataset.loyaltystore;
+        const config = dummyPage.getElementById("profile_edit_config").dataset.profileEdit;
         return JSON.parse(config).webapi_token;
     }
 }
