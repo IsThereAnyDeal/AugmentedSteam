@@ -1,11 +1,11 @@
 import {HTML, HTMLParser, Localization} from "../../../../modulesCore";
-import {Feature, RequestData, User} from "../../../modulesContent";
+import {Feature, RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FCommonGames extends Feature {
 
     checkPrerequisites() {
-        return User.isSignedIn && document.querySelector("label[for='show_common_games']") !== null;
+        return document.querySelector("label[for='show_common_games']") !== null;
     }
 
     apply() {
