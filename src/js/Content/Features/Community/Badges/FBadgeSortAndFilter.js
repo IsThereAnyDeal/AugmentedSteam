@@ -7,6 +7,7 @@ export default class FBadgeSortAndFilter extends Feature {
     apply() {
 
         this._header = document.querySelector(".profile_badges_header");
+        this._header.classList.add("as_flyout_menus");
 
         this._addSort();
         this._addFilter();
