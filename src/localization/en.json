@@ -1,4 +1,5 @@
 {
+    "download_demo_header": "Download __gamename__ Demo",
     "calc_workshop_size": {
         "file_size": "File size __size__",
         "finished": "Finished",
