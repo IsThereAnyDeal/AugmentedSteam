@@ -701,17 +701,15 @@ img.astats_icon {
  * Games page
  * FCommonGames
  **************************************/
-input[id="show_common_games"],
-label[for="show_common_games"] {
-  display: none; /* hide Steam's checkbox */
+.common_filter_ctn {
+  display: none !important; /* hide Steam's checkbox */
 }
 .esi-hide-common .esi-common,
 .esi-hide-notcommon .esi-notcommon {
-  display: none !important;
+  display: none !important; /* ensure the filter options work alongside filtering by keywords */
 }
 .es_games_filter {
-  display: inline-block;
-  margin-left: 20px;
+  margin-bottom: 6px;
 }
 
 /***************************************

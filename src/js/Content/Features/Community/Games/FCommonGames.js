@@ -5,14 +5,15 @@ import {Page} from "../../Page";
 export default class FCommonGames extends Feature {
 
     checkPrerequisites() {
-        return document.querySelector("label[for='show_common_games']") !== null;
+        // Steam's filter checkbox won't appear if not signed in, or if on own profile
+        return document.querySelector(".common_filter_ctn") !== null;
     }
 
     apply() {
 
         document.getElementById("gameslist_controls").classList.add("as_flyout_menus");
 
-        HTML.afterEnd("label[for='show_common_games']",
+        HTML.afterEnd(".common_filter_ctn",
             `<div class="es_games_filter">
                 <span>${Localization.str.show}</span>
                 <div class="store_nav">
