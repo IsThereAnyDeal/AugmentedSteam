@@ -16,7 +16,7 @@ module.exports = {
         "css/options": "./src/css/options.css",
         // pages
         "js/background": "./src/js/Background/background.js",
-        "js/options": "./src/js/options/options.js",
+        "js/options": "./src/js/Options/options.js",
         "js/community/app": "./src/js/Content/Features/Community/App/PApp.js",
         "js/community/badges": "./src/js/Content/Features/Community/Badges/PBadges.js",
         "js/community/booster_creator": "./src/js/Content/Features/Community/BoosterCreator/PBoosterCreator.js",
