@@ -9,6 +9,7 @@ import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
 import FKeepEditableRanking from "./FKeepEditableRanking";
 import FOneClickRemoveFromWishlist from "./FOneClickRemoveFromWishlist";
+import FWishlistPurchaseCheckboxes from "./FWishlistPurchaseCheckboxes";
 import {TimeUtils} from "../../../../modulesCore";
 
 export class CWishlist extends CStoreBase {
@@ -29,6 +30,7 @@ export class CWishlist extends CStoreBase {
             FExportWishlist,
             FKeepEditableRanking,
             FOneClickRemoveFromWishlist,
+            FWishlistPurchaseCheckboxes,
             FAlternativeLinuxIcon,
         ]);
 

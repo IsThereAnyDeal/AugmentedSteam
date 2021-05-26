@@ -1188,6 +1188,35 @@ img.astats_icon {
 
 /***************************************
  * Wishlist
+ * FWishlistPurchaseCheckboxes
+ **************************************/
+.wishlist_row .purchase_container {
+  display: flex;
+  align-items: center;
+}
+input.es_wishlist_selection {
+  margin-left: 5px;
+}
+
+#es_cart_ctn {
+  display: flex;
+  visibility: hidden;
+  justify-content: space-evenly;
+  align-items: center;
+  position: fixed;
+  bottom: 0px;
+  left: 35%;
+  background: #1f2126;
+  height: 50px;
+  width: 400px;
+}
+.cart_total {
+  font-size: 15px;
+  text-decoration: underline;
+}
+
+/***************************************
+ * Wishlist
  * FEmptyWishlist/FExportWishlist
  **************************************/
 #cart_status_data {
