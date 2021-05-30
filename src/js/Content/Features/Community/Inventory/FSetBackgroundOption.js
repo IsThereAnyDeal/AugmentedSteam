@@ -23,7 +23,13 @@ export default class FSetBackgroundOption extends CallbackFeature {
         // Get owned backgrounds and the communityitemid for equipped background
         if (!this.profileBgsOwned) {
 
-            this.userToken = await User.getUserToken();
+            const response = await RequestData.getJson("https://store.steampowered.com/pointssummary/ajaxgetasyncconfig");
+            if (!response || !response.success) {
+                console.error("Failed to get webapi token");
+                return;
+            }
+
+            this.userToken = response.data.webapi_token;
 
             try {
                 const [equipped, owned] = await Promise.all([

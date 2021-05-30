@@ -110,17 +110,6 @@ class User {
         const _appName = HTMLParser.clearSpecialSymbols(appName);
         return Background.action("purchases", _appName, lang);
     }
-
-    /*
-     * Retrieve access token from user's profile to use in new style WebAPI calls (Services)
-     * Can also be retrieved from the discussions page for apps and the points shop
-     */
-    static async getUserToken() {
-        const html = await RequestData.getHttp(User.profileUrl);
-        const dummyPage = HTMLParser.htmlToDOM(html);
-        const config = dummyPage.getElementById("application_config").dataset.loyaltystore;
-        return JSON.parse(config).webapi_token;
-    }
 }
 
 export {User};
