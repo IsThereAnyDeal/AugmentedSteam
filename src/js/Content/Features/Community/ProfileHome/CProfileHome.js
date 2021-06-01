@@ -12,6 +12,7 @@ import FCustomStyle from "./FCustomStyle";
 import FTwitchShowcase from "./FTwitchShowcase";
 import FChatDropdownOptions from "./FChatDropdownOptions";
 import FViewSteamId from "./FViewSteamId";
+import FPinnedBackground from "./FPinnedBackground";
 
 export class CProfileHome extends CCommunityBase {
 
@@ -50,8 +51,13 @@ export class CProfileHome extends CCommunityBase {
             FTwitchShowcase,
             FChatDropdownOptions,
             FViewSteamId,
+            FPinnedBackground,
         ]);
 
         this.isPrivateProfile = document.body.classList.contains("private_profile");
+
+        // FPinnedBackground needs to wait on custom backgrounds (if any) to be fetched and set
+        FPinnedBackground.dependencies = [FCustomBackground];
+        FPinnedBackground.weakDependency = true;
     }
 }

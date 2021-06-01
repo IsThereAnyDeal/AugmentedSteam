@@ -6,18 +6,7 @@ export default class FCustomBackground extends Feature {
         const prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9.]+)/i);
         if (prevHash) {
             const imgUrl = `//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/${prevHash[1]}/${prevHash[2]}`;
-
-            const testImg = document.createElement("img");
-            testImg.style.display = "none";
-            testImg.src = imgUrl;
-
-            document.body.append(testImg);
-
-            // Make sure the url is for a valid background image
-            testImg.addEventListener("load", () => {
-                this._setProfileBg(imgUrl);
-                testImg.remove();
-            });
+            this._setProfileBg(imgUrl);
 
             return false;
         }

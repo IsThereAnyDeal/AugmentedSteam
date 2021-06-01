@@ -149,6 +149,7 @@ export default {
     "showinvnav": "options.inventory_nav_text",
 
     // profile
+    "profile_pinned_bg": "options.profile_pinned_bg",
     "show_wishlist_link": "options.show_wishlist_link",
     "show_wishlist_count": "options.show_wishlist_count",
     "showsteamrepapi": "options.steamrepapi",
