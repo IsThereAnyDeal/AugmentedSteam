@@ -75,6 +75,7 @@
   font-size: 11px;
   cursor: pointer;
   color: #ffffff;
+  text-transform: uppercase;
 }
 #es_customize_btn .es_customize_title img {
   vertical-align: text-bottom;
