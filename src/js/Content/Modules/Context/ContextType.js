@@ -21,8 +21,8 @@ export default Object.freeze({
     "BADGES": 19,
     "GAME_CARD": 20,
     "FRIENDS_THAT_PLAY": 21,
-    "FRIENDS": 22,
-    "GROUPS": 23,
+    "FRIENDS": 22, // unused
+    "GROUPS": 23, // unused
     "INVENTORY": 24,
     "MARKET_LISTING": 25,
     "MARKET": 26,
@@ -38,5 +38,6 @@ export default Object.freeze({
     "RECOMMENDED": 36,
     "BOOSTER_CREATOR": 37,
     "TRADE_OFFER": 38,
+    "FRIENDS_AND_GROUPS": 39,
 });
 

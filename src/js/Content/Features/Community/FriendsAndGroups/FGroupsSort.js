@@ -1,15 +1,23 @@
-import {Localization, SyncedStorage} from "../../../../modulesCore";
-import {Feature, Sortbox} from "../../../modulesContent";
+import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {CallbackFeature, Sortbox} from "../../../modulesContent";
 
-export default class FGroupsSort extends Feature {
+export default class FGroupsSort extends CallbackFeature {
 
-    checkPrerequisites() {
-        return this.context.groups.length > 1;
+    setup() {
+        this.callback();
     }
 
-    apply() {
+    callback() {
+        if (!document.getElementById("groups_list")) { return; }
+
+        this._groups = Array.from(document.querySelectorAll(".group_block"));
+        if (this._groups.length <= 1) { return; }
 
         this._initSort = true;
+
+        // move the search bar to the same position as on friends page
+        const container = HTML.wrap("#search_text_box", '<div class="searchBarContainer"></div>');
+        document.getElementById("search_results").insertAdjacentElement("beforebegin", container);
 
         document.querySelector("span.profile_groups.title").insertAdjacentElement("afterend", Sortbox.get(
             "groups",
@@ -29,7 +37,7 @@ export default class FGroupsSort extends Feature {
         if (this._initSort) {
 
             let i = 0;
-            for (const group of this.context.groups) {
+            for (const group of this._groups) {
                 const name = group.querySelector(".groupTitle > a").textContent;
                 const membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
                 group.dataset.esSortdefault = i.toString();
@@ -41,10 +49,10 @@ export default class FGroupsSort extends Feature {
             this._initSort = false;
         }
 
-        this.context.groups.sort(this._getSortFunc(sortBy, `esSort${sortBy}`));
+        this._groups.sort(this._getSortFunc(sortBy, `esSort${sortBy}`));
 
         const searchResults = document.querySelector("#search_results_empty");
-        for (const group of this.context.groups) {
+        for (const group of this._groups) {
             if (reversed) {
                 searchResults.insertAdjacentElement("afterend", group);
             } else {
