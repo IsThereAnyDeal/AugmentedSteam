@@ -97,6 +97,20 @@ class UpdateHandler {
             SyncedStorage.remove("showfakeccwarning");
             SyncedStorage.remove("hideaboutlinks");
         }
+
+        if (oldVersion.isSameOrBefore("2.0.1")) {
+            SyncedStorage.remove("hide_dlcunownedgames");
+            SyncedStorage.remove("hide_wishlist");
+            SyncedStorage.remove("hide_cart");
+            SyncedStorage.remove("hide_notdiscounted");
+            SyncedStorage.remove("hide_mixed");
+            SyncedStorage.remove("hide_negative");
+            SyncedStorage.remove("hide_priceabove");
+            SyncedStorage.remove("priceabove_value");
+            SyncedStorage.remove("hide_owned");
+            SyncedStorage.remove("hide_ignored");
+            SyncedStorage.remove("highlight_notdiscounted");
+        }
     }
 }
 

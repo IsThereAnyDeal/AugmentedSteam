@@ -124,7 +124,6 @@ SyncedStorage.defaults = Object.freeze({
     "highlight_inv_guestpass": false,
     "highlight_notinterested": false,
     "highlight_excludef2p": false,
-    "highlight_notdiscounted": false,
     "highlight_collection": true,
     "highlight_waitlist": true,
 
@@ -138,16 +137,6 @@ SyncedStorage.defaults = Object.freeze({
     "tag_waitlist": false,
     "tag_short": false,
 
-    "hide_owned": false,
-    "hide_ignored": false,
-    "hide_dlcunownedgames": false,
-    "hide_wishlist": false,
-    "hide_cart": false,
-    "hide_notdiscounted": false,
-    "hide_mixed": false,
-    "hide_negative": false,
-    "hide_priceabove": false,
-    "priceabove_value": "",
     "hidetmsymbols": false,
 
     "showlowestprice": true,

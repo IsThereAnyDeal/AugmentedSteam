@@ -115,12 +115,8 @@ export default class FHighlightsTags extends Feature {
                 }
 
                 if (node.querySelector(".ds_ignored_flag") && opts.ignored) {
-                    this.highlightNotInterested(nodeToHighlight);
+                    this.highlightIgnored(nodeToHighlight);
                 }
-            }
-
-            if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
-                this.highlightNonDiscounts(nodeToHighlight);
             }
         }
 
@@ -129,11 +125,9 @@ export default class FHighlightsTags extends Feature {
 
         const includeDsInfo
             = !hasDsInfo
-            && ((opts.owned && (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")
-                || SyncedStorage.get("hide_owned")))
+            && ((opts.owned && (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")))
                 || (opts.wishlisted && (SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist")))
-                || (opts.ignored && (SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested")
-                || SyncedStorage.get("hide_ignored")))
+                || (opts.ignored && (SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested")))
             );
 
         const [dsStatus, itadStatus, invStatus] = await Promise.all([
@@ -159,7 +153,7 @@ export default class FHighlightsTags extends Feature {
                     nodes.forEach(node => { this.highlightWishlist(node); });
                 }
                 if (opts.ignored && dsStatus[storeid].ignored) {
-                    nodes.forEach(node => { this.highlightNotInterested(node); });
+                    nodes.forEach(node => { this.highlightIgnored(node); });
                 }
             }
 
@@ -188,7 +182,7 @@ export default class FHighlightsTags extends Feature {
 
                 // Same as for the ITAD highlights (don't need to check)
                 if (invStatus[trimmedId].coupon) {
-                    nodes.forEach(node => { this.highlightCoupon(node); });
+                    nodes.forEach(node => { this.highlightInvCoupon(node); });
                 }
             }
         }
@@ -377,40 +371,27 @@ export default class FHighlightsTags extends Feature {
         }
     }
 
+    static highlightOwned(node) {
+        this._highlightItem(node, "owned");
+    }
+
     static highlightWishlist(node) {
         this._highlightItem(node, "wishlist");
     }
 
-    static highlightCoupon(node) {
+    static highlightInvCoupon(node) {
         this._highlightItem(node, "coupon");
     }
 
-    // Color the tile for items in inventory
     static highlightInvGift(node) {
         this._highlightItem(node, "inv_gift");
     }
 
-    // Color the tile for items in inventory
     static highlightInvGuestpass(node) {
         this._highlightItem(node, "inv_guestpass");
     }
 
-    static highlightNonDiscounts(node) {
-        if (!SyncedStorage.get("highlight_notdiscounted")) { return; }
-        node.style.display = "none";
-    }
-
-    static highlightOwned(node) {
-        if (SyncedStorage.get("hide_owned") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
-            node.style.display = "none";
-        }
-        this._highlightItem(node, "owned");
-    }
-
-    static highlightNotInterested(node) {
-        if (SyncedStorage.get("hide_ignored") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
-            node.style.display = "none";
-        }
+    static highlightIgnored(node) {
         this._highlightItem(node, "notinterested");
     }
 
