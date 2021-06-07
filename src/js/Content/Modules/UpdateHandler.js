@@ -107,6 +107,8 @@ class UpdateHandler {
             SyncedStorage.remove("hide_negative");
             SyncedStorage.remove("hide_priceabove");
             SyncedStorage.remove("priceabove_value");
+            SyncedStorage.remove("hide_owned");
+            SyncedStorage.remove("hide_ignored");
         }
     }
 }

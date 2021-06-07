@@ -138,8 +138,6 @@ SyncedStorage.defaults = Object.freeze({
     "tag_waitlist": false,
     "tag_short": false,
 
-    "hide_owned": false,
-    "hide_ignored": false,
     "hidetmsymbols": false,
 
     "showlowestprice": true,

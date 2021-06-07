@@ -129,11 +129,9 @@ export default class FHighlightsTags extends Feature {
 
         const includeDsInfo
             = !hasDsInfo
-            && ((opts.owned && (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")
-                || SyncedStorage.get("hide_owned")))
+            && ((opts.owned && (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")))
                 || (opts.wishlisted && (SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist")))
-                || (opts.ignored && (SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested")
-                || SyncedStorage.get("hide_ignored")))
+                || (opts.ignored && (SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested")))
             );
 
         const [dsStatus, itadStatus, invStatus] = await Promise.all([
@@ -401,16 +399,10 @@ export default class FHighlightsTags extends Feature {
     }
 
     static highlightOwned(node) {
-        if (SyncedStorage.get("hide_owned") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
-            node.style.display = "none";
-        }
         this._highlightItem(node, "owned");
     }
 
     static highlightNotInterested(node) {
-        if (SyncedStorage.get("hide_ignored") && (node.closest(".search_result_row") || node.closest(".tab_item"))) {
-            node.style.display = "none";
-        }
         this._highlightItem(node, "notinterested");
     }
 

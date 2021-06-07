@@ -53,8 +53,6 @@ export default {
     "tag_short": "tag_short",
 
     // hide
-    "hide_owned": "options.hide_owned",
-    "hide_ignored": "options.hide_ignored",
     "hidetmsymbols": "options.hidetmsymbols",
 
     // store homepage
