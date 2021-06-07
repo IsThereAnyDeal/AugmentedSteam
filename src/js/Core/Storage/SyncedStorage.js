@@ -124,7 +124,6 @@ SyncedStorage.defaults = Object.freeze({
     "highlight_inv_guestpass": false,
     "highlight_notinterested": false,
     "highlight_excludef2p": false,
-    "highlight_notdiscounted": false,
     "highlight_collection": true,
     "highlight_waitlist": true,
 

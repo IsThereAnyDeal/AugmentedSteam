@@ -118,10 +118,6 @@ export default class FHighlightsTags extends Feature {
                     this.highlightNotInterested(nodeToHighlight);
                 }
             }
-
-            if (node.classList.contains("search_result_row") && !node.querySelector(".search_discount span")) {
-                this.highlightNonDiscounts(nodeToHighlight);
-            }
         }
 
         const storeIds = Array.from(storeIdsMap.keys());
@@ -391,11 +387,6 @@ export default class FHighlightsTags extends Feature {
     // Color the tile for items in inventory
     static highlightInvGuestpass(node) {
         this._highlightItem(node, "inv_guestpass");
-    }
-
-    static highlightNonDiscounts(node) {
-        if (!SyncedStorage.get("highlight_notdiscounted")) { return; }
-        node.style.display = "none";
     }
 
     static highlightOwned(node) {
