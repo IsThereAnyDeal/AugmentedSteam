@@ -115,7 +115,7 @@ export default class FHighlightsTags extends Feature {
                 }
 
                 if (node.querySelector(".ds_ignored_flag") && opts.ignored) {
-                    this.highlightNotInterested(nodeToHighlight);
+                    this.highlightIgnored(nodeToHighlight);
                 }
             }
         }
@@ -153,7 +153,7 @@ export default class FHighlightsTags extends Feature {
                     nodes.forEach(node => { this.highlightWishlist(node); });
                 }
                 if (opts.ignored && dsStatus[storeid].ignored) {
-                    nodes.forEach(node => { this.highlightNotInterested(node); });
+                    nodes.forEach(node => { this.highlightIgnored(node); });
                 }
             }
 
@@ -182,7 +182,7 @@ export default class FHighlightsTags extends Feature {
 
                 // Same as for the ITAD highlights (don't need to check)
                 if (invStatus[trimmedId].coupon) {
-                    nodes.forEach(node => { this.highlightCoupon(node); });
+                    nodes.forEach(node => { this.highlightInvCoupon(node); });
                 }
             }
         }
@@ -371,29 +371,27 @@ export default class FHighlightsTags extends Feature {
         }
     }
 
-    static highlightWishlist(node) {
-        this._highlightItem(node, "wishlist");
-    }
-
-    static highlightCoupon(node) {
-        this._highlightItem(node, "coupon");
-    }
-
-    // Color the tile for items in inventory
-    static highlightInvGift(node) {
-        this._highlightItem(node, "inv_gift");
-    }
-
-    // Color the tile for items in inventory
-    static highlightInvGuestpass(node) {
-        this._highlightItem(node, "inv_guestpass");
-    }
-
     static highlightOwned(node) {
         this._highlightItem(node, "owned");
     }
 
-    static highlightNotInterested(node) {
+    static highlightWishlist(node) {
+        this._highlightItem(node, "wishlist");
+    }
+
+    static highlightInvCoupon(node) {
+        this._highlightItem(node, "coupon");
+    }
+
+    static highlightInvGift(node) {
+        this._highlightItem(node, "inv_gift");
+    }
+
+    static highlightInvGuestpass(node) {
+        this._highlightItem(node, "inv_guestpass");
+    }
+
+    static highlightIgnored(node) {
         this._highlightItem(node, "notinterested");
     }
 
