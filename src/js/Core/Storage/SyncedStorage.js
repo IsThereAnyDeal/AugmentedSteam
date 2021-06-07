@@ -140,14 +140,6 @@ SyncedStorage.defaults = Object.freeze({
 
     "hide_owned": false,
     "hide_ignored": false,
-    "hide_dlcunownedgames": false,
-    "hide_wishlist": false,
-    "hide_cart": false,
-    "hide_notdiscounted": false,
-    "hide_mixed": false,
-    "hide_negative": false,
-    "hide_priceabove": false,
-    "priceabove_value": "",
     "hidetmsymbols": false,
 
     "showlowestprice": true,
