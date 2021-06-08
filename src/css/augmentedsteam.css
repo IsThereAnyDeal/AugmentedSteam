@@ -1201,6 +1201,22 @@ img.astats_icon {
 
 /***************************************
  * Wishlist
+ * FKeepEditableRanking
+ **************************************/
+#wishlist_ctn:not(.sort_order).as_show_order_input .capsule {
+  margin-left: 40px;
+}
+#wishlist_ctn:not(.sort_order).as_show_order_input .as_hover_handle {
+  display: block;
+  width: 40px;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+#wishlist_ctn.sort_order.as_show_order_input .as_hover_handle {
+  display: none;
+}
+
+/***************************************
+ * Wishlist
  * FEmptyWishlist/FExportWishlist
  **************************************/
 #cart_status_data {
