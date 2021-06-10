@@ -9,7 +9,7 @@ export default class FExtraLinks extends Feature {
         if (context.type === ContextType.APP) {
             this._type = "app";
             this._gameid = context.appid;
-            this._node = document.querySelector("#ReportAppBtn").parentNode;
+            this._node = document.querySelector("#shareEmbedRow");
         } else if (context.type === ContextType.SUB) {
             this._type = "sub";
             this._gameid = context.subid;
@@ -137,7 +137,7 @@ export default class FExtraLinks extends Feature {
 
     _moveExtraLinks() {
 
-        const usefulLinks = this._node.parentNode;
+        const usefulLinks = this._node;
         usefulLinks.classList.add("es_useful_link");
 
         const sideDetails = document.querySelector(".es_side_details_wrap");
