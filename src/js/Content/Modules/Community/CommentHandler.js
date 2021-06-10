@@ -178,8 +178,11 @@ export class CommentHandler {
                 favBox.style.backgroundColor = "black";
             });
 
-            favBox.addEventListener("dragleave", () => {
-                favBox.style.backgroundColor = null;
+            favBox.addEventListener("dragleave", ev => {
+                // Prevent background flicker when hovering over child elements, see https://stackoverflow.com/a/54960084
+                if (!favBox.contains(ev.relatedTarget)) {
+                    favBox.style.backgroundColor = null;
+                }
             });
 
             favBox.addEventListener("drop", ev => {
