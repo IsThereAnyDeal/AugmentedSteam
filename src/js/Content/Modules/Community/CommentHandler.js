@@ -142,6 +142,10 @@ export class CommentHandler {
     }
 
     static addFavoriteEmoticons() {
+        if (document.querySelectorAll(".emoticon_button").length === 0) {
+            return;
+        }
+
         const observer = new MutationObserver(() => {
             const emoticonPopup = document.querySelector(".emoticon_popup:not(.es_emoticons)");
             if (!emoticonPopup) { return; }
