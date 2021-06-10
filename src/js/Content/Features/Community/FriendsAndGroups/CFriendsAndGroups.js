@@ -21,7 +21,7 @@ export class CFriendsAndGroups extends CCommunityBase {
 
         Page.runInPageContext(() => {
             window.SteamFacade.jq(document).ajaxSuccess((event, xhr, settings) => {
-                if (settings.url.endsWith("friends?ajax=1") || settings.url.endsWith("groups/?ajax=1")) {
+                if (/\/(friends|groups)\/?\?ajax=1$/.test(settings.url)) {
                     window.Messenger.postMessage("subpageNav");
                 }
             });
