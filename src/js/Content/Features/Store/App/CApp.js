@@ -119,6 +119,10 @@ export class CApp extends CStore {
 
         FMediaExpander.dependencies = [FYouTubeVideos];
         FMediaExpander.weakDependency = true;
+
+        // FPackBreakdown skips purchase options with a package info button to avoid false positives
+        FPackageInfoButton.dependencies = [FPackBreakdown];
+        FPackageInfoButton.weakDependency = true;
     }
 
     storePageDataPromise() {
