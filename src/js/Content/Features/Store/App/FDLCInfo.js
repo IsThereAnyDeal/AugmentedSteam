@@ -32,7 +32,7 @@ export default class FDLCInfo extends Feature {
                     <br><a class="linkbar" href="${suggestUrl}" target="_blank">${Localization.str.dlc_suggest} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></a>
                     </div></div></div>`;
 
-            HTML.beforeBegin(document.querySelector("#category_block").parentNode, html);
+            HTML.beforeBegin(document.querySelector("#category_block"), html);
         }
     }
 }
