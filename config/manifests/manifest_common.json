@@ -502,8 +502,8 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/sharedfiles/filedetails?id=*",
-        "*://steamcommunity.com/sharedfiles/filedetails/?id=*"
+        "*://steamcommunity.com/sharedfiles/filedetails?*id=*",
+        "*://steamcommunity.com/sharedfiles/filedetails/?*id=*"
       ],
       "js": [
         "js/community/shared_files.js"
@@ -514,8 +514,8 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/sharedfiles/editguide?id=*",
-        "*://steamcommunity.com/sharedfiles/editguide/?id=*"
+        "*://steamcommunity.com/sharedfiles/editguide?*appid=*",
+        "*://steamcommunity.com/sharedfiles/editguide/?*appid=*"
       ],
       "js": [
         "js/community/edit_guide.js"
@@ -551,10 +551,10 @@
         "*://steamcommunity.com/market/*",
         "*://steamcommunity.com/groups/*",
         "*://steamcommunity.com/app/*",
-        "*://steamcommunity.com/sharedfiles/filedetails?id=*",
-        "*://steamcommunity.com/sharedfiles/filedetails/?id=*",
-        "*://steamcommunity.com/sharedfiles/editguide?id=*",
-        "*://steamcommunity.com/sharedfiles/editguide/?id=*",
+        "*://steamcommunity.com/sharedfiles/filedetails?*id=*",
+        "*://steamcommunity.com/sharedfiles/filedetails/?*id=*",
+        "*://steamcommunity.com/sharedfiles/editguide?*appid=*",
+        "*://steamcommunity.com/sharedfiles/editguide/?*appid=*",
         "*://steamcommunity.com/tradingcards/boostercreator"
       ],
       "js": [
