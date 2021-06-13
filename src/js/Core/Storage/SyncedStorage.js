@@ -246,7 +246,6 @@ SyncedStorage.defaults = Object.freeze({
     "wlbuttoncommunityapp": true,
     "removeguideslanguagefilter": false,
     "disablelinkfilter": false,
-    "showallfriendsthatown": false,
     "sortfriendsby": "default_ASC",
     "sortreviewsby": "default_ASC",
     "sortgroupsby": "default_ASC",

@@ -110,6 +110,8 @@ class UpdateHandler {
             SyncedStorage.remove("hide_owned");
             SyncedStorage.remove("hide_ignored");
             SyncedStorage.remove("highlight_notdiscounted");
+
+            SyncedStorage.remove("showallfriendsthatown");
         }
     }
 }

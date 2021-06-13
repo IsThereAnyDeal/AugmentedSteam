@@ -175,5 +175,4 @@ export default {
     "steamcardexchange": "options.steamcardexchange",
     "wlbuttoncommunityapp": "options.wlbuttoncommunityapp",
     "removeguideslanguagefilter": "options.removeguideslanguagefilter",
-    "showallfriendsthatown": "options.showallfriendsthatown",
 };
