@@ -49,7 +49,8 @@
   "content_scripts": [
     {
       "matches": [
-        "*://store.steampowered.com/"
+        "*://store.steampowered.com/",
+        "*://store.steampowered.com/?*"
       ],
       "js": [ "js/store/frontpage.js" ],
       "css": [ "css/augmentedsteam.css" ]
@@ -197,6 +198,7 @@
         "*://translation.steampowered.com/*",
         "*://partner.steampowered.com/*",
         "*://store.steampowered.com/",
+        "*://store.steampowered.com/?*",
         "*://*.steampowered.com/wishlist/id/*",
         "*://*.steampowered.com/wishlist/profiles/*",
         "*://*.steampowered.com/sale/*",
