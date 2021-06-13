@@ -139,7 +139,7 @@ export class CApp extends CStore {
     }
 
     hasAchievements() {
-        return document.querySelector("#achievement_block") !== null;
+        return document.querySelector(".communitylink_achievement_images") !== null;
     }
 
     removeFromWishlist() {
