@@ -139,6 +139,7 @@ export class CApp extends CStore {
     }
 
     hasAchievements() {
+        // #achievement_block is also used for point shop items
         return document.querySelector(".communitylink_achievement_images") !== null;
     }
 
