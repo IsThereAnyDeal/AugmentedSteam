@@ -538,6 +538,7 @@
         "show_empty_wishlist": "Show \"Empty Wishlist\" button",
         "show_wishlist_stats": "Show wishlist stats",
         "user_notes": {
+            "user_notes": "User notes",
             "app": "On app pages",
             "wishlist": "On my wishlist",
             "loc": "Storage location",
