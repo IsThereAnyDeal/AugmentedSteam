@@ -114,7 +114,6 @@ export default {
     "show_steamspy_info": "options.show_steamspy_info",
 
     // store general
-    "showusernotes": "options.show_user_notes",
     "horizontalscrolling": "options.horizontalscrolling",
     "show_early_access": "options.show_early_access",
     "show_alternative_linux_icon": "options.show_alternative_linux_icon",
