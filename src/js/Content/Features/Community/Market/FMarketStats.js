@@ -153,7 +153,7 @@ export default class FMarketStats extends Feature {
             request.attempt += 1;
             request.lastAttempt = Date.now();
             if (request.attempt > 1) {
-                await TimeUtils.sleep(2000);
+                await TimeUtils.timer(2000);
             } else if (request.attempt > 4) {
 
                 // Give up after four tries

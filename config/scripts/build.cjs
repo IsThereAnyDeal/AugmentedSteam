@@ -1,7 +1,7 @@
 const WebpackRunner = require("../webpack/WebpackRunner.cjs");
 const argparse = require("argparse");
 
-const browsers = Object.freeze(["chrome", "firefox"]);
+const browsers = Object.freeze(["chrome", "firefox", "edge"]);
 
 const parser = new argparse.ArgumentParser({
     "add_help": true

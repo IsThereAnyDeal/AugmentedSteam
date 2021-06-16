@@ -67,7 +67,6 @@ class AugmentedSteam {
         const btn = document.createElement("div");
         btn.classList.add("es_btt");
         btn.textContent = "▲";
-        btn.style.visibility = "hidden";
 
         document.body.append(btn);
 
@@ -77,18 +76,6 @@ class AugmentedSteam {
                 "left": 0,
                 "behavior": "smooth"
             });
-        });
-
-        btn.addEventListener("transitionstart", () => {
-            if (btn.style.visibility === "hidden") {
-                btn.style.visibility = "visible";
-            } else {
-
-                // transition: opacity 200ms ease-in-out;
-                setTimeout(() => {
-                    btn.style.visibility = "hidden";
-                }, 200);
-            }
         });
 
         window.addEventListener("scroll", () => {
@@ -178,12 +165,6 @@ class AugmentedSteam {
         }
     }
 
-    static _removeAboutLinks() {
-        if (!SyncedStorage.get("hideaboutlinks")) { return; }
-
-        DOMHelper.remove("#global_header a[href^='https://store.steampowered.com/about/']");
-    }
-
     static _addUsernameSubmenuLinks() {
         const node = document.querySelector(".supernav_container .submenu_username");
 
@@ -234,17 +215,19 @@ class AugmentedSteam {
     static _replaceAccountName() {
         if (!SyncedStorage.get("replaceaccountname")) { return; }
 
-        const accountNameNode = document.querySelector("#account_pulldown");
-        const accountName = accountNameNode.textContent.trim();
-        const communityName = document.querySelector("#global_header .username").textContent.trim();
+        const logoutNode = document.querySelector("#account_dropdown .persona.online");
+        const accountName = logoutNode.textContent.trim();
+        const communityName = document.querySelector("#account_pulldown").textContent.trim();
 
-        // Present on https://store.steampowered.com/account/history/
-        const pageHeader = document.querySelector("h2.pageheader");
-        if (pageHeader) {
-            pageHeader.textContent = pageHeader.textContent.replace(accountName, communityName);
+        logoutNode.textContent = communityName;
+
+        // Replace page header on account related pages
+        if (location.href.startsWith("https://store.steampowered.com/account")) {
+            const pageHeader = document.querySelector("h2.pageheader");
+            if (pageHeader) {
+                pageHeader.textContent = pageHeader.textContent.replace(new RegExp(accountName, "i"), communityName);
+            }
         }
-
-        accountNameNode.textContent = communityName;
 
         // Don't replace title on user pages that aren't mine
         const isUserPage = /.*(id|profiles)\/.+/g.test(location.pathname);
@@ -382,7 +365,6 @@ class AugmentedSteam {
         AugmentedSteam._addMenu();
         AugmentedSteam._addLanguageWarning();
         AugmentedSteam._handleInstallSteamButton();
-        AugmentedSteam._removeAboutLinks();
         AugmentedSteam._disableLinkFilter();
         AugmentedSteam._skipGotSteam();
         AugmentedSteam._keepSteamSubscriberAgreementState();

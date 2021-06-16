@@ -8,13 +8,10 @@ class Language {
             return this._currentSteamLanguage;
         }
 
-        const nodes = document.querySelectorAll("script[src]");
-        const re = /(?:\?|&(?:amp;)?)l=([^&]+)/;
-        for (const n of nodes) {
-            const src = n.getAttribute("src");
-            const match = src.match(re);
-            if (match) {
-                Language._currentSteamLanguage = match[1];
+        for (const script of document.querySelectorAll("script[src]")) {
+            const language = new URL(script.src).searchParams.get("l");
+            if (language) {
+                Language._currentSteamLanguage = language;
                 return this._currentSteamLanguage;
             }
         }
@@ -68,6 +65,5 @@ Language.languages = {
     "ukrainian": "ua",
     "vietnamese": "vi",
 };
-
 
 export {Language};

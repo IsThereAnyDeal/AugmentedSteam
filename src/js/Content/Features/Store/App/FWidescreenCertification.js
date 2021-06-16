@@ -54,19 +54,24 @@ export default class FWidescreenCertification extends Feature {
         const [uwsIcon, uwsText] = this._getType(uws, "uw", "Ultra-Widescreen");
         const [fkgIcon, fkgText] = this._getType(fkg, "4k", "4k UHD");
 
-        let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.wsgf.certifications}</div>
-                    <div class="block underlined_links es_wsgf">
-                    <div class="block_content"><div class="block_content_inner"><div class="details_block"><center>`;
-
-        if (wsg !== "Incomplete") { html += `<img src="${HTML.escape(wsgIcon)}" title="${HTML.escape(wsgText)}">&nbsp;&nbsp;&nbsp;`; }
-        if (mmg !== "Incomplete") { html += `<img src="${HTML.escape(mmgIcon)}" title="${HTML.escape(mmgText)}">&nbsp;&nbsp;&nbsp;`; }
-        if (uws !== "Incomplete") { html += `<img src="${HTML.escape(uwsIcon)}" title="${HTML.escape(uwsText)}">&nbsp;&nbsp;&nbsp;`; }
-        if (fkg !== "Incomplete") { html += `<img src="${HTML.escape(fkgIcon)}" title="${HTML.escape(fkgText)}">&nbsp;&nbsp;&nbsp;`; }
-
-        html += `</center></div>
-                <br><a class="linkbar" target="_blank" href="${HTML.escape(path)}">${Localization.str.rating_details} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></a>
-                </div></div></div>`;
-
-        HTML.afterEnd("div.game_details", html);
+        HTML.afterEnd("div.game_details",
+            `<div class="block responsive_apppage_details_right heading">${Localization.str.wsgf.certifications}</div>
+            <div class="block underlined_links es_wsgf">
+                <div class="block_content">
+                    <div class="block_content_inner">
+                        <div class="details_block">
+                            ${wsg ? `<img src="${HTML.escape(wsgIcon)}" title="${HTML.escape(wsgText)}">` : ""}
+                            ${mmg ? `<img src="${HTML.escape(mmgIcon)}" title="${HTML.escape(mmgText)}">` : ""}
+                            ${uws ? `<img src="${HTML.escape(uwsIcon)}" title="${HTML.escape(uwsText)}">` : ""}
+                            ${fkg ? `<img src="${HTML.escape(fkgIcon)}" title="${HTML.escape(fkgText)}">` : ""}
+                        </div>
+                        <br>
+                        <a class="linkbar" target="_blank" href="${HTML.escape(path)}">
+                            ${Localization.str.rating_details}
+                            <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif">
+                        </a>
+                    </div>
+                </div>
+            </div>`);
     }
 }

@@ -29,10 +29,6 @@ const PermissionOptions = Object.freeze({
         "persistent": true,
         "permissions": ["contextMenus"]
     },
-    "itad_connect": {
-        "persistent": false,
-        "permissions": ["webRequest", "webRequestBlocking"],
-    },
 });
 
 class Permissions {
@@ -47,7 +43,10 @@ class Permissions {
     /**
      * @return Promise
      */
-    static request(permissionList) {
+    static async request(permissionList) {
+        // Prevents requesting permissions that are not optional (contextMenus for Firefox)
+        if (await this.contains(permissionList)) { return true; }
+
         return browser.permissions.request({"permissions": permissionList});
     }
 

@@ -1,7 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {HTML, Localization, TimeUtils} from "../../../../modulesCore";
 import {Background, DOMHelper, Feature, ProfileData, SteamId} from "../../../modulesContent";
-import Config from "config";
-import {Page} from "../../Page";
+import Config from "../../../../config";
 
 export default class FBackgroundSelection extends Feature {
 
@@ -18,9 +17,9 @@ export default class FBackgroundSelection extends Feature {
     async _checkPage() {
 
         const html
-            = `<div class='js-bg-selection as-pd'>
+            = `<div class="js-bg-selection as-pd">
 
-                <div class="DialogLabel as-pd__head" data-tooltip-text='${Localization.str.custom_background_help}'>
+                <div class="DialogLabel as-pd__head" data-tooltip-text="${Localization.str.custom_background_help}">
                     ${Localization.str.custom_background} <span class="as-pd__help">(?)</span>
                 </div>
 
@@ -37,8 +36,8 @@ export default class FBackgroundSelection extends Feature {
                 </div>
 
                 <div class="as-pd__buttons">
-                    <button class='DialogButton _DialogLayout Secondary as-pd__btn js-as-pd-bg-clear'>${Localization.str.thewordclear}</button>
-                    <button class='DialogButton _DialogLayout Primary as-pd__btn js-as-pd-bg-save'>${Localization.str.save}</button>
+                    <button class="DialogButton _DialogLayout Secondary as-pd__btn js-as-pd-bg-clear">${Localization.str.thewordclear}</button>
+                    <button class="DialogButton _DialogLayout Primary as-pd__btn js-as-pd-bg-save">${Localization.str.save}</button>
                 </div>
             </div>`;
 
@@ -53,8 +52,6 @@ export default class FBackgroundSelection extends Feature {
             this._imagesNode = document.querySelector(".js-pd-imgs");
 
             this._active = true;
-
-            Page.runInPageContext(() => { window.SteamFacade.setupTooltips(); });
 
             this._selectedAppid = ProfileData.getBgAppid();
             let selectedGameKey = null;
@@ -74,7 +71,7 @@ export default class FBackgroundSelection extends Feature {
 
             this._hideBgFormLoading(this._listNode);
 
-            let timeout = null;
+            let timer = null;
 
             this._listNode.addEventListener("click", ({target}) => {
                 if (!target.dataset.appid) { return; }
@@ -97,27 +94,27 @@ export default class FBackgroundSelection extends Feature {
 
             this._gameFilterNode.addEventListener("keyup", () => {
 
-                if (timeout) {
-                    window.clearTimeout(timeout);
+                if (!timer) {
+                    timer = TimeUtils.resettableTimer(() => {
+
+                        const max = 100;
+                        const value = this._getSafeString(this._gameFilterNode.value);
+                        if (value === "") { return; }
+
+                        let i = 0;
+                        let list = "";
+                        for (const [appid, title, safeTitle] of games) {
+                            if (safeTitle.includes(value)) {
+                                list += `<div class="as-pd__item js-pd-item" data-appid="${appid}">${title}</div>`;
+                                i++;
+                            }
+                            if (i >= max) { break; }
+                        }
+                        HTML.inner(this._listNode, list);
+                    }, 200);
                 }
 
-                timeout = window.setTimeout(() => {
-
-                    const max = 100;
-                    const value = this._getSafeString(this._gameFilterNode.value);
-                    if (value === "") { return; }
-
-                    let i = 0;
-                    let list = "";
-                    for (const [appid, title, safeTitle] of games) {
-                        if (safeTitle.includes(value)) {
-                            list += `<div class='as-pd__item js-pd-item' data-appid="${appid}">${title}</div>`;
-                            i++;
-                        }
-                        if (i >= max) { break; }
-                    }
-                    HTML.inner(this._listNode, list);
-                }, 200);
+                timer.reset();
             });
 
             if (games[selectedGameKey]) {
@@ -186,10 +183,10 @@ export default class FBackgroundSelection extends Feature {
 
     _showBgFormLoading(node) {
         HTML.inner(node,
-            `<div class='es_loading'>
-               <img src='https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif'>
-               <span>${Localization.str.loading}</span>
-             </div>`);
+            `<div class="es_loading">
+                <img src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
+                <span>${Localization.str.loading}</span>
+            </div>`);
     }
 
     _hideBgFormLoading(node) {

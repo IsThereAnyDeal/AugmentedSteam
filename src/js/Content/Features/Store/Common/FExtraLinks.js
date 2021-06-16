@@ -1,8 +1,5 @@
+import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../../modulesCore";
 import {ContextType, Feature} from "../../../modulesContent";
-
-import {HTML} from "../../../../Core/Html/Html";
-import {Localization} from "../../../../Core/Localization/Localization";
-import {SyncedStorage} from "../../../../Core/Storage/SyncedStorage";
 
 export default class FExtraLinks extends Feature {
 
@@ -12,7 +9,7 @@ export default class FExtraLinks extends Feature {
         if (context.type === ContextType.APP) {
             this._type = "app";
             this._gameid = context.appid;
-            this._node = document.querySelector("#ReportAppBtn").parentNode;
+            this._node = document.querySelector("#shareEmbedRow");
         } else if (context.type === ContextType.SUB) {
             this._type = "sub";
             this._gameid = context.subid;
@@ -45,11 +42,13 @@ export default class FExtraLinks extends Feature {
 
             this._moveExtraLinks();
 
+            const appName = HTMLParser.clearSpecialSymbols(this.context.appName);
+
             if (SyncedStorage.get("showyoutube")) {
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "youtube_btn",
-                        `https://www.youtube.com/results?search_query=${encodeURIComponent(this.context.appName)}`,
+                        `https://www.youtube.com/results?search_query=${encodeURIComponent(appName)}`,
                         Localization.str.view_on_website.replace("__website__", "YouTube")
                     ));
             }
@@ -58,12 +57,10 @@ export default class FExtraLinks extends Feature {
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "twitch_btn",
-                        `https://www.twitch.tv/directory/game/${encodeURIComponent(this.context.appName.replace(/(\u2122)/g, "")
-                            .replace(/(\xAE)/g, ""))}`,
+                        `https://www.twitch.tv/directory/game/${encodeURIComponent(appName)}`,
                         Localization.str.view_on_website.replace("__website__", "Twitch")
                     ));
             }
-
 
             if (SyncedStorage.get("showpcgw")) {
                 HTML.afterBegin(this._node,
@@ -98,7 +95,7 @@ export default class FExtraLinks extends Feature {
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "cardexchange_btn",
-                        `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.communityAppid}/`,
+                        `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.context.communityAppid}/`,
                         Localization.str.view_on_website.replace("__website__", "Steam Card Exchange")
                     ));
             }
@@ -140,7 +137,7 @@ export default class FExtraLinks extends Feature {
 
     _moveExtraLinks() {
 
-        const usefulLinks = this._node.parentNode;
+        const usefulLinks = this._node;
         usefulLinks.classList.add("es_useful_link");
 
         const sideDetails = document.querySelector(".es_side_details_wrap");

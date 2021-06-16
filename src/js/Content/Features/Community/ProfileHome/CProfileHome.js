@@ -7,17 +7,18 @@ import FCustomBackground from "./FCustomBackground";
 import FProfileStoreLinks from "./FProfileStoreLinks";
 import FSteamRep from "./FSteamRep";
 import FProfileDropdownOptions from "./FProfileDropdownOptions";
+import FInGameStoreLink from "./FInGameStoreLink";
 import FCustomStyle from "./FCustomStyle";
 import FTwitchShowcase from "./FTwitchShowcase";
 import FChatDropdownOptions from "./FChatDropdownOptions";
+import FViewSteamId from "./FViewSteamId";
 
 export class CProfileHome extends CCommunityBase {
 
     constructor() {
-
         // If there is an error message, like profile does not exists.
         if (document.getElementById("message")) {
-            super();
+            super(ContextType.PROFILE_HOME);
             return;
         }
 
@@ -44,9 +45,13 @@ export class CProfileHome extends CCommunityBase {
             FProfileStoreLinks,
             FSteamRep,
             FProfileDropdownOptions,
+            FInGameStoreLink,
             FCustomStyle,
             FTwitchShowcase,
             FChatDropdownOptions,
+            FViewSteamId,
         ]);
+
+        this.isPrivateProfile = document.body.classList.contains("private_profile");
     }
 }

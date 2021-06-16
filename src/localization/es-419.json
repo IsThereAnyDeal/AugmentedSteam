@@ -572,7 +572,12 @@
             "import_fail": "No se pudo importar la configuración",
             "export": "Exportar",
             "reset": "Resetear"
-        }
+        },
+        "removebroadcasts": "",
+        "maintainers": "",
+        "with_help_of": "",
+        "contributors": "",
+        "apppage": ""
     },
     "ready": {
         "errormsg": "Error al cargar los datos de Augmented Steam",

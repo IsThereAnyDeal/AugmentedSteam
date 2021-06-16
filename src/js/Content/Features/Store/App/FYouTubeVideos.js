@@ -1,10 +1,19 @@
 import {HTML, Language, Localization, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
+import {Page} from "../../Page";
 
 export default class FYouTubeVideos extends Feature {
 
-    checkPrerequisites() {
-        return SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews");
+    async checkPrerequisites() {
+        if (!SyncedStorage.get("showyoutubegameplay") && !SyncedStorage.get("showyoutubereviews")) { return false; }
+
+        const data = await this.context.data;
+        if (data && data.youtube) {
+            this._data = data.youtube;
+        } else {
+            this._data = null;
+        }
+        return true;
     }
 
     apply() {
@@ -53,15 +62,19 @@ export default class FYouTubeVideos extends Feature {
 
             gamePlayTab.addEventListener("click", () => {
                 if (!this._tabToMedia.has(gamePlayTab)) {
-                    const gamePlayMedia = this._getIframe(Localization.str.gameplay);
+                    const gamePlayMedia = this._getIframe("gameplay");
+
+                    this._tabToMedia.set(gamePlayTab, gamePlayMedia);
+
+                    if (gamePlayMedia === null) { return; }
 
                     document.querySelector(".highlight_ctn")
                         .insertAdjacentElement("beforeend", gamePlayMedia);
-
-                    this._tabToMedia.set(gamePlayTab, gamePlayMedia);
                 }
 
-                this._setActiveTab(gamePlayTab);
+                if (this._tabToMedia.get(gamePlayTab) !== null) {
+                    this._setActiveTab(gamePlayTab);
+                }
             });
         }
 
@@ -70,20 +83,26 @@ export default class FYouTubeVideos extends Feature {
 
             reviewTab.addEventListener("click", () => {
                 if (!this._tabToMedia.has(reviewTab)) {
-                    const reviewMedia = this._getIframe(Localization.str.review);
+                    const reviewMedia = this._getIframe("reviews");
+
+                    this._tabToMedia.set(reviewTab, reviewMedia);
+
+                    if (reviewMedia === null) { return; }
 
                     document.querySelector(".highlight_ctn")
                         .insertAdjacentElement("beforeend", reviewMedia);
-
-                    this._tabToMedia.set(reviewTab, reviewMedia);
                 }
 
-                this._setActiveTab(reviewTab);
+                if (this._tabToMedia.get(reviewTab) !== null) {
+                    this._setActiveTab(reviewTab);
+                }
             });
         }
     }
 
     _setActiveTab(tab) {
+        if (!tab) { return; }
+
         const activeTab = document.querySelector(".js-tab.active");
         if (activeTab === tab) { return; }
 
@@ -91,7 +110,9 @@ export default class FYouTubeVideos extends Feature {
         const activeMedia = this._tabToMedia.get(activeTab);
 
         if (activeTab.classList.contains("js-tab-steam")) {
-            Page.runInPageContext(() => { SteamOnWebPanelHidden(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => {
+                SteamOnWebPanelHidden(); // eslint-disable-line no-undef, new-cap
+            });
         } else if (activeTab.classList.contains("js-tab-yt")) {
             activeMedia.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "https://www.youtube.com");
         }
@@ -103,24 +124,23 @@ export default class FYouTubeVideos extends Feature {
         tab.classList.add("active");
 
         if (tab.classList.contains("js-tab-steam")) {
-            Page.runInPageContext(() => { SteamOnWebPanelShown(); }); // eslint-disable-line no-undef, new-cap
+            Page.runInPageContext(() => {
+                SteamOnWebPanelShown(); // eslint-disable-line no-undef, new-cap
+            });
         }
     }
 
-    _getIframe(searchQuery) {
+    _getIframe(type) {
 
-        const listParam = encodeURIComponent(
-
-            // Remove trademarks etc
-            `intitle:"${this.context.appName.replace(/[\u00AE\u00A9\u2122]/g, "")} ${searchQuery}" "PC"`
-        );
+        const videoIds = this._data && this._data[type];
+        if (!videoIds) { return null; }
 
         const hlParam = encodeURIComponent(Language.getLanguageCode(Language.getCurrentSteamLanguage()));
 
         const player = document.createElement("iframe");
         player.classList.add("es_youtube_player");
         player.type = "text/html";
-        player.src = `https://www.youtube.com/embed?listType=search&list=${listParam}&origin=https://store.steampowered.com&widget_referrer=https://steamaugmented.com&hl=${hlParam}&enablejsapi=1`;
+        player.src = `https://www.youtube.com/embed?playlist=${videoIds}&origin=https://store.steampowered.com&widget_referrer=https://augmentedsteam.com&hl=${hlParam}&enablejsapi=1`;
         player.allowFullscreen = true;
 
         return player;

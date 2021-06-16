@@ -239,7 +239,7 @@ class Prices {
             purchase += `<div class="game_purchase_action">
                             <div class="game_purchase_action_bg">
                                 <div class="btn_addtocart btn_packageinfo">
-                                    <a class="btnv6_blue_blue_innerfade btn_medium" href="${bundle.details}" target="_blank">
+                                    <a class="btn_blue_steamui btn_medium" href="${bundle.details}" target="_blank">
                                         <span>${Localization.str.bundle.info}</span>
                                     </a>
                                 </div>
@@ -253,7 +253,7 @@ class Prices {
             }
 
             purchase += `<div class="btn_addtocart">
-                            <a class="btnv6_green_white_innerfade btn_medium" href="${bundle.url}" target="_blank">
+                            <a class="btn_green_steamui btn_medium" href="${bundle.url}" target="_blank">
                                 <span>${Localization.str.buy}</span>
                             </a>
                         </div></div></div></div>`;

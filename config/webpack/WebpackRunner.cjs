@@ -4,7 +4,7 @@ const path = require("path");
 const MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin");
 const ExtensionReloader = require("webpack-extension-reloader");
 const ZipPlugin = require("zip-webpack-plugin");
-const UpdateManifestScriptsPlugin = require("./Plugins/UpdateManifestScriptsPlugin.cjs");
+const ManifestTransformerPlugin = require("./Plugins/ManifestTransformerPlugin.cjs");
 const PreprocessChangelogPlugin = require("./Plugins/PreprocessChangelogPlugin.cjs");
 
 class WebpackRunner {
@@ -12,7 +12,7 @@ class WebpackRunner {
     constructor(browser) {
         this._browser = browser;
 
-        if (!["firefox", "chrome"].includes(this._browser)) {
+        if (!["firefox", "chrome", "edge"].includes(this._browser)) {
             throw new Error(`Unknown browser ${this._browser}`);
         }
 
@@ -65,7 +65,7 @@ class WebpackRunner {
                 },
                 "space": this._development ? "\t" : null,
             }),
-            new UpdateManifestScriptsPlugin({
+            new ManifestTransformerPlugin({
                 "js": ["js/browser-polyfill.js", "js/dompurify.js"]
             }),
             new PreprocessChangelogPlugin({

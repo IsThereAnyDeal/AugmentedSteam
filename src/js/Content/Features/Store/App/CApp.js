@@ -44,6 +44,12 @@ import FRemoveBroadcasts from "./FRemoveBroadcasts";
 export class CApp extends CStore {
 
     constructor() {
+        // Don't apply features if there's an error message (e.g. region-locked, age-gated)
+        if (document.getElementById("error_box")) {
+            super(ContextType.APP);
+            return;
+        }
+
         super(ContextType.APP, [
             FReplaceDevPubLinks,
             FRemoveFromWishlist,
@@ -109,6 +115,7 @@ export class CApp extends CStore {
 
         // The customizer has to wait on this data to be added in order to find the HTML elements
         FCustomizer.dependencies = [FSteamSpy, FSteamChart, FSurveyData];
+        FCustomizer.weakDependency = true;
 
         FMediaExpander.dependencies = [FYouTubeVideos];
         FMediaExpander.weakDependency = true;
@@ -132,7 +139,8 @@ export class CApp extends CStore {
     }
 
     hasAchievements() {
-        return document.querySelector("#achievement_block") !== null;
+        // #achievement_block is also used for point shop items
+        return document.querySelector(".communitylink_achievement_images") !== null;
     }
 
     removeFromWishlist() {

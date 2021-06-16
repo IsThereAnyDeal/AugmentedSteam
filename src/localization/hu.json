@@ -572,7 +572,12 @@
             "import_fail": "Beállítások importálása sikertelen",
             "export": "Export",
             "reset": "Visszaállítás"
-        }
+        },
+        "removebroadcasts": "Élő közvetítések eltávolítása teljesen",
+        "maintainers": "Projekt karbantartók",
+        "with_help_of": "sok segítséggel __contributors__",
+        "contributors": "nagyszerű közreműködőinktől",
+        "apppage": "App oldal"
     },
     "ready": {
         "errormsg": "Hiba az Augmented Steam adatbetöltése közben",

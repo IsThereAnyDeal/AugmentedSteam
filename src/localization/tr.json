@@ -572,7 +572,12 @@
             "import_fail": "Ayarları yedekten yükleme başarısız oldu",
             "export": "Kaydet",
             "reset": "Sıfırla"
-        }
+        },
+        "removebroadcasts": "",
+        "maintainers": "",
+        "with_help_of": "",
+        "contributors": "",
+        "apppage": ""
     },
     "ready": {
         "errormsg": "Augmented Steam verilerini yüklerken hata oluştu",

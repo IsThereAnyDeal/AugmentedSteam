@@ -572,7 +572,12 @@
             "import_fail": "Impossibile importare le impostazioni",
             "export": "Esporta",
             "reset": "Resetta"
-        }
+        },
+        "removebroadcasts": "",
+        "maintainers": "",
+        "with_help_of": "",
+        "contributors": "",
+        "apppage": ""
     },
     "ready": {
         "errormsg": "Errore nel caricamento di Augmented Steam",

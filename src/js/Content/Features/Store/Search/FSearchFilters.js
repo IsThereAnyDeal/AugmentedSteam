@@ -129,9 +129,9 @@ export default class FSearchFilters extends Feature {
 
                 if (filtersChanged) {
                     filter._setState(params);
-                    filter.apply(document.querySelectorAll(".search_result_row"));
+                    filter._apply(document.querySelectorAll(".search_result_row"));
                 } else {
-                    filter.apply(newResults);
+                    filter._apply(newResults);
                 }
             }
 
@@ -154,7 +154,7 @@ export default class FSearchFilters extends Feature {
                     controller.SetPageChangedHandler((...args) => {
                         oldPageHandler(...args);
 
-                        Messenger.postMessage("searchCompleted", false);
+                        window.Messenger.postMessage("searchCompleted", false);
                     });
                 }
             }
@@ -200,7 +200,7 @@ export default class FSearchFilters extends Feature {
                  * Therefore we can already notify the content script that the search completed.
                  */
                 if (Object.toQueryString(currentAsParameters) !== Object.toQueryString(asParameters)) {
-                    Messenger.postMessage("searchCompleted", true);
+                    window.Messenger.postMessage("searchCompleted", true);
                 }
 
                 searchOld(params);
@@ -219,7 +219,7 @@ export default class FSearchFilters extends Feature {
                 setPageChangeHandler();
 
                 // At this point the new results have been loaded and decorated (by the Dynamic Store)
-                Messenger.postMessage("searchCompleted", false);
+                window.Messenger.postMessage("searchCompleted", false);
             };
 
             // https://github.com/SteamDatabase/SteamTracking/blob/71f26599625ed8b6af3c0e8968c3959405fab5ec/store.steampowered.com/public/javascript/searchpage.js#L463

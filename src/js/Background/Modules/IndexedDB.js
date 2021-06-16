@@ -160,7 +160,7 @@ class IndexedDB {
             expiryTx.store.put(expiry, key);
         }
 
-        return expiryTx;
+        return expiryTx.done;
     }
 
     static async get(storeName, key, options = {}) {
