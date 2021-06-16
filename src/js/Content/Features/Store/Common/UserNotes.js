@@ -25,14 +25,14 @@ class UserNotes {
             capInfo = await this._adapter.set(...args);
         } catch (err) {
             if (err instanceof OutOfCapacityError) {
-                return this._showCloudStorageDialog(true, err.ratio);
+                return this._showDialog(true, err.ratio);
             } else {
                 throw err;
             }
         }
 
         if (capInfo instanceof CapacityInfo && capInfo.closeToFull) {
-            return this._showCloudStorageDialog(false, capInfo.utilization);
+            return this._showDialog(false, capInfo.utilization);
         }
 
         return true;
@@ -119,7 +119,7 @@ class UserNotes {
         onNoteUpdate(node, note.length !== 0);
     }
 
-    async _showCloudStorageDialog(exceeded, ratio) {
+    async _showDialog(exceeded, ratio) {
 
         const str = this._str;
 
