@@ -90,12 +90,7 @@ export default class FInventoryMarketHelper extends Feature {
 
             this._addOneClickGemsOption(item, appid, assetId, sessionId);
 
-            /*
-             * 753 is the appid for "Steam" in the Steam Inventory
-             * 6 is the context used for "Community Items"; backgrounds, emoticons and trading cards
-             * TODO Support non-Steam items
-             */
-            if (_marketable && _contextId === 6 && _globalId === 753) {
+            if (_marketable) {
                 this._addQuickSellOptions(
                     item,
                     thisItem,
