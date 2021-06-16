@@ -514,8 +514,8 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/sharedfiles/editguide?*appid=*",
-        "*://steamcommunity.com/sharedfiles/editguide/?*appid=*"
+        "*://steamcommunity.com/sharedfiles/editguide?*",
+        "*://steamcommunity.com/sharedfiles/editguide/?*"
       ],
       "js": [
         "js/community/edit_guide.js"
@@ -553,8 +553,8 @@
         "*://steamcommunity.com/app/*",
         "*://steamcommunity.com/sharedfiles/filedetails?*id=*",
         "*://steamcommunity.com/sharedfiles/filedetails/?*id=*",
-        "*://steamcommunity.com/sharedfiles/editguide?*appid=*",
-        "*://steamcommunity.com/sharedfiles/editguide/?*appid=*",
+        "*://steamcommunity.com/sharedfiles/editguide?*",
+        "*://steamcommunity.com/sharedfiles/editguide/?*",
         "*://steamcommunity.com/tradingcards/boostercreator"
       ],
       "js": [
