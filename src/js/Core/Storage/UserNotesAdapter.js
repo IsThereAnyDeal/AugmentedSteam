@@ -132,14 +132,15 @@ class IdbAdapter {
     }
 }
 
-class ItadAdapter extends IdbAdapter {
-
-}
+/*
+ * TODO Implement
+ * class ItadAdapter extends IdbAdapter {}
+ */
 
 UserNotesAdapter.adapters = Object.freeze({
     "synced_storage": SyncedStorageAdapter,
     "idb": IdbAdapter,
-    "itad": ItadAdapter,
+    // "itad": ItadAdapter,
 });
 
 export {CapacityInfo, OutOfCapacityError, UserNotesAdapter};

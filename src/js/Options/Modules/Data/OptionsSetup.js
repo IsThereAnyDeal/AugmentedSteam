@@ -63,7 +63,7 @@ export default {
         [
             ["synced_storage", "options.user_notes.synced_storage"],
             ["idb", "options.user_notes.local"],
-            ["itad", "options.user_notes.itad"],
+            // ["itad", "options.user_notes.itad"],
         ],
     ],
 

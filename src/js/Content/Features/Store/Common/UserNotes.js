@@ -129,7 +129,7 @@ class UserNotes {
             ${str.storage_warning_desc}`;
 
         Page.runInPageContext((title, desc, strCloudStorage, strCancel, strLocalStorage) => {
-            const modal = window.SteamFacade.showConfirmDialog(title, desc, strCloudStorage, strCancel, strLocalStorage);
+            const modal = window.SteamFacade.showConfirmDialog(title, desc, strLocalStorage, strCancel);
 
             modal
                 .done(res => window.Messenger.postMessage("storageOption", res))
@@ -147,8 +147,6 @@ class UserNotes {
         let adapterType;
 
         if (buttonPressed === "OK") {
-            adapterType = "itad";
-        } else if (buttonPressed === "SECONDARY") {
             adapterType = "idb";
         } else {
             return false;
