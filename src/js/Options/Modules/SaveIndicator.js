@@ -20,7 +20,7 @@ class SaveIndicator {
 
         await this._promise;
         this._promise = null;
-        await TimeUtils.sleep(this.displayTime);
+        await TimeUtils.timer(this.displayTime);
 
         if (this._promise !== null) { return; }
 
