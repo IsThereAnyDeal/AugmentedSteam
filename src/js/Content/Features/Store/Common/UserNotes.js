@@ -19,20 +19,20 @@ class UserNotes {
 
     async set(...args) {
 
-        let capInfo;
+        let capInfo = null;
 
         try {
             capInfo = await this._adapter.set(...args);
         } catch (err) {
             if (err instanceof OutOfCapacityError) {
-                return this._showDialog(true, err.ratio);
-            } else {
-                throw err;
+                return (await this._showDialog(true, err.ratio)) ? this.set(...args) : false;
             }
+
+            throw err;
         }
 
         if (capInfo instanceof CapacityInfo && capInfo.closeToFull) {
-            return this._showDialog(false, capInfo.utilization);
+            await this._showDialog(false, capInfo.utilization);
         }
 
         return true;
