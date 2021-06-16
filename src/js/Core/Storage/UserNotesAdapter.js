@@ -7,14 +7,14 @@ class UserNotesAdapter {
 
         if (typeof UserNotesAdapter._adapter === "undefined") {
 
-            let adapter = new UserNotesAdapter.adapters[SyncedStorage.get("user_notes_adapter")]();
+            let Adapter = UserNotesAdapter.adapters[SyncedStorage.get("user_notes_adapter")];
 
-            if (typeof adapter === "undefined") {
+            if (typeof Adapter === "undefined") {
                 SyncedStorage.remove("user_notes_adapter");
-                adapter = new UserNotesAdapter.adapters[SyncedStorage.defaults.user_notes_adapter]();
+                Adapter = UserNotesAdapter.adapters[SyncedStorage.defaults.user_notes_adapter];
             }
 
-            UserNotesAdapter._adapter = adapter;
+            UserNotesAdapter._adapter = new Adapter();
         }
 
         return UserNotesAdapter._adapter;
