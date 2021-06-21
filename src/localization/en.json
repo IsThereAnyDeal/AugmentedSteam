@@ -4,8 +4,8 @@
         "busy": "Currently Busy",
         "away": "Currently Away",
         "snooze": "Currently Snoozing",
-        "looking to trade": "Looking to Trade",
-        "looking to play": "Looking to Play"
+        "looking_to_trade": "Looking to Trade",
+        "looking_to_play": "Looking to Play"
     },
     "calc_workshop_size": {
         "file_size": "File size __size__",

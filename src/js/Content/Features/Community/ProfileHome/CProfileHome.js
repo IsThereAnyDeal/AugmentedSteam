@@ -12,6 +12,7 @@ import FCustomStyle from "./FCustomStyle";
 import FTwitchShowcase from "./FTwitchShowcase";
 import FChatDropdownOptions from "./FChatDropdownOptions";
 import FViewSteamId from "./FViewSteamId";
+import FProfileStatus from "./FProfileStatus";
 
 export class CProfileHome extends CCommunityBase {
 
@@ -50,6 +51,7 @@ export class CProfileHome extends CCommunityBase {
             FTwitchShowcase,
             FChatDropdownOptions,
             FViewSteamId,
+            FProfileStatus,
         ]);
 
         this.isPrivateProfile = document.body.classList.contains("private_profile");
