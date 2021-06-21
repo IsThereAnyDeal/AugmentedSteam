@@ -143,6 +143,8 @@ export default {
     "profile_showcase_twitch": "options.profile_showcase_twitch",
     "profile_showcase_own_twitch": "options.profile_showcase_own_twitch",
     "profile_showcase_twitch_profileonly": "options.profile_showcase_twitch_profileonly",
+    "profile_accurate_status": "options.profile_accurate_status",
+    "profile_shared_game": "options.profile_shared_game",
 
     // community general
     "show_profile_link_images": [

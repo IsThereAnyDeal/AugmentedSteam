@@ -1,4 +1,4 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {Feature, RequestData, SteamId, User} from "../../../modulesContent";
 
 export default class FProfileStatus extends Feature {
@@ -17,7 +17,8 @@ export default class FProfileStatus extends Feature {
 
         // The input needed to get appid only appears when logged in
         const appidNode = document.querySelector("input[name=ingameAppID]");
-        if (ingameNode && appidNode && User.isSignedIn) {
+        const bInGame = ingameNode && appidNode;
+        if (bInGame) {
             const appid = appidNode.value;
             const game = ingameNode.textContent;
             // FinGameStoreLink
@@ -26,27 +27,39 @@ export default class FProfileStatus extends Feature {
                 <span data-tooltip-text="${Localization.str.view_in_store}">${game}</span>
             </a>`);
 
-            const userToken = await User.getUserToken();
-            const {response} = await RequestData.getJson(`https://api.steampowered.com/IPlayerService/IsPlayingSharedGame/v1/?access_token=${userToken}&steamid=${profileSteamId}&appid_playing=${appid}`, {"credentials": "omit"}).catch(() => false);
-            lenderSteamId = (response || {}).lender_steamid;
+            if (SyncedStorage.get("profile_shared_game")) {
+                const userToken = await User.getUserToken();
+                const {response} = await RequestData.getJson(`https://api.steampowered.com/IPlayerService/IsPlayingSharedGame/v1/?access_token=${userToken}&steamid=${profileSteamId}&appid_playing=${appid}`, {"credentials": "omit"}).catch(() => false);
+                lenderSteamId = (response || {}).lender_steamid; // falsy if request failed
+            }
         }
 
         let profile = null;
         let lender = null;
-        try {
-            const steamids = profileSteamId + (lenderSteamId ? `,${lenderSteamId}` : "");
-            const response = await RequestData.getJson(`https://steamcommunity.com/actions/ajaxresolveusers?steamids=${steamids}`);
-            for (const user of response) {
-                if (user.steamid === profileSteamId) {
-                    profile = user;
+        const steamids = [];
+        // if in-game or option profile_accurate_status is disabled, we don't want to request accurate status
+        if (!bInGame && SyncedStorage.get("profile_accurate_status")) {
+            steamids.push(profileSteamId);
+        }
+        // lenderSteamId is falsy when profile_shared_game option is disabled
+        if (lenderSteamId) {
+            steamids.push(lenderSteamId);
+        }
+        if (steamids.length > 0) {
+            try {
+                const users = await RequestData.getJson(`https://steamcommunity.com/actions/ajaxresolveusers?steamids=${steamids.join(",")}`);
+                for (const user of users) {
+                    if (user.steamid === profileSteamId) {
+                        profile = user;
+                    }
+                    if (user.steamid === lenderSteamId) {
+                        lender = user;
+                    }
                 }
-                if (user.steamid === lenderSteamId) {
-                    lender = user;
-                }
+            } catch (err) {
+                console.error(err);
+                return;
             }
-        } catch (err) {
-            console.error(err);
-            return;
         }
 
         if (statusNode.parentNode.classList.contains("es_profile_status")) { // in case of streaming
@@ -54,11 +67,11 @@ export default class FProfileStatus extends Feature {
         }
 
         statusNode.parentNode.classList.add("es_profile_status");
-        if (ingameNode && lender) {
+        if (bInGame && lender) {
             HTML.beforeEnd(ingameNode,
                 `<span> (${Localization.str.profile_status.shared_by.replace("__user__",
                     `<a href="//steamcommunity.com/profiles/${lender.steamid}" data-miniprofile="${lender.accountid}">${lender.persona_name}</a>`)})</span>`);
-        } else {
+        } else if (profile) {
             this._applyNewStatus(profile, statusNode);
         }
     }
