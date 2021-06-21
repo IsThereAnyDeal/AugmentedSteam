@@ -35,8 +35,22 @@ export default class FTwitchShowcase extends Feature {
         const channelUrl = search.href;
         const channelGame = data.game;
         const channelViewers = data.viewer_count;
-        const previewUrl = `${data.thumbnail_url.replace("{width}", 636).replace("{height}", 358)}?${Math.random()}`;
+        const previewUrl = `${data.thumbnail_url.replace("{width}", 663).replace("{height}", 373)}?${Math.random()}`;
+        
+        // Add profile status
+        const statusNode = document.querySelector(".profile_in_game_header");
+        statusNode.parentNode.classList.add("es_profile_status");
+        statusNode.parentNode.style.color = "#9147ff";
+        statusNode.innerText = Localization.str.profile_status.streaming;
 
+        const subStatusNode = document.querySelector(".profile_in_game_name");
+        if (subStatusNode) {
+            subStatusNode.innerText = channelGame;
+        } else {
+            HTML.afterEnd(statusNode, `<div class="profile_in_game_name">${channelGame}</div>`);
+        }
+
+        // Ass showcase
         HTML.afterBegin(".profile_leftcol",
             `<div class='profile_customization' id='es_twitch'>
                 <div class='profile_customization_header'>

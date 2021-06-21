@@ -2435,7 +2435,7 @@ label[for="show_common_games"] {
 .esi-stream__title {
   display: flex;
   justify-content: space-between;
-  padding: 5px 10px;
+  padding: 0px 25px 15px;
 }
 
 /***************************************
