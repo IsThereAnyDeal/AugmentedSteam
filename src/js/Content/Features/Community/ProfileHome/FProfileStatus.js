@@ -1,56 +1,93 @@
-import {Localization} from "../../../../modulesCore";
-import {Feature, RequestData, SteamId} from "../../../modulesContent";
+import {HTML, Localization} from "../../../../modulesCore";
+import {Feature, RequestData, SteamId, User} from "../../../modulesContent";
 
 export default class FProfileStatus extends Feature {
 
     checkPrerequisites() {
-        this.statusNode = document.querySelector(".profile_in_game_header");
-        return this.statusNode !== null;
+        return !this.context.isPrivateProfile;
     }
 
     async apply() {
-        this.steamId = SteamId.getSteamId();
+        const statusNode = document.querySelector(".profile_in_game_header");
+        if (!statusNode) { return; }
+
+        const ingameNode = document.querySelector(".profile_in_game_name");
+        const profileSteamId = SteamId.getSteamId();
+        let lenderSteamId = null;
+
+        // The input needed to get appid only appears when logged in
+        const appidNode = document.querySelector("input[name=ingameAppID]");
+        if (ingameNode && appidNode && User.isSignedIn) {
+            const appid = appidNode.value;
+            const game = ingameNode.textContent;
+            // FinGameStoreLink
+            HTML.inner(ingameNode,
+                `<a href="//store.steampowered.com/app/${appid}">
+                <span data-tooltip-text="${Localization.str.view_in_store}">${game}</span>
+            </a>`);
+
+            const userToken = await User.getUserToken();
+            const {response} = await RequestData.getJson(`https://api.steampowered.com/IPlayerService/IsPlayingSharedGame/v1/?access_token=${userToken}&steamid=${profileSteamId}&appid_playing=${appid}`, {"credentials": "omit"}).catch(() => false);
+            lenderSteamId = (response || {}).lender_steamid;
+        }
+
+        let profile = null;
+        let lender = null;
         try {
-            const response = await RequestData.getJson(`https://steamcommunity.com/actions/ajaxresolveusers?steamids=${this.steamId}`);
-            const player = response.find(p => p.steamid === this.steamId);
-            if (!player) {
-                throw new Error("Failed to fetch player summary");
+            const steamids = profileSteamId + (lenderSteamId ? `,${lenderSteamId}` : "");
+            const response = await RequestData.getJson(`https://steamcommunity.com/actions/ajaxresolveusers?steamids=${steamids}`);
+            for (const user of response) {
+                if (user.steamid === profileSteamId) {
+                    profile = user;
+                }
+                if (user.steamid === lenderSteamId) {
+                    lender = user;
+                }
             }
-            this.summary = player;
         } catch (err) {
             console.error(err);
             return;
         }
 
-        if (this.statusNode.parentNode.classList.contains("es_profile_status")) { // in case of streaming
+        if (statusNode.parentNode.classList.contains("es_profile_status")) { // in case of streaming
             return;
         }
 
-        this.statusNode.parentNode.classList.add("es_profile_status");
-        switch (this.summary.persona_state) {
+        statusNode.parentNode.classList.add("es_profile_status");
+        if (ingameNode && lender) {
+            HTML.beforeEnd(ingameNode,
+                `<span> (${Localization.str.profile_status.shared_by.replace("__user__",
+                    `<a href="//steamcommunity.com/profiles/${lender.steamid}" data-miniprofile="${lender.accountid}">${lender.persona_name}</a>`)})</span>`);
+        } else {
+            this._applyNewStatus(profile, statusNode);
+        }
+    }
+
+    _applyNewStatus(profile, statusNode) {
+        switch (profile.persona_state) {
             case 0: // Offline
                 break;
             case 1: // Online
                 break;
             case 2: // Busy
-                this.statusNode.parentNode.style.color = "#ed4245";
-                this.statusNode.innerText = Localization.str.profile_status.busy;
+                statusNode.parentNode.style.color = "#ed4245";
+                statusNode.textContent = Localization.str.profile_status.busy;
                 break;
             case 3: // Away
-                this.statusNode.parentNode.style.color = "#faa81b";
-                this.statusNode.innerText = Localization.str.profile_status.away;
+                statusNode.parentNode.style.color = "#faa81b";
+                statusNode.textContent = Localization.str.profile_status.away;
                 break;
             case 4: // Snooze
-                this.statusNode.parentNode.style.color = "#ffffff";
-                this.statusNode.innerText = Localization.str.profile_status.snooze;
+                statusNode.parentNode.style.color = "#ffffff";
+                statusNode.textContent = Localization.str.profile_status.snooze;
                 break;
             case 5: // Looking to trade
-                this.statusNode.parentNode.style.color = "#648a3d";
-                this.statusNode.innerText = Localization.str.profile_status.looking_to_trade;
+                statusNode.parentNode.style.color = "#648a3d";
+                statusNode.textContent = Localization.str.profile_status.looking_to_trade;
                 break;
             case 6: // Looking to play
-                this.statusNode.parentNode.style.color = "#ffff69";
-                this.statusNode.innerText = Localization.str.profile_status.looking_to_play;
+                statusNode.parentNode.style.color = "#ffff69";
+                statusNode.textContent = Localization.str.profile_status.looking_to_play;
                 break;
             default:
                 break;

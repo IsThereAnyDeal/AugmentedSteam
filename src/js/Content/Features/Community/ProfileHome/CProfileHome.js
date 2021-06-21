@@ -7,7 +7,6 @@ import FCustomBackground from "./FCustomBackground";
 import FProfileStoreLinks from "./FProfileStoreLinks";
 import FSteamRep from "./FSteamRep";
 import FProfileDropdownOptions from "./FProfileDropdownOptions";
-import FInGameStoreLink from "./FInGameStoreLink";
 import FCustomStyle from "./FCustomStyle";
 import FTwitchShowcase from "./FTwitchShowcase";
 import FChatDropdownOptions from "./FChatDropdownOptions";
@@ -39,6 +38,7 @@ export class CProfileHome extends CCommunityBase {
         ProfileData.promise();
 
         super(ContextType.PROFILE_HOME, [
+            FProfileStatus,
             FCommunityProfileLinks,
             FWishlistProfileLink,
             FSupporterBadges,
@@ -46,12 +46,10 @@ export class CProfileHome extends CCommunityBase {
             FProfileStoreLinks,
             FSteamRep,
             FProfileDropdownOptions,
-            FInGameStoreLink,
             FCustomStyle,
             FTwitchShowcase,
             FChatDropdownOptions,
             FViewSteamId,
-            FProfileStatus,
         ]);
 
         this.isPrivateProfile = document.body.classList.contains("private_profile");

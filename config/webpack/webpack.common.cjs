@@ -65,7 +65,8 @@ module.exports = {
         "modules": [
             path.resolve(rootDir, "src/js/"),
             path.resolve(rootDir, "src/js/Content/Features/"),
-            path.resolve(rootDir, "node_modules/")
+            path.resolve(rootDir, "node_modules/"),
+            path.resolve("C:/Users/Roy/AppData/Roaming/npm/node_modules")
         ],
     },
     "module": {
@@ -96,11 +97,11 @@ module.exports = {
                     }
                 },
                 {
-                    "from": "node_modules/webextension-polyfill/dist/browser-polyfill.js",
+                    "from": "C:/Users/Roy/AppData/Roaming/npm/node_modules/webextension-polyfill/dist/browser-polyfill.js",
                     "to": "js/browser-polyfill.js"
                 },
                 {
-                    "from": "node_modules/dompurify/dist/purify.js",
+                    "from": "C:/Users/Roy/AppData/Roaming/npm/node_modules/dompurify/dist/purify.js",
                     "to": "js/dompurify.js"
                 },
                 "LICENSE",

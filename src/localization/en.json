@@ -5,7 +5,8 @@
         "away": "Currently Away",
         "snooze": "Currently Snoozing",
         "looking_to_trade": "Looking to Trade",
-        "looking_to_play": "Looking to Play"
+        "looking_to_play": "Looking to Play",
+        "shared_by": "Shared by __user__"
     },
     "calc_workshop_size": {
         "file_size": "File size __size__",
