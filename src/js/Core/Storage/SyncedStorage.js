@@ -169,6 +169,14 @@ SyncedStorage.defaults = Object.freeze({
     "showyoutubereviews": true,
     "showwsgf": true,
     "exfgls": true,
+    "app_custom_link": [
+        {
+            "enabled": false,
+            "name": "Google",
+            "url": "google.com/search?q=[ID]+[NAME]",
+            "icon": "www.google.com/images/branding/product/ico/googleg_lodp.ico"
+        },
+    ],
 
     "customize_apppage": {
         "recentupdates": true,
