@@ -116,7 +116,7 @@ const Options = (() => {
         loadStores();
 
         Region.populate();
-        CustomLinks.populate();
+        self.customLinks.forEach(option => option.populate());
     }
 
     function importSettings({"target": input}) {
@@ -281,9 +281,13 @@ const Options = (() => {
         const currency = ExtensionResources.getJSON("json/currency.json").then(addCurrencies);
         await Promise.all([Localization, currency]);
         const Defaults = SyncedStorage.defaults;
+        self.customLinks = [];
+        for (const container of document.querySelectorAll(".js-customlinks")) {
+            self.customLinks.push(new CustomLinks(container));
+        }
 
         Region.init();
-        CustomLinks.init();
+        self.customLinks.forEach(option => option.init());
 
         OptionsBuilder.build();
 

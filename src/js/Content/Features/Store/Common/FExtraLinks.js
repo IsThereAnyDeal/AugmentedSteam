@@ -43,6 +43,31 @@ export default class FExtraLinks extends Feature {
             this._moveExtraLinks();
 
             const appName = HTMLParser.clearSpecialSymbols(this.context.appName);
+            
+            // custom app link
+            for (const customLink of SyncedStorage.get("app_custom_link")) {
+                if (!customLink || !customLink.enabled) {
+                    continue;
+                }
+
+                const customUrl = customLink.url;
+                const name = HTML.escape(customLink.name);
+                const link = `//${HTML.escape(customUrl
+                    .replace("[NAME]", encodeURIComponent(appName))
+                    .replace("[ID]", this.context.appid))}`;
+                let icon;
+                if (customLink.icon) {
+                    icon = `//${HTML.escape(customLink.icon)}`;
+                }
+
+                HTML.afterBegin(this._node,
+                    this._getRightColLinkHtml(
+                        null,
+                        link,
+                        Localization.str.view_on_website.replace("__website__", name),
+                        icon
+                    ));
+            }
 
             if (SyncedStorage.get("showyoutube")) {
                 HTML.afterBegin(this._node,
@@ -129,9 +154,10 @@ export default class FExtraLinks extends Feature {
         }
     }
 
-    _getRightColLinkHtml(cls, url, str) {
-        return `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span>
+    _getRightColLinkHtml(cls, url, str, iconUrl) {
+        const icon = cls ? "" : `style="background: ${iconUrl ? `url('${iconUrl}')` : "none"}; background-size: contain;"`;
+        return `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls || ""}" target="_blank" href="${url}">
+                    <span><i class="ico16" ${icon}></i>&nbsp;&nbsp; ${str}</span>
                 </a>`;
     }
 
