@@ -20,12 +20,6 @@ export default class FProfileStatus extends Feature {
         const bInGame = ingameNode && appidNode;
         if (bInGame) {
             const appid = appidNode.value;
-            const game = ingameNode.textContent;
-            // FinGameStoreLink
-            HTML.inner(ingameNode,
-                `<a href="//store.steampowered.com/app/${appid}">
-                <span data-tooltip-text="${Localization.str.view_in_store}">${game}</span>
-            </a>`);
 
             if (SyncedStorage.get("profile_shared_game")) {
                 const userToken = await User.getUserToken();
@@ -42,7 +36,7 @@ export default class FProfileStatus extends Feature {
             steamids.push(profileSteamId);
         }
         // lenderSteamId is falsy when profile_shared_game option is disabled
-        if (lenderSteamId) {
+        if (lenderSteamId && lenderSteamId !== "0") {
             steamids.push(lenderSteamId);
         }
         if (steamids.length > 0) {
@@ -67,10 +61,12 @@ export default class FProfileStatus extends Feature {
         }
 
         statusNode.parentNode.classList.add("es_profile_status");
-        if (bInGame && lender) {
+        if (lender) {
             HTML.beforeEnd(ingameNode,
-                `<span> (${Localization.str.profile_status.shared_by.replace("__user__",
-                    `<a href="//steamcommunity.com/profiles/${lender.steamid}" data-miniprofile="${lender.accountid}">${lender.persona_name}</a>`)})</span>`);
+                `<div class="profile_in_game_header">${Localization.str.profile_status.shared_by}</div>
+                <div class="profile_in_game_name es_shared_by">
+                    <a href="//steamcommunity.com/profiles/${lender.steamid}" data-miniprofile="${lender.accountid}">${lender.persona_name}</a>
+                </div>`);
         } else if (profile) {
             this._applyNewStatus(profile, statusNode);
         }

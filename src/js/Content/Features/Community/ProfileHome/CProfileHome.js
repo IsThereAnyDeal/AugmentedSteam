@@ -7,6 +7,7 @@ import FCustomBackground from "./FCustomBackground";
 import FProfileStoreLinks from "./FProfileStoreLinks";
 import FSteamRep from "./FSteamRep";
 import FProfileDropdownOptions from "./FProfileDropdownOptions";
+import FInGameStoreLink from "./FInGameStoreLink";
 import FCustomStyle from "./FCustomStyle";
 import FTwitchShowcase from "./FTwitchShowcase";
 import FChatDropdownOptions from "./FChatDropdownOptions";
@@ -46,6 +47,7 @@ export class CProfileHome extends CCommunityBase {
             FProfileStoreLinks,
             FSteamRep,
             FProfileDropdownOptions,
+            FInGameStoreLink,
             FCustomStyle,
             FTwitchShowcase,
             FChatDropdownOptions,
