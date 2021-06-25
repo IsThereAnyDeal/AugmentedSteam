@@ -1,10 +1,10 @@
-import {ExtensionResources, HTML} from "../../../../modulesCore";
+import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
 import {DOMHelper, Feature, ProfileData} from "../../../modulesContent";
 
 export default class FCustomStyle extends Feature {
 
     checkPrerequisites() {
-        return !this.context.isPrivateProfile;
+        return !this.context.isPrivateProfile && !SyncedStorage.get("custom_style_disable");
     }
 
     async apply() {
