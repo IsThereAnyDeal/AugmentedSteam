@@ -285,7 +285,7 @@ SyncedStorage.defaults = Object.freeze({
     "profile_showcase_twitch_profileonly": false,
 
     "profile_accurate_status": true,
-    "profile_shared_game": true,
+    "profile_shared_game": false,
 
     "itad_import_library": false,
     "itad_import_wishlist": false,
