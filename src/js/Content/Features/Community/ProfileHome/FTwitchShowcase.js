@@ -50,7 +50,7 @@ export default class FTwitchShowcase extends Feature {
             HTML.afterEnd(statusNode, `<div class="profile_in_game_name">${channelGame}</div>`);
         }
 
-        // Ass showcase
+        // Add showcase
         HTML.afterBegin(".profile_leftcol",
             `<div class='profile_customization' id='es_twitch'>
                 <div class='profile_customization_header'>
