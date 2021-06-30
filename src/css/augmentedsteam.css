@@ -217,12 +217,6 @@ img.astats_icon {
   margin-left: 4px;
 }
 
-.es_youtube_player {
-  border: none;
-  width: 600px;
-  height: 337.5px;
-}
-
 .es_tab.active .tab_content {
   background-color: #0003 !important;
 }
