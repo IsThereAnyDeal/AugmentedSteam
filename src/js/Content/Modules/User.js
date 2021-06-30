@@ -117,7 +117,7 @@ class User {
      */
     static async getUserToken() {
         // Use relative URL, so it matches domain (works on any steam domain)
-        const response = await RequestData.getJson("/pointssummary/ajaxgetasyncconfig?origin=steamcommunity.com");
+        const response = await RequestData.getJson("/pointssummary/ajaxgetasyncconfig").catch(() => false);
         if (!response || !response.success) {
             throw new Error("Failed to get webapi token");
         }
