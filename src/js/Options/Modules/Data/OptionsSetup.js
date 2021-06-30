@@ -71,6 +71,7 @@ export default {
     "homepage_tab_selection": [
         "options.homepage_default_tab",
         [
+            ["remember", "options.homepage_default_tab_remember"],
             ["tab_newreleases_content_trigger", "options.homepage_default_tab_newreleases"],
             ["tab_topsellers_content_trigger", "options.homepage_default_tab_topsellers"],
             ["tab_upcoming_content_trigger", "options.homepage_default_tab_upcoming"],
