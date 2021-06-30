@@ -696,7 +696,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ item",
-        "num_items": "__num__ items"
+        "num_items": "__num__ items",
+        "back": "Back to Trade Offers"
     },
     "update": {
         "dont_show": "Don't Show Again",
