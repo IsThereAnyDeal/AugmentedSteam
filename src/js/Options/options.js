@@ -170,7 +170,7 @@ const Options = (() => {
         // TODO do not use confirm
         // eslint-disable-next-line no-alert
         if (!window.confirm(Localization.str.options.clear)) { return; }
-        SyncedStorage.clear();
+        SyncedStorage.clear(false);
 
         SyncedStorage.then(loadOptions);
 

@@ -55,11 +55,24 @@ class SyncedStorage {
         return Object.entries(this._cache);
     }
 
-    static clear() {
-        this._cache = {};
-        return this._adapter.clear();
+    static async clear(force = false) {
+
+        let tmp;
+        if (force) {
+            this._cache = {};
+        } else {
+            tmp = this.persistent.reduce((acc, option) => {
+                acc[option] = this._cache[option];
+                return acc;
+            }, {});
+        }
 
         // can throw if MAX_WRITE* is exceeded
+        await this._adapter.clear();
+
+        if (!force) {
+            await this.import(tmp);
+        }
     }
 
     // load whole storage and make local copy
@@ -303,5 +316,9 @@ SyncedStorage.defaults = Object.freeze({
     "context_steamdb_instant": false,
     "context_steam_keys": false,
 });
+SyncedStorage.persistent = [
+    "user_notes",
+    "user_notes_adapter",
+];
 
 export {SyncedStorage};
