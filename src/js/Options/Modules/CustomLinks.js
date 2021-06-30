@@ -95,7 +95,7 @@ class CustomLinks {
         }
 
         SyncedStorage.set(`${this._type}_custom_link`, links);
-        SaveIndicator.show();
+        SaveIndicator.saved();
     }
 }
 

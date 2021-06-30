@@ -14,6 +14,7 @@ import {
 } from "../modulesCore";
 import {StoreList} from "./Modules/Data/StoreList";
 import {ContextMenu} from "../Background/Modules/ContextMenu";
+import {UserNotesAdapter} from "../Core/Storage/UserNotesAdapter";
 
 // TODO this needs to be refactored and cleaned up
 
@@ -180,6 +181,9 @@ const Options = (() => {
     }
 
     async function saveOption(option) {
+
+        SaveIndicator.saving();
+
         let value;
 
         if (option === "stores") {
@@ -235,8 +239,12 @@ const Options = (() => {
             }
         }
 
+        if (option === "user_notes_adapter") {
+            await UserNotesAdapter.changeAdapter(value);
+        }
+
         SyncedStorage.set(option, value);
-        SaveIndicator.show();
+        SaveIndicator.saved();
     }
 
     function saveOptionFromEvent(e) {

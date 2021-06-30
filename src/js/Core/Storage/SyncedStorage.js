@@ -80,16 +80,12 @@ class SyncedStorage {
         return this.init().then(onDone, onCatch);
     }
 
-    static async quota() {
-        const maxBytes = this._adapter.QUOTA_BYTES;
-        const bytes = await this._adapter.getBytesInUse();
-        return bytes / maxBytes; // float 0.0 (0%) -> 1.0 (100%)
-    }
-
     static toJson() {
         return JSON.stringify(this._cache);
     }
 }
+
+SyncedStorage.QUOTA_BYTES_PER_ITEM = 8192;
 
 SyncedStorage._adapter = browser.storage.sync || browser.storage.local;
 SyncedStorage._cache = {};
@@ -224,9 +220,11 @@ SyncedStorage.defaults = Object.freeze({
     "openinnewtab": false,
     "keepssachecked": false,
     "showemptywishlist": true,
-    "showusernotes": true,
+    "user_notes_app": true,
+    "user_notes_wishlist": true,
     "showwishliststats": true,
     "user_notes": {},
+    "user_notes_adapter": "synced_storage",
     "replaceaccountname": true,
     "showlanguagewarning": true,
     "showlanguagewarninglanguage": "english",

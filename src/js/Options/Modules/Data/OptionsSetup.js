@@ -55,6 +55,18 @@ export default {
     // hide
     "hidetmsymbols": "options.hidetmsymbols",
 
+    // store user notes
+    "user_notes_app": "options.user_notes.app",
+    "user_notes_wishlist": "options.user_notes.wishlist",
+    "user_notes_adapter": [
+        "options.user_notes.loc",
+        [
+            ["synced_storage", "options.user_notes.synced_storage"],
+            ["idb", "options.user_notes.local"],
+            // ["itad", "options.user_notes.itad"],
+        ],
+    ],
+
     // store homepage
     "homepage_tab_selection": [
         "options.homepage_default_tab",
@@ -102,7 +114,6 @@ export default {
     "show_steamspy_info": "options.show_steamspy_info",
 
     // store general
-    "showusernotes": "options.show_user_notes",
     "horizontalscrolling": "options.horizontalscrolling",
     "show_early_access": "options.show_early_access",
     "show_alternative_linux_icon": "options.show_alternative_linux_icon",

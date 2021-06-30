@@ -145,6 +145,14 @@
                 </div>
 
                 <div class="section js-section">
+                    <h2 data-locale-text="options.user_notes.user_notes" class="js-section-head">User Notes</h2>
+                    <label data-locale-text="show">Show</label>
+                    <div data-dynamic="user_notes_app"></div>
+                    <div data-dynamic="user_notes_wishlist"></div>
+                    <div data-dynamic-select="user_notes_adapter"></div>
+                </div>
+
+                <div class="section js-section">
                     <h2 data-locale-text="options.homepage" class="js-section-head">Homepage</h2>
                     <div data-dynamic-select="homepage_tab_selection"></div>
                 </div>
@@ -197,7 +205,6 @@
 
                 <div class="section js-section">
                     <h2 data-locale-text="options.general" class="js-section-head">General</h2>
-                    <div data-dynamic="showusernotes"></div>
                     <div data-dynamic="horizontalscrolling"></div>
                     <div data-dynamic="show_early_access"></div>
                     <div data-dynamic="show_alternative_linux_icon"></div>
@@ -369,9 +376,15 @@
         </div>
     </div>
 
-    <div class="notification js-options-saved">
-        <img class="notification__img" src="../img/save.svg">
-        <span data-locale-text="options.saved_note">Options saved</span>
+    <div class="notification js-options-save">
+        <div class="notification notification-save js-options-saving">
+            <div class="notification__img lds-dual-ring"></div>
+            <span data-locale-text="options.saving">Saving...</span>
+        </div>
+        <div class="notification notification-save js-options-saved">
+            <img class="notification__img" src="../img/save.svg">
+            <span data-locale-text="options.saved_note">Options saved</span>
+        </div>
     </div>
 
     <div class="notification js-options-reset">

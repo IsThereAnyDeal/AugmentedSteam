@@ -1,129 +1,161 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {HTML, Localization} from "../../../../modulesCore";
 import {Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
+import {CapacityInfo, OutOfCapacityError, UserNotesAdapter} from "../../../../Core/Storage/UserNotesAdapter";
+import {SyncedStorage} from "../../../../Core/Storage/SyncedStorage";
 
-export class UserNotes {
+class UserNotes {
     constructor() {
+        this._str = Localization.str.user_note;
+        this._adapter = UserNotesAdapter.getAdapter();
 
-        this._notes = SyncedStorage.get("user_notes") || {};
-
-        this.noteModalTemplate = `
-            <div id="es_note_modal" data-appid="__appid__" data-selector="__selector__">
-                <div id="es_note_modal_content">
-                    <div class="es_note_prompt newmodal_prompt_with_textarea gray_bevel fullwidth">
-                        <textarea name="es_note_input" id="es_note_input" rows="6" cols="12" maxlength="512">__note__</textarea>
-                    </div>
-                    <div class="es_note_buttons" style="float: right">
-                        <div class="es_note_modal_submit btn_green_steamui btn_medium">
-                            <span>${Localization.str.save}</span>
-                        </div>
-                        <div class="es_note_modal_close btn_grey_steamui btn_medium">
-                            <span>${Localization.str.cancel}</span>
-                        </div>
-                    </div>
-                </div>
+        this.noteModalTemplate
+            = `<div class="es_note_prompt newmodal_prompt_with_textarea gray_bevel fullwidth">
+                <textarea name="es_note_input" id="es_note_input" rows="6" cols="12">__note__</textarea>
             </div>`;
     }
 
-    // TODO data functions should probably be split from presentation, but splitting it to background seems unneccessary
-    get(appid) {
-        return this._notes[appid];
+    get(...args) { return this._adapter.get(...args); }
+
+    async set(...args) {
+
+        let capInfo = null;
+
+        try {
+            capInfo = await this._adapter.set(...args);
+        } catch (err) {
+            if (err instanceof OutOfCapacityError) {
+                return (await this._showDialog(true, err.ratio)) ? this.set(...args) : false;
+            }
+
+            throw err;
+        }
+
+        if (capInfo instanceof CapacityInfo && capInfo.closeToFull) {
+            await this._showDialog(false, capInfo.utilization);
+        }
+
+        return true;
     }
 
-    set(appid, note) {
-        this._notes[appid] = note;
-        SyncedStorage.set("user_notes", this._notes);
-    }
-
-    delete(appid) {
-        delete this._notes[appid];
-        SyncedStorage.set("user_notes", this._notes);
-    }
-
-    exists(appid) {
-        return Boolean(this._notes[appid]);
-    }
+    delete(...args) { return this._adapter.delete(...args); }
 
     async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
 
+        let note = await this.get(appid) || "";
+
         // Partly copied from shared_global.js
-        const bgClick = Page.runInPageContext((title, template) => {
+        Page.runInPageContext((title, template, strSave, strCancel) => {
             /* eslint-disable no-undef, new-cap, camelcase */
+
             const deferred = new jQuery.Deferred();
-            function fnOk() { deferred.resolve(); }
+            function fnOk() {
+                deferred.resolve(
+                    document.querySelector("#es_note_input").value
+                        .trim()
+                        .replace(/\s\s+/g, " ")
+                );
+            }
 
-            const Modal = _BuildDialog(title, template, [], fnOk);
-            deferred.always(() => Modal.Dismiss());
+            function fnCancel() {
+                deferred.reject();
+            }
 
-            const promise = new Promise(resolve => {
-                Modal.m_fnBackgroundClick = () => {
-                    Messenger.onMessage("noteSaved").then(() => { Modal.Dismiss(); });
-                    resolve();
-                };
-            });
+            const buttons = [];
 
-            Modal.Show();
+            const okBtn = _BuildDialogButton(strSave, true);
+            okBtn.click(fnOk);
+            buttons.push(okBtn);
 
-            // attach the deferred's events to the modal
-            deferred.promise(Modal);
+            const cancelBtn = _BuildDialogButton(strCancel, false);
+            cancelBtn.click(fnCancel);
+            buttons.push(cancelBtn);
 
-            const note_input = document.getElementById("es_note_input");
-            note_input.focus();
-            note_input.setSelectionRange(0, note_input.textLength);
-            note_input.addEventListener("keydown", e => {
-                if (e.key === "Enter") {
-                    $J(".es_note_modal_submit").click();
-                } else if (e.key === "Escape") {
-                    Modal.Dismiss();
-                }
-            });
+            const modal = _BuildDialog(title, template, buttons, fnCancel);
 
-            return promise;
+            _BindOnEnterKeyPressForDialog(modal, deferred, fnOk);
+            deferred.always(() => modal.Dismiss());
+
+            const noteInput = document.getElementById("es_note_input");
+            noteInput.focus();
+            noteInput.setSelectionRange(0, noteInput.textLength);
+
+            deferred.promise(modal);
+
+            modal
+                .done(note => { window.Messenger.postMessage("noteClosed", note); })
+                .fail(() => { window.Messenger.postMessage("noteClosed", null); });
+
+            modal.Show();
             /* eslint-enable no-undef */
         },
         [
-            Localization.str.user_note.add_for_game.replace("__gamename__", appname),
-            this.noteModalTemplate.replace("__appid__", appid).replace("__note__", await this.get(appid) || "")
+            this._str.add_for_game.replace("__gamename__", appname),
+            this.noteModalTemplate.replace("__appid__", appid).replace("__note__", note)
                 .replace("__selector__", encodeURIComponent(nodeSelector)),
+            Localization.str.save,
+            Localization.str.cancel,
         ],
-        "backgroundClick");
+        true);
 
-        const saveNote = () => {
-            const modal = document.querySelector("#es_note_modal");
-            const appid = parseInt(modal.dataset.appid);
-            const note = HTML.escape(modal.querySelector("#es_note_input").value.trim().replace(/\s\s+/g, " ")
-                .substring(0, 512));
-            const node = document.querySelector(decodeURIComponent(modal.dataset.selector));
+        const oldNote = note;
 
-            if (note.length === 0) {
-                this.delete(appid);
-                node.textContent = Localization.str.user_note.add;
-                return [node, false];
-            }
+        note = await Messenger.onMessage("noteClosed");
+        if (note === null) { return; }
 
-            this.set(appid, note);
+        note = HTML.escape(note);
+        if (note === oldNote) { return; }
+
+        const node = document.querySelector(nodeSelector);
+
+        if (note.length === 0) {
+            this.delete(appid);
+            node.textContent = this._str.add;
+        } else {
+            if (!await this.set(appid, note)) { return; }
             HTML.inner(node, `"${note}"`);
-            return [node, true];
-        };
-
-        function clickListener(e) {
-            if (e.target.closest(".es_note_modal_submit")) {
-                e.preventDefault();
-                onNoteUpdate(...saveNote());
-                Page.runInPageContext(() => { window.SteamFacade.dismissActiveModal(); });
-            } else if (e.target.closest(".es_note_modal_close")) {
-                Page.runInPageContext(() => { window.SteamFacade.dismissActiveModal(); });
-            } else {
-                return;
-            }
-            document.removeEventListener("click", clickListener);
         }
 
-        document.addEventListener("click", clickListener);
+        onNoteUpdate(node, note.length !== 0);
+    }
 
-        bgClick.then(() => {
-            onNoteUpdate(...saveNote());
-            Messenger.postMessage("noteSaved");
-        });
+    async _showDialog(exceeded, ratio) {
+
+        const str = this._str;
+
+        const desc
+            = `${(exceeded ? str.not_enough_space_desc : str.close_on_storage_desc).replace("__perc__", (ratio * 100).toFixed(0))}
+            <br>
+            ${str.storage_warning_desc}`;
+
+        Page.runInPageContext((title, desc, strCloudStorage, strCancel, strLocalStorage) => {
+            const modal = window.SteamFacade.showConfirmDialog(title, desc, strLocalStorage, strCancel);
+
+            modal
+                .done(res => window.Messenger.postMessage("storageOption", res))
+                .fail(() => window.Messenger.postMessage("storageOption", null));
+        },
+        [
+            exceeded ? str.not_enough_space : str.close_on_storage,
+            desc,
+            str.save_itad,
+            str.save_synced_storage,
+            str.save_local,
+        ]);
+
+        const buttonPressed = await Messenger.onMessage("storageOption");
+        let adapterType;
+
+        if (buttonPressed === "OK") {
+            adapterType = "idb";
+        } else {
+            return false;
+        }
+
+        this._adapter = await UserNotesAdapter.changeAdapter(adapterType);
+        await SyncedStorage.set("user_notes_adapter", adapterType);
+        return true;
     }
 }
+
+export {UserNotes};
