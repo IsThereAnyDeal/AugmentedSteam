@@ -414,7 +414,7 @@
             "export": "Export",
             "reset": "Reset"
         },
-        "custom_style_disable": "Disable custom themes",
+        "show_custom_themes": "Show custom themes",
         "community_default_tab": "Default community home page tab",
         "videos": "Videos",
         "broadcasts": "Broadcasts",

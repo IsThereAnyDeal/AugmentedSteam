@@ -4,7 +4,7 @@ import {DOMHelper, Feature, ProfileData} from "../../../modulesContent";
 export default class FCustomStyle extends Feature {
 
     checkPrerequisites() {
-        return !this.context.isPrivateProfile && !SyncedStorage.get("custom_style_disable");
+        return !this.context.isPrivateProfile && SyncedStorage.get("show_custom_themes");
     }
 
     async apply() {

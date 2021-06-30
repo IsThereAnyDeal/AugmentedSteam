@@ -270,7 +270,7 @@ SyncedStorage.defaults = Object.freeze({
     "sortgroupsby": "default_ASC",
     "show1clickgoo": true,
     "show_profile_link_images": "gray",
-    "custom_style_disable": false,
+    "show_custom_themes": true,
     "profile_steamrepcn": true,
     "profile_steamgifts": true,
     "profile_steamtrades": true,

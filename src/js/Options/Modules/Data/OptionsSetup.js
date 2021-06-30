@@ -150,7 +150,7 @@ export default {
     "show_wishlist_link": "options.show_wishlist_link",
     "show_wishlist_count": "options.show_wishlist_count",
     "showsteamrepapi": "options.steamrepapi",
-    "custom_style_disable": "options.custom_style_disable",
+    "show_custom_themes": "options.show_custom_themes",
     "profile_steamid": "options.profile_steamid",
     "profile_showcase_twitch": "options.profile_showcase_twitch",
     "profile_showcase_own_twitch": "options.profile_showcase_own_twitch",
