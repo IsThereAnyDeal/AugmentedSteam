@@ -1,4 +1,4 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {HTML, Language, Localization} from "../../../../modulesCore";
 import {EarlyAccess, Feature, Messenger} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 import {Page} from "../../Page";
@@ -8,6 +8,7 @@ import {MixedSearchFilter} from "./Filters/MixedSearchFilter";
 import {NegativeSearchFilter} from "./Filters/NegativeSearchFilter";
 import {ReviewsCountSearchFilter} from "./Filters/ReviewsCountSearchFilter";
 import {ReviewsScoreSearchFilter} from "./Filters/ReviewsScoreSearchFilter";
+import {ReleaseDateSearchFilter} from "./Filters/ReleaseDateSearchFilter";
 
 export default class FSearchFilters extends Feature {
 
@@ -20,8 +21,15 @@ export default class FSearchFilters extends Feature {
             NegativeSearchFilter,
             ReviewsScoreSearchFilter,
             ReviewsCountSearchFilter,
-        ].map(Filter => new Filter(this));
+        ];
 
+        // Only support this filter with english dates
+        if (Language.getCurrentSteamLanguage() === "english") {
+            // TODO: Multilang support?
+            this._filters.push(ReleaseDateSearchFilter);
+        }
+        
+        this._filters = this._filters.map(Filter => new Filter(this));
         this._urlParams = {};
 
         for (const filter of this._filters) {

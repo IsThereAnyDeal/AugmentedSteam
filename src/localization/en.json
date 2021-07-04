@@ -192,6 +192,7 @@
             "min_count": "Min count",
             "max_count": "Max count"
         },
+        "release_date": "Release date:",
         "hide_cart": "Hide items in your Cart",
         "hide_ea": "Hide Early Access items",
         "hide_mixed": "Hide mixed rating items",

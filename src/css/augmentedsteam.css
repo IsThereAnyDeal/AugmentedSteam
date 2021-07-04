@@ -2938,7 +2938,8 @@ label[for="show_common_games"] {
 .search_results.mixed .as-hide-mixed,
 .search_results.negative .as-hide-negative,
 .search_results .as-reviews-score,
-.search_results .as-reviews-count {
+.search_results .as-reviews-count,
+.search_results .as-release-date {
   height: 0;
   margin: 0;
   border: none;
@@ -2964,11 +2965,19 @@ label[for="show_common_games"] {
   padding: 7.5px 8px !important; /* 7.5px is the (line-height (28px) - font-size (13px)) / 2 */
 }
 
-.as-reviews-count-filter {
+.as-filter {
   margin-top: 10px;
 }
 
-.as-reviews-count-filter__header {
+.as-filter__input[type="date"] {
+  font: 400 10px Arial;
+}
+
+.as-filter__input[type="date"]::-webkit-calendar-picker-indicator {
+  margin-left: -5px;
+}
+
+.as-filter__header {
   margin-left: 8px;
   font-size: 13px;
   font-family: "Motiva Sans", Sans-serif;
@@ -2976,7 +2985,7 @@ label[for="show_common_games"] {
   color: #9fbbcb;
 }
 
-.as-reviews-count-filter__content {
+.as-filter__content {
   display: flex;
   align-items: center;
   padding: 0 12px;
@@ -2984,7 +2993,7 @@ label[for="show_common_games"] {
 }
 
 /* https://github.com/SteamDatabase/SteamTracking/blob/ad1bfe7966cbfc3a8cdff7d0fcc9f3437425b7a8/store.steampowered.com/public/css/v6/search.css#L546 */
-.as-reviews-count-filter__input {
+.as-filter__input {
   min-width: 0;
   background-color: rgba( 0, 0, 0, 0.2 );
   color: #fff;
@@ -2995,7 +3004,7 @@ label[for="show_common_games"] {
   margin: 5px;
 }
 
-.as-reviews-count-filter__input::placeholder {
+.as-filter__input::placeholder {
   text-transform: lowercase;
 }
 
