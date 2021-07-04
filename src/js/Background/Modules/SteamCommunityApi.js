@@ -129,8 +129,8 @@ class SteamCommunityApi extends Api {
         let data = await SteamCommunityApi.getInventory(1);
         if (!data) { return null; }
 
-        function addGiftsAndPasses(description, desc) {
-            const appids = GameId.getAppids(desc.value);
+        function addGiftsAndPasses(description) {
+            const appids = GameId.getAppids(description.value);
 
             // Gift package with multiple apps
             isPackage = true;
