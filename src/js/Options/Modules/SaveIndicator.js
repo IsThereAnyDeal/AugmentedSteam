@@ -3,6 +3,11 @@ import {Fader} from "./Fader";
 
 class SaveIndicator {
 
+    static show() {
+        this.saving();
+        this.saved();
+    }
+
     static saving() {
         if (this._currentSaves++ > 0) { return; }
 

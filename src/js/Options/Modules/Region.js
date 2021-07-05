@@ -64,7 +64,7 @@ class Region {
         }
 
         SyncedStorage.set("regional_countries", value);
-        SaveIndicator.saved();
+        SaveIndicator.show();
     }
 
     static _clear() {
