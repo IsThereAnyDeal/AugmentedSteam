@@ -141,7 +141,7 @@
     "homepage_curators": "Recomendaciones de mentor de Steam",
     "homepage_topnewreleases": "Mejores ventas de Steam",
     "homepage_sidebar": "Barra lateral",
-    "drop_calc": "Haz clic aquí para calcular las obtención aleatorias restantes",
+    "drop_calc": "Haz clic aquí para calcular las obtenciones aleatorias restantes",
     "price": "Precio",
     "view_marketplace": "Ver en el mercado",
     "market_transactions": "Transacciones del mercado",
@@ -219,7 +219,7 @@
     "homepage_carousel": "Carrusel",
     "official_group": "Grupo oficial",
     "saved": "Guardado",
-    "add_unowned_dlc_to_cart": "Añadir al carrito las DLC que no tengas",
+    "add_unowned_dlc_to_cart": "Añadir al carrito los DLC que no tengas",
     "buy": "Comprar",
     "buy_package": "Comprar __package__",
     "more_information": "Más información",
@@ -297,7 +297,7 @@
         "lowest_price": "Mejor actual:",
         "historical_low": "Bajada histórica:",
         "bundled": "En pack:",
-        "with_voucher": "sin cupón __voucher__",
+        "with_voucher": "con cupón __voucher__",
         "store": "en&nbsp;__store__",
         "bundle_count": "__count__ veces",
         "info": "info.",
@@ -336,7 +336,7 @@
         "summary": "__unlocked__ de __total__ (__percentage__ %) logros desbloqueados:"
     },
     "bundle": {
-        "offer_ends": "Oferta finalizada",
+        "offer_ends": "La oferta acaba",
         "at_least": "Paga menos",
         "pwyw": "Paga lo que quieras",
         "includes": "Incluye __num__ artículos",
@@ -354,7 +354,7 @@
     "hltb": {
         "title": "Tiempo para completarlo",
         "main_e": "Historia y extras",
-        "compl": "Completitsta",
+        "compl": "Completista",
         "submit": "Enviar tu tiempo",
         "main": "Historia principal",
         "no_data": "No se han encontrado datos",
@@ -423,12 +423,12 @@
         "showallfriendsthatown": "Mostrar «Amigos que lo tienen»",
         "regional_price_on": "Mostrar comparación de precios regionales",
         "friends_own": "Artículos que tienen tus amigos",
-        "horizontalscrolling": "Activar desplazamiento horizontal en páginas con la rueda del ratón",
+        "horizontalscrolling": "Activar desplazamiento horizontal con la rueda del ratón",
         "supportinfo": "Mostrar información de apoyo en las páginas de la tienda",
         "drm": "Mostrar advertencias de DRM de terceros",
         "show_regionwarning": "Mostrar un aviso si estás en una región sin cuenta",
         "foot_link": "Extensión Augmented Steam",
-        "profile_link_images": "Imágenes de los enlaces en el perfil",
+        "profile_link_images": "Estilo de los iconos de los links en Perfil y Grupos",
         "library": "Motrar botón de «Biblioteca» en el encabezado",
         "show1clickgoo": "Mostrar botón «Cambiar a gemas con 1 clic...» en los artículos del inventario compatibles",
         "hidedlcunownedgames": "DLC de juegos que no tienes",
@@ -573,11 +573,23 @@
             "export": "Exportar",
             "reset": "Reiniciar"
         },
-        "removebroadcasts": "",
-        "maintainers": "",
-        "with_help_of": "",
-        "contributors": "",
-        "apppage": ""
+        "removebroadcasts": "Quitar completamente cualquier retransmisión en directo",
+        "maintainers": "Mantenedores del proyecto",
+        "with_help_of": "con un montón de ayuda de nuestros __contributors__",
+        "contributors": "magníficos contribuidores",
+        "apppage": "Página de la app",
+        "exfgls": "Mostar un aviso si la app está excluida del Préstamo Familiar",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": ""
     },
     "ready": {
         "errormsg": "Error al cargar los datos de Augmented Steam",
@@ -648,7 +660,7 @@
         "last_import": "Última importación...",
         "from": "desde ITAD:",
         "to": "a ITAD:",
-        "sync_now": "Sincronizar ya",
+        "sync_now": "Sincronizar ahora",
         "option": "Mostrar opción de menú para sincronizar datos con IsThereAnyDeal.com",
         "send_to_itad": "Enviar los juegos que tienes a IsThereAnyDeal",
         "sending": "Cargando tus juegos y paquetes y enviándolos a IsThereAnyDeal.com",
@@ -659,7 +671,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ artículo",
-        "num_items": "__num__ artículos"
+        "num_items": "__num__ artículos",
+        "back": ""
     },
     "update": {
         "dont_show": "No mostrar de nuevo",
@@ -694,7 +707,15 @@
         "update": "Actualizar nota",
         "add_prompt": "Introduce tu nota",
         "update_prompt": "Actualiza tu nota",
-        "add_for_game": "Nota en __gamename__"
+        "add_for_game": "Nota en __gamename__",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "Nueva cola",

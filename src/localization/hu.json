@@ -577,7 +577,19 @@
         "maintainers": "Projekt karbantartók",
         "with_help_of": "sok segítséggel __contributors__",
         "contributors": "nagyszerű közreműködőinktől",
-        "apppage": "App oldal"
+        "apppage": "App oldal",
+        "exfgls": "Figyelmeztetés ha egy app ki van zárva a Családi Megosztásból",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": ""
     },
     "ready": {
         "errormsg": "Hiba az Augmented Steam adatbetöltése közben",
@@ -659,7 +671,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ tárgy",
-        "num_items": "__num__ tárgyak"
+        "num_items": "__num__ tárgyak",
+        "back": ""
     },
     "update": {
         "dont_show": "Ne Mutassa Újra",
@@ -694,7 +707,15 @@
         "update": "Jegyzet frissítése",
         "add_prompt": "Írd be a jegyzeted",
         "update_prompt": "Frissítsd a jegyzeted",
-        "add_for_game": "Jegyzetek ehhez: __gamename__"
+        "add_for_game": "Jegyzetek ehhez: __gamename__",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "Új Sor",
