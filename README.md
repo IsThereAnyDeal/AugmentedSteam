@@ -2,10 +2,13 @@
 
 ![eslint](https://github.com/tfedor/AugmentedSteam/workflows/eslint/badge.svg)
 
-[![chrome users](https://img.shields.io/chrome-web-store/users/dnhpnfgdlenaccegplpojghhmaamnnfp?label=chrome%20users)](https://chrome.google.com/webstore/detail/augmented-steam/dnhpnfgdlenaccegplpojghhmaamnnfp)
-[![chrome rating](https://img.shields.io/chrome-web-store/stars/dnhpnfgdlenaccegplpojghhmaamnnfp?label=chrome%20rating)](https://chrome.google.com/webstore/detail/augmented-steam/dnhpnfgdlenaccegplpojghhmaamnnfp/reviews)  
-[![firefox users](https://img.shields.io/amo/users/enhanced-steam-an-itad-fork?label=firefox%20users&color=4c1)](https://addons.mozilla.org/firefox/addon/enhanced-steam-an-itad-fork/)
-[![firefox rating](https://img.shields.io/amo/stars/enhanced-steam-an-itad-fork?label=firefox%20rating)](https://addons.mozilla.org/firefox/addon/enhanced-steam-an-itad-fork/reviews/)
+[![chrome users](https://img.shields.io/chrome-web-store/users/dnhpnfgdlenaccegplpojghhmaamnnfp?label=chrome%20users&style=for-the-badge&logo=googlechrome)](https://chrome.google.com/webstore/detail/augmented-steam/dnhpnfgdlenaccegplpojghhmaamnnfp)
+[![firefox users](https://img.shields.io/amo/users/enhanced-steam-an-itad-fork?label=firefox%20users&color=4c1&style=for-the-badge&logo=firefoxbrowser)](https://addons.mozilla.org/firefox/addon/enhanced-steam-an-itad-fork/)
+[![edge users](https://img.shields.io/badge/dynamic/json?label=edge%20users&query=%24.activeInstallCount&url=https://microsoftedge.microsoft.com/addons/getproductdetailsbycrxid/dnpjkgmekpilchdgolfifobohlohlioc&style=for-the-badge&logo=microsoftedge)](https://microsoftedge.microsoft.com/addons/getproductdetailsbycrxid/dnpjkgmekpilchdgolfifobohlohlioc)  
+[![chrome rating](https://img.shields.io/chrome-web-store/stars/dnhpnfgdlenaccegplpojghhmaamnnfp?label=chrome%20rating&style=for-the-badge&logo=googlechrome)](https://chrome.google.com/webstore/detail/augmented-steam/dnhpnfgdlenaccegplpojghhmaamnnfp/reviews)
+[![firefox rating](https://img.shields.io/amo/stars/enhanced-steam-an-itad-fork?label=firefox%20rating&style=for-the-badge&logo=firefoxbrowser)](https://addons.mozilla.org/firefox/addon/enhanced-steam-an-itad-fork/reviews/)
+[![edge rating](https://img.shields.io/badge/dynamic/json?label=edge%20rating&suffix=/5&query=%24.averageRating&url=https://microsoftedge.microsoft.com/addons/getproductdetailsbycrxid/dnpjkgmekpilchdgolfifobohlohlioc&style=for-the-badge&logo=microsoftedge)](https://microsoftedge.microsoft.com/addons/getproductdetailsbycrxid/dnpjkgmekpilchdgolfifobohlohlioc)
+
 
 Enhanced Steam fork by IsThereAnyDeal.
 
