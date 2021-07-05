@@ -845,17 +845,19 @@ img.astats_icon {
 .workshop_item_header.es_expanded .col_right {
   display: none;
 }
+.workshop_item_header.es_expanded #highlight_player_area,
 .workshop_item_header.es_expanded .highlight_player_item iframe,
 .workshop_item_header.es_expanded .workshopItemPreviewImageEnlargeable,
 .workshop_item_header.es_expanded .workshopItemPreviewImageEnlargeableContainer {
-  width: auto;
-  height: 520px;
+  width: 920px !important;
+  height: 520px !important;
   max-width: 920px !important;
+  max-height: 520px !important;
 }
 .workshop_item_header.es_expanded .highlight_ctn,
-.workshop_item_header.es_expanded .highlight_overflow,
-.workshop_item_header.es_expanded .highlight_player_item iframe {
+.workshop_item_header.es_expanded .highlight_overflow {
   width: 920px;
+  max-width: 920px;
 }
 .workshop_item_header .es_slider_toggle {
   display: block;
