@@ -189,7 +189,11 @@ class AugmentedSteam {
             const selector = "a[href*='/linkfilter/']";
 
             for (const node of parent.querySelectorAll(selector)) {
-                node.href = node.href.replace(/^.+?\/linkfilter\/\?url=/, "");
+                const link = node.href.replace(/^.+?\/linkfilter\/\?url=\s*/, "");
+                // eslint-disable-next-line no-script-url
+                if (!link.toLowerCase().startsWith("javascript:")) {
+                    node.href = link;
+                }
             }
         }
 
