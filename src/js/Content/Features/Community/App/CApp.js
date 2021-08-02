@@ -8,13 +8,15 @@ import FCommunityAppPageWishlist from "./FCommunityAppPageWishlist";
 
 export class CApp extends CCommunityBase {
 
-    constructor() {
+    constructor(type = ContextType.COMMUNITY_APP, features = []) {
 
-        super(ContextType.COMMUNITY_APP, [
+        features.push(
             FCommunityAppPageLinks,
             FCommunityAppPageWishlist,
             FSkipAgecheck,
-        ]);
+        );
+
+        super(type, features);
 
         this.appid = GameId.getAppid(window.location.href);
 
