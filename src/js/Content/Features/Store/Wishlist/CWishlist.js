@@ -83,8 +83,6 @@ export class CWishlist extends CStoreBase {
                     delayedWork.clear();
 
                     this.triggerCallbacks(arg);
-
-                    window.dispatchEvent(new Event("resize"));
                 }, 50);
             } else {
                 timer.reset();

@@ -30,6 +30,8 @@ export default class FWishlistUserNotes extends CallbackFeature {
 
     callback(nodes) {
 
+        const lastNode = nodes[nodes.length - 1];
+
         for (const node of nodes) {
             if (node.classList.contains("esi-has-note")) { continue; }
 
@@ -50,8 +52,11 @@ export default class FWishlistUserNotes extends CallbackFeature {
 
                 HTML.afterEnd(node.querySelector(".mid_container"), `<div class="esi-note ${cssClass} ellipsis">${noteText}</div>`);
                 node.classList.add("esi-has-note");
-            })();
 
+                if (node === lastNode) {
+                    window.dispatchEvent(new Event("resize"));
+                }
+            })();
         }
     }
 }
