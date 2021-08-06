@@ -5,25 +5,21 @@ import {Permissions} from "../../modulesCore";
 class ContextMenu {
 
     static onClick(info) {
-        const query = encodeURIComponent(info.selectionText.trim());
         const url = ContextMenu.queryLinks[info.menuItemId];
         if (!url) { return; }
 
+        let query = info.selectionText.trim();
+
         if (info.menuItemId === "context_steam_keys") {
             const steamKeys = query.match(/[A-Z0-9]{5}(-[A-Z0-9]{5}){2}/g);
-            if (!steamKeys || steamKeys.length === 0) {
 
-                // eslint-disable-next-line no-alert -- TODO Find a better way
-                window.alert(Localization.str.options.no_keys_found);
-                return;
+            // Set the query to matched keys if any, otherwise display the selected text anyway
+            if (Array.isArray(steamKeys)) {
+                query = steamKeys.join(",");
             }
-
-            for (const steamKey of steamKeys) {
-                browser.tabs.create({"url": url.replace("__steamkey__", steamKey)});
-            }
-        } else {
-            browser.tabs.create({"url": url.replace("__query__", query)});
         }
+
+        browser.tabs.create({"url": url.replace("__query__", encodeURIComponent(query))});
     }
 
     static async build() {
@@ -63,7 +59,7 @@ ContextMenu.queryLinks = {
     "context_bartervg": "https://barter.vg/search?q=__query__",
     "context_steamdb": "https://steamdb.info/search/?q=__query__",
     "context_steamdb_instant": "https://steamdb.info/instantsearch/?query=__query__",
-    "context_steam_keys": "https://store.steampowered.com/account/registerkey?key=__steamkey__"
+    "context_steam_keys": "https://store.steampowered.com/account/registerkey?key=__query__"
 };
 
 export {ContextMenu};
