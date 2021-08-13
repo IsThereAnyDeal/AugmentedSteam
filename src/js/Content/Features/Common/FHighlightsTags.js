@@ -1,4 +1,4 @@
-import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../../modulesCore";
+import {GameId, HTML, Localization, SyncedStorage} from "../../../modulesCore";
 import {DynamicStore, Feature, ITAD, Inventory} from "../../modulesContent";
 import {Page} from "../Page";
 
@@ -190,9 +190,6 @@ export default class FHighlightsTags extends Feature {
 
     static _addTag(node, tag) {
 
-        const tagShort = SyncedStorage.get("tag_short");
-
-        // Load the colors CSS for tags
         if (!this._tagCssLoaded) {
             this._tagCssLoaded = true;
 
@@ -211,58 +208,57 @@ export default class FHighlightsTags extends Feature {
         }
 
         // Add the tags container if needed
-        let tags = node.querySelectorAll(".es_tags");
-        if (tags.length === 0) {
-            tags = HTMLParser.htmlToElement(`<div class="es_tags ${tagShort ? "es_tags_short" : ""}"></div>`);
+        let container = node.querySelector(".es_tags");
+        if (!container) {
+            container = document.createElement("div");
+            container.classList.add("es_tags");
+            if (SyncedStorage.get("tag_short")) {
+                container.classList.add("es_tags_short");
+            }
 
             let root;
             if (node.classList.contains("tab_row")) { // fixme can't find it
                 root = node.querySelector(".tab_desc").classList.remove("with_discount");
 
                 node.querySelector(".tab_discount").style.top = "15px";
-                root.querySelector("h4").insertAdjacentElement("afterend", tags);
+                root.querySelector("h4").insertAdjacentElement("afterend", container);
             } else if (node.classList.contains("home_smallcap")) {
-                node.querySelector(".home_smallcap_title").insertAdjacentElement("afterbegin", tags);
+                node.querySelector(".home_smallcap_title").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("curated_app_item")) {
-                node.querySelector(".home_headerv5_title").insertAdjacentElement("afterbegin", tags);
+                node.querySelector(".home_headerv5_title").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("tab_item")) {
-                node.querySelector(".tab_item_name").insertAdjacentElement("afterend", tags);
+                node.querySelector(".tab_item_name").insertAdjacentElement("afterend", container);
             } else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
-                node.querySelector(".discount_block").insertAdjacentElement("beforebegin", tags);
+                node.querySelector(".discount_block").insertAdjacentElement("beforebegin", container);
             } else if (node.classList.contains("search_result_row")) {
-                node.querySelector("p").insertAdjacentElement("afterbegin", tags);
+                node.querySelector("p").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("dailydeal")) { // can't find it
                 root = node.parentNode;
-                root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", tags);
+                root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", container);
                 HTML.beforeBegin(root.querySelector(".game_purchase_action"), '<div style="clear: right;"></div>');
             } else if (node.classList.contains("browse_tag_game")) {
-                node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
+                node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", container);
             } else if (node.classList.contains("game_area_dlc_row")) {
-                node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", tags);
+                node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("wishlist_row")) {
-                node.querySelector(".addedon").insertAdjacentElement("afterbegin", tags);
+                node.querySelector(".addedon").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("match")) {
-                node.querySelector(".match_price").insertAdjacentElement("afterbegin", tags);
+                node.querySelector(".match_price").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("cluster_capsule")) {
-                node.querySelector(".main_cap_platform_area").append(tags);
+                node.querySelector(".main_cap_platform_area").append(container);
             } else if (node.classList.contains("recommendation_highlight")) {
-                node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", tags);
+                node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("similar_grid_item")) {
-                node.querySelector(".regular_price, .discount_block").append(tags);
+                node.querySelector(".regular_price, .discount_block").append(container);
             } else if (node.classList.contains("recommendation_carousel_item")) {
-                node.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
+                node.querySelector(".buttons").insertAdjacentElement("beforebegin", container);
             } else if (node.classList.contains("friendplaytime_game")) {
-                node.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
+                node.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", container);
             }
-
-            tags = [tags];
         }
 
-        // Add the tag
-        for (const n of tags) {
-            if (!n.querySelector(`.es_tag_${tag}`)) {
-                HTML.beforeEnd(n, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
-            }
+        if (!container.querySelector(`.es_tag_${tag}`)) {
+            HTML.beforeEnd(container, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
         }
     }
     /* eslint-enable complexity */
