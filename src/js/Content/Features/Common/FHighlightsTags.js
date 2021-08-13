@@ -227,7 +227,7 @@ export default class FHighlightsTags extends Feature {
             } else if (node.classList.contains("curated_app_item")) {
                 node.querySelector(".home_headerv5_title").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("tab_item")) {
-                node.querySelector(".tab_item_name").insertAdjacentElement("afterend", container);
+                node.querySelector(".tab_item_details").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
                 node.querySelector(".discount_block").insertAdjacentElement("beforebegin", container);
             } else if (node.classList.contains("search_result_row")) {
@@ -453,7 +453,7 @@ FHighlightsTags._selector = [
     "div.home_area_spotlight", // Midweek and weekend deals
     "div.browse_tag_game", // Tagged games
     "div.similar_grid_item", // Items on the "Similarly tagged" pages
-    ".tab_item", // Items on new homepage
+    ".tab_item", // Item rows on storefront/tag/genre pages
     ".special > .special_img_ctn", // new homepage specials
     ".special.special_img_ctn",
     "div.curated_app_item", // curated app items!

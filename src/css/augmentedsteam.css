@@ -1509,10 +1509,6 @@ img.astats_icon {
 .small_cap .es_tags {
   margin-top: 0;
 }
-.tab_item .es_tags {
-  z-index: 10;
-  float: left;
-}
 #search_suggestion_contents .es_tags {
   float: right;
   margin-left: 5px;
