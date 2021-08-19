@@ -38,6 +38,12 @@ const actionCallbacks = new Map([
     ["steam.currencies", StaticResources.currencies],
 
     ["migrate.notesToSyncedStorage", ExtensionData.moveNotesToSyncedStorage],
+    ["notes.get", ExtensionData.getNote],
+    ["notes.set", ExtensionData.setNote],
+    ["notes.delete", ExtensionData.deleteNote],
+    ["notes.getall", ExtensionData.getAllNotes],
+    ["notes.setall", ExtensionData.setAllNotes],
+    ["notes.clear", ExtensionData.clearNotes],
     ["cache.clear", ExtensionData.clearCache],
 
     ["dlcinfo", AugmentedSteamApi.endpointFactory("v01/dlcinfo")],

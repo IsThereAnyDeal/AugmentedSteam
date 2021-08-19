@@ -577,7 +577,19 @@
         "maintainers": "",
         "with_help_of": "",
         "contributors": "",
-        "apppage": ""
+        "apppage": "",
+        "exfgls": "",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": ""
     },
     "ready": {
         "errormsg": "Fehler beim Laden von Augmented Steam-Daten",
@@ -659,7 +671,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ Gegenstand",
-        "num_items": "__num__ Gegenstände"
+        "num_items": "__num__ Gegenstände",
+        "back": ""
     },
     "update": {
         "dont_show": "Nicht erneut zeigen",
@@ -694,7 +707,15 @@
         "update": "Notiz aktualisieren",
         "add_prompt": "Gib deine Notiz ein",
         "update_prompt": "Aktualisiere deine Notiz",
-        "add_for_game": "Notiz für __gamename__"
+        "add_for_game": "Notiz für __gamename__",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "<b>Neue</b> Liste",

@@ -5,7 +5,7 @@ import {UserNotes} from "../Common/UserNotes";
 export default class FWishlistUserNotes extends CallbackFeature {
 
     checkPrerequisites() {
-        return this.context.myWishlist && SyncedStorage.get("showusernotes");
+        return this.context.myWishlist && SyncedStorage.get("user_notes_wishlist");
     }
 
     setup() {
@@ -37,16 +37,21 @@ export default class FWishlistUserNotes extends CallbackFeature {
             let noteText;
             let cssClass;
 
-            if (this._userNotes.exists(appid)) {
-                noteText = `"${this._userNotes.get(appid)}"`;
-                cssClass = "esi-user-note";
-            } else {
-                noteText = Localization.str.user_note.add;
-                cssClass = "esi-empty-note";
-            }
+            (async() => {
+                const note = await this._userNotes.get(appid);
 
-            HTML.afterEnd(node.querySelector(".mid_container"), `<div class="esi-note ${cssClass}">${noteText}</div>`);
-            node.classList.add("esi-has-note");
+                if (note === null) {
+                    noteText = Localization.str.user_note.add;
+                    cssClass = "esi-empty-note";
+                } else {
+                    noteText = `"${note}"`;
+                    cssClass = "esi-user-note";
+                }
+
+                HTML.afterEnd(node.querySelector(".mid_container"), `<div class="esi-note ${cssClass} ellipsis">${noteText}</div>`);
+                node.classList.add("esi-has-note");
+            })();
+
         }
     }
 }

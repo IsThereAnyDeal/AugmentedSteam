@@ -110,6 +110,15 @@ class UpdateHandler {
             SyncedStorage.remove("hide_owned");
             SyncedStorage.remove("hide_ignored");
             SyncedStorage.remove("highlight_notdiscounted");
+
+            SyncedStorage.remove("showallfriendsthatown");
+
+            if (SyncedStorage.has("showusernotes")) {
+                const val = SyncedStorage.get("showusernotes");
+                SyncedStorage.set("user_notes_app", val);
+                SyncedStorage.set("user_notes_wishlist", val);
+                SyncedStorage.remove("showusernotes");
+            }
         }
     }
 }

@@ -43,7 +43,10 @@ class Permissions {
     /**
      * @return Promise
      */
-    static request(permissionList) {
+    static async request(permissionList) {
+        // Prevents requesting permissions that are not optional (contextMenus for Firefox)
+        if (await this.contains(permissionList)) { return true; }
+
         return browser.permissions.request({"permissions": permissionList});
     }
 

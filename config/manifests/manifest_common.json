@@ -1,7 +1,7 @@
 {
   "name": "Augmented Steam",
   "short_name": "AS",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Augments your Steam Experience",
   "icons": {
     "128": "img/logo/as128.png",
@@ -49,7 +49,8 @@
   "content_scripts": [
     {
       "matches": [
-        "*://store.steampowered.com/"
+        "*://store.steampowered.com/",
+        "*://store.steampowered.com/?*"
       ],
       "js": [ "js/store/frontpage.js" ],
       "css": [ "css/augmentedsteam.css" ]
@@ -197,6 +198,7 @@
         "*://translation.steampowered.com/*",
         "*://partner.steampowered.com/*",
         "*://store.steampowered.com/",
+        "*://store.steampowered.com/?*",
         "*://*.steampowered.com/wishlist/id/*",
         "*://*.steampowered.com/wishlist/profiles/*",
         "*://*.steampowered.com/sale/*",
@@ -500,8 +502,8 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/sharedfiles/filedetails?id=*",
-        "*://steamcommunity.com/sharedfiles/filedetails/?id=*"
+        "*://steamcommunity.com/sharedfiles/filedetails?*id=*",
+        "*://steamcommunity.com/sharedfiles/filedetails/?*id=*"
       ],
       "js": [
         "js/community/shared_files.js"
@@ -512,8 +514,8 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/sharedfiles/editguide?id=*",
-        "*://steamcommunity.com/sharedfiles/editguide/?id=*"
+        "*://steamcommunity.com/sharedfiles/editguide?*",
+        "*://steamcommunity.com/sharedfiles/editguide/?*"
       ],
       "js": [
         "js/community/edit_guide.js"
@@ -549,10 +551,10 @@
         "*://steamcommunity.com/market/*",
         "*://steamcommunity.com/groups/*",
         "*://steamcommunity.com/app/*",
-        "*://steamcommunity.com/sharedfiles/filedetails?id=*",
-        "*://steamcommunity.com/sharedfiles/filedetails/?id=*",
-        "*://steamcommunity.com/sharedfiles/editguide?id=*",
-        "*://steamcommunity.com/sharedfiles/editguide/?id=*",
+        "*://steamcommunity.com/sharedfiles/filedetails?*id=*",
+        "*://steamcommunity.com/sharedfiles/filedetails/?*id=*",
+        "*://steamcommunity.com/sharedfiles/editguide?*",
+        "*://steamcommunity.com/sharedfiles/editguide/?*",
         "*://steamcommunity.com/tradingcards/boostercreator"
       ],
       "js": [

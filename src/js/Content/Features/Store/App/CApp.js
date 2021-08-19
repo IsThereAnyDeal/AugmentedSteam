@@ -20,7 +20,6 @@ import FMetacriticUserScore from "./FMetacriticUserScore";
 import FOpenCritic from "./FOpenCritic";
 import FOwnedElsewhere from "./FOwnedElsewhere";
 import FPurchaseDate from "./FPurchaseDate";
-import FYouTubeVideos from "./FYouTubeVideos";
 import FSteamPeek from "./FSteamPeek";
 import FWidescreenCertification from "./FWidescreenCertification";
 import FHowLongToBeat from "./FHowLongToBeat";
@@ -67,7 +66,6 @@ export class CApp extends CStore {
             FOpenCritic,
             FOwnedElsewhere,
             FPurchaseDate,
-            FYouTubeVideos,
             FSteamPeek,
             FWidescreenCertification,
             FHowLongToBeat,
@@ -116,9 +114,6 @@ export class CApp extends CStore {
         // The customizer has to wait on this data to be added in order to find the HTML elements
         FCustomizer.dependencies = [FSteamSpy, FSteamChart, FSurveyData];
         FCustomizer.weakDependency = true;
-
-        FMediaExpander.dependencies = [FYouTubeVideos];
-        FMediaExpander.weakDependency = true;
     }
 
     storePageDataPromise() {
@@ -139,7 +134,8 @@ export class CApp extends CStore {
     }
 
     hasAchievements() {
-        return document.querySelector("#achievement_block") !== null;
+        // #achievement_block is also used for point shop items
+        return document.querySelector(".communitylink_achievement_images") !== null;
     }
 
     removeFromWishlist() {

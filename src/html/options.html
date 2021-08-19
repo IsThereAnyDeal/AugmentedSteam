@@ -145,6 +145,14 @@
                 </div>
 
                 <div class="section js-section">
+                    <h2 data-locale-text="options.user_notes.user_notes" class="js-section-head">User Notes</h2>
+                    <label data-locale-text="show">Show</label>
+                    <div data-dynamic="user_notes_app"></div>
+                    <div data-dynamic="user_notes_wishlist"></div>
+                    <div data-dynamic-select="user_notes_adapter"></div>
+                </div>
+
+                <div class="section js-section">
                     <h2 data-locale-text="options.homepage" class="js-section-head">Homepage</h2>
                     <div data-dynamic-select="homepage_tab_selection"></div>
                 </div>
@@ -174,26 +182,30 @@
                     <div data-dynamic="showmcus"></div>
                     <div data-dynamic="showoc"></div>
                     <div data-dynamic="showhltb"></div>
-                    <div data-dynamic="showitadlinks"></div>
-                    <div data-dynamic="showsteamdb"></div>
-                    <div data-dynamic="showbartervg"></div>
                     <div data-dynamic="showastatslink"></div>
-                    <div data-dynamic="showyoutubegameplay"></div>
-                    <div data-dynamic="showyoutubereviews"></div>
-                    <div data-dynamic="showyoutube"></div>
-                    <div data-dynamic="showtwitch"></div>
-                    <div data-dynamic="showpcgw"></div>
                     <div data-dynamic="showcompletionistme"></div>
                     <div data-dynamic="showprotondb"></div>
                     <div data-dynamic="showwsgf"></div>
                     <div data-dynamic="showsteamcardexchange"></div>
                     <div data-dynamic="show_steamchart_info"></div>
                     <div data-dynamic="show_steamspy_info"></div>
+                    <div data-dynamic="showitadlinks"></div>
+                    <div data-dynamic="showsteamdb"></div>
+                    <div data-dynamic="showbartervg"></div>
+                    <div data-dynamic="showpcgw"></div>
+                    <div data-dynamic="showyoutube"></div>
+                    <div data-dynamic="showyoutubegameplay"></div>
+                    <div data-dynamic="showyoutubereviews"></div>
+                    <div data-dynamic="showtwitch"></div>
+
+                    <div class="js-customlinks" data-type="app"></div>
+                    <div>
+                        <button class="js-app-custom-link-add" data-locale-text="options.add_custom_link">Add custom link</button>
+                    </div>
                 </div>
 
                 <div class="section js-section">
                     <h2 data-locale-text="options.general" class="js-section-head">General</h2>
-                    <div data-dynamic="showusernotes"></div>
                     <div data-dynamic="horizontalscrolling"></div>
                     <div data-dynamic="show_early_access"></div>
                     <div data-dynamic="show_alternative_linux_icon"></div>
@@ -263,6 +275,7 @@
 
                 <div class="section js-section">
                     <h2 data-locale-text="options.profile" class="js-section-head">Profile</h2>
+                    <div data-dynamic="show_custom_themes" class="parent_option"></div>
                     <div data-dynamic="show_wishlist_link" class="parent_option"></div>
                     <div data-dynamic="show_wishlist_count" class="option--sub js-sub-option" id="wishlist_link_group"></div>
                     <div data-dynamic="showsteamrepapi"></div>
@@ -282,9 +295,9 @@
                     <div data-dynamic-wrap="profile_backpacktf"><i class="es_sites_icons es_backpacktf_icon"></i>Backpack.tf</div>
                     <div data-dynamic-wrap="profile_astatsnl"><i class="es_sites_icons es_astatsnl_icon"></i>AStats.nl</div>
 
-                    <div class="js-customlinks"></div>
+                    <div class="js-customlinks" data-type="profile"></div>
                     <div>
-                        <button class="js-custom-link-add" data-locale-text="options.add_custom_link">Add custom link</button>
+                        <button class="js-profile-custom-link-add" data-locale-text="options.add_custom_link">Add custom link</button>
                     </div>
                 </div>
 
@@ -311,7 +324,6 @@
                     <div data-dynamic="steamcardexchange" class="option"></div>
                     <div data-dynamic="wlbuttoncommunityapp"></div>
                     <div data-dynamic="removeguideslanguagefilter"></div>
-                    <div data-dynamic="showallfriendsthatown"></div>
                 </div>
             </div>
         </div>
@@ -365,9 +377,15 @@
         </div>
     </div>
 
-    <div class="notification js-options-saved">
-        <img class="notification__img" src="../img/save.svg">
-        <span data-locale-text="options.saved_note">Options saved</span>
+    <div class="notification js-options-save">
+        <div class="notification notification-save js-options-saving">
+            <div class="notification__img lds-dual-ring"></div>
+            <span data-locale-text="options.saving">Saving...</span>
+        </div>
+        <div class="notification notification-save js-options-saved">
+            <img class="notification__img" src="../img/save.svg">
+            <span data-locale-text="options.saved_note">Options saved</span>
+        </div>
     </div>
 
     <div class="notification js-options-reset">

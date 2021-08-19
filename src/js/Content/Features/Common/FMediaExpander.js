@@ -1,5 +1,5 @@
-import {HTML, LocalStorage, Localization, SyncedStorage, TimeUtils} from "../../../modulesCore";
-import {ContextType, Feature} from "../../modulesContent";
+import {HTML, LocalStorage, Localization, TimeUtils} from "../../../modulesCore";
+import {Feature} from "../../modulesContent";
 
 export default class FMediaExpander extends Feature {
 
@@ -9,17 +9,7 @@ export default class FMediaExpander extends Feature {
     }
 
     apply() {
-        let selector = null;
-
-
-        if (this.context.type === ContextType.APP
-            && (SyncedStorage.get("showyoutubegameplay") || SyncedStorage.get("showyoutubereviews"))) {
-            selector = ".home_tabs_row";
-        } else {
-            selector = "#highlight_player_area";
-        }
-
-        HTML.beforeEnd(selector,
+        HTML.beforeEnd("#highlight_player_area",
             `<div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
                 <div data-tooltip-text="${Localization.str.expand_slider}" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
                 <div data-tooltip-text="${Localization.str.contract_slider}" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>

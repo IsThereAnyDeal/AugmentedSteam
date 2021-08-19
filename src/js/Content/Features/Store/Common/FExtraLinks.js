@@ -1,8 +1,5 @@
+import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../../modulesCore";
 import {ContextType, Feature} from "../../../modulesContent";
-
-import {HTML} from "../../../../Core/Html/Html";
-import {Localization} from "../../../../Core/Localization/Localization";
-import {SyncedStorage} from "../../../../Core/Storage/SyncedStorage";
 
 export default class FExtraLinks extends Feature {
 
@@ -12,7 +9,7 @@ export default class FExtraLinks extends Feature {
         if (context.type === ContextType.APP) {
             this._type = "app";
             this._gameid = context.appid;
-            this._node = document.querySelector("#ReportAppBtn").parentNode;
+            this._node = document.querySelector("#shareEmbedRow");
         } else if (context.type === ContextType.SUB) {
             this._type = "sub";
             this._gameid = context.subid;
@@ -45,12 +42,57 @@ export default class FExtraLinks extends Feature {
 
             this._moveExtraLinks();
 
+            const appName = HTMLParser.clearSpecialSymbols(this.context.appName);
+
+            // custom app link
+            for (const customLink of SyncedStorage.get("app_custom_link")) {
+                if (!customLink || !customLink.enabled) {
+                    continue;
+                }
+
+                const customUrl = customLink.url;
+                const name = HTML.escape(customLink.name);
+                const link = `//${HTML.escape(customUrl
+                    .replace("[NAME]", encodeURIComponent(appName))
+                    .replace("[ID]", this.context.appid))}`;
+                let icon;
+                if (customLink.icon) {
+                    icon = `//${HTML.escape(customLink.icon)}`;
+                }
+
+                HTML.afterBegin(this._node,
+                    this._getRightColLinkHtml(
+                        null,
+                        link,
+                        Localization.str.view_on_website.replace("__website__", name),
+                        icon,
+                    ));
+            }
+
+            if (SyncedStorage.get("showyoutubereviews")) {
+                HTML.afterBegin(this._node,
+                    this._getRightColLinkHtml(
+                        "youtube_btn",
+                        `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC" intitle:Review`)}`,
+                        Localization.str.youtube_reviews,
+                    ));
+            }
+
+            if (SyncedStorage.get("showyoutubegameplay")) {
+                HTML.afterBegin(this._node,
+                    this._getRightColLinkHtml(
+                        "youtube_btn",
+                        `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC Gameplay"`)}`,
+                        Localization.str.youtube_gameplay,
+                    ));
+            }
+
             if (SyncedStorage.get("showyoutube")) {
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "youtube_btn",
-                        `https://www.youtube.com/results?search_query=${encodeURIComponent(this.context.appName)}`,
-                        Localization.str.view_on_website.replace("__website__", "YouTube")
+                        `https://www.youtube.com/results?search_query=${encodeURIComponent(appName)}`,
+                        Localization.str.view_on_website.replace("__website__", "YouTube"),
                     ));
             }
 
@@ -58,19 +100,17 @@ export default class FExtraLinks extends Feature {
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "twitch_btn",
-                        `https://www.twitch.tv/directory/game/${encodeURIComponent(this.context.appName.replace(/(\u2122)/g, "")
-                            .replace(/(\xAE)/g, ""))}`,
-                        Localization.str.view_on_website.replace("__website__", "Twitch")
+                        `https://www.twitch.tv/directory/game/${encodeURIComponent(appName)}`,
+                        Localization.str.view_on_website.replace("__website__", "Twitch"),
                     ));
             }
-
 
             if (SyncedStorage.get("showpcgw")) {
                 HTML.afterBegin(this._node,
                     this._getRightColLinkHtml(
                         "pcgw_btn",
                         `https://pcgamingwiki.com/api/appid.php?appid=${this.context.appid}`,
-                        Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki")
+                        Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki"),
                     ));
             }
 
@@ -79,7 +119,7 @@ export default class FExtraLinks extends Feature {
                     this._getRightColLinkHtml(
                         "completionistme_btn",
                         `https://completionist.me/steam/app/${this.context.appid}/`,
-                        Localization.str.view_on_website.replace("__website__", "Completionist.me")
+                        Localization.str.view_on_website.replace("__website__", "Completionist.me"),
                     ));
             }
 
@@ -88,7 +128,7 @@ export default class FExtraLinks extends Feature {
                     this._getRightColLinkHtml(
                         "protondb_btn",
                         `https://www.protondb.com/app/${this.context.appid}/`,
-                        Localization.str.view_on_website.replace("__website__", "ProtonDB")
+                        Localization.str.view_on_website.replace("__website__", "ProtonDB"),
                     ));
             }
 
@@ -99,7 +139,7 @@ export default class FExtraLinks extends Feature {
                     this._getRightColLinkHtml(
                         "cardexchange_btn",
                         `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.context.communityAppid}/`,
-                        Localization.str.view_on_website.replace("__website__", "Steam Card Exchange")
+                        Localization.str.view_on_website.replace("__website__", "Steam Card Exchange"),
                     ));
             }
         }
@@ -109,7 +149,7 @@ export default class FExtraLinks extends Feature {
                 this._getRightColLinkHtml(
                     "bartervg_ico",
                     `https://barter.vg/steam/${this._type}/${this._gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Barter.vg")
+                    Localization.str.view_on_website.replace("__website__", "Barter.vg"),
                 ));
         }
 
@@ -118,7 +158,7 @@ export default class FExtraLinks extends Feature {
                 this._getRightColLinkHtml(
                     "steamdb_ico",
                     `https://steamdb.info/${this._type}/${this._gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Steam Database")
+                    Localization.str.view_on_website.replace("__website__", "Steam Database"),
                 ));
         }
 
@@ -127,20 +167,21 @@ export default class FExtraLinks extends Feature {
                 this._getRightColLinkHtml(
                     "itad_ico",
                     `https://isthereanydeal.com/steam/${this._type}/${this._gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal")
+                    Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal"),
                 ));
         }
     }
 
-    _getRightColLinkHtml(cls, url, str) {
-        return `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span>
+    _getRightColLinkHtml(cls, url, str, iconUrl) {
+        const icon = cls ? "" : `style="background: ${iconUrl ? `url('${iconUrl}')` : "none"}; background-size: contain;"`;
+        return `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls || ""}" target="_blank" href="${url}">
+                    <span><i class="ico16" ${icon}></i>&nbsp;&nbsp; ${str}</span>
                 </a>`;
     }
 
     _moveExtraLinks() {
 
-        const usefulLinks = this._node.parentNode;
+        const usefulLinks = this._node;
         usefulLinks.classList.add("es_useful_link");
 
         const sideDetails = document.querySelector(".es_side_details_wrap");

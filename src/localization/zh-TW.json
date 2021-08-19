@@ -577,7 +577,19 @@
         "maintainers": "專案維護者",
         "with_help_of": "以及許多__contributors__",
         "contributors": "熱心付出的貢獻者",
-        "apppage": "應用程式頁面"
+        "apppage": "應用程式頁面",
+        "exfgls": "",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": ""
     },
     "ready": {
         "errormsg": "Augmented Steam 資料載入錯誤",
@@ -659,7 +671,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ 個物品",
-        "num_items": "__num__ 個物品"
+        "num_items": "__num__ 個物品",
+        "back": ""
     },
     "update": {
         "dont_show": "不要再顯示",
@@ -694,7 +707,15 @@
         "update": "更新備註",
         "add_prompt": "輸入你的備註",
         "update_prompt": "更新你的備註",
-        "add_for_game": "__gamename__ 的備註"
+        "add_for_game": "__gamename__ 的備註",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "開始新佇列",
