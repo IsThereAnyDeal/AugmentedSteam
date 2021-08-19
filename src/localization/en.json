@@ -538,6 +538,7 @@
         "replace_view_client": "Replace with \"View in Client\"",
         "show_empty_wishlist": "Show \"Empty Wishlist\" button",
         "show_wishlist_stats": "Show wishlist stats",
+        "oneclickremovewl": "Skip confirmation when removing items",
         "user_notes": {
             "user_notes": "User notes",
             "app": "On app pages",

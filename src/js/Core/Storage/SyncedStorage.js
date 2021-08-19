@@ -236,6 +236,7 @@ SyncedStorage.defaults = Object.freeze({
     "user_notes_app": true,
     "user_notes_wishlist": true,
     "showwishliststats": true,
+    "oneclickremovewl": false,
     "user_notes": {},
     "user_notes_adapter": "synced_storage",
     "replaceaccountname": true,
