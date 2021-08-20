@@ -1,4 +1,4 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {Localization, SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature, Sortbox} from "../../../modulesContent";
 
 export default class FGroupsSort extends CallbackFeature {
@@ -14,10 +14,6 @@ export default class FGroupsSort extends CallbackFeature {
         if (this._groups.length <= 1) { return; }
 
         this._initSort = true;
-
-        // move the search bar to the same position as on friends page
-        const container = HTML.wrap("#search_text_box", '<div class="searchBarContainer"></div>');
-        document.getElementById("search_results").insertAdjacentElement("beforebegin", container);
 
         document.querySelector("span.profile_groups.title").insertAdjacentElement("afterend", Sortbox.get(
             "groups",

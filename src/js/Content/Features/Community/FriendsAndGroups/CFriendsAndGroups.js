@@ -6,6 +6,8 @@ import FGroupsManageButton from "./FGroupsManageButton";
 import FGroupsSort from "./FGroupsSort";
 import {Page} from "../../Page";
 
+import {HTML} from "../../../../modulesCore";
+
 export class CFriendsAndGroups extends CCommunityBase {
 
     constructor() {
@@ -27,6 +29,15 @@ export class CFriendsAndGroups extends CCommunityBase {
             });
         });
 
-        Messenger.addMessageListener("subpageNav", () => { this.triggerCallbacks(); });
+        Messenger.addMessageListener("subpageNav", () => {
+
+            if (document.getElementById("groups_list") !== null) {
+                // move the search bar to the same position as on friends page
+                const container = HTML.wrap("#search_text_box", '<div class="searchBarContainer"></div>');
+                document.getElementById("search_results").insertAdjacentElement("beforebegin", container);
+            }
+
+            this.triggerCallbacks();
+        });
     }
 }
