@@ -5,7 +5,7 @@ export default class FDemoAbovePurchase extends Feature {
 
     checkPrerequisites() {
         const rightcolDemoBtn = document.querySelector(".rightcol.game_meta_data a[href^='javascript:ShowGotSteamModal'], .rightcol.game_meta_data a[href^='steam://install']");
-        this._demoLink = rightcolDemoBtn && rightcolDemoBtn.href.match(/steam:\/\/install\/\d+/);
+        this._demoLink = rightcolDemoBtn && rightcolDemoBtn.href;
 
         return Boolean(this._demoLink) && document.querySelector(".demo_above_purchase") === null;
     }
@@ -25,7 +25,7 @@ export default class FDemoAbovePurchase extends Feature {
             <div class="game_purchase_action">
                 <div class="game_purchase_action_bg">
                     <div class="btn_addtocart">
-                        <a class="btn_green_steamui btn_medium" href="${this._demoLink[0]}">
+                        <a class="btn_green_steamui btn_medium">
                             <span>${Localization.str.export.download}</span>
                         </a>
                     </div>
@@ -39,5 +39,8 @@ export default class FDemoAbovePurchase extends Feature {
         } else {
             HTML.afterBegin(document.getElementById("game_area_purchase"), html);
         }
+
+        // Prevent sanitizing javascript link (comes from page, safe source)
+        document.querySelector(".demo_above_purchase .btn_green_steamui").href = this._demoLink;
     }
 }
