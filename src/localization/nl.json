@@ -573,11 +573,23 @@
             "export": "Exporteren",
             "reset": "Resetten"
         },
-        "removebroadcasts": "",
-        "maintainers": "",
-        "with_help_of": "",
-        "contributors": "",
-        "apppage": ""
+        "removebroadcasts": "Elke live broadcast helemaal verwijderen",
+        "maintainers": "Project Onderhouders",
+        "with_help_of": "met heel veel help van onze",
+        "contributors": "geweldige bijdragers",
+        "apppage": "App pagina",
+        "exfgls": "",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": ""
     },
     "ready": {
         "errormsg": "Fout tijdens het laden van Augmented Steam gegevens",
@@ -659,7 +671,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ object",
-        "num_items": "__num__ object"
+        "num_items": "__num__ object",
+        "back": ""
     },
     "update": {
         "dont_show": "Niet nogmaals tonen",
@@ -694,7 +707,15 @@
         "update": "Notitie updaten",
         "add_prompt": "Notitie schrijven",
         "update_prompt": "Notitie updaten",
-        "add_for_game": "Notitie voor __gamename__"
+        "add_for_game": "Notitie voor __gamename__",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "Nieuwe Queue",

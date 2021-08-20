@@ -7,7 +7,7 @@ export default class FBadgeProgress extends Feature {
         return this.context.hasCards && User.isSignedIn && SyncedStorage.get("show_badge_progress");
     }
 
-    apply() {
+    async apply() {
 
         DOMHelper.insertStylesheet("//steamcommunity-a.akamaihd.net/public/css/skin_1/badges.css");
 
@@ -24,12 +24,18 @@ export default class FBadgeProgress extends Feature {
 
         const appid = this.context.communityAppid;
 
-        return Promise.all([
-            Background.action("cards", appid)
-                .then(result => { this._loadBadgeContent(".es_normal_badge_progress", result); }),
-            Background.action("cards", appid, true)
-                .then(result => { this._loadBadgeContent(".es_foil_badge_progress", result); }),
-        ]);
+        try {
+            await Promise.all([
+                Background.action("cards", appid)
+                    .then(result => { this._loadBadgeContent(".es_normal_badge_progress", result); }),
+                Background.action("cards", appid, true)
+                    .then(result => { this._loadBadgeContent(".es_foil_badge_progress", result); }),
+            ]);
+        } catch (err) {
+            document.getElementById("es_badge_progress").remove();
+            document.getElementById("es_badge_progress_content").remove();
+            throw err;
+        }
     }
 
     _loadBadgeContent(targetSelector, result) {
@@ -42,7 +48,7 @@ export default class FBadgeProgress extends Feature {
         const badge = dummy.querySelector(".badge_gamecard_page");
         if (badge) {
             this._displayBadgeInfo(targetSelector, badge);
-        } else if (document.getElementById("es_badge_progress")) {
+        } else {
             document.getElementById("es_badge_progress").remove();
             document.getElementById("es_badge_progress_content").remove();
         }

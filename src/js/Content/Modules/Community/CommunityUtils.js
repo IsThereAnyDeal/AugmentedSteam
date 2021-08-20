@@ -5,9 +5,12 @@ export class CommunityUtils {
     static currentUserIsOwner() {
         if (!User.isSignedIn) { return false; }
 
-        const badgeOwnerUrl = `${document.querySelector(".profile_small_header_texture > a").href}/`;
+        let profileLink = document.querySelector(".profile_small_header_texture > a, .friends_header_avatar > a").href;
+        if (!profileLink.endsWith("/")) {
+            profileLink += "/";
+        }
 
-        return badgeOwnerUrl === User.profileUrl;
+        return profileLink === User.profileUrl;
     }
 
     static makeProfileLink(id, link, name, iconType, iconUrl) {

@@ -577,7 +577,19 @@
         "maintainers": "Mainteneurs de projet",
         "with_help_of": "avec beaucoup d'aide de nos __contributors__",
         "contributors": "merveilleux contributeurs",
-        "apppage": "Pages du magasin"
+        "apppage": "Pages du magasin",
+        "exfgls": "Afficher une remarque si l'application est exclue du partage familial",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": ""
     },
     "ready": {
         "errormsg": "Erreur lors du chargement des données d'Augmented Steam",
@@ -659,7 +671,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ objet",
-        "num_items": "__num__ objets"
+        "num_items": "__num__ objets",
+        "back": ""
     },
     "update": {
         "dont_show": "Ne plus afficher",
@@ -694,7 +707,15 @@
         "update": "Mettre la note à jour",
         "add_prompt": "Saisissez votre note",
         "update_prompt": "Mettez votre note à jour",
-        "add_for_game": "Note pour __gamename__"
+        "add_for_game": "Note pour __gamename__",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "Nouvelle liste",

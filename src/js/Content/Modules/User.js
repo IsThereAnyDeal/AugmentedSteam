@@ -112,14 +112,17 @@ class User {
     }
 
     /*
-     * Retrieve access token from user's profile to use in new style WebAPI calls (Services)
-     * Can also be retrieved from the discussions page for apps and the points shop
+     * Retrieve user access token to use in new style WebAPI calls (Services)
+     * https://github.com/Revadike/UnofficialSteamWebAPI/wiki/Get-Points-Summary-Config
      */
     static async getUserToken() {
-        const html = await RequestData.getHttp(User.profileUrl);
-        const dummyPage = HTMLParser.htmlToDOM(html);
-        const config = dummyPage.getElementById("application_config").dataset.loyaltystore;
-        return JSON.parse(config).webapi_token;
+        // Use relative URL, so it matches domain (works on any steam domain)
+        const response = await RequestData.getJson("/pointssummary/ajaxgetasyncconfig").catch(() => false);
+        if (!response || !response.success) {
+            throw new Error("Failed to get webapi token");
+        }
+
+        return response.data.webapi_token;
     }
 }
 

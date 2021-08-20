@@ -577,7 +577,19 @@
         "maintainers": "",
         "with_help_of": "",
         "contributors": "",
-        "apppage": ""
+        "apppage": "",
+        "exfgls": "",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": ""
     },
     "ready": {
         "errormsg": "Chyba při načítání Augmented Steam dat",
@@ -659,7 +671,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ položka",
-        "num_items": "__num__ položek"
+        "num_items": "__num__ položek",
+        "back": ""
     },
     "update": {
         "dont_show": "Příště nezobrazovat",
@@ -694,7 +707,15 @@
         "update": "Aktualizovat poznámku",
         "add_prompt": "Vyplňte poznámku",
         "update_prompt": "Aktualizovat poznámku",
-        "add_for_game": "Poznámka pro __gamename__"
+        "add_for_game": "Poznámka pro __gamename__",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "",

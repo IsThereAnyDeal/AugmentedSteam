@@ -167,7 +167,7 @@
     "price_above_tooltip": "無料のアイテムや価格タグ無しのアイテムにはゼロを入力する; この機能を無効にするにはこの項目を空白にしてください",
     "price_above_wrong_format": "フォーマットが違う、__pattern__のような形式で入力してください",
     "reviews_below": "指定のレビュー数以下のアイテム",
-    "reviews_below_tooltip": "レビュー無しのアイテムにはゼロを入力する; この機能を無効にするにはこの項目を空白にしてください",
+    "reviews_below_tooltip": "レビュー無しのアイテムには0を入力する; この機能を無効にするにはこの項目を空白にしてください",
     "news": "ニュース",
     "check_system": "システムをチェック",
     "viewinclient": "Steamクライアントで表示する",
@@ -297,8 +297,8 @@
         "lowest_price": "現在最安：",
         "historical_low": "史上最安：",
         "bundled": "バンドル内の回数：",
-        "with_voucher": "__voucher__特恵が適用可能",
-        "store": "__store__での販売",
+        "with_voucher": "割引「__voucher__」が適用可能",
+        "store": "__store__にての販売",
         "bundle_count": "__count__回",
         "info": "情報",
         "more": "もっと",
@@ -478,7 +478,7 @@
         "show_steamchart_info": "SteamCharts.comの情報を表示",
         "show_steamspy_info": "Steamspy.comの情報を表示",
         "showallachievements": "「すべてのゲーム」ページで実績統計を表示",
-        "showallstats": "「すべてのゲーム」ページでプレイ時間",
+        "showallstats": "「すべてのゲーム」ページでプレイ時間データを表示する",
         "lowestprice_onwishlist": "ウィッシュリストで表示",
         "steamrepapi": "プロフィールページにSteamRepステータスを表示する",
         "header": "ヘッダー",
@@ -573,11 +573,23 @@
             "export": "エクスポート",
             "reset": "リセット"
         },
-        "removebroadcasts": "",
-        "maintainers": "",
-        "with_help_of": "",
-        "contributors": "",
-        "apppage": ""
+        "removebroadcasts": "すべてのライブブロードキャストをブロックする",
+        "maintainers": "プロジェクト保守者",
+        "with_help_of": "__contributors__から多大なるご助力を賜りました。",
+        "contributors": "協力者たち",
+        "apppage": "アプリページ",
+        "exfgls": "アプリがファミリーシェアリングから除外された時に通知を送る",
+        "saving": "セーブ中…",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": ""
     },
     "ready": {
         "errormsg": "Augmented Steam のデータロードエラー",
@@ -653,22 +665,23 @@
         "send_to_itad": "所持しているゲームの情報をIsThereAnyDealに送信",
         "sending": "既に所持しているゲームやゲームセットの情報を読み込みIsThereAnyDeal.comに送信する",
         "info": {
-            "itad-steam": "Augmented SteamをIsThereAnyDealと接続すると、あなたのウェイトリストとコレクションをAugmented Steamでハイライトやタグすることが可能、たとえあなたはSteamにてそれらを所持していないとしても。",
-            "steam-itad": "また、精確さをさらに上げるため、ゲームをSteamライブラリと/やウィッシュリストからIsThereAnyDealへインポートすることも可能（例えばDLCまたはリストに入ってないゲーム）。今この機能を使ってアイテムを追加するだけができる、削除機能は実装されていないため、IsThereAnyDealが統合した同期機能の代わりに成れないが、補充としてはできる。"
+            "itad-steam": "Augmented SteamをIsThereAnyDealと接続すると、あなたはSteamにてそれらのゲームを所持していない場合にもかかわらず、IsThereAnyDealのウェイトリストとコレクションをAugmented Steamでハイライトやタグすることができます。",
+            "steam-itad": "また、精確さをさらに上げるため、ゲームをSteamライブラリまたはウィッシュリストからIsThereAnyDealへインポートすることも可能（例えば、DLCまたは収録されていないゲーム）。今、削除機能は実装されていないため、この機能を使ってアイテムを追加するだけができる。IsThereAnyDealが統合した同期機能の代わりに成れないが、補充としてはできる。"
         }
     },
     "tradeoffer": {
         "num_item": "__num__ 個のアイテム",
-        "num_items": "__num__ 個のアイテム"
+        "num_items": "__num__ 個のアイテム",
+        "back": ""
     },
     "update": {
-        "dont_show": "再び表示しない",
-        "updated": "Augmented Steamは、__version__に更新されました",
-        "changes": "このリリースには、以下の変更が含まれています"
+        "dont_show": "今後表示しない",
+        "updated": "Augmented Steamは、__version__ にアップデートされました",
+        "changes": "今回のアップデートにより、以下の変更点があります"
     },
     "register": {
         "success": "__gamename__ を有効化しました",
-        "owned": "このSteamアカウントには、この製品に含まれるゲームが既にあります。",
+        "owned": "このSteamアカウントには、この注文に含まれるゲームが既に持ちます。",
         "notavail": "この製品はお客様の居住国ではご利用いただけません。この製品コードの有効化は行われていません。",
         "invalid": "入力した製品コードは無効です。入力したキーが正しいことを確認してください。",
         "already": "入力された製品コードは別の Steam アカウントですでに有効になっています。",
@@ -678,23 +691,31 @@
         "default": "予期しないエラーが発生したため、製品コードを有効化できませんでした。30分後に再度お試しください。"
     },
     "wl": {
-        "total_price": "現在価値",
+        "total_price": "合計価格",
         "in_wishlist": "ウィッシュリスト内",
         "on_sale": "セール中",
-        "no_price": "価格がない"
+        "no_price": "価格が表示されない"
     },
     "coll": {
         "total_time": "総時間数",
         "in_collection": "コレクション内",
         "played": "プレイした",
-        "never_played": "プレイすることない"
+        "never_played": "プレイしなかった"
     },
     "user_note": {
         "add": "メモを追加",
         "update": "メモを更新",
         "add_prompt": "メモを入力",
         "update_prompt": "自分のメモを更新",
-        "add_for_game": "__gamename__のメモ"
+        "add_for_game": "__gamename__のメモ",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "新しいキュー",
@@ -704,12 +725,12 @@
         "workshop": "ワークショップ",
         "subscriptions": "サブスクリプション",
         "subscribe_all": "すべてをサブスクライブ",
-        "subscribe_confirm": "現在のフィルターですべての __count__ 個のワークショップアイテムをサブスクライブしますか？",
+        "subscribe_confirm": "現在のフィルターで全部 __count__ 個のワークショップアイテムをサブスクライブしますか？",
         "subscribe_loading": "__i__/__count__ 個のワークショップアイテムをサブスクライブ中、お待ち下さい…",
         "unsubscribe_all": "サブスクリプションをすべて解除",
-        "unsubscribe_confirm": "現在のフィルターですべての __count__ 個のワークショップアイテムのサブスクリプションを解除しますか？",
+        "unsubscribe_confirm": "現在のフィルターで全部 __count__ 個のワークショップアイテムのサブスクリプションを解除しますか？",
         "unsubscribe_loading": "__i__/__count__ 個のワークショップアイテムのサブスクリプションを解除中、お待ち下さい…",
-        "finished": "完成しました！成功数は __success__ 個、失敗数は __fail__ 個。OKをクリックして再読み込み。",
+        "finished": "完成しました！ __success__ 個は成功、 __fail__ 個は失敗失敗しました。OKをクリックして再読み込み。",
         "failed": "__n__ は失敗した。"
     },
     "this_version": "現在のバージョン",
@@ -722,10 +743,10 @@
     "filters": "Augmented Steamのフィルター",
     "search_filters": {
         "reviews_score": {
-            "between": "__lower__%から__upper__%までのレビュースコア",
-            "any": "任意のレビュースコア",
-            "up_to": "最大__score__%のレビュースコア",
-            "from": "最低__score__%のレビュースコア"
+            "between": "レビュースコア：__lower__%から__upper__%まで",
+            "any": "レビュースコア：任意",
+            "up_to": "レビュースコア：最大__score__%",
+            "from": "レビュースコア：最低__score__%"
         },
         "reviews_count": {
             "count": "レビュー数：",

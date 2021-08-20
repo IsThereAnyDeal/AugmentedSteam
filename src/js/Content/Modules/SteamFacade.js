@@ -139,6 +139,10 @@ class SteamFacade {
         CScrollOffsetWatcher.ForceRecalc();
     }
 
+    static loadImageGroupOnScroll(elTarget, strGroup) {
+        LoadImageGroupOnScroll(elTarget, strGroup);
+    }
+
     // inventory
 
     static firstPage() {

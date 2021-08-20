@@ -1,22 +1,27 @@
-import {HTML, LocalStorage, Localization, SyncedStorage} from "../../../../modulesCore";
-import {Background, Feature} from "../../../modulesContent";
+import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {Feature} from "../../../modulesContent";
+// import Config from "../../../../config";
 
 export default class FHowLongToBeat extends Feature {
 
     async checkPrerequisites() {
-        if (!this.context.isDlc() && SyncedStorage.get("showhltb")) {
-            const result = await this.context.data;
-            this._data = result && result.hltb;
-
-            return Boolean(this._data);
+        if (!SyncedStorage.get("showhltb") || this.context.isDlc()) {
+            return false;
         }
-        return false;
+
+        const result = await this.context.data;
+        if (!result || !result.hltb) { return false; }
+
+        // TODO remove when suggestion link is fixed
+        if (!result.hltb.success) { return false; }
+
+        return true;
     }
 
-    apply() {
-        const data = this._data;
+    async apply() {
+        const data = (await this.context.data).hltb;
 
-        // let suggestUrl = `${Config.PublicHost}/gamedata/hltb_link_suggest.php`;
+        // const suggestUrl = `${Config.PublicHost}/gamedata/hltb_link_suggest.php`;
         const icoImg = "//store.steampowered.com/public/images/v5/ico_external_link.gif";
 
         let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.hltb.title}</div>
@@ -38,24 +43,20 @@ export default class FHowLongToBeat extends Feature {
                     <a class="linkbar" href="${HTML.escape(data.url)}" target="_blank">${Localization.str.more_information} <img src="${icoImg}"></a>
                     <a class="linkbar" href="${HTML.escape(data.submit_url)}" target="_blank">${Localization.str.hltb.submit} <img src="${icoImg}"></a>`;
 
-            // eslint-disable-next-line max-len
-            // FIXME <a class="linkbar" href="${suggestUrl}" id="suggest">${Localization.str.hltb.wrong}-${Localization.str.hltb.help} <img src="${icoImg}"></a>
+            // html += `<a class="linkbar" href="${suggestUrl}" id="es_hltb_suggest">${Localization.str.hltb.wrong} ${Localization.str.hltb.help} <img src="${icoImg}"></a>`;
         } else {
             html += `${Localization.str.hltb.no_data}</div>`;
-
-            // eslint-disable-next-line max-len
-            // FIXME <a class="linkbar" href="${suggestUrl}" id="suggest">${Localization.str.hltb.wrong}-${Localization.str.hltb.help} <img src="${icoImg}"></a>
+            // html += `<a class="linkbar" href="${suggestUrl}" id="es_hltb_suggest">${Localization.str.hltb.help} <img src="${icoImg}"></a>`;
         }
+
         html += "</div></div></div>";
 
         HTML.afterEnd("div.game_details", html);
 
-        const suggest = document.querySelector("#suggest");
-        if (suggest) { // FIXME consequence of the above FIXME
-            suggest.addEventListener("click", () => {
-                LocalStorage.remove(`storePageData_${this.context.appid}`);
-                Background.action("storepagedata.expire", this.context.appid);
-            });
-        }
+        /*
+         * document.querySelector("#es_hltb_suggest").addEventListener("click", () => {
+         *    Background.action("storepagedata.expire", this.context.appid);
+         * });
+         */
     }
 }

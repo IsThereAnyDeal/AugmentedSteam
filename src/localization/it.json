@@ -577,7 +577,19 @@
         "maintainers": "",
         "with_help_of": "",
         "contributors": "",
-        "apppage": ""
+        "apppage": "",
+        "exfgls": "",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": ""
     },
     "ready": {
         "errormsg": "Errore nel caricamento di Augmented Steam",
@@ -659,7 +671,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ oggetto",
-        "num_items": "__num__ oggetti"
+        "num_items": "__num__ oggetti",
+        "back": ""
     },
     "update": {
         "dont_show": "Non mostrare più",
@@ -694,7 +707,15 @@
         "update": "Modifica la nota",
         "add_prompt": "Inserisci la tua nota",
         "update_prompt": "Modifica la tua nota",
-        "add_for_game": "Nota per __gamename__"
+        "add_for_game": "Nota per __gamename__",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "Nuovo elenco scoperte",
