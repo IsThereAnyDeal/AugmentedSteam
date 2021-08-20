@@ -1621,6 +1621,16 @@ img.astats_icon {
   margin-right: 0;
 }
 
+/** layout for friend activity page */
+.blotter_block a.es_highlighted {
+  color: rgba(255, 255, 255, 0.80);
+  padding: 1px 4px;
+  line-height: 20px;
+  white-space: nowrap;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.80);
+}
+
 /**
  * https://github.com/jshackles/Enhanced_Steam/issues/778
  * Use original selection background color for live search entries that are both selected and highlighted
@@ -1777,21 +1787,14 @@ img.astats_icon {
 }
 
 /***************************************
- * Activity pages
- * add_achievement_comparison_link()
+ * Friend activity page
+ * FAchievementComparisonLink
  **************************************/
-.blotter_block a.es_highlighted {
-  color: rgba(255, 255, 255, 0.80);
-  padding: 1px 4px;
-  line-height: 20px;
-  white-space: nowrap;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.80);
-}
 .es_achievement_compare {
   font-size: 10px;
   float: right;
   margin-right: 6px;
+  line-height: 32px;
 }
 .es_achievements {
   margin-top: 0 !important;
