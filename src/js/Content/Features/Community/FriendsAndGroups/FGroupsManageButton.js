@@ -1,14 +1,22 @@
 import {HTML, Localization} from "../../../../modulesCore";
-import {ConfirmDialog, Feature, RequestData, User} from "../../../modulesContent";
+import {CallbackFeature, ConfirmDialog, RequestData, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 
-export default class FGroupsManageButton extends Feature {
+export default class FGroupsManageButton extends CallbackFeature {
 
     checkPrerequisites() {
-        return this.context.groups.length !== 0 && this.context.groups[0].querySelector(".actions") !== null;
+        return this.context.myProfile;
     }
 
-    apply() {
+    setup() {
+        this.callback();
+    }
+
+    callback() {
+        if (!document.getElementById("groups_list")) { return; }
+
+        this._groups = Array.from(document.querySelectorAll(".group_block"));
+        if (this._groups.length === 0) { return; }
 
         const groupsStr = Localization.str.groups;
 
@@ -37,7 +45,7 @@ export default class FGroupsManageButton extends Feature {
                 <div class="row"></div>
             </div>`);
 
-        for (const group of this.context.groups) {
+        for (const group of this._groups) {
             group.classList.add("selectable");
             HTML.afterBegin(group,
                 `<div class="indicator select_friend">
@@ -73,7 +81,7 @@ export default class FGroupsManageButton extends Feature {
     async _leaveGroups() {
         const selected = [];
 
-        for (const group of this.context.groups) {
+        for (const group of this._groups) {
             if (!group.classList.contains("selected")) {
                 continue;
             }
@@ -90,8 +98,7 @@ export default class FGroupsManageButton extends Feature {
 
                 const body = Localization.str.groups.leave_admin_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
                 const result = await ConfirmDialog.open(Localization.str.groups.leave, body);
-                const cont = (result === "OK");
-                if (!cont) {
+                if (result !== "OK") {
                     group.querySelector(".select_friend").click();
                     continue;
                 }
@@ -105,8 +112,8 @@ export default class FGroupsManageButton extends Feature {
             const result = await ConfirmDialog.open(Localization.str.groups.leave, body);
 
             if (result === "OK") {
-                for (const tuple of selected) {
-                    const [id, group] = tuple;
+                for (const [id, group] of selected) {
+
                     const res = await this._leaveGroup(id).catch(err => console.error(err));
 
                     if (!res || !res.success) {

@@ -324,22 +324,16 @@
         "*://steamcommunity.com/id/*/friends",
         "*://steamcommunity.com/id/*/friends/*",
         "*://steamcommunity.com/profiles/*/friends",
-        "*://steamcommunity.com/profiles/*/friends/*"
-      ],
-      "js": [
-        "js/community/friends.js"
-      ],
-      "css": [
-        "css/augmentedsteam.css"
-      ]
-    },
-    {
-      "matches": [
+        "*://steamcommunity.com/profiles/*/friends/*",
         "*://steamcommunity.com/id/*/groups",
-        "*://steamcommunity.com/profiles/*/groups"
+        "*://steamcommunity.com/id/*/groups/*",
+        "*://steamcommunity.com/profiles/*/groups",
+        "*://steamcommunity.com/profiles/*/groups/*",
+        "*://steamcommunity.com/id/*/following/",
+        "*://steamcommunity.com/profiles/*/following/"
       ],
       "js": [
-        "js/community/groups.js"
+        "js/community/friends_and_groups.js"
       ],
       "css": [
         "css/augmentedsteam.css"
@@ -445,7 +439,11 @@
         "*://steamcommunity.com/profiles/*/friends",
         "*://steamcommunity.com/profiles/*/friends/*",
         "*://steamcommunity.com/id/*/groups",
+        "*://steamcommunity.com/id/*/groups/*",
         "*://steamcommunity.com/profiles/*/groups",
+        "*://steamcommunity.com/profiles/*/groups/*",
+        "*://steamcommunity.com/id/*/following/",
+        "*://steamcommunity.com/profiles/*/following/",
         "*://steamcommunity.com/id/*/inventory*",
         "*://steamcommunity.com/profiles/*/inventory*",
         "*://steamcommunity.com/id/*/stats*",
