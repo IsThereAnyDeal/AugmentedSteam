@@ -184,7 +184,6 @@ export default {
     ],
     "showallachievements": "options.showallachievements",
     "showallstats": "options.showallstats",
-    "showcomparelinks": "options.showcomparelinks",
     "hidespamcomments": "options.hidespamcomments",
     "steamcardexchange": "options.steamcardexchange",
     "wlbuttoncommunityapp": "options.wlbuttoncommunityapp",
