@@ -9,6 +9,8 @@ export default class FSubscribeAllDependencies extends Feature {
     }
 
     apply() {
+        if (document.getElementById("SubscribeItemBtn") === null) { return; }
+
         document.getElementById("SubscribeItemBtn").addEventListener("click", () => {
 
             if (document.querySelector(".newmodal") === null) { return; }
