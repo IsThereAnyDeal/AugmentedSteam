@@ -4,7 +4,7 @@ import {Feature, User} from "../../../modulesContent";
 export default class FUserNotes extends Feature {
 
     checkPrerequisites() {
-        return User.isSignedIn && SyncedStorage.get("showusernotes");
+        return User.isSignedIn && SyncedStorage.get("user_notes_app");
     }
 
     async apply() {
@@ -16,8 +16,10 @@ export default class FUserNotes extends Feature {
         let inactiveStyle = "";
         let activeStyle = "display:none;";
 
-        if (await userNotes.exists(this.context.appid)) {
-            noteText = `"${await userNotes.get(this.context.appid)}"`;
+        const note = await userNotes.get(this.context.appid);
+
+        if (note !== null) {
+            noteText = `"${note}"`;
             cssClass = "";
 
             inactiveStyle = "display:none;";
@@ -35,7 +37,7 @@ export default class FUserNotes extends Feature {
             </div>`);
 
         HTML.beforeEnd(".queue_actions_ctn",
-            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass}'>${noteText}</div>`);
+            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass} ellipsis'>${noteText}</div>`);
 
         function toggleState(node, active) {
             const button = document.querySelector(".js-user-note-button");

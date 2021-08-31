@@ -577,7 +577,19 @@
         "maintainers": "项目维护者",
         "with_help_of": "此项目离不开所有__contributors__的帮助",
         "contributors": "了不起的贡献者们",
-        "apppage": "商店页面"
+        "apppage": "商店页面",
+        "exfgls": "如果游戏不支持家庭共享则显示提醒",
+        "saving": "正在保存……",
+        "user_notes": {
+            "user_notes": "用户备注",
+            "app": "在商店页面",
+            "wishlist": "在愿望单",
+            "loc": "存储位置",
+            "synced_storage": "同步存储",
+            "local": "本地数据库",
+            "itad": "IsThereAnyDeal 服务器"
+        },
+        "show_custom_themes": "显示自定义主题"
     },
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",
@@ -659,7 +671,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ 个物品",
-        "num_items": "__num__ 个物品"
+        "num_items": "__num__ 个物品",
+        "back": "返回交易报价"
     },
     "update": {
         "dont_show": "不要再显示",
@@ -694,7 +707,15 @@
         "update": "更新备注",
         "add_prompt": "输入备注内容",
         "update_prompt": "更新您的备注",
-        "add_for_game": "__gamename__ 的备注"
+        "add_for_game": "__gamename__ 的备注",
+        "not_enough_space": "没有足够的空间存储备注",
+        "not_enough_space_desc": "Augmented Steam 无法保存更多用户备注，因为您选择的存储方式不允许存储更多数据（已使用约 __perc__% 存储空间）。",
+        "close_on_storage": "您的存储空间即将耗尽",
+        "close_on_storage_desc": "根据您选择的存储方式，Augmented Steam 即将无法保存更多用户备注（已使用约 __perc__% 存储空间）。",
+        "storage_warning_desc": "您可以选择在本地数据库存储用户备注（无同步功能），或继续使用您的浏览器提供的存储方式（您必须删除一些旧备注才能添加新备注）。",
+        "save_itad": "在 ITAD 服务器存储备注",
+        "save_synced_storage": "继续使用同步存储",
+        "save_local": "在本地存储备注"
     },
     "queue": {
         "new": "开始新队列",

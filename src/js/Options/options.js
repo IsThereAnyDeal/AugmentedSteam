@@ -14,6 +14,7 @@ import {
 } from "../modulesCore";
 import {StoreList} from "./Modules/Data/StoreList";
 import {ContextMenu} from "../Background/Modules/ContextMenu";
+import {UserNotesAdapter} from "../Core/Storage/UserNotesAdapter";
 
 // TODO this needs to be refactored and cleaned up
 
@@ -116,7 +117,7 @@ const Options = (() => {
         loadStores();
 
         Region.populate();
-        CustomLinks.populate();
+        self.customLinks.forEach(option => option.populate());
     }
 
     function importSettings({"target": input}) {
@@ -169,7 +170,7 @@ const Options = (() => {
         // TODO do not use confirm
         // eslint-disable-next-line no-alert
         if (!window.confirm(Localization.str.options.clear)) { return; }
-        SyncedStorage.clear();
+        SyncedStorage.clear(false);
 
         SyncedStorage.then(loadOptions);
 
@@ -180,6 +181,9 @@ const Options = (() => {
     }
 
     async function saveOption(option) {
+
+        SaveIndicator.saving();
+
         let value;
 
         if (option === "stores") {
@@ -235,8 +239,12 @@ const Options = (() => {
             }
         }
 
+        if (option === "user_notes_adapter") {
+            await UserNotesAdapter.changeAdapter(value);
+        }
+
         SyncedStorage.set(option, value);
-        SaveIndicator.show();
+        SaveIndicator.saved();
     }
 
     function saveOptionFromEvent(e) {
@@ -281,9 +289,13 @@ const Options = (() => {
         const currency = ExtensionResources.getJSON("json/currency.json").then(addCurrencies);
         await Promise.all([Localization, currency]);
         const Defaults = SyncedStorage.defaults;
+        self.customLinks = [];
+        for (const container of document.querySelectorAll(".js-customlinks")) {
+            self.customLinks.push(new CustomLinks(container));
+        }
 
         Region.init();
-        CustomLinks.init();
+        self.customLinks.forEach(option => option.init());
 
         OptionsBuilder.build();
 

@@ -1,14 +1,19 @@
 import {HTML, Localization} from "../../../../modulesCore";
-import {Feature} from "../../../modulesContent";
+import {CallbackFeature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
-export default class FInviteButton extends Feature {
+export default class FInviteButton extends CallbackFeature {
 
     checkPrerequisites() {
-        return document.querySelector("#manage_friends_control") !== null;
+        return this.context.myProfile;
     }
 
-    apply() {
+    setup() {
+        this.callback();
+    }
+
+    callback() {
+        if (!document.getElementById("friends_list")) { return; }
 
         HTML.afterBegin("#manage_friends > div:nth-child(2)",
             `<span class="manage_action btnv6_lightblue_blue btn_medium" id="invitetogroup">

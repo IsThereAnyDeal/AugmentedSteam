@@ -10,6 +10,8 @@ class Fader {
 
         node.style.transition = `${property} ${durationMs}ms`;
         node.style[property] = finalValue;
+
+        return TimeUtils.timer(durationMs);
     }
 
     static fadeIn(node, duration = 400) {

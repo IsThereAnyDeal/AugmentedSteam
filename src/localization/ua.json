@@ -577,7 +577,19 @@
         "maintainers": "Супровідники проекту",
         "with_help_of": "з великою допомогою наших __contributors__",
         "contributors": "чудових помічників",
-        "apppage": ""
+        "apppage": "Сторінка гри",
+        "exfgls": "Відображати повідомлення, якщо гра недоступна для Сімейної Бібліотеки",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": ""
     },
     "ready": {
         "errormsg": "Помилка завантаження даних Augmented Steam",
@@ -659,7 +671,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ річ",
-        "num_items": "__num__ речей"
+        "num_items": "__num__ речей",
+        "back": ""
     },
     "update": {
         "dont_show": "Більше не показувати",
@@ -694,7 +707,15 @@
         "update": "Оновити нотатку",
         "add_prompt": "Введіть нотатку",
         "update_prompt": "Оновіть нотатку",
-        "add_for_game": "Нотатка до __gamename__"
+        "add_for_game": "Нотатка до __gamename__",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "Нова черга",

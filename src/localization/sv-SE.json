@@ -577,7 +577,19 @@
         "maintainers": "",
         "with_help_of": "",
         "contributors": "",
-        "apppage": ""
+        "apppage": "",
+        "exfgls": "",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": ""
     },
     "ready": {
         "errormsg": "Fel vid inläsning av Augmented Steams data",
@@ -659,7 +671,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ Objekt",
-        "num_items": "__num__ Objekt"
+        "num_items": "__num__ Objekt",
+        "back": ""
     },
     "update": {
         "dont_show": "Visa inte igen",
@@ -694,7 +707,15 @@
         "update": "",
         "add_prompt": "",
         "update_prompt": "",
-        "add_for_game": ""
+        "add_for_game": "",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "",

@@ -577,7 +577,19 @@
         "maintainers": "",
         "with_help_of": "",
         "contributors": "",
-        "apppage": ""
+        "apppage": "",
+        "exfgls": "",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": ""
     },
     "ready": {
         "errormsg": "Augmented Steam verilerini yüklerken hata oluştu",
@@ -659,7 +671,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ öğe",
-        "num_items": "__num__ öğe"
+        "num_items": "__num__ öğe",
+        "back": ""
     },
     "update": {
         "dont_show": "Tekrar Gösterme",
@@ -694,7 +707,15 @@
         "update": "Notu güncelle",
         "add_prompt": "Notunuzu girin",
         "update_prompt": "Notunuzu güncelleyin",
-        "add_for_game": "__gamename__ için not"
+        "add_for_game": "__gamename__ için not",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "Yeni Kuyruk",

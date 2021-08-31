@@ -3,6 +3,10 @@ import {HTML, Localization} from "../../../../modulesCore";
 
 export default class FCountTradeItems extends Feature {
 
+    checkPrerequisites() {
+        return document.querySelector(".error_page_links") === null;
+    }
+
     apply() {
 
         HTML.afterEnd(
