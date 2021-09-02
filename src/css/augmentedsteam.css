@@ -886,6 +886,9 @@ img.astats_icon {
 .highlight_overflow {
   z-index: 5;
 }
+.collectionChoiceSection {
+  height: 400px;
+}
 /* When browser window is too small hide the side details and the toggle button in Store */
 @media (max-width: 910px) {
   #game_highlights .rightcol {
