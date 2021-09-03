@@ -5,9 +5,7 @@ import Workshop from "../Workshop";
 export default class FSubscribeAllDependencies extends Feature {
 
     checkPrerequisites() {
-        if (document.getElementById("SubscribeItemBtn") === null) { return false; }
-
-        return User.isSignedIn;
+        return document.getElementById("SubscribeItemBtn") !== null && User.isSignedIn;
     }
 
     apply() {
