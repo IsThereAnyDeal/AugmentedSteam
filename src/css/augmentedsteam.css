@@ -25,6 +25,13 @@
 #modalContent.modal_frame {
   min-width: 720px !important;
 }
+/**
+ * https://github.com/tfedor/AugmentedSteam/issues/1254
+ * Increase height of collection choice section 
+ */
+.collectionChoiceSection {
+  height: 400px;
+}
 
 /* Back To Top button */
 .es_btt {
@@ -885,9 +892,6 @@ img.astats_icon {
 }
 .highlight_overflow {
   z-index: 5;
-}
-.collectionChoiceSection {
-  height: 400px;
 }
 /* When browser window is too small hide the side details and the toggle button in Store */
 @media (max-width: 910px) {
