@@ -5,12 +5,12 @@ import Workshop from "../Workshop";
 export default class FSubscribeAllDependencies extends Feature {
 
     checkPrerequisites() {
+        if (document.getElementById("SubscribeItemBtn") === null) { return false; }
+
         return User.isSignedIn;
     }
 
     apply() {
-        if (document.getElementById("SubscribeItemBtn") === null) { return; }
-
         document.getElementById("SubscribeItemBtn").addEventListener("click", () => {
 
             if (document.querySelector(".newmodal") === null) { return; }
