@@ -216,26 +216,12 @@ export default class FHighlightsTags extends Feature {
                 container.classList.add("es_tags_short");
             }
 
-            let root;
-            if (node.classList.contains("tab_row")) { // fixme can't find it
-                root = node.querySelector(".tab_desc").classList.remove("with_discount");
-
-                node.querySelector(".tab_discount").style.top = "15px";
-                root.querySelector("h4").insertAdjacentElement("afterend", container);
-            } else if (node.classList.contains("home_smallcap")) {
-                node.querySelector(".home_smallcap_title").insertAdjacentElement("afterbegin", container);
-            } else if (node.classList.contains("curated_app_item")) {
-                node.querySelector(".home_headerv5_title").insertAdjacentElement("afterbegin", container);
-            } else if (node.classList.contains("tab_item")) {
+            if (node.classList.contains("tab_item")) {
                 node.querySelector(".tab_item_details").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
                 node.querySelector(".discount_block").insertAdjacentElement("beforebegin", container);
             } else if (node.classList.contains("search_result_row")) {
                 node.querySelector("p").insertAdjacentElement("afterbegin", container);
-            } else if (node.classList.contains("dailydeal")) { // can't find it
-                root = node.parentNode;
-                root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", container);
-                HTML.beforeBegin(root.querySelector(".game_purchase_action"), '<div style="clear: right;"></div>');
             } else if (node.classList.contains("browse_tag_game")) {
                 node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", container);
             } else if (node.classList.contains("game_area_dlc_row")) {
@@ -244,8 +230,6 @@ export default class FHighlightsTags extends Feature {
                 node.querySelector(".addedon").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("match")) {
                 node.querySelector(".match_price").insertAdjacentElement("afterbegin", container);
-            } else if (node.classList.contains("cluster_capsule")) {
-                node.querySelector(".main_cap_platform_area").append(container);
             } else if (node.classList.contains("recommendation_highlight")) {
                 node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("similar_grid_item")) {
@@ -419,20 +403,15 @@ FHighlightsTags._types = [
 ];
 
 FHighlightsTags._selector = [
-    "div.tab_row", // Storefront rows
-    "div.dailydeal_ctn",
     ".store_main_capsule", // "Featured & Recommended"
-    "div.wishlistRow", // Wishlist rows
     "a.game_area_dlc_row", // DLC on app pages
     "a.small_cap", // Featured storefront items and "recommended" section on app pages
-    "a.home_smallcap",
     ".home_content_item", // Small items under "Keep scrolling for more recommendations"
     ".home_content.single", // Big items under "Keep scrolling for more recommendations"
     ".home_area_spotlight", // "Special offers" big items
     "a.search_result_row", // Search result rows
     "a.match", // Search suggestions rows
     ".highlighted_app", // For example "Recently Recommended" on curators page
-    "a.cluster_capsule", // Carousel items
     "div.recommendation_highlight", // Recommendation pages
     "div.recommendation_carousel_item", // Recommendation pages
     "div.friendplaytime_game", // Recommendation pages
@@ -456,7 +435,6 @@ FHighlightsTags._selector = [
     ".tab_item", // Item rows on storefront/tag/genre pages
     ".special > .special_img_ctn", // new homepage specials
     ".special.special_img_ctn",
-    "div.curated_app_item", // curated app items!
     ".hero_capsule", // Summer sale "Featured"
     ".sale_capsule" // Summer sale general capsules
 ].map(sel => `${sel}:not(.es_highlighted)`)
