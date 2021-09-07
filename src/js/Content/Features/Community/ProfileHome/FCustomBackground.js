@@ -23,15 +23,21 @@ export default class FCustomBackground extends Feature {
         this._setProfileBg(bg);
     }
 
+    /**
+     * Only sets static backgrounds for now.
+     * TODO Update to support animated backgrounds once the custom backgrounds database
+     * and/or the "view full image" feature on the Market supports them.
+     */
     _setProfileBg(imgUrl) {
         DOMHelper.remove(".profile_animated_background"); // Animated BGs will interfere with static BGs
 
-        document.body.classList.add("has_profile_background");
-
         const profilePage = document.querySelector(".no_header.profile_page");
-        profilePage.classList.add("has_profile_background");
         profilePage.style.backgroundImage = `url(${imgUrl})`;
 
-        profilePage.querySelector(".profile_content").classList.add("has_profile_background");
+        if (!profilePage.classList.contains("has_profile_background")) {
+            for (const node of [document.body, profilePage, profilePage.querySelector(".profile_content")]) {
+                node.classList.add("has_profile_background");
+            }
+        }
     }
 }
