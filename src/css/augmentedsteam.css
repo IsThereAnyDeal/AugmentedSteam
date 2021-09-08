@@ -970,40 +970,6 @@ img.astats_icon {
 }
 
 /***************************************
- * Store pages, Community
- * check_early_access()
- **************************************/
-.es_early_access {
-  position: relative;
-}
-.es_overlay_container {
-  position: relative;
-  display: inherit;
-}
-.home_tabs_content .es_early_access .tab_item_cap {
-  line-height: 48px !important;
-}
-.es_overlay,
-.es_overlay img {
-  position: absolute;
-  z-index: 4;
-  width: auto !important;
-  height: 60%;
-  min-height: 35px;
-  max-height: 120px;
-}
-.es_overlay img {
-  position: relative;
-  height: 100% !important;
-}
-.spotlight_img.es_early_access > a {
-  display: inherit;
-}
-.showcase_slot .es_overlay_container {
-  pointer-events: none !important;
-}
-
-/***************************************
  * App pages
  * player_hd_button()
  **************************************/
@@ -1564,6 +1530,64 @@ img.astats_icon {
  */
 .search_suggest .match.focus {
   background: #212d3d !important;
+}
+
+/***************************************
+ * Common
+ * FEarlyAccess
+ **************************************/
+.es_overlay,
+.es_overlay img {
+  position: absolute;
+  z-index: 4; /* Should be lower than .ds_flag (currently 5) */
+  width: auto !important;
+  height: 60%;
+  min-height: 35px;
+  max-height: 120px;
+}
+.es_overlay img {
+  position: relative;
+  height: 100% !important;
+}
+
+.es_early_access .broadcast_live_stream_icon {
+  display: none; /* Hide broadcast icon since it gets in the way */
+}
+
+.home_content_item .es_overlay_container,
+.small_cap .es_overlay_container,
+.leftcol .es_overlay_container {
+  position: relative;
+  display: inherit;
+}
+.home_content.single .es_overlay {
+  z-index: 11;
+}
+.home_content.single.es_early_access > .gamelink > .ds_flag {
+  z-index: 12;
+}
+.curator_featured .es_overlay {
+  height: 25%;
+}
+.tab_item.es_early_access > .tab_item_cap {
+  line-height: 48px;
+}
+.spotlight_img.es_early_access > a {
+  display: inherit;
+}
+.showcase_slot .es_overlay_container {
+  pointer-events: none !important;
+}
+.store_capsule .es_overlay_container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+.store_capsule .es_overlay_container > img {
+  width: 100%;
 }
 
 /***************************************
@@ -2254,21 +2278,6 @@ label.es_dlc_label > input:checked::after {
 
 .es_dlc_info .details_block img {
   vertical-align: top;
-}
-
-/***************************************
- * Store curator pages
- **************************************/
-.store_capsule .es_overlay_container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  vertical-align: top;
-}
-.store_capsule .es_overlay_container > img {
-  width: 100%;
 }
 
 /***************************************

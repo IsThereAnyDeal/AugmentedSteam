@@ -1,5 +1,6 @@
 import {Context, ContextType} from "../../modulesContent";
 import FHideTrademarks from "../Common/FHideTrademarks";
+import FEarlyAccess from "../Common/FEarlyAccess";
 
 export class CCommunityBase extends Context {
 
@@ -7,6 +8,7 @@ export class CCommunityBase extends Context {
 
         features.push(
             FHideTrademarks,
+            FEarlyAccess,
         );
 
         super(type, features);

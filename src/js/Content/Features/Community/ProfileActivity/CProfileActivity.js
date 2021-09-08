@@ -1,6 +1,7 @@
-import {ContextType, EarlyAccess} from "../../../modulesContent";
+import {ContextType} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
 import {CommentHandler} from "../../../Modules/Community/CommentHandler";
+import FEarlyAccess from "../../Common/FEarlyAccess";
 import FHighlightFriendsActivity from "./FHighlightFriendsActivity";
 import FAchievementLink from "./FAchievementLink";
 
@@ -20,11 +21,11 @@ export class CProfileActivity extends CCommunityBase {
 
         new MutationObserver(mutations => {
 
-            EarlyAccess.showEarlyAccess();
             CommentHandler.hideSpamComments();
 
-            for (const mutation of mutations) {
-                this.triggerCallbacks(mutation.addedNodes[0]);
+            for (const {addedNodes} of mutations) {
+                this.triggerCallbacks(addedNodes[0]);
+                FEarlyAccess.show(addedNodes[0].querySelectorAll(".blotter_gamepurchase_logo"));
             }
         }).observe(document.querySelector("#blotter_content"), {"childList": true});
     }
