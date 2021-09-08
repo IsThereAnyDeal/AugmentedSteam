@@ -50,9 +50,12 @@ export default class FHighlightsTags extends Feature {
         const opts = {...this._options, ...options};
         if (!Object.values(opts).some(x => x)) { return; }
 
+        const _nodes = nodes || document.querySelectorAll(this._selector);
+        if (_nodes.length === 0) { return; }
+
         const storeIdsMap = new Map();
 
-        for (const node of nodes || document.querySelectorAll(this._selector)) {
+        for (const node of _nodes) {
             let nodeToHighlight = node;
 
             if (node.classList.contains("item")) {
@@ -109,6 +112,8 @@ export default class FHighlightsTags extends Feature {
         }
 
         const storeIds = Array.from(storeIdsMap.keys());
+        if (storeIds.length === 0) { return; }
+
         const trimmedStoreIds = storeIds.map(id => GameId.trimStoreId(id));
 
         const includeDsInfo = !hasDsInfo && (opts.owned || opts.wishlisted || opts.ignored);
