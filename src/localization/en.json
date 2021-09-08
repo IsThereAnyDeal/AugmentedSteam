@@ -237,6 +237,8 @@
     "all": "All",
     "total_spent": "Total Spent",
     "external_funds": "External Funds Used",
+    "shopping_cart_history": "View Shopping Cart history",
+    "manage_webapi_key": "Manage my Steam Web API key",
     "games_with_drops": "__dropsgames__ games with drops remaining",
     "binder_view": "Binder View",
     "view_stats": "View stats",
