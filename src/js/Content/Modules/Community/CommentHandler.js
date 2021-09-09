@@ -119,6 +119,10 @@ export class CommentHandler {
 
     static _dragFavEmoticon(ev) {
         ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon);
+        const emoticonHover = document.querySelector(".emoticon_hover");
+        if (emoticonHover) {
+            emoticonHover.style.display = "none";
+        }
     }
 
     static _clickFavEmoticon(ev, emoticonPopup) {
