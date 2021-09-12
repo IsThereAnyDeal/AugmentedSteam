@@ -3006,4 +3006,5 @@ label.es_dlc_label > input:checked::after {
 .as-pd__preview {
   display: block;
   margin: auto;
+  max-width: 100%;
 }
