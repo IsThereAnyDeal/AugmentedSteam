@@ -15,7 +15,7 @@ export default class FCustomBackground extends Feature {
 
             // Make sure the url is for a valid background image
             testImg.addEventListener("load", () => {
-                this._setProfileBg(imgUrl);
+                FCustomBackground.setProfileBg(imgUrl);
                 testImg.remove();
             });
 
@@ -31,10 +31,10 @@ export default class FCustomBackground extends Feature {
         const bg = ProfileData.getBgImgUrl();
         if (!bg) { return; }
 
-        this._setProfileBg(bg);
+        FCustomBackground.setProfileBg(bg);
     }
 
-    _setProfileBg(imgUrl) {
+    static setProfileBg(imgUrl) {
         DOMHelper.remove(".profile_animated_background"); // Animated BGs will interfere with static BGs
 
         document.body.classList.add("has_profile_background");
