@@ -15,6 +15,8 @@ export default class FCustomStyle extends Feature {
         const availableStyles = [
             "clear",
             "goldenprofile",
+            "goldenprofile2020",
+            "winter2019",
             "green",
             "holiday2014",
             "orange",
@@ -32,6 +34,79 @@ export default class FCustomStyle extends Feature {
         document.body.classList.add("es_profile_style");
 
         switch (style) {
+            case "winter2019": {
+                DOMHelper.insertStylesheet("//steamcommunity-a.akamaihd.net/public/css/promo/winter2019/goldenprofile.css");
+
+                const profilePageNode = document.querySelector(".no_header.profile_page");
+                profilePageNode.classList.add("golden_profile");
+                HTML.wrap(profilePageNode, "<div class='profile_golden_wrapper'></div>");
+
+                HTML.afterBegin(profilePageNode,
+                    `<div class="w19_sides_position">
+                        <div class="w19_side left">
+                            <div class="w19_side_background"></div>
+                            <div class="w19_pig"></div>
+                            <div class="w19_top"></div>
+                            <div class="w19_pendulum">
+                                <div class="w19_strings"></div>
+                                <img src="//steamcdn-a.akamaihd.net/steamcommunity/public/assets/winter2019/goldenprofile/dangle_flake.png">
+                            </div>
+                        </div>
+                        <div class="w19_side right">
+                            <div class="w19_side_background"></div>
+                            <div class="w19_pig"></div>
+                            <div class="w19_top"></div>
+                            <div class="w19_pendulum">
+                                <div class="w19_strings"></div>
+                                <img src="//steamcdn-a.akamaihd.net/steamcommunity/public/assets/winter2019/goldenprofile/dangle_flake.png">
+                            </div>
+                        </div>
+                        <div class="snowflakes" aria-hidden="true">
+                            <div class="snowflake"></div>
+                            <div class="snowflake"></div>
+                            <div class="snowflake"></div>
+                            <div class="snowflake"></div>
+                            <div class="snowflake"></div>
+                            <div class="snowflake"></div>
+                            <div class="snowflake"></div>
+                            <div class="snowflake"></div>
+                            <div class="snowflake"></div>
+                            <div class="snowflake"></div>
+                            <div class="snowflake"></div>
+                        </div>
+                    </div>`);
+
+                HTML.afterBegin(".profile_header_bg_texture", "<div class='golden_profile_header'></div>");
+
+                document.querySelector(".playerAvatar.profile_header_size").classList.add("golden");
+
+                break;
+            }
+            case "goldenprofile2020": {
+                DOMHelper.insertStylesheet("//steamcommunity-a.akamaihd.net/public/css/promo/lny2020/goldenprofile.css");
+
+                const profilePageNode = document.querySelector(".no_header.profile_page");
+                profilePageNode.classList.add("golden_profile");
+                HTML.wrap(profilePageNode, "<div class='profile_golden_wrapper'></div>");
+
+                HTML.afterBegin(profilePageNode,
+                    `<div class="w19_sides_position">
+                        <div class="w19_side left">
+                            <div class="w19_side_background"></div>
+                        </div>
+                        <div class="w19_side right">
+                            <div class="w19_side_background"></div>
+                        </div>
+                    </div>`);
+
+                HTML.afterBegin(".profile_header_bg_texture", "<div class='golden_profile_header'></div>");
+
+                const avatarNode = document.querySelector(".playerAvatar.profile_header_size");
+                avatarNode.classList.add("golden");
+                HTML.afterBegin(avatarNode, "<div class='goldenAvatarOverlay'></div>");
+
+                break;
+            }
             case "goldenprofile": {
                 DOMHelper.insertStylesheet("//steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css");
 
