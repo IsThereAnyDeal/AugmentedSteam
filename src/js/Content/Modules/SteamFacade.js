@@ -147,6 +147,10 @@ class SteamFacade {
         CheckAgeGateSubmit(callbackFunc);
     }
 
+    static loadImageGroupOnScroll(elTarget, strGroup) {
+        LoadImageGroupOnScroll(elTarget, strGroup);
+    }
+
     // inventory
 
     static firstPage() {

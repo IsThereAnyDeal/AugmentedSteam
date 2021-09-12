@@ -1,19 +1,23 @@
 import {HTMLParser, Localization, SyncedStorage} from "../../../../modulesCore";
-import {Feature, RequestData, Sortbox} from "../../../modulesContent";
+import {CallbackFeature, RequestData, Sortbox} from "../../../modulesContent";
 
-export default class FFriendsSort extends Feature {
+export default class FFriendsSort extends CallbackFeature {
 
     checkPrerequisites() {
-        // Only add sort options if on own friends page
-        if (!document.querySelector("#manage_friends_control")) { return false; }
-
-        this.offlineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
-        return this.offlineFriends.length > 1;
+        return this.context.myProfile;
     }
 
-    apply() {
+    setup() {
+        this.callback();
+    }
 
-        this.offlineFriends.forEach((friend, i) => { friend.dataset.esSortDefault = i; });
+    callback() {
+        if (!document.getElementById("friends_list")) { return; }
+
+        this._offlineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
+        if (this._offlineFriends.length <= 1) { return; }
+
+        this._offlineFriends.forEach((friend, i) => { friend.dataset.esSortDefault = i; });
 
         document.querySelector("#manage_friends_control").insertAdjacentElement("beforebegin", Sortbox.get(
             "friends",
@@ -57,10 +61,10 @@ export default class FFriendsSort extends Feature {
         }
 
         const property = `esSort${_sortBy === "default" ? "Default" : "Time"}`;
-        this.offlineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
+        this._offlineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
 
         const offlineBlock = document.querySelector("#state_offline");
-        for (const friend of this.offlineFriends) {
+        for (const friend of this._offlineFriends) {
             if (reversed) {
                 offlineBlock.insertAdjacentElement("afterend", friend);
             } else {

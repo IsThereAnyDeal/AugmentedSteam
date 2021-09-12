@@ -61,10 +61,10 @@ export default class FSupportInfo extends Feature {
             }
         }
 
-        HTML.beforeEnd(".glance_ctn .user_reviews",
-            `<div class="release_date">
+        HTML.beforeEnd(".glance_ctn_responsive_left",
+            `<div class="release_date" style="padding-bottom: 0;">
                 <div class="subtitle column">${Localization.str.support}:</div>
-                <div class="summary column" id="es_support_list">${support}</div>
+                <div class="summary column">${support}</div>
             </div>`);
     }
 }

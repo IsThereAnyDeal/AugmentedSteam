@@ -7,10 +7,10 @@ export default class FReplaceDevPubLinks extends Feature {
 
     apply() {
         const devs = Array.from(
-            document.querySelectorAll("#developers_list > a, .details_block > .dev_row:first-of-type > a")
+            document.querySelectorAll(".glance_ctn_responsive_left > .dev_row:nth-child(3) a, .details_block > .dev_row:first-of-type > a")
         );
         const pubs = Array.from(
-            document.querySelectorAll(".user_reviews > .dev_row:last-of-type a, .details_block > .dev_row:nth-of-type(2) > a")
+            document.querySelectorAll(".glance_ctn_responsive_left > .dev_row:nth-child(4) a, .details_block > .dev_row:nth-of-type(2) > a")
         );
         let franchise = document.querySelector(".details_block > .dev_row:nth-of-type(3) > a");
         franchise = franchise ? [franchise] : [];

@@ -1,32 +1,67 @@
 import {HTML, HTMLParser, Localization} from "../../../../modulesCore";
-import {Feature, RequestData, User} from "../../../modulesContent";
+import {Feature, RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FCommonGames extends Feature {
 
     checkPrerequisites() {
-        return User.isSignedIn && document.querySelector("label[for='show_common_games']");
+        // Steam's filter checkbox won't appear if not signed in, or if on own profile
+        return document.querySelector(".common_filter_ctn") !== null;
     }
 
     apply() {
 
-        HTML.afterEnd("label[for='show_common_games']",
-            `<label for="es_gl_show_common_games"><input type="checkbox" id="es_gl_show_common_games">${Localization.str.common_label}</label>
-             <label for="es_gl_show_notcommon_games"><input type="checkbox" id="es_gl_show_notcommon_games">${Localization.str.notcommon_label}</label>`);
+        document.getElementById("gameslist_controls").classList.add("as_flyout_menus");
 
-        const commonCheckbox = document.getElementById("es_gl_show_common_games");
-        const notCommonCheckbox = document.getElementById("es_gl_show_notcommon_games");
+        HTML.afterEnd(".common_filter_ctn",
+            `<div class="es_games_filter">
+                <span>${Localization.str.show}</span>
+                <div class="store_nav">
+                    <div class="tab flyout_tab" data-flyout="es_filter_flyout" data-flyout-align="left" data-flyout-valign="bottom">
+                        <span class="pulldown">
+                            <div id="es_filter_active">${Localization.str.games_all}</div>
+                            <span></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout">
+                    <div class="popup_body popup_menu">
+                        <a class="popup_menu_item" id="es_games_all">${Localization.str.games_all}</a>
+                        <a class="popup_menu_item" id="es_games_common">${Localization.str.games_common}</a>
+                        <a class="popup_menu_item" id="es_games_notcommon">${Localization.str.games_notcommon}</a>
+                    </div>
+                </div>
+            </div>`);
+
+        Page.runInPageContext(() => { window.SteamFacade.bindAutoFlyoutEvents(); });
+
         const rows = document.getElementById("games_list_rows");
 
-        commonCheckbox.addEventListener("change", async({target}) => {
+        document.getElementById("es_games_all").addEventListener("click", () => {
+            rows.classList.remove("esi-hide-common", "esi-hide-notcommon");
+            document.getElementById("es_filter_active").textContent = Localization.str.games_all;
+            document.getElementById("es_filter_flyout").style.display = "none";
+        });
+
+        document.getElementById("es_games_common").addEventListener("click", async() => {
             await this._loadCommonGames();
-            rows.classList.toggle("esi-hide-notcommon", target.checked);
+
+            rows.classList.remove("esi-hide-common");
+            rows.classList.add("esi-hide-notcommon");
+            document.getElementById("es_filter_active").textContent = Localization.str.games_common;
+            document.getElementById("es_filter_flyout").style.display = "none";
+
             Page.runInPageContext(() => { window.SteamFacade.scrollOffsetForceRecalc(); });
         });
 
-        notCommonCheckbox.addEventListener("change", async({target}) => {
+        document.getElementById("es_games_notcommon").addEventListener("click", async() => {
             await this._loadCommonGames();
-            rows.classList.toggle("esi-hide-common", target.checked);
+
+            rows.classList.remove("esi-hide-notcommon");
+            rows.classList.add("esi-hide-common");
+            document.getElementById("es_filter_active").textContent = Localization.str.games_notcommon;
+            document.getElementById("es_filter_flyout").style.display = "none";
+
             Page.runInPageContext(() => { window.SteamFacade.scrollOffsetForceRecalc(); });
         });
     }
