@@ -72,13 +72,8 @@ export default class FCommunityProfileLinks extends Feature {
         for (const customLink of SyncedStorage.get("profile_custom_link")) {
             if (!customLink.enabled) { continue; }
 
-            let customUrl = customLink.url;
-            if (!customUrl.includes("[ID]")) {
-                customUrl += "[ID]";
-            }
-
             const name = HTML.escape(customLink.name);
-            const link = `//${HTML.escape(customUrl.replace("[ID]", steamId))}`;
+            const link = `//${HTML.escape(customLink.url.replace("[ID]", steamId))}`;
             let icon;
             if (customLink.icon) {
                 icon = `//${HTML.escape(customLink.icon)}`;

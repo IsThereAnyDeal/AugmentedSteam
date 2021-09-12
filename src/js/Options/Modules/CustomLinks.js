@@ -61,14 +61,9 @@ class CustomLinks {
     _create(link) {
         const node = this._template.cloneNode(true);
 
-        let url = link.url;
-        if (url && !url.includes("[ID]")) {
-            url += "[ID]";
-        }
-
         node.querySelector(`[name="${this._type}_custom_enabled"]`).checked = link.enabled;
         node.querySelector(`[name="${this._type}_custom_name"]`).value = link.name;
-        node.querySelector(`[name="${this._type}_custom_url"]`).value = url;
+        node.querySelector(`[name="${this._type}_custom_url"]`).value = link.url;
         node.querySelector(`[name="${this._type}_custom_icon"]`).value = link.icon;
 
         this._container.append(node);
