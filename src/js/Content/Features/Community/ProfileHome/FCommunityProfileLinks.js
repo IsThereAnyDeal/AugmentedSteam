@@ -7,12 +7,6 @@ export default class FCommunityProfileLinks extends Feature {
 
         const steamId = SteamId.getSteamId();
 
-        let iconType = "none";
-        const images = SyncedStorage.get("show_profile_link_images");
-        if (images !== "none") {
-            iconType = images === "color" ? "color" : "gray";
-        }
-
         const links = [
             {
                 "id": "steamrep",
@@ -56,7 +50,7 @@ export default class FCommunityProfileLinks extends Feature {
             }
         ];
 
-        // Add "SteamRepCN"
+        // Add SteamRepCN link if language is Chinese
         const language = Language.getCurrentSteamLanguage();
         if ((language === "schinese" || language === "tchinese") && SyncedStorage.get("profile_steamrepcn")) {
             links.push({
@@ -66,19 +60,17 @@ export default class FCommunityProfileLinks extends Feature {
             });
         }
 
-        // Build the links HTML
-        let htmlstr = "";
+        let html = "";
+        let iconType = SyncedStorage.get("show_profile_link_images");
 
-        for (const link of links) {
-            if (!SyncedStorage.get(`profile_${link.id}`)) { continue; }
-            htmlstr += CommunityUtils.makeProfileLink(link.id, link.link, link.name, iconType);
+        for (const {id, link, name} of links) {
+            if (!SyncedStorage.get(`profile_${id}`)) { continue; }
+            html += CommunityUtils.makeProfileLink(id, link, name, iconType);
         }
 
         // custom profile link
         for (const customLink of SyncedStorage.get("profile_custom_link")) {
-            if (!customLink || !customLink.enabled) {
-                continue;
-            }
+            if (!customLink.enabled) { continue; }
 
             let customUrl = customLink.url;
             if (!customUrl.includes("[ID]")) {
@@ -94,17 +86,16 @@ export default class FCommunityProfileLinks extends Feature {
                 iconType = "none";
             }
 
-            htmlstr += CommunityUtils.makeProfileLink("custom", link, name, iconType, icon);
+            html += CommunityUtils.makeProfileLink("custom", link, name, iconType, icon);
         }
 
-        // Insert the links HMTL into the page
-        if (htmlstr) {
+        if (html) {
             const linksNode = document.querySelector(".profile_item_links");
             if (linksNode) {
-                HTML.beforeEnd(linksNode, `${htmlstr}<div style="clear: both;"></div>`);
+                HTML.beforeEnd(linksNode, `${html}<div style="clear: both;"></div>`);
             } else {
                 const rightColNode = document.querySelector(".profile_rightcol");
-                HTML.beforeEnd(rightColNode, `<div class="profile_item_links">${htmlstr}</div>`);
+                HTML.beforeEnd(rightColNode, `<div class="profile_item_links">${html}</div>`);
                 HTML.afterEnd(rightColNode, '<div style="clear: both;"></div>');
             }
         }
