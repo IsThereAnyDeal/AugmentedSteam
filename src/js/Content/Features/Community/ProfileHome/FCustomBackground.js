@@ -6,18 +6,7 @@ export default class FCustomBackground extends Feature {
         const prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9.]+)/i);
         if (prevHash) {
             const imgUrl = `//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/${prevHash[1]}/${prevHash[2]}`;
-
-            const testImg = document.createElement("img");
-            testImg.style.display = "none";
-            testImg.src = imgUrl;
-
-            document.body.append(testImg);
-
-            // Make sure the url is for a valid background image
-            testImg.addEventListener("load", () => {
-                FCustomBackground.setProfileBg(imgUrl);
-                testImg.remove();
-            });
+            this.setProfileBg(imgUrl);
 
             return false;
         }
@@ -34,15 +23,21 @@ export default class FCustomBackground extends Feature {
         FCustomBackground.setProfileBg(bg);
     }
 
+    /**
+     * Only sets static backgrounds for now.
+     * TODO Update to support animated backgrounds once the custom backgrounds database
+     * and/or the "view full image" feature on the Market supports them.
+     */
     static setProfileBg(imgUrl) {
         DOMHelper.remove(".profile_animated_background"); // Animated BGs will interfere with static BGs
 
-        document.body.classList.add("has_profile_background");
-
         const profilePage = document.querySelector(".no_header.profile_page");
-        profilePage.classList.add("has_profile_background");
         profilePage.style.backgroundImage = `url(${imgUrl})`;
 
-        profilePage.querySelector(".profile_content").classList.add("has_profile_background");
+        if (!profilePage.classList.contains("has_profile_background")) {
+            for (const node of [document.body, profilePage, profilePage.querySelector(".profile_content")]) {
+                node.classList.add("has_profile_background");
+            }
+        }
     }
 }
