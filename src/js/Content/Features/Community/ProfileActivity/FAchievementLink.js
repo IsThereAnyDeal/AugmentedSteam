@@ -23,9 +23,11 @@ export default class FAchievementLink extends CallbackFeature {
                 profileUrl += "/";
             }
 
-            const container = HTML.element(`<a class="es-ach-link" href="${profileUrl}stats/${appid}/achievements/" target="_blank"></a>`);
-            container.append(...node.querySelectorAll(":scope > img, :scope > .rollup_plus"));
-            linksNode.insertAdjacentElement("afterend", container);
+            HTML.wrap(
+                `<a class="es-ach-link" href="${profileUrl}stats/${appid}/achievements/" target="_blank"></a>`,
+                node.querySelector(":scope > img"),
+                null,
+            );
         }
     }
 }

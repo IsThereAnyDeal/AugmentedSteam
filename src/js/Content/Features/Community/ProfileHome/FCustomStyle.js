@@ -40,7 +40,7 @@ export default class FCustomStyle extends Feature {
 
                 const profilePageNode = document.querySelector(".no_header.profile_page");
                 profilePageNode.classList.add("golden_profile");
-                HTML.wrap(profilePageNode, "<div class='profile_golden_wrapper'></div>");
+                HTML.wrap("<div class='profile_golden_wrapper'></div>", profilePageNode);
 
                 HTML.afterBegin(profilePageNode,
                     `<div class="w19_sides_position">
@@ -88,7 +88,7 @@ export default class FCustomStyle extends Feature {
 
                 const profilePageNode = document.querySelector(".no_header.profile_page");
                 profilePageNode.classList.add("golden_profile");
-                HTML.wrap(profilePageNode, "<div class='profile_golden_wrapper'></div>");
+                HTML.wrap("<div class='profile_golden_wrapper'></div>", profilePageNode);
 
                 HTML.afterBegin(profilePageNode,
                     `<div class="w19_sides_position">
@@ -117,7 +117,7 @@ export default class FCustomStyle extends Feature {
 
                 const profilePageNode = document.querySelector(".no_header.profile_page");
                 profilePageNode.classList.add("golden_profile");
-                HTML.wrap(profilePageNode, "<div class='profile_golden_wrapper'></div>");
+                HTML.wrap("<div class='profile_golden_wrapper'></div>", profilePageNode);
 
                 HTML.afterBegin(profilePageNode,
                     `<div class="lny_sides_position">

@@ -33,7 +33,7 @@ export class CFriendsAndGroups extends CCommunityBase {
 
             if (document.getElementById("groups_list") !== null) {
                 // move the search bar to the same position as on friends page
-                const container = HTML.wrap("#search_text_box", '<div class="searchBarContainer"></div>');
+                const container = HTML.wrap('<div class="searchBarContainer"></div>', "#search_text_box");
                 document.getElementById("search_results").insertAdjacentElement("beforebegin", container);
             }
 
