@@ -120,6 +120,10 @@ class UpdateHandler {
                 SyncedStorage.remove("showusernotes");
             }
         }
+
+        if (oldVersion.isSameOrBefore("2.1.0")) {
+            SyncedStorage.remove("showcomparelinks");
+        }
     }
 }
 

@@ -1736,16 +1736,13 @@ img.astats_icon {
 
 /***************************************
  * Friend activity page
- * FAchievementComparisonLink
+ * FAchievementLink
  **************************************/
-.es_achievement_compare {
-  font-size: 10px;
-  float: right;
-  margin-right: 6px;
-  line-height: 32px;
+.es-ach-link:hover {
+  text-decoration: none;
 }
-.es_achievements {
-  margin-top: 0 !important;
+.es-ach-link > img {
+  margin-right: 4px;
 }
 
 /***************************************
