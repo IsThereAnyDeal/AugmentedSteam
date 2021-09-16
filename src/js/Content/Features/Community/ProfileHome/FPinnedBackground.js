@@ -13,6 +13,7 @@ export default class FPinnedBackground extends Feature {
         if (animatedBgNode) {
             animatedBgNode.style.position = "fixed";
         } else {
+
             /**
              * For static bgs, add its own element so it can scroll independently to avoid performance issues.
              * See https://www.fourkitchens.com/blog/article/fix-scrolling-performance-css-will-change-property/
@@ -22,9 +23,11 @@ export default class FPinnedBackground extends Feature {
 
             // Copy background-image from inline style
             const profilePage = document.querySelector(".no_header.profile_page");
-            bgNode.style.backgroundImage = profilePage.style.backgroundImage;
+
+            // For the default background this property is not present in the inline style, so use getComputedStyle
+            bgNode.style.backgroundImage = getComputedStyle(profilePage).backgroundImage;
             profilePage.insertAdjacentElement("afterbegin", bgNode);
-            profilePage.style.backgroundImage = "";
+            profilePage.style.backgroundImage = "none";
         }
     }
 }
