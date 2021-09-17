@@ -23,11 +23,16 @@ export default class FAchievementLink extends CallbackFeature {
                 profileUrl += "/";
             }
 
-            HTML.wrap(
+            const wrapper = HTML.wrap(
                 `<a class="es-ach-link" href="${profileUrl}stats/${appid}/achievements/" target="_blank"></a>`,
                 node.querySelector(":scope > img"),
                 null,
             );
+
+            // Preserve space that existed between images before they were wrapped
+            for (const el of wrapper.children) {
+                el.insertAdjacentText("afterend", " ");
+            }
         }
     }
 }
