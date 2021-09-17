@@ -1489,10 +1489,7 @@ img.astats_icon {
 .es_tags.es_tags_short span::first-letter {
   font-size: 10px;
 }
-.browse_tag_game .es_tags {
-  display : table;
-  margin-left: 8px;
-}
+
 .recommendation_highlight .es_tags {
   position: absolute;
   margin-top: -20px;
@@ -1513,27 +1510,15 @@ img.astats_icon {
 .game_area_dlc_price .es_tags ~ div {
   display: inline-block;
 }
-.small_cap .es_tags {
-  margin-top: 0;
-}
-.tab_item .es_tags {
-  z-index: 10;
-  float: left;
-}
-#search_suggestion_contents .es_tags {
+.match .es_tags {
   float: right;
   margin-left: 5px;
 }
-
-/** layout for tag pages */
-.browse_tag_game_name {
-  margin-left: 8px;
+.search_result_row .es_tags {
+  vertical-align: top;
 }
-.browse_tag_game_price {
-  margin-left: 8px;
-}
-.browse_tag_game {
-  margin-bottom: 4px;
+.wishlist_row .es_tags {
+  vertical-align: baseline;
 }
 
 /*.es_highlighted div:not(.discount_pct):not(.discount_final_price):not(.discount_original_price):not(.main_cap_status):not(.search_released):not(.tab_item_top_tags):not(.tab_item_details) {
