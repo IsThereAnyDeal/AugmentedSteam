@@ -25,6 +25,13 @@
 #modalContent.modal_frame {
   min-width: 720px !important;
 }
+/**
+ * https://github.com/tfedor/AugmentedSteam/issues/1254
+ * Increase height of collection choice section 
+ */
+.collectionChoiceSection {
+  height: 400px;
+}
 
 /* Back To Top button */
 .es_btt {
