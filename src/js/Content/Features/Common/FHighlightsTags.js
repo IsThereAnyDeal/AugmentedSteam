@@ -38,29 +38,24 @@ export default class FHighlightsTags extends Feature {
      * Highlights and tags DOM nodes that are owned, wishlisted, ignored, collected, waitlisted
      * or that the user has a gift, a guest pass or coupon for.
      *
-     * Additionally hides non-discounted titles if wished by the user.
      * @param {NodeList|Array} nodes - The nodes that should get highlighted
      * (defaults to all known nodes that are highlightable and taggable)
      * @param {boolean} hasDsInfo - Whether or not the supplied nodes contain dynamic store info (defaults to true)
-     * @param {Object} options - The highlights/tags that should be applied (defaults to all enabled)
+     * @param {Object} options - Option overrides that should be applied
      * @returns {Promise} - Resolved once the highlighting and tagging completed for the nodes
      */
     /* eslint-disable complexity -- FIXME */
-    static async highlightAndTag(nodes = document.querySelectorAll(this._selector), hasDsInfo = true, options = {}) {
+    static async highlightAndTag(nodes, hasDsInfo = true, options = {}) {
 
-        const opts = {"owned": true,
-            "wishlisted": true,
-            "ignored": true,
-            "collected": true,
-            "waitlisted": true,
-            "gift": true,
-            "guestPass": true,
-            "coupon": true,
-            ...options};
+        const opts = {...this._options, ...options};
+        if (!Object.values(opts).some(x => x)) { return; }
+
+        const _nodes = nodes || document.querySelectorAll(this._selector);
+        if (_nodes.length === 0) { return; }
 
         const storeIdsMap = new Map();
 
-        for (const node of nodes) {
+        for (const node of _nodes) {
             let nodeToHighlight = node;
 
             if (node.classList.contains("item")) {
@@ -97,49 +92,41 @@ export default class FHighlightsTags extends Feature {
 
             if (storeId) {
                 if (storeIdsMap.has(storeId)) {
-                    const arr = storeIdsMap.get(storeId);
-                    arr.push(nodeToHighlight);
-                    storeIdsMap.set(storeId, arr);
+                    storeIdsMap.get(storeId).push(nodeToHighlight);
                 } else {
                     storeIdsMap.set(storeId, [nodeToHighlight]);
                 }
             }
 
             if (hasDsInfo) {
-                if (node.querySelector(".ds_owned_flag") && opts.owned) {
+                if (opts.owned && node.querySelector(".ds_owned_flag") !== null) {
                     this.highlightOwned(nodeToHighlight);
                 }
-
-                if (node.querySelector(".ds_wishlist_flag") && opts.wishlisted) {
+                if (opts.wishlisted && node.querySelector(".ds_wishlist_flag") !== null) {
                     this.highlightWishlist(nodeToHighlight);
                 }
-
-                if (node.querySelector(".ds_ignored_flag") && opts.ignored) {
+                if (opts.ignored && node.querySelector(".ds_ignored_flag") !== null) {
                     this.highlightIgnored(nodeToHighlight);
                 }
             }
         }
 
         const storeIds = Array.from(storeIdsMap.keys());
+        if (storeIds.length === 0) { return; }
+
         const trimmedStoreIds = storeIds.map(id => GameId.trimStoreId(id));
 
-        const includeDsInfo
-            = !hasDsInfo
-            && ((opts.owned && (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")))
-                || (opts.wishlisted && (SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist")))
-                || (opts.ignored && (SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested")))
-            );
+        const includeDsInfo = !hasDsInfo && (opts.owned || opts.wishlisted || opts.ignored);
 
         const [dsStatus, itadStatus, invStatus] = await Promise.all([
             includeDsInfo ? DynamicStore.getAppStatus(storeIds) : Promise.resolve(),
             ITAD.getAppStatus(storeIds, {
-                "waitlist": opts.waitlisted && (SyncedStorage.get("highlight_waitlist") || SyncedStorage.get("tag_waitlist")),
-                "collection": opts.collected && (SyncedStorage.get("highlight_collection") || SyncedStorage.get("tag_collection")),
+                "waitlist": opts.waitlisted,
+                "collection": opts.collected,
             }),
             Inventory.getAppStatus(trimmedStoreIds, {
-                "giftsAndPasses": (opts.gift && (SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift")))
-                    || (opts.guestPass && (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass"))),
-                "coupons": opts.coupon && (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon")),
+                "giftsAndPasses": opts.gift || opts.guestPass,
+                "coupons": opts.coupon,
             }),
         ]);
 
@@ -401,6 +388,17 @@ FHighlightsTags._types = [
     "inv_guestpass",
     "inv_gift",
 ];
+
+FHighlightsTags._options = {
+    "owned": SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned"),
+    "wishlisted": SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist"),
+    "ignored": SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested"),
+    "collected": SyncedStorage.get("highlight_collection") || SyncedStorage.get("tag_collection"),
+    "waitlisted": SyncedStorage.get("highlight_waitlist") || SyncedStorage.get("tag_waitlist"),
+    "gift": SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift"),
+    "guestPass": SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass"),
+    "coupon": SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon"),
+};
 
 FHighlightsTags._selector = [
     ".store_main_capsule", // "Featured & Recommended"
