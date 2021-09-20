@@ -51,6 +51,7 @@ const actionCallbacks = new Map([
     ["storepagedata.expire", AugmentedSteamApi.expireStorePageData],
     ["prices", AugmentedSteamApi.endpointFactory("v01/prices")],
     ["rates", AugmentedSteamApi.rates],
+    ["clearrates", AugmentedSteamApi.clearRates],
     ["isea", AugmentedSteamApi.isEA],
     ["profile.background", AugmentedSteamApi.endpointFactory("v01/profile/background/background")],
     ["profile.background.games", AugmentedSteamApi.endpointFactory("v01/profile/background/games")],

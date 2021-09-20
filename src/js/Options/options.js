@@ -15,6 +15,7 @@ import {
 import {StoreList} from "./Modules/Data/StoreList";
 import {ContextMenu} from "../Background/Modules/ContextMenu";
 import {UserNotesAdapter} from "../Core/Storage/UserNotesAdapter";
+import {BackgroundSimple} from "../Core/BackgroundSimple";
 
 // TODO this needs to be refactored and cleaned up
 
@@ -239,8 +240,13 @@ const Options = (() => {
             }
         }
 
-        if (option === "user_notes_adapter") {
-            await UserNotesAdapter.changeAdapter(value);
+        switch (option) {
+            case "user_notes_adapter":
+                await UserNotesAdapter.changeAdapter(value);
+                break;
+            case "override_price":
+                await BackgroundSimple.action("clearrates");
+                break;
         }
 
         SyncedStorage.set(option, value);
