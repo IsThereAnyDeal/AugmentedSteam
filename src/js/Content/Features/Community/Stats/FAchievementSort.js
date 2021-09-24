@@ -71,15 +71,11 @@ export default class FAchievementSort extends Feature {
             for (const [, node] of this._nodes.time) {
                 container.insertAdjacentElement("afterbegin", node);
             }
-
-            container.classList.add("esi_ach_sortbytime"); // Hide locked achievements
         } else if (key === "default") {
 
             for (const node of this._nodes.default) {
                 container.insertAdjacentElement(reversed ? "afterbegin" : "beforeend", node);
             }
-
-            container.classList.remove("esi_ach_sortbytime");
         }
 
         // Restore avatars to its original position

@@ -722,9 +722,6 @@ img.astats_icon {
 .esi_ach_locked + .esi_ach_unlocked {
   margin-top: 62px;
 }
-.esi_ach_sortbytime .esi_ach_locked {
-  display: none;
-}
 .esi_ach_avatars {
   min-height: 66px;
   margin-bottom: 18px;
