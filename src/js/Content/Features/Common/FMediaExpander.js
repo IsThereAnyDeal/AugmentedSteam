@@ -78,7 +78,7 @@ export default class FMediaExpander extends Feature {
                 node.remove();
             }
 
-            const detailsWrap = HTML.wrap(detailsClone, '<div class="es_side_details_wrap"></div>');
+            const detailsWrap = HTML.wrap('<div class="es_side_details_wrap"></div>', detailsClone);
             const target = document.querySelector("div.rightcol.game_meta_data");
             if (target) {
                 target.insertAdjacentElement("afterbegin", detailsWrap);
@@ -97,7 +97,7 @@ export default class FMediaExpander extends Feature {
             // Sometimes for a split second the slider pushes the details down, this fixes it
             target = document.querySelector(".highlight_ctn");
             if (target) {
-                HTML.wrap(target, '<div class="leftcol"></div>');
+                HTML.wrap('<div class="leftcol"></div>', target);
             }
         }
     }

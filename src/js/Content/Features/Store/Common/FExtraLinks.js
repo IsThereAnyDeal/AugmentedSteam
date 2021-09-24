@@ -158,7 +158,7 @@ export default class FExtraLinks extends Feature {
                 this._getRightColLinkHtml(
                     "steamdb_ico",
                     `https://steamdb.info/${this._type}/${this._gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Steam Database"),
+                    Localization.str.view_on_website.replace("__website__", "SteamDB"),
                 ));
         }
 

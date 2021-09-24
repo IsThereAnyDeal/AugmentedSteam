@@ -25,6 +25,13 @@
 #modalContent.modal_frame {
   min-width: 720px !important;
 }
+/**
+ * https://github.com/tfedor/AugmentedSteam/issues/1254
+ * Increase height of collection choice section 
+ */
+.collectionChoiceSection {
+  height: 400px;
+}
 
 /* Back To Top button */
 .es_btt {
@@ -1498,10 +1505,7 @@ img.astats_icon {
 .es_tags.es_tags_short span::first-letter {
   font-size: 10px;
 }
-.browse_tag_game .es_tags {
-  display : table;
-  margin-left: 8px;
-}
+
 .recommendation_highlight .es_tags {
   position: absolute;
   margin-top: -20px;
@@ -1522,27 +1526,15 @@ img.astats_icon {
 .game_area_dlc_price .es_tags ~ div {
   display: inline-block;
 }
-.small_cap .es_tags {
-  margin-top: 0;
-}
-.tab_item .es_tags {
-  z-index: 10;
-  float: left;
-}
-#search_suggestion_contents .es_tags {
+.match .es_tags {
   float: right;
   margin-left: 5px;
 }
-
-/** layout for tag pages */
-.browse_tag_game_name {
-  margin-left: 8px;
+.search_result_row .es_tags {
+  vertical-align: top;
 }
-.browse_tag_game_price {
-  margin-left: 8px;
-}
-.browse_tag_game {
-  margin-bottom: 4px;
+.wishlist_row .es_tags {
+  vertical-align: baseline;
 }
 
 /*.es_highlighted div:not(.discount_pct):not(.discount_final_price):not(.discount_original_price):not(.main_cap_status):not(.search_released):not(.tab_item_top_tags):not(.tab_item_details) {
@@ -1752,16 +1744,10 @@ img.astats_icon {
 
 /***************************************
  * Friend activity page
- * FAchievementComparisonLink
+ * FAchievementLink
  **************************************/
-.es_achievement_compare {
-  font-size: 10px;
-  float: right;
-  margin-right: 6px;
-  line-height: 32px;
-}
-.es_achievements {
-  margin-top: 0 !important;
+.es-ach-link:hover {
+  text-decoration: none;
 }
 
 /***************************************
@@ -2246,6 +2232,31 @@ label.es_dlc_label > input:checked::after {
   display: none;
 }
 
+/** Favorite emoticons */
+.es_emoticons.emoticon_popup {
+  max-width: 352px;
+}
+.es_emoticons .es_emoticons_content {
+  margin-bottom: 10px;
+  min-height: 32px;
+  line-height: 32px;
+  text-align: center;
+  max-height: none;
+  display: flex;
+}
+#es_fav_remove {
+  width: 10%;
+  background-image: url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+#es_fav_emoticons {
+  width: 90%;
+}
+
+.esi_ach_unlocked + .esi_ach_locked {
+  margin-top: 72px;
+}
 
 .es_hltb a.linkbar > img,
 .es_wsgf a.linkbar > img,
@@ -2499,6 +2510,21 @@ label.es_dlc_label > input:checked::after {
 }
 .es_profile_style .holidayprofile .profile_customization_header {
   background: none !important;
+}
+
+/***************************************
+ * User profiles
+ * FPinnedBackground
+ **************************************/
+.as_profile_static_background {
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: auto;
 }
 
 /***************************************
@@ -3018,4 +3044,5 @@ label.es_dlc_label > input:checked::after {
 .as-pd__preview {
   display: block;
   margin: auto;
+  max-width: 100%;
 }

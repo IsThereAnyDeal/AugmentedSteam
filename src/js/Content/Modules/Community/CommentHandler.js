@@ -90,39 +90,42 @@ export class CommentHandler {
         observer.observe(modalWait, {"attributes": true});
     }
 
-    static _updateFavs(favs, emoticonPopup, favBox, favRemove, name) {
+    static _updateFavs(favs, emoticonPopup, favBox, name) {
         SyncedStorage.set("fav_emoticons", favs);
 
         if (name && favs.includes(name) && favs.length > 1) {
             HTML.beforeEnd(favBox, this._buildEmoticonOption(name));
             const node = favBox.querySelector(`[data-emoticon="${name}"]`);
-            this._finalizeFav(node, emoticonPopup, favRemove);
+            this._finalizeFav(node, emoticonPopup);
         } else if (name && !favs.includes(name) && favs.length > 0) {
             const node = favBox.querySelector(`[data-emoticon="${name}"]`);
             if (!node) { return; }
-            node.parentNode.removeChild(node);
+            node.remove();
         } else {
             const favsHtml = this._buildFavBox(favs);
             HTML.inner(favBox, favsHtml);
-            favBox.querySelectorAll(".emoticon_option").forEach(node => {
-                this._finalizeFav(node, emoticonPopup, favRemove);
-            });
+            for (const node of favBox.querySelectorAll(".emoticon_option")) {
+                this._finalizeFav(node, emoticonPopup);
+            }
         }
     }
 
-    static _finalizeFav(node, emoticonPopup, favRemove) {
+    static _finalizeFav(node, emoticonPopup) {
         node.draggable = true;
         node.querySelector("img").draggable = false;
         node.addEventListener("dragstart", (ev) => this._dragFavEmoticon(ev));
-        node.addEventListener("click", (ev) => this._clickFavEmoticon(ev, emoticonPopup, favRemove));
+        node.addEventListener("click", (ev) => this._clickFavEmoticon(ev, emoticonPopup));
     }
 
     static _dragFavEmoticon(ev) {
         ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon);
+        const emoticonHover = document.querySelector(".emoticon_hover");
+        if (emoticonHover) {
+            emoticonHover.style.display = "none";
+        }
     }
 
-    // eslint-disable-next-line no-unused-vars -- TODO Is this feature not yet implemented
-    static _clickFavEmoticon(ev, emoticonPopup, favRemove) {
+    static _clickFavEmoticon(ev, emoticonPopup) {
         const name = ev.target.closest(".emoticon_option").dataset.emoticon;
         const noFav = emoticonPopup.querySelector(`[data-emoticon=${name}]:not(.es_fav)`);
         noFav.click();
@@ -143,28 +146,32 @@ export class CommentHandler {
     }
 
     static addFavoriteEmoticons() {
+        if (document.querySelectorAll(".emoticon_button").length === 0) {
+            return;
+        }
+
         const observer = new MutationObserver(() => {
             const emoticonPopup = document.querySelector(".emoticon_popup:not(.es_emoticons)");
             if (!emoticonPopup) { return; }
 
             emoticonPopup.classList.add("es_emoticons");
-            emoticonPopup.style.maxWidth = "352px";
-            emoticonPopup.querySelectorAll(".emoticon_option").forEach((node) => {
+
+            for (const node of emoticonPopup.querySelectorAll(".emoticon_option")) {
                 node.draggable = true;
                 node.querySelector("img").draggable = false;
-                node.addEventListener("dragstart", ev => ev.dataTransfer.setData("emoticon", ev.target.dataset.emoticon));
-            });
+                node.addEventListener("dragstart", (ev) => this._dragFavEmoticon(ev));
+            }
 
             let favs = SyncedStorage.get("fav_emoticons");
             HTML.afterBegin(emoticonPopup,
-                `<div style="margin-bottom:10px;min-height:32px;line-height:32px;text-align:center;max-height:none;display:flex;" class="emoticon_popup_content">
-                    <div style="width:10%;background-image:url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);background-repeat:no-repeat;background-position:center center;" class="commentthread_entry_quotebox" id="es_fav_remove"></div>
-                    <div style="width:90%;" class="commentthread_entry_quotebox" id="es_fav_emoticons"></div>
+                `<div class="emoticon_popup_content es_emoticons_content">
+                    <div class="commentthread_entry_quotebox" id="es_fav_remove"></div>
+                    <div class="commentthread_entry_quotebox" id="es_fav_emoticons"></div>
                 </div>`);
 
             const favBox = emoticonPopup.querySelector("#es_fav_emoticons");
             const favRemove = emoticonPopup.querySelector("#es_fav_remove");
-            this._updateFavs(favs, emoticonPopup, favBox, favRemove);
+            this._updateFavs(favs, emoticonPopup, favBox);
 
             favBox.addEventListener("dragover", ev => {
                 ev.preventDefault();
@@ -175,8 +182,11 @@ export class CommentHandler {
                 favBox.style.backgroundColor = "black";
             });
 
-            favBox.addEventListener("dragleave", () => {
-                favBox.style.backgroundColor = null;
+            favBox.addEventListener("dragleave", ev => {
+                // Prevent background flicker when hovering over child elements, see https://stackoverflow.com/a/54960084
+                if (!favBox.contains(ev.relatedTarget)) {
+                    favBox.style.backgroundColor = null;
+                }
             });
 
             favBox.addEventListener("drop", ev => {
@@ -187,7 +197,7 @@ export class CommentHandler {
                 if (favs.includes(name)) { return; }
 
                 favs.push(name);
-                this._updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+                this._updateFavs(favs, emoticonPopup, favBox, name);
             });
 
             favRemove.addEventListener("dragover", ev => {
@@ -209,7 +219,7 @@ export class CommentHandler {
                 favRemove.style.backgroundColor = null;
                 const name = ev.dataTransfer.getData("emoticon");
                 favs = favs.filter(fav => fav !== name);
-                this._updateFavs(favs, emoticonPopup, favBox, favRemove, name);
+                this._updateFavs(favs, emoticonPopup, favBox, name);
             });
         });
 

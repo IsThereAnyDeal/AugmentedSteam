@@ -405,7 +405,9 @@
     {
       "matches": [
         "*://steamcommunity.com/id/*/recommended*",
-        "*://steamcommunity.com/profiles/*/recommended*"
+        "*://steamcommunity.com/profiles/*/recommended*",
+        "*://steamcommunity.com/id/*/reviews*",
+        "*://steamcommunity.com/profiles/*/reviews*"
       ],
       "js": [
         "js/community/recommended.js"
@@ -453,7 +455,9 @@
         "*://steamcommunity.com/profiles/*/myworkshopfiles?*browsefilter=mysubscriptions*",
         "*://steamcommunity.com/profiles/*/myworkshopfiles/?*browsefilter=mysubscriptions*",
         "*://steamcommunity.com/id/*/recommended*",
-        "*://steamcommunity.com/profiles/*/recommended*"
+        "*://steamcommunity.com/profiles/*/recommended*",
+        "*://steamcommunity.com/id/*/reviews*",
+        "*://steamcommunity.com/profiles/*/reviews*"
       ],
       "js": [
         "js/community/profile_home.js"

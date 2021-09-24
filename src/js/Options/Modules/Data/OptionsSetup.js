@@ -149,10 +149,11 @@ export default {
     "showinvnav": "options.inventory_nav_text",
 
     // profile
+    "show_custom_themes": "options.show_custom_themes",
+    "profile_pinned_bg": "options.profile_pinned_bg",
     "show_wishlist_link": "options.show_wishlist_link",
     "show_wishlist_count": "options.show_wishlist_count",
     "showsteamrepapi": "options.steamrepapi",
-    "show_custom_themes": "options.show_custom_themes",
     "profile_steamid": "options.profile_steamid",
     "profile_showcase_twitch": "options.profile_showcase_twitch",
     "profile_showcase_own_twitch": "options.profile_showcase_own_twitch",
@@ -184,7 +185,6 @@ export default {
     ],
     "showallachievements": "options.showallachievements",
     "showallstats": "options.showallstats",
-    "showcomparelinks": "options.showcomparelinks",
     "hidespamcomments": "options.hidespamcomments",
     "steamcardexchange": "options.steamcardexchange",
     "wlbuttoncommunityapp": "options.wlbuttoncommunityapp",
