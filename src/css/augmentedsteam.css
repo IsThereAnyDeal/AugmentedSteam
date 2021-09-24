@@ -27,7 +27,7 @@
 }
 /**
  * https://github.com/tfedor/AugmentedSteam/issues/1254
- * Increase height of collection choice section 
+ * Increase height of collection choice section
  */
 .collectionChoiceSection {
   height: 400px;
@@ -2252,10 +2252,6 @@ label.es_dlc_label > input:checked::after {
 }
 #es_fav_emoticons {
   width: 90%;
-}
-
-.esi_ach_unlocked + .esi_ach_locked {
-  margin-top: 72px;
 }
 
 .es_hltb a.linkbar > img,
