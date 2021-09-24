@@ -34,7 +34,10 @@ export default class FAchievementSort extends Feature {
 
         if (!this._initSort) {
 
-            // Remove linebreaks and transparent img (replace with CSS margins to maintain spacing)
+            /*
+             * Remove linebreaks and transparent img (the latter is visible in compare views).
+             * Replace with CSS margins to maintain spacing.
+             */
             for (const el of container.querySelectorAll(":scope > br, :scope > img")) {
                 el.remove();
             }
