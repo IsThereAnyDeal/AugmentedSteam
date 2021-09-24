@@ -832,8 +832,7 @@ img.astats_icon {
 .workshop_item_header #highlight_player_area,
 .workshop_item_header .highlight_player_item iframe,
 .workshop_item_header .workshopItemPreviewImageEnlargeable,
-.workshop_item_header .workshopItemPreviewImageEnlargeableContainer,
-.es_youtube_player {
+.workshop_item_header .workshopItemPreviewImageEnlargeableContainer {
   transition: width 0.25s ease, max-width 0.25s ease, height 0.25s ease;
 }
 .es_slider_toggle {
@@ -923,13 +922,8 @@ img.astats_icon {
     width: 616px;
   }
 
-  #game_highlights.es_expanded .highlight_ctn,
-  #game_highlights.es_expanded .es_youtube_player {
+  #game_highlights.es_expanded .highlight_ctn {
     width: 940px;
-  }
-
-  #game_highlights.es_expanded .es_youtube_player {
-    height: 528.75px;
   }
 
   #game_highlights.es_expanded .highlight_overflow {
