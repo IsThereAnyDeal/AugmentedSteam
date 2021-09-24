@@ -72,12 +72,6 @@ export default class FMediaExpander extends Feature {
             detailsClone = detailsClone.cloneNode(true);
             detailsClone.classList.add("es_side_details", "block", "responsive_apppage_details_left");
 
-            for (const node of detailsClone.querySelectorAll(".app_tag.add_button, .glance_tags_ctn.your_tags_ctn")) {
-
-                // There are some issues with having duplicates of these on page when trying to add tags
-                node.remove();
-            }
-
             const detailsWrap = HTML.wrap('<div class="es_side_details_wrap"></div>', detailsClone);
             const target = document.querySelector("div.rightcol.game_meta_data");
             if (target) {

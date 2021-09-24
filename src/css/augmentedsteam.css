@@ -955,11 +955,6 @@ img.astats_icon {
     height: auto !important;
   }
 
-  .es_side_details .popular_tags_ctn .add_button,
-  .es_side_details .your_tags_ctn {
-    display: none;
-  }
-
   .es_side_details .glance_tags_ctn {
     margin-bottom: 0;
     position: relative;
