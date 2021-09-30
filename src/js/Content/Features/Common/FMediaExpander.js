@@ -1,5 +1,5 @@
 import {HTML, LocalStorage, Localization, TimeUtils} from "../../../modulesCore";
-import {Feature} from "../../modulesContent";
+import {ContextType, Feature} from "../../modulesContent";
 
 export default class FMediaExpander extends Feature {
 
@@ -15,16 +15,19 @@ export default class FMediaExpander extends Feature {
                 <div data-tooltip-text="${Localization.str.contract_slider}" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
             </div>`);
 
+        this._sliderToggle = document.querySelector(".es_slider_toggle");
+        this._sliderToggle.addEventListener("click", e => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            this._toggleView();
+        });
+
         const expandSlider = LocalStorage.get("expand_slider", false);
         if (expandSlider) {
-            this._buildSideDetails();
+            this._toggleView();
 
-            for (const node of document.querySelectorAll(
-                ".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap"
-            )) {
-                node.classList.add("es_expanded");
-            }
-            for (const node of document.querySelectorAll(".es_side_details_wrap, .es_side_details")) {
+            /*for (const node of document.querySelectorAll(".es_side_details_wrap, .es_side_details")) {
 
                 // shrunk => expanded
                 node.style.display = null;
@@ -34,12 +37,8 @@ export default class FMediaExpander extends Feature {
             // Triggers the adjustment of the slider scroll bar
             TimeUtils.timer(250).then(() => {
                 window.dispatchEvent(new Event("resize"));
-            });
+            });*/
         }
-
-        const sliderToggle = document.querySelector(".es_slider_toggle");
-
-        sliderToggle.addEventListener("click", (e) => { this._clickSliderToggle(e); });
 
         /*
          * Prevent the slider toggle from overlapping a sketchfab model's "X"
@@ -50,10 +49,10 @@ export default class FMediaExpander extends Feature {
             const container = document.getElementById("highlight_player_area");
             container.addEventListener("mouseenter", () => {
                 if (sketchfabNode.style.display === "none") { return; }
-                sliderToggle.style.top = "32px";
+                this._sliderToggle.style.top = "32px";
             });
             container.addEventListener("mouseleave", () => {
-                sliderToggle.style.top = null;
+                this._sliderToggle.style.top = null;
             });
         }
     }
@@ -96,24 +95,36 @@ export default class FMediaExpander extends Feature {
         }
     }
 
-    _clickSliderToggle(e) {
-        e.preventDefault();
-        e.stopPropagation();
+    _toggleView() {
 
-        const el = e.target.closest(".es_slider_toggle");
-        this._buildSideDetails();
+        const expand = !this._sliderToggle.classList.contains("es_expanded");
 
+        // this._buildSideDetails();
+
+        for (const node of document.querySelectorAll(
+            ".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap"
+        )) {
+            node.classList.toggle("es_expanded", expand);
+        }
+
+        if (this.context.type === ContextType.APP) {
+            this._handleApp(expand);
+        } else if (this.context.type === ContextType.SHARED_FILES) {
+            this._handleWorkshop(expand);
+        }
+
+        /*
         // Fade In/Out sideDetails
         const sideDetails = document.querySelector(".es_side_details_wrap, .es_side_details");
         if (sideDetails) {
-            if (el.classList.contains("es_expanded")) {
+            if (this._sliderToggle.classList.contains("es_expanded")) {
 
                 // expanded => shrunk
                 sideDetails.style.opacity = 0;
 
                 TimeUtils.timer(250).then(() => {
                     // Hide after transition completes
-                    if (!el.classList.contains("es_expanded")) {
+                    if (!this._sliderToggle.classList.contains("es_expanded")) {
                         sideDetails.style.display = "none";
                     }
                 });
@@ -145,12 +156,22 @@ export default class FMediaExpander extends Feature {
                 // Triggers the adjustment of the slider scroll bar
                 window.dispatchEvent(new Event("resize"));
             });
-        });
+        });*/
+    }
 
-        for (const node of document.querySelectorAll(
-            ".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap"
-        )) {
-            node.classList.toggle("es_expanded");
+    _handleApp(expand) {
+        const details = this._details;
+        details.classList.toggle("as-side-details", expand);
+        details.classList.toggle("block", expand);
+        details.classList.toggle("responsive_apppage_details_left", expand);
+        details.classList.toggle("rightcol", !expand);
+
+        if (expand) {
+            document.querySelector(".rightcol.game_meta_data").insertAdjacentElement("afterbegin", this._details);
+        } else {
+            document.getElementById("game_highlights").insertAdjacentElement("afterbegin", this._details);
         }
     }
+
+    _handleWorkshop(expand) {}
 }

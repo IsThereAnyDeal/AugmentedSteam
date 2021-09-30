@@ -912,7 +912,6 @@ img.astats_icon {
   }
 
   .game_meta_data .es_side_details,
-  .game_meta_data .es_side_details_wrap,
   #game_highlights .es_slider_toggle {
     display: none !important;
   }
@@ -930,17 +929,7 @@ img.astats_icon {
     margin-right: 0;
   }
 
-  #game_highlights.es_expanded .rightcol {
-    display: none !important;
-  }
-
-  #game_highlights.es_expanded .leftcol {
-    float: none !important;
-    width: auto !important;
-  }
-
   .es_slider_toggle,
-  .es_side_details.es_expanded,
   .es_side_details_wrap.es_expanded {
     display: block;
   }
@@ -950,26 +939,9 @@ img.astats_icon {
     opacity: 0;
   }
 
-  .es_side_details .game_header_image_full {
+  .as-side-details .game_header_image_full {
     width: 276px !important;
     height: auto !important;
-  }
-
-  .es_side_details .glance_tags_ctn {
-    margin-bottom: 0;
-    position: relative;
-  }
-
-  .es_side_details .popular_tags:after {
-    content: "";
-    display: block;
-    position: absolute;
-    right: -17px;
-    bottom: 0;
-    background-image: linear-gradient(90deg, rgba(13, 20, 28, 0) 0%, rgb(13, 20, 28) 80%);
-    width: 35px;
-    height: 22px;
-    pointer-events: none;
   }
 }
 
