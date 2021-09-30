@@ -56,6 +56,10 @@ class SteamFacade {
         return CollapseLongStrings(selector);
     }
 
+    static adjustVisibleAppTags(selector) {
+        return AdjustVisibleAppTags($J(selector));
+    }
+
     // events
 
     static bindAutoFlyoutEvents() {
@@ -180,7 +184,7 @@ class SteamFacade {
     static zoomYearForSellDialog() {
         pricehistory_zoomDays(SellItemDialog.m_plotPriceHistory, SellItemDialog.m_timePriceHistoryEarliest, SellItemDialog.m_timePriceHistoryLatest, 365);
     }
-      
+
     // selections
 
     static updateSelection() {

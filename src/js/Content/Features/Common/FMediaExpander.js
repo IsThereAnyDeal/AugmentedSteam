@@ -1,5 +1,6 @@
 import {HTML, LocalStorage, Localization, TimeUtils} from "../../../modulesCore";
 import {ContextType, Feature} from "../../modulesContent";
+import {Page} from "../Page";
 
 export default class FMediaExpander extends Feature {
 
@@ -102,7 +103,7 @@ export default class FMediaExpander extends Feature {
         // this._buildSideDetails();
 
         for (const node of document.querySelectorAll(
-            ".es_slider_toggle, #game_highlights, .workshop_item_header, .es_side_details, .es_side_details_wrap"
+            ".es_slider_toggle, #game_highlights, .workshop_item_header, .js-side-details"
         )) {
             node.classList.toggle("es_expanded", expand);
         }
@@ -160,17 +161,20 @@ export default class FMediaExpander extends Feature {
     }
 
     _handleApp(expand) {
-        const details = this._details;
-        details.classList.toggle("as-side-details", expand);
-        details.classList.toggle("block", expand);
-        details.classList.toggle("responsive_apppage_details_left", expand);
-        details.classList.toggle("rightcol", !expand);
+        const clsList = this._details.classList;
+        clsList.toggle("as-side-details", expand);
+        clsList.toggle("js-side-details", expand);
+        clsList.toggle("block", expand);
+        clsList.toggle("responsive_apppage_details_left", expand);
+        clsList.toggle("rightcol", !expand);
 
         if (expand) {
             document.querySelector(".rightcol.game_meta_data").insertAdjacentElement("afterbegin", this._details);
         } else {
             document.getElementById("game_highlights").insertAdjacentElement("afterbegin", this._details);
         }
+
+        Page.runInPageContext(() => { window.SteamFacade.adjustVisibleAppTags(".popular_tags"); });
     }
 
     _handleWorkshop(expand) {}
