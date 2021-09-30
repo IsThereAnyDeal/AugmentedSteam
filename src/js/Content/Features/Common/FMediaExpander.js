@@ -102,7 +102,7 @@ export default class FMediaExpander extends Feature {
 
         const expand = !this._sliderToggle.classList.contains("es_expanded");
 
-        // this._buildSideDetails();
+        LocalStorage.set("expand_slider", expand);
 
         for (const node of document.querySelectorAll(
             ".es_slider_toggle, #game_highlights, .workshop_item_header, .as-side-details"
@@ -128,51 +128,6 @@ export default class FMediaExpander extends Feature {
         }, {"once": true});
 
         this._details.style.opacity = 0;
-
-        /*
-        // Fade In/Out sideDetails
-        const sideDetails = document.querySelector(".es_side_details_wrap, .es_side_details");
-        if (sideDetails) {
-            if (this._sliderToggle.classList.contains("es_expanded")) {
-
-                // expanded => shrunk
-                sideDetails.style.opacity = 0;
-
-                TimeUtils.timer(250).then(() => {
-                    // Hide after transition completes
-                    if (!this._sliderToggle.classList.contains("es_expanded")) {
-                        sideDetails.style.display = "none";
-                    }
-                });
-            } else {
-
-                // shrunk => expanded
-                sideDetails.style.display = null;
-                sideDetails.style.opacity = 1;
-            }
-        }
-
-        // On every animation/transition end check the slider state
-        document.querySelector(".highlight_ctn").addEventListener("transitionend", () => {
-
-            // Save slider state
-            LocalStorage.set("expand_slider", el.classList.contains("es_expanded"));
-            const details = this._details;
-
-            // If slider was contracted show the extended details
-            if (!el.classList.contains("es_expanded")) {
-                details.style.transition = "";
-                details.style.opacity = "0";
-                details.style.transition = "opacity 250ms";
-                details.style.display = null;
-                details.style.opacity = "1";
-            }
-
-            TimeUtils.timer(250).then(() => {
-                // Triggers the adjustment of the slider scroll bar
-                window.dispatchEvent(new Event("resize"));
-            });
-        });*/
     }
 
     _handleApp(expand) {
