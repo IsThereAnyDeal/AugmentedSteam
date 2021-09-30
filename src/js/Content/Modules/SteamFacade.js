@@ -225,6 +225,10 @@ class SteamFacade {
     static jqPost(url, settings) {
         return $J.post(url, settings);
     }
+
+    static jqTrigger(selector, eventName) {
+        return $J(selector).trigger(eventName);
+    }
 }
 
 export {SteamFacade};
