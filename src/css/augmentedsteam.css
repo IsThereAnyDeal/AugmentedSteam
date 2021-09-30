@@ -945,6 +945,14 @@ img.astats_icon {
   }
 }
 
+.as-side-details a {
+	color: #67c1f5;
+}
+
+.as-side-details a:hover {
+	color: #ffffff;
+}
+
 .requiredItem .loader {
   float: right;
 }
