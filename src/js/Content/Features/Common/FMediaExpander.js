@@ -16,6 +16,8 @@ export default class FMediaExpander extends Feature {
                 <div data-tooltip-text="${Localization.str.contract_slider}" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
             </div>`);
 
+        this._details.classList.add("as-side-details");
+
         this._sliderToggle = document.querySelector(".es_slider_toggle");
         this._sliderToggle.addEventListener("click", e => {
             e.preventDefault();
@@ -103,16 +105,23 @@ export default class FMediaExpander extends Feature {
         // this._buildSideDetails();
 
         for (const node of document.querySelectorAll(
-            ".es_slider_toggle, #game_highlights, .workshop_item_header, .js-side-details"
+            ".es_slider_toggle, #game_highlights, .workshop_item_header, .as-side-details"
         )) {
             node.classList.toggle("es_expanded", expand);
         }
 
-        if (this.context.type === ContextType.APP) {
-            this._handleApp(expand);
-        } else if (this.context.type === ContextType.SHARED_FILES) {
-            this._handleWorkshop(expand);
-        }
+        this._details.addEventListener("transitionend", () => {
+
+            if (this.context.type === ContextType.APP) {
+                this._handleApp(expand);
+            } else if (this.context.type === ContextType.SHARED_FILES) {
+                this._handleWorkshop(expand);
+            }
+
+            this._details.style.opacity = null;
+        }, {"once": true});
+
+        this._details.style.opacity = 0;
 
         /*
         // Fade In/Out sideDetails
@@ -162,8 +171,6 @@ export default class FMediaExpander extends Feature {
 
     _handleApp(expand) {
         const clsList = this._details.classList;
-        clsList.toggle("as-side-details", expand);
-        clsList.toggle("js-side-details", expand);
         clsList.toggle("block", expand);
         clsList.toggle("responsive_apppage_details_left", expand);
         clsList.toggle("rightcol", !expand);

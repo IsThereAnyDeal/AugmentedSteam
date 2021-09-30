@@ -929,27 +929,25 @@ img.astats_icon {
     margin-right: 0;
   }
 
-  .es_slider_toggle,
-  .es_side_details_wrap.es_expanded {
+  .es_slider_toggle {
     display: block;
   }
 
-  .es_side_details_wrap {
-    transition: opacity 250ms ease 0s;
-    opacity: 0;
+  .as-side-details {
+    transition: opacity 125ms ease 0s;
   }
 
-  .as-side-details .game_header_image_full {
+  .as-side-details.es_expanded .game_header_image_full {
     width: 276px !important;
     height: auto !important;
   }
 }
 
-.as-side-details a {
+.as-side-details.es_expanded a {
 	color: #67c1f5;
 }
 
-.as-side-details a:hover {
+.as-side-details.es_expanded a:hover {
 	color: #ffffff;
 }
 
