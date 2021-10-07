@@ -192,15 +192,15 @@ class SteamFacade {
     }
 
     static selectAll() {
-        return selectAll();
+        return SelectAll();
     }
 
     static selectNone() {
-        return selectNone();
+        return SelectNone();
     }
 
     static selectInverse() {
-        return selectInverse();
+        return SelectInverse();
     }
 
 
