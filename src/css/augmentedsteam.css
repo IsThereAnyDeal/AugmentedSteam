@@ -876,9 +876,6 @@ img.astats_icon {
 #highlight_player_area {
   width: auto !important;
 }
-.workshop_item_header.es_expanded .col_right {
-  display: none;
-}
 .workshop_item_header.es_expanded #highlight_player_area,
 .workshop_item_header.es_expanded .highlight_player_item iframe,
 .workshop_item_header.es_expanded .workshopItemPreviewImageEnlargeable,
