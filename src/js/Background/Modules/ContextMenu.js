@@ -1,6 +1,4 @@
-import {Localization} from "../../Core/Localization/Localization";
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
-import {Permissions} from "../../modulesCore";
+import {Localization, Permissions, SyncedStorage} from "../../modulesCore";
 
 class ContextMenu {
 
@@ -23,8 +21,8 @@ class ContextMenu {
     }
 
     static async build() {
-        await Localization;
         await SyncedStorage;
+        await Localization;
 
         for (const option of Object.keys(ContextMenu.queryLinks)) {
             if (!SyncedStorage.get(option)) { continue; }
