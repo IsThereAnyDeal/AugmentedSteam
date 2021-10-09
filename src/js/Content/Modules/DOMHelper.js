@@ -39,6 +39,15 @@ class DOMHelper {
 
         document.head.appendChild(script);
     }
+
+    static insertCSS(content, id) {
+        const style = document.createElement("style");
+
+        if (id) { style.id = id; }
+        style.textContent = content;
+
+        document.head.appendChild(style);
+    }
 }
 
 export {DOMHelper};

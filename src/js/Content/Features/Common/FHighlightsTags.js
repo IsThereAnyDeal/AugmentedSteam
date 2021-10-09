@@ -1,5 +1,5 @@
 import {GameId, HTML, Localization, SyncedStorage} from "../../../modulesCore";
-import {DynamicStore, Feature, ITAD, Inventory} from "../../modulesContent";
+import {DOMHelper, DynamicStore, Feature, ITAD, Inventory} from "../../modulesContent";
 import {Page} from "../Page";
 
 export default class FHighlightsTags extends Feature {
@@ -200,11 +200,7 @@ export default class FHighlightsTags extends Feature {
                 tagCss.push(`.es_tag_${name} { background-color: ${color}; }`);
             }
 
-            let style = document.createElement("style");
-            style.id = "es_tag_styles";
-            style.textContent = tagCss.join("\n");
-            document.head.appendChild(style);
-            style = null;
+            DOMHelper.insertCSS(tagCss.join("\n"));
         }
 
         // Add the tags container if needed
@@ -290,11 +286,7 @@ export default class FHighlightsTags extends Feature {
                 );
             }
 
-            let style = document.createElement("style");
-            style.id = "es_highlight_styles";
-            style.textContent = hlCss.join("\n");
-            document.head.appendChild(style);
-            style = null;
+            DOMHelper.insertCSS(hlCss.join("\n"));
         }
 
         let _node = node;
