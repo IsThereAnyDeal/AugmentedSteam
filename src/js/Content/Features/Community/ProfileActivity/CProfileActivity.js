@@ -3,6 +3,7 @@ import {CCommunityBase} from "../CCommunityBase";
 import {CommentHandler} from "../../../Modules/Community/CommentHandler";
 import FHighlightFriendsActivity from "./FHighlightFriendsActivity";
 import FAchievementLink from "./FAchievementLink";
+import FReplaceCommunityHubLinks from "./FReplaceCommunityHubLinks";
 
 export class CProfileActivity extends CCommunityBase {
 
@@ -11,6 +12,7 @@ export class CProfileActivity extends CCommunityBase {
         super(ContextType.PROFILE_ACTIVITY, [
             FHighlightFriendsActivity,
             FAchievementLink,
+            FReplaceCommunityHubLinks,
         ]);
 
         this._registerObserver();
