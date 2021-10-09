@@ -35,7 +35,7 @@ class DOMHelper {
         if (id) { script.id = id; }
         if (src) { script.src = src; }
         if (content) { script.textContent = content; }
-        script.async = isAsync;
+        if (isAsync) { script.setAttribute("async", ""); }
 
         document.head.appendChild(script);
     }
