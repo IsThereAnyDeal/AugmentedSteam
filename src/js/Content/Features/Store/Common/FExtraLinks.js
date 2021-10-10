@@ -38,12 +38,13 @@ export default class FExtraLinks extends Feature {
 
     apply() {
 
+        // Note: Links should be rendered in the same order as displayed on the options page
         const links = [
             {
-                "id": "showbartervg",
-                "className": "bartervg_ico",
-                "link": `https://barter.vg/steam/${this._type}/${this._gameid}/`,
-                "text": Localization.str.view_on_website.replace("__website__", "Barter.vg"),
+                "id": "showitadlinks",
+                "className": "itad_ico",
+                "link": `https://isthereanydeal.com/steam/${this._type}/${this._gameid}/`,
+                "text": Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal"),
             },
             {
                 "id": "showsteamdb",
@@ -52,10 +53,10 @@ export default class FExtraLinks extends Feature {
                 "text": Localization.str.view_on_website.replace("__website__", "SteamDB"),
             },
             {
-                "id": "showitadlinks",
-                "className": "itad_ico",
-                "link": `https://isthereanydeal.com/steam/${this._type}/${this._gameid}/`,
-                "text": Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal"),
+                "id": "showbartervg",
+                "className": "bartervg_ico",
+                "link": `https://barter.vg/steam/${this._type}/${this._gameid}/`,
+                "text": Localization.str.view_on_website.replace("__website__", "Barter.vg"),
             },
         ];
 
@@ -64,51 +65,6 @@ export default class FExtraLinks extends Feature {
             this._moveExtraLinks();
 
             const appName = HTMLParser.clearSpecialSymbols(this.context.appName);
-
-            links.push(
-                {
-                    "id": "showyoutubereviews",
-                    "className": "youtube_btn",
-                    "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC" intitle:Review`)}`,
-                    "text": Localization.str.youtube_reviews,
-                },
-                {
-                    "id": "showyoutubegameplay",
-                    "className": "youtube_btn",
-                    "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC Gameplay"`)}`,
-                    "text": Localization.str.youtube_gameplay,
-                },
-                {
-                    "id": "showyoutube",
-                    "className": "youtube_btn",
-                    "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(appName)}`,
-                    "text": Localization.str.view_on_website.replace("__website__", "YouTube"),
-                },
-                {
-                    "id": "showtwitch",
-                    "className": "twitch_btn",
-                    "link": `https://www.twitch.tv/directory/game/${encodeURIComponent(appName)}`,
-                    "text": Localization.str.view_on_website.replace("__website__", "Twitch"),
-                },
-                {
-                    "id": "showpcgw",
-                    "className": "pcgw_btn",
-                    "link": `https://pcgamingwiki.com/api/appid.php?appid=${this.context.appid}`,
-                    "text": Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki"),
-                },
-                {
-                    "id": "showcompletionistme",
-                    "className": "completionistme_btn",
-                    "link": `https://completionist.me/steam/app/${this.context.appid}/`,
-                    "text": Localization.str.view_on_website.replace("__website__", "Completionist.me"),
-                },
-                {
-                    "id": "showprotondb",
-                    "className": "protondb_btn",
-                    "link": `https://www.protondb.com/app/${this.context.appid}/`,
-                    "text": Localization.str.view_on_website.replace("__website__", "ProtonDB"),
-                },
-            );
 
             if (this.context.hasCards) {
                 // FIXME some dlc have card category yet no card
@@ -119,6 +75,51 @@ export default class FExtraLinks extends Feature {
                     "text": Localization.str.view_on_website.replace("__website__", "Steam Card Exchange"),
                 });
             }
+
+            links.push(
+                {
+                    "id": "showprotondb",
+                    "className": "protondb_btn",
+                    "link": `https://www.protondb.com/app/${this.context.appid}/`,
+                    "text": Localization.str.view_on_website.replace("__website__", "ProtonDB"),
+                },
+                {
+                    "id": "showcompletionistme",
+                    "className": "completionistme_btn",
+                    "link": `https://completionist.me/steam/app/${this.context.appid}/`,
+                    "text": Localization.str.view_on_website.replace("__website__", "Completionist.me"),
+                },
+                {
+                    "id": "showpcgw",
+                    "className": "pcgw_btn",
+                    "link": `https://pcgamingwiki.com/api/appid.php?appid=${this.context.appid}`,
+                    "text": Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki"),
+                },
+                {
+                    "id": "showtwitch",
+                    "className": "twitch_btn",
+                    "link": `https://www.twitch.tv/directory/game/${encodeURIComponent(appName)}`,
+                    "text": Localization.str.view_on_website.replace("__website__", "Twitch"),
+                },
+                {
+                    "id": "showyoutube",
+                    "className": "youtube_btn",
+                    "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(appName)}`,
+                    "text": Localization.str.view_on_website.replace("__website__", "YouTube"),
+                },
+                {
+                    "id": "showyoutubegameplay",
+                    "className": "youtube_btn",
+                    "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC Gameplay"`)}`,
+                    "text": Localization.str.youtube_gameplay,
+                },
+                {
+                    "id": "showyoutubereviews",
+                    "className": "youtube_btn",
+                    "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC" intitle:Review`)}`,
+                    "text": Localization.str.youtube_reviews,
+                },
+            );
 
             // custom app link
             for (const customLink of SyncedStorage.get("app_custom_link")) {
