@@ -1,5 +1,5 @@
 
-/* eslint-disable no-undef,new-cap */
+/* eslint-disable camelcase,no-undef,new-cap */
 
 // noinspection JSUnresolvedFunction,JSUnresolvedVariable
 class SteamFacade {
@@ -64,6 +64,10 @@ class SteamFacade {
 
     static bindAutoFlyoutEvents() {
         return BindAutoFlyoutEvents();
+    }
+
+    static sliderOnChange(value) {
+        return g_player.SliderOnChange(value);
     }
 
     // dynamic store

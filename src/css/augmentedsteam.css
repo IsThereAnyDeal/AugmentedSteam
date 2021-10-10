@@ -890,6 +890,16 @@ img.astats_icon {
   width: 920px;
   max-width: 920px;
 }
+
+/*
+ * The native highlight strip has a width of 593px. (https://github.com/SteamDatabase/SteamTracking/blob/8e19832027cf425b5db71c09c878739b5630c66a/steamcommunity.com/public/css/skin_1/workshop_itemdetails.css#L238)
+ * Five items are at most fully visible on the strip. You can derive the following formula:
+ * stripWidth(itemCount) = itemCount * (116px width + 3px margin) - 2px
+ * On the expanded view 7 items are visible.
+ */
+.workshop_item_header.es_expanded #highlight_strip {
+  width: 831px;
+}
 .workshop_item_header .es_slider_toggle {
   display: block;
 }

@@ -106,5 +106,38 @@ export default class FMediaExpander extends Feature {
         } else {
             document.querySelector(".highlight_ctn").insertAdjacentElement("afterend", this._details);
         }
+
+        this._details.addEventListener("transitionend", () => {
+
+            // https://github.com/SteamDatabase/SteamTracking/blob/8e19832027cf425b5db71c09c878739b5630c66a/steamcommunity.com/public/javascript/workshop_previewplayer.js#L123
+            Page.runInPageContext(() => {
+                const f = window.SteamFacade;
+                const player = f.global("g_player");
+
+                const elemSlider = f.global("$")("highlight_slider");
+                const nSliderWidth = player.m_elemStripScroll.getWidth() - player.m_elemStrip.getWidth();
+
+                player.slider.dispose();
+
+                if (nSliderWidth > 0) {
+                    const newValue = player.slider.value * (nSliderWidth / player.slider.range.end);
+
+                    player.slider = new (f.global("Control").Slider)(
+                        elemSlider.down(".handle"),
+                        elemSlider,
+                        {
+                            "range": f.global("$R")(0, nSliderWidth),
+                            "sliderValue": newValue,
+                            "onSlide": player.SliderOnChange.bind(player),
+                            "onChange": player.SliderOnChange.bind(player),
+                        }
+                    );
+
+                    f.sliderOnChange(newValue);
+                } else {
+                    elemSlider.hide();
+                }
+            });
+        }, {"once": true});
     }
 }
