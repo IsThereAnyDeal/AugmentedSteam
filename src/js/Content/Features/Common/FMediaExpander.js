@@ -62,7 +62,13 @@ export default class FMediaExpander extends Feature {
                 this._handleWorkshop(expand);
             }
 
-            this._details.style.opacity = null;
+            /*
+             * The transitionend event might not get fired when a transition is triggered immediately after appending it to the DOM
+             * (which happens here).
+             * This mostly happens when the page is still loading, I assume there is a race condition with the rendering calls.
+             * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Transitions/Using_CSS_transitions#javascript_examples
+             */
+            setTimeout(() => { this._details.style.opacity = null; }, 0);
         }, {"once": true});
 
         this._details.style.opacity = 0;
