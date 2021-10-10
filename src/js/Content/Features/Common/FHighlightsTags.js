@@ -6,17 +6,6 @@ export default class FHighlightsTags extends Feature {
 
     async apply() {
 
-        FHighlightsTags._options = {
-            "owned": SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned"),
-            "wishlisted": SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist"),
-            "ignored": SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested"),
-            "collected": SyncedStorage.get("highlight_collection") || SyncedStorage.get("tag_collection"),
-            "waitlisted": SyncedStorage.get("highlight_waitlist") || SyncedStorage.get("tag_waitlist"),
-            "gift": SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift"),
-            "guestPass": SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass"),
-            "coupon": SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon"),
-        };
-
         await Page.runInPageContext(() => new Promise(resolve => {
             window.SteamFacade.onDynamicStoreReady(() => { resolve(); });
         }), null, true);
@@ -57,6 +46,19 @@ export default class FHighlightsTags extends Feature {
      */
     /* eslint-disable complexity -- FIXME */
     static async highlightAndTag(nodes, hasDsInfo = true, options = {}) {
+
+        if (typeof FHighlightsTags._options === "undefined") {
+            FHighlightsTags._options = {
+                "owned": SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned"),
+                "wishlisted": SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist"),
+                "ignored": SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested"),
+                "collected": SyncedStorage.get("highlight_collection") || SyncedStorage.get("tag_collection"),
+                "waitlisted": SyncedStorage.get("highlight_waitlist") || SyncedStorage.get("tag_waitlist"),
+                "gift": SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift"),
+                "guestPass": SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass"),
+                "coupon": SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon"),
+            };
+        }
 
         const opts = {...this._options, ...options};
         if (!Object.values(opts).some(x => x)) { return; }
