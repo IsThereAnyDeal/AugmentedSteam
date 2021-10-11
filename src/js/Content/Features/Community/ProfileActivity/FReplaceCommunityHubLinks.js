@@ -17,6 +17,7 @@ export default class FReplaceCommunityHubLinks extends CallbackFeature {
         const nodes = parent.querySelectorAll(".blotter_block a:not(.bb_link)");
 
         for (const node of nodes) {
+            if (!node.hasAttribute("href")) { continue; }
             node.href = node.href.replace(/steamcommunity\.com\/(?:app|games)/, "store.steampowered.com/app");
         }
     }
