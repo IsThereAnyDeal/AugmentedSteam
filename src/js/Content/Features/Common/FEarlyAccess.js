@@ -110,7 +110,7 @@ export default class FEarlyAccess extends Feature {
 
 // TODO support React-based sales pages, curator lists, etc.
 FEarlyAccess._selector = [
-    // store.steampowered.com
+    // Store only, selectors for the Community are split into relevant contexts
     ".tab_item", // Item rows on storefront, genre, category, tags etc. pages
     ".quadscreenshot_carousel a", // Top carousel on genre, category, tags etc. pages
     ".newonsteam_headercap", // explore/new
@@ -141,12 +141,5 @@ FEarlyAccess._selector = [
     ".recommendation_carousel_item",
     ".app_header",
     ".friendplaytime_appheader",
-
-    // steamcommunity.com
-    ".gameListRowLogo", // my/games, my/followedgames
-    ".leftcol > a", // my/recommended, my/reviews
-    ".blotter_gamepurchase_logo",
-    ".game_info_cap",
-    ".showcase_slot:not(.showcase_achievement)",
 ].map(sel => `${sel}:not(.es_ea_checked)`)
     .join(",");

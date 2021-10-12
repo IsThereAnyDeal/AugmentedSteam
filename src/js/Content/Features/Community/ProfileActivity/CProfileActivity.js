@@ -14,6 +14,8 @@ export class CProfileActivity extends CCommunityBase {
             FAchievementLink,
         ]);
 
+        FEarlyAccess.show(document.querySelectorAll(".blotter_gamepurchase_logo"));
+
         this._registerObserver();
     }
 

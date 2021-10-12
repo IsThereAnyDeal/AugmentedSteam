@@ -1,5 +1,6 @@
 import {ContextType, ProfileData} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
+import FEarlyAccess from "../../Common/FEarlyAccess";
 import FCommunityProfileLinks from "./FCommunityProfileLinks";
 import FWishlistProfileLink from "./FWishlistProfileLink";
 import FSupporterBadges from "./FSupporterBadges";
@@ -55,6 +56,8 @@ export class CProfileHome extends CCommunityBase {
         ]);
 
         this.isPrivateProfile = document.body.classList.contains("private_profile");
+
+        FEarlyAccess.show(document.querySelectorAll(".game_info_cap, .showcase_slot:not(.showcase_achievement)"));
 
         // FPinnedBackground needs to wait on custom backgrounds (if any) to be fetched and set
         FPinnedBackground.dependencies = [FCustomBackground];

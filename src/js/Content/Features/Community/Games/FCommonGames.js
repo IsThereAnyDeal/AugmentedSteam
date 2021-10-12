@@ -6,7 +6,7 @@ export default class FCommonGames extends Feature {
 
     checkPrerequisites() {
         // Steam's filter checkbox won't appear if not signed in, or if on own profile
-        return document.querySelector(".common_filter_ctn") !== null;
+        return this.context.showStats && document.querySelector(".common_filter_ctn") !== null;
     }
 
     apply() {
