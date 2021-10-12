@@ -1572,12 +1572,6 @@ img.astats_icon {
 .tab_item.es_early_access > .tab_item_cap {
   line-height: 48px;
 }
-.spotlight_img.es_early_access > a {
-  display: inherit;
-}
-.showcase_slot .es_overlay_container {
-  pointer-events: none !important;
-}
 .store_capsule .es_overlay_container {
   position: absolute;
   top: 0;
