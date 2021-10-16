@@ -1508,6 +1508,16 @@ img.astats_icon {
   vertical-align: baseline;
 }
 
+/* Hide ds_flag and revert the burring/dimming of app images */
+.es_highlighted .ds_flag {
+  display: none;
+}
+.es_highlighted.ds_flagged img,
+.es_highlighted .ds_flagged img {
+  filter: blur(0) !important;
+  opacity: 1 !important;
+}
+
 /*.es_highlighted div:not(.discount_pct):not(.discount_final_price):not(.discount_original_price):not(.main_cap_status):not(.search_released):not(.tab_item_top_tags):not(.tab_item_details) {
 	color: rgba(255, 255, 255, 0.8) !important;
 }*/
