@@ -20,6 +20,10 @@ export class CSharedFiles extends CCommunityBase {
             FSubscribeAllDependencies,
         ]);
 
-        this.appid = GameId.getAppid(document.querySelector(".apphub_sectionTabs > a").href);
+        /*
+         * Get appid from the "All" tab link.
+         * The value will be `null` for e.g. Greenlight items that don't have the tabs section.
+         */
+        this.appid = GameId.getAppid(document.querySelector("a.apphub_sectionTab"));
     }
 }
