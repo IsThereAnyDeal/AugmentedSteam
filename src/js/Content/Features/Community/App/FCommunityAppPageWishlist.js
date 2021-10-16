@@ -4,7 +4,9 @@ import {Background, DynamicStore, Feature, User} from "../../../modulesContent";
 export default class FCommunityAppPageWishlist extends Feature {
 
     checkPrerequisites() {
-        return User.isSignedIn && SyncedStorage.get("wlbuttoncommunityapp");
+        return User.isSignedIn
+            && SyncedStorage.get("wlbuttoncommunityapp")
+            && (this._node = document.querySelector(".apphub_OtherSiteInfo")) !== null;
     }
 
     async apply() {
@@ -14,7 +16,7 @@ export default class FCommunityAppPageWishlist extends Feature {
         let {owned, wishlisted} = await DynamicStore.getAppStatus(`app/${appid}`);
         if (owned) { return; }
 
-        const parent = document.querySelector(".apphub_OtherSiteInfo");
+        const parent = this._node;
 
         HTML.beforeEnd(parent,
             // First whitespace intended, separates buttons

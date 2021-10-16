@@ -18,7 +18,12 @@ export class CApp extends CCommunityBase {
 
         super(type, features);
 
-        this.appid = GameId.getAppid(window.location.href);
+        /*
+         * Get appid from the "All" tab link. (FSharedFiles extends this class and the URL for those pages don't contain the appid)
+         * The value will be `null` for e.g. Greenlight items that don't have the tabs section.
+         * Avoid using the "Store Page" button because it doesn't appear for unlisted apps.
+         */
+        this.appid = GameId.getAppid(document.querySelector("a.apphub_sectionTab"));
 
         FHighlightsTags.highlightTitle(this.appid);
     }
