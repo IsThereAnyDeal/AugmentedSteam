@@ -114,10 +114,16 @@ export default class FMediaExpander extends Feature {
                 const f = window.SteamFacade;
                 const player = f.global("g_player");
 
+                // g_player is null when the shared file only has one screenshot and therefore no highlight strip
+                if (player === null) { return; }
+
                 const elemSlider = f.global("$")("highlight_slider");
                 const nSliderWidth = player.m_elemStripScroll.getWidth() - player.m_elemStrip.getWidth();
 
-                player.slider.dispose();
+                // Shared files with too few screenshots won't have a slider
+                if (typeof player.slider !== "undefined") {
+                    player.slider.dispose();
+                }
 
                 if (nSliderWidth > 0) {
                     const newValue = player.slider.value * (nSliderWidth / player.slider.range.end);
