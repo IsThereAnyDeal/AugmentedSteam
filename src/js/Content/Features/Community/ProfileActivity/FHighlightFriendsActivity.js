@@ -12,7 +12,8 @@ export default class FHighlightFriendsActivity extends CallbackFeature {
 
         const aNodes = Array.from(parent.querySelectorAll(".blotter_block")).reduce((acc, cur) => {
             acc.push(
-                ...Array.from(cur.querySelectorAll("a:not(.blotter_gamepurchase_logo)"))
+                // Don't highlight images of your friends' game purchases and don't highlight dynamic links as they will get replaced by https://github.com/SteamDatabase/SteamTracking/blob/3552ed4337cd76a5cf0c08ff4d4569d94ef6d4be/steamcommunity.com/public/shared/javascript/shared_global.js#L1512
+                ...Array.from(cur.querySelectorAll("a:not(.blotter_gamepurchase_logo,[id^='dynamiclink_'])"))
                     .filter(link => (GameId.getAppid(link) !== null && link.childElementCount <= 1)
 
                 // https://github.com/tfedor/AugmentedSteam/pull/470#pullrequestreview-284928257
