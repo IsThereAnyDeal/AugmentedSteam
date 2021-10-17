@@ -1,4 +1,4 @@
-# Augmented Steam
+<img src="https://user-images.githubusercontent.com/14999077/137643508-aa5d7001-f417-49a2-9b46-9ab629e0545b.png" width=100%></img>
 
 [![chrome users](https://img.shields.io/chrome-web-store/users/dnhpnfgdlenaccegplpojghhmaamnnfp?label=chrome%20users&logo=googlechrome)](https://chrome.google.com/webstore/detail/augmented-steam/dnhpnfgdlenaccegplpojghhmaamnnfp)
 [![firefox users](https://img.shields.io/amo/users/enhanced-steam-an-itad-fork?label=firefox%20users&color=4c1&logo=firefoxbrowser)](https://addons.mozilla.org/firefox/addon/enhanced-steam-an-itad-fork/)
