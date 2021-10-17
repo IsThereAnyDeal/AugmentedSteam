@@ -8,11 +8,11 @@
 
 Enhanced Steam fork by IsThereAnyDeal.
 
-This is an extension repository, find [server repository here](https://github.com/tfedor/AugmentedSteam_Server).
+This is an extension repository, find the [server repository here](https://github.com/tfedor/AugmentedSteam_Server).
 
 We are commited to continue it's development, after the [original extension](https://github.com/jshackles/Enhanced_Steam) has ended its life.
 
-Visit [extension's page](https://augmentedsteam.com/) or our [Discord channel](https://discord.gg/yn57q7f) for more info.
+Visit the [extension's page](https://augmentedsteam.com/) or our [Discord channel](https://discord.gg/yn57q7f) for more info.
 
 ## Development Setup
 
@@ -30,16 +30,16 @@ Run `npm run build firefox -- --production` or `npm run build chrome -- --produc
 
 ### Hot Reload
 
-During development, it might be convenient to run hot reload server, so you don't need to reload extension manually
+During development, it might be convenient to run the hot reload server, so you don't need to reload the extension manually
 after each build.
 
-To do that, run build with `--server` argument. Make sure to manually reload extension first time after the build.
+To do that, run build with the `--server` argument. Make sure to manually reload the extension first time after the build.
 > *Example:* `npm run build -- firefox --server`
 
 Now, for every change you make in the source code, the server will rebuild and reload the extension
 and refresh all affected pages automatically.
 
-In case the hot reload does not work or stops working, try restarting server and reloading extension manually.
+In case the hot reload does not work or stops working, try restarting the server and reloading the extension manually.
 
 ## License
 
