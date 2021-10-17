@@ -102,9 +102,9 @@ export class ReviewsCountSearchFilter extends SearchFilter {
 
             const reviewsNode = row.querySelector(".search_review_summary");
             if (reviewsNode) {
-                const match = reviewsNode.dataset.tooltipHtml.match(/\d{1,3}%.*?((?:\d{1,3},?)+)/);
+                const match = reviewsNode.dataset.tooltipHtml.match(/(?<!%\s*[\d,]*)\d[\d,]+(?![\d,]*\s*%)/);
                 if (match) {
-                    reviewCount = Number(match[1].replace(/,/g, ""));
+                    reviewCount = Number(match[0].replace(/,/g, ""));
                 }
             }
 

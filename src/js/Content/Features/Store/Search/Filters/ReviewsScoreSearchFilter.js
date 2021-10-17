@@ -151,9 +151,9 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
 
             const reviewsNode = row.querySelector(".search_review_summary");
             if (reviewsNode) {
-                const match = reviewsNode.dataset.tooltipHtml.match(/(\d{1,3})%/);
+                const match = reviewsNode.dataset.tooltipHtml.match(/(?<=%\s?)\d+|\d+(?=\s*%)/);
                 if (match) {
-                    reviewPercentage = Number(match[1]);
+                    reviewPercentage = Number(match[0]);
                 }
             }
 
