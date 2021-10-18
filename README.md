@@ -6,7 +6,23 @@
 
 ![eslint](https://github.com/tfedor/AugmentedSteam/workflows/eslint/badge.svg)
 
-Enhanced Steam fork by IsThereAnyDeal.
+Augmented Steam is a browser extension by [IsThereAnyDeal](https://isthereanydeal.com/) that improves your experience on the [Steam](https://store.steampowered.com/) platform by providing helpful information and tons of customization options.
+
+Some selected features:
+- Price details (current best, historical low) for any game or DLC sourced from many authorized stores
+- More visible highlighting of games you own or have wishlisted or ignored (also works with your IsThereAnyDeal Waitlist and Collection!)
+- Fine-tuned product search with search filters such as review count / score and Early Access
+- Sort and filter options for the market, games, friends, groups, achievements, badges and reviews
+- Links to popular websites with additional related information, plus the ability to add your own custom links
+- Quick / Instant Sell items in your inventory
+- Custom profile backgrounds and styles, visible to all users of Augmented Steam
+- Take and store notes about any game
+- Maximize information relevance by hiding unwanted content blocks from app pages or the homepage
+- Automatically skip age gates for NSFW content
+- Batch actions for various scenarios, e.g. registering multiple product keys or adding multiple DLCs to your cart at once
+- And many more!
+
+Augmented Steam, a fork of [Enhanced Steam](https://github.com/jshackles/Enhanced_Steam).
 
 This is an extension repository, find the [server repository here](https://github.com/tfedor/AugmentedSteam_Server).
 
