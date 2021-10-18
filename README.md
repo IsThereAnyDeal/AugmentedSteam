@@ -38,12 +38,12 @@ This is the repository for the extension, not the [server repository](https://gi
 
 Run `npm install` to install the required packages.
 
-### Building Extension
+### Building
 
-**Development build**
+**Development build:**
 Run `npm run build firefox` or `npm run build chrome`
 
-**Production build**
+**Production build:**
 Run `npm run build firefox -- --production` or `npm run build chrome -- --production`
 
 > *Note:* Run `npm run build -- --help` to see all available build options
@@ -53,13 +53,12 @@ Run `npm run build firefox -- --production` or `npm run build chrome -- --produc
 During development, it might be convenient to run the hot reload server, so you don't need to reload the extension manually
 after each build.
 
-To do that, run build with the `--server` argument. Make sure to manually reload the extension first time after the build.
+To do that, run `build` with the `--server` argument. Make sure to manually reload the extension for the first time after the hot reload build.
 > *Example:* `npm run build -- firefox --server`
 
-Now, for every change you make in the source code, the server will rebuild and reload the extension
-and refresh all affected pages automatically.
+Now, for every change you make in the source code, the server will rebuild and reload the extension and refresh all affected pages automatically.
 
-In case the hot reload does not work or stops working, try restarting the server and reloading the extension manually.
+In case the hot reload doesn't work or stops working, try restarting the server and reloading the extension manually.
 
 ## License
 
