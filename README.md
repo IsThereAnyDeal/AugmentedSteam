@@ -1,5 +1,9 @@
 [![Banner](.github/banner.png)](https://augmentedsteam.com/)
 
+[![Chrome download link](https://user-images.githubusercontent.com/14999077/137792613-1a22f12c-9744-4dbe-b0f4-fcb78e197b16.png)](https://chrome.google.com/webstore/detail/augmented-steam/dnhpnfgdlenaccegplpojghhmaamnnfp)
+[![Firefox download link](https://user-images.githubusercontent.com/14999077/137792665-c8a21478-49e4-49b9-bdd1-2ed441f22987.png)](https://addons.mozilla.org/firefox/addon/enhanced-steam-an-itad-fork/)
+[![Edge download link](https://user-images.githubusercontent.com/14999077/137792554-21463932-9e19-4ea5-a0ec-15cd10effe16.png)](https://microsoftedge.microsoft.com/addons/detail/augmented-steam/dnpjkgmekpilchdgolfifobohlohlioc)
+
 [![chrome users](https://img.shields.io/chrome-web-store/users/dnhpnfgdlenaccegplpojghhmaamnnfp?label=chrome%20users&logo=googlechrome)](https://chrome.google.com/webstore/detail/augmented-steam/dnhpnfgdlenaccegplpojghhmaamnnfp)
 [![firefox users](https://img.shields.io/amo/users/enhanced-steam-an-itad-fork?label=firefox%20users&color=4c1&logo=firefoxbrowser)](https://addons.mozilla.org/firefox/addon/enhanced-steam-an-itad-fork/)
 [![edge users](https://img.shields.io/badge/dynamic/json?label=edge%20users&query=%24.activeInstallCount&url=https://microsoftedge.microsoft.com/addons/getproductdetailsbycrxid/dnpjkgmekpilchdgolfifobohlohlioc&logo=microsoftedge)](https://microsoftedge.microsoft.com/addons/detail/augmented-steam/dnpjkgmekpilchdgolfifobohlohlioc)
