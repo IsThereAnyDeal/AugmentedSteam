@@ -26,13 +26,13 @@ Some selected features:
 - Batch actions for various scenarios, e.g. registering multiple product keys or adding multiple DLCs to your cart at once
 - And many more!
 
-Augmented Steam, a fork of [Enhanced Steam](https://github.com/jshackles/Enhanced_Steam).
+Augmented Steam is a fork and spiritual successor of [Enhanced Steam](https://github.com/jshackles/Enhanced_Steam), which has come to its end of life in February 2019.  
+Visit the [extension's page](https://augmentedsteam.com/) for more information.
 
-This is an extension repository, find the [server repository here](https://github.com/tfedor/AugmentedSteam_Server).
+We like to help you on our [Discord server](https://discord.gg/yn57q7f) in the `#as-general` or `#as-bugs` channels.  
+If you want to report a bug, please use this repository's [issue tracker](https://github.com/tfedor/AugmentedSteam/issues).
 
-We are commited to continue it's development, after the [original extension](https://github.com/jshackles/Enhanced_Steam) has ended its life.
-
-Visit the [extension's page](https://augmentedsteam.com/) or our [Discord channel](https://discord.gg/yn57q7f) for more info.
+This is the repository for the extension, not the [server repository](https://github.com/tfedor/AugmentedSteam_Server).
 
 ## Development Setup
 
