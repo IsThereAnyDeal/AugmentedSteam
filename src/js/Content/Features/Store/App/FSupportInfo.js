@@ -1,10 +1,10 @@
-import {HTML, LocalStorage, Localization, SyncedStorage} from "../../../../modulesCore";
+import {GameId, HTML, LocalStorage, Localization, SyncedStorage} from "../../../../modulesCore";
 import {Background, Feature} from "../../../modulesContent";
 
 export default class FSupportInfo extends Feature {
 
     async checkPrerequisites() {
-        if (this.context.isDlc() || !SyncedStorage.get("showsupportinfo")) { return false; }
+        if (!SyncedStorage.get("showsupportinfo")) { return false; }
 
         let cache = LocalStorage.get("support_info", null);
 
@@ -16,7 +16,8 @@ export default class FSupportInfo extends Feature {
             };
         }
 
-        const appid = this.context.appid;
+        // Attempt to get appid of parent app first for DLCs and Soundtracks
+        const appid = GameId.getAppid(document.querySelector(".glance_details a")) || this.context.appid;
         this._supportInfo = cache.data[appid];
 
         if (!this._supportInfo) {
