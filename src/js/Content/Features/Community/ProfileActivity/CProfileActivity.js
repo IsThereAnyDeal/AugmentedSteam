@@ -14,7 +14,7 @@ export class CProfileActivity extends CCommunityBase {
             FAchievementLink,
         ]);
 
-        FEarlyAccess.show(document.querySelectorAll(".blotter_gamepurchase_logo"));
+        FEarlyAccess.show(document.querySelectorAll(".blotter_gamepurchase_logo, .gameLogoHolder_default"));
 
         this._registerObserver();
     }
@@ -27,7 +27,7 @@ export class CProfileActivity extends CCommunityBase {
 
             for (const {addedNodes} of mutations) {
                 this.triggerCallbacks(addedNodes[0]);
-                FEarlyAccess.show(addedNodes[0].querySelectorAll(".blotter_gamepurchase_logo"));
+                FEarlyAccess.show(addedNodes[0].querySelectorAll(".blotter_gamepurchase_logo, .gameLogoHolder_default"));
             }
         }).observe(document.querySelector("#blotter_content"), {"childList": true});
     }
