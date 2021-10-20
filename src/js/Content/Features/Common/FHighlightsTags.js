@@ -247,24 +247,19 @@ export default class FHighlightsTags extends Feature {
     }
     /* eslint-enable complexity */
 
-    static _highlightNode(node) {
+    static _highlightNode(node, type) {
+
         if (SyncedStorage.get("highlight_excludef2p")) {
 
-            if (node.innerHTML.match(
-                /<div class="(tab_price|large_cap_price|col search_price|main_cap_price|price)">\n?(.+)?(Free to Play|Play for Free!)(.+)?<\/div>/i
-            )) {
-                return;
-            }
-            if (node.innerHTML.match(/<h5>(Free to Play|Play for Free!)<\/h5>/i)) {
-                return;
-            }
-            if (node.innerHTML.match(/genre_release/) && node.querySelector(".genre_release").innerHTML.match(/Free to Play/i)) {
-                return;
-            }
-            if (node.classList.contains("search_result_row") && node.innerHTML.match(/Free to Play/i)) {
-                return;
-            }
+            let _node = node.querySelector("[data-ds-tagids]") || node.closest("[data-ds-tagids]");
+            // Check for the "Free to Play" tag
+            if (_node && JSON.parse(_node.dataset.dsTagids).includes(113)) { return; }
+            // Check if the price is "Free", only works for English users
+            _node = node.querySelector(".discount_final_price, .regular_price, .search_price, .game_area_dlc_price, .browse_tag_game_price");
+            if (_node && /\bFree\b/.test(_node.textContent)) { return; }
         }
+
+        node.classList.add("es_highlighted", `es_highlighted_${type}`);
 
         if (!this._highlightCssLoaded) {
             this._highlightCssLoaded = true;
@@ -342,8 +337,7 @@ export default class FHighlightsTags extends Feature {
         node.classList.add("es_highlight_checked");
 
         if (SyncedStorage.get(`highlight_${name}`)) {
-            node.classList.add("es_highlighted", `es_highlighted_${name}`);
-            this._highlightNode(node);
+            this._highlightNode(node, name);
         }
 
         if (SyncedStorage.get(`tag_${name}`)) {
