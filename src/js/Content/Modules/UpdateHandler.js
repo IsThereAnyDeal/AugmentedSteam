@@ -123,6 +123,14 @@ class UpdateHandler {
 
         if (oldVersion.isSameOrBefore("2.1.0")) {
             SyncedStorage.remove("showcomparelinks");
+
+            const links = SyncedStorage.get("profile_custom_link");
+            for (const link of links) {
+                if (link.url && !link.url.includes("[ID]")) {
+                    link.url += "[ID]";
+                }
+            }
+            SyncedStorage.set("profile_custom_link", links);
         }
     }
 }
