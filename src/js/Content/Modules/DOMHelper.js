@@ -35,9 +35,18 @@ class DOMHelper {
         if (id) { script.id = id; }
         if (src) { script.src = src; }
         if (content) { script.textContent = content; }
-        script.async = isAsync;
+        if (isAsync) { script.setAttribute("async", ""); }
 
         document.head.appendChild(script);
+    }
+
+    static insertCSS(content, id) {
+        const style = document.createElement("style");
+
+        if (id) { style.id = id; }
+        style.textContent = content;
+
+        document.head.appendChild(style);
     }
 }
 
