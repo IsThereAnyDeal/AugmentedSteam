@@ -64,8 +64,21 @@ class GameId {
     }
 
     static getAppidImgSrc(text) {
-        if (!text) { return null; }
-        const m = text.match(/(?:cdn\.akamai\.steamstatic\.com\/steam|steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
+        let _text = text;
+
+        if (!_text) { return null; }
+
+        if (_text instanceof HTMLImageElement) {
+            if (_text.hasAttribute("src")) {
+                _text = _text.getAttribute("src");
+            } else {
+                _text = _text.dataset.imageUrl;
+            }
+            if (!_text) { return null; }
+        }
+
+        // TODO support Steam's CDN option
+        const m = _text.match(/(?:cdn\.(?:akamai|cloudflare)\.steamstatic\.com\/steam|steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
         return m && GameId.parseId(m[1]);
     }
 

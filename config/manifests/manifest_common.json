@@ -262,7 +262,9 @@
     {
       "matches": [
         "*://steamcommunity.com/id/*/games*",
-        "*://steamcommunity.com/profiles/*/games*"
+        "*://steamcommunity.com/profiles/*/games*",
+        "*://steamcommunity.com/id/*/followedgames*",
+        "*://steamcommunity.com/profiles/*/followedgames*"
       ],
       "js": [
         "js/community/games.js"
@@ -428,6 +430,8 @@
         "*://steamcommunity.com/profiles/*/myactivity",
         "*://steamcommunity.com/id/*/games*",
         "*://steamcommunity.com/profiles/*/games*",
+        "*://steamcommunity.com/id/*/followedgames*",
+        "*://steamcommunity.com/profiles/*/followedgames*",
         "*://steamcommunity.com/id/*/edit*",
         "*://steamcommunity.com/profiles/*/edit*",
         "*://steamcommunity.com/id/*/badges",

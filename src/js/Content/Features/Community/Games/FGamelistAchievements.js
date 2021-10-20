@@ -4,7 +4,7 @@ import {Feature, Stats} from "../../../modulesContent";
 export default class FGamelistAchievements extends Feature {
 
     checkPrerequisites() {
-        return SyncedStorage.get("showallachievements");
+        return this.context.showStats && SyncedStorage.get("showallachievements");
     }
 
     apply() {

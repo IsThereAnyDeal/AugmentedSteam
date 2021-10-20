@@ -3,7 +3,6 @@ import {
     AugmentedSteam, Background,
     CurrencyManager,
     DOMHelper,
-    EarlyAccess,
     ITAD, Messenger, ProgressBar,
     Sortbox,
     UpdateHandler,
@@ -98,7 +97,6 @@ class Page {
         ProgressBar.loading();
         AugmentedSteam.init();
         UpdateHandler.checkVersion(AugmentedSteam.clearCache);
-        EarlyAccess.showEarlyAccess();
         ITAD.create();
         Sortbox.init();
         this._pageSpecificFeatures();

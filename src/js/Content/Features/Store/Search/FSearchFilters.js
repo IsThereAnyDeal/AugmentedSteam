@@ -1,6 +1,7 @@
 import {HTML, Localization} from "../../../../modulesCore";
-import {EarlyAccess, Feature, Messenger} from "../../../modulesContent";
+import {Feature, Messenger} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
+import FEarlyAccess from "../../Common/FEarlyAccess";
 import {Page} from "../../Page";
 import {CartSearchFilter} from "./Filters/CartSearchFilter";
 import {EarlyAccessSearchFilter} from "./Filters/EarlyAccessSearchFilter";
@@ -118,7 +119,7 @@ export default class FSearchFilters extends Feature {
         Messenger.addMessageListener("searchCompleted", filtersChanged => {
             const newResults = document.querySelectorAll(".search_result_row:not([data-as-review-count])");
 
-            EarlyAccess.showEarlyAccess();
+            FEarlyAccess.show(newResults);
             FHighlightsTags.highlightAndTag(newResults);
 
             const params = new URLSearchParams(window.location.search);
