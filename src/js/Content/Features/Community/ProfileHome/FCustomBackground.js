@@ -6,7 +6,7 @@ export default class FCustomBackground extends Feature {
         const prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9.]+)/i);
         if (prevHash) {
             const imgUrl = `//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/${prevHash[1]}/${prevHash[2]}`;
-            this.setProfileBg(imgUrl);
+            this._setProfileBg(imgUrl);
 
             return false;
         }
@@ -20,7 +20,7 @@ export default class FCustomBackground extends Feature {
         const bg = ProfileData.getBgImgUrl();
         if (!bg) { return; }
 
-        FCustomBackground.setProfileBg(bg);
+        this._setProfileBg(bg);
     }
 
     /**
@@ -28,7 +28,7 @@ export default class FCustomBackground extends Feature {
      * TODO Update to support animated backgrounds once the custom backgrounds database
      * and/or the "view full image" feature on the Market supports them.
      */
-    static setProfileBg(imgUrl) {
+    _setProfileBg(imgUrl) {
         DOMHelper.remove(".profile_animated_background"); // Animated BGs will interfere with static BGs
 
         const profilePage = document.querySelector(".no_header.profile_page");

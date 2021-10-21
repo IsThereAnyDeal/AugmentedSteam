@@ -1,6 +1,5 @@
 import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
 import {DOMHelper, Feature, ProfileData} from "../../../modulesContent";
-import FCustomBackground from "./FCustomBackground";
 
 export default class FCustomStyle extends Feature {
 
@@ -106,10 +105,6 @@ export default class FCustomStyle extends Feature {
                 avatarNode.classList.add("golden");
                 HTML.afterBegin(avatarNode, "<div class='goldenAvatarOverlay'></div>");
 
-                if (!profilePageNode.classList.contains("has_profile_background")) {
-                    FCustomBackground.setProfileBg("https://steamcdn-a.akamaihd.net/steamcommunity/public/images/items/1223590/daa4b34582ed6cab1327f247be8d03d92ae8aaaa.jpg");
-                }
-
                 break;
             }
             case "goldenprofile": {
@@ -173,6 +168,3 @@ export default class FCustomStyle extends Feature {
         }
     }
 }
-
-// Required for LNY2020 to check whether the profile has a (custom) background
-FCustomStyle.dependencies = [FCustomBackground];
