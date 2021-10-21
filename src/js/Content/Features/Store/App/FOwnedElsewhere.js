@@ -4,7 +4,7 @@ import {HTML, Localization} from "../../../../modulesCore";
 export default class FOwnedElsewhere extends Feature {
 
     checkPrerequisites() {
-        return !this.context.isOwned() && Background.action("itad.isconnected");
+        return !this.context.isOwned && Background.action("itad.isconnected");
     }
 
     async apply() {

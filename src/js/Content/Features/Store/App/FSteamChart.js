@@ -5,8 +5,10 @@ export default class FSteamChart extends Feature {
 
     async checkPrerequisites() {
         if (!SyncedStorage.get("show_steamchart_info")
-            || this.context.isDlc()
-            || !document.querySelector(".sys_req")) { return false; }
+            || this.context.isDlc
+            || !document.querySelector(".sys_req")) {
+            return false;
+        }
 
         const result = await this.context.data;
         if (result && result.charts && result.charts.chart && result.charts.chart.peakall) {

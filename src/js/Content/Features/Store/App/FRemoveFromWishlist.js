@@ -5,7 +5,7 @@ import {Page} from "../../Page";
 export default class FRemoveFromWishlist extends Feature {
 
     checkPrerequisites() {
-        return User.isSignedIn && !this.context.isOwned();
+        return User.isSignedIn && !this.context.isOwned;
     }
 
     apply() {

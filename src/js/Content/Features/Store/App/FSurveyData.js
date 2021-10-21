@@ -4,7 +4,7 @@ import {HTML, Localization} from "../../../../modulesCore";
 export default class FSurveyData extends Feature {
 
     async checkPrerequisites() {
-        if (this.context.isVideo() || this.context.isDlc() || !document.querySelector(".sys_req")) { return false; }
+        if (this.context.isVideo || this.context.isDlc || !document.querySelector(".sys_req")) { return false; }
 
         const result = await this.context.data;
         if (result && result.survey) {
@@ -60,7 +60,7 @@ export default class FSurveyData extends Feature {
 
         /*
          * FIXME
-         * if (this.context.isOwned() && document.getElementById("my_activity")) {
+         * if (this.context.isOwned && document.getElementById("my_activity")) {
          *   html += `<a class="btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs"
          *      href="${Config.PublicHost}/survey/?appid=${this.context.appid}"><span>${Localization.str.survey.take}</span></a>`;
          * }

@@ -5,7 +5,7 @@ import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../..
 export default class FAStatsLink extends Feature {
 
     checkPrerequisites() {
-        return SyncedStorage.get("showastatslink") && this.context.hasAchievements();
+        return SyncedStorage.get("showastatslink") && this.context.hasAchievements;
     }
 
     apply() {

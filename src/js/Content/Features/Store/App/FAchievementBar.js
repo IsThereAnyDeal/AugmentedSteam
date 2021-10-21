@@ -4,7 +4,9 @@ import {Feature, Stats} from "../../../modulesContent";
 export default class FAchievementBar extends Feature {
 
     checkPrerequisites() {
-        return SyncedStorage.get("showachinstore") && this.context.hasAchievements() && document.getElementById("my_activity");
+        return SyncedStorage.get("showachinstore")
+            && this.context.hasAchievements
+            && document.getElementById("my_activity") !== null;
     }
 
     async apply() {

@@ -5,7 +5,7 @@ export default class FSteamSpy extends Feature {
 
     async checkPrerequisites() {
         if (!SyncedStorage.get("show_steamspy_info")
-            || this.context.isDlc()
+            || this.context.isDlc
             || !document.querySelector(".sys_req")) {
             return false;
         }

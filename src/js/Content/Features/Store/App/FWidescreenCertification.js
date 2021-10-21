@@ -16,7 +16,7 @@ export default class FWidescreenCertification extends Feature {
     }
 
     async checkPrerequisites() {
-        if (!this.context.isDlc() && SyncedStorage.get("showwsgf")) {
+        if (!this.context.isDlc && SyncedStorage.get("showwsgf")) {
             const result = await this.context.data;
             if (result && result.wsgf) {
                 this._data = result.wsgf;

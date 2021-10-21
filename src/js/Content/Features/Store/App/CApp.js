@@ -105,6 +105,15 @@ export class CApp extends CStore {
         // TODO this check is unreliable; some apps and dlcs have card category yet no card, and vice versa
         this.hasCards = document.querySelector('#category_block img[src$="/ico_cards.png"]') !== null;
 
+        // #achievement_block is also used for point shop items
+        this.hasAchievements = document.querySelector(".communitylink_achievement_images") !== null;
+
+        this.isOwned = document.querySelector(".game_area_already_owned") !== null;
+
+        this.isDlc = document.querySelector("div.game_area_dlc_bubble") !== null;
+
+        this.isVideo = document.querySelector(".game_area_purchase_game span[class*=streaming], div.series_seasons") !== null;
+
         this.onWishAndWaitlistRemove = null;
 
         // Some games (e.g. 201270, 201271) have different appid in store page and community
@@ -131,24 +140,6 @@ export class CApp extends CStore {
 
     storePageDataPromise() {
         return Background.action("storepagedata", this.appid, this.metalink, SyncedStorage.get("showoc"));
-    }
-
-    // TODO(tfedor) maybe make properties instead of dynamic qheck of all of these "isXY"? Not sure
-    isOwned() {
-        return document.querySelector(".game_area_already_owned") !== null;
-    }
-
-    isDlc() {
-        return document.querySelector("div.game_area_dlc_bubble") !== null;
-    }
-
-    isVideo() {
-        return document.querySelector('.game_area_purchase_game span[class*="streaming"], div.series_seasons') !== null;
-    }
-
-    hasAchievements() {
-        // #achievement_block is also used for point shop items
-        return document.querySelector(".communitylink_achievement_images") !== null;
     }
 
     removeFromWishlist() {
