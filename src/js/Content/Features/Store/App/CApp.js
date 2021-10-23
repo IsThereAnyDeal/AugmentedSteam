@@ -116,6 +116,10 @@ export class CApp extends CStore {
         // The customizer has to wait on this data to be added in order to find the HTML elements
         FCustomizer.dependencies = [FSteamSpy, FSteamChart, FSurveyData];
         FCustomizer.weakDependency = true;
+
+        // FPackBreakdown skips purchase options with a package info button to avoid false positives
+        FPackageInfoButton.dependencies = [FPackBreakdown];
+        FPackageInfoButton.weakDependency = true;
     }
 
     storePageDataPromise() {
