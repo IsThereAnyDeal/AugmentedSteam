@@ -1,6 +1,5 @@
 import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
 import {DOMHelper, Feature, ProfileData} from "../../../modulesContent";
-import FCustomBackground from "./FCustomBackground";
 
 export default class FCustomStyle extends Feature {
 
@@ -106,8 +105,20 @@ export default class FCustomStyle extends Feature {
                 avatarNode.classList.add("golden");
                 HTML.afterBegin(avatarNode, "<div class='goldenAvatarOverlay'></div>");
 
+                // Use the animated BG that comes with this theme if the profile has no BG equipped
                 if (!profilePageNode.classList.contains("has_profile_background")) {
-                    FCustomBackground.setProfileBg("https://steamcdn-a.akamaihd.net/steamcommunity/public/images/items/1223590/daa4b34582ed6cab1327f247be8d03d92ae8aaaa.jpg");
+
+                    HTML.afterBegin(profilePageNode,
+                        `<div class="profile_animated_background">
+                            <video playsinline autoplay muted loop poster="//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/1223590/daa4b34582ed6cab1327f247be8d03d92ae8aaaa.jpg">
+                                <source src="//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/1223590/c146558951b46ade8d64ea8e787980f84d30ec46.webm" type="video/webm">
+                                <source src="//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/1223590/b5c39efda3998e0d2e734e8b7385ecf705ce8cc5.mp4" type="video/mp4">
+                            </video>
+                        </div>`);
+
+                    for (const node of [document.body, profilePageNode, profilePageNode.querySelector(".profile_content")]) {
+                        node.classList.add("has_profile_background");
+                    }
                 }
 
                 break;
@@ -173,6 +184,3 @@ export default class FCustomStyle extends Feature {
         }
     }
 }
-
-// Required for LNY2020 to check whether the profile has a (custom) background
-FCustomStyle.dependencies = [FCustomBackground];

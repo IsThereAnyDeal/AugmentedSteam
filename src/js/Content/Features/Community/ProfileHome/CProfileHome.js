@@ -59,8 +59,11 @@ export class CProfileHome extends CCommunityBase {
 
         FEarlyAccess.show(document.querySelectorAll(".game_info_cap, .showcase_slot:not(.showcase_achievement)"));
 
-        // FPinnedBackground needs to wait on custom backgrounds (if any) to be fetched and set
-        FPinnedBackground.dependencies = [FCustomBackground];
+        // Need to wait on custom background and style (LNY2020 may set the background) to be fetched and set
+        FPinnedBackground.dependencies = [FCustomBackground, FCustomStyle];
         FPinnedBackground.weakDependency = true;
+
+        // Required for LNY2020 to check whether the profile has a (custom) background
+        FCustomStyle.dependencies = [FCustomBackground];
     }
 }
