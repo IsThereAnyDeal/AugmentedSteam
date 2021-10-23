@@ -77,6 +77,10 @@ class SyncedStorage {
 
     // load whole storage and make local copy
     static async init() {
+
+        if (this._initialized) { return this._cache; }
+        this._initialized = true;
+
         browser.storage.onChanged.addListener(changes => {
             for (const [key, {"newValue": val}] of Object.entries(changes)) {
                 this._cache[key] = val;
