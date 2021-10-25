@@ -11,16 +11,22 @@ import {Page} from "../Features/Page";
 
 class UpdateHandler {
 
-    static checkVersion(onUpdate) {
+    static async checkVersion(onUpdate) {
         const lastVersion = Version.fromString(SyncedStorage.get("version"));
         const currentVersion = Version.fromString(Info.version);
 
         if (currentVersion.isAfter(lastVersion)) {
+
+            let changelogPromise = Promise.resolve();
             if (SyncedStorage.get("version_show")) {
-                this._showChangelog();
+                changelogPromise = this._showChangelog().catch(err => { console.error("Failed to show changelog: %o", err); });
             }
-            this._migrateSettings(lastVersion);
-            onUpdate();
+
+            await Promise.all([
+                changelogPromise,
+                this._migrateSettings(lastVersion),
+                onUpdate(),
+            ]);
         }
 
         SyncedStorage.set("version", Info.version);
@@ -30,10 +36,13 @@ class UpdateHandler {
 
         const changelog = await ExtensionResources.getJSON("changelog.json");
         const html = changelog[Info.version];
-        if (!html) { return; }
+        if (!html) {
+            throw new Error("Can't find changelog for version %s", Info.version);
+        }
 
         const logo = ExtensionResources.getURL("img/logo/as128.png");
-        const dialog = `<div class="es_changelog"><img src="${logo}"><div>${html}</div></div>`;
+        const githubChanges = `<p><a href="https://github.com/tfedor/AugmentedSteam/compare/v${SyncedStorage.get("version")}...v${Info.version}">All changes on GitHub</a></p>`;
+        const dialog = `<div class="es_changelog"><img src="${logo}"><div>${html}${githubChanges}</div></div>`;
 
         const connectBtn = document.querySelector("#itad_connect");
         function itadConnected() { connectBtn.replaceWith("✓"); }
