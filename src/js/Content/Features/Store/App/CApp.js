@@ -44,9 +44,13 @@ import FDemoAbovePurchase from "./FDemoAbovePurchase";
 export class CApp extends CStore {
 
     constructor() {
-        // Don't apply features if there's an error message (e.g. region-locked, age-gated)
+
+        // Only add extra links if there's an error message (e.g. region-locked, age-gated)
         if (document.getElementById("error_box")) {
-            super(ContextType.APP);
+            super(ContextType.APP, [FExtraLinks]);
+
+            this.appid = GameId.getAppid(window.location.host + window.location.pathname);
+
             return;
         }
 
@@ -96,6 +100,7 @@ export class CApp extends CStore {
         this.appid = GameId.getAppid(window.location.host + window.location.pathname);
         this.storeid = `app/${this.appid}`;
 
+        // TODO this check is unreliable; some apps and dlcs have card category yet no card, and vice versa
         this.hasCards = document.querySelector('#category_block img[src$="/ico_cards.png"]') !== null;
 
         this.onWishAndWaitlistRemove = null;
