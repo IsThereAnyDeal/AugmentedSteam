@@ -9,10 +9,10 @@ export default class FAchievementLink extends CallbackFeature {
 
     callback(parent = document) {
 
-        const nodes = Array.from(parent.querySelectorAll(".blotter_daily_rollup_line"))
-            .filter(node => node.querySelector(":scope > img") !== null);
+        for (const node of parent.querySelectorAll(".blotter_daily_rollup_line")) {
 
-        for (const node of nodes) {
+            const firstImg = node.querySelector(":scope > img");
+            if (!firstImg) { continue; }
 
             const linksNode = node.querySelector(":scope > span");
             const appid = GameId.getAppid(linksNode && linksNode.querySelector("a:nth-of-type(2)"));
@@ -25,7 +25,7 @@ export default class FAchievementLink extends CallbackFeature {
 
             const wrapper = HTML.wrap(
                 `<a class="es-ach-link" href="${profileUrl}stats/${appid}/achievements/" target="_blank"></a>`,
-                node.querySelector(":scope > img"),
+                firstImg,
                 null,
             );
 
