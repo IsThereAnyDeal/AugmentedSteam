@@ -8,15 +8,15 @@
   transition: opacity 0.25s ease-in-out;
 }
 /**
- * https://github.com/tfedor/AugmentedSteam/issues/485
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/485
  * Always show "View all comments" links on friends activity page
  */
 .blotter_viewallcomments_container {
   display: block !important;
 }
 /**
- * https://github.com/tfedor/AugmentedSteam/issues/397
- * https://github.com/tfedor/AugmentedSteam/issues/545
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/397
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/545
  * Fix long-shaped artwork thumbnails
  */
 .publishedfile_popup_screenshot, .publishedfile_popup_screenshot > img, .profile_media_item, .imgWallItem {
@@ -26,7 +26,7 @@
   min-width: 720px !important;
 }
 /**
- * https://github.com/tfedor/AugmentedSteam/issues/1254
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/1254
  * Increase height of collection choice section
  */
 .collectionChoiceSection {
@@ -1383,7 +1383,7 @@ img.astats_icon {
 }
 
 /**
- * https://github.com/tfedor/AugmentedSteam/issues/389
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/389
  * Fix unclickable dropdowns
  */
 .ds_options_tooltip {

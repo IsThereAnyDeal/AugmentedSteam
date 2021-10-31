@@ -16,7 +16,7 @@ export default class FHighlightFriendsActivity extends CallbackFeature {
                 ...Array.from(cur.querySelectorAll("a:not(.blotter_gamepurchase_logo,[id^='dynamiclink_'])"))
                     .filter(link => (GameId.getAppid(link) !== null && link.childElementCount <= 1)
 
-                // https://github.com/tfedor/AugmentedSteam/pull/470#pullrequestreview-284928257
+                // https://github.com/IsThereAnyDeal/AugmentedSteam/pull/470#pullrequestreview-284928257
                 && (link.childElementCount !== 1 || !link.closest(".vote_header")))
             );
             return acc;

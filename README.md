@@ -5,7 +5,7 @@
 [![Edge users](https://img.shields.io/badge/dynamic/json?label=Edge%20users&query=%24.activeInstallCount&url=https://microsoftedge.microsoft.com/addons/getproductdetailsbycrxid/dnpjkgmekpilchdgolfifobohlohlioc&logo=microsoftedge)](https://microsoftedge.microsoft.com/addons/detail/augmented-steam/dnpjkgmekpilchdgolfifobohlohlioc)
 
 [![Discord](https://img.shields.io/discord/301903094080339968?label=Discord&logo=discord)](https://discord.gg/yn57q7f)
-![eslint](https://github.com/tfedor/AugmentedSteam/workflows/eslint/badge.svg)
+![eslint](https://github.com/IsThereAnyDeal/AugmentedSteam/workflows/eslint/badge.svg)
 
 Augmented Steam is a browser extension by [IsThereAnyDeal](https://isthereanydeal.com/) that improves your experience on the [Steam](https://store.steampowered.com/) platform by providing helpful information and tons of customization options.
 
@@ -31,9 +31,9 @@ Visit the [extension's page](https://augmentedsteam.com/) for more information.
 [![Edge download link](badges/edge.png)](https://microsoftedge.microsoft.com/addons/detail/augmented-steam/dnpjkgmekpilchdgolfifobohlohlioc)
 
 We like to help you on our [Discord server](https://discord.gg/yn57q7f) in the `#as-general` or `#as-bugs` channels.  
-If you want to report a bug, please use this repository's [issue tracker](https://github.com/tfedor/AugmentedSteam/issues).
+If you want to report a bug, please use this repository's [issue tracker](https://github.com/IsThereAnyDeal/AugmentedSteam/issues).
 
-This is the repository for the extension, not the [server repository](https://github.com/tfedor/AugmentedSteam_Server).
+This is the repository for the extension, not the [server repository](https://github.com/IsThereAnyDeal/AugmentedSteam_Server).
 
 ## Development Setup
 
