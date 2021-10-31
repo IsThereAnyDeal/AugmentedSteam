@@ -10,8 +10,10 @@ class ChangelogBuilder {
         for (const [version, logHtml] of Object.entries(data)) {
 
             html += `
-                <h2>${version}</h2>
-                <div>${logHtml}</div>
+                <div class="changelog__release">
+                    <h2 class="changelog__version">${version}</h2>
+                    <div class="changelog__log">${logHtml}</div>                
+                </div>
             `;
         }
 
