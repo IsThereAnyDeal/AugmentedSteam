@@ -1,3 +1,14 @@
+2.2.0: |
+  New:
+  - Added option to skip confirmation dialog when removing games from your wishlist
+  - Wishlist rankings will now remain editable when any sorting or filtering options are active
+  - Added option to pin profile backgrounds, so that they won't move when scrolling
+  - Added two new custom profile themes (Golden 2020 & Winter 2019)
+
+  Bug fixes:
+  - Review filters on the search page now work for every language
+  - Firefox only: Games without a note note no longer show "undefined"
+
 2.1.0: |
   - Automatically show price with coupon on game page, when coupon is available
   - Add option for showing "excluded from family sharing" notice
