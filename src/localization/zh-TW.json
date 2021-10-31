@@ -578,18 +578,21 @@
         "with_help_of": "以及許多__contributors__",
         "contributors": "熱心付出的貢獻者",
         "apppage": "應用程式頁面",
-        "exfgls": "",
-        "saving": "",
+        "exfgls": "若應用程式無法透過親友同享功能分享顯示提示訊息",
+        "custom_style_disable": "停用自訂主題",
+        "saving": "儲存中...",
         "user_notes": {
-            "user_notes": "",
-            "app": "",
-            "wishlist": "",
-            "loc": "",
-            "synced_storage": "",
-            "local": "",
-            "itad": ""
+            "user_notes": "便箋",
+            "app": "於應用程式頁面",
+            "wishlist": "於我的願望清單",
+            "loc": "儲存位置",
+            "synced_storage": "可同步的本地儲存空間",
+            "local": "本地資料庫",
+            "itad": "IsThereAnyDeal 伺服器"
         },
-        "show_custom_themes": ""
+        "show_custom_themes": "顯示自訂主題",
+        "oneclickremovewl": "移除項目時跳過確認訊息",
+        "profile_pinned_bg": "捲動時固定個人檔案背景"
     },
     "ready": {
         "errormsg": "Augmented Steam 資料載入錯誤",
@@ -672,7 +675,7 @@
     "tradeoffer": {
         "num_item": "__num__ 個物品",
         "num_items": "__num__ 個物品",
-        "back": ""
+        "back": "返回交易提案"
     },
     "update": {
         "dont_show": "不要再顯示",
@@ -708,14 +711,14 @@
         "add_prompt": "輸入你的備註",
         "update_prompt": "更新你的備註",
         "add_for_game": "__gamename__ 的備註",
-        "not_enough_space": "",
-        "not_enough_space_desc": "",
-        "close_on_storage": "",
-        "close_on_storage_desc": "",
-        "storage_warning_desc": "",
-        "save_itad": "",
-        "save_synced_storage": "",
-        "save_local": ""
+        "not_enough_space": "儲存空間不足",
+        "not_enough_space_desc": "Augmented Steam 無法儲存更多便箋了，因為你目前選用的儲存方式無法容納更多資料（正嘗試使用 __perc__% 的儲存空間）。",
+        "close_on_storage": "儲存空間即將用盡",
+        "close_on_storage_desc": "你目前選用的儲存方式即將無法儲存更多便箋了（已使用 __perc__% 的儲存空間）。",
+        "storage_warning_desc": "你可以選擇將便箋儲存於本地資料庫（無法同步）或繼續使用瀏覽器提供的儲存空間（需先刪除一些舊便箋才能加入新的）。",
+        "save_itad": "將便箋儲存至 ITAD 伺服器",
+        "save_synced_storage": "繼續使用可同步的儲存空間",
+        "save_local": "於本地端儲存便箋"
     },
     "queue": {
         "new": "開始新佇列",
@@ -774,5 +777,12 @@
     "processing": "處理中…",
     "wait": "請稍候",
     "login_warning": "請務必登入 __link__ 以使用 Augmented Steam 的完整功能。",
-    "youtube_reviews": "YouTube 評論"
+    "youtube_reviews": "YouTube 評論",
+    "download_demo_header": "下載 __gamename__ 試玩版",
+    "games_common": "你擁有的遊戲",
+    "games_notcommon": "你尚未擁有的遊戲",
+    "shopping_cart_history": "檢視購物車歷史紀錄",
+    "manage_webapi_key": "管理我的 Steam Web API 金鑰",
+    "steam_cloud_header": "Steam 雲端",
+    "steam_cloud_saves": "檢視雲端存檔"
 }

@@ -26,7 +26,7 @@
     "add_nickname": "เพิ่มชื่อเล่น",
     "total_size": "ขนาดรวม",
     "dlc_details": "รายละเอียดเนื้อหาที่ดาวน์โหลดได้",
-    "badge_not_unlocked": "ยังไม่ปลดล็อค",
+    "badge_not_unlocked": "ยังไม่ปลดล็อก",
     "each": "แต่ละ",
     "view_in_market": "ดูในตลาดชุมชน",
     "homepage_spotlight": "โดดเด่น",
@@ -116,7 +116,7 @@
     "videos": "วิดีโอ / ตัวอย่าง",
     "community": "ชุมชน",
     "dlc_data_header": "รายละเอียดเนื้อหาที่ดาวน์โหลดได้",
-    "graphics": "กราฟิกส์",
+    "graphics": "กราฟิก",
     "owned_elsewhere": "คุณเป็นเจ้าของ __gametitle__ ใน __storelist__ อยู่แล้ว",
     "trading_cards": "การ์ดสะสมบน Steam",
     "view_badge": "ดูเหรียญตรา",
@@ -213,7 +213,7 @@
     "software": "ซอฟต์แวร์",
     "purchase_date": "(สั่งซื้อเมื่อ __date__)",
     "custom_background_help": "ผู้ใช้ Augmented Steam ทั้งหมดจะมองเห็นภาพพื้นหลังนี้บนหน้าโปรไฟล์ของคุณ ผู้ที่ไม่ใช้งาน Augmented Steam จะมองเห็นเพียงภาพพื้นหลังปกติของคุณ",
-    "date_unlocked": "วันที่ปลดล็อค",
+    "date_unlocked": "วันที่ปลดล็อก",
     "view_badge_foil": "ดูเหรียญตราฟอยล์",
     "net_spent": "ค่าใช้จ่ายสุทธิ:",
     "homepage_carousel": "แถบหมุน",
@@ -224,7 +224,7 @@
     "buy_package": "ซื้อ __package__",
     "more_information": "ข้อมูลเพิ่มเติม",
     "games_discount": "เกมที่มีส่วนลด",
-    "region_unavailable": "ไม่พร้อมใช้ในภูมิภาคนี้",
+    "region_unavailable": "ไม่พร้อมใช้งานในภูมิภาคนี้",
     "item_type": "ประเภทรายการ",
     "avg_price_3cards": "ราคาเฉลี่ยของการ์ดสะสม 3 ใบ: __price__",
     "mods": "ม็อด",
@@ -261,7 +261,7 @@
     "notcommon_label": "ซ่อนเกมที่คุณเป็นเจ้าของ",
     "show_all_steam_releases": "แสดงการวางจำหน่ายบน Steam ทั้งหมด",
     "wishlist": "สิ่งที่อยากได้",
-    "on_wishlist": "บนสิ่งที่อยากได้",
+    "on_wishlist": "รายการสิ่งที่อยากได้",
     "ignored": "ละเว้น",
     "on_waitlist": "ในสิ่งที่อยากได้",
     "notdiscounted": "ผลิตภัณฑ์ที่ไม่ได้ลดราคา",
@@ -579,17 +579,20 @@
         "contributors": "เหล่าผู้มีส่วนร่วมที่ยอดเยี่ยม",
         "apppage": "หน้าแอป",
         "exfgls": "แสดงประกาศหากแอปถูกรวมอยู่ในการแบ่งปันครอบครัว",
-        "saving": "",
+        "custom_style_disable": "ปิดการใช้งานธีมแบบกำหนดเอง",
+        "saving": "กำลังบันทึก...",
         "user_notes": {
-            "user_notes": "",
-            "app": "",
-            "wishlist": "",
-            "loc": "",
-            "synced_storage": "",
-            "local": "",
-            "itad": ""
+            "user_notes": "หมายเหตุของผู้ใช้",
+            "app": "บนหน้าแอป",
+            "wishlist": "บนสิ่งที่อยากได้ของฉัน",
+            "loc": "ตำแหน่งพื้นที่จัดเก็บข้อมูล",
+            "synced_storage": "พื้นที่จัดเก็บข้อมูลที่ซิงค์แล้ว/ภายในเครื่อง",
+            "local": "ฐานข้อมูลภายในเครื่อง",
+            "itad": "เซิร์ฟเวอร์ IsThereAnyDeal"
         },
-        "show_custom_themes": ""
+        "show_custom_themes": "แสดงธีมแบบกำหนดเอง",
+        "oneclickremovewl": "ข้ามการยืนยันเมื่อกำลังลบรายการ",
+        "profile_pinned_bg": "ปักหมุดตำแหน่งพื้นหลังโปรไฟล์เมื่อกำลังเลื่อน"
     },
     "ready": {
         "errormsg": "ตรวจพบข้อผิดพลาดในการโหลดข้อมูล Augmented Steam",
@@ -619,7 +622,7 @@
         "graphics_settings": "การตั้งค่ากราฟิก",
         "satisfaction": "ความพึงพอใจในประสิทธิภาพตาม GPU",
         "gs_y": "มีตัวเลือกกราฟิกอยู่ภายในหรือมีเมนูกราฟิก",
-        "gs_n": "ไม่มีตัวเลือกกราฟิกอยู่ภายในและไม่มีเมนูกราฟิก",
+        "gs_n": "ไม่มีตัวเลือกกราฟิกอยู่ภายในหรือไม่มีเมนูกราฟิก",
         "nobody": "ยังไม่มีใครทำแบบสำรวจด้านประสิทธิภาพสำหรับเกมนี้",
         "take": "ทำแบบสำรวจ"
     },
@@ -637,7 +640,7 @@
         "inv_gift": "ของขวัญ",
         "inv_guestpass": "บัตรทดลองเล่น",
         "owned": "เป็นเจ้าของแล้ว",
-        "notinterested": "ไม่สนใจ",
+        "notinterested": "ละเว้น",
         "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ คนต้องการสิ่งนี้</a>",
         "collection": "มีในชุดสะสมแล้ว",
         "waitlist": "มีในสิ่งที่อยากได้แล้ว"
@@ -672,7 +675,7 @@
     "tradeoffer": {
         "num_item": "__num__ รายการ",
         "num_items": "__num__ รายการ",
-        "back": ""
+        "back": "กลับไปยังข้อเสนอการแลกเปลี่ยน"
     },
     "update": {
         "dont_show": "ไม่ต้องแสดงอีก",
@@ -693,8 +696,8 @@
     "wl": {
         "total_price": "มูลค่าปัจจุบัน",
         "in_wishlist": "บนสิ่งที่อยากได้",
-        "on_sale": "บนการลดราคา",
-        "no_price": "ไม่มีราคา"
+        "on_sale": "รายการลดราคา",
+        "no_price": "ไม่ระบุราคา"
     },
     "coll": {
         "total_time": "เวลารวมทั้งหมด",
@@ -708,14 +711,14 @@
         "add_prompt": "กรอกข้อความหมายเหตุของคุณ",
         "update_prompt": "อัปเดตหมายเหตุของคุณ",
         "add_for_game": "หมายเหตุสำหรับ __gamename__",
-        "not_enough_space": "",
-        "not_enough_space_desc": "",
-        "close_on_storage": "",
-        "close_on_storage_desc": "",
-        "storage_warning_desc": "",
-        "save_itad": "",
-        "save_synced_storage": "",
-        "save_local": ""
+        "not_enough_space": "พื้นที่ไม่เพียงพอสำหรับบันทึกหมายเหตุ",
+        "not_enough_space_desc": "Augmented Steam ไม่สามารถบันทึกหมายเหตุของผู้ใช้เพิ่มได้อีก เนื่องจากอะแดปเตอร์จัดเก็บข้อมูลที่คุณใช้งานไม่อนุญาตให้บันทึกข้อมูลเพิ่มเติม (กำลังพยายามใช้ความจุของพื้นที่จัดเก็บข้อมูล ~__perc__%)",
+        "close_on_storage": "คุณกำลังเรียกปิดพื้นที่จัดเก็บข้อมูล",
+        "close_on_storage_desc": "Augmented Steam ถูกปิดจนไม่สามารถบันทึกหมายเหตุของผู้ใช้กับอะแดปเตอร์พื้นที่จัดเก็บข้อมูลปัจจุบันของคุณได้ (พื้นที่จัดเก็บข้อมูลถูกใช้งานไป ~__perc__%)",
+        "storage_warning_desc": "คุณสามารถเลือกจัดเก็บหมายเหตุของผู้ใช้ในฐานข้อมูลภายในเครื่อง (โดยไม่ต้องทำการซิงโครไนซ์) หรือดำเนินการใช้วิธีจัดเก็บข้อมูลตามเบราว์เซอร์ของคุณ (สามารถบันทึกหมายเหตุใหม่เพิ่มได้ หากคุณลบหมายเหตุเก่าบางอันออก)",
+        "save_itad": "บันทึกหมายเหตุบนเซิร์ฟเวอร์ ITAD",
+        "save_synced_storage": "ดำเนินการใช้พื้นที่จัดเก็บข้อมูลที่ซิงค์แล้วต่อ",
+        "save_local": "จัดเก็บหมายเหตุภายในเครื่อง"
     },
     "queue": {
         "new": "คิวใหม่",
@@ -774,5 +777,12 @@
     "processing": "กำลังดำเนินการ...",
     "wait": "กรุณารอสักครู่",
     "login_warning": "ตรวจสอบให้แน่ใจว่าคุณได้เข้าสู่ระบบไปยัง __link__ เพื่อใช้งานคุณสมบัติทั้งหมดของ Augmented Steam",
-    "youtube_reviews": "บทวิจารณ์บน YouTube"
+    "youtube_reviews": "บทวิจารณ์บน YouTube",
+    "download_demo_header": "ดาวน์โหลดเดโม __gamename__",
+    "games_common": "เกมที่คุณเป็นเจ้าของ",
+    "games_notcommon": "เกมที่คุณไม่ได้เป็นเจ้าของ",
+    "shopping_cart_history": "ดูประวัติรถเข็น",
+    "manage_webapi_key": "จัดการรหัส Steam Web API ของฉัน",
+    "steam_cloud_header": "คลาวด์บน Steam",
+    "steam_cloud_saves": "ดูบันทึกบนคลาวด์"
 }

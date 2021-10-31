@@ -579,6 +579,7 @@
         "contributors": "великолепных помощников",
         "apppage": "Страница в магазине",
         "exfgls": "Показывать уведомление, если приложение исключено из Family Sharing",
+        "custom_style_disable": "Отключить пользовательские темы",
         "saving": "Сохранение...",
         "user_notes": {
             "user_notes": "Пользовательские заметки",
@@ -589,7 +590,9 @@
             "local": "Локальная база данных",
             "itad": "Сервер IsThereAnyDeal"
         },
-        "show_custom_themes": "Показывать пользовательские темы"
+        "show_custom_themes": "Показывать пользовательские темы",
+        "oneclickremovewl": "Пропускать подтверждение удаления предметов",
+        "profile_pinned_bg": "Закрепить положение фонового изображения во время прокрутки"
     },
     "ready": {
         "errormsg": "Ошибка загрузки данных Augmented Steam",
@@ -774,5 +777,12 @@
     "processing": "Обработка...",
     "wait": "Пожалуйста, подождите",
     "login_warning": "Убедитесь, что вы вошли в __link__, чтобы иметь доступ ко всем возможностям Augmented Steam.",
-    "youtube_reviews": "Обзоры на YouTube"
+    "youtube_reviews": "Обзоры на YouTube",
+    "download_demo_header": "Скачать демо __gamename__",
+    "games_common": "Игры, которые у вас есть",
+    "games_notcommon": "Игры, которых у вас нет",
+    "shopping_cart_history": "Посмотреть историю корзины",
+    "manage_webapi_key": "Редактировать ключ Steam Web API",
+    "steam_cloud_header": "Облако Steam",
+    "steam_cloud_saves": "Посмотреть сохранения в облаке"
 }

@@ -579,6 +579,7 @@
         "contributors": "了不起的贡献者们",
         "apppage": "商店页面",
         "exfgls": "如果游戏不支持家庭共享则显示提醒",
+        "custom_style_disable": "禁用自定义主题",
         "saving": "正在保存……",
         "user_notes": {
             "user_notes": "用户备注",
@@ -589,7 +590,9 @@
             "local": "本地数据库",
             "itad": "IsThereAnyDeal 服务器"
         },
-        "show_custom_themes": "显示自定义主题"
+        "show_custom_themes": "显示自定义主题",
+        "oneclickremovewl": "删除物品时跳过确认",
+        "profile_pinned_bg": "滚动时固定个人资料背景位置"
     },
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",
@@ -774,5 +777,12 @@
     "processing": "处理中...",
     "wait": "请稍候",
     "login_warning": "您必须登录 __link__ 才能使用 Augmented Steam 的全部功能。",
-    "youtube_reviews": "YouTube 评测"
+    "youtube_reviews": "YouTube 评测",
+    "download_demo_header": "下载 __gamename__ 试玩版",
+    "games_common": "您拥有的游戏",
+    "games_notcommon": "您尚未拥有的游戏",
+    "shopping_cart_history": "查看购物车历史记录",
+    "manage_webapi_key": "管理我的 Steam Web API 密钥",
+    "steam_cloud_header": "Steam 云",
+    "steam_cloud_saves": "查看云存储"
 }

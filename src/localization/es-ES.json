@@ -579,17 +579,20 @@
         "contributors": "magníficos contribuidores",
         "apppage": "Página de la app",
         "exfgls": "Mostar un aviso si la app está excluida del Préstamo Familiar",
-        "saving": "",
+        "custom_style_disable": "Desactivar temas personalizados",
+        "saving": "Guardando...",
         "user_notes": {
-            "user_notes": "",
-            "app": "",
-            "wishlist": "",
-            "loc": "",
-            "synced_storage": "",
-            "local": "",
-            "itad": ""
+            "user_notes": "Notas de usuario",
+            "app": "En las páginas de las aplicaciones",
+            "wishlist": "En mi lista de deseados",
+            "loc": "Lugar de almacenamiento",
+            "synced_storage": "Almacenamiento sincronizado/local",
+            "local": "Base de datos local",
+            "itad": "Servidor de IsThereAnyDeal"
         },
-        "show_custom_themes": ""
+        "show_custom_themes": "Mostrar temas personalizados",
+        "oneclickremovewl": "Saltar confirmación al eliminar obetos",
+        "profile_pinned_bg": "Fijar la posición del fondo de perfil al hacer scroll"
     },
     "ready": {
         "errormsg": "Error al cargar los datos de Augmented Steam",
@@ -672,7 +675,7 @@
     "tradeoffer": {
         "num_item": "__num__ artículo",
         "num_items": "__num__ artículos",
-        "back": ""
+        "back": "Volver a las ofertas de intercambio"
     },
     "update": {
         "dont_show": "No mostrar de nuevo",
@@ -708,14 +711,14 @@
         "add_prompt": "Introduce tu nota",
         "update_prompt": "Actualiza tu nota",
         "add_for_game": "Nota en __gamename__",
-        "not_enough_space": "",
-        "not_enough_space_desc": "",
-        "close_on_storage": "",
-        "close_on_storage_desc": "",
-        "storage_warning_desc": "",
-        "save_itad": "",
-        "save_synced_storage": "",
-        "save_local": ""
+        "not_enough_space": "No hay suficiente espacio para guardar la nota",
+        "not_enough_space_desc": "Augmented Steam no puede guardar más notas de usuario porque el adaptador de almacenamiento utilizado no permite guardar más datos (intentando utilizar aproximadamente el __perc__ % de la capacidad de almacenamiento).",
+        "close_on_storage": "Te estás quedando sin almacenamiento",
+        "close_on_storage_desc": "Augmented Steam está cerca de no poder guardar más notas de usuario con el adaptador de almacenamiento actual (aproximadamente el __perc__ % de la capacidad de almacenamiento está en uso).",
+        "storage_warning_desc": "Puedes optar por almacenar tus notas de usuario en una base de datos local (sin sincronización) o seguir utilizando el método de almacenamiento proporcionado por tu navegador (donde solo se pueden añadir nuevas notas si se eliminan algunas antiguas).",
+        "save_itad": "Guardar notas en el servidor de ITAD",
+        "save_synced_storage": "Seguir usando el almacenamiento sincronizado",
+        "save_local": "Almacenar notas localmente"
     },
     "queue": {
         "new": "Nueva cola",
@@ -774,5 +777,12 @@
     "processing": "Procesando...",
     "wait": "Por favor, espera",
     "login_warning": "Asegúrate de iniciar sesión en __link__ para disfrutar de las características de Augmented Steam.",
-    "youtube_reviews": "Reseñas de YouTube"
+    "youtube_reviews": "Reseñas de YouTube",
+    "download_demo_header": "Descargar demo de __gamename__",
+    "games_common": "Juegos que tienes",
+    "games_notcommon": "Juegos que no tienes",
+    "shopping_cart_history": "Ver historial del Carrito",
+    "manage_webapi_key": "Gestionar mi clave de la API de Steam Web",
+    "steam_cloud_header": "Steam Cloud",
+    "steam_cloud_saves": "Ver partidas guardadas en la nube"
 }

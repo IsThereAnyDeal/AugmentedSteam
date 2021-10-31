@@ -579,6 +579,7 @@
         "contributors": "υπέροχους συνεισφέροντες",
         "apppage": "Σελίδα εφαρμογής",
         "exfgls": "",
+        "custom_style_disable": "",
         "saving": "",
         "user_notes": {
             "user_notes": "",
@@ -589,7 +590,9 @@
             "local": "",
             "itad": ""
         },
-        "show_custom_themes": ""
+        "show_custom_themes": "",
+        "oneclickremovewl": "",
+        "profile_pinned_bg": ""
     },
     "ready": {
         "errormsg": "Σφάλμα κατά τη φόρτωση δεδομένων Augmented Steam",
@@ -774,5 +777,12 @@
     "processing": "Επεξεργασία...",
     "wait": "Παρακαλώ περιμένετε",
     "login_warning": "Βεβαιωθείτε ότι έχετε συνδεθεί στο __link__ για να μπορείτε να χρησιμοποιήσετε όλες τις δυνατότητες του Augmented Steam.",
-    "youtube_reviews": "Κριτικές YouTube"
+    "youtube_reviews": "Κριτικές YouTube",
+    "download_demo_header": "",
+    "games_common": "",
+    "games_notcommon": "",
+    "shopping_cart_history": "",
+    "manage_webapi_key": "",
+    "steam_cloud_header": "",
+    "steam_cloud_saves": ""
 }

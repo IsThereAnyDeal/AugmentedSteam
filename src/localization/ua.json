@@ -579,6 +579,7 @@
         "contributors": "чудових помічників",
         "apppage": "Сторінка гри",
         "exfgls": "Відображати повідомлення, якщо гра недоступна для Сімейної Бібліотеки",
+        "custom_style_disable": "",
         "saving": "",
         "user_notes": {
             "user_notes": "",
@@ -589,7 +590,9 @@
             "local": "",
             "itad": ""
         },
-        "show_custom_themes": ""
+        "show_custom_themes": "",
+        "oneclickremovewl": "",
+        "profile_pinned_bg": ""
     },
     "ready": {
         "errormsg": "Помилка завантаження даних Augmented Steam",
@@ -774,5 +777,12 @@
     "processing": "Опрацювання...",
     "wait": "Будь ласка зачекайте",
     "login_warning": "Переконайтеся, що ви увійшли до __link__, щоб мати можливість скористатися усіма можливостями Augmented Steam.",
-    "youtube_reviews": "Огляди з YouTube"
+    "youtube_reviews": "Огляди з YouTube",
+    "download_demo_header": "",
+    "games_common": "",
+    "games_notcommon": "",
+    "shopping_cart_history": "",
+    "manage_webapi_key": "",
+    "steam_cloud_header": "",
+    "steam_cloud_saves": ""
 }

@@ -578,18 +578,21 @@
         "with_help_of": "met heel veel help van onze",
         "contributors": "geweldige bijdragers",
         "apppage": "App pagina",
-        "exfgls": "",
-        "saving": "",
+        "exfgls": "Laat een bericht zien als Family Sharing niet mogelijk is voor een app",
+        "custom_style_disable": "Schakel aangepaste thema's uit",
+        "saving": "Aan het opslaan...",
         "user_notes": {
-            "user_notes": "",
-            "app": "",
-            "wishlist": "",
-            "loc": "",
-            "synced_storage": "",
-            "local": "",
-            "itad": ""
+            "user_notes": "Gebruiker notities",
+            "app": "Op app pagina's",
+            "wishlist": "Op mijn wenslijst",
+            "loc": "Opslag locatie",
+            "synced_storage": "Synced/locale opslag",
+            "local": "Locale opslag",
+            "itad": "IsThereAnyDeal server"
         },
-        "show_custom_themes": ""
+        "show_custom_themes": "Laat aangepaste thema's zien",
+        "oneclickremovewl": "",
+        "profile_pinned_bg": ""
     },
     "ready": {
         "errormsg": "Fout tijdens het laden van Augmented Steam gegevens",
@@ -672,7 +675,7 @@
     "tradeoffer": {
         "num_item": "__num__ object",
         "num_items": "__num__ object",
-        "back": ""
+        "back": "Terug naar ruilaanbiedingen"
     },
     "update": {
         "dont_show": "Niet nogmaals tonen",
@@ -708,14 +711,14 @@
         "add_prompt": "Notitie schrijven",
         "update_prompt": "Notitie updaten",
         "add_for_game": "Notitie voor __gamename__",
-        "not_enough_space": "",
-        "not_enough_space_desc": "",
-        "close_on_storage": "",
-        "close_on_storage_desc": "",
-        "storage_warning_desc": "",
-        "save_itad": "",
-        "save_synced_storage": "",
-        "save_local": ""
+        "not_enough_space": "Niet genoeg ruimte om je notitie op te slaan",
+        "not_enough_space_desc": "Augmented Steam niet nier meer gebruiker notities opslaan omdat jouw gekozen opslag adapter niet meer data toestaat (geprobeerd ~__perc__% van de opslag te gebruiken).",
+        "close_on_storage": "Jouw opslag zit bijna vol",
+        "close_on_storage_desc": "Augmented Steam kan bijna niet meer gebruiker notities opslaan (~__perc__% opslag gebruikt) met de huidige opslag adapter.",
+        "storage_warning_desc": "Je kan ervoor kiezen om jouw gebruiker notities in een lokale database (niet gesynchroniseerd) op te slaan, of doorgaan met het gebruiken van de opslag methode van jouw browser (waar nieuwe notities alleen kan worden opgeslagen als er oude worden verwijderd).",
+        "save_itad": "Notities opslaan op de ITAD server",
+        "save_synced_storage": "Ga door met synced opslag gebruiken",
+        "save_local": "Notities lokaal opslaan"
     },
     "queue": {
         "new": "Nieuwe Queue",
@@ -774,5 +777,12 @@
     "processing": "Aan het verwerken...",
     "wait": "Wachten a.u.b.",
     "login_warning": "Zorg dat je ingelogd bent bij __link__ om geheel gebruik te maken van Augmented Steam",
-    "youtube_reviews": "YouTube Reviews"
+    "youtube_reviews": "YouTube Reviews",
+    "download_demo_header": "",
+    "games_common": "",
+    "games_notcommon": "",
+    "shopping_cart_history": "",
+    "manage_webapi_key": "",
+    "steam_cloud_header": "",
+    "steam_cloud_saves": ""
 }
