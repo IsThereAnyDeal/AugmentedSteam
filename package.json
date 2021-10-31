@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "node config/scripts/build.cjs",
-    "update-locales": "node config/scripts/build.cjs"
+    "update-locales": "node config/scripts/locales.cjs"
   },
   "devDependencies": {
     "argparse": "^2.0.1",
