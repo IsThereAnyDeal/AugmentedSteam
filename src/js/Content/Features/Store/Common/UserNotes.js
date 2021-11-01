@@ -40,11 +40,11 @@ class UserNotes {
 
     delete(...args) { return this._adapter.delete(...args); }
 
-    async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
+    async showModalDialog(appname, appid, noteEl, onNoteUpdate) {
 
         let note = await this.get(appid) || "";
 
-        // Partly copied from shared_global.js
+        // Partly copied `ShowConfirmDialog` from shared_global.js
         Page.runInPageContext((title, template, strSave, strCancel) => {
             /* eslint-disable no-undef, new-cap, camelcase */
 
@@ -94,16 +94,14 @@ class UserNotes {
                 .fail(() => { window.Messenger.postMessage("noteClosed", null); });
 
             modal.Show();
-            /* eslint-enable no-undef */
+            /* eslint-enable no-undef, new-cap, camelcase */
         },
         [
             this._str.add_for_game.replace("__gamename__", appname),
-            this.noteModalTemplate.replace("__appid__", appid).replace("__note__", note)
-                .replace("__selector__", encodeURIComponent(nodeSelector)),
+            this.noteModalTemplate.replace("__note__", note),
             Localization.str.save,
             Localization.str.cancel,
-        ],
-        true);
+        ]);
 
         const oldNote = note;
 
@@ -113,17 +111,15 @@ class UserNotes {
         note = HTML.escape(note);
         if (note === oldNote) { return; }
 
-        const node = document.querySelector(nodeSelector);
-
         if (note.length === 0) {
             this.delete(appid);
-            node.textContent = this._str.add;
+            noteEl.textContent = this._str.add;
         } else {
             if (!await this.set(appid, note)) { return; }
-            HTML.inner(node, `"${note}"`);
+            HTML.inner(noteEl, `"${note}"`);
         }
 
-        onNoteUpdate(node, note.length !== 0);
+        onNoteUpdate(noteEl, note.length !== 0);
     }
 
     async _showDialog(exceeded, ratio) {
