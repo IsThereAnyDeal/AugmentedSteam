@@ -1,8 +1,7 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {Localization, SyncedStorage} from "../../../../modulesCore";
 import {Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
 import {CapacityInfo, OutOfCapacityError, UserNotesAdapter} from "../../../../Core/Storage/UserNotesAdapter";
-import {SyncedStorage} from "../../../../Core/Storage/SyncedStorage";
 
 class UserNotes {
     constructor() {
@@ -106,17 +105,14 @@ class UserNotes {
         const oldNote = note;
 
         note = await Messenger.onMessage("noteClosed");
-        if (note === null) { return; }
-
-        note = HTML.escape(note);
-        if (note === oldNote) { return; }
+        if (note === null || note === oldNote) { return; }
 
         if (note.length === 0) {
             this.delete(appid);
             noteEl.textContent = this._str.add;
         } else {
             if (!await this.set(appid, note)) { return; }
-            HTML.inner(noteEl, `"${note}"`);
+            noteEl.textContent = `"${note}"`;
         }
 
         onNoteUpdate(noteEl, note.length !== 0);

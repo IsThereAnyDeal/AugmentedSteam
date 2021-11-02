@@ -31,7 +31,7 @@ export default class FUserNotes extends Feature {
         if (note !== null) {
             button.classList.add("esi-has-note");
 
-            HTML.inner(noteEl, `"${note}"`);
+            noteEl.textContent = `"${note}"`;
             noteEl.classList.add("esi-has-note");
         }
 

@@ -41,7 +41,7 @@ export default class FWishlistUserNotes extends CallbackFeature {
                 const note = await this._userNotes.get(appid);
 
                 if (note !== null) {
-                    HTML.inner(noteEl, `"${note}"`);
+                    noteEl.textContent = `"${note}"`;
                     noteEl.classList.add("esi-has-note");
                 }
 
