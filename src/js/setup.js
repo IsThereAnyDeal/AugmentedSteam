@@ -1,28 +1,5 @@
 import {SyncedStorage} from "./Core/Storage/SyncedStorage";
 
-/*
- * Shim for Promise.finally() for browsers (Waterfox/FF 56) that don't have it
- * https://github.com/domenic/promises-unwrapping/issues/18#issuecomment-57801572
- */
-if (typeof Promise.prototype.finally === "undefined") {
-    // eslint-disable-next-line no-extend-native
-    Object.defineProperty(Promise.prototype, "finally", {
-        "value": function(callback) {
-            const constructor = this.constructor;
-            return this.then((value) => {
-                return constructor.resolve(callback()).then(() => {
-                    return value;
-                });
-            }, (reason) => {
-                return constructor.resolve(callback()).then(() => {
-                    console.error(reason);
-                    throw reason;
-                });
-            });
-        },
-    });
-}
-
 let initialized = false;
 
 /**
