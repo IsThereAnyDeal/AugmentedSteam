@@ -79,6 +79,11 @@ class UserNotes {
             const noteInput = document.getElementById("es_note_input");
             noteInput.focus();
             noteInput.setSelectionRange(0, noteInput.textLength);
+            noteInput.addEventListener("keydown", e => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    okBtn.trigger("click");
+                }
+            });
 
             deferred.promise(modal);
 
