@@ -35,15 +35,24 @@ export default class FShowMarketOverview extends CallbackFeature {
 
             try {
                 const currency = CurrencyManager.currencyNumberToType(walletCurrency);
-                const result = await Background.action("market.averagecardprice", {appid, currency});
+                const result = await Background.action("market.averagecardprices",
+                    {
+                        currency,
+                        "appids": appid,
+                        "foilappids": appid
+                    });
 
-                const avgPrice = result.average.toFixed(2) * 100;
+                const avgPrice
+                    = (
+                        (result[appid].foil.average * FShowMarketOverview._foilChance)
+                        + (result[appid].regular.average * (1 - FShowMarketOverview._foilChance))
+                    ).toFixed(2) * 100;
 
                 thisItem.dataset.cardsPrice = await Page.runInPageContext((price, type) => {
                     return window.SteamFacade.vCurrencyFormat(price, type);
                 }, [avgPrice, currency], true);
             } catch (err) {
-                console.error(err);
+                console.error("Failed to retrieve average card prices for appid", appid, err);
             } finally {
                 thisItem.classList.remove("es_avgprice_loading");
             }
@@ -127,3 +136,6 @@ export default class FShowMarketOverview extends CallbackFeature {
         return html;
     }
 }
+
+// https://steamcommunity.com/groups/tradingcards/discussions/1/864969482042344380/#c864969482044786566
+FShowMarketOverview._foilChance = 0.01;
