@@ -79,6 +79,8 @@ class UserNotes {
             const noteInput = document.getElementById("es_note_input");
             noteInput.focus();
             noteInput.setSelectionRange(0, noteInput.textLength);
+
+            // Native keyup handler ignores events on <textarea>'s https://github.com/SteamDatabase/SteamTracking/blob/b8f3721153355d82005e621b167969f6c1f27bdf/steamcommunity.com/public/shared/javascript/shared_global.js#L459
             noteInput.addEventListener("keydown", e => {
                 if (e.key === "Enter" && !e.shiftKey) {
                     okBtn.trigger("click");
