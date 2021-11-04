@@ -1,6 +1,7 @@
 import ContextType from "../../../Modules/Context/ContextType";
 import {CCommunityBase} from "../CCommunityBase";
 import FEarlyAccess from "../../Common/FEarlyAccess";
+import FFixAppImageNotFound from "../FFixAppImageNotFound";
 import FGamesStats from "./FGamesStats";
 import FCommonGames from "./FCommonGames";
 import FGamelistAchievements from "./FGamelistAchievements";
@@ -16,6 +17,7 @@ export class CGames extends CCommunityBase {
         }
 
         super(ContextType.GAMES, [
+            FFixAppImageNotFound,
             FGamesStats,
             FCommonGames,
             FGamelistAchievements,
