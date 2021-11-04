@@ -261,6 +261,7 @@ SyncedStorage.defaults = Object.freeze({
     "community_default_tab": "",
     "showallachievements": false,
     "showallstats": true,
+    "replacecommunityhublinks": false,
     "showachinstore": true,
     "hideactivelistings": false,
     "showlowestmarketprice": true,

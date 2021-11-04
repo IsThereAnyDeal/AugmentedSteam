@@ -22,8 +22,8 @@ class GameId {
             if (!_text) { return null; }
         }
 
-        // app, market/listing
-        const m = _text.match(/(?:store\.steampowered|steamcommunity)\.com\/(?:app|market\/listings)\/(\d+)\/?/);
+        // app, games (legacy official group page), market/listing
+        const m = _text.match(/(?:store\.steampowered|steamcommunity)\.com\/(?:app|games|market\/listings)\/(\d+)\/?/);
         return m && GameId.parseId(m[1]);
     }
 
