@@ -53,7 +53,7 @@ export default class FKeepEditableRanking extends CallbackFeature {
             newHoverHandle.classList.add("as_hover_handle");
             newHoverHandle.draggable = false;
             newHoverHandle.querySelector("img").remove();
-            hoverHandle.insertAdjacentElement("beforebegin", newHoverHandle);
+            hoverHandle.insertAdjacentElement("afterend", newHoverHandle);
 
             const input = hoverHandle.querySelector(".order_input");
             const newInput = newHoverHandle.querySelector(".order_input");
