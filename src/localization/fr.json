@@ -592,7 +592,8 @@
         },
         "show_custom_themes": "Afficher les thèmes personnalisés",
         "oneclickremovewl": "Ignorer la confirmation lors de la suppression d'objets",
-        "profile_pinned_bg": "Épinglez la position de l'arrière-plan du profil pendant le défilement"
+        "profile_pinned_bg": "Épinglez la position de l'arrière-plan du profil pendant le défilement",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Erreur lors du chargement des données d'Augmented Steam",

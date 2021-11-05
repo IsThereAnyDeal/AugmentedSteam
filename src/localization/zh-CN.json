@@ -592,7 +592,8 @@
         },
         "show_custom_themes": "显示自定义主题",
         "oneclickremovewl": "删除物品时跳过确认",
-        "profile_pinned_bg": "滚动时固定个人资料背景位置"
+        "profile_pinned_bg": "滚动时固定个人资料背景位置",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",

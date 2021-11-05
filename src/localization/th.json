@@ -261,7 +261,7 @@
     "notcommon_label": "ซ่อนเกมที่คุณเป็นเจ้าของ",
     "show_all_steam_releases": "แสดงการวางจำหน่ายบน Steam ทั้งหมด",
     "wishlist": "สิ่งที่อยากได้",
-    "on_wishlist": "รายการสิ่งที่อยากได้",
+    "on_wishlist": "บนรายการสิ่งที่อยากได้",
     "ignored": "ละเว้น",
     "on_waitlist": "ในสิ่งที่อยากได้",
     "notdiscounted": "ผลิตภัณฑ์ที่ไม่ได้ลดราคา",
@@ -592,7 +592,8 @@
         },
         "show_custom_themes": "แสดงธีมแบบกำหนดเอง",
         "oneclickremovewl": "ข้ามการยืนยันเมื่อกำลังลบรายการ",
-        "profile_pinned_bg": "ปักหมุดตำแหน่งพื้นหลังโปรไฟล์เมื่อกำลังเลื่อน"
+        "profile_pinned_bg": "ปักหมุดตำแหน่งพื้นหลังโปรไฟล์เมื่อกำลังเลื่อน",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "ตรวจพบข้อผิดพลาดในการโหลดข้อมูล Augmented Steam",
@@ -696,7 +697,7 @@
     "wl": {
         "total_price": "มูลค่าปัจจุบัน",
         "in_wishlist": "บนสิ่งที่อยากได้",
-        "on_sale": "รายการลดราคา",
+        "on_sale": "บนรายการลดราคา",
         "no_price": "ไม่ระบุราคา"
     },
     "coll": {

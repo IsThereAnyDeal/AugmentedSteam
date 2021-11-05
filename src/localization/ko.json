@@ -592,7 +592,8 @@
         },
         "show_custom_themes": "",
         "oneclickremovewl": "",
-        "profile_pinned_bg": ""
+        "profile_pinned_bg": "",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Augmented Steam 데이터 로딩 오류",

@@ -592,7 +592,8 @@
         },
         "show_custom_themes": "顯示自訂主題",
         "oneclickremovewl": "移除項目時跳過確認訊息",
-        "profile_pinned_bg": "捲動時固定個人檔案背景"
+        "profile_pinned_bg": "捲動時固定個人檔案背景",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Augmented Steam 資料載入錯誤",

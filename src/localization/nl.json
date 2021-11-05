@@ -592,7 +592,8 @@
         },
         "show_custom_themes": "Laat aangepaste thema's zien",
         "oneclickremovewl": "",
-        "profile_pinned_bg": ""
+        "profile_pinned_bg": "",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Fout tijdens het laden van Augmented Steam gegevens",

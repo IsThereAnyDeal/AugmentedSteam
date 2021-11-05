@@ -592,7 +592,8 @@
         },
         "show_custom_themes": "Mostrar temas personalizados",
         "oneclickremovewl": "Saltar confirmación al eliminar obetos",
-        "profile_pinned_bg": "Fijar la posición del fondo de perfil al hacer scroll"
+        "profile_pinned_bg": "Fijar la posición del fondo de perfil al hacer scroll",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Error al cargar los datos de Augmented Steam",
