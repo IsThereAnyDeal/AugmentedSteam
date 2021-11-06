@@ -102,7 +102,12 @@ class WebpackRunner {
                             "archive": [
                                 {
                                     "source": this._outputDirectoryName,
-                                    "destination": `${this._config.output.path}/${this._browser}.zip`
+                                    "destination": `${this._config.output.path}/${this._browser}.zip`,
+                                    "options": {
+                                        "zlib": {
+                                            "level": 6,
+                                        }
+                                    },
                                 },
                             ]
                         }
