@@ -69,6 +69,7 @@ class WebpackRunner {
                         "to": "manifest.json",
                     }
                 ],
+                "mergeFn": (object, other) => merge(object, other),
                 "minify": !this._development
             }),
             new ManifestTransformerPlugin({
