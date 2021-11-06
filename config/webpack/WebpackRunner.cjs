@@ -3,7 +3,7 @@ const {merge} = require("webpack-merge");
 const path = require("path");
 const MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin");
 const ExtensionReloader = require("webpack-extension-reloader");
-const ZipPlugin = require("zip-webpack-plugin");
+const FileManagerPlugin = require("filemanager-webpack-plugin");
 const ManifestTransformerPlugin = require("./Plugins/ManifestTransformerPlugin.cjs");
 const PreprocessChangelogPlugin = require("./Plugins/PreprocessChangelogPlugin.cjs");
 
@@ -34,11 +34,15 @@ class WebpackRunner {
         return this._development ? "dev" : "prod";
     }
 
+    get _outputDirectoryName() {
+        return path.resolve(this._config.output.path, `${this._mode}.${this._browser}`);
+    }
+
     _buildOptions() {
         const options = {};
 
         options.output = {
-            "path": path.resolve(this._config.output.path, `${this._mode}.${this._browser}`)
+            "path": path.resolve(this._outputDirectoryName)
         };
 
         if (this._development) {
@@ -90,9 +94,17 @@ class WebpackRunner {
 
         if (!this._development) {
             options.plugins.push(
-                new ZipPlugin({
-                    "path": this._config.output.path,
-                    "filename": `${this._browser}.zip`
+                new FileManagerPlugin({
+                    "events": {
+                        "onEnd": {
+                            "archive": [
+                                {
+                                    "source": this._outputDirectoryName,
+                                    "destination": `${this._config.output.path}/${this._browser}.zip`
+                                },
+                            ]
+                        }
+                    }
                 })
             );
         }
