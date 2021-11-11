@@ -1,111 +1,25 @@
+import {Storage} from "./Storage";
 import {Info} from "../Info";
 
-class SyncedStorage {
-
-    /*
-     * browser.storage.sync limits
-     * QUOTA_BYTES = 102400 // 100KB
-     * QUOTA_BYTES_PER_ITEM = 8192 // 8KB
-     * MAX_ITEMS = 512
-     * MAX_WRITE_OPERATIONS_PER_HOUR = 1800
-     * MAX_WRITE_OPERATIONS_PER_MINUTE = 120
-     */
-    static has(key) {
-        return Object.prototype.hasOwnProperty.call(this._cache, key);
-    }
-
-    static get(key) {
-        if (typeof this._cache[key] == "undefined") {
-            if (typeof this.defaults[key] == "undefined") {
-                console.warn(`Unrecognized SyncedStorage key "${key}"`);
-            }
-            return this.defaults[key];
-        }
-        return this._cache[key];
-    }
-
-    static set(key, value) {
-        this._cache[key] = value;
-        return this._adapter.set({[key]: value});
-
-        // this will throw if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
-    }
-
-    static import(entries) {
-        for (const [key, value] of Object.entries(entries)) {
-            this._cache[key] = value;
-        }
-        return this._adapter.set(entries);
-    }
-
-    static remove(key) {
-        if (typeof this._cache[key] !== "undefined") {
-            delete this._cache[key];
-        }
-        return this._adapter.remove(key);
-
-        // can throw if MAX_WRITE* is exceeded
-    }
-
-    static keys(prefix = "") {
-        return Object.keys(this._cache).filter(k => k.startsWith(prefix));
-    }
-
-    static entries() {
-        return Object.entries(this._cache);
-    }
-
-    static async clear(force = false) {
-
-        let tmp;
-        if (force) {
-            this._cache = {};
-        } else {
-            tmp = this.persistent.reduce((acc, option) => {
-                acc[option] = this._cache[option];
-                return acc;
-            }, {});
-        }
-
-        // can throw if MAX_WRITE* is exceeded
-        await this._adapter.clear();
-
-        if (!force) {
-            await this.import(tmp);
-        }
-    }
-
-    // load whole storage and make local copy
-    static async init() {
-
-        if (this._initialized) { return this._cache; }
-        this._initialized = true;
-
-        browser.storage.onChanged.addListener(changes => {
-            for (const [key, {"newValue": val}] of Object.entries(changes)) {
-                this._cache[key] = val;
-            }
-        });
-
-        const storage = await this._adapter.get(null);
-        Object.assign(this._cache, storage);
-
-        return this._cache;
-    }
-
-    static then(onDone, onCatch) {
-        return this.init().then(onDone, onCatch);
-    }
-
-    static toJson() {
-        return JSON.stringify(this._cache);
-    }
-}
-
-SyncedStorage.QUOTA_BYTES_PER_ITEM = 8192;
+/*
+ * browser.storage.sync limits
+ * QUOTA_BYTES = 102400 // 100KB
+ * QUOTA_BYTES_PER_ITEM = 8192 // 8KB
+ * MAX_ITEMS = 512
+ * MAX_WRITE_OPERATIONS_PER_HOUR = 1800
+ * MAX_WRITE_OPERATIONS_PER_MINUTE = 120
+ */
+class SyncedStorage extends Storage {}
 
 SyncedStorage._adapter = browser.storage.sync || browser.storage.local;
-SyncedStorage._cache = {};
+
+/*
+ * 8KiB is the limit for storage.sync https://chromium.googlesource.com/chromium/src/+/refs/heads/main/extensions/common/api/storage.json#227
+ * 5MiB is the limit for storage.local (overall size) https://chromium.googlesource.com/chromium/src/+/refs/heads/main/extensions/common/api/storage.json#227
+ * 2KiB are subtracted in order to save some space for other configuration options
+ */
+SyncedStorage.QUOTA_BYTES_PER_ITEM = browser.storage.sync ? 8192 : 5242880 - 2048;
+
 SyncedStorage.defaults = Object.freeze({
     "language": "english",
 
