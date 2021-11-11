@@ -1,4 +1,4 @@
-import {Info, Localization, SyncedStorage} from "../../modulesCore";
+import {Info, LocalStorage, Localization, SyncedStorage} from "../../modulesCore";
 import {
     AugmentedSteam, Background,
     CurrencyManager,
@@ -77,7 +77,7 @@ class Page {
                 console.error(err);
             }
 
-            await Promise.all([Localization, User, CurrencyManager]);
+            await Promise.all([LocalStorage, Localization, User, CurrencyManager]);
         } catch (err) {
             console.group("Augmented Steam initialization");
             console.error("Failed to initiliaze Augmented Steam");

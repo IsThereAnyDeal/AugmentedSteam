@@ -51,10 +51,7 @@ export default class FMarketStats extends Feature {
 
     async _load() {
 
-        let {startListing, purchaseTotal, saleTotal} = LocalStorage.get(
-            "market_stats",
-            {"startListing": null, "purchaseTotal": 0, "saleTotal": 0}
-        );
+        let {startListing, purchaseTotal, saleTotal} = LocalStorage.get("market_stats");
         let curStartListing = null;
         const transactions = new Set();
         let stop = false;
