@@ -1,14 +1,15 @@
 
-// TODO use https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage
-class LocalStorage {
-    static get(key, defaultValue) {
-        const item = localStorage.getItem(key);
-        if (!item) { return defaultValue; }
-        try {
-            return JSON.parse(item);
-        } catch (err) {
-            return defaultValue;
+import {Storage} from "./Storage";
+import {SyncedStorage} from "./SyncedStorage";
+
+class LocalStorage extends Storage {
+
+    static init() {
+        if (SyncedStorage._adapter === this._adapter) {
+            return (this.cache = SyncedStorage.cache);
         }
+        this.cache = {};
+        return super.init();
     }
 
     static set(key, value) {
@@ -35,6 +36,8 @@ class LocalStorage {
         localStorage.clear();
     }
 }
+
+LocalStorage._adapter = browser.storage.local;
 
 LocalStorage.defaults = Object.freeze({
     "access_token": null,

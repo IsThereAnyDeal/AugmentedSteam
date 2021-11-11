@@ -85,6 +85,4 @@ class Storage {
     }
 }
 
-Storage.cache = {};
-
 export {Storage};
