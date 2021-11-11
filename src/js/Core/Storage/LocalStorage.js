@@ -6,7 +6,7 @@ class LocalStorage extends Storage {
 
     static init() {
         if (SyncedStorage._adapter === this._adapter) {
-            return (this.cache = SyncedStorage.cache);
+            return Promise.resolve(this.cache = SyncedStorage.cache);
         }
         this.cache = {};
         return super.init();
