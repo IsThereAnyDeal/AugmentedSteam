@@ -50,10 +50,10 @@ class AugmentedSteam {
             });
         });
 
-        document.querySelector("#es_clear_cache").addEventListener("click", e => {
+        document.querySelector("#es_clear_cache").addEventListener("click", async e => {
             e.preventDefault();
 
-            AugmentedSteam.clearCache();
+            await AugmentedSteam.clearCache();
             window.location.reload();
         });
     }
@@ -354,10 +354,7 @@ class AugmentedSteam {
     }
 
     static clearCache() {
-        localStorage.clear();
-        SyncedStorage.remove("user_currency");
-        SyncedStorage.remove("store_sessionid");
-        Background.action("cache.clear");
+        return Background.action("cache.clear");
     }
 
     static init() {
