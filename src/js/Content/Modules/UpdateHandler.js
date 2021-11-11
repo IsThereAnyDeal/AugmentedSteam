@@ -37,7 +37,7 @@ class UpdateHandler {
         const changelog = await ExtensionResources.getJSON("changelog.json");
         const html = changelog[Info.version];
         if (!html) {
-            throw new Error("Can't find changelog for version %s", Info.version);
+            throw new Error(`Can't find changelog for version ${Info.version}`);
         }
 
         const logo = ExtensionResources.getURL("img/logo/as128.png");
