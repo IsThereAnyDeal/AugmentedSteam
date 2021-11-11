@@ -77,7 +77,10 @@ class WebpackRunner {
             }),
             new PreprocessChangelogPlugin({
                 "path": path.resolve(__dirname, "../../changelog.yml")
-            })
+            }),
+            new webpack.DefinePlugin({
+                "__BROWSER__": JSON.stringify(this._browser)
+            }),
         ];
 
         if (this._server) {

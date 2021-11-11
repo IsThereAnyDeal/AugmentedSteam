@@ -6,7 +6,8 @@
         "es6": true
     },
     "globals": {
-        "DOMPurify": "readonly"
+        "DOMPurify": "readonly",
+        "__BROWSER__": "readonly"
     },
     "parserOptions": {
         "ecmaVersion": 2020,
