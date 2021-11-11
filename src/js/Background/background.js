@@ -8,6 +8,7 @@ import {StaticResources} from "./Modules/StaticResources";
 import {ITADApi} from "./Modules/ITADApi";
 import {AugmentedSteamApi} from "./Modules/AugmentedSteamApi";
 import {ExtensionData} from "./Modules/ExtensionData";
+import {CacheStorage} from "./Modules/CacheStorage";
 
 // Functions that are called when an object store (or one of its entries) has expired
 IndexedDB.objStoreFetchFns = new Map([
@@ -37,7 +38,9 @@ const actionCallbacks = new Map([
 
     ["steam.currencies", StaticResources.currencies],
 
+    ["migrate.cachestorage", CacheStorage.migrate],
     ["migrate.notesToSyncedStorage", ExtensionData.moveNotesToSyncedStorage],
+
     ["notes.get", ExtensionData.getNote],
     ["notes.set", ExtensionData.setNote],
     ["notes.delete", ExtensionData.deleteNote],
@@ -119,7 +122,7 @@ browser.runtime.onMessage.addListener(async(message, sender) => {
     message.params = message.params || [];
     let res;
     try {
-        await Promise.all([IndexedDB, LocalStorage, SyncedStorage.then(() => { setup(); })]);
+        await Promise.all([IndexedDB, CacheStorage, LocalStorage, SyncedStorage.then(() => { setup(); })]);
         res = await callback(...message.params);
     } catch (err) {
         console.group(`Callback: "${message.action}"`);

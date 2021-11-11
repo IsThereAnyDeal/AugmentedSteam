@@ -141,6 +141,10 @@ class UpdateHandler {
             }
             SyncedStorage.set("profile_custom_link", links);
         }
+
+        if (oldVersion.isSameOrBefore("2.2.1")) {
+            Background.action("migrate.cachestorage");
+        }
     }
 }
 

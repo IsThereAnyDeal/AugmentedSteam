@@ -12,7 +12,6 @@ class Storage {
             console.warn('Unrecognized storage key "%s"', key);
         }
         return this.defaults[key];
-        
     }
 
     static set(key, value) {
@@ -63,9 +62,20 @@ class Storage {
     // load whole storage and make local copy
     static async init() {
 
-        browser.storage.onChanged.addListener((changes, area) => {
+        const area = this._adapter === browser.storage.sync ? "sync" : "local";
+        const cache = Storage.caches[area];
 
-            if (this._adapter !== browser.storage[area]) { return; }
+        if (typeof cache !== "undefined") {
+            this.cache = cache;
+            return this.cache;
+        }
+
+        Storage.caches[area] = {};
+        this.cache = Storage.caches[area];
+
+        browser.storage.onChanged.addListener((changes, eventArea) => {
+
+            if (area !== eventArea) { return; }
 
             for (const [key, {"newValue": val}] of Object.entries(changes)) {
                 this.cache[key] = val;
@@ -85,5 +95,7 @@ class Storage {
         return JSON.stringify(this.cache);
     }
 }
+
+Storage.caches = {};
 
 export {Storage};

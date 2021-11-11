@@ -1,22 +1,20 @@
 
 import {Storage} from "./Storage";
-import {SyncedStorage} from "./SyncedStorage";
 import {Environment} from "../Environment";
 
 class LocalStorage extends Storage {
 
     static async init() {
-        if (SyncedStorage._adapter === this._adapter) {
-            this.cache = SyncedStorage.cache;
-        } else {
-            await super.init();
-        }
+        await super.init();
 
-        // TODO Remove after some versions
-        return this._migrateLocalStorage();
+        if (this === LocalStorage) {
+            // TODO Remove after some versions
+            return this.migrate();
+        }
+        return null;
     }
 
-    static async _migrateLocalStorage() {
+    static async migrate() {
 
         const migrationDone = this.get("local_storage_migration");
 
@@ -75,7 +73,5 @@ LocalStorage.defaults = Object.freeze({
     "hide_login_warn_community": false,
     "local_storage_migration": {"store": false, "community": false, "extension": false},
 });
-
-LocalStorage.cache = {};
 
 export {LocalStorage};

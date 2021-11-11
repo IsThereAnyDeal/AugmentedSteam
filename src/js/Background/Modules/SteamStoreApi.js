@@ -81,7 +81,7 @@ class SteamStoreApi extends Api {
     }
 
     static async currency() {
-        let currency = CacheStorage.get("currency", 60 * 60);
+        let currency = CacheStorage.get("currency");
         if (currency) { return currency; }
 
         currency = await SteamStoreApi.currencyFromWallet();

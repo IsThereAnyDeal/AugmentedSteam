@@ -11,7 +11,6 @@ import {Info} from "../Info";
  */
 class SyncedStorage extends Storage {}
 
-SyncedStorage.cache = {};
 SyncedStorage._adapter = browser.storage.sync || browser.storage.local;
 
 /*
