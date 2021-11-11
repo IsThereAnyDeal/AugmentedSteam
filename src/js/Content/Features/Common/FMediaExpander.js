@@ -21,7 +21,7 @@ export default class FMediaExpander extends Feature {
         this._sliderToggle = document.querySelector(".es_slider_toggle");
         this._sliderToggle.addEventListener("click", () => { this._toggleView(); });
 
-        if (LocalStorage.get("expand_slider", false)) {
+        if (LocalStorage.get("expand_slider")) {
             this._toggleView();
         }
 

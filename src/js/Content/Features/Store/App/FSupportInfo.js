@@ -6,7 +6,7 @@ export default class FSupportInfo extends Feature {
     async checkPrerequisites() {
         if (!SyncedStorage.get("showsupportinfo")) { return false; }
 
-        let cache = LocalStorage.get("support_info", null);
+        let cache = LocalStorage.get("support_info");
 
         // todo IDB
         if (!cache || !cache.expiry || cache.expiry < Date.now()) {

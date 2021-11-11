@@ -63,7 +63,7 @@ export default class FCustomTags extends Feature {
 
         const params = new URLSearchParams(window.location.search);
         const curId = params.get("id") || "recent";
-        const savedTags = LocalStorage.get("es_guide_tags", {});
+        const savedTags = LocalStorage.get("es_guide_tags");
         if (!savedTags[curId]) {
             savedTags[curId] = savedTags.recent || [];
         }

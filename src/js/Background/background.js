@@ -1,5 +1,5 @@
 import setup from "../setup";
-import {Permissions, SyncedStorage} from "../modulesCore";
+import {LocalStorage, Permissions, SyncedStorage} from "../modulesCore";
 import {ContextMenu} from "./Modules/ContextMenu";
 import {IndexedDB} from "./Modules/IndexedDB";
 import {SteamCommunityApi} from "./Modules/SteamCommunityApi";
@@ -119,7 +119,7 @@ browser.runtime.onMessage.addListener(async(message, sender) => {
     message.params = message.params || [];
     let res;
     try {
-        await Promise.all([IndexedDB, SyncedStorage.then(() => { setup(); })]);
+        await Promise.all([IndexedDB, LocalStorage, SyncedStorage.then(() => { setup(); })]);
         res = await callback(...message.params);
     } catch (err) {
         console.group(`Callback: "${message.action}"`);
