@@ -77,6 +77,7 @@ class Storage {
 
     static then(onDone, onCatch) {
         const promise = this._initialized ? Promise.resolve(this.cache) : this.init();
+        this._initialized = true;
         return promise.then(onDone, onCatch);
     }
 
