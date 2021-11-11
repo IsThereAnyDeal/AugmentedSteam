@@ -1,33 +1,35 @@
 import {SyncedStorage} from "./Storage/SyncedStorage";
 
+const ctxPermissions = __BROWSER__ === "firefox" ? [] : ["contextMenus"];
+
 const PermissionOptions = Object.freeze({
     "context_steam_store": {
         "persistent": true,
-        "permissions": ["contextMenus"]
+        "permissions": ctxPermissions,
     },
     "context_steam_market": {
         "persistent": true,
-        "permissions": ["contextMenus"]
+        "permissions": ctxPermissions,
     },
     "context_itad": {
         "persistent": true,
-        "permissions": ["contextMenus"]
+        "permissions": ctxPermissions,
     },
     "context_bartervg": {
         "persistent": true,
-        "permissions": ["contextMenus"]
+        "permissions": ctxPermissions,
     },
     "context_steamdb": {
         "persistent": true,
-        "permissions": ["contextMenus"]
+        "permissions": ctxPermissions,
     },
     "context_steamdb_instant": {
         "persistent": true,
-        "permissions": ["contextMenus"]
+        "permissions": ctxPermissions,
     },
     "context_steam_keys": {
         "persistent": true,
-        "permissions": ["contextMenus"]
+        "permissions": ctxPermissions,
     },
 });
 
@@ -43,10 +45,7 @@ class Permissions {
     /**
      * @return Promise
      */
-    static async request(permissionList) {
-        // Prevents requesting permissions that are not optional (contextMenus for Firefox)
-        if (await this.contains(permissionList)) { return true; }
-
+    static request(permissionList) {
         return browser.permissions.request({"permissions": permissionList});
     }
 
