@@ -76,6 +76,6 @@ LocalStorage.defaults = Object.freeze({
     "local_storage_migration": {"store": false, "community": false, "extension": false},
 });
 
-LocalStorage.cache = {}
+LocalStorage.cache = {};
 
 export {LocalStorage};
