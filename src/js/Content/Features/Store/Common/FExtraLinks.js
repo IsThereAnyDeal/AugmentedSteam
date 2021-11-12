@@ -53,6 +53,12 @@ export default class FExtraLinks extends Feature {
                 "text": Localization.str.view_on_website.replace("__website__", "SteamDB"),
             },
             {
+                "id": "showsteampeeklinks",
+                "className": "steampeek_ico",
+                "link": `https://steampeek.hu/?appid=${this._gameid}`,
+                "text": Localization.str.view_on_website.replace("__website__", "Steampeek"),
+            },
+            {
                 "id": "showbartervg",
                 "className": "bartervg_ico",
                 "link": `https://barter.vg/steam/${this._type}/${this._gameid}/`,
