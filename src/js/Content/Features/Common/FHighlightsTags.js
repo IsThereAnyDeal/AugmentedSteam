@@ -217,7 +217,7 @@ export default class FHighlightsTags extends Feature {
             } else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
                 node.querySelector(".discount_block").insertAdjacentElement("beforebegin", container);
             } else if (node.classList.contains("search_result_row")) {
-                node.querySelector("p").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".search_name > div").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("browse_tag_game")) {
                 node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", container);
             } else if (node.classList.contains("game_area_dlc_row")) {
