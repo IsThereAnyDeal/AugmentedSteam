@@ -41,8 +41,12 @@ export class CInventory extends CCommunityBase {
                 // https://github.com/SteamDatabase/SteamTracking/blob/b3abe9c82f9e9d260265591320cac6304e500e58/steamcommunity.com/public/javascript/economy_common.js#L161
                 const hashName = window.SteamFacade.getMarketHashName(g_ActiveInventory.selectedItem.description);
 
+                /*
+                 * See https://github.com/IsThereAnyDeal/AugmentedSteam/pull/1047#discussion_r571444376
+                 * Update: For non-Steam items, the text may not have a color, so test date only
+                 */
                 const restriction = Array.isArray(g_ActiveInventory.selectedItem.description.owner_descriptions)
-                    ? g_ActiveInventory.selectedItem.description.owner_descriptions.some(el => /\[date\]\d+\[\/date\]/.test(el.value) && el.color === "A75124")
+                    ? g_ActiveInventory.selectedItem.description.owner_descriptions.some(el => /\[date\]\d+\[\/date\]/.test(el.value))
                     : false;
 
                 // https://github.com/SteamDatabase/SteamTracking/blob/f26cfc1ec42b8a0c27ca11f4343edbd8dd293255/steamcommunity.com/public/javascript/economy_v2.js#L4468
