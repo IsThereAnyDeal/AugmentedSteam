@@ -4,7 +4,7 @@ import {HTML, Localization} from "../../../../modulesCore";
 export default class FDemoAbovePurchase extends Feature {
 
     checkPrerequisites() {
-        const rightcolDemoBtn = document.querySelector(".rightcol.game_meta_data a[href^='javascript:ShowGotSteamModal'], .rightcol.game_meta_data a[href^='steam://install']");
+        const rightcolDemoBtn = document.querySelector(".rightcol.game_meta_data a[href^='javascript:ShowGotSteamModal']");
         this._demoLink = rightcolDemoBtn && rightcolDemoBtn.href;
 
         return Boolean(this._demoLink) && document.querySelector(".demo_above_purchase") === null;

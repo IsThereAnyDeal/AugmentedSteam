@@ -287,9 +287,10 @@ class AugmentedSteam {
     static _skipGotSteam() {
         if (!SyncedStorage.get("skip_got_steam")) { return; }
 
-        for (const node of document.querySelectorAll("a[href^='javascript:ShowGotSteamModal']")) {
-            node.href = node.href.split("'")[1];
-        }
+        // https://github.com/SteamDatabase/SteamTracking/blob/cdf367ce61926a896fe54d710b3ed25d66d7e333/store.steampowered.com/public/javascript/game.js#L1785
+        Page.runInPageContext(() => {
+            window.ShowGotSteamModal = function(...args) { window.location.assign(args[0]); };
+        });
     }
 
     static _keepSteamSubscriberAgreementState() {
