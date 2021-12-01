@@ -4,56 +4,22 @@ import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
 import {Api} from "./Api";
 import Config from "../../config";
 import {IndexedDB} from "./IndexedDB";
+import {Redirect} from "./Redirect";
 
 class ITADApi extends Api {
 
     static async authorize() {
         const rnd = crypto.getRandomValues(new Uint32Array(1))[0];
-        const redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
+        const redirectURL = "https://isthereanydeal.com/connectaugmentedsteam";
 
         const authUrl = new URL(`${Config.ITADApiServerHost}/oauth/authorize/`);
         authUrl.searchParams.set("client_id", Config.ITADClientId);
         authUrl.searchParams.set("response_type", "token");
         authUrl.searchParams.set("state", rnd);
         authUrl.searchParams.set("scope", ITADApi.requiredScopes.join(" "));
-        authUrl.searchParams.set("redirect_uri", redirectURI);
+        authUrl.searchParams.set("redirect_uri", redirectURL);
 
-        const tab = await browser.tabs.create({"url": authUrl.toString()});
-
-        const url = await new Promise((resolve, reject) => {
-            function webRequestListener({url}) {
-                resolve(url);
-
-                browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
-                // eslint-disable-next-line no-use-before-define -- Circular dependency
-                browser.tabs.onRemoved.removeListener(tabsListener);
-
-                browser.tabs.remove(tab.id);
-                return {"cancel": true};
-            }
-
-            function tabsListener(tabId) {
-                if (tabId === tab.id) {
-                    reject(new Error("Authorization tab closed"));
-
-                    browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
-                    browser.tabs.onRemoved.removeListener(tabsListener);
-                }
-            }
-
-            browser.webRequest.onBeforeRequest.addListener(
-                webRequestListener,
-                {
-                    "urls": [
-                        redirectURI, // For Chrome, seems to not support match patterns (a problem with the Polyfill?)
-                        `${redirectURI}#*` // For Firefox
-                    ],
-                    "tabId": tab.id
-                },
-                ["blocking"]
-            );
-            browser.tabs.onRemoved.addListener(tabsListener);
-        });
+        const url = await Redirect.waitForRedirect(authUrl, redirectURL);
 
         const hashFragment = new URL(url).hash;
         const params = new URLSearchParams(hashFragment.substr(1));
