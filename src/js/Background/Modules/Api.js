@@ -25,36 +25,36 @@ class Api {
         return fetch(url, _params);
     }
 
-    static async getEndpoint(endpoint, query, responseHandler, params = {}) {
+    static async getEndpoint(endpoint, query, responseFn, params = {}) {
         let _endpoint = endpoint;
         if (!endpoint.endsWith("/")) { _endpoint += "/"; }
 
-        const response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "GET"}));
-        if (responseHandler) { responseHandler(response); }
+        let response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "GET"}));
+        response = await this.responseHandler(responseFn, response);
         return response.json();
     }
 
-    static async getPage(endpoint, query, responseHandler, params = {}) {
-        const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "GET"}));
-        if (responseHandler) { responseHandler(response); }
+    static async getPage(endpoint, query, responseFn, params = {}) {
+        let response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "GET"}));
+        response = await this.responseHandler(responseFn, response);
         return response.text();
     }
 
-    static async postEndpoint(endpoint, query, responseHandler, params = {}) {
+    static async postEndpoint(endpoint, query, responseFn, params = {}) {
         let _endpoint = endpoint;
         if (!endpoint.endsWith("/")) { _endpoint += "/"; }
 
-        const response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "POST"}));
-        if (responseHandler) { responseHandler(response); }
+        let response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "POST"}));
+        response = await this.responseHandler(responseFn, response);
         return response.json();
     }
 
-    static async deleteEndpoint(endpoint, query, responseHandler, params = {}) {
+    static async deleteEndpoint(endpoint, query, responseFn, params = {}) {
         let _endpoint = endpoint;
         if (!endpoint.endsWith("/")) { _endpoint += "/"; }
 
-        const response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "DELETE"}));
-        if (responseHandler) { responseHandler(response); }
+        let response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "DELETE"}));
+        response = await this.responseHandler(responseFn, response);
         return response.json();
     }
 
@@ -64,10 +64,10 @@ class Api {
             if (objPath) {
                 if (Array.isArray(objPath)) {
                     for (const part of objPath) {
-                        result = result[part];
+                        result = result?.[part];
                     }
                 } else {
-                    result = result[objPath];
+                    result = result?.[objPath];
                 }
             } else {
                 result = result.data;
@@ -88,6 +88,14 @@ class Api {
 
             return IndexedDB.put(storeName, typeof key === "undefined" ? result : new Map([[key, result]]));
         };
+    }
+
+    static async responseHandler(responseFn, response) {
+        if (typeof responseFn !== "function") { return response; }
+
+        const mappedResponse = await responseFn(response);
+
+        return mappedResponse ?? response;
     }
 }
 Api.params = {};
