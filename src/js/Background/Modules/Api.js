@@ -25,37 +25,17 @@ class Api {
         return fetch(url, _params);
     }
 
-    static async getEndpoint(endpoint, query, responseFn, params = {}) {
+    static getEndpoint(...args) { return this.fetchEndpoint("GET", ...args).then(response => response.json()); }
+    static getPage(...args) { return this.fetchEndpoint("GET", ...args).then(response => response.text()); }
+    static postEndpoint(...args) { return this.fetchEndpoint("POST", ...args).then(response => response.json()); }
+    static deleteEndpoint(...args) { return this.fetchEndpoint("DELETE", ...args).then(response => response.json()); }
+
+    static async fetchEndpoint(method, endpoint, query, responseFn, params = {}) {
         let _endpoint = endpoint;
-        if (!endpoint.endsWith("/")) { _endpoint += "/"; }
+        if (!endpoint.endsWith("/")) { _endpoint += "/"; } // TODO Add explanation or remove
 
-        let response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "GET"}));
-        response = await this.responseHandler(responseFn, response);
-        return response.json();
-    }
-
-    static async getPage(endpoint, query, responseFn, params = {}) {
-        let response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "GET"}));
-        response = await this.responseHandler(responseFn, response);
-        return response.text();
-    }
-
-    static async postEndpoint(endpoint, query, responseFn, params = {}) {
-        let _endpoint = endpoint;
-        if (!endpoint.endsWith("/")) { _endpoint += "/"; }
-
-        let response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "POST"}));
-        response = await this.responseHandler(responseFn, response);
-        return response.json();
-    }
-
-    static async deleteEndpoint(endpoint, query, responseFn, params = {}) {
-        let _endpoint = endpoint;
-        if (!endpoint.endsWith("/")) { _endpoint += "/"; }
-
-        let response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "DELETE"}));
-        response = await this.responseHandler(responseFn, response);
-        return response.json();
+        const response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {method}));
+        return this.responseHandler(responseFn, response);
     }
 
     static endpointFactory(endpoint, objPath) {
