@@ -287,30 +287,6 @@ img.astats_icon {
   margin-top: 10px;
 }
 
-.es_text_input {
-  background-color: #4d4b49;
-  border: 1px solid #82807c;
-  color: #ffffff;
-  height: 18px;
-  padding: 2px 4px 3px 4px;
-}
-#es_custom_money_amount {
-  width: 54px;
-}
-.giftcard_selection #es_custom_money_amount {
-  height: 15px;
-  vertical-align: middle;
-}
-.addfunds_area_purchase_game #es_custom_money_amount {
-  margin-top: -5px;
-}
-.es_custom_money .giftcard_corner {
-  filter: hue-rotate(160deg);
-}
-.es_custom_money .giftcard_text.small {
-  font-size: 14px !important;
-}
-
 .itad-pricing {
   padding: 5px 5px 5px 42px;
   height: auto !important;
@@ -451,6 +427,38 @@ img.astats_icon {
 }
 .performance-graph .right-bar span {
   padding-left: 5px;
+}
+
+/***************************************
+ * Funds page
+ * FCustomGiftcardAndWallet
+ **************************************/
+#es_custom_money_input {
+  background-color: #4d4b49;
+  border: 1px solid #82807c;
+  color: #ffffff;
+  height: 18px;
+  padding: 2px 4px 3px 4px;
+  width: 54px;
+}
+.giftcard_selection #es_custom_money_input {
+  height: 15px;
+  vertical-align: middle;
+}
+.addfunds_area_purchase_game #es_custom_money_input {
+  margin-top: -5px;
+}
+.es_custom_money a {
+  cursor: pointer;
+}
+.es_custom_money a .giftcard_style {
+  cursor: default;
+}
+.es_custom_money .giftcard_corner {
+  filter: hue-rotate(160deg);
+}
+.es_custom_money .giftcard_text.small {
+  font-size: 14px !important;
 }
 
 /***************************************
