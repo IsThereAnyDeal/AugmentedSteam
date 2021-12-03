@@ -112,7 +112,7 @@ class SteamStoreApi extends Api {
         const self = SteamStoreApi;
 
         // TODO what's the minimal page we can load here to get sessionId?
-        const html = await self.getPage("/news/");
+        const html = await self.getPage("/about/");
         return HTMLParser.getVariableFromText(html, "g_sessionID", "string");
     }
 
