@@ -10,19 +10,14 @@ class Sortbox {
         this._activeDropLists = {};
         this._lastSelectHideTime = 0;
 
-        document.addEventListener("mousedown", e => this._handleMouseClick(e));
-    }
-
-    static _handleMouseClick(e) {
-        for (const key of Object.keys(this._activeDropLists)) {
-            if (!this._activeDropLists[key]) { continue; }
-
-            const ulAboveEvent = e.target.closest("ul");
-
-            if (ulAboveEvent && ulAboveEvent.id === `${key}_droplist`) { continue; }
-
-            this._hide(key);
-        }
+        // Hide droplist when clicking outside
+        document.addEventListener("mousedown", e => {
+            for (const key of Object.keys(this._activeDropLists)) {
+                if (this._activeDropLists[key] && !e.target.closest(`#${key}_container`)) {
+                    this._hide(key);
+                }
+            }
+        });
     }
 
     static _highlightItem(id, index, bSetSelected) {
@@ -135,7 +130,7 @@ class Sortbox {
         const box = HTML.element(
             `<div class="es-sortbox es-sortbox--${name}">
                 <div class="es-sortbox__label">${Localization.str.sort_by}</div>
-                <div class="es-sortbox__container">
+                <div id="${id}_container" class="es-sortbox__container">
                     <input id="${id}" type="hidden" name="${name}" value="${initialOption}">
                     <a class="trigger" id="${id}_trigger"></a>
                     <div class="es-dropdown">
@@ -203,5 +198,7 @@ class Sortbox {
         return box;
     }
 }
+
+Sortbox.init();
 
 export {Sortbox};
