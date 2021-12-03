@@ -38,22 +38,8 @@ class Api {
         return this.responseHandler(responseFn, response);
     }
 
-    static endpointFactory(endpoint, objPath) {
-        return async params => {
-            let result = await this.getEndpoint(endpoint, params);
-            if (objPath) {
-                if (Array.isArray(objPath)) {
-                    for (const part of objPath) {
-                        result = result?.[part];
-                    }
-                } else {
-                    result = result?.[objPath];
-                }
-            } else {
-                result = result.data;
-            }
-            return result;
-        };
+    static endpointFactory(endpoint) {
+        return params => this.getEndpoint(endpoint, params);
     }
 
     static endpointFactoryCached(endpoint, storeName, mapFn) {

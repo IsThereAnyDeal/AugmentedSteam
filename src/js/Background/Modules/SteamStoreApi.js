@@ -202,10 +202,13 @@ class SteamStoreApi extends Api {
         const params = {"appids": appid};
         if (filter) { params.filters = filter; }
 
-        return SteamStoreApi.endpointFactory("api/appdetails/", appid)(params);
+        return SteamStoreApi.endpointFactory("api/appdetails/")(params).then(result => result[appid]);
     }
 
-    static appUserDetails(appid) { return SteamStoreApi.endpointFactory("api/appuserdetails/", appid)({"appids": appid}); }
+    static appUserDetails(appid) {
+        return SteamStoreApi.endpointFactory("api/appuserdetails/")({"appids": appid})
+            .then(result => result.appid);
+    }
 }
 SteamStoreApi.origin = "https://store.steampowered.com/";
 SteamStoreApi.params = {"credentials": "include"};
