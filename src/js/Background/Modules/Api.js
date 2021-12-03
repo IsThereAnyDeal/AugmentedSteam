@@ -38,13 +38,22 @@ class Api {
         return this.responseHandler(responseFn, response);
     }
 
-    static endpointFactory(endpoint) {
-        return params => this.getEndpoint(endpoint, params);
+    static endpointFactory(endpoint, method = "GET") {
+        return params => {
+            let endpointFn;
+            switch (method) {
+                default: // Fall through
+                case "GET": endpointFn = this.getEndpoint; break;
+                case "POST": endpointFn = this.postEndpoint; break;
+                case "DELETE": endpointFn = this.deleteEndpoint; break;
+            }
+            return endpointFn.bind(this)(endpoint, params);
+        };
     }
 
-    static endpointFactoryCached(endpoint, storeName, mapFn) {
+    static endpointFactoryCached(endpoint, storeName, mapFn, method) {
         return async({params, key} = {}) => {
-            let result = await this.getEndpoint(endpoint, params);
+            let result = await this.endpointFactory(endpoint, method)(params);
 
             if (mapFn) {
                 result = mapFn(result.data);
