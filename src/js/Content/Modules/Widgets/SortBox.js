@@ -73,7 +73,9 @@ class Sortbox {
     }
 
     static _onBlur(id) {
-        if (!this._classCheck(document.querySelector(`#${id}_trigger`), "activetrigger")) { this._activeDropLists[id] = false; }
+        if (!document.querySelector(`#${id}_trigger`).classList.contains("activetrigger")) {
+            this._activeDropLists[id] = false;
+        }
     }
 
     static _hide(id) {
@@ -103,13 +105,9 @@ class Sortbox {
     }
 
     static _onTriggerClick(id) {
-        if (!this._classCheck(document.querySelector(`#${id}_trigger`), "activetrigger")) {
+        if (!document.querySelector(`#${id}_trigger`).classList.contains("activetrigger")) {
             this._show(id);
         }
-    }
-
-    static _classCheck(element, className) {
-        return new RegExp(`\\b${className}\\b`).test(element.className);
     }
 
     /**
