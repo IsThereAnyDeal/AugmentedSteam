@@ -16,7 +16,7 @@ export class CGameCard extends CCommunityBase {
         ]);
 
         this.appid = GameId.getAppidFromGameCard(window.location.pathname);
-        this.isFoil = window.location.search.includes("?border=1");
+        this.isFoil = new URLSearchParams(window.location.search).get("border") === "1";
 
         /*
          * Steam sale events that have cards but no store page or trading forum

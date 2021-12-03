@@ -188,8 +188,8 @@ class AugmentedSteam {
         function removeLinkFilter(parent = document) {
             const selector = "a[href*='/linkfilter/']";
 
-            for (const node of parent.querySelectorAll(selector)) {
-                node.href = node.href.replace(/^.+?\/linkfilter\/\?url=/, "");
+            for (const link of parent.querySelectorAll(selector)) {
+                link.href = new URLSearchParams(link.search).get("url");
             }
         }
 
