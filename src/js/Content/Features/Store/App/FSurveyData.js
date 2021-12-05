@@ -1,5 +1,7 @@
 import {Feature} from "../../../Modules/Feature/Feature";
 import {HTML, Localization} from "../../../../modulesCore";
+import {Background, User} from "../../../modulesContent";
+import {Page} from "../../Page";
 
 export default class FSurveyData extends Feature {
 
@@ -15,7 +17,10 @@ export default class FSurveyData extends Feature {
     }
 
     apply() {
+        this._showData();
+    }
 
+    _showData() {
         const survey = this._survey;
         let html = `<div id="performance_survey" class="game_area_description"><h2>${Localization.str.survey.performance_survey}</h2>`;
 
@@ -58,17 +63,152 @@ export default class FSurveyData extends Feature {
             html += `<p>${Localization.str.survey.nobody}</p>`;
         }
 
-        /*
-         * FIXME
-         * if (this.context.isOwned() && document.getElementById("my_activity")) {
-         *   html += `<a class="btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs"
-         *      href="${Config.PublicHost}/survey/?appid=${this.context.appid}"><span>${Localization.str.survey.take}</span></a>`;
-         * }
-         */
+        if (this.context.isOwned() && document.getElementById("my_activity") !== null) {
+            html += `<a class="btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs"><span>${Localization.str.survey.take}</span></a>`;
+        }
 
         html += "</div>";
 
         HTML.beforeBegin(document.querySelector(".sys_req").parentNode, html);
+
+        document.querySelector(".es_btn_systemreqs").addEventListener("click", () => { this._showForm(); });
+    }
+
+    async _showForm() {
+
+        const form = `<form id="es_submit_survey"><h3>Please select your monitor's native resolution</h3>
+        <div class="form-group">
+        <div class="col-lg-10">
+        <select class="form-control" name="mr" style="width: initial;">
+        <option value="less">Less than 1920x1080 or non-widescreen</option>
+        <option value="hd">1920x1080 (HD)</option>
+        <option value="wqhd">2560x1440 (WQHD)</option>
+        <option value="4k">3840x2160 (4K)</option>
+        <option value="ns" selected="">Other / Not Sure</option>
+        </select>
+        </div>
+        </div>
+        <h3>Does the game allow you to play fullscreen at this resolution without stretching?</h3>
+        <div class="form-group">
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="fs" style="margin-left: 1px;" value="yes">
+        Yes
+        </label>
+        </div>
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="fs" style="margin-left: 1px;" value="no">
+        No
+        </label>
+        </div>
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="fs" style="margin-left: 1px;" value="ns" checked="">
+        Not Sure
+        </label>
+        </div>
+        </div>
+        <h3>Is the game's framerate: </h3>
+        <div class="form-group">
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="fr" style="margin-left: 1px;" value="30">
+        Fixed at 30fps or less
+        </label>
+        </div>
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="fr" style="margin-left: 1px;" value="fi">
+        Fixed at higher than 30fps
+        </label>
+        </div>
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="fr" style="margin-left: 1px;" value="va">
+        Variable
+        </label>
+        </div>
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="fr" style="margin-left: 1px;" value="ns" checked="">
+        Not Sure
+        </label>
+        </div>
+        </div>
+        <h3>Does this game have built-in graphics options, such as a "Graphics Settings" menu?</h3>
+        <div class="form-group">
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="gs" style="margin-left: 1px;" value="yes">
+        Yes
+        </label>
+        </div>
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="gs" style="margin-left: 1px;" value="no">
+        No
+        </label>
+        </div>
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="gs" style="margin-left: 1px;" value="ns" checked="">
+        Not Sure
+        </label>
+        </div>
+        </div>
+        <h3>Do you think the game performs well?</h3>
+        <div class="form-group">
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="pw" style="margin-left: 1px;" value="yes">
+        Yes
+        </label>
+        </div>
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="pw" style="margin-left: 1px;" value="no">
+        No
+        </label>
+        </div>
+        <div class="radio">
+        <label style="margin-left: 5px;">
+        <input type="radio" name="pw" style="margin-left: 1px;" value="ns" checked="">
+        Not Sure
+        </label>
+        </div>
+        </div>
+        <h3>Please select your graphics card manufacturer</h3>
+        <div class="form-group">
+        <div class="col-lg-10">
+        <select class="form-control" name="gc" style="width: initial;">
+        <option value="nvidia">Nvidia</option>
+        <option value="amd">AMD</option>
+        <option value="intel">Intel</option>
+        <option value="ns" selected="">Other / Not Sure</option>
+        </select>
+        </div>
+        </div>
+        <div class="form-group">
+        <div class="col-lg-10">
+        <button type="submit" class="btn btn-primary" id="nextButton">Submit</button>
+        </div>
+        </div></form>`;
+
+        await Page.runInPageContext((surveyStr, form) => new Promise(resolve => {
+            window.SteamFacade.showConfirmDialog(surveyStr, form);
+
+            const okBtn = window.SteamFacade.jq(".newmodal_buttons > .btn_green_steamui");
+
+            okBtn.off("click");
+            okBtn.click(() => { resolve(); });
+        }), [Localization.str.survey.take, form], true);
+
+        const fd = new FormData(document.getElementById("es_submit_survey"));
+        fd.append("steam_id", User.steamId); // The user is logged in since they can only take the survey when they own a game
+        fd.append("appid", this.context.appid);
+
+        await Background.action("survey.submit", Object.fromEntries(fd));
     }
 
     _getBarHtml(name, data) {

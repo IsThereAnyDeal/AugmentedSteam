@@ -62,6 +62,7 @@ const actionCallbacks = new Map([
     ["market.cardprices", AugmentedSteamApi.endpointFactory("v01/market/cardprices")],
     ["market.averagecardprices", AugmentedSteamApi.endpointFactory("v01/market/averagecardprices")],
     ["steampeek", AugmentedSteamApi.steamPeek],
+    ["survey.submit", AugmentedSteamApi.endpointFactory("v01/survey/submit", "POST")],
 
     ["appdetails", SteamStoreApi.appDetails],
     ["appuserdetails", SteamStoreApi.appUserDetails],
