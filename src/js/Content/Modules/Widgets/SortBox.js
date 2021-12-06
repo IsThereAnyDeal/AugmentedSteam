@@ -82,8 +82,7 @@ class Sortbox {
         const droplist = document.querySelector(`#${id}_droplist`);
         const trigger = document.querySelector(`#${id}_trigger`);
 
-        const d = new Date();
-        this._lastSelectHideTime = d.valueOf();
+        this._lastSelectHideTime = Date.now();
 
         trigger.className = "trigger";
         droplist.className = "dropdownhidden";
@@ -92,8 +91,7 @@ class Sortbox {
     }
 
     static _show(id) {
-        const d = new Date();
-        if (d - this._lastSelectHideTime < 50) { return; }
+        if (Date.now() - this._lastSelectHideTime < 50) { return; }
 
         const droplist = document.querySelector(`#${id}_droplist`);
         const trigger = document.querySelector(`#${id}_trigger`);
@@ -130,12 +128,12 @@ class Sortbox {
                 <div class="es-sortbox__label">${Localization.str.sort_by}</div>
                 <div id="${id}_container" class="es-sortbox__container">
                     <input id="${id}" type="hidden" name="${name}" value="${initialOption}">
-                    <a class="trigger" id="${id}_trigger"></a>
+                    <a id="${id}_trigger" class="trigger"></a>
                     <div class="es-dropdown">
-                        <ul id="${id}_droplist" class="es-dropdown__list dropdownhidden"></ul>
+                        <ul id="${id}_droplist" class="dropdownhidden"></ul>
                     </div>
                 </div>
-                <span class="es-sortbox__reverse">${arrowDown}</span>
+                <span class="es-sortbox__reverse">${reversed ? arrowUp : arrowDown}</span>
             </div>`
         );
 
@@ -162,7 +160,6 @@ class Sortbox {
             reverseEl.textContent = reversed ? arrowUp : arrowDown;
             onChange(input.value.replace(`${id}_`, ""), reversed);
         });
-        if (reversed) { reverseEl.textContent = arrowUp; }
 
         const trigger = box.querySelector(`#${id}_trigger`);
         trigger.addEventListener("focus", () => this._onFocus(id));
@@ -176,8 +173,8 @@ class Sortbox {
 
             let toggle = "inactive";
             if (key === trimmedOption) {
-                box.querySelector(`#${id}`).value = key;
-                box.querySelector(".trigger").textContent = text;
+                input.value = key;
+                trigger.textContent = text;
                 toggle = "highlighted";
             }
 
