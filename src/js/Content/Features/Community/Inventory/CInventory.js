@@ -54,19 +54,31 @@ export class CInventory extends CCommunityBase {
                     ? g_ActiveInventory.selectedItem.description.market_fee
                     : g_rgWalletInfo.wallet_publisher_fee_percent_default;
 
+                const contextId = Number(g_ActiveInventory.selectedItem.contextid);
+                const globalId = Number(g_ActiveInventory.appid);
+
+                let appid = null;
+                let isBooster = false;
+
+                // Only parse hashname if the item is a Steam item
+                if (contextId === 6 && globalId === 753) {
+                    appid = parseInt(hashName);
+                    isBooster = /Booster Pack/i.test(hashName);
+                }
+
                 window.Messenger.postMessage("marketInfo", {
                     "view": iActiveSelectView,
                     "sessionId": g_sessionID,
                     "assetId": g_ActiveInventory.selectedItem.assetid, // DO NOT try to convert this to a number as the value might exceed Number.MAX_SAFE_INTEGER
-                    "contextId": Number(g_ActiveInventory.selectedItem.contextid),
-                    "globalId": Number(g_ActiveInventory.appid),
+                    contextId,
+                    globalId,
                     "walletCurrency": g_rgWalletInfo.wallet_currency,
                     "marketable": g_ActiveInventory.selectedItem.description.marketable,
                     hashName,
                     publisherFee,
                     restriction,
-                    "appid": parseInt(hashName) || null,
-                    "isBooster": /Booster Pack/i.test(hashName),
+                    appid,
+                    isBooster,
                 });
             });
             /* eslint-enable no-undef, camelcase */
