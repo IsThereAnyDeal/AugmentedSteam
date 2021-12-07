@@ -77,8 +77,8 @@ export default class FSurveyData extends Feature {
     async _showForm() {
 
         const form = `<form id="es_submit_survey">
-            <h3 class="as-survey-form__title">Please select your monitor's native resolution</h3>
             <div>
+                <h3 class="as-survey-form__title">Please select your monitor's native resolution</h3>
                 <select name="mr" style="width: initial;">
                     <option value="less">Less than 1920x1080 or non-widescreen</option>
                     <option value="hd">1920x1080 (HD)</option>
@@ -88,8 +88,8 @@ export default class FSurveyData extends Feature {
                 </select>
             </div>
 
-            <h3 class="as-survey-form__title">Does the game allow you to play fullscreen at this resolution without stretching?</h3>
             <div>
+                <h3 class="as-survey-form__title">Does the game allow you to play fullscreen at this resolution without stretching?</h3>
                 <label style="margin-left: 5px;">
                     <input type="radio" name="fs" style="margin-left: 1px;" value="yes">
                     Yes
@@ -104,8 +104,8 @@ export default class FSurveyData extends Feature {
                 </label>
             </div>
 
-            <h3 class="as-survey-form__title">Is the game's framerate: </h3>
             <div>
+                <h3 class="as-survey-form__title">Is the game's framerate: </h3>
                 <label style="margin-left: 5px;">
                     <input type="radio" name="fr" style="margin-left: 1px;" value="30">
                     Fixed at 30fps or less
@@ -124,8 +124,8 @@ export default class FSurveyData extends Feature {
                 </label>
             </div>
 
-            <h3 class="as-survey-form__title">Does this game have built-in graphics options, such as a "Graphics Settings" menu?</h3>
             <div>
+                <h3 class="as-survey-form__title">Does this game have built-in graphics options, such as a "Graphics Settings" menu?</h3>
                 <label style="margin-left: 5px;">
                     <input type="radio" name="gs" style="margin-left: 1px;" value="yes">
                     Yes
@@ -140,8 +140,8 @@ export default class FSurveyData extends Feature {
                 </label>
             </div>
 
-            <h3 class="as-survey-form__title">Do you think the game performs well?</h3>
             <div>
+                <h3 class="as-survey-form__title">Do you think the game performs well?</h3>
                 <label style="margin-left: 5px;">
                     <input type="radio" name="pw" style="margin-left: 1px;" value="yes">
                     Yes
@@ -156,8 +156,8 @@ export default class FSurveyData extends Feature {
                 </label>
             </div>
 
-            <h3 class="as-survey-form__title">Please select your graphics card manufacturer</h3>
             <div>
+                <h3 class="as-survey-form__title">Please select your graphics card manufacturer</h3>
                 <select name="gc" style="width: initial;">
                     <option value="nvidia">Nvidia</option>
                     <option value="amd">AMD</option>
