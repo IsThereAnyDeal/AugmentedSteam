@@ -195,11 +195,6 @@ export default class FSurveyData extends Feature {
                     </select>
                 </div>
             </div>
-            <div>
-                <div>
-                    <button type="submit" id="nextButton">Submit</button>
-                </div>
-            </div>
         </form>`;
 
         await Page.runInPageContext((surveyStr, form) => new Promise(resolve => {
