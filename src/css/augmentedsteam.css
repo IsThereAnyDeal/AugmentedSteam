@@ -3016,3 +3016,7 @@ label.es_dlc_label > input:checked::after {
   margin: auto;
   max-width: 100%;
 }
+
+.as-survey-form__title {
+  margin: 15px 0 10px;
+}
