@@ -79,121 +79,91 @@ export default class FSurveyData extends Feature {
         const form = `<form id="es_submit_survey">
             <h3 class="as-survey-form__title">Please select your monitor's native resolution</h3>
             <div>
-                <div>
-                    <select name="mr" style="width: initial;">
-                        <option value="less">Less than 1920x1080 or non-widescreen</option>
-                        <option value="hd">1920x1080 (HD)</option>
-                        <option value="wqhd">2560x1440 (WQHD)</option>
-                        <option value="4k">3840x2160 (4K)</option>
-                        <option value="ns" selected="">Other / Not Sure</option>
-                    </select>
-                </div>
+                <select name="mr" style="width: initial;">
+                    <option value="less">Less than 1920x1080 or non-widescreen</option>
+                    <option value="hd">1920x1080 (HD)</option>
+                    <option value="wqhd">2560x1440 (WQHD)</option>
+                    <option value="4k">3840x2160 (4K)</option>
+                    <option value="ns" selected="">Other / Not Sure</option>
+                </select>
             </div>
 
             <h3 class="as-survey-form__title">Does the game allow you to play fullscreen at this resolution without stretching?</h3>
             <div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="fs" style="margin-left: 1px;" value="yes">
-                        Yes
-                    </label>
-                </div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="fs" style="margin-left: 1px;" value="no">
-                        No
-                    </label>
-                </div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="fs" style="margin-left: 1px;" value="ns" checked="">
-                        Not Sure
-                    </label>
-                </div>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="fs" style="margin-left: 1px;" value="yes">
+                    Yes
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="fs" style="margin-left: 1px;" value="no">
+                    No
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="fs" style="margin-left: 1px;" value="ns" checked="">
+                    Not Sure
+                </label>
             </div>
 
             <h3 class="as-survey-form__title">Is the game's framerate: </h3>
             <div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="fr" style="margin-left: 1px;" value="30">
-                        Fixed at 30fps or less
-                    </label>
-                </div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="fr" style="margin-left: 1px;" value="fi">
-                        Fixed at higher than 30fps
-                    </label>
-                </div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="fr" style="margin-left: 1px;" value="va">
-                        Variable
-                    </label>
-                </div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="fr" style="margin-left: 1px;" value="ns" checked="">
-                        Not Sure
-                    </label>
-                </div>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="fr" style="margin-left: 1px;" value="30">
+                    Fixed at 30fps or less
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="fr" style="margin-left: 1px;" value="fi">
+                    Fixed at higher than 30fps
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="fr" style="margin-left: 1px;" value="va">
+                    Variable
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="fr" style="margin-left: 1px;" value="ns" checked="">
+                    Not Sure
+                </label>
             </div>
 
             <h3 class="as-survey-form__title">Does this game have built-in graphics options, such as a "Graphics Settings" menu?</h3>
             <div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="gs" style="margin-left: 1px;" value="yes">
-                        Yes
-                    </label>
-                </div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="gs" style="margin-left: 1px;" value="no">
-                        No
-                    </label>
-                </div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="gs" style="margin-left: 1px;" value="ns" checked="">
-                        Not Sure
-                    </label>
-                </div>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="gs" style="margin-left: 1px;" value="yes">
+                    Yes
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="gs" style="margin-left: 1px;" value="no">
+                    No
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="gs" style="margin-left: 1px;" value="ns" checked="">
+                    Not Sure
+                </label>
             </div>
 
             <h3 class="as-survey-form__title">Do you think the game performs well?</h3>
             <div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="pw" style="margin-left: 1px;" value="yes">
-                        Yes
-                    </label>
-                </div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="pw" style="margin-left: 1px;" value="no">
-                        No
-                    </label>
-                </div>
-                <div>
-                    <label style="margin-left: 5px;">
-                        <input type="radio" name="pw" style="margin-left: 1px;" value="ns" checked="">
-                        Not Sure
-                    </label>
-                </div>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="pw" style="margin-left: 1px;" value="yes">
+                    Yes
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="pw" style="margin-left: 1px;" value="no">
+                    No
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="pw" style="margin-left: 1px;" value="ns" checked="">
+                    Not Sure
+                </label>
             </div>
 
             <h3 class="as-survey-form__title">Please select your graphics card manufacturer</h3>
             <div>
-                <div>
-                    <select name="gc" style="width: initial;">
-                        <option value="nvidia">Nvidia</option>
-                        <option value="amd">AMD</option>
-                        <option value="intel">Intel</option>
-                        <option value="ns" selected="">Other / Not Sure</option>
-                    </select>
-                </div>
+                <select name="gc" style="width: initial;">
+                    <option value="nvidia">Nvidia</option>
+                    <option value="amd">AMD</option>
+                    <option value="intel">Intel</option>
+                    <option value="ns" selected="">Other / Not Sure</option>
+                </select>
             </div>
         </form>`;
 
