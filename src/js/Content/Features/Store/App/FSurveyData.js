@@ -82,28 +82,17 @@ export default class FSurveyData extends Feature {
 
         const form = `<form id="es_submit_survey">
             <div>
-                <h3 class="as-survey-form__title">Please select your monitor's native resolution</h3>
-                <select name="mr" style="width: initial;">
-                    <option value="less">Less than 1920x1080 or non-widescreen</option>
-                    <option value="hd">1920x1080 (HD)</option>
-                    <option value="wqhd">2560x1440 (WQHD)</option>
-                    <option value="4k">3840x2160 (4K)</option>
-                    <option value="ns" selected="">Other / Not Sure</option>
-                </select>
-            </div>
-
-            <div>
-                <h3 class="as-survey-form__title">Does the game allow you to play fullscreen at this resolution without stretching?</h3>
+                <h3 class="as-survey-form__title">Does this game have good controls?</h3>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="fs" style="margin-left: 1px;" value="yes">
+                    <input type="radio" name="good_controls" style="margin-left: 1px;" value="yes">
                     Yes
                 </label>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="fs" style="margin-left: 1px;" value="no">
+                    <input type="radio" name="good_controls" style="margin-left: 1px;" value="no">
                     No
                 </label>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="fs" style="margin-left: 1px;" value="ns" checked="">
+                    <input type="radio" name="good_controls" style="margin-left: 1px;" value="ns" checked="">
                     Not Sure
                 </label>
             </div>
@@ -111,63 +100,73 @@ export default class FSurveyData extends Feature {
             <div>
                 <h3 class="as-survey-form__title">Is the game's framerate: </h3>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="fr" style="margin-left: 1px;" value="30">
-                    Fixed at 30fps or less
+                    <input type="radio" name="framerate" style="margin-left: 1px;" value="30">
+                    Fixed at 30 FPS or less
                 </label>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="fr" style="margin-left: 1px;" value="fi">
-                    Fixed at higher than 30fps
+                    <input type="radio" name="framerate" style="margin-left: 1px;" value="60">
+                    Fixed at 60 FPS or less
                 </label>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="fr" style="margin-left: 1px;" value="va">
+                    <input type="radio" name="framerate" style="margin-left: 1px;" value="va">
                     Variable
                 </label>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="fr" style="margin-left: 1px;" value="ns" checked="">
+                    <input type="radio" name="framerate" style="margin-left: 1px;" value="ns" checked="">
                     Not Sure
                 </label>
             </div>
 
             <div>
-                <h3 class="as-survey-form__title">Does this game have built-in graphics options, such as a "Graphics Settings" menu?</h3>
+                <h3 class="as-survey-form__title">Does this game suffer from any sort of input lag or desynchronization?</h3>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="gs" style="margin-left: 1px;" value="yes">
+                    <input type="radio" name="lag" style="margin-left: 1px;" value="yes">
                     Yes
                 </label>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="gs" style="margin-left: 1px;" value="no">
+                    <input type="radio" name="lag" style="margin-left: 1px;" value="no">
                     No
                 </label>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="gs" style="margin-left: 1px;" value="ns" checked="">
+                    <input type="radio" name="lag" style="margin-left: 1px;" value="ns" checked="">
                     Not Sure
                 </label>
             </div>
 
             <div>
-                <h3 class="as-survey-form__title">Do you think the game performs well?</h3>
+                <h3 class="as-survey-form__title">How customizable are this game's graphics settings?</h3>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="pw" style="margin-left: 1px;" value="yes">
+                    <input type="radio" name="graphics_settings" style="margin-left: 1px;" value="not_existent">
+                    Not existent
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="graphics_settings" style="margin-left: 1px;" value="not_granular">
+                    Basic
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="graphics_settings" style="margin-left: 1px;" value="granular">
+                    Granular
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="graphics_settings" style="margin-left: 1px;" value="ns" checked="">
+                    Not Sure
+                </label>
+            </div>
+
+            <div>
+                <h3 class="as-survey-form__title">Will the game sounds mute when the game is in the background?</h3>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="bg_sound" style="margin-left: 1px;" value="yes">
                     Yes
                 </label>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="pw" style="margin-left: 1px;" value="no">
+                    <input type="radio" name="bg_sound" style="margin-left: 1px;" value="no">
                     No
                 </label>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="pw" style="margin-left: 1px;" value="ns" checked="">
+                    <input type="radio" name="bg_sound" style="margin-left: 1px;" value="ns" checked="">
                     Not Sure
                 </label>
-            </div>
-
-            <div>
-                <h3 class="as-survey-form__title">Please select your graphics card manufacturer</h3>
-                <select name="gc" style="width: initial;">
-                    <option value="nvidia">Nvidia</option>
-                    <option value="amd">AMD</option>
-                    <option value="intel">Intel</option>
-                    <option value="ns" selected="">Other / Not Sure</option>
-                </select>
             </div>
         </form>`;
 
