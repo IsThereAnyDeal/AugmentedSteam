@@ -213,6 +213,14 @@ export default class FSurveyData extends Feature {
         }), [Localization.str.survey.take, form], true);
 
         const fd = new FormData(document.getElementById("es_submit_survey"));
+
+        // Use Array.from to avoid skipping entries (due to deletion during iteration)
+        for (const [key, val] of Array.from(fd.entries())) {
+            if (val === "ns") {
+                fd.delete(key);
+            }
+        }
+
         fd.append("steam_id", User.steamId); // The user is logged in since they can only take the survey when they own a game
         fd.append("appid", this.context.appid);
 
