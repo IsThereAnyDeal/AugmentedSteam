@@ -3017,12 +3017,6 @@ label.es_dlc_label > input:checked::after {
   max-width: 100%;
 }
 
-.as-survey-form__question--unanswered, .as-survey-form__submit--disabled {
-  opacity: 0.5;
-}
-.as-survey-form__question--answered {
-  opacity: unset;
-}
 .as-survey-form__select {
   width: auto;
   padding: 3px;
@@ -3031,8 +3025,10 @@ label.es_dlc_label > input:checked::after {
   margin: 30px 0 15px;
 }
 .as-survey-form__submit--disabled {
+  opacity: 0.5;
   pointer-events: none;
 }
 .as-survey-form__submit--enabled {
+  opacity: unset;
   pointer-events: unset;
 }

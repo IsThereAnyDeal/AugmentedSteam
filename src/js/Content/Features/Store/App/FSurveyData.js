@@ -154,14 +154,8 @@ export default class FSurveyData extends Feature {
 
             okBtn.addClass("as-survey-form__submit--disabled");
 
-            jq("#es_submit_survey select").change(({target}) => {
-                const question = jq(target).closest(".js-survey-form__question");
-                const answered = target.value !== "ns";
-
-                question.toggleClass("as-survey-form__question--unanswered", !answered);
-                question.toggleClass("as-survey-form__question--answered", answered);
-
-                const anyAnswered = answered || jq("#es_submit_survey select:not([value='ns'])").length > 0;
+            jq("#es_submit_survey select").change(() => {
+                const anyAnswered = jq("#es_submit_survey option:checked:not([value='ns'])").length > 0;
 
                 okBtn.toggleClass("as-survey-form__submit--disabled", !anyAnswered);
                 okBtn.toggleClass("as-survey-form__submit--enabled", anyAnswered);
