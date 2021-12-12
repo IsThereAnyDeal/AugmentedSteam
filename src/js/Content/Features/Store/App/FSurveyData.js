@@ -82,22 +82,6 @@ export default class FSurveyData extends Feature {
 
         const form = `<form id="es_submit_survey">
             <div>
-                <h3 class="as-survey-form__title">Does this game have good controls?</h3>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="good_controls" style="margin-left: 1px;" value="yes">
-                    Yes
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="good_controls" style="margin-left: 1px;" value="no">
-                    No
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="good_controls" style="margin-left: 1px;" value="ns" checked="">
-                    Not Sure
-                </label>
-            </div>
-
-            <div>
                 <h3 class="as-survey-form__title">Is the game's framerate: </h3>
                 <label style="margin-left: 5px;">
                     <input type="radio" name="framerate" style="margin-left: 1px;" value="30">
@@ -113,6 +97,22 @@ export default class FSurveyData extends Feature {
                 </label>
                 <label style="margin-left: 5px;">
                     <input type="radio" name="framerate" style="margin-left: 1px;" value="ns" checked="">
+                    Not Sure
+                </label>
+            </div>
+
+            <div>
+                <h3 class="as-survey-form__title">Do you think that the game is well optimized?</h3>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="optimized" style="margin-left: 1px;" value="yes">
+                    Yes
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="optimized" style="margin-left: 1px;" value="no">
+                    No
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="optimized" style="margin-left: 1px;" value="ns" checked="">
                     Not Sure
                 </label>
             </div>
@@ -170,17 +170,17 @@ export default class FSurveyData extends Feature {
             </div>
 
             <div>
-                <h3 class="as-survey-form__title">Do you think that the game is well optimized?</h3>
+                <h3 class="as-survey-form__title">Does this game have good controls?</h3>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="optimized" style="margin-left: 1px;" value="yes">
+                    <input type="radio" name="good_controls" style="margin-left: 1px;" value="yes">
                     Yes
                 </label>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="optimized" style="margin-left: 1px;" value="no">
+                    <input type="radio" name="good_controls" style="margin-left: 1px;" value="no">
                     No
                 </label>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="optimized" style="margin-left: 1px;" value="ns" checked="">
+                    <input type="radio" name="good_controls" style="margin-left: 1px;" value="ns" checked="">
                     Not Sure
                 </label>
             </div>
