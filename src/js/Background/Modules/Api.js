@@ -56,9 +56,7 @@ class Api {
             let result = await this.endpointFactory(endpoint, method)(params);
 
             if (mapFn) {
-                result = mapFn(result.data);
-            } else {
-                result = result.data;
+                result = mapFn(result);
             }
 
             return IndexedDB.put(storeName, typeof key === "undefined" ? result : new Map([[key, result]]));

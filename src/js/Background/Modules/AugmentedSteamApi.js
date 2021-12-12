@@ -56,8 +56,7 @@ class AugmentedSteamApi extends Api {
         if (json?.result !== "success") {
             throw new Error("Endpoint not successfully retrieved");
         }
-        delete json.result;
-        return json;
+        return json.data;
     }
 
     static storePageData(appid, metalink, showoc) {

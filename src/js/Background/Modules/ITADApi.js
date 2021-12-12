@@ -71,6 +71,10 @@ class ITADApi extends Api {
         };
     }
 
+    static async getEndpoint(...args) { return (await super.getEndpoint(...args)).data; }
+    static async postEndpoint(...args) { return (await super.postEndpoint(...args)).data; }
+    static async deleteEndpoint(...args) { return (await super.deleteEndpoint(...args)).data; }
+
     static async addToWaitlist(appids) {
         if (!appids || (Array.isArray(appids) && !appids.length)) {
             console.warn("Can't add nothing to ITAD waitlist");
