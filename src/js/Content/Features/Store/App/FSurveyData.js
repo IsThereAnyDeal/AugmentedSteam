@@ -96,7 +96,7 @@ export default class FSurveyData extends Feature {
                     Variable
                 </label>
                 <label style="margin-left: 5px;">
-                    <input type="radio" name="framerate" style="margin-left: 1px;" value="ns" checked="">
+                    <input type="radio" name="framerate" style="margin-left: 1px;" value="ns" checked>
                     Not Sure
                 </label>
             </div>
@@ -195,12 +195,19 @@ export default class FSurveyData extends Feature {
             okBtn.off("click");
             okBtn.click(() => { resolve(); });
 
+            okBtn.addClass("as-survey-form__submit--disabled");
+
             jq("#es_submit_survey input").change(({target}) => {
-                const clsList = target.closest(".js-survey-form__question").classList;
+                const question = jq(target).closest(".js-survey-form__question");
                 const answered = target.value !== "ns";
 
-                clsList.toggle("as-survey-form__question--unanswered", !answered);
-                clsList.toggle("as-survey-form__question--answered", answered);
+                question.toggleClass("as-survey-form__question--unanswered", !answered);
+                question.toggleClass("as-survey-form__question--answered", answered);
+
+                const anyAnswered = answered || jq("#es_submit_survey input:checked:not([value='ns'])").length > 0;
+
+                okBtn.toggleClass("as-survey-form__submit--disabled", !anyAnswered);
+                okBtn.toggleClass("as-survey-form__submit--enabled", anyAnswered);
             });
 
         }), [Localization.str.survey.take, form], true);
