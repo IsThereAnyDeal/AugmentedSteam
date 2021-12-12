@@ -63,7 +63,9 @@ export default class FSurveyData extends Feature {
             html += `<p>${Localization.str.survey.nobody}</p>`;
         }
 
-        if (this.context.isOwned() && document.getElementById("my_activity") !== null) {
+        const showBtn = this.context.isOwned() && document.getElementById("my_activity") !== null;
+
+        if (showBtn) {
             html += `<a class="btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs"><span>${Localization.str.survey.take}</span></a>`;
         }
 
@@ -71,7 +73,9 @@ export default class FSurveyData extends Feature {
 
         HTML.beforeBegin(document.querySelector(".sys_req").parentNode, html);
 
-        document.querySelector(".es_btn_systemreqs").addEventListener("click", () => { this._showForm(); });
+        if (showBtn) {
+            document.querySelector(".es_btn_systemreqs").addEventListener("click", () => { this._showForm(); });
+        }
     }
 
     async _showForm() {
