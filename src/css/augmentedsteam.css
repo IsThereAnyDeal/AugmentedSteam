@@ -2438,13 +2438,14 @@ label.es_dlc_label > input:checked::after {
 }
 .es-copy__copied {
   opacity: 0;
-  transition: opacity 200ms;
+  transition: opacity .2s .6s;
   margin-left: 20px;
   color: #999;
   font-size: 0.95em;
 }
 .es-copy.is-copied .es-copy__copied {
   opacity: 1;
+  transition: opacity .2s 0s;
 }
 
 /***************************************
