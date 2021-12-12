@@ -82,107 +82,59 @@ export default class FSurveyData extends Feature {
 
         const form = `<form id="es_submit_survey">
             <div class="as-survey-form__question--unanswered js-survey-form__question">
-                <h3 class="as-survey-form__title">Is the game's framerate: </h3>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="framerate" style="margin-left: 1px;" value="30">
-                    Fixed at 30 FPS or less
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="framerate" style="margin-left: 1px;" value="60">
-                    Fixed at 60 FPS or less
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="framerate" style="margin-left: 1px;" value="va">
-                    Variable
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="framerate" style="margin-left: 1px;" value="ns" checked>
-                    Not Sure
-                </label>
+                <h3 class="as-survey-form__title">What is this game's frame rate?</h3>
+                <select class="as-survey-form__select" name="framerate">
+                    <option value="30">Fixed at 30 FPS or less</option>
+                    <option value="60">Fixed at 60 FPS or less</option>
+                    <option value="va">Variable</option>
+                    <option value="ns" selected>Other / Not Sure</option>
+                </select>
             </div>
 
             <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Do you think that the game is well optimized?</h3>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="optimized" style="margin-left: 1px;" value="yes">
-                    Yes
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="optimized" style="margin-left: 1px;" value="no">
-                    No
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="optimized" style="margin-left: 1px;" value="ns" checked="">
-                    Not Sure
-                </label>
+                <select class="as-survey-form__select" name="optimized">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                    <option value="ns" selected>Other / Not Sure</option>
+                </select>
             </div>
 
             <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Does this game suffer from any sort of input lag or desynchronization?</h3>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="lag" style="margin-left: 1px;" value="yes">
-                    Yes
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="lag" style="margin-left: 1px;" value="no">
-                    No
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="lag" style="margin-left: 1px;" value="ns" checked="">
-                    Not Sure
-                </label>
+                <select class="as-survey-form__select" name="lag">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                    <option value="ns" selected>Other / Not Sure</option>
+                </select>
             </div>
 
             <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">How customizable are this game's graphics settings?</h3>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="graphics_settings" style="margin-left: 1px;" value="not_existent">
-                    Not existent
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="graphics_settings" style="margin-left: 1px;" value="not_granular">
-                    Basic
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="graphics_settings" style="margin-left: 1px;" value="granular">
-                    Granular
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="graphics_settings" style="margin-left: 1px;" value="ns" checked="">
-                    Not Sure
-                </label>
+                <select class="as-survey-form__select" name="graphics_settings">
+                    <option value="not_existent">Not existent</option>
+                    <option value="basic">Basic</option>
+                    <option value="granular">Granular</option>
+                    <option value="ns" selected>Other / Not Sure</option>
+                </select>
             </div>
 
             <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Will the game sounds mute when the game is in the background?</h3>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="bg_sound" style="margin-left: 1px;" value="yes">
-                    Yes
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="bg_sound" style="margin-left: 1px;" value="no">
-                    No
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="bg_sound" style="margin-left: 1px;" value="ns" checked="">
-                    Not Sure
-                </label>
+                <select class="as-survey-form__select" name="bg_sound">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                    <option value="ns" selected>Other / Not Sure</option>
+                </select>
             </div>
 
             <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Does this game have good controls?</h3>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="good_controls" style="margin-left: 1px;" value="yes">
-                    Yes
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="good_controls" style="margin-left: 1px;" value="no">
-                    No
-                </label>
-                <label style="margin-left: 5px;">
-                    <input type="radio" name="good_controls" style="margin-left: 1px;" value="ns" checked="">
-                    Not Sure
-                </label>
+                <select class="as-survey-form__select" name="good_controls">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                    <option value="ns" selected>Other / Not Sure</option>
+                </select>
             </div>
         </form>`;
 
@@ -202,14 +154,14 @@ export default class FSurveyData extends Feature {
 
             okBtn.addClass("as-survey-form__submit--disabled");
 
-            jq("#es_submit_survey input").change(({target}) => {
+            jq("#es_submit_survey select").change(({target}) => {
                 const question = jq(target).closest(".js-survey-form__question");
                 const answered = target.value !== "ns";
 
                 question.toggleClass("as-survey-form__question--unanswered", !answered);
                 question.toggleClass("as-survey-form__question--answered", answered);
 
-                const anyAnswered = answered || jq("#es_submit_survey input:checked:not([value='ns'])").length > 0;
+                const anyAnswered = answered || jq("#es_submit_survey select:not([value='ns'])").length > 0;
 
                 okBtn.toggleClass("as-survey-form__submit--disabled", !anyAnswered);
                 okBtn.toggleClass("as-survey-form__submit--enabled", anyAnswered);

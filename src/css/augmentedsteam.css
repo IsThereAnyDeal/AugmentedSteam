@@ -3023,6 +3023,9 @@ label.es_dlc_label > input:checked::after {
 .as-survey-form__question--answered {
   opacity: unset;
 }
+.as-survey-form__select {
+  width: auto;
+}
 .as-survey-form__title {
   margin: 15px 0 10px;
 }
