@@ -3025,9 +3025,10 @@ label.es_dlc_label > input:checked::after {
 }
 .as-survey-form__select {
   width: auto;
+  padding: 3px;
 }
 .as-survey-form__title {
-  margin: 15px 0 10px;
+  margin: 30px 0 15px;
 }
 .as-survey-form__submit--disabled {
   pointer-events: none;
