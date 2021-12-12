@@ -168,6 +168,22 @@ export default class FSurveyData extends Feature {
                     Not Sure
                 </label>
             </div>
+
+            <div>
+                <h3 class="as-survey-form__title">Do you think that the game is well optimized?</h3>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="optimized" style="margin-left: 1px;" value="yes">
+                    Yes
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="optimized" style="margin-left: 1px;" value="no">
+                    No
+                </label>
+                <label style="margin-left: 5px;">
+                    <input type="radio" name="optimized" style="margin-left: 1px;" value="ns" checked="">
+                    Not Sure
+                </label>
+            </div>
         </form>`;
 
         await Page.runInPageContext((surveyStr, form) => new Promise(resolve => {
