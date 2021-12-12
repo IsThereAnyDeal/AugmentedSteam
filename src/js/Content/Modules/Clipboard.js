@@ -1,16 +1,25 @@
 
 class Clipboard {
 
-    static set(content) {
+    static async set(content) {
+
+        try {
+            await navigator.clipboard.writeText(content);
+            return true;
+        } catch {
+            // Ignore error, use fallback
+        }
 
         // Based on https://stackoverflow.com/a/12693636
-        document.oncopy = (e) => {
-            e.clipboardData.setData("Text", content);
+        function copyHandler(e) {
+            e.clipboardData.setData("text/plain", content);
             e.preventDefault();
-        };
+        }
 
-        document.execCommand("Copy");
-        document.oncopy = null;
+        document.addEventListener("copy", copyHandler);
+        const result = document.execCommand("copy");
+        document.removeEventListener("copy", copyHandler);
+        return result;
     }
 }
 

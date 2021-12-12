@@ -14,7 +14,8 @@ export default class FViewSteamId extends Feature {
             const elem = e.target.closest(".es-copy");
             if (!elem) { return; }
 
-            Clipboard.set(elem.querySelector(".es-copy__id").innerText);
+            const result = await Clipboard.set(elem.querySelector(".es-copy__id").textContent);
+            if (!result) { return; }
 
             const lastCopied = document.querySelector(".es-copy.is-copied");
             if (lastCopied) {
