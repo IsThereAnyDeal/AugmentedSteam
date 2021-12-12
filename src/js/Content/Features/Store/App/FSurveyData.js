@@ -81,7 +81,7 @@ export default class FSurveyData extends Feature {
     async _showForm() {
 
         const form = `<form id="es_submit_survey">
-            <div>
+            <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Is the game's framerate: </h3>
                 <label style="margin-left: 5px;">
                     <input type="radio" name="framerate" style="margin-left: 1px;" value="30">
@@ -101,7 +101,7 @@ export default class FSurveyData extends Feature {
                 </label>
             </div>
 
-            <div>
+            <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Do you think that the game is well optimized?</h3>
                 <label style="margin-left: 5px;">
                     <input type="radio" name="optimized" style="margin-left: 1px;" value="yes">
@@ -117,7 +117,7 @@ export default class FSurveyData extends Feature {
                 </label>
             </div>
 
-            <div>
+            <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Does this game suffer from any sort of input lag or desynchronization?</h3>
                 <label style="margin-left: 5px;">
                     <input type="radio" name="lag" style="margin-left: 1px;" value="yes">
@@ -133,7 +133,7 @@ export default class FSurveyData extends Feature {
                 </label>
             </div>
 
-            <div>
+            <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">How customizable are this game's graphics settings?</h3>
                 <label style="margin-left: 5px;">
                     <input type="radio" name="graphics_settings" style="margin-left: 1px;" value="not_existent">
@@ -153,7 +153,7 @@ export default class FSurveyData extends Feature {
                 </label>
             </div>
 
-            <div>
+            <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Will the game sounds mute when the game is in the background?</h3>
                 <label style="margin-left: 5px;">
                     <input type="radio" name="bg_sound" style="margin-left: 1px;" value="yes">
@@ -169,7 +169,7 @@ export default class FSurveyData extends Feature {
                 </label>
             </div>
 
-            <div>
+            <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Does this game have good controls?</h3>
                 <label style="margin-left: 5px;">
                     <input type="radio" name="good_controls" style="margin-left: 1px;" value="yes">
@@ -189,10 +189,20 @@ export default class FSurveyData extends Feature {
         await Page.runInPageContext((surveyStr, form) => new Promise(resolve => {
             window.SteamFacade.showConfirmDialog(surveyStr, form);
 
-            const okBtn = window.SteamFacade.jq(".newmodal_buttons > .btn_green_steamui");
+            const jq = window.SteamFacade.jq;
+            const okBtn = jq(".newmodal_buttons > .btn_green_steamui");
 
             okBtn.off("click");
             okBtn.click(() => { resolve(); });
+
+            jq("#es_submit_survey input").change(({target}) => {
+                const clsList = target.closest(".js-survey-form__question").classList;
+                const answered = target.value !== "ns";
+
+                clsList.toggle("as-survey-form__question--unanswered", !answered);
+                clsList.toggle("as-survey-form__question--answered", answered);
+            });
+
         }), [Localization.str.survey.take, form], true);
 
         const fd = new FormData(document.getElementById("es_submit_survey"));

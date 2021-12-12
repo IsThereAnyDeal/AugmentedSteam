@@ -3017,6 +3017,12 @@ label.es_dlc_label > input:checked::after {
   max-width: 100%;
 }
 
+.as-survey-form__question--unanswered {
+  opacity: 0.5;
+}
+.as-survey-form__question--answered {
+  opacity: 1;
+}
 .as-survey-form__title {
   margin: 15px 0 10px;
 }
