@@ -192,8 +192,13 @@ export default class FSurveyData extends Feature {
             const jq = window.SteamFacade.jq;
             const okBtn = jq(".newmodal_buttons > .btn_green_steamui");
 
-            okBtn.off("click");
-            okBtn.click(() => { resolve(); });
+            okBtn.get(0).addEventListener("click", e => {
+                resolve();
+                e.stopImmediatePropagation();
+            }, {
+                "capture": true,
+                "once": true,
+            });
 
             okBtn.addClass("as-survey-form__submit--disabled");
 
@@ -225,6 +230,8 @@ export default class FSurveyData extends Feature {
         fd.append("appid", this.context.appid);
 
         await Background.action("survey.submit", Object.fromEntries(fd));
+
+        document.querySelector(".newmodal_buttons > .btn_green_steamui").click();
     }
 
     _getBarHtml(name, data) {
