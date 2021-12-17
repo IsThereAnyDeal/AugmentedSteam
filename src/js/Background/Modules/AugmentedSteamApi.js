@@ -12,7 +12,7 @@ class AugmentedSteamApi extends Api {
      */
 
     static authenticate() {
-        const endpoint = (new URL("api/login.v01.php", this.origin)).toString();
+        const endpoint = (new URL("v01/login", this.origin)).toString();
         const redirectURL = (new URL("connectaugmentedsteam", this.origin)).toString();
         return Redirect.waitForRedirect(endpoint, redirectURL);
     }
