@@ -78,6 +78,7 @@ export default class FSurveyData extends Feature {
         }
     }
 
+    // TODO Show if survey was already taken
     async _showForm() {
 
         const form = `<form id="es_submit_survey">
@@ -175,6 +176,7 @@ export default class FSurveyData extends Feature {
         fd.append("steam_id", User.steamId); // The user is logged in since they can only take the survey when they own a game
         fd.append("appid", this.context.appid);
 
+        // TODO Display errors
         await Background.action("survey.submit", Object.fromEntries(fd));
 
         document.querySelector(".newmodal_buttons > .btn_green_steamui").click();
