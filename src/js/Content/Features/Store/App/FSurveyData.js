@@ -112,9 +112,9 @@ export default class FSurveyData extends Feature {
             <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">How customizable are this game's graphics settings?</h3>
                 <select class="as-survey-form__select" name="graphics_settings">
-                    <option value="not_existent">Not existent</option>
-                    <option value="basic">Basic</option>
-                    <option value="granular">Granular</option>
+                    <option value="no">Not existent</option>
+                    <option value="bs">Basic</option>
+                    <option value="gr">Granular</option>
                     <option value="ns" selected>Other / Not Sure</option>
                 </select>
             </div>
