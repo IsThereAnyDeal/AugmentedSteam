@@ -27,37 +27,46 @@ export default class FSurveyData extends Feature {
         if (survey.success) {
             html += `<p>${Localization.str.survey.users.replace("__users__", survey.responses)}</p>`;
 
-            html += `<p><b>${Localization.str.survey.framerate}</b>: ${Math.round(survey.frp)}% ${Localization.str.survey.framerate_response}`;
-            switch (survey.fr) {
-                case "30": html += ` <span style="color: #8f0e10;">${Localization.str.survey.framerate_30}</span>`; break;
-                case "fi": html += ` <span style="color: #e1c48a;">${Localization.str.survey.framerate_fi}</span>`; break;
+            html += `<p><b>${Localization.str.survey.framerate}</b>: ${survey.frameratep}% ${Localization.str.survey.framerate_response}`;
+            switch (survey.framerate) {
+                case "th": html += ` <span style="color: #8f0e10;">${Localization.str.survey.framerate_30}</span>`; break;
+                case "sx": html += ` <span style="color: #e1c48a;">${Localization.str.survey.framerate_30}</span>`; break;
                 case "va": html += ` <span style="color: #8BC53F;">${Localization.str.survey.framerate_va}</span>`; break;
             }
 
-            html += `<br><b>${Localization.str.survey.resolution}</b>: ${Localization.str.survey.resolution_support}`;
-            switch (survey.mr) {
-                case "less": html += ` <span style="color: #8f0e10;">${Localization.str.survey.resolution_less.replace("__pixels__", "1920x1080")}</span>`; break;
-                case "hd": html += ` <span style="color: #8BC53F;">${Localization.str.survey.resolution_up.replace("__pixels__", "1920x1080 (HD)")}</span>`; break;
-                case "wqhd": html += ` <span style="color: #8BC53F;">${Localization.str.survey.resolution_up.replace("__pixels__", "2560x1440 (WQHD)")}</span>`; break;
-                case "4k": html += ` <span style="color: #8BC53F;">${Localization.str.survey.resolution_up.replace("__pixels__", "3840x2160 (4K)")}</span>`; break;
-            }
-
-            html += `<br><b>${Localization.str.survey.graphics_settings}</b>:`;
-            if (survey.gs) {
-                html += ` <span style="color: #8BC53F;">${Localization.str.survey.gs_y}</span></p>`;
+            html += `<br><b>${Localization.str.survey.optimization}</b>: ${survey.optimizedp}%`;
+            if (survey.optimized) {
+                html += ` <span style="color: #8BC53F;">${Localization.str.survey.optimization_y}</span>`;
             } else {
-                html += ` <span style="color: #8f0e10;">${Localization.str.survey.gs_n}</span></p>`;
+                html += ` <span style="color: #8f0e10;">${Localization.str.survey.optimization_n}</span>`;
             }
 
-            if (["nvidia", "amd", "intel", "other"].some(key => key in survey)) {
-                html += `<p><b>${Localization.str.survey.satisfaction}</b>:</p><div class="performance-graph">`;
+            html += `<br><b>${Localization.str.survey.lag}</b>: ${survey.lagp}%`;
+            if (survey.lag) {
+                html += ` <span style="color: #8f0e10;">${Localization.str.survey.lag_y}</span>`;
+            } else {
+                html += ` <span style="color: #8BC53F;">${Localization.str.survey.lag_n}</span>`;
+            }
 
-                if ("nvidia" in survey) { html += this._getBarHtml("Nvidia", survey.nvidia); }
-                if ("amd" in survey) { html += this._getBarHtml("AMD", survey.amd); }
-                if ("intel" in survey) { html += this._getBarHtml("Intel", survey.intel); }
-                if ("other" in survey) { html += this._getBarHtml("Other", survey.other); }
+            html += `<br><b>${Localization.str.survey.graphics_settings}</b>: ${survey.graphics_settingsp}`;
+            switch (survey.graphics_settings) {
+                case "no": html += ` <span style="color: #8f0e10;">${Localization.str.survey.graphics_settings_no}</span>`; break;
+                case "bs": html += ` <span style="color: #e1c48a;">${Localization.str.survey.graphics_settings_bs}</span>`; break;
+                case "gr": html += ` <span style="color: #8BC53F;">${Localization.str.survey.graphics_settings_gr}</span>`; break;
+            }
 
-                html += "</div>";
+            html += `<br><b>${Localization.str.survey.bg_sound}</b>: ${survey.bg_soundp}%`;
+            if (survey.bg_sound) {
+                html += ` <span>${Localization.str.survey.bg_sound_y}</span>`;
+            } else {
+                html += ` <span>${Localization.str.survey.bg_sound_n}</span>`;
+            }
+
+            html += `<br><b>${Localization.str.survey.good_controls}</b>: ${survey.good_controlsp}%`;
+            if (survey.good_controls) {
+                html += ` <span style="color: #8BC53F;">${Localization.str.survey.good_controls_y}</span></p>`;
+            } else {
+                html += ` <span style="color: #8f0e10;">${Localization.str.survey.good_controls_n}</span></p>`;
             }
         } else {
             html += `<p>${Localization.str.survey.nobody}</p>`;
@@ -85,8 +94,8 @@ export default class FSurveyData extends Feature {
             <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">What is this game's frame rate?</h3>
                 <select class="as-survey-form__select" name="framerate">
-                    <option value="30">Fixed at 30 FPS or less</option>
-                    <option value="60">Fixed at 60 FPS or less</option>
+                    <option value="th">Fixed at 30 FPS or less</option>
+                    <option value="sx">Fixed at 60 FPS or less</option>
                     <option value="va">Variable</option>
                     <option value="ns" selected>Other / Not Sure</option>
                 </select>
@@ -95,8 +104,8 @@ export default class FSurveyData extends Feature {
             <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Do you think that the game is well optimized?</h3>
                 <select class="as-survey-form__select" name="optimized">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
                     <option value="ns" selected>Other / Not Sure</option>
                 </select>
             </div>
@@ -104,8 +113,8 @@ export default class FSurveyData extends Feature {
             <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Does this game suffer from any sort of input lag or desynchronization?</h3>
                 <select class="as-survey-form__select" name="lag">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
                     <option value="ns" selected>Other / Not Sure</option>
                 </select>
             </div>
@@ -123,8 +132,8 @@ export default class FSurveyData extends Feature {
             <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Will the game sounds mute when the game is in the background?</h3>
                 <select class="as-survey-form__select" name="bg_sound">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
                     <option value="ns" selected>Other / Not Sure</option>
                 </select>
             </div>
@@ -132,8 +141,8 @@ export default class FSurveyData extends Feature {
             <div class="as-survey-form__question--unanswered js-survey-form__question">
                 <h3 class="as-survey-form__title">Does this game have good controls?</h3>
                 <select class="as-survey-form__select" name="good_controls">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
                     <option value="ns" selected>Other / Not Sure</option>
                 </select>
             </div>
