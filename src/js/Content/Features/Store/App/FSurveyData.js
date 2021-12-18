@@ -25,49 +25,35 @@ export default class FSurveyData extends Feature {
         let html = `<div id="performance_survey" class="game_area_description"><h2>${Localization.str.survey.performance_survey}</h2>`;
 
         if (survey.success) {
-            html += `<p>${Localization.str.survey.users.replace("__users__", survey.responses)}</p>`;
 
-            html += `<p><b>${Localization.str.survey.framerate}</b>: ${survey.frameratep}% ${Localization.str.survey.framerate_response}`;
-            switch (survey.framerate) {
-                case "th": html += ` <span style="color: #8f0e10;">${Localization.str.survey.framerate_30}</span>`; break;
-                case "sx": html += ` <span style="color: #e1c48a;">${Localization.str.survey.framerate_30}</span>`; break;
-                case "va": html += ` <span style="color: #8BC53F;">${Localization.str.survey.framerate_va}</span>`; break;
-            }
-
-            html += `<br><b>${Localization.str.survey.optimization}</b>: ${survey.optimizedp}%`;
-            if (survey.optimized) {
-                html += ` <span style="color: #8BC53F;">${Localization.str.survey.optimization_y}</span>`;
-            } else {
-                html += ` <span style="color: #8f0e10;">${Localization.str.survey.optimization_n}</span>`;
-            }
-
-            html += `<br><b>${Localization.str.survey.lag}</b>: ${survey.lagp}%`;
-            if (survey.lag) {
-                html += ` <span style="color: #8f0e10;">${Localization.str.survey.lag_y}</span>`;
-            } else {
-                html += ` <span style="color: #8BC53F;">${Localization.str.survey.lag_n}</span>`;
-            }
-
-            html += `<br><b>${Localization.str.survey.graphics_settings}</b>: ${survey.graphics_settingsp}`;
-            switch (survey.graphics_settings) {
-                case "no": html += ` <span style="color: #8f0e10;">${Localization.str.survey.graphics_settings_no}</span>`; break;
-                case "bs": html += ` <span style="color: #e1c48a;">${Localization.str.survey.graphics_settings_bs}</span>`; break;
-                case "gr": html += ` <span style="color: #8BC53F;">${Localization.str.survey.graphics_settings_gr}</span>`; break;
-            }
-
-            html += `<br><b>${Localization.str.survey.bg_sound}</b>: ${survey.bg_soundp}%`;
-            if (survey.bg_sound) {
-                html += ` <span>${Localization.str.survey.bg_sound_y}</span>`;
-            } else {
-                html += ` <span>${Localization.str.survey.bg_sound_n}</span>`;
-            }
-
-            html += `<br><b>${Localization.str.survey.good_controls}</b>: ${survey.good_controlsp}%`;
-            if (survey.good_controls) {
-                html += ` <span style="color: #8BC53F;">${Localization.str.survey.good_controls_y}</span></p>`;
-            } else {
-                html += ` <span style="color: #8f0e10;">${Localization.str.survey.good_controls_n}</span></p>`;
-            }
+            html += this._getResultHtml(survey, [
+                ["framerate", {
+                    "th": "#8f0e10",
+                    "sx": "#e1c48a",
+                    "va": "#8BC53F",
+                }],
+                ["optimized", {
+                    "yes": "#8BC53F",
+                    "no": "#8f0e10",
+                }],
+                ["lag", {
+                    "yes": "#8f0e10",
+                    "no": "#8BC53F",
+                }],
+                ["graphics_settings", {
+                    "no": "#8f0e10",
+                    "bs": "#e1c48a",
+                    "gr": "#8BC53F",
+                }],
+                ["bg_sound", {
+                    "yes": null,
+                    "no": null,
+                }],
+                ["good_controls", {
+                    "yes": "#8BC53F",
+                    "no": "#8f0e10",
+                }],
+            ]);
         } else {
             html += `<p>${Localization.str.survey.nobody}</p>`;
         }
@@ -191,11 +177,26 @@ export default class FSurveyData extends Feature {
         document.querySelector(".newmodal_buttons > .btn_green_steamui").click();
     }
 
-    _getBarHtml(name, data) {
-        if (data > 90 || data < 10) {
-            return `<div class="row"><div class="left-bar ${name.toLowerCase()}" style="width: ${parseInt(data)}%;"><span>${name}&nbsp;${data}%</span></div><div class="right-bar" style="width: ${parseInt(100 - data)}%;"></div></div>`;
-        } else {
-            return `<div class="row"><div class="left-bar ${name.toLowerCase()}" style="width: ${parseInt(data)}%;"><span>${name}</span></div><div class="right-bar" style="width: ${parseInt(100 - data)}%;"><span>${data}%</span></div></div>`;
+    _getResultHtml(survey, config) {
+        let html = `<p>${Localization.str.survey.users.replace("__users__", survey.responses)}</p><p>`;
+
+        for (const [name, colors] of config) {
+            html += `<b>${Localization.str.survey[name]}</b>: ${survey[`${name}p`]}% `;
+
+            let value = survey[name];
+            if (value === 0) {
+                value = "no";
+            } else if (value === 1) {
+                value = "yes";
+            }
+
+            const color = colors[value];
+
+            html += `<span style="color: ${color ?? "unset"};">${Localization.str.survey[`${name}_${value}`]}</span><br>`;
         }
+
+        html += "</p>";
+
+        return html;
     }
 }
