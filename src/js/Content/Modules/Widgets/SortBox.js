@@ -10,19 +10,14 @@ class Sortbox {
         this._activeDropLists = {};
         this._lastSelectHideTime = 0;
 
-        document.addEventListener("mousedown", e => this._handleMouseClick(e));
-    }
-
-    static _handleMouseClick(e) {
-        for (const key of Object.keys(this._activeDropLists)) {
-            if (!this._activeDropLists[key]) { continue; }
-
-            const ulAboveEvent = e.target.closest("ul");
-
-            if (ulAboveEvent && ulAboveEvent.id === `${key}_droplist`) { continue; }
-
-            this._hide(key);
-        }
+        // Hide droplist when clicking outside
+        document.addEventListener("mousedown", e => {
+            for (const key of Object.keys(this._activeDropLists)) {
+                if (this._activeDropLists[key] && !e.target.closest(`#${key}_container`)) {
+                    this._hide(key);
+                }
+            }
+        });
     }
 
     static _highlightItem(id, index, bSetSelected) {
@@ -78,15 +73,16 @@ class Sortbox {
     }
 
     static _onBlur(id) {
-        if (!this._classCheck(document.querySelector(`#${id}_trigger`), "activetrigger")) { this._activeDropLists[id] = false; }
+        if (!document.querySelector(`#${id}_trigger`).classList.contains("activetrigger")) {
+            this._activeDropLists[id] = false;
+        }
     }
 
     static _hide(id) {
         const droplist = document.querySelector(`#${id}_droplist`);
         const trigger = document.querySelector(`#${id}_trigger`);
 
-        const d = new Date();
-        this._lastSelectHideTime = d.valueOf();
+        this._lastSelectHideTime = Date.now();
 
         trigger.className = "trigger";
         droplist.className = "dropdownhidden";
@@ -95,8 +91,7 @@ class Sortbox {
     }
 
     static _show(id) {
-        const d = new Date();
-        if (d - this._lastSelectHideTime < 50) { return; }
+        if (Date.now() - this._lastSelectHideTime < 50) { return; }
 
         const droplist = document.querySelector(`#${id}_droplist`);
         const trigger = document.querySelector(`#${id}_trigger`);
@@ -108,13 +103,9 @@ class Sortbox {
     }
 
     static _onTriggerClick(id) {
-        if (!this._classCheck(document.querySelector(`#${id}_trigger`), "activetrigger")) {
+        if (!document.querySelector(`#${id}_trigger`).classList.contains("activetrigger")) {
             this._show(id);
         }
-    }
-
-    static _classCheck(element, className) {
-        return new RegExp(`\\b${className}\\b`).test(element.className);
     }
 
     /**
@@ -135,14 +126,14 @@ class Sortbox {
         const box = HTML.element(
             `<div class="es-sortbox es-sortbox--${name}">
                 <div class="es-sortbox__label">${Localization.str.sort_by}</div>
-                <div class="es-sortbox__container">
+                <div id="${id}_container" class="es-sortbox__container">
                     <input id="${id}" type="hidden" name="${name}" value="${initialOption}">
-                    <a class="trigger" id="${id}_trigger"></a>
+                    <a id="${id}_trigger" class="trigger"></a>
                     <div class="es-dropdown">
-                        <ul id="${id}_droplist" class="es-dropdown__list dropdownhidden"></ul>
+                        <ul id="${id}_droplist" class="dropdownhidden"></ul>
                     </div>
                 </div>
-                <span class="es-sortbox__reverse">${arrowDown}</span>
+                <span class="es-sortbox__reverse">${reversed ? arrowUp : arrowDown}</span>
             </div>`
         );
 
@@ -169,7 +160,6 @@ class Sortbox {
             reverseEl.textContent = reversed ? arrowUp : arrowDown;
             onChange(input.value.replace(`${id}_`, ""), reversed);
         });
-        if (reversed) { reverseEl.textContent = arrowUp; }
 
         const trigger = box.querySelector(`#${id}_trigger`);
         trigger.addEventListener("focus", () => this._onFocus(id));
@@ -183,8 +173,8 @@ class Sortbox {
 
             let toggle = "inactive";
             if (key === trimmedOption) {
-                box.querySelector(`#${id}`).value = key;
-                box.querySelector(".trigger").textContent = text;
+                input.value = key;
+                trigger.textContent = text;
                 toggle = "highlighted";
             }
 
@@ -203,5 +193,7 @@ class Sortbox {
         return box;
     }
 }
+
+Sortbox.init();
 
 export {Sortbox};

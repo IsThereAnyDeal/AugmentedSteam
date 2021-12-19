@@ -4,7 +4,6 @@ import {
     CurrencyManager,
     DOMHelper,
     ITAD, Messenger, ProgressBar,
-    Sortbox,
     UpdateHandler,
     User
 } from "../modulesContent";
@@ -98,7 +97,6 @@ class Page {
         AugmentedSteam.init();
         UpdateHandler.checkVersion(AugmentedSteam.clearCache);
         ITAD.create();
-        Sortbox.init();
         this._pageSpecificFeatures();
 
         const context = new ContextClass();
