@@ -644,9 +644,16 @@
         "users": "__users__ users have completed the performance survey for this game.",
         "nobody": "Nobody has taken a performance survey for this game yet.",
         "take": "Take The Survey",
+        "not_sure": "Other / Not Sure",
         "questions": {
             "framerate": {
                 "name": "Framerate",
+                "question": "What is this game's frame rate?",
+                "answers": {
+                    "th": "Fixed at 30 FPS or less",
+                    "sx": "Fixed at 60 FPS or less",
+                    "va": "Variable"
+                },
                 "responses": {
                     "th": "responded that the framerate is fixed at 30fps or lower",
                     "sx": "responded that the framerate is fixed at 60fps or lower",
@@ -655,6 +662,11 @@
             },
             "optimized": {
                 "name": "Optimization",
+                "question": "Do you think that the game is well optimized?",
+                "answers": {
+                    "yes": "Yes",
+                    "no": "No"
+                },
                 "responses": {
                     "yes": "think that this game is well optimized",
                     "no": "think that this game isn't well optimized"
@@ -662,6 +674,11 @@
             },
             "lag": {
                 "name": "Lag",
+                "question": "Does this game suffer from any sort of input lag or desynchronization?",
+                "answers": {
+                    "yes": "Yes",
+                    "no": "No"
+                },
                 "responses": {
                     "yes": "encountered some sorts of input lag or desynchronization",
                     "no": "didn't encounter any sorts of input lag or desynchronization"
@@ -669,6 +686,12 @@
             },
             "graphics_settings": {
                 "name": "Graphics Settings",
+                "question": "How customizable are this game's graphics settings?",
+                "answers": {
+                    "no": "Not existent",
+                    "bs": "Basic",
+                    "gr": "Granular"
+                },
                 "responses": {
                     "no": "reported that this game doesn't have a graphics settings menu",
                     "bs": "reported that this game only allows basic changes to the graphics settings",
@@ -677,6 +700,11 @@
             },
             "bg_sound": {
                 "name": "Background sound",
+                "question": "Will the game sounds mute when the game is in the background?",
+                "answers": {
+                    "yes": "Yes",
+                    "no": "No"
+                },
                 "responses": {
                     "yes": "reported that this game mutes its sounds when unfocused",
                     "no": "reported that this game continues to play its sounds when unfocused"
@@ -684,6 +712,11 @@
             },
             "good_controls": {
                 "name": "Controls",
+                "question": "Does this game have good controls?",
+                "answers": {
+                    "yes": "Yes",
+                    "no": "No"
+                },
                 "responses": {
                     "yes": "are satisfied with the game controls",
                     "no": "aren't satisfied with the game controls"

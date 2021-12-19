@@ -9,6 +9,36 @@ const COLORS = Object.freeze({
     "bad": "#8f0e10",
 });
 
+// We need to define the order here, i.e. use arrays instead of objects
+const QUESTIONS = [
+    ["framerate", [
+        ["th", COLORS.bad],
+        ["sx", COLORS.ok],
+        ["va", COLORS.good],
+    ]],
+    ["optimized", [
+        ["yes", COLORS.good],
+        ["no", COLORS.bad],
+    ]],
+    ["lag", [
+        ["yes", COLORS.bad],
+        ["no", COLORS.good],
+    ]],
+    ["graphics_settings", [
+        ["no", COLORS.bad],
+        ["bs", COLORS.ok],
+        ["gr", COLORS.good],
+    ]],
+    ["bg_sound", [
+        ["yes", null],
+        ["no", null],
+    ]],
+    ["good_controls", [
+        ["yes", COLORS.good],
+        ["no", COLORS.bad],
+    ]],
+];
+
 export default class FSurveyData extends Feature {
 
     async checkPrerequisites() {
@@ -32,34 +62,9 @@ export default class FSurveyData extends Feature {
 
         if (survey.success) {
 
-            html += this._getResultHtml(survey, [
-                ["framerate", {
-                    "th": COLORS.bad,
-                    "sx": COLORS.ok,
-                    "va": COLORS.good,
-                }],
-                ["optimized", {
-                    "yes": COLORS.good,
-                    "no": COLORS.bad,
-                }],
-                ["lag", {
-                    "yes": COLORS.bad,
-                    "no": COLORS.good,
-                }],
-                ["graphics_settings", {
-                    "no": COLORS.bad,
-                    "bs": COLORS.ok,
-                    "gr": COLORS.good,
-                }],
-                ["bg_sound", {
-                    "yes": null,
-                    "no": null,
-                }],
-                ["good_controls", {
-                    "yes": COLORS.good,
-                    "no": COLORS.bad,
-                }],
-            ]);
+            QUESTIONS.map(([question, values]) => [question, Object.fromEntries(values)]);
+
+            html += this._getResultHtml(survey, QUESTIONS.map(([question, values]) => [question, Object.fromEntries(values)]));
         } else {
             html += `<p>${Localization.str.survey.nobody}</p>`;
         }
@@ -80,65 +85,7 @@ export default class FSurveyData extends Feature {
     }
 
     // TODO Show if survey was already taken
-    async _showForm() {
-
-        const form = `<form id="es_submit_survey">
-            <div class="as-survey-form__question--unanswered js-survey-form__question">
-                <h3 class="as-survey-form__title">What is this game's frame rate?</h3>
-                <select class="as-survey-form__select" name="framerate">
-                    <option value="th">Fixed at 30 FPS or less</option>
-                    <option value="sx">Fixed at 60 FPS or less</option>
-                    <option value="va">Variable</option>
-                    <option value="ns" selected>Other / Not Sure</option>
-                </select>
-            </div>
-
-            <div class="as-survey-form__question--unanswered js-survey-form__question">
-                <h3 class="as-survey-form__title">Do you think that the game is well optimized?</h3>
-                <select class="as-survey-form__select" name="optimized">
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                    <option value="ns" selected>Other / Not Sure</option>
-                </select>
-            </div>
-
-            <div class="as-survey-form__question--unanswered js-survey-form__question">
-                <h3 class="as-survey-form__title">Does this game suffer from any sort of input lag or desynchronization?</h3>
-                <select class="as-survey-form__select" name="lag">
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                    <option value="ns" selected>Other / Not Sure</option>
-                </select>
-            </div>
-
-            <div class="as-survey-form__question--unanswered js-survey-form__question">
-                <h3 class="as-survey-form__title">How customizable are this game's graphics settings?</h3>
-                <select class="as-survey-form__select" name="graphics_settings">
-                    <option value="no">Not existent</option>
-                    <option value="bs">Basic</option>
-                    <option value="gr">Granular</option>
-                    <option value="ns" selected>Other / Not Sure</option>
-                </select>
-            </div>
-
-            <div class="as-survey-form__question--unanswered js-survey-form__question">
-                <h3 class="as-survey-form__title">Will the game sounds mute when the game is in the background?</h3>
-                <select class="as-survey-form__select" name="bg_sound">
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                    <option value="ns" selected>Other / Not Sure</option>
-                </select>
-            </div>
-
-            <div class="as-survey-form__question--unanswered js-survey-form__question">
-                <h3 class="as-survey-form__title">Does this game have good controls?</h3>
-                <select class="as-survey-form__select" name="good_controls">
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                    <option value="ns" selected>Other / Not Sure</option>
-                </select>
-            </div>
-        </form>`;
+    async _showForm() { 
 
         await Page.runInPageContext((surveyStr, form) => new Promise(resolve => {
             window.SteamFacade.showConfirmDialog(surveyStr, form);
@@ -163,7 +110,7 @@ export default class FSurveyData extends Feature {
                 okBtn.toggleClass("as-survey-form__submit--enabled", anyAnswered);
             });
 
-        }), [Localization.str.survey.take, form], true);
+        }), [Localization.str.survey.take, this._buildForm()], true);
 
         const fd = new FormData(document.getElementById("es_submit_survey"));
 
@@ -181,6 +128,26 @@ export default class FSurveyData extends Feature {
         await Background.action("survey.submit", Object.fromEntries(fd));
 
         document.querySelector(".newmodal_buttons > .btn_green_steamui").click();
+    }
+
+    _buildForm() {
+        let html = '<form id="es_submit_survey">';
+
+        for (const [question, values] of QUESTIONS) {
+
+            html += `<div class="as-survey-form__question--unanswered js-survey-form__question">
+                <h3 class="as-survey-form__title">${Localization.str.survey.questions[question].question}</h3>
+                <select class="as-survey-form__select" name="${question}">`;
+
+            for (const [value] of values) {
+                html += `<option value="${value}">${Localization.str.survey.questions[question].answers[value]}</option>`;
+            }
+
+            html += `<option value="ns" selected>${Localization.str.survey.not_sure}</option></select></div>`;
+        }
+
+        html += "</form>";
+        return html;
     }
 
     _getResultHtml(survey, config) {
