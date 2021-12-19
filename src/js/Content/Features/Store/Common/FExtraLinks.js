@@ -103,19 +103,19 @@ export default class FExtraLinks extends Feature {
                 },
                 {
                     "id": "showyoutube",
-                    "className": "youtube_btn",
+                    "className": "as_youtube_btn",
                     "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(appName)}`,
                     "text": Localization.str.view_on_website.replace("__website__", "YouTube"),
                 },
                 {
                     "id": "showyoutubegameplay",
-                    "className": "youtube_btn",
+                    "className": "as_youtube_btn",
                     "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC Gameplay"`)}`,
                     "text": Localization.str.youtube_gameplay,
                 },
                 {
                     "id": "showyoutubereviews",
-                    "className": "youtube_btn",
+                    "className": "as_youtube_btn",
                     "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC" intitle:Review`)}`,
                     "text": Localization.str.youtube_reviews,
                 },
