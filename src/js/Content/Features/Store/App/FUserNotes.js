@@ -8,52 +8,46 @@ export default class FUserNotes extends Feature {
     }
 
     async apply() {
-        const userNotes = this.context.userNotes;
-
-        let noteText = "";
-        let cssClass = "esi-note--hidden";
-
-        let inactiveStyle = "";
-        let activeStyle = "display:none;";
-
-        const note = await userNotes.get(this.context.appid);
-
-        if (note !== null) {
-            noteText = `"${note}"`;
-            cssClass = "";
-
-            inactiveStyle = "display:none;";
-            activeStyle = "";
-        }
 
         HTML.beforeBegin(".queue_actions_ctn > :last-child",
-            `<div class="queue_control_button js-user-note-button">
-                <div id="es_add_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${inactiveStyle}">
+            `<div id="esi-user-note-button" class="queue_control_button">
+                <div class="esi-add-note btnv6_blue_hoverfade btn_medium">
                     <span>${Localization.str.user_note.add}</span>
                 </div>
-                <div id="es_update_note" class="btnv6_blue_hoverfade btn_medium queue_btn_inactive" style="${activeStyle}">
+                <div class="esi-update-note btnv6_blue_hoverfade btn_medium">
                     <span>${Localization.str.user_note.update}</span>
                 </div>
             </div>`);
 
         HTML.beforeEnd(".queue_actions_ctn",
-            `<div id='esi-store-user-note' class='esi-note esi-note--store ${cssClass} ellipsis'>${noteText}</div>`);
+            '<div id="esi-store-user-note" class="esi-note esi-note--store ellipsis"></div>');
 
-        function toggleState(node, active) {
-            const button = document.querySelector(".js-user-note-button");
-            button.querySelector("#es_add_note").style.display = active ? "none" : null;
-            button.querySelector("#es_update_note").style.display = active ? null : "none";
+        const button = document.querySelector("#esi-user-note-button");
+        const noteEl = document.querySelector("#esi-store-user-note");
 
-            node.classList.toggle("esi-note--hidden", !active);
+        const userNotes = this.context.userNotes;
+        const note = await userNotes.get(this.context.appid);
+
+        if (note !== null) {
+            button.classList.add("esi-has-note");
+
+            noteEl.textContent = `"${note}"`;
+            noteEl.classList.add("esi-has-note");
         }
 
         const handler = () => {
             userNotes.showModalDialog(
-                this.context.appName, this.context.appid, "#esi-store-user-note", toggleState
+                this.context.appName,
+                this.context.appid,
+                noteEl,
+                (node, active) => {
+                    button.classList.toggle("esi-has-note", active);
+                    node.classList.toggle("esi-has-note", active);
+                }
             );
         };
 
-        document.querySelector(".js-user-note-button").addEventListener("click", handler);
-        document.querySelector("#esi-store-user-note").addEventListener("click", handler);
+        button.addEventListener("click", handler);
+        noteEl.addEventListener("click", handler);
     }
 }
