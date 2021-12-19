@@ -111,15 +111,20 @@ export default class FHighlightsTags extends Feature {
                 }
             }
 
+        
             if (hasDsInfo) {
-                if (opts.owned && node.querySelector(".ds_owned_flag") !== null) {
-                    this.highlightOwned(nodeToHighlight);
-                }
-                if (opts.wishlisted && node.querySelector(".ds_wishlist_flag") !== null) {
-                    this.highlightWishlist(nodeToHighlight);
-                }
-                if (opts.ignored && node.querySelector(".ds_ignored_flag") !== null) {
-                    this.highlightIgnored(nodeToHighlight);
+                try {
+                    if (opts.owned && node.querySelector(".ds_owned_flag") !== null) {
+                        this.highlightOwned(nodeToHighlight);
+                    }
+                    if (opts.wishlisted && node.querySelector(".ds_wishlist_flag") !== null) {
+                        this.highlightWishlist(nodeToHighlight);
+                    }
+                    if (opts.ignored && node.querySelector(".ds_ignored_flag") !== null) {
+                        this.highlightIgnored(nodeToHighlight);
+                    }
+                } catch (err) {
+                    console.error("Failed to highlight / tag node", err);
                 }
             }
         }
@@ -145,15 +150,18 @@ export default class FHighlightsTags extends Feature {
 
         const it = trimmedStoreIds.values();
         for (const [storeid, nodes] of storeIdsMap) {
+
+            const operations = [];
+
             if (dsStatus) {
                 if (opts.owned && dsStatus[storeid].owned) {
-                    nodes.forEach(node => { this.highlightOwned(node); });
+                    operations.push(this.highlightOwned);
                 }
                 if (opts.wishlisted && dsStatus[storeid].wishlisted) {
-                    nodes.forEach(node => { this.highlightWishlist(node); });
+                    operations.push(this.highlightWishlist);
                 }
                 if (opts.ignored && dsStatus[storeid].ignored) {
-                    nodes.forEach(node => { this.highlightIgnored(node); });
+                    operations.push(this.highlightIgnored);
                 }
             }
 
@@ -163,26 +171,38 @@ export default class FHighlightsTags extends Feature {
              */
             if (itadStatus) {
                 if (itadStatus[storeid].collected) {
-                    nodes.forEach(node => { this.highlightCollection(node); });
+                    operations.push(this.highlightCollection);
                 }
                 if (itadStatus[storeid].waitlisted) {
-                    nodes.forEach(node => { this.highlightWaitlist(node); });
+                    operations.push(this.highlightWaitlist);
                 }
             }
 
             if (invStatus) {
                 const trimmedId = it.next().value;
                 if (opts.gift && invStatus[trimmedId].gift) {
-                    nodes.forEach(node => { this.highlightInvGift(node); });
+                    operations.push(this.highlightInvGift);
                 }
 
                 if (opts.guestPass && invStatus[trimmedId].guestPass) {
-                    nodes.forEach(node => { this.highlightInvGuestpass(node); });
+                    operations.push(this.highlightInvGuestpass);
                 }
 
                 // Same as for the ITAD highlights (don't need to check)
                 if (invStatus[trimmedId].coupon) {
-                    nodes.forEach(node => { this.highlightInvCoupon(node); });
+                    operations.push(this.highlightInvCoupon);
+                }
+            }
+
+            for (let operation of operations) {
+                operation = operation.bind(this);
+
+                for (const node of nodes) {
+                    try {
+                        operation(node);
+                    } catch (err) {
+                        console.error("Failed to highlight / tag node", err);
+                    }
                 }
             }
         }
