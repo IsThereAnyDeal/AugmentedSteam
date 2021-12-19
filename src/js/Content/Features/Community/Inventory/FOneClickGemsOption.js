@@ -10,6 +10,8 @@ export default class FOneClickGemsOption extends CallbackFeature {
 
     callback({view, sessionId, assetId, appid}) {
 
+        if (!appid) { return; }
+
         // scrap link is always present, replace the link to avoid attaching multiple listeners
         const scrapLink = document.getElementById(`iteminfo${view}_item_scrap_link`);
         const newScrapLink = scrapLink.cloneNode(true);

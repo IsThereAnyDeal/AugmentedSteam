@@ -2,7 +2,6 @@ import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature, CurrencyManager, RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
 
-// TODO Support non-Steam items
 export default class FQuickSellOptions extends CallbackFeature {
 
     checkPrerequisites() {
