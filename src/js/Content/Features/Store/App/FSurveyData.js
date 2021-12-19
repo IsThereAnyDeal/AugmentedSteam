@@ -85,7 +85,7 @@ export default class FSurveyData extends Feature {
     }
 
     // TODO Show if survey was already taken
-    async _showForm() { 
+    async _showForm() {
 
         await Page.runInPageContext((surveyStr, form) => new Promise(resolve => {
             window.SteamFacade.showConfirmDialog(surveyStr, form);
