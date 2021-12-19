@@ -3,6 +3,12 @@ import {HTML, Localization} from "../../../../modulesCore";
 import {Background, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 
+const COLORS = Object.freeze({
+    "good": "#8bc53f",
+    "ok": "#e1c48a",
+    "bad": "#8f0e10",
+});
+
 export default class FSurveyData extends Feature {
 
     async checkPrerequisites() {
@@ -28,30 +34,30 @@ export default class FSurveyData extends Feature {
 
             html += this._getResultHtml(survey, [
                 ["framerate", {
-                    "th": "#8f0e10",
-                    "sx": "#e1c48a",
-                    "va": "#8BC53F",
+                    "th": COLORS.bad,
+                    "sx": COLORS.ok,
+                    "va": COLORS.good,
                 }],
                 ["optimized", {
-                    "yes": "#8BC53F",
-                    "no": "#8f0e10",
+                    "yes": COLORS.good,
+                    "no": COLORS.bad,
                 }],
                 ["lag", {
-                    "yes": "#8f0e10",
-                    "no": "#8BC53F",
+                    "yes": COLORS.bad,
+                    "no": COLORS.good,
                 }],
                 ["graphics_settings", {
-                    "no": "#8f0e10",
-                    "bs": "#e1c48a",
-                    "gr": "#8BC53F",
+                    "no": COLORS.bad,
+                    "bs": COLORS.ok,
+                    "gr": COLORS.good,
                 }],
                 ["bg_sound", {
                     "yes": null,
                     "no": null,
                 }],
                 ["good_controls", {
-                    "yes": "#8BC53F",
-                    "no": "#8f0e10",
+                    "yes": COLORS.good,
+                    "no": COLORS.bad,
                 }],
             ]);
         } else {
