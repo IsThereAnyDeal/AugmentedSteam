@@ -181,7 +181,7 @@ export default class FSurveyData extends Feature {
         let html = `<p>${Localization.str.survey.users.replace("__users__", survey.responses)}</p><p>`;
 
         for (const [name, colors] of config) {
-            html += `<b>${Localization.str.survey[name]}</b>: ${survey[`${name}p`]}% `;
+            html += `<b>${Localization.str.survey.questions[name].name}</b>: ${survey[`${name}p`]}% `;
 
             let value = survey[name];
             if (value === 0) {
@@ -192,7 +192,7 @@ export default class FSurveyData extends Feature {
 
             const color = colors[value];
 
-            html += `<span style="color: ${color ?? "unset"};">${Localization.str.survey[`${name}_${value}`]}</span><br>`;
+            html += `<span style="color: ${color ?? "unset"};">${Localization.str.survey.questions[name].responses[value]}</span><br>`;
         }
 
         html += "</p>";

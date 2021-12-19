@@ -642,29 +642,54 @@
     "survey": {
         "performance_survey": "Performance Survey",
         "users": "__users__ users have completed the performance survey for this game.",
-        "framerate": "Framerate",
-        "framerate_response": "responded that the framerate was",
-        "framerate_th": "fixed at 30fps or lower",
-        "framerate_sx": "fixed at 60fps or lower",
-        "framerate_va": "variable, dependant on hardware",
-        "optimized": "Optimization",
-        "optimized_yes": "think that this game is well optimized",
-        "optimized_no": "think that this game isn't well optimized",
-        "lag": "Lag",
-        "lag_yes": "encountered some sorts of input lag or desynchronization",
-        "lag_no": "didn't encounter any sorts of input lag or desynchronization",
-        "graphics_settings": "Graphics Settings",
-        "graphics_settings_no": "reported that this game doesn't have a graphics settings menu",
-        "graphics_settings_bs": "reported that this game only allows basic changes to the graphics settings",
-        "graphics_settings_gr": "reported that this game has granular graphics settings",
-        "bg_sound": "Background sound",
-        "bg_sound_yes": "reported that this game mutes its sounds when unfocused",
-        "bg_sound_no": "reported that this game continues to play its sounds when unfocused",
-        "good_controls": "Controls",
-        "good_controls_yes": "are satisfied with the game controls",
-        "good_controls_no": "aren't satisfied with the game controls",
         "nobody": "Nobody has taken a performance survey for this game yet.",
-        "take": "Take The Survey"
+        "take": "Take The Survey",
+        "questions": {
+            "framerate": {
+                "name": "Framerate",
+                "responses": {
+                    "th": "responded that the framerate is fixed at 30fps or lower",
+                    "sx": "responded that the framerate is fixed at 60fps or lower",
+                    "va": "responded that the framerate is variable, dependant on hardware"
+                }
+            },
+            "optimized": {
+                "name": "Optimization",
+                "responses": {
+                    "yes": "think that this game is well optimized",
+                    "no": "think that this game isn't well optimized"
+                }
+            },
+            "lag": {
+                "name": "Lag",
+                "responses": {
+                    "yes": "encountered some sorts of input lag or desynchronization",
+                    "no": "didn't encounter any sorts of input lag or desynchronization"
+                }
+            },
+            "graphics_settings": {
+                "name": "Graphics Settings",
+                "responses": {
+                    "no": "reported that this game doesn't have a graphics settings menu",
+                    "bs": "reported that this game only allows basic changes to the graphics settings",
+                    "gr": "reported that this game has granular graphics settings"
+                }
+            },
+            "bg_sound": {
+                "name": "Background sound",
+                "responses": {
+                    "yes": "reported that this game mutes its sounds when unfocused",
+                    "no": "reported that this game continues to play its sounds when unfocused"
+                }
+            },
+            "good_controls": {
+                "name": "Controls",
+                "responses": {
+                    "yes": "are satisfied with the game controls",
+                    "no": "aren't satisfied with the game controls"
+                }
+            }
+        }
     },
     "dlc_select": {
         "select": "Select",
