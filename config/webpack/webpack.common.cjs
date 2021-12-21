@@ -48,6 +48,7 @@ module.exports = {
         "js/store/default": "./src/js/Content/Features/Store/PDefaultStore.js",
         "js/store/frontpage": "./src/js/Content/Features/Store/Storefront/PStoreFront.js",
         "js/store/funds": "./src/js/Content/Features/Store/Funds/PFunds.js",
+        "js/store/points_shop": "./src/js/Content/Features/Store/PointsShop/PPointsShop.js",
         "js/store/registerkey": "./src/js/Content/Features/Store/RegisterKey/PRegisterKey.js",
         "js/store/sale": "./src/js/Content/Features/Store/Sale/PSale.js",
         "js/store/search": "./src/js/Content/Features/Store/Search/PSearch.js",

@@ -1,12 +1,12 @@
-import {DOMHelper, Feature, ProfileData} from "../../../modulesContent";
+import {Feature, ProfileData} from "../../../modulesContent";
 
 export default class FCustomBackground extends Feature {
 
     checkPrerequisites() {
         const prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9.]+)/i);
         if (prevHash) {
-            const imgUrl = `//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/${prevHash[1]}/${prevHash[2]}`;
-            this._setProfileBg(imgUrl);
+            const src = `//cdn.akamai.steamstatic.com/steamcommunity/public/images/items/${prevHash[1]}/${prevHash[2]}`;
+            this._setProfileBg(src);
 
             return false;
         }
@@ -23,16 +23,34 @@ export default class FCustomBackground extends Feature {
         this._setProfileBg(bg);
     }
 
-    /**
-     * Only sets static backgrounds for now.
-     * TODO Update to support animated backgrounds once the custom backgrounds database
-     * and/or the "view full image" feature on the Market supports them.
-     */
-    _setProfileBg(imgUrl) {
-        DOMHelper.remove(".profile_animated_background"); // Animated BGs will interfere with static BGs
+    _setProfileBg(src) {
 
+        const isVideo = /(webm|mp4)$/.test(src);
         const profilePage = document.querySelector(".no_header.profile_page");
-        profilePage.style.backgroundImage = `url(${imgUrl})`;
+        let animatedBgContainer = document.querySelector(".profile_animated_background");
+
+        if (isVideo) {
+            if (animatedBgContainer) {
+                animatedBgContainer.querySelector("video").src = src;
+            } else {
+                profilePage.style.backgroundImage = "none";
+
+                animatedBgContainer = document.createElement("div");
+                animatedBgContainer.classList.add("profile_animated_background");
+
+                const videoEl = document.createElement("video");
+                ["playsinline", "autoplay", "muted", "loop"].forEach(attr => videoEl.setAttribute(attr, ""));
+                videoEl.src = src;
+                animatedBgContainer.append(videoEl);
+                profilePage.prepend(animatedBgContainer);
+            }
+        } else {
+            if (animatedBgContainer) {
+                animatedBgContainer.remove(); // Animated BGs will interfere with static BGs
+            }
+
+            profilePage.style.backgroundImage = `url(${src})`;
+        }
 
         if (!profilePage.classList.contains("has_profile_background")) {
             for (const node of [document.body, profilePage, profilePage.querySelector(".profile_content")]) {

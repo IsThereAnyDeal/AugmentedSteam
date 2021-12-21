@@ -2091,6 +2091,19 @@ label.es_dlc_label > input:checked::after {
 }
 
 /***************************************
+ * Points Shop
+ * FBackgroundPreviewLink
+ **************************************/
+.as_preview_background_ctn {
+  text-align: right;
+  text-decoration: underline;
+}
+.as_preview_background {
+  font-size: .9rem;
+  color: #b3b4cd;
+}
+
+/***************************************
  * Market
  * market_popular_refresh_toggle()
  **************************************/
