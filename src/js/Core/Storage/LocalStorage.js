@@ -71,6 +71,7 @@ LocalStorage.defaults = Object.freeze({
     "support_info": null,
     "hide_login_warn_store": false,
     "hide_login_warn_community": false,
+    "review_filters": {},
     "local_storage_migration": {"store": false, "community": false, "extension": false},
 });
 
