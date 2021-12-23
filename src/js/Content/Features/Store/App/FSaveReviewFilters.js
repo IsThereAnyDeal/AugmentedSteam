@@ -39,13 +39,15 @@ export default class FSaveReviewFilters extends Feature {
             if ((minPlaytime && minPlaytime !== "0") || (maxPlaytime && maxPlaytime !== "0")) {
                 filtersChanged = true;
 
+                const upperBound = 100;
+
                 const min = Number(minPlaytime);
 
                 /**
-                 * No maximum means the (current) maximum value of 100, but is stored as 0
+                 * No maximum means the upper bound, but is stored as 0
                  * https://github.com/SteamDatabase/SteamTracking/blob/9c64b223ab168c4ce4dacf14fccc3e527f5975ef/store.steampowered.com/public/javascript/game.js#L1651
                  */
-                const max = Number(maxPlaytime) || 100;
+                const max = Number(maxPlaytime);
 
                 // Update playtime silder text and hidden inputs (required, the rest are just for visuals)
                 f.updatePlaytimeFilterValues(min, max);
@@ -54,7 +56,7 @@ export default class FSaveReviewFilters extends Feature {
                  * Update playtime preset checkbox state
                  * https://github.com/SteamDatabase/SteamTracking/blob/9c64b223ab168c4ce4dacf14fccc3e527f5975ef/store.steampowered.com/public/javascript/game.js#L1594
                  */
-                if (min === 0 && max === 100) {
+                if (min === 0 && max === 0) {
                     document.querySelector("#review_playtime_preset_0").checked = true;
                 } else {
                     f.jq("input[name=review_playtime_preset]").attr("checked", false); // uncheck all radio buttons
@@ -65,7 +67,7 @@ export default class FSaveReviewFilters extends Feature {
                  * https://github.com/SteamDatabase/SteamTracking/blob/9c64b223ab168c4ce4dacf14fccc3e527f5975ef/store.steampowered.com/public/javascript/game.js#L1608
                  */
                 f.jq("#app_reviews_playtime_slider").slider("values", 0, min * 60 * 60);
-                f.jq("#app_reviews_playtime_slider").slider("values", 1, max * 60 * 60);
+                f.jq("#app_reviews_playtime_slider").slider("values", 1, (max || upperBound) * 60 * 60);
             }
 
             if (!filtersChanged) { return; }
