@@ -36,7 +36,7 @@ export default class FSaveReviewFilters extends Feature {
                 document.querySelector(`#${language}`).checked = true;
             }
 
-            if ((minPlaytime && minPlaytime !== "0") || (maxPlaytime && maxPlaytime !== "0")) {
+            if (minPlaytime !== "0" || maxPlaytime !== "0") {
                 filtersChanged = true;
 
                 const upperBound = 100;
@@ -56,11 +56,7 @@ export default class FSaveReviewFilters extends Feature {
                  * Update playtime preset checkbox state
                  * https://github.com/SteamDatabase/SteamTracking/blob/9c64b223ab168c4ce4dacf14fccc3e527f5975ef/store.steampowered.com/public/javascript/game.js#L1594
                  */
-                if (min === 0 && max === 0) {
-                    document.querySelector("#review_playtime_preset_0").checked = true;
-                } else {
-                    f.jq("input[name=review_playtime_preset]").attr("checked", false); // uncheck all radio buttons
-                }
+                f.jq("input[name=review_playtime_preset]").attr("checked", false); // uncheck all radio buttons
 
                 /**
                  * Update playtime slider display
