@@ -1,8 +1,5 @@
+import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../../modulesCore";
 import {ContextType, Feature} from "../../../modulesContent";
-
-import {HTML} from "../../../../Core/Html/Html";
-import {Localization} from "../../../../Core/Localization/Localization";
-import {SyncedStorage} from "../../../../Core/Storage/SyncedStorage";
 
 export default class FExtraLinks extends Feature {
 
@@ -12,7 +9,7 @@ export default class FExtraLinks extends Feature {
         if (context.type === ContextType.APP) {
             this._type = "app";
             this._gameid = context.appid;
-            this._node = document.querySelector("#ReportAppBtn").parentNode;
+            this._node = document.querySelector("#shareEmbedRow");
         } else if (context.type === ContextType.SUB) {
             this._type = "sub";
             this._gameid = context.subid;
@@ -41,106 +38,121 @@ export default class FExtraLinks extends Feature {
 
     apply() {
 
+        // Note: Links should be rendered in the same order as displayed on the options page
+        const links = [
+            {
+                "id": "showitadlinks",
+                "className": "itad_ico",
+                "link": `https://isthereanydeal.com/steam/${this._type}/${this._gameid}/`,
+                "text": Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal"),
+            },
+            {
+                "id": "showsteamdb",
+                "className": "steamdb_ico",
+                "link": `https://steamdb.info/${this._type}/${this._gameid}/`,
+                "text": Localization.str.view_on_website.replace("__website__", "SteamDB"),
+            },
+            {
+                "id": "showbartervg",
+                "className": "bartervg_ico",
+                "link": `https://barter.vg/steam/${this._type}/${this._gameid}/`,
+                "text": Localization.str.view_on_website.replace("__website__", "Barter.vg"),
+            },
+        ];
+
         if (this._type === "app") {
 
             this._moveExtraLinks();
 
-            if (SyncedStorage.get("showyoutube")) {
-                HTML.afterBegin(this._node,
-                    this._getRightColLinkHtml(
-                        "youtube_btn",
-                        `https://www.youtube.com/results?search_query=${encodeURIComponent(this.context.appName)}`,
-                        Localization.str.view_on_website.replace("__website__", "YouTube")
-                    ));
-            }
+            const appName = HTMLParser.clearSpecialSymbols(this.context.appName);
 
-            if (SyncedStorage.get("showtwitch")) {
-                HTML.afterBegin(this._node,
-                    this._getRightColLinkHtml(
-                        "twitch_btn",
-                        `https://www.twitch.tv/directory/game/${encodeURIComponent(this.context.appName.replace(/(\u2122)/g, "")
-                            .replace(/(\xAE)/g, ""))}`,
-                        Localization.str.view_on_website.replace("__website__", "Twitch")
-                    ));
-            }
-
-
-            if (SyncedStorage.get("showpcgw")) {
-                HTML.afterBegin(this._node,
-                    this._getRightColLinkHtml(
-                        "pcgw_btn",
-                        `https://pcgamingwiki.com/api/appid.php?appid=${this.context.appid}`,
-                        Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki")
-                    ));
-            }
-
-            if (SyncedStorage.get("showcompletionistme")) {
-                HTML.afterBegin(this._node,
-                    this._getRightColLinkHtml(
-                        "completionistme_btn",
-                        `https://completionist.me/steam/app/${this.context.appid}/`,
-                        Localization.str.view_on_website.replace("__website__", "Completionist.me")
-                    ));
-            }
-
-            if (SyncedStorage.get("showprotondb")) {
-                HTML.afterBegin(this._node,
-                    this._getRightColLinkHtml(
-                        "protondb_btn",
-                        `https://www.protondb.com/app/${this.context.appid}/`,
-                        Localization.str.view_on_website.replace("__website__", "ProtonDB")
-                    ));
-            }
-
-            if (this.context.hasCards && SyncedStorage.get("showsteamcardexchange")) {
-
+            if (this.context.hasCards) {
                 // FIXME some dlc have card category yet no card
-                HTML.afterBegin(this._node,
-                    this._getRightColLinkHtml(
-                        "cardexchange_btn",
-                        `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.context.communityAppid}/`,
-                        Localization.str.view_on_website.replace("__website__", "Steam Card Exchange")
-                    ));
+                links.push({
+                    "id": "showsteamcardexchange",
+                    "className": "cardexchange_btn",
+                    "link": `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.context.communityAppid}/`,
+                    "text": Localization.str.view_on_website.replace("__website__", "Steam Card Exchange"),
+                });
+            }
+
+            links.push(
+                {
+                    "id": "showprotondb",
+                    "className": "protondb_btn",
+                    "link": `https://www.protondb.com/app/${this.context.appid}/`,
+                    "text": Localization.str.view_on_website.replace("__website__", "ProtonDB"),
+                },
+                {
+                    "id": "showcompletionistme",
+                    "className": "completionistme_btn",
+                    "link": `https://completionist.me/steam/app/${this.context.appid}/`,
+                    "text": Localization.str.view_on_website.replace("__website__", "Completionist.me"),
+                },
+                {
+                    "id": "showpcgw",
+                    "className": "pcgw_btn",
+                    "link": `https://pcgamingwiki.com/api/appid.php?appid=${this.context.appid}`,
+                    "text": Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki"),
+                },
+                {
+                    "id": "showtwitch",
+                    "className": "twitch_btn",
+                    "link": `https://www.twitch.tv/directory/game/${encodeURIComponent(appName)}`,
+                    "text": Localization.str.view_on_website.replace("__website__", "Twitch"),
+                },
+                {
+                    "id": "showyoutube",
+                    "className": "as_youtube_btn",
+                    "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(appName)}`,
+                    "text": Localization.str.view_on_website.replace("__website__", "YouTube"),
+                },
+                {
+                    "id": "showyoutubegameplay",
+                    "className": "as_youtube_btn",
+                    "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC Gameplay"`)}`,
+                    "text": Localization.str.youtube_gameplay,
+                },
+                {
+                    "id": "showyoutubereviews",
+                    "className": "as_youtube_btn",
+                    "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC" intitle:Review`)}`,
+                    "text": Localization.str.youtube_reviews,
+                },
+            );
+
+            // custom app link
+            for (const customLink of SyncedStorage.get("app_custom_link")) {
+                if (!customLink.enabled) { continue; }
+
+                const link = `//${HTML.escape(customLink.url
+                    .replace("[NAME]", encodeURIComponent(appName))
+                    .replace("[ID]", this.context.appid))}`;
+                const text = Localization.str.view_on_website.replace("__website__", HTML.escape(customLink.name));
+                const iconUrl = customLink.icon ? `url(//${HTML.escape(customLink.icon)})` : "none";
+
+                links.push({link, text, iconUrl});
             }
         }
 
-        if (SyncedStorage.get("showbartervg")) {
-            HTML.afterBegin(this._node,
-                this._getRightColLinkHtml(
-                    "bartervg_ico",
-                    `https://barter.vg/steam/${this._type}/${this._gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Barter.vg")
-                ));
-        }
+        // Loop backwards, because links are inserted at the "afterbegin" position
+        for (let i = links.length - 1; i >= 0; i--) {
+            const link = links[i];
+            if (link.id && !SyncedStorage.get(link.id)) { continue; }
 
-        if (SyncedStorage.get("showsteamdb")) {
-            HTML.afterBegin(this._node,
-                this._getRightColLinkHtml(
-                    "steamdb_ico",
-                    `https://steamdb.info/${this._type}/${this._gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "Steam Database")
-                ));
+            const icon = link.className ? "" : `style="background: ${link.iconUrl}; background-size: contain;"`;
+            HTML.afterBegin(
+                this._node,
+                `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${link.className || ""}" target="_blank" href="${link.link}">
+                    <span><i class="ico16" ${icon}></i>&nbsp;&nbsp; ${link.text}</span>
+                </a>`
+            );
         }
-
-        if (SyncedStorage.get("showitadlinks")) {
-            HTML.afterBegin(this._node,
-                this._getRightColLinkHtml(
-                    "itad_ico",
-                    `https://isthereanydeal.com/steam/${this._type}/${this._gameid}/`,
-                    Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal")
-                ));
-        }
-    }
-
-    _getRightColLinkHtml(cls, url, str) {
-        return `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${cls}" target="_blank" href="${url}">
-                    <span><i class="ico16"></i>&nbsp;&nbsp; ${str}</span>
-                </a>`;
     }
 
     _moveExtraLinks() {
 
-        const usefulLinks = this._node.parentNode;
+        const usefulLinks = this._node;
         usefulLinks.classList.add("es_useful_link");
 
         const sideDetails = document.querySelector(".es_side_details_wrap");

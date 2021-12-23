@@ -1,5 +1,6 @@
 import ContextType from "../../../Modules/Context/ContextType";
 import {CCommunityBase} from "../CCommunityBase";
+import FEarlyAccess from "../../Common/FEarlyAccess";
 import FReviewSort from "./FReviewSort";
 
 export class CRecommended extends CCommunityBase {
@@ -9,5 +10,7 @@ export class CRecommended extends CCommunityBase {
         super(ContextType.RECOMMENDED, [
             FReviewSort,
         ]);
+
+        FEarlyAccess.show(document.querySelectorAll(".leftcol > a"));
     }
 }

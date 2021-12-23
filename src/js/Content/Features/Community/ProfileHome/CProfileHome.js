@@ -1,5 +1,7 @@
 import {ContextType, ProfileData} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
+import FEarlyAccess from "../../Common/FEarlyAccess";
+import FFixAppImageNotFound from "../FFixAppImageNotFound";
 import FCommunityProfileLinks from "./FCommunityProfileLinks";
 import FWishlistProfileLink from "./FWishlistProfileLink";
 import FSupporterBadges from "./FSupporterBadges";
@@ -12,6 +14,7 @@ import FCustomStyle from "./FCustomStyle";
 import FTwitchShowcase from "./FTwitchShowcase";
 import FChatDropdownOptions from "./FChatDropdownOptions";
 import FViewSteamId from "./FViewSteamId";
+import FPinnedBackground from "./FPinnedBackground";
 
 export class CProfileHome extends CCommunityBase {
 
@@ -38,6 +41,7 @@ export class CProfileHome extends CCommunityBase {
         ProfileData.promise();
 
         super(ContextType.PROFILE_HOME, [
+            FFixAppImageNotFound,
             FCommunityProfileLinks,
             FWishlistProfileLink,
             FSupporterBadges,
@@ -50,8 +54,18 @@ export class CProfileHome extends CCommunityBase {
             FTwitchShowcase,
             FChatDropdownOptions,
             FViewSteamId,
+            FPinnedBackground,
         ]);
 
         this.isPrivateProfile = document.body.classList.contains("private_profile");
+
+        FEarlyAccess.show(document.querySelectorAll(".game_info_cap, .showcase_slot:not(.showcase_achievement)"));
+
+        // Need to wait on custom background and style (LNY2020 may set the background) to be fetched and set
+        FPinnedBackground.dependencies = [FCustomBackground, FCustomStyle];
+        FPinnedBackground.weakDependency = true;
+
+        // Required for LNY2020 to check whether the profile has a (custom) background
+        FCustomStyle.dependencies = [FCustomBackground];
     }
 }

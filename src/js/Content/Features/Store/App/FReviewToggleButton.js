@@ -30,7 +30,7 @@ export default class FReviewToggleButton extends Feature {
             this._toggleReviews();
         });
 
-        this._toggleReviews(LocalStorage.get("show_review_section", true));
+        this._toggleReviews(LocalStorage.get("show_review_section"));
     }
 
     _toggleReviews(state) {
@@ -38,7 +38,7 @@ export default class FReviewToggleButton extends Feature {
         let _state = state;
 
         if (typeof _state === "undefined") {
-            _state = !LocalStorage.get("show_review_section", true);
+            _state = !LocalStorage.get("show_review_section");
             LocalStorage.set("show_review_section", _state);
         }
 

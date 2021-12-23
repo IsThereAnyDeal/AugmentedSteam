@@ -577,7 +577,23 @@
         "maintainers": "Projekt karbantartók",
         "with_help_of": "sok segítséggel __contributors__",
         "contributors": "nagyszerű közreműködőinktől",
-        "apppage": "App oldal"
+        "apppage": "App oldal",
+        "exfgls": "Figyelmeztetés ha egy app ki van zárva a Családi Megosztásból",
+        "custom_style_disable": "Egyéni témák letiltása",
+        "saving": "Mentés...",
+        "user_notes": {
+            "user_notes": "Jegyzetek",
+            "app": "App oldalakon",
+            "wishlist": "Kivánságlistámon",
+            "loc": "",
+            "synced_storage": "",
+            "local": "Lokális adatbázis",
+            "itad": "IsThereAnyDeal szerver"
+        },
+        "show_custom_themes": "Egyéni témák megjelenítése",
+        "oneclickremovewl": "",
+        "profile_pinned_bg": "",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Hiba az Augmented Steam adatbetöltése közben",
@@ -659,7 +675,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ tárgy",
-        "num_items": "__num__ tárgyak"
+        "num_items": "__num__ tárgyak",
+        "back": ""
     },
     "update": {
         "dont_show": "Ne Mutassa Újra",
@@ -694,7 +711,15 @@
         "update": "Jegyzet frissítése",
         "add_prompt": "Írd be a jegyzeted",
         "update_prompt": "Frissítsd a jegyzeted",
-        "add_for_game": "Jegyzetek ehhez: __gamename__"
+        "add_for_game": "Jegyzetek ehhez: __gamename__",
+        "not_enough_space": "Nincs elég hely a jegyzet mentéséhez",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "Jegyzetek mentése az ITAD szerveren",
+        "save_synced_storage": "",
+        "save_local": "Jegyzetek lokális tárolása"
     },
     "queue": {
         "new": "Új Sor",
@@ -753,5 +778,12 @@
     "processing": "Feldolgozás..",
     "wait": "Kérem várjon",
     "login_warning": "Győződj meg róla, hogy be vagy jelentkezve __link__, hogy az Augmented Steam összes funkcióját használhasd",
-    "youtube_reviews": "YouTube értékelések"
+    "youtube_reviews": "YouTube értékelések",
+    "download_demo_header": "",
+    "games_common": "",
+    "games_notcommon": "",
+    "shopping_cart_history": "",
+    "manage_webapi_key": "",
+    "steam_cloud_header": "",
+    "steam_cloud_saves": ""
 }

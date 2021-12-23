@@ -4,7 +4,7 @@ import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../../modules
 export default class FGamesStats extends Feature {
 
     checkPrerequisites() {
-        return SyncedStorage.get("showallstats");
+        return this.context.showStats && SyncedStorage.get("showallstats");
     }
 
     apply() {

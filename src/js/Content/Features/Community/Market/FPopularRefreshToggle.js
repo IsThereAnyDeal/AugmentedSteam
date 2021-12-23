@@ -13,7 +13,7 @@ export default class FPopularRefreshToggle extends Feature {
             this._toggleRefresh(!LocalStorage.get("popular_refresh"));
         });
 
-        this._toggleRefresh(LocalStorage.get("popular_refresh", false));
+        this._toggleRefresh(LocalStorage.get("popular_refresh"));
 
         Page.runInPageContext(() => { window.SteamFacade.vTooltip("#es_popular_refresh_toggle"); });
     }

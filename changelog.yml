@@ -1,6 +1,51 @@
+2.2.1: |
+  Hotfix for the occasional overwriting of ranked order of your wishlist.
+
+  New features:
+  - Missing app images will now be replaced with proper images
+  - Added option to replace community hub links with store page links on friend activity feed
+
+  Fixes:
+  - Your wishlist ranked order will no longer be overwritten, which happend occassionaly under specific conditions
+  - Manually changing the wishlist ranked order didn't work in the "Your rank" view
+  - Pressing Enter while entering user notes will now close and save the note (Shift + Enter for a new line)
+  - Improved average card price calculation for booster packs
+  - Restore option "Search Steam Market for '...'" for context menus
+  - Average card price for booster packs sometimes didn't show up
+
+
+2.2.0: |
+  New:
+  - Added option to skip confirmation dialog when removing games from your wishlist
+  - Wishlist rankings will now remain editable when any sorting or filtering options are active
+  - Added option to pin profile backgrounds, so that they won't move when scrolling
+  - Added two new custom profile themes (Golden 2020 & Winter 2019)
+
+  Bug fixes:
+  - Review filters on the search page now work for every language
+  - Firefox only: Games without a note note no longer show "undefined"
+
+2.1.0: |
+  - Automatically show price with coupon on game page, when coupon is available
+  - Add option for showing "excluded from family sharing" notice
+  - Add option to create custom links on app pages
+  - Removed embedded YouTube videos due to changes in YouTube's API; replaced with YouTube links instead
+  - Added option to store notes in local database, which has higher limits for storage, but won't sync across devices (use this if you reached limit and can't store any more notes)
+  - Add better error handling for notes
+  - Add button to Workshop to subscribe to all dependencies at once
+  - Fix unclickable workshop items after changing tab
+  - Fix workshop features not working on sorted pages
+  - Allow quick-/insta-selling all marketable items
+  - Fix quick sell not showing for items that have no buy orders
+  - Add option to globally disable custom themes
+  - Fix Augmented Steam not loading in some cases
+  - Fixed features that were broken by Steam update
+  - Remove features that were made obsolete by Steam update
+
+
 2.0.1: |
   A good ol' bugfix release
-  
+
   - Fixed Augmented Steam not working on some profile pages and activity pages
   - Fixed "Add to wishlist" dropdown menu
   - Fixed wishlist export not respecting sort order

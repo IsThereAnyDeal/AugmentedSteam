@@ -117,7 +117,7 @@
     "community": "커뮤니티",
     "dlc_data_header": "다운로드 컨텐츠 세부사항",
     "graphics": "그래픽",
-    "owned_elsewhere": "",
+    "owned_elsewhere": "당신은 이미 __gametitle__ on __storelist__ 제품을 가지고 있습니다.",
     "trading_cards": "Steam 트레이딩 카드",
     "view_badge": "배지 표시",
     "purchase_total": "총 구매 금액:",
@@ -126,19 +126,19 @@
     "apppage_purchase": "구매 옵션",
     "search_error_retry": "다시 시도하려면 이곳을 클릭하세요.",
     "contribute": "기여하기 (GitHub)",
-    "review": "",
+    "review": "리뷰",
     "reviews": "리뷰",
     "read_reviews": "리뷰 보기",
     "read_more_reviews": "에서 더 많은 리뷰 보기",
-    "gameplay": "",
-    "youtube_gameplay": "",
+    "gameplay": "게임플레이",
+    "youtube_gameplay": "YouTube 게임플레이",
     "size": "크기",
     "package_info": "패키지 정보",
     "badge_completion_avg": "배지 완성 평균 비용: __cost__",
     "using_store": "__current__ 지역의 Steam 상점을 이용하고 있습니다.",
     "volume_sold_last_24": "최근 24시간 동안 팔린 개수: __sold__ 개",
     "sold_last_24": "최근 24시간 동안 __sold__ 개 팔림",
-    "homepage_curators": "",
+    "homepage_curators": "Steam 큐레이터 추천",
     "homepage_topnewreleases": "",
     "homepage_sidebar": "사이드바",
     "drop_calc": "획득 가능한 카드 세어보기",
@@ -567,17 +567,33 @@
         "add_to_waitlist": "",
         "profile_steamid": "",
         "settings_mngmt": {
-            "import": "",
-            "import_success": "",
-            "import_fail": "",
-            "export": "",
-            "reset": ""
+            "import": "불러오기",
+            "import_success": "성공적으로 세팅을 불러왔습니다",
+            "import_fail": "세팅을 불러오는 데 실패했습니다",
+            "export": "내보내기",
+            "reset": "초기화"
         },
-        "removebroadcasts": "",
+        "removebroadcasts": "라이브 방송을 전부 없애기",
         "maintainers": "",
         "with_help_of": "",
         "contributors": "",
-        "apppage": ""
+        "apppage": "",
+        "exfgls": "",
+        "custom_style_disable": "",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": "",
+        "oneclickremovewl": "",
+        "profile_pinned_bg": "",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Augmented Steam 데이터 로딩 오류",
@@ -659,7 +675,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ 항목",
-        "num_items": "__num__ 항목들"
+        "num_items": "__num__ 항목들",
+        "back": ""
     },
     "update": {
         "dont_show": "다시 표시하지 않음",
@@ -694,7 +711,15 @@
         "update": "",
         "add_prompt": "",
         "update_prompt": "",
-        "add_for_game": ""
+        "add_for_game": "",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "",
@@ -734,8 +759,8 @@
         },
         "hide_ea": "",
         "hide_cart": "",
-        "hide_mixed": "",
-        "hide_negative": ""
+        "hide_mixed": "평가가 복합적인 제품 숨기기",
+        "hide_negative": "평가가 부정적인 제품 숨기기"
     },
     "calc_workshop_size": {
         "file_size": "",
@@ -744,14 +769,21 @@
         "calc_size": "",
         "total_size": ""
     },
-    "date": "",
-    "rating": "",
-    "helpful": "",
-    "funny": "",
-    "length": "",
-    "visibility": "",
-    "processing": "",
-    "wait": "",
+    "date": "날짜",
+    "rating": "평가",
+    "helpful": "도움이 되는",
+    "funny": "재밌는",
+    "length": "길이",
+    "visibility": "공개여부",
+    "processing": "처리중...",
+    "wait": "기다려 주세요",
     "login_warning": "",
-    "youtube_reviews": ""
+    "youtube_reviews": "YouTube 리뷰",
+    "download_demo_header": "",
+    "games_common": "",
+    "games_notcommon": "",
+    "shopping_cart_history": "",
+    "manage_webapi_key": "",
+    "steam_cloud_header": "",
+    "steam_cloud_saves": ""
 }

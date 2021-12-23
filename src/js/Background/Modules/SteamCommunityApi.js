@@ -23,7 +23,7 @@ class SteamCommunityApi extends Api {
 
     static async getInventory(contextId) {
         const login = LocalStorage.get("login");
-        if (!login) {
+        if (!login.steamId) {
             console.warn("Must be signed in to access Inventory");
             return null;
         }
@@ -129,8 +129,8 @@ class SteamCommunityApi extends Api {
         let data = await SteamCommunityApi.getInventory(1);
         if (!data) { return null; }
 
-        function addGiftsAndPasses(description, desc) {
-            const appids = GameId.getAppids(desc.value);
+        function addGiftsAndPasses(description) {
+            const appids = GameId.getAppids(description.value);
 
             // Gift package with multiple apps
             isPackage = true;
@@ -307,7 +307,7 @@ class SteamCommunityApi extends Api {
         }
 
         const login = LocalStorage.get("login");
-        if (login && login.profilePath === profilePath) { return login; }
+        if (login.profilePath === profilePath) { return login; }
 
         const html = await self.getPage(profilePath);
         const profileData = HTMLParser.getVariableFromText(html, "g_rgProfileData", "object");

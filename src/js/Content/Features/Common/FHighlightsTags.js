@@ -1,5 +1,5 @@
-import {GameId, HTML, HTMLParser, Localization, SyncedStorage} from "../../../modulesCore";
-import {DynamicStore, Feature, ITAD, Inventory} from "../../modulesContent";
+import {GameId, HTML, Localization, SyncedStorage} from "../../../modulesCore";
+import {DOMHelper, DynamicStore, Feature, ITAD, Inventory} from "../../modulesContent";
 import {Page} from "../Page";
 
 export default class FHighlightsTags extends Feature {
@@ -38,29 +38,37 @@ export default class FHighlightsTags extends Feature {
      * Highlights and tags DOM nodes that are owned, wishlisted, ignored, collected, waitlisted
      * or that the user has a gift, a guest pass or coupon for.
      *
-     * Additionally hides non-discounted titles if wished by the user.
      * @param {NodeList|Array} nodes - The nodes that should get highlighted
      * (defaults to all known nodes that are highlightable and taggable)
      * @param {boolean} hasDsInfo - Whether or not the supplied nodes contain dynamic store info (defaults to true)
-     * @param {Object} options - The highlights/tags that should be applied (defaults to all enabled)
+     * @param {Object} options - Option overrides that should be applied
      * @returns {Promise} - Resolved once the highlighting and tagging completed for the nodes
      */
     /* eslint-disable complexity -- FIXME */
-    static async highlightAndTag(nodes = document.querySelectorAll(this._selector), hasDsInfo = true, options = {}) {
+    static async highlightAndTag(nodes, hasDsInfo = true, options = {}) {
 
-        const opts = {"owned": true,
-            "wishlisted": true,
-            "ignored": true,
-            "collected": true,
-            "waitlisted": true,
-            "gift": true,
-            "guestPass": true,
-            "coupon": true,
-            ...options};
+        if (typeof FHighlightsTags._options === "undefined") {
+            FHighlightsTags._options = {
+                "owned": SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned"),
+                "wishlisted": SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist"),
+                "ignored": SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested"),
+                "collected": SyncedStorage.get("highlight_collection") || SyncedStorage.get("tag_collection"),
+                "waitlisted": SyncedStorage.get("highlight_waitlist") || SyncedStorage.get("tag_waitlist"),
+                "gift": SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift"),
+                "guestPass": SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass"),
+                "coupon": SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon"),
+            };
+        }
+
+        const opts = {...this._options, ...options};
+        if (!Object.values(opts).some(x => x)) { return; }
+
+        const _nodes = nodes || document.querySelectorAll(this._selector);
+        if (_nodes.length === 0) { return; }
 
         const storeIdsMap = new Map();
 
-        for (const node of nodes) {
+        for (const node of _nodes) {
             let nodeToHighlight = node;
 
             if (node.classList.contains("item")) {
@@ -97,63 +105,63 @@ export default class FHighlightsTags extends Feature {
 
             if (storeId) {
                 if (storeIdsMap.has(storeId)) {
-                    const arr = storeIdsMap.get(storeId);
-                    arr.push(nodeToHighlight);
-                    storeIdsMap.set(storeId, arr);
+                    storeIdsMap.get(storeId).push(nodeToHighlight);
                 } else {
                     storeIdsMap.set(storeId, [nodeToHighlight]);
                 }
             }
 
+        
             if (hasDsInfo) {
-                if (node.querySelector(".ds_owned_flag") && opts.owned) {
-                    this.highlightOwned(nodeToHighlight);
-                }
-
-                if (node.querySelector(".ds_wishlist_flag") && opts.wishlisted) {
-                    this.highlightWishlist(nodeToHighlight);
-                }
-
-                if (node.querySelector(".ds_ignored_flag") && opts.ignored) {
-                    this.highlightIgnored(nodeToHighlight);
+                try {
+                    if (opts.owned && node.querySelector(".ds_owned_flag") !== null) {
+                        this.highlightOwned(nodeToHighlight);
+                    }
+                    if (opts.wishlisted && node.querySelector(".ds_wishlist_flag") !== null) {
+                        this.highlightWishlist(nodeToHighlight);
+                    }
+                    if (opts.ignored && node.querySelector(".ds_ignored_flag") !== null) {
+                        this.highlightIgnored(nodeToHighlight);
+                    }
+                } catch (err) {
+                    console.error("Failed to highlight / tag node", err);
                 }
             }
         }
 
         const storeIds = Array.from(storeIdsMap.keys());
+        if (storeIds.length === 0) { return; }
+
         const trimmedStoreIds = storeIds.map(id => GameId.trimStoreId(id));
 
-        const includeDsInfo
-            = !hasDsInfo
-            && ((opts.owned && (SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned")))
-                || (opts.wishlisted && (SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist")))
-                || (opts.ignored && (SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested")))
-            );
+        const includeDsInfo = !hasDsInfo && (opts.owned || opts.wishlisted || opts.ignored);
 
         const [dsStatus, itadStatus, invStatus] = await Promise.all([
             includeDsInfo ? DynamicStore.getAppStatus(storeIds) : Promise.resolve(),
             ITAD.getAppStatus(storeIds, {
-                "waitlist": opts.waitlisted && (SyncedStorage.get("highlight_waitlist") || SyncedStorage.get("tag_waitlist")),
-                "collection": opts.collected && (SyncedStorage.get("highlight_collection") || SyncedStorage.get("tag_collection")),
+                "waitlist": opts.waitlisted,
+                "collection": opts.collected,
             }),
             Inventory.getAppStatus(trimmedStoreIds, {
-                "giftsAndPasses": (opts.gift && (SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift")))
-                    || (opts.guestPass && (SyncedStorage.get("highlight_inv_guestpass") || SyncedStorage.get("tag_inv_guestpass"))),
-                "coupons": opts.coupon && (SyncedStorage.get("highlight_coupon") || SyncedStorage.get("tag_coupon")),
+                "giftsAndPasses": opts.gift || opts.guestPass,
+                "coupons": opts.coupon,
             }),
         ]);
 
         const it = trimmedStoreIds.values();
         for (const [storeid, nodes] of storeIdsMap) {
+
+            const operations = [];
+
             if (dsStatus) {
                 if (opts.owned && dsStatus[storeid].owned) {
-                    nodes.forEach(node => { this.highlightOwned(node); });
+                    operations.push(this.highlightOwned);
                 }
                 if (opts.wishlisted && dsStatus[storeid].wishlisted) {
-                    nodes.forEach(node => { this.highlightWishlist(node); });
+                    operations.push(this.highlightWishlist);
                 }
                 if (opts.ignored && dsStatus[storeid].ignored) {
-                    nodes.forEach(node => { this.highlightIgnored(node); });
+                    operations.push(this.highlightIgnored);
                 }
             }
 
@@ -163,26 +171,38 @@ export default class FHighlightsTags extends Feature {
              */
             if (itadStatus) {
                 if (itadStatus[storeid].collected) {
-                    nodes.forEach(node => { this.highlightCollection(node); });
+                    operations.push(this.highlightCollection);
                 }
                 if (itadStatus[storeid].waitlisted) {
-                    nodes.forEach(node => { this.highlightWaitlist(node); });
+                    operations.push(this.highlightWaitlist);
                 }
             }
 
             if (invStatus) {
                 const trimmedId = it.next().value;
                 if (opts.gift && invStatus[trimmedId].gift) {
-                    nodes.forEach(node => { this.highlightInvGift(node); });
+                    operations.push(this.highlightInvGift);
                 }
 
                 if (opts.guestPass && invStatus[trimmedId].guestPass) {
-                    nodes.forEach(node => { this.highlightInvGuestpass(node); });
+                    operations.push(this.highlightInvGuestpass);
                 }
 
                 // Same as for the ITAD highlights (don't need to check)
                 if (invStatus[trimmedId].coupon) {
-                    nodes.forEach(node => { this.highlightInvCoupon(node); });
+                    operations.push(this.highlightInvCoupon);
+                }
+            }
+
+            for (let operation of operations) {
+                operation = operation.bind(this);
+
+                for (const node of nodes) {
+                    try {
+                        operation(node);
+                    } catch (err) {
+                        console.error("Failed to highlight / tag node", err);
+                    }
                 }
             }
         }
@@ -190,9 +210,6 @@ export default class FHighlightsTags extends Feature {
 
     static _addTag(node, tag) {
 
-        const tagShort = SyncedStorage.get("tag_short");
-
-        // Load the colors CSS for tags
         if (!this._tagCssLoaded) {
             this._tagCssLoaded = true;
 
@@ -203,88 +220,62 @@ export default class FHighlightsTags extends Feature {
                 tagCss.push(`.es_tag_${name} { background-color: ${color}; }`);
             }
 
-            let style = document.createElement("style");
-            style.id = "es_tag_styles";
-            style.textContent = tagCss.join("\n");
-            document.head.appendChild(style);
-            style = null;
+            DOMHelper.insertCSS(tagCss.join("\n"));
         }
 
         // Add the tags container if needed
-        let tags = node.querySelectorAll(".es_tags");
-        if (tags.length === 0) {
-            tags = HTMLParser.htmlToElement(`<div class="es_tags ${tagShort ? "es_tags_short" : ""}"></div>`);
-
-            let root;
-            if (node.classList.contains("tab_row")) { // fixme can't find it
-                root = node.querySelector(".tab_desc").classList.remove("with_discount");
-
-                node.querySelector(".tab_discount").style.top = "15px";
-                root.querySelector("h4").insertAdjacentElement("afterend", tags);
-            } else if (node.classList.contains("home_smallcap")) {
-                node.querySelector(".home_smallcap_title").insertAdjacentElement("afterbegin", tags);
-            } else if (node.classList.contains("curated_app_item")) {
-                node.querySelector(".home_headerv5_title").insertAdjacentElement("afterbegin", tags);
-            } else if (node.classList.contains("tab_item")) {
-                node.querySelector(".tab_item_name").insertAdjacentElement("afterend", tags);
-            } else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
-                node.querySelector(".discount_block").insertAdjacentElement("beforebegin", tags);
-            } else if (node.classList.contains("search_result_row")) {
-                node.querySelector("p").insertAdjacentElement("afterbegin", tags);
-            } else if (node.classList.contains("dailydeal")) { // can't find it
-                root = node.parentNode;
-                root.querySelector(".game_purchase_action").insertAdjacentElement("beforebegin", tags);
-                HTML.beforeBegin(root.querySelector(".game_purchase_action"), '<div style="clear: right;"></div>');
-            } else if (node.classList.contains("browse_tag_game")) {
-                node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", tags);
-            } else if (node.classList.contains("game_area_dlc_row")) {
-                node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", tags);
-            } else if (node.classList.contains("wishlist_row")) {
-                node.querySelector(".addedon").insertAdjacentElement("afterbegin", tags);
-            } else if (node.classList.contains("match")) {
-                node.querySelector(".match_price").insertAdjacentElement("afterbegin", tags);
-            } else if (node.classList.contains("cluster_capsule")) {
-                node.querySelector(".main_cap_platform_area").append(tags);
-            } else if (node.classList.contains("recommendation_highlight")) {
-                node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", tags);
-            } else if (node.classList.contains("similar_grid_item")) {
-                node.querySelector(".regular_price, .discount_block").append(tags);
-            } else if (node.classList.contains("recommendation_carousel_item")) {
-                node.querySelector(".buttons").insertAdjacentElement("beforebegin", tags);
-            } else if (node.classList.contains("friendplaytime_game")) {
-                node.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", tags);
+        let container = node.querySelector(".es_tags");
+        if (!container) {
+            container = document.createElement("div");
+            container.classList.add("es_tags");
+            if (SyncedStorage.get("tag_short")) {
+                container.classList.add("es_tags_short");
             }
 
-            tags = [tags];
+            if (node.classList.contains("tab_item")) {
+                node.querySelector(".tab_item_details").insertAdjacentElement("afterbegin", container);
+            } else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
+                node.querySelector(".discount_block").insertAdjacentElement("beforebegin", container);
+            } else if (node.classList.contains("search_result_row")) {
+                node.querySelector(".search_name > div").insertAdjacentElement("afterbegin", container);
+            } else if (node.classList.contains("browse_tag_game")) {
+                node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", container);
+            } else if (node.classList.contains("game_area_dlc_row")) {
+                node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", container);
+            } else if (node.classList.contains("wishlist_row")) {
+                node.querySelector(".addedon").insertAdjacentElement("afterbegin", container);
+            } else if (node.classList.contains("match")) {
+                node.querySelector(".match_price").insertAdjacentElement("afterbegin", container);
+            } else if (node.classList.contains("recommendation_highlight")) {
+                node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", container);
+            } else if (node.classList.contains("similar_grid_item")) {
+                node.querySelector(".regular_price, .discount_block").append(container);
+            } else if (node.classList.contains("recommendation_carousel_item")) {
+                node.querySelector(".buttons").insertAdjacentElement("beforebegin", container);
+            } else if (node.classList.contains("friendplaytime_game")) {
+                node.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", container);
+            }
         }
 
-        // Add the tag
-        for (const n of tags) {
-            if (!n.querySelector(`.es_tag_${tag}`)) {
-                HTML.beforeEnd(n, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
-            }
+        if (!container.querySelector(`.es_tag_${tag}`)) {
+            HTML.beforeEnd(container, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
         }
     }
     /* eslint-enable complexity */
 
-    static _highlightNode(node) {
+    static _highlightNode(node, type) {
+
         if (SyncedStorage.get("highlight_excludef2p")) {
 
-            if (node.innerHTML.match(
-                /<div class="(tab_price|large_cap_price|col search_price|main_cap_price|price)">\n?(.+)?(Free to Play|Play for Free!)(.+)?<\/div>/i
-            )) {
-                return;
-            }
-            if (node.innerHTML.match(/<h5>(Free to Play|Play for Free!)<\/h5>/i)) {
-                return;
-            }
-            if (node.innerHTML.match(/genre_release/) && node.querySelector(".genre_release").innerHTML.match(/Free to Play/i)) {
-                return;
-            }
-            if (node.classList.contains("search_result_row") && node.innerHTML.match(/Free to Play/i)) {
-                return;
-            }
+            let _node = node.querySelector("[data-ds-tagids]") || node.closest("[data-ds-tagids]");
+            // Check for the "Free to Play" tag
+            if (_node && JSON.parse(_node.dataset.dsTagids).includes(113)) { return; }
+            // Check if the price is "Free", only works for English users
+            _node = node.querySelector(".discount_final_price, .regular_price, .search_price, .game_area_dlc_price, .browse_tag_game_price");
+            if (_node && /\bFree\b/.test(_node.textContent)) { return; }
         }
+
+        node.classList.add("es_highlighted", `es_highlighted_${type}`);
 
         if (!this._highlightCssLoaded) {
             this._highlightCssLoaded = true;
@@ -310,11 +301,7 @@ export default class FHighlightsTags extends Feature {
                 );
             }
 
-            let style = document.createElement("style");
-            style.id = "es_highlight_styles";
-            style.textContent = hlCss.join("\n");
-            document.head.appendChild(style);
-            style = null;
+            DOMHelper.insertCSS(hlCss.join("\n"));
         }
 
         let _node = node;
@@ -362,8 +349,7 @@ export default class FHighlightsTags extends Feature {
         node.classList.add("es_highlight_checked");
 
         if (SyncedStorage.get(`highlight_${name}`)) {
-            node.classList.add("es_highlighted", `es_highlighted_${name}`);
-            this._highlightNode(node);
+            this._highlightNode(node, name);
         }
 
         if (SyncedStorage.get(`tag_${name}`)) {
@@ -423,20 +409,15 @@ FHighlightsTags._types = [
 ];
 
 FHighlightsTags._selector = [
-    "div.tab_row", // Storefront rows
-    "div.dailydeal_ctn",
     ".store_main_capsule", // "Featured & Recommended"
-    "div.wishlistRow", // Wishlist rows
     "a.game_area_dlc_row", // DLC on app pages
     "a.small_cap", // Featured storefront items and "recommended" section on app pages
-    "a.home_smallcap",
     ".home_content_item", // Small items under "Keep scrolling for more recommendations"
     ".home_content.single", // Big items under "Keep scrolling for more recommendations"
     ".home_area_spotlight", // "Special offers" big items
     "a.search_result_row", // Search result rows
     "a.match", // Search suggestions rows
     ".highlighted_app", // For example "Recently Recommended" on curators page
-    "a.cluster_capsule", // Carousel items
     "div.recommendation_highlight", // Recommendation pages
     "div.recommendation_carousel_item", // Recommendation pages
     "div.friendplaytime_game", // Recommendation pages
@@ -457,10 +438,9 @@ FHighlightsTags._selector = [
     "div.home_area_spotlight", // Midweek and weekend deals
     "div.browse_tag_game", // Tagged games
     "div.similar_grid_item", // Items on the "Similarly tagged" pages
-    ".tab_item", // Items on new homepage
+    ".tab_item", // Item rows on storefront/tag/genre pages
     ".special > .special_img_ctn", // new homepage specials
     ".special.special_img_ctn",
-    "div.curated_app_item", // curated app items!
     ".hero_capsule", // Summer sale "Featured"
     ".sale_capsule" // Summer sale general capsules
 ].map(sel => `${sel}:not(.es_highlighted)`)

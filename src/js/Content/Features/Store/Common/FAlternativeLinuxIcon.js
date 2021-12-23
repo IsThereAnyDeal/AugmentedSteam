@@ -1,5 +1,5 @@
 import {ExtensionResources, SyncedStorage} from "../../../../modulesCore";
-import {ContextType, Feature} from "../../../modulesContent";
+import {ContextType, DOMHelper, Feature} from "../../../modulesContent";
 
 export default class FAlternativeLinuxIcon extends Feature {
 
@@ -9,7 +9,6 @@ export default class FAlternativeLinuxIcon extends Feature {
 
     apply() {
         const url = ExtensionResources.getURL("img/alternative_linux_icon.png");
-        const style = document.createElement("style");
 
         let cssText = `span.platform_img.linux { background-image: url(${url}) !important; }`;
 
@@ -17,7 +16,6 @@ export default class FAlternativeLinuxIcon extends Feature {
             cssText += ".tab_item.focus .tab_item_details span.platform_img.linux { filter: brightness(20%); }";
         }
 
-        style.textContent = cssText;
-        document.head.appendChild(style);
+        DOMHelper.insertCSS(cssText);
     }
 }

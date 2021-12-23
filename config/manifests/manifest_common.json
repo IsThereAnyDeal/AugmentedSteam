@@ -1,7 +1,7 @@
 {
   "name": "Augmented Steam",
   "short_name": "AS",
-  "version": "2.0.1",
+  "version": "2.2.1",
   "description": "Augments your Steam Experience",
   "icons": {
     "128": "img/logo/as128.png",
@@ -49,7 +49,8 @@
   "content_scripts": [
     {
       "matches": [
-        "*://store.steampowered.com/"
+        "*://store.steampowered.com/",
+        "*://store.steampowered.com/?*"
       ],
       "js": [ "js/store/frontpage.js" ],
       "css": [ "css/augmentedsteam.css" ]
@@ -197,6 +198,7 @@
         "*://translation.steampowered.com/*",
         "*://partner.steampowered.com/*",
         "*://store.steampowered.com/",
+        "*://store.steampowered.com/?*",
         "*://*.steampowered.com/wishlist/id/*",
         "*://*.steampowered.com/wishlist/profiles/*",
         "*://*.steampowered.com/sale/*",
@@ -260,7 +262,9 @@
     {
       "matches": [
         "*://steamcommunity.com/id/*/games*",
-        "*://steamcommunity.com/profiles/*/games*"
+        "*://steamcommunity.com/profiles/*/games*",
+        "*://steamcommunity.com/id/*/followedgames*",
+        "*://steamcommunity.com/profiles/*/followedgames*"
       ],
       "js": [
         "js/community/games.js"
@@ -322,22 +326,16 @@
         "*://steamcommunity.com/id/*/friends",
         "*://steamcommunity.com/id/*/friends/*",
         "*://steamcommunity.com/profiles/*/friends",
-        "*://steamcommunity.com/profiles/*/friends/*"
-      ],
-      "js": [
-        "js/community/friends.js"
-      ],
-      "css": [
-        "css/augmentedsteam.css"
-      ]
-    },
-    {
-      "matches": [
+        "*://steamcommunity.com/profiles/*/friends/*",
         "*://steamcommunity.com/id/*/groups",
-        "*://steamcommunity.com/profiles/*/groups"
+        "*://steamcommunity.com/id/*/groups/*",
+        "*://steamcommunity.com/profiles/*/groups",
+        "*://steamcommunity.com/profiles/*/groups/*",
+        "*://steamcommunity.com/id/*/following/",
+        "*://steamcommunity.com/profiles/*/following/"
       ],
       "js": [
-        "js/community/groups.js"
+        "js/community/friends_and_groups.js"
       ],
       "css": [
         "css/augmentedsteam.css"
@@ -409,7 +407,9 @@
     {
       "matches": [
         "*://steamcommunity.com/id/*/recommended*",
-        "*://steamcommunity.com/profiles/*/recommended*"
+        "*://steamcommunity.com/profiles/*/recommended*",
+        "*://steamcommunity.com/id/*/reviews*",
+        "*://steamcommunity.com/profiles/*/reviews*"
       ],
       "js": [
         "js/community/recommended.js"
@@ -430,6 +430,8 @@
         "*://steamcommunity.com/profiles/*/myactivity",
         "*://steamcommunity.com/id/*/games*",
         "*://steamcommunity.com/profiles/*/games*",
+        "*://steamcommunity.com/id/*/followedgames*",
+        "*://steamcommunity.com/profiles/*/followedgames*",
         "*://steamcommunity.com/id/*/edit*",
         "*://steamcommunity.com/profiles/*/edit*",
         "*://steamcommunity.com/id/*/badges",
@@ -443,7 +445,11 @@
         "*://steamcommunity.com/profiles/*/friends",
         "*://steamcommunity.com/profiles/*/friends/*",
         "*://steamcommunity.com/id/*/groups",
+        "*://steamcommunity.com/id/*/groups/*",
         "*://steamcommunity.com/profiles/*/groups",
+        "*://steamcommunity.com/profiles/*/groups/*",
+        "*://steamcommunity.com/id/*/following/",
+        "*://steamcommunity.com/profiles/*/following/",
         "*://steamcommunity.com/id/*/inventory*",
         "*://steamcommunity.com/profiles/*/inventory*",
         "*://steamcommunity.com/id/*/stats*",
@@ -453,7 +459,9 @@
         "*://steamcommunity.com/profiles/*/myworkshopfiles?*browsefilter=mysubscriptions*",
         "*://steamcommunity.com/profiles/*/myworkshopfiles/?*browsefilter=mysubscriptions*",
         "*://steamcommunity.com/id/*/recommended*",
-        "*://steamcommunity.com/profiles/*/recommended*"
+        "*://steamcommunity.com/profiles/*/recommended*",
+        "*://steamcommunity.com/id/*/reviews*",
+        "*://steamcommunity.com/profiles/*/reviews*"
       ],
       "js": [
         "js/community/profile_home.js"
@@ -500,8 +508,8 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/sharedfiles/filedetails?id=*",
-        "*://steamcommunity.com/sharedfiles/filedetails/?id=*"
+        "*://steamcommunity.com/sharedfiles/filedetails?*id=*",
+        "*://steamcommunity.com/sharedfiles/filedetails/?*id=*"
       ],
       "js": [
         "js/community/shared_files.js"
@@ -512,8 +520,8 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/sharedfiles/editguide?id=*",
-        "*://steamcommunity.com/sharedfiles/editguide/?id=*"
+        "*://steamcommunity.com/sharedfiles/editguide?*",
+        "*://steamcommunity.com/sharedfiles/editguide/?*"
       ],
       "js": [
         "js/community/edit_guide.js"
@@ -549,10 +557,10 @@
         "*://steamcommunity.com/market/*",
         "*://steamcommunity.com/groups/*",
         "*://steamcommunity.com/app/*",
-        "*://steamcommunity.com/sharedfiles/filedetails?id=*",
-        "*://steamcommunity.com/sharedfiles/filedetails/?id=*",
-        "*://steamcommunity.com/sharedfiles/editguide?id=*",
-        "*://steamcommunity.com/sharedfiles/editguide/?id=*",
+        "*://steamcommunity.com/sharedfiles/filedetails?*id=*",
+        "*://steamcommunity.com/sharedfiles/filedetails/?*id=*",
+        "*://steamcommunity.com/sharedfiles/editguide?*",
+        "*://steamcommunity.com/sharedfiles/editguide/?*",
         "*://steamcommunity.com/tradingcards/boostercreator"
       ],
       "js": [

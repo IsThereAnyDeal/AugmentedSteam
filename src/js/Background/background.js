@@ -1,5 +1,5 @@
 import setup from "../setup";
-import {Permissions, SyncedStorage} from "../modulesCore";
+import {LocalStorage, Permissions, SyncedStorage} from "../modulesCore";
 import {ContextMenu} from "./Modules/ContextMenu";
 import {IndexedDB} from "./Modules/IndexedDB";
 import {SteamCommunityApi} from "./Modules/SteamCommunityApi";
@@ -8,6 +8,7 @@ import {StaticResources} from "./Modules/StaticResources";
 import {ITADApi} from "./Modules/ITADApi";
 import {AugmentedSteamApi} from "./Modules/AugmentedSteamApi";
 import {ExtensionData} from "./Modules/ExtensionData";
+import {CacheStorage} from "./Modules/CacheStorage";
 
 // Functions that are called when an object store (or one of its entries) has expired
 IndexedDB.objStoreFetchFns = new Map([
@@ -37,7 +38,15 @@ const actionCallbacks = new Map([
 
     ["steam.currencies", StaticResources.currencies],
 
+    ["migrate.cachestorage", CacheStorage.migrate],
     ["migrate.notesToSyncedStorage", ExtensionData.moveNotesToSyncedStorage],
+
+    ["notes.get", ExtensionData.getNote],
+    ["notes.set", ExtensionData.setNote],
+    ["notes.delete", ExtensionData.deleteNote],
+    ["notes.getall", ExtensionData.getAllNotes],
+    ["notes.setall", ExtensionData.setAllNotes],
+    ["notes.clear", ExtensionData.clearNotes],
     ["cache.clear", ExtensionData.clearCache],
 
     ["dlcinfo", AugmentedSteamApi.endpointFactory("v01/dlcinfo")],
@@ -45,12 +54,12 @@ const actionCallbacks = new Map([
     ["storepagedata.expire", AugmentedSteamApi.expireStorePageData],
     ["prices", AugmentedSteamApi.endpointFactory("v01/prices")],
     ["rates", AugmentedSteamApi.rates],
+    ["clearrates", AugmentedSteamApi.clearRates],
     ["isea", AugmentedSteamApi.isEA],
     ["profile.background", AugmentedSteamApi.endpointFactory("v01/profile/background/background")],
     ["profile.background.games", AugmentedSteamApi.endpointFactory("v01/profile/background/games")],
     ["twitch.stream", AugmentedSteamApi.endpointFactory("v01/twitch/stream")],
     ["market.cardprices", AugmentedSteamApi.endpointFactory("v01/market/cardprices")],
-    ["market.averagecardprice", AugmentedSteamApi.endpointFactory("v01/market/averagecardprice")], // FIXME deprecated
     ["market.averagecardprices", AugmentedSteamApi.endpointFactory("v01/market/averagecardprices")],
     ["steampeek", AugmentedSteamApi.steamPeek],
 
@@ -113,7 +122,7 @@ browser.runtime.onMessage.addListener(async(message, sender) => {
     message.params = message.params || [];
     let res;
     try {
-        await Promise.all([IndexedDB, SyncedStorage.then(() => { setup(); })]);
+        await Promise.all([IndexedDB, CacheStorage, LocalStorage, SyncedStorage.then(() => { setup(); })]);
         res = await callback(...message.params);
     } catch (err) {
         console.group(`Callback: "${message.action}"`);

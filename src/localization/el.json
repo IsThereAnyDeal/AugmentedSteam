@@ -573,11 +573,27 @@
             "export": "Εξαγωγή",
             "reset": "Επαναφορά"
         },
-        "removebroadcasts": "",
-        "maintainers": "",
-        "with_help_of": "",
-        "contributors": "",
-        "apppage": ""
+        "removebroadcasts": "Πλήρης αφαίρεση ζωντανών μεταδόσεων",
+        "maintainers": "Συντηρητές έργου",
+        "with_help_of": "με πολύ βοήθεια από τους  __contributors__",
+        "contributors": "υπέροχους συνεισφέροντες",
+        "apppage": "Σελίδα εφαρμογής",
+        "exfgls": "",
+        "custom_style_disable": "",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": "",
+        "oneclickremovewl": "",
+        "profile_pinned_bg": "",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Σφάλμα κατά τη φόρτωση δεδομένων Augmented Steam",
@@ -659,7 +675,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ αντικείμενο",
-        "num_items": "__num__ αντικείμενα"
+        "num_items": "__num__ αντικείμενα",
+        "back": ""
     },
     "update": {
         "dont_show": "Να μην εμφανιστεί ξανά",
@@ -694,7 +711,15 @@
         "update": "Ενημέρωση σημείωσης",
         "add_prompt": "Εισαγωγή της σημείωσης σας",
         "update_prompt": "Ενημέρωση της σημείωσης σας",
-        "add_for_game": "Σημείωση για __gamename__"
+        "add_for_game": "Σημείωση για __gamename__",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "Νέα Ουρά",
@@ -753,5 +778,12 @@
     "processing": "Επεξεργασία...",
     "wait": "Παρακαλώ περιμένετε",
     "login_warning": "Βεβαιωθείτε ότι έχετε συνδεθεί στο __link__ για να μπορείτε να χρησιμοποιήσετε όλες τις δυνατότητες του Augmented Steam.",
-    "youtube_reviews": "Κριτικές YouTube"
+    "youtube_reviews": "Κριτικές YouTube",
+    "download_demo_header": "",
+    "games_common": "",
+    "games_notcommon": "",
+    "shopping_cart_history": "",
+    "manage_webapi_key": "",
+    "steam_cloud_header": "",
+    "steam_cloud_saves": ""
 }

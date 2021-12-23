@@ -577,7 +577,23 @@
         "maintainers": "",
         "with_help_of": "",
         "contributors": "",
-        "apppage": ""
+        "apppage": "",
+        "exfgls": "",
+        "custom_style_disable": "",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": "",
+        "oneclickremovewl": "",
+        "profile_pinned_bg": "",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Errore nel caricamento di Augmented Steam",
@@ -659,7 +675,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ oggetto",
-        "num_items": "__num__ oggetti"
+        "num_items": "__num__ oggetti",
+        "back": ""
     },
     "update": {
         "dont_show": "Non mostrare più",
@@ -694,7 +711,15 @@
         "update": "Modifica la nota",
         "add_prompt": "Inserisci la tua nota",
         "update_prompt": "Modifica la tua nota",
-        "add_for_game": "Nota per __gamename__"
+        "add_for_game": "Nota per __gamename__",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "Nuovo elenco scoperte",
@@ -753,5 +778,12 @@
     "processing": "Elaborazione in corso...",
     "wait": "Attendere prego",
     "login_warning": "Assicurati di aver effettuato l'accesso a __link__ per poter utilizzare tutte le funzionalità di Augmented Steam.",
-    "youtube_reviews": "Recensioni su YouTube"
+    "youtube_reviews": "Recensioni su YouTube",
+    "download_demo_header": "",
+    "games_common": "",
+    "games_notcommon": "",
+    "shopping_cart_history": "",
+    "manage_webapi_key": "",
+    "steam_cloud_header": "",
+    "steam_cloud_saves": ""
 }

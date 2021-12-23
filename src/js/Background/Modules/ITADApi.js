@@ -267,7 +267,7 @@ class ITADApi extends Api {
 
         await Promise.all(promises);
 
-        const lastImport = LocalStorage.get("lastItadImport") || {};
+        const lastImport = LocalStorage.get("lastItadImport");
         lastImport.to = TimeUtils.now();
         LocalStorage.set("lastItadImport", lastImport);
     }
@@ -301,7 +301,7 @@ class ITADApi extends Api {
             collection[gameid] = _types;
         });
 
-        const lastImport = LocalStorage.get("lastItadImport") || {};
+        const lastImport = LocalStorage.get("lastItadImport");
         lastImport.from = TimeUtils.now();
         LocalStorage.set("lastItadImport", lastImport);
 
@@ -316,7 +316,7 @@ class ITADApi extends Api {
             waitlist.push(gameid);
         }
 
-        const lastImport = LocalStorage.get("lastItadImport") || {};
+        const lastImport = LocalStorage.get("lastItadImport");
         lastImport.from = TimeUtils.now();
         LocalStorage.set("lastItadImport", lastImport);
 

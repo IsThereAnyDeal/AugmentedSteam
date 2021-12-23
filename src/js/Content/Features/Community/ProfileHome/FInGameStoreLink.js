@@ -1,22 +1,31 @@
-import {HTML, Localization} from "../../../../modulesCore";
-import {Feature, User} from "../../../modulesContent";
+import {GameId, HTML, HTMLParser, Localization} from "../../../../modulesCore";
+import {Feature, RequestData} from "../../../modulesContent";
 
 export default class FInGameStoreLink extends Feature {
 
     checkPrerequisites() {
-        return !this.context.isPrivateProfile && User.isSignedIn;
+        return !this.context.isPrivateProfile
+            && (this._avatarNode = document.querySelector(".profile_header_size[data-miniprofile]")) !== null
+            && this._avatarNode.classList.contains("in-game");
     }
 
-    apply() {
+    async apply() {
 
-        // The input needed to get appid only appears when logged in
-        const ingameNode = document.querySelector("input[name=ingameAppID]");
-        if (!ingameNode || !ingameNode.value) { return; }
+        // Try to get appid from the deprecated "report abuse" form (only appears when logged in)
+        let appid = document.querySelector("input[name=ingameAppID]")?.value;
+
+        // Otherwise fetch the profile's miniprofile hover content
+        if (!appid) {
+            const html = await RequestData.getHttp(`https://steamcommunity.com/miniprofile/${this._avatarNode.dataset.miniprofile}`);
+            const doc = HTMLParser.htmlToDOM(html);
+            appid = GameId.getAppidImgSrc(doc.querySelector("img.game_logo"));
+            if (!appid) { return; }
+        }
 
         const node = document.querySelector(".profile_in_game_name");
 
         HTML.inner(node,
-            `<a href="//store.steampowered.com/app/${ingameNode.value}" target="_blank">
+            `<a href="//store.steampowered.com/app/${appid}" target="_blank">
                 <span data-tooltip-text="${Localization.str.view_in_store}">${node.textContent}</span>
             </a>`);
     }

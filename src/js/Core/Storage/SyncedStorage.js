@@ -1,98 +1,25 @@
+import {Storage} from "./Storage";
 import {Info} from "../Info";
 
-class SyncedStorage {
-
-    /*
-     * browser.storage.sync limits
-     * QUOTA_BYTES = 102400 // 100KB
-     * QUOTA_BYTES_PER_ITEM = 8192 // 8KB
-     * MAX_ITEMS = 512
-     * MAX_WRITE_OPERATIONS_PER_HOUR = 1800
-     * MAX_WRITE_OPERATIONS_PER_MINUTE = 120
-     */
-    static has(key) {
-        return Object.prototype.hasOwnProperty.call(this._cache, key);
-    }
-
-    static get(key) {
-        if (typeof this._cache[key] == "undefined") {
-            if (typeof this.defaults[key] == "undefined") {
-                console.warn(`Unrecognized SyncedStorage key "${key}"`);
-            }
-            return this.defaults[key];
-        }
-        return this._cache[key];
-    }
-
-    static set(key, value) {
-        this._cache[key] = value;
-        return this._adapter.set({[key]: value});
-
-        // this will throw if MAX_WRITE_*, MAX_ITEMS, QUOTA_BYTES* are exceeded
-    }
-
-    static import(entries) {
-        for (const [key, value] of Object.entries(entries)) {
-            this._cache[key] = value;
-        }
-        return this._adapter.set(entries);
-    }
-
-    static remove(key) {
-        if (typeof this._cache[key] !== "undefined") {
-            delete this._cache[key];
-        }
-        return this._adapter.remove(key);
-
-        // can throw if MAX_WRITE* is exceeded
-    }
-
-    static keys(prefix = "") {
-        return Object.keys(this._cache).filter(k => k.startsWith(prefix));
-    }
-
-    static entries() {
-        return Object.entries(this._cache);
-    }
-
-    static clear() {
-        this._cache = {};
-        return this._adapter.clear();
-
-        // can throw if MAX_WRITE* is exceeded
-    }
-
-    // load whole storage and make local copy
-    static async init() {
-        browser.storage.onChanged.addListener(changes => {
-            for (const [key, {"newValue": val}] of Object.entries(changes)) {
-                this._cache[key] = val;
-            }
-        });
-
-        const storage = await this._adapter.get(null);
-        Object.assign(this._cache, storage);
-
-        return this._cache;
-    }
-
-    static then(onDone, onCatch) {
-        return this.init().then(onDone, onCatch);
-    }
-
-    static async quota() {
-        const maxBytes = this._adapter.QUOTA_BYTES;
-        const bytes = await this._adapter.getBytesInUse();
-        return bytes / maxBytes; // float 0.0 (0%) -> 1.0 (100%)
-    }
-
-    static toJson() {
-        return JSON.stringify(this._cache);
-    }
-}
+/*
+ * browser.storage.sync limits
+ * QUOTA_BYTES = 102400 // 100KB
+ * QUOTA_BYTES_PER_ITEM = 8192 // 8KB
+ * MAX_ITEMS = 512
+ * MAX_WRITE_OPERATIONS_PER_HOUR = 1800
+ * MAX_WRITE_OPERATIONS_PER_MINUTE = 120
+ */
+class SyncedStorage extends Storage {}
 
 SyncedStorage._adapter = browser.storage.sync || browser.storage.local;
-SyncedStorage._cache = {};
+
+/*
+ * 8KiB is the limit for storage.sync https://chromium.googlesource.com/chromium/src/+/refs/heads/main/extensions/common/api/storage.json#227
+ * 5MiB is the limit for storage.local (overall size) https://chromium.googlesource.com/chromium/src/+/refs/heads/main/extensions/common/api/storage.json#227
+ * 2KiB are subtracted in order to save some space for other configuration options
+ */
+SyncedStorage.QUOTA_BYTES_PER_ITEM = browser.storage.sync ? 8192 : 5242880 - 2048;
+
 SyncedStorage.defaults = Object.freeze({
     "language": "english",
 
@@ -169,6 +96,14 @@ SyncedStorage.defaults = Object.freeze({
     "showyoutubereviews": true,
     "showwsgf": true,
     "exfgls": true,
+    "app_custom_link": [
+        {
+            "enabled": false,
+            "name": "Google",
+            "url": "google.com/search?q=[ID]+[NAME]",
+            "icon": "www.google.com/images/branding/product/ico/googleg_lodp.ico"
+        },
+    ],
 
     "customize_apppage": {
         "recentupdates": true,
@@ -217,9 +152,12 @@ SyncedStorage.defaults = Object.freeze({
     "openinnewtab": false,
     "keepssachecked": false,
     "showemptywishlist": true,
-    "showusernotes": true,
+    "user_notes_app": true,
+    "user_notes_wishlist": true,
     "showwishliststats": true,
+    "oneclickremovewl": false,
     "user_notes": {},
+    "user_notes_adapter": "synced_storage",
     "replaceaccountname": true,
     "showlanguagewarning": true,
     "showlanguagewarninglanguage": "english",
@@ -238,8 +176,8 @@ SyncedStorage.defaults = Object.freeze({
     "community_default_tab": "",
     "showallachievements": false,
     "showallstats": true,
+    "replacecommunityhublinks": false,
     "showachinstore": true,
-    "showcomparelinks": false,
     "hideactivelistings": false,
     "showlowestmarketprice": true,
     "hidespamcomments": false,
@@ -247,12 +185,13 @@ SyncedStorage.defaults = Object.freeze({
     "wlbuttoncommunityapp": true,
     "removeguideslanguagefilter": false,
     "disablelinkfilter": false,
-    "showallfriendsthatown": false,
     "sortfriendsby": "default_ASC",
     "sortreviewsby": "default_ASC",
     "sortgroupsby": "default_ASC",
     "show1clickgoo": true,
     "show_profile_link_images": "gray",
+    "show_custom_themes": true,
+    "profile_pinned_bg": false,
     "profile_steamrepcn": true,
     "profile_steamgifts": true,
     "profile_steamtrades": true,
@@ -298,5 +237,9 @@ SyncedStorage.defaults = Object.freeze({
     "context_steamdb_instant": false,
     "context_steam_keys": false,
 });
+SyncedStorage.persistent = [
+    "user_notes",
+    "user_notes_adapter",
+];
 
 export {SyncedStorage};

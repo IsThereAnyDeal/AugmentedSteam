@@ -1,11 +1,12 @@
 import {Context, ContextType} from "../../../modulesContent";
-import FTotalSpent from "./FTotalSpent";
+import FUsefulLinks from "./FUsefulLinks";
 
 export class CAccount extends Context {
 
     constructor() {
+
         super(ContextType.ACCOUNT, [
-            FTotalSpent,
+            FUsefulLinks,
         ]);
     }
 }

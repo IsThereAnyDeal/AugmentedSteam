@@ -9,23 +9,24 @@ export default class FRemoveGuidesLangFilter extends Feature {
 
     apply() {
 
-        for (const node of document.querySelectorAll("#rightContents .browseOption")) {
-            const onclick = node.getAttribute("onclick");
+        for (const node of document.querySelectorAll(".rightDetailsBlock .browseOption")) {
+            node.removeAttribute("onclick"); // remove redundant onclick attribute
 
             const linkNode = node.querySelector("a");
-            linkNode.href = linkNode.href.replace(/requiredtags[^&]+/, "requiredtags[]=-1");
+            const newLink = new URL(linkNode.href);
 
-            if (onclick) {
-                const url = linkNode.href;
-                node.removeAttribute("onclick");
-                node.addEventListener("click", () => {
-                    window.location.href = url;
-                });
+            // note the param is "requiredtags[0]" here for whatever reason
+            if (newLink.searchParams.has("requiredtags[0]")) {
+                newLink.searchParams.set("requiredtags[0]", "-1");
             }
+
+            linkNode.href = newLink.href;
         }
 
         for (const node of document.querySelectorAll(".guides_home_view_all_link > a, .guide_home_category_selection")) {
-            node.href = node.href.replace(/&requiredtags[^&]+$/, "");
+            const newLink = new URL(node.href);
+            newLink.searchParams.set("requiredtags[]", "-1");
+            node.href = newLink.href;
         }
     }
 }

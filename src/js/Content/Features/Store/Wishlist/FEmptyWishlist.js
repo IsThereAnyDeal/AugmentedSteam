@@ -62,4 +62,4 @@ export default class FEmptyWishlist extends Feature {
     }
 }
 
-FEmptyWishlist.deps = [FExportWishlist];
+FEmptyWishlist.dependencies = [FExportWishlist];

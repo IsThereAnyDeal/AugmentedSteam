@@ -21,7 +21,6 @@ import FMetacriticUserScore from "./FMetacriticUserScore";
 import FOpenCritic from "./FOpenCritic";
 import FOwnedElsewhere from "./FOwnedElsewhere";
 import FPurchaseDate from "./FPurchaseDate";
-import FYouTubeVideos from "./FYouTubeVideos";
 import FSteamPeek from "./FSteamPeek";
 import FWidescreenCertification from "./FWidescreenCertification";
 import FHowLongToBeat from "./FHowLongToBeat";
@@ -41,6 +40,8 @@ import FReviewToggleButton from "./FReviewToggleButton";
 import FOwnedActionsButtons from "./FOwnedActionsButtons";
 import FSupportInfo from "./FSupportInfo";
 import FRemoveBroadcasts from "./FRemoveBroadcasts";
+import FDemoAbovePurchase from "./FDemoAbovePurchase";
+import FSaveReviewFilters from "./FSaveReviewFilters";
 
 export class CApp extends CStore {
 
@@ -68,7 +69,6 @@ export class CApp extends CStore {
             FOpenCritic,
             FOwnedElsewhere,
             FPurchaseDate,
-            FYouTubeVideos,
             FSteamPeek,
             FWidescreenCertification,
             FHowLongToBeat,
@@ -90,6 +90,8 @@ export class CApp extends CStore {
             FSupportInfo,
             FMediaExpander,
             FRemoveBroadcasts,
+            FDemoAbovePurchase,
+            FSaveReviewFilters,
             FAddToCartNoRedirect,
         ]);
 
@@ -119,8 +121,9 @@ export class CApp extends CStore {
         FCustomizer.dependencies = [FSteamSpy, FSteamChart, FSurveyData];
         FCustomizer.weakDependency = true;
 
-        FMediaExpander.dependencies = [FYouTubeVideos];
-        FMediaExpander.weakDependency = true;
+        // FPackBreakdown skips purchase options with a package info button to avoid false positives
+        FPackageInfoButton.dependencies = [FPackBreakdown];
+        FPackageInfoButton.weakDependency = true;
     }
 
     storePageDataPromise() {
@@ -141,7 +144,8 @@ export class CApp extends CStore {
     }
 
     hasAchievements() {
-        return document.querySelector("#achievement_block") !== null;
+        // #achievement_block is also used for point shop items
+        return document.querySelector(".communitylink_achievement_images") !== null;
     }
 
     removeFromWishlist() {

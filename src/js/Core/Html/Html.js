@@ -61,17 +61,22 @@ class HTML {
         return _node;
     }
 
-    static wrap(node, html) {
-        const _node = HTML._getNode(node);
+    static wrap(wrapper, startEl, endEl = startEl) {
+        const _startEl = HTML._getNode(startEl);
 
-        if (_node) {
-            const wrapper = HTML.element(html);
-            _node.replaceWith(wrapper);
-            wrapper.append(_node);
-            return wrapper;
-        } else {
-            return _node;
+        if (!_startEl) { return null; }
+
+        const _endEl = endEl === null ? _startEl.parentElement.lastElementChild : HTML._getNode(endEl);
+
+        const wrappedNodes = [_startEl];
+        for (let cur = _startEl; cur.nextElementSibling !== null && cur !== _endEl; cur = cur.nextElementSibling) {
+            wrappedNodes.push(cur.nextElementSibling);
         }
+
+        const _wrapper = HTML.element(wrapper);
+        _startEl.replaceWith(_wrapper);
+        _wrapper.append(...wrappedNodes);
+        return _wrapper;
     }
 
     static adjacent(node, position, html) {

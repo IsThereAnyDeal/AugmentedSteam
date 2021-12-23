@@ -1,9 +1,9 @@
 const webpack = require("webpack");
 const {merge} = require("webpack-merge");
 const path = require("path");
-const MergeJsonWebpackPlugin = require("merge-jsons-webpack-plugin");
+const MergeJsonWebpackPlugin = require("merge-json-webpack-plugin");
 const ExtensionReloader = require("webpack-extension-reloader");
-const ZipPlugin = require("zip-webpack-plugin");
+const FileManagerPlugin = require("filemanager-webpack-plugin");
 const ManifestTransformerPlugin = require("./Plugins/ManifestTransformerPlugin.cjs");
 const PreprocessChangelogPlugin = require("./Plugins/PreprocessChangelogPlugin.cjs");
 
@@ -34,11 +34,15 @@ class WebpackRunner {
         return this._development ? "dev" : "prod";
     }
 
+    get _outputDirectoryName() {
+        return path.resolve(this._config.output.path, `${this._mode}.${this._browser}`);
+    }
+
     _buildOptions() {
         const options = {};
 
         options.output = {
-            "path": path.resolve(this._config.output.path, `${this._mode}.${this._browser}`)
+            "path": path.resolve(this._outputDirectoryName)
         };
 
         if (this._development) {
@@ -55,22 +59,28 @@ class WebpackRunner {
 
         options.plugins = [
             new MergeJsonWebpackPlugin({
-                "files": [
-                    "config/manifests/manifest_common.json",
-                    `config/manifests/manifest_${this._browser}.json`,
-                    `config/manifests/manifest_${this._mode}.json`,
+                "groups": [
+                    {
+                        "files": [
+                            "config/manifests/manifest_common.json",
+                            `config/manifests/manifest_${this._browser}.json`,
+                            `config/manifests/manifest_${this._mode}.json`,
+                        ],
+                        "to": "manifest.json",
+                    }
                 ],
-                "output": {
-                    "fileName": "manifest.json",
-                },
-                "space": this._development ? "\t" : null,
+                "mergeFn": (object, other) => merge(object, other),
+                "minify": !this._development
             }),
             new ManifestTransformerPlugin({
                 "js": ["js/browser-polyfill.js", "js/dompurify.js"]
             }),
             new PreprocessChangelogPlugin({
                 "path": path.resolve(__dirname, "../../changelog.yml")
-            })
+            }),
+            new webpack.DefinePlugin({
+                "__BROWSER__": JSON.stringify(this._browser)
+            }),
         ];
 
         if (this._server) {
@@ -90,9 +100,22 @@ class WebpackRunner {
 
         if (!this._development) {
             options.plugins.push(
-                new ZipPlugin({
-                    "path": this._config.output.path,
-                    "filename": `${this._browser}.zip`
+                new FileManagerPlugin({
+                    "events": {
+                        "onEnd": {
+                            "archive": [
+                                {
+                                    "source": this._outputDirectoryName,
+                                    "destination": `${this._config.output.path}/${this._browser}.zip`,
+                                    "options": {
+                                        "zlib": {
+                                            "level": 6,
+                                        }
+                                    },
+                                },
+                            ]
+                        }
+                    }
                 })
             );
         }

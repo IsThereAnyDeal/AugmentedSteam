@@ -8,15 +8,15 @@
   transition: opacity 0.25s ease-in-out;
 }
 /**
- * https://github.com/tfedor/AugmentedSteam/issues/485
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/485
  * Always show "View all comments" links on friends activity page
  */
 .blotter_viewallcomments_container {
   display: block !important;
 }
 /**
- * https://github.com/tfedor/AugmentedSteam/issues/397
- * https://github.com/tfedor/AugmentedSteam/issues/545
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/397
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/545
  * Fix long-shaped artwork thumbnails
  */
 .publishedfile_popup_screenshot, .publishedfile_popup_screenshot > img, .profile_media_item, .imgWallItem {
@@ -24,6 +24,20 @@
 }
 #modalContent.modal_frame {
   min-width: 720px !important;
+}
+/**
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/1254
+ * Increase height of collection choice section
+ */
+.collectionChoiceSection {
+  height: 400px;
+}
+/**
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/pull/1329
+ * Fix clipped bottom section on the interactive recommender page
+ */
+[class^=interactiverecommender_BottomSection] {
+  overflow-y: visible !important;
 }
 
 /* Back To Top button */
@@ -217,12 +231,6 @@ img.astats_icon {
   margin-left: 4px;
 }
 
-.es_youtube_player {
-  border: none;
-  width: 600px;
-  height: 337.5px;
-}
-
 .es_tab.active .tab_content {
   background-color: #0003 !important;
 }
@@ -284,30 +292,6 @@ img.astats_icon {
 .es_btn_systemreqs {
   margin-bottom: 10px;
   margin-top: 10px;
-}
-
-.es_text_input {
-  background-color: #4d4b49;
-  border: 1px solid #82807c;
-  color: #ffffff;
-  height: 18px;
-  padding: 2px 4px 3px 4px;
-}
-#es_custom_money_amount {
-  width: 54px;
-}
-.giftcard_selection #es_custom_money_amount {
-  height: 15px;
-  vertical-align: middle;
-}
-.addfunds_area_purchase_game #es_custom_money_amount {
-  margin-top: -5px;
-}
-.es_custom_money .giftcard_corner {
-  filter: hue-rotate(160deg);
-}
-.es_custom_money .giftcard_text.small {
-  font-size: 14px !important;
 }
 
 .itad-pricing {
@@ -450,6 +434,38 @@ img.astats_icon {
 }
 .performance-graph .right-bar span {
   padding-left: 5px;
+}
+
+/***************************************
+ * Funds page
+ * FCustomGiftcardAndWallet
+ **************************************/
+#es_custom_money_input {
+  background-color: #4d4b49;
+  border: 1px solid #82807c;
+  color: #ffffff;
+  height: 18px;
+  padding: 2px 4px 3px 4px;
+  width: 54px;
+}
+.giftcard_selection #es_custom_money_input {
+  height: 15px;
+  vertical-align: middle;
+}
+.addfunds_area_purchase_game #es_custom_money_input {
+  margin-top: -5px;
+}
+.es_custom_money a {
+  cursor: pointer;
+}
+.es_custom_money a .giftcard_style {
+  cursor: default;
+}
+.es_custom_money .giftcard_corner {
+  filter: hue-rotate(160deg);
+}
+.es_custom_money .giftcard_text.small {
+  font-size: 14px !important;
 }
 
 /***************************************
@@ -643,12 +659,12 @@ img.astats_icon {
 }
 
 /** Flyout menus, taken from https://steamstore-a.akamaihd.net/public/css/v6/store.css */
-.profile_badges_header .store_nav {
+.as_flyout_menus .store_nav {
   display: inline;
   float: none;
   margin-left: 5px;
 }
-.profile_badges_header .store_nav .tab {
+.as_flyout_menus .store_nav .tab {
   float: none;
   padding: 1px;
   display: inline-block;
@@ -656,7 +672,7 @@ img.astats_icon {
   cursor: pointer;
   background: rgba(103, 193, 245, 0.4);
 }
-.profile_badges_header .store_nav .tab > span.pulldown {
+.as_flyout_menus .store_nav .tab > span.pulldown {
   font-size: 12px;
   color: #67c1f5;
   line-height: 29px;
@@ -664,15 +680,15 @@ img.astats_icon {
   display: block;
   background: none;
 }
-.profile_badges_header .store_nav .tab:hover > span.pulldown,
-.profile_badges_header .store_nav .tab:hover,
-.profile_badges_header .store_nav .tab.focus > span.pulldown,
-.profile_badges_header .store_nav .tab.focus {
+.as_flyout_menus .store_nav .tab:hover > span.pulldown,
+.as_flyout_menus .store_nav .tab:hover,
+.as_flyout_menus .store_nav .tab.focus > span.pulldown,
+.as_flyout_menus .store_nav .tab.focus {
   filter: none;
   color: #ffffff;
   background: linear-gradient(-60deg, #67c1f5 0%, #417a9b 100%);
 }
-.profile_badges_header .store_nav .tab > span.pulldown > span {
+.as_flyout_menus .store_nav .tab > span.pulldown > span {
   width: 19px;
   height: 12px;
   padding: 0;
@@ -683,19 +699,47 @@ img.astats_icon {
   cursor: pointer;
   vertical-align: text-bottom;
 }
-.profile_badges_header .store_nav .tab:hover > span.pulldown > span,
-.profile_badges_header .store_nav .tab.focus > span.pulldown > span {
+.as_flyout_menus .store_nav .tab:hover > span.pulldown > span,
+.as_flyout_menus .store_nav .tab.focus > span.pulldown > span {
   background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png');
 }
-.profile_badges_header .popup_block_new .popup_body {
+.as_flyout_menus .popup_block_new .popup_body {
   border: none;
   position: relative;
   background: #417a9b;
   padding: 6px 0;
 }
-.profile_badges_header .popup_menu .popup_menu_item {
+.as_flyout_menus .popup_menu .popup_menu_item {
   color: #e5e4dc;
   margin: 0 8px;
+}
+
+/***************************************
+ * Games page
+ * FCommonGames
+ **************************************/
+.common_filter_ctn {
+  display: none !important; /* hide Steam's checkbox */
+}
+.esi-hide-common .esi-common,
+.esi-hide-notcommon .esi-notcommon {
+  display: none !important; /* ensure the filter options work alongside filtering by keywords */
+}
+.es_games_filter {
+  margin-bottom: 6px;
+}
+
+/***************************************
+ * Achievement stats page
+ * FAchievementSort
+ **************************************/
+.esi_ach_unlocked + .esi_ach_locked,
+.esi_ach_locked + .esi_ach_unlocked {
+  margin-top: 62px;
+}
+.esi_ach_avatars {
+  min-height: 66px;
+  margin-bottom: 18px;
 }
 
 /***************************************
@@ -803,8 +847,7 @@ img.astats_icon {
 .workshop_item_header #highlight_player_area,
 .workshop_item_header .highlight_player_item iframe,
 .workshop_item_header .workshopItemPreviewImageEnlargeable,
-.workshop_item_header .workshopItemPreviewImageEnlargeableContainer,
-.es_youtube_player {
+.workshop_item_header .workshopItemPreviewImageEnlargeableContainer {
   transition: width 0.25s ease, max-width 0.25s ease, height 0.25s ease;
 }
 .es_slider_toggle {
@@ -848,20 +891,29 @@ img.astats_icon {
 #highlight_player_area {
   width: auto !important;
 }
-.workshop_item_header.es_expanded .col_right {
-  display: none;
-}
+.workshop_item_header.es_expanded #highlight_player_area,
 .workshop_item_header.es_expanded .highlight_player_item iframe,
 .workshop_item_header.es_expanded .workshopItemPreviewImageEnlargeable,
 .workshop_item_header.es_expanded .workshopItemPreviewImageEnlargeableContainer {
-  width: auto;
-  height: 520px;
+  width: 920px !important;
+  height: 520px !important;
   max-width: 920px !important;
+  max-height: 520px !important;
 }
 .workshop_item_header.es_expanded .highlight_ctn,
-.workshop_item_header.es_expanded .highlight_overflow,
-.workshop_item_header.es_expanded .highlight_player_item iframe {
+.workshop_item_header.es_expanded .highlight_overflow {
   width: 920px;
+  max-width: 920px;
+}
+
+/*
+ * The native highlight strip has a width of 593px. (https://github.com/SteamDatabase/SteamTracking/blob/8e19832027cf425b5db71c09c878739b5630c66a/steamcommunity.com/public/css/skin_1/workshop_itemdetails.css#L238)
+ * Five items are at most fully visible on the strip. You can derive the following formula:
+ * stripWidth(itemCount) = itemCount * (116px width + 3px margin) - 2px
+ * On the expanded view 7 items are visible.
+ */
+.workshop_item_header.es_expanded #highlight_strip {
+  width: 831px;
 }
 .workshop_item_header .es_slider_toggle {
   display: block;
@@ -882,7 +934,6 @@ img.astats_icon {
   }
 
   .game_meta_data .es_side_details,
-  .game_meta_data .es_side_details_wrap,
   #game_highlights .es_slider_toggle {
     display: none !important;
   }
@@ -892,65 +943,34 @@ img.astats_icon {
     width: 616px;
   }
 
-  #game_highlights.es_expanded .highlight_ctn,
-  #game_highlights.es_expanded .es_youtube_player {
+  #game_highlights.es_expanded .highlight_ctn {
     width: 940px;
-  }
-
-  #game_highlights.es_expanded .es_youtube_player {
-    height: 528.75px;
   }
 
   #game_highlights.es_expanded .highlight_overflow {
     margin-right: 0;
   }
 
-  #game_highlights.es_expanded .rightcol {
-    display: none !important;
-  }
-
-  #game_highlights.es_expanded .leftcol {
-    float: none !important;
-    width: auto !important;
-  }
-
-  .es_slider_toggle,
-  .es_side_details.es_expanded,
-  .es_side_details_wrap.es_expanded {
+  .es_slider_toggle {
     display: block;
   }
 
-  .es_side_details_wrap {
-    transition: opacity 250ms ease 0s;
-    opacity: 0;
+  .as-side-details {
+    transition: opacity 125ms ease 0s;
   }
 
-  .es_side_details .game_header_image_full {
+  .as-side-details.es_expanded .game_header_image_full {
     width: 276px !important;
     height: auto !important;
   }
+}
 
-  .es_side_details .popular_tags_ctn .add_button,
-  .es_side_details .your_tags_ctn {
-    display: none;
-  }
+.as-side-details.es_expanded a {
+	color: #67c1f5;
+}
 
-  .es_side_details .glance_tags_ctn {
-    margin-bottom: 0;
-    position: relative;
-  }
-
-  .es_side_details .popular_tags:after {
-    content: "";
-    display: block;
-    position: absolute;
-    right: -17px;
-    bottom: 0;
-    background-image: linear-gradient(90deg, rgba(13, 20, 28, 0) 0%, rgb(13, 20, 28) 80%);
-    width: 35px;
-    height: 22px;
-    pointer-events: none;
-  }
+.as-side-details.es_expanded a:hover {
+	color: #ffffff;
 }
 
 .requiredItem .loader {
@@ -962,40 +982,6 @@ img.astats_icon {
 }
 .es_required_item--error {
   background-color: rgba(214, 34, 5, 0.2) !important;
-}
-
-/***************************************
- * Store pages, Community
- * check_early_access()
- **************************************/
-.es_early_access {
-  position: relative;
-}
-.es_overlay_container {
-  position: relative;
-  display: inherit;
-}
-.home_tabs_content .es_early_access .tab_item_cap {
-  line-height: 48px !important;
-}
-.es_overlay,
-.es_overlay img {
-  position: absolute;
-  z-index: 4;
-  width: auto !important;
-  height: 60%;
-  min-height: 35px;
-  max-height: 120px;
-}
-.es_overlay img {
-  position: relative;
-  height: 100% !important;
-}
-.spotlight_img.es_early_access > a {
-  display: inherit;
-}
-.showcase_slot .es_overlay_container {
-  pointer-events: none !important;
 }
 
 /***************************************
@@ -1201,6 +1187,22 @@ img.astats_icon {
 
 /***************************************
  * Wishlist
+ * FKeepEditableRanking
+ **************************************/
+#wishlist_ctn:not(.sort_order).as_show_order_input .capsule {
+  margin-left: 40px;
+}
+#wishlist_ctn:not(.sort_order).as_show_order_input .as_hover_handle {
+  display: block;
+  width: 40px;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+#wishlist_ctn.sort_order.as_show_order_input .as_hover_handle {
+  display: none;
+}
+
+/***************************************
+ * Wishlist
  * FEmptyWishlist/FExportWishlist
  **************************************/
 #cart_status_data {
@@ -1267,86 +1269,50 @@ img.astats_icon {
 }
 
 /***************************************
- * Badges page
- * FBadgeSortAndFilter/Drop down menus
+ * App pages
+ * Common/UserNotes
  **************************************/
-.profile_badges_sortoptions > a {
-  display: none; /* hide Steam's badge sort options */
+.es_note_prompt {
+  /* Long app titles stretch the modal but this element doesn't scale since it's width is 500 px at max */
+  width: auto !important;
 }
-#wishlist_sort_options .es_badge_filter,
-#wishlist_sort_options .es_badge_view {
-  float: right;
-  margin-left: 18px;
-}
-#es_sort_flyout, #es_filter_flyout, #es_badgeview_flyout {
-  display: none;
-}
-#es_sort_active, #es_filter_active, #es_badgeview_active {
-  display: inline;
+#es_note_input {
+  height: 112px;
+  font-size: 14px !important;
 }
 
-/* Taken from: http://store.akamai.steamstatic.com/public/css/v6/store.css */
-#wishlist_sort_options .store_nav .tab {
-  padding: 1px;
-  display: inline-block;
-  text-decoration: none;
-  cursor: pointer;
-  background: rgba(103, 193, 245, 0.4);
+#esi-user-note-button .esi-add-note,
+#esi-user-note-button .esi-update-note {
+  display: none;
 }
-#wishlist_sort_options .store_nav .tab > span {
-  font-size: 12px;
-  color: #67c1f5;
-  line-height: 29px;
-  padding: 0 15px;
+#esi-user-note-button:not(.esi-has-note) .esi-add-note,
+#esi-user-note-button.esi-has-note .esi-update-note {
+  display: inline-block;
+}
+
+.esi-note {
+  font-size: 11px;
+  height: fit-content;
+  flex-grow: 2;
+  margin-top: 5px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+.esi-note--store {
+  font-size: 1.4em;
+  font-style: italic;
+  margin-top: 20px;
+  display: none;
+}
+.esi-note--store.esi-has-note {
   display: block;
 }
-#wishlist_sort_options .store_nav .tab.lesspadding > span {
-  padding: 0 12px;
+.esi-note--wishlist {
+  font-style: italic;
 }
-#wishlist_sort_options .store_nav .tab:hover > span,
-#wishlist_sort_options .store_nav .tab:hover,
-#wishlist_sort_options .store_nav .tab.focus > span,
-#wishlist_sort_options .store_nav .tab.focus {
-  filter: none;
-  color: #ffffff;
-  background: linear-gradient(-60deg, #67c1f5 0%, #417a9b 100%);
-}
-#wishlist_sort_options .store_nav .tab > span.pulldown {
-  padding-right: 7px;
-  background: none;
-}
-#wishlist_sort_options .store_nav .tab > span.pulldown > span {
-  width: 19px;
-  height: 12px;
-  padding: 0;
-  display: inline-block;
-  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded.png');
-  background-position: center;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  vertical-align: text-bottom;
-}
-#wishlist_sort_options .store_nav .tab:hover > span.pulldown > span,
-#wishlist_sort_options .store_nav .tab.focus > span.pulldown > span {
-  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png');
-}
-#wishlist_sort_options .popup_block_new .popup_body {
-  border: none !important;
-  position: relative;
-  background: #417a9b !important;
-  padding: 6px 0;
-}
-#wishlist_sort_options .popup_menu_item {
-  color: #e5e4dc;
-  margin: 0 8px;
-}
-#wishlist_sort_options .tab {
-  float: none;
-}
-#wishlist_sort_options .store_nav {
-  display: inline;
-  float: none;
-  margin-left: 5px;
+.esi-note--wishlist.esi-has-note {
+  font-style: normal;
+  color: #5fafdd;
 }
 
 /***************************************
@@ -1475,7 +1441,7 @@ img.astats_icon {
 }
 
 /**
- * https://github.com/tfedor/AugmentedSteam/issues/389
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/389
  * Fix unclickable dropdowns
  */
 .ds_options_tooltip {
@@ -1534,10 +1500,7 @@ img.astats_icon {
 .es_tags.es_tags_short span::first-letter {
   font-size: 10px;
 }
-.browse_tag_game .es_tags {
-  display : table;
-  margin-left: 8px;
-}
+
 .recommendation_highlight .es_tags {
   position: absolute;
   margin-top: -20px;
@@ -1558,27 +1521,15 @@ img.astats_icon {
 .game_area_dlc_price .es_tags ~ div {
   display: inline-block;
 }
-.small_cap .es_tags {
-  margin-top: 0;
-}
-.tab_item .es_tags {
-  z-index: 10;
-  float: left;
-}
-#search_suggestion_contents .es_tags {
+.match .es_tags {
   float: right;
   margin-left: 5px;
 }
-
-/** layout for tag pages */
-.browse_tag_game_name {
-  margin-left: 8px;
+.search_result_row .es_tags {
+  vertical-align: top;
 }
-.browse_tag_game_price {
-  margin-left: 8px;
-}
-.browse_tag_game {
-  margin-bottom: 4px;
+.wishlist_row .es_tags {
+  vertical-align: baseline;
 }
 
 /*.es_highlighted div:not(.discount_pct):not(.discount_final_price):not(.discount_original_price):not(.main_cap_status):not(.search_released):not(.tab_item_top_tags):not(.tab_item_details) {
@@ -1621,12 +1572,74 @@ img.astats_icon {
   margin-right: 0;
 }
 
+/** layout for friend activity page */
+.blotter_block a.es_highlighted {
+  color: rgba(255, 255, 255, 0.80);
+  padding: 1px 4px;
+  line-height: 20px;
+  white-space: nowrap;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.80);
+}
+
 /**
  * https://github.com/jshackles/Enhanced_Steam/issues/778
  * Use original selection background color for live search entries that are both selected and highlighted
  */
 .search_suggest .match.focus {
   background: #212d3d !important;
+}
+
+/***************************************
+ * Common
+ * FEarlyAccess
+ **************************************/
+.es_overlay,
+.es_overlay img {
+  position: absolute;
+  z-index: 4; /* Should be lower than .ds_flag (currently 5) */
+  width: auto !important;
+  height: 60%;
+  min-height: 35px;
+  max-height: 120px;
+}
+.es_overlay img {
+  position: relative;
+  height: 100% !important;
+}
+
+.es_early_access .broadcast_live_stream_icon {
+  display: none; /* Hide broadcast icon since it gets in the way */
+}
+
+.home_content_item .es_overlay_container,
+.small_cap .es_overlay_container,
+.leftcol .es_overlay_container {
+  position: relative;
+  display: inherit;
+}
+.home_content.single .es_overlay {
+  z-index: 11;
+}
+.home_content.single.es_early_access > .gamelink > .ds_flag {
+  z-index: 12;
+}
+.curator_featured .es_overlay {
+  height: 25%;
+}
+.tab_item.es_early_access > .tab_item_cap {
+  line-height: 48px;
+}
+.store_capsule .es_overlay_container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+.store_capsule .es_overlay_container > img {
+  width: 100%;
 }
 
 /***************************************
@@ -1777,24 +1790,11 @@ img.astats_icon {
 }
 
 /***************************************
- * Activity pages
- * add_achievement_comparison_link()
+ * Friend activity page
+ * FAchievementLink
  **************************************/
-.blotter_block a.es_highlighted {
-  color: rgba(255, 255, 255, 0.80);
-  padding: 1px 4px;
-  line-height: 20px;
-  white-space: nowrap;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.80);
-}
-.es_achievement_compare {
-  font-size: 10px;
-  float: right;
-  margin-right: 6px;
-}
-.es_achievements {
-  margin-top: 0 !important;
+.es-ach-link:hover {
+  text-decoration: none;
 }
 
 /***************************************
@@ -2213,43 +2213,6 @@ label.es_dlc_label > input:checked::after {
   font-weight: 300;
 }
 
-.es_note_prompt {
-  /* Long app titles stretch the modal but this element doesn't scale since it's width is 500 px at max */
-  width: auto !important;
-}
-
-#es_note_input {
-  height: 112px;
-  font-size: 14px !important;
-}
-
-.esi-note {
-  font-size: 11px;
-  height: fit-content;
-  margin-top: 5px;
-  flex-grow: 2;
-  margin-right: 5px;
-  cursor: pointer;
-}
-
-.esi-empty-note {
-  font-style: italic;
-}
-
-.esi-user-note {
-  color: #5fafdd;
-}
-
-.esi-note--store {
-  font-size: 1.4em;
-  font-style: italic;
-  margin-top: 20px;
-}
-
-.esi-note--hidden {
-  display: none;
-}
-
 #es_new_queue {
   width: 150px;
   margin-right: -10px;
@@ -2279,20 +2242,27 @@ label.es_dlc_label > input:checked::after {
   display: none;
 }
 
-.esi_ach_unlocked + .esi_ach_locked {
-  margin-top: 72px;
+/** Favorite emoticons */
+.es_emoticons.emoticon_popup {
+  max-width: 352px;
 }
-
-/* hide Steam's option on "All Games" page */
-input[id="show_common_games"],
-label[for="show_common_games"] {
-  display: none;
+.es_emoticons .es_emoticons_content {
+  margin-bottom: 10px;
+  min-height: 32px;
+  line-height: 32px;
+  text-align: center;
+  max-height: none;
+  display: flex;
 }
-.esi-hide-common .esi-common,
-.esi-hide-notcommon .esi-notcommon {
-  display: none !important;
+#es_fav_remove {
+  width: 10%;
+  background-image: url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);
+  background-repeat: no-repeat;
+  background-position: center;
 }
-
+#es_fav_emoticons {
+  width: 90%;
+}
 
 .es_hltb a.linkbar > img,
 .es_wsgf a.linkbar > img,
@@ -2323,21 +2293,6 @@ label[for="show_common_games"] {
 
 .es_dlc_info .details_block img {
   vertical-align: top;
-}
-
-/***************************************
- * Store curator pages
- **************************************/
-.store_capsule .es_overlay_container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  vertical-align: top;
-}
-.store_capsule .es_overlay_container > img {
-  width: 100%;
 }
 
 /***************************************
@@ -2504,13 +2459,14 @@ label[for="show_common_games"] {
 }
 .es-copy__copied {
   opacity: 0;
-  transition: opacity 200ms;
+  transition: opacity .2s .6s;
   margin-left: 20px;
   color: #999;
   font-size: 0.95em;
 }
 .es-copy.is-copied .es-copy__copied {
   opacity: 1;
+  transition: opacity .2s 0s;
 }
 
 /***************************************
@@ -2546,6 +2502,21 @@ label[for="show_common_games"] {
 }
 .es_profile_style .holidayprofile .profile_customization_header {
   background: none !important;
+}
+
+/***************************************
+ * User profiles
+ * FPinnedBackground
+ **************************************/
+.as_profile_static_background {
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: auto;
 }
 
 /***************************************
@@ -3065,4 +3036,5 @@ label[for="show_common_games"] {
 .as-pd__preview {
   display: block;
   margin: auto;
+  max-width: 100%;
 }

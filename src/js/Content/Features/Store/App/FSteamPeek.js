@@ -98,7 +98,7 @@ export default class FSteamPeek extends Feature {
             this._adjustScroller();
         });
 
-        if (LocalStorage.get("steampeek", false)) {
+        if (LocalStorage.get("steampeek")) {
             steamPeekTab.click();
         }
     }

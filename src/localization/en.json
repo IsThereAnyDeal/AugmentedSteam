@@ -6,6 +6,7 @@
         "cont_checkout": "Checkout",
         "cont_continue": "Continue Shopping"
     },
+    "download_demo_header": "Download __gamename__ Demo",
     "calc_workshop_size": {
         "file_size": "File size __size__",
         "finished": "Finished",
@@ -183,6 +184,8 @@
     "add_to_cart": "Add to Cart",
     "view": "View",
     "games_all": "All Games",
+    "games_common": "Games that you own",
+    "games_notcommon": "Games that you do not own",
     "game_name": "Game Name",
     "gift_transactions": "Gift Purchases",
     "demos": "Demos",
@@ -241,6 +244,10 @@
     "all": "All",
     "total_spent": "Total Spent",
     "external_funds": "External Funds Used",
+    "shopping_cart_history": "View Shopping Cart history",
+    "manage_webapi_key": "Manage my Steam Web API key",
+    "steam_cloud_header": "Steam Cloud",
+    "steam_cloud_saves": "View Cloud saves",
     "games_with_drops": "__dropsgames__ games with drops remaining",
     "binder_view": "Binder View",
     "view_stats": "View stats",
@@ -421,6 +428,7 @@
             "export": "Export",
             "reset": "Reset"
         },
+        "show_custom_themes": "Show custom themes",
         "community_default_tab": "Default community home page tab",
         "videos": "Videos",
         "broadcasts": "Broadcasts",
@@ -450,6 +458,7 @@
         "name": "Name",
         "show_alternative_linux_icon": "Show alternative Linux icon",
         "showcomparelinks": "Show \"Compare\" links for achievements on friend activity feed",
+        "replacecommunityhublinks": "Replace community hub links with store page links on friend activity feed",
         "hidetmsymbols": "Trademark and Copyright symbols in game titles",
         "metacritic": "Show Metacritic user scores",
         "opencritic": "Show Opencritic ratings and reviews",
@@ -462,7 +471,6 @@
         "wlbuttoncommunityapp": "Show \"Add to Wishlist\" button on community hubs",
         "removeguideslanguagefilter": "Don't automatically filter guides by user language",
         "disablelinkfilter": "Disable confirmation when accessing external sites",
-        "showallfriendsthatown": "Show \"All friends that own\"",
         "regional_price_on": "Show regional price comparison",
         "friends_own": "Items your friends own",
         "horizontalscrolling": "Enable horizontal scrolling with the mouse wheel",
@@ -509,10 +517,11 @@
         "spamcommentregex": "Regular Expression string:",
         "hide_owned_homepage": "Items you own on the homepage",
         "saved_note": "Options saved",
+        "saving": "Saving...",
         "regional_hideworld": "Hide globe indicator",
         "show_astatslink": "Show AStats links",
-        "show_youtubegameplay": "Show YouTube gameplay videos",
-        "show_youtubereviews": "Show YouTube review videos",
+        "show_youtubegameplay": "Show \"YouTube Gameplay\" links",
+        "show_youtubereviews": "Show \"YouTube Reviews\" links",
         "openinnewtab": "Open external links in a new tab",
         "showbartervg": "Show Barter.vg links",
         "guest": "Items you have a guest pass for",
@@ -525,6 +534,7 @@
         "lowestprice_onwishlist": "Show when hovering over wishlist items",
         "steamrepapi": "Show SteamRep status",
         "profile_steamid": "Show a link to view SteamIDs",
+        "profile_pinned_bg": "Pin the profile background position while scrolling",
         "header": "Header",
         "lowestprice": "Show on app pages",
         "group_events": "Show events on group overview",
@@ -544,7 +554,16 @@
         "replace_view_client": "Replace with \"View in Client\"",
         "show_empty_wishlist": "Show \"Empty Wishlist\" button",
         "show_wishlist_stats": "Show wishlist stats",
-        "show_user_notes": "Show user notes on app pages and your wishlist",
+        "oneclickremovewl": "Skip confirmation when removing items",
+        "user_notes": {
+            "user_notes": "User notes",
+            "app": "On app pages",
+            "wishlist": "On my wishlist",
+            "loc": "Storage location",
+            "synced_storage": "Synced/Local storage",
+            "local": "Local database",
+            "itad": "IsThereAnyDeal server"
+        },
         "inventory_nav_text": "Show advanced navigation on inventory page",
         "carousel_description": "Show app descriptions on storefront carousel",
         "market_total": "Automatically load transaction summary on Market",
@@ -695,7 +714,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ item",
-        "num_items": "__num__ items"
+        "num_items": "__num__ items",
+        "back": "Back to Trade Offers"
     },
     "update": {
         "dont_show": "Don't Show Again",
@@ -730,7 +750,15 @@
         "update": "Update note",
         "add_prompt": "Enter your note",
         "update_prompt": "Update your note",
-        "add_for_game": "Note for __gamename__"
+        "add_for_game": "Note for __gamename__",
+        "not_enough_space": "Not enough space to save note",
+        "not_enough_space_desc": "Augmented Steam can't save any more user notes since your used storage adapter doesn't allow more data to be saved (attempting to use ~__perc__% of the storage capacity).",
+        "close_on_storage": "You are running close on storage",
+        "close_on_storage_desc": "Augmented Steam is close to not being able to save any more user notes (~__perc__% storage usage) with your current storage adapter.",
+        "storage_warning_desc": "You can choose to store your user notes in a local database (without synchronization) or continue using the storage method provided by your browser (where new notes can only be added if you delete some old).",
+        "save_itad": "Save notes on ITAD server",
+        "save_synced_storage": "Continue using synced storage",
+        "save_local": "Store notes locally"
     },
     "queue": {
         "new": "New Queue",

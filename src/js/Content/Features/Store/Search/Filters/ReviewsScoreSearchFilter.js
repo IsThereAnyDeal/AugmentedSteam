@@ -147,13 +147,14 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
     _addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-percentage])")) {
 
         for (const row of rows) {
-            let reviewPercentage = 100;
+            // If this item doesn't have any reviews, exclude it
+            let reviewPercentage = -1;
 
             const reviewsNode = row.querySelector(".search_review_summary");
             if (reviewsNode) {
-                const match = reviewsNode.dataset.tooltipHtml.match(/(\d{1,3})%/);
+                const match = reviewsNode.dataset.tooltipHtml.match(/(?<=%\s?)\d+|\d+(?=\s*%)/);
                 if (match) {
-                    reviewPercentage = Number(match[1]);
+                    reviewPercentage = Number(match[0]);
                 }
             }
 
@@ -170,7 +171,7 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
 
         for (const row of rows) {
             const rowScore = Number(row.dataset.asReviewPercentage);
-            row.classList.toggle("as-reviews-score", rowScore < minScore || rowScore > maxScore);
+            row.classList.toggle("as-reviews-score", rowScore === -1 || rowScore < minScore || rowScore > maxScore);
         }
     }
 }

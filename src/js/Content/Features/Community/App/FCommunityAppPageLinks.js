@@ -4,12 +4,13 @@ import {Feature} from "../../../Modules/Feature/Feature";
 export default class FCommunityAppPageLinks extends Feature {
 
     checkPrerequisites() {
-        return SyncedStorage.get("showsteamdb") || SyncedStorage.get("showitadlinks") || SyncedStorage.get("showbartervg");
+        return (SyncedStorage.get("showsteamdb") || SyncedStorage.get("showitadlinks") || SyncedStorage.get("showbartervg"))
+            && (this._node = document.querySelector(".apphub_OtherSiteInfo")) !== null;
     }
 
     apply() {
 
-        const node = document.querySelector(".apphub_OtherSiteInfo");
+        const node = this._node;
 
         if (SyncedStorage.get("showsteamdb")) {
             HTML.beforeEnd(node, this._makeHeaderLink(

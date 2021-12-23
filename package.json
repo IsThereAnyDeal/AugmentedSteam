@@ -1,29 +1,31 @@
 {
   "scripts": {
-    "build": "node config/scripts/build.cjs"
+    "build": "node config/scripts/build.cjs",
+    "update-locales": "node config/scripts/locales.cjs"
   },
   "devDependencies": {
     "argparse": "^2.0.1",
-    "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.2.1",
-    "css-loader": "^5.0.0",
-    "css-minimizer-webpack-plugin": "^1.1.5",
-    "eslint": "^7.4.0",
-    "eslint-loader": "^4.0.2",
-    "json-minimizer-webpack-plugin": "^1.0.1",
-    "marked": "^2.0.0",
-    "merge-jsons-webpack-plugin": "^1.0.21",
-    "mini-css-extract-plugin": "^1.2.1",
-    "webpack": "^5.3.2",
-    "webpack-cli": "^4.1.0",
+    "axios": "^0.24.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^9.0.1",
+    "css-loader": "^6.5.0",
+    "css-minimizer-webpack-plugin": "^3.1.1",
+    "eslint": "^8.1.0",
+    "filemanager-webpack-plugin": "^6.1.7",
+    "form-data": "^4.0.0",
+    "json-minimizer-webpack-plugin": "^3.1.0",
+    "marked": "^3.0.8",
+    "merge-json-webpack-plugin": "^6.0.0",
+    "mini-css-extract-plugin": "^2.4.3",
+    "webpack": "^5.61.0",
+    "webpack-cli": "^4.9.1",
     "webpack-extension-reloader": "^1.1.4",
-    "webpack-merge": "^5.2.0",
-    "yaml": "^2.0.0-1",
-    "zip-webpack-plugin": "^3.0.0"
+    "webpack-merge": "^5.8.0",
+    "yaml": "^1.10.2"
   },
   "dependencies": {
-    "dompurify": "^2.2.2",
-    "idb": "^5.0.7",
-    "webextension-polyfill": "^0.6.0"
+    "dompurify": "^2.3.3",
+    "idb": "^6.1.5",
+    "webextension-polyfill": "^0.8.0"
   }
 }

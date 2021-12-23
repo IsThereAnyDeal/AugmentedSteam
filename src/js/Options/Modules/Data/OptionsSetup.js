@@ -19,6 +19,7 @@ export default {
 
     // context menu
     "context_steam_store": "options.context_steam_store",
+    "context_steam_market": "options.context_steam_market",
     "context_itad": "options.context_itad",
     "context_bartervg": "options.context_bartervg",
     "context_steamdb": "options.context_steamdb",
@@ -55,10 +56,23 @@ export default {
     // hide
     "hidetmsymbols": "options.hidetmsymbols",
 
+    // store user notes
+    "user_notes_app": "options.user_notes.app",
+    "user_notes_wishlist": "options.user_notes.wishlist",
+    "user_notes_adapter": [
+        "options.user_notes.loc",
+        [
+            ["synced_storage", "options.user_notes.synced_storage"],
+            ["idb", "options.user_notes.local"],
+            // ["itad", "options.user_notes.itad"],
+        ],
+    ],
+
     // store homepage
     "homepage_tab_selection": [
         "options.homepage_default_tab",
         [
+            ["remember", "options.homepage_default_tab_remember"],
             ["tab_newreleases_content_trigger", "options.homepage_default_tab_newreleases"],
             ["tab_topsellers_content_trigger", "options.homepage_default_tab_topsellers"],
             ["tab_upcoming_content_trigger", "options.homepage_default_tab_upcoming"],
@@ -69,6 +83,7 @@ export default {
     // store wishlist
     "showemptywishlist": "options.show_empty_wishlist",
     "showwishliststats": "options.show_wishlist_stats",
+    "oneclickremovewl": "options.oneclickremovewl",
 
     // store app page
     "mp4video": "options.mp4video",
@@ -85,24 +100,23 @@ export default {
     "showmcus": "options.metacritic",
     "showoc": "options.opencritic",
     "showhltb": "options.hltb",
+    "showwsgf": "options.wsgf",
+    "show_steamchart_info": "options.show_steamchart_info",
+    "show_steamspy_info": "options.show_steamspy_info",
+    "showastatslink": "options.show_astatslink",
     "showitadlinks": "options.itadlinks",
     "showsteamdb": "options.steamdb",
     "showbartervg": "options.showbartervg",
-    "showastatslink": "options.show_astatslink",
+    "showsteamcardexchange": "options.store_steamcards",
+    "showprotondb": "options.protondb",
+    "showcompletionistme": "options.completionistme",
+    "showpcgw": "options.pcgw",
+    "showtwitch": "options.twitch",
+    "showyoutube": "options.youtube",
     "showyoutubegameplay": "options.show_youtubegameplay",
     "showyoutubereviews": "options.show_youtubereviews",
-    "showyoutube": "options.youtube",
-    "showtwitch": "options.twitch",
-    "showpcgw": "options.pcgw",
-    "showcompletionistme": "options.completionistme",
-    "showprotondb": "options.protondb",
-    "showwsgf": "options.wsgf",
-    "showsteamcardexchange": "options.store_steamcards",
-    "show_steamchart_info": "options.show_steamchart_info",
-    "show_steamspy_info": "options.show_steamspy_info",
 
     // store general
-    "showusernotes": "options.show_user_notes",
     "horizontalscrolling": "options.horizontalscrolling",
     "show_early_access": "options.show_early_access",
     "show_alternative_linux_icon": "options.show_alternative_linux_icon",
@@ -137,6 +151,8 @@ export default {
     "showinvnav": "options.inventory_nav_text",
 
     // profile
+    "show_custom_themes": "options.show_custom_themes",
+    "profile_pinned_bg": "options.profile_pinned_bg",
     "show_wishlist_link": "options.show_wishlist_link",
     "show_wishlist_count": "options.show_wishlist_count",
     "showsteamrepapi": "options.steamrepapi",
@@ -171,10 +187,9 @@ export default {
     ],
     "showallachievements": "options.showallachievements",
     "showallstats": "options.showallstats",
-    "showcomparelinks": "options.showcomparelinks",
+    "replacecommunityhublinks": "options.replacecommunityhublinks",
     "hidespamcomments": "options.hidespamcomments",
     "steamcardexchange": "options.steamcardexchange",
     "wlbuttoncommunityapp": "options.wlbuttoncommunityapp",
     "removeguideslanguagefilter": "options.removeguideslanguagefilter",
-    "showallfriendsthatown": "options.showallfriendsthatown",
 };

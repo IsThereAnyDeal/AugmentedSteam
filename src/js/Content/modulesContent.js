@@ -22,7 +22,6 @@ export {Background} from "./Modules/Background";
 export {Clipboard} from "./Modules/Clipboard";
 export {CurrencyManager} from "./Modules/CurrencyManager";
 export {DOMHelper} from "./Modules/DOMHelper";
-export {EarlyAccess} from "./Modules/EarlyAccess";
 export {ITAD} from "./Modules/ITAD";
 export {Messenger} from "./Modules/Messenger";
 export {Price} from "./Modules/Price";

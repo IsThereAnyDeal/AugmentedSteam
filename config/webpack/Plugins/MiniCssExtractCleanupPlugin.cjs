@@ -5,16 +5,21 @@
  */
 class MiniCssExtractCleanupPlugin {
     apply(compiler) {
-        compiler.hooks.emit.tapAsync("MiniCssExtractCleanupPlugin", (compilation, callback) => {
-            Object.keys(compilation.assets)
-                .filter(asset => {
-                    return /^css\/.+\.js(\.map)?/.test(asset);
-                })
-                .forEach(asset => {
-                    delete compilation.assets[asset];
-                });
+        compiler.hooks.compilation.tap(this.constructor.name, (compilation) => {
 
-            callback();
+            compilation.hooks.processAssets.tap({
+                "name": `${this.constructor.name}_compilation`,
+                "stage": compilation.PROCESS_ASSETS_STAGE_OPTIMIZE
+            }, (assets) => {
+                Object.keys(assets)
+                    .filter(asset => {
+                        return /^css\/.+\.js(\.map)?/.test(asset);
+                    })
+                    .forEach(asset => {
+                        compilation.deleteAsset(asset);
+                    });
+            });
+
         });
     }
 }

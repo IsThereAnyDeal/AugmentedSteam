@@ -1,5 +1,5 @@
 
-/* eslint-disable no-undef,new-cap */
+/* eslint-disable camelcase,no-undef,new-cap */
 
 // noinspection JSUnresolvedFunction,JSUnresolvedVariable
 class SteamFacade {
@@ -56,10 +56,22 @@ class SteamFacade {
         return CollapseLongStrings(selector);
     }
 
+    static adjustVisibleAppTags(selector) {
+        return AdjustVisibleAppTags($J(selector));
+    }
+
+    static updatePlaytimeFilterValues(hourMin, hourMax) {
+        return UpdatePlaytimeFilterValues(hourMin, hourMax);
+    }
+
     // events
 
     static bindAutoFlyoutEvents() {
         return BindAutoFlyoutEvents();
+    }
+
+    static sliderOnChange(value) {
+        return g_player.SliderOnChange(value);
     }
 
     // dynamic store
@@ -139,6 +151,18 @@ class SteamFacade {
         CScrollOffsetWatcher.ForceRecalc();
     }
 
+    static vSetCookie(strCookieName, strValue, expiryInDays, path) {
+        V_SetCookie(strCookieName, strValue, expiryInDays, path);
+    }
+
+    static checkAgeGateSubmit(callbackFunc) {
+        CheckAgeGateSubmit(callbackFunc);
+    }
+
+    static loadImageGroupOnScroll(elTarget, strGroup) {
+        LoadImageGroupOnScroll(elTarget, strGroup);
+    }
+
     // inventory
 
     static firstPage() {
@@ -168,7 +192,7 @@ class SteamFacade {
     static zoomYearForSellDialog() {
         pricehistory_zoomDays(SellItemDialog.m_plotPriceHistory, SellItemDialog.m_timePriceHistoryEarliest, SellItemDialog.m_timePriceHistoryLatest, 365);
     }
-      
+
     // selections
 
     static updateSelection() {
@@ -176,15 +200,15 @@ class SteamFacade {
     }
 
     static selectAll() {
-        return selectAll();
+        return SelectAll();
     }
 
     static selectNone() {
-        return selectNone();
+        return SelectNone();
     }
 
     static selectInverse() {
-        return selectInverse();
+        return SelectInverse();
     }
 
 
@@ -208,6 +232,10 @@ class SteamFacade {
 
     static jqPost(url, settings) {
         return $J.post(url, settings);
+    }
+
+    static jqTrigger(selector, eventName) {
+        return $J(selector).trigger(eventName);
     }
 }
 

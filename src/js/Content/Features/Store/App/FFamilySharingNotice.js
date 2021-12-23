@@ -12,7 +12,7 @@ export default class FFamilySharingNotice extends Feature {
 
     apply() {
         HTML.beforeBegin("#game_area_purchase",
-            `<div id="purchase_note">
+            `<div>
                 <div class="notice_box_top"></div>
                     <div class="notice_box_content">${Localization.str.family_sharing_notice}</div>
                 <div class="notice_box_bottom"></div>

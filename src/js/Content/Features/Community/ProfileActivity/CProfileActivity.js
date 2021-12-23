@@ -1,7 +1,10 @@
-import {ContextType, EarlyAccess} from "../../../modulesContent";
+import {ContextType} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
 import {CommentHandler} from "../../../Modules/Community/CommentHandler";
+import FEarlyAccess from "../../Common/FEarlyAccess";
 import FHighlightFriendsActivity from "./FHighlightFriendsActivity";
+import FAchievementLink from "./FAchievementLink";
+import FReplaceCommunityHubLinks from "./FReplaceCommunityHubLinks";
 
 export class CProfileActivity extends CCommunityBase {
 
@@ -9,15 +12,25 @@ export class CProfileActivity extends CCommunityBase {
 
         super(ContextType.PROFILE_ACTIVITY, [
             FHighlightFriendsActivity,
+            FAchievementLink,
+            FReplaceCommunityHubLinks,
         ]);
 
-        new MutationObserver(() => {
+        FEarlyAccess.show(document.querySelectorAll(".blotter_gamepurchase_logo, .gameLogoHolder_default"));
 
-            // TODO Only apply on new nodes
-            this.triggerCallbacks();
-            EarlyAccess.showEarlyAccess();
+        this._registerObserver();
+    }
+
+    _registerObserver() {
+
+        new MutationObserver(mutations => {
+
             CommentHandler.hideSpamComments();
 
-        }).observe(document.querySelector("#blotter_content"), {"subtree": true, "childList": true});
+            for (const {addedNodes} of mutations) {
+                this.triggerCallbacks(addedNodes[0]);
+                FEarlyAccess.show(addedNodes[0].querySelectorAll(".blotter_gamepurchase_logo, .gameLogoHolder_default"));
+            }
+        }).observe(document.querySelector("#blotter_content"), {"childList": true});
     }
 }

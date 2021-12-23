@@ -1,5 +1,5 @@
 import {Localization, SyncedStorage} from "../../../../../modulesCore";
-import {EarlyAccess} from "../../../../Modules/EarlyAccess";
+import FEarlyAccess from "../../../Common/FEarlyAccess";
 import {SimpleSearchFilter} from "./SimpleSearchFilter";
 
 export class EarlyAccessSearchFilter extends SimpleSearchFilter {
@@ -27,7 +27,7 @@ export class EarlyAccessSearchFilter extends SimpleSearchFilter {
     async _addRowMetadata(rows) {
         if (!this.active || SyncedStorage.get("show_early_access")) { return; }
 
-        for (const row of await EarlyAccess.getEaNodes(rows)) {
+        for (const row of await FEarlyAccess.getEaNodes(rows)) {
             row.classList.add("es_early_access");
         }
     }

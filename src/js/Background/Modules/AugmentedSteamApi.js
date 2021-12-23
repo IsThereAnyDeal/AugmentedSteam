@@ -45,6 +45,10 @@ class AugmentedSteamApi extends Api {
         return IndexedDB.getAll("rates", {"params": {"to": to.sort().join(",")}});
     }
 
+    static clearRates() {
+        return IndexedDB.clear("rates");
+    }
+
     static isEA(appids) {
         return IndexedDB.contains("earlyAccessAppids", appids);
     }

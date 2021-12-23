@@ -7,7 +7,7 @@
     "invite_friends": "Convidar amigos",
     "invite_to_group": "Convidar para grupo",
     "inverse": "Inverso",
-    "transactionStatus": "Falha em __failed__ solicitação(ões). Foram recuperadas __size__ de __total__ transações.",
+    "transactionStatus": "Falha em __failed__ solicitação(ões). Foram recuperadas __size__ of __total__ transações.",
     "custom_tags": "Marcadores personalzados",
     "add_tag": "Adicionar marcador",
     "enter_tag": "Insira o marcador personalizado que deseja adicionar",
@@ -117,7 +117,7 @@
     "community": "Comunidade",
     "dlc_data_header": "Detalhes do conteúdo adicional",
     "graphics": "Gráficos",
-    "owned_elsewhere": "Você já possui _gametitle_ na _storelist_",
+    "owned_elsewhere": "Você já possui __gametitle__ na __storelist__",
     "trading_cards": "Cartas Colecionáveis Steam",
     "view_badge": "Ver insígnia",
     "purchase_total": "Total de compras:",
@@ -573,11 +573,27 @@
             "export": "Exportar",
             "reset": "Redefinir"
         },
-        "removebroadcasts": "",
-        "maintainers": "",
-        "with_help_of": "",
-        "contributors": "",
-        "apppage": ""
+        "removebroadcasts": "Remover completamente qualquer transmissão ao vivo",
+        "maintainers": "Mantenedores do projeto",
+        "with_help_of": "com muita ajuda dos nossos __contributors__",
+        "contributors": "maravilhosos contribuidores",
+        "apppage": "Página do app",
+        "exfgls": "",
+        "custom_style_disable": "",
+        "saving": "",
+        "user_notes": {
+            "user_notes": "",
+            "app": "",
+            "wishlist": "",
+            "loc": "",
+            "synced_storage": "",
+            "local": "",
+            "itad": ""
+        },
+        "show_custom_themes": "",
+        "oneclickremovewl": "",
+        "profile_pinned_bg": "",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Erro ao carregar dados do Augmented Steam",
@@ -628,7 +644,7 @@
         "notinterested": "Dispensado",
         "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ desejam</a>",
         "collection": "",
-        "waitlist": ""
+        "waitlist": "Na lista de espera"
     },
     "wallet": {
         "custom_amount": "Adicionar quantia personalizada",
@@ -653,13 +669,14 @@
         "send_to_itad": "Enviar dados de jogos na conta para IsThereAnyDeal",
         "sending": "Carregando dados de jogos e pacotes na conta e enviando-os para IsThereAnyDeal.com",
         "info": {
-            "itad-steam": "Conectar Augmented Steam com IsThereAnyDeal permite que você aplique os destaques e as marcações do Augmented Steam aos jogos da sua Lista de espera e Coleção, mesmo que não os possua np Steam.",
+            "itad-steam": "Conectar Augmented Steam com IsThereAnyDeal permite que você aplique os destaques e as marcações do Augmented Steam aos jogos da sua Lista de espera e Coleção, mesmo que não os possua no Steam.",
             "steam-itad": "Além disso, permite que você importe jogos da sua Biblioteca Steam e/ou lista de desejos para IsThereAnyDeal, para melhor precisão (como DLCs ou jogos deslistados). Atualmente, essa ferramenta pode adicionar jogos, mas não removê-los, então não é um substituto para a sincronização integrada do IsThereAnyDeal, mas sim uma adição."
         }
     },
     "tradeoffer": {
         "num_item": "__num__ item",
-        "num_items": "__num__ itens"
+        "num_items": "__num__ itens",
+        "back": ""
     },
     "update": {
         "dont_show": "Não exibir novamente",
@@ -694,7 +711,15 @@
         "update": "Atualizar observação",
         "add_prompt": "Insira a sua observação",
         "update_prompt": "Atualize a sua observação",
-        "add_for_game": "Observação para __gamename__"
+        "add_for_game": "Observação para __gamename__",
+        "not_enough_space": "",
+        "not_enough_space_desc": "",
+        "close_on_storage": "",
+        "close_on_storage_desc": "",
+        "storage_warning_desc": "",
+        "save_itad": "",
+        "save_synced_storage": "",
+        "save_local": ""
     },
     "queue": {
         "new": "Nova lista",
@@ -753,5 +778,12 @@
     "processing": "Processando...",
     "wait": "Aguarde",
     "login_warning": "Confirme que iniciou a sessão no __link__ para usar todos os recursos do Augmented Steam.",
-    "youtube_reviews": "Análises do YouTube"
+    "youtube_reviews": "Análises do YouTube",
+    "download_demo_header": "",
+    "games_common": "",
+    "games_notcommon": "",
+    "shopping_cart_history": "",
+    "manage_webapi_key": "",
+    "steam_cloud_header": "",
+    "steam_cloud_saves": ""
 }

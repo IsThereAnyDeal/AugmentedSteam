@@ -20,4 +20,4 @@ labels: bug
 ### Specifications
 
   - Augmented Steam Version: 
-  - Browser Version : 
+  - Browser Version: 
