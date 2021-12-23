@@ -58,6 +58,10 @@ export default class FSaveReviewFilters extends Feature {
                  */
                 f.jq("input[name=review_playtime_preset]").attr("checked", false); // uncheck all radio buttons
 
+                if (max == 0) {
+                    f.jq(`#review_playtime_preset_${min}`).attr("checked", true);
+                }
+
                 /**
                  * Update playtime slider display
                  * https://github.com/SteamDatabase/SteamTracking/blob/9c64b223ab168c4ce4dacf14fccc3e527f5975ef/store.steampowered.com/public/javascript/game.js#L1608
