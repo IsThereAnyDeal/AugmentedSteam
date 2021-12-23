@@ -32,6 +32,13 @@
 .collectionChoiceSection {
   height: 400px;
 }
+/**
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/pull/1329
+ * Fix clipped bottom section on the interactive recommender page
+ */
+[class^=interactiverecommender_BottomSection] {
+  overflow-y: visible !important;
+}
 
 /* Back To Top button */
 .es_btt {
