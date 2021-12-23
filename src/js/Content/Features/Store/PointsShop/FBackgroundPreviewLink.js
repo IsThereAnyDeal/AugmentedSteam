@@ -13,18 +13,16 @@ export default class FBackgroundPreviewLink extends Feature {
             for (const {addedNodes} of mutations) {
                 if (addedNodes.length !== 1 || !addedNodes[0].classList.contains("FullModalOverlay")) { continue; }
 
-                let videoEl;
-
-                await new Promise(resolve => {
+                const videoEl = await new Promise(resolve => {
                     new MutationObserver((mutations, observer) => {
-                        videoEl = mutations[0].addedNodes[0].querySelector("[class^='redeempointsmodal_BackgroundPreviewContainer'] video");
                         observer.disconnect();
-                        resolve();
+                        resolve(mutations[0].addedNodes[0].querySelector("[class^='redeempointsmodal_BackgroundPreviewContainer'] video"));
                     }).observe(addedNodes[0], {"childList": true, "subtree": true});
                 });
 
                 if (!videoEl) { continue; }
 
+                // Use the first source (usually webm format, should be well supported)
                 const bgLink = videoEl.querySelector("source").src.match(/images\/items\/(\d+)\/([a-z0-9.]+)/i);
                 if (bgLink) {
                     HTML.beforeBegin(addedNodes[0].querySelector("[class^='redeempointsmodal_BackgroundPreviewContainer']"),
