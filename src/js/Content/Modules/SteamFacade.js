@@ -60,6 +60,10 @@ class SteamFacade {
         return AdjustVisibleAppTags($J(selector));
     }
 
+    static updatePlaytimeFilterValues(hourMin, hourMax) {
+        return UpdatePlaytimeFilterValues(hourMin, hourMax);
+    }
+
     // events
 
     static bindAutoFlyoutEvents() {
