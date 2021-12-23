@@ -1802,6 +1802,15 @@ img.astats_icon {
 }
 
 /***************************************
+ * Friend activity page
+ * FToggleComments
+ **************************************/
+.as_comments_toggle {
+  float: right;
+  margin-right: 6px;
+}
+
+/***************************************
  * Market
  * add_market_sort()
  **************************************/

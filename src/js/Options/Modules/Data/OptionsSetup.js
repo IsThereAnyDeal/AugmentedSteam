@@ -160,6 +160,10 @@ export default {
     "profile_showcase_own_twitch": "options.profile_showcase_own_twitch",
     "profile_showcase_twitch_profileonly": "options.profile_showcase_twitch_profileonly",
 
+    // friend activity
+    "replacecommunityhublinks": "options.replacecommunityhublinks",
+    "hideannouncementcomments": "options.hideannouncementcomments",
+
     // community general
     "show_profile_link_images": [
         "options.profile_link_images",
@@ -186,7 +190,6 @@ export default {
     ],
     "showallachievements": "options.showallachievements",
     "showallstats": "options.showallstats",
-    "replacecommunityhublinks": "options.replacecommunityhublinks",
     "hidespamcomments": "options.hidespamcomments",
     "steamcardexchange": "options.steamcardexchange",
     "wlbuttoncommunityapp": "options.wlbuttoncommunityapp",

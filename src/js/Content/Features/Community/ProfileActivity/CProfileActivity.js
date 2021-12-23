@@ -5,6 +5,7 @@ import FEarlyAccess from "../../Common/FEarlyAccess";
 import FHighlightFriendsActivity from "./FHighlightFriendsActivity";
 import FAchievementLink from "./FAchievementLink";
 import FReplaceCommunityHubLinks from "./FReplaceCommunityHubLinks";
+import FToggleComments from "./FToggleComments";
 
 export class CProfileActivity extends CCommunityBase {
 
@@ -14,6 +15,7 @@ export class CProfileActivity extends CCommunityBase {
             FHighlightFriendsActivity,
             FAchievementLink,
             FReplaceCommunityHubLinks,
+            FToggleComments,
         ]);
 
         FEarlyAccess.show(document.querySelectorAll(".blotter_gamepurchase_logo, .gameLogoHolder_default"));

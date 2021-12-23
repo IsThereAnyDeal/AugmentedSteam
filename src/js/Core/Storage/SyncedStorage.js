@@ -176,6 +176,7 @@ SyncedStorage.defaults = Object.freeze({
     "showallachievements": false,
     "showallstats": true,
     "replacecommunityhublinks": false,
+    "hideannouncementcomments": false,
     "showachinstore": true,
     "hideactivelistings": false,
     "showlowestmarketprice": true,

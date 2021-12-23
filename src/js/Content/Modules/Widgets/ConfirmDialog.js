@@ -1,4 +1,5 @@
 import {Page} from "../../Features/Page";
+import {Localization} from "../../../Core/Localization/Localization";
 
 class ConfirmDialog {
 
@@ -22,6 +23,15 @@ class ConfirmDialog {
             strSecondaryActionButton
         ],
         true);
+    }
+
+    static openFeatureHint(optionStr) {
+        return this.open(
+            "Augmented Steam",
+            `${Localization.str.feature_hint.desc}<br><br>${optionStr}<br><br>${Localization.str.feature_hint.reminder}`,
+            Localization.str.thewordyes,
+            Localization.str.thewordno
+        );
     }
 }
 
