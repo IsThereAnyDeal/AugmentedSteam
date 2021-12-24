@@ -99,13 +99,13 @@ export default class FDRMWarnings extends Feature {
 
         const drmNames = [
             [gfwl, "Games for Windows Live"],
-            [uplay, "Ubisoft Uplay"],
+            [uplay, "Ubisoft Connect"],
             [securom, "SecuROM"],
             [tages, "Tages"],
-            [stardock, "Stardock Account Required"],
+            [stardock, "Stardock Account required"],
             [rockstar, "Rockstar Social Club"],
             [kalypso, "Kalypso Launcher"],
-            [denuvo, "Denuvo Anti-tamper"],
+            [denuvo, "Denuvo Anti-Tamper"],
             [origin, "EA Origin"],
             [xbox, "Microsoft Xbox Live"],
         ].flatMap(([enabled, name]) => { return enabled ? [name] : []; });
