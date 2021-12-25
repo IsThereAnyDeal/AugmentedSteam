@@ -72,7 +72,7 @@ export default class FSaveReviewFilters extends Feature {
                  */
                 f.jq("input[name=review_playtime_preset]").attr("checked", false); // uncheck all radio buttons
 
-                if (max == 0) {
+                if (max === 0) {
                     f.jq(`#review_playtime_preset_${min}`).attr("checked", true);
                 }
 
