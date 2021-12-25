@@ -131,11 +131,14 @@ export default class FDRMWarnings extends Feature {
         }
 
         if (drmString) {
+            const html = `<div class="es_drm_warning"><span>${drmString}</span></div>`;
+
+            // Insert the notice after the "Buy this game as a gift for a friend" note if present
             const node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
             if (node) {
-                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${drmString}</span></div>`);
+                HTML.afterEnd(node, html);
             } else {
-                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${drmString}</span></div>`);
+                HTML.afterBegin("#game_area_purchase, #game_area_purchase_top", html);
             }
         }
     }
