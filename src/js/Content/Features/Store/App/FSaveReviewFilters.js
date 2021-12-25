@@ -4,15 +4,26 @@ import {Page} from "../../Page";
 
 export default class FSaveReviewFilters extends Feature {
 
+    checkPrerequisites() {
+        return !document.querySelector("#noReviewsWriteOne");
+    }
+
     apply() {
 
         Messenger.addMessageListener("filtersChanged", () => {
-            LocalStorage.set("review_filters", {
-                "context": document.querySelector("#review_context").value,
-                "language": document.querySelector("input[name=review_language]:checked").id,
-                "minPlaytime": document.querySelector("#app_reviews_playtime_range_min").value,
-                "maxPlaytime": document.querySelector("#app_reviews_playtime_range_max").value,
-            });
+
+            const context = document.querySelector("#review_context").value;
+            const language = document.querySelector("input[name=review_language]:checked").id;
+            const minPlaytime = document.querySelector("#app_reviews_playtime_range_min")?.value;
+            const maxPlaytime = document.querySelector("#app_reviews_playtime_range_max")?.value;
+
+            const value = LocalStorage.get("review_filters");
+            value.context = context;
+            value.language = language;
+            if (minPlaytime) { value.minPlaytime = minPlaytime; }
+            if (maxPlaytime) { value.maxPlaytime = maxPlaytime; }
+
+            LocalStorage.set("review_filters", value);
         });
 
         Page.runInPageContext(({context, language, minPlaytime, maxPlaytime}) => {
@@ -36,7 +47,10 @@ export default class FSaveReviewFilters extends Feature {
                 document.querySelector(`#${language}`).checked = true;
             }
 
-            if (minPlaytime !== "0" || maxPlaytime !== "0") {
+            // Playtime filters may not be available on apps with too few reviews
+            if (document.querySelector("#app_reviews_playtime_range_min") !== null
+                && ((minPlaytime && minPlaytime !== "0") || (maxPlaytime && maxPlaytime !== "0"))
+            ) {
                 filtersChanged = true;
 
                 const upperBound = 100;
