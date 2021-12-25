@@ -1,8 +1,5 @@
+import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {ContextType, Feature} from "../../../modulesContent";
-
-import {HTML} from "../../../../Core/Html/Html";
-import {Localization} from "../../../../Core/Localization/Localization";
-import {SyncedStorage} from "../../../../Core/Storage/SyncedStorage";
 
 export default class FDRMWarnings extends Feature {
 
@@ -112,8 +109,7 @@ export default class FDRMWarnings extends Feature {
             [denuvo, "Denuvo Anti-tamper"],
             [origin, "EA Origin"],
             [xbox, "Microsoft Xbox Live"],
-        ].filter(([enabled]) => enabled)
-            .map(([, name]) => name);
+        ].flatMap(([enabled, name]) => { return enabled ? [name] : []; });
 
         let drmString;
         if (drmNames.length > 0) {
