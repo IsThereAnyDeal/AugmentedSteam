@@ -250,7 +250,11 @@
         "*://steamcommunity.com/id/*/home",
         "*://steamcommunity.com/profiles/*/home",
         "*://steamcommunity.com/id/*/myactivity",
-        "*://steamcommunity.com/profiles/*/myactivity"
+        "*://steamcommunity.com/profiles/*/myactivity",
+        "*://steamcommunity.com/id/*/friendactivitydetail/*",
+        "*://steamcommunity.com/profiles/*/friendactivitydetail/*",
+        "*://steamcommunity.com/id/*/status/*",
+        "*://steamcommunity.com/profiles/*/status/*"
       ],
       "js": [
         "js/community/profile_activity.js"
@@ -428,6 +432,10 @@
         "*://steamcommunity.com/profiles/*/home",
         "*://steamcommunity.com/id/*/myactivity",
         "*://steamcommunity.com/profiles/*/myactivity",
+        "*://steamcommunity.com/id/*/friendactivitydetail/*",
+        "*://steamcommunity.com/profiles/*/friendactivitydetail/*",
+        "*://steamcommunity.com/id/*/status/*",
+        "*://steamcommunity.com/profiles/*/status/*",
         "*://steamcommunity.com/id/*/games*",
         "*://steamcommunity.com/profiles/*/games*",
         "*://steamcommunity.com/id/*/followedgames*",
