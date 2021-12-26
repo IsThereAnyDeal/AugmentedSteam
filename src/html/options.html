@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <link href="../css/augmentedsteam.css" rel="stylesheet" type="text/css">
     <link href="../css/options.css" rel="stylesheet" type="text/css">
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>Augmented Steam Options</title>
     <base target="_blank">
 </head>
@@ -30,35 +30,35 @@
                         <label class="option__label" for="showlanguagewarning" data-locale-text="options.show_languagewarning">Show warning if browsing in a language other than</label>
                         <div class="option__buttons">
                             <select id="warning_language" data-setting="showlanguagewarninglanguage">
-                            <option value="english">English</option>
-                            <option value="bulgarian">български</option>
-                            <option value="czech">čeština</option>
-                            <option value="danish">Dansk</option>
-                            <option value="dutch">Nederlands</option>
-                            <option value="finnish">Suomi</option>
-                            <option value="french">Français</option>
-                            <option value="greek">Ελληνικά</option>
-                            <option value="german">Deutsch</option>
-                            <option value="hungarian">Magyar</option>
-                            <option value="italian">Italiano</option>
-                            <option value="japanese">日本語</option>
-                            <option value="koreana">한국어</option>
-                            <option value="norwegian">Norsk</option>
-                            <option value="polish">Polski</option>
-                            <option value="portuguese">Português</option>
-                            <option value="brazilian">Português-Brasil</option>
-                            <option value="russian">Русский</option>
-                            <option value="romanian">Română</option>
-                            <option value="schinese">汉语</option>
-                            <option value="tchinese">漢語</option>
-                            <option value="spanish">Español</option>
-                            <option value="latam">Español Latinoamericano</option>
-                            <option value="swedish">Svenska</option>
-                            <option value="thai">ไทย</option>
-                            <option value="turkish">Türkçe</option>
-                            <option value="ukrainian">Українська</option>
-                            <option value="vietnamese">Tiếng Việt</option>
-                        </select>
+                                <option value="english">English</option>
+                                <option value="bulgarian">български</option>
+                                <option value="czech">čeština</option>
+                                <option value="danish">Dansk</option>
+                                <option value="dutch">Nederlands</option>
+                                <option value="finnish">Suomi</option>
+                                <option value="french">Français</option>
+                                <option value="greek">Ελληνικά</option>
+                                <option value="german">Deutsch</option>
+                                <option value="hungarian">Magyar</option>
+                                <option value="italian">Italiano</option>
+                                <option value="japanese">日本語</option>
+                                <option value="koreana">한국어</option>
+                                <option value="norwegian">Norsk</option>
+                                <option value="polish">Polski</option>
+                                <option value="portuguese">Português</option>
+                                <option value="brazilian">Português-Brasil</option>
+                                <option value="russian">Русский</option>
+                                <option value="romanian">Română</option>
+                                <option value="schinese">汉语</option>
+                                <option value="tchinese">漢語</option>
+                                <option value="spanish">Español</option>
+                                <option value="latam">Español Latinoamericano</option>
+                                <option value="swedish">Svenska</option>
+                                <option value="thai">ไทย</option>
+                                <option value="turkish">Türkçe</option>
+                                <option value="ukrainian">Українська</option>
+                                <option value="vietnamese">Tiếng Việt</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -266,10 +266,10 @@
 
                 <div class="section js-section">
                     <h2 data-locale-text="options.inventory" class="js-section-head">Inventory</h2>
-                    <div class="parent_option" data-dynamic="quickinv"></div>
+                    <div data-dynamic="quickinv" class="parent_option"></div>
                     <div id="quickinv_opt" class="option option--sub js-sub-option">
                         <label for="quickinv_diff" data-locale-text="options.quickinv_diff">Quick Sale modifier:</label>
-                        <input type="number" step="0.01" id="quickinv_diff" data-setting="quickinv_diff" class="textbox">
+                        <input type="number" step="0.01" id="quickinv_diff" data-setting="quickinv_diff">
                         <button id="quickinv_default" data-locale-text="theworddefault">Default</button>
                     </div>
                     <div data-dynamic="show1clickgoo"></div>
@@ -320,12 +320,12 @@
                     <div data-dynamic="showallstats"></div>
                     <div data-dynamic="replacecommunityhublinks"></div>
                     <div data-dynamic="hidespamcomments" class="parent_option"></div>
-                    <div id="spamcommentregex_list" class="option--sub js-sub-option">
+                    <div id="spamcommentregex_list" class="option option--sub js-sub-option">
                         <label for="spamcommentregex" data-locale-text="options.spamcommentregex">Regular Expression string:</label>
-                        <input type="text" id="spamcommentregex" data-setting="spamcommentregex" class="textbox">
+                        <input type="text" id="spamcommentregex" data-setting="spamcommentregex">
                         <button id="spamcommentregex_default" data-locale-text="theworddefault">Default</button>
                     </div>
-                    <div data-dynamic="steamcardexchange" class="option"></div>
+                    <div data-dynamic="steamcardexchange"></div>
                     <div data-dynamic="wlbuttoncommunityapp"></div>
                     <div data-dynamic="removeguideslanguagefilter"></div>
                 </div>
