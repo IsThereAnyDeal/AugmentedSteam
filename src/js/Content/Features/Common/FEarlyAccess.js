@@ -117,7 +117,7 @@ FEarlyAccess._selector = [
     ".comingsoon_headercap", // explore/upcoming
     ".store_capsule",
     ".dailydeal_ctn",
-    ".special.special_img_ctn",
+    ".special.special_img_ctn", // explore/new, cart/
     /*
      * These use CSS backgrounds instead of img elements, unsupported for now
      * ".store_main_capsule", // Featured & Recommended

@@ -1618,7 +1618,9 @@ img.astats_icon {
 
 .home_content_item .es_overlay_container,
 .small_cap .es_overlay_container,
-.leftcol .es_overlay_container {
+.special.special_img_ctn .es_overlay_container,
+.leftcol .es_overlay_container,
+.review_app_actions .gameLogoHolder_default .es_overlay_container {
   position: relative;
   display: inherit;
 }
