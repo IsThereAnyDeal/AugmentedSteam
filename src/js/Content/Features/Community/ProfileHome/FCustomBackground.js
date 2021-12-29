@@ -1,3 +1,4 @@
+import {HTML} from "../../../../modulesCore";
 import {Feature, ProfileData} from "../../../modulesContent";
 
 export default class FCustomBackground extends Feature {
@@ -27,22 +28,18 @@ export default class FCustomBackground extends Feature {
 
         const isVideo = /(webm|mp4)$/.test(src);
         const profilePage = document.querySelector(".no_header.profile_page");
-        let animatedBgContainer = document.querySelector(".profile_animated_background");
+        const animatedBgContainer = document.querySelector(".profile_animated_background");
 
         if (isVideo) {
             if (animatedBgContainer) {
                 animatedBgContainer.querySelector("video").src = src;
             } else {
+                HTML.afterBegin(profilePage,
+                    `<div class="profile_animated_background">
+                        <video playsinline autoplay muted loop src="${src}"></video>
+                    </div>`);
+
                 profilePage.style.backgroundImage = "none";
-
-                animatedBgContainer = document.createElement("div");
-                animatedBgContainer.classList.add("profile_animated_background");
-
-                const videoEl = document.createElement("video");
-                ["playsinline", "autoplay", "muted", "loop"].forEach(attr => videoEl.setAttribute(attr, ""));
-                videoEl.src = src;
-                animatedBgContainer.append(videoEl);
-                profilePage.prepend(animatedBgContainer);
             }
         } else {
             if (animatedBgContainer) {
