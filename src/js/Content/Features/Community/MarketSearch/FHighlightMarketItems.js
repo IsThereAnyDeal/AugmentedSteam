@@ -4,6 +4,10 @@ import FHighlightsTags from "../../Common/FHighlightsTags";
 
 export default class FHighlightMarketItems extends CallbackFeature {
 
+    checkPrerequisites() {
+        return SyncedStorage.get("highlight_owned");
+    }
+
     setup() {
 
         new MutationObserver(mutations => {
@@ -23,19 +27,24 @@ export default class FHighlightMarketItems extends CallbackFeature {
         this.callback();
     }
 
-    checkPrerequisites() {
-        return SyncedStorage.get("highlight_owned");
-    }
-
     async callback() {
 
-        for (const node of document.querySelectorAll(".market_listing_row_link")) {
-            const m = node.href.match(/market\/listings\/753\/(.+?)(\?|$)/);
-            if (!m) { continue; }
+        const hashNamesMap = new Map();
 
-            // todo Collect hashes and query them all at once
-            if (await Inventory.hasInMarketInventory(decodeURIComponent(m[1]))) {
-                FHighlightsTags.highlightOwned(node.querySelector("div"));
+        for (const node of document.querySelectorAll(".market_listing_row[data-appid]")) {
+            if (node.dataset.appid === "753") {
+                hashNamesMap.set(node.dataset.hashName, node);
+            }
+        }
+
+        if (hashNamesMap.size === 0) { return; }
+
+        const hashNames = Array.from(hashNamesMap.keys());
+        const ownedStatus = await Inventory.hasInMarketInventory(hashNames);
+
+        for (const hashName of hashNames) {
+            if (ownedStatus[hashName]) {
+                FHighlightsTags.highlightOwned(hashNamesMap.get(hashName));
             }
         }
     }
