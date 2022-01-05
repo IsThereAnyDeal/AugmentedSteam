@@ -30,6 +30,20 @@ export default class FProfileDropdownOptions extends Feature {
                     });
                 });
             }
+
+            // Show current nickname in input box
+            Page.runInPageContext(() => {
+                const oldShowNicknameModal = window.ShowNicknameModal;
+
+                window.ShowNicknameModal = function() {
+                    oldShowNicknameModal();
+
+                    const nicknameNode = document.querySelector(".persona_name .nickname");
+                    if (nicknameNode !== null) {
+                        document.querySelector(".newmodal input[type=text]").value = nicknameNode.textContent.trim().slice(1, -1);
+                    }
+                };
+            });
         }
 
         // add post history link

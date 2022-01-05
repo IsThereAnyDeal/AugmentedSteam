@@ -1,10 +1,9 @@
-import {Info, Localization, SyncedStorage} from "../../modulesCore";
+import {Info, LocalStorage, Localization, SyncedStorage} from "../../modulesCore";
 import {
     AugmentedSteam, Background,
     CurrencyManager,
     DOMHelper,
     ITAD, Messenger, ProgressBar,
-    Sortbox,
     UpdateHandler,
     User
 } from "../modulesContent";
@@ -77,7 +76,7 @@ class Page {
                 console.error(err);
             }
 
-            await Promise.all([Localization, User, CurrencyManager]);
+            await Promise.all([LocalStorage, Localization, User, CurrencyManager]);
         } catch (err) {
             console.group("Augmented Steam initialization");
             console.error("Failed to initiliaze Augmented Steam");
@@ -98,7 +97,6 @@ class Page {
         AugmentedSteam.init();
         UpdateHandler.checkVersion(AugmentedSteam.clearCache);
         ITAD.create();
-        Sortbox.init();
         this._pageSpecificFeatures();
 
         const context = new ContextClass();

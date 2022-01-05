@@ -1,6 +1,7 @@
 import {ContextType, ProfileData} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
 import FEarlyAccess from "../../Common/FEarlyAccess";
+import FFixAppImageNotFound from "../FFixAppImageNotFound";
 import FCommunityProfileLinks from "./FCommunityProfileLinks";
 import FWishlistProfileLink from "./FWishlistProfileLink";
 import FSupporterBadges from "./FSupporterBadges";
@@ -40,6 +41,7 @@ export class CProfileHome extends CCommunityBase {
         ProfileData.promise();
 
         super(ContextType.PROFILE_HOME, [
+            FFixAppImageNotFound,
             FCommunityProfileLinks,
             FWishlistProfileLink,
             FSupporterBadges,

@@ -24,8 +24,8 @@ class AugmentedSteam {
                         <a class="popup_menu_item" target="_blank" href="${ExtensionResources.getURL("html/options.html")}">${Localization.str.thewordoptions}</a>
                         <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
                         <div class="hr"></div>
-                        <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/AugmentedSteam">${Localization.str.contribute}</a>
-                        <a class="popup_menu_item" target="_blank" href="https://github.com/tfedor/AugmentedSteam/issues">${Localization.str.bug_feature}</a>
+                        <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam">${Localization.str.contribute}</a>
+                        <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam/issues">${Localization.str.bug_feature}</a>
                         <div class="hr"></div>
                         <a class="popup_menu_item" target="_blank" href="${config.PublicHost}">${Localization.str.website}</a>
                         <a class="popup_menu_item" target="_blank" href="https://isthereanydeal.com/">IsThereAnyDeal</a>
@@ -50,10 +50,10 @@ class AugmentedSteam {
             });
         });
 
-        document.querySelector("#es_clear_cache").addEventListener("click", e => {
+        document.querySelector("#es_clear_cache").addEventListener("click", async e => {
             e.preventDefault();
 
-            AugmentedSteam.clearCache();
+            await AugmentedSteam.clearCache();
             window.location.reload();
         });
     }
@@ -188,8 +188,8 @@ class AugmentedSteam {
         function removeLinkFilter(parent = document) {
             const selector = "a[href*='/linkfilter/']";
 
-            for (const node of parent.querySelectorAll(selector)) {
-                node.href = node.href.replace(/^.+?\/linkfilter\/\?url=/, "");
+            for (const link of parent.querySelectorAll(selector)) {
+                link.href = new URLSearchParams(link.search).get("url");
             }
         }
 
@@ -287,9 +287,10 @@ class AugmentedSteam {
     static _skipGotSteam() {
         if (!SyncedStorage.get("skip_got_steam")) { return; }
 
-        for (const node of document.querySelectorAll("a[href^='javascript:ShowGotSteamModal']")) {
-            node.href = node.href.split("'")[1];
-        }
+        // https://github.com/SteamDatabase/SteamTracking/blob/cdf367ce61926a896fe54d710b3ed25d66d7e333/store.steampowered.com/public/javascript/game.js#L1785
+        Page.runInPageContext(() => {
+            window.ShowGotSteamModal = function(steamUrl) { window.location.assign(steamUrl); };
+        });
     }
 
     static _keepSteamSubscriberAgreementState() {
@@ -354,10 +355,7 @@ class AugmentedSteam {
     }
 
     static clearCache() {
-        localStorage.clear();
-        SyncedStorage.remove("user_currency");
-        SyncedStorage.remove("store_sessionid");
-        Background.action("cache.clear");
+        return Background.action("cache.clear");
     }
 
     static init() {

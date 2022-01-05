@@ -1,4 +1,4 @@
-import {ExtensionResources, HTML, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
+import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {Clipboard, Feature, SteamId, SteamIdDetail} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -14,16 +14,14 @@ export default class FViewSteamId extends Feature {
             const elem = e.target.closest(".es-copy");
             if (!elem) { return; }
 
-            Clipboard.set(elem.querySelector(".es-copy__id").innerText);
+            const result = await Clipboard.set(elem.querySelector(".es-copy__id").textContent);
+            if (!result) { return; }
 
-            const lastCopied = document.querySelector(".es-copy.is-copied");
-            if (lastCopied) {
-                lastCopied.classList.remove("is-copied");
-            }
+            elem.addEventListener("transitionend", () => {
+                elem.classList.remove("is-copied");
+            }, {"once": true});
 
             elem.classList.add("is-copied");
-            await TimeUtils.timer(2000);
-            elem.classList.remove("is-copied");
         }
 
         function showSteamIdDialog() {

@@ -106,10 +106,7 @@ module.exports = {
             ]
         }),
         new MiniCssExtractPlugin({
-            "filename": "[name].css",
-            "options": {
-                "url": false
-            }
+            "filename": "[name].css"
         }),
         new MiniCssExtractCleanupPlugin()
     ],

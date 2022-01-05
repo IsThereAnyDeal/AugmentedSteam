@@ -20,24 +20,27 @@ export class CFriendsAndGroups extends CCommunityBase {
         ]);
 
         this.myProfile = CommunityUtils.currentUserIsOwner();
+        this._moveSearchBar();
 
         Page.runInPageContext(() => {
             window.SteamFacade.jq(document).ajaxSuccess((event, xhr, settings) => {
-                if (/\/(friends|groups)\/?\?ajax=1$/.test(settings.url)) {
+                if (/\/(friends|groups)(\/common)?\/?\?ajax=1$/.test(settings.url)) {
                     window.Messenger.postMessage("subpageNav");
                 }
             });
         });
 
         Messenger.addMessageListener("subpageNav", () => {
-
-            if (document.getElementById("groups_list") !== null) {
-                // move the search bar to the same position as on friends page
-                const container = HTML.wrap('<div class="searchBarContainer"></div>', "#search_text_box");
-                document.getElementById("search_results").insertAdjacentElement("beforebegin", container);
-            }
-
+            this._moveSearchBar();
             this.triggerCallbacks();
         });
+    }
+
+    _moveSearchBar() {
+        if (document.getElementById("groups_list") !== null) {
+            // Move the search bar on groups page to the same position as on friends page
+            const container = HTML.wrap('<div class="searchBarContainer"></div>', "#search_text_box");
+            document.getElementById("search_results").insertAdjacentElement("beforebegin", container);
+        }
     }
 }

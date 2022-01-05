@@ -579,6 +579,7 @@
         "contributors": "協力者たち",
         "apppage": "アプリページ",
         "exfgls": "アプリがファミリーシェアリングから除外された時に通知を送る",
+        "custom_style_disable": "カスタムテーマを無効化",
         "saving": "セーブ中…",
         "user_notes": {
             "user_notes": "",
@@ -589,7 +590,10 @@
             "local": "",
             "itad": ""
         },
-        "show_custom_themes": ""
+        "show_custom_themes": "",
+        "oneclickremovewl": "",
+        "profile_pinned_bg": "",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Augmented Steam のデータロードエラー",
@@ -774,5 +778,12 @@
     "processing": "処理中…",
     "wait": "お待ちください",
     "login_warning": "Augmented Steamのすべての機能を利用するため、__link__にログインしてください。",
-    "youtube_reviews": "YouTubeレビュー"
+    "youtube_reviews": "YouTubeレビュー",
+    "download_demo_header": "",
+    "games_common": "",
+    "games_notcommon": "",
+    "shopping_cart_history": "",
+    "manage_webapi_key": "",
+    "steam_cloud_header": "",
+    "steam_cloud_saves": ""
 }

@@ -579,6 +579,7 @@
         "contributors": "чудесни сътрудници",
         "apppage": "Страница на приложение",
         "exfgls": "Показване на известие, ако приложението е изключено от „Семейно споделяне“",
+        "custom_style_disable": "Преустановяване на персонализирани теми",
         "saving": "Запазване…",
         "user_notes": {
             "user_notes": "Потребителски бележки",
@@ -589,7 +590,10 @@
             "local": "Локална база данни",
             "itad": "IsThereAnyDeal сървър"
         },
-        "show_custom_themes": "Показване на персонализирани теми"
+        "show_custom_themes": "Показване на персонализирани теми",
+        "oneclickremovewl": "Прескачане на потвърждаването, когато се премахват артикули",
+        "profile_pinned_bg": "Закачане на позицията за профилния фон, докато се скролира",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Грешка при зареждане на данните за Augmented Steam",
@@ -774,5 +778,12 @@
     "processing": "Обработване…",
     "wait": "Моля, изчакайте",
     "login_warning": "Уверете се, че сте влезли в __link__, с цел да сте способни да използвате всички характеристики на Augmented Steam.",
-    "youtube_reviews": "YouTube рецензии"
+    "youtube_reviews": "YouTube рецензии",
+    "download_demo_header": "Сваляне на __gamename__ демото",
+    "games_common": "Игри, които притежавате",
+    "games_notcommon": "Игри, които не притежавате",
+    "shopping_cart_history": "Преглед на историята на кошницата за пазаруване",
+    "manage_webapi_key": "Управляване на моя Steam уеб API ключ",
+    "steam_cloud_header": "Steam облак",
+    "steam_cloud_saves": "Преглед на запазеното в облака"
 }

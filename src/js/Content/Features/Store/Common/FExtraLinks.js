@@ -105,19 +105,19 @@ export default class FExtraLinks extends Feature {
                 "enabled": isAppPage && appName && SyncedStorage.get("showtwitch"),
             },
             {
-                "iconClass": "youtube_btn",
+                "iconClass": "as_youtube_btn",
                 "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(appName)}`,
                 "text": Localization.str.view_on_website.replace("__website__", "YouTube"),
                 "enabled": isAppPage && appName && SyncedStorage.get("showyoutube"),
             },
             {
-                "iconClass": "youtube_btn",
+                "iconClass": "as_youtube_btn",
                 "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC Gameplay"`)}`,
                 "text": Localization.str.youtube_gameplay,
                 "enabled": isAppPage && appName && SyncedStorage.get("showyoutubegameplay"),
             },
             {
-                "iconClass": "youtube_btn",
+                "iconClass": "as_youtube_btn",
                 "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC" intitle:Review`)}`,
                 "text": Localization.str.youtube_reviews,
                 "enabled": isAppPage && appName && SyncedStorage.get("showyoutubereviews"),

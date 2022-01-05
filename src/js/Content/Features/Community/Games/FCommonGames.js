@@ -70,8 +70,9 @@ export default class FCommonGames extends Feature {
         if (this._hasCommonGamesLoaded) { return; }
         this._hasCommonGamesLoaded = true;
 
-        const commonUrl = `${window.location.href}&games_in_common=1`;
-        const data = await RequestData.getHttp(commonUrl);
+        const url = new URL(window.location.href);
+        url.searchParams.set("games_in_common", "1");
+        const data = await RequestData.getHttp(url.toString());
 
         const games = HTMLParser.getVariableFromText(data, "rgGames", "array");
         const _commonGames = new Set();

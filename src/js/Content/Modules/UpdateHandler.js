@@ -37,11 +37,11 @@ class UpdateHandler {
         const changelog = await ExtensionResources.getJSON("changelog.json");
         const html = changelog[Info.version];
         if (!html) {
-            throw new Error("Can't find changelog for version %s", Info.version);
+            throw new Error(`Can't find changelog for version ${Info.version}`);
         }
 
         const logo = ExtensionResources.getURL("img/logo/as128.png");
-        const githubChanges = `<p><a href="https://github.com/tfedor/AugmentedSteam/compare/v${SyncedStorage.get("version")}...v${Info.version}">All changes on GitHub</a></p>`;
+        const githubChanges = `<p><a href="https://github.com/IsThereAnyDeal/AugmentedSteam/compare/v${SyncedStorage.get("version")}...v${Info.version}">All changes on GitHub</a></p>`;
         const dialog = `<div class="es_changelog"><img src="${logo}"><div>${html}${githubChanges}</div></div>`;
 
         const connectBtn = document.querySelector("#itad_connect");
@@ -140,6 +140,10 @@ class UpdateHandler {
                 }
             }
             SyncedStorage.set("profile_custom_link", links);
+        }
+
+        if (oldVersion.isSameOrBefore("2.2.1")) {
+            Background.action("migrate.cachestorage");
         }
     }
 }

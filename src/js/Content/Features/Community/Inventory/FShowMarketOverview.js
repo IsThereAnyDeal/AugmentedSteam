@@ -35,15 +35,24 @@ export default class FShowMarketOverview extends CallbackFeature {
 
             try {
                 const currency = CurrencyManager.currencyNumberToType(walletCurrency);
-                const result = await Background.action("market.averagecardprice", {appid, currency});
+                const result = await Background.action("market.averagecardprices",
+                    {
+                        currency,
+                        "appids": appid,
+                        "foilappids": appid
+                    });
 
-                const avgPrice = result.average.toFixed(2) * 100;
+                const avgPrice
+                    = (
+                        (result[appid].foil.average * FShowMarketOverview._foilChance)
+                        + (result[appid].regular.average * (1 - FShowMarketOverview._foilChance))
+                    ).toFixed(2) * 100;
 
                 thisItem.dataset.cardsPrice = await Page.runInPageContext((price, type) => {
                     return window.SteamFacade.vCurrencyFormat(price, type);
                 }, [avgPrice, currency], true);
             } catch (err) {
-                console.error(err);
+                console.error("Failed to retrieve average card prices for appid", appid, err);
             } finally {
                 thisItem.classList.remove("es_avgprice_loading");
             }
@@ -55,8 +64,34 @@ export default class FShowMarketOverview extends CallbackFeature {
             // In own inventory, only add the average price of three cards to booster packs
             if (thisItem.dataset.cardsPrice && thisItem.dataset.cardsPrice !== "nodata") {
 
-                firstDiv.querySelector("div:nth-child(2)")
-                    .append(Localization.str.avg_price_3cards.replace("__price__", thisItem.dataset.cardsPrice));
+                const priceInfoDiv = firstDiv.querySelector("div:nth-child(2)");
+
+                /*
+                 * Due to race conditions the lowest price might have already been fetched (e.g. when request is loaded from cache).
+                 * Therefore the Ajax handler wouldn't get triggered.
+                 * This comparison checks for the existence of the text node "Starting at: ..."
+                 */
+                if (priceInfoDiv.firstChild.nodeType === Node.TEXT_NODE) {
+                    priceInfoDiv.append(Localization.str.avg_price_3cards.replace("__price__", thisItem.dataset.cardsPrice));
+                } else {
+
+                    // Wait for population of the div https://github.com/SteamDatabase/SteamTracking/blob/6c5145935aa0a9f9134e724d89569dfd1f2af014/steamcommunity.com/public/javascript/economy_v2.js#L3563
+                    Page.runInPageContext(hashName => new Promise(resolve => {
+                        function onComplete(response) {
+                            if (!response.url.startsWith("https://steamcommunity.com/market/priceoverview/") || response.parameters.market_hash_name !== hashName) {
+                                return;
+                            }
+
+                            resolve();
+                            window.Ajax.Responders.unregister(onComplete);
+                        }
+
+                        window.Ajax.Responders.register({onComplete});
+                    }), [hashName], true).then(() => {
+                        firstDiv.querySelector("div:nth-child(2)")
+                            .append(Localization.str.avg_price_3cards.replace("__price__", thisItem.dataset.cardsPrice));
+                    });
+                }
             }
 
             return;
@@ -127,3 +162,6 @@ export default class FShowMarketOverview extends CallbackFeature {
         return html;
     }
 }
+
+// https://steamcommunity.com/groups/tradingcards/discussions/1/864969482042344380/#c864969482044786566
+FShowMarketOverview._foilChance = 0.01;

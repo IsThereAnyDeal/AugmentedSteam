@@ -1,11 +1,11 @@
 [![Banner](.github/banner.png)](https://augmentedsteam.com/)
 
 [![Chrome users](https://img.shields.io/chrome-web-store/users/dnhpnfgdlenaccegplpojghhmaamnnfp?label=Chrome%20users&logo=googlechrome)](https://chrome.google.com/webstore/detail/augmented-steam/dnhpnfgdlenaccegplpojghhmaamnnfp)
-[![Firefox users](https://img.shields.io/amo/users/enhanced-steam-an-itad-fork?label=Firefox%20users&color=4c1&logo=firefoxbrowser)](https://addons.mozilla.org/firefox/addon/enhanced-steam-an-itad-fork/)
+[![Firefox users](https://img.shields.io/amo/users/augmented-steam?label=Firefox%20users&color=4c1&logo=firefoxbrowser)](https://addons.mozilla.org/firefox/addon/augmented-steam/)
 [![Edge users](https://img.shields.io/badge/dynamic/json?label=Edge%20users&query=%24.activeInstallCount&url=https://microsoftedge.microsoft.com/addons/getproductdetailsbycrxid/dnpjkgmekpilchdgolfifobohlohlioc&logo=microsoftedge)](https://microsoftedge.microsoft.com/addons/detail/augmented-steam/dnpjkgmekpilchdgolfifobohlohlioc)
 
 [![Discord](https://img.shields.io/discord/301903094080339968?label=Discord&logo=discord)](https://discord.gg/yn57q7f)
-![eslint](https://github.com/tfedor/AugmentedSteam/workflows/eslint/badge.svg)
+![eslint](https://github.com/IsThereAnyDeal/AugmentedSteam/workflows/eslint/badge.svg)
 
 Augmented Steam is a browser extension by [IsThereAnyDeal](https://isthereanydeal.com/) that improves your experience on the [Steam](https://store.steampowered.com/) platform by providing helpful information and tons of customization options.
 
@@ -26,14 +26,14 @@ Some selected features:
 Augmented Steam is a fork and spiritual successor of [Enhanced Steam](https://github.com/jshackles/Enhanced_Steam), which has come to its end of life in February 2019.  
 Visit the [extension's page](https://augmentedsteam.com/) for more information.
 
-[![Chrome download link](https://user-images.githubusercontent.com/14999077/137792613-1a22f12c-9744-4dbe-b0f4-fcb78e197b16.png)](https://chrome.google.com/webstore/detail/augmented-steam/dnhpnfgdlenaccegplpojghhmaamnnfp)
-[![Firefox download link](https://user-images.githubusercontent.com/14999077/137792665-c8a21478-49e4-49b9-bdd1-2ed441f22987.png)](https://addons.mozilla.org/firefox/addon/enhanced-steam-an-itad-fork/)
-[![Edge download link](https://user-images.githubusercontent.com/14999077/137792554-21463932-9e19-4ea5-a0ec-15cd10effe16.png)](https://microsoftedge.microsoft.com/addons/detail/augmented-steam/dnpjkgmekpilchdgolfifobohlohlioc)
+[![Chrome download link](badges/chrome.png)](https://chrome.google.com/webstore/detail/augmented-steam/dnhpnfgdlenaccegplpojghhmaamnnfp)
+[![Firefox download link](badges/firefox.png)](https://addons.mozilla.org/firefox/addon/augmented-steam/)
+[![Edge download link](badges/edge.png)](https://microsoftedge.microsoft.com/addons/detail/augmented-steam/dnpjkgmekpilchdgolfifobohlohlioc)
 
 We like to help you on our [Discord server](https://discord.gg/yn57q7f) in the `#as-general` or `#as-bugs` channels.  
-If you want to report a bug, please use this repository's [issue tracker](https://github.com/tfedor/AugmentedSteam/issues).
+If you want to report a bug, please use this repository's [issue tracker](https://github.com/IsThereAnyDeal/AugmentedSteam/issues).
 
-This is the repository for the extension, not the [server repository](https://github.com/tfedor/AugmentedSteam_Server).
+This is the repository for the extension, not the [server repository](https://github.com/IsThereAnyDeal/AugmentedSteam_Server).
 
 ## Development Setup
 

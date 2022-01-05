@@ -11,37 +11,41 @@ class ManifestTransformerPlugin {
     }
 
     apply(compiler) {
-        compiler.hooks.emit.tapAsync(this.constructor.name, (compilation, callback) => {
-            const asset = compilation.getAsset("manifest.json");
-            const source = asset.source;
+        compiler.hooks.compilation.tap(this.constructor.name, (compilation) => {
 
-            const data = JSON.parse(source.source());
+            compilation.hooks.processAssets.tap({
+                "name": `${this.constructor.name}_compilation`,
+                "stage": compilation.PROCESS_ASSETS_STAGE_PRE_PROCESS
+            }, (assets) => {
+                const manifest = "manifest.json";
+                const source = assets[manifest];
 
-            for (const {matches, exclude_matches, js, css} of data.content_scripts) {
+                const data = JSON.parse(source.source());
 
-                this._addMatchVariants(matches);
+                for (const {matches, exclude_matches, js, css} of data.content_scripts) {
 
-                if (Array.isArray(exclude_matches)) {
-                    this._addMatchVariants(exclude_matches);
+                    this._addMatchVariants(matches);
+
+                    if (Array.isArray(exclude_matches)) {
+                        this._addMatchVariants(exclude_matches);
+                    }
+
+                    for (const path of this._js) {
+                        js.unshift(path);
+                    }
+
+                    for (const path of this._css) {
+                        css.unshift(path);
+                    }
                 }
 
-                for (const path of this._js) {
-                    js.unshift(path);
-                }
+                const result = JSON.stringify(data);
 
-                for (const path of this._css) {
-                    css.unshift(path);
-                }
-            }
-
-            const result = JSON.stringify(data);
-
-            compilation.updateAsset(asset.name, {
-                "size": () => result.length,
-                "source": () => result
+                compilation.updateAsset(manifest, {
+                    "size": () => result.length,
+                    "source": () => result
+                });
             });
-
-            callback();
         });
     }
 

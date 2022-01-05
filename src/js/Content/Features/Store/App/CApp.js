@@ -40,6 +40,7 @@ import FOwnedActionsButtons from "./FOwnedActionsButtons";
 import FSupportInfo from "./FSupportInfo";
 import FRemoveBroadcasts from "./FRemoveBroadcasts";
 import FDemoAbovePurchase from "./FDemoAbovePurchase";
+import FSaveReviewFilters from "./FSaveReviewFilters";
 
 export class CApp extends CStore {
 
@@ -93,6 +94,7 @@ export class CApp extends CStore {
             FMediaExpander,
             FRemoveBroadcasts,
             FDemoAbovePurchase,
+            FSaveReviewFilters,
         ]);
 
         this.userNotes = new UserNotes();

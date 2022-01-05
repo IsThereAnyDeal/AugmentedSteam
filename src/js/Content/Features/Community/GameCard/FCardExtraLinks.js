@@ -5,13 +5,13 @@ export default class FCardExtraLinks extends Feature {
 
     apply() {
 
-        let url = window.location.href;
+        const url = new URL(window.location.href);
         let text;
         if (this.context.isFoil) {
-            url = url.replace(/\?border=1/, "");
+            url.searchParams.delete("border");
             text = Localization.str.view_normal_badge;
         } else {
-            url += "?border=1";
+            url.searchParams.set("border", "1");
             text = Localization.str.view_foil_badge;
         }
 

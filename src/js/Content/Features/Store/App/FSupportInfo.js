@@ -1,12 +1,12 @@
-import {HTML, LocalStorage, Localization, SyncedStorage} from "../../../../modulesCore";
+import {GameId, HTML, LocalStorage, Localization, SyncedStorage} from "../../../../modulesCore";
 import {Background, Feature} from "../../../modulesContent";
 
 export default class FSupportInfo extends Feature {
 
     async checkPrerequisites() {
-        if (this.context.isDlc() || !SyncedStorage.get("showsupportinfo")) { return false; }
+        if (!SyncedStorage.get("showsupportinfo")) { return false; }
 
-        let cache = LocalStorage.get("support_info", null);
+        let cache = LocalStorage.get("support_info");
 
         // todo IDB
         if (!cache || !cache.expiry || cache.expiry < Date.now()) {
@@ -16,7 +16,8 @@ export default class FSupportInfo extends Feature {
             };
         }
 
-        const appid = this.context.appid;
+        // Attempt to get appid of parent app first for DLCs and Soundtracks
+        const appid = GameId.getAppid(document.querySelector(".glance_details a")) || this.context.appid;
         this._supportInfo = cache.data[appid];
 
         if (!this._supportInfo) {
@@ -37,34 +38,30 @@ export default class FSupportInfo extends Feature {
 
     apply() {
 
-        const url = this._supportInfo.url;
-        const email = this._supportInfo.email;
+        const {url, email} = this._supportInfo;
+        const links = [];
 
-        let support = "";
         if (url) {
-            support += `<a href="${url}">${Localization.str.website}</a>`;
+            links.push(`<a href="${url}">${Localization.str.website}</a>`);
         }
 
         if (email) {
-            if (url) {
-                support += ", ";
-            }
 
             // From https://emailregex.com/
             const emailRegex
                 = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
             if (emailRegex.test(email)) {
-                support += `<a href="mailto:${email}">${Localization.str.email}</a>`;
+                links.push(`<a href="mailto:${email}">${Localization.str.email}</a>`);
             } else {
-                support += `<a href="${email}">${Localization.str.contact}</a>`;
+                links.push(`<a href="${email}">${Localization.str.contact}</a>`);
             }
         }
 
         HTML.beforeEnd(".glance_ctn_responsive_left",
             `<div class="release_date" style="padding-bottom: 0;">
                 <div class="subtitle column">${Localization.str.support}:</div>
-                <div class="summary column">${support}</div>
+                <div class="summary column">${links.join(", ")}</div>
             </div>`);
     }
 }

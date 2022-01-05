@@ -1,7 +1,7 @@
 import {TimeUtils} from "../../Core/Utils/TimeUtils";
 import {LocalStorage} from "../../Core/Storage/LocalStorage";
 
-class CacheStorage {
+class CacheStorage extends LocalStorage {
 
     static isExpired(timestamp, ttl) {
         let _ttl = ttl;
@@ -10,39 +10,35 @@ class CacheStorage {
         return timestamp + _ttl <= TimeUtils.now();
     }
 
-    static get(key, ttl, defaultValue) {
-        if (!ttl) { return defaultValue; }
-        let item = localStorage.getItem(`cache_${key}`);
-        if (!item) { return defaultValue; }
-        try {
-            item = JSON.parse(item);
-        } catch (err) {
-            return defaultValue;
+    static get(key) {
+
+        if (typeof this.ttls[key] === "undefined") {
+            console.warn("No TTL specified for cache storage key", key);
+            return this.defaults[key];
         }
-        if (!item.timestamp || CacheStorage.isExpired(item.timestamp, ttl)) { return defaultValue; }
+
+        const item = super.get(key);
+
+        if (!item?.timestamp || this.isExpired(item.timestamp, this.ttls[key])) { return this.defaults[key]; }
         return item.data;
     }
 
     static set(key, value) {
-        localStorage.setItem(`cache_${key}`, JSON.stringify({"data": value, "timestamp": TimeUtils.now()}));
+        return super.set(key, {"data": value, "timestamp": TimeUtils.now()});
     }
 
-    static remove(key) {
-        localStorage.removeItem(`cache_${key}`);
-    }
-
-    static keys() {
-        return LocalStorage.keys()
-            .filter(k => k.startsWith("cache_"))
-            .map(k => k.substring(6)); // "cache_".length == 6
-    }
-
-    static clear() {
-        const keys = CacheStorage.keys();
-        for (const key of keys) {
-            CacheStorage.remove(key);
-        }
+    // TODO Remove after some versions
+    static migrate() {
+        localStorage.removeItem("cache_currency");
     }
 }
+
+CacheStorage.ttls = {
+    "currency": 60 * 60,
+};
+
+CacheStorage.defaults = {
+    "currency": null,
+};
 
 export {CacheStorage};

@@ -54,7 +54,7 @@ class OptionsTranslator {
         this._localizeLanguageOptions();
 
         // this is not very clean, but I can't figure out better solution right now, having it in-place would be nicer
-        const url = "https://github.com/tfedor/AugmentedSteam/graphs/contributors";
+        const url = "https://github.com/IsThereAnyDeal/AugmentedSteam/graphs/contributors";
         HTML.inner(
             document.querySelector(".js-contributors-text"),
             Localization.getString("options.with_help_of")

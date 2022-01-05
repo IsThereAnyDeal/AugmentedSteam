@@ -117,7 +117,7 @@
     "community": "Comunidade",
     "dlc_data_header": "Detalhes do conteúdo adicional",
     "graphics": "Gráficos",
-    "owned_elsewhere": "Você já possui _gametitle_ na _storelist_",
+    "owned_elsewhere": "Você já possui __gametitle__ na __storelist__",
     "trading_cards": "Cartas Colecionáveis Steam",
     "view_badge": "Ver insígnia",
     "purchase_total": "Total de compras:",
@@ -579,6 +579,7 @@
         "contributors": "maravilhosos contribuidores",
         "apppage": "Página do app",
         "exfgls": "",
+        "custom_style_disable": "",
         "saving": "",
         "user_notes": {
             "user_notes": "",
@@ -589,7 +590,10 @@
             "local": "",
             "itad": ""
         },
-        "show_custom_themes": ""
+        "show_custom_themes": "",
+        "oneclickremovewl": "",
+        "profile_pinned_bg": "",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Erro ao carregar dados do Augmented Steam",
@@ -665,7 +669,7 @@
         "send_to_itad": "Enviar dados de jogos na conta para IsThereAnyDeal",
         "sending": "Carregando dados de jogos e pacotes na conta e enviando-os para IsThereAnyDeal.com",
         "info": {
-            "itad-steam": "Conectar Augmented Steam com IsThereAnyDeal permite que você aplique os destaques e as marcações do Augmented Steam aos jogos da sua Lista de espera e Coleção, mesmo que não os possua np Steam.",
+            "itad-steam": "Conectar Augmented Steam com IsThereAnyDeal permite que você aplique os destaques e as marcações do Augmented Steam aos jogos da sua Lista de espera e Coleção, mesmo que não os possua no Steam.",
             "steam-itad": "Além disso, permite que você importe jogos da sua Biblioteca Steam e/ou lista de desejos para IsThereAnyDeal, para melhor precisão (como DLCs ou jogos deslistados). Atualmente, essa ferramenta pode adicionar jogos, mas não removê-los, então não é um substituto para a sincronização integrada do IsThereAnyDeal, mas sim uma adição."
         }
     },
@@ -774,5 +778,12 @@
     "processing": "Processando...",
     "wait": "Aguarde",
     "login_warning": "Confirme que iniciou a sessão no __link__ para usar todos os recursos do Augmented Steam.",
-    "youtube_reviews": "Análises do YouTube"
+    "youtube_reviews": "Análises do YouTube",
+    "download_demo_header": "",
+    "games_common": "",
+    "games_notcommon": "",
+    "shopping_cart_history": "",
+    "manage_webapi_key": "",
+    "steam_cloud_header": "",
+    "steam_cloud_saves": ""
 }

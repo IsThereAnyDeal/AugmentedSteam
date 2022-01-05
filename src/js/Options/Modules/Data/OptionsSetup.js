@@ -19,6 +19,7 @@ export default {
 
     // context menu
     "context_steam_store": "options.context_steam_store",
+    "context_steam_market": "options.context_steam_market",
     "context_itad": "options.context_itad",
     "context_bartervg": "options.context_bartervg",
     "context_steamdb": "options.context_steamdb",
@@ -185,6 +186,7 @@ export default {
     ],
     "showallachievements": "options.showallachievements",
     "showallstats": "options.showallstats",
+    "replacecommunityhublinks": "options.replacecommunityhublinks",
     "hidespamcomments": "options.hidespamcomments",
     "steamcardexchange": "options.steamcardexchange",
     "wlbuttoncommunityapp": "options.wlbuttoncommunityapp",

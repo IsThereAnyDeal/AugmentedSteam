@@ -81,7 +81,7 @@ class SteamStoreApi extends Api {
     }
 
     static async currency() {
-        let currency = CacheStorage.get("currency", 60 * 60);
+        let currency = CacheStorage.get("currency");
         if (currency) { return currency; }
 
         currency = await SteamStoreApi.currencyFromWallet();
@@ -112,7 +112,7 @@ class SteamStoreApi extends Api {
         const self = SteamStoreApi;
 
         // TODO what's the minimal page we can load here to get sessionId?
-        const html = await self.getPage("/news/");
+        const html = await self.getPage("/about/");
         return HTMLParser.getVariableFromText(html, "g_sessionID", "string");
     }
 

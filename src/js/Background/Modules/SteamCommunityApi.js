@@ -23,7 +23,7 @@ class SteamCommunityApi extends Api {
 
     static async getInventory(contextId) {
         const login = LocalStorage.get("login");
-        if (!login) {
+        if (!login.steamId) {
             console.warn("Must be signed in to access Inventory");
             return null;
         }
@@ -307,7 +307,7 @@ class SteamCommunityApi extends Api {
         }
 
         const login = LocalStorage.get("login");
-        if (login && login.profilePath === profilePath) { return login; }
+        if (login.profilePath === profilePath) { return login; }
 
         const html = await self.getPage(profilePath);
         const profileData = HTMLParser.getVariableFromText(html, "g_rgProfileData", "object");

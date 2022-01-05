@@ -8,15 +8,15 @@
   transition: opacity 0.25s ease-in-out;
 }
 /**
- * https://github.com/tfedor/AugmentedSteam/issues/485
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/485
  * Always show "View all comments" links on friends activity page
  */
 .blotter_viewallcomments_container {
   display: block !important;
 }
 /**
- * https://github.com/tfedor/AugmentedSteam/issues/397
- * https://github.com/tfedor/AugmentedSteam/issues/545
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/397
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/545
  * Fix long-shaped artwork thumbnails
  */
 .publishedfile_popup_screenshot, .publishedfile_popup_screenshot > img, .profile_media_item, .imgWallItem {
@@ -26,11 +26,18 @@
   min-width: 720px !important;
 }
 /**
- * https://github.com/tfedor/AugmentedSteam/issues/1254
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/1254
  * Increase height of collection choice section
  */
 .collectionChoiceSection {
   height: 400px;
+}
+/**
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/pull/1329
+ * Fix clipped bottom section on the interactive recommender page
+ */
+[class^=interactiverecommender_BottomSection] {
+  overflow-y: visible !important;
 }
 
 /* Back To Top button */
@@ -287,30 +294,6 @@ img.astats_icon {
   margin-top: 10px;
 }
 
-.es_text_input {
-  background-color: #4d4b49;
-  border: 1px solid #82807c;
-  color: #ffffff;
-  height: 18px;
-  padding: 2px 4px 3px 4px;
-}
-#es_custom_money_amount {
-  width: 54px;
-}
-.giftcard_selection #es_custom_money_amount {
-  height: 15px;
-  vertical-align: middle;
-}
-.addfunds_area_purchase_game #es_custom_money_amount {
-  margin-top: -5px;
-}
-.es_custom_money .giftcard_corner {
-  filter: hue-rotate(160deg);
-}
-.es_custom_money .giftcard_text.small {
-  font-size: 14px !important;
-}
-
 .itad-pricing {
   padding: 5px 5px 5px 42px;
   height: auto !important;
@@ -451,6 +434,38 @@ img.astats_icon {
 }
 .performance-graph .right-bar span {
   padding-left: 5px;
+}
+
+/***************************************
+ * Funds page
+ * FCustomGiftcardAndWallet
+ **************************************/
+#es_custom_money_input {
+  background-color: #4d4b49;
+  border: 1px solid #82807c;
+  color: #ffffff;
+  height: 18px;
+  padding: 2px 4px 3px 4px;
+  width: 54px;
+}
+.giftcard_selection #es_custom_money_input {
+  height: 15px;
+  vertical-align: middle;
+}
+.addfunds_area_purchase_game #es_custom_money_input {
+  margin-top: -5px;
+}
+.es_custom_money a {
+  cursor: pointer;
+}
+.es_custom_money a .giftcard_style {
+  cursor: default;
+}
+.es_custom_money .giftcard_corner {
+  filter: hue-rotate(160deg);
+}
+.es_custom_money .giftcard_text.small {
+  font-size: 14px !important;
 }
 
 /***************************************
@@ -1255,6 +1270,53 @@ img.astats_icon {
 
 /***************************************
  * App pages
+ * Common/UserNotes
+ **************************************/
+.es_note_prompt {
+  /* Long app titles stretch the modal but this element doesn't scale since it's width is 500 px at max */
+  width: auto !important;
+}
+#es_note_input {
+  height: 112px;
+  font-size: 14px !important;
+}
+
+#esi-user-note-button .esi-add-note,
+#esi-user-note-button .esi-update-note {
+  display: none;
+}
+#esi-user-note-button:not(.esi-has-note) .esi-add-note,
+#esi-user-note-button.esi-has-note .esi-update-note {
+  display: inline-block;
+}
+
+.esi-note {
+  font-size: 11px;
+  height: fit-content;
+  flex-grow: 2;
+  margin-top: 5px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+.esi-note--store {
+  font-size: 1.4em;
+  font-style: italic;
+  margin-top: 20px;
+  display: none;
+}
+.esi-note--store.esi-has-note {
+  display: block;
+}
+.esi-note--wishlist {
+  font-style: italic;
+}
+.esi-note--wishlist.esi-has-note {
+  font-style: normal;
+  color: #5fafdd;
+}
+
+/***************************************
+ * App pages
  * Common/FRegionalPricing
  **************************************/
 .es_regional_prices .game_purchase_action,
@@ -1383,7 +1445,7 @@ img.astats_icon {
 }
 
 /**
- * https://github.com/tfedor/AugmentedSteam/issues/389
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/389
  * Fix unclickable dropdowns
  */
 .ds_options_tooltip {
@@ -2169,43 +2231,6 @@ label.es_dlc_label > input:checked::after {
   font-weight: 300;
 }
 
-.es_note_prompt {
-  /* Long app titles stretch the modal but this element doesn't scale since it's width is 500 px at max */
-  width: auto !important;
-}
-
-#es_note_input {
-  height: 112px;
-  font-size: 14px !important;
-}
-
-.esi-note {
-  font-size: 11px;
-  height: fit-content;
-  margin-top: 5px;
-  flex-grow: 2;
-  margin-right: 5px;
-  cursor: pointer;
-}
-
-.esi-empty-note {
-  font-style: italic;
-}
-
-.esi-user-note {
-  color: #5fafdd;
-}
-
-.esi-note--store {
-  font-size: 1.4em;
-  font-style: italic;
-  margin-top: 20px;
-}
-
-.esi-note--hidden {
-  display: none;
-}
-
 #es_new_queue {
   width: 150px;
   margin-right: -10px;
@@ -2452,13 +2477,14 @@ label.es_dlc_label > input:checked::after {
 }
 .es-copy__copied {
   opacity: 0;
-  transition: opacity 200ms;
+  transition: opacity .2s .6s;
   margin-left: 20px;
   color: #999;
   font-size: 0.95em;
 }
 .es-copy.is-copied .es-copy__copied {
   opacity: 1;
+  transition: opacity .2s 0s;
 }
 
 /***************************************

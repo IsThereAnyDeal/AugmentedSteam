@@ -1,8 +1,7 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {Localization, SyncedStorage} from "../../../../modulesCore";
 import {Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
 import {CapacityInfo, OutOfCapacityError, UserNotesAdapter} from "../../../../Core/Storage/UserNotesAdapter";
-import {SyncedStorage} from "../../../../Core/Storage/SyncedStorage";
 
 class UserNotes {
     constructor() {
@@ -40,11 +39,11 @@ class UserNotes {
 
     delete(...args) { return this._adapter.delete(...args); }
 
-    async showModalDialog(appname, appid, nodeSelector, onNoteUpdate) {
+    async showModalDialog(appname, appid, noteEl, onNoteUpdate) {
 
         let note = await this.get(appid) || "";
 
-        // Partly copied from shared_global.js
+        // Partly copied `ShowConfirmDialog` from shared_global.js
         Page.runInPageContext((title, template, strSave, strCancel) => {
             /* eslint-disable no-undef, new-cap, camelcase */
 
@@ -80,43 +79,54 @@ class UserNotes {
             noteInput.focus();
             noteInput.setSelectionRange(0, noteInput.textLength);
 
+            // Native keyup handler ignores events on <textarea>'s https://github.com/SteamDatabase/SteamTracking/blob/b8f3721153355d82005e621b167969f6c1f27bdf/steamcommunity.com/public/shared/javascript/shared_global.js#L459
+            noteInput.addEventListener("keydown", e => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    okBtn.trigger("click");
+                }
+            });
+
             deferred.promise(modal);
 
             modal
-                .done(note => { window.Messenger.postMessage("noteClosed", note); })
-                .fail(() => { window.Messenger.postMessage("noteClosed", null); });
+                .done(note => {
+                    window.sessionStorage.removeItem("es_note_autosave");
+                    window.Messenger.postMessage("noteClosed", note);
+                })
+                .fail(() => {
+                    if (noteInput.value.trim() !== "") {
+                        window.sessionStorage.setItem("es_note_autosave", noteInput.value);
+                    }
+                    window.Messenger.postMessage("noteClosed", null);
+                });
 
             modal.Show();
-            /* eslint-enable no-undef */
+            /* eslint-enable no-undef, new-cap, camelcase */
         },
         [
             this._str.add_for_game.replace("__gamename__", appname),
-            this.noteModalTemplate.replace("__appid__", appid).replace("__note__", note)
-                .replace("__selector__", encodeURIComponent(nodeSelector)),
+            this.noteModalTemplate.replace("__note__", note || window.sessionStorage.getItem("es_note_autosave") || ""),
             Localization.str.save,
             Localization.str.cancel,
-        ],
-        true);
+        ]);
 
         const oldNote = note;
 
         note = await Messenger.onMessage("noteClosed");
-        if (note === null) { return; }
-
-        note = HTML.escape(note);
-        if (note === oldNote) { return; }
-
-        const node = document.querySelector(nodeSelector);
+        if (note === null || note === oldNote) { return; }
 
         if (note.length === 0) {
             this.delete(appid);
-            node.textContent = this._str.add;
+            noteEl.textContent = this._str.add;
         } else {
-            if (!await this.set(appid, note)) { return; }
-            HTML.inner(node, `"${note}"`);
+            if (!await this.set(appid, note)) {
+                window.sessionStorage.setItem("es_note_autosave", note);
+                return;
+            }
+            noteEl.textContent = `"${note}"`;
         }
 
-        onNoteUpdate(node, note.length !== 0);
+        onNoteUpdate(noteEl, note.length !== 0);
     }
 
     async _showDialog(exceeded, ratio) {

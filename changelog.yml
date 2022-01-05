@@ -1,3 +1,30 @@
+2.2.1: |
+  Hotfix for the occasional overwriting of ranked order of your wishlist.
+
+  New features:
+  - Missing app images will now be replaced with proper images
+  - Added option to replace community hub links with store page links on friend activity feed
+
+  Fixes:
+  - Your wishlist ranked order will no longer be overwritten, which happend occassionaly under specific conditions
+  - Manually changing the wishlist ranked order didn't work in the "Your rank" view
+  - Pressing Enter while entering user notes will now close and save the note (Shift + Enter for a new line)
+  - Improved average card price calculation for booster packs
+  - Restore option "Search Steam Market for '...'" for context menus
+  - Average card price for booster packs sometimes didn't show up
+
+
+2.2.0: |
+  New:
+  - Added option to skip confirmation dialog when removing games from your wishlist
+  - Wishlist rankings will now remain editable when any sorting or filtering options are active
+  - Added option to pin profile backgrounds, so that they won't move when scrolling
+  - Added two new custom profile themes (Golden 2020 & Winter 2019)
+
+  Bug fixes:
+  - Review filters on the search page now work for every language
+  - Firefox only: Games without a note note no longer show "undefined"
+
 2.1.0: |
   - Automatically show price with coupon on game page, when coupon is available
   - Add option for showing "excluded from family sharing" notice

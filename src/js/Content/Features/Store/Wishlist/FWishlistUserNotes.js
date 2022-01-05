@@ -10,19 +10,18 @@ export default class FWishlistUserNotes extends CallbackFeature {
 
     setup() {
         this._userNotes = new UserNotes();
+        this._noteEl = HTML.element(`<div class="esi-note esi-note--wishlist ellipsis">${Localization.str.user_note.add}</div>`);
 
         document.addEventListener("click", ({target}) => {
             if (!target.classList.contains("esi-note")) { return; }
 
             const row = target.closest(".wishlist_row");
-            const appid = Number(row.dataset.appId);
             this._userNotes.showModalDialog(
                 row.querySelector("a.title").textContent.trim(),
-                appid,
-                `.wishlist_row[data-app-id="${appid}"] div.esi-note`,
+                Number(row.dataset.appId),
+                target,
                 (node, active) => {
-                    node.classList.toggle("esi-empty-note", !active);
-                    node.classList.toggle("esi-user-note", active);
+                    node.classList.toggle("esi-has-note", active);
                 }
             );
         });
@@ -35,22 +34,18 @@ export default class FWishlistUserNotes extends CallbackFeature {
         for (const node of nodes) {
             if (node.classList.contains("esi-has-note")) { continue; }
 
+            const noteEl = this._noteEl.cloneNode(true);
             const appid = Number(node.dataset.appId);
-            let noteText;
-            let cssClass;
 
             (async() => {
                 const note = await this._userNotes.get(appid);
 
-                if (note === null) {
-                    noteText = Localization.str.user_note.add;
-                    cssClass = "esi-empty-note";
-                } else {
-                    noteText = `"${note}"`;
-                    cssClass = "esi-user-note";
+                if (note !== null) {
+                    noteEl.textContent = `"${note}"`;
+                    noteEl.classList.add("esi-has-note");
                 }
 
-                HTML.afterEnd(node.querySelector(".mid_container"), `<div class="esi-note ${cssClass} ellipsis">${noteText}</div>`);
+                node.querySelector(".mid_container").insertAdjacentElement("afterend", noteEl);
                 node.classList.add("esi-has-note");
 
                 if (node === lastNode) {

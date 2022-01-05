@@ -579,6 +579,7 @@
         "contributors": "",
         "apppage": "",
         "exfgls": "",
+        "custom_style_disable": "",
         "saving": "",
         "user_notes": {
             "user_notes": "",
@@ -589,7 +590,10 @@
             "local": "",
             "itad": ""
         },
-        "show_custom_themes": ""
+        "show_custom_themes": "",
+        "oneclickremovewl": "",
+        "profile_pinned_bg": "",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Lỗi tải dữ liệu Augmented Steam",
@@ -774,5 +778,12 @@
     "processing": "Đang xử lý...",
     "wait": "Xin chờ",
     "login_warning": "Đảm bảo bạn đã đăng nhập vào __link__ để sử dụng tất cả các tính năng của Augmented Steam.",
-    "youtube_reviews": "Nhận xét Youtube"
+    "youtube_reviews": "Nhận xét Youtube",
+    "download_demo_header": "",
+    "games_common": "",
+    "games_notcommon": "",
+    "shopping_cart_history": "",
+    "manage_webapi_key": "",
+    "steam_cloud_header": "",
+    "steam_cloud_saves": ""
 }

@@ -487,7 +487,7 @@
         "changelog": "Changelog:",
         "owned": "Giochi che possiedi",
         "itadlinks": "Visualizza i link di IsThereAnyDeal",
-        "steamdb": "Mostra pulsante di SteamDB",
+        "steamdb": "Mostra pulsante di Steam Database",
         "hide_early_access": "Nascondi giochi ad Accesso Anticipato su homepage, sfoglia e ricerca",
         "reset_note": "Impostazioni ripristinate",
         "profiles_link_group_game": "Gioco esclusivo",
@@ -579,6 +579,7 @@
         "contributors": "",
         "apppage": "",
         "exfgls": "",
+        "custom_style_disable": "",
         "saving": "",
         "user_notes": {
             "user_notes": "",
@@ -589,7 +590,10 @@
             "local": "",
             "itad": ""
         },
-        "show_custom_themes": ""
+        "show_custom_themes": "",
+        "oneclickremovewl": "",
+        "profile_pinned_bg": "",
+        "replacecommunityhublinks": ""
     },
     "ready": {
         "errormsg": "Errore nel caricamento di Augmented Steam",
@@ -774,5 +778,12 @@
     "processing": "Elaborazione in corso...",
     "wait": "Attendere prego",
     "login_warning": "Assicurati di aver effettuato l'accesso a __link__ per poter utilizzare tutte le funzionalità di Augmented Steam.",
-    "youtube_reviews": "Recensioni su YouTube"
+    "youtube_reviews": "Recensioni su YouTube",
+    "download_demo_header": "",
+    "games_common": "",
+    "games_notcommon": "",
+    "shopping_cart_history": "",
+    "manage_webapi_key": "",
+    "steam_cloud_header": "",
+    "steam_cloud_saves": ""
 }

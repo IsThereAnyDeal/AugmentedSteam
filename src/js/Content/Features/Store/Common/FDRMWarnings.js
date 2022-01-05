@@ -1,8 +1,5 @@
+import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {ContextType, Feature} from "../../../modulesContent";
-
-import {HTML} from "../../../../Core/Html/Html";
-import {Localization} from "../../../../Core/Localization/Localization";
-import {SyncedStorage} from "../../../../Core/Storage/SyncedStorage";
 
 export default class FDRMWarnings extends Feature {
 
@@ -10,18 +7,53 @@ export default class FDRMWarnings extends Feature {
         if (!SyncedStorage.get("showdrm")) { return false; }
 
         // Prevent false-positives
-        return !this.context.type === ContextType.APP || (
-            this.context.appid !== 21690 // Resident Evil 5, at Capcom's request
+        return (this.context.appid !== 216900 // Resident Evil 5, at Capcom's request
             && this.context.appid !== 1157970 // Special K
         );
     }
 
     apply() {
 
-        let text = "";
-        for (const node of document.querySelectorAll(".game_area_sys_req, #game_area_legal, .game_details, .DRM_notice")) {
-            text += node.textContent.toLowerCase();
+        const isAppPage = this.context.type === ContextType.APP;
+
+        function getTextFromDRMNotices() {
+            if (!isAppPage) { return []; }
+
+            const value = [];
+            for (const node of document.querySelectorAll(".DRM_notice")) {
+                if (!node.querySelector("a[onclick^=ShowEULA]")) {
+                    value.push(node.textContent);
+                }
+            }
+            return value;
         }
+
+        function getTextFromGameDetails() {
+            if (isAppPage) { return ""; } // Only bundle/sub pages have DRM info in game details
+
+            let value = "";
+            let node = document.querySelector(".language_list");
+            if (!node) { return ""; }
+            node = node.nextSibling;
+            while (node !== null) {
+                value += node.textContent;
+                node = node.nextSibling;
+            }
+            return value;
+        }
+
+        let text = "";
+        for (const node of document.querySelectorAll(".game_area_sys_req, #game_area_legal")) {
+            text += node.textContent;
+        }
+
+        const drmNotices = getTextFromDRMNotices();
+        text += drmNotices.join("");
+
+        const gameDetails = getTextFromGameDetails();
+        text += gameDetails;
+
+        text = text.toLowerCase();
 
         // Games for Windows Live detection
         const gfwl
@@ -76,42 +108,32 @@ export default class FDRMWarnings extends Feature {
             [denuvo, "Denuvo Anti-tamper"],
             [origin, "EA Origin"],
             [xbox, "Microsoft Xbox Live"],
-        ].filter(([enabled]) => enabled)
-            .map(([, name]) => name);
+        ].flatMap(([enabled, name]) => { return enabled ? [name] : []; });
 
         let drmString;
         if (drmNames.length > 0) {
-            drmString = this.context.type === ContextType.APP
-                ? Localization.str.drm_third_party
-                : Localization.str.drm_third_party_sub;
-
+            drmString = isAppPage ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
             drmString = drmString.replace("__drmlist__", `(${drmNames.join(", ")})`);
-
-        } else { // Detect other DRM
+        } else {
             const regex = /\b(drm|account|steam)\b/i;
-            if (this.context.type === ContextType.APP) {
-                for (const node of document.querySelectorAll("#category_block > .DRM_notice")) {
-                    const text = node.textContent;
-                    if (regex.test(text)) {
-                        drmString = text;
-                        break;
-                    }
-                }
+
+            // Display the first "DRM Notice" or the text in game details that matches DRM/3rd party accounts
+            if (isAppPage) {
+                drmString = drmNotices.find(text => regex.test(text));
             } else {
-                const node = document.querySelector(".game_details .details_block > p > b:last-of-type");
-                const text = node.textContent + node.nextSibling.textContent;
-                if (regex.test(text)) {
-                    drmString = text;
-                }
+                drmString = regex.test(gameDetails) && gameDetails;
             }
         }
 
         if (drmString) {
+            const html = `<div class="es_drm_warning"><span>${drmString}</span></div>`;
+
+            // Insert the notice after the "Buy this game as a gift for a friend" note if present
             const node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
             if (node) {
-                HTML.afterEnd(node, `<div class="game_area_already_owned es_drm_warning"><span>${drmString}</span></div>`);
+                HTML.afterEnd(node, html);
             } else {
-                HTML.afterBegin("#game_area_purchase", `<div class="es_drm_warning"><span>${drmString}</span></div>`);
+                HTML.afterBegin("#game_area_purchase, #game_area_purchase_top", html);
             }
         }
     }
