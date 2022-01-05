@@ -124,7 +124,7 @@ export default class FExtraLinks extends Feature {
                 HTML.beforeBegin("h2.pageheader",
                     `<div class="es_apphub_OtherSiteInfo">
                         <a class="btnv6_blue_hoverfade btn_medium" href="//steamcommunity.com/app/${this._gameid}/">
-                            <span>Community Hub</span>
+                            <span>${Localization.str.community_hub}</span>
                         </a>
                     </div>`);
             } else {
