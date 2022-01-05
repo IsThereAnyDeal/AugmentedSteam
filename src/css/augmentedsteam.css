@@ -2268,13 +2268,6 @@ label.es_dlc_label > input:checked::after {
   width: 90%;
 }
 
-.es_hltb a.linkbar > img,
-.es_wsgf a.linkbar > img,
-.es_dlc_info a.linkbar > img,
-.es_bundle_info > img {
-  border: 0;
-  vertical-align: baseline;
-}
 
 .es_hltb .details_block span {
   float: right;
