@@ -9,19 +9,4 @@ export class CPointsShop extends Context {
             FBackgroundPreviewLink,
         ]);
     }
-
-    async applyFeatures() {
-
-        const root = document.querySelector("#application_root");
-        if (root.childElementCount === 0) {
-            await new Promise(resolve => {
-                new MutationObserver((mutations, observer) => {
-                    observer.disconnect();
-                    resolve();
-                }).observe(root, {"childList": true});
-            });
-        }
-
-        super.applyFeatures();
-    }
 }
