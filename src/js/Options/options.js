@@ -337,7 +337,9 @@ const Options = (() => {
             "tag_inv_guestpass",
             "tag_notinterested",
             "tag_collection",
-            "tag_waitlist"].forEach(addHandlerToSetDefaultColor);
+            "tag_waitlist",
+            "user_notes_app",
+            "user_notes_wishlist"].forEach(addHandlerToSetDefaultColor);
 
         document.getElementById("spamcommentregex_default")
             .addEventListener("click", () => setValue("#spamcommentregex", "[\\u2500-\\u25FF]"));

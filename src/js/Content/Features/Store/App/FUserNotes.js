@@ -27,12 +27,14 @@ export default class FUserNotes extends Feature {
 
         const userNotes = this.context.userNotes;
         const note = await userNotes.get(this.context.appid);
+        const color = SyncedStorage.get("user_notes_app_color");
 
         if (note !== null) {
             button.classList.add("esi-has-note");
 
             noteEl.textContent = `"${note}"`;
             noteEl.classList.add("esi-has-note");
+            noteEl.style.color = color;
         }
 
         const handler = () => {
@@ -43,6 +45,7 @@ export default class FUserNotes extends Feature {
                 (node, active) => {
                     button.classList.toggle("esi-has-note", active);
                     node.classList.toggle("esi-has-note", active);
+                    node.style.color = active ? color : null;
                 }
             );
         };

@@ -11,6 +11,7 @@ export default class FWishlistUserNotes extends CallbackFeature {
     setup() {
         this._userNotes = new UserNotes();
         this._noteEl = HTML.element(`<div class="esi-note esi-note--wishlist ellipsis">${Localization.str.user_note.add}</div>`);
+        this._color = SyncedStorage.get("user_notes_wishlist_color");
 
         document.addEventListener("click", ({target}) => {
             if (!target.classList.contains("esi-note")) { return; }
@@ -22,6 +23,7 @@ export default class FWishlistUserNotes extends CallbackFeature {
                 target,
                 (node, active) => {
                     node.classList.toggle("esi-has-note", active);
+                    node.style.color = active ? this._color : null;
                 }
             );
         });
@@ -43,6 +45,7 @@ export default class FWishlistUserNotes extends CallbackFeature {
                 if (note !== null) {
                     noteEl.textContent = `"${note}"`;
                     noteEl.classList.add("esi-has-note");
+                    noteEl.style.color = this._color;
                 }
 
                 node.querySelector(".mid_container").insertAdjacentElement("afterend", noteEl);

@@ -153,6 +153,8 @@ SyncedStorage.defaults = Object.freeze({
     "showemptywishlist": true,
     "user_notes_app": true,
     "user_notes_wishlist": true,
+    "user_notes_app_color": "#c6d4df",
+    "user_notes_wishlist_color": "#5fafdd",
     "showwishliststats": true,
     "oneclickremovewl": false,
     "user_notes": {},
