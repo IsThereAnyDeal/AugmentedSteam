@@ -5,12 +5,6 @@ export default class FGroupLinks extends Feature {
 
     apply() {
 
-        let iconType = "none";
-        const images = SyncedStorage.get("show_profile_link_images");
-        if (images !== "none") {
-            iconType = images === "color" ? "color" : "gray";
-        }
-
         const links = [
             {
                 "id": "steamgifts",
@@ -20,9 +14,11 @@ export default class FGroupLinks extends Feature {
         ];
 
         let html = "";
-        for (const link of links) {
-            if (!SyncedStorage.get(`group_${link.id}`)) { continue; }
-            html += CommunityUtils.makeProfileLink(link.id, link.link, link.name, iconType);
+        const iconType = SyncedStorage.get("show_profile_link_images");
+
+        for (const {id, link, name} of links) {
+            if (!SyncedStorage.get(`group_${id}`)) { continue; }
+            html += CommunityUtils.makeProfileLink(id, link, name, iconType);
         }
 
         if (html) {
