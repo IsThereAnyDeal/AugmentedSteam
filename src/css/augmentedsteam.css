@@ -1472,6 +1472,12 @@ img.astats_icon {
   padding: 16px;
 }
 
+/* Copied from apphub.css, which isn't loaded on error pages */
+.es_apphub_OtherSiteInfo {
+  position: relative;
+  float: right;
+}
+
 /***************************************
  * Version update dialog
  **************************************/

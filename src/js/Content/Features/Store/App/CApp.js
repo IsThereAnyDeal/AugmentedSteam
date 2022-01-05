@@ -45,11 +45,11 @@ import FSaveReviewFilters from "./FSaveReviewFilters";
 export class CApp extends CStore {
 
     constructor() {
-
         // Only add extra links if there's an error message (e.g. region-locked, age-gated)
-        if (document.getElementById("error_box")) {
+        if (document.getElementById("error_box") !== null) {
             super(ContextType.APP, [FExtraLinks]);
 
+            this.isErrorPage = true;
             this.appid = GameId.getAppid(window.location.host + window.location.pathname);
 
             return;

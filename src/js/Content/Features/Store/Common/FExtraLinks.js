@@ -10,10 +10,8 @@ export default class FExtraLinks extends Feature {
             this._type = "app";
             this._gameid = context.appid;
 
-            const errorBox = document.querySelector("#error_box");
-            if (errorBox) {
-                this._node = errorBox;
-                this._isErrorPage = true;
+            if (context.isErrorPage) {
+                this._node = document.querySelector("#error_box");
             } else {
                 this._node = document.querySelector("#shareEmbedRow");
             }
@@ -50,12 +48,6 @@ export default class FExtraLinks extends Feature {
 
         // Note: Links should be rendered in the same order as displayed on the options page
         const links = [
-            {
-                "link": `https://steamcommunity.com/app/${this._gameid}/`,
-                "text": "Community Hub",
-                "iconUrl": "none",
-                "enabled": this._isErrorPage,
-            },
             {
                 "iconClass": "itad_ico",
                 "link": `https://isthereanydeal.com/steam/${this._type}/${this._gameid}/`,
@@ -126,9 +118,18 @@ export default class FExtraLinks extends Feature {
 
         if (isAppPage) {
 
-            // Move share/embed links to the top of the right column
-            if (!this._isErrorPage) {
+            if (this.context.isErrorPage) {
 
+                // Add a Community Hub button to roughly where it normally is
+                HTML.beforeBegin("h2.pageheader",
+                    `<div class="es_apphub_OtherSiteInfo">
+                        <a class="btnv6_blue_hoverfade btn_medium" href="//steamcommunity.com/app/${this._gameid}/">
+                            <span>Community Hub</span>
+                        </a>
+                    </div>`);
+            } else {
+
+                // Move share/embed links to the top of the right column
                 const sideDetails = document.querySelector(".es_side_details_wrap");
                 if (sideDetails) {
                     sideDetails.insertAdjacentElement("afterend", this._node);
@@ -161,7 +162,7 @@ export default class FExtraLinks extends Feature {
         }
 
         if (html) {
-            if (this._isErrorPage) {
+            if (this.context.isErrorPage) {
                 HTML.afterEnd(this._node, `<div class="es_extralinks_ctn">${html}</div>`);
             } else {
                 HTML.afterBegin(this._node, html);
