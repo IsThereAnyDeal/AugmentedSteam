@@ -1470,6 +1470,7 @@ img.astats_icon {
   width: max-content;
   background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
   padding: 16px;
+  margin: auto;
 }
 
 /* Copied from apphub.css, which isn't loaded on error pages */
