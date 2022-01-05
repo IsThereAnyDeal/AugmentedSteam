@@ -13,19 +13,23 @@ export default class FBackgroundPreviewLink extends Feature {
             for (const {addedNodes} of mutations) {
                 if (addedNodes.length !== 1 || !addedNodes[0].classList.contains("FullModalOverlay")) { continue; }
 
-                const videoEl = await new Promise(resolve => {
+                const previewEl = await new Promise(resolve => {
                     new MutationObserver((mutations, observer) => {
                         observer.disconnect();
-                        resolve(mutations[0].addedNodes[0].querySelector("[class^='redeempointsmodal_BackgroundPreviewContainer'] video"));
+                        resolve(mutations[0].addedNodes[0].querySelector("[class^=redeempointsmodal_PreviewBackgroundContainer]").lastElementChild);
                     }).observe(addedNodes[0], {"childList": true, "subtree": true});
                 });
 
-                if (!videoEl) { continue; }
+                if (!previewEl) { continue; }
 
-                // Use the first source (usually webm format, should be well supported)
-                const bgLink = videoEl.querySelector("source").src.match(/images\/items\/(\d+)\/([a-z0-9.]+)/i);
+                let bgLink = (previewEl instanceof HTMLVideoElement)
+                    ? previewEl.querySelector("source").src // Use the first source (usually webm format, should be well supported)
+                    : previewEl.style.backgroundImage;
+
+                bgLink = bgLink.match(/images\/items\/(\d+)\/([a-z0-9.]+)/i);
+
                 if (bgLink) {
-                    HTML.beforeBegin(addedNodes[0].querySelector("[class^='redeempointsmodal_BackgroundPreviewContainer']"),
+                    HTML.beforeBegin(addedNodes[0].querySelector("[class^=redeempointsmodal_BackgroundPreviewContainer]"),
                         `<div class="as_preview_background_ctn">
                             <a class="as_preview_background" target="_blank" href="${User.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
                                 ${Localization.str.preview_background}
