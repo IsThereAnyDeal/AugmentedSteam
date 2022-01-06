@@ -22,10 +22,10 @@ export default Object.freeze({
     "GAME_CARD": 20,
     "FRIENDS_THAT_PLAY": 21,
     "FRIENDS": 22, // unused
-    "GROUPS": 23, // unused
+    "MARKET_SEARCH": 23,
     "INVENTORY": 24,
     "MARKET_LISTING": 25,
-    "MARKET": 26,
+    "MARKET_HOME": 26,
     "PROFILE_HOME": 27,
     "GROUP_HOME": 28,
     "GUIDES": 29,

@@ -370,13 +370,22 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/market/*"
-      ],
-      "exclude_matches": [
-        "*://steamcommunity.com/market/listings/*"
+        "*://steamcommunity.com/market/search",
+        "*://steamcommunity.com/market/search/*"
       ],
       "js": [
-        "js/community/market.js"
+        "js/community/market_search.js"
+      ],
+      "css": [
+        "css/augmentedsteam.css"
+      ]
+    },
+    {
+      "matches": [
+        "*://steamcommunity.com/market"
+      ],
+      "js": [
+        "js/community/market_home.js"
       ],
       "css": [
         "css/augmentedsteam.css"
@@ -562,6 +571,7 @@
         "*://steamcommunity.com/profiles/*",
         "*://steamcommunity.com/workshop",
         "*://steamcommunity.com/workshop/browse*",
+        "*://steamcommunity.com/market",
         "*://steamcommunity.com/market/*",
         "*://steamcommunity.com/groups/*",
         "*://steamcommunity.com/app/*",
