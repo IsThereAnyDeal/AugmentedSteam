@@ -11,11 +11,12 @@ export default class FSteamSpy extends Feature {
         }
 
         const result = await this.context.data;
-        if (result && result.steamspy && result.steamspy.owners) {
-            this._data = result.steamspy;
+        if (!result || !result.steamspy || !result.steamspy.owners) {
+            return false;
         }
 
-        return typeof this._data !== "undefined";
+        this._data = result.steamspy;
+        return true;
     }
 
     apply() {

@@ -11,14 +11,16 @@ export default class FSteamChart extends Feature {
         }
 
         const result = await this.context.data;
-        if (result && result.charts && result.charts.chart && result.charts.chart.peakall) {
-            this._chart = result.charts.chart;
+        if (!result || !result.charts || !result.charts.chart || !result.charts.chart.peakall) {
+            return false;
         }
 
-        return typeof this._chart !== "undefined";
+        this._chart = result.charts.chart;
+        return true;
     }
 
     apply() {
+
         HTML.beforeBegin(document.querySelector(".sys_req").parentNode,
             `<div id="steam-charts" class="game_area_description">
                 <h2>${Localization.str.charts.current}</h2>

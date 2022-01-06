@@ -4,14 +4,19 @@ import {HTML, Localization} from "../../../../modulesCore";
 export default class FSurveyData extends Feature {
 
     async checkPrerequisites() {
-        if (this.context.isVideo || this.context.isDlc || !document.querySelector(".sys_req")) { return false; }
-
-        const result = await this.context.data;
-        if (result && result.survey) {
-            this._survey = result.survey;
+        if (this.context.isVideo
+            || this.context.isDlc
+            || !document.querySelector(".sys_req")) {
+            return false;
         }
 
-        return typeof this._survey !== "undefined";
+        const result = await this.context.data;
+        if (!result || !result.survey) {
+            return false;
+        }
+
+        this._survey = result.survey;
+        return true;
     }
 
     apply() {

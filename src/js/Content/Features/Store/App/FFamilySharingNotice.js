@@ -7,7 +7,11 @@ export default class FFamilySharingNotice extends Feature {
         if (!SyncedStorage.get("exfgls")) { return false; }
 
         const result = await this.context.data;
-        return result && result.exfgls && result.exfgls.excluded;
+        if (!result || !result.exfgls || !result.exfgls.excluded) {
+            return false;
+        }
+
+        return true;
     }
 
     apply() {
