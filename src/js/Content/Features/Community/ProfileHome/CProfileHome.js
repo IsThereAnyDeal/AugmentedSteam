@@ -19,8 +19,8 @@ import FPinnedBackground from "./FPinnedBackground";
 export class CProfileHome extends CCommunityBase {
 
     constructor() {
-        // If there is an error message, like profile does not exists.
-        if (document.getElementById("message")) {
+        // Don't apply features if there's an error message (e.g. non-existent profile)
+        if (document.getElementById("message") !== null) {
             super(ContextType.PROFILE_HOME);
             return;
         }
