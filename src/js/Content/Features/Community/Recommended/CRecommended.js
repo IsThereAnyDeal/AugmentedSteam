@@ -11,6 +11,6 @@ export class CRecommended extends CCommunityBase {
             FReviewSort,
         ]);
 
-        FEarlyAccess.show(document.querySelectorAll(".leftcol > a"));
+        FEarlyAccess.show(document.querySelectorAll(".leftcol > a, .gameLogoHolder_default"));
     }
 }
