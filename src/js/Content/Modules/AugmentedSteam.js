@@ -186,7 +186,7 @@ class AugmentedSteam {
     static _cartLink() {
         // There are two menus; one for responsive (mobile) and one for "unresponsive" (desktop) design
         for (const wishlistLink of document.querySelectorAll(".submenu_store > .submenuitem[href='https://steamcommunity.com/my/wishlist/']")) {
-            HTML.afterEnd(wishlistLink, `<a class="submenuitem" href="https://store.steampowered.com/cart/">Cart</a>`);
+            HTML.afterEnd(wishlistLink, `<a class="submenuitem" href="https://store.steampowered.com/cart/">${Localization.str.cart}</a>`);
         }
     }
 

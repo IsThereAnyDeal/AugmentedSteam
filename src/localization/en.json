@@ -7,6 +7,7 @@
         "calc_size": "Calculate Total Size",
         "total_size": "Total size: __size__"
     },
+    "cart": "Cart",
     "steamid_of_user": "__user__'s SteamID",
     "click_to_copy": "Click to copy",
     "copied": "Copied to your clipboard!",
