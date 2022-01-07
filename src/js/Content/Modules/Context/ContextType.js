@@ -39,5 +39,6 @@ export default Object.freeze({
     "BOOSTER_CREATOR": 37,
     "TRADE_OFFER": 38,
     "FRIENDS_AND_GROUPS": 39,
+    "POINTS_SHOP": 40,
 });
 

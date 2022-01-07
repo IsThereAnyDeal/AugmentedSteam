@@ -183,6 +183,18 @@
     },
     {
       "matches": [
+        "*://*.steampowered.com/points/shop",
+        "*://*.steampowered.com/points/shop/*"
+      ],
+      "js": [
+        "js/store/points_shop.js"
+      ],
+      "css": [
+        "css/augmentedsteam.css"
+      ]
+    },
+    {
+      "matches": [
         "*://*.steampowered.com/*"
       ],
       "exclude_matches": [
@@ -214,7 +226,9 @@
         "*://*.steampowered.com/bundle/*",
         "*://*.steampowered.com/sub/*",
         "*://*.steampowered.com/app/*",
-        "*://*.steampowered.com/agecheck/*"
+        "*://*.steampowered.com/agecheck/*",
+        "*://*.steampowered.com/points/shop",
+        "*://*.steampowered.com/points/shop/*"
       ],
       "js": [
         "js/store/default.js"
