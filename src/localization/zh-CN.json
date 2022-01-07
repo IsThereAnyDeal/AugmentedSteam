@@ -593,7 +593,9 @@
         "show_custom_themes": "显示自定义主题",
         "oneclickremovewl": "删除物品时跳过确认",
         "profile_pinned_bg": "滚动时固定个人资料背景位置",
-        "replacecommunityhublinks": ""
+        "replacecommunityhublinks": "在好友动态中，将社区中心链接替换为商店页面链接",
+        "hideannouncementcomments": "",
+        "friend_activity": ""
     },
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",
@@ -785,5 +787,15 @@
     "shopping_cart_history": "查看购物车历史记录",
     "manage_webapi_key": "管理我的 Steam Web API 密钥",
     "steam_cloud_header": "Steam 云",
-    "steam_cloud_saves": "查看云存储"
+    "steam_cloud_saves": "查看云存储",
+    "community_hub": "",
+    "cart": "",
+    "feature_hint": {
+        "desc": "",
+        "reminder": ""
+    },
+    "thewordyes": "",
+    "thewordno": "",
+    "show_comments": "",
+    "hide_comments": ""
 }

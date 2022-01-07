@@ -592,8 +592,10 @@
         },
         "show_custom_themes": "Mostrar temas personalizados",
         "oneclickremovewl": "Omitir confirmación al remover artículos",
-        "profile_pinned_bg": "",
-        "replacecommunityhublinks": ""
+        "profile_pinned_bg": "Fijar la posición del fondo de perfil mientras me mueva con la rueda del ratón",
+        "replacecommunityhublinks": "Reemplazar los enlaces del centro de la comunidad con enlaces a la página de la tienda de cada juego en el feed de actividad de amigos",
+        "hideannouncementcomments": "",
+        "friend_activity": ""
     },
     "ready": {
         "errormsg": "Error al cargar datos de Augmented Steam",
@@ -782,8 +784,18 @@
     "download_demo_header": "Descargar demo de __gamename__",
     "games_common": "Juegos que tienes",
     "games_notcommon": "Juegos que no tienes",
-    "shopping_cart_history": "",
-    "manage_webapi_key": "",
-    "steam_cloud_header": "",
-    "steam_cloud_saves": ""
+    "shopping_cart_history": "Ver mi historial del carrito de compras",
+    "manage_webapi_key": "Administrar mi clave de API web de Steam",
+    "steam_cloud_header": "Nube de Steam",
+    "steam_cloud_saves": "Ver guardados en la nube",
+    "community_hub": "",
+    "cart": "",
+    "feature_hint": {
+        "desc": "",
+        "reminder": ""
+    },
+    "thewordyes": "",
+    "thewordno": "",
+    "show_comments": "",
+    "hide_comments": ""
 }

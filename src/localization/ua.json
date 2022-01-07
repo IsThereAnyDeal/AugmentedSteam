@@ -593,7 +593,9 @@
         "show_custom_themes": "Відображати користувацькі теми",
         "oneclickremovewl": "Пропускати підтвердження при видаленні ігор",
         "profile_pinned_bg": "Зафіксувати положення тла профілю при прокручуванні",
-        "replacecommunityhublinks": ""
+        "replacecommunityhublinks": "",
+        "hideannouncementcomments": "",
+        "friend_activity": ""
     },
     "ready": {
         "errormsg": "Помилка завантаження даних Augmented Steam",
@@ -785,5 +787,15 @@
     "shopping_cart_history": "Переглянути історію кошику",
     "manage_webapi_key": "Керування ключем Steam Web API",
     "steam_cloud_header": "Steam Cloud",
-    "steam_cloud_saves": "Переглянути ігри, які збережено до вашої Steam Cloud"
+    "steam_cloud_saves": "Переглянути ігри, які збережено до вашої Steam Cloud",
+    "community_hub": "",
+    "cart": "",
+    "feature_hint": {
+        "desc": "",
+        "reminder": ""
+    },
+    "thewordyes": "",
+    "thewordno": "",
+    "show_comments": "",
+    "hide_comments": ""
 }

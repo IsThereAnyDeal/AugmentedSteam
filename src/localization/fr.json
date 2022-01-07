@@ -593,7 +593,9 @@
         "show_custom_themes": "Afficher les thèmes personnalisés",
         "oneclickremovewl": "Ignorer la confirmation lors de la suppression d'objets",
         "profile_pinned_bg": "Épinglez la position de l'arrière-plan du profil pendant le défilement",
-        "replacecommunityhublinks": ""
+        "replacecommunityhublinks": "Remplacer les liens vers les hubs de la communauté par des liens vers le magasin sur le fil d'activité des contacts",
+        "hideannouncementcomments": "",
+        "friend_activity": ""
     },
     "ready": {
         "errormsg": "Erreur lors du chargement des données d'Augmented Steam",
@@ -785,5 +787,15 @@
     "shopping_cart_history": "Afficher l'historique du panier",
     "manage_webapi_key": "Gérer ma clé Steam Web API",
     "steam_cloud_header": "Steam Cloud",
-    "steam_cloud_saves": "Afficher les sauvegardes du cloud"
+    "steam_cloud_saves": "Afficher les sauvegardes du cloud",
+    "community_hub": "",
+    "cart": "",
+    "feature_hint": {
+        "desc": "",
+        "reminder": ""
+    },
+    "thewordyes": "",
+    "thewordno": "",
+    "show_comments": "",
+    "hide_comments": ""
 }

@@ -593,7 +593,9 @@
         "show_custom_themes": "顯示自訂主題",
         "oneclickremovewl": "移除項目時跳過確認訊息",
         "profile_pinned_bg": "捲動時固定個人檔案背景",
-        "replacecommunityhublinks": ""
+        "replacecommunityhublinks": "",
+        "hideannouncementcomments": "",
+        "friend_activity": ""
     },
     "ready": {
         "errormsg": "Augmented Steam 資料載入錯誤",
@@ -785,5 +787,15 @@
     "shopping_cart_history": "檢視購物車歷史紀錄",
     "manage_webapi_key": "管理我的 Steam Web API 金鑰",
     "steam_cloud_header": "Steam 雲端",
-    "steam_cloud_saves": "檢視雲端存檔"
+    "steam_cloud_saves": "檢視雲端存檔",
+    "community_hub": "",
+    "cart": "",
+    "feature_hint": {
+        "desc": "",
+        "reminder": ""
+    },
+    "thewordyes": "",
+    "thewordno": "",
+    "show_comments": "",
+    "hide_comments": ""
 }

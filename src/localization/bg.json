@@ -593,7 +593,9 @@
         "show_custom_themes": "Показване на персонализирани теми",
         "oneclickremovewl": "Прескачане на потвърждаването, когато се премахват артикули",
         "profile_pinned_bg": "Закачане на позицията за профилния фон, докато се скролира",
-        "replacecommunityhublinks": ""
+        "replacecommunityhublinks": "Подмяна на връзките за обществени центрове с такива за страниците в магазина от емисията за дейност на приятели",
+        "hideannouncementcomments": "",
+        "friend_activity": ""
     },
     "ready": {
         "errormsg": "Грешка при зареждане на данните за Augmented Steam",
@@ -785,5 +787,15 @@
     "shopping_cart_history": "Преглед на историята на кошницата за пазаруване",
     "manage_webapi_key": "Управляване на моя Steam уеб API ключ",
     "steam_cloud_header": "Steam облак",
-    "steam_cloud_saves": "Преглед на запазеното в облака"
+    "steam_cloud_saves": "Преглед на запазеното в облака",
+    "community_hub": "",
+    "cart": "",
+    "feature_hint": {
+        "desc": "",
+        "reminder": ""
+    },
+    "thewordyes": "",
+    "thewordno": "",
+    "show_comments": "",
+    "hide_comments": ""
 }

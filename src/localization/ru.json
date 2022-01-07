@@ -593,7 +593,9 @@
         "show_custom_themes": "Показывать пользовательские темы",
         "oneclickremovewl": "Пропускать подтверждение удаления предметов",
         "profile_pinned_bg": "Закрепить положение фонового изображения во время прокрутки",
-        "replacecommunityhublinks": "Заменить ссылки на центры сообществ ссылками на страницы магазинов в ленте активности"
+        "replacecommunityhublinks": "Заменить ссылки на центры сообществ ссылками на страницы магазинов в ленте активности",
+        "hideannouncementcomments": "",
+        "friend_activity": ""
     },
     "ready": {
         "errormsg": "Ошибка загрузки данных Augmented Steam",
@@ -785,5 +787,15 @@
     "shopping_cart_history": "Посмотреть историю корзины",
     "manage_webapi_key": "Редактировать ключ Steam Web API",
     "steam_cloud_header": "Облако Steam",
-    "steam_cloud_saves": "Посмотреть сохранения в облаке"
+    "steam_cloud_saves": "Посмотреть сохранения в облаке",
+    "community_hub": "",
+    "cart": "",
+    "feature_hint": {
+        "desc": "",
+        "reminder": ""
+    },
+    "thewordyes": "",
+    "thewordno": "",
+    "show_comments": "",
+    "hide_comments": ""
 }
