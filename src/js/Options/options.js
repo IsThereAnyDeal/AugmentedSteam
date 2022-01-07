@@ -230,7 +230,7 @@ const Options = (() => {
                         throw new Error("Could not grant / remove the permissions");
                     }
 
-                    if (PermissionOptions[option].permissions.includes("contextMenus")) {
+                    if (option.startsWith("context_")) {
                         ContextMenu.update();
                     }
                 } catch (err) {
