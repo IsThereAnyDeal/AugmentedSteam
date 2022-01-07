@@ -1467,7 +1467,7 @@ img.astats_icon {
   margin-bottom: 0px;
 }
 .es_extralinks_ctn {
-  width: max-content;
+  text-align: center;
   background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
   padding: 16px;
   margin: auto;
