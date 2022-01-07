@@ -15,7 +15,7 @@ const changelog = fs.readFileSync(changelogPath, {
 const json = YAML.parse(changelog);
 const latestVersion = Object.keys(json)[0];
 
-const releaseDir = `${releasesPath}${latestVersion}_test`;
+const releaseDir = `${releasesPath}${latestVersion}`;
 const sourceDir = `${releaseDir}/source`;
 
 if (fs.existsSync(releaseDir)) {
