@@ -166,20 +166,21 @@ class AugmentedSteam {
     }
 
     static _addUsernameSubmenuLinks() {
-        const node = document.querySelector(".supernav_container .submenu_username");
-
-        HTML.afterEnd(
-            node.querySelector("a"),
-            `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`
-        );
-        HTML.afterEnd(
-            node.querySelector("a:nth-child(2)"),
-            `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`
-        );
-        HTML.beforeEnd(
-            node,
-            `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`
-        );
+        // There are two menus; one for responsive (mobile) and one for "unresponsive" (desktop) design
+        for (const node of document.querySelectorAll(".submenu_username")) {
+            HTML.afterEnd(
+                node.querySelector("a"),
+                `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`
+            );
+            HTML.afterEnd(
+                node.querySelector("a:nth-child(2)"),
+                `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`
+            );
+            HTML.beforeEnd(
+                node,
+                `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`
+            );
+        }
     }
 
     static _cartLink() {
