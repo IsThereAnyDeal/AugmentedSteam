@@ -21,7 +21,7 @@ export default class FHighlightMarketItems extends CallbackFeature {
 
         const hashNamesMap = new Map();
 
-        for (const node of document.querySelectorAll(".market_listing_row[data-appid]")) {
+        for (const node of document.querySelectorAll(".market_listing_row")) {
             if (node.dataset.appid === "753") {
                 hashNamesMap.set(node.dataset.hashName, node);
             }
