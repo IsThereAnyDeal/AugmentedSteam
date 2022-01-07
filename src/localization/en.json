@@ -1,5 +1,13 @@
 {
     "download_demo_header": "Download __gamename__ Demo",
+    "feature_hint": {
+        "desc": "Would you like to enable the following feature?",
+        "reminder": "You can change your preferences through the options page later."
+    },
+    "thewordyes": "Yes",
+    "thewordno": "No",
+    "show_comments": "Show Comments",
+    "hide_comments": "Hide Comments",
     "calc_workshop_size": {
         "file_size": "File size __size__",
         "finished": "Finished",
@@ -453,7 +461,8 @@
         "name": "Name",
         "show_alternative_linux_icon": "Show alternative Linux icon",
         "showcomparelinks": "Show \"Compare\" links for achievements on friend activity feed",
-        "replacecommunityhublinks": "Replace community hub links with store page links on friend activity feed",
+        "replacecommunityhublinks": "Replace community hub links with store page links",
+        "hideannouncementcomments": "Hide comments under all group announcements by default",
         "hidetmsymbols": "Trademark and Copyright symbols in game titles",
         "metacritic": "Show Metacritic user scores",
         "opencritic": "Show Opencritic ratings and reviews",
@@ -569,6 +578,7 @@
         "inventory": "Inventory",
         "profile": "Profile",
         "group": "Group",
+        "friend_activity": "Friend Activity Feed",
         "group_links": "Options for links to 3rd party sites",
         "show_languagewarning": "Show warning if browsing in a language other than",
         "homepage": "Homepage",
