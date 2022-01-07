@@ -1453,6 +1453,33 @@ img.astats_icon {
 }
 
 /***************************************
+ * App pages
+ * Common/FExtraLinks
+ **************************************/
+.es_app_btn {
+  display: block !important;
+  margin-bottom: 6px;
+}
+.es_app_btn .ico16 {
+  margin-right: 12px !important;
+}
+.es_extralinks_ctn .es_app_btn:last-of-type {
+  margin-bottom: 0px;
+}
+.es_extralinks_ctn {
+  width: max-content;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
+  padding: 16px;
+  margin: auto;
+}
+
+/* Copied from apphub.css, which isn't loaded on error pages */
+.es_apphub_OtherSiteInfo {
+  position: relative;
+  float: right;
+}
+
+/***************************************
  * Version update dialog
  **************************************/
 .es_changelog {
@@ -2171,12 +2198,6 @@ label.es_dlc_label > input:checked::after {
   vertical-align: top;
 }
 
-
-/* right column 3rd party sites buttons */
-.rightcol.game_meta_data .es_app_btn {
-  display: block;
-  margin-bottom: 6px;
-}
 
 .esi-shown {
   display: block !important;
