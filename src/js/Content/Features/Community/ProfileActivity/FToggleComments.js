@@ -49,7 +49,7 @@ export default class FToggleComments extends CallbackFeature {
 
     _toggleComments(commentArea, btnEl, hide) {
         commentArea.style.display = hide ? "none" : "";
-        btnEl.classList[hide ? "add" : "remove"]("as-comments-hidden");
+        btnEl.classList.toggle("as-comments-hidden", hide);
         btnEl.querySelector("span").textContent = Localization.str[hide ? "show_comments" : "hide_comments"];
     }
 }
