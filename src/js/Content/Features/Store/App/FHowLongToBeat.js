@@ -22,7 +22,6 @@ export default class FHowLongToBeat extends Feature {
         const data = (await this.context.data).hltb;
 
         // const suggestUrl = `${Config.PublicHost}/gamedata/hltb_link_suggest.php`;
-        const icoImg = "//store.steampowered.com/public/images/v5/ico_external_link.gif";
 
         let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.hltb.title}</div>
                     <div class="block game_details underlined_links es_hltb">
@@ -40,13 +39,13 @@ export default class FHowLongToBeat extends Feature {
             }
 
             html += `</div>
-                    <a class="linkbar" href="${HTML.escape(data.url)}" target="_blank">${Localization.str.more_information} <img src="${icoImg}"></a>
-                    <a class="linkbar" href="${HTML.escape(data.submit_url)}" target="_blank">${Localization.str.hltb.submit} <img src="${icoImg}"></a>`;
+                    <a class="linkbar es_external_icon" href="${HTML.escape(data.url)}" target="_blank">${Localization.str.more_information}"></a>
+                    <a class="linkbar es_external_icon" href="${HTML.escape(data.submit_url)}" target="_blank">${Localization.str.hltb.submit}"></a>`;
 
-            // html += `<a class="linkbar" href="${suggestUrl}" id="es_hltb_suggest">${Localization.str.hltb.wrong} ${Localization.str.hltb.help} <img src="${icoImg}"></a>`;
+            // html += `<a class="linkbar es_external_icon" href="${suggestUrl}" id="es_hltb_suggest">${Localization.str.hltb.wrong} ${Localization.str.hltb.help}</a>`;
         } else {
             html += `${Localization.str.hltb.no_data}</div>`;
-            // html += `<a class="linkbar" href="${suggestUrl}" id="es_hltb_suggest">${Localization.str.hltb.help} <img src="${icoImg}"></a>`;
+            // html += `<a class="linkbar es_external_icon" href="${suggestUrl}" id="es_hltb_suggest">${Localization.str.hltb.help}</a>`;
         }
 
         html += "</div></div></div>";

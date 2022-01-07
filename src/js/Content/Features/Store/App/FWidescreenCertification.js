@@ -66,10 +66,7 @@ export default class FWidescreenCertification extends Feature {
                             ${fkg ? `<img src="${HTML.escape(fkgIcon)}" title="${HTML.escape(fkgText)}">` : ""}
                         </div>
                         <br>
-                        <a class="linkbar" target="_blank" href="${HTML.escape(path)}">
-                            ${Localization.str.rating_details}
-                            <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif">
-                        </a>
+                        <a class="linkbar es_external_icon" target="_blank" href="${HTML.escape(path)}">${Localization.str.rating_details}</a>
                     </div>
                 </div>
             </div>`);

@@ -43,7 +43,7 @@ export default class FITADPrices extends Feature {
         prices.bundleCallback = function(html) {
 
             HTML.afterEnd("#game_area_purchase",
-                `<h2 class="gradientbg es_bundle_info">${Localization.str.bundle.header} <img src="//store.steampowered.com/public/images/v5/ico_external_link.gif"></h2>
+                `<h2 class="gradientbg es_external_icon">${Localization.str.bundle.header}</h2>
                 ${html}`);
         };
 

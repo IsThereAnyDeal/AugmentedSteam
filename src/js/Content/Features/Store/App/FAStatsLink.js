@@ -15,7 +15,7 @@ export default class FAStatsLink extends Feature {
         HTML.beforeEnd("#achievement_block",
             `<div class="game_area_details_specs">
                 <div class="icon"><img class="astats_icon" src="${imgUrl}"></div>
-                <a class="name" href="${url}" target="_blank">${Localization.str.view_astats}</a>
+                <a class="name es_external_icon" href="${url}" target="_blank">${Localization.str.view_astats}</a>
             </div>`);
     }
 }
