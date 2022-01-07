@@ -6,12 +6,17 @@ import {Page} from "../../Page";
 export default class FReplaceDevPubLinks extends Feature {
 
     apply() {
-        const devs = Array.from(
-            document.querySelectorAll(".glance_ctn_responsive_left > .dev_row:nth-child(3) a, .details_block > .dev_row:first-of-type > a")
-        );
-        const pubs = Array.from(
-            document.querySelectorAll(".glance_ctn_responsive_left > .dev_row:nth-child(4) a, .details_block > .dev_row:nth-of-type(2) > a")
-        );
+
+        const devs = [document.querySelector(".details_block > .dev_row:first-of-type > a")];
+        const highlightsDev = document.getElementById("developers_list")?.parentElement;
+
+        if (highlightsDev !== null) { devs.push(highlightsDev.querySelector("a")); }
+
+        const pubs = [document.querySelector(".details_block > .dev_row:nth-of-type(2) > a")];
+        const highlightsPub = highlightsDev?.nextElementSibling;
+
+        if (highlightsPub !== null) { pubs.push(highlightsPub.querySelector("a")); }
+
         let franchise = document.querySelector(".details_block > .dev_row:nth-of-type(3) > a");
         franchise = franchise ? [franchise] : [];
 
