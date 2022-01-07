@@ -6,7 +6,7 @@ export default class FAchievementBar extends Feature {
     checkPrerequisites() {
         return SyncedStorage.get("showachinstore")
             && this.context.hasAchievements
-            && document.getElementById("my_activity") !== null;
+            && this.context.isOwnedAndPlayed;
     }
 
     async apply() {

@@ -65,7 +65,7 @@ export default class FSurveyData extends Feature {
 
         /*
          * FIXME
-         * if (this.context.isOwned && document.getElementById("my_activity")) {
+         * if (this.context.isOwnedAndPlayed) {
          *   html += `<a class="btnv6_blue_blue_innerfade btn_medium es_btn_systemreqs"
          *      href="${Config.PublicHost}/survey/?appid=${this.context.appid}"><span>${Localization.str.survey.take}</span></a>`;
          * }
