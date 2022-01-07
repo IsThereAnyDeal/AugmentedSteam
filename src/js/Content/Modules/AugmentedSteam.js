@@ -182,6 +182,13 @@ class AugmentedSteam {
         );
     }
 
+    static _cartLink() {
+        // There are two menus; one for responsive (mobile) and one for "unresponsive" (desktop) design
+        for (const wishlistLink of document.querySelectorAll(".submenu_store > .submenuitem[href='https://steamcommunity.com/my/wishlist/']")) {
+            HTML.afterEnd(wishlistLink, `<a class="submenuitem" href="https://store.steampowered.com/cart/">Cart</a>`);
+        }
+    }
+
     static _disableLinkFilter() {
         if (!SyncedStorage.get("disablelinkfilter")) { return; }
 
@@ -368,6 +375,7 @@ class AugmentedSteam {
         AugmentedSteam._keepSteamSubscriberAgreementState();
         AugmentedSteam._defaultCommunityTab();
         AugmentedSteam._horizontalScrolling();
+        AugmentedSteam._cartLink();
 
         if (User.isSignedIn) {
             AugmentedSteam._addUsernameSubmenuLinks();

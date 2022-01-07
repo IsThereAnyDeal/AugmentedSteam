@@ -1,4 +1,4 @@
-
+// TODO Accept NodeLists to insert HTML for every node in the list
 class HTML {
 
     static escape(str) {
