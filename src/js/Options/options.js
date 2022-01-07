@@ -65,6 +65,14 @@ const Options = (() => {
         }
     }
 
+    function toggleSubOptions(parentOption, value) {
+        let nxt = parentOption.nextElementSibling;
+        while (nxt && nxt.classList.contains("js-sub-option")) {
+            nxt.classList.toggle("is-disabled", value);
+            nxt = nxt.nextElementSibling;
+        }
+    }
+
     // Restores select box state to saved value from SyncStorage.
     let changelogLoaded;
 
@@ -83,10 +91,7 @@ const Options = (() => {
                 if (parentOption) {
                     if (node.id === "showallstores") { value = !value; }
 
-                    let nxt = parentOption.nextElementSibling;
-                    for (; nxt.classList.contains("js-sub-option"); nxt = nxt.nextElementSibling) {
-                        nxt.classList.toggle("is-disabled", !value);
-                    }
+                    toggleSubOptions(parentOption, !value);
                 }
             } else if (value) {
                 node.value = value;
@@ -361,10 +366,7 @@ const Options = (() => {
 
         document.querySelectorAll(".parent_option").forEach(parentOption => {
             parentOption.querySelector("input").addEventListener("change", () => {
-                let nxt = parentOption.nextElementSibling;
-                for (; nxt.classList.contains("js-sub-option"); nxt = nxt.nextElementSibling) {
-                    nxt.classList.toggle("is-disabled");
-                }
+                toggleSubOptions(parentOption, parentOption.checked);
             });
         });
 
