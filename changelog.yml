@@ -1,3 +1,7 @@
+2.3.1: |
+  - Fix search results getting hidden when review score filters are not used
+
+
 2.3.0: |
   New features:
   - It is now possible to preview backgrounds from the Points Shop
