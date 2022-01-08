@@ -295,7 +295,7 @@
     "see_more": "ดูเพิ่มเติม",
     "pricing": {
         "lowest_price": "ราคาดีที่สุดในขณะนี้:",
-        "historical_low": "ราคาต่ำสุดในประวัติ:",
+        "historical_low": "ราคาต่ำที่สุดในประวัติ:",
         "bundled": "เคยลงในชุดรวม:",
         "with_voucher": "พร้อมบัตรกำนัล __voucher__",
         "store": "ที่&nbsp;__store__",
@@ -593,7 +593,9 @@
         "show_custom_themes": "แสดงธีมแบบกำหนดเอง",
         "oneclickremovewl": "ข้ามการยืนยันเมื่อกำลังลบรายการ",
         "profile_pinned_bg": "ปักหมุดตำแหน่งพื้นหลังโปรไฟล์เมื่อกำลังเลื่อน",
-        "replacecommunityhublinks": ""
+        "replacecommunityhublinks": "แทนที่ลิงก์ศูนย์กลางชุมชนด้วยลิงก์หน้าร้านค้าบนฟีดกิจกรรมของเพื่อน",
+        "hideannouncementcomments": "",
+        "friend_activity": ""
     },
     "ready": {
         "errormsg": "ตรวจพบข้อผิดพลาดในการโหลดข้อมูล Augmented Steam",
@@ -785,5 +787,15 @@
     "shopping_cart_history": "ดูประวัติรถเข็น",
     "manage_webapi_key": "จัดการรหัส Steam Web API ของฉัน",
     "steam_cloud_header": "คลาวด์บน Steam",
-    "steam_cloud_saves": "ดูบันทึกบนคลาวด์"
+    "steam_cloud_saves": "ดูบันทึกบนคลาวด์",
+    "community_hub": "",
+    "cart": "",
+    "feature_hint": {
+        "desc": "",
+        "reminder": ""
+    },
+    "thewordyes": "",
+    "thewordno": "",
+    "show_comments": "",
+    "hide_comments": ""
 }

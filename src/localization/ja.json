@@ -593,7 +593,9 @@
         "show_custom_themes": "",
         "oneclickremovewl": "",
         "profile_pinned_bg": "",
-        "replacecommunityhublinks": ""
+        "replacecommunityhublinks": "",
+        "hideannouncementcomments": "",
+        "friend_activity": ""
     },
     "ready": {
         "errormsg": "Augmented Steam のデータロードエラー",
@@ -785,5 +787,15 @@
     "shopping_cart_history": "",
     "manage_webapi_key": "",
     "steam_cloud_header": "",
-    "steam_cloud_saves": ""
+    "steam_cloud_saves": "",
+    "community_hub": "",
+    "cart": "",
+    "feature_hint": {
+        "desc": "",
+        "reminder": ""
+    },
+    "thewordyes": "",
+    "thewordno": "",
+    "show_comments": "",
+    "hide_comments": ""
 }

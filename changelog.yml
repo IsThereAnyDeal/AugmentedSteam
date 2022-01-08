@@ -1,3 +1,19 @@
+2.3.0: |
+  New features:
+  - It is now possible to preview backgrounds from the Points Shop
+  - Review filter preferences are remembered over page loads
+  - The user notes dialog remembers your last typed in text, in case you accidentally dismiss it
+
+  Fixes:
+  - Search row highlighting / tagging didn't work when tagging was enabled
+  - Custom giftcards were broken
+  - Context menu entries couldn't be fully disabled
+  - Quick- & Insta-sell options didn't appear for some non-Steam items
+  - Prevent ad blockers from blocking links to YouTube
+  - Fix developer and publisher homepage link position when SteamDB is installed
+  - The shared localStorage was cleared on every extension update
+
+
 2.2.1: |
   Hotfix for the occasional overwriting of ranked order of your wishlist.
 
