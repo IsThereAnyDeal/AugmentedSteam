@@ -13,10 +13,16 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
             this._scoreValues.push(score);
         }
         this._maxStep = this._scoreValues.length;
+        this._active = false;
     }
 
     get active() {
-        return this._minScore.value !== "0" || this._maxScore.value !== this._maxStep.toString();
+        return this._active;
+    }
+
+    set active(newActive) {
+        this._feature.results.classList.toggle("reviews-score", newActive);
+        this._active = newActive;
     }
 
     getHTML() {
@@ -99,15 +105,14 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
             });
 
             input.addEventListener("change", () => {
-                this._apply();
 
-                let val = null;
-
-                if (minVal !== 0 || maxVal !== this._maxStep) {
-                    val = `${minVal === 0 ? "" : this._scoreValues[minVal]}-${maxVal === this._maxStep ? "" : this._scoreValues[maxVal]}`;
-                }
+                const active = minVal !== 0 || maxVal !== this._maxStep;
+                const val = active ? `${minVal === 0 ? "" : this._scoreValues[minVal]}-${maxVal === this._maxStep ? "" : this._scoreValues[maxVal]}` : null;
 
                 this.value = val;
+                this.active = active;
+
+                this._apply();
             });
         }
 
@@ -147,7 +152,6 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
     _addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-percentage])")) {
 
         for (const row of rows) {
-            // If this item doesn't have any reviews, exclude it
             let reviewPercentage = -1;
 
             const reviewsNode = row.querySelector(".search_review_summary");
@@ -163,6 +167,8 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
     }
 
     _apply(rows = document.querySelectorAll(".search_result_row")) {
+
+        if (!this.active) { return; }
 
         const minScore = this._scoreValues[Number(this._minScore.value)];
 

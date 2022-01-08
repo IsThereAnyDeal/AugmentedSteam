@@ -2952,7 +2952,7 @@ label.es_dlc_label > input:checked::after {
 .search_results.ea .es_early_access,
 .search_results.mixed .as-hide-mixed,
 .search_results.negative .as-hide-negative,
-.search_results .as-reviews-score,
+.search_results.reviews-score .as-reviews-score,
 .search_results .as-reviews-count {
   height: 0;
   margin: 0;
