@@ -1324,13 +1324,8 @@ img.astats_icon {
   overflow-x: initial !important;
   overflow: visible !important;
 }
-.es_regional_prices.game_area_purchase_game:hover,
-.es_regional_prices.sale_page_purchase_item:hover {
+.es_regional_prices.game_area_purchase_game:hover {
   z-index: 9999;
-}
-.es_regional_prices.sale_page_purchase_item {
-  height: auto;
-  min-height: 136px;
 }
 .es_regional_prices:not(.es_regional_always) .es_regional_onmouse {
   cursor: help;
@@ -1380,9 +1375,6 @@ img.astats_icon {
   float: right;
   margin-bottom: 5px;
   margin-top: auto;
-}
-.es_regional_always .es_regional_sale {
-  margin-bottom: 55px;
 }
 .es_regional_onmouse:hover .es_regional_container {
   display: block !important;

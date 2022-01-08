@@ -69,17 +69,6 @@
     },
     {
       "matches": [
-        "*://*.steampowered.com/sale/*"
-      ],
-      "js": [
-        "js/store/sale.js"
-      ],
-      "css": [
-        "css/augmentedsteam.css"
-      ]
-    },
-    {
-      "matches": [
         "*://*.steampowered.com/stats",
         "*://*.steampowered.com/stats/*"
       ],
@@ -213,7 +202,6 @@
         "*://store.steampowered.com/?*",
         "*://*.steampowered.com/wishlist/id/*",
         "*://*.steampowered.com/wishlist/profiles/*",
-        "*://*.steampowered.com/sale/*",
         "*://*.steampowered.com/stats",
         "*://*.steampowered.com/stats/*",
         "*://*.steampowered.com/search",
