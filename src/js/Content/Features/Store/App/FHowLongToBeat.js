@@ -5,7 +5,9 @@ import {Feature} from "../../../modulesContent";
 export default class FHowLongToBeat extends Feature {
 
     async checkPrerequisites() {
-        if (!SyncedStorage.get("showhltb") || this.context.isDlcLike) {
+        if (!SyncedStorage.get("showhltb")
+            || this.context.isDlcLike
+            || this.context.isVideoOrHardware) {
             return false;
         }
 

@@ -4,9 +4,7 @@ import {HTML, Localization} from "../../../../modulesCore";
 export default class FSurveyData extends Feature {
 
     async checkPrerequisites() {
-        if (this.context.isVideo
-            || this.context.isDlcLike
-            || !document.querySelector(".sys_req")) {
+        if (this.context.isDlcLike || this.context.isVideoOrHardware) {
             return false;
         }
 

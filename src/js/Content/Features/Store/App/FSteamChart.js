@@ -6,7 +6,7 @@ export default class FSteamChart extends Feature {
     async checkPrerequisites() {
         if (!SyncedStorage.get("show_steamchart_info")
             || this.context.isDlcLike
-            || !document.querySelector(".sys_req")) {
+            || this.context.isVideoOrHardware) {
             return false;
         }
 

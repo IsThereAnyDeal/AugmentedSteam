@@ -114,7 +114,13 @@ export class CApp extends CStore {
         this.isDlc = document.querySelector(".game_area_dlc_bubble") !== null;
         this.isDlcLike = this.isDlc && document.querySelector(".game_area_soundtrack_bubble") !== null;
 
-        this.isVideo = document.querySelector(".game_area_purchase_game span[class*=streaming], div.series_seasons") !== null;
+        const category = new URLSearchParams(document.querySelector(".breadcrumbs a")?.search).get("category1");
+
+        /**
+         * `true` for non-application items, or if system requirements section is missing (usually hardware)
+         * Previous check for videos: document.querySelector(".game_area_purchase_game span[class*=streaming], div.series_seasons") !== null;
+         */
+        this.isVideoOrHardware = category === "992" || category === "993" || !document.querySelector(".sys_req");
 
         this.onWishAndWaitlistRemove = null;
 
