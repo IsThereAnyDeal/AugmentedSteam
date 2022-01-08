@@ -85,23 +85,7 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
                     }
                 }
 
-                let text;
-                if (minVal === 0) {
-                    if (maxVal === maxStep) {
-                        text = Localization.str.search_filters.reviews_score.any;
-                    } else {
-                        text = Localization.str.search_filters.reviews_score.up_to.replace("__score__", this._scoreValues[maxVal]);
-                    }
-                } else if (maxVal === maxStep) {
-                    text = Localization.str.search_filters.reviews_score.from
-                        .replace("__score__", this._scoreValues[minVal]);
-                } else {
-                    text = Localization.str.search_filters.reviews_score.between
-                        .replace("__lower__", this._scoreValues[minVal])
-                        .replace("__upper__", this._scoreValues[maxVal]);
-                }
-
-                this._rangeDisplay.textContent = text;
+                this._setText(minVal, maxVal);
             });
 
             input.addEventListener("change", () => {
@@ -121,8 +105,8 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
 
     _setState(params) {
 
-        let lowerScoreVal = "0";
-        let upperScoreVal = this._maxStep.toString();
+        let lowerScoreVal = 0;
+        let upperScoreVal = this._maxStep;
 
         if (params.has("as-reviews-score")) {
 
@@ -132,21 +116,27 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
             this._value = val;
 
             if (match) {
-                let [, lower, upper] = match;
-                lower = parseInt(lower);
-                upper = parseInt(upper);
+                let lowerIndex = this._scoreValues.indexOf(parseInt(match[1]));
+                let upperIndex = this._scoreValues.indexOf(parseInt(match[2]));
 
-                if (!isNaN(lower) && this._scoreValues.includes(lower)) {
-                    lowerScoreVal = this._scoreValues.indexOf(lower).toString();
+                if (lowerIndex === -1) {
+                    lowerIndex = lowerScoreVal;
+                } else {
+                    lowerScoreVal = lowerIndex;
                 }
-                if (!isNaN(upper) && this._scoreValues.includes(upper)) {
-                    upperScoreVal = this._scoreValues.indexOf(upper).toString();
+
+                if (upperIndex === -1) {
+                    upperIndex = upperScoreVal;
+                } else {
+                    upperScoreVal = upperIndex;
                 }
+
+                this._setText(lowerIndex, upperIndex);
             }
         }
 
-        this._minScore.value = lowerScoreVal;
-        this._maxScore.value = upperScoreVal;
+        this._minScore.value = lowerScoreVal.toString();
+        this._maxScore.value = upperScoreVal.toString();
     }
 
     _addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-percentage])")) {
@@ -179,5 +169,25 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
             const rowScore = Number(row.dataset.asReviewPercentage);
             row.classList.toggle("as-reviews-score", rowScore === -1 || rowScore < minScore || rowScore > maxScore);
         }
+    }
+
+    _setText(minVal, maxVal) {
+        let text;
+        if (minVal === 0) {
+            if (maxVal === this._maxStep) {
+                text = Localization.str.search_filters.reviews_score.any;
+            } else {
+                text = Localization.str.search_filters.reviews_score.up_to.replace("__score__", this._scoreValues[maxVal]);
+            }
+        } else if (maxVal === this._maxStep) {
+            text = Localization.str.search_filters.reviews_score.from
+                .replace("__score__", this._scoreValues[minVal]);
+        } else {
+            text = Localization.str.search_filters.reviews_score.between
+                .replace("__lower__", this._scoreValues[minVal])
+                .replace("__upper__", this._scoreValues[maxVal]);
+        }
+
+        this._rangeDisplay.textContent = text;
     }
 }
