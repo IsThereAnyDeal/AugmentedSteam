@@ -111,7 +111,8 @@ export class CApp extends CStore {
         this.isOwned = document.querySelector(".game_area_already_owned") !== null;
         this.isOwnedAndPlayed = this.isOwned && document.querySelector("#my_activity") !== null;
 
-        this.isDlc = document.querySelector("div.game_area_dlc_bubble") !== null;
+        this.isDlc = document.querySelector(".game_area_dlc_bubble") !== null;
+        this.isDlcLike = this.isDlc && document.querySelector(".game_area_soundtrack_bubble") !== null;
 
         this.isVideo = document.querySelector(".game_area_purchase_game span[class*=streaming], div.series_seasons") !== null;
 

@@ -5,7 +5,7 @@ export default class FSurveyData extends Feature {
 
     async checkPrerequisites() {
         if (this.context.isVideo
-            || this.context.isDlc
+            || this.context.isDlcLike
             || !document.querySelector(".sys_req")) {
             return false;
         }

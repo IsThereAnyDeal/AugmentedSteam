@@ -16,7 +16,7 @@ export default class FWidescreenCertification extends Feature {
     }
 
     async checkPrerequisites() {
-        if (!SyncedStorage.get("showwsgf") || this.context.isDlc) {
+        if (!SyncedStorage.get("showwsgf") || this.context.isDlcLike) {
             return false;
         }
 
