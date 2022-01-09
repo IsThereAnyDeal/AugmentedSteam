@@ -117,7 +117,7 @@ export class CApp extends CStore {
         this.isOwnedAndPlayed = this.isOwned && document.querySelector("#my_activity") !== null;
 
         this.isDlc = document.querySelector(".game_area_dlc_bubble") !== null;
-        this.isDlcLike = this.isDlc && document.querySelector(".game_area_soundtrack_bubble") !== null;
+        this.isDlcLike = this.isDlc || document.querySelector(".game_area_soundtrack_bubble") !== null;
 
         const category = new URLSearchParams(document.querySelector(".breadcrumbs a")?.search).get("category1");
 
