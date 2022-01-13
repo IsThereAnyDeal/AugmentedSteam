@@ -433,15 +433,11 @@ FHighlightsTags._selector = [
     ".comingsoon_headercap", // explore/upcoming/
     ".home_marketing_message", // "Updates and offers"
     "div.dlc_page_purchase_dlc", // DLC page rows
-    "div.sale_page_purchase_item", // Sale pages
-    "div.item", // Sale pages / featured pages
     "div.home_area_spotlight", // Midweek and weekend deals
     "div.browse_tag_game", // Tagged games
     "div.similar_grid_item", // Items on the "Similarly tagged" pages
     ".tab_item", // Item rows on storefront/tag/genre pages
     ".special > .special_img_ctn", // new homepage specials
     ".special.special_img_ctn",
-    ".hero_capsule", // Summer sale "Featured"
-    ".sale_capsule" // Summer sale general capsules
 ].map(sel => `${sel}:not(.es_highlighted)`)
     .join(",");
