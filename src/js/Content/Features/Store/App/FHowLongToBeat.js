@@ -5,22 +5,27 @@ import {Feature} from "../../../modulesContent";
 export default class FHowLongToBeat extends Feature {
 
     async checkPrerequisites() {
-        if (!SyncedStorage.get("showhltb") || this.context.isDlc()) {
+        if (!SyncedStorage.get("showhltb")
+            || this.context.isDlcLike
+            || this.context.isVideoOrHardware) {
             return false;
         }
 
         const result = await this.context.data;
-        if (!result || !result.hltb) { return false; }
+        if (!result || !result.hltb) {
+            return false;
+        }
 
         // TODO remove when suggestion link is fixed
         if (!result.hltb.success) { return false; }
 
+        this._data = result.hltb;
         return true;
     }
 
-    async apply() {
-        const data = (await this.context.data).hltb;
+    apply() {
 
+        const data = this._data;
         // const suggestUrl = `${Config.PublicHost}/gamedata/hltb_link_suggest.php`;
 
         let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.hltb.title}</div>

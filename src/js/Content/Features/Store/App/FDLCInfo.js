@@ -5,7 +5,7 @@ import Config from "../../../../config";
 export default class FDLCInfo extends Feature {
 
     checkPrerequisites() {
-        return this.context.isDlc();
+        return this.context.isDlc;
     }
 
     async apply() {

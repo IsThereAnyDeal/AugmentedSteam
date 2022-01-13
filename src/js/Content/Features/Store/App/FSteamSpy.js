@@ -5,17 +5,18 @@ export default class FSteamSpy extends Feature {
 
     async checkPrerequisites() {
         if (!SyncedStorage.get("show_steamspy_info")
-            || this.context.isDlc()
-            || !document.querySelector(".sys_req")) {
+            || this.context.isDlcLike
+            || this.context.isVideoOrHardware) {
             return false;
         }
 
         const result = await this.context.data;
-        if (result && result.steamspy && result.steamspy.owners) {
-            this._data = result.steamspy;
+        if (!result || !result.steamspy || !result.steamspy.owners) {
+            return false;
         }
 
-        return typeof this._data !== "undefined";
+        this._data = result.steamspy;
+        return true;
     }
 
     apply() {
@@ -40,19 +41,20 @@ export default class FSteamSpy extends Feature {
 
     _getTimeString(value) {
 
-        const days = Math.trunc(value / 1440);
         let _value = value;
+        const result = [];
+
+        const days = Math.trunc(_value / 1440);
+        if (days > 0) { result.push(`${days}d`); }
         _value -= days * 1440;
 
         const hours = Math.trunc(_value / 60);
+        result.push(`${hours}h`);
         _value -= hours * 60;
 
         const minutes = _value;
+        result.push(`${minutes}m`);
 
-        let result = "";
-        if (days > 0) { result += `${days}d `; }
-        result += `${hours}h ${minutes}m`;
-
-        return result;
+        return result.join(" ");
     }
 }

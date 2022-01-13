@@ -16,14 +16,19 @@ export default class FWidescreenCertification extends Feature {
     }
 
     async checkPrerequisites() {
-        if (!this.context.isDlc() && SyncedStorage.get("showwsgf")) {
-            const result = await this.context.data;
-            if (result && result.wsgf) {
-                this._data = result.wsgf;
-                return true;
-            }
+        if (!SyncedStorage.get("showwsgf")
+            || this.context.isDlcLike
+            || this.context.isVideoOrHardware) {
+            return false;
         }
-        return false;
+
+        const result = await this.context.data;
+        if (!result || !result.wsgf) {
+            return false;
+        }
+
+        this._data = result.wsgf;
+        return true;
     }
 
     _getType(value, imgPrefix, typeName) {

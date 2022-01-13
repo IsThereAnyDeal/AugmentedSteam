@@ -97,28 +97,39 @@ export class CApp extends CStore {
             FSaveReviewFilters,
         ]);
 
-        this.userNotes = new UserNotes();
-
         this.appid = GameId.getAppid(window.location.host + window.location.pathname);
         this.storeid = `app/${this.appid}`;
+
+        // Some games (e.g. 201270, 201271) have different appid in store page and community
+        this.communityAppid = GameId.getAppidImgSrc(document.querySelector(".apphub_AppIcon img")?.getAttribute("src")) ?? this.appid;
+
+        this.appName = document.querySelector(".apphub_AppName")?.textContent ?? "";
+
+        this.metalink = document.querySelector("#game_area_metalink a")?.getAttribute("href") ?? null;
 
         // TODO this check is unreliable; some apps and dlcs have card category yet no card, and vice versa
         this.hasCards = document.querySelector('#category_block img[src$="/ico_cards.png"]') !== null;
 
+        // #achievement_block is also used for point shop items
+        this.hasAchievements = document.querySelector(".communitylink_achievement_images") !== null;
+
+        this.isOwned = document.querySelector(".game_area_already_owned") !== null;
+        this.isOwnedAndPlayed = this.isOwned && document.querySelector("#my_activity") !== null;
+
+        this.isDlc = document.querySelector(".game_area_dlc_bubble") !== null;
+        this.isDlcLike = this.isDlc || document.querySelector(".game_area_soundtrack_bubble") !== null;
+
+        const category = new URLSearchParams(document.querySelector(".breadcrumbs a")?.search).get("category1");
+
+        /**
+         * `true` for non-application items, or if system requirements section is missing (usually hardware)
+         * Previous check for videos: document.querySelector(".game_area_purchase_game span[class*=streaming], div.series_seasons") !== null;
+         */
+        this.isVideoOrHardware = category === "992" || category === "993" || !document.querySelector(".sys_req");
+
         this.onWishAndWaitlistRemove = null;
-
-        // Some games (e.g. 201270, 201271) have different appid in store page and community
-        const communityAppidSrc = document.querySelector(".apphub_AppIcon img").getAttribute("src");
-        this.communityAppid = GameId.getAppidImgSrc(communityAppidSrc);
-        if (!this.communityAppid) {
-            this.communityAppid = this.appid;
-        }
-
-        const metalinkNode = document.querySelector("#game_area_metalink a");
-        this.metalink = metalinkNode && metalinkNode.getAttribute("href");
-
+        this.userNotes = new UserNotes();
         this.data = this.storePageDataPromise().catch(err => { console.error(err); });
-        this.appName = document.querySelector(".apphub_AppName").textContent;
 
         // The customizer has to wait on this data to be added in order to find the HTML elements
         FCustomizer.dependencies = [FSteamSpy, FSteamChart, FSurveyData];
@@ -131,24 +142,6 @@ export class CApp extends CStore {
 
     storePageDataPromise() {
         return Background.action("storepagedata", this.appid, this.metalink, SyncedStorage.get("showoc"));
-    }
-
-    // TODO(tfedor) maybe make properties instead of dynamic qheck of all of these "isXY"? Not sure
-    isOwned() {
-        return document.querySelector(".game_area_already_owned") !== null;
-    }
-
-    isDlc() {
-        return document.querySelector("div.game_area_dlc_bubble") !== null;
-    }
-
-    isVideo() {
-        return document.querySelector('.game_area_purchase_game span[class*="streaming"], div.series_seasons') !== null;
-    }
-
-    hasAchievements() {
-        // #achievement_block is also used for point shop items
-        return document.querySelector(".communitylink_achievement_images") !== null;
     }
 
     removeFromWishlist() {

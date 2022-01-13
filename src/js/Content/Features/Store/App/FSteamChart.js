@@ -5,18 +5,22 @@ export default class FSteamChart extends Feature {
 
     async checkPrerequisites() {
         if (!SyncedStorage.get("show_steamchart_info")
-            || this.context.isDlc()
-            || !document.querySelector(".sys_req")) { return false; }
-
-        const result = await this.context.data;
-        if (result && result.charts && result.charts.chart && result.charts.chart.peakall) {
-            this._chart = result.charts.chart;
+            || this.context.isDlcLike
+            || this.context.isVideoOrHardware) {
+            return false;
         }
 
-        return typeof this._chart !== "undefined";
+        const result = await this.context.data;
+        if (!result || !result.charts || !result.charts.chart || !result.charts.chart.peakall) {
+            return false;
+        }
+
+        this._chart = result.charts.chart;
+        return true;
     }
 
     apply() {
+
         HTML.beforeBegin(document.querySelector(".sys_req").parentNode,
             `<div id="steam-charts" class="game_area_description">
                 <h2>${Localization.str.charts.current}</h2>

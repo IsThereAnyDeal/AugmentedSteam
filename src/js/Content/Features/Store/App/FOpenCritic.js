@@ -7,14 +7,17 @@ export default class FOpenCritic extends Feature {
         if (!SyncedStorage.get("showoc")) { return false; }
 
         const result = await this.context.data;
-        if (!result || !result.oc || !result.oc.url) { return false; }
+        if (!result || !result.oc || !result.oc.url) {
+            return false;
+        }
 
+        this._data = result.oc;
         return true;
     }
 
-    async apply() {
-        const data = (await this.context.data).oc;
+    apply() {
 
+        const data = this._data;
         const ocImg = ExtensionResources.getURL("img/opencritic.png");
         const award = data.award || "NA";
 
