@@ -66,11 +66,11 @@ class ManifestTransformerPlugin {
 
             const parsedMatches = this._parseOptional(match);
 
-            for (const parsedMatch of parsedMatches) {
+            for (const match of parsedMatches) {
 
-                results.push(parsedMatch);
+                results.push(match);
 
-                if (parsedMatch.endsWith("*") || parsedMatch.endsWith("/")) { continue; }
+                if (match.endsWith("*") || match.endsWith("/")) { continue; }
 
                 results.push(`${match}?*`);
 
