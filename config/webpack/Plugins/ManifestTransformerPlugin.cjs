@@ -72,14 +72,14 @@ class ManifestTransformerPlugin {
 
                 if (parsedMatch.endsWith("*") || parsedMatch.endsWith("/")) { continue; }
 
-                if (!parsedMatches.includes(`${match}/*`)) {
-                    results.push(`${match}/`);
-                }
+                results.push(`${match}?*`);
 
-                results.push(
-                    `${match}?*`,
-                    `${match}/?*`,
-                );
+                if (!parsedMatches.includes(`${match}/*`)) {
+                    results.push(
+                        `${match}/`,
+                        `${match}/?*`,
+                    );
+                }
             }
         }
 
