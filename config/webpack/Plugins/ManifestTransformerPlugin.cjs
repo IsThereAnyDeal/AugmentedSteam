@@ -22,20 +22,27 @@ class ManifestTransformerPlugin {
 
                 const data = JSON.parse(source.source());
 
-                for (const {matches, exclude_matches, js, css} of data.content_scripts) {
+                for (const entry of data.content_scripts) {
 
-                    this._addMatchVariants(matches);
-
-                    if (Array.isArray(exclude_matches)) {
-                        this._addMatchVariants(exclude_matches);
+                    for (const [prop, val] of Object.entries(entry)) {
+                        if (!Array.isArray(val)) {
+                            entry[prop] = [val];
+                        }
                     }
 
+                    if (typeof entry.css === "undefined") {
+                        entry.css = ["css/augmentedsteam.css"];
+                    }
+
+                    entry.matches = this._transformMatches(entry.matches);
+                    entry.exclude_matches = this._transformMatches(entry.exclude_matches);
+
                     for (const path of this._js) {
-                        js.unshift(path);
+                        entry.js.unshift(path);
                     }
 
                     for (const path of this._css) {
-                        css.unshift(path);
+                        entry.css.unshift(path);
                     }
                 }
 
@@ -49,20 +56,65 @@ class ManifestTransformerPlugin {
         });
     }
 
-    _addMatchVariants(matches) {
+    _transformMatches(matches) {
+
+        if (!Array.isArray(matches)) { return; }
+
+        const results = [];
+
         for (const match of matches) {
 
-            if (match.endsWith("*") || match.endsWith("/")) { continue; }
+            const parsedMatches = this._parseOptional(match);
 
-            if (!matches.includes(`${match}/*`)) {
-                matches.push(`${match}/`);
+            for (const parsedMatch of parsedMatches) {
+
+                results.push(parsedMatch);
+
+                if (parsedMatch.endsWith("*") || parsedMatch.endsWith("/")) { continue; }
+
+                if (!parsedMatches.includes(`${match}/*`)) {
+                    results.push(`${match}/`);
+                }
+
+                results.push(
+                    `${match}?*`,
+                    `${match}/?*`,
+                );
             }
-
-            matches.push(
-                `${match}?*`,
-                `${match}/?*`,
-            );
         }
+
+        return results;
+    }
+
+    _parseOptional(match) {
+
+        // Allows (very basic) optional strings in a match string by surrounding the optional part with brackets, e.g. "example.com/some_page[/]"
+        const regex = /\[.+]/gd;
+        let results = regex.exec(match);
+
+        if (results === null) {
+            return [match];
+        }
+
+        let newMatches = [];
+
+        do {
+            const [startIndex, endIndex] = results.indices[0];
+            const firstHalf = match.substring(0, startIndex);
+            const secondHalf = match.substring(endIndex);
+            const optional = results[0].slice(1, -1);
+
+            const withOptional = firstHalf + optional + secondHalf;
+            const withoutOptional = firstHalf + secondHalf;
+
+            // If there is more than just one optional part, do a recursive call
+            newMatches = newMatches.concat(
+                this._parseOptional(withOptional),
+                this._parseOptional(withoutOptional)
+            );
+        } while ((results = regex.exec(match)) !== null);
+
+        return newMatches;
     }
 }
 
