@@ -10,12 +10,12 @@ export default class FReplaceDevPubLinks extends Feature {
         const devs = [document.querySelector(".details_block > .dev_row:first-of-type > a")];
         const highlightsDev = document.getElementById("developers_list")?.parentElement;
 
-        if (highlightsDev !== null) { devs.push(highlightsDev.querySelector("a")); }
+        if (typeof highlightsDev === "undefined") { devs.push(highlightsDev.querySelector("a")); }
 
         const pubs = [document.querySelector(".details_block > .dev_row:nth-of-type(2) > a")];
         const highlightsPub = highlightsDev?.nextElementSibling;
 
-        if (highlightsPub !== null) { pubs.push(highlightsPub.querySelector("a")); }
+        if (typeof highlightsPub === "undefined") { pubs.push(highlightsPub.querySelector("a")); }
 
         let franchise = document.querySelector(".details_block > .dev_row:nth-of-type(3) > a");
         franchise = franchise ? [franchise] : [];
