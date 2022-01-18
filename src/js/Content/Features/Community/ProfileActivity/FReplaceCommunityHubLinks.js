@@ -14,10 +14,15 @@ export default class FReplaceCommunityHubLinks extends CallbackFeature {
     callback(parent = document) {
 
         // Don't replace user-provided links i.e. links in announcements/comments
-        const nodes = parent.querySelectorAll(".blotter_block a:not(.bb_link)");
+        const nodes = parent.querySelectorAll(".blotter_block a[href]:not(.bb_link)");
 
         for (const node of nodes) {
-            if (!node.hasAttribute("href")) { continue; }
+
+            // https://github.com/IsThereAnyDeal/AugmentedSteam/issues/1368
+            if (node.parentElement.classList.contains("blotter_group_announcement_headline")) {
+                continue;
+            }
+
             node.href = node.href.replace(/steamcommunity\.com\/(?:app|games)/, "store.steampowered.com/app");
         }
     }
