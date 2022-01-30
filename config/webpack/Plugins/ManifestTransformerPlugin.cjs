@@ -15,7 +15,7 @@ class ManifestTransformerPlugin {
 
             compilation.hooks.processAssets.tap({
                 "name": `${this.constructor.name}_compilation`,
-                "stage": compilation.PROCESS_ASSETS_STAGE_PRE_PROCESS
+                "stage": compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
             }, (assets) => {
                 const manifest = "manifest.json";
                 const source = assets[manifest];
@@ -43,6 +43,12 @@ class ManifestTransformerPlugin {
 
                     for (const path of this._css) {
                         entry.css.unshift(path);
+                    }
+
+                    // If a CSS file exists for an entry point, add it to the list of stylesheets
+                    const cssFileName = entry.js[this._js.length].replace(".js", ".css");
+                    if (assets.hasOwnProperty(cssFileName)) {
+                        entry.css.push(cssFileName);
                     }
                 }
 
