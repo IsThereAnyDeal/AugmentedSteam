@@ -13,6 +13,10 @@
         "ecmaVersion": 2020,
         "sourceType": "module"
     },
+    "ignorePatterns": [
+        "/dist/**",
+        "/releases/**"
+    ],
     "overrides": [
         {
             "files": "*.cjs",
@@ -22,10 +26,6 @@
                 "webextensions": false
             }
         }
-    ],
-    "ignorePatterns": [
-        "/dist/**",
-        "/releases/**"
     ],
     "rules": {
         "array-bracket-newline": ["error", "consistent"],
