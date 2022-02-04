@@ -1,11 +1,11 @@
-import type {Storage as StorageTypes} from "webextension-polyfill";
 import browser from "webextension-polyfill";
 
-export type Key = string | number | symbol;
+import type {Storage as StorageTypes} from "webextension-polyfill";
+import type {ValueOf} from "ts-essentials";
+
+export type Key = string;
 export type Value = unknown;
 export type Store = Map<Key, Value>;
-
-export type ValueOf<T> = T[keyof T];
 
 type EventArea = "sync" | "local" | "managed";
 
@@ -13,18 +13,14 @@ export default abstract class Storage<Defaults extends Record<Key, Value>> imple
 
     private static readonly caches: Map<StorageTypes.StorageArea, Store> = new Map();
 
-    protected readonly defaults: Readonly<Map<keyof Defaults, ValueOf<Defaults>>>;
-
     private initialized = false;
     private cache: Store = new Map();
 
     public constructor(
         private readonly adapter: Readonly<StorageTypes.StorageArea>,
-        defaults: Readonly<Defaults>,
-        private readonly persistent: readonly (keyof Defaults)[],
-    ) {
-        this.defaults = new Map(Object.entries(defaults));
-    }
+        protected readonly defaults: Readonly<Record<keyof Defaults, ValueOf<Defaults>>>,
+        private readonly persistent: readonly (Extract<keyof Defaults, string>)[],
+    ) {}
 
     public has(key: keyof Defaults): boolean; // For editor support
     public has(key: Key): boolean;
@@ -32,19 +28,19 @@ export default abstract class Storage<Defaults extends Record<Key, Value>> imple
         return this.cache.has(key);
     }
 
-    public get(key: keyof Defaults): Value; // For editor support
+    public get<K extends keyof Defaults>(key: K): Defaults[K]; // For editor support
     public get(key: Key): Value;
     public get(key: Key): Value {
         if (typeof this.cache.get(key) !== "undefined") {
             return this.cache.get(key);
         }
-        if (typeof this.defaults.get(key) === "undefined") {
+        if (typeof this.defaults[key] === "undefined") {
             console.warn('Unrecognized storage key "%s"', key);
         }
-        return this.defaults.get(key);
+        return this.defaults[key];
     }
 
-    public async set(key: keyof Defaults, value: ValueOf<Defaults>): Promise<void>; // For editor support
+    public async set<K extends keyof Defaults>(key: K, value: Defaults[K]): Promise<void>; // For editor support
     public async set(key: Key, value: Value): Promise<void>;
     public async set(key: Key, value: Value): Promise<void> {
         this.cache.set(key, value);

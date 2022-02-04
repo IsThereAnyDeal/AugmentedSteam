@@ -1,7 +1,7 @@
 import {TimeUtils} from "../../modulesCore";
 import {LocalStorage} from "../../Core/Storage/LocalStorage";
 
-import type {Key, Value, ValueOf} from "../../Core/Storage/Storage";
+import type {Key, Value} from "../../Core/Storage/Storage";
 
 interface Timestamped {
     "timestamp": number;
@@ -14,7 +14,7 @@ export class CacheStorage<Defaults extends Record<Key, Value>> extends LocalStor
 
     public constructor(
         defaults: Readonly<Defaults>,
-        persistent: readonly (keyof Defaults)[],
+        persistent: readonly (Extract<keyof Defaults, string>)[],
         ttls: Readonly<Record<keyof Defaults, number>>,
     ) {
         super(
@@ -25,30 +25,30 @@ export class CacheStorage<Defaults extends Record<Key, Value>> extends LocalStor
         this.ttls = new Map(Object.entries(ttls));
     }
 
-    public override get(key: keyof Defaults): Value; // For editor support
+    public override get<K extends keyof Defaults>(key: K): Defaults[K]; // For editor support
     public override get(key: Key): Value;
     public override get(key: Key): Value {
 
         if (typeof this.ttls.get(key) === "undefined") {
             console.warn("No TTL specified for cache storage key", key);
-            return this.defaults.get(key);
+            return this.defaults[key];
         }
 
         const item = super.get(key);
 
         if (!this.isTimestamped(item)) {
-            return this.defaults.get(key);
+            return this.defaults[key];
         }
 
         const ttl = this.ttls.get(key);
         if (typeof ttl === "undefined" || this.isExpired(item.timestamp, ttl)) {
-            return this.defaults.get(key);
+            return this.defaults[key];
         }
 
         return item.data;
     }
 
-    public override async set(key: keyof Defaults, value: ValueOf<Defaults>): Promise<void>; // For editor support
+    public override async set<K extends keyof Defaults>(key: K, value: Defaults[K]): Promise<void>; // For editor support
     public override async set(key: Key, value: Value): Promise<void>;
     public override async set(key: Key, value: Value): Promise<void> {
         return super.set(key, {"data": value, "timestamp": TimeUtils.now()});

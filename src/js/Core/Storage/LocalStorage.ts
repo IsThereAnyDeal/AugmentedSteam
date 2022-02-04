@@ -13,7 +13,7 @@ export class LocalStorage<Defaults extends Record<Key, Value>> extends Storage<D
 
     public constructor(
         defaults: Readonly<Defaults>,
-        persistent: readonly (keyof Defaults)[],
+        persistent: readonly (Extract<keyof Defaults, string>)[],
     ) {
         super(
             browser.storage.local,
@@ -41,7 +41,7 @@ export class LocalStorage<Defaults extends Record<Key, Value>> extends Storage<D
 
         if (migrationDone[type]) { return; }
 
-        await Promise.all(Array.from(this.defaults.keys()).map(async key => {
+        await Promise.all(Object.keys(this.defaults).map(async key => {
 
             const value = localStorage.getItem(key.toString());
             if (value === null) { return; }

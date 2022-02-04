@@ -19,7 +19,7 @@ export class SyncedStorage<Defaults extends Record<Key, Value>> extends Storage<
 
     public constructor(
         defaults: Readonly<Defaults>,
-        persistent: readonly (keyof Defaults)[],
+        persistent: readonly (Extract<keyof Defaults, string>)[],
     ) {
         super(
             browser.storage.sync,
