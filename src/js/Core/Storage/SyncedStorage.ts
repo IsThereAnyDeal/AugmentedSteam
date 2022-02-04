@@ -1,5 +1,9 @@
-import {Storage} from "./Storage";
+import Storage from "./Storage";
+import type {Key, Value} from "./Storage";
 import {Info} from "../Info";
+import browser from "webextension-polyfill";
+
+// FIXME browser.storage.sync is still restricted (in terms of quota limits) even if the user hasn't enabled sync
 
 /*
  * browser.storage.sync limits
@@ -9,18 +13,23 @@ import {Info} from "../Info";
  * MAX_WRITE_OPERATIONS_PER_HOUR = 1800
  * MAX_WRITE_OPERATIONS_PER_MINUTE = 120
  */
-class SyncedStorage extends Storage {}
+export class SyncedStorage<Defaults extends Record<Key, Value>> extends Storage<Defaults> {
 
-SyncedStorage._adapter = browser.storage.sync || browser.storage.local;
+    public static readonly QUOTA_BYTES_PER_ITEM = browser.storage.sync.QUOTA_BYTES_PER_ITEM;
 
-/*
- * 8KiB is the limit for storage.sync https://chromium.googlesource.com/chromium/src/+/refs/heads/main/extensions/common/api/storage.json#227
- * 5MiB is the limit for storage.local (overall size) https://chromium.googlesource.com/chromium/src/+/refs/heads/main/extensions/common/api/storage.json#227
- * 2KiB are subtracted in order to save some space for other configuration options
- */
-SyncedStorage.QUOTA_BYTES_PER_ITEM = browser.storage.sync ? 8192 : 5242880 - 2048;
+    public constructor(
+        defaults: Readonly<Defaults>,
+        persistent: readonly (keyof Defaults)[],
+    ) {
+        super(
+            browser.storage.sync,
+            defaults,
+            persistent,
+        );
+    }
+}
 
-SyncedStorage.defaults = Object.freeze({
+const DEFAULTS = {
     "language": "english",
 
     "version": Info.version,
@@ -236,10 +245,14 @@ SyncedStorage.defaults = Object.freeze({
     "context_steamdb": false,
     "context_steamdb_instant": false,
     "context_steam_keys": false,
-});
-SyncedStorage.persistent = [
+};
+
+const PERSISTENT: (keyof typeof DEFAULTS)[] = [
     "user_notes",
     "user_notes_adapter",
 ];
 
-export {SyncedStorage};
+export default new SyncedStorage(
+    DEFAULTS,
+    PERSISTENT,
+);

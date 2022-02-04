@@ -1,4 +1,4 @@
-import {SyncedStorage} from "../../../Core/Storage/SyncedStorage";
+import {SyncedStorage} from "../../../modulesCore";
 import {ContextType, Feature} from "../../modulesContent";
 import {Page} from "../Page";
 

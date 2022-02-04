@@ -1,14 +1,8 @@
-import {HTML} from "../../Core/Html/Html";
-import {ExtensionResources} from "../../Core/ExtensionResources";
-import {Localization} from "../../Core/Localization/Localization";
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
-import {Language} from "../../Core/Localization/Language";
-import {LocalStorage} from "../../Core/Storage/LocalStorage";
-import {Background} from "./Background";
-import {DOMHelper} from "./DOMHelper";
+import {ExtensionResources, HTML, Language, LocalStorage, Localization, SyncedStorage} from "../../modulesCore";
+import {Background, DOMHelper, User} from "../modulesContent";
+
 import {HorizontalScroller} from "./Widgets/HorizontalScroller";
 import {DynamicStore} from "./Data/DynamicStore";
-import {User} from "./User";
 import {Page} from "../Features/Page";
 import config from "../../config";
 

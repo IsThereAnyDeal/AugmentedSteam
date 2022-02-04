@@ -1,15 +1,11 @@
-import {ExtensionResources, GameId, HTML, Language, Localization, SyncedStorage} from "../../../modulesCore";
+import {ExtensionResources, GameId, Language, SyncedStorage} from "../../../modulesCore";
 import {Background, Feature} from "../../modulesContent";
 
 import EarlyAccess from "./EarlyAccess.svelte";
 
 export default class FEarlyAccess extends Feature {
 
-    apply() {
-        FEarlyAccess.show();
-    }
-
-    static async show(nodes?: NodeListOf<Element>) {
+    public static async show(nodes?: NodeListOf<Element>): Promise<void> {
         if (!SyncedStorage.get("show_early_access")) { return; }
 
         const _nodes = nodes ?? document.querySelectorAll(this._selector);
@@ -60,6 +56,12 @@ export default class FEarlyAccess extends Feature {
             });
         }
     }
+
+    public override async apply(): Promise<void> {
+        await FEarlyAccess.show();
+    }
+
+    
 
     static async getEaNodes(nodes: NodeList) {
 

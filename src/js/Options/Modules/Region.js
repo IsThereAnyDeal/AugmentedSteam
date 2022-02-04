@@ -1,5 +1,5 @@
-import {HTML} from "../../Core/Html/Html";
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
+import {HTML, SyncedStorage} from "../../modulesCore";
+
 import {CountryList} from "./Data/CountryList";
 import {SaveIndicator} from "./SaveIndicator";
 

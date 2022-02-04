@@ -8,7 +8,7 @@ import {StaticResources} from "./Modules/StaticResources";
 import {ITADApi} from "./Modules/ITADApi";
 import {AugmentedSteamApi} from "./Modules/AugmentedSteamApi";
 import {ExtensionData} from "./Modules/ExtensionData";
-import {CacheStorage} from "./Modules/CacheStorage";
+import CacheStorage from "./Modules/CacheStorage";
 
 // Functions that are called when an object store (or one of its entries) has expired
 IndexedDB.objStoreFetchFns = new Map([

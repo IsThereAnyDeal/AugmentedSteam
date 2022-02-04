@@ -156,7 +156,7 @@
         "space-in-parens": "error",
         "space-infix-ops": "error",
         "space-unary-ops": "error",
-        "spaced-comment": "error",
+        "spaced-comment": ["error", "always", { "markers": ["/"] }],
         "strict": ["error", "global"],
         "switch-colon-spacing": "error",
         "symbol-description": "error",
@@ -196,6 +196,9 @@
                 "@typescript-eslint/naming-convention": "off", // TODO Maybe implement that later?
                 "@typescript-eslint/no-confusing-non-null-assertion": "off",
                 "@typescript-eslint/no-extra-parens": "off",
+                "@typescript-eslint/no-extraneous-class": "off",
+                "@typescript-eslint/no-magic-numbers": ["warn", {"ignore": [0, 1, 24, 60]}],
+                "@typescript-eslint/no-parameter-properties": "off",
                 "@typescript-eslint/no-restricted-imports": "off", // TODO Restrict imports of globals (e.g. DOMPurify)
                 "@typescript-eslint/no-shadow": "off",
                 "@typescript-eslint/no-throw-literal": ["error", {"allowThrowingAny": false, "allowThrowingUnknown": false}],
@@ -205,6 +208,7 @@
                 "@typescript-eslint/prefer-enum-initializers": "off",
                 "@typescript-eslint/prefer-namespace-keyword": "off", // We're using ES2015 modules
                 "@typescript-eslint/quotes": ["error", "double", {"avoidEscape": true}],
+                "@typescript-eslint/sort-type-union-intersection-members": "off",
                 "@typescript-eslint/space-before-function-paren": ["error", "never"],
                 "@typescript-eslint/typedef": "off"
             }

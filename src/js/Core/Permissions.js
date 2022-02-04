@@ -1,4 +1,4 @@
-import {SyncedStorage} from "./Storage/SyncedStorage";
+import {SyncedStorage} from "../modulesCore";
 
 const ctxPermissions = __BROWSER__ === "firefox" ? [] : ["contextMenus"];
 

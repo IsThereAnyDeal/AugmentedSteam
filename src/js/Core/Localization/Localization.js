@@ -1,7 +1,4 @@
-import {BackgroundSimple} from "../BackgroundSimple";
-import {ExtensionResources} from "../ExtensionResources";
-import {Language} from "./Language";
-import {SyncedStorage} from "../Storage/SyncedStorage";
+import {BackgroundSimple, ExtensionResources, Language, SyncedStorage} from "../../modulesCore";
 
 
 class Localization {

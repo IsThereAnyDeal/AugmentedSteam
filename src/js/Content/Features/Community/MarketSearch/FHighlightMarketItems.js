@@ -1,4 +1,4 @@
-import {SyncedStorage} from "../../../../Core/Storage/SyncedStorage";
+import {SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature, Inventory} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 

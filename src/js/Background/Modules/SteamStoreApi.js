@@ -2,7 +2,7 @@ import {HTMLParser} from "../../Core/Html/HtmlParser";
 import {Errors} from "../../Core/Errors/Errors";
 import {Api} from "./Api";
 import {IndexedDB} from "./IndexedDB";
-import {CacheStorage} from "./CacheStorage";
+import CacheStorage from "./CacheStorage";
 
 class SteamStoreApi extends Api {
 

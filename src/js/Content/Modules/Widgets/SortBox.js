@@ -1,8 +1,6 @@
 
 // Most of the code here comes from dselect.js
-import {HTML} from "../../../Core/Html/Html";
-import {Localization} from "../../../Core/Localization/Localization";
-import {SyncedStorage} from "../../../Core/Storage/SyncedStorage";
+import {HTML, Localization, SyncedStorage} from "../../../modulesCore";
 
 class Sortbox {
 

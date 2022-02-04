@@ -1,4 +1,4 @@
-import {SyncedStorage} from "./Core/Storage/SyncedStorage";
+import {SyncedStorage} from "./modulesCore";
 
 let initialized = false;
 

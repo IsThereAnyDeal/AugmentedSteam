@@ -19,7 +19,6 @@
         // Modules
         "module": "ES2020",
         "moduleResolution": "node",
-        "types": ["svelte"],
 
         // Emit
         /**
