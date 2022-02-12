@@ -47,10 +47,10 @@ export default class FHowLongToBeat extends Feature {
                     <a class="linkbar es_external_icon" href="${HTML.escape(data.url)}" target="_blank">${Localization.str.more_information}</a>
                     <a class="linkbar es_external_icon" href="${HTML.escape(data.submit_url)}" target="_blank">${Localization.str.hltb.submit}</a>`;
 
-            // html += `<a class="linkbar es_external_icon" href="${suggestUrl}" id="es_hltb_suggest">${Localization.str.hltb.wrong} ${Localization.str.hltb.help}</a>`;
+            // html += `<a class="linkbar es_external_icon" id="es_hltb_suggest" href="${suggestUrl}" target="_blank">${Localization.str.hltb.wrong} ${Localization.str.hltb.help}</a>`;
         } else {
             html += `${Localization.str.hltb.no_data}</div>`;
-            // html += `<a class="linkbar es_external_icon" href="${suggestUrl}" id="es_hltb_suggest">${Localization.str.hltb.help}</a>`;
+            // html += `<a class="linkbar es_external_icon" id="es_hltb_suggest" href="${suggestUrl}" target="_blank">${Localization.str.hltb.help}</a>`;
         }
 
         html += "</div></div></div>";
