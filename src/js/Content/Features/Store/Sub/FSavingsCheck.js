@@ -1,38 +1,27 @@
-
-import {HTML, Localization, TimeUtils} from "../../../../modulesCore";
-import {Feature} from "../../../Modules/Feature/Feature";
-import {DOMHelper} from "../../../Modules/DOMHelper";
-import {Price} from "../../../Modules/Price";
+import {HTML, Localization} from "../../../../modulesCore";
+import {DOMHelper, Feature, Price} from "../../../modulesContent";
 
 export default class FSavingsCheck extends Feature {
 
-    async apply() {
-
-        // why is this here?
-        await TimeUtils.timer(500);
+    apply() {
 
         let notOwnedTotalPrice = 0;
 
         for (const node of document.querySelectorAll(".tab_item:not(.ds_owned)")) {
-            const priceNode = node.querySelector(".discount_final_price");
+            let priceNode = node.querySelector(".discount_final_price");
 
             // Only present when the product has a price associated with (so it's not free or N/A)
             if (priceNode) {
-                const priceContainer = priceNode.textContent.trim();
-                if (priceContainer) {
-                    const price = Price.parseFromString(priceContainer);
-                    if (price) {
-                        notOwnedTotalPrice += price.value;
-                        continue;
-                    }
+                const finalPrice = Price.parseFromString(priceNode.textContent);
+                if (finalPrice) {
+                    notOwnedTotalPrice += finalPrice.value;
+                    continue;
                 }
             } else {
-                const finalPrice = node.querySelector(".final_price");
-                if (finalPrice) {
-                    if (finalPrice.textContent === "N/A") {
-                        notOwnedTotalPrice = null;
-                        break;
-                    }
+                priceNode = node.querySelector(".final_price");
+                if (priceNode && priceNode.textContent.trim() === "N/A") {
+                    notOwnedTotalPrice = null;
+                    break;
                 }
                 continue;
             }
@@ -45,7 +34,6 @@ export default class FSavingsCheck extends Feature {
             if (!packagePrice) { return; }
 
             notOwnedTotalPrice -= packagePrice.value;
-            notOwnedTotalPrice = new Price(notOwnedTotalPrice);
 
             if (!document.querySelector("#package_savings_bar")) {
                 HTML.beforeEnd(".package_totals_area",
@@ -56,8 +44,8 @@ export default class FSavingsCheck extends Feature {
             }
 
             const savingsNode = document.querySelector("#package_savings_bar > .savings");
-            savingsNode.textContent = notOwnedTotalPrice;
-            if (notOwnedTotalPrice.value < 0) {
+            savingsNode.textContent = new Price(notOwnedTotalPrice);
+            if (notOwnedTotalPrice < 0) {
                 savingsNode.style.color = "red";
             }
         }
