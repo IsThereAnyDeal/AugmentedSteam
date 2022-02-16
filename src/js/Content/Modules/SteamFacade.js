@@ -163,6 +163,10 @@ class SteamFacade {
         LoadImageGroupOnScroll(elTarget, strGroup);
     }
 
+    static showModalContent(url, titleBarText, titleBarURL, sizeToFit) {
+        ShowModalContent(url, titleBarText, titleBarURL, sizeToFit);
+    }
+
     // inventory
 
     static firstPage() {

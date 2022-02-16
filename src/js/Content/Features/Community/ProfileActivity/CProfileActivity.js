@@ -25,16 +25,16 @@ export class CProfileActivity extends CCommunityBase {
 
         // Fix undefined function when clicking on the "show all x comments" button under "uploaded a screenshot" type activity
         Page.runInPageContext(() => {
-            /* eslint-disable no-undef, new-cap, camelcase */
-            if (typeof Blotter_ShowLargeScreenshot !== "function") {
+            const f = window.SteamFacade;
 
-                Blotter_ShowLargeScreenshot = function(galleryid, showComments) {
-                    const gallery = g_BlotterGalleries[galleryid];
+            if (typeof f.global("Blotter_ShowLargeScreenshot") !== "function") {
+
+                f.globalSet("Blotter_ShowLargeScreenshot", (galleryid, showComments) => {
+                    const gallery = f.global("g_BlotterGalleries")[galleryid];
                     const ss = gallery.shots[gallery.m_screenshotActive];
-                    ShowModalContent(`${ss.m_modalContentLink}&insideModal=1&showComments=${showComments}`, ss.m_modalContentLinkText, ss.m_modalContentLink, true);
-                };
+                    f.showModalContent(`${ss.m_modalContentLink}&insideModal=1&showComments=${showComments}`, ss.m_modalContentLinkText, ss.m_modalContentLink, true);
+                });
             }
-            /* eslint-enable no-undef, new-cap, camelcase */
         });
     }
 
