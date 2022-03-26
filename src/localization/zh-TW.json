@@ -788,14 +788,14 @@
     "manage_webapi_key": "管理我的 Steam Web API 金鑰",
     "steam_cloud_header": "Steam 雲端",
     "steam_cloud_saves": "檢視雲端存檔",
-    "community_hub": "",
-    "cart": "",
+    "community_hub": "社群中心",
+    "cart": "購物車",
     "feature_hint": {
-        "desc": "",
-        "reminder": ""
+        "desc": "您想啟用下列特性嗎？",
+        "reminder": "稍後您可以在設置中修改您的選項。"
     },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": ""
+    "thewordyes": "是",
+    "thewordno": "否",
+    "show_comments": "展開討論",
+    "hide_comments": "隱藏討論"
 }

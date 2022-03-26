@@ -788,14 +788,14 @@
     "manage_webapi_key": "管理我的 Steam Web API 密钥",
     "steam_cloud_header": "Steam 云",
     "steam_cloud_saves": "查看云存储",
-    "community_hub": "",
-    "cart": "",
+    "community_hub": "社区中心",
+    "cart": "购物车",
     "feature_hint": {
-        "desc": "",
-        "reminder": ""
+        "desc": "您想启用以下功能吗？",
+        "reminder": "稍后您可以在设置中修改您的选项。"
     },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": ""
+    "thewordyes": "是",
+    "thewordno": "否",
+    "show_comments": "展开评论",
+    "hide_comments": "隐藏评论"
 }
