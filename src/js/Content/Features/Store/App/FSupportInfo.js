@@ -33,15 +33,16 @@ export default class FSupportInfo extends Feature {
             LocalStorage.set("support_info", cache);
         }
 
-        return this._supportInfo.url || this._supportInfo.email;
+        return Boolean(this._supportInfo.url || this._supportInfo.email);
     }
 
     apply() {
 
-        const {url, email} = this._supportInfo;
+        let {url, email} = this._supportInfo;
         const links = [];
 
         if (url) {
+            url = /^https?:\/\//.test(url) ? url : `//${url}`;
             links.push(`<a href="${url}">${Localization.str.website}</a>`);
         }
 
