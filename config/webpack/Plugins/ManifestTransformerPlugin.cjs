@@ -35,6 +35,7 @@ class ManifestTransformerPlugin {
                     }
 
                     entry.matches = this._transformMatches(entry.matches);
+                    // eslint-disable-next-line camelcase -- This property name is enforced by the manifest syntax
                     entry.exclude_matches = this._transformMatches(entry.exclude_matches);
 
                     for (const path of this._js) {
@@ -58,7 +59,7 @@ class ManifestTransformerPlugin {
 
     _transformMatches(matches) {
 
-        if (!Array.isArray(matches)) { return; }
+        if (!Array.isArray(matches)) { return undefined; }
 
         const results = [];
 
@@ -88,7 +89,10 @@ class ManifestTransformerPlugin {
 
     _parseOptional(match) {
 
-        // Allows (very basic) optional strings in a match string by surrounding the optional part with brackets, e.g. "example.com/some_page[/]"
+        /*
+         * Allows (very basic) optional strings in a match string by surrounding the optional part
+         * with brackets, e.g. "example.com/some_page[/]"
+         */
         const regex = /\[.+]/gd;
         let results = regex.exec(match);
 

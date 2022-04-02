@@ -123,7 +123,6 @@
         "no-throw-literal": "error",
         "no-trailing-spaces": ["error", { "skipBlankLines": true }],
         "no-undef-init": "error",
-        "no-undefined": "error",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": ["error", { "defaultAssignment": false }],
         "no-unused-expressions": "error",
