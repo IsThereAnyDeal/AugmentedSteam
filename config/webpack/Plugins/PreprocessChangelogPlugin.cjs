@@ -1,6 +1,6 @@
 const YAML = require("yaml");
 const fs = require("fs");
-const marked = require("marked");
+const {marked} = require("marked");
 
 class PreprocessChangelogPlugin {
 
