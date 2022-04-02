@@ -20,6 +20,9 @@
                 "node": true,
                 "browser": false,
                 "webextensions": false
+            },
+            "parserOptions": {
+                "ecmaVersion": "latest"
             }
         }
     ],
