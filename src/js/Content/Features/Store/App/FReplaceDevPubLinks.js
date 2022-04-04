@@ -1,5 +1,4 @@
-import {HTML} from "../../../../Core/Html/Html";
-import {Localization} from "../../../../Core/Localization/Localization";
+import {HTML, Localization} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -10,12 +9,12 @@ export default class FReplaceDevPubLinks extends Feature {
         const devs = [document.querySelector(".details_block > .dev_row:first-of-type > a")];
         const highlightsDev = document.getElementById("developers_list")?.parentElement;
 
-        if (typeof highlightsDev === "undefined") { devs.push(highlightsDev.querySelector("a")); }
+        if (highlightsDev) { devs.push(highlightsDev.querySelector("a")); }
 
         const pubs = [document.querySelector(".details_block > .dev_row:nth-of-type(2) > a")];
         const highlightsPub = highlightsDev?.nextElementSibling;
 
-        if (typeof highlightsPub === "undefined") { pubs.push(highlightsPub.querySelector("a")); }
+        if (highlightsPub) { pubs.push(highlightsPub.querySelector("a")); }
 
         let franchise = document.querySelector(".details_block > .dev_row:nth-of-type(3) > a");
         franchise = franchise ? [franchise] : [];
