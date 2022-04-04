@@ -98,7 +98,7 @@
       "js": "js/store/agecheck.js"
     },
     {
-      "matches": "*://*.steampowered.com/points/shop[/*]",
+      "matches": "*://*.steampowered.com/points[/*]",
       "js": "js/store/points_shop.js"
     },
     {
@@ -128,7 +128,7 @@
         "*://*.steampowered.com/sub/*",
         "*://*.steampowered.com/app/*",
         "*://*.steampowered.com/agecheck/*",
-        "*://*.steampowered.com/points/shop[/*]"
+        "*://*.steampowered.com/points[/*]"
       ],
       "js": "js/store/default.js"
     },
