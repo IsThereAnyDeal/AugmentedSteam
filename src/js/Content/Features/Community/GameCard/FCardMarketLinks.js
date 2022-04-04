@@ -42,7 +42,7 @@ export default class FCardMarketLinks extends Feature {
             }
 
             if (url && price) {
-                const marketLink = `https://steamcommunity.com/market/listings/753/${url}`;
+                const marketLink = `https://steamcommunity.com/market/listings/${url}`;
                 const cardPrice = new Price(price);
                 HTML.beforeEnd(node, `<a class="es_card_search" href="${marketLink}">${Localization.str.lowest_price} ${cardPrice}</a>`);
             }
