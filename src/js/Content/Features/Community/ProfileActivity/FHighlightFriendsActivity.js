@@ -21,7 +21,9 @@ export default class FHighlightFriendsActivity extends CallbackFeature {
                 && (link.childElementCount !== 1 || !link.closest(".vote_header"))
 
                 // https://github.com/IsThereAnyDeal/AugmentedSteam/issues/1368
-                && !link.parentElement.classList.contains("blotter_group_announcement_headline"));
+                && !link.parentElement.classList.contains("blotter_group_announcement_headline")
+            
+                && !link.parentElement.classList.contains("gameLogo"));
 
         FHighlightsTags.highlightAndTag(nodes, false);
     }
