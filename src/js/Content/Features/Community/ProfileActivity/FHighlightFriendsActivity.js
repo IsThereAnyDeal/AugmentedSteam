@@ -17,12 +17,12 @@ export default class FHighlightFriendsActivity extends CallbackFeature {
         const nodes = Array.from(parent.querySelectorAll(".blotter_block a[href]:not(.blotter_gamepurchase_logo, [id^='dynamiclink_'])"))
             .filter(link => (GameId.getAppid(link) !== null && link.childElementCount <= 1)
 
+                // Don't highlight links that refer to announcement details
+                && !/\/announcements\/detail\/\d+$/.test(new URL(link.href).pathname)
+
                 // https://github.com/IsThereAnyDeal/AugmentedSteam/pull/470#pullrequestreview-284928257
                 && (link.childElementCount !== 1 || !link.closest(".vote_header"))
 
-                // https://github.com/IsThereAnyDeal/AugmentedSteam/issues/1368
-                && !link.parentElement.classList.contains("blotter_group_announcement_headline")
-            
                 && !link.parentElement.classList.contains("gameLogo"));
 
         FHighlightsTags.highlightAndTag(nodes, false);
