@@ -2295,6 +2295,10 @@ label.es_dlc_label > input:checked::after {
   max-height: none;
   display: flex;
 }
+.es_emoticons_content .no-access {
+  cursor: help;
+  opacity: 0.4;
+}
 #es_fav_remove {
   width: 10%;
   background-image: url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);

@@ -126,8 +126,15 @@ export class CommentHandler {
     }
 
     static _clickFavEmoticon(ev, emoticonPopup) {
-        const name = ev.target.closest(".emoticon_option").dataset.emoticon;
-        const noFav = emoticonPopup.querySelector(`[data-emoticon=${name}]:not(.es_fav)`);
+        const node = ev.target.closest(".emoticon_option");
+        const noFav = emoticonPopup.querySelector(`[data-emoticon=${node.dataset.emoticon}]:not(.es_fav)`);
+        if (!noFav) {
+            // The user doesn't have access to this emoticon
+            ev.stopPropagation();
+            node.classList.add("no-access");
+            node.querySelector("img").title = Localization.str.fav_emoticons_no_access;
+            return;
+        }
         noFav.click();
     }
 
