@@ -10,14 +10,6 @@ export default class FHighlightsTags extends Feature {
             window.SteamFacade.onDynamicStoreReady(() => { resolve(); });
         }), null, true);
 
-        const searchBoxContents = document.getElementById("search_suggestion_contents");
-        if (searchBoxContents) {
-            const observer = new MutationObserver(records => {
-                FHighlightsTags.highlightAndTag(records[0].addedNodes);
-            });
-            observer.observe(searchBoxContents, {"childList": true});
-        }
-
         return Promise.all([
             FHighlightsTags.highlightTitle(this.context.appid),
             FHighlightsTags.highlightAndTag(),
@@ -111,7 +103,7 @@ export default class FHighlightsTags extends Feature {
                 }
             }
 
-        
+
             if (hasDsInfo) {
                 try {
                     if (opts.owned && node.querySelector(".ds_owned_flag") !== null) {

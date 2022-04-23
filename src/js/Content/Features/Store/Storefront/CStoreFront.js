@@ -1,16 +1,19 @@
-import ContextType from "../../../Modules/Context/ContextType";
+import {ContextType, User} from "../../../modulesContent";
 import {CStoreBase} from "../Common/CStoreBase";
-import FMonitorStoreFront from "./FMonitorStoreFront";
-import FHomePageTab from "./FHomePageTab";
 import FCustomizer from "../Common/FCustomizer";
+import FHomePageTab from "./FHomePageTab";
 
 export class CStoreFront extends CStoreBase {
 
     constructor() {
+
         super(ContextType.STORE_FRONT, [
-            FMonitorStoreFront,
-            FHomePageTab,
             FCustomizer,
+            FHomePageTab,
         ]);
+
+        if (User.isSignedIn) { // TODO ITAD status
+            this.monitorStoreFront();
+        }
     }
 }
