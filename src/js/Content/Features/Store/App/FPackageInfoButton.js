@@ -19,6 +19,8 @@ export default class FPackageInfoButton extends Feature {
         for (const node of document.querySelectorAll(
             ".game_area_purchase_game_wrapper:not(.bundle_hidden_by_preferences, .game_purchase_sub_dropdown, .dynamic_bundle_description)"
         )) {
+            // Exclude entries that already have a "Package info" button
+            if (node.querySelector(".btn_packageinfo")) { return; }
 
             const subid = node.querySelector("input[name=subid]");
             if (!subid) { continue; } // This should never happen; non-applicable items should ideally be excluded by the selector
