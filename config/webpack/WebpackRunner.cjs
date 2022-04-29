@@ -62,10 +62,9 @@ class WebpackRunner {
                 "groups": [
                     {
                         "files": [
-                            "config/manifests/common.json",
-                            `config/manifests/${this._mode}.json`,
-                            `config/manifests/${this._browser}/common.json`,
-                            `config/manifests/${this._browser}/${this._mode}.json`,
+                            "config/manifests/manifest_common.json",
+                            `config/manifests/manifest_${this._browser}.json`,
+                            `config/manifests/manifest_${this._mode}.json`,
                         ],
                         "to": "manifest.json",
                     }
