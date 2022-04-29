@@ -404,9 +404,7 @@
         "compl": "Completionist",
         "submit": "Submit Your Time",
         "main": "Main Story",
-        "no_data": "No data found",
-        "help": "Click here to help",
-        "wrong": "Wrong game?"
+        "no_data": "No data found"
     },
     "library": {
         "in_library": "In Library",

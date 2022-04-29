@@ -1,6 +1,5 @@
 import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
-// import Config from "../../../../config";
 
 export default class FHowLongToBeat extends Feature {
 
@@ -26,7 +25,6 @@ export default class FHowLongToBeat extends Feature {
     apply() {
 
         const data = this._data;
-        // const suggestUrl = `${Config.PublicHost}/gamedata/hltb_link_suggest.php`;
 
         let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.hltb.title}</div>
                     <div class="block game_details underlined_links es_hltb">
@@ -46,21 +44,12 @@ export default class FHowLongToBeat extends Feature {
             html += `</div>
                     <a class="linkbar es_external_icon" href="${HTML.escape(data.url)}" target="_blank">${Localization.str.more_information}</a>
                     <a class="linkbar es_external_icon" href="${HTML.escape(data.submit_url)}" target="_blank">${Localization.str.hltb.submit}</a>`;
-
-            // html += `<a class="linkbar es_external_icon" id="es_hltb_suggest" href="${suggestUrl}" target="_blank">${Localization.str.hltb.wrong} ${Localization.str.hltb.help}</a>`;
         } else {
             html += `${Localization.str.hltb.no_data}</div>`;
-            // html += `<a class="linkbar es_external_icon" id="es_hltb_suggest" href="${suggestUrl}" target="_blank">${Localization.str.hltb.help}</a>`;
         }
 
         html += "</div></div></div>";
 
         HTML.afterEnd("div.game_details", html);
-
-        /*
-         * document.querySelector("#es_hltb_suggest").addEventListener("click", () => {
-         *    Background.action("storepagedata.expire", this.context.appid);
-         * });
-         */
     }
 }
