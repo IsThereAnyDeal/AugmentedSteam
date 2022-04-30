@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const {merge} = require("webpack-merge");
 const path = require("path");
+const fs = require("fs");
 const MergeJsonWebpackPlugin = require("merge-json-webpack-plugin");
 const ExtensionReloader = require("webpack-ext-reloader");
 const FileManagerPlugin = require("filemanager-webpack-plugin");
@@ -57,15 +58,31 @@ class WebpackRunner {
             "css/augmentedsteam": `./src/css/augmentedsteam-${this._browser}.css`
         };
 
+
+        const manifestsDirectory = "config/manifests";
+        const fileNames = [
+            "base.json",
+            `base.${this._mode}.json`,
+            `${this._browser}.json`,
+            `${this._browser}.${this._mode}.json`,
+        ];
+
+        console.log("\x1b[33;1m%s\x1b[0m", "Building manifest from...");
+        const files = [];
+        for (const fileName of fileNames) {
+            const path = `${manifestsDirectory}/${fileName}`;
+            if (fs.existsSync(path)) {
+                files.push(path);
+                console.log(`  ${manifestsDirectory}/\x1b[32;1m${fileName}\x1b[0m`);
+            }
+        }
+        console.log("");
+
         options.plugins = [
             new MergeJsonWebpackPlugin({
                 "groups": [
                     {
-                        "files": [
-                            "config/manifests/manifest_common.json",
-                            `config/manifests/manifest_${this._browser}.json`,
-                            `config/manifests/manifest_${this._mode}.json`,
-                        ],
+                        files,
                         "to": "manifest.json",
                     }
                 ],
