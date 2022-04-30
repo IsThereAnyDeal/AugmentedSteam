@@ -594,8 +594,8 @@
         "oneclickremovewl": "Прескачане на потвърждаването, когато се премахват артикули",
         "profile_pinned_bg": "Закачане на позицията за профилния фон, докато се скролира",
         "replacecommunityhublinks": "Подмяна на връзките за обществени центрове с такива за страниците в магазина от емисията за дейност на приятели",
-        "hideannouncementcomments": "",
-        "friend_activity": ""
+        "hideannouncementcomments": "Скриване на коментарите под всички групови анонси по подразбиране",
+        "friend_activity": "Емисия с приятелска активност"
     },
     "ready": {
         "errormsg": "Грешка при зареждане на данните за Augmented Steam",
@@ -788,14 +788,15 @@
     "manage_webapi_key": "Управляване на моя Steam уеб API ключ",
     "steam_cloud_header": "Steam облак",
     "steam_cloud_saves": "Преглед на запазеното в облака",
-    "community_hub": "",
-    "cart": "",
+    "community_hub": "Обществен център",
+    "cart": "Кошница",
     "feature_hint": {
-        "desc": "",
-        "reminder": ""
+        "desc": "Бихте ли искали да включите следната характеристика?",
+        "reminder": "Можете да промените своите предпочитания по-късно посредством страницата с опциите."
     },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": ""
+    "thewordyes": "Да",
+    "thewordno": "Не",
+    "show_comments": "Показване на коментари",
+    "hide_comments": "Скриване на коментари",
+    "fav_emoticons_no_access": "Нямате достъп до тази емотикона"
 }

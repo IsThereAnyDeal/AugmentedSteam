@@ -594,8 +594,8 @@
         "oneclickremovewl": "ข้ามการยืนยันเมื่อกำลังลบรายการ",
         "profile_pinned_bg": "ปักหมุดตำแหน่งพื้นหลังโปรไฟล์เมื่อกำลังเลื่อน",
         "replacecommunityhublinks": "แทนที่ลิงก์ศูนย์กลางชุมชนด้วยลิงก์หน้าร้านค้าบนฟีดกิจกรรมของเพื่อน",
-        "hideannouncementcomments": "",
-        "friend_activity": ""
+        "hideannouncementcomments": "ซ่อนความเห็นภายใต้กลุ่มประกาศทั้งหมดตามค่าเริ่มต้น",
+        "friend_activity": "ฟีดกิจกรรมของเพื่อน"
     },
     "ready": {
         "errormsg": "ตรวจพบข้อผิดพลาดในการโหลดข้อมูล Augmented Steam",
@@ -788,14 +788,15 @@
     "manage_webapi_key": "จัดการรหัส Steam Web API ของฉัน",
     "steam_cloud_header": "คลาวด์บน Steam",
     "steam_cloud_saves": "ดูบันทึกบนคลาวด์",
-    "community_hub": "",
-    "cart": "",
+    "community_hub": "ศูนย์กลางชุมชน",
+    "cart": "รถเข็น",
     "feature_hint": {
-        "desc": "",
-        "reminder": ""
+        "desc": "คุณต้องการเปิดการใช้งานคุณสมบัติดังต่อไปนี้หรือไม่?",
+        "reminder": "คุณสามารถเปลี่ยนการปรับแต่งของคุณได้ผ่านหน้าตัวเลือกในภายหลัง"
     },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": ""
+    "thewordyes": "ใช่",
+    "thewordno": "ไม่",
+    "show_comments": "แสดงความเห็น",
+    "hide_comments": "ซ่อนความเห็น",
+    "fav_emoticons_no_access": ""
 }

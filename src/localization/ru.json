@@ -594,8 +594,8 @@
         "oneclickremovewl": "Пропускать подтверждение удаления предметов",
         "profile_pinned_bg": "Закрепить положение фонового изображения во время прокрутки",
         "replacecommunityhublinks": "Заменить ссылки на центры сообществ ссылками на страницы магазинов в ленте активности",
-        "hideannouncementcomments": "",
-        "friend_activity": ""
+        "hideannouncementcomments": "Скрывать комментарии под всеми объявлениями в группах по умолчанию",
+        "friend_activity": "Лента активности друзей"
     },
     "ready": {
         "errormsg": "Ошибка загрузки данных Augmented Steam",
@@ -788,14 +788,15 @@
     "manage_webapi_key": "Редактировать ключ Steam Web API",
     "steam_cloud_header": "Облако Steam",
     "steam_cloud_saves": "Посмотреть сохранения в облаке",
-    "community_hub": "",
-    "cart": "",
+    "community_hub": "Центр сообщества",
+    "cart": "Корзина",
     "feature_hint": {
-        "desc": "",
-        "reminder": ""
+        "desc": "Вы хотите включить данную опцию?",
+        "reminder": "Вы сможете изменить ваши предпочтения на странице настроек позже."
     },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": ""
+    "thewordyes": "Да",
+    "thewordno": "Нет",
+    "show_comments": "Показать комментарии",
+    "hide_comments": "Скрыть комментарии",
+    "fav_emoticons_no_access": ""
 }

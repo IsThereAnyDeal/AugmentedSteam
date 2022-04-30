@@ -573,11 +573,11 @@
             "export": "Kaydet",
             "reset": "Sıfırla"
         },
-        "removebroadcasts": "",
-        "maintainers": "",
+        "removebroadcasts": "Bütün canlı yayınları tamamen kaldır",
+        "maintainers": "Proje Sorumluları",
         "with_help_of": "",
         "contributors": "",
-        "apppage": "",
+        "apppage": "Uygulama Sayfası",
         "exfgls": "",
         "custom_style_disable": "",
         "saving": "",
@@ -594,7 +594,7 @@
         "oneclickremovewl": "",
         "profile_pinned_bg": "",
         "replacecommunityhublinks": "",
-        "hideannouncementcomments": "",
+        "hideannouncementcomments": "Varsayılan olarak tüm grup duyurularının altındaki yorumları gizle",
         "friend_activity": ""
     },
     "ready": {
@@ -797,5 +797,6 @@
     "thewordyes": "",
     "thewordno": "",
     "show_comments": "",
-    "hide_comments": ""
+    "hide_comments": "",
+    "fav_emoticons_no_access": ""
 }

@@ -594,8 +594,8 @@
         "oneclickremovewl": "Omitir confirmación al remover artículos",
         "profile_pinned_bg": "Fijar la posición del fondo de perfil mientras me mueva con la rueda del ratón",
         "replacecommunityhublinks": "Reemplazar los enlaces del centro de la comunidad con enlaces a la página de la tienda de cada juego en el feed de actividad de amigos",
-        "hideannouncementcomments": "",
-        "friend_activity": ""
+        "hideannouncementcomments": "Ocultar comentarios de todos los anuncios de grupos de forma predeterminada",
+        "friend_activity": "Feed de actividad de tus amigos"
     },
     "ready": {
         "errormsg": "Error al cargar datos de Augmented Steam",
@@ -788,14 +788,15 @@
     "manage_webapi_key": "Administrar mi clave de API web de Steam",
     "steam_cloud_header": "Nube de Steam",
     "steam_cloud_saves": "Ver guardados en la nube",
-    "community_hub": "",
-    "cart": "",
+    "community_hub": "Centro de la comunidad",
+    "cart": "Carrito",
     "feature_hint": {
-        "desc": "",
-        "reminder": ""
+        "desc": "¿Te gustaría habilitar la siguiente función?",
+        "reminder": "Más tarde puedes cambiar tus preferencias a través de la página de opciones."
     },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": ""
+    "thewordyes": "Sí",
+    "thewordno": "No",
+    "show_comments": "Mostrar comentarios",
+    "hide_comments": "Ocultar comentarios",
+    "fav_emoticons_no_access": ""
 }

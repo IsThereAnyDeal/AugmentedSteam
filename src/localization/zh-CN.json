@@ -594,8 +594,8 @@
         "oneclickremovewl": "删除物品时跳过确认",
         "profile_pinned_bg": "滚动时固定个人资料背景位置",
         "replacecommunityhublinks": "在好友动态中，将社区中心链接替换为商店页面链接",
-        "hideannouncementcomments": "",
-        "friend_activity": ""
+        "hideannouncementcomments": "默认隐藏所有组公告下的评论",
+        "friend_activity": "好友动态"
     },
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",
@@ -788,14 +788,15 @@
     "manage_webapi_key": "管理我的 Steam Web API 密钥",
     "steam_cloud_header": "Steam 云",
     "steam_cloud_saves": "查看云存储",
-    "community_hub": "",
-    "cart": "",
+    "community_hub": "社区中心",
+    "cart": "购物车",
     "feature_hint": {
-        "desc": "",
-        "reminder": ""
+        "desc": "您希望启用以下功能吗？",
+        "reminder": "您可以稍后在选项页面更改偏好设置。"
     },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": ""
+    "thewordyes": "是",
+    "thewordno": "否",
+    "show_comments": "显示留言",
+    "hide_comments": "隐藏留言",
+    "fav_emoticons_no_access": "您没有使用此表情的权限"
 }

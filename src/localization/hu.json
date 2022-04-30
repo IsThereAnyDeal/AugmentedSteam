@@ -594,7 +594,7 @@
         "oneclickremovewl": "",
         "profile_pinned_bg": "",
         "replacecommunityhublinks": "",
-        "hideannouncementcomments": "",
+        "hideannouncementcomments": "Kommentek automatikus elrejtése csoport bejelentések alatt",
         "friend_activity": ""
     },
     "ready": {
@@ -781,21 +781,22 @@
     "wait": "Kérem várjon",
     "login_warning": "Győződj meg róla, hogy be vagy jelentkezve __link__, hogy az Augmented Steam összes funkcióját használhasd",
     "youtube_reviews": "YouTube értékelések",
-    "download_demo_header": "",
+    "download_demo_header": "__gamename__ Demo letöltése",
     "games_common": "",
     "games_notcommon": "",
     "shopping_cart_history": "",
     "manage_webapi_key": "",
-    "steam_cloud_header": "",
+    "steam_cloud_header": "Steam Felhő",
     "steam_cloud_saves": "",
     "community_hub": "",
-    "cart": "",
+    "cart": "Kosár",
     "feature_hint": {
         "desc": "",
         "reminder": ""
     },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": ""
+    "thewordyes": "Igen",
+    "thewordno": "Nem",
+    "show_comments": "Kommentek megjelenítése",
+    "hide_comments": "Kommentek elrejtése",
+    "fav_emoticons_no_access": ""
 }
