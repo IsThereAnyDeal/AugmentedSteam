@@ -41,7 +41,7 @@ class UpdateHandler {
         }
 
         const logo = ExtensionResources.getURL("img/logo/as128.png");
-        const githubChanges = `<p><a href="https://github.com/IsThereAnyDeal/AugmentedSteam/compare/v${SyncedStorage.get("version")}...v${Info.version}">All changes on GitHub</a></p>`;
+        const githubChanges = `<p><a href="https://github.com/IsThereAnyDeal/AugmentedSteam/compare/v${SyncedStorage.get("version")}...v${Info.version}" target="_blank" rel="noopener noreferrer">All changes on GitHub</a></p>`;
         const dialog = `<div class="es_changelog"><img src="${logo}"><div>${html}${githubChanges}</div></div>`;
 
         const connectBtn = document.querySelector("#itad_connect");
