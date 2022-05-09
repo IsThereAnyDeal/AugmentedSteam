@@ -655,11 +655,11 @@
     },
     "wsgf": {
         "incomplete": "Incompleto",
-        "unsupported": "Esta pontuação é dada a jogos que não possuem compatibilidade com __type__.  O jogo pode não ser jogado no modo __type__ ou a imagem é estendida para preencher a janela. A proporção correta não é mantida.",
+        "unsupported": "Esta pontuação é dada a jogos que não possuem compatibilidade com __type__. O jogo pode não ser jogado no modo __type__ ou a imagem é estendida para preencher a janela. A proporção correta não é mantida.",
         "gold": "Esta medalha é dada a jogos que receberam pontuações perfeitas do WSGF pela sua compatibilidade e certificação com __type__.",
-        "silver": "Esta medalha é dada a jogos que receberam uma nota final B pela sua compatibilidade com __type__.  Todos os jogos com esta nota não possuem grandes problemas, mas pode haver um detalhe que impede uma pontuação perfeita.",
-        "limited": "Esta medalha é dada a jogos que receberam uma nota final C pela sua compatibilidade com __type__.  Todos os jogos com esta nota possuem algum tipo de compatibilidade com __type__, mas têm problemas significativos.",
-        "certifications": "Certificações de Widescreen da WSGF"
+        "silver": "Esta medalha é dada a jogos que receberam uma nota final B pela sua compatibilidade com __type__. Todos os jogos com esta nota não possuem grandes problemas, mas pode haver um detalhe que impede uma pontuação perfeita.",
+        "limited": "Esta medalha é dada a jogos que receberam uma nota final C pela sua compatibilidade com __type__. Todos os jogos com esta nota possuem algum tipo de compatibilidade com __type__, mas têm problemas significativos.",
+        "certifications": "Certificações de Widescreen do WSGF"
     },
     "itad": {
         "import": "Importar periodicamente:",
