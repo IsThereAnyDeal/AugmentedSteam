@@ -125,7 +125,7 @@
     "games_installed": "Installed Games",
     "hours_short": "__hours__ hrs",
     "faqs": "Frequently Asked Questions",
-    "spam_comment_show": "__num__ spam comments hidden on this page.  Click here to show them.",
+    "spam_comment_show": "__num__ spam comments hidden on this page. Click here to show them.",
     "dlc": "Downloadable Content",
     "add_to_wishlist": "Add to your wishlist",
     "add_to_wishlist_tooltip": "Get notified by email when your wishlisted items get released or are on sale",
@@ -218,7 +218,7 @@
     "viewinclient": "View in Client",
     "custom_background": "Custom Background",
     "custom_style": "Custom Theme",
-    "custom_style_help": "All users of Augmented Steam will see this theme on your profile.  Non-Augmented Steam users will not see any theme changes made here.",
+    "custom_style_help": "All users of Augmented Steam will see this theme on your profile. Non-Augmented Steam users will not see any theme changes made here.",
     "noneselected": "None Selected / No Change",
     "most_drops": "Most Drops",
     "badge_foil_progress": "View Foil Badge Progress",
@@ -261,7 +261,7 @@
     "visit_trade_forum": "Visit Trade Forum",
     "software": "Software",
     "purchase_date": "(Purchased __date__)",
-    "custom_background_help": "All users of Augmented Steam will see this background on your profile.  Non-Augmented Steam users will see your regular profile background.",
+    "custom_background_help": "All users of Augmented Steam will see this background on your profile. Non-Augmented Steam users will see your regular profile background.",
     "date_unlocked": "Date Unlocked",
     "view_badge_foil": "View Foil Badge",
     "net_spent": "Net spent:",
@@ -695,7 +695,7 @@
     },
     "wsgf": {
         "incomplete": "Incomplete",
-        "unsupported": "This score is awarded to games that have no __type__ support. The game may be unplayable in __type__, or the image is stretched to fit the window.  Correct aspect ratio is not retained.",
+        "unsupported": "This score is awarded to games that have no __type__ support. The game may be unplayable in __type__, or the image is stretched to fit the window. Correct aspect ratio is not retained.",
         "gold": "This medal is awarded to games which have received perfect scores from the WSGF for their __type__ support, and are __type__ Certified.",
         "silver": "This medal is awarded to games that have received a calculated grade of B for their __type__ support. All of these games are without major flaws, but have at least one blemish that prevents a perfect score.",
         "limited": "This score is awarded to games that have received a calculated grade of C for their __type__ support. All of these games have some level of __type__ support but have significant issues.",
@@ -728,13 +728,13 @@
     "register": {
         "success": "Successfully activated __gamename__",
         "owned": "This Steam account already owns the product(s) contained in this offer.",
-        "notavail": "Sorry, but this product is not available for purchase in this country.  Your product key has not been redeemed.",
-        "invalid": "The product code you've entered is not valid.  Please double check to see if you've mistyped your key.",
+        "notavail": "Sorry, but this product is not available for purchase in this country. Your product key has not been redeemed.",
+        "invalid": "The product code you've entered is not valid. Please double check to see if you've mistyped your key.",
         "already": "The product code you've entered has already been activated by a different Steam account.",
         "dlc": "The product code you've entered requires ownership of another product before activation.",
         "wallet": "The code you have entered is from a Steam Gift Card or Steam Wallet Code",
-        "toomany": "There have been too many recent activation attempts from this account.  Please wait and try again later.",
-        "default": "An unexpected error occurred.  Your product code has not been redeemed.  Please wait 30 minutes and try redeeming the code again."
+        "toomany": "There have been too many recent activation attempts from this account. Please wait and try again later.",
+        "default": "An unexpected error occurred. Your product code has not been redeemed. Please wait 30 minutes and try redeeming the code again."
     },
     "wl": {
         "total_price": "current value",
