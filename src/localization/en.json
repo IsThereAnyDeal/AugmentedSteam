@@ -421,6 +421,9 @@
         "average_playtime": "Average playtime",
         "average_playtime_2weeks": "Average playtime in the last two weeks",
         "formatted_time": "__hours__ hours, __minutes__ minutes"
+        "playtime_unit_day": "d"
+        "playtime_unit_hour": "h"
+        "playtime_unit_minute": "m"
     },
     "options": {
         "settings_mngmt": {
