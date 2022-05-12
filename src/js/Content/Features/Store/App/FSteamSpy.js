@@ -45,15 +45,15 @@ export default class FSteamSpy extends Feature {
         const result = [];
 
         const days = Math.trunc(_value / 1440);
-        if (days > 0) { result.push(`${days}d`); }
+        if (days > 0) { result.push(`${days}${Localization.str.spy.playtime_unit_day}`); }
         _value -= days * 1440;
 
         const hours = Math.trunc(_value / 60);
-        result.push(`${hours}h`);
+        result.push(`${hours}${Localization.str.spy.playtime_unit_hour}`);
         _value -= hours * 60;
 
         const minutes = _value;
-        result.push(`${minutes}m`);
+        result.push(`${minutes}${Localization.str.spy.playtime_unit_minute}`);
 
         return result.join(" ");
     }
