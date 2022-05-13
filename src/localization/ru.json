@@ -19,7 +19,7 @@
     "oneclickgoo": "Превратить в самоцветы одной кнопкой",
     "view_in_library": "Открыть в библиотеке",
     "support": "Поддержка",
-    "email": "Эл. почта",
+    "email": "E-mail",
     "contact": "Связаться",
     "fav_emoticons_dragging": "Перетащите сюда смайлики, чтобы добавить в избранное",
     "post_history": "Показать историю сообщений",
@@ -376,9 +376,6 @@
         "average_playtime": "Средняя продолжительность",
         "average_playtime_2weeks": "Средняя продолжительность игры за последние две недели",
         "formatted_time": "__hours__ часов, __minutes__ минут"
-        "playtime_unit_day": "д"
-        "playtime_unit_hour": "ч"
-        "playtime_unit_minute": "м"
     },
     "options": {
         "community_default_tab": "Вкладка по умолчанию на главной странице Сообщества",
