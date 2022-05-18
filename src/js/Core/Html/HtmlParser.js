@@ -25,7 +25,7 @@ class HTMLParser {
         } else if (type === "string") {
             regex = new RegExp(`${name}\\s*=\\s*(\\".+?\\");`);
         } else {
-            return null;
+            regex = new RegExp(name);
         }
 
         const m = text.match(regex);
@@ -33,7 +33,12 @@ class HTMLParser {
             if (type === "int") {
                 return parseInt(m[1]);
             }
-            return JSON.parse(m[1]);
+
+            try {
+                return JSON.parse(m[1]);
+            } catch {
+                return null;
+            }
         }
 
         return null;
