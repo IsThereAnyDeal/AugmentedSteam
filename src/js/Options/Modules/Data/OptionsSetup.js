@@ -194,4 +194,5 @@ export default {
     "steamcardexchange": "options.steamcardexchange",
     "wlbuttoncommunityapp": "options.wlbuttoncommunityapp",
     "removeguideslanguagefilter": "options.removeguideslanguagefilter",
+    "confirmdeletecomment": "options.confirmdeletecomment",
 };
