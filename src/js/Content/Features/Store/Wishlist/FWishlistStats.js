@@ -37,12 +37,7 @@ export default class FWishlistStats extends Feature {
 
         // capture this event so it doesn't get default prevented
         document.body.addEventListener("click", ({target}) => {
-            if (
-                !statsBtn.classList.contains("hover")
-                || target.closest("#esi-wishlist-stats, #esi-wishlist-stats-content") !== null
-            ) {
-                return;
-            }
+            if (statsBtn.contains(target) || statsContent.contains(target)) { return; }
 
             statsBtn.classList.remove("hover");
             statsContent.classList.remove("hover");
