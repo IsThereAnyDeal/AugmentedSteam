@@ -506,6 +506,36 @@ img.astats_icon {
 }
 
 /***************************************
+ * Wishlist and Games page stats
+ **************************************/
+#esi-wishlist-stats-content,
+#esi-games-stats-content {
+  display: flex;
+  padding: 25px;
+  overflow: hidden;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 1.6em;
+  text-align: center;
+}
+.esi-stat {
+  display: flex;
+  flex-direction: column;
+}
+.esi-stat span {
+  font-size: 1.8em;
+  font-weight: 300;
+}
+#esi-wishlist-stats-content .esi-stat {
+  color: #222d3d;
+  font-weight: bold;
+}
+#esi-wishlist-stats,
+#esi-wishlist-stats-content .esi-stat span {
+  color: white;
+}
+
+/***************************************
  * Game Cards page
  **************************************/
 .es_card_search {
@@ -2224,35 +2254,6 @@ label.es_dlc_label > input:checked::after {
   margin-top: 32px;
 }
 
-#esi-wishlist-chart-content,
-#esi-collection-chart-content {
-  display: flex;
-  padding: 25px;
-  overflow: hidden;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1.6em;
-  text-align: center;
-}
-#esi-wishlist-chart-content span {
-  flex-grow: 2;
-}
-#esi-wishlist-chart-content a,
-#esi-collection-chart-content a {
-  cursor: pointer;
-  flex-grow: 2;
-}
-
-.esi-wishlist-stat,
-.esi-collection-stat {
-  display: flex;
-  flex-direction: column;
-}
-.esi-wishlist-stat span,
-.esi-collection-stat span {
-  font-size: 1.8em;
-  font-weight: 300;
-}
 
 #es_new_queue {
   width: 150px;
