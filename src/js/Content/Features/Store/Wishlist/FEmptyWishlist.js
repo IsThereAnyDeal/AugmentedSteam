@@ -42,6 +42,7 @@ export default class FEmptyWishlist extends Feature {
 
             let cur = 1;
             const textNode = document.querySelector(".waiting_dialog_throbber").nextSibling;
+            const url = "https://store.steampowered.com/api/removefromwishlist";
 
             for (const {appid} of wishlistData) {
                 textNode.textContent = Localization.str.empty_wishlist.removing
@@ -52,7 +53,6 @@ export default class FEmptyWishlist extends Feature {
                 formData.append("sessionid", User.sessionId);
                 formData.append("appid", appid);
 
-                const url = `https://store.steampowered.com/wishlist/profiles/${User.steamId}/remove/`;
                 await RequestData.post(url, formData);
             }
 
