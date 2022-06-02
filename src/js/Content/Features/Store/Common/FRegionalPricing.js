@@ -50,10 +50,6 @@ export default class FRegionalPricing extends Feature {
                 prices[country] = result[subid].data.price;
             }));
 
-            const node = document.querySelector(`input[name=subid][value="${subid}"]`)
-                .closest(".game_area_purchase_game_wrapper, #game_area_purchase")
-                .querySelector(".game_purchase_action");
-
             const apiPrice = prices[User.storeCountry.toLowerCase()];
 
             // For paid titles that have F2P versions with their own subid (see #894)
@@ -86,7 +82,7 @@ export default class FRegionalPricing extends Feature {
                         handleError(err, country);
                     }
 
-                    html = `<div class="es-regprice es-flag es-flag--${country}">${priceRegion}`;
+                    html += `<div class="es-regprice es-flag es-flag--${country}">${priceRegion}`;
 
                     if (priceLocal && priceUser) {
                         let percentageIndicator = "equal";
@@ -99,21 +95,21 @@ export default class FRegionalPricing extends Feature {
                             percentageIndicator = "higher";
                         }
 
-                        html
-                            += `<span class="es-regprice__converted">${priceUser}</span>
-                                <span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`;
+                        html += `<span class="es-regprice__converted">${priceUser}</span>`;
+                        html += `<span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`;
                     }
-
-                    html += "</div>";
                 } else {
-                    html
-                        = ` <div class="es-regprice es-flag es-flag--${country}">
-                                <span class="es-regprice__none">${Localization.str.region_unavailable}</span>
-                            </div>`;
+                    html += `<div class="es-regprice es-flag es-flag--${country}">`;
+                    html += `<span class="es-regprice__none">${Localization.str.region_unavailable}</span>`;
                 }
 
+                html += "</div>";
                 HTML.beforeEnd(pricingDiv, html);
             }
+
+            const node = document.querySelector(`input[name=subid][value="${subid}"]`)
+                .closest(".game_area_purchase_game_wrapper, #game_area_purchase")
+                .querySelector(".game_purchase_action");
 
             const purchaseArea = node.closest(".game_area_purchase_game");
             purchaseArea.classList.add("es_regional_prices");
