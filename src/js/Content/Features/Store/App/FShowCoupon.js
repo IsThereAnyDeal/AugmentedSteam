@@ -22,7 +22,7 @@ export default class FShowCoupon extends Feature {
                 </div>
                 <div class="devnotes">
                     <div style="display:flex;padding-top:10px">
-                        <img src="//steamcommunity-a.akamaihd.net/economy/image/${coupon.image_url}" style="width:96px;height:64px;">
+                        <img src="//community.akamai.steamstatic.com/economy/image/${coupon.image_url}" style="width:96px;height:64px;">
                         <div style="display:flex;flex-direction:column;margin-left:10px">
                             <h1 style="margin-top:2px">${coupon.title}</h1>
                             <div>${coupon.discount_note || ""}</div>

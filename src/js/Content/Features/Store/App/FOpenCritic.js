@@ -36,7 +36,7 @@ export default class FOpenCritic extends Feature {
                     <div class="wordmark">
                         <div class="metacritic">OpenCritic</div>
                         <div id="game_area_metalink">${award} - <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=average" target="_blank">${Localization.str.read_reviews}</a>
-                            <img src="https://steamstore-a.akamaihd.net/public/images/ico/iconExternalLink.gif" border="0" align="bottom">
+                            <img src="//store.akamai.steamstatic.com/public/images/ico/iconExternalLink.gif" border="0" align="bottom">
                         </div>
                     </div>
                 </div>

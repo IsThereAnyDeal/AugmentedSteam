@@ -184,7 +184,7 @@ export default class FBackgroundSelection extends Feature {
     _showBgFormLoading(node) {
         HTML.inner(node,
             `<div class="es_loading">
-                <img src="https://steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
+                <img src="//community.akamai.steamstatic.com/public/images/login/throbber.gif">
                 <span>${Localization.str.loading}</span>
             </div>`);
     }

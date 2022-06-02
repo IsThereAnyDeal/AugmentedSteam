@@ -73,7 +73,7 @@ export default class FSteamPeek extends Feature {
                 for (const {title, appid} of data) {
                     HTML.beforeBegin(lastChild,
                         `<a class="small_cap es_sp_similar" data-ds-appid="${appid}" href="https://store.steampowered.com/app/${appid}/">
-                            <img src="https://steamcdn-a.akamaihd.net/steam/apps/${appid}/capsule_184x69.jpg" class="small_cap_img"></img>
+                            <img src="//cdn.akamai.steamstatic.com/steam/apps/${appid}/capsule_184x69.jpg" class="small_cap_img"></img>
                             <h4>${title}</h4>
                         </a>`);
 

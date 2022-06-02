@@ -19,7 +19,7 @@ export default class FRemoveFromWishlist extends Feature {
         imgNode.classList.add("es-in-wl");
         HTML.beforeBegin(imgNode,
             `<img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}" style="display: none;">
-            <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">`);
+            <img class="es-loading-wl" src="//community.akamai.steamstatic.com/public/images/login/throbber.gif" style="display: none;">`);
 
         successBtn.addEventListener("click", async e => {
             e.preventDefault();

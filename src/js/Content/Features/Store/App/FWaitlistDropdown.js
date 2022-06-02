@@ -39,14 +39,14 @@ export default class FWaitlistDropdown extends Feature {
         HTML.afterEnd(wrapper,
             `<div class="queue_control_button queue_btn_menu as_btn_wishlist_menu">
                 <div class="queue_menu_arrow btn_medium">
-                    <span><img src="https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded.png"></span>
+                    <span><img src="//store.akamai.steamstatic.com/public/images/v6/btn_arrow_down_padded.png"></span>
                 </div>
                 <div class="queue_menu_flyout">
                     <div class="queue_menu_flyout_content">
                         <div class="queue_menu_option" id="queue_menu_option_on_wishlist">
                             <div>
-                                <img class="queue_ignore_menu_option_image selected" src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected_bright.png">
-                                <img class="queue_ignore_menu_option_image unselected" src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_unselected_bright.png">
+                                <img class="queue_ignore_menu_option_image selected" src="//store.akamai.steamstatic.com/public/images/v6/ico/ico_selected_bright.png">
+                                <img class="queue_ignore_menu_option_image unselected" src="//store.akamai.steamstatic.com/public/images/v6/ico/ico_unselected_bright.png">
                             </div>
                             <div class="queue_menu_option_label">
                                 <div class="option_title">${Localization.str.wishlist} (${Localization.str.theworddefault})</div>
@@ -55,8 +55,8 @@ export default class FWaitlistDropdown extends Feature {
                         </div>
                         <div class="queue_menu_option" id="queue_menu_option_on_waitlist">
                             <div>
-                                <img class="queue_ignore_menu_option_image selected" src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected_bright.png">
-                                <img class="queue_ignore_menu_option_image unselected" src="https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_unselected_bright.png">
+                                <img class="queue_ignore_menu_option_image selected" src="//store.akamai.steamstatic.com/public/images/v6/ico/ico_selected_bright.png">
+                                <img class="queue_ignore_menu_option_image unselected" src="//store.akamai.steamstatic.com/public/images/v6/ico/ico_unselected_bright.png">
                             </div>
                             <div class="queue_menu_option_label">
                                 <div class="option_title">Waitlist</div>

@@ -33,7 +33,7 @@ export default class FMarketStats extends Feature {
         const statusNode = document.getElementById("es_market_summary_status");
 
         HTML.inner(statusNode,
-            `<img id="es_market_summary_throbber" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
+            `<img id="es_market_summary_throbber" src="//community.akamai.steamstatic.com/public/images/login/throbber.gif">
             <span>
                 <span id="esi_market_stats_progress_description">${Localization.str.loading} </span>
                 <span id="esi_market_stats_progress"></span>

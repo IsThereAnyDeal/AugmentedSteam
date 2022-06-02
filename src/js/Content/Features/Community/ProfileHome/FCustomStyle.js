@@ -35,7 +35,7 @@ export default class FCustomStyle extends Feature {
 
         switch (style) {
             case "winter2019": {
-                DOMHelper.insertStylesheet("//steamcommunity-a.akamaihd.net/public/css/promo/winter2019/goldenprofile.css");
+                DOMHelper.insertStylesheet("//community.akamai.steamstatic.com/public/css/promo/winter2019/goldenprofile.css");
 
                 const profilePageNode = document.querySelector(".no_header.profile_page");
                 profilePageNode.classList.add("golden_profile");
@@ -49,7 +49,7 @@ export default class FCustomStyle extends Feature {
                             <div class="w19_top"></div>
                             <div class="w19_pendulum">
                                 <div class="w19_strings"></div>
-                                <img src="//steamcdn-a.akamaihd.net/steamcommunity/public/assets/winter2019/goldenprofile/dangle_flake.png">
+                                <img src="//cdn.akamai.steamstatic.com/steamcommunity/public/assets/winter2019/goldenprofile/dangle_flake.png">
                             </div>
                         </div>
                         <div class="w19_side right">
@@ -58,7 +58,7 @@ export default class FCustomStyle extends Feature {
                             <div class="w19_top"></div>
                             <div class="w19_pendulum">
                                 <div class="w19_strings"></div>
-                                <img src="//steamcdn-a.akamaihd.net/steamcommunity/public/assets/winter2019/goldenprofile/dangle_flake.png">
+                                <img src="//cdn.akamai.steamstatic.com/steamcommunity/public/assets/winter2019/goldenprofile/dangle_flake.png">
                             </div>
                         </div>
                         <div class="snowflakes" aria-hidden="true">
@@ -83,7 +83,7 @@ export default class FCustomStyle extends Feature {
                 break;
             }
             case "goldenprofile2020": {
-                DOMHelper.insertStylesheet("//steamcommunity-a.akamaihd.net/public/css/promo/lny2020/goldenprofile.css");
+                DOMHelper.insertStylesheet("//community.akamai.steamstatic.com/public/css/promo/lny2020/goldenprofile.css");
 
                 const profilePageNode = document.querySelector(".no_header.profile_page");
                 profilePageNode.classList.add("golden_profile");
@@ -110,9 +110,9 @@ export default class FCustomStyle extends Feature {
 
                     HTML.afterBegin(profilePageNode,
                         `<div class="profile_animated_background">
-                            <video playsinline autoplay muted loop poster="//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/1223590/daa4b34582ed6cab1327f247be8d03d92ae8aaaa.jpg">
-                                <source src="//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/1223590/c146558951b46ade8d64ea8e787980f84d30ec46.webm" type="video/webm">
-                                <source src="//steamcdn-a.akamaihd.net/steamcommunity/public/images/items/1223590/b5c39efda3998e0d2e734e8b7385ecf705ce8cc5.mp4" type="video/mp4">
+                            <video playsinline autoplay muted loop poster="//cdn.akamai.steamstatic.com/steamcommunity/public/images/items/1223590/daa4b34582ed6cab1327f247be8d03d92ae8aaaa.jpg">
+                                <source src="//cdn.akamai.steamstatic.com/steamcommunity/public/images/items/1223590/c146558951b46ade8d64ea8e787980f84d30ec46.webm" type="video/webm">
+                                <source src="//cdn.akamai.steamstatic.com/steamcommunity/public/images/items/1223590/b5c39efda3998e0d2e734e8b7385ecf705ce8cc5.mp4" type="video/mp4">
                             </video>
                         </div>`);
 
@@ -124,7 +124,7 @@ export default class FCustomStyle extends Feature {
                 break;
             }
             case "goldenprofile": {
-                DOMHelper.insertStylesheet("//steamcommunity-a.akamaihd.net/public/css/promo/lny2019/goldenprofile.css");
+                DOMHelper.insertStylesheet("//community.akamai.steamstatic.com/public/css/promo/lny2019/goldenprofile.css");
 
                 const profilePageNode = document.querySelector(".no_header.profile_page");
                 profilePageNode.classList.add("golden_profile");
@@ -138,7 +138,7 @@ export default class FCustomStyle extends Feature {
                             <div class="lny_pig"></div>
                             <div class="lny_pendulum">
                                 <div class="lny_strings"></div>
-                                <img src="//steamcdn-a.akamaihd.net/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern1.png">
+                                <img src="//cdn.akamai.steamstatic.com/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern1.png">
                             </div>
                         </div>
                         <div class="lny_side right">
@@ -147,7 +147,7 @@ export default class FCustomStyle extends Feature {
                             <div class="lny_pig"></div>
                             <div class="lny_pendulum">
                                 <div class="lny_strings"></div>
-                                <img src="//steamcdn-a.akamaihd.net/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern2.png">
+                                <img src="//cdn.akamai.steamstatic.com/steamcommunity/public/assets/lny2019/goldenprofile/test_lantern2.png">
                             </div>
                         </div>
                     </div>`);
@@ -162,7 +162,7 @@ export default class FCustomStyle extends Feature {
                 break;
             }
             case "holiday2014":
-                DOMHelper.insertStylesheet("//steamcommunity-a.akamaihd.net/public/css/skin_1/holidayprofile.css");
+                DOMHelper.insertStylesheet("//community.akamai.steamstatic.com/public/css/skin_1/holidayprofile.css");
 
                 HTML.beforeEnd(".profile_header_bg_texture", "<div class='holidayprofile_header_overlay'></div>");
                 document.querySelector(".no_header.profile_page").classList.add("holidayprofile");
