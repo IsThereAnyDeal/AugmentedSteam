@@ -163,9 +163,9 @@ export default class FMarketStats extends Feature {
             /*
              * Request may fail with results_html === "\t\t\t\t\t\t<div class=\"market_listing_table_message\">
              * There was an error loading your market history. Please try again later.</div>\r\n\t"
+             * Note the error message is localized!
              */
-            const message = dom.querySelector(".market_listing_table_message");
-            if (message && message.textContent.includes("try again later")) {
+            if (dom.querySelector(".market_listing_table_message") !== null) {
                 pageRequests.push(request);
                 failedRequests += 1;
                 return null;
