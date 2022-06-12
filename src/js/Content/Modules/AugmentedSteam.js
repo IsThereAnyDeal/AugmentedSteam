@@ -21,7 +21,7 @@ class AugmentedSteam {
                 <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
                 <div id="es_popup" class="popup_block_new">
                     <div class="popup_body popup_menu">
-                        <a class="popup_menu_item" target="_blank" href="${ExtensionResources.getURL("html/options.html")}">${Localization.str.thewordoptions}</a>
+                        <a class="popup_menu_item" id="es_options_link" target="_blank" href="${ExtensionResources.getURL("html/options.html")}">${Localization.str.thewordoptions}</a>
                         <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
                         <div class="hr"></div>
                         <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam">${Localization.str.contribute}</a>
@@ -56,6 +56,12 @@ class AugmentedSteam {
             await AugmentedSteam.clearCache();
             window.location.reload();
         });
+
+        document.querySelector("#es_options_link").removeAttribute("href");
+        document.querySelector("#es_options_link").addEventListener("click", e => {
+            window.open(ExtensionResources.getURL("html/options.html"));
+        });
+
     }
 
     static _addBackToTop() {
