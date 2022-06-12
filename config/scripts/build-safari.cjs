@@ -3,32 +3,11 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 
-const teamId = "BAK83N2AUM";
+const teamId = process.argv[2];
 const buildDir = path.resolve("dist");
 const chromeDir = path.resolve(buildDir, "dev.chrome");
 const safariDir = path.resolve(buildDir, "dev.safari");
 const manifestFile = "config/manifests/base.json";
-
-if (os.platform() !== "darwin") {
-	error("Safari extension can only be built on Mac");
-}
-
-const xcrun = child_process.execSync("command -v xcrun")
-	.toString();
-
-if (!xcrun || xcrun.match(/^[\n\r\s]*$/)) {
-	error("XCode not found");
-}
-
-const manifest = JSON.parse(fs.readFileSync(manifestFile)
-	.toString());
-const appName = manifest.name;
-const appDir = path.resolve(safariDir,appName);
-
-function error(msg) {
-	print("red", "Error: " + msg);
-	process.exit(1);
-}
 
 function getColor(num) {
 	return "\x1b[" + num + "m";
@@ -46,6 +25,11 @@ const colors = {
 
 function print(color, msg) {
 	console.log(`${colors[color]}${msg}${colors["reset"]}`);
+}
+
+function error(msg) {
+	print("red", "Error: " + msg);
+	process.exit(1);
 }
 
 function exec(cmd, path) {
@@ -70,15 +54,39 @@ function run(label, cmd, path = null) {
 	print("green", "Success");
 }
 
-run("Building Chrome extension", "node config/scripts/build.cjs chrome");
-run("Converting Chrome extension to Safari extension", `xcrun safari-web-extension-converter --project-location "${safariDir}" --app-name "${appName}" --no-open --no-prompt --force "${chromeDir}"`);
-run("Building Safari extension",`xcodebuild -target "${appName} (macOS)" DEVELOPMENT_TEAM=${teamId}`, appDir);
-const app = path.resolve(appDir,"build","Release", appName + ".app");
+if (os.platform() !== "darwin") {
+	error("Safari extension can only be built on Mac");
+}
 
-if( !fs.existsSync( app ) )
-{
+if (!teamId || teamId.match(/^[\n\r\s]*$/)) {
+	error("TeamID is missing");
+}
+
+if (teamId.match(/myteamid/i)) {
+	error("You must specify your TeamID");
+}
+
+const xcrun = child_process.execSync("command -v xcrun")
+	.toString();
+
+if (!xcrun || xcrun.match(/^[\n\r\s]*$/)) {
+	error("XCode not found");
+}
+
+const manifest = JSON.parse(fs.readFileSync(manifestFile)
+	.toString());
+const appName = manifest.name;
+const appDir = path.resolve(safariDir, appName);
+
+run("Building Chrome extension", "node config/scripts/build.cjs chrome");
+run("Converting Chrome extension to Safari extension",
+	`xcrun safari-web-extension-converter --project-location "${safariDir}" --app-name "${appName}" --no-open --no-prompt --force "${chromeDir}"`);
+run("Building Safari extension", `xcodebuild -target "${appName} (macOS)" DEVELOPMENT_TEAM=${teamId}`, appDir);
+const app = path.resolve(appDir, "build", "Release", appName + ".app");
+
+if (!fs.existsSync(app)) {
 	error("Unknown error while building");
 }
 
-print("magenta", "App Location: " + path.resolve(appDir,"build","Release", appName + ".app") );
-print("green","Build completed successfully!");
+print("magenta", "App Location: " + path.resolve(appDir, "build", "Release", appName + ".app"));
+print("green", "Build completed successfully!");

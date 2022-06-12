@@ -3,7 +3,7 @@
     "build": "node config/scripts/build.cjs",
     "update-locales": "node config/scripts/locales.cjs",
     "release": "node config/scripts/make-release.cjs",
-    "build-safari": "node config/scripts/build-safari.cjs"
+    "build-safari": "node config/scripts/build-safari.cjs myTeamID"
   },
   "devDependencies": {
     "archiver": "^5.3.0",
