@@ -19,7 +19,8 @@
     "*://steamcommunity.com/*",
     "*://*.isthereanydeal.com/",
     "webRequest",
-    "webRequestBlocking"
+    "webRequestBlocking",
+	"https://esapi.isthereanydeal.com/*"
   ],
   "web_accessible_resources": [
     "img/*.png",
