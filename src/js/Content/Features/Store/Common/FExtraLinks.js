@@ -155,9 +155,9 @@ export default class FExtraLinks extends Feature {
         for (const link of links) {
             if (!link.enabled) { continue; }
 
-            const icon = link.iconClass ? "" : `style="background: ${link.iconUrl}; background-size: contain;"`;
+            const icon = link.iconClass ? "" : `style="background-image: ${link.iconUrl};"`;
             html += `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${link.iconClass || ""}" target="_blank" href="${link.link}">
-                        <span><i class="ico16" ${icon}></i>${link.text}</span>
+                        <span><i class="es_ico16" ${icon}></i>${link.text}</span>
                     </a>`;
         }
 

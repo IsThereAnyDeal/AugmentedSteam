@@ -1452,9 +1452,16 @@ img.astats_icon {
   display: block !important;
   margin-bottom: 6px;
 }
-.es_app_btn .ico16 {
-  margin-right: 12px !important;
+/* Taken from buttons.css (.icon16) */
+.es_app_btn .es_ico16 {
+  margin: 7px 12px 7px 0px;
+  vertical-align: top;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-size: contain;
 }
+
 .es_extralinks_ctn .es_app_btn:last-of-type {
   margin-bottom: 0px;
 }
@@ -1465,7 +1472,7 @@ img.astats_icon {
   margin: auto;
 }
 
-/* Copied from apphub.css, which isn't loaded on error pages */
+/* Taken from apphub.css, which isn't loaded on error pages */
 .es_apphub_OtherSiteInfo {
   position: relative;
   float: right;
