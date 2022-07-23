@@ -10,7 +10,7 @@ export default class FConfirmDeleteComment extends Feature {
 
     apply() {
 
-        Messenger.addMessageListener("setOption", value => SyncedStorage.set("confirmdeletecomment", value));
+        Messenger.addMessageListener("noDeletionConfirm", () => SyncedStorage.set("confirmdeletecomment", false));
 
         Page.runInPageContext((promptStr, labelStr) => {
 
@@ -38,17 +38,16 @@ export default class FConfirmDeleteComment extends Feature {
 
                 document.querySelector(".newmodal input[type=checkbox]").addEventListener("change", e => {
                     checked = e.currentTarget.checked;
-                    window.Messenger.postMessage("setOption", !checked);
-                });
-
-                // Restore old method if don't show is checked, so the prompt is not shown when deleting more comments on the same page
-                modal.always(() => {
-                    if (checked) {
-                        CCommentThread.DeleteComment = oldDeleteComment; // eslint-disable-line no-undef
-                    }
                 });
 
                 modal.done(() => {
+                    if (checked) {
+                        // Restore old method if don't show is checked, so the prompt is not shown when deleting more comments on the same page
+                        CCommentThread.DeleteComment = oldDeleteComment; // eslint-disable-line no-undef
+                        
+                        window.Messenger.postMessage("noDeletionConfirm");
+                    }
+
                     oldDeleteComment.call(this, id, gidcomment);
                 });
             };
