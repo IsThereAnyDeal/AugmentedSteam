@@ -1,27 +1,28 @@
-import {HTML} from "../../Core/Html/Html";
-import {ExtensionResources} from "../../Core/ExtensionResources";
-import {Localization} from "../../Core/Localization/Localization";
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
-import {Language} from "../../Core/Localization/Language";
-import {LocalStorage} from "../../Core/Storage/LocalStorage";
-import {Background} from "./Background";
-import {DOMHelper} from "./DOMHelper";
-import {HorizontalScroller} from "./Widgets/HorizontalScroller";
-import {DynamicStore} from "./Data/DynamicStore";
-import {User} from "./User";
-import {Page} from "../Features/Page";
 import config from "../../config";
+import {ExtensionResources} from "../../Core/ExtensionResources";
+import {HTML} from "../../Core/Html/Html";
+import {Language} from "../../Core/Localization/Language";
+import {Localization} from "../../Core/Localization/Localization";
+import {LocalStorage} from "../../Core/Storage/LocalStorage";
+import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
+import {Page} from "../Features/Page";
+import {Background} from "./Background";
+import {DynamicStore} from "./Data/DynamicStore";
+import {DOMHelper} from "./DOMHelper";
+import {User} from "./User";
+import {HorizontalScroller} from "./Widgets/HorizontalScroller";
 
 class AugmentedSteam {
 
     static _addMenu() {
 
-        HTML.afterBegin("#global_action_menu",
-            `<div id="es_menu">
+        HTML.afterBegin("#global_action_menu", `<div id="es_menu">
                 <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
                 <div id="es_popup" class="popup_block_new">
                     <div class="popup_body popup_menu">
-                        <a class="popup_menu_item" id="es_options_link" target="_blank" href="${ExtensionResources.getURL("html/options.html")}">${Localization.str.thewordoptions}</a>
+                        <a class="popup_menu_item" id="es_options_link" target="_blank" href="${ExtensionResources.getURL(
+        "html/options.html"
+    )}">${Localization.str.thewordoptions}</a>
                         <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
                         <div class="hr"></div>
                         <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam">${Localization.str.contribute}</a>
@@ -34,38 +35,54 @@ class AugmentedSteam {
                 </div>
             </div>`);
 
-        document.querySelector("#es_pulldown").addEventListener("click", () => {
-            Page.runInPageContext(() => {
-                window.SteamFacade.showMenu("es_pulldown", "es_popup", "right", "bottom", true);
+        document.querySelector("#es_pulldown")
+            .addEventListener("click", () => {
+                Page.runInPageContext(() => {
+                    window.SteamFacade.showMenu("es_pulldown", "es_popup", "right", "bottom", true);
+                });
             });
-        });
 
-        document.querySelector("#es_menu").addEventListener("click", e => {
-            e.stopPropagation();
-        });
-
-        document.querySelector("#es_popup").addEventListener("click", () => {
-            Page.runInPageContext(() => {
-                window.SteamFacade.hideMenu("es_pulldown", "es_popup");
+        document.querySelector("#es_menu")
+            .addEventListener("click", e => {
+                e.stopPropagation();
             });
+
+        document.querySelector("#es_popup")
+            .addEventListener("click", () => {
+                Page.runInPageContext(() => {
+                    window.SteamFacade.hideMenu("es_pulldown", "es_popup");
+                });
+            });
+
+        document.querySelector("#es_clear_cache")
+            .addEventListener("click", async e => {
+                e.preventDefault();
+
+                await AugmentedSteam.clearCache();
+                window.location.reload();
+            });
+
+        document.querySelector("#es_options_link")
+            .removeAttribute("href");
+        document.querySelector("#es_options_link")
+            .addEventListener("click", e => {
+                window.open(ExtensionResources.getURL("html/options.html"));
+            });
+
+        if (config.ITADExpiry < Date.now()) {
+            config.ITADExpiry += Date.now();
+        }
+
+        LocalStorage.set("access_token", {
+            "token": config.ITADAccessToken,
+            "expiry": config.ITADExpiry,
         });
-
-        document.querySelector("#es_clear_cache").addEventListener("click", async e => {
-            e.preventDefault();
-
-            await AugmentedSteam.clearCache();
-            window.location.reload();
-        });
-
-        document.querySelector("#es_options_link").removeAttribute("href");
-        document.querySelector("#es_options_link").addEventListener("click", e => {
-            window.open(ExtensionResources.getURL("html/options.html"));
-        });
-
     }
 
     static _addBackToTop() {
-        if (!SyncedStorage.get("show_backtotop")) { return; }
+        if (!SyncedStorage.get("show_backtotop")) {
+            return;
+        }
 
         // Remove Steam's back-to-top button
         DOMHelper.remove("#BackToTop");
@@ -80,7 +97,7 @@ class AugmentedSteam {
             window.scroll({
                 "top": 0,
                 "left": 0,
-                "behavior": "smooth"
+                "behavior": "smooth",
             });
         });
 
@@ -99,8 +116,7 @@ class AugmentedSteam {
     }
 
     static _addWarning(innerHTML, stopShowingHandler) {
-        const el = HTML.element(
-            `<div class="es_warn js-warn">
+        const el = HTML.element(`<div class="es_warn js-warn">
                 <div class="es_warn__cnt">
                     <div>${innerHTML}</div>
                     <div class="es_warn__control">
@@ -108,31 +124,39 @@ class AugmentedSteam {
                         <a class="es_warn__btn js-warn-hide">${Localization.str.hide}</a>
                     </div>
                 </div>
-            </div>`
-        );
+            </div>`);
 
-        el.querySelector(".js-warn-close").addEventListener("click", () => {
-            if (stopShowingHandler) {
-                stopShowingHandler();
-            }
-            el.closest(".js-warn").remove();
-        });
+        el.querySelector(".js-warn-close")
+            .addEventListener("click", () => {
+                if (stopShowingHandler) {
+                    stopShowingHandler();
+                }
+                el.closest(".js-warn")
+                    .remove();
+            });
 
-        el.querySelector(".js-warn-hide").addEventListener("click", () => {
-            el.closest(".js-warn").remove();
-        });
+        el.querySelector(".js-warn-hide")
+            .addEventListener("click", () => {
+                el.closest(".js-warn")
+                    .remove();
+            });
 
-        document.getElementById("global_header").insertAdjacentElement("afterend", el);
+        document.getElementById("global_header")
+            .insertAdjacentElement("afterend", el);
     }
 
     /**
      * Display warning if browsing using a different language
      */
     static _addLanguageWarning() {
-        if (!SyncedStorage.get("showlanguagewarning")) { return; }
+        if (!SyncedStorage.get("showlanguagewarning")) {
+            return;
+        }
 
         const currentLanguage = Language.getCurrentSteamLanguage();
-        if (!currentLanguage) { return; }
+        if (!currentLanguage) {
+            return;
+        }
 
         if (!SyncedStorage.has("showlanguagewarninglanguage")) {
             SyncedStorage.set("showlanguagewarninglanguage", currentLanguage);
@@ -140,23 +164,30 @@ class AugmentedSteam {
 
         const warningLanguage = SyncedStorage.get("showlanguagewarninglanguage");
 
-        if (currentLanguage === warningLanguage) { return; }
+        if (currentLanguage === warningLanguage) {
+            return;
+        }
 
-        Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then((strings) => {
-            AugmentedSteam._addWarning(
-                `${strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage)}
+        Localization.loadLocalization(Language.getLanguageCode(warningLanguage))
+            .then((strings) => {
+                AugmentedSteam._addWarning(
+                    `${strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage)}
                 <a href="#" id="es_reset_language_code">
                 ${strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage)}
-                </a>`,
-                () => { SyncedStorage.set("showlanguagewarning", false); }
-            );
+                </a>`, () => {
+                        SyncedStorage.set("showlanguagewarning", false);
+                    }
+                );
 
-            document.querySelector("#es_reset_language_code").addEventListener("click", (e) => {
-                e.preventDefault();
-                // eslint-disable-next-line no-undef, new-cap
-                Page.runInPageContext(warningLanguage => { ChangeLanguage(warningLanguage); }, [warningLanguage]);
+                document.querySelector("#es_reset_language_code")
+                    .addEventListener("click", (e) => {
+                        e.preventDefault();
+                        // eslint-disable-next-line no-undef, new-cap
+                        Page.runInPageContext(warningLanguage => {
+                            ChangeLanguage(warningLanguage);
+                        }, [warningLanguage]);
+                    });
             });
-        });
     }
 
     static _handleInstallSteamButton() {
@@ -174,30 +205,29 @@ class AugmentedSteam {
     static _addUsernameSubmenuLinks() {
         // There are two menus; one for responsive (mobile) and one for "unresponsive" (desktop) design
         for (const node of document.querySelectorAll(".submenu_username")) {
-            HTML.afterEnd(
-                node.querySelector("a"),
-                `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`
-            );
-            HTML.afterEnd(
-                node.querySelector("a:nth-child(2)"),
-                `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`
-            );
-            HTML.beforeEnd(
-                node,
-                `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`
-            );
+            HTML.afterEnd(node.querySelector("a"),
+                `<a class="submenuitem" href="//steamcommunity.com/my/games/">${Localization.str.games}</a>`);
+            HTML.afterEnd(node.querySelector("a:nth-child(2)"),
+                `<a class="submenuitem" href="//store.steampowered.com/wishlist/">${Localization.str.wishlist}</a>`);
+            HTML.beforeEnd(node,
+                `<a class="submenuitem" href="//steamcommunity.com/my/recommended/">${Localization.str.reviews}</a>`);
         }
     }
 
     static _cartLink() {
         // There are two menus; one for responsive (mobile) and one for "unresponsive" (desktop) design
-        for (const wishlistLink of document.querySelectorAll(".submenu_store > .submenuitem[href='https://steamcommunity.com/my/wishlist/']")) {
-            HTML.afterEnd(wishlistLink, `<a class="submenuitem" href="https://store.steampowered.com/cart/">${Localization.str.cart}</a>`);
+        for (const wishlistLink of document.querySelectorAll(
+            ".submenu_store > .submenuitem[href='https://steamcommunity.com/my/wishlist/']"
+        )) {
+            HTML.afterEnd(wishlistLink,
+                `<a class="submenuitem" href="https://store.steampowered.com/cart/">${Localization.str.cart}</a>`);
         }
     }
 
     static _disableLinkFilter() {
-        if (!SyncedStorage.get("disablelinkfilter")) { return; }
+        if (!SyncedStorage.get("disablelinkfilter")) {
+            return;
+        }
 
         function removeLinkFilter(parent = document) {
             const selector = "a[href*='/linkfilter/']";
@@ -212,26 +242,33 @@ class AugmentedSteam {
         new MutationObserver(mutations => {
             for (const mutation of mutations) {
                 for (const node of mutation.addedNodes) {
-                    if (node.nodeType !== Node.ELEMENT_NODE) { continue; }
+                    if (node.nodeType !== Node.ELEMENT_NODE) {
+                        continue;
+                    }
                     removeLinkFilter(node);
                 }
             }
-        }).observe(document, {"childList": true, "subtree": true});
+        }).observe(document, {
+            "childList": true,
+            "subtree": true,
+        });
     }
 
     static _addRedeemLink() {
-        HTML.beforeBegin(
-            "#account_language_pulldown",
-            `<a class="popup_menu_item" href="https://store.steampowered.com/account/registerkey">${Localization.str.activate}</a>`
-        );
+        HTML.beforeBegin("#account_language_pulldown",
+            `<a class="popup_menu_item" href="https://store.steampowered.com/account/registerkey">${Localization.str.activate}</a>`);
     }
 
     static _replaceAccountName() {
-        if (!SyncedStorage.get("replaceaccountname")) { return; }
+        if (!SyncedStorage.get("replaceaccountname")) {
+            return;
+        }
 
         const logoutNode = document.querySelector("#account_dropdown .persona.online");
         const accountName = logoutNode.textContent.trim();
-        const communityName = document.querySelector("#account_pulldown").textContent.trim();
+        const communityName = document.querySelector("#account_pulldown")
+            .textContent
+            .trim();
 
         logoutNode.textContent = communityName;
 
@@ -252,58 +289,63 @@ class AugmentedSteam {
 
     static _launchRandomButton() {
 
-        HTML.beforeEnd(
-            "#es_popup .popup_menu",
-            `<div class="hr"></div>
-             <a id="es_random_game" class="popup_menu_item" style="cursor: pointer;">${Localization.str.launch_random}</a>`
-        );
+        HTML.beforeEnd("#es_popup .popup_menu", `<div class="hr"></div>
+             <a id="es_random_game" class="popup_menu_item" style="cursor: pointer;">${Localization.str.launch_random}</a>`);
 
-        document.querySelector("#es_random_game").addEventListener("click", async() => {
-            const appid = await DynamicStore.getRandomApp();
-            if (!appid) { return; }
-
-            Background.action("appdetails", appid).then(response => {
-                if (!response || !response.success) { return; }
-                const data = response.data;
-
-                let gameid = appid;
-                let gamename;
-                if (data.fullgame) {
-                    gameid = data.fullgame.appid;
-                    gamename = data.fullgame.name;
-                } else {
-                    gamename = data.name;
+        document.querySelector("#es_random_game")
+            .addEventListener("click", async() => {
+                const appid = await DynamicStore.getRandomApp();
+                if (!appid) {
+                    return;
                 }
 
-                Page.runInPageContext((playGameStr, gameid, visitStore) => {
-                    const prompt = window.SteamFacade.showConfirmDialog(
-                        playGameStr,
-                        `<img src="//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg">`,
-                        null,
-                        null,
-                        visitStore
-                    );
+                Background.action("appdetails", appid)
+                    .then(response => {
+                        if (!response || !response.success) {
+                            return;
+                        }
+                        const data = response.data;
 
-                    prompt.done(result => {
-                        if (result === "OK") { window.location.assign(`steam://run/${gameid}`); }
-                        if (result === "SECONDARY") { window.location.assign(`//store.steampowered.com/app/${gameid}`); }
+                        let gameid = appid;
+                        let gamename;
+                        if (data.fullgame) {
+                            gameid = data.fullgame.appid;
+                            gamename = data.fullgame.name;
+                        } else {
+                            gamename = data.name;
+                        }
+
+                        Page.runInPageContext((playGameStr, gameid, visitStore) => {
+                            const prompt = window.SteamFacade.showConfirmDialog(playGameStr,
+                                `<img src="//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg">`,
+                                null,
+                                null,
+                                visitStore);
+
+                            prompt.done(result => {
+                                if (result === "OK") {
+                                    window.location.assign(`steam://run/${gameid}`);
+                                }
+                                if (result === "SECONDARY") {
+                                    window.location.assign(`//store.steampowered.com/app/${gameid}`);
+                                }
+                            });
+                        }, [Localization.str.play_game.replace("__gamename__", gamename.replace("'", "")
+                            .trim()), gameid, Localization.str.visit_store]);
                     });
-                },
-                [
-                    Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim()),
-                    gameid,
-                    Localization.str.visit_store,
-                ]);
             });
-        });
     }
 
     static _skipGotSteam() {
-        if (!SyncedStorage.get("skip_got_steam")) { return; }
+        if (!SyncedStorage.get("skip_got_steam")) {
+            return;
+        }
 
         // https://github.com/SteamDatabase/SteamTracking/blob/cdf367ce61926a896fe54d710b3ed25d66d7e333/store.steampowered.com/public/javascript/game.js#L1785
         Page.runInPageContext(() => {
-            window.ShowGotSteamModal = function(steamUrl) { window.location.assign(steamUrl); };
+            window.ShowGotSteamModal = function(steamUrl) {
+                window.location.assign(steamUrl);
+            };
         });
     }
 
@@ -320,12 +362,18 @@ class AugmentedSteam {
 
     static _defaultCommunityTab() {
         const tab = SyncedStorage.get("community_default_tab");
-        if (!tab) { return; }
+        if (!tab) {
+            return;
+        }
 
         const links = document.querySelectorAll("a[href^='https://steamcommunity.com/app/']");
         for (const link of links) {
-            if (link.classList.contains("apphub_sectionTab")) { continue; }
-            if (!/^\/app\/[0-9]+\/?$/.test(link.pathname)) { continue; }
+            if (link.classList.contains("apphub_sectionTab")) {
+                continue;
+            }
+            if (!/^\/app\/[0-9]+\/?$/.test(link.pathname)) {
+                continue;
+            }
             if (!link.pathname.endsWith("/")) {
                 link.pathname += "/";
             }
@@ -334,19 +382,21 @@ class AugmentedSteam {
     }
 
     static _horizontalScrolling() {
-        if (!SyncedStorage.get("horizontalscrolling")) { return; }
+        if (!SyncedStorage.get("horizontalscrolling")) {
+            return;
+        }
 
         for (const node of document.querySelectorAll(".slider_ctn:not(.spotlight)")) {
-            HorizontalScroller.create(
-                node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
+            HorizontalScroller.create(node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
                 node.querySelector(".slider_left"),
-                node.querySelector(".slider_right"),
-            );
+                node.querySelector(".slider_right"));
         }
     }
 
     static addLoginWarning(type) {
-        if (AugmentedSteam._loginWarningAdded || LocalStorage.get(`hide_login_warn_${type}`)) { return; }
+        if (AugmentedSteam._loginWarningAdded || LocalStorage.get(`hide_login_warn_${type}`)) {
+            return;
+        }
 
         let host;
 
@@ -360,8 +410,9 @@ class AugmentedSteam {
         }
 
         AugmentedSteam._addWarning(
-            `${Localization.str.login_warning.replace("__link__", `<a href="https://${host}/login/">${host}</a>`)}`,
-            () => { LocalStorage.set(`hide_login_warn_${type}`, true); }
+            `${Localization.str.login_warning.replace("__link__", `<a href="https://${host}/login/">${host}</a>`)}`, () => {
+                LocalStorage.set(`hide_login_warn_${type}`, true);
+            }
         );
         AugmentedSteam._loginWarningAdded = true;
 
