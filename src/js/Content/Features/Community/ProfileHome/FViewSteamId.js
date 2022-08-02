@@ -34,6 +34,7 @@ export default class FViewSteamId extends Feature {
                 steamId.id2,
                 steamId.id3,
                 steamId.id64,
+                steamId.id64hex,
                 `https://steamcommunity.com/profiles/${steamId.id64}`
             ];
 
