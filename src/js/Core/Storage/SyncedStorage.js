@@ -184,6 +184,7 @@ SyncedStorage.defaults = Object.freeze({
     "spamcommentregex": "[\\u2500-\\u25FF]",
     "wlbuttoncommunityapp": true,
     "removeguideslanguagefilter": false,
+    "confirmdeletecomment": true,
     "disablelinkfilter": false,
     "sortfriendsby": "default_ASC",
     "sortreviewsby": "default_ASC",
