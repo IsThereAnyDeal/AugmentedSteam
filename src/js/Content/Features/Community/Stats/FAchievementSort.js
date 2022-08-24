@@ -1,4 +1,4 @@
-import {Localization} from "../../../../modulesCore";
+import {HTMLParser, Localization} from "../../../../modulesCore";
 import {Feature, RequestData, Sortbox} from "../../../modulesContent";
 
 export default class FAchievementSort extends Feature {
@@ -90,24 +90,16 @@ export default class FAchievementSort extends Feature {
     async _initSortByTime() {
 
         const url = new URL(window.location.origin + window.location.pathname);
-        url.searchParams.set("xml", 1);
+        url.searchParams.set("tab", "achievements");
+        url.searchParams.set("panorama", "please");
 
         const result = await RequestData.getHttp(url.toString());
-        const xmlDoc = new DOMParser().parseFromString(result, "text/xml");
-        const xmlTags = xmlDoc.getElementsByTagName("achievement");
+        let achievements = HTMLParser.getVariableFromText(result, "g_rgAchievements", "object");
+        achievements = Object.values({...achievements.open, ...achievements.closed});
 
-        // XML doc redirects to profile home if "Game details" is not public, see issue #1193
-        if (xmlTags.length === 0) {
-            throw new Error("Failed to fetch XML doc for stats page");
-        }
-
-        for (let i = 0; i < this._nodes.default.length; ++i) {
-            const node = this._nodes.default[i];
-            let unlockTime = 0;
-            const unlockTimestamp = xmlTags[i].querySelector("unlockTimestamp");
-            if (unlockTimestamp) {
-                unlockTime = unlockTimestamp.textContent;
-            }
+        for (const node of this._nodes.default) {
+            const name = node.querySelector(".achieveTxt > h3").textContent;
+            const unlockTime = achievements.find(val => val.name === name)?.unlock_time ?? 0;
 
             if (unlockTime === 0) {
                 node.classList.add("esi_ach_locked");
