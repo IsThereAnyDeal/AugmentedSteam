@@ -593,7 +593,7 @@
         "show_custom_themes": "Mostrar temas personalizados",
         "oneclickremovewl": "Omitir confirmación al remover artículos",
         "profile_pinned_bg": "Fijar la posición del fondo de perfil mientras me mueva con la rueda del ratón",
-        "replacecommunityhublinks": "Reemplazar los enlaces del centro de la comunidad con enlaces a la página de la tienda de cada juego en el feed de actividad de amigos",
+        "replacecommunityhublinks": "Reemplazar los enlaces del centro de la comunidad con enlaces a la página de tienda de cada juego",
         "hideannouncementcomments": "Ocultar comentarios de todos los anuncios de grupos de forma predeterminada",
         "friend_activity": "Feed de actividad de tus amigos"
     },
@@ -651,7 +651,7 @@
     "wallet": {
         "custom_amount": "Agregar monto personalizado",
         "custom_amount_text": "Cualquier cantidad superior a __minamount__",
-        "custom_giftcard": "Seleccionar __input__ tarjeta(s) de regalo personalizada(s)"
+        "custom_giftcard": "Seleccione una tarjeta de regalo personalizada de __input__"
     },
     "wsgf": {
         "incomplete": "Incompleto",
@@ -798,5 +798,5 @@
     "thewordno": "No",
     "show_comments": "Mostrar comentarios",
     "hide_comments": "Ocultar comentarios",
-    "fav_emoticons_no_access": ""
+    "fav_emoticons_no_access": "No tienes acceso a este emoticón."
 }

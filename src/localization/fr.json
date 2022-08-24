@@ -3,7 +3,7 @@
     "click_to_copy": "Cliquez pour copier",
     "copied": "Copié dans le presse-papiers !",
     "view_steamid": "Voir le SteamID",
-    "more_on_steampeek": "Voir plus sur SteamPeak",
+    "more_on_steampeek": "Voir plus sur SteamPeek",
     "invite_friends": "Inviter des amis",
     "invite_to_group": "Inviter dans le groupe",
     "inverse": "Inverser",
@@ -798,5 +798,5 @@
     "thewordno": "Non",
     "show_comments": "Afficher les commentaires",
     "hide_comments": "Cacher les commentaires",
-    "fav_emoticons_no_access": ""
+    "fav_emoticons_no_access": "Vous n'avez pas accès à cet émoticône"
 }

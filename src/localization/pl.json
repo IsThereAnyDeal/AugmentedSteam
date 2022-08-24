@@ -574,9 +574,9 @@
             "reset": "Resetuj"
         },
         "removebroadcasts": "Usuń wszystkie transmisje na żywo",
-        "maintainers": "",
-        "with_help_of": "",
-        "contributors": "",
+        "maintainers": "Patroni projektu",
+        "with_help_of": "z dużą pomocą naszych __contributors__",
+        "contributors": "super współautorów",
         "apppage": "Strona aplikacji",
         "exfgls": "Pokaż informacje kiedy aplikacja jest wykluczona z opcji Udostępniania gier",
         "custom_style_disable": "Wyłącz niestandardowe motywy",
@@ -586,15 +586,15 @@
             "app": "Na stronach aplikacji",
             "wishlist": "Na mojej liście życzeń",
             "loc": "Lokalizacja przechowywania",
-            "synced_storage": "",
+            "synced_storage": "Pamięć synchronizowana/lokalna",
             "local": "Lokalna baza danych",
             "itad": "Serwer IsThereAnyDeal"
         },
         "show_custom_themes": "Wyświetlaj niestandardowe motywy",
         "oneclickremovewl": "Pomiń potwierdzanie przy usuwaniu produktów",
-        "profile_pinned_bg": "",
-        "replacecommunityhublinks": "",
-        "hideannouncementcomments": "",
+        "profile_pinned_bg": "Przypnij pozycję tła profilu podczas przewijania",
+        "replacecommunityhublinks": "Odsyłaj do sklepu zamiast do centrum społeczności\n",
+        "hideannouncementcomments": "Domyślnie ukrywaj komentarze pod wszystkimi ogłoszeniami grupowymi",
         "friend_activity": "Strona aktywności znajomych"
     },
     "ready": {

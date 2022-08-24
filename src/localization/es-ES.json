@@ -595,7 +595,7 @@
         "profile_pinned_bg": "Fijar la posición del fondo de perfil al hacer scroll",
         "replacecommunityhublinks": "",
         "hideannouncementcomments": "",
-        "friend_activity": ""
+        "friend_activity": "Actividad de los amigos"
     },
     "ready": {
         "errormsg": "Error al cargar los datos de Augmented Steam",
@@ -788,15 +788,15 @@
     "manage_webapi_key": "Gestionar mi clave de la API de Steam Web",
     "steam_cloud_header": "Steam Cloud",
     "steam_cloud_saves": "Ver partidas guardadas en la nube",
-    "community_hub": "",
-    "cart": "",
+    "community_hub": "Punto de encuentro",
+    "cart": "Carrito",
     "feature_hint": {
-        "desc": "",
-        "reminder": ""
+        "desc": "¿Deseas activar la siguiente funcionalidad?",
+        "reminder": "Puedes cambiar tus preferencias a través de la página de opciones más adelante."
     },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": "",
-    "fav_emoticons_no_access": ""
+    "thewordyes": "Sí",
+    "thewordno": "No",
+    "show_comments": "Mostrar comentarios",
+    "hide_comments": "Ocultar comentarios",
+    "fav_emoticons_no_access": "No tienes acceso a este emoticono"
 }
