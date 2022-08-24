@@ -1,3 +1,8 @@
+2.3.3: |
+  - Fix Steam showing reported tags as applied (#1423)
+  - Add confirmation dialog when deleting comments (#1166)
+  - Update localizations
+
 2.3.2: |
   - Update WSGF medals to match their new designs
   - Fix typo in HLTB section on app pages
