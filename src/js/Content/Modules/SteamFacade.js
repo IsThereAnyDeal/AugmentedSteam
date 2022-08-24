@@ -151,14 +151,6 @@ class SteamFacade {
         CScrollOffsetWatcher.ForceRecalc();
     }
 
-    static vSetCookie(strCookieName, strValue, expiryInDays, path) {
-        V_SetCookie(strCookieName, strValue, expiryInDays, path);
-    }
-
-    static checkAgeGateSubmit(callbackFunc) {
-        CheckAgeGateSubmit(callbackFunc);
-    }
-
     static loadImageGroupOnScroll(elTarget, strGroup) {
         LoadImageGroupOnScroll(elTarget, strGroup);
     }
