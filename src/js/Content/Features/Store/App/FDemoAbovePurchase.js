@@ -1,18 +1,18 @@
-import {Feature} from "../../../modulesContent";
 import {HTML, Localization} from "../../../../modulesCore";
+import {Feature} from "../../../modulesContent";
 
 export default class FDemoAbovePurchase extends Feature {
 
     checkPrerequisites() {
-        const rightcolDemoBtn = document.querySelector(".rightcol.game_meta_data a[href^='javascript:ShowGotSteamModal']");
-        this._demoLink = rightcolDemoBtn && rightcolDemoBtn.href;
+        this._demoLink = document.querySelector(".download_demo_button a.btn_medium")?.href.slice(11); // strip leading "javascript:"
 
+        // Check if there's a demo link in the right column, but no demo-above-purchase section
         return Boolean(this._demoLink) && document.querySelector(".demo_above_purchase") === null;
     }
 
     apply() {
 
-        // Determine available platforms from the system requirments section
+        // Determine available platforms from system requirements
         const winIcon = document.querySelector("[data-os=win]") ? '<span class="platform_img win"></span>' : "";
         const macIcon = document.querySelector("[data-os=mac]") ? '<span class="platform_img mac"></span>' : "";
         const linuxIcon = document.querySelector("[data-os=linux]") ? '<span class="platform_img linux"></span>' : "";
@@ -24,10 +24,10 @@ export default class FDemoAbovePurchase extends Feature {
             <h1>${Localization.str.download_demo_header.replace("__gamename__", this.context.appName)}</h1>
             <div class="game_purchase_action">
                 <div class="game_purchase_action_bg">
-                    <div class="btn_addtocart">
-                        <a class="btn_green_steamui btn_medium">
+                    <div id="demoGameBtn" class="btn_addtocart">
+                        <span class="btn_green_steamui btn_medium">
                             <span>${Localization.str.export.download}</span>
-                        </a>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@ export default class FDemoAbovePurchase extends Feature {
             HTML.afterBegin(document.getElementById("game_area_purchase"), html);
         }
 
-        // Prevent sanitizing javascript link (comes from page, safe source)
-        document.querySelector(".demo_above_purchase .btn_green_steamui").href = this._demoLink;
+        // Prevent sanitizing inline javascript (comes from page, safe source)
+        document.querySelector("#demoGameBtn > .btn_green_steamui").setAttribute("onclick", this._demoLink);
     }
 }
