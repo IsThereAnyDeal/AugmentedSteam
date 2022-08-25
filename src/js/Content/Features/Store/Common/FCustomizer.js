@@ -151,12 +151,41 @@ FCustomizer.Customizer = class {
         return str;
     }
 
+    /**
+     * Checks if the state of the option associated with the key should be stored in a separate storage entry.
+     * @param {string} key the name of the key used in the customizer
+     * @returns null if the key doesn't have a separate option and its state is stored inside a common options object,
+     * the name of the storage key otherwise
+     */
+    _getSeparateOptionName(key) {
+        switch (key) {
+            case "steamchart":
+                return "show_steamchart_info";
+            case "surveys":
+                return "show_survey_info";
+            case "steamspy":
+                return "show_steamspy_info";
+            default:
+                return null;
+        }
+    }
+
     _updateState(name, state) {
+        const optionName = this._getSeparateOptionName(name);
+        if (optionName !== null) {
+            return SyncedStorage.set(optionName, state);
+        }
+
         this.settings[name] = state;
-        SyncedStorage.set(this.settingsName, this.settings);
+        return SyncedStorage.set(this.settingsName, this.settings);
     }
 
     _getState(name) {
+        const optionName = this._getSeparateOptionName(name);
+        if (optionName !== null) {
+            return SyncedStorage.get(optionName);
+        }
+
         const state = this.settings[name];
         return (typeof state === "undefined") || state;
     }
