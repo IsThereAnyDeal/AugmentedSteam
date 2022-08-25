@@ -1,4 +1,4 @@
-import {Localization} from "../../../../modulesCore";
+import {Localization, SyncedStorage} from "../../../../modulesCore";
 import {RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -31,27 +31,38 @@ export class AddToCart {
          */
         if (response.url === "https://store.steampowered.com/cart/") {
 
-            Page.runInPageContext((str) => {
+            let enabled = SyncedStorage.get("addtocart_no_redirect");
 
-                window.SteamFacade.showConfirmDialog(str.cont_title, str.cont_desc, str.cont_checkout, str.cont_continue)
-                    .done((choice) => {
-                        if (choice === "OK") {
-                            window.location.assign("https://store.steampowered.com/cart/");
-                        }
-                    })
-                    .fail(() => {
-                        // If the dialog is closed or cancel (continue shopping) is selected...
-                        if (window.location.pathname.startsWith("/wishlist/")) {
-                            // Show cart button and update number of items
-                            document.getElementById("store_header_cart_btn").style.display = "block";
-                            const oldCount = document.getElementById("cart_item_count_value").textContent;
-                            document.getElementById("cart_item_count_value").textContent = Number(oldCount) + 1;
-                        } else {
-                            // Reload on store pages so page elements are updated
-                            window.location.reload();
-                        }
-                    });
-            }, [Localization.str.addtocart_dialog]);
+            // Show dialog to first time users
+            if (!SyncedStorage.has("addtocart_no_redirect")) {
+                enabled = await Page.runInPageContext((str) => new Promise((resolve) => {
+                    // FIXME The desc localization includes raw HTML tags (<br>), which is not good
+                    window.SteamFacade.showConfirmDialog(str.title, str.desc, str.continue, str.checkout)
+                        .done(() => {
+                            resolve(true);
+                        })
+                        .fail(() => {
+                            resolve(false);
+                        });
+                }), [Localization.str.addtocart_dialog], true);
+
+                SyncedStorage.set("addtocart_no_redirect", enabled);
+            }
+
+            if (enabled) {
+                if (window.location.pathname.startsWith("/wishlist/")) {
+                    // Show cart button and update number of items
+                    document.getElementById("store_header_cart_btn").style.display = "block";
+                    const oldCount = document.getElementById("cart_item_count_value").textContent;
+                    document.getElementById("cart_item_count_value").textContent = Number(oldCount) + 1;
+                } else {
+                    // Reload on store pages so page elements are updated
+                    window.location.reload();
+                }
+            } else {
+                // If the dialog is closed or canceled, don't enable feature
+                window.location.assign("https://store.steampowered.com/cart/");
+            }
         } else {
             window.location.assign(response.url);
         }

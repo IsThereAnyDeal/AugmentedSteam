@@ -5,7 +5,7 @@ import {AddToCart} from "./AddToCart";
 export default class FAddToCartNoRedirect extends Feature {
 
     checkPrerequisites() {
-        return SyncedStorage.get("addtocart_no_redirect");
+        return !SyncedStorage.has("addtocart_no_redirect") || SyncedStorage.get("addtocart_no_redirect");
     }
 
     apply() {

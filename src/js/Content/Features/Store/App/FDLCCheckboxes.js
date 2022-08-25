@@ -77,7 +77,7 @@ export default class FDLCCheckboxes extends Feature {
         const cartBtn = dlcSection.querySelector("#es_selected_btn");
         cartBtn.insertAdjacentElement("beforebegin", cartForm);
         cartBtn.addEventListener("click", () => {
-            if (SyncedStorage.get("addtocart_no_redirect")) {
+            if (!SyncedStorage.has("addtocart_no_redirect") || SyncedStorage.get("addtocart_no_redirect")) {
                 AddToCart.post(cartForm);
             } else {
                 cartForm.submit();
