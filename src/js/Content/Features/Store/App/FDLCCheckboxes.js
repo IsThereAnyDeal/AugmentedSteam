@@ -1,5 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {Feature, Price, User} from "../../../modulesContent";
+import {AddToCart} from "../Common/AddToCart";
 
 export default class FDLCCheckboxes extends Feature {
 
@@ -75,7 +76,13 @@ export default class FDLCCheckboxes extends Feature {
 
         const cartBtn = dlcSection.querySelector("#es_selected_btn");
         cartBtn.insertAdjacentElement("beforebegin", cartForm);
-        cartBtn.addEventListener("click", () => { cartForm.submit(); });
+        cartBtn.addEventListener("click", () => {
+            if (SyncedStorage.get("addtocart_no_redirect")) {
+                AddToCart.post(cartForm);
+            } else {
+                cartForm.submit();
+            }
+        });
 
         HTML.afterEnd(dlcSection.querySelector(".gradientbg"),
             `<div id="es_dlc_option_panel">

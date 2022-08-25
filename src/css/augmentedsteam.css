@@ -1324,9 +1324,6 @@ img.astats_icon {
   overflow-x: initial !important;
   overflow: visible !important;
 }
-.es_regional_prices.game_area_purchase_game:hover {
-  z-index: 9999;
-}
 .es_regional_prices:not(.es_regional_always) .es_regional_onmouse {
   cursor: help;
 }

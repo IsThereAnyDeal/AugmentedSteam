@@ -146,6 +146,7 @@ SyncedStorage.defaults = Object.freeze({
     "show_alternative_linux_icon": false,
     "show_itad_button": false,
     "skip_got_steam": false,
+    "addtocart_no_redirect": false,
 
     "installsteam": "show",
     "openinnewtab": false,

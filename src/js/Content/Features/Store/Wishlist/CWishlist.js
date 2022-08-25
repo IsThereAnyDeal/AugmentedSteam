@@ -1,6 +1,7 @@
 import {ContextType, User} from "../../../modulesContent";
 import {CStoreBase} from "../Common/CStoreBase";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
+import FAddToCartNoRedirect from "../Common/FAddToCartNoRedirect";
 import FWishlistHighlights from "./FWishlistHighlights";
 import FWishlistITADPrices from "./FWishlistITADPrices";
 import FWishlistUserNotes from "./FWishlistUserNotes";
@@ -30,6 +31,7 @@ export class CWishlist extends CStoreBase {
             FKeepEditableRanking,
             FOneClickRemoveFromWishlist,
             FAlternativeLinuxIcon,
+            FAddToCartNoRedirect,
         ]);
 
         if (User.isSignedIn) {
