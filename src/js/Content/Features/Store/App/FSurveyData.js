@@ -1,10 +1,10 @@
 import {Feature} from "../../../Modules/Feature/Feature";
-import {HTML, Localization} from "../../../../modulesCore";
+import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 
 export default class FSurveyData extends Feature {
 
     async checkPrerequisites() {
-        if (this.context.isDlcLike || this.context.isVideoOrHardware) {
+        if (!SyncedStorage.get("show_survey_info") || this.context.isDlcLike || this.context.isVideoOrHardware) {
             return false;
         }
 

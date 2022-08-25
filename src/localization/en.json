@@ -544,6 +544,7 @@
         "waitlist": "Items in your ITAD Waitlist",
         "show_steamchart_info": "Show SteamCharts.com information",
         "show_steamspy_info": "Show steamspy.com information",
+        "show_survey_info": "Show Performance Survey data",
         "showallachievements": "Show achievement completion bars on \"All Games\" page",
         "showallstats": "Show playtime stats on \"All Games\" page",
         "lowestprice_onwishlist": "Show when hovering over wishlist items",
