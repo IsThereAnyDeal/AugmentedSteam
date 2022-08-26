@@ -1,10 +1,10 @@
-import {Feature} from "../../../Modules/Feature/Feature";
+import {CallbackFeature} from "../../../Modules/Feature/CallbackFeature";
 import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 
-export default class FSurveyData extends Feature {
+export default class FSurveyData extends CallbackFeature {
 
     async checkPrerequisites() {
-        if (!SyncedStorage.get("show_survey_info") || this.context.isDlcLike || this.context.isVideoOrHardware) {
+        if (this.context.isDlcLike || this.context.isVideoOrHardware) {
             return false;
         }
 
@@ -17,10 +17,25 @@ export default class FSurveyData extends Feature {
         return true;
     }
 
-    apply() {
+    setup() {
+        this._initialized = false;
+
+        HTML.beforeBegin(
+            document.querySelector(".sys_req").parentNode,
+            "<div id='performance_survey'></div>"
+        );
+
+        if (SyncedStorage.get("show_survey_info")) {
+            this.callback("surveys");
+        }
+    }
+
+    callback(type) {
+        if (type !== "surveys" || this._initialized) { return; }
+        this._initialized = true;
 
         const survey = this._survey;
-        let html = `<div id="performance_survey" class="game_area_description"><h2>${Localization.str.survey.performance_survey}</h2>`;
+        let html = `<h2>${Localization.str.survey.performance_survey}</h2>`;
 
         if (survey.success) {
             html += `<p>${Localization.str.survey.users.replace("__users__", survey.responses)}</p>`;
@@ -69,9 +84,12 @@ export default class FSurveyData extends Feature {
          * }
          */
 
-        html += "</div>";
+        const node = document.getElementById("performance_survey");
 
-        HTML.beforeBegin(document.querySelector(".sys_req").parentNode, html);
+        // This class adds a margin, so it'd waste space if it were already added before
+        node.classList.add("game_area_description");
+
+        HTML.inner(node, html);
     }
 
     _getBarHtml(name, data) {
