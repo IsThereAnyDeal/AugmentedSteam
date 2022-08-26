@@ -1,7 +1,7 @@
-import {CallbackFeature} from "../../../Modules/Feature/CallbackFeature";
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import CustomizerFeature from "./CustomizerFeature";
+import {Localization} from "../../../../modulesCore";
 
-export default class FSurveyData extends CallbackFeature {
+export default class FSurveyData extends CustomizerFeature {
 
     async checkPrerequisites() {
         if (this.context.isDlcLike || this.context.isVideoOrHardware) {
@@ -17,23 +17,7 @@ export default class FSurveyData extends CallbackFeature {
         return true;
     }
 
-    setup() {
-        this._initialized = false;
-
-        HTML.beforeBegin(
-            document.querySelector(".sys_req").parentNode,
-            "<div id='performance_survey'></div>"
-        );
-
-        if (SyncedStorage.get("show_survey_info")) {
-            this.callback("surveys");
-        }
-    }
-
-    callback(type) {
-        if (type !== "surveys" || this._initialized) { return; }
-        this._initialized = true;
-
+    getContent() {
         const survey = this._survey;
         let html = `<h2>${Localization.str.survey.performance_survey}</h2>`;
 
@@ -84,12 +68,7 @@ export default class FSurveyData extends CallbackFeature {
          * }
          */
 
-        const node = document.getElementById("performance_survey");
-
-        // This class adds a margin, so it'd waste space if it were already added before
-        node.classList.add("game_area_description");
-
-        HTML.inner(node, html);
+        return html;
     }
 
     _getBarHtml(name, data) {
