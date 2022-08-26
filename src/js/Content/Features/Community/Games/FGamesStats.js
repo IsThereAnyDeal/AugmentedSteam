@@ -1,5 +1,5 @@
-import {Feature} from "../../../Modules/Feature/Feature";
 import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../../modulesCore";
+import {Feature} from "../../../Modules/Feature/Feature";
 
 export default class FGamesStats extends Feature {
 
@@ -29,11 +29,11 @@ export default class FGamesStats extends Feature {
         const totalTime = Localization.str.hours_short.replace("__hours__", time.toFixed(1));
 
         HTML.beforeBegin("#mainContents",
-            `<div id="esi-collection-chart-content">
-                <div class="esi-collection-stat"><span class="num">${totalTime}</span>${Localization.str.coll.total_time}</div>
-                <div class="esi-collection-stat"><span class="num">${countTotal}</span>${Localization.str.coll.in_collection}</div>
-                <div class="esi-collection-stat"><span class="num">${countPlayed}</span>${Localization.str.coll.played}</div>
-                <div class="esi-collection-stat"><span class="num">${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>
+            `<div id="esi-games-stats-content">
+                <div class="esi-stat"><span>${totalTime}</span>${Localization.str.coll.total_time}</div>
+                <div class="esi-stat"><span>${countTotal}</span>${Localization.str.coll.in_collection}</div>
+                <div class="esi-stat"><span>${countPlayed}</span>${Localization.str.coll.played}</div>
+                <div class="esi-stat"><span>${countNeverPlayed}</span>${Localization.str.coll.never_played}</div>
             </div>`);
     }
 }
