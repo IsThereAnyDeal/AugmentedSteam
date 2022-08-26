@@ -112,7 +112,7 @@ SyncedStorage.defaults = Object.freeze({
         "contentwarning": true,
         "steamchart": true,
         "steamspy": true,
-        "surveys": true,
+        "survey": true,
         "sysreq": true,
         "legal": true,
         "morelikethis": true,

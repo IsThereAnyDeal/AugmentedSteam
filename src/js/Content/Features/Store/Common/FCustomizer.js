@@ -77,7 +77,7 @@ export default class FCustomizer extends Feature {
             .add("about", getParentEl("#game_area_description"))
             .add("contentwarning", getParentEl("#game_area_content_descriptors"))
             .add("steamchart", "#steam-charts", Localization.str.charts.current)
-            .add("surveys", "#performance_survey", Localization.str.survey.performance_survey)
+            .add("survey", "#performance_survey", Localization.str.survey.performance_survey)
             .add("steamspy", "#steam-spy", Localization.str.spy.player_data)
             .add("sysreq", getParentEl(".sys_req"))
             .add("legal", getParentEl("#game_area_legal"), Localization.str.apppage_legal)
@@ -273,6 +273,6 @@ FCustomizer.Customizer = class {
  */
 FCustomizer.Customizer.asFeatures = new Map([
     ["steamchart", "show_steamchart_info"],
-    ["surveys", "show_survey_info"], // TODO Change to survey (without s)
+    ["survey", "show_survey_info"],
     ["steamspy", "show_steamspy_info"],
 ]);
