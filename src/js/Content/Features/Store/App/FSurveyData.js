@@ -3,6 +3,10 @@ import {Localization} from "../../../../modulesCore";
 
 export default class FSurveyData extends CustomizerFeature {
 
+    constructor(context) {
+        super(context, "survey", "show_survey_info", "performance_survey");
+    }
+
     async checkPrerequisites() {
         if (this.context.isDlcLike || this.context.isVideoOrHardware) {
             return false;

@@ -3,6 +3,10 @@ import {HTML, Localization} from "../../../../modulesCore";
 
 export default class FSteamSpy extends CustomizerFeature {
 
+    constructor(context) {
+        super(context, "steam-spy", "show_steamspy_info", "steamspy");
+    }
+
     async checkPrerequisites() {
         if (this.context.isDlcLike || this.context.isVideoOrHardware) {
             return false;
