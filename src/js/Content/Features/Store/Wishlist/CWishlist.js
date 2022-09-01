@@ -1,3 +1,4 @@
+import {HTMLParser, TimeUtils} from "../../../../modulesCore";
 import {ContextType, User} from "../../../modulesContent";
 import {CStoreBase} from "../Common/CStoreBase";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
@@ -10,13 +11,15 @@ import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
 import FKeepEditableRanking from "./FKeepEditableRanking";
 import FOneClickRemoveFromWishlist from "./FOneClickRemoveFromWishlist";
-import {TimeUtils} from "../../../../modulesCore";
 
 export class CWishlist extends CStoreBase {
 
     constructor() {
+
+        const wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
+
         // Don't apply features on empty or private wishlists
-        if (document.getElementById("nothing_to_see_here").style.display !== "none") {
+        if (!wishlistData || wishlistData.length === 0) {
             super(ContextType.WISHLIST);
             return;
         }
@@ -34,6 +37,7 @@ export class CWishlist extends CStoreBase {
             FOneClickRemoveFromWishlist,
         ]);
 
+        this.wishlistData = wishlistData;
         this.myWishlist = false;
 
         if (User.isSignedIn) {
