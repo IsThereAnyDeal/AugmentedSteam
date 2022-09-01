@@ -22,6 +22,8 @@ export class CWishlist extends CStoreBase {
         }
 
         super(ContextType.WISHLIST, [
+            FAlternativeLinuxIcon,
+            FAddToCartNoRedirect,
             FWishlistHighlights,
             FWishlistITADPrices,
             FWishlistUserNotes,
@@ -30,16 +32,14 @@ export class CWishlist extends CStoreBase {
             FExportWishlist,
             FKeepEditableRanking,
             FOneClickRemoveFromWishlist,
-            FAlternativeLinuxIcon,
-            FAddToCartNoRedirect,
         ]);
+
+        this.myWishlist = false;
 
         if (User.isSignedIn) {
             const myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/").replace(/\/$/, "");
             const myWishlistUrlRegex = new RegExp(`^${myWishlistUrl}([/#]|$)`);
             this.myWishlist = myWishlistUrlRegex.test(window.location.href) || window.location.href.includes(`/profiles/${User.steamId}`);
-        } else {
-            this.myWishlist = false;
         }
     }
 
