@@ -41,6 +41,9 @@ export class CWishlist extends CStoreBase {
             const myWishlistUrlRegex = new RegExp(`^${myWishlistUrl}([/#]|$)`);
             this.myWishlist = myWishlistUrlRegex.test(window.location.href) || window.location.href.includes(`/profiles/${User.steamId}`);
         }
+
+        // Maintain the order of the buttons
+        FEmptyWishlist.dependencies = [FExportWishlist];
     }
 
     async applyFeatures() {

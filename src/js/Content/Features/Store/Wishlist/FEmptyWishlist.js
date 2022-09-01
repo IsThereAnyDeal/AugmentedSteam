@@ -1,7 +1,5 @@
-
 import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../../modulesCore";
 import {DynamicStore, Feature, RequestData, User} from "../../../modulesContent";
-import FExportWishlist from "./FExportWishlist";
 import {Page} from "../../Page";
 
 export default class FEmptyWishlist extends Feature {
@@ -61,5 +59,3 @@ export default class FEmptyWishlist extends Feature {
         });
     }
 }
-
-FEmptyWishlist.dependencies = [FExportWishlist];
