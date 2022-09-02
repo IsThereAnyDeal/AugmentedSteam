@@ -59,7 +59,7 @@
       "js": "js/store/wishlist.js"
     },
     {
-      "matches": "*://*.steampowered.com/stats[/*]",
+      "matches": "*://*.steampowered.com/stats",
       "js": "js/store/stats.js"
     },
     {
@@ -68,8 +68,8 @@
     },
     {
       "matches": [
-        "*://*.steampowered.com/steamaccount/addfunds*",
-        "*://*.steampowered.com/digitalgiftcards/selectgiftcard[/*]"
+        "*://*.steampowered.com/steamaccount/addfunds",
+        "*://*.steampowered.com/digitalgiftcards/selectgiftcard"
       ],
       "js": "js/store/funds.js"
     },
@@ -104,24 +104,24 @@
     {
       "matches": "*://*.steampowered.com/*",
       "exclude_matches": [
-        "*://store.steampowered.com/dynamicstore/*",
-        "*://store.steampowered.com/checkout/*",
-        "*://store.steampowered.com/widget/*",
-        "*://store.steampowered.com/login/*",
-        "*://store.steampowered.com/join/*",
+        "*://store.steampowered.com/supportmessages",
+        "*://store.steampowered.com/video/*",
+        "*://store.steampowered.com/checkout[/*]",
+        "*://store.steampowered.com/widget[/*]",
+        "*://store.steampowered.com/login[/*]",
+        "*://store.steampowered.com/join[/*]",
         "*://store.steampowered.com/api/*",
         "*://api.steampowered.com/*",
-        "*://support.steampowered.com/*",
         "*://help.steampowered.com/*",
-        "*://translation.steampowered.com/*",
+        "*://login.steampowered.com/*",
         "*://partner.steampowered.com/*",
         "*://store.steampowered.com/[?*]",
         "*://*.steampowered.com/wishlist/id/*",
         "*://*.steampowered.com/wishlist/profiles/*",
-        "*://*.steampowered.com/stats[/*]",
+        "*://*.steampowered.com/stats",
         "*://*.steampowered.com/search[/*]",
-        "*://*.steampowered.com/steamaccount/addfunds*",
-        "*://*.steampowered.com/digitalgiftcards/selectgiftcard[/*]",
+        "*://*.steampowered.com/steamaccount/addfunds",
+        "*://*.steampowered.com/digitalgiftcards/selectgiftcard",
         "*://*.steampowered.com/account",
         "*://*.steampowered.com/account/registerkey",
         "*://*.steampowered.com/bundle/*",
@@ -155,17 +155,17 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/id/*/games*",
-        "*://steamcommunity.com/profiles/*/games*",
-        "*://steamcommunity.com/id/*/followedgames*",
-        "*://steamcommunity.com/profiles/*/followedgames*"
+        "*://steamcommunity.com/id/*/games",
+        "*://steamcommunity.com/profiles/*/games",
+        "*://steamcommunity.com/id/*/followedgames",
+        "*://steamcommunity.com/profiles/*/followedgames"
       ],
       "js": "js/community/games.js"
     },
     {
       "matches": [
-        "*://steamcommunity.com/id/*/edit*",
-        "*://steamcommunity.com/profiles/*/edit*"
+        "*://steamcommunity.com/id/*/edit/*",
+        "*://steamcommunity.com/profiles/*/edit/*"
       ],
       "js": "js/community/profile_edit.js"
     },
@@ -178,15 +178,15 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/id/*/gamecards*",
-        "*://steamcommunity.com/profiles/*/gamecards*"
+        "*://steamcommunity.com/id/*/gamecards/*",
+        "*://steamcommunity.com/profiles/*/gamecards/*"
       ],
       "js": "js/community/gamecard.js"
     },
     {
       "matches": [
-        "*://steamcommunity.com/id/*/friendsthatplay*",
-        "*://steamcommunity.com/profiles/*/friendsthatplay*"
+        "*://steamcommunity.com/id/*/friendsthatplay[/*]",
+        "*://steamcommunity.com/profiles/*/friendsthatplay[/*]"
       ],
       "js": "js/community/friends_that_play.js"
     },
@@ -194,17 +194,17 @@
       "matches": [
         "*://steamcommunity.com/id/*/friends[/*]",
         "*://steamcommunity.com/profiles/*/friends[/*]",
-        "*://steamcommunity.com/id/*/groups[*/]",
+        "*://steamcommunity.com/id/*/groups[/*]",
         "*://steamcommunity.com/profiles/*/groups[/*]",
-        "*://steamcommunity.com/id/*/following/",
-        "*://steamcommunity.com/profiles/*/following/"
+        "*://steamcommunity.com/id/*/following[/*]",
+        "*://steamcommunity.com/profiles/*/following[/*]"
       ],
       "js": "js/community/friends_and_groups.js"
     },
     {
       "matches": [
-        "*://steamcommunity.com/id/*/inventory*",
-        "*://steamcommunity.com/profiles/*/inventory*"
+        "*://steamcommunity.com/id/*/inventory",
+        "*://steamcommunity.com/profiles/*/inventory"
       ],
       "js": "js/community/inventory.js"
     },
@@ -222,8 +222,8 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/id/*/stats*",
-        "*://steamcommunity.com/profiles/*/stats*"
+        "*://steamcommunity.com/id/*/stats/*",
+        "*://steamcommunity.com/profiles/*/stats/*"
       ],
       "js": "js/community/stats.js"
     },
@@ -236,10 +236,10 @@
     },
     {
       "matches": [
-        "*://steamcommunity.com/id/*/recommended*",
-        "*://steamcommunity.com/profiles/*/recommended*",
-        "*://steamcommunity.com/id/*/reviews*",
-        "*://steamcommunity.com/profiles/*/reviews*"
+        "*://steamcommunity.com/id/*/recommended[/*]",
+        "*://steamcommunity.com/profiles/*/recommended[/*]",
+        "*://steamcommunity.com/id/*/reviews[/*]",
+        "*://steamcommunity.com/profiles/*/reviews[/*]"
       ],
       "js": "js/community/recommended.js"
     },
@@ -257,34 +257,34 @@
         "*://steamcommunity.com/profiles/*/friendactivitydetail/*",
         "*://steamcommunity.com/id/*/status/*",
         "*://steamcommunity.com/profiles/*/status/*",
-        "*://steamcommunity.com/id/*/games*",
-        "*://steamcommunity.com/profiles/*/games*",
-        "*://steamcommunity.com/id/*/followedgames*",
-        "*://steamcommunity.com/profiles/*/followedgames*",
-        "*://steamcommunity.com/id/*/edit*",
-        "*://steamcommunity.com/profiles/*/edit*",
+        "*://steamcommunity.com/id/*/games",
+        "*://steamcommunity.com/profiles/*/games",
+        "*://steamcommunity.com/id/*/followedgames",
+        "*://steamcommunity.com/profiles/*/followedgames",
+        "*://steamcommunity.com/id/*/edit/*",
+        "*://steamcommunity.com/profiles/*/edit/*",
         "*://steamcommunity.com/id/*/badges",
         "*://steamcommunity.com/profiles/*/badges",
-        "*://steamcommunity.com/id/*/gamecards*",
-        "*://steamcommunity.com/profiles/*/gamecards*",
-        "*://steamcommunity.com/id/*/friendsthatplay*",
-        "*://steamcommunity.com/profiles/*/friendsthatplay*",
+        "*://steamcommunity.com/id/*/gamecards/*",
+        "*://steamcommunity.com/profiles/*/gamecards/*",
+        "*://steamcommunity.com/id/*/friendsthatplay[/*]",
+        "*://steamcommunity.com/profiles/*/friendsthatplay[/*]",
         "*://steamcommunity.com/id/*/friends[/*]",
         "*://steamcommunity.com/profiles/*/friends[/*]",
         "*://steamcommunity.com/id/*/groups[/*]",
         "*://steamcommunity.com/profiles/*/groups[/*]",
-        "*://steamcommunity.com/id/*/following/",
-        "*://steamcommunity.com/profiles/*/following/",
-        "*://steamcommunity.com/id/*/inventory*",
-        "*://steamcommunity.com/profiles/*/inventory*",
-        "*://steamcommunity.com/id/*/stats*",
-        "*://steamcommunity.com/profiles/*/stats*",
+        "*://steamcommunity.com/id/*/following[/*]",
+        "*://steamcommunity.com/profiles/*/following[/*]",
+        "*://steamcommunity.com/id/*/inventory",
+        "*://steamcommunity.com/profiles/*/inventory",
+        "*://steamcommunity.com/id/*/stats/*",
+        "*://steamcommunity.com/profiles/*/stats/*",
         "*://steamcommunity.com/id/*/myworkshopfiles[/]?*browsefilter=mysubscriptions*",
         "*://steamcommunity.com/profiles/*/myworkshopfiles[/]?*browsefilter=mysubscriptions*",
-        "*://steamcommunity.com/id/*/recommended*",
-        "*://steamcommunity.com/profiles/*/recommended*",
-        "*://steamcommunity.com/id/*/reviews*",
-        "*://steamcommunity.com/profiles/*/reviews*"
+        "*://steamcommunity.com/id/*/recommended[/*]",
+        "*://steamcommunity.com/profiles/*/recommended[/*]",
+        "*://steamcommunity.com/id/*/reviews[/*]",
+        "*://steamcommunity.com/profiles/*/reviews[/*]"
       ],
       "js": "js/community/profile_home.js"
     },
@@ -293,12 +293,12 @@
       "js": "js/community/group_home.js"
     },
     {
-      "matches": "*://steamcommunity.com/app/*/guides*",
+      "matches": "*://steamcommunity.com/app/*/guides",
       "js": "js/community/guides.js"
     },
     {
       "matches": "*://steamcommunity.com/app/*",
-      "exclude_matches": "*://steamcommunity.com/app/*/guides*",
+      "exclude_matches": "*://steamcommunity.com/app/*/guides",
       "js": "js/community/app.js"
     },
     {
@@ -316,9 +316,10 @@
     {
       "matches": "*://steamcommunity.com/*",
       "exclude_matches": [
-        "*://steamcommunity.com/login/*",
-        "*://steamcommunity.com/openid/*",
-        "*://steamcommunity.com/chat/*",
+        "*://steamcommunity.com/login[/*]",
+        "*://steamcommunity.com/openid[/*]",
+        "*://steamcommunity.com/comment[/*]",
+        "*://steamcommunity.com/chat[/*]",
         "*://steamcommunity.com/tradeoffer/*",
         "*://steamcommunity.com/id/*",
         "*://steamcommunity.com/profiles/*",
