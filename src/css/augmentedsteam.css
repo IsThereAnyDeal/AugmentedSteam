@@ -1859,46 +1859,6 @@ img.astats_icon {
 }
 
 /***************************************
- * Market
- * add_market_sort()
- **************************************/
-.es_marketsort {
-  cursor: pointer;
-  display: inline-block;
-  float: right;
-}
-#es_marketsort_name {
-  display: block;
-  float: none;
-}
-#es_marketsort_game {
-  width: 165px;
-  padding-left: 5px;
-}
-.es_marketsort.active span:last-child::after {
-  display: inline;
-  margin-left: 4px;
-  margin-right: -16px;
-  color: #eee;
-  font-size: 12px;
-}
-.es_marketsort.active.asc span:last-child::after {
-  content: "▲";
-}
-.es_marketsort.active.desc span:last-child::after {
-  content: "▼";
-}
-#tabContentsMyActiveMarketListingsTable .market_listing_table_header {
-  overflow: hidden;
-}
-#tabContentsMyActiveMarketListingsTable .market_listing_header_namespacer {
-  visibility: hidden;
-}
-.market_listing_listed_position {
-  display: none;
-}
-
-/***************************************
  * Augmented Steam and ITAD menu
  **************************************/
 #es_menu {

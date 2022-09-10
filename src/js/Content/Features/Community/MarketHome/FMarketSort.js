@@ -1,140 +1,113 @@
-import {HTML, HTMLParser, Localization} from "../../../../modulesCore";
-import {DOMHelper, Feature} from "../../../modulesContent";
+import {Localization, SyncedStorage} from "../../../../modulesCore";
+import {DOMHelper, Feature, Price, Sortbox} from "../../../modulesContent";
 
 export default class FMarketSort extends Feature {
 
+    checkPrerequisites() {
+        // Check if user is logged in and has more than 1 active listings
+        return document.querySelectorAll("#tabContentsMyActiveMarketListingsRows .market_listing_row").length > 1;
+    }
+
     apply() {
 
-        const container = document.querySelector("#tabContentsMyActiveMarketListingsTable");
-        if (!container || !container.querySelector(".market_listing_table_header")) { return; }
+        this._insertSortbox();
+        this._addPageControlsHandler();
 
-        // Indicate default sort and add buttons to header
-        function buildButtons() {
-            if (document.querySelector(".es_marketsort")) { return; }
+        // reset sortbox after changing pagesize option (Steam refreshes the listings)
+        new MutationObserver(() => {
+            this._insertSortbox();
+            this._addPageControlsHandler();
+        }).observe(document.getElementById("tabContentsMyListings"), {"childList": true});
+    }
 
-            // name
-            DOMHelper.wrap(
-                HTMLParser.htmlToElement("<span id='es_marketsort_name' class='es_marketsort market_sortable_column'></span>"),
-                DOMHelper.selectLastNode(container, ".market_listing_table_header span").parentNode
-            );
+    _addPageControlsHandler() {
 
-            // date
-            let node = container.querySelector(".market_listing_table_header .market_listing_listed_date");
-            node.classList.add("market_sortable_column");
+        // reset sortbox after clicking page controls (we don't fetch all listings so each page is sorted individually)
+        document.getElementById("tabContentsMyActiveMarketListings_controls")?.addEventListener("click", () => {
+            this._insertSortbox();
+        });
+    }
 
-            DOMHelper.wrap(
-                HTMLParser.htmlToElement("<span id='es_marketsort_date' class='es_marketsort active asc'></span>"),
-                node
-            );
+    _insertSortbox() {
 
-            // price
-            node = DOMHelper.selectLastNode(container, ".market_listing_table_header .market_listing_my_price");
-            node.classList.add("market_sortable_column");
+        const container = document.getElementById("tabContentsMyActiveMarketListingsTable");
+        const header = container.querySelector(".market_listing_table_header");
 
-            DOMHelper.wrap(
-                HTMLParser.htmlToElement("<span id='es_marketsort_price' class='es_marketsort'></span>"),
-                node
-            );
-
-            HTML.beforeBegin("#es_marketsort_name",
-                `<span id='es_marketsort_game' class='es_marketsort market_sortable_column'><span>${Localization.str.game_name.toUpperCase()}</span></span>`);
+        if (container.querySelector(".es-sortbox") !== null) {
+            container.querySelector(".es-sortbox").remove();
+            Sortbox.reset();
         }
 
-        function sortRows(sortBy, asc) {
-            let selector;
-            let dataname;
-            let isNumber = false;
-            switch (sortBy) {
-                case "es_marketsort_name":
-                    selector = ".market_listing_item_name";
-                    break;
-                case "es_marketsort_date":
-                    dataname = "esiDefaultPosition";
-                    isNumber = true;
-                    break;
-                case "es_marketsort_price":
-                    selector = ".market_listing_price";
-                    break;
-                case "es_marketsort_game":
-                    selector = ".market_listing_game_name";
-                    break;
-            }
+        container.querySelector("h3.my_market_header").insertAdjacentElement("beforebegin", Sortbox.get(
+            "my_market_listings",
+            [
+                ["default", header.querySelector(".market_listing_listed_date").textContent.trim()],
+                ["item", header.querySelector(".market_listing_header_namespacer").parentNode.textContent.trim()],
+                ["game", Localization.str.game_name.toUpperCase()],
+                // TODO this `selectLastNode` call is due to lowest prices adding an additional column, avoid this
+                ["price", DOMHelper.selectLastNode(header, ".market_listing_my_price").textContent.trim()],
+            ],
+            SyncedStorage.get("sortmylistingsby"),
+            (sortBy, reversed) => { this._sortRows(sortBy, reversed); },
+            "sortmylistingsby"
+        ));
+    }
 
-            const rows = [];
-            const nodes = container.querySelectorAll(".market_listing_row");
-            for (const node of nodes) {
-                let value;
-                if (selector) {
-                    value = node.querySelector(selector).textContent.trim();
-                } else {
-                    value = node.dataset[dataname];
-                }
+    _sortRows(sortBy, reversed) {
 
-                if (isNumber) {
-                    value = parseInt(value);
-                }
+        const container = document.getElementById("tabContentsMyActiveMarketListingsRows");
+        const property = `esSort${sortBy}`;
+        const rows = [];
 
-                rows.push([value, node]);
-            }
-
-            const s = (asc === true) ? 1 : -1;
-            rows.sort((a, b) => {
-                if (a[0] === b[0]) { return 0; }
-                if (isNumber) {
-                    return asc ? b[0] - a[0] : a[0] - b[0];
-                }
-
-                return a[0] < b[0] ? s : -s;
-            });
-
-            for (const row of rows) {
-                container.append(row[1]);
-            }
-        }
-
-        buildButtons();
-
-        // add header click handlers
-        const tableHeader = container.querySelector(".market_listing_table_header");
-        if (!tableHeader) { return; }
-
-        tableHeader.addEventListener("click", ({target}) => {
-            const sortNode = target.closest(".es_marketsort");
-            if (!sortNode) { return; }
-
-            const isAsc = sortNode.classList.contains("asc");
-
-            document.querySelector(".es_marketsort.active").classList.remove("active");
-
-            sortNode.classList.add("active");
-            sortNode.classList.toggle("asc", !isAsc);
-            sortNode.classList.toggle("desc", isAsc);
+        // query available listings on each sort because they may be removed
+        container.querySelectorAll(".market_listing_row").forEach((node, i) => {
 
             // set default position
-            if (!container.querySelector(".market_listing_row[data-esi-default-position]")) {
-                const nodes = container.querySelectorAll(".market_listing_row");
-                let i = 0;
-                for (const node of nodes) {
-                    node.dataset.esiDefaultPosition = i++;
-                }
+            if (!node.dataset.esSortdefault) {
+                node.dataset.esSortdefault = i;
             }
 
-            sortRows(sortNode.id, isAsc);
+            let value = node.dataset[property];
+            if (typeof value === "undefined") {
+                if (sortBy === "item" || sortBy === "game") {
+                    value = node.querySelector(`.market_listing_${sortBy}_name`).textContent.trim();
+                } else if (sortBy === "price") {
+                    value = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent).value;
+                }
+
+                if (!value) { return; }
+                value = String(value);
+                node.dataset[property] = value;
+            }
+
+            rows.push([value, node]);
         });
 
-        container.addEventListener("click", (e) => {
-            if (!e.target.closest(".market_paging_controls span")) { return; }
-            document.querySelector(".es_marketsort.active").classList.remove("active");
+        rows.sort(this._getSortFunc(sortBy));
 
-            const dateNode = document.querySelector("#es_marketsort_date");
-            dateNode.classList.remove("desc");
-            dateNode.classList.add("active asc");
-        });
+        if (reversed) {
+            rows.reverse();
+        }
 
-        /*
-         * TODO when do we need this?
-         * let observer = new MutationObserver(buildButtons);
-         * observer.observe(document.querySelector("#tabContentsMyActiveMarketListingsTable"), {childList: true, subtree: true});
-         */
+        rows.forEach(row => container.append(row[1]));
+    }
+
+    _getSortFunc(sortBy) {
+        switch (sortBy) {
+            case "default":
+                return (a, b) => Number(a[0]) - Number(b[0]);
+            case "price":
+                return (a, b) => Number(b[0]) - Number(a[0]);
+            case "item":
+            case "game":
+                return (a, b) => a[0].localeCompare(b[0]);
+            default:
+                this.logError(
+                    new Error("Invalid sorting criteria"),
+                    "Can't sort market listings by criteria '%s'",
+                    sortBy,
+                );
+                return () => 0;
+        }
     }
 }

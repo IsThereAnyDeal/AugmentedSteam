@@ -31,30 +31,24 @@ export default class FGroupsSort extends CallbackFeature {
     _sortGroups(sortBy, reversed) {
 
         if (this._initSort) {
-
-            let i = 0;
-            for (const group of this._groups) {
-                const name = group.querySelector(".groupTitle > a").textContent;
-                const membercount = Number(group.querySelector(".memberRow > a").textContent.match(/\d+/g).join(""));
-                group.dataset.esSortdefault = i.toString();
-                group.dataset.esSortnames = name;
-                group.dataset.esSortmembers = membercount.toString();
-                i++;
-            }
+            this._groups.forEach((group, i) => {
+                group.dataset.esSortdefault = i;
+                group.dataset.esSortnames = group.querySelector(".groupTitle > a").textContent;
+                group.dataset.esSortmembers = group.querySelector(".memberRow > a").textContent.match(/\d+/g).join("");
+            });
 
             this._initSort = false;
         }
 
-        this._groups.sort(this._getSortFunc(sortBy, `esSort${sortBy}`));
+        this._groups.sort(this._getSortFunc(sortBy));
 
-        const searchResults = document.querySelector("#search_results_empty");
-        for (const group of this._groups) {
-            if (reversed) {
-                searchResults.insertAdjacentElement("afterend", group);
-            } else {
-                searchResults.parentElement.appendChild(group);
-            }
+        if (reversed) {
+            this._groups.reverse();
         }
+
+        // TODO better indicator for primary group document.getElementById("primaryGroupBreak");
+        const searchResults = document.getElementById("search_results");
+        this._groups.forEach(group => searchResults.append(group));
     }
 
     _getSortFunc(sortBy) {
