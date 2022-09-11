@@ -117,7 +117,7 @@ export default class FMarketLowestPrice extends Feature {
                     // If the node is detached after this timeout
                     if (!node.parentNode) { break; }
                 } else {
-                    console.error("Failed to retrieve price overview for item %s!", marketHashName);
+                    console.error("Failed to retrieve price overview for item %s!", decodeURIComponent(marketHashName));
                     break;
                 }
             }
