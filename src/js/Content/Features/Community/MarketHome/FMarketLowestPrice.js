@@ -112,11 +112,10 @@ export default class FMarketLowestPrice extends Feature {
                 // Too Many Requests
                 if (err instanceof Errors.HTTPError && err.code === 429) {
                     await TimeUtils.timer(30000);
-                    if (node) { // If the node still exists after this timeout
-                        attempt++;
-                    } else {
-                        break;
-                    }
+                    attempt++;
+
+                    // If the node is detached after this timeout
+                    if (!node.parentNode) { break; }
                 } else {
                     console.error("Failed to retrieve price overview for item %s!", marketHashName);
                     break;
