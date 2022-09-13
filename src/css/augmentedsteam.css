@@ -1366,7 +1366,7 @@ img.astats_icon {
   padding-left: 30px !important;
 }
 .es_regional_container {
-  z-index: 999;
+  z-index: 10;
   background: linear-gradient(to bottom, #33425a 5%, #282f3d 100%);
   padding: 7px 8px;
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.8);
@@ -1383,6 +1383,13 @@ img.astats_icon {
   right: -8px;
   width: 0;
   height: 0;
+}
+/**
+ * Raise the purchase container's z-index on hover so the popup shows on top of subsequent purchase containers.
+ * Must be lower than the default z-index for CModal (1000) to avoid the dialogs glitching out when clicking inside the purchase container.
+ */
+.es_regional_prices.game_area_purchase_game:hover {
+  z-index: 100;
 }
 .es_regional_prices:not(.es_regional_always) .es_regional_container {
   display: none;
