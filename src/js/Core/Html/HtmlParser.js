@@ -16,22 +16,26 @@ class HTMLParser {
 
     static getVariableFromText(text, name, type) {
         let regex;
-        if (type === "object") {
-            regex = new RegExp(`${name}\\s*=\\s*(\\{.+?\\});`);
-        } else if (type === "array") {
-            regex = new RegExp(`${name}\\s*=\\s*(\\[.+?\\]);`);
-        } else if (type === "int") {
-            regex = new RegExp(`${name}\\s*=\\s*(.+?);`);
-        } else if (type === "string") {
-            regex = new RegExp(`${name}\\s*=\\s*(\\".+?\\");`);
-        } else {
-            regex = new RegExp(name);
+        if (typeof name === "string") {
+            if (type === "object") {
+                regex = new RegExp(`${name}\\s*=\\s*(\\{.+?\\});`);
+            } else if (type === "array") {
+                regex = new RegExp(`${name}\\s*=\\s*(\\[.+?\\]);`);
+            } else if (type === "int") {
+                regex = new RegExp(`${name}\\s*=\\s*(.+?);`);
+            } else if (type === "string") {
+                regex = new RegExp(`${name}\\s*=\\s*['"](.+?)['"];`);
+            }
+        } else if (name instanceof RegExp) {
+            regex = name;
         }
 
         const m = text.match(regex);
         if (m) {
             if (type === "int") {
                 return parseInt(m[1]);
+            } else if (type === "string") {
+                return m[1];
             }
 
             try {
