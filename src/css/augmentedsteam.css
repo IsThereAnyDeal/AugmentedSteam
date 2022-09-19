@@ -1025,9 +1025,10 @@ img.astats_icon {
   font-family: 'Motiva Sans', sans-serif;
   font-weight: bold;
   cursor: pointer;
-}
-.es_playback_sd .es_hd_toggle span {
   opacity: 0.4;
+}
+.es_playback_hd .es_hd_toggle {
+  opacity: 1;
 }
 
 /***************************************

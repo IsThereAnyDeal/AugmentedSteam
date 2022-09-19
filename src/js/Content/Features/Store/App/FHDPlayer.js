@@ -1,133 +1,68 @@
+import {LocalStorage} from "../../../../modulesCore";
 import {Feature} from "../../../Modules/Feature/Feature";
-import {HTML, LocalStorage, TimeUtils} from "../../../../modulesCore";
 
 export default class FHDPlayer extends Feature {
 
     checkPrerequisites() {
-        return document.querySelector("div.highlight_movie");
+        return document.querySelector("div.highlight_movie") !== null;
     }
 
     apply() {
 
-        const that = this;
-        const movieNode = document.querySelector("div.highlight_movie");
-        let playInHD = LocalStorage.get("playback_hd");
+        const context = this.context;
 
-        function toggleFullscreen(videoControl) {
-            const fullscreenAvailable = document.fullscreenEnabled || document.mozFullScreenEnabled;
+        function clickHDControl() {
+            const playInHD = LocalStorage.get("playback_hd");
 
-            // Mozilla unprefixed in v64
-            if (!fullscreenAvailable) { return; }
-
-            const container = videoControl.parentNode;
-            const isFullscreen = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
-
-            /*
-             * Mozilla unprefixed in v64
-             * Chrome unprefixed in v53
-             */
-
-            if (isFullscreen) {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen(); // Mozilla unprefixed in v64
-                }
-            } else {
-                let response = null;
-                if (container.requestFullscreen) {
-                    response = container.requestFullscreen();
-                } else if (container.mozRequestFullScreen) {
-                    response = container.mozRequestFullScreen(); // Mozilla unprefixed in v64
-                } else if (container.webkitRequestFullscreen) {
-                    container.webkitRequestFullscreen(); // Chrome unprefixed in v69, no promise
-                }
-
-                // if response is a promise, catch any errors it throws
-                Promise.resolve(response).catch(err => console.error(err));
+            // When the "HD" button is clicked change the definition for all videos accordingly
+            for (const node of document.querySelectorAll("video.highlight_movie")) {
+                context.toggleVideoDefinition(node, !playInHD);
             }
+
+            LocalStorage.set("playback_hd", !playInHD);
         }
 
-        async function addHDControl(videoControl) {
+        function addHDControl(videoEl) {
+            const container = videoEl.parentNode;
 
-            playInHD = LocalStorage.get("playback_hd");
-
-            // prevents a bug in Chrome which causes videos to stop playing after changing the src
-            await TimeUtils.timer(150);
-
-            // Add "HD" button to the video
-            if (videoControl.dataset.hdSrc) {
-                const node = videoControl.parentNode.querySelector(".time");
-                if (node) {
-                    HTML.afterEnd(node, '<div class="es_hd_toggle"><span>HD</span></div>');
-                }
-            }
-
-            // Override Valve's auto switch to HD when putting a video in fullscreen
-            let node = videoControl.parentNode.querySelector(".fullscreen_button");
-            if (node) {
-                let newNode = document.createElement("div");
-                newNode.classList.add("fullscreen_button");
-                newNode.addEventListener("click", (() => toggleFullscreen(videoControl)), false);
-                node.replaceWith(newNode);
-                node = null; // prevent memory leak
-                newNode = null;
-            }
+            const btn = document.createElement("div");
+            btn.classList.add("es_hd_toggle");
+            btn.textContent = "HD";
+            btn.addEventListener("click", clickHDControl);
+            container.querySelector(".time").insertAdjacentElement("afterend", btn);
 
             // Toggle fullscreen on video double click
-            videoControl.addEventListener("dblclick", (() => toggleFullscreen(videoControl)), false);
+            videoEl.addEventListener("dblclick", () => {
+                container.querySelector(".fullscreen_button").click();
+            });
 
-            that.context.toggleVideoDefinition(videoControl, playInHD);
+            context.toggleVideoDefinition(videoEl, LocalStorage.get("playback_hd"));
         }
 
         // Add HD Control to each video as it's added to the DOM
-        const firstVideoIsPlaying = movieNode.querySelector("video.highlight_movie");
-        if (firstVideoIsPlaying) {
-            addHDControl(firstVideoIsPlaying);
-        }
+        for (const container of document.querySelectorAll("div.highlight_movie")) {
 
-        const observer = new MutationObserver(mutations => {
-            for (const mutation of mutations) {
-                for (const node of mutation.addedNodes) {
-                    if (!node.matches("video.highlight_movie")) { continue; }
-                    addHDControl(node);
-                }
-            }
-        });
-        for (const node of document.querySelectorAll("div.highlight_movie")) {
-            observer.observe(node, {"childList": true});
-        }
-
-        // When the "HD" button is clicked change the definition for all videos accordingly
-        document.querySelector("#highlight_player_area").addEventListener("click", ev => {
-
-            if (!ev.target.closest(".es_hd_toggle")) { return; }
-
-            ev.preventDefault();
-            ev.stopPropagation();
-
-            const videoControl = ev.target.closest("div.highlight_movie").querySelector("video");
-            const playInHD = this.context.toggleVideoDefinition(videoControl);
-
-            for (const node of document.querySelectorAll("video.highlight_movie")) {
-                if (node === videoControl) { continue; }
-                this.context.toggleVideoDefinition(node, playInHD);
+            // Check if video has already loaded
+            const videoEl = container.querySelector("video");
+            if (videoEl !== null) {
+                addHDControl(videoEl);
+                continue;
             }
 
-            LocalStorage.set("playback_hd", playInHD);
-        }, true);
+            new MutationObserver((mutations, observer) => {
 
-        // When the slider is expanded first time after the page was loaded set videos definition to HD
-        for (const node of document.querySelectorAll(".es_slider_toggle")) {
-            node.addEventListener("click", function clickInitialHD(ev) {
+                // Steam empties the container if the video or poster failed to load, but that should rarely happen so disconnect immediately
+                observer.disconnect();
 
-                ev.currentTarget.removeEventListener("click", clickInitialHD, false);
-                if (!ev.target.classList.contains("es_expanded")) { return; }
-                for (const node of document.querySelectorAll("video.highlight_movie.es_video_sd")) {
-                    that.context.toggleVideoDefinition(node, true);
+                for (const {addedNodes} of mutations) {
+                    for (const node of addedNodes) {
+                        if (node instanceof HTMLVideoElement) {
+                            addHDControl(node);
+                            break;
+                        }
+                    }
                 }
-                LocalStorage.set("playback_hd", true);
-            }, false);
+            }).observe(container, {"childList": true});
         }
     }
 }

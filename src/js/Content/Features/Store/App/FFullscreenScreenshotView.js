@@ -1,11 +1,11 @@
-import {Feature} from "../../../Modules/Feature/Feature";
 import {HTML} from "../../../../modulesCore";
+import {Feature} from "../../../Modules/Feature/Feature";
 
 export default class FFullscreenScreenshotView extends Feature {
 
     apply() {
 
-        function toggleFullScreen(ev) {
+        function toggleFullscreen(ev) {
             if (document.fullscreenElement) {
                 document.exitFullscreen();
             } else {
@@ -25,9 +25,9 @@ export default class FFullscreenScreenshotView extends Feature {
             HTML.beforeEnd(modalFooter,
                 `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_fullscreen_toggle" style="right: calc(${nextButtonOffsetWidth}px + 0.5em)"><i></i></div>`);
             const fsvButton = modalFooter.querySelector(".es_screenshot_fullscreen_toggle");
-            fsvButton.addEventListener("click", toggleFullScreen);
+            fsvButton.addEventListener("click", toggleFullscreen);
 
-            const modalTitleLink = modalFooter.parentElement.querySelector(".screenshot_popup_modal_title > a");
+            const modalTitleLink = modalFooter.parentNode.querySelector(".screenshot_popup_modal_title > a");
             HTML.beforeEnd(modalFooter,
                 `<div class="btnv6_blue_hoverfade btn_medium es_screenshot_open_btn" style="right: calc(${nextButtonOffsetWidth + fsvButton.offsetWidth}px + 1em)"><i></i></div>`);
             const openButton = modalFooter.querySelector(".es_screenshot_open_btn");
@@ -36,15 +36,15 @@ export default class FFullscreenScreenshotView extends Feature {
             });
         }
 
-        const observer = new MutationObserver(mutations => {
-            for (const mutation of mutations) {
-                for (const node of mutation.addedNodes) {
+        new MutationObserver(mutations => {
+            for (const {addedNodes} of mutations) {
+                for (const node of addedNodes) {
                     if (node.classList.contains("screenshot_popup_modal")) {
                         initFSVButtons();
+                        break;
                     }
                 }
             }
-        });
-        observer.observe(document.body, {"childList": true});
+        }).observe(document.body, {"childList": true});
     }
 }
