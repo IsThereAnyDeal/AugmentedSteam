@@ -1031,6 +1031,10 @@ img.astats_icon {
   opacity: 1;
 }
 
+video.highlight_movie:hover + .html5_video_overlay {
+  transition: bottom 0.2s linear;
+}
+
 /***************************************
  * App pages
  * FAchievementBar

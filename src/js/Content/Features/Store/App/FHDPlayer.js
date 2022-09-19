@@ -1,4 +1,4 @@
-import {LocalStorage} from "../../../../modulesCore";
+import {LocalStorage, TimeUtils} from "../../../../modulesCore";
 import {Feature} from "../../../Modules/Feature/Feature";
 
 export default class FHDPlayer extends Feature {
@@ -39,6 +39,28 @@ export default class FHDPlayer extends Feature {
             context.toggleVideoDefinition(videoEl, LocalStorage.get("playback_hd"));
         }
 
+        function addMouseMoveHandler(videoEl) {
+            const overlay = videoEl.nextElementSibling;
+            let timer;
+
+            videoEl.addEventListener("mousemove", () => {
+                if (timer) {
+                    timer.reset();
+                    overlay.style.bottom = "0px";
+                    videoEl.style.cursor = "";
+                } else {
+                    timer = TimeUtils.resettableTimer(() => {
+                        overlay.style.bottom = "-35px";
+                        videoEl.style.cursor = "none";
+                    }, 2000);
+                }
+            });
+
+            videoEl.addEventListener("mouseleave", () => {
+                timer?.stop(); // Avoid hiding the overlay when moving the cursor from video to overlay
+            });
+        }
+
         // Add HD Control to each video as it's added to the DOM
         for (const container of document.querySelectorAll("div.highlight_movie")) {
 
@@ -46,6 +68,7 @@ export default class FHDPlayer extends Feature {
             const videoEl = container.querySelector("video");
             if (videoEl !== null) {
                 addHDControl(videoEl);
+                addMouseMoveHandler(videoEl);
                 continue;
             }
 
@@ -58,6 +81,7 @@ export default class FHDPlayer extends Feature {
                     for (const node of addedNodes) {
                         if (node instanceof HTMLVideoElement) {
                             addHDControl(node);
+                            addMouseMoveHandler(node);
                             break;
                         }
                     }
