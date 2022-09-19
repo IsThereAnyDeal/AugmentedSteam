@@ -8,12 +8,6 @@ class DOMHelper {
         container.append(node);
     }
 
-    static remove(selector) {
-        const node = document.querySelector(selector);
-        if (!node) { return; }
-        node.remove();
-    }
-
     // TODO extend Node itself?
     static selectLastNode(parent, selector) {
         const nodes = parent.querySelectorAll(selector);

@@ -1,5 +1,5 @@
 import {HTML, Localization, TimeUtils} from "../../../../modulesCore";
-import {Background, DOMHelper, Feature, ProfileData, SteamId} from "../../../modulesContent";
+import {Background, Feature, ProfileData, SteamId} from "../../../modulesContent";
 import Config from "../../../../config";
 
 export default class FBackgroundSelection extends Feature {
@@ -141,7 +141,7 @@ export default class FBackgroundSelection extends Feature {
             });
 
         } else if (this._active) {
-            DOMHelper.remove(".js-bg-selection");
+            document.querySelector(".js-bg-selection")?.remove();
             this._active = false;
         }
     }
