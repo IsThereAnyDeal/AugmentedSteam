@@ -1,13 +1,6 @@
 
 class DOMHelper {
 
-    static wrap(container, node) {
-        const parent = node.parentNode;
-        parent.insertBefore(container, node);
-        parent.removeChild(node);
-        container.append(node);
-    }
-
     static remove(selector) {
         const node = document.querySelector(selector);
         if (!node) { return; }
