@@ -59,10 +59,6 @@
       "js": "js/store/wishlist.js"
     },
     {
-      "matches": "*://*.steampowered.com/stats[/*]",
-      "js": "js/store/stats.js"
-    },
-    {
       "matches": "*://*.steampowered.com/search[/*]",
       "js": "js/store/search.js"
     },
