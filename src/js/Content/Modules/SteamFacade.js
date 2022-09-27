@@ -64,6 +64,11 @@ class SteamFacade {
         return UpdatePlaytimeFilterValues(hourMin, hourMax);
     }
 
+    // @param appid required, rest is optional
+    static removeFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2) {
+        return RemoveFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2);
+    }
+
     // events
 
     static bindAutoFlyoutEvents() {
