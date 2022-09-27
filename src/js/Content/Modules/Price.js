@@ -33,7 +33,7 @@ class Price {
             return new Price(this.value, this.currency);
         }
         const rate = CurrencyManager.getRate(this.currency, desiredCurrency);
-        if (!rate) {
+        if (rate === null) {
             throw new Error(`Could not establish conversion rate between ${this.currency} and ${desiredCurrency}`);
         }
         return new Price(this.value * rate, desiredCurrency);

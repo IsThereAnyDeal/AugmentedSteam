@@ -18,6 +18,25 @@ export default class FRegionalPricing extends Feature {
             countries.push(localCountry);
         }
 
+        // Store error messages to avoid duplicate console warnings
+        const errors = new Set();
+
+        function handleError(err, country) {
+
+            const message = country
+                ? `Can't show converted price and relative price differences for country code ${country.toUpperCase()}`
+                : "Can't show relative price differences to any other currencies";
+
+            if (!errors.has(message)) {
+                errors.add(message);
+
+                console.group("Regional pricing");
+                console.error(err);
+                console.warn(message);
+                console.groupEnd();
+            }
+        }
+
         for (const subid of this.context.getAllSubids()) {
 
             const prices = {};
@@ -31,10 +50,6 @@ export default class FRegionalPricing extends Feature {
                 prices[country] = result[subid].data.price;
             }));
 
-            const node = document.querySelector(`input[name=subid][value="${subid}"]`)
-                .closest(".game_area_purchase_game_wrapper, #game_area_purchase")
-                .querySelector(".game_purchase_action");
-
             const apiPrice = prices[User.storeCountry.toLowerCase()];
 
             // For paid titles that have F2P versions with their own subid (see #894)
@@ -44,10 +59,7 @@ export default class FRegionalPricing extends Feature {
             try {
                 priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(CurrencyManager.customCurrency);
             } catch (err) {
-                console.group("Regional pricing");
-                console.error(err);
-                console.warn("Can't show relative price differences to any other currencies");
-                console.groupEnd();
+                handleError(err);
             }
 
             const pricingDiv = document.createElement("div");
@@ -67,16 +79,10 @@ export default class FRegionalPricing extends Feature {
                     try {
                         priceUser = priceRegion.inCurrency(CurrencyManager.customCurrency);
                     } catch (err) {
-                        console.group("Regional pricing");
-                        console.error(err);
-                        console.warn(
-                            'Not able to show converted price and relative price differences for country code "%s"',
-                            country.toUpperCase()
-                        );
-                        console.groupEnd();
+                        handleError(err, country);
                     }
 
-                    html = `<div class="es-regprice es-flag es-flag--${country}">${priceRegion}`;
+                    html += `<div class="es-regprice es-flag es-flag--${country}">${priceRegion}`;
 
                     if (priceLocal && priceUser) {
                         let percentageIndicator = "equal";
@@ -89,21 +95,21 @@ export default class FRegionalPricing extends Feature {
                             percentageIndicator = "higher";
                         }
 
-                        html
-                            += `<span class="es-regprice__converted">${priceUser}</span>
-                                <span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`;
+                        html += `<span class="es-regprice__converted">${priceUser}</span>`;
+                        html += `<span class="es-regprice__perc es-regprice__perc--${percentageIndicator}">${percentage}%</span>`;
                     }
-
-                    html += "</div>";
                 } else {
-                    html
-                        = ` <div class="es-regprice es-flag es-flag--${country}">
-                                <span class="es-regprice__none">${Localization.str.region_unavailable}</span>
-                            </div>`;
+                    html += `<div class="es-regprice es-flag es-flag--${country}">`;
+                    html += `<span class="es-regprice__none">${Localization.str.region_unavailable}</span>`;
                 }
 
+                html += "</div>";
                 HTML.beforeEnd(pricingDiv, html);
             }
+
+            const node = document.querySelector(`input[name=subid][value="${subid}"]`)
+                .closest(".game_area_purchase_game_wrapper, #game_area_purchase")
+                .querySelector(".game_purchase_action");
 
             const purchaseArea = node.closest(".game_area_purchase_game");
             purchaseArea.classList.add("es_regional_prices");
