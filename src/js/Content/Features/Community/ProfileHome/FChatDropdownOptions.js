@@ -17,16 +17,16 @@ export default class FChatDropdownOptions extends Feature {
 
         HTML.replace(sendButton,
             `<span class="btn_profile_action btn_medium" id="profile_chat_dropdown_link">
-                <span>${sendButton.textContent}<img src="//community.akamai.steamstatic.com/public/images/profile/profile_action_dropdown.png"></span>
+                <span>${sendButton.textContent}<img src="//community.cloudflare.steamstatic.com/public/images/profile/profile_action_dropdown.png"></span>
             </span>
             <div class="popup_block" id="profile_chat_dropdown">
                 <div class="popup_body popup_menu shadow_content">
                     <a id="btnWebChat" class="popup_menu_item">
-                        <img src="//community.akamai.steamstatic.com/public/images/skin_1/icon_btn_comment.png">
+                        <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/icon_btn_comment.png">
                         &nbsp; ${Localization.str.web_browser_chat}
                     </a>
                     <a class="popup_menu_item" href="steam://friends/message/${friendSteamId}">
-                        <img src="//community.akamai.steamstatic.com/public/images/skin_1/icon_btn_comment.png">
+                        <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/icon_btn_comment.png">
                         &nbsp; ${Localization.str.steam_client_chat}
                     </a>
                 </div>

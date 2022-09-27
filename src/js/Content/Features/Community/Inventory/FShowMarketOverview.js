@@ -112,7 +112,7 @@ export default class FShowMarketOverview extends CallbackFeature {
         if (!thisItem.dataset.lowestPrice) {
             if (firstDiv.querySelector("img.es_loading") !== null) { return; }
 
-            HTML.inner(firstDiv, '<img class="es_loading" src="//community.akamai.steamstatic.com/public/images/login/throbber.gif">');
+            HTML.inner(firstDiv, '<img class="es_loading" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">');
 
             thisItem.dataset.lowestPrice = "nodata";
             thisItem.dataset.soldVolume = "nodata";

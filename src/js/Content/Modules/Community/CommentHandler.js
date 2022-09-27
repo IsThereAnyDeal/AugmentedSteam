@@ -149,7 +149,7 @@ export class CommentHandler {
     }
 
     static _buildEmoticonOption(name) {
-        return `<div class="emoticon_option es_fav" data-emoticon="${name}"><img src="//community.akamai.steamstatic.com/economy/emoticon/${name}" class="emoticon"></div>`;
+        return `<div class="emoticon_option es_fav" data-emoticon="${name}"><img src="//community.cloudflare.steamstatic.com/economy/emoticon/${name}" class="emoticon"></div>`;
     }
 
     static addFavoriteEmoticons() {

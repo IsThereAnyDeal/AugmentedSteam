@@ -9,7 +9,7 @@ export default class FBadgeProgress extends Feature {
 
     async apply() {
 
-        DOMHelper.insertStylesheet("//community.akamai.steamstatic.com/public/css/skin_1/badges.css");
+        DOMHelper.insertStylesheet("//community.cloudflare.steamstatic.com/public/css/skin_1/badges.css");
 
         HTML.afterEnd("#category_block",
             `<div id="es_badge_progress" class="block responsive_apppage_details_right heading">

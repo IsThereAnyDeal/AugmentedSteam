@@ -76,7 +76,7 @@ export default class FViewSteamId extends Feature {
         if (dropdown) {
             HTML.beforeEnd(dropdown,
                 `<a class="popup_menu_item" id="es_steamid">
-                    <img src="//community.akamai.steamstatic.com/public/images/skin_1/iconForums.png">&nbsp; ${Localization.str.view_steamid}
+                    <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/iconForums.png">&nbsp; ${Localization.str.view_steamid}
                 </a>`);
         } else {
             const actions = document.querySelector(".profile_header_actions");

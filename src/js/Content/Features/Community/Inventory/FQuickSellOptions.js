@@ -115,7 +115,7 @@ export default class FQuickSellOptions extends CallbackFeature {
 
             HTML.inner(marketActions.querySelector("div"),
                 `<div class="es_loading" style="min-height: 66px;">
-                    <img src="//community.akamai.steamstatic.com/public/images/login/throbber.gif">
+                    <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
                     <span>${Localization.str.selling}</span>
                 </div>`);
 

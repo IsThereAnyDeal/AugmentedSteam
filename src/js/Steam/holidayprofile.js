@@ -8,72 +8,72 @@ const animationDefaults = {
 
 const animations = [
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/ball_blink_1170_9_69.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/ball_blink_1170_9_69.png",
         "cols": 9,
         "frames": 69
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/ball_jump_650_5_25.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/ball_jump_650_5_25.png",
         "cols": 5,
         "frames": 25
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/ball_wave_1170_9_78.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/ball_wave_1170_9_78.png",
         "cols": 9,
         "frames": 78
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/cupcake_blink_1040_8_60.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/cupcake_blink_1040_8_60.png",
         "cols": 8,
         "frames": 60
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/cupcake_jump_650_5_25.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/cupcake_jump_650_5_25.png",
         "cols": 5,
         "frames": 25
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/cupcake_wave_1040_8_54.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/cupcake_wave_1040_8_54.png",
         "cols": 8,
         "frames": 54
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/monte_blink_1040_8_62.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/monte_blink_1040_8_62.png",
         "cols": 8,
         "frames": 62
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/monte_wave_1040_8_57.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/monte_wave_1040_8_57.png",
         "cols": 8,
         "frames": 57
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/runner_blink_1170_9_72.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/runner_blink_1170_9_72.png",
         "cols": 9,
         "frames": 72
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/runner_present_1170_9_79.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/runner_present_1170_9_79.png",
         "cols": 9,
         "frames": 79
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/runner_wave_1170_9_68.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/runner_wave_1170_9_68.png",
         "cols": 9,
         "frames": 68
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/zippy_blink_1040_8_59.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/zippy_blink_1040_8_59.png",
         "cols": 8,
         "frames": 59
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/zippy_shiv_910_7_46.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/zippy_shiv_910_7_46.png",
         "cols": 7,
         "frames": 46
     },
     {
-        "image": "https://steamcommunity-a.akamaihd.net/public/images/profile/holidayprofile/sprite_sheets/crushed/zippy_wave_910_7_45.png",
+        "image": "https://community.cloudflare.steamstatic.com/public/images/profile/holidayprofile/sprite_sheets/crushed/zippy_wave_910_7_45.png",
         "cols": 7,
         "frames": 45
     }

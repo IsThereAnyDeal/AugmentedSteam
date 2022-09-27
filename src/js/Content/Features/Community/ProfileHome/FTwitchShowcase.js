@@ -45,7 +45,7 @@ export default class FTwitchShowcase extends Feature {
                 <a class="esi-stream" href="${channelUrl}">
                     <div class="esi-stream__preview">
                         <img src="${previewUrl}">
-                        <img src="//store.akamai.steamstatic.com/public/shared/images/apphubs/play_icon80.png" class="esi-stream__play">
+                        <img src="//store.cloudflare.steamstatic.com/public/shared/images/apphubs/play_icon80.png" class="esi-stream__play">
                         <div class="esi-stream__live">Live on <span class="esi-stream__twitch">Twitch</span></div>
                     </div>
                     <div class="esi-stream__title">
