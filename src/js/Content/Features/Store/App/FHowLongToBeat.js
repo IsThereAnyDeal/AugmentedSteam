@@ -34,12 +34,12 @@ export default class FHowLongToBeat extends Feature {
             <div class="block underlined_links es_hltb">
                 <div class="block_content">
                     <div class="block_content_inner">
-                        <div class="details_block">
+                        ${story || extras || comp ? `<div class="details_block">
                             ${story ? `<b>${Localization.str.hltb.main}:</b><span>${HTML.escape(story)}</span><br>` : ""}
                             ${extras ? `<b>${Localization.str.hltb.main_e}:</b><span>${HTML.escape(extras)}</span><br>` : ""}
                             ${comp ? `<b>${Localization.str.hltb.compl}:</b><span>${HTML.escape(comp)}</span><br>` : ""}
                         </div>
-                        <br>
+                        <br>` : ""}
                         <a class="linkbar es_external_icon" href="${HTML.escape(url)}" target="_blank">${Localization.str.more_information}</a>
                         <a class="linkbar es_external_icon" href="${HTML.escape(submit)}" target="_blank">${Localization.str.hltb.submit}</a>
                     </div>
