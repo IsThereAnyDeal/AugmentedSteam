@@ -118,6 +118,10 @@ class SteamIdDetail {
     get id64() {
         return this._steamId64;
     }
+
+    get id64hex() {
+        return `steam:${BigInt(this._steamId64).toString(16)}`;
+    }
 }
 
 export {SteamId, SteamIdDetail};
