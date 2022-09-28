@@ -2308,7 +2308,7 @@ label.es_dlc_label > input:checked::after {
 }
 
 
-/* Taken from store_game_shared.css (.game_details) */
+/* .game_details styles from https://github.com/SteamDatabase/SteamTracking/blob/8719637a11e9e707f0adb4d07987cd9423d0d828/steamcommunity.com/public/shared/css/store_game_shared.css#L389 */
 .es_hltb {
   color: #8f98a0;
   line-height: 20px;
