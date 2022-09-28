@@ -38,14 +38,14 @@ export default class FTwitchShowcase extends Feature {
         const previewUrl = `${data.thumbnail_url.replace("{width}", 636).replace("{height}", 358)}?${Math.random()}`;
 
         HTML.afterBegin(".profile_leftcol",
-            `<div class='profile_customization' id='es_twitch'>
-                <div class='profile_customization_header'>
+            `<div class="profile_customization" id="es_twitch">
+                <div class="profile_customization_header">
                     ${Localization.str.twitch.now_streaming.replace("__username__", channelUsername)}
                 </div>
                 <a class="esi-stream" href="${channelUrl}">
                     <div class="esi-stream__preview">
                         <img src="${previewUrl}">
-                        <img src="https://steamstore-a.akamaihd.net/public/shared/images/apphubs/play_icon80.png" class="esi-stream__play">
+                        <img src="//store.cloudflare.steamstatic.com/public/shared/images/apphubs/play_icon80.png" class="esi-stream__play">
                         <div class="esi-stream__live">Live on <span class="esi-stream__twitch">Twitch</span></div>
                     </div>
                     <div class="esi-stream__title">

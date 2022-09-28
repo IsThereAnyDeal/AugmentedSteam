@@ -67,10 +67,10 @@ class Stats {
         return `<div class="recentAchievements">
             ${achievementStr}
             <br>
-            <img src="https://community.akamai.steamstatic.com/public/images/skin_1/achieveBarLeft.gif" width="2" height="12" border="0">
-            <img src="https://community.akamai.steamstatic.com/public/images/skin_1/achieveBarFull.gif" width="${achBarWidth}" height="12" border="0">
-            <img src="https://community.akamai.steamstatic.com/public/images/skin_1/achieveBarEmpty.gif" width="${achBarWidthRemainder}" height="12" border="0">
-            <img src="https://community.akamai.steamstatic.com/public/images/skin_1/achieveBarRight.gif" width="2" height="12" border="0">
+            <img src="https://community.cloudflare.steamstatic.com/public/images/skin_1/achieveBarLeft.gif" width="2" height="12" border="0">
+            <img src="https://community.cloudflare.steamstatic.com/public/images/skin_1/achieveBarFull.gif" width="${achBarWidth}" height="12" border="0">
+            <img src="https://community.cloudflare.steamstatic.com/public/images/skin_1/achieveBarEmpty.gif" width="${achBarWidthRemainder}" height="12" border="0">
+            <img src="https://community.cloudflare.steamstatic.com/public/images/skin_1/achieveBarRight.gif" width="2" height="12" border="0">
             <br>
         </div>`.replace(/>\s+</g, "><"); // Remove whitespace between tags to avoid layout issues
     }
