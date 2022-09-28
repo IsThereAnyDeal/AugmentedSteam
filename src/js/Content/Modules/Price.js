@@ -30,7 +30,7 @@ class Price {
 
     inCurrency(desiredCurrency) {
         if (this.currency === desiredCurrency) {
-            return new Price(this.value, this.currency);
+            return this;
         }
         const rate = CurrencyManager.getRate(this.currency, desiredCurrency);
         if (rate === null) {

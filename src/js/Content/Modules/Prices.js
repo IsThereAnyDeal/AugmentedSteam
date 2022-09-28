@@ -51,9 +51,13 @@ class Prices {
      */
     _getPricingStrings(priceData, price, pricingStr) {
         let prices = price.toString();
-        if (CurrencyManager.customCurrency !== CurrencyManager.storeCurrency) {
-            const priceAlt = price.inCurrency(CurrencyManager.storeCurrency);
-            prices += ` (${priceAlt.toString()})`;
+        if (price.currency !== CurrencyManager.storeCurrency) {
+            try {
+                const priceAlt = price.inCurrency(CurrencyManager.storeCurrency);
+                prices += ` (${priceAlt.toString()})`;
+            } catch (err) {
+                console.warn("Could not convert currency, omitting price in store currency");
+            }
         }
         const pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
 
@@ -101,7 +105,11 @@ class Prices {
                 lowest = new Price(priceData.price, meta.currency);
             }
 
-            lowest = lowest.inCurrency(CurrencyManager.customCurrency);
+            try {
+                lowest = lowest.inCurrency(CurrencyManager.customCurrency);
+            } catch (err) {
+                console.warn("Could not convert currency, using country currency");
+            }
             const [pricesStr, cutStr, storeStr] = this._getPricingStrings(priceData, lowest, pricingStr);
 
             let drmStr = "";
@@ -124,7 +132,13 @@ class Prices {
         if (lowestData) {
             hasData = true;
 
-            const historical = new Price(lowestData.price, meta.currency).inCurrency(CurrencyManager.customCurrency);
+            let historical = new Price(lowestData.price, meta.currency);
+            try {
+                historical = historical.inCurrency(CurrencyManager.customCurrency);
+            } catch (err) {
+                console.warn("Could not convert currency, using country currency");
+            }
+
             const [pricesStr, cutStr, storeStr] = this._getPricingStrings(lowestData, historical, pricingStr);
             const dateStr = new Date(lowestData.recorded * 1000).toLocaleDateString();
 
@@ -204,36 +218,8 @@ class Prices {
 
             purchase += '<p class="package_contents">';
 
-            let bundlePrice;
-            const appName = document.querySelector(".apphub_AppName").textContent;
-
-            for (let i = 0; i < tiers.length; ++i) {
-                const tierNum = i + 1;
-                const tier = tiers[i];
-
-                purchase += "<b>";
-                if (tiers.length > 1) {
-                    const tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
-                    const tierPrice = (new Price(tier.price, meta.currency).inCurrency(CurrencyManager.customCurrency))
-                        .toString();
-
-                    purchase += Localization.str.bundle.tier_includes.replace("__tier__", tierName).replace("__price__", tierPrice)
-                        .replace("__num__", tier.games.length);
-                } else {
-                    purchase += Localization.str.bundle.includes.replace("__num__", tier.games.length);
-                }
-                purchase += ":</b> ";
-
-                const gameList = tier.games.join(", ");
-                if (gameList.includes(appName)) {
-                    purchase += gameList.replace(appName, `<u>${appName}</u>`);
-                    bundlePrice = tier.price;
-                } else {
-                    purchase += gameList;
-                }
-
-                purchase += "<br>";
-            }
+            let [tierHtml, bundlePrice] = this._processTiers(tiers, meta);
+            purchase += tierHtml;
 
             purchase += "</p>";
             purchase += `<div class="game_purchase_action">
@@ -246,10 +232,16 @@ class Prices {
                             </div>
                             <div class="game_purchase_action_bg">`;
 
-            if (bundlePrice && bundlePrice > 0) {
-                bundlePrice = (new Price(bundlePrice, meta.currency).inCurrency(CurrencyManager.customCurrency))
-                    .toString();
-                purchase += `<div class="game_purchase_price price" itemprop="price">${bundlePrice}</div>`;
+            if (bundlePrice > 0) {
+
+                bundlePrice = new Price(bundlePrice, meta.currency);
+                try {
+                    bundlePrice = bundlePrice.inCurrency(CurrencyManager.customCurrency);
+                } catch (err) {
+                    console.warn("Could not convert currency, using country currency");
+                }
+
+                purchase += `<div class="game_purchase_price price" itemprop="price">${bundlePrice.toString()}</div>`;
             }
 
             purchase += `<div class="btn_addtocart">
@@ -262,6 +254,48 @@ class Prices {
         if (purchase) {
             this.bundleCallback(purchase);
         }
+    }
+
+    _processTiers(tiers, meta) {
+        let purchase = "";
+        let bundlePrice = null;
+        const appName = document.querySelector(".apphub_AppName").textContent;
+
+        for (let i = 0; i < tiers.length; ++i) {
+            const tierNum = i + 1;
+            const tier = tiers[i];
+
+            purchase += "<b>";
+            if (tiers.length > 1) {
+                const tierName = tier.note || Localization.str.bundle.tier.replace("__num__", tierNum);
+
+                let tierPrice = new Price(tier.price, meta.currency);
+                try {
+                    tierPrice = tierPrice.inCurrency(CurrencyManager.customCurrency);
+                } catch (err) {
+                    console.warn("Could not convert currency, using country currency");
+                }
+
+                purchase += Localization.str.bundle.tier_includes
+                    .replace("__tier__", tierName)
+                    .replace("__price__", tierPrice.toString())
+                    .replace("__num__", tier.games.length);
+            } else {
+                purchase += Localization.str.bundle.includes.replace("__num__", tier.games.length);
+            }
+            purchase += ":</b> ";
+
+            const gameList = tier.games.join(", ");
+            if (gameList.includes(appName)) {
+                purchase += gameList.replace(appName, `<u>${appName}</u>`);
+                bundlePrice = tier.price;
+            } else {
+                purchase += gameList;
+            }
+
+            purchase += "<br>";
+        }
+        return [purchase, bundlePrice];
     }
 
     load() {
