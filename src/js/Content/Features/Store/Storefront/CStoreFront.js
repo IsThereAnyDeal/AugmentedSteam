@@ -74,5 +74,20 @@ export class CStoreFront extends CStoreBase {
                 }
             }).observe(contentNode, {"childList": true});
         }
+
+        // Top sellers tab
+        const topSellersTab = document.querySelector("#tab_topsellers_content");
+        if (topSellersTab) {
+            new MutationObserver(mutations => {
+                for (const {addedNodes} of mutations) {
+                    if (addedNodes.length > 1) {
+                        const nodes = Array.from(addedNodes)
+                            .filter(el => el instanceof Element && el.classList.contains("tab_item"));
+
+                        this.decorateStoreCapsules(nodes);
+                    }
+                }
+            }).observe(topSellersTab.querySelector(".tab_content_items"), {"childList": true});
+        }
     }
 }
