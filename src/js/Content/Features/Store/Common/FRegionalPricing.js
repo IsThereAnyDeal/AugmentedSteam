@@ -43,7 +43,8 @@ export default class FRegionalPricing extends Feature {
 
             await Promise.all(countries.map(async country => {
                 const result = await RequestData.getJson(
-                    `https://store.steampowered.com/api/packagedetails/?packageids=${subid}&cc=${country}`
+                    `https://store.steampowered.com/api/packagedetails/?packageids=${subid}&cc=${country}`,
+                    {"credentials": "omit"}
                 );
 
                 if (!result || !result[subid] || !result[subid].success || !result[subid].data.price) { return; }
