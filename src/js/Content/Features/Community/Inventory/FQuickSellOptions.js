@@ -11,6 +11,7 @@ export default class FQuickSellOptions extends CallbackFeature {
     async callback({
         view,
         sessionId,
+        marketAllowed,
         assetId,
         contextId,
         globalId,
@@ -20,7 +21,8 @@ export default class FQuickSellOptions extends CallbackFeature {
         publisherFee
     }) {
 
-        if (!marketable) { return; }
+        // Additional checks for market eligibility, see https://github.com/SteamDatabase/SteamTracking/blob/13e4e0c8f8772ef316f73881af8c546218cf7117/steamcommunity.com/public/javascript/economy_v2.js#L3675
+        if (!marketAllowed || (walletCurrency === 0) || !marketable) { return; }
 
         const thisItem = document.getElementById(`${globalId}_${contextId}_${assetId}`);
         const marketActions = document.getElementById(`iteminfo${view}_item_market_actions`);

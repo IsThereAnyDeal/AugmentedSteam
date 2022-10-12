@@ -69,6 +69,7 @@ export class CInventory extends CCommunityBase {
                 window.Messenger.postMessage("marketInfo", {
                     "view": iActiveSelectView,
                     "sessionId": g_sessionID,
+                    "marketAllowed": g_bMarketAllowed,
                     "assetId": g_ActiveInventory.selectedItem.assetid, // DO NOT try to convert this to a number as the value might exceed Number.MAX_SAFE_INTEGER
                     contextId,
                     globalId,
