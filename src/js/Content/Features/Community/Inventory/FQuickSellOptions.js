@@ -30,9 +30,19 @@ export default class FQuickSellOptions extends CallbackFeature {
 
         // marketActions' innerHTML is cleared on item selection, so the links HTML has to be re-inserted
         HTML.beforeEnd(marketActions,
-            this._makeMarketButton(`es_quicksell${view}`, Localization.str.quick_sell_desc.replace("__modifier__", diff))
-            + this._makeMarketButton(`es_instantsell${view}`, Localization.str.instant_sell_desc)
-            + '<div class="es_qsell_loading"></div>');
+            `<a class="item_market_action_button item_market_action_button_green" id="es_quicksell${view}" data-tooltip-text="${Localization.str.quick_sell_desc.replace("__modifier__", diff)}" style="display: none;">
+                <span class="item_market_action_button_edge item_market_action_button_left"></span>
+                <span class="item_market_action_button_contents"></span>
+                <span class="item_market_action_button_edge item_market_action_button_right"></span>
+                <span class="item_market_action_button_preload"></span>
+            </a>
+            <a class="item_market_action_button item_market_action_button_green" id="es_instantsell${view}" data-tooltip-text="${Localization.str.instant_sell_desc}" style="display: none;">
+                <span class="item_market_action_button_edge item_market_action_button_left"></span>
+                <span class="item_market_action_button_contents"></span>
+                <span class="item_market_action_button_edge item_market_action_button_right"></span>
+                <span class="item_market_action_button_preload"></span>
+            </a>
+            <div class="es_qsell_loading"></div>`);
 
         Page.runInPageContext(view => {
             window.SteamFacade.vTooltip(`#es_quicksell${view}, #es_instantsell${view}`);
@@ -170,14 +180,5 @@ export default class FQuickSellOptions extends CallbackFeature {
                 dataset.priceHigh = priceHigh.toFixed(2) * 100;
             }
         }
-    }
-
-    _makeMarketButton(id, tooltip) {
-        return `<a class="item_market_action_button item_market_action_button_green" id="${id}" data-tooltip-text="${tooltip}" style="display: none;">
-                    <span class="item_market_action_button_edge item_market_action_button_left"></span>
-                    <span class="item_market_action_button_contents"></span>
-                    <span class="item_market_action_button_edge item_market_action_button_right"></span>
-                    <span class="item_market_action_button_preload"></span>
-                </a>`;
     }
 }
