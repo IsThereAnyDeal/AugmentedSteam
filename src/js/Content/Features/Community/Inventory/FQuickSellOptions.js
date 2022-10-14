@@ -31,7 +31,8 @@ export default class FQuickSellOptions extends CallbackFeature {
         // marketActions' innerHTML is cleared on item selection, so the links HTML has to be re-inserted
         HTML.beforeEnd(marketActions,
             this._makeMarketButton(`es_quicksell${view}`, Localization.str.quick_sell_desc.replace("__modifier__", diff))
-            + this._makeMarketButton(`es_instantsell${view}`, Localization.str.instant_sell_desc));
+            + this._makeMarketButton(`es_instantsell${view}`, Localization.str.instant_sell_desc)
+            + '<div class="es_qsell_loading"></div>');
 
         Page.runInPageContext(view => {
             window.SteamFacade.vTooltip(`#es_quicksell${view}, #es_instantsell${view}`);
@@ -92,29 +93,33 @@ export default class FQuickSellOptions extends CallbackFeature {
             instantSell.style.display = "block";
         }
 
+        function enableButtons(enable) {
+            for (const button of marketActions.querySelectorAll(".item_market_action_button")) {
+                button.classList[enable ? "remove" : "add"]("btn_disabled");
+                button.style.pointerEvents = enable ? "" : "none";
+            }
+        }
+
+        const loadingEl = marketActions.querySelector(".es_qsell_loading");
+
         async function clickHandler(e) {
             e.preventDefault();
 
-            const buttonParent = e.target.closest(".item_market_action_button[data-price]");
-            if (!buttonParent) { return; }
+            enableButtons(false);
 
-            for (const button of [quickSell, instantSell]) {
-                button.classList.add("btn_disabled");
-                button.style.pointerEvents = "none";
-            }
-
-            HTML.inner(marketActions.querySelector("div"),
-                `<div class="es_loading" style="min-height: 66px;">
+            HTML.inner(loadingEl,
+                `<div class="es_loading">
                     <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
                     <span>${Localization.str.selling}</span>
                 </div>`);
 
             const feeInfo = await Page.runInPageContext((price, fee) => {
                 return window.SteamFacade.calculateFeeAmount(price, fee);
-            }, [buttonParent.dataset.price, publisherFee], true);
+            }, [e.currentTarget.dataset.price, publisherFee], true);
 
             const sellPrice = feeInfo.amount - feeInfo.fees;
 
+            // https://github.com/SteamDatabase/SteamTracking/blob/13e4e0c8f8772ef316f73881af8c546218cf7117/steamcommunity.com/public/javascript/economy_v2.js#L4268
             const formData = new FormData();
             formData.append("sessionid", sessionId);
             formData.append("appid", globalId);
@@ -123,9 +128,22 @@ export default class FQuickSellOptions extends CallbackFeature {
             formData.append("amount", 1);
             formData.append("price", sellPrice);
 
-            await RequestData.post("https://steamcommunity.com/market/sellitem/", formData);
+            const result = await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {}, true).catch(err => err);
 
-            marketActions.style.display = "none";
+            if (!result?.success) {
+                HTML.inner(loadingEl, result?.message ?? Localization.str.error);
+                enableButtons(true);
+
+                return;
+            }
+
+            // https://github.com/SteamDatabase/SteamTracking/blob/13e4e0c8f8772ef316f73881af8c546218cf7117/steamcommunity.com/public/javascript/economy_v2.js#L4368
+            if (result.requires_confirmation) {
+                HTML.inner(loadingEl, Localization.str.quick_sell_verify);
+            } else {
+                marketActions.style.display = "none";
+            }
+
             document.getElementById(`iteminfo${view}_item_scrap_actions`).style.display = "none";
 
             thisItem.classList.add("btn_disabled", "activeInfo");
