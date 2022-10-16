@@ -30,19 +30,22 @@ export default class FQuickSellOptions extends CallbackFeature {
 
         // marketActions' innerHTML is cleared on item selection, so the links HTML has to be re-inserted
         HTML.beforeEnd(marketActions,
-            `<a class="item_market_action_button item_market_action_button_green" id="es_quicksell${view}" data-tooltip-text="${Localization.str.quick_sell_desc.replace("__modifier__", diff)}" style="display: none;">
+            `<a class="item_market_action_button item_market_action_button_green" id="es_quicksell${view}" data-tooltip-text="${Localization.str.quick_sell_desc.replace("__modifier__", diff)}">
                 <span class="item_market_action_button_edge item_market_action_button_left"></span>
                 <span class="item_market_action_button_contents"></span>
                 <span class="item_market_action_button_edge item_market_action_button_right"></span>
                 <span class="item_market_action_button_preload"></span>
             </a>
-            <a class="item_market_action_button item_market_action_button_green" id="es_instantsell${view}" data-tooltip-text="${Localization.str.instant_sell_desc}" style="display: none;">
+            <a class="item_market_action_button item_market_action_button_green" id="es_instantsell${view}" data-tooltip-text="${Localization.str.instant_sell_desc}">
                 <span class="item_market_action_button_edge item_market_action_button_left"></span>
                 <span class="item_market_action_button_contents"></span>
                 <span class="item_market_action_button_edge item_market_action_button_right"></span>
                 <span class="item_market_action_button_preload"></span>
             </a>
-            <div class="es_qsell_loading"></div>`);
+            <div class="es_loading es_qsell_loading">
+                <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
+                <span>${Localization.str.selling}</span>
+            </div>`);
 
         Page.runInPageContext(view => {
             window.SteamFacade.vTooltip(`#es_quicksell${view}, #es_instantsell${view}`);
@@ -106,7 +109,6 @@ export default class FQuickSellOptions extends CallbackFeature {
         function enableButtons(enable) {
             for (const button of marketActions.querySelectorAll(".item_market_action_button")) {
                 button.classList[enable ? "remove" : "add"]("btn_disabled");
-                button.style.pointerEvents = enable ? "" : "none";
             }
         }
 
@@ -116,12 +118,7 @@ export default class FQuickSellOptions extends CallbackFeature {
             e.preventDefault();
 
             enableButtons(false);
-
-            HTML.inner(loadingEl,
-                `<div class="es_loading">
-                    <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
-                    <span>${Localization.str.selling}</span>
-                </div>`);
+            loadingEl.style.display = "block";
 
             const feeInfo = await Page.runInPageContext((price, fee) => {
                 return window.SteamFacade.calculateFeeAmount(price, fee);
@@ -141,7 +138,7 @@ export default class FQuickSellOptions extends CallbackFeature {
             const result = await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {}, true).catch(err => err);
 
             if (!result?.success) {
-                HTML.inner(loadingEl, result?.message ?? Localization.str.error);
+                loadingEl.textContent = result?.message ?? Localization.str.error;
                 enableButtons(true);
 
                 return;
@@ -149,7 +146,7 @@ export default class FQuickSellOptions extends CallbackFeature {
 
             // https://github.com/SteamDatabase/SteamTracking/blob/13e4e0c8f8772ef316f73881af8c546218cf7117/steamcommunity.com/public/javascript/economy_v2.js#L4368
             if (result.requires_confirmation) {
-                HTML.inner(loadingEl, Localization.str.quick_sell_verify);
+                loadingEl.textContent = Localization.str.quick_sell_verify;
             } else {
                 marketActions.style.display = "none";
             }
@@ -157,7 +154,6 @@ export default class FQuickSellOptions extends CallbackFeature {
             document.getElementById(`iteminfo${view}_item_scrap_actions`).style.display = "none";
 
             thisItem.classList.add("btn_disabled", "activeInfo");
-            thisItem.style.pointerEvents = "none";
         }
 
         quickSell.addEventListener("click", clickHandler);
