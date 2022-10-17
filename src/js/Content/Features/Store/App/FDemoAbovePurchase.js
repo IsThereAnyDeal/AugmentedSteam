@@ -1,12 +1,15 @@
 import {HTML, Localization} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 
-// Try out with https://store.steampowered.com/app/220/HalfLife_2/
-// TODO Add "Add to Library" button
+/*
+ * Try out with https://store.steampowered.com/app/220/HalfLife_2/
+ * TODO Add "Add to Library" button
+ */
 export default class FDemoAbovePurchase extends Feature {
 
     checkPrerequisites() {
-        this._demoLink = document.querySelector(".download_demo_button a.btn_medium")?.href.slice(11); // strip leading "javascript:"
+        // strip leading "javascript:"
+        this._demoLink = document.querySelector(".download_demo_button a.btn_medium")?.href.slice(11);
 
         // Check if there's a demo link in the right column, but no demo-above-purchase section
         return Boolean(this._demoLink) && document.querySelector(".demo_above_purchase") === null;
