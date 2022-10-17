@@ -2,7 +2,8 @@
   "scripts": {
     "build": "node config/scripts/build.cjs",
     "update-locales": "node config/scripts/locales.cjs",
-    "release": "node config/scripts/make-release.cjs"
+    "release": "node config/scripts/make-release.cjs",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "archiver": "^5.3.1",
