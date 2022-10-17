@@ -1,6 +1,8 @@
 import {HTML, Localization} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 
+// Try out with https://store.steampowered.com/app/220/HalfLife_2/
+// TODO Add "Add to Library" button
 export default class FDemoAbovePurchase extends Feature {
 
     checkPrerequisites() {
