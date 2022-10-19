@@ -10,7 +10,8 @@ jobs:
           node-version: 14
           cache: "npm"
       - run: npm ci
-      - uses: actions/upload-artifact@v3
+      - if: failure()
+        uses: actions/upload-artifact@v3
         with:
           name: npm-log
           path: /home/runner/.npm/_logs/
