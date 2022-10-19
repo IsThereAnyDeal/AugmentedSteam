@@ -11,7 +11,7 @@ export default class FBackgroundPreviewLink extends Feature {
 
         new MutationObserver(async mutations => {
             for (const {addedNodes} of mutations) {
-                if (addedNodes.length !== 1 || !addedNodes[0].classList.contains("FullModalOverlay")) { continue; }
+                if (addedNodes.length !== 1 || !addedNodes[0].classList.contains("active")) { continue; }
 
                 const previewEl = await new Promise(resolve => {
                     new MutationObserver((mutations, observer) => {
@@ -37,6 +37,6 @@ export default class FBackgroundPreviewLink extends Feature {
                         </div>`);
                 }
             }
-        }).observe(document.body, {"childList": true});
+        }).observe(document.querySelector(".FullModalOverlay"), {"childList": true});
     }
 }
