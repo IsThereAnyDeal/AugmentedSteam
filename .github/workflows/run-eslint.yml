@@ -15,4 +15,4 @@ jobs:
         with:
           name: npm-log
           path: /home/runner/.npm/_logs/
-      - run: npx eslint .
+      - run: npm run lint
