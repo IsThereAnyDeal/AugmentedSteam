@@ -1,4 +1,5 @@
 {
+  "name": "augmented-steam",
   "scripts": {
     "build": "node config/scripts/build.cjs",
     "update-locales": "node config/scripts/locales.cjs",
