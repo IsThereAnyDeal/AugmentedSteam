@@ -9,7 +9,7 @@ jobs:
         with:
           node-version: 14
           cache: "npm"
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - if: failure()
         uses: actions/upload-artifact@v3
         with:
