@@ -16,7 +16,10 @@ export default class FBackgroundPreviewLink extends Feature {
                 const previewEl = await new Promise(resolve => {
                     new MutationObserver((mutations, observer) => {
                         observer.disconnect();
-                        resolve(mutations[0].addedNodes[0].querySelector("[class*=redeempointsmodal_BackgroundPreviewContainer] > [class*=redeempointsmodal_PreviewBackgroundContainer]")?.lastElementChild);
+                        resolve(mutations[0]
+                            .addedNodes[0]
+                            .querySelector("[class*=redeempointsmodal_PreviewBackgroundContainer]")
+                            ?.lastElementChild);
                     }).observe(addedNodes[0], {"childList": true, "subtree": true});
                 });
 

@@ -210,7 +210,8 @@ export default class FMarketStats extends Feature {
         /**
          * TODOs to consider
          * 1. Store failed ranges separately so they can be retried later, and/or add a "refresh" button to recalculate from scratch
-         * 2. After testing, Steam starts throwing 429s after 30 requests (30 * 500 = 15000 items), sometimes earlier. Add a "continue" button to allow continuing where we left off
+         * 2. After testing, Steam starts throwing 429s after 30 requests (30 * 500 = 15000 items), sometimes earlier.
+         *  Add a "continue" button to allow continuing where we left off.
          */
         progressNode.textContent = Localization.str.transactionStatus
             .replace("__failed__", failedRequests)

@@ -60,8 +60,11 @@ class Stats {
             .replace("__total__", stats[2])
             .replace("__percentage__", stats[3]);
 
-        // https://github.com/SteamDatabase/SteamTracking/blob/master/steamcommunity.com/public/javascript/profile_gameslist_functions.js#L216-L217
-        const achBarWidth = 185 * (stats[1] / stats[2]) || 0; // For some reason some games report 0 total achievements, check for NaN
+        /*
+         * https://github.com/SteamDatabase/SteamTracking/blob/master/steamcommunity.com/public/javascript/profile_gameslist_functions.js#L216-L217
+         * For some reason some games report 0 total achievements, check for NaN
+         */
+        const achBarWidth = 185 * (stats[1] / stats[2]) || 0;
         const achBarWidthRemainder = 185 - achBarWidth;
 
         return `<div class="recentAchievements">

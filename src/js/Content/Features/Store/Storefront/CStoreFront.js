@@ -36,7 +36,8 @@ export class CStoreFront extends CStoreBase {
         }
 
         /**
-         * The "recommended curators" section is lazy-loaded if the "apps recommended by curators" section is empty (`rgCuratedAppsData` is an empty array)
+         * The "recommended curators" section is lazy-loaded if the "apps recommended by curators"
+         * section is empty (`rgCuratedAppsData` is an empty array)
          * https://github.com/SteamDatabase/SteamTracking/blob/524ff1a7d552fc9c9a4fde992d3a79d3a98a93d0/store.steampowered.com/public/javascript/home.js#L2842
          */
         const curatorsNode = document.querySelector("#steam_curators_not_empty");

@@ -8,17 +8,14 @@ export default class FPackageInfoButton extends Feature {
     }
 
     apply() {
+        const excluded = [
+            ".bundle_hidden_by_preferences", // Bundles that are filtered due to preferences (e.g. no nudity)
+            ".game_purchase_sub_dropdown", // Subscriptions (no subid)
+            ".dynamic_bundle_description", // Bundles
+        ].join(",");
 
-        /**
-         * Exclude
-         * 1. free items (no form element to get subid, excluded by class selector)
-         * 2. blurred out items (no purchase option thus no form element to get subid)
-         * 3. subscriptions (no subid)
-         * 4. bundles
-         */
-        for (const node of document.querySelectorAll(
-            ".game_area_purchase_game_wrapper:not(.bundle_hidden_by_preferences, .game_purchase_sub_dropdown, .dynamic_bundle_description)"
-        )) {
+        // Free items do not have the game_area_purchase_game_wrapper class
+        for (const node of document.querySelectorAll(`.game_area_purchase_game_wrapper:not(${excluded})`)) {
             // Exclude entries that already have a "Package info" button
             if (node.querySelector(".btn_packageinfo")) { return; }
 

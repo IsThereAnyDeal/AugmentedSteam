@@ -5,7 +5,11 @@ export default class FShowGemsCost extends Feature {
 
     async apply() {
 
-        const boosterData = await Page.runInPageContext(() => JSON.parse(JSON.stringify(window.CBoosterCreatorPage.sm_rgBoosterData)), null, true);
+        const boosterData = await Page.runInPageContext(
+            () => JSON.parse(JSON.stringify(window.CBoosterCreatorPage.sm_rgBoosterData)),
+            null,
+            true,
+        );
 
         // Localized string of "(quantifier) + Gems"
         const gemWord = document.querySelector(".booster_creator_goostatus .goo_display").textContent.trim().replace(/[\d]+,?/g, "");

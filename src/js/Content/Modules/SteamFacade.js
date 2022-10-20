@@ -199,7 +199,12 @@ class SteamFacade {
     }
 
     static zoomYearForSellDialog() {
-        pricehistory_zoomDays(SellItemDialog.m_plotPriceHistory, SellItemDialog.m_timePriceHistoryEarliest, SellItemDialog.m_timePriceHistoryLatest, 365);
+        pricehistory_zoomDays(
+            SellItemDialog.m_plotPriceHistory,
+            SellItemDialog.m_timePriceHistoryEarliest,
+            SellItemDialog.m_timePriceHistoryLatest,
+            365
+        );
     }
 
     // selections
