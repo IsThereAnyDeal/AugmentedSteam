@@ -15,7 +15,7 @@ export default class FWishlistStats extends Feature {
         HTML.beforeBegin("#tab_filters",
             `<div class="filter_tab" id="esi-wishlist-stats">
                 ${Localization.str.wl.label}
-                <img src="https://store.akamai.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png">
+                <img src="//store.cloudflare.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png">
             </div>`);
 
         HTML.beforeBegin("#section_filters",
@@ -24,7 +24,83 @@ export default class FWishlistStats extends Feature {
                 <div class="esi-stat"><span id="esi-stat-count"></span>${Localization.str.wl.in_wishlist}</div>
                 <div class="esi-stat"><span id="esi-stat-onsale"></span>${Localization.str.wl.on_sale}</div>
                 <div class="esi-stat"><span id="esi-stat-noprice"></span>${Localization.str.wl.no_price}</div>
+                <div class="esi-stat" style="display: none;"><span id="esi-stat-hidden" data-tooltip-text="${Localization.str.wl.hidden_tooltip}"></span>${Localization.str.wl.hidden}</div>
             </div>`);
+
+        // Hidden entries that don't show up and are not removable by traditional means
+        const hiddenApps = this.context.wishlistData
+            .filter(({appid}) => !this._appInfo[appid])
+            .sort((a, b) => {
+                // Order items as they'd appear on the wishlist by default
+                if (a.priority === b.priority) { return 0; }
+                if (b.priority === 0) { return -1; }
+                if (a.priority === 0) { return 1; }
+                return a.priority - b.priority;
+            })
+            .map(({appid}) => appid);
+
+        if (hiddenApps.length > 0) {
+            const node = document.getElementById("esi-stat-hidden");
+            node.textContent = hiddenApps.length;
+            node.parentNode.style.display = "";
+
+            node.addEventListener("click", () => {
+                Page.runInPageContext((hiddenApps, viewStr, removeStr, wlStr) => {
+                    const f = window.SteamFacade;
+                    const g = f.global;
+                    const canEdit = g("g_bCanEdit"); // `true` if logged in and viewing own wishlist
+
+                    // We support removing items so use a global property to keep track of them
+                    window.asHiddenApps ??= hiddenApps;
+
+                    let html = "";
+                    for (const appid of window.asHiddenApps) {
+
+                        html += `<div class="as-wl-remove-row" data-appid="${appid}">
+                            <a href="//steamcommunity.com/app/${appid}/discussions/" target="_blank">
+                                <img src="//cdn.cloudflare.steamstatic.com/steam/apps/${appid}/header_292x136.jpg" loading="lazy">
+                            </a>
+                            <a href="https://isthereanydeal.com/steam/app/${appid}/" target="_blank">${viewStr.replace("__website__", "IsThereAnyDeal")}</a>
+                            <a href="https://steamdb.info/app/${appid}/" target="_blank">${viewStr.replace("__website__", "SteamDB")}</a>
+                            ${canEdit ? `<span class="as-wl-remove">${removeStr}</span>` : ""}
+                        </div>`;
+                    }
+
+                    f.showDialog(wlStr.hidden, html);
+
+                    if (!canEdit) { return; }
+
+                    document.querySelector(".newmodal_content").addEventListener("click", ({target}) => {
+                        if (!target.closest(".as-wl-remove")) { return; }
+
+                        const row = target.closest("[data-appid]");
+                        const appidToRemove = Number(row.dataset.appid);
+
+                        f.showConfirmDialog(wlStr.remove_title, `${wlStr.remove_confirm.replace("__appid__", appidToRemove)}<br><br>${wlStr.remove_confirm_warn}`)
+                            .done(() => {
+                                g("RemoveFromWishlist")(appidToRemove);
+                                f.dynamicStoreInvalidateCache();
+
+                                // eslint-disable-next-line max-nested-callbacks
+                                window.asHiddenApps = window.asHiddenApps.filter(appid => appid !== appidToRemove);
+
+                                row.remove();
+                                const node = document.getElementById("esi-stat-hidden");
+                                node.textContent = window.asHiddenApps.length;
+                                if (window.asHiddenApps.length === 0) {
+                                    node.parentNode.style.display = "none";
+                                }
+                            });
+                    });
+                },
+                [
+                    hiddenApps,
+                    Localization.str.view_on_website,
+                    Localization.str.remove,
+                    Localization.str.wl
+                ]);
+            });
+        }
 
         const statsBtn = document.getElementById("esi-wishlist-stats");
         const statsContent = document.getElementById("esi-wishlist-stats-content");

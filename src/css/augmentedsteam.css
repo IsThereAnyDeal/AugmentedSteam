@@ -528,6 +528,37 @@ img.astats_icon {
   color: white;
 }
 
+.as-wl-remove-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+#esi-stat-hidden, .as-wl-remove {
+  cursor: pointer;
+}
+.as-wl-remove-row > a:first-child {
+  display: inline-block;
+  width: 162px;
+  height: 75px;
+}
+.as-wl-remove-row img {
+  width: 162px;
+}
+.as-wl-remove-row > a:not(:first-child) {
+  margin-left: 30px;
+}
+.as-wl-remove-row > a:last-of-type {
+  margin-right: 30px;
+}
+.as-wl-remove {
+  margin-right: 5px;
+  text-decoration: underline;
+}
+.as-wl-remove:hover {
+  color: #d8dde2;
+}
+
 /***************************************
  * Game Cards page
  **************************************/
