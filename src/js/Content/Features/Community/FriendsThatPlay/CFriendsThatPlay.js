@@ -6,11 +6,16 @@ import FFriendsPlaytimeSort from "./FFriendsPlaytimeSort";
 export class CFriendsThatPlay extends CCommunityBase {
 
     constructor() {
+
+        // Don't apply features if there's an error message (e.g. invalid or missing appid)
+        if (document.querySelector(".profile_fatalerror") !== null) {
+            super(ContextType.FRIENDS_THAT_PLAY);
+            return;
+        }
+
         super(ContextType.FRIENDS_THAT_PLAY, [
             FFriendsCount,
             FFriendsPlaytimeSort,
         ]);
-
-        this.appid = parseInt(window.location.pathname.match(/\/friendsthatplay\/(\d+)/)[1]);
     }
 }
