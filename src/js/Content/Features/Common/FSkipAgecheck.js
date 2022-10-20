@@ -11,7 +11,7 @@ export default class FSkipAgecheck extends Feature {
 
         if (this.context.type === ContextType.AGECHECK) {
 
-            // Partially taken from https://github.com/SteamDatabase/BrowserExtension/blob/master/scripts/store/agecheck.js
+            // Partially taken from https://github.com/SteamDatabase/BrowserExtension/blob/435b6fed85e487dcafcaff9f7353691c70511a05/scripts/store/agecheck.js
             const year = Math.floor(Math.random() * 35) + 50;
             const time = new Date(year, 0) / 1000; // Jan 01 19xx 00:00:00 GMT+0800
 
