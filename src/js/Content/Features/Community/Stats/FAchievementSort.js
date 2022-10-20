@@ -1,5 +1,5 @@
-import {HTMLParser, Localization} from "../../../../modulesCore";
-import {Feature, RequestData, Sortbox} from "../../../modulesContent";
+import {Localization} from "../../../../modulesCore";
+import {Feature, Sortbox} from "../../../modulesContent";
 
 export default class FAchievementSort extends Feature {
 
@@ -33,12 +33,7 @@ export default class FAchievementSort extends Feature {
 
         if (!this._achievementsFetched) {
 
-            const url = new URL(window.location.origin + window.location.pathname);
-            url.searchParams.set("tab", "achievements");
-            url.searchParams.set("panorama", "please");
-
-            const result = await RequestData.getHttp(url.toString());
-            let achievements = HTMLParser.getVariableFromText(result, "g_rgAchievements", "object");
+            let achievements = await this.context.getAchievementData();
             achievements = Object.values({...achievements.open, ...achievements.closed});
 
             const nodes = container.querySelectorAll(".achieveRow");
