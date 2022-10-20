@@ -1,7 +1,5 @@
-
-import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../../modulesCore";
+import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {DynamicStore, Feature, RequestData, User} from "../../../modulesContent";
-import FExportWishlist from "./FExportWishlist";
 import {Page} from "../../Page";
 
 export default class FEmptyWishlist extends Feature {
@@ -34,12 +32,7 @@ export default class FEmptyWishlist extends Feature {
                 });
             }, [Localization.str.empty_wishlist], true);
 
-            const wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
-            if (!wishlistData) {
-                console.warn("Failed to find wishlist data for this wishlist");
-                return;
-            }
-
+            const wishlistData = this.context.wishlistData;
             let cur = 1;
             const textNode = document.querySelector(".waiting_dialog_throbber").nextSibling;
             const url = "https://store.steampowered.com/api/removefromwishlist";
@@ -61,5 +54,3 @@ export default class FEmptyWishlist extends Feature {
         });
     }
 }
-
-FEmptyWishlist.dependencies = [FExportWishlist];
