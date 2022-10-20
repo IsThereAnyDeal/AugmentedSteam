@@ -100,7 +100,7 @@ class Page {
         this._pageSpecificFeatures();
 
         const context = new ContextClass();
-        context.applyFeatures();
+        await context.applyFeatures();
     }
 
     _pageSpecificFeatures() {

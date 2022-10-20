@@ -51,10 +51,12 @@ export class CWishlist extends CStoreBase {
     }
 
     async applyFeatures() {
+        if (this.features.length === 0) { return; }
+
         const throbber = document.getElementById("throbber");
-        if (throbber.style.display !== "none") {
+        if (throbber && throbber.style.display !== "none") {
             await new Promise(resolve => {
-                new MutationObserver((mutations, observer) => {
+                new MutationObserver((_, observer) => {
                     observer.disconnect();
                     resolve();
                 }).observe(throbber, {"attributes": true});
