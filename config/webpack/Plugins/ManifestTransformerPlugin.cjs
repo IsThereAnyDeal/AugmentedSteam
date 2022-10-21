@@ -71,7 +71,7 @@ class ManifestTransformerPlugin {
 
                 results.push(match);
 
-                if (match.endsWith("*") || match.endsWith("/")) { continue; }
+                if (match.endsWith("*")) { continue; }
 
                 results.push(`${match}?*`);
 
