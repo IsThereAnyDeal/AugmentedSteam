@@ -104,6 +104,7 @@
     {
       "matches": "*://*.steampowered.com/*",
       "exclude_matches": [
+        "*://store.steampowered.com/dynamicstore/*",
         "*://store.steampowered.com/supportmessages",
         "*://store.steampowered.com/video/*",
         "*://store.steampowered.com/checkout[/*]",
