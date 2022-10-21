@@ -59,8 +59,8 @@
       "js": "js/store/wishlist.js"
     },
     {
-      "matches": "*://*.steampowered.com/stats",
-      "js": "js/store/stats.js"
+      "matches": "*://*.steampowered.com/charts[/*]",
+      "js": "js/store/charts.js"
     },
     {
       "matches": "*://*.steampowered.com/search[/*]",
@@ -118,7 +118,7 @@
         "*://store.steampowered.com/[?*]",
         "*://*.steampowered.com/wishlist/id/*",
         "*://*.steampowered.com/wishlist/profiles/*",
-        "*://*.steampowered.com/stats",
+        "*://*.steampowered.com/charts",
         "*://*.steampowered.com/search[/*]",
         "*://*.steampowered.com/steamaccount/addfunds",
         "*://*.steampowered.com/digitalgiftcards/selectgiftcard",
