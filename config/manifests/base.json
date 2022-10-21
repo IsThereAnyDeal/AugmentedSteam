@@ -119,7 +119,7 @@
         "*://store.steampowered.com/[?*]",
         "*://*.steampowered.com/wishlist/id/*",
         "*://*.steampowered.com/wishlist/profiles/*",
-        "*://*.steampowered.com/charts",
+        "*://*.steampowered.com/charts[/*]",
         "*://*.steampowered.com/search[/*]",
         "*://*.steampowered.com/steamaccount/addfunds",
         "*://*.steampowered.com/digitalgiftcards/selectgiftcard",
