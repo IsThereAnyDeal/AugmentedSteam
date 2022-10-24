@@ -165,6 +165,7 @@ SyncedStorage.defaults = Object.freeze({
     "homepage_tab_selection": "remember",
     "homepage_tab_last": null,
     "send_age_info": true,
+    "showdeckcompat": false,
     "removebroadcasts": false,
     "mp4video": false,
     "horizontalscrolling": true,

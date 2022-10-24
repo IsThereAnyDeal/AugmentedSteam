@@ -96,6 +96,8 @@ export default {
     "show_badge_progress": "options.show_badge_progress",
     "show_coupon": "options.show_coupon",
     "removebroadcasts": "options.removebroadcasts",
+    "showdeckcompat": "options.showdeckcompat",
+
     "exfgls": "options.exfgls",
     "showmcus": "options.metacritic",
     "showoc": "options.opencritic",

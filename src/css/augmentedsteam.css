@@ -1195,6 +1195,35 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 
 /***************************************
+ * App pages
+ * FSteamDeckCompatibility
+ **************************************/
+.as_deckverified_BannerContainer {
+  padding: 12px 0px;
+}
+.as_deckverified_BannerHeader {
+  text-transform: uppercase;
+  font-size: 12px;
+  padding-bottom: 5px;
+  color: #fff;
+  font-weight: 700;
+}
+.as_deckverified_BannerContentDesktop {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
+  padding: 10px;
+}
+.as_svg_SteamDeckCompatIcon {
+  padding-right: 8px;
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+}
+.as_deckverified_CompatibilityDetailRatingDescription {
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+/***************************************
  * Store and Community
  * add_language_warning(),
  * add_fake_country_code_warning()

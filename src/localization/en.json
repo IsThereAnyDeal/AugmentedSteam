@@ -8,6 +8,12 @@
         "continue": "Yes, continue shopping"
     },
     "download_demo_header": "Download __gamename__ Demo",
+    "deck_compat": {
+        "header": "Steam Deck Compatibility",
+        "unsupported": "Unsupported",
+        "playable": "Playable",
+        "verified": "Verified"
+    },
     "feature_hint": {
         "desc": "Would you like to enable the following feature?",
         "reminder": "You can change your preferences through the options page later."
@@ -524,6 +530,7 @@
         "library_f2p": "Show played free to play games and demos in library",
         "inventory_market_text": "Show Market price on inventory page",
         "send_age_info": "Automatically send age verification and skip mature content warnings",
+        "showdeckcompat": "Always show Steam Deck compatibility status",
         "removebroadcasts": "Completely remove any live broadcast",
         "exfgls": "Show a notice if app is excluded from Family Sharing",
         "mp4video": "Force videos to be in MP4 format",
