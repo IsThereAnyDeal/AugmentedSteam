@@ -10,20 +10,18 @@ export default class FHighlightFriendsActivity extends CallbackFeature {
 
     callback(parent = document) {
 
-        /**
-         * Don't highlight images of your friends' game purchases and dynamic links
-         * Dynamic links will get replaced by https://github.com/SteamDatabase/SteamTracking/blob/3552ed4337cd76a5cf0c08ff4d4569d94ef6d4be/steamcommunity.com/public/shared/javascript/shared_global.js#L1512
-         */
-        const nodes = Array.from(parent.querySelectorAll(".blotter_block a[href]:not(.blotter_gamepurchase_logo, [id^='dynamiclink_'])"))
+        const excluded = [
+            ".blotter_gamepurchase_logo", // Images of your friends' game purchases
+            "[id^='dynamiclink_']", // Dynamic links (the first 10 store links in posts are replaced with iframes and may cause errors due to race conditions)
+            "[href*='/announcements/detail/']", // Announcement header links
+        ].join(",");
+
+        // Exclude game logos from highlighting too
+        const nodes = Array.from(parent.querySelectorAll(`.blotter_block :not(.gameLogo) > a[href]:not(${excluded})`))
             .filter(link => (GameId.getAppid(link) !== null && link.childElementCount <= 1)
 
-                // Don't highlight links that refer to announcement details
-                && !/\/announcements\/detail\/\d+$/.test(new URL(link.href).pathname)
-
                 // https://github.com/IsThereAnyDeal/AugmentedSteam/pull/470#pullrequestreview-284928257
-                && (link.childElementCount !== 1 || !link.closest(".vote_header"))
-
-                && !link.parentElement.classList.contains("gameLogo"));
+                && (link.childElementCount !== 1 || !link.closest(".vote_header")));
 
         FHighlightsTags.highlightAndTag(nodes, false);
     }
