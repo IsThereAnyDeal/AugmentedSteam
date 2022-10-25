@@ -24,14 +24,14 @@ class UserNotes {
             capInfo = await this._adapter.set(...args);
         } catch (err) {
             if (err instanceof OutOfCapacityError) {
-                return (await this._showDialog(true, err.ratio)) ? this.set(...args) : false;
+                return (await this._showOutOfCapacityDialog(true, err.ratio)) ? this.set(...args) : false;
             }
 
             throw err;
         }
 
         if (capInfo instanceof CapacityInfo && capInfo.closeToFull) {
-            await this._showDialog(false, capInfo.utilization);
+            await this._showOutOfCapacityDialog(false, capInfo.utilization);
         }
 
         return true;
@@ -79,7 +79,10 @@ class UserNotes {
             noteInput.focus();
             noteInput.setSelectionRange(0, noteInput.textLength);
 
-            // Native keyup handler ignores events on <textarea>'s https://github.com/SteamDatabase/SteamTracking/blob/b8f3721153355d82005e621b167969f6c1f27bdf/steamcommunity.com/public/shared/javascript/shared_global.js#L459
+            /**
+             * Native keyup handler ignores events on <textarea>s
+             * https://github.com/SteamDatabase/SteamTracking/blob/6aabc1d81478c9a3f33598cd0968b5fdaf14f8b8/steamcommunity.com/public/shared/javascript/shared_global.js#L477
+             */
             noteInput.addEventListener("keydown", e => {
                 if (e.key === "Enter" && !e.shiftKey) {
                     okBtn.trigger("click");
@@ -129,7 +132,7 @@ class UserNotes {
         onNoteUpdate(noteEl, note.length !== 0);
     }
 
-    async _showDialog(exceeded, ratio) {
+    async _showOutOfCapacityDialog(exceeded, ratio) {
 
         const str = this._str;
 
@@ -140,6 +143,9 @@ class UserNotes {
 
         Page.runInPageContext((title, desc, strCloudStorage, strCancel, strLocalStorage) => {
             const modal = window.SteamFacade.showConfirmDialog(title, desc, strLocalStorage, strCancel);
+
+            // Avoid releasing Enter (could be from the previous notes dialog) from auto-confirming selection
+            window.SteamFacade.jq(document).off("keyup.SharedConfirmDialog");
 
             modal
                 .done(res => window.Messenger.postMessage("storageOption", res))
