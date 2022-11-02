@@ -70,6 +70,7 @@ export class CInventory extends CCommunityBase {
                     "view": iActiveSelectView,
                     "sessionId": g_sessionID,
                     "marketAllowed": g_bMarketAllowed,
+                    "country": g_strCountryCode,
                     "assetId": g_ActiveInventory.selectedItem.assetid, // DO NOT try to convert this to a number as the value might exceed Number.MAX_SAFE_INTEGER
                     contextId,
                     globalId,

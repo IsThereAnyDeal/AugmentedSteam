@@ -4,6 +4,12 @@ import {Page} from "../../Page";
 
 export default class FQuickSellOptions extends CallbackFeature {
 
+    constructor(context) {
+        super(context);
+
+        this._loadedMarketPrices = {};
+    }
+
     checkPrerequisites() {
         return this.context.myInventory && SyncedStorage.get("quickinv");
     }
@@ -12,6 +18,7 @@ export default class FQuickSellOptions extends CallbackFeature {
         view,
         sessionId,
         marketAllowed,
+        country,
         assetId,
         contextId,
         globalId,
@@ -56,17 +63,18 @@ export default class FQuickSellOptions extends CallbackFeature {
             if (thisItem.classList.contains("es_prices_loading")) { return; }
             thisItem.classList.add("es_prices_loading");
 
-            thisItem.dataset.priceLow = "nodata";
-            thisItem.dataset.priceHigh = "nodata";
+            let {priceLow = 0, priceHigh = 0} = this._loadedMarketPrices[hashName]
+                || await this._getMarketPrices(globalId, country, walletCurrency, hashName).catch(() => null)
+                || {};
 
-            // Get item_nameid of selected item, which can only be found on the item's marketlistings page
-            const result = await RequestData.getHttp(`https://steamcommunity.com/market/listings/${globalId}/${encodeURIComponent(hashName)}`);
-
-            const m = result.match(/Market_LoadOrderSpread\( (\d+) \)/);
-
-            if (m) {
-                await this._fillInPrices(m[1], thisItem.dataset, walletCurrency, diff);
+            if (priceHigh > 0) {
+                // TODO calculate actual lowest listing price and avoid hard-coding this value
+                priceHigh = Math.max((priceHigh / 100) + parseFloat(diff), 0.03) || 0;
+                priceHigh = priceHigh.toFixed(2) * 100;
             }
+
+            thisItem.dataset.priceLow = priceLow;
+            thisItem.dataset.priceHigh = priceHigh;
 
             thisItem.classList.remove("es_prices_loading");
         }
@@ -78,8 +86,8 @@ export default class FQuickSellOptions extends CallbackFeature {
         const instantSell = document.getElementById(`es_instantsell${view}`);
         const loadingEl = marketActions.querySelector(".es_qsell_loading");
 
-        const priceHighValue = Number(thisItem.dataset.priceHigh) || 0;
-        const priceLowValue = Number(thisItem.dataset.priceLow) || 0;
+        const priceHighValue = Number(thisItem.dataset.priceHigh);
+        const priceLowValue = Number(thisItem.dataset.priceLow);
 
         const currencyType = CurrencyManager.currencyNumberToType(walletCurrency);
 
@@ -107,7 +115,7 @@ export default class FQuickSellOptions extends CallbackFeature {
             formData.append("appid", globalId);
             formData.append("contextid", contextId);
             formData.append("assetid", assetId);
-            formData.append("amount", 1);
+            formData.append("amount", 1); // TODO support stacked items, e.g. sack of gems
             formData.append("price", sellPrice);
 
             const result = await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {}, true).catch(err => err);
@@ -132,32 +140,41 @@ export default class FQuickSellOptions extends CallbackFeature {
         }
 
         // Show Quick Sell button
-        if (priceHighValue && priceHighValue > priceLowValue) {
+        if (priceHighValue > 0 && priceHighValue > priceLowValue) {
             this._showSellButton(quickSell, Localization.str.quick_sell, priceHighValue, currencyType, clickHandler);
         }
 
         // Show Instant Sell button
-        if (priceLowValue) {
+        if (priceLowValue > 0) {
             this._showSellButton(instantSell, Localization.str.instant_sell, priceLowValue, currencyType, clickHandler);
         }
     }
 
-    async _fillInPrices(itemNameId, dataset, walletCurrency, diff) {
-        const data = await RequestData.getJson(`https://steamcommunity.com/market/itemordershistogram?language=english&currency=${walletCurrency}&item_nameid=${itemNameId}`);
+    _getMarketPrices(globalId, country, walletCurrency, hashName) {
 
-        if (data && data.success) {
-
-            if (data.highest_buy_order) {
-                dataset.priceLow = data.highest_buy_order;
+        // Get item_nameid of selected item, which can only be found on the item's market listings page
+        return RequestData.getHttp(`https://steamcommunity.com/market/listings/${globalId}/${encodeURIComponent(hashName)}`).then(result => {
+            const m = result.match(/Market_LoadOrderSpread\( (\d+) \)/);
+            if (!m) {
+                console.error("Failed to get nameId for item '%s'", hashName);
+                return null;
             }
 
-            if (data.lowest_sell_order) {
-                let priceHigh = parseFloat(data.lowest_sell_order / 100) + parseFloat(diff);
-                priceHigh = Math.max(priceHigh, 0.03);
+            return RequestData.getJson(`https://steamcommunity.com/market/itemordershistogram?country=${country}&language=english&currency=${walletCurrency}&item_nameid=${m[1]}`).then(data => {
+                if (!data || !data.success) {
+                    console.error("Failed to get market prices for item '%s'", hashName);
+                    return null;
+                }
 
-                dataset.priceHigh = priceHigh.toFixed(2) * 100;
-            }
-        }
+                const prices = {
+                    "priceLow": Number(data.highest_buy_order),
+                    "priceHigh": Number(data.lowest_sell_order)
+                };
+
+                this._loadedMarketPrices[hashName] = prices;
+                return prices;
+            });
+        });
     }
 
     async _showSellButton(buttonEl, buttonStr, priceVal, currencyType, clickHandler) {
