@@ -76,43 +76,18 @@ export default class FQuickSellOptions extends CallbackFeature {
 
         const quickSell = document.getElementById(`es_quicksell${view}`);
         const instantSell = document.getElementById(`es_instantsell${view}`);
+        const loadingEl = marketActions.querySelector(".es_qsell_loading");
 
         const priceHighValue = Number(thisItem.dataset.priceHigh) || 0;
         const priceLowValue = Number(thisItem.dataset.priceLow) || 0;
 
         const currencyType = CurrencyManager.currencyNumberToType(walletCurrency);
 
-        // Show Quick Sell button
-        if (priceHighValue && priceHighValue > priceLowValue) {
-            const formattedPrice = await Page.runInPageContext(
-                (price, type) => window.SteamFacade.vCurrencyFormat(price, type), [priceHighValue, currencyType], true
-            );
-
-            quickSell.querySelector(".item_market_action_button_contents").textContent
-                = Localization.str.quick_sell.replace("__amount__", formattedPrice);
-            quickSell.dataset.price = priceHighValue;
-            quickSell.style.display = "block";
-        }
-
-        // Show Instant Sell button
-        if (priceLowValue) {
-            const formattedPrice = await Page.runInPageContext(
-                (price, type) => window.SteamFacade.vCurrencyFormat(price, type), [priceLowValue, currencyType], true
-            );
-
-            instantSell.querySelector(".item_market_action_button_contents").textContent
-                = Localization.str.instant_sell.replace("__amount__", formattedPrice);
-            instantSell.dataset.price = priceLowValue;
-            instantSell.style.display = "block";
-        }
-
         function enableButtons(enable) {
             for (const button of marketActions.querySelectorAll(".item_market_action_button")) {
                 button.classList[enable ? "remove" : "add"]("btn_disabled");
             }
         }
-
-        const loadingEl = marketActions.querySelector(".es_qsell_loading");
 
         async function clickHandler(e) {
             e.preventDefault();
@@ -156,8 +131,15 @@ export default class FQuickSellOptions extends CallbackFeature {
             thisItem.classList.add("btn_disabled", "activeInfo");
         }
 
-        quickSell.addEventListener("click", clickHandler);
-        instantSell.addEventListener("click", clickHandler);
+        // Show Quick Sell button
+        if (priceHighValue && priceHighValue > priceLowValue) {
+            this._showSellButton(quickSell, Localization.str.quick_sell, priceHighValue, currencyType, clickHandler);
+        }
+
+        // Show Instant Sell button
+        if (priceLowValue) {
+            this._showSellButton(instantSell, Localization.str.instant_sell, priceLowValue, currencyType, clickHandler);
+        }
     }
 
     async _fillInPrices(itemNameId, dataset, walletCurrency, diff) {
@@ -176,5 +158,16 @@ export default class FQuickSellOptions extends CallbackFeature {
                 dataset.priceHigh = priceHigh.toFixed(2) * 100;
             }
         }
+    }
+
+    async _showSellButton(buttonEl, buttonStr, priceVal, currencyType, clickHandler) {
+        const formattedPrice = await Page.runInPageContext(
+            (price, type) => window.SteamFacade.vCurrencyFormat(price, type), [priceVal, currencyType], true
+        );
+
+        buttonEl.querySelector(".item_market_action_button_contents").textContent = buttonStr.replace("__amount__", formattedPrice);
+        buttonEl.dataset.price = priceVal;
+        buttonEl.style.display = "block";
+        buttonEl.addEventListener("click", clickHandler);
     }
 }
