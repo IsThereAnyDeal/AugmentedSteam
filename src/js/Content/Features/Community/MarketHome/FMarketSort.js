@@ -1,5 +1,5 @@
 import {Localization, SyncedStorage} from "../../../../modulesCore";
-import {DOMHelper, Feature, Price, Sortbox} from "../../../modulesContent";
+import {Feature, Price, Sortbox} from "../../../modulesContent";
 
 export default class FMarketSort extends Feature {
 
@@ -47,8 +47,7 @@ export default class FMarketSort extends Feature {
                 ["default", header.querySelector(".market_listing_listed_date").textContent.trim()],
                 ["item", header.querySelector(".market_listing_header_namespacer").parentNode.textContent.trim()],
                 ["game", Localization.str.game_name.toUpperCase()],
-                // TODO this `selectLastNode` call is due to lowest prices adding an additional column, avoid this
-                ["price", DOMHelper.selectLastNode(header, ".market_listing_my_price").textContent.trim()],
+                ["price", header.querySelector(".market_listing_my_price").textContent.trim()],
             ],
             SyncedStorage.get("sortmylistingsby"),
             (sortBy, reversed) => { this._sortRows(sortBy, reversed); },

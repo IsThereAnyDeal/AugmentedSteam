@@ -2171,6 +2171,9 @@ label.es_dlc_label > input:checked::after {
  * Market home
  * FMarketLowestPrice
  **************************************/
+.es_market_listing_lowest {
+  width: 115px;
+}
 .es_priced_higher {
   color: #ff1717;
 }

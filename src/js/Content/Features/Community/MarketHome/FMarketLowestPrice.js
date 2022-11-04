@@ -26,7 +26,7 @@ export default class FMarketLowestPrice extends Feature {
             if (!editNode) { continue; }
 
             editNode.style.width = "200px";
-            HTML.afterEnd(editNode, `<span class="market_listing_right_cell market_listing_my_price">${Localization.str.lowest}</span>`);
+            HTML.afterEnd(editNode, `<span class="market_listing_right_cell es_market_listing_lowest">${Localization.str.lowest}</span>`);
         }
 
         this._insertPrices();
@@ -43,7 +43,7 @@ export default class FMarketLowestPrice extends Feature {
             const button = node.querySelector(".market_listing_edit_buttons.placeholder");
             button.style.width = "200px";
 
-            HTML.afterEnd(button, `<div class="market_listing_right_cell market_listing_my_price es_market_listing_lowest">${Localization.str.loading}</div>`);
+            HTML.afterEnd(button, `<div class="market_listing_right_cell es_market_listing_lowest">${Localization.str.loading}</div>`);
 
             // Move the actual button due to changed width
             const actualButton = node.querySelector(".market_listing_edit_buttons.actual_content");
