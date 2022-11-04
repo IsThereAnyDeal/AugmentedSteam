@@ -19,7 +19,7 @@ export default class FProfileDropdownOptions extends Feature {
 
                 HTML.afterEnd(this._node,
                     `<a class="popup_menu_item" id="es_nickname">
-                        <img src="//steamcommunity-a.akamaihd.net/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}
+                        <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}
                     </a>`);
 
                 document.querySelector("#es_nickname").addEventListener("click", () => {
@@ -49,7 +49,7 @@ export default class FProfileDropdownOptions extends Feature {
         // add post history link
         HTML.afterEnd(this._node,
             `<a class="popup_menu_item" href="${window.location.pathname}/posthistory">
-                <img src="//steamcommunity-a.akamaihd.net/public/images/skin_1/icon_btn_comment.png">&nbsp; ${Localization.str.post_history}
+                <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/icon_btn_comment.png">&nbsp; ${Localization.str.post_history}
             </a>`);
     }
 }

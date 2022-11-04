@@ -34,7 +34,7 @@ export default class FGamelistAchievements extends Feature {
             }
 
             const appid = GameId.getAppidFromId(node.id);
-            const achieveBar = await Stats.getAchievementBarForGamelist(this._path, appid);
+            const achieveBar = await Stats.getAchievementBar(this._path, appid, true);
             if (!achieveBar) { continue; }
 
             HTML.afterBegin(node.querySelector(".gameListRowItem"), achieveBar);

@@ -42,7 +42,11 @@ export default class FConfirmDeleteComment extends Feature {
 
                 modal.done(() => {
                     if (checked) {
-                        // Restore old method if don't show is checked, so the prompt is not shown when deleting more comments on the same page
+
+                        /*
+                         * Restore old method if don't show is checked, so the prompt is not shown
+                         * when deleting more comments on the same page
+                         */
                         CCommentThread.DeleteComment = oldDeleteComment; // eslint-disable-line no-undef
                         
                         window.Messenger.postMessage("noDeletionConfirm");

@@ -1,7 +1,5 @@
-
 import {SyncedStorage} from "../../../../modulesCore";
-import {CallbackFeature} from "../../../Modules/Feature/CallbackFeature";
-import {Prices} from "../../../Modules/Prices";
+import {CallbackFeature, Prices} from "../../../modulesContent";
 
 export default class FWishlistITADPrices extends CallbackFeature {
 

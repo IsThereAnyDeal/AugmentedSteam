@@ -3,14 +3,13 @@
     "env": {
         "browser": true,
         "webextensions": true,
-        "es6": true
+        "es2021": true
     },
     "globals": {
         "DOMPurify": "readonly",
         "__BROWSER__": "readonly"
     },
     "parserOptions": {
-        "ecmaVersion": 2020,
         "sourceType": "module"
     },
     "overrides": [
@@ -68,7 +67,7 @@
         "lines-around-comment": ["warn", { "beforeLineComment": false, "beforeBlockComment": true }],
         "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
         "max-depth": "warn",
-        "max-len": ["warn", { "code": 132, "ignoreTemplateLiterals": true, "ignoreRegExpLiterals": true, "ignoreUrls": true }],
+        "max-len": ["warn", { "code": 132, "ignoreStrings": true, "ignoreTemplateLiterals": true, "ignoreRegExpLiterals": true, "ignoreUrls": true }],
         "max-nested-callbacks": ["error", 4],
         "max-statements-per-line": ["error", { "max": 2 }],
         "multiline-comment-style": "error",

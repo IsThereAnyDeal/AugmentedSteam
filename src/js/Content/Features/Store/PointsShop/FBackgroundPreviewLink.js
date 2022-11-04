@@ -11,12 +11,15 @@ export default class FBackgroundPreviewLink extends Feature {
 
         new MutationObserver(async mutations => {
             for (const {addedNodes} of mutations) {
-                if (addedNodes.length !== 1 || !addedNodes[0].classList.contains("FullModalOverlay")) { continue; }
+                if (addedNodes.length !== 1 || !addedNodes[0].classList.contains("active")) { continue; }
 
                 const previewEl = await new Promise(resolve => {
                     new MutationObserver((mutations, observer) => {
                         observer.disconnect();
-                        resolve(mutations[0].addedNodes[0].querySelector("[class*=redeempointsmodal_BackgroundPreviewContainer] > [class*=redeempointsmodal_PreviewBackgroundContainer]")?.lastElementChild);
+                        resolve(mutations[0]
+                            .addedNodes[0]
+                            .querySelector("[class*=redeempointsmodal_PreviewBackgroundContainer]")
+                            ?.lastElementChild);
                     }).observe(addedNodes[0], {"childList": true, "subtree": true});
                 });
 
@@ -37,6 +40,6 @@ export default class FBackgroundPreviewLink extends Feature {
                         </div>`);
                 }
             }
-        }).observe(document.body, {"childList": true});
+        }).observe(document.querySelector(".FullModalOverlay"), {"childList": true});
     }
 }

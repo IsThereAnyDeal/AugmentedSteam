@@ -403,6 +403,7 @@ class IndexedDB {
         return req;
     }
 
+    // TODO Move into TimeUtils
     static isExpired(expiry) {
         return expiry <= TimeUtils.now();
     }

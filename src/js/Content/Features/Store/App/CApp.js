@@ -43,6 +43,7 @@ import FRemoveBroadcasts from "./FRemoveBroadcasts";
 import FDemoAbovePurchase from "./FDemoAbovePurchase";
 import FSaveReviewFilters from "./FSaveReviewFilters";
 import FHideReportedTags from "./FHideReportedTags";
+import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
 
 export class CApp extends CStore {
 
@@ -99,13 +100,16 @@ export class CApp extends CStore {
             FSaveReviewFilters,
             FHideReportedTags,
             FAddToCartNoRedirect,
+            FPatchHighlightPlayer,
         ]);
 
         this.appid = GameId.getAppid(window.location.host + window.location.pathname);
         this.storeid = `app/${this.appid}`;
 
         // Some games (e.g. 201270, 201271) have different appid in store page and community
-        this.communityAppid = GameId.getAppidImgSrc(document.querySelector(".apphub_AppIcon img")?.getAttribute("src")) ?? this.appid;
+        this.communityAppid = GameId.getAppidImgSrc(
+            document.querySelector(".apphub_AppIcon img")?.getAttribute("src")
+        ) ?? this.appid;
 
         this.appName = document.querySelector(".apphub_AppName")?.textContent ?? "";
 
@@ -127,7 +131,8 @@ export class CApp extends CStore {
 
         /**
          * `true` for non-application items, or if system requirements section is missing (usually hardware)
-         * Previous check for videos: document.querySelector(".game_area_purchase_game span[class*=streaming], div.series_seasons") !== null;
+         * Previous check for videos:
+         * document.querySelector(".game_area_purchase_game span[class*=streaming], div.series_seasons") !== null;
          */
         this.isVideoOrHardware = category === "992" || category === "993" || !document.querySelector(".sys_req");
 

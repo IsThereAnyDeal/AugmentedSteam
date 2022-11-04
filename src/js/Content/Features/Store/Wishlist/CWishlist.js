@@ -1,3 +1,4 @@
+import {HTMLParser, TimeUtils} from "../../../../modulesCore";
 import {ContextType, User} from "../../../modulesContent";
 import {CStoreBase} from "../Common/CStoreBase";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
@@ -10,18 +11,22 @@ import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
 import FKeepEditableRanking from "./FKeepEditableRanking";
 import FOneClickRemoveFromWishlist from "./FOneClickRemoveFromWishlist";
-import {TimeUtils} from "../../../../modulesCore";
 
 export class CWishlist extends CStoreBase {
 
     constructor() {
+
+        const wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
+
         // Don't apply features on empty or private wishlists
-        if (document.getElementById("nothing_to_see_here").style.display !== "none") {
+        if (!wishlistData || wishlistData.length === 0) {
             super(ContextType.WISHLIST);
             return;
         }
 
         super(ContextType.WISHLIST, [
+            FAlternativeLinuxIcon,
+            FAddToCartNoRedirect,
             FWishlistHighlights,
             FWishlistITADPrices,
             FWishlistUserNotes,
@@ -30,24 +35,28 @@ export class CWishlist extends CStoreBase {
             FExportWishlist,
             FKeepEditableRanking,
             FOneClickRemoveFromWishlist,
-            FAlternativeLinuxIcon,
-            FAddToCartNoRedirect,
         ]);
+
+        this.wishlistData = wishlistData;
+        this.myWishlist = false;
 
         if (User.isSignedIn) {
             const myWishlistUrl = User.profileUrl.replace("steamcommunity.com/", "store.steampowered.com/wishlist/").replace(/\/$/, "");
             const myWishlistUrlRegex = new RegExp(`^${myWishlistUrl}([/#]|$)`);
             this.myWishlist = myWishlistUrlRegex.test(window.location.href) || window.location.href.includes(`/profiles/${User.steamId}`);
-        } else {
-            this.myWishlist = false;
         }
+
+        // Maintain the order of the buttons
+        FEmptyWishlist.dependencies = [FExportWishlist];
     }
 
     async applyFeatures() {
+        if (this.features.length === 0) { return; }
+
         const throbber = document.getElementById("throbber");
-        if (throbber.style.display !== "none") {
+        if (throbber && throbber.style.display !== "none") {
             await new Promise(resolve => {
-                new MutationObserver((mutations, observer) => {
+                new MutationObserver((_, observer) => {
                     observer.disconnect();
                     resolve();
                 }).observe(throbber, {"attributes": true});

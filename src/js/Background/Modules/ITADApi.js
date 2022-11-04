@@ -5,6 +5,8 @@ import {Api} from "./Api";
 import Config from "../../config";
 import {IndexedDB} from "./IndexedDB";
 
+const MAX_ITEMS_PER_REQUEST = 1000;
+
 class ITADApi extends Api {
 
     static async authorize() {
@@ -105,44 +107,6 @@ class ITADApi extends Api {
         };
     }
 
-    static async addToWaitlist(appids) {
-        if (!appids || (Array.isArray(appids) && !appids.length)) {
-            console.warn("Can't add nothing to ITAD waitlist");
-            return null;
-        }
-
-        const waitlistJSON = {
-            "version": "02",
-            "data": [],
-        };
-
-        const storeids = {};
-        if (Array.isArray(appids)) {
-            appids.forEach(appid => {
-                const id = `app/${appid}`;
-                waitlistJSON.data.push({
-                    "gameid": ["steam", id],
-                });
-                storeids[id] = null;
-            });
-        } else {
-            const id = `app/${appids}`;
-            waitlistJSON.data[0] = {
-                "gameid": ["steam", id],
-            };
-            storeids[id] = null;
-        }
-
-        await ITADApi.postEndpoint(
-            "v01/waitlist/import/",
-            {"access_token": ITADApi.accessToken},
-            null,
-            {"body": JSON.stringify(waitlistJSON)}
-        );
-
-        return IndexedDB.put("waitlist", storeids);
-    }
-
     static async removeFromWaitlist(appids) {
         if (!appids || (Array.isArray(appids) && !appids.length)) {
             throw new Error("Can't remove nothing from ITAD Waitlist!");
@@ -159,53 +123,71 @@ class ITADApi extends Api {
         return IndexedDB.delete("waitlist", storeids);
     }
 
-    static addToCollection(appids, subids) {
-        if ((!appids || (Array.isArray(appids) && !appids.length)) && (!subids || (Array.isArray(subids) && !subids.length))) {
-            console.warn("Can't add nothing to ITAD collection");
-            return null;
+    static async addToWaitlist(appIds) {
+        const waitlistJSON = {
+            "version": "02",
+            "data": [],
+        };
+
+        const storeIdsArr = [];
+        const storeIdsObj = {};
+        const _appIds = Array.isArray(appIds) ? appIds : [appIds];
+
+        for (const appId of _appIds) {
+            const storeId = `app/${appId}`;
+            storeIdsArr.push(storeId);
+            storeIdsObj[storeId] = null;
         }
 
+        await this.splitPostRequests(waitlistJSON, storeIdsArr, "v01/waitlist/import/", id => ({
+            "gameid": ["steam", id],
+        }));
+
+        return IndexedDB.put("waitlist", storeIdsObj);
+    }
+
+    static async addToCollection(appIds, subIds) {
         const collectionJSON = {
             "version": "02",
             "data": [],
         };
 
-        let _appids;
-        if (Array.isArray(appids)) {
-            _appids = appids;
-        } else if (appids) {
-            _appids = [appids];
-        } else {
-            _appids = [];
+        const _appIds = Array.isArray(appIds) ? appIds : [appIds];
+        const _subIds = Array.isArray(subIds) ? subIds : [subIds];
+
+        const storeIds = _appIds.map(appId => `app/${appId}`).concat(_subIds.map(subId => `sub/${subId}`));
+
+        await this.splitPostRequests(collectionJSON, storeIds, "v01/collection/import/", id => ({
+            "gameid": ["steam", id],
+            "copies": [{
+                "type": "steam",
+                "status": "redeemed",
+                "owned": 1,
+            }],
+        }));
+
+        // TODO Add to DB
+    }
+
+    static async splitPostRequests(json, items, endpoint, getJson) {
+        const responses = [];
+
+        for (let i = 0; i < items.length;) {
+            for (; i < items.length && json.data.length < MAX_ITEMS_PER_REQUEST; i++) {
+                json.data.push(getJson(items[i]));
+            }
+
+            responses.push(await ITADApi.postEndpoint(
+                endpoint,
+                {"access_token": ITADApi.accessToken},
+                null,
+                {"body": JSON.stringify(json)}
+            ));
+
+            json.data = [];
         }
 
-        let _subids;
-        if (Array.isArray(subids)) {
-            _subids = subids;
-        } else if (subids) {
-            _subids = [subids];
-        } else {
-            _subids = [];
-        }
-
-        const storeids = _appids.map(appid => `app/${appid}`).concat(_subids.map(subid => `sub/${subid}`));
-        for (const storeid of storeids) {
-            collectionJSON.data.push({
-                "gameid": ["steam", storeid],
-                "copies": [{
-                    "type": "steam",
-                    "status": "redeemed",
-                    "owned": 1,
-                }],
-            });
-        }
-
-        return ITADApi.postEndpoint(
-            "v01/collection/import/",
-            {"access_token": ITADApi.accessToken},
-            null,
-            {"body": JSON.stringify(collectionJSON)}
-        );
+        return responses;
     }
 
     static async import(force) {

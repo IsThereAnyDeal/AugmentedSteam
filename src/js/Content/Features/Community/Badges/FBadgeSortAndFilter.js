@@ -252,48 +252,44 @@ export default class FBadgeSortAndFilter extends Feature {
     _toggleBinderView() {
 
         const mainNode = document.querySelector("div.maincontent");
+        const isBinderView = window.location.hash === "#binderview";
 
-        if (window.location.hash === "#binderview") {
-            mainNode.classList.add("es_binder_view");
+        mainNode.classList.toggle("es_binder_view", isBinderView);
 
+        if (isBinderView) {
             // Don't attempt changes again if already loaded
             if (!mainNode.classList.contains("es_binder_loaded")) {
                 mainNode.classList.add("es_binder_loaded");
 
-                for (const node of document.querySelectorAll(".badge_row")) {
-                    const stats = node.querySelector(".progress_info_bold");
-                    if (stats && /\d+/.test(stats.textContent)) {
-                        HTML.beforeEnd(node.querySelector(".badge_content"), `<span class="es_game_stats">${stats.innerHTML}</span>`);
-                    }
-
-                    const infoNode = node.querySelector(".badge_progress_info");
-                    if (infoNode) {
-                        const card = infoNode.textContent.match(/(\d+)\D*(\d+)/);
-                        if (card) {
-                            HTML.beforeBegin(infoNode, `<div class="es_badge_progress_info">${card[1]} / ${card[2]}</div>`);
-                        }
-                    }
-                }
-            }
-
-            // Add hash to pagination links
-            for (const node of document.querySelectorAll("div.pageLinks a.pagelink, div.pageLinks a.pagebtn")) {
-                node.href += "#binderview";
+                this._loadBinderView();
             }
 
             // Triggers the loading of out-of-view badge images
             window.dispatchEvent(new Event("resize"));
+        }
 
-            document.querySelector("#es_badgeview_active").textContent = Localization.str.binder_view;
-        } else {
-            mainNode.classList.remove("es_binder_view");
+        // Add / Remove hash from pagination links
+        for (const node of document.querySelectorAll("div.pageLinks a.pagelink, div.pageLinks a.pagebtn")) {
+            node.href = isBinderView ? `${node.href}#binderview` : node.href.replace("#binderview", "");
+        }
 
-            // Remove hash from pagination links
-            for (const node of document.querySelectorAll("div.pageLinks a.pagelink, div.pageLinks a.pagebtn")) {
-                node.href = node.href.replace("#binderview", "");
+        document.querySelector("#es_badgeview_active").textContent = isBinderView ? Localization.str.binder_view : Localization.str.theworddefault;
+    }
+
+    _loadBinderView() {
+        for (const node of document.querySelectorAll(".badge_row")) {
+            const stats = node.querySelector(".progress_info_bold");
+            if (stats && /\d+/.test(stats.textContent)) {
+                HTML.beforeEnd(node.querySelector(".badge_content"), `<span class="es_game_stats">${stats.innerHTML}</span>`);
             }
 
-            document.querySelector("#es_badgeview_active").textContent = Localization.str.theworddefault;
+            const infoNode = node.querySelector(".badge_progress_info");
+            if (!infoNode) { continue; }
+
+            const card = infoNode.textContent.match(/(\d+)\D*(\d+)/);
+            if (!card) { continue; }
+
+            HTML.beforeBegin(infoNode, `<div class="es_badge_progress_info">${card[1]} / ${card[2]}</div>`);
         }
     }
 }

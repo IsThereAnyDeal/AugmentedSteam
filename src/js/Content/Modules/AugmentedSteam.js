@@ -271,7 +271,7 @@ class AugmentedSteam {
                 Page.runInPageContext((playGameStr, gameid, visitStore) => {
                     const prompt = window.SteamFacade.showConfirmDialog(
                         playGameStr,
-                        `<img src="//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg">`,
+                        `<img src="//cdn.cloudflare.steamstatic.com/steam/apps/${gameid}/header.jpg">`,
                         null,
                         null,
                         visitStore

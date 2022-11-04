@@ -22,15 +22,15 @@ export default class FCommunityAppPageWishlist extends Feature {
             // First whitespace intended, separates buttons
             ` <a id="es_wishlist_add" class="btnv6_blue_hoverfade btn_medium" style="${wishlisted ? "display: none;" : ""}">
                 <span>
-                    <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">
+                    <img class="es-loading-wl" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif" style="display: none;">
                     ${Localization.str.add_to_wishlist}
                 </span>
             </a>
             <a id="es_wishlist_success" class="btnv6_blue_hoverfade btn_medium" style="${wishlisted ? "" : "display: none;"}">
                 <span>
                     <img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}" style="display: none;">
-                    <img class="es-loading-wl" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif" style="display: none;">
-                    <img class="es-in-wl" src="//steamstore-a.akamaihd.net/public/images/v6/ico/ico_selected.png" border="0">
+                    <img class="es-loading-wl" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif" style="display: none;">
+                    <img class="es-in-wl" src="//store.cloudflare.steamstatic.com/public/images/v6/ico/ico_selected.png" border="0">
                     ${Localization.str.on_wishlist}
                 </span>
             </a>

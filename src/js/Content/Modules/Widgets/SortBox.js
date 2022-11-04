@@ -7,8 +7,7 @@ import {SyncedStorage} from "../../../Core/Storage/SyncedStorage";
 class Sortbox {
 
     static init() {
-        this._activeDropLists = {};
-        this._lastSelectHideTime = 0;
+        this.reset();
 
         // Hide droplist when clicking outside
         document.addEventListener("mousedown", e => {
@@ -18,6 +17,11 @@ class Sortbox {
                 }
             }
         });
+    }
+
+    static reset() {
+        this._activeDropLists = {};
+        this._lastSelectHideTime = 0;
     }
 
     static _highlightItem(id, index, bSetSelected) {

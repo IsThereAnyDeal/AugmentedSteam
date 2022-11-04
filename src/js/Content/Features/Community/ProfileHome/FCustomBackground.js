@@ -6,7 +6,7 @@ export default class FCustomBackground extends Feature {
     checkPrerequisites() {
         const prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9.]+)/i);
         if (prevHash) {
-            const src = `//cdn.akamai.steamstatic.com/steamcommunity/public/images/items/${prevHash[1]}/${prevHash[2]}`;
+            const src = `//cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/${prevHash[1]}/${prevHash[2]}`;
             this._setProfileBg(src);
 
             return false;

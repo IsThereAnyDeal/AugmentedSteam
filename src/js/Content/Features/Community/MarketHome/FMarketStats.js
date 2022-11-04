@@ -33,7 +33,7 @@ export default class FMarketStats extends Feature {
         const statusNode = document.getElementById("es_market_summary_status");
 
         HTML.inner(statusNode,
-            `<img id="es_market_summary_throbber" src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
+            `<img id="es_market_summary_throbber" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
             <span>
                 <span id="esi_market_stats_progress_description">${Localization.str.loading} </span>
                 <span id="esi_market_stats_progress"></span>
@@ -57,7 +57,7 @@ export default class FMarketStats extends Feature {
         let stop = false;
 
         // If startListing is missing, reset cached data to avoid inaccurate results.
-        if (startListing === null && (purchaseTotal > 0 || saleTotal > 0)) {
+        if (startListing === null && (purchaseTotal > 0 || saleTotal > 0)) { // TODO when is startListing `null`?
             purchaseTotal = 0;
             saleTotal = 0;
         }
@@ -75,7 +75,7 @@ export default class FMarketStats extends Feature {
                         transactions.add(node.id);
                     }
                 } else {
-                    console.error("Could not find id of transaction", node);
+                    console.error("Could not find id of transaction", node); // TODO are there any implications?
                 }
                 const type = node.querySelector(".market_listing_gainorloss").textContent;
                 let isPurchase;
@@ -90,7 +90,7 @@ export default class FMarketStats extends Feature {
                     curStartListing = node.id;
                 }
 
-                // If reached cached data, then stop.
+                // Stop when cached data is reached.
                 if (node.id === startListing) {
                     stop = true;
                     break;
@@ -133,7 +133,7 @@ export default class FMarketStats extends Feature {
                 </div>`);
         }
 
-        const pageSize = 500;
+        const pageSize = 500; // Max number of transactions Steam allows to fetch per request
         let pages = -1;
         let currentPage = 0;
         let totalCount = null;
@@ -148,27 +148,27 @@ export default class FMarketStats extends Feature {
             const request = pageRequests.shift();
             url.searchParams.set("start", request.start);
             request.attempt += 1;
-            request.lastAttempt = Date.now();
+            request.lastAttempt = Date.now(); // TODO this field is set but never read
             if (request.attempt > 1) {
                 await TimeUtils.timer(2000);
             } else if (request.attempt > 4) {
 
                 // Give up after four tries
-                throw new Error("Could not retrieve market transactions.");
+                throw new Error(`Failed to load market history page ${url}`);
             }
 
             const data = await RequestData.getJson(url.toString());
-            const dom = HTMLParser.htmlToDOM(data.results_html);
+            const dom = HTMLParser.htmlToDOM(data.results_html); // TODO use DOMParser since there's no need to sanitize?
 
             /*
              * Request may fail with results_html === "\t\t\t\t\t\t<div class=\"market_listing_table_message\">
              * There was an error loading your market history. Please try again later.</div>\r\n\t"
+             * Note the error message is localized!
              */
-            const message = dom.querySelector(".market_listing_table_message");
-            if (message && message.textContent.includes("try again later")) {
+            if (dom.querySelector(".market_listing_table_message") !== null) {
                 pageRequests.push(request);
-                failedRequests += 1;
-                return null;
+                failedRequests += 1; // TODO what if this request succeeds in later attempts?
+                return null; // TODO change the return type to avoid implicit conversions on line 189 ?
             }
 
             updatePrices(dom, request.start);
@@ -207,6 +207,12 @@ export default class FMarketStats extends Feature {
             return true;
         }
 
+        /**
+         * TODOs to consider
+         * 1. Store failed ranges separately so they can be retried later, and/or add a "refresh" button to recalculate from scratch
+         * 2. After testing, Steam starts throwing 429s after 30 requests (30 * 500 = 15000 items), sometimes earlier.
+         *  Add a "continue" button to allow continuing where we left off.
+         */
         progressNode.textContent = Localization.str.transactionStatus
             .replace("__failed__", failedRequests)
             .replace("__size__", transactions.size)

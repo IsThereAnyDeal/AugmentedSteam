@@ -70,7 +70,7 @@ export default class FSubscribeAllDependencies extends Feature {
 
                     const checkmarkHtml
                          = `<div class="requiredItemSubscribed">
-                                <img src="https://community.akamai.steamstatic.com/public/images//sharedfiles/check_header_large.png">
+                                <img src="https://community.cloudflare.steamstatic.com/public/images//sharedfiles/check_header_large.png">
                             </div>`;
 
                     div.classList.add("es_required_item--success");

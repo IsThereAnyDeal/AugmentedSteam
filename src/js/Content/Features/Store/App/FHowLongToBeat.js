@@ -11,12 +11,9 @@ export default class FHowLongToBeat extends Feature {
         }
 
         const result = await this.context.data;
-        if (!result || !result.hltb) {
+        if (!result || !result.hltb || !result.hltb.success) {
             return false;
         }
-
-        // TODO remove when suggestion link is fixed
-        if (!result.hltb.success) { return false; }
 
         this._data = result.hltb;
         return true;
@@ -24,32 +21,29 @@ export default class FHowLongToBeat extends Feature {
 
     apply() {
 
-        const data = this._data;
+        const {
+            "main_story": story,
+            "main_extras": extras,
+            comp,
+            url,
+            "submit_url": submit,
+        } = this._data;
 
-        let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.hltb.title}</div>
-                    <div class="block game_details underlined_links es_hltb">
-                    <div class="block_content"><div class="block_content_inner"><div class="details_block">`;
-
-        if (data.success) {
-            if (data.main_story) {
-                html += `<b>${Localization.str.hltb.main}:</b><span>${HTML.escape(data.main_story)}</span><br>`;
-            }
-            if (data.main_extras) {
-                html += `<b>${Localization.str.hltb.main_e}:</b><span>${HTML.escape(data.main_extras)}</span><br>`;
-            }
-            if (data.comp) {
-                html += `<b>${Localization.str.hltb.compl}:</b><span>${HTML.escape(data.comp)}</span><br>`;
-            }
-
-            html += `</div>
-                    <a class="linkbar es_external_icon" href="${HTML.escape(data.url)}" target="_blank">${Localization.str.more_information}</a>
-                    <a class="linkbar es_external_icon" href="${HTML.escape(data.submit_url)}" target="_blank">${Localization.str.hltb.submit}</a>`;
-        } else {
-            html += `${Localization.str.hltb.no_data}</div>`;
-        }
-
-        html += "</div></div></div>";
-
-        HTML.afterEnd("div.game_details", html);
+        HTML.afterEnd("div.game_details",
+            `<div class="block responsive_apppage_details_right heading">${Localization.str.hltb.title}</div>
+            <div class="block underlined_links es_hltb">
+                <div class="block_content">
+                    <div class="block_content_inner">
+                        ${story || extras || comp ? `<div class="details_block">
+                            ${story ? `<b>${Localization.str.hltb.main}:</b><span>${HTML.escape(story)}</span><br>` : ""}
+                            ${extras ? `<b>${Localization.str.hltb.main_e}:</b><span>${HTML.escape(extras)}</span><br>` : ""}
+                            ${comp ? `<b>${Localization.str.hltb.compl}:</b><span>${HTML.escape(comp)}</span><br>` : ""}
+                        </div>
+                        <br>` : ""}
+                        <a class="linkbar es_external_icon" href="${HTML.escape(url)}" target="_blank">${Localization.str.more_information}</a>
+                        <a class="linkbar es_external_icon" href="${HTML.escape(submit)}" target="_blank">${Localization.str.hltb.submit}</a>
+                    </div>
+                </div>
+            </div>`);
     }
 }

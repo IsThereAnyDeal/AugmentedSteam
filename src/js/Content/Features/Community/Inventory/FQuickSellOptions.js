@@ -49,23 +49,7 @@ export default class FQuickSellOptions extends CallbackFeature {
             const m = result.match(/Market_LoadOrderSpread\( (\d+) \)/);
 
             if (m) {
-                const data = await RequestData.getJson(`https://steamcommunity.com/market/itemordershistogram?language=english&currency=${walletCurrency}&item_nameid=${m[1]}`);
-
-                if (data && data.success) {
-
-                    if (data.highest_buy_order) {
-                        thisItem.dataset.priceLow = data.highest_buy_order;
-                    }
-
-                    if (data.lowest_sell_order) {
-                        let priceHigh = parseFloat(data.lowest_sell_order / 100) + parseFloat(diff);
-                        if (priceHigh < 0.03) {
-                            priceHigh = 0.03;
-                        }
-
-                        thisItem.dataset.priceHigh = priceHigh.toFixed(2) * 100;
-                    }
-                }
+                await this._fillInPrices(m[1], thisItem.dataset, walletCurrency, diff);
             }
 
             thisItem.classList.remove("es_prices_loading");
@@ -84,7 +68,9 @@ export default class FQuickSellOptions extends CallbackFeature {
 
         // Show Quick Sell button
         if (priceHighValue && priceHighValue > priceLowValue) {
-            const formattedPrice = await Page.runInPageContext((price, type) => window.SteamFacade.vCurrencyFormat(price, type), [priceHighValue, currencyType], true);
+            const formattedPrice = await Page.runInPageContext(
+                (price, type) => window.SteamFacade.vCurrencyFormat(price, type), [priceHighValue, currencyType], true
+            );
 
             quickSell.querySelector(".item_market_action_button_contents").textContent
                 = Localization.str.quick_sell.replace("__amount__", formattedPrice);
@@ -94,7 +80,9 @@ export default class FQuickSellOptions extends CallbackFeature {
 
         // Show Instant Sell button
         if (priceLowValue) {
-            const formattedPrice = await Page.runInPageContext((price, type) => window.SteamFacade.vCurrencyFormat(price, type), [priceLowValue, currencyType], true);
+            const formattedPrice = await Page.runInPageContext(
+                (price, type) => window.SteamFacade.vCurrencyFormat(price, type), [priceLowValue, currencyType], true
+            );
 
             instantSell.querySelector(".item_market_action_button_contents").textContent
                 = Localization.str.instant_sell.replace("__amount__", formattedPrice);
@@ -115,7 +103,7 @@ export default class FQuickSellOptions extends CallbackFeature {
 
             HTML.inner(marketActions.querySelector("div"),
                 `<div class="es_loading" style="min-height: 66px;">
-                    <img src="//steamcommunity-a.akamaihd.net/public/images/login/throbber.gif">
+                    <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
                     <span>${Localization.str.selling}</span>
                 </div>`);
 
@@ -144,6 +132,24 @@ export default class FQuickSellOptions extends CallbackFeature {
 
         quickSell.addEventListener("click", clickHandler);
         instantSell.addEventListener("click", clickHandler);
+    }
+
+    async _fillInPrices(itemNameId, dataset, walletCurrency, diff) {
+        const data = await RequestData.getJson(`https://steamcommunity.com/market/itemordershistogram?language=english&currency=${walletCurrency}&item_nameid=${itemNameId}`);
+
+        if (data && data.success) {
+
+            if (data.highest_buy_order) {
+                dataset.priceLow = data.highest_buy_order;
+            }
+
+            if (data.lowest_sell_order) {
+                let priceHigh = parseFloat(data.lowest_sell_order / 100) + parseFloat(diff);
+                priceHigh = Math.max(priceHigh, 0.03);
+
+                dataset.priceHigh = priceHigh.toFixed(2) * 100;
+            }
+        }
     }
 
     _makeMarketButton(id, tooltip) {

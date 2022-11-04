@@ -61,16 +61,10 @@ class User {
                 if (window.location.hostname.endsWith("steampowered.com")) {
 
                     // Search through all scripts in case the order gets changed or a new one gets added
-                    for (const script of document.getElementsByTagName("script")) {
-                        const match = script.textContent.match(/GDynamicStore\.Init\(.+?, '([A-Z]{2})/);
-                        if (match) {
-                            newCountry = match[1];
-                            break;
-                        }
-                    }
+                    newCountry = HTMLParser.getVariableFromDom(/GDynamicStore\.Init\(.+?,\s*'([A-Z]{2})'/, "string");
 
                 } else if (window.location.hostname === "steamcommunity.com") {
-                    const config = document.querySelector("#webui_config,#application_config");
+                    const config = document.querySelector("#webui_config, #application_config");
                     if (config) {
                         newCountry = JSON.parse(config.dataset.config).COUNTRY;
                     }

@@ -39,6 +39,13 @@
 [class^=interactiverecommender_BottomSection] {
   overflow-y: visible !important;
 }
+/**
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/1472
+ * Fix achievement progress bar and text display
+ */
+.achieveTxt.withProgress {
+  width: 100%;
+}
 
 /* Back To Top button */
 .es_btt {
@@ -74,7 +81,7 @@
 
 /**
  * Customize button on storefront and app pages
- * Taken from: https://steamstore-a.akamaihd.net/public/css/v6/home.css
+ * Taken from: https://store.cloudflare.steamstatic.com/public/css/v6/home.css
  */
 #es_customize_btn {
   text-align: left;
@@ -141,7 +148,7 @@
   display: inline-block;
   width: 14px;
   height: 14px;
-  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/customize_checkboxes.png');
+  background-image: url('https://store.cloudflare.steamstatic.com/public/images/v6/customize_checkboxes.png');
   background-position: 0px 0px;
 }
 #es_customize_btn .home_viewsettings_checkbox.checked {
@@ -354,28 +361,11 @@ img.astats_icon {
   opacity: 1;
 }
 
-#es_market_summary span, .es_loading span {
+/* throbber loading image --TODO check usage */
+.es_loading span {
   vertical-align: top;
   line-height: 32px;
   margin-left: 5px;
-}
-#es_market_summary_status {
-  display: flex;
-  align-items: center;
-}
-#es_market_summary_status img {
-  margin-right: 10px;
-}
-
-.es_market_summary_item {
-  float: right;
-  line-height: inherit !important;
-}
-.es_percentage_higher {
-  color: #ff1717;
-}
-.es_percentage_lower {
-  color: #60ad0a;
 }
 
 .es_drm_warning {
@@ -688,7 +678,7 @@ img.astats_icon {
   display: inline;
 }
 
-/** Flyout menus, taken from https://steamstore-a.akamaihd.net/public/css/v6/store.css */
+/** Flyout menus, taken from https://store.cloudflare.steamstatic.com/public/css/v6/store.css */
 .as_flyout_menus .store_nav {
   display: inline;
   float: none;
@@ -723,7 +713,7 @@ img.astats_icon {
   height: 12px;
   padding: 0;
   display: inline-block;
-  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded.png');
+  background-image: url('https://store.cloudflare.steamstatic.com/public/images/v6/btn_arrow_down_padded.png');
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
@@ -731,7 +721,7 @@ img.astats_icon {
 }
 .as_flyout_menus .store_nav .tab:hover > span.pulldown > span,
 .as_flyout_menus .store_nav .tab.focus > span.pulldown > span {
-  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png');
+  background-image: url('https://store.cloudflare.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png');
 }
 .as_flyout_menus .popup_block_new .popup_body {
   border: none;
@@ -1037,7 +1027,7 @@ img.astats_icon {
 .es-achieveBar-store {
   float: right;
 }
-/* Taken from: https://steamcommunity-a.akamaihd.net/public/css/skin_1/playerstats_generic.css */
+/* Taken from: https://community.cloudflare.steamstatic.com/public/css/skin_1/playerstats_generic.css */
 .es-achieveBar-store .achieveBar {
   background: #3a3a3a;
   padding: 1px;
@@ -1366,7 +1356,7 @@ img.astats_icon {
   padding-left: 30px !important;
 }
 .es_regional_container {
-  z-index: 999;
+  z-index: 10;
   background: linear-gradient(to bottom, #33425a 5%, #282f3d 100%);
   padding: 7px 8px;
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.8);
@@ -1383,6 +1373,13 @@ img.astats_icon {
   right: -8px;
   width: 0;
   height: 0;
+}
+/**
+ * Raise the purchase container's z-index on hover so the popup shows on top of subsequent purchase containers.
+ * Must be lower than the default z-index for CModal (1000) to avoid the dialogs glitching out when clicking inside the purchase container.
+ */
+.es_regional_prices.game_area_purchase_game:hover {
+  z-index: 100;
 }
 .es_regional_prices:not(.es_regional_always) .es_regional_container {
   display: none;
@@ -1859,46 +1856,6 @@ img.astats_icon {
 }
 
 /***************************************
- * Market
- * add_market_sort()
- **************************************/
-.es_marketsort {
-  cursor: pointer;
-  display: inline-block;
-  float: right;
-}
-#es_marketsort_name {
-  display: block;
-  float: none;
-}
-#es_marketsort_game {
-  width: 165px;
-  padding-left: 5px;
-}
-.es_marketsort.active span:last-child::after {
-  display: inline;
-  margin-left: 4px;
-  margin-right: -16px;
-  color: #eee;
-  font-size: 12px;
-}
-.es_marketsort.active.asc span:last-child::after {
-  content: "▲";
-}
-.es_marketsort.active.desc span:last-child::after {
-  content: "▼";
-}
-#tabContentsMyActiveMarketListingsTable .market_listing_table_header {
-  overflow: hidden;
-}
-#tabContentsMyActiveMarketListingsTable .market_listing_header_namespacer {
-  visibility: hidden;
-}
-.market_listing_listed_position {
-  display: none;
-}
-
-/***************************************
  * Augmented Steam and ITAD menu
  **************************************/
 #es_menu {
@@ -1952,7 +1909,7 @@ img.astats_icon {
   white-space: nowrap;
 }
 .es-itad-hover__arrow {
-  background-image: url(https://steamcommunity-a.akamaihd.net/public/shared/images/popups/hover_arrow_both.gif);
+  background-image: url(https://community.cloudflare.steamstatic.com/public/shared/images/popups/hover_arrow_both.gif);
   background-repeat: no-repeat;
   position: absolute;
   top: 0;
@@ -2176,8 +2133,38 @@ label.es_dlc_label > input:checked::after {
 }
 
 /***************************************
- * Market
- * market_popular_refresh_toggle()
+ * Market home
+ * FMarketLowestPrice
+ **************************************/
+.es_priced_higher {
+  color: #ff1717;
+}
+.es_priced_lower {
+  color: #60ad0a;
+}
+
+/***************************************
+ * Market home
+ * FMarketStats
+ **************************************/
+#es_market_summary_status {
+  display: flex;
+  align-items: center;
+}
+#es_market_summary_status img {
+  margin-right: 10px;
+}
+.es_market_summary_item {
+  float: right;
+  line-height: inherit !important;
+  vertical-align: top;
+  line-height: 32px;
+  margin-left: 5px;
+}
+
+/***************************************
+ * Market home
+ * FPopularRefreshToggle
  **************************************/
 #es_popular_refresh_toggle {
   position: absolute;
@@ -2299,7 +2286,7 @@ label.es_dlc_label > input:checked::after {
 }
 #es_fav_remove {
   width: 10%;
-  background-image: url(https://steamcommunity-a.akamaihd.net/economy/emoticon/remove);
+  background-image: url(https://community.cloudflare.steamstatic.com/economy/emoticon/remove);
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -2308,7 +2295,20 @@ label.es_dlc_label > input:checked::after {
 }
 
 
-.es_hltb .details_block span {
+/* .game_details styles from https://github.com/SteamDatabase/SteamTracking/blob/8719637a11e9e707f0adb4d07987cd9423d0d828/steamcommunity.com/public/shared/css/store_game_shared.css#L389 */
+.es_hltb {
+  color: #8f98a0;
+  line-height: 20px;
+}
+.es_hltb b {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #556772;
+  font-weight: normal;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+.es_hltb span {
   float: right;
 }
 
@@ -2335,7 +2335,7 @@ label.es_dlc_label > input:checked::after {
  * Global Steam Client button
  **************************************/
 .header_installsteam_btn_content.es_steamclient_btn {
-  background-image: url('https://steamstore-a.akamaihd.net/public/images/v6/icon_platform_linux.png');
+  background-image: url('https://store.cloudflare.steamstatic.com/public/images/v6/icon_platform_linux.png');
   background-position: 5px;
   padding-left: 28px;
 }
@@ -2899,7 +2899,7 @@ label.es_dlc_label > input:checked::after {
   top: 0;
   bottom: 0;
   width: 20px;
-  background: url(https://steamstore-a.akamaihd.net/public/images/v6/ico/ico_arrow_dn_for_select.png) no-repeat left center;
+  background: url(https://store.cloudflare.steamstatic.com/public/images/v6/ico/ico_arrow_dn_for_select.png) no-repeat left center;
   content: '';
 }
 .es-dropdown {

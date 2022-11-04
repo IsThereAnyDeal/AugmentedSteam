@@ -1,4 +1,4 @@
-import {Localization} from "../../../../modulesCore";
+import {HTMLParser, Localization} from "../../../../modulesCore";
 import {Feature, RequestData, Sortbox} from "../../../modulesContent";
 
 export default class FAchievementSort extends Feature {
@@ -10,12 +10,11 @@ export default class FAchievementSort extends Feature {
 
     apply() {
 
+        this._achievementsFetched = false;
+
         this._container = document.getElementById("personalAchieve");
         this._isCompareView = this._container.classList.contains("compare_view");
-        this._nodes = {
-            "default": Array.from(this._container.querySelectorAll(".achieveRow")),
-            "time": [],
-        };
+        this._nodes = [];
 
         document.getElementById("tabs").insertAdjacentElement("beforebegin", Sortbox.get(
             "achievements",
@@ -32,7 +31,29 @@ export default class FAchievementSort extends Feature {
 
         const container = this._container;
 
-        if (!this._initSort) {
+        if (!this._achievementsFetched) {
+
+            const url = new URL(window.location.origin + window.location.pathname);
+            url.searchParams.set("tab", "achievements");
+            url.searchParams.set("panorama", "please");
+
+            const result = await RequestData.getHttp(url.toString());
+            let achievements = HTMLParser.getVariableFromText(result, "g_rgAchievements", "object");
+            achievements = Object.values({...achievements.open, ...achievements.closed});
+
+            const nodes = container.querySelectorAll(".achieveRow");
+            for (let i = 0; i < nodes.length; ++i) {
+                const node = nodes[i];
+                const name = node.querySelector(".achieveTxt > h3").textContent;
+                const unlockTime = achievements.find(val => val.name === name)?.unlock_time ?? 0;
+
+                if (unlockTime === 0) {
+                    node.classList.add("esi_ach_locked");
+                } else {
+                    node.classList.add("esi_ach_unlocked");
+                    this._nodes.push({"default": i, "time": unlockTime, node}); // Only reorder unlocked achievements
+                }
+            }
 
             /*
              * Remove linebreaks and transparent img (the latter is visible in compare views).
@@ -42,7 +63,7 @@ export default class FAchievementSort extends Feature {
                 el.remove();
             }
 
-            // Wrap avatars in a container
+            // Wrap avatars in a container (visible in compare views)
             if (this._isCompareView) {
                 this._avatars = document.createElement("div");
                 this._avatars.classList.add("esi_ach_avatars");
@@ -50,71 +71,24 @@ export default class FAchievementSort extends Feature {
                 container.insertAdjacentElement("afterbegin", this._avatars);
             }
 
-            this._initSort = true;
+            this._achievementsFetched = true;
         }
 
-        if (key === "time") {
+        if (reversed) {
+            this._nodes.sort((a, b) => b[key] - a[key]);
+        } else {
+            this._nodes.sort((a, b) => a[key] - b[key]);
+        }
 
-            if (this._nodes.time.length === 0) {
-                try {
-                    await this._initSortByTime();
-                } catch (err) {
-                    console.error(err);
-                    return;
-                }
-            }
-
-            if (reversed) {
-                // Descending sort, because nodes are inserted at the "afterbegin" position
-                this._nodes.time.sort((a, b) => b[0] - a[0]);
-            } else {
-                this._nodes.time.sort((a, b) => a[0] - b[0]);
-            }
-
-            for (const [, node] of this._nodes.time) {
-                container.insertAdjacentElement("afterbegin", node);
-            }
-        } else if (key === "default") {
-
-            for (const node of this._nodes.default) {
-                container.insertAdjacentElement(reversed ? "afterbegin" : "beforeend", node);
-            }
+        // Loop backwards, because nodes are inserted at the "afterbegin" position
+        for (let i = this._nodes.length - 1; i >= 0; --i) {
+            const {node} = this._nodes[i];
+            container.insertAdjacentElement("afterbegin", node);
         }
 
         // Restore avatars to its original position
         if (this._isCompareView) {
             container.insertAdjacentElement("afterbegin", this._avatars);
-        }
-    }
-
-    async _initSortByTime() {
-
-        const url = new URL(window.location.origin + window.location.pathname);
-        url.searchParams.set("xml", 1);
-
-        const result = await RequestData.getHttp(url.toString());
-        const xmlDoc = new DOMParser().parseFromString(result, "text/xml");
-        const xmlTags = xmlDoc.getElementsByTagName("achievement");
-
-        // XML doc redirects to profile home if "Game details" is not public, see issue #1193
-        if (xmlTags.length === 0) {
-            throw new Error("Failed to fetch XML doc for stats page");
-        }
-
-        for (let i = 0; i < this._nodes.default.length; ++i) {
-            const node = this._nodes.default[i];
-            let unlockTime = 0;
-            const unlockTimestamp = xmlTags[i].querySelector("unlockTimestamp");
-            if (unlockTimestamp) {
-                unlockTime = unlockTimestamp.textContent;
-            }
-
-            if (unlockTime === 0) {
-                node.classList.add("esi_ach_locked");
-            } else {
-                node.classList.add("esi_ach_unlocked");
-                this._nodes.time.push([unlockTime, node]); // Only reorder unlocked achievements
-            }
         }
     }
 }

@@ -191,6 +191,7 @@ SyncedStorage.defaults = Object.freeze({
     "sortfriendsby": "default_ASC",
     "sortreviewsby": "default_ASC",
     "sortgroupsby": "default_ASC",
+    "sortmylistingsby": "default_ASC",
     "show1clickgoo": true,
     "show_profile_link_images": "gray",
     "show_custom_themes": true,
