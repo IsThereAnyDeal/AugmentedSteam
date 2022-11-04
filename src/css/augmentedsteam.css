@@ -354,28 +354,11 @@ img.astats_icon {
   opacity: 1;
 }
 
-#es_market_summary span, .es_loading span {
+/* throbber loading image --TODO check usage */
+.es_loading span {
   vertical-align: top;
   line-height: 32px;
   margin-left: 5px;
-}
-#es_market_summary_status {
-  display: flex;
-  align-items: center;
-}
-#es_market_summary_status img {
-  margin-right: 10px;
-}
-
-.es_market_summary_item {
-  float: right;
-  line-height: inherit !important;
-}
-.es_percentage_higher {
-  color: #ff1717;
-}
-.es_percentage_lower {
-  color: #60ad0a;
 }
 
 .es_drm_warning {
@@ -2136,8 +2119,38 @@ label.es_dlc_label > input:checked::after {
 }
 
 /***************************************
- * Market
- * market_popular_refresh_toggle()
+ * Market home
+ * FMarketLowestPrice
+ **************************************/
+.es_priced_higher {
+  color: #ff1717;
+}
+.es_priced_lower {
+  color: #60ad0a;
+}
+
+/***************************************
+ * Market home
+ * FMarketStats
+ **************************************/
+#es_market_summary_status {
+  display: flex;
+  align-items: center;
+}
+#es_market_summary_status img {
+  margin-right: 10px;
+}
+.es_market_summary_item {
+  float: right;
+  line-height: inherit !important;
+  vertical-align: top;
+  line-height: 32px;
+  margin-left: 5px;
+}
+
+/***************************************
+ * Market home
+ * FPopularRefreshToggle
  **************************************/
 #es_popular_refresh_toggle {
   position: absolute;
