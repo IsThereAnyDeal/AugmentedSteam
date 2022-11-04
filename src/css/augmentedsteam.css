@@ -1083,7 +1083,7 @@ img.astats_icon {
 
 /***************************************
  * App pages
- * addFullscreenScreenshotView()
+ * FFullscreenScreenshotView
  **************************************/
 .es_screenshot_fullscreen_toggle {
   position: absolute;
@@ -1098,17 +1098,17 @@ img.astats_icon {
   margin: 5px;
 }
 .es_screenshot_open_btn {
-	position: absolute;
-	right: 24%;
-	bottom: 0;
+  position: absolute;
+  right: 24%;
+  bottom: 0;
 }
 .es_screenshot_open_btn i {
-	display: block;
-	background-position: center;
-	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
-	margin: 5px;
+  display: block;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 16px;
+  margin: 5px;
 }
 .screenshot_popup_modal_content:fullscreen .es_screenshot_fullscreen_toggle i {
   background-position: bottom left;
@@ -1150,13 +1150,19 @@ img.astats_icon {
   border-radius: 100px;
   padding: 0 1em;
 }
-.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer > .previous::before {
-  content: '';
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer > .previous::before,
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer > .next::before {
+  content: "";
   position: absolute;
-  left: 0;
   bottom: 0;
   width: 40vw;
   height: 100vh;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer > .previous::before {
+  left: 0;
+}
+.screenshot_popup_modal_content:fullscreen .screenshot_popup_modal_footer > .next::before {
+  right: 0;
 }
 
 /***************************************
