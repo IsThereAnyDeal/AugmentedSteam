@@ -46,6 +46,9 @@
 .achieveTxt.withProgress {
   width: 100%;
 }
+.achieveTxt h3.ellipsis {
+  white-space: normal;
+}
 
 /* Back To Top button */
 .es_btt {
