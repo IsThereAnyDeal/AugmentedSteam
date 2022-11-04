@@ -13,7 +13,10 @@ export default class FMarketSort extends Feature {
         this._insertSortbox();
         this._addPageControlsHandler();
 
-        // reset sortbox after changing pagesize option (Steam refreshes the listings)
+        // Only need to observe when page controls exist
+        if (document.getElementById("tabContentsMyActiveMarketListings_ctn") === null) { return; }
+
+        // Reset sortbox after changing pagesize option (Steam refreshes the listings)
         new MutationObserver(() => {
             this._insertSortbox();
             this._addPageControlsHandler();
@@ -22,7 +25,7 @@ export default class FMarketSort extends Feature {
 
     _addPageControlsHandler() {
 
-        // reset sortbox after clicking page controls (we don't fetch all listings so each page is sorted individually)
+        // Reset sortbox after clicking page controls (we don't fetch all listings so each page is sorted individually)
         document.getElementById("tabContentsMyActiveMarketListings_controls")?.addEventListener("click", () => {
             this._insertSortbox();
         });
@@ -59,10 +62,10 @@ export default class FMarketSort extends Feature {
         const property = `esSort${sortBy}`;
         const rows = [];
 
-        // query available listings on each sort because they may be removed
+        // Query available listings on each sort because they may be removed
         container.querySelectorAll(".market_listing_row").forEach((node, i) => {
 
-            // set default position
+            // Set default position
             if (!node.dataset.esSortdefault) {
                 node.dataset.esSortdefault = i;
             }
