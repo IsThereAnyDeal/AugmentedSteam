@@ -43,6 +43,14 @@ class ResettableTimer {
 
         this._running = true;
     }
+
+    stop() {
+        if (typeof this._id !== "undefined") {
+            clearTimeout(this._id);
+        }
+
+        this._running = false;
+    }
 }
 
 class TimeUtils {
