@@ -43,6 +43,7 @@ import FRemoveBroadcasts from "./FRemoveBroadcasts";
 import FDemoAbovePurchase from "./FDemoAbovePurchase";
 import FSaveReviewFilters from "./FSaveReviewFilters";
 import FHideReportedTags from "./FHideReportedTags";
+import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
 
 export class CApp extends CStore {
 
@@ -99,6 +100,7 @@ export class CApp extends CStore {
             FSaveReviewFilters,
             FHideReportedTags,
             FAddToCartNoRedirect,
+            FPatchHighlightPlayer,
         ]);
 
         this.appid = GameId.getAppid(window.location.host + window.location.pathname);
