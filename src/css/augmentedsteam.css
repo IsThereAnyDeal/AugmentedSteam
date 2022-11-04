@@ -39,6 +39,16 @@
 [class^=interactiverecommender_BottomSection] {
   overflow-y: visible !important;
 }
+/**
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/1472
+ * Fix achievement progress bar and text display
+ */
+.achieveTxt.withProgress {
+  width: 100%;
+}
+.achieveTxt h3 {
+  white-space: normal;
+}
 
 /* Back To Top button */
 .es_btt {
