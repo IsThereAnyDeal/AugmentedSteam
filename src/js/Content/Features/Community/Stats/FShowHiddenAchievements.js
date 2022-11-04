@@ -63,7 +63,7 @@ export default class FShowHiddenAchievements extends Feature {
                     </div>`);
             }
 
-            btn.classList.add("btn_disabled");
+            btn.remove();
         });
     }
 }
