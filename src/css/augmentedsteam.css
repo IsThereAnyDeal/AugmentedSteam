@@ -786,18 +786,30 @@ img.astats_icon {
 
 /***************************************
  * User Inventory
- * Quicksell/instantsell action buttons
+ * FQuickSellOptions
  **************************************/
-.item_market_actions a.item_market_action_button {
+/**
+ * We need higher precedence to override the display property of .item_market_action_button
+ * https://github.com/SteamDatabase/SteamTracking/blob/9868c2d72e43193c6db4530a9b3842af63563fd7/steamcommunity.com/public/css/skin_1/economy.css#L944
+ */
+.item_market_actions .item_market_action_button {
   margin-bottom: 4px;
   overflow: hidden;
   width: max-content;
   display: block;
 }
+.item_market_actions .item_market_action_button[id^=es_],
+.es_qsell_loading {
+  display: none;
+}
+.view_inventory_page .item.btn_disabled,
+.item_market_actions .item_market_action_button.btn_disabled {
+  pointer-events: none;
+}
 
 /***************************************
  * User Inventory
- * addPriceToGifts()
+ * FAddPriceToGifts
  **************************************/
 .es_game_purchase_action {
   margin-bottom: 16px;
