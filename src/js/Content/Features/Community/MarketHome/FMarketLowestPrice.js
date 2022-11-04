@@ -3,24 +3,27 @@ import {CurrencyManager, Feature, Price, RequestData, User} from "../../../modul
 
 export default class FMarketLowestPrice extends Feature {
 
+    constructor(context) {
+        super(context);
+
+        this._loadedMarketPrices = {};
+    }
+
     checkPrerequisites() {
         return User.isSignedIn && SyncedStorage.get("showlowestmarketprice") && !SyncedStorage.get("hideactivelistings");
     }
 
     apply() {
 
-        this._loadedMarketPrices = {};
-        this._parentNode = document.getElementById("tabContentsMyListings");
-
         new MutationObserver(() => { this._insertPrices(); })
             .observe(document.getElementById("tabContentsMyActiveMarketListingsRows"), {"childList": true});
 
-        // update tables' headers
-        for (const node of this._parentNode.querySelectorAll("#my_market_listingsonhold_number, #my_market_selllistings_number")) {
+        // Update table headers
+        for (const node of document.querySelectorAll("#my_market_listingsonhold_number, #my_market_selllistings_number")) {
 
             const listingNode = node.closest(".my_listing_section");
-            if (listingNode.classList.contains("es_selling")) { continue; }
-            listingNode.classList.add("es_selling");
+            if (listingNode.classList.contains("es_with_lowest_prices")) { continue; }
+            listingNode.classList.add("es_with_lowest_prices");
 
             const editNode = listingNode.querySelector(".market_listing_edit_buttons");
             if (!editNode) { continue; }
@@ -33,10 +36,10 @@ export default class FMarketLowestPrice extends Feature {
 
     async _insertPrices() {
 
-        // update table rows
+        // Update table rows
         const rows = [];
 
-        for (const node of this._parentNode.querySelectorAll(".es_selling .market_listing_row")) {
+        for (const node of document.querySelectorAll(".es_with_lowest_prices .market_listing_row")) {
             if (node.querySelector(".es_market_listing_lowest") !== null) { continue; }
 
             HTML.afterEnd(
@@ -55,7 +58,8 @@ export default class FMarketLowestPrice extends Feature {
             if (!appid || !marketHashName) { continue; }
 
             const lowestNode = node.querySelector(".es_market_listing_lowest");
-            const data = this._loadedMarketPrices[marketHashName] || await this._getPriceOverview(node, Number(appid), marketHashName);
+            const data = this._loadedMarketPrices[marketHashName]
+                || await this._getPriceOverview(node, Number(appid), marketHashName);
 
             if (!data) {
                 lowestNode.textContent = Localization.str.theworderror;
