@@ -1,10 +1,10 @@
-import {HTMLParser, Localization} from "../../../../modulesCore";
-import {Feature, RequestData, Sortbox} from "../../../modulesContent";
+import {Localization} from "../../../../modulesCore";
+import {Feature, Sortbox} from "../../../modulesContent";
 
 export default class FAchievementSort extends Feature {
 
     checkPrerequisites() {
-        // Check if the user has at least 2 achievements unlocked
+        // Check if the user has unlocked more than 1 achievement
         return document.querySelectorAll("#personalAchieve .achieveUnlockTime").length > 1;
     }
 
@@ -23,22 +23,18 @@ export default class FAchievementSort extends Feature {
                 ["time", Localization.str.date_unlocked],
             ],
             "default_ASC",
-            (key, reversed) => { this._sortBy(key, reversed); },
+            (sortBy, reversed) => { this._sortRows(sortBy, reversed); },
         ));
     }
 
-    async _sortBy(key, reversed) {
+    async _sortRows(sortBy, reversed) {
 
         const container = this._container;
 
         if (!this._achievementsFetched) {
+            this._achievementsFetched = true;
 
-            const url = new URL(window.location.origin + window.location.pathname);
-            url.searchParams.set("tab", "achievements");
-            url.searchParams.set("panorama", "please");
-
-            const result = await RequestData.getHttp(url.toString());
-            let achievements = HTMLParser.getVariableFromText(result, "g_rgAchievements", "object");
+            let achievements = await this.context.getAchievementData();
             achievements = Object.values({...achievements.open, ...achievements.closed});
 
             const nodes = container.querySelectorAll(".achieveRow");
@@ -68,27 +64,22 @@ export default class FAchievementSort extends Feature {
                 this._avatars = document.createElement("div");
                 this._avatars.classList.add("esi_ach_avatars");
                 this._avatars.append(...container.querySelectorAll(".topAvatarsLeft, .topAvatarsRight"));
-                container.insertAdjacentElement("afterbegin", this._avatars);
+                container.prepend(this._avatars);
             }
-
-            this._achievementsFetched = true;
         }
 
-        if (reversed) {
-            this._nodes.sort((a, b) => b[key] - a[key]);
-        } else {
-            this._nodes.sort((a, b) => a[key] - b[key]);
+        this._nodes.sort((a, b) => a[sortBy] - b[sortBy]);
+
+        // reverse if otherwise, because nodes are inserted at the "afterbegin" position
+        if (!reversed) {
+            this._nodes.reverse();
         }
 
-        // Loop backwards, because nodes are inserted at the "afterbegin" position
-        for (let i = this._nodes.length - 1; i >= 0; --i) {
-            const {node} = this._nodes[i];
-            container.insertAdjacentElement("afterbegin", node);
-        }
+        this._nodes.forEach(({node}) => container.prepend(node));
 
         // Restore avatars to its original position
         if (this._isCompareView) {
-            container.insertAdjacentElement("afterbegin", this._avatars);
+            container.prepend(this._avatars);
         }
     }
 }

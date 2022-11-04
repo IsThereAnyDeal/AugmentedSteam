@@ -763,6 +763,15 @@ img.astats_icon {
 }
 
 /***************************************
+ * Achievement stats page
+ * FShowHiddenAchievements
+ **************************************/
+#as_ach_showall {
+  margin-left: auto;
+  margin-right: 6px;
+}
+
+/***************************************
  * User Inventory
  * FInventoryGoTo
  **************************************/
