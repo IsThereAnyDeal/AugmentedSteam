@@ -45,11 +45,11 @@ class Prices {
     }
 
     /**
-     * @param priceData
+     * @param data
      * @param {Price} price
      * @param {string} pricingStr
      */
-    _getPricingStrings(priceData, price, pricingStr) {
+    _getPricingStrings(data, price, pricingStr, withVoucher) {
         let prices = price.toString();
         if (price.currency !== CurrencyManager.storeCurrency) {
             try {
@@ -62,11 +62,11 @@ class Prices {
         const pricesStr = `<span class="itad-pricing__price">${prices}</span>`;
 
         let cutStr = "";
-        if (priceData.cut > 0) {
-            cutStr = `<span class="itad-pricing__cut">-${priceData.cut}%</span> `;
+        if (data.cut > 0 || withVoucher) {
+            cutStr = `<span class="itad-pricing__cut">-${withVoucher ? data.cut_total : data.cut}%</span> `;
         }
 
-        const storeStr = pricingStr.store.replace("__store__", priceData.store);
+        const storeStr = pricingStr.store.replace("__store__", data.store);
         return [pricesStr, cutStr, storeStr];
     }
 
@@ -91,9 +91,10 @@ class Prices {
         if (priceData) {
             hasData = true;
 
+            const withVoucher = SyncedStorage.get("showlowestpricecoupon") && priceData.price_voucher;
             let lowest;
             let voucherStr = "";
-            if (SyncedStorage.get("showlowestpricecoupon") && priceData.price_voucher) {
+            if (withVoucher) {
                 lowest = new Price(priceData.price_voucher, meta.currency);
 
                 const voucher = HTML.escape(priceData.voucher);
@@ -110,7 +111,7 @@ class Prices {
             } catch (err) {
                 console.warn("Could not convert currency, using country currency");
             }
-            const [pricesStr, cutStr, storeStr] = this._getPricingStrings(priceData, lowest, pricingStr);
+            const [pricesStr, cutStr, storeStr] = this._getPricingStrings(priceData, lowest, pricingStr, withVoucher);
 
             let drmStr = "";
             if (priceData.drm.length > 0 && priceData.store !== "Steam") {
