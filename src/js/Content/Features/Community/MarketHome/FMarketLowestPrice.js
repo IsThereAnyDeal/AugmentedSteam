@@ -25,7 +25,6 @@ export default class FMarketLowestPrice extends Feature {
             const editNode = listingNode.querySelector(".market_listing_edit_buttons");
             if (!editNode) { continue; }
 
-            editNode.style.width = "200px";
             HTML.afterEnd(editNode, `<span class="market_listing_right_cell es_market_listing_lowest">${Localization.str.lowest}</span>`);
         }
 
@@ -40,15 +39,10 @@ export default class FMarketLowestPrice extends Feature {
         for (const node of this._parentNode.querySelectorAll(".es_selling .market_listing_row")) {
             if (node.querySelector(".es_market_listing_lowest") !== null) { continue; }
 
-            const button = node.querySelector(".market_listing_edit_buttons.placeholder");
-            button.style.width = "200px";
-
-            HTML.afterEnd(button, `<div class="market_listing_right_cell es_market_listing_lowest">${Localization.str.loading}</div>`);
-
-            // Move the actual button due to changed width
-            const actualButton = node.querySelector(".market_listing_edit_buttons.actual_content");
-            actualButton.style.width = "inherit";
-            button.append(actualButton);
+            HTML.afterEnd(
+                node.querySelector(".market_listing_edit_buttons.placeholder"),
+                `<div class="market_listing_right_cell es_market_listing_lowest">${Localization.str.loading}</div>`
+            );
 
             rows.push(node);
         }
