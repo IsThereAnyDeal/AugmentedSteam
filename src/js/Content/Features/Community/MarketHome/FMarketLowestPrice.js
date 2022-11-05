@@ -1,7 +1,7 @@
 import {Errors, HTML, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
-import {CurrencyManager, Feature, Price, RequestData, User} from "../../../modulesContent";
+import {CallbackFeature, CurrencyManager, Price, RequestData, User} from "../../../modulesContent";
 
-export default class FMarketLowestPrice extends Feature {
+export default class FMarketLowestPrice extends CallbackFeature {
 
     constructor(context) {
         super(context);
@@ -13,7 +13,11 @@ export default class FMarketLowestPrice extends Feature {
         return User.isSignedIn && SyncedStorage.get("showlowestmarketprice") && !SyncedStorage.get("hideactivelistings");
     }
 
-    apply() {
+    setup() {
+        this.callback();
+    }
+
+    callback() {
 
         new MutationObserver(() => { this._insertPrices(); })
             .observe(document.getElementById("tabContentsMyActiveMarketListingsRows"), {"childList": true});

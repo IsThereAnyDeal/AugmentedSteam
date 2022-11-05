@@ -1,25 +1,20 @@
 import {Localization, SyncedStorage} from "../../../../modulesCore";
-import {Feature, Price, Sortbox} from "../../../modulesContent";
+import {CallbackFeature, Price, Sortbox} from "../../../modulesContent";
 
-export default class FMarketSort extends Feature {
+export default class FMarketSort extends CallbackFeature {
 
     checkPrerequisites() {
         // Check if user is logged in and has more than 1 active listing
         return document.querySelectorAll("#tabContentsMyActiveMarketListingsRows .market_listing_row").length > 1;
     }
 
-    apply() {
+    setup() {
+        this.callback();
+    }
 
+    callback() {
         this._insertSortbox();
         this._addPageControlsHandler();
-
-        // If there're page controls, observe the listings because Steam refreshes them after selecting a page size option
-        if (document.getElementById("tabContentsMyActiveMarketListings_ctn") !== null) {
-            new MutationObserver(() => {
-                this._insertSortbox();
-                this._addPageControlsHandler();
-            }).observe(document.getElementById("tabContentsMyListings"), {"childList": true});
-        }
     }
 
     _addPageControlsHandler() {

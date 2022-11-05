@@ -17,5 +17,12 @@ export class CMarketHome extends CCommunityBase {
             FPopularRefreshToggle,
             FMarketLowestPrice,
         ]);
+
+        // If there're page controls, observe the listings because Steam refreshes them after selecting a page size option
+        if (document.getElementById("tabContentsMyActiveMarketListings_ctn") !== null) {
+            new MutationObserver(() => {
+                this.triggerCallbacks();
+            }).observe(document.getElementById("tabContentsMyListings"), {"childList": true});
+        }
     }
 }
