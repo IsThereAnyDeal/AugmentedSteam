@@ -314,6 +314,8 @@
         "removing": "Removing app __cur__ from __total__..."
     },
     "about": "About",
+	"about_desc": "Augmented Steam is a fork of the Enhanced Steam extension.",
+	"about_desc2": "Visit the extension's page or our Discord channel for more info.",
     "never": "Never",
     "coupon_available": "You have a coupon available!",
     "launch_random": "Launch Random Game",
@@ -445,7 +447,10 @@
             "export": "Export",
             "reset": "Reset"
         },
-        "show_custom_themes": "Show custom themes",
+		"augmented_steam_disclaimer": "Augmented Steam",
+		"augmented_steam_disclaimer2": "a fork by IsThereAnyDeal",
+		"augmented_steam_disclaimer3": "original author jshackles",
+		"show_custom_themes": "Show custom themes",
         "community_default_tab": "Default community home page tab",
         "videos": "Videos",
         "broadcasts": "Broadcasts",
@@ -800,6 +805,8 @@
     },
     "original_authors": "Original authors",
     "acknowledgements": "Acknowledgments",
+	"acknowledgements_svg_credit": "Save SVG Vector is licensed under CC BY 4.0",
+	"acknowledgements_icon_credit": "Icon made by Freepik from www.flaticon.com",
     "other": "Other",
     "images": "Images",
     "powered_by": "Powered by __link__"
