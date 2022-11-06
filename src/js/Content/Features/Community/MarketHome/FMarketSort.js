@@ -1,26 +1,20 @@
 import {Localization, SyncedStorage} from "../../../../modulesCore";
-import {DOMHelper, Feature, Price, Sortbox} from "../../../modulesContent";
+import {CallbackFeature, Price, Sortbox} from "../../../modulesContent";
 
-export default class FMarketSort extends Feature {
+export default class FMarketSort extends CallbackFeature {
 
     checkPrerequisites() {
-        // Check if user is logged in and has more than 1 active listings
+        // Check if user is logged in and has more than 1 active listing
         return document.querySelectorAll("#tabContentsMyActiveMarketListingsRows .market_listing_row").length > 1;
     }
 
-    apply() {
+    setup() {
+        this.callback();
+    }
 
+    callback() {
         this._insertSortbox();
         this._addPageControlsHandler();
-
-        // Only need to observe when page controls exist
-        if (document.getElementById("tabContentsMyActiveMarketListings_ctn") === null) { return; }
-
-        // Reset sortbox after changing pagesize option (Steam refreshes the listings)
-        new MutationObserver(() => {
-            this._insertSortbox();
-            this._addPageControlsHandler();
-        }).observe(document.getElementById("tabContentsMyListings"), {"childList": true});
     }
 
     _addPageControlsHandler() {
@@ -47,8 +41,7 @@ export default class FMarketSort extends Feature {
                 ["default", header.querySelector(".market_listing_listed_date").textContent.trim()],
                 ["item", header.querySelector(".market_listing_header_namespacer").parentNode.textContent.trim()],
                 ["game", Localization.str.game_name.toUpperCase()],
-                // TODO this `selectLastNode` call is due to lowest prices adding an additional column, avoid this
-                ["price", DOMHelper.selectLastNode(header, ".market_listing_my_price").textContent.trim()],
+                ["price", header.querySelector(".market_listing_my_price").textContent.trim()],
             ],
             SyncedStorage.get("sortmylistingsby"),
             (sortBy, reversed) => { this._sortRows(sortBy, reversed); },
