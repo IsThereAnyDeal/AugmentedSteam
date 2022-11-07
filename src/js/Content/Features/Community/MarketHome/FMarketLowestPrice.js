@@ -19,7 +19,7 @@ export default class FMarketLowestPrice extends CallbackFeature {
 
     callback() {
 
-        new MutationObserver(() => { this._insertPrices(); })
+        new MutationObserver(() => { this._updateTableRows(); })
             .observe(document.getElementById("tabContentsMyActiveMarketListingsRows"), {"childList": true});
 
         // Update table headers
@@ -35,12 +35,37 @@ export default class FMarketLowestPrice extends CallbackFeature {
             HTML.afterEnd(editNode, `<span class="market_listing_right_cell es_market_listing_lowest">${Localization.str.lowest}</span>`);
         }
 
-        this._insertPrices();
+        this._updateTableRows();
     }
 
-    async _insertPrices() {
+    _insertPrice(node, data) {
 
-        // Update table rows
+        const lowestNode = node.querySelector(".es_market_listing_lowest");
+
+        if (typeof data === "undefined") {
+            lowestNode.textContent = Localization.str.theworderror;
+            return;
+        }
+
+        if (typeof data.lowest_price === "undefined") {
+            lowestNode.textContent = Localization.str.no_data;
+            return;
+        }
+
+        lowestNode.textContent = data.lowest_price;
+
+        const myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent);
+        const lowPrice = Price.parseFromString(data.lowest_price);
+
+        if (myPrice.value <= lowPrice.value) {
+            lowestNode.classList.add("es_priced_lower"); // Our price matches the lowest price
+        } else {
+            lowestNode.classList.add("es_priced_higher"); // Our price is higher than the lowest price
+        }
+    }
+
+    async _updateTableRows() {
+
         const rows = [];
 
         for (const node of document.querySelectorAll(".es_with_lowest_prices .market_listing_row")) {
@@ -54,41 +79,30 @@ export default class FMarketLowestPrice extends CallbackFeature {
             rows.push(node);
         }
 
+        // Put a delay between requests
+        let delay = false;
+
         for (const node of rows) {
-            const linkNode = node.querySelector(".market_listing_item_name_link");
-            if (!linkNode) { continue; }
+            const [, appid, marketHashName] = node.querySelector(".market_listing_item_name_link")?.pathname
+                .match(/^\/market\/listings\/(\d+)\/([^/]+)/) ?? [];
 
-            const [, appid, marketHashName] = linkNode.pathname.match(/^\/market\/listings\/(\d+)\/([^/]+)/) || [];
-            if (!appid || !marketHashName) { continue; }
+            if (!appid || !marketHashName) {
+                console.error("Couldn't find appid or market hash name for item id %s", node.id);
+                this._insertPrice(node);
+                continue;
+            }
 
-            const lowestNode = node.querySelector(".es_market_listing_lowest");
-            const data = this._loadedMarketPrices[marketHashName]
-                || await this._getPriceOverview(node, Number(appid), marketHashName);
-
+            let data = this._loadedMarketPrices[marketHashName];
             if (!data) {
-                lowestNode.textContent = Localization.str.theworderror;
-                continue;
+                data = await this._getPriceOverview(node, Number(appid), marketHashName, delay);
+                delay = true;
             }
 
-            if (!("lowest_price" in data)) {
-                lowestNode.textContent = Localization.str.no_data;
-                continue;
-            }
-
-            lowestNode.textContent = data.lowest_price;
-
-            const myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent);
-            const lowPrice = Price.parseFromString(data.lowest_price);
-
-            if (myPrice.value <= lowPrice.value) {
-                lowestNode.classList.add("es_priced_lower"); // Our price matches the lowest price
-            } else {
-                lowestNode.classList.add("es_priced_higher"); // Our price is higher than the lowest price
-            }
+            this._insertPrice(node, data);
         }
     }
 
-    async _getPriceOverview(node, appid, marketHashName) {
+    async _getPriceOverview(node, appid, marketHashName, delay) {
 
         const country = User.storeCountry;
         const currencyNumber = CurrencyManager.currencyTypeToNumber(CurrencyManager.storeCurrency);
@@ -97,6 +111,10 @@ export default class FMarketLowestPrice extends CallbackFeature {
         let attempt = 0;
 
         do {
+            if (delay && attempt === 0) {
+                await TimeUtils.timer(1000);
+            }
+
             try {
                 data = await RequestData.getJson(
                     `https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`
@@ -107,17 +125,17 @@ export default class FMarketLowestPrice extends CallbackFeature {
                 }
 
                 this._loadedMarketPrices[marketHashName] = data;
-                await TimeUtils.timer(1000);
                 break;
             } catch (err) {
 
                 // Too Many Requests
                 if (err instanceof Errors.HTTPError && err.code === 429) {
                     await TimeUtils.timer(30000);
-                    attempt++;
 
-                    // If the node is detached after this timeout
+                    // If the node is detached after the timeout
                     if (!node.parentNode) { break; }
+
+                    attempt++;
                 } else {
                     console.error("Failed to retrieve price overview for item %s!", decodeURIComponent(marketHashName));
                     break;
