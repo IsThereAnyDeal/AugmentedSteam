@@ -10,6 +10,7 @@
     "download_demo_header": "Download __gamename__ Demo",
     "deck_compat": {
         "header": "Steam Deck Compatibility",
+        "unknown": "Unknown",
         "unsupported": "Unsupported",
         "playable": "Playable",
         "verified": "Verified"

@@ -1208,15 +1208,15 @@ video.highlight_movie:hover + .html5_video_overlay {
   color: #fff;
   font-weight: 700;
 }
-.as_deckverified_BannerContentDesktop {
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
+.as_deckverified_BannerContent {
   padding: 10px;
+  background-color: #3b5a7280;
 }
 .as_svg_SteamDeckCompatIcon {
-  padding-right: 8px;
+  padding-right: 2px;
   vertical-align: middle;
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
 }
 .as_deckverified_CompatibilityDetailRatingDescription {
   vertical-align: middle;
