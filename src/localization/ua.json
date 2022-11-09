@@ -513,7 +513,7 @@
         "group_links": "Відображати у групах посилання на:",
         "show_languagewarning": "Відображати попередження, якщо сторінка відкрита на іншій мові",
         "homepage": "Домашня сторінка",
-        "homepage_default_tab": "Вкладка домашньої сторінки за промовчанням",
+        "homepage_default_tab": "Вкладка домашньої сторінки за замовчуванням",
         "homepage_default_tab_remember": "Пам'ятайти попередні",
         "homepage_default_tab_newreleases": "Популярні новинки",
         "homepage_default_tab_allreleases": "Всі нові релізи",
@@ -593,9 +593,9 @@
         "show_custom_themes": "Відображати користувацькі теми",
         "oneclickremovewl": "Пропускати підтвердження при видаленні ігор",
         "profile_pinned_bg": "Зафіксувати положення тла профілю при прокручуванні",
-        "replacecommunityhublinks": "",
-        "hideannouncementcomments": "",
-        "friend_activity": ""
+        "replacecommunityhublinks": "Замінити посилання на центр спільноти посиланням на сторінку крамниці",
+        "hideannouncementcomments": "Приховати коментарі під усіма оголошеннями в группах за замовчуванням",
+        "friend_activity": "Діяльність друзів"
     },
     "ready": {
         "errormsg": "Помилка завантаження даних Augmented Steam",
@@ -788,14 +788,15 @@
     "manage_webapi_key": "Керування ключем Steam Web API",
     "steam_cloud_header": "Steam Cloud",
     "steam_cloud_saves": "Переглянути ігри, які збережено до вашої Steam Cloud",
-    "community_hub": "",
-    "cart": "",
+    "community_hub": "Центр спільноти",
+    "cart": "Кошик",
     "feature_hint": {
-        "desc": "",
-        "reminder": ""
+        "desc": "Чи бажаєте ви ввімкнути наступну функцію?",
+        "reminder": "Ви можете змінити налаштування пізніше на сторінці з опціями."
     },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": ""
+    "thewordyes": "Так",
+    "thewordno": "Ні",
+    "show_comments": "Відображати коментарі",
+    "hide_comments": "Приховати коментарі",
+    "fav_emoticons_no_access": ""
 }

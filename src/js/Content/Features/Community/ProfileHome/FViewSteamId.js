@@ -34,6 +34,7 @@ export default class FViewSteamId extends Feature {
                 steamId.id2,
                 steamId.id3,
                 steamId.id64,
+                steamId.id64hex,
                 `https://steamcommunity.com/profiles/${steamId.id64}`
             ];
 
@@ -76,7 +77,7 @@ export default class FViewSteamId extends Feature {
         if (dropdown) {
             HTML.beforeEnd(dropdown,
                 `<a class="popup_menu_item" id="es_steamid">
-                    <img src="https://steamcommunity-a.akamaihd.net/public/images/skin_1/iconForums.png">&nbsp; ${Localization.str.view_steamid}
+                    <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/iconForums.png">&nbsp; ${Localization.str.view_steamid}
                 </a>`);
         } else {
             const actions = document.querySelector(".profile_header_actions");

@@ -211,7 +211,7 @@ export const StoreList = [
     },
     {
         "id": "uplay",
-        "title": "Uplay",
+        "title": "Ubisoft Store",
         "color": "#01657a"
     },
     {

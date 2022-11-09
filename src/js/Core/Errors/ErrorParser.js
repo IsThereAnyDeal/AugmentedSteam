@@ -6,7 +6,6 @@
  *  cut down to only send the message of the error},
  * losing information about the type.
  */
-/* eslint-enable max-len */
 class ErrorParser {
 
     /**

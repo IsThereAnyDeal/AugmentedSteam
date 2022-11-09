@@ -1,6 +1,5 @@
 import {SyncedStorage} from "../../../modulesCore";
 import {ContextType, Feature} from "../../modulesContent";
-import {Page} from "../Page";
 
 export default class FSkipAgecheck extends Feature {
 
@@ -12,26 +11,21 @@ export default class FSkipAgecheck extends Feature {
 
         if (this.context.type === ContextType.AGECHECK) {
 
-            Page.runInPageContext(() => {
+            // Partially taken from https://github.com/SteamDatabase/BrowserExtension/blob/435b6fed85e487dcafcaff9f7353691c70511a05/scripts/store/agecheck.js
+            const year = Math.floor(Math.random() * 35) + 50;
+            const time = new Date(year, 0) / 1000; // Jan 01 19xx 00:00:00 GMT+0800
 
-                // Modified version of `HideAgeGate` from the page script
-                function newHideAgeGate() {
-                    const cookiePath = window.location.pathname.replace("/agecheck", "");
-                    window.SteamFacade.vSetCookie("wants_mature_content", 1, 365, cookiePath);
-                    window.location.replace(window.location.origin + cookiePath);
-                }
+            let expiry = new Date();
+            expiry.setFullYear(expiry.getFullYear() + 1);
+            expiry = expiry.toUTCString();
 
-                const ageYearNode = document.querySelector("#ageYear");
-                if (ageYearNode) { // Game may contain content nsfw...
-                    const myYear = Math.floor(Math.random() * 75) + 10;
-                    ageYearNode.value = `19${myYear}`;
+            document.cookie = `birthtime=${time}; expires=${expiry}; path=/;`;
+            document.cookie = `wants_mature_content=1; expires=${expiry}; path=/;`;
 
-                    window.SteamFacade.checkAgeGateSubmit(newHideAgeGate);
-                } else { // Game contains content you have asked not to see
-                    // `CheckAgeGateSubmit` calls `HideAgeGate` on these pages, so bypass it completely
-                    newHideAgeGate();
-                }
-            });
+            // Make sure there's a valid age gate before redirecting
+            if (document.querySelector("#app_agegate")) {
+                window.location.href = window.location.href.replace("/agecheck", "");
+            }
         } else {
             this._skipContentWarning();
 
@@ -47,9 +41,6 @@ export default class FSkipAgecheck extends Feature {
     }
 
     _skipContentWarning() {
-        const btn = document.querySelector("#age_gate_btn_continue");
-        if (btn) {
-            btn.click();
-        }
+        document.querySelector("#age_gate_btn_continue")?.click();
     }
 }

@@ -1,5 +1,4 @@
-import {HTML} from "../../../../Core/Html/Html";
-import {Localization} from "../../../../Core/Localization/Localization";
+import {HTML, Localization} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -7,15 +6,20 @@ export default class FReplaceDevPubLinks extends Feature {
 
     apply() {
 
-        const devs = [document.querySelector(".details_block > .dev_row:first-of-type > a")];
-        const highlightsDev = document.getElementById("developers_list")?.parentElement;
+        const devs = [...document.querySelectorAll("#genresAndManufacturer > .dev_row:first-of-type > a")];
 
-        if (typeof highlightsDev === "undefined") { devs.push(highlightsDev.querySelector("a")); }
+        // We need to use this element to locate the row that contains developer info, see #1346
+        const glanceDevRow = document.getElementById("developers_list")?.parentElement;
+        if (glanceDevRow) {
+            devs.push(...glanceDevRow.querySelectorAll("a"));
+        }
 
-        const pubs = [document.querySelector(".details_block > .dev_row:nth-of-type(2) > a")];
-        const highlightsPub = highlightsDev?.nextElementSibling;
+        const pubs = [...document.querySelectorAll("#genresAndManufacturer > .dev_row:nth-of-type(2) > a")];
 
-        if (typeof highlightsPub === "undefined") { pubs.push(highlightsPub.querySelector("a")); }
+        const glancePubRow = glanceDevRow?.nextElementSibling;
+        if (glancePubRow) {
+            pubs.push(...glancePubRow.querySelectorAll("a"));
+        }
 
         let franchise = document.querySelector(".details_block > .dev_row:nth-of-type(3) > a");
         franchise = franchise ? [franchise] : [];

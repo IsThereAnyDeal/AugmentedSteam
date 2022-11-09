@@ -1,19 +1,6 @@
 
 class DOMHelper {
 
-    static wrap(container, node) {
-        const parent = node.parentNode;
-        parent.insertBefore(container, node);
-        parent.removeChild(node);
-        container.append(node);
-    }
-
-    static remove(selector) {
-        const node = document.querySelector(selector);
-        if (!node) { return; }
-        node.remove();
-    }
-
     // TODO extend Node itself?
     static selectLastNode(parent, selector) {
         const nodes = parent.querySelectorAll(selector);

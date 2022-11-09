@@ -1,5 +1,5 @@
 import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
-import {DOMHelper, Feature, ProfileData} from "../../../modulesContent";
+import {Feature, ProfileData} from "../../../modulesContent";
 import Config from "../../../../config";
 
 export default class FStyleSelection extends Feature {
@@ -98,7 +98,7 @@ export default class FStyleSelection extends Feature {
             });
 
         } else if (this._active) {
-            DOMHelper.remove(".js-style-selection");
+            document.querySelector(".js-style-selection")?.remove();
             this._active = false;
         }
     }

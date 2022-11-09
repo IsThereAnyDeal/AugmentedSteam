@@ -1,12 +1,16 @@
+import {LocalStorage, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../Modules/Feature/Feature";
-import {SyncedStorage} from "../../../../modulesCore";
 
 export default class FForceMP4 extends Feature {
+
     checkPrerequisites() {
         return SyncedStorage.get("mp4video");
     }
 
     apply() {
+
+        const playInHD = LocalStorage.get("playback_hd");
+
         for (const node of document.querySelectorAll("[data-webm-source]")) {
             const mp4 = node.dataset.mp4Source;
             const mp4hd = node.dataset.mp4HdSource;
@@ -15,12 +19,11 @@ export default class FForceMP4 extends Feature {
             node.dataset.webmSource = mp4;
             node.dataset.webmHdSource = mp4hd;
 
-            const video = node.querySelector("video");
-            if (!video) { continue; }
+            const videoEl = node.querySelector("video");
+            if (!videoEl) { continue; }
 
-            video.dataset.sdSrc = mp4;
-            video.dataset.hdSrc = mp4hd;
-            this.context.toggleVideoDefinition(video, false);
+            videoEl.dataset.hdSrc = mp4hd;
+            this.context.toggleVideoDefinition(videoEl, playInHD, true);
         }
     }
 }

@@ -1,9 +1,10 @@
-import {GameId, LocalStorage, SyncedStorage} from "../../../../modulesCore";
+import {GameId, SyncedStorage} from "../../../../modulesCore";
 import {Background, ContextType, User} from "../../../modulesContent";
 import FMediaExpander from "../../Common/FMediaExpander";
 import FITADPrices from "../Common/FITADPrices";
 import FDRMWarnings from "../Common/FDRMWarnings";
 import FExtraLinks from "../Common/FExtraLinks";
+import FAddToCartNoRedirect from "../Common/FAddToCartNoRedirect";
 import {UserNotes} from "../Common/UserNotes";
 import {CStore} from "../Common/CStore";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
@@ -41,6 +42,8 @@ import FSupportInfo from "./FSupportInfo";
 import FRemoveBroadcasts from "./FRemoveBroadcasts";
 import FDemoAbovePurchase from "./FDemoAbovePurchase";
 import FSaveReviewFilters from "./FSaveReviewFilters";
+import FHideReportedTags from "./FHideReportedTags";
+import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
 
 export class CApp extends CStore {
 
@@ -95,13 +98,18 @@ export class CApp extends CStore {
             FRemoveBroadcasts,
             FDemoAbovePurchase,
             FSaveReviewFilters,
+            FHideReportedTags,
+            FAddToCartNoRedirect,
+            FPatchHighlightPlayer,
         ]);
 
         this.appid = GameId.getAppid(window.location.host + window.location.pathname);
         this.storeid = `app/${this.appid}`;
 
         // Some games (e.g. 201270, 201271) have different appid in store page and community
-        this.communityAppid = GameId.getAppidImgSrc(document.querySelector(".apphub_AppIcon img")?.getAttribute("src")) ?? this.appid;
+        this.communityAppid = GameId.getAppidImgSrc(
+            document.querySelector(".apphub_AppIcon img")?.getAttribute("src")
+        ) ?? this.appid;
 
         this.appName = document.querySelector(".apphub_AppName")?.textContent ?? "";
 
@@ -123,7 +131,8 @@ export class CApp extends CStore {
 
         /**
          * `true` for non-application items, or if system requirements section is missing (usually hardware)
-         * Previous check for videos: document.querySelector(".game_area_purchase_game span[class*=streaming], div.series_seasons") !== null;
+         * Previous check for videos:
+         * document.querySelector(".game_area_purchase_game span[class*=streaming], div.series_seasons") !== null;
          */
         this.isVideoOrHardware = category === "992" || category === "993" || !document.querySelector(".sys_req");
 
@@ -138,6 +147,10 @@ export class CApp extends CStore {
         // FPackBreakdown skips purchase options with a package info button to avoid false positives
         FPackageInfoButton.dependencies = [FPackBreakdown];
         FPackageInfoButton.weakDependency = true;
+
+        // HDPlayer needs to wait for mp4 sources to be set
+        FHDPlayer.dependencies = [FForceMP4];
+        FHDPlayer.weakDependency = true;
     }
 
     storePageDataPromise() {
@@ -152,52 +165,41 @@ export class CApp extends CStore {
         return Background.action("itad.removefromwaitlist", this.appid);
     }
 
-    toggleVideoDefinition(videoControl, setHD) {
-        let videoIsHD = false;
+    /**
+     * @param videoEl - the video element
+     * @param {boolean} setHD - set HD or SD source
+     * @param {boolean} [force] - force set source, only current use is in FForceMP4, where we need to set mp4 source regardless of HD
+     */
+    toggleVideoDefinition(videoEl, setHD, force = false) {
+        const container = videoEl.parentNode;
+        container.classList.toggle("es_playback_hd", setHD);
 
-        const videoIsVisible = videoControl.parentNode.offsetHeight > 0 && videoControl.parentNode.offsetWidth > 0,
-            loadedSrc = videoControl.classList.contains("es_loaded_src"),
-            playInHD = LocalStorage.get("playback_hd") || videoControl.classList.contains("es_video_hd");
+        // Return early if there's nothing to do, i.e. setting HD while the video is already in HD, and vice versa
+        const isHD = videoEl.src === videoEl.dataset.hdSrc;
+        if (!force && (setHD === isHD)) { return; }
 
-        const videoPosition = videoControl.currentTime || 0,
-            videoPaused = videoControl.paused;
+        const useWebM = /\.webm/.test(videoEl.dataset.hdSrc); // `false` if browser doesn't support webm, or if "force mp4" feature is enabled
+        const isVisible = container.offsetHeight > 0 && container.offsetWidth > 0;
 
-        /** @this {HTMLVideoElement} The video element */
-        function onLoadedMetaData() {
-            this.currentTime = videoPosition;
-            if (!videoPaused && videoControl.play) {
+        // https://github.com/SteamDatabase/SteamTracking/blob/4da99e29581ba6628ad5ce24c50856703aea71a2/store.steampowered.com/public/javascript/gamehighlightplayer.js#L1055-L1067
+        const position = videoEl.currentTime || 0;
+        videoEl.pause();
+        videoEl.preload = "metadata";
 
-                Promise.resolve(videoControl.play()).catch(() => {
-                    // FIXME Why?
+        videoEl.addEventListener("loadedmetadata", () => {
+            videoEl.currentTime = position;
 
-                    // If response is a promise, suppress any errors it throws
-                });
+            if (isVisible) {
+                videoEl.play();
             }
-            videoControl.removeEventListener("loadedmetadata", onLoadedMetaData, false);
+        }, {"once": true});
+
+        if (setHD) {
+            videoEl.src = useWebM ? container.dataset.webmHdSource : container.dataset.mp4HdSource;
+        } else {
+            videoEl.src = useWebM ? container.dataset.webmSource : container.dataset.mp4Source;
         }
 
-        if (videoIsVisible) {
-            videoControl.preload = "metadata";
-            videoControl.addEventListener("loadedmetadata", onLoadedMetaData, false);
-        }
-
-        if ((!playInHD && typeof setHD === "undefined") || setHD === true) {
-            videoIsHD = true;
-            videoControl.src = videoControl.dataset.hdSrc;
-        } else if (loadedSrc) {
-            videoControl.src = videoControl.dataset.sdSrc;
-        }
-
-        if (videoIsVisible && loadedSrc) {
-            videoControl.load();
-        }
-
-        videoControl.classList.add("es_loaded_src");
-        videoControl.classList.toggle("es_video_sd", !videoIsHD);
-        videoControl.classList.toggle("es_video_hd", videoIsHD);
-        videoControl.parentNode.classList.toggle("es_playback_sd", !videoIsHD);
-        videoControl.parentNode.classList.toggle("es_playback_hd", videoIsHD);
-
-        return videoIsHD;
+        videoEl.load();
     }
 }

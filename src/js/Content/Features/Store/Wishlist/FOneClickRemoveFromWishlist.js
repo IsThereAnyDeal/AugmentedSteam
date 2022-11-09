@@ -23,20 +23,11 @@ export default class FOneClickRemoveFromWishlist extends CallbackFeature {
             // eslint-disable-next-line no-loop-func
             newDeleteNode.addEventListener("click", () => {
 
-                /*
-                 * Modified version of fnRemoveFromWishlist from wishlist.js
-                 * https://github.com/SteamDatabase/SteamTracking/blob/ca5145acba077bee42de2593f6b17a6ed045b5f6/store.steampowered.com/public/javascript/wishlist.js#L173
-                 */
+                // https://github.com/SteamDatabase/SteamTracking/blob/161d053dc7bd782333584196d97bce5f7509d640/store.steampowered.com/public/javascript/wishlist.js#L158
                 Page.runInPageContext(appid => {
-
                     const f = window.SteamFacade;
 
-                    f.jqPost(`${f.global("g_strWishlistBaseURL")}remove/`, {
-                        appid,
-                        "sessionid": f.global("g_sessionID")
-                    });
-
-                    f.dynamicStoreInvalidateCache();
+                    f.removeFromWishlist(appid);
 
                     f.jq("#wishlist_ctn").removeClass("sorting");
 

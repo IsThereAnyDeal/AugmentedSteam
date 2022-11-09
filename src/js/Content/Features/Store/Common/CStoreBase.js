@@ -3,17 +3,18 @@ import FHighlightsTags from "../../Common/FHighlightsTags";
 import FEarlyAccess from "../../Common/FEarlyAccess";
 import FHideTrademarks from "../../Common/FHideTrademarks";
 import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
+import FFocusSearch from "./FFocusSearch";
 
 export class CStoreBase extends Context {
 
     constructor(type = ContextType.STORE_DEFAULT, features = []) {
 
-        // TODO Split this up into the relevant contexts
         features.push(
             FHighlightsTags,
             FEarlyAccess,
-            FAlternativeLinuxIcon,
             FHideTrademarks,
+            FAlternativeLinuxIcon,
+            FFocusSearch,
         );
 
         super(type, features);
@@ -22,6 +23,14 @@ export class CStoreBase extends Context {
     }
 
     _observeChanges() {
+
+        // search box on the navigation bar
+        const searchBox = document.querySelector("#search_suggestion_contents");
+        if (searchBox) {
+            new MutationObserver(mutations => {
+                this.decorateStoreCapsules(mutations[0].addedNodes);
+            }).observe(searchBox, {"childList": true});
+        }
 
         // genre, category, tags etc. pages
         const tabContent = document.querySelector(".tab_content_ctn");
@@ -32,8 +41,7 @@ export class CStoreBase extends Context {
                         const nodes = Array.from(addedNodes)
                             .filter(el => el instanceof Element && el.classList.contains("tab_item"));
 
-                        FHighlightsTags.highlightAndTag(nodes);
-                        FEarlyAccess.show(nodes);
+                        this.decorateStoreCapsules(nodes);
                     }
                 }
             }).observe(tabContent, {"childList": true, "subtree": true});
@@ -50,8 +58,7 @@ export class CStoreBase extends Context {
                         const nodes = Array.from(addedNodes)
                             .filter(el => el instanceof Element && el.querySelector(".friendactivity_game_link") !== null);
 
-                        FHighlightsTags.highlightAndTag(nodes);
-                        FEarlyAccess.show(nodes);
+                        this.decorateStoreCapsules(nodes);
                     }
                 }
             }).observe(friendactivityTab, {"childList": true, "subtree": true});
@@ -65,17 +72,20 @@ export class CStoreBase extends Context {
             "#CuratorsRows", // curators/recommendedcurators
         ].join(","));
 
-        if (!container) { return; }
-
-        new MutationObserver(mutations => {
-            for (const {addedNodes} of mutations) {
-                if (addedNodes.length > 0 && addedNodes[0] instanceof Element) {
-                    const nodes = addedNodes[0].querySelectorAll(".browse_tag_game, .store_capsule, .recommendation");
-
-                    FHighlightsTags.highlightAndTag(nodes);
-                    FEarlyAccess.show(nodes);
+        if (container) {
+            new MutationObserver(mutations => {
+                for (const {addedNodes} of mutations) {
+                    if (addedNodes.length > 0 && addedNodes[0] instanceof Element) {
+                        const nodes = addedNodes[0].querySelectorAll(".browse_tag_game, .store_capsule, .recommendation");
+                        this.decorateStoreCapsules(nodes);
+                    }
                 }
-            }
-        }).observe(container, {"childList": true, "subtree": true});
+            }).observe(container, {"childList": true, "subtree": true});
+        }
+    }
+
+    decorateStoreCapsules(nodes, hasDsInfo) {
+        FHighlightsTags.highlightAndTag(nodes, hasDsInfo);
+        FEarlyAccess.show(nodes);
     }
 }

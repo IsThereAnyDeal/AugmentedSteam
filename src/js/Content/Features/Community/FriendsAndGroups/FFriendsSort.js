@@ -17,7 +17,7 @@ export default class FFriendsSort extends CallbackFeature {
         this._offlineFriends = Array.from(document.querySelectorAll(".friend_block_v2.persona.offline"));
         if (this._offlineFriends.length <= 1) { return; }
 
-        this._offlineFriends.forEach((friend, i) => { friend.dataset.esSortDefault = i; });
+        this._offlineFriends.forEach((friend, i) => { friend.dataset.esSortdefault = i; });
 
         document.querySelector("#manage_friends_control").insertAdjacentElement("beforebegin", Sortbox.get(
             "friends",
@@ -33,43 +33,39 @@ export default class FFriendsSort extends CallbackFeature {
 
     async _sortFriends(sortBy, reversed) {
 
-        const _sortBy = (sortBy === "lastonline" ? "lastonline" : "default");
+        const property = `esSort${sortBy}`;
 
-        if (_sortBy === "lastonline" && !this._friendsFetched) {
+        if (sortBy === "lastonline" && !this._friendsFetched) {
 
             this._friendsFetched = true;
             const data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
             const dom = HTMLParser.htmlToElement(data);
+            const lastOnlineRegex = /Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/;
 
             for (const friend of dom.querySelectorAll(".friend_block_v2.persona.offline")) {
-                let lastOnline = friend.querySelector(".friend_last_online_text");
 
                 // Doesn't exist when profile is private
-                if (lastOnline) {
-                    lastOnline = lastOnline.textContent.match(/Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/);
-                }
+                const lastOnline = friend.querySelector(".friend_last_online_text")?.textContent.match(lastOnlineRegex);
 
                 let downtime = Infinity;
                 if (lastOnline) {
-                    const days = parseInt(lastOnline[1]) || 0;
-                    const hours = parseInt(lastOnline[2]) || 0;
-                    const minutes = parseInt(lastOnline[3]) || 0;
+                    const days = Number(lastOnline[1]) || 0;
+                    const hours = Number(lastOnline[2]) || 0;
+                    const minutes = Number(lastOnline[3]) || 0;
                     downtime = (((days * 24) + hours) * 60) + minutes;
                 }
-                document.querySelector(`.friend_block_v2.persona.offline[data-steamid="${friend.dataset.steamid}"]`).dataset.esSortTime = downtime;
+                document.querySelector(`.friend_block_v2.persona.offline[data-steamid="${friend.dataset.steamid}"]`).dataset[property] = downtime;
             }
         }
 
-        const property = `esSort${_sortBy === "default" ? "Default" : "Time"}`;
         this._offlineFriends.sort((a, b) => Number(a.dataset[property]) - Number(b.dataset[property]));
 
-        const offlineBlock = document.querySelector("#state_offline");
-        for (const friend of this._offlineFriends) {
-            if (reversed) {
-                offlineBlock.insertAdjacentElement("afterend", friend);
-            } else {
-                offlineBlock.parentElement.appendChild(friend);
-            }
+        // reverse if otherwise, because nodes are inserted at the "afterend" position
+        if (!reversed) {
+            this._offlineFriends.reverse();
         }
+
+        const offlineBlock = document.getElementById("state_offline");
+        this._offlineFriends.forEach(friend => offlineBlock.after(friend));
     }
 }

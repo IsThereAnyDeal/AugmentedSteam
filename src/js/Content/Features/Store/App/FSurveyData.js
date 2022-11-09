@@ -1,7 +1,11 @@
-import {Feature} from "../../../Modules/Feature/Feature";
-import {HTML, Localization} from "../../../../modulesCore";
+import CustomizerFeature from "./CustomizerFeature";
+import {Localization} from "../../../../modulesCore";
 
-export default class FSurveyData extends Feature {
+export default class FSurveyData extends CustomizerFeature {
+
+    constructor(context) {
+        super(context, "survey", "show_survey_info", "performance_survey");
+    }
 
     async checkPrerequisites() {
         if (this.context.isDlcLike || this.context.isVideoOrHardware) {
@@ -17,10 +21,9 @@ export default class FSurveyData extends Feature {
         return true;
     }
 
-    apply() {
-
+    getContent() {
         const survey = this._survey;
-        let html = `<div id="performance_survey" class="game_area_description"><h2>${Localization.str.survey.performance_survey}</h2>`;
+        let html = `<h2>${Localization.str.survey.performance_survey}</h2>`;
 
         if (survey.success) {
             html += `<p>${Localization.str.survey.users.replace("__users__", survey.responses)}</p>`;
@@ -69,9 +72,7 @@ export default class FSurveyData extends Feature {
          * }
          */
 
-        html += "</div>";
-
-        HTML.beforeBegin(document.querySelector(".sys_req").parentNode, html);
+        return html;
     }
 
     _getBarHtml(name, data) {

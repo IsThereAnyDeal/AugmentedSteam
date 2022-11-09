@@ -8,7 +8,7 @@ export default class FCustomizer extends Feature {
 
         HTML.afterBegin("#cart_status_data",
             `<div class="store_header_btn_gray store_header_btn" id="es_customize_btn">
-                <div class="es_customize_title">${Localization.str.customize}<img src="//steamstore-a.akamaihd.net/public/images/v6/btn_arrow_down_padded_white.png"></div>
+                <div class="es_customize_title">${Localization.str.customize}<img src="//store.cloudflare.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png"></div>
                 <div class="home_viewsettings_popup">
                     <div class="home_viewsettings_instructions">${Localization.str.apppage_sections}</div>
                 </div>
@@ -67,7 +67,7 @@ export default class FCustomizer extends Feature {
             return el && el.closest(".game_page_autocollapse_ctn");
         }
 
-        const customizer = new FCustomizer.Customizer("customize_apppage");
+        const customizer = new FCustomizer.Customizer("customize_apppage", this.context);
         customizer
             .add("franchisenotice", ".franchise_notice", Localization.str.apppage_franchise)
             .add("eaheader", ".early_access_header:not(.es_coupon_info)", Localization.str.apppage_eaheader)
@@ -76,9 +76,9 @@ export default class FCustomizer extends Feature {
             .add("reviews", "#game_area_reviews")
             .add("about", getParentEl("#game_area_description"))
             .add("contentwarning", getParentEl("#game_area_content_descriptors"))
-            .add("steamchart", "#steam-charts")
-            .add("surveys", "#performance_survey")
-            .add("steamspy", "#steam-spy")
+            .add("steamchart", "#steam-charts", Localization.str.charts.current)
+            .add("survey", "#performance_survey", Localization.str.survey.performance_survey)
+            .add("steamspy", "#steam-spy", Localization.str.spy.player_data)
             .add("sysreq", getParentEl(".sys_req"))
             .add("legal", getParentEl("#game_area_legal"), Localization.str.apppage_legal)
             .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
@@ -99,7 +99,7 @@ export default class FCustomizer extends Feature {
             return el && el.closest(".home_ctn");
         }
 
-        const customizer = new FCustomizer.Customizer("customize_frontpage");
+        const customizer = new FCustomizer.Customizer("customize_frontpage", this.context);
         customizer
             .add("featuredrecommended", ".home_cluster_ctn")
             .add("trendingamongfriends", ".friends_recently_purchased", "", true)
@@ -134,9 +134,10 @@ export default class FCustomizer extends Feature {
 
 FCustomizer.Customizer = class {
 
-    constructor(settingsName) {
+    constructor(settingsName, context) {
         this.settingsName = settingsName;
         this.settings = SyncedStorage.get(settingsName);
+        this.context = context;
     }
 
     _textValue(node) {
@@ -151,20 +152,39 @@ FCustomizer.Customizer = class {
         return str;
     }
 
-    _updateState(name, state) {
-        this.settings[name] = state;
-        SyncedStorage.set(this.settingsName, this.settings);
+    _setEnabled(name, enabled) {
+        const optionName = this.constructor.asFeatures.get(name);
+        if (typeof optionName !== "undefined") {
+            if (enabled) {
+                this.context.triggerCallbacks(name);
+            }
+            return SyncedStorage.set(optionName, enabled);
+        }
+
+        this.settings[name] = enabled;
+        return SyncedStorage.set(this.settingsName, this.settings);
     }
 
-    _getState(name) {
-        const state = this.settings[name];
-        return (typeof state === "undefined") || state;
+    _isEnabled(name) {
+        const optionName = this.constructor.asFeatures.get(name);
+        if (typeof optionName !== "undefined") {
+            return SyncedStorage.get(optionName);
+        }
+
+        const enabled = this.settings[name];
+        return (typeof enabled === "undefined") || enabled;
     }
 
     add(name, targets, text, forceShow = false) {
 
         let _text = text;
         let elements;
+
+        const enabled = this._isEnabled(name);
+
+        if (enabled && this.constructor.asFeatures.has(name)) {
+            this.context.triggerCallbacks(name);
+        }
 
         if (typeof targets === "string") {
             elements = document.querySelectorAll(targets);
@@ -175,10 +195,6 @@ FCustomizer.Customizer = class {
         } else {
             return this;
         }
-
-        if (!elements.length) { return this; }
-
-        const state = this._getState(name);
 
         for (const element of elements) {
 
@@ -191,8 +207,8 @@ FCustomizer.Customizer = class {
                 if (_text === "") { continue; }
             }
  
-            element.classList.toggle("esi-shown", state);
-            element.classList.toggle("esi-hidden", !state);
+            element.classList.toggle("esi-shown", enabled);
+            element.classList.toggle("esi-hidden", !enabled);
             element.classList.add("esi-customizer");
             element.dataset.esName = name;
             element.dataset.esText = _text;
@@ -220,12 +236,12 @@ FCustomizer.Customizer = class {
                 customizerEntries.get(name).push(element);
             } else {
 
-                const state = element.classList.contains("esi-shown");
+                const enabled = element.classList.contains("esi-shown");
                 const text = element.dataset.esText;
 
                 HTML.beforeEnd("#es_customize_btn .home_viewsettings_popup",
                     `<div class="home_viewsettings_checkboxrow ellipsis" id="${name}">
-                        <div class="home_viewsettings_checkbox ${state ? "checked" : ""}"></div>
+                        <div class="home_viewsettings_checkbox ${enabled ? "checked" : ""}"></div>
                         <div class="home_viewsettings_label">${text}</div>
                     </div>`);
 
@@ -236,18 +252,27 @@ FCustomizer.Customizer = class {
         for (const [name, elements] of customizerEntries) {
             const checkboxrow = document.getElementById(name);
             checkboxrow.addEventListener("click", e => {
-                const state = !checkboxrow.querySelector(".checked");
+                const enabled = !checkboxrow.querySelector(".checked");
 
                 for (const element of elements) {
-                    element.classList.toggle("esi-shown", state);
-                    element.classList.toggle("esi-hidden", !state);
+                    element.classList.toggle("esi-shown", enabled);
+                    element.classList.toggle("esi-hidden", !enabled);
                 }
 
                 e.target.closest(".home_viewsettings_checkboxrow")
-                    .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", state);
+                    .querySelector(".home_viewsettings_checkbox").classList.toggle("checked", enabled);
 
-                this._updateState(name, state);
+                this._setEnabled(name, enabled);
             });
         }
     }
 };
+
+/**
+ * Maps customizer keys corresponding to AS features to their respective storage keys
+ */
+FCustomizer.Customizer.asFeatures = new Map([
+    ["steamchart", "show_steamchart_info"],
+    ["survey", "show_survey_info"],
+    ["steamspy", "show_steamspy_info"],
+]);

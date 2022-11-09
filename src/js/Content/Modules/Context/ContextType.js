@@ -8,7 +8,7 @@ export default Object.freeze({
     "REGISTER_KEY": 6,
     "SALE": 7, // unused
     "SEARCH": 8,
-    "STATS": 9,
+    "CHARTS": 9,
     "STORE_FRONT": 10,
     "SUB": 11,
     "WISHLIST": 12,

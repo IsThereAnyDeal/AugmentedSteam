@@ -10,14 +10,6 @@ export default class FHighlightsTags extends Feature {
             window.SteamFacade.onDynamicStoreReady(() => { resolve(); });
         }), null, true);
 
-        const searchBoxContents = document.getElementById("search_suggestion_contents");
-        if (searchBoxContents) {
-            const observer = new MutationObserver(records => {
-                FHighlightsTags.highlightAndTag(records[0].addedNodes);
-            });
-            observer.observe(searchBoxContents, {"childList": true});
-        }
-
         return Promise.all([
             FHighlightsTags.highlightTitle(this.context.appid),
             FHighlightsTags.highlightAndTag(),
@@ -75,17 +67,17 @@ export default class FHighlightsTags extends Feature {
                 nodeToHighlight = node.querySelector(".info");
             } else if (node.classList.contains("home_area_spotlight")) {
                 nodeToHighlight = node.querySelector(".spotlight_content");
-            } else if (node.parentNode.classList.contains("steam_curator_recommendation")
-                && node.parentNode.classList.contains("big")) {
+            } else if (node.parentNode?.classList.contains("steam_curator_recommendation")
+                && node.parentNode?.classList.contains("big")) {
                 nodeToHighlight = node.nextElementSibling;
-            } else if (node.parentNode.parentNode.classList.contains("curations")) {
+            } else if (node.parentNode?.parentNode?.classList.contains("curations")) {
                 nodeToHighlight = node.parentNode;
-            } else if (node.classList.contains("special_img_ctn") && node.parentElement.classList.contains("special")) {
-                nodeToHighlight = node.parentElement;
+            } else if (node.classList.contains("special_img_ctn") && node.parentNode?.classList.contains("special")) {
+                nodeToHighlight = node.parentNode;
             } else if (node.classList.contains("blotter_userstats_game")) {
 
                 // Small game capsules on activity page (e.g. when posting a status about a game)
-                nodeToHighlight = node.parentElement;
+                nodeToHighlight = node.parentNode;
             }
 
             const aNode = node.querySelector("a");
@@ -111,7 +103,7 @@ export default class FHighlightsTags extends Feature {
                 }
             }
 
-        
+
             if (hasDsInfo) {
                 try {
                     if (opts.owned && node.querySelector(".ds_owned_flag") !== null) {
@@ -313,8 +305,8 @@ export default class FHighlightsTags extends Feature {
 
             // Genre Carousel items
             _node = _node.querySelector(".large_cap_content");
-        } else if (_node.parentNode.classList.contains("steam_curator_recommendation")
-            && _node.parentNode.classList.contains("big")) {
+        } else if (_node.parentNode?.classList.contains("steam_curator_recommendation")
+            && _node.parentNode?.classList.contains("big")) {
             _node = _node.previousElementSibling;
         }
 
@@ -323,7 +315,7 @@ export default class FHighlightsTags extends Feature {
             _node = _node.querySelector(".gamelink");
         }
 
-        if (_node.parentNode.parentNode.classList.contains("apps_recommended_by_curators_v2")) {
+        if (_node.parentNode?.parentNode?.classList.contains("apps_recommended_by_curators_v2")) {
             let r = _node.querySelectorAll(".ds_flag");
             r.forEach(node => node.remove());
             r = _node.querySelectorAll(".ds_flagged");
@@ -331,7 +323,7 @@ export default class FHighlightsTags extends Feature {
         } else {
 
             if (_node.classList.contains("info") || _node.classList.contains("spotlight_content")) {
-                _node = _node.parentElement;
+                _node = _node.parentNode;
             }
 
             let r = _node.querySelector(".ds_flag");

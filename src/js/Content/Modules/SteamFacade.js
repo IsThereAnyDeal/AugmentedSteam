@@ -64,6 +64,11 @@ class SteamFacade {
         return UpdatePlaytimeFilterValues(hourMin, hourMax);
     }
 
+    // @param appid required, rest is optional
+    static removeFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2) {
+        return RemoveFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2);
+    }
+
     // events
 
     static bindAutoFlyoutEvents() {
@@ -151,16 +156,12 @@ class SteamFacade {
         CScrollOffsetWatcher.ForceRecalc();
     }
 
-    static vSetCookie(strCookieName, strValue, expiryInDays, path) {
-        V_SetCookie(strCookieName, strValue, expiryInDays, path);
-    }
-
-    static checkAgeGateSubmit(callbackFunc) {
-        CheckAgeGateSubmit(callbackFunc);
-    }
-
     static loadImageGroupOnScroll(elTarget, strGroup) {
         LoadImageGroupOnScroll(elTarget, strGroup);
+    }
+
+    static showModalContent(url, titleBarText, titleBarURL, sizeToFit) {
+        ShowModalContent(url, titleBarText, titleBarURL, sizeToFit);
     }
 
     // inventory
@@ -190,7 +191,12 @@ class SteamFacade {
     }
 
     static zoomYearForSellDialog() {
-        pricehistory_zoomDays(SellItemDialog.m_plotPriceHistory, SellItemDialog.m_timePriceHistoryEarliest, SellItemDialog.m_timePriceHistoryLatest, 365);
+        pricehistory_zoomDays(
+            SellItemDialog.m_plotPriceHistory,
+            SellItemDialog.m_timePriceHistoryEarliest,
+            SellItemDialog.m_timePriceHistoryLatest,
+            365
+        );
     }
 
     // selections

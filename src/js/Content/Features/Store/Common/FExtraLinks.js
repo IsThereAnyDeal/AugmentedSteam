@@ -47,7 +47,64 @@ export default class FExtraLinks extends Feature {
         const appName = typeof this.context.appName === "string" && HTMLParser.clearSpecialSymbols(this.context.appName);
 
         // Note: Links should be rendered in the same order as displayed on the options page
-        const links = [
+        const links = this._getLinks(isAppPage, appName);
+
+        if (isAppPage) {
+
+            if (this.context.isErrorPage) {
+
+                // Add a Community Hub button to roughly where it normally is
+                HTML.beforeBegin("h2.pageheader",
+                    `<div class="es_apphub_OtherSiteInfo">
+                        <a class="btnv6_blue_hoverfade btn_medium" href="//steamcommunity.com/app/${this._gameid}/">
+                            <span>${Localization.str.community_hub}</span>
+                        </a>
+                    </div>`);
+            } else {
+
+                // Move share/embed links to the top of the right column
+                const sideDetails = document.querySelector(".es_side_details_wrap");
+                if (sideDetails) {
+                    sideDetails.insertAdjacentElement("afterend", this._node);
+                } else {
+                    document.querySelector("div.rightcol.game_meta_data").insertAdjacentElement("afterbegin", this._node);
+                }
+            }
+
+            // custom app link
+            for (const customLink of SyncedStorage.get("app_custom_link")) {
+
+                const link = `//${HTML.escape(customLink.url
+                    .replace("[NAME]", appName ? encodeURIComponent(appName) : "")
+                    .replace("[ID]", this._gameid))}`;
+                const text = Localization.str.view_on_website.replace("__website__", HTML.escape(customLink.name));
+                const iconUrl = customLink.icon ? `url(//${HTML.escape(customLink.icon)})` : "none";
+
+                links.push({link, text, iconUrl, "enabled": customLink.enabled});
+            }
+        }
+
+        let html = "";
+        for (const link of links) {
+            if (!link.enabled) { continue; }
+
+            const icon = link.iconClass ? "" : `style="background: ${link.iconUrl}; background-size: contain;"`;
+            html += `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${link.iconClass || ""}" target="_blank" href="${link.link}">
+                        <span><i class="ico16" ${icon}></i>${link.text}</span>
+                    </a>`;
+        }
+
+        if (html) {
+            if (this.context.isErrorPage) {
+                HTML.afterEnd(this._node, `<div class="es_extralinks_ctn">${html}</div>`);
+            } else {
+                HTML.afterBegin(this._node, html);
+            }
+        }
+    }
+
+    _getLinks(isAppPage, appName) {
+        return [
             {
                 "iconClass": "itad_ico",
                 "link": `https://isthereanydeal.com/steam/${this._type}/${this._gameid}/`,
@@ -115,58 +172,5 @@ export default class FExtraLinks extends Feature {
                 "enabled": isAppPage && appName && SyncedStorage.get("showyoutubereviews"),
             },
         ];
-
-        if (isAppPage) {
-
-            if (this.context.isErrorPage) {
-
-                // Add a Community Hub button to roughly where it normally is
-                HTML.beforeBegin("h2.pageheader",
-                    `<div class="es_apphub_OtherSiteInfo">
-                        <a class="btnv6_blue_hoverfade btn_medium" href="//steamcommunity.com/app/${this._gameid}/">
-                            <span>${Localization.str.community_hub}</span>
-                        </a>
-                    </div>`);
-            } else {
-
-                // Move share/embed links to the top of the right column
-                const sideDetails = document.querySelector(".es_side_details_wrap");
-                if (sideDetails) {
-                    sideDetails.insertAdjacentElement("afterend", this._node);
-                } else {
-                    document.querySelector("div.rightcol.game_meta_data").insertAdjacentElement("afterbegin", this._node);
-                }
-            }
-
-            // custom app link
-            for (const customLink of SyncedStorage.get("app_custom_link")) {
-
-                const link = `//${HTML.escape(customLink.url
-                    .replace("[NAME]", appName ? encodeURIComponent(appName) : "")
-                    .replace("[ID]", this._gameid))}`;
-                const text = Localization.str.view_on_website.replace("__website__", HTML.escape(customLink.name));
-                const iconUrl = customLink.icon ? `url(//${HTML.escape(customLink.icon)})` : "none";
-
-                links.push({link, text, iconUrl, "enabled": customLink.enabled});
-            }
-        }
-
-        let html = "";
-        for (const link of links) {
-            if (!link.enabled) { continue; }
-
-            const icon = link.iconClass ? "" : `style="background: ${link.iconUrl}; background-size: contain;"`;
-            html += `<a class="btnv6_blue_hoverfade btn_medium es_app_btn ${link.iconClass || ""}" target="_blank" href="${link.link}">
-                        <span><i class="ico16" ${icon}></i>${link.text}</span>
-                    </a>`;
-        }
-
-        if (html) {
-            if (this.context.isErrorPage) {
-                HTML.afterEnd(this._node, `<div class="es_extralinks_ctn">${html}</div>`);
-            } else {
-                HTML.afterBegin(this._node, html);
-            }
-        }
     }
 }

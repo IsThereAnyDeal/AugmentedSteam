@@ -198,12 +198,7 @@ class CurrencyManager {
 
     static getRate(from, to) {
         if (from === to) { return 1; }
-
-        if (CurrencyManager._rates[from] && CurrencyManager._rates[from][to]) {
-            return CurrencyManager._rates[from][to];
-        }
-
-        return null;
+        return CurrencyManager._rates?.[from]?.[to] ?? null;
     }
 
     static getCurrencySymbolFromString(str) {

@@ -13,11 +13,14 @@ export default class FReplaceCommunityHubLinks extends CallbackFeature {
 
     callback(parent = document) {
 
-        // Don't replace user-provided links i.e. links in announcements/comments
-        const nodes = parent.querySelectorAll(".blotter_block a:not(.bb_link)");
+        const excluded = [
+            ".bb_link", // User-provided links, i.e. links in announcements/comments
+            "[href*='/announcements/detail/']", // Announcement header links
+        ].join(",");
+
+        const nodes = parent.querySelectorAll(`.blotter_block a[href]:not(${excluded})`);
 
         for (const node of nodes) {
-            if (!node.hasAttribute("href")) { continue; }
             node.href = node.href.replace(/steamcommunity\.com\/(?:app|games)/, "store.steampowered.com/app");
         }
     }

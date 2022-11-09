@@ -19,7 +19,8 @@ export class CApp extends CCommunityBase {
         super(type, features);
 
         /*
-         * Get appid from the "All" tab link. (CSharedFiles extends this class and the URL for those pages doesn't contain the appid)
+         * Get appid from the "All" tab link. (CSharedFiles extends this class and the URL for
+         * those pages doesn't contain the appid).
          * The value will be `null` for e.g. Greenlight items that don't have the tabs section.
          * Avoid using the "Store Page" button because it doesn't appear for unlisted apps.
          */

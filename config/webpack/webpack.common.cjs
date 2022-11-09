@@ -53,7 +53,7 @@ module.exports = {
         "js/store/points_shop": "./src/js/Content/Features/Store/PointsShop/PPointsShop.js",
         "js/store/registerkey": "./src/js/Content/Features/Store/RegisterKey/PRegisterKey.js",
         "js/store/search": "./src/js/Content/Features/Store/Search/PSearch.js",
-        "js/store/stats": "./src/js/Content/Features/Store/Stats/PStats.js",
+        "js/store/charts": "./src/js/Content/Features/Store/Charts/PCharts.js",
         "js/store/sub": "./src/js/Content/Features/Store/Sub/PSub.js",
         "js/store/wishlist": "./src/js/Content/Features/Store/Wishlist/PWishlist.js",
         "js/extra/holidayprofile": "./src/js/Steam/holidayprofile.js"

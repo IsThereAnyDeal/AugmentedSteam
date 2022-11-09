@@ -35,7 +35,7 @@ class UpdateHandler {
         }
 
         const logo = ExtensionResources.getURL("img/logo/as128.png");
-        const githubChanges = `<p><a href="https://github.com/IsThereAnyDeal/AugmentedSteam/compare/v${SyncedStorage.get("version")}...v${Info.version}">All changes on GitHub</a></p>`;
+        const githubChanges = `<p><a href="https://github.com/IsThereAnyDeal/AugmentedSteam/compare/v${SyncedStorage.get("version")}...v${Info.version}" target="_blank">All changes on GitHub</a></p>`;
         const dialog = `<div class="es_changelog"><img src="${logo}"><div>${html}${githubChanges}</div></div>`;
 
         const connectBtn = document.querySelector("#itad_connect");
@@ -63,39 +63,6 @@ class UpdateHandler {
     }
 
     static _migrateSettings(oldVersion) {
-
-        if (oldVersion.isSameOrBefore("1.3.1")) {
-            BackgroundSimple.action("cache.clear");
-
-            SyncedStorage.set("horizontalscrolling", SyncedStorage.get("horizontalmediascrolling"));
-            SyncedStorage.remove("horizontalmediascrolling");
-        }
-
-        if (oldVersion.isSameOrBefore("1.4")) {
-            SyncedStorage.remove("show_sysreqcheck");
-        }
-
-        if (oldVersion.isSame("1.4")) {
-            Background.action("migrate.notesToSyncedStorage");
-        }
-
-        if (oldVersion.isSameOrBefore("1.4.1")) {
-            SyncedStorage.set("profile_steamid", SyncedStorage.get("profile_permalink"));
-            SyncedStorage.remove("profile_permalink");
-        }
-
-        if (oldVersion.isSameOrBefore("1.4.3")) {
-            SyncedStorage.remove("contscroll");
-            Background.action("logout");
-        }
-
-        if (oldVersion.isSameOrBefore("1.4.7")) {
-            const emoticons = LocalStorage.get("fav_emoticons");
-            if (Array.isArray(emoticons)) {
-                SyncedStorage.set("fav_emoticons", emoticons);
-            }
-        }
-
         if (oldVersion.isSameOrBefore("2.0.0")) {
             SyncedStorage.remove("showfakeccwarning");
             SyncedStorage.remove("hideaboutlinks");
@@ -138,6 +105,22 @@ class UpdateHandler {
 
         if (oldVersion.isSameOrBefore("2.2.1")) {
             Background.action("migrate.cachestorage");
+        }
+
+        if (oldVersion.isSameOrBefore("2.3.3")) {
+            const options = SyncedStorage.get("customize_apppage");
+            for (const [customizerKey, optionKey] of [
+                ["steamchart", "show_steamchart_info"],
+                ["surveys", "show_survey_info"],
+                ["steamspy", "show_steamspy_info"],
+            ]) {
+                if (Object.prototype.hasOwnProperty.call(options, customizerKey) && typeof options[customizerKey] === "boolean") {
+                    SyncedStorage.set(optionKey, options[customizerKey]);
+                    delete options[customizerKey];
+                }
+            }
+
+            SyncedStorage.set("customize_apppage", options);
         }
     }
 }

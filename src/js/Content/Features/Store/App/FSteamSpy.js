@@ -1,12 +1,14 @@
-import {Feature} from "../../../Modules/Feature/Feature";
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import CustomizerFeature from "./CustomizerFeature";
+import {HTML, Localization} from "../../../../modulesCore";
 
-export default class FSteamSpy extends Feature {
+export default class FSteamSpy extends CustomizerFeature {
+
+    constructor(context) {
+        super(context, "steam-spy", "show_steamspy_info", "steamspy");
+    }
 
     async checkPrerequisites() {
-        if (!SyncedStorage.get("show_steamspy_info")
-            || this.context.isDlcLike
-            || this.context.isVideoOrHardware) {
+        if (this.context.isDlcLike || this.context.isVideoOrHardware) {
             return false;
         }
 
@@ -19,24 +21,20 @@ export default class FSteamSpy extends Feature {
         return true;
     }
 
-    apply() {
-
+    getContent() {
         const owners = this._data.owners.split("..");
         const ownersFrom = HTML.escape(owners[0].trim());
         const ownersTo = HTML.escape(owners[1].trim());
         const averageTotal = this._getTimeString(this._data.average_forever);
         const average2weeks = this._getTimeString(this._data.average_2weeks);
 
-        HTML.beforeBegin(document.querySelector(".sys_req").parentNode,
-            `<div id="steam-spy" class="game_area_description">
-                <h2>${Localization.str.spy.player_data}</h2>
-                <div class="chart-content">
-                    <div class="chart-stat"><span class="num">${ownersFrom}<br>-<br>${ownersTo}</span><br>${Localization.str.spy.owners}</div>
-                    <div class="chart-stat"><span class="num">${averageTotal}</span><br>${Localization.str.spy.average_playtime}</div>
-                    <div class="chart-stat"><span class="num">${average2weeks}</span><br>${Localization.str.spy.average_playtime_2weeks}</div>
-                </div>
-                <span class="chart-footer">${Localization.str.powered_by.replace("__link__", `<a href="https://steamspy.com/app/${this.context.appid}" target="_blank">steamspy.com</a>`)}</span>
-            </div>`);
+        return `<h2>${Localization.str.spy.player_data}</h2>
+            <div class="chart-content">
+                <div class="chart-stat"><span class="num">${ownersFrom}<br>-<br>${ownersTo}</span><br>${Localization.str.spy.owners}</div>
+                <div class="chart-stat"><span class="num">${averageTotal}</span><br>${Localization.str.spy.average_playtime}</div>
+                <div class="chart-stat"><span class="num">${average2weeks}</span><br>${Localization.str.spy.average_playtime_2weeks}</div>
+            </div>
+            <span class="chart-footer">${Localization.str.powered_by.replace("__link__", `<a href="https://steamspy.com/app/${this.context.appid}" target="_blank">steamspy.com</a>`)}</span>`;
     }
 
     _getTimeString(value) {
@@ -45,15 +43,15 @@ export default class FSteamSpy extends Feature {
         const result = [];
 
         const days = Math.trunc(_value / 1440);
-        if (days > 0) { result.push(`${days}d`); }
+        if (days > 0) { result.push(`${Localization.str.spy.playtime_unit_day.replace("__days__", days)}`); }
         _value -= days * 1440;
 
         const hours = Math.trunc(_value / 60);
-        result.push(`${hours}h`);
+        result.push(`${Localization.str.spy.playtime_unit_hour.replace("__hours__", hours)}`);
         _value -= hours * 60;
 
         const minutes = _value;
-        result.push(`${minutes}m`);
+        result.push(`${Localization.str.spy.playtime_unit_minute.replace("__minutes__", minutes)}`);
 
         return result.join(" ");
     }

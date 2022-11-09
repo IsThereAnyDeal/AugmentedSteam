@@ -1,5 +1,5 @@
 import {ExtensionResources, HTML, Language, LocalStorage, Localization, SyncedStorage} from "../../modulesCore";
-import {Background, DOMHelper, User} from "../modulesContent";
+import {Background, User} from "../modulesContent";
 
 import {HorizontalScroller} from "./Widgets/HorizontalScroller";
 import {DynamicStore} from "./Data/DynamicStore";
@@ -56,7 +56,7 @@ class AugmentedSteam {
         if (!SyncedStorage.get("show_backtotop")) { return; }
 
         // Remove Steam's back-to-top button
-        DOMHelper.remove("#BackToTop");
+        document.querySelector("#BackToTop")?.remove();
 
         const btn = document.createElement("div");
         btn.classList.add("es_btt");
@@ -150,7 +150,7 @@ class AugmentedSteam {
     static _handleInstallSteamButton() {
         const option = SyncedStorage.get("installsteam");
         if (option === "hide") {
-            DOMHelper.remove("div.header_installsteam_btn");
+            document.querySelector("div.header_installsteam_btn")?.remove();
         } else if (option === "replace") {
             const btn = document.querySelector("div.header_installsteam_btn > a");
             btn.textContent = Localization.str.viewinclient;
@@ -266,7 +266,7 @@ class AugmentedSteam {
                 Page.runInPageContext((playGameStr, gameid, visitStore) => {
                     const prompt = window.SteamFacade.showConfirmDialog(
                         playGameStr,
-                        `<img src="//steamcdn-a.akamaihd.net/steam/apps/${gameid}/header.jpg">`,
+                        `<img src="//cdn.cloudflare.steamstatic.com/steam/apps/${gameid}/header.jpg">`,
                         null,
                         null,
                         visitStore

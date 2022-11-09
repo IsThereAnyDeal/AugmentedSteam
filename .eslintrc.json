@@ -12,13 +12,59 @@
     "env": {
         "browser": true,
         "webextensions": true,
-        "es6": true
+        "es2021": true
     },
     "globals": {
         "DOMPurify": "readonly",
         "__BROWSER__": "readonly"
     },
-    
+    "overrides": [
+        {
+            "files": "*.cjs",
+            "env": {
+                "node": true,
+                "browser": false,
+                "webextensions": false
+            }
+        },
+        {
+            "files": "*.ts",
+            "extends": "plugin:@typescript-eslint/all",
+            "parserOptions": {
+                "project": ["./tsconfig.json"]
+            },
+            "rules": {
+                "@typescript-ban-tslint-comment": "off", // Not using TSLint
+                "@typescript-eslint/brace-style": ["error", "1tbs", {"allowSingleLine": true}],
+                "@typescript-eslint/comma-dangle": ["error", "only-multiline"],
+                "@typescript-eslint/consistent-type-assertions": ["error", {"assertionStyle": "as", "objectLiteralTypeAssertions": "never"}],
+                "@typescript-eslint/consistent-type-definitions": "off",
+                "@typescript-eslint/consistent-type-exports": ["error", {"fixMixedExportsWithInlineTypeSpecifier": true}],
+                "@typescript-eslint/explicit-module-boundary-types": "off", // Already using explicit-function-return-type
+                "@typescript-eslint/indent": ["error", 4, {"SwitchCase": 1}], // Broken, but should still be useful. Disable with inline comments where necessary
+                "@typescript-eslint/init-declarations": "off",
+                "@typescript-eslint/lines-between-class-members": ["error", "always", {"exceptAfterSingleLine": true}],
+                "@typescript-eslint/naming-convention": "off", // TODO Maybe implement that later?
+                "@typescript-eslint/no-confusing-non-null-assertion": "off",
+                "@typescript-eslint/no-extra-parens": "off",
+                "@typescript-eslint/no-extraneous-class": "off",
+                "@typescript-eslint/no-magic-numbers": ["warn", {"ignore": [0, 1, 24, 60]}],
+                "@typescript-eslint/no-parameter-properties": "off",
+                "@typescript-eslint/no-restricted-imports": "off", // TODO Restrict imports of globals (e.g. DOMPurify)
+                "@typescript-eslint/no-shadow": "off",
+                "@typescript-eslint/no-throw-literal": ["error", {"allowThrowingAny": false, "allowThrowingUnknown": false}],
+                "@typescript-eslint/no-type-alias": "off",
+                "@typescript-eslint/no-unnecessary-type-arguments": "off",
+                "@typescript-eslint/padding-line-between-statements": "off",
+                "@typescript-eslint/prefer-enum-initializers": "off",
+                "@typescript-eslint/prefer-namespace-keyword": "off", // We're using ES2015 modules
+                "@typescript-eslint/quotes": ["error", "double", {"avoidEscape": true}],
+                "@typescript-eslint/sort-type-union-intersection-members": "off",
+                "@typescript-eslint/space-before-function-paren": ["error", "never"],
+                "@typescript-eslint/typedef": "off"
+            }
+        }
+    ],
     "rules": {
         "array-bracket-newline": ["error", "consistent"],
         "array-bracket-spacing": ["error", "never"],
@@ -57,7 +103,7 @@
         "lines-around-comment": ["warn", {"beforeLineComment": false, "beforeBlockComment": true}],
         "lines-between-class-members": ["error", "always", {"exceptAfterSingleLine": true}],
         "max-depth": "warn",
-        "max-len": ["warn", {"code": 132, "ignoreTemplateLiterals": true, "ignoreRegExpLiterals": true, "ignoreUrls": true}],
+        "max-len": ["warn", { "code": 132, "ignoreTemplateLiterals": true, "ignoreRegExpLiterals": true, "ignoreUrls": true }],
         "max-nested-callbacks": ["error", 4],
         "max-statements-per-line": ["error", {"max": 2}],
         "multiline-comment-style": "error",
@@ -110,7 +156,6 @@
         "no-throw-literal": "error",
         "no-trailing-spaces": ["error", {"skipBlankLines": true}],
         "no-undef-init": "error",
-        "no-undefined": "error",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": ["error", {"defaultAssignment": false}],
         "no-unused-expressions": "error",
@@ -166,52 +211,5 @@
         "vars-on-top": "error",
         "wrap-iife": ["error", "inside"],
         "yield-star-spacing": "error"
-    },
-    "overrides": [
-        {
-            "files": "*.cjs",
-            "env": {
-                "node": true,
-                "browser": false,
-                "webextensions": false
-            }
-        },
-        {
-            "files": "*.ts",
-            "extends": "plugin:@typescript-eslint/all",
-            "parserOptions": {
-                "project": ["./tsconfig.json"]
-            },
-            "rules": {
-                "@typescript-ban-tslint-comment": "off", // Not using TSLint
-                "@typescript-eslint/brace-style": ["error", "1tbs", {"allowSingleLine": true}],
-                "@typescript-eslint/comma-dangle": ["error", "only-multiline"],
-                "@typescript-eslint/consistent-type-assertions": ["error", {"assertionStyle": "as", "objectLiteralTypeAssertions": "never"}],
-                "@typescript-eslint/consistent-type-definitions": "off",
-                "@typescript-eslint/consistent-type-exports": ["error", {"fixMixedExportsWithInlineTypeSpecifier": true}],
-                "@typescript-eslint/explicit-module-boundary-types": "off", // Already using explicit-function-return-type
-                "@typescript-eslint/indent": ["error", 4, {"SwitchCase": 1}], // Broken, but should still be useful. Disable with inline comments where necessary
-                "@typescript-eslint/init-declarations": "off",
-                "@typescript-eslint/lines-between-class-members": ["error", "always", {"exceptAfterSingleLine": true}],
-                "@typescript-eslint/naming-convention": "off", // TODO Maybe implement that later?
-                "@typescript-eslint/no-confusing-non-null-assertion": "off",
-                "@typescript-eslint/no-extra-parens": "off",
-                "@typescript-eslint/no-extraneous-class": "off",
-                "@typescript-eslint/no-magic-numbers": ["warn", {"ignore": [0, 1, 24, 60]}],
-                "@typescript-eslint/no-parameter-properties": "off",
-                "@typescript-eslint/no-restricted-imports": "off", // TODO Restrict imports of globals (e.g. DOMPurify)
-                "@typescript-eslint/no-shadow": "off",
-                "@typescript-eslint/no-throw-literal": ["error", {"allowThrowingAny": false, "allowThrowingUnknown": false}],
-                "@typescript-eslint/no-type-alias": "off",
-                "@typescript-eslint/no-unnecessary-type-arguments": "off",
-                "@typescript-eslint/padding-line-between-statements": "off",
-                "@typescript-eslint/prefer-enum-initializers": "off",
-                "@typescript-eslint/prefer-namespace-keyword": "off", // We're using ES2015 modules
-                "@typescript-eslint/quotes": ["error", "double", {"avoidEscape": true}],
-                "@typescript-eslint/sort-type-union-intersection-members": "off",
-                "@typescript-eslint/space-before-function-paren": ["error", "never"],
-                "@typescript-eslint/typedef": "off"
-            }
-        }
-    ]
+    }
 }

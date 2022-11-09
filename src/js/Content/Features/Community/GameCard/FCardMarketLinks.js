@@ -28,22 +28,23 @@ export default class FCardMarketLinks extends Feature {
                 .replace(/&amp;/g, "&")
                 .replace(/\(\d+\)/g, "")
                 .trim();
-            let cardData = data[cardName] || data[`${cardName} (Trading Card)`];
-            if (this.context.isFoil) {
-                cardData = data[`${cardName} (Foil)`] || data[`${cardName} (Foil Trading Card)`];
+
+            const cardData = this.context.isFoil
+                ? data[`${cardName} (Foil)`] || data[`${cardName} (Foil Trading Card)`]
+                : data[cardName] || data[`${cardName} (Trading Card)`];
+
+            if (!cardData) { continue; }
+
+            const {url, price = 0} = cardData;
+
+            if (node.classList.contains("unowned")) {
+                cost += price;
             }
 
-            if (cardData) {
-                const marketLink = `https://steamcommunity.com/market/listings/${cardData.url}`;
-                const cardPrice = new Price(cardData.price);
-
-                if (node.classList.contains("unowned")) {
-                    cost += cardPrice.value;
-                }
-
-                if (marketLink && cardPrice) {
-                    HTML.beforeEnd(node, `<a class="es_card_search" href="${marketLink}">${Localization.str.lowest_price} ${cardPrice}</a>`);
-                }
+            if (url && price) {
+                const marketLink = `https://steamcommunity.com/market/listings/${url}`;
+                const cardPrice = new Price(price);
+                HTML.beforeEnd(node, `<a class="es_card_search" href="${marketLink}">${Localization.str.lowest_price} ${cardPrice}</a>`);
             }
         }
 
