@@ -4,6 +4,7 @@ import FFriendsSort from "./FFriendsSort";
 import FInviteFriendsToGroup from "./FInviteFriendsToGroup";
 import FGroupsManageButton from "./FGroupsManageButton";
 import FGroupsSort from "./FGroupsSort";
+import FSetPrimaryGroup from "./FSetPrimaryGroup";
 import {Page} from "../../Page";
 
 import {HTML} from "../../../../modulesCore";
@@ -17,6 +18,7 @@ export class CFriendsAndGroups extends CCommunityBase {
             FInviteFriendsToGroup,
             FGroupsManageButton,
             FGroupsSort,
+            FSetPrimaryGroup,
         ]);
 
         this.myProfile = CommunityUtils.currentUserIsOwner();
@@ -34,6 +36,9 @@ export class CFriendsAndGroups extends CCommunityBase {
             this._moveSearchBar();
             this.triggerCallbacks();
         });
+
+        // FSetPrimaryGroup needs to locate the primary group before sorting changes the order
+        FGroupsSort.dependencies = [FSetPrimaryGroup];
     }
 
     _moveSearchBar() {

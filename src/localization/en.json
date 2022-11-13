@@ -296,7 +296,9 @@
         "select": "Select:",
         "leave": "Leave Groups",
         "selected": "__n__ selected.",
-        "leave_admin_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?"
+        "leave_admin_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?",
+        "primary": "Favorite Group",
+        "set_primary": "Set as featured group"
     },
     "export": {
         "wishlist": "Export wishlist",
