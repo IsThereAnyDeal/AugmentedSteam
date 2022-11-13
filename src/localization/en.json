@@ -531,7 +531,7 @@
         "library_f2p": "Show played free to play games and demos in library",
         "inventory_market_text": "Show Market price on inventory page",
         "send_age_info": "Automatically send age verification and skip mature content warnings",
-        "showdeckcompat": "Always show Steam Deck compatibility status",
+        "showdeckcompat": "Show Steam Deck compatibility ratings in the features list (and fetch the data when it's missing)",
         "removebroadcasts": "Completely remove any live broadcast",
         "exfgls": "Show a notice if app is excluded from Family Sharing",
         "mp4video": "Force videos to be in MP4 format",

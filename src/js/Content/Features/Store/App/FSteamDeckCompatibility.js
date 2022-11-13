@@ -11,12 +11,15 @@ export default class FSteamDeckCompatibility extends Feature {
 
         const compatNode = document.querySelector("[data-featuretarget=deck-verified-results]");
         if (compatNode) {
-            // Move the section to a more prominent position
+            // Move the section to the features list
             document.querySelector("#category_block").insertAdjacentElement("afterbegin", compatNode);
             return;
         }
 
-        // Compat info is not shown in regions where Valve doesn't sell the Steam Deck, or if the game is untested (usually means the status is unknown)
+        /**
+         * This section is hidden in regions where Valve doesn't sell the Steam Deck,
+         * or if the game is untested/under review (usually means the status is unknown).
+         */
         const data = await RequestData.getJson(`https://store.steampowered.com/saleaction/ajaxgetdeckappcompatibilityreport?nAppID=${this.context.appid}`);
         if (!data || !data.success) { return; }
 
