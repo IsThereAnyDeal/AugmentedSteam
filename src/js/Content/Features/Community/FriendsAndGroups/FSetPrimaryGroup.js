@@ -17,17 +17,20 @@ export default class FSetPrimaryGroup extends CallbackFeature {
         const groups = document.querySelectorAll(".group_block");
         if (groups.length === 0) { return; }
 
-        const primaryGroup = document.getElementById("primaryGroupBreak")?.previousElementSibling;
-        if (!primaryGroup || !primaryGroup.classList.contains("group_block")) { return; }
-
-        // Remove old indicator since it doesn't appear for some reason
-        document.getElementById("primaryGroupBreak").remove();
-
         // Indicator for favorite group
         const indicator = HTML.element(`<div class="as_primary_group_text">${Localization.str.groups.primary}</div>`);
 
-        primaryGroup.classList.add("as_primary_group");
-        primaryGroup.querySelector(".group_block_details").append(indicator);
+        const primaryGroupBreak = document.getElementById("primaryGroupBreak");
+        if (primaryGroupBreak) {
+            const primaryGroup = primaryGroupBreak.previousElementSibling;
+            if (primaryGroup?.classList.contains("group_block")) {
+                // Remove old indicator since it doesn't appear for some reason
+                primaryGroupBreak.remove();
+
+                primaryGroup.classList.add("as_primary_group");
+                primaryGroup.querySelector(".group_block_details").append(indicator);
+            }
+        }
 
         for (const group of groups) {
             HTML.afterBegin(group.querySelector(".actions"),
@@ -54,7 +57,7 @@ export default class FSetPrimaryGroup extends CallbackFeature {
                 return;
             }
 
-            document.querySelector(".group_block.as_primary_group").classList.remove("as_primary_group");
+            document.querySelector(".group_block.as_primary_group")?.classList.remove("as_primary_group");
             const group = btn.closest(".group_block");
             group.classList.add("as_primary_group");
             group.querySelector(".group_block_details").append(indicator);
