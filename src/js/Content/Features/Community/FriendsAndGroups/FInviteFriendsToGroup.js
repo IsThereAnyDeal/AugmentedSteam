@@ -15,8 +15,8 @@ export default class FInviteButton extends CallbackFeature {
     callback() {
         if (!document.getElementById("friends_list")) { return; }
 
-        HTML.afterBegin("#manage_friends > div:nth-child(2)",
-            `<span class="manage_action btnv6_lightblue_blue btn_medium" id="invitetogroup">
+        HTML.beforeEnd(".manage_friend_actions_ctn",
+            `<span class="manage_action btnv6_lightblue_blue btn_small" id="es_invite_to_group">
                 <span>${Localization.str.invite_to_group}</span>
             </span>`);
 
@@ -27,13 +27,13 @@ export default class FInviteButton extends CallbackFeature {
             Page.runInPageContext(groupId => {
                 const f = window.SteamFacade;
                 f.toggleManageFriends();
-                f.jqOnClick("#invitetogroup", () => {
+                f.jqOnClick("#es_invite_to_group", () => {
                     const friends = f.getCheckedAccounts("#search_results > .selectable.selected:visible");
                     f.inviteUserToGroup(null, groupId, friends);
                 });
             }, [params.get("invitegid")]);
         } else {
-            document.getElementById("invitetogroup").addEventListener("click", () => {
+            document.getElementById("es_invite_to_group").addEventListener("click", () => {
                 Page.runInPageContext(() => { window.SteamFacade.execFriendAction("group_invite", "friends/all"); });
             });
         }

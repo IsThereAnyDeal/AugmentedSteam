@@ -36,13 +36,14 @@ export default class FGroupsManageButton extends CallbackFeature {
                     </span>
                 </div>
                 <div class="row">
-                    <span class="manage_action anage_action btnv6_lightblue_blue btn_medium btn_uppercase" id="es_leave_groups">
-                        <span>${groupsStr.leave}</span>
-                    </span>
+                    <div class="manage_friend_actions_ctn">
+                        <span class="manage_action btnv6_lightblue_blue btn_small" id="es_leave_groups">
+                            <span>${groupsStr.leave}</span>
+                        </span>
+                    </div>
                     <span id="selected_msg_err" class="selected_msg error hidden"></span>
                     <span id="selected_msg" class="selected_msg hidden">${groupsStr.selected.replace("__n__", '<span id="selected_count"></span>')}</span>
                 </div>
-                <div class="row"></div>
             </div>`);
 
         for (const group of groups) {
