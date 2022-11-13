@@ -15,8 +15,8 @@ export default class FGroupsManageButton extends CallbackFeature {
     callback() {
         if (!document.getElementById("groups_list")) { return; }
 
-        this._groups = Array.from(document.querySelectorAll(".group_block"));
-        if (this._groups.length === 0) { return; }
+        const groups = document.querySelectorAll(".group_block");
+        if (groups.length === 0) { return; }
 
         const groupsStr = Localization.str.groups;
 
@@ -45,7 +45,7 @@ export default class FGroupsManageButton extends CallbackFeature {
                 <div class="row"></div>
             </div>`);
 
-        for (const group of this._groups) {
+        for (const group of groups) {
             group.classList.add("selectable");
             HTML.afterBegin(group,
                 `<div class="indicator select_friend">
@@ -81,10 +81,7 @@ export default class FGroupsManageButton extends CallbackFeature {
     async _leaveGroups() {
         const selected = [];
 
-        for (const group of this._groups) {
-            if (!group.classList.contains("selected")) {
-                continue;
-            }
+        for (const group of document.querySelectorAll(".group_block.selected")) {
 
             const actions = group.querySelector(".actions");
             const admin = actions.querySelector("[href*='/edit']");
@@ -121,8 +118,8 @@ export default class FGroupsManageButton extends CallbackFeature {
                         continue;
                     }
 
-                    group.style.opacity = "0.3";
-                    group.querySelector(".select_friend").click();
+                    // Make sure to remove the row so it doesn't show up again when filtering
+                    group.remove();
                 }
             }
         }
