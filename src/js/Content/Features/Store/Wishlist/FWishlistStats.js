@@ -1,4 +1,4 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {Feature, Messenger, Price} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -44,8 +44,13 @@ export default class FWishlistStats extends Feature {
             node.textContent = hiddenApps.length;
             node.parentNode.style.display = "";
 
+            const icons = {
+                "itad": ExtensionResources.getURL("img/itad.png"),
+                "steamdb": ExtensionResources.getURL("img/ico/steamdb.png"),
+            };
+
             node.addEventListener("click", () => {
-                Page.runInPageContext((hiddenApps, viewStr, removeStr, wlStr) => {
+                Page.runInPageContext((hiddenApps, icons, removeStr, wlStr) => {
                     const f = window.SteamFacade;
                     const g = f.global;
                     const canEdit = g("g_bCanEdit"); // `true` if logged in and viewing own wishlist
@@ -60,8 +65,8 @@ export default class FWishlistStats extends Feature {
                             <a href="//steamcommunity.com/app/${appid}/discussions/" target="_blank">
                                 <img src="//cdn.cloudflare.steamstatic.com/steam/apps/${appid}/header_292x136.jpg" loading="lazy">
                             </a>
-                            <a href="https://isthereanydeal.com/steam/app/${appid}/" target="_blank">${viewStr.replace("__website__", "IsThereAnyDeal")}</a>
-                            <a href="https://steamdb.info/app/${appid}/" target="_blank">${viewStr.replace("__website__", "SteamDB")}</a>
+                            <a href="https://isthereanydeal.com/steam/app/${appid}/" target="_blank"><img src="${icons.itad}" title="ITAD"></a>
+                            <a href="https://steamdb.info/app/${appid}/" target="_blank"><img src="${icons.steamdb}" title="SteamDB"></a>
                             ${canEdit ? `<span class="as-wl-remove">${removeStr}</span>` : ""}
                         </div>`;
                     }
@@ -95,7 +100,7 @@ export default class FWishlistStats extends Feature {
                 },
                 [
                     hiddenApps,
-                    Localization.str.view_on_website,
+                    icons,
                     Localization.str.remove,
                     Localization.str.wl
                 ]);

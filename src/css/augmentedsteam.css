@@ -531,6 +531,7 @@ img.astats_icon {
 .as-wl-remove-row {
   display: flex;
   align-items: center;
+  column-gap: 30px;
   margin-bottom: 5px;
   background-color: rgba(0, 0, 0, 0.2);
 }
@@ -542,17 +543,12 @@ img.astats_icon {
   width: 162px;
   height: 75px;
 }
-.as-wl-remove-row img {
+.as-wl-remove-row > a:first-child img {
   width: 162px;
-}
-.as-wl-remove-row > a:not(:first-child) {
-  margin-left: 30px;
-}
-.as-wl-remove-row > a:last-of-type {
-  margin-right: 30px;
 }
 .as-wl-remove {
   margin-right: 5px;
+  margin-left: auto;
   text-decoration: underline;
 }
 .as-wl-remove:hover {
