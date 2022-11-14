@@ -164,29 +164,6 @@ class AugmentedSteam {
         }
     }
 
-    static _disableLinkFilter() {
-        if (!SyncedStorage.get("disablelinkfilter")) { return; }
-
-        function removeLinkFilter(parent = document) {
-            const selector = "a[href*='/linkfilter/']";
-
-            for (const link of parent.querySelectorAll(selector)) {
-                link.href = new URLSearchParams(link.search).get("url");
-            }
-        }
-
-        removeLinkFilter();
-
-        new MutationObserver(mutations => {
-            for (const mutation of mutations) {
-                for (const node of mutation.addedNodes) {
-                    if (node.nodeType !== Node.ELEMENT_NODE) { continue; }
-                    removeLinkFilter(node);
-                }
-            }
-        }).observe(document, {"childList": true, "subtree": true});
-    }
-
     static _addRedeemLink() {
         HTML.beforeBegin(
             "#account_language_pulldown",
@@ -344,7 +321,6 @@ class AugmentedSteam {
         AugmentedSteam._addMenu();
         AugmentedSteam._addLanguageWarning();
         AugmentedSteam._handleInstallSteamButton();
-        AugmentedSteam._disableLinkFilter();
         AugmentedSteam._skipGotSteam();
         AugmentedSteam._keepSteamSubscriberAgreementState();
         AugmentedSteam._defaultCommunityTab();
