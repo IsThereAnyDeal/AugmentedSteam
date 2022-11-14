@@ -104,8 +104,7 @@ export default class FEarlyAccess extends Feature {
 }
 
 // TODO support React-based sales pages, curator lists, etc.
-FEarlyAccess._selector = [
-    // Store only, selectors for the Community are split into relevant contexts
+const storeSelectors = [
     ".tab_item", // Item rows on storefront, genre, category, tags etc. pages
     ".quadscreenshot_carousel a", // Top carousel on genre, category, tags etc. pages
     ".newonsteam_headercap", // explore/new
@@ -136,5 +135,17 @@ FEarlyAccess._selector = [
     ".recommendation_carousel_item",
     ".app_header",
     ".friendplaytime_appheader",
-].map(sel => `${sel}:not(.es_ea_checked)`)
+];
+
+const communitySelectors = [
+    // Selectors for Profile Home are split out due to issues with running them on my/edit/showcases
+    ".gameListRowLogo", // my/games
+    ".gameLogo", // Various game community pages e.g. global/personal achievements
+    ".blotter_gamepurchase_logo", // activity home
+    ".gameLogoHolder_default", // activity home, individual reviews
+    ".game_capsule_ctn", // reviews list
+];
+
+FEarlyAccess._selector = (window.location.hostname === "store.steampowered.com" ? storeSelectors : communitySelectors)
+    .map(sel => `${sel}:not(.es_ea_checked)`)
     .join(",");

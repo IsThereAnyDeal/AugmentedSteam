@@ -1,6 +1,5 @@
 import ContextType from "../../../Modules/Context/ContextType";
 import {CCommunityBase} from "../CCommunityBase";
-import FEarlyAccess from "../../Common/FEarlyAccess";
 import FFixAppImageNotFound from "../FFixAppImageNotFound";
 import FGamesStats from "./FGamesStats";
 import FCommonGames from "./FCommonGames";
@@ -22,8 +21,6 @@ export class CGames extends CCommunityBase {
             FCommonGames,
             FGamelistAchievements,
         ]);
-
-        FEarlyAccess.show(document.querySelectorAll(".gameListRowLogo"));
 
         this.showStats = new URLSearchParams(window.location.search).get("tab") === "all";
     }
