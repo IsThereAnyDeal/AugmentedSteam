@@ -5,7 +5,6 @@ import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
 import {Language} from "../../Core/Localization/Language";
 import {LocalStorage} from "../../Core/Storage/LocalStorage";
 import {Background} from "./Background";
-import {HorizontalScroller} from "./Widgets/HorizontalScroller";
 import {DynamicStore} from "./Data/DynamicStore";
 import {User} from "./User";
 import {Page} from "../Features/Page";
@@ -258,18 +257,6 @@ class AugmentedSteam {
         }
     }
 
-    static _horizontalScrolling() {
-        if (!SyncedStorage.get("horizontalscrolling")) { return; }
-
-        for (const node of document.querySelectorAll(".slider_ctn:not(.spotlight)")) {
-            HorizontalScroller.create(
-                node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
-                node.querySelector(".slider_left"),
-                node.querySelector(".slider_right"),
-            );
-        }
-    }
-
     static addLoginWarning(type) {
         if (AugmentedSteam._loginWarningAdded || LocalStorage.get(`hide_login_warn_${type}`)) { return; }
 
@@ -302,7 +289,6 @@ class AugmentedSteam {
         AugmentedSteam._addLanguageWarning();
         AugmentedSteam._handleInstallSteamButton();
         AugmentedSteam._defaultCommunityTab();
-        AugmentedSteam._horizontalScrolling();
         AugmentedSteam._cartLink();
 
         if (User.isSignedIn) {

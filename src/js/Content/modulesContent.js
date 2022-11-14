@@ -13,7 +13,6 @@ export {Feature} from "./Modules/Feature/Feature";
 export {FeatureManager} from "./Modules/Feature/FeatureManager";
 
 export {ConfirmDialog} from "./Modules/Widgets/ConfirmDialog";
-export {HorizontalScroller} from "./Modules/Widgets/HorizontalScroller";
 export {ProgressBar} from "./Modules/Widgets/ProgressBar";
 export {Sortbox} from "./Modules/Widgets/SortBox";
 
