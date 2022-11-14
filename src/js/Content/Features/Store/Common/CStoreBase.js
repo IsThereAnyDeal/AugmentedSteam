@@ -2,6 +2,7 @@ import {Context, ContextType} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 import FEarlyAccess from "../../Common/FEarlyAccess";
 import FHideTrademarks from "../../Common/FHideTrademarks";
+import FBackToTop from "../../Common/FBackToTop";
 import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
 import FFocusSearch from "./FFocusSearch";
 
@@ -13,6 +14,7 @@ export class CStoreBase extends Context {
             FHighlightsTags,
             FEarlyAccess,
             FHideTrademarks,
+            FBackToTop,
             FAlternativeLinuxIcon,
             FFocusSearch,
         );
