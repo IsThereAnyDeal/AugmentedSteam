@@ -16,6 +16,21 @@ export default {
             ["replace", "options.replace_view_client"]
         ]
     ],
+    "community_default_tab": [
+        "options.community_default_tab",
+        [
+            ["", "all"],
+            ["discussions", "discussions"],
+            ["screenshots", "options.screenshots"],
+            ["images", "options.artwork"],
+            ["broadcasts", "options.broadcasts"],
+            ["videos", "options.videos"],
+            ["workshop", "workshop.workshop"],
+            ["allnews", "news"],
+            ["guides", "guides"],
+            ["reviews", "reviews"],
+        ]
+    ],
 
     // context menu
     "context_steam_store": "options.context_steam_store",
@@ -173,21 +188,6 @@ export default {
             ["gray", "options.profile_link_images_gray"],
             ["color", "options.profile_link_images_color"],
             ["none", "options.profile_link_images_none"]
-        ]
-    ],
-    "community_default_tab": [
-        "options.community_default_tab",
-        [
-            ["", "all"],
-            ["discussions", "discussions"],
-            ["screenshots", "options.screenshots"],
-            ["images", "options.artwork"],
-            ["broadcasts", "options.broadcasts"],
-            ["videos", "options.videos"],
-            ["workshop", "workshop.workshop"],
-            ["allnews", "news"],
-            ["guides", "guides"],
-            ["reviews", "reviews"],
         ]
     ],
     "showallachievements": "options.showallachievements",

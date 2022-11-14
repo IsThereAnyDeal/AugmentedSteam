@@ -242,21 +242,6 @@ class AugmentedSteam {
         });
     }
 
-    static _defaultCommunityTab() {
-        const tab = SyncedStorage.get("community_default_tab");
-        if (!tab) { return; }
-
-        const links = document.querySelectorAll("a[href^='https://steamcommunity.com/app/']");
-        for (const link of links) {
-            if (link.classList.contains("apphub_sectionTab")) { continue; }
-            if (!/^\/app\/[0-9]+\/?$/.test(link.pathname)) { continue; }
-            if (!link.pathname.endsWith("/")) {
-                link.pathname += "/";
-            }
-            link.pathname += `${tab}/`;
-        }
-    }
-
     static addLoginWarning(type) {
         if (AugmentedSteam._loginWarningAdded || LocalStorage.get(`hide_login_warn_${type}`)) { return; }
 
@@ -288,7 +273,6 @@ class AugmentedSteam {
         AugmentedSteam._addMenu();
         AugmentedSteam._addLanguageWarning();
         AugmentedSteam._handleInstallSteamButton();
-        AugmentedSteam._defaultCommunityTab();
         AugmentedSteam._cartLink();
 
         if (User.isSignedIn) {

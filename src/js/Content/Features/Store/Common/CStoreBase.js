@@ -5,6 +5,7 @@ import FHideTrademarks from "../../Common/FHideTrademarks";
 import FBackToTop from "../../Common/FBackToTop";
 import FDisableLinkFilter from "../../Common/FDisableLinkFilter";
 import FKeepSSACheckboxState from "../../Common/FKeepSSACheckboxState";
+import FDefaultCommunityTab from "../../Common/FDefaultCommunityTab";
 import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
 import FSkipGotSteamDialog from "./FSkipGotSteamDialog";
 import FHorizontalScrolling from "./FHorizontalScrolling";
@@ -21,6 +22,7 @@ export class CStoreBase extends Context {
             FBackToTop,
             FDisableLinkFilter,
             FKeepSSACheckboxState,
+            FDefaultCommunityTab,
             FAlternativeLinuxIcon,
             FSkipGotSteamDialog,
             FHorizontalScrolling,
