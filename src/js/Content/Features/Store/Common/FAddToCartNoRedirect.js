@@ -10,6 +10,9 @@ export default class FAddToCartNoRedirect extends Feature {
 
     apply() {
 
+        // This feature has different behavior on wishlists vs store pages
+        const onWishlist = this.context.type === ContextType.WISHLIST;
+
         function getFormEl(href) {
 
             let formName;
@@ -45,10 +48,10 @@ export default class FAddToCartNoRedirect extends Feature {
 
             e.preventDefault();
 
-            AddToCart.post(form);
+            AddToCart.post(form, onWishlist, node);
         }
 
-        if (this.context.type === ContextType.WISHLIST) {
+        if (onWishlist) {
             document.addEventListener("click", handler);
         } else {
             for (const node of document.querySelectorAll(".btn_addtocart > a[href^=javascript]")) {
