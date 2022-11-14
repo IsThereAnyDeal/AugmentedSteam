@@ -252,17 +252,6 @@ class AugmentedSteam {
         });
     }
 
-    static _keepSteamSubscriberAgreementState() {
-        const nodes = document.querySelectorAll("#market_sell_dialog_accept_ssa,#market_buyorder_dialog_accept_ssa,#accept_ssa");
-        for (const node of nodes) {
-            node.checked = SyncedStorage.get("keepssachecked");
-
-            node.addEventListener("click", () => {
-                SyncedStorage.set("keepssachecked", !SyncedStorage.get("keepssachecked"));
-            });
-        }
-    }
-
     static _defaultCommunityTab() {
         const tab = SyncedStorage.get("community_default_tab");
         if (!tab) { return; }
@@ -322,7 +311,6 @@ class AugmentedSteam {
         AugmentedSteam._addLanguageWarning();
         AugmentedSteam._handleInstallSteamButton();
         AugmentedSteam._skipGotSteam();
-        AugmentedSteam._keepSteamSubscriberAgreementState();
         AugmentedSteam._defaultCommunityTab();
         AugmentedSteam._horizontalScrolling();
         AugmentedSteam._cartLink();
