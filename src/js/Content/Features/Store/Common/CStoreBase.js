@@ -6,6 +6,7 @@ import FBackToTop from "../../Common/FBackToTop";
 import FDisableLinkFilter from "../../Common/FDisableLinkFilter";
 import FKeepSSACheckboxState from "../../Common/FKeepSSACheckboxState";
 import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
+import FSkipGotSteamDialog from "./FSkipGotSteamDialog";
 import FFocusSearch from "./FFocusSearch";
 
 export class CStoreBase extends Context {
@@ -20,6 +21,7 @@ export class CStoreBase extends Context {
             FDisableLinkFilter,
             FKeepSSACheckboxState,
             FAlternativeLinuxIcon,
+            FSkipGotSteamDialog,
             FFocusSearch,
         );
 

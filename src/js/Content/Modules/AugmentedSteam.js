@@ -243,15 +243,6 @@ class AugmentedSteam {
         });
     }
 
-    static _skipGotSteam() {
-        if (!SyncedStorage.get("skip_got_steam")) { return; }
-
-        // https://github.com/SteamDatabase/SteamTracking/blob/cdf367ce61926a896fe54d710b3ed25d66d7e333/store.steampowered.com/public/javascript/game.js#L1785
-        Page.runInPageContext(() => {
-            window.ShowGotSteamModal = function(steamUrl) { window.location.assign(steamUrl); };
-        });
-    }
-
     static _defaultCommunityTab() {
         const tab = SyncedStorage.get("community_default_tab");
         if (!tab) { return; }
@@ -310,7 +301,6 @@ class AugmentedSteam {
         AugmentedSteam._addMenu();
         AugmentedSteam._addLanguageWarning();
         AugmentedSteam._handleInstallSteamButton();
-        AugmentedSteam._skipGotSteam();
         AugmentedSteam._defaultCommunityTab();
         AugmentedSteam._horizontalScrolling();
         AugmentedSteam._cartLink();
