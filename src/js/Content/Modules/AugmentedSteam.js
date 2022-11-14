@@ -118,10 +118,12 @@ class AugmentedSteam {
                 () => { SyncedStorage.set("showlanguagewarning", false); }
             );
 
-            document.querySelector("#es_reset_language_code").addEventListener("click", (e) => {
+            document.querySelector("#es_reset_language_code").addEventListener("click", e => {
                 e.preventDefault();
-                // eslint-disable-next-line no-undef, new-cap
-                Page.runInPageContext(warningLanguage => { ChangeLanguage(warningLanguage); }, [warningLanguage]);
+
+                Page.runInPageContext(language => {
+                    window.SteamFacade.changeLanguage(language);
+                }, [warningLanguage]);
             });
         });
     }
