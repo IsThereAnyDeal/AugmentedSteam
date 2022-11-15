@@ -46,6 +46,7 @@ module.exports = {
         "js/store/agecheck": "./src/js/Content/Features/Store/AgeCheck/PAgecheck.js",
         "js/store/app": "./src/js/Content/Features/Store/App/PApp.js",
         "js/store/bundle": "./src/js/Content/Features/Store/Bundle/PBundle.js",
+        "js/store/cart": "./src/js/Content/Features/Store/Cart/PCart.js",
         "js/store/default": "./src/js/Content/Features/Store/PDefaultStore.js",
         "js/store/frontpage": "./src/js/Content/Features/Store/Storefront/PStoreFront.js",
         "js/store/funds": "./src/js/Content/Features/Store/Funds/PFunds.js",

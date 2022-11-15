@@ -6,7 +6,7 @@ export default Object.freeze({
     "STORE_DEFAULT": 4,
     "FUNDS": 5,
     "REGISTER_KEY": 6,
-    "SALE": 7, // unused
+    "CART": 7,
     "SEARCH": 8,
     "CHARTS": 9,
     "STORE_FRONT": 10,
