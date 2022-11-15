@@ -9,37 +9,38 @@ export default class FBackgroundPreviewLink extends Feature {
 
     apply() {
 
-        new MutationObserver(async mutations => {
-            for (const {addedNodes} of mutations) {
-                if (addedNodes.length !== 1 || !addedNodes[0].classList.contains("active")) { continue; }
+        // Steam has changed things several times already, now this modal element is always present
+        const modalEl = document.querySelector(".FullModalOverlay");
+        if (!modalEl) { return; }
 
-                const previewEl = await new Promise(resolve => {
-                    new MutationObserver((mutations, observer) => {
-                        observer.disconnect();
-                        resolve(mutations[0]
-                            .addedNodes[0]
-                            .querySelector("[class*=redeempointsmodal_PreviewBackgroundContainer]")
-                            ?.lastElementChild);
-                    }).observe(addedNodes[0], {"childList": true, "subtree": true});
-                });
+        /*
+         * Also need to test hen viewing the item directly, e.g.
+         * https://store.steampowered.com/points/shop/c/backgrounds/reward/150370/
+         */
+        new MutationObserver(mutations => {
+            const container = mutations[0].addedNodes[0];
+            if (!container?.classList?.contains("ModalPosition")) { return; }
 
-                if (!previewEl) { continue; }
+            const previewEl = container
+                .querySelector("[class*=redeempointsmodal_PreviewBackgroundContainer]")
+                ?.lastElementChild;
 
-                let bgLink = (previewEl instanceof HTMLVideoElement)
-                    ? previewEl.querySelector("source").src // Use the first source (usually webm format, should be well supported)
-                    : previewEl.style.backgroundImage;
+            if (!previewEl) { return; }
 
-                bgLink = bgLink.match(/images\/items\/(\d+)\/([a-z0-9.]+)/i);
+            let bgLink = (previewEl instanceof HTMLVideoElement)
+                ? previewEl.querySelector("source").src // Use the first source (usually webm format, should be well supported)
+                : previewEl.style.backgroundImage;
 
-                if (bgLink) {
-                    HTML.beforeBegin(addedNodes[0].querySelector("[class*=redeempointsmodal_BackgroundPreviewContainer]"),
-                        `<div class="as_preview_background_ctn">
-                            <a class="as_preview_background" target="_blank" href="${User.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
-                                ${Localization.str.preview_background}
-                            </a>
-                        </div>`);
-                }
-            }
-        }).observe(document.querySelector(".FullModalOverlay"), {"childList": true});
+            bgLink = bgLink.match(/images\/items\/(\d+)\/([a-z0-9.]+)/i);
+
+            if (!bgLink) { return; }
+
+            HTML.beforeBegin(container.querySelector("[class*=redeempointsmodal_BackgroundPreviewContainer]"),
+                `<div class="as_preview_background_ctn">
+                    <a class="as_preview_background" target="_blank" href="${User.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
+                        ${Localization.str.preview_background}
+                    </a>
+                </div>`);
+        }).observe(modalEl, {"childList": true, "subtree": true});
     }
 }
