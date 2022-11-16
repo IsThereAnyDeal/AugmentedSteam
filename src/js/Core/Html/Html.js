@@ -76,7 +76,7 @@ class HTML {
         return _wrapper;
     }
 
-    static adjacent(node, position, html) {
+    static _adjacent(node, position, html) {
         const _node = HTML._getNode(node);
 
         if (_node) {
@@ -86,19 +86,19 @@ class HTML {
     }
 
     static beforeBegin(node, html) {
-        HTML.adjacent(node, "beforebegin", html);
+        HTML._adjacent(node, "beforebegin", html);
     }
 
     static afterBegin(node, html) {
-        HTML.adjacent(node, "afterbegin", html);
+        HTML._adjacent(node, "afterbegin", html);
     }
 
     static beforeEnd(node, html) {
-        HTML.adjacent(node, "beforeend", html);
+        HTML._adjacent(node, "beforeend", html);
     }
 
     static afterEnd(node, html) {
-        HTML.adjacent(node, "afterend", html);
+        HTML._adjacent(node, "afterend", html);
     }
 }
 
