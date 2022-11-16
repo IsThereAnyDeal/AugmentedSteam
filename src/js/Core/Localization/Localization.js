@@ -26,10 +26,6 @@ class Localization {
 
             // Object.assign() but deep-assigning objects recursively
             for (const [key, val] of Object.entries(source)) {
-                if (typeof target[key] === "undefined") {
-                    console.warn("The key %s doesn't exist in the English localization file", key);
-                    continue;
-                }
                 if (typeof val === "object") {
                     deepAssign(target[key], val);
                 } else if (val !== "") {
