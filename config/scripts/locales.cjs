@@ -45,6 +45,7 @@ async function loadLanguage(languageCode) {
     data.append("id", Config.projectId);
     data.append("language", languageCode);
     data.append("type", "key_value_json");
+    data.append("filters", JSON.stringify(["translated", "not_fuzzy"]));
 
     let result = await axios.post(Config.exportUrl, data, {"headers": data.getHeaders()});
     const response = result.data;
