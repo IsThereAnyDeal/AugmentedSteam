@@ -1,4 +1,4 @@
-import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../../modulesCore";
+import {HTML, Localization, StringUtils, SyncedStorage} from "../../../../modulesCore";
 import {ContextType, Feature} from "../../../modulesContent";
 
 export default class FExtraLinks extends Feature {
@@ -44,7 +44,7 @@ export default class FExtraLinks extends Feature {
     apply() {
 
         const isAppPage = this._type === "app";
-        const appName = typeof this.context.appName === "string" && HTMLParser.clearSpecialSymbols(this.context.appName);
+        const appName = typeof this.context.appName === "string" && StringUtils.clearSpecialSymbols(this.context.appName);
 
         // Note: Links should be rendered in the same order as displayed on the options page
         const links = this._getLinks(isAppPage, appName);

@@ -1,5 +1,6 @@
 import {CookieStorage} from "../../Core/Storage/CookieStorage";
 import {HTMLParser} from "../../Core/Html/HtmlParser";
+import {StringUtils} from "../../Core/Utils/StringUtils";
 import {Background} from "./Background";
 import {RequestData} from "./RequestData";
 
@@ -101,7 +102,7 @@ class User {
     }
 
     static getPurchaseDate(lang, appName) {
-        const _appName = HTMLParser.clearSpecialSymbols(appName);
+        const _appName = StringUtils.clearSpecialSymbols(appName);
         return Background.action("purchases", _appName, lang);
     }
 

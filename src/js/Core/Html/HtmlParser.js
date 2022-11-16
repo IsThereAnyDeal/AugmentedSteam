@@ -1,10 +1,6 @@
 
 class HTMLParser {
 
-    static clearSpecialSymbols(string) {
-        return string.replace(/[\u00AE\u00A9\u2122]/g, "");
-    }
-
     static getVariableFromText(text, name, type) {
         let regex;
         if (typeof name === "string") {

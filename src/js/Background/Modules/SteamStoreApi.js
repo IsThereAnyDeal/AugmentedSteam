@@ -1,6 +1,7 @@
 import {HTML} from "../../Core/Html/Html";
 import {HTMLParser} from "../../Core/Html/HtmlParser";
 import {Errors} from "../../Core/Errors/Errors";
+import {StringUtils} from "../../Core/Utils/StringUtils";
 import {Api} from "./Api";
 import {IndexedDB} from "./IndexedDB";
 import {CacheStorage} from "./CacheStorage";
@@ -149,7 +150,7 @@ class SteamStoreApi extends Api {
             const removeNode = name.querySelector("div");
             if (removeNode) { removeNode.remove(); }
 
-            let appName = HTMLParser.clearSpecialSymbols(name.textContent.trim());
+            let appName = StringUtils.clearSpecialSymbols(name.textContent.trim());
             for (const regex of replaceRegex) {
                 appName = appName.replace(regex, "");
             }
