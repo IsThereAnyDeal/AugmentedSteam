@@ -12,13 +12,14 @@ export default class FShowCoupon extends Feature {
         if (!coupon) { return; }
 
         const couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, (m0, m1) => { return new Date(m1 * 1000).toLocaleString(); });
+        const learnMore = Localization.str.coupon_learn_more;
 
         HTML.beforeBegin("#game_area_purchase",
             `<div class="early_access_header es_coupon_info">
                 <div class="heading">
                     <h1 class="inset">${Localization.str.coupon_available}</h1>
                     <h2 class="inset">${Localization.str.coupon_application_note}</h2>
-                    <p>${Localization.str.coupon_learn_more}</p>
+                    <p>${learnMore.full_text.replace("__linkdesc__", `<a href="https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275">${learnMore.link_text}</a>`)}</p>
                 </div>
                 <div class="devnotes">
                     <div style="display:flex;padding-top:10px">

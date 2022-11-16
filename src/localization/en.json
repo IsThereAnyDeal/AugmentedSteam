@@ -152,7 +152,10 @@
     "language": "Language",
     "theworddefault": "Default",
     "thewordclear": "Clear",
-    "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Learn more</a> about Steam Coupons",
+    "coupon_learn_more": {
+        "link_text": "Learn more",
+        "full_text": "__linkdesc__ about Steam Coupons"
+    },
     "show": "Show",
     "show_all": "Show All",
     "badges_all": "All Badges",
@@ -425,13 +428,6 @@
         "main": "Main Story",
         "no_data": "No data found"
     },
-    "library": {
-        "in_library": "In Library",
-        "error_loading_library": "Couldn't load your library.",
-        "categories": "Categories...",
-        "genres": "Genres...",
-        "private_profile": "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
-    },
     "spy": {
         "player_data": "Player Data",
         "owners": "Owners",
@@ -703,14 +699,11 @@
     },
     "tag": {
         "wishlist": "Wishlist",
-        "friends_own": "__friendcount__ own",
         "coupon": "Coupon",
-        "friends_rec": "<a href=\"http://store.steampowered.com/recommended/byfriends/__appid__\">__friendcount__ friends reviewed",
         "inv_gift": "Gift",
         "inv_guestpass": "Guestpass",
         "owned": "Owned",
         "notinterested": "Ignored",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ wish for</a>",
         "collection": "Collected",
         "waitlist": "Waitlisted"
     },
