@@ -21,7 +21,7 @@ class HTML {
         return template.content;
     }
 
-    static element(html) {
+    static toElement(html) {
         return HTML.toDom(html).firstElementChild;
     }
 
@@ -73,7 +73,7 @@ class HTML {
             wrappedNodes.push(cur.nextElementSibling);
         }
 
-        const _wrapper = HTML.element(wrapper);
+        const _wrapper = HTML.toElement(wrapper);
         _startEl.replaceWith(_wrapper);
         _wrapper.append(...wrappedNodes);
         return _wrapper;
