@@ -10,10 +10,6 @@ class HTMLParser {
         return HTML.fragment(html);
     }
 
-    static htmlToElement(html) {
-        return HTML.element(html);
-    }
-
     static getVariableFromText(text, name, type) {
         let regex;
         if (typeof name === "string") {

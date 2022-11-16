@@ -39,7 +39,7 @@ export default class FFriendsSort extends CallbackFeature {
 
             this._friendsFetched = true;
             const data = await RequestData.getHttp("https://steamcommunity.com/my/friends/?ajax=1&l=english");
-            const dom = HTMLParser.htmlToElement(data);
+            const dom = HTMLParser.htmlToDOM(data);
             const lastOnlineRegex = /Last Online (?:(\d+) days)?(?:, )?(?:(\d+) hrs)?(?:, )?(?:(\d+) mins)? ago/;
 
             for (const friend of dom.querySelectorAll(".friend_block_v2.persona.offline")) {
