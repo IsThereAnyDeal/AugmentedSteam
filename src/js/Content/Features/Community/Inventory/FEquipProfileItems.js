@@ -43,7 +43,7 @@ export default class FEquipProfileItems extends CallbackFeature {
         if (itemType === "profilebackground") {
             document.getElementById(`iteminfo${view}_item_actions`).append(btn);
         } else {
-            document.getElementById(`iteminfo${view}_item_owner_actions`).append(btn);
+            document.getElementById(`iteminfo${view}_item_owner_actions`).replaceChildren(btn);
         }
 
         // TODO Add checkbox so users can set equip options for the background through /IPlayerService/SetEquippedProfileItemFlags/
