@@ -1726,7 +1726,7 @@ video.highlight_movie:hover + .html5_video_overlay {
 .home_content_item .es_overlay_container,
 .small_cap .es_overlay_container,
 .special.special_img_ctn .es_overlay_container,
-.leftcol .es_overlay_container,
+.game_capsule_ctn .es_overlay_container,
 .review_app_actions .gameLogoHolder_default .es_overlay_container {
   position: relative;
   display: inherit;
@@ -1739,6 +1739,13 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 .curator_featured .es_overlay {
   height: 25%;
+}
+.gameListRowLogo .es_overlay,
+.game_capsule_ctn .es_overlay {
+  height: 70%;
+}
+.gameLogo .es_overlay {
+  height: 50%;
 }
 .tab_item.es_early_access > .tab_item_cap {
   line-height: 48px;
