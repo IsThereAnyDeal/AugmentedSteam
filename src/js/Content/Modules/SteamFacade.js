@@ -50,6 +50,10 @@ class SteamFacade {
         return HideMenu(elemLink, elemPopup);
     }
 
+    static changeLanguage(strTargetLanguage, bStayOnPage) {
+        return ChangeLanguage(strTargetLanguage, bStayOnPage);
+    }
+
     // app pages
 
     static collapseLongStrings(selector) {
