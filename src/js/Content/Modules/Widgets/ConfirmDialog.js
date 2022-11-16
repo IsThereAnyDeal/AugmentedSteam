@@ -25,7 +25,7 @@ class ConfirmDialog {
         true);
     }
 
-    static openFeatureHint(strTitle, optionStr, strDescription, strOKButton, strCancelButton, strSecondaryActionButton) {
+    static openFeatureHint(optionStr, strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton) {
 
         const _strTitle = strTitle ? `Augmented Steam - ${strTitle}` : "Augmented Steam";
 

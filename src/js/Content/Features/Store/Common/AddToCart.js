@@ -38,8 +38,8 @@ export class AddToCart {
         if (!SyncedStorage.has("addtocart_no_redirect")) {
 
             enabled = await ConfirmDialog.openFeatureHint(
-                addToCartStr.title,
                 "addtocart_no_redirect",
+                addToCartStr.title,
                 addToCartStr.desc,
                 addToCartStr.continue,
                 addToCartStr.checkout
