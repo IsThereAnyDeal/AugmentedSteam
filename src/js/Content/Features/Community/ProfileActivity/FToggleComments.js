@@ -33,7 +33,7 @@ export default class FToggleComments extends CallbackFeature {
 
         if (!SyncedStorage.has("hideannouncementcomments")) {
 
-            ConfirmDialog.openFeatureHint(Localization.str.options.hideannouncementcomments)
+            ConfirmDialog.openFeatureHint(undefined, "hideannouncementcomments")
                 .then(result => {
                     const hide = result === "OK";
                     SyncedStorage.set("hideannouncementcomments", hide);

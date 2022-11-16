@@ -1,5 +1,5 @@
 import {Localization, SyncedStorage} from "../../../../modulesCore";
-import {RequestData} from "../../../modulesContent";
+import {ConfirmDialog, RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export class AddToCart {
@@ -7,6 +7,7 @@ export class AddToCart {
     static async post(formEl, onWishlist, addToCartEl) {
 
         const cartUrl = "https://store.steampowered.com/cart/";
+        const addToCartStr = Localization.str.addtocart_dialog;
         let response;
 
         try {
@@ -18,7 +19,7 @@ export class AddToCart {
             },
             [
                 Localization.str.error,
-                Localization.str.addtocart_dialog.error_desc,
+                addToCartStr.error_desc,
                 err.toString()
             ]);
 
@@ -33,18 +34,16 @@ export class AddToCart {
 
         let enabled = SyncedStorage.get("addtocart_no_redirect");
 
-        // Show a confirm dialog to first time users asking if they want to enabled this feature
+        // Show feature hint to first time users
         if (!SyncedStorage.has("addtocart_no_redirect")) {
-            enabled = await Page.runInPageContext((str) => new Promise((resolve) => {
-                // https://github.com/SteamDatabase/SteamTracking/blob/48f469eb6f296cc551fac7c96bbb9dfa7e987809/store.steampowered.com/public/javascript/itemstore.js#L43
-                window.SteamFacade.showConfirmDialog(str.title, `${str.desc}<br><br>${str.desc_feature}`, str.continue, str.checkout)
-                    .done(() => {
-                        resolve(true);
-                    })
-                    .fail(() => {
-                        resolve(false);
-                    });
-            }), [Localization.str.addtocart_dialog], true);
+
+            enabled = await ConfirmDialog.openFeatureHint(
+                addToCartStr.title,
+                "addtocart_no_redirect",
+                addToCartStr.desc,
+                addToCartStr.continue,
+                addToCartStr.checkout
+            ) === "OK";
 
             SyncedStorage.set("addtocart_no_redirect", enabled);
         }

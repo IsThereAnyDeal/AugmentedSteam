@@ -4,7 +4,6 @@
         "error_desc": "An error occurred while adding your item to Cart.",
         "title": "Added to Shopping Cart",
         "desc": "The item was added to your Shopping Cart.",
-        "desc_feature": "Would you like to enable a feature that prevents redirections to your Cart?",
         "checkout": "No, checkout",
         "continue": "Yes, continue shopping"
     },
