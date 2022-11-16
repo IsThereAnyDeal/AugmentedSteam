@@ -28,19 +28,16 @@ class HTML {
     static _getNode(node) {
         let _node = node;
 
-        if (typeof _node == "undefined" || _node === null) {
-            console.warn(`${_node} is not an Element.`);
-            return null;
-        }
-        if (typeof _node == "string") {
+        if (typeof _node === "string") {
             _node = document.querySelector(_node);
         }
-        if (!(_node instanceof Element)) {
-            console.warn(`${_node} is not an Element.`);
-            return null;
+
+        if (_node instanceof Element) {
+            return _node;
         }
 
-        return _node;
+        console.warn(`${_node} is not an Element.`);
+        return null;
     }
 
     static inner(node, html) {
