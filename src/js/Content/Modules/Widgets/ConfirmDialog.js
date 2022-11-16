@@ -38,7 +38,7 @@ class ConfirmDialog {
         const _strDescription =
             `${strDescription ? `${strDescription}<br><br>` : ""}
             ${Localization.str.feature_hint.desc}<br><br>
-            <span class="as_feature_hint_option">${Localization.str.options[option]}</span><br><br>
+            <span class="as_feature_hint_option">${Localization.str.options[optionStr]}</span><br><br>
             ${Localization.str.feature_hint.reminder}`;
 
         return this.open(_strTitle, _strDescription, strOKButton, strCancelButton, strSecondaryActionButton);
