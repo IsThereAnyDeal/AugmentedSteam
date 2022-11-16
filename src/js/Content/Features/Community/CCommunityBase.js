@@ -1,25 +1,16 @@
-import {Context, ContextType} from "../../modulesContent";
-import FEarlyAccess from "../Common/FEarlyAccess";
+import {CBase} from "../Common/CBase";
+import {ContextType} from "../../modulesContent";
 import FHideTrademarks from "../Common/FHideTrademarks";
-import FBackToTop from "../Common/FBackToTop";
-import FDisableLinkFilter from "../Common/FDisableLinkFilter";
-import FKeepSSACheckboxState from "../Common/FKeepSSACheckboxState";
-import FDefaultCommunityTab from "../Common/FDefaultCommunityTab";
 import FConfirmDeleteComment from "./FConfirmDeleteComment";
 import FHideSpamComments from "./FHideSpamComments";
 import FFavoriteEmoticons from "./FFavoriteEmoticons";
 
-export class CCommunityBase extends Context {
+export class CCommunityBase extends CBase {
 
     constructor(type = ContextType.COMMUNITY_DEFAULT, features = []) {
 
         features.push(
-            FEarlyAccess,
             FHideTrademarks,
-            FBackToTop,
-            FDisableLinkFilter,
-            FKeepSSACheckboxState,
-            FDefaultCommunityTab,
             FConfirmDeleteComment,
             FHideSpamComments,
             FFavoriteEmoticons,
