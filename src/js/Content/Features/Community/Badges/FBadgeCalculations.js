@@ -1,4 +1,4 @@
-import {GameId, HTML, HTMLParser, Localization} from "../../../../modulesCore";
+import {GameId, HTML, Localization} from "../../../../modulesCore";
 import {Background, CurrencyManager, DOMHelper, Feature, Price, RequestData} from "../../../modulesContent";
 
 export default class FBadgeCalculations extends Feature {
@@ -180,7 +180,7 @@ export default class FBadgeCalculations extends Feature {
             return;
         }
 
-        const dummyPage = HTMLParser.htmlToDOM(response);
+        const dummyPage = HTML.toDom(response);
         const boosterCount = dummyPage.querySelectorAll(".booster_eligibility_game").length;
 
         HTML.beforeEnd("#es_calculations", `<br>${Localization.str.games_with_booster.replace("__boostergames__", boosterCount)}`);

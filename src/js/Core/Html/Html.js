@@ -15,14 +15,14 @@ class HTML {
         return str.replace(/[&<>"']/g, (m) => { return map[m]; });
     }
 
-    static fragment(html) {
+    static toDom(html) {
         const template = document.createElement("template");
         template.innerHTML = DOMPurify.sanitize(html);
         return template.content;
     }
 
     static element(html) {
-        return HTML.fragment(html).firstElementChild;
+        return HTML.toDom(html).firstElementChild;
     }
 
     static _getNode(node) {

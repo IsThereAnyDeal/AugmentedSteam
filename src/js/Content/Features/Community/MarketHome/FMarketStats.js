@@ -1,4 +1,4 @@
-import {HTML, HTMLParser, LocalStorage, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
+import {HTML, LocalStorage, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
 import {Feature, Price, RequestData, User} from "../../../modulesContent";
 
 export default class FMarketStats extends Feature {
@@ -158,7 +158,7 @@ export default class FMarketStats extends Feature {
             }
 
             const data = await RequestData.getJson(url.toString());
-            const dom = HTMLParser.htmlToDOM(data.results_html); // TODO use DOMParser since there's no need to sanitize?
+            const dom = HTML.toDom(data.results_html); // TODO use DOMParser since there's no need to sanitize?
 
             /*
              * Request may fail with results_html === "\t\t\t\t\t\t<div class=\"market_listing_table_message\">

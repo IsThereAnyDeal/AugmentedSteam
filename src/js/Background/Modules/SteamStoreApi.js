@@ -1,3 +1,4 @@
+import {HTML} from "../../Core/Html/Html";
 import {HTMLParser} from "../../Core/Html/HtmlParser";
 import {Errors} from "../../Core/Errors/Errors";
 import {Api} from "./Api";
@@ -63,14 +64,14 @@ class SteamStoreApi extends Api {
 
     static async currencyFromWallet() {
         const html = await SteamStoreApi.getPage("/steamaccount/addfunds");
-        const dummyPage = HTMLParser.htmlToDOM(html);
+        const dummyPage = HTML.toDom(html);
 
         return dummyPage.querySelector("input[name=currency]").value;
     }
 
     static async currencyFromApp() {
         const html = await SteamStoreApi.getPage("/app/220");
-        const dummyPage = HTMLParser.htmlToDOM(html);
+        const dummyPage = HTML.toDom(html);
 
         const currency = dummyPage.querySelector("meta[itemprop=priceCurrency][content]");
         if (!currency || !currency.getAttribute("content")) {
@@ -102,7 +103,7 @@ class SteamStoreApi extends Api {
                 throw new Errors.LoginError("store");
             }
         });
-        const dummyPage = HTMLParser.htmlToDOM(html);
+        const dummyPage = HTML.toDom(html);
 
         const node = dummyPage.querySelector("#dselect_user_country");
         return node && node.value;
@@ -141,7 +142,7 @@ class SteamStoreApi extends Api {
         const purchaseDates = new Map();
 
         const html = await SteamStoreApi.getPage("/account/licenses/", {"l": lang});
-        const dummyPage = HTMLParser.htmlToDOM(html);
+        const dummyPage = HTML.toDom(html);
         const nodes = dummyPage.querySelectorAll("#main_content td.license_date_col");
         for (const node of nodes) {
             const name = node.nextElementSibling;

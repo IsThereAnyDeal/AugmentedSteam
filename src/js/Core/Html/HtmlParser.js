@@ -1,13 +1,8 @@
-import {HTML} from "./Html";
 
 class HTMLParser {
 
     static clearSpecialSymbols(string) {
         return string.replace(/[\u00AE\u00A9\u2122]/g, "");
-    }
-
-    static htmlToDOM(html) {
-        return HTML.fragment(html);
     }
 
     static getVariableFromText(text, name, type) {

@@ -1,4 +1,4 @@
-import {HTMLParser} from "../../Core/Html/HtmlParser";
+import {HTML} from "../../Core/Html/Html";
 import {Localization} from "../../Core/Localization/Localization";
 import {Background} from "./Background";
 
@@ -7,7 +7,7 @@ class Stats {
     static async getAchievementBar(path, appid, altStyle = false) {
 
         const html = await Background.action("stats", path, appid);
-        const achNode = HTMLParser.htmlToDOM(html).querySelector("#topSummaryAchievements");
+        const achNode = HTML.toDom(html).querySelector("#topSummaryAchievements");
         if (!achNode) { return null; }
 
         // Games without leaderboards will have "grey" style achievement bars, return them
