@@ -35,9 +35,8 @@ export class AddToCart {
 
             // Show dialog to first time users
             if (!SyncedStorage.has("addtocart_no_redirect")) {
-                enabled = await Page.runInPageContext((str) => new Promise((resolve) => {
-                    // FIXME The desc localization includes raw HTML tags (<br>), which is not good
-                    window.SteamFacade.showConfirmDialog(str.title, str.desc, str.continue, str.checkout)
+                enabled = await Page.runInPageContext(({title, desc, "continue": cont, checkout}) => new Promise((resolve) => {
+                    window.SteamFacade.showConfirmDialog(title, `${desc.added_to_cart}<br><br>${desc.enable_feature}`, cont, checkout)
                         .done(() => {
                             resolve(true);
                         })

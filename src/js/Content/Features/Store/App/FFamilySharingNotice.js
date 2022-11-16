@@ -15,10 +15,12 @@ export default class FFamilySharingNotice extends Feature {
     }
 
     apply() {
+        const notice = Localization.str.family_sharing_notice;
+
         HTML.beforeBegin("#game_area_purchase",
             `<div>
                 <div class="notice_box_top"></div>
-                    <div class="notice_box_content">${Localization.str.family_sharing_notice}</div>
+                    <div class="notice_box_content"><b>${notice.notice}</b> ${notice.desc}</div>
                 <div class="notice_box_bottom"></div>
             </div>`);
     }

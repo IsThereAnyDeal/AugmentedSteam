@@ -3,7 +3,10 @@
     "addtocart_dialog": {
         "error_desc": "An error occurred while adding your item to Cart.",
         "title": "Added to Shopping Cart",
-        "desc": "The item was added to your Shopping Cart.<br><br>Would you like to enable a feature that prevents redirections to your Cart?",
+        "desc": {
+            "added_to_cart": "The item was added to your Shopping Cart.",
+            "enable_feature": "Would you like to enable a feature that prevents redirections to your Cart?"
+        },
         "checkout": "No, checkout",
         "continue": "Yes, continue shopping"
     },
@@ -262,7 +265,10 @@
     "rating_details": "See rating details",
     "drops_worth_avg": "Worth Approximately",
     "using_store_return": "Click here to go back to the __base__ store.",
-    "family_sharing_notice": "<b>Notice:</b> This game is excluded from Steam's Family Sharing service.",
+    "family_sharing_notice": {
+        "notice": "Notice:",
+        "desc": "This game is excluded from Steam's Family Sharing service."
+    },
     "valid": "Valid",
     "price_options": "Price options",
     "no_results_found": "No results found",
@@ -306,7 +312,10 @@
         "select": "Select:",
         "leave": "Leave Groups",
         "selected": "__n__ selected.",
-        "leave_admin_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?"
+        "leave_admin_confirm": {
+            "currently_admin": "You are currently admin of __name__.",
+            "want_to_leave": "Are you sure you want to leave this group?"
+        }
     },
     "export": {
         "wishlist": "Export wishlist",

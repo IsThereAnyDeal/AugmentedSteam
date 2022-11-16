@@ -93,8 +93,9 @@ export default class FGroupsManageButton extends CallbackFeature {
 
             if (admin) {
                 const name = split[3];
+                const leaveAdminConfirm = Localization.str.groups.leave_admin_confirm;
 
-                const body = Localization.str.groups.leave_admin_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
+                const body = `${leaveAdminConfirm.currently_admin.replace("__name__", `<a href="/gid/${id}" target="_blank">${name}</a>`)}<br>${leaveAdminConfirm.want_to_leave}`;
                 const result = await ConfirmDialog.open(Localization.str.groups.leave, body);
                 if (result !== "OK") {
                     group.querySelector(".select_friend").click();
