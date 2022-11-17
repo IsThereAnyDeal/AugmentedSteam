@@ -333,6 +333,12 @@
         "removing": "Removing app __cur__ from __total__..."
     },
     "about": "About",
+	"about_desc_text": "Augmented Steam is a fork of the Enhanced Steam extension.",
+    "about_desc2": {
+        "link_text": "extension's page",
+		"link2_text": "Discord channel",
+        "full_text": "Visit the __linkwebsitedesc__ or our __linkdiscorddesc2__ for more info."
+    },
     "never": "Never",
     "coupon_available": "You have a coupon available!",
     "launch_random": "Launch Random Game",
@@ -457,6 +463,9 @@
             "export": "Export",
             "reset": "Reset"
         },
+		"augmented_steam_disclaimer": "Augmented Steam",
+		"augmented_steam_disclaimer2": "a fork by IsThereAnyDeal",
+		"augmented_steam_disclaimer3": "original author jshackles",
         "show_custom_themes": "Show custom themes",
         "community_default_tab": "Default community home page tab",
         "videos": "Videos",
@@ -810,6 +819,17 @@
     },
     "original_authors": "Original authors",
     "acknowledgements": "Acknowledgments",
+	"acknowledgements_desc": {
+        "link_text": "Save SVG Vector",
+		"link2_text": "CC BY 4.0",
+        "full_text": "__linksvgdesc__ is licensed under __linklicensedesc2__"
+    },
+	"acknowledgements_desc2": {
+        "link_text": "Icon",
+		"link2_text": "Freepik",
+		"link3_text": "www.flaticon.com",
+        "full_text": "__linkicondesc__ made by __linkfreepikdesc__ from __linkflaticondesc__"
+    },
     "other": "Other",
     "images": "Images",
     "powered_by": "Powered by __link__"
