@@ -34,9 +34,9 @@ class OptionsTranslator {
             .replace("__contributors__", `<a href="https://github.com/IsThereAnyDeal/AugmentedSteam/graphs/contributors">${optionsStr.contributors}</a>`);
         HTML.inner(".js-contributors-text", html);
 
-        html = optionsStr.about_desc_links.full_text
-            .replace("__linkdescwebsite__", `<a href="${Config.PublicHost}">${optionsStr.about_desc_links.link_text_website}</a>`)
-            .replace("__linkdescdiscord__", `<a href="${Config.ITADDiscord}">${optionsStr.about_desc_links.link_text_discord}</a>`);
+        html = optionsStr.about_desc_links
+            .replace("__website__", `<a href="${Config.PublicHost}">${Localization.str.website.toLowerCase()}</a>`)
+            .replace("__discord__", `<a href="${Config.ITADDiscord}">Discord</a>`);
         HTML.inner(".js-about-text", html);
     }
 

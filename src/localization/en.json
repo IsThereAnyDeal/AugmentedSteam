@@ -668,11 +668,7 @@
         "with_help_of": "with a lot of help by our __contributors__",
         "contributors": "wonderful contributors",
         "about_desc": "Augmented Steam is a fork of the Enhanced Steam extension.",
-        "about_desc_links": {
-            "link_text_website": "extension's website",
-            "link_text_discord": "Discord channel",
-            "full_text": "Visit the __linkdescwebsite__ or our __linkdescdiscord__ for more info."
-        },
+        "about_desc_links": "Visit the extension's __website__ or our __discord__ for more info.",
         "footer_fork": "a fork by IsThereAnyDeal",
         "footer_author": "original author jshackles"
     },
