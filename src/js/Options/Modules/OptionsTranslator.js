@@ -1,5 +1,6 @@
 import {HTML} from "../../Core/Html/Html";
 import {Localization} from "../../Core/Localization/Localization";
+import Config from "../../config";
 
 class OptionsTranslator {
 
@@ -26,13 +27,17 @@ class OptionsTranslator {
     }
 
     static _localizeHtml() {
-        const nodes = document.querySelectorAll("[data-locale-html]");
-        for (const node of nodes) {
-            const translation = this.getTranslation(node.dataset.localeHtml);
-            if (translation) {
-                HTML.inner(node, translation);
-            }
-        }
+        const optionsStr = Localization.str.options;
+
+        // HTML tags are not allowed in localization strings
+        let html = optionsStr.with_help_of
+            .replace("__contributors__", `<a href="https://github.com/IsThereAnyDeal/AugmentedSteam/graphs/contributors">${optionsStr.contributors}</a>`);
+        HTML.inner(".js-contributors-text", html);
+
+        html = optionsStr.about_desc_links.full_text
+            .replace("__linkdescwebsite__", `<a href="${Config.PublicHost}">${optionsStr.about_desc_links.link_text_website}</a>`)
+            .replace("__linkdescdiscord__", `<a href="${Config.ITADDiscord}">${optionsStr.about_desc_links.link_text_discord}</a>`);
+        HTML.inner(".js-about-text", html);
     }
 
     static _localizeLanguageOptions() {
@@ -47,22 +52,11 @@ class OptionsTranslator {
     }
 
     static translate() {
-
         document.title = `Augmented Steam ${Localization.str.thewordoptions}`;
+
         this._localizeText();
         this._localizeHtml();
         this._localizeLanguageOptions();
-
-        // this is not very clean, but I can't figure out better solution right now, having it in-place would be nicer
-        const url = "https://github.com/IsThereAnyDeal/AugmentedSteam/graphs/contributors";
-        HTML.inner(
-            document.querySelector(".js-contributors-text"),
-            Localization.getString("options.with_help_of")
-                .replace(
-                    "__contributors__",
-                    `<a href='${url}'>${Localization.getString("options.contributors")}</a>`
-                )
-        );
     }
 }
 
