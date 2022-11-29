@@ -231,7 +231,7 @@
         "*://steamcommunity.com/id/*/stats/*",
         "*://steamcommunity.com/profiles/*/stats/*"
       ],
-      "js": "js/community/stats.js"
+      "js": "js/community/profile_stats.js"
     },
     {
       "matches": [

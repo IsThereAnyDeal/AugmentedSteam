@@ -30,7 +30,7 @@ export default Object.freeze({
     "GROUP_HOME": 28,
     "GUIDES": 29,
     "COMMUNITY_APP": 30,
-    "COMMUNITY_STATS": 31,
+    "PROFILE_STATS": 31,
     "MY_WORKSHOP": 32,
     "SHARED_FILES": 33,
     "WORKSHOP_BROWSE": 34,
