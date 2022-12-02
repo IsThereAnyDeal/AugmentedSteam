@@ -26,6 +26,7 @@ module.exports = {
         "js/community/friends_that_play": "./src/js/Content/Features/Community/FriendsThatPlay/PFriendsThatPlay.js",
         "js/community/gamecard": "./src/js/Content/Features/Community/GameCard/PGameCard.js",
         "js/community/games": "./src/js/Content/Features/Community/Games/PGames.js",
+        "js/community/global_stats": "./src/js/Content/Features/Community/GlobalStats/PGlobalStats.js",
         "js/community/group_home": "./src/js/Content/Features/Community/GroupHome/PGroupHome.js",
         "js/community/guides": "./src/js/Content/Features/Community/Guides/PGuides.js",
         "js/community/inventory": "./src/js/Content/Features/Community/Inventory/PInventory.js",

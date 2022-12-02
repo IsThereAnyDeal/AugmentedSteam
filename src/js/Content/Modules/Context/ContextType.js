@@ -21,7 +21,7 @@ export default Object.freeze({
     "BADGES": 19,
     "GAME_CARD": 20,
     "FRIENDS_THAT_PLAY": 21,
-    "FRIENDS": 22, // unused
+    "GLOBAL_STATS": 22,
     "MARKET_SEARCH": 23,
     "INVENTORY": 24,
     "MARKET_LISTING": 25,
