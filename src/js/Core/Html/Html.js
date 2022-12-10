@@ -21,6 +21,11 @@ class HTML {
         return template.content;
     }
 
+    // TODO deprecated, to be removed
+    static element(html) {
+        return HTML.toElement(html);
+    }
+
     static toElement(html) {
         return HTML.toDom(html).firstElementChild;
     }
