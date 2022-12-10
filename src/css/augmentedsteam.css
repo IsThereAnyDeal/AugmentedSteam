@@ -1195,6 +1195,35 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 
 /***************************************
+ * App pages
+ * FSteamDeckCompatibility
+ **************************************/
+.as_deckverified_BannerContainer {
+  padding: 12px 0px;
+}
+.as_deckverified_BannerHeader {
+  text-transform: uppercase;
+  font-size: 12px;
+  padding-bottom: 5px;
+  color: #fff;
+  font-weight: 700;
+}
+.as_deckverified_BannerContent {
+  padding: 10px;
+  background-color: #3b5a7280;
+}
+.as_svg_SteamDeckCompatIcon {
+  padding-right: 2px;
+  vertical-align: middle;
+  width: 25px;
+  height: 25px;
+}
+.as_deckverified_CompatibilityDetailRatingDescription {
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+/***************************************
  * Store and Community
  * add_language_warning(),
  * add_fake_country_code_warning()
@@ -1697,7 +1726,7 @@ video.highlight_movie:hover + .html5_video_overlay {
 .home_content_item .es_overlay_container,
 .small_cap .es_overlay_container,
 .special.special_img_ctn .es_overlay_container,
-.leftcol .es_overlay_container,
+.game_capsule_ctn .es_overlay_container,
 .review_app_actions .gameLogoHolder_default .es_overlay_container {
   position: relative;
   display: inherit;
@@ -1710,6 +1739,13 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 .curator_featured .es_overlay {
   height: 25%;
+}
+.gameListRowLogo .es_overlay,
+.game_capsule_ctn .es_overlay {
+  height: 70%;
+}
+.gameLogo .es_overlay {
+  height: 50%;
 }
 .tab_item.es_early_access > .tab_item_cap {
   line-height: 48px;

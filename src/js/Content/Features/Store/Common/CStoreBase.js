@@ -1,19 +1,23 @@
-import {Context, ContextType} from "../../../modulesContent";
+import {CBase} from "../../Common/CBase";
+import {ContextType} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 import FEarlyAccess from "../../Common/FEarlyAccess";
 import FHideTrademarks from "../../Common/FHideTrademarks";
 import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
+import FSkipGotSteamDialog from "./FSkipGotSteamDialog";
+import FHorizontalScrolling from "./FHorizontalScrolling";
 import FFocusSearch from "./FFocusSearch";
 
-export class CStoreBase extends Context {
+export class CStoreBase extends CBase {
 
     constructor(type = ContextType.STORE_DEFAULT, features = []) {
 
         features.push(
             FHighlightsTags,
-            FEarlyAccess,
             FHideTrademarks,
             FAlternativeLinuxIcon,
+            FSkipGotSteamDialog,
+            FHorizontalScrolling,
             FFocusSearch,
         );
 

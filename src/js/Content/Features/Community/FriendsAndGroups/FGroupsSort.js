@@ -10,10 +10,8 @@ export default class FGroupsSort extends CallbackFeature {
     callback() {
         if (!document.getElementById("groups_list")) { return; }
 
-        this._groups = Array.from(document.querySelectorAll(".group_block"));
-        if (this._groups.length <= 1) { return; }
-
-        this._initSort = true;
+        this._container = document.getElementById("search_results");
+        if (this._container.querySelectorAll(".group_block").length <= 1) { return; }
 
         document.querySelector("span.profile_groups.title").insertAdjacentElement("afterend", Sortbox.get(
             "groups",
@@ -30,36 +28,50 @@ export default class FGroupsSort extends CallbackFeature {
 
     _sortGroups(sortBy, reversed) {
 
-        if (this._initSort) {
-            this._groups.forEach((group, i) => {
-                group.dataset.esSortdefault = i;
-                group.dataset.esSortnames = group.querySelector(".groupTitle > a").textContent;
-                group.dataset.esSortmembers = group.querySelector(".memberRow > a").textContent.match(/\d+/g).join("");
-            });
+        const property = `esSort${sortBy}`;
+        const rows = [];
 
-            this._initSort = false;
-        }
+        // Query available groups on each sort because they may be removed by our leave group feature, see #1520
+        this._container.querySelectorAll(".group_block").forEach((node, i) => {
 
-        this._groups.sort(this._getSortFunc(sortBy));
+            // Set default position
+            if (!node.dataset.esSortdefault) {
+                node.dataset.esSortdefault = i;
+            }
+
+            let value = node.dataset[property];
+            if (typeof value === "undefined") {
+                if (sortBy === "members") {
+                    value = node.querySelector(".memberRow > a").textContent.match(/\d+/g).join("");
+                } else if (sortBy === "names") {
+                    value = node.querySelector(".groupTitle > a").textContent;
+                }
+
+                if (!value) { return; }
+                value = String(value);
+                node.dataset[property] = value;
+            }
+
+            rows.push([value, node]);
+        });
+
+        rows.sort(this._getSortFunc(sortBy));
 
         if (reversed) {
-            this._groups.reverse();
+            rows.reverse();
         }
 
-        // TODO better indicator for primary group document.getElementById("primaryGroupBreak");
-        const searchResults = document.getElementById("search_results");
-        this._groups.forEach(group => searchResults.append(group));
+        rows.forEach(row => this._container.append(row[1]));
     }
 
     _getSortFunc(sortBy) {
-        const property = `esSort${sortBy}`;
         switch (sortBy) {
             case "default":
-                return (a, b) => Number(a.dataset[property]) - Number(b.dataset[property]);
+                return (a, b) => Number(a[0]) - Number(b[0]);
             case "members":
-                return (a, b) => Number(b.dataset[property]) - Number(a.dataset[property]);
+                return (a, b) => Number(b[0]) - Number(a[0]);
             case "names":
-                return (a, b) => a.dataset[property].localeCompare(b.dataset[property]);
+                return (a, b) => a[0].localeCompare(b[0]);
             default:
                 this.logError(
                     new Error("Invalid sorting criteria"),

@@ -19,8 +19,6 @@ export class CProfileActivity extends CCommunityBase {
             FToggleComments,
         ]);
 
-        FEarlyAccess.show(document.querySelectorAll(".blotter_gamepurchase_logo, .gameLogoHolder_default"));
-
         this._registerObserver();
 
         // Fix undefined function when clicking on the "show all x comments" button under "uploaded a screenshot" type activity

@@ -8,6 +8,13 @@
         "continue": "Yes, continue shopping"
     },
     "download_demo_header": "Download __gamename__ Demo",
+    "deck_compat": {
+        "header": "Steam Deck Compatibility",
+        "unknown": "Unknown",
+        "unsupported": "Unsupported",
+        "playable": "Playable",
+        "verified": "Verified"
+    },
     "feature_hint": {
         "desc": "Would you like to enable the following feature?",
         "reminder": "You can change your preferences through the options page later."
@@ -146,7 +153,10 @@
     "language": "Language",
     "theworddefault": "Default",
     "thewordclear": "Clear",
-    "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Learn more</a> about Steam Coupons",
+    "coupon_learn_more": {
+        "link_text": "Learn more",
+        "full_text": "__linkdesc__ about Steam Coupons"
+    },
     "show": "Show",
     "show_all": "Show All",
     "badges_all": "All Badges",
@@ -253,7 +263,10 @@
     "rating_details": "See rating details",
     "drops_worth_avg": "Worth Approximately",
     "using_store_return": "Click here to go back to the __base__ store.",
-    "family_sharing_notice": "<b>Notice:</b> This game is excluded from Steam's Family Sharing service.",
+    "family_sharing_notice": {
+        "notice": "Notice:",
+        "desc": "This game is excluded from Steam's Family Sharing service."
+    },
     "valid": "Valid",
     "price_options": "Price options",
     "no_results_found": "No results found",
@@ -297,7 +310,10 @@
         "select": "Select:",
         "leave": "Leave Groups",
         "selected": "__n__ selected.",
-        "leave_admin_confirm": "You are currently admin of __name__.<br>Are you sure you want to leave this group?"
+        "leave_admin_confirm": {
+            "currently_admin": "You are currently admin of __name__.",
+            "want_to_leave": "Are you sure you want to leave this group?"
+        }
     },
     "export": {
         "wishlist": "Export wishlist",
@@ -419,13 +435,6 @@
         "main": "Main Story",
         "no_data": "No data found"
     },
-    "library": {
-        "in_library": "In Library",
-        "error_loading_library": "Couldn't load your library.",
-        "categories": "Categories...",
-        "genres": "Genres...",
-        "private_profile": "Change your profile status to public <a href='http://steamcommunity.com/my/edit/settings'>in your settings</a> to use this feature."
-    },
     "spy": {
         "player_data": "Player Data",
         "owners": "Owners",
@@ -525,6 +534,7 @@
         "library_f2p": "Show played free to play games and demos in library",
         "inventory_market_text": "Show Market price on inventory page",
         "send_age_info": "Automatically send age verification and skip mature content warnings",
+        "showdeckcompat": "Show Steam Deck compatibility ratings in the features list (and fetch the data when it's missing)",
         "removebroadcasts": "Completely remove any live broadcast",
         "exfgls": "Show a notice if app is excluded from Family Sharing",
         "mp4video": "Force videos to be in MP4 format",
@@ -696,14 +706,11 @@
     },
     "tag": {
         "wishlist": "Wishlist",
-        "friends_own": "__friendcount__ own",
         "coupon": "Coupon",
-        "friends_rec": "<a href=\"http://store.steampowered.com/recommended/byfriends/__appid__\">__friendcount__ friends reviewed",
         "inv_gift": "Gift",
         "inv_guestpass": "Guestpass",
         "owned": "Owned",
         "notinterested": "Ignored",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ wish for</a>",
         "collection": "Collected",
         "waitlist": "Waitlisted"
     },

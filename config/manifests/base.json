@@ -102,6 +102,10 @@
       "js": "js/store/points_shop.js"
     },
     {
+      "matches": "*://*.steampowered.com/cart[/*]",
+      "js": "js/store/cart.js"
+    },
+    {
       "matches": "*://*.steampowered.com/*",
       "exclude_matches": [
         "*://store.steampowered.com/dynamicstore/*",
@@ -129,7 +133,8 @@
         "*://*.steampowered.com/sub/*",
         "*://*.steampowered.com/app/*",
         "*://*.steampowered.com/agecheck/*",
-        "*://*.steampowered.com/points[/*]"
+        "*://*.steampowered.com/points[/*]",
+        "*://*.steampowered.com/cart[/*]"
       ],
       "js": "js/store/default.js"
     },

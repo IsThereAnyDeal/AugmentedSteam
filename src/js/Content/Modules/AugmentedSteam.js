@@ -5,7 +5,6 @@ import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
 import {Language} from "../../Core/Localization/Language";
 import {LocalStorage} from "../../Core/Storage/LocalStorage";
 import {Background} from "./Background";
-import {HorizontalScroller} from "./Widgets/HorizontalScroller";
 import {DynamicStore} from "./Data/DynamicStore";
 import {User} from "./User";
 import {Page} from "../Features/Page";
@@ -54,31 +53,6 @@ class AugmentedSteam {
 
             await AugmentedSteam.clearCache();
             window.location.reload();
-        });
-    }
-
-    static _addBackToTop() {
-        if (!SyncedStorage.get("show_backtotop")) { return; }
-
-        // Remove Steam's back-to-top button
-        document.querySelector("#BackToTop")?.remove();
-
-        const btn = document.createElement("div");
-        btn.classList.add("es_btt");
-        btn.textContent = "▲";
-
-        document.body.append(btn);
-
-        btn.addEventListener("click", () => {
-            window.scroll({
-                "top": 0,
-                "left": 0,
-                "behavior": "smooth"
-            });
-        });
-
-        window.addEventListener("scroll", () => {
-            btn.classList.toggle("is-visible", window.scrollY >= 400);
         });
     }
 
@@ -144,10 +118,12 @@ class AugmentedSteam {
                 () => { SyncedStorage.set("showlanguagewarning", false); }
             );
 
-            document.querySelector("#es_reset_language_code").addEventListener("click", (e) => {
+            document.querySelector("#es_reset_language_code").addEventListener("click", e => {
                 e.preventDefault();
-                // eslint-disable-next-line no-undef, new-cap
-                Page.runInPageContext(warningLanguage => { ChangeLanguage(warningLanguage); }, [warningLanguage]);
+
+                Page.runInPageContext(language => {
+                    window.SteamFacade.changeLanguage(language);
+                }, [warningLanguage]);
             });
         });
     }
@@ -187,29 +163,6 @@ class AugmentedSteam {
         for (const wishlistLink of document.querySelectorAll(".submenu_store > .submenuitem[href='https://steamcommunity.com/my/wishlist/']")) {
             HTML.afterEnd(wishlistLink, `<a class="submenuitem" href="https://store.steampowered.com/cart/">${Localization.str.cart}</a>`);
         }
-    }
-
-    static _disableLinkFilter() {
-        if (!SyncedStorage.get("disablelinkfilter")) { return; }
-
-        function removeLinkFilter(parent = document) {
-            const selector = "a[href*='/linkfilter/']";
-
-            for (const link of parent.querySelectorAll(selector)) {
-                link.href = new URLSearchParams(link.search).get("url");
-            }
-        }
-
-        removeLinkFilter();
-
-        new MutationObserver(mutations => {
-            for (const mutation of mutations) {
-                for (const node of mutation.addedNodes) {
-                    if (node.nodeType !== Node.ELEMENT_NODE) { continue; }
-                    removeLinkFilter(node);
-                }
-            }
-        }).observe(document, {"childList": true, "subtree": true});
     }
 
     static _addRedeemLink() {
@@ -291,53 +244,6 @@ class AugmentedSteam {
         });
     }
 
-    static _skipGotSteam() {
-        if (!SyncedStorage.get("skip_got_steam")) { return; }
-
-        // https://github.com/SteamDatabase/SteamTracking/blob/cdf367ce61926a896fe54d710b3ed25d66d7e333/store.steampowered.com/public/javascript/game.js#L1785
-        Page.runInPageContext(() => {
-            window.ShowGotSteamModal = function(steamUrl) { window.location.assign(steamUrl); };
-        });
-    }
-
-    static _keepSteamSubscriberAgreementState() {
-        const nodes = document.querySelectorAll("#market_sell_dialog_accept_ssa,#market_buyorder_dialog_accept_ssa,#accept_ssa");
-        for (const node of nodes) {
-            node.checked = SyncedStorage.get("keepssachecked");
-
-            node.addEventListener("click", () => {
-                SyncedStorage.set("keepssachecked", !SyncedStorage.get("keepssachecked"));
-            });
-        }
-    }
-
-    static _defaultCommunityTab() {
-        const tab = SyncedStorage.get("community_default_tab");
-        if (!tab) { return; }
-
-        const links = document.querySelectorAll("a[href^='https://steamcommunity.com/app/']");
-        for (const link of links) {
-            if (link.classList.contains("apphub_sectionTab")) { continue; }
-            if (!/^\/app\/[0-9]+\/?$/.test(link.pathname)) { continue; }
-            if (!link.pathname.endsWith("/")) {
-                link.pathname += "/";
-            }
-            link.pathname += `${tab}/`;
-        }
-    }
-
-    static _horizontalScrolling() {
-        if (!SyncedStorage.get("horizontalscrolling")) { return; }
-
-        for (const node of document.querySelectorAll(".slider_ctn:not(.spotlight)")) {
-            HorizontalScroller.create(
-                node.parentNode.querySelector("#highlight_strip, .store_horizontal_autoslider_ctn"),
-                node.querySelector(".slider_left"),
-                node.querySelector(".slider_right"),
-            );
-        }
-    }
-
     static addLoginWarning(type) {
         if (AugmentedSteam._loginWarningAdded || LocalStorage.get(`hide_login_warn_${type}`)) { return; }
 
@@ -366,15 +272,9 @@ class AugmentedSteam {
     }
 
     static init() {
-        AugmentedSteam._addBackToTop();
         AugmentedSteam._addMenu();
         AugmentedSteam._addLanguageWarning();
         AugmentedSteam._handleInstallSteamButton();
-        AugmentedSteam._disableLinkFilter();
-        AugmentedSteam._skipGotSteam();
-        AugmentedSteam._keepSteamSubscriberAgreementState();
-        AugmentedSteam._defaultCommunityTab();
-        AugmentedSteam._horizontalScrolling();
         AugmentedSteam._cartLink();
 
         if (User.isSignedIn) {

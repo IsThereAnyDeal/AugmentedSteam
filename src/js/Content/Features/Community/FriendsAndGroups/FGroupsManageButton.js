@@ -15,8 +15,8 @@ export default class FGroupsManageButton extends CallbackFeature {
     callback() {
         if (!document.getElementById("groups_list")) { return; }
 
-        this._groups = Array.from(document.querySelectorAll(".group_block"));
-        if (this._groups.length === 0) { return; }
+        const groups = document.querySelectorAll(".group_block");
+        if (groups.length === 0) { return; }
 
         const groupsStr = Localization.str.groups;
 
@@ -36,16 +36,17 @@ export default class FGroupsManageButton extends CallbackFeature {
                     </span>
                 </div>
                 <div class="row">
-                    <span class="manage_action anage_action btnv6_lightblue_blue btn_medium btn_uppercase" id="es_leave_groups">
-                        <span>${groupsStr.leave}</span>
-                    </span>
+                    <div class="manage_friend_actions_ctn">
+                        <span class="manage_action btnv6_lightblue_blue btn_small" id="es_leave_groups">
+                            <span>${groupsStr.leave}</span>
+                        </span>
+                    </div>
                     <span id="selected_msg_err" class="selected_msg error hidden"></span>
                     <span id="selected_msg" class="selected_msg hidden">${groupsStr.selected.replace("__n__", '<span id="selected_count"></span>')}</span>
                 </div>
-                <div class="row"></div>
             </div>`);
 
-        for (const group of this._groups) {
+        for (const group of groups) {
             group.classList.add("selectable");
             HTML.afterBegin(group,
                 `<div class="indicator select_friend">
@@ -81,10 +82,7 @@ export default class FGroupsManageButton extends CallbackFeature {
     async _leaveGroups() {
         const selected = [];
 
-        for (const group of this._groups) {
-            if (!group.classList.contains("selected")) {
-                continue;
-            }
+        for (const group of document.querySelectorAll(".group_block.selected")) {
 
             const actions = group.querySelector(".actions");
             const admin = actions.querySelector("[href*='/edit']");
@@ -95,8 +93,9 @@ export default class FGroupsManageButton extends CallbackFeature {
 
             if (admin) {
                 const name = split[3];
+                const leaveAdminConfirm = Localization.str.groups.leave_admin_confirm;
 
-                const body = Localization.str.groups.leave_admin_confirm.replace("__name__", `<a href=\\"/gid/${id}\\" target=\\"_blank\\">${name}</a>`);
+                const body = `${leaveAdminConfirm.currently_admin.replace("__name__", `<a href="/gid/${id}" target="_blank">${name}</a>`)}<br>${leaveAdminConfirm.want_to_leave}`;
                 const result = await ConfirmDialog.open(Localization.str.groups.leave, body);
                 if (result !== "OK") {
                     group.querySelector(".select_friend").click();
@@ -121,8 +120,8 @@ export default class FGroupsManageButton extends CallbackFeature {
                         continue;
                     }
 
-                    group.style.opacity = "0.3";
-                    group.querySelector(".select_friend").click();
+                    // Make sure to remove the row so it doesn't show up again when filtering
+                    group.remove();
                 }
             }
         }
