@@ -57,6 +57,12 @@ export class CInventory extends CCommunityBase {
                 // https://github.com/SteamDatabase/SteamTracking/blob/f26cfc1ec42b8a0c27ca11f4343edbd8dd293255/steamcommunity.com/public/javascript/economy_v2.js#L4468
                 const publisherFee = item.description.market_fee ?? wallet.wallet_publisher_fee_percent_default;
 
+                /*
+                 * The lowest amount Steam allows any party to receive is 0.01, so use that to calculate lowest listing price
+                 * https://github.com/SteamDatabase/SteamTracking/blob/b3abe9c82f9e9d260265591320cac6304e500e58/steamcommunity.com/public/javascript/economy_common.js#L154-L155
+                 */
+                const lowestListingPrice = f.calculateAmountToSendForDesiredReceivedAmount(1, publisherFee).amount / 100;
+
                 const contextId = Number(item.contextid);
                 const globalId = Number(inv.appid);
 
@@ -81,6 +87,7 @@ export class CInventory extends CCommunityBase {
                     "marketable": item.description.marketable,
                     hashName,
                     publisherFee,
+                    lowestListingPrice,
                     restriction,
                     appid,
                     isBooster,
