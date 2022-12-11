@@ -4,6 +4,7 @@ import FHideTrademarks from "./FHideTrademarks";
 import FBackToTop from "./FBackToTop";
 import FDisableLinkFilter from "./FDisableLinkFilter";
 import FKeepSSACheckboxState from "./FKeepSSACheckboxState";
+import FDefaultCommunityTab from "./FDefaultCommunityTab";
 
 export class CBase extends Context {
 
@@ -15,6 +16,7 @@ export class CBase extends Context {
             FBackToTop,
             FDisableLinkFilter,
             FKeepSSACheckboxState,
+            FDefaultCommunityTab,
         );
 
         super(type, features);
