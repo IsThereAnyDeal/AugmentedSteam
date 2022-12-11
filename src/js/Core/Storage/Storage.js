@@ -92,7 +92,7 @@ class Storage {
     }
 
     static toJson() {
-        return JSON.stringify(this.cache);
+        return JSON.stringify(this.cache, null, 4);
     }
 }
 
