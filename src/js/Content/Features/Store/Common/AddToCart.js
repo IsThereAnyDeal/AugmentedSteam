@@ -55,7 +55,6 @@ export class AddToCart {
         }
 
         if (onWishlist) {
-            // Note: Steam may not keep button status after reloading
             addToCartEl.setAttribute("href", cartUrl);
             addToCartEl.querySelector("span").textContent = Localization.str.in_cart;
 
@@ -63,6 +62,11 @@ export class AddToCart {
             document.getElementById("store_header_cart_btn").style.display = "block";
             const itemCount = document.getElementById("cart_item_count_value");
             itemCount.textContent = Number(itemCount.textContent) + 1;
+
+            // The Cart page forces a DS update, so do here too
+            Page.runInPageContext(() => {
+                window.SteamFacade.dynamicStoreInvalidateCache();
+            });
         } else {
             // On store pages, reload so page elements are updated
             window.location.reload();
