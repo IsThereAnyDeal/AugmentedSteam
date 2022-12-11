@@ -120,6 +120,10 @@ class SteamFacade {
         return CalculateFeeAmount(amount, publisherFee);
     }
 
+    static calculateAmountToSendForDesiredReceivedAmount(receivedAmount, publisherFee) {
+        return CalculateAmountToSendForDesiredReceivedAmount(receivedAmount, publisherFee);
+    }
+
     static vCurrencyFormat(amount, currencyCode) {
         return v_currencyformat(amount, currencyCode);
     }
