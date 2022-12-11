@@ -25,7 +25,8 @@ export default class FQuickSellOptions extends CallbackFeature {
         walletCurrency,
         marketable,
         hashName,
-        publisherFee
+        publisherFee,
+        lowestListingPrice
     }) {
 
         // Additional checks for market eligibility, see https://github.com/SteamDatabase/SteamTracking/blob/13e4e0c8f8772ef316f73881af8c546218cf7117/steamcommunity.com/public/javascript/economy_v2.js#L3675
@@ -68,8 +69,7 @@ export default class FQuickSellOptions extends CallbackFeature {
                 || {};
 
             if (priceHigh > 0) {
-                // TODO calculate actual lowest listing price and avoid hard-coding this value
-                priceHigh = Math.max((priceHigh / 100) + parseFloat(diff), 0.03) || 0;
+                priceHigh = Math.max((priceHigh / 100) + parseFloat(diff), lowestListingPrice) || 0;
                 priceHigh = priceHigh.toFixed(2) * 100;
             }
 
@@ -93,7 +93,7 @@ export default class FQuickSellOptions extends CallbackFeature {
 
         function enableButtons(enable) {
             for (const button of marketActions.querySelectorAll(".item_market_action_button")) {
-                button.classList[enable ? "remove" : "add"]("btn_disabled");
+                button.classList.toggle("btn_disabled", !enable);
             }
         }
 
