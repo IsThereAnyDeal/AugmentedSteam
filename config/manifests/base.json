@@ -231,7 +231,7 @@
         "*://steamcommunity.com/id/*/stats/*",
         "*://steamcommunity.com/profiles/*/stats/*"
       ],
-      "js": "js/community/stats.js"
+      "js": "js/community/profile_stats.js"
     },
     {
       "matches": [
@@ -320,6 +320,10 @@
       "js": "js/community/booster_creator.js"
     },
     {
+      "matches": "*://steamcommunity.com/stats/*/achievements",
+      "js": "js/community/global_stats.js"
+    },
+    {
       "matches": "*://steamcommunity.com/*",
       "exclude_matches": [
         "*://steamcommunity.com/login[/*]",
@@ -335,7 +339,8 @@
         "*://steamcommunity.com/app/*",
         "*://steamcommunity.com/sharedfiles/filedetails[/]?*id=*",
         "*://steamcommunity.com/sharedfiles/editguide[/]?*",
-        "*://steamcommunity.com/tradingcards/boostercreator"
+        "*://steamcommunity.com/tradingcards/boostercreator",
+        "*://steamcommunity.com/stats/*/achievements"
       ],
       "js": "js/community/default.js"
     },

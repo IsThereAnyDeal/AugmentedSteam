@@ -21,7 +21,7 @@ export default Object.freeze({
     "BADGES": 19,
     "GAME_CARD": 20,
     "FRIENDS_THAT_PLAY": 21,
-    "FRIENDS": 22, // unused
+    "GLOBAL_STATS": 22,
     "MARKET_SEARCH": 23,
     "INVENTORY": 24,
     "MARKET_LISTING": 25,
@@ -30,7 +30,7 @@ export default Object.freeze({
     "GROUP_HOME": 28,
     "GUIDES": 29,
     "COMMUNITY_APP": 30,
-    "COMMUNITY_STATS": 31,
+    "PROFILE_STATS": 31,
     "MY_WORKSHOP": 32,
     "SHARED_FILES": 33,
     "WORKSHOP_BROWSE": 34,
