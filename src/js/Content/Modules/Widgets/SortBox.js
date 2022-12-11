@@ -127,7 +127,7 @@ class Sortbox {
         const arrowDown = "↓";
         const arrowUp = "↑";
 
-        const box = HTML.element(
+        const box = HTML.toElement(
             `<div class="es-sortbox es-sortbox--${name}">
                 <div class="es-sortbox__label">${Localization.str.sort_by}</div>
                 <div id="${id}_container" class="es-sortbox__container">

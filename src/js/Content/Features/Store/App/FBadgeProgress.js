@@ -1,5 +1,5 @@
 import {Background, DOMHelper, Feature, User} from "../../../modulesContent";
-import {HTML, HTMLParser, Localization, SyncedStorage} from "../../../../modulesCore";
+import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 
 export default class FBadgeProgress extends Feature {
 
@@ -39,7 +39,7 @@ export default class FBadgeProgress extends Feature {
     }
 
     _loadBadgeContent(targetSelector, result) {
-        const dummy = HTMLParser.htmlToDOM(result);
+        const dummy = HTML.toDom(result);
 
         /*
          * grap badge and game cards

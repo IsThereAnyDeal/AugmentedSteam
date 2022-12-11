@@ -1,4 +1,4 @@
-import {HTMLParser, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
+import {HTML, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
 import {Background, Feature, Messenger, Sortbox} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -86,7 +86,7 @@ export default class FReviewSort extends Feature {
 
             const footer = document.querySelector("#leftContents > .workshopBrowsePaging:last-child");
             for (const {node} of displayedReviews) {
-                footer.insertAdjacentElement("beforebegin", HTMLParser.htmlToElement(node));
+                HTML.beforeBegin(footer, node);
             }
 
             // Add back sanitized event handlers

@@ -37,7 +37,7 @@ export default class FEarlyAccess extends Feature {
 
             const imageUrl = ExtensionResources.getURL(imageName);
 
-            this._container = HTML.element(
+            this._container = HTML.toElement(
                 `<span class="es_overlay_container">
                     <span class="es_overlay">
                         <img title="${Localization.str.early_access}" src="${imageUrl}">

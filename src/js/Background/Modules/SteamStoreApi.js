@@ -1,5 +1,7 @@
+import {HTML} from "../../Core/Html/Html";
 import {HTMLParser} from "../../Core/Html/HtmlParser";
 import {Errors} from "../../Core/Errors/Errors";
+import {StringUtils} from "../../Core/Utils/StringUtils";
 import {Api} from "./Api";
 import {IndexedDB} from "./IndexedDB";
 import {CacheStorage} from "./CacheStorage";
@@ -63,14 +65,14 @@ class SteamStoreApi extends Api {
 
     static async currencyFromWallet() {
         const html = await SteamStoreApi.getPage("/steamaccount/addfunds");
-        const dummyPage = HTMLParser.htmlToDOM(html);
+        const dummyPage = HTML.toDom(html);
 
         return dummyPage.querySelector("input[name=currency]").value;
     }
 
     static async currencyFromApp() {
         const html = await SteamStoreApi.getPage("/app/220");
-        const dummyPage = HTMLParser.htmlToDOM(html);
+        const dummyPage = HTML.toDom(html);
 
         const currency = dummyPage.querySelector("meta[itemprop=priceCurrency][content]");
         if (!currency || !currency.getAttribute("content")) {
@@ -102,7 +104,7 @@ class SteamStoreApi extends Api {
                 throw new Errors.LoginError("store");
             }
         });
-        const dummyPage = HTMLParser.htmlToDOM(html);
+        const dummyPage = HTML.toDom(html);
 
         const node = dummyPage.querySelector("#dselect_user_country");
         return node && node.value;
@@ -141,14 +143,14 @@ class SteamStoreApi extends Api {
         const purchaseDates = new Map();
 
         const html = await SteamStoreApi.getPage("/account/licenses/", {"l": lang});
-        const dummyPage = HTMLParser.htmlToDOM(html);
+        const dummyPage = HTML.toDom(html);
         const nodes = dummyPage.querySelectorAll("#main_content td.license_date_col");
         for (const node of nodes) {
             const name = node.nextElementSibling;
             const removeNode = name.querySelector("div");
             if (removeNode) { removeNode.remove(); }
 
-            let appName = HTMLParser.clearSpecialSymbols(name.textContent.trim());
+            let appName = StringUtils.clearSpecialSymbols(name.textContent.trim());
             for (const regex of replaceRegex) {
                 appName = appName.replace(regex, "");
             }

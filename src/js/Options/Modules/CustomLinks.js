@@ -10,7 +10,7 @@ class CustomLinks {
     }
 
     init() {
-        this._template = HTML.element(
+        this._template = HTML.toElement(
             `<div class="custom-link option js-custom-link">
                 <input type="checkbox" name="${this._type}_custom_enabled">
                 <div>

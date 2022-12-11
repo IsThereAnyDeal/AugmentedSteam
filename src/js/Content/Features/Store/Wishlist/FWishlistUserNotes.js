@@ -10,7 +10,7 @@ export default class FWishlistUserNotes extends CallbackFeature {
 
     setup() {
         this._userNotes = new UserNotes();
-        this._noteEl = HTML.element(`<div class="esi-note esi-note--wishlist ellipsis">${Localization.str.user_note.add}</div>`);
+        this._noteEl = HTML.toElement(`<div class="esi-note esi-note--wishlist ellipsis">${Localization.str.user_note.add}</div>`);
 
         document.addEventListener("click", ({target}) => {
             if (!target.classList.contains("esi-note")) { return; }

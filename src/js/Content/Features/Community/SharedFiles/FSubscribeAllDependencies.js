@@ -13,7 +13,7 @@ export default class FSubscribeAllDependencies extends Feature {
 
             if (document.querySelector(".newmodal") === null) { return; }
 
-            const subBtn = HTML.element(
+            const subBtn = HTML.toElement(
                 `<div class="btn_blue_steamui btn_medium">
                     <span>${Localization.str.workshop.subscribe_all}</span>
                 </div>`
@@ -31,7 +31,7 @@ export default class FSubscribeAllDependencies extends Feature {
                 active = true;
 
                 const items = document.querySelectorAll(".newmodal #RequiredItems > a");
-                const loader = HTML.element("<div class='loader'></div>");
+                const loader = HTML.toElement("<div class='loader'></div>");
                 const originalContainer = document.querySelector("#rightContents #RequiredItems");
                 let failed = false;
 

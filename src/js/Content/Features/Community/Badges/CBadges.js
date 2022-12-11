@@ -1,4 +1,4 @@
-import {HTMLParser} from "../../../../Core/Html/HtmlParser";
+import {HTML, HTMLParser} from "../../../../modulesCore";
 import {CommunityUtils, ContextType, DOMHelper, RequestData} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
 import FCardExchangeLinks from "../FCardExchangeLinks";
@@ -35,7 +35,7 @@ export class CBadges extends CCommunityBase {
                 const response = await RequestData.getHttp(url.toString());
 
                 const delayedLoadImages = HTMLParser.getVariableFromText(response, "g_rgDelayedLoadImages", "object");
-                const dom = HTMLParser.htmlToDOM(response);
+                const dom = HTML.toDom(response);
 
                 await callback(dom, delayedLoadImages);
 

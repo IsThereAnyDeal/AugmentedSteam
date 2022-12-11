@@ -4,7 +4,7 @@ import {CallbackFeature, ConfirmDialog} from "../../../modulesContent";
 export default class FToggleComments extends CallbackFeature {
 
     setup() {
-        this._btnEl = HTML.element('<span class="btn_grey_grey btn_small_thin as_comments_toggle"><span></span></span>');
+        this._btnEl = HTML.toElement('<span class="btn_grey_grey btn_small_thin as_comments_toggle"><span></span></span>');
 
         this.callback();
     }

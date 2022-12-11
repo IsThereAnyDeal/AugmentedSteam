@@ -1,4 +1,4 @@
-import {GameId, HTML, HTMLParser, Localization} from "../../../../modulesCore";
+import {GameId, HTML, Localization} from "../../../../modulesCore";
 import {Feature, RequestData} from "../../../modulesContent";
 
 export default class FInGameStoreLink extends Feature {
@@ -17,7 +17,7 @@ export default class FInGameStoreLink extends Feature {
         // Otherwise fetch the profile's miniprofile hover content
         if (!appid) {
             const html = await RequestData.getHttp(`https://steamcommunity.com/miniprofile/${this._avatarNode.dataset.miniprofile}`);
-            const doc = HTMLParser.htmlToDOM(html);
+            const doc = HTML.toDom(html);
             appid = GameId.getAppidImgSrc(doc.querySelector("img.game_logo"));
             if (!appid) { return; }
         }

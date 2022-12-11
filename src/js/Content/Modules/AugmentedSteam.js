@@ -66,7 +66,7 @@ class AugmentedSteam {
     }
 
     static _addWarning(innerHTML, stopShowingHandler) {
-        const el = HTML.element(
+        const el = HTML.toElement(
             `<div class="es_warn js-warn">
                 <div class="es_warn__cnt">
                     <div>${innerHTML}</div>

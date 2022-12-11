@@ -15,32 +15,34 @@ class HTML {
         return str.replace(/[&<>"']/g, (m) => { return map[m]; });
     }
 
-    static fragment(html) {
+    static toDom(html) {
         const template = document.createElement("template");
         template.innerHTML = DOMPurify.sanitize(html);
         return template.content;
     }
 
+    // TODO deprecated, to be removed
     static element(html) {
-        return HTML.fragment(html).firstElementChild;
+        return HTML.toElement(html);
+    }
+
+    static toElement(html) {
+        return HTML.toDom(html).firstElementChild;
     }
 
     static _getNode(node) {
         let _node = node;
 
-        if (typeof _node == "undefined" || _node === null) {
-            console.warn(`${_node} is not an Element.`);
-            return null;
-        }
-        if (typeof _node == "string") {
+        if (typeof _node === "string") {
             _node = document.querySelector(_node);
         }
-        if (!(_node instanceof Element)) {
-            console.warn(`${_node} is not an Element.`);
-            return null;
+
+        if (_node instanceof Element) {
+            return _node;
         }
 
-        return _node;
+        console.warn(`${_node} is not an Element.`);
+        return null;
     }
 
     static inner(node, html) {
@@ -73,13 +75,13 @@ class HTML {
             wrappedNodes.push(cur.nextElementSibling);
         }
 
-        const _wrapper = HTML.element(wrapper);
+        const _wrapper = HTML.toElement(wrapper);
         _startEl.replaceWith(_wrapper);
         _wrapper.append(...wrappedNodes);
         return _wrapper;
     }
 
-    static adjacent(node, position, html) {
+    static _adjacent(node, position, html) {
         const _node = HTML._getNode(node);
 
         if (_node) {
@@ -89,19 +91,19 @@ class HTML {
     }
 
     static beforeBegin(node, html) {
-        HTML.adjacent(node, "beforebegin", html);
+        HTML._adjacent(node, "beforebegin", html);
     }
 
     static afterBegin(node, html) {
-        HTML.adjacent(node, "afterbegin", html);
+        HTML._adjacent(node, "afterbegin", html);
     }
 
     static beforeEnd(node, html) {
-        HTML.adjacent(node, "beforeend", html);
+        HTML._adjacent(node, "beforeend", html);
     }
 
     static afterEnd(node, html) {
-        HTML.adjacent(node, "afterend", html);
+        HTML._adjacent(node, "afterend", html);
     }
 }
 

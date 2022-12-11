@@ -143,7 +143,7 @@ class Sidebar {
                 console.warn("Content for sidebar entry not found");
             }
 
-            const groupNode = HTML.element(
+            const groupNode = HTML.toElement(
                 `<div class="sidebar__group js-sb-grp">
                     <a class="sidebar__item sidebar__item--cat${multiClass} js-sb-cat" data-id="${contentId}">
                         ${Localization.getString(localeKey)}
