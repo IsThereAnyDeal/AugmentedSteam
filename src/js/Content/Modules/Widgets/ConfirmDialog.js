@@ -25,13 +25,19 @@ class ConfirmDialog {
         true);
     }
 
-    static openFeatureHint(optionStr) {
-        return this.open(
-            "Augmented Steam",
-            `${Localization.str.feature_hint.desc}<br><br>${optionStr}<br><br>${Localization.str.feature_hint.reminder}`,
-            Localization.str.thewordyes,
-            Localization.str.thewordno
-        );
+    static openFeatureHint(optionStr, strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton) {
+
+        const _strTitle = strTitle ? `Augmented Steam - ${strTitle}` : "Augmented Steam";
+
+        const _strDescription = `${strDescription ? `${strDescription}<br><br>` : ""}
+            ${Localization.str.feature_hint.desc}<br><br>
+            <span class="as_feature_hint_option">${Localization.str.options[optionStr]}</span><br><br>
+            ${Localization.str.feature_hint.reminder}`;
+
+        const _strOKButton = strOKButton || Localization.str.thewordyes;
+        const _strCancelButton = strCancelButton || Localization.str.thewordno;
+
+        return this.open(_strTitle, _strDescription, _strOKButton, _strCancelButton, strSecondaryActionButton);
     }
 }
 

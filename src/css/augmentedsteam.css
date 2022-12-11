@@ -3148,3 +3148,10 @@ label.es_dlc_label > input:checked::after {
   margin: auto;
   max-width: 100%;
 }
+
+/*
+ * Dialogs
+ */
+.as_feature_hint_option {
+  color: white;
+}

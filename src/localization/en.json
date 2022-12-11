@@ -3,10 +3,7 @@
     "addtocart_dialog": {
         "error_desc": "An error occurred while adding your item to Cart.",
         "title": "Added to Shopping Cart",
-        "desc": {
-            "added_to_cart": "The item was added to your Shopping Cart.",
-            "enable_feature": "Would you like to enable a feature that prevents redirections to your Cart?"
-        },
+        "desc": "The item was added to your Shopping Cart.",
         "checkout": "No, checkout",
         "continue": "Yes, continue shopping"
     },
@@ -36,6 +33,7 @@
         "total_size": "Total size: __size__"
     },
     "cart": "Cart",
+    "in_cart": "In Cart",
     "steamid_of_user": "__user__'s SteamID",
     "click_to_copy": "Click to copy",
     "copied": "Copied to your clipboard!",
