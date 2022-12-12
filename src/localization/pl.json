@@ -6,7 +6,6 @@
     "more_on_steampeek": "Zobacz więcej na SteamPeek",
     "invite_friends": "Zaproś znajomych",
     "invite_to_group": "Zaproś do grupy",
-    "inverse": "Odwróć",
     "transactionStatus": "Liczba żądań zakończonych niepowodzeniem: __failed__. Pobrano __size__ z __total__ transakcji.",
     "custom_tags": "Niestandardowe tagi",
     "add_tag": "Dodaj tag",
@@ -33,7 +32,6 @@
     "remove": "Usuń",
     "get_help": "Pomoc",
     "add_selected_dlc_to_cart": "Dodaj zaznaczone DLC do koszyka",
-    "credits": "Autorzy",
     "store_transactions": "Transakcje w sklepie",
     "sign_in": "Zaloguj się",
     "games_coupon": "Tytuły, dla których masz kupony",
@@ -106,7 +104,6 @@
     "language": "Język",
     "theworddefault": "Domyślne",
     "thewordclear": "Wyczyść",
-    "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Dowiedz się więcej</a> o kuponach Steam",
     "show": "Pokaż",
     "badges_all": "Wszystkie odznaki",
     "comparison_mode": "Włącz cały opis gry, żeby ją porównać",
@@ -131,7 +128,6 @@
     "read_reviews": "Przeczytaj recenzje",
     "read_more_reviews": "Przeczytaj więcej recenzji na",
     "gameplay": "Gameplay",
-    "youtube_gameplay": "Gameplaye na YouTube",
     "size": "Rozmiaru",
     "package_info": "Informacje o pakiecie",
     "badge_completion_avg": "Śr. koszt wytworzenia odznaki: __cost__",
@@ -163,9 +159,6 @@
     "gift_transactions": "Zakupy prezentów",
     "demos": "Wersje demo",
     "notinterested": "Tytuły oznaczone jako ignorowane",
-    "price_above": "Tytuły, które kosztują więcej niż",
-    "price_above_tooltip": "Wprowadź zero dla tytułów dostępnych za darmo lub bez oznaczeń cenowych; pozostaw to pole puste, aby wyłączyć tę funkcję",
-    "price_above_wrong_format": "Nieprawidłowy format. Oczekiwany to: __pattern__",
     "reviews_below": "Tytuły z liczbą recenzji nieprzekraczającą",
     "reviews_below_tooltip": "Wprowadź zero dla tytułów bez wystawionych recenzji; pozostaw to pole puste, aby wyłączyć tę funkcję",
     "news": "Aktualności",
@@ -180,7 +173,6 @@
     "net_gain": "Dochód:",
     "apppage_recentupdates": "Ostatnie wydarzenia i ogłoszenia",
     "apppage_eaheader": "Informacje o wczesnym dostępie",
-    "apppage_eabanner": "Baner dyskusji wczesnego dostępu",
     "apppage_workshop": "Baner Warsztatu Steam",
     "apppage_greenlight": "Baner Steam Greenlight",
     "apppage_legal": "Informacje prawne",
@@ -195,19 +187,16 @@
     "rating_details": "Zobacz informacje o ocenach",
     "drops_worth_avg": "Szacowana wartość",
     "using_store_return": "Kliknij tutaj, aby powrócić do sklepu dla __base__.",
-    "family_sharing_notice": "<b>Uwaga:</b> Ta gra jest wykluczona z funkcji udostępniania gier.",
     "valid": "Ważne do",
     "price_options": "Opcje cenowe",
     "no_results_found": "Nie znaleziono wyników",
     "visit_store": "Odwiedź stronę w sklepie",
     "all": "Wszystko",
     "total_spent": "Łącznie wydano",
-    "external_funds": "Wykorzystane środki zewnętrzne",
     "games_with_drops": "__dropsgames__ gier z kartami do zdobycia",
     "binder_view": "Widok skoroszytu",
     "view_stats": "Zobacz statystyki",
     "using_language": "Aktualnie przeglądasz Steam w języku __current__m.",
-    "community_login": "Upewnij się, że jesteś zalogowany(-a) na __link__, by w pełni korzystać ze wszystkich funkcji Augmented Steam.",
     "popular": "Popularne",
     "visit_trade_forum": "Odwiedź forum wymiany",
     "software": "Programy",
@@ -235,7 +224,9 @@
         "select": "Wybierz:",
         "leave": "Opuść grupy",
         "selected": "Wybrano: __n__",
-        "leave_admin_confirm": "Jesteś administratorem w grupie: __name__.<br>Czy na pewno chcesz ją opuścić?"
+        "leave_admin_confirm": {
+            "want_to_leave": "Czy na pewno chcesz opuścić tę grupę?"
+        }
     },
     "export": {
         "wishlist": "Eksportuj listę życzeń",
@@ -268,7 +259,6 @@
     "cancel": "Anuluj",
     "wiki_article": "Pokaż artykuł na __pcgw__",
     "view_all": "POKAŻ WSZYSTKICH",
-    "programming": "Programowanie",
     "games_with_booster": "__boostergames__ gier może wygenerować pakiety kart",
     "sort_by": "Sortuj wg:",
     "sort_by_keyword": "Sortuj wg: __keyword__",
@@ -322,7 +312,6 @@
     "show_wishlist_total": "Wyświetl łączną wartość listy życzeń",
     "tag_short": "Używaj inicjałów zamiast pełnych nazw etykiet, by zaoszczędzić miejsce",
     "no_price_data": "Brak dostępnych informacji o cenie",
-    "exclude_tags": "Wyklucz tagi",
     "user_score": "Ocena graczy",
     "user_reviews": "Recenzje użytkowników",
     "review_summary": "__percent__ z __num__ recenzji użytkowników dla tej gry jest pozytywnych.",
@@ -357,16 +346,7 @@
         "compl": "Kompletne ukończenie",
         "submit": "Podaj swój czas",
         "main": "Główny wątek",
-        "no_data": "Nie znaleziono danych",
-        "help": "Kliknij tutaj, by uzyskać pomoc",
-        "wrong": "Niewłaściwa gra?"
-    },
-    "library": {
-        "in_library": "W bibliotece",
-        "error_loading_library": "Wystąpił błąd podczas ładowania twojej biblioteki.",
-        "categories": "Kategorie...",
-        "genres": "Gatunki...",
-        "private_profile": "Zmień status swojego profilu na publiczny <a href='http://steamcommunity.com/my/edit/settings'>w ustawieniach</a>, by skorzystać z tej funkcji."
+        "no_data": "Nie znaleziono danych"
     },
     "spy": {
         "player_data": "Informacje o graczach",
@@ -398,7 +378,6 @@
         "steamcardexchange": "Wyświetlaj odnośniki do SteamCardExchange na stronach odznak",
         "regional_price": "Porównanie cen regionalnych",
         "excludef2p": "Nie wyróżniaj gier Free to Play",
-        "contscroll": "Włącz ciągłe przewijanie wyników wyszukiwania",
         "profile_link_images_none": "Brak",
         "replace_account_name": "Używaj nazwy społecznościowej zamiast nazwy konta",
         "profile_links": "Wyświetlaj odnośniki do profili na:",
@@ -420,7 +399,6 @@
         "wlbuttoncommunityapp": "Wyświetlaj przycisk „Dodaj do listy życzeń” na stronach centrum społeczności",
         "removeguideslanguagefilter": "Nie filtruj automatycznie poradników po języku użytkownika",
         "disablelinkfilter": "Wyłącz potwierdzenia przy przechodzeniu na zewnętrzne serwisy",
-        "showallfriendsthatown": "Wyświetlaj „Znajomi, którzy to posiadają”",
         "regional_price_on": "Wyświetlaj porównanie cen regionalnych:",
         "friends_own": "Tytuły, które posiadają znajomi",
         "horizontalscrolling": "Włącz przewijanie w poziomie za pomocą kółka myszy",
@@ -436,7 +414,6 @@
         "hidespamcomments": "Ukrywaj spam w komentarzach na stronach Warsztatu i profili",
         "hide_owned": "Posiadane tytuły w wynikach wyszukiwania i na stronach tagów",
         "hide_ignored": "Ignorowane tytuły w wynikach wyszukiwania i na stronach tagów",
-        "reset": "Zresetuj ustawienia",
         "api_key": "Klucz API",
         "gift": "Tytuły przechowywane w formie prezentu",
         "show_sysreqcheck": "Wyświetlaj przycisk „Sprawdź swój system” na stronach aplikacji (eksperymentalne!)",
@@ -500,7 +477,6 @@
         "replace_view_client": "Zastąp przyciskiem „Otwórz w kliencie Steam”",
         "show_empty_wishlist": "Wyświetlaj przycisk „Wyczyść listę życzeń”",
         "show_wishlist_stats": "Wyświetlaj podsumowanie na liście życzeń",
-        "show_user_notes": "Wyświetlaj notatki użytkownika na liście życzeń i stronach aplikacji",
         "inventory_nav_text": "Wyświetlaj zaawansowane opcje nawigacji po stronach ekwipunku",
         "carousel_description": "Wyświetlaj opisy aplikacji na karuzeli",
         "market_total": "Wyświetlaj podsumowanie transakcji na rynku",
@@ -574,28 +550,22 @@
             "reset": "Resetuj"
         },
         "removebroadcasts": "Usuń wszystkie transmisje na żywo",
-        "maintainers": "Patroni projektu",
-        "with_help_of": "z dużą pomocą naszych __contributors__",
-        "contributors": "super współautorów",
         "apppage": "Strona aplikacji",
         "exfgls": "Pokaż informacje kiedy aplikacja jest wykluczona z opcji Udostępniania gier",
-        "custom_style_disable": "Wyłącz niestandardowe motywy",
         "saving": "Zapisywanie...",
         "user_notes": {
             "user_notes": "Notatki użytkownika",
             "app": "Na stronach aplikacji",
             "wishlist": "Na mojej liście życzeń",
             "loc": "Lokalizacja przechowywania",
-            "synced_storage": "Pamięć synchronizowana/lokalna",
             "local": "Lokalna baza danych",
             "itad": "Serwer IsThereAnyDeal"
         },
         "show_custom_themes": "Wyświetlaj niestandardowe motywy",
         "oneclickremovewl": "Pomiń potwierdzanie przy usuwaniu produktów",
-        "profile_pinned_bg": "Przypnij pozycję tła profilu podczas przewijania",
         "replacecommunityhublinks": "Odsyłaj do sklepu zamiast do centrum społeczności\n",
-        "hideannouncementcomments": "Domyślnie ukrywaj komentarze pod wszystkimi ogłoszeniami grupowymi",
-        "friend_activity": "Strona aktywności znajomych"
+        "friend_activity": "Strona aktywności znajomych",
+        "confirmdeletecomment": "Pokaż potwierdzenie przy usuwaniu komentarzy"
     },
     "ready": {
         "errormsg": "Wystąpił błąd podczas wczytywania danych Augmented Steam",
@@ -637,20 +607,16 @@
     },
     "tag": {
         "wishlist": "Na liście życzeń",
-        "friends_own": "__friendcount__ znajomych posiada tę grę",
         "coupon": "Kupon",
-        "friends_rec": "<a href=\"http://store.steampowered.com/recommended/byfriends/__appid__\">__friendcount__ znajomych poleca tę grę",
         "inv_gift": "Prezent",
         "inv_guestpass": "Klucz tymczasowy",
         "owned": "Posiadane",
         "notinterested": "Ignorowane",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ znajomych chce tej gry</a>",
         "collection": "W kolekcji",
         "waitlist": "Na liście oczekujących"
     },
     "wallet": {
         "custom_amount": "Dodaj dowolną kwotę",
-        "custom_amount_text": "Kwota przekraczająca __minamount__",
         "custom_giftcard": "Wybierz kartę podarunkową o wartości __input__"
     },
     "wsgf": {
@@ -671,8 +637,7 @@
         "send_to_itad": "Wyślij posiadane gry do IsThereAnyDeal",
         "sending": "Trwa wczytywanie pakietów i gier z twojej biblioteki, i wysyłanie ich do IsThereAnyDeal.com",
         "info": {
-            "itad-steam": "Połączenie Augmented Steam z IsThereAnyDeal pozwoli ci użyć podświetlania i oznaczania gier na twojej liście życzeń i w kolekcji, nawet jeżeli nie masz ich dodanych na platformie Steam.",
-            "steam-itad": ""
+            "itad-steam": "Połączenie Augmented Steam z IsThereAnyDeal pozwoli ci użyć podświetlania i oznaczania gier na twojej liście życzeń i w kolekcji, nawet jeżeli nie masz ich dodanych na platformie Steam."
         }
     },
     "tradeoffer": {
@@ -715,12 +680,8 @@
         "update_prompt": "Zaktualizuj treść notatki",
         "add_for_game": "Notatka dla __gamename__",
         "not_enough_space": "Za mało miejsca, aby zapisać notatkę",
-        "not_enough_space_desc": "",
         "close_on_storage": "Zaczyna ci brakować miejsca",
-        "close_on_storage_desc": "",
-        "storage_warning_desc": "",
         "save_itad": "Zapisz notatki na serwerze ITAD",
-        "save_synced_storage": "",
         "save_local": "Przechowuj notatki lokalnie"
     },
     "queue": {
@@ -739,7 +700,6 @@
         "finished": "Gotowe! Zakończone powodzeniem: __success__, zakończone niepowodzeniem: __fail__. Kliknij przycisk „OK”, by odświeżyć stronę",
         "failed": "Zakończone niepowodzeniem: __n__"
     },
-    "this_version": "To wydanie",
     "original_authors": "Pierwotni autorzy",
     "acknowledgements": "Podziękowania",
     "other": "Inne",
@@ -798,5 +758,14 @@
     "thewordno": "Nie",
     "show_comments": "Pokaż komentarze",
     "hide_comments": "Ukryj komentarze",
-    "fav_emoticons_no_access": "Nie masz dostępu do tej emotikony"
+    "fav_emoticons_no_access": "Nie masz dostępu do tej emotikony",
+    "delete_comment_prompt": "Czy na pewno chcesz usunąć ten komentarz?",
+    "addtocart_dialog": {
+        "error_desc": "Wystąpił błąd podczas dodawania przedmiotu do koszyka.",
+        "title": "Dodano do koszyka",
+        "continue": "Tak, kontynuuj zakupy"
+    },
+    "theworderror": "Błąd",
+    "quick_sell_verify": "Wymagane potwierdzenie Steam Guard",
+    "show_all": "Pokaż wszystko"
 }

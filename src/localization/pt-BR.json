@@ -13,9 +13,9 @@
     "enter_tag": "Insira o marcador personalizado a ser adicionado",
     "status": "Estado:",
     "connect": "Conectar",
-    "connected": "Conectado",
+    "connected": "conectado",
     "disconnect": "Desconectar",
-    "disconnected": "Desconectado",
+    "disconnected": "desconectado",
     "oneclickgoo": "Transformar em gemas com 1 clique...",
     "view_in_library": "Ver na biblioteca",
     "support": "Suporte",
@@ -33,7 +33,6 @@
     "remove": "Remover",
     "get_help": "Obter ajuda",
     "add_selected_dlc_to_cart": "Adicionar selec. ao carrinho",
-    "credits": "Créditos",
     "store_transactions": "Transações na loja",
     "sign_in": "Entrar",
     "games_coupon": "Jogos com cupons",
@@ -106,7 +105,6 @@
     "language": "Idioma",
     "theworddefault": "Padrão",
     "thewordclear": "Limpar",
-    "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Saiba mais</a> sobre Cupons Steam",
     "show": "Exibir",
     "badges_all": "Todas as insígnias",
     "comparison_mode": "Ative o modo \"Todos os jogos\" para comparar jogos",
@@ -163,9 +161,6 @@
     "gift_transactions": "Transações de presentes",
     "demos": "Demonstrações",
     "notinterested": "Itens ignorados",
-    "price_above": "Itens que custam mais de",
-    "price_above_tooltip": "Insira zero para itens gratuitos ou sem preço; deixe em branco para desativar",
-    "price_above_wrong_format": "Formato incorreto. Insira um valor desta forma: __pattern__",
     "reviews_below": "Itens com total de análises menor que",
     "reviews_below_tooltip": "Insira zero para itens sem análises; deixe em branco para desativar",
     "news": "Notícias",
@@ -184,8 +179,8 @@
     "apppage_workshop": "Banner da Oficina Steam",
     "apppage_greenlight": "Banner do Steam Greenlight",
     "apppage_legal": "Informações jurídicas",
-    "apppage_franchise": "Franquia",
-    "apppage_morefromfranchise": "Mais da franquia",
+    "apppage_franchise": "Série",
+    "apppage_morefromfranchise": "Mais da série",
     "bug_feature": "Relatar bug / Sugerir recurso",
     "always": "Sempre",
     "compare": "Comparar",
@@ -195,7 +190,6 @@
     "rating_details": "Ver detalhes da avaliação",
     "drops_worth_avg": "Valor aproximado:",
     "using_store_return": "Clique aqui para voltar à loja da região __base__.",
-    "family_sharing_notice": "<b>Observação:</b> este jogo não está disponível no Compartilhamento de Biblioteca Steam.",
     "valid": "Válido",
     "price_options": "Opções de preço",
     "no_results_found": "Nenhum resultado encontrado",
@@ -207,7 +201,6 @@
     "binder_view": "Grade",
     "view_stats": "Ver estatísticas",
     "using_language": "Você está navegando pelo Steam em __current__.",
-    "community_login": "Certifique-se de ter iniciado a sessão em __link__ para poder usar todos os recursos do Augmented Steam.",
     "popular": "Populares",
     "visit_trade_forum": "Visitar fórum de troca",
     "software": "Softwares",
@@ -235,7 +228,10 @@
         "select": "Selecionar:",
         "leave": "Sair dos grupos",
         "selected": "__n__ selecionado(s).",
-        "leave_admin_confirm": "Você atualmente é administrador de __name__.<br>Tem certeza de que deseja sair deste grupo?"
+        "leave_admin_confirm": {
+            "currently_admin": "Você é um administrador do grupo \"__name__\".",
+            "want_to_leave": "Tem certeza de que deseja sair deste grupo?"
+        }
     },
     "export": {
         "wishlist": "Exportar lista de desejos",
@@ -249,7 +245,7 @@
     "separator": "Separador",
     "empty_wishlist": {
         "title": "Esvaziar lista de desejos",
-        "confirm": "Tem certeza de que deseja esvaziar a sua lista de desejos?\n\nEsta ação não pode ser revertida!",
+        "confirm": "Tem certeza de que deseja esvaziar a sua lista de desejos?\n\nEsta ação não pode ser desfeita!",
         "removing": "Removendo aplicativo __cur__ de __total__..."
     },
     "about": "Sobre",
@@ -268,7 +264,6 @@
     "cancel": "Cancelar",
     "wiki_article": "Ver artigo da __pcgw__",
     "view_all": "VER TODOS",
-    "programming": "Programação",
     "games_with_booster": "Apto a receber pacotes bônus de __boostergames__ jogos",
     "sort_by": "Ordenar por:",
     "sort_by_keyword": "Ordenar por __keyword__",
@@ -322,7 +317,6 @@
     "show_wishlist_total": "Exibir total da lista de desejos",
     "tag_short": "Usar marcadores curtos para economizar espaço",
     "no_price_data": "Não há informações de preço disponíveis",
-    "exclude_tags": "Excluir marcadores",
     "user_score": "Pontuação de usuários",
     "user_reviews": "Análises de usuários",
     "review_summary": "__percent__ das __num__ análises de usuários deste jogo são positivas.",
@@ -357,16 +351,7 @@
         "compl": "Completacionista",
         "submit": "Envie o seu tempo",
         "main": "História principal",
-        "no_data": "Nenhum dado encontrado",
-        "help": "Clique aqui para ajudar",
-        "wrong": "Jogo errado?"
-    },
-    "library": {
-        "in_library": "Na biblioteca",
-        "error_loading_library": "Não foi possível carregar a sua biblioteca.",
-        "categories": "Categorias...",
-        "genres": "Gêneros...",
-        "private_profile": "Altere a privacidade do seu perfil para pública nas <a href='http://steamcommunity.com/my/edit/settings'>configurações</a> para usar este recurso."
+        "no_data": "Nenhum dado encontrado"
     },
     "spy": {
         "player_data": "Dados dos jogadores",
@@ -375,7 +360,10 @@
         "players_2weeks": "Jogadores nas duas últimas semanas",
         "average_playtime": "Tempo médio de jogo",
         "average_playtime_2weeks": "Tempo médio de jogo nas duas últimas semanas",
-        "formatted_time": "__hours__ horas e __minutes__ minutos"
+        "formatted_time": "__hours__ horas e __minutes__ minutos",
+        "playtime_unit_day": "__days__d",
+        "playtime_unit_hour": "__hours__h",
+        "playtime_unit_minute": "__minutes__m"
     },
     "options": {
         "community_default_tab": "Aba padrão da página inicial da comunidade",
@@ -398,7 +386,6 @@
         "steamcardexchange": "Exibir links para o site SteamCardExchange em insígnias",
         "regional_price": "Comparação de preços regionais",
         "excludef2p": "Não destacar jogos gratuitos para jogar",
-        "contscroll": "Ativar rolagem contínua em resultados da busca",
         "profile_link_images_none": "Nenhum",
         "replace_account_name": "Substituir nome de usuário pelo nome de perfil",
         "profile_links": "Exibir links em perfis para:",
@@ -413,17 +400,16 @@
         "opencritic": "Exibir avaliações e análises do site Opencritic",
         "hideactivelistings": "Ocultar todos os anúncios ativos na página inicial por padrão",
         "showlowestmarketprice": "Exibir o preço mais baixo para os meus anúncios",
-        "clear": "Tem certeza de que deseja restaurar todas as configurações? Isso não pode ser revertido.",
+        "clear": "Tem certeza de que deseja restaurar todas as configurações? Isso não pode ser desfeito.",
         "profile_api_info": "Exibir link para informações do usuário via API em perfis",
         "coupon": "Itens que você possui um cupom",
         "show_package_info": "Exibir botão \"Informações do pacote\" para todos os pacotes",
         "wlbuttoncommunityapp": "Exibir botão \"Adicionar à lista de desejos\" em Centrais da Comunidade",
         "removeguideslanguagefilter": "Não filtrar guias pelo idioma do usuário automaticamente",
         "disablelinkfilter": "Desativar confirmação ao acessar sites externos",
-        "showallfriendsthatown": "Exibir \"Todos os amigos que possuem\"",
         "regional_price_on": "Exibir comparação de preços regionais",
         "friends_own": "Itens que os seus amigos possuem",
-        "horizontalscrolling": "Ativar rolagem horizontal com a rodinha do mouse",
+        "horizontalscrolling": "Ativar rolagem horizontal com a roda do mouse",
         "supportinfo": "Exibir informações de suporte",
         "drm": "Exibir avisos para GDD (DRM) de terceiros",
         "show_regionwarning": "Exibir aviso caso esteja navegando em uma região que não seja a da própria conta",
@@ -436,7 +422,6 @@
         "hidespamcomments": "Ocultar comentários de spam em perfis e nos itens da Oficina",
         "hide_owned": "Itens que você possui nas páginas de marcadores e de busca",
         "hide_ignored": "Itens que você ignorou nas páginas de marcadores e de busca",
-        "reset": "Redefinir opções",
         "api_key": "Chave da API",
         "gift": "Itens que você possui uma cópia de presente",
         "show_sysreqcheck": "Exibir botão para verificar requisitos do sistema em páginas de aplicativos (experimental!)",
@@ -500,7 +485,6 @@
         "replace_view_client": "Substituir por \"Ver no cliente\"",
         "show_empty_wishlist": "Exibir botão \"Esvaziar lista de desejos\"",
         "show_wishlist_stats": "Exibir dados da lista de desejos",
-        "show_user_notes": "Exibir observações de usuários em páginas de aplicativos e na lista de desejos",
         "inventory_nav_text": "Exibir navegação avançada no inventário",
         "carousel_description": "Exibir descrições de aplicativos no carrossel da página inicial da loja",
         "market_total": "Exibir o resumo de transações no Mercado automaticamente",
@@ -579,7 +563,6 @@
         "contributors": "maravilhosos contribuidores",
         "apppage": "Página de aplicativo",
         "exfgls": "Exibir um aviso se o aplicativo não estiver disponível no Compartilhamento de Biblioteca Steam",
-        "custom_style_disable": "Desativar temas personalizados",
         "saving": "Salvando...",
         "user_notes": {
             "user_notes": "Observações de usuários",
@@ -595,7 +578,11 @@
         "profile_pinned_bg": "Afixar o plano de fundo do perfil ao rolar a página",
         "replacecommunityhublinks": "Substituir links da Central da Comunidade por links da loja",
         "hideannouncementcomments": "Ocultar comentários em anúncios de grupos por padrão",
-        "friend_activity": "Atividade dos amigos"
+        "friend_activity": "Atividade dos amigos",
+        "confirmdeletecomment": "Perguntar antes de excluir um comentário",
+        "showdeckcompat": "Exibir categorias de compatibilidade com o Steam Deck na lista de recursos do jogo (e buscar dados quando indisponíveis)",
+        "show_survey_info": "Exibir dados da pesquisa de desempenho",
+        "addtocart_no_redirect": "Impedir redirecionamento automático ao adicionar itens ao carrinho de compras"
     },
     "ready": {
         "errormsg": "Erro ao carregar dados do Augmented Steam",
@@ -637,14 +624,11 @@
     },
     "tag": {
         "wishlist": "Desejado",
-        "friends_own": "__friendcount__ possuem",
         "coupon": "Cupom",
-        "friends_rec": "Analisado por <a href=\"http://store.steampowered.com/recommended/byfriends/__appid__\">__friendcount__ amigos",
         "inv_gift": "Presente",
         "inv_guestpass": "Passe",
         "owned": "Na conta",
         "notinterested": "Ignorado",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ desejam</a>",
         "collection": "Na coleção",
         "waitlist": "Na lista de espera"
     },
@@ -700,7 +684,8 @@
         "total_price": "preço atual",
         "in_wishlist": "na lista de desejos",
         "on_sale": "em oferta",
-        "no_price": "sem preço"
+        "no_price": "sem preço",
+        "label": "estatísticas"
     },
     "coll": {
         "total_time": "tempo total",
@@ -739,7 +724,6 @@
         "finished": "Pronto! __success__ bem-sucedidos, __fail__ falharam. Clique em OK para recarregar a página",
         "failed": "__n__ falharam"
     },
-    "this_version": "Esta versão",
     "original_authors": "Autores originais",
     "acknowledgements": "Agradecimentos",
     "other": "Outro",
@@ -759,10 +743,10 @@
             "min_count": "Qtd. mín.",
             "max_count": "Qtd. máx."
         },
-        "hide_ea": "Oc. it. em acesso antecipado",
-        "hide_cart": "Ocultar itens no carrinho",
-        "hide_mixed": "Oc. it. com análises neutras",
-        "hide_negative": "Oc. it. com análises negativas"
+        "hide_ea": "Ocultar produtos em acesso antecipado",
+        "hide_cart": "Ocultar produtos no carrinho",
+        "hide_mixed": "Ocultar produtos com análises neutras",
+        "hide_negative": "Ocultar produtos com análises negativas"
     },
     "calc_workshop_size": {
         "file_size": "Tamanho: __size__",
@@ -798,5 +782,31 @@
     "thewordno": "Não",
     "show_comments": "Exibir comentários",
     "hide_comments": "Ocultar comentários",
-    "fav_emoticons_no_access": "Você não tem acesso a este emoticon"
+    "fav_emoticons_no_access": "Você não tem acesso a este emoticon",
+    "delete_comment_prompt": "Tem certeza de que deseja excluir este comentário?",
+    "addtocart_dialog": {
+        "error_desc": "Ocorreu um erro ao adicionar o item ao carrinho.",
+        "title": "Adicionado ao carrinho",
+        "checkout": "Não, finalizar compra",
+        "continue": "Sim, continuar comprando"
+    },
+    "deck_compat": {
+        "header": "Compatibilidade com o Steam Deck",
+        "unknown": "Desconhecido",
+        "unsupported": "Incompatível",
+        "playable": "Jogável",
+        "verified": "Aprovado"
+    },
+    "theworderror": "Erro",
+    "no_data": "Sem dados",
+    "quick_sell_verify": "Requer confirmação do Steam Guard",
+    "show_all": "Exibir tudo",
+    "coupon_learn_more": {
+        "link_text": "Saiba mais",
+        "full_text": "__linkdesc__ sobre Cupons Steam"
+    },
+    "family_sharing_notice": {
+        "notice": "Aviso:",
+        "desc": "Este título não está disponível no Compartilhamento de Biblioteca Steam."
+    }
 }

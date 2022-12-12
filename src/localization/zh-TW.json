@@ -33,7 +33,6 @@
     "remove": "移除",
     "get_help": "取得協助",
     "add_selected_dlc_to_cart": "將所選 DLC 加入購物車",
-    "credits": "製作群",
     "store_transactions": "商店購買",
     "sign_in": "登入",
     "games_coupon": "有優惠券的遊戲",
@@ -106,7 +105,6 @@
     "language": "語言",
     "theworddefault": "預設",
     "thewordclear": "清除",
-    "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">了解更多</a>關於 Steam 優惠券的資訊",
     "show": "顯示",
     "badges_all": "所有徽章",
     "comparison_mode": "啟用所有遊戲總覽以比較遊戲",
@@ -163,9 +161,6 @@
     "gift_transactions": "禮物購買",
     "demos": "試玩版",
     "notinterested": "標記為已忽略的項目",
-    "price_above": "價格高於下方數值的項目",
-    "price_above_tooltip": "輸入 0 來顯示免費或未標價的項目；留白以停用此功能",
-    "price_above_wrong_format": "格式錯誤，應輸入 __pattern__",
     "reviews_below": "評論數少於下方數值的項目",
     "reviews_below_tooltip": "輸入 0 來顯示無評論的項目；留白以停用此功能",
     "news": "新聞",
@@ -195,7 +190,6 @@
     "rating_details": "檢視評分詳情",
     "drops_worth_avg": "大約值",
     "using_store_return": "按此返回__base__地區的商店",
-    "family_sharing_notice": "<b>注意：</b>這款遊戲不支援 Steam 親友同享服務。",
     "valid": "有效",
     "price_options": "價格選項",
     "no_results_found": "未找到結果",
@@ -203,11 +197,10 @@
     "all": "全部",
     "total_spent": "消費總額",
     "external_funds": "外部資金消費紀錄",
-    "games_with_drops": "__dropsgames__ 款遊戲還會掉落卡片",
+    "games_with_drops": "__dropsgames__ 款遊戲還有剩餘的卡片掉落數",
     "binder_view": "簡潔",
     "view_stats": "檢視統計資料",
     "using_language": "你正在以__current__瀏覽 Steam。",
-    "community_login": "請務必登入 __link__ 以使用 Augmented Steam 的完整功能。",
     "popular": "熱門",
     "visit_trade_forum": "造訪交易討論區",
     "software": "軟體",
@@ -229,13 +222,16 @@
     "avg_price_3cards": "三張交換卡片的平均價格：__price__",
     "mods": "模組",
     "groups": {
-        "leave_groups_confirm": "你目前是 __name__ 的管理員。<br>你確定要離開此群組嗎？",
+        "leave_groups_confirm": "你確定要離開所選的 __n__ 個群組嗎？",
         "manage_groups": "管理群組",
         "action_groups": "請從下方選擇你欲採取行動的群組。",
         "select": "選擇：",
         "leave": "離開",
         "selected": "已選擇 __n__ 個。",
-        "leave_admin_confirm": "你目前是 __name__ 的管理員。<br>你確定要離開此群組嗎？"
+        "leave_admin_confirm": {
+            "currently_admin": "你目前是 __name__ 的管理員。",
+            "want_to_leave": "你確定要離開這個群組嗎？"
+        }
     },
     "export": {
         "wishlist": "匯出願望清單",
@@ -268,8 +264,7 @@
     "cancel": "取消",
     "wiki_article": "檢視 __pcgw__ 上的文章",
     "view_all": "檢視全部",
-    "programming": "程式開發",
-    "games_with_booster": "__boostergames__ 款遊戲有資格獲得擴充包",
+    "games_with_booster": "__boostergames__ 款遊戲符合獲得擴充包的資格",
     "sort_by": "排序依據：",
     "sort_by_keyword": "依__keyword__排序",
     "playtime": "遊戲時數",
@@ -322,7 +317,6 @@
     "show_wishlist_total": "顯示願望清單總價值",
     "tag_short": "使用簡化標記以節省空間",
     "no_price_data": "無可用的價格資料",
-    "exclude_tags": "排除標籤",
     "user_score": "使用者評分",
     "user_reviews": "使用者評論",
     "review_summary": "__num__ 篇使用者評論中有 __percent__ 給予好評。",
@@ -357,16 +351,7 @@
         "compl": "完美主義者",
         "submit": "提交你的時數",
         "main": "主線故事",
-        "no_data": "找不到資料",
-        "help": "按此協助修正",
-        "wrong": "錯誤的遊戲？"
-    },
-    "library": {
-        "in_library": "在收藏庫中",
-        "error_loading_library": "無法載入你的收藏庫。",
-        "categories": "分類…",
-        "genres": "類型…",
-        "private_profile": "在<a href='http://steamcommunity.com/my/edit/settings'>設定</a>中將個人檔案狀態改為公開來使用此功能。"
+        "no_data": "找不到資料"
     },
     "spy": {
         "player_data": "玩家資料",
@@ -375,7 +360,10 @@
         "players_2weeks": "最近兩週的玩家數量",
         "average_playtime": "平均遊戲時數",
         "average_playtime_2weeks": "最近兩週的平均遊戲時數",
-        "formatted_time": "__hours__ 小時 __minutes__ 分鐘"
+        "formatted_time": "__hours__ 小時 __minutes__ 分鐘",
+        "playtime_unit_day": "__days__d",
+        "playtime_unit_hour": "__hours__h",
+        "playtime_unit_minute": "__minutes__m"
     },
     "options": {
         "community_default_tab": "預設社群中心分頁",
@@ -398,7 +386,6 @@
         "steamcardexchange": "在徽章頁面中顯示 SteamCardExchange 連結",
         "regional_price": "區域價格比較",
         "excludef2p": "不高亮顯示免費遊戲",
-        "contscroll": "啟用搜尋結果的連續捲動",
         "profile_link_images_none": "無",
         "replace_account_name": "以社群名稱取代帳戶名稱",
         "profile_links": "第三方網站連結相關選項",
@@ -420,7 +407,6 @@
         "wlbuttoncommunityapp": "在社群中心顯示「新增至願望清單」按鈕",
         "removeguideslanguagefilter": "不自動依據使用者語言篩選指南",
         "disablelinkfilter": "停用造訪外部網站時的確認訊息",
-        "showallfriendsthatown": "顯示「所有擁有的好友」",
         "regional_price_on": "顯示區域價格比較",
         "friends_own": "好友擁有的項目",
         "horizontalscrolling": "啟用滑鼠滾輪水平捲動",
@@ -436,7 +422,6 @@
         "hidespamcomments": "隱藏工作坊和個人檔案上的垃圾留言",
         "hide_owned": "搜尋結果和標籤頁面中你已擁有的項目",
         "hide_ignored": "搜尋結果和標籤頁面中你已忽略的項目",
-        "reset": "重設選項",
         "api_key": "API 金鑰",
         "gift": "擁有禮物副本的項目",
         "show_sysreqcheck": "在應用程式頁面中顯示檢查系統需求的按鈕（實驗性！）",
@@ -500,7 +485,6 @@
         "replace_view_client": "替換為「在用戶端中檢視」",
         "show_empty_wishlist": "顯示「清空願望清單」按鈕",
         "show_wishlist_stats": "顯示願望清單統計資料",
-        "show_user_notes": "在願望清單與商店頁面中顯示使用者備註",
         "inventory_nav_text": "在物品庫頁面中顯示進階導覽功能",
         "carousel_description": "在商店頁面的旋轉看板中顯示應用程式描述",
         "market_total": "在市集首頁中自動載入交易摘要",
@@ -579,7 +563,6 @@
         "contributors": "熱心付出的貢獻者",
         "apppage": "應用程式頁面",
         "exfgls": "若應用程式無法透過親友同享功能分享顯示提示訊息",
-        "custom_style_disable": "停用自訂主題",
         "saving": "儲存中...",
         "user_notes": {
             "user_notes": "便箋",
@@ -594,8 +577,12 @@
         "oneclickremovewl": "移除項目時跳過確認訊息",
         "profile_pinned_bg": "捲動時固定個人檔案背景",
         "replacecommunityhublinks": "以商店連結取代社群中心連結",
-        "hideannouncementcomments": "默認隱藏所有組通知下的評論",
-        "friend_activity": "好友動態"
+        "hideannouncementcomments": "預設隱藏所有群組公告下的留言",
+        "friend_activity": "好友動態",
+        "confirmdeletecomment": "刪除留言前顯示確認訊息",
+        "showdeckcompat": "顯示 Steam Deck 相容性分級於功能清單中（且在無此資料時向 Steam 發送額外的請求）",
+        "show_survey_info": "顯示效能調查資料",
+        "addtocart_no_redirect": "將項目加入購物車時不自動跳轉到購物車頁面"
     },
     "ready": {
         "errormsg": "Augmented Steam 資料載入錯誤",
@@ -637,14 +624,11 @@
     },
     "tag": {
         "wishlist": "願望清單",
-        "friends_own": "__friendcount__ 位擁有",
         "coupon": "優惠券",
-        "friends_rec": "<a href=\"http://store.steampowered.com/recommended/byfriends/__appid__\">__friendcount__ 位好友寫了評論",
         "inv_gift": "禮物",
         "inv_guestpass": "招待券",
         "owned": "已擁有",
         "notinterested": "已忽略",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 位想要</a>",
         "collection": "已加入 Collection",
         "waitlist": "已加入 Waitlist"
     },
@@ -700,7 +684,8 @@
         "total_price": "目前總價值",
         "in_wishlist": "在願望清單中",
         "on_sale": "特價中",
-        "no_price": "未標價"
+        "no_price": "未標價",
+        "label": "統計資料"
     },
     "coll": {
         "total_time": "總時數",
@@ -709,11 +694,11 @@
         "never_played": "未玩過"
     },
     "user_note": {
-        "add": "新增備註",
-        "update": "更新備註",
-        "add_prompt": "輸入你的備註",
-        "update_prompt": "更新你的備註",
-        "add_for_game": "__gamename__ 的備註",
+        "add": "新增便箋",
+        "update": "更新便箋",
+        "add_prompt": "輸入你的便箋",
+        "update_prompt": "更新你的便箋",
+        "add_for_game": "__gamename__ 的便箋",
         "not_enough_space": "儲存空間不足",
         "not_enough_space_desc": "Augmented Steam 無法儲存更多便箋了，因為你目前選用的儲存方式無法容納更多資料（正嘗試使用 __perc__% 的儲存空間）。",
         "close_on_storage": "儲存空間即將用盡",
@@ -739,7 +724,6 @@
         "finished": "完成！__success__ 個操作成功，__fail__ 個操作失敗。點擊確定以重新整理頁面。",
         "failed": "__n__ 個操作失敗。"
     },
-    "this_version": "此版本",
     "original_authors": "原版作者",
     "acknowledgements": "致謝",
     "other": "其他",
@@ -791,12 +775,40 @@
     "community_hub": "社群中心",
     "cart": "購物車",
     "feature_hint": {
-        "desc": "您想啟用下列特性嗎？",
-        "reminder": "稍後您可以在設置中修改您的選項。"
+        "desc": "你想啟用以下的功能嗎？",
+        "reminder": "你之後可以前往設定頁面變更偏好設定。"
     },
     "thewordyes": "是",
     "thewordno": "否",
-    "show_comments": "展開討論",
-    "hide_comments": "隱藏討論",
-    "fav_emoticons_no_access": ""
+    "show_comments": "顯示留言",
+    "hide_comments": "隱藏留言",
+    "fav_emoticons_no_access": "你無法存取這個表情符號",
+    "delete_comment_prompt": "你確定要刪除此留言？",
+    "addtocart_dialog": {
+        "error_desc": "將項目加入購物車時發生錯誤。",
+        "title": "已加入購物車",
+        "checkout": "否，前往結帳",
+        "continue": "是，繼續購物",
+        "desc": "該項目已加入你的購物車。"
+    },
+    "deck_compat": {
+        "header": "Steam Deck 相容性分級",
+        "unknown": "不明",
+        "unsupported": "不支援",
+        "playable": "可遊玩",
+        "verified": "已驗證"
+    },
+    "theworderror": "錯誤",
+    "no_data": "無資料",
+    "quick_sell_verify": "需要 Steam Guard 確認",
+    "show_all": "顯示全部",
+    "coupon_learn_more": {
+        "link_text": "了解更多",
+        "full_text": "__linkdesc__關於 Steam 優惠券的資訊"
+    },
+    "family_sharing_notice": {
+        "notice": "通知：",
+        "desc": "此遊戲無法使用 Steam 的親友同享功能。"
+    },
+    "in_cart": "於購物車中"
 }

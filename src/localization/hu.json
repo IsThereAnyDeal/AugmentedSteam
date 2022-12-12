@@ -33,7 +33,6 @@
     "remove": "Eltávolít",
     "get_help": "Segítség",
     "add_selected_dlc_to_cart": "Kijelölt DLC hozzáadása a kosárhoz",
-    "credits": "Közreműködők",
     "store_transactions": "Áruházi tranzakciók",
     "sign_in": "Bejelentkezés",
     "games_coupon": "Játékok kuponnal",
@@ -106,7 +105,6 @@
     "language": "Nyelv",
     "theworddefault": "Alapértelmezett",
     "thewordclear": "Törlés",
-    "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Tudj meg többet</a> a Steam kuponokról",
     "show": "Mutat",
     "badges_all": "Összes kitűző",
     "comparison_mode": "Engedélyezi az összes játék áttekintését, hogy összehasonlíthasd őket",
@@ -131,7 +129,6 @@
     "read_reviews": "Értékelések olvasása",
     "read_more_reviews": "További vélemények a(z)",
     "gameplay": "Játékmenet",
-    "youtube_gameplay": "YouTube játékmenet",
     "size": "Méret",
     "package_info": "Csomaginfó",
     "badge_completion_avg": "Az összeállítás áltagköltsége: __cost__",
@@ -163,9 +160,6 @@
     "gift_transactions": "Ajándék tranzakciók",
     "demos": "Demók",
     "notinterested": "A tétel érdektelennek jelölve",
-    "price_above": "Elemek amik drágábbak, mint",
-    "price_above_tooltip": "Írj nullát az ingyenes elemekért vagy ár címke nélküliekért; Hagyd üresen ezt a mezőt, ha ki szeretnéd kapcsolni ezt a funkciót",
-    "price_above_wrong_format": "Rossz formátum, az elvárt alak: __pattern__",
     "reviews_below": "Elemek kevesebb értékeléssel ennél: ",
     "reviews_below_tooltip": "Írj be nullát az értékelés nélküli elemekért; hagyd a mezőt üresen a funkció kikapcsolásához",
     "news": "Hírek",
@@ -195,19 +189,16 @@
     "rating_details": "Értékelések megnézése",
     "drops_worth_avg": "Hozzávetőleges érték",
     "using_store_return": "Kattints ide, hogy visszatérj a  __base__ boltba.",
-    "family_sharing_notice": "<b>Megjegyzés:</b> Ez a játék ki van zárva a Steam Családi Megosztás szolgáltatásból.",
     "valid": "Érvényes",
     "price_options": "Ár opciók",
     "no_results_found": "Nincs találat",
     "visit_store": "Áruházi oldal megnézése",
     "all": "Összes",
     "total_spent": "Összes kiadás",
-    "external_funds": "Külső tőke használva",
     "games_with_drops": "__dropsgames__ játék ad további kártyákat",
     "binder_view": "Rács nézet",
     "view_stats": "Statisztikák megtekintése",
     "using_language": "A steam oldalait __current__ nyelven nézed.",
-    "community_login": "Bizonyosodj meg, hogy be vagy jelentkezve a __link__ oldalra, hogy az AugmentedSteam összes funkcióját használni tudd.",
     "popular": "Népszerű",
     "visit_trade_forum": "Csere fórum meglátogatása",
     "software": "Szoftver",
@@ -234,8 +225,7 @@
         "action_groups": "Válaszd ki a csoportokat amelyeken műveletet kívánsz végrehajtani.",
         "select": "Kijelölés:",
         "leave": "Kilépés csoportokból",
-        "selected": "__n__ kijelölve.",
-        "leave_admin_confirm": "Jelenleg a __name__ adminisztrátora vagy.<br>Biztos ki szeretnél lépni?"
+        "selected": "__n__ kijelölve."
     },
     "export": {
         "wishlist": "Kívánságlista exportálása",
@@ -268,7 +258,6 @@
     "cancel": "Mégse",
     "wiki_article": "__pcgw__ cikk megtekintése",
     "view_all": "ÖSSZES MEGTEKINTÉS",
-    "programming": "Programozás",
     "games_with_booster": "__boostergames__ játékhoz vagy jogosult bónuszcsomagra",
     "sort_by": "Rendezési szempont:",
     "sort_by_keyword": "Rendezési szempont __keyword__",
@@ -322,7 +311,6 @@
     "show_wishlist_total": "Teljes kívánságlista mutatása",
     "tag_short": "Használj rövid tag-eket, hogy helyet takaríts meg",
     "no_price_data": "Ár adatok nem elérhetőék",
-    "exclude_tags": "Kizáró címkék",
     "user_score": "Felhasználók pontszáma",
     "user_reviews": "Felhasználói értékelések",
     "review_summary": "A __num__ játékos __percent__ -a értékelte pozitívan ezt a játékot.",
@@ -357,16 +345,7 @@
         "compl": "Összesen",
         "submit": "A Te időd megosztása",
         "main": "Főszál",
-        "no_data": "Nem található adat",
-        "help": "Kattints ide a segítséghez",
-        "wrong": "Rossz játék?"
-    },
-    "library": {
-        "in_library": "Könyvtárban",
-        "error_loading_library": "Nem sikerült a könyvtárat betölteni",
-        "categories": "Kategóriák...",
-        "genres": "Műfajok...",
-        "private_profile": "A funkció használatához tedd publikussá profilod <a href='http://steamcommunity.com/my/edit/settings'>a beállításaidnál</a>"
+        "no_data": "Nem található adat"
     },
     "spy": {
         "player_data": "Játékos adatok",
@@ -398,7 +377,6 @@
         "steamcardexchange": "SteamCardExchange linkek mutatása a Kitűzőkőn",
         "regional_price": "Régiók árainak összehasonlítása",
         "excludef2p": "Az ingyenes játékok kizárása a kiemeléstől",
-        "contscroll": "A keresés eredményeinek folyamatos görgetésének az engedélyezése.",
         "profile_link_images_none": "Semmi",
         "replace_account_name": "Cserélje fel a fióknevet a közösségi névre.",
         "profile_links": "Mutassa a profil linkeket a",
@@ -420,7 +398,6 @@
         "wlbuttoncommunityapp": "\"Tedd Kivánságlistára\" gomb megjelenítése a közösségi alkalmazásokon",
         "removeguideslanguagefilter": "Ne szűrje automatikusan az Útmutatókat nyelv szerint",
         "disablelinkfilter": "Megerősítés kikapcsolása külső oldalak esetén",
-        "showallfriendsthatown": "\"Összes barát, aki birtokolja ezt\" mutatása",
         "regional_price_on": "Mutassa a régiók árainak összevetését",
         "friends_own": "Barátaid által birtokolt tárgyak",
         "horizontalscrolling": "Vízszintes görgetés engedélyezése egér görgővel",
@@ -428,7 +405,6 @@
         "drm": "Mutassa a 3. fél általi DRM figyelmeztetéseket",
         "show_regionwarning": "Figyelmeztessen, ha nem a fiók régiójában történik a böngészés",
         "foot_link": "Augmented Steam kiterjesztés",
-        "profile_link_images": "Profil képek",
         "library": "Könyvtár gomb mutatása a fejrészben",
         "show1clickgoo": "Mutassa \"1 klikk cserélje drágakőre\" gomb az alkalmazható raktár tárgyakon.",
         "hidedlcunownedgames": "DLC-k olyan játékokhoz amelyek nincsenek meg neked",
@@ -436,7 +412,6 @@
         "hidespamcomments": "Rejtse el a spam hozzászólásokat a Mühely és profilon.",
         "hide_owned": "Már megvásárolt termékek a keresési találatokban és a kulcsszó oldalakon",
         "hide_ignored": "Mellőzött elemek mutatása keresési találatokban és címke oldalakon",
-        "reset": "Beállítások visszaállítása",
         "api_key": "API Kulcs",
         "gift": "Ajánékok",
         "show_sysreqcheck": "Mutassa a gépigény gombot az alkalmazások oldalon (Kísérleti!)",
@@ -500,7 +475,6 @@
         "replace_view_client": "Lecserélés \"Megtekintés a Steam kliensben\"-re",
         "show_empty_wishlist": "\"Üres kívánságlista\" gomb kimutatása",
         "show_wishlist_stats": "Kívánságlista statisztikák mutatása a kívánságlistán",
-        "show_user_notes": "Jegyzetek mutatása kívánságlista és app oldalakon",
         "inventory_nav_text": "Bővített kezelési lehetőségek a raktár oldalon",
         "carousel_description": "Leírások mutatása a főoldal galériájában",
         "market_total": "Tranzakció összefoglalás megjelenítése a Piacon",
@@ -579,23 +553,16 @@
         "contributors": "nagyszerű közreműködőinktől",
         "apppage": "App oldal",
         "exfgls": "Figyelmeztetés ha egy app ki van zárva a Családi Megosztásból",
-        "custom_style_disable": "Egyéni témák letiltása",
         "saving": "Mentés...",
         "user_notes": {
             "user_notes": "Jegyzetek",
             "app": "App oldalakon",
             "wishlist": "Kivánságlistámon",
-            "loc": "",
-            "synced_storage": "",
             "local": "Lokális adatbázis",
             "itad": "IsThereAnyDeal szerver"
         },
         "show_custom_themes": "Egyéni témák megjelenítése",
-        "oneclickremovewl": "",
-        "profile_pinned_bg": "",
-        "replacecommunityhublinks": "",
-        "hideannouncementcomments": "Kommentek automatikus elrejtése csoport bejelentések alatt",
-        "friend_activity": ""
+        "hideannouncementcomments": "Kommentek automatikus elrejtése csoport bejelentések alatt"
     },
     "ready": {
         "errormsg": "Hiba az Augmented Steam adatbetöltése közben",
@@ -637,20 +604,16 @@
     },
     "tag": {
         "wishlist": "Kívánságlista",
-        "friends_own": "__friendcount__ barátnak van meg",
         "coupon": "Kupon",
-        "friends_rec": "<a href=\"http://store.steampowered.com/recommended/byfriends/__appid__\">__friendcount__ barát ajánlotta",
         "inv_gift": "Ajándék",
         "inv_guestpass": "Vendégbelépő",
         "owned": "Birtokolt",
         "notinterested": "Nem érdekel",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ szeretné</a>",
         "collection": "Begyűjtött",
         "waitlist": "Kivánságlistán"
     },
     "wallet": {
         "custom_amount": "Egyéni összeg hozzáadása",
-        "custom_amount_text": "Bármilyen __minamount__ fölötti összeg hozzáadása",
         "custom_giftcard": "Válassz __input__ egyedi ajándékkártyát"
     },
     "wsgf": {
@@ -677,8 +640,7 @@
     },
     "tradeoffer": {
         "num_item": "__num__ tárgy",
-        "num_items": "__num__ tárgyak",
-        "back": ""
+        "num_items": "__num__ tárgyak"
     },
     "update": {
         "dont_show": "Ne Mutassa Újra",
@@ -715,12 +677,7 @@
         "update_prompt": "Frissítsd a jegyzeted",
         "add_for_game": "Jegyzetek ehhez: __gamename__",
         "not_enough_space": "Nincs elég hely a jegyzet mentéséhez",
-        "not_enough_space_desc": "",
-        "close_on_storage": "",
-        "close_on_storage_desc": "",
-        "storage_warning_desc": "",
         "save_itad": "Jegyzetek mentése az ITAD szerveren",
-        "save_synced_storage": "",
         "save_local": "Jegyzetek lokális tárolása"
     },
     "queue": {
@@ -739,7 +696,6 @@
         "finished": "Kész!__success__sikeres, __fail__sikertelen. Kattints az OK-ra az oldal frissítéséhez.",
         "failed": "__n__ sikertelen"
     },
-    "this_version": "Ez a verzió",
     "original_authors": "Eredeti készítők",
     "acknowledgements": "Elismerések",
     "other": "Egyéb",
@@ -782,21 +738,10 @@
     "login_warning": "Győződj meg róla, hogy be vagy jelentkezve __link__, hogy az Augmented Steam összes funkcióját használhasd",
     "youtube_reviews": "YouTube értékelések",
     "download_demo_header": "__gamename__ Demo letöltése",
-    "games_common": "",
-    "games_notcommon": "",
-    "shopping_cart_history": "",
-    "manage_webapi_key": "",
     "steam_cloud_header": "Steam Felhő",
-    "steam_cloud_saves": "",
-    "community_hub": "",
     "cart": "Kosár",
-    "feature_hint": {
-        "desc": "",
-        "reminder": ""
-    },
     "thewordyes": "Igen",
     "thewordno": "Nem",
     "show_comments": "Kommentek megjelenítése",
-    "hide_comments": "Kommentek elrejtése",
-    "fav_emoticons_no_access": ""
+    "hide_comments": "Kommentek elrejtése"
 }

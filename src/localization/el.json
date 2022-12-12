@@ -33,7 +33,6 @@
     "remove": "Αφαίρεση",
     "get_help": "Βοήθεια",
     "add_selected_dlc_to_cart": "Προσθέστε τα επιλεγμένα DLC στο καλάθι αγορών",
-    "credits": "Συντελεστές",
     "store_transactions": "Συναλλαγές Καταστήματος",
     "sign_in": "Σύνδεση",
     "games_coupon": "Παιχνίδια με Κουπόνια",
@@ -106,7 +105,6 @@
     "language": "Γλώσσα",
     "theworddefault": "Προεπιλογή",
     "thewordclear": "Καθαρισμός",
-    "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Μάθε περισσότερα</a> για τα κουπόνια Steam",
     "show": "Εμφάνιση",
     "badges_all": "Όλα τα εμβλήματα",
     "comparison_mode": "Ενεργοποιήση επισκόπησης 'ολων των παιχνιδιών για σύγκριση",
@@ -131,7 +129,6 @@
     "read_reviews": "Ανάγνωση κριτικών",
     "read_more_reviews": "Διαβάστε περισσότερεσ κριτικές στο",
     "gameplay": "Gameplay",
-    "youtube_gameplay": "YouTube Gameplay",
     "size": "Μέγεθος",
     "package_info": "Πληροφορίες πακέτου",
     "badge_completion_avg": "Μέσος όρος κόστους ολοκλήρωσης: __cost__",
@@ -163,9 +160,6 @@
     "gift_transactions": "Συναλλαγές δώρων",
     "demos": "Επιδείξεις",
     "notinterested": "Στοιχεία που έχουν επισημανθεί ως μη ενδιαφέροντα",
-    "price_above": "Αντικείμενα που κοστίζουν περισσότερο από",
-    "price_above_tooltip": "Εισάγετε την τιμή μηδέν για δωρεάν είδη ή για είδη χωρίς ετικέτα τιμής. Αφήστε το πεδίο κενό για να απενεργοποιήσετε αυτή τη δυνατότητα",
-    "price_above_wrong_format": "Λάθος μορφή, αναμενόμενη εισαγωγή με τη μορφή __pattern__",
     "reviews_below": "Στοιχεία με λιγότερες κριτικές από",
     "reviews_below_tooltip": "Εισαγάγετε μηδέν για αντικείμενα χωρίς κριτικές. αφήστε αυτό το πεδίο κενό για να απενεργοποιήσετε αυτήν τη λειτουργία",
     "news": "Νέα",
@@ -195,7 +189,6 @@
     "rating_details": "Δείτε πληροφορίες βαθμολογίας",
     "drops_worth_avg": "Αξίζουν Περίπου",
     "using_store_return": "Κάντε κλικ εδώ για να επιστρέψετε στο __base__ κατάστημα.",
-    "family_sharing_notice": "<b>Σημείωση:</b> Αυτό το παιχνίδι εξαιρείται από την υπηρεσία Κοινής Χρήσης του Steam.",
     "valid": "Έγκυρο",
     "price_options": "Επιλογές Τιμής",
     "no_results_found": "Δεν βρέθηκαν αποτελέσματα",
@@ -207,7 +200,6 @@
     "binder_view": "Εμφάνιση βιβλιοδέτη",
     "view_stats": "Δείτε τα στατιστικά",
     "using_language": "Περιηγήστε στο Steam στο __current__.",
-    "community_login": "Βεβαιωθείτε ότι είστε συνδεδεμένοι στο __link__ για να μπορέσετε να χρησιμοποιήσετε όλες τις λειτουργίες του Augmented Steam.",
     "popular": "Δημοφιλή",
     "visit_trade_forum": "Επισκεφθείτε το φόρουμ του εμπορίου",
     "software": "Λογισμικό",
@@ -234,8 +226,7 @@
         "action_groups": "Επιλέξτε τις ομάδες παρακάτω στις οποίες θέλετε να αναλάβετε δράση.",
         "select": "Επιλογή:",
         "leave": "Αποχώρηση από ομάδες",
-        "selected": "__n__ επιλέχτηκαν.",
-        "leave_admin_confirm": "Αυτήν τη στιγμή είστε διαχειριστής του __name__. <br> Είστε βέβαιοι ότι θέλετε να εγκαταλείψετε αυτήν την ομάδα;"
+        "selected": "__n__ επιλέχτηκαν."
     },
     "export": {
         "wishlist": "Εξαγωγή λίστας επιθυμιών",
@@ -268,7 +259,6 @@
     "cancel": "Ακύρωση",
     "wiki_article": "Προβολή __pcgw__ Άρθρο",
     "view_all": "ΕΜΦΑΝΙΣΗ ΟΛΩΝ",
-    "programming": "Προγραμματισμός",
     "games_with_booster": "__boostergames__ παιχνίδια επιλεγμένα για συμπληρωματικά πακέτα",
     "sort_by": "Ταξινόμηση κατά:",
     "sort_by_keyword": "Ταξινόμηση κατά __keyword__",
@@ -322,7 +312,6 @@
     "show_wishlist_total": "Εμφάνιση συνόλου λίστας επιθυμιών",
     "tag_short": "Χρησιμοποιήστε σύντομες ετικέτες για εξοικονόμηση χώρου",
     "no_price_data": "Δεν υπάρχει διαθέσιμη τιμή",
-    "exclude_tags": "Απόκρυψη ετικετών",
     "user_score": "Βαθμολογία χρηστών",
     "user_reviews": "Κριτικές χρηστών",
     "review_summary": "__percent__ των __num__ κριτικών χρηστών για αυτό το παιχνίδι είναι θετικές.",
@@ -357,16 +346,7 @@
         "compl": "Ολοκληρωτής",
         "submit": "Καταχωρήστε Τον Χρόνο σας",
         "main": "Κύρια ιστορία",
-        "no_data": "Δε βρέθηκαν δεδομένα",
-        "help": "Κάντε κλικ εδώ για βοήθεια",
-        "wrong": "Λάθος παιχνίδι;"
-    },
-    "library": {
-        "in_library": "Στη συλλογή",
-        "error_loading_library": "Δεν μπορεί να φορτωθεί η συλλογή σας.",
-        "categories": "Κατηγορίες...",
-        "genres": "Είδη...",
-        "private_profile": "Αλλάξτε τη κατάσταση του προφίλ σας σε δημόσιο <a href='http://steamcommunity.com/my/edit/settings'>στις ρυθμίσεις σας</a> για να χρησιμοποιήσετε αυτή τη λειτουργία."
+        "no_data": "Δε βρέθηκαν δεδομένα"
     },
     "spy": {
         "player_data": "Δεδομένα Παιχτών",
@@ -398,7 +378,6 @@
         "steamcardexchange": "Εμφάνιση συνδέσμων SteamCardExchange στα εμβλήματα",
         "regional_price": "Σύγκριση τιμών ανά περιοχή",
         "excludef2p": "Εξαίρεση δωρεάν παιχνιδιών από τις επισημάνσεις",
-        "contscroll": "Επιτρέπει την συνεχή κύλιση των αποτελεσμάτων αναζήτησης",
         "profile_link_images_none": "Καμιά",
         "replace_account_name": "Αντικατάσταση ονόματος λογαριασμού με το όνομα κοινότητας",
         "profile_links": "Προβολή συνδέσμων προφίλ σε",
@@ -420,7 +399,6 @@
         "wlbuttoncommunityapp": "Εμφάνιση του κουμπιού \"Προσθήκη στη Λίστα Επιθυμιών\" στους κόμβους εφαρμογών της Κοινότητας",
         "removeguideslanguagefilter": "Μη αυτόματο φιλτράρισμα οδηγών ανά γλώσσα χρήστη",
         "disablelinkfilter": "Απενεργοποίηση επιβεβαίωσης κατά την πρόσβαση σε εξωτερικές τοποθεσίες",
-        "showallfriendsthatown": "Προβολή \"Όλοι οι φίλοι που κατέχουν\"",
         "regional_price_on": "Εμφάνιση συγκριτή περιφερειακών τιμών",
         "friends_own": "Αντικείμενα που έχουν οι φίλοι σας",
         "horizontalscrolling": "Ενεργοποιήστε την οριζόντια κύλιση με τον τροχό του ποντικιού",
@@ -436,7 +414,6 @@
         "hidespamcomments": "Απόκρυψη ανεπιθύμητων σχολίων από το Εργαστήρι και τα προφίλ",
         "hide_owned": "αντικείμενα που κατέχετε σε αποτελέσματα αναζητήσεων και σελίδες ετικετών",
         "hide_ignored": "Αντικείμενα που αγνοήσατε στα αποτελέσματα αναζήτησης και στις σελίδες ετικετών",
-        "reset": "Επαναφορά επιλογών",
         "api_key": "API Key",
         "gift": "Στοιχεία αποθηκευμένα ως δώρο",
         "show_sysreqcheck": "Εμφάνιση του κουμπιού για να ελέγξετε τις απαιτήσεις συστήματος στις σελίδες εφαρμογών (πειραματικό!)",
@@ -500,7 +477,6 @@
         "replace_view_client": "Αντικατάσταση με \"Προβολή στον Client\"",
         "show_empty_wishlist": "Εμφάνιση του κουμπιού «Άδειασμα Wishlist»",
         "show_wishlist_stats": "Εμφάνιση στατιστικών στη λίστα επιθυμιών",
-        "show_user_notes": "Εμφάνιση των σημειώσεων χρήστη στη λίστα επιθυμιών και στις σελίδες εφαρμογών",
         "inventory_nav_text": "Εμφάνιση προηγμένης πλοήγησης στη σελίδα Αντικειμένων",
         "carousel_description": "Εμφάνιση περιγραφών εφαρμογών στο καρουσέλ της αρχικής σελίδας καταστήματος",
         "market_total": "Προβολή του συνόλου συναλλαγών στην Αγορά",
@@ -577,25 +553,7 @@
         "maintainers": "Συντηρητές έργου",
         "with_help_of": "με πολύ βοήθεια από τους  __contributors__",
         "contributors": "υπέροχους συνεισφέροντες",
-        "apppage": "Σελίδα εφαρμογής",
-        "exfgls": "",
-        "custom_style_disable": "",
-        "saving": "",
-        "user_notes": {
-            "user_notes": "",
-            "app": "",
-            "wishlist": "",
-            "loc": "",
-            "synced_storage": "",
-            "local": "",
-            "itad": ""
-        },
-        "show_custom_themes": "",
-        "oneclickremovewl": "",
-        "profile_pinned_bg": "",
-        "replacecommunityhublinks": "",
-        "hideannouncementcomments": "",
-        "friend_activity": ""
+        "apppage": "Σελίδα εφαρμογής"
     },
     "ready": {
         "errormsg": "Σφάλμα κατά τη φόρτωση δεδομένων Augmented Steam",
@@ -637,20 +595,16 @@
     },
     "tag": {
         "wishlist": "Λίστα Επιθυμιών",
-        "friends_own": "__friendcount__ το κατέχουν",
         "coupon": "Κουπόνι",
-        "friends_rec": "<a href=\"http://store.steampowered.com/recommended/byfriends/__appid__\">__friendcount__ φίλοι έκαναν αξιολόγηση",
         "inv_gift": "Δώρο",
         "inv_guestpass": "Πάσο επισκέπτη",
         "owned": "Σε κατοχή",
         "notinterested": "Δεν ενδιαφέρομαι",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ θέλουν το</a>",
         "collection": "Συλλέχθηκαν",
         "waitlist": "Στη λίστα αναμονής"
     },
     "wallet": {
         "custom_amount": "Προσθέστε προσαρμοσμένο ποσό",
-        "custom_amount_text": "Προσθέστε οποιοδήποτε ποσό πάνω από __minamount__",
         "custom_giftcard": "Επιλέξτε __input__ προσαρμοσμένη κάρτα δώρου"
     },
     "wsgf": {
@@ -677,8 +631,7 @@
     },
     "tradeoffer": {
         "num_item": "__num__ αντικείμενο",
-        "num_items": "__num__ αντικείμενα",
-        "back": ""
+        "num_items": "__num__ αντικείμενα"
     },
     "update": {
         "dont_show": "Να μην εμφανιστεί ξανά",
@@ -713,15 +666,7 @@
         "update": "Ενημέρωση σημείωσης",
         "add_prompt": "Εισαγωγή της σημείωσης σας",
         "update_prompt": "Ενημέρωση της σημείωσης σας",
-        "add_for_game": "Σημείωση για __gamename__",
-        "not_enough_space": "",
-        "not_enough_space_desc": "",
-        "close_on_storage": "",
-        "close_on_storage_desc": "",
-        "storage_warning_desc": "",
-        "save_itad": "",
-        "save_synced_storage": "",
-        "save_local": ""
+        "add_for_game": "Σημείωση για __gamename__"
     },
     "queue": {
         "new": "Νέα Ουρά",
@@ -739,7 +684,6 @@
         "finished": "Τέλος! __success__ επιτυχής, __fail__ απέτυχαν. Κάντε κλικ στο OK για να ανανεώσετε τη σελίδα\n",
         "failed": "__n__ απέτυχαν"
     },
-    "this_version": "Αυτή η έκδοση",
     "original_authors": "Αρχικοί συγγραφείς",
     "acknowledgements": "Ευχαριστίες",
     "other": "Άλλα",
@@ -780,23 +724,5 @@
     "processing": "Επεξεργασία...",
     "wait": "Παρακαλώ περιμένετε",
     "login_warning": "Βεβαιωθείτε ότι έχετε συνδεθεί στο __link__ για να μπορείτε να χρησιμοποιήσετε όλες τις δυνατότητες του Augmented Steam.",
-    "youtube_reviews": "Κριτικές YouTube",
-    "download_demo_header": "",
-    "games_common": "",
-    "games_notcommon": "",
-    "shopping_cart_history": "",
-    "manage_webapi_key": "",
-    "steam_cloud_header": "",
-    "steam_cloud_saves": "",
-    "community_hub": "",
-    "cart": "",
-    "feature_hint": {
-        "desc": "",
-        "reminder": ""
-    },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": "",
-    "fav_emoticons_no_access": ""
+    "youtube_reviews": "Κριτικές YouTube"
 }

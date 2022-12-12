@@ -33,7 +33,6 @@
     "remove": "削除",
     "get_help": "ヘルプを参照する",
     "add_selected_dlc_to_cart": "選択したDLCをカートに追加",
-    "credits": "クレジット",
     "store_transactions": "ストアでの取引",
     "sign_in": "サインイン",
     "games_coupon": "クーポンがあるゲーム",
@@ -106,7 +105,6 @@
     "language": "言語",
     "theworddefault": "デフォルト",
     "thewordclear": "クリア",
-    "coupon_learn_more": "クーポンについての<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">詳細</a>",
     "show": "表示",
     "badges_all": "全バッジ",
     "comparison_mode": "すべてのゲームのオーバービューを有効にして、ゲーム比較を確認する",
@@ -163,9 +161,6 @@
     "gift_transactions": "ギフト取引",
     "demos": "デモ",
     "notinterested": "興味なしにマークされたアイテム",
-    "price_above": "指定の価格以上のアイテム",
-    "price_above_tooltip": "無料のアイテムや価格タグ無しのアイテムにはゼロを入力する; この機能を無効にするにはこの項目を空白にしてください",
-    "price_above_wrong_format": "フォーマットが違う、__pattern__のような形式で入力してください",
     "reviews_below": "指定のレビュー数以下のアイテム",
     "reviews_below_tooltip": "レビュー無しのアイテムには0を入力する; この機能を無効にするにはこの項目を空白にしてください",
     "news": "ニュース",
@@ -195,7 +190,6 @@
     "rating_details": "評価の詳細を表示",
     "drops_worth_avg": "およその価値",
     "using_store_return": "ここをクリックすると__base__ストアに戻ります。",
-    "family_sharing_notice": "<b>注意:</b> このゲームは Steam のファミリーシェアリングサービスから除外されています。",
     "valid": "有効",
     "price_options": "価格オプション",
     "no_results_found": "検索結果なし",
@@ -207,7 +201,6 @@
     "binder_view": "バインダー表示",
     "view_stats": "統計を表示",
     "using_language": "__current__ で Steam を表示しています",
-    "community_login": "__link__にログインすることで、Augmented Steamのすべての機能が利用できる。",
     "popular": "人気",
     "visit_trade_forum": "トレードフォーラムを開く",
     "software": "ソフトウェア",
@@ -234,8 +227,7 @@
         "action_groups": "操作を行うグループを選択してください。",
         "select": "選択：",
         "leave": "グループから脱退",
-        "selected": "__n__個を選択した。",
-        "leave_admin_confirm": "あなたは今 __name__で管理人をしています。<br>脱退してもよろしいですか？"
+        "selected": "__n__個を選択した。"
     },
     "export": {
         "wishlist": "ウィッシュリストをエクスポート",
@@ -268,7 +260,6 @@
     "cancel": "キャンセル",
     "wiki_article": "__pcgw__ の記事を表示",
     "view_all": "すべて表示",
-    "programming": "プログラミング",
     "games_with_booster": "__boostergames__本のゲームにブースターパックの受取資格があります",
     "sort_by": "ソート順:",
     "sort_by_keyword": "ソート順 __keyword__",
@@ -322,7 +313,6 @@
     "show_wishlist_total": "ウィッシュリストの合計額を表示",
     "tag_short": "スペースの節約のため短縮タグを使用する",
     "no_price_data": "価格データがありません",
-    "exclude_tags": "除外するタグ",
     "user_score": "ユーザースコア",
     "user_reviews": "ユーザー レビュー",
     "review_summary": "このゲームのユーザーレビュー __num__ 件中 __percent__ が好評です。",
@@ -357,16 +347,7 @@
         "compl": "完璧主義者",
         "submit": "あなたの時間を送信",
         "main": "主なストーリー",
-        "no_data": "データが見つかりません",
-        "help": "ここをクリックでヘルプを表示",
-        "wrong": "違うゲームですか？"
-    },
-    "library": {
-        "in_library": "ライブラリー内",
-        "error_loading_library": "ライブラリを読み込めませんでした。",
-        "categories": "カテゴリ...",
-        "genres": "ジャンル...",
-        "private_profile": "この機能を有効にするには、<a href='http://steamcommunity.com/my/edit/settings'>設定で</a>プロフィールのステータスを公開にしてください。"
+        "no_data": "データが見つかりません"
     },
     "spy": {
         "player_data": "プレイヤー データ",
@@ -398,7 +379,6 @@
         "steamcardexchange": "バッジにSteamCardExchangeへのリンクを表示",
         "regional_price": "地域別価格比較",
         "excludef2p": "無料プレイのゲームを強調表示から除外",
-        "contscroll": "検索結果の持続的スクロールを有効にする",
         "profile_link_images_none": "なし",
         "replace_account_name": "アカウント名をコミュニティ名で置き換える",
         "profile_links": "プロフィールに以下のリンクを表示",
@@ -420,7 +400,6 @@
         "wlbuttoncommunityapp": "「ウィッシュリストに追加」ボタンをコミュニティアプリハブに表示",
         "removeguideslanguagefilter": "ユーザーの言語設定によるガイドの自動フィルタリングをしない",
         "disablelinkfilter": "外部サイトにアクセスする際の確認を無効にする",
-        "showallfriendsthatown": "「すでにこのゲームを持っているすべてのフレンド」を表示",
         "regional_price_on": "地域別価格比較を表示",
         "friends_own": "フレンドが所有しているアイテム",
         "horizontalscrolling": "マウスホイールで横スクロールを許可する",
@@ -428,7 +407,6 @@
         "drm": "サードパーティーDRMの警告を表示",
         "show_regionwarning": "非アカウントのリージョンで閲覧している場合警告を表示する",
         "foot_link": "Augmented Steam 拡張機能",
-        "profile_link_images": "プロフィールリンク画像",
         "library": "ヘッダーにライブラリボタンを表示",
         "show1clickgoo": "「1-click でジェムに変換」ボタンを適用可能なインベントリアイテムに表示",
         "hidedlcunownedgames": "所有していないゲームのDLC",
@@ -436,7 +414,6 @@
         "hidespamcomments": "ワークショップとプロフィールのスパムコメントを非表示",
         "hide_owned": "検索結果とタグページで所有しているアイテム",
         "hide_ignored": "検索結果とタグページで無視したアイテム",
-        "reset": "オプションをリセット",
         "api_key": "API キー",
         "gift": "ギフトで保管しているアイテム",
         "show_sysreqcheck": "アプリページにシステム要件を確認するボタンを表示 (実験的!)",
@@ -500,7 +477,6 @@
         "replace_view_client": "「Steamクライアントで表示する」に書き換える",
         "show_empty_wishlist": "「ウィッシュリストを空にする」ボタンを表示",
         "show_wishlist_stats": "ウィッシュリストでウィッシュリスト統計情報を表示",
-        "show_user_notes": "ウィッシュリストとアプリページでユーザーメモを表示",
         "inventory_nav_text": "インベントリページ上で高度な案内を表示",
         "carousel_description": "ストアトップのカルーセルのアプリ説明を表示",
         "market_total": "マーケットで取引概要を表示",
@@ -579,23 +555,7 @@
         "contributors": "協力者たち",
         "apppage": "アプリページ",
         "exfgls": "アプリがファミリーシェアリングから除外された時に通知を送る",
-        "custom_style_disable": "カスタムテーマを無効化",
-        "saving": "セーブ中…",
-        "user_notes": {
-            "user_notes": "",
-            "app": "",
-            "wishlist": "",
-            "loc": "",
-            "synced_storage": "",
-            "local": "",
-            "itad": ""
-        },
-        "show_custom_themes": "",
-        "oneclickremovewl": "",
-        "profile_pinned_bg": "",
-        "replacecommunityhublinks": "",
-        "hideannouncementcomments": "",
-        "friend_activity": ""
+        "saving": "セーブ中…"
     },
     "ready": {
         "errormsg": "Augmented Steam のデータロードエラー",
@@ -637,20 +597,16 @@
     },
     "tag": {
         "wishlist": "ウィッシュリスト",
-        "friends_own": "__friendcount__ 人所有",
         "coupon": "クーポン",
-        "friends_rec": "<a href=\"http://store.steampowered.com/recommended/byfriends/__appid__\">__friendcount__ 人のフレンドがレビューしました</a>",
         "inv_gift": "ギフト",
         "inv_guestpass": "ゲストパス",
         "owned": "所持",
         "notinterested": "興味なし",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ 人が欲しがっています</a>",
         "collection": "収集済み",
         "waitlist": "ウェイトリストに追加した"
     },
     "wallet": {
         "custom_amount": "カスタムした額を追加",
-        "custom_amount_text": "__minamount__以上の任意の額を追加",
         "custom_giftcard": "__input__カスタムギフトカードを選択"
     },
     "wsgf": {
@@ -677,8 +633,7 @@
     },
     "tradeoffer": {
         "num_item": "__num__ 個のアイテム",
-        "num_items": "__num__ 個のアイテム",
-        "back": ""
+        "num_items": "__num__ 個のアイテム"
     },
     "update": {
         "dont_show": "今後表示しない",
@@ -713,15 +668,7 @@
         "update": "メモを更新",
         "add_prompt": "メモを入力",
         "update_prompt": "自分のメモを更新",
-        "add_for_game": "__gamename__のメモ",
-        "not_enough_space": "",
-        "not_enough_space_desc": "",
-        "close_on_storage": "",
-        "close_on_storage_desc": "",
-        "storage_warning_desc": "",
-        "save_itad": "",
-        "save_synced_storage": "",
-        "save_local": ""
+        "add_for_game": "__gamename__のメモ"
     },
     "queue": {
         "new": "新しいキュー",
@@ -739,7 +686,6 @@
         "finished": "完成しました！ __success__ 個は成功、 __fail__ 個は失敗失敗しました。OKをクリックして再読み込み。",
         "failed": "__n__ は失敗した。"
     },
-    "this_version": "現在のバージョン",
     "original_authors": "元開発者",
     "acknowledgements": "感謝",
     "other": "その他",
@@ -780,23 +726,5 @@
     "processing": "処理中…",
     "wait": "お待ちください",
     "login_warning": "Augmented Steamのすべての機能を利用するため、__link__にログインしてください。",
-    "youtube_reviews": "YouTubeレビュー",
-    "download_demo_header": "",
-    "games_common": "",
-    "games_notcommon": "",
-    "shopping_cart_history": "",
-    "manage_webapi_key": "",
-    "steam_cloud_header": "",
-    "steam_cloud_saves": "",
-    "community_hub": "",
-    "cart": "",
-    "feature_hint": {
-        "desc": "",
-        "reminder": ""
-    },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": "",
-    "fav_emoticons_no_access": ""
+    "youtube_reviews": "YouTubeレビュー"
 }

@@ -33,7 +33,6 @@
     "remove": "Verwijder",
     "get_help": "Zoek Hulp",
     "add_selected_dlc_to_cart": "Voeg geselecteerde DLC toe aan je winkelwagen",
-    "credits": "Bijdragen",
     "store_transactions": "Winkel Transacties",
     "sign_in": "Inloggen",
     "games_coupon": "Spellen Met Kortingsbonnen",
@@ -106,7 +105,6 @@
     "language": "Taal",
     "theworddefault": "Standaard",
     "thewordclear": "Legen",
-    "coupon_learn_more": "<a href=\"https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275\">Kom meer te weten</a> over Steam-coupons",
     "show": "Toon",
     "badges_all": "Alle Badges",
     "comparison_mode": "Zet alle spellen overzicht aan om spellen vergelijken te zien",
@@ -163,9 +161,6 @@
     "gift_transactions": "Geschenktransacties",
     "demos": "Demo's",
     "notinterested": "Voorwerpen gemarkeerd als niet interessant",
-    "price_above": "Voorwerpen die meer kosten dan",
-    "price_above_tooltip": "Voer een nul in voor kosteloze voorwerpen of voorwerpen zonder prijsaanduiding; laat dit veld leeg om dit onderdeel uit te schakelen",
-    "price_above_wrong_format": "Verkeerd formaat, verwachte invoer in formaat: __pattern__",
     "reviews_below": "Voorwerpen met minder beoordelingen dan",
     "reviews_below_tooltip": "Voer nul in voor voorwerpen zonder beoordelingen: laat dit veld leeg om dit onderdeel uit te schakelen",
     "news": "Nieuws",
@@ -195,7 +190,6 @@
     "rating_details": "Bekijk cijfer details",
     "drops_worth_avg": "Gemiddeld Waard",
     "using_store_return": "Klik hier om terug te gaan naar de __base__ winkel.",
-    "family_sharing_notice": "<b>Opmerking:</b> Deze game is uitgesloten van Steam's Familie Deel service.",
     "valid": "Geldig",
     "price_options": "Prijs opties",
     "no_results_found": "Geen resultaten gevonden",
@@ -207,7 +201,6 @@
     "binder_view": "Binder overzicht",
     "view_stats": "Bekijk statistieken",
     "using_language": "Je browset Steam nu in __current__.",
-    "community_login": "Zorg ervoor dat u ingelogd bent op __link___ om alle functies van Augmented Steam te gebruiken.",
     "popular": "Populair",
     "visit_trade_forum": "Bezoek Ruil Forum",
     "software": "Software",
@@ -229,13 +222,11 @@
     "avg_price_3cards": "Gemiddelde prijs van drie ruilkaarten: __price__",
     "mods": "Modificaties. ",
     "groups": {
-        "leave_groups_confirm": "U bent momenteel admin van __name__.<br>Weet u zeker dat u deze groep wilt verlaten?",
         "manage_groups": "Groepen beheren",
         "action_groups": "Selecteer hieronder de groepen waar je actie op wilt ondernemen. ",
         "select": "Selecteer:",
         "leave": "Verlaten",
-        "selected": "__n__ geselecteerd",
-        "leave_admin_confirm": "U bent momenteel admin van __name__.<br>Weet u zeker dat u deze groep wilt verlaten?"
+        "selected": "__n__ geselecteerd"
     },
     "export": {
         "wishlist": "Verlanglijst exporteren",
@@ -268,7 +259,6 @@
     "cancel": "Annuleer",
     "wiki_article": "Bekijk __pcgw_ Artikel",
     "view_all": "ALLES BEKIJKEN",
-    "programming": "Programmeren",
     "games_with_booster": "__boostergames__ spellen geschikt voor booster pakketen",
     "sort_by": "Sorteer op:",
     "sort_by_keyword": "Sorteer op __keyword__",
@@ -322,7 +312,6 @@
     "show_wishlist_total": "Toon volledige verlanglijst",
     "tag_short": "Gebruik korte tags om ruimte te besparen",
     "no_price_data": "Geen prijsgegevens beschikbaar",
-    "exclude_tags": "Sluit tags uit",
     "user_score": "Gebruikersscore",
     "user_reviews": "Beoordelingen van gebruikers",
     "review_summary": "__percent__ van de __num__ gebruikersbeoordelingen voor dit spel zijn positief.",
@@ -357,16 +346,7 @@
         "compl": "Perfectionist",
         "submit": "Verstuur jouw tijd",
         "main": "Hoofdverhaal",
-        "no_data": "Geen Gegevens Gevonden",
-        "help": "Klik hier om te helpen",
-        "wrong": "Verkeerde Spel?"
-    },
-    "library": {
-        "in_library": "In Bibliotheek",
-        "error_loading_library": "Kon jouw bibliotheek niet laden.",
-        "categories": "Categorieën...",
-        "genres": "Genres...",
-        "private_profile": "Verander je profiel status naar publiek <a href='http://steamcommunity.com/my/edit/settings'>in je opties</a> om deze optie te gebruiken."
+        "no_data": "Geen Gegevens Gevonden"
     },
     "spy": {
         "player_data": "Gegevens spelers",
@@ -398,7 +378,6 @@
         "steamcardexchange": "Toon SteamCardExchange links bij badges",
         "regional_price": "Regionale prijs vergelijking",
         "excludef2p": "Sluit gratis om te spelen games uit van highlights",
-        "contscroll": "Zet doorlopend scrollen aan bij zoek resultaten",
         "profile_link_images_none": "Geen",
         "replace_account_name": "Vervang account naam met gemeenschap naam",
         "profile_links": "Toon profiel links naar",
@@ -420,7 +399,6 @@
         "wlbuttoncommunityapp": "Toon \"Voeg toe aan verlanglijst\" knop bij gemeenschap app hubs",
         "removeguideslanguagefilter": "Niet doen automatisch filteren gidsen door gebruiker taal",
         "disablelinkfilter": "Bevestiging uitschakelen bij het benaderen van externe sites",
-        "showallfriendsthatown": "Toon \"Alle vrienden die dat in hun bibliotheek hebben\"",
         "regional_price_on": "Toon regionale prijs vergelijking",
         "friends_own": "Items die je vrienden hebben",
         "horizontalscrolling": "Schakel horizontaal scrollen in op app pagina's met de middelmuisknop",
@@ -436,7 +414,6 @@
         "hidespamcomments": "Verberg spam comments bij de Workshop & profielen",
         "hide_owned": "Items die jij hebt in zoek resultaten en tag pagina's",
         "hide_ignored": "Items die jij hebt genegeerd in zoekresultaten en tag pagina's",
-        "reset": "Reset opties",
         "api_key": "API Sleutel",
         "gift": "Items opgeslagen als cadeau",
         "show_sysreqcheck": "Laat knoppen zien om te kijken naar systeem eisen op app pagina's (Experimenteel!)",
@@ -500,7 +477,6 @@
         "replace_view_client": "Vervang met \"Beijk in Client\"",
         "show_empty_wishlist": "Knop \"Verlanglijst Leegmaken\" weergeven",
         "show_wishlist_stats": "Toon statistieken op verlanglijstjes",
-        "show_user_notes": "Gebruiker notities op verlanglijst en app pagina's weergeven",
         "inventory_nav_text": "Toon geavanceerde navigatie in inventory pagina",
         "carousel_description": "Toon app beschrijving op de winkel front",
         "market_total": "Toon transactie samenvatting op de Market",
@@ -579,7 +555,6 @@
         "contributors": "geweldige bijdragers",
         "apppage": "App pagina",
         "exfgls": "Laat een bericht zien als Family Sharing niet mogelijk is voor een app",
-        "custom_style_disable": "Schakel aangepaste thema's uit",
         "saving": "Aan het opslaan...",
         "user_notes": {
             "user_notes": "Gebruiker notities",
@@ -590,12 +565,7 @@
             "local": "Locale opslag",
             "itad": "IsThereAnyDeal server"
         },
-        "show_custom_themes": "Laat aangepaste thema's zien",
-        "oneclickremovewl": "",
-        "profile_pinned_bg": "",
-        "replacecommunityhublinks": "",
-        "hideannouncementcomments": "",
-        "friend_activity": ""
+        "show_custom_themes": "Laat aangepaste thema's zien"
     },
     "ready": {
         "errormsg": "Fout tijdens het laden van Augmented Steam gegevens",
@@ -637,14 +607,11 @@
     },
     "tag": {
         "wishlist": "Verlanglijst",
-        "friends_own": "__friendcount__ eigen",
         "coupon": "Waardebon",
-        "friends_rec": "<a href=\"http://store.steampowered.com/recommended/byfriends/__appid__\">__friendcount__ door vrienden beoordeeld",
         "inv_gift": "Cadeau",
         "inv_guestpass": "Gastenpas",
         "owned": "In je bezit",
         "notinterested": "Niet geïnteresseerd",
-        "friends_want": "<a href=\"http://steamcommunity.com/my/friendsthatplay/__appid__\">__friendcount__ willen dit</a>",
         "collection": "Verzameld",
         "waitlist": "In je wachtlijst"
     },
@@ -739,7 +706,6 @@
         "finished": "Voltooid! __success__ successvul en __fail__ gefaald. Click OK to refresh the page",
         "failed": "__n__ gefaald"
     },
-    "this_version": "Deze version",
     "original_authors": "Originele makers",
     "acknowledgements": "Erkenningen",
     "other": "Anders",
@@ -780,23 +746,5 @@
     "processing": "Aan het verwerken...",
     "wait": "Wachten a.u.b.",
     "login_warning": "Zorg dat je ingelogd bent bij __link__ om geheel gebruik te maken van Augmented Steam",
-    "youtube_reviews": "YouTube Reviews",
-    "download_demo_header": "",
-    "games_common": "",
-    "games_notcommon": "",
-    "shopping_cart_history": "",
-    "manage_webapi_key": "",
-    "steam_cloud_header": "",
-    "steam_cloud_saves": "",
-    "community_hub": "",
-    "cart": "",
-    "feature_hint": {
-        "desc": "",
-        "reminder": ""
-    },
-    "thewordyes": "",
-    "thewordno": "",
-    "show_comments": "",
-    "hide_comments": "",
-    "fav_emoticons_no_access": ""
+    "youtube_reviews": "YouTube Reviews"
 }
