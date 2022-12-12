@@ -89,7 +89,7 @@ function cleanup() {
     await zipSource();
 
     console.log("3. npm install");
-    run("npm install");
+    run("npm ci --omit=dev --ignore-scripts");
 
     console.log("4. build...");
     for (const platform of ["firefox", "chrome", "edge"]) {
