@@ -1,3 +1,40 @@
+2.4.0: |
+  New Features
+  - Add option to stay on the page after you add game to your cart, instead of redirecting to the cart
+  - Add shortcut for store search; search field gains focus if you press "s" key
+  - Add option to always show Steam deck compatibility in the features list on the app page
+  - Add feature to show hidden achievements
+  - Add link to your shopping cart history on the cart page
+  - Show hex variant of SteamID64 on community profiles (Xseba360)
+  - Auto hide video player controls and cursor while video is playing
+  
+  Market
+  - Improved handling of lowest market price
+  - Fix market stats loading in non-English languages
+  - Improve quick sell handling by showing an error message if quick sell fails and try to make fails less frequent
+  - Fix sell listings sorting
+  
+  Apps
+  - Video player volume fixes: volume setting now persists across session, and mute is respected even when manually playing, stopping or seeking in video
+  - No longer show How Long To Beat box if the game has no data
+  - Fix achievement progress bar and text display if text was too long
+  - Update WSGF medals (RoseTheFlower)
+  - Improve handling of app page customization
+  - Improve handling of regional prices
+  - Fix developer/publisher search page links not working when there are multiple developers/publishers
+  - Fix various issues with the HD switch on videos
+  - Show total price cut with voucher, instead of only deal's cut
+  
+  Wishlist
+  - Improve wishlist stats display. Stats are now visible under button so it doesn't take unnecessary space and minimizes the risk of breaking wishlist (drag to reorder)
+  - Optimize wishlist import to IsThereAnyDeal
+  
+  Community
+  - Fix achievement sorting when profile privacy is not set to public (currently only unlocked achievements are being sorted)
+  - Improve achievements sorting
+  - Fix points shop background preview link
+  - Update Steam's CDN for when we were referencing their images
+
 2.3.3: |
   - Fix Steam showing reported tags as applied (#1423)
   - Add confirmation dialog when deleting comments (#1166)
