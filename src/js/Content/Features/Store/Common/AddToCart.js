@@ -6,7 +6,7 @@ export class AddToCart {
 
     static async post(formEl, onWishlist, addToCartEl) {
 
-        const cartUrl = "https://store.steampowered.com/cart/";
+        const cartUrl = formEl.getAttribute("action");
         const addToCartStr = Localization.str.addtocart_dialog;
         let response;
 
