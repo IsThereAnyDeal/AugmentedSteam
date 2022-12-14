@@ -42,7 +42,7 @@ export default class FSupportInfo extends Feature {
         const links = [];
 
         if (url) {
-            url = /^https?:\/\//.test(url) ? url : `//${url}`;
+            url = HTML.formatUrl(url);
             links.push(`<a href="${url}">${Localization.str.website}</a>`);
         }
 

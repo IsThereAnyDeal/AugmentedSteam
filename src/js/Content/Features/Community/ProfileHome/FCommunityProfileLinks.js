@@ -73,10 +73,10 @@ export default class FCommunityProfileLinks extends Feature {
             if (!customLink.enabled) { continue; }
 
             const name = HTML.escape(customLink.name);
-            const link = `//${HTML.escape(customLink.url.replace("[ID]", steamId))}`;
+            const link = `${HTML.formatUrl(customLink.url.replace("[ID]", steamId))}`;
             let icon;
             if (customLink.icon) {
-                icon = `//${HTML.escape(customLink.icon)}`;
+                icon = `${HTML.formatUrl(customLink.icon)}`;
             } else {
                 iconType = "none";
             }
