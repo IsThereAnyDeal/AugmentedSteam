@@ -1,4 +1,3 @@
-
 class GameId {
 
     static parseId(id) {
