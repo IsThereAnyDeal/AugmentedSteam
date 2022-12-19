@@ -1,13 +1,15 @@
 import ContextType from "../../../Modules/Context/ContextType";
 import {GameId} from "../../../../Core/GameId";
-import {CStore} from "../Common/CStore";
+import {CStoreBase} from "../Common/CStoreBase";
 import FExtraLinks from "../Common/FExtraLinks";
 import FDRMWarnings from "../Common/FDRMWarnings";
 import FITADPrices from "../Common/FITADPrices";
 import FAddToCartNoRedirect from "../Common/FAddToCartNoRedirect";
 
-export class CBundle extends CStore {
+export class CBundle extends CStoreBase {
+
     constructor() {
+
         super(ContextType.BUNDLE, [
             FExtraLinks,
             FDRMWarnings,

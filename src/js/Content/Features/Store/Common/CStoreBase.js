@@ -22,6 +22,16 @@ export class CStoreBase extends CBase {
         this._observeChanges();
     }
 
+    getAllSubids() {
+        const result = [];
+        for (const node of document.querySelectorAll("input[name=subid]")) {
+            if (node.value) {
+                result.push(node.value);
+            }
+        }
+        return result;
+    }
+
     _observeChanges() {
 
         // search box on the navigation bar
