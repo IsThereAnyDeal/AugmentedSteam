@@ -5,7 +5,6 @@ import FEarlyAccess from "../../Common/FEarlyAccess";
 import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
 import FSkipGotSteamDialog from "./FSkipGotSteamDialog";
 import FHorizontalScrolling from "./FHorizontalScrolling";
-import FFocusSearch from "./FFocusSearch";
 
 export class CStoreBase extends CBase {
 
@@ -16,7 +15,6 @@ export class CStoreBase extends CBase {
             FAlternativeLinuxIcon,
             FSkipGotSteamDialog,
             FHorizontalScrolling,
-            FFocusSearch,
         );
 
         super(type, features);

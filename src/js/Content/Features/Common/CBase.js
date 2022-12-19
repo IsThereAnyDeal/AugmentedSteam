@@ -5,6 +5,7 @@ import FBackToTop from "./FBackToTop";
 import FDisableLinkFilter from "./FDisableLinkFilter";
 import FKeepSSACheckboxState from "./FKeepSSACheckboxState";
 import FDefaultCommunityTab from "./FDefaultCommunityTab";
+import FFocusSearch from "./FFocusSearch";
 
 export class CBase extends Context {
 
@@ -17,6 +18,7 @@ export class CBase extends Context {
             FDisableLinkFilter,
             FKeepSSACheckboxState,
             FDefaultCommunityTab,
+            FFocusSearch,
         );
 
         super(type, features);
