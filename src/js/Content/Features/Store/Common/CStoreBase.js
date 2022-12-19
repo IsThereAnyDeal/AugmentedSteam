@@ -2,7 +2,6 @@ import {CBase} from "../../Common/CBase";
 import {ContextType} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 import FEarlyAccess from "../../Common/FEarlyAccess";
-import FHideTrademarks from "../../Common/FHideTrademarks";
 import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
 import FSkipGotSteamDialog from "./FSkipGotSteamDialog";
 import FHorizontalScrolling from "./FHorizontalScrolling";
@@ -14,7 +13,6 @@ export class CStoreBase extends CBase {
 
         features.push(
             FHighlightsTags,
-            FHideTrademarks,
             FAlternativeLinuxIcon,
             FSkipGotSteamDialog,
             FHorizontalScrolling,
