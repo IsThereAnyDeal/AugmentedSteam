@@ -68,6 +68,9 @@ class User {
                     const config = document.querySelector("#webui_config, #application_config");
                     if (config) {
                         newCountry = JSON.parse(config.dataset.config).COUNTRY;
+                    } else {
+                        // This variable is present on market-related pages
+                        newCountry = HTMLParser.getVariableFromDom("g_strCountryCode", "string");
                     }
                 }
 
