@@ -236,7 +236,7 @@ class AugmentedSteam {
                     });
                 },
                 [
-                    Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim()),
+                    Localization.str.play_game.replace("__gamename__", gamename),
                     gameid,
                     Localization.str.visit_store,
                 ]);
