@@ -139,11 +139,17 @@
       "js": "js/store/default.js"
     },
     {
-      "matches": "*://steamcommunity.com/workshop",
+      "matches": [
+        "*://steamcommunity.com/sharedfiles",
+        "*://steamcommunity.com/workshop"
+      ],
       "js": "js/community/workshop.js"
     },
     {
-      "matches": "*://steamcommunity.com/workshop/browse",
+      "matches": [
+        "*://steamcommunity.com/sharedfiles/browse",
+        "*://steamcommunity.com/workshop/browse"
+      ],
       "js": "js/community/workshop_browse.js"
     },
     {
@@ -308,11 +314,17 @@
       "js": "js/community/app.js"
     },
     {
-      "matches": "*://steamcommunity.com/sharedfiles/filedetails[/]?*id=*",
+      "matches": [
+        "*://steamcommunity.com/sharedfiles/filedetails[/*]",
+        "*://steamcommunity.com/workshop/filedetails[/*]"
+      ],
       "js": "js/community/shared_files.js"
     },
     {
-      "matches": "*://steamcommunity.com/sharedfiles/editguide[/]?*",
+      "matches": [
+        "*://steamcommunity.com/sharedfiles/editguide[/]?*",
+        "*://steamcommunity.com/workshop/editguide[/]?*"
+      ],
       "js": "js/community/edit_guide.js"
     },
     {
@@ -333,12 +345,17 @@
         "*://steamcommunity.com/tradeoffer/*",
         "*://steamcommunity.com/id/*",
         "*://steamcommunity.com/profiles/*",
-        "*://steamcommunity.com/workshop[/browse]",
         "*://steamcommunity.com/market[/*]",
         "*://steamcommunity.com/groups/*",
         "*://steamcommunity.com/app/*",
-        "*://steamcommunity.com/sharedfiles/filedetails[/]?*id=*",
+        "*://steamcommunity.com/sharedfiles",
+        "*://steamcommunity.com/workshop",
+        "*://steamcommunity.com/sharedfiles/browse",
+        "*://steamcommunity.com/workshop/browse",
+        "*://steamcommunity.com/sharedfiles/filedetails[/*]",
+        "*://steamcommunity.com/workshop/filedetails[/*]",
         "*://steamcommunity.com/sharedfiles/editguide[/]?*",
+        "*://steamcommunity.com/workshop/editguide[/]?*",
         "*://steamcommunity.com/tradingcards/boostercreator",
         "*://steamcommunity.com/stats/*/achievements"
       ],
