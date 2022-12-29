@@ -6,6 +6,26 @@ export default class FBrowseWorkshops extends Feature {
 
     apply() {
 
+        for (const tab of document.querySelectorAll(".browseOption")) {
+            const a = tab.querySelector("a");
+            const href = a.href;
+            a.removeAttribute("href");
+
+            if (tab.classList.contains("notSelected")) {
+                HTML.wrap('<div style="position: relative;"></div>', tab);
+            }
+
+            const newTab = HTML.replace(tab, tab.outerHTML); // Sanitize click listeners
+
+            newTab.addEventListener("click", () => {
+                const url = new URL(href, "https://steamcommunity.com/workshop/");
+                const query = url.searchParams.get("browsesort");
+                LocalStorage.set("workshop_state", url.search);
+                window.history.pushState(null, null, url.search);
+                this._changeTab(query);
+            });
+        }
+
         let url = new URL(window.location.href);
 
         if (url.searchParams.has("browsesort")) {
@@ -18,23 +38,6 @@ export default class FBrowseWorkshops extends Feature {
                 this._changeTab(query);
             }
         }
-
-        Page.runInPageContext(() => {
-            window.SteamFacade.jq(".browseOption")
-                .get()
-                .forEach(node => { node.onclick = () => false; });
-        });
-
-        document.querySelectorAll(".browseOption").forEach(tab => {
-            tab.addEventListener("click", () => {
-                const a = tab.querySelector("a[href]");
-                const url = new URL(`https://steamcommunity.com/workshop/${a.href}`);
-                const query = url.searchParams.get("browsesort");
-                LocalStorage.set("workshop_state", url.search);
-                window.history.pushState(null, null, url.search);
-                this._changeTab(query);
-            });
-        });
     }
 
     async _changeTab(query, start = 0, count = 8) {
@@ -43,8 +46,7 @@ export default class FBrowseWorkshops extends Feature {
 
         tab.setAttribute("disabled", "disabled");
 
-        const image = document.querySelector(".browseOptionImage");
-        tab.parentNode.insertAdjacentElement("afterbegin", image);
+        tab.before(document.querySelector(".browseOptionImage"));
 
         document.querySelectorAll(".browseOption").forEach(tab => tab.classList.add("notSelected"));
         tab.classList.remove("notSelected");

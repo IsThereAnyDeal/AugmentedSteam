@@ -63,10 +63,13 @@ class HTML {
     static replace(node, html) {
         const _node = HTML._getNode(node);
 
-        if (_node) {
-            _node.outerHTML = DOMPurify.sanitize(html);
-        }
-        return _node;
+        if (!_node) { return null; }
+
+        const dom = HTML.toDom(html); // Support replacing with multiple nodes
+        const firstEl = dom.firstElementChild; // Save reference before emptying the docFrag
+        _node.replaceWith(dom);
+
+        return firstEl;
     }
 
     static wrap(wrapper, startEl, endEl = startEl) {
