@@ -225,8 +225,7 @@ class AugmentedSteam {
 
         HTML.beforeEnd(
             "#es_popup .popup_menu",
-            `<div class="hr"></div>
-             <a id="es_random_game" class="popup_menu_item" style="cursor: pointer;">${Localization.str.launch_random}</a>`
+            `<div class="hr"></div><a id="es_random_game" class="popup_menu_item">${Localization.str.launch_random}</a>`
         );
 
         document.querySelector("#es_random_game").addEventListener("click", async() => {
@@ -237,22 +236,16 @@ class AugmentedSteam {
                 if (!response || !response.success) { return; }
                 const data = response.data;
 
-                let gameid = appid;
-                let gamename;
-                if (data.fullgame) {
-                    gameid = data.fullgame.appid;
-                    gamename = data.fullgame.name;
-                } else {
-                    gamename = data.name;
-                }
+                const gameid = data.fullgame?.appid ?? appid;
+                const gamename = data.fullgame?.name ?? data.name;
 
-                Page.runInPageContext((playGameStr, gameid, visitStore) => {
+                Page.runInPageContext((playGameStr, gameid, visitStoreStr) => {
                     const prompt = window.SteamFacade.showConfirmDialog(
                         playGameStr,
                         `<img src="//cdn.cloudflare.steamstatic.com/steam/apps/${gameid}/header.jpg">`,
                         null,
                         null,
-                        visitStore
+                        visitStoreStr
                     );
 
                     prompt.done(result => {
@@ -261,7 +254,7 @@ class AugmentedSteam {
                     });
                 },
                 [
-                    Localization.str.play_game.replace("__gamename__", gamename.replace("'", "").trim()),
+                    Localization.str.play_game.replace("__gamename__", gamename),
                     gameid,
                     Localization.str.visit_store,
                 ]);
