@@ -1,12 +1,12 @@
 import {GameId, SyncedStorage} from "../../../../modulesCore";
 import {Background, ContextType, User} from "../../../modulesContent";
+import {CStoreBase} from "../Common/CStoreBase";
+import {UserNotes} from "../Common/UserNotes";
 import FMediaExpander from "../../Common/FMediaExpander";
 import FITADPrices from "../Common/FITADPrices";
 import FDRMWarnings from "../Common/FDRMWarnings";
 import FExtraLinks from "../Common/FExtraLinks";
 import FAddToCartNoRedirect from "../Common/FAddToCartNoRedirect";
-import {UserNotes} from "../Common/UserNotes";
-import {CStore} from "../Common/CStore";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
 import FRemoveFromWishlist from "./FRemoveFromWishlist";
 import FForceMP4 from "./FForceMP4";
@@ -46,9 +46,10 @@ import FHideReportedTags from "./FHideReportedTags";
 import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
 import FSteamDeckCompatibility from "./FSteamDeckCompatibility";
 
-export class CApp extends CStore {
+export class CApp extends CStoreBase {
 
     constructor() {
+
         // Only add extra links if there's an error message (e.g. region-locked, age-gated)
         if (document.getElementById("error_box") !== null) {
             super(ContextType.APP, [FExtraLinks]);

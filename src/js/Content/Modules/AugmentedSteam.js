@@ -56,6 +56,31 @@ class AugmentedSteam {
         });
     }
 
+    static _addBackToTop() {
+        if (!SyncedStorage.get("show_backtotop")) { return; }
+
+        // Remove Steam's back-to-top button
+        document.querySelector("#BackToTop")?.remove();
+
+        const btn = document.createElement("div");
+        btn.classList.add("es_btt");
+        btn.textContent = "▲";
+
+        document.body.append(btn);
+
+        btn.addEventListener("click", () => {
+            window.scroll({
+                "top": 0,
+                "left": 0,
+                "behavior": "smooth"
+            });
+        });
+
+        window.addEventListener("scroll", () => {
+            btn.classList.toggle("is-visible", window.scrollY >= 400);
+        });
+    }
+
     static _bindLogout() {
 
         // TODO there should be a better detection of logout, probably
@@ -272,6 +297,7 @@ class AugmentedSteam {
     }
 
     static init() {
+        AugmentedSteam._addBackToTop();
         AugmentedSteam._addMenu();
         AugmentedSteam._addLanguageWarning();
         AugmentedSteam._handleInstallSteamButton();

@@ -1,9 +1,9 @@
-import {Feature} from "../../../Modules/Feature/Feature";
+import {Feature} from "../../Modules/Feature/Feature";
 
 export default class FFocusSearch extends Feature {
 
     checkPrerequisites() {
-        this._node = document.querySelector("#store_nav_search_term");
+        this._node = document.querySelector("#store_nav_search_term, input.discussionSearchText");
         return this._node !== null;
     }
 

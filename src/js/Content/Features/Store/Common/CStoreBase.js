@@ -2,11 +2,9 @@ import {CBase} from "../../Common/CBase";
 import {ContextType} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 import FEarlyAccess from "../../Common/FEarlyAccess";
-import FHideTrademarks from "../../Common/FHideTrademarks";
 import FAlternativeLinuxIcon from "./FAlternativeLinuxIcon";
 import FSkipGotSteamDialog from "./FSkipGotSteamDialog";
 import FHorizontalScrolling from "./FHorizontalScrolling";
-import FFocusSearch from "./FFocusSearch";
 
 export class CStoreBase extends CBase {
 
@@ -14,16 +12,24 @@ export class CStoreBase extends CBase {
 
         features.push(
             FHighlightsTags,
-            FHideTrademarks,
             FAlternativeLinuxIcon,
             FSkipGotSteamDialog,
             FHorizontalScrolling,
-            FFocusSearch,
         );
 
         super(type, features);
 
         this._observeChanges();
+    }
+
+    getAllSubids() {
+        const result = [];
+        for (const node of document.querySelectorAll("input[name=subid]")) {
+            if (node.value) {
+                result.push(node.value);
+            }
+        }
+        return result;
     }
 
     _observeChanges() {
