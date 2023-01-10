@@ -74,11 +74,11 @@ export default class FExtraLinks extends Feature {
             // custom app link
             for (const customLink of SyncedStorage.get("app_custom_link")) {
 
-                const link = `//${HTML.escape(customLink.url
+                const link = `${HTML.formatUrl(customLink.url
                     .replace("[NAME]", appName ? encodeURIComponent(appName) : "")
                     .replace("[ID]", this._gameid))}`;
                 const text = Localization.str.view_on_website.replace("__website__", HTML.escape(customLink.name));
-                const iconUrl = customLink.icon ? `url(//${HTML.escape(customLink.icon)})` : "none";
+                const iconUrl = customLink.icon ? `url(${HTML.formatUrl(customLink.icon)})` : "none";
 
                 links.push({link, text, iconUrl, "enabled": customLink.enabled});
             }

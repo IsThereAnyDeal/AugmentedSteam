@@ -1,6 +1,12 @@
 // TODO Accept NodeLists to insert HTML for every node in the list
 class HTML {
 
+    static formatUrl(link) {
+        const protocolReg = /^[a-z]+:\/\//;
+        const _link = protocolReg.test(link) ? link : `//${link}`;
+        return this.escape(_link);
+    }
+
     static escape(str) {
 
         // @see https://stackoverflow.com/a/4835406
