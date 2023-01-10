@@ -30,4 +30,3 @@ export {Stats} from "./Modules/Stats";
 export {SteamId, SteamIdDetail} from "./Modules/SteamId";
 export {UpdateHandler} from "./Modules/UpdateHandler";
 export {User} from "./Modules/User";
-export {Viewport} from "./Modules/Viewport";
