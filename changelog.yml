@@ -1,3 +1,9 @@
+2.4.1: |
+  - Avoid free promotions getting added to Cart
+  - Fix protocol for custom 3rd party links (pidanmeng)
+  - Improve store country detection on market-related pages
+  - Other minor fixes
+
 2.4.0: |
   New Features
   - Add option to stay on the page after you add game to your cart, instead of redirecting to the cart
