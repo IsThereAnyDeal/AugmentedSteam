@@ -788,7 +788,8 @@
         "error_desc": "Ocurrió un error al agregar su artículo al carrito.",
         "title": "Agregado al carrito de compras",
         "checkout": "No, pagar",
-        "continue": "Sí, seguir comprando"
+        "continue": "Sí, seguir comprando",
+        "desc": "El ítem fue agregado a tu carrito de compras"
     },
     "deck_compat": {
         "header": "Compatibilidad con Steam Deck",
@@ -808,5 +809,6 @@
     "family_sharing_notice": {
         "notice": "Aviso:",
         "desc": "Este juego no se incluye en el Préstamo familiar."
-    }
+    },
+    "in_cart": "En el carrito"
 }

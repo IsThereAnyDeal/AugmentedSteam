@@ -788,7 +788,8 @@
         "error_desc": "Une erreur s'est produite lors de l'ajout de votre article au panier.",
         "title": "Ajouté au panier",
         "checkout": "Non, passer au paiement",
-        "continue": "Oui, continuez vos achats"
+        "continue": "Oui, continuez vos achats",
+        "desc": "L'article a été ajouté à votre panier."
     },
     "deck_compat": {
         "header": "Compatibilité Steam Deck",
@@ -808,5 +809,6 @@
     "family_sharing_notice": {
         "notice": "Remarque :",
         "desc": "Ce jeu est exclu du service de partage familial de Steam."
-    }
+    },
+    "in_cart": "Dans le panier"
 }

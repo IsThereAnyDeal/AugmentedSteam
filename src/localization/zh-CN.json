@@ -785,7 +785,8 @@
         "error_desc": "添加物品至购物车时发生了错误。",
         "title": "添加至购物车",
         "checkout": "不，现在结账",
-        "continue": "是，继续购物"
+        "continue": "是，继续购物",
+        "desc": "此物品已添加到您的购物车。"
     },
     "deck_compat": {
         "header": "Steam Deck 兼容性",
@@ -805,5 +806,6 @@
     "family_sharing_notice": {
         "notice": "注意：",
         "desc": "此游戏不包含在 Steam 家庭共享服务中。"
-    }
+    },
+    "in_cart": "在购物车中"
 }
