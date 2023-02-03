@@ -65,8 +65,9 @@ export class CacheStorage<Defaults extends Record<Key, Value>> extends LocalStor
     }
 
     private isTimestamped(obj: unknown): obj is Timestamped {
-        return typeof (obj as Timestamped).timestamp === "number"
-            && typeof (obj as Timestamped).data !== "undefined";
+        return obj !== null && typeof obj === "object"
+            && "timestamp" in obj && typeof obj.timestamp === "number"
+            && "data" in obj && typeof obj.data !== "undefined";
     }
 }
 
