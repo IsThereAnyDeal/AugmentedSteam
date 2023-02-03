@@ -30,6 +30,8 @@
         },
         {
             "files": "*.ts",
+            "parser": "@typescript-eslint/parser",
+            "plugins": ["@typescript-eslint"],
             "extends": "plugin:@typescript-eslint/all",
             "parserOptions": {
                 "project": ["./tsconfig.json"]
