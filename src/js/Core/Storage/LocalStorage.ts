@@ -4,7 +4,7 @@ import type {Key, Value} from "./Storage";
 import {Environment} from "../Environment";
 import browser from "webextension-polyfill";
 
-type MigrationArea = "store" | "community" | "extension";
+type MigrationArea = "community" | "extension" | "store";
 type MigrationStatus = {
     [Area in MigrationArea]: boolean;
 };
