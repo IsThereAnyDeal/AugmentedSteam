@@ -1,6 +1,4 @@
-import {LocalStorage} from "../../Core/Storage/LocalStorage";
-import {TimeUtils} from "../../Core/Utils/TimeUtils";
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
+import {LocalStorage, SyncedStorage, TimeUtils} from "../../modulesCore";
 import {Api} from "./Api";
 import Config from "../../config";
 import {IndexedDB} from "./IndexedDB";

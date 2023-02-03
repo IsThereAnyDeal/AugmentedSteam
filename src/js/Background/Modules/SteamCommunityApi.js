@@ -1,9 +1,6 @@
-import {LocalStorage} from "../../Core/Storage/LocalStorage";
-import {Errors} from "../../Core/Errors/Errors";
-import {GameId} from "../../Core/GameId";
-import {HTMLParser} from "../../Core/Html/HtmlParser";
+import {Errors, GameId, HTMLParser, LocalStorage} from "../../modulesCore";
 import {Api} from "./Api";
-import {CacheStorage} from "./CacheStorage";
+import CacheStorage from "./CacheStorage";
 import {IndexedDB} from "./IndexedDB";
 
 class SteamCommunityApi extends Api {

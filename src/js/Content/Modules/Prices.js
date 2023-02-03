@@ -1,10 +1,5 @@
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
-import {Localization} from "../../Core/Localization/Localization";
-import {HTML} from "../../Core/Html/Html";
-import {Background} from "./Background";
-import {User} from "./User";
-import {Price} from "./Price";
-import {CurrencyManager} from "./CurrencyManager";
+import {HTML, Localization, SyncedStorage} from "../../modulesCore";
+import {Background, CurrencyManager, Price, User} from "../modulesContent";
 
 class Prices {
 

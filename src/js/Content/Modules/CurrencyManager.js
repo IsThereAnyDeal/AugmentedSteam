@@ -1,6 +1,6 @@
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
-import {StringUtils} from "../../Core/Utils/StringUtils";
-import {Background} from "./Background";
+import {StringUtils, SyncedStorage} from "../../modulesCore";
+import {Background} from "../modulesContent";
+
 import {Page} from "../Features/Page";
 
 class SteamCurrency {

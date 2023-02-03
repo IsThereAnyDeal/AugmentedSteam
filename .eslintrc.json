@@ -1,5 +1,14 @@
 {
+    "root": true,
+    "parserOptions": {
+        "ecmaVersion": 2021,
+        "sourceType": "module"
+    },
     "extends": "eslint:recommended",
+    "ignorePatterns": [
+        "/dist/**",
+        "/releases/**"
+    ],
     "env": {
         "browser": true,
         "webextensions": true,
@@ -9,9 +18,6 @@
         "DOMPurify": "readonly",
         "__BROWSER__": "readonly"
     },
-    "parserOptions": {
-        "sourceType": "module"
-    },
     "overrides": [
         {
             "files": "*.cjs",
@@ -19,15 +25,45 @@
                 "node": true,
                 "browser": false,
                 "webextensions": false
-            },
+            }
+        },
+        {
+            "files": "*.ts",
+            "extends": "plugin:@typescript-eslint/all",
             "parserOptions": {
-                "ecmaVersion": "latest"
+                "project": ["./tsconfig.json"]
+            },
+            "rules": {
+                "@typescript-ban-tslint-comment": "off", // Not using TSLint
+                "@typescript-eslint/brace-style": ["error", "1tbs", {"allowSingleLine": true}],
+                "@typescript-eslint/comma-dangle": ["error", "only-multiline"],
+                "@typescript-eslint/consistent-type-assertions": ["error", {"assertionStyle": "as", "objectLiteralTypeAssertions": "never"}],
+                "@typescript-eslint/consistent-type-definitions": "off",
+                "@typescript-eslint/consistent-type-exports": ["error", {"fixMixedExportsWithInlineTypeSpecifier": true}],
+                "@typescript-eslint/explicit-module-boundary-types": "off", // Already using explicit-function-return-type
+                "@typescript-eslint/indent": ["error", 4, {"SwitchCase": 1}], // Broken, but should still be useful. Disable with inline comments where necessary
+                "@typescript-eslint/init-declarations": "off",
+                "@typescript-eslint/lines-between-class-members": ["error", "always", {"exceptAfterSingleLine": true}],
+                "@typescript-eslint/naming-convention": "off", // TODO Maybe implement that later?
+                "@typescript-eslint/no-confusing-non-null-assertion": "off",
+                "@typescript-eslint/no-extra-parens": "off",
+                "@typescript-eslint/no-extraneous-class": "off",
+                "@typescript-eslint/no-magic-numbers": ["warn", {"ignore": [0, 1, 24, 60]}],
+                "@typescript-eslint/no-parameter-properties": "off",
+                "@typescript-eslint/no-restricted-imports": "off", // TODO Restrict imports of globals (e.g. DOMPurify)
+                "@typescript-eslint/no-shadow": "off",
+                "@typescript-eslint/no-throw-literal": ["error", {"allowThrowingAny": false, "allowThrowingUnknown": false}],
+                "@typescript-eslint/no-type-alias": "off",
+                "@typescript-eslint/no-unnecessary-type-arguments": "off",
+                "@typescript-eslint/padding-line-between-statements": "off",
+                "@typescript-eslint/prefer-enum-initializers": "off",
+                "@typescript-eslint/prefer-namespace-keyword": "off", // We're using ES2015 modules
+                "@typescript-eslint/quotes": ["error", "double", {"avoidEscape": true}],
+                "@typescript-eslint/sort-type-union-intersection-members": "off",
+                "@typescript-eslint/space-before-function-paren": ["error", "never"],
+                "@typescript-eslint/typedef": "off"
             }
         }
-    ],
-    "ignorePatterns": [
-        "/dist/**",
-        "/releases/**"
     ],
     "rules": {
         "array-bracket-newline": ["error", "consistent"],
@@ -37,7 +73,7 @@
         "arrow-spacing": "error",
         "block-scoped-var": "error",
         "block-spacing": "error",
-        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "brace-style": ["error", "1tbs", {"allowSingleLine": true}],
         "camelcase": ["error", {"ignoreDestructuring": true}],
         "comma-dangle": ["error", "only-multiline"],
         "comma-spacing": "error",
@@ -62,27 +98,26 @@
         "grouped-accessor-pairs": ["error", "getBeforeSet"],
         "implicit-arrow-linebreak": "error",
         "indent": ["error", 4, {"SwitchCase": 1}],
-        "key-spacing": ["error", { "mode": "minimum" }],
+        "key-spacing": ["error", {"mode": "minimum"}],
         "keyword-spacing": "error",
-        "lines-around-comment": ["warn", { "beforeLineComment": false, "beforeBlockComment": true }],
-        "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+        "lines-around-comment": ["warn", {"beforeLineComment": false, "beforeBlockComment": true}],
+        "lines-between-class-members": ["error", "always", {"exceptAfterSingleLine": true}],
         "max-depth": "warn",
-        "max-len": ["warn", { "code": 132, "ignoreStrings": true, "ignoreTemplateLiterals": true, "ignoreRegExpLiterals": true, "ignoreUrls": true }],
+        "max-len": ["warn", { "code": 132, "ignoreTemplateLiterals": true, "ignoreRegExpLiterals": true, "ignoreUrls": true }],
         "max-nested-callbacks": ["error", 4],
-        "max-statements-per-line": ["error", { "max": 2 }],
+        "max-statements-per-line": ["error", {"max": 2}],
         "multiline-comment-style": "error",
         "new-cap": "error",
         "new-parens": "error",
         "newline-per-chained-call": "error",
         "no-alert": "warn",
-        "no-array-constructor": "error",
         "no-caller": "error",
         "no-case-declarations": "error",
         "no-confusing-arrow": "error",
         "no-constructor-return": "error",
+        "no-dupe-class-members": "error",
         "no-dupe-else-if": "error",
         "no-duplicate-imports": "error",
-        "no-empty-function": "error",
         "no-eq-null": "error",
         "no-eval": "error",
         "no-extend-native": "error",
@@ -99,10 +134,9 @@
         "no-multi-assign": "error",
         "no-multi-spaces": "error",
         "no-multi-str": "error",
-        "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1, "maxBOF": 1 }],
+        "no-multiple-empty-lines": ["error", {"max": 2, "maxEOF": 1, "maxBOF": 1}],
         "no-negated-condition": "error",
         "no-nested-ternary": "error",
-        "no-new": "error",
         "no-new-func": "error",
         "no-new-object": "error",
         "no-new-wrappers": "error",
@@ -120,10 +154,10 @@
         "no-tabs": "error",
         "no-template-curly-in-string": "error",
         "no-throw-literal": "error",
-        "no-trailing-spaces": ["error", { "skipBlankLines": true }],
+        "no-trailing-spaces": ["error", {"skipBlankLines": true}],
         "no-undef-init": "error",
         "no-unmodified-loop-condition": "error",
-        "no-unneeded-ternary": ["error", { "defaultAssignment": false }],
+        "no-unneeded-ternary": ["error", {"defaultAssignment": false}],
         "no-unused-expressions": "error",
         "no-unused-vars": ["error", {"args": "none"}],
         "no-use-before-define": "error",
@@ -140,7 +174,7 @@
         "nonblock-statement-body-position": "error",
         "object-curly-newline": "error",
         "object-curly-spacing": "error",
-        "object-property-newline": ["error", { "allowAllPropertiesOnSameLine": true }],
+        "object-property-newline": ["error", {"allowAllPropertiesOnSameLine": true}],
         "one-var-declaration-per-line": "error",
         "operator-assignment": "error",
         "operator-linebreak": ["error", "before"],
@@ -155,9 +189,8 @@
         "prefer-spread": "error",
         "prefer-template": "error",
         "quote-props": "error",
-        "quotes": ["error", "double", { "avoidEscape": true }],
+        "quotes": ["error", "double", {"avoidEscape": true}],
         "radix": ["error", "as-needed"],
-        "require-await": "error",
         "rest-spread-spacing": "error",
         "semi": "error",
         "semi-spacing": "error",
@@ -168,7 +201,7 @@
         "space-in-parens": "error",
         "space-infix-ops": "error",
         "space-unary-ops": "error",
-        "spaced-comment": "error",
+        "spaced-comment": ["error", "always", { "markers": ["/"] }],
         "strict": ["error", "global"],
         "switch-colon-spacing": "error",
         "symbol-description": "error",

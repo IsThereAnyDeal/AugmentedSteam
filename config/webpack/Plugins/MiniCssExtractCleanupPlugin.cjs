@@ -9,7 +9,7 @@ class MiniCssExtractCleanupPlugin {
 
             compilation.hooks.processAssets.tap({
                 "name": `${this.constructor.name}_compilation`,
-                "stage": compilation.PROCESS_ASSETS_STAGE_OPTIMIZE
+                "stage": compilation.PROCESS_ASSETS_STAGE_OPTIMIZE_COUNT,
             }, (assets) => {
                 Object.keys(assets)
                     .filter(asset => {

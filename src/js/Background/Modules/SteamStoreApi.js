@@ -4,7 +4,7 @@ import {Errors} from "../../Core/Errors/Errors";
 import {StringUtils} from "../../Core/Utils/StringUtils";
 import {Api} from "./Api";
 import {IndexedDB} from "./IndexedDB";
-import {CacheStorage} from "./CacheStorage";
+import CacheStorage from "./CacheStorage";
 
 class SteamStoreApi extends Api {
 

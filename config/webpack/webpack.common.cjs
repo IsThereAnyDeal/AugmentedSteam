@@ -5,6 +5,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const MiniCssExtractCleanupPlugin = require("./Plugins/MiniCssExtractCleanupPlugin.cjs");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
+const sveltePreprocess = require("svelte-preprocess");
 
 const rootDir = path.resolve(__dirname, "../../");
 
@@ -64,6 +65,7 @@ module.exports = {
         "filename": "[name].js",
     },
     "resolve": {
+        "extensions": [".ts", ".svelte", ".js"],
         "modules": [
             path.resolve(rootDir, "src/js/"),
             path.resolve(rootDir, "src/js/Content/Features/"),
@@ -72,6 +74,23 @@ module.exports = {
     },
     "module": {
         "rules": [
+            {
+                "test": /\.(html|svelte)$/,
+                "use": {
+                    "loader": "svelte-loader",
+                    "options": {
+                        "emitCss": true,
+                        "preprocess": sveltePreprocess({
+                            "sourceMap": true,
+                        }),
+                    },
+                },
+            },
+            {
+                "test": /\.ts$/,
+                "use": "ts-loader",
+                "exclude": /node_modules/,
+            },
             {
                 "test": /\.css$/,
                 "use": [MiniCssExtractPlugin.loader, {

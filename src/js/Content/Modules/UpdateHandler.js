@@ -1,11 +1,6 @@
-import {Version} from "../../Core/Version";
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
-import {Info} from "../../Core/Info";
-import {ExtensionResources} from "../../Core/ExtensionResources";
-import {Localization} from "../../Core/Localization/Localization";
-import {BackgroundSimple} from "../../Core/BackgroundSimple";
-import {Background} from "./Background";
-import {ITAD} from "./ITAD";
+import {BackgroundSimple, ExtensionResources, Info, LocalStorage, Localization, SyncedStorage, Version} from "../../modulesCore";
+import {Background, ITAD} from "../modulesContent";
+
 import {Page} from "../Features/Page";
 
 class UpdateHandler {

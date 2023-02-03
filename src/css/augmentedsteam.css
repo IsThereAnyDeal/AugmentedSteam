@@ -1723,14 +1723,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   display: none; /* Hide broadcast icon since it gets in the way */
 }
 
-.home_content_item .es_overlay_container,
-.small_cap .es_overlay_container,
-.special.special_img_ctn .es_overlay_container,
-.game_capsule_ctn .es_overlay_container,
-.review_app_actions .gameLogoHolder_default .es_overlay_container {
-  position: relative;
-  display: inherit;
-}
 .home_content.single .es_overlay {
   z-index: 11;
 }
@@ -1749,17 +1741,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 .tab_item.es_early_access > .tab_item_cap {
   line-height: 48px;
-}
-.store_capsule .es_overlay_container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  vertical-align: top;
-}
-.store_capsule .es_overlay_container > img {
-  width: 100%;
 }
 
 /***************************************

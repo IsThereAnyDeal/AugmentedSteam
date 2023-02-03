@@ -1,6 +1,4 @@
-import {SyncedStorage} from "../../../Core/Storage/SyncedStorage";
-import {HTML} from "../../../Core/Html/Html";
-import {Localization} from "../../../Core/Localization/Localization";
+import {HTML, Localization, SyncedStorage} from "../../../modulesCore";
 
 class ProgressBar {
     static create() {

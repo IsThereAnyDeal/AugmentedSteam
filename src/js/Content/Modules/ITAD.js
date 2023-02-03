@@ -1,10 +1,5 @@
-import {HTML} from "../../Core/Html/Html";
-import {ExtensionResources} from "../../Core/ExtensionResources";
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
-import {Localization} from "../../Core/Localization/Localization";
-import {Background} from "./Background";
-import {User} from "./User";
-import {TimeUtils} from "../../modulesCore";
+import {ExtensionResources, HTML, Localization, SyncedStorage, TimeUtils} from "../../modulesCore";
+import {Background, User} from "../modulesContent";
 
 class ITAD {
     static async create() {

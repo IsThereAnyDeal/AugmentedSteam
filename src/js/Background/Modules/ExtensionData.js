@@ -1,6 +1,6 @@
-import {SyncedStorage} from "../../Core/Storage/SyncedStorage";
+import {SyncedStorage} from "../../modulesCore";
 import {IndexedDB} from "./IndexedDB";
-import {CacheStorage} from "./CacheStorage";
+import CacheStorage from "./CacheStorage";
 
 class ExtensionData {
     static clearCache() {
