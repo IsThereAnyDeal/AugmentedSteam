@@ -1,7 +1,6 @@
 {
     "root": true,
     "parserOptions": {
-        "ecmaVersion": 2021,
         "sourceType": "module"
     },
     "extends": "eslint:recommended",
@@ -24,7 +23,9 @@
             "env": {
                 "node": true,
                 "browser": false,
-                "webextensions": false
+                "webextensions": false,
+                "es2021": false,
+                "es2022": true
             }
         },
         {
