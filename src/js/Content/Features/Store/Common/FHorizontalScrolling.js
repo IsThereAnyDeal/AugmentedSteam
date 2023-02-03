@@ -1,5 +1,5 @@
-import {SyncedStorage} from "../../../../Core/Storage/SyncedStorage";
-import {Feature} from "../../../Modules/Feature/Feature";
+import {SyncedStorage} from "../../../../modulesCore";
+import {Feature} from "../../../modulesContent";
 
 export default class FHorizontalScrolling extends Feature {
 
