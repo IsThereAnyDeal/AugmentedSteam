@@ -160,10 +160,6 @@ class SteamFacade {
         return ExecFriendAction(action, navid);
     }
 
-    static scrollOffsetForceRecalc() {
-        CScrollOffsetWatcher.ForceRecalc();
-    }
-
     static loadImageGroupOnScroll(elTarget, strGroup) {
         LoadImageGroupOnScroll(elTarget, strGroup);
     }

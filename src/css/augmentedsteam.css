@@ -738,21 +738,6 @@ img.astats_icon {
 }
 
 /***************************************
- * Games page
- * FCommonGames
- **************************************/
-.common_filter_ctn {
-  display: none !important; /* hide Steam's checkbox */
-}
-.esi-hide-common .esi-common,
-.esi-hide-notcommon .esi-notcommon {
-  display: none !important; /* ensure the filter options work alongside filtering by keywords */
-}
-.es_games_filter {
-  margin-bottom: 6px;
-}
-
-/***************************************
  * Achievement stats page
  * FAchievementSort
  **************************************/
