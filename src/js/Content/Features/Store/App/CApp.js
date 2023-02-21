@@ -45,6 +45,7 @@ import FSaveReviewFilters from "./FSaveReviewFilters";
 import FHideReportedTags from "./FHideReportedTags";
 import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
 import FSteamDeckCompatibility from "./FSteamDeckCompatibility";
+import FRemoveDupeScreenshots from "./FRemoveDupeScreenshots";
 
 export class CApp extends CStoreBase {
 
@@ -104,6 +105,7 @@ export class CApp extends CStoreBase {
             FAddToCartNoRedirect,
             FPatchHighlightPlayer,
             FSteamDeckCompatibility,
+            FRemoveDupeScreenshots,
         ]);
 
         this.appid = GameId.getAppid(window.location.host + window.location.pathname);
