@@ -91,8 +91,11 @@ export default class FDRMWarnings extends Feature {
         // Denuvo Antitamper detection
         const denuvo = text.includes("denuvo");
 
-        // EA origin detection
-        const origin = text.includes("origin client");
+        // EA app (Origin) detection
+        const eaApp
+                = text.includes("origin client")
+            || text.includes("ea account")
+            || text.includes("ea app");
 
         // Microsoft Xbox Live account detection
         const xbox = text.includes("xbox live");
@@ -106,7 +109,7 @@ export default class FDRMWarnings extends Feature {
             [rockstar, "Rockstar Social Club"],
             [kalypso, "Kalypso Launcher"],
             [denuvo, "Denuvo Anti-Tamper"],
-            [origin, "EA Origin"],
+            [eaApp, "EA app (Origin)"],
             [xbox, "Microsoft Xbox Live"],
         ].flatMap(([enabled, name]) => { return enabled ? [name] : []; });
 
