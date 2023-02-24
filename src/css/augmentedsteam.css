@@ -49,6 +49,18 @@
 .achieveTxt h3.ellipsis {
   white-space: normal;
 }
+/**
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/pull/1590
+ * Fix badge row text display
+ */
+.badge_content > .badge_current {
+    float: initial;
+    width: initial;
+}
+.badge_content > .badge_progress_info + .badge_current {
+    width: 296px;
+    float: left;
+}
 
 /* Back To Top button */
 .es_btt {
