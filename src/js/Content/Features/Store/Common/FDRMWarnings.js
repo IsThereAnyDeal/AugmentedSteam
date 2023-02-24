@@ -64,8 +64,8 @@ export default class FDRMWarnings extends Feature {
             || text.includes("multiplayer play and other live features included at no charge")
             || text.includes("www.gamesforwindows.com/live");
 
-        // Ubisoft Uplay detection
-        const uplay
+        // Ubisoft Connect detection
+        const ubisoft
                 = text.includes("uplay")
             || text.includes("ubisoft account");
 
@@ -102,7 +102,7 @@ export default class FDRMWarnings extends Feature {
 
         const drmNames = [
             [gfwl, "Games for Windows Live"],
-            [uplay, "Ubisoft Connect"],
+            [ubisoft, "Ubisoft Connect"],
             [securom, "SecuROM"],
             [tages, "Tages"],
             [stardock, "Stardock Account required"],
