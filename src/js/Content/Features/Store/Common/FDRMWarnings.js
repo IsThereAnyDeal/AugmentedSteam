@@ -3,13 +3,19 @@ import {ContextType, Feature} from "../../../modulesContent";
 
 export default class FDRMWarnings extends Feature {
 
+    constructor(context) {
+        super(context);
+
+        // Exclude false-positives
+        this._excludedAppids = [
+            21690, // Resident Evil 5, at Capcom's request
+        ];
+    }
+
     checkPrerequisites() {
         if (!SyncedStorage.get("showdrm")) { return false; }
 
-        // Prevent false-positives
-        return (this.context.appid !== 216900 // Resident Evil 5, at Capcom's request
-            && this.context.appid !== 1157970 // Special K
-        );
+        return !this._excludedAppids.includes(this.context.appid);
     }
 
     apply() {
