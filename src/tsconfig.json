@@ -1,0 +1,30 @@
+{
+    "extends": "../tsconfig.base.json",
+    "compilerOptions": {
+        // Modules
+        "baseUrl": "js/",
+
+        // Emit
+        /**
+         * Svelte Preprocess cannot figure out whether you have a value or a type, so tell TypeScript to
+         * enforce using `import type` instead of `import` for Types.
+         */
+        // "importsNotUsedAsValues": "error",
+        /**
+         * TypeScript doesn't know about import usages in the template because it only sees the
+         * script of a Svelte file. Therefore preserve all value imports.
+         */
+        "verbatimModuleSyntax": true,
+        /**
+         * To have warnings/errors of the Svelte compiler at the correct position,
+         * enable source maps by default.
+         */
+        "sourceMap": true,
+
+        // Interop Constraints
+        // "isolatedModules": true, // Svelte compiles the scripts in isolation
+
+        // Language and Environment
+        "target": "es2021",
+    }
+}

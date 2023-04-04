@@ -1,15 +1,17 @@
-const path = require("path");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const JsonMinimizerPlugin = require("json-minimizer-webpack-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const MiniCssExtractCleanupPlugin = require("./Plugins/MiniCssExtractCleanupPlugin.cjs");
-const {CleanWebpackPlugin} = require("clean-webpack-plugin");
-const sveltePreprocess = require("svelte-preprocess");
+import path from "node:path";
+import url from "node:url";
+import CopyWebpackPlugin from "copy-webpack-plugin";
+import JsonMinimizerPlugin from "json-minimizer-webpack-plugin";
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import MiniCssExtractCleanupPlugin from "./Plugins/MiniCssExtractCleanupPlugin.js";
+import {CleanWebpackPlugin} from "clean-webpack-plugin";
+import sveltePreprocess from "svelte-preprocess";
+import type {Configuration} from "webpack";
 
-const rootDir = path.resolve(__dirname, "../../");
+const rootDir = url.fileURLToPath(new URL("../../", import.meta.url));
 
-module.exports = {
+const config = {
     "context": rootDir,
     "entry": {
         // stylesheets - NOTE: main stylesheet added during build, based on browser
@@ -100,6 +102,12 @@ module.exports = {
                     }
                 }],
             },
+            {
+                "test": /\.js$/,
+                "resolve": {
+                    "fullySpecified": false, // Allow omitting the file extension for imports
+                },
+            }
         ],
     },
     "plugins": [
@@ -139,4 +147,6 @@ module.exports = {
             new CssMinimizerPlugin(),
         ],
     },
-};
+} satisfies Configuration;
+
+export default config;

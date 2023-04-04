@@ -17,6 +17,7 @@
         "DOMPurify": "readonly",
         "__BROWSER__": "readonly"
     },
+    "reportUnusedDisableDirectives": true,
     "overrides": [
         {
             "files": "*.cjs",
@@ -32,10 +33,7 @@
             "files": "*.ts",
             "parser": "@typescript-eslint/parser",
             "plugins": ["@typescript-eslint"],
-            "extends": "plugin:@typescript-eslint/all",
-            "parserOptions": {
-                "project": ["./tsconfig.json"]
-            },
+            "extends": ["plugin:@typescript-eslint/all"],
             "rules": {
                 "@typescript-ban-tslint-comment": "off", // Not using TSLint
                 "@typescript-eslint/brace-style": ["error", "1tbs", {"allowSingleLine": true}],
@@ -46,25 +44,42 @@
                 "@typescript-eslint/explicit-module-boundary-types": "off", // Already using explicit-function-return-type
                 "@typescript-eslint/indent": ["error", 4, {"SwitchCase": 1}], // Broken, but should still be useful. Disable with inline comments where necessary
                 "@typescript-eslint/init-declarations": "off",
+                "@typescript-eslint/key-spacing": ["error", {"mode": "minimum"}],
+                "@typescript-eslint/lines-around-comment": ["warn", {"beforeLineComment": false, "beforeBlockComment": true}],
                 "@typescript-eslint/lines-between-class-members": ["error", "always", {"exceptAfterSingleLine": true}],
                 "@typescript-eslint/naming-convention": "off", // TODO Maybe implement that later?
                 "@typescript-eslint/no-confusing-non-null-assertion": "off",
                 "@typescript-eslint/no-extra-parens": "off",
                 "@typescript-eslint/no-extraneous-class": "off",
-                "@typescript-eslint/no-magic-numbers": ["warn", {"ignore": [0, 1, 24, 60]}],
-                "@typescript-eslint/no-parameter-properties": "off",
+                "@typescript-eslint/no-magic-numbers": "off",
                 "@typescript-eslint/no-restricted-imports": "off", // TODO Restrict imports of globals (e.g. DOMPurify)
                 "@typescript-eslint/no-shadow": "off",
-                "@typescript-eslint/no-throw-literal": ["error", {"allowThrowingAny": false, "allowThrowingUnknown": false}],
+                "@typescript-eslint/no-throw-literal": ["error", {"allowThrowingUnknown": true}],
                 "@typescript-eslint/no-type-alias": "off",
+                "@typescript-eslint/no-unnecessary-condition": "off", // https://github.com/typescript-eslint/typescript-eslint/issues/6635
                 "@typescript-eslint/no-unnecessary-type-arguments": "off",
+                "no-unreachable": "error", // Deactivated by the recommended config, probably due to the allowUnreachableCode TSConfig option
                 "@typescript-eslint/padding-line-between-statements": "off",
+                "@typescript-eslint/parameter-properties": "off",
                 "@typescript-eslint/prefer-enum-initializers": "off",
                 "@typescript-eslint/prefer-namespace-keyword": "off", // We're using ES2015 modules
+                "@typescript-eslint/prefer-readonly-parameter-types": "off", // Becomes very verbose, also there is no-param-reassign
                 "@typescript-eslint/quotes": ["error", "double", {"avoidEscape": true}],
                 "@typescript-eslint/sort-type-union-intersection-members": "off",
                 "@typescript-eslint/space-before-function-paren": ["error", "never"],
                 "@typescript-eslint/typedef": "off"
+            }
+        },
+        {
+            "files": "config/**/*.ts",
+            "parserOptions": {
+                "project": ["config/tsconfig.json"]
+            }
+        },
+        {
+            "files": "src/**/*.ts",
+            "parserOptions": {
+                "project": ["src/tsconfig.json"]
             }
         }
     ],
@@ -106,7 +121,7 @@
         "lines-around-comment": ["warn", {"beforeLineComment": false, "beforeBlockComment": true}],
         "lines-between-class-members": ["error", "always", {"exceptAfterSingleLine": true}],
         "max-depth": "warn",
-        "max-len": ["warn", { "code": 132, "ignoreTemplateLiterals": true, "ignoreRegExpLiterals": true, "ignoreUrls": true }],
+        "max-len": ["warn", { "code": 132, "ignoreTemplateLiterals": true, "ignoreRegExpLiterals": true, "ignoreStrings": true, "ignoreUrls": true }],
         "max-nested-callbacks": ["error", 4],
         "max-statements-per-line": ["error", {"max": 2}],
         "multiline-comment-style": "error",
@@ -121,6 +136,7 @@
         "no-dupe-class-members": "error",
         "no-dupe-else-if": "error",
         "no-duplicate-imports": "error",
+        "no-empty-static-block": "error",
         "no-eq-null": "error",
         "no-eval": "error",
         "no-extend-native": "error",
@@ -135,12 +151,13 @@
         "no-loop-func": "error",
         "no-mixed-operators": "error",
         "no-multi-assign": "error",
-        "no-multi-spaces": "error",
+        "no-multi-spaces": ["error", {"ignoreEOLComments": true}],
         "no-multi-str": "error",
         "no-multiple-empty-lines": ["error", {"max": 2, "maxEOF": 1, "maxBOF": 1}],
         "no-negated-condition": "error",
         "no-nested-ternary": "error",
         "no-new-func": "error",
+        "no-new-native-nonconstructor": "error",
         "no-new-object": "error",
         "no-new-wrappers": "error",
         "no-octal": "error",
@@ -171,7 +188,6 @@
         "no-useless-rename": "error",
         "no-useless-return": "error",
         "no-var": "error",
-        "no-void": "error",
         "no-with": "error",
         "no-whitespace-before-property": "error",
         "nonblock-statement-body-position": "error",

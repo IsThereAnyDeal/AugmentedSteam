@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        // Type Checking
+        "allowUnreachableCode": true, // Handled by no-unreachable ESLint rule
+        "allowUnusedLabels": true, // Handled by no-labels ESLint rule
+        "exactOptionalPropertyTypes": true,
+        "noFallthroughCasesInSwitch": false, // Handled by no-fallthrough ESLint rule
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedLocals": false, // Handled by no-unused-vars ESLint rule
+        "noUnusedParameters": false, // Handled by no-unused-vars ESLint rule
+        "strict": true,
+
+        // Modules
+        "module": "es2020",
+        "moduleResolution": "node",
+
+        // Emit
+        "noEmit": true, // Code emission handled by webpack and ts-node
+
+        // JavaScript Support
+        "allowJs": true, // TODO Remove once fully migrated
+
+        // Interop Constraints
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true
+    }
+}

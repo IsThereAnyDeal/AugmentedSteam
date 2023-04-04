@@ -1,0 +1,10 @@
+{
+    "extends": "../tsconfig.base.json",
+    "ts-node": {
+        "esm": true
+    },
+    "compilerOptions": {
+        // Language and Environment
+        "target": "es2022"
+      }
+}
