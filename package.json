@@ -37,7 +37,7 @@
     "webpack-cli": "^4.10.0",
     "webpack-ext-reloader": "^1.1.9",
     "webpack-merge": "^5.8.0",
-    "yaml": "^2.1.1"
+    "yaml": "^2.2.2"
   },
   "dependencies": {
     "dompurify": "^2.4.0",
