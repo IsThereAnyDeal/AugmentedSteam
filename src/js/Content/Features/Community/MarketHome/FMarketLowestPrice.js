@@ -7,6 +7,9 @@ export default class FMarketLowestPrice extends CallbackFeature {
         super(context);
 
         this._loadedMarketPrices = {};
+        this._delayMs = 1000; // Delay to put between requests in attempt to avoid 429s
+        this._delay = false; // Whether to put a delay between requests
+        this._timeout = false; // Whether the user has been timed-out
     }
 
     checkPrerequisites() {
@@ -42,20 +45,22 @@ export default class FMarketLowestPrice extends CallbackFeature {
 
         const lowestNode = node.querySelector(".es_market_listing_lowest");
 
-        if (typeof data === "undefined") {
-            lowestNode.textContent = Localization.str.theworderror;
-            return;
+        switch (data) {
+            case "error":
+                lowestNode.textContent = Localization.str.theworderror;
+                return;
+            case "nodata":
+                lowestNode.textContent = Localization.str.no_data;
+                return;
+            case "timeout":
+                lowestNode.textContent = Localization.str.toomanyrequests;
+                return;
+            default:
+                lowestNode.textContent = data;
         }
-
-        if (typeof data.lowest_price === "undefined") {
-            lowestNode.textContent = Localization.str.no_data;
-            return;
-        }
-
-        lowestNode.textContent = data.lowest_price;
 
         const myPrice = Price.parseFromString(node.querySelector(".market_listing_price span span").textContent);
-        const lowPrice = Price.parseFromString(data.lowest_price);
+        const lowPrice = Price.parseFromString(data);
 
         if (myPrice.value <= lowPrice.value) {
             lowestNode.classList.add("es_priced_lower"); // Our price matches the lowest price
@@ -79,69 +84,64 @@ export default class FMarketLowestPrice extends CallbackFeature {
             rows.push(node);
         }
 
-        // Put a delay between requests
-        let delay = false;
-
         for (const node of rows) {
             const [, appid, marketHashName] = node.querySelector(".market_listing_item_name_link")?.pathname
                 .match(/^\/market\/listings\/(\d+)\/([^/]+)/) ?? [];
 
             if (!appid || !marketHashName) {
-                console.error("Couldn't find appid or market hash name for item id %s", node.id);
-                this._insertPrice(node);
+                console.error("Couldn't find appid or market hash name for item id '%s'", node.id);
+                this._insertPrice(node, "error");
                 continue;
             }
 
             let data = this._loadedMarketPrices[marketHashName];
-            if (!data) {
-                data = await this._getPriceOverview(node, Number(appid), marketHashName, delay);
-                delay = true;
+            if (typeof data === "undefined") {
+                if (this._timeout) {
+                    this._insertPrice(node, "timeout");
+                    continue;
+                }
+
+                data = await this._getPriceOverview(node, Number(appid), marketHashName);
+                this._delay = true;
             }
 
             this._insertPrice(node, data);
         }
     }
 
-    async _getPriceOverview(node, appid, marketHashName, delay) {
+    async _getPriceOverview(node, appid, marketHashName) {
 
         const country = User.storeCountry;
         const currencyNumber = CurrencyManager.currencyTypeToNumber(CurrencyManager.storeCurrency);
 
         let data;
-        let attempt = 0;
 
-        do {
-            if (delay && attempt === 0) {
-                await TimeUtils.timer(1000);
+        if (this._delay) {
+            await TimeUtils.timer(this._delayMs);
+        }
+
+        try {
+            const result = await RequestData.getJson(
+                `https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`
+            );
+
+            if (!result || !result.success) {
+                throw new Error();
             }
 
-            try {
-                data = await RequestData.getJson(
-                    `https://steamcommunity.com/market/priceoverview/?country=${country}&currency=${currencyNumber}&appid=${appid}&market_hash_name=${marketHashName}`
-                );
+            data = result.lowest_price || "nodata";
+            this._loadedMarketPrices[marketHashName] = data;
+        } catch (err) {
 
-                if (!data || !data.success) {
-                    throw new Error();
-                }
-
-                this._loadedMarketPrices[marketHashName] = data;
-                break;
-            } catch (err) {
-
-                // Too Many Requests
-                if (err instanceof Errors.HTTPError && err.code === 429) {
-                    await TimeUtils.timer(30000);
-
-                    // If the node is detached after the timeout
-                    if (!node.parentNode) { break; }
-
-                    attempt++;
-                } else {
-                    console.error("Failed to retrieve price overview for item %s!", decodeURIComponent(marketHashName));
-                    break;
-                }
+            // Too Many Requests
+            if (err instanceof Errors.HTTPError && err.code === 429) {
+                this._timeout = true;
+                data = "timeout";
+            } else {
+                console.error("Failed to retrieve price overview for item '%s'", decodeURIComponent(marketHashName));
+                data = "error";
             }
-        } while (attempt < 2); // Give up after 2 tries
+        }
 
         return data;
     }
