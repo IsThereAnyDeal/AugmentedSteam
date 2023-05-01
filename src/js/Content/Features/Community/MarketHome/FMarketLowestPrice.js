@@ -7,7 +7,7 @@ export default class FMarketLowestPrice extends CallbackFeature {
         super(context);
 
         this._loadedMarketPrices = {};
-        this._delayMs = 1000; // Delay to put between requests in attempt to avoid 429s
+        this._delayMs = 2000; // Delay to put between requests in attempt to avoid 429s
         this._delay = false; // Whether to put a delay between requests
         this._timeout = false; // Whether the user has been timed-out
     }
