@@ -10,6 +10,7 @@ import FExportWishlist from "./FExportWishlist";
 import FKeepEditableRanking from "./FKeepEditableRanking";
 import FOneClickRemoveFromWishlist from "./FOneClickRemoveFromWishlist";
 import FWishlistProfileLink from "./FWishlistProfileLink";
+import FWishlistDemoLink from "./FWishlistDemoLink";
 import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import {ContextType} from "@Content/Modules/Context/ContextType";
 import User from "@Content/Modules/User";
@@ -46,6 +47,7 @@ export default class CWishlist extends CStoreBase {
                 FKeepEditableRanking,
                 FOneClickRemoveFromWishlist,
                 FWishlistProfileLink,
+                FWishlistDemoLink,
             ] : []
         );
 

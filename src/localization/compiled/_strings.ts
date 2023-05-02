@@ -1,5 +1,6 @@
 export const __deleteCommentPrompt = "deleteCommentPrompt";
 export const __downloadDemoHeader = "downloadDemoHeader";
+export const __downloadDemo = "downloadDemo";
 export const __deckCompat_header = "deckCompat_header";
 export const __deckCompat_unknown = "deckCompat_unknown";
 export const __deckCompat_unsupported = "deckCompat_unsupported";

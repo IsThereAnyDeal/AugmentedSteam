@@ -45,7 +45,12 @@ interface LocalStorageSchema extends StorageSchema {
         language: string,
         minPlaytime?: string,
         maxPlaytime?: string
-    }
+    },
+    wl_demo_appids: Array<{
+        appid: number,
+        demoAppid: number|undefined,
+        expiry: number
+    }>,
 }
 
 class LocalStorage<Schema extends StorageSchema> extends Storage<ns.LocalStorageArea, Schema>{
