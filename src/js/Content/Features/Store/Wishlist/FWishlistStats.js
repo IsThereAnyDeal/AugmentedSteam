@@ -105,32 +105,29 @@ export default class FWishlistStats extends Feature {
 
         if (hiddenApps.length === 0) { return; }
 
-        HTML.beforeEnd(
-            document.getElementById("esi-wishlist-stats-content"),
-            `<div class="esi-stat">
-                <span id="esi-stat-hidden" data-tooltip-text="${Localization.str.wl.hidden_tooltip}">${hiddenApps.length}</span>
-                ${Localization.str.wl.hidden}
-            </div>`
-        );
+        HTML.beforeEnd("#esi-wishlist-stats-content",
+            `<div class="esi-stat" id="esi-stat-hidden-ctn" data-tooltip-text="${Localization.str.wl.hidden_tooltip}">
+                <span id="esi-stat-hidden">${hiddenApps.length}</span>
+                <div class="esi-stat-hidden-label">
+                    ${Localization.str.wl.hidden}
+                    <span>(?)</span>
+                </div>
+            </div>`);
 
         const icons = {
             "itad": ExtensionResources.getURL("img/itad.png"),
             "steamdb": ExtensionResources.getURL("img/ico/steamdb.png"),
         };
 
-        document.getElementById("esi-stat-hidden").addEventListener("click", () => {
+        document.getElementById("esi-stat-hidden-ctn").addEventListener("click", () => {
             Page.runInPageContext((hiddenApps, icons, removeStr, wlStr) => {
                 const f = window.SteamFacade;
                 const g = f.global;
                 const canEdit = g("g_bCanEdit"); // `true` if logged in and viewing own wishlist
 
                 // We support removing items so use a global property to keep track of them
-                window.asHiddenApps ??= hiddenApps;
-
-                let html = "";
-                for (const appid of window.asHiddenApps) {
-
-                    html += `<div class="as-wl-remove-row" data-appid="${appid}">
+                const html = (window.asHiddenApps ??= hiddenApps).map(appid => {
+                    return `<div class="as-wl-remove-row" data-appid="${appid}">
                         <a href="//steamcommunity.com/app/${appid}/discussions/" target="_blank">
                             <img src="//cdn.cloudflare.steamstatic.com/steam/apps/${appid}/header_292x136.jpg" loading="lazy">
                         </a>
@@ -138,7 +135,7 @@ export default class FWishlistStats extends Feature {
                         <a href="https://steamdb.info/app/${appid}/" target="_blank"><img src="${icons.steamdb}" title="SteamDB"></a>
                         ${canEdit ? `<span class="as-wl-remove">${removeStr}</span>` : ""}
                     </div>`;
-                }
+                }).join("");
 
                 f.showDialog(wlStr.hidden, html);
 
@@ -160,10 +157,9 @@ export default class FWishlistStats extends Feature {
 
                             row.remove();
                             const node = document.getElementById("esi-stat-hidden");
+                            node.textContent = window.asHiddenApps.length;
                             if (window.asHiddenApps.length === 0) {
                                 node.parentNode.remove();
-                            } else {
-                                node.textContent = window.asHiddenApps.length;
                             }
                         });
                 });
