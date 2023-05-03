@@ -1271,6 +1271,15 @@ video.highlight_movie:hover + .html5_video_overlay {
 
 /***************************************
  * Wishlist
+ * FWishlistProfileLink
+ **************************************/
+.as_wl_profile_link {
+  display: flex;
+  align-items: center;
+}
+
+/***************************************
+ * Wishlist
  * FKeepEditableRanking
  **************************************/
 #wishlist_ctn:not(.sort_order).as_show_order_input .capsule {
