@@ -29,12 +29,13 @@ export default class FWishlistUserNotes extends CallbackFeature {
 
     callback(nodes) {
 
-        const lastNode = nodes[nodes.length - 1];
-
         for (const node of nodes) {
             if (node.classList.contains("esi-has-note")) { continue; }
 
             const noteEl = this._noteEl.cloneNode(true);
+            node.querySelector(".mid_container").after(noteEl);
+            node.classList.add("esi-has-note");
+
             const appid = Number(node.dataset.appId);
 
             (async() => {
@@ -43,13 +44,6 @@ export default class FWishlistUserNotes extends CallbackFeature {
                 if (note !== null) {
                     noteEl.textContent = `"${note}"`;
                     noteEl.classList.add("esi-has-note");
-                }
-
-                node.querySelector(".mid_container").insertAdjacentElement("afterend", noteEl);
-                node.classList.add("esi-has-note");
-
-                if (node === lastNode) {
-                    window.dispatchEvent(new Event("resize"));
                 }
             })();
         }
