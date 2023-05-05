@@ -255,6 +255,13 @@ class SteamCommunityApi extends Api {
                 const visibility = visibilityNode ? Number(visibilityNode.value) : 0; // Public: 0; Friends-only: 1
                 const playtime = playtimeText ? parseFloat(playtimeText[0].replace(/,/g, "")) : 0.0;
 
+                // Count total awards received
+                const awards = Array.from(node.querySelectorAll(".review_award"))
+                    .reduce((acc, node) => {
+                        const count = node.classList.contains("more_btn") ? 0 : Number(node.querySelector(".review_award_count").textContent.trim());
+                        return acc + count;
+                    }, 0);
+
                 reviews.push({
                     "default": defaultOrder,
                     rating,
@@ -263,6 +270,7 @@ class SteamCommunityApi extends Api {
                     length,
                     visibility,
                     playtime,
+                    awards,
                     "node": DOMPurify.sanitize(node.outerHTML) + devResponseNode,
                     id
                 });

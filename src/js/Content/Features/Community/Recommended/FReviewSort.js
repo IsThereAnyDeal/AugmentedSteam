@@ -45,6 +45,7 @@ export default class FReviewSort extends Feature {
                 ["length", Localization.str.length],
                 ["visibility", Localization.str.visibility],
                 ["playtime", Localization.str.playtime],
+                ["awards", Localization.str.awards],
             ],
             SyncedStorage.get("sortreviewsby"),
             (sortBy, reversed) => { this._sortReviews(sortBy, reversed); },
@@ -70,6 +71,7 @@ export default class FReviewSort extends Feature {
                 case "length":
                 case "visibility":
                 case "playtime":
+                case "awards":
                     return b[sortBy] - a[sortBy];
                 case "default":
                     return a[sortBy] - b[sortBy];
