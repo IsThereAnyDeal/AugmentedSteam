@@ -270,7 +270,7 @@ class SteamCommunityApi extends Api {
 
         if (!await IndexedDB.contains("reviews", steamId, {"preventFetch": true})) { return null; }
 
-        const reviews = await IndexedDB.get("reviews", steamId, {"params": reviewCount});
+        const reviews = await SteamCommunityApi.getReviews(steamId, reviewCount);
 
         for (const review of reviews) {
             if (review.id === id) {

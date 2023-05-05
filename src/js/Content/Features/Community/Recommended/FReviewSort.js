@@ -30,7 +30,7 @@ export default class FReviewSort extends Feature {
                     || pathname.startsWith("/userreviews/update/")) {
 
                     const id = pathname.split("/").pop();
-                    Messenger.postMessage("updateReview", id);
+                    window.Messenger.postMessage("updateReview", id);
                 }
             });
         });
