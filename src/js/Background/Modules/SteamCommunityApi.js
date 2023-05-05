@@ -216,15 +216,12 @@ class SteamCommunityApi extends Api {
     static _getReviewId(node) {
         const input = node.querySelector("input");
 
-        /*
-         * Only exists when the requested profile is yours
-         * (these are the input fields where you can change visibility and language of the review)
-         */
+        // Only exists when the requested profile is yours
         if (input) {
             return Number(input.id.replace("ReviewVisibility", ""));
         }
 
-        // Otherwise you have buttons to vote for the review (Was it helpful or not, was it funny?)
+        // Otherwise you have buttons to vote for the review
         return Number(node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", ""));
     }
 
