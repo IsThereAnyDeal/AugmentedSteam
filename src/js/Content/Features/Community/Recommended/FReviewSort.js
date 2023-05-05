@@ -62,7 +62,7 @@ export default class FReviewSort extends Feature {
             node.remove();
         }
 
-        let displayedReviews = this._reviews.sort((a, b) => {
+        let displayedReviews = this._reviews.slice().sort((a, b) => {
             switch (sortBy) {
                 case "rating":
                 case "helpful":
