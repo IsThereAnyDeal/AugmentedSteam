@@ -239,6 +239,9 @@ class SteamCommunityApi extends Api {
 
                 const playtimeText = node.querySelector(".hours").textContent.split("(")[0].match(/(\d+,)?\d+\.\d+/);
                 const visibilityNode = node.querySelector(".dselect_container:nth-child(2) .trigger");
+                const devResponseNode = node.nextElementSibling.classList.contains("review_developer_response_container")
+                    ? DOMPurify.sanitize(node.nextElementSibling.outerHTML)
+                    : "";
 
                 const id = SteamCommunityApi._getReviewId(node);
                 const rating = node.querySelector("[src*=thumbsUp]") ? 1 : 0;
@@ -260,7 +263,7 @@ class SteamCommunityApi extends Api {
                     length,
                     visibility,
                     playtime,
-                    "node": DOMPurify.sanitize(node.outerHTML),
+                    "node": DOMPurify.sanitize(node.outerHTML) + devResponseNode,
                     id
                 });
             }

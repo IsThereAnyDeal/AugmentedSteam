@@ -58,7 +58,7 @@ export default class FReviewSort extends Feature {
             await this._getReviews();
         }
 
-        for (const node of document.querySelectorAll(".review_box")) {
+        for (const node of document.querySelectorAll(".review_box, .review_developer_response_container")) {
             node.remove();
         }
 
