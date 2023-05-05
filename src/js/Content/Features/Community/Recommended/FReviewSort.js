@@ -160,8 +160,6 @@ export default class FReviewSort extends Feature {
 
         try {
             this._reviews = await Background.action("reviews", this._path, this._numReviews);
-
-            this._reviews.forEach((review, i) => { review.default = i; });
         } finally {
 
             // Delay half a second to avoid dialog flicker when grabbing cache

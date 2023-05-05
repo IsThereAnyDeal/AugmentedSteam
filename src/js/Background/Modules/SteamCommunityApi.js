@@ -229,11 +229,14 @@ class SteamCommunityApi extends Api {
         const parser = new DOMParser();
         const pageCount = 10;
         const reviews = [];
+        let defaultOrder = 0;
 
         for (let p = 1; p <= Math.ceil(reviewCount / pageCount); p++) {
             const doc = parser.parseFromString(await SteamCommunityApi.getPage(`${steamId}/recommended`, {p}), "text/html");
 
             for (const node of doc.querySelectorAll(".review_box")) {
+                defaultOrder++;
+
                 const headerText = node.querySelector(".header").innerHTML.split("<br>");
                 const playtimeText = node.querySelector(".hours").textContent.split("(")[0].match(/(\d+,)?\d+\.\d+/);
                 const visibilityNode = node.querySelector(".dselect_container:nth-child(2) .trigger");
@@ -247,6 +250,7 @@ class SteamCommunityApi extends Api {
                 const playtime = playtimeText ? parseFloat(playtimeText[0].split(",").join("")) : 0.0;
 
                 reviews.push({
+                    "default": defaultOrder,
                     rating,
                     helpful,
                     funny,
