@@ -238,7 +238,7 @@ class SteamCommunityApi extends Api {
                 defaultOrder++;
 
                 const playtimeText = node.querySelector(".hours").textContent.split("(")[0].match(/(\d+,)?\d+\.\d+/);
-                const visibilityNode = node.querySelector(".dselect_container:nth-child(2) .trigger");
+                const visibilityNode = node.querySelector("input[id^=ReviewVisibility]");
                 const devResponseNode = node.nextElementSibling.classList.contains("review_developer_response_container")
                     ? DOMPurify.sanitize(node.nextElementSibling.outerHTML)
                     : "";
@@ -252,7 +252,7 @@ class SteamCommunityApi extends Api {
                         return text ? Number(text[0].replace(/,/g, "")) : 0;
                     });
                 const length = node.querySelector(".content").textContent.trim().length;
-                const visibility = visibilityNode ? visibilityNode.textContent : "Public";
+                const visibility = visibilityNode ? Number(visibilityNode.value) : 0; // Public: 0; Friends-only: 1
                 const playtime = playtimeText ? parseFloat(playtimeText[0].split(",").join("")) : 0.0;
 
                 reviews.push({

@@ -68,15 +68,9 @@ export default class FReviewSort extends Feature {
                 case "helpful":
                 case "funny":
                 case "length":
+                case "visibility":
                 case "playtime":
                     return b[sortBy] - a[sortBy];
-                case "visibility": {
-                    const _a = a[sortBy].toLowerCase();
-                    const _b = b[sortBy].toLowerCase();
-                    if (_a > _b) { return -1; }
-                    if (_a < _b) { return 1; }
-                    return 0;
-                }
                 case "default":
                     return a[sortBy] - b[sortBy];
                 default:
