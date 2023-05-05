@@ -154,9 +154,6 @@ export default class FReviewSort extends Feature {
 
     async _getReviews() {
 
-        // Delay half a second to avoid dialog flicker when grabbing cache
-        await TimeUtils.timer(500);
-
         Page.runInPageContext((processing, wait) => {
             window.SteamFacade.showBlockingWaitDialog(processing, wait);
         }, [Localization.str.processing, Localization.str.wait]);
@@ -166,6 +163,10 @@ export default class FReviewSort extends Feature {
 
             this._reviews.forEach((review, i) => { review.default = i; });
         } finally {
+
+            // Delay half a second to avoid dialog flicker when grabbing cache
+            await TimeUtils.timer(500);
+
             Page.runInPageContext(() => {
                 window.SteamFacade.dismissActiveModal();
             });
