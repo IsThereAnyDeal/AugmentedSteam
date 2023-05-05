@@ -1,5 +1,5 @@
 import {HTML, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
-import {Background, Feature, Messenger, Sortbox} from "../../../modulesContent";
+import {Background, Feature, Messenger, Sortbox, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FReviewSort extends Feature {
@@ -95,55 +95,61 @@ export default class FReviewSort extends Feature {
         }
 
         // Add back sanitized event handlers
-        Page.runInPageContext(ids => {
-            document.querySelectorAll(".review_box").forEach((node, i) => {
-                const id = ids[i];
+        const loggedIn = User.isSignedIn ? 1 : 0;
+        const loginURL = encodeURIComponent(`https://steamcommunity.com/login/home/?goto=${this._path}/recommended/?insideModal=0`);
+        const ids = displayedReviews.map(review => review.id);
+        document.querySelectorAll(".review_box").forEach((node, i) => {
+            const id = ids[i];
 
-                // Only exists when the requested profile is yours
-                const containers = node.querySelectorAll(".dselect_container");
-
-                if (containers.length > 0) {
-                    for (const container of containers) {
-                        const type = container.id.startsWith("ReviewVisibility") ? "Visibility" : "Language";
-                        const input = container.querySelector("input");
-                        const trigger = container.querySelector(".trigger");
-                        const selections = container.querySelectorAll(".dropcontainer a");
-
-                        input.onchange = () => { window[`OnReview${type}Change`](id, `Review${type}${id}`); };
-
-                        /* eslint-disable no-script-url, no-undef, new-cap, no-loop-func --
-                         * The D* functions are not actual references in this context,
-                         * they're functions in the page context. */
-                        trigger.href = "javascript:DSelectNoop();";
-                        trigger.onfocus = () => DSelectOnFocus(`Review${type}${id}`);
-                        trigger.onblur = () => DSelectOnBlur(`Review${type}${id}`);
-                        trigger.onclick = () => DSelectOnTriggerClick(`Review${type}${id}`);
-
-                        selections.forEach((selection, selIndex) => {
-                            selection.href = "javascript:DSelectNoop();";
-                            selection.onmouseover = () => DHighlightItem(`Review${type}${id}`, selIndex, false);
-                            selection.onclick = () => DHighlightItem(`Review${type}${id}`, selIndex, true);
-                        });
-                        /* eslint-enable no-script-url, no-undef, new-cap, no-loop-func */
-                    }
-
-                // Otherwise you have buttons to vote for the review
+            for (const award of node.querySelectorAll(".review_award")) {
+                // More button shows up after 3 awards
+                if (award.classList.contains("more_btn")) {
+                    award.setAttribute("onclick", "UserReview_ShowMoreAwards(this);");
                 } else {
-                    const btns = node.querySelectorAll(".control_block a");
-                    const [upvote, downvote, funny] = btns;
-
-                    for (const btn of btns) {
-                        btn.href = "javascript:void(0)"; // eslint-disable-line no-script-url
-                    }
-
-                    /* eslint-disable new-cap, no-undef */
-                    upvote.onclick = () => UserReviewVoteUp(id);
-                    downvote.onclick = () => UserReviewVoteDown(id);
-                    funny.onclick = () => UserReviewVoteTag(id, 1, `RecommendationVoteTagBtn${id}_1`);
-                    /* eslint-enable new-cap, no-undef */
+                    const selected = award.dataset.tooltipHtml.match(/animated\/(\d+)\.png/)[1];
+                    award.setAttribute("onclick", `UserReview_Award(${loggedIn}, "${loginURL}", "${id}", OnUserReviewAward, ${selected});`);
                 }
-            });
-        }, [displayedReviews.map(review => review.id)]);
+            }
+
+            // Only exists when the requested profile is yours
+            const containers = node.querySelectorAll(".dselect_container");
+
+            if (containers.length > 0) {
+                for (const container of containers) {
+                    const type = container.id.startsWith("ReviewVisibility") ? "Visibility" : "Language";
+                    const arg = `Review${type}${id}`;
+                    const input = container.querySelector("input");
+                    const trigger = container.querySelector(".trigger");
+                    const selections = container.querySelectorAll(".dropcontainer a");
+
+                    input.setAttribute("onchange", `OnReview${type}Change("${id}", "${arg}");`);
+
+                    trigger.setAttribute("href", "javascript:DSelectNoop();"); // eslint-disable-line no-script-url
+                    trigger.setAttribute("onfocus", `DSelectOnFocus("${arg}");`);
+                    trigger.setAttribute("onblur", `DSelectOnBlur("${arg}");`);
+                    trigger.setAttribute("onclick", `DSelectOnTriggerClick("${arg}");`);
+
+                    selections.forEach((selection, selIndex) => {
+                        selection.setAttribute("href", "javascript:DSelectNoop();"); // eslint-disable-line no-script-url
+                        selection.setAttribute("onmouseover", `DHighlightItem("${arg}", ${selIndex}, false);`);
+                        selection.setAttribute("onclick", `DHighlightItem("${arg}", ${selIndex}, true);`);
+                    });
+                }
+
+            // Otherwise you have buttons to vote for and award the review
+            } else {
+                const [upvote, downvote, funny, award] = node.querySelectorAll(".control_block > .btn_small_thin");
+
+                for (const btn of [upvote, downvote, funny]) {
+                    btn.setAttribute("href", "javascript:void(0)"); // eslint-disable-line no-script-url
+                }
+
+                upvote.setAttribute("onclick", `UserReviewVoteUp(${loggedIn}, "${loginURL}", "${id}");`);
+                downvote.setAttribute("onclick", `UserReviewVoteDown(${loggedIn}, "${loginURL}", "${id}");`);
+                funny.setAttribute("onclick", `UserReviewVoteTag(${loggedIn}, "${loginURL}", "${id}");`);
+                award.setAttribute("onclick", `UserReview_Award(${loggedIn}, "${loginURL}", "${id}", OnUserReviewAward);`);
+            }
+        });
     }
 
     async _getReviews() {

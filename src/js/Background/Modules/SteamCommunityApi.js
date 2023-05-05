@@ -221,7 +221,7 @@ class SteamCommunityApi extends Api {
             return Number(input.id.replace("ReviewVisibility", ""));
         }
 
-        // Otherwise you have buttons to vote for the review
+        // Otherwise you have buttons to vote for and award the review
         return Number(node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", ""));
     }
 
