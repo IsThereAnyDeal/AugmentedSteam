@@ -237,14 +237,17 @@ class SteamCommunityApi extends Api {
             for (const node of doc.querySelectorAll(".review_box")) {
                 defaultOrder++;
 
-                const headerText = node.querySelector(".header").innerHTML.split("<br>");
                 const playtimeText = node.querySelector(".hours").textContent.split("(")[0].match(/(\d+,)?\d+\.\d+/);
                 const visibilityNode = node.querySelector(".dselect_container:nth-child(2) .trigger");
 
                 const id = SteamCommunityApi._getReviewId(node);
                 const rating = node.querySelector("[src*=thumbsUp]") ? 1 : 0;
-                const helpful = headerText[0] && headerText[0].match(/\d+/g) ? parseInt(headerText[0].match(/\d+/g).join("")) : 0;
-                const funny = headerText[1] && headerText[1].match(/\d+/g) ? parseInt(headerText[1].match(/\d+/g).join("")) : 0;
+                const [helpful = 0, funny = 0] = Array.from(node.querySelector(".header").childNodes)
+                    .filter(node => node.nodeType === 3)
+                    .map(node => {
+                        const text = node.textContent.match(/(?:\d+,)?\d+/);
+                        return text ? Number(text[0].replace(/,/g, "")) : 0;
+                    });
                 const length = node.querySelector(".content").textContent.trim().length;
                 const visibility = visibilityNode ? visibilityNode.textContent : "Public";
                 const playtime = playtimeText ? parseFloat(playtimeText[0].split(",").join("")) : 0.0;
