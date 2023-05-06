@@ -1693,14 +1693,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.80);
 }
 
-/**
- * https://github.com/jshackles/Enhanced_Steam/issues/778
- * Use original selection background color for live search entries that are both selected and highlighted
- */
-.search_suggest .match.focus {
-  background: #212d3d !important;
-}
-
 /***************************************
  * Common
  * FEarlyAccess

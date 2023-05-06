@@ -284,9 +284,6 @@ export default class FHighlightsTags extends Feature {
                     .hero_capsule.es_highlighted_${name}, .blotter_userstatus_game.es_highlighted_${name} {
                         outline: solid ${color};
                     }
-                    #search_suggestion_contents .focus.es_highlighted_${name} {
-                        box-shadow: -5px 0 0 ${color};
-                    }
                     .apphub_AppName.es_highlighted_${name} {
                         background: none !important; color: ${color};
                     }`
