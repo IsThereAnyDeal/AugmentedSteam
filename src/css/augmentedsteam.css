@@ -1632,7 +1632,7 @@ video.highlight_movie:hover + .html5_video_overlay {
 .game_area_dlc_price .es_tags ~ div {
   display: inline-block;
 }
-.match .es_tags {
+.match_app .es_tags {
   float: right;
   margin-left: 5px;
 }

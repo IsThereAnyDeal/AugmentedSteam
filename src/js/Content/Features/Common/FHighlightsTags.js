@@ -236,8 +236,8 @@ export default class FHighlightsTags extends Feature {
                 node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("wishlist_row")) {
                 node.querySelector(".addedon").insertAdjacentElement("afterbegin", container);
-            } else if (node.classList.contains("match")) {
-                node.querySelector(".match_price").insertAdjacentElement("afterbegin", container);
+            } else if (node.classList.contains("match_app")) {
+                node.querySelector(".match_subtitle").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("recommendation_highlight")) {
                 node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("similar_grid_item")) {
