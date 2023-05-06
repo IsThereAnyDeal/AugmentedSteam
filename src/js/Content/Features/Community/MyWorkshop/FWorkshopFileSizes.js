@@ -4,107 +4,126 @@ import {Page} from "../../Page";
 
 export default class FWorkshopFileSizes extends Feature {
 
+    checkPrerequisites() {
+        // Check if the user is signed in, viewing own profile, and has subscribed to at least one item
+        return document.querySelector(".primary_panel") !== null
+            && document.querySelector(".workshopBrowsePagingInfo") !== null;
+    }
+
     apply() {
-        this._addFileSizes();
-        this._addTotalSizeButton();
-    }
 
-    async _addFileSizes() {
-        for (const node of document.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
-            if (node.classList.contains("sized")) { continue; }
+        this._calcStr = Localization.str.calc_workshop_size;
 
-            const id = node.id.replace("Subscription", "");
-            const size = await Background.action("workshopfilesize", id, true);
-            if (typeof size !== "number") { continue; }
-
-            const str = Localization.str.calc_workshop_size.file_size.replace("__size__", this._getFileSizeStr(size));
-            HTML.beforeEnd(node.querySelector(".workshopItemSubscriptionDetails"), `<div class="workshopItemDate">${str}</div>`);
-            node.classList.add("sized");
-        }
-    }
-
-    _addTotalSizeButton() {
-
-        const panel = document.querySelector(".primary_panel");
-        HTML.beforeEnd(panel,
+        HTML.beforeEnd(".primary_panel",
             `<div class="menu_panel">
                 <div class="rightSectionHolder">
                     <div class="rightDetailsBlock">
                         <span class="btn_grey_steamui btn_medium" id="es_calc_size">
-                            <span>${Localization.str.calc_workshop_size.calc_size}</span>
+                            <span>${this._calcStr.calc_size}</span>
                         </span>
                     </div>
                 </div>
             </div>`);
 
-        document.getElementById("es_calc_size").addEventListener("click", async() => {
+        document.getElementById("es_calc_size").addEventListener("click", () => {
+            const pagingInfo = document.querySelector(".workshopBrowsePagingInfo").textContent;
+            this._total = Math.max(...pagingInfo.replace(/,/g, "").match(/\d+/g));
 
-            Page.runInPageContext((calculating, totalSize) => {
-                window.SteamFacade.showBlockingWaitDialog(calculating, totalSize);
-            },
-            [
-                Localization.str.calc_workshop_size.calculating,
-                Localization.str.calc_workshop_size.total_size.replace("__size__", "0 KB"),
-            ]);
+            this._startCalculation();
+        });
 
-            const totalStr = document.querySelector(".workshopBrowsePagingInfo").innerText.match(/\d+[,\d]*/g).pop();
-            const total = Number(totalStr.replace(/,/g, ""));
-            const parser = new DOMParser();
-            let totalSize = 0;
-            const url = new URL(window.location.href);
+        this._addFileSizes(); // Doesn't actually fetch any data unless total size has been calculated before
+    }
 
-            for (let p = 1; p <= Math.ceil(total / 30); p++) {
-                url.searchParams.set("p", p);
-                url.searchParams.set("numperpage", 30);
+    async _addFileSizes() {
 
-                const result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
-                if (!result) {
-                    console.error(`Failed to request ${url.toString()}`);
-                    continue;
-                }
+        for (const node of document.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
+            if (node.classList.contains("as-has-filesize")) { continue; }
 
-                const doc = parser.parseFromString(result, "text/html");
-                for (const item of doc.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
-                    const id = item.id.replace("Subscription", "");
-                    let size;
+            const size = await this._getFileSize(node, true).catch(err => console.error(err));
+            if (!size) { continue; }
 
-                    try {
-                        size = await Background.action("workshopfilesize", id);
-                    } catch (err) {
-                        console.group("Workshop file sizes");
-                        console.error(`Couldn't get file size for item ID ${id}`);
-                        console.error(err);
-                        console.groupEnd();
-                    }
+            const str = this._calcStr.file_size.replace("__size__", this._getFileSizeStr(size));
+            HTML.beforeEnd(node.querySelector(".workshopItemSubscriptionDetails"), `<div class="workshopItemDate">${str}</div>`);
+            node.classList.add("as-has-filesize");
+        }
+    }
 
-                    if (!size) { continue; }
+    async _startCalculation() {
 
-                    totalSize += size;
+        this._completed = 0;
+        this._failed = 0;
+        this._totalSize = 0;
 
-                    Page.runInPageContext((calculating, totalSize) => {
-                        const f = window.SteamFacade;
-                        f.dismissActiveModal();
-                        f.showBlockingWaitDialog(calculating, totalSize);
-                    },
-                    [
-                        Localization.str.calc_workshop_size.calculating,
-                        Localization.str.calc_workshop_size.total_size.replace("__size__", this._getFileSizeStr(totalSize)),
-                    ]);
-                }
+        this._updateWaitDialog();
+
+        const parser = new DOMParser();
+        const url = new URL(window.location.origin + window.location.pathname);
+        url.searchParams.set("browsefilter", "mysubscriptions");
+        url.searchParams.set("numperpage", 30);
+
+        for (let p = 1; p <= Math.ceil(this._total / 30); p++) {
+            url.searchParams.set("p", p);
+
+            const result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+            if (!result) {
+                console.error(`Failed to request ${url}`);
+                continue;
             }
 
-            this._addFileSizes();
+            const doc = parser.parseFromString(result, "text/html");
+            for (const node of doc.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
+                await this._getFileSize(node)
+                    .then(size => {
+                        this._completed++;
+                        this._totalSize += size;
+                    })
+                    .catch(err => {
+                        this._failed++;
+                        console.error(err);
+                    })
+                    .finally(() => {
+                        this._updateWaitDialog();
+                    });
+            }
+        }
 
-            Page.runInPageContext((finished, totalSize) => {
-                const f = window.SteamFacade;
-                f.dismissActiveModal();
-                f.showAlertDialog(finished, totalSize);
-            },
-            [
-                Localization.str.calc_workshop_size.finished,
-                Localization.str.calc_workshop_size.total_size.replace("__size__", this._getFileSizeStr(totalSize)),
-            ]);
-        });
+        let resultString = this._calcStr.calc_finished
+            .replace("__success__", this._completed)
+            .replace("__total__", this._total);
+
+        resultString += "<br>";
+
+        resultString += this._calcStr.total_size
+            .replace("__size__", this._getFileSizeStr(this._totalSize));
+
+        Page.runInPageContext((title, result) => {
+            window.SteamFacade.dismissActiveModal();
+            window.SteamFacade.showAlertDialog(title, result);
+        }, [this._calcStr.calc_size, resultString]);
+
+        this._addFileSizes(); // Add file sizes now that data has been fetched
+    }
+
+    _updateWaitDialog() {
+
+        let statusString = this._calcStr.calc_loading
+            .replace("__i__", this._completed)
+            .replace("__count__", this._total);
+
+        if (this._failed > 0) {
+            statusString += "<br>";
+            statusString += Localization.str.workshop.failed.replace("__n__", this._failed);
+        }
+
+        const container = document.querySelector("#as_loading_text_ctn");
+        if (container) {
+            HTML.inner(container, statusString);
+        } else {
+            Page.runInPageContext((title, progress) => {
+                window.SteamFacade.showBlockingWaitDialog(title, `<div id="as_loading_text_ctn">${progress}</div>`);
+            }, [this._calcStr.calc_size, statusString]);
+        }
     }
 
     _getFileSizeStr(size) {
@@ -112,5 +131,10 @@ export default class FWorkshopFileSizes extends Feature {
 
         const index = units.findIndex((unit, i) => size / (1000 ** (units.length - (i + 1))) >= 1);
         return `${(size / (1000 ** (units.length - (index + 1)))).toFixed(2)} ${units[index]}`;
+    }
+
+    _getFileSize(node, preventFetch = false) {
+        const id = Number(node.id.replace("Subscription", ""));
+        return Background.action("workshopfilesize", id, preventFetch);
     }
 }

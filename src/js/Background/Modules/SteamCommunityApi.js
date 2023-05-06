@@ -195,22 +195,23 @@ class SteamCommunityApi extends Api {
 
     static async fetchWorkshopFileSize({"key": id}) {
         const parser = new DOMParser();
-        const res = await SteamCommunityApi.getPage("/sharedfiles/filedetails/", {id});
-        const doc = parser.parseFromString(res, "text/html");
+        const doc = parser.parseFromString(await SteamCommunityApi.getPage("/sharedfiles/filedetails/", {id}), "text/html");
 
-        const details = doc.querySelector(".detailsStatRight");
-        if (!details || !details.innerText.includes("MB")) {
-            throw new Error("Couldn't find details block for workshop file size");
+        const details = doc.querySelector(".detailsStatRight")?.textContent;
+        if (!details || !details.includes("MB")) {
+            throw new Error(`Couldn't find details block for item id "${id}"`);
         }
 
-        const text = details.innerText.split(" ")[0].trim();
-        const size = parseFloat(text.replace(/,/g, ""));
+        const size = parseFloat(details.replace(/,/g, ""));
+        if (Number.isNaN(size)) {
+            throw new Error(`Invalid file size for item id "${id}"`);
+        }
 
-        return IndexedDB.put("workshopFileSizes", new Map([[Number(id), size * 1000]]));
+        return IndexedDB.put("workshopFileSizes", new Map([[id, size * 1000]]));
     }
 
     static getWorkshopFileSize(id, preventFetch) {
-        return IndexedDB.get("workshopFileSizes", Number(id), {preventFetch});
+        return IndexedDB.get("workshopFileSizes", id, {preventFetch});
     }
 
     static _getReviewId(node) {
