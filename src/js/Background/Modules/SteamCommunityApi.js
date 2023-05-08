@@ -237,22 +237,23 @@ class SteamCommunityApi extends Api {
             for (const node of doc.querySelectorAll(".review_box")) {
                 defaultOrder++;
 
-                const playtimeText = node.querySelector(".hours").textContent.match(/(?:\d+,)?\d+\.\d+/);
-                const visibilityNode = node.querySelector("input[id^=ReviewVisibility]");
-                const devResponseNode = node.nextElementSibling.classList.contains("review_developer_response_container")
-                    ? DOMPurify.sanitize(node.nextElementSibling.outerHTML)
-                    : "";
-
-                const id = SteamCommunityApi._getReviewId(node);
                 const rating = node.querySelector("[src*=thumbsUp]") ? 1 : 0;
+
                 const [helpful = 0, funny = 0] = Array.from(node.querySelector(".header").childNodes)
                     .filter(node => node.nodeType === 3)
                     .map(node => {
                         const text = node.textContent.match(/(?:\d+,)?\d+/);
                         return text ? Number(text[0].replace(/,/g, "")) : 0;
                     });
+
                 const length = node.querySelector(".content").textContent.trim().length;
-                const visibility = visibilityNode ? Number(visibilityNode.value) : 0; // Public: 0; Friends-only: 1
+
+                // There're only two kinds of visibility, Public: 0; Friends-only: 1
+                const visibilityNode = node.querySelector("input[id^=ReviewVisibility]");
+                const visibility = visibilityNode ? Number(visibilityNode.value) : 0;
+
+                // Total playtime comes first
+                const playtimeText = node.querySelector(".hours").textContent.match(/(?:\d+,)?\d+\.\d+/);
                 const playtime = playtimeText ? parseFloat(playtimeText[0].replace(/,/g, "")) : 0.0;
 
                 // Count total awards received
@@ -261,6 +262,10 @@ class SteamCommunityApi extends Api {
                         const count = node.classList.contains("more_btn") ? 0 : Number(node.querySelector(".review_award_count").textContent.trim());
                         return acc + count;
                     }, 0);
+
+                const devResponseNode = node.nextElementSibling.classList.contains("review_developer_response_container")
+                    ? DOMPurify.sanitize(node.nextElementSibling.outerHTML)
+                    : "";
 
                 reviews.push({
                     "default": defaultOrder,
@@ -272,7 +277,7 @@ class SteamCommunityApi extends Api {
                     playtime,
                     awards,
                     "node": DOMPurify.sanitize(node.outerHTML) + devResponseNode,
-                    id
+                    "id": SteamCommunityApi._getReviewId(node)
                 });
             }
         }
