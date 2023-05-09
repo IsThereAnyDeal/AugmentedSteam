@@ -18,7 +18,7 @@ export default class FFocusSearch extends Feature {
         }
 
         document.addEventListener("keydown", e => {
-            if (e.key !== "s" || e.repeat) { return; }
+            if (e.key !== "s" || e.ctrlKey || e.repeat) { return; }
 
             let el = document.activeElement;
             if (isContentEditable(el)) { return; }
