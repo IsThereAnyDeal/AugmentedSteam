@@ -3,7 +3,16 @@ import {Feature} from "../../Modules/Feature/Feature";
 export default class FFocusSearch extends Feature {
 
     checkPrerequisites() {
-        this._node = document.querySelector("#store_nav_search_term, input.discussionSearchText");
+
+        this._node = document.querySelector([
+            "#store_nav_search_term", // Store pages
+            "input.discussionSearchText", // Community discussions
+            "#wishlist_search", // Wishlist
+            "#workshopSearchText", // Workshop
+            "#findItemsSearchBox", // Market
+            // TODO support dynamic pages e.g. groups/friends, Games page (React)
+        ].join(","));
+
         return this._node !== null;
     }
 
