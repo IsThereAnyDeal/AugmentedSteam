@@ -1,6 +1,5 @@
 
 export {CommunityUtils} from "./Modules/Community/CommunityUtils";
-export {ProfileData} from "./Modules/Community/ProfileData";
 
 export {Context} from "./Modules/Context/Context";
 export {default as ContextType} from "./Modules/Context/ContextType";

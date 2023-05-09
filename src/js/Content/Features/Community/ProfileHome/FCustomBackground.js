@@ -1,9 +1,9 @@
 import {HTML} from "../../../../modulesCore";
-import {Feature, ProfileData} from "../../../modulesContent";
+import {Feature} from "../../../modulesContent";
 
 export default class FCustomBackground extends Feature {
 
-    checkPrerequisites() {
+    async checkPrerequisites() {
         const prevHash = window.location.hash.match(/#previewBackground\/(\d+)\/([a-z0-9.]+)/i);
         if (prevHash) {
             const src = `//cdn.cloudflare.steamstatic.com/steamcommunity/public/images/items/${prevHash[1]}/${prevHash[2]}`;
@@ -12,16 +12,19 @@ export default class FCustomBackground extends Feature {
             return false;
         }
 
-        return !this.context.isPrivateProfile;
+        if (this.context.isPrivateProfile) { return false; }
+
+        const result = await this.context.data;
+        if (!result || !result.bg || !result.bg.img) {
+            return false;
+        }
+
+        this._bg = `https://steamcommunity.com/economy/image/${result.bg.img}`;
+        return true;
     }
 
-    async apply() {
-
-        await ProfileData;
-        const bg = ProfileData.getBgImgUrl();
-        if (!bg) { return; }
-
-        this._setProfileBg(bg);
+    apply() {
+        this._setProfileBg(this._bg);
     }
 
     _setProfileBg(src) {
