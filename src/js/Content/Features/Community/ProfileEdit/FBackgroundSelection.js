@@ -66,22 +66,16 @@ export default class FBackgroundSelection extends Feature {
             const listNode = document.querySelector(".js-pd-list");
             const imagesNode = document.querySelector(".js-pd-imgs");
 
-            let selectedGameKey = null;
+            const games = await this._getGamesList(listNode);
 
-            this._showBgFormLoading(listNode);
-
-            const games = await Background.action("profile.background.games");
-
-            for (const key in games) {
-                if (!Object.prototype.hasOwnProperty.call(games, key)) { continue; }
-                games[key][2] = this._getSafeString(games[key][1]);
-
-                if (games[key][0] === this._selectedAppid) {
-                    selectedGameKey = key;
+            // Show current selection
+            if (this._selectedAppid) {
+                const game = games.find(([appid]) => appid === this._selectedAppid);
+                if (game) {
+                    gameFilterNode.value = game[1];
+                    this._selectGame(this._selectedAppid, imagesNode);
                 }
             }
-
-            this._hideBgFormLoading(listNode);
 
             listNode.addEventListener("click", ({target}) => {
                 const appid = Number(target.dataset.appid ?? 0);
@@ -132,15 +126,6 @@ export default class FBackgroundSelection extends Feature {
 
                 timer.reset();
             });
-
-            // Show current selection
-            if (games[selectedGameKey]) {
-                gameFilterNode.value = games[selectedGameKey][1];
-
-                if (this._selectedAppid) {
-                    this._selectGame(this._selectedAppid, imagesNode);
-                }
-            }
 
             document.querySelector(".js-pd-bg-clear").addEventListener("click", async() => {
                 if (!this._currentImage && !this._currentAppid) { return; }
@@ -198,15 +183,23 @@ export default class FBackgroundSelection extends Feature {
         return `https://steamcommunity.com/economy/image/${name}/622x349`;
     }
 
-    _showBgFormLoading(node) {
-        HTML.inner(node,
-            `<div class="es_loading">
-                <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
-                <span>${Localization.str.loading}</span>
-            </div>`);
-    }
+    async _getGamesList(listNode) {
 
-    _hideBgFormLoading(node) {
-        node.querySelector(".es_loading").remove();
+        if (typeof this._games === "undefined") {
+
+            HTML.inner(listNode,
+                `<div class="es_loading">
+                    <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
+                    <span>${Localization.str.loading}</span>
+                </div>`);
+
+            this._games = (await Background.action("profile.background.games")).forEach(game => {
+                game.push(this._getSafeString(game[1]));
+            });
+
+            listNode.querySelector(".es_loading").remove();
+        }
+
+        return this._games;
     }
 }
