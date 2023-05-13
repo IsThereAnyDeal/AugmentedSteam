@@ -137,7 +137,7 @@ class ITADApi extends Api {
             storeIdsObj[storeId] = null;
         }
 
-        await this.splitPostRequests(waitlistJSON, storeIdsArr, "v01/waitlist/import/", id => ({
+        await ITADApi.splitPostRequests(waitlistJSON, storeIdsArr, "v01/waitlist/import/", id => ({
             "gameid": ["steam", id],
         }));
 
@@ -155,7 +155,7 @@ class ITADApi extends Api {
 
         const storeIds = _appIds.map(appId => `app/${appId}`).concat(_subIds.map(subId => `sub/${subId}`));
 
-        await this.splitPostRequests(collectionJSON, storeIds, "v01/collection/import/", id => ({
+        await ITADApi.splitPostRequests(collectionJSON, storeIds, "v01/collection/import/", id => ({
             "gameid": ["steam", id],
             "copies": [{
                 "type": "steam",
