@@ -11,6 +11,11 @@ export default class FBrowseWorkshops extends Feature {
             const href = a.href;
             a.removeAttribute("href");
 
+            /**
+             * The background image that indicates the currently selected tab is positioned before the tab div.
+             * If this image is not wrapped by a relatively positioned div, it will be absolutely positioned
+             * to the very left instead of being the background of the tab name.
+             */
             if (tab.classList.contains("notSelected")) {
                 HTML.wrap('<div style="position: relative;"></div>', tab);
             }
