@@ -664,7 +664,11 @@
         "add_to_waitlist": "Show \"Add to Waitlist\" dropdown on app pages",
         "maintainers": "Project Maintainers",
         "with_help_of": "with a lot of help by our __contributors__",
-        "contributors": "wonderful contributors"
+        "contributors": "wonderful contributors",
+        "about_desc": "Augmented Steam is a fork of the Enhanced Steam extension.",
+        "about_desc_links": "Visit the extension's __website__ or our __discord__ for more info.",
+        "footer_fork": "a fork by IsThereAnyDeal",
+        "footer_author": "original author jshackles"
     },
     "ready": {
         "errormsg": "Error loading Augmented Steam data",

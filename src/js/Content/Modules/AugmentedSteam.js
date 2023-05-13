@@ -3,7 +3,7 @@ import {Background, User} from "../modulesContent";
 
 import {DynamicStore} from "./Data/DynamicStore";
 import {Page} from "../Features/Page";
-import config from "../../config";
+import Config from "../../config";
 
 class AugmentedSteam {
 
@@ -20,9 +20,9 @@ class AugmentedSteam {
                         <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam">${Localization.str.contribute}</a>
                         <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam/issues">${Localization.str.bug_feature}</a>
                         <div class="hr"></div>
-                        <a class="popup_menu_item" target="_blank" href="${config.PublicHost}">${Localization.str.website}</a>
+                        <a class="popup_menu_item" target="_blank" href="${Config.PublicHost}">${Localization.str.website}</a>
                         <a class="popup_menu_item" target="_blank" href="https://isthereanydeal.com/">IsThereAnyDeal</a>
-                        <a class="popup_menu_item" target="_blank" href="https://discord.gg/yn57q7f">Discord</a>
+                        <a class="popup_menu_item" target="_blank" href="${Config.ITADDiscord}">Discord</a>
                     </div>
                 </div>
             </div>`);
