@@ -1,6 +1,5 @@
-.idea
-.old
-releases
-debug.log
-/node_modules/
+# Build artifacts
+/releases/
 /dist/
+
+/node_modules/
