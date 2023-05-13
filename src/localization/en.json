@@ -327,7 +327,7 @@
     "separator": "Separator",
     "empty_wishlist": {
         "title": "Empty wishlist",
-        "confirm": "Are you sure you want to empty your wishlist?\n\nThis action cannot be undone!",
+        "confirm": "Are you sure you want to empty your wishlist? This action cannot be undone!",
         "removing": "Removing app __cur__ from __total__..."
     },
     "about": "About",
