@@ -1,5 +1,5 @@
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../Modules/Feature/Feature";
-import {SyncedStorage} from "../../../../modulesCore";
 
 export default class FRemoveGuidesLangFilter extends Feature {
 
@@ -10,22 +10,36 @@ export default class FRemoveGuidesLangFilter extends Feature {
     apply() {
 
         for (const node of document.querySelectorAll(".rightDetailsBlock .browseOption")) {
-            node.removeAttribute("onclick"); // remove redundant onclick attribute
-
             const linkNode = node.querySelector("a");
             const newLink = new URL(linkNode.href);
 
-            // note the param is "requiredtags[0]" here for whatever reason
+            // Note the param is "requiredtags[0]" here for whatever reason
             if (newLink.searchParams.has("requiredtags[0]")) {
-                newLink.searchParams.set("requiredtags[0]", "-1");
-            }
+                newLink.searchParams.delete("requiredtags[0]");
 
-            linkNode.href = newLink.href;
+                linkNode.href = newLink.href;
+
+                HTML.replace(node, node.outerHTML); // Sanitize click listeners
+            }
         }
 
-        for (const node of document.querySelectorAll(".guides_home_view_all_link > a, .guide_home_category_selection")) {
+        for (const node of document.querySelectorAll(".guides_home_view_all_link > a")) {
             const newLink = new URL(node.href);
-            newLink.searchParams.set("requiredtags[]", "-1");
+
+            // First "View All" link might be for showing hidden categories
+            if (newLink.searchParams.has("requiredtags[]")) {
+                newLink.searchParams.delete("requiredtags[]");
+
+                node.href = newLink.href;
+            }
+        }
+
+        for (const node of document.querySelectorAll(".guide_home_category_selection")) {
+            const newLink = new URL(node.href);
+
+            // Set param to first value (category tag), which will delete the others (language tag)
+            newLink.searchParams.set("requiredtags[]", newLink.searchParams.get("requiredtags[]"));
+
             node.href = newLink.href;
         }
     }
