@@ -52,37 +52,35 @@ class CapacityInfo {
 
 class SyncedStorageAdapter {
 
-    constructor() {
-        this._notes = SyncedStorage.get("user_notes");
-    }
-
     get(appid) {
-        return this._notes[appid] || null;
+        const notes = SyncedStorage.get("user_notes");
+        return notes[appid] || null;
     }
 
     async set(appid, note) {
 
-        const oldNote = this._notes[appid];
-        this._notes[appid] = note;
+        const notes = SyncedStorage.get("user_notes");
+        notes[appid] = note;
 
-        const storageUsage = this._getNotesSize() / SyncedStorage.QUOTA_BYTES_PER_ITEM;
+        const storageUsage = this._getNotesSize(notes) / SyncedStorage.QUOTA_BYTES_PER_ITEM;
         if (storageUsage > 1) {
-            this._notes[appid] = oldNote;
             throw new OutOfCapacityError(storageUsage, "Can't set this user note, out of capacity");
         }
 
-        await SyncedStorage.set("user_notes", this._notes);
+        await SyncedStorage.set("user_notes", notes);
 
         return new CapacityInfo(storageUsage > 0.85, storageUsage);
     }
 
     delete(appid) {
-        delete this._notes[appid];
-        return SyncedStorage.set("user_notes", this._notes);
+        const notes = SyncedStorage.get("user_notes");
+        delete notes[appid];
+
+        return SyncedStorage.set("user_notes", notes);
     }
 
     export() {
-        return this._notes;
+        return SyncedStorage.get("user_notes");
     }
 
     import(notes) {
@@ -92,15 +90,14 @@ class SyncedStorageAdapter {
             throw new OutOfCapacityError(storageUsage, "Import to synced storage failed, too much data for this adapter");
         }
 
-        this._notes = notes;
-        return SyncedStorage.set("user_notes", this._notes);
+        return SyncedStorage.set("user_notes", notes);
     }
 
     clear() {
         return SyncedStorage.remove("user_notes");
     }
 
-    _getNotesSize(notes = this._notes) {
+    _getNotesSize(notes = SyncedStorage.get("user_notes")) {
         return "user_notes".length + JSON.stringify(notes).length;
     }
 }
