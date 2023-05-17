@@ -1,4 +1,4 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {Localization, SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature} from "../../../modulesContent";
 import {Page} from "../../Page";
 import {UserNotes} from "../Common/UserNotes";
