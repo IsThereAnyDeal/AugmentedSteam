@@ -1612,7 +1612,7 @@ video.highlight_movie:hover + .html5_video_overlay {
 .game_area_dlc_price .es_tags ~ div {
   display: inline-block;
 }
-.match .es_tags {
+.match_app .es_tags {
   float: right;
   margin-left: 5px;
 }
@@ -1671,14 +1671,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   white-space: nowrap;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.80);
-}
-
-/**
- * https://github.com/jshackles/Enhanced_Steam/issues/778
- * Use original selection background color for live search entries that are both selected and highlighted
- */
-.search_suggest .match.focus {
-  background: #212d3d !important;
 }
 
 /***************************************

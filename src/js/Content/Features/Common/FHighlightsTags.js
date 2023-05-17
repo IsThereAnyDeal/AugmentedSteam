@@ -236,8 +236,8 @@ export default class FHighlightsTags extends Feature {
                 node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("wishlist_row")) {
                 node.querySelector(".addedon").insertAdjacentElement("afterbegin", container);
-            } else if (node.classList.contains("match")) {
-                node.querySelector(".match_price").insertAdjacentElement("afterbegin", container);
+            } else if (node.classList.contains("match_app")) {
+                node.querySelector(".match_subtitle").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("recommendation_highlight")) {
                 node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", container);
             } else if (node.classList.contains("similar_grid_item")) {
@@ -283,9 +283,6 @@ export default class FHighlightsTags extends Feature {
                     .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name},
                     .hero_capsule.es_highlighted_${name}, .blotter_userstatus_game.es_highlighted_${name} {
                         outline: solid ${color};
-                    }
-                    #search_suggestion_contents .focus.es_highlighted_${name} {
-                        box-shadow: -5px 0 0 ${color};
                     }
                     .apphub_AppName.es_highlighted_${name} {
                         background: none !important; color: ${color};
