@@ -28,7 +28,7 @@ export default class FUserNotes extends Feature {
         const userNotes = this.context.userNotes;
         const note = await userNotes.get(this.context.appid);
 
-        if (note !== null) {
+        if (typeof note !== "undefined") {
             button.classList.add("esi-has-note");
 
             noteEl.textContent = `"${note}"`;

@@ -53,12 +53,19 @@ class CapacityInfo {
 class SyncedStorageAdapter {
 
     get(appid) {
+        const isArray = Array.isArray(appid);
+        const appids = isArray ? appid : [appid];
+
         const notes = SyncedStorage.get("user_notes");
-        return notes[appid] || null;
+        const res = appids.reduce((acc, val) => {
+            acc[val] = notes[val];
+            return acc;
+        }, {});
+
+        return isArray ? res : res[appid];
     }
 
     async set(appid, note) {
-
         const notes = SyncedStorage.get("user_notes");
         notes[appid] = note;
 
@@ -104,8 +111,13 @@ class SyncedStorageAdapter {
 
 class IdbAdapter {
 
-    get(appid) {
-        return BackgroundSimple.action("notes.get", appid);
+    async get(appid) {
+        const isArray = Array.isArray(appid);
+        const appids = isArray ? appid : [appid];
+
+        const res = await BackgroundSimple.action("notes.get", appids);
+
+        return isArray ? res : res[appid];
     }
 
     set(appid, note) {

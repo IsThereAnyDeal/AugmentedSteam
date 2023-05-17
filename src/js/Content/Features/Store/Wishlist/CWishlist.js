@@ -67,9 +67,7 @@ export class CWishlist extends CStoreBase {
 
         const alreadyLoaded = document.querySelectorAll(".wishlist_row");
         if (alreadyLoaded.length !== 0) {
-            this.triggerCallbacks(alreadyLoaded);
-
-            window.dispatchEvent(new Event("resize"));
+            await this.triggerCallbacks(Array.from(alreadyLoaded));
         }
 
         this._registerObserver();

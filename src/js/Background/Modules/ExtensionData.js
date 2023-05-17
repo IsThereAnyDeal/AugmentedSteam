@@ -22,11 +22,8 @@ class ExtensionData {
         SyncedStorage.set("user_notes", notes);
     }
 
-    static async getNote(appid) {
-        const note = await IndexedDB.get("notes", appid);
-
-        if (typeof note === "undefined") { return null; }
-        return note;
+    static async getNote(appids) {
+        return IndexedDB.get("notes", appids);
     }
 
     static setNote(appid, note) {
