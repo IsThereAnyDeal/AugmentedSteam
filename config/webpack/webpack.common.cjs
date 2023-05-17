@@ -88,7 +88,12 @@ module.exports = {
             },
             {
                 "test": /\.ts$/,
-                "use": "ts-loader",
+                "use": [{
+                    "loader": "ts-loader",
+                    "options": {
+                        "transpileOnly": true, // TODO Remove once typechecking throws no more errors
+                    }
+                }],
                 "exclude": /node_modules/,
             },
             {

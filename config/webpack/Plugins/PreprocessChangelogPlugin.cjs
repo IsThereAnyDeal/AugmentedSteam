@@ -2,6 +2,11 @@ const YAML = require("yaml");
 const fs = require("fs");
 const {marked} = require("marked");
 
+marked.use({
+    "mangle": false,
+    "headerIds": false,
+});
+
 class PreprocessChangelogPlugin {
 
     constructor(options) {
