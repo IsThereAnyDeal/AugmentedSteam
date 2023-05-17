@@ -221,6 +221,11 @@ class SteamFacade {
         return SelectInverse();
     }
 
+    // Wishlist
+
+    static wishlistOnScroll() {
+        return g_Wishlist.OnScroll();
+    }
 
     // jQuery functions
 

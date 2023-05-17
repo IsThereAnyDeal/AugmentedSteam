@@ -46,7 +46,10 @@ export default class FWishlistUserNotes extends CallbackFeature {
          * change the height.
          */
         Page.runInPageContext(str => {
-            for (const elements of Object.values(window.g_Wishlist.rgElements)) {
+            const f = window.SteamFacade;
+            const wl = f.global("g_Wishlist");
+
+            for (const elements of Object.values(wl.rgElements)) {
                 const el = elements[0];
 
                 const noteEl = document.createElement("div");
@@ -56,7 +59,11 @@ export default class FWishlistUserNotes extends CallbackFeature {
                 el.querySelector(".mid_container").after(noteEl);
             }
 
-            window.dispatchEvent(new Event("resize"));
+            // Adjust the row height to account for the newly added note content
+            wl.nRowHeight = f.jq(".wishlist_row").outerHeight(true);
+
+            // The scroll handler loads the visible rows and adjusts their positions
+            f.wishlistOnScroll();
         }, [Localization.str.user_note.add]);
     }
 
