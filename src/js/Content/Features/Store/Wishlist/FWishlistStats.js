@@ -64,7 +64,6 @@ export default class FWishlistStats extends Feature {
     async _updateStats() {
 
         let totalPrice = 0;
-        let totalCount = 0;
         let totalOnSale = 0;
         let totalNoPrice = 0;
 
@@ -81,11 +80,10 @@ export default class FWishlistStats extends Feature {
             } else {
                 totalNoPrice++;
             }
-            totalCount++;
         }
 
         document.getElementById("esi-stat-price").textContent = new Price(totalPrice / 100);
-        document.getElementById("esi-stat-count").textContent = totalCount;
+        document.getElementById("esi-stat-count").textContent = appInfo.length;
         document.getElementById("esi-stat-onsale").textContent = totalOnSale;
         document.getElementById("esi-stat-noprice").textContent = totalNoPrice;
     }
