@@ -5,20 +5,19 @@ import {Page} from "../../Page";
 export default class FReviewSort extends Feature {
 
     checkPrerequisites() {
-        return document.querySelectorAll(".review_box").length > 1;
+        this._reviewCount = Number(document.querySelector("#rightContents .review_stat .giantNumber").textContent.trim());
+        return this._reviewCount > 1;
     }
 
     apply() {
 
-        const pagingInfo = document.querySelector(".workshopBrowsePagingInfo").textContent;
-        this._numReviews = Math.max(...pagingInfo.replace(/,/g, "").match(/\d+/g));
         this._path = window.location.pathname.match(/\/((?:id|profiles)\/.+?)\//)[1];
 
         this._curPage = new URLSearchParams(window.location.search).get("p") || 1;
         this._pageCount = 10;
 
         Messenger.addMessageListener("updateReview", id => {
-            Background.action("updatereviewnode", this._path, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, this._numReviews)
+            Background.action("updatereviewnode", this._path, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, this._reviewCount)
                 .then(() => { this._getReviews(); });
         });
 
@@ -161,7 +160,7 @@ export default class FReviewSort extends Feature {
         }, [Localization.str.processing, Localization.str.wait]);
 
         try {
-            this._reviews = await Background.action("reviews", this._path, this._numReviews);
+            this._reviews = await Background.action("reviews", this._path, this._reviewCount);
         } finally {
 
             // Delay half a second to avoid dialog flicker when grabbing cache
