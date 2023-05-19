@@ -5,15 +5,21 @@ import {Page} from "../../Page";
 export default class FReviewSort extends Feature {
 
     checkPrerequisites() {
+        // Total number of reviews. Passed to background script for fetching reviews.
         this._reviewCount = Number(document.querySelector("#rightContents .review_stat .giantNumber").textContent.trim());
+
         return this._reviewCount > 1;
     }
 
     apply() {
 
+        // Current profile path. Passed to background script for fetching reviews.
         this._path = window.location.pathname.match(/\/((?:id|profiles)\/.+?)\//)[1];
 
+        // Current page. Used to calculate the portion of reviews to show after sorting.
         this._curPage = new URLSearchParams(window.location.search).get("p") || 1;
+
+        // Max reviews displayed per page. Used for fetching reviews and synced with background script.
         this._pageCount = 10;
 
         Messenger.addMessageListener("updateReview", id => {
@@ -54,7 +60,7 @@ export default class FReviewSort extends Feature {
 
     async _sortReviews(sortBy, reversed) {
 
-        if (!this._reviews) {
+        if (typeof this._reviews === "undefined") {
             await this._getReviews();
         }
 
