@@ -71,14 +71,18 @@ export default class FWishlistStats extends Feature {
         const appInfo = visibleApps.map(appid => this._appInfo[appid]);
 
         for (const data of appInfo) {
-            if (data.subs.length > 0) {
-                totalPrice += data.subs[0].price;
+            const sub = data.subs?.[0];
 
-                if (data.subs[0].discount_pct > 0) {
-                    totalOnSale++;
-                }
-            } else {
+            if (!sub || !sub.price) {
                 totalNoPrice++;
+                continue;
+            }
+
+            totalPrice += Number(sub.price);
+
+            // `null` if sub is a package with no discount; 0 if sub is a bundle with no discount
+            if (sub.discount_pct) {
+                totalOnSale++;
             }
         }
 
