@@ -23,7 +23,7 @@
             "url": `https://barter.vg/steam/app/${appid}/`,
             "str": "Barter.vg",
         },
-    ];
+    ] as const;
 </script>
 
 {#each links as {opt, cls, url, str}}

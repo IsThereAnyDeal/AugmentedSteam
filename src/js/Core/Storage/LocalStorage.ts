@@ -1,6 +1,4 @@
-
-import Storage from "./Storage";
-import type {Key, Value} from "./Storage";
+import {type Key, default as Storage, type Value} from "./Storage";
 import {Environment} from "../Environment";
 import browser from "webextension-polyfill";
 
@@ -12,8 +10,8 @@ type MigrationStatus = {
 export class LocalStorage<Defaults extends Record<Key, Value>> extends Storage<Defaults> {
 
     public constructor(
-        defaults: Readonly<Defaults>,
-        persistent: readonly (Extract<keyof Defaults, string>)[],
+        defaults: Defaults,
+        persistent: (Extract<keyof Defaults, string>)[],
     ) {
         super(
             browser.storage.local,

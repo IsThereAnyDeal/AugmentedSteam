@@ -1,5 +1,4 @@
-import Storage from "./Storage";
-import type {Key, Value} from "./Storage";
+import {type Key, default as Storage, type Value} from "./Storage";
 import {Info} from "../Info";
 import browser from "webextension-polyfill";
 
@@ -13,13 +12,13 @@ import browser from "webextension-polyfill";
  * MAX_WRITE_OPERATIONS_PER_HOUR = 1800
  * MAX_WRITE_OPERATIONS_PER_MINUTE = 120
  */
-export class SyncedStorage<Defaults extends Record<Key, Value>> extends Storage<Defaults> {
+class SyncedStorage<Defaults extends Record<Key, Value>> extends Storage<Defaults> {
 
     public static readonly QUOTA_BYTES_PER_ITEM = browser.storage.sync.QUOTA_BYTES_PER_ITEM;
 
     public constructor(
-        defaults: Readonly<Defaults>,
-        persistent: readonly (Extract<keyof Defaults, string>)[],
+        defaults: Defaults,
+        persistent: Extract<keyof Defaults, string>[],
     ) {
         super(
             browser.storage.sync,

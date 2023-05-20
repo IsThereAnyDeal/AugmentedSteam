@@ -1,25 +1,23 @@
-import browser from "webextension-polyfill";
-
-import type {Storage as StorageTypes} from "webextension-polyfill";
-import type {ValueOf} from "ts-essentials";
+import {type Storage as StorageTypes, default as browser} from "webextension-polyfill";
 
 export type Key = string;
 export type Value = unknown;
 export type Store = Map<Key, Value>;
 
-type EventArea = "sync" | "local" | "managed";
+type EventArea = "local" | "managed" | "sync";
+
+const jsonIndentation = 4;
 
 export default abstract class Storage<Defaults extends Record<Key, Value>> implements PromiseLike<Store> {
-
-    private static readonly caches: Map<StorageTypes.StorageArea, Store> = new Map();
+    private static readonly caches = new Map<StorageTypes.StorageArea, Store>();
 
     private initialized = false;
     private cache: Store = new Map();
 
     public constructor(
-        private readonly adapter: Readonly<StorageTypes.StorageArea>,
-        protected readonly defaults: Readonly<Record<keyof Defaults, ValueOf<Defaults>>>,
-        private readonly persistent: readonly (Extract<keyof Defaults, string>)[],
+        private readonly adapter: StorageTypes.StorageArea,
+        protected readonly defaults: Defaults,
+        private readonly persistent: (Extract<keyof Defaults, string>)[],
     ) {}
 
     public has(key: keyof Defaults): boolean; // For editor support
@@ -47,7 +45,7 @@ export default abstract class Storage<Defaults extends Record<Key, Value>> imple
         return this.adapter.set({[key]: value});
     }
 
-    public async import(entries: Readonly<Store>): Promise<void> {
+    public async import(entries: Store): Promise<void> {
         for (const [key, value] of Object.entries(entries)) {
             this.cache.set(key, value);
         }
@@ -85,8 +83,8 @@ export default abstract class Storage<Defaults extends Record<Key, Value>> imple
     }
 
     public then<TResult1 = Store, TResult2 = never>(
-        onfulfilled?: ((value: Readonly<Store>) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-        onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | undefined | null
+        onfulfilled?: ((value: Readonly<Store>) => PromiseLike<TResult1> | TResult1) | null | undefined,
+        onrejected?: ((reason: unknown) => PromiseLike<TResult2> | TResult2) | null | undefined,
     ): PromiseLike<TResult1 | TResult2> {
         const promise = this.initialized ? Promise.resolve(this.cache) : this.init();
         this.initialized = true;
@@ -94,7 +92,7 @@ export default abstract class Storage<Defaults extends Record<Key, Value>> imple
     }
 
     public toJson(): string {
-        return JSON.stringify(Array.from(this.entries()), null, 4);
+        return JSON.stringify(Array.from(this.entries()), null, jsonIndentation);
     }
 
     protected async init(): Promise<Store> {

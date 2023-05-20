@@ -8,18 +8,18 @@ interface Timestamped {
     "data": unknown;
 }
 
-export class CacheStorage<Defaults extends Record<Key, Value>> extends LocalStorage<Defaults> {
+class CacheStorage<Defaults extends Record<Key, Value>> extends LocalStorage<Defaults> {
 
     private readonly ttls: Readonly<Map<keyof Defaults, number>>;
 
     public constructor(
-        defaults: Readonly<Defaults>,
-        persistent: readonly (Extract<keyof Defaults, string>)[],
-        ttls: Readonly<Record<keyof Defaults, number>>,
+        defaults: Defaults,
+        persistent: (Extract<keyof Defaults, string>)[],
+        ttls: Record<keyof Defaults, number>,
     ) {
         super(
             defaults,
-            persistent
+            persistent,
         );
 
         this.ttls = new Map(Object.entries(ttls));
