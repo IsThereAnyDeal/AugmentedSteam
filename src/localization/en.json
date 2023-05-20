@@ -772,7 +772,12 @@
         "total_price": "current value",
         "in_wishlist": "on wishlist",
         "on_sale": "on sale",
-        "no_price": "without price"
+        "no_price": "without price",
+        "hidden": "hidden apps",
+        "hidden_tooltip": "Apps that have been removed/unlisted and are not visible on wishlists. Click for details.",
+        "remove_title": "Remove this item from your wishlist?",
+        "remove_confirm": "Are you sure you want to remove 'appid __appid__' from your wishlist?",
+        "remove_confirm_warn": "It cannot be re-added afterwards!"
     },
     "coll": {
         "total_time": "total time",
