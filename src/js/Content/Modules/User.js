@@ -113,14 +113,18 @@ class User {
      * Retrieve user access token to use in new style WebAPI calls (Services)
      * https://github.com/Revadike/UnofficialSteamWebAPI/wiki/Get-Points-Summary-Config
      */
-    static async getUserToken() {
-        // Use relative URL, so it matches domain (works on any steam domain)
-        const response = await RequestData.getJson("/pointssummary/ajaxgetasyncconfig").catch(() => false);
-        if (!response || !response.success) {
-            throw new Error("Failed to get webapi token");
-        }
+    static get accessToken() {
+        if (User._accessToken) { return User._accessToken; }
 
-        return response.data.webapi_token;
+        // This endpoint works on both store and community
+        return RequestData.getJson(`${window.location.origin}/pointssummary/ajaxgetasyncconfig`).then(response => {
+            if (!response || !response.success) {
+                throw new Error("Failed to get webapi token");
+            }
+
+            User._accessToken = response.data.webapi_token;
+            return User._accessToken;
+        });
     }
 }
 
