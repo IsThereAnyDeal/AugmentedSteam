@@ -213,15 +213,12 @@ class SteamCommunityApi extends Api {
     static _getReviewId(node) {
         const input = node.querySelector("input");
 
-        /*
-         * Only exists when the requested profile is yours
-         * (these are the input fields where you can change visibility and language of the review)
-         */
+        // Only exists when the requested profile is yours
         if (input) {
             return Number(input.id.replace("ReviewVisibility", ""));
         }
 
-        // Otherwise you have buttons to vote for the review (Was it helpful or not, was it funny?)
+        // Otherwise you have buttons to vote for and award the review
         return Number(node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", ""));
     }
 
@@ -229,32 +226,55 @@ class SteamCommunityApi extends Api {
         const parser = new DOMParser();
         const pageCount = 10;
         const reviews = [];
+        let defaultOrder = 0;
 
         for (let p = 1; p <= Math.ceil(reviewCount / pageCount); p++) {
             const doc = parser.parseFromString(await SteamCommunityApi.getPage(`${steamId}/recommended`, {p}), "text/html");
 
             for (const node of doc.querySelectorAll(".review_box")) {
-                const headerText = node.querySelector(".header").innerHTML.split("<br>");
-                const playtimeText = node.querySelector(".hours").textContent.split("(")[0].match(/(\d+,)?\d+\.\d+/);
-                const visibilityNode = node.querySelector(".dselect_container:nth-child(2) .trigger");
+                defaultOrder++;
 
-                const id = SteamCommunityApi._getReviewId(node);
                 const rating = node.querySelector("[src*=thumbsUp]") ? 1 : 0;
-                const helpful = headerText[0] && headerText[0].match(/\d+/g) ? parseInt(headerText[0].match(/\d+/g).join("")) : 0;
-                const funny = headerText[1] && headerText[1].match(/\d+/g) ? parseInt(headerText[1].match(/\d+/g).join("")) : 0;
+
+                const [helpful = 0, funny = 0] = Array.from(node.querySelector(".header").childNodes)
+                    .filter(node => node.nodeType === 3)
+                    .map(node => {
+                        const text = node.textContent.match(/(?:\d+,)?\d+/);
+                        return text ? Number(text[0].replace(/,/g, "")) : 0;
+                    });
+
                 const length = node.querySelector(".content").textContent.trim().length;
-                const visibility = visibilityNode ? visibilityNode.textContent : "Public";
-                const playtime = playtimeText ? parseFloat(playtimeText[0].split(",").join("")) : 0.0;
+
+                // There're only two kinds of visibility, Public: 0; Friends-only: 1
+                const visibilityNode = node.querySelector("input[id^=ReviewVisibility]");
+                const visibility = visibilityNode ? Number(visibilityNode.value) : 0;
+
+                // Total playtime comes first
+                const playtimeText = node.querySelector(".hours").textContent.match(/(?:\d+,)?\d+\.\d+/);
+                const playtime = playtimeText ? parseFloat(playtimeText[0].replace(/,/g, "")) : 0.0;
+
+                // Count total awards received
+                const awards = Array.from(node.querySelectorAll(".review_award"))
+                    .reduce((acc, node) => {
+                        const count = node.classList.contains("more_btn") ? 0 : Number(node.querySelector(".review_award_count").textContent.trim());
+                        return acc + count;
+                    }, 0);
+
+                const devResponseNode = node.nextElementSibling.classList.contains("review_developer_response_container")
+                    ? DOMPurify.sanitize(node.nextElementSibling.outerHTML)
+                    : "";
 
                 reviews.push({
+                    "default": defaultOrder,
                     rating,
                     helpful,
                     funny,
                     length,
                     visibility,
                     playtime,
-                    "node": DOMPurify.sanitize(node.outerHTML),
-                    id
+                    awards,
+                    "node": DOMPurify.sanitize(node.outerHTML) + devResponseNode,
+                    "id": SteamCommunityApi._getReviewId(node)
                 });
             }
         }
@@ -270,7 +290,7 @@ class SteamCommunityApi extends Api {
 
         if (!await IndexedDB.contains("reviews", steamId, {"preventFetch": true})) { return null; }
 
-        const reviews = await IndexedDB.get("reviews", steamId, {"params": reviewCount});
+        const reviews = await SteamCommunityApi.getReviews(steamId, reviewCount);
 
         for (const review of reviews) {
             if (review.id === id) {
