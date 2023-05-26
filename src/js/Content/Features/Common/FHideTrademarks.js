@@ -1,5 +1,5 @@
-import {HTML, SyncedStorage} from "../../../modulesCore";
-import {ContextType, Feature} from "../../modulesContent";
+import {SyncedStorage} from "../../../modulesCore";
+import {Feature} from "../../modulesContent";
 
 export default class FHideTrademarks extends Feature {
 
@@ -9,42 +9,51 @@ export default class FHideTrademarks extends Feature {
 
     apply() {
 
-        // TODO I would try to reduce number of selectors here
-        let selectors = "title, .apphub_AppName, .breadcrumbs, h1, h4";
-        if (this.context.type === ContextType.STORE_DEFAULT) {
-            selectors
-                += ".game_area_already_owned, .details_block, .game_description_snippet, "
-                + ".game_area_description p, .glance_details, .game_area_dlc_bubble game_area_bubble, .package_contents, "
-                + ".game_area_dlc_name, .tab_desc, .tab_item_name";
-        } else {
-            selectors
-                += ".game_suggestion, .appHubShortcut_Title, .apphub_CardContentNewsTitle, "
-                + ".apphub_CardTextContent, .apphub_CardContentAppName, .apphub_AppName";
+        const symbolsRegex = /[\u00AE\u00A9\u2122]/g;
+        const ignoreTags = new Set(["script", "style", "br", "hr", "link", "img", "video", "audio"]);
+        const skipIds = new Set(["global_header", "footer", "game_area_legal", "app_reviews_hash"]);
+
+        function replaceText(node) {
+            const text = node.textContent;
+
+            // Don't set textContent if there's nothing to replace to avoid infinite mutations loop on FF
+            if (text.trim() !== "" && symbolsRegex.test(text)) {
+                symbolsRegex.lastIndex = 0;
+                node.textContent = text.replace(symbolsRegex, "");
+            }
         }
 
-        // Replaces "R", "C" and "TM" signs
-        function replaceSymbols(node) {
-
-            // tfedor I don't trust this won't break any inline JS
-            if (!node || !node.innerHTML) { return; }
-            HTML.inner(node, node.innerHTML.replace(/[\u00AE\u00A9\u2122]/g, ""));
-        }
-
-        for (const node of document.querySelectorAll(selectors)) {
-            replaceSymbols(node);
-        }
-
-        const observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                mutation.addedNodes.forEach(node => {
-                    replaceSymbols(node);
-                });
+        function walkTree(root = document.body) {
+            const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+                acceptNode(node) {
+                    if (node.nodeType === 1) {
+                        if (ignoreTags.has(node.tagName.toLowerCase()) || skipIds.has(node.id)) {
+                            return NodeFilter.FILTER_REJECT; // Skip walking children
+                        }
+                        return NodeFilter.FILTER_SKIP;
+                    }
+                    return NodeFilter.FILTER_ACCEPT;
+                }
             });
-        });
 
-        const nodes = document.querySelectorAll("#game_select_suggestions,#search_suggestion_contents,.tab_content_ctn");
-        for (const node of nodes) {
-            observer.observe(node, {"childList": true, "subtree": true});
+            let node;
+            while ((node = walker.nextNode()) !== null) {
+                replaceText(node);
+            }
         }
+
+        walkTree();
+
+        new MutationObserver(mutations => {
+            for (const {addedNodes} of mutations) {
+                for (const node of addedNodes) {
+                    if (node.nodeType === 1) {
+                        walkTree(node);
+                    } else if (node.nodeType === 3) {
+                        replaceText(node);
+                    }
+                }
+            }
+        }).observe(document.body, {"childList": true, "subtree": true});
     }
 }
