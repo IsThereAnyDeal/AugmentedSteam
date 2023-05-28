@@ -5,7 +5,7 @@ import {Page} from "../../Page";
 export default class FReviewSort extends Feature {
 
     checkPrerequisites() {
-        // Total number of reviews. Passed to background script for fetching reviews.
+        // Total number of reviews
         this._reviewCount = Number(document.querySelector("#rightContents .review_stat .giantNumber").textContent.trim());
 
         return this._reviewCount > 1;
@@ -16,19 +16,22 @@ export default class FReviewSort extends Feature {
         // Patch award nodes and callback according to store pages/discussions
         this._patchReviewAwards();
 
+        // Max reviews displayed per page
+        this._pageCount = 10;
+
         // Current profile path. Passed to background script for fetching reviews.
         this._path = window.location.pathname.match(/\/((?:id|profiles)\/.+?)\//)[1];
 
-        // Current page. Used to calculate the portion of reviews to show after sorting.
+        // Number of pages. Passed to background script for fetching reviews.
+        this._pages = Math.ceil(this._reviewCount / this._pageCount);
+
+        // Current page. Used to calculate the range of reviews to show after sorting.
         this._curPage = new URLSearchParams(window.location.search).get("p") || 1;
 
-        // Max reviews displayed per page. Used for fetching reviews and synced with background script.
-        this._pageCount = 10;
+        // Whether the user has performed an action that may update review stats
+        this._reviewUpdated = false;
 
-        Messenger.addMessageListener("updateReview", id => {
-            Background.action("updatereviewnode", this._path, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, this._reviewCount)
-                .then(() => { this._getReviews(); });
-        });
+        Messenger.addMessageListener("updateReview", () => { this._reviewUpdated = true; });
 
         Page.runInPageContext(() => {
             window.SteamFacade.jq(document).ajaxSuccess((event, xhr, {url}) => {
@@ -37,8 +40,7 @@ export default class FReviewSort extends Feature {
                     || pathname.startsWith("/userreviews/votetag/")
                     || pathname.startsWith("/userreviews/update/")) {
 
-                    const id = pathname.split("/").pop();
-                    window.Messenger.postMessage("updateReview", id);
+                    window.Messenger.postMessage("updateReview");
                 }
             });
         });
@@ -63,7 +65,7 @@ export default class FReviewSort extends Feature {
 
     async _sortReviews(sortBy, reversed) {
 
-        if (typeof this._reviews === "undefined") {
+        if (this._reviewUpdated || typeof this._reviews === "undefined") {
             await this._getReviews();
         }
 
@@ -169,7 +171,9 @@ export default class FReviewSort extends Feature {
         }, [Localization.str.processing, Localization.str.wait]);
 
         try {
-            this._reviews = await Background.action("reviews", this._path, this._reviewCount);
+            this._reviews = await Background.action("reviews", this._path, this._pages, this._reviewUpdated);
+
+            this._reviewUpdated = false;
         } finally {
 
             // Delay half a second to avoid dialog flicker when grabbing cache
@@ -249,7 +253,7 @@ export default class FReviewSort extends Feature {
                     }
                 }
 
-                window.Messenger.postMessage("updateReview", id);
+                window.Messenger.postMessage("updateReview");
             });
         });
     }

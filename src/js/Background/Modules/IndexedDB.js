@@ -321,6 +321,10 @@ class IndexedDB {
 
         if (!IndexedDB.timestampedEntriesStores.has(storeName)) { return null; }
 
+        if (options.forceFetch) {
+            return Promise.all(keys.map(key => IndexedDB.fetchUpdatedData(storeName, key, options.params)));
+        }
+
         const tx = IndexedDB.db.transaction("expiries");
         const expired = [];
 
@@ -351,14 +355,13 @@ class IndexedDB {
 
         if (!IndexedDB.timestampedStores.has(storeName)) { return null; }
 
-        const expiry = await IndexedDB.db.get("expiries", storeName);
-        let expired = true;
-
-        if (expiry) {
-            expired = IndexedDB.isExpired(expiry);
+        if (options.forceFetch) {
+            return IndexedDB.fetchUpdatedData(storeName, null, options.params);
         }
 
-        if (expired) {
+        const expiry = await IndexedDB.db.get("expiries", storeName);
+
+        if (!expiry || IndexedDB.isExpired(expiry)) {
             await IndexedDB.clear(storeName);
             if (!options.preventFetch) {
                 return IndexedDB.fetchUpdatedData(storeName, null, options.params);

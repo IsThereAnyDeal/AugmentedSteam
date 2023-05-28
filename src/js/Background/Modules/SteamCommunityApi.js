@@ -222,13 +222,12 @@ class SteamCommunityApi extends Api {
         return Number(node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", ""));
     }
 
-    static async fetchReviews({"key": steamId, "params": {reviewCount}}) {
+    static async fetchReviews({"key": steamId, "params": {pages}}) {
         const parser = new DOMParser();
-        const pageCount = 10;
         const reviews = [];
         let defaultOrder = 0;
 
-        for (let p = 1; p <= Math.ceil(reviewCount / pageCount); p++) {
+        for (let p = 1; p <= pages; p++) {
             const doc = parser.parseFromString(await SteamCommunityApi.getPage(`${steamId}/recommended`, {p}), "text/html");
 
             for (const node of doc.querySelectorAll(".review_box")) {
@@ -282,29 +281,8 @@ class SteamCommunityApi extends Api {
         return IndexedDB.put("reviews", {[steamId]: reviews});
     }
 
-    static async updateReviewNode(steamId, html, reviewCount) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const node = doc.querySelector(".review_box");
-        const id = SteamCommunityApi._getReviewId(node);
-
-        if (!await IndexedDB.contains("reviews", steamId, {"preventFetch": true})) { return null; }
-
-        const reviews = await SteamCommunityApi.getReviews(steamId, reviewCount);
-
-        for (const review of reviews) {
-            if (review.id === id) {
-                review.node = DOMPurify.sanitize(node.outerHTML);
-                break;
-            }
-        }
-
-        // Todo updates expiry even though there is no new fetched data
-        return IndexedDB.put("reviews", {[steamId]: reviews});
-    }
-
-    static getReviews(steamId, reviewCount) {
-        return IndexedDB.get("reviews", steamId, {"params": {reviewCount}});
+    static getReviews(steamId, pages, forceFetch) {
+        return IndexedDB.get("reviews", steamId, {"params": {pages}, ...{forceFetch}});
     }
 
     /*
