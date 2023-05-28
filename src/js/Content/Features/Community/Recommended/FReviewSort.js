@@ -13,6 +13,9 @@ export default class FReviewSort extends Feature {
 
     apply() {
 
+        // Patch award nodes and callback according to store pages/discussions
+        this._patchReviewAwards();
+
         // Current profile path. Passed to background script for fetching reviews.
         this._path = window.location.pathname.match(/\/((?:id|profiles)\/.+?)\//)[1];
 
@@ -113,7 +116,7 @@ export default class FReviewSort extends Feature {
                 if (award.classList.contains("more_btn")) {
                     award.setAttribute("onclick", "UserReview_ShowMoreAwards(this);");
                 } else {
-                    const selected = award.dataset.tooltipHtml.match(/animated\/(\d+)\.png/)[1];
+                    const selected = this._getSetAwardType(award);
                     award.setAttribute("onclick", `UserReview_Award(${loggedIn}, "${loginURL}", "${id}", OnUserReviewAward, ${selected});`);
                 }
             }
@@ -176,5 +179,78 @@ export default class FReviewSort extends Feature {
                 window.SteamFacade.dismissActiveModal();
             });
         }
+    }
+
+    _getSetAwardType(node) {
+        return (node.dataset.reaction ??= node.querySelector("img").src.match(/\/still\/(\d+)\.png/)[1]);
+    }
+
+    _patchReviewAwards() {
+
+        // Add data attribute for award type (leaving out award count since it's redundant)
+        for (const award of document.querySelectorAll(".review_award:not(.more_btn)")) {
+            this._getSetAwardType(award);
+        }
+
+        // Patch `OnUserReviewAward` function to avoid reloading the page after giving an award
+        Page.runInPageContext(() => {
+            // Naively check if Steam has updated the function
+            const oldFn = window.SteamFacade.global("OnUserReviewAward");
+            if (typeof oldFn !== "function" || oldFn.toString().length !== 73) {
+                return;
+            }
+
+            // Based on `OnRecommendationAward` from game.js and `Forum_OnCommunityAwardGranted` from forum.js
+            window.SteamFacade.globalSet("OnUserReviewAward", (id, reaction) => {
+                const review = document.querySelector(`[id$="${id}"`).closest(".review_box");
+
+                let awardsCtn = review.querySelector(".review_award_ctn");
+                if (awardsCtn === null) {
+                    awardsCtn = document.createElement("div");
+                    awardsCtn.classList.add("review_award_ctn");
+                    review.querySelector(".header").append(awardsCtn);
+                }
+
+                const existingAward = Array.from(awardsCtn.querySelectorAll(".review_award"))
+                    .find(node => Number(node.dataset.reaction) === reaction);
+
+                if (existingAward) {
+                    const countEl = existingAward.querySelector(".review_award_count");
+                    const count = Number(countEl.textContent.trim());
+                    countEl.textContent = count + 1;
+                    countEl.classList.remove("hidden");
+
+                    awardsCtn.prepend(existingAward);
+                } else {
+                    const award = document.createElement("div");
+                    award.classList.add("review_award");
+
+                    const img = document.createElement("img");
+                    img.classList.add("review_award_icon", "tooltip");
+                    img.src = `https://store.cloudflare.steamstatic.com/public/images/loyalty/reactions/still/${reaction}.png`;
+                    award.append(img);
+
+                    const countEl = document.createElement("span");
+                    countEl.classList.add("review_award_count");
+                    countEl.textContent = 1;
+                    award.append(countEl);
+
+                    award.dataset.reaction = reaction;
+
+                    awardsCtn.prepend(award);
+
+                    const moreEl = awardsCtn.querySelector(".more_btn");
+                    if (moreEl) {
+                        const countEl = moreEl.querySelector(".review_award_count");
+                        const count = Number(countEl.textContent.trim());
+                        countEl.textContent = count + 1;
+                    } else {
+                        awardsCtn.classList.add("show_all_awards");
+                    }
+                }
+
+                window.Messenger.postMessage("updateReview", id);
+            });
+        });
     }
 }
