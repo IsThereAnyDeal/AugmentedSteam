@@ -13,11 +13,9 @@ export default class FOneClickRemoveFromWishlist extends CallbackFeature {
         for (const node of nodes) {
 
             const deleteNode = node.querySelector(".delete");
-            if (deleteNode.classList.contains("as-oneclickremove")) { continue; }
 
             // Replace the delete node in order to disable Steam's handlers
             const newDeleteNode = deleteNode.cloneNode(true);
-            newDeleteNode.classList.add("as-oneclickremove");
             deleteNode.replaceWith(newDeleteNode);
 
             // eslint-disable-next-line no-loop-func

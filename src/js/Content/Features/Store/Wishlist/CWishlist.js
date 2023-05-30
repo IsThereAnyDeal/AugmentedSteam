@@ -65,15 +65,13 @@ export class CWishlist extends CStoreBase {
 
         await super.applyFeatures();
 
-        const alreadyLoaded = document.querySelectorAll(".wishlist_row");
+        // Internal property to track which nodes have already been processed
+        const done = Symbol("done");
+
+        const alreadyLoaded = Array.from(document.querySelectorAll(".wishlist_row"));
         if (alreadyLoaded.length !== 0) {
-            await this.triggerCallbacks(Array.from(alreadyLoaded));
+            await this.triggerCallbacks(alreadyLoaded, done);
         }
-
-        this._registerObserver();
-    }
-
-    _registerObserver() {
 
         let timer = null;
         const delayedWork = new Set();
@@ -81,8 +79,9 @@ export class CWishlist extends CStoreBase {
         new MutationObserver(mutations => {
 
             for (const {addedNodes} of mutations) {
-                if (addedNodes[0]) {
-                    delayedWork.add(addedNodes[0]);
+                const node = addedNodes[0];
+                if (node && !node[done]) {
+                    delayedWork.add(node);
                 }
             }
 
@@ -95,12 +94,17 @@ export class CWishlist extends CStoreBase {
                     delayedWork.clear();
 
                     if (visibleRows.length !== 0) {
-                        this.triggerCallbacks(visibleRows);
+                        this.triggerCallbacks(visibleRows, done);
                     }
                 }, 50);
             } else {
                 timer.reset();
             }
         }).observe(document.getElementById("wishlist_ctn"), {"childList": true});
+    }
+
+    triggerCallbacks(nodes, done) {
+        nodes.forEach(node => { node[done] = true; });
+        return super.triggerCallbacks(nodes);
     }
 }

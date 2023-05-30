@@ -71,20 +71,15 @@ export default class FWishlistUserNotes extends CallbackFeature {
     }
 
     async callback(nodes) {
-        const newNodes = nodes.filter(node => !node.classList.contains("js-note-checked"));
 
-        for (const node of newNodes) {
-            node.classList.add("js-note-checked");
-        }
-
-        const appids = newNodes.map(node => Number(node.dataset.appId));
+        const appids = nodes.map(node => Number(node.dataset.appId));
         const notes = await this._userNotes.get(appids);
 
-        for (let i = 0; i < newNodes.length; i++) {
+        for (let i = 0; i < nodes.length; i++) {
             const note = notes[appids[i]];
 
             if (typeof note !== "undefined") {
-                const noteEl = newNodes[i].querySelector(".esi-note");
+                const noteEl = nodes[i].querySelector(".esi-note");
                 noteEl.textContent = `"${note}"`;
                 noteEl.classList.add("esi-has-note");
             }
