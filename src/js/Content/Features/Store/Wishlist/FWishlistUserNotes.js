@@ -62,6 +62,9 @@ export default class FWishlistUserNotes extends CallbackFeature {
             // Adjust the row height to account for the newly added note content
             wl.nRowHeight = f.jq(".wishlist_row").outerHeight(true);
 
+            // Update initial container height
+            document.getElementById("wishlist_ctn").style.height = `${wl.nRowHeight * wl.rgVisibleApps.length}px`;
+
             // The scroll handler loads the visible rows and adjusts their positions
             f.wishlistOnScroll();
         }, [Localization.str.user_note.add]);
