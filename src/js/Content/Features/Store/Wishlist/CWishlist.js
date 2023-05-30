@@ -75,15 +75,14 @@ export class CWishlist extends CStoreBase {
 
     _registerObserver() {
 
-        const container = document.getElementById("wishlist_ctn");
         let timer = null;
         const delayedWork = new Set();
 
         new MutationObserver(mutations => {
 
-            for (const record of mutations) {
-                if (record.addedNodes.length === 1) {
-                    delayedWork.add(record.addedNodes[0]);
+            for (const {addedNodes} of mutations) {
+                if (addedNodes[0]) {
+                    delayedWork.add(addedNodes[0]);
                 }
             }
 
@@ -92,14 +91,16 @@ export class CWishlist extends CStoreBase {
                 timer = TimeUtils.resettableTimer(() => {
 
                     // Valve detaches wishlist entries that aren't visible
-                    const arg = Array.from(delayedWork).filter(node => node.parentNode === container);
+                    const visibleRows = Array.from(delayedWork).filter(node => node.isConnected);
                     delayedWork.clear();
 
-                    this.triggerCallbacks(arg);
+                    if (visibleRows.length !== 0) {
+                        this.triggerCallbacks(visibleRows);
+                    }
                 }, 50);
             } else {
                 timer.reset();
             }
-        }).observe(container, {"childList": true});
+        }).observe(document.getElementById("wishlist_ctn"), {"childList": true});
     }
 }
