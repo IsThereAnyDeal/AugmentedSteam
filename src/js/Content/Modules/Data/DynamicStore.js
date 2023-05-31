@@ -20,7 +20,7 @@ class DynamicStore {
         const storeIds = multiple ? storeId : [storeId];
         const trimmedIds = storeIds.map(id => GameId.trimStoreId(id));
 
-        const dsStatus = await Background.action("dynamicstorestatus", trimmedIds);
+        const dsStatus = await Background.action("dynamicstore.status", trimmedIds);
 
         const status = storeIds.reduce((acc, id, i) => {
             const trimmedId = trimmedIds[i];
@@ -41,7 +41,7 @@ class DynamicStore {
 
     static async getRandomApp() {
         await DynamicStore._fetch();
-        return Background.action("dynamicStore.randomApp");
+        return Background.action("dynamicstore.randomapp");
     }
 
     static _fetch() {
