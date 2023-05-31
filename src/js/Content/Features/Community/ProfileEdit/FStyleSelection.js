@@ -1,8 +1,17 @@
 import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
-import {Feature, ProfileData} from "../../../modulesContent";
+import {Feature} from "../../../modulesContent";
 import Config from "../../../../config";
 
 export default class FStyleSelection extends Feature {
+
+    async checkPrerequisites() {
+
+        const result = await this.context.data;
+        if (!result) { return false; }
+
+        this._currentStyle = result.style;
+        return true;
+    }
 
     apply() {
 
@@ -25,7 +34,7 @@ export default class FStyleSelection extends Feature {
 
                 <div class="as-pd__cnt">
                     <div>
-                        <select name="es_style" id="es_style" class="gray_bevel dynInput as-pd__select">
+                        <select name="es_style" class="gray_bevel dynInput as-pd__select js-pd-style-select">
                             <option value="remove">${Localization.str.noneselected}</option>
                             <option value="goldenprofile2020">Lunar Sale 2020</option>
                             <option value="winter2019">Winter Sale 2019</option>
@@ -43,11 +52,11 @@ export default class FStyleSelection extends Feature {
                             <option value="grey">Grey Theme</option>
                         </select>
                     </div>
-                    <img id="es_style_preview" class="as-pd__preview" src="">
+                    <img class="as-pd__preview js-pd-style-preview" src="">
                 </div>
 
-                <div id="es_style_buttons" class="as-pd__buttons">
-                    <button id="es_style_save_btn" class="DialogButton _DialogLayout Primary as-pd__btn">${Localization.str.save}</button>
+                <div class="as-pd__buttons">
+                    <button class="DialogButton _DialogLayout Primary as-pd__btn js-pd-style-save">${Localization.str.save}</button>
                 </div>
             </div>`;
 
@@ -58,42 +67,42 @@ export default class FStyleSelection extends Feature {
             HTML.beforeEnd('[class^="profileeditshell_PageContent_"]', html);
             this._active = true;
 
-            const styleSelectNode = document.querySelector("#es_style");
+            const styleSelectNode = document.querySelector(".js-pd-style-select");
+            const stylePreviewNode = document.querySelector(".js-pd-style-preview");
 
-            const currentStyle = ProfileData.getStyle();
-            if (currentStyle) {
-                styleSelectNode.value = currentStyle;
+            // Show current selection
+            if (this._currentStyle) {
+                styleSelectNode.value = this._currentStyle;
 
-                const imgNode = document.querySelector("#es_style_preview");
-                imgNode.src = ExtensionResources.getURL(`img/profile_styles/${currentStyle}/preview.png`);
-
-                if (currentStyle === "remove") {
-                    imgNode.style.display = "none";
+                if (this._currentStyle === "remove") {
+                    stylePreviewNode.style.display = "none";
+                } else {
+                    stylePreviewNode.src = ExtensionResources.getURL(`img/profile_styles/${this._currentStyle}/preview.png`);
                 }
+            } else {
+                styleSelectNode.value = "remove";
             }
 
             styleSelectNode.addEventListener("change", () => {
-                const imgNode = document.querySelector("#es_style_preview");
                 if (styleSelectNode.value === "remove") {
-                    imgNode.style.display = "none";
+                    stylePreviewNode.style.display = "none";
                 } else {
-                    imgNode.style.display = "block";
-                    imgNode.src = ExtensionResources.getURL(`img/profile_styles/${styleSelectNode.value}/preview.png`);
+                    stylePreviewNode.style.display = "block";
+                    stylePreviewNode.src = ExtensionResources.getURL(`img/profile_styles/${styleSelectNode.value}/preview.png`);
                 }
-
-                // Enable the "save" button
-                document.querySelector("#es_style_save_btn").classList.remove("btn_disabled");
             });
 
-            document.querySelector("#es_style_save_btn").addEventListener("click", async({target}) => {
-                if (target.closest("#es_style_save_btn").classList.contains("btn_disabled")) { return; }
-                await ProfileData.clearOwn();
+            document.querySelector(".js-pd-style-save").addEventListener("click", async() => {
+                if (styleSelectNode.value === "remove" && !this._currentStyle) { return; }
+                if (styleSelectNode.value === this._currentStyle) { return; }
+
+                await this.context.clearOwn();
 
                 if (styleSelectNode.value === "remove") {
                     window.location.href = `${Config.ApiServerHost}/v01/profile/style/edit/delete/`;
                 } else {
-                    const selectedStyle = encodeURIComponent(styleSelectNode.value);
-                    window.location.href = `${Config.ApiServerHost}/v01/profile/style/edit/save/?style=${selectedStyle}`;
+                    const style = encodeURIComponent(styleSelectNode.value);
+                    window.location.href = `${Config.ApiServerHost}/v01/profile/style/edit/save/?style=${style}`;
                 }
             });
 

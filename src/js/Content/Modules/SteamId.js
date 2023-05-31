@@ -86,7 +86,6 @@ class SteamIdDetail {
         return `STEAM_${this._universe}:${this._y}:${this._accountNumber}`;
     }
 
-
     get id3() {
         const map = new Map(
             [

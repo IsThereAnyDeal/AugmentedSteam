@@ -1,4 +1,4 @@
-import {ContextType, ProfileData} from "../../../modulesContent";
+import {Background, ContextType, SteamId} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
 import FEarlyAccess from "../../Common/FEarlyAccess";
 import FCommunityProfileLinks from "./FCommunityProfileLinks";
@@ -18,26 +18,12 @@ import FPinnedBackground from "./FPinnedBackground";
 export class CProfileHome extends CCommunityBase {
 
     constructor() {
+
         // Don't apply features if there's an error message (e.g. non-existent profile)
         if (document.getElementById("message") !== null) {
             super(ContextType.PROFILE_HOME);
             return;
         }
-
-        if (window.location.hash === "#as-success") {
-
-            /*
-             * TODO This is a hack. It turns out, that clearOwn clears data, but immediately reloads them.
-             *      That's why when we clear profile before going to API to store changes we don't get updated images
-             *      when we get back.
-             *      clearOwn shouldn't immediately reload.
-             *
-             *      Also, we are hoping for the best here, we should probably await?
-             */
-            ProfileData.clearOwn();
-        }
-
-        ProfileData.promise();
 
         super(ContextType.PROFILE_HOME, [
             FCommunityProfileLinks,
@@ -55,7 +41,9 @@ export class CProfileHome extends CCommunityBase {
             FPinnedBackground,
         ]);
 
+        this.steamId = SteamId.getSteamId();
         this.isPrivateProfile = document.body.classList.contains("private_profile");
+        this.data = this.profileDataPromise().catch(err => console.error(err));
 
         FEarlyAccess.show(document.querySelectorAll(".game_info_cap, .showcase_slot:not(.showcase_achievement)"));
 
@@ -65,5 +53,10 @@ export class CProfileHome extends CCommunityBase {
 
         // Required for LNY2020 to check whether the profile has a (custom) background
         FCustomStyle.dependencies = [FCustomBackground];
+        FCustomStyle.weakDependency = true;
+    }
+
+    profileDataPromise() {
+        return Background.action("profile", this.steamId);
     }
 }

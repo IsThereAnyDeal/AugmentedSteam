@@ -1,11 +1,11 @@
 import {HTML, Language, SyncedStorage} from "../../../../modulesCore";
-import {CommunityUtils, Feature, SteamId} from "../../../modulesContent";
+import {CommunityUtils, Feature} from "../../../modulesContent";
 
 export default class FCommunityProfileLinks extends Feature {
 
     apply() {
 
-        const steamId = SteamId.getSteamId();
+        const steamId = this.context.steamId;
 
         const links = [
             {

@@ -1,8 +1,22 @@
 import {HTML, Localization, TimeUtils} from "../../../../modulesCore";
-import {Background, Feature, ProfileData, SteamId} from "../../../modulesContent";
+import {Background, Feature} from "../../../modulesContent";
 import Config from "../../../../config";
 
 export default class FBackgroundSelection extends Feature {
+
+    async checkPrerequisites() {
+
+        const result = await this.context.data;
+        if (!result) { return false; }
+
+        const {img, appid} = result.bg || {};
+
+        this._currentImage = img || ""; // @type string
+        this._currentAppid = appid ? parseInt(appid) : 0; // @type number
+        this._selectedImage = this._currentImage;
+        this._selectedAppid = this._currentAppid;
+        return true;
+    }
 
     apply() {
 
@@ -36,8 +50,8 @@ export default class FBackgroundSelection extends Feature {
                 </div>
 
                 <div class="as-pd__buttons">
-                    <button class="DialogButton _DialogLayout Secondary as-pd__btn js-as-pd-bg-clear">${Localization.str.thewordclear}</button>
-                    <button class="DialogButton _DialogLayout Primary as-pd__btn js-as-pd-bg-save">${Localization.str.save}</button>
+                    <button class="DialogButton _DialogLayout Secondary as-pd__btn js-pd-bg-clear">${Localization.str.thewordclear}</button>
+                    <button class="DialogButton _DialogLayout Primary as-pd__btn js-pd-bg-save">${Localization.str.save}</button>
                 </div>
             </div>`;
 
@@ -46,98 +60,90 @@ export default class FBackgroundSelection extends Feature {
             if (this._active) { return; } // Happens because the below code will trigger the observer again
 
             HTML.beforeEnd('[class^="profileeditshell_PageContent_"]', html);
-
-            this._gameFilterNode = document.querySelector(".js-pd-game");
-            this._listNode = document.querySelector(".js-pd-list");
-            this._imagesNode = document.querySelector(".js-pd-imgs");
-
             this._active = true;
 
-            this._selectedAppid = ProfileData.getBgAppid();
-            let selectedGameKey = null;
+            const gameFilterNode = document.querySelector(".js-pd-game");
+            const listNode = document.querySelector(".js-pd-list");
+            const imagesNode = document.querySelector(".js-pd-imgs");
 
-            this._showBgFormLoading(this._listNode);
+            const games = await this._getGamesList(listNode);
 
-            const games = await Background.action("profile.background.games");
-
-            for (const key in games) {
-                if (!Object.prototype.hasOwnProperty.call(games, key)) { continue; }
-                games[key][2] = this._getSafeString(games[key][1]);
-
-                if (games[key][0] === this._selectedAppid) {
-                    selectedGameKey = key;
+            // Show current selection
+            if (this._selectedAppid) {
+                const game = games.find(([appid]) => appid === this._selectedAppid);
+                if (game) {
+                    gameFilterNode.value = game[1];
+                    this._selectGame(this._selectedAppid, imagesNode);
                 }
             }
 
-            this._hideBgFormLoading(this._listNode);
+            listNode.addEventListener("click", ({target}) => {
+                const appid = Number(target.dataset.appid ?? 0);
+                if (!appid || appid === this._selectedAppid) { return; }
 
-            let timer = null;
+                this._selectedImage = ""; // Clear current selection so selected image and appid remain in sync
+                this._selectGame(appid, imagesNode);
 
-            this._listNode.addEventListener("click", ({target}) => {
-                if (!target.dataset.appid) { return; }
-                this._selectGame(target.dataset.appid);
+                document.querySelector(".js-pd-item.is-selected")?.classList.remove("is-selected");
+                target.classList.add("is-selected");
             });
 
-            this._imagesNode.addEventListener("click", ({target}) => {
+            imagesNode.addEventListener("click", ({target}) => {
                 const node = target.closest(".js-pd-img");
+                if (!node || node.dataset.img === this._selectedImage) { return; }
 
-                if (!node) { return; }
                 this._selectedImage = node.dataset.img;
 
-                const currentSelected = document.querySelector(".js-pd-img.is-selected");
-                if (currentSelected) {
-                    currentSelected.classList.remove("is-selected");
-                }
-
+                document.querySelector(".js-pd-img.is-selected")?.classList.remove("is-selected");
                 node.classList.add("is-selected");
             });
 
-            this._gameFilterNode.addEventListener("keyup", () => {
+            let timer = null;
+
+            gameFilterNode.addEventListener("keyup", () => {
 
                 if (!timer) {
                     timer = TimeUtils.resettableTimer(() => {
 
                         const max = 100;
-                        const value = this._getSafeString(this._gameFilterNode.value);
+                        const value = this._getSafeString(gameFilterNode.value);
                         if (value === "") { return; }
 
                         let i = 0;
                         let list = "";
                         for (const [appid, title, safeTitle] of games) {
                             if (safeTitle.includes(value)) {
-                                list += `<div class="as-pd__item js-pd-item" data-appid="${appid}">${title}</div>`;
+                                const selected = this._selectedAppid === appid ? " is-selected" : "";
+
+                                list += `<div class="as-pd__item${selected} js-pd-item" data-appid="${appid}">${title}</div>`;
                                 i++;
                             }
                             if (i >= max) { break; }
                         }
-                        HTML.inner(this._listNode, list);
+                        HTML.inner(listNode, list);
                     }, 200);
                 }
 
                 timer.reset();
             });
 
-            if (games[selectedGameKey]) {
-                this._gameFilterNode.value = games[selectedGameKey][1];
+            document.querySelector(".js-pd-bg-clear").addEventListener("click", async() => {
+                if (!this._currentImage && !this._currentAppid) { return; }
 
-                if (this._selectedAppid) {
-                    this._selectGame(this._selectedAppid);
-                }
-            }
+                await this.context.clearOwn();
 
-            document.querySelector(".js-as-pd-bg-clear").addEventListener("click", async() => {
-                await ProfileData.clearOwn();
                 window.location.href = `${Config.ApiServerHost}/v01/profile/background/edit/delete/`;
             });
 
-            document.querySelector(".js-as-pd-bg-save").addEventListener("click", async() => {
-                if (this._selectedImage && this._selectedAppid) {
-                    await ProfileData.clearOwn();
+            document.querySelector(".js-pd-bg-save").addEventListener("click", async() => {
+                if (!this._selectedImage || !this._selectedAppid) { return; }
+                if (this._selectedImage === this._currentImage && this._selectedAppid === this._currentAppid) { return; }
 
-                    const selectedAppid = encodeURIComponent(this._selectedAppid);
-                    const selectedImg = encodeURIComponent(this._selectedImage);
-                    window.location.href = `${Config.ApiServerHost}/v01/profile/background/edit/save/?appid=${selectedAppid}&img=${selectedImg}`;
-                }
+                await this.context.clearOwn();
+
+                const appid = encodeURIComponent(this._selectedAppid);
+                const img = encodeURIComponent(this._selectedImage);
+                window.location.href = `${Config.ApiServerHost}/v01/profile/background/edit/save/?appid=${appid}&img=${img}`;
             });
 
         } else if (this._active) {
@@ -150,46 +156,51 @@ export default class FBackgroundSelection extends Feature {
         return value.toLowerCase().replace(/[^a-z0-9 ]/g, "");
     }
 
-    async _selectGame(appid) {
+    async _selectGame(appid, imagesNode) {
 
         const result = await Background.action("profile.background", {
             appid,
-            "profile": SteamId.getSteamId(),
+            "profile": this.context.steamId,
         });
 
         this._selectedAppid = appid;
-        const selectedImg = ProfileData.getBgImg();
 
         let images = "";
         for (const [url, title] of result) {
-            let selectedClass = "";
-            if (selectedImg === url) {
-                selectedClass = " is-selected";
-            }
+            const selected = this._selectedImage === url ? " is-selected" : "";
 
             images
-                += `<div class="as-pd__item${selectedClass} js-pd-img" data-img="${url}">
+                += `<div class="as-pd__item${selected} js-pd-img" data-img="${url}">
                         <img src="${this._getImageUrl(url)}" class="as-pd__img">
                         <div>${title}</div>
                     </div>`;
         }
 
-        HTML.inner(this._imagesNode, images);
+        HTML.inner(imagesNode, images);
     }
 
     _getImageUrl(name) {
         return `https://steamcommunity.com/economy/image/${name}/622x349`;
     }
 
-    _showBgFormLoading(node) {
-        HTML.inner(node,
-            `<div class="es_loading">
-                <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
-                <span>${Localization.str.loading}</span>
-            </div>`);
-    }
+    async _getGamesList(listNode) {
 
-    _hideBgFormLoading(node) {
-        node.querySelector(".es_loading").remove();
+        if (typeof this._games === "undefined") {
+
+            HTML.inner(listNode,
+                `<div class="es_loading">
+                    <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
+                    <span>${Localization.str.loading}</span>
+                </div>`);
+
+            this._games = await Background.action("profile.background.games");
+            for (const game of this._games) {
+                game.push(this._getSafeString(game[1]));
+            }
+
+            listNode.querySelector(".es_loading").remove();
+        }
+
+        return this._games;
     }
 }

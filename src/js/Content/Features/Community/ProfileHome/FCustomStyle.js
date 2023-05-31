@@ -1,35 +1,51 @@
 import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
-import {DOMHelper, Feature, ProfileData} from "../../../modulesContent";
+import {DOMHelper, Feature} from "../../../modulesContent";
 
 export default class FCustomStyle extends Feature {
 
-    checkPrerequisites() {
-        return !this.context.isPrivateProfile && SyncedStorage.get("show_custom_themes");
-    }
+    constructor(context) {
+        super(context);
 
-    async apply() {
-
-        const {style} = await ProfileData || {};
-        if (!style) { return; }
-
-        const availableStyles = [
-            "clear",
-            "goldenprofile",
+        // Synced with available options in CProfileEdit/FStyleSelection
+        this._availableStyles = new Set([
             "goldenprofile2020",
             "winter2019",
-            "green",
+            "goldenprofile",
             "holiday2014",
+            "blue",
+            "clear",
+            "green",
             "orange",
             "pink",
             "purple",
             "red",
             "teal",
             "yellow",
-            "blue",
-            "grey"
-        ];
+            "grey",
+        ]);
+    }
 
-        if (!availableStyles.includes(style)) { return; }
+    async checkPrerequisites() {
+        if (this.context.isPrivateProfile || !SyncedStorage.get("show_custom_themes")) {
+            return false;
+        }
+
+        const result = await this.context.data;
+        if (!result || !result.style || result.style === "remove") {
+            return false;
+        }
+
+        if (!this._availableStyles.has(result.style)) {
+            return false;
+        }
+
+        this._data = result.style;
+        return true;
+    }
+
+    apply() {
+
+        const style = this._data;
 
         document.body.classList.add("es_profile_style");
 
