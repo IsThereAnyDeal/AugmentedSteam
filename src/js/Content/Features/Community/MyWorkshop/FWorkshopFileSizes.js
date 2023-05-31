@@ -73,18 +73,17 @@ export default class FWorkshopFileSizes extends Feature {
 
             const doc = parser.parseFromString(result, "text/html");
             for (const node of doc.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
-                await this._getFileSize(node)
-                    .then(size => {
-                        this._completed++;
-                        this._totalSize += size;
-                    })
-                    .catch(err => {
-                        this._failed++;
-                        console.error(err);
-                    })
-                    .finally(() => {
-                        this._updateWaitDialog();
-                    });
+                try {
+                    const size = await this._getFileSize(node);
+
+                    this._completed++;
+                    this._totalSize += size;
+                } catch (err) {
+                    this._failed++;
+                    console.error(err);
+                } finally {
+                    this._updateWaitDialog();
+                }
             }
         }
 
