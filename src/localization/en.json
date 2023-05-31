@@ -28,9 +28,9 @@
     "hide_comments": "Hide Comments",
     "calc_workshop_size": {
         "file_size": "File size __size__",
-        "finished": "Finished",
-        "calculating": "Calculating...",
         "calc_size": "Calculate Total Size",
+        "calc_loading": "Calculating __i__/__count__ workshop items, please wait...",
+        "calc_finished": "Finished! Successfully calculated __success__/__total__ items.",
         "total_size": "Total size: __size__"
     },
     "cart": "Cart",
