@@ -60,7 +60,8 @@ export default class FHDPlayer extends Feature {
     }
 
     _addMouseMoveHandler(container) {
-        const [video, overlay, titlebar = null] = container.children;
+        // There may be a 3rd element - the titlebar, but Steam hides it after playing the video for 5s
+        const [video, overlay] = container.children;
         let timer;
 
         video.addEventListener("mousemove", () => {
@@ -68,16 +69,10 @@ export default class FHDPlayer extends Feature {
                 timer.reset();
                 video.style.cursor = "";
                 overlay.style.bottom = "0px";
-                if (titlebar) {
-                    titlebar.style.top = "0px";
-                }
             } else {
                 timer = TimeUtils.resettableTimer(() => {
                     video.style.cursor = "none";
                     overlay.style.bottom = "-35px";
-                    if (titlebar) {
-                        titlebar.style.top = "-35px";
-                    }
                 }, 2000);
             }
         });
