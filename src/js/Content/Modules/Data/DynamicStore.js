@@ -1,15 +1,7 @@
 import {GameId} from "../../../Core/GameId";
 import {Background} from "../Background";
-import {User} from "../User";
 
 class DynamicStore {
-
-    /*
-     * FIXME
-     *  1. Check usage of `await DynamicStore`, currently it does nothing
-     *  2. getAppStatus() is not properly waiting for initialization of the DynamicStore
-     *  3. There is no guarante that `User` is initialized before `_fetch()` is called
-     */
 
     static clear() {
         return Background.action("dynamicstore.clear");
@@ -39,23 +31,8 @@ class DynamicStore {
         return multiple ? status : status[storeId];
     }
 
-    static async getRandomApp() {
-        await DynamicStore._fetch();
+    static getRandomApp() {
         return Background.action("dynamicstore.randomapp");
-    }
-
-    static _fetch() {
-        if (!User.isSignedIn) {
-            return DynamicStore.clear();
-        }
-        return Promise.resolve(null);
-    }
-
-    static then(onDone, onCatch) {
-        if (!DynamicStore._promise) {
-            DynamicStore._promise = DynamicStore._fetch();
-        }
-        return DynamicStore._promise.then(onDone, onCatch);
     }
 }
 

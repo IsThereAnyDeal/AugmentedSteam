@@ -175,14 +175,6 @@ class SteamStoreApi extends Api {
             "wishlisted": rgWishlist,
         };
 
-        /*
-         * dynamicstore keys are:
-         * "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
-         * "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
-         * "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
-         * "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
-         */
-
         return IndexedDB.put("dynamicStore", dynamicStore);
     }
 
