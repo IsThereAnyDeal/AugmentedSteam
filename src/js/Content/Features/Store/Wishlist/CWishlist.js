@@ -11,6 +11,7 @@ import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
 import FKeepEditableRanking from "./FKeepEditableRanking";
 import FOneClickRemoveFromWishlist from "./FOneClickRemoveFromWishlist";
+import FWishlistProfileLink from "./FWishlistProfileLink";
 
 export class CWishlist extends CStoreBase {
 
@@ -35,6 +36,7 @@ export class CWishlist extends CStoreBase {
             FExportWishlist,
             FKeepEditableRanking,
             FOneClickRemoveFromWishlist,
+            FWishlistProfileLink,
         ]);
 
         this.wishlistData = wishlistData;
