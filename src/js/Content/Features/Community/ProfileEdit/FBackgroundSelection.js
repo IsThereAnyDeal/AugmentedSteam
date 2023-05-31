@@ -193,9 +193,10 @@ export default class FBackgroundSelection extends Feature {
                     <span>${Localization.str.loading}</span>
                 </div>`);
 
-            this._games = (await Background.action("profile.background.games")).forEach(game => {
+            this._games = await Background.action("profile.background.games");
+            for (const game of this._games) {
                 game.push(this._getSafeString(game[1]));
-            });
+            }
 
             listNode.querySelector(".es_loading").remove();
         }
