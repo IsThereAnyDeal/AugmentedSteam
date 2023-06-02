@@ -62,26 +62,24 @@ export default class FWishlistUserNotes extends CallbackFeature {
             // Adjust the row height to account for the newly added note content
             wl.nRowHeight = f.jq(".wishlist_row").outerHeight(true);
 
+            // Update initial container height
+            document.getElementById("wishlist_ctn").style.height = `${wl.nRowHeight * wl.rgVisibleApps.length}px`;
+
             // The scroll handler loads the visible rows and adjusts their positions
             f.wishlistOnScroll();
         }, [Localization.str.user_note.add]);
     }
 
     async callback(nodes) {
-        const newNodes = nodes.filter(node => !node.classList.contains("js-note-checked"));
 
-        for (const node of newNodes) {
-            node.classList.add("js-note-checked");
-        }
-
-        const appids = newNodes.map(node => Number(node.dataset.appId));
+        const appids = nodes.map(node => Number(node.dataset.appId));
         const notes = await this._userNotes.get(appids);
 
-        for (let i = 0; i < newNodes.length; i++) {
+        for (let i = 0; i < nodes.length; i++) {
             const note = notes[appids[i]];
 
             if (typeof note !== "undefined") {
-                const noteEl = newNodes[i].querySelector(".esi-note");
+                const noteEl = nodes[i].querySelector(".esi-note");
                 noteEl.textContent = `"${note}"`;
                 noteEl.classList.add("esi-has-note");
             }
