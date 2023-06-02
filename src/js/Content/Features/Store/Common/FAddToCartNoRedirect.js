@@ -35,7 +35,20 @@ export default class FAddToCartNoRedirect extends Feature {
                     return null;
             }
 
-            return document.forms[formName];
+            let formEl = document.forms[formName];
+
+            // Special handling for bundles on wishlist
+            if (onWishlist && !formEl && fnName === "addBundleToCart") {
+                // Use the actual (wrong) name to locate the associated form
+                formEl = document.forms[`add_to_cart_${href.match(/\d+/)[0]}`];
+                // Find the `input` element with the name `subid` and change it to `bundleid`
+                const inputEl = formEl?.elements.subid;
+                if (inputEl) {
+                    inputEl.name = "bundleid";
+                }
+            }
+
+            return formEl;
         }
 
         function handler(e) {

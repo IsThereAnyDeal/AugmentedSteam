@@ -64,7 +64,6 @@ export default class FWishlistStats extends Feature {
     async _updateStats() {
 
         let totalPrice = 0;
-        let totalCount = 0;
         let totalOnSale = 0;
         let totalNoPrice = 0;
 
@@ -72,20 +71,23 @@ export default class FWishlistStats extends Feature {
         const appInfo = visibleApps.map(appid => this._appInfo[appid]);
 
         for (const data of appInfo) {
-            if (data.subs.length > 0) {
-                totalPrice += data.subs[0].price;
+            const sub = data.subs?.[0];
 
-                if (data.subs[0].discount_pct > 0) {
-                    totalOnSale++;
-                }
-            } else {
+            if (!sub || !sub.price) {
                 totalNoPrice++;
+                continue;
             }
-            totalCount++;
+
+            totalPrice += Number(sub.price);
+
+            // `null` if sub is a package with no discount; 0 if sub is a bundle with no discount
+            if (sub.discount_pct) {
+                totalOnSale++;
+            }
         }
 
         document.getElementById("esi-stat-price").textContent = new Price(totalPrice / 100);
-        document.getElementById("esi-stat-count").textContent = totalCount;
+        document.getElementById("esi-stat-count").textContent = appInfo.length;
         document.getElementById("esi-stat-onsale").textContent = totalOnSale;
         document.getElementById("esi-stat-noprice").textContent = totalNoPrice;
     }
