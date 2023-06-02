@@ -175,14 +175,6 @@ class SteamStoreApi extends Api {
             "wishlisted": rgWishlist,
         };
 
-        /*
-         * dynamicstore keys are:
-         * "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
-         * "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
-         * "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
-         * "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
-         */
-
         return IndexedDB.put("dynamicStore", dynamicStore);
     }
 
@@ -192,7 +184,7 @@ class SteamStoreApi extends Api {
 
     static async dynamicStoreRandomApp() {
         const store = await IndexedDB.getAll("dynamicStore");
-        if (!store || !store.ownedApps) { return null; }
+        if (!store.ownedApps.length) { return null; }
         return store.ownedApps[Math.floor(Math.random() * store.ownedApps.length)];
     }
 

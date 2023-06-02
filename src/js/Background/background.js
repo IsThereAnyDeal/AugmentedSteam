@@ -70,8 +70,8 @@ const actionCallbacks = new Map([
     ["wishlists", SteamStoreApi.wishlists],
     ["purchases", SteamStoreApi.purchases],
     ["clearpurchases", SteamStoreApi.clearPurchases],
-    ["dynamicstorestatus", SteamStoreApi.dsStatus],
-    ["dynamicStore.randomApp", SteamStoreApi.dynamicStoreRandomApp],
+    ["dynamicstore.status", SteamStoreApi.dsStatus],
+    ["dynamicstore.randomapp", SteamStoreApi.dynamicStoreRandomApp],
 
     ["login", SteamCommunityApi.login],
     ["logout", SteamCommunityApi.logout],
