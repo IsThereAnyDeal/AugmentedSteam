@@ -80,6 +80,7 @@ export default class FGroupsManageButton extends CallbackFeature {
     }
 
     async _leaveGroups() {
+        this._endpoint = new URL("friends/action", User.profileUrl);
         const selected = [];
 
         for (const group of document.querySelectorAll(".group_block.selected")) {
@@ -136,6 +137,6 @@ export default class FGroupsManageButton extends CallbackFeature {
             "steamids[]": id
         };
 
-        return RequestData.post(`${User.profileUrl}/friends/action`, data, {}, true);
+        return RequestData.post(this._endpoint, data, {}, true);
     }
 }

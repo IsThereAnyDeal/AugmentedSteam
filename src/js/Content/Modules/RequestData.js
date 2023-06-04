@@ -5,12 +5,6 @@ class RequestData {
 
     static async getHttp(url, settings = {}, responseType = "text") {
 
-        let _url = url;
-        if (_url.startsWith("//")) { // TODO remove when not needed
-            _url = window.location.protocol + url;
-            console.warn("Requesting URL without protocol, please update");
-        }
-
         const _settings = {
             "method": "GET",
             "credentials": "include",
@@ -24,7 +18,7 @@ class RequestData {
         let response;
 
         try {
-            response = await RequestData._fetchFn(_url, _settings);
+            response = await RequestData._fetchFn(url, _settings);
 
             if (!response.ok) {
                 throw new Errors.HTTPError(response.status, `HTTP ${response.status} ${response.statusText} for ${response.url}`);
@@ -55,7 +49,7 @@ class RequestData {
         } else {
             _responseType = "text";
         }
-        
+
         return RequestData.getHttp(url, _settings, _responseType);
     }
 
@@ -75,7 +69,7 @@ class RequestData {
  */
 RequestData._fetchFn
     // eslint-disable-next-line no-undef
-    = (typeof content !== "undefined" && content && content.fetch) // content is only available in FF environments
+    = (typeof content !== "undefined" && content && content.fetch)
     || fetch.bind(window);
 
 export {RequestData};

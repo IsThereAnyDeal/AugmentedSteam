@@ -9,7 +9,9 @@ class Api {
      * withResponse? use a boolean to include Response object in result?
      */
     static _fetchWithDefaults(endpoint, query = {}, params = {}) {
-        const url = new URL(endpoint, this.origin);
+        // AS APIs require trailing slash
+        const _endpoint = endpoint.endsWith("/") ? endpoint : endpoint + "/";
+        const url = new URL(_endpoint, this.origin);
         const _params = {...this.params, ...params};
         if (_params.method === "POST" && !_params.body) {
             _params.body = new URLSearchParams(query);
@@ -20,10 +22,7 @@ class Api {
     }
 
     static async getEndpoint(endpoint, query, responseHandler, params = {}) {
-        let _endpoint = endpoint;
-        if (!endpoint.endsWith("/")) { _endpoint += "/"; }
-
-        const response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "GET"}));
+        const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "GET"}));
         if (responseHandler) { responseHandler(response); }
         return response.json();
     }
@@ -35,19 +34,13 @@ class Api {
     }
 
     static async postEndpoint(endpoint, query, responseHandler, params = {}) {
-        let _endpoint = endpoint;
-        if (!endpoint.endsWith("/")) { _endpoint += "/"; }
-
-        const response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "POST"}));
+        const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "POST"}));
         if (responseHandler) { responseHandler(response); }
         return response.json();
     }
 
     static async deleteEndpoint(endpoint, query, responseHandler, params = {}) {
-        let _endpoint = endpoint;
-        if (!endpoint.endsWith("/")) { _endpoint += "/"; }
-
-        const response = await this._fetchWithDefaults(_endpoint, query, Object.assign(params, {"method": "DELETE"}));
+        const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "DELETE"}));
         if (responseHandler) { responseHandler(response); }
         return response.json();
     }
