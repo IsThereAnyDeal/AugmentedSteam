@@ -66,8 +66,8 @@ export default class FBrowseWorkshops extends Feature {
                 </div>
             </div>`);
 
-        const url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
-        const result = JSON.parse(await RequestData.getHttp(url));
+        const params = new URLSearchParams({query, start, count});
+        const result = await RequestData.getJson(`https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?${params}`);
         HTML.inner(container, result.results_html);
 
         // Restore onclick attribute
