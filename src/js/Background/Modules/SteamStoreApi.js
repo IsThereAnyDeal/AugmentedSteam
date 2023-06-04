@@ -1,7 +1,4 @@
-import {HTML} from "../../Core/Html/Html";
-import {HTMLParser} from "../../Core/Html/HtmlParser";
-import {Errors} from "../../Core/Errors/Errors";
-import {StringUtils} from "../../Core/Utils/StringUtils";
+import {HTML, HTMLParser, StringUtils} from "../../modulesCore";
 import {Api} from "./Api";
 import {IndexedDB} from "./IndexedDB";
 import CacheStorage from "./CacheStorage";
@@ -94,27 +91,8 @@ class SteamStoreApi extends Api {
         return currency;
     }
 
-    /*
-     * Invoked if we were previously logged out and are now logged in
-     */
-    static async country() {
-        const self = SteamStoreApi;
-        const html = await self.getPage("/account/change_country/", {}, res => {
-            if (new URL(res.url).pathname === "/login/") {
-                throw new Errors.LoginError("store");
-            }
-        });
-        const dummyPage = HTML.toDom(html);
-
-        const node = dummyPage.querySelector("#dselect_user_country");
-        return node && node.value;
-    }
-
     static async sessionId() {
-        const self = SteamStoreApi;
-
-        // TODO what's the minimal page we can load here to get sessionId?
-        const html = await self.getPage("/about/");
+        const html = await SteamStoreApi.getPage("/about/");
         return HTMLParser.getVariableFromText(html, "g_sessionID", "string");
     }
 
@@ -161,8 +139,13 @@ class SteamStoreApi extends Api {
         return IndexedDB.put("purchases", purchaseDates);
     }
 
-    static purchases(appName, lang) { return IndexedDB.get("purchases", appName, {"params": lang}); }
-    static clearPurchases() { return IndexedDB.clear("purchases"); }
+    static purchases(appName, lang) {
+        return IndexedDB.get("purchases", appName, {"params": lang});
+    }
+
+    static clearPurchases() {
+        return IndexedDB.clear("purchases");
+    }
 
     static async dynamicStore() {
         const store = await SteamStoreApi.getEndpoint("dynamicstore/userdata", {}, null, {"cache": "no-cache"});
@@ -198,8 +181,6 @@ class SteamStoreApi extends Api {
 
         return SteamStoreApi.endpointFactory("api/appdetails/", appid)(params);
     }
-
-    static appUserDetails(appid) { return SteamStoreApi.endpointFactory("api/appuserdetails/", appid)({"appids": appid}); }
 }
 SteamStoreApi.origin = "https://store.steampowered.com/";
 SteamStoreApi.params = {"credentials": "include"};
