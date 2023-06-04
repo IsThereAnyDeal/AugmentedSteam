@@ -6,12 +6,9 @@ export default class Workshop {
 
         const _method = method === "subscribe" ? method : "unsubscribe";
 
-        const formData = new FormData();
-        formData.append("sessionid", User.sessionId);
-        formData.append("appid", appid);
-        formData.append("id", id);
+        const data = {"sessionid": User.sessionId, appid, id};
 
-        const res = await RequestData.post(`https://steamcommunity.com/sharedfiles/${_method}`, formData, {}, true);
+        const res = await RequestData.post(`https://steamcommunity.com/sharedfiles/${_method}`, data, {}, true);
 
         if (method === "subscribe") {
             // https://github.com/SteamDatabase/SteamTracking/blob/3ab40a4604426852de8a51c50d963978e9660de4/steamcommunity.com/public/javascript/sharedfiles_functions_logged_in.js#L533

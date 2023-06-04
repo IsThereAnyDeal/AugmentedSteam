@@ -39,12 +39,12 @@ class RequestData {
         return responseType === "none" ? response : response[responseType]();
     }
 
-    static post(url, formData, settings = {}, returnJSON = false) {
+    static post(url, data, settings = {}, returnJSON = false) {
 
         const _settings = {
             ...settings,
             "method": "POST",
-            "body": formData
+            "body": new URLSearchParams(data)
         };
 
         let _responseType;

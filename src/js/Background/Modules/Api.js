@@ -11,16 +11,10 @@ class Api {
     static _fetchWithDefaults(endpoint, query = {}, params = {}) {
         const url = new URL(endpoint, this.origin);
         const _params = {...this.params, ...params};
-        if (_params && _params.method === "POST" && !_params.body) {
-            const formData = new FormData();
-            for (const [k, v] of Object.entries(query)) {
-                formData.append(k, v);
-            }
-            _params.body = formData;
+        if (_params.method === "POST" && !_params.body) {
+            _params.body = new URLSearchParams(query);
         } else {
-            for (const [k, v] of Object.entries(query)) {
-                url.searchParams.append(k, v);
-            }
+            url.search = new URLSearchParams(query).toString();
         }
         return fetch(url, _params);
     }

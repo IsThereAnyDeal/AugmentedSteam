@@ -42,11 +42,7 @@ export default class FEmptyWishlist extends Feature {
                     .replace("__cur__", cur++)
                     .replace("__total__", wishlistData.length);
 
-                const formData = new FormData();
-                formData.append("sessionid", User.sessionId);
-                formData.append("appid", appid);
-
-                await RequestData.post(url, formData);
+                await RequestData.post(url, {"sessionid": User.sessionId, appid});
             }
 
             DynamicStore.clear();

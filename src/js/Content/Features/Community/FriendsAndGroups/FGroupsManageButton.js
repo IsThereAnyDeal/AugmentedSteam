@@ -128,13 +128,14 @@ export default class FGroupsManageButton extends CallbackFeature {
     }
 
     _leaveGroup(id) {
-        const formData = new FormData();
-        formData.append("sessionid", User.sessionId);
-        formData.append("steamid", User.steamId);
-        formData.append("ajax", 1);
-        formData.append("action", "leave_group");
-        formData.append("steamids[]", id);
+        const data = {
+            "sessionid": User.sessionId,
+            "steamid": User.steamId,
+            "ajax": 1,
+            "action": "leave_group",
+            "steamids[]": id
+        };
 
-        return RequestData.post(`${User.profileUrl}/friends/action`, formData, {}, true);
+        return RequestData.post(`${User.profileUrl}/friends/action`, data, {}, true);
     }
 }
