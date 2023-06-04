@@ -158,8 +158,8 @@ export default class FHighlightsTags extends Feature {
             }
 
             /*
-             * Don't need to check for the opts object here, since the result contains
-             * false for every property if the highlight has been disabled
+             * Don't need to check for the opts object for itad and inv, since the result
+             * contains `false` for every property if the highlight has been disabled
              */
             if (itadStatus) {
                 if (itadStatus[storeid].collected) {
@@ -172,15 +172,12 @@ export default class FHighlightsTags extends Feature {
 
             if (invStatus) {
                 const trimmedId = it.next().value;
-                if (opts.gift && invStatus[trimmedId].gift) {
+                if (invStatus[trimmedId].gift) {
                     operations.push(this.highlightInvGift);
                 }
-
-                if (opts.guestPass && invStatus[trimmedId].guestPass) {
+                if (invStatus[trimmedId].guestPass) {
                     operations.push(this.highlightInvGuestpass);
                 }
-
-                // Same as for the ITAD highlights (don't need to check)
                 if (invStatus[trimmedId].coupon) {
                     operations.push(this.highlightInvCoupon);
                 }
