@@ -60,32 +60,33 @@ class SteamStoreApi extends Api {
         return SteamStoreApi.clearDynamicStore();
     }
 
-    static async currencyFromWallet() {
+    static async _getCurrencyFromWallet(parser) {
         const html = await SteamStoreApi.getPage("/steamaccount/addfunds", {}, true);
-        const dummyPage = HTML.toDom(html);
+        const doc = parser.parseFromString(html, "text/html");
 
-        return dummyPage.querySelector("input[name=currency]").value;
+        return doc.querySelector("input[name=currency]")?.value;
     }
 
-    static async currencyFromApp() {
+    static async _getCurrencyFromApp(parser) {
         const html = await SteamStoreApi.getPage("/app/220", {}, true);
-        const dummyPage = HTML.toDom(html);
+        const doc = parser.parseFromString(html, "text/html");
 
-        const currency = dummyPage.querySelector("meta[itemprop=priceCurrency][content]");
-        if (!currency || !currency.getAttribute("content")) {
-            throw new Error("Store currency could not be determined from app 220");
-        }
-
-        return currency.getAttribute("content");
+        return doc.querySelector("meta[itemprop=priceCurrency][content]")?.getAttribute("content");
     }
 
     static async currency() {
         let currency = CacheStorage.get("currency");
         if (currency) { return currency; }
 
-        currency = await SteamStoreApi.currencyFromWallet();
-        if (!currency) { currency = await SteamStoreApi.currencyFromApp(); }
-        if (!currency) { throw new Error("Could not retrieve store currency"); }
+        const parser = new DOMParser();
+
+        currency = await SteamStoreApi._getCurrencyFromWallet(parser);
+        if (!currency) {
+            currency = await SteamStoreApi._getCurrencyFromApp(parser);
+            if (!currency) {
+                throw new Error("Store currency could not be determined from app 220");
+            }
+        }
 
         CacheStorage.set("currency", currency);
         return currency;
