@@ -233,7 +233,9 @@ export default class FHighlightsTags extends Feature {
             } else if (node.classList.contains("browse_tag_game")) {
                 node.querySelector(".browse_tag_game_price").after(container);
             } else if (node.classList.contains("game_area_dlc_row")) {
-                node.querySelector(".game_area_dlc_price").prepend(container);
+                // Must check discount block first
+                const priceNode = node.querySelector(".discount_block") || node.querySelector(".game_area_dlc_price");
+                priceNode.prepend(container);
             } else if (node.classList.contains("wishlist_row")) {
                 node.querySelector(".addedon").prepend(container);
             } else if (node.classList.contains("match_app")) {
