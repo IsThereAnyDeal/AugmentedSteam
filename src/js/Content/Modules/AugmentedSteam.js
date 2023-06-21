@@ -150,11 +150,18 @@ class AugmentedSteam {
 
     static _handleInstallSteamButton() {
         const option = SyncedStorage.get("installsteam");
+        if (option === "show") { return; }
+
+        const btn = document.querySelector(".header_installsteam_btn");
+        if (!btn) {
+            console.error(`Couldn't find "Install Steam" button element.`);
+            return;
+        }
+
         if (option === "hide") {
-            document.querySelector("div.header_installsteam_btn")?.remove();
+            btn.remove();
         } else if (option === "replace") {
-            const btn = document.querySelector("div.header_installsteam_btn > a");
-            btn.textContent = Localization.str.viewinclient;
+            btn.querySelector("div").textContent = Localization.str.viewinclient;
             btn.href = `steam://openurl/${window.location.href}`;
             btn.classList.add("es_steamclient_btn");
         }

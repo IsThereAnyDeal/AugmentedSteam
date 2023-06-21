@@ -2400,7 +2400,7 @@ label.es_dlc_label > input:checked::after {
 /***************************************
  * Global Steam Client button
  **************************************/
-.header_installsteam_btn_content.es_steamclient_btn {
+.es_steamclient_btn .header_installsteam_btn_content {
   background-image: url('https://store.cloudflare.steamstatic.com/public/images/v6/icon_platform_linux.png');
   background-position: 5px;
   padding-left: 28px;
