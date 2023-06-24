@@ -1921,9 +1921,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 /***************************************
  * Augmented Steam and ITAD menu
  **************************************/
-#es_menu {
-  display: inline-block;
-}
 #es_pulldown {
   display: inline-block;
   padding-left: 4px;
