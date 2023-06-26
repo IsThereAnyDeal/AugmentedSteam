@@ -24,12 +24,6 @@ export default class FSteamPeek extends Feature {
                 </div>
             </div>`);
 
-        HTML.beforeEnd(
-            this._moreLikeThis.querySelector(".store_horizontal_autoslider_ctn"),
-            `<div class="block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad"
-                        id="es_steampeek_content"></div>`,
-        );
-
         // TODO Create a global handler for DS loading
         await Page.runInPageContext(() => new Promise(resolve => {
             window.SteamFacade.onDynamicStoreReady(() => { resolve(); });
