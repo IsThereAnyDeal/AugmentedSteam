@@ -79,6 +79,9 @@ export class CStoreFront extends CStoreBase {
         // Top sellers tab
         const topSellersTab = document.querySelector("#tab_topsellers_content");
         if (topSellersTab) {
+            // TODO Steam broke this section, remove when fixed
+            if (!topSellersTab.querySelector(".tab_content_items")) { return; }
+
             new MutationObserver(mutations => {
                 for (const {addedNodes} of mutations) {
                     if (addedNodes.length > 1) {
