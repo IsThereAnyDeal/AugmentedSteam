@@ -15,18 +15,21 @@ export default class FAddToCartNoRedirect extends Feature {
 
         function getFormEl(href) {
 
+            const matches = href.match(/^javascript:([^(]+)\((.+)?\)/);
+            if (matches === null) { return null; }
+
+            const arg = (matches[2] ?? "").trim();
             let formName;
 
-            const fnName = href.match(/javascript:([^(]+)/)[1];
-            switch (fnName) {
+            switch (matches[1]) {
                 case "addToCart":
-                    formName = `add_to_cart_${href.match(/\d+/)[0]}`;
+                    formName = `add_to_cart_${arg}`;
                     break;
                 case "addBundleToCart":
-                    formName = `add_bundle_to_cart_${href.match(/\d+/)[0]}`;
+                    formName = `add_bundle_to_cart_${arg}`;
                     break;
                 case "GamePurchaseDropdownAddToCart":
-                    formName = `add_to_cart_${href.split("'")[1]}`;
+                    formName = `add_to_cart_${arg.slice(1, -1)}`;
                     break;
                 case "addAllDlcToCart":
                     formName = "add_all_dlc_to_cart";
@@ -40,7 +43,7 @@ export default class FAddToCartNoRedirect extends Feature {
             // Special handling for bundles on wishlist
             if (onWishlist && !formEl && fnName === "addBundleToCart") {
                 // Use the actual (wrong) name to locate the associated form
-                formEl = document.forms[`add_to_cart_${href.match(/\d+/)[0]}`];
+                formEl = document.forms[`add_to_cart_${arg}`];
                 // Find the `input` element with the name `subid` and change it to `bundleid`
                 const inputEl = formEl?.elements.subid;
                 if (inputEl) {
