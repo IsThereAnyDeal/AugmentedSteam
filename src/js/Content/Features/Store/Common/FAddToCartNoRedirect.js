@@ -87,7 +87,8 @@ export default class FAddToCartNoRedirect extends Feature {
         if (onWishlist) {
             document.addEventListener("click", handler);
         } else {
-            for (const node of document.querySelectorAll(".btn_addtocart > a[href^=javascript]")) {
+            // Avoid selecting the purchase option node, e.g. on GTA5, EVE Online
+            for (const node of document.querySelectorAll(".btn_addtocart:not([id$='select_option']) > a[href^=javascript]")) {
                 node.addEventListener("click", handler);
             }
         }
