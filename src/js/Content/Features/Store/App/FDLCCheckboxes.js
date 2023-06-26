@@ -71,7 +71,7 @@ export default class FDLCCheckboxes extends Feature {
 
         const cartForm = document.createElement("form");
         cartForm.name = "add_selected_dlc_to_cart";
-        cartForm.action = "/cart/";
+        cartForm.action = "https://store.steampowered.com/cart/";
         cartForm.method = "POST";
 
         const cartBtn = dlcSection.querySelector("#es_selected_btn");
