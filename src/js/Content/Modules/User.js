@@ -1,4 +1,3 @@
-import {CookieStorage} from "../../Core/Storage/CookieStorage";
 import {HTMLParser} from "../../Core/Html/HtmlParser";
 import {StringUtils} from "../../Core/Utils/StringUtils";
 import {Background} from "./Background";
@@ -8,16 +7,14 @@ class User {
 
     static get storeCountry() {
 
-        const url = new URL(window.location.href);
-
         let country;
-        if (url.searchParams && url.searchParams.has("cc")) {
-            country = url.searchParams.get("cc");
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.has("cc")) {
+            // Support overrides, though this only works when logged out now
+            country = params.get("cc");
         } else {
             country = User._storeCountry;
-            if (!country) {
-                country = CookieStorage.get("steamCountry");
-            }
         }
 
         if (!country) {
@@ -25,7 +22,7 @@ class User {
             country = "US";
         }
 
-        return country.substr(0, 2);
+        return country;
     }
 
     static promise() {
@@ -40,7 +37,6 @@ class User {
 
             loginPromise = Background.action("login", User.profilePath)
                 .then(login => {
-                    if (!login) { return; }
                     User.isSignedIn = true;
                     User.steamId = login.steamId;
                 });
@@ -50,7 +46,7 @@ class User {
 
         User._promise = loginPromise
             .then(() => Background.action("storecountry"))
-            .catch(({message}) => { console.error(message); })
+            .catch(err => { console.error(err); })
             .then(country => {
                 if (country) {
                     User._storeCountry = country;
@@ -59,29 +55,23 @@ class User {
 
                 let newCountry;
 
-                if (window.location.hostname.endsWith("steampowered.com")) {
-
-                    // Search through all scripts in case the order gets changed or a new one gets added
-                    newCountry = HTMLParser.getVariableFromDom(/GDynamicStore\.Init\(.+?,\s*'([A-Z]{2})'/, "string");
-
+                // Check config first since it's the fastest and present on most pages
+                const config = document.querySelector("#webui_config, #application_config");
+                if (config) {
+                    newCountry = JSON.parse(config.dataset.config).COUNTRY;
                 } else if (window.location.hostname === "steamcommunity.com") {
-                    const config = document.querySelector("#webui_config, #application_config");
-                    if (config) {
-                        newCountry = JSON.parse(config.dataset.config).COUNTRY;
-                    } else {
-                        // This variable is present on market-related pages
-                        newCountry = HTMLParser.getVariableFromDom("g_strCountryCode", "string");
-                    }
+                    // This variable is present on market-related pages
+                    newCountry = HTMLParser.getVariableFromDom("g_strCountryCode", "string");
+                } else {
+                    newCountry = HTMLParser.getVariableFromDom(/GDynamicStore\.Init\(.+?,\s*'([A-Z]{2})'/, "string");
                 }
 
-                if (newCountry) {
-                    User._storeCountry = newCountry;
-                    return Background.action("storecountry", newCountry)
-                        .catch(({message}) => { console.error(message); });
-                } else {
+                if (!newCountry) {
                     throw new Error("Script with user store country not found");
                 }
 
+                User._storeCountry = newCountry;
+                return Background.action("storecountry", newCountry);
             })
             .catch(err => {
                 console.group("Store country detection");
