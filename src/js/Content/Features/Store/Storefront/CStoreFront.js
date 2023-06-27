@@ -69,7 +69,7 @@ export class CStoreFront extends CStoreBase {
                 for (const {addedNodes} of mutations) {
                     for (const node of addedNodes) {
                         if (!(node instanceof Element)) { continue; }
-                        const nodes = node.querySelectorAll(".home_content_item, .home_content.single");
+                        const nodes = node.querySelectorAll(".home_content_item, .home_content.single > .gamelink");
                         this.decorateStoreCapsules(nodes);
                     }
                 }
