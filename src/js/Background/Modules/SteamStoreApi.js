@@ -1,4 +1,4 @@
-import {HTML, HTMLParser, StringUtils} from "../../modulesCore";
+import {Errors, HTML, HTMLParser, StringUtils} from "../../modulesCore";
 import {Api} from "./Api";
 import {IndexedDB} from "./IndexedDB";
 import CacheStorage from "./CacheStorage";
@@ -61,14 +61,14 @@ class SteamStoreApi extends Api {
     }
 
     static async currencyFromWallet() {
-        const html = await SteamStoreApi.getPage("/steamaccount/addfunds");
+        const html = await SteamStoreApi.getPage("/steamaccount/addfunds", {}, true);
         const dummyPage = HTML.toDom(html);
 
         return dummyPage.querySelector("input[name=currency]").value;
     }
 
     static async currencyFromApp() {
-        const html = await SteamStoreApi.getPage("/app/220");
+        const html = await SteamStoreApi.getPage("/app/220", {}, true);
         const dummyPage = HTML.toDom(html);
 
         const currency = dummyPage.querySelector("meta[itemprop=priceCurrency][content]");
@@ -92,12 +92,12 @@ class SteamStoreApi extends Api {
     }
 
     static async sessionId() {
-        const html = await SteamStoreApi.getPage("/about/");
+        const html = await SteamStoreApi.getPage("/about/", {}, true);
         return HTMLParser.getVariableFromText(html, "g_sessionID", "string");
     }
 
     static async wishlists(path) {
-        const html = await SteamStoreApi.getPage(`/wishlist${path}`);
+        const html = await SteamStoreApi.getPage(`/wishlist${path}`, {}, true);
         const data = HTMLParser.getVariableFromText(html, "g_rgWishlistData", "array");
         return data ? data.length : "";
     }
@@ -180,6 +180,14 @@ class SteamStoreApi extends Api {
         if (filter) { params.filters = filter; }
 
         return SteamStoreApi.endpointFactory("api/appdetails/", appid)(params);
+    }
+
+    static getPage(endpoint, query, crossDomain) {
+        return super.getPage(endpoint, query, res => {
+            if (new URL(res.url).pathname === "/login/") {
+                throw new Errors.LoginError("store");
+            }
+        }, {}, crossDomain);
     }
 }
 SteamStoreApi.origin = "https://store.steampowered.com/";
