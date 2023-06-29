@@ -152,8 +152,9 @@ export default class FBackgroundSelection extends Feature {
         }
     }
 
+    // From https://github.com/SteamDatabase/SteamTracking/blob/6db3e47a120c5c938a0ab37186d39b02b14d27d9/steamcommunity.com/public/javascript/global.js#L2790
     _getSafeString(value) {
-        return value.toLowerCase().replace(/[^a-z0-9 ]/g, "");
+        return value.toLowerCase().replace(/[\s.-:!?,']+/g, "");
     }
 
     async _selectGame(appid, imagesNode) {
