@@ -211,18 +211,6 @@ class SteamCommunityApi extends Api {
         return IndexedDB.get("workshopFileSizes", id, {preventFetch});
     }
 
-    static _getReviewId(node) {
-        const input = node.querySelector("input");
-
-        // Only exists when the requested profile is yours
-        if (input) {
-            return Number(input.id.replace("ReviewVisibility", ""));
-        }
-
-        // Otherwise you have buttons to vote for and award the review
-        return Number(node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", ""));
-    }
-
     static async fetchReviews({"key": steamId, "params": {reviewCount}}) {
         const parser = new DOMParser();
         const pageCount = 10;
@@ -250,6 +238,12 @@ class SteamCommunityApi extends Api {
                 const visibilityNode = node.querySelector("input[id^=ReviewVisibility]");
                 const visibility = visibilityNode ? Number(visibilityNode.value) : 0;
 
+                const reviewId = visibilityNode
+                    // Only exists when the requested profile is yours
+                    ? visibilityNode.id.replace("ReviewVisibility", "")
+                    // Otherwise you have buttons to vote for and award the review
+                    : node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", "");
+
                 // Total playtime comes first
                 const playtimeText = node.querySelector(".hours").textContent.match(/(?:\d+,)?\d+\.\d+/);
                 const playtime = playtimeText ? parseFloat(playtimeText[0].replace(/,/g, "")) : 0.0;
@@ -275,32 +269,11 @@ class SteamCommunityApi extends Api {
                     playtime,
                     awards,
                     "node": DOMPurify.sanitize(node.outerHTML) + devResponseNode,
-                    "id": SteamCommunityApi._getReviewId(node)
+                    "id": reviewId
                 });
             }
         }
 
-        return IndexedDB.put("reviews", {[steamId]: reviews});
-    }
-
-    static async updateReviewNode(steamId, html, reviewCount) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const node = doc.querySelector(".review_box");
-        const id = SteamCommunityApi._getReviewId(node);
-
-        if (!await IndexedDB.contains("reviews", steamId, {"preventFetch": true})) { return null; }
-
-        const reviews = await SteamCommunityApi.getReviews(steamId, reviewCount);
-
-        for (const review of reviews) {
-            if (review.id === id) {
-                review.node = DOMPurify.sanitize(node.outerHTML);
-                break;
-            }
-        }
-
-        // Todo updates expiry even though there is no new fetched data
         return IndexedDB.put("reviews", {[steamId]: reviews});
     }
 

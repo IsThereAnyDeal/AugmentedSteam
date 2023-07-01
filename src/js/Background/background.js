@@ -86,7 +86,6 @@ const actionCallbacks = new Map([
     ["clearownprofile", SteamCommunityApi.clearOwn],
     ["workshopfilesize", SteamCommunityApi.getWorkshopFileSize],
     ["reviews", SteamCommunityApi.getReviews],
-    ["updatereviewnode", SteamCommunityApi.updateReviewNode],
 
     ["itad.authorize", ITADApi.authorize],
     ["itad.disconnect", ITADApi.disconnect],

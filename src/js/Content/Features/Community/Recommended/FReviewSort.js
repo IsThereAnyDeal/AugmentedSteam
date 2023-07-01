@@ -1,5 +1,5 @@
 import {HTML, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
-import {Background, Feature, Messenger, Sortbox, User} from "../../../modulesContent";
+import {Background, Feature, Sortbox, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FReviewSort extends Feature {
@@ -21,24 +21,6 @@ export default class FReviewSort extends Feature {
 
         // Max reviews displayed per page. Used for fetching reviews and synced with background script.
         this._pageCount = 10;
-
-        Messenger.addMessageListener("updateReview", id => {
-            Background.action("updatereviewnode", this._path, document.querySelector(`[id$="${id}"`).closest(".review_box").outerHTML, this._reviewCount)
-                .then(() => { this._getReviews(); });
-        });
-
-        Page.runInPageContext(() => {
-            window.SteamFacade.jq(document).ajaxSuccess((event, xhr, {url}) => {
-                const pathname = new URL(url).pathname;
-                if (pathname.startsWith("/userreviews/rate/")
-                    || pathname.startsWith("/userreviews/votetag/")
-                    || pathname.startsWith("/userreviews/update/")) {
-
-                    const id = pathname.split("/").pop();
-                    window.Messenger.postMessage("updateReview", id);
-                }
-            });
-        });
 
         document.querySelector("#leftContents > h1").before(Sortbox.get(
             "reviews",
