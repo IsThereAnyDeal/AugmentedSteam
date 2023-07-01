@@ -19,8 +19,11 @@ export default class FReviewSort extends Feature {
         // Current page. Used to calculate the portion of reviews to show after sorting.
         this._curPage = new URLSearchParams(window.location.search).get("p") || 1;
 
-        // Max reviews displayed per page. Used for fetching reviews and synced with background script.
+        // Max reviews displayed per page.
         this._pageCount = 10;
+
+        // Number of pages. Passed to background script for fetching reviews.
+        this._pages = Math.ceil(this._reviewCount / this._pageCount);
 
         document.querySelector("#leftContents > h1").before(Sortbox.get(
             "reviews",
@@ -148,7 +151,7 @@ export default class FReviewSort extends Feature {
         }, [Localization.str.processing, Localization.str.wait]);
 
         try {
-            this._reviews = await Background.action("reviews", this._path, this._reviewCount);
+            this._reviews = await Background.action("reviews", this._path, this._pages);
         } finally {
 
             // Delay half a second to avoid dialog flicker when grabbing cache

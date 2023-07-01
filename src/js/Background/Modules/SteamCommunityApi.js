@@ -211,13 +211,12 @@ class SteamCommunityApi extends Api {
         return IndexedDB.get("workshopFileSizes", id, {preventFetch});
     }
 
-    static async fetchReviews({"key": steamId, "params": {reviewCount}}) {
+    static async fetchReviews({"key": steamId, "params": {pages}}) {
         const parser = new DOMParser();
-        const pageCount = 10;
         const reviews = [];
         let defaultOrder = 0;
 
-        for (let p = 1; p <= Math.ceil(reviewCount / pageCount); p++) {
+        for (let p = 1; p <= pages; p++) {
             const doc = parser.parseFromString(await SteamCommunityApi.getPage(`${steamId}/recommended`, {p}), "text/html");
 
             for (const node of doc.querySelectorAll(".review_box")) {
@@ -277,8 +276,8 @@ class SteamCommunityApi extends Api {
         return IndexedDB.put("reviews", {[steamId]: reviews});
     }
 
-    static getReviews(steamId, reviewCount) {
-        return IndexedDB.get("reviews", steamId, {"params": {reviewCount}});
+    static getReviews(steamId, pages) {
+        return IndexedDB.get("reviews", steamId, {"params": {pages}});
     }
 
     /*
