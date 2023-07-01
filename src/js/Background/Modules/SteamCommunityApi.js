@@ -250,7 +250,9 @@ class SteamCommunityApi extends Api {
                 // Count total awards received
                 const awards = Array.from(node.querySelectorAll(".review_award"))
                     .reduce((acc, node) => {
-                        const count = node.classList.contains("more_btn") ? 0 : Number(node.querySelector(".review_award_count").textContent.trim());
+                        const count = node.classList.contains("more_btn") 
+                            ? 0 
+                            : Number(node.querySelector(".review_award_count").textContent.trim());
                         return acc + count;
                     }, 0);
 
