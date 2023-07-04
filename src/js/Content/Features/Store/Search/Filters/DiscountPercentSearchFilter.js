@@ -111,10 +111,9 @@ export class DiscountPercentSearchFilter extends SearchFilter {
             return 0;
         }
 
-        const discountText = discountEl.innerText.replace("-", "").replace("%", "");
-        discount = parseInt(discountText);
-        if (isNaN(discount)) {
-            discount = 0;
+        const discountText = discountEl.innerText.match(/\d+/);
+        if (discountText !== null) {
+            discount = Number(discountText);
         }
         
         return discount;
