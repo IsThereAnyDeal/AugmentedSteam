@@ -3013,7 +3013,8 @@ label.es_dlc_label > input:checked::after {
 .search_results.mixed .as-hide-mixed,
 .search_results.negative .as-hide-negative,
 .search_results.reviews-score .as-reviews-score,
-.search_results .as-reviews-count {
+.search_results .as-reviews-count,
+.search_results .as-discount-percent {
   height: 0;
   margin: 0;
   border: none;
@@ -3039,11 +3040,11 @@ label.es_dlc_label > input:checked::after {
   padding: 7.5px 8px !important; /* 7.5px is the (line-height (28px) - font-size (13px)) / 2 */
 }
 
-.as-reviews-count-filter {
+.as-reviews-count-filter, .as-discount-percent-filter {
   margin-top: 10px;
 }
 
-.as-reviews-count-filter__header {
+.as-reviews-count-filter__header, .as-discount-percent-filter__header {
   margin-left: 8px;
   font-size: 13px;
   font-family: "Motiva Sans", Sans-serif;
@@ -3051,7 +3052,7 @@ label.es_dlc_label > input:checked::after {
   color: #9fbbcb;
 }
 
-.as-reviews-count-filter__content {
+.as-reviews-count-filter__content, .as-discount-percent-filter__content {
   display: flex;
   align-items: center;
   padding: 0 12px;
@@ -3059,7 +3060,7 @@ label.es_dlc_label > input:checked::after {
 }
 
 /* https://github.com/SteamDatabase/SteamTracking/blob/ad1bfe7966cbfc3a8cdff7d0fcc9f3437425b7a8/store.steampowered.com/public/css/v6/search.css#L546 */
-.as-reviews-count-filter__input {
+.as-reviews-count-filter__input, .as-discount-percent-filter__input  {
   min-width: 0;
   background-color: rgba( 0, 0, 0, 0.2 );
   color: #fff;
