@@ -98,23 +98,23 @@ export class DiscountPercentSearchFilter extends SearchFilter {
     _addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-discount-percent])")) {
 
         for (const row of rows) {
-            let discountPercent = this.getDiscountPercent(row);
+            const discountPercent = this.getDiscountPercent(row);
             row.dataset.asDiscountPercent = discountPercent;
         }
     }
 
     getDiscountPercent(row) {
         let discount = 0;
-        const discountEl = row.querySelector('.search_discount');
+        const discountEl = row.querySelector(".search_discount");
         
         if (!discountEl || discountEl.innerText === "") {
-            return 0
+            return 0;
         }
 
-        let temp = discountEl.innerText.replace("-","").replace("%","");
-        discount = parseInt(temp);
+        const discountText = discountEl.innerText.replace("-", "").replace("%", "");
+        discount = parseInt(discountText);
         if (isNaN(discount)) {
-        discount = 0
+            discount = 0;
         }
         
         return discount;
