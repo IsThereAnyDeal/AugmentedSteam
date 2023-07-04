@@ -98,12 +98,12 @@ export class DiscountPercentSearchFilter extends SearchFilter {
     _addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-discount-percent])")) {
 
         for (const row of rows) {
-            const discountPercent = this.getDiscountPercent(row);
+            const discountPercent = this._getDiscountPercent(row);
             row.dataset.asDiscountPercent = discountPercent;
         }
     }
 
-    getDiscountPercent(row) {
+    _getDiscountPercent(row) {
         let discount = 0;
         const discountEl = row.querySelector(".search_discount");
         
