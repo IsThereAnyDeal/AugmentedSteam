@@ -84,7 +84,7 @@ class ManifestTransformerPlugin {
 
                 results.push(match);
 
-                if (match.endsWith("*")) { continue; }
+                if (match.endsWith("*") || match.endsWith("/") || match.includes("?")) { continue; }
 
                 results.push(`${match}?*`);
 
