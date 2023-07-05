@@ -404,7 +404,7 @@ FHighlightsTags._selector = [
     "a.game_area_dlc_row", // DLC on app pages
     "a.small_cap", // Featured storefront items and "recommended" section on app pages
     ".home_content_item", // Small items under "Keep scrolling for more recommendations"
-    ".home_content.single", // Big items under "Keep scrolling for more recommendations"
+    ".home_content.single > .gamelink", // Big items under "Keep scrolling for more recommendations"
     ".home_area_spotlight", // "Special offers" big items
     "a.search_result_row", // Search result rows
     "a.match", // Search suggestions rows
