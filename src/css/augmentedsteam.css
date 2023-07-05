@@ -1917,23 +1917,18 @@ video.highlight_movie:hover + .html5_video_overlay {
 /***************************************
  * Augmented Steam and ITAD menu
  **************************************/
-#es_menu {
-  display: inline-block;
-}
 #es_pulldown {
-  vertical-align: middle;
   display: inline-block;
-  margin: 1px;
   padding-left: 4px;
-  line-height: 19px;
+  line-height: 25px;
+}
+#es_pulldown.focus {
+  color: #ffffff;
 }
 #es_popup {
   display: none;
 }
 #es_popup .popup_menu .hr {
-  height: 1px;
-  background-color: #82807c;
-  width: 90%;
   margin: 2px 12px;
 }
 
