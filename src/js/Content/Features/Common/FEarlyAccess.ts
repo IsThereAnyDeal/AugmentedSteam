@@ -96,6 +96,7 @@ export default class FEarlyAccess extends Feature {
 
             new EarlyAccess({
                 "target": imgHeader.parentElement,
+                "anchor": imgHeader, // Render the component "before" the original image
                 "props": {
                     imageUrl,
                     imgHeader,
