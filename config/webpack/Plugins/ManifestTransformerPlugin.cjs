@@ -25,18 +25,27 @@ class ManifestTransformerPlugin {
                 for (const entry of data.content_scripts) {
 
                     for (const [prop, val] of Object.entries(entry)) {
-                        if (!Array.isArray(val)) {
-                            entry[prop] = [val];
+                        switch (prop) {
+                            case "js":
+                            case "css":
+                                if (!Array.isArray(val)) {
+                                    entry[prop] = [val];
+                                }
+                                break;
+                            case "matches":
+                            case "exclude_matches": {
+                                const valAsArray = Array.isArray(val) ? val : [val];
+                                entry[prop] = this._transformMatches(valAsArray);
+                                break;
+                            }
+                            default:
+                                break;
                         }
                     }
 
                     if (typeof entry.css === "undefined") {
                         entry.css = ["css/augmentedsteam.css"];
                     }
-
-                    entry.matches = this._transformMatches(entry.matches);
-                    // eslint-disable-next-line camelcase -- This property name is enforced by the manifest syntax
-                    entry.exclude_matches = this._transformMatches(entry.exclude_matches);
 
                     for (const path of this._js) {
                         entry.js.unshift(path);
@@ -64,8 +73,6 @@ class ManifestTransformerPlugin {
     }
 
     _transformMatches(matches) {
-
-        if (!Array.isArray(matches)) { return undefined; }
 
         const results = [];
 
