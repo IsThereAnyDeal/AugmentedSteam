@@ -462,42 +462,32 @@ img.astats_icon {
 }
 
 /***************************************
- * Store and Community wishlist buttons
+ * Community app page
+ * FCommunityAppPageWishlist
  **************************************/
 .es-loading-wl {
   width: 16px;
-  filter: brightness(350%); /* to make the image more consitent with others, feel free to replace the image and remove this */
+  /* Makes the image more consitent with others */
+  filter: brightness(350%);
 }
-
 #es_wishlist_success img,
 #es_wishlist_add img {
   margin: 7px 0;
   vertical-align: top;
 }
-
 #es_wishlist_fail {
+  display: none;
   position: absolute;
   right: 0px;
 }
-
-.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success > a:hover .es-in-wl,
-.apphub_OtherSiteInfo:not(.loading) #es_wishlist_success:hover .es-in-wl {
-  display: none !important;
-}
-.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success > a:hover .es-remove-wl,
-.apphub_OtherSiteInfo:not(.loading) #es_wishlist_success:hover .es-remove-wl {
+.apphub_OtherSiteInfo:not(.loading) a:hover img.es-remove-wl {
   display: inline !important;
 }
-.queue_actions_ctn.loading img,
-.apphub_OtherSiteInfo.loading img {
+.apphub_OtherSiteInfo:not(.loading) img:not(.es-in-wl),
+.apphub_OtherSiteInfo.loading img:not(.es-loading-wl),
+.apphub_OtherSiteInfo:not(.loading) a:hover img:not(.es-remove-wl) {
   display: none;
 }
-.queue_actions_ctn.loading #add_to_wishlist_area_success .es-loading-wl,
-.apphub_OtherSiteInfo.loading #es_wishlist_success .es-loading-wl,
-.apphub_OtherSiteInfo.loading #es_wishlist_add .es-loading-wl {
-  display: inline !important;
-}
-
 /***************************************
  * Wishlist and Games page stats
  **************************************/
@@ -1111,12 +1101,24 @@ video.highlight_movie:hover + .html5_video_overlay {
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
 }
+.as_btn_wishlist .btnv6_blue_hoverfade img {
+  vertical-align: middle;
+  margin-left: -6px;
+  margin-top: -2px;
+  margin-right: 3px;
+}
 .queue_btn_menu.on_wishlist #queue_menu_option_on_wishlist .queue_ignore_menu_option_image.selected,
 .queue_btn_menu.on_waitlist #queue_menu_option_on_waitlist .queue_ignore_menu_option_image.selected {
   display: inline-block;
 }
+.queue_actions_ctn:not(.loading) .as_btn_wishlist a:hover img.es-remove-wl {
+  display: inline !important;
+}
 .queue_btn_menu.on_wishlist #queue_menu_option_on_wishlist .queue_ignore_menu_option_image.unselected,
-.queue_btn_menu.on_waitlist #queue_menu_option_on_waitlist .queue_ignore_menu_option_image.unselected {
+.queue_btn_menu.on_waitlist #queue_menu_option_on_waitlist .queue_ignore_menu_option_image.unselected,
+.queue_actions_ctn:not(.loading) .as_btn_wishlist img:not(.es-in-wl),
+.queue_actions_ctn.loading .as_btn_wishlist img:not(.es-loading-wl),
+.queue_actions_ctn:not(.loading) .as_btn_wishlist a:hover img:not(.es-remove-wl) {
   display: none;
 }
 

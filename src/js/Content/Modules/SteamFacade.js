@@ -108,9 +108,9 @@ class SteamFacade {
 
         $J(selector).v_tooltip({
             "tooltipClass": isStore ? "store_tooltip" : "community_tooltip",
-            "dataName": isHtml ? "tooltipHtml" : "tooltipText",
+            "dataAttr": isHtml ? "data-tooltip-html" : "data-tooltip-text",
             "defaultType": isHtml ? "html" : "text",
-            "replaceExisting": false
+            "replaceExisting": true
         });
     }
 

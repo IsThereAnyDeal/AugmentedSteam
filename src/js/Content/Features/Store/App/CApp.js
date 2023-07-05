@@ -1,5 +1,5 @@
 import {GameId, SyncedStorage} from "../../../../modulesCore";
-import {Background, ContextType, User} from "../../../modulesContent";
+import {Background, ContextType} from "../../../modulesContent";
 import {CStoreBase} from "../Common/CStoreBase";
 import {UserNotes} from "../Common/UserNotes";
 import FMediaExpander from "../../Common/FMediaExpander";
@@ -8,7 +8,6 @@ import FDRMWarnings from "../Common/FDRMWarnings";
 import FExtraLinks from "../Common/FExtraLinks";
 import FAddToCartNoRedirect from "../Common/FAddToCartNoRedirect";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
-import FRemoveFromWishlist from "./FRemoveFromWishlist";
 import FForceMP4 from "./FForceMP4";
 import FHDPlayer from "./FHDPlayer";
 import FUserNotes from "./FUserNotes";
@@ -63,7 +62,6 @@ export class CApp extends CStoreBase {
 
         super(ContextType.APP, [
             FReplaceDevPubLinks,
-            FRemoveFromWishlist,
             FForceMP4,
             FHDPlayer,
             FUserNotes,
@@ -141,7 +139,6 @@ export class CApp extends CStoreBase {
          */
         this.isVideoOrHardware = category === "992" || category === "993" || !document.querySelector(".sys_req");
 
-        this.onWishAndWaitlistRemove = null;
         this.userNotes = new UserNotes();
         this.data = this.storePageDataPromise().catch(err => { console.error(err); });
 
@@ -160,14 +157,6 @@ export class CApp extends CStoreBase {
 
     storePageDataPromise() {
         return Background.action("storepagedata", this.appid, this.metalink, SyncedStorage.get("showoc"));
-    }
-
-    removeFromWishlist() {
-        return Background.action("wishlist.remove", this.appid, User.sessionId);
-    }
-
-    removeFromWaitlist() {
-        return Background.action("itad.removefromwaitlist", this.appid);
     }
 
     /**
