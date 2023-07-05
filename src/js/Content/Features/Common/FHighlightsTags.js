@@ -225,27 +225,29 @@ export default class FHighlightsTags extends Feature {
             }
 
             if (node.classList.contains("tab_item")) {
-                node.querySelector(".tab_item_details").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".tab_item_details").prepend(container);
             } else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
-                node.querySelector(".discount_block").insertAdjacentElement("beforebegin", container);
+                node.querySelector(".discount_block").before(container);
             } else if (node.classList.contains("search_result_row")) {
-                node.querySelector(".search_name > div").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".search_name > div").prepend(container);
             } else if (node.classList.contains("browse_tag_game")) {
-                node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", container);
+                node.querySelector(".browse_tag_game_price").after(container);
             } else if (node.classList.contains("game_area_dlc_row")) {
-                node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", container);
+                // Must check discount block first
+                const priceNode = node.querySelector(".discount_block") || node.querySelector(".game_area_dlc_price");
+                priceNode.prepend(container);
             } else if (node.classList.contains("wishlist_row")) {
-                node.querySelector(".addedon").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".addedon").prepend(container);
             } else if (node.classList.contains("match_app")) {
-                node.querySelector(".match_subtitle").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".match_subtitle").prepend(container);
             } else if (node.classList.contains("recommendation_highlight")) {
-                node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".highlight_description").prepend(container);
             } else if (node.classList.contains("similar_grid_item")) {
                 node.querySelector(".regular_price, .discount_block").append(container);
             } else if (node.classList.contains("recommendation_carousel_item")) {
-                node.querySelector(".buttons").insertAdjacentElement("beforebegin", container);
+                node.querySelector(".buttons").before(container);
             } else if (node.classList.contains("friendplaytime_game")) {
-                node.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", container);
+                node.querySelector(".friendplaytime_buttons").before(container);
             }
         }
 
