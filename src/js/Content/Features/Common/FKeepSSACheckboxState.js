@@ -15,7 +15,7 @@ export default class FKeepSSACheckboxState extends Feature {
             node.checked = SyncedStorage.get("keepssachecked");
 
             node.addEventListener("click", () => {
-                SyncedStorage.set("keepssachecked", !SyncedStorage.get("keepssachecked"));
+                SyncedStorage.set("keepssachecked", node.checked);
             });
         }
     }
