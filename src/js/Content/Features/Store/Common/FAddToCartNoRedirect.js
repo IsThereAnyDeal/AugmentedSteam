@@ -1,5 +1,5 @@
-import {Localization, SyncedStorage} from "../../../../modulesCore";
-import {ConfirmDialog, ContextType, Feature} from "../../../modulesContent";
+import {SyncedStorage} from "../../../../modulesCore";
+import {ContextType, Feature} from "../../../modulesContent";
 import {AddToCart} from "./AddToCart";
 
 export default class FAddToCartNoRedirect extends Feature {
@@ -62,25 +62,7 @@ export default class FAddToCartNoRedirect extends Feature {
             const form = getFormEl(node.href);
             if (!form) { return; }
 
-            let enabled = SyncedStorage.get("addtocart_no_redirect");
-
-            // Show feature hint to first time users
-            if (!SyncedStorage.has("addtocart_no_redirect")) {
-                const addToCartStr = Localization.str.addtocart_dialog;
-
-                enabled = await ConfirmDialog.openFeatureHint(
-                    "addtocart_no_redirect",
-                    addToCartStr.title,
-                    addToCartStr.desc,
-                    addToCartStr.continue,
-                    addToCartStr.checkout
-                ) === "OK";
-
-                SyncedStorage.set("addtocart_no_redirect", enabled);
-            }
-
-            // If the dialog is closed or canceled, don't enable feature
-            if (!enabled) { return; }
+            if (!await AddToCart.checkFeatureHint()) { return; }
 
             e.preventDefault();
 

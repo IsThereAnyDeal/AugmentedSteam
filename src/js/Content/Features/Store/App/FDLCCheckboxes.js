@@ -1,4 +1,4 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {HTML, Localization} from "../../../../modulesCore";
 import {Feature, Price, User} from "../../../modulesContent";
 import {AddToCart} from "../Common/AddToCart";
 
@@ -76,8 +76,8 @@ export default class FDLCCheckboxes extends Feature {
 
         const cartBtn = dlcSection.querySelector("#es_selected_btn");
         cartBtn.before(cartForm);
-        cartBtn.addEventListener("click", () => {
-            if (!SyncedStorage.has("addtocart_no_redirect") || SyncedStorage.get("addtocart_no_redirect")) {
+        cartBtn.addEventListener("click", async() => {
+            if (await AddToCart.checkFeatureHint()) {
                 AddToCart.post(cartForm);
             } else {
                 cartForm.submit();

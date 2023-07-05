@@ -1,8 +1,30 @@
-import {Localization} from "../../../../modulesCore";
-import {RequestData} from "../../../modulesContent";
+import {Localization, SyncedStorage} from "../../../../modulesCore";
+import {ConfirmDialog, RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export class AddToCart {
+
+    static async checkFeatureHint() {
+        let enabled = SyncedStorage.get("addtocart_no_redirect");
+
+        // Show feature hint to first time users
+        if (!SyncedStorage.has("addtocart_no_redirect")) {
+            const addToCartStr = Localization.str.addtocart_dialog;
+
+            // If the dialog is closed or canceled, don't enable feature
+            enabled = await ConfirmDialog.openFeatureHint(
+                "addtocart_no_redirect",
+                addToCartStr.title,
+                addToCartStr.desc,
+                addToCartStr.continue,
+                addToCartStr.checkout
+            ) === "OK";
+
+            SyncedStorage.set("addtocart_no_redirect", enabled);
+        }
+
+        return enabled;
+    }
 
     static async post(formEl, onWishlist, addToCartEl) {
 
