@@ -57,7 +57,7 @@ class ManifestTransformerPlugin {
 
                     // If a CSS file exists for an entry point, add it to the list of stylesheets
                     const cssFileName = entry.js[this._js.length].replace(".js", ".css");
-                    if (assets.hasOwnProperty(cssFileName)) {
+                    if (Object.prototype.hasOwnProperty.call(assets, cssFileName)) {
                         entry.css.push(cssFileName);
                     }
                 }
