@@ -64,7 +64,6 @@ const actionCallbacks = new Map([
     ["steampeek", AugmentedSteamApi.steamPeek],
 
     ["appdetails", SteamStoreApi.appDetails],
-    ["appuserdetails", SteamStoreApi.appUserDetails],
     ["currency", SteamStoreApi.currency],
     ["sessionid", SteamStoreApi.sessionId],
     ["wishlists", SteamStoreApi.wishlists],

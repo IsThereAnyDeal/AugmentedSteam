@@ -11,11 +11,11 @@ class SteamCommunityApi extends Api {
      */
 
     static cards(appid, border) {
-        return SteamCommunityApi.getPage(`/my/gamecards/${appid}`, (border ? {"border": 1} : {}));
+        return SteamCommunityApi.getPage(`/my/gamecards/${appid}`, border ? {"border": 1} : {}, true);
     }
 
     static stats(path, appid) {
-        return SteamCommunityApi.getPage(`${path}/stats/${appid}`);
+        return SteamCommunityApi.getPage(`${path}/stats/${appid}`, {}, true);
     }
 
     static async getInventory(contextId) {
@@ -327,7 +327,7 @@ class SteamCommunityApi extends Api {
         const login = LocalStorage.get("login");
         if (login.profilePath === profilePath) { return login; }
 
-        const html = await self.getPage(profilePath);
+        const html = await self.getPage(profilePath, {}, true);
         const profileData = HTMLParser.getVariableFromText(html, "g_rgProfileData", "object");
         const steamId = profileData.steamid;
 
@@ -369,12 +369,12 @@ class SteamCommunityApi extends Api {
         return IndexedDB.delete("profiles", steamId);
     }
 
-    static async getPage(endpoint, query) {
-        const response = await this._fetchWithDefaults(endpoint, query, {"method": "GET"});
-        if (new URL(response.url).pathname === "/login/home/") {
-            throw new Errors.LoginError("community");
-        }
-        return response.text();
+    static getPage(endpoint, query, crossDomain) {
+        return super.getPage(endpoint, query, res => {
+            if (new URL(res.url).pathname === "/login/home/") {
+                throw new Errors.LoginError("community");
+            }
+        }, {}, crossDomain);
     }
 }
 SteamCommunityApi.origin = "https://steamcommunity.com/";

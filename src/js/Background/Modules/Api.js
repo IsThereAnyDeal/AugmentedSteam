@@ -34,7 +34,16 @@ class Api {
         return response.json();
     }
 
-    static async getPage(endpoint, query, responseHandler, params = {}) {
+    static async getPage(endpoint, query, responseHandler, params = {}, crossDomain = false) {
+        if (crossDomain) {
+
+            /**
+             * Pretend we're doing normal navigation to trigger the login flow in case the user's JWT token has expired.
+             * See https://github.com/SteamDatabase/BrowserExtension/blob/27da70af9391026ef194b09e70aaf2bbb302e067/scripts/background.js#L106-L110
+             */
+            Object.assign(params, {"headers": {"Accept": "text/html"}});
+        }
+
         const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "GET"}));
         if (responseHandler) { responseHandler(response); }
         return response.text();
