@@ -1,4 +1,4 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {HTML, Localization} from "../../../../modulesCore";
 import {Feature, Price, User} from "../../../modulesContent";
 import {AddToCart} from "../Common/AddToCart";
 
@@ -41,7 +41,7 @@ export default class FDLCCheckboxes extends Feature {
             }
 
             label.append(checkbox);
-            dlcRow.insertAdjacentElement("beforebegin", label);
+            dlcRow.before(label);
         }
 
         // Toggle dsinfo on label when adding/removing wishlist via ds_options dropdown
@@ -71,13 +71,13 @@ export default class FDLCCheckboxes extends Feature {
 
         const cartForm = document.createElement("form");
         cartForm.name = "add_selected_dlc_to_cart";
-        cartForm.action = "/cart/";
+        cartForm.action = "https://store.steampowered.com/cart/";
         cartForm.method = "POST";
 
         const cartBtn = dlcSection.querySelector("#es_selected_btn");
-        cartBtn.insertAdjacentElement("beforebegin", cartForm);
-        cartBtn.addEventListener("click", () => {
-            if (!SyncedStorage.has("addtocart_no_redirect") || SyncedStorage.get("addtocart_no_redirect")) {
+        cartBtn.before(cartForm);
+        cartBtn.addEventListener("click", async() => {
+            if (await AddToCart.checkFeatureHint()) {
                 AddToCart.post(cartForm);
             } else {
                 cartForm.submit();
@@ -129,8 +129,7 @@ export default class FDLCCheckboxes extends Feature {
 
         dlcSection.addEventListener("change", () => {
 
-            cartForm.innerHTML = "";
-            cartForm.append(inputAction, inputSessionId);
+            cartForm.replaceChildren(inputAction, inputSessionId);
 
             let total = 0;
             for (const node of dlcSection.querySelectorAll(".es_dlc_label > input:checked")) {
