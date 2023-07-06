@@ -1,14 +1,11 @@
 import {GameId, HTML, Localization, SyncedStorage} from "../../../modulesCore";
 import {DOMHelper, DynamicStore, Feature, ITAD, Inventory} from "../../modulesContent";
-import {Page} from "../Page";
 
 export default class FHighlightsTags extends Feature {
 
     async apply() {
 
-        await Page.runInPageContext(() => new Promise(resolve => {
-            window.SteamFacade.onDynamicStoreReady(() => { resolve(); });
-        }), null, true);
+        await DynamicStore.onReady();
 
         return Promise.all([
             FHighlightsTags.highlightTitle(this.context.appid),
