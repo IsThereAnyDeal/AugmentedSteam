@@ -53,22 +53,19 @@ export default class FEquipProfileItems extends CallbackFeature {
             if (btn.classList.contains("es_equip_loading") || btn.classList.contains("btn_disabled")) { return; }
             btn.classList.add("es_equip_loading");
 
-            const formData = new FormData();
-
             /*
              * Note: For duplicate items, assetId won't be the same, and the /IPlayerService/GetProfileItemsOwned/ endpoint
              * will only return one of them (the first one obtained maybe?), but any of them will work for equipping.
              */
-            formData.append("communityitemid", assetId);
+            const data = {"communityitemid": assetId};
 
             if (itemType === "profilemodifier") {
-                formData.append("appid", appid);
-                formData.append("activate", true);
+                Object.assign(data, {appid, "activate": true});
             }
 
             try {
                 const token = await User.accessToken;
-                await RequestData.post(`https://api.steampowered.com${apiPath}?access_token=${token}`, formData, {"credentials": "omit"});
+                await RequestData.post(`https://api.steampowered.com${apiPath}?access_token=${token}`, data, {"credentials": "omit"});
 
                 btn.classList.add("btn_disabled");
             } catch (err) {

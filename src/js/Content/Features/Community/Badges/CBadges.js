@@ -32,7 +32,7 @@ export class CBadges extends CCommunityBase {
             url.searchParams.set("p", p);
 
             try {
-                const response = await RequestData.getHttp(url.toString());
+                const response = await RequestData.getHttp(url);
 
                 const delayedLoadImages = HTMLParser.getVariableFromText(response, "g_rgDelayedLoadImages", "object");
                 const dom = HTML.toDom(response);

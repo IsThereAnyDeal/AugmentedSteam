@@ -65,7 +65,7 @@ export default class FWorkshopFileSizes extends Feature {
         for (let p = 1; p <= Math.ceil(this._total / 30); p++) {
             url.searchParams.set("p", p);
 
-            const result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+            const result = await RequestData.getHttp(url).catch(err => console.error(err));
             if (!result) {
                 console.error(`Failed to request ${url}`);
                 continue;
