@@ -54,9 +54,10 @@ class SteamCommunityApi extends Api {
      * Inventory functions, must be signed in to function correctly
      */
     static async coupons() { // context#3
-        const coupons = new Map();
         const data = await SteamCommunityApi.getInventory(3);
         if (!data) { return null; }
+
+        const coupons = new Map();
 
         for (const description of data.descriptions) {
             if (!description.type || description.type !== "Coupon") { continue; }
@@ -118,13 +119,13 @@ class SteamCommunityApi extends Api {
     static hasCoupon(appid) { return IndexedDB.indexContainsKey("coupons", "appid", appid); }
 
     static async giftsAndPasses() { // context#1, gifts and guest passes
+        const data = await SteamCommunityApi.getInventory(1);
+        if (!data) { return null; }
+
         const gifts = [];
         const passes = [];
 
         let isPackage;
-
-        let data = await SteamCommunityApi.getInventory(1);
-        if (!data) { return null; }
 
         function addGiftsAndPasses(description) {
             const appids = GameId.getAppids(description.value);
@@ -167,25 +168,19 @@ class SteamCommunityApi extends Api {
             }
         }
 
-        data = {
-            "gifts": gifts,
-            "passes": passes,
-        };
-
-        return IndexedDB.put("giftsAndPasses", data);
+        return IndexedDB.put("giftsAndPasses", {gifts, passes});
     }
 
     static hasGiftsAndPasses(appid) {
         return IndexedDB.getFromIndex("giftsAndPasses", "appid", appid, {"all": true, "asKey": true});
     }
 
+    // Only used for market highlighting
     static async items() { // context#6, community items
-        // only used for market highlighting
         const data = await SteamCommunityApi.getInventory(6);
-        if (data) {
-            return IndexedDB.put("items", data.descriptions.map(item => item.market_hash_name));
-        }
-        return null;
+        if (!data) { return null; }
+
+        return IndexedDB.put("items", data.descriptions.map(item => item.market_hash_name));
     }
 
     static hasItem(hashes) { return IndexedDB.contains("items", hashes); }

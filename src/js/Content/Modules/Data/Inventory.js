@@ -6,23 +6,18 @@ class Inventory {
         return Background.action("coupon", appid);
     }
 
-    static async getAppStatus(appids, options) {
+    static async getAppStatus(appid, options) {
 
-        function getStatusObject(giftsAndPasses, hasCoupon) {
-            return {
-                "gift": giftsAndPasses.includes("gifts"),
-                "guestPass": giftsAndPasses.includes("passes"),
-                "coupon": Boolean(hasCoupon),
-            };
-        }
-
-        const opts = {"giftsAndPasses": true,
+        const opts = {
+            "giftsAndPasses": true,
             "coupons": true,
-            ...options};
+            ...options
+        };
 
         if (!opts.giftsAndPasses && !opts.coupons) { return null; }
 
-        const multiple = Array.isArray(appids);
+        const multiple = Array.isArray(appid);
+        const appids = multiple ? appid : [appid];
 
         try {
             const [giftsAndPasses, coupons] = await Promise.all([
@@ -30,26 +25,21 @@ class Inventory {
                 opts.coupons ? Background.action("hascoupon", appids) : Promise.resolve(),
             ]);
 
-            if (multiple) {
-                const results = {};
+            if (!giftsAndPasses && !coupons) { return null; }
 
-                for (const id of appids) {
-                    results[id] = getStatusObject(giftsAndPasses ? giftsAndPasses[id] : [], coupons ? coupons[id] : false);
-                }
+            const status = appids.reduce((acc, id) => {
+                acc[id] = {
+                    "gift": giftsAndPasses ? giftsAndPasses[id].includes("gifts") : false,
+                    "guestPass": giftsAndPasses ? giftsAndPasses[id].includes("passes") : false,
+                    "coupon": coupons ? coupons[id] : false,
+                };
+                return acc;
+            }, {});
 
-                return results;
-            }
-            return getStatusObject(giftsAndPasses || [], typeof coupons === "undefined" ? false : coupons);
+            return multiple ? status : status[appid];
         } catch (err) {
-            if (multiple) {
-                const results = {};
-                for (const id of appids) {
-                    results[id] = getStatusObject([], false);
-                }
-                return results;
-            }
-
-            return getStatusObject([], false);
+            console.error(err);
+            return null;
         }
     }
 
