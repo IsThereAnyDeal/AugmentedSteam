@@ -233,7 +233,8 @@
         "hide_cart": "Hide items in your Cart",
         "hide_ea": "Hide Early Access items",
         "hide_mixed": "Hide mixed rating items",
-        "hide_negative": "Hide negative rating items"
+        "hide_negative": "Hide negative rating items",
+        "hide_sub_package": "Hide packages (subs)"
     },
     "reviews_below": "Items with less reviews than",
     "reviews_below_tooltip": "Enter zero for items without reviews; leave this field empty to disable this feature",
