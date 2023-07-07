@@ -230,6 +230,11 @@
             "min_count": "Min count",
             "max_count": "Max count"
         },
+        "discount_percent": {
+            "count": "Discount percent:",
+            "min_count": "Min %",
+            "max_count": "Max %"
+        },
         "hide_cart": "Hide items in your Cart",
         "hide_ea": "Hide Early Access items",
         "hide_mixed": "Hide mixed rating items",
