@@ -99,8 +99,6 @@
     "spam_comment_show": "__num__ spam reacties verborgen op deze pagina. Klik hier om ze te vertonen.",
     "dlc": "Downloadbare Content.",
     "add_to_wishlist": "Voeg toe aan verlanglijst",
-    "add_to_wishlist_tooltip": "Word via e-mail op de hoogte gebracht wanneer items op je verlanglijst worden uitgebracht of in de uitverkoop gaan",
-    "remove_from_wishlist_tooltip": "Dit product staat al op je verlanglijst. Klik om het van je verlanglijst te verwijderen.",
     "add_to_waitlist": "Voeg toe aan Wachtlijst",
     "language": "Taal",
     "theworddefault": "Standaard",
@@ -222,11 +220,16 @@
     "avg_price_3cards": "Gemiddelde prijs van drie ruilkaarten: __price__",
     "mods": "Modificaties. ",
     "groups": {
+        "leave_groups_confirm": "Weet je zeker dat je __n__ geselecteerde groepen wilt verlaten?",
         "manage_groups": "Groepen beheren",
         "action_groups": "Selecteer hieronder de groepen waar je actie op wilt ondernemen. ",
         "select": "Selecteer:",
         "leave": "Verlaten",
-        "selected": "__n__ geselecteerd"
+        "selected": "__n__ geselecteerd",
+        "leave_admin_confirm": {
+            "currently_admin": "Je bent momenteel beheerder van __name__.",
+            "want_to_leave": "Weet je zeker dat je deze groep wilt verlaten?"
+        }
     },
     "export": {
         "wishlist": "Verlanglijst exporteren",
@@ -240,7 +243,6 @@
     "separator": "Verdeler",
     "empty_wishlist": {
         "title": "Verlanglijst leegmaken",
-        "confirm": "Weet u zeker dat u uw verlanglijstje leeg wilt maken?\nDit kan niet ongedaan gemaakt worden!",
         "removing": "App __cur__ van de __total__ aan het verwijderen..."
     },
     "about": "Over Ons",
@@ -252,7 +254,6 @@
     "notcommon_label": "Verberg spellen die jij hebt",
     "show_all_steam_releases": "Toon alle Steam releases",
     "wishlist": "Verlanglijst",
-    "on_wishlist": "Op Verlanglijst",
     "ignored": "Genegeerd",
     "on_waitlist": "In Wachtlijst",
     "notdiscounted": "Artikelen zonder korting",
@@ -355,7 +356,10 @@
         "players_2weeks": "Spelers in de laatste twee weken",
         "average_playtime": "Gemiddelde speelduur",
         "average_playtime_2weeks": "Gemiddelde speelduur in de laatste twee weken",
-        "formatted_time": "__hours__ uren, __minutes__ minuten"
+        "formatted_time": "__hours__ uren, __minutes__ minuten",
+        "playtime_unit_day": "__days__d",
+        "playtime_unit_hour": "__hours__u",
+        "playtime_unit_minute": "__minutes__m"
     },
     "options": {
         "community_default_tab": "Standaard community thuispagina tabblad",
@@ -454,7 +458,6 @@
         "waitlist": "Items van jouw ITAD Wachtlijst",
         "show_steamchart_info": "Toon SteamCharts.com info",
         "show_steamspy_info": "Toon steamspy.com info",
-        "showallachievements": "Toon achievements statistieken op \"Alle spellen\" pagina",
         "showallstats": "Toon speeltijdstatistieken op \"Alle spellen\" pagina",
         "lowestprice_onwishlist": "Toon op verlanglijst",
         "steamrepapi": "Toon SteamRep status op profiel pagina's",
@@ -565,7 +568,16 @@
             "local": "Locale opslag",
             "itad": "IsThereAnyDeal server"
         },
-        "show_custom_themes": "Laat aangepaste thema's zien"
+        "show_custom_themes": "Laat aangepaste thema's zien",
+        "oneclickremovewl": "Bevestiging bij het verwijderen van voorwerpen overslaan",
+        "profile_pinned_bg": "Positie van profielachtergrond vastzetten tijdens scrollen",
+        "replacecommunityhublinks": "Links naar communityhubs vervangen door winkelpagina's",
+        "hideannouncementcomments": "Opmerkingen onder alle groepsaankondigingen standaard verbergen",
+        "friend_activity": "Vriendenactiviteitsfeed",
+        "confirmdeletecomment": "Bevestiging tonen bij het verwijderen van opmerkingen",
+        "showdeckcompat": "Beoordelingen voor compatibiliteit met Steam Deck tonen in de functielijst (en ontbrekende gegevens ophalen)",
+        "show_survey_info": "Gegevens van prestatievragenlijst tonen",
+        "addtocart_no_redirect": "Doorverwijzing voorkomen bij het toevoegen van artikelen aan de winkelwagen"
     },
     "ready": {
         "errormsg": "Fout tijdens het laden van Augmented Steam gegevens",
@@ -667,7 +679,8 @@
         "total_price": "huidige waarde",
         "in_wishlist": "in verlanglijst",
         "on_sale": "in de verkoop",
-        "no_price": "zonder prijs"
+        "no_price": "zonder prijs",
+        "label": "statistieken"
     },
     "coll": {
         "total_time": "totale tijd",
@@ -732,8 +745,6 @@
     },
     "calc_workshop_size": {
         "file_size": "Bestandsgrootte van __size__",
-        "finished": "Klaar",
-        "calculating": "Aan het berekenen...",
         "calc_size": "Bereken ",
         "total_size": "Totale grootte: __size__"
     },
@@ -746,5 +757,51 @@
     "processing": "Aan het verwerken...",
     "wait": "Wachten a.u.b.",
     "login_warning": "Zorg dat je ingelogd bent bij __link__ om geheel gebruik te maken van Augmented Steam",
-    "youtube_reviews": "YouTube Reviews"
+    "youtube_reviews": "YouTube Reviews",
+    "download_demo_header": "Demo van __gamename__ downloaden",
+    "games_common": "Spellen die je bezit",
+    "games_notcommon": "Spellen die je niet bezit",
+    "shopping_cart_history": "Geschiedenis van winkelwagen weergeven",
+    "manage_webapi_key": "Mijn Steam Web API-sleutel beheren",
+    "steam_cloud_header": "Steam Cloud",
+    "steam_cloud_saves": "Opslagbestanden in de cloud weergeven",
+    "community_hub": "Communityhub",
+    "cart": "Winkelwagen",
+    "feature_hint": {
+        "desc": "Wil je de volgende functie inschakelen?",
+        "reminder": "Je kunt je voorkeuren later wijzigen via de opties."
+    },
+    "thewordyes": "Ja",
+    "thewordno": "Nee",
+    "show_comments": "Opmerkingen weergeven",
+    "hide_comments": "Opmerkingen verbergen",
+    "fav_emoticons_no_access": "Je hebt geen toegang tot deze emoticon",
+    "delete_comment_prompt": "Weet je zeker dat je deze opmerking wilt verwijderen?",
+    "addtocart_dialog": {
+        "error_desc": "Er is een fout opgetreden bij het toevoegen van het artikel aan je winkelwagen.",
+        "title": "Toegevoegd aan winkelwagen",
+        "checkout": "Nee, afrekenen",
+        "continue": "Ja, verder winkelen",
+        "desc": "Het artikel is aan je winkelwagen toegevoegd."
+    },
+    "deck_compat": {
+        "header": "Compatibiliteit met Steam Deck",
+        "unknown": "Onbekend",
+        "unsupported": "Niet-ondersteund",
+        "playable": "Speelbaar",
+        "verified": "Geverifieerd"
+    },
+    "theworderror": "Fout",
+    "no_data": "Geen gegevens",
+    "quick_sell_verify": "Bevestiging van Steam Guard nodig",
+    "show_all": "Alles tonen",
+    "coupon_learn_more": {
+        "link_text": "Meer informatie",
+        "full_text": "__linkdesc__ over Steam-coupons"
+    },
+    "family_sharing_notice": {
+        "notice": "Opmerking:",
+        "desc": "Dit spel is uitgesloten van de gezinsbibliotheek van Steam."
+    },
+    "in_cart": "In winkelwagen"
 }

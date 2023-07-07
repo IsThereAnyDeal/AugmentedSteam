@@ -99,8 +99,6 @@
     "spam_comment_show": "このページで __num__ 件のスパムコメントが非表示にされています。ここをクリックして表示。",
     "dlc": "ダウンロードコンテンツ",
     "add_to_wishlist": "ウィッシュリストに追加",
-    "add_to_wishlist_tooltip": "ウィッシュリストに追加したアイテムのリリース通知やセール通知をメールで受け取ります",
-    "remove_from_wishlist_tooltip": "このアイテムはすでにウィッシュリストに含まれました。クリックしてウィッシュリストから削除します。",
     "add_to_waitlist": "ウェイトリストに追加",
     "language": "言語",
     "theworddefault": "デフォルト",
@@ -241,7 +239,6 @@
     "separator": "区切り記号",
     "empty_wishlist": {
         "title": "ウィッシュリストを空にする",
-        "confirm": "本当にウィッシュリストを空にしてもよろしいですか？\n\nこの操作は元に戻せません！",
         "removing": "__total__個のアプリから__cur__個目を削除しています…"
     },
     "about": "アバウト",
@@ -253,7 +250,6 @@
     "notcommon_label": "自分が所有しているゲームを非表示にする",
     "show_all_steam_releases": "Steam のリリースをすべて表示",
     "wishlist": "ウィッシュリスト",
-    "on_wishlist": "ウィッシュリストに存在",
     "ignored": "無視した",
     "on_waitlist": "ウェイトリスト内",
     "notdiscounted": "割引していないアイテム",
@@ -454,7 +450,6 @@
         "waitlist": "ITADウェイトリスト内のアイテム",
         "show_steamchart_info": "SteamCharts.comの情報を表示",
         "show_steamspy_info": "Steamspy.comの情報を表示",
-        "showallachievements": "「すべてのゲーム」ページで実績統計を表示",
         "showallstats": "「すべてのゲーム」ページでプレイ時間データを表示する",
         "lowestprice_onwishlist": "ウィッシュリストで表示",
         "steamrepapi": "プロフィールページにSteamRepステータスを表示する",
@@ -712,8 +707,6 @@
     },
     "calc_workshop_size": {
         "file_size": "ファイルサイズ__size__",
-        "finished": "完了した",
-        "calculating": "計算中…",
         "calc_size": "合計サイズを計算",
         "total_size": "合計サイズ：__size__"
     },

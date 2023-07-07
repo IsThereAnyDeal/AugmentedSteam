@@ -68,7 +68,6 @@
     "spam_comment_show": "__num__ spam komentářů skryto na této stránce.  Klikněte sem pro jejich zobrazení.",
     "dlc": "Stáhnutelný obsah",
     "add_to_wishlist": "Přidat do Seznamu přání",
-    "add_to_wishlist_tooltip": "Přidejte tento produkt do svého seznamu přání a budete upozorněni na jeho vydání nebo zlevnění.",
     "language": "Jazyk",
     "theworddefault": "Výchozí",
     "show": "Ukázat",
@@ -170,8 +169,7 @@
     "avg_price_3cards": "Průměrná cena 3 sběratelských karet: __price__",
     "mods": "Módy",
     "empty_wishlist": {
-        "title": "Vyprázdnit Seznam přání",
-        "confirm": "Jste si jistý, že chcete vymazat váš seznam přání?\n\nTato akce je nevratná!"
+        "title": "Vyprázdnit Seznam přání"
     },
     "about": "O rozšíření",
     "never": "Nikdy",
@@ -182,7 +180,6 @@
     "notcommon_label": "Schovat hry, které vlastníte",
     "show_all_steam_releases": "Zobrazit vše vydané ve službě Steam",
     "wishlist": "Seznam přání",
-    "on_wishlist": "Seznam přání",
     "notdiscounted": "Nezlevněné položky",
     "cancel": "Zrušit",
     "wiki_article": "Ukázat článek __pcgw__",
@@ -333,7 +330,6 @@
         "guest": "Položky, na které máte Guest Pass",
         "show_steamchart_info": "Ukázat informace ze SteamCharts.com",
         "show_steamspy_info": "Zobrazit steamspy.com info",
-        "showallachievements": "Ukázat statistiky achievementů na stránce \"Všechny hry\"",
         "lowestprice_onwishlist": "Ukázat v Seznamu přání",
         "steamrepapi": "Ukázat SteamRep status na profilových stránkách",
         "header": "Hlavička",

@@ -68,7 +68,6 @@
     "spam_comment_show": "\"__num__\"Spamkommentarer dolda på denna sida. Klicka här för att visa dem.",
     "dlc": "Nedladdningsbart innehåll",
     "add_to_wishlist": "Lägg till i önskelistan",
-    "add_to_wishlist_tooltip": "Få ett e-postmeddelande när artiklar i din önskelista släpps eller är på rea.",
     "language": "Språk",
     "theworddefault": "Standard",
     "show": "Visa",
@@ -170,8 +169,7 @@
     "avg_price_3cards": "Genomsnittspris för tre samlarkort: __price__",
     "mods": "Modifikationer",
     "empty_wishlist": {
-        "title": "Töm önskelistan",
-        "confirm": "Är du säker på att du vill tömma din önskelista?\n\nÅtgärden kan inte ångras!"
+        "title": "Töm önskelistan"
     },
     "about": "Om",
     "never": "Aldrig",
@@ -182,7 +180,6 @@
     "notcommon_label": "Göm spel som du äger",
     "show_all_steam_releases": "Visa alla Steamsläpp",
     "wishlist": "Önskelista",
-    "on_wishlist": "På önskelista",
     "notdiscounted": "Artiklar ej rabatterade",
     "cancel": "Avbryt",
     "wiki_article": "Visa __pcgw__ artikel",
@@ -333,7 +330,6 @@
         "guest": "Föremål som du har gästpass till",
         "show_steamchart_info": "Visa information ifrån SteamCharts.com",
         "show_steamspy_info": "Visa steamspy.com information",
-        "showallachievements": "Visa framstegsstatistik i \"Alla spel\" sida",
         "lowestprice_onwishlist": "Visa på Önskelistan",
         "steamrepapi": "Visa status för SteamRep på profilsidan",
         "header": "Sidhuvud",

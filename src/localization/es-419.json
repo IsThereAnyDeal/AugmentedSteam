@@ -99,8 +99,6 @@
     "spam_comment_show": "__num__ comentarios ocultos marcados como spam. Haz clic aquí para mostrarlos.",
     "dlc": "Contenido Descargable",
     "add_to_wishlist": "Agregar a tu lista de deseados",
-    "add_to_wishlist_tooltip": "Recibe una notificación por email cuando sus artículos deseados se lancen o estén en oferta",
-    "remove_from_wishlist_tooltip": "Este producto ya está en tu lista de deseados. Haz clic para eliminarlo de tu lista de deseados.",
     "add_to_waitlist": "Agregar a tu Lista de Espera",
     "language": "Idioma",
     "theworddefault": "Por defecto",
@@ -245,7 +243,6 @@
     "separator": "Separador",
     "empty_wishlist": {
         "title": "Vaciar lista de deseados",
-        "confirm": "¿Estás seguro que deseas vaciar tu lista de deseados?\n\n¡Esta acción no se puede deshacer!",
         "removing": "Removiendo aplicación __cur__ de __total__..."
     },
     "about": "Acerca de",
@@ -257,7 +254,6 @@
     "notcommon_label": "Ocultar juegos que ya tienes",
     "show_all_steam_releases": "Mostrar todos los lanzamientos de Steam",
     "wishlist": "Lista de deseados",
-    "on_wishlist": "En Lista de Deseados",
     "ignored": "Ignorado",
     "on_waitlist": "En lista de espera",
     "notdiscounted": "Artículos sin descuento",
@@ -462,7 +458,6 @@
         "waitlist": "Artículos en tu Lista de Espera de ITAD",
         "show_steamchart_info": "Mostrar información de SteamCharts.com",
         "show_steamspy_info": "Mostrar información de steamspy.com",
-        "showallachievements": "Mostrar estadísticas de los logros en la página \"Todos los juegos\"",
         "showallstats": "Mostrar estadísticas de tiempo de juego en la página de \"Todos los Juegos\"",
         "lowestprice_onwishlist": "Mostrar al pasar el cursor sobre los artículos de la lista de deseados",
         "steamrepapi": "Mostrar estado SteamRep en las páginas de perfil",
@@ -750,8 +745,6 @@
     },
     "calc_workshop_size": {
         "file_size": "Tamaño de archivo __size__",
-        "finished": "Terminado",
-        "calculating": "Calculando...",
         "calc_size": "Calcular Tamaño Total",
         "total_size": "Tamaño total: __size__"
     },

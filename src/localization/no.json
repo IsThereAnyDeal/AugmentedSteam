@@ -68,7 +68,6 @@
     "spam_comment_show": "__num__ spam-kommentarer skjult på denne siden.  Klikk her for å vise dem.",
     "dlc": "Nedlastbart innhold",
     "add_to_wishlist": "Legg til i ønskelisten din",
-    "add_to_wishlist_tooltip": "Bli varslet på e-post når gjenstander på ønskelisten gis ut eller er på salg",
     "language": "Språk",
     "theworddefault": "Standard",
     "show": "Vis",
@@ -170,8 +169,7 @@
     "avg_price_3cards": "Gjennomsnittspris for tre samlekort: __price__",
     "mods": "Modifikasjoner",
     "empty_wishlist": {
-        "title": "Tøm ønskeliste",
-        "confirm": "Er du sikker på at du vil tømme ønskelisten din?\n\nDenne handlingen kan ikke omgjøres!"
+        "title": "Tøm ønskeliste"
     },
     "about": "Om",
     "never": "Aldri",
@@ -182,7 +180,6 @@
     "notcommon_label": "Skjul spill som du eier",
     "show_all_steam_releases": "Vis alle Steam-utgivelser",
     "wishlist": "Ønskeliste",
-    "on_wishlist": "På ønskelisten",
     "notdiscounted": "Gjenstander er ikke rabattert",
     "cancel": "Avbryt",
     "wiki_article": "Vis __pcgw__-artikkel",
@@ -333,7 +330,6 @@
         "guest": "Gjenstander du har et gjestepass for",
         "show_steamchart_info": "Vis SteamCharts.com-informasjon",
         "show_steamspy_info": "Vis steamspy.com info",
-        "showallachievements": "Vis prestasjonsstatistikk på \"Alle spill\"-siden",
         "lowestprice_onwishlist": "Vis på ønskeliste",
         "steamrepapi": "Vis SteamRep-status på profilsider",
         "header": "Topptekst",

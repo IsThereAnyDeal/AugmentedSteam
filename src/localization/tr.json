@@ -19,7 +19,7 @@
     "oneclickgoo": "Tek Tık ile Cevhere Dönüştür...",
     "view_in_library": "Kütüphanede Görüntüle",
     "support": "Destek",
-    "email": "E-Posta",
+    "email": "E-posta",
     "contact": "İletişim",
     "fav_emoticons_dragging": "Simgeleri favorilere eklemek için buraya sürükleyin",
     "post_history": "Gönderi geçmişini görüntüle",
@@ -28,7 +28,7 @@
     "dlc_details": "İndirilebilir Öğe Ayrıntıları",
     "badge_not_unlocked": "Açılmamış",
     "each": "Her biri",
-    "view_in_market": "Topluluk Pazarı'nda Görüntüle",
+    "view_in_market": "Topluluk Pazarında Görüntüle",
     "homepage_spotlight": "Öne Çıkanlar",
     "remove": "Kaldır",
     "get_help": "Yardım Al",
@@ -99,8 +99,6 @@
     "spam_comment_show": "Bu sayfadaki  __num__  spam yorumu gizlendi. Görmek için buraya tıklayın.",
     "dlc": "İndirilebilir İçerik",
     "add_to_wishlist": "İstek listene ekle",
-    "add_to_wishlist_tooltip": "İstek listenizdeki ürünler çıktığı zaman veya indirime girdiği zaman e-posta ile bildirim alın.",
-    "remove_from_wishlist_tooltip": "Bu ürün zaten istek listesinde. Listenden silmek için tıkla.",
     "add_to_waitlist": "Bekleme listene ekle",
     "language": "Dil",
     "theworddefault": "Varsayılan",
@@ -129,6 +127,7 @@
     "read_reviews": "Değerlendirmeleri Oku",
     "read_more_reviews": "Daha fazla değerlendirme oku:",
     "gameplay": "Oynanış",
+    "youtube_gameplay": "YouTube Oynanış",
     "size": "Boyut",
     "package_info": "Paket Bilgisi",
     "badge_completion_avg": "Ortalama Tamamlama Tutarı: __cost__",
@@ -195,6 +194,7 @@
     "visit_store": "Mağaza Sayfasına Git",
     "all": "Hepsi",
     "total_spent": "Toplam Harcanan",
+    "external_funds": "Kullanılan Dış Fonlar",
     "games_with_drops": "Kart düşürülebilen __dropsgames__ oyun",
     "binder_view": "Katalog Görünümü",
     "view_stats": "İstatistikleri göster",
@@ -220,11 +220,16 @@
     "avg_price_3cards": "3 takas kartı için en fazla fiyat: __price__",
     "mods": "Modlar",
     "groups": {
+        "leave_groups_confirm": "Seçilen __n__ grubundan ayrılmak istiyor musunuz?",
         "manage_groups": "Grupları yönet",
         "action_groups": "İşlem yapmak istediğin grupları aşağıdan seç.",
         "select": "Seç:",
         "leave": "Ayrıl",
-        "selected": "__n__ seçili"
+        "selected": "__n__ seçili",
+        "leave_admin_confirm": {
+            "currently_admin": "Şu anda __name__ üstünde yöneticisisiniz.",
+            "want_to_leave": "Bu gruptan ayrılmak istediğinizden emin misiniz?"
+        }
     },
     "export": {
         "wishlist": "İstek listesini dışarı aktar",
@@ -238,7 +243,6 @@
     "separator": "Ayraç",
     "empty_wishlist": {
         "title": "İstek listesini temizle",
-        "confirm": "İstek listeni boşaltmak istediğine emin misin?\n\nBu işlem geri alınamaz!",
         "removing": "Uygulama __cur__ / __total__ kaldırılıyor..."
     },
     "about": "Hakkında",
@@ -250,7 +254,6 @@
     "notcommon_label": "Sahip olduğun oyunları gizle",
     "show_all_steam_releases": "Steam'de çıkanların tümünü göster",
     "wishlist": "İstek Listesi",
-    "on_wishlist": "İstek Listesinde",
     "ignored": "Yok Sayılmış",
     "on_waitlist": "Bekleme Listesinde",
     "notdiscounted": "İndirimde olmayan öğeler",
@@ -353,7 +356,10 @@
         "players_2weeks": "Son iki hafta içinde oyuncular",
         "average_playtime": "Ortalama oynama süresi",
         "average_playtime_2weeks": "Son iki haftada ortalama oynama süresi",
-        "formatted_time": "__hours__ saat, __minutes__ dakika"
+        "formatted_time": "__hours__ saat, __minutes__ dakika",
+        "playtime_unit_day": "__days__g",
+        "playtime_unit_hour": "__hours__s",
+        "playtime_unit_minute": "__minutes__d"
     },
     "options": {
         "community_default_tab": "Varsayılan topluluk ana sayfası sekmesi",
@@ -399,10 +405,12 @@
         "disablelinkfilter": "Dış sitelerine erişirken onayı devre dışı bırak",
         "regional_price_on": "Karşılaştırmada bölgesel fiyatları göster",
         "friends_own": "Arkadaşlarının sahip oldukları öğeler",
+        "horizontalscrolling": "Fare tekerleği ile yatay kaydırmayı etkinleştir",
         "supportinfo": "Mağaza sayfalarında destek bilgisini göster",
         "drm": "Üçüncü parti DRM uyarılarını göster",
         "show_regionwarning": "Hesap dışı bir bölgede geziyorsam uyar",
         "foot_link": "Augmented Steam Eklentisi",
+        "profile_link_images": "Profil ve Grup bağlantıları görüntü biçimi",
         "library": "Kütüphane düğmesini başlıkta göster",
         "show1clickgoo": "Uygulanabilir envanter eşyalarında \"Tek Tıkla Cevher'e Dönüştür\" düğmesini göster",
         "hidedlcunownedgames": "Oyunların sahip olmadığın DLC'leri",
@@ -450,7 +458,6 @@
         "waitlist": "ITAD Bekleme Listendeki Öğeler",
         "show_steamchart_info": "SteamCharts.com bilgisini göster",
         "show_steamspy_info": "Steamspy.com bilgisini göster",
-        "showallachievements": "\"Tüm Oyunlar\" sayfasında başarım istatistiklerini göster",
         "showallstats": "\"Tüm Oyunlar\" sayfasında oynama istatistiklerini göster",
         "lowestprice_onwishlist": "İstek Listesinde Göster",
         "steamrepapi": "SteamRep durumunu profil sayfalarında göster",
@@ -547,8 +554,30 @@
         },
         "removebroadcasts": "Bütün canlı yayınları tamamen kaldır",
         "maintainers": "Proje Sorumluları",
-        "apppage": "Uygulama Sayfası",
-        "hideannouncementcomments": "Varsayılan olarak tüm grup duyurularının altındaki yorumları gizle"
+        "with_help_of": "__contributors__ çok fazla yardımları ile",
+        "contributors": "çok katkısı olanlar",
+        "apppage": "Uygulama sayfası",
+        "exfgls": "Uygulama Aile Paylaşımı yoksa bildirim göster",
+        "saving": "Kaydediliyor...",
+        "user_notes": {
+            "user_notes": "Kullanıcı notları",
+            "app": "Uygulama sayfalarında",
+            "wishlist": "İstek listemde",
+            "loc": "Depolama konumu",
+            "synced_storage": "Eşitlenmiş/Yerel depo",
+            "local": "Yerel veritabanı",
+            "itad": "IsThereAnyDeal sunucu"
+        },
+        "show_custom_themes": "Özel temaları göster",
+        "oneclickremovewl": "Öğeleri kaldırırken onayı atla",
+        "profile_pinned_bg": "Kaydırma yaparken profil arka plan konumunu sabitle",
+        "replacecommunityhublinks": "Topluluk merkezi bağlantılarını mağaza bağlantılarıyla değiştir",
+        "hideannouncementcomments": "Varsayılan olarak tüm grup duyurularının altındaki yorumları gizle",
+        "friend_activity": "Arkadaş Etkinliği Akışı",
+        "confirmdeletecomment": "Yorumları silerken onayı göster",
+        "showdeckcompat": "Özellikler listesinde Steam Deck uyumluluk derecelendirmelerini gösterin (ve eksik olduğunda verileri alın)",
+        "show_survey_info": "Performans Anketi verilerini göster",
+        "addtocart_no_redirect": "Sepetinize ürün eklerken yeniden yönlendirmeyi önle"
     },
     "ready": {
         "errormsg": "Augmented Steam verilerini yüklerken hata oluştu",
@@ -600,6 +629,7 @@
     },
     "wallet": {
         "custom_amount": "Farklı bir miktar ekle",
+        "custom_amount_text": "__minamount__ üzerindeki herhangi bir tutar",
         "custom_giftcard": "__input__ Özel Hediye Kartını Seç"
     },
     "wsgf": {
@@ -626,7 +656,8 @@
     },
     "tradeoffer": {
         "num_item": "__num__ öğe",
-        "num_items": "__num__ öğe"
+        "num_items": "__num__ öğe",
+        "back": "İşlem Tekliflerine Geri Dön"
     },
     "update": {
         "dont_show": "Tekrar Gösterme",
@@ -648,7 +679,8 @@
         "total_price": "geçerli değer",
         "in_wishlist": "istek listesinde",
         "on_sale": "indirimde",
-        "no_price": "fiyatsız"
+        "no_price": "fiyatsız",
+        "label": "İstatistik"
     },
     "coll": {
         "total_time": "toplam süre",
@@ -661,7 +693,15 @@
         "update": "Notu güncelle",
         "add_prompt": "Notunuzu girin",
         "update_prompt": "Notunuzu güncelleyin",
-        "add_for_game": "__gamename__ için not"
+        "add_for_game": "__gamename__ için not",
+        "not_enough_space": "Notu kaydetmek için yeterli alan yok",
+        "not_enough_space_desc": "Kullanılmış depolama bağdaştırıcınız daha fazla veri kaydına izin vermediğinden (depolama kapasitesinin ~__perc__% kullanmaya çalışıyor) Augmented Steam daha fazla kullanıcı notu kaydedemez.",
+        "close_on_storage": "Depolama alanı dolmak üzere",
+        "close_on_storage_desc": "Augmented Steam, mevcut depolama konumuna daha fazla kullanıcı notu (~__perc__% depolama kullanımı) kaydedemeyecek.",
+        "storage_warning_desc": "Kullanıcı notlarınızı yerel bir veritabanında (eşitleme olmadan) depolamayı seçebilir veya tarayıcınız tarafından sağlanan depolama yöntemini kullanmaya devam edebilirsiniz (burada yeni notlar yalnızca bazı eskileri silerseniz eklenebilir).",
+        "save_itad": "Notları ITAD sunucusuna kaydet",
+        "save_synced_storage": "Eşitlenmiş depolama alanını kullanmaya devam et",
+        "save_local": "Notları yerel olarak depola"
     },
     "queue": {
         "new": "Yeni Kuyruk",
@@ -705,8 +745,6 @@
     },
     "calc_workshop_size": {
         "file_size": "Dosya sayısı __size__",
-        "finished": "Bitti",
-        "calculating": "Hesaplanıyor...",
         "calc_size": "Toplam Boyutu Hesapla",
         "total_size": "Toplam boyut: __size__"
     },
@@ -719,5 +757,51 @@
     "processing": "İşleniyor...",
     "wait": "Lütfen bekleyin",
     "login_warning": "Augmented Steam'in tüm özelliklerini kullanabilmek için __link__ adresinden oturum açtığınıza emin olun.",
-    "youtube_reviews": "YouTube İncelemeleri"
+    "youtube_reviews": "YouTube İncelemeleri",
+    "download_demo_header": "__gamename__ Demo indir",
+    "games_common": "Sahip olduğunuz oyunlar",
+    "games_notcommon": "Sahibi olmadığınız oyunlar",
+    "shopping_cart_history": "Alışveriş sepeti geçmişini görüntüle",
+    "manage_webapi_key": "Steam Web API anahtarımı yönet",
+    "steam_cloud_header": "Steam Bulut",
+    "steam_cloud_saves": "Bulut kayıtlarını görüntüle",
+    "community_hub": "Topluluk Merkezi",
+    "cart": "Sepet",
+    "feature_hint": {
+        "desc": "Aşağıdaki özelliği etkinleştirmek ister misiniz?",
+        "reminder": "Tercihlerinizi daha sonra seçenekler sayfasından değiştirebilirsiniz."
+    },
+    "thewordyes": "Evet",
+    "thewordno": "Hayır",
+    "show_comments": "Yorumları Göster",
+    "hide_comments": "Yorumları Gizle",
+    "fav_emoticons_no_access": "Bu ifadeye erişiminiz yok",
+    "delete_comment_prompt": "Bu yorumu silmek istediğinizden emin misiniz?",
+    "addtocart_dialog": {
+        "error_desc": "Ürününü sepete eklerken bir hata oluştu.",
+        "title": "Alışveriş sepetine eklendi",
+        "checkout": "Hayır, ödeme",
+        "continue": "Evet, alışverişe devam et",
+        "desc": "Ürün Alışveriş Sepetinize eklenmiştir."
+    },
+    "deck_compat": {
+        "header": "Steam Deck Uyumluluğu",
+        "unknown": "Bilinmeyen",
+        "unsupported": "Desteklenmiyor",
+        "playable": "Oynanabilir",
+        "verified": "Onaylı"
+    },
+    "theworderror": "Hata",
+    "no_data": "Veri yok",
+    "quick_sell_verify": "Steam Guard onayı gerekli",
+    "show_all": "Tümünü Göster",
+    "coupon_learn_more": {
+        "link_text": "Daha fazla",
+        "full_text": "__linkdesc__  Steam Kuponları"
+    },
+    "family_sharing_notice": {
+        "notice": "Uyarı:",
+        "desc": "Bu oyun Steam Aile Paylaşımı hizmetinden hariç tutulmuştur."
+    },
+    "in_cart": "Sepetinizde"
 }
