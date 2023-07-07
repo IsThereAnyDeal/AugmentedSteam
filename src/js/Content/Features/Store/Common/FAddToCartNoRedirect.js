@@ -18,10 +18,11 @@ export default class FAddToCartNoRedirect extends Feature {
             const matches = href.match(/^javascript:([^(]+)\((.+)?\)/);
             if (matches === null) { return null; }
 
+            const fnName = matches[1];
             const arg = (matches[2] ?? "").trim();
             let formName;
 
-            switch (matches[1]) {
+            switch (fnName) {
                 case "addToCart":
                     formName = `add_to_cart_${arg}`;
                     break;
