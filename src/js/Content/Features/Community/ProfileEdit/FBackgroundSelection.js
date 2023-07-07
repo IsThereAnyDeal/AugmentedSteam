@@ -145,7 +145,7 @@ export default class FBackgroundSelection extends Feature {
                             return a.levenshtein - b.levenshtein;
                         });
 
-                        matchingGames = matchingGames.slice(0, 100);
+                        matchingGames = matchingGames.slice(0, 20);
 
                         let list = "";
                         for (const [appid, title] of matchingGames) {
