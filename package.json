@@ -26,7 +26,6 @@
     "marked": "^5.0.2",
     "merge-json-webpack-plugin": "^6.1.0",
     "mini-css-extract-plugin": "^2.7.5",
-    "svelte": "^3.59.1",
     "svelte-check": "^3.3.2",
     "svelte-loader": "^3.1.7",
     "svelte-preprocess": "^5.0.3",
@@ -42,6 +41,7 @@
   "dependencies": {
     "dompurify": "^3.0.3",
     "idb": "^7.1.1",
+    "svelte": "^3.59.1",
     "webextension-polyfill": "^0.10.0"
   }
 }
