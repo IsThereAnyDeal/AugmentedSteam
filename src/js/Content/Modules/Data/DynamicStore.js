@@ -1,7 +1,40 @@
 import {GameId} from "../../../Core/GameId";
 import {Background} from "../Background";
+import {Messenger} from "../Messenger";
+import {Page} from "../../Features/Page";
 
 class DynamicStore {
+
+    static onReady() {
+        return Page.runInPageContext(() => new Promise(resolve => {
+            window.GDynamicStore.OnReady(() => { resolve(); });
+        }), null, true);
+    }
+
+    static invalidateCacheHandler() {
+
+        Messenger.onMessage("DSObject").then(isDefined => {
+            if (isDefined) {
+                Messenger.addMessageListener("DSInvalidateCache", DynamicStore.clear);
+            }
+        });
+
+        Page.runInPageContext(() => {
+            if (typeof window.GDynamicStore === "undefined") {
+                window.Messenger.postMessage("DSObject", false);
+                return;
+            }
+
+            window.Messenger.postMessage("DSObject", true);
+
+            const oldFunc = window.GDynamicStore.InvalidateCache;
+            window.GDynamicStore.InvalidateCache = function(...args) {
+                oldFunc.call(this, args);
+
+                window.Messenger.postMessage("DSInvalidateCache");
+            };
+        });
+    }
 
     static clear() {
         return Background.action("dynamicstore.clear");

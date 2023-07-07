@@ -93,10 +93,6 @@ class SteamFacade {
         return GDynamicStore.DecorateDynamicItems($J(selector), bForceRecalculate);
     }
 
-    static onDynamicStoreReady(callback) {
-        return GDynamicStore.OnReady(callback);
-    }
-
     static storeItemDataBindHover(selector, unAppID, unPackageID, unBundleID, rgAdditionalParams) {
         GStoreItemData.BindHoverEvents($J(selector), unAppID, unPackageID, unBundleID, rgAdditionalParams);
     }

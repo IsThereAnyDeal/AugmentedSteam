@@ -1,5 +1,5 @@
 import {HTML, LocalStorage, Localization} from "../../../../modulesCore";
-import {Background, Feature} from "../../../modulesContent";
+import {Background, DynamicStore, Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FSteamPeek extends Feature {
@@ -23,10 +23,7 @@ export default class FSteamPeek extends Feature {
                 </div>
             </div>`);
 
-        // TODO Create a global handler for DS loading
-        await Page.runInPageContext(() => new Promise(resolve => {
-            window.SteamFacade.onDynamicStoreReady(() => { resolve(); });
-        }), null, true);
+        await DynamicStore.onReady();
 
         const [steamTab, steamPeekTab, content] = this._moreLikeThis
             .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");

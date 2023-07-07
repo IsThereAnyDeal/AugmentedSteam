@@ -298,6 +298,8 @@ class AugmentedSteam {
             AugmentedSteam._replaceAccountName();
             AugmentedSteam._launchRandomButton();
             AugmentedSteam._bindLogout();
+
+            DynamicStore.invalidateCacheHandler();
         }
     }
 }
