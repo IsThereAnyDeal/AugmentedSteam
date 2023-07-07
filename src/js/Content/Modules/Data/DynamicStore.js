@@ -13,10 +13,19 @@ class DynamicStore {
 
     static invalidateCacheHandler() {
 
-        Messenger.addMessageListener("DSInvalidateCache", DynamicStore.clear);
+        Messenger.onMessage("DSObject").then(isDefined => {
+            if (isDefined) {
+                Messenger.addMessageListener("DSInvalidateCache", DynamicStore.clear);
+            }
+        });
 
         Page.runInPageContext(() => {
-            if (typeof window.GDynamicStore === "undefined") { return; }
+            if (typeof window.GDynamicStore === "undefined") {
+                window.Messenger.postMessage("DSObject", false);
+                return;
+            }
+
+            window.Messenger.postMessage("DSObject", true);
 
             const oldFunc = window.GDynamicStore.InvalidateCache;
             window.GDynamicStore.InvalidateCache = function(...args) {
