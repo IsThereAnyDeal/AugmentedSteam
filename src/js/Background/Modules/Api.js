@@ -10,7 +10,7 @@ class Api {
      */
     static _fetchWithDefaults(endpoint, query = {}, params = {}) {
         // AS APIs require trailing slash
-        const _endpoint = endpoint.endsWith("/") ? endpoint : endpoint + "/";
+        const _endpoint = endpoint.endsWith("/") ? endpoint : `${endpoint}/`;
         const url = new URL(_endpoint, this.origin);
         const _params = {...this.params, ...params};
         if (_params.method === "POST" && !_params.body) {
