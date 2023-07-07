@@ -193,7 +193,7 @@ class CurrencyManager {
     static _getCurrencyFromWallet() {
         const walletInfo = HTMLParser.getVariableFromDom("g_rgWalletInfo", "object");
         if (walletInfo && walletInfo.wallet_currency) {
-            return CurrencyManager.currencyNumberToType(walletCurrency.wallet_currency);
+            return CurrencyManager.currencyNumberToType(walletInfo.wallet_currency);
         }
     }
 
