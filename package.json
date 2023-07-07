@@ -4,7 +4,8 @@
     "build": "node config/scripts/build.cjs",
     "update-locales": "node config/scripts/locales.cjs",
     "release": "node config/scripts/make-release.cjs",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "check": "eslint . & npx tsc --noEmit & svelte-check"
   },
   "devDependencies": {
     "@types/webextension-polyfill": "^0.10.0",
@@ -19,6 +20,7 @@
     "css-loader": "^6.7.3",
     "css-minimizer-webpack-plugin": "^5.0.0",
     "eslint": "^8.40.0",
+    "eslint-plugin-svelte": "^2.32.2",
     "filemanager-webpack-plugin": "^8.0.0",
     "form-data": "^4.0.0",
     "jsdom": "^22.0.0",
