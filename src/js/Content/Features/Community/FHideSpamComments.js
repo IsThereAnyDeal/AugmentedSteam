@@ -9,8 +9,7 @@ export default class FHideSpamComments extends Feature {
 
     apply() {
 
-        this._spamRgx = new RegExp(SyncedStorage.get("spamcommentregex"), "i");
-        this.handleAllCommentThreads();
+        FHideSpamComments.handleAllCommentThreads();
 
         // TODO this should be moved to CCommunityBase and support other features
         const modalWait = document.querySelector("#modalContentWait");
@@ -21,12 +20,16 @@ export default class FHideSpamComments extends Feature {
             if (!modalContainer) { return; }
 
             const latestFrame = window.frames[window.frames.length - 1]; // Only check latest added frame
-            this.handleAllCommentThreads(latestFrame.document);
+            FHideSpamComments.handleAllCommentThreads(latestFrame.document);
         }).observe(modalWait, {"attributes": true});
     }
 
-    handleAllCommentThreads(parent = document) {
+    static handleAllCommentThreads(parent = document) {
         if (!SyncedStorage.get("hidespamcomments")) { return; }
+
+        if (typeof this._spamRgx === "undefined") {
+            this._spamRgx = new RegExp(SyncedStorage.get("spamcommentregex"), "i");
+        }
 
         const nodes = parent.querySelectorAll(".commentthread_comment_container:not(.esi_commentthread)");
         for (const node of nodes) {
@@ -35,7 +38,7 @@ export default class FHideSpamComments extends Feature {
         }
     }
 
-    _addCommentThreadObserver(threadNode) {
+    static _addCommentThreadObserver(threadNode) {
         if (threadNode.dataset.esiCommentObserver) { return; }
         threadNode.dataset.esiCommentObserver = "1";
 
@@ -43,12 +46,12 @@ export default class FHideSpamComments extends Feature {
             .observe(threadNode.querySelector(".commentthread_comments"), {"childList": true});
     }
 
-    _updateCommentThread(node) {
+    static _updateCommentThread(node) {
         const countHidden = this._hideSpamComments(node);
         this._toggleHiddenCommentsButton(node, countHidden);
     }
 
-    _toggleHiddenCommentsButton(threadNode, count) {
+    static _toggleHiddenCommentsButton(threadNode, count) {
         threadNode.classList.add("esi_commentthread");
 
         let button = threadNode.querySelector(".esi_commentthread_button");
@@ -75,7 +78,7 @@ export default class FHideSpamComments extends Feature {
         threadNode.classList.remove("esi_commentthread--showspam");
     }
 
-    _hideSpamComments(threadNode) {
+    static _hideSpamComments(threadNode) {
         const nodes = threadNode.querySelectorAll(".commentthread_comment .commentthread_comment_text");
         let hiddenCount = 0;
         for (const node of nodes) {
