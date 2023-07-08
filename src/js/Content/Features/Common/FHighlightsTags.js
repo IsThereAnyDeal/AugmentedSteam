@@ -230,9 +230,7 @@ export default class FHighlightsTags extends Feature {
             }
         }
 
-        if (!container.querySelector(`.es_tag_${tag}`)) {
-            HTML.beforeEnd(container, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
-        }
+        HTML.beforeEnd(container, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
     }
 
     static _highlightNode(node, type) {
