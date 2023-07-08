@@ -1,8 +1,7 @@
 import {SyncedStorage} from "../modulesCore";
 
-const OpenInNewTab = SyncedStorage.get("openinnewtab");
-
 export default function external(node: HTMLAnchorElement): void {
+    const OpenInNewTab = SyncedStorage.get("openinnewtab");
     if (!OpenInNewTab) { return; }
 
     node.target = "_blank";
