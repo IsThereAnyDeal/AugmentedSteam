@@ -285,6 +285,9 @@ export default class FHighlightsTags extends Feature {
         } else if (node.classList.contains("blotter_userstats_game")) {
             // Small game capsules on activity page (e.g. when posting a status about a game)
             nodeToHighlight = node.parentNode;
+        } else if (node.classList.contains("gamelink")) {
+            // Recommendations at the bottom of the storefront
+            nodeToHighlight = node.parentNode;
         }
 
         nodeToHighlight.classList.add("es_highlighted", `es_highlighted_${type}`);
