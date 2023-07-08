@@ -1,3 +1,37 @@
+2.5.0: |
+  New Features:
+  - Wishlist: Add feature to show hidden apps in the stats popup
+  - Wishlist: Make wishlist header a link to profile 
+  - Search: Add discount percentage filter (thomeval)
+  - Inventory: Allow equipping more profile item types directly from the inventory
+  - Review pages: Add sorting by reward count
+  - Badges: Add the ability to sort badges by least cards remaining to complete set
+  - Store page: Remove duplicate screenshots
+  
+  Fixes:
+  - Fix the option to hide or replace the "Install Steam" button (this crashed the whole extension)
+  - Greatly reduce the frequency of the red login warning banner
+  - Fix unresponsive wishlist when user notes are enabled
+  - Fix total value calculation on wishlist pages
+  - Fix adding bundles to cart when the "no redirect" feature is enabled on wishlist pages
+  - Fix review sorting on reviews pages
+  - Fix spam hiding feature
+  - Fix tab image placement after clicking tabs on workshop home
+  - Fix not disabling the "Show all" button after it has been clicked on profile stats pages (Carl0sCheca)
+  - Fix broken "View all" link and category selections when removing language tag on guides pages
+  - Fix display of game stats on your games pages
+  - Fix loss of user notes when multiple tabs are used to store notes
+  - Fix tag insertion for search results
+  - Fix possible interference of keyboard shortcut "s" with other extensions
+  - Fix adding items to Waitlist on store pages
+  - Fix tag placement for discounted DLCs on store pages
+
+  Miscellaneous improvements:
+  - Show alert and stop sending requests when the lowest price requests have time out on the market home page
+  - Add progress info when calculating total size of subscribed workshop items
+  - Add Early Access banners to SteamPeek recommendations on app pages
+  - Improve the game search for selecting a custom background on the profile edit page
+
 2.4.1: |
   - Avoid free promotions getting added to Cart
   - Fix protocol for custom 3rd party links (pidanmeng)

@@ -99,8 +99,6 @@
     "spam_comment_show": "__num__ comentarios ocultos marcados como spam. Haz clic aquí para mostrarlos.",
     "dlc": "Contenido descargable",
     "add_to_wishlist": "Añadir a tu lista de deseados",
-    "add_to_wishlist_tooltip": "Recibe una notificación por email cuando se lancen o estén de oferta artículos de tu lista de deseados",
-    "remove_from_wishlist_tooltip": "Este producto ya está en tu lista de deseados. Haz clic para eliminarlo de la lista.",
     "add_to_waitlist": "Añadir a la lista de espera",
     "language": "Idioma",
     "theworddefault": "Por defecto",
@@ -245,7 +243,6 @@
     "separator": "Separador",
     "empty_wishlist": {
         "title": "Vacíar lista de deseados",
-        "confirm": "¿Estás seguro que deseas vaciar tu lista de deseados?\n\n¡Esta acción no se puede deshacer!",
         "removing": "Eliminando __cur__ de __total__ aplicaciones..."
     },
     "about": "Acerca de",
@@ -257,7 +254,6 @@
     "notcommon_label": "Ocultar juegos que ya tienes",
     "show_all_steam_releases": "Mostrar todos los lanzamientos de Steam",
     "wishlist": "Lista de deseados",
-    "on_wishlist": "En la lista de deseados",
     "ignored": "Ignorado",
     "on_waitlist": "En la lista de espera",
     "notdiscounted": "Artículos sin descuento",
@@ -462,7 +458,6 @@
         "waitlist": "Artículos en tu lista de espera de ITAD",
         "show_steamchart_info": "Mostrar información de SteamCharts.com",
         "show_steamspy_info": "Mostrar información de steamspy.com",
-        "showallachievements": "Mostrar estadísticas de los logros en la página «Todos los juegos»",
         "showallstats": "Mostrar estadísticas de tiempo jugado en la página «Todos los juegos»",
         "lowestprice_onwishlist": "Mostrar en la lista de deseados",
         "steamrepapi": "Mostrar estado de SteamRep en los perfiles",
@@ -750,8 +745,6 @@
     },
     "calc_workshop_size": {
         "file_size": "Tamaño del archivo __size__",
-        "finished": "Finalizado",
-        "calculating": "Calculando...",
         "calc_size": "Calcular tamaño total",
         "total_size": "Tamaño total: __size__"
     },

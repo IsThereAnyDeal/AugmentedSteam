@@ -56,7 +56,7 @@ class ITADApi extends Api {
         });
 
         const hashFragment = new URL(url).hash;
-        const params = new URLSearchParams(hashFragment.substr(1));
+        const params = new URLSearchParams(hashFragment.slice(1));
 
         if (parseInt(params.get("state")) !== rnd) {
             throw new Error("Failed to verify state parameter from URL fragment");

@@ -6,7 +6,7 @@ import FHighlightFriendsActivity from "./FHighlightFriendsActivity";
 import FAchievementLink from "./FAchievementLink";
 import FReplaceCommunityHubLinks from "./FReplaceCommunityHubLinks";
 import FToggleComments from "./FToggleComments";
-import {Page} from "../../Page";
+import FPatchBlotterFunc from "./FPatchBlotterFunc";
 
 export class CProfileActivity extends CCommunityBase {
 
@@ -17,27 +17,10 @@ export class CProfileActivity extends CCommunityBase {
             FAchievementLink,
             FReplaceCommunityHubLinks,
             FToggleComments,
+            FPatchBlotterFunc,
         ]);
 
-        this._registerObserver();
-
-        // Fix undefined function when clicking on the "show all x comments" button under "uploaded a screenshot" type activity
-        Page.runInPageContext(() => {
-            const f = window.SteamFacade;
-
-            if (typeof f.global("Blotter_ShowLargeScreenshot") !== "function") {
-
-                f.globalSet("Blotter_ShowLargeScreenshot", (galleryid, showComments) => {
-                    const gallery = f.global("g_BlotterGalleries")[galleryid];
-                    const ss = gallery.shots[gallery.m_screenshotActive];
-                    f.showModalContent(`${ss.m_modalContentLink}&insideModal=1&showComments=${showComments}`, ss.m_modalContentLinkText, ss.m_modalContentLink, true);
-                });
-            }
-        });
-    }
-
-    _registerObserver() {
-
+        // Process newly added activity entries
         new MutationObserver(mutations => {
             for (const {addedNodes} of mutations) {
                 this.triggerCallbacks(addedNodes[0]);

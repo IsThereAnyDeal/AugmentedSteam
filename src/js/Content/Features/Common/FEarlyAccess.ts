@@ -20,7 +20,7 @@ const storeSelectors = [
     ".home_area_spotlight", // Special Offers, specials/
     ".curator_giant_capsule", // Curator Recommendations
     ".home_content_item",
-    ".home_content.single",
+    ".home_content.single > .gamelink",
     ".highlighted_app_header", // curators/
     "#curator_avatar_image", // Header image on dlc pages
     ".curator_featured a", // Featured items on curator, developer, publisher, franchise, dlc etc. pages
@@ -96,6 +96,7 @@ export default class FEarlyAccess extends Feature {
 
             new EarlyAccess({
                 "target": imgHeader.parentElement,
+                "anchor": imgHeader, // Render the component "before" the original image
                 "props": {
                     imageUrl,
                     imgHeader,
@@ -164,7 +165,7 @@ export default class FEarlyAccess extends Feature {
         ".home_area_spotlight", // Special Offers, specials/
         ".curator_giant_capsule", // Curator Recommendations
         ".home_content_item",
-        ".home_content.single",
+        ".home_content.single > .gamelink",
         ".highlighted_app_header", // curators/
         "#curator_avatar_image", // Header image on dlc pages
         ".curator_featured a", // Featured items on curator, developer, publisher, franchise, dlc etc. pages

@@ -184,7 +184,6 @@ const DEFAULTS = {
     "quickinv": true,
     "quickinv_diff": -0.01,
     "community_default_tab": "",
-    "showallachievements": false,
     "showallstats": true,
     "replacecommunityhublinks": false,
     "hideannouncementcomments": false,

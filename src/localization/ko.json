@@ -99,8 +99,6 @@
     "spam_comment_show": "__num__ 개의 스팸 댓글들을 가렸습니다. 보고 싶다면 여길 누르세요.",
     "dlc": "다운로드 가능한 콘텐츠",
     "add_to_wishlist": "찜 목록에 추가",
-    "add_to_wishlist_tooltip": "찜 목록에 있는 아이템의 출시 및 할인에 대한 알림 이메일을 받습니다",
-    "remove_from_wishlist_tooltip": "이 제품은 이미 찜 목록에 있습니다. 찜 목록에서 제거하려면 클릭하세요.",
     "language": "언어",
     "theworddefault": "기본값",
     "show": "열기",
@@ -207,8 +205,7 @@
     "avg_price_3cards": "트레이딩 카드 3개의 평균 가격: __price__",
     "mods": "모드",
     "empty_wishlist": {
-        "title": "찜 목록 비우기",
-        "confirm": "정말로 찜 목록을 비우시겠습니까?\n\n이 작업은 되돌릴 수 없습니다!"
+        "title": "찜 목록 비우기"
     },
     "about": "정보",
     "never": "사용하지 않음",
@@ -219,7 +216,6 @@
     "notcommon_label": "소유중인 게임 숨기기",
     "show_all_steam_releases": "스팀 모든 자료 보기",
     "wishlist": "찜 목록",
-    "on_wishlist": "위시리스트에",
     "notdiscounted": "할인되지 않은 항목",
     "cancel": "취소",
     "wiki_article": "__pcgw__ 기사 보기",
@@ -370,7 +366,6 @@
         "guest": "손님",
         "show_steamchart_info": "SteamCharts.com의 정보 보기",
         "show_steamspy_info": "steamspay.com 정보 보이기",
-        "showallachievements": "\"모든 게임\" 페이지에서 도전과제 스탯 보기",
         "lowestprice_onwishlist": "찜 목록 보기",
         "steamrepapi": "프로필 페이지에 SteamREP 정보를 표시합니다.",
         "header": "Steam페이지 최상단",

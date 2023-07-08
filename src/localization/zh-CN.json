@@ -99,8 +99,6 @@
     "spam_comment_show": "本页有 __num__ 条垃圾评论被隐藏，点击这里显示。",
     "dlc": "可下载内容（DLC）",
     "add_to_wishlist": "添加至您的愿望单",
-    "add_to_wishlist_tooltip": "在您愿望单中的物品正式发布或特价销售时获取邮件通知",
-    "remove_from_wishlist_tooltip": "此产品已经在您的愿望单中。点击从愿望单中移除。",
     "add_to_waitlist": "添加至观察列表（Waitlist）",
     "language": "语言",
     "theworddefault": "默认",
@@ -244,7 +242,6 @@
     "separator": "分隔符",
     "empty_wishlist": {
         "title": "清空愿望单",
-        "confirm": "您确定要清空愿望单？\n\n此操作无法撤消！",
         "removing": "正在移除 __total__ 个产品中的第 __cur__ 个..."
     },
     "about": "关于",
@@ -256,7 +253,6 @@
     "notcommon_label": "隐藏已拥有的游戏",
     "show_all_steam_releases": "显示全部 Steam 新品",
     "wishlist": "愿望单",
-    "on_wishlist": "在愿望单上",
     "ignored": "已忽略",
     "on_waitlist": "在观察列表中",
     "notdiscounted": "无折扣物品",
@@ -461,7 +457,6 @@
         "waitlist": "您 ITAD 观察列表（Waitlist）中的物品",
         "show_steamchart_info": "显示 SteamCharts.com 信息",
         "show_steamspy_info": "显示 steamspy.com 信息",
-        "showallachievements": "在“所有游戏”页面显示成就数据",
         "showallstats": "在“所有游戏”页面显示时长统计",
         "lowestprice_onwishlist": "在愿望单中显示",
         "steamrepapi": "在个人资料页面显示 SteamRep 状态",
@@ -580,7 +575,11 @@
         "confirmdeletecomment": "删除留言时要求确认",
         "showdeckcompat": "在功能列表中显示 Steam Deck 兼容性评分（缺少数据时更新）",
         "show_survey_info": "显示性能调查数据",
-        "addtocart_no_redirect": "添加物品至购物车时阻止页面跳转"
+        "addtocart_no_redirect": "添加物品至购物车时阻止页面跳转",
+        "about_desc": "Augmented Steam 是 Enhanced Steam 扩展程序的衍生版本。",
+        "about_desc_links": "访问此扩展程序的__website__或 __discord__ 了解更多。",
+        "footer_fork": "来自 IsThereAnyDeal 的衍生版本",
+        "footer_author": "原始作者 jshackles"
     },
     "ready": {
         "errormsg": "Augmented Steam 数据载入错误",
@@ -682,7 +681,12 @@
         "in_wishlist": "在愿望单中",
         "on_sale": "特价中",
         "no_price": "无价格",
-        "label": "统计"
+        "label": "统计",
+        "hidden": "隐藏的 App",
+        "hidden_tooltip": "被删除/下架的 App 不会显示在愿望单中。点击查看详情。",
+        "remove_title": "从愿望单中移除此物品？",
+        "remove_confirm": "您确定要从愿望单中移除“App ID __appid__”吗？",
+        "remove_confirm_warn": "它将无法被重新添加！"
     },
     "coll": {
         "total_time": "总时长",
@@ -747,10 +751,10 @@
     },
     "calc_workshop_size": {
         "file_size": "文件大小 __size__",
-        "finished": "已完成",
-        "calculating": "正在计算...",
         "calc_size": "计算总大小",
-        "total_size": "总大小：__size__"
+        "total_size": "总大小：__size__",
+        "calc_loading": "正在计算第 __i__/__count__ 个创意工坊物品，请稍等……",
+        "calc_finished": "完成！成功计算 __success__/__total__ 个物品。"
     },
     "date": "日期",
     "rating": "评价",
@@ -807,5 +811,9 @@
         "notice": "注意：",
         "desc": "此游戏不包含在 Steam 家庭共享服务中。"
     },
-    "in_cart": "在购物车中"
+    "in_cart": "在购物车中",
+    "toomanyrequests": "请求过多",
+    "equip_on_profile": "在个人资料上展示",
+    "awards": "奖励",
+    "cards_remain": "集齐还需最少卡牌数"
 }

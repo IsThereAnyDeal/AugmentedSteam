@@ -27,7 +27,7 @@ export class CProfileStats extends CCommunityBase {
         url.searchParams.set("tab", "achievements");
         url.searchParams.set("panorama", "please");
 
-        return RequestData.getHttp(url.toString()).then(result => {
+        return RequestData.getHttp(url).then(result => {
             this._data = HTMLParser.getVariableFromText(result, "g_rgAchievements", "object");
             return this._data;
         });

@@ -99,8 +99,6 @@
     "spam_comment_show": "__num__ comentários indesejados ocultos nesta página. Clique aqui para exibi-los.",
     "dlc": "Conteúdo adicional",
     "add_to_wishlist": "Adicionar à lista de desejos",
-    "add_to_wishlist_tooltip": "Seja notificado por e-mail quando itens da sua lista de desejos forem lançados ou estiverem em oferta",
-    "remove_from_wishlist_tooltip": "O produto já está na sua lista de desejos. Clique para removê-lo da sua lista de desejos.",
     "add_to_waitlist": "Adicionar à lista de espera",
     "language": "Idioma",
     "theworddefault": "Padrão",
@@ -245,7 +243,6 @@
     "separator": "Separador",
     "empty_wishlist": {
         "title": "Esvaziar lista de desejos",
-        "confirm": "Tem certeza de que deseja esvaziar a sua lista de desejos?\n\nEsta ação não pode ser desfeita!",
         "removing": "Removendo aplicativo __cur__ de __total__..."
     },
     "about": "Sobre",
@@ -257,7 +254,6 @@
     "notcommon_label": "Ocultar jogos que você possui",
     "show_all_steam_releases": "Exibir todos os lançamentos no Steam",
     "wishlist": "Lista de desejos",
-    "on_wishlist": "Na lista de desejos",
     "ignored": "Ignorado",
     "on_waitlist": "Na lista de espera",
     "notdiscounted": "Itens sem desconto",
@@ -462,7 +458,6 @@
         "waitlist": "Itens na sua lista de espera do ITAD",
         "show_steamchart_info": "Exibir informações do site SteamCharts.com",
         "show_steamspy_info": "Exibir informações do site steamspy.com",
-        "showallachievements": "Exibir estatísticas de conquistas na página \"Todos os jogos\"",
         "showallstats": "Exibir dados de tempo de jogo na página \"Todos os jogos\"",
         "lowestprice_onwishlist": "Exibir na lista de desejos ao passar o mouse por cima",
         "steamrepapi": "Exibir estado do SteamRep",
@@ -750,8 +745,6 @@
     },
     "calc_workshop_size": {
         "file_size": "Tamanho: __size__",
-        "finished": "Concluído",
-        "calculating": "Calculando...",
         "calc_size": "Calcular tamanho total",
         "total_size": "Tamanho total: __size__"
     },

@@ -68,7 +68,6 @@
     "spam_comment_show": "__num__ comentários irrelevantes ocultos nesta página. Clica aqui para os veres.",
     "dlc": "Conteúdo Transferível",
     "add_to_wishlist": "Adicionar à lista de desejos",
-    "add_to_wishlist_tooltip": "Recebes uma notificação por e-mail quando os produtos na tua lista de desejo forem lançados ou estiverem em promoção",
     "language": "Idioma",
     "theworddefault": "Padrão",
     "show": "Mostrar",
@@ -170,8 +169,7 @@
     "avg_price_3cards": "Preço médio de três cartas: __price__",
     "mods": "Mods",
     "empty_wishlist": {
-        "title": "Esvaziar lista de desejos",
-        "confirm": "Tens a certeza que queres limpar a tua lista de desejos?\n\nEsta acção não pode ser desfeita!"
+        "title": "Esvaziar lista de desejos"
     },
     "about": "Sobre",
     "never": "Nunca",
@@ -182,7 +180,6 @@
     "notcommon_label": "Esconder jogos que possuis",
     "show_all_steam_releases": "Mostrar todos os lançamentos no Steam",
     "wishlist": "Lista de desejos",
-    "on_wishlist": "Na lista de desejos",
     "notdiscounted": "Itens sem desconto",
     "cancel": "Cancelar",
     "wiki_article": "Ver Artigo __pcgw__",
@@ -333,7 +330,6 @@
         "guest": "Itens que tens um passe de convidado",
         "show_steamchart_info": "Mostrar informações do SteamCharts.com",
         "show_steamspy_info": "Mostrar informação de steamspy.com",
-        "showallachievements": "Mostrar estatísticas de proezas na página \"Todos os jogos\"",
         "lowestprice_onwishlist": "Mostrar na Lista de Desejos",
         "steamrepapi": "Mostrar o estado da reputação na página de perfil",
         "header": "Cabeçalho",

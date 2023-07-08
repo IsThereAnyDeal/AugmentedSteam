@@ -3,7 +3,10 @@
     "parserOptions": {
         "sourceType": "module"
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:svelte/recommended"
+    ],
     "ignorePatterns": [
         "/dist/**",
         "/releases/**"
@@ -26,6 +29,16 @@
                 "webextensions": false,
                 "es2021": false,
                 "es2022": true
+            }
+        },
+        {
+            "files": "*.svelte",
+            "parser": "svelte-eslint-parser",
+            "parserOptions": {
+                "parser": "@typescript-eslint/parser"
+            },
+            "rules": {
+                "one-var": ["error", "never"]
             }
         },
         {

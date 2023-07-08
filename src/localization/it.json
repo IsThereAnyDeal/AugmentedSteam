@@ -99,8 +99,6 @@
     "spam_comment_show": "__num__ commenti spam nascosti in questa pagina. Clicca qui per mostrarli.",
     "dlc": "Contenuti scaricabili",
     "add_to_wishlist": "Aggiungi alla tua lista dei desideri",
-    "add_to_wishlist_tooltip": "Ricevi una notifica via email quando i prodotti nella tua lista dei desideri vengono rilasciati o sono scontati",
-    "remove_from_wishlist_tooltip": "Questo prodotto è già nella tua lista dei desideri. Fai clic qui per rimuoverlo.",
     "add_to_waitlist": "Aggiungi alla tua lista dei giochi in attesa",
     "language": "Lingua",
     "theworddefault": "Predefinito",
@@ -239,7 +237,6 @@
     "separator": "Separatore",
     "empty_wishlist": {
         "title": "Svuota la lista dei desideri",
-        "confirm": "Sei sicuro di voler svuotare la tua lista dei desideri?\n\nQuesta azione non può essere annullata!",
         "removing": "Rimozione di __cur__ da __total__ in corso..."
     },
     "about": "Informazioni",
@@ -251,7 +248,6 @@
     "notcommon_label": "Nascondi i giochi in libreria",
     "show_all_steam_releases": "Mostra tutte le ultime uscite",
     "wishlist": "Lista dei desideri",
-    "on_wishlist": "Nella lista dei desideri",
     "ignored": "Ignorato",
     "on_waitlist": "Nella lista d'attesa",
     "notdiscounted": "Prodotti non scontati",
@@ -452,7 +448,6 @@
         "waitlist": "Prodotti nella tua lista d'attesa di ITAD",
         "show_steamchart_info": "Mostra informazioni da SteamCharts.com",
         "show_steamspy_info": "Mostra informazioni di steamspy.com",
-        "showallachievements": "Mostra achievement sulla pagina \"Tutti i giochi\"",
         "showallstats": "Visualizza le statistiche di gioco nella pagina \"Tutti i giochi\"",
         "lowestprice_onwishlist": "Mostra nella lista dei desideri",
         "steamrepapi": "Mostra status di SteamRep nelle pagine del profilo",
@@ -704,8 +699,6 @@
     },
     "calc_workshop_size": {
         "file_size": "Dimensione file __size__",
-        "finished": "Completato",
-        "calculating": "Calcolo in corso...",
         "calc_size": "Calcola dimensione totale",
         "total_size": "Dimensione totale: __size__"
     },

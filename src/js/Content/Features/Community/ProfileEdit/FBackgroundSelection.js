@@ -1,4 +1,4 @@
-import {HTML, Localization, TimeUtils} from "../../../../modulesCore";
+import {HTML, Localization, StringUtils, TimeUtils} from "../../../../modulesCore";
 import {Background, Feature} from "../../../modulesContent";
 import Config from "../../../../config";
 
@@ -100,25 +100,58 @@ export default class FBackgroundSelection extends Feature {
 
             let timer = null;
 
+            // Most of this logic is from https://github.com/SteamDatabase/SteamTracking/blob/6db3e47a120c5c938a0ab37186d39b02b14d27d9/steamcommunity.com/public/javascript/global.js#L2726
             gameFilterNode.addEventListener("keyup", () => {
 
                 if (!timer) {
                     timer = TimeUtils.resettableTimer(() => {
 
-                        const max = 100;
-                        const value = this._getSafeString(gameFilterNode.value);
-                        if (value === "") { return; }
+                        const searchString = gameFilterNode.value.toLowerCase();
+                        const terms = searchString.split(" ").filter(term => term !== "");
+                        if (terms.length === 0) {
+                            HTML.inner(listNode, "");
+                            return;
+                        }
 
-                        let i = 0;
-                        let list = "";
-                        for (const [appid, title, safeTitle] of games) {
-                            if (safeTitle.includes(value)) {
-                                const selected = this._selectedAppid === appid ? " is-selected" : "";
+                        const regexes = terms.map(term => new RegExp(StringUtils.escapeRegExp(term), "i"));
 
-                                list += `<div class="as-pd__item${selected} js-pd-item" data-appid="${appid}">${title}</div>`;
-                                i++;
+                        let matchingGames = games.filter(game => {
+                            const [, title, safeTitle] = game;
+                            let match = true;
+
+                            for (const regex of regexes) {
+                                if (!regex.test(safeTitle) && !regex.test(title)) {
+                                    match = false;
+                                    break;
+                                }
                             }
-                            if (i >= max) { break; }
+
+                            if (match) {
+                                game.levenshtein = StringUtils.levenshtein(title.trim().toLowerCase(), searchString);
+                            }
+
+                            return match;
+                        });
+
+                        if (matchingGames.length === 0) {
+                            HTML.inner(listNode, "");
+                            return;
+                        }
+
+                        matchingGames.sort((a, b) => {
+                            if (a.levenshtein === b.levenshtein) {
+                                return a[1].localeCompare(b[1]);
+                            }
+                            return a.levenshtein - b.levenshtein;
+                        });
+
+                        matchingGames = matchingGames.slice(0, 20);
+
+                        let list = "";
+                        for (const [appid, title] of matchingGames) {
+                            const selected = this._selectedAppid === appid ? " is-selected" : "";
+
+                            list += `<div class="as-pd__item${selected} js-pd-item" data-appid="${appid}">${title}</div>`;
                         }
                         HTML.inner(listNode, list);
                     }, 200);
@@ -152,8 +185,9 @@ export default class FBackgroundSelection extends Feature {
         }
     }
 
+    // From https://github.com/SteamDatabase/SteamTracking/blob/6db3e47a120c5c938a0ab37186d39b02b14d27d9/steamcommunity.com/public/javascript/global.js#L2790
     _getSafeString(value) {
-        return value.toLowerCase().replace(/[^a-z0-9 ]/g, "");
+        return value.toLowerCase().replace(/[\s.-:!?,']+/g, "");
     }
 
     async _selectGame(appid, imagesNode) {

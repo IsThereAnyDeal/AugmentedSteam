@@ -1,7 +1,7 @@
 {
   "name": "Augmented Steam",
   "short_name": "AS",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "description": "Augments your Steam Experience",
   "icons": {
     "128": "img/logo/as128.png",
@@ -111,7 +111,6 @@
         "*://store.steampowered.com/dynamicstore/*",
         "*://store.steampowered.com/supportmessages",
         "*://store.steampowered.com/video/*",
-        "*://store.steampowered.com/checkout[/*]",
         "*://store.steampowered.com/widget[/*]",
         "*://store.steampowered.com/login[/*]",
         "*://store.steampowered.com/join[/*]",
@@ -119,6 +118,7 @@
         "*://api.steampowered.com/*",
         "*://help.steampowered.com/*",
         "*://login.steampowered.com/*",
+        "*://checkout.steampowered.com/*",
         "*://partner.steampowered.com/*",
         "*://store.steampowered.com/[?*]",
         "*://*.steampowered.com/wishlist/id/*",

@@ -1,14 +1,11 @@
 import {GameId, HTML, Localization, SyncedStorage} from "../../../modulesCore";
 import {DOMHelper, DynamicStore, Feature, ITAD, Inventory} from "../../modulesContent";
-import {Page} from "../Page";
 
 export default class FHighlightsTags extends Feature {
 
     async apply() {
 
-        await Page.runInPageContext(() => new Promise(resolve => {
-            window.SteamFacade.onDynamicStoreReady(() => { resolve(); });
-        }), null, true);
+        await DynamicStore.onReady();
 
         return Promise.all([
             FHighlightsTags.highlightTitle(this.context.appid),
@@ -158,8 +155,8 @@ export default class FHighlightsTags extends Feature {
             }
 
             /*
-             * Don't need to check for the opts object here, since the result contains
-             * false for every property if the highlight has been disabled
+             * Don't need to check for the opts object for itad and inv, since the result
+             * contains `false` for every property if the highlight has been disabled
              */
             if (itadStatus) {
                 if (itadStatus[storeid].collected) {
@@ -172,15 +169,12 @@ export default class FHighlightsTags extends Feature {
 
             if (invStatus) {
                 const trimmedId = it.next().value;
-                if (opts.gift && invStatus[trimmedId].gift) {
+                if (invStatus[trimmedId].gift) {
                     operations.push(this.highlightInvGift);
                 }
-
-                if (opts.guestPass && invStatus[trimmedId].guestPass) {
+                if (invStatus[trimmedId].guestPass) {
                     operations.push(this.highlightInvGuestpass);
                 }
-
-                // Same as for the ITAD highlights (don't need to check)
                 if (invStatus[trimmedId].coupon) {
                     operations.push(this.highlightInvCoupon);
                 }
@@ -225,27 +219,29 @@ export default class FHighlightsTags extends Feature {
             }
 
             if (node.classList.contains("tab_item")) {
-                node.querySelector(".tab_item_details").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".tab_item_details").prepend(container);
             } else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
-                node.querySelector(".discount_block").insertAdjacentElement("beforebegin", container);
+                node.querySelector(".discount_block").before(container);
             } else if (node.classList.contains("search_result_row")) {
-                node.querySelector(".search_name > div").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".search_name > div").prepend(container);
             } else if (node.classList.contains("browse_tag_game")) {
-                node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", container);
+                node.querySelector(".browse_tag_game_price").after(container);
             } else if (node.classList.contains("game_area_dlc_row")) {
-                node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", container);
+                // Must check discount block first
+                const priceNode = node.querySelector(".discount_block") || node.querySelector(".game_area_dlc_price");
+                priceNode.prepend(container);
             } else if (node.classList.contains("wishlist_row")) {
-                node.querySelector(".addedon").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".addedon").prepend(container);
             } else if (node.classList.contains("match_app")) {
-                node.querySelector(".match_subtitle").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".match_subtitle").prepend(container);
             } else if (node.classList.contains("recommendation_highlight")) {
-                node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".highlight_description").prepend(container);
             } else if (node.classList.contains("similar_grid_item")) {
                 node.querySelector(".regular_price, .discount_block").append(container);
             } else if (node.classList.contains("recommendation_carousel_item")) {
-                node.querySelector(".buttons").insertAdjacentElement("beforebegin", container);
+                node.querySelector(".buttons").before(container);
             } else if (node.classList.contains("friendplaytime_game")) {
-                node.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", container);
+                node.querySelector(".friendplaytime_buttons").before(container);
             }
         }
 
@@ -402,7 +398,7 @@ FHighlightsTags._selector = [
     "a.game_area_dlc_row", // DLC on app pages
     "a.small_cap", // Featured storefront items and "recommended" section on app pages
     ".home_content_item", // Small items under "Keep scrolling for more recommendations"
-    ".home_content.single", // Big items under "Keep scrolling for more recommendations"
+    ".home_content.single > .gamelink", // Big items under "Keep scrolling for more recommendations"
     ".home_area_spotlight", // "Special offers" big items
     "a.search_result_row", // Search result rows
     "a.match", // Search suggestions rows

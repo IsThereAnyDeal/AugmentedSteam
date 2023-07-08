@@ -1,7 +1,6 @@
 import {HTML, LocalStorage, Localization} from "../../../../modulesCore";
-import {Background, Feature} from "../../../modulesContent";
+import {Background, DynamicStore, Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
-import FHighlightsTags from "../../Common/FHighlightsTags";
 
 export default class FSteamPeek extends Feature {
 
@@ -24,16 +23,7 @@ export default class FSteamPeek extends Feature {
                 </div>
             </div>`);
 
-        HTML.beforeEnd(
-            this._moreLikeThis.querySelector(".store_horizontal_autoslider_ctn"),
-            `<div class="block_responsive_horizontal_scroll store_horizontal_autoslider block_content nopad"
-                        id="es_steampeek_content"></div>`,
-        );
-
-        // TODO Create a global handler for DS loading
-        await Page.runInPageContext(() => new Promise(resolve => {
-            window.SteamFacade.onDynamicStoreReady(() => { resolve(); });
-        }), null, true);
+        await DynamicStore.onReady();
 
         const [steamTab, steamPeekTab, content] = this._moreLikeThis
             .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");
@@ -73,10 +63,9 @@ export default class FSteamPeek extends Feature {
                 for (const {title, appid} of data) {
                     HTML.beforeBegin(lastChild,
                         `<a class="small_cap es_sp_similar" data-ds-appid="${appid}" href="https://store.steampowered.com/app/${appid}/">
-                            <img src="//cdn.cloudflare.steamstatic.com/steam/apps/${appid}/capsule_184x69.jpg" class="small_cap_img"></img>
+                            <img src="//cdn.cloudflare.steamstatic.com/steam/apps/${appid}/capsule_184x69.jpg" class="small_cap_img">
                             <h4>${title}</h4>
                         </a>`);
-
 
                     Page.runInPageContext(appid => {
                         window.SteamFacade.storeItemDataBindHover("#recommended_block_content > a:last-of-type", appid);
@@ -87,7 +76,7 @@ export default class FSteamPeek extends Feature {
                     window.SteamFacade.dynamicStoreDecorateItems("#recommended_block_content > a.es_sp_similar");
                 });
 
-                FHighlightsTags.highlightAndTag(content.querySelectorAll("a.es_sp_similar"), true);
+                this.context.decorateStoreCapsules(content.querySelectorAll("a.es_sp_similar"), true);
 
                 HTML.beforeBegin(lastChild,
                     `<a class="small_cap es_sp_similar" href="http://steampeek.hu/?appid=${this.context.appid}" target="_blank">

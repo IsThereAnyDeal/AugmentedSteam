@@ -99,8 +99,6 @@
     "spam_comment_show": "此頁面有 __num__ 則垃圾留言已被隱藏。按此顯示。",
     "dlc": "可下載內容（DLC）",
     "add_to_wishlist": "新增至你的願望清單",
-    "add_to_wishlist_tooltip": "當您加入願望清單的項目正式發行或特價時，您會收到電子郵件通知",
-    "remove_from_wishlist_tooltip": "這項產品已經在您的願望清單中了。按此將其從願望清單移除。",
     "add_to_waitlist": "新增至你的 Waitlist",
     "language": "語言",
     "theworddefault": "預設",
@@ -245,7 +243,6 @@
     "separator": "分隔符",
     "empty_wishlist": {
         "title": "清空願望清單",
-        "confirm": "你確定要清空願望清單嗎？\n此動作無法復原！",
         "removing": "正在移除第 __cur__ / __total__ 款應用程式…"
     },
     "about": "關於",
@@ -257,7 +254,6 @@
     "notcommon_label": "隱藏你擁有的遊戲",
     "show_all_steam_releases": "顯示所有 Steam 產品",
     "wishlist": "願望清單",
-    "on_wishlist": "在願望清單中",
     "ignored": "已忽略",
     "on_waitlist": "在 Waitlist 中",
     "notdiscounted": "無折扣的項目",
@@ -462,7 +458,6 @@
         "waitlist": "在你的 ITAD Waitlist 中的項目",
         "show_steamchart_info": "顯示 SteamCharts.com 資訊",
         "show_steamspy_info": "顯示 steamspy.com 資訊",
-        "showallachievements": "在「所有遊戲」頁面中顯示成就完成度條",
         "showallstats": "在「所有遊戲」頁面中顯示遊玩時數統計資料",
         "lowestprice_onwishlist": "在滑鼠游標移至願望清單項目上時顯示",
         "steamrepapi": "顯示 SteamRep 狀態",
@@ -750,8 +745,6 @@
     },
     "calc_workshop_size": {
         "file_size": "檔案大小 __size__",
-        "finished": "已完成",
-        "calculating": "計算中…",
         "calc_size": "計算總大小",
         "total_size": "總大小：__size__"
     },

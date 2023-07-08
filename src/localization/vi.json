@@ -99,8 +99,6 @@
     "spam_comment_show": "__num__ bình luận spam được ẩn.  Ấn vào đây để hiển thị.",
     "dlc": "DLC",
     "add_to_wishlist": "Thêm cái gì đó vào danh sách ước",
-    "add_to_wishlist_tooltip": "Thông báo qua thư khi sản phẩm trong danh sách ước của bạn được phát hành hoặc khuyến mãi",
-    "remove_from_wishlist_tooltip": "Sản phẩm này đã có trong Danh sách ước. Nhấn để xoá khỏi Danh sách ước.",
     "add_to_waitlist": "Thêm vào Waitlist",
     "language": "Ngôn ngữ",
     "theworddefault": "Mặc định",
@@ -235,7 +233,6 @@
     },
     "empty_wishlist": {
         "title": "Xóa hết Danh sách ước",
-        "confirm": "Bạn có chắc bạn muốn xóa toàn bộ danh sách ước của bạn?\n\nHành động này không thể hoàn tác!",
         "removing": "Xóa ứng dụng __cur__ khỏi __total__..."
     },
     "about": "Giới thiệu",
@@ -247,7 +244,6 @@
     "notcommon_label": "Ẩn trò chơi mà bạn sở hữu",
     "show_all_steam_releases": "Hiển thị tất cả các phiên bản steam",
     "wishlist": "Danh sách ước",
-    "on_wishlist": "Trong danh sách ước",
     "on_waitlist": "Trong Danh Sách Chờ",
     "notdiscounted": "Mặt hàng không giảm giá",
     "cancel": "Hủy bỏ",
@@ -415,7 +411,6 @@
         "guest": "Items you have a guest pass for",
         "show_steamchart_info": "Show SteamCharts.com info",
         "show_steamspy_info": "Show steamspy.com info",
-        "showallachievements": "Show achievement stats on \"All Games\" page",
         "lowestprice_onwishlist": "Hiển thị khi di chuột vào các vật phẩm danh sách ước",
         "steamrepapi": "Show SteamRep status on profile pages",
         "header": "Header",
@@ -632,8 +627,6 @@
     },
     "calc_workshop_size": {
         "file_size": "Kích thước tập tin __size__",
-        "finished": "Đã xong",
-        "calculating": "Đang tính toán...",
         "calc_size": "Tính Tổng Kích Thước",
         "total_size": "Tổng kích thước: __size__"
     },

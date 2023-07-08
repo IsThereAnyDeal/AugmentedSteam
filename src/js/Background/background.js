@@ -64,7 +64,6 @@ const actionCallbacks = new Map([
     ["steampeek", AugmentedSteamApi.steamPeek],
 
     ["appdetails", SteamStoreApi.appDetails],
-    ["appuserdetails", SteamStoreApi.appUserDetails],
     ["currency", SteamStoreApi.currency],
     ["sessionid", SteamStoreApi.sessionId],
     ["wishlists", SteamStoreApi.wishlists],
@@ -86,7 +85,6 @@ const actionCallbacks = new Map([
     ["clearownprofile", SteamCommunityApi.clearOwn],
     ["workshopfilesize", SteamCommunityApi.getWorkshopFileSize],
     ["reviews", SteamCommunityApi.getReviews],
-    ["updatereviewnode", SteamCommunityApi.updateReviewNode],
 
     ["itad.authorize", ITADApi.authorize],
     ["itad.disconnect", ITADApi.disconnect],

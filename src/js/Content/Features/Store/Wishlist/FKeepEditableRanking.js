@@ -60,6 +60,11 @@ export default class FKeepEditableRanking extends CallbackFeature {
                 input.value = newInput.value;
                 input.dispatchEvent(new Event("change"));
             });
+
+            // Select all text when focusing input field
+            newInput.addEventListener("focus", () => {
+                newInput.select();
+            });
         }
     }
 }

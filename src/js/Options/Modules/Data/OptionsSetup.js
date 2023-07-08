@@ -192,7 +192,6 @@ export default {
             ["none", "options.profile_link_images_none"]
         ]
     ],
-    "showallachievements": "options.showallachievements",
     "showallstats": "options.showallstats",
     "hidespamcomments": "options.hidespamcomments",
     "steamcardexchange": "options.steamcardexchange",
