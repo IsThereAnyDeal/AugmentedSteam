@@ -20,6 +20,8 @@ export default class FShowHiddenAchievements extends Feature {
 
         const btn = document.getElementById("as_ach_showall");
         btn.addEventListener("click", async() => {
+            if (btn.classList.contains("btn_disabled"))
+                return;
 
             let achievements = await this.context.getAchievementData();
             achievements = Object.values({...achievements.open}).filter(val => val.hidden);

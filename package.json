@@ -4,7 +4,8 @@
     "build": "node config/scripts/build.cjs",
     "update-locales": "node config/scripts/locales.cjs",
     "release": "node config/scripts/make-release.cjs",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "check": "eslint . & npx tsc --noEmit & svelte-check"
   },
   "devDependencies": {
     "@types/webextension-polyfill": "^0.10.0",
@@ -19,6 +20,7 @@
     "css-loader": "^6.7.3",
     "css-minimizer-webpack-plugin": "^5.0.0",
     "eslint": "^8.40.0",
+    "eslint-plugin-svelte": "^2.32.2",
     "filemanager-webpack-plugin": "^8.0.0",
     "form-data": "^4.0.0",
     "jsdom": "^22.0.0",
@@ -26,7 +28,6 @@
     "marked": "^5.0.2",
     "merge-json-webpack-plugin": "^6.1.0",
     "mini-css-extract-plugin": "^2.7.5",
-    "svelte": "^3.59.1",
     "svelte-check": "^3.3.2",
     "svelte-loader": "^3.1.7",
     "svelte-preprocess": "^5.0.3",
@@ -42,6 +43,7 @@
   "dependencies": {
     "dompurify": "^3.0.3",
     "idb": "^7.1.1",
+    "svelte": "^3.59.1",
     "webextension-polyfill": "^0.10.0"
   }
 }

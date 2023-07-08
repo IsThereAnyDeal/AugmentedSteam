@@ -13,7 +13,10 @@ export default class FMarketLowestPrice extends CallbackFeature {
     }
 
     checkPrerequisites() {
-        return User.isSignedIn && SyncedStorage.get("showlowestmarketprice") && !SyncedStorage.get("hideactivelistings");
+        return SyncedStorage.get("showlowestmarketprice")
+            && !SyncedStorage.get("hideactivelistings")
+            // Check if the user is signed in, and has active listings
+            && document.getElementById("tabContentsMyActiveMarketListingsRows") !== null;
     }
 
     setup() {

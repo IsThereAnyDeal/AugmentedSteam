@@ -87,49 +87,37 @@ class ITAD {
         await updateLastImport();
     }
 
-    static async getAppStatus(storeIds, options) {
-        const opts = {"waitlist": true,
+    static async getAppStatus(storeId, options) {
+
+        if (!await Background.action("itad.isconnected")) { return null; }
+
+        const opts = {
+            "waitlist": true,
             "collection": true,
-            ...options};
+            ...options
+        };
 
         if (!opts.collection && !opts.waitlist) { return null; }
 
-        const multiple = Array.isArray(storeIds);
-        const promises = [];
-        const resolved = Promise.resolve(multiple ? {} : false);
+        const multiple = Array.isArray(storeId);
+        const storeIds = multiple ? storeId : [storeId];
 
-        if (await Background.action("itad.isconnected")) {
-            if (opts.collection) {
-                promises.push(Background.action("itad.incollection", storeIds));
-            } else {
-                promises.push(resolved);
-            }
-            if (opts.waitlist) {
-                promises.push(Background.action("itad.inwaitlist", storeIds));
-            } else {
-                promises.push(resolved);
-            }
-        } else {
-            promises.push(resolved, resolved);
-        }
+        const [inCollection, inWaitlist] = await Promise.all([
+            opts.collection ? Background.action("itad.incollection", storeIds) : Promise.resolve(),
+            opts.waitlist ? Background.action("itad.inwaitlist", storeIds) : Promise.resolve(),
+        ]);
 
-        const [inCollection, inWaitlist] = await Promise.all(promises);
+        if (!inCollection && !inWaitlist) { return null; }
 
-        if (multiple) {
-            const result = {};
-            for (const id of storeIds) {
-                result[id] = {
-                    "collected": inCollection[id],
-                    "waitlisted": inWaitlist[id],
-                };
-            }
-            return result;
-        } else {
-            return {
-                "collected": inCollection,
-                "waitlisted": inWaitlist,
+        const status = storeIds.reduce((acc, id) => {
+            acc[id] = {
+                "collected": inCollection ? inCollection[id] : false,
+                "waitlisted": inWaitlist ? inWaitlist[id] : false,
             };
-        }
+            return acc;
+        }, {});
+
+        return multiple ? status : status[storeId];
     }
 }
 

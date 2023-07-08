@@ -85,12 +85,13 @@ export default class FMultiProductKeys extends Feature {
             for (let i = 0; i < keys.length; i++) {
                 const currentKey = keys[i];
 
-                const formData = new FormData();
-                formData.append("sessionid", User.sessionId);
-                formData.append("product_key", currentKey);
+                const data = {
+                    "sessionid": User.sessionId,
+                    "product_key": currentKey
+                };
 
-                const request = RequestData.post("https://store.steampowered.com/account/ajaxregisterkey", formData).then(data => {
-                    const _data = JSON.parse(data);
+                const request = RequestData.post("https://store.steampowered.com/account/ajaxregisterkey", data).then(response => {
+                    const _data = JSON.parse(response);
                     const attempted = currentKey;
                     let message = Localization.str.register.default;
                     if (_data.success === 1) {

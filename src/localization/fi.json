@@ -68,7 +68,6 @@
     "spam_comment_show": "__num__ roskaviestiä piilotettu tältä sivulta.  Paina tästä nähdäksesi ne.",
     "dlc": "Ladattava Sisältö",
     "add_to_wishlist": "Lisää toivelistalle",
-    "add_to_wishlist_tooltip": "Saat sähköposti-ilmoituksen, kun toivelistallasi olevat tuotteet julkaistaan tai ne on alennuksessa.",
     "language": "Kieli",
     "theworddefault": "Oletusarvo",
     "show": "Näytä",
@@ -170,8 +169,7 @@
     "avg_price_3cards": "Kolmen keräilykortin keskiarvo: __price__",
     "mods": "Modit",
     "empty_wishlist": {
-        "title": "Tyhjennä toivelista",
-        "confirm": "Oletko varma että haluat tyhjentää toivelistasi?\n\nTätä toimintoa ei voi perua!"
+        "title": "Tyhjennä toivelista"
     },
     "about": "Tietoja",
     "never": "Ei koskaan",
@@ -182,7 +180,6 @@
     "notcommon_label": "Piilota omistamasi pelit",
     "show_all_steam_releases": "Näytä kaikki Steam-julkaisut",
     "wishlist": "Toivelista",
-    "on_wishlist": "Toivelistalla",
     "notdiscounted": "Ei alennetut kohteet",
     "cancel": "Peruuta",
     "wiki_article": "Näytä __pcgw__ -artikkeli",
@@ -333,7 +330,6 @@
         "guest": "Tuotteet joihin sinulla on vierailulupa",
         "show_steamchart_info": "Näytä SteamCharts.com tilastot",
         "show_steamspy_info": "Näytä steamspy.com tiedot",
-        "showallachievements": "Näytä saavutustilastot \"Kaikki pelit\" sivulla",
         "lowestprice_onwishlist": "Näytä toivelistalla",
         "steamrepapi": "Näytä SteamRep tila profiileissa",
         "header": "Ylätunniste",

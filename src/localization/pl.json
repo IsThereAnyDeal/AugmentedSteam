@@ -98,8 +98,6 @@
     "spam_comment_show": "Komentarzy ze spamem ukrytych na tej stronie: __num__. Kliknij tutaj, by je wyświetlić.",
     "dlc": "DLC",
     "add_to_wishlist": "Dodaj do listy życzeń",
-    "add_to_wishlist_tooltip": "Otrzymaj powiadomienie e-mailem, kiedy produkt na liście życzeń zostanie wydany lub będzie na wyprzedaży",
-    "remove_from_wishlist_tooltip": "Ten produkt już jest na twojej liście życzeń. Kliknij tutaj, aby go z niej usunąć.",
     "add_to_waitlist": "Dodaj do listy oczekujących",
     "language": "Język",
     "theworddefault": "Domyślne",
@@ -240,7 +238,6 @@
     "separator": "Separator",
     "empty_wishlist": {
         "title": "Wyczyść listę życzeń",
-        "confirm": "Czy na pewno chcesz wyczyścić swoją listę życzeń?\n\nTej operacji nie można cofnąć!",
         "removing": "Trwa usuwanie aplikacji (__cur__ z __total__)..."
     },
     "about": "O dodatku",
@@ -252,7 +249,6 @@
     "notcommon_label": "Ukryj posiadane gry",
     "show_all_steam_releases": "Pokaż wszystkie gry wydane na Steam",
     "wishlist": "Lista życzeń",
-    "on_wishlist": "Na liście życzeń",
     "ignored": "Ignorowane",
     "on_waitlist": "oczekujących",
     "notdiscounted": "Tytuły, które nie są przecenione",
@@ -454,7 +450,6 @@
         "waitlist": "Tytuły na twojej liście oczekujących ITAD",
         "show_steamchart_info": "Wyświetlaj informacje z SteamCharts.com",
         "show_steamspy_info": "Wyświetlaj informacje z SteamSpy.com",
-        "showallachievements": "Wyświetlaj postęp osiągnięć na stronie „Wszystkie gry”",
         "showallstats": "Wyświetlaj podsumowanie na stronie „Wszystkie gry”",
         "lowestprice_onwishlist": "Wyświetlaj na listach życzeń",
         "steamrepapi": "Wyświetlaj status SteamRep na stronach profili",
@@ -726,8 +721,6 @@
     },
     "calc_workshop_size": {
         "file_size": "Rozmiar pliku: __size__",
-        "finished": "Zakończono",
-        "calculating": "Trwa obliczanie...",
         "calc_size": "Oblicz całkowity rozmiar",
         "total_size": "Całkowity rozmiar: __size__"
     },

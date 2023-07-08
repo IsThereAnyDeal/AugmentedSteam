@@ -69,7 +69,7 @@ export class CStoreFront extends CStoreBase {
                 for (const {addedNodes} of mutations) {
                     for (const node of addedNodes) {
                         if (!(node instanceof Element)) { continue; }
-                        const nodes = node.querySelectorAll(".home_content_item, .home_content.single");
+                        const nodes = node.querySelectorAll(".home_content_item, .home_content.single > .gamelink");
                         this.decorateStoreCapsules(nodes);
                     }
                 }
@@ -79,6 +79,9 @@ export class CStoreFront extends CStoreBase {
         // Top sellers tab
         const topSellersTab = document.querySelector("#tab_topsellers_content");
         if (topSellersTab) {
+            // TODO Steam broke this section, remove when fixed
+            if (!topSellersTab.querySelector(".tab_content_items")) { return; }
+
             new MutationObserver(mutations => {
                 for (const {addedNodes} of mutations) {
                     if (addedNodes.length > 1) {

@@ -122,6 +122,10 @@ class UpdateHandler {
 
             SyncedStorage.set("customize_apppage", options);
         }
+
+        if (oldVersion.isSameOrBefore("2.4.1")) {
+            SyncedStorage.remove("showallachievements");
+        }
     }
 }
 

@@ -107,15 +107,16 @@ export default class FQuickSellOptions extends CallbackFeature {
             const sellPrice = feeInfo.amount - feeInfo.fees;
 
             // https://github.com/SteamDatabase/SteamTracking/blob/13e4e0c8f8772ef316f73881af8c546218cf7117/steamcommunity.com/public/javascript/economy_v2.js#L4268
-            const formData = new FormData();
-            formData.append("sessionid", sessionId);
-            formData.append("appid", globalId);
-            formData.append("contextid", contextId);
-            formData.append("assetid", assetId);
-            formData.append("amount", 1); // TODO support stacked items, e.g. sack of gems
-            formData.append("price", sellPrice);
+            const data = {
+                "sessionid": sessionId,
+                "appid": globalId,
+                "contextid": contextId,
+                "assetid": assetId,
+                "amount": 1, // TODO support stacked items, e.g. sack of gems
+                "price": sellPrice
+            };
 
-            const result = await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {}, true).catch(err => err);
+            const result = await RequestData.post("https://steamcommunity.com/market/sellitem/", data, {}, true).catch(err => err);
 
             if (!result?.success) {
                 loadingEl.textContent = result?.message ?? Localization.str.error;

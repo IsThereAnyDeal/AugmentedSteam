@@ -11,11 +11,11 @@ class SteamCommunityApi extends Api {
      */
 
     static cards(appid, border) {
-        return SteamCommunityApi.getPage(`/my/gamecards/${appid}`, (border ? {"border": 1} : {}));
+        return SteamCommunityApi.getPage(`/my/gamecards/${appid}`, border ? {"border": 1} : {}, true);
     }
 
     static stats(path, appid) {
-        return SteamCommunityApi.getPage(`${path}/stats/${appid}`);
+        return SteamCommunityApi.getPage(`${path}/stats/${appid}`, {}, true);
     }
 
     static async getInventory(contextId) {
@@ -54,9 +54,10 @@ class SteamCommunityApi extends Api {
      * Inventory functions, must be signed in to function correctly
      */
     static async coupons() { // context#3
-        const coupons = new Map();
         const data = await SteamCommunityApi.getInventory(3);
         if (!data) { return null; }
+
+        const coupons = new Map();
 
         for (const description of data.descriptions) {
             if (!description.type || description.type !== "Coupon") { continue; }
@@ -118,13 +119,13 @@ class SteamCommunityApi extends Api {
     static hasCoupon(appid) { return IndexedDB.indexContainsKey("coupons", "appid", appid); }
 
     static async giftsAndPasses() { // context#1, gifts and guest passes
+        const data = await SteamCommunityApi.getInventory(1);
+        if (!data) { return null; }
+
         const gifts = [];
         const passes = [];
 
         let isPackage;
-
-        let data = await SteamCommunityApi.getInventory(1);
-        if (!data) { return null; }
 
         function addGiftsAndPasses(description) {
             const appids = GameId.getAppids(description.value);
@@ -167,25 +168,19 @@ class SteamCommunityApi extends Api {
             }
         }
 
-        data = {
-            "gifts": gifts,
-            "passes": passes,
-        };
-
-        return IndexedDB.put("giftsAndPasses", data);
+        return IndexedDB.put("giftsAndPasses", {gifts, passes});
     }
 
     static hasGiftsAndPasses(appid) {
         return IndexedDB.getFromIndex("giftsAndPasses", "appid", appid, {"all": true, "asKey": true});
     }
 
+    // Only used for market highlighting
     static async items() { // context#6, community items
-        // only used for market highlighting
         const data = await SteamCommunityApi.getInventory(6);
-        if (data) {
-            return IndexedDB.put("items", data.descriptions.map(item => item.market_hash_name));
-        }
-        return null;
+        if (!data) { return null; }
+
+        return IndexedDB.put("items", data.descriptions.map(item => item.market_hash_name));
     }
 
     static hasItem(hashes) { return IndexedDB.contains("items", hashes); }
@@ -211,25 +206,12 @@ class SteamCommunityApi extends Api {
         return IndexedDB.get("workshopFileSizes", id, {preventFetch});
     }
 
-    static _getReviewId(node) {
-        const input = node.querySelector("input");
-
-        // Only exists when the requested profile is yours
-        if (input) {
-            return Number(input.id.replace("ReviewVisibility", ""));
-        }
-
-        // Otherwise you have buttons to vote for and award the review
-        return Number(node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", ""));
-    }
-
-    static async fetchReviews({"key": steamId, "params": {reviewCount}}) {
+    static async fetchReviews({"key": steamId, "params": {pages}}) {
         const parser = new DOMParser();
-        const pageCount = 10;
         const reviews = [];
         let defaultOrder = 0;
 
-        for (let p = 1; p <= Math.ceil(reviewCount / pageCount); p++) {
+        for (let p = 1; p <= pages; p++) {
             const doc = parser.parseFromString(await SteamCommunityApi.getPage(`${steamId}/recommended`, {p}), "text/html");
 
             for (const node of doc.querySelectorAll(".review_box")) {
@@ -250,6 +232,12 @@ class SteamCommunityApi extends Api {
                 const visibilityNode = node.querySelector("input[id^=ReviewVisibility]");
                 const visibility = visibilityNode ? Number(visibilityNode.value) : 0;
 
+                const reviewId = visibilityNode
+                    // Only exists when the requested profile is yours
+                    ? visibilityNode.id.replace("ReviewVisibility", "")
+                    // Otherwise you have buttons to vote for and award the review
+                    : node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", "");
+
                 // Total playtime comes first
                 const playtimeText = node.querySelector(".hours").textContent.match(/(?:\d+,)?\d+\.\d+/);
                 const playtime = playtimeText ? parseFloat(playtimeText[0].replace(/,/g, "")) : 0.0;
@@ -257,7 +245,9 @@ class SteamCommunityApi extends Api {
                 // Count total awards received
                 const awards = Array.from(node.querySelectorAll(".review_award"))
                     .reduce((acc, node) => {
-                        const count = node.classList.contains("more_btn") ? 0 : Number(node.querySelector(".review_award_count").textContent.trim());
+                        const count = node.classList.contains("more_btn")
+                            ? 0
+                            : Number(node.querySelector(".review_award_count").textContent.trim());
                         return acc + count;
                     }, 0);
 
@@ -275,7 +265,7 @@ class SteamCommunityApi extends Api {
                     playtime,
                     awards,
                     "node": DOMPurify.sanitize(node.outerHTML) + devResponseNode,
-                    "id": SteamCommunityApi._getReviewId(node)
+                    "id": reviewId
                 });
             }
         }
@@ -283,29 +273,8 @@ class SteamCommunityApi extends Api {
         return IndexedDB.put("reviews", {[steamId]: reviews});
     }
 
-    static async updateReviewNode(steamId, html, reviewCount) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const node = doc.querySelector(".review_box");
-        const id = SteamCommunityApi._getReviewId(node);
-
-        if (!await IndexedDB.contains("reviews", steamId, {"preventFetch": true})) { return null; }
-
-        const reviews = await SteamCommunityApi.getReviews(steamId, reviewCount);
-
-        for (const review of reviews) {
-            if (review.id === id) {
-                review.node = DOMPurify.sanitize(node.outerHTML);
-                break;
-            }
-        }
-
-        // Todo updates expiry even though there is no new fetched data
-        return IndexedDB.put("reviews", {[steamId]: reviews});
-    }
-
-    static getReviews(steamId, reviewCount) {
-        return IndexedDB.get("reviews", steamId, {"params": {reviewCount}});
+    static getReviews(steamId, pages) {
+        return IndexedDB.get("reviews", steamId, {"params": {pages}});
     }
 
     /*
@@ -327,7 +296,7 @@ class SteamCommunityApi extends Api {
         const login = LocalStorage.get("login");
         if (login.profilePath === profilePath) { return login; }
 
-        const html = await self.getPage(profilePath);
+        const html = await self.getPage(profilePath, {}, true);
         const profileData = HTMLParser.getVariableFromText(html, "g_rgProfileData", "object");
         const steamId = profileData.steamid;
 
@@ -369,12 +338,12 @@ class SteamCommunityApi extends Api {
         return IndexedDB.delete("profiles", steamId);
     }
 
-    static async getPage(endpoint, query) {
-        const response = await this._fetchWithDefaults(endpoint, query, {"method": "GET"});
-        if (new URL(response.url).pathname === "/login/home/") {
-            throw new Errors.LoginError("community");
-        }
-        return response.text();
+    static getPage(endpoint, query, crossDomain) {
+        return super.getPage(endpoint, query, res => {
+            if (new URL(res.url).pathname === "/login/home/") {
+                throw new Errors.LoginError("community");
+            }
+        }, {}, crossDomain);
     }
 }
 SteamCommunityApi.origin = "https://steamcommunity.com/";

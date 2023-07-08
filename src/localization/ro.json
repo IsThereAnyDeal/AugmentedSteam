@@ -71,7 +71,6 @@
     "spam_comment_show": "__num__ comentarii spam ascunse pe această pagină. Click aici pentru a le afișa.",
     "dlc": "Conţinut suplimentar",
     "add_to_wishlist": "Adaugă la lista de dorințe",
-    "add_to_wishlist_tooltip": "Primește notificări prin e-mail atunci când produsele din lista ta de dorințe sunt lansate sau se află la reducere",
     "language": "Limba",
     "theworddefault": "Implicit",
     "show": "Afișează",
@@ -173,8 +172,7 @@
     "avg_price_3cards": "Prețul mediu a trei cărți de schimb: __price__",
     "mods": "Mod-uri",
     "empty_wishlist": {
-        "title": "Golește lista de dorințe",
-        "confirm": "Ești sigur că vrei să golești lista de dorințe?\nAceastă acțiune este ireversibilă!"
+        "title": "Golește lista de dorințe"
     },
     "about": "Despre",
     "never": "Niciodată",
@@ -185,7 +183,6 @@
     "notcommon_label": "Ascunde jocurile pe care le dețin",
     "show_all_steam_releases": "Afișează toate lansările Steam",
     "wishlist": "Listă de dorințe",
-    "on_wishlist": "Pe lista de dorințe",
     "notdiscounted": "Produse fără reducere",
     "cancel": "Anulează",
     "wiki_article": "Vezi articol __pcgw__",
@@ -336,7 +333,6 @@
         "guest": "Produse care le ai ca invitație",
         "show_steamchart_info": "Afișează informații SteamCharts.com",
         "show_steamspy_info": "Arată informații de pe steamspy.com",
-        "showallachievements": "Arată statisticile realizărilor pe pagina \"Toate jocurile\"",
         "lowestprice_onwishlist": "Afișează în Lista de dorințe",
         "steamrepapi": "Arată status-ul SteamRep pe paginile de profil",
         "header": "Antet",

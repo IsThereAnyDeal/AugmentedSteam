@@ -462,42 +462,32 @@ img.astats_icon {
 }
 
 /***************************************
- * Store and Community wishlist buttons
+ * Community app page
+ * FCommunityAppPageWishlist
  **************************************/
 .es-loading-wl {
   width: 16px;
-  filter: brightness(350%); /* to make the image more consitent with others, feel free to replace the image and remove this */
+  /* Makes the image more consitent with others */
+  filter: brightness(350%);
 }
-
 #es_wishlist_success img,
 #es_wishlist_add img {
   margin: 7px 0;
   vertical-align: top;
 }
-
 #es_wishlist_fail {
+  display: none;
   position: absolute;
   right: 0px;
 }
-
-.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success > a:hover .es-in-wl,
-.apphub_OtherSiteInfo:not(.loading) #es_wishlist_success:hover .es-in-wl {
-  display: none !important;
-}
-.queue_actions_ctn:not(.loading) #add_to_wishlist_area_success > a:hover .es-remove-wl,
-.apphub_OtherSiteInfo:not(.loading) #es_wishlist_success:hover .es-remove-wl {
+.apphub_OtherSiteInfo:not(.loading) a:hover img.es-remove-wl {
   display: inline !important;
 }
-.queue_actions_ctn.loading img,
-.apphub_OtherSiteInfo.loading img {
+.apphub_OtherSiteInfo:not(.loading) img:not(.es-in-wl),
+.apphub_OtherSiteInfo.loading img:not(.es-loading-wl),
+.apphub_OtherSiteInfo:not(.loading) a:hover img:not(.es-remove-wl) {
   display: none;
 }
-.queue_actions_ctn.loading #add_to_wishlist_area_success .es-loading-wl,
-.apphub_OtherSiteInfo.loading #es_wishlist_success .es-loading-wl,
-.apphub_OtherSiteInfo.loading #es_wishlist_add .es-loading-wl {
-  display: inline !important;
-}
-
 /***************************************
  * Wishlist and Games page stats
  **************************************/
@@ -1111,12 +1101,24 @@ video.highlight_movie:hover + .html5_video_overlay {
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
 }
+.as_btn_wishlist .btnv6_blue_hoverfade img {
+  vertical-align: middle;
+  margin-left: -6px;
+  margin-top: -2px;
+  margin-right: 3px;
+}
 .queue_btn_menu.on_wishlist #queue_menu_option_on_wishlist .queue_ignore_menu_option_image.selected,
 .queue_btn_menu.on_waitlist #queue_menu_option_on_waitlist .queue_ignore_menu_option_image.selected {
   display: inline-block;
 }
+.queue_actions_ctn:not(.loading) .as_btn_wishlist a:hover img.es-remove-wl {
+  display: inline !important;
+}
 .queue_btn_menu.on_wishlist #queue_menu_option_on_wishlist .queue_ignore_menu_option_image.unselected,
-.queue_btn_menu.on_waitlist #queue_menu_option_on_waitlist .queue_ignore_menu_option_image.unselected {
+.queue_btn_menu.on_waitlist #queue_menu_option_on_waitlist .queue_ignore_menu_option_image.unselected,
+.queue_actions_ctn:not(.loading) .as_btn_wishlist img:not(.es-in-wl),
+.queue_actions_ctn.loading .as_btn_wishlist img:not(.es-loading-wl),
+.queue_actions_ctn:not(.loading) .as_btn_wishlist a:hover img:not(.es-remove-wl) {
   display: none;
 }
 
@@ -1645,12 +1647,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   float: left;
   margin-left: 8px;
 }
-.game_area_dlc_price .es_tags {
-  margin-top: -1px;
-}
-.game_area_dlc_price .es_tags ~ div {
-  display: inline-block;
-}
 .match_app .es_tags {
   float: right;
   margin-left: 5px;
@@ -1716,39 +1712,12 @@ video.highlight_movie:hover + .html5_video_overlay {
  * Common
  * FEarlyAccess
  **************************************/
-.es_overlay,
-.es_overlay img {
-  position: absolute;
-  z-index: 4; /* Should be lower than .ds_flag (currently 5) */
-  width: auto !important;
-  height: 60%;
-  min-height: 35px;
-  max-height: 120px;
-}
-.es_overlay img {
-  position: relative;
-  height: 100% !important;
-}
-
 .es_early_access .broadcast_live_stream_icon {
   display: none; /* Hide broadcast icon since it gets in the way */
 }
 
-.home_content.single .es_overlay {
-  z-index: 11;
-}
 .home_content.single.es_early_access > .gamelink > .ds_flag {
   z-index: 12;
-}
-.curator_featured .es_overlay {
-  height: 25%;
-}
-.gameListRowLogo .es_overlay,
-.game_capsule_ctn .es_overlay {
-  height: 70%;
-}
-.gameLogo .es_overlay {
-  height: 50%;
 }
 .tab_item.es_early_access > .tab_item_cap {
   line-height: 48px;
@@ -1921,23 +1890,18 @@ video.highlight_movie:hover + .html5_video_overlay {
 /***************************************
  * Augmented Steam and ITAD menu
  **************************************/
-#es_menu {
-  display: inline-block;
-}
 #es_pulldown {
-  vertical-align: middle;
   display: inline-block;
-  margin: 1px;
   padding-left: 4px;
-  line-height: 19px;
+  line-height: 25px;
+}
+#es_pulldown.focus {
+  color: #ffffff;
 }
 #es_popup {
   display: none;
 }
 #es_popup .popup_menu .hr {
-  height: 1px;
-  background-color: #82807c;
-  width: 90%;
   margin: 2px 12px;
 }
 
@@ -2400,7 +2364,7 @@ label.es_dlc_label > input:checked::after {
 /***************************************
  * Global Steam Client button
  **************************************/
-.header_installsteam_btn_content.es_steamclient_btn {
+.es_steamclient_btn .header_installsteam_btn_content {
   background-image: url('https://store.cloudflare.steamstatic.com/public/images/v6/icon_platform_linux.png');
   background-position: 5px;
   padding-left: 28px;
@@ -3014,7 +2978,8 @@ label.es_dlc_label > input:checked::after {
 .search_results.negative .as-hide-negative,
 .search_results.sub-package .as-hide-sub-package,
 .search_results.reviews-score .as-reviews-score,
-.search_results .as-reviews-count {
+.search_results .as-reviews-count,
+.search_results .as-discount-percent {
   height: 0;
   margin: 0;
   border: none;
@@ -3040,11 +3005,11 @@ label.es_dlc_label > input:checked::after {
   padding: 7.5px 8px !important; /* 7.5px is the (line-height (28px) - font-size (13px)) / 2 */
 }
 
-.as-reviews-count-filter {
+.as-reviews-count-filter, .as-discount-percent-filter {
   margin-top: 10px;
 }
 
-.as-reviews-count-filter__header {
+.as-reviews-count-filter__header, .as-discount-percent-filter__header {
   margin-left: 8px;
   font-size: 13px;
   font-family: "Motiva Sans", Sans-serif;
@@ -3052,7 +3017,7 @@ label.es_dlc_label > input:checked::after {
   color: #9fbbcb;
 }
 
-.as-reviews-count-filter__content {
+.as-reviews-count-filter__content, .as-discount-percent-filter__content {
   display: flex;
   align-items: center;
   padding: 0 12px;
@@ -3060,7 +3025,7 @@ label.es_dlc_label > input:checked::after {
 }
 
 /* https://github.com/SteamDatabase/SteamTracking/blob/ad1bfe7966cbfc3a8cdff7d0fcc9f3437425b7a8/store.steampowered.com/public/css/v6/search.css#L546 */
-.as-reviews-count-filter__input {
+.as-reviews-count-filter__input, .as-discount-percent-filter__input  {
   min-width: 0;
   background-color: rgba( 0, 0, 0, 0.2 );
   color: #fff;

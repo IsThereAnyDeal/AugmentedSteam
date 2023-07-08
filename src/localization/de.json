@@ -99,8 +99,6 @@
     "spam_comment_show": "__num__ Spam-Kommentare wurden versteckt. Klick hier, um sie anzuzeigen.",
     "dlc": "Herunterladbare Inhalte",
     "add_to_wishlist": "Zur Wunschliste hinzufügen",
-    "add_to_wishlist_tooltip": "Sie erhalten eine E-Mail, wenn ein Titel von Ihrer Wunschliste veröffentlicht wird oder im Sale ist (jederzeit widerrufbar).",
-    "remove_from_wishlist_tooltip": "Dieses Produkt ist bereits auf deiner Wunschliste. Klicke, um es von dieser zu entfernen.",
     "add_to_waitlist": "Zur Waitlist hinzufügen",
     "language": "Sprache",
     "theworddefault": "Standard",
@@ -241,7 +239,6 @@
     "separator": "Separator",
     "empty_wishlist": {
         "title": "Wunschliste leeren",
-        "confirm": "Bist du sicher, dass du deine Wunschliste leeren willst?\n\nDiese Aktion kann nicht rückgängig gemacht werden!",
         "removing": "Entferne App __cur__ von __total__"
     },
     "about": "Über",
@@ -253,7 +250,6 @@
     "notcommon_label": "Spiele ausblenden, die du besitzt",
     "show_all_steam_releases": "Alle Steam-Veröffentlichungen anzeigen",
     "wishlist": "Wunschliste",
-    "on_wishlist": "Auf der Wunschliste",
     "ignored": "Ignoriert",
     "on_waitlist": "Auf Wunschliste",
     "notdiscounted": "Spiele, die nicht im Angebot sind",
@@ -454,7 +450,6 @@
         "waitlist": "Spiele, die in deiner ITAD Waitlist sind",
         "show_steamchart_info": "Informationen von SteamCharts.com anzeigen",
         "show_steamspy_info": "Steamspy.com-Infos anzeigen",
-        "showallachievements": "Statistiken für Errungenschaften auf der \"Alle Spiele\"-Seite anzeigen",
         "showallstats": "Zeige Spielzeit-Statistiken auf \"Alle Spiele\" Seite",
         "lowestprice_onwishlist": "Auf der Wunschliste anzeigen",
         "steamrepapi": "SteamRep-Status auf Profilseiten anzeigen",
@@ -693,8 +688,6 @@
     },
     "calc_workshop_size": {
         "file_size": "Dateigröße __size__",
-        "finished": "Beendet",
-        "calculating": "Berechne...",
         "calc_size": "Gesamtgröße berechnen",
         "total_size": "Gesamtgröße: __size__"
     },

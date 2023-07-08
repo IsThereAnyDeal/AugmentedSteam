@@ -9,32 +9,15 @@ export default class FPatchHighlightPlayer extends Feature {
         Page.runInPageContext(() => {
             const f = window.SteamFacade;
 
-            // https://github.com/SteamDatabase/SteamTracking/blob/a100fdc357bb6fe4131dc7eb7fa8e17ac4ae10a4/store.steampowered.com/public/javascript/gamehighlightplayer.js#L68
-            if (typeof f.global("SetGameHighlightPlayerVolume") === "function") {
-                f.globalSet("SetGameHighlightPlayerVolume", (flVolume) => {
-                    // Set expiry, which is not done in the original function, making the cookie expire at the session end
-                    const dateExpires = new Date();
-                    dateExpires.setTime(dateExpires.getTime() + (1000 * 60 * 60 * 24 * 365 * 10));
-                    document.cookie = `flGameHighlightPlayerVolume=${flVolume}; expires=${dateExpires.toUTCString()}; path=/`;
-                });
-            }
-
-            // https://github.com/SteamDatabase/SteamTracking/blob/a100fdc357bb6fe4131dc7eb7fa8e17ac4ae10a4/store.steampowered.com/public/javascript/gamehighlightplayer.js#L33
+            /**
+             * Remove the check for `g_bUserSelectedTrailer` to avoid unmuting the player when switching or seeking video
+             * https://github.com/SteamDatabase/SteamTracking/blob/b7e8996a9a2a26296df60b252a608b3dc1c96ab1/store.steampowered.com/public/javascript/gamehighlightplayer.js#L33
+             */
             if (typeof f.global("BIsUserGameHighlightAudioEnabled") === "function") {
+
                 f.globalSet("BIsUserGameHighlightAudioEnabled", () => {
-                    // Do not auto unmute the player when switching or seeking video
                     const rgMatches = document.cookie.match(/(^|; )bGameHighlightAudioEnabled=([^;]*)/);
                     return rgMatches && rgMatches[2] === "true";
-                });
-            }
-
-            // https://github.com/SteamDatabase/SteamTracking/blob/a100fdc357bb6fe4131dc7eb7fa8e17ac4ae10a4/store.steampowered.com/public/javascript/gamehighlightplayer.js#L46
-            if (typeof f.global("SetGameHighlightAudioEnabled") === "function") {
-                f.globalSet("SetGameHighlightAudioEnabled", (bEnabled) => {
-                    // Set expiry, which is not done in the original function, making the cookie expire at the session end
-                    const dateExpires = new Date();
-                    dateExpires.setTime(dateExpires.getTime() + (1000 * 60 * 60 * 24 * 365 * 10));
-                    document.cookie = `bGameHighlightAudioEnabled=${bEnabled ? "true" : "false"}; expires=${dateExpires.toUTCString()}; path=/`;
                 });
             }
         });

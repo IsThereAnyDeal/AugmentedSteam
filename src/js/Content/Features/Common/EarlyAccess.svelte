@@ -1,6 +1,5 @@
 <script lang="ts">
     import {onMount} from "svelte";
-
     import {Localization} from "../../../modulesCore";
 
     export let imageUrl: string;
@@ -10,12 +9,12 @@
 
     onMount(() => {
         container.append(imgHeader);
-    })
+    });
 </script>
 
 <span bind:this={container} class="es_overlay_container">
     <span class="es_overlay">
-        <img title="{Localization.str.early_access}" src="{imageUrl}" alt="Early Access banner">
+        <img title={Localization.str.early_access} src={imageUrl} alt="Early Access banner">
     </span>
 </span>
 
@@ -39,5 +38,33 @@
     }
     :global(.store_capsule) .es_overlay_container > :global(img) {
         width: 100%;
+    }
+
+    .es_overlay,
+    .es_overlay img {
+        position: absolute;
+        z-index: 4; /* Should be lower than .ds_flag (currently 5) */
+        width: auto !important;
+        height: 60%;
+        min-height: 35px;
+        max-height: 120px;
+    }
+    .es_overlay img {
+        position: relative;
+        height: 100% !important;
+    }
+
+    :global(.home_content.single) .es_overlay {
+        z-index: 11;
+    }
+    :global(.gameListRowLogo) .es_overlay,
+    :global(.game_capsule_ctn) .es_overlay {
+        height: 70%;
+    }
+    :global(.gameLogo) .es_overlay {
+        height: 50%;
+    }
+    :global(.curator_featured) .es_overlay {
+        height: 25%;
     }
 </style>

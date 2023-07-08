@@ -4,7 +4,7 @@ import {Feature, RequestData} from "../../../modulesContent";
 export default class FSteamDeckCompatibility extends Feature {
 
     checkPrerequisites() {
-        return SyncedStorage.get("showdeckcompat");
+        return SyncedStorage.get("showdeckcompat") && !this.context.isDlcLike && !this.context.isVideoOrHardware;
     }
 
     async apply() {
