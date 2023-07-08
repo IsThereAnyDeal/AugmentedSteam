@@ -1712,39 +1712,12 @@ video.highlight_movie:hover + .html5_video_overlay {
  * Common
  * FEarlyAccess
  **************************************/
-.es_overlay,
-.es_overlay img {
-  position: absolute;
-  z-index: 4; /* Should be lower than .ds_flag (currently 5) */
-  width: auto !important;
-  height: 60%;
-  min-height: 35px;
-  max-height: 120px;
-}
-.es_overlay img {
-  position: relative;
-  height: 100% !important;
-}
-
 .es_early_access .broadcast_live_stream_icon {
   display: none; /* Hide broadcast icon since it gets in the way */
 }
 
-.home_content.single .es_overlay {
-  z-index: 11;
-}
 .home_content.single.es_early_access > .gamelink > .ds_flag {
   z-index: 12;
-}
-.curator_featured .es_overlay {
-  height: 25%;
-}
-.gameListRowLogo .es_overlay,
-.game_capsule_ctn .es_overlay {
-  height: 70%;
-}
-.gameLogo .es_overlay {
-  height: 50%;
 }
 .tab_item.es_early_access > .tab_item_cap {
   line-height: 48px;
