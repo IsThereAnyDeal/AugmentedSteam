@@ -61,13 +61,20 @@ export default class FAddToCartNoRedirect extends Feature {
             if (!node) { return; }
 
             const form = getFormEl(node.href);
+
+            /**
+             * This shouldn't happen, but Steam has fallback logic in case
+             * the form is missing, so just yield back to Steam for now.
+             */
             if (!form) { return; }
 
-            if (!await AddToCart.checkFeatureHint()) { return; }
+            e.preventDefault(); // MUST be called before `await`
 
-            e.preventDefault();
-
-            AddToCart.post(form, onWishlist, node);
+            if (!await AddToCart.checkFeatureHint()) {
+                form.submit();
+            } else {
+                AddToCart.post(form, onWishlist, node);
+            }
         }
 
         if (onWishlist) {
