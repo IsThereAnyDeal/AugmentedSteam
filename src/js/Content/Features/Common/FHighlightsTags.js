@@ -122,18 +122,18 @@ export default class FHighlightsTags extends Feature {
         ]);
 
         const it = trimmedStoreIds.values();
-        for (const [storeid, nodes] of storeIdsMap) {
+        for (const [storeId, nodes] of storeIdsMap) {
 
             const operations = [];
 
             if (dsStatus) {
-                if (opts.owned && dsStatus[storeid].owned) {
+                if (opts.owned && dsStatus[storeId].owned) {
                     operations.push(this.highlightOwned);
                 }
-                if (opts.wishlisted && dsStatus[storeid].wishlisted) {
+                if (opts.wishlisted && dsStatus[storeId].wishlisted) {
                     operations.push(this.highlightWishlist);
                 }
-                if (opts.ignored && dsStatus[storeid].ignored) {
+                if (opts.ignored && dsStatus[storeId].ignored) {
                     operations.push(this.highlightIgnored);
                 }
             }
@@ -143,10 +143,10 @@ export default class FHighlightsTags extends Feature {
              * contains `false` for every property if the highlight has been disabled
              */
             if (itadStatus) {
-                if (itadStatus[storeid].collected) {
+                if (itadStatus[storeId].collected) {
                     operations.push(this.highlightCollection);
                 }
-                if (itadStatus[storeid].waitlisted) {
+                if (itadStatus[storeId].waitlisted) {
                     operations.push(this.highlightWaitlist);
                 }
             }
