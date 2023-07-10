@@ -47,7 +47,6 @@ const communitySelectors = [
 ];
 
 const selector = (window.location.hostname === "store.steampowered.com" ? storeSelectors : communitySelectors)
-    .map(sel => `${sel}:not(.es_ea_checked)`)
     .join(",");
 
 export default class FEarlyAccess extends Feature {
@@ -117,6 +116,7 @@ export default class FEarlyAccess extends Feature {
 
         for (const node of nodes) {
 
+            if (node.classList.contains("es_ea_checked")) { continue; }
             node.classList.add("es_ea_checked");
 
             // Skip the live streams section since the thumbnail is shown on top
@@ -180,6 +180,5 @@ export default class FEarlyAccess extends Feature {
         ".recommendation_carousel_item",
         ".app_header",
         ".friendplaytime_appheader",
-    ].map(sel => `${sel}:not(.es_ea_checked)`)
-        .join(",");
+    ].join(",");
 }

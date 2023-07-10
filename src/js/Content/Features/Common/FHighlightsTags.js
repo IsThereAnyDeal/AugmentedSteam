@@ -59,6 +59,9 @@ export default class FHighlightsTags extends Feature {
 
         for (const node of _nodes) {
 
+            if (node.classList.contains("es_highlight_checked")) { continue; }
+            node.classList.add("es_highlight_checked");
+
             const aNode = node.querySelector("a");
 
             const appid = GameId.getAppid(node) || GameId.getAppid(aNode) || GameId.getAppidFromId(node.id);
@@ -295,8 +298,6 @@ export default class FHighlightsTags extends Feature {
     }
 
     static _highlightItem(node, name) {
-        node.classList.add("es_highlight_checked");
-
         if (SyncedStorage.get(`highlight_${name}`)) {
             this._highlightNode(node, name);
         }
@@ -389,5 +390,4 @@ FHighlightsTags._selector = [
     ".tab_item", // Item rows on storefront/tag/genre pages
     ".special > .special_img_ctn", // new homepage specials
     ".special.special_img_ctn",
-].map(sel => `${sel}:not(.es_highlight_checked)`)
-    .join(",");
+].join(",");
