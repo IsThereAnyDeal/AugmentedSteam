@@ -33,7 +33,6 @@ export default class FHighlightsTags extends Feature {
      * @param {Object} options - Option overrides that should be applied
      * @returns {Promise} - Resolved once the highlighting and tagging completed for the nodes
      */
-    /* eslint-disable complexity -- FIXME */
     static async highlightAndTag(nodes, hasDsInfo = true, options = {}) {
 
         if (typeof FHighlightsTags._options === "undefined") {
@@ -64,7 +63,7 @@ export default class FHighlightsTags extends Feature {
 
             const aNode = node.querySelector("a");
 
-            const appid = GameId.getAppid(node) || GameId.getAppid(aNode) || GameId.getAppidFromId(node.id);
+            const appid = GameId.getAppid(node) || GameId.getAppid(aNode);
             const subid = GameId.getSubid(node) || GameId.getSubid(aNode);
             const bundleid = GameId.getBundleid(node) || GameId.getBundleid(aNode);
 
@@ -83,6 +82,8 @@ export default class FHighlightsTags extends Feature {
                 } else {
                     storeIdsMap.set(storeId, [node]);
                 }
+            } else {
+                console.warn("FHighlightsTags: Couldn't find storeId for node %o", node);
             }
 
             if (hasDsInfo) {
@@ -177,7 +178,6 @@ export default class FHighlightsTags extends Feature {
             }
         }
     }
-    /* eslint-enable complexity */
 
     static _addTag(node, tag) {
 
@@ -219,8 +219,8 @@ export default class FHighlightsTags extends Feature {
                 node.querySelector(".addedon").prepend(container);
             } else if (node.classList.contains("match_app")) {
                 node.querySelector(".match_subtitle").prepend(container);
-            } else if (node.classList.contains("recommendation_highlight")) {
-                node.querySelector(".highlight_description").prepend(container);
+            } else if (node.classList.contains("header_image")) {
+                node.parentNode.querySelector(".highlight_description").prepend(container);
             } else if (node.classList.contains("similar_grid_item")) {
                 node.querySelector(".regular_price, .discount_block").append(container);
             } else if (node.classList.contains("recommendation_carousel_item")) {
@@ -256,8 +256,10 @@ export default class FHighlightsTags extends Feature {
                     `.es_highlighted_${name} {
                         background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important;
                     }
-                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name},
-                    .hero_capsule.es_highlighted_${name}, .blotter_userstatus_game.es_highlighted_${name} {
+                    .curator_giant_capsule.es_highlighted_${name},
+                    .blotter_userstatus_game.es_highlighted_${name},
+                    #curator_avatar_image.es_highlighted_${name} .curator_avatar,
+                    .app_header.es_highlighted_${name} {
                         outline: solid ${color};
                     }
                     .apphub_AppName.es_highlighted_${name} {
@@ -269,24 +271,33 @@ export default class FHighlightsTags extends Feature {
             DOMHelper.insertCSS(hlCss.join("\n"));
         }
 
+        // Find the node to highlight if needed
         let nodeToHighlight = node;
 
         if (node.classList.contains("item")) {
             nodeToHighlight = node.querySelector(".info");
         } else if (node.classList.contains("home_area_spotlight")) {
             nodeToHighlight = node.querySelector(".spotlight_content");
-        } else if (node.parentNode?.classList.contains("steam_curator_recommendation")
-            && node.parentNode?.classList.contains("big")) {
-            nodeToHighlight = node.nextElementSibling;
-        } else if (node.parentNode?.parentNode?.classList.contains("curations")) {
-            nodeToHighlight = node.parentNode;
         } else if (node.classList.contains("special_img_ctn") && node.parentNode?.classList.contains("special")) {
             nodeToHighlight = node.parentNode;
-        } else if (node.classList.contains("blotter_userstats_game")) {
+        } else if (node.classList.contains("store_capsule")) {
+            if (node.parentNode?.classList.contains("steam_curator_recommendation")
+                && node.parentNode?.classList.contains("big")) {
+                // curators/ (larger store capsule)
+                nodeToHighlight = node.nextElementSibling;
+            } else if (node.parentNode?.parentNode?.classList.contains("curations")) {
+                nodeToHighlight = node.parentNode;
+            }
+        } else if (
             // Small game capsules on activity page (e.g. when posting a status about a game)
-            nodeToHighlight = node.parentNode;
-        } else if (node.classList.contains("gamelink")) {
-            // Recommendations at the bottom of the storefront
+            node.classList.contains("blotter_userstats_game")
+            || node.classList.contains("gamelink")
+            || node.classList.contains("recommendation_app")
+            || node.classList.contains("header_image")
+            || node.classList.contains("game_capsule")
+            || node.classList.contains("highlighted_app_header")
+            || node.classList.contains("friendplaytime_appheader")
+        ) {
             nodeToHighlight = node.parentNode;
         }
 
@@ -361,34 +372,33 @@ FHighlightsTags._types = [
 
 // Note: select the node which has DS info, and traverse later when highlighting if needed
 FHighlightsTags._selector = [
-    ".store_main_capsule", // "Featured & Recommended"
-    "a.game_area_dlc_row", // DLC on app pages
-    "a.small_cap", // Featured storefront items and "recommended" section on app pages
-    ".home_content_item", // Small items under "Keep scrolling for more recommendations"
-    ".home_content.single > .gamelink", // Big items under "Keep scrolling for more recommendations"
-    ".home_area_spotlight", // "Special offers" big items
-    "a.search_result_row", // Search result rows
-    "a.match", // Search suggestions rows
-    ".highlighted_app", // For example "Recently Recommended" on curators page
-    "div.recommendation_highlight", // Recommendation pages
-    "div.recommendation_carousel_item", // Recommendation pages
-    "div.friendplaytime_game", // Recommendation pages
-    ".recommendation_row", // "Recent recommendations by friends"
-    ".friendactivity_tab_row", // "Most played" and "Most wanted" tabs on recommendation pages
-    ".friend_game_block", // "Friends recently bought"
-    ".recommendation", // Curator pages and the new DLC pages
-    ".curator_giant_capsule",
-    "div.carousel_items.curator_featured > div", // Carousel items on Curator pages
-    "div.item_ctn", // Curator list item
-    ".store_capsule", // All sorts of items on almost every page
+    ".tab_item", // Item rows on storefront
     ".newonsteam_headercap", // explore/new/
     ".comingsoon_headercap", // explore/upcoming/
-    ".home_marketing_message", // "Updates and offers"
-    "div.dlc_page_purchase_dlc", // DLC page rows
-    "div.home_area_spotlight", // Midweek and weekend deals
-    "div.browse_tag_game", // Tagged games
-    "div.similar_grid_item", // Items on the "Similarly tagged" pages
-    ".tab_item", // Item rows on storefront/tag/genre pages
-    ".special > .special_img_ctn", // new homepage specials
-    ".special.special_img_ctn",
+    ".store_capsule",
+    ".dailydeal_ctn",
+    ".special.special_img_ctn", // explore/new, cart/
+    ".special > .special_img_ctn",
+    ".store_main_capsule", // Featured & Recommended
+    ".home_marketing_message", // Updates and Offers
+    ".home_area_spotlight", // Special Offers, specials/
+    ".curator_giant_capsule", // Curator Recommendations
+    ".home_content_item", // Recommendations at the bottom of the storefront (small)
+    ".home_content.single > .gamelink", // ...aforementioned (big)
+    ".highlighted_app_header", // curators/
+    "body.dlc_curator #curator_avatar_image", // Header image on dlc pages
+    ".curator_featured .capsule", // Featured items on curator, developer, publisher, franchise, dlc etc. pages
+    ".recommendation", // Item rows on aforementioned pages (the node to highlight and the parent of .store_capsule, and will get processed first)
+    ".search_result_row",
+    ".small_cap", // "recommended" section on app pages
+    ".game_area_dlc_row", // DLC on app pages
+    ".browse_tag_game", // tag/browse (the node to highlight)
+    ".recommendation_highlight > .header_image", // recommended/morelike, recommended/friendactivity/
+    ".similar_grid_item", // recommended/morelike
+    ".friend_game_block > .game_capsule", // recommended/friendactivity/
+    ".friendactivity_tab_row", // recommended/friendactivity/
+    ".recommendation_app", // recommended/byfriends/
+    ".recommendation_carousel_item",
+    ".app_header",
+    ".friendplaytime_appheader",
 ].join(",");
