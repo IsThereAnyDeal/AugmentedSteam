@@ -35,15 +35,18 @@ class UpdateHandler {
         }
 
         const logo = ExtensionResources.getURL("img/logo/as128.png");
-        const githubChanges = `<p><a href="https://github.com/IsThereAnyDeal/AugmentedSteam/compare/v${SyncedStorage.get("version")}...v${Info.version}" target="_blank">All changes on GitHub</a></p>`;
-        const dialog = `<div class="es_changelog"><img src="${logo}"><div>${html}${githubChanges}</div></div>`;
+        const githubLink = `https://github.com/IsThereAnyDeal/AugmentedSteam/compare/v${SyncedStorage.get("version")}...v${Info.version}`;
+        const dialog = `<div class="es_changelog">
+            <img src="${logo}">
+            <div>
+                ${html}
+                <p><a href="${githubLink}" target="_blank">${Localization.str.update.changes}</a></p>
+            </div>
+        </div>`;
 
-        Page.runInPageContext(
-            (updatedStr, dialog) => {
-                window.SteamFacade.showAlertDialog(updatedStr, dialog);
-            },
-            [Localization.str.update.updated.replace("__version__", Info.version), dialog]
-        );
+        Page.runInPageContext((title, html) => {
+            window.SteamFacade.showAlertDialog(title, html);
+        }, [Localization.str.update.updated.replace("__version__", Info.version), dialog]);
     }
 
     static _migrateSettings(oldVersion) {

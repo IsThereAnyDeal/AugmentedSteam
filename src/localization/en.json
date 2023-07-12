@@ -762,7 +762,7 @@
     "update": {
         "dont_show": "Don't Show Again",
         "updated": "Augmented Steam has been updated to __version__",
-        "changes": "This release includes the following changes"
+        "changes": "View all changes on GitHub"
     },
     "register": {
         "success": "Successfully activated __gamename__",
