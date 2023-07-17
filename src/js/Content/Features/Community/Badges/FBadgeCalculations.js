@@ -4,7 +4,7 @@ import {Background, CurrencyManager, DOMHelper, Feature, Price, RequestData} fro
 export default class FBadgeCalculations extends Feature {
 
     checkPrerequisites() {
-        return this.context.myProfile;
+        return this.context.showDropOptions;
     }
 
     apply() {
@@ -19,6 +19,7 @@ export default class FBadgeCalculations extends Feature {
     _updateHead() {
 
         const xpBlockRight = document.querySelector(".profile_xp_block_right");
+        xpBlockRight.classList.add("es_badge_calc_ctn");
 
         // Move FAQ to the middle
         HTML.beforeEnd(document.querySelector(".profile_xp_block_mid"), `<div class="es_faq_cards">${xpBlockRight.innerHTML}</div>`);

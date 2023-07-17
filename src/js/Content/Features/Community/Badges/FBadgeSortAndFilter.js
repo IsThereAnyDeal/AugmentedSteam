@@ -18,7 +18,6 @@ export default class FBadgeSortAndFilter extends Feature {
 
     _addSort() {
 
-        const isOwnProfile = this.context.myProfile;
         const sortOptions = this._header.querySelector(".profile_badges_sortoptions");
 
         // Build popup menu for Steam's sort options + our options
@@ -27,7 +26,7 @@ export default class FBadgeSortAndFilter extends Feature {
             const sort = new URL(node.href).searchParams.get("sort");
             html += `<a class="popup_menu_item" href="?sort=${sort}">${node.textContent.trim()}</a>`;
         }
-        if (isOwnProfile) {
+        if (this.context.showDropOptions) {
             html += `<a class="popup_menu_item" id="es_badge_sort_drops">${Localization.str.most_drops}</a>`;
             html += `<a class="popup_menu_item" id="es_badge_sort_value">${Localization.str.drops_value}</a>`;
             html += `<a class="popup_menu_item" id="es_badge_sort_remain">${Localization.str.cards_remain}</a>`;
@@ -48,7 +47,7 @@ export default class FBadgeSortAndFilter extends Feature {
                 <div class="popup_body popup_menu">${html}</div>
             </div>`);
 
-        if (isOwnProfile) {
+        if (this.context.showDropOptions) {
             document.querySelector("#es_badge_sort_drops").addEventListener("click", async e => {
 
                 if (this.context.hasMultiplePages) {
@@ -104,7 +103,7 @@ export default class FBadgeSortAndFilter extends Feature {
     }
 
     _addFilter() {
-        if (!this.context.myProfile) { return; }
+        if (!this.context.showDropOptions) { return; }
 
         HTML.afterBegin(this._header,
             `<div class="es_badge_filter">
@@ -135,8 +134,7 @@ export default class FBadgeSortAndFilter extends Feature {
             this._recalcLazyLoaderOffset();
         });
 
-        document.querySelector("#es_badge_drops").addEventListener("click", async e => {
-            e.preventDefault();
+        document.querySelector("#es_badge_drops").addEventListener("click", async() => {
 
             if (this.context.hasMultiplePages) {
                 await this._loadAllPages();

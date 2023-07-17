@@ -603,9 +603,9 @@ img.astats_icon {
  * Badges page
  * FBadgeCalculations
  **************************************/
-.profile_xp_block_right {
-  width: 280px !important;
-  text-align: right !important;
+.es_badge_calc_ctn.profile_xp_block_right {
+  width: 280px;
+  text-align: right;
   cursor: auto;
 }
 .es_faq_cards {
