@@ -105,18 +105,14 @@ export class DiscountPercentSearchFilter extends SearchFilter {
 
     _getDiscountPercent(row) {
         let discount = 0;
-        const discountEl = row.querySelector(".search_discount");
+        const discountEl = row.querySelector(".discount_block");
         
-        if (!discountEl || discountEl.innerText === "") {
+        if (!discountEl) {
             return 0;
         }
 
-        const discountText = discountEl.innerText.match(/\d+/);
-        if (discountText !== null) {
-            discount = Number(discountText);
-        }
-        
-        return discount;
+        const discountAmount = Number(discountEl.dataset["discount"])
+        return isNaN(discountAmount) ? 0 : discountAmount
     }
 
     _apply(rows = document.querySelectorAll(".search_result_row")) {
