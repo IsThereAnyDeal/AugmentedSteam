@@ -98,25 +98,11 @@ export class DiscountPercentSearchFilter extends SearchFilter {
     _addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-discount-percent])")) {
 
         for (const row of rows) {
-            const discountPercent = this._getDiscountPercent(row);
-            row.dataset.asDiscountPercent = discountPercent;
-        }
-    }
 
-    _getDiscountPercent(row) {
-        let discount = 0;
-        const discountEl = row.querySelector(".search_discount");
-        
-        if (!discountEl || discountEl.innerText === "") {
-            return 0;
+            // Exclude bundles that don't have additional discounts
+            const discountEl = row.querySelector(".discount_block:not(.no_discount)");
+            row.dataset.asDiscountPercent = discountEl?.dataset.discount ?? 0;
         }
-
-        const discountText = discountEl.innerText.match(/\d+/);
-        if (discountText !== null) {
-            discount = Number(discountText);
-        }
-        
-        return discount;
     }
 
     _apply(rows = document.querySelectorAll(".search_result_row")) {
