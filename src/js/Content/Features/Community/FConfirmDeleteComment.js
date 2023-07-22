@@ -10,14 +10,24 @@ export default class FConfirmDeleteComment extends Feature {
 
     apply() {
 
-        Messenger.addMessageListener("noDeletionConfirm", () => SyncedStorage.set("confirmdeletecomment", false));
+        Messenger.onMessage("CCommentThread").then(isDefined => {
+            if (isDefined) {
+                Messenger.addMessageListener("noDeletionConfirm", () => SyncedStorage.set("confirmdeletecomment", false));
+            }
+        });
 
         Page.runInPageContext((promptStr, labelStr) => {
+            if (typeof window.CCommentThread === "undefined") {
+                window.Messenger.postMessage("CCommentThread", false);
+                return;
+            }
+
+            window.Messenger.postMessage("CCommentThread", true);
 
             // https://github.com/SteamDatabase/SteamTracking/blob/18d1c0eed3dcedc81656e3d278b3896253cc5b84/steamcommunity.com/public/javascript/global.js#L2465
-            const oldDeleteComment = CCommentThread.DeleteComment; // eslint-disable-line no-undef
+            const oldDeleteComment = window.CCommentThread.DeleteComment;
 
-            CCommentThread.DeleteComment = function(id, gidcomment) { // eslint-disable-line no-undef
+            window.CCommentThread.DeleteComment = function(id, gidcomment) {
 
                 /**
                  * Forum topics have special handling and show a prompt already
@@ -47,8 +57,8 @@ export default class FConfirmDeleteComment extends Feature {
                          * Restore old method if don't show is checked, so the prompt is not shown
                          * when deleting more comments on the same page
                          */
-                        CCommentThread.DeleteComment = oldDeleteComment; // eslint-disable-line no-undef
-                        
+                        window.CCommentThread.DeleteComment = oldDeleteComment;
+
                         window.Messenger.postMessage("noDeletionConfirm");
                     }
 
