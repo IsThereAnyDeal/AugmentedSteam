@@ -205,6 +205,8 @@ export default class FHighlightsTags extends Feature {
 
             if (node.classList.contains("tab_item")) {
                 node.querySelector(".tab_item_details").prepend(container);
+            } else if (node.classList.contains("store_main_capsule")) {
+                node.querySelector(".platforms").prepend(container);
             } else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
                 node.querySelector(".discount_block").before(container);
             } else if (node.classList.contains("search_result_row")) {
