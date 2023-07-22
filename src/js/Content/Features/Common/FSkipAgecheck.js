@@ -23,24 +23,11 @@ export default class FSkipAgecheck extends Feature {
             document.cookie = `wants_mature_content=1; expires=${expiry}; path=/;`;
 
             // Make sure there's a valid age gate before redirecting
-            if (document.querySelector("#app_agegate")) {
+            if (document.querySelector("#app_agegate") !== null) {
                 window.location.href = window.location.href.replace("/agecheck", "");
             }
         } else {
-            this._skipContentWarning();
-
-            // Inline style changes to `display: block` if content warning is dismissed
-            const node = document.querySelector(".responsive_page_template_content");
-            if (node && node.style.display !== "block") {
-                new MutationObserver((mutations, observer) => {
-                    observer.disconnect();
-                    this._skipContentWarning();
-                }).observe(node, {"attributes": true});
-            }
+            document.querySelector(".contentcheck_desc_ctn button[onclick^=Proceed]")?.click();
         }
-    }
-
-    _skipContentWarning() {
-        document.querySelector("#age_gate_btn_continue")?.click();
     }
 }
