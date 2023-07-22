@@ -17,6 +17,7 @@ export default class FConfirmDeleteComment extends Feature {
         });
 
         Page.runInPageContext((promptStr, labelStr) => {
+            // `CCommentThread` is defined in global.js
             if (typeof window.CCommentThread === "undefined") {
                 window.Messenger.postMessage("CCommentThread", false);
                 return;
