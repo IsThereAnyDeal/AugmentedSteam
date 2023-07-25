@@ -44,7 +44,7 @@ class UserNotes {
         let note = await this.get(appid) || "";
 
         // Partly copied `ShowConfirmDialog` from shared_global.js
-        Page.runInPageContext((title, template, strSave, strCancel) => {
+        Page.runInPageContext((title, template, strSave, strCancel, appid) => {
             /* eslint-disable no-undef, new-cap, camelcase */
 
             const deferred = new jQuery.Deferred();
@@ -93,12 +93,12 @@ class UserNotes {
 
             modal
                 .done(note => {
-                    window.sessionStorage.removeItem("es_note_autosave");
+                    window.sessionStorage.removeItem(`es_note_autosave_${appid}`);
                     window.Messenger.postMessage("noteClosed", note);
                 })
                 .fail(() => {
                     if (noteInput.value.trim() !== "") {
-                        window.sessionStorage.setItem("es_note_autosave", noteInput.value);
+                        window.sessionStorage.setItem(`es_note_autosave_${appid}`, noteInput.value);
                     }
                     window.Messenger.postMessage("noteClosed", null);
                 });
@@ -108,9 +108,10 @@ class UserNotes {
         },
         [
             this._str.add_for_game.replace("__gamename__", appname),
-            this.noteModalTemplate.replace("__note__", note || window.sessionStorage.getItem("es_note_autosave") || ""),
+            this.noteModalTemplate.replace("__note__", note || window.sessionStorage.getItem(`es_note_autosave_${appid}`) || ""),
             Localization.str.save,
             Localization.str.cancel,
+            appid,
         ]);
 
         const oldNote = note;
@@ -123,7 +124,7 @@ class UserNotes {
             noteEl.textContent = this._str.add;
         } else {
             if (!await this.set(appid, note)) {
-                window.sessionStorage.setItem("es_note_autosave", note);
+                window.sessionStorage.setItem(`es_note_autosave_${appid}`, note);
                 return;
             }
             noteEl.textContent = `"${note}"`;
