@@ -108,7 +108,7 @@ class UserNotes {
         },
         [
             this._str.add_for_game.replace("__gamename__", appname),
-            this.noteModalTemplate.replace("__note__", note || window.sessionStorage.getItem(`es_note_autosave_${appid}`) || ""),
+            this.noteModalTemplate.replace("__note__", window.sessionStorage.getItem(`es_note_autosave_${appid}`) || note),
             Localization.str.save,
             Localization.str.cancel,
             appid,
