@@ -14,7 +14,7 @@ import browser from "webextension-polyfill";
  */
 class SyncedStorage<Defaults extends Record<Key, Value>> extends Storage<Defaults> {
 
-    public static readonly QUOTA_BYTES_PER_ITEM = browser.storage.sync.QUOTA_BYTES_PER_ITEM;
+    public readonly QUOTA_BYTES_PER_ITEM = browser.storage.sync.QUOTA_BYTES_PER_ITEM;
 
     public constructor(
         defaults: Defaults,
