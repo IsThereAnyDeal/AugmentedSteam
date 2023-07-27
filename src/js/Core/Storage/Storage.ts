@@ -92,7 +92,7 @@ export default abstract class Storage<Defaults extends Record<Key, Value>> imple
     }
 
     public toJson(): string {
-        return JSON.stringify(Array.from(this.entries()), null, jsonIndentation);
+        return JSON.stringify(Object.fromEntries(this.entries()), null, jsonIndentation);
     }
 
     protected async init(): Promise<Store> {
