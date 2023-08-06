@@ -467,7 +467,7 @@ img.astats_icon {
  **************************************/
 .es-loading-wl {
   width: 16px;
-  /* Makes the image more consitent with others */
+  /* Makes the image more consistent with others */
   filter: brightness(350%);
 }
 #es_wishlist_success img,
@@ -479,13 +479,14 @@ img.astats_icon {
   display: none;
   position: absolute;
   right: 0px;
+  color: #c6d4df;
 }
-.apphub_OtherSiteInfo:not(.loading) a:hover img.es-remove-wl {
+.as_btn_community_wishlist:not(.loading) a:hover img.es-remove-wl {
   display: inline !important;
 }
-.apphub_OtherSiteInfo:not(.loading) img:not(.es-in-wl),
-.apphub_OtherSiteInfo.loading img:not(.es-loading-wl),
-.apphub_OtherSiteInfo:not(.loading) a:hover img:not(.es-remove-wl) {
+.as_btn_community_wishlist:not(.loading) img:not(.es-in-wl),
+.as_btn_community_wishlist.loading img:not(.es-loading-wl),
+.as_btn_community_wishlist:not(.loading) a:hover img:not(.es-remove-wl) {
   display: none;
 }
 /***************************************

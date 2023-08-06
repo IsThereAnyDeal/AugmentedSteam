@@ -6,7 +6,7 @@ export default class FCommunityAppPageWishlist extends Feature {
     checkPrerequisites() {
         return User.isSignedIn
             && SyncedStorage.get("wlbuttoncommunityapp")
-            && (this._node = document.querySelector(".apphub_OtherSiteInfo")) !== null;
+            && document.querySelector(".apphub_OtherSiteInfo") !== null;
     }
 
     async apply() {
@@ -16,28 +16,29 @@ export default class FCommunityAppPageWishlist extends Feature {
         let {owned, wishlisted} = await DynamicStore.getAppStatus(`app/${appid}`);
         if (owned) { return; }
 
-        const parent = this._node;
-
-        HTML.beforeEnd(parent,
+        HTML.beforeEnd(".apphub_OtherSiteInfo",
             // First whitespace intended, separates buttons
-            ` <a id="es_wishlist_add" class="btnv6_blue_hoverfade btn_medium" style="${wishlisted ? "display: none;" : ""}">
-                <span>
-                    <img class="es-loading-wl" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
-                    ${Localization.str.add_to_wishlist}
-                </span>
-            </a>
-            <a id="es_wishlist_success" class="btnv6_blue_hoverfade btn_medium" style="${wishlisted ? "" : "display: none;"}">
-                <span>
-                    <img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}">
-                    <img class="es-loading-wl" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
-                    <img class="es-in-wl" src="//store.cloudflare.steamstatic.com/public/images/v6/ico/ico_selected.png" border="0">
-                    ${Localization.str.on_wishlist}
-                </span>
-            </a>
-            <div id="es_wishlist_fail">
-                <b>${Localization.str.error}</b>
-            </div>`);
+            ` <span class="as_btn_community_wishlist">
+                <a id="es_wishlist_add" class="btnv6_blue_hoverfade btn_medium" style="${wishlisted ? "display: none;" : ""}">
+                    <span>
+                        <img class="es-loading-wl" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
+                        ${Localization.str.add_to_wishlist}
+                    </span>
+                </a>
+                <a id="es_wishlist_success" class="btnv6_blue_hoverfade btn_medium" style="${wishlisted ? "" : "display: none;"}">
+                    <span>
+                        <img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}">
+                        <img class="es-loading-wl" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
+                        <img class="es-in-wl" src="//store.cloudflare.steamstatic.com/public/images/v6/ico/ico_selected.png" border="0">
+                        ${Localization.str.on_wishlist}
+                    </span>
+                </a>
+                <div id="es_wishlist_fail">
+                    <b>${Localization.str.error}</b>
+                </div>
+            </span>`);
 
+        const parent = document.querySelector(".as_btn_community_wishlist");
         const addBtn = document.getElementById("es_wishlist_add");
         const successBtn = document.getElementById("es_wishlist_success");
         const failNode = document.getElementById("es_wishlist_fail");
