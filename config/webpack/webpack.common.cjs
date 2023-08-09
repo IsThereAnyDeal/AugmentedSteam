@@ -45,6 +45,7 @@ module.exports = {
         "js/community/workshop": "./src/js/Content/Features/Community/Workshop/PWorkshop.js",
         "js/community/workshop_browse": "./src/js/Content/Features/Community/WorkshopBrowse/PWorkshopBrowse.js",
         "js/store/account": "./src/js/Content/Features/Store/Account/PAccount.js",
+        "js/store/licences": "./src/js/Content/Features/Store/Licenses/PLicenses.js",
         "js/store/agecheck": "./src/js/Content/Features/Store/AgeCheck/PAgecheck.js",
         "js/store/app": "./src/js/Content/Features/Store/App/PApp.js",
         "js/store/bundle": "./src/js/Content/Features/Store/Bundle/PBundle.js",
