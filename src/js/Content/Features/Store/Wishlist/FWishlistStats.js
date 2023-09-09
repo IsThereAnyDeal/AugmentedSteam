@@ -139,7 +139,7 @@ export default class FWishlistStats extends Feature {
                     </div>`;
                 }).join("");
 
-                f.showDialog(wlStr.hidden, html);
+                f.showDialog(wlStr.hidden.toUpperCase(), html);
 
                 if (!canEdit) { return; }
 
