@@ -378,6 +378,7 @@ img.astats_icon {
   padding-bottom: 8px;
   min-height: 38px;
   background: linear-gradient(rgb(73, 22, 26) 0%, rgb(191, 48, 34) 100%);
+  margin-bottom: 10px;
 }
 .es_drm_warning span {
   display: table-cell;
