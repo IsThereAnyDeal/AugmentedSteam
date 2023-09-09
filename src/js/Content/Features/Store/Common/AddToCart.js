@@ -30,12 +30,16 @@ export class AddToCart {
 
         // Use the form's `action` here because free promotions are submitted to a different endpoint
         const endpoint = formEl.getAttribute("action");
-        const body = new FormData(formEl);
+
+        if (endpoint.includes("freelicense/")) {
+            this._addFreePromotion(endpoint, formEl, onWishlist, addToCartEl);
+            return;
+        }
 
         let response;
 
         try {
-            response = await RequestData.post(endpoint, body, {}, "none");
+            response = await RequestData.post(endpoint, new FormData(formEl), {}, false);
         } catch (err) {
             // Likely network error; response.ok doesn't mean the item was added successfully
             Page.runInPageContext((errTitle, errDesc, errStr) => {
@@ -75,6 +79,51 @@ export class AddToCart {
             });
         } else {
             // On store pages, reload so page elements are updated
+            window.location.reload();
+        }
+    }
+
+    // See https://github.com/SteamDatabase/SteamTracking/blob/14f2138651e27bae760d067c490948c1197e5e61/store.steampowered.com/public/javascript/main.js#L1419
+    static async _addFreePromotion(endpoint, formEl, onWishlist, addToCartEl) {
+
+        const _endpoint = endpoint.endsWith("/") ? endpoint : `${endpoint}/`;
+        const body = new FormData(formEl);
+        const id = body.get("subid") || body.get("bundleid");
+
+        // Yield back to Steam if required fields are missing
+        if (!id || !body.has("sessionid")) {
+            formEl.submit();
+        }
+
+        const data = {
+            "ajax": true,
+            "sessionid": body.get("sessionid")
+        };
+
+        const response = await RequestData.post(`${_endpoint}${id}`, data).catch(err => console.error(err));
+
+        // This endpoint returns an empty array on success
+        if (!Array.isArray(response)) {
+            Page.runInPageContext((errTitle, errDesc, errStr) => {
+                window.SteamFacade.showAlertDialog(errTitle, errStr ? `${errDesc}<br><br>${errStr}` : errDesc);
+            },
+            [
+                Localization.str.error,
+                Localization.str.addtocart_dialog.error_desc_freepromo,
+                response ? `Error code: ${response.purchaseresultdetail}` : undefined
+            ]);
+
+            return;
+        }
+
+        if (onWishlist) {
+            addToCartEl.setAttribute("href", "https://store.steampowered.com/account/licenses/");
+            addToCartEl.querySelector("span").textContent = Localization.str.in_account;
+
+            Page.runInPageContext(() => {
+                window.SteamFacade.dynamicStoreInvalidateCache();
+            });
+        } else {
             window.location.reload();
         }
     }

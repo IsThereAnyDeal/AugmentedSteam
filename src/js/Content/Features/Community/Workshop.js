@@ -8,7 +8,7 @@ export default class Workshop {
 
         const data = {"sessionid": User.sessionId, appid, id};
 
-        const res = await RequestData.post(`https://steamcommunity.com/sharedfiles/${_method}`, data, {}, true);
+        const res = await RequestData.post(`https://steamcommunity.com/sharedfiles/${_method}`, data);
 
         if (method === "subscribe") {
             // https://github.com/SteamDatabase/SteamTracking/blob/3ab40a4604426852de8a51c50d963978e9660de4/steamcommunity.com/public/javascript/sharedfiles_functions_logged_in.js#L533

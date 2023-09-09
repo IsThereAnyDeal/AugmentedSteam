@@ -2,6 +2,7 @@
     "delete_comment_prompt": "Are you sure you want to delete this comment?",
     "addtocart_dialog": {
         "error_desc": "An error occurred while adding your item to Cart.",
+        "error_desc_freepromo": "An error occurred while adding this item to your account.",
         "title": "Added to Shopping Cart",
         "desc": "The item was added to your Shopping Cart.",
         "checkout": "No, checkout",
@@ -35,6 +36,7 @@
     },
     "cart": "Cart",
     "in_cart": "In Cart",
+    "in_account": "In Account",
     "steamid_of_user": "__user__'s SteamID",
     "copied": "Copied to your clipboard!",
     "view_steamid": "View SteamID",
