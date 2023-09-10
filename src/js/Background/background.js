@@ -39,7 +39,6 @@ const actionCallbacks = new Map([
     ["steam.currencies", StaticResources.currencies],
 
     ["migrate.cachestorage", CacheStorage.migrate],
-    ["migrate.notesToSyncedStorage", ExtensionData.moveNotesToSyncedStorage],
 
     ["notes.get", ExtensionData.getNote],
     ["notes.set", ExtensionData.setNote],
