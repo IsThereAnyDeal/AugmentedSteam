@@ -146,38 +146,4 @@ export default class FEarlyAccess extends Feature {
             return eaStatus[appid] ? nodesArray : [];
         });
     }
-
-    // TODO support React-based sales pages, curator lists, etc.
-    static _selector = [
-        // Store only, selectors for the Community are split into relevant contexts
-        ".tab_item", // Item rows on storefront
-        ".newonsteam_headercap", // explore/new
-        ".comingsoon_headercap", // explore/upcoming
-        ".store_capsule",
-        ".dailydeal_ctn",
-        ".special.special_img_ctn", // explore/new, cart/
-        /*
-         * These use CSS backgrounds instead of img elements, unsupported for now
-         * ".store_main_capsule", // Featured & Recommended
-         * ".home_marketing_message", // Updates and Offers
-         */
-        ".home_area_spotlight", // Special Offers, specials/
-        ".curator_giant_capsule", // Curator Recommendations
-        ".home_content_item", // Recommendations at the bottom of the storefront (small)
-        ".home_content.single > .gamelink", // ...aforementioned (big)
-        ".highlighted_app_header", // curators/
-        "body.dlc_curator #curator_avatar_image", // Header image on dlc pages
-        ".curator_featured .capsule", // Featured items on curator, developer, publisher, franchise, dlc etc. pages
-        ".search_result_row",
-        ".small_cap", // "recommended" section on app pages
-        ".browse_tag_game_cap", // tag/browse
-        ".recommendation_highlight > .header_image", // recommended/morelike, recommended/friendactivity/
-        ".similar_grid_item", // recommended/morelike
-        ".friend_game_block > .game_capsule", // recommended/friendactivity/
-        ".friendactivity_tab_row", // recommended/friendactivity/
-        ".recommendation_app", // recommended/byfriends/
-        ".recommendation_carousel_item",
-        ".app_header",
-        ".friendplaytime_appheader",
-    ].join(",");
 }
