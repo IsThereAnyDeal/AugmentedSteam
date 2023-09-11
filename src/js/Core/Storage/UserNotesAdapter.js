@@ -66,15 +66,17 @@ class SyncedStorageAdapter {
     }
 
     async set(appid, note) {
-        const notes = SyncedStorage.get("user_notes");
-        notes[appid] = note;
+        const newNotes = {
+            ...SyncedStorage.get("user_notes"),
+            ...{[appid]: note}
+        };
 
-        const storageUsage = this._getNotesSize(notes) / SyncedStorage.QUOTA_BYTES_PER_ITEM;
+        const storageUsage = this._getNotesSize(newNotes) / SyncedStorage.QUOTA_BYTES_PER_ITEM;
         if (storageUsage > 1) {
             throw new OutOfCapacityError(storageUsage, "Can't set this user note, out of capacity");
         }
 
-        await SyncedStorage.set("user_notes", notes);
+        await SyncedStorage.set("user_notes", newNotes);
 
         return new CapacityInfo(storageUsage > 0.85, storageUsage);
     }
