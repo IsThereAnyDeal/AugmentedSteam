@@ -5,8 +5,7 @@ import EarlyAccess from "./EarlyAccess.svelte";
 
 // TODO support React-based sales pages, curator lists, etc.
 const storeSelectors = [
-    ".tab_item", // Item rows on storefront, genre, category, tags etc. pages
-    ".quadscreenshot_carousel a", // Top carousel on genre, category, tags etc. pages
+    ".tab_item", // Item rows on storefront
     ".newonsteam_headercap", // explore/new
     ".comingsoon_headercap", // explore/upcoming
     ".store_capsule",
@@ -19,19 +18,19 @@ const storeSelectors = [
      */
     ".home_area_spotlight", // Special Offers, specials/
     ".curator_giant_capsule", // Curator Recommendations
-    ".home_content_item",
-    ".home_content.single > .gamelink",
+    ".home_content_item", // Recommendations at the bottom of the storefront (small)
+    ".home_content.single > .gamelink", // ...aforementioned (big)
     ".highlighted_app_header", // curators/
-    "#curator_avatar_image", // Header image on dlc pages
-    ".curator_featured a", // Featured items on curator, developer, publisher, franchise, dlc etc. pages
+    "body.dlc_curator #curator_avatar_image", // Header image on dlc pages
+    ".curator_featured .capsule", // Featured items on curator, developer, publisher, franchise, dlc etc. pages
     ".search_result_row",
     ".small_cap", // "recommended" section on app pages
     ".browse_tag_game_cap", // tag/browse
-    ".header_image", // recommended/morelike, friendactivity header
-    ".similar_grid_capsule", // recommended/morelike
-    ".friend_game_block a[data-ds-appid]",
-    ".friendactivity_tab_row",
-    ".recommendation_app",
+    ".recommendation_highlight > .header_image", // recommended/morelike, recommended/friendactivity/
+    ".similar_grid_item", // recommended/morelike
+    ".friend_game_block > .game_capsule", // recommended/friendactivity/
+    ".friendactivity_tab_row", // recommended/friendactivity/
+    ".recommendation_app", // recommended/byfriends/
     ".recommendation_carousel_item",
     ".app_header",
     ".friendplaytime_appheader",
@@ -39,7 +38,6 @@ const storeSelectors = [
 
 const communitySelectors = [
     // Selectors for Profile Home are split out due to issues with running them on my/edit/showcases
-    ".gameListRowLogo", // my/games
     ".gameLogo", // Various game community pages e.g. global/personal achievements
     ".blotter_gamepurchase_logo", // activity home
     ".gameLogoHolder_default", // activity home, individual reviews
@@ -47,7 +45,6 @@ const communitySelectors = [
 ];
 
 const selector = (window.location.hostname === "store.steampowered.com" ? storeSelectors : communitySelectors)
-    .map(sel => `${sel}:not(.es_ea_checked)`)
     .join(",");
 
 export default class FEarlyAccess extends Feature {
@@ -117,6 +114,7 @@ export default class FEarlyAccess extends Feature {
 
         for (const node of nodes) {
 
+            if (node.classList.contains("es_ea_checked")) { continue; }
             node.classList.add("es_ea_checked");
 
             // Skip the live streams section since the thumbnail is shown on top
@@ -135,6 +133,8 @@ export default class FEarlyAccess extends Feature {
                 } else {
                     appidsMap.set(appid, [node]);
                 }
+            } else {
+                console.warn("FEarlyAccess: Couldn't find appid for node %o", node);
             }
         }
 
@@ -150,8 +150,7 @@ export default class FEarlyAccess extends Feature {
     // TODO support React-based sales pages, curator lists, etc.
     static _selector = [
         // Store only, selectors for the Community are split into relevant contexts
-        ".tab_item", // Item rows on storefront, genre, category, tags etc. pages
-        ".quadscreenshot_carousel a", // Top carousel on genre, category, tags etc. pages
+        ".tab_item", // Item rows on storefront
         ".newonsteam_headercap", // explore/new
         ".comingsoon_headercap", // explore/upcoming
         ".store_capsule",
@@ -164,22 +163,21 @@ export default class FEarlyAccess extends Feature {
          */
         ".home_area_spotlight", // Special Offers, specials/
         ".curator_giant_capsule", // Curator Recommendations
-        ".home_content_item",
-        ".home_content.single > .gamelink",
+        ".home_content_item", // Recommendations at the bottom of the storefront (small)
+        ".home_content.single > .gamelink", // ...aforementioned (big)
         ".highlighted_app_header", // curators/
-        "#curator_avatar_image", // Header image on dlc pages
-        ".curator_featured a", // Featured items on curator, developer, publisher, franchise, dlc etc. pages
+        "body.dlc_curator #curator_avatar_image", // Header image on dlc pages
+        ".curator_featured .capsule", // Featured items on curator, developer, publisher, franchise, dlc etc. pages
         ".search_result_row",
         ".small_cap", // "recommended" section on app pages
         ".browse_tag_game_cap", // tag/browse
-        ".header_image", // recommended/morelike, friendactivity header
-        ".similar_grid_capsule", // recommended/morelike
-        ".friend_game_block a[data-ds-appid]",
-        ".friendactivity_tab_row",
-        ".recommendation_app",
+        ".recommendation_highlight > .header_image", // recommended/morelike, recommended/friendactivity/
+        ".similar_grid_item", // recommended/morelike
+        ".friend_game_block > .game_capsule", // recommended/friendactivity/
+        ".friendactivity_tab_row", // recommended/friendactivity/
+        ".recommendation_app", // recommended/byfriends/
         ".recommendation_carousel_item",
         ".app_header",
         ".friendplaytime_appheader",
-    ].map(sel => `${sel}:not(.es_ea_checked)`)
-        .join(",");
+    ].join(",");
 }

@@ -95,12 +95,6 @@ class GameId {
         return res;
     }
 
-    static getAppidFromId(text) {
-        if (!text) { return null; }
-        const m = text.match(/game_(\d+)/);
-        return m && GameId.parseId(m[1]);
-    }
-
     static getAppidFromGameCard(text) {
         if (!text) { return null; }
         const m = text.match(/\/gamecards\/(\d+)/);
