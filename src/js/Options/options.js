@@ -144,6 +144,11 @@ const Options = (() => {
                 return;
             }
 
+            // TODO Bugged in v2.5, see #1717, remove after some versions
+            if (Array.isArray(importedSettings)) {
+                importedSettings = Object.fromEntries(importedSettings);
+            }
+
             delete importedSettings.version;
 
             try {
