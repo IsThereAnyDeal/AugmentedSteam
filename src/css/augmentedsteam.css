@@ -1709,12 +1709,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.80);
 }
 
-/** Fix browse tag page highlights */
-.browse_tag_game {
-  padding-top: 0 !important;
-  margin-top: 12px;
-}
-
 /***************************************
  * Common
  * FEarlyAccess
