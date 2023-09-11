@@ -45,7 +45,7 @@ export default abstract class Storage<Defaults extends Record<Key, Value>> imple
         return this.adapter.set({[key]: value});
     }
 
-    public async import(entries: Store): Promise<void> {
+    public async import(entries: Record<Key, Value>): Promise<void> {
         for (const [key, value] of Object.entries(entries)) {
             this.cache.set(key, value);
         }
@@ -70,7 +70,7 @@ export default abstract class Storage<Defaults extends Record<Key, Value>> imple
     public async clear(clearPersistent = false): Promise<void> {
         let persistentEntries;
         if (!clearPersistent) {
-            persistentEntries = new Map(this.persistent.map(option => [option, this.cache.get(option)]));
+            persistentEntries = Object.fromEntries(this.persistent.map(option => [option, this.cache.get(option)]));
         }
 
         await this.adapter.clear();
@@ -92,7 +92,7 @@ export default abstract class Storage<Defaults extends Record<Key, Value>> imple
     }
 
     public toJson(): string {
-        return JSON.stringify(Array.from(this.entries()), null, jsonIndentation);
+        return JSON.stringify(Object.fromEntries(this.entries()), null, jsonIndentation);
     }
 
     protected async init(): Promise<Store> {
