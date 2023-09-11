@@ -35,7 +35,7 @@ export class CInventory extends CCommunityBase {
 
         Page.runInPageContext(() => {
             document.addEventListener("click", ({target}) => {
-                if (!target.matches("a.inventory_item_link, a.newitem")) { return; }
+                if (!target.closest("a.inventory_item_link, a.newitem")) { return; }
 
                 const f = window.SteamFacade;
                 const g = f.global;
