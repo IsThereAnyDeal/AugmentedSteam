@@ -10,20 +10,13 @@ export default class FConfirmDeleteComment extends Feature {
 
     apply() {
 
-        Messenger.onMessage("CCommentThread").then(isDefined => {
-            if (isDefined) {
-                Messenger.addMessageListener("noDeletionConfirm", () => SyncedStorage.set("confirmdeletecomment", false));
-            }
-        });
+        Messenger.addMessageListener("noDeletionConfirm", () => SyncedStorage.set("confirmdeletecomment", false));
 
         Page.runInPageContext((promptStr, labelStr) => {
             // `CCommentThread` is defined in global.js
             if (typeof window.CCommentThread === "undefined") {
-                window.Messenger.postMessage("CCommentThread", false);
                 return;
             }
-
-            window.Messenger.postMessage("CCommentThread", true);
 
             // https://github.com/SteamDatabase/SteamTracking/blob/18d1c0eed3dcedc81656e3d278b3896253cc5b84/steamcommunity.com/public/javascript/global.js#L2465
             const oldDeleteComment = window.CCommentThread.DeleteComment;
