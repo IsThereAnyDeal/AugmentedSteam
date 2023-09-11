@@ -512,8 +512,12 @@ img.astats_icon {
   font-weight: 300;
 }
 #esi-wishlist-stats-content .esi-stat {
-  color: #222d3d;
+  color: #1a9fff;
   font-weight: bold;
+}
+/* Apply Steam's margin to the filter button (the old `:first-child`) */
+#esi-wishlist-stats + #tab_filters {
+  margin: 0px 15px 0px 0px;
 }
 #esi-wishlist-stats,
 #esi-wishlist-stats-content .esi-stat > span {
