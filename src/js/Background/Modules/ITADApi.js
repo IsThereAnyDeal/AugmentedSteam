@@ -7,6 +7,15 @@ const MAX_ITEMS_PER_REQUEST = 1000;
 
 class ITADApi extends Api {
 
+    static getStoreList() {
+        return IndexedDB.getAll("storeList");
+    }
+
+    static async fetchStoreList() {
+        const storeList = await ITADApi.getEndpoint("v01/web/stores/all/");
+        await IndexedDB.put("storeList", storeList);
+    }
+
     static async authorize() {
         const rnd = crypto.getRandomValues(new Uint32Array(1))[0];
         const redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";

@@ -39,6 +39,10 @@ class IndexedDB {
                     tx.objectStore("workshopFileSizes").deleteIndex("expiry");
                     tx.objectStore("reviews").deleteIndex("expiry");
                 }
+
+                if (oldVersion < 4) {
+                    db.createObjectStore("storeList");
+                }
             },
             blocked() {
                 console.error("Failed to upgrade database, there is already an open connection");
@@ -437,6 +441,7 @@ IndexedDB.timestampedStores = new Map([
     ["rates", 60 * 60],
     ["collection", 15 * 60],
     ["waitlist", 15 * 60],
+    ["storeList", 7 * 24 * 60 * 60],
 ]);
 
 IndexedDB.timestampedEntriesStores = new Map([

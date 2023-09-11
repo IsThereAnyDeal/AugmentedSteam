@@ -1,6 +1,7 @@
 import {type Key, default as Storage, type Value} from "./Storage";
 import {Info} from "../Info";
 import browser from "webextension-polyfill";
+import {StoreList} from "../../Options/Modules/Data/StoreList";
 
 // FIXME browser.storage.sync is still restricted (in terms of quota limits) even if the user hasn't enabled sync
 
@@ -25,6 +26,20 @@ class SyncedStorage<Defaults extends Record<Key, Value>> extends Storage<Default
             defaults,
             persistent,
         );
+    }
+
+    protected override async migrate(): Promise<void> {
+
+        // TODO Remove after some versions (added v2.5.1)
+        if (this.has("stores")) {
+            const stores = this.get("stores");
+            if (stores.length !== 0) {
+                const excludedStores = StoreList.map(({id}) => id).filter(id => !stores.includes(id));
+                await this.set("excluded_stores", excludedStores);
+            }
+
+            await this.remove("stores");
+        }
     }
 }
 
@@ -78,7 +93,7 @@ const DEFAULTS = {
     "showlowestprice_onwishlist": true,
     "showlowestpricecoupon": true,
     "showallstores": true,
-    "stores": [],
+    "excluded_stores": [],
     "override_price": "auto",
     "showregionalprice": "mouse",
     "regional_countries": ["us", "gb", "ru", "br", "au", "jp"],

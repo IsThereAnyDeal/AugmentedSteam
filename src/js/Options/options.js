@@ -1,3 +1,4 @@
+import {StoreListBuilder} from "./Modules/StoreListBuilder";
 import {ChangelogBuilder} from "./Modules/ChangelogBuilder";
 import {CustomLinks} from "./Modules/CustomLinks";
 import {Fader} from "./Modules/Fader";
@@ -12,7 +13,6 @@ import {
     Downloader, ExtensionResources, HTML, Info,
     Localization, PermissionOptions, Permissions, SyncedStorage
 } from "../modulesCore";
-import {StoreList} from "./Modules/Data/StoreList";
 import {ContextMenu} from "../Background/Modules/ContextMenu";
 import {UserNotesAdapter} from "../Core/Storage/UserNotesAdapter";
 import {BackgroundSimple} from "../Core/BackgroundSimple";
@@ -23,23 +23,6 @@ const Options = (() => {
     const self = {};
 
     let profileLinkImagesSelect;
-
-    function loadStores() {
-        const storesNode = document.querySelector(".js-store-stores");
-        const stores = SyncedStorage.get("stores");
-
-        let html = "";
-
-        for (const store of StoreList) {
-            const id = store.id;
-            html += `<div class="option option--store">
-                        <input type="checkbox" id="${id}"${(stores.length === 0 || stores.indexOf(id) !== -1) ? " checked" : ""}>
-                        <label for="${id}">${store.title}</label>
-                    </div>`;
-        }
-
-        HTML.inner(storesNode, html);
-    }
 
     function loadProfileLinkImages() {
 
@@ -73,9 +56,7 @@ const Options = (() => {
         }
     }
 
-    // Restores select box state to saved value from SyncStorage.
-    let changelogLoaded;
-
+    // Restores checkbox state to saved value from SyncedStorage
     function loadOptions() {
 
         // Set the value or state for each input
@@ -114,13 +95,9 @@ const Options = (() => {
             }
         }
 
-        if (!changelogLoaded) {
-            (new ChangelogBuilder()).build();
-            changelogLoaded = true;
-        }
+        (new StoreListBuilder()).build();
 
         loadProfileLinkImages();
-        loadStores();
 
         Region.populate();
         self.customLinks.forEach(option => option.populate());
@@ -192,12 +169,12 @@ const Options = (() => {
 
         let value;
 
-        if (option === "stores") {
+        if (option === "excluded_stores") {
 
             value = [];
             const nodes = document.querySelectorAll(".js-store-stores input[type=checkbox]");
             for (const node of nodes) {
-                if (node.checked) {
+                if (!node.checked) {
                     value.push(node.id);
                 }
             }
@@ -263,7 +240,7 @@ const Options = (() => {
         const node = e.target.closest("[data-setting]");
         if (!node) {
             if (e.target.closest(".js-store-stores")) {
-                saveOption("stores");
+                saveOption("excluded_stores");
             }
             return;
         }
@@ -320,6 +297,7 @@ const Options = (() => {
 
         await (new ITADConnectionManager()).run();
 
+        (new ChangelogBuilder()).build();
         (new LocaleCreditsBuilder()).build();
 
         function addHandlerToSetDefaultColor(key) {

@@ -29,6 +29,7 @@ IndexedDB.objStoreFetchFns = new Map([
 
     ["collection", ITADApi.endpointFactoryCached("v02/user/coll/all", "collection", ITADApi.mapCollection)],
     ["waitlist", ITADApi.endpointFactoryCached("v01/user/wait/all", "waitlist", ITADApi.mapWaitlist)],
+    ["storeList", ITADApi.fetchStoreList],
 ]);
 
 const actionCallbacks = new Map([
@@ -96,6 +97,7 @@ const actionCallbacks = new Map([
     ["itad.removefromwaitlist", ITADApi.removeFromWaitlist],
     ["itad.incollection", ITADApi.inCollection],
     ["itad.getfromcollection", ITADApi.getFromCollection],
+    ["itad.storelist", ITADApi.getStoreList],
 
     ["error.test", () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
