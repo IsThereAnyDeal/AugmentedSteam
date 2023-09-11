@@ -1589,17 +1589,20 @@ video.highlight_movie:hover + .html5_video_overlay {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  max-width: 800px
+  max-width: 800px;
 }
 .es_changelog p {
   margin-bottom: 0.4em;
+  font-weight: bold;
 }
-.es_changelog img { margin-right: 21px; }
+.es_changelog img {
+  margin-right: 21px;
+}
 .es_changelog ul {
+  list-style-position: outside;
   padding: 0 10px 10px 10px;
   margin: 0 0 0 15px;
 }
-
 .es_changelog li {
   margin-bottom: 3px;
 }
