@@ -9,7 +9,11 @@ export default class FLincensesSummary extends Feature {
         const list = {};
         const types = {};
         for ( const item of all ) {
-            const year = item.querySelector( ".license_date_col" ).innerHTML.split( " " )[2];
+            const date_str = item.querySelector( ".license_date_col" ).innerHTML;
+            const year =
+                   /\d{4}$/.exec(date_str)?.[0] // "24 May, 2022" -> "2022"
+                || /^\d{4}/.exec(date_str)?.[0] // "2023. aug. 2." -> "2023"
+                || "";
             const typ = item.querySelector( ".license_acquisition_col" ).innerHTML.trim();
             (list[year] ||= {})[typ] = (list[year][typ] || 0) + 1;
             types[typ] = (types[typ] || 0) + 1;

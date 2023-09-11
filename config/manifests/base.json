@@ -78,7 +78,7 @@
       "js": "js/store/account.js"
     },
     {
-      "matches": "*://store.steampowered.com/account/licenses/",
+      "matches": "*://store.steampowered.com/account/licenses[/*]",
       "js": "js/store/licences.js"
     },
     {
@@ -132,7 +132,7 @@
         "*://*.steampowered.com/steamaccount/addfunds",
         "*://*.steampowered.com/digitalgiftcards/selectgiftcard",
         "*://*.steampowered.com/account",
-        "*://*.steampowered.com/account/licenses/",
+        "*://*.steampowered.com/account/licenses",
         "*://*.steampowered.com/account/registerkey",
         "*://*.steampowered.com/bundle/*",
         "*://*.steampowered.com/sub/*",
