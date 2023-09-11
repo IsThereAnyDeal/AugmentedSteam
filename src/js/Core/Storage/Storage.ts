@@ -68,18 +68,18 @@ export default abstract class Storage<Defaults extends Record<Key, Value>> imple
     }
 
     public async clear(clearPersistent = false): Promise<void> {
-        let persistentEntries;
-        if (!clearPersistent) {
-            persistentEntries = Object.fromEntries(this.persistent.map(option => [option, this.cache.get(option)]));
+        const clearAll = async () => {
+            await this.adapter.clear();
+            this.cache = new Map();
         }
 
-        await this.adapter.clear();
-        this.cache = new Map();
-
-        if (!clearPersistent) {
-            // @ts-expect-error Narrowing isn't working here, persistentEntries should be well defined in this branch
-            await this.import(persistentEntries);
+        if (clearPersistent) {
+            return clearAll();
         }
+
+        const persistentEntries = Object.fromEntries(this.persistent.map(option => [option, this.cache.get(option)]));
+        await clearAll();
+        return this.import(persistentEntries);
     }
 
     public then<TResult1 = Store, TResult2 = never>(
