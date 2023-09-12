@@ -40,5 +40,6 @@ export default Object.freeze({
     "TRADE_OFFER": 38,
     "FRIENDS_AND_GROUPS": 39,
     "POINTS_SHOP": 40,
+    "LICENSES": 41,
 });
 
