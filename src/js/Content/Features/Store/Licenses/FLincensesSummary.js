@@ -39,9 +39,9 @@ export default class FLincensesSummary extends Feature {
             .map(([year, row], i) => `<tr>
                 <td>${year}</td>
                 ${typesEntries
-        .map(([name]) => `<td>${row[name] || "0"}</td>`)
-        .join("")
-}
+                    .map(([name]) => `<td>${row[name] || "0"}</td>`)
+                    .join("")
+                }
                 <td>${totals[i] || "0"}</td>
             </tr>`)
             .join("");
