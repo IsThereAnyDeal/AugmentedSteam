@@ -132,7 +132,7 @@
         "*://*.steampowered.com/steamaccount/addfunds",
         "*://*.steampowered.com/digitalgiftcards/selectgiftcard",
         "*://*.steampowered.com/account",
-        "*://*.steampowered.com/account/licenses",
+        "*://*.steampowered.com/account/licenses[/*]",
         "*://*.steampowered.com/account/registerkey",
         "*://*.steampowered.com/bundle/*",
         "*://*.steampowered.com/sub/*",
