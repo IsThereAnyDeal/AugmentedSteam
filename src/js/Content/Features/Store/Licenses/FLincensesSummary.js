@@ -9,9 +9,9 @@ export default class FLincensesSummary extends Feature {
         const types = {};
 
         for (const item of all) {
-            const dateStr = item.querySelector(".license_date_col").innerHTML;
+            const dateStr = item.querySelector(".license_date_col").textContent.trim();
             const year = /\d{4}/.exec(dateStr)?.[0] ?? "";
-            const typ = item.querySelector(".license_acquisition_col").innerHTML.trim();
+            const typ = item.querySelector(".license_acquisition_col").textContent.trim();
 
             (list[year] ??= {})[typ] = (list[year][typ] ?? 0) + 1;
             types[typ] = (types[typ] ?? 0) + 1;
