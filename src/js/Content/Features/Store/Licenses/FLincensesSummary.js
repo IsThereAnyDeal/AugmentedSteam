@@ -51,19 +51,23 @@ export default class FLincensesSummary extends Feature {
             `<div class="block" style="margin-bottom: 20px">
                 <div class="block_content">
                     <table class="account_table">
-                        <tbody>
+                        <thead>
                             <tr>
                                 <th>${Localization.str.year}</th>
                                 ${tableHeader}
                                 <th>${Localization.str.all}</th>
                             </tr>
+                        </thead>
+                        <tbody>
                             ${rows}
+                        </tbody>
+                        <tfoot>
                             <tr>
                                 <td>${Localization.str.all}</td>
                                 ${tableFooter}
                                 <td>${totalGlobal}</td>
                             </tr>
-                        </tbody>
+                        </tfoot>
                     </table>
                 </div>
             </div>`
