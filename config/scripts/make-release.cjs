@@ -5,7 +5,7 @@ const archiver = require("archiver");
 
 const root = `${__dirname}/../..`;
 const changelogPath = `${root}/changelog.yml`;
-const releasesPath = `${root}/releases/`;
+const releasesPath = `${root}/../AugmentedSteam_releases/`;
 
 const changelog = fs.readFileSync(changelogPath, {
     "encoding": "utf8",
@@ -27,6 +27,7 @@ function copySource() {
     const toCopy = [
         "badges",
         "config",
+        "tsconfig.json",
         "src",
         ".eslintrc.json",
         ".gitignore",
@@ -89,7 +90,7 @@ function cleanup() {
     await zipSource();
 
     console.log("3. npm install");
-    run("npm ci --omit=dev --ignore-scripts");
+    run("npm install");
 
     console.log("4. build...");
     for (const platform of ["firefox", "chrome", "edge"]) {
