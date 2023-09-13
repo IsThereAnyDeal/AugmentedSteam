@@ -15,7 +15,8 @@ import {StoreList} from "../../Options/Modules/Data/StoreList";
  */
 class SyncedStorage<Defaults extends Record<Key, Value>> extends Storage<Defaults> {
 
-    public readonly QUOTA_BYTES_PER_ITEM = browser.storage.sync.QUOTA_BYTES_PER_ITEM;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- see https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/66696
+    public readonly QUOTA_BYTES_PER_ITEM = browser.storage.sync.QUOTA_BYTES_PER_ITEM ?? 8192;
 
     public constructor(
         defaults: Defaults,
