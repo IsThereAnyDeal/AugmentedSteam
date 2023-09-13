@@ -10,7 +10,7 @@ import {Region} from "./Modules/Region";
 import {SaveIndicator} from "./Modules/SaveIndicator";
 import {Sidebar} from "./Modules/Sidebar";
 import {
-    Downloader, ExtensionResources, HTML, Info,
+    Downloader, ExtensionResources, Info,
     Localization, PermissionOptions, Permissions, SyncedStorage
 } from "../modulesCore";
 import {ContextMenu} from "../Background/Modules/ContextMenu";
