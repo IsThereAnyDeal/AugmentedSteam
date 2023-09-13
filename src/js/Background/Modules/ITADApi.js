@@ -7,13 +7,16 @@ const MAX_ITEMS_PER_REQUEST = 1000;
 
 class ITADApi extends Api {
 
-    static getStoreList() {
-        return IndexedDB.getAll("storeList");
+    static async getStoreList() {
+        return Object.values(await IndexedDB.getAll("storeList"));
     }
 
     static async fetchStoreList() {
-        const storeList = await ITADApi.getEndpoint("v01/web/stores/all/");
-        await IndexedDB.put("storeList", storeList);
+        const storeList = (await ITADApi.getEndpoint("v01/web/stores/all/"))?.data;
+        if (!Array.isArray(storeList)) {
+            throw new Error("Can't read store list from response");
+        }
+        await IndexedDB.put("storeList", storeList, {"multiple": true});
     }
 
     static async authorize() {

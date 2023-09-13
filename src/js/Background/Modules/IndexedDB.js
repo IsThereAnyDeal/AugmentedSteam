@@ -41,7 +41,7 @@ class IndexedDB {
                 }
 
                 if (oldVersion < 4) {
-                    db.createObjectStore("storeList");
+                    db.createObjectStore("storeList", {"keyPath": "id"});
                 }
             },
             blocked() {

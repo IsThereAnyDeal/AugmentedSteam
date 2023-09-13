@@ -17,7 +17,7 @@ class StoreListBuilder {
         const excludedStores = SyncedStorage.get("excluded_stores");
 
         let html = "";
-        for (const {id, title, color} of storeList.data) {
+        for (const {id, title, color} of storeList) {
             const checked = excludedStores.includes(id) ? "" : " checked";
 
             html += `<div class="option option--store">
