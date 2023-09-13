@@ -10,7 +10,7 @@
   - Fix not skipping community content warnings
   - Fix error on importing extension settings
   - Fix improper loading of badges when sorting alphabetically
-  - Fix warning dialog for exceeded storage space never appearing on Firefox
+  - Fix warning dialog for exceeded storage space never appearing
   
   Miscellaneous changes:
   - Improve relevance of YouTube queries on app pages (gmikhail)
