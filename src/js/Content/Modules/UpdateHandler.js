@@ -113,6 +113,10 @@ class UpdateHandler {
         if (oldVersion.isSameOrBefore("2.4.1")) {
             SyncedStorage.remove("showallachievements");
         }
+
+        if (oldVersion.isSameOrBefore("2.5.0")) {
+            SyncedStorage.remove("replaceaccountname");
+        }
     }
 }
 

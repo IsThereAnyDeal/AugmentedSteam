@@ -182,7 +182,6 @@ const DEFAULTS = {
     "oneclickremovewl": false,
     "user_notes": {},
     "user_notes_adapter": "synced_storage",
-    "replaceaccountname": true,
     "showlanguagewarning": true,
     "showlanguagewarninglanguage": "english",
     "homepage_tab_selection": "remember",

@@ -193,39 +193,6 @@ class AugmentedSteam {
         );
     }
 
-    static _replaceAccountName() {
-        if (!SyncedStorage.get("replaceaccountname")) { return; }
-
-        const accountDetails = document.querySelector("#account_dropdown .account_name");
-        const accountName = accountDetails?.textContent;
-        if (!accountName) {
-            console.warn("Failed to retrieve account name");
-            return;
-        }
-
-        const communityName = document.getElementById("account_pulldown")?.textContent?.trim();
-        if (!communityName) {
-            console.warn("Failed to retrieve community name");
-            return;
-        }
-
-        accountDetails.textContent = communityName;
-
-        // Replace page header on account related pages
-        if (location.href.startsWith("https://store.steampowered.com/account")) {
-            const pageHeader = document.querySelector("h2.pageheader");
-            if (pageHeader) {
-                pageHeader.textContent = pageHeader.textContent.replace(accountName, communityName);
-            }
-        }
-
-        // Don't replace title on user pages that aren't mine
-        const isUserPage = /(id|profiles)\/.+/.test(location.pathname);
-        if (!isUserPage || location.pathname.includes(User.profilePath)) {
-            document.title = document.title.replace(accountName, communityName);
-        }
-    }
-
     static _launchRandomButton() {
 
         HTML.beforeEnd(
@@ -304,7 +271,6 @@ class AugmentedSteam {
         if (User.isSignedIn) {
             AugmentedSteam._addUsernameSubmenuLinks();
             AugmentedSteam._addRedeemLink();
-            AugmentedSteam._replaceAccountName();
             AugmentedSteam._launchRandomButton();
             AugmentedSteam._bindLogout();
 
