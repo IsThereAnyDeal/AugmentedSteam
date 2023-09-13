@@ -5,7 +5,7 @@ export class CLicenses extends Context {
 
     constructor() {
 
-        super(ContextType.ACCOUNT, [
+        super(ContextType.LICENSES, [
             FLincensesSummary,
         ]);
     }
