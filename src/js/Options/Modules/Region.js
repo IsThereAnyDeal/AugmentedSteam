@@ -20,7 +20,8 @@ class Region {
 
         document.querySelector(".js-region-add")
             .addEventListener("click", () => {
-                Region._addRegionHtml("none");
+                Region._addRegionHtml();
+                Region._save();
             });
 
         document.querySelector(".js-region-reset")
@@ -70,7 +71,7 @@ class Region {
         HTML.inner(this._container, "");
     }
 
-    static _addRegionHtml(country) {
+    static _addRegionHtml(country = "us") {
         let options = "";
         const countries = Object.entries(Localization.str.countries).sort(([, a], [, b]) => a.localeCompare(b));
         for (const [cc, countryName] of countries) {
