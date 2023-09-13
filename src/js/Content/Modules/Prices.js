@@ -14,11 +14,20 @@ class Prices {
         this._bundles = [];
     }
 
-    _getApiParams() {
+    async _getApiParams() {
+
+        if ([this.appids, this.subids, this.bundleids].every(param => param.length === 0)) {
+            return null;
+        }
+
         const apiParams = {};
 
-        if (!SyncedStorage.get("showallstores") && SyncedStorage.get("stores").length > 0) {
-            apiParams.stores = SyncedStorage.get("stores").join(",");
+        const excludedStores = SyncedStorage.get("excluded_stores");
+        if (!SyncedStorage.get("showallstores") && excludedStores.length > 0) {
+            const storeList = await Background.action("itad.storelist").catch(err => console.error(err));
+            if (storeList) {
+                apiParams.stores = storeList.data.map(({id}) => id).filter(id => !excludedStores.includes(id)).join(",");
+            }
         }
 
         const cc = User.storeCountry;
@@ -33,8 +42,6 @@ class Prices {
         if (SyncedStorage.get("showlowestpricecoupon")) {
             apiParams.coupon = true;
         }
-
-        if (!apiParams.appids && !apiParams.subids && !apiParams.bundleids) { return null; }
 
         return apiParams;
     }
@@ -294,18 +301,17 @@ class Prices {
         return [purchase, bundlePrice];
     }
 
-    load() {
-        const apiParams = this._getApiParams();
+    async load() {
+        const apiParams = await this._getApiParams();
         if (!apiParams) { return; }
 
-        Background.action("prices", apiParams).then(response => {
-            const meta = response[".meta"];
+        const response = await Background.action("prices", apiParams);
+        const meta = response[".meta"];
 
-            for (const [gameid, info] of Object.entries(response.data)) {
-                this._processPrices(gameid, meta, info);
-                this._processBundles(meta, info);
-            }
-        });
+        for (const [gameid, info] of Object.entries(response.data)) {
+            this._processPrices(gameid, meta, info);
+            this._processBundles(meta, info);
+        }
     }
 }
 

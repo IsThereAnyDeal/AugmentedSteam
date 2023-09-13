@@ -1,3 +1,4 @@
+// TODO This is the old store list prior to v2.5, remove after some versions
 export const StoreList = [
     {
         "id": "game2",
