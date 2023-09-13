@@ -382,7 +382,7 @@ FHighlightsTags._selector = [
     ".special.special_img_ctn", // explore/new, cart/
     ".special > .special_img_ctn",
     ".store_main_capsule", // Featured & Recommended
-    ".home_marketing_message", // Updates and Offers
+    ".home_marketing_message[data-ds-appid]", // Updates and Offers
     ".home_area_spotlight", // Special Offers, specials/
     ".curator_giant_capsule", // Curator Recommendations
     ".home_content_item", // Recommendations at the bottom of the storefront (small)
