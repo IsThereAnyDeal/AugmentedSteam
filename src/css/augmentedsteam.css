@@ -1910,7 +1910,15 @@ video.highlight_movie:hover + .html5_video_overlay {
 #es_popup {
   display: none;
 }
-#es_popup .popup_menu .hr {
+#es_popup > .popup_body {
+  width: fit-content;
+  max-width: 250px;
+}
+#es_popup > .popup_body.popup_menu .popup_menu_item {
+  padding: 8px 18px;
+  font-size: 13px;
+}
+#es_popup > .popup_body.popup_menu .hr {
   margin: 2px 12px;
 }
 
