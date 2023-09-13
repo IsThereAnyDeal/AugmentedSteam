@@ -196,22 +196,31 @@ class AugmentedSteam {
     static _replaceAccountName() {
         if (!SyncedStorage.get("replaceaccountname")) { return; }
 
-        const logoutNode = document.querySelector("#account_dropdown .persona.online");
-        const accountName = logoutNode.textContent.trim();
-        const communityName = document.querySelector("#account_pulldown").textContent.trim();
+        const accountDetails = document.querySelector("#account_dropdown .account_name");
+        const accountName = accountDetails?.textContent;
+        if (!accountName) {
+            console.warn("Failed to retrieve account name");
+            return;
+        }
 
-        logoutNode.textContent = communityName;
+        const communityName = document.getElementById("account_pulldown")?.textContent?.trim();
+        if (!communityName) {
+            console.warn("Failed to retrieve community name");
+            return;
+        }
+
+        accountDetails.textContent = communityName;
 
         // Replace page header on account related pages
         if (location.href.startsWith("https://store.steampowered.com/account")) {
             const pageHeader = document.querySelector("h2.pageheader");
             if (pageHeader) {
-                pageHeader.textContent = pageHeader.textContent.replace(new RegExp(accountName, "i"), communityName);
+                pageHeader.textContent = pageHeader.textContent.replace(accountName, communityName);
             }
         }
 
         // Don't replace title on user pages that aren't mine
-        const isUserPage = /.*(id|profiles)\/.+/g.test(location.pathname);
+        const isUserPage = /(id|profiles)\/.+/.test(location.pathname);
         if (!isUserPage || location.pathname.includes(User.profilePath)) {
             document.title = document.title.replace(accountName, communityName);
         }
