@@ -1,3 +1,23 @@
+2.6.0: |
+  New Features:
+  - Add summary table for statistics about your acquired items on the licenses page (L1Q)
+  
+  Fixes:
+  - Fix complete extension crash when "Replace account name with community name" is enabled
+  - Fix shrinking SteamDB buttons on app pages
+  - Fix instant dismissal of one-time dialog when adding items to your cart
+  - Fix discount percentage filter removing all search results
+  - Fix not skipping community content warnings
+  - Fix error on importing extension settings
+  - Fix improper loading of badges when sorting alphabetically
+  - Fix warning dialog for exceeded storage space never appearing on Firefox
+  
+  Miscellaneous changes:
+  - Improve relevance of YouTube queries on app pages (gmikhail)
+  - Keep stores for ITAD price comparison up-to-date by periodically fetching supported stores
+  - Unsaved user notes are now temporarily stored per-game instead of sharing a single slot
+  - Separate DRM warnings from purchase boxes for clarity on product pages (sparr)
+
 2.5.0: |
   New Features:
   - Wishlist: Add feature to show hidden apps in the stats popup
