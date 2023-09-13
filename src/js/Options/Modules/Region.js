@@ -72,7 +72,8 @@ class Region {
 
     static _addRegionHtml(country) {
         let options = "";
-        for (const [cc, countryName] of Object.entries(Localization.str.countries)) {
+        const countries = Object.entries(Localization.str.countries).sort(([, a], [, b]) => a.localeCompare(b));
+        for (const [cc, countryName] of countries) {
             const selected = (cc === country ? " selected='selected'" : "");
             options += `<option value='${cc}'${selected}>${countryName}</option>`;
         }
