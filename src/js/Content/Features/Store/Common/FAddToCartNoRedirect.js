@@ -15,18 +15,22 @@ export default class FAddToCartNoRedirect extends Feature {
 
         function getFormEl(href) {
 
+            const matches = href.match(/^javascript:([^(]+)\((.+)?\)/);
+            if (matches === null) { return null; }
+
+            const fnName = matches[1];
+            const arg = (matches[2] ?? "").trim();
             let formName;
 
-            const fnName = href.match(/javascript:([^(]+)/)[1];
             switch (fnName) {
                 case "addToCart":
-                    formName = `add_to_cart_${href.match(/\d+/)[0]}`;
+                    formName = `add_to_cart_${arg}`;
                     break;
                 case "addBundleToCart":
-                    formName = `add_bundle_to_cart_${href.match(/\d+/)[0]}`;
+                    formName = `add_bundle_to_cart_${arg}`;
                     break;
                 case "GamePurchaseDropdownAddToCart":
-                    formName = `add_to_cart_${href.split("'")[1]}`;
+                    formName = `add_to_cart_${arg.slice(1, -1)}`;
                     break;
                 case "addAllDlcToCart":
                     formName = "add_all_dlc_to_cart";
@@ -35,26 +39,49 @@ export default class FAddToCartNoRedirect extends Feature {
                     return null;
             }
 
-            return document.forms[formName];
+            let formEl = document.forms[formName];
+
+            // Special handling for bundles on wishlist
+            if (onWishlist && !formEl && fnName === "addBundleToCart") {
+                // Use the actual (wrong) name to locate the associated form
+                formEl = document.forms[`add_to_cart_${arg}`];
+                // Find the `input` element with the name `subid` and change it to `bundleid`
+                const inputEl = formEl?.elements.subid;
+                if (inputEl) {
+                    inputEl.name = "bundleid";
+                }
+            }
+
+            return formEl;
         }
 
-        function handler(e) {
+        async function handler(e) {
 
             const node = e.target.closest("a[href^=javascript]");
             if (!node) { return; }
 
             const form = getFormEl(node.href);
+
+            /**
+             * This shouldn't happen, but Steam has fallback logic in case
+             * the form is missing, so just yield back to Steam for now.
+             */
             if (!form) { return; }
 
-            e.preventDefault();
+            e.preventDefault(); // MUST be called before `await`
 
-            AddToCart.post(form, onWishlist, node);
+            if (!await AddToCart.checkFeatureHint()) {
+                form.submit();
+            } else {
+                AddToCart.post(form, onWishlist, node);
+            }
         }
 
         if (onWishlist) {
             document.addEventListener("click", handler);
         } else {
-            for (const node of document.querySelectorAll(".btn_addtocart > a[href^=javascript]")) {
+            // Avoid selecting the purchase option node, e.g. on GTA5, EVE Online
+            for (const node of document.querySelectorAll(".btn_addtocart:not([id$='select_option']) > a[href^=javascript]")) {
                 node.addEventListener("click", handler);
             }
         }

@@ -9,6 +9,7 @@ import {MixedSearchFilter} from "./Filters/MixedSearchFilter";
 import {NegativeSearchFilter} from "./Filters/NegativeSearchFilter";
 import {ReviewsCountSearchFilter} from "./Filters/ReviewsCountSearchFilter";
 import {ReviewsScoreSearchFilter} from "./Filters/ReviewsScoreSearchFilter";
+import {DiscountPercentSearchFilter} from "./Filters/DiscountPercentSearchFilter";
 
 export default class FSearchFilters extends Feature {
 
@@ -21,6 +22,7 @@ export default class FSearchFilters extends Feature {
             NegativeSearchFilter,
             ReviewsScoreSearchFilter,
             ReviewsCountSearchFilter,
+            DiscountPercentSearchFilter
         ].map(Filter => new Filter(this));
 
         this._urlParams = {};

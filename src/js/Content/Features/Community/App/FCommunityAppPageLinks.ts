@@ -3,29 +3,21 @@ import {Feature} from "../../../Modules/Feature/Feature";
 
 import CommunityAppPageLinks from "./CommunityAppPageLinks.svelte";
 
-export default class FCommunityAppPageLinks extends Feature {
+export default class FCommunityAppPageLinks extends Feature<{ appid: number }> {
 
-    _node: HTMLElement;
+    private node: HTMLElement | null = null;
 
-    checkPrerequisites() {
+    public override checkPrerequisites(): boolean {
         return (SyncedStorage.get("showsteamdb") || SyncedStorage.get("showitadlinks") || SyncedStorage.get("showbartervg"))
-            && (this._node = document.querySelector(".apphub_OtherSiteInfo")) !== null;
+            && (this.node = document.querySelector(".apphub_OtherSiteInfo")) !== null;
     }
 
-    apply() {
-
-        const node = this._node;
+    public override apply(): void {
+        const node = this.node!;
 
         new CommunityAppPageLinks({
             "target": node,
             "props": {"appid": this.context.appid},
         });
-    }
-
-    _makeHeaderLink(cls, url, str) {
-        // First whitespace intended, separates buttons
-        return ` <a class="btnv6_blue_hoverfade btn_medium ${cls}" target="_blank" href="${url}">
-                   <span><i class="ico16"></i>&nbsp;${str}</span>
-               </a>`;
     }
 }

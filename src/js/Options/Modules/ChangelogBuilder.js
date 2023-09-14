@@ -1,5 +1,4 @@
-import {ExtensionResources} from "../../Core/ExtensionResources";
-import {HTML} from "../../Core/Html/Html";
+import {ExtensionResources, HTML} from "../../modulesCore";
 
 class ChangelogBuilder {
 
@@ -9,18 +8,13 @@ class ChangelogBuilder {
         let html = "";
         for (const [version, logHtml] of Object.entries(data)) {
 
-            html += `
-                <div class="changelog__release">
-                    <h2 class="changelog__version">${version}</h2>
-                    <div class="changelog__log">${logHtml}</div>                
-                </div>
-            `;
+            html += `<div class="changelog__release">
+                        <h2 class="changelog__version">${version}</h2>
+                        <div class="changelog__log">${logHtml}</div>
+                    </div>`;
         }
 
-        HTML.inner(
-            document.querySelector(".js-changelog"),
-            html
-        );
+        HTML.inner(".js-changelog", html);
     }
 }
 

@@ -3,6 +3,11 @@ import fs from "fs";
 import {marked} from "marked";
 import webpack, {type Compiler, type WebpackPluginInstance} from "webpack";
 
+marked.use({
+    "mangle": false,
+    "headerIds": false,
+});
+
 type Options = {
     "path": string;
 };

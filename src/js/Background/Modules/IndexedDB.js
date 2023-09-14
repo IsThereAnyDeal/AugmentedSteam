@@ -39,6 +39,10 @@ class IndexedDB {
                     tx.objectStore("workshopFileSizes").deleteIndex("expiry");
                     tx.objectStore("reviews").deleteIndex("expiry");
                 }
+
+                if (oldVersion < 4) {
+                    db.createObjectStore("storeList", {"keyPath": "id"});
+                }
             },
             blocked() {
                 console.error("Failed to upgrade database, there is already an open connection");
@@ -352,13 +356,8 @@ class IndexedDB {
         if (!IndexedDB.timestampedStores.has(storeName)) { return null; }
 
         const expiry = await IndexedDB.db.get("expiries", storeName);
-        let expired = true;
 
-        if (expiry) {
-            expired = IndexedDB.isExpired(expiry);
-        }
-
-        if (expired) {
+        if (!expiry || IndexedDB.isExpired(expiry)) {
             await IndexedDB.clear(storeName);
             if (!options.preventFetch) {
                 return IndexedDB.fetchUpdatedData(storeName, null, options.params);
@@ -442,6 +441,7 @@ IndexedDB.timestampedStores = new Map([
     ["rates", 60 * 60],
     ["collection", 15 * 60],
     ["waitlist", 15 * 60],
+    ["storeList", 7 * 24 * 60 * 60],
 ]);
 
 IndexedDB.timestampedEntriesStores = new Map([

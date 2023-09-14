@@ -3,7 +3,10 @@
     "parserOptions": {
         "sourceType": "module"
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:svelte/recommended"
+    ],
     "ignorePatterns": [
         "/dist/**",
         "/releases/**"
@@ -30,6 +33,16 @@
             }
         },
         {
+            "files": "*.svelte",
+            "parser": "svelte-eslint-parser",
+            "parserOptions": {
+                "parser": "@typescript-eslint/parser"
+            },
+            "rules": {
+                "one-var": ["error", "never"]
+            }
+        },
+        {
             "files": "*.ts",
             "parser": "@typescript-eslint/parser",
             "plugins": ["@typescript-eslint"],
@@ -52,15 +65,17 @@
                 "@typescript-eslint/no-extra-parens": "off",
                 "@typescript-eslint/no-extraneous-class": "off",
                 "@typescript-eslint/no-magic-numbers": "off",
+                "@typescript-eslint/no-non-null-assertion": "off",
+                "@typescript-eslint/no-parameter-properties": "off",
                 "@typescript-eslint/no-restricted-imports": "off", // TODO Restrict imports of globals (e.g. DOMPurify)
                 "@typescript-eslint/no-shadow": "off",
                 "@typescript-eslint/no-throw-literal": ["error", {"allowThrowingUnknown": true}],
                 "@typescript-eslint/no-type-alias": "off",
                 "@typescript-eslint/no-unnecessary-condition": "off", // https://github.com/typescript-eslint/typescript-eslint/issues/6635
                 "@typescript-eslint/no-unnecessary-type-arguments": "off",
+                "@typescript-eslint/object-curly-spacing": "off",
                 "no-unreachable": "error", // Deactivated by the recommended config, probably due to the allowUnreachableCode TSConfig option
                 "@typescript-eslint/padding-line-between-statements": "off",
-                "@typescript-eslint/parameter-properties": "off",
                 "@typescript-eslint/prefer-enum-initializers": "off",
                 "@typescript-eslint/prefer-namespace-keyword": "off", // We're using ES2015 modules
                 "@typescript-eslint/prefer-readonly-parameter-types": "off", // Becomes very verbose, also there is no-param-reassign

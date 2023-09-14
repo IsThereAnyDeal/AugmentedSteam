@@ -38,7 +38,10 @@ export class CStoreBase extends CBase {
         const searchBox = document.querySelector("#search_suggestion_contents");
         if (searchBox) {
             new MutationObserver(mutations => {
-                this.decorateStoreCapsules(mutations[0].addedNodes);
+                const nodes = Array.from(mutations[0].addedNodes)
+                    .filter(el => el.classList.contains("match_app"));
+
+                this.decorateStoreCapsules(nodes);
             }).observe(searchBox, {"childList": true});
         }
 

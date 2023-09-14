@@ -52,37 +52,44 @@ class CapacityInfo {
 
 class SyncedStorageAdapter {
 
-    constructor() {
-        this._notes = SyncedStorage.get("user_notes");
-    }
-
     get(appid) {
-        return this._notes[appid] || null;
+        const isArray = Array.isArray(appid);
+        const appids = isArray ? appid : [appid];
+
+        const notes = SyncedStorage.get("user_notes");
+        const res = appids.reduce((acc, val) => {
+            acc[val] = notes[val];
+            return acc;
+        }, {});
+
+        return isArray ? res : res[appid];
     }
 
     async set(appid, note) {
+        const newNotes = {
+            ...SyncedStorage.get("user_notes"),
+            ...{[appid]: note}
+        };
 
-        const oldNote = this._notes[appid];
-        this._notes[appid] = note;
-
-        const storageUsage = this._getNotesSize() / SyncedStorage.QUOTA_BYTES_PER_ITEM;
+        const storageUsage = this._getNotesSize(newNotes) / SyncedStorage.QUOTA_BYTES_PER_ITEM;
         if (storageUsage > 1) {
-            this._notes[appid] = oldNote;
             throw new OutOfCapacityError(storageUsage, "Can't set this user note, out of capacity");
         }
 
-        await SyncedStorage.set("user_notes", this._notes);
+        await SyncedStorage.set("user_notes", newNotes);
 
         return new CapacityInfo(storageUsage > 0.85, storageUsage);
     }
 
     delete(appid) {
-        delete this._notes[appid];
-        return SyncedStorage.set("user_notes", this._notes);
+        const notes = SyncedStorage.get("user_notes");
+        delete notes[appid];
+
+        return SyncedStorage.set("user_notes", notes);
     }
 
     export() {
-        return this._notes;
+        return SyncedStorage.get("user_notes");
     }
 
     import(notes) {
@@ -92,23 +99,27 @@ class SyncedStorageAdapter {
             throw new OutOfCapacityError(storageUsage, "Import to synced storage failed, too much data for this adapter");
         }
 
-        this._notes = notes;
-        return SyncedStorage.set("user_notes", this._notes);
+        return SyncedStorage.set("user_notes", notes);
     }
 
     clear() {
         return SyncedStorage.remove("user_notes");
     }
 
-    _getNotesSize(notes = this._notes) {
+    _getNotesSize(notes = SyncedStorage.get("user_notes")) {
         return "user_notes".length + JSON.stringify(notes).length;
     }
 }
 
 class IdbAdapter {
 
-    get(appid) {
-        return BackgroundSimple.action("notes.get", appid);
+    async get(appid) {
+        const isArray = Array.isArray(appid);
+        const appids = isArray ? appid : [appid];
+
+        const res = await BackgroundSimple.action("notes.get", appids);
+
+        return isArray ? res : res[appid];
     }
 
     set(appid, note) {

@@ -7,6 +7,18 @@ const MAX_ITEMS_PER_REQUEST = 1000;
 
 class ITADApi extends Api {
 
+    static async getStoreList() {
+        return Object.values(await IndexedDB.getAll("storeList"));
+    }
+
+    static async fetchStoreList() {
+        const storeList = (await ITADApi.getEndpoint("v01/web/stores/all/"))?.data;
+        if (!Array.isArray(storeList)) {
+            throw new Error("Can't read store list from response");
+        }
+        await IndexedDB.put("storeList", storeList, {"multiple": true});
+    }
+
     static async authorize() {
         const rnd = crypto.getRandomValues(new Uint32Array(1))[0];
         const redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
@@ -56,7 +68,7 @@ class ITADApi extends Api {
         });
 
         const hashFragment = new URL(url).hash;
-        const params = new URLSearchParams(hashFragment.substr(1));
+        const params = new URLSearchParams(hashFragment.slice(1));
 
         if (parseInt(params.get("state")) !== rnd) {
             throw new Error("Failed to verify state parameter from URL fragment");
@@ -137,7 +149,7 @@ class ITADApi extends Api {
             storeIdsObj[storeId] = null;
         }
 
-        await this.splitPostRequests(waitlistJSON, storeIdsArr, "v01/waitlist/import/", id => ({
+        await ITADApi.splitPostRequests(waitlistJSON, storeIdsArr, "v01/waitlist/import/", id => ({
             "gameid": ["steam", id],
         }));
 
@@ -155,7 +167,7 @@ class ITADApi extends Api {
 
         const storeIds = _appIds.map(appId => `app/${appId}`).concat(_subIds.map(subId => `sub/${subId}`));
 
-        await this.splitPostRequests(collectionJSON, storeIds, "v01/collection/import/", id => ({
+        await ITADApi.splitPostRequests(collectionJSON, storeIds, "v01/collection/import/", id => ({
             "gameid": ["steam", id],
             "copies": [{
                 "type": "steam",

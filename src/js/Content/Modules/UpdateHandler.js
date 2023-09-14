@@ -1,5 +1,5 @@
-import {BackgroundSimple, ExtensionResources, Info, LocalStorage, Localization, SyncedStorage, Version} from "../../modulesCore";
-import {Background, ITAD} from "../modulesContent";
+import {ExtensionResources, Info, Localization, SyncedStorage, Version} from "../../modulesCore";
+import {Background} from "../modulesContent";
 
 import {Page} from "../Features/Page";
 
@@ -35,31 +35,18 @@ class UpdateHandler {
         }
 
         const logo = ExtensionResources.getURL("img/logo/as128.png");
-        const githubChanges = `<p><a href="https://github.com/IsThereAnyDeal/AugmentedSteam/compare/v${SyncedStorage.get("version")}...v${Info.version}" target="_blank">All changes on GitHub</a></p>`;
-        const dialog = `<div class="es_changelog"><img src="${logo}"><div>${html}${githubChanges}</div></div>`;
+        const githubLink = `https://github.com/IsThereAnyDeal/AugmentedSteam/compare/v${SyncedStorage.get("version")}...v${Info.version}`;
+        const dialog = `<div class="es_changelog">
+            <img src="${logo}">
+            <div>
+                ${html}
+                <p><a href="${githubLink}" target="_blank">${Localization.str.update.changes}</a></p>
+            </div>
+        </div>`;
 
-        const connectBtn = document.querySelector("#itad_connect");
-        function itadConnected() { connectBtn.replaceWith("✓"); }
-
-        Page.runInPageContext(
-            (updatedStr, dialog) => {
-                window.SteamFacade.showAlertDialog(updatedStr, dialog);
-            },
-            [Localization.str.update.updated.replace("__version__", Info.version), dialog]
-        );
-
-        if (Version.fromString(Info.version).isSame(new Version(1, 4))) {
-
-            if (await BackgroundSimple.action("itad.isconnected")) {
-                itadConnected();
-            } else {
-                connectBtn.addEventListener("click", async() => {
-                    await BackgroundSimple.action("itad.authorize");
-                    ITAD.create();
-                    itadConnected();
-                });
-            }
-        }
+        Page.runInPageContext((title, html) => {
+            window.SteamFacade.showAlertDialog(title, html);
+        }, [Localization.str.update.updated.replace("__version__", Info.version), dialog]);
     }
 
     static _migrateSettings(oldVersion) {
@@ -121,6 +108,14 @@ class UpdateHandler {
             }
 
             SyncedStorage.set("customize_apppage", options);
+        }
+
+        if (oldVersion.isSameOrBefore("2.4.1")) {
+            SyncedStorage.remove("showallachievements");
+        }
+
+        if (oldVersion.isSameOrBefore("2.5.0")) {
+            SyncedStorage.remove("replaceaccountname");
         }
     }
 }

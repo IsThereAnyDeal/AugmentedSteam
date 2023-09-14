@@ -93,10 +93,6 @@ class SteamFacade {
         return GDynamicStore.DecorateDynamicItems($J(selector), bForceRecalculate);
     }
 
-    static onDynamicStoreReady(callback) {
-        return GDynamicStore.OnReady(callback);
-    }
-
     static storeItemDataBindHover(selector, unAppID, unPackageID, unBundleID, rgAdditionalParams) {
         GStoreItemData.BindHoverEvents($J(selector), unAppID, unPackageID, unBundleID, rgAdditionalParams);
     }
@@ -108,9 +104,9 @@ class SteamFacade {
 
         $J(selector).v_tooltip({
             "tooltipClass": isStore ? "store_tooltip" : "community_tooltip",
-            "dataName": isHtml ? "tooltipHtml" : "tooltipText",
+            "dataAttr": isHtml ? "data-tooltip-html" : "data-tooltip-text",
             "defaultType": isHtml ? "html" : "text",
-            "replaceExisting": false
+            "replaceExisting": true
         });
     }
 
@@ -158,10 +154,6 @@ class SteamFacade {
 
     static execFriendAction(action, navid) {
         return ExecFriendAction(action, navid);
-    }
-
-    static scrollOffsetForceRecalc() {
-        CScrollOffsetWatcher.ForceRecalc();
     }
 
     static loadImageGroupOnScroll(elTarget, strGroup) {
@@ -225,6 +217,11 @@ class SteamFacade {
         return SelectInverse();
     }
 
+    // Wishlist
+
+    static wishlistOnScroll() {
+        return g_Wishlist.OnScroll();
+    }
 
     // jQuery functions
 

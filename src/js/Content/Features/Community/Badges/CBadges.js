@@ -23,16 +23,21 @@ export class CBadges extends CCommunityBase {
     async eachBadgePage(callback) {
 
         const url = new URL(window.location.origin + window.location.pathname);
-        const skip = parseInt(new URLSearchParams(window.location.search).get("p")) || 1;
-        const lastPage = parseInt(DOMHelper.selectLastNode(document, ".pagelink").textContent);
+        const params = new URLSearchParams(window.location.search);
+        if (params.has("sort")) {
+            url.searchParams.set("sort", params.get("sort"));
+        }
 
-        for (let p = 1; p <= lastPage; p++) { // doing one page at a time to prevent too many requests at once
+        const skip = Number(params.get("p") ?? 1);
+        const lastPage = Number(DOMHelper.selectLastNode(document, ".pagelink").textContent);
+
+        for (let p = 1; p <= lastPage; p++) {
             if (p === skip) { continue; }
 
             url.searchParams.set("p", p);
 
             try {
-                const response = await RequestData.getHttp(url.toString());
+                const response = await RequestData.getHttp(url);
 
                 const delayedLoadImages = HTMLParser.getVariableFromText(response, "g_rgDelayedLoadImages", "object");
                 const dom = HTML.toDom(response);

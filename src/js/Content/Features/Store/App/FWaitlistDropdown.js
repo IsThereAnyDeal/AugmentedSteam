@@ -1,5 +1,5 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
-import {Background, Feature} from "../../../modulesContent";
+import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {Background, Feature, Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FWaitlistDropdown extends Feature {
@@ -12,29 +12,25 @@ export default class FWaitlistDropdown extends Feature {
 
     async apply() {
 
+        const parent = document.querySelector(".queue_actions_ctn");
+        const [wishlistArea, wishlistSuccessArea] = parent.querySelectorAll("#add_to_wishlist_area, #add_to_wishlist_area_success");
+
         // Remove Steam's temp notice and native dropdown menu
-        for (const node of document.querySelectorAll("#add_to_wishlist_area_success > div")) {
+        for (const node of wishlistSuccessArea.querySelectorAll(":scope > div")) {
             node.remove();
         }
-
-        const wishlistDivs = document.querySelectorAll("#add_to_wishlist_area,#add_to_wishlist_area_success");
-        const [wishlistArea, wishlistSuccessArea] = wishlistDivs;
-
-        HTML.afterEnd(".queue_actions_ctn :first-child",
-            `<div style="position: relative; display: inline-block;">
-                <div class="queue_control_button as_btn_wishlist"></div>
-            </div>`);
 
         /*
          * Creating a common parent for #add_to_wishlist_area and #add_to_wishlist_area_success
          * makes it easier to apply the dropdown menu
          */
-        const wrapper = document.querySelector(".as_btn_wishlist");
+        HTML.beforeBegin(wishlistArea,
+            `<div style="position: relative; display: inline-block;">
+                <div class="queue_control_button as_btn_wishlist"></div>
+            </div>`);
 
-        // Move the wrapper such that there can't be any other elements in between the dropdown and other buttons (see #690)
-        document.querySelector(".queue_actions_ctn").insertBefore(wrapper.parentNode, wishlistArea);
-
-        wrapper.append(...wishlistDivs);
+        const wrapper = parent.querySelector(".as_btn_wishlist");
+        wrapper.append(wishlistArea, wishlistSuccessArea);
 
         HTML.afterEnd(wrapper,
             `<div class="queue_control_button queue_btn_menu as_btn_wishlist_menu">
@@ -67,15 +63,45 @@ export default class FWaitlistDropdown extends Feature {
                 </div>
             </div>`);
 
-        let wishlisted = document.querySelector("#add_to_wishlist_area").style.display === "none";
+        const removeBtn = wishlistSuccessArea.querySelector("a");
+        const addBtn = wishlistArea.querySelector("a");
+
+        // Add hover/loading images
+        const imgNode = removeBtn.querySelector("img");
+        imgNode.classList.add("es-in-wl");
+        HTML.beforeBegin(imgNode,
+            `<img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}">
+            <img class="es-loading-wl" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">`);
+
+        // Trailing whitespace intended to separate image and text
+        HTML.afterBegin(addBtn.querySelector("span"), `<img class="es-loading-wl" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif"> `);
+
+        // Check response of ajax calls before updating button status
+        Page.runInPageContext(() => {
+            window.SteamFacade.jq(document).ajaxComplete((e, xhr, {url}) => {
+                const method = (url.endsWith("/") ? url.slice(0, -1) : url).split("/").pop();
+                if (method === "addtowishlist" || method === "removefromwishlist") {
+                    const response = JSON.parse(xhr.responseText);
+                    window.Messenger.postMessage("addRemoveWishlist", response.success);
+                }
+            });
+        });
+
+        let wishlisted = wishlistArea.style.display === "none";
         let waitlisted = await Background.action("itad.inwaitlist", this.context.storeid);
 
-        const menu = document.querySelector(".as_btn_wishlist_menu");
+        const menu = parent.querySelector(".as_btn_wishlist_menu");
         const menuArrow = menu.querySelector(".queue_menu_arrow");
-        const wishlistOption = document.querySelector("#queue_menu_option_on_wishlist");
-        const waitlistOption = document.querySelector("#queue_menu_option_on_waitlist");
+        const wishlistOption = parent.querySelector("#queue_menu_option_on_wishlist");
+        const waitlistOption = parent.querySelector("#queue_menu_option_on_waitlist");
+
+        // Native localized text
+        const removeFromWishlistLabel = wishlistSuccessArea.querySelector("span").lastChild.textContent;
+        const removeFromWishlistTooltip = wishlistSuccessArea.querySelector("a").dataset.tooltipText;
 
         function updateDiv() {
+            parent.classList.remove("loading");
+
             const oneActive = Boolean(wishlisted) || Boolean(waitlisted);
 
             menuArrow.classList.toggle("queue_btn_active", oneActive);
@@ -86,61 +112,100 @@ export default class FWaitlistDropdown extends Feature {
             wishlistArea.style.display = oneActive ? "none" : "";
             wishlistSuccessArea.style.display = oneActive ? "" : "none";
 
-            let text;
+            let text, tooltip;
             if (wishlisted && !waitlisted) {
-                text = Localization.str.on_wishlist;
+                text = removeFromWishlistLabel;
+                tooltip = removeFromWishlistTooltip;
             } else if (!wishlisted && waitlisted) {
                 text = Localization.str.on_waitlist;
+                tooltip = Localization.str.remove_from_waitlist_tooltip;
             } else if (wishlisted && waitlisted) {
-                text = `${Localization.str.on_wishlist} & ${Localization.str.on_waitlist}`;
+                text = Localization.str.on_wishlist_and_waitlist;
+                tooltip = Localization.str.remove_from_wishlist_and_waitlist_tooltip;
             } else {
-                document.querySelector("#add_to_wishlist_area span").textContent = ` ${Localization.str.add_to_wishlist}`;
-                return;
+                tooltip = removeFromWishlistTooltip;
             }
 
-            document.querySelector("#add_to_wishlist_area_success span").lastChild.textContent = ` ${text}`;
+            if (text) {
+                wishlistSuccessArea.querySelector("span").lastChild.textContent = ` ${text}`;
+            }
+
+            removeBtn.dataset.tooltipText = tooltip;
+
+            // Tooltips by default are stored internally by jQuery, so replace it after changing the attribute
+            Page.runInPageContext(() => {
+                window.SteamFacade.vTooltip("#add_to_wishlist_area_success > a");
+            });
         }
 
         updateDiv();
 
-        wishlistArea.querySelector("a").addEventListener("click", async() => {
+        // Click add-to-wishlist, only add to wishlist
+        addBtn.addEventListener("click", async() => {
+            if (parent.classList.contains("loading")) { return; }
+            parent.classList.add("loading");
 
-            await Page.runInPageContext(() => new Promise(resolve => {
-                const d = window.SteamFacade.jq(document);
-                d.ajaxComplete(function handler(e, xhr, {url}) {
-                    if (url === "https://store.steampowered.com/api/addtowishlist") {
-                        resolve();
-                        d.unbind("ajaxComplete", handler);
-                    }
-                });
-            }), null, true);
-
-            wishlisted = !wishlisted;
-            updateDiv();
-        });
-
-        this.context.onWishAndWaitlistRemove = () => {
-            wishlisted = false;
-            waitlisted = false;
-            updateDiv();
-        };
-
-        wishlistOption.addEventListener("click", async() => {
-            if (wishlisted) {
-                await this.context.removeFromWishlist();
+            if (await Messenger.onMessage("addRemoveWishlist")) {
                 wishlisted = !wishlisted;
                 updateDiv();
             } else {
-                wishlistArea.querySelector("a").click();
+                parent.classList.remove("loading");
+            }
+        });
+
+        // Click remove-from-wishlist, remove from both wishlist and waitlist
+        removeBtn.addEventListener("click", async(e) => {
+            if (!wishlisted) {
+                // Prevent default action if item is only waitlisted
+                e.preventDefault();
+            }
+
+            if (parent.classList.contains("loading")) { return; }
+            parent.classList.add("loading");
+
+            if (wishlisted && await Messenger.onMessage("addRemoveWishlist")) {
+                wishlisted = !wishlisted;
+            }
+
+            if (waitlisted) {
+                await Background.action("itad.removefromwaitlist", this.context.appid);
+                waitlisted = !waitlisted;
+            }
+
+            updateDiv();
+        });
+
+        wishlistOption.addEventListener("click", async() => {
+            if (wishlisted) {
+                if (parent.classList.contains("loading")) { return; }
+                parent.classList.add("loading");
+
+                // Use Steam's method here so wishlist count is updated and dynamic store cache invalidated
+                Page.runInPageContext((appid) => {
+                    window.SteamFacade.removeFromWishlist(appid, "add_to_wishlist_area_success", "add_to_wishlist_area", "add_to_wishlist_area_fail", "1_store-navigation__", "add_to_wishlist_area2");
+                }, [this.context.appid]);
+
+                if (await Messenger.onMessage("addRemoveWishlist")) {
+                    wishlisted = !wishlisted;
+                    updateDiv();
+                } else {
+                    parent.classList.remove("loading");
+                }
+            } else {
+                addBtn.dispatchEvent(new MouseEvent("click"));
             }
         });
 
         waitlistOption.addEventListener("click", async() => {
+            if (parent.classList.contains("loading")) { return; }
+            parent.classList.add("loading");
+
             if (waitlisted) {
-                await this.context.removeFromWaitlist();
+                await Background.action("itad.removefromwaitlist", this.context.appid);
             } else {
                 await Background.action("itad.addtowaitlist", this.context.appid);
             }
+
             waitlisted = !waitlisted;
             updateDiv();
         });

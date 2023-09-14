@@ -79,7 +79,7 @@ export default class ManifestTransformerPlugin implements WebpackPluginInstance 
 
                 results.push(match);
 
-                if (match.endsWith("*")) { continue; }
+                if (match.endsWith("*") || match.endsWith("/") || match.includes("?")) { continue; }
 
                 results.push(`${match}?*`);
 

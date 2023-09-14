@@ -1,4 +1,3 @@
-import {SyncedStorage} from "../../modulesCore";
 import {IndexedDB} from "./IndexedDB";
 import CacheStorage from "./CacheStorage";
 
@@ -8,25 +7,8 @@ class ExtensionData {
         return IndexedDB.clear();
     }
 
-    /*
-     * TEMP(1.4.1)
-     * TODO delete after few versions
-     */
-    static async moveNotesToSyncedStorage() {
-        const idbNotes = Object.entries(await IndexedDB.getAll("notes"));
-
-        const notes = SyncedStorage.get("user_notes");
-        for (const [appid, note] of idbNotes) {
-            notes[appid] = note;
-        }
-        SyncedStorage.set("user_notes", notes);
-    }
-
-    static async getNote(appid) {
-        const note = await IndexedDB.get("notes", appid);
-
-        if (typeof note === "undefined") { return null; }
-        return note;
+    static async getNote(appids) {
+        return IndexedDB.get("notes", appids);
     }
 
     static setNote(appid, note) {

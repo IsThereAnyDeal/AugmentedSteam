@@ -1,7 +1,7 @@
 {
   "name": "Augmented Steam",
   "short_name": "AS",
-  "version": "2.4.1",
+  "version": "2.6.0",
   "description": "Augments your Steam Experience",
   "icons": {
     "128": "img/logo/as128.png",
@@ -82,6 +82,10 @@
       "js": ["js/store/registerkey.js"]
     },
     {
+      "matches": ["*://store.steampowered.com/account/licenses"],
+      "js": ["js/store/licences.js"]
+    },
+    {
       "matches": ["*://*.steampowered.com/bundle/*"],
       "js": ["js/store/bundle.js"]
     },
@@ -111,7 +115,6 @@
         "*://store.steampowered.com/dynamicstore/*",
         "*://store.steampowered.com/supportmessages",
         "*://store.steampowered.com/video/*",
-        "*://store.steampowered.com/checkout[/*]",
         "*://store.steampowered.com/widget[/*]",
         "*://store.steampowered.com/login[/*]",
         "*://store.steampowered.com/join[/*]",
@@ -119,6 +122,7 @@
         "*://api.steampowered.com/*",
         "*://help.steampowered.com/*",
         "*://login.steampowered.com/*",
+        "*://checkout.steampowered.com/*",
         "*://partner.steampowered.com/*",
         "*://store.steampowered.com/[?*]",
         "*://*.steampowered.com/wishlist/id/*",
@@ -128,6 +132,7 @@
         "*://*.steampowered.com/steamaccount/addfunds",
         "*://*.steampowered.com/digitalgiftcards/selectgiftcard",
         "*://*.steampowered.com/account",
+        "*://*.steampowered.com/account/licenses",
         "*://*.steampowered.com/account/registerkey",
         "*://*.steampowered.com/bundle/*",
         "*://*.steampowered.com/sub/*",
@@ -139,11 +144,17 @@
       "js": ["js/store/default.js"]
     },
     {
-      "matches": ["*://steamcommunity.com/workshop"],
+      "matches": [
+        "*://steamcommunity.com/sharedfiles",
+        "*://steamcommunity.com/workshop"
+      ],
       "js": ["js/community/workshop.js"]
     },
     {
-      "matches": ["*://steamcommunity.com/workshop/browse"],
+      "matches": [
+        "*://steamcommunity.com/sharedfiles/browse",
+        "*://steamcommunity.com/workshop/browse"
+      ],
       "js": ["js/community/workshop_browse.js"]
     },
     {
@@ -308,11 +319,17 @@
       "js": ["js/community/app.js"]
     },
     {
-      "matches": ["*://steamcommunity.com/sharedfiles/filedetails[/]?*id=*"],
+      "matches": [
+        "*://steamcommunity.com/sharedfiles/filedetails[/*]",
+        "*://steamcommunity.com/workshop/filedetails[/*]"
+      ],
       "js": ["js/community/shared_files.js"]
     },
     {
-      "matches": ["*://steamcommunity.com/sharedfiles/editguide[/]?*"],
+      "matches": [
+        "*://steamcommunity.com/sharedfiles/editguide[/]?*",
+        "*://steamcommunity.com/workshop/editguide[/]?*"
+      ],
       "js": ["js/community/edit_guide.js"]
     },
     {
@@ -333,12 +350,17 @@
         "*://steamcommunity.com/tradeoffer/*",
         "*://steamcommunity.com/id/*",
         "*://steamcommunity.com/profiles/*",
-        "*://steamcommunity.com/workshop[/browse]",
         "*://steamcommunity.com/market[/*]",
         "*://steamcommunity.com/groups/*",
         "*://steamcommunity.com/app/*",
-        "*://steamcommunity.com/sharedfiles/filedetails[/]?*id=*",
+        "*://steamcommunity.com/sharedfiles",
+        "*://steamcommunity.com/workshop",
+        "*://steamcommunity.com/sharedfiles/browse",
+        "*://steamcommunity.com/workshop/browse",
+        "*://steamcommunity.com/sharedfiles/filedetails[/*]",
+        "*://steamcommunity.com/workshop/filedetails[/*]",
         "*://steamcommunity.com/sharedfiles/editguide[/]?*",
+        "*://steamcommunity.com/workshop/editguide[/]?*",
         "*://steamcommunity.com/tradingcards/boostercreator",
         "*://steamcommunity.com/stats/*/achievements"
       ],

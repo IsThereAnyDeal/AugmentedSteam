@@ -29,6 +29,7 @@ IndexedDB.objStoreFetchFns = new Map([
 
     ["collection", ITADApi.endpointFactoryCached("v02/user/coll/all", "collection", ITADApi.mapCollection)],
     ["waitlist", ITADApi.endpointFactoryCached("v01/user/wait/all", "waitlist", ITADApi.mapWaitlist)],
+    ["storeList", ITADApi.fetchStoreList],
 ]);
 
 const actionCallbacks = new Map([
@@ -39,7 +40,6 @@ const actionCallbacks = new Map([
     ["steam.currencies", StaticResources.currencies],
 
     ["migrate.cachestorage", CacheStorage.migrate],
-    ["migrate.notesToSyncedStorage", ExtensionData.moveNotesToSyncedStorage],
 
     ["notes.get", ExtensionData.getNote],
     ["notes.set", ExtensionData.setNote],
@@ -64,14 +64,13 @@ const actionCallbacks = new Map([
     ["steampeek", AugmentedSteamApi.steamPeek],
 
     ["appdetails", SteamStoreApi.appDetails],
-    ["appuserdetails", SteamStoreApi.appUserDetails],
     ["currency", SteamStoreApi.currency],
     ["sessionid", SteamStoreApi.sessionId],
     ["wishlists", SteamStoreApi.wishlists],
     ["purchases", SteamStoreApi.purchases],
     ["clearpurchases", SteamStoreApi.clearPurchases],
-    ["dynamicstorestatus", SteamStoreApi.dsStatus],
-    ["dynamicStore.randomApp", SteamStoreApi.dynamicStoreRandomApp],
+    ["dynamicstore.status", SteamStoreApi.dsStatus],
+    ["dynamicstore.randomapp", SteamStoreApi.dynamicStoreRandomApp],
 
     ["login", SteamCommunityApi.login],
     ["logout", SteamCommunityApi.logout],
@@ -86,7 +85,6 @@ const actionCallbacks = new Map([
     ["clearownprofile", SteamCommunityApi.clearOwn],
     ["workshopfilesize", SteamCommunityApi.getWorkshopFileSize],
     ["reviews", SteamCommunityApi.getReviews],
-    ["updatereviewnode", SteamCommunityApi.updateReviewNode],
 
     ["itad.authorize", ITADApi.authorize],
     ["itad.disconnect", ITADApi.disconnect],
@@ -99,6 +97,7 @@ const actionCallbacks = new Map([
     ["itad.removefromwaitlist", ITADApi.removeFromWaitlist],
     ["itad.incollection", ITADApi.inCollection],
     ["itad.getfromcollection", ITADApi.getFromCollection],
+    ["itad.storelist", ITADApi.getStoreList],
 
     ["error.test", () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);

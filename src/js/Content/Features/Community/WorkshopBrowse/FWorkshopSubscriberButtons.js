@@ -1,21 +1,17 @@
-import {GameId, HTML, Localization} from "../../../../modulesCore";
-import {Feature, RequestData, User} from "../../../modulesContent";
+import {HTML, Localization} from "../../../../modulesCore";
+import {ConfirmDialog, Feature, RequestData, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 import Workshop from "../Workshop";
 
 export default class FWorkshopSubscriberButtons extends Feature {
 
     checkPrerequisites() {
-        return User.isSignedIn;
+        return User.isSignedIn
+            && document.querySelector(".workshopBrowseItems") !== null
+            && document.querySelector(".workshopBrowsePagingInfo") !== null;
     }
 
     apply() {
-
-        this._appid = GameId.getAppidUriQuery(window.location.search);
-        if (!this._appid) { return; }
-
-        const pagingInfo = document.querySelector(".workshopBrowsePagingInfo");
-        if (!pagingInfo) { return; }
 
         this._workshopStr = Localization.str.workshop;
 
@@ -37,7 +33,8 @@ export default class FWorkshopSubscriberButtons extends Feature {
 
         document.getElementById("es_subscriber_container").addEventListener("click", ({target}) => {
             this._method = target.closest(".es_subscriber").dataset.method;
-            this._total = Math.max(...pagingInfo.textContent.replace(/,/g, "").match(/\d+/g));
+            const pagingInfo = document.querySelector(".workshopBrowsePagingInfo").textContent;
+            this._total = Math.max(...pagingInfo.replace(/,/g, "").match(/\d+/g));
 
             this._startSubscriber();
         });
@@ -48,41 +45,30 @@ export default class FWorkshopSubscriberButtons extends Feature {
         this._completed = 0;
         this._failed = 0;
 
-        const statusTitle = this._workshopStr[`${this._method}_all`];
+        this._statusTitle = this._workshopStr[`${this._method}_all`];
         const statusString = this._workshopStr[`${this._method}_confirm`]
             .replace("__count__", this._total);
 
-        // todo reject when dialog closed
-        await Page.runInPageContext((title, confirm) => {
-            const prompt = window.SteamFacade.showConfirmDialog(title, confirm);
-
-            return new Promise(resolve => {
-                prompt.done(result => {
-                    if (result === "OK") {
-                        resolve();
-                    }
-                });
-            });
-
-        }, [statusTitle, statusString], "startSubscriber");
+        if (await ConfirmDialog.open(this._statusTitle, statusString) !== "OK") { return; }
 
         this._updateWaitDialog();
 
         const parser = new DOMParser();
+        const url = new URL(window.location.href);
+        url.searchParams.set("numperpage", 30);
+
         const workshopItems = [];
         for (let p = 1; p <= Math.ceil(this._total / 30); p++) {
-            const url = new URL(window.location.href);
             url.searchParams.set("p", p);
-            url.searchParams.set("numperpage", 30);
 
-            const result = await RequestData.getHttp(url.toString()).catch(err => console.error(err));
+            const result = await RequestData.getHttp(url).catch(err => console.error(err));
             if (!result) {
-                console.error(`Failed to request ${url.toString()}`);
+                console.error(`Failed to request ${url}`);
                 continue;
             }
 
-            const xmlDoc = parser.parseFromString(result, "text/html");
-            for (let node of xmlDoc.querySelectorAll(".workshopItem")) {
+            const doc = parser.parseFromString(result, "text/html");
+            for (let node of doc.querySelectorAll(".workshopItem")) {
                 const subNode = node.querySelector(".user_action_history_icon.subscribed");
                 if (this._canSkip(subNode)) { continue; }
 
@@ -95,7 +81,7 @@ export default class FWorkshopSubscriberButtons extends Feature {
         this._updateWaitDialog();
 
         const promises = workshopItems.map(
-            id => Workshop.changeSubscription(id, this._appid, this._method)
+            id => Workshop.changeSubscription(id, this.context.appid, this._method)
                 .catch(err => {
                     this._failed++;
                     console.error(err);
@@ -106,29 +92,24 @@ export default class FWorkshopSubscriberButtons extends Feature {
                 })
         );
 
-        return Promise.all(promises).finally(() => { this._showResults(); });
+        Promise.all(promises).finally(() => { this._showResults(); });
     }
 
     _showResults() {
 
-        const statusTitle = this._workshopStr[`${this._method}_all`];
         const statusString = this._workshopStr.finished
             .replace("__success__", this._completed - this._failed)
             .replace("__fail__", this._failed);
 
         Page.runInPageContext((title, finished) => {
-            if (window.dialog) {
-                // eslint-disable-next-line new-cap
-                window.dialog.Dismiss();
-            }
-
-            window.dialog = window.SteamFacade.showConfirmDialog(title, finished)
+            window.SteamFacade.dismissActiveModal();
+            window.SteamFacade.showConfirmDialog(title, finished)
                 .done(result => {
                     if (result === "OK") {
                         window.location.reload();
                     }
                 });
-        }, [statusTitle, statusString]);
+        }, [this._statusTitle, statusString]);
     }
 
     _canSkip(node) {
@@ -150,23 +131,19 @@ export default class FWorkshopSubscriberButtons extends Feature {
             .replace("__i__", this._completed)
             .replace("__count__", this._total);
 
-        if (this._failed) {
+        if (this._failed > 0) {
+            statusString += "<br>";
             statusString += this._workshopStr.failed.replace("__n__", this._failed);
         }
 
-        const modal = document.querySelector(".newmodal_content");
-        if (modal) {
-            modal.innerText = statusString;
+        const container = document.querySelector("#as_loading_text_ctn");
+        if (container) {
+            HTML.inner(container, statusString);
         } else {
-            const statusTitle = this._workshopStr[`${this._method}_all`];
             Page.runInPageContext((title, progress) => {
-                if (window.dialog) {
-                    // eslint-disable-next-line new-cap
-                    window.dialog.Dismiss();
-                }
-
-                window.dialog = window.SteamFacade.showBlockingWaitDialog(title, progress);
-            }, [statusTitle, statusString]);
+                window.SteamFacade.dismissActiveModal();
+                window.SteamFacade.showBlockingWaitDialog(title, `<div id="as_loading_text_ctn">${progress}</div>`);
+            }, [this._statusTitle, statusString]);
         }
     }
 }

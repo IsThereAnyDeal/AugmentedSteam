@@ -7,9 +7,9 @@ export default class FBadgeProgressLink extends CallbackFeature {
         return this.context.myInventory;
     }
 
-    callback({view, appid, isBooster}) {
+    callback({view, appid, itemType}) {
 
-        if (!isBooster) { return; }
+        if (itemType !== "booster") { return; }
 
         HTML.beforeEnd(`#iteminfo${view}_item_owner_actions`,
             `<a class="btn_small btn_grey_white_innerfade" href="//steamcommunity.com/my/gamecards/${appid}/">

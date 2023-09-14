@@ -1,7 +1,5 @@
-import {StringUtils, SyncedStorage} from "../../modulesCore";
+import {HTMLParser, StringUtils, SyncedStorage} from "../../modulesCore";
 import {Background} from "../modulesContent";
-
-import {Page} from "../Features/Page";
 
 class SteamCurrency {
 
@@ -152,50 +150,6 @@ class SteamCurrency {
 
 class CurrencyManager {
 
-    static _getCurrencyFromDom() {
-        const currencyNode = document.querySelector('meta[itemprop="priceCurrency"]');
-        if (currencyNode && currencyNode.hasAttribute("content")) {
-            return currencyNode.getAttribute("content");
-        }
-        return null;
-    }
-
-    static async _getCurrencyFromWallet() {
-        const walletCurrency = await Page.runInPageContext(
-            // eslint-disable-next-line no-undef, camelcase
-            () => (typeof g_rgWalletInfo !== "undefined" && g_rgWalletInfo ? g_rgWalletInfo.wallet_currency : null),
-            null,
-            "walletCurrency"
-        );
-
-        if (walletCurrency) {
-            return CurrencyManager.currencyNumberToType(walletCurrency);
-        }
-        return null;
-    }
-
-    static async _getStoreCurrency(context) {
-        let currency = CurrencyManager._getCurrencyFromDom();
-
-        if (!currency) {
-            currency = await CurrencyManager._getCurrencyFromWallet(context);
-        }
-
-        if (!currency) {
-            try {
-                currency = await Background.action("currency");
-            } catch (error) {
-                console.error(`Couldn't load currency${error}`);
-            }
-        }
-
-        if (!currency) {
-            currency = "USD"; // fallback
-        }
-
-        return currency;
-    }
-
     static getRate(from, to) {
         if (from === to) { return 1; }
         return CurrencyManager._rates?.[from]?.[to] ?? null;
@@ -229,8 +183,37 @@ class CurrencyManager {
         return CurrencyManager._indices.id[number] || CurrencyManager._defaultCurrency;
     }
 
-    static async _loadCurrency(context) {
-        CurrencyManager.storeCurrency = await CurrencyManager._getStoreCurrency(context);
+    static _getCurrencyFromDom() {
+        const currencyNode = document.querySelector("meta[itemprop=priceCurrency][content]");
+        if (currencyNode) {
+            return currencyNode.getAttribute("content");
+        }
+    }
+
+    static _getCurrencyFromWallet() {
+        const walletInfo = HTMLParser.getVariableFromDom("g_rgWalletInfo", "object");
+        if (walletInfo && walletInfo.wallet_currency) {
+            return CurrencyManager.currencyNumberToType(walletInfo.wallet_currency);
+        }
+    }
+
+    static async _getStoreCurrency() {
+        let currency = CurrencyManager._getCurrencyFromDom() || CurrencyManager._getCurrencyFromWallet();
+
+        if (!currency) {
+            try {
+                currency = await Background.action("currency");
+            } catch (err) {
+                console.error(err);
+                currency = "USD"; // fallback
+            }
+        }
+
+        return currency;
+    }
+
+    static async _loadCurrency() {
+        CurrencyManager.storeCurrency = await CurrencyManager._getStoreCurrency();
         const currencySetting = SyncedStorage.get("override_price");
         CurrencyManager.customCurrency = (currencySetting === "auto")
             ? CurrencyManager.storeCurrency
@@ -245,7 +228,7 @@ class CurrencyManager {
         CurrencyManager._rates = await Background.action("rates", toCurrencies);
     }
 
-    static async init(context) {
+    static async init() {
         if (CurrencyManager._isInitialized) { return; }
 
         const currencies = await Background.action("steam.currencies");
@@ -263,18 +246,18 @@ class CurrencyManager {
         CurrencyManager._defaultCurrency = CurrencyManager._indices.id[1]; // USD
 
         try {
-            await CurrencyManager._loadCurrency(context);
+            await CurrencyManager._loadCurrency();
             await CurrencyManager._loadRates();
-        } catch (e) {
+        } catch (err) {
             console.error("Failed to initialize Currency");
-            console.error(e);
+            console.error(err);
         }
 
         CurrencyManager._isInitialized = true;
     }
 
-    static then(onSuccess, onFailure) {
-        return CurrencyManager.init().then(onSuccess, onFailure);
+    static then(onDone, onCatch) {
+        return CurrencyManager.init().then(onDone, onCatch);
     }
 }
 CurrencyManager._isInitialized = false;

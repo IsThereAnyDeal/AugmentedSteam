@@ -3,27 +3,25 @@ import {Background, User} from "../modulesContent";
 
 import {DynamicStore} from "./Data/DynamicStore";
 import {Page} from "../Features/Page";
-import config from "../../config";
+import Config from "../../config";
 
 class AugmentedSteam {
 
     static _addMenu() {
 
         HTML.afterBegin("#global_action_menu",
-            `<div id="es_menu">
-                <span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
-                <div id="es_popup" class="popup_block_new">
-                    <div class="popup_body popup_menu">
-                        <a class="popup_menu_item" target="_blank" href="${ExtensionResources.getURL("html/options.html")}">${Localization.str.thewordoptions}</a>
-                        <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
-                        <div class="hr"></div>
-                        <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam">${Localization.str.contribute}</a>
-                        <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam/issues">${Localization.str.bug_feature}</a>
-                        <div class="hr"></div>
-                        <a class="popup_menu_item" target="_blank" href="${config.PublicHost}">${Localization.str.website}</a>
-                        <a class="popup_menu_item" target="_blank" href="https://isthereanydeal.com/">IsThereAnyDeal</a>
-                        <a class="popup_menu_item" target="_blank" href="https://discord.gg/yn57q7f">Discord</a>
-                    </div>
+            `<span id="es_pulldown" class="pulldown global_action_link">Augmented Steam</span>
+            <div id="es_popup" class="popup_block_new">
+                <div class="popup_body popup_menu">
+                    <a class="popup_menu_item" target="_blank" href="${ExtensionResources.getURL("html/options.html")}">${Localization.str.thewordoptions}</a>
+                    <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache">${Localization.str.clear_cache}</a>
+                    <div class="hr"></div>
+                    <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam">${Localization.str.contribute}</a>
+                    <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam/issues">${Localization.str.bug_feature}</a>
+                    <div class="hr"></div>
+                    <a class="popup_menu_item" target="_blank" href="${Config.PublicHost}">${Localization.str.website}</a>
+                    <a class="popup_menu_item" target="_blank" href="https://isthereanydeal.com/">IsThereAnyDeal</a>
+                    <a class="popup_menu_item" target="_blank" href="${Config.ITADDiscord}">Discord</a>
                 </div>
             </div>`);
 
@@ -31,10 +29,6 @@ class AugmentedSteam {
             Page.runInPageContext(() => {
                 window.SteamFacade.showMenu("es_pulldown", "es_popup", "right", "bottom", true);
             });
-        });
-
-        document.querySelector("#es_menu").addEventListener("click", e => {
-            e.stopPropagation();
         });
 
         document.querySelector("#es_popup").addEventListener("click", () => {
@@ -150,11 +144,18 @@ class AugmentedSteam {
 
     static _handleInstallSteamButton() {
         const option = SyncedStorage.get("installsteam");
+        if (option === "show") { return; }
+
+        const btn = document.querySelector(".header_installsteam_btn");
+        if (!btn) {
+            console.error(`Couldn't find "Install Steam" button element.`);
+            return;
+        }
+
         if (option === "hide") {
-            document.querySelector("div.header_installsteam_btn")?.remove();
+            btn.remove();
         } else if (option === "replace") {
-            const btn = document.querySelector("div.header_installsteam_btn > a");
-            btn.textContent = Localization.str.viewinclient;
+            btn.querySelector("div").textContent = Localization.str.viewinclient;
             btn.href = `steam://openurl/${window.location.href}`;
             btn.classList.add("es_steamclient_btn");
         }
@@ -190,30 +191,6 @@ class AugmentedSteam {
             "#account_language_pulldown",
             `<a class="popup_menu_item" href="https://store.steampowered.com/account/registerkey">${Localization.str.activate}</a>`
         );
-    }
-
-    static _replaceAccountName() {
-        if (!SyncedStorage.get("replaceaccountname")) { return; }
-
-        const logoutNode = document.querySelector("#account_dropdown .persona.online");
-        const accountName = logoutNode.textContent.trim();
-        const communityName = document.querySelector("#account_pulldown").textContent.trim();
-
-        logoutNode.textContent = communityName;
-
-        // Replace page header on account related pages
-        if (location.href.startsWith("https://store.steampowered.com/account")) {
-            const pageHeader = document.querySelector("h2.pageheader");
-            if (pageHeader) {
-                pageHeader.textContent = pageHeader.textContent.replace(new RegExp(accountName, "i"), communityName);
-            }
-        }
-
-        // Don't replace title on user pages that aren't mine
-        const isUserPage = /.*(id|profiles)\/.+/g.test(location.pathname);
-        if (!isUserPage || location.pathname.includes(User.profilePath)) {
-            document.title = document.title.replace(accountName, communityName);
-        }
     }
 
     static _launchRandomButton() {
@@ -294,9 +271,10 @@ class AugmentedSteam {
         if (User.isSignedIn) {
             AugmentedSteam._addUsernameSubmenuLinks();
             AugmentedSteam._addRedeemLink();
-            AugmentedSteam._replaceAccountName();
             AugmentedSteam._launchRandomButton();
             AugmentedSteam._bindLogout();
+
+            DynamicStore.invalidateCacheHandler();
         }
     }
 }

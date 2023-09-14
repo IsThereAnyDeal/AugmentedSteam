@@ -1,6 +1,5 @@
-import {HTML, SyncedStorage} from "../../modulesCore";
+import {HTML, Localization, SyncedStorage} from "../../modulesCore";
 
-import {CountryList} from "./Data/CountryList";
 import {SaveIndicator} from "./SaveIndicator";
 
 class Region {
@@ -21,7 +20,8 @@ class Region {
 
         document.querySelector(".js-region-add")
             .addEventListener("click", () => {
-                Region._addRegionHtml("");
+                Region._addRegionHtml();
+                Region._save();
             });
 
         document.querySelector(".js-region-reset")
@@ -71,11 +71,12 @@ class Region {
         HTML.inner(this._container, "");
     }
 
-    static _addRegionHtml(country) {
+    static _addRegionHtml(country = "us") {
         let options = "";
-        for (const cc in CountryList) {
-            const selected = (cc.toLowerCase() === country ? " selected='selected'" : "");
-            options += `<option value='${cc.toLowerCase()}'${selected}>${CountryList[cc]}</option>`;
+        const countries = Object.entries(Localization.str.countries).sort(([, a], [, b]) => a.localeCompare(b));
+        for (const [cc, countryName] of countries) {
+            const selected = (cc === country ? " selected='selected'" : "");
+            options += `<option value='${cc}'${selected}>${countryName}</option>`;
         }
 
         let countryClass = "";

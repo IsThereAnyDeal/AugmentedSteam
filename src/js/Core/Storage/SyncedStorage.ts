@@ -1,7 +1,7 @@
-import Storage from "./Storage";
-import type {Key, Value} from "./Storage";
+import {type Key, default as Storage, type Value} from "./Storage";
 import {Info} from "../Info";
 import browser from "webextension-polyfill";
+import {StoreList} from "../../Options/Modules/Data/StoreList";
 
 // FIXME browser.storage.sync is still restricted (in terms of quota limits) even if the user hasn't enabled sync
 
@@ -13,19 +13,34 @@ import browser from "webextension-polyfill";
  * MAX_WRITE_OPERATIONS_PER_HOUR = 1800
  * MAX_WRITE_OPERATIONS_PER_MINUTE = 120
  */
-export class SyncedStorage<Defaults extends Record<Key, Value>> extends Storage<Defaults> {
+class SyncedStorage<Defaults extends Record<Key, Value>> extends Storage<Defaults> {
 
-    public static readonly QUOTA_BYTES_PER_ITEM = browser.storage.sync.QUOTA_BYTES_PER_ITEM;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- see https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/66696
+    public readonly QUOTA_BYTES_PER_ITEM = browser.storage.sync.QUOTA_BYTES_PER_ITEM ?? 8192;
 
     public constructor(
-        defaults: Readonly<Defaults>,
-        persistent: readonly (Extract<keyof Defaults, string>)[],
+        defaults: Defaults,
+        persistent: Extract<keyof Defaults, string>[],
     ) {
         super(
             browser.storage.sync,
             defaults,
             persistent,
         );
+    }
+
+    protected override async migrate(): Promise<void> {
+
+        // TODO Remove after some versions (added v2.5.1)
+        if (this.has("stores")) {
+            const stores = this.get("stores");
+            if (stores.length !== 0) {
+                const excludedStores = StoreList.map(({id}) => id).filter(id => !stores.includes(id));
+                await this.set("excluded_stores", excludedStores);
+            }
+
+            await this.remove("stores");
+        }
     }
 }
 
@@ -79,7 +94,7 @@ const DEFAULTS = {
     "showlowestprice_onwishlist": true,
     "showlowestpricecoupon": true,
     "showallstores": true,
-    "stores": [],
+    "excluded_stores": [],
     "override_price": "auto",
     "showregionalprice": "mouse",
     "regional_countries": ["us", "gb", "ru", "br", "au", "jp"],
@@ -168,7 +183,6 @@ const DEFAULTS = {
     "oneclickremovewl": false,
     "user_notes": {},
     "user_notes_adapter": "synced_storage",
-    "replaceaccountname": true,
     "showlanguagewarning": true,
     "showlanguagewarninglanguage": "english",
     "homepage_tab_selection": "remember",
@@ -185,7 +199,6 @@ const DEFAULTS = {
     "quickinv": true,
     "quickinv_diff": -0.01,
     "community_default_tab": "",
-    "showallachievements": false,
     "showallstats": true,
     "replacecommunityhublinks": false,
     "hideannouncementcomments": false,

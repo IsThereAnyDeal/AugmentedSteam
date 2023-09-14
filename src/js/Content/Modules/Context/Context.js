@@ -17,9 +17,9 @@ class Context {
     }
 
     triggerCallbacks(...params) {
-        for (const callback of this._callbacks) {
-            callback(...params);
-        }
+        return Promise.all(
+            this._callbacks.map(callback => callback(...params))
+        );
     }
 }
 

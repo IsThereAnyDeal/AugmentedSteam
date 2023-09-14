@@ -38,23 +38,20 @@ export default class FQuickSellOptions extends CallbackFeature {
 
         // marketActions' innerHTML is cleared on item selection, so the links HTML has to be re-inserted
         HTML.beforeEnd(marketActions,
-            `<a class="item_market_action_button item_market_action_button_green" id="es_quicksell${view}" data-tooltip-text="${Localization.str.quick_sell_desc.replace("__modifier__", diff)}">
-                <span class="item_market_action_button_edge item_market_action_button_left"></span>
-                <span class="item_market_action_button_contents"></span>
-                <span class="item_market_action_button_edge item_market_action_button_right"></span>
-                <span class="item_market_action_button_preload"></span>
-            </a>
-            <a class="item_market_action_button item_market_action_button_green" id="es_instantsell${view}" data-tooltip-text="${Localization.str.instant_sell_desc}">
-                <span class="item_market_action_button_edge item_market_action_button_left"></span>
-                <span class="item_market_action_button_contents"></span>
-                <span class="item_market_action_button_edge item_market_action_button_right"></span>
-                <span class="item_market_action_button_preload"></span>
-            </a>
-            <div class="es_loading es_qsell_loading">
-                <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
-                <span>${Localization.str.selling}</span>
+            `<div class="es_qsell_ctn">
+                <a class="btn_small btn_grey_white_innerfade" id="es_quicksell${view}" data-tooltip-text="${Localization.str.quick_sell_desc.replace("__modifier__", diff)}">
+                    <span></span>
+                </a>
+                <a class="btn_small btn_grey_white_innerfade" id="es_instantsell${view}" data-tooltip-text="${Localization.str.instant_sell_desc}">
+                    <span></span>
+                </a>
+                <div class="es_loading es_qsell_loading">
+                    <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
+                    <span>${Localization.str.selling}</span>
+                </div>
             </div>`);
 
+        // Steam's mutation observer for tooltips is disabled on inventories, so add them manually
         Page.runInPageContext(view => {
             window.SteamFacade.vTooltip(`#es_quicksell${view}, #es_instantsell${view}`);
         }, [view]);
@@ -92,7 +89,7 @@ export default class FQuickSellOptions extends CallbackFeature {
         const currencyType = CurrencyManager.currencyNumberToType(walletCurrency);
 
         function enableButtons(enable) {
-            for (const button of marketActions.querySelectorAll(".item_market_action_button")) {
+            for (const button of marketActions.querySelectorAll(".item_market_action_button, .btn_small")) {
                 button.classList.toggle("btn_disabled", !enable);
             }
         }
@@ -110,15 +107,16 @@ export default class FQuickSellOptions extends CallbackFeature {
             const sellPrice = feeInfo.amount - feeInfo.fees;
 
             // https://github.com/SteamDatabase/SteamTracking/blob/13e4e0c8f8772ef316f73881af8c546218cf7117/steamcommunity.com/public/javascript/economy_v2.js#L4268
-            const formData = new FormData();
-            formData.append("sessionid", sessionId);
-            formData.append("appid", globalId);
-            formData.append("contextid", contextId);
-            formData.append("assetid", assetId);
-            formData.append("amount", 1); // TODO support stacked items, e.g. sack of gems
-            formData.append("price", sellPrice);
+            const data = {
+                "sessionid": sessionId,
+                "appid": globalId,
+                "contextid": contextId,
+                "assetid": assetId,
+                "amount": 1, // TODO support stacked items, e.g. sack of gems
+                "price": sellPrice
+            };
 
-            const result = await RequestData.post("https://steamcommunity.com/market/sellitem/", formData, {}, true).catch(err => err);
+            const result = await RequestData.post("https://steamcommunity.com/market/sellitem/", data, {}, true).catch(err => err);
 
             if (!result?.success) {
                 loadingEl.textContent = result?.message ?? Localization.str.error;
@@ -182,7 +180,7 @@ export default class FQuickSellOptions extends CallbackFeature {
             (price, type) => window.SteamFacade.vCurrencyFormat(price, type), [priceVal, currencyType], true
         );
 
-        buttonEl.querySelector(".item_market_action_button_contents").textContent = buttonStr.replace("__amount__", formattedPrice);
+        buttonEl.querySelector("span").textContent = buttonStr.replace("__amount__", formattedPrice);
         buttonEl.dataset.price = priceVal;
         buttonEl.style.display = "block";
         buttonEl.addEventListener("click", clickHandler);

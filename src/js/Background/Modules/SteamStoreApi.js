@@ -1,7 +1,4 @@
-import {HTML} from "../../Core/Html/Html";
-import {HTMLParser} from "../../Core/Html/HtmlParser";
-import {Errors} from "../../Core/Errors/Errors";
-import {StringUtils} from "../../Core/Utils/StringUtils";
+import {Errors, HTML, HTMLParser, StringUtils} from "../../modulesCore";
 import {Api} from "./Api";
 import {IndexedDB} from "./IndexedDB";
 import CacheStorage from "./CacheStorage";
@@ -63,63 +60,45 @@ class SteamStoreApi extends Api {
         return SteamStoreApi.clearDynamicStore();
     }
 
-    static async currencyFromWallet() {
-        const html = await SteamStoreApi.getPage("/steamaccount/addfunds");
-        const dummyPage = HTML.toDom(html);
+    static async _getCurrencyFromWallet(parser) {
+        const html = await SteamStoreApi.getPage("/steamaccount/addfunds", {}, true);
+        const doc = parser.parseFromString(html, "text/html");
 
-        return dummyPage.querySelector("input[name=currency]").value;
+        return doc.querySelector("input[name=currency]")?.value;
     }
 
-    static async currencyFromApp() {
-        const html = await SteamStoreApi.getPage("/app/220");
-        const dummyPage = HTML.toDom(html);
+    static async _getCurrencyFromApp(parser) {
+        const html = await SteamStoreApi.getPage("/app/220", {}, true);
+        const doc = parser.parseFromString(html, "text/html");
 
-        const currency = dummyPage.querySelector("meta[itemprop=priceCurrency][content]");
-        if (!currency || !currency.getAttribute("content")) {
-            throw new Error("Store currency could not be determined from app 220");
-        }
-
-        return currency.getAttribute("content");
+        return doc.querySelector("meta[itemprop=priceCurrency][content]")?.getAttribute("content");
     }
 
     static async currency() {
         let currency = CacheStorage.get("currency");
         if (currency) { return currency; }
 
-        currency = await SteamStoreApi.currencyFromWallet();
-        if (!currency) { currency = await SteamStoreApi.currencyFromApp(); }
-        if (!currency) { throw new Error("Could not retrieve store currency"); }
+        const parser = new DOMParser();
+
+        currency = await SteamStoreApi._getCurrencyFromWallet(parser);
+        if (!currency) {
+            currency = await SteamStoreApi._getCurrencyFromApp(parser);
+            if (!currency) {
+                throw new Error("Store currency could not be determined from app 220");
+            }
+        }
 
         CacheStorage.set("currency", currency);
         return currency;
     }
 
-    /*
-     * Invoked if we were previously logged out and are now logged in
-     */
-    static async country() {
-        const self = SteamStoreApi;
-        const html = await self.getPage("/account/change_country/", {}, res => {
-            if (new URL(res.url).pathname === "/login/") {
-                throw new Errors.LoginError("store");
-            }
-        });
-        const dummyPage = HTML.toDom(html);
-
-        const node = dummyPage.querySelector("#dselect_user_country");
-        return node && node.value;
-    }
-
     static async sessionId() {
-        const self = SteamStoreApi;
-
-        // TODO what's the minimal page we can load here to get sessionId?
-        const html = await self.getPage("/about/");
+        const html = await SteamStoreApi.getPage("/about/", {}, true);
         return HTMLParser.getVariableFromText(html, "g_sessionID", "string");
     }
 
     static async wishlists(path) {
-        const html = await SteamStoreApi.getPage(`/wishlist${path}`);
+        const html = await SteamStoreApi.getPage(`/wishlist${path}`, {}, true);
         const data = HTMLParser.getVariableFromText(html, "g_rgWishlistData", "array");
         return data ? data.length : "";
     }
@@ -161,8 +140,13 @@ class SteamStoreApi extends Api {
         return IndexedDB.put("purchases", purchaseDates);
     }
 
-    static purchases(appName, lang) { return IndexedDB.get("purchases", appName, {"params": lang}); }
-    static clearPurchases() { return IndexedDB.clear("purchases"); }
+    static purchases(appName, lang) {
+        return IndexedDB.get("purchases", appName, {"params": lang});
+    }
+
+    static clearPurchases() {
+        return IndexedDB.clear("purchases");
+    }
 
     static async dynamicStore() {
         const store = await SteamStoreApi.getEndpoint("dynamicstore/userdata", {}, null, {"cache": "no-cache"});
@@ -175,14 +159,6 @@ class SteamStoreApi extends Api {
             "wishlisted": rgWishlist,
         };
 
-        /*
-         * dynamicstore keys are:
-         * "rgWishlist", "rgOwnedPackages", "rgOwnedApps", "rgPackagesInCart", "rgAppsInCart"
-         * "rgRecommendedTags", "rgIgnoredApps", "rgIgnoredPackages", "rgCurators", "rgCurations"
-         * "rgCreatorsFollowed", "rgCreatorsIgnored", "preferences", "rgExcludedTags",
-         * "rgExcludedContentDescriptorIDs", "rgAutoGrantApps"
-         */
-
         return IndexedDB.put("dynamicStore", dynamicStore);
     }
 
@@ -192,7 +168,7 @@ class SteamStoreApi extends Api {
 
     static async dynamicStoreRandomApp() {
         const store = await IndexedDB.getAll("dynamicStore");
-        if (!store || !store.ownedApps) { return null; }
+        if (!store.ownedApps.length) { return null; }
         return store.ownedApps[Math.floor(Math.random() * store.ownedApps.length)];
     }
 
@@ -207,7 +183,13 @@ class SteamStoreApi extends Api {
         return SteamStoreApi.endpointFactory("api/appdetails/", appid)(params);
     }
 
-    static appUserDetails(appid) { return SteamStoreApi.endpointFactory("api/appuserdetails/", appid)({"appids": appid}); }
+    static getPage(endpoint, query, crossDomain) {
+        return super.getPage(endpoint, query, res => {
+            if (new URL(res.url).pathname === "/login/") {
+                throw new Errors.LoginError("store");
+            }
+        }, {}, crossDomain);
+    }
 }
 SteamStoreApi.origin = "https://store.steampowered.com/";
 SteamStoreApi.params = {"credentials": "include"};

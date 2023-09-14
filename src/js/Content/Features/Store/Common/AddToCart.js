@@ -4,39 +4,14 @@ import {Page} from "../../Page";
 
 export class AddToCart {
 
-    static async post(formEl, onWishlist, addToCartEl) {
-
-        const cartUrl = formEl.getAttribute("action");
-        const addToCartStr = Localization.str.addtocart_dialog;
-        let response;
-
-        try {
-            response = await RequestData.post(cartUrl, new FormData(formEl), {}, "none");
-        } catch (err) {
-            // Likely network error; response.ok doesn't mean the item was added successfully
-            Page.runInPageContext((errTitle, errDesc, errStr) => {
-                window.SteamFacade.showAlertDialog(errTitle, `${errDesc}<br><br>${errStr}`);
-            },
-            [
-                Localization.str.error,
-                addToCartStr.error_desc,
-                err.toString()
-            ]);
-
-            return;
-        }
-
-        // If redirected to a page other than the cart, follow the redirect
-        if (response.url !== cartUrl) {
-            window.location.assign(response.url);
-            return;
-        }
-
+    static async checkFeatureHint() {
         let enabled = SyncedStorage.get("addtocart_no_redirect");
 
         // Show feature hint to first time users
         if (!SyncedStorage.has("addtocart_no_redirect")) {
+            const addToCartStr = Localization.str.addtocart_dialog;
 
+            // If the dialog is closed or canceled, don't enable feature
             enabled = await ConfirmDialog.openFeatureHint(
                 "addtocart_no_redirect",
                 addToCartStr.title,
@@ -48,14 +23,45 @@ export class AddToCart {
             SyncedStorage.set("addtocart_no_redirect", enabled);
         }
 
-        // If the dialog is closed or canceled, don't enable feature
-        if (!enabled) {
-            window.location.assign(cartUrl);
+        return enabled;
+    }
+
+    static async post(formEl, onWishlist, addToCartEl) {
+
+        // Use the form's `action` here because free promotions are submitted to a different endpoint
+        const endpoint = formEl.getAttribute("action");
+        const body = new FormData(formEl);
+
+        let response;
+
+        try {
+            response = await RequestData.post(endpoint, body, {}, "none");
+        } catch (err) {
+            // Likely network error; response.ok doesn't mean the item was added successfully
+            Page.runInPageContext((errTitle, errDesc, errStr) => {
+                window.SteamFacade.showAlertDialog(errTitle, `${errDesc}<br><br>${errStr}`);
+            },
+            [
+                Localization.str.error,
+                Localization.str.addtocart_dialog.error_desc,
+                err.toString()
+            ]);
+
+            return;
+        }
+
+        /**
+         * If redirected to a page other than the cart, follow the redirect.
+         * E.g. CSGO operations redirect to a /approvetxn/ page.
+         */
+        const url = new URL(response.url);
+        if (!/^\/cart\/?$/.test(url.pathname)) {
+            window.location.assign(response.url);
             return;
         }
 
         if (onWishlist) {
-            addToCartEl.setAttribute("href", cartUrl);
+            addToCartEl.setAttribute("href", "https://store.steampowered.com/cart/");
             addToCartEl.querySelector("span").textContent = Localization.str.in_cart;
 
             // Show the cart button and update item count

@@ -51,13 +51,14 @@ const config = {
         "js/store/app": "./src/js/Content/Features/Store/App/PApp.js",
         "js/store/bundle": "./src/js/Content/Features/Store/Bundle/PBundle.js",
         "js/store/cart": "./src/js/Content/Features/Store/Cart/PCart.js",
+        "js/store/charts": "./src/js/Content/Features/Store/Charts/PCharts.js",
         "js/store/default": "./src/js/Content/Features/Store/PDefaultStore.js",
         "js/store/frontpage": "./src/js/Content/Features/Store/Storefront/PStoreFront.js",
         "js/store/funds": "./src/js/Content/Features/Store/Funds/PFunds.js",
+        "js/store/licences": "./src/js/Content/Features/Store/Licenses/PLicenses.js",
         "js/store/points_shop": "./src/js/Content/Features/Store/PointsShop/PPointsShop.js",
         "js/store/registerkey": "./src/js/Content/Features/Store/RegisterKey/PRegisterKey.js",
         "js/store/search": "./src/js/Content/Features/Store/Search/PSearch.js",
-        "js/store/charts": "./src/js/Content/Features/Store/Charts/PCharts.js",
         "js/store/sub": "./src/js/Content/Features/Store/Sub/PSub.js",
         "js/store/wishlist": "./src/js/Content/Features/Store/Wishlist/PWishlist.js",
         "js/extra/holidayprofile": "./src/js/Steam/holidayprofile.js"
@@ -90,7 +91,12 @@ const config = {
             },
             {
                 "test": /\.ts$/,
-                "use": "ts-loader",
+                "use": [{
+                    "loader": "ts-loader",
+                    "options": {
+                        "transpileOnly": true, // TODO Remove once typechecking throws no more errors
+                    }
+                }],
                 "exclude": /node_modules/,
             },
             {

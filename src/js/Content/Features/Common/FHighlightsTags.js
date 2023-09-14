@@ -1,14 +1,11 @@
 import {GameId, HTML, Localization, SyncedStorage} from "../../../modulesCore";
 import {DOMHelper, DynamicStore, Feature, ITAD, Inventory} from "../../modulesContent";
-import {Page} from "../Page";
 
 export default class FHighlightsTags extends Feature {
 
     async apply() {
 
-        await Page.runInPageContext(() => new Promise(resolve => {
-            window.SteamFacade.onDynamicStoreReady(() => { resolve(); });
-        }), null, true);
+        await DynamicStore.onReady();
 
         return Promise.all([
             FHighlightsTags.highlightTitle(this.context.appid),
@@ -36,7 +33,6 @@ export default class FHighlightsTags extends Feature {
      * @param {Object} options - Option overrides that should be applied
      * @returns {Promise} - Resolved once the highlighting and tagging completed for the nodes
      */
-    /* eslint-disable complexity -- FIXME */
     static async highlightAndTag(nodes, hasDsInfo = true, options = {}) {
 
         if (typeof FHighlightsTags._options === "undefined") {
@@ -61,28 +57,13 @@ export default class FHighlightsTags extends Feature {
         const storeIdsMap = new Map();
 
         for (const node of _nodes) {
-            let nodeToHighlight = node;
 
-            if (node.classList.contains("item")) {
-                nodeToHighlight = node.querySelector(".info");
-            } else if (node.classList.contains("home_area_spotlight")) {
-                nodeToHighlight = node.querySelector(".spotlight_content");
-            } else if (node.parentNode?.classList.contains("steam_curator_recommendation")
-                && node.parentNode?.classList.contains("big")) {
-                nodeToHighlight = node.nextElementSibling;
-            } else if (node.parentNode?.parentNode?.classList.contains("curations")) {
-                nodeToHighlight = node.parentNode;
-            } else if (node.classList.contains("special_img_ctn") && node.parentNode?.classList.contains("special")) {
-                nodeToHighlight = node.parentNode;
-            } else if (node.classList.contains("blotter_userstats_game")) {
-
-                // Small game capsules on activity page (e.g. when posting a status about a game)
-                nodeToHighlight = node.parentNode;
-            }
+            if (node.classList.contains("es_highlight_checked")) { continue; }
+            node.classList.add("es_highlight_checked");
 
             const aNode = node.querySelector("a");
 
-            const appid = GameId.getAppid(node) || GameId.getAppid(aNode) || GameId.getAppidFromId(node.id);
+            const appid = GameId.getAppid(node) || GameId.getAppid(aNode);
             const subid = GameId.getSubid(node) || GameId.getSubid(aNode);
             const bundleid = GameId.getBundleid(node) || GameId.getBundleid(aNode);
 
@@ -97,23 +78,24 @@ export default class FHighlightsTags extends Feature {
 
             if (storeId) {
                 if (storeIdsMap.has(storeId)) {
-                    storeIdsMap.get(storeId).push(nodeToHighlight);
+                    storeIdsMap.get(storeId).push(node);
                 } else {
-                    storeIdsMap.set(storeId, [nodeToHighlight]);
+                    storeIdsMap.set(storeId, [node]);
                 }
+            } else {
+                console.warn("FHighlightsTags: Couldn't find storeId for node %o", node);
             }
-
 
             if (hasDsInfo) {
                 try {
                     if (opts.owned && node.querySelector(".ds_owned_flag") !== null) {
-                        this.highlightOwned(nodeToHighlight);
+                        this.highlightOwned(node);
                     }
                     if (opts.wishlisted && node.querySelector(".ds_wishlist_flag") !== null) {
-                        this.highlightWishlist(nodeToHighlight);
+                        this.highlightWishlist(node);
                     }
                     if (opts.ignored && node.querySelector(".ds_ignored_flag") !== null) {
-                        this.highlightIgnored(nodeToHighlight);
+                        this.highlightIgnored(node);
                     }
                 } catch (err) {
                     console.error("Failed to highlight / tag node", err);
@@ -141,46 +123,43 @@ export default class FHighlightsTags extends Feature {
         ]);
 
         const it = trimmedStoreIds.values();
-        for (const [storeid, nodes] of storeIdsMap) {
+        for (const [storeId, nodes] of storeIdsMap) {
 
             const operations = [];
 
             if (dsStatus) {
-                if (opts.owned && dsStatus[storeid].owned) {
+                if (opts.owned && dsStatus[storeId].owned) {
                     operations.push(this.highlightOwned);
                 }
-                if (opts.wishlisted && dsStatus[storeid].wishlisted) {
+                if (opts.wishlisted && dsStatus[storeId].wishlisted) {
                     operations.push(this.highlightWishlist);
                 }
-                if (opts.ignored && dsStatus[storeid].ignored) {
+                if (opts.ignored && dsStatus[storeId].ignored) {
                     operations.push(this.highlightIgnored);
                 }
             }
 
             /*
-             * Don't need to check for the opts object here, since the result contains
-             * false for every property if the highlight has been disabled
+             * Don't need to check for the opts object for itad and inv, since the result
+             * contains `false` for every property if the highlight has been disabled
              */
             if (itadStatus) {
-                if (itadStatus[storeid].collected) {
+                if (itadStatus[storeId].collected) {
                     operations.push(this.highlightCollection);
                 }
-                if (itadStatus[storeid].waitlisted) {
+                if (itadStatus[storeId].waitlisted) {
                     operations.push(this.highlightWaitlist);
                 }
             }
 
             if (invStatus) {
                 const trimmedId = it.next().value;
-                if (opts.gift && invStatus[trimmedId].gift) {
+                if (invStatus[trimmedId].gift) {
                     operations.push(this.highlightInvGift);
                 }
-
-                if (opts.guestPass && invStatus[trimmedId].guestPass) {
+                if (invStatus[trimmedId].guestPass) {
                     operations.push(this.highlightInvGuestpass);
                 }
-
-                // Same as for the ITAD highlights (don't need to check)
                 if (invStatus[trimmedId].coupon) {
                     operations.push(this.highlightInvCoupon);
                 }
@@ -225,35 +204,36 @@ export default class FHighlightsTags extends Feature {
             }
 
             if (node.classList.contains("tab_item")) {
-                node.querySelector(".tab_item_details").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".tab_item_details").prepend(container);
+            } else if (node.classList.contains("store_main_capsule")) {
+                node.querySelector(".platforms").prepend(container);
             } else if (node.classList.contains("newonsteam_headercap") || node.classList.contains("comingsoon_headercap")) {
-                node.querySelector(".discount_block").insertAdjacentElement("beforebegin", container);
+                node.querySelector(".discount_block").before(container);
             } else if (node.classList.contains("search_result_row")) {
-                node.querySelector(".search_name > div").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".search_name > div").prepend(container);
             } else if (node.classList.contains("browse_tag_game")) {
-                node.querySelector(".browse_tag_game_price").insertAdjacentElement("afterend", container);
+                node.querySelector(".browse_tag_game_price").after(container);
             } else if (node.classList.contains("game_area_dlc_row")) {
-                node.querySelector(".game_area_dlc_price").insertAdjacentElement("afterbegin", container);
+                // Must check discount block first
+                const priceNode = node.querySelector(".discount_block") || node.querySelector(".game_area_dlc_price");
+                priceNode.prepend(container);
             } else if (node.classList.contains("wishlist_row")) {
-                node.querySelector(".addedon").insertAdjacentElement("afterbegin", container);
-            } else if (node.classList.contains("match")) {
-                node.querySelector(".match_price").insertAdjacentElement("afterbegin", container);
-            } else if (node.classList.contains("recommendation_highlight")) {
-                node.querySelector(".highlight_description").insertAdjacentElement("afterbegin", container);
+                node.querySelector(".addedon").prepend(container);
+            } else if (node.classList.contains("match_app")) {
+                node.querySelector(".match_subtitle").prepend(container);
+            } else if (node.classList.contains("header_image")) {
+                node.parentNode.querySelector(".highlight_description").prepend(container);
             } else if (node.classList.contains("similar_grid_item")) {
                 node.querySelector(".regular_price, .discount_block").append(container);
             } else if (node.classList.contains("recommendation_carousel_item")) {
-                node.querySelector(".buttons").insertAdjacentElement("beforebegin", container);
+                node.querySelector(".buttons").before(container);
             } else if (node.classList.contains("friendplaytime_game")) {
-                node.querySelector(".friendplaytime_buttons").insertAdjacentElement("beforebegin", container);
+                node.querySelector(".friendplaytime_buttons").before(container);
             }
         }
 
-        if (!container.querySelector(`.es_tag_${tag}`)) {
-            HTML.beforeEnd(container, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
-        }
+        HTML.beforeEnd(container, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
     }
-    /* eslint-enable complexity */
 
     static _highlightNode(node, type) {
 
@@ -267,8 +247,6 @@ export default class FHighlightsTags extends Feature {
             if (_node && /\bFree\b/.test(_node.textContent)) { return; }
         }
 
-        node.classList.add("es_highlighted", `es_highlighted_${type}`);
-
         if (!this._highlightCssLoaded) {
             this._highlightCssLoaded = true;
 
@@ -280,12 +258,11 @@ export default class FHighlightsTags extends Feature {
                     `.es_highlighted_${name} {
                         background: ${color} linear-gradient(135deg, rgba(0, 0, 0, 0.70) 10%, rgba(0, 0, 0, 0) 100%) !important;
                     }
-                    .carousel_items .es_highlighted_${name}.price_inline, .curator_giant_capsule.es_highlighted_${name},
-                    .hero_capsule.es_highlighted_${name}, .blotter_userstatus_game.es_highlighted_${name} {
+                    .curator_giant_capsule.es_highlighted_${name},
+                    .blotter_userstatus_game.es_highlighted_${name},
+                    #curator_avatar_image.es_highlighted_${name} .curator_avatar,
+                    .app_header.es_highlighted_${name} {
                         outline: solid ${color};
-                    }
-                    #search_suggestion_contents .focus.es_highlighted_${name} {
-                        box-shadow: -5px 0 0 ${color};
                     }
                     .apphub_AppName.es_highlighted_${name} {
                         background: none !important; color: ${color};
@@ -296,50 +273,45 @@ export default class FHighlightsTags extends Feature {
             DOMHelper.insertCSS(hlCss.join("\n"));
         }
 
-        let _node = node;
+        // Find the node to highlight if needed
+        let nodeToHighlight = node;
 
-        // Carousel item
-        if (_node.classList.contains("cluster_capsule")) {
-            _node = _node.querySelector(".main_cap_content").parentNode;
-        } else if (_node.classList.contains("large_cap")) {
-
-            // Genre Carousel items
-            _node = _node.querySelector(".large_cap_content");
-        } else if (_node.parentNode?.classList.contains("steam_curator_recommendation")
-            && _node.parentNode?.classList.contains("big")) {
-            _node = _node.previousElementSibling;
-        }
-
-        // Recommendations on front page when scrolling down
-        if (_node.classList.contains("single")) {
-            _node = _node.querySelector(".gamelink");
-        }
-
-        if (_node.parentNode?.parentNode?.classList.contains("apps_recommended_by_curators_v2")) {
-            let r = _node.querySelectorAll(".ds_flag");
-            r.forEach(node => node.remove());
-            r = _node.querySelectorAll(".ds_flagged");
-            r.forEach(node => node.classList.remove("ds_flagged"));
-        } else {
-
-            if (_node.classList.contains("info") || _node.classList.contains("spotlight_content")) {
-                _node = _node.parentNode;
+        if (node.classList.contains("item")) {
+            nodeToHighlight = node.querySelector(".info");
+        } else if (node.classList.contains("home_area_spotlight")) {
+            nodeToHighlight = node.querySelector(".spotlight_content");
+        } else if (node.classList.contains("special_img_ctn") && node.parentNode?.classList.contains("special")) {
+            nodeToHighlight = node.parentNode;
+        } else if (node.classList.contains("store_capsule")) {
+            if (node.parentNode?.classList.contains("steam_curator_recommendation")
+                && node.parentNode?.classList.contains("big")) {
+                // curators/ (larger store capsule)
+                nodeToHighlight = node.nextElementSibling;
+            } else if (node.parentNode?.parentNode?.classList.contains("curations")) {
+                nodeToHighlight = node.parentNode;
             }
-
-            let r = _node.querySelector(".ds_flag");
-            if (r) { r.remove(); }
-            r = _node.querySelector(".ds_flagged");
-            if (r) {
-                r.classList.remove("ds_flagged");
-            }
+        } else if (
+            // Small game capsules on activity page (e.g. when posting a status about a game)
+            node.classList.contains("blotter_userstats_game")
+            || node.classList.contains("gamelink")
+            || node.classList.contains("recommendation_app")
+            || node.classList.contains("header_image")
+            || node.classList.contains("game_capsule")
+            || node.classList.contains("highlighted_app_header")
+            || node.classList.contains("friendplaytime_appheader")
+        ) {
+            nodeToHighlight = node.parentNode;
         }
 
-        _node.classList.remove("ds_flagged");
+        nodeToHighlight.classList.add("es_highlighted", `es_highlighted_${type}`);
+
+        // Remove DS flags
+        node.querySelectorAll(".ds_flag").forEach(node => node.remove());
+        node.querySelectorAll(".ds_flagged").forEach(node => node.classList.remove("ds_flagged"));
+        node.classList.remove("ds_flagged");
     }
 
     static _highlightItem(node, name) {
-        node.classList.add("es_highlight_checked");
-
         if (SyncedStorage.get(`highlight_${name}`)) {
             this._highlightNode(node, name);
         }
@@ -400,36 +372,35 @@ FHighlightsTags._types = [
     "inv_gift",
 ];
 
+// Note: select the node which has DS info, and traverse later when highlighting if needed
 FHighlightsTags._selector = [
-    ".store_main_capsule", // "Featured & Recommended"
-    "a.game_area_dlc_row", // DLC on app pages
-    "a.small_cap", // Featured storefront items and "recommended" section on app pages
-    ".home_content_item", // Small items under "Keep scrolling for more recommendations"
-    ".home_content.single", // Big items under "Keep scrolling for more recommendations"
-    ".home_area_spotlight", // "Special offers" big items
-    "a.search_result_row", // Search result rows
-    "a.match", // Search suggestions rows
-    ".highlighted_app", // For example "Recently Recommended" on curators page
-    "div.recommendation_highlight", // Recommendation pages
-    "div.recommendation_carousel_item", // Recommendation pages
-    "div.friendplaytime_game", // Recommendation pages
-    ".recommendation_row", // "Recent recommendations by friends"
-    ".friendactivity_tab_row", // "Most played" and "Most wanted" tabs on recommendation pages
-    ".friend_game_block", // "Friends recently bought"
-    ".recommendation", // Curator pages and the new DLC pages
-    ".curator_giant_capsule",
-    "div.carousel_items.curator_featured > div", // Carousel items on Curator pages
-    "div.item_ctn", // Curator list item
-    ".store_capsule", // All sorts of items on almost every page
+    ".tab_item", // Item rows on storefront
     ".newonsteam_headercap", // explore/new/
     ".comingsoon_headercap", // explore/upcoming/
-    ".home_marketing_message", // "Updates and offers"
-    "div.dlc_page_purchase_dlc", // DLC page rows
-    "div.home_area_spotlight", // Midweek and weekend deals
-    "div.browse_tag_game", // Tagged games
-    "div.similar_grid_item", // Items on the "Similarly tagged" pages
-    ".tab_item", // Item rows on storefront/tag/genre pages
-    ".special > .special_img_ctn", // new homepage specials
-    ".special.special_img_ctn",
-].map(sel => `${sel}:not(.es_highlighted)`)
-    .join(",");
+    ".store_capsule",
+    ".dailydeal_ctn",
+    ".special.special_img_ctn", // explore/new, cart/
+    ".special > .special_img_ctn",
+    ".store_main_capsule", // Featured & Recommended
+    ".home_marketing_message[data-ds-appid]", // Updates and Offers
+    ".home_area_spotlight", // Special Offers, specials/
+    ".curator_giant_capsule", // Curator Recommendations
+    ".home_content_item", // Recommendations at the bottom of the storefront (small)
+    ".home_content.single > .gamelink", // ...aforementioned (big)
+    ".highlighted_app_header", // curators/
+    "body.dlc_curator #curator_avatar_image", // Header image on dlc pages
+    ".curator_featured .capsule", // Featured items on curator, developer, publisher, franchise, dlc etc. pages
+    ".recommendation", // Item rows on aforementioned pages (the node to highlight and the parent of .store_capsule, and will get processed first)
+    ".search_result_row",
+    ".small_cap", // "recommended" section on app pages
+    ".game_area_dlc_row", // DLC on app pages
+    ".browse_tag_game", // tag/browse (the node to highlight)
+    ".recommendation_highlight > .header_image", // recommended/morelike, recommended/friendactivity/
+    ".similar_grid_item", // recommended/morelike
+    ".friend_game_block > .game_capsule", // recommended/friendactivity/
+    ".friendactivity_tab_row", // recommended/friendactivity/
+    ".recommendation_app", // recommended/byfriends/
+    ".recommendation_carousel_item",
+    ".app_header",
+    ".friendplaytime_appheader",
+].join(",");

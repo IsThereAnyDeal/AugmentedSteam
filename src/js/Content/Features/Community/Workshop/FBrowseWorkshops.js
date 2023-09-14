@@ -6,33 +6,43 @@ export default class FBrowseWorkshops extends Feature {
 
     apply() {
 
-        let url = new URL(window.location.href);
+        for (const tab of document.querySelectorAll(".browseOption")) {
+            const a = tab.querySelector("a");
+            const href = a.href;
+            a.removeAttribute("href");
 
-        if (url.searchParams && url.searchParams.has("browsesort")) {
-            LocalStorage.set("workshop_state", url.search);
-        } else {
-            const search = LocalStorage.get("workshop_state");
-            url = new URL(`https://steamcommunity.com/workshop/${search}`);
-            const query = url.searchParams.get("browsesort");
-            this._changeTab(query);
-        }
+            /**
+             * The background image that indicates the currently selected tab is positioned before the tab div.
+             * If this image is not wrapped by a relatively positioned div, it will be absolutely positioned
+             * to the very left instead of being the background of the tab name.
+             */
+            if (tab.classList.contains("notSelected")) {
+                HTML.wrap('<div style="position: relative;"></div>', tab);
+            }
 
-        Page.runInPageContext(() => {
-            window.SteamFacade.jq(".browseOption")
-                .get()
-                .forEach(node => { node.onclick = () => false; });
-        });
+            const newTab = HTML.replace(tab, tab.outerHTML); // Sanitize click listeners
 
-        document.querySelectorAll(".browseOption").forEach(tab => {
-            tab.addEventListener("click", () => {
-                const a = tab.querySelector("a[href]");
-                const url = new URL(`https://steamcommunity.com/workshop/${a.href}`);
+            newTab.addEventListener("click", () => {
+                const url = new URL(href, "https://steamcommunity.com/workshop/");
                 const query = url.searchParams.get("browsesort");
                 LocalStorage.set("workshop_state", url.search);
                 window.history.pushState(null, null, url.search);
                 this._changeTab(query);
             });
-        });
+        }
+
+        let url = new URL(window.location.href);
+
+        if (url.searchParams.has("browsesort")) {
+            LocalStorage.set("workshop_state", url.search);
+        } else {
+            const search = LocalStorage.get("workshop_state");
+            if (search) {
+                url = new URL(search, "https://steamcommunity.com/workshop/");
+                const query = url.searchParams.get("browsesort");
+                this._changeTab(query);
+            }
+        }
     }
 
     async _changeTab(query, start = 0, count = 8) {
@@ -41,8 +51,7 @@ export default class FBrowseWorkshops extends Feature {
 
         tab.setAttribute("disabled", "disabled");
 
-        const image = document.querySelector(".browseOptionImage");
-        tab.parentNode.insertAdjacentElement("afterbegin", image);
+        tab.before(document.querySelector(".browseOptionImage"));
 
         document.querySelectorAll(".browseOption").forEach(tab => tab.classList.add("notSelected"));
         tab.classList.remove("notSelected");
@@ -57,8 +66,8 @@ export default class FBrowseWorkshops extends Feature {
                 </div>
             </div>`);
 
-        const url = `https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?query=${query}&start=${start}&count=${count}`;
-        const result = JSON.parse(await RequestData.getHttp(url));
+        const params = new URLSearchParams({query, start, count});
+        const result = await RequestData.getJson(`https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?${params}`);
         HTML.inner(container, result.results_html);
 
         // Restore onclick attribute

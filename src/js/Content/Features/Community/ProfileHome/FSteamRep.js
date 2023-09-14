@@ -1,16 +1,21 @@
 import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
-import {Feature, ProfileData, SteamId} from "../../../modulesContent";
+import {Feature} from "../../../modulesContent";
 
 export default class FSteamRep extends Feature {
 
-    checkPrerequisites() {
-        return SyncedStorage.get("showsteamrepapi");
+    async checkPrerequisites() {
+        if (!SyncedStorage.get("showsteamrepapi")) { return false; }
+
+        const result = await this.context.data;
+        if (!result || !result.steamrep || !result.steamrep.length) {
+            return false;
+        }
+
+        this._data = result.steamrep;
+        return true;
     }
 
-    async apply() {
-
-        const {steamrep} = await ProfileData || {};
-        if (!steamrep || !steamrep.length) { return; }
+    apply() {
 
         // Build reputation images regexp
         const repImgs = {
@@ -23,7 +28,7 @@ export default class FSteamRep extends Feature {
 
         let html = "";
 
-        for (const value of steamrep) {
+        for (const value of this._data) {
 
             if (value.trim() === "") { continue; }
 
@@ -54,10 +59,8 @@ export default class FSteamRep extends Feature {
         }
 
         if (html) {
-            const steamId = SteamId.getSteamId();
-
             HTML.afterBegin(".profile_rightcol",
-                `<a id="es_steamrep" href="https://steamrep.com/profiles/${steamId}" target="_blank">
+                `<a id="es_steamrep" href="https://steamrep.com/profiles/${this.context.steamId}" target="_blank">
                     ${html}
                 </a>`);
         }

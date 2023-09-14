@@ -3,13 +3,19 @@ import {ContextType, Feature} from "../../../modulesContent";
 
 export default class FDRMWarnings extends Feature {
 
+    constructor(context) {
+        super(context);
+
+        // Exclude false-positives
+        this._excludedAppids = [
+            21690, // Resident Evil 5, at Capcom's request
+        ];
+    }
+
     checkPrerequisites() {
         if (!SyncedStorage.get("showdrm")) { return false; }
 
-        // Prevent false-positives
-        return (this.context.appid !== 216900 // Resident Evil 5, at Capcom's request
-            && this.context.appid !== 1157970 // Special K
-        );
+        return !this._excludedAppids.includes(this.context.appid);
     }
 
     apply() {
@@ -64,8 +70,8 @@ export default class FDRMWarnings extends Feature {
             || text.includes("multiplayer play and other live features included at no charge")
             || text.includes("www.gamesforwindows.com/live");
 
-        // Ubisoft Uplay detection
-        const uplay
+        // Ubisoft Connect detection
+        const ubisoft
                 = text.includes("uplay")
             || text.includes("ubisoft account");
 
@@ -91,22 +97,25 @@ export default class FDRMWarnings extends Feature {
         // Denuvo Antitamper detection
         const denuvo = text.includes("denuvo");
 
-        // EA origin detection
-        const origin = text.includes("origin client");
+        // EA app (Origin) detection
+        const eaApp
+                = text.includes("origin client")
+            || text.includes("ea account")
+            || text.includes("ea app");
 
         // Microsoft Xbox Live account detection
         const xbox = text.includes("xbox live");
 
         const drmNames = [
             [gfwl, "Games for Windows Live"],
-            [uplay, "Ubisoft Connect"],
+            [ubisoft, "Ubisoft Connect"],
             [securom, "SecuROM"],
             [tages, "Tages"],
             [stardock, "Stardock Account required"],
             [rockstar, "Rockstar Social Club"],
             [kalypso, "Kalypso Launcher"],
             [denuvo, "Denuvo Anti-Tamper"],
-            [origin, "EA Origin"],
+            [eaApp, "EA app (Origin)"],
             [xbox, "Microsoft Xbox Live"],
         ].flatMap(([enabled, name]) => { return enabled ? [name] : []; });
 
@@ -126,15 +135,10 @@ export default class FDRMWarnings extends Feature {
         }
 
         if (drmString) {
-            const html = `<div class="es_drm_warning"><span>${drmString}</span></div>`;
-
-            // Insert the notice after the "Buy this game as a gift for a friend" note if present
-            const node = document.querySelector("#game_area_purchase .game_area_description_bodylabel");
-            if (node) {
-                HTML.afterEnd(node, html);
-            } else {
-                HTML.afterBegin("#game_area_purchase, #game_area_purchase_top", html);
-            }
+            HTML.afterBegin(
+                "#game_area_purchase, #game_area_purchase_top",
+                `<div class="es_drm_warning"><span>${drmString}</span></div>`
+            );
         }
     }
 }

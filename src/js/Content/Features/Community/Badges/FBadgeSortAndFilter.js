@@ -30,6 +30,7 @@ export default class FBadgeSortAndFilter extends Feature {
         if (isOwnProfile) {
             html += `<a class="popup_menu_item" id="es_badge_sort_drops">${Localization.str.most_drops}</a>`;
             html += `<a class="popup_menu_item" id="es_badge_sort_value">${Localization.str.drops_value}</a>`;
+            html += `<a class="popup_menu_item" id="es_badge_sort_remain">${Localization.str.cards_remain}</a>`;
         }
 
         const activeText = sortOptions.querySelector(".active").textContent.trim();
@@ -54,7 +55,7 @@ export default class FBadgeSortAndFilter extends Feature {
                     await this._loadAllPages();
                 }
 
-                this._sortBadgeRows(e.target.textContent, (node) => {
+                this._sortBadgeRows("drops", e.target.textContent, (node) => {
                     const dropCount = node.querySelector(".progress_info_bold");
                     if (!dropCount) { return 0; }
 
@@ -71,11 +72,32 @@ export default class FBadgeSortAndFilter extends Feature {
                     await this._loadAllPages();
                 }
 
-                this._sortBadgeRows(e.target.textContent, (node) => {
+                this._sortBadgeRows("value", e.target.textContent, (node) => {
                     const dropWorth = node.querySelector("[data-es-card-worth]");
                     if (!dropWorth) { return 0; }
 
                     return parseFloat(dropWorth.dataset.esCardWorth);
+                });
+            });
+
+            document.querySelector("#es_badge_sort_remain").addEventListener("click", async e => {
+
+                if (this.context.hasMultiplePages) {
+                    await this._loadAllPages();
+                }
+
+                // Note we're sorting by "least" cards remaining to complete set
+                this._sortBadgeRows("remain", e.target.textContent, (node) => {
+                    const infoNode = node.querySelector(".badge_progress_info");
+                    if (!infoNode) { return Infinity; }
+
+                    const info = infoNode.textContent.match(/\d+/g);
+                    if (!info || info.length !== 2) { return Infinity; }
+
+                    const [collected, total] = info.map(Number);
+
+                    // Total comes before collected in some locales
+                    return Math.abs(total - collected);
                 });
             });
         }
@@ -204,7 +226,7 @@ export default class FBadgeSortAndFilter extends Feature {
         }, [images]);
     }
 
-    _sortBadgeRows(activeText, nodeValueCallback) {
+    _sortBadgeRows(sortBy, activeText, nodeValueCallback) {
         const sheetNode = document.querySelector(".badges_sheet");
 
         // Remove script tags that'll get in the way of associating rows with their scroll elements
@@ -220,7 +242,11 @@ export default class FBadgeSortAndFilter extends Feature {
             badgeRows.push([[scrollEl, node], nodeValueCallback(node)]);
         }
 
-        badgeRows.sort((a, b) => b[1] - a[1]);
+        if (sortBy === "remain") {
+            badgeRows.sort((a, b) => a[1] - b[1]);
+        } else {
+            badgeRows.sort((a, b) => b[1] - a[1]);
+        }
 
         for (const row of badgeRows) {
             sheetNode.append(...row[0]);

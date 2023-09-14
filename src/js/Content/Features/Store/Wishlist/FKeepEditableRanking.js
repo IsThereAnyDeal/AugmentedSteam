@@ -44,8 +44,6 @@ export default class FKeepEditableRanking extends CallbackFeature {
 
         for (const node of nodes) {
 
-            if (node.querySelector(".as_hover_handle") !== null) { continue; }
-
             // Clone the hover element in order to disable drag-and-drop while filtering is active
             const hoverHandle = node.querySelector(".hover_handle");
             const newHoverHandle = hoverHandle.cloneNode(true);
@@ -61,6 +59,11 @@ export default class FKeepEditableRanking extends CallbackFeature {
             newInput.addEventListener("change", () => {
                 input.value = newInput.value;
                 input.dispatchEvent(new Event("change"));
+            });
+
+            // Select all text when focusing input field
+            newInput.addEventListener("focus", () => {
+                newInput.select();
             });
         }
     }

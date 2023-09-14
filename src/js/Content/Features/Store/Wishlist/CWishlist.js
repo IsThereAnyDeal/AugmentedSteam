@@ -11,6 +11,7 @@ import FEmptyWishlist from "./FEmptyWishlist";
 import FExportWishlist from "./FExportWishlist";
 import FKeepEditableRanking from "./FKeepEditableRanking";
 import FOneClickRemoveFromWishlist from "./FOneClickRemoveFromWishlist";
+import FWishlistProfileLink from "./FWishlistProfileLink";
 
 export class CWishlist extends CStoreBase {
 
@@ -35,6 +36,7 @@ export class CWishlist extends CStoreBase {
             FExportWishlist,
             FKeepEditableRanking,
             FOneClickRemoveFromWishlist,
+            FWishlistProfileLink,
         ]);
 
         this.wishlistData = wishlistData;
@@ -65,27 +67,23 @@ export class CWishlist extends CStoreBase {
 
         await super.applyFeatures();
 
-        const alreadyLoaded = document.querySelectorAll(".wishlist_row");
-        if (alreadyLoaded.length !== 0) {
-            this.triggerCallbacks(alreadyLoaded);
+        // Internal property to track which nodes have already been processed
+        const done = Symbol("done");
 
-            window.dispatchEvent(new Event("resize"));
+        const alreadyLoaded = Array.from(document.querySelectorAll(".wishlist_row"));
+        if (alreadyLoaded.length !== 0) {
+            await this.triggerCallbacks(alreadyLoaded, done);
         }
 
-        this._registerObserver();
-    }
-
-    _registerObserver() {
-
-        const container = document.getElementById("wishlist_ctn");
         let timer = null;
         const delayedWork = new Set();
 
         new MutationObserver(mutations => {
 
-            for (const record of mutations) {
-                if (record.addedNodes.length === 1) {
-                    delayedWork.add(record.addedNodes[0]);
+            for (const {addedNodes} of mutations) {
+                const node = addedNodes[0];
+                if (node && !node[done]) {
+                    delayedWork.add(node);
                 }
             }
 
@@ -94,14 +92,21 @@ export class CWishlist extends CStoreBase {
                 timer = TimeUtils.resettableTimer(() => {
 
                     // Valve detaches wishlist entries that aren't visible
-                    const arg = Array.from(delayedWork).filter(node => node.parentNode === container);
+                    const visibleRows = Array.from(delayedWork).filter(node => node.isConnected);
                     delayedWork.clear();
 
-                    this.triggerCallbacks(arg);
+                    if (visibleRows.length !== 0) {
+                        this.triggerCallbacks(visibleRows, done);
+                    }
                 }, 50);
             } else {
                 timer.reset();
             }
-        }).observe(container, {"childList": true});
+        }).observe(document.getElementById("wishlist_ctn"), {"childList": true});
+    }
+
+    triggerCallbacks(nodes, done) {
+        nodes.forEach(node => { node[done] = true; });
+        return super.triggerCallbacks(nodes);
     }
 }

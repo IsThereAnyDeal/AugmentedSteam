@@ -14,7 +14,7 @@ export default class FShowMarketOverview extends CallbackFeature {
         hashName,
         restriction,
         appid,
-        isBooster
+        itemType
     }) {
 
         /*
@@ -27,7 +27,7 @@ export default class FShowMarketOverview extends CallbackFeature {
         const marketActions = document.getElementById(`iteminfo${view}_item_market_actions`);
 
         // If is a booster pack get the average price of three cards
-        if (isBooster && !thisItem.dataset.cardsPrice) {
+        if (itemType === "booster" && !thisItem.dataset.cardsPrice) {
             if (thisItem.classList.contains("es_avgprice_loading")) { return; }
             thisItem.classList.add("es_avgprice_loading");
 
