@@ -48,7 +48,7 @@ export default class ManifestTransformerPlugin implements WebpackPluginInstance 
                     cs.css ??= ["css/augmentedsteam.css"];
                     cs.matches = this.transformMatches(cs.matches);
                     // eslint-disable-next-line camelcase -- This property name is enforced by the manifest syntax
-                    cs.exclude_matches = this.transformMatches(cs.exclude_matches ?? []);
+                    cs.exclude_matches &&= this.transformMatches(cs.exclude_matches);
 
                     cs.js.unshift(...this.js);
                     cs.css.unshift(...this.css);

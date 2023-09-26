@@ -2,16 +2,15 @@ import webpack from "webpack";
 import {merge} from "webpack-merge";
 import path from "path";
 import fs from "fs";
-import url from "url";
 import MergeJsonWebpackPlugin from "merge-json-webpack-plugin";
-import ExtensionReloader from "webpack-ext-reloader";
+import {default as ExtensionReloader, type IExtensionReloaderInstance} from "webpack-ext-reloader";
 import FileManagerPlugin from "filemanager-webpack-plugin";
-import ManifestTransformerPlugin from "./Plugins/ManifestTransformerPlugin.js";
-import PreprocessChangelogPlugin from "./Plugins/PreprocessChangelogPlugin.js";
-import type Browser from "../browser.js";
-import config from "../webpack/webpack.common.js";
+import ManifestTransformerPlugin from "./Plugins/ManifestTransformerPlugin";
+import PreprocessChangelogPlugin from "./Plugins/PreprocessChangelogPlugin";
+import type Browser from "../browser";
+import config from "../webpack/webpack.common";
 
-const rootDir = url.fileURLToPath(new URL("../../", import.meta.url));
+const rootDir = path.resolve(__dirname, "../..");
 
 type Options = {
     browser: Browser;
@@ -131,6 +130,7 @@ export default class WebpackRunner {
         if (this.server) {
             options.watch = true;
             options.plugins.push(
+                // @ts-expect-error Typings are broken for webpack-ext-reloader, it's only declaring types
                 new ExtensionReloader({
                     "entries": {
                         "background": "background",
@@ -139,7 +139,7 @@ export default class WebpackRunner {
                             Object.keys(config.entry)
                                 .filter(entry => entry !== "background" && entry !== "options"),
                     }
-                })
+                }) as IExtensionReloaderInstance,
             );
         }
 

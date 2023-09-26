@@ -1,6 +1,6 @@
-import WebpackRunner from "../webpack/WebpackRunner.js";
+import WebpackRunner from "../webpack/WebpackRunner";
 import * as argparse from "argparse";
-import Browser from "../browser.js";
+import Browser from "../browser";
 
 const browsers = Object.values(Browser);
 const choices = ["all"].concat(browsers);

@@ -1,6 +1,5 @@
 {
   "name": "augmented-steam",
-  "type": "module",
   "scripts": {
     "build": "ts-node --project config/tsconfig.json config/scripts/build.ts",
     "update-locales": "node config/scripts/locales.cjs",

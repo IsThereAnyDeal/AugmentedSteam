@@ -1,10 +1,8 @@
 {
     "extends": "../tsconfig.base.json",
-    "ts-node": {
-        "esm": true
-    },
     "compilerOptions": {
         // Language and Environment
-        "target": "es2022"
+        "target": "es2022",
+        "module": "commonjs"
       }
 }

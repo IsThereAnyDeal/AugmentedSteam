@@ -18,7 +18,7 @@
         "moduleResolution": "node",
 
         // Emit
-        "noEmit": true, // Code emission handled by webpack and ts-node
+        "noEmit": true, // Code emission handled by the bundler and ts-node
 
         // JavaScript Support
         "allowJs": true, // TODO Remove once fully migrated

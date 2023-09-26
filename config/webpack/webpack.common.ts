@@ -1,15 +1,14 @@
 import path from "node:path";
-import url from "node:url";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import JsonMinimizerPlugin from "json-minimizer-webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import MiniCssExtractCleanupPlugin from "./Plugins/MiniCssExtractCleanupPlugin.js";
+import MiniCssExtractCleanupPlugin from "./Plugins/MiniCssExtractCleanupPlugin";
 import {CleanWebpackPlugin} from "clean-webpack-plugin";
 import sveltePreprocess from "svelte-preprocess";
 import type {Configuration} from "webpack";
 
-const rootDir = url.fileURLToPath(new URL("../../", import.meta.url));
+const rootDir = path.resolve(__dirname, "../..");
 
 const config = {
     "context": rootDir,
