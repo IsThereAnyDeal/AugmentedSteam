@@ -3,6 +3,7 @@ import {Background, ContextType} from "../../../modulesContent";
 import {CStoreBase} from "../Common/CStoreBase";
 import {UserNotes} from "../Common/UserNotes";
 import FMediaExpander from "../../Common/FMediaExpander";
+import FDisableLinkFilter from "../../Common/FDisableLinkFilter";
 import FITADPrices from "../Common/FITADPrices";
 import FDRMWarnings from "../Common/FDRMWarnings";
 import FExtraLinks from "../Common/FExtraLinks";
@@ -61,6 +62,7 @@ export class CApp extends CStoreBase {
         }
 
         super(ContextType.APP, [
+            FDisableLinkFilter,
             FReplaceDevPubLinks,
             FForceMP4,
             FHDPlayer,
