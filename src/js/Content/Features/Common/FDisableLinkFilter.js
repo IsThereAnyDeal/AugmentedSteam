@@ -13,7 +13,13 @@ export default class FDisableLinkFilter extends Feature {
             const selector = "a[href*='/linkfilter/']";
 
             for (const link of parent.querySelectorAll(selector)) {
-                link.href = new URLSearchParams(link.search).get("url");
+                const params = new URLSearchParams(link.search);
+                if (params.has("u")) {
+                    link.href = params.get("u");
+                } else if (params.has("url")) {
+                    // TODO old param prior to 11/2023, remove after some time
+                    link.href = params.get("url");
+                }
             }
         }
 
