@@ -22,10 +22,14 @@ IndexedDB.objStoreFetchFns = new Map([
     ["dynamicStore", SteamStoreApi.dynamicStore],
     ["packages", SteamStoreApi.fetchPackage],
 
-    ["earlyAccessAppids", AugmentedSteamApi.endpointFactoryCached("v01/earlyaccess", "earlyAccessAppids")],
+    ["earlyAccessAppids", AugmentedSteamApi.endpointFactoryCached(
+        "early-access/v1",
+        "earlyAccessAppids",
+        data => Object.fromEntries(data.map(appid => [appid, appid]))
+    )],
     ["storePageData", AugmentedSteamApi.endpointFactoryCached("v01/storepagedata", "storePageData")],
     ["profiles", AugmentedSteamApi.endpointFactoryCached("v01/profile/profile", "profiles")],
-    ["rates", AugmentedSteamApi.endpointFactoryCached("v01/rates", "rates")],
+    ["rates", AugmentedSteamApi.endpointFactoryCached("rates/v1", "rates")],
 
     ["collection", ITADApi.endpointFactoryCached("v02/user/coll/all", "collection", ITADApi.mapCollection)],
     ["waitlist", ITADApi.endpointFactoryCached("v01/user/wait/all", "waitlist", ITADApi.mapWaitlist)],

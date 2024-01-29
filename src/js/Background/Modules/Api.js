@@ -1,3 +1,4 @@
+import {Errors} from "../../modulesCore";
 import {IndexedDB} from "./IndexedDB";
 
 class Api {
@@ -9,9 +10,7 @@ class Api {
      * withResponse? use a boolean to include Response object in result?
      */
     static _fetchWithDefaults(endpoint, query = {}, params = {}) {
-        // AS APIs require trailing slash
-        const _endpoint = endpoint.endsWith("/") ? endpoint : `${endpoint}/`;
-        const url = new URL(_endpoint, this.origin);
+        const url = new URL(endpoint, this.origin);
         const _params = {...this.params, ...params};
         if (_params.method === "POST" && !_params.body) {
             _params.body = new URLSearchParams(query);
@@ -23,7 +22,12 @@ class Api {
 
     static async getEndpoint(endpoint, query, responseHandler, params = {}) {
         const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "GET"}));
-        if (responseHandler) { responseHandler(response); }
+        if (responseHandler) {
+            responseHandler(response);
+        }
+        if (response.status !== 200) {
+            throw new Errors.HTTPError(response.status, response.statusText);
+        }
         return response.json();
     }
 
@@ -65,8 +69,6 @@ class Api {
                 } else {
                     result = result[objPath];
                 }
-            } else {
-                result = result.data;
             }
             return result;
         };
@@ -77,9 +79,7 @@ class Api {
             let result = await this.getEndpoint(endpoint, params);
 
             if (mapFn) {
-                result = mapFn(result.data);
-            } else {
-                result = result.data;
+                result = mapFn(result);
             }
 
             return IndexedDB.put(storeName, typeof key === "undefined" ? result : new Map([[key, result]]));
