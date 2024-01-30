@@ -80,6 +80,16 @@ class AugmentedSteamApi extends Api {
         throw new Errors.HTTPError(response.status, response.statusText);
     }
 
+    static async fetchProfile(steamId) {
+        const url = new URL(`profile/${steamId}/v2`, Config.ApiServerHost);
+        let response = await fetch(url);
+
+        if (response.ok) {
+            return response.json();
+        }
+
+        throw new Errors.HTTPError(response.status, response.statusText);
+    }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
 AugmentedSteamApi._progressingRequests = new Map();

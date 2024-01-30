@@ -32,7 +32,11 @@ IndexedDB.objStoreFetchFns = new Map([
         await IndexedDB.put("storePageData", new Map([[key, data]]));
         return data;
     }],
-    ["profiles", AugmentedSteamApi.endpointFactoryCached("v01/profile/profile", "profiles")],
+    ["profiles", async({params, key} = {}) => {
+        const data = await AugmentedSteamApi.fetchProfile(params.profile);
+        await IndexedDB.put("profiles", new Map([[key, data]]));
+        return data;
+    }],
     ["rates", AugmentedSteamApi.endpointFactoryCached("rates/v1", "rates")],
 
     ["collection", ITADApi.endpointFactoryCached("v02/user/coll/all", "collection", ITADApi.mapCollection)],

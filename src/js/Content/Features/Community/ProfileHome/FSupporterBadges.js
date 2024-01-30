@@ -1,4 +1,4 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 import Config from "../../../../config";
 
@@ -28,13 +28,15 @@ export default class FSupporterBadges extends Feature {
             <div class="profile_count_link_preview">`;
 
         for (const badge of this._data) {
+            const img = ExtensionResources.getURL(`/img/badges/${badge.img}`);
+
             if (badge.link) {
                 html += `<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>${badge.title}">
-                            <a href="${badge.link}"><img class="badge_icon small" src="${badge.img}"></a>
+                            <a href="${badge.link}"><img class="badge_icon small" src="${img}" /></a>
                         </div>`;
             } else {
                 html += `<div class="profile_badges_badge" data-tooltip-html="Augmented Steam<br>${badge.title}">
-                            <img class="badge_icon small" src="${badge.img}">
+                            <img class="badge_icon small" src="${img}" />
                         </div>`;
             }
         }
