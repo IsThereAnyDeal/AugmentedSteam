@@ -23,12 +23,23 @@ class ITADApi extends Api {
         const rnd = crypto.getRandomValues(new Uint32Array(1))[0];
         const redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
 
-        const authUrl = new URL(`${Config.ITADApiServerHost}/oauth/authorize/`);
+        function generateString(length) {
+            const source = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~";
+            return Array(length).join().split(",")
+                .map(() => source.charAt(Math.floor(Math.random() * source.length)))
+                .join("");
+        }
+        const verifier = generateString(64);
+        const state = generateString(30);
+
+        const authUrl = new URL(`${Config.ITADServer}/oauth/authorize/`);
+        authUrl.searchParams.set("response_type", "code");
         authUrl.searchParams.set("client_id", Config.ITADClientId);
-        authUrl.searchParams.set("response_type", "token");
-        authUrl.searchParams.set("state", rnd);
-        authUrl.searchParams.set("scope", ITADApi.requiredScopes.join(" "));
         authUrl.searchParams.set("redirect_uri", redirectURI);
+        authUrl.searchParams.set("scope", ITADApi.requiredScopes.join(" "));
+        authUrl.searchParams.set("state", state);
+        authUrl.searchParams.set("code_challenge", verifier);
+        authUrl.searchParams.set("code_challenge_method", "plain");
 
         const tab = await browser.tabs.create({"url": authUrl.toString()});
 
@@ -58,7 +69,7 @@ class ITADApi extends Api {
                 {
                     "urls": [
                         redirectURI, // For Chrome, seems to not support match patterns (a problem with the Polyfill?)
-                        `${redirectURI}#*` // For Firefox
+                        `${redirectURI}/?*` // For Firefox
                     ],
                     "tabId": tab.id
                 },
@@ -67,18 +78,32 @@ class ITADApi extends Api {
             browser.tabs.onRemoved.addListener(tabsListener);
         });
 
-        const hashFragment = new URL(url).hash;
-        const params = new URLSearchParams(hashFragment.slice(1));
+        const responseUrl = new URL(url);
 
-        if (parseInt(params.get("state")) !== rnd) {
+        if (responseUrl.searchParams.get("state") !== state) {
             throw new Error("Failed to verify state parameter from URL fragment");
         }
 
-        const accessToken = params.get("access_token");
-        const expiresIn = params.get("expires_in");
+        const tokenUrl = new URL("oauth/token/", Config.ITADServer);
+        const params = new URLSearchParams();
+        params.set("grant_type", "authorization_code");
+        params.set("client_id", Config.ITADClientId);
+        params.set("redirect_uri", redirectURI);
+        params.set("code", responseUrl.searchParams.get("code"));
+        params.set("code_verifier", verifier);
+        params.set("state", verifier);
+
+        let response = await fetch(tokenUrl, {
+            method: "POST",
+            body: params
+        });
+        const tokens = await response.json();
+
+        const accessToken = tokens.access_token;
+        const expiresIn = tokens.expires_in;
 
         if (!accessToken || !expiresIn) {
-            throw new Error(`Couldn't retrieve information from URL fragment "${hashFragment}"`);
+            throw new Error(`Authorization failed`);
         }
 
         LocalStorage.set("access_token", {
