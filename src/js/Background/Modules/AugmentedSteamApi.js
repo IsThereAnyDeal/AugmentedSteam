@@ -1,3 +1,4 @@
+import {Errors} from "../../modulesCore";
 import {IndexedDB} from "./IndexedDB";
 import Config from "../../config";
 import {Api} from "./Api";
@@ -34,6 +35,28 @@ class AugmentedSteamApi extends Api {
 
     static steamPeek(appid) {
         return AugmentedSteamApi.endpointFactory("v01/similar")({appid, "count": 15});
+    }
+
+    static async fetchPrices(params/*: {
+        country: string,
+        apps?: number[],
+        subs?: number[],
+        bundles?: number[],
+        voucher: boolean,
+        shops: number[]
+    }*/) {
+        const url = new URL("prices/v2", Config.ApiServerHost);
+
+        let response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(params)
+        });
+
+        if (response.ok) {
+            return response.json();
+        }
+
+        throw new Errors.HTTPError(response.status, response.statusText);
     }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
