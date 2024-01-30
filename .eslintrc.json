@@ -81,7 +81,9 @@
                 "@typescript-eslint/quotes": ["error", "double", {"avoidEscape": true}],
                 "@typescript-eslint/sort-type-union-intersection-members": "off",
                 "@typescript-eslint/space-before-function-paren": ["error", "never"],
-                "@typescript-eslint/typedef": "off"
+                "@typescript-eslint/typedef": "off",
+                "@typescript-eslint/member-delimiter-style": "off", // TODO prefer comma, can't be bothered to set it up right now
+                "@typescript-eslint/space-infix-ops": "off"
             }
         }
     ],
@@ -199,7 +201,6 @@
         "operator-assignment": "error",
         "operator-linebreak": ["error", "before"],
         "prefer-arrow-callback": "error",
-        "prefer-const": ["error", { "destructuring": "all" }],
         "prefer-exponentiation-operator": "error",
         "prefer-numeric-literals": "error",
         "prefer-object-spread": "error",
@@ -208,7 +209,7 @@
         "prefer-rest-params": "error",
         "prefer-spread": "error",
         "prefer-template": "error",
-        "quote-props": "error",
+        "quote-props": ["error", "consistent"],
         "quotes": ["error", "double", {"avoidEscape": true}],
         "radix": ["error", "as-needed"],
         "rest-spread-spacing": "error",
@@ -219,7 +220,6 @@
         "space-before-blocks": "error",
         "space-before-function-paren": ["error", "never"],
         "space-in-parens": "error",
-        "space-infix-ops": "error",
         "space-unary-ops": "error",
         "spaced-comment": ["error", "always", { "markers": ["/"] }],
         "strict": ["error", "global"],
