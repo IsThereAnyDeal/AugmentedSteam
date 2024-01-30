@@ -26,9 +26,7 @@ export default class FTwitchShowcase extends Feature {
 
         const twitchId = m[1].replace(/\//g, "");
 
-        const data = await Background.action("twitch.stream", {"channel": twitchId});
-
-        // If the channel is not streaming, the response is: {"result":"success","data":[]}
+        const data = await Background.action("twitch.stream", twitchId);
         if (Array.isArray(data)) { return; }
 
         const channelUsername = data.user_name;

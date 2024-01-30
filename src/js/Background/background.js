@@ -70,10 +70,10 @@ const actionCallbacks = new Map([
     ["isea", AugmentedSteamApi.isEA],
     ["profile.background", AugmentedSteamApi.endpointFactory("profile/background/list/v2")],
     ["profile.background.games", AugmentedSteamApi.endpointFactory("profile/background/games/v1")],
-    ["twitch.stream", AugmentedSteamApi.endpointFactory("v01/twitch/stream")],
+    ["twitch.stream", AugmentedSteamApi.fetchTwitch],
     ["market.cardprices", AugmentedSteamApi.endpointFactory("v01/market/cardprices")],
     ["market.averagecardprices", AugmentedSteamApi.endpointFactory("v01/market/averagecardprices")],
-    ["steampeek", AugmentedSteamApi.steamPeek],
+    ["steampeek", AugmentedSteamApi.fetchSteamPeek],
 
     ["appdetails", SteamStoreApi.appDetails],
     ["currency", SteamStoreApi.currency],

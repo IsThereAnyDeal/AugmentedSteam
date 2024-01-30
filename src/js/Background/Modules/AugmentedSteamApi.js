@@ -31,7 +31,7 @@ class AugmentedSteamApi extends Api {
         return IndexedDB.contains("earlyAccessAppids", appids);
     }
 
-    static steamPeek(appid) {
+    static fetchSteamPeek(appid) {
         return AugmentedSteamApi.endpointFactory(`similar/${appid}/v2`)({"count": 15});
     }
 
@@ -89,6 +89,10 @@ class AugmentedSteamApi extends Api {
         }
 
         throw new Errors.HTTPError(response.status, response.statusText);
+    }
+
+    static async fetchTwitch(twitchChannelId) {
+        return AugmentedSteamApi.endpointFactory(`twitch/${twitchChannelId}/stream/v2`);
     }
 }
 AugmentedSteamApi.origin = Config.ApiServerHost;
