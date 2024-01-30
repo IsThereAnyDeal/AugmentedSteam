@@ -94,8 +94,7 @@ export default class FBadgeCalculations extends Feature {
         try {
             data = await Background.action("market.averagecardprices", {
                 "currency": CurrencyManager.storeCurrency,
-                "appids": appids.join(","),
-                "foilappids": foilAppids.join(","),
+                "appids": [...appids, ...foilAppids].join(",")
             });
         } catch (err) {
             console.error("Failed to retrieve average card prices", err);
@@ -109,7 +108,7 @@ export default class FBadgeCalculations extends Feature {
 
             if (!data[appid] || !data[appid][key]) { continue; }
 
-            const averagePrice = data[appid][key].average;
+            const averagePrice = data[appid][key];
 
             const progressInfoNode = node.querySelector(".badge_progress_info");
             if (progressInfoNode) {
