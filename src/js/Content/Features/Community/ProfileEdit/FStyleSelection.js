@@ -99,10 +99,10 @@ export default class FStyleSelection extends Feature {
                 await this.context.clearOwn();
 
                 if (styleSelectNode.value === "remove") {
-                    window.location.href = `${Config.ApiServerHost}/v01/profile/style/edit/delete/`;
+                    window.location.href = `${Config.ApiServerHost}/profile/style/delete/v2`;
                 } else {
                     const style = encodeURIComponent(styleSelectNode.value);
-                    window.location.href = `${Config.ApiServerHost}/v01/profile/style/edit/save/?style=${style}`;
+                    window.location.href = `${Config.ApiServerHost}/profile/style/save/v2?style=${style}`;
                 }
             });
 

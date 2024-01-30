@@ -165,7 +165,7 @@ export default class FBackgroundSelection extends Feature {
 
                 await this.context.clearOwn();
 
-                window.location.href = `${Config.ApiServerHost}/v01/profile/background/edit/delete/`;
+                window.location.href = `${Config.ApiServerHost}/profile/background/delete/v2`;
             });
 
             document.querySelector(".js-pd-bg-save").addEventListener("click", async() => {
@@ -176,7 +176,7 @@ export default class FBackgroundSelection extends Feature {
 
                 const appid = encodeURIComponent(this._selectedAppid);
                 const img = encodeURIComponent(this._selectedImage);
-                window.location.href = `${Config.ApiServerHost}/v01/profile/background/edit/save/?appid=${appid}&img=${img}`;
+                window.location.href = `${Config.ApiServerHost}/profile/background/save/v2?appid=${appid}&img=${img}`;
             });
 
         } else if (this._active) {
