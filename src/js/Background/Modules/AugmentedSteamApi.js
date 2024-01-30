@@ -32,7 +32,7 @@ class AugmentedSteamApi extends Api {
     }
 
     static steamPeek(appid) {
-        return AugmentedSteamApi.endpointFactory("v01/similar")({appid, "count": 15});
+        return AugmentedSteamApi.endpointFactory(`similar/${appid}/v2`)({"count": 15});
     }
 
     static async fetchPrices(params/*: {
