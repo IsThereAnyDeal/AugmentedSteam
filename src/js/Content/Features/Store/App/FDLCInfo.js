@@ -1,4 +1,4 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
 import {Background, Feature} from "../../../modulesContent";
 import Config from "../../../../config";
 
@@ -13,7 +13,7 @@ export default class FDLCInfo extends Feature {
         let response;
 
         try {
-            response = await Background.action("dlcinfo", {"appid": this.context.appid, "appname": this.context.appName});
+            response = await Background.action("dlcinfo", this.context.appid);
             // TODO remove when suggestion link is fixed
             if (!response || !response.length) { return; }
         } catch (err) {
@@ -26,8 +26,8 @@ export default class FDLCInfo extends Feature {
                    <div class="block_content"><div class="block_content_inner"><div class="details_block">`;
 
         for (const item of response) {
-            const iconUrl = `${Config.PublicHost}/gamedata/icons/${encodeURIComponent(item.icon)}`;
-            const title = HTML.escape(item.desc);
+            const iconUrl = ExtensionResources.getURL(`/img/dlcicons/${encodeURIComponent(item.icon)}`);
+            const title = HTML.escape(item.description);
             const name = HTML.escape(item.name);
 
             html += `<div class="game_area_details_specs">

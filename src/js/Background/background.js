@@ -57,7 +57,7 @@ const actionCallbacks = new Map([
     ["notes.clear", ExtensionData.clearNotes],
     ["cache.clear", ExtensionData.clearCache],
 
-    ["dlcinfo", AugmentedSteamApi.endpointFactory("v01/dlcinfo")],
+    ["dlcinfo", AugmentedSteamApi.fetchDlcInfo],
     ["storepagedata", AugmentedSteamApi.storePageData],
     ["storepagedata.expire", AugmentedSteamApi.expireStorePageData],
     ["prices", AugmentedSteamApi.fetchPrices],
