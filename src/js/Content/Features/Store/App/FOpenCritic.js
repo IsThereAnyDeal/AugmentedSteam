@@ -7,19 +7,19 @@ export default class FOpenCritic extends Feature {
         if (!SyncedStorage.get("showoc")) { return false; }
 
         const result = await this.context.data;
-        if (!result || !result.oc || !result.oc.url) {
+        if (!result || !result.reviews || !result.reviews.opencritic) {
             return false;
         }
 
-        this._data = result.oc;
+        this._review = result.reviews.opencritic;
         return true;
     }
 
     apply() {
 
-        const data = this._data;
+        const review = this._review;
         const ocImg = ExtensionResources.getURL("img/opencritic.png");
-        const award = data.award || "NA";
+        const award = review.verdict || "NA";
 
         let node = document.querySelector("#game_area_metascore");
         if (node) {
@@ -31,11 +31,11 @@ export default class FOpenCritic extends Feature {
         HTML.afterEnd(node,
             `<div class="block responsive_apppage_reviewblock">
                 <div id="game_area_opencritic">
-                    <div class="score ${award.toLowerCase()}">${data.score ? data.score : "--"}</div>
+                    <div class="score ${award.toLowerCase()}">${review.score ? review.score : "--"}</div>
                     <div class="logo"><img src="${ocImg}"></div>
                     <div class="wordmark">
                         <div class="metacritic">OpenCritic</div>
-                        <div id="game_area_metalink">${award} - <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=average" target="_blank">${Localization.str.read_reviews}</a>
+                        <div id="game_area_metalink">${award} - <a href="${review.url}?utm_source=enhanced-steam-itad&utm_medium=average" target="_blank">${Localization.str.read_reviews}</a>
                             <img src="//store.cloudflare.steamstatic.com/public/images/ico/iconExternalLink.gif" border="0" align="bottom">
                         </div>
                     </div>
@@ -43,6 +43,8 @@ export default class FOpenCritic extends Feature {
                 <div style="clear: both;"></div>
             </div>`);
 
+        /*
+         TODO missing data source, improve tracking
         let reviews = "";
         for (const review of data.reviews) {
             const date = new Date(review.date).toLocaleDateString();
@@ -70,5 +72,6 @@ export default class FOpenCritic extends Feature {
                     </div>`);
             }
         }
+         */
     }
 }

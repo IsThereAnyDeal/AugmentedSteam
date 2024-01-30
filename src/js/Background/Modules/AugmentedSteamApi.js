@@ -10,10 +10,8 @@ class AugmentedSteamApi extends Api {
      * static _progressingRequests = new Map();
      */
 
-    static storePageData(appid, metalink, showoc) {
+    static storePageData(appid) {
         const params = {"appid": appid};
-        if (metalink) { params.mcurl = metalink; }
-        if (showoc) { params.oc = 1; }
         return IndexedDB.get("storePageData", appid, {params});
     }
 
@@ -51,6 +49,17 @@ class AugmentedSteamApi extends Api {
             method: "POST",
             body: JSON.stringify(params)
         });
+
+        if (response.ok) {
+            return response.json();
+        }
+
+        throw new Errors.HTTPError(response.status, response.statusText);
+    }
+
+    static async fetchAppPageData(appid) {
+        const url = new URL(`app/${appid}/v2`, Config.ApiServerHost);
+        let response = await fetch(url);
 
         if (response.ok) {
             return response.json();

@@ -82,7 +82,6 @@ export default class FITADPrices extends Feature {
                 prices,
                 bundles,
             }) => {
-                console.log(prices, bundles);
                 for (let {type, id, data} of prices) {
                     this._insertPrices(type, id, data);
                 }

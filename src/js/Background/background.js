@@ -27,7 +27,11 @@ IndexedDB.objStoreFetchFns = new Map([
         "earlyAccessAppids",
         data => Object.fromEntries(data.map(appid => [appid, appid]))
     )],
-    ["storePageData", AugmentedSteamApi.endpointFactoryCached("v01/storepagedata", "storePageData")],
+    ["storePageData", async({params, key} = {}) => {
+        const data = await AugmentedSteamApi.fetchAppPageData(params.appid);
+        await IndexedDB.put("storePageData", new Map([[key, data]]));
+        return data;
+    }],
     ["profiles", AugmentedSteamApi.endpointFactoryCached("v01/profile/profile", "profiles")],
     ["rates", AugmentedSteamApi.endpointFactoryCached("rates/v1", "rates")],
 

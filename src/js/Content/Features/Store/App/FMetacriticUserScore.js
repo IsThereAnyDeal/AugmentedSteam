@@ -9,17 +9,17 @@ export default class FMetacriticUserScore extends Feature {
         }
 
         const result = await this.context.data;
-        if (!result || !result.data || !result.data.userscore) {
+        if (!result || !result.reviews || !result.reviews.metauser) {
             return false;
         }
 
-        this._data = result.data.userscore;
+        this._review = result.reviews.metauser;
         return true;
     }
 
     apply() {
 
-        const metauserscore = this._data * 10;
+        const metauserscore = this._review.score;
         if (isNaN(metauserscore)) { return; }
 
         let rating;

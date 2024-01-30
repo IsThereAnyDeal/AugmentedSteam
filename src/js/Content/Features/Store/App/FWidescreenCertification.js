@@ -47,11 +47,11 @@ export default class FWidescreenCertification extends Feature {
     apply() {
 
         const {
-            "Path": path,
-            "WideScreenGrade": wsg,
-            "MultiMonitorGrade": mmg,
-            "Grade4k": fkg,
-            "UltraWideScreenGrade": uws,
+            "url": url,
+            "wide": wsg,
+            "multi_monitor": mmg,
+            "4k": fkg,
+            "ultrawide": uws,
         } = this._data;
 
         const [wsgIcon, wsgText] = this._getType(wsg, "ws", "Widescreen");
@@ -71,7 +71,7 @@ export default class FWidescreenCertification extends Feature {
                             ${fkg ? `<img src="${HTML.escape(fkgIcon)}" title="${HTML.escape(fkgText)}">` : ""}
                         </div>
                         <br>
-                        <a class="linkbar es_external_icon" target="_blank" href="${HTML.escape(path)}">${Localization.str.rating_details}</a>
+                        <a class="linkbar es_external_icon" target="_blank" href="${HTML.escape(url)}">${Localization.str.rating_details}</a>
                     </div>
                 </div>
             </div>`);

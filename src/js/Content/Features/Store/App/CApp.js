@@ -1,50 +1,48 @@
-import {GameId, SyncedStorage} from "../../../../modulesCore";
+import {GameId} from "../../../../modulesCore";
 import {Background, ContextType} from "../../../modulesContent";
-import {CStoreBase} from "../Common/CStoreBase";
-import {UserNotes} from "../Common/UserNotes";
 import FMediaExpander from "../../Common/FMediaExpander";
-import FITADPrices from "../Common/FITADPrices";
+import {CStoreBase} from "../Common/CStoreBase";
+import FAddToCartNoRedirect from "../Common/FAddToCartNoRedirect";
+import FCustomizer from "../Common/FCustomizer";
 import FDRMWarnings from "../Common/FDRMWarnings";
 import FExtraLinks from "../Common/FExtraLinks";
-import FAddToCartNoRedirect from "../Common/FAddToCartNoRedirect";
-import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
+import FITADPrices from "../Common/FITADPrices";
+import FRegionalPricing from "../Common/FRegionalPricing";
+import {UserNotes} from "../Common/UserNotes";
+import FAchievementBar from "./FAchievementBar";
+import FAStatsLink from "./FAStatsLink";
+import FBadgeProgress from "./FBadgeProgress";
+import FDemoAbovePurchase from "./FDemoAbovePurchase";
+import FDLCCheckboxes from "./FDLCCheckboxes";
+import FDLCInfo from "./FDLCInfo";
+import FFamilySharingNotice from "./FFamilySharingNotice";
 import FForceMP4 from "./FForceMP4";
+import FFullscreenScreenshotView from "./FFullscreenScreenshotView";
 import FHDPlayer from "./FHDPlayer";
+import FHideReportedTags from "./FHideReportedTags";
+import FHowLongToBeat from "./FHowLongToBeat";
+import FMetacriticUserScore from "./FMetacriticUserScore";
+import FNewQueue from "./FNewQueue";
+import FOpenCritic from "./FOpenCritic";
+import FOwnedActionsButtons from "./FOwnedActionsButtons";
+import FOwnedElsewhere from "./FOwnedElsewhere";
+import FPackageInfoButton from "./FPackageInfoButton";
+import FPackBreakdown from "./FPackBreakdown";
+import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
+import FPurchaseDate from "./FPurchaseDate";
+import FRemoveBroadcasts from "./FRemoveBroadcasts";
+import FRemoveDupeScreenshots from "./FRemoveDupeScreenshots";
+import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
+import FReviewToggleButton from "./FReviewToggleButton";
+import FSaveReviewFilters from "./FSaveReviewFilters";
+import FShowCoupon from "./FShowCoupon";
+import FPlayers from "./FSteamChart";
+import FSteamDeckCompatibility from "./FSteamDeckCompatibility";
+import FSteamPeek from "./FSteamPeek";
+import FSupportInfo from "./FSupportInfo";
 import FUserNotes from "./FUserNotes";
 import FWaitlistDropdown from "./FWaitlistDropdown";
-import FNewQueue from "./FNewQueue";
-import FFullscreenScreenshotView from "./FFullscreenScreenshotView";
-import FShowCoupon from "./FShowCoupon";
-import FDLCInfo from "./FDLCInfo";
-import FMetacriticUserScore from "./FMetacriticUserScore";
-import FOpenCritic from "./FOpenCritic";
-import FOwnedElsewhere from "./FOwnedElsewhere";
-import FPurchaseDate from "./FPurchaseDate";
-import FSteamPeek from "./FSteamPeek";
 import FWidescreenCertification from "./FWidescreenCertification";
-import FHowLongToBeat from "./FHowLongToBeat";
-import FFamilySharingNotice from "./FFamilySharingNotice";
-import FPackBreakdown from "./FPackBreakdown";
-import FPackageInfoButton from "./FPackageInfoButton";
-import FSteamChart from "./FSteamChart";
-import FSteamSpy from "./FSteamSpy";
-import FSurveyData from "./FSurveyData";
-import FCustomizer from "../Common/FCustomizer";
-import FDLCCheckboxes from "./FDLCCheckboxes";
-import FBadgeProgress from "./FBadgeProgress";
-import FAStatsLink from "./FAStatsLink";
-import FAchievementBar from "./FAchievementBar";
-import FRegionalPricing from "../Common/FRegionalPricing";
-import FReviewToggleButton from "./FReviewToggleButton";
-import FOwnedActionsButtons from "./FOwnedActionsButtons";
-import FSupportInfo from "./FSupportInfo";
-import FRemoveBroadcasts from "./FRemoveBroadcasts";
-import FDemoAbovePurchase from "./FDemoAbovePurchase";
-import FSaveReviewFilters from "./FSaveReviewFilters";
-import FHideReportedTags from "./FHideReportedTags";
-import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
-import FSteamDeckCompatibility from "./FSteamDeckCompatibility";
-import FRemoveDupeScreenshots from "./FRemoveDupeScreenshots";
 
 export class CApp extends CStoreBase {
 
@@ -83,9 +81,7 @@ export class CApp extends CStoreBase {
             FFamilySharingNotice,
             FPackBreakdown,
             FPackageInfoButton,
-            FSteamChart,
-            FSteamSpy,
-            FSurveyData,
+            FPlayers,
             FCustomizer,
             FDLCCheckboxes,
             FBadgeProgress,
@@ -143,7 +139,7 @@ export class CApp extends CStoreBase {
         this.data = this.storePageDataPromise().catch(err => { console.error(err); });
 
         // The customizer has to wait on this data to be added in order to find the HTML elements
-        FCustomizer.dependencies = [FSteamSpy, FSteamChart, FSurveyData];
+        FCustomizer.dependencies = [FPlayers];
         FCustomizer.weakDependency = true;
 
         // FPackBreakdown skips purchase options with a package info button to avoid false positives
@@ -156,7 +152,7 @@ export class CApp extends CStoreBase {
     }
 
     storePageDataPromise() {
-        return Background.action("storepagedata", this.appid, this.metalink, SyncedStorage.get("showoc"));
+        return Background.action("storepagedata", this.appid);
     }
 
     /**

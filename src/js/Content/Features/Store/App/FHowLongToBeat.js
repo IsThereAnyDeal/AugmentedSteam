@@ -11,7 +11,7 @@ export default class FHowLongToBeat extends Feature {
         }
 
         const result = await this.context.data;
-        if (!result || !result.hltb || !result.hltb.success) {
+        if (!result || !result.hltb) {
             return false;
         }
 
@@ -21,13 +21,11 @@ export default class FHowLongToBeat extends Feature {
 
     apply() {
 
-        const {
-            "main_story": story,
-            "main_extras": extras,
-            comp,
-            url,
-            "submit_url": submit,
-        } = this._data;
+        const {story, extras, complete, url} = this._data;
+
+        function hrs(minutes) {
+            return Localization.str.hours_short.replace("__hours__", (minutes / 60).toFixed(1).toString());
+        }
 
         HTML.afterEnd("div.game_details",
             `<div class="block responsive_apppage_details_right heading">${Localization.str.hltb.title}</div>
@@ -35,13 +33,12 @@ export default class FHowLongToBeat extends Feature {
                 <div class="block_content">
                     <div class="block_content_inner">
                         ${story || extras || comp ? `<div class="details_block">
-                            ${story ? `<b>${Localization.str.hltb.main}:</b><span>${HTML.escape(story)}</span><br>` : ""}
-                            ${extras ? `<b>${Localization.str.hltb.main_e}:</b><span>${HTML.escape(extras)}</span><br>` : ""}
-                            ${comp ? `<b>${Localization.str.hltb.compl}:</b><span>${HTML.escape(comp)}</span><br>` : ""}
+                            ${story ? `<b>${Localization.str.hltb.main}:</b><span>${hrs(story)}</span><br>` : ""}
+                            ${extras ? `<b>${Localization.str.hltb.main_e}:</b><span>${hrs(extras)}</span><br>` : ""}
+                            ${complete ? `<b>${Localization.str.hltb.compl}:</b><span>${hrs(complete)}</span><br>` : ""}
                         </div>
                         <br>` : ""}
                         <a class="linkbar es_external_icon" href="${HTML.escape(url)}" target="_blank">${Localization.str.more_information}</a>
-                        <a class="linkbar es_external_icon" href="${HTML.escape(submit)}" target="_blank">${Localization.str.hltb.submit}</a>
                     </div>
                 </div>
             </div>`);
