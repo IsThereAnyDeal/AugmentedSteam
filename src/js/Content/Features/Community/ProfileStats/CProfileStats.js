@@ -1,5 +1,5 @@
-import {HTMLParser} from "../../../../modulesCore";
-import {ContextType, RequestData} from "../../../modulesContent";
+import {GameId, HTMLParser, Language} from "../../../../modulesCore";
+import {ContextType, RequestData, User} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
 import FAchievementSort from "./FAchievementSort";
 import FShowHiddenAchievements from "./FShowHiddenAchievements";
@@ -18,18 +18,25 @@ export class CProfileStats extends CCommunityBase {
             FAchievementSort,
             FShowHiddenAchievements,
         ]);
+
+        this.appid = GameId.getAppidImgSrc(
+            document.querySelector(".gameLogo img")?.getAttribute("src")
+        );
     }
 
-    getAchievementData() {
+    async getAchievementData() {
         if (this._data) { return this._data; }
 
-        const url = new URL(window.location.origin + window.location.pathname);
-        url.searchParams.set("tab", "achievements");
-        url.searchParams.set("panorama", "please");
+        const params = new URLSearchParams();
+        params.set("format", "json");
+        params.set("access_token", await User.accessToken);
+        params.set("appid", this.appid);
+        params.set("language", Language.getCurrentSteamLanguage());
+        params.set("x_requested_with", "AugmentedSteam");
 
-        return RequestData.getHttp(url).then(result => {
-            this._data = HTMLParser.getVariableFromText(result, "g_rgAchievements", "object");
-            return this._data;
-        });
+        return RequestData.getJson(
+            `https://api.steampowered.com/IPlayerService/GetGameAchievements/v1/?${params.toString()}`,
+            {"credentials": "omit"}
+        );
     }
 }
