@@ -39,8 +39,16 @@ IndexedDB.objStoreFetchFns = new Map([
     }],
     ["rates", AugmentedSteamApi.endpointFactoryCached("rates/v1", "rates")],
 
-    ["collection", ITADApi.endpointFactoryCached("v02/user/coll/all", "collection", ITADApi.mapCollection)],
-    ["waitlist", ITADApi.endpointFactoryCached("v01/user/wait/all", "waitlist", ITADApi.mapWaitlist)],
+    ["collection", async () => {
+        const data = await ITADApi.fetchCollection();
+        await IndexedDB.put("collection", data);
+        return data;
+    }],
+    ["waitlist", async () => {
+        const data = await ITADApi.fetchWaitlist();
+        await IndexedDB.put("waitlist", data);
+        return data;
+    }],
     ["storeList", ITADApi.fetchStoreList],
 ]);
 
