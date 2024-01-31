@@ -18,19 +18,15 @@ export class CProfileEdit extends CCommunityBase {
 
     async applyFeatures() {
 
-        if (!document.querySelector('[class^="profileeditshell_PageContent_"]')) {
+        const root = document.getElementById("react_root");
+        if (root && !root.querySelector('[class^="profileeditshell_PageContent_"]')) {
             await new Promise(resolve => {
-                new MutationObserver((records, observer) => {
-                    for (const {addedNodes} of records) {
-                        for (const node of addedNodes) {
-                            if (node.nodeType !== Node.ELEMENT_NODE
-                                || !node.querySelector('[class^="profileeditshell_PageContent_"]')) { continue; }
-
-                            observer.disconnect();
-                            resolve();
-                        }
+                new MutationObserver((_, observer) => {
+                    if (root.querySelector('[class^="profileeditshell_PageContent_"]') !== null) {
+                        observer.disconnect();
+                        resolve();
                     }
-                }).observe(document.getElementById("application_root"), {"childList": true});
+                }).observe(root, {"childList": true});
             });
         }
 
