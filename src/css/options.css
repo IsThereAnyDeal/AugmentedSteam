@@ -59,6 +59,7 @@
  */
 
 html, body {
+  color-scheme: dark;
   font-size: 10px;
   color: var(--font-color);
   background-color: var(--body-bg-color);
