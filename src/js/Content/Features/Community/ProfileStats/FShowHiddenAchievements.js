@@ -23,43 +23,30 @@ export default class FShowHiddenAchievements extends Feature {
             if (btn.classList.contains("btn_disabled"))
                 return;
 
+            let visibleAchievements = [...document.querySelectorAll(".achieveTxt")].map(x => {
+                return {
+                    name: x.querySelector("h3").innerHTML,
+                    desc: x.querySelector("h5").innerHTML,
+                }
+            });
+
             let achievements = await this.context.getAchievementData();
-            achievements = Object.values({...achievements.open}).filter(val => val.hidden);
+            achievements = Object.values({...achievements.response.achievements}).filter(val =>
+                val.hidden && !visibleAchievements.some(x =>
+                    x.name === val.localized_name && x.desc === val.localized_desc
+                )
+            );
 
             for (const ach of achievements) {
-
-                let achieveTxtClass = "achieveTxt";
-                let progressHtml = "";
-                const progress = typeof ach.progress === "object" && ach.progress;
-
-                if (progress) {
-                    achieveTxtClass += " withProgress";
-
-                    const width = Math.round(progress.amtComplete * 100);
-                    if (width > 50) {
-                        progressHtml += `<div class="achievementProgressBar ellipsis">
-                            <div class="progress" style="width: ${width}%">
-                                <div class="progressText inBar ellipsis"> ${progress.currentVal ?? progress.min_val} / ${progress.max_val} </div>
-                            </div>
-                        </div>`;
-                    } else {
-                        progressHtml += `<div class="achievementProgressBar ellipsis">
-                            <div class="progress" style="width: ${width}%"> </div>
-                            <div class="progressText nextToBar ellipsis"> ${progress.currentVal ?? progress.min_val} / ${progress.max_val} </div>
-                        </div>`;
-                    }
-                }
-
                 HTML.afterEnd(parent,
                     `<div class="achieveRow">
                         <div class="achieveImgHolder">
-                            <img src="${ach.icon_open}">
+                            <img src="//cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/${this.context.appid}/${ach.icon}">
                         </div>
                         <div class="achieveTxtHolder">
-                            <div class="${achieveTxtClass}">
-                                <h3 class="ellipsis">${ach.name}</h3>
-                                <h5 class="ellipsis">${ach.desc}</h5>
-                                ${progressHtml}
+                            <div class="achieveTxt">
+                                <h3 class="ellipsis">${ach.localized_name}</h3>
+                                <h5>${ach.localized_desc}</h5>
                             </div>
                         </div>
                     </div>`);
