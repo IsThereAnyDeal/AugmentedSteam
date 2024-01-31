@@ -44,8 +44,8 @@ export default class FShowMarketOverview extends CallbackFeature {
 
                 const avgPrice
                     = (
-                        (result[appid].foil.average * FShowMarketOverview._foilChance)
-                        + (result[appid].regular.average * (1 - FShowMarketOverview._foilChance))
+                        (result[appid].foil * FShowMarketOverview._foilChance)
+                        + (result[appid].regular * (1 - FShowMarketOverview._foilChance))
                     ).toFixed(2) * 100;
 
                 thisItem.dataset.cardsPrice = await Page.runInPageContext((price, type) => {
