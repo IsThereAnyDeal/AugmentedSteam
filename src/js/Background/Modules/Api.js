@@ -52,12 +52,6 @@ class Api {
         return response.json();
     }
 
-    static async deleteEndpoint(endpoint, query, responseHandler, params = {}) {
-        const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "DELETE"}));
-        if (responseHandler) { responseHandler(response); }
-        return response.json();
-    }
-
     static endpointFactory(endpoint, objPath) {
         return async params => {
             let result = await this.getEndpoint(endpoint, params);

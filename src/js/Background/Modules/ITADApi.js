@@ -131,7 +131,7 @@ class ITADApi extends Api {
         return true;
     }
 
-    static async fetchSteamIds(gids) {
+    static async _fetchSteamIds(gids) {
         let response = await fetch(new URL("unstable/id-lookup/steam/v1", Config.ITADApiServerHost), {
             method: "POST",
             headers: {"content-type": "application/json"},
@@ -140,13 +140,33 @@ class ITADApi extends Api {
 
         if (response.ok) {
             let obj = await response.json();
-            let map = new Map(Object.entries(obj));
+            let map = new Map();
+            for (let [itad, steam] of Object.entries(obj)) {
+                if (steam !== null) {
+                    map.set(steam, itad);
+                }
+            }
+            return map;
+        }
 
-            // filter out null values
-            Object.keys(obj)
-                .filter(key => obj[key] === null)
-                .forEach(key => map.delete(key));
+        throw new Errors.HTTPError(response.status, response.statusText);
+    }
 
+    static async _fetchGameIds(steamIds) {
+        let response = await fetch(new URL("unstable/id-lookup/game/v1", Config.ITADApiServerHost), {
+            method: "POST",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify(steamIds)
+        });
+
+        if (response.ok) {
+            let obj = await response.json();
+            let map = new Map();
+            for (let [steam, itad] of Object.entries(obj)) {
+                if (itad !== null) {
+                    map.set(steam, itad);
+                }
+            }
             return map;
         }
 
@@ -167,7 +187,7 @@ class ITADApi extends Api {
 
         let collection = await response.json();
         let gids = collection.map(entry => entry.id);
-        let map = await this.fetchSteamIds(gids);
+        let map = await ITADApi._fetchSteamIds(gids);
 
         this._recordLastImport();
         return map;
@@ -188,7 +208,7 @@ class ITADApi extends Api {
 
         let waitlist = await response.json();
         let gids = waitlist.map(entry => entry.id);
-        let map = await this.fetchSteamIds(gids);
+        let map = await ITADApi._fetchSteamIds(gids);
 
         this._recordLastImport();
         return map;
@@ -200,98 +220,82 @@ class ITADApi extends Api {
         LocalStorage.set("lastItadImport", lastImport);
     }
 
-    static endpointFactoryCached(endpoint, storeName, resultFn) {
-        return ({params = {}, key} = {}) => {
-            if (ITADApi.isConnected()) {
-                return super.endpointFactoryCached(endpoint, storeName, resultFn)(
-                    {"params": Object.assign(params, {"access_token": ITADApi.accessToken}), key}
-                );
-            }
-            return null;
-        };
-    }
-
-    static async removeFromWaitlist(appids) {
-        if (!appids || (Array.isArray(appids) && !appids.length)) {
+    static async removeFromWaitlist(appids_) {
+        if (!appids_ || (Array.isArray(appids_) && !appids_.length)) {
             throw new Error("Can't remove nothing from ITAD Waitlist!");
         }
-
-        const _appids = Array.isArray(appids) ? appids : [appids];
-        const storeids = _appids.map(appid => `app/${appid}`);
-
-        await ITADApi.deleteEndpoint(
-            "v02/user/wait/remove/",
-            {"access_token": ITADApi.accessToken, "shop": "steam", "ids": storeids.join()}
+        const appids = Array.isArray(appids_) ? appids_ : [appids_];
+        const steamids = appids.map(appid => `app/${appid}`);
+        let gids = await Promise.all(
+            steamids.map(id => IndexedDB.get("waitlist", id))
         );
+        gids = gids.filter(value => value); // filter out undefined values
 
-        return IndexedDB.delete("waitlist", storeids);
-    }
+        if (gids.length > 0) {
+            let response = await fetch(new URL("waitlist/games/v1", Config.ITADApiServerHost), {
+                method: "DELETE",
+                headers: {"authorization": "Bearer " + ITADApi.accessToken},
+                body: JSON.stringify(gids)
+            });
 
-    static async addToWaitlist(appIds) {
-        const waitlistJSON = {
-            "version": "02",
-            "data": [],
-        };
-
-        const storeIdsArr = [];
-        const storeIdsObj = {};
-        const _appIds = Array.isArray(appIds) ? appIds : [appIds];
-
-        for (const appId of _appIds) {
-            const storeId = `app/${appId}`;
-            storeIdsArr.push(storeId);
-            storeIdsObj[storeId] = null;
-        }
-
-        await ITADApi.splitPostRequests(waitlistJSON, storeIdsArr, "v01/waitlist/import/", id => ({
-            "gameid": ["steam", id],
-        }));
-
-        return IndexedDB.put("waitlist", storeIdsObj);
-    }
-
-    static async addToCollection(appIds, subIds) {
-        const collectionJSON = {
-            "version": "02",
-            "data": [],
-        };
-
-        const _appIds = Array.isArray(appIds) ? appIds : [appIds];
-        const _subIds = Array.isArray(subIds) ? subIds : [subIds];
-
-        const storeIds = _appIds.map(appId => `app/${appId}`).concat(_subIds.map(subId => `sub/${subId}`));
-
-        await ITADApi.splitPostRequests(collectionJSON, storeIds, "v01/collection/import/", id => ({
-            "gameid": ["steam", id],
-            "copies": [{
-                "type": "steam",
-                "status": "redeemed",
-                "owned": 1,
-            }],
-        }));
-
-        // TODO Add to DB
-    }
-
-    static async splitPostRequests(json, items, endpoint, getJson) {
-        const responses = [];
-
-        for (let i = 0; i < items.length;) {
-            for (; i < items.length && json.data.length < MAX_ITEMS_PER_REQUEST; i++) {
-                json.data.push(getJson(items[i]));
+            if (response.ok) {
+                return IndexedDB.delete("waitlist", steamids)
             }
-
-            responses.push(await ITADApi.postEndpoint(
-                endpoint,
-                {"access_token": ITADApi.accessToken},
-                null,
-                {"body": JSON.stringify(json)}
-            ));
-
-            json.data = [];
         }
 
-        return responses;
+        // TODO error handling
+    }
+
+    static async addToWaitlist(appids_) {
+        const appids = Array.isArray(appids_) ? appids_ : [appids_];
+        if (appids.length === 0) { return; }
+
+        const steamids = appids.map(appid => `app/${appid}`);
+        const map = await ITADApi._fetchGameIds(steamids);
+
+        if (map.size !== 0) {
+            let response = await fetch(new URL("waitlist/games/v1", Config.ITADApiServerHost), {
+                method: "PUT",
+                headers: {"authorization": "Bearer " + ITADApi.accessToken},
+                body: JSON.stringify(Array.from(map.values()))
+            });
+
+            if (response.ok) {
+                return IndexedDB.put("waitlist", map)
+            }
+        }
+
+        // TODO error handling
+    }
+
+    static async addToCollection(appids_, subids_) {
+        const appids = Array.isArray(appids_) ? appids_ : [appids_];
+        const subids = Array.isArray(subids_) ? subids_ : [subids_];
+
+        const steamids = [
+            ...appids.map(appid => `app/${appid}`),
+            ...subids.map(subid => `sub/${subid}`),
+        ];
+
+        if (steamids.length === 0) {
+            return;
+        }
+
+        const map = await ITADApi._fetchGameIds(steamids);
+
+        if (map.size !== 0) {
+            let response = await fetch(new URL("collection/games/v1", Config.ITADApiServerHost), {
+                method: "PUT",
+                headers: {"authorization": "Bearer " + ITADApi.accessToken},
+                body: JSON.stringify(Array.from(map.values()))
+            });
+
+            if (response.ok) {
+                return IndexedDB.put("collection", map)
+            }
+        }
+
+        // TODO error handling
     }
 
     static async import(force) {
@@ -362,14 +366,10 @@ class ITADApi extends Api {
         await Promise.all([
             ITADApi.import(true),
             IndexedDB.clear("waitlist").then(
-                () => IndexedDB.objStoreFetchFns.get("waitlist")(
-                    {"params": {"shop": "steam", "optional": "gameid"}}
-                )
+                () => IndexedDB.objStoreFetchFns.get("waitlist")()
             ),
             IndexedDB.clear("collection").then(
-                () => IndexedDB.objStoreFetchFns.get("collection")(
-                    {"params": {"shop": "steam", "optional": "gameid,copy_type"}}
-                )
+                () => IndexedDB.objStoreFetchFns.get("collection")()
             ),
         ]);
     }
@@ -377,15 +377,15 @@ class ITADApi extends Api {
     static lastImport() { return LocalStorage.get("lastItadImport"); }
 
     static inWaitlist(storeIds) {
-        return IndexedDB.contains("waitlist", storeIds, {"params": {"shop": "steam", "optional": "gameid"}});
+        return IndexedDB.contains("waitlist", storeIds);
     }
 
     static inCollection(storeIds) {
-        return IndexedDB.contains("collection", storeIds, {"params": {"shop": "steam", "optional": "gameid,copy_type"}});
+        return IndexedDB.contains("collection", storeIds);
     }
 
     static getFromCollection(storeId) {
-        return IndexedDB.get("collection", storeId, {"params": {"shop": "steam", "optional": "gameid,copy_type"}});
+        return IndexedDB.get("collection", storeId);
     }
 }
 ITADApi.accessToken = null;
