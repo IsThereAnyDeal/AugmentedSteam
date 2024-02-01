@@ -12,7 +12,7 @@ class ITADApi extends Api {
     }
 
     static async fetchStoreList() {
-        const storeList = (await ITADApi.getEndpoint("v01/web/stores/all/"))?.data;
+        const storeList = (await ITADApi.getEndpoint("service/shops/v1"));
         if (!Array.isArray(storeList)) {
             throw new Error("Can't read store list from response");
         }

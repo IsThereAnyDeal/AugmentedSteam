@@ -17,12 +17,12 @@ class StoreListBuilder {
         const excludedStores = SyncedStorage.get("excluded_stores");
 
         let html = "";
-        for (const {id, title, color} of storeList) {
+        for (const {id, title} of storeList) {
             const checked = excludedStores.includes(id) ? "" : " checked";
 
             html += `<div class="option option--store">
                         <input type="checkbox" id="${id}"${checked}>
-                        <label for="${id}" style="color: ${color}">${title}</label>
+                        <label for="${id}">${title}</label>
                     </div>`;
         }
 

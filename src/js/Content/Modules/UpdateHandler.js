@@ -117,6 +117,27 @@ class UpdateHandler {
         if (oldVersion.isSameOrBefore("2.5.0")) {
             SyncedStorage.remove("replaceaccountname");
         }
+
+        if (oldVersion.isSameOrBefore("3.0.0")) { // TODO what version will we use?
+            const shopUpdateMap = {
+                "adventureshop":1,"allyouplay":2,"amazonus":3,"battlenet":4,"bistore":5,"bundlestars":6,"coinplay":7,
+                "cybermanta":8,"desura":9,"digitaldownload":10,"direct2drive":11,"discord":12,"dlgamer":13,"dotemu":14,
+                "dreamgame":15,"epic":16,"fireflower":17,"funstock":18,"game2":19,"gamebillet":20,"gamefly":21,
+                "gamejolt":22,"gameolith":23,"gamersgate":24,"gamesload":25,"gamesplanet":26,"gamesplanetde":27,
+                "gamesplanetfr":28,"gamesplanetus":29,"gamesrepublic":30,"gamesrocket":31,"gametap":32,"gemly":33,
+                "getgames":34,"gog":35,"greenmangaming":36,"humblestore":37,"humblewidgets":38,"chrono":39,
+                "imperialgames":40,"impulse":41,"indiegalastore":42,"indiegamestand":43,"itchio":44,"lbostore":45,
+                "less4games":46,"macgamestore":47,"microsoft":48,"newegg":49,"nuuvem":50,"oculus":51,"origin":52,"paradox":53,
+                "playfield":54,"playism":55,"razer":56,"savemi":57,"shinyloot":58,"silagames":59,"squenix":60,"steam":61,
+                "uplay":62,"voidu":63,"wingamestore":64,"joybuggy":65,"noctre":66,"etailmarket":67
+            }
+
+            const excluded = SyncedStorage.get("excluded_stores");
+            const remapped = excluded
+                .map(oldKey => shopUpdateMap[oldKey] ?? null)
+                .filter(value => value);
+            SyncedStorage.set("excluded_stores", remapped);
+        }
     }
 }
 

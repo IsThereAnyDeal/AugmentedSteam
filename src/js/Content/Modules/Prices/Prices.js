@@ -8,7 +8,9 @@ class Prices {
         if (!SyncedStorage.get("showallstores") && excludedStores.length > 0) {
             const storeList = await Background.action("itad.storelist").catch(err => console.error(err));
             if (storeList) {
-                return storeList.map(({id}) => id).filter(id => !excludedStores.includes(id)).join(",");
+                return storeList
+                    .map(({id}) => id)
+                    .filter(id => !excludedStores.includes(id));
             }
         }
         return [];

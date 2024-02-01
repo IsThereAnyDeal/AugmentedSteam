@@ -180,7 +180,7 @@ const Options = (() => {
             const nodes = document.querySelectorAll(".js-store-stores input[type=checkbox]");
             for (const node of nodes) {
                 if (!node.checked) {
-                    value.push(node.id);
+                    value.push(Number(node.id));
                 }
             }
 
