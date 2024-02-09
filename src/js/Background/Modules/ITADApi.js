@@ -20,15 +20,30 @@ class ITADApi extends Api {
     }
 
     static async authorize() {
-        const rnd = crypto.getRandomValues(new Uint32Array(1))[0];
         const redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
 
         function generateString(length) {
-            const source = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~";
-            return Array(length).join().split(",")
-                .map(() => source.charAt(Math.floor(Math.random() * source.length)))
-                .join("");
+            const source = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.~";
+            let arr = new Uint8Array(length);
+            window.crypto.getRandomValues(arr)
+            return arr.reduce((result, value) => result + source.charAt(Math.floor(value % source.length)), "");
         }
+
+        async function sha256(str) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(str);
+
+            let sha256Buffer = await window.crypto.subtle.digest("SHA-256", data);
+            return String.fromCharCode(...new Uint8Array(sha256Buffer))
+        }
+
+        function base64url(str) {
+            return btoa(str)
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=+$/, '');
+        }
+
         const verifier = generateString(64);
         const state = generateString(30);
 
@@ -38,8 +53,8 @@ class ITADApi extends Api {
         authUrl.searchParams.set("redirect_uri", redirectURI);
         authUrl.searchParams.set("scope", ITADApi.requiredScopes.join(" "));
         authUrl.searchParams.set("state", state);
-        authUrl.searchParams.set("code_challenge", verifier);
-        authUrl.searchParams.set("code_challenge_method", "plain");
+        authUrl.searchParams.set("code_challenge", base64url(await sha256(verifier)));
+        authUrl.searchParams.set("code_challenge_method", "S256");
 
         const tab = await browser.tabs.create({"url": authUrl.toString()});
 
@@ -91,7 +106,6 @@ class ITADApi extends Api {
         params.set("redirect_uri", redirectURI);
         params.set("code", responseUrl.searchParams.get("code"));
         params.set("code_verifier", verifier);
-        params.set("state", verifier);
 
         let response = await fetch(tokenUrl, {
             method: "POST",
