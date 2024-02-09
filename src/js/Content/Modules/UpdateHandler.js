@@ -118,7 +118,7 @@ class UpdateHandler {
             SyncedStorage.remove("replaceaccountname");
         }
 
-        if (oldVersion.isSameOrBefore("3.0.0")) { // TODO what version will we use?
+        if (oldVersion.isSameOrBefore("3.0.0")) {
             const shopUpdateMap = {
                 "adventureshop":1,"allyouplay":2,"amazonus":3,"battlenet":4,"bistore":5,"bundlestars":6,"coinplay":7,
                 "cybermanta":8,"desura":9,"digitaldownload":10,"direct2drive":11,"discord":12,"dlgamer":13,"dotemu":14,

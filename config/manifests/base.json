@@ -1,7 +1,7 @@
 {
   "name": "Augmented Steam",
   "short_name": "AS",
-  "version": "2.6.0",
+  "version": "3.0.0",
   "description": "Augments your Steam Experience",
   "icons": {
     "128": "img/logo/as128.png",

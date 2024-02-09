@@ -1,3 +1,6 @@
+3.0.0: |
+  Maintenance release to make sure Augmented Steam plays well with the updated ITAD and backing server.
+
 2.6.0: |
   New Features:
   - Add summary table for statistics about your acquired items on the licenses page (L1Q)
