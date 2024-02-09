@@ -527,6 +527,7 @@
         "on_sale": "w promocji",
         "no_price": "bez ceny",
         "label": "statystyki",
+        "hidden": "ukryte aplikacje",
         "remove_title": "Usunąć ten przedmiot z listy życzeń?"
     },
     "coll": {
@@ -589,8 +590,8 @@
         "hide_negative": "Ukryj tytuły z oceną negatywną",
         "discount_percent": {
             "count": "Procent rabatu:",
-            "min_count": "Min %",
-            "max_count": "Max %"
+            "min_count": "min. %",
+            "max_count": "maks. %"
         }
     },
     "calc_workshop_size": {
@@ -652,5 +653,25 @@
         "desc": "Ta gra jest wykluczona z funkcji udostępniania gier."
     },
     "in_cart": "W koszyku",
-    "awards": "Nagrody"
+    "awards": "Nagrody",
+    "cards_remain": "Najmniej kart pozostałych do ukończenia zestawu",
+    "countries": {
+        "af": "Afganistan",
+        "ag": "Antigua i Barbuda",
+        "tl": "Timor Wschodni",
+        "tm": "Turkmenistan",
+        "to": "Tonga",
+        "tt": "Trynidad i Tobago",
+        "tv": "Tuvalu",
+        "ug": "Uganda",
+        "um": "Dalekie Wyspy Mniejsze Stanów Zjednoczonych",
+        "va": "Watykan",
+        "vc": "Saint Vincent i Grenadyny",
+        "vg": "Brytyjskie Wyspy Dziewicze",
+        "vi": "Wyspy Dziewicze",
+        "vu": "Vanuatu",
+        "wf": "Wallis i Futuna",
+        "ws": "Samoa",
+        "yt": "Majotta"
+    }
 }

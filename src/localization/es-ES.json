@@ -163,6 +163,7 @@
     "none": "Nada",
     "empty_wishlist": {
         "title": "Vacíar lista de deseados",
+        "confirm": "¿Estás seguro que deseas vaciar tu lista de deseados?\n\n¡Esta acción no se puede deshacer!",
         "removing": "Eliminando __cur__ de __total__ aplicaciones..."
     },
     "about": "Acerca de",
@@ -172,6 +173,7 @@
     "play_game": "¿Jugar a __gamename__?",
     "drops_value": "Obtención más valiosa",
     "wishlist": "Lista de deseados",
+    "on_wishlist": "En la lista de deseados",
     "on_waitlist": "En la lista de espera",
     "cancel": "Cancelar",
     "wiki_article": "Ver artículo de __pcgw__",
@@ -427,12 +429,16 @@
         "confirmdeletecomment": "Mostar confirmación al borrar comentarios",
         "showdeckcompat": "Mostar puntuación de compatibilidad con Steam Deck en la lista de funcionalidades (y obtener datos cuando falten)",
         "show_survey_info": "Mostar datos de encuesta de rendimiento",
-        "addtocart_no_redirect": "Evitar redirección al añadir productos al carrito"
+        "addtocart_no_redirect": "Evitar redirección al añadir productos al carrito",
+        "about_desc": "Augmented Steam es un fork de la extensión Enhanced Steam.",
+        "about_desc_links": "Visita la web de la extensión __website__ o nuestro __discord__ para más información.",
+        "footer_fork": "un fork de IsThereAnyDeal",
+        "footer_author": "autor original jshackles"
     },
     "ready": {
         "loading": "Cargando datos de Augmented Steam...",
         "ready": "Augmented Steam está listo",
-        "failed": "__amount__ solicitud(es) fallida(s), comprueba la consola del navegador para más información.",
+        "failed": "__amount__ solicitud(es) fallida(s), comprueba la consola del navegador para más información",
         "server_outage": "Los servidores de Augmented Steam están sobrecargados"
     },
     "twitch": {
@@ -507,7 +513,8 @@
     },
     "update": {
         "dont_show": "No mostrar de nuevo",
-        "updated": "Augmented Steam se ha actualizado a la versión __version__"
+        "updated": "Augmented Steam se ha actualizado a la versión __version__",
+        "changes": "Ver todos los cambios en GitHub"
     },
     "register": {
         "success": "__gamename__ se ha activado con éxito",
@@ -525,7 +532,12 @@
         "in_wishlist": "en la lista de deseados",
         "on_sale": "en oferta",
         "no_price": "sin precio",
-        "label": "estadísticas"
+        "label": "estadísticas",
+        "hidden": "aplicaciones ocultas",
+        "hidden_tooltip": "Aplicaciones que han sido borradas/retiradas y no son visibles en la lista de deseos. Click para más detalles.",
+        "remove_title": "Borrar este elemento de tu lista de deseados?",
+        "remove_confirm": "Estás seguro de que quieres borrar 'appid __appid__' de tu lista de deseados?",
+        "remove_confirm_warn": "No se podrá reañadir después!"
     },
     "coll": {
         "total_time": "tiempo total",
@@ -584,12 +596,19 @@
         "hide_ea": "Ocultar elem. anticipados",
         "hide_cart": "Ocultar elem. en tu carro",
         "hide_mixed": "Ocultar elem. con reseñas variadas",
-        "hide_negative": "Ocultar elem. con reseñas negativas"
+        "hide_negative": "Ocultar elem. con reseñas negativas",
+        "discount_percent": {
+            "count": "Porcentaje de descuento:",
+            "min_count": "Min %",
+            "max_count": "Máximo %"
+        }
     },
     "calc_workshop_size": {
         "file_size": "Tamaño del archivo __size__",
         "calc_size": "Calcular tamaño total",
-        "total_size": "Tamaño total: __size__"
+        "total_size": "Tamaño total: __size__",
+        "calc_loading": "Calculando __i__/__count__ elementos de workshop, por favor espere...",
+        "calc_finished": "Completado! Calculados con éxito __success__/__total__ elementos."
     },
     "date": "Fecha",
     "rating": "Valoración",
@@ -644,5 +663,53 @@
         "notice": "Aviso:",
         "desc": "Este juego está excluido del Préstamo familiar de Steam"
     },
-    "in_cart": "En el carrito"
+    "in_cart": "En el carrito",
+    "toomanyrequests": "Demasiadas Solicitudes",
+    "equip_on_profile": "Equipar en el Perfil",
+    "awards": "Premios",
+    "cards_remain": "Las mínimas cartas para completar el set",
+    "remove_from_waitlist_tooltip": "Borrar de tu Lista de espera",
+    "remove_from_wishlist_and_waitlist_tooltip": "Borrar de tu Lista de deseados y Lista de espera",
+    "on_wishlist_and_waitlist": "En la lista de deseados y de espera",
+    "remove": "Remover",
+    "countries": {
+        "ad": "Andorra",
+        "ae": "Emiratos Árabes Unidos",
+        "af": "Afghanistan",
+        "ag": "Antigua and Barbuda",
+        "ai": "Anguila",
+        "al": "Albania",
+        "am": "Armenia",
+        "an": "Antillas Neerlandesas",
+        "ao": "Angola",
+        "ar": "Argentina",
+        "as": "Samoa Americana",
+        "at": "Austria",
+        "au": "Australia",
+        "aw": "Aruba",
+        "az": "Azerbaiyán",
+        "ba": "Bosnia y Herzegovina",
+        "bb": "Barbados",
+        "bd": "Bangladesh",
+        "be": "Bélgica",
+        "bf": "Burkina Faso",
+        "bg": "Bulgaria",
+        "bh": "Baréin",
+        "bi": "Burundi",
+        "bj": "Benín",
+        "bm": "Bermudas",
+        "bn": "Brunei",
+        "bo": "Bolivia",
+        "br": "Brasil",
+        "bs": "Bahamas",
+        "bt": "Bután",
+        "bv": "Isla Bouvet",
+        "bw": "Botsuana",
+        "by": "Bielorrusia",
+        "bz": "Belice",
+        "ca": "Canadá",
+        "cd": "Congo - Kinsasa"
+    },
+    "using_language_return": "Click aquí para ver Steam en __base__.",
+    "using_language": "Estás viendo Steam en __current__."
 }

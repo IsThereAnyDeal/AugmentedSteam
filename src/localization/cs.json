@@ -1,4 +1,18 @@
 {
+    "steamid_of_user": "SteamID uživatele __user__",
+    "copied": "Zkopírováno do schránky!",
+    "view_steamid": "Zobrazit SteamID",
+    "invite_friends": "Pozvat přátele",
+    "invite_to_group": "Pozvat do skupiny",
+    "connect": "Připojit",
+    "connected": "Připojeno",
+    "disconnect": "Odpojit",
+    "disconnected": "Odpojeno",
+    "oneclickgoo": "Vyměnit za drahokamy 1 kliknutím...",
+    "view_in_library": "Zobrazit v knihovně",
+    "support": "Podpora",
+    "email": "E-mail",
+    "fav_emoticons_dragging": "Přetáhněte sem emotikon pro přidání do oblíbených",
     "post_history": "Zobrazit historii příspěvků",
     "add_nickname": "Přidat přezdívku",
     "total_size": "Celková velikost",
@@ -49,6 +63,7 @@
     "badges_all": "Všechny odznaky",
     "es_supporter": "Podporovatel Enhanced Steamu",
     "community": "Komunita",
+    "owned_elsewhere": "Již vlastníte __gametitle__ v __storelist__",
     "view_badge": "Zobrazit odznak",
     "purchase_total": "Nákupy celkem:",
     "view_foil_badge": "Zobrazit postup foil odznaku",
@@ -61,6 +76,7 @@
     "badge_completion_avg": "Prům. cena dokončení: __cost__",
     "volume_sold_last_24": "Množství: __sold__ kusů prodáno za posledních 24 hodin",
     "sold_last_24": "__sold__ kusů prodáno za posledních 24 hodin",
+    "homepage_curators": "Doporučení kurátorů Steamu",
     "homepage_sidebar": "Postranní panel",
     "drop_calc": "Klikněte zde pro spočítání zbývajících přídělů karet",
     "price": "Cena",
@@ -100,6 +116,11 @@
     "more_information": "Více informací",
     "region_unavailable": "Nedostupné v tomto regionu",
     "avg_price_3cards": "Průměrná cena 3 sběratelských karet: __price__",
+    "export": {
+        "wishlist": "Exportovat seznam přání",
+        "download": "Stáhnout",
+        "copy_clipboard": "Zkopírovat do schránky"
+    },
     "empty_wishlist": {
         "title": "Vyprázdnit Seznam přání"
     },
@@ -115,12 +136,19 @@
     "view_all": "ZOBRAZIT VŠE",
     "games_with_booster": "__boostergames__ her s nárokem na přídavné balíčky",
     "sort_by": "Seřadit podle:",
+    "year": "Rok",
     "lastonline": "Naposledy Online",
     "drm_third_party_sub": "Upozornění: Jeden nebo více titulů z tohoto balíčku používá DRM třetí strany __drmlist__.",
     "customize": "Upravit",
     "bundle_saving_text": "Zakoupením tohoto balíčku ušetříte",
     "thewordoptions": "Nastavení",
     "discussions": "Diskuze",
+    "pricing": {
+        "lowest_price": "Současná nejlepší:",
+        "historical_low": "Historicky nejnižší:",
+        "bundled": "V balíčku:",
+        "with_voucher": "s kuponem __voucher__"
+    },
     "web_browser_chat": "Webový chat",
     "steam_client_chat": "Chat v klientovi Steamu",
     "preview_background": "Náhled pozadí",
@@ -131,6 +159,7 @@
     "no_price_data": "Údaje o ceně nejsou dostupné",
     "user_score": "Hodnocení uživatele",
     "market_popular_items_toggle": "Povolit automatické aktualizace pro oblíbené položky",
+    "show_progressbar": "Zobrazit ukazatele průběhu a stavu Augmented Steam",
     "achievements": {
         "option": "Ukázat achievementy na stránce obchodu"
     },
@@ -163,6 +192,9 @@
         "average_playtime_2weeks": "Průmerná délka hraní v posledních dvou týdnech"
     },
     "options": {
+        "videos": "Videa",
+        "broadcasts": "Přenosy",
+        "screenshots": "Snímky obrazovky",
         "wsgf": "Ukázat informace z WSGF (širokoúhlé hraní)",
         "version_show": "Ukázat seznam změn při aktualizacích Augmented Steamu",
         "steamcardexchange": "Ukázat odkazy na SteamCardExchange u odznaků",
@@ -198,6 +230,8 @@
         "quickinv": "Zobrazit tlačítka pro rychlý prodej ve Steam komunitě (v inventáři)",
         "quickinv_diff": "Modifikátor rychlého prodeje:",
         "send_age_info": "Automaticky odeslat potvrzení věku, pokud je vyžádováno",
+        "mp4video": "Vynutit formát videí MP4",
+        "youtube": "Zobrazit odkazy YouTube",
         "pcgw": "Ukázat odkazy na PCGamingWiki",
         "store_steamcards": "Zobrazit SteamCardExchange odkazy v obchodě",
         "spamcommentregex": "Regulární výraz:",
@@ -215,7 +249,10 @@
         "steamdb": "Ukázat odkazy na SteamDB",
         "reset_note": "Nastavení resetována",
         "profile_link_images_color": "Barevné",
+        "install_steam_button": "Tlačítko \"Nainstalovat Steam\"",
+        "replace_view_client": "Nahradit \"Zobrazit ve Steam aplikaci\"",
         "show_empty_wishlist": "Zobrazit tlačítko \"Vyprázdnit Seznam přání\"",
+        "show_wishlist_stats": "Zobrazit statistiky seznamu přání",
         "inventory_nav_text": "Ukázat pokročilou navigaci na stránce Inventář",
         "market_total": "Ukázat shrnutí transakcí na Tržišti",
         "lowestprice_coupon": "Zahrnout kupóny při porovnávání cen",
@@ -266,11 +303,26 @@
             "thai": "Thaiština",
             "turkish": "Turečtina",
             "ukrainian": "Ukrajinština"
+        },
+        "add_custom_link": "Přidat vlastní odkaz",
+        "auto_detect": "Automaticky detekovat",
+        "settings_mngmt": {
+            "import": "Importovat",
+            "import_success": "Nastavení úspěšně importována",
+            "import_fail": "Selhal import nastavení",
+            "export": "Exportovat",
+            "reset": "Resetovat"
+        },
+        "saving": "Ukládání...",
+        "user_notes": {
+            "loc": "Umístění úložiště"
         }
     },
     "ready": {
         "loading": "Augmented Steam načítá data...",
-        "ready": "Augmented Steam je připravený."
+        "ready": "Augmented Steam je připravený.",
+        "failed": "Selhalo __amount__ požadavků, zkontrolujte konzoli prohlížeče pro více informací",
+        "server_outage": "Servery Augmented Steam jsou nyní přetížené"
     },
     "twitch": {
         "now_streaming": "__username__ živě steamuje na Twitch",
@@ -320,6 +372,10 @@
         "certifications": "Optimalizováno pro širokoúhlé monitory"
     },
     "itad": {
+        "last_import": "Poslední import...",
+        "from": "z ITAD:",
+        "to": "do ITAD:",
+        "sync_now": "Synchronizovat nyní",
         "option": "Zobrazit nabídku Možností synchronizace dat do IsThereAnyDeal.com",
         "send_to_itad": "Odeslat vlastněné hry na IsThereAnyDeal",
         "sending": "Načítám vlastněné hry a balíčky a posílám je do IsThereAnyDeal.com"
@@ -349,5 +405,104 @@
         "add_prompt": "Vyplňte poznámku",
         "update_prompt": "Aktualizovat poznámku",
         "add_for_game": "Poznámka pro __gamename__"
-    }
+    },
+    "workshop": {
+        "subscriptions": "Odběry",
+        "subscribe_all": "Odebírat všechny",
+        "subscribe_confirm": "Jste si jisti odběrem všech __count__ položek workshopu s těmito filtry?",
+        "unsubscribe_all": "Zrušit odběr všech"
+    },
+    "help_translate": "Pomozte nám přeložit Augmented Steam pomocí POEditoru",
+    "search_filters": {
+        "reviews_count": {
+            "count": "Počet recenzí:",
+            "min_count": "Min. počet",
+            "max_count": "Max. počet"
+        },
+        "hide_ea": "Skrýt položky v předběžném přístupu",
+        "hide_cart": "Skrýt položky ve vašem košíku",
+        "discount_percent": {
+            "count": "Procentuální sleva:",
+            "min_count": "Min. %",
+            "max_count": "Max. %"
+        }
+    },
+    "date": "Datum",
+    "rating": "Hodnocení",
+    "helpful": "Užitečné",
+    "funny": "Vtipné",
+    "length": "Délka",
+    "visibility": "Viditelnost",
+    "processing": "Zpracovávání...",
+    "wait": "Čekejte prosím",
+    "youtube_reviews": "YouTube recenze",
+    "download_demo_header": "Stáhnout demoverzi __gamename__",
+    "shopping_cart_history": "Zobrazit historii nákupního košíku",
+    "steam_cloud_header": "Steam Cloud",
+    "steam_cloud_saves": "Zobrazit uložené pozice Steam Cloud",
+    "cart": "Košík",
+    "thewordyes": "Ano",
+    "thewordno": "Ne",
+    "show_comments": "Zobrazit komentáře",
+    "hide_comments": "Skrýt komentáře",
+    "fav_emoticons_no_access": "Nemáte přístup k tomuto emotikonu",
+    "delete_comment_prompt": "Jste si jisti smazáním tohoto komentáře?",
+    "addtocart_dialog": {
+        "error_desc": "Nastala chyba při přidávání položky do vašeho košíku.",
+        "title": "Přidáno do nákupního košíku",
+        "checkout": "Ne, do nákupního košíku",
+        "continue": "Ano, pokračovat v nakupování"
+    },
+    "remove": "Odebrat",
+    "countries": {
+        "al": "Albánie",
+        "at": "Rakousko",
+        "au": "Austrálie",
+        "br": "Brazílie",
+        "ca": "Kanada",
+        "ch": "Švýcarsko",
+        "cn": "Čína",
+        "co": "Kolumbie",
+        "cu": "Kuba",
+        "cy": "Kypr",
+        "cz": "Česká republika",
+        "de": "Německo",
+        "dk": "Dánsko",
+        "ee": "Estonsko",
+        "eg": "Egypt",
+        "es": "Španělsko",
+        "fi": "Finsko",
+        "fr": "Francie",
+        "gb": "Spojené Království",
+        "gr": "Řecko",
+        "hr": "Chorvatsko",
+        "hu": "Maďarsko",
+        "lu": "Lucembursko",
+        "mc": "Monako",
+        "md": "Moldavsko",
+        "mg": "Madagaskar",
+        "mt": "Malta",
+        "mx": "Mexiko",
+        "my": "Malajsie ",
+        "no": "Norsko",
+        "np": "Nepál",
+        "nz": "Nový Zéland",
+        "ph": "Filipíny",
+        "pk": "Pákistán",
+        "pl": "Polsko",
+        "pt": "Portugalsko",
+        "ro": "Rumunsko",
+        "rs": "Srbsko",
+        "ru": "Rusko",
+        "se": "Švédsko",
+        "si": "Slovinsko",
+        "sk": "Slovensko",
+        "so": "Somálsko",
+        "tr": "Turecko",
+        "ua": "Ukrajina",
+        "us": "Spojené státy",
+        "va": "Vatikán"
+    },
+    "using_language_return": "Klikněte sem pro prohlížení Steamu v jazyce __base__.",
+    "using_language": "Prohlížíte Steam v jazyce __current__."
 }
