@@ -8,24 +8,20 @@ export default class FDisableLinkFilter extends Feature {
     }
 
     apply() {
-
-        function removeLinkFilter(parent = document) {
-            const selector = "a[href*='/linkfilter/']";
-
-            for (const link of parent.querySelectorAll(selector)) {
-                link.href = new URLSearchParams(link.search).get("url");
-            }
-        }
-
-        removeLinkFilter();
-
-        new MutationObserver(mutations => {
-            for (const mutation of mutations) {
-                for (const node of mutation.addedNodes) {
-                    if (node.nodeType !== Node.ELEMENT_NODE) { continue; }
-                    removeLinkFilter(node);
+        document.addEventListener("click", function(e) {
+            if (e.target.tagName && e.target.tagName === "A") {
+                let href = e.target.href;
+                if (/\/linkfilter\//.test(href)) {
+                    let params = new URLSearchParams(href.search);
+                    // TODO "url" param was used prior to 11/2023, remove after some time
+                    let url = params.get("u") ?? params.get("url");
+                    if (url) {
+                        // TODO check whether it's safe to just directly edit e.target.href
+                        window.location.href = url;
+                        e.preventDefault();
+                    }
                 }
             }
-        }).observe(document, {"childList": true, "subtree": true});
+        });
     }
 }
