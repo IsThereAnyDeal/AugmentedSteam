@@ -32,7 +32,7 @@ export default class FHowLongToBeat extends Feature {
             <div class="block underlined_links es_hltb">
                 <div class="block_content">
                     <div class="block_content_inner">
-                        ${story || extras || comp ? `<div class="details_block">
+                        ${story || extras || complete ? `<div class="details_block">
                             ${story ? `<b>${Localization.str.hltb.main}:</b><span>${hrs(story)}</span><br>` : ""}
                             ${extras ? `<b>${Localization.str.hltb.main_e}:</b><span>${hrs(extras)}</span><br>` : ""}
                             ${complete ? `<b>${Localization.str.hltb.compl}:</b><span>${hrs(complete)}</span><br>` : ""}
