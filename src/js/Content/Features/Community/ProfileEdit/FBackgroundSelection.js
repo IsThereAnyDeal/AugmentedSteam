@@ -21,11 +21,12 @@ export default class FBackgroundSelection extends Feature {
     apply() {
 
         this._active = false;
+        this._root = document.querySelector("#react_root");
 
         this._checkPage();
 
         new MutationObserver(() => { this._checkPage(); })
-            .observe(document.querySelector('[class^="profileeditshell_PageContent_"]'), {"childList": true});
+            .observe(this._root, {"childList": true, "subtree": true});
     }
 
     async _checkPage() {
@@ -59,7 +60,7 @@ export default class FBackgroundSelection extends Feature {
 
             if (this._active) { return; } // Happens because the below code will trigger the observer again
 
-            HTML.beforeEnd('[class^="profileeditshell_PageContent_"]', html);
+            HTML.beforeEnd(this._root.querySelector(":scope > div:last-child > div:last-child"), html);
             this._active = true;
 
             const gameFilterNode = document.querySelector(".js-pd-game");
