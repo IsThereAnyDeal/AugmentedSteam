@@ -48,13 +48,12 @@
                 <!-- TODO i got rid of "with voucher" string, because replacing html
                           into translation is no good: pricingStr.with_voucher
                           figure out a better way -->
-                <span class="itad-pricing__voucher">{data.current.voucher}</span>)}
+                <span class="itad-pricing__voucher">{data.current.voucher}</span>
             {/if}
 
             {@html pricingStr.store.replace("__store__", HTML.escape(data.current.shop.name))}
             {#if currentDrms.length > 0}
                 <span class="itad-pricing__drm">({currentDrms.join(", ")})</span>
-            }
             {/if}
         </a>
     {/if}
