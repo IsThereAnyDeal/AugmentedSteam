@@ -16,23 +16,6 @@ export class CProfileEdit extends CCommunityBase {
         this.data = this.profileDataPromise().catch(err => console.error(err));
     }
 
-    async applyFeatures() {
-
-        const root = document.getElementById("react_root");
-        if (root && !root.querySelector('[class^="profileeditshell_PageContent_"]')) {
-            await new Promise(resolve => {
-                new MutationObserver((_, observer) => {
-                    if (root.querySelector('[class^="profileeditshell_PageContent_"]') !== null) {
-                        observer.disconnect();
-                        resolve();
-                    }
-                }).observe(root, {"childList": true});
-            });
-        }
-
-        return super.applyFeatures();
-    }
-
     profileDataPromise() {
         return Background.action("profile", this.steamId);
     }
