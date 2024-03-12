@@ -1,9 +1,8 @@
 <svelte:options accessors immutable />
 
 <script lang="ts">
-    import {Localization} from "../../../Core/Localization/Localization";
+    import {HTML, Localization, SyncedStorage} from "../../../modulesCore";
     import type {TPriceOverview} from "./_types";
-    import {HTML} from "../../../modulesCore";
     import PriceWithAlt from "./PriceWithAlt.svelte";
     import {afterUpdate} from "svelte";
 
@@ -13,6 +12,7 @@
     export let height: number;
 
     const pricingStr = Localization.str.pricing;
+    const showVoucher = SyncedStorage.get("showlowestpricecoupon");
 
     let node: HTMLElement;
     let currentDrms: string[];
@@ -44,7 +44,7 @@
                 <span class="itad-pricing__cut">-{data.current.cut}%</span>
             {/if}
 
-            {#if data.current.voucher}
+            {#if showVoucher && data.current.voucher}
                 <!-- TODO i got rid of "with voucher" string, because replacing html
                           into translation is no good: pricingStr.with_voucher
                           figure out a better way -->
