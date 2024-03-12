@@ -69,7 +69,7 @@
             {#if data.lowest.cut > 0}
                 <span class="itad-pricing__cut">-{data.lowest.cut}%</span>
             {/if}
-            {@html pricingStr.store.replace("__store__", HTML.escape(data.current.shop.name))}
+            {@html pricingStr.store.replace("__store__", HTML.escape(data.lowest.shop.name))}
             {new Date(data.lowest.timestamp).toLocaleDateString()}
         </div>
     {/if}
