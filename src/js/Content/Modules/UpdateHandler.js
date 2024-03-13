@@ -143,6 +143,7 @@ class UpdateHandler {
             SyncedStorage.remove("addtocart_no_redirect");
             SyncedStorage.remove("show_steamspy_info");
             SyncedStorage.remove("show_survey_info");
+            SyncedStorage.remove("show_steamchart_info");
         }
     }
 }

@@ -412,7 +412,7 @@
         "guest": "Items you have a guest pass for",
         "collection": "Items in your ITAD Collection",
         "waitlist": "Items in your ITAD Waitlist",
-        "show_steamchart_info": "Show SteamCharts.com information",
+        "show_players_info": "Show player count information",
         "showallstats": "Show playtime stats on \"All Games\" page",
         "lowestprice_onwishlist": "Show when hovering over wishlist items",
         "steamrepapi": "Show SteamRep status",

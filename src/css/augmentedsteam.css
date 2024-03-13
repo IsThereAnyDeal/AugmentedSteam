@@ -245,40 +245,6 @@ img.astats_icon {
   background-color: #0003 !important;
 }
 
-.chart-stat {
-  float: left;
-  text-align: center;
-  width: 120px;
-  margin-top: 25px;
-  padding-left: 15px;
-}
-.chart-stat span {
-  font-size: 1.8em;
-  font-weight: 300;
-}
-
-.chart-content {
-  display: flex;
-  background-color: transparent;
-  width: 592px;
-  padding: 2px 12px;
-  overflow: hidden;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-
-.chart-footer {
-  font-size: 11px;
-  float: right;
-  padding-top: 5px;
-  margin-bottom: 20px;
-}
-
-#steam-charts .chart-footer,
-#steam-spy .chart-footer {
-  padding-right: 13px;
-}
-
 .es_each {
   color: #626366;
   font-size: 11px;
@@ -1242,6 +1208,21 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 
 /***************************************
+ * App pages
+ * FPlayers
+ **************************************/
+.as_players {
+  line-height: 20px;
+}
+.as_players_stat {
+  color: #8f98a0;
+}
+.as_players_num {
+  float: right;
+  color: #67c1f5;
+}
+
+/***************************************
  * Store and Community
  * add_language_warning(),
  * add_fake_country_code_warning()
@@ -2006,8 +1987,8 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 
 /***************************************
- * Store app pages
- * addMetacriticUserScore(),addOpenCritic()
+ * App pages
+ * FMetacriticUserScore, FOpenCritic
  **************************************/
 #game_area_userscore {
   margin-top: 6px;
@@ -2069,8 +2050,8 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 
 /***************************************
- * Store app pages
- * addBadgeProgress()
+ * App pages
+ * FBadgeProgress
  **************************************/
 .es_badges_progress_block .es_cards_numbers {
   padding-top: 10px;
@@ -2094,7 +2075,7 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 
 /***************************************
- * Store app pages
+ * App pages
  * FDLCCheckboxes
  **************************************/
 #es_selected_btn {

@@ -117,7 +117,7 @@ export default {
     "showoc": "options.opencritic",
     "showhltb": "options.hltb",
     "showwsgf": "options.wsgf",
-    "show_steamchart_info": "options.show_steamchart_info",
+    "show_players_info": "options.show_players_info",
     "showastatslink": "options.show_astatslink",
     "showitadlinks": "options.itadlinks",
     "showsteamdb": "options.steamdb",

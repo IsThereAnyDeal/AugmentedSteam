@@ -76,7 +76,6 @@ export default class FCustomizer extends Feature {
             .add("reviews", "#game_area_reviews")
             .add("about", getParentEl("#game_area_description"))
             .add("contentwarning", getParentEl("#game_area_content_descriptors"))
-            .add("steamchart", "#steam-charts", Localization.str.charts.current)
             .add("sysreq", getParentEl(".sys_req"))
             .add("legal", getParentEl("#game_area_legal"), Localization.str.apppage_legal)
             .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
@@ -151,24 +150,11 @@ FCustomizer.Customizer = class {
     }
 
     _setEnabled(name, enabled) {
-        const optionName = this.constructor.asFeatures.get(name);
-        if (typeof optionName !== "undefined") {
-            if (enabled) {
-                this.context.triggerCallbacks(name);
-            }
-            return SyncedStorage.set(optionName, enabled);
-        }
-
         this.settings[name] = enabled;
         return SyncedStorage.set(this.settingsName, this.settings);
     }
 
     _isEnabled(name) {
-        const optionName = this.constructor.asFeatures.get(name);
-        if (typeof optionName !== "undefined") {
-            return SyncedStorage.get(optionName);
-        }
-
         const enabled = this.settings[name];
         return (typeof enabled === "undefined") || enabled;
     }
@@ -177,12 +163,6 @@ FCustomizer.Customizer = class {
 
         let _text = text;
         let elements;
-
-        const enabled = this._isEnabled(name);
-
-        if (enabled && this.constructor.asFeatures.has(name)) {
-            this.context.triggerCallbacks(name);
-        }
 
         if (typeof targets === "string") {
             elements = document.querySelectorAll(targets);
@@ -193,6 +173,8 @@ FCustomizer.Customizer = class {
         } else {
             return this;
         }
+
+        const enabled = this._isEnabled(name);
 
         for (const element of elements) {
 
@@ -266,9 +248,3 @@ FCustomizer.Customizer = class {
     }
 };
 
-/**
- * Maps customizer keys corresponding to AS features to their respective storage keys
- */
-FCustomizer.Customizer.asFeatures = new Map([
-    ["steamchart", "show_steamchart_info"],
-]);

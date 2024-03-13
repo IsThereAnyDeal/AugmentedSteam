@@ -134,7 +134,6 @@ const DEFAULTS = {
         "reviews": true,
         "about": true,
         "contentwarning": true,
-        "steamchart": true,
         "sysreq": true,
         "legal": true,
         "morelikethis": true,
@@ -161,7 +160,7 @@ const DEFAULTS = {
     },
 
     "show_package_info": false,
-    "show_steamchart_info": true,
+    "show_players_info": true,
     "show_early_access": true,
     "show_alternative_linux_icon": false,
     "show_itad_button": false,
