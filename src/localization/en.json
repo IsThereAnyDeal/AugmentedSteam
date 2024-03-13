@@ -324,15 +324,6 @@
         "main": "Main Story",
         "no_data": "No data found"
     },
-    "spy": {
-        "player_data": "Player Data",
-        "owners": "Owners",
-        "average_playtime": "Average playtime",
-        "average_playtime_2weeks": "Average playtime in the last two weeks",
-        "playtime_unit_day": "__days__d",
-        "playtime_unit_hour": "__hours__h",
-        "playtime_unit_minute": "__minutes__m"
-    },
     "options": {
         "settings_mngmt": {
             "import": "Import",
@@ -422,7 +413,6 @@
         "collection": "Items in your ITAD Collection",
         "waitlist": "Items in your ITAD Waitlist",
         "show_steamchart_info": "Show SteamCharts.com information",
-        "show_steamspy_info": "Show steamspy.com information",
         "show_survey_info": "Show Performance Survey data",
         "showallstats": "Show playtime stats on \"All Games\" page",
         "lowestprice_onwishlist": "Show when hovering over wishlist items",
