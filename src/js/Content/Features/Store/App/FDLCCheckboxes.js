@@ -14,6 +14,8 @@ export default class FDLCCheckboxes extends Feature {
         const dlcSection = document.querySelector(".game_area_dlc_section");
 
         for (const dlcRow of dlcSection.querySelectorAll(".game_area_dlc_row")) {
+
+            // Only add checkboxes to purchasable dlcs
             const subidNode = dlcRow.querySelector("input[name^=subid]");
             if (!subidNode) { continue; }
 
@@ -48,7 +50,12 @@ export default class FDLCCheckboxes extends Feature {
         new MutationObserver(mutations => {
             for (const {target} of mutations) {
                 if (!target.classList.contains("game_area_dlc_row")) { continue; }
-                target.previousElementSibling.classList.toggle("es_dlc_wishlist", target.classList.contains("ds_wishlist"));
+
+                // Prevent errors when there're no labels, e.g. free dlcs
+                const label = target.previousElementSibling;
+                if (!label?.classList.contains("es_dlc_label")) { continue; }
+
+                label.classList.toggle("es_dlc_wishlist", target.classList.contains("ds_wishlist"));
             }
         }).observe(dlcSection.querySelector(".gameDlcBlocks"), {"subtree": true, "attributeFilter": ["class"]});
 
