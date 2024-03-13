@@ -138,6 +138,10 @@ class UpdateHandler {
                 .filter(value => value);
             SyncedStorage.set("excluded_stores", remapped);
         }
+
+        if (oldVersion.isSameOrBefore("3.1.0")) {
+            SyncedStorage.remove("addtocart_no_redirect");
+        }
     }
 }
 

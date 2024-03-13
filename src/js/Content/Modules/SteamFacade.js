@@ -73,6 +73,11 @@ class SteamFacade {
         return RemoveFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2);
     }
 
+    // @param subid can be number or array
+    static addItemToCart(subid, bundleid, navdata) {
+        return window.AddItemToCart(subid, bundleid, navdata);
+    }
+
     // events
 
     static bindAutoFlyoutEvents() {

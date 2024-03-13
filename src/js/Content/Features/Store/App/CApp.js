@@ -2,7 +2,6 @@ import {GameId} from "../../../../modulesCore";
 import {Background, ContextType} from "../../../modulesContent";
 import FMediaExpander from "../../Common/FMediaExpander";
 import {CStoreBase} from "../Common/CStoreBase";
-import FAddToCartNoRedirect from "../Common/FAddToCartNoRedirect";
 import FCustomizer from "../Common/FCustomizer";
 import FDRMWarnings from "../Common/FDRMWarnings";
 import FExtraLinks from "../Common/FExtraLinks";
@@ -96,7 +95,6 @@ export class CApp extends CStoreBase {
             FDemoAbovePurchase,
             FSaveReviewFilters,
             FHideReportedTags,
-            FAddToCartNoRedirect,
             FPatchHighlightPlayer,
             FSteamDeckCompatibility,
             FRemoveDupeScreenshots,
