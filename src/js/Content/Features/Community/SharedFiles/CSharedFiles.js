@@ -1,7 +1,6 @@
 import ContextType from "../../../Modules/Context/ContextType";
 import {CApp} from "../App/CApp";
 import FMediaExpander from "../../Common/FMediaExpander";
-import FSubscribeAllDependencies from "./FSubscribeAllDependencies";
 
 export class CSharedFiles extends CApp {
 
@@ -15,7 +14,6 @@ export class CSharedFiles extends CApp {
 
         super(ContextType.SHARED_FILES, [
             FMediaExpander,
-            FSubscribeAllDependencies,
         ]);
     }
 }
