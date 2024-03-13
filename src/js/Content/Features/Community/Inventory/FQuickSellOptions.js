@@ -116,7 +116,7 @@ export default class FQuickSellOptions extends CallbackFeature {
                 "price": sellPrice
             };
 
-            const result = await RequestData.post("https://steamcommunity.com/market/sellitem/", data, {}, true).catch(err => err);
+            const result = await RequestData.post("https://steamcommunity.com/market/sellitem/", data).catch(err => err);
 
             if (!result?.success) {
                 loadingEl.textContent = result?.message ?? Localization.str.error;

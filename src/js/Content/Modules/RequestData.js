@@ -30,27 +30,22 @@ class RequestData {
 
         ProgressBar.finishRequest();
 
-        return responseType === "none" ? response : response[responseType]();
+        return await response[responseType]();
     }
 
-    static post(url, data, settings = {}, returnJSON = false) {
+    static async post(url, data, settings = {}, returnJSON = true) {
 
         const _settings = {
-            ...settings,
             "method": "POST",
-            "body": new URLSearchParams(data)
+            "body": new URLSearchParams(data),
+            "credentials": "include",
+            "headers": {"origin": window.location.origin},
+            "referrer": window.location.origin + window.location.pathname,
+            ...settings
         };
 
-        let _responseType;
-        if (typeof returnJSON === "string") {
-            _responseType = returnJSON;
-        } else if (returnJSON) {
-            _responseType = "json";
-        } else {
-            _responseType = "text";
-        }
-
-        return RequestData.getHttp(url, _settings, _responseType);
+        const response = await RequestData._fetchFn(url, _settings);
+        return returnJSON ? await response.json() : response;
     }
 
     static getJson(url, settings) {
