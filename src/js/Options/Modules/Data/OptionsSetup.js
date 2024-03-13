@@ -118,7 +118,6 @@ export default {
     "showhltb": "options.hltb",
     "showwsgf": "options.wsgf",
     "show_steamchart_info": "options.show_steamchart_info",
-    "show_survey_info": "options.show_survey_info",
     "showastatslink": "options.show_astatslink",
     "showitadlinks": "options.itadlinks",
     "showsteamdb": "options.steamdb",
