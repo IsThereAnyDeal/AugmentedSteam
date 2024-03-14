@@ -914,5 +914,6 @@
         "zw": "Zimbabwe"
     },
     "using_language_return": "Cliquez ici pour naviguer sur Steam en __base__.",
-    "using_language": "Vous naviguez sur Steam en __current__."
+    "using_language": "Vous naviguez sur Steam en __current__.",
+    "another_store": "Autre Magasin"
 }

@@ -914,5 +914,6 @@
         "zw": "Зимбабве"
     },
     "using_language_return": "Кликнете тук, за да преглеждате Steam в __base__.",
-    "using_language": "Преглеждате Steam в __current__."
+    "using_language": "Преглеждате Steam в __current__.",
+    "another_store": "друг магазин"
 }

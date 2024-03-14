@@ -176,7 +176,7 @@
     "on_wishlist": "Auf der Wunschliste",
     "on_waitlist": "Auf Warteliste",
     "cancel": "Abbrechen",
-    "wiki_article": "__pcgw__-Artikel anzeigen",
+    "wiki_article": "__pcgw__-Artikel",
     "view_all": "ALLE ANSEHEN",
     "games_with_booster": "__boostergames__ Spiele können Booster-Packs erhalten",
     "sort_by": "Sortieren nach:",
@@ -191,7 +191,7 @@
     "thewordoptions": "Optionen",
     "discussions": "Diskussionen",
     "pricing": {
-        "lowest_price": "Aktuell niedrigster Preis:",
+        "lowest_price": "Aktueller Tiefstpreis:",
         "historical_low": "Historischer Tiefstpreis:",
         "bundled": "In Bundle:",
         "with_voucher": "mit Gutschein __voucher__",
@@ -206,7 +206,7 @@
     "early_access": "Early Access",
     "tag_short": "Kurze Tags benutzen, um Platz zu sparen",
     "no_price_data": "Keine Preisdaten verfügbar",
-    "user_score": "Nutzerwertungen",
+    "user_score": "Nutzerwertung",
     "market_popular_items_toggle": "Live-Aktualisierung von beliebten Artikeln umschalten",
     "show_progressbar": "Augmented-Steam-Fortschritts- und Statusbalken anzeigen",
     "achievements": {
@@ -272,7 +272,7 @@
         "show_alternative_linux_icon": "Alternatives Linux-Symbol zeigen",
         "hidetmsymbols": "Marken- und Copyrightsymbole in Spieltiteln",
         "metacritic": "Metacritic-Nutzerwertungen",
-        "opencritic": "OpenCritic-Bewertungen und -Rezensionen anzeigen",
+        "opencritic": "OpenCritic-Wertungen und -Rezensionen anzeigen",
         "hideactivelistings": "Standardmäßig alle aktiven Angebote im Markt ausblenden",
         "showlowestmarketprice": "Niedrigsten Marktpreis für Ihre Angebote anzeigen",
         "clear": "Möchten Sie alle Einstellungen wirklich zurücksetzen? Dies kann nicht rückgängig gemacht werden.",
@@ -914,5 +914,6 @@
         "zw": "Simbabwe"
     },
     "using_language_return": "Hier anklicken, um Steam in __base__ zu verwenden.",
-    "using_language": "Sie verwenden Steam in __current__."
+    "using_language": "Sie verwenden Steam in __current__.",
+    "another_store": "anderer Shop"
 }

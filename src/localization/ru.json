@@ -25,7 +25,7 @@
     "add_nickname": "Добавить псевдоним",
     "total_size": "Полный размер",
     "dlc_details": "Информация загружаемого контента",
-    "badge_not_unlocked": "Не разблокировано",
+    "badge_not_unlocked": "Не открыто",
     "each": "Каждая",
     "view_in_market": "Просмотреть на торговой площадке",
     "get_help": "Получить помощь",
@@ -133,7 +133,7 @@
     "visit_trade_forum": "Посетить форум обмена",
     "purchase_date": "(Приобретено __date__)",
     "custom_background_help": "Все пользователи Augmented Steam увидят этот фон в вашем профиле. Пользователи, у которых не установлен Augmented Steam, увидят выбранный вами фон выше.",
-    "date_unlocked": "Дата разблокировки",
+    "date_unlocked": "Дата открытия",
     "net_spent": "Потрачено:",
     "buy": "Купить",
     "buy_package": "Купить __package__",
@@ -210,7 +210,7 @@
     "show_progressbar": "Показывать полосу прогресса и состояния Augmented Steam",
     "achievements": {
         "option": "Показывать достижения на страницах в магазине",
-        "summary": "Разблокировано __unlocked__ из __total__ достижений (__percentage__%):"
+        "summary": "Получено __unlocked__ из __total__ достижений (__percentage__%):"
     },
     "bundle": {
         "offer_ends": "Предложение заканчивается",
@@ -578,7 +578,7 @@
     "acknowledgements": "Благодарности",
     "powered_by": "Создано __link__",
     "help_translate": "Помогите нам перевести Augmented Steam на сайте POEditor",
-    "filters": "Фильтры Augmented Steam (Скрыть предметы)",
+    "filters": "Фильтры Augmented Steam (Скрыть товары)",
     "search_filters": {
         "reviews_score": {
             "between": "Между __lower__ и __upper__ обзорами",
@@ -597,8 +597,8 @@
         "hide_negative": "С отрицательными отзывами",
         "discount_percent": {
             "count": "Процент скидки:",
-            "min_count": "минимум",
-            "max_count": "максимум"
+            "min_count": "мин.",
+            "max_count": "макс."
         }
     },
     "calc_workshop_size": {
@@ -912,5 +912,6 @@
         "zw": "Зимбабве"
     },
     "using_language_return": "Нажмите здесь, чтобы пользоваться Steam на языке: __base__.",
-    "using_language": "Вы находитесь на сайте Steam, используя язык: __current__."
+    "using_language": "Вы находитесь на сайте Steam, используя язык: __current__.",
+    "another_store": "другой магазин"
 }
