@@ -1,4 +1,10 @@
+/**
+ * @contentScript
+ * @match *://steamcommunity.com/tradeoffer/*
+ */
+
 import {CTradeOffer} from "./CTradeOffer";
+import "../../../../../css/community/tradeoffer.css"
 
 import {Localization, SyncedStorage} from "../../../../modulesCore";
 
