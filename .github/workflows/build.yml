@@ -1,0 +1,12 @@
+name: Build Augmented Steam
+on:
+  push:
+    branches: [develop, master]
+jobs:
+  build-all:
+    strategy:
+      matrix:
+        browser: [firefox, chrome, edge]
+    uses: ./.github/workflows/build-browser.yml
+    with:
+      browser: ${{ matrix.browser }}
