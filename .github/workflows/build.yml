@@ -4,6 +4,7 @@ on:
     branches: [develop, master]
 jobs:
   build-all:
+    name: Build Augmented Steam
     strategy:
       matrix:
         browser: [firefox, chrome, edge]
