@@ -21,9 +21,6 @@ export default {
         "webRequest",
         "webRequestBlocking"
     ],
-    optional_permissions: [
-        "contextMenus"
-    ],
     web_accessible_resources: [
         "img/*.png",
         "img/*.gif",
