@@ -4,8 +4,7 @@ on:
     inputs:
       browser:
         required: true
-        type: choice
-        options: [firefox, chrome, edge]
+        type: string
 jobs:
   build:
     runs-on: ubuntu-latest
