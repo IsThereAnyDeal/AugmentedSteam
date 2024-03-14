@@ -1,0 +1,28 @@
+name: Run Build
+on:
+  workflow_call:
+    inputs:
+      browser:
+        required: true
+        type: string
+jobs:
+  build:
+    name: Build ${{ inputs.browser }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+      - name: Install
+        run: npm install
+      - name: Build
+        run: npm run build -- ${{ inputs.browser }} --production
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name:  ${{ inputs.browser }}
+          path: dist/prod.${{ inputs.browser }}
+          if-no-files-found: error

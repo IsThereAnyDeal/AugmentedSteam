@@ -1,3 +1,8 @@
+/**
+ * @contentScript
+ * @match *://*.steampowered.com/agecheck/*
+ */
+
 import {StorePage} from "../../StorePage";
 import {CAgeCheck} from "./CAgecheck";
 
