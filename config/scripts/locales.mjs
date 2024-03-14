@@ -1,12 +1,14 @@
-const createDOMPurify = require("dompurify");
-const fs = require("fs");
-const chalk = require("chalk");
-const axios = require("axios");
-const FormData = require("form-data");
-const {JSDOM} = require("jsdom");
+import createDOMPurify from "dompurify";
+import fs from "node:fs/promises";
+import chalk from "chalk";
+import axios from "axios";
+import FormData from "form-data";
+import {JSDOM} from "jsdom";
 
 const window = new JSDOM().window;
 const DOMPurify = createDOMPurify(window);
+
+const __dirname = import.meta.dirname;
 
 // Disallow all tags, only plain text is allowed for translations
 DOMPurify.setConfig({"ALLOWED_TAGS": []});
@@ -79,7 +81,7 @@ async function loadLanguage(languageCode) {
     }
 
     const url = response.result.url;
-    
+
     result = await axios.get(url, {"responseType": "stream"});
 
     function streamToString(stream) {
@@ -97,19 +99,17 @@ async function loadLanguage(languageCode) {
     checkTranslations(translation);
 
     const filepath = `${__dirname}/../../src/localization/${LANGUAGE_MAP[languageCode]}.json`;
-    fs.writeFileSync(filepath, rawJSON);
-    
+    await fs.writeFile(filepath, rawJSON);
+
     return filepath;
 }
 
-(async() => {
-    for (const languageCode of Object.keys(LANGUAGE_MAP)) {
-        try {
-            const path = await loadLanguage(languageCode);
-            console.log(`${chalk.green("OK")} ${languageCode}: ${path}`);
-        } catch (e) {
-            console.error(`${chalk.red("ERROR")} ${languageCode}: ${e}`);
-            process.exitCode = 1;
-        }
+for (const languageCode of Object.keys(LANGUAGE_MAP)) {
+    try {
+        const path = await loadLanguage(languageCode);
+        console.log(`${chalk.green("OK")} ${languageCode}: ${path}`);
+    } catch (e) {
+        console.error(`${chalk.red("ERROR")} ${languageCode}: ${e}`);
+        process.exitCode = 1;
     }
-})();
+}
