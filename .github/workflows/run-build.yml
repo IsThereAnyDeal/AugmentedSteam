@@ -1,4 +1,4 @@
-name: Build Augmented Steam
+name: Run Build
 on:
   workflow_call:
     inputs:

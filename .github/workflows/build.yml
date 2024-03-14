@@ -7,6 +7,6 @@ jobs:
     strategy:
       matrix:
         browser: [firefox, chrome, edge]
-    uses: ./.github/workflows/build-browser.yml
+    uses: ./.github/workflows/run-build.yml
     with:
       browser: ${{ matrix.browser }}
