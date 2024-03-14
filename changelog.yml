@@ -1,3 +1,12 @@
+3.1.0: |
+  **in progress
+  - fix formatting of price overview on app pages
+  - fix profile edit features not showing up
+  - fix error when toggling checkboxes for free DLCs
+  - remove some deprecated features
+  - fix bundle header showing even when there are no bundles listed
+  - fix historical low showing incorrect shop
+
 3.0.0: |
   Maintenance release to make sure Augmented Steam plays well with the updated ITAD and backing server.
 
