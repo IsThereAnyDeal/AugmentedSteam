@@ -79,21 +79,8 @@ export default async function(options) {
 
     let manifestPlugin = manifestPreprocess();
 
-    await esbuild.build({
-        entryPoints: [
-            {out: "browser-polyfill", in: `${rootDir}/node_modules/webextension-polyfill/dist/browser-polyfill.js`},
-            {out: "dompurify", in: `${rootDir}/node_modules/dompurify/dist/purify.js`}
-        ],
-        outdir: `${distDir}/js/`,
-        entryNames: "[name]",
-        bundle: true,
-        minify: true,
-        sourcemap: false,
-        splitting: false,
-        mainFields: ["svelte", "browser", "module", "main"],
-        conditions: ["svelte", "browser"],
-        logLevel: "warning",
-    });
+    await fs.cp(`${rootDir}/node_modules/webextension-polyfill/dist/browser-polyfill.min.js`, `${distDir}/js/browser-polyfill.js`);
+    await fs.cp(`${rootDir}/node_modules/dompurify/dist/purify.js`, `${distDir}/js/dompurify.js`);
 
     let result = await esbuild.build({
         entryPoints: [
