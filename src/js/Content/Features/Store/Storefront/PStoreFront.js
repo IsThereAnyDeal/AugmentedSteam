@@ -1,6 +1,6 @@
 /**
  * @contentScript
- * @matches *://store.steampowered.com/[?*]
+ * @match *://store.steampowered.com/[?*]
  */
 
 import {StorePage} from "../../StorePage";
