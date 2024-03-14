@@ -5,7 +5,7 @@ import path from "path";
 import sveltePreprocess from "svelte-preprocess";
 import fs from "node:fs/promises";
 import YAML from "yaml";
-import ManifestBuilder from "../manifest/ManifestBuilder.mjs";
+import ManifestBuilder from "./manifestBuilder.mjs";
 import manifestPreprocess from "./manifestPreprocess.mjs";
 
 const __dirname = import.meta.dirname;
