@@ -63,7 +63,7 @@ async function buildChangelog(path) {
 export default async function(options) {
     const rootDir = path.resolve(__dirname, "../../../");
     const srcDir = path.resolve(rootDir, "src");
-    const distDir = path.resolve(rootDir, `dist-es/${options.dev ? "dev" : "prod"}.${options.browser}`);
+    const distDir = path.resolve(rootDir, `dist/${options.dev ? "dev" : "prod"}.${options.browser}`);
 
     try {
         await fs.rm(distDir, {recursive: true});
