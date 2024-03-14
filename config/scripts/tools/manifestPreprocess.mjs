@@ -63,8 +63,8 @@ export default function() {
                     const doc = contents.match(/\/\*\*.+?@contentScript.+?\*\//s);
 
                     if (doc && doc[0]) {
-                        const matches = doc[0].matchAll(/@match (.+)\s*/g);
-                        const excludes = doc[0].matchAll(/@exclude (.+)\s*/g);
+                        const matches = doc[0].matchAll(/@match\s+(.+)\s*/g);
+                        const excludes = doc[0].matchAll(/@exclude\s+(.+)\s*/g);
 
                         map.set(args.path, {
                             matches: [...(new Set([...matches].map(m => processPath(m[1])).flat()))],
