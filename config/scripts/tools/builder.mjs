@@ -98,7 +98,7 @@ export default async function(options) {
     let result = await esbuild.build({
         entryPoints: [
             // stylesheets - NOTE, in: main stylesheet added during build, based on browser
-            {out: "augmentedsteam", in: `${srcDir}/css/augmentedsteam-${options.browser}.css`},
+            {out: "augmentedsteam", in: `${srcDir}/css/augmentedsteam.css`},
             {out: "options", in: `${srcDir}/css/options.css`},
             // pages
             {out: "background", in: `${srcDir}/js/Background/background.js`},
@@ -175,9 +175,13 @@ export default async function(options) {
             {
                 name: "extension-assets",
                 setup(build) {
-                    // TODO
-                    build.onResolve({ filter: /moz-extension:\/\// }, args => {
-                        return { path: args.path, external: true }
+                    build.onResolve({ filter: /extension:\/\// }, args => {
+                        return {
+                            path: options.browser === "firefox"
+                                ? args.path.replace("extension://", "moz-extension://__MSG_@@extension_id__/")
+                                : args.path.replace("extension://", "chrome-extension://__MSG_@@extension_id__/"),
+                            external: true
+                        }
                     })
                 },
             },
