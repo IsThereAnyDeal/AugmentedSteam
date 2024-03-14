@@ -61,7 +61,7 @@ async function buildChangelog(path) {
 }
 
 export default async function(options) {
-    const rootDir = path.resolve(__dirname, "../../../");
+    const rootDir = path.resolve(__dirname, "../../");
     const srcDir = path.resolve(rootDir, "src");
     const distDir = path.resolve(rootDir, `dist/${options.dev ? "dev" : "prod"}.${options.browser}`);
 

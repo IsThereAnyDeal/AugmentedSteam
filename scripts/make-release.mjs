@@ -7,7 +7,7 @@ import YAML from "yaml";
 
 const __dirname = import.meta.dirname;
 
-const root = `${__dirname}/../..`;
+const root = `${__dirname}/../`;
 const changelogPath = `${root}/changelog.yml`;
 const releasesPath = `${root}/../AugmentedSteam_releases/`;
 
