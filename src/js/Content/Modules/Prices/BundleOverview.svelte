@@ -32,7 +32,7 @@
     });
 </script>
 
-{#if data.length > 0}
+{#if data.length > 0 && data.some(v => !v.expiry || Date.parse(v.expiry) > Date.now())}
     <h2 class="gradientbg es_external_icon">{Localization.str.bundle.header}</h2>
 
     {#each data as bundle}
