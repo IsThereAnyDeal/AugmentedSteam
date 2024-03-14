@@ -133,7 +133,6 @@ export default async function(options) {
             {out: "store/wishlist", in: `${srcDir}/js/Content/Features/Store/Wishlist/PWishlist.js`},
             {out: "extra/holidayprofile", in: `${srcDir}/js/Steam/holidayprofile.js`}
         ],
-        publicPath: "/public/",
         globalName: "_as",
         format: "iife",
         outdir: distDir,
