@@ -134,9 +134,6 @@ const DEFAULTS = {
         "reviews": true,
         "about": true,
         "contentwarning": true,
-        "steamchart": true,
-        "steamspy": true,
-        "survey": true,
         "sysreq": true,
         "legal": true,
         "morelikethis": true,
@@ -162,16 +159,12 @@ const DEFAULTS = {
         "homepagesidebar": true
     },
 
-    // 'show_keylol_links': false, // not in use, option is commented out
     "show_package_info": false,
-    "show_steamchart_info": true,
-    "show_steamspy_info": true,
-    "show_survey_info": true,
+    "show_players_info": true,
     "show_early_access": true,
     "show_alternative_linux_icon": false,
     "show_itad_button": false,
     "skip_got_steam": false,
-    "addtocart_no_redirect": false,
 
     "installsteam": "show",
     "openinnewtab": false,

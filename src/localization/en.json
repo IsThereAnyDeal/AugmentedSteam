@@ -1,12 +1,5 @@
 {
     "delete_comment_prompt": "Are you sure you want to delete this comment?",
-    "addtocart_dialog": {
-        "error_desc": "An error occurred while adding your item to Cart.",
-        "title": "Added to Shopping Cart",
-        "desc": "The item was added to your Shopping Cart.",
-        "checkout": "No, checkout",
-        "continue": "Yes, continue shopping"
-    },
     "download_demo_header": "Download __gamename__ Demo",
     "deck_compat": {
         "header": "Steam Deck Compatibility",
@@ -331,15 +324,6 @@
         "main": "Main Story",
         "no_data": "No data found"
     },
-    "spy": {
-        "player_data": "Player Data",
-        "owners": "Owners",
-        "average_playtime": "Average playtime",
-        "average_playtime_2weeks": "Average playtime in the last two weeks",
-        "playtime_unit_day": "__days__d",
-        "playtime_unit_hour": "__hours__h",
-        "playtime_unit_minute": "__minutes__m"
-    },
     "options": {
         "settings_mngmt": {
             "import": "Import",
@@ -428,9 +412,7 @@
         "guest": "Items you have a guest pass for",
         "collection": "Items in your ITAD Collection",
         "waitlist": "Items in your ITAD Waitlist",
-        "show_steamchart_info": "Show SteamCharts.com information",
-        "show_steamspy_info": "Show steamspy.com information",
-        "show_survey_info": "Show Performance Survey data",
+        "show_players_info": "Show player count information",
         "showallstats": "Show playtime stats on \"All Games\" page",
         "lowestprice_onwishlist": "Show when hovering over wishlist items",
         "steamrepapi": "Show SteamRep status",
@@ -480,7 +462,6 @@
         "wishlist": "Items on your wishlist",
         "add_another_region": "Add",
         "skip_got_steam": "Skip the \"Got Steam?\" window",
-        "addtocart_no_redirect": "Prevent redirection when adding items to your Cart",
         "store_general_thirdparty": "Options for information from 3rd-party sites",
         "purchase_dates": "Show purchase date",
         "show_badge_progress": "Show badge progress",
@@ -540,25 +521,6 @@
     "twitch": {
         "now_streaming": "__username__ is live streaming on Twitch",
         "viewers": "Viewers"
-    },
-    "survey": {
-        "performance_survey": "Performance Survey",
-        "users": "__users__ users have completed the performance survey for this game.",
-        "framerate": "Framerate",
-        "framerate_response": "responded that the framerate was",
-        "framerate_30": "fixed at 30fps or lower",
-        "framerate_fi": "fixed at higher than 30fps",
-        "framerate_va": "variable, dependant on hardware",
-        "resolution": "Resolution",
-        "resolution_support": "This game appears to support",
-        "resolution_less": "less than __pixels__ resolution",
-        "resolution_up": "up to __pixels__ resolution",
-        "graphics_settings": "Graphics Settings",
-        "satisfaction": "Performance Satisfaction by GPU",
-        "gs_y": "Has built-in graphic options or a graphics menu",
-        "gs_n": "Does not have built-in graphic options or a graphics menu",
-        "nobody": "Nobody has taken a performance survey for this game yet.",
-        "take": "Take The Survey"
     },
     "dlc_select": {
         "wishlisted_dlc": "Select Wishlisted DLC",

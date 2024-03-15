@@ -117,9 +117,7 @@ export default {
     "showoc": "options.opencritic",
     "showhltb": "options.hltb",
     "showwsgf": "options.wsgf",
-    "show_steamchart_info": "options.show_steamchart_info",
-    "show_steamspy_info": "options.show_steamspy_info",
-    "show_survey_info": "options.show_survey_info",
+    "show_players_info": "options.show_players_info",
     "showastatslink": "options.show_astatslink",
     "showitadlinks": "options.itadlinks",
     "showsteamdb": "options.steamdb",
@@ -138,7 +136,6 @@ export default {
     "show_early_access": "options.show_early_access",
     "show_alternative_linux_icon": "options.show_alternative_linux_icon",
     "skip_got_steam": "options.skip_got_steam",
-    "addtocart_no_redirect": "options.addtocart_no_redirect",
 
     // price
     "showlowestprice": "options.lowestprice",

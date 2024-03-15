@@ -1,6 +1,6 @@
 import {HTML, Localization} from "../../../../modulesCore";
-import {Feature, Price, User} from "../../../modulesContent";
-import {AddToCart} from "../Common/AddToCart";
+import {Feature, Price} from "../../../modulesContent";
+import {Page} from "../../Page";
 
 export default class FDLCCheckboxes extends Feature {
 
@@ -76,19 +76,12 @@ export default class FDLCCheckboxes extends Feature {
             HTML.afterEnd(dlcSection.querySelector(".gameDlcBlocks"), html);
         }
 
-        const cartForm = document.createElement("form");
-        cartForm.name = "add_selected_dlc_to_cart";
-        cartForm.action = "https://store.steampowered.com/cart/";
-        cartForm.method = "POST";
-
+        const subids = new Set();
         const cartBtn = dlcSection.querySelector("#es_selected_btn");
-        cartBtn.before(cartForm);
-        cartBtn.addEventListener("click", async() => {
-            if (await AddToCart.checkFeatureHint()) {
-                AddToCart.post(cartForm);
-            } else {
-                cartForm.submit();
-            }
+        cartBtn.addEventListener("click", () => {
+            Page.runInPageContext((subids) => {
+                window.SteamFacade.addItemToCart(subids.length === 1 ? subids[0] : subids);
+            }, [Array.from(subids)]);
         });
 
         HTML.afterEnd(dlcSection.querySelector(".gradientbg"),
@@ -122,26 +115,14 @@ export default class FDLCCheckboxes extends Feature {
             dlcSection.dispatchEvent(new Event("change"));
         });
 
-        function createHiddenInput(name, value) {
-            const input = document.createElement("input");
-            input.type = "hidden";
-            input.name = name;
-            input.value = value;
-
-            return input;
-        }
-
-        const inputAction = createHiddenInput("action", "add_to_cart");
-        const inputSessionId = createHiddenInput("sessionid", User.sessionId);
-
         dlcSection.addEventListener("change", () => {
 
-            cartForm.replaceChildren(inputAction, inputSessionId);
+            subids.clear();
 
             let total = 0;
             for (const node of dlcSection.querySelectorAll(".es_dlc_label > input:checked")) {
 
-                cartForm.append(createHiddenInput("subid[]", node.dataset.esDlcSubid));
+                subids.add(Number(node.dataset.esDlcSubid));
 
                 if (node.dataset.esDlcPrice) {
                     total += Number(node.dataset.esDlcPrice);
