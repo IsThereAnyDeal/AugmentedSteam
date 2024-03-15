@@ -109,7 +109,6 @@
         text-align: right;
     }
     .itad-pricing__voucher {
-        font-weight: bold;
         font-size: 1.1em;
     }
     .itad-pricing__drm {
