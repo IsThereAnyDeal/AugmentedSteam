@@ -1,4 +1,4 @@
-export interface TShop {
+interface TShop {
     id: number,
     name: string,
 }
@@ -9,17 +9,17 @@ export interface TPrice {
     currency: string
 }
 
-export interface TDrm {
+interface TDrm {
     id: number,
     name: string
 }
 
-export interface TPlatform {
+interface TPlatform {
     id: number,
     name: string
 }
 
-export interface TCurrent {
+interface TCurrent {
     shop: TShop,
     price: TPrice,
     regular: TPrice,
@@ -33,7 +33,7 @@ export interface TCurrent {
     url: string
 }
 
-export interface TLowest {
+interface TLowest {
     shop: TShop,
     price: TPrice,
     regular: TPrice,
@@ -44,6 +44,7 @@ export interface TLowest {
 export interface TPriceOverview {
     current: TCurrent|null,
     lowest: TLowest|null,
+    bundled: number,
     urls: {
         info: string,
         history: string
@@ -69,15 +70,33 @@ export interface TBundle {
     tiers: TTier[]
 }
 
-export interface TTier {
+interface TTier {
     price: TPrice|null,
     games: TBundleGame[]
 }
 
-export interface TBundleGame {
+interface TBundleGame {
     id: string,
     slug: string,
     title: string,
     type: string|null,
     mature: boolean
+}
+
+
+export interface TFetchPricesMessage {
+    action: "prices",
+    params: {
+        country: string,
+        apps: number[],
+        subs: number[],
+        bundles: number[],
+        voucher: boolean,
+        shops: number[]
+    }
+}
+
+export interface TFetchPricesResponse {
+    prices: Record<string, TPriceOverview>,
+    bundles: TBundle[]
 }

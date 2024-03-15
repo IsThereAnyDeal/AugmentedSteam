@@ -40,7 +40,7 @@ export default class FITADPrices extends Feature {
         new PriceOverview({
             target,
             anchor,
-            props: {id, data}
+            props: {data}
         });
     }
 

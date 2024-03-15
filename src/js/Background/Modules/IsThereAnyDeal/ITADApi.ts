@@ -1,14 +1,16 @@
-import {Errors, LocalStorage, SyncedStorage, TimeUtils} from "../../modulesCore";
-import {Api} from "./Api";
-import Config from "../../config";
-import {IndexedDB} from "./IndexedDB";
+import {Errors, LocalStorage, SyncedStorage, TimeUtils} from "../../../modulesCore";
+import {Api} from "../Api";
+import Config from "../../../config";
+import {IndexedDB} from "../IndexedDB";
+import type {TGetStoreListResponse} from "./_types";
+import {EStoreName} from "../../EStoreName";
 
 const MAX_ITEMS_PER_REQUEST = 1000;
 
 class ITADApi extends Api {
 
-    static async getStoreList() {
-        return Object.values(await IndexedDB.getAll("storeList"));
+    static async getStoreList(): Promise<TGetStoreListResponse> {
+        return Object.values(await IndexedDB.getAll(EStoreName.StoreList));
     }
 
     static async fetchStoreList() {

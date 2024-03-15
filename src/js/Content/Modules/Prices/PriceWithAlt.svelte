@@ -2,8 +2,8 @@
 
 <script lang="ts">
     import {Price} from "../Price";
-    import type {TPrice} from "./_types";
     import {CurrencyManager} from "../CurrencyManager";
+    import type {TPrice} from "../../../Background/Modules/AugmentedSteam/_types";
 
     export let price: TPrice;
 

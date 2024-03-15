@@ -51,7 +51,6 @@ export default class FWishlistITADPrices extends CallbackFeature {
                         return new PriceOverview({
                             target: node,
                             props: {
-                                id,
                                 data,
                                 setBottom: true
                             }

@@ -1,11 +1,11 @@
 <svelte:options immutable={true} />
 
 <script lang="ts">
-    import type {TBundle, TPrice} from "./_types";
     import {Localization} from "../../../Core/Localization/Localization";
     import {onMount} from "svelte";
     import {Price} from "../Price";
     import {CurrencyManager} from "../CurrencyManager";
+    import type {TBundle, TPrice} from "../../../Background/Modules/AugmentedSteam/_types";
 
     export let data: TBundle[];
 

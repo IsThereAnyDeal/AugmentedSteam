@@ -2,15 +2,14 @@
 
 <script lang="ts">
     import {Localization} from "../../../Core/Localization/Localization";
-    import type {TPriceOverview} from "./_types";
     import {HTML} from "../../../modulesCore";
     import PriceWithAlt from "./PriceWithAlt.svelte";
     import {afterUpdate} from "svelte";
+    import type {TPriceOverview} from "../../../Background/Modules/AugmentedSteam/_types";
 
-    export let id: number;
     export let data: TPriceOverview;
     export let setBottom: boolean = false;
-    export let height: number;
+    export let height: number|undefined;
 
     const pricingStr = Localization.str.pricing;
 
@@ -24,14 +23,16 @@
     }
 
     afterUpdate(() => {
-        if (!setBottom) { return; }
+        if (!setBottom || !height) {
+            return;
+        }
         height = Math.ceil(node.getBoundingClientRect().height);
         node.style.bottom = `${-height}px`;
     });
 </script>
 
 
-<div class="itad-pricing" id="es_price_{id}" bind:this={node}>
+<div class="itad-pricing" bind:this={node}>
     {#if data.current}
         <a href={data.urls.info} target="_blank">{pricingStr.lowest_price}</a>
 
@@ -45,10 +46,7 @@
             {/if}
 
             {#if data.current.voucher}
-                <!-- TODO i got rid of "with voucher" string, because replacing html
-                          into translation is no good: pricingStr.with_voucher
-                          figure out a better way -->
-                <span class="itad-pricing__voucher">{data.current.voucher}</span>
+                <span class="itad-pricing__voucher">{pricingStr.with_voucher.replace("__voucher__", data.current.voucher)}</span>
             {/if}
 
             {@html pricingStr.store.replace("__store__", HTML.escape(data.current.shop.name))}
@@ -74,10 +72,51 @@
         </div>
     {/if}
 
-    <!-- TODO does this still have any value?
-    {#if bundled}
-        <a href="${bundledUrl}" target="_blank">{pricingStr.bundled}</a>
-        <div class="itad-pricing__bundled">{pricingStr.bundle_count.replace("__count__", bundledCount)}</div>
+    {#if data.bundled}
+        <a href={data.urls.info} target="_blank">{pricingStr.bundled}</a>
+        <div class="itad-pricing__bundled">{pricingStr.bundle_count.replace("__count__", data.bundled)}</div>
     {/if}
-    -->
 </div>
+
+
+<style>
+    .itad-pricing {
+        padding: 5px 5px 5px 42px;
+        height: auto !important;
+        border-bottom: 0;
+        font-size: 12px;
+        color: #a8b2ba;
+        background-color: rgba(0, 0, 0, 0.2);
+        background-repeat: no-repeat;
+        background-position: 9px center;
+        background-size: 24px;
+        display: grid;
+        grid-template-columns: min-content min-content auto;
+        grid-column-gap: 10px;
+        white-space: nowrap;
+        line-height: 1.5;
+        align-items: baseline;
+    }
+    .itad-pricing__main {
+        white-space: normal;
+    }
+    .itad-pricing__cut {
+        color: #a4d007;
+    }
+    .itad-pricing__price {
+        font-size: 1.1em;
+        color: #acdbf5;
+        text-align: right;
+    }
+    .itad-pricing__voucher {
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+    .itad-pricing__drm {
+        text-transform: uppercase;
+        color: #626366;
+    }
+    .itad-pricing__bundled {
+        grid-column: 2 / span 2
+    }
+</style>

@@ -1,4 +1,6 @@
+import browser from "webextension-polyfill";
 
+/** @deprecated */
 class BackgroundSimple {
     static message(message) {
         return browser.runtime.sendMessage(message);
@@ -10,4 +12,10 @@ class BackgroundSimple {
     }
 }
 
-export {BackgroundSimple};
+class BackgroundSender {
+    static send<T, U>(message: T): Promise<U> {
+        return browser.runtime.sendMessage(message);
+    }
+}
+
+export {BackgroundSimple, BackgroundSender};

@@ -1,7 +1,8 @@
-import {Errors} from "../../modulesCore";
-import {IndexedDB} from "./IndexedDB";
-import Config from "../../config";
-import {Api} from "./Api";
+import {Errors} from "../../../modulesCore";
+import {IndexedDB} from "../IndexedDB";
+import Config from "../../../config";
+import {Api} from "../Api";
+import type {TFetchPricesResponse} from "./_types";
 
 class AugmentedSteamApi extends Api {
 
@@ -35,19 +36,19 @@ class AugmentedSteamApi extends Api {
         return AugmentedSteamApi.endpointFactory(`similar/${appid}/v2`)({"count": 15});
     }
 
-    static async fetchPrices(params/*: {
+    static async fetchPrices(
         country: string,
-        apps?: number[],
-        subs?: number[],
-        bundles?: number[],
+        apps: number[],
+        subs: number[],
+        bundles: number[],
         voucher: boolean,
         shops: number[]
-    }*/) {
+    ): Promise<TFetchPricesResponse> {
         const url = new URL("prices/v2", Config.ApiServerHost);
 
         let response = await fetch(url, {
             method: "POST",
-            body: JSON.stringify(params)
+            body: JSON.stringify({country, apps, subs, bundles, voucher, shops})
         });
 
         if (response.ok) {

@@ -5,10 +5,15 @@ import {IndexedDB} from "./Modules/IndexedDB";
 import {SteamCommunityApi} from "./Modules/SteamCommunityApi";
 import {SteamStoreApi} from "./Modules/SteamStoreApi";
 import {StaticResources} from "./Modules/StaticResources";
-import {ITADApi} from "./Modules/ITADApi";
-import {AugmentedSteamApi} from "./Modules/AugmentedSteamApi";
+import {ITADApi} from "./Modules/IsThereAnyDeal/ITADApi";
+import {AugmentedSteamApi} from "./Modules/AugmentedSteam/AugmentedSteamApi";
 import {ExtensionData} from "./Modules/ExtensionData";
 import CacheStorage from "./Modules/CacheStorage";
+import browser, {type Runtime} from "webextension-polyfill";
+import type {TFetchPricesMessage} from "./Modules/AugmentedSteam/_types";
+import type {TGetStoreListMessage} from "./Modules/IsThereAnyDeal/_types";
+
+type MessageSender = Runtime.MessageSender;
 
 // Functions that are called when an object store (or one of its entries) has expired
 IndexedDB.objStoreFetchFns = new Map([
@@ -72,7 +77,6 @@ const actionCallbacks = new Map([
     ["dlcinfo", AugmentedSteamApi.fetchDlcInfo],
     ["storepagedata", AugmentedSteamApi.storePageData],
     ["storepagedata.expire", AugmentedSteamApi.expireStorePageData],
-    ["prices", AugmentedSteamApi.fetchPrices],
     ["rates", AugmentedSteamApi.rates],
     ["clearrates", AugmentedSteamApi.clearRates],
     ["isea", AugmentedSteamApi.isEA],
@@ -117,41 +121,83 @@ const actionCallbacks = new Map([
     ["itad.removefromwaitlist", ITADApi.removeFromWaitlist],
     ["itad.incollection", ITADApi.inCollection],
     ["itad.getfromcollection", ITADApi.getFromCollection],
-    ["itad.storelist", ITADApi.getStoreList],
 
     ["error.test", () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
 
-/*
- * new Map() for Map.prototype.get() in lieu of:
- * Object.prototype.hasOwnProperty.call(actionCallbacks, message.action)
- */
 
-browser.runtime.onMessage.addListener(async(message, sender) => {
-    if (!sender || !sender.tab) { return null; } // not from a tab, ignore
-    if (!message || !message.action) { return null; }
+/** @deprecated */
+type GenericMessage = {
+    action: string,
+    params?: any
+};
 
-    const callback = actionCallbacks.get(message.action);
-    if (!callback) {
+type Message =
+    // ITADApi
+    | TGetStoreListMessage
+    // AugmentedSteamApi
+    | TFetchPricesMessage
+    // old
+    | GenericMessage;
 
-        // requested action not recognized, reply with error immediately
-        throw new Error(`Did not recognize "${message.action}" as an action.`);
+browser.runtime.onMessage.addListener((
+    message: Message,
+    sender: MessageSender,
+    sendResponse: (...params: any) => void
+): true|void => {
+
+    if (!sender || !sender.tab) { // not from a tab, ignore
+        return;
+    }
+    if (!message || !message.action) {
+        return;
     }
 
-    message.params = message.params || [];
-    let res;
-    try {
-        await Promise.all([IndexedDB, CacheStorage, LocalStorage, SyncedStorage.then(() => { setup(); })]);
-        res = await callback(...message.params);
-    } catch (err) {
-        console.group(`Callback: "${message.action}"`);
-        console.error('Failed to execute callback "%s" with params %o', message.action, message.params);
-        console.error(err);
-        console.groupEnd();
+    (async function() {
+        try {
+            let response: any;
 
-        throw new Error(err.toString());
-    }
-    return res;
+            switch(message.action) { // TODO rename to "api"?
+
+                case "itad.storelist":
+                    response = await ITADApi.getStoreList();
+                    break;
+
+                case "prices":
+                    let {country, apps, subs, bundles, voucher, shops} = message.params;
+                    response = await AugmentedSteamApi.fetchPrices(country, apps, subs, bundles, voucher, shops);
+                    break
+
+                default:
+                    /*
+                     * TODO deprecated
+                     * Old handling, remove once we rewrite all handlers to explicit style above
+                     */
+                    const callback = actionCallbacks.get(message.action);
+                    if (!callback) {
+
+                        // requested action not recognized, reply with error immediately
+                        throw new Error(`Did not recognize "${message.action}" as an action.`);
+                    }
+
+                    const params = (<GenericMessage>message).params || []
+
+                        await Promise.all([IndexedDB, CacheStorage, LocalStorage, SyncedStorage.then(() => { setup(); })]);
+                        response = await callback(...params);
+
+            }
+
+            sendResponse(response);
+        } catch (err) {
+            console.group(`Callback: "${message.action}"`);
+            console.error('Failed to execute %o', message);
+            console.error(err);
+            console.groupEnd();
+
+            throw new Error((<any>err).toString());
+        }
+    })();
+    return true;
 });
 
 browser.runtime.onStartup.addListener(ContextMenu.update);
