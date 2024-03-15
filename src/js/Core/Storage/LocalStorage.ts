@@ -78,6 +78,7 @@ const DEFAULTS = {
     "hide_login_warn_store": false,
     "hide_login_warn_community": false,
     "review_filters": {},
+    "wl_demo_appids": [],
     "local_storage_migration": {"store": false, "community": false, "extension": false},
 };
 
