@@ -1,4 +1,4 @@
-import {Background, ContextType, SteamId} from "../../../modulesContent";
+import {Background, ContextType, FeatureManager, SteamId} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
 import FEarlyAccess from "../../Common/FEarlyAccess";
 import FCommunityProfileLinks from "./FCommunityProfileLinks";
@@ -48,12 +48,10 @@ export class CProfileHome extends CCommunityBase {
         FEarlyAccess.show(document.querySelectorAll(".game_info_cap, .showcase_slot:not(.showcase_achievement)"));
 
         // Need to wait on custom background and style (LNY2020 may set the background) to be fetched and set
-        FPinnedBackground.dependencies = [FCustomBackground, FCustomStyle];
-        FPinnedBackground.weakDependency = true;
+        FeatureManager.dependency(FPinnedBackground, [FCustomBackground, true], [FCustomStyle, true]);
 
         // Required for LNY2020 to check whether the profile has a (custom) background
-        FCustomStyle.dependencies = [FCustomBackground];
-        FCustomStyle.weakDependency = true;
+        FeatureManager.dependency(FCustomStyle, [FCustomBackground, true])
     }
 
     profileDataPromise() {

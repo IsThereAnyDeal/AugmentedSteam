@@ -1,5 +1,5 @@
 import {GameId} from "../../../../modulesCore";
-import {Background, ContextType} from "../../../modulesContent";
+import {Background, ContextType, FeatureManager} from "../../../modulesContent";
 import FMediaExpander from "../../Common/FMediaExpander";
 import {CStoreBase} from "../Common/CStoreBase";
 import FCustomizer from "../Common/FCustomizer";
@@ -137,12 +137,10 @@ export class CApp extends CStoreBase {
         this.data = this.storePageDataPromise().catch(err => { console.error(err); });
 
         // FPackBreakdown skips purchase options with a package info button to avoid false positives
-        FPackageInfoButton.dependencies = [FPackBreakdown];
-        FPackageInfoButton.weakDependency = true;
+        FeatureManager.dependency(FPackageInfoButton, [FPackBreakdown, true]);
 
         // HDPlayer needs to wait for mp4 sources to be set
-        FHDPlayer.dependencies = [FForceMP4];
-        FHDPlayer.weakDependency = true;
+        FeatureManager.dependency(FPackageInfoButton, [FPackBreakdown, true]);
     }
 
     storePageDataPromise() {

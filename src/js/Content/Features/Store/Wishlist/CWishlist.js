@@ -1,5 +1,5 @@
 import {HTMLParser, TimeUtils} from "../../../../modulesCore";
-import {ContextType, User} from "../../../modulesContent";
+import {ContextType, FeatureManager, User} from "../../../modulesContent";
 import {CStoreBase} from "../Common/CStoreBase";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
 import FWishlistHighlights from "./FWishlistHighlights";
@@ -47,7 +47,7 @@ export class CWishlist extends CStoreBase {
         }
 
         // Maintain the order of the buttons
-        FEmptyWishlist.dependencies = [FExportWishlist];
+        FeatureManager.dependency(FEmptyWishlist, [FExportWishlist, false]);
     }
 
     async applyFeatures() {

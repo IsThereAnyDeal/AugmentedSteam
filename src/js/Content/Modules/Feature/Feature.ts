@@ -4,11 +4,11 @@ class Feature<C extends object = Record<string, never>> {
         protected context: C,
     ) {}
 
-    public checkPrerequisites(): boolean {
+    public checkPrerequisites(): boolean|Promise<boolean> {
         return true;
     }
 
-    public apply(): void {
+    public apply(): void|Promise<void> {
         throw new Error("Stub");
     }
 
