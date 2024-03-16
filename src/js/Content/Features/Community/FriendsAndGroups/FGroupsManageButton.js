@@ -137,6 +137,6 @@ export default class FGroupsManageButton extends CallbackFeature {
             "steamids[]": id
         };
 
-        return RequestData.post(this._endpoint, data, {}, true);
+        return RequestData.post(this._endpoint, data);
     }
 }
