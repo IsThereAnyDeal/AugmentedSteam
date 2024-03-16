@@ -1167,20 +1167,6 @@ video.highlight_movie:hover + .html5_video_overlay {
   font-size: 14px;
 }
 
-/***************************************
- * App pages
- * FPlayers
- **************************************/
-.as_players {
-  line-height: 20px;
-}
-.as_players_stat {
-  color: #8f98a0;
-}
-.as_players_num {
-  float: right;
-  color: #67c1f5;
-}
 
 /***************************************
  * Store and Community

@@ -28,6 +28,7 @@ import FOwnedElsewhere from "./FOwnedElsewhere";
 import FPackageInfoButton from "./FPackageInfoButton";
 import FPackBreakdown from "./FPackBreakdown";
 import FPatchHighlightPlayer from "./FPatchHighlightPlayer";
+import {FPlayers} from "./FPlayers.svelte";
 import FPurchaseDate from "./FPurchaseDate";
 import FRemoveBroadcasts from "./FRemoveBroadcasts";
 import FRemoveDupeScreenshots from "./FRemoveDupeScreenshots";
@@ -35,7 +36,6 @@ import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
 import FReviewToggleButton from "./FReviewToggleButton";
 import FSaveReviewFilters from "./FSaveReviewFilters";
 import FShowCoupon from "./FShowCoupon";
-import FPlayers from "./FPlayers";
 import FSteamDeckCompatibility from "./FSteamDeckCompatibility";
 import FSteamPeek from "./FSteamPeek";
 import FSupportInfo from "./FSupportInfo";
@@ -135,10 +135,6 @@ export class CApp extends CStoreBase {
 
         this.userNotes = new UserNotes();
         this.data = this.storePageDataPromise().catch(err => { console.error(err); });
-
-        // The customizer has to wait on this data to be added in order to find the HTML elements
-        FCustomizer.dependencies = [FPlayers];
-        FCustomizer.weakDependency = true;
 
         // FPackBreakdown skips purchase options with a package info button to avoid false positives
         FPackageInfoButton.dependencies = [FPackBreakdown];
