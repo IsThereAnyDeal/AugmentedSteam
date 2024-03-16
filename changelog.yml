@@ -6,7 +6,10 @@
   - remove some deprecated features
   - fix bundle header showing even when there are no bundles listed
   - fix historical low showing incorrect shop
-  - return info about how many times game was bundled 
+  - return info about how many times game was bundled
+  - fix shopping cart history link not showing up
+  - remove deprecated features
+  - redo how players stats show up
 
 3.0.0: |
   Maintenance release to make sure Augmented Steam plays well with the updated ITAD and backing server.
