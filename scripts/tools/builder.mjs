@@ -141,7 +141,7 @@ export default async function(options) {
         assetNames: "[dir]/[name]",
         bundle: true,
         minify: !options.dev,
-        sourcemap: options.dev,
+        sourcemap: true,
         splitting: false,
         mainFields: ["svelte", "browser", "module", "main"],
         conditions: ["svelte", "browser"],

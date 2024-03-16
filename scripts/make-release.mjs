@@ -12,7 +12,7 @@ const changelogPath = `${root}/changelog.yml`;
 const releasesPath = `${root}/../AugmentedSteam_releases/`;
 
 const options = (new Command())
-    .option("--rewrite", "Rewrite existing release", false)
+    .option("--force", "Overwrite existing release", false)
     .parse()
     .opts();
 
@@ -39,7 +39,7 @@ if (fs.existsSync(releaseDir)) {
 function copySource() {
     const toCopy = [
         "badges",
-        "config",
+        "scripts",
         "tsconfig.json",
         "src",
         ".eslintrc.json",
