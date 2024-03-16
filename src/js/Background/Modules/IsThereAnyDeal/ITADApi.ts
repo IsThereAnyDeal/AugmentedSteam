@@ -147,8 +147,8 @@ class ITADApi extends Api {
         return true;
     }
 
-    static async _fetchSteamIds(gids) {
-        let response = await fetch(new URL("unstable/id-lookup/steam/v1", Config.ITADApiServerHost), {
+    static async _fetchSteamIds(gids: string[]) {
+        let response = await fetch(new URL("unstable/id-lookup/shop/61/v2", Config.ITADApiServerHost), {
             method: "POST",
             headers: {"content-type": "application/json"},
             body: JSON.stringify(gids)
@@ -156,10 +156,12 @@ class ITADApi extends Api {
 
         if (response.ok) {
             let obj = await response.json();
-            let map = new Map();
-            for (let [itad, steam] of Object.entries(obj)) {
-                if (steam !== null) {
-                    map.set(steam, itad);
+            let map: Map<string, string> = new Map();
+            for (let [itad, steamIds] of <[string, string[]|null][]>Object.entries(obj)) {
+                if (steamIds !== null) {
+                    for (let steamId of steamIds) {
+                        map.set(steamId, itad);
+                    }
                 }
             }
             return map;
@@ -168,8 +170,8 @@ class ITADApi extends Api {
         throw new Errors.HTTPError(response.status, response.statusText);
     }
 
-    static async _fetchGameIds(steamIds) {
-        let response = await fetch(new URL("unstable/id-lookup/game/v1", Config.ITADApiServerHost), {
+    static async _fetchGameIds(steamIds: string[]) {
+        let response = await fetch(new URL("unstable/id-lookup/itad/61/v2", Config.ITADApiServerHost), {
             method: "POST",
             headers: {"content-type": "application/json"},
             body: JSON.stringify(steamIds)
@@ -178,7 +180,7 @@ class ITADApi extends Api {
         if (response.ok) {
             let obj = await response.json();
             let map = new Map();
-            for (let [steam, itad] of Object.entries(obj)) {
+            for (let [steam, itad] of <[string, string|null][]>Object.entries(obj)) {
                 if (itad !== null) {
                     map.set(steam, itad);
                 }
