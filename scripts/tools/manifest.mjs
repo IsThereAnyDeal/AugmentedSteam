@@ -35,7 +35,8 @@ export default {
         "img/profile_styles/*/preview.png",
         "localization/*.json",
         "js/extra/holidayprofile.js",
-        "changelog.json"
+        "changelog.json",
+        "*.map"
     ],
     homepage_url: "https://augmentedsteam.com/",
     background: {
