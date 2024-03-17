@@ -90,18 +90,17 @@ export default class FMultiProductKeys extends Feature {
                     "product_key": currentKey
                 };
 
-                const request = RequestData.post("https://store.steampowered.com/account/ajaxregisterkey", data).then(response => {
-                    const _data = JSON.parse(response);
+                const request = RequestData.post("https://store.steampowered.com/account/ajaxregisterkey", data).then(result => {
                     const attempted = currentKey;
                     let message = Localization.str.register.default;
-                    if (_data.success === 1) {
+                    if (result.success === 1) {
                         document.querySelector(`#attempt_${attempted}_icon img`).setAttribute("src", ExtensionResources.getURL("img/sr/okay.png"));
-                        if (_data.purchase_receipt_info.line_items.length > 0) {
-                            document.querySelector(`#attempt_${attempted}_result`).textContent = Localization.str.register.success.replace("__gamename__", _data.purchase_receipt_info.line_items[0].line_item_description);
+                        if (result.purchase_receipt_info.line_items.length > 0) {
+                            document.querySelector(`#attempt_${attempted}_result`).textContent = Localization.str.register.success.replace("__gamename__", result.purchase_receipt_info.line_items[0].line_item_description);
                             document.querySelector(`#attempt_${attempted}_result`).style.display = "block";
                         }
                     } else {
-                        switch (_data.purchase_result_details) {
+                        switch (result.purchase_result_details) {
                             case 9: message = Localization.str.register.owned; break;
                             case 13: message = Localization.str.register.notavail; break;
                             case 14: message = Localization.str.register.invalid; break;
