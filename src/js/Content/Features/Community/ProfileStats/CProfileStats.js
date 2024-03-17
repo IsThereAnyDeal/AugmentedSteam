@@ -14,7 +14,7 @@ export class CProfileStats extends CCommunityBase {
         }
 
         super(ContextType.PROFILE_STATS, [
-            // FAchievementSort,
+            FAchievementSort,
             FShowHiddenAchievements,
         ]);
     }
