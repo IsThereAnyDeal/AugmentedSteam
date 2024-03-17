@@ -1,5 +1,5 @@
-import {HTML, Localization} from "../../../../modulesCore";
-import {Feature} from "../../../modulesContent";
+import {GameId, HTML, Language, Localization} from "../../../../modulesCore";
+import {Feature, RequestData, User} from "../../../modulesContent";
 
 export default class FShowHiddenAchievements extends Feature {
 
@@ -11,6 +11,11 @@ export default class FShowHiddenAchievements extends Feature {
 
     apply() {
 
+        const appid = GameId.getAppidImgSrc(
+            document.querySelector(".gameLogo img")?.getAttribute("src")
+        );
+        if (!appid) { return; }
+
         const parent = this._node.parentNode;
 
         HTML.afterEnd(parent.querySelector(".achieveTxt"),
@@ -20,20 +25,19 @@ export default class FShowHiddenAchievements extends Feature {
 
         const btn = document.getElementById("as_ach_showall");
         btn.addEventListener("click", async() => {
-            if (btn.classList.contains("btn_disabled"))
-                return;
+            if (btn.classList.contains("btn_disabled")) { return; }
 
-            let visibleAchievements = [...document.querySelectorAll(".achieveTxt")].map(x => {
+            const visibleAchievements = [...document.querySelectorAll(".achieveTxt")].map(x => {
                 return {
-                    name: x.querySelector("h3").innerHTML,
-                    desc: x.querySelector("h5").innerHTML,
-                }
+                    name: x.querySelector("h3").textContent,
+                    desc: x.querySelector("h5").textContent,
+                };
             });
 
-            let achievements = await this.context.getAchievementData();
-            achievements = Object.values({...achievements.response.achievements}).filter(val =>
-                val.hidden && !visibleAchievements.some(x =>
-                    x.name === val.localized_name && x.desc === val.localized_desc
+            let achievements = await this._getAchievements(appid);
+            achievements = Object.values({...achievements.response.achievements}).filter(
+                val => val.hidden && !visibleAchievements.some(
+                    x => x.name === val.localized_name && x.desc === val.localized_desc
                 )
             );
 
@@ -41,7 +45,7 @@ export default class FShowHiddenAchievements extends Feature {
                 HTML.afterEnd(parent,
                     `<div class="achieveRow">
                         <div class="achieveImgHolder">
-                            <img src="//cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/${this.context.appid}/${ach.icon}">
+                            <img src="//cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/${appid}/${ach.icon}">
                         </div>
                         <div class="achieveTxtHolder">
                             <div class="achieveTxt">
@@ -54,5 +58,20 @@ export default class FShowHiddenAchievements extends Feature {
 
             btn.classList.add("btn_disabled");
         });
+    }
+
+    async _getAchievements(appid) {
+
+        const params = new URLSearchParams();
+        params.set("format", "json");
+        params.set("access_token", await User.accessToken);
+        params.set("appid", appid);
+        params.set("language", Language.getCurrentSteamLanguage());
+        params.set("x_requested_with", "AugmentedSteam");
+
+        return RequestData.getJson(
+            `https://api.steampowered.com/IPlayerService/GetGameAchievements/v1/?${params.toString()}`,
+            {"credentials": "omit"}
+        );
     }
 }

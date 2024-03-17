@@ -1,5 +1,4 @@
-import {GameId, HTMLParser, Language} from "../../../../modulesCore";
-import {ContextType, RequestData, User} from "../../../modulesContent";
+import {ContextType} from "../../../modulesContent";
 import {CCommunityBase} from "../CCommunityBase";
 import FAchievementSort from "./FAchievementSort";
 import FShowHiddenAchievements from "./FShowHiddenAchievements";
@@ -18,25 +17,5 @@ export class CProfileStats extends CCommunityBase {
             FAchievementSort,
             FShowHiddenAchievements,
         ]);
-
-        this.appid = GameId.getAppidImgSrc(
-            document.querySelector(".gameLogo img")?.getAttribute("src")
-        );
-    }
-
-    async getAchievementData() {
-        if (this._data) { return this._data; }
-
-        const params = new URLSearchParams();
-        params.set("format", "json");
-        params.set("access_token", await User.accessToken);
-        params.set("appid", this.appid);
-        params.set("language", Language.getCurrentSteamLanguage());
-        params.set("x_requested_with", "AugmentedSteam");
-
-        return RequestData.getJson(
-            `https://api.steampowered.com/IPlayerService/GetGameAchievements/v1/?${params.toString()}`,
-            {"credentials": "omit"}
-        );
     }
 }
