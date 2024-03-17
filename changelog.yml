@@ -10,6 +10,8 @@
   - fix shopping cart history link not showing up
   - remove deprecated features
   - redo how players stats show up
+  - fix some games not being highlighted properly (#1847)
+  - fix achievements sorting (partially, only for some locales)
 
 3.0.0: |
   Maintenance release to make sure Augmented Steam plays well with the updated ITAD and backing server.
