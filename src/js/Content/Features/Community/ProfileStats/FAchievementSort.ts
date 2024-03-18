@@ -1,4 +1,4 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {HTML, Language, Localization} from "../../../../modulesCore";
 import {Feature, RequestData, Sortbox} from "../../../modulesContent";
 import type {CProfileStats} from "./CProfileStats";
 import {DateTime} from "luxon";
@@ -6,7 +6,8 @@ import {DateTime} from "luxon";
 export default class FAchievementSort extends Feature<CProfileStats> {
 
     private bookmark: Element|null = null;
-    private unlockedAchievements: Element[] = [];
+    private defaultSort: Element[] = [];
+    private unlockedMap: Map<Element, number> = new Map();
     private achievementsFetched: boolean = false;
 
     override checkPrerequisites(): boolean {
@@ -17,10 +18,8 @@ export default class FAchievementSort extends Feature<CProfileStats> {
 
     override apply(): void {
 
-        this.unlockedAchievements = Array.from(document.querySelectorAll(".achieveRow"))
-            .filter(el => !!el.querySelector(".achieveUnlockTime"));
-
-        this.unlockedAchievements.forEach((ach, i) => { ach.dataset.esSortdefault = `${i}`; });
+        this.defaultSort = Array.from(document.querySelectorAll(".achieveRow"))
+            .filter(el => el.querySelector(".achieveUnlockTime") !== null);
 
         // Insert an empty div before the first unlocked achievement as an anchor for sorted nodes
         this.bookmark = document.createElement("div");
@@ -39,17 +38,14 @@ export default class FAchievementSort extends Feature<CProfileStats> {
 
     private async _sortRows(sortBy: "default"|"time", reversed: boolean) {
 
-        const property = `esSort${sortBy}`;
-
         if (sortBy === "time" && !this.achievementsFetched) {
 
             this.achievementsFetched = true;
 
-            const url = new URL(window.location.origin + window.location.pathname);
-            url.searchParams.set("l", "english");
+            const dom = Language.getCurrentSteamLanguage() === "english"
+                ? document
+                : await this._fetchAchievementsPage();
 
-            const data = await RequestData.getHttp(url.toString());
-            const dom = HTML.toDom(data);
             const nodes = dom.querySelectorAll(".achieveRow");
 
             for (let i = 0; i < nodes.length; i++) {
@@ -63,33 +59,31 @@ export default class FAchievementSort extends Feature<CProfileStats> {
                     {"locale": "en-US"}
                 );
 
-                document.querySelector(`.achieveRow[data-es-sortdefault="${i}"]`)!
-                    .dataset[property] = `${unlockedTime.toUnixInteger()}`;
+                this.unlockedMap.set(this.defaultSort[i], unlockedTime.toUnixInteger());
             }
         }
 
-        this.unlockedAchievements.sort(this._getSortFunc(sortBy, property));
+        let sortedNodes: Element[] = [];
+
+        if (sortBy === "default") {
+            sortedNodes = [...this.defaultSort];
+        } else if (sortBy === "time") {
+            sortedNodes = [...this.unlockedMap.keys()]
+                .sort((a, b) => (this.unlockedMap.get(a) ?? 0) - (this.unlockedMap.get(b) ?? 0));
+        }
 
         if (reversed) {
-            this.unlockedAchievements.reverse();
+            sortedNodes.reverse();
         }
 
-        this.unlockedAchievements.forEach(ach => this.bookmark.before(ach));
+        sortedNodes.forEach(node => this.bookmark.before(node));
     }
 
-    private _getSortFunc(sortBy: "default"|"time", property) {
-        switch (sortBy) {
-            case "default":
-                return (a, b) => Number(a.dataset[property] ?? 0) - Number(b.dataset[property] ?? 0);
-            case "time":
-                return (a, b) => Number(b.dataset[property] ?? 0) - Number(a.dataset[property] ?? 0);
-            default:
-                this.logError(
-                    new Error("Invalid sorting criteria"),
-                    "Can't sort achievements by criteria '%s'",
-                    sortBy,
-                );
-                return () => 0;
-        }
+    private async _fetchAchievementsPage(): Promise<DocumentFragment> {
+        const url = new URL(window.location.origin + window.location.pathname);
+        url.searchParams.set("l", "english");
+
+        const data = await RequestData.getHttp(url.toString());
+        return HTML.toDom(data);
     }
 }
