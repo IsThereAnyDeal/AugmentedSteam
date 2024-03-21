@@ -156,12 +156,6 @@
         "main": "Hovedhistorie",
         "no_data": "Ingen data fundet"
     },
-    "spy": {
-        "player_data": "Spillerdata",
-        "owners": "Ejere",
-        "average_playtime": "Gennemsnitlig spilletid",
-        "average_playtime_2weeks": "Gennemsnitlig spilletid i de sidste to uger"
-    },
     "options": {
         "wsgf": "Vis WSGF (Widescreen) info ",
         "version_show": "Vis ændringsloggen når \"Augmented Steam\" opdaterer",
@@ -205,8 +199,6 @@
         "regional_hideworld": "Skjul globe indikator",
         "show_astatslink": "Vis AStats link på app sider",
         "guest": "Elementer, du har et gæstepas til",
-        "show_steamchart_info": "Vis SteamCharts.com info",
-        "show_steamspy_info": "Vis oplysninger om steamspy.com",
         "lowestprice_onwishlist": "Vis på ønskeliste",
         "steamrepapi": "Vis SteamRep status på profilsider",
         "lowestprice": "Vis",
@@ -275,25 +267,6 @@
     "twitch": {
         "now_streaming": "__username__ live streamer på Twitch",
         "viewers": "Seere"
-    },
-    "survey": {
-        "performance_survey": "Præstationsundersøgelse",
-        "users": "__users__ brugere har gennemført præstationsundersøgelsen for dette spil.",
-        "framerate": "Framerate",
-        "framerate_response": "svarede at frameraten var",
-        "framerate_30": "fixed ved 30fps eller lavere",
-        "framerate_fi": "fixed ved højere end 30 fps",
-        "framerate_va": "variabel, afhængigt af hardware",
-        "resolution": "Opløsning",
-        "resolution_support": "Dette spil ser ud til at støtte",
-        "resolution_less": "mindre end __pixels__ opløsning",
-        "resolution_up": "op til __pixels__ opløsning",
-        "graphics_settings": "Grafik indstillinger",
-        "satisfaction": "Ydeevne tilfredshed af GPU",
-        "gs_y": "Har indbygget grafisk muligheder eller en grafik menu",
-        "gs_n": "Har ikke indbygget grafik indstillinger eller en grafik menu",
-        "nobody": "Ingen har taget en performance-undersøgelse for dette spil endnu.",
-        "take": "Tag undersøgelsen"
     },
     "dlc_select": {
         "wishlisted_dlc": "Vælg ønskelistede DLC",

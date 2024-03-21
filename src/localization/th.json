@@ -233,15 +233,6 @@
         "main": "เนื้อเรื่องหลัก",
         "no_data": "ไม่พบข้อมูล"
     },
-    "spy": {
-        "player_data": "ข้อมูลผู้เล่น",
-        "owners": "ผู้เป็นเจ้าของ",
-        "average_playtime": "เวลาการเล่นโดยเฉลี่ย",
-        "average_playtime_2weeks": "เวลาการเล่นโดยเฉลี่ยในสองสัปดาห์ที่ผ่านมา",
-        "playtime_unit_day": "__days__ วัน",
-        "playtime_unit_hour": "__hours__ ชั่วโมง",
-        "playtime_unit_minute": "__minutes__ นาที"
-    },
     "options": {
         "community_default_tab": "แท็บหน้าหลักชุมชนเริ่มต้น",
         "videos": "วิดีโอ",
@@ -314,8 +305,6 @@
         "guest": "รายการที่คุณมีบัตรทดลองเล่น",
         "collection": "ผลิตภัณฑ์ในชุดสะสม ITAD ของคุณ",
         "waitlist": "ผลิตภัณฑ์ในสิ่งที่อยากได้ ITAD ของคุณ",
-        "show_steamchart_info": "แสดงข้อมูล SteamCharts.com",
-        "show_steamspy_info": "แสดงข้อมูล steamspy.com",
         "showallstats": "แสดงสถิติเวลาเล่นบนหน้า \"เกมทั้งหมด\"",
         "lowestprice_onwishlist": "แสดงบนสิ่งที่อยากได้",
         "steamrepapi": "แสดงสถานะ SteamRep บนหน้าโปรไฟล์",
@@ -424,8 +413,6 @@
         "friend_activity": "ฟีดกิจกรรมของเพื่อน",
         "confirmdeletecomment": "แสดงการยืนยันเมื่อกำลังลบความเห็น",
         "showdeckcompat": "แสดงระดับความเข้ากันได้ของ Steam Deck ในรายการนำเสนอ (และเรียกข้อมูลเมื่อไม่มีข้อมูลแสดง)",
-        "show_survey_info": "แสดงข้อมูลแบบสำรวจประสิทธิภาพ",
-        "addtocart_no_redirect": "ป้องกันการเปลี่ยนเส้นทางเมื่อกำลังเพิ่มรายการในรถเข็นของคุณ",
         "about_desc": "Augmented Steam เป็นเวอร์ชันแยกของส่วนเสริม Enhanced Steam",
         "about_desc_links": "เยี่ยมชม__website__ของส่วนเสริมหรือ __discord__ ของเราสำหรับข้อมูลเพิ่มเติม",
         "footer_fork": "เวอร์ชันแยกสร้างโดย IsThereAnyDeal",
@@ -440,25 +427,6 @@
     "twitch": {
         "now_streaming": "__username__ กำลังสตรีมสดบน Twitch",
         "viewers": "ผู้ชม"
-    },
-    "survey": {
-        "performance_survey": "แบบสำรวจประสิทธิภาพ",
-        "users": "__users__ ผู้ใช้ได้ทำแบบสำรวจประสิทธิภาพเสร็จสมบูรณ์สำหรับเกมนี้แล้ว",
-        "framerate": "อัตราเฟรม",
-        "framerate_response": "อัตราเฟรมนั้นตอบสนองที่เท่าไร",
-        "framerate_30": "กำหนดไว้ที่ 30fps หรือต่ำกว่า",
-        "framerate_fi": "กำหนดไว้ที่สูงกว่า 30fps",
-        "framerate_va": "มีหลายปัจจัย ขึ้นอยู่กับฮาร์ดแวร์",
-        "resolution": "ความละเอียด",
-        "resolution_support": "เกมนี้แสดงให้เห็นว่ารองรับ",
-        "resolution_less": "ความละเอียดน้อยกว่า __pixels__",
-        "resolution_up": "ความละเอียดได้ถึง __pixels__",
-        "graphics_settings": "การตั้งค่ากราฟิก",
-        "satisfaction": "ความพึงพอใจในประสิทธิภาพตาม GPU",
-        "gs_y": "มีตัวเลือกกราฟิกอยู่ภายในหรือมีเมนูกราฟิก",
-        "gs_n": "ไม่มีตัวเลือกกราฟิกอยู่ภายในหรือไม่มีเมนูกราฟิก",
-        "nobody": "ยังไม่มีใครทำแบบสำรวจด้านประสิทธิภาพสำหรับเกมนี้",
-        "take": "ทำแบบสำรวจ"
     },
     "dlc_select": {
         "wishlisted_dlc": "เลือกเนื้อหาดาวน์โหลดที่อยู่ในสิ่งที่อยากได้",
@@ -631,13 +599,6 @@
     "hide_comments": "ซ่อนความเห็น",
     "fav_emoticons_no_access": "คุณไม่มีสิทธิ์เข้าถึงอิโมติคอนนี้",
     "delete_comment_prompt": "คุณแน่ใจหรือไม่ว่าคุณต้องการลบความเห็นนี้?",
-    "addtocart_dialog": {
-        "error_desc": "พบข้อผิดพลาดในขณะที่กำลังเพิ่มรายการในรถเข็นของคุณ",
-        "title": "เพิ่มลงในรถเข็นแล้ว",
-        "checkout": "ไม่ล่ะ ชำระเงินเลย",
-        "continue": "ใช่ เลือกซื้อต่อ",
-        "desc": "รายการนี้ถูกเพิ่มลงในรถเข็นแล้ว"
-    },
     "deck_compat": {
         "header": "ความเข้ากันได้กับ Steam Deck",
         "unknown": "ไม่ระบุ",

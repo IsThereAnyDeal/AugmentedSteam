@@ -234,15 +234,6 @@
         "main": "Hoofdverhaal",
         "no_data": "Geen Gegevens Gevonden"
     },
-    "spy": {
-        "player_data": "Gegevens spelers",
-        "owners": "Eigenaars",
-        "average_playtime": "Gemiddelde speelduur",
-        "average_playtime_2weeks": "Gemiddelde speelduur in de laatste twee weken",
-        "playtime_unit_day": "__days__d",
-        "playtime_unit_hour": "__hours__u",
-        "playtime_unit_minute": "__minutes__m"
-    },
     "options": {
         "community_default_tab": "Standaard community thuispagina tabblad",
         "videos": "Video's",
@@ -316,8 +307,6 @@
         "guest": "Items waar je een gast pas voor hebt",
         "collection": "Items van jouw ITAD Collectie",
         "waitlist": "Items van jouw ITAD Wachtlijst",
-        "show_steamchart_info": "Toon SteamCharts.com info",
-        "show_steamspy_info": "Toon steamspy.com info",
         "showallstats": "Toon speeltijdstatistieken op \"Alle spellen\" pagina",
         "lowestprice_onwishlist": "Toon op verlanglijst",
         "steamrepapi": "Toon SteamRep status op profiel pagina's",
@@ -426,9 +415,7 @@
         "hideannouncementcomments": "Opmerkingen onder alle groepsaankondigingen standaard verbergen",
         "friend_activity": "Vriendenactiviteitsfeed",
         "confirmdeletecomment": "Bevestiging tonen bij het verwijderen van opmerkingen",
-        "showdeckcompat": "Beoordelingen voor compatibiliteit met Steam Deck tonen in de functielijst (en ontbrekende gegevens ophalen)",
-        "show_survey_info": "Gegevens van prestatievragenlijst tonen",
-        "addtocart_no_redirect": "Doorverwijzing voorkomen bij het toevoegen van artikelen aan de winkelwagen"
+        "showdeckcompat": "Beoordelingen voor compatibiliteit met Steam Deck tonen in de functielijst (en ontbrekende gegevens ophalen)"
     },
     "ready": {
         "loading": "Augmented Steam is gegevens aan het laden...",
@@ -439,25 +426,6 @@
     "twitch": {
         "now_streaming": "__username__ is aan het livestreamen op Twitch",
         "viewers": "kijkers"
-    },
-    "survey": {
-        "performance_survey": "Prestatie enquete",
-        "users": "__users__ gebruikers hebben voltooid de prestatie enquete voor dit spel.",
-        "framerate": "Framerate",
-        "framerate_response": "antwoordde dat de framerate was",
-        "framerate_30": "vastgesteld op 30fps of lager",
-        "framerate_fi": "vastgesteld op hoger dan 30fps",
-        "framerate_va": "variabele, afhankelijk van de hardware",
-        "resolution": "Resolutie",
-        "resolution_support": "Dit spel blijkt te ondersteunen",
-        "resolution_less": "minder dan __pixels__ resolutie",
-        "resolution_up": "tot __pixels__ resolutie",
-        "graphics_settings": "Grafische instellingen",
-        "satisfaction": "Prestatie Tevredenheid van GPU",
-        "gs_y": "Heeft ingebouwde grafische opties of een grafische menu",
-        "gs_n": "Heeft geen ingebouwde grafische opties of een grafische menu",
-        "nobody": "Nog niemand heeft een prestatie enquete voor dit spel genomen.",
-        "take": "Deelnemen aan de enquête"
     },
     "dlc_select": {
         "wishlisted_dlc": "Selecteer verlanglijst DLC",
@@ -619,13 +587,6 @@
     "hide_comments": "Opmerkingen verbergen",
     "fav_emoticons_no_access": "Je hebt geen toegang tot deze emoticon",
     "delete_comment_prompt": "Weet je zeker dat je deze opmerking wilt verwijderen?",
-    "addtocart_dialog": {
-        "error_desc": "Er is een fout opgetreden bij het toevoegen van het artikel aan je winkelwagen.",
-        "title": "Toegevoegd aan winkelwagen",
-        "checkout": "Nee, afrekenen",
-        "continue": "Ja, verder winkelen",
-        "desc": "Het artikel is aan je winkelwagen toegevoegd."
-    },
     "deck_compat": {
         "header": "Compatibiliteit met Steam Deck",
         "unknown": "Onbekend",

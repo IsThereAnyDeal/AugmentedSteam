@@ -231,15 +231,6 @@
         "main": "Storia principale",
         "no_data": "Dati non trovati"
     },
-    "spy": {
-        "player_data": "Dati dei giocatori",
-        "owners": "Possessori",
-        "average_playtime": "Media tempo di gioco",
-        "average_playtime_2weeks": "Media tempo di gioco nelle ultime due settimane",
-        "playtime_unit_day": "__days__g",
-        "playtime_unit_hour": "__hours__o",
-        "playtime_unit_minute": "__minutes__m"
-    },
     "options": {
         "community_default_tab": "Scheda predefinita della pagina principale della comunità",
         "videos": "Video",
@@ -312,8 +303,6 @@
         "guest": "Giochi per i quali hai un Pass Ospite",
         "collection": "Prodotti nella tua collezione su ITAD",
         "waitlist": "Prodotti nella tua lista d'attesa di ITAD",
-        "show_steamchart_info": "Mostra informazioni da SteamCharts.com",
-        "show_steamspy_info": "Mostra informazioni di steamspy.com",
         "showallstats": "Visualizza le statistiche di gioco nella pagina \"Tutti i giochi\"",
         "lowestprice_onwishlist": "Mostra nella lista dei desideri",
         "steamrepapi": "Mostra status di SteamRep nelle pagine del profilo",
@@ -423,8 +412,6 @@
         "friend_activity": "Attività degli amici",
         "confirmdeletecomment": "Mostra conferma durante l'eliminazione dei commenti",
         "showdeckcompat": "Mostra la compatibilità con Steam Deck nell'elenco delle funzionalità (e recupera i dati quando mancano)",
-        "show_survey_info": "Mostra dati dei sondaggi sulle prestazioni",
-        "addtocart_no_redirect": "Impedisci reindirizzamento quando si aggiungono articoli al carrello",
         "about_desc": "Augmented Steam è un fork dell'estensione Enhanced Steam.",
         "about_desc_links": "Per maggiori informazioni visita il sito web dell'estensione __website__ o il nostro __discord__.",
         "footer_fork": "un fork di IsThereAnyDeal",
@@ -439,25 +426,6 @@
     "twitch": {
         "now_streaming": "__username__ è in diretta su Twitch",
         "viewers": "Spettatori"
-    },
-    "survey": {
-        "performance_survey": "Sondaggio sulle prestazioni",
-        "users": "__users__ utenti hanno compilato il sondaggio sulle prestazioni di questo gioco.",
-        "framerate": "Framerate",
-        "framerate_response": "ha dichiarato che il framerate è",
-        "framerate_30": "fissato a 30fps o meno",
-        "framerate_fi": "fissato a più di 30fps",
-        "framerate_va": "variabile, a seconda dell'hardware",
-        "resolution": "Risoluzione",
-        "resolution_support": "Il gioco sembra supportare",
-        "resolution_less": "risoluzioni inferiori a __pixels__",
-        "resolution_up": "risoluzioni fino a __pixels__",
-        "graphics_settings": "Impostazioni grafiche",
-        "satisfaction": "Soddisfazione sulle prestazioni per GPU",
-        "gs_y": "Contiene opzioni o menù dedicati alla grafica",
-        "gs_n": "Non contiene opzioni o menù dedicati alla grafica",
-        "nobody": "Nessuno ha ancora compilato il sondaggio sulle prestazioni per questo gioco.",
-        "take": "Partecipa al sondaggio"
     },
     "dlc_select": {
         "wishlisted_dlc": "Seleziona DLC in lista dei desideri",
@@ -630,13 +598,6 @@
     "hide_comments": "Nascondi commenti",
     "fav_emoticons_no_access": "Non hai accesso a questa emoticon",
     "delete_comment_prompt": "Eliminare questo commento?",
-    "addtocart_dialog": {
-        "error_desc": "Errore durante l'aggiunta dell'articolo al carrello.",
-        "title": "Aggiunto al carrello",
-        "checkout": "No, vai alla cassa",
-        "continue": "Sì, continua gli acquisti",
-        "desc": "Articolo aggiunto al carrello."
-    },
     "deck_compat": {
         "header": "Compatibilità Steam Deck",
         "unknown": "Sconosciuta",

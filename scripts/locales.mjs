@@ -98,7 +98,7 @@ async function loadLanguage(languageCode) {
 
     checkTranslations(translation);
 
-    const filepath = `${__dirname}/../../src/localization/${LANGUAGE_MAP[languageCode]}.json`;
+    const filepath = `${__dirname}/../src/localization/${LANGUAGE_MAP[languageCode]}.json`;
     await fs.writeFile(filepath, rawJSON);
 
     return filepath;

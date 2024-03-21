@@ -235,15 +235,6 @@
         "main": "Ana Hikaye",
         "no_data": "Veri bulunamadı"
     },
-    "spy": {
-        "player_data": "Oyuncu Verileri",
-        "owners": "Sahip",
-        "average_playtime": "Ortalama oynama süresi",
-        "average_playtime_2weeks": "Son iki haftada ortalama oynama süresi",
-        "playtime_unit_day": "__days__g",
-        "playtime_unit_hour": "__hours__s",
-        "playtime_unit_minute": "__minutes__d"
-    },
     "options": {
         "community_default_tab": "Varsayılan topluluk ana sayfası sekmesi",
         "videos": "Videolar",
@@ -317,8 +308,6 @@
         "guest": "Misafir girişine sahip oldukların",
         "collection": "ITAD Koleksiyonundaki Öğeler",
         "waitlist": "ITAD Bekleme Listendeki Öğeler",
-        "show_steamchart_info": "SteamCharts.com bilgisini göster",
-        "show_steamspy_info": "Steamspy.com bilgisini göster",
         "showallstats": "\"Tüm Oyunlar\" sayfasında oynama istatistiklerini göster",
         "lowestprice_onwishlist": "İstek Listesinde Göster",
         "steamrepapi": "SteamRep durumunu profil sayfalarında göster",
@@ -428,8 +417,6 @@
         "friend_activity": "Arkadaş Etkinliği Akışı",
         "confirmdeletecomment": "Yorumları silerken onayı göster",
         "showdeckcompat": "Özellikler listesinde Steam Deck uyumluluk derecelendirmelerini gösterin (ve eksik olduğunda verileri alın)",
-        "show_survey_info": "Performans Anketi verilerini göster",
-        "addtocart_no_redirect": "Sepetinize ürün eklerken yeniden yönlendirmeyi önle",
         "about_desc": "Augmented Steam, Enhanced Steam uzantısının çatalıdır.",
         "about_desc_links": "Daha fazlası için __website__ ya da __discord__ adreslerimizi ziyaret edin.",
         "footer_fork": "IsThereAnyDeal'ın bir çatalı",
@@ -444,25 +431,6 @@
     "twitch": {
         "now_streaming": "__username__ Twitch üzerinden canlı yayın yapıyor",
         "viewers": "İzleyici"
-    },
-    "survey": {
-        "performance_survey": "Performans Araştırması",
-        "users": "__users__ kullanıcı bu oyun için performans araştırmasını tamamladı.",
-        "framerate": "Kare hızı",
-        "framerate_response": "kare hızı için şöyle dedi:",
-        "framerate_30": "30fps sabit veya daha düşük",
-        "framerate_fi": "30fps'den daha yükseğe sabitlenmiş",
-        "framerate_va": "değişken, donanıma bağlı",
-        "resolution": "Çözünürlük",
-        "resolution_support": "Bu oyunun",
-        "resolution_less": "__pixels__ çözünürlüğünden daha düşük desteği var",
-        "resolution_up": "__pixels__ çözünürlüğüne kadar desteği var gibi görünüyor",
-        "graphics_settings": "Grafik Ayarları",
-        "satisfaction": "GPU'ya göre Performans Memnuniyeti",
-        "gs_y": "Yerleşik grafik seçenekleri ya da bir grafik menüsü mevcut",
-        "gs_n": "Yerleşik grafik seçenekleri veya bir grafik menüsü yok",
-        "nobody": "Hiç kimse henüz bu oyun için performans araştırmasını almamıştır.",
-        "take": "Anketimize Katılın"
     },
     "dlc_select": {
         "wishlisted_dlc": "İstek Listesindeki DLC'yi seç",
@@ -637,13 +605,6 @@
     "hide_comments": "Yorumları Gizle",
     "fav_emoticons_no_access": "Bu ifadeye erişiminiz yok",
     "delete_comment_prompt": "Bu yorumu silmek istediğinizden emin misiniz?",
-    "addtocart_dialog": {
-        "error_desc": "Ürününü sepete eklerken bir hata oluştu.",
-        "title": "Alışveriş sepetine eklendi",
-        "checkout": "Hayır, ödeme",
-        "continue": "Evet, alışverişe devam et",
-        "desc": "Ürün Alışveriş Sepetinize eklenmiştir."
-    },
     "deck_compat": {
         "header": "Steam Deck Uyumluluğu",
         "unknown": "Bilinmeyen",

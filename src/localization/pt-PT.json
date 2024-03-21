@@ -156,12 +156,6 @@
         "main": "Estória principal",
         "no_data": "Nenhum dado encontrado"
     },
-    "spy": {
-        "player_data": "Dados acerca dos jogadores",
-        "owners": "Donos",
-        "average_playtime": "Média de tempo de jogo",
-        "average_playtime_2weeks": "Tempo médio jogado nas últimas duas semanas"
-    },
     "options": {
         "wsgf": "Mostrar informação WSGF (ecrã panorâmico)",
         "version_show": "Mostrar o histórico de alterações quando o Augmented Steam atualiza",
@@ -205,8 +199,6 @@
         "regional_hideworld": "Ocultar indicador regional",
         "show_astatslink": "Mostrar link para o site AStats em páginas de aplicações",
         "guest": "Itens que tens um passe de convidado",
-        "show_steamchart_info": "Mostrar informações do SteamCharts.com",
-        "show_steamspy_info": "Mostrar informação de steamspy.com",
         "lowestprice_onwishlist": "Mostrar na Lista de Desejos",
         "steamrepapi": "Mostrar o estado da reputação na página de perfil",
         "lowestprice": "Mostrar",
@@ -275,25 +267,6 @@
     "twitch": {
         "now_streaming": "__username__ está a transmitir em directo no Twitch",
         "viewers": "Visualizadores"
-    },
-    "survey": {
-        "performance_survey": "Inquérito de Desempenho",
-        "users": "__users__ utilizadores completaram o inquérito de desempenho para este jogo.",
-        "framerate": "Rácio de fotogramas",
-        "framerate_response": "responderam que o rácio de fotogramas foi",
-        "framerate_30": "fixo a 30fps ou menos",
-        "framerate_fi": "fixo ou superior a 30fps",
-        "framerate_va": "variável, dependente do hardware",
-        "resolution": "Resolução",
-        "resolution_support": "Este jogo parece suportar",
-        "resolution_less": "resolução menor que __pixels__",
-        "resolution_up": "resolução até __pixels__",
-        "graphics_settings": "Definições Gráficas",
-        "satisfaction": "Satisfação de Desempenho por GPU",
-        "gs_y": "Tem um menu ou opções embutidas que permitem alterar os gráficos",
-        "gs_n": "Não tem um menu ou opções embutidas que permitam alterar os gráficos",
-        "nobody": "Ainda ninguém completou o inquérito de desempenho para este jogo.",
-        "take": "Faz o Inquérito"
     },
     "dlc_select": {
         "wishlisted_dlc": "Selecionar DLC na Lista de Desejos",

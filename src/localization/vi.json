@@ -222,12 +222,6 @@
         "main": "Main Story",
         "no_data": "No data found"
     },
-    "spy": {
-        "player_data": "Dữ liệu người chơi",
-        "owners": "Người sở hữu",
-        "average_playtime": "Thời gian chơi trung bình",
-        "average_playtime_2weeks": "Thời gian chơi trung bình trong hai tuần qua"
-    },
     "options": {
         "wsgf": "Hiển thị thông tin WSGF (màn hình rộng)",
         "version_show": "Show change log when Augmented Steam updates",
@@ -273,8 +267,6 @@
         "show_astatslink": "Show AStats link on app pages",
         "show_youtubereviews": "Xem các đường dẫn \"Đánh Giá YouTube\"",
         "guest": "Items you have a guest pass for",
-        "show_steamchart_info": "Show SteamCharts.com info",
-        "show_steamspy_info": "Show steamspy.com info",
         "lowestprice_onwishlist": "Hiển thị khi di chuột vào các vật phẩm danh sách ước",
         "steamrepapi": "Show SteamRep status on profile pages",
         "lowestprice": "Show",
@@ -357,25 +349,6 @@
     "twitch": {
         "now_streaming": "__username__ đang phát sóng trực tiếp trên Twitch",
         "viewers": "Người xem"
-    },
-    "survey": {
-        "performance_survey": "Khảo sát Hiệu năng",
-        "users": "__users__ người dùng đã hoàn thành khảo sát hiệu năng cho trò chơi này.",
-        "framerate": "Khung hình",
-        "framerate_response": "trả lời rằng khung hình",
-        "framerate_30": "cố định tại 30fps hoặc thấp hơn",
-        "framerate_fi": "cố định cao hơn 30fps",
-        "framerate_va": "bất biến, phụ thuộc vào phần cứng",
-        "resolution": "Độ phân giải",
-        "resolution_support": "Trò chơi này có hỗ trợ",
-        "resolution_less": "thấp hơn so với độ phân giải __pixels__",
-        "resolution_up": "tới độ phân giải __pixels__",
-        "graphics_settings": "Thiết lập Đồ họa",
-        "satisfaction": "Performance Satisfaction by GPU",
-        "gs_y": "Has built-in graphic options or a graphics menu",
-        "gs_n": "Does not have built-in graphic options or a graphics menu",
-        "nobody": "Nobody has taken a performance survey for this game yet.",
-        "take": "Take The Survey"
     },
     "dlc_select": {
         "wishlisted_dlc": "Chọn các DLC đã được thêm vào Danh sách ước",

@@ -185,12 +185,6 @@
         "main": "Hlavní příběh",
         "no_data": "Nebyla nalezena jakákoli data"
     },
-    "spy": {
-        "player_data": "Data hráče",
-        "owners": "Vlastníci",
-        "average_playtime": "Průměrná délka hraní",
-        "average_playtime_2weeks": "Průmerná délka hraní v posledních dvou týdnech"
-    },
     "options": {
         "videos": "Videa",
         "broadcasts": "Přenosy",
@@ -239,8 +233,6 @@
         "regional_hideworld": "Schovat indikátor země",
         "show_astatslink": "Ukázat odkaz na AStats na stránkách aplikací",
         "guest": "Položky, na které máte Guest Pass",
-        "show_steamchart_info": "Ukázat informace ze SteamCharts.com",
-        "show_steamspy_info": "Zobrazit steamspy.com info",
         "lowestprice_onwishlist": "Ukázat v Seznamu přání",
         "steamrepapi": "Ukázat SteamRep status na profilových stránkách",
         "lowestprice": "Ukázat",
@@ -327,25 +319,6 @@
     "twitch": {
         "now_streaming": "__username__ živě steamuje na Twitch",
         "viewers": "Diváci"
-    },
-    "survey": {
-        "performance_survey": "Průzkum",
-        "users": "__users__ uživatelů podstoupilo průzkum pro tuto hru.",
-        "framerate": "Snímková frekvence",
-        "framerate_response": "odpovědělo že snímková frekvence byla",
-        "framerate_30": "uzamčena na 30 FPS nebo méně",
-        "framerate_fi": "uzamčena na více než 30 FPS",
-        "framerate_va": "Proměnná, závislé na hardwaru",
-        "resolution": "Rozlišení",
-        "resolution_support": "Tato hra podporuje",
-        "resolution_less": "rozlišení méně než __pixels__",
-        "resolution_up": "až rozlišení __pixels__",
-        "graphics_settings": "Nastavení grafiky",
-        "satisfaction": "Poměr mezi grafickými kartami",
-        "gs_y": "Má možnost nastavení grafiky",
-        "gs_n": "Nemá možnost nastavení grafiky",
-        "nobody": "Nikdo dosud nevyplnil dotazník výkonu pro tuto hru.",
-        "take": "Vyplnit dotazník"
     },
     "dlc_select": {
         "wishlisted_dlc": "Vybrat DLC na Seznamu přání",
@@ -447,12 +420,6 @@
     "hide_comments": "Skrýt komentáře",
     "fav_emoticons_no_access": "Nemáte přístup k tomuto emotikonu",
     "delete_comment_prompt": "Jste si jisti smazáním tohoto komentáře?",
-    "addtocart_dialog": {
-        "error_desc": "Nastala chyba při přidávání položky do vašeho košíku.",
-        "title": "Přidáno do nákupního košíku",
-        "checkout": "Ne, do nákupního košíku",
-        "continue": "Ano, pokračovat v nakupování"
-    },
     "remove": "Odebrat",
     "countries": {
         "al": "Albánie",

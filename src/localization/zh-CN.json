@@ -232,15 +232,6 @@
         "main": "主线剧情",
         "no_data": "找不到数据"
     },
-    "spy": {
-        "player_data": "玩家数据",
-        "owners": "拥有者",
-        "average_playtime": "平均游戏时长",
-        "average_playtime_2weeks": "最近两周内平均游戏时长",
-        "playtime_unit_day": "__days__ 天",
-        "playtime_unit_hour": "__hours__ 小时",
-        "playtime_unit_minute": "__minutes__ 分"
-    },
     "options": {
         "community_default_tab": "默认社区中心页面",
         "videos": "视频",
@@ -314,8 +305,6 @@
         "guest": "拥有玩家通行证的物品",
         "collection": "您 ITAD 收藏库（Collection）中的物品",
         "waitlist": "您 ITAD 观察列表（Waitlist）中的物品",
-        "show_steamchart_info": "显示 SteamCharts.com 信息",
-        "show_steamspy_info": "显示 steamspy.com 信息",
         "showallstats": "在“所有游戏”页面显示时长统计",
         "lowestprice_onwishlist": "在愿望单中显示",
         "steamrepapi": "在个人资料页面显示 SteamRep 状态",
@@ -424,8 +413,6 @@
         "friend_activity": "好友动态",
         "confirmdeletecomment": "删除留言时要求确认",
         "showdeckcompat": "在功能列表中显示 Steam Deck 兼容性评分（缺少数据时更新）",
-        "show_survey_info": "显示性能调查数据",
-        "addtocart_no_redirect": "添加物品至购物车时阻止页面跳转",
         "about_desc": "Augmented Steam 是 Enhanced Steam 扩展程序的衍生版本。",
         "about_desc_links": "访问此扩展程序的__website__或 __discord__ 了解更多。",
         "footer_fork": "来自 IsThereAnyDeal 的衍生版本",
@@ -440,25 +427,6 @@
     "twitch": {
         "now_streaming": "__username__ 正在 Twitch 上直播",
         "viewers": "观看者"
-    },
-    "survey": {
-        "performance_survey": "性能调查",
-        "users": "__users__ 位用户已完成此游戏的性能调查。",
-        "framerate": "帧率",
-        "framerate_response": "用户反馈帧率",
-        "framerate_30": "固定在 30 帧或 30 帧以下",
-        "framerate_fi": "固定在 30 帧以上",
-        "framerate_va": "根据硬件变化",
-        "resolution": "分辨率",
-        "resolution_support": "这个游戏似乎支持",
-        "resolution_less": "低于 __pixels__ 分辨率",
-        "resolution_up": "最高 __pixels__ 分辨率",
-        "graphics_settings": "图像设置",
-        "satisfaction": "GPU 性能表现",
-        "gs_y": "具有内置图像选项或图像菜单",
-        "gs_n": "没有内置图像选项或图像菜单",
-        "nobody": "尚未有人参与此游戏的性能调查。",
-        "take": "参与调查"
     },
     "dlc_select": {
         "wishlisted_dlc": "选择愿望单中的 DLC",
@@ -631,13 +599,6 @@
     "hide_comments": "隐藏留言",
     "fav_emoticons_no_access": "您没有使用此表情的权限",
     "delete_comment_prompt": "您确定要删除这条留言吗？",
-    "addtocart_dialog": {
-        "error_desc": "添加物品至购物车时发生了错误。",
-        "title": "添加至购物车",
-        "checkout": "不，现在结账",
-        "continue": "是，继续购物",
-        "desc": "此物品已添加到您的购物车。"
-    },
     "deck_compat": {
         "header": "Steam Deck 兼容性",
         "unknown": "未知",

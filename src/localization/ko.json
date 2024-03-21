@@ -184,12 +184,6 @@
         "main": "메인",
         "no_data": "데이터를 찾을 수 없습니다"
     },
-    "spy": {
-        "player_data": "플레이어 데이터",
-        "owners": "소유자",
-        "average_playtime": "평균 플레이시간",
-        "average_playtime_2weeks": "지난 2주간 평균 플레이타임"
-    },
     "options": {
         "wsgf": "WSGF (와이드 스크린) 정보를 표시",
         "version_show": "Augmented Steam이 업데이트 될 때 변경 내용 보이기",
@@ -233,8 +227,6 @@
         "regional_hideworld": "세계 표시 숨기기",
         "show_astatslink": "AStats 링크 보기",
         "guest": "손님",
-        "show_steamchart_info": "SteamCharts.com의 정보 보기",
-        "show_steamspy_info": "steamspay.com 정보 보이기",
         "lowestprice_onwishlist": "찜 목록 보기",
         "steamrepapi": "프로필 페이지에 SteamREP 정보를 표시합니다.",
         "lowestprice": "표시",
@@ -311,25 +303,6 @@
     "twitch": {
         "now_streaming": "__username__는 트위치에서 라이브 스트리밍 중",
         "viewers": "시청자"
-    },
-    "survey": {
-        "performance_survey": "성능 조사",
-        "users": "__users__ 사용자는이 게임에 대한 성능 조사를 완료 했습니다.",
-        "framerate": "프레임 속도",
-        "framerate_response": "는 프레임율이였다 응답",
-        "framerate_30": "30프레임에서 고정 또는 낮았다",
-        "framerate_fi": "30프레임 보다 높은 상태에서 고정",
-        "framerate_va": "하드웨어에 따라 다양",
-        "resolution": "해상도",
-        "resolution_support": "게임 지원 해상도",
-        "resolution_less": "__pixels__보다 작은 해상도",
-        "resolution_up": "__pixels__ 해상도 까지",
-        "graphics_settings": "그래픽 설정",
-        "satisfaction": "GPU의 성능 우세",
-        "gs_y": "내장 그래픽 옵션 또는 그래픽 메뉴",
-        "gs_n": "내장 그래픽 옵션 또는 그래픽 메뉴 없음",
-        "nobody": "아직 아무도 이 게임에 대한 성능조사를 하지 않았다.",
-        "take": "설문 조사 참여"
     },
     "dlc_select": {
         "wishlisted_dlc": "찜한 상품 목록의 DLC를 선택",

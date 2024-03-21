@@ -235,15 +235,6 @@
         "main": "Päätarina",
         "no_data": "Tietoja ei löytynyt"
     },
-    "spy": {
-        "player_data": "Pelaajien tiedot",
-        "owners": "Omistajia",
-        "average_playtime": "Keskimääräinen peliaika",
-        "average_playtime_2weeks": "Keskimääräinen peliaika kahden viime viikon aikana",
-        "playtime_unit_day": "__days__pv",
-        "playtime_unit_hour": "__hours__t",
-        "playtime_unit_minute": "__minutes__min"
-    },
     "options": {
         "community_default_tab": "Vakio yhteisön kotisivu",
         "videos": "Videot",
@@ -317,8 +308,6 @@
         "guest": "Tuotteet joihin sinulla on vierailulupa",
         "collection": "ITAD kokoelmassasi",
         "waitlist": "ITAD odotuslista",
-        "show_steamchart_info": "Näytä SteamCharts.com tilastot",
-        "show_steamspy_info": "Näytä steamspy.com tiedot",
         "showallstats": "Näytä peliaika tieto \"Kaikki pelis\" sivulla",
         "lowestprice_onwishlist": "Näytä toivelistalla",
         "steamrepapi": "Näytä SteamRep tila profiileissa",
@@ -428,8 +417,6 @@
         "friend_activity": "Kavereiden aktiivisuus syöte",
         "confirmdeletecomment": "Näytä vahvistus poistaessa kommentteja",
         "showdeckcompat": "Näytä Steam Deck yhteensopivuus arvio tuote tiedoissa (hae data jos puuttuu)",
-        "show_survey_info": "Näytä Suorituskyky Tutkimukset tietoa",
-        "addtocart_no_redirect": "Estä uudelleenohjaus listessä tuotteita Ostoskärryyn",
         "about_desc": "Augmented Steam on Enhanced Steam -laajennuksen forkki.",
         "about_desc_links": "Lisätietoa saat laajennuksen verkkosivuilta tai discord -serveriltä.",
         "footer_fork": "IsThereAnyDealin forkki",
@@ -444,25 +431,6 @@
     "twitch": {
         "now_streaming": "__username__ on lähettämässä suoraa lähetystä Twitchissä",
         "viewers": "Katsojat"
-    },
-    "survey": {
-        "performance_survey": "Tehokkuustesti",
-        "users": "__users__ käyttäjää on suorittanut tehokkuustestin tälle pelille.",
-        "framerate": "Ruudunpäivitys",
-        "framerate_response": "vastasi että ruudunpäivitys oli",
-        "framerate_30": "rajoitettu 30fps tai vähemmän",
-        "framerate_fi": "pysyvästi yli 30fps\n",
-        "framerate_va": "vakaa, laitteistosta riippuvainen",
-        "resolution": "Resoluutio",
-        "resolution_support": "Tämä peli näyttää tukevan",
-        "resolution_less": "alle __pixels__:n resoluutio",
-        "resolution_up": "korkeimmillaan __pixels__ resoluutiota",
-        "graphics_settings": "Grafiikka-asetukset",
-        "satisfaction": "GPU performanssin tyydyttävyys",
-        "gs_y": "Sisältää sisäänrakennetut grafiikkavalinnat tai grafiikkamenun",
-        "gs_n": "Ei ole sisäänrakennettuja grafiikka-asetuksia tai grafiikkamenua",
-        "nobody": "Kukaan ei ole vielä täyttäny performanssikyselyä tälle pelille.",
-        "take": "Vastaa kyselyyn"
     },
     "dlc_select": {
         "wishlisted_dlc": "Valitse toivelistalla olevat lisäsisällöt",
@@ -636,13 +604,6 @@
     "hide_comments": "Piilota kommentit",
     "fav_emoticons_no_access": "Sinulla ei ole oikeuksia käyttää tätä emojia",
     "delete_comment_prompt": "Haluatko varmasti poistaa tämän kommentin?",
-    "addtocart_dialog": {
-        "error_desc": "Ongelma lisätessä tuotetta Ostoskärryysi.",
-        "title": "Lisätty Ostoskärryysi",
-        "checkout": "Ei, maksamaan",
-        "continue": "Kyllä, jatka ostoksia",
-        "desc": "Tuote lisättiin ostoskärryysi."
-    },
     "deck_compat": {
         "header": "Steam Deck yhteensopivuus",
         "unknown": "Tuntematon",

@@ -235,15 +235,6 @@
         "main": "Główny wątek",
         "no_data": "Nie znaleziono danych"
     },
-    "spy": {
-        "player_data": "Informacje o graczach",
-        "owners": "Liczba posiadaczy",
-        "average_playtime": "Przeciętny czas gry",
-        "average_playtime_2weeks": "Przeciętny czas gry w ciągu ostatnich 2 tygodni",
-        "playtime_unit_day": "__days__d",
-        "playtime_unit_hour": "__hours__h",
-        "playtime_unit_minute": "__minutes__m"
-    },
     "options": {
         "community_default_tab": "Domyślna zakładka na stronie głównej Społeczności Steam:",
         "videos": "Filmy",
@@ -317,8 +308,6 @@
         "guest": "Tytuły przechowywane w formie klucza tymczasowego",
         "collection": "Tytuły w twojej kolekcji ITAD",
         "waitlist": "Tytuły na twojej liście oczekujących ITAD",
-        "show_steamchart_info": "Wyświetlaj informacje z SteamCharts.com",
-        "show_steamspy_info": "Wyświetlaj informacje z SteamSpy.com",
         "showallstats": "Wyświetlaj podsumowanie na stronie „Wszystkie gry”",
         "lowestprice_onwishlist": "Wyświetlaj na listach życzeń",
         "steamrepapi": "Wyświetlaj status SteamRep na stronach profili",
@@ -439,25 +428,6 @@
     "twitch": {
         "now_streaming": "__username__ właśnie streamuje na Twitchu",
         "viewers": "widzów"
-    },
-    "survey": {
-        "performance_survey": "Badanie wydajności",
-        "users": "__users__ użytkowników ukończyło badanie wydajności tej gry.",
-        "framerate": "Liczba klatek na sekundę",
-        "framerate_response": "ankietowanych odpowiedziało, że liczba klatek na sekundę była",
-        "framerate_30": "stała (30 kl./s lub mniej)",
-        "framerate_fi": "stała (więcej niż 30 kl./s)",
-        "framerate_va": "zmienna, zależna od sprzętu",
-        "resolution": "Rozdzielczość",
-        "resolution_support": "Ta gra wspiera",
-        "resolution_less": "rozdzielczości poniżej __pixels__",
-        "resolution_up": "rozdzielczości do __pixels__",
-        "graphics_settings": "Opcje graficzne",
-        "satisfaction": "Satysfakcja z wydajności GPU (wg producenta)",
-        "gs_y": "Posiada wbudowane menu opcji graficznych",
-        "gs_n": "Nie posiada wbudowanego menu opcji graficznych",
-        "nobody": "Jeszcze nikt nie podjął się badania wydajności tej gry.",
-        "take": "Weź udział w badaniu"
     },
     "dlc_select": {
         "wishlisted_dlc": "Zaznacz DLC z listy życzeń",
@@ -626,13 +596,6 @@
     "hide_comments": "Ukryj komentarze",
     "fav_emoticons_no_access": "Nie masz dostępu do tej emotikony",
     "delete_comment_prompt": "Czy na pewno chcesz usunąć ten komentarz?",
-    "addtocart_dialog": {
-        "error_desc": "Wystąpił błąd podczas dodawania produktu do koszyka.",
-        "title": "Dodano do koszyka",
-        "checkout": "Nie, przejdź do koszyka",
-        "continue": "Tak, kontynuuj zakupy",
-        "desc": "Produkt został dodany do koszyka."
-    },
     "deck_compat": {
         "header": "Zgodność ze Steam Deckiem",
         "unknown": "Nieznana",

@@ -235,15 +235,6 @@
         "main": "主線故事",
         "no_data": "找不到資料"
     },
-    "spy": {
-        "player_data": "玩家資料",
-        "owners": "擁有者數量",
-        "average_playtime": "平均遊戲時數",
-        "average_playtime_2weeks": "最近兩週的平均遊戲時數",
-        "playtime_unit_day": "__days__d",
-        "playtime_unit_hour": "__hours__h",
-        "playtime_unit_minute": "__minutes__m"
-    },
     "options": {
         "community_default_tab": "預設社群中心分頁",
         "videos": "影片",
@@ -317,8 +308,6 @@
         "guest": "擁有招待券的項目",
         "collection": "在你的 ITAD Collection 中的項目",
         "waitlist": "在你的 ITAD Waitlist 中的項目",
-        "show_steamchart_info": "顯示 SteamCharts.com 資訊",
-        "show_steamspy_info": "顯示 steamspy.com 資訊",
         "showallstats": "在「所有遊戲」頁面中顯示遊玩時數統計資料",
         "lowestprice_onwishlist": "在滑鼠游標移至願望清單項目上時顯示",
         "steamrepapi": "顯示 SteamRep 狀態",
@@ -428,8 +417,6 @@
         "friend_activity": "好友動態",
         "confirmdeletecomment": "刪除留言前顯示確認訊息",
         "showdeckcompat": "顯示 Steam Deck 相容性分級於功能清單中（且在無此資料時向 Steam 發送額外的請求）",
-        "show_survey_info": "顯示效能調查資料",
-        "addtocart_no_redirect": "將項目加入購物車時不自動跳轉到購物車頁面",
         "about_desc": "Augmented Steam 是 Enhanced Steam 的分支版本。",
         "about_desc_links": "歡迎造訪我們的__website__或 __discord__ 了解更多。",
         "footer_fork": "IsThereAnyDeal 開發的分支版本",
@@ -444,25 +431,6 @@
     "twitch": {
         "now_streaming": "__username__ 正在 Twitch 上直播",
         "viewers": "觀眾"
-    },
-    "survey": {
-        "performance_survey": "效能調查",
-        "users": "__users__ 位使用者已完成這款遊戲的效能調查。",
-        "framerate": "幀率",
-        "framerate_response": "使用者反映幀率",
-        "framerate_30": "固定在每秒 30 幀以下",
-        "framerate_fi": "固定在每秒 30 幀以上",
-        "framerate_va": "取決於硬體",
-        "resolution": "解析度",
-        "resolution_support": "這款遊戲似乎支援",
-        "resolution_less": "低於 __pixels__ 的解析度",
-        "resolution_up": "最高 __pixels__ 的解析度",
-        "graphics_settings": "圖形設定",
-        "satisfaction": "GPU 效能表現",
-        "gs_y": "有內建圖形設定或圖形選單",
-        "gs_n": "無內建圖形設定或圖形選單",
-        "nobody": "尚未有人參與這款遊戲的效能調查。",
-        "take": "參與調查"
     },
     "dlc_select": {
         "wishlisted_dlc": "選取願望清單中的 DLC",
@@ -637,13 +605,6 @@
     "hide_comments": "隱藏留言",
     "fav_emoticons_no_access": "你無法存取這個表情符號",
     "delete_comment_prompt": "你確定要刪除此留言？",
-    "addtocart_dialog": {
-        "error_desc": "將項目加入購物車時發生錯誤。",
-        "title": "已加入購物車",
-        "checkout": "否，前往結帳",
-        "continue": "是，繼續購物",
-        "desc": "該項目已加入你的購物車。"
-    },
     "deck_compat": {
         "header": "Steam Deck 相容性分級",
         "unknown": "不明",

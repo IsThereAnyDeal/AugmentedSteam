@@ -229,12 +229,6 @@
         "main": "主なストーリー",
         "no_data": "データが見つかりません"
     },
-    "spy": {
-        "player_data": "プレイヤー データ",
-        "owners": "所有者",
-        "average_playtime": "平均プレイ時間",
-        "average_playtime_2weeks": "過去 2 週間の平均プレイ時間"
-    },
     "options": {
         "community_default_tab": "デフォルトのコミュニティホームページタブ",
         "videos": "動画",
@@ -307,8 +301,6 @@
         "guest": "ゲストパスがあるアイテム",
         "collection": "ITADコレクション内のアイテム",
         "waitlist": "ITADウェイトリスト内のアイテム",
-        "show_steamchart_info": "SteamCharts.comの情報を表示",
-        "show_steamspy_info": "Steamspy.comの情報を表示",
         "showallstats": "「すべてのゲーム」ページでプレイ時間データを表示する",
         "lowestprice_onwishlist": "ウィッシュリストで表示",
         "steamrepapi": "プロフィールページにSteamRepステータスを表示する",
@@ -411,25 +403,6 @@
     "twitch": {
         "now_streaming": "__username__ はTwitchで配信中です",
         "viewers": "視聴者"
-    },
-    "survey": {
-        "performance_survey": "パフォーマンス調査",
-        "users": "__users__人のユーザーがこのゲームのパフォーマンスを調査しました。",
-        "framerate": "フレームレート",
-        "framerate_response": "のユーザーがフレームレートについて次のように報告しています：",
-        "framerate_30": "固定（30fps以下）",
-        "framerate_fi": "固定（30fpsより高い）",
-        "framerate_va": "可変（ハードウェアに依存）",
-        "resolution": "解像度",
-        "resolution_support": "次の解像度に対応しています：",
-        "resolution_less": "__pixels__ 未満の解像度",
-        "resolution_up": "最大 __pixels__ の解像度",
-        "graphics_settings": "グラフィック設定",
-        "satisfaction": "各GPUのパフォーマンス満足度",
-        "gs_y": "グラフィック設定やグラフィックメニューがあります",
-        "gs_n": "グラフィック設定やグラフィックメニューがありません",
-        "nobody": "まだこのゲームはパフォーマンス調査されていません。",
-        "take": "調査に協力する"
     },
     "dlc_select": {
         "wishlisted_dlc": "ウィッシュリストに入ったDLCを選択",
