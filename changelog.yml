@@ -1,17 +1,15 @@
 3.1.0: |
-  **in progress
   - fix formatting of price overview on app pages
-  - fix profile edit features not showing up
-  - fix error when toggling checkboxes for free DLCs
-  - remove some deprecated features
   - fix bundle header showing even when there are no bundles listed
   - fix historical low showing incorrect shop
   - return info about how many times game was bundled
-  - fix shopping cart history link not showing up
-  - remove deprecated features
-  - redo how players stats show up
   - fix some games not being highlighted properly (#1847)
-  - fix achievements sorting (partially, only for some locales)
+  - fix error when toggling checkboxes for free DLCs
+  - redo how players stats show up
+  - fix shopping cart history link not showing up
+  - fix profile background and style features not showing up
+  - fix achievements sorting
+  - remove deprecated features
 
 3.0.0: |
   Maintenance release to make sure Augmented Steam plays well with the updated ITAD and backing server.
