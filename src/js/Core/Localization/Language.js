@@ -1,3 +1,4 @@
+import ApplicationConfig from "../../Content/Modules/ApplicationConfig";
 import {CookieStorage} from "../Storage/CookieStorage";
 import {Environment} from "../Environment";
 
@@ -6,6 +7,13 @@ class Language {
     static getCurrentSteamLanguage() {
         if (this._currentSteamLanguage !== null) {
             return this._currentSteamLanguage;
+        }
+
+        try {
+            this._currentSteamLanguage = ApplicationConfig.language();
+            return this._currentSteamLanguage;
+        } catch(e) {
+            // no handling
         }
 
         for (const script of document.querySelectorAll("script[src]")) {
