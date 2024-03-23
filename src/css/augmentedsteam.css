@@ -976,25 +976,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 
 /***************************************
  * App pages
- * FAchievementBar
- **************************************/
-.es-achieveBar-store {
-  float: right;
-}
-/* Taken from: https://community.cloudflare.steamstatic.com/public/css/skin_1/playerstats_generic.css */
-.es-achieveBar-store .achieveBar {
-  background: #3a3a3a;
-  padding: 1px;
-  border: 1px solid #aeaeae;
-  width: 176.9px;
-}
-.es-achieveBar-store .achieveBarProgress {
-  height: 8px;
-  background-color: #aeaeae;
-}
-
-/***************************************
- * App pages
  * FReviewToggleButton
  **************************************/
 .es_review_section {
