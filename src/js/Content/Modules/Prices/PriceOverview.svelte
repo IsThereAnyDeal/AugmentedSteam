@@ -1,8 +1,7 @@
 <svelte:options accessors immutable />
 
 <script lang="ts">
-    import {Localization} from "../../../Core/Localization/Localization";
-    import {HTML} from "../../../modulesCore";
+    import {Localization, HTML} from "../../../modulesCore";
     import PriceWithAlt from "./PriceWithAlt.svelte";
     import {afterUpdate} from "svelte";
     import type {TPriceOverview} from "../../../Background/Modules/AugmentedSteam/_types";
@@ -23,7 +22,7 @@
     }
 
     afterUpdate(() => {
-        if (!setBottom || !height) {
+        if (!setBottom) {
             return;
         }
         height = Math.ceil(node.getBoundingClientRect().height);
