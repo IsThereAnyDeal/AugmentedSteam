@@ -33,13 +33,6 @@
   height: 400px;
 }
 /**
- * https://github.com/IsThereAnyDeal/AugmentedSteam/pull/1329
- * Fix clipped bottom section on the interactive recommender page
- */
-[class^=interactiverecommender_BottomSection] {
-  overflow-y: visible !important;
-}
-/**
  * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/1472
  * Fix achievement progress bar and text display
  */
