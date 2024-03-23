@@ -14,10 +14,6 @@ class SteamCommunityApi extends Api {
         return SteamCommunityApi.getPage(`/my/gamecards/${appid}`, border ? {"border": 1} : {}, true);
     }
 
-    static stats(path, appid) {
-        return SteamCommunityApi.getPage(`${path}/stats/${appid}`, {}, true);
-    }
-
     static async getInventory(contextId) {
         const login = LocalStorage.get("login");
         if (!login.steamId) {
