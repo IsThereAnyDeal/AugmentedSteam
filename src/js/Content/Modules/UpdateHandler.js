@@ -145,6 +145,11 @@ class UpdateHandler {
             SyncedStorage.remove("show_survey_info");
             SyncedStorage.remove("show_steamchart_info");
         }
+
+        if (oldVersion.isSameOrBefore("3.2.0")) {
+            SyncedStorage.remove("showyoutubegameplay");
+            SyncedStorage.remove("showyoutubereviews");
+        }
     }
 }
 

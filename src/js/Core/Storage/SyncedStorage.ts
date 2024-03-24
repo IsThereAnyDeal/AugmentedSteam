@@ -106,6 +106,7 @@ const DEFAULTS = {
     "showoc": true,
     "showhltb": true,
     "showyoutube": true,
+    "showyoutubequery": "[NAME] Gameplay",
     "showtwitch": true,
     "showpcgw": true,
     "showcompletionistme": false,
@@ -116,8 +117,6 @@ const DEFAULTS = {
     "showsteamdb": true,
     "showbartervg": false,
     "showastatslink": true,
-    "showyoutubegameplay": true,
-    "showyoutubereviews": true,
     "showwsgf": true,
     "exfgls": true,
     "app_custom_link": [

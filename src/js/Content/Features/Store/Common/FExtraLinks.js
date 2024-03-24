@@ -71,6 +71,19 @@ export default class FExtraLinks extends Feature {
                 }
             }
 
+            if (SyncedStorage.get("showyoutube")) {
+
+                const query = SyncedStorage.get("showyoutubequery")
+                    .replace("[NAME]", appName ?? "");
+
+                links.push({
+                    "iconClass": "as_youtube_btn", // Add prefix to avoid getting targeted by adblockers
+                    "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`,
+                    "text": Localization.str.view_on_website.replace("__website__", "YouTube"),
+                    "enabled": true,
+                });
+            }
+
             // custom app link
             for (const customLink of SyncedStorage.get("app_custom_link")) {
 
@@ -152,24 +165,6 @@ export default class FExtraLinks extends Feature {
                 "link": `https://www.twitch.tv/directory/game/${encodeURIComponent(appName)}`,
                 "text": Localization.str.view_on_website.replace("__website__", "Twitch"),
                 "enabled": isAppPage && appName && SyncedStorage.get("showtwitch"),
-            },
-            {
-                "iconClass": "as_youtube_btn",
-                "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(appName)}`,
-                "text": Localization.str.view_on_website.replace("__website__", "YouTube"),
-                "enabled": isAppPage && appName && SyncedStorage.get("showyoutube"),
-            },
-            {
-                "iconClass": "as_youtube_btn",
-                "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC" Gameplay`)}`,
-                "text": Localization.str.youtube_gameplay,
-                "enabled": isAppPage && appName && SyncedStorage.get("showyoutubegameplay"),
-            },
-            {
-                "iconClass": "as_youtube_btn",
-                "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC" Review`)}`,
-                "text": Localization.str.youtube_reviews,
-                "enabled": isAppPage && appName && SyncedStorage.get("showyoutubereviews"),
             },
         ];
     }

@@ -276,12 +276,25 @@ const Options = (() => {
             });
     }
 
+    function setDefaultHandler(key, DEFAULTS) {
+        const node = document.getElementById(`${key}_default`);
+
+        let _key = key;
+        if (key.startsWith("highlight") || key.startsWith("tag")) {
+            _key = `${_key}_color`;
+        }
+
+        node.addEventListener("click", () => {
+            setValue(`#${_key}`, DEFAULTS[_key]);
+        });
+    }
+
     self.init = async() => {
         await SyncedStorage;
 
         const currency = ExtensionResources.getJSON("json/currency.json").then(addCurrencies);
         await Promise.all([Localization, currency]);
-        const Defaults = SyncedStorage.defaults;
+
         self.customLinks = [];
         for (const container of document.querySelectorAll(".js-customlinks")) {
             self.customLinks.push(new CustomLinks(container));
@@ -305,12 +318,10 @@ const Options = (() => {
         (new ChangelogBuilder()).build();
         (new LocaleCreditsBuilder()).build();
 
-        function addHandlerToSetDefaultColor(key) {
-            document.getElementById(`${key}_default`)
-                .addEventListener("click", () => { setValue(`#${key}_color`, Defaults[`${key}_color`]); });
-        }
+        const DEFAULTS = SyncedStorage.defaults;
 
-        ["highlight_owned",
+        [
+            "highlight_owned",
             "highlight_wishlist",
             "highlight_coupon",
             "highlight_inv_gift",
@@ -325,16 +336,15 @@ const Options = (() => {
             "tag_inv_guestpass",
             "tag_notinterested",
             "tag_collection",
-            "tag_waitlist"].forEach(addHandlerToSetDefaultColor);
-
-        document.getElementById("spamcommentregex_default")
-            .addEventListener("click", () => setValue("#spamcommentregex", "[\\u2500-\\u25FF]"));
-        document.getElementById("quickinv_default")
-            .addEventListener("click", () => setValue("#quickinv_diff", "-0.01"));
+            "tag_waitlist",
+            "spamcommentregex",
+            "quickinv_diff",
+            "showyoutubequery",
+        ].forEach(key => setDefaultHandler(key, DEFAULTS));
 
         document.getElementById("quickinv_diff").addEventListener("blur", () => {
             if (isNaN(parseFloat(document.getElementById("quickinv_diff").value))) {
-                setValue("#quickinv_diff", "-0.01");
+                setValue("#quickinv_diff", DEFAULTS["quickinv_diff"]);
             }
         });
 

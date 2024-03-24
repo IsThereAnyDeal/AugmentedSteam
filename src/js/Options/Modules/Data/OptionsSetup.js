@@ -126,10 +126,8 @@ export default {
     "showprotondb": "options.protondb",
     "showcompletionistme": "options.completionistme",
     "showpcgw": "options.pcgw",
-    "showtwitch": "options.twitch",
     "showyoutube": "options.youtube",
-    "showyoutubegameplay": "options.show_youtubegameplay",
-    "showyoutubereviews": "options.show_youtubereviews",
+    "showtwitch": "options.twitch",
 
     // store general
     "horizontalscrolling": "options.horizontalscrolling",
