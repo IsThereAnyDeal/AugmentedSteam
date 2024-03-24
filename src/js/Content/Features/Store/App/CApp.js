@@ -33,7 +33,7 @@ import FPurchaseDate from "./FPurchaseDate";
 import FRemoveBroadcasts from "./FRemoveBroadcasts";
 import FRemoveDupeScreenshots from "./FRemoveDupeScreenshots";
 import FReplaceDevPubLinks from "./FReplaceDevPubLinks";
-import FReviewToggleButton from "./FReviewToggleButton";
+import {FReviewToggleButton} from "./FReviewToggleButton.svelte";
 import FSaveReviewFilters from "./FSaveReviewFilters";
 import FShowCoupon from "./FShowCoupon";
 import FSteamDeckCompatibility from "./FSteamDeckCompatibility";
