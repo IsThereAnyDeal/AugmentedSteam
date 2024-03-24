@@ -64,6 +64,7 @@
     "total_size": "Total Size",
     "dlc_details": "Downloadable Content Details",
     "badge_not_unlocked": "Not unlocked",
+    "badge_level": "Level __level__",
     "each": "Each",
     "view_in_market": "View in Community Market",
     "remove": "Remove",
