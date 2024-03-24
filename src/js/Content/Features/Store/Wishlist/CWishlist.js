@@ -47,7 +47,7 @@ export class CWishlist extends CStoreBase {
         }
 
         // Maintain the order of the buttons
-        FeatureManager.dependency(FEmptyWishlist, [FExportWishlist, false]);
+        FeatureManager.dependency(FEmptyWishlist, [FExportWishlist, true]);
     }
 
     async applyFeatures() {
