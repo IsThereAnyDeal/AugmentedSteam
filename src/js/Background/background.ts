@@ -100,7 +100,6 @@ const actionCallbacks = new Map([
     ["logout", SteamCommunityApi.logout],
     ["storecountry", SteamCommunityApi.storeCountry],
     ["cards", SteamCommunityApi.cards],
-    ["stats", SteamCommunityApi.stats],
     ["coupon", SteamCommunityApi.getCoupon],
     ["hasgiftsandpasses", SteamCommunityApi.hasGiftsAndPasses],
     ["hascoupon", SteamCommunityApi.hasCoupon],
