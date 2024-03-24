@@ -127,7 +127,7 @@ export default class FExtraLinks extends Feature {
                 "iconClass": "cardexchange_btn",
                 "link": `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.context.communityAppid}/`,
                 "text": Localization.str.view_on_website.replace("__website__", "Steam Card Exchange"),
-                "enabled": isAppPage && this.context.hasCards && SyncedStorage.get("showsteamcardexchange"),
+                "enabled": isAppPage && SyncedStorage.get("showsteamcardexchange"),
             },
             {
                 "iconClass": "protondb_btn",

@@ -10,7 +10,7 @@ import FRegionalPricing from "../Common/FRegionalPricing";
 import {UserNotes} from "../Common/UserNotes";
 import FAchievementBar from "./FAchievementBar";
 import FAStatsLink from "./FAStatsLink";
-import FBadgeProgress from "./FBadgeProgress";
+import {FBadgeProgress} from "./FBadgeProgress.svelte";
 import FDemoAbovePurchase from "./FDemoAbovePurchase";
 import FDLCCheckboxes from "./FDLCCheckboxes";
 import FDLCInfo from "./FDLCInfo";
@@ -111,9 +111,6 @@ export class CApp extends CStoreBase {
         this.appName = document.querySelector(".apphub_AppName")?.textContent ?? "";
 
         this.metalink = document.querySelector("#game_area_metalink a")?.getAttribute("href") ?? null;
-
-        // TODO this check is unreliable; some apps and dlcs have card category yet no card, and vice versa
-        this.hasCards = document.querySelector('#category_block img[src$="/ico_cards.png"]') !== null;
 
         // #achievement_block is also used for point shop items
         this.hasAchievements = document.querySelector(".communitylink_achievement_images") !== null;
