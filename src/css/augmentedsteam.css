@@ -995,28 +995,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 
 /***************************************
  * App pages
- * FReviewToggleButton
- **************************************/
-.es_review_section {
-  overflow: hidden;
-}
-#review_create.es_contracted .es_review_section {
-  max-height: 0;
-}
-#es_review_toggle {
-  float: right;
-}
-#review_create.es_contracted .es_review_contract,
-#review_create:not(.es_contracted) .es_review_expand {
-  display: none;
-}
-#review_create.es_contracted .es_review_expand,
-#review_create:not(.es_contracted) .es_review_contract {
-  display: block;
-}
-
-/***************************************
- * App pages
  * FWaitlistDropdown
  **************************************/
 .queue_control_button.as_btn_wishlist_menu {
