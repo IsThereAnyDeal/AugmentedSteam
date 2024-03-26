@@ -4,8 +4,11 @@
     "build": "node scripts/build.mjs",
     "update-locales": "node scripts/locales.mjs",
     "release": "node scripts/make-release.mjs",
-    "lint": "eslint .",
-    "check": "eslint . & npx tsc --noEmit & svelte-check"
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "eslint . --fix",
+    "check": "eslint . --max-warnings 0 & npx tsc --noEmit & svelte-check",
+    "svelte-check": "svelte-check",
+    "svelte-check:watch": "svelte-check --watch"
   },
   "devDependencies": {
     "@types/luxon": "^3.4.2",
