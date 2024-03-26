@@ -145,6 +145,21 @@ class UpdateHandler {
             SyncedStorage.remove("show_survey_info");
             SyncedStorage.remove("show_steamchart_info");
         }
+
+        if (oldVersion.isSameOrBefore("3.2.0")) {
+            const [twitch, youtube] = SyncedStorage.defaults["app_custom_link"];
+            twitch.enabled = SyncedStorage.get("showtwitch");
+            youtube.enabled = SyncedStorage.get("showyoutubegameplay");
+            SyncedStorage.set("app_custom_link", [
+                twitch,
+                youtube,
+                ...SyncedStorage.get("app_custom_link")
+            ]);
+            SyncedStorage.remove("showyoutube");
+            SyncedStorage.remove("showtwitch");
+            SyncedStorage.remove("showyoutubegameplay");
+            SyncedStorage.remove("showyoutubereviews");
+        }
     }
 }
 

@@ -47,7 +47,7 @@ export default class FExtraLinks extends Feature {
         const appName = typeof this.context.appName === "string" && StringUtils.clearSpecialSymbols(this.context.appName);
 
         // Note: Links should be rendered in the same order as displayed on the options page
-        const links = this._getLinks(isAppPage, appName);
+        const links = this._getLinks(isAppPage);
 
         if (isAppPage) {
 
@@ -103,7 +103,7 @@ export default class FExtraLinks extends Feature {
         }
     }
 
-    _getLinks(isAppPage, appName) {
+    _getLinks(isAppPage) {
         return [
             {
                 "iconClass": "itad_ico",
@@ -146,30 +146,6 @@ export default class FExtraLinks extends Feature {
                 "link": `https://pcgamingwiki.com/api/appid.php?appid=${this.context.appid}`,
                 "text": Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki"),
                 "enabled": isAppPage && SyncedStorage.get("showpcgw"),
-            },
-            {
-                "iconClass": "twitch_btn",
-                "link": `https://www.twitch.tv/directory/game/${encodeURIComponent(appName)}`,
-                "text": Localization.str.view_on_website.replace("__website__", "Twitch"),
-                "enabled": isAppPage && appName && SyncedStorage.get("showtwitch"),
-            },
-            {
-                "iconClass": "as_youtube_btn",
-                "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(appName)}`,
-                "text": Localization.str.view_on_website.replace("__website__", "YouTube"),
-                "enabled": isAppPage && appName && SyncedStorage.get("showyoutube"),
-            },
-            {
-                "iconClass": "as_youtube_btn",
-                "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC" Gameplay`)}`,
-                "text": Localization.str.youtube_gameplay,
-                "enabled": isAppPage && appName && SyncedStorage.get("showyoutubegameplay"),
-            },
-            {
-                "iconClass": "as_youtube_btn",
-                "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC" Review`)}`,
-                "text": Localization.str.youtube_reviews,
-                "enabled": isAppPage && appName && SyncedStorage.get("showyoutubereviews"),
             },
         ];
     }
