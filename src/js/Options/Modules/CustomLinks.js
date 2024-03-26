@@ -43,7 +43,7 @@ class CustomLinks {
         });
 
         document.querySelector(`.js-${this._type}-custom-link-add`).addEventListener("click", () => {
-            this._create(SyncedStorage.defaults[`${this._type}_custom_link`][0]);
+            this._create(SyncedStorage.defaults[`${this._type}_custom_link`].at(-1));
             this._save();
         });
     }
@@ -65,6 +65,9 @@ class CustomLinks {
         node.querySelector(`[name="${this._type}_custom_name"]`).value = link.name;
         node.querySelector(`[name="${this._type}_custom_url"]`).value = link.url;
         node.querySelector(`[name="${this._type}_custom_icon"]`).value = link.icon;
+        if (link.default) {
+            node.querySelector("button").remove();
+        }
 
         this._container.append(node);
     }

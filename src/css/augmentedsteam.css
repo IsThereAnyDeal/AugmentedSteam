@@ -3076,14 +3076,6 @@ label.es_dlc_label > input:checked::after {
   background-image: url("extension://img/bartervg.png");
 }
 
-.as_youtube_btn i {
-  background-image: url("extension://img/icon-youtube.png");
-}
-
-.twitch_btn i {
-  background-image: url("extension://img/icon-twitch.png");
-}
-
 .pcgw_btn i {
   background-image: url("extension://img/pcgw.png");
 }

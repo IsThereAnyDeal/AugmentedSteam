@@ -105,8 +105,6 @@ const DEFAULTS = {
     "showmcus": true,
     "showoc": true,
     "showhltb": true,
-    "showyoutube": true,
-    "showtwitch": true,
     "showpcgw": true,
     "showcompletionistme": false,
     "showprotondb": false,
@@ -116,16 +114,28 @@ const DEFAULTS = {
     "showsteamdb": true,
     "showbartervg": false,
     "showastatslink": true,
-    "showyoutubegameplay": true,
-    "showyoutubereviews": true,
     "showwsgf": true,
     "exfgls": true,
     "app_custom_link": [
         {
+            "default": true,
+            "enabled": false,
+            "name": "Twitch",
+            "url": "https://www.twitch.tv/directory/game/[NAME]",
+            "icon": "https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png"
+        },
+        {
+            "default": true,
+            "enabled": false,
+            "name": "Youtube",
+            "url": "https://www.youtube.com/results?search_query=[NAME]+\"PC\"+Gameplay",
+            "icon": "https://www.youtube.com/s/desktop/27f3c87c/img/favicon_32x32.png"
+        },
+        {
             "enabled": false,
             "name": "Google",
-            "url": "google.com/search?q=[ID]+[NAME]",
-            "icon": "www.google.com/images/branding/product/ico/googleg_lodp.ico"
+            "url": "https://www.google.com/search?q=[ID]+[NAME]",
+            "icon": "https://www.google.com/images/branding/product/ico/googleg_lodp.ico"
         },
     ],
 
@@ -226,8 +236,8 @@ const DEFAULTS = {
         {
             "enabled": true,
             "name": "Google",
-            "url": "google.com/search?q=[ID]",
-            "icon": "www.google.com/images/branding/product/ico/googleg_lodp.ico"
+            "url": "https://www.google.com/search?q=[ID]",
+            "icon": "https://www.google.com/images/branding/product/ico/googleg_lodp.ico"
         },
     ],
     "fav_emoticons": [],
