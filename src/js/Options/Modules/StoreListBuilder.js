@@ -1,4 +1,5 @@
-import {BackgroundSimple, HTML, SyncedStorage} from "../../modulesCore";
+import {HTML, SyncedStorage} from "../../modulesCore";
+import ITADApiFacade from "../../Content/Modules/Facades/ITADApiFacade";
 
 class StoreListBuilder {
 
@@ -11,7 +12,7 @@ class StoreListBuilder {
         // This section is re-built on options reset
         HTML.inner(this._container, "");
 
-        const storeList = await BackgroundSimple.action("itad.storelist").catch(err => console.error(err));
+        const storeList = await ITADApiFacade.getStoreList().catch(err => console.error(err));
         if (!storeList) { return; }
 
         const excludedStores = SyncedStorage.get("excluded_stores");

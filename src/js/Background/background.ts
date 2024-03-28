@@ -144,7 +144,7 @@ browser.runtime.onMessage.addListener((
     message: Message,
     sender: MessageSender,
     sendResponse: (...params: any) => void
-): true|void => {
+): true|undefined => {
 
     if (!sender || !sender.tab) { // not from a tab, ignore
         return;
@@ -153,22 +153,24 @@ browser.runtime.onMessage.addListener((
         return;
     }
 
-    (async function() {
+    (async function(): void {
         try {
+            await Promise.all([IndexedDB, CacheStorage, LocalStorage, SyncedStorage.then(() => { setup(); })]);
+
             let response: any;
 
-            switch(message.action) { // TODO rename to "api"?
+            switch (message.action) { // TODO rename to "api"?
 
                 case "itad.storelist":
                     response = await ITADApi.getStoreList();
                     break;
 
-                case "prices":
-                    let {country, apps, subs, bundles, voucher, shops} = message.params;
+                case "prices": {
+                    const {country, apps, subs, bundles, voucher, shops} = (<TFetchPricesMessage>message).params;
                     response = await AugmentedSteamApi.fetchPrices(country, apps, subs, bundles, voucher, shops);
-                    break
-
-                default:
+                    break;
+                }
+                default: {
                     /*
                      * TODO deprecated
                      * Old handling, remove once we rewrite all handlers to explicit style above
@@ -180,21 +182,19 @@ browser.runtime.onMessage.addListener((
                         throw new Error(`Did not recognize "${message.action}" as an action.`);
                     }
 
-                    const params = (<GenericMessage>message).params || []
-
-                        await Promise.all([IndexedDB, CacheStorage, LocalStorage, SyncedStorage.then(() => { setup(); })]);
-                        response = await callback(...params);
-
+                    const params = (<GenericMessage>message).params || [];
+                    response = await callback(...params);
+                }
             }
 
             sendResponse(response);
         } catch (err) {
             console.group(`Callback: "${message.action}"`);
-            console.error('Failed to execute %o', message);
+            console.error("Failed to execute %o", message);
             console.error(err);
             console.groupEnd();
 
-            throw new Error((<any>err).toString());
+            throw new Error((<Error>err).toString());
         }
     })();
     return true;
