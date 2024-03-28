@@ -76,7 +76,7 @@ export default class FSteamPeek extends Feature {
                     window.SteamFacade.dynamicStoreDecorateItems("#recommended_block_content > a.es_sp_similar");
                 });
 
-                this.context.decorateStoreCapsules(content.querySelectorAll("a.es_sp_similar"), true);
+                this.context.decorateStoreCapsules(content.querySelectorAll("a.es_sp_similar"));
 
                 HTML.beforeBegin(lastChild,
                     `<a class="small_cap es_sp_similar" href="http://steampeek.hu/?appid=${this.context.appid}" target="_blank">

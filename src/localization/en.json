@@ -158,6 +158,7 @@
     "view": "View",
     "game_name": "Game Name",
     "notinterested": "Items you ignored",
+    "notinterested_owned": "Items you ignored as owned elsewhere",
     "search_filters": {
         "reviews_score": {
             "between": "Between __lower__% and __upper__% review score",
@@ -534,6 +535,7 @@
         "inv_guestpass": "Guestpass",
         "owned": "Owned",
         "notinterested": "Ignored",
+        "notinterested_owned": "Ignored (owned elsewhere)",
         "collection": "Collected",
         "waitlist": "Waitlisted"
     },

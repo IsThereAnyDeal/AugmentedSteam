@@ -54,7 +54,7 @@ export class CStoreFront extends CStoreBase {
 
                         // This section goes through multiple rendering steps before apps show up, so don't disconnect immediately
                         if (nodes.length !== 0) {
-                            this.decorateStoreCapsules(nodes, false); // This section doesn't have dsinfo for some reason
+                            this.decorateStoreCapsules(nodes);
                             observer.disconnect();
                         }
                     }
