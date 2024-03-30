@@ -7,27 +7,50 @@ export default class FBackgroundPreviewLink extends Feature {
         return User.isSignedIn;
     }
 
-    apply() {
+    async apply() {
 
-        // Steam has changed things several times already, now this modal element is always present
-        const modalEl = document.querySelector(".FullModalOverlay");
-        if (!modalEl) { return; }
+        let modalEl = document.querySelector(".FullModalOverlay");
+        if (!modalEl) {
+            await new Promise(resolve => {
+                new MutationObserver((_, observer) => {
+                    modalEl = document.querySelector(".FullModalOverlay");
+                    if (modalEl) {
+                        observer.disconnect();
+                        resolve();
+                    }
+                }).observe(document.body, {"childList": true});
+            });
+        }
 
         /*
          * Also need to test hen viewing the item directly, e.g.
          * https://store.steampowered.com/points/shop/c/backgrounds/reward/150370/
          */
         new MutationObserver(mutations => {
-            const container = mutations[0].addedNodes[0];
-            if (!container?.classList?.contains("ModalPosition")) { return; }
+            let container;
+            outer: for (const {addedNodes} of mutations) {
+                for (const node of addedNodes) {
+                    if (node.classList.contains("ModalPosition")) {
+                        container = node;
+                        break outer;
+                    }
+                }
+            }
+            if (!container) { return; }
 
-            const previewEl = container
-                .querySelector("[class*=redeempointsmodal_PreviewBackgroundContainer]")
-                ?.lastElementChild;
+            let previewEl;
+            for (const node of container.querySelectorAll("div")) {
 
+                // https://store.cloudflare.steamstatic.com/public/images/applications/store/background_preview.png
+                const bg = getComputedStyle(node).backgroundImage;
+                if (/\/background_preview\.png/.test(bg)) {
+                    previewEl = node.nextElementSibling;
+                    break;
+                }
+            }
             if (!previewEl) { return; }
 
-            let bgLink = (previewEl instanceof HTMLVideoElement)
+            let bgLink = previewEl.tagName === "VIDEO"
                 ? previewEl.querySelector("source").src // Use the first source (usually webm format, should be well supported)
                 : previewEl.style.backgroundImage;
 
@@ -35,7 +58,7 @@ export default class FBackgroundPreviewLink extends Feature {
 
             if (!bgLink) { return; }
 
-            HTML.beforeBegin(container.querySelector("[class*=redeempointsmodal_BackgroundPreviewContainer]"),
+            HTML.beforeBegin(previewEl.parentNode,
                 `<div class="as_preview_background_ctn">
                     <a class="as_preview_background" target="_blank" href="${User.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
                         ${Localization.str.preview_background}
