@@ -27,11 +27,11 @@
     const types = {};
 
     for (const item of document.querySelectorAll(".account_table tr")) {
-        const dateStr = item.querySelector(".license_date_col")?.textContent.trim();
-        const type = item.querySelector(".license_acquisition_col")?.textContent.trim();
-        if (!dateStr || !type) { continue; }
+        const dateStr = item.querySelector("td.license_date_col")?.textContent.trim();
+        if (!dateStr) { continue; }
 
-        const year = /\d{4}/.exec(dateStr)?.[0] ?? "";
+        const year = /\d{4}/.exec(dateStr)?.[0] ?? Localization.str.thewordunknown;
+        const type = item.querySelector("td.license_acquisition_col")?.textContent.trim() || Localization.str.thewordunknown;
 
         (list[year] ??= {})[type] = (list[year][type] ?? 0) + 1;
         types[type] = (types[type] ?? 0) + 1;
@@ -105,6 +105,7 @@
         font-size: 22px;
         font-family: "Motiva Sans", Sans-serif;
         font-weight: normal;
+        text-transform: uppercase;
     }
     button {
         vertical-align: text-bottom;

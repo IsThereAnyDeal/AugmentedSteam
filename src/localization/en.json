@@ -19,6 +19,7 @@
     "toomanyrequests": "Too Many Requests",
     "show_comments": "Show Comments",
     "hide_comments": "Hide Comments",
+    "thewordunknown": "Unknown",
     "calc_workshop_size": {
         "file_size": "File size __size__",
         "calc_size": "Calculate Total Size",
