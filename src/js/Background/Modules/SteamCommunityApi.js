@@ -125,33 +125,25 @@ class SteamCommunityApi extends Api {
         const gifts = [];
         const passes = [];
 
-        let isPackage;
-
-        function addGiftsAndPasses(description) {
-            const appids = GameId.getAppids(description.value);
-
-            // Gift package with multiple apps
-            isPackage = true;
-
-            for (const appid of appids) {
-                if (!appid) { continue; }
-                if (description.type === "Gift") {
-                    gifts.push(appid);
-                } else {
-                    passes.push(appid);
-                }
-            }
-        }
+        let isPackage = false;
 
         for (const description of data.descriptions) {
-            isPackage = false;
-            if (description.descriptions) {
-                for (const desc of description.descriptions) {
-                    if (desc.type !== "html") { continue; }
 
-                    addGiftsAndPasses(desc);
+            const desc = description.descriptions?.find(d => d.type === "html");
+            if (desc) {
+                const appids = GameId.getAppids(desc.value);
+                if (appids.length > 0) {
 
-                    break;
+                    // Gift package with multiple apps
+                    isPackage = true;
+
+                    for (const appid of appids) {
+                        if (description.type === "Gift") {
+                            gifts.push(appid);
+                        } else {
+                            passes.push(appid);
+                        }
+                    }
                 }
             }
 
