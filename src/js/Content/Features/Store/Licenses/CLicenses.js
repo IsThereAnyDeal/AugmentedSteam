@@ -1,12 +1,12 @@
 import {Context, ContextType} from "../../../modulesContent";
-import FLincensesSummary from "./FLincensesSummary";
+import {FLicensesSummary} from "./FLicensesSummary.svelte";
 
 export class CLicenses extends Context {
 
     constructor() {
 
         super(ContextType.LICENSES, [
-            FLincensesSummary,
+            FLicensesSummary,
         ]);
     }
 }
