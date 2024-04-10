@@ -2,43 +2,25 @@
     // @ts-ignore
     import self_ from "./FAchievementBar.svelte";
     import {SyncedStorage} from "../../../../modulesCore";
-    import {Feature, RequestData, User} from "../../../modulesContent";
+    import {Feature} from "../../../modulesContent";
     import type {CApp} from "./CApp";
+    import SteamApi from "../../../Modules/SteamApi";
 
     export class FAchievementBar extends Feature<CApp> {
 
         override checkPrerequisites(): boolean {
+            /**
+             * If you don't own the game, all values will be 0,
+             * just as if you own the game but have no achievements,
+             * so it's important to check for ownership `this.context.isOwnedAndPlayed`.
+             */
             return SyncedStorage.get("showachinstore")
                 && this.context.hasAchievements
                 && this.context.isOwnedAndPlayed;
         }
 
         override async apply(): Promise<void> {
-            let response;
-
-            try {
-                const token = await User.accessToken;
-                response = await RequestData.post(
-                    `https://api.steampowered.com/IPlayerService/GetAchievementsProgress/v1/?access_token=${token}`,
-                    {"steamid": User.steamId, "appids[0]": this.context.communityAppid},
-                    {"credentials": "omit"}
-                );
-            } catch (err) {
-                throw new Error("Failed to fetch achievements", {"cause": err});
-            }
-
-            response = response?.response?.achievement_progress?.[0];
-
-            if (!response) {
-                throw new Error("Failed to find achievements data");
-            }
-
-            /**
-             * If you don't own the game, all values will be 0,
-             * just as if you own the game but have no achievements,
-             * so it's important to check for ownership `this.context.isOwnedAndPlayed`.
-             */
-            const {unlocked, total, percentage} = response;
+            const {unlocked, total, percentage} = await SteamApi.getAchievementsProgress(this.context.communityAppid);
 
             const target = document.querySelector("#my_activity")!;
 
@@ -72,7 +54,7 @@
 <div class="es_achievebar_ctn">
     <div>{achievementStr}</div>
     <div class="es_achievebar">
-        <div style="width: {percentage}%;" class="es_achievebar_progress"></div>
+        <div style:width="{percentage}%" class="es_achievebar_progress"></div>
     </div>
 </div>
 
