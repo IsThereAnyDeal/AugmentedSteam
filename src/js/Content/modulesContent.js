@@ -25,7 +25,6 @@ export {Messenger} from "./Modules/Messenger";
 export {Price} from "./Modules/Price";
 export {Prices} from "./Modules/Prices/Prices";
 export {RequestData} from "./Modules/RequestData";
-export {Stats} from "./Modules/Stats";
 export {SteamId, SteamIdDetail} from "./Modules/SteamId";
 export {UpdateHandler} from "./Modules/UpdateHandler";
 export {User} from "./Modules/User";

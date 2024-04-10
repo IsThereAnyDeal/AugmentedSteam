@@ -8,7 +8,7 @@ import FExtraLinks from "../Common/FExtraLinks";
 import FITADPrices from "../Common/FITADPrices";
 import FRegionalPricing from "../Common/FRegionalPricing";
 import {UserNotes} from "../Common/UserNotes";
-import FAchievementBar from "./FAchievementBar";
+import {FAchievementBar} from "./FAchievementBar.svelte";
 import FAStatsLink from "./FAStatsLink";
 import FBadgeProgress from "./FBadgeProgress";
 import FDemoAbovePurchase from "./FDemoAbovePurchase";
