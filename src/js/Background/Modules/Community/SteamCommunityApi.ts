@@ -285,7 +285,7 @@ class SteamCommunityApi extends Api {
         const login = LocalStorage.get("login");
         if (login.profilePath === profilePath) { return login; }
 
-        const html = await self.getPage(profilePath, {}, true);
+        const html = await self.getPage(profilePath);
         const profileData = HTMLParser.getVariableFromText(html, "g_rgProfileData", "object");
         const steamId = profileData.steamid;
 
@@ -327,12 +327,12 @@ class SteamCommunityApi extends Api {
         return IndexedDB.delete("profiles", steamId);
     }
 
-    static getPage(endpoint, query, crossDomain) {
+    static getPage(endpoint, query) {
         return super.getPage(endpoint, query, res => {
             if (new URL(res.url).pathname === "/login/home/") {
                 throw new Errors.LoginError("community");
             }
-        }, {}, crossDomain);
+        });
     }
 }
 SteamCommunityApi.origin = "https://steamcommunity.com/";

@@ -61,14 +61,14 @@ class SteamStoreApi extends Api {
     }
 
     static async _getCurrencyFromWallet(parser) {
-        const html = await SteamStoreApi.getPage("/steamaccount/addfunds", {}, true);
+        const html = await SteamStoreApi.getPage("/steamaccount/addfunds");
         const doc = parser.parseFromString(html, "text/html");
 
         return doc.querySelector("input[name=currency]")?.value;
     }
 
     static async _getCurrencyFromApp(parser) {
-        const html = await SteamStoreApi.getPage("/app/220", {}, true);
+        const html = await SteamStoreApi.getPage("/app/220");
         const doc = parser.parseFromString(html, "text/html");
 
         return doc.querySelector("meta[itemprop=priceCurrency][content]")?.getAttribute("content");
@@ -93,12 +93,12 @@ class SteamStoreApi extends Api {
     }
 
     static async sessionId() {
-        const html = await SteamStoreApi.getPage("/about/", {}, true);
+        const html = await SteamStoreApi.getPage("/about/");
         return HTMLParser.getVariableFromText(html, "g_sessionID", "string");
     }
 
     static async wishlists(path) {
-        const html = await SteamStoreApi.getPage(`/wishlist${path}`, {}, true);
+        const html = await SteamStoreApi.getPage(`/wishlist${path}`);
         const data = HTMLParser.getVariableFromText(html, "g_rgWishlistData", "array");
         return data ? data.length : "";
     }
@@ -183,12 +183,12 @@ class SteamStoreApi extends Api {
         return SteamStoreApi.endpointFactory("api/appdetails/", appid)(params);
     }
 
-    static getPage(endpoint, query, crossDomain) {
+    static getPage(endpoint, query) {
         return super.getPage(endpoint, query, res => {
             if (new URL(res.url).pathname === "/login/") {
                 throw new Errors.LoginError("store");
             }
-        }, {}, crossDomain);
+        });
     }
 }
 SteamStoreApi.origin = "https://store.steampowered.com/";
