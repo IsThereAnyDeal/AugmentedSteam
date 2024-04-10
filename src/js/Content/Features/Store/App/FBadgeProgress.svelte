@@ -2,8 +2,10 @@
     // @ts-ignore
     import self_ from "./FBadgeProgress.svelte";
     import {SyncedStorage} from "../../../../modulesCore";
-    import {Background, Feature, User} from "../../../modulesContent";
+    import {Feature, User} from "../../../modulesContent";
     import type {CApp} from "./CApp";
+    import type {TFetchBadgeInfoResponse} from "../../../../Background/Modules/Community/_types";
+    import SteamCommunityApiFacade from "../../../Modules/Facades/SteamCommunityApiFacade";
 
     export class FBadgeProgress extends Feature<CApp> {
 
@@ -14,15 +16,12 @@
         }
 
         override async apply(): Promise<void> {
-            let data;
+            let response: TFetchBadgeInfoResponse = await SteamCommunityApiFacade.fetchBadgeInfo(
+                User.steamId,
+                this.context.communityAppid
+            );
 
-            try {
-                data = await Background.action("cards", User.steamId, this.context.communityAppid);
-            } catch (err) {
-                throw new Error("Failed to fetch badges", {"cause": err});
-            }
-
-            data = data.badgedata;
+            let data = response.badgedata;
 
             // No badge data if game doesn't have cards or not logged in
             if (!data) {
@@ -45,28 +44,9 @@
 
 <script lang="ts">
     import {Localization} from "../../../../modulesCore";
+    import type {TBadgeData} from "../../../../Background/Modules/Community/_types";
 
-    export let data: {
-        appid: number;
-        border: 0|1;
-        series: number;
-        level: number;
-        maxlevel: number;
-        name: string; // empty if no badge level
-        xp: number;
-        nextlevelname: string;
-        nextlevelxp: number;
-        iconurl: string;
-        bMaxed: null|boolean; // not sure
-        rgCards: {
-            name: string;
-            title: string;
-            imgurl: string;
-            arturl: string;
-            owned: 0|1;
-            markethash: string;
-        }[];
-    };
+    export let data: TBadgeData;
 
     let cardOwned = data.rgCards.filter(c => c.owned === 1).length;
     let cardTotal = data.rgCards.length;

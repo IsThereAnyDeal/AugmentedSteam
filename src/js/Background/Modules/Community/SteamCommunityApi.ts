@@ -1,7 +1,8 @@
-import {Errors, GameId, HTMLParser, LocalStorage} from "../../modulesCore";
-import {Api} from "./Api";
-import CacheStorage from "./CacheStorage";
-import {IndexedDB} from "./IndexedDB";
+import {Errors, GameId, HTMLParser, LocalStorage} from "../../../modulesCore";
+import {Api} from "../Api";
+import CacheStorage from "../CacheStorage";
+import {IndexedDB} from "../IndexedDB";
+import type {TFetchBadgeInfoResponse} from "./_types";
 
 class SteamCommunityApi extends Api {
 
@@ -10,7 +11,7 @@ class SteamCommunityApi extends Api {
      * static params = { 'credentials': 'include', };
      */
 
-    static cards(steamid, appid) {
+    static fetchBadgeInfo(steamid: string, appid: number): Promise<TFetchBadgeInfoResponse> {
         return SteamCommunityApi.getEndpoint(`/profiles/${steamid}/ajaxgetbadgeinfo/${appid}`);
     }
 

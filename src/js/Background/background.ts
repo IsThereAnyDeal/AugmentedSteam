@@ -2,7 +2,7 @@ import setup from "../setup";
 import {LocalStorage, Permissions, SyncedStorage} from "../modulesCore";
 import {ContextMenu} from "./Modules/ContextMenu";
 import {IndexedDB} from "./Modules/IndexedDB";
-import {SteamCommunityApi} from "./Modules/SteamCommunityApi";
+import {SteamCommunityApi} from "./Modules/Community/SteamCommunityApi";
 import {SteamStoreApi} from "./Modules/SteamStoreApi";
 import {StaticResources} from "./Modules/StaticResources";
 import {ITADApi} from "./Modules/IsThereAnyDeal/ITADApi";
@@ -12,6 +12,7 @@ import CacheStorage from "./Modules/CacheStorage";
 import browser, {type Runtime} from "webextension-polyfill";
 import type {TFetchPricesMessage} from "./Modules/AugmentedSteam/_types";
 import type {TGetStoreListMessage} from "./Modules/IsThereAnyDeal/_types";
+import type {TFetchBadgeInfoMessage} from "./Modules/Community/_types";
 
 type MessageSender = Runtime.MessageSender;
 
@@ -99,7 +100,7 @@ const actionCallbacks = new Map([
     ["login", SteamCommunityApi.login],
     ["logout", SteamCommunityApi.logout],
     ["storecountry", SteamCommunityApi.storeCountry],
-    ["cards", SteamCommunityApi.cards],
+    ["cards", SteamCommunityApi.fetchBadgeInfo],
     ["coupon", SteamCommunityApi.getCoupon],
     ["hasgiftsandpasses", SteamCommunityApi.hasGiftsAndPasses],
     ["hascoupon", SteamCommunityApi.hasCoupon],
@@ -136,6 +137,8 @@ type Message =
     | TGetStoreListMessage
     // AugmentedSteamApi
     | TFetchPricesMessage
+    // SteamCommunityApi
+    | TFetchBadgeInfoMessage
     // old
     | GenericMessage;
 
@@ -152,11 +155,16 @@ browser.runtime.onMessage.addListener((
         return;
     }
 
-    (async function(): void {
+    (async function(): Promise<void> {
         try {
             await Promise.all([IndexedDB, CacheStorage, LocalStorage, SyncedStorage.then(() => { setup(); })]);
 
             let response: any;
+
+            /*
+             * TODO: (<>message.)params typecast should be needed only until we allow GenericMessage, once we get rid of it,
+             *   remove type cast, which should also ensure better checks
+             */
 
             switch (message.action) { // TODO rename to "api"?
 
@@ -169,6 +177,13 @@ browser.runtime.onMessage.addListener((
                     response = await AugmentedSteamApi.fetchPrices(country, apps, subs, bundles, voucher, shops);
                     break;
                 }
+
+                case "community.badgeinfo":
+                    const {steamId, appid} = (<TFetchBadgeInfoMessage>message).params;
+                    response = await SteamCommunityApi.fetchBadgeInfo(steamId, appid);
+                    break;
+
+
                 default: {
                     /*
                      * TODO deprecated
