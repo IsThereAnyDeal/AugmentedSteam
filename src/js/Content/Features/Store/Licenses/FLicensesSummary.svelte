@@ -1,5 +1,4 @@
 <script lang="ts" context="module">
-    // @ts-ignore
     import self_ from "./FLicensesSummary.svelte";
     import {Feature} from "../../../modulesContent";
     import type {CLicenses} from "./CLicenses";
@@ -20,98 +19,91 @@
     }
 </script>
 
-<script lang="js">
+<script lang="ts">
     import {Localization} from "../../../../modulesCore";
+    import {slide} from "svelte/transition";
+    import SmallSteamButton from "../../../Steam/SmallSteamButton.svelte";
+    import ToggleIcon from "../../../Steam/ToggleIcon.svelte";
 
-    const list = {};
-    const types = {};
+    const total: Record<string, number> = {};
+    const yearly: Record<string, Record<string, number>> = {};
 
     for (const item of document.querySelectorAll(".account_table tr")) {
-        const dateStr = item.querySelector("td.license_date_col")?.textContent.trim();
+        const dateStr = item.querySelector("td.license_date_col")?.textContent?.trim();
         if (!dateStr) { continue; }
 
         const year = /\d{4}/.exec(dateStr)?.[0] ?? Localization.str.thewordunknown;
-        const type = item.querySelector("td.license_acquisition_col")?.textContent.trim() || Localization.str.thewordunknown;
+        const type = item.querySelector("td.license_acquisition_col")?.textContent?.trim() || Localization.str.thewordunknown;
 
-        (list[year] ??= {})[type] = (list[year][type] ?? 0) + 1;
-        types[type] = (types[type] ?? 0) + 1;
+        total[type] = (total[type] ?? 0) + 1;
+        (yearly[year] ??= {})[type] = (yearly[year][type] ?? 0) + 1;
     }
 
-    const listEntries = Object.entries(list).reverse();
-    const totals = listEntries.map(
-        ([, row]) => Object.entries(row)
-            .map(([, count]) => count)
-            .reduce((a, b) => a + b, 0)
-    );
-
-    const totalGlobal = totals.reduce((a, b) => a + b, 0);
-    const typesEntries = Object.entries(types);
-
-    const tableHeader = typesEntries
-        .map(([name]) => `<th>${name}</th>`)
-        .join("");
-
-    const tableFooter = typesEntries
-        .map(([, value]) => `<td>${value || "0"}</td>`)
-        .join("");
-
-    const rows = listEntries
-        .map(([year, row], i) => `<tr>
-            <td>${year}</td>
-            ${typesEntries
-                .map(([name]) => `<td>${row[name] || "0"}</td>`)
-                .join("")
-            }
-            <td>${totals[i] || "0"}</td>
-        </tr>`)
-        .join("");
-
-    let show = false;
+    let isOpen: boolean = false;
 </script>
 
-<span class="h3">{Localization.str.wl.label}</span>
-<button on:click={() => (show = !show)}>{show ? Localization.str.hide : Localization.str.show}</button>
-{#if show}
-<div class="block_content">
-    <table class="account_table">
-        <thead>
-            <tr>
-                <th>{Localization.str.year}</th>
-                {@html tableHeader}
-                <th>{Localization.str.all}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {@html rows}
-        </tbody>
-        <tfoot>
-            <tr>
-                <td>{Localization.str.all}</td>
-                {@html tableFooter}
-                <td>{totalGlobal}</td>
-            </tr>
-        </tfoot>
-    </table>
+
+<div class="stats">
+    <h3>
+        {Localization.str.wl.label}
+        <SmallSteamButton on:click={() => (isOpen = !isOpen)}>
+            {isOpen ? Localization.str.hide : Localization.str.show}
+            <ToggleIcon down={!isOpen} />
+        </SmallSteamButton>
+    </h3>
+
+    {#if isOpen}
+        <div class="block_content" transition:slide={{axis: "y", duration: 200}}>
+            <table class="account_table">
+                <thead>
+                    <tr>
+                        <th>{Localization.str.year}</th>
+                        {#each Object.keys(total) as type}
+                            <th>{type}</th>
+                        {/each}
+                        <th>{Localization.str.all}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each Object.entries(yearly).reverse() as [year, map]}
+                        <tr>
+                            <td>{year}</td>
+                            {#each Object.keys(total) as type}
+                                <td>{map[type] ?? 0}</td>
+                            {/each}
+                            <td>{Object.values(map).reduce((result, currentValue) => result + currentValue, 0)}</td>
+                        </tr>
+                    {/each}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>{Localization.str.all}</td>
+                        {#each Object.values(total) as count}
+                            <td>{count}</td>
+                        {/each}
+                        <td>{Object.values(total).reduce((result, currentValue) => result + currentValue, 0)}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    {/if}
 </div>
-{/if}
 
 
 <style>
-    :global(.block) {
-        margin-top: 20px;
+    .stats {
+        margin-bottom: 20px;
     }
-    .h3 {
+
+    h3 {
         color: #ffffff;
         font-size: 22px;
         font-family: "Motiva Sans", Sans-serif;
         font-weight: normal;
         text-transform: uppercase;
-    }
-    button {
-        vertical-align: text-bottom;
-        margin-left: 5px;
-        cursor: pointer;
-        border: solid #8ecafc 1px;
-        padding: 0px 10px;
+        display: flex;
+        gap: 5px;
+        justify-content: flex-start;
+        align-items: baseline;
     }
 </style>
