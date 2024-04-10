@@ -46,15 +46,17 @@ export default class FAchievementSort extends Feature<CProfileStats> {
 
     private getDateFormat(language: string): {format: string, options?: DateTimeOptions}|null {
 
-        switch(language) {
+        switch (language) {
             case "english":
                 return {
-                    format: "'Unlocked' d LLL, yyyy '@' h:mma"
+                    format: "'Unlocked' d LLL, yyyy '@' h:mma",
+                    formatNoYear: "'Unlocked' d LLL '@' h:mma",
                 };
 
             case "czech":
                 return {
                     format: "'Odemčeno' d. LLL. yyyy v H.mm",
+                    formatNoYear: "'Odemčeno' d. LLL. v H.mm",
                     options: {locale: "cs"}
                 };
 
@@ -76,8 +78,8 @@ export default class FAchievementSort extends Feature<CProfileStats> {
 
         let dateSetup = this.getDateFormat(Language.getCurrentSteamLanguage() ?? "");
 
-        const nodes = (<Element>this.container).querySelectorAll(".achieveUnlockTime");
-        for (let node of nodes) {
+        const nodes = this.container!.querySelectorAll(".achieveUnlockTime");
+        for (const node of nodes) {
             if (!node.firstChild?.textContent) { continue; }
 
             const achieveRow = node.closest(".achieveRow");
@@ -86,10 +88,11 @@ export default class FAchievementSort extends Feature<CProfileStats> {
             this.defaultSort.push(achieveRow);
 
             if (dateSetup) {
-                let {format, options} = dateSetup;
+                const dateString = node.firstChild.textContent.trim();
+                const {format, formatNoYear, options} = dateSetup;
                 const unlockedTime = DateTime.fromFormat(
-                    node.firstChild.textContent.trim(),
-                    format,
+                    dateString,
+                    /\d{4}/.test(dateString) ? format : formatNoYear,
                     options
                 );
                 this.unlockedMap.set(achieveRow, unlockedTime.toUnixInteger());
@@ -98,30 +101,32 @@ export default class FAchievementSort extends Feature<CProfileStats> {
 
         // fallback, load the same page in english
         if (dateSetup === null) {
+            dateSetup = this.getDateFormat("english");
+
             const url = new URL(window.location.origin + window.location.pathname);
             url.searchParams.set("l", "english");
 
-            let dateSetup = this.getDateFormat("english");
             const data = await RequestData.getHttp(url.toString());
             const nodes = HTML.toDom(data).querySelectorAll(".achieveUnlockTime");
-            let i = 0;
-            for (let node of nodes) {
+            if (nodes.length !== this.defaultSort.length) {
+                throw new Error("Achievement nodes mismatch");
+            }
+
+            for (let i = 0; i < nodes.length; i++) {
+                const node = nodes[i];
                 if (!node.firstChild?.textContent) { continue; }
 
                 const achieveRow = node.closest(".achieveRow");
                 if (!achieveRow) { continue; }
 
-                let {format} = <{format: string}>dateSetup;
+                const dateString = node.firstChild.textContent.trim();
+                const {format, formatNoYear} = <{format: string}>dateSetup;
                 const unlockedTime = DateTime.fromFormat(
-                    node.firstChild.textContent.trim(),
-                    format
+                    dateString,
+                    /\d{4}/.test(dateString) ? format : formatNoYear
                 );
 
-                let defaultSortNode = this.defaultSort[i++];
-                if (!defaultSortNode) {
-                    throw new Error("Achievement nodes mismatch");
-                }
-                this.unlockedMap.set(defaultSortNode, unlockedTime.toUnixInteger());
+                this.unlockedMap.set(this.defaultSort[i], unlockedTime.toUnixInteger());
             }
         }
     }
