@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
     // @ts-ignore
     import self_ from "./FPlayers.svelte";
+    import {SyncedStorage} from "../../../../modulesCore";
     import {Feature} from "../../../modulesContent";
     import type {CApp} from "./CApp";
 
@@ -8,7 +9,9 @@
         private _data: any;
 
         override async checkPrerequisites(): Promise<boolean> {
-            if (this.context.isDlcLike || this.context.isVideoOrHardware) {
+            if (this.context.isDlcLike
+                || this.context.isVideoOrHardware
+                || !SyncedStorage.get("show_players_info")) {
                 return false;
             }
 
