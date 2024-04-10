@@ -5,7 +5,7 @@
     "update-locales": "node scripts/locales.mjs",
     "release": "node scripts/make-release.mjs",
     "lint": "eslint .",
-    "check": "eslint . & npx tsc --noEmit & svelte-check"
+    "check": "npx tsc --noEmit & svelte-check"
   },
   "devDependencies": {
     "@types/luxon": "^3.4.2",
