@@ -10,8 +10,8 @@ class SteamCommunityApi extends Api {
      * static params = { 'credentials': 'include', };
      */
 
-    static cards(appid, border) {
-        return SteamCommunityApi.getPage(`/my/gamecards/${appid}`, border ? {"border": 1} : {}, true);
+    static cards(steamid, appid) {
+        return SteamCommunityApi.getEndpoint(`/profiles/${steamid}/ajaxgetbadgeinfo/${appid}`);
     }
 
     static async getInventory(contextId) {
