@@ -56,6 +56,7 @@ const DEFAULTS = {
     "highlight_inv_gift_color": "#800040",
     "highlight_inv_guestpass_color": "#513c73",
     "highlight_notinterested_color": "#4f4f4f",
+    "highlight_notinterested_owned_color": "#4f4f4f",
     "highlight_collection_color": "#856d0e",
     "highlight_waitlist_color": "#4c7521",
 
@@ -65,6 +66,7 @@ const DEFAULTS = {
     "tag_inv_gift_color": "#b10059",
     "tag_inv_guestpass_color": "#65449a",
     "tag_notinterested_color": "#4f4f4f",
+    "tag_notinterested_owned_color": "#4f4f4f",
     "tag_collection_color": "#856d0e",
     "tag_waitlist_color": "#4c7521",
 
@@ -74,6 +76,7 @@ const DEFAULTS = {
     "highlight_inv_gift": false,
     "highlight_inv_guestpass": false,
     "highlight_notinterested": false,
+    "highlight_notinterested_owned": false,
     "highlight_excludef2p": false,
     "highlight_collection": true,
     "highlight_waitlist": true,
@@ -84,6 +87,7 @@ const DEFAULTS = {
     "tag_inv_gift": false,
     "tag_inv_guestpass": false,
     "tag_notinterested": true,
+    "tag_notinterested_owned": true,
     "tag_collection": false,
     "tag_waitlist": false,
     "tag_short": false,

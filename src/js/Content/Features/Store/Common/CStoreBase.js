@@ -97,8 +97,8 @@ export class CStoreBase extends CBase {
         }
     }
 
-    decorateStoreCapsules(nodes, hasDsInfo) {
-        FHighlightsTags.highlightAndTag(nodes, hasDsInfo);
+    decorateStoreCapsules(nodes) {
+        FHighlightsTags.highlightAndTag(nodes);
         FEarlyAccess.show(nodes);
     }
 }

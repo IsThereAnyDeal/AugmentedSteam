@@ -16,6 +16,6 @@ export default class FWishlistHighlights extends CallbackFeature {
             options.waitlisted = false;
         }
 
-        return FHighlightsTags.highlightAndTag(nodes, false, options);
+        return FHighlightsTags.highlightAndTag(nodes, options);
     }
 }

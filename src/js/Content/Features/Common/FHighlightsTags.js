@@ -20,7 +20,7 @@ export default class FHighlightsTags extends Feature {
 
         title.dataset.dsAppid = appid;
 
-        return FHighlightsTags.highlightAndTag([title], false);
+        return FHighlightsTags.highlightAndTag([title]);
     }
 
     /**
@@ -29,17 +29,17 @@ export default class FHighlightsTags extends Feature {
      *
      * @param {NodeList|Array} nodes - The nodes that should get highlighted
      * (defaults to all known nodes that are highlightable and taggable)
-     * @param {boolean} hasDsInfo - Whether or not the supplied nodes contain dynamic store info (defaults to true)
      * @param {Object} options - Option overrides that should be applied
      * @returns {Promise} - Resolved once the highlighting and tagging completed for the nodes
      */
-    static async highlightAndTag(nodes, hasDsInfo = true, options = {}) {
+    static async highlightAndTag(nodes, options = {}) {
 
         if (typeof FHighlightsTags._options === "undefined") {
             FHighlightsTags._options = {
                 "owned": SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned"),
                 "wishlisted": SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist"),
                 "ignored": SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested"),
+                "ignoredOwned": SyncedStorage.get("highlight_notinterested_owned") || SyncedStorage.get("tag_notinterested_owned"),
                 "collected": SyncedStorage.get("highlight_collection") || SyncedStorage.get("tag_collection"),
                 "waitlisted": SyncedStorage.get("highlight_waitlist") || SyncedStorage.get("tag_waitlist"),
                 "gift": SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift"),
@@ -85,22 +85,6 @@ export default class FHighlightsTags extends Feature {
             } else {
                 console.warn("FHighlightsTags: Couldn't find storeId for node %o", node);
             }
-
-            if (hasDsInfo) {
-                try {
-                    if (opts.owned && node.querySelector(".ds_owned_flag") !== null) {
-                        this.highlightOwned(node);
-                    }
-                    if (opts.wishlisted && node.querySelector(".ds_wishlist_flag") !== null) {
-                        this.highlightWishlist(node);
-                    }
-                    if (opts.ignored && node.querySelector(".ds_ignored_flag") !== null) {
-                        this.highlightIgnored(node);
-                    }
-                } catch (err) {
-                    console.error("Failed to highlight / tag node", err);
-                }
-            }
         }
 
         const storeIds = Array.from(storeIdsMap.keys());
@@ -108,7 +92,7 @@ export default class FHighlightsTags extends Feature {
 
         const trimmedStoreIds = storeIds.map(id => GameId.trimStoreId(id));
 
-        const includeDsInfo = !hasDsInfo && (opts.owned || opts.wishlisted || opts.ignored);
+        const includeDsInfo = opts.owned || opts.wishlisted || opts.ignored || opts.ignoredOwned;
 
         const [dsStatus, itadStatus, invStatus] = await Promise.all([
             includeDsInfo ? DynamicStore.getAppStatus(storeIds) : Promise.resolve(),
@@ -136,6 +120,9 @@ export default class FHighlightsTags extends Feature {
                 }
                 if (opts.ignored && dsStatus[storeId].ignored) {
                     operations.push(this.highlightIgnored);
+                }
+                if (opts.ignoredOwned && dsStatus[storeId].ignoredOwned) {
+                    operations.push(this.highlightIgnoredOwnedElsewhere);
                 }
             }
 
@@ -345,6 +332,10 @@ export default class FHighlightsTags extends Feature {
         this._highlightItem(node, "notinterested");
     }
 
+    static highlightIgnoredOwnedElsewhere(node) {
+        this._highlightItem(node, "notinterested_owned");
+    }
+
     static highlightCollection(node) {
         this._highlightItem(node, "collection");
     }
@@ -362,6 +353,7 @@ FHighlightsTags._tagCssLoaded = false;
  * The later it appears in the array, the higher its precedence
  */
 FHighlightsTags._types = [
+    "notinterested_owned",
     "notinterested",
     "waitlist",
     "wishlist",

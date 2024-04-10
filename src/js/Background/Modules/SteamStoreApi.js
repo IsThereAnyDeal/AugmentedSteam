@@ -152,8 +152,19 @@ class SteamStoreApi extends Api {
         const store = await SteamStoreApi.getEndpoint("dynamicstore/userdata", {}, null, {"cache": "no-cache"});
         const {rgOwnedApps, rgOwnedPackages, rgIgnoredApps, rgWishlist} = store;
 
+        const ignored = [];
+        const ignoredOwnedElsewhere = [];
+        Object.entries(rgIgnoredApps).forEach(([appid, value]) => {
+            if (value === 0) {
+                ignored.push(Number(appid));
+            } else if (value === 2) {
+                ignoredOwnedElsewhere.push(Number(appid));
+            }
+        });
+
         const dynamicStore = {
-            "ignored": Object.keys(rgIgnoredApps).map(key => Number(key)),
+            ignored,
+            ignoredOwnedElsewhere,
             "ownedApps": rgOwnedApps,
             "ownedPackages": rgOwnedPackages,
             "wishlisted": rgWishlist,

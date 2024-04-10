@@ -23,6 +23,6 @@ export default class FHighlightFriendsActivity extends CallbackFeature {
                 // https://github.com/IsThereAnyDeal/AugmentedSteam/pull/470#pullrequestreview-284928257
                 && (link.childElementCount !== 1 || !link.closest(".vote_header")));
 
-        FHighlightsTags.highlightAndTag(nodes, false);
+        FHighlightsTags.highlightAndTag(nodes);
     }
 }
