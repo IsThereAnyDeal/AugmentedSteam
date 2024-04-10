@@ -39,7 +39,7 @@ export default class FHighlightsTags extends Feature {
                 "owned": SyncedStorage.get("highlight_owned") || SyncedStorage.get("tag_owned"),
                 "wishlisted": SyncedStorage.get("highlight_wishlist") || SyncedStorage.get("tag_wishlist"),
                 "ignored": SyncedStorage.get("highlight_notinterested") || SyncedStorage.get("tag_notinterested"),
-                "ignoredOwned": SyncedStorage.get("highlight_notinterested_owned") || SyncedStorage.get("tag_notinterested_owned"),
+                "ignoredOwned": SyncedStorage.get("highlight_ignored_owned") || SyncedStorage.get("tag_ignored_owned"),
                 "collected": SyncedStorage.get("highlight_collection") || SyncedStorage.get("tag_collection"),
                 "waitlisted": SyncedStorage.get("highlight_waitlist") || SyncedStorage.get("tag_waitlist"),
                 "gift": SyncedStorage.get("highlight_inv_gift") || SyncedStorage.get("tag_inv_gift"),
@@ -333,7 +333,7 @@ export default class FHighlightsTags extends Feature {
     }
 
     static highlightIgnoredOwnedElsewhere(node) {
-        this._highlightItem(node, "notinterested_owned");
+        this._highlightItem(node, "ignored_owned");
     }
 
     static highlightCollection(node) {
@@ -353,7 +353,7 @@ FHighlightsTags._tagCssLoaded = false;
  * The later it appears in the array, the higher its precedence
  */
 FHighlightsTags._types = [
-    "notinterested_owned",
+    "ignored_owned",
     "notinterested",
     "waitlist",
     "wishlist",
