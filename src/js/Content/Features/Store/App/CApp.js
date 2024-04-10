@@ -139,8 +139,8 @@ export class CApp extends CStoreBase {
         // FPackBreakdown skips purchase options with a package info button to avoid false positives
         FeatureManager.dependency(FPackageInfoButton, [FPackBreakdown, true]);
 
-        // HDPlayer needs to wait for mp4 sources to be set
-        FeatureManager.dependency(FPackageInfoButton, [FPackBreakdown, true]);
+        // FHDPlayer needs to wait for mp4 sources to be set
+        FeatureManager.dependency(FHDPlayer, [FForceMP4, true]);
     }
 
     storePageDataPromise() {
