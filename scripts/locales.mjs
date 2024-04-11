@@ -26,7 +26,7 @@ program
         const compiler = new Compiler(LocalizationsPath, CompiledPath);
 
         const en = await compiler.compile("en");
-        const keys = new Set(Object.keys(en.locale));
+        const keys = new Set(Object.keys(en.strings));
 
         await compiler.saveKeyMap(keys);
         console.log(`${chalk.green("OK")} Strings`);
@@ -43,7 +43,7 @@ program
             const lang = path.basename(file, ".json");
             if (lang === "en") { continue; }
 
-            const compiled = await compiler.compile(lang, en.locale, keys);
+            const compiled = await compiler.compile(lang, en.strings, keys);
             await compiler.save(lang, compiled);
             console.log(`${chalk.green("OK")} ${lang}`);
         }

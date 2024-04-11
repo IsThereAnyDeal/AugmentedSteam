@@ -51,18 +51,12 @@ export default class Compiler {
                 strings: Object.keys(result).length,
                 translated: translated
             },
-            locale: result
+            strings: result
         };
     }
 
     async save(lang, compiled) {
-
-        await writeFile(`${this.compiledPath}/${lang}.json`, JSON.stringify(
-            Object.fromEntries([
-                ["_stats", compiled.stats],
-                ...Object.entries(compiled.locale)
-            ])
-        ));
+        await writeFile(`${this.compiledPath}/${lang}.json`, JSON.stringify(compiled));
     }
 
     async saveKeyMap(keys) {
