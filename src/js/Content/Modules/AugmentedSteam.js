@@ -1,3 +1,4 @@
+import {__usingLanguage, __usingLanguageReturn} from "../../../localization/compiled/_strings";
 import {ExtensionResources, HTML, Language, LocalStorage, Localization, SyncedStorage} from "../../modulesCore";
 import {Background, User} from "../modulesContent";
 
@@ -123,11 +124,12 @@ class AugmentedSteam {
 
         if (currentLanguage === warningLanguage) { return; }
 
-        Localization.loadLocalization(Language.getLanguageCode(warningLanguage)).then((strings) => {
+        Localization.load(Language.getLanguageCode(warningLanguage)).then(locale => {
+            const strings = locale.strings;
             AugmentedSteam._addWarning(
-                `${strings.using_language.replace("__current__", strings.options.lang[currentLanguage] || currentLanguage)}
+                `${strings[__usingLanguage].replace("__current__", strings[`options_lang_${currentLanguage}`] ?? currentLanguage)}
                 <a href="#" id="es_reset_language_code">
-                ${strings.using_language_return.replace("__base__", strings.options.lang[warningLanguage] || warningLanguage)}
+                ${strings[__usingLanguageReturn].replace("__base__", strings[`options_lang_${warningLanguage}`] ?? warningLanguage)}
                 </a>`,
                 () => { SyncedStorage.set("showlanguagewarning", false); }
             );

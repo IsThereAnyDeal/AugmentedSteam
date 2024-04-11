@@ -1,35 +1,15 @@
 import {HTML} from "../../Core/Html/Html";
 import Language from "../../Core/Localization/Language";
-import {Localization} from "../../Core/Localization/Localization";
+import Localization from "../../Core/Localization/Localization";
 import LocaleCredits from "./Data/LocaleCredits";
 
 class LocaleCreditsBuilder {
 
-    constructor() {
-        this._total = this._deepCount(Localization.str);
-    }
-
-    _deepCount(obj) {
-        let cnt = 0;
-        for (const key of Object.keys(obj)) {
-            if (!Localization.str[key]) { // don't count "made up" translations
-                continue;
-            }
-            if (typeof obj[key] === "object") {
-                cnt += this._deepCount(obj[key]);
-            } else if (obj[key] !== "") {
-                cnt++;
-            }
-        }
-        return cnt;
-    }
-
     async _computeCoverage(lang) {
         if (lang === "english") { return 100; }
         const code = Language.map[lang];
-        const locale = await Localization.loadLocalization(code);
-        const count = this._deepCount(locale);
-        return 100 * count / this._total;
+        const locale = await Localization.load(code);
+        return 100 * locale.stats.translated / locale.stats.strings;
     }
 
     async build() {
