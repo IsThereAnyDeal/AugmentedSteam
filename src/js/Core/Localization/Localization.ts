@@ -1,79 +1,56 @@
 import {BackgroundSimple, ExtensionResources, Language, SyncedStorage} from "../../modulesCore";
 
+interface TLocale {
+    stats: {
+        strings: number,
+        translated: number,
+    },
+    strings: Record<string, string>
+}
 
-class Localization {
+export default class Localization {
 
-    static loadLocalization(code) {
-        return ExtensionResources.getJSON(`/localization/${code}.json`);
+    private static _promise: Promise<void>|null = null;
+    public static locale: TLocale;
+
+    static load(code: string): Promise<TLocale> {
+        return ExtensionResources.getJSON(`/localization/compiled/${code}.json`);
     }
 
     static init() {
-        if (Localization._promise) { return Localization._promise; }
-
-        let currentSteamLanguage = Language.getCurrentSteamLanguage();
-        const storedSteamLanguage = SyncedStorage.get("language");
-        if (currentSteamLanguage === null) {
-            currentSteamLanguage = storedSteamLanguage;
-        } else if (currentSteamLanguage !== storedSteamLanguage) {
-            SyncedStorage.set("language", currentSteamLanguage);
-            BackgroundSimple.action("clearpurchases");
-        }
-
-        function deepAssign(target, source) {
-
-            // Object.assign() but deep-assigning objects recursively
-            for (const [key, val] of Object.entries(source)) {
-                if (typeof val === "object") {
-                    target[key] ??= {};
-                    deepAssign(target[key], val);
-                } else if (val === "" || typeof val !== "string") {
-                    console.warn("Unknown value for term", key);
-                    continue;
-                } else {
-                    target[key] = val;
+        if (!this._promise) {
+            this._promise = (async () => {
+                const stored = SyncedStorage.get("language");
+                let current = Language.getCurrentSteamLanguage();
+                if (current === null) {
+                    current = stored;
+                } else if (current !== stored) {
+                    SyncedStorage.set("language", current);
+                    BackgroundSimple.action("clearpurchases");
                 }
-            }
-            return target;
+
+                const lang = Language.getLanguageCode(current);
+
+                try {
+                    this.locale = await this.load(lang);
+                } catch(e) {
+                    console.error(`Failed to load ${lang}`);
+                    this.locale = await this.load("en");
+                }
+            })();
         }
 
-        const local = Language.getLanguageCode(currentSteamLanguage);
-        const codes = ["en"];
-        if (local !== null && local !== "en") {
-            codes.push(local);
-        }
-        Localization._promise = Promise.all(
-            codes.map(lc => Localization.loadLocalization(lc))
-        ).then(([english, local]) => {
-            Localization.str = english;
-            if (local) {
-                deepAssign(Localization.str, local);
-            }
-            return Localization.str;
-        });
-        return Localization._promise;
+        return this._promise;
     }
 
-    static then(onDone, onCatch) {
-        return Localization.init().then(onDone, onCatch);
-    }
-
-    static getString(key) {
-
-        // Source: http://stackoverflow.com/a/24221895
-        const path = key.split(".").reverse();
-        let current = Localization.str;
-
-        while (path.length) {
-            if (typeof current !== "object") {
-                return null;
-            }
-            current = current[path.pop()];
-        }
-        return current;
+    static then(
+        onfulfilled: ((value: void) => Promise<void>) | undefined | null,
+        onrejected: ((reason: any) => Promise<void>) | undefined | null
+    ): Promise<void> {
+        return Localization.init().then(onfulfilled, onrejected);
     }
 }
 
-Localization._promise = null;
-
-
-export {Localization};
+export function L(key: string): string | undefined {
+    return Localization.locale.strings[key] ?? undefined;
+}
