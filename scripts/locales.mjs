@@ -43,7 +43,7 @@ program
             const lang = path.basename(file, ".json");
             if (lang === "en") { continue; }
 
-            const compiled = await compiler.compile(lang, en, keys);
+            const compiled = await compiler.compile(lang, en.locale, keys);
             await compiler.save(lang, compiled);
             console.log(`${chalk.green("OK")} ${lang}`);
         }

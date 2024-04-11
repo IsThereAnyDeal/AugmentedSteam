@@ -2,7 +2,9 @@
   "name": "augmented-steam",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "update-locales": "node scripts/locales.mjs",
+    "update-locales": "node scripts/locales.mjs download",
+    "compile-locales": "node scripts/locales.mjs compile",
+    "locales": "npm run update-locales && npm run compile-locales",
     "release": "node scripts/make-release.mjs",
     "lint": "eslint .",
     "check": "npx tsc --noEmit & svelte-check"
