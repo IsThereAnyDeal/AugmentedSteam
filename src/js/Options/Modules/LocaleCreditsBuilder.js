@@ -1,5 +1,5 @@
 import {HTML} from "../../Core/Html/Html";
-import {Language} from "../../Core/Localization/Language";
+import Language from "../../Core/Localization/Language";
 import {Localization} from "../../Core/Localization/Localization";
 import LocaleCredits from "./Data/LocaleCredits";
 
@@ -26,7 +26,7 @@ class LocaleCreditsBuilder {
 
     async _computeCoverage(lang) {
         if (lang === "english") { return 100; }
-        const code = Language.languages[lang];
+        const code = Language.map[lang];
         const locale = await Localization.loadLocalization(code);
         const count = this._deepCount(locale);
         return 100 * count / this._total;

@@ -2,7 +2,7 @@ export {ErrorParser} from "./Core/Errors/ErrorParser";
 export {Errors} from "./Core/Errors/Errors";
 export {HTML} from "./Core/Html/Html";
 export {HTMLParser} from "./Core/Html/HtmlParser";
-export {Language} from "./Core/Localization/Language";
+export {default as Language} from "./Core/Localization/Language";
 export {Localization} from "./Core/Localization/Localization";
 export {CookieStorage} from "./Core/Storage/CookieStorage";
 export {default as LocalStorage} from "./Core/Storage/LocalStorage";

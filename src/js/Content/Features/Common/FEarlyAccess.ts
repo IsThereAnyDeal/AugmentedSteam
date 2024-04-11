@@ -57,7 +57,7 @@ export default class FEarlyAccess extends Feature {
 
         // TODO add missing images for supported locales
         let imageName = "img/overlay/early_access_banner_english.png";
-        if (Language.isCurrentLanguageOneOf([
+        if (Language.isCurrentLanguageOneOf(
             "brazilian",
             "french",
             "italian",
@@ -71,7 +71,7 @@ export default class FEarlyAccess extends Feature {
             "latam",
             "tchinese",
             "thai"
-        ])) {
+        )) {
             imageName = `img/overlay/early_access_banner_${Language.getCurrentSteamLanguage()}.png`;
         }
 
@@ -106,7 +106,7 @@ export default class FEarlyAccess extends Feature {
         await FEarlyAccess.show();
     }
 
-    
+
 
     static async getEaNodes(nodes: NodeList) {
 
