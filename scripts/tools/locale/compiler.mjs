@@ -19,7 +19,7 @@ export default class Compiler {
     *_traverse(locale, prefix= "") {
         for (let [key, value] of Object.entries(locale)) {
             if (typeof value === "object") {
-                yield* this._traverse(value, key+".");
+                yield* this._traverse(value, prefix+key+".");
             } else {
                 yield [prefix+key, value];
             }
@@ -29,7 +29,7 @@ export default class Compiler {
     _transposeKey(key) {
         return key
             .replace(/[_-]([a-z])/g, (match, p1) => p1.toUpperCase())
-            .replace(/\./, "_");
+            .replace(/\./g, "_");
     }
 
     async compile(lang, defaults= {}, filter = null){
