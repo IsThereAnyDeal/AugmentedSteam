@@ -420,7 +420,8 @@
         "about_desc": "Augmented Steam est un fork de l'extension Enhanced Steam.",
         "about_desc_links": "Visitez le __website__ de l'extension ou notre __discord__ pour plus d'informations.",
         "footer_fork": "un fork par IsThereAnyDeal",
-        "footer_author": "auteur original jshackles"
+        "footer_author": "auteur original jshackles",
+        "show_players_info": "Afficher les informations sur le nombre de joueurs"
     },
     "ready": {
         "loading": "Chargement des données d'Augmented Steam...",

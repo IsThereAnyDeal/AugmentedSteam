@@ -420,7 +420,8 @@
         "about_desc": "Augmented Steam е разклонение на добавката Enhanced Steam.",
         "about_desc_links": "Посетете __website__ на добавката или нашия __discord__ за още информация.",
         "footer_fork": "разклонение от IsThereAnyDeal",
-        "footer_author": "оригинален автор jshackles"
+        "footer_author": "оригинален автор jshackles",
+        "show_players_info": "Показване на информация за броя на играчите"
     },
     "ready": {
         "loading": "Зареждане на данните за Augmented Steam…",

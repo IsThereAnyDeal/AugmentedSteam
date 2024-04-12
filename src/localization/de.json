@@ -214,7 +214,7 @@
         "summary": "__unlocked__ von __total__ (__percentage__%) Errungenschaften freigeschaltet:"
     },
     "bundle": {
-        "offer_ends": "Das Angebot endet",
+        "offer_ends": "Angebot endet am",
         "includes": "Enthält __num__ Artikel",
         "tier_includes": "__tier__ (__price__) enthält __num__ Artikel",
         "tier": "Stufe __num__",
@@ -222,10 +222,10 @@
         "info": "Bundle-Informationen"
     },
     "charts": {
-        "peakall": "Historischer Höchststand",
-        "current": "Derzeitige Spieler",
-        "playing_now": "spielen jetzt gerade",
-        "peaktoday": "heutiger Höchststand"
+        "peakall": "Allzeithoch",
+        "current": "Spieler",
+        "playing_now": "aktuell online",
+        "peaktoday": "heutiges Hoch"
     },
     "hltb": {
         "title": "Zeit zum Durchspielen",
@@ -420,7 +420,8 @@
         "about_desc": "Augmented Steam ist ein Fork der Erweiterung Enhanced Steam.",
         "about_desc_links": "Besuchen Sie für weitere Informationen die __Website__ der Erweiterung oder unseren __Discord__.",
         "footer_fork": "ein Fork von IsThereAnyDeal",
-        "footer_author": "Originalautor jshackles"
+        "footer_author": "Originalautor jshackles",
+        "show_players_info": "Informationen zur Spielerzahl anzeigen"
     },
     "ready": {
         "loading": "Augmented Steam lädt Daten ...",
