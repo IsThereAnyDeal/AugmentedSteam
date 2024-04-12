@@ -1,4 +1,6 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {__userScore} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../Modules/Feature/Feature";
 
 export default class FMetacriticUserScore extends Feature {
@@ -36,7 +38,7 @@ export default class FMetacriticUserScore extends Feature {
                 <div class="score ${rating}">${metauserscore}</div>
                 <div class="logo"></div>
                 <div class="wordmark">
-                    <div class="metacritic">${Localization.str.user_score}</div>
+                    <div class="metacritic">${L(__userScore)}</div>
                 </div>
             </div>`);
     }

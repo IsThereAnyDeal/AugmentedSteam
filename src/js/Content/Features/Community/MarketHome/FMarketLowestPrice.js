@@ -1,4 +1,6 @@
-import {Errors, HTML, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
+import {__loading, __lowest, __noData, __theworderror, __toomanyrequests} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {Errors, HTML, SyncedStorage, TimeUtils} from "../../../../modulesCore";
 import {CallbackFeature, CurrencyManager, Price, RequestData, User} from "../../../modulesContent";
 
 export default class FMarketLowestPrice extends CallbackFeature {
@@ -38,7 +40,7 @@ export default class FMarketLowestPrice extends CallbackFeature {
             const editNode = listingNode.querySelector(".market_listing_edit_buttons");
             if (!editNode) { continue; }
 
-            HTML.afterEnd(editNode, `<span class="market_listing_right_cell es_market_listing_lowest">${Localization.str.lowest}</span>`);
+            HTML.afterEnd(editNode, `<span class="market_listing_right_cell es_market_listing_lowest">${L(__lowest)}</span>`);
         }
 
         this._updateTableRows();
@@ -50,13 +52,13 @@ export default class FMarketLowestPrice extends CallbackFeature {
 
         switch (data) {
             case "error":
-                lowestNode.textContent = Localization.str.theworderror;
+                lowestNode.textContent = L(__theworderror);
                 return;
             case "nodata":
-                lowestNode.textContent = Localization.str.no_data;
+                lowestNode.textContent = L(__noData);
                 return;
             case "timeout":
-                lowestNode.textContent = Localization.str.toomanyrequests;
+                lowestNode.textContent = L(__toomanyrequests);
                 return;
             default:
                 lowestNode.textContent = data;
@@ -81,7 +83,7 @@ export default class FMarketLowestPrice extends CallbackFeature {
 
             HTML.afterEnd(
                 node.querySelector(".market_listing_edit_buttons.placeholder"),
-                `<div class="market_listing_right_cell es_market_listing_lowest">${Localization.str.loading}</div>`
+                `<div class="market_listing_right_cell es_market_listing_lowest">${L(__loading)}</div>`
             );
 
             rows.push(node);

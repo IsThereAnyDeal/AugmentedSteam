@@ -1,3 +1,9 @@
+import {
+    __calcWorkshopSize_calcFinished, __calcWorkshopSize_calcLoading,
+    __calcWorkshopSize_calcSize,
+    __calcWorkshopSize_fileSize, __calcWorkshopSize_totalSize, __workshop_failed,
+} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
 import {HTML, Localization} from "../../../../modulesCore";
 import {Background, Feature, RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
@@ -12,14 +18,12 @@ export default class FWorkshopFileSizes extends Feature {
 
     apply() {
 
-        this._calcStr = Localization.str.calc_workshop_size;
-
         HTML.beforeEnd(".primary_panel",
             `<div class="menu_panel">
                 <div class="rightSectionHolder">
                     <div class="rightDetailsBlock">
                         <span class="btn_grey_steamui btn_medium" id="es_calc_size">
-                            <span>${this._calcStr.calc_size}</span>
+                            <span>${L(__calcWorkshopSize_calcSize)}</span>
                         </span>
                     </div>
                 </div>
@@ -43,7 +47,7 @@ export default class FWorkshopFileSizes extends Feature {
             const size = await this._getFileSize(node, true).catch(err => console.error(err));
             if (!size) { continue; }
 
-            const str = this._calcStr.file_size.replace("__size__", this._getFileSizeStr(size));
+            const str = L(__calcWorkshopSize_fileSize, {"size": this._getFileSizeStr(size)});
             HTML.beforeEnd(node.querySelector(".workshopItemSubscriptionDetails"), `<div class="workshopItemDate">${str}</div>`);
             node.classList.add("as-has-filesize");
         }
@@ -87,32 +91,35 @@ export default class FWorkshopFileSizes extends Feature {
             }
         }
 
-        let resultString = this._calcStr.calc_finished
-            .replace("__success__", this._completed)
-            .replace("__total__", this._total);
+        let resultString = L(__calcWorkshopSize_calcFinished, {
+            "success": this._completed,
+            "total": this._total
+        });
 
         resultString += "<br>";
 
-        resultString += this._calcStr.total_size
-            .replace("__size__", this._getFileSizeStr(this._totalSize));
+        resultString += L(__calcWorkshopSize_totalSize, {
+            "size": this._getFileSizeStr(this._totalSize)
+        });
 
         Page.runInPageContext((title, result) => {
             window.SteamFacade.dismissActiveModal();
             window.SteamFacade.showAlertDialog(title, result);
-        }, [this._calcStr.calc_size, resultString]);
+        }, [L(__calcWorkshopSize_calcSize), resultString]);
 
         this._addFileSizes(); // Add file sizes now that data has been fetched
     }
 
     _updateWaitDialog() {
 
-        let statusString = this._calcStr.calc_loading
-            .replace("__i__", this._completed)
-            .replace("__count__", this._total);
+        let statusString = L(__calcWorkshopSize_calcLoading, {
+            "i": this._completed,
+            "count": this._total
+        });
 
         if (this._failed > 0) {
             statusString += "<br>";
-            statusString += Localization.str.workshop.failed.replace("__n__", this._failed);
+            statusString += L(__workshop_failed, {"n": this._failed});
         }
 
         const container = document.querySelector("#as_loading_text_ctn");
@@ -121,7 +128,7 @@ export default class FWorkshopFileSizes extends Feature {
         } else {
             Page.runInPageContext((title, progress) => {
                 window.SteamFacade.showBlockingWaitDialog(title, `<div id="as_loading_text_ctn">${progress}</div>`);
-            }, [this._calcStr.calc_size, statusString]);
+            }, [L(__calcWorkshopSize_calcSize), statusString]);
         }
     }
 

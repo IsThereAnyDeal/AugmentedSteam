@@ -1,4 +1,16 @@
-import {HTML, HTMLParser, Localization} from "../../../../modulesCore";
+import {
+    __badgesAll,
+    __badgesDrops,
+    __binderView,
+    __cardsRemain,
+    __dropsValue,
+    __mostDrops,
+    __show,
+    __theworddefault,
+    __view,
+} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, HTMLParser} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -28,9 +40,9 @@ export default class FBadgeSortAndFilter extends Feature {
             html += `<a class="popup_menu_item" href="?sort=${sort}">${node.textContent.trim()}</a>`;
         }
         if (isOwnProfile) {
-            html += `<a class="popup_menu_item" id="es_badge_sort_drops">${Localization.str.most_drops}</a>`;
-            html += `<a class="popup_menu_item" id="es_badge_sort_value">${Localization.str.drops_value}</a>`;
-            html += `<a class="popup_menu_item" id="es_badge_sort_remain">${Localization.str.cards_remain}</a>`;
+            html += `<a class="popup_menu_item" id="es_badge_sort_drops">${L(__mostDrops)}</a>`;
+            html += `<a class="popup_menu_item" id="es_badge_sort_value">${L(__dropsValue)}</a>`;
+            html += `<a class="popup_menu_item" id="es_badge_sort_remain">${L(__cardsRemain)}</a>`;
         }
 
         const activeText = sortOptions.querySelector(".active").textContent.trim();
@@ -108,19 +120,19 @@ export default class FBadgeSortAndFilter extends Feature {
 
         HTML.afterBegin(this._header,
             `<div class="es_badge_filter">
-                <span>${Localization.str.show}</span>
+                <span>${L(__show)}</span>
                 <div class="store_nav">
                     <div class="tab flyout_tab" data-flyout="es_filter_flyout" data-flyout-align="right" data-flyout-valign="bottom">
                         <span class="pulldown">
-                            <div id="es_filter_active">${Localization.str.badges_all}</div>
+                            <div id="es_filter_active">${L(__badgesAll)}</div>
                             <span></span>
                         </span>
                     </div>
                 </div>
                 <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_filter_flyout">
                     <div class="popup_body popup_menu">
-                        <a class="popup_menu_item es_bg_filter" id="es_badge_all">${Localization.str.badges_all}</a>
-                        <a class="popup_menu_item es_bg_filter" id="es_badge_drops">${Localization.str.badges_drops}</a>
+                        <a class="popup_menu_item es_bg_filter" id="es_badge_all">${L(__badgesAll)}</a>
+                        <a class="popup_menu_item es_bg_filter" id="es_badge_drops">${L(__badgesDrops)}</a>
                     </div>
                 </div>
             </div>`);
@@ -130,7 +142,7 @@ export default class FBadgeSortAndFilter extends Feature {
                 node.style.display = "block";
             }
 
-            document.querySelector("#es_filter_active").textContent = Localization.str.badges_all;
+            document.querySelector("#es_filter_active").textContent = L(__badgesAll);
             document.querySelector("#es_filter_flyout").style.display = "none";
             this._recalcLazyLoaderOffset();
         });
@@ -151,7 +163,7 @@ export default class FBadgeSortAndFilter extends Feature {
                 }
             }
 
-            document.querySelector("#es_filter_active").textContent = Localization.str.badges_drops;
+            document.querySelector("#es_filter_active").textContent = L(__badgesDrops);
             document.querySelector("#es_filter_flyout").style.display = "none";
             this._recalcLazyLoaderOffset();
         });
@@ -161,19 +173,19 @@ export default class FBadgeSortAndFilter extends Feature {
 
         HTML.afterBegin(this._header,
             `<div class="es_badge_view">
-                <span>${Localization.str.view}</span>
+                <span>${L(__view)}</span>
                 <div class="store_nav">
                     <div class="tab flyout_tab" data-flyout="es_badgeview_flyout" data-flyout-align="right" data-flyout-valign="bottom">
                         <span class="pulldown">
-                            <div id="es_badgeview_active">${Localization.str.theworddefault}</div>
+                            <div id="es_badgeview_active">${L(__theworddefault)}</div>
                             <span></span>
                         </span>
                     </div>
                 </div>
                 <div class="popup_block_new flyout_tab_flyout responsive_slidedown" id="es_badgeview_flyout">
                     <div class="popup_body popup_menu">
-                        <a class="popup_menu_item es_bg_view" data-view="defaultview">${Localization.str.theworddefault}</a>
-                        <a class="popup_menu_item es_bg_view" data-view="binderview">${Localization.str.binder_view}</a>
+                        <a class="popup_menu_item es_bg_view" data-view="defaultview">${L(__theworddefault)}</a>
+                        <a class="popup_menu_item es_bg_view" data-view="binderview">${L(__binderView)}</a>
                     </div>
                 </div>
             </div>`);
@@ -299,7 +311,7 @@ export default class FBadgeSortAndFilter extends Feature {
             node.href = isBinderView ? `${node.href}#binderview` : node.href.replace("#binderview", "");
         }
 
-        document.querySelector("#es_badgeview_active").textContent = isBinderView ? Localization.str.binder_view : Localization.str.theworddefault;
+        document.querySelector("#es_badgeview_active").textContent = L(isBinderView ? __binderView : __theworddefault);
     }
 
     _loadBinderView() {

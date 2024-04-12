@@ -1,4 +1,6 @@
-import {Language, Localization, SyncedStorage} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__purchaseDate} from "@Strings/_strings";
+import {Language, SyncedStorage} from "../../../../modulesCore";
 import {Feature, User} from "../../../modulesContent";
 
 export default class FPurchaseDate extends Feature {
@@ -19,6 +21,6 @@ export default class FPurchaseDate extends Feature {
             return;
         }
 
-        this._node.textContent += ` ${Localization.str.purchase_date.replace("__date__", date)}`;
+        this._node.textContent += ` ${L(__purchaseDate, {date})}`;
     }
 }

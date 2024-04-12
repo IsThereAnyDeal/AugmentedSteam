@@ -1,5 +1,7 @@
+import {__viewBadge} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {Feature} from "../../../Modules/Feature/Feature";
-import {HTML, Localization} from "../../../../modulesCore";
 
 export default class FBadgePageLink extends Feature {
 
@@ -18,7 +20,7 @@ export default class FBadgePageLink extends Feature {
             `<a class="es_marketlistings_btn btn_grey_grey btn_medium" href="//steamcommunity.com/my/gamecards/${gameAppId + cardType}" target="_blank">
                 <span>
                     <img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png">
-                    ${Localization.str.view_badge}
+                    ${L(__viewBadge)}
                 </span>
             </a>`);
     }

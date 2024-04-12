@@ -38,6 +38,13 @@
         // Interop Constraints
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
-        "isolatedModules": true
+        "isolatedModules": true,
+
+        "paths": {
+            "@Core/*": ["./src/js/Core/*"],
+            "@Content/*": ["./src/js/Content/*"],
+            "@Background/*": ["./src/js/Background/*"],
+            "@Strings/*": ["./src/localization/compiled/*"],
+        }
     }
 }

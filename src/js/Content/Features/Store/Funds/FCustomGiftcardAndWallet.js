@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__wallet_customAmount, __wallet_customAmountText, __wallet_customGiftcard} from "@Strings/_strings";
+import {HTML} from "../../../../modulesCore";
 import {CurrencyManager, Feature, Price} from "../../../modulesContent";
 
 export default class FCustomGiftcardAndWallet extends Feature {
@@ -40,17 +42,17 @@ export default class FCustomGiftcardAndWallet extends Feature {
 
         if (giftcard) {
             const styleel = newel.querySelector(".giftcard_style");
-            HTML.inner(styleel, Localization.str.wallet.custom_giftcard.replace("__input__", `<span>${input}</span>`));
+            HTML.inner(styleel, L(__wallet_customGiftcard, {"input": `<span>${input}</span>`}));
             newel.querySelector("#es_custom_money_input").dataset.tooltipText
-                = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
+                = L(__wallet_customAmountText, {"minamount": price});
 
             styleel.addEventListener("click", e => {
                 e.stopPropagation();
             });
         } else {
             HTML.inner(priceel, input);
-            newel.querySelector("h1").textContent = `${Localization.str.wallet.custom_amount} ${price}`;
-            newel.querySelector("p").textContent = Localization.str.wallet.custom_amount_text.replace("__minamount__", price);
+            newel.querySelector("h1").textContent = `${L(__wallet_customAmount)} ${price}`;
+            newel.querySelector("p").textContent = L(__wallet_customAmountText, {"minamount": price});
         }
 
         minAmountNode.insertAdjacentElement("afterend", newel);
@@ -67,7 +69,7 @@ export default class FCustomGiftcardAndWallet extends Feature {
                 priceel.textContent = new Price(value);
                 priceel.classList.toggle("small", priceel.textContent.length > 8);
             } else {
-                newel.querySelector("h1").textContent = `${Localization.str.wallet.custom_amount} ${new Price(value)}`;
+                newel.querySelector("h1").textContent = `${L(__wallet_customAmount)} ${new Price(value)}`;
             }
         });
 

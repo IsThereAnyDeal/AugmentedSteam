@@ -1,16 +1,23 @@
 <svelte:options accessors immutable />
 
 <script lang="ts">
-    import {Localization, HTML} from "../../../modulesCore";
+    import {HTML} from "@Core/Html/Html";
     import PriceWithAlt from "./PriceWithAlt.svelte";
     import {afterUpdate} from "svelte";
-    import type {TPriceOverview} from "../../../Background/Modules/AugmentedSteam/_types";
+    import type {TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
+    import {
+        __pricing_bundleCount,
+        __pricing_bundled,
+        __pricing_historicalLow,
+        __pricing_lowestPrice,
+        __pricing_store,
+        __pricing_withVoucher
+    } from "@Strings/_strings";
+    import {L} from "@Core/Localization/Localization";
 
     export let data: TPriceOverview;
     export let setBottom: boolean = false;
     export let height: number|undefined;
-
-    const pricingStr = Localization.str.pricing;
 
     let node: HTMLElement;
     let currentDrms: string[];
@@ -33,7 +40,7 @@
 
 <div class="itad-pricing" bind:this={node}>
     {#if data.current}
-        <a href={data.urls.info} target="_blank">{pricingStr.lowest_price}</a>
+        <a href={data.urls.info} target="_blank">{L(__pricing_lowestPrice)}</a>
 
         <span class="itad-pricing__price">
             <PriceWithAlt price={data.current.price} />
@@ -45,10 +52,10 @@
             {/if}
 
             {#if data.current.voucher}
-                <span class="itad-pricing__voucher">{pricingStr.with_voucher.replace("__voucher__", data.current.voucher)}</span>
+                <span class="itad-pricing__voucher">{L(__pricing_withVoucher, {"voucher": data.current.voucher})}</span>
             {/if}
 
-            {@html pricingStr.store.replace("__store__", HTML.escape(data.current.shop.name))}
+            {@html L(__pricing_store, {"store": HTML.escape(data.current.shop.name)})}
             {#if currentDrms.length > 0}
                 <span class="itad-pricing__drm">({currentDrms.join(", ")})</span>
             {/if}
@@ -56,7 +63,7 @@
     {/if}
 
     {#if data.lowest}
-        <a href={data.urls.info} target="_blank">{pricingStr.historical_low}</a>
+        <a href={data.urls.info} target="_blank">{L(__pricing_historicalLow)}</a>
 
         <span class="itad-pricing__price">
             <PriceWithAlt price={data.lowest.price} />
@@ -66,14 +73,14 @@
             {#if data.lowest.cut > 0}
                 <span class="itad-pricing__cut">-{data.lowest.cut}%</span>
             {/if}
-            {@html pricingStr.store.replace("__store__", HTML.escape(data.lowest.shop.name))}
+            {@html L(__pricing_store, {"store": HTML.escape(data.lowest.shop.name)})}
             {new Date(data.lowest.timestamp).toLocaleDateString()}
         </div>
     {/if}
 
     {#if data.bundled}
-        <a href={data.urls.info} target="_blank">{pricingStr.bundled}</a>
-        <div class="itad-pricing__bundled">{pricingStr.bundle_count.replace("__count__", data.bundled)}</div>
+        <a href={data.urls.info} target="_blank">{L(__pricing_bundled)}</a>
+        <div class="itad-pricing__bundled">{L(__pricing_bundleCount, {"count": data.bundled})}</div>
     {/if}
 </div>
 

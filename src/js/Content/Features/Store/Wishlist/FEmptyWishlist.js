@@ -1,4 +1,6 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__emptyWishlist_confirm, __emptyWishlist_removing, __emptyWishlist_title} from "@Strings/_strings";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {DynamicStore, Feature, RequestData, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -9,28 +11,29 @@ export default class FEmptyWishlist extends Feature {
     }
 
     apply() {
-        HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_empty_wishlist">${Localization.str.empty_wishlist.title}</div>`);
+        HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_empty_wishlist">${L(__emptyWishlist_title)}</div>`);
 
         document.getElementById("es_empty_wishlist").addEventListener("click", async() => {
 
-            await Page.runInPageContext(emptyWishlist => {
+            await Page.runInPageContext(() => {
                 const f = window.SteamFacade;
-                const prompt = f.showConfirmDialog(emptyWishlist.title, emptyWishlist.confirm);
+                const prompt = f.showConfirmDialog(L(__emptyWishlist_title), L(__emptyWishlist_confirm));
 
                 return new Promise(resolve => {
                     prompt.done(result => {
                         if (result === "OK") {
                             f.showBlockingWaitDialog(
-                                emptyWishlist.title,
-                                emptyWishlist.removing
-                                    .replace("__cur__", 1)
-                                    .replace("__total__", f.global("g_rgWishlistData").length)
+                                L(__emptyWishlist_title),
+                                L(__emptyWishlist_removing, {
+                                    "cur": 1,
+                                    "total": f.global("g_rgWishlistData").length
+                                })
                             );
                             resolve();
                         }
                     });
                 });
-            }, [Localization.str.empty_wishlist], true);
+            }, [], true);
 
             const wishlistData = this.context.wishlistData;
             let cur = 1;
@@ -38,9 +41,10 @@ export default class FEmptyWishlist extends Feature {
             const url = "https://store.steampowered.com/api/removefromwishlist";
 
             for (const {appid} of wishlistData) {
-                textNode.textContent = Localization.str.empty_wishlist.removing
-                    .replace("__cur__", cur++)
-                    .replace("__total__", wishlistData.length);
+                textNode.textContent = L(__emptyWishlist_removing, {
+                    "cur": cur++,
+                    "total": wishlistData.length
+                });
 
                 await RequestData.post(url, {"sessionid": User.sessionId, appid});
             }

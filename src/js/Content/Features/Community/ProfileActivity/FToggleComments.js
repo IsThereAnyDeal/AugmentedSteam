@@ -1,3 +1,4 @@
+import {__hideComments, __options_hideannouncementcomments, __showComments} from "../../../../../localization/compiled/_strings";
 import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature, ConfirmDialog} from "../../../modulesContent";
 
@@ -33,7 +34,7 @@ export default class FToggleComments extends CallbackFeature {
 
         if (!SyncedStorage.has("hideannouncementcomments")) {
 
-            ConfirmDialog.openFeatureHint("hideannouncementcomments")
+            ConfirmDialog.openFeatureHint(__options_hideannouncementcomments)
                 .then(result => {
                     const hide = result === "OK";
                     SyncedStorage.set("hideannouncementcomments", hide);
@@ -50,6 +51,6 @@ export default class FToggleComments extends CallbackFeature {
     _toggleComments(commentArea, btnEl, hide) {
         commentArea.style.display = hide ? "none" : "";
         btnEl.classList.toggle("as-comments-hidden", hide);
-        btnEl.querySelector("span").textContent = Localization.str[hide ? "show_comments" : "hide_comments"];
+        btnEl.querySelector("span").textContent = L(hide ? __showComments : __hideComments);
     }
 }

@@ -1,4 +1,14 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {
+    __error,
+    __instantSell,
+    __instantSellDesc,
+    __quickSell,
+    __quickSellDesc,
+    __quickSellVerify,
+    __selling,
+} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature, CurrencyManager, RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -39,15 +49,15 @@ export default class FQuickSellOptions extends CallbackFeature {
         // marketActions' innerHTML is cleared on item selection, so the links HTML has to be re-inserted
         HTML.beforeEnd(marketActions,
             `<div class="es_qsell_ctn">
-                <a class="btn_small btn_grey_white_innerfade" id="es_quicksell${view}" data-tooltip-text="${Localization.str.quick_sell_desc.replace("__modifier__", diff)}">
+                <a class="btn_small btn_grey_white_innerfade" id="es_quicksell${view}" data-tooltip-text="${L(__quickSellDesc, {"modifier": diff})}">
                     <span></span>
                 </a>
-                <a class="btn_small btn_grey_white_innerfade" id="es_instantsell${view}" data-tooltip-text="${Localization.str.instant_sell_desc}">
+                <a class="btn_small btn_grey_white_innerfade" id="es_instantsell${view}" data-tooltip-text="${L(__instantSellDesc)}">
                     <span></span>
                 </a>
                 <div class="es_loading es_qsell_loading">
                     <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
-                    <span>${Localization.str.selling}</span>
+                    <span>${L(__selling)}</span>
                 </div>
             </div>`);
 
@@ -119,7 +129,7 @@ export default class FQuickSellOptions extends CallbackFeature {
             const result = await RequestData.post("https://steamcommunity.com/market/sellitem/", data).catch(err => err);
 
             if (!result?.success) {
-                loadingEl.textContent = result?.message ?? Localization.str.error;
+                loadingEl.textContent = result?.message ?? L(__error);
                 enableButtons(true);
 
                 return;
@@ -127,7 +137,7 @@ export default class FQuickSellOptions extends CallbackFeature {
 
             // https://github.com/SteamDatabase/SteamTracking/blob/13e4e0c8f8772ef316f73881af8c546218cf7117/steamcommunity.com/public/javascript/economy_v2.js#L4368
             if (result.requires_confirmation) {
-                loadingEl.textContent = Localization.str.quick_sell_verify;
+                loadingEl.textContent = L(__quickSellVerify);
             } else {
                 marketActions.style.display = "none";
             }
@@ -139,12 +149,12 @@ export default class FQuickSellOptions extends CallbackFeature {
 
         // Show Quick Sell button
         if (priceHighValue > 0 && priceHighValue > priceLowValue) {
-            this._showSellButton(quickSell, Localization.str.quick_sell, priceHighValue, currencyType, clickHandler);
+            this._showSellButton(quickSell, L(__quickSell), priceHighValue, currencyType, clickHandler);
         }
 
         // Show Instant Sell button
         if (priceLowValue > 0) {
-            this._showSellButton(instantSell, Localization.str.instant_sell, priceLowValue, currencyType, clickHandler);
+            this._showSellButton(instantSell, L(__instantSell), priceLowValue, currencyType, clickHandler);
         }
     }
 

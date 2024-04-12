@@ -1,4 +1,5 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {__regionUnavailable} from "@Strings/_strings";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {CurrencyManager, Feature, Price, RequestData, User} from "../../../modulesContent";
 
 export default class FRegionalPricing extends Feature {
@@ -114,7 +115,7 @@ export default class FRegionalPricing extends Feature {
             }
         } else {
             html += `<div class="es-regprice es-flag es-flag--${country}">`;
-            html += `<span class="es-regprice__none">${Localization.str.region_unavailable}</span>`;
+            html += `<span class="es-regprice__none">${L(__regionUnavailable)}</span>`;
         }
 
         html += "</div>";

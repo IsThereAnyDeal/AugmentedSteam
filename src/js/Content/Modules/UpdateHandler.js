@@ -1,7 +1,9 @@
-import {ExtensionResources, Info, Localization, SyncedStorage, Version} from "../../modulesCore";
-import {Background} from "../modulesContent";
+import {L} from "@Core/Localization/Localization";
+import {__update_changes, __update_updated} from "@Strings/_strings";
+import {ExtensionResources, Info, SyncedStorage, Version} from "../../modulesCore";
 
 import {Page} from "../Features/Page";
+import {Background} from "../modulesContent";
 
 class UpdateHandler {
 
@@ -40,13 +42,13 @@ class UpdateHandler {
             <img src="${logo}">
             <div>
                 ${html}
-                <p><a href="${githubLink}" target="_blank">${Localization.str.update.changes}</a></p>
+                <p><a href="${githubLink}" target="_blank">${L(__update_changes)}</a></p>
             </div>
         </div>`;
 
         Page.runInPageContext((title, html) => {
             window.SteamFacade.showAlertDialog(title, html);
-        }, [Localization.str.update.updated.replace("__version__", Info.version), dialog]);
+        }, [L(__update_updated, {"version": Info.version}), dialog]);
     }
 
     static _migrateSettings(oldVersion) {

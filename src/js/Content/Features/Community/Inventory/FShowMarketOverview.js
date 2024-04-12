@@ -1,4 +1,12 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {
+    __avgPrice_3cards,
+    __noPriceData,
+    __startingAt,
+    __viewInMarket,
+    __volumeSoldLast_24,
+} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {Background, CallbackFeature, CurrencyManager, RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -72,7 +80,7 @@ export default class FShowMarketOverview extends CallbackFeature {
                  * This comparison checks for the existence of the text node "Starting at: ..."
                  */
                 if (priceInfoDiv.firstChild.nodeType === Node.TEXT_NODE) {
-                    priceInfoDiv.append(Localization.str.avg_price_3cards.replace("__price__", thisItem.dataset.cardsPrice));
+                    priceInfoDiv.append(L(__avgPrice_3cards, {"price": thisItem.dataset.cardsPrice}));
                 } else {
 
                     // Wait for population of the div https://github.com/SteamDatabase/SteamTracking/blob/6c5145935aa0a9f9134e724d89569dfd1f2af014/steamcommunity.com/public/javascript/economy_v2.js#L3563
@@ -89,7 +97,7 @@ export default class FShowMarketOverview extends CallbackFeature {
                         window.Ajax.Responders.register({onComplete});
                     }), [hashName], true).then(() => {
                         firstDiv.querySelector("div:nth-child(2)")
-                            .append(Localization.str.avg_price_3cards.replace("__price__", thisItem.dataset.cardsPrice));
+                            .append(L(__avgPrice_3cards, {"price": thisItem.dataset.cardsPrice}));
                     });
                 }
             }
@@ -105,7 +113,7 @@ export default class FShowMarketOverview extends CallbackFeature {
 
         // "View in market" link
         let html = `<div style="height:24px;">
-                        <a href="//steamcommunity.com/market/listings/${globalId}/${_hashName}">${Localization.str.view_in_market}</a>
+                        <a href="//steamcommunity.com/market/listings/${globalId}/${_hashName}">${L(__viewInMarket)}</a>
                     </div>`;
 
         // Check if price is stored in data
@@ -142,20 +150,20 @@ export default class FShowMarketOverview extends CallbackFeature {
         let html = '<div style="min-height:3em;margin-left:1em;">';
 
         if (node.dataset.lowestPrice && node.dataset.lowestPrice !== "nodata") {
-            html += Localization.str.starting_at.replace("__price__", node.dataset.lowestPrice);
+            html += L(__startingAt, {"price": node.dataset.lowestPrice});
 
             if (node.dataset.soldVolume && node.dataset.soldVolume !== "nodata") {
                 html += "<br>";
-                html += Localization.str.volume_sold_last_24.replace("__sold__", node.dataset.soldVolume);
+                html += L(__volumeSoldLast_24, {"sold": node.dataset.soldVolume});
             }
 
             // cards price data is only fetched for booster packs
             if (node.dataset.cardsPrice && node.dataset.cardsPrice !== "nodata") {
                 html += "<br>";
-                html += Localization.str.avg_price_3cards.replace("__price__", node.dataset.cardsPrice);
+                html += L(__avgPrice_3cards, {"price": node.dataset.cardsPrice});
             }
         } else {
-            html += Localization.str.no_price_data;
+            html += L(__noPriceData);
         }
 
         html += "</div>";

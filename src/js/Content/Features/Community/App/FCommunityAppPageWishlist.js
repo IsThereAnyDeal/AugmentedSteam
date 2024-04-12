@@ -1,4 +1,6 @@
-import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {__addToWishlist, __error, __onWishlist} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
 import {Background, DynamicStore, Feature, User} from "../../../modulesContent";
 
 export default class FCommunityAppPageWishlist extends Feature {
@@ -22,7 +24,7 @@ export default class FCommunityAppPageWishlist extends Feature {
                 <a id="es_wishlist_add" class="btnv6_blue_hoverfade btn_medium" style="${wishlisted ? "display: none;" : ""}">
                     <span>
                         <img class="es-loading-wl" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
-                        ${Localization.str.add_to_wishlist}
+                        ${L(__addToWishlist)}
                     </span>
                 </a>
                 <a id="es_wishlist_success" class="btnv6_blue_hoverfade btn_medium" style="${wishlisted ? "" : "display: none;"}">
@@ -30,11 +32,11 @@ export default class FCommunityAppPageWishlist extends Feature {
                         <img class="es-remove-wl" src="${ExtensionResources.getURL("img/remove.png")}">
                         <img class="es-loading-wl" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
                         <img class="es-in-wl" src="//store.cloudflare.steamstatic.com/public/images/v6/ico/ico_selected.png" border="0">
-                        ${Localization.str.on_wishlist}
+                        ${L(__onWishlist)}
                     </span>
                 </a>
                 <div id="es_wishlist_fail">
-                    <b>${Localization.str.error}</b>
+                    <b>${L(__error)}</b>
                 </div>
             </span>`);
 

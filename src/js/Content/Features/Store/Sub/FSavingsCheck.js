@@ -1,3 +1,5 @@
+import {L} from "@Core/Localization/Localization";
+import {__bundleSavingText} from "@Strings/_strings";
 import {HTML, Localization} from "../../../../modulesCore";
 import {DOMHelper, Feature, Price} from "../../../modulesContent";
 
@@ -39,7 +41,7 @@ export default class FSavingsCheck extends Feature {
                 HTML.beforeEnd(".package_totals_area",
                     `<div id="package_savings_bar">
                         <div class="savings"></div>
-                        <div class="message">${Localization.str.bundle_saving_text}</div>
+                        <div class="message">${L(__bundleSavingText)}</div>
                     </div>`);
             }
 

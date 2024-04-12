@@ -1,3 +1,4 @@
+import {__userNote_add} from "@Strings/_strings";
 import {Localization, SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature} from "../../../modulesContent";
 import {Page} from "../../Page";
@@ -67,7 +68,7 @@ export default class FWishlistUserNotes extends CallbackFeature {
 
             // The scroll handler loads the visible rows and adjusts their positions
             f.wishlistOnScroll();
-        }, [Localization.str.user_note.add]);
+        }, [L(__userNote_add)]);
     }
 
     async callback(nodes) {

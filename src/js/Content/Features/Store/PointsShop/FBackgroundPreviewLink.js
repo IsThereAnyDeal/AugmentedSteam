@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__previewBackground} from "@Strings/_strings";
+import {HTML} from "../../../../modulesCore";
 import {Feature, User} from "../../../modulesContent";
 
 export default class FBackgroundPreviewLink extends Feature {
@@ -61,7 +63,7 @@ export default class FBackgroundPreviewLink extends Feature {
             HTML.beforeBegin(previewEl.parentNode,
                 `<div class="as_preview_background_ctn">
                     <a class="as_preview_background" target="_blank" href="${User.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
-                        ${Localization.str.preview_background}
+                        ${L(__previewBackground)}
                     </a>
                 </div>`);
         }).observe(modalEl, {"childList": true, "subtree": true});

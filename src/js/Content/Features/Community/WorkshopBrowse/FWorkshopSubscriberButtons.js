@@ -1,4 +1,16 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {
+    __workshop_failed,
+    __workshop_finished,
+    __workshop_subscribeAll,
+    __workshop_subscribeConfirm,
+    __workshop_subscribeLoading,
+    __workshop_subscriptions,
+    __workshop_unsubscribeAll,
+    __workshop_unsubscribeConfirm,
+    __workshop_unsubscribeLoading,
+} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {ConfirmDialog, Feature, RequestData, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 import Workshop from "../Workshop";
@@ -12,20 +24,17 @@ export default class FWorkshopSubscriberButtons extends Feature {
     }
 
     apply() {
-
-        this._workshopStr = Localization.str.workshop;
-
         HTML.beforeBegin(".panel > .rightSectionTopTitle",
-            `<div class="rightSectionTopTitle">${this._workshopStr.subscriptions}:</div>
+            `<div class="rightSectionTopTitle">${L(__workshop_subscriptions)}:</div>
             <div id="es_subscriber_container" class="rightDetailsBlock">
                 <div style="position: relative;">
                     <div class="browseOption mostrecent">
-                        <a class="es_subscriber" data-method="subscribe">${this._workshopStr.subscribe_all}</a>
+                        <a class="es_subscriber" data-method="subscribe">${L(__workshop_subscribeAll)}</a>
                     </div>
                 </div>
                 <div style="position: relative;">
                     <div class="browseOption mostrecent">
-                        <a class="es_subscriber" data-method="unsubscribe">${this._workshopStr.unsubscribe_all}</a>
+                        <a class="es_subscriber" data-method="unsubscribe">${L(__workshop_unsubscribeAll)}</a>
                     </div>
                 </div>
                 <hr>
@@ -45,9 +54,10 @@ export default class FWorkshopSubscriberButtons extends Feature {
         this._completed = 0;
         this._failed = 0;
 
-        this._statusTitle = this._workshopStr[`${this._method}_all`];
-        const statusString = this._workshopStr[`${this._method}_confirm`]
-            .replace("__count__", this._total);
+        this._statusTitle = L(this._method === "subscribe" ? __workshop_subscribeAll : __workshop_unsubscribeAll);
+        const statusString = L(this._method === "subscribe" ? __workshop_subscribeConfirm : __workshop_unsubscribeConfirm, {
+            "count": this._total
+        });
 
         if (await ConfirmDialog.open(this._statusTitle, statusString) !== "OK") { return; }
 
@@ -97,9 +107,10 @@ export default class FWorkshopSubscriberButtons extends Feature {
 
     _showResults() {
 
-        const statusString = this._workshopStr.finished
-            .replace("__success__", this._completed - this._failed)
-            .replace("__fail__", this._failed);
+        const statusString = L(__workshop_finished, {
+            "success": this._completed - this._failed,
+            "fail": this._failed
+        });
 
         Page.runInPageContext((title, finished) => {
             window.SteamFacade.dismissActiveModal();
@@ -127,13 +138,14 @@ export default class FWorkshopSubscriberButtons extends Feature {
 
     _updateWaitDialog() {
 
-        let statusString = this._workshopStr[`${this._method}_loading`]
-            .replace("__i__", this._completed)
-            .replace("__count__", this._total);
+        let statusString = L(this._method === "subscribe" ? __workshop_subscribeLoading : __workshop_unsubscribeLoading, {
+            "i": this._completed,
+            "count": this._total
+        });
 
         if (this._failed > 0) {
             statusString += "<br>";
-            statusString += this._workshopStr.failed.replace("__n__", this._failed);
+            statusString += L(__workshop_failed, {"n": this._failed});
         }
 
         const container = document.querySelector("#as_loading_text_ctn");

@@ -1,5 +1,17 @@
-import {GameId, HTML, Localization, SyncedStorage} from "../../../modulesCore";
-import {DOMHelper, DynamicStore, Feature, ITAD, Inventory} from "../../modulesContent";
+import {
+    __tag_collection,
+    __tag_coupon,
+    __tag_ignoredOwned,
+    __tag_invGift,
+    __tag_invGuestpass,
+    __tag_notinterested,
+    __tag_owned,
+    __tag_waitlist,
+    __tag_wishlist,
+} from "../../../../localization/compiled/_strings";
+import {L} from "../../../Core/Localization/Localization";
+import {GameId, HTML, SyncedStorage} from "../../../modulesCore";
+import {DOMHelper, DynamicStore, Feature, Inventory, ITAD} from "../../modulesContent";
 
 export default class FHighlightsTags extends Feature {
 
@@ -166,7 +178,7 @@ export default class FHighlightsTags extends Feature {
         }
     }
 
-    static _addTag(node, tag) {
+    static _addTag(node, tag, locale) {
 
         if (!this._tagCssLoaded) {
             this._tagCssLoaded = true;
@@ -219,7 +231,7 @@ export default class FHighlightsTags extends Feature {
             }
         }
 
-        HTML.beforeEnd(container, `<span class="es_tag_${tag}">${Localization.str.tag[tag]}</span>`);
+        HTML.beforeEnd(container, `<span class="es_tag_${tag}">${L(locale)}</span>`);
     }
 
     static _highlightNode(node, type) {
@@ -298,50 +310,50 @@ export default class FHighlightsTags extends Feature {
         node.classList.remove("ds_flagged");
     }
 
-    static _highlightItem(node, name) {
+    static _highlightItem(node, name, locale) {
         if (SyncedStorage.get(`highlight_${name}`)) {
             this._highlightNode(node, name);
         }
 
         if (SyncedStorage.get(`tag_${name}`)) {
-            this._addTag(node, name);
+            this._addTag(node, name, locale);
         }
     }
 
     static highlightOwned(node) {
-        this._highlightItem(node, "owned");
+        this._highlightItem(node, "owned", __tag_owned);
     }
 
     static highlightWishlist(node) {
-        this._highlightItem(node, "wishlist");
+        this._highlightItem(node, "wishlist", __tag_wishlist);
     }
 
     static highlightInvCoupon(node) {
-        this._highlightItem(node, "coupon");
+        this._highlightItem(node, "coupon", __tag_coupon);
     }
 
     static highlightInvGift(node) {
-        this._highlightItem(node, "inv_gift");
+        this._highlightItem(node, "inv_gift", __tag_invGift);
     }
 
     static highlightInvGuestpass(node) {
-        this._highlightItem(node, "inv_guestpass");
+        this._highlightItem(node, "inv_guestpass", __tag_invGuestpass);
     }
 
     static highlightIgnored(node) {
-        this._highlightItem(node, "notinterested");
+        this._highlightItem(node, "notinterested", __tag_notinterested);
     }
 
     static highlightIgnoredOwnedElsewhere(node) {
-        this._highlightItem(node, "ignored_owned");
+        this._highlightItem(node, "ignored_owned", __tag_ignoredOwned);
     }
 
     static highlightCollection(node) {
-        this._highlightItem(node, "collection");
+        this._highlightItem(node, "collection", __tag_collection);
     }
 
     static highlightWaitlist(node) {
-        this._highlightItem(node, "waitlist");
+        this._highlightItem(node, "waitlist", __tag_waitlist);
     }
 }
 

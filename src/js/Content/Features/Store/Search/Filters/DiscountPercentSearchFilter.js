@@ -1,4 +1,8 @@
-import {Localization} from "../../../../../Core/Localization/Localization";
+import {
+    __searchFilters_discountPercent_count, __searchFilters_discountPercent_maxCount,
+    __searchFilters_discountPercent_minCount,
+} from "../../../../../../localization/compiled/_strings";
+import {L} from "../../../../../Core/Localization/Localization";
 import {SearchFilter} from "./SearchFilter";
 
 export class DiscountPercentSearchFilter extends SearchFilter {
@@ -16,11 +20,11 @@ export class DiscountPercentSearchFilter extends SearchFilter {
     getHTML() {
 
         return `<div class="as-discount-percent-filter">
-                    <div class="as-discount-percent-filter__header">${Localization.str.search_filters.discount_percent.count}</div>
+                    <div class="as-discount-percent-filter__header">${L(__searchFilters_discountPercent_count)}</div>
                     <div class="as-discount-percent-filter__content js-discount-percent-filter">
-                        <input class="as-discount-percent-filter__input js-discount-percent-input js-discount-percent-lower" type="number" min="0" max="100" step="1" placeholder="${Localization.str.search_filters.discount_percent.min_count}">
+                        <input class="as-discount-percent-filter__input js-discount-percent-input js-discount-percent-lower" type="number" min="0" max="100" step="1" placeholder="${L(__searchFilters_discountPercent_minCount)}">
                         -
-                        <input class="as-discount-percent-filter__input js-discount-percent-input js-discount-percent-upper" type="number" min="0" max="100" step="1" placeholder="${Localization.str.search_filters.discount_percent.max_count}">
+                        <input class="as-discount-percent-filter__input js-discount-percent-input js-discount-percent-upper" type="number" min="0" max="100" step="1" placeholder="${L(__searchFilters_discountPercent_maxCount)}">
                         <input type="hidden" name="as-discount-percent">
                     </div>
                 </div>`;

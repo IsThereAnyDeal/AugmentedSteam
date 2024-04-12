@@ -1,4 +1,15 @@
-import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {
+    __addToWaitlist,
+    __addToWishlist,
+    __onWaitlist,
+    __onWishlistAndWaitlist,
+    __removeFromWaitlistTooltip,
+    __removeFromWishlistAndWaitlistTooltip,
+    __theworddefault,
+    __wishlist,
+} from "@Strings/_strings";
+import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
 import {Background, Feature, Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -45,8 +56,8 @@ export default class FWaitlistDropdown extends Feature {
                                 <img class="queue_ignore_menu_option_image unselected" src="//store.cloudflare.steamstatic.com/public/images/v6/ico/ico_unselected_bright.png">
                             </div>
                             <div class="queue_menu_option_label">
-                                <div class="option_title">${Localization.str.wishlist} (${Localization.str.theworddefault})</div>
-                                <div class="option_subtitle">${Localization.str.add_to_wishlist}</div>
+                                <div class="option_title">${L(__wishlist)} (${L(__theworddefault)})</div>
+                                <div class="option_subtitle">${L(__addToWishlist)}</div>
                             </div>
                         </div>
                         <div class="queue_menu_option" id="queue_menu_option_on_waitlist">
@@ -56,7 +67,7 @@ export default class FWaitlistDropdown extends Feature {
                             </div>
                             <div class="queue_menu_option_label">
                                 <div class="option_title">Waitlist</div>
-                                <div class="option_subtitle">${Localization.str.add_to_waitlist}</div>
+                                <div class="option_subtitle">${L(__addToWaitlist)}</div>
                             </div>
                         </div>
                     </div>
@@ -117,11 +128,11 @@ export default class FWaitlistDropdown extends Feature {
                 text = removeFromWishlistLabel;
                 tooltip = removeFromWishlistTooltip;
             } else if (!wishlisted && waitlisted) {
-                text = Localization.str.on_waitlist;
-                tooltip = Localization.str.remove_from_waitlist_tooltip;
+                text = L(__onWaitlist);
+                tooltip = L(__removeFromWaitlistTooltip);
             } else if (wishlisted && waitlisted) {
-                text = Localization.str.on_wishlist_and_waitlist;
-                tooltip = Localization.str.remove_from_wishlist_and_waitlist_tooltip;
+                text = L(__onWishlistAndWaitlist);
+                tooltip = L(__removeFromWishlistAndWaitlistTooltip);
             } else {
                 tooltip = removeFromWishlistTooltip;
             }

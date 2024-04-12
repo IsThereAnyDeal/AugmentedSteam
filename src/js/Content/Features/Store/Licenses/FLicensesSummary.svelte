@@ -20,10 +20,11 @@
 </script>
 
 <script lang="ts">
-    import {Localization} from "../../../../modulesCore";
     import {slide} from "svelte/transition";
     import SmallSteamButton from "../../../Steam/SmallSteamButton.svelte";
     import ToggleIcon from "../../../Steam/ToggleIcon.svelte";
+    import {__all, __hide, __show, __thewordunknown, __wl_label, __year} from "@Strings/_strings";
+    import {L} from "@Core/Localization/Localization";
 
     const total: Record<string, number> = {};
     const yearly: Record<string, Record<string, number>> = {};
@@ -32,8 +33,8 @@
         const dateStr = item.querySelector("td.license_date_col")?.textContent?.trim();
         if (!dateStr) { continue; }
 
-        const year = /\d{4}/.exec(dateStr)?.[0] ?? Localization.str.thewordunknown;
-        const type = item.querySelector("td.license_acquisition_col")?.textContent?.trim() || Localization.str.thewordunknown;
+        const year = /\d{4}/.exec(dateStr)?.[0] ?? L(__thewordunknown);
+        const type = item.querySelector("td.license_acquisition_col")?.textContent?.trim() || L(__thewordunknown);
 
         total[type] = (total[type] ?? 0) + 1;
         (yearly[year] ??= {})[type] = (yearly[year][type] ?? 0) + 1;
@@ -45,9 +46,9 @@
 
 <div class="stats">
     <h3>
-        {Localization.str.wl.label}
+        {L(__wl_label)}
         <SmallSteamButton on:click={() => (isOpen = !isOpen)}>
-            {isOpen ? Localization.str.hide : Localization.str.show}
+            {L(isOpen ? __hide : __show)}
             <ToggleIcon down={!isOpen} />
         </SmallSteamButton>
     </h3>
@@ -57,11 +58,11 @@
             <table class="account_table">
                 <thead>
                     <tr>
-                        <th>{Localization.str.year}</th>
+                        <th>{L(__year)}</th>
                         {#each Object.keys(total) as type}
                             <th>{type}</th>
                         {/each}
-                        <th>{Localization.str.all}</th>
+                        <th>{L(__all)}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -77,7 +78,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td>{Localization.str.all}</td>
+                        <td>{L(__all)}</td>
                         {#each Object.values(total) as count}
                             <td>{count}</td>
                         {/each}

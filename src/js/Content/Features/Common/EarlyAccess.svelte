@@ -1,6 +1,7 @@
 <script lang="ts">
     import {onMount} from "svelte";
-    import {Localization} from "../../../modulesCore";
+    import {L} from "../../../Core/Localization/Localization";
+    import {__earlyAccess} from "../../../../localization/compiled/_strings";
 
     export let imageUrl: string;
     export let imgHeader: HTMLImageElement;
@@ -12,11 +13,13 @@
     });
 </script>
 
+
 <span bind:this={container} class="es_overlay_container">
     <span class="es_overlay">
-        <img title={Localization.str.early_access} src={imageUrl} alt="Early Access banner">
+        <img title={L(__earlyAccess)} src={imageUrl} alt="Early Access banner">
     </span>
 </span>
+
 
 <style>
     :global(.home_content_item) .es_overlay_container,

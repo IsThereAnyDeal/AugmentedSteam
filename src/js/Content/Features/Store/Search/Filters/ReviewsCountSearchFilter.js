@@ -1,4 +1,8 @@
-import {Localization} from "../../../../../Core/Localization/Localization";
+import {
+    __searchFilters_reviewsCount_count, __searchFilters_reviewsCount_maxCount,
+    __searchFilters_reviewsCount_minCount,
+} from "../../../../../../localization/compiled/_strings";
+import {L} from "../../../../../Core/Localization/Localization";
 import {SearchFilter} from "./SearchFilter";
 
 export class ReviewsCountSearchFilter extends SearchFilter {
@@ -16,11 +20,11 @@ export class ReviewsCountSearchFilter extends SearchFilter {
     getHTML() {
 
         return `<div class="as-reviews-count-filter">
-                    <div class="as-reviews-count-filter__header">${Localization.str.search_filters.reviews_count.count}</div>
+                    <div class="as-reviews-count-filter__header">${L(__searchFilters_reviewsCount_count)}</div>
                     <div class="as-reviews-count-filter__content js-reviews-count-filter">
-                        <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-lower" type="number" min="0" step="100" placeholder="${Localization.str.search_filters.reviews_count.min_count}">
+                        <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-lower" type="number" min="0" step="100" placeholder="${L(__searchFilters_reviewsCount_minCount)}">
                         -
-                        <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-upper" type="number" min="0" step="100" placeholder="${Localization.str.search_filters.reviews_count.max_count}">
+                        <input class="as-reviews-count-filter__input js-reviews-count-input js-reviews-count-upper" type="number" min="0" step="100" placeholder="${L(__searchFilters_reviewsCount_maxCount)}">
                         <input type="hidden" name="as-reviews-count">
                     </div>
                 </div>`;

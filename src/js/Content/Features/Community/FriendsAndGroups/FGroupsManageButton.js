@@ -1,3 +1,16 @@
+import {
+    __all,
+    __groups_actionGroups,
+    __groups_leave,
+    __groups_leaveAdminConfirm_currentlyAdmin,
+    __groups_leaveAdminConfirm_wantToLeave,
+    __groups_leaveGroupsConfirm,
+    __groups_manageGroups,
+    __groups_select,
+    __inverse,
+    __none,
+} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
 import {HTML, Localization} from "../../../../modulesCore";
 import {CallbackFeature, ConfirmDialog, RequestData, User} from "../../../modulesContent";
 import {Page} from "../../Page";
@@ -18,21 +31,19 @@ export default class FGroupsManageButton extends CallbackFeature {
         const groups = document.querySelectorAll(".group_block");
         if (groups.length === 0) { return; }
 
-        const groupsStr = Localization.str.groups;
-
         HTML.beforeEnd(".title_bar",
             `<button id="manage_friends_control" class="profile_friends manage_link btnv6_blue_hoverfade btn_medium btn_uppercase">
-                <span>${groupsStr.manage_groups}</span>
+                <span>${L(__groups_manageGroups)}</span>
             </button>`);
 
         HTML.afterEnd(".title_bar",
             `<div id="manage_friends" class="manage_friends_panel">
-                <div class="row">${groupsStr.action_groups}
+                <div class="row">${L(__groups_actionGroups)}
                     <span class="row">
-                        <span class="dimmed">${groupsStr.select}</span>
-                        <span class="selection_type" id="es_select_all">${Localization.str.all}</span>
-                        <span class="selection_type" id="es_select_none">${Localization.str.none}</span>
-                        <span class="selection_type" id="es_select_inverse">${Localization.str.inverse}</span>
+                        <span class="dimmed">${L(__groups_select)}</span>
+                        <span class="selection_type" id="es_select_all">${L(__all)}</span>
+                        <span class="selection_type" id="es_select_none">${L(__none)}</span>
+                        <span class="selection_type" id="es_select_inverse">${L(__inverse)}</span>
                     </span>
                 </div>
                 <div class="row">
@@ -94,10 +105,11 @@ export default class FGroupsManageButton extends CallbackFeature {
 
             if (admin) {
                 const name = split[3];
-                const leaveAdminConfirm = Localization.str.groups.leave_admin_confirm;
 
-                const body = `${leaveAdminConfirm.currently_admin.replace("__name__", `<a href="/gid/${id}" target="_blank">${name}</a>`)}<br>${leaveAdminConfirm.want_to_leave}`;
-                const result = await ConfirmDialog.open(Localization.str.groups.leave, body);
+                const body = `${L(__groups_leaveAdminConfirm_currentlyAdmin, {
+                    "name": `<a href="/gid/${id}" target="_blank">${name}</a>`
+                })}<br>${L(__groups_leaveAdminConfirm_wantToLeave)}`;
+                const result = await ConfirmDialog.open(L(__groups_leave), body);
                 if (result !== "OK") {
                     group.querySelector(".select_friend").click();
                     continue;
@@ -108,8 +120,8 @@ export default class FGroupsManageButton extends CallbackFeature {
         }
 
         if (selected.length > 0) {
-            const body = Localization.str.groups.leave_groups_confirm.replace("__n__", selected.length);
-            const result = await ConfirmDialog.open(Localization.str.groups.leave, body);
+            const body = L(__groups_leaveGroupsConfirm, {"n": selected.length});
+            const result = await ConfirmDialog.open(L(__groups_leave), body);
 
             if (result === "OK") {
                 for (const [id, group] of selected) {

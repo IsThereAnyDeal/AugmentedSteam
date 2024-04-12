@@ -42,8 +42,10 @@
 </script>
 
 <script lang="ts">
-    import {LocalStorage, Localization} from "../../../../modulesCore";
+    import {LocalStorage} from "../../../../modulesCore";
     import {onMount} from "svelte";
+    import {L} from "@Core/Localization/Localization";
+    import {__contractSlider, __expandSlider} from "@Strings/_strings";
 
     export let reviewSection: HTMLElement;
 
@@ -71,8 +73,8 @@
  observer for tooltips.
 -->
 <button class="btnv6_lightblue_blue btn_medium es_review_toggle" on:click={toggleReviews}>
-    <div data-tooltip-text="{Localization.str.expand_slider}" class:inactive={show}>▼</div>
-    <div data-tooltip-text="{Localization.str.contract_slider}" class:inactive={!show}>▲</div>
+    <div data-tooltip-text="{L(__expandSlider)}" class:inactive={show}>▼</div>
+    <div data-tooltip-text="{L(__contractSlider)}" class:inactive={!show}>▲</div>
 </button>
 
 

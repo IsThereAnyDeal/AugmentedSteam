@@ -1,3 +1,11 @@
+import {
+    __badgeCompletionAvg,
+    __cardDropsRemaining,
+    __dropCalc,
+    __dropsWorthAvg, __gamesWithBooster, __gamesWithDrops,
+    __loading,
+} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
 import {GameId, HTML, Localization} from "../../../../modulesCore";
 import {Background, CurrencyManager, DOMHelper, Feature, Price, RequestData} from "../../../modulesContent";
 
@@ -34,7 +42,7 @@ export default class FBadgeCalculations extends Feature {
             HTML.afterBegin(".profile_xp_block_right",
                 `<div id="es_calculations">
                     <div class="btn_grey_black btn_small_thin">
-                        <span>${Localization.str.drop_calc}</span>
+                        <span>${L(__dropCalc)}</span>
                     </div>
                 </div>`);
 
@@ -43,7 +51,7 @@ export default class FBadgeCalculations extends Feature {
             document.querySelector("#es_calculations").addEventListener("click", async() => {
                 if (completed) { return; }
 
-                document.querySelector("#es_calculations").textContent = Localization.str.loading;
+                document.querySelector("#es_calculations").textContent = L(__loading);
 
                 await this.context.eachBadgePage(dom => this._countFromDOM(dom));
 
@@ -52,7 +60,7 @@ export default class FBadgeCalculations extends Feature {
             });
 
         } else {
-            HTML.afterBegin(".profile_xp_block_right", `<div id="es_calculations">${Localization.str.loading}</div>`);
+            HTML.afterBegin(".profile_xp_block_right", `<div id="es_calculations">${L(__loading)}</div>`);
 
             await this._countFromDOM();
             this._addData();
@@ -130,7 +138,7 @@ export default class FBadgeCalculations extends Feature {
             if (worth) {
                 HTML.afterEnd(node.querySelector(".progress_info_bold"),
                     `<span data-es-card-worth="${worth.toFixed(2)}">
-                        (${Localization.str.drops_worth_avg} ${new Price(worth)})
+                        (${L(__dropsWorthAvg)} ${new Price(worth)})
                     </span>`);
             }
 
@@ -139,7 +147,7 @@ export default class FBadgeCalculations extends Feature {
                 if (badgeNameBox) {
                     HTML.afterEnd(badgeNameBox,
                         `<div class="badge_info_unlocked">
-                            ${Localization.str.badge_completion_avg.replace("__cost__", cost)}
+                            ${L(__badgeCompletionAvg, {"cost": String(cost)})}
                         </div>`);
                 }
             }
@@ -164,12 +172,12 @@ export default class FBadgeCalculations extends Feature {
 
         HTML.inner(
             "#es_calculations",
-            `${Localization.str.card_drops_remaining.replace("__drops__", this._dropsCount)}
+            `${L(__cardDropsRemaining, {"drops": this._dropsCount})}
             <br>
-            ${Localization.str.games_with_drops.replace("__dropsgames__", this._dropsGames)}`
+            ${L(__gamesWithDrops, {"dropsgames": this._dropsGames})}`
         );
 
-        document.querySelector("#es_cards_worth").textContent = `${Localization.str.drops_worth_avg} ${new Price(this._totalWorth)}`;
+        document.querySelector("#es_cards_worth").textContent = `${L(__dropsWorthAvg)} ${new Price(this._totalWorth)}`;
 
         let response;
         try {
@@ -182,7 +190,7 @@ export default class FBadgeCalculations extends Feature {
         const dummyPage = HTML.toDom(response);
         const boosterCount = dummyPage.querySelectorAll(".booster_eligibility_game").length;
 
-        HTML.beforeEnd("#es_calculations", `<br>${Localization.str.games_with_booster.replace("__boostergames__", boosterCount)}`);
+        HTML.beforeEnd("#es_calculations", `<br>${L(__gamesWithBooster, {"boostergames": boosterCount})}`);
     }
 
     _getRemainingDropsWorth(node, averagePrice) {

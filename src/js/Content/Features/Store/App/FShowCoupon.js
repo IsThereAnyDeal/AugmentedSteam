@@ -1,4 +1,11 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {
+    __couponApplicationNote,
+    __couponAvailable,
+    __couponLearnMore_fullText,
+    __couponLearnMore_linkText,
+} from "@Strings/_strings";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {CurrencyManager, Feature, Inventory, Price} from "../../../modulesContent";
 
 export default class FShowCoupon extends Feature {
@@ -12,14 +19,15 @@ export default class FShowCoupon extends Feature {
         if (!coupon) { return; }
 
         const couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, (m0, m1) => { return new Date(m1 * 1000).toLocaleString(); });
-        const learnMore = Localization.str.coupon_learn_more;
 
         HTML.beforeBegin("#game_area_purchase",
             `<div class="early_access_header es_coupon_info">
                 <div class="heading">
-                    <h1 class="inset">${Localization.str.coupon_available}</h1>
-                    <h2 class="inset">${Localization.str.coupon_application_note}</h2>
-                    <p>${learnMore.full_text.replace("__linkdesc__", `<a href="https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275">${learnMore.link_text}</a>`)}</p>
+                    <h1 class="inset">${L(__couponAvailable)}</h1>
+                    <h2 class="inset">${L(__couponApplicationNote)}</h2>
+                    <p>${L(__couponLearnMore_fullText, {
+                        "linkdesc": `<a href="https://support.steampowered.com/kb_article.php?ref=4210-YIPC-0275">${L(__couponLearnMore_linkText)}</a>`
+                    })}</p>
                 </div>
                 <div class="devnotes">
                     <div style="display:flex;padding-top:10px">

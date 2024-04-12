@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {__viewBadgeProgress} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {CallbackFeature} from "../../../modulesContent";
 
 export default class FBadgeProgressLink extends CallbackFeature {
@@ -13,7 +15,7 @@ export default class FBadgeProgressLink extends CallbackFeature {
 
         HTML.beforeEnd(`#iteminfo${view}_item_owner_actions`,
             `<a class="btn_small btn_grey_white_innerfade" href="//steamcommunity.com/my/gamecards/${appid}/">
-                <span>${Localization.str.view_badge_progress}</span>
+                <span>${L(__viewBadgeProgress)}</span>
             </a>`);
     }
 }

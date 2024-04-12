@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {__previewBackground} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {Feature, User} from "../../../modulesContent";
 
 export default class FBackgroundPreviewLink extends Feature {
@@ -16,7 +18,7 @@ export default class FBackgroundPreviewLink extends Feature {
         if (bgLink) {
             HTML.afterEnd(viewFullLink,
                 `<a class="es_preview_background btn_small btn_darkblue_white_innerfade" target="_blank" href="${User.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
-                    <span>${Localization.str.preview_background}</span>
+                    <span>${L(__previewBackground)}</span>
                 </a>`);
         }
     }

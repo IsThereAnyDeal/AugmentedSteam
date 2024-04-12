@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__options_homepage} from "@Strings/_strings";
+import {HTML} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -39,7 +41,7 @@ export default class FReplaceDevPubLinks extends Feature {
             if (!type) { continue; }
 
             node.href = `https://store.steampowered.com/search/?${type}=${encodeURIComponent(node.textContent)}`;
-            HTML.afterEnd(node, ` (<a href="${homepageLink.href}">${Localization.str.options.homepage}</a>)`);
+            HTML.afterEnd(node, ` (<a href="${homepageLink.href}">${L(__options_homepage)}</a>)`);
         }
 
         for (const moreBtn of document.querySelectorAll(".dev_row > .more_btn")) {

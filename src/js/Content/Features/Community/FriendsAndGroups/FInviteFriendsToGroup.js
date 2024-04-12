@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {__inviteToGroup} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {CallbackFeature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -17,7 +19,7 @@ export default class FInviteButton extends CallbackFeature {
 
         HTML.beforeEnd(".manage_friend_actions_ctn",
             `<span class="manage_action btnv6_lightblue_blue btn_small" id="es_invite_to_group">
-                <span>${Localization.str.invite_to_group}</span>
+                <span>${L(__inviteToGroup)}</span>
             </span>`);
 
         const params = new URLSearchParams(window.location.search);

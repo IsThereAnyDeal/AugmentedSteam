@@ -1,6 +1,8 @@
-import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
-import {Feature} from "../../../modulesContent";
+import {__esSupporter} from "../../../../../localization/compiled/_strings";
 import Config from "../../../../config";
+import {L} from "../../../../Core/Localization/Localization";
+import {ExtensionResources, HTML} from "../../../../modulesCore";
+import {Feature} from "../../../modulesContent";
 
 export default class FSupporterBadges extends Feature {
 
@@ -21,7 +23,7 @@ export default class FSupporterBadges extends Feature {
         let html = `<div class="profile_badges" id="es_supporter_badges">
             <div class="profile_count_link">
                 <a href="${Config.PublicHost}">
-                    <span class="count_link_label">${Localization.str.es_supporter}</span>&nbsp;
+                    <span class="count_link_label">${L(__esSupporter)}</span>&nbsp;
                     <span class="profile_count_link_total">${this._data.length}</span>
                 </a>
             </div>

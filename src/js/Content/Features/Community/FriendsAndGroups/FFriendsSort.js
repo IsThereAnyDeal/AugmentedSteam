@@ -1,4 +1,6 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {__lastonline, __theworddefault} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature, RequestData, Sortbox} from "../../../modulesContent";
 
 export default class FFriendsSort extends CallbackFeature {
@@ -22,8 +24,8 @@ export default class FFriendsSort extends CallbackFeature {
         document.querySelector("#manage_friends_control").insertAdjacentElement("beforebegin", Sortbox.get(
             "friends",
             [
-                ["default", Localization.str.theworddefault],
-                ["lastonline", Localization.str.lastonline]
+                ["default", L(__theworddefault)],
+                ["lastonline", L(__lastonline)]
             ],
             SyncedStorage.get("sortfriendsby"),
             (sortBy, reversed) => { this._sortFriends(sortBy, reversed); },

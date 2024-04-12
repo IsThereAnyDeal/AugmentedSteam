@@ -1,4 +1,6 @@
-import {Localization, SyncedStorage} from "../../../../modulesCore";
+import {__gameName} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature, Price, Sortbox} from "../../../modulesContent";
 
 export default class FMarketSort extends CallbackFeature {
@@ -40,7 +42,7 @@ export default class FMarketSort extends CallbackFeature {
             [
                 ["default", header.querySelector(".market_listing_listed_date").textContent.trim()],
                 ["item", header.querySelector(".market_listing_header_namespacer").parentNode.textContent.trim()],
-                ["game", Localization.str.game_name.toUpperCase()],
+                ["game", L(__gameName).toUpperCase()],
                 ["price", header.querySelector(".market_listing_my_price").textContent.trim()],
             ],
             SyncedStorage.get("sortmylistingsby"),

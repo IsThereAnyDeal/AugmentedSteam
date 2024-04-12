@@ -1,5 +1,7 @@
+import {__tradeoffer_numItem, __tradeoffer_numItems} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {Feature} from "../../../Modules/Feature/Feature";
-import {HTML, Localization} from "../../../../modulesCore";
 
 export default class FCountTradeItems extends Feature {
 
@@ -31,11 +33,9 @@ export default class FCountTradeItems extends Feature {
 
                     const yourItems = document.querySelectorAll("#your_slots .has_item").length;
                     if (yourItems > 0) {
-                        const text = yourItems === 1
-                            ? Localization.str.tradeoffer.num_item
-                            : Localization.str.tradeoffer.num_items;
-
-                        yourItemsCountNode.textContent = text.replace("__num__", yourItems);
+                        yourItemsCountNode.textContent = L(yourItems === 1 ? __tradeoffer_numItem : __tradeoffer_numItems, {
+                            "num": yourItems
+                        });
                         document.querySelector("#your_slots_count").style.display = "block"; // TODO slideDown
                     } else {
                         document.querySelector("#your_slots_count").style.display = "none"; // TODO slideUp
@@ -43,11 +43,9 @@ export default class FCountTradeItems extends Feature {
 
                     const theirItems = document.querySelectorAll("#their_slots .has_item").length;
                     if (theirItems > 0) {
-                        const text = theirItems === 1
-                            ? Localization.str.tradeoffer.num_item
-                            : Localization.str.tradeoffer.num_items;
-
-                        theirItemsCountNode.textContent = text.replace("__num__", theirItems);
+                        theirItemsCountNode.textContent = L(theirItems === 1 ? __tradeoffer_numItem : __tradeoffer_numItems, {
+                            "num": theirItems
+                        });
                         document.querySelector("#their_slots_count").style.display = "block"; // TODO slideDown
                     } else {
                         document.querySelector("#their_slots_count").style.display = "none"; // TODO slideUp

@@ -1,4 +1,4 @@
-import {Localization} from "../../../../Core/Localization/Localization";
+import {__playtime, __theworddefault} from "../../../../../localization/compiled/_strings";
 import {Feature, Sortbox} from "../../../modulesContent";
 
 export default class FFriendsPlaytimeSort extends Feature {
@@ -43,8 +43,8 @@ export default class FFriendsPlaytimeSort extends Feature {
         }
 
         document.querySelector(".friendListSectionHeader").insertAdjacentElement("beforeend", Sortbox.get("friends_that_play", [
-            ["default", Localization.str.theworddefault],
-            ["playtime", Localization.str.playtime],
+            ["default", L(__theworddefault)],
+            ["playtime", L(__playtime)],
         ], "default_ASC", onChange));
     }
 }

@@ -1,4 +1,6 @@
-import {HTML, Localization, StringUtils, SyncedStorage} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__communityHub, __viewOnWebsite, __wikiArticle, __youtubeGameplay, __youtubeReviews} from "@Strings/_strings";
+import {HTML, StringUtils, SyncedStorage} from "../../../../modulesCore";
 import {ContextType, Feature} from "../../../modulesContent";
 
 export default class FExtraLinks extends Feature {
@@ -57,7 +59,7 @@ export default class FExtraLinks extends Feature {
                 HTML.beforeBegin("h2.pageheader",
                     `<div class="es_apphub_OtherSiteInfo">
                         <a class="btnv6_blue_hoverfade btn_medium" href="//steamcommunity.com/app/${this._gameid}/">
-                            <span>${Localization.str.community_hub}</span>
+                            <span>${L(__communityHub)}</span>
                         </a>
                     </div>`);
             } else {
@@ -77,7 +79,7 @@ export default class FExtraLinks extends Feature {
                 const link = `${HTML.formatUrl(customLink.url
                     .replace("[NAME]", appName ? encodeURIComponent(appName) : "")
                     .replace("[ID]", this._gameid))}`;
-                const text = Localization.str.view_on_website.replace("__website__", HTML.escape(customLink.name));
+                const text = L(__viewOnWebsite, {"website": HTML.escape(customLink.name)});
                 const iconUrl = customLink.icon ? `url(${HTML.formatUrl(customLink.icon)})` : "none";
 
                 links.push({link, text, iconUrl, "enabled": customLink.enabled});
@@ -108,67 +110,67 @@ export default class FExtraLinks extends Feature {
             {
                 "iconClass": "itad_ico",
                 "link": `https://isthereanydeal.com/steam/${this._type}/${this._gameid}/`,
-                "text": Localization.str.view_on_website.replace("__website__", "IsThereAnyDeal"),
+                "text": L(__viewOnWebsite, {"website": "IsThereAnyDeal"}),
                 "enabled": SyncedStorage.get("showitadlinks"),
             },
             {
                 "iconClass": "steamdb_ico",
                 "link": `https://steamdb.info/${this._type}/${this._gameid}/`,
-                "text": Localization.str.view_on_website.replace("__website__", "SteamDB"),
+                "text": L(__viewOnWebsite, {"website": "SteamDB"}),
                 "enabled": SyncedStorage.get("showsteamdb"),
             },
             {
                 "iconClass": "bartervg_ico",
                 "link": `https://barter.vg/steam/${this._type}/${this._gameid}/`,
-                "text": Localization.str.view_on_website.replace("__website__", "Barter.vg"),
+                "text": L(__viewOnWebsite, {"website": "Barter.vg"}),
                 "enabled": SyncedStorage.get("showbartervg"),
             },
             {
                 "iconClass": "cardexchange_btn",
                 "link": `https://www.steamcardexchange.net/index.php?gamepage-appid-${this.context.communityAppid}/`,
-                "text": Localization.str.view_on_website.replace("__website__", "Steam Card Exchange"),
+                "text": L(__viewOnWebsite, {"website": "Steam Card Exchange"}),
                 "enabled": isAppPage && SyncedStorage.get("showsteamcardexchange"),
             },
             {
                 "iconClass": "protondb_btn",
                 "link": `https://www.protondb.com/app/${this.context.appid}/`,
-                "text": Localization.str.view_on_website.replace("__website__", "ProtonDB"),
+                "text": L(__viewOnWebsite, {"website": "ProtonDB"}),
                 "enabled": isAppPage && SyncedStorage.get("showprotondb"),
             },
             {
                 "iconClass": "completionistme_btn",
                 "link": `https://completionist.me/steam/app/${this.context.appid}/`,
-                "text": Localization.str.view_on_website.replace("__website__", "Completionist.me"),
+                "text": L(__viewOnWebsite, {"website": "Completionist.me"}),
                 "enabled": isAppPage && SyncedStorage.get("showcompletionistme"),
             },
             {
                 "iconClass": "pcgw_btn",
                 "link": `https://pcgamingwiki.com/api/appid.php?appid=${this.context.appid}`,
-                "text": Localization.str.wiki_article.replace("__pcgw__", "PCGamingWiki"),
+                "text": L(__wikiArticle, {"pcgw": "PCGamingWiki"}),
                 "enabled": isAppPage && SyncedStorage.get("showpcgw"),
             },
             {
                 "iconClass": "twitch_btn",
                 "link": `https://www.twitch.tv/directory/game/${encodeURIComponent(appName)}`,
-                "text": Localization.str.view_on_website.replace("__website__", "Twitch"),
+                "text": L(__viewOnWebsite, {"website": "Twitch"}),
                 "enabled": isAppPage && appName && SyncedStorage.get("showtwitch"),
             },
             {
                 "iconClass": "as_youtube_btn",
                 "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(appName)}`,
-                "text": Localization.str.view_on_website.replace("__website__", "YouTube"),
+                "text": L(__viewOnWebsite, {"website": "YouTube"}),
                 "enabled": isAppPage && appName && SyncedStorage.get("showyoutube"),
             },
             {
                 "iconClass": "as_youtube_btn",
                 "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC" Gameplay`)}`,
-                "text": Localization.str.youtube_gameplay,
+                "text": L(__youtubeGameplay),
                 "enabled": isAppPage && appName && SyncedStorage.get("showyoutubegameplay"),
             },
             {
                 "iconClass": "as_youtube_btn",
                 "link": `https://www.youtube.com/results?search_query=${encodeURIComponent(`${appName} "PC" Review`)}`,
-                "text": Localization.str.youtube_reviews,
+                "text": L(__youtubeReviews),
                 "enabled": isAppPage && appName && SyncedStorage.get("showyoutubereviews"),
             },
         ];

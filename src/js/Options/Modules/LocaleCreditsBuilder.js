@@ -1,6 +1,7 @@
 import {HTML} from "../../Core/Html/Html";
 import Language from "../../Core/Localization/Language";
-import Localization from "../../Core/Localization/Localization";
+import {L} from "../../Core/Localization/Localization";
+import {Localization} from "../../modulesCore";
 import LocaleCredits from "./Data/LocaleCredits";
 
 class LocaleCreditsBuilder {
@@ -21,7 +22,7 @@ class LocaleCreditsBuilder {
 
             html += `
                 <div class="lang js-lang">
-                    <h2 class="lang__name">${Localization.str.options.lang[lang]}</h2>
+                    <h2 class="lang__name">${L(`options_lang_${lang}`)}</h2>
                     <div class="lang__perc js-lang-perc">${coverage.toFixed(1)}%</div>
                     <div class="lang__credits">${credits}</div>
                 </div>`;

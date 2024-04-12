@@ -1,10 +1,11 @@
-import {Localization} from "../../../../../Core/Localization/Localization";
+import {__searchFilters_hideMixed} from "../../../../../../localization/compiled/_strings";
+import {L} from "../../../../../Core/Localization/Localization";
 import {SimpleSearchFilter} from "./SimpleSearchFilter";
 
 export class MixedSearchFilter extends SimpleSearchFilter {
 
     constructor(feature) {
-        super("as-hide", feature, Localization.str.search_filters.hide_mixed, "mixed");
+        super("as-hide", feature, L(__searchFilters_hideMixed), "mixed");
     }
 
     _addRowMetadata(rows) {

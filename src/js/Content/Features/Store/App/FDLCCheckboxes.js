@@ -1,4 +1,11 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {
+    __addSelectedDlcToCart,
+    __dlcSelect_none,
+    __dlcSelect_unownedDlc,
+    __dlcSelect_wishlistedDlc,
+} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {Feature, Price} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -63,7 +70,7 @@ export default class FDLCCheckboxes extends Feature {
                 <div class="game_purchase_price price"></div>
                 <div class="btn_addtocart">
                     <a class="btn_green_steamui btn_medium">
-                        <span>${Localization.str.add_selected_dlc_to_cart}</span>
+                        <span>${L(__addSelectedDlcToCart)}</span>
                     </a>
                 </div>
             </div>`;
@@ -86,9 +93,9 @@ export default class FDLCCheckboxes extends Feature {
 
         HTML.afterEnd(dlcSection.querySelector(".gradientbg"),
             `<div id="es_dlc_option_panel">
-                <div class="es_dlc_option" id="unowned_dlc_check">${Localization.str.dlc_select.unowned_dlc}</div>
-                <div class="es_dlc_option" id="wl_dlc_check">${Localization.str.dlc_select.wishlisted_dlc}</div>
-                <div class="es_dlc_option" id="no_dlc_check">${Localization.str.dlc_select.none}</div>
+                <div class="es_dlc_option" id="unowned_dlc_check">${L(__dlcSelect_unownedDlc)}</div>
+                <div class="es_dlc_option" id="wl_dlc_check">${L(__dlcSelect_wishlistedDlc)}</div>
+                <div class="es_dlc_option" id="no_dlc_check">${L(__dlcSelect_none)}</div>
             </div>`);
 
         dlcSection.querySelector("#unowned_dlc_check").addEventListener("click", () => {

@@ -1,4 +1,14 @@
-import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {
+    __ratingDetails,
+    __wsgf_certifications,
+    __wsgf_gold,
+    __wsgf_incomplete,
+    __wsgf_limited,
+    __wsgf_silver,
+    __wsgf_unsupported,
+} from "@Strings/_strings";
+import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../Modules/Feature/Feature";
 
 export default class FWidescreenCertification extends Feature {
@@ -7,11 +17,11 @@ export default class FWidescreenCertification extends Feature {
         super(context);
 
         this._levelMap = {
-            "A": "gold",
-            "B": "silver",
-            "C": "limited",
-            "Incomplete": "incomplete",
-            "Unsupported": "unsupported"
+            "A": ["gold", __wsgf_gold],
+            "B": ["silver", __wsgf_silver],
+            "C": ["limited", __wsgf_limited],
+            "Incomplete": ["incomplete", __wsgf_incomplete],
+            "Unsupported": ["unsupported", __wsgf_unsupported]
         };
     }
 
@@ -36,10 +46,10 @@ export default class FWidescreenCertification extends Feature {
         let icon = "";
         let text = "";
 
-        const level = this._levelMap[value];
+        const [level, string] = this._levelMap[value];
         if (level) {
             icon = ExtensionResources.getURL(`img/wsgf/${imgPrefix}-${level}.png`);
-            text = Localization.str.wsgf[level].replace(/__type__/g, typeName);
+            text = L(string, {"type": typeName});
         }
         return [icon, text];
     }
@@ -60,7 +70,7 @@ export default class FWidescreenCertification extends Feature {
         const [fkgIcon, fkgText] = this._getType(fkg, "4k", "4k UHD");
 
         HTML.afterEnd("div.game_details",
-            `<div class="block responsive_apppage_details_right heading">${Localization.str.wsgf.certifications}</div>
+            `<div class="block responsive_apppage_details_right heading">${L(__wsgf_certifications)}</div>
             <div class="block underlined_links es_wsgf">
                 <div class="block_content">
                     <div class="block_content_inner">
@@ -71,7 +81,7 @@ export default class FWidescreenCertification extends Feature {
                             ${fkg ? `<img src="${HTML.escape(fkgIcon)}" title="${HTML.escape(fkgText)}">` : ""}
                         </div>
                         <br>
-                        <a class="linkbar es_external_icon" target="_blank" href="${HTML.escape(url)}">${Localization.str.rating_details}</a>
+                        <a class="linkbar es_external_icon" target="_blank" href="${HTML.escape(url)}">${L(__ratingDetails)}</a>
                     </div>
                 </div>
             </div>`);

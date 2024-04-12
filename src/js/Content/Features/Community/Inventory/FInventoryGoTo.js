@@ -1,4 +1,6 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {__go} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {DOMHelper, Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -28,7 +30,7 @@ export default class FInventoryGoTo extends Feature {
         HTML.beforeBegin("#inventory_pagecontrols",
             `<div id="es_pagego">
                 <input type="number" id="es_pagenumber" class="filter_search_box" value="1" min="1" max="${pageMax.textContent}">
-                <a id="es_gotopage_btn" class="pagebtn">${Localization.str.go}</a>
+                <a id="es_gotopage_btn" class="pagebtn">${L(__go)}</a>
             </div>`);
         document.getElementById("es_gotopage_btn").addEventListener("click", () => {
             Page.runInPageContext(() => { window.SteamFacade.goToPage(); });

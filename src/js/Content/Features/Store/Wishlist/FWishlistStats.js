@@ -1,3 +1,14 @@
+import {L} from "@Core/Localization/Localization";
+import {
+    __remove,
+    __wl_hidden,
+    __wl_hiddenTooltip,
+    __wl_inWishlist,
+    __wl_label,
+    __wl_noPrice,
+    __wl_onSale, __wl_removeConfirm, __wl_removeConfirmWarn, __wl_removeTitle,
+    __wl_totalPrice,
+} from "@Strings/_strings";
 import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {Feature, Messenger, Price} from "../../../modulesContent";
 import {Page} from "../../Page";
@@ -14,16 +25,16 @@ export default class FWishlistStats extends Feature {
 
         HTML.beforeBegin("#tab_filters",
             `<div class="filter_tab" id="esi-wishlist-stats">
-                ${Localization.str.wl.label}
+                ${L(__wl_label)}
                 <img src="//store.cloudflare.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png">
             </div>`);
 
         HTML.beforeBegin("#section_filters",
             `<div class="filter_section" id="esi-wishlist-stats-content">
-                <div class="esi-stat"><span id="esi-stat-price"></span>${Localization.str.wl.total_price}</div>
-                <div class="esi-stat"><span id="esi-stat-count"></span>${Localization.str.wl.in_wishlist}</div>
-                <div class="esi-stat"><span id="esi-stat-onsale"></span>${Localization.str.wl.on_sale}</div>
-                <div class="esi-stat"><span id="esi-stat-noprice"></span>${Localization.str.wl.no_price}</div>
+                <div class="esi-stat"><span id="esi-stat-price"></span>${L(__wl_totalPrice)}</div>
+                <div class="esi-stat"><span id="esi-stat-count"></span>${L(__wl_inWishlist)}</div>
+                <div class="esi-stat"><span id="esi-stat-onsale"></span>${L(__wl_onSale)}</div>
+                <div class="esi-stat"><span id="esi-stat-noprice"></span>${L(__wl_noPrice)}</div>
             </div>`);
 
         // Add a separate section for hidden entries
@@ -108,10 +119,10 @@ export default class FWishlistStats extends Feature {
         if (hiddenApps.length === 0) { return; }
 
         HTML.beforeEnd("#esi-wishlist-stats-content",
-            `<div class="esi-stat" id="esi-stat-hidden-ctn" data-tooltip-text="${Localization.str.wl.hidden_tooltip}">
+            `<div class="esi-stat" id="esi-stat-hidden-ctn" data-tooltip-text="${L(__wl_hiddenTooltip)}">
                 <span id="esi-stat-hidden">${hiddenApps.length}</span>
                 <div class="esi-stat-hidden-label">
-                    ${Localization.str.wl.hidden}
+                    ${L(__wl_hidden)}
                     <span>(?)</span>
                 </div>
             </div>`);
@@ -122,7 +133,7 @@ export default class FWishlistStats extends Feature {
         };
 
         document.getElementById("esi-stat-hidden-ctn").addEventListener("click", () => {
-            Page.runInPageContext((hiddenApps, icons, removeStr, wlStr) => {
+            Page.runInPageContext((hiddenApps, icons, removeStr) => {
                 const f = window.SteamFacade;
                 const g = f.global;
                 const canEdit = g("g_bCanEdit"); // `true` if logged in and viewing own wishlist
@@ -139,7 +150,7 @@ export default class FWishlistStats extends Feature {
                     </div>`;
                 }).join("");
 
-                f.showDialog(wlStr.hidden.toUpperCase(), html);
+                f.showDialog(L(__wl_hidden).toUpperCase(), html);
 
                 if (!canEdit) { return; }
 
@@ -149,7 +160,7 @@ export default class FWishlistStats extends Feature {
                     const row = target.closest("[data-appid]");
                     const appidToRemove = Number(row.dataset.appid);
 
-                    f.showConfirmDialog(wlStr.remove_title, `${wlStr.remove_confirm.replace("__appid__", appidToRemove)}<br><br>${wlStr.remove_confirm_warn}`)
+                    f.showConfirmDialog(L(__wl_removeTitle), `${L(__wl_removeConfirm, {"appid": appidToRemove})}<br><br>${L(__wl_removeConfirmWarn)}`)
                         .done(() => {
                             g("RemoveFromWishlist")(appidToRemove);
                             f.dynamicStoreInvalidateCache();
@@ -169,8 +180,7 @@ export default class FWishlistStats extends Feature {
             [
                 hiddenApps,
                 icons,
-                Localization.str.remove,
-                Localization.str.wl
+                L(__remove)
             ]);
         });
     }

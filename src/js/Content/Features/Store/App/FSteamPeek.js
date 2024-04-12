@@ -1,4 +1,6 @@
-import {HTML, LocalStorage, Localization} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__moreOnSteampeek} from "@Strings/_strings";
+import {HTML, LocalStorage} from "../../../../modulesCore";
 import {Background, DynamicStore, Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -80,7 +82,7 @@ export default class FSteamPeek extends Feature {
 
                 HTML.beforeBegin(lastChild,
                     `<a class="small_cap es_sp_similar" href="http://steampeek.hu/?appid=${this.context.appid}" target="_blank">
-                        <div class="es_sp_similar__link">${Localization.str.more_on_steampeek}</div>
+                        <div class="es_sp_similar__link">${L(__moreOnSteampeek)}</div>
                     </a>`);
             }
 

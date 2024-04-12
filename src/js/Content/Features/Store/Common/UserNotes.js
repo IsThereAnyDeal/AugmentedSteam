@@ -1,3 +1,18 @@
+import {L} from "@Core/Localization/Localization";
+import {
+    __cancel,
+    __save,
+    __userNote_add,
+    __userNote_addForGame,
+    __userNote_closeOnStorage,
+    __userNote_closeOnStorageDesc,
+    __userNote_notEnoughSpace,
+    __userNote_notEnoughSpaceDesc,
+    __userNote_saveItad,
+    __userNote_saveLocal,
+    __userNote_saveSyncedStorage,
+    __userNote_storageWarningDesc,
+} from "@Strings/_strings";
 import {Localization, SyncedStorage} from "../../../../modulesCore";
 import {Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
@@ -5,7 +20,6 @@ import {CapacityInfo, OutOfCapacityError, UserNotesAdapter} from "../../../../Co
 
 class UserNotes {
     constructor() {
-        this._str = Localization.str.user_note;
         this._adapter = UserNotesAdapter.getAdapter();
 
         this.noteModalTemplate
@@ -107,10 +121,10 @@ class UserNotes {
             /* eslint-enable no-undef, new-cap, camelcase */
         },
         [
-            this._str.add_for_game.replace("__gamename__", appname),
+            L(__userNote_addForGame, {"gamename": appname}),
             this.noteModalTemplate.replace("__note__", window.sessionStorage.getItem(`es_note_autosave_${appid}`) || note),
-            Localization.str.save,
-            Localization.str.cancel,
+            L(__save),
+            L(__cancel),
             appid,
         ]);
 
@@ -121,7 +135,7 @@ class UserNotes {
 
         if (note.length === 0) {
             this.delete(appid);
-            noteEl.textContent = this._str.add;
+            noteEl.textContent = L(__userNote_add);
         } else {
             if (!await this.set(appid, note)) {
                 window.sessionStorage.setItem(`es_note_autosave_${appid}`, note);
@@ -135,12 +149,10 @@ class UserNotes {
 
     async _showOutOfCapacityDialog(exceeded, ratio) {
 
-        const str = this._str;
-
         const desc
-            = `${(exceeded ? str.not_enough_space_desc : str.close_on_storage_desc).replace("__perc__", (ratio * 100).toFixed(0))}
+            = `${L(exceeded ? __userNote_notEnoughSpaceDesc : __userNote_closeOnStorageDesc, {"perc": (ratio * 100).toFixed(0)})}
             <br>
-            ${str.storage_warning_desc}`;
+            ${L(__userNote_storageWarningDesc)}`;
 
         Page.runInPageContext((title, desc, strCloudStorage, strCancel, strLocalStorage) => {
             const modal = window.SteamFacade.showConfirmDialog(title, desc, strLocalStorage, strCancel);
@@ -153,11 +165,11 @@ class UserNotes {
                 .fail(() => window.Messenger.postMessage("storageOption", null));
         },
         [
-            exceeded ? str.not_enough_space : str.close_on_storage,
+            L(exceeded ? __userNote_notEnoughSpace : __userNote_closeOnStorage),
             desc,
-            str.save_itad,
-            str.save_synced_storage,
-            str.save_local,
+            L(__userNote_saveItad),
+            L(__userNote_saveSyncedStorage),
+            L(__userNote_saveLocal)
         ]);
 
         const buttonPressed = await Messenger.onMessage("storageOption");

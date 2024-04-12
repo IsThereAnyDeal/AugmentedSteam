@@ -1,10 +1,10 @@
 <script lang="ts" context="module">
     // @ts-ignore
     import self_ from "./FAchievementBar.svelte";
-    import {SyncedStorage} from "../../../../modulesCore";
     import {Feature} from "../../../modulesContent";
     import type {CApp} from "./CApp";
     import SteamApi from "../../../Modules/SteamApi";
+    import {SyncedStorage} from "../../../../modulesCore";
 
     export class FAchievementBar extends Feature<CApp> {
 
@@ -38,16 +38,18 @@
 </script>
 
 <script lang="ts">
-    import {Localization} from "../../../../modulesCore";
+    import {__achievements_summary} from "../../../../../localization/compiled/_strings";
+    import {L} from "../../../../Core/Localization/Localization";
 
     export let unlocked: number;
     export let total: number;
     export let percentage: number;
 
-    let achievementStr = Localization.str.achievements.summary
-        .replace("__unlocked__", unlocked)
-        .replace("__total__", total)
-        .replace("__percentage__", percentage);
+    let achievementStr = L(__achievements_summary, {
+        "unlocked": unlocked,
+        "total": total,
+        "percentage": percentage
+    });
 </script>
 
 

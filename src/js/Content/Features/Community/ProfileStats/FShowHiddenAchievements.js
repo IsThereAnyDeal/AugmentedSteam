@@ -1,4 +1,6 @@
-import {GameId, HTML, Language, Localization} from "../../../../modulesCore";
+import {__showAll} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {GameId, HTML, Language} from "../../../../modulesCore";
 import {Feature, RequestData, User} from "../../../modulesContent";
 
 export default class FShowHiddenAchievements extends Feature {
@@ -20,7 +22,7 @@ export default class FShowHiddenAchievements extends Feature {
 
         HTML.afterEnd(parent.querySelector(".achieveTxt"),
             `<div id="as_ach_showall" class="btnv6_blue_hoverfade btn_medium">
-                <span>${Localization.str.show_all}</span>
+                <span>${L(__showAll)}</span>
             </div>`);
 
         const btn = document.getElementById("as_ach_showall");

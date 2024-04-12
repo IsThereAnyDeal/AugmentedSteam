@@ -1,4 +1,5 @@
-import {Localization} from "../../../modulesCore";
+import {__year} from "../../../../localization/compiled/_strings";
+import {L} from "../../../Core/Localization/Localization";
 import {ContextType, Feature} from "../../modulesContent";
 import {Page} from "../Page";
 
@@ -12,7 +13,7 @@ export default class FPriceHistoryZoomYear extends Feature {
 
         const zoomYear = document.createElement("a");
         zoomYear.classList.add("zoomopt");
-        zoomYear.textContent = Localization.str.year;
+        zoomYear.textContent = L(__year);
 
         document.querySelectorAll(".zoomopt")[2].insertAdjacentElement("beforebegin", zoomYear);
 

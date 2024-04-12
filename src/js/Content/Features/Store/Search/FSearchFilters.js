@@ -1,15 +1,16 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {__filters} from "@Strings/_strings";
+import {HTML} from "../../../../modulesCore";
 import {Feature, Messenger} from "../../../modulesContent";
-import FHighlightsTags from "../../Common/FHighlightsTags";
 import FEarlyAccess from "../../Common/FEarlyAccess";
+import FHighlightsTags from "../../Common/FHighlightsTags";
 import {Page} from "../../Page";
 import {CartSearchFilter} from "./Filters/CartSearchFilter";
+import {DiscountPercentSearchFilter} from "./Filters/DiscountPercentSearchFilter";
 import {EarlyAccessSearchFilter} from "./Filters/EarlyAccessSearchFilter";
 import {MixedSearchFilter} from "./Filters/MixedSearchFilter";
 import {NegativeSearchFilter} from "./Filters/NegativeSearchFilter";
 import {ReviewsCountSearchFilter} from "./Filters/ReviewsCountSearchFilter";
 import {ReviewsScoreSearchFilter} from "./Filters/ReviewsScoreSearchFilter";
-import {DiscountPercentSearchFilter} from "./Filters/DiscountPercentSearchFilter";
 
 export default class FSearchFilters extends Feature {
 
@@ -43,7 +44,7 @@ export default class FSearchFilters extends Feature {
 
         HTML.afterBegin("#advsearchform .rightcol",
             `<div class="block search_collapse_block" data-collapse-name="${collapseName}">
-                <div class="block_header"><div>${Localization.str.filters}</div></div>
+                <div class="block_header"><div>${L(__filters)}</div></div>
                 <div class="block_content block_content_inner">
                     ${this._filters.reduce((html, filter) => html + filter.getHTML(), "")}
                 </div>

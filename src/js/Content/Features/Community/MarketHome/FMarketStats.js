@@ -1,4 +1,15 @@
-import {HTML, LocalStorage, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
+import {
+    __loading,
+    __loadMarketStats,
+    __marketTransactions,
+    __netGain,
+    __netSpent,
+    __purchaseTotal,
+    __salesTotal,
+    __transactionStatus,
+} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, LocalStorage, SyncedStorage, TimeUtils} from "../../../../modulesCore";
 import {Feature, Price, RequestData, User} from "../../../modulesContent";
 
 export default class FMarketStats extends Feature {
@@ -12,10 +23,10 @@ export default class FMarketStats extends Feature {
         HTML.beforeBegin("#findItems",
             `<div id="es_summary">
                 <div class="market_search_sidebar_contents">
-                    <h2 class="market_section_title">${Localization.str.market_transactions}</h2>
+                    <h2 class="market_section_title">${L(__marketTransactions)}</h2>
                     <div id="es_market_summary_status">
                         <a class="btnv6_grey_black ico_hover btn_small_thin" id="es_market_summary_button">
-                            <span>${Localization.str.load_market_stats}</span>
+                            <span>${L(__loadMarketStats)}</span>
                         </a>
                     </div>
                 </div>
@@ -35,7 +46,7 @@ export default class FMarketStats extends Feature {
         HTML.inner(statusNode,
             `<img id="es_market_summary_throbber" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
             <span>
-                <span id="esi_market_stats_progress_description">${Localization.str.loading} </span>
+                <span id="esi_market_stats_progress_description">${L(__loading)} </span>
                 <span id="esi_market_stats_progress"></span>
             </span>`);
 
@@ -110,21 +121,21 @@ export default class FMarketStats extends Feature {
 
             const net = new Price(saleTotal - purchaseTotal);
             let color = "green";
-            let netText = Localization.str.net_gain;
+            let netText = L(__netGain);
             if (net.value < 0) {
                 color = "red";
-                netText = Localization.str.net_spent;
+                netText = L(__netSpent);
             }
 
             const purchaseTotalPrice = new Price(purchaseTotal);
             const saleTotalPrice = new Price(saleTotal);
             HTML.inner("#es_market_summary",
                 `<div>
-                    ${Localization.str.purchase_total}
+                    ${L(__purchaseTotal)}
                     <span class="es_market_summary_item">${purchaseTotalPrice}</span>
                 </div>
                 <div>
-                    ${Localization.str.sales_total}
+                    ${L(__salesTotal)}
                     <span class="es_market_summary_item">${saleTotalPrice}</span>
                 </div>
                 <div>
@@ -213,10 +224,11 @@ export default class FMarketStats extends Feature {
          * 2. After testing, Steam starts throwing 429s after 30 requests (30 * 500 = 15000 items), sometimes earlier.
          *  Add a "continue" button to allow continuing where we left off.
          */
-        progressNode.textContent = Localization.str.transactionStatus
-            .replace("__failed__", failedRequests)
-            .replace("__size__", transactions.size)
-            .replace("__total__", totalCount);
+        progressNode.textContent = L(__transactionStatus, {
+            "failed": failedRequests,
+            "size": transactions.size,
+            "total": totalCount
+        });
         return false;
     }
 }

@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {__each} from "@Strings/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {CurrencyManager, Feature, Price} from "../../../modulesContent";
 
 export default class FPackBreakdown extends Feature {
@@ -64,7 +66,7 @@ export default class FPackBreakdown extends Feature {
         HTML.afterBegin(node.querySelector(".game_purchase_action_bg"),
             `<div class="es_each_box">
                 <div class="es_each_price">${new Price(unitPrice)}</div>
-                <div class="es_each">${Localization.str.each}</div>
+                <div class="es_each">${L(__each)}</div>
             </div>`);
     }
 }

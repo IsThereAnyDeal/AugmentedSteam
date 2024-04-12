@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {__queue_new, __queue_newTooltip} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -11,9 +13,9 @@ export default class FNewQueue extends Feature {
     apply() {
 
         HTML.afterEnd(".btn_next_in_queue",
-            `<div id="es_new_queue" class="btn_next_in_queue btn_next_in_queue_trigger" data-tooltip-text="${Localization.str.queue.new_tooltip}">
+            `<div id="es_new_queue" class="btn_next_in_queue btn_next_in_queue_trigger" data-tooltip-text="${L(__queue_newTooltip)}">
                 <div class="next_in_queue_content">
-                    <span class="finish_queue_text">${Localization.str.queue.new}</span>
+                    <span class="finish_queue_text">${L(__queue_new)}</span>
                 </div>
             </div>`);
 

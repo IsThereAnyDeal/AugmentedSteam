@@ -1,4 +1,6 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {__twitch_nowStreaming, __twitch_viewers} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {Background, Feature, User} from "../../../modulesContent";
 
 export default class FTwitchShowcase extends Feature {
@@ -38,7 +40,7 @@ export default class FTwitchShowcase extends Feature {
         HTML.afterBegin(".profile_leftcol",
             `<div class="profile_customization" id="es_twitch">
                 <div class="profile_customization_header">
-                    ${Localization.str.twitch.now_streaming.replace("__username__", channelUsername)}
+                    ${L(__twitch_nowStreaming, {"username": channelUsername})}
                 </div>
                 <a class="esi-stream" href="${channelUrl}">
                     <div class="esi-stream__preview">
@@ -48,7 +50,7 @@ export default class FTwitchShowcase extends Feature {
                     </div>
                     <div class="esi-stream__title">
                         <span class="live_stream_app">${channelGame}</span>
-                        <span class="live_steam_viewers">${channelViewers} ${Localization.str.twitch.viewers}</span>
+                        <span class="live_steam_viewers">${channelViewers} ${L(__twitch_viewers)}</span>
                     </div>
                 </a>
             </div>`);

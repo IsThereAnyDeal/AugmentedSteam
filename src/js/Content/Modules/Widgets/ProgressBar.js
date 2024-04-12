@@ -1,4 +1,6 @@
-import {HTML, Localization, SyncedStorage} from "../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__ready_failed, __ready_loading, __ready_ready, __ready_serverOutage} from "@Strings/_strings";
+import {HTML, SyncedStorage} from "../../../modulesCore";
 
 class ProgressBar {
     static create() {
@@ -6,7 +8,7 @@ class ProgressBar {
 
         HTML.afterEnd("#global_actions",
             `<div class="es_progress__wrap">
-                <div class="es_progress es_progress--complete" title="${Localization.str.ready.ready}">
+                <div class="es_progress es_progress--complete" title="${L(__ready_ready)}">
                     <div class="es_progress__bar">
                         <div class="es_progress__value"></div>
                     </div>
@@ -18,7 +20,7 @@ class ProgressBar {
     static loading() {
         if (!ProgressBar._progress) { return; }
 
-        ProgressBar._progress.setAttribute("title", Localization.str.ready.loading);
+        ProgressBar._progress.setAttribute("title", L(__ready_loading));
 
         ProgressBar.requests = {"initiated": 0, "completed": 0};
         ProgressBar._progress.classList.remove("es_progress--complete");
@@ -56,7 +58,7 @@ class ProgressBar {
 
         if (_value >= 100) {
             ProgressBar._progress.classList.add("es_progress--complete");
-            ProgressBar._progress.setAttribute("title", Localization.str.ready.ready);
+            ProgressBar._progress.setAttribute("title", L(__ready_ready));
             ProgressBar.requests = null;
         }
     }
@@ -70,7 +72,7 @@ class ProgressBar {
         if (!ProgressBar._progress.parentElement.querySelector(".es_progress__warning, .es_progress__error")) {
             HTML.afterEnd(
                 ProgressBar._progress,
-                `<div class="es_progress__warning">${Localization.str.ready.server_outage}</div>`
+                `<div class="es_progress__warning">${L(__ready_serverOutage)}</div>`
             );
         }
     }
@@ -88,13 +90,11 @@ class ProgressBar {
 
         const nodeError = ProgressBar._progress.parentElement.querySelector(".es_progress__error");
         if (nodeError) {
-            nodeError.textContent = Localization.str.ready.failed.replace("__amount__", ++ProgressBar._failedRequests);
+            nodeError.textContent = L(__ready_failed, {"amount": ++ProgressBar._failedRequests});
         } else {
             HTML.afterEnd(
                 ProgressBar._progress,
-                `<div class="es_progress__error">${
-                    Localization.str.ready.failed.replace("__amount__", ++ProgressBar._failedRequests)
-                }</div>`
+                `<div class="es_progress__error">${L(__ready_failed, {"amount": ++ProgressBar._failedRequests})}</div>`
             );
         }
     }

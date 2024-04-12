@@ -1,3 +1,12 @@
+import {L} from "@Core/Localization/Localization";
+import {
+    __export_copyClipboard,
+    __export_download,
+    __export_format,
+    __export_text,
+    __export_type,
+    __export_wishlist,
+} from "@Strings/_strings";
 import {Downloader, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {Clipboard, Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
@@ -78,7 +87,7 @@ WishlistExporter.method = Object.freeze({"download": Symbol("Download"), "copyTo
 export default class FExportWishlist extends Feature {
 
     apply() {
-        HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${Localization.str.export.wishlist}</div></div>`);
+        HTML.afterBegin("#cart_status_data", `<div class="es-wbtn" id="es_export_wishlist"><div>${L(__export_wishlist)}</div></div>`);
 
         document.querySelector("#es_export_wishlist").addEventListener("click", async() => {
 
@@ -135,30 +144,30 @@ export default class FExportWishlist extends Feature {
             }
         }
 
-        Page.runInPageContext(exportStr => {
+        Page.runInPageContext(() => {
             window.SteamFacade.showConfirmDialog(
-                exportStr.wishlist,
+                L(__export_wishlist),
                 `<div id="es_export_form">
                     <div class="es-wexport">
-                        <h2>${exportStr.type}</h2>
+                        <h2>${L(__export_type)}</h2>
                         <div>
-                            <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${exportStr.text}</label>
+                            <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="text" checked> ${L(__export_text)}</label>
                             <label class="es-wexport__label"><input type="radio" name="es_wexport_type" value="json"> JSON</label>
                         </div>
                     </div>
                     <div class="es-wexport es-wexport__format">
-                        <h2>${exportStr.format}</h2>
+                        <h2>${L(__export_format)}</h2>
                         <div>
                             <input type="text" id="es-wexport-format" class="es-wexport__input" value="%title%"><br>
                             <div class="es-wexport__symbols">%title%, %id%, %appid%, %url%, %release_date%, %price%, %discount%, %base_price%, %type%, %note%</div>
                         </div>
                     </div>
                 </div>`,
-                exportStr.download,
+                L(__export_download),
                 null, // use default "Cancel"
-                exportStr.copy_clipboard
+                L(__export_copyClipboard)
             );
-        }, [Localization.str.export]);
+        }, []);
 
         const [dlBtn, copyBtn] = document.querySelectorAll(".newmodal_buttons > .btn_medium");
 

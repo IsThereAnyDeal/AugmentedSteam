@@ -1,4 +1,6 @@
-import {Localization, SyncedStorage} from "../../../modulesCore";
+import {__deleteCommentPrompt, __update_dontShow} from "../../../../localization/compiled/_strings";
+import {L} from "../../../Core/Localization/Localization";
+import {SyncedStorage} from "../../../modulesCore";
 import {Feature, Messenger, User} from "../../modulesContent";
 import {Page} from "../Page";
 
@@ -61,8 +63,8 @@ export default class FConfirmDeleteComment extends Feature {
             };
         },
         [
-            Localization.str.delete_comment_prompt,
-            Localization.str.update.dont_show
+            L(__deleteCommentPrompt),
+            L(__update_dontShow)
         ]);
     }
 }

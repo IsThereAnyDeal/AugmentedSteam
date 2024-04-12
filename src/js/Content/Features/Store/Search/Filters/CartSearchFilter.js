@@ -1,9 +1,10 @@
+import {__searchFilters_hideCart} from "../../../../../../localization/compiled/_strings";
+import {L} from "../../../../../Core/Localization/Localization";
 import {SimpleSearchFilter} from "./SimpleSearchFilter";
-import {Localization} from "../../../../../Core/Localization/Localization";
 
 export class CartSearchFilter extends SimpleSearchFilter {
 
     constructor(feature) {
-        super("as-hide", feature, Localization.str.search_filters.hide_cart, "cart");
+        super("as-hide", feature, L(__searchFilters_hideCart), "cart");
     }
 }

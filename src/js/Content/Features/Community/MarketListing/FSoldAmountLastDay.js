@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {__soldLast_24} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {CurrencyManager, Feature, RequestData, User} from "../../../modulesContent";
 
 export default class FSoldAmountLastDay extends Feature {
@@ -17,7 +19,9 @@ export default class FSoldAmountLastDay extends Feature {
 
         const soldHtml
             = `<div class="es_sold_amount">
-                   ${Localization.str.sold_last_24.replace("__sold__", `<span class="market_commodity_orders_header_promote">${data.volume || 0}</span>`)}
+                   ${L(__soldLast_24, {
+                       "sold": `<span class="market_commodity_orders_header_promote">${data.volume || 0}</span>`
+                   })}
                </div>`;
 
         const nodes = document.querySelectorAll("#market_commodity_order_spread > :nth-child(2) .market_commodity_orders_header, #pricehistory .jqplot-title, #listings .market_section_title");

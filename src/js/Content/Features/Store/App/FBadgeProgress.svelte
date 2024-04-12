@@ -43,8 +43,14 @@
 </script>
 
 <script lang="ts">
-    import {Localization} from "../../../../modulesCore";
     import type {TBadgeData} from "../../../../Background/Modules/Community/_types";
+    import {L} from "../../../../Core/Localization/Localization";
+    import {
+        __badgeLevel,
+        __badgeNotUnlocked,
+        __badgeProgress,
+        __cardsOwned, __viewBadge, __viewBadgeProgress
+    } from "../../../../../localization/compiled/_strings";
 
     export let data: TBadgeData;
 
@@ -53,14 +59,14 @@
 </script>
 
 
-<div class="block responsive_apppage_details_right heading">{Localization.str.badge_progress}</div>
+<div class="block responsive_apppage_details_right heading">{L(__badgeProgress)}</div>
 <div class="block responsive_apppage_details_right">
     <div class="block_content_inner es_badges_progress_block">
         {#if data.level === 0}
             <div class="badge_empty_circle"></div>
             <div class="badge_empty_right">
                 <div class="badge_empty_name">{data.nextlevelname}</div>
-                <div class="badge_empty_name">{Localization.str.badge_not_unlocked}</div>
+                <div class="badge_empty_name">{L(__badgeNotUnlocked)}</div>
             </div>
         {:else}
             <div class="badge_info_image">
@@ -68,15 +74,15 @@
             </div>
             <div class="badge_info_description">
                 <div class="badge_info_title">{data.name}</div>
-                <div>{Localization.str.badge_level.replace("__level__", data.level)}</div>
+                <div>{L(__badgeLevel, {"level": data.level})}</div>
             </div>
         {/if}
         <div class="es_cards_numbers">
-            <div class="es_cards_owned">{Localization.str.cards_owned.replace("__owned__", cardOwned).replace("__possible__", cardTotal)}</div>
+            <div class="es_cards_owned">{L(__cardsOwned, {"owned": cardOwned, "possible": cardTotal})}</div>
         </div>
         <div class="game_area_details_specs">
             <div class="icon"><img src="//store.steampowered.com/public/images/v6/ico/ico_cards.png" class="category_icon" alt="Cards icon"></div>
-            <a href="//steamcommunity.com/my/gamecards/{data.appid}/" class="name">{data.bMaxed ? Localization.str.view_badge : Localization.str.view_badge_progress}</a>
+            <a href="//steamcommunity.com/my/gamecards/{data.appid}/" class="name">{L(data.bMaxed ? __viewBadge : __viewBadgeProgress)}</a>
         </div>
     </div>
 </div>

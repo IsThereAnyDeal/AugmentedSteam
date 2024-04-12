@@ -1,4 +1,6 @@
-import {HTML, HTMLParser, Localization} from "../../../../modulesCore";
+import {__steamClientChat, __webBrowserChat} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, HTMLParser} from "../../../../modulesCore";
 import {Feature, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -23,11 +25,11 @@ export default class FChatDropdownOptions extends Feature {
                 <div class="popup_body popup_menu shadow_content">
                     <a id="btnWebChat" class="popup_menu_item">
                         <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/icon_btn_comment.png">
-                        &nbsp; ${Localization.str.web_browser_chat}
+                        &nbsp; ${L(__webBrowserChat)}
                     </a>
                     <a class="popup_menu_item" href="steam://friends/message/${friendSteamId}">
                         <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/icon_btn_comment.png">
-                        &nbsp; ${Localization.str.steam_client_chat}
+                        &nbsp; ${L(__steamClientChat)}
                     </a>
                 </div>
             </div>`);

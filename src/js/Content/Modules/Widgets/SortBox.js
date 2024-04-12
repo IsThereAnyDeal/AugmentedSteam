@@ -1,6 +1,8 @@
+import {L} from "@Core/Localization/Localization";
+import {__sortBy} from "@Strings/_strings";
 
 // Most of the code here comes from dselect.js
-import {HTML, Localization, SyncedStorage} from "../../../modulesCore";
+import {HTML, SyncedStorage} from "../../../modulesCore";
 
 class Sortbox {
 
@@ -127,7 +129,7 @@ class Sortbox {
 
         const box = HTML.toElement(
             `<div class="es-sortbox es-sortbox--${name}">
-                <div class="es-sortbox__label">${Localization.str.sort_by}</div>
+                <div class="es-sortbox__label">${L(__sortBy)}</div>
                 <div id="${id}_container" class="es-sortbox__container">
                     <input id="${id}" type="hidden" name="${name}" value="${initialOption}">
                     <a id="${id}_trigger" class="trigger"></a>

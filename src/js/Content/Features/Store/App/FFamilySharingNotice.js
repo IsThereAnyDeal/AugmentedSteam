@@ -1,5 +1,7 @@
+import {__familySharingNotice_desc, __familySharingNotice_notice} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../Modules/Feature/Feature";
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 
 export default class FFamilySharingNotice extends Feature {
 
@@ -11,12 +13,10 @@ export default class FFamilySharingNotice extends Feature {
     }
 
     apply() {
-        const notice = Localization.str.family_sharing_notice;
-
         HTML.beforeBegin("#game_area_purchase",
             `<div>
                 <div class="notice_box_top"></div>
-                    <div class="notice_box_content"><b>${notice.notice}</b> ${notice.desc}</div>
+                    <div class="notice_box_content"><b>${L(__familySharingNotice_notice)}</b> ${L(__familySharingNotice_desc)}</div>
                 <div class="notice_box_bottom"></div>
             </div>`);
     }

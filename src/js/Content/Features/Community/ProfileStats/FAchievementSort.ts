@@ -1,7 +1,9 @@
-import {HTML, Language, Localization} from "../../../../modulesCore";
+import {HTML, Language} from "../../../../modulesCore";
 import {Feature, RequestData, Sortbox} from "../../../modulesContent";
 import type {CProfileStats} from "./CProfileStats";
 import {DateTime, type DateTimeOptions} from "luxon";
+import {__dateUnlocked, __theworddefault} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
 
 export default class FAchievementSort extends Feature<CProfileStats> {
 
@@ -27,8 +29,8 @@ export default class FAchievementSort extends Feature<CProfileStats> {
         const sortbox = Sortbox.get(
             "achievements",
             [
-                ["default", Localization.str.theworddefault],
-                ["time", Localization.str.date_unlocked],
+                ["default", L(__theworddefault)],
+                ["time", L(__dateUnlocked)],
             ],
             "default_ASC",
             (sortBy: "time"|"default", reversed: boolean) => { this._sortRows(sortBy, reversed); },

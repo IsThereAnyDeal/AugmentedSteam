@@ -1,4 +1,21 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {
+    __apppageEabanner,
+    __apppageEaheader,
+    __apppageFranchise,
+    __apppageGreenlight,
+    __apppageLegal,
+    __apppageMorefromfranchise,
+    __apppageRecentupdates,
+    __apppageSections,
+    __apppageWorkshop,
+    __customize,
+    __homepageCurators,
+    __homepageSidebar,
+    __homepageTabs,
+    __homepageTopnewreleases,
+} from "@Strings/_strings";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {ContextType, Feature, Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -8,9 +25,9 @@ export default class FCustomizer extends Feature {
 
         HTML.afterBegin("#cart_status_data",
             `<div class="store_header_btn_gray store_header_btn" id="es_customize_btn">
-                <div class="es_customize_title">${Localization.str.customize}<img src="//store.cloudflare.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png"></div>
+                <div class="es_customize_title">${L(__customize)}<img src="//store.cloudflare.steamstatic.com/public/images/v6/btn_arrow_down_padded_white.png"></div>
                 <div class="home_viewsettings_popup">
-                    <div class="home_viewsettings_instructions">${Localization.str.apppage_sections}</div>
+                    <div class="home_viewsettings_instructions">${L(__apppageSections)}</div>
                 </div>
             </div>`);
 
@@ -69,22 +86,22 @@ export default class FCustomizer extends Feature {
 
         const customizer = new FCustomizer.Customizer("customize_apppage", this.context);
         customizer
-            .add("franchisenotice", ".franchise_notice", Localization.str.apppage_franchise)
-            .add("eaheader", ".early_access_header:not(.es_coupon_info)", Localization.str.apppage_eaheader)
-            .add("eabanner", ".early_access_banner", Localization.str.apppage_eabanner)
-            .add("recentupdates", "[data-featuretarget=events-row]", Localization.str.apppage_recentupdates)
+            .add("franchisenotice", ".franchise_notice", L(__apppageFranchise))
+            .add("eaheader", ".early_access_header:not(.es_coupon_info)", L(__apppageEaheader))
+            .add("eabanner", ".early_access_banner", L(__apppageEabanner))
+            .add("recentupdates", "[data-featuretarget=events-row]", L(__apppageRecentupdates))
             .add("reviews", "#game_area_reviews")
             .add("about", getParentEl("#game_area_description"))
             .add("contentwarning", getParentEl("#game_area_content_descriptors"))
             .add("sysreq", getParentEl(".sys_req"))
-            .add("legal", getParentEl("#game_area_legal"), Localization.str.apppage_legal)
+            .add("legal", getParentEl("#game_area_legal"), L(__apppageLegal))
             .add("moredlcfrombasegame", "#moredlcfrombasegame_block")
-            .add("franchise", "#franchise_block", Localization.str.apppage_morefromfranchise)
+            .add("franchise", "#franchise_block", L(__apppageMorefromfranchise))
             .add("morelikethis", "#recommended_block")
             .add("recommendedbycurators", ".steam_curators_block")
             .add("customerreviews", "#app_reviews_hash")
-            .add("workshop", getParentEl("[href^='https://steamcommunity.com/workshop/browse']"), Localization.str.apppage_workshop)
-            .add("greenlight", getParentEl("[href^='https://steamcommunity.com/greenlight']"), Localization.str.apppage_greenlight);
+            .add("workshop", getParentEl("[href^='https://steamcommunity.com/workshop/browse']"), L(__apppageWorkshop))
+            .add("greenlight", getParentEl("[href^='https://steamcommunity.com/greenlight']"), L(__apppageGreenlight));
 
         customizer.build();
     }
@@ -101,15 +118,15 @@ export default class FCustomizer extends Feature {
             .add("featuredrecommended", ".home_cluster_ctn")
             .add("trendingamongfriends", ".friends_recently_purchased", "", true)
             .add("discoveryqueue", ".discovery_queue_ctn")
-            .add("curators", ".steam_curators_ctn", Localization.str.homepage_curators)
-            .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn", Localization.str.homepage_curators)
+            .add("curators", ".steam_curators_ctn", L(__homepageCurators))
+            .add("morecuratorrecommendations", ".apps_recommended_by_curators_ctn", L(__homepageCurators))
             .add("fromdevelopersandpublishersthatyouknow", ".recommended_creators_ctn")
             .add("popularvrgames", ".best_selling_vr_ctn")
-            .add("homepagetabs", ".tab_container", Localization.str.homepage_tabs)
+            .add("homepagetabs", ".tab_container", L(__homepageTabs))
             .add("gamesstreamingnow", ".live_streams_ctn", "", true)
             .add("updatesandoffers", ".marketingmessage_area", "", true)
-            .add("topnewreleases", ".top_new_releases", Localization.str.homepage_topnewreleases)
-            .add("homepagesidebar", "body:not(.no_home_gutter) .home_page_gutter", Localization.str.homepage_sidebar)
+            .add("topnewreleases", ".top_new_releases", L(__homepageTopnewreleases))
+            .add("homepagesidebar", "body:not(.no_home_gutter) .home_page_gutter", L(__homepageSidebar))
             .add("specialoffers", getParentEl(".special_offers"))
             .add("browsesteam", getParentEl(".big_buttons.home_page_content"))
             .add("recentlyupdated", getParentEl(".recently_updated_block"))
@@ -186,7 +203,7 @@ FCustomizer.Customizer = class {
                 _text = this._textValue(element).toLowerCase();
                 if (_text === "") { continue; }
             }
- 
+
             element.classList.toggle("esi-shown", enabled);
             element.classList.toggle("esi-hidden", !enabled);
             element.classList.add("esi-customizer");

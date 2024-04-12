@@ -1,4 +1,6 @@
-import {Localization, SyncedStorage} from "../../../modulesCore";
+import {__spamCommentShow} from "../../../../localization/compiled/_strings";
+import {L} from "../../../Core/Localization/Localization";
+import {SyncedStorage} from "../../../modulesCore";
 import {Feature} from "../../modulesContent";
 
 export default class FHideSpamComments extends Feature {
@@ -74,7 +76,7 @@ export default class FHideSpamComments extends Feature {
         }
 
         button.classList.remove("esi-hidden");
-        button.textContent = Localization.str.spam_comment_show.replace("__num__", count);
+        button.textContent = L(__spamCommentShow, {"num": count});
         threadNode.classList.remove("esi_commentthread--showspam");
     }
 

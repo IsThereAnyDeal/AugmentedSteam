@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {__addNickname, __postHistory} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {Feature, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -19,7 +21,7 @@ export default class FProfileDropdownOptions extends Feature {
 
                 HTML.afterEnd(this._node,
                     `<a class="popup_menu_item" id="es_nickname">
-                        <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${Localization.str.add_nickname}
+                        <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/notification_icon_edit_bright.png">&nbsp; ${L(__addNickname)}
                     </a>`);
 
                 document.querySelector("#es_nickname").addEventListener("click", () => {
@@ -49,7 +51,7 @@ export default class FProfileDropdownOptions extends Feature {
         // add post history link
         HTML.afterEnd(this._node,
             `<a class="popup_menu_item" href="${window.location.pathname}/posthistory">
-                <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/icon_btn_comment.png">&nbsp; ${Localization.str.post_history}
+                <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/icon_btn_comment.png">&nbsp; ${L(__postHistory)}
             </a>`);
     }
 }

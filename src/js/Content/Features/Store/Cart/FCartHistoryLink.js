@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__shoppingCartHistory} from "@Strings/_strings";
+import {HTML} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 
 export default class FCartHistoryLink extends Feature {
@@ -19,7 +21,7 @@ export default class FCartHistoryLink extends Feature {
 
         HTML.beforeBegin(anchor,
             `<a href="https://help.steampowered.com/accountdata/ShoppingCartHistory" target="_blank">
-                ${Localization.str.shopping_cart_history}
+                ${L(__shoppingCartHistory)}
             </a>`);
     }
 }

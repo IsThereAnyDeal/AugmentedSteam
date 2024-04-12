@@ -1,4 +1,9 @@
-import {StoreListBuilder} from "./Modules/StoreListBuilder";
+import {L} from "@Core/Localization/Localization";
+import {__options_clear, __options_settingsMngmt_importFail, __options_settingsMngmt_importSuccess} from "@Strings/_strings";
+import {ContextMenu} from "../Background/Modules/ContextMenu";
+import {BackgroundSimple} from "../Core/BackgroundSimple";
+import {UserNotesAdapter} from "../Core/Storage/UserNotesAdapter";
+import {Downloader, ExtensionResources, Info, Localization, PermissionOptions, Permissions, SyncedStorage} from "../modulesCore";
 import {ChangelogBuilder} from "./Modules/ChangelogBuilder";
 import {CustomLinks} from "./Modules/CustomLinks";
 import {Fader} from "./Modules/Fader";
@@ -9,13 +14,7 @@ import {OptionsTranslator} from "./Modules/OptionsTranslator";
 import {Region} from "./Modules/Region";
 import {SaveIndicator} from "./Modules/SaveIndicator";
 import {Sidebar} from "./Modules/Sidebar";
-import {
-    Downloader, ExtensionResources, Info,
-    Localization, PermissionOptions, Permissions, SyncedStorage
-} from "../modulesCore";
-import {ContextMenu} from "../Background/Modules/ContextMenu";
-import {UserNotesAdapter} from "../Core/Storage/UserNotesAdapter";
-import {BackgroundSimple} from "../Core/BackgroundSimple";
+import {StoreListBuilder} from "./Modules/StoreListBuilder";
 
 // TODO this needs to be refactored and cleaned up
 
@@ -117,7 +116,7 @@ const Options = (() => {
 
                 // TODO do not use alert
                 // eslint-disable-next-line no-alert
-                window.alert(Localization.str.options.settings_mngmt.import_fail);
+                window.alert(L(__options_settingsMngmt_importFail));
                 return;
             }
 
@@ -138,13 +137,13 @@ const Options = (() => {
 
                 // TODO do not use alert
                 // eslint-disable-next-line no-alert
-                window.alert(Localization.str.options.settings_mngmt.import_fail);
+                window.alert(L(__options_settingsMngmt_importFail));
                 return;
             }
 
             // TODO do not use alert
             // eslint-disable-next-line no-alert
-            window.alert(Localization.str.options.settings_mngmt.import_success);
+            window.alert(L(__options_settingsMngmt_importSuccess));
             window.location.reload();
         });
         reader.readAsText(input.files[0]);
@@ -157,7 +156,7 @@ const Options = (() => {
     function clearSettings() {
         // TODO do not use confirm
         // eslint-disable-next-line no-alert
-        if (!window.confirm(Localization.str.options.clear)) { return; }
+        if (!window.confirm(L(__options_clear))) { return; }
         SyncedStorage.clear(false);
 
         SyncedStorage.then(loadOptions);

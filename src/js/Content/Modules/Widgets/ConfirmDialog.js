@@ -1,5 +1,6 @@
+import {__featureHint_desc, __featureHint_reminder, __thewordno, __thewordyes} from "../../../../localization/compiled/_strings";
+import {L} from "../../../Core/Localization/Localization";
 import {Page} from "../../Features/Page";
-import {Localization} from "../../../Core/Localization/Localization";
 
 class ConfirmDialog {
 
@@ -30,12 +31,12 @@ class ConfirmDialog {
         const _strTitle = strTitle ? `Augmented Steam - ${strTitle}` : "Augmented Steam";
 
         const _strDescription = `${strDescription ? `${strDescription}<br><br>` : ""}
-            ${Localization.str.feature_hint.desc}<br><br>
-            <span class="as_feature_hint_option">${Localization.str.options[optionStr]}</span><br><br>
-            ${Localization.str.feature_hint.reminder}`;
+            ${L(__featureHint_desc)}<br><br>
+            <span class="as_feature_hint_option">${L(optionStr)}</span><br><br>
+            ${L(__featureHint_reminder)}`;
 
-        const _strOKButton = strOKButton || Localization.str.thewordyes;
-        const _strCancelButton = strCancelButton || Localization.str.thewordno;
+        const _strOKButton = strOKButton || L(__thewordyes);
+        const _strCancelButton = strCancelButton || L(__thewordno);
 
         return this.open(_strTitle, _strDescription, _strOKButton, _strCancelButton, strSecondaryActionButton);
     }

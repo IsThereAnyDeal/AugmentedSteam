@@ -1,4 +1,5 @@
-import {Localization, SyncedStorage} from "../../../../modulesCore";
+import {__members, __name, __theworddefault} from "../../../../../localization/compiled/_strings";
+import {SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature, Sortbox} from "../../../modulesContent";
 
 export default class FGroupsSort extends CallbackFeature {
@@ -16,9 +17,9 @@ export default class FGroupsSort extends CallbackFeature {
         document.querySelector("span.profile_groups.title").insertAdjacentElement("afterend", Sortbox.get(
             "groups",
             [
-                ["default", Localization.str.theworddefault],
-                ["members", Localization.str.members],
-                ["names", Localization.str.name]
+                ["default", L(__theworddefault)],
+                ["members", L(__members)],
+                ["names", L(__name)]
             ],
             SyncedStorage.get("sortgroupsby"),
             (sortBy, reversed) => { this._sortGroups(sortBy, reversed); },

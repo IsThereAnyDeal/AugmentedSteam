@@ -1,4 +1,6 @@
-import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {__close, __copied, __steamidOfUser, __viewSteamid} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
 import {Clipboard, Feature, SteamIdDetail} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -14,14 +16,14 @@ export default class FViewSteamId extends Feature {
         if (dropdown) {
             HTML.beforeEnd(dropdown,
                 `<a class="popup_menu_item" id="es_steamid">
-                    <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/iconForums.png">&nbsp; ${Localization.str.view_steamid}
+                    <img src="//community.cloudflare.steamstatic.com/public/images/skin_1/iconForums.png">&nbsp; ${L(__viewSteamid)}
                 </a>`);
         } else {
             const actions = document.querySelector(".profile_header_actions");
             if (actions) {
                 HTML.beforeEnd(actions,
                     `<a class="btn_profile_action btn_medium" id="es_steamid">
-                        <span>${Localization.str.view_steamid}</span>
+                        <span>${L(__viewSteamid)}</span>
                     </a>`);
             }
         }
@@ -65,7 +67,7 @@ export default class FViewSteamId extends Feature {
                         <a class="es-copy">
                             <span class="es-copy__id">${id}</span>
                             <img src="${imgUrl}" class="es-copy__icon">
-                            <span class="es-copy__copied">${Localization.str.copied}</span>
+                            <span class="es-copy__copied">${L(__copied)}</span>
                         </a>
                     </p>`;
         }
@@ -85,9 +87,9 @@ export default class FViewSteamId extends Feature {
             });
         },
         [
-            Localization.str.steamid_of_user,
+            L(__steamidOfUser),
             html,
-            Localization.str.close,
+            L(__close),
         ],
         "closeDialog")
             .then(() => { document.removeEventListener("click", copySteamId); });

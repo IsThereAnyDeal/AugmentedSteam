@@ -1,6 +1,15 @@
-import {HTML, Localization, StringUtils, TimeUtils} from "../../../../modulesCore";
-import {Background, Feature} from "../../../modulesContent";
+import {
+    __customBackground,
+    __customBackgroundHelp,
+    __gameName,
+    __loading,
+    __save,
+    __thewordclear,
+} from "../../../../../localization/compiled/_strings";
 import Config from "../../../../config";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, StringUtils, TimeUtils} from "../../../../modulesCore";
+import {Background, Feature} from "../../../modulesContent";
 
 export default class FBackgroundSelection extends Feature {
 
@@ -34,12 +43,12 @@ export default class FBackgroundSelection extends Feature {
         const html
             = `<div class="js-bg-selection as-pd">
 
-                <div class="DialogLabel as-pd__head" data-tooltip-text="${Localization.str.custom_background_help}">
-                    ${Localization.str.custom_background} <span class="as-pd__help">(?)</span>
+                <div class="DialogLabel as-pd__head" data-tooltip-text="${L(__customBackgroundHelp)}">
+                    ${L(__customBackground)} <span class="as-pd__help">(?)</span>
                 </div>
 
                 <div class="DialogInput_Wrapper _DialogLayout">
-                    <input type="text" class="DialogInput DialogInputPlaceholder DialogTextInputBase js-pd-game" value="" placeholder="${Localization.str.game_name}">
+                    <input type="text" class="DialogInput DialogInputPlaceholder DialogTextInputBase js-pd-game" value="" placeholder="${L(__gameName)}">
                 </div>
 
                 <div class="as-pd__cnt">
@@ -51,8 +60,8 @@ export default class FBackgroundSelection extends Feature {
                 </div>
 
                 <div class="as-pd__buttons">
-                    <button class="DialogButton _DialogLayout Secondary as-pd__btn js-pd-bg-clear">${Localization.str.thewordclear}</button>
-                    <button class="DialogButton _DialogLayout Primary as-pd__btn js-pd-bg-save">${Localization.str.save}</button>
+                    <button class="DialogButton _DialogLayout Secondary as-pd__btn js-pd-bg-clear">${L(__thewordclear)}</button>
+                    <button class="DialogButton _DialogLayout Primary as-pd__btn js-pd-bg-save">${L(__save)}</button>
                 </div>
             </div>`;
 
@@ -225,7 +234,7 @@ export default class FBackgroundSelection extends Feature {
             HTML.inner(listNode,
                 `<div class="es_loading">
                     <img src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
-                    <span>${Localization.str.loading}</span>
+                    <span>${L(__loading)}</span>
                 </div>`);
 
             this._games = await Background.action("profile.background.games");

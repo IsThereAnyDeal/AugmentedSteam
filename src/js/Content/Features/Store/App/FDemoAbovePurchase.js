@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {__downloadDemoHeader, __export_download} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 
 /*
@@ -26,12 +28,12 @@ export default class FDemoAbovePurchase extends Feature {
             <div class="game_area_purchase_platform">
                 ${winIcon}${macIcon}${linuxIcon}
             </div>
-            <h1>${Localization.str.download_demo_header.replace("__gamename__", this.context.appName)}</h1>
+            <h1>${L(__downloadDemoHeader, {"gamename": this.context.appName})}</h1>
             <div class="game_purchase_action">
                 <div class="game_purchase_action_bg">
                     <div id="demoGameBtn" class="btn_addtocart">
                         <span class="btn_green_steamui btn_medium">
-                            <span>${Localization.str.export.download}</span>
+                            <span>${L(__export_download)}</span>
                         </span>
                     </div>
                 </div>

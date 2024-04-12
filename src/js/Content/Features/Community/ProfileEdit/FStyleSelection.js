@@ -1,6 +1,8 @@
-import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
-import {Feature} from "../../../modulesContent";
+import {__customStyle, __customStyleHelp, __noneselected, __save} from "../../../../../localization/compiled/_strings";
 import Config from "../../../../config";
+import {L} from "../../../../Core/Localization/Localization";
+import {ExtensionResources, HTML} from "../../../../modulesCore";
+import {Feature} from "../../../modulesContent";
 
 export default class FStyleSelection extends Feature {
 
@@ -29,14 +31,14 @@ export default class FStyleSelection extends Feature {
         const html
             = `<div class="js-style-selection as-pd">
 
-                <div class="as-pd__head" data-tooltip-text="${Localization.str.custom_style_help}">
-                    ${Localization.str.custom_style} <span class="as-pd__help">(?)</span>
+                <div class="as-pd__head" data-tooltip-text="${L(__customStyleHelp)}">
+                    ${L(__customStyle)} <span class="as-pd__help">(?)</span>
                 </div>
 
                 <div class="as-pd__cnt">
                     <div>
                         <select name="es_style" class="gray_bevel dynInput as-pd__select js-pd-style-select">
-                            <option value="remove">${Localization.str.noneselected}</option>
+                            <option value="remove">${L(__noneselected)}</option>
                             <option value="goldenprofile2020">Lunar Sale 2020</option>
                             <option value="winter2019">Winter Sale 2019</option>
                             <option value="goldenprofile">Lunar Sale 2019</option>
@@ -57,7 +59,7 @@ export default class FStyleSelection extends Feature {
                 </div>
 
                 <div class="as-pd__buttons">
-                    <button class="DialogButton _DialogLayout Primary as-pd__btn js-pd-style-save">${Localization.str.save}</button>
+                    <button class="DialogButton _DialogLayout Primary as-pd__btn js-pd-style-save">${L(__save)}</button>
                 </div>
             </div>`;
 

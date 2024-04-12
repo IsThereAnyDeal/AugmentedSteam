@@ -51,11 +51,11 @@ export default class Localization {
     }
 }
 
-export function L(key: string, replacements: Record<string, string>|null = null): string {
+export function L(key: string, replacements: Record<string, string|number>|null = null): string {
     let text = Localization.locale.strings[key] ?? "<<missing text>>";
     if (replacements !== null) {
         for (let [key, value] of Object.entries(replacements)) {
-            text = text.replaceAll(`__${key}__`, value);
+            text = text.replaceAll(`__${key}__`, String(value));
         }
     }
     return text;

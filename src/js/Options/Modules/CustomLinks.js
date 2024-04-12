@@ -1,4 +1,6 @@
-import {HTML, Localization, SyncedStorage} from "../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__options_icon, __options_name} from "@Strings/_strings";
+import {HTML, SyncedStorage} from "../../modulesCore";
 import {SaveIndicator} from "./SaveIndicator";
 
 class CustomLinks {
@@ -15,7 +17,7 @@ class CustomLinks {
                 <input type="checkbox" name="${this._type}_custom_enabled">
                 <div>
                     <div>
-                        <label class="custom-link__label">${Localization.str.options.name}</label>
+                        <label class="custom-link__label">${L(__options_name)}</label>
                         <input class="custom-link__input" type="text" name="${this._type}_custom_name" maxlength="30">
                     </div>
                     <div>
@@ -23,7 +25,7 @@ class CustomLinks {
                         <input class="custom-link__input" type="text" name="${this._type}_custom_url">
                     </div>
                     <div>
-                        <label class="custom-link__label">${Localization.str.options.icon}</label>
+                        <label class="custom-link__label">${L(__options_icon)}</label>
                         <input class="custom-link__input" type="text" name="${this._type}_custom_icon">
                     </div>
                 </div>

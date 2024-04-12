@@ -1,4 +1,5 @@
-import {ExtensionResources, HTML, Localization, SyncedStorage, TimeUtils} from "../../modulesCore";
+import {__itad_from, __itad_lastImport, __itad_syncNow, __itad_to, __never} from "@Strings/_strings";
+import {ExtensionResources, HTML, SyncedStorage, TimeUtils} from "../../modulesCore";
 import {Background, User} from "../modulesContent";
 
 class ITAD {
@@ -24,13 +25,13 @@ class ITAD {
             const {from, to} = await Background.action("itad.lastimport");
 
             let htmlStr
-                = `<div>${Localization.str.itad.from}</div>
-                   <div>${from ? new Date(from * 1000).toLocaleString() : Localization.str.never}</div>`;
+                = `<div>${L(__itad_from)}</div>
+                   <div>${from ? new Date(from * 1000).toLocaleString() : L(__never)}</div>`;
 
             if (SyncedStorage.get("itad_import_library") || SyncedStorage.get("itad_import_wishlist")) {
                 htmlStr
-                    += `<div>${Localization.str.itad.to}</div>
-                        <div>${to ? new Date(to * 1000).toLocaleString() : Localization.str.never}</div>`;
+                    += `<div>${L(__itad_to)}</div>
+                        <div>${to ? new Date(to * 1000).toLocaleString() : L(__never)}</div>`;
             }
 
             HTML.inner(".es-itad-hover__last-import", htmlStr);
@@ -40,10 +41,10 @@ class ITAD {
             HTML.afterEnd("#es_itad_status",
                 `<div class="es-itad-hover">
                     <div class="es-itad-hover__content">
-                        <h4>${Localization.str.itad.last_import}</h4>
+                        <h4>${L(__itad_lastImport)}</h4>
                         <div class="es-itad-hover__last-import"></div>
                         <div class="es-itad-hover__sync-now">
-                            <span class="es-itad-hover__sync-now-text">${Localization.str.itad.sync_now}</span>
+                            <span class="es-itad-hover__sync-now-text">${L(__itad_syncNow)}</span>
                             <div class="loader"></div>
                             <span class="es-itad-hover__sync-failed">&#10060;</span>
                             <span class="es-itad-hover__sync-success">&#10003;</span>

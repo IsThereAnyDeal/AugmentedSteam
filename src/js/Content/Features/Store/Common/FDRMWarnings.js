@@ -1,4 +1,6 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__drmThirdParty, __drmThirdPartySub} from "@Strings/_strings";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {ContextType, Feature} from "../../../modulesContent";
 
 export default class FDRMWarnings extends Feature {
@@ -121,8 +123,9 @@ export default class FDRMWarnings extends Feature {
 
         let drmString;
         if (drmNames.length > 0) {
-            drmString = isAppPage ? Localization.str.drm_third_party : Localization.str.drm_third_party_sub;
-            drmString = drmString.replace("__drmlist__", `(${drmNames.join(", ")})`);
+            drmString = L(isAppPage ? __drmThirdParty : __drmThirdPartySub, {
+                "drmlist": `(${drmNames.join(", ")})`
+            });
         } else {
             const regex = /\b(drm|account|steam)\b/i;
 

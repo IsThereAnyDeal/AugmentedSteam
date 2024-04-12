@@ -1,5 +1,6 @@
+import {__about, __community, __news, __options_general, __price, __store} from "../../../localization/compiled/_strings";
 import {HTML} from "../../Core/Html/Html";
-import {Localization} from "../../Core/Localization/Localization";
+import {L} from "../../Core/Localization/Localization";
 import {TimeUtils} from "../../modulesCore";
 
 class Sidebar {
@@ -105,12 +106,12 @@ class Sidebar {
         Sidebar._contentNodes = [];
 
         const categories = [
-            ["general", "options.general"],
-            ["store", "store"],
-            ["price", "price"],
-            ["community", "community"],
-            ["news", "news"],
-            ["about", "about"],
+            ["general", __options_general],
+            ["store", __store],
+            ["price", __price],
+            ["community", __community],
+            ["news", __news],
+            ["about", __about],
         ];
 
         const sidebarEl = document.querySelector(".js-sb");
@@ -146,7 +147,7 @@ class Sidebar {
             const groupNode = HTML.toElement(
                 `<div class="sidebar__group js-sb-grp">
                     <a class="sidebar__item sidebar__item--cat${multiClass} js-sb-cat" data-id="${contentId}">
-                        ${Localization.getString(localeKey)}
+                        ${L(localeKey)}
                     </a>
                 </div>`
             );

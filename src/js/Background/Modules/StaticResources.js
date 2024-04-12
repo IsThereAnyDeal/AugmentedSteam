@@ -1,4 +1,4 @@
-import {ExtensionResources} from "../../Core/ExtensionResources";
+import ExtensionResources from "../../Core/ExtensionResources";
 
 class StaticResources {
 

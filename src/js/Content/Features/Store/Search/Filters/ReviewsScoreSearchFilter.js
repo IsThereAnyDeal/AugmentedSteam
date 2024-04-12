@@ -1,4 +1,10 @@
-import {Localization} from "../../../../../Core/Localization/Localization";
+import {
+    __searchFilters_reviewsScore_any,
+    __searchFilters_reviewsScore_between,
+    __searchFilters_reviewsScore_from,
+    __searchFilters_reviewsScore_upTo,
+} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
 import {SearchFilter} from "./SearchFilter";
 
 export class ReviewsScoreSearchFilter extends SearchFilter {
@@ -34,7 +40,7 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
                         <input class="as-double-slider__input as-double-slider__input--lower js-reviews-score-input js-reviews-score-lower range_input" type="range" min="0" max="${this._maxStep}" step="1" value="0">
                         <input type="hidden" name="as-reviews-score">
                     </div>
-                    <div class="as-range-display range_display">${Localization.str.search_filters.reviews_score.any}</div>
+                    <div class="as-range-display range_display">${L(__searchFilters_reviewsScore_any)}</div>
                 </div>`;
     }
 
@@ -175,17 +181,17 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
         let text;
         if (minVal === 0) {
             if (maxVal === this._maxStep) {
-                text = Localization.str.search_filters.reviews_score.any;
+                text = L(__searchFilters_reviewsScore_any);
             } else {
-                text = Localization.str.search_filters.reviews_score.up_to.replace("__score__", this._scoreValues[maxVal]);
+                text = L(__searchFilters_reviewsScore_upTo, {score: this._scoreValues[maxVal]});
             }
         } else if (maxVal === this._maxStep) {
-            text = Localization.str.search_filters.reviews_score.from
-                .replace("__score__", this._scoreValues[minVal]);
+            text = L(__searchFilters_reviewsScore_from, {score: this._scoreValues[minVal]});
         } else {
-            text = Localization.str.search_filters.reviews_score.between
-                .replace("__lower__", this._scoreValues[minVal])
-                .replace("__upper__", this._scoreValues[maxVal]);
+            text = L(__searchFilters_reviewsScore_between, {
+                lower: this._scoreValues[minVal],
+                upper: this._scoreValues[maxVal]
+            });
         }
 
         this._rangeDisplay.textContent = text;

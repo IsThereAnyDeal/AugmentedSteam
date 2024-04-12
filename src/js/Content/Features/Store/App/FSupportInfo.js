@@ -1,4 +1,6 @@
-import {GameId, HTML, LocalStorage, Localization, SyncedStorage} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__contact, __email, __support, __website} from "@Strings/_strings";
+import {GameId, HTML, LocalStorage, SyncedStorage} from "../../../../modulesCore";
 import {Background, Feature} from "../../../modulesContent";
 
 export default class FSupportInfo extends Feature {
@@ -43,7 +45,7 @@ export default class FSupportInfo extends Feature {
 
         if (url) {
             url = HTML.formatUrl(url);
-            links.push(`<a href="${url}">${Localization.str.website}</a>`);
+            links.push(`<a href="${url}">${L(__website)}</a>`);
         }
 
         if (email) {
@@ -53,15 +55,15 @@ export default class FSupportInfo extends Feature {
                 = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
             if (emailRegex.test(email)) {
-                links.push(`<a href="mailto:${email}">${Localization.str.email}</a>`);
+                links.push(`<a href="mailto:${email}">${L(__email)}</a>`);
             } else {
-                links.push(`<a href="${email}">${Localization.str.contact}</a>`);
+                links.push(`<a href="${email}">${L(__contact)}</a>`);
             }
         }
 
         HTML.beforeEnd(".glance_ctn_responsive_left",
             `<div class="release_date" style="padding-bottom: 0;">
-                <div class="subtitle column">${Localization.str.support}:</div>
+                <div class="subtitle column">${L(__support)}:</div>
                 <div class="summary column">${links.join(", ")}</div>
             </div>`);
     }

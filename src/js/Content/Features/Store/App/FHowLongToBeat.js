@@ -1,4 +1,13 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {
+    __hltb_compl,
+    __hltb_main,
+    __hltb_mainE,
+    __hltb_title,
+    __hoursShort,
+    __moreInformation,
+} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 
 export default class FHowLongToBeat extends Feature {
@@ -24,21 +33,21 @@ export default class FHowLongToBeat extends Feature {
         const {story, extras, complete, url} = this._data;
 
         function hrs(minutes) {
-            return Localization.str.hours_short.replace("__hours__", (minutes / 60).toFixed(1).toString());
+            return L(__hoursShort, {"hours": (minutes / 60).toFixed(1).toString()});
         }
 
         HTML.afterEnd("div.game_details",
-            `<div class="block responsive_apppage_details_right heading">${Localization.str.hltb.title}</div>
+            `<div class="block responsive_apppage_details_right heading">${L(__hltb_title)}</div>
             <div class="block underlined_links es_hltb">
                 <div class="block_content">
                     <div class="block_content_inner">
                         ${story || extras || complete ? `<div class="details_block">
-                            ${story ? `<b>${Localization.str.hltb.main}:</b><span>${hrs(story)}</span><br>` : ""}
-                            ${extras ? `<b>${Localization.str.hltb.main_e}:</b><span>${hrs(extras)}</span><br>` : ""}
-                            ${complete ? `<b>${Localization.str.hltb.compl}:</b><span>${hrs(complete)}</span><br>` : ""}
+                            ${story ? `<b>${L(__hltb_main)}:</b><span>${hrs(story)}</span><br>` : ""}
+                            ${extras ? `<b>${L(__hltb_mainE)}:</b><span>${hrs(extras)}</span><br>` : ""}
+                            ${complete ? `<b>${L(__hltb_compl)}:</b><span>${hrs(complete)}</span><br>` : ""}
                         </div>
                         <br>` : ""}
-                        <a class="linkbar es_external_icon" href="${HTML.escape(url)}" target="_blank">${Localization.str.more_information}</a>
+                        <a class="linkbar es_external_icon" href="${HTML.escape(url)}" target="_blank">${L(__moreInformation)}</a>
                     </div>
                 </div>
             </div>`);

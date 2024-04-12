@@ -1,4 +1,6 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {__wishlist} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {Background, Feature} from "../../../modulesContent";
 
 export default class FWishlistProfileLink extends Feature {
@@ -12,7 +14,7 @@ export default class FWishlistProfileLink extends Feature {
         HTML.afterEnd(".profile_item_links .profile_count_link",
             `<div id="es_wishlist_link" class="profile_count_link ellipsis">
                 <a href="//store.steampowered.com/wishlist${window.location.pathname}">
-                    <span class="count_link_label">${Localization.str.wishlist}</span>&nbsp;
+                    <span class="count_link_label">${L(__wishlist)}</span>&nbsp;
                     <span id="es_wishlist_count" class="profile_count_link_total"></span>
                 </a>
             </div>`);

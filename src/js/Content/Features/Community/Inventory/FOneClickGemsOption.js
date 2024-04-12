@@ -1,3 +1,5 @@
+import {__oneclickgoo} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
 import {Localization, SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature} from "../../../modulesContent";
 import {Page} from "../../Page";
@@ -17,7 +19,7 @@ export default class FOneClickGemsOption extends CallbackFeature {
         const newScrapLink = scrapLink.cloneNode(true);
         scrapLink.replaceWith(newScrapLink);
 
-        newScrapLink.querySelector("span").textContent = Localization.str.oneclickgoo;
+        newScrapLink.querySelector("span").textContent = L(__oneclickgoo);
 
         newScrapLink.addEventListener("click", e => {
             e.preventDefault();

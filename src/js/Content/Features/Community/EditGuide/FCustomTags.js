@@ -1,4 +1,6 @@
-import {HTML, LocalStorage, Localization} from "../../../../modulesCore";
+import {__addTag, __customTags, __enterTag} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, LocalStorage} from "../../../../modulesCore";
 import {Feature, Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -20,9 +22,9 @@ export default class FCustomTags extends Feature {
 
         HTML.afterEnd(langSection,
             `<div class="tag_category_container" id="checkboxgroup_2">
-                <div class="tag_category_desc">${Localization.str.custom_tags}</div>
+                <div class="tag_category_desc">${L(__customTags)}</div>
                 <div><a style="margin-top: 8px;" class="btn_blue_white_innerfade btn_small_thin" id="es_add_tag">
-                    <span>${Localization.str.add_tag}</span>
+                    <span>${L(__addTag)}</span>
                 </a></div>
             </div>`);
 
@@ -53,7 +55,7 @@ export default class FCustomTags extends Feature {
 
                 modal.done(done);
             });
-        }, [Localization.str.custom_tags, Localization.str.enter_tag]);
+        }, [L(__customTags), L(__enterTag)]);
     }
 
     _rememberTags() {

@@ -1,4 +1,6 @@
-import {HTML, Localization} from "../../../../modulesCore";
+import {__equipOnProfile} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML} from "../../../../modulesCore";
 import {CallbackFeature, RequestData, User} from "../../../modulesContent";
 
 export default class FEquipProfileItems extends CallbackFeature {
@@ -36,7 +38,7 @@ export default class FEquipProfileItems extends CallbackFeature {
 
         const btn = HTML.toElement(
             `<a class="btn_small btn_darkblue_white_innerfade">
-                <span>${Localization.str.equip_on_profile}</span>
+                <span>${L(__equipOnProfile)}</span>
             </a>`
         );
 

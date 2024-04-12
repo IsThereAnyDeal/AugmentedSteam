@@ -1,4 +1,6 @@
-import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {__readReviews} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../modulesContent";
 
 export default class FOpenCritic extends Feature {
@@ -35,7 +37,7 @@ export default class FOpenCritic extends Feature {
                     <div class="logo"><img src="${ocImg}"></div>
                     <div class="wordmark">
                         <div class="metacritic">OpenCritic</div>
-                        <div id="game_area_metalink">${award} - <a href="${review.url}?utm_source=enhanced-steam-itad&utm_medium=average" target="_blank">${Localization.str.read_reviews}</a>
+                        <div id="game_area_metalink">${award} - <a href="${review.url}?utm_source=enhanced-steam-itad&utm_medium=average" target="_blank">${L(__readReviews)}</a>
                             <img src="//store.cloudflare.steamstatic.com/public/images/ico/iconExternalLink.gif" border="0" align="bottom">
                         </div>
                     </div>
@@ -55,7 +57,7 @@ export default class FOpenCritic extends Feature {
             const html = `<div id="es_opencritic_reviews">
                 ${reviews}
                 <div class="chart-footer">
-                    ${Localization.str.read_more_reviews}
+                    ${L(__readMoreReviews)}
                     <a href="${data.url}?utm_source=enhanced-steam-itad&utm_medium=reviews" target="_blank">OpenCritic.com</a>
                 </div>
             </div>`;
@@ -67,7 +69,7 @@ export default class FOpenCritic extends Feature {
             } else {
                 HTML.beforeBegin(document.getElementById("game_area_description").parentElement.parentElement,
                     `<div id="game_area_reviews" class="game_area_description">
-                        <h2>${Localization.str.reviews}</h2>
+                        <h2>${L(__reviews)}</h2>
                         ${html}
                     </div>`);
             }

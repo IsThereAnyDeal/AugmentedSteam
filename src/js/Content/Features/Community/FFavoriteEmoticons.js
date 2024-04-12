@@ -1,4 +1,6 @@
-import {HTML, Localization, SyncedStorage} from "../../../modulesCore";
+import {__favEmoticonsDragging, __favEmoticonsNoAccess} from "../../../../localization/compiled/_strings";
+import {L} from "../../../Core/Localization/Localization";
+import {HTML, SyncedStorage} from "../../../modulesCore";
 import {Feature} from "../../modulesContent";
 
 export default class FFavoriteEmoticons extends Feature {
@@ -127,7 +129,7 @@ export default class FFavoriteEmoticons extends Feature {
             // The user doesn't have access to this emoticon
             ev.stopPropagation();
             node.classList.add("no-access");
-            node.querySelector("img").title = Localization.str.fav_emoticons_no_access;
+            node.querySelector("img").title = L(__favEmoticonsNoAccess);
             return;
         }
         noFav.click();
@@ -138,7 +140,7 @@ export default class FFavoriteEmoticons extends Feature {
         if (favs.length) {
             favsHtml = favs.map(fav => this._buildEmoticonOption(fav)).join("");
         } else {
-            favsHtml = Localization.str.fav_emoticons_dragging;
+            favsHtml = L(__favEmoticonsDragging);
         }
         return favsHtml;
     }

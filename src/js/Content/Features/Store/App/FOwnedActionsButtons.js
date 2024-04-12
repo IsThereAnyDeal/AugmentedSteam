@@ -1,4 +1,6 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {__getHelp, __viewinclient, __viewInLibrary} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {Feature, User} from "../../../modulesContent";
 
 export default class FOwnedActionsButtons extends Feature {
@@ -18,7 +20,7 @@ export default class FOwnedActionsButtons extends Feature {
         if (option === "hide") {
             btn.remove();
         } else if (option === "replace") {
-            btn.querySelector("span").textContent = Localization.str.viewinclient;
+            btn.querySelector("span").textContent = L(__viewinclient);
             btn.href = `steam://store/${appid}`;
         }
 
@@ -27,7 +29,7 @@ export default class FOwnedActionsButtons extends Feature {
             HTML.afterBegin(node,
                 `<div class="game_area_already_owned_btn">
                     <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="steam://nav/games/details/${appid}">
-                        <span>${Localization.str.view_in_library}</span>
+                        <span>${L(__viewInLibrary)}</span>
                     </a>
                 </div>`);
         }
@@ -36,7 +38,7 @@ export default class FOwnedActionsButtons extends Feature {
         HTML.afterEnd(node,
             `<div class="game_area_already_owned_btn">
                 <a class="btnv6_lightblue_blue btnv6_border_2px btn_medium" href="//help.steampowered.com/wizard/HelpWithGame/?appid=${appid}">
-                    <span>${Localization.str.get_help}</span>
+                    <span>${L(__getHelp)}</span>
                 </a>
             </div>`);
     }

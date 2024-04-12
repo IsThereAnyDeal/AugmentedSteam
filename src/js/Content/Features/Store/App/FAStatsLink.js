@@ -1,5 +1,7 @@
+import {__viewAstats} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../Modules/Feature/Feature";
-import {ExtensionResources, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 
 // todo maybe integrate with other useful links?
 export default class FAStatsLink extends Feature {
@@ -15,7 +17,7 @@ export default class FAStatsLink extends Feature {
         HTML.beforeEnd("#achievement_block",
             `<div class="game_area_details_specs">
                 <div class="icon"><img class="astats_icon" src="${imgUrl}"></div>
-                <a class="name es_external_icon" href="${url}" target="_blank">${Localization.str.view_astats}</a>
+                <a class="name es_external_icon" href="${url}" target="_blank">${L(__viewAstats)}</a>
             </div>`);
     }
 }

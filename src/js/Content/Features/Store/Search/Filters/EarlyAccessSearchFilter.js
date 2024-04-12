@@ -1,11 +1,13 @@
-import {Localization, SyncedStorage} from "../../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {__searchFilters_hideEa} from "@Strings/_strings";
+import {SyncedStorage} from "../../../../../modulesCore";
 import FEarlyAccess from "../../../Common/FEarlyAccess";
 import {SimpleSearchFilter} from "./SimpleSearchFilter";
 
 export class EarlyAccessSearchFilter extends SimpleSearchFilter {
 
     constructor(feature) {
-        super("as-hide", feature, Localization.str.search_filters.hide_ea, "ea");
+        super("as-hide", feature, L(__searchFilters_hideEa), "ea");
     }
 
     _setState(params) {

@@ -1,6 +1,7 @@
-import {ExtensionResources, HTML, Localization} from "../../../../modulesCore";
+import {__dlcDetails} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {ExtensionResources, HTML} from "../../../../modulesCore";
 import {Background, Feature} from "../../../modulesContent";
-import Config from "../../../../config";
 
 export default class FDLCInfo extends Feature {
 
@@ -21,7 +22,7 @@ export default class FDLCInfo extends Feature {
             return;
         }
 
-        let html = `<div class="block responsive_apppage_details_right heading">${Localization.str.dlc_details}</div>
+        let html = `<div class="block responsive_apppage_details_right heading">${L(__dlcDetails)}</div>
                    <div class="block es_dlc_info">
                    <div class="block_content"><div class="block_content_inner"><div class="details_block">`;
 

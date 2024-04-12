@@ -1,4 +1,6 @@
-import {HTML, LocalStorage, Localization} from "../../../modulesCore";
+import {__contractSlider, __expandSlider} from "../../../../localization/compiled/_strings";
+import {L} from "../../../Core/Localization/Localization";
+import {HTML, LocalStorage} from "../../../modulesCore";
 import {ContextType, Feature} from "../../modulesContent";
 import {Page} from "../Page";
 
@@ -12,8 +14,8 @@ export default class FMediaExpander extends Feature {
     apply() {
         HTML.beforeEnd("#highlight_player_area",
             `<div class="es_slider_toggle btnv6_blue_hoverfade btn_medium">
-                <div data-tooltip-text="${Localization.str.expand_slider}" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
-                <div data-tooltip-text="${Localization.str.contract_slider}" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
+                <div data-tooltip-text="${L(__expandSlider)}" class="es_slider_expand"><i class="es_slider_toggle_icon"></i></div>
+                <div data-tooltip-text="${L(__contractSlider)}" class="es_slider_contract"><i class="es_slider_toggle_icon"></i></div>
             </div>`);
 
         this._details.classList.add("as-side-details");

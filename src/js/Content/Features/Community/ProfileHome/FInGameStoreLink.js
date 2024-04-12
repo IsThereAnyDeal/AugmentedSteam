@@ -1,4 +1,6 @@
-import {GameId, HTML, Localization} from "../../../../modulesCore";
+import {__viewInStore} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {GameId, HTML} from "../../../../modulesCore";
 import {Feature, RequestData} from "../../../modulesContent";
 
 export default class FInGameStoreLink extends Feature {
@@ -26,7 +28,7 @@ export default class FInGameStoreLink extends Feature {
 
         HTML.inner(node,
             `<a href="//store.steampowered.com/app/${appid}" target="_blank">
-                <span data-tooltip-text="${Localization.str.view_in_store}">${node.textContent}</span>
+                <span data-tooltip-text="${L(__viewInStore)}">${node.textContent}</span>
             </a>`);
     }
 }

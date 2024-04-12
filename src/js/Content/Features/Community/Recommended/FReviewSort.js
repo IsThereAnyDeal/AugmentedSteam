@@ -1,4 +1,17 @@
-import {HTML, Localization, SyncedStorage, TimeUtils} from "../../../../modulesCore";
+import {
+    __awards,
+    __date,
+    __funny,
+    __helpful,
+    __length,
+    __playtime,
+    __processing,
+    __rating,
+    __visibility,
+    __wait,
+} from "../../../../../localization/compiled/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, SyncedStorage, TimeUtils} from "../../../../modulesCore";
 import {Background, Feature, Sortbox, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -28,14 +41,14 @@ export default class FReviewSort extends Feature {
         document.querySelector("#leftContents > h1").before(Sortbox.get(
             "reviews",
             [
-                ["default", Localization.str.date],
-                ["rating", Localization.str.rating],
-                ["helpful", Localization.str.helpful],
-                ["funny", Localization.str.funny],
-                ["length", Localization.str.length],
-                ["visibility", Localization.str.visibility],
-                ["playtime", Localization.str.playtime],
-                ["awards", Localization.str.awards],
+                ["default", L(__date)],
+                ["rating", L(__rating)],
+                ["helpful", L(__helpful)],
+                ["funny", L(__funny)],
+                ["length", L(__length)],
+                ["visibility", L(__visibility)],
+                ["playtime", L(__playtime)],
+                ["awards", L(__awards)],
             ],
             SyncedStorage.get("sortreviewsby"),
             (sortBy, reversed) => { this._sortReviews(sortBy, reversed); },
@@ -148,7 +161,7 @@ export default class FReviewSort extends Feature {
 
         Page.runInPageContext((processing, wait) => {
             window.SteamFacade.showBlockingWaitDialog(processing, wait);
-        }, [Localization.str.processing, Localization.str.wait]);
+        }, [L(__processing), L(__wait)]);
 
         try {
             this._reviews = await Background.action("reviews", this._path, this._pages);

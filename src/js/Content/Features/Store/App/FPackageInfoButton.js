@@ -1,5 +1,7 @@
+import {__packageInfo} from "@Strings/_strings";
+import {L} from "../../../../Core/Localization/Localization";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../Modules/Feature/Feature";
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 
 export default class FPackageInfoButton extends Feature {
 
@@ -26,7 +28,7 @@ export default class FPackageInfoButton extends Feature {
                 `<div class="game_purchase_action_bg">
                     <div class="btn_addtocart btn_packageinfo">
                         <a class="btn_blue_steamui btn_medium" href="//store.steampowered.com/sub/${subid.value}/">
-                            <span>${Localization.str.package_info}</span>
+                            <span>${L(__packageInfo)}</span>
                         </a>
                     </div>
                 </div>`);

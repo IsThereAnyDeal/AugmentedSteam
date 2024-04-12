@@ -1,4 +1,5 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {__userNote_add, __userNote_update} from "@Strings/_strings";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {Feature, User} from "../../../modulesContent";
 
 export default class FUserNotes extends Feature {
@@ -12,10 +13,10 @@ export default class FUserNotes extends Feature {
         HTML.beforeBegin(".queue_actions_ctn > :last-child",
             `<div id="esi-user-note-button" class="queue_control_button">
                 <div class="esi-add-note btnv6_blue_hoverfade btn_medium">
-                    <span>${Localization.str.user_note.add}</span>
+                    <span>${L(__userNote_add)}</span>
                 </div>
                 <div class="esi-update-note btnv6_blue_hoverfade btn_medium">
-                    <span>${Localization.str.user_note.update}</span>
+                    <span>${L(__userNote_update)}</span>
                 </div>
             </div>`);
 

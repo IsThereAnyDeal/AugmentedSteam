@@ -1,4 +1,12 @@
-import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
+import {
+    __deckCompat_header,
+    __deckCompat_playable,
+    __deckCompat_unknown,
+    __deckCompat_unsupported,
+    __deckCompat_verified,
+} from "@Strings/_strings";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {Feature, RequestData} from "../../../modulesContent";
 
 export default class FSteamDeckCompatibility extends Feature {
@@ -23,24 +31,28 @@ export default class FSteamDeckCompatibility extends Feature {
         const data = await RequestData.getJson(`https://store.steampowered.com/saleaction/ajaxgetdeckappcompatibilityreport?nAppID=${this.context.appid}`);
         if (!data || !data.success) { return; }
 
-        let status, icon;
+        let status, icon, locale;
         const code = data.results.resolved_category;
         switch (code) {
             case 0:
                 status = "unknown";
                 icon = "1a3a76c9e8dacf756b822247a23bef435768a5ff.png";
+                locale = __deckCompat_unknown;
                 break;
             case 1:
                 status = "unsupported";
                 icon = "dd56b9d37f5b5bf4da236b9bd3d62e3d120d7df5.png";
+                locale = __deckCompat_unsupported;
                 break;
             case 2:
                 status = "playable";
                 icon = "16e802051c2a3b99c7f1720b7de7fad6e540e02a.png";
+                locale = __deckCompat_playable;
                 break;
             case 3:
                 status = "verified";
                 icon = "82a3cff3038fbb4c36fabb5dd79540b23fa9a4d4.png";
+                locale = __deckCompat_verified;
                 break;
             default:
                 console.error("Unknown Steam Deck compatibility status code: %s", code);
@@ -49,10 +61,10 @@ export default class FSteamDeckCompatibility extends Feature {
 
         HTML.afterBegin("#category_block",
             `<div class="as_deckverified_BannerContainer">
-                <div class="as_deckverified_BannerHeader">${Localization.str.deck_compat.header}</div>
+                <div class="as_deckverified_BannerHeader">${L(__deckCompat_header)}</div>
                 <div class="as_deckverified_BannerContent">
                     <img class="as_svg_SteamDeckCompatIcon" src="//cdn.cloudflare.steamstatic.com/steamcommunity/public/images/clans/39049601/${icon}">
-                    <span class="as_deckverified_CompatibilityDetailRatingDescription">${Localization.str.deck_compat[status]}</span>
+                    <span class="as_deckverified_CompatibilityDetailRatingDescription">${L(locale)}</span>
                 </div>
             </div>`);
     }
