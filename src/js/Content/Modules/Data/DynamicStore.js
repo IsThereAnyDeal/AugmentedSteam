@@ -52,7 +52,7 @@ class DynamicStore {
             const trimmedId = trimmedIds[i];
             acc[id] = {
                 "ignored": dsStatus[trimmedId].includes("ignored"),
-                "ignoredOwned": dsStatus[trimmedId].includes("ignoredOwnedElsewhere"),
+                "ignoredOwned": dsStatus[trimmedId].includes("ignoredOwned"),
                 "wishlisted": dsStatus[trimmedId].includes("wishlisted"),
             };
             if (id.startsWith("app/")) {

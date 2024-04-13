@@ -122,7 +122,7 @@ export default class FHighlightsTags extends Feature {
                     operations.push(this.highlightIgnored);
                 }
                 if (opts.ignoredOwned && dsStatus[storeId].ignoredOwned) {
-                    operations.push(this.highlightIgnoredOwnedElsewhere);
+                    operations.push(this.highlightIgnoredOwned);
                 }
             }
 
@@ -332,7 +332,7 @@ export default class FHighlightsTags extends Feature {
         this._highlightItem(node, "notinterested");
     }
 
-    static highlightIgnoredOwnedElsewhere(node) {
+    static highlightIgnoredOwned(node) {
         this._highlightItem(node, "ignored_owned");
     }
 
