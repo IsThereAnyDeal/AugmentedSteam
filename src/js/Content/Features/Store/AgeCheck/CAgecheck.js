@@ -1,14 +1,13 @@
-import {Context, ContextType} from "../../../modulesContent";
+import {ContextType} from "../../../modulesContent";
+import {CStoreBase} from "../Common/CStoreBase";
 import FSkipAgecheck from "../../Common/FSkipAgecheck";
-import FFocusSearch from "../../Common/FFocusSearch";
 
-export class CAgeCheck extends Context {
+export class CAgeCheck extends CStoreBase {
 
     constructor() {
 
         super(ContextType.AGECHECK, [
             FSkipAgecheck,
-            FFocusSearch,
         ]);
     }
 }

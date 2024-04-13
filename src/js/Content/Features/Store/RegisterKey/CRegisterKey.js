@@ -1,15 +1,12 @@
-import {Context, ContextType} from "../../../modulesContent";
-import FKeepSSACheckboxState from "../../Common/FKeepSSACheckboxState";
-import FFocusSearch from "../../Common/FFocusSearch";
+import {ContextType} from "../../../modulesContent";
+import {CStoreBase} from "../Common/CStoreBase";
 import FMultiProductKeys from "./FMultiProductKeys";
 
-export class CRegisterKey extends Context {
+export class CRegisterKey extends CStoreBase {
 
     constructor() {
 
         super(ContextType.REGISTER_KEY, [
-            FKeepSSACheckboxState,
-            FFocusSearch,
             FMultiProductKeys,
         ]);
     }

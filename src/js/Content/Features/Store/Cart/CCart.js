@@ -1,7 +1,8 @@
-import {Context, ContextType} from "../../../modulesContent";
+import {ContextType} from "../../../modulesContent";
+import {CStoreBase} from "../Common/CStoreBase";
 import FCartHistoryLink from "./FCartHistoryLink";
 
-export class CCart extends Context {
+export class CCart extends CStoreBase {
 
     constructor() {
 
