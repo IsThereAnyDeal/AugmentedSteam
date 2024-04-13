@@ -162,9 +162,6 @@ export default class FExportWishlist extends Feature {
 
         const [dlBtn, copyBtn] = document.querySelectorAll(".newmodal_buttons > .btn_medium");
 
-        // Update button to new style, remove when not needed
-        copyBtn.classList.replace("btn_darkblue_white_innerfade", "btn_blue_steamui");
-
         // Capture this s.t. the CModal doesn't get destroyed before we can grab this information
         dlBtn.addEventListener("click", () => { exportWishlist(WishlistExporter.method.download); }, true);
         copyBtn.addEventListener("click", () => { exportWishlist(WishlistExporter.method.copyToClipboard); }, true);
