@@ -1,135 +1,51 @@
-import {type Storage as StorageTypes, default as browser} from "webextension-polyfill";
+import {type Storage as ns} from "webextension-polyfill";
 
-export type Key = string;
-export type Value = unknown;
-export type Store = Map<Key, Value>;
+interface StorageInterface {
+    get<K extends string, V>(key: K): Promise<V|undefined>;
+    getObject<T extends Record<string, any>>(object: T): Promise<T>;
+    getAll<V extends Record<string, any>>(): Promise<Partial<V>>;
 
-type EventArea = "local" | "managed" | "sync";
+    set<K extends string, V>(key: K, value: V): Promise<void>;
+    setObject<T extends Record<string, any>>(object: T): Promise<void>;
 
-const jsonIndentation = 4;
+    remove<K extends string>(...keys: K[]): Promise<void>;
+}
 
-export default abstract class Storage<Defaults extends Record<Key, Value>> implements PromiseLike<Store> {
-    private static readonly caches = new Map<StorageTypes.StorageArea, Store>();
+export default class Storage<T extends ns.SyncStorageAreaSync|ns.LocalStorageArea>
+    implements StorageInterface {
 
-    private initialized = false;
-    private cache: Store = new Map();
+    private storageArea: T;
 
-    public constructor(
-        private readonly adapter: StorageTypes.StorageArea,
-        protected readonly defaults: Defaults,
-        private readonly persistent: (Extract<keyof Defaults, string>)[],
-    ) {}
-
-    public has(key: keyof Defaults): boolean; // For editor support
-    public has(key: Key): boolean;
-    public has(key: Key): boolean {
-        return this.cache.has(key);
+    constructor(storageArea: T) {
+        this.storageArea = storageArea;
     }
 
-    public get<K extends keyof Defaults>(key: K): Defaults[K]; // For editor support
-    public get(key: Key): Value;
-    public get(key: Key): Value {
-        if (typeof this.cache.get(key) !== "undefined") {
-            return this.cache.get(key);
-        }
-        if (typeof this.defaults[key] === "undefined") {
-            console.warn('Unrecognized storage key "%s"', key);
-        }
-        return this.defaults[key];
+    get onChanged() {
+        return this.storageArea.onChanged;
     }
 
-    public async set<K extends keyof Defaults>(key: K, value: Defaults[K]): Promise<void>; // For editor support
-    public async set(key: Key, value: Value): Promise<void>;
-    public async set(key: Key, value: Value): Promise<void> {
-        this.cache.set(key, value);
-        return this.adapter.set({[key]: value});
+    async get<K extends string, V>(key: K): Promise<V | undefined> {
+        let response = await this.storageArea.get(key);
+        return response[key] ?? undefined;
     }
 
-    public async import(entries: Record<Key, Value>): Promise<void> {
-        for (const [key, value] of Object.entries(entries)) {
-            this.cache.set(key, value);
-        }
-        return this.adapter.set(entries);
+    getAll<V extends Record<string, any>>(): Promise<Partial<V>> {
+        return this.storageArea.get(null) as Promise<Partial<V>>;
     }
 
-    public async remove(key: keyof Defaults): Promise<void>; // For editor support
-    public async remove(key: Key): Promise<void>;
-    public async remove(key: Key): Promise<void> {
-        this.cache.delete(key);
-        return this.adapter.remove(key.toString());
+    getObject<T extends Record<string, any>>(object: T): Promise<T> {
+        return this.storageArea.get(object) as Promise<T>;
     }
 
-    public keys(prefix = ""): Key[] {
-        return Array.from(this.cache.keys()).filter(k => k.toString().startsWith(prefix));
+    set<K extends string, V>(key: K, value: V): Promise<void> {
+        return this.storageArea.set({[key]: value});
     }
 
-    public entries(): IterableIterator<[Key, Value]> {
-        return this.cache.entries();
+    setObject<T extends Record<string, any>>(object: T): Promise<void> {
+        return this.storageArea.set(object);
     }
 
-    public async clear(clearPersistent = false): Promise<void> {
-        const clearAll = async () => {
-            await this.adapter.clear();
-            this.cache = new Map();
-        }
-
-        if (clearPersistent) {
-            return clearAll();
-        }
-
-        const persistentEntries = Object.fromEntries(this.persistent.map(option => [option, this.cache.get(option)]));
-        await clearAll();
-        return this.import(persistentEntries);
-    }
-
-    public then<TResult1 = Store, TResult2 = never>(
-        onfulfilled?: ((value: Readonly<Store>) => PromiseLike<TResult1> | TResult1) | null | undefined,
-        onrejected?: ((reason: unknown) => PromiseLike<TResult2> | TResult2) | null | undefined,
-    ): PromiseLike<TResult1 | TResult2> {
-        const promise = this.initialized ? Promise.resolve(this.cache) : this.init();
-        this.initialized = true;
-        return promise.then(onfulfilled, onrejected);
-    }
-
-    public toJson(): string {
-        return JSON.stringify(Object.fromEntries(this.entries()), null, jsonIndentation);
-    }
-
-    protected async init(): Promise<Store> {
-
-        const adapter = this.adapter;
-        const cache = Storage.caches.get(adapter);
-
-        if (typeof cache !== "undefined") {
-            this.cache = cache;
-            return this.cache;
-        }
-
-        this.cache = new Map();
-        Storage.caches.set(adapter, this.cache);
-
-        browser.storage.onChanged.addListener((
-            changes: Readonly<Record<string, Readonly<StorageTypes.StorageChange>>>,
-            eventArea
-        ) => {
-
-            if (adapter !== browser.storage[eventArea as EventArea]) { return; }
-
-            for (const [key, {"newValue": val}] of Object.entries(changes)) {
-                this.cache.set(key, val);
-            }
-        });
-
-        for (const [key, value] of Object.entries(await this.adapter.get(null))) {
-            this.cache.set(key, value);
-        }
-
-        await this.migrate();
-
-        return this.cache;
-    }
-
-    protected async migrate(): Promise<void> {
-        // Implemented by subclasses
+    remove<K extends string>(...keys: K[]): Promise<void> {
+        return this.storageArea.remove(keys);
     }
 }
