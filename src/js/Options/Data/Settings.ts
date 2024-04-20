@@ -59,7 +59,7 @@ const DefaultSettings: TSettings = Object.freeze({
     "excluded_stores": [],
     "override_price": "auto",
     "showregionalprice": "mouse",
-    "regional_countries": ["us", "gb", "ru", "br", "au", "jp"],
+    "regional_countries": ["us", "gb", "fr", "br", "au", "jp"],
 
     "show_es_homepagetabs": true,
     "showmarkettotal": false,
@@ -245,6 +245,10 @@ export class SettingsStore {
         this.data = await SyncedStorage.getObject<TSettings>(DefaultSettings);
     }
 
+    static getDefault<K extends keyof TSettings>(key: K): TSettings[K] {
+        return DefaultSettings[key];
+    }
+
     static get<K extends keyof TSettings>(key: K): TSettings[K] {
         return this.data[key];
     }
@@ -256,6 +260,26 @@ export class SettingsStore {
         SyncedStorage.set(key, value);
 
         this.onSaveEnd.invoke();
+    }
+
+    static remove<K extends keyof TSettings>(key: K): void {
+        SyncedStorage.remove(key);
+        this.data[key] = structuredClone(DefaultSettings[key]);
+    }
+
+    static clear(): void {
+        SyncedStorage.remove(...Object.keys(this.data));
+        this.data = structuredClone(DefaultSettings);
+    }
+
+    static import(data: TSettings): void {
+        // TODO check data for valid keys and values
+        SyncedStorage.setObject(data);
+        this.data = data;
+    }
+
+    static asObject(): TSettings {
+        return structuredClone(this.data);
     }
 }
 

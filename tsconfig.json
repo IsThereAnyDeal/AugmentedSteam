@@ -41,6 +41,7 @@
         "isolatedModules": true,
 
         "paths": {
+            "@Assets/*": ["./src/img/*"],
             "@Core/*": ["./src/js/Core/*"],
             "@Content/*": ["./src/js/Content/*"],
             "@Background/*": ["./src/js/Background/*"],

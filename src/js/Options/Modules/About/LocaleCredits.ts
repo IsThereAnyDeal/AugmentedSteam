@@ -1,5 +1,5 @@
 
-export default {
+export default <Record<string, string>>{
     "brazilian":
         "Berna, Mougevit, Ricci, Rubens Vinícius, Scopel, Titoncio, Yachagon, xAranda"
         + "(NO AUDIO), 級 Happy, Greg Strider, Luís, Matheus R., Rahone Marcelino",

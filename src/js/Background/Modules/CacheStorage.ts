@@ -1,7 +1,7 @@
 import {TimeUtils} from "../../modulesCore";
 import {LocalStorage} from "../../Core/Storage/LocalStorage";
 
-import type {Key, Value} from "../../Core/Storage/Storage";
+import type {Key, Value} from "@Core/Storage/Storage";
 
 interface Timestamped {
     "timestamp": number;

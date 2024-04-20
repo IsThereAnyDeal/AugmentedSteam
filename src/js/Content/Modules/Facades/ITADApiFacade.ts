@@ -1,5 +1,5 @@
-import type {TGetStoreListMessage, TGetStoreListResponse} from "../../../Background/Modules/IsThereAnyDeal/_types";
-import {BackgroundSender} from "../../../Core/BackgroundSimple";
+import type {TGetStoreListMessage, TGetStoreListResponse} from "@Background/Modules/IsThereAnyDeal/_types";
+import {BackgroundSender} from "@Core/BackgroundSimple";
 
 export default class ITADApiFacade {
 

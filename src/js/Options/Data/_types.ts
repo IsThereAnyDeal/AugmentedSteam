@@ -1,7 +1,7 @@
 
 type TColor = string;
 type TShopId = number;
-type TCustomLink = {
+export type TCustomLink = {
     enabled: boolean,
     name: string,
     url: string,

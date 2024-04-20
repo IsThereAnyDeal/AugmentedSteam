@@ -2483,6 +2483,7 @@ label.es_dlc_label > input:checked::after {
   display: inline-block;
   background-repeat: no-repeat;
   background-position: top left;
+  background-image: url("extension://img/flags/flags.png");
 }
 
 .es-flag.es-flag--ad:before {background-position: -16px 0}
@@ -3086,9 +3087,6 @@ label.es_dlc_label > input:checked::after {
   background-image: url("extension://img/ico/astatsnl.png");
 }
 
-.es-flag:before {
-  background-image: url("extension://img/flags/flags.png");
-}
 
 /* || DOUBLE SLIDER */
 

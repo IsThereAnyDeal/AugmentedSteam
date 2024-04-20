@@ -86,10 +86,9 @@ export default async function(options) {
         entryPoints: [
             // stylesheets - NOTE, in: main stylesheet added during build, based on browser
             {out: "augmentedsteam", in: `${srcDir}/css/augmentedsteam.css`},
-            {out: "options", in: `${srcDir}/css/options.css`},
             // pages
-            {out: "background", in: `${srcDir}/js/Background/background.js`},
-            {out: "options", in: `${srcDir}/js/Options/options.js`},
+            {out: "background", in: `${srcDir}/js/Background/background.ts`},
+            {out: "options", in: `${srcDir}/js/Options/options.ts`},
             {out: "community/app", in: `${srcDir}/js/Content/Features/Community/App/PApp.js`},
             {out: "community/badges", in: `${srcDir}/js/Content/Features/Community/Badges/PBadges.js`},
             {out: "community/booster_creator", in: `${srcDir}/js/Content/Features/Community/BoosterCreator/PBoosterCreator.js`},
@@ -177,7 +176,7 @@ export default async function(options) {
             "__BROWSER__": JSON.stringify(options.browser)
         },
         loader: {
-            // ".svg": "file",
+            ".svg": "file",
             ".png": "file",
             // ".gif": "file",
             // ".jpg": "file"

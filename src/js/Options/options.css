@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+:root {
+  --body-bg-color: #1b1c24;
+  --sidebar-bg-color: #262833;
+  --sidebar-bg-hover-color: #333643;
+  --sidebar-cat-open-bg-color: #333643;
+
+  --box-color: #262833;
+
+  --highlight-color: #3090ce;
+
+  --link-color: #3090ce;
+  --link-hover-color: #1a9aed;
+
+  --text-color: #dcdee8;
+  --text-bright: white;
+
+  --header-highlight: #036db1;
+  --sub-color: #b1b2bc;
+
+  --input-bg-color: #1a1c21;
+
+  --button-bg-color: #162c3e;
+  --button-bg-color-hover: #162c3e;
+  --button-border-color: #0b4267;
+  --button-border-color-hover: #3090ce;
+
+  --color-success: #02ba55;
+  --color-error: #d72e2e;
+
+  --text-size: 14px;
+}
+
+html, body {
+  color-scheme: dark;
+  font-size: 10px;
+  color: var(--text-color);
+  background-color: var(--body-bg-color);
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  text-align: left;
+}
+
+h1 {
+  font-size: 2.6rem;
+  font-weight: normal;
+  margin: 0 0 15px 0;
+}
+
+h2 {
+  font-size: 1.8rem;
+  font-weight: normal;
+  margin: 0 0 10px 0;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: normal;
+  margin: 0 0 5px 0;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--link-color);
+}
+a:hover {
+  color: var(--link-hover-color);
+}
+
+.inpt {
+  outline: 0;
+  background-color: var(--input-bg-color);
+  color: var(--text-color);
+  padding: 8px;
+  border: 1px solid #333643;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.inpt:hover,
+.inpt:focus {
+  color: var(--text-bright);
+  border-color: #3c404e;
+}
+
+button {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+
+.btn {
+  padding: 5px 15px;
+  border: 1px solid var(--button-border-color);
+  border-radius: 4px;
+  background: #1a1c21;
+}
+.btn:hover {
+  border-color: var(--button-border-color-hover);
+}
+
+.box {
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--box-color);
+}
+
+p {
+  margin: 0;
+}
+p + p {
+  margin-top: 5px;
+}
