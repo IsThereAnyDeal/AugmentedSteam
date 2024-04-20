@@ -25,6 +25,11 @@
         ]
     ];
 
+    function select(value: string) {
+        selected = value;
+        window.location.hash = value;
+    }
+
     export let selected: string = setup[0]![0]![0];
 </script>
 
@@ -34,7 +39,7 @@
             {#each group as [value, locale]}
                 <button type="button"
                         class:is-selected={selected === value}
-                        on:click={() => selected = value}>{locale}</button>
+                        on:click={() => select(value)}>{locale}</button>
             {/each}
         </div>
     {/each}

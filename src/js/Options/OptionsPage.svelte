@@ -25,7 +25,9 @@
         })();
     });
 
-    export let section: string = "general";
+    export let section: string = (window.location.hash === "")
+        ? "general"
+        : window.location.hash.substring(1);
 </script>
 
 
