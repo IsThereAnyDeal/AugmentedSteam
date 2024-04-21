@@ -67,12 +67,12 @@
     </Section>
 
     <Section title={L(__options_contextMenu)}>
-        <Toggle bind:value={$settings.context_steam_store}>{L(__options_contextSteamStore)}</Toggle>
-        <Toggle bind:value={$settings.context_steam_market}>{L(__options_contextSteamMarket)}</Toggle>
-        <Toggle bind:value={$settings.context_itad}>{L(__options_contextItad)}</Toggle>
-        <Toggle bind:value={$settings.context_bartervg}>{L(__options_contextBartervg)}</Toggle>
-        <Toggle bind:value={$settings.context_steamdb}>{L(__options_contextSteamdb)}</Toggle>
-        <Toggle bind:value={$settings.context_steamdb_instant}>{L(__options_contextSteamdbInstant)}</Toggle>
+        <Toggle bind:value={$settings.context_steam_store}>{L(__options_contextSteamStore, {query: "..."})}</Toggle>
+        <Toggle bind:value={$settings.context_steam_market}>{L(__options_contextSteamMarket, {query: "..."})}</Toggle>
+        <Toggle bind:value={$settings.context_itad}>{L(__options_contextItad, {query: "..."})}</Toggle>
+        <Toggle bind:value={$settings.context_bartervg}>{L(__options_contextBartervg, {query: "..."})}</Toggle>
+        <Toggle bind:value={$settings.context_steamdb}>{L(__options_contextSteamdb, {query: "..."})}</Toggle>
+        <Toggle bind:value={$settings.context_steamdb_instant}>{L(__options_contextSteamdbInstant, {query: "..."})}</Toggle>
         <Toggle bind:value={$settings.context_steam_keys}>{L(__options_contextSteamKeys)}</Toggle>
     </Section>
 </div>
