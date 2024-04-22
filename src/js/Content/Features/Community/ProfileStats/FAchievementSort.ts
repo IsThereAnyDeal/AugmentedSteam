@@ -77,19 +77,39 @@ export default class FAchievementSort extends Feature<CProfileStats> {
         achieveRow.insertAdjacentElement("beforebegin", this.bookmark);
 
         let dateSetup = this.getDateFormat(Language.getCurrentSteamLanguage() ?? "");
+        console.log(dateSetup);
+
+        let check = true;
 
         const nodes = this.container!.querySelectorAll(".achieveUnlockTime");
         for (const node of nodes) {
-            if (!node.firstChild?.textContent) { continue; }
+            if (!node.firstChild?.textContent) {
+                console.log("textContent missing");
+                continue;
+            }
 
             const achieveRow = node.closest(".achieveRow");
-            if (!achieveRow) { continue; }
+            if (!achieveRow) {
+                console.log("achieveRow missing");
+                continue;
+            }
 
             this.defaultSort.push(achieveRow);
 
             if (dateSetup) {
                 const dateString = node.firstChild.textContent.trim();
                 const {format, formatNoYear, options} = dateSetup;
+
+                if (check) {
+                    check = false;
+                    const unlockedTime = DateTime.fromFormatExplain(
+                        dateString,
+                        /\d{4}/.test(dateString) ? format : formatNoYear,
+                        options
+                    );
+                    console.log(unlockedTime);
+                }
+
                 const unlockedTime = DateTime.fromFormat(
                     dateString,
                     /\d{4}/.test(dateString) ? format : formatNoYear,
