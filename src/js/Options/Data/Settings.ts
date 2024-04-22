@@ -250,6 +250,10 @@ export class SettingsStore {
     }
 
     static get<K extends keyof TSettings>(key: K): TSettings[K] {
+        if (!this.data) {
+            throw new Error("Settings have not been loaded");
+        }
+
         return this.data[key];
     }
 
