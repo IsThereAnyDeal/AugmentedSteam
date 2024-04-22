@@ -44,13 +44,19 @@ export default class FAchievementSort extends Feature<CProfileStats> {
         tabs.insertAdjacentElement("beforebegin", sortbox);
     }
 
-    private getDateFormat(language: string): {format: string, options?: DateTimeOptions}|null {
+    private getDateFormat(language: string): {format: string, formatNoYear: string, options?: DateTimeOptions}|null {
 
         switch (language) {
             case "english":
                 return {
                     format: "'Unlocked' d LLL, yyyy '@' h:mma",
                     formatNoYear: "'Unlocked' d LLL '@' h:mma",
+                };
+
+            case "english_us":
+                return {
+                    format: "'Unlocked' LLL d, yyyy '@' h:mma",
+                    formatNoYear: "'Unlocked' LLL d '@' h:mma",
                 };
 
             case "czech":
@@ -61,9 +67,9 @@ export default class FAchievementSort extends Feature<CProfileStats> {
                 };
 
             // TODO add support for more locales without need to fallback to english
+            default:
+                return null;
         }
-
-        return null;
     }
 
     private async onFirstSort() {
@@ -76,7 +82,9 @@ export default class FAchievementSort extends Feature<CProfileStats> {
         this.bookmark = document.createElement("div");
         achieveRow.insertAdjacentElement("beforebegin", this.bookmark);
 
-        let dateSetup = this.getDateFormat(Language.getCurrentSteamLanguage() ?? "");
+        const lang = Language.getCurrentSteamLanguage();
+        let dateSetup = this.getDateFormat(lang ?? "");
+        let testFormat: boolean = lang === "english";
 
         const nodes = this.container!.querySelectorAll(".achieveUnlockTime");
         for (const node of nodes) {
@@ -89,12 +97,20 @@ export default class FAchievementSort extends Feature<CProfileStats> {
 
             if (dateSetup) {
                 const dateString = node.firstChild.textContent.trim();
+
+                if (testFormat && /^Unlocked \w{3} \d{1,2}/.test(dateString)) {
+                    testFormat = false;
+                    dateSetup = this.getDateFormat("english_us");
+                }
+
                 const {format, formatNoYear, options} = dateSetup;
+
                 const unlockedTime = DateTime.fromFormat(
                     dateString,
                     /\d{4}/.test(dateString) ? format : formatNoYear,
                     options
                 );
+
                 this.unlockedMap.set(achieveRow, unlockedTime.toUnixInteger());
             }
         }
@@ -102,6 +118,7 @@ export default class FAchievementSort extends Feature<CProfileStats> {
         // fallback, load the same page in english
         if (dateSetup === null) {
             dateSetup = this.getDateFormat("english");
+            testFormat = true;
 
             const url = new URL(window.location.origin + window.location.pathname);
             url.searchParams.set("l", "english");
@@ -120,7 +137,14 @@ export default class FAchievementSort extends Feature<CProfileStats> {
                 if (!achieveRow) { continue; }
 
                 const dateString = node.firstChild.textContent.trim();
-                const {format, formatNoYear} = <{format: string}>dateSetup;
+
+                if (testFormat && /^Unlocked \w{3} \d{1,2}/.test(dateString)) {
+                    testFormat = false;
+                    dateSetup = this.getDateFormat("english_us");
+                }
+
+                const {format, formatNoYear} = dateSetup;
+
                 const unlockedTime = DateTime.fromFormat(
                     dateString,
                     /\d{4}/.test(dateString) ? format : formatNoYear
