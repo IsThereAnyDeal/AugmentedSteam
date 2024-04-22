@@ -66,6 +66,12 @@ export default class FAchievementSort extends Feature<CProfileStats> {
                     formatShort: "'Unlocked' d LLL '@' h:mma",
                 };
 
+            case "english_us":
+                return {
+                    format: "'Unlocked' LLL d, yyyy '@' h:mma",
+                    formatShort: "'Unlocked' LLL d '@' h:mma",
+                };
+
             case "czech":
                 return {
                     format: "'Odemčeno' d. LLL. yyyy v H.mm",
@@ -89,7 +95,9 @@ export default class FAchievementSort extends Feature<CProfileStats> {
         this.bookmark = document.createElement("div");
         achieveRow.insertAdjacentElement("beforebegin", this.bookmark);
 
-        let dateSetup = this.getDateFormat(Language.getCurrentSteamLanguage() ?? "");
+        const lang = Language.getCurrentSteamLanguage();
+        let dateSetup = this.getDateFormat(lang ?? "");
+        let testFormat: boolean = lang === "english";
 
         const nodes = this.container!.querySelectorAll(".achieveUnlockTime");
         for (const node of nodes) {
@@ -102,19 +110,32 @@ export default class FAchievementSort extends Feature<CProfileStats> {
 
             if (dateSetup) {
                 const dateString = node.firstChild.textContent.trim();
-                const {format, formatShort, options} = dateSetup;
-                const unlockedTime = DateTime.fromFormat(
-                    dateString,
-                    /\d{4}/.test(dateString) ? format : formatShort,
-                    options
-                );
-                this.unlockedMap.set(achieveRow, unlockedTime.toUnixInteger());
+
+                if (testFormat && /^Unlocked \w{3} \d{1,2}/.test(dateString)) {
+                    testFormat = false;
+                    dateSetup = this.getDateFormat("english_us");
+                }
+
+                const {format, formatShort, options} = dateSetup as DateFormatSettings;
+                const fmt = /\d{4}/.test(dateString) ? format : formatShort;
+                const unlockedTime = DateTime.fromFormat(dateString, fmt, options).toUnixInteger();
+
+                if (Number.isNaN(unlockedTime)) {
+                    this.logError(
+                        new Error("Invalid unlocked time"),
+                        `Failed to parse "${dateString}" with format "${fmt}"`
+                    );
+                    return;
+                }
+
+                this.unlockedMap.set(achieveRow, unlockedTime);
             }
         }
 
         // fallback, load the same page in english
         if (dateSetup === null) {
-            dateSetup = this.getDateFormat("english") as DateFormatSettings;
+            dateSetup = this.getDateFormat("english");
+            testFormat = true;
 
             const url = new URL(window.location.origin + window.location.pathname);
             url.searchParams.set("l", "english");
@@ -133,13 +154,25 @@ export default class FAchievementSort extends Feature<CProfileStats> {
                 if (!achieveRow) { continue; }
 
                 const dateString = node.firstChild.textContent.trim();
-                const {format, formatShort} = dateSetup;
-                const unlockedTime = DateTime.fromFormat(
-                    dateString,
-                    /\d{4}/.test(dateString) ? format : formatShort
-                );
 
-                this.unlockedMap.set(this.defaultSort[i]!, unlockedTime.toUnixInteger());
+                if (testFormat && /^Unlocked \w{3} \d{1,2}/.test(dateString)) {
+                    testFormat = false;
+                    dateSetup = this.getDateFormat("english_us");
+                }
+
+                const {format, formatShort} = dateSetup as DateFormatSettings;
+                const fmt = /\d{4}/.test(dateString) ? format : formatShort;
+                const unlockedTime = DateTime.fromFormat(dateString, fmt).toUnixInteger();
+
+                if (Number.isNaN(unlockedTime)) {
+                    this.logError(
+                        new Error("Invalid unlocked time"),
+                        `Failed to parse "${dateString}" with format "${fmt}"`
+                    );
+                    return;
+                }
+
+                this.unlockedMap.set(this.defaultSort[i]!, unlockedTime);
             }
         }
     }
