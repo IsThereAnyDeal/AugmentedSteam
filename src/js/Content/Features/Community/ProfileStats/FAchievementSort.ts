@@ -104,14 +104,18 @@ export default class FAchievementSort extends Feature<CProfileStats> {
                 }
 
                 const {format, formatNoYear, options} = dateSetup;
+                const fmt = /\d{4}/.test(dateString) ? format : formatNoYear;
+                const unlockedTime = DateTime.fromFormat(dateString, fmt, options).toUnixInteger();
 
-                const unlockedTime = DateTime.fromFormat(
-                    dateString,
-                    /\d{4}/.test(dateString) ? format : formatNoYear,
-                    options
-                );
+                if (Number.isNaN(unlockedTime)) {
+                    this.logError(
+                        new Error("Invalid unlocked time"),
+                        `Failed to parse "${dateString}" with format "${fmt}"`
+                    );
+                    return;
+                }
 
-                this.unlockedMap.set(achieveRow, unlockedTime.toUnixInteger());
+                this.unlockedMap.set(achieveRow, unlockedTime);
             }
         }
 
@@ -144,13 +148,18 @@ export default class FAchievementSort extends Feature<CProfileStats> {
                 }
 
                 const {format, formatNoYear} = dateSetup;
+                const fmt = /\d{4}/.test(dateString) ? format : formatNoYear;
+                const unlockedTime = DateTime.fromFormat(dateString, fmt).toUnixInteger();
 
-                const unlockedTime = DateTime.fromFormat(
-                    dateString,
-                    /\d{4}/.test(dateString) ? format : formatNoYear
-                );
+                if (Number.isNaN(unlockedTime)) {
+                    this.logError(
+                        new Error("Invalid unlocked time"),
+                        `Failed to parse "${dateString}" with format "${fmt}"`
+                    );
+                    return;
+                }
 
-                this.unlockedMap.set(this.defaultSort[i], unlockedTime.toUnixInteger());
+                this.unlockedMap.set(this.defaultSort[i], unlockedTime);
             }
         }
     }
