@@ -2,6 +2,7 @@ name: Build Augmented Steam
 on:
   push:
     branches: [develop, master]
+  pull_request:
 jobs:
   build-all:
     name: Build Augmented Steam
