@@ -66,6 +66,14 @@ class TimeUtils {
     static now() {
         return Math.trunc(Date.now() / 1000);
     }
+
+    static isInPast(timestamp) {
+        return timestamp <= this.now();
+    }
+
+    static isInFuture(timestamp) {
+        return timestamp > this.now();
+    }
 }
 
 export {TimeUtils};

@@ -1,24 +1,37 @@
 import {Errors} from "../../modulesCore";
-import {IndexedDB} from "./IndexedDB";
 
-class Api {
+export default abstract class Api {
 
-    /*
-     * FF doesn't support static members
-     * static origin; // this *must* be overridden
-     * static params = {};
-     * withResponse? use a boolean to include Response object in result?
-     */
-    static _fetchWithDefaults(endpoint, query = {}, params = {}) {
-        const url = new URL(endpoint, this.origin);
-        const _params = {...this.params, ...params};
-        if (_params.method === "POST" && !_params.body) {
-            _params.body = new URLSearchParams(query);
-        } else {
-            url.search = new URLSearchParams(query).toString();
-        }
-        return fetch(url, _params);
+    private readonly origin: string;
+
+    constructor(origin: string) {
+        this.origin = origin;
     }
+
+    protected getApiUrl(path: string, query: Record<string, string|number> = {}): URL {
+        let url = new URL(path, this.origin);
+        for (let [key, value] of Object.entries(query)) {
+            url.searchParams.set(key, String(value));
+        }
+        return url
+    }
+
+    protected async fetchJson<T>(
+        url: string|URL,
+        init: RequestInit = {}
+    ): Promise<T> {
+        let response = await fetch(url, init);
+
+        if (!response.ok) {
+            throw new Errors.HTTPError(response.status, response.statusText);
+        }
+
+        return await response.json();
+    }
+
+
+
+
 
     static async getEndpoint(endpoint, query, responseHandler, params = {}) {
         const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "GET"}));
@@ -31,17 +44,17 @@ class Api {
         return response.json();
     }
 
-    static async getPage(endpoint, query, responseHandler, params = {}) {
+    static async getPage(endpoint, query, params = {}) {
         const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "GET"}));
-        if (responseHandler) { responseHandler(response); }
         return response.text();
     }
 
-    static async postEndpoint(endpoint, query, responseHandler, params = {}) {
+    static async postEndpoint(endpoint, query, params = {}) {
         const response = await this._fetchWithDefaults(endpoint, query, Object.assign(params, {"method": "POST"}));
-        if (responseHandler) { responseHandler(response); }
         return response.json();
     }
+
+
 
     static endpointFactory(endpoint, objPath) {
         return async params => {
@@ -71,6 +84,4 @@ class Api {
         };
     }
 }
-Api.params = {};
 
-export {Api};

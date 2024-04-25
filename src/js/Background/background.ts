@@ -1,18 +1,18 @@
 import setup from "../setup";
 import {LocalStorage, Permissions, SyncedStorage} from "../modulesCore";
 import {ContextMenu} from "./Modules/ContextMenu";
-import {IndexedDB} from "./Modules/IndexedDB";
+import IndexedDB from "./Modules/IndexedDB";
 import {SteamCommunityApi} from "./Modules/Community/SteamCommunityApi";
 import {SteamStoreApi} from "./Modules/SteamStoreApi";
 import {StaticResources} from "./Modules/StaticResources";
 import {ITADApi} from "./Modules/IsThereAnyDeal/ITADApi";
-import {AugmentedSteamApi} from "./Modules/AugmentedSteam/AugmentedSteamApi";
+import AugmentedSteamApi from "./Modules/AugmentedSteam/AugmentedSteamApi";
 import {ExtensionData} from "./Modules/ExtensionData";
 import CacheStorage from "./Modules/CacheStorage";
 import browser, {type Runtime} from "webextension-polyfill";
-import type {TFetchPricesMessage} from "./Modules/AugmentedSteam/_types";
 import type {TGetStoreListMessage} from "./Modules/IsThereAnyDeal/_types";
 import type {TFetchBadgeInfoMessage} from "./Modules/Community/_types";
+import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
 
 type MessageSender = Runtime.MessageSender;
 
@@ -27,23 +27,6 @@ IndexedDB.objStoreFetchFns = new Map([
     ["purchases", SteamStoreApi.purchaseDate],
     ["dynamicStore", SteamStoreApi.dynamicStore],
     ["packages", SteamStoreApi.fetchPackage],
-
-    ["earlyAccessAppids", AugmentedSteamApi.endpointFactoryCached(
-        "early-access/v1",
-        "earlyAccessAppids",
-        data => Object.fromEntries(data.map(appid => [appid, appid]))
-    )],
-    ["storePageData", async({params, key} = {}) => {
-        const data = await AugmentedSteamApi.fetchAppPageData(params.appid);
-        await IndexedDB.put("storePageData", new Map([[key, data]]));
-        return data;
-    }],
-    ["profiles", async({params, key} = {}) => {
-        const data = await AugmentedSteamApi.fetchProfile(params.profile);
-        await IndexedDB.put("profiles", new Map([[key, data]]));
-        return data;
-    }],
-    ["rates", AugmentedSteamApi.endpointFactoryCached("rates/v1", "rates")],
 
     ["collection", async () => {
         const data = await ITADApi.fetchCollection();
@@ -74,19 +57,6 @@ const actionCallbacks = new Map([
     ["notes.setall", ExtensionData.setAllNotes],
     ["notes.clear", ExtensionData.clearNotes],
     ["cache.clear", ExtensionData.clearCache],
-
-    ["dlcinfo", AugmentedSteamApi.fetchDlcInfo],
-    ["storepagedata", AugmentedSteamApi.storePageData],
-    ["storepagedata.expire", AugmentedSteamApi.expireStorePageData],
-    ["rates", AugmentedSteamApi.rates],
-    ["clearrates", AugmentedSteamApi.clearRates],
-    ["isea", AugmentedSteamApi.isEA],
-    ["profile.background", AugmentedSteamApi.endpointFactory("profile/background/list/v2")],
-    ["profile.background.games", AugmentedSteamApi.endpointFactory("profile/background/games/v1")],
-    ["twitch.stream", AugmentedSteamApi.fetchTwitch],
-    ["market.cardprices", AugmentedSteamApi.endpointFactory("market/cards/v2")],
-    ["market.averagecardprices", AugmentedSteamApi.endpointFactory("market/cards/average-prices/v2")],
-    ["steampeek", AugmentedSteamApi.fetchSteamPeek],
 
     ["appdetails", SteamStoreApi.appDetails],
     ["currency", SteamStoreApi.currency],
@@ -135,8 +105,6 @@ type GenericMessage = {
 type Message =
     // ITADApi
     | TGetStoreListMessage
-    // AugmentedSteamApi
-    | TFetchPricesMessage
     // SteamCommunityApi
     | TFetchBadgeInfoMessage
     // old
@@ -166,17 +134,23 @@ browser.runtime.onMessage.addListener((
              *   remove type cast, which should also ensure better checks
              */
 
+            let handlers: ApiHandlerInterface[] = [
+                new AugmentedSteamApi()
+            ];
+
+            for (let handler of handlers) {
+                response = handler.handle(message);
+                if (response !== undefined) {
+                    break;
+                }
+            }
+
+
             switch (message.action) { // TODO rename to "api"?
 
                 case "itad.storelist":
                     response = await ITADApi.getStoreList();
                     break;
-
-                case "prices": {
-                    const {country, apps, subs, bundles, voucher, shops} = (<TFetchPricesMessage>message).params;
-                    response = await AugmentedSteamApi.fetchPrices(country, apps, subs, bundles, voucher, shops);
-                    break;
-                }
 
                 case "community.badgeinfo":
                     const {steamId, appid} = (<TFetchBadgeInfoMessage>message).params;

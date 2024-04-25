@@ -1,3 +1,4 @@
+
 interface TShop {
     id: number,
     name: string,
@@ -83,20 +84,105 @@ interface TBundleGame {
     mature: boolean
 }
 
-
-export interface TFetchPricesMessage {
-    action: "prices",
-    params: {
-        country: string,
-        apps: number[],
-        subs: number[],
-        bundles: number[],
-        voucher: boolean,
-        shops: number[]
+export interface TProfileData {
+    badges: Array<{
+        title: string,
+        img: string
+    }>,
+    steamrep: Array<string>
+    style: string|null
+    bg: {
+        img: string|null,
+        appid: number|null
     }
 }
+
 
 export interface TFetchPricesResponse {
     prices: Record<string, TPriceOverview>,
     bundles: TBundle[]
+}
+
+export interface TFetchStorePageDataResponse {
+    family_sharing: boolean,
+    players: {
+        recent: number,
+        peak_today: number,
+        peak_all: number
+    },
+    wsgf: {
+        "url": string,
+        "wide": string,
+        "ultrawide": string,
+        "multi_monitor": string,
+        "4k": string
+    }|null,
+    hltb: {
+        story: number|null,
+        extras: number|null,
+        complete: number|null,
+        url: string
+    }|null,
+    reviews: {
+        metauser: {
+            score: number|null,
+            verdict: number|null,
+            url: string
+        }|null,
+        opencritic: {
+            score: number|null,
+            verdict: number|null,
+            url: string
+        }|null
+    }
+}
+
+export type TFetchDlcInfoResponse = Array<{
+    id: number,
+    name: string,
+    description: string,
+    icon: string
+}>;
+
+export interface TIsEarlyAccessResponse {
+    [appid: number]: boolean
+}
+
+export type TSimilarResponse = Array<{
+    title: string,
+    appid: number,
+    sprating: number,
+    score: number
+}>;
+
+export interface TFetchRatesResponse {
+    [from: string]: {
+        [to: string]: number
+    }
+}
+
+export type TFetchProfileBackgroundsResponse = Array<[string, string]>;
+
+export type TFetchProfileBackgroundsGamesResponse = Array<[number, string]>;
+
+export interface TFetchMarketCardPricesResponse {
+    [title: string]: {
+        img: string,
+        url: string,
+        price: number
+    }
+}
+
+export interface TFetchMarketCardAveragePricesResponse {
+    [id: string]: {
+        regular: number,
+        foil: number
+    }
+}
+
+export interface TFetchTwitchStreamResponse {
+    user_name: string,
+    game: string,
+    view_count: number,
+    thumbnail_url: string
 }

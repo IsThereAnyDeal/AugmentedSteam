@@ -1,42 +1,88 @@
-import {Errors} from "../../../modulesCore";
-import {IndexedDB} from "../IndexedDB";
+import {TimeUtils} from "../../../modulesCore";
+import IndexedDB from "../IndexedDB";
 import Config from "../../../config";
-import {Api} from "../Api";
-import type {TFetchPricesResponse} from "./_types";
+import Api from "../Api";
+import type {
+    TProfileData,
+    TFetchDlcInfoResponse,
+    TFetchMarketCardAveragePricesResponse,
+    TFetchMarketCardPricesResponse,
+    TFetchPricesResponse,
+    TFetchProfileBackgroundsGamesResponse,
+    TFetchProfileBackgroundsResponse,
+    TFetchRatesResponse,
+    TFetchStorePageDataResponse,
+    TFetchTwitchStreamResponse,
+    TIsEarlyAccessResponse,
+    TSimilarResponse
+} from "@Background/Modules/AugmentedSteam/_types";
+import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
 
-class AugmentedSteamApi extends Api {
+export default class AugmentedSteamApi extends Api implements ApiHandlerInterface{
 
-    /*
-     * static origin = Config.ApiServerHost;
-     * static _progressingRequests = new Map();
-     */
-
-    static storePageData(appid) {
-        const params = {"appid": appid};
-        return IndexedDB.get("storePageData", appid, {params});
+    constructor() {
+        super(Config.ApiServerHost);
     }
 
-    static expireStorePageData(appid) {
-        return IndexedDB.delete("storePageData", `app_${appid}`);
+    private async fetchStorePageData(appid: number): Promise<TFetchStorePageDataResponse> {
+        const url = this.getApiUrl(`app/${appid}/v2`);
+        return this.fetchJson(url);
     }
 
-    static rates(to) {
-        return IndexedDB.getAll("rates", {"params": {"to": to.sort().join(",")}});
+    private async fetchRates(to: string[]): Promise<{[from: string]: {[to: string]: number}}> {
+        const url = this.getApiUrl(`rates/v1`, {to: to.join(",")});
+        return await this.fetchJson(url);
     }
 
-    static clearRates() {
-        return IndexedDB.clear("rates");
+    private async fetchEarlyAccess(): Promise<Array<number>> {
+        const url = this.getApiUrl("early-access/v1");
+        return this.fetchJson(url);
     }
 
-    static isEA(appids) {
-        return IndexedDB.contains("earlyAccessAppids", appids);
+    private async fetchSteamPeek(appid: number): Promise<TSimilarResponse> {
+        const url = this.getApiUrl(`similar/${appid}/v2`, {count: 15});
+        return await this.fetchJson(url);
     }
 
-    static fetchSteamPeek(appid) {
-        return AugmentedSteamApi.endpointFactory(`similar/${appid}/v2`)({"count": 15});
+    private async fetchDlcInfo(appid: number): Promise<TFetchDlcInfoResponse> {
+        const url = this.getApiUrl(`dlc/${appid}/v2`);
+        return this.fetchJson<TFetchDlcInfoResponse>(url);
     }
 
-    static async fetchPrices(
+    private async fetchProfile(steamId: string): Promise<TProfileData> {
+        const url = this.getApiUrl(`profile/${steamId}/v2`);
+        return await this.fetchJson(url);
+    }
+
+    private async fetchTwitch(twitchChannelId: string): Promise<TFetchTwitchStreamResponse> {
+        const url = this.getApiUrl(`twitch/${twitchChannelId}/stream/v2`);
+        return this.fetchJson<TFetchTwitchStreamResponse>(url);
+    }
+
+    private async fetchProfileBackgrounds(appid: number): Promise<TFetchProfileBackgroundsResponse> {
+        const url = this.getApiUrl("profile/background/list/v2", {appid});
+        return this.fetchJson<TFetchProfileBackgroundsResponse>(url);
+    }
+
+    private async fetchProfileBackgroundsGames(): Promise<TFetchProfileBackgroundsGamesResponse> {
+        const url = this.getApiUrl("profile/background/games/v1");
+        return this.fetchJson<TFetchProfileBackgroundsGamesResponse>(url);
+    }
+
+    private async fetchMarketCardPrices(currency: string, appid: number): Promise<TFetchMarketCardPricesResponse> {
+        const url = this.getApiUrl("market/cards/v2", {currency, appid});
+        return this.fetchJson(url);
+    }
+
+    private async fetchMarketAverageCardPrices(currency: string, appids: number[]): Promise<TFetchMarketCardAveragePricesResponse> {
+        const url = this.getApiUrl("market/cards/average-prices/v2", {
+            currency,
+            appids: appids.join(",")
+        });
+        return this.fetchJson(url);
+    }
+
+    private async fetchPrices(
         country: string,
         apps: number[],
         subs: number[],
@@ -44,59 +90,135 @@ class AugmentedSteamApi extends Api {
         voucher: boolean,
         shops: number[]
     ): Promise<TFetchPricesResponse> {
-        const url = new URL("prices/v2", Config.ApiServerHost);
+        const url = this.getApiUrl("prices/v2");
 
-        let response = await fetch(url, {
+        return await this.fetchJson<TFetchPricesResponse>(url, {
             method: "POST",
             body: JSON.stringify({country, apps, subs, bundles, voucher, shops})
         });
-
-        if (response.ok) {
-            return response.json();
-        }
-
-        throw new Errors.HTTPError(response.status, response.statusText);
     }
 
-    static async fetchAppPageData(appid) {
-        const url = new URL(`app/${appid}/v2`, Config.ApiServerHost);
-        let response = await fetch(url);
 
-        if (response.ok) {
-            return response.json();
+    private async getProfileData(steamId: string): Promise<TProfileData> {
+        const ttl = 24*60*60;
+
+        let data = await IndexedDB.get("profiles", steamId);
+
+        if (!data || TimeUtils.isInPast(data.expiry)) {
+            data = {
+                data: this.fetchProfile(steamId),
+                expiry: TimeUtils.now() + ttl
+            };
+            await IndexedDB.put("profiles", data, steamId);
         }
 
-        throw new Errors.HTTPError(response.status, response.statusText);
+        return data.data;
     }
 
-    static async fetchDlcInfo(appid) {
-        const url = new URL(`dlc/${appid}/v2`, Config.ApiServerHost);
+    async getStorePageData(appid: number): Promise<TFetchStorePageDataResponse> {
+        const ttl = 60*60;
+        let data = await IndexedDB.get("storePageData", appid);
 
-        let response = await fetch(url);
+        if (!data || TimeUtils.isInPast(data.expiry)) {
+            data = {
+                data: await this.fetchStorePageData(appid),
+                expiry: TimeUtils.now() + ttl
+            }
 
-        if (response.ok) {
-            return response.json();
+            await IndexedDB.put("storePageData", data,appid);
+        }
+        return data.data;
+    }
+
+    expireStorePageData(appid: number): Promise<void> {
+        return IndexedDB.delete("storePageData", appid);
+    }
+
+    async getRates(to: string[]): Promise<TFetchRatesResponse> {
+        const ttl = 60*60;
+
+        const key = to.join(",");
+
+        let rates = await IndexedDB.get("rates", key);
+
+        if (!rates || TimeUtils.isInPast(rates.expiry)) {
+            rates = {
+                data: await this.fetchRates(to),
+                expiry: TimeUtils.now() + ttl
+            };
+            await IndexedDB.put("rates", rates, key);
+        }
+        return rates.data;
+    }
+
+    clearRates() {
+        return IndexedDB.clear("rates");
+    }
+
+    async isEA(appids: number[]): Promise<TIsEarlyAccessResponse> {
+        const ttl = 2*60*60;
+        const isExpired = await IndexedDB.isStoreExpired("earlyAccessAppids");
+
+        if (isExpired) {
+            const appids = await this.fetchEarlyAccess();
+
+            await IndexedDB.putAll(
+                "earlyAccessAppids",
+                appids.map(appid => [appid, appid]),
+            );
+            await IndexedDB.setStoreExpiry("earlyAccessAppids", ttl)
         }
 
-        throw new Errors.HTTPError(response.status, response.statusText);
+        return IndexedDB.contains("earlyAccessAppids", appids);
     }
 
-    static async fetchProfile(steamId) {
-        const url = new URL(`profile/${steamId}/v2`, Config.ApiServerHost);
-        let response = await fetch(url);
+    async handle(message: any) {
 
-        if (response.ok) {
-            return response.json();
+        switch (message.action) {
+
+            case EMessage.Prices: {
+                const params = message.params;
+                const {country, apps, subs, bundles, voucher, shops} = params;
+                return await this.fetchPrices(country, apps, subs, bundles, voucher, shops);
+            }
+
+            case EMessage.DlcInfo:
+                return await this.fetchDlcInfo(message.params.appid);
+
+            case EMessage.StorePageData:
+                return await this.getStorePageData(message.params.appid);
+
+            case EMessage.ExpireStorePageData:
+                return await this.expireStorePageData(message.params.appid);
+
+            case EMessage.Rates:
+                return await this.getRates(message.params.to);
+
+            case EMessage.ClearRates:
+                return await this.clearRates();
+
+            case EMessage.IsEA:
+                return await this.isEA(message.params.appids);
+
+            case EMessage.ProfileBackground:
+                return await this.fetchProfileBackgrounds(message.params.appid);
+
+            case EMessage.ProfileBackgroundGames:
+                return await this.fetchProfileBackgroundsGames();
+
+            case EMessage.TwitchStream:
+                return await this.fetchTwitch(message.params.channelId);
+
+            case EMessage.MarketCardPrices:
+                return await this.fetchMarketCardPrices(message.params.currency, message.params.appid);
+
+            case EMessage.MarketAverageCardPrices:
+                return await this.fetchMarketAverageCardPrices(message.params.currency, message.params.appids);
+
+            case EMessage.SteamPeek:
+                return await this.fetchSteamPeek(message.params.appid);
         }
 
-        throw new Errors.HTTPError(response.status, response.statusText);
-    }
-
-    static async fetchTwitch(twitchChannelId) {
-        return AugmentedSteamApi.endpointFactory(`twitch/${twitchChannelId}/stream/v2`);
+        return undefined;
     }
 }
-AugmentedSteamApi.origin = Config.ApiServerHost;
-AugmentedSteamApi._progressingRequests = new Map();
-
-export {AugmentedSteamApi};

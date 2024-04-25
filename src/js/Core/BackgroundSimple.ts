@@ -19,6 +19,10 @@ class BackgroundSender {
     static send<Request, Response>(message: Request): Promise<Response> {
         return browser.runtime.sendMessage(message);
     }
+
+    static send2<Response>(action: string, params: Record<string, any>={}): Promise<Response> {
+        return browser.runtime.sendMessage({action, params});
+    }
 }
 
 export {BackgroundSimple, BackgroundSender};
