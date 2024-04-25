@@ -11,14 +11,14 @@
     import {SettingsStore} from "../../../Data/Settings";
     import LocalizedCountryList from "../Components/LocalizedCountryList";
     import Select from "../Components/Select.svelte";
-    import type {TSettings} from "../../../Data/_types";
+    import type {SettingsSchema} from "../../../Data/_types";
     import type {Writable} from "svelte/store";
     import {L} from "@Core/Localization/Localization";
     import DeleteIcon from "../../Icons/DeleteIcon.svelte";
     import {slide} from "svelte/transition";
     import OptionGroup from "../Components/OptionGroup.svelte";
 
-    export let settings: Writable<TSettings>;
+    export let settings: Writable<SettingsSchema>;
 
     let localizedCountries: [string, string][] = [];
     let selection: string[] = [];

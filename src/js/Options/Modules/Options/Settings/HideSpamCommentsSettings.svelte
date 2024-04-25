@@ -3,11 +3,11 @@
     import {__options_hidespamcomments, __options_spamcommentregex, __theworddefault} from "@Strings/_strings";
     import Toggle from "../Components/Toggle.svelte";
     import type {Writable} from "svelte/store";
-    import type {TSettings} from "../../../Data/_types";
+    import type {SettingsSchema} from "../../../Data/_types";
     import {SettingsStore} from "../../../Data/Settings";
     import SubOptions from "../Components/SubOptions.svelte";
 
-    export let settings: Writable<TSettings>
+    export let settings: Writable<SettingsSchema>
 
     function handleDefault() {
         SettingsStore.remove("spamcommentregex");

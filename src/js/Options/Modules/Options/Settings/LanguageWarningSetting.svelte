@@ -1,7 +1,7 @@
 <script lang="ts">
     import Select from "../Components/Select.svelte";
     import type {Writable} from "svelte/store";
-    import type {TSettings} from "../../../Data/_types";
+    import type {SettingsSchema} from "../../../Data/_types";
     import {onMount} from "svelte";
     import {
         __options_lang_brazilian,
@@ -68,7 +68,7 @@
         ["vietnamese", __options_lang_vietnamese, "Vietnamese"],
     ];
 
-    export let settings: Writable<TSettings>;
+    export let settings: Writable<SettingsSchema>;
 
     let options: Array<[string, string]> = [];
 

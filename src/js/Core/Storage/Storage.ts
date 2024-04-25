@@ -1,22 +1,29 @@
 import {type Storage as ns} from "webextension-polyfill";
 
-interface StorageInterface {
-    get<K extends string, V>(key: K): Promise<V|undefined>;
-    getObject<T extends Record<string, any>>(object: T): Promise<T>;
-    getAll<V extends Record<string, any>>(): Promise<Partial<V>>;
+export interface StorageSchema {
+    [K: string]: any
+}
+export type SchemaKey<Schema extends StorageSchema> = keyof Schema & string;
+export type SchemaValue<Schema extends StorageSchema, Key extends SchemaKey<Schema>> = Schema[Key];
 
-    set<K extends string, V>(key: K, value: V): Promise<void>;
-    setObject<T extends Record<string, any>>(object: T): Promise<void>;
+export interface StorageInterface<Schema extends StorageSchema> {
+    get<K extends SchemaKey<Schema>>(key: K): Promise<Schema[K]|undefined>;
+    getObject<T extends Partial<Schema>>(object: T): Promise<T>;
 
-    remove<K extends string>(...keys: K[]): Promise<void>;
+    set<K extends SchemaKey<Schema>>(key: K, value: SchemaValue<Schema, K>): Promise<void>;
+    setObject(object: Partial<Schema>): Promise<void>;
+
+    remove<K extends SchemaKey<Schema>>(...keys: K[]): Promise<void>;
 }
 
-export default class Storage<T extends ns.SyncStorageAreaSync|ns.LocalStorageArea>
-    implements StorageInterface {
+export default class Storage<
+    Area extends ns.SyncStorageAreaSync|ns.LocalStorageArea,
+    Schema extends StorageSchema
+> implements StorageInterface<Schema> {
 
-    private storageArea: T;
+    private storageArea: Area;
 
-    constructor(storageArea: T) {
+    constructor(storageArea: Area) {
         this.storageArea = storageArea;
     }
 
@@ -24,28 +31,24 @@ export default class Storage<T extends ns.SyncStorageAreaSync|ns.LocalStorageAre
         return this.storageArea.onChanged;
     }
 
-    async get<K extends string, V>(key: K): Promise<V | undefined> {
+    async get<K extends SchemaKey<Schema>, V = Schema[K]>(key: K): Promise<V | undefined> {
         let response = await this.storageArea.get(key);
         return response[key] ?? undefined;
     }
 
-    getAll<V extends Record<string, any>>(): Promise<Partial<V>> {
-        return this.storageArea.get(null) as Promise<Partial<V>>;
-    }
-
-    getObject<T extends Record<string, any>>(object: T): Promise<T> {
+    getObject<T extends Partial<Schema>>(object: T): Promise<T> {
         return this.storageArea.get(object) as Promise<T>;
     }
 
-    set<K extends string, V>(key: K, value: V): Promise<void> {
+    set<K extends SchemaKey<Schema>>(key: K, value: SchemaValue<Schema, K>): Promise<void> {
         return this.storageArea.set({[key]: value});
     }
 
-    setObject<T extends Record<string, any>>(object: T): Promise<void> {
+    setObject(object: Partial<Schema>): Promise<void> {
         return this.storageArea.set(object);
     }
 
-    remove<K extends string>(...keys: K[]): Promise<void> {
+    remove<K extends SchemaKey<Schema>>(...keys: K[]): Promise<void> {
         return this.storageArea.remove(keys);
     }
 }

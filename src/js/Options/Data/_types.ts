@@ -8,7 +8,7 @@ export type TCustomLink = {
     icon: string
 };
 
-export interface TSettings {
+export interface SettingsSchema {
     language: string,
 
     version: string,

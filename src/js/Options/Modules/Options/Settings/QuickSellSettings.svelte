@@ -3,11 +3,11 @@
     import {__options_quickinv, __options_quickinvDiff, __theworddefault} from "@Strings/_strings";
     import SubOptions from "../Components/SubOptions.svelte";
     import Toggle from "../Components/Toggle.svelte";
-    import type {TSettings} from "../../../Data/_types";
+    import type {SettingsSchema} from "../../../Data/_types";
     import type {Writable} from "svelte/store";
     import {SettingsStore} from "../../../Data/Settings";
 
-    export let settings: Writable<TSettings>;
+    export let settings: Writable<SettingsSchema>;
 
     function handleDefault() {
         SettingsStore.remove("quickinv_diff");

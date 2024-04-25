@@ -39,9 +39,9 @@
     import Section from "./Components/Section.svelte";
     import Toggle from "./Components/Toggle.svelte";
     import CustomLinks from "./Settings/CustomLinks.svelte";
-    import type {TSettings} from "../../Data/_types";
+    import type {SettingsSchema} from "../../Data/_types";
 
-    let settings: Writable<TSettings> = writable(Settings);
+    let settings: Writable<SettingsSchema> = writable(Settings);
 </script>
 
 

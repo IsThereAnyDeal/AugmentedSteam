@@ -53,12 +53,12 @@
     import Toggle from "./Components/Toggle.svelte";
     import CustomLinks from "./Settings/CustomLinks.svelte";
     import Select from "./Components/Select.svelte";
-    import type {TSettings} from "../../Data/_types";
+    import type {SettingsSchema} from "../../Data/_types";
     import HideSpamCommentsSettings from "./Settings/HideSpamCommentsSettings.svelte";
     import SubOptions from "./Components/SubOptions.svelte";
     import QuickSellSettings from "./Settings/QuickSellSettings.svelte";
 
-    let settings: Writable<TSettings> = writable(Settings);
+    let settings: Writable<SettingsSchema> = writable(Settings);
 </script>
 
 

@@ -3,17 +3,17 @@
     import {onMount} from "svelte";
     import Settings from "../../../Data/Settings";
     import type {TGetStoreListResponse} from "@Background/Modules/IsThereAnyDeal/_types";
-    import type {TSettings} from "../../../Data/_types";
+    import type {SettingsSchema} from "../../../Data/_types";
     import {__error, __loading, __options_storesAll} from "@Strings/_strings";
     import Toggle from "../Components/Toggle.svelte";
     import {slide} from "svelte/transition";
     import {L} from "@Core/Localization/Localization";
     import type {Writable} from "svelte/store";
 
-    export let settings: Writable<TSettings>;
+    export let settings: Writable<SettingsSchema>;
 
     let promise: Promise<TGetStoreListResponse> = Promise.reject();
-    let excludedStores: TSettings['excluded_stores'] = [];
+    let excludedStores: SettingsSchema['excluded_stores'] = [];
 
     onMount(() => {
         promise = (async () => {

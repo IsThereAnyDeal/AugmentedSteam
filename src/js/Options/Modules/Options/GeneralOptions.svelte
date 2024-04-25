@@ -27,11 +27,11 @@
     import Section from "./Components/Section.svelte";
     import Toggle from "./Components/Toggle.svelte";
     import Select from "./Components/Select.svelte";
-    import type {TSettings} from "../../Data/_types";
+    import type {SettingsSchema} from "../../Data/_types";
     import LanguageWarningSetting from "./Settings/LanguageWarningSetting.svelte";
     import OptionGroup from "./Components/OptionGroup.svelte";
 
-    let settings: Writable<TSettings> = writable(Settings);
+    let settings: Writable<SettingsSchema> = writable(Settings);
 </script>
 
 

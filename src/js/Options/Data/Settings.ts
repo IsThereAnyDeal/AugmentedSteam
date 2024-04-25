@@ -1,8 +1,9 @@
 import {Info} from "@Core/Info";
-import type {TSettings} from "./_types";
+import type {SettingsSchema} from "./_types";
 import {SyncedStorage} from "../../modulesCore";
+import type {SchemaKey, SchemaValue, StorageInterface} from "@Core/Storage/Storage";
 
-const DefaultSettings: TSettings = Object.freeze({
+const DefaultSettings: SettingsSchema = Object.freeze({
     "language": "english",
 
     "version": Info.version,
@@ -236,20 +237,21 @@ class Event {
 
 export class SettingsStore {
 
-    private static data: TSettings;
+    private static data: SettingsSchema;
+    private static storage: StorageInterface<SettingsSchema> = new SyncedStorage<SettingsSchema>();
 
     public static readonly onSaveStart: Event = new Event();
     public static readonly onSaveEnd: Event = new Event();
 
     static async load(): Promise<void> {
-        this.data = await SyncedStorage.getObject<TSettings>(DefaultSettings);
+        this.data = await this.storage.getObject(DefaultSettings);
     }
 
-    static getDefault<K extends keyof TSettings>(key: K): TSettings[K] {
+    static getDefault<K extends keyof SettingsSchema>(key: K): SettingsSchema[K] {
         return DefaultSettings[key];
     }
 
-    static get<K extends keyof TSettings>(key: K): TSettings[K] {
+    static get<K extends keyof SettingsSchema>(key: K): SettingsSchema[K] {
         if (!this.data) {
             throw new Error("Settings have not been loaded");
         }
@@ -257,46 +259,46 @@ export class SettingsStore {
         return this.data[key];
     }
 
-    static set<K extends keyof TSettings>(key: K, value: TSettings[K]): void {
+    static set<K extends SchemaKey<SettingsSchema>>(key: K, value: SchemaValue<SettingsSchema, K>): void {
         this.onSaveStart.invoke();
 
         this.data[key] = value;
-        SyncedStorage.set(key, value);
+        this.storage.set(key, value);
 
         this.onSaveEnd.invoke();
     }
 
-    static remove<K extends keyof TSettings>(key: K): void {
-        SyncedStorage.remove(key);
+    static remove<K extends SchemaKey<SettingsSchema>>(key: K): void {
+        this.storage.remove(key);
         this.data[key] = structuredClone(DefaultSettings[key]);
     }
 
     static clear(): void {
-        SyncedStorage.remove(...Object.keys(this.data));
+        this.storage.remove(...(Object.keys(this.data) as SchemaKey<SettingsSchema>[]));
         this.data = structuredClone(DefaultSettings);
     }
 
-    static import(data: TSettings): void {
+    static import(data: SettingsSchema): void {
         // TODO check data for valid keys and values
-        SyncedStorage.setObject(data);
+        this.storage.setObject(data);
         this.data = data;
     }
 
-    static asObject(): TSettings {
+    static asObject(): SettingsSchema {
         return structuredClone(this.data);
     }
 }
 
 export default (new Proxy(SettingsStore, {
-    get<K extends keyof TSettings>(target: typeof SettingsStore, prop: K): TSettings[K] {
+    get<K extends SchemaKey<SettingsSchema>>(target: typeof SettingsStore, prop: K): SchemaValue<SettingsSchema, K> {
         return target.get(prop);
     },
 
-    set<K extends keyof TSettings>(target: typeof SettingsStore, prop: K, value: TSettings[K]): boolean {
+    set<K extends SchemaKey<SettingsSchema>>(target: typeof SettingsStore, prop: K, value: SchemaValue<SettingsSchema, K>): boolean {
         target.set(prop, value);
         return true;
     }
-})) as unknown as TSettings;
+})) as unknown as SettingsSchema;
 
 
 /*

@@ -13,11 +13,11 @@
     import Toggle from "./Components/Toggle.svelte";
     import RegionSelect from "./Settings/RegionSelect.svelte";
     import StoreList from "./Settings/StoreListSetting.svelte";
-    import type {TSettings} from "../../Data/_types";
+    import type {SettingsSchema} from "../../Data/_types";
     import OverridePriceSetting from "./Settings/OverridePriceSetting.svelte";
     import OptionGroup from "./Components/OptionGroup.svelte";
 
-    let settings: Writable<TSettings> = writable(Settings);
+    let settings: Writable<SettingsSchema> = writable(Settings);
 </script>
 
 
