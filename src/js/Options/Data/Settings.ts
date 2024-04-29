@@ -1,7 +1,7 @@
 import {Info} from "@Core/Info";
 import type {SettingsSchema} from "./_types";
 import {SyncedStorage} from "../../modulesCore";
-import type {SchemaKey, SchemaValue, StorageInterface} from "@Core/Storage/Storage";
+import type {SchemaKeys, SchemaValue, StorageInterface} from "@Core/Storage/Storage";
 
 const DefaultSettings: SettingsSchema = Object.freeze({
     "language": "english",
@@ -259,7 +259,7 @@ export class SettingsStore {
         return this.data[key];
     }
 
-    static set<K extends SchemaKey<SettingsSchema>>(key: K, value: SchemaValue<SettingsSchema, K>): void {
+    static set<K extends SchemaKeys<SettingsSchema>>(key: K, value: SchemaValue<SettingsSchema, K>): void {
         this.onSaveStart.invoke();
 
         this.data[key] = value;
@@ -268,13 +268,13 @@ export class SettingsStore {
         this.onSaveEnd.invoke();
     }
 
-    static remove<K extends SchemaKey<SettingsSchema>>(key: K): void {
+    static remove<K extends SchemaKeys<SettingsSchema>>(key: K): void {
         this.storage.remove(key);
         this.data[key] = structuredClone(DefaultSettings[key]);
     }
 
     static clear(): void {
-        this.storage.remove(...(Object.keys(this.data) as SchemaKey<SettingsSchema>[]));
+        this.storage.remove(...(Object.keys(this.data) as SchemaKeys<SettingsSchema>[]));
         this.data = structuredClone(DefaultSettings);
     }
 
@@ -290,11 +290,11 @@ export class SettingsStore {
 }
 
 export default (new Proxy(SettingsStore, {
-    get<K extends SchemaKey<SettingsSchema>>(target: typeof SettingsStore, prop: K): SchemaValue<SettingsSchema, K> {
+    get<K extends SchemaKeys<SettingsSchema>>(target: typeof SettingsStore, prop: K): SchemaValue<SettingsSchema, K> {
         return target.get(prop);
     },
 
-    set<K extends SchemaKey<SettingsSchema>>(target: typeof SettingsStore, prop: K, value: SchemaValue<SettingsSchema, K>): boolean {
+    set<K extends SchemaKeys<SettingsSchema>>(target: typeof SettingsStore, prop: K, value: SchemaValue<SettingsSchema, K>): boolean {
         target.set(prop, value);
         return true;
     }

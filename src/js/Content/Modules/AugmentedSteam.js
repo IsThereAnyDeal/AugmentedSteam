@@ -1,18 +1,31 @@
 import {L} from "@Core/Localization/Localization";
 import {
     __activate,
-    __bugFeature, __cart, __clearCache,
-    __contribute, __games, __hide, __launchRandom, __loginWarning, __playGame, __reviews,
-    __thewordoptions, __update_dontShow,
+    __bugFeature,
+    __cart,
+    __clearCache,
+    __contribute,
+    __games,
+    __hide,
+    __launchRandom,
+    __loginWarning,
+    __playGame,
+    __reviews,
+    __thewordoptions,
+    __update_dontShow,
     __usingLanguage,
-    __usingLanguageReturn, __viewinclient, __visitStore, __website, __wishlist,
+    __usingLanguageReturn,
+    __viewinclient,
+    __visitStore,
+    __website,
+    __wishlist,
 } from "@Strings/_strings";
-import {ExtensionResources, HTML, Language, LocalStorage, Localization, SyncedStorage} from "../../modulesCore";
+import Config from "../../config";
+import {ExtensionResources, HTML, Language, Localization, LocalStorage, SyncedStorage} from "../../modulesCore";
+import {Page} from "../Features/Page";
 import {Background, User} from "../modulesContent";
 
 import {DynamicStore} from "./Data/DynamicStore";
-import {Page} from "../Features/Page";
-import Config from "../../config";
 
 class AugmentedSteam {
 

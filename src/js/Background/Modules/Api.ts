@@ -8,9 +8,12 @@ export default abstract class Api {
         this.origin = origin;
     }
 
-    protected getApiUrl(path: string, query: Record<string, string|number> = {}): URL {
+    protected getApiUrl(path: string, query: Record<string, string|number|undefined> = {}): URL {
         let url = new URL(path, this.origin);
         for (let [key, value] of Object.entries(query)) {
+            if (value === undefined) {
+                continue
+            }
             url.searchParams.set(key, String(value));
         }
         return url
@@ -27,6 +30,19 @@ export default abstract class Api {
         }
 
         return await response.json();
+    }
+
+    protected async fetchText(
+        url: string|URL,
+        init: RequestInit = {}
+    ): Promise<string> {
+        let response = await fetch(url, init);
+
+        if (!response.ok) {
+            throw new Errors.HTTPError(response.status, response.statusText);
+        }
+
+        return await response.text();
     }
 
 

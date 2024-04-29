@@ -17,6 +17,7 @@ import type {
     TSimilarResponse
 } from "@Background/Modules/AugmentedSteam/_types";
 import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
+import {EMessage} from "@Background/Modules/AugmentedSteam/EMessage";
 
 export default class AugmentedSteamApi extends Api implements ApiHandlerInterface{
 
@@ -97,7 +98,6 @@ export default class AugmentedSteamApi extends Api implements ApiHandlerInterfac
             body: JSON.stringify({country, apps, subs, bundles, voucher, shops})
         });
     }
-
 
     private async getProfileData(steamId: string): Promise<TProfileData> {
         const ttl = 24*60*60;

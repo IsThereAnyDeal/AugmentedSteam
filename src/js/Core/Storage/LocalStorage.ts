@@ -1,13 +1,26 @@
-import browser from "webextension-polyfill";
-import {type Storage as ns} from "webextension-polyfill";
-import Storage from "./Storage";
+import browser, {type Storage as ns} from "webextension-polyfill";
+import Storage, {type StorageSchema} from "./Storage";
+import type {TLogin} from "@Background/Modules/Community/_types";
 
-export class LocalStorage extends Storage<ns.LocalStorageArea>{
+interface CacheEntry<V = unknown> {
+    data: V,
+    expiry: number
+}
+
+interface LocalStorageSchema extends StorageSchema {
+    login: TLogin,
+    storeCountry: string,
+    currency: CacheEntry<string>
+}
+
+class LocalStorage<Schema extends StorageSchema> extends Storage<ns.LocalStorageArea, Schema>{
 
     public constructor() {
         super(browser.storage.local);
     }
 }
+
+export default new LocalStorage<LocalStorageSchema>();
 
 /* FIXME
 const DEFAULTS = {
@@ -31,5 +44,4 @@ const DEFAULTS = {
 };
 
 const PERSISTENT: (keyof typeof DEFAULTS)[] = [];
-
 */

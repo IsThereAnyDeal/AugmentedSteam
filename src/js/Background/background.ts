@@ -13,17 +13,12 @@ import browser, {type Runtime} from "webextension-polyfill";
 import type {TGetStoreListMessage} from "./Modules/IsThereAnyDeal/_types";
 import type {TFetchBadgeInfoMessage} from "./Modules/Community/_types";
 import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
+import InventoryApi from "@Background/Modules/Inventory/InventoryApi";
 
 type MessageSender = Runtime.MessageSender;
 
 // Functions that are called when an object store (or one of its entries) has expired
 IndexedDB.objStoreFetchFns = new Map([
-    ["coupons", SteamCommunityApi.coupons],
-    ["giftsAndPasses", SteamCommunityApi.giftsAndPasses],
-    ["items", SteamCommunityApi.items],
-    ["workshopFileSizes", SteamCommunityApi.fetchWorkshopFileSize],
-    ["reviews", SteamCommunityApi.fetchReviews],
-
     ["purchases", SteamStoreApi.purchaseDate],
     ["dynamicStore", SteamStoreApi.dynamicStore],
     ["packages", SteamStoreApi.fetchPackage],
@@ -66,19 +61,6 @@ const actionCallbacks = new Map([
     ["clearpurchases", SteamStoreApi.clearPurchases],
     ["dynamicstore.status", SteamStoreApi.dsStatus],
     ["dynamicstore.randomapp", SteamStoreApi.dynamicStoreRandomApp],
-
-    ["login", SteamCommunityApi.login],
-    ["logout", SteamCommunityApi.logout],
-    ["storecountry", SteamCommunityApi.storeCountry],
-    ["cards", SteamCommunityApi.fetchBadgeInfo],
-    ["coupon", SteamCommunityApi.getCoupon],
-    ["hasgiftsandpasses", SteamCommunityApi.hasGiftsAndPasses],
-    ["hascoupon", SteamCommunityApi.hasCoupon],
-    ["hasitem", SteamCommunityApi.hasItem],
-    ["profile", SteamCommunityApi.getProfile],
-    ["clearownprofile", SteamCommunityApi.clearOwn],
-    ["workshopfilesize", SteamCommunityApi.getWorkshopFileSize],
-    ["reviews", SteamCommunityApi.getReviews],
 
     ["itad.authorize", ITADApi.authorize],
     ["itad.disconnect", ITADApi.disconnect],
@@ -135,7 +117,9 @@ browser.runtime.onMessage.addListener((
              */
 
             let handlers: ApiHandlerInterface[] = [
-                new AugmentedSteamApi()
+                new AugmentedSteamApi(),
+                new SteamCommunityApi(),
+                new InventoryApi()
             ];
 
             for (let handler of handlers) {

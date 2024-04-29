@@ -23,15 +23,40 @@ export interface TBadgeData {
     rgCards: TCardInfo[]
 }
 
-export interface TFetchBadgeInfoMessage {
-    action: "community.badgeinfo",
-    params: {
-        steamId: string,
-        appid: number
-    }
+export interface TLogin {
+    steamId: string,
+    profilePath: string
+}
+
+export interface TCoupon {
+    image_url: string,
+    title: string,
+    discount: number,
+    id: string,
+    discount_note?: string,
+    discount_note_id?: number,
+    discount_doesnt_stack?: true
+    valid_id?: number,
+    valid?: string,
+    appids: number[]
+}
+
+export interface TReview {
+    default: number,
+    rating: number,
+    helpful: number,
+    funny: number,
+    length: number,
+    visibility: number,
+    playtime: number,
+    awards: number,
+    node: string,
+    id: string
 }
 
 export interface TFetchBadgeInfoResponse {
     eresult: number,
     badgedata?: TBadgeData
 }
+
+export type TFetchReviewsResponse = TReview[];

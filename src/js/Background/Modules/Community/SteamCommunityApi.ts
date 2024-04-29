@@ -1,182 +1,41 @@
-import {Errors, GameId, HTMLParser, LocalStorage} from "../../../modulesCore";
-import {Api} from "../Api";
-import CacheStorage from "../CacheStorage";
-import {IndexedDB} from "../IndexedDB";
-import type {TFetchBadgeInfoResponse} from "./_types";
+import {Errors, HTMLParser, LocalStorage, TimeUtils} from "../../../modulesCore";
+import Api from "../Api";
+import IndexedDB from "../IndexedDB";
+import type {TFetchBadgeInfoResponse, TFetchReviewsResponse, TReview} from "./_types";
+import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
+import {EMessage} from "./EMessage";
+import DOMPurify from "dompurify";
 
-class SteamCommunityApi extends Api {
+class SteamCommunityApi extends Api implements ApiHandlerInterface {
 
-    /*
-     * static origin = "https://steamcommunity.com/";
-     * static params = { 'credentials': 'include', };
-     */
-
-    static fetchBadgeInfo(steamid: string, appid: number): Promise<TFetchBadgeInfoResponse> {
-        return SteamCommunityApi.getEndpoint(`/profiles/${steamid}/ajaxgetbadgeinfo/${appid}`);
+    constructor() {
+        super("https://steamcommunity.com/")
     }
 
-    static async getInventory(contextId) {
-        const login = LocalStorage.get("login");
-        if (!login.steamId) {
-            console.warn("Must be signed in to access Inventory");
-            return null;
+    private async fetchPage(url: URL) {
+        const response = await fetch(url, {credentials: "include"});
+
+        if (!response.ok) {
+            throw new Errors.HTTPError(response.status, response.statusText);
         }
 
-        const params = {"l": "english", "count": 2000};
-        let data = null;
-        let result, lastAssetid;
-
-        do {
-            const thisParams = Object.assign(params, lastAssetid ? {"start_assetid": lastAssetid} : null);
-            result = await SteamCommunityApi.getEndpoint(`/inventory/${login.steamId}/753/${contextId}`, thisParams, res => {
-                if (res.status === 403) {
-                    throw new Errors.LoginError("community");
-                }
-            });
-            if (result && result.success) {
-                if (!data) { data = {"assets": [], "descriptions": []}; }
-                if (result.assets) { data.assets = data.assets.concat(result.assets); }
-                if (result.descriptions) { data.descriptions = data.descriptions.concat(result.descriptions); }
-                lastAssetid = result.last_assetid;
-            }
-        } while (result.more_items);
-
-        if (!data) {
-            throw new Error(`Could not retrieve Inventory 753/${contextId}`);
-        }
-        return data;
-    }
-
-    /*
-     * Inventory functions, must be signed in to function correctly
-     */
-    static async coupons() { // context#3
-        const data = await SteamCommunityApi.getInventory(3);
-        if (!data) { return null; }
-
-        const coupons = new Map();
-
-        for (const description of data.descriptions) {
-            if (!description.type || description.type !== "Coupon") { continue; }
-            if (!description.actions) { continue; }
-
-            const coupon = {
-                "image_url": description.icon_url,
-                "title": description.name,
-                "discount": description.name.match(/([1-9][0-9])%/)[1],
-                "id": `${description.classid}_${description.instanceid}`
-            };
-            description.descriptions.forEach((desc, i) => {
-                const value = desc.value;
-                if (value.startsWith("Can't be applied with other discounts.")) {
-                    Object.assign(coupon, {
-                        "discount_note": value,
-                        "discount_note_id": i,
-                        "discount_doesnt_stack": true,
-                    });
-                } else if (value.startsWith("(Valid")) {
-                    Object.assign(coupon, {
-                        "valid_id": i,
-                        "valid": value,
-                    });
-                }
-            });
-
-            for (const action of description.actions) {
-                const match = action.link.match(/[1-9][0-9]*(?:,[1-9][0-9]*)*/);
-                if (!match) {
-                    console.warn("Couldn't find packageid(s) for link %s", action.link);
-                    continue;
-                }
-
-                for (let packageid of match[0].split(",")) {
-                    packageid = Number(packageid);
-                    if (!coupons.has(packageid) || coupons.get(packageid).discount < coupon.discount) {
-                        coupons.set(packageid, coupon);
-                    }
-                }
-            }
+        if (new URL(response.url).pathname === "/login/home/") {
+            throw new Errors.LoginError("community");
         }
 
-        const packages = await IndexedDB.get("packages", Array.from(coupons.keys()));
-
-        for (const [subid, coupon] of coupons.entries()) {
-            const details = packages[subid];
-            if (details) {
-                coupon.appids = details;
-            } else {
-                coupon.appids = [];
-            }
-        }
-
-        return IndexedDB.put("coupons", coupons);
+        return await response.text();
+    }
+    private fetchBadgeInfo(steamid: string, appid: number): Promise<TFetchBadgeInfoResponse> {
+        const url = this.getApiUrl(`/profiles/${steamid}/ajaxgetbadgeinfo/${appid}`);
+        return this.fetchJson(url, {credentials: "include"});
     }
 
-    static getCoupon(appid) { return IndexedDB.getFromIndex("coupons", "appid", appid); }
-    static hasCoupon(appid) { return IndexedDB.indexContainsKey("coupons", "appid", appid); }
-
-    static async giftsAndPasses() { // context#1, gifts and guest passes
-        const data = await SteamCommunityApi.getInventory(1);
-        if (!data) { return null; }
-
-        const gifts = [];
-        const passes = [];
-
-        let isPackage = false;
-
-        for (const description of data.descriptions) {
-
-            const desc = description.descriptions?.find(d => d.type === "html");
-            if (desc) {
-                const appids = GameId.getAppids(desc.value);
-                if (appids.length > 0) {
-
-                    // Gift package with multiple apps
-                    isPackage = true;
-
-                    for (const appid of appids) {
-                        if (description.type === "Gift") {
-                            gifts.push(appid);
-                        } else {
-                            passes.push(appid);
-                        }
-                    }
-                }
-            }
-
-            // Single app
-            if (!isPackage && description.actions) {
-                const appid = GameId.getAppid(description.actions[0].link);
-                if (appid) {
-                    if (description.type === "Gift") {
-                        gifts.push(appid);
-                    } else {
-                        passes.push(appid);
-                    }
-                }
-            }
-        }
-
-        return IndexedDB.put("giftsAndPasses", {gifts, passes});
-    }
-
-    static hasGiftsAndPasses(appid) {
-        return IndexedDB.getFromIndex("giftsAndPasses", "appid", appid, {"all": true, "asKey": true});
-    }
-
-    // Only used for market highlighting
-    static async items() { // context#6, community items
-        const data = await SteamCommunityApi.getInventory(6);
-        if (!data) { return null; }
-
-        return IndexedDB.put("items", data.descriptions.map(item => item.market_hash_name));
-    }
-
-    static hasItem(hashes) { return IndexedDB.contains("items", hashes); }
-
-    static async fetchWorkshopFileSize({"key": id}) {
+    private async fetchWorkshopFileSize(id: string): Promise<number> {
         const parser = new DOMParser();
-        const doc = parser.parseFromString(await SteamCommunityApi.getPage("/sharedfiles/filedetails/", {id}), "text/html");
+
+        const url = this.getApiUrl("/sharedfiles/filedetails/", {id});
+        const html = await this.fetchText(url, {credentials: "include"});
+        const doc = parser.parseFromString(html, "text/html");
 
         const details = doc.querySelector(".detailsStatRight")?.textContent;
         if (!details || !details.includes("MB")) {
@@ -188,47 +47,64 @@ class SteamCommunityApi extends Api {
             throw new Error(`Invalid file size for item id "${id}"`);
         }
 
-        return IndexedDB.put("workshopFileSizes", new Map([[id, size * 1000]]));
+        return size*1000;
     }
 
-    static getWorkshopFileSize(id, preventFetch) {
-        return IndexedDB.get("workshopFileSizes", id, {preventFetch});
+    private async getWorkshopFileSize(id: string, preventFetch: boolean) {
+        let entry = await IndexedDB.get("workshopFileSizes", id)
+
+        if (!entry || TimeUtils.isInPast(entry.expiry)) {
+            if (preventFetch) {
+                await IndexedDB.delete("workshopFileSizes", id);
+                return null;
+            } else {
+                entry = {
+                    size: await this.fetchWorkshopFileSize(id),
+                    expiry: TimeUtils.now() + 5 * 86400
+                };
+                await IndexedDB.put("workshopFileSizes", entry, id);
+            }
+        }
+
+        return entry.size;
     }
 
-    static async fetchReviews({"key": steamId, "params": {pages}}) {
+    private async fetchReviews(steamId: string, pages: number): Promise<TFetchReviewsResponse> {
         const parser = new DOMParser();
-        const reviews = [];
+        const reviews: TReview[] = [];
         let defaultOrder = 0;
 
         for (let p = 1; p <= pages; p++) {
-            const doc = parser.parseFromString(await SteamCommunityApi.getPage(`${steamId}/recommended`, {p}), "text/html");
+            const url = this.getApiUrl(`${steamId}/recommended`, {p});
+            const html = await this.fetchPage(url);
+            const doc = parser.parseFromString(html, "text/html");
 
             for (const node of doc.querySelectorAll(".review_box")) {
                 defaultOrder++;
 
                 const rating = node.querySelector("[src*=thumbsUp]") ? 1 : 0;
 
-                const [helpful = 0, funny = 0] = Array.from(node.querySelector(".header").childNodes)
-                    .filter(node => node.nodeType === 3)
+                const [helpful = 0, funny = 0] = Array.from(node.querySelector(".header")?.childNodes ?? [])
+                    .filter(node => node.nodeType === Node.TEXT_NODE)
                     .map(node => {
-                        const text = node.textContent.match(/(?:\d+,)?\d+/);
+                        const text = node.textContent?.match(/(?:\d+,)?\d+/);
                         return text ? Number(text[0].replace(/,/g, "")) : 0;
                     });
 
-                const length = node.querySelector(".content").textContent.trim().length;
+                const length = node.querySelector(".content")!.textContent!.trim().length;
 
-                // There're only two kinds of visibility, Public: 0; Friends-only: 1
-                const visibilityNode = node.querySelector("input[id^=ReviewVisibility]");
+                // There are only two kinds of visibility, Public: 0; Friends-only: 1
+                const visibilityNode = node.querySelector<HTMLInputElement>("input[id^=ReviewVisibility]");
                 const visibility = visibilityNode ? Number(visibilityNode.value) : 0;
 
                 const reviewId = visibilityNode
                     // Only exists when the requested profile is yours
                     ? visibilityNode.id.replace("ReviewVisibility", "")
                     // Otherwise you have buttons to vote for and award the review
-                    : node.querySelector(".control_block > a").id.replace("RecommendationVoteUpBtn", "");
+                    : node.querySelector(".control_block > a")!.id.replace("RecommendationVoteUpBtn", "");
 
                 // Total playtime comes first
-                const playtimeText = node.querySelector(".hours").textContent.match(/(?:\d+,)?\d+\.\d+/);
+                const playtimeText = node.querySelector(".hours")!.textContent!.match(/(?:\d+,)?\d+\.\d+/);
                 const playtime = playtimeText ? parseFloat(playtimeText[0].replace(/,/g, "")) : 0.0;
 
                 // Count total awards received
@@ -236,11 +112,11 @@ class SteamCommunityApi extends Api {
                     .reduce((acc, node) => {
                         const count = node.classList.contains("more_btn")
                             ? 0
-                            : Number(node.querySelector(".review_award_count").textContent.trim());
+                            : Number(node.querySelector(".review_award_count")!.textContent!.trim());
                         return acc + count;
                     }, 0);
 
-                const devResponseNode = node.nextElementSibling.classList.contains("review_developer_response_container")
+                const devResponseNode = node.nextElementSibling?.classList.contains("review_developer_response_container")
                     ? DOMPurify.sanitize(node.nextElementSibling.outerHTML)
                     : "";
 
@@ -259,33 +135,45 @@ class SteamCommunityApi extends Api {
             }
         }
 
-        return IndexedDB.put("reviews", {[steamId]: reviews});
+        return reviews;
     }
 
-    static getReviews(steamId, pages) {
-        return IndexedDB.get("reviews", steamId, {"params": {pages}});
+    private async getReviews(steamId: string, pages: number): Promise<TFetchReviewsResponse> {
+        let entry = await IndexedDB.get("reviews", steamId)
+
+        if (!entry || TimeUtils.isInPast(entry.expiry)) {
+            entry = {
+                data: await this.fetchReviews(steamId, pages),
+                expiry: TimeUtils.now() + 60*60
+            };
+            await IndexedDB.put("reviews", entry, steamId);
+        }
+
+        return entry.data;
     }
 
     /*
      * Invoked when the content script thinks the user is logged in
      * If we don't know the user's steamId, fetch their community profile
      */
-    static async login(profilePath) {
-        const self = SteamCommunityApi;
+    private async login(profilePath: string) {
 
         if (!profilePath) {
-            self.logout();
+            await this.logout();
             throw new Error("Login endpoint needs a valid profile path");
         }
         if (!profilePath.startsWith("/id/") && !profilePath.startsWith("/profiles/")) {
-            self.logout();
+            await this.logout();
             throw new Error(`Could not interpret ${profilePath} as a valid profile path`);
         }
 
-        const login = LocalStorage.get("login");
-        if (login.profilePath === profilePath) { return login; }
+        const login = await LocalStorage.get("login");
+        if (login?.profilePath === profilePath) {
+            return login;
+        }
 
-        const html = await self.getPage(profilePath);
+        const url = this.getApiUrl(profilePath);
+        const html = await this.fetchText(url);
         const profileData = HTMLParser.getVariableFromText(html, "g_rgProfileData", "object");
         const steamId = profileData.steamid;
 
@@ -293,49 +181,76 @@ class SteamCommunityApi extends Api {
             throw new Error("Failed to retrieve steamID from profile");
         }
 
-        self.logout(true);
+        await this.logout(true);
 
         const value = {steamId, profilePath};
-        LocalStorage.set("login", value);
+        await LocalStorage.set("login", value);
 
         return value;
     }
 
-    static logout(newLogout = LocalStorage.has("login")) {
-        if (newLogout) {
-            LocalStorage.remove("login");
-            LocalStorage.remove("storeCountry");
-            CacheStorage.remove("currency");
+    private async logout(force: boolean|undefined=undefined) {
+        if (force === undefined) {
+            force = (await LocalStorage.get("login") !== undefined)
+        }
+        if (force) {
+            await Promise.all([
+                LocalStorage.remove("login"),
+                LocalStorage.remove("storeCountry"),
+                LocalStorage.remove("currency")
+            ]);
         }
     }
 
     // TODO This and (at least) the login calls don't seem appropriate in this class
-    static storeCountry(newCountry) {
+    private async storeCountry(newCountry: string|undefined=undefined): Promise<string|null> {
         if (newCountry) {
-            LocalStorage.set("storeCountry", newCountry);
+            await LocalStorage.set("storeCountry", newCountry);
             return null;
         } else {
-            return LocalStorage.get("storeCountry");
+            return (await LocalStorage.get("storeCountry")) ?? null;
         }
     }
 
-    static getProfile(steamId) {
+    private getProfile(steamId) {
         return IndexedDB.get("profiles", steamId, {"params": {"profile": steamId}});
     }
 
-    static clearOwn(steamId) {
+    private clearOwn(steamId) {
         return IndexedDB.delete("profiles", steamId);
     }
 
-    static getPage(endpoint, query) {
-        return super.getPage(endpoint, query, res => {
-            if (new URL(res.url).pathname === "/login/home/") {
-                throw new Errors.LoginError("community");
-            }
-        });
+    async handle(message: any): Promise<any> {
+
+        switch(message.action) {
+
+            case EMessage.BadgeInfo:
+                return await this.fetchBadgeInfo(message.params.steamId, message.params.appid);
+
+            case EMessage.WorkshopFileSize:
+                return await this.getWorkshopFileSize(message.params.id, message.params.preventFetch);
+
+            case EMessage.Reviews:
+                return await this.getReviews(message.params.steamId, message.params.pages);
+
+            case EMessage.Login:
+                return await this.login(message.params.profilePath);
+
+            case EMessage.Logout:
+                return await this.login(message.params.force ?? undefined);
+
+            case EMessage.StoreCountry:
+                return await this.storeCountry(message.params.country ?? undefined);
+
+            case EMessage.Profile:
+                // FIXME
+                throw new Error();
+
+            case EMessage.ClearOwnProfile:
+                // FIXME
+                throw new Error();
+        }
+
+        return undefined;
     }
 }
-SteamCommunityApi.origin = "https://steamcommunity.com/";
-SteamCommunityApi.params = {"credentials": "include"};
-
-export {SteamCommunityApi};

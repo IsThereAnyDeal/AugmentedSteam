@@ -1,19 +1,28 @@
 import {type Storage as ns} from "webextension-polyfill";
 
-export interface StorageSchema {
-    [K: string]: any
-}
-export type SchemaKey<Schema extends StorageSchema> = keyof Schema & string;
-export type SchemaValue<Schema extends StorageSchema, Key extends SchemaKey<Schema>> = Schema[Key];
+/*
+ * Type declarations stolen from idb, because I was too dumb to figure them out on my own
+ * */
+declare type KeyToKeyNoIndex<T> = {
+    [K in keyof T]: string extends K ? never : number extends K ? never : K;
+};
+export declare type ValuesOf<T> = T extends {
+    [K in keyof T]: infer U;
+} ? U : never;
+declare type KnownKeys<T> = ValuesOf<KeyToKeyNoIndex<T>>;
+
+export declare type StorageSchema = Record<string, any>;
+export declare type SchemaKeys<Schema extends StorageSchema | unknown> = Schema extends StorageSchema ? (KnownKeys<Schema> & string) : string;
+export declare type SchemaValue<Schema extends StorageSchema | unknown, Key extends SchemaKeys<Schema>> = Schema extends StorageSchema ? Schema[Key] : any;
 
 export interface StorageInterface<Schema extends StorageSchema> {
-    get<K extends SchemaKey<Schema>>(key: K): Promise<Schema[K]|undefined>;
+    get<K extends SchemaKeys<Schema>>(key: K): Promise<SchemaValue<Schema, K>|undefined>;
     getObject<T extends Partial<Schema>>(object: T): Promise<T>;
 
-    set<K extends SchemaKey<Schema>>(key: K, value: SchemaValue<Schema, K>): Promise<void>;
+    set<K extends SchemaKeys<Schema>>(key: K, value: SchemaValue<Schema, K>): Promise<void>;
     setObject(object: Partial<Schema>): Promise<void>;
 
-    remove<K extends SchemaKey<Schema>>(...keys: K[]): Promise<void>;
+    remove<K extends SchemaKeys<Schema>>(...keys: K[]): Promise<void>;
 }
 
 export default class Storage<
@@ -31,7 +40,7 @@ export default class Storage<
         return this.storageArea.onChanged;
     }
 
-    async get<K extends SchemaKey<Schema>, V = Schema[K]>(key: K): Promise<V | undefined> {
+    async get<K extends SchemaKeys<Schema>>(key: K): Promise<SchemaValue<Schema, K> | undefined> {
         let response = await this.storageArea.get(key);
         return response[key] ?? undefined;
     }
@@ -40,7 +49,7 @@ export default class Storage<
         return this.storageArea.get(object) as Promise<T>;
     }
 
-    set<K extends SchemaKey<Schema>>(key: K, value: SchemaValue<Schema, K>): Promise<void> {
+    set<K extends SchemaKeys<Schema>>(key: K, value: SchemaValue<Schema, K>): Promise<void> {
         return this.storageArea.set({[key]: value});
     }
 
@@ -48,7 +57,7 @@ export default class Storage<
         return this.storageArea.set(object);
     }
 
-    remove<K extends SchemaKey<Schema>>(...keys: K[]): Promise<void> {
+    remove<K extends SchemaKeys<Schema>>(...keys: K[]): Promise<void> {
         return this.storageArea.remove(keys);
     }
 }

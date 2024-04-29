@@ -1,4 +1,5 @@
-enum EMessage {
+
+export enum EMessage {
     Prices = "prices",
     DlcInfo = "dlcinfo",
     StorePageData = "storepagedata",

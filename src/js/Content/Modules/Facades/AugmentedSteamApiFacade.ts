@@ -12,6 +12,7 @@ import type {
     TIsEarlyAccessResponse,
     TSimilarResponse
 } from "@Background/Modules/AugmentedSteam/_types";
+import {EMessage} from "@Background/Modules/AugmentedSteam/EMessage";
 
 export default class AugmentedSteamApiFacade {
 

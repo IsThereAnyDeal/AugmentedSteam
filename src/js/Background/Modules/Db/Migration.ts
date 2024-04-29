@@ -46,6 +46,8 @@ async function upgrade(
     }
 
     if (oldVersion < 5) {
+        const v4Db = db as unknown as IDBPDatabase;
+
         db.deleteObjectStore("storePageData");
         db.createObjectStore("storePageData")
             .createIndex("idx_expiry", "expiry");
@@ -54,9 +56,28 @@ async function upgrade(
         db.createObjectStore("rates")
             .createIndex("idx_expiry", "expiry");
 
+        db.deleteObjectStore("coupons");
+        db.createObjectStore("coupons")
+            .createIndex("idx_appid", "appids", {unique: false, multiEntry: true});
+
+        db.createObjectStore("giftsAndPasses")
+            .createIndex("idx_appid", "", {unique: false, multiEntry: true});
+
+        // db.deleteObjectStore("items");
+        // db.createObjectStore("items");
+
+        db.deleteObjectStore("workshopFileSizes");
+        db.createObjectStore("workshopFileSizes")
+            .createIndex("idx_expiry", "expiry");
+
+        db.deleteObjectStore("reviews");
+        db.createObjectStore("reviews")
+            .createIndex("idx_expiry", "expiry");
 
 
-        const v4Db = db as unknown as IDBPDatabase;
+
+
+
         const v4Tx = tx as unknown as IDBPTransaction;
 
         let newData: Array<[StoreNames<ASDB>, {key: string|null, expiry: number}]> = [];
