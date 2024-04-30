@@ -22,18 +22,6 @@ IndexedDB.objStoreFetchFns = new Map([
     ["purchases", SteamStoreApi.purchaseDate],
     ["dynamicStore", SteamStoreApi.dynamicStore],
     ["packages", SteamStoreApi.fetchPackage],
-
-    ["collection", async () => {
-        const data = await ITADApi.fetchCollection();
-        await IndexedDB.put("collection", data);
-        return data;
-    }],
-    ["waitlist", async () => {
-        const data = await ITADApi.fetchWaitlist();
-        await IndexedDB.put("waitlist", data);
-        return data;
-    }],
-    ["storeList", ITADApi.fetchStoreList],
 ]);
 
 const actionCallbacks = new Map([
@@ -61,18 +49,6 @@ const actionCallbacks = new Map([
     ["clearpurchases", SteamStoreApi.clearPurchases],
     ["dynamicstore.status", SteamStoreApi.dsStatus],
     ["dynamicstore.randomapp", SteamStoreApi.dynamicStoreRandomApp],
-
-    ["itad.authorize", ITADApi.authorize],
-    ["itad.disconnect", ITADApi.disconnect],
-    ["itad.isconnected", ITADApi.isConnected],
-    ["itad.import", ITADApi.import],
-    ["itad.sync", ITADApi.sync],
-    ["itad.lastimport", ITADApi.lastImport],
-    ["itad.inwaitlist", ITADApi.inWaitlist],
-    ["itad.addtowaitlist", ITADApi.addToWaitlist],
-    ["itad.removefromwaitlist", ITADApi.removeFromWaitlist],
-    ["itad.incollection", ITADApi.inCollection],
-    ["itad.getfromcollection", ITADApi.getFromCollection],
 
     ["error.test", () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
@@ -131,10 +107,6 @@ browser.runtime.onMessage.addListener((
 
 
             switch (message.action) { // TODO rename to "api"?
-
-                case "itad.storelist":
-                    response = await ITADApi.getStoreList();
-                    break;
 
                 case "community.badgeinfo":
                     const {steamId, appid} = (<TFetchBadgeInfoMessage>message).params;

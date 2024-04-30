@@ -42,6 +42,7 @@
         "paths": {
             "@Assets/*": ["./src/img/*"],
             "@Core/*": ["./src/js/Core/*"],
+            "@Options/*": ["./src/js/Options/*"],
             "@Content/*": ["./src/js/Content/*"],
             "@Background/*": ["./src/js/Background/*"],
             "@Strings/*": ["./src/localization/compiled/*"],

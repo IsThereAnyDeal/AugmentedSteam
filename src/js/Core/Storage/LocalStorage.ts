@@ -10,7 +10,15 @@ interface CacheEntry<V = unknown> {
 interface LocalStorageSchema extends StorageSchema {
     login: TLogin,
     storeCountry: string,
-    currency: CacheEntry<string>
+    currency: CacheEntry<string>,
+    access_token: {
+        token: string,
+        expiry: number
+    },
+    lastItadImport: {
+        from: null|number,
+        to: null|number
+    }
 }
 
 class LocalStorage<Schema extends StorageSchema> extends Storage<ns.LocalStorageArea, Schema>{

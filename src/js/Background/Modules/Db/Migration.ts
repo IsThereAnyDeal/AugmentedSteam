@@ -74,9 +74,20 @@ async function upgrade(
         db.createObjectStore("reviews")
             .createIndex("idx_expiry", "expiry");
 
+        db.deleteObjectStore("storeList");
+        db.createObjectStore("storeList", {keyPath: "id"});
 
+        // db.deleteObjectStore("collection");
+        // db.createObjectStore("collection");
 
+        // db.deleteObjectStore("waitlist");
+        // db.createObjectStore("waitlist");
 
+        // db.deleteObjectStore("itadImport");
+        // db.createObjectStore("itadImport");
+
+        db.deleteObjectStore("dynamicStore");
+        db.createObjectStore("dynamicStore");
 
         const v4Tx = tx as unknown as IDBPTransaction;
 

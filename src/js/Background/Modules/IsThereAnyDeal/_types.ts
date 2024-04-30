@@ -1,14 +1,16 @@
 
-interface TShopInfo {
+export interface TShopInfo {
     id: number,
-    title: string,
-    deals: number,
-    games: number,
-    update: string
-}
-
-export interface TGetStoreListMessage {
-    action: "itad.storelist"
+    title: string
 }
 
 export type TGetStoreListResponse = TShopInfo[]
+
+export type TLastImportResponse = {
+    from: number|null,
+    to: number|null
+};
+
+export type TInWaitlistResponse = Record<string, boolean>;
+
+export type TInCollectionResponse = Record<string, boolean>;

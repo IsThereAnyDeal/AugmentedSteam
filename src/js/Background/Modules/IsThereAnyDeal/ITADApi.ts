@@ -1,294 +1,208 @@
 import {Errors, LocalStorage, SyncedStorage, TimeUtils} from "../../../modulesCore";
-import {Api} from "../Api";
+import Api from "../Api";
 import Config from "../../../config";
-import {IndexedDB} from "../IndexedDB";
-import type {TGetStoreListResponse} from "./_types";
-import {EStoreName} from "../../EStoreName";
+import IndexedDB from "../IndexedDB";
+import type {
+    TGetStoreListResponse,
+    TInCollectionResponse,
+    TInWaitlistResponse,
+    TLastImportResponse,
+    TShopInfo
+} from "./_types";
+import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
+import Authorization from "./Authorization";
+import Settings from "@Options/Data/Settings";
+import AccessToken from "@Background/Modules/IsThereAnyDeal/AccessToken";
+import {EMessage} from "@Background/Modules/IsThereAnyDeal/EMessage";
 
-const MAX_ITEMS_PER_REQUEST = 1000;
+const MaxItemsPerRequest = 1000;
+const RequiredScopes = [
+    "wait_read",
+    "wait_write",
+    "coll_read",
+    "coll_write",
+];
 
-class ITADApi extends Api {
+export default class ITADApi extends Api implements ApiHandlerInterface {
 
-    static async getStoreList(): Promise<TGetStoreListResponse> {
-        return Object.values(await IndexedDB.getAll(EStoreName.StoreList));
+    constructor() {
+        super(Config.ITADApiServerHost);
     }
 
-    static async fetchStoreList() {
-        const storeList = (await ITADApi.getEndpoint("service/shops/v1"));
+    private async fetchStoreList(): Promise<TShopInfo[]> {
+        const url = this.getApiUrl("service/shops/v1");
+        const storeList = (await this.fetchJson(url));
+
         if (!Array.isArray(storeList)) {
             throw new Error("Can't read store list from response");
         }
-        await IndexedDB.put("storeList", storeList, {"multiple": true});
+
+        return storeList.map(store => {return {
+            id: store.id,
+            title: store.title
+        }});
     }
 
-    static async authorize() {
-        const redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
-
-        function generateString(length) {
-            const source = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.~";
-            let arr = new Uint8Array(length);
-            window.crypto.getRandomValues(arr)
-            return arr.reduce((result, value) => result + source.charAt(Math.floor(value % source.length)), "");
-        }
-
-        async function sha256(str) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(str);
-
-            let sha256Buffer = await window.crypto.subtle.digest("SHA-256", data);
-            return String.fromCharCode(...new Uint8Array(sha256Buffer))
-        }
-
-        function base64url(str) {
-            return btoa(str)
-                .replace(/\+/g, '-')
-                .replace(/\//g, '_')
-                .replace(/=+$/, '');
-        }
-
-        const verifier = generateString(64);
-        const state = generateString(30);
-
-        const authUrl = new URL(`${Config.ITADServer}/oauth/authorize/`);
-        authUrl.searchParams.set("response_type", "code");
-        authUrl.searchParams.set("client_id", Config.ITADClientId);
-        authUrl.searchParams.set("redirect_uri", redirectURI);
-        authUrl.searchParams.set("scope", ITADApi.requiredScopes.join(" "));
-        authUrl.searchParams.set("state", state);
-        authUrl.searchParams.set("code_challenge", base64url(await sha256(verifier)));
-        authUrl.searchParams.set("code_challenge_method", "S256");
-
-        const tab = await browser.tabs.create({"url": authUrl.toString()});
-
-        const url = await new Promise((resolve, reject) => {
-            function webRequestListener({url}) {
-                resolve(url);
-
-                browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
-                // eslint-disable-next-line no-use-before-define -- Circular dependency
-                browser.tabs.onRemoved.removeListener(tabsListener);
-
-                browser.tabs.remove(tab.id);
-                return {"cancel": true};
-            }
-
-            function tabsListener(tabId) {
-                if (tabId === tab.id) {
-                    reject(new Error("Authorization tab closed"));
-
-                    browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
-                    browser.tabs.onRemoved.removeListener(tabsListener);
-                }
-            }
-
-            browser.webRequest.onBeforeRequest.addListener(
-                webRequestListener,
-                {
-                    "urls": [
-                        redirectURI, // For Chrome, seems to not support match patterns (a problem with the Polyfill?)
-                        `${redirectURI}/?*` // For Firefox
-                    ],
-                    "tabId": tab.id
-                },
-                ["blocking"]
-            );
-            browser.tabs.onRemoved.addListener(tabsListener);
-        });
-
-        const responseUrl = new URL(url);
-
-        if (responseUrl.searchParams.get("state") !== state) {
-            throw new Error("Failed to verify state parameter from URL fragment");
-        }
-
-        const tokenUrl = new URL("oauth/token/", Config.ITADServer);
-        const params = new URLSearchParams();
-        params.set("grant_type", "authorization_code");
-        params.set("client_id", Config.ITADClientId);
-        params.set("redirect_uri", redirectURI);
-        params.set("code", responseUrl.searchParams.get("code"));
-        params.set("code_verifier", verifier);
-
-        let response = await fetch(tokenUrl, {
-            method: "POST",
-            body: params
-        });
-        const tokens = await response.json();
-
-        const accessToken = tokens.access_token;
-        const expiresIn = tokens.expires_in;
-
-        if (!accessToken || !expiresIn) {
-            throw new Error(`Authorization failed`);
-        }
-
-        LocalStorage.set("access_token", {
-            "token": accessToken,
-            "expiry": TimeUtils.now() + parseInt(expiresIn)
-        });
-    }
-
-    static disconnect() {
-        LocalStorage.remove("access_token");
-        LocalStorage.remove("lastItadImport");
-        return IndexedDB.clear(["collection", "waitlist", "itadImport"]);
-    }
-
-    static isConnected() {
-        const lsEntry = LocalStorage.get("access_token");
-        if (!lsEntry) { return false; }
-
-        if (lsEntry.expiry <= TimeUtils.now()) {
-            LocalStorage.remove("access_token");
-            return false;
-        }
-        ITADApi.accessToken = lsEntry.token;
-
-        return true;
-    }
-
-    static async _fetchSteamIds(gids: string[]) {
-        let response = await fetch(new URL("unstable/id-lookup/shop/61/v2", Config.ITADApiServerHost), {
+    private async fetchSteamIds(gids: string[]): Promise<Map<string, string>> {
+        const url = this.getApiUrl("unstable/id-lookup/shop/61/v2");
+        let obj = await this.fetchJson<Record<string, string[]|null>>(url, {
             method: "POST",
             headers: {"content-type": "application/json"},
             body: JSON.stringify(gids)
         });
 
-        if (response.ok) {
-            let obj = await response.json();
-            let map: Map<string, string> = new Map();
-            for (let [itad, steamIds] of <[string, string[]|null][]>Object.entries(obj)) {
-                if (steamIds !== null) {
-                    for (let steamId of steamIds) {
-                        map.set(steamId, itad);
-                    }
+        let map: Map<string, string> = new Map();
+        for (let [itad, steamIds] of Object.entries(obj)) {
+            if (steamIds !== null) {
+                for (let steamId of steamIds) {
+                    map.set(steamId, itad);
                 }
             }
-            return map;
         }
-
-        throw new Errors.HTTPError(response.status, response.statusText);
+        return map;
     }
 
-    static async _fetchGameIds(steamIds: string[]) {
-        let response = await fetch(new URL("unstable/id-lookup/itad/61/v2", Config.ITADApiServerHost), {
+    private async fetchGameIds(steamIds: string[]): Promise<Map<string, string>> {
+        const url = this.getApiUrl("unstable/id-lookup/itad/61/v2");
+        let obj = await this.fetchJson<Record<string, string|null>>(url, {
             method: "POST",
             headers: {"content-type": "application/json"},
             body: JSON.stringify(steamIds)
         });
 
-        if (response.ok) {
-            let obj = await response.json();
-            let map = new Map();
-            for (let [steam, itad] of <[string, string|null][]>Object.entries(obj)) {
-                if (itad !== null) {
-                    map.set(steam, itad);
-                }
+        let map = new Map();
+        for (let [steam, itad] of Object.entries(obj)) {
+            if (itad !== null) {
+                map.set(steam, itad);
             }
-            return map;
         }
-
-        throw new Errors.HTTPError(response.status, response.statusText);
+        return map;
     }
 
-    static async fetchCollection() {
-        if (!ITADApi.isConnected()) {
+    private async fetchCollection(): Promise<Map<string, string>|null> {
+        const accessToken = await AccessToken.load();
+        if (!accessToken) {
             return null;
         }
 
-        let response = await fetch(new URL("/collection/games/v1", Config.ITADApiServerHost), {
-            headers: {"authorization": "Bearer " + ITADApi.accessToken}
+        const url = this.getApiUrl("/collection/games/v1");
+        let collection = await this.fetchJson<{id: string}[]>(url, {
+            headers: {"authorization": "Bearer " + accessToken}
         });
-        if (!response.ok) {
-            throw new Errors.HTTPError(response.status, response.statusText);
-        }
-
-        let collection = await response.json();
         let gids = collection.map(entry => entry.id);
-        let map = await ITADApi._fetchSteamIds(gids);
-
-        this._recordLastImport();
-        return map;
+        return await this.fetchSteamIds(gids);
     }
 
-    static async fetchWaitlist() {
-        if (!ITADApi.isConnected()) {
+    private async fetchWaitlist() {
+        const accessToken = await AccessToken.load();
+        if (!accessToken) {
             return null;
         }
 
-        let response = await fetch(new URL("/waitlist/games/v1", Config.ITADApiServerHost), {
-            headers: {"authorization": "Bearer " + ITADApi.accessToken}
+        const url = this.getApiUrl("/waitlist/games/v1")
+        let waitlist = await this.fetchJson<{id: string}[]>(url, {
+            headers: {"authorization": "Bearer " + accessToken}
         });
 
-        if (!response.ok) {
-            throw new Errors.HTTPError(response.status, response.statusText);
+        let gids = waitlist.map(entry => entry.id);
+        return await this.fetchSteamIds(gids);
+    }
+
+    private async getStoreList(): Promise<TGetStoreListResponse> {
+        if (await IndexedDB.isStoreExpired("storeList")) {
+            let result = await this.fetchStoreList()
+            await IndexedDB.replaceAll("storeList", result.map(store => [store.id, store]));
+            await IndexedDB.setStoreExpiry("storeList", 7*86400);
+            return result;
+        } else {
+            return await IndexedDB.db.getAll("storeList");
+        }
+    }
+
+    private async isConnected(): Promise<boolean> {
+        return (await AccessToken.load()) !== null;
+    }
+
+    private async disconnect(): Promise<void> {
+        await AccessToken.clear();
+        await LocalStorage.remove("lastItadImport");
+        return IndexedDB.clear("collection", "waitlist", "itadImport");
+    }
+
+    private async getLastImport(): Promise<TLastImportResponse> {
+        return (await LocalStorage.get("lastItadImport")) ?? {from: null, to: null};
+    }
+
+    private async recordLastImport() {
+        let lastImport = await this.getLastImport();
+        lastImport.from = TimeUtils.now();
+        await LocalStorage.set("lastItadImport", lastImport);
+    }
+
+    private async removeFromWaitlist(appids: number[]) {
+        const accessToken = await AccessToken.load();
+        if (!accessToken) {
+            throw new Error("Missing access token");
         }
 
-        let waitlist = await response.json();
-        let gids = waitlist.map(entry => entry.id);
-        let map = await ITADApi._fetchSteamIds(gids);
-
-        this._recordLastImport();
-        return map;
-    }
-
-    static async _recordLastImport() {
-        const lastImport = LocalStorage.get("lastItadImport");
-        lastImport.from = TimeUtils.now();
-        LocalStorage.set("lastItadImport", lastImport);
-    }
-
-    static async removeFromWaitlist(appids_) {
-        if (!appids_ || (Array.isArray(appids_) && !appids_.length)) {
+        if (appids.length === 0) {
             throw new Error("Can't remove nothing from ITAD Waitlist!");
         }
-        const appids = Array.isArray(appids_) ? appids_ : [appids_];
-        const steamids = appids.map(appid => `app/${appid}`);
+        const steamIds = appids.map(appid => `app/${appid}`);
+
         let gids = await Promise.all(
-            steamids.map(id => IndexedDB.get("waitlist", id))
+            steamIds.map(id => IndexedDB.get("waitlist", id))
         );
         gids = gids.filter(value => value); // filter out undefined values
 
         if (gids.length > 0) {
-            let response = await fetch(new URL("waitlist/games/v1", Config.ITADApiServerHost), {
+            const url = this.getApiUrl("waitlist/games/v1");
+            let response = await fetch(url, {
                 method: "DELETE",
-                headers: {"authorization": "Bearer " + ITADApi.accessToken},
+                headers: {"authorization": "Bearer " + accessToken},
                 body: JSON.stringify(gids)
             });
 
-            if (response.ok) {
-                return IndexedDB.delete("waitlist", steamids)
+            if (!response.ok) {
+                throw new Errors.HTTPError(response.status, response.statusText);
             }
-        }
 
+            return IndexedDB.delete("waitlist", ...steamIds)
+        }
         // TODO error handling
     }
 
-    static async addToWaitlist(appids_) {
-        const appids = Array.isArray(appids_) ? appids_ : [appids_];
-        if (appids.length === 0) { return; }
+    private async addToWaitlist(appids: number[]) {
+        const accessToken = await AccessToken.load();
+        if (!accessToken) {
+            throw new Error("Missing access token");
+        }
 
-        const steamids = appids.map(appid => `app/${appid}`);
-        const map = await ITADApi._fetchGameIds(steamids);
+        const steamIds = appids.map(appid => `app/${appid}`);
+        const map = await this.fetchGameIds(steamIds);
 
         if (map.size !== 0) {
             let response = await fetch(new URL("waitlist/games/v1", Config.ITADApiServerHost), {
                 method: "PUT",
-                headers: {"authorization": "Bearer " + ITADApi.accessToken},
+                headers: {"authorization": "Bearer " + accessToken},
                 body: JSON.stringify(Array.from(map.values()))
             });
 
-            if (response.ok) {
-                return IndexedDB.put("waitlist", map)
+            if (!response.ok) {
+                throw new Errors.HTTPError(response.status, response.statusText);
             }
+
+            return IndexedDB.putMany("waitlist", [...map]);
         }
 
         // TODO error handling
     }
 
-    static async addToCollection(appids_, subids_) {
-        const appids = Array.isArray(appids_) ? appids_ : [appids_];
-        const subids = Array.isArray(subids_) ? subids_ : [subids_];
+    private async addToCollection(appids: number[], subids: number[]) {
+        const accessToken = await AccessToken.load();
+        if (!accessToken) {
+            throw new Error("Missing access token");
+        }
 
         const steamids = [
             ...appids.map(appid => `app/${appid}`),
@@ -299,122 +213,174 @@ class ITADApi extends Api {
             return;
         }
 
-        const map = await ITADApi._fetchGameIds(steamids);
+        const map = await this.fetchGameIds(steamids);
 
         if (map.size !== 0) {
             let response = await fetch(new URL("collection/games/v1", Config.ITADApiServerHost), {
                 method: "PUT",
-                headers: {"authorization": "Bearer " + ITADApi.accessToken},
+                headers: {"authorization": "Bearer " + accessToken},
                 body: JSON.stringify(Array.from(map.values()))
             });
 
             if (response.ok) {
-                return IndexedDB.put("collection", map)
+                return IndexedDB.putMany("collection", [...map])
             }
         }
 
         // TODO error handling
     }
 
-    static async import(force) {
+    private async exportToItad(force: boolean): Promise<void> {
 
         if (force) {
             await IndexedDB.clear("dynamicStore");
         } else {
-            const lastImport = LocalStorage.get("lastItadImport");
+            const lastImport = await this.getLastImport();
 
-            if (lastImport && lastImport.to && !IndexedDB.isExpired(lastImport.to + (12 * 60 * 60))) { return; }
+            if (lastImport.to && TimeUtils.isInPast(lastImport.to + 12*60*60)) {
+                return;
+            }
         }
 
-        const dsKeys = [];
-        const itadImportKeys = [];
-        if (SyncedStorage.get("itad_import_library")) {
-            dsKeys.push("ownedApps", "ownedPackages");
-            itadImportKeys.push("lastOwnedApps", "lastOwnedPackages");
+        const db = IndexedDB.db;
+        const tx = db.transaction(["dynamicStore", "itadImport"]);
+        const dynamicStore = tx.objectStore("dynamicStore");
+        const itadImport = tx.objectStore("itadImport");
+
+        let ownedApps: number[] = [];
+        let ownedPackages: number[] = [];
+        let wishlisted: number[] = [];
+
+        let newOwnedApps: number[] = [];
+        let newOwnedPackages: number[] = [];
+        let newWishlisted: number[] = [];
+
+        if (Settings.itad_import_library) {
+            const lastOwnedApps = new Set(await itadImport.get("lastOwnedApps") ?? []);
+            const lastOwnedPackages = new Set(await itadImport.get("lastOwnedPackages") ?? []);
+
+            ownedApps = await dynamicStore.get("ownedApps") ?? [];
+            ownedPackages = await dynamicStore.get("ownedPackages") ?? [];
+
+            newOwnedApps = ownedApps.filter(id => !lastOwnedApps.has(id));
+            newOwnedPackages = ownedPackages.filter(id => !lastOwnedPackages.has(id));
         }
 
-        if (SyncedStorage.get("itad_import_wishlist")) {
-            dsKeys.push("wishlisted");
-            itadImportKeys.push("lastWishlisted");
+        if (Settings.itad_import_wishlist) {
+            const lastWishlisted = new Set(await itadImport.get("lastWishlisted") ?? []);
+
+            wishlisted = await dynamicStore.get("wishlisted") ?? [];
+            newWishlisted = wishlisted.filter(id => !lastWishlisted.has(id));
         }
 
-        const result = await Promise.all([
-            IndexedDB.get("dynamicStore", dsKeys),
-            IndexedDB.get("itadImport", itadImportKeys),
-        ]);
-
-        function removeDuplicates(from, other) {
-            if (!from) { return []; }
-            if (!other) { return from; }
-            return from.filter(el => !other.includes(el));
-        }
+        await tx.done;
 
         const promises = [];
 
-        if (SyncedStorage.get("itad_import_library")) {
-            const [{ownedApps, ownedPackages}, {lastOwnedApps, lastOwnedPackages}] = result;
-            const newOwnedApps = removeDuplicates(ownedApps, lastOwnedApps);
-            const newOwnedPackages = removeDuplicates(ownedPackages, lastOwnedPackages);
-            if (newOwnedApps.length || newOwnedPackages.length) {
-                promises.push(ITADApi.addToCollection(newOwnedApps, newOwnedPackages)
-                    .then(() => IndexedDB.put("itadImport", {
-                        "lastOwnedApps": ownedApps,
-                        "lastOwnedPackages": ownedPackages,
-                    })));
-            }
+        if (newOwnedApps.length > 0 || newOwnedPackages.length > 0) {
+            promises.push((async () => {
+                await this.addToCollection(newOwnedApps, newOwnedPackages);
+                await IndexedDB.putMany("itadImport", [
+                    ["lastOwnedApps", ownedApps],
+                    ["lastOwnedPackages", ownedPackages],
+                ]);
+            })());
         }
 
-        if (SyncedStorage.get("itad_import_wishlist")) {
-            const [{wishlisted}, {lastWishlisted}] = result;
-            const newWishlisted = removeDuplicates(wishlisted, lastWishlisted);
-            if (newWishlisted.length) {
-                promises.push(ITADApi.addToWaitlist(newWishlisted)
-                    .then(() => IndexedDB.put("itadImport", {"lastWishlisted": wishlisted})));
-            }
+        if (newWishlisted.length > 0) {
+            promises.push((async () => {
+                await this.addToWaitlist(newWishlisted);
+                await IndexedDB.put("itadImport", wishlisted, "lastWishlisted");
+            })());
         }
 
         await Promise.all(promises);
 
-        const lastImport = LocalStorage.get("lastItadImport");
+        let lastImport = await this.getLastImport();
         lastImport.to = TimeUtils.now();
-        LocalStorage.set("lastItadImport", lastImport);
+
+        await LocalStorage.set("lastItadImport", lastImport);
     }
 
-    static async sync() {
-        await Promise.all([
-            ITADApi.import(true),
-            IndexedDB.clear("waitlist").then(
-                () => IndexedDB.objStoreFetchFns.get("waitlist")()
-            ),
-            IndexedDB.clear("collection").then(
-                () => IndexedDB.objStoreFetchFns.get("collection")()
-            ),
-        ]);
+    private async importWaitlist(force: boolean): Promise<void> {
+        if (force || await IndexedDB.isStoreExpired("waitlist")) {
+            const data = await this.fetchWaitlist();
+            await IndexedDB.replaceAll("waitlist", data ? [...data.entries()] : []);
+            await IndexedDB.setStoreExpiry("waitlist", TimeUtils.now() + 15*60);
+            await this.recordLastImport();
+        }
     }
 
-    static lastImport() { return LocalStorage.get("lastItadImport"); }
+    private async importCollection(force: boolean): Promise<void> {
+        if (force || await IndexedDB.isStoreExpired("collection")) {
+            const data = await this.fetchCollection();
+            await IndexedDB.replaceAll("collection", data ? [...data.entries()] : []);
+            await IndexedDB.setStoreExpiry("collection", TimeUtils.now() + 15*60);
+            await this.recordLastImport();
+        }
+    }
 
-    static inWaitlist(storeIds) {
+    private async sync(): Promise<void> {
+        await this.exportToItad(true);
+        await this.importWaitlist(true);
+        await this.importCollection(true);
+    }
+
+    private async inWaitlist(storeIds: string[]): Promise<TInWaitlistResponse> {
+        await this.importWaitlist(false);
         return IndexedDB.contains("waitlist", storeIds);
     }
 
-    static inCollection(storeIds) {
+    private async inCollection(storeIds: string[]): Promise<TInCollectionResponse> {
+        await this.importCollection(false);
         return IndexedDB.contains("collection", storeIds);
     }
 
-    static getFromCollection(storeId) {
+    private async getFromCollection(storeId: string) {
+        await this.importCollection(false);
         return IndexedDB.get("collection", storeId);
     }
+
+    async handle(message: any) {
+
+        switch(message.action) {
+            case EMessage.StoreList:
+                return await this.getStoreList();
+
+            case EMessage.Authorize:
+                return await ((new Authorization()).authorize(RequiredScopes));
+
+            case EMessage.Disconnect:
+                return await this.disconnect();
+
+            case EMessage.IsConnected:
+                return await this.isConnected();
+
+            case EMessage.Export:
+                return await this.exportToItad(message.params.force);
+
+            case EMessage.Sync:
+                return await this.sync();
+
+            case EMessage.LastImport:
+                return await this.getLastImport();
+
+            case EMessage.InWaitlist:
+                return await this.inWaitlist(message.params.storeIds);
+
+            case EMessage.AddToWaitlist:
+                return await this.addToWaitlist(message.params.appids);
+
+            case EMessage.RemoveFromWaitlist:
+                return await this.removeFromWaitlist(message.params.appids);
+
+            case EMessage.InCollection:
+                return await this.inCollection(message.params.storeIds);
+
+            case EMessage.GetFromCollection:
+                return await this.getFromCollection(message.params.storeId);
+        }
+
+        return undefined;
+    }
 }
-ITADApi.accessToken = null;
-ITADApi.requiredScopes = [
-    "wait_read",
-    "wait_write",
-    "coll_read",
-    "coll_write",
-];
-
-ITADApi.origin = Config.ITADApiServerHost;
-ITADApi._progressingRequests = new Map();
-
-export {ITADApi};

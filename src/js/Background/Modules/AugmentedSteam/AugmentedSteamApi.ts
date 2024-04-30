@@ -162,7 +162,7 @@ export default class AugmentedSteamApi extends Api implements ApiHandlerInterfac
         if (isExpired) {
             const appids = await this.fetchEarlyAccess();
 
-            await IndexedDB.putAll(
+            await IndexedDB.replaceAll(
                 "earlyAccessAppids",
                 appids.map(appid => [appid, appid]),
             );

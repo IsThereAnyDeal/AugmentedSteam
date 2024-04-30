@@ -27,9 +27,6 @@ type Schema = ADB5;
 const timestampedStores = new Map<StoreNames<Schema>, number>([
     ["purchases", 24 * 60 * 60],
     ["dynamicStore", 15 * 60],
-    ["collection", 15 * 60],
-    ["waitlist", 15 * 60],
-    ["storeList", 7 * 24 * 60 * 60],
 ]);
 
 const timestampedEntriesStores = new Map([
@@ -113,21 +110,40 @@ export default class IndexedDB {
         await this.db.put(storeName, value, key);
     }
 
-    static async putAll<StoreName extends StoreNames<Schema>>(
+    static async putMany<StoreName extends StoreNames<Schema>>(
         storeName: StoreName,
         data: Array<[
             StoreKey<Schema, StoreName>,
             StoreValue<Schema, StoreName>
         ]>
     ): Promise<void> {
-        const tx = this.db.transaction(storeName);
+        const tx = this.db.transaction(storeName, "readwrite");
         const store = tx.store;
-
-        await store.clear();
 
         await Promise.all(
             data.map(([key, value]) => store.put(value, key))
         );
+
+        await tx.done;
+    }
+
+    static async replaceAll<StoreName extends StoreNames<Schema>>(
+        storeName: StoreName,
+        data: Array<[
+            StoreKey<Schema, StoreName>,
+            StoreValue<Schema, StoreName>
+        ]>
+    ): Promise<void> {
+        const tx = this.db.transaction(storeName, "readwrite");
+        const store = tx.store;
+
+        await store.clear();
+
+        if (data.length > 0) {
+            await Promise.all(
+                data.map(([key, value]) => store.put(value, key))
+            );
+        }
 
         await tx.done;
     }
@@ -142,17 +158,22 @@ export default class IndexedDB {
     static async getAll<StoreName extends StoreNames<Schema>>(
         storeName: StoreName,
         keys: Array<StoreKey<Schema, StoreName>>
-    ) {
+    ): Promise<Record<
+        StoreKey<Schema, StoreName>,
+        StoreValue<Schema, StoreName>|undefined
+    >> {
         let cursor = await IndexedDB.db.transaction(storeName).store.openCursor();
 
-        while (cursor) {
-            keys.push(cursor.key);
-            values.push(cursor.value);
+        let result = Object.fromEntries(keys.map(k => [k, undefined]));
 
+        while (cursor) {
+            // @ts-ignore
+            result[cursor.key] = cursor.value;
             cursor = await cursor.continue();
         }
 
-        return IndexedDB._resultsAsObject(keys, await Promise.all(values));
+        // @ts-ignore
+        return result;
     }
 
     static async getFromIndex<
@@ -171,15 +192,19 @@ export default class IndexedDB {
 
     static async delete<StoreName extends StoreNames<Schema>>(
         storeName: StoreName,
-        key: StoreKey<Schema, StoreName>
+        ...key: StoreKey<Schema, StoreName>[]
     ): Promise<void> {
-        await this.db.delete(storeName, key);
+        for (let key_ of key) {
+            await this.db.delete(storeName, key_);
+        }
     }
 
-    static clear<StoreName extends StoreNames<Schema>>(
-        storeName: StoreName
+    static async clear<StoreName extends StoreNames<Schema>>(
+        ...storeName: StoreName[]
     ): Promise<void> {
-        return this.db.clear(storeName);
+        for (let store of storeName) {
+            await this.db.clear(store);
+        }
     }
 
     static async contains<

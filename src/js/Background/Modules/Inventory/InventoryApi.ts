@@ -204,7 +204,7 @@ export default class InventoryApi extends Api implements ApiHandlerInterface {
             if (coupons === null) {
                 await IndexedDB.clear("coupons");
             } else {
-                await IndexedDB.putAll("coupons", [...coupons.entries()])
+                await IndexedDB.replaceAll("coupons", [...coupons.entries()])
                 await IndexedDB.setStoreExpiry("coupons", 60*60);
             }
         }
@@ -224,7 +224,7 @@ export default class InventoryApi extends Api implements ApiHandlerInterface {
             if (data === null) {
                 await IndexedDB.clear("giftsAndPasses");
             } else {
-                await IndexedDB.putAll("giftsAndPasses", [
+                await IndexedDB.replaceAll("giftsAndPasses", [
                     ["gifts", data.gifts],
                     ["passes", data.passes]
                 ]);
@@ -249,7 +249,7 @@ export default class InventoryApi extends Api implements ApiHandlerInterface {
             if (data === null) {
                 await IndexedDB.clear("items");
             } else {
-                await IndexedDB.putAll("items", data.map(hash => [hash, hash]));
+                await IndexedDB.replaceAll("items", data.map(hash => [hash, hash]));
                 await IndexedDB.setStoreExpiry("items", 60*60);
             }
         }

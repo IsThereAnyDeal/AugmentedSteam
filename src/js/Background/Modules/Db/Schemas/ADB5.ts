@@ -34,14 +34,12 @@ export interface ADB5 extends DBSchema {
         key: number,
         value: number
     },
-    /*purchases: {},
+    // purchases: {},
     dynamicStore: {
-        indexes: {
-            appid: number
-        }
+        key: string,
+        value: number[]
     },
-    packages: {},
-    */
+    // packages: {},
     storePageData: {
         key: number,
         value: {
@@ -72,13 +70,21 @@ export interface ADB5 extends DBSchema {
             idx_expiry: number
         }
     },
-    /* notes: {},
-    collection: {},
-    waitlist: {},
-    itadImport: {},
+    // notes: {},
+    collection: {
+        key: string,
+        value: string
+    },
+    waitlist: {
+        key: string,
+        value: string
+    },
+    itadImport: {
+        key: string,
+        value: number[],
+    },
 
     // v2
-    */
     "workshopFileSizes": {
         key: string,
         value: {
@@ -112,9 +118,14 @@ export interface ADB5 extends DBSchema {
     },
 
     // v4
-    /*
-    storeList: {},
-*/
+    storeList: {
+        key: number,
+        value: {
+            id: number,
+            title: string
+        }
+    },
+
     // v5
     expiries: {
         key: StoreNames<ADB5>,
