@@ -87,7 +87,16 @@ async function upgrade(
         // db.createObjectStore("itadImport");
 
         db.deleteObjectStore("dynamicStore");
-        db.createObjectStore("dynamicStore");
+        db.createObjectStore("dynamicStore")
+            .createIndex("idx_appid", "", {unique: false, multiEntry: true});
+
+        db.deleteObjectStore("packages");
+        db.createObjectStore("packages")
+            .createIndex("idx_expiry", "expiry");
+
+        // db.deleteObjectStore("purchases");
+        // db.createObjectStore("purchases");
+
 
         const v4Tx = tx as unknown as IDBPTransaction;
 

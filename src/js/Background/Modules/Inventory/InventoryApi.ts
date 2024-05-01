@@ -10,7 +10,7 @@ import {
     type InventoryResponse
 } from "@Background/Modules/Inventory/_types";
 import {EMessage} from "./EMessage";
-import {SteamStoreApi} from "@Background/Modules/SteamStoreApi";
+import SteamStoreApi from "@Background/Modules/Store/SteamStoreApi";
 
 
 export default class InventoryApi extends Api implements ApiHandlerInterface {
@@ -131,12 +131,9 @@ export default class InventoryApi extends Api implements ApiHandlerInterface {
             }
         }
 
-        // FIXME
-        (new SteamStoreApi()).fetchPackagesOrSomething();
-        const packages = await IndexedDB.get("packages", Array.from(coupons.keys()));
+        const packages = await (new SteamStoreApi()).getPackageApps([...coupons.keys()]);
         for (const [subid, coupon] of coupons.entries()) {
-            const details = packages[subid];
-            coupon.appids = details ?? [];
+            coupon.appids = packages.get(subid) ?? [];
         }
 
         return coupons;

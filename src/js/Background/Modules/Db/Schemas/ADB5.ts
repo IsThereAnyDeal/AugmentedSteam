@@ -34,12 +34,27 @@ export interface ADB5 extends DBSchema {
         key: number,
         value: number
     },
-    // purchases: {},
+    purchases: {
+        key: string,
+        value: string
+    },
     dynamicStore: {
         key: string,
-        value: number[]
+        value: number[],
+        indexes: {
+            idx_appid: number
+        }
     },
-    // packages: {},
+    packages: {
+        key: number,
+        value: {
+            appids: number[],
+            expiry: number
+        },
+        indexes: {
+            idx_expiry: number
+        }
+    },
     storePageData: {
         key: number,
         value: {

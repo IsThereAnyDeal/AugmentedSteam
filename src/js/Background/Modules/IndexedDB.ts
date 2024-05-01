@@ -14,27 +14,6 @@ import type {ADB5} from "@Background/Modules/Db/Schemas/ADB5";
 
 type Schema = ADB5;
 
-/**
- *  Object stores in this map won't get checked
- *  for timestamps if cached.
- *  Instead of checking the single entry, the object store itself has
- *  a entry named "expiry".
- *
- *  This allows us to reduce the overhead of having one timestamp for
- *  each individual entry, although they're basically fetched during
- *  the same time.
- */
-const timestampedStores = new Map<StoreNames<Schema>, number>([
-    ["purchases", 24 * 60 * 60],
-    ["dynamicStore", 15 * 60],
-]);
-
-const timestampedEntriesStores = new Map([
-    ["packages", 7 * 24 * 60 * 60],
-]);
-
-
-
 export default class IndexedDB {
 
     private static promise: Promise<void>;

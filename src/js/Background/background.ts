@@ -3,9 +3,9 @@ import {LocalStorage, Permissions, SyncedStorage} from "../modulesCore";
 import {ContextMenu} from "./Modules/ContextMenu";
 import IndexedDB from "./Modules/IndexedDB";
 import {SteamCommunityApi} from "./Modules/Community/SteamCommunityApi";
-import {SteamStoreApi} from "./Modules/SteamStoreApi";
+import SteamStoreApi from "./Modules/Store/SteamStoreApi";
 import {StaticResources} from "./Modules/StaticResources";
-import {ITADApi} from "./Modules/IsThereAnyDeal/ITADApi";
+import ITADApi from "./Modules/IsThereAnyDeal/ITADApi";
 import AugmentedSteamApi from "./Modules/AugmentedSteam/AugmentedSteamApi";
 import {ExtensionData} from "./Modules/ExtensionData";
 import CacheStorage from "./Modules/CacheStorage";
@@ -17,17 +17,8 @@ import InventoryApi from "@Background/Modules/Inventory/InventoryApi";
 
 type MessageSender = Runtime.MessageSender;
 
-// Functions that are called when an object store (or one of its entries) has expired
-IndexedDB.objStoreFetchFns = new Map([
-    ["purchases", SteamStoreApi.purchaseDate],
-    ["dynamicStore", SteamStoreApi.dynamicStore],
-    ["packages", SteamStoreApi.fetchPackage],
-]);
 
 const actionCallbacks = new Map([
-    ["wishlist.add", SteamStoreApi.wishlistAdd],
-    ["wishlist.remove", SteamStoreApi.wishlistRemove],
-    ["dynamicstore.clear", SteamStoreApi.clearDynamicStore],
 
     ["steam.currencies", StaticResources.currencies],
 
@@ -40,15 +31,6 @@ const actionCallbacks = new Map([
     ["notes.setall", ExtensionData.setAllNotes],
     ["notes.clear", ExtensionData.clearNotes],
     ["cache.clear", ExtensionData.clearCache],
-
-    ["appdetails", SteamStoreApi.appDetails],
-    ["currency", SteamStoreApi.currency],
-    ["sessionid", SteamStoreApi.sessionId],
-    ["wishlists", SteamStoreApi.wishlists],
-    ["purchases", SteamStoreApi.purchases],
-    ["clearpurchases", SteamStoreApi.clearPurchases],
-    ["dynamicstore.status", SteamStoreApi.dsStatus],
-    ["dynamicstore.randomapp", SteamStoreApi.dynamicStoreRandomApp],
 
     ["error.test", () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
@@ -95,7 +77,9 @@ browser.runtime.onMessage.addListener((
             let handlers: ApiHandlerInterface[] = [
                 new AugmentedSteamApi(),
                 new SteamCommunityApi(),
-                new InventoryApi()
+                new InventoryApi(),
+                new ITADApi(),
+                new SteamStoreApi()
             ];
 
             for (let handler of handlers) {
