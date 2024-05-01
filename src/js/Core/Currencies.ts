@@ -1,4 +1,8 @@
 
+/**
+ * @see https://partner.steamgames.com/doc/store/pricing/currencies
+ */
+
 export default Object.freeze(<Array<{
     id: number,
     abbr: string,
