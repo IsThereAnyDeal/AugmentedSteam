@@ -134,14 +134,14 @@ export default class IndexedDB {
         return await this.db.get(storeName, key);
     }
 
-    static async getAll<StoreName extends StoreNames<Schema>>(
+    static async getObject<StoreName extends StoreNames<Schema>>(
         storeName: StoreName,
         keys: Array<StoreKey<Schema, StoreName>>
     ): Promise<Record<
         StoreKey<Schema, StoreName>,
         StoreValue<Schema, StoreName>|undefined
     >> {
-        let cursor = await IndexedDB.db.transaction(storeName).store.openCursor();
+        let cursor = await this.db.transaction(storeName).store.openCursor();
 
         let result = Object.fromEntries(keys.map(k => [k, undefined]));
 

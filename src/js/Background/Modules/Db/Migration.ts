@@ -97,6 +97,9 @@ async function upgrade(
         // db.deleteObjectStore("purchases");
         // db.createObjectStore("purchases");
 
+        // db.deleteObjectStore("notes");
+        // db.createObjectStore("notes");
+
 
         const v4Tx = tx as unknown as IDBPTransaction;
 

@@ -7,7 +7,7 @@ import SteamStoreApi from "./Modules/Store/SteamStoreApi";
 import {StaticResources} from "./Modules/StaticResources";
 import ITADApi from "./Modules/IsThereAnyDeal/ITADApi";
 import AugmentedSteamApi from "./Modules/AugmentedSteam/AugmentedSteamApi";
-import {ExtensionData} from "./Modules/ExtensionData";
+import {UserNotesApi} from "./Modules/UserNotes/UserNotesApi";
 import CacheStorage from "./Modules/CacheStorage";
 import browser, {type Runtime} from "webextension-polyfill";
 import type {TGetStoreListMessage} from "./Modules/IsThereAnyDeal/_types";
@@ -17,21 +17,20 @@ import InventoryApi from "@Background/Modules/Inventory/InventoryApi";
 
 type MessageSender = Runtime.MessageSender;
 
+/*
+
+    private clearCache() {
+        CacheStorage.clear();
+        return IndexedDB.clear();
+    }
+
+    ["cache.clear", UserNotesApi.clearCache],
+
+*/
 
 const actionCallbacks = new Map([
-
     ["steam.currencies", StaticResources.currencies],
-
     ["migrate.cachestorage", CacheStorage.migrate],
-
-    ["notes.get", ExtensionData.getNote],
-    ["notes.set", ExtensionData.setNote],
-    ["notes.delete", ExtensionData.deleteNote],
-    ["notes.getall", ExtensionData.getAllNotes],
-    ["notes.setall", ExtensionData.setAllNotes],
-    ["notes.clear", ExtensionData.clearNotes],
-    ["cache.clear", ExtensionData.clearCache],
-
     ["error.test", () => { return Promise.reject(new Error("This is a TEST Error. Please ignore.")); }],
 ]);
 
@@ -79,7 +78,8 @@ browser.runtime.onMessage.addListener((
                 new SteamCommunityApi(),
                 new InventoryApi(),
                 new ITADApi(),
-                new SteamStoreApi()
+                new SteamStoreApi(),
+                new UserNotesApi()
             ];
 
             for (let handler of handlers) {

@@ -52,7 +52,7 @@ export default class SteamStoreApi extends Api implements ApiHandlerInterface {
         let result = new Map<TSubid, TAppid[]>;
 
         let toFetch: number[] = [];
-        const data = await IndexedDB.getAll("packages", subids);
+        const data = await IndexedDB.getObject("packages", subids);
         for (let [subid, entry] of Object.entries(data)) {
             if (!entry || TimeUtils.isInPast(entry.expiry)) {
                 toFetch.push(Number(subid));
@@ -290,12 +290,12 @@ export default class SteamStoreApi extends Api implements ApiHandlerInterface {
     private async dynamicStoreRandomApp(): Promise<number|null> {
         await this.refreshDynamicStore();
 
-        const ownedApps = await IndexedDB.getAll("dynamicStore", ["ownedApps"]);
+        const ownedApps = await IndexedDB.get("dynamicStore", "ownedApps");
         if (!ownedApps || !Array.isArray(ownedApps) || ownedApps.length === 0) {
             return null;
         }
 
-        return ownedApps[Math.floor(Math.random() * ownedApps.length)];
+        return ownedApps[Math.floor(Math.random() * ownedApps.length)]!;
     }
 
     private async clearDynamicStore(): Promise<void> {

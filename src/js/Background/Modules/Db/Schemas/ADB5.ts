@@ -85,7 +85,10 @@ export interface ADB5 extends DBSchema {
             idx_expiry: number
         }
     },
-    // notes: {},
+    notes: {
+        key: number,
+        value: string
+    },
     collection: {
         key: string,
         value: string
