@@ -11,6 +11,7 @@ import {
 } from "idb";
 import Migration from "@Background/Modules/Db/Migration";
 import type {ADB5} from "@Background/Modules/Db/Schemas/ADB5";
+import LocalStorage from "@Core/Storage/LocalStorage";
 
 type Schema = ADB5;
 
@@ -30,7 +31,12 @@ export default class IndexedDB {
                     },
                 });
 
-                await IndexedDB.cleanup();
+                let dbCleanup = await LocalStorage.get("db_cleanup");
+                if (!dbCleanup || TimeUtils.isInPast(dbCleanup + 86400)) {
+                    console.log("Db cleanup");
+                    await IndexedDB.cleanup();
+                    await LocalStorage.set("db_cleanup", TimeUtils.now());
+                }
             })();
         }
 
@@ -48,26 +54,43 @@ export default class IndexedDB {
         const promises = [];
 
         const tx = this.db.transaction(this.db.objectStoreNames, "readwrite");
-
         let cursor = await tx.objectStore("expiries")
-            .index("expiry")
+            .index("idx_expiry")
             .openCursor(IDBKeyRange.upperBound(TimeUtils.now()));
 
         while (cursor) {
             let storeName = cursor.key as unknown as StoreNames<Schema>;
 
             if (this.db.objectStoreNames.contains(storeName)) {
-                if (cursor.value.key) {
-                    promises.push(tx.objectStore(storeName).delete(cursor.value.key));
-                } else {
-                    promises.push(tx.objectStore(storeName).clear());
-                }
+                promises.push(tx.objectStore(storeName).clear());
             }
             promises.push(cursor.delete());
             cursor = await cursor.continue();
         }
+        await Promise.all(promises);
 
-        return Promise.all(promises);
+        await Promise.all([
+            this.deleteExpiredEntries("packages", "idx_expiry"),
+            this.deleteExpiredEntries("storePageData", "idx_expiry"),
+            this.deleteExpiredEntries("profiles", "idx_expiry"),
+            this.deleteExpiredEntries("rates", "idx_expiry"),
+            this.deleteExpiredEntries("workshopFileSizes", "idx_expiry"),
+            this.deleteExpiredEntries("reviews", "idx_expiry"),
+        ]);
+    }
+
+    private static async deleteExpiredEntries<
+        StoreName extends StoreNames<Schema>,
+        IndexName extends IndexNames<Schema, StoreName>
+    >(storeName: StoreName, indexName: IndexName) {
+        const tx = this.db.transaction(storeName, "readwrite");
+        const index = tx.store.index(indexName);
+        let cursor = await index.openKeyCursor(IDBKeyRange.upperBound(TimeUtils.now()));
+
+        while (cursor) {
+            await cursor.delete();
+            cursor = await cursor.continue();
+        }
     }
 
     static async isStoreExpired<StoreName extends StoreNames<Schema>>(

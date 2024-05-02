@@ -18,7 +18,8 @@ interface LocalStorageSchema extends StorageSchema {
     lastItadImport: {
         from: null|number,
         to: null|number
-    }
+    },
+    db_cleanup: number
 }
 
 class LocalStorage<Schema extends StorageSchema> extends Storage<ns.LocalStorageArea, Schema>{
