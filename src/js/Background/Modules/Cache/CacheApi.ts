@@ -1,9 +1,9 @@
-import IndexedDB from "../IndexedDB";
-import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
+import IndexedDB from "@Background/Db/IndexedDB";
+import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import {EAction} from "@Background/EAction";
 
-export default class CacheApi implements ApiHandlerInterface{
+export default class CacheApi implements MessageHandlerInterface{
 
     private async clearCache(): Promise<void> {
         await LocalStorage.remove(

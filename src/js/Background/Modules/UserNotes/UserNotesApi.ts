@@ -1,8 +1,8 @@
-import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
-import IndexedDB from "../IndexedDB";
+import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
+import IndexedDB from "@Background/Db/IndexedDB";
 import {EAction} from "@Background/EAction";
 
-export default class UserNotesApi implements ApiHandlerInterface {
+export default class UserNotesApi implements MessageHandlerInterface {
 
     private async getNote(appids: number[]): Promise<Record<number, string|undefined>> {
         return IndexedDB.getObject("notes", appids);

@@ -1,12 +1,12 @@
 import { EAction } from "@Background/EAction";
 import {Errors, HTMLParser, LocalStorage, TimeUtils} from "../../../modulesCore";
 import Api from "../Api";
-import IndexedDB from "../IndexedDB";
+import IndexedDB from "@Background/Db/IndexedDB";
 import type {TFetchBadgeInfoResponse, TFetchReviewsResponse, TReview} from "./_types";
-import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
+import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import DOMPurify from "dompurify";
 
-export default class SteamCommunityApi extends Api implements ApiHandlerInterface {
+export default class SteamCommunityApi extends Api implements MessageHandlerInterface {
 
     constructor() {
         super("https://steamcommunity.com/")

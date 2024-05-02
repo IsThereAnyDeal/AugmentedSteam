@@ -1,5 +1,5 @@
 import {TimeUtils} from "../../../modulesCore";
-import IndexedDB from "../IndexedDB";
+import IndexedDB from "@Background/Db/IndexedDB";
 import Config from "../../../config";
 import Api from "../Api";
 import type {
@@ -16,10 +16,10 @@ import type {
     TIsEarlyAccessResponse,
     TSimilarResponse
 } from "@Background/Modules/AugmentedSteam/_types";
-import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
+import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import {EAction} from "@Background/EAction";
 
-export default class AugmentedSteamApi extends Api implements ApiHandlerInterface{
+export default class AugmentedSteamApi extends Api implements MessageHandlerInterface{
 
     constructor() {
         super(Config.ApiServerHost);

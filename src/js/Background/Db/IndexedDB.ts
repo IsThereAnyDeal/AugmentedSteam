@@ -9,8 +9,8 @@ import {
     type StoreNames,
     type StoreValue
 } from "idb";
-import Migration from "@Background/Modules/Db/Migration";
-import type {ADB5} from "@Background/Modules/Db/Schemas/ADB5";
+import Migration from "@Background/Db/Migration";
+import type {ADB5} from "@Background/Db/Schemas/ADB5";
 import LocalStorage from "@Core/Storage/LocalStorage";
 
 type Schema = ADB5;

@@ -1,7 +1,7 @@
 import {Errors, HTML, HTMLParser, StringUtils, TimeUtils} from "../../../modulesCore";
 import Api from "../Api";
-import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
-import IndexedDB from "@Background/Modules/IndexedDB";
+import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
+import IndexedDB from "@Background/Db/IndexedDB";
 import type {TAppDetail, TFetchWishlistResponse, TPackageDetail, TWishlistGame} from "./_types";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import {EAction} from "@Background/EAction";
@@ -10,7 +10,7 @@ import {EAction} from "@Background/EAction";
 type TAppid = number;
 type TSubid = number;
 
-export default class SteamStoreApi extends Api implements ApiHandlerInterface {
+export default class SteamStoreApi extends Api implements MessageHandlerInterface {
 
     constructor() {
         super("https://store.steampowered.com/");

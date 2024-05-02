@@ -1,5 +1,5 @@
 import type {IDBPDatabase, IDBPTransaction, StoreNames} from "idb";
-import type {ADB5} from "@Background/Modules/Db/Schemas/ADB5";
+import type {ADB5} from "@Background/Db/Schemas/ADB5";
 
 type Schema = ADB5;
 

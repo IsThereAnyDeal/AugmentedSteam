@@ -1,13 +1,13 @@
 import bootstrapDomPurify from "../bootstrapDomPurify";
 import ContextMenu from "./Modules/ContextMenu/ContextMenu";
-import IndexedDB from "./Modules/IndexedDB";
+import IndexedDB from "@Background/Db/IndexedDB";
 import SteamCommunityApi from "./Modules/Community/SteamCommunityApi";
 import SteamStoreApi from "./Modules/Store/SteamStoreApi";
 import ITADApi from "./Modules/IsThereAnyDeal/ITADApi";
 import AugmentedSteamApi from "./Modules/AugmentedSteam/AugmentedSteamApi";
 import UserNotesApi from "./Modules/UserNotes/UserNotesApi";
 import browser, {type Runtime} from "webextension-polyfill";
-import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
+import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import InventoryApi from "@Background/Modules/Inventory/InventoryApi";
 import CacheApi from "@Background/Modules/Cache/CacheApi";
 import {SettingsStore} from "@Options/Data/Settings";
@@ -37,7 +37,7 @@ browser.runtime.onMessage.addListener((
             await Promise.all([IndexedDB, SettingsStore, bootstrapDomPurify()]);
 
             let response: any = undefined;
-            let handlers: ApiHandlerInterface[] = [
+            let handlers: MessageHandlerInterface[] = [
                 new AugmentedSteamApi(),
                 new SteamCommunityApi(),
                 new InventoryApi(),

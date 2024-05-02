@@ -1,8 +1,8 @@
 import {Errors, GameId, LocalStorage} from "../../../modulesCore";
 import type {TCoupon} from "@Background/Modules/Community/_types";
-import IndexedDB from "@Background/Modules/IndexedDB";
+import IndexedDB from "@Background/Db/IndexedDB";
 import Api from "@Background/Modules/Api";
-import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
+import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import {
     ContextId,
     type HasGiftsAndPassesResponse,
@@ -13,7 +13,7 @@ import SteamStoreApi from "@Background/Modules/Store/SteamStoreApi";
 import {EAction} from "@Background/EAction";
 
 
-export default class InventoryApi extends Api implements ApiHandlerInterface {
+export default class InventoryApi extends Api implements MessageHandlerInterface {
 
     constructor() {
         super("https://steamcommunity.com/");

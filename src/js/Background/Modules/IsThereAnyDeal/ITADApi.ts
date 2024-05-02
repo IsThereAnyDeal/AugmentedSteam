@@ -1,7 +1,7 @@
 import {Errors, LocalStorage, SyncedStorage, TimeUtils} from "../../../modulesCore";
 import Api from "../Api";
 import Config from "../../../config";
-import IndexedDB from "../IndexedDB";
+import IndexedDB from "@Background/Db/IndexedDB";
 import type {
     TGetStoreListResponse,
     TInCollectionResponse,
@@ -9,7 +9,7 @@ import type {
     TLastImportResponse,
     TShopInfo
 } from "./_types";
-import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
+import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import Authorization from "./Authorization";
 import Settings from "@Options/Data/Settings";
 import AccessToken from "@Background/Modules/IsThereAnyDeal/AccessToken";
@@ -23,7 +23,7 @@ const RequiredScopes = [
     "coll_write",
 ];
 
-export default class ITADApi extends Api implements ApiHandlerInterface {
+export default class ITADApi extends Api implements MessageHandlerInterface {
 
     constructor() {
         super(Config.ITADApiServerHost);
