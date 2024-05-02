@@ -1,13 +1,13 @@
 import setup from "../setup";
-import {LocalStorage, Permissions, SyncedStorage} from "../modulesCore";
-import {ContextMenu} from "./Modules/ContextMenu";
+import {LocalStorage, SyncedStorage} from "../modulesCore";
+import ContextMenu from "./Modules/ContextMenu/ContextMenu";
 import IndexedDB from "./Modules/IndexedDB";
 import {SteamCommunityApi} from "./Modules/Community/SteamCommunityApi";
 import SteamStoreApi from "./Modules/Store/SteamStoreApi";
 import {StaticResources} from "./Modules/StaticResources";
 import ITADApi from "./Modules/IsThereAnyDeal/ITADApi";
 import AugmentedSteamApi from "./Modules/AugmentedSteam/AugmentedSteamApi";
-import {UserNotesApi} from "./Modules/UserNotes/UserNotesApi";
+import UserNotesApi from "./Modules/UserNotes/UserNotesApi";
 import CacheStorage from "./Modules/CacheStorage";
 import browser, {type Runtime} from "webextension-polyfill";
 import type {TGetStoreListMessage} from "./Modules/IsThereAnyDeal/_types";
@@ -128,11 +128,4 @@ browser.runtime.onMessage.addListener((
     return true;
 });
 
-browser.runtime.onStartup.addListener(ContextMenu.update);
-browser.runtime.onInstalled.addListener(ContextMenu.update);
-
-Permissions.when("contextMenus", () => {
-    browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
-}, () => {
-    browser.contextMenus.onClicked.removeListener(ContextMenu.onClick);
-});
+ContextMenu.register();
