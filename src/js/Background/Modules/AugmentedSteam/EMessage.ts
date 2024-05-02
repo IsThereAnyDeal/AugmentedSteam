@@ -12,5 +12,7 @@ export enum EMessage {
     TwitchStream = "twitch.stream",
     MarketCardPrices = "market.cardprices",
     MarketAverageCardPrices = "market.averagecardprices",
-    SteamPeek = "steampeek"
+    SteamPeek = "steampeek",
+    Profile = "profile",
+    ClearProfile = "clearownprofile"
 }

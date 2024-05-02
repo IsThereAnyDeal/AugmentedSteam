@@ -115,6 +115,10 @@ export default class AugmentedSteamApi extends Api implements ApiHandlerInterfac
         return data.data;
     }
 
+    private clearOwn(steamId: string) {
+        return IndexedDB.delete("profiles", steamId);
+    }
+
     async getStorePageData(appid: number): Promise<TFetchStorePageDataResponse> {
         const ttl = 60*60;
         let data = await IndexedDB.get("storePageData", appid);
@@ -217,6 +221,12 @@ export default class AugmentedSteamApi extends Api implements ApiHandlerInterfac
 
             case EMessage.SteamPeek:
                 return await this.fetchSteamPeek(message.params.appid);
+
+            case EMessage.Profile:
+                return await this.getProfileData(message.params.steamId);
+
+            case EMessage.ClearProfile:
+                return await this.clearOwn(message.params.steamId);
         }
 
         return undefined;

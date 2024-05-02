@@ -7,6 +7,4 @@ export enum EMessage {
     Logout = "logout",
     StoreCountry = "storecountry",
     Cards = "cards",
-    Profile = "profile",
-    ClearOwnProfile = "clearownprofile",
 }

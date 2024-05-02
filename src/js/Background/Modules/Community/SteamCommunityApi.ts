@@ -212,14 +212,6 @@ export default class SteamCommunityApi extends Api implements ApiHandlerInterfac
         }
     }
 
-    private getProfile(steamId) {
-        return IndexedDB.get("profiles", steamId, {"params": {"profile": steamId}});
-    }
-
-    private clearOwn(steamId) {
-        return IndexedDB.delete("profiles", steamId);
-    }
-
     async handle(message: any): Promise<any> {
 
         switch(message.action) {
@@ -241,14 +233,6 @@ export default class SteamCommunityApi extends Api implements ApiHandlerInterfac
 
             case EMessage.StoreCountry:
                 return await this.storeCountry(message.params.country ?? undefined);
-
-            case EMessage.Profile:
-                // FIXME
-                throw new Error();
-
-            case EMessage.ClearOwnProfile:
-                // FIXME
-                throw new Error();
         }
 
         return undefined;
