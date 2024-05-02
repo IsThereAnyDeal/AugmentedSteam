@@ -26,6 +26,7 @@ export default class CacheApi implements ApiHandlerInterface{
             "workshopFileSizes",
             "reviews",
             "storeList",
+            "storePageData",
             "expiries"
         );
     }

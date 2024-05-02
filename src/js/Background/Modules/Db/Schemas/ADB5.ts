@@ -101,9 +101,7 @@ export interface ADB5 extends DBSchema {
         key: string,
         value: number[],
     },
-
-    // v2
-    "workshopFileSizes": {
+    workshopFileSizes: {
         key: string,
         value: {
             size: number,
@@ -113,7 +111,7 @@ export interface ADB5 extends DBSchema {
             idx_expiry: number
         }
     },
-    "reviews": {
+    reviews: {
         key: string,
         value: {
             data: Array<{
@@ -134,8 +132,6 @@ export interface ADB5 extends DBSchema {
             idx_expiry: number
         }
     },
-
-    // v4
     storeList: {
         key: number,
         value: {
@@ -143,13 +139,11 @@ export interface ADB5 extends DBSchema {
             title: string
         }
     },
-
-    // v5
     expiries: {
         key: StoreNames<ADB5>,
         value: number,
         indexes: {
-            "": number
+            idx_expiry: number
         }
     }
 }
