@@ -21,7 +21,7 @@
 
     onMount(() => {
         initialLoad = (async () => {
-            await Promise.all([SettingsStore.load(), Localization]);
+            await Promise.all([SettingsStore, Localization]);
         })();
     });
 

@@ -6,7 +6,7 @@ import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
 import {EMessage} from "./EMessage";
 import DOMPurify from "dompurify";
 
-class SteamCommunityApi extends Api implements ApiHandlerInterface {
+export default class SteamCommunityApi extends Api implements ApiHandlerInterface {
 
     constructor() {
         super("https://steamcommunity.com/")

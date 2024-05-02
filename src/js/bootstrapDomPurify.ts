@@ -1,4 +1,5 @@
-import {SyncedStorage} from "./modulesCore";
+import Settings, {SettingsStore} from "@Options/Data/Settings";
+import DOMPurify, {type Config} from "dompurify";
 
 let initialized = false;
 
@@ -6,12 +7,13 @@ let initialized = false;
  * DOMPurify setup
  * @see https://github.com/cure53/DOMPurify
  */
-export default function() {
+export default async function() {
 
     if (initialized) { return; }
     initialized = true;
 
-    const allowOpenInNewTab = SyncedStorage.get("openinnewtab");
+    await SettingsStore;
+    const allowOpenInNewTab = Settings.openinnewtab;
 
     /*
      * NOTE FOR ADDON REVIEWER:
@@ -27,7 +29,7 @@ export default function() {
      * as described in https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
      */
 
-    const purifyConfig = {
+    const purifyConfig: Config = {
         "ALLOWED_URI_REGEXP": /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|chrome-extension|moz-extension|steam):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i
     };
 

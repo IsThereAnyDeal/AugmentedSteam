@@ -63,7 +63,7 @@ export default class ContextMenu {
     }
 
     static async build(): Promise<void> {
-        await SettingsStore.load();
+        await SettingsStore;
         await Localization;
 
         for (const [option, entry] of Object.entries(ContextMenu.queryLinks)) {

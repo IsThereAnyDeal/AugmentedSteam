@@ -8,7 +8,7 @@ import {
     User
 } from "../modulesContent";
 import {SteamFacade} from "../Modules/SteamFacade";
-import setup from "../../setup";
+import setup from "../../bootstrapDomPurify";
 import config from "../../config";
 
 /**
