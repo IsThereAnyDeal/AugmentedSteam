@@ -17,7 +17,7 @@ import type {
     TSimilarResponse
 } from "@Background/Modules/AugmentedSteam/_types";
 import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
-import {EMessage} from "@Background/Modules/AugmentedSteam/EMessage";
+import {EAction} from "@Background/EAction";
 
 export default class AugmentedSteamApi extends Api implements ApiHandlerInterface{
 
@@ -180,52 +180,52 @@ export default class AugmentedSteamApi extends Api implements ApiHandlerInterfac
 
         switch (message.action) {
 
-            case EMessage.Prices: {
+            case EAction.Prices: {
                 const params = message.params;
                 const {country, apps, subs, bundles, voucher, shops} = params;
                 return await this.fetchPrices(country, apps, subs, bundles, voucher, shops);
             }
 
-            case EMessage.DlcInfo:
+            case EAction.DlcInfo:
                 return await this.fetchDlcInfo(message.params.appid);
 
-            case EMessage.StorePageData:
+            case EAction.StorePageData:
                 return await this.getStorePageData(message.params.appid);
 
-            case EMessage.ExpireStorePageData:
+            case EAction.StorePageData_Expire:
                 return await this.expireStorePageData(message.params.appid);
 
-            case EMessage.Rates:
+            case EAction.Rates:
                 return await this.getRates(message.params.to);
 
-            case EMessage.ClearRates:
+            case EAction.Rates_Clear:
                 return await this.clearRates();
 
-            case EMessage.IsEA:
+            case EAction.IsEA:
                 return await this.isEA(message.params.appids);
 
-            case EMessage.ProfileBackground:
+            case EAction.ProfileBackground:
                 return await this.fetchProfileBackgrounds(message.params.appid);
 
-            case EMessage.ProfileBackgroundGames:
+            case EAction.ProfileBackgroundGames:
                 return await this.fetchProfileBackgroundsGames();
 
-            case EMessage.TwitchStream:
+            case EAction.TwitchStream:
                 return await this.fetchTwitch(message.params.channelId);
 
-            case EMessage.MarketCardPrices:
+            case EAction.Market_CardPrices:
                 return await this.fetchMarketCardPrices(message.params.currency, message.params.appid);
 
-            case EMessage.MarketAverageCardPrices:
+            case EAction.Market_AverageCardPrices:
                 return await this.fetchMarketAverageCardPrices(message.params.currency, message.params.appids);
 
-            case EMessage.SteamPeek:
+            case EAction.SteamPeek:
                 return await this.fetchSteamPeek(message.params.appid);
 
-            case EMessage.Profile:
+            case EAction.Profile:
                 return await this.getProfileData(message.params.steamId);
 
-            case EMessage.ClearProfile:
+            case EAction.Profile_Clear:
                 return await this.clearOwn(message.params.steamId);
         }
 

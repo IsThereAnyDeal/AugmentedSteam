@@ -9,8 +9,8 @@ import {
     type InventoryData,
     type InventoryResponse
 } from "@Background/Modules/Inventory/_types";
-import {EMessage} from "./EMessage";
 import SteamStoreApi from "@Background/Modules/Store/SteamStoreApi";
+import {EAction} from "@Background/EAction";
 
 
 export default class InventoryApi extends Api implements ApiHandlerInterface {
@@ -257,16 +257,16 @@ export default class InventoryApi extends Api implements ApiHandlerInterface {
     async handle(message: any): Promise<any> {
 
         switch(message.action) {
-            case EMessage.GetCoupon:
+            case EAction.Inventory_GetCoupon:
                 return await this.getCoupon(message.params.appid);
 
-            case EMessage.HasCoupon:
+            case EAction.Inventory_HasCoupon:
                 return await this.hasCoupon(message.params.appid);
 
-            case EMessage.HasGiftsAndPasses:
+            case EAction.Inventory_HasGiftsAndPasses:
                 return await this.hasGiftsAndPasses(message.params.appids);
 
-            case EMessage.HasItem:
+            case EAction.Inventory_HasItem:
                 return await this.hasItem(message.params.hashes);
         }
 

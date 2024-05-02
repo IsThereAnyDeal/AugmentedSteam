@@ -1,6 +1,6 @@
 import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
 import IndexedDB from "../IndexedDB";
-import {EMessage} from "@Background/Modules/UserNotes/EMessage";
+import {EAction} from "@Background/EAction";
 
 export default class UserNotesApi implements ApiHandlerInterface {
 
@@ -43,22 +43,22 @@ export default class UserNotesApi implements ApiHandlerInterface {
     async handle(message: any): Promise<any> {
 
         switch(message.action) {
-            case EMessage.Notes_Get:
+            case EAction.Notes_Get:
                 return await this.getNote(message.params.appid);
 
-            case EMessage.Notes_Set:
+            case EAction.Notes_Set:
                 return await this.setNote(message.params.appid, message.params.note);
 
-            case EMessage.Notes_Delete:
+            case EAction.Notes_Delete:
                 return await this.deleteNote(message.params.appid);
 
-            case EMessage.Notes_GetAll:
+            case EAction.Notes_GetAll:
                 return await this.getAllNotes();
 
-            case EMessage.Notes_SetAll:
+            case EAction.Notes_SetAll:
                 return await this.setAllNotes(message.params.notes);
 
-            case EMessage.Notes_Clear:
+            case EAction.Notes_Clear:
                 return await this.clearNotes();
         }
 

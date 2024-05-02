@@ -4,7 +4,7 @@ import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
 import IndexedDB from "@Background/Modules/IndexedDB";
 import type {TAppDetail, TFetchWishlistResponse, TPackageDetail, TWishlistGame} from "./_types";
 import LocalStorage from "@Core/Storage/LocalStorage";
-import {EMessage} from "@Background/Modules/Store/EMessage";
+import {EAction} from "@Background/EAction";
 
 // helper types for clarity
 type TAppid = number;
@@ -328,37 +328,37 @@ export default class SteamStoreApi extends Api implements ApiHandlerInterface {
     async handle(message: any): Promise<any> {
 
         switch(message.action) {
-            case EMessage.Wishlist_Add:
+            case EAction.Wishlist_Add:
                 return await this.wishlistAdd(message.params.appid);
 
-            case EMessage.Wishlist_Remove:
+            case EAction.Wishlist_Remove:
                 return await this.wishlistRemove(message.params.appid, message.params.sessionId ?? null);
 
-            case EMessage.Wishlists:
+            case EAction.Wishlists:
                 return await this.fetchWishlistCount(message.params.path);
 
-            case EMessage.AppDetails:
+            case EAction.AppDetails:
                 return await this.fetchAppDetails(message.params.appid, message.params.filter ?? undefined);
 
-            case EMessage.Currency:
+            case EAction.Currency:
                 return await this.getCurrency();
 
-            case EMessage.SessionId:
+            case EAction.SessionId:
                 return await this.fetchSessionId();
 
-            case EMessage.Purchases:
+            case EAction.Purchases:
                 return await this.getPurchaseDate(message.params.appName, message.params.lang);
 
-            case EMessage.ClearPurchases:
+            case EAction.Purchases_Clear:
                 return await this.clearPurchases();
 
-            case EMessage.DynamicStore_Clear:
+            case EAction.DynamicStore_Clear:
                 return await this.clearDynamicStore();
 
-            case EMessage.DynamicStore_Status:
+            case EAction.DynamicStore_Status:
                 return await this.getDynamicStoreStatus(message.params.ids);
 
-            case EMessage.DynamicStore_RandomApp:
+            case EAction.DynamicStore_RandomApp:
                 return await this.dynamicStoreRandomApp();
         }
 

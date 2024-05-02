@@ -1,9 +1,9 @@
+import { EAction } from "@Background/EAction";
 import {Errors, HTMLParser, LocalStorage, TimeUtils} from "../../../modulesCore";
 import Api from "../Api";
 import IndexedDB from "../IndexedDB";
 import type {TFetchBadgeInfoResponse, TFetchReviewsResponse, TReview} from "./_types";
 import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
-import {EMessage} from "./EMessage";
 import DOMPurify from "dompurify";
 
 export default class SteamCommunityApi extends Api implements ApiHandlerInterface {
@@ -216,22 +216,22 @@ export default class SteamCommunityApi extends Api implements ApiHandlerInterfac
 
         switch(message.action) {
 
-            case EMessage.BadgeInfo:
+            case EAction.BadgeInfo:
                 return await this.fetchBadgeInfo(message.params.steamId, message.params.appid);
 
-            case EMessage.WorkshopFileSize:
+            case EAction.WorkshopFileSize:
                 return await this.getWorkshopFileSize(message.params.id, message.params.preventFetch);
 
-            case EMessage.Reviews:
+            case EAction.Reviews:
                 return await this.getReviews(message.params.steamId, message.params.pages);
 
-            case EMessage.Login:
+            case EAction.Login:
                 return await this.login(message.params.profilePath);
 
-            case EMessage.Logout:
+            case EAction.Logout:
                 return await this.login(message.params.force ?? undefined);
 
-            case EMessage.StoreCountry:
+            case EAction.StoreCountry:
                 return await this.storeCountry(message.params.country ?? undefined);
         }
 

@@ -1,7 +1,7 @@
 import IndexedDB from "../IndexedDB";
 import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
-import {EMessage} from "./EMessage";
 import LocalStorage from "@Core/Storage/LocalStorage";
+import {EAction} from "@Background/EAction";
 
 export default class CacheApi implements ApiHandlerInterface{
 
@@ -33,7 +33,7 @@ export default class CacheApi implements ApiHandlerInterface{
     async handle(message: any) {
 
         switch (message.action) {
-            case EMessage.CacheClear: {
+            case EAction.CacheClear: {
                 return await this.clearCache();
             }
         }

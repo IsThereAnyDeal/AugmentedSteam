@@ -13,7 +13,7 @@ import type ApiHandlerInterface from "@Background/ApiHandlerInterface";
 import Authorization from "./Authorization";
 import Settings from "@Options/Data/Settings";
 import AccessToken from "@Background/Modules/IsThereAnyDeal/AccessToken";
-import {EMessage} from "@Background/Modules/IsThereAnyDeal/EMessage";
+import {EAction} from "@Background/EAction";
 
 const MaxItemsPerRequest = 1000;
 const RequiredScopes = [
@@ -344,40 +344,40 @@ export default class ITADApi extends Api implements ApiHandlerInterface {
     async handle(message: any) {
 
         switch(message.action) {
-            case EMessage.StoreList:
+            case EAction.StoreList:
                 return await this.getStoreList();
 
-            case EMessage.Authorize:
+            case EAction.Authorize:
                 return await ((new Authorization()).authorize(RequiredScopes));
 
-            case EMessage.Disconnect:
+            case EAction.Disconnect:
                 return await this.disconnect();
 
-            case EMessage.IsConnected:
+            case EAction.IsConnected:
                 return await this.isConnected();
 
-            case EMessage.Export:
+            case EAction.Export:
                 return await this.exportToItad(message.params.force);
 
-            case EMessage.Sync:
+            case EAction.Sync:
                 return await this.sync();
 
-            case EMessage.LastImport:
+            case EAction.LastImport:
                 return await this.getLastImport();
 
-            case EMessage.InWaitlist:
+            case EAction.InWaitlist:
                 return await this.inWaitlist(message.params.storeIds);
 
-            case EMessage.AddToWaitlist:
+            case EAction.AddToWaitlist:
                 return await this.addToWaitlist(message.params.appids);
 
-            case EMessage.RemoveFromWaitlist:
+            case EAction.RemoveFromWaitlist:
                 return await this.removeFromWaitlist(message.params.appids);
 
-            case EMessage.InCollection:
+            case EAction.InCollection:
                 return await this.inCollection(message.params.storeIds);
 
-            case EMessage.GetFromCollection:
+            case EAction.GetFromCollection:
                 return await this.getFromCollection(message.params.storeId);
         }
 
