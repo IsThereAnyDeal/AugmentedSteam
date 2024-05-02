@@ -30,7 +30,7 @@ export default class ITADApi extends Api implements ApiHandlerInterface {
     }
 
     private async fetchStoreList(): Promise<TShopInfo[]> {
-        const url = this.getApiUrl("service/shops/v1");
+        const url = this.getUrl("service/shops/v1");
         const storeList = (await this.fetchJson(url));
 
         if (!Array.isArray(storeList)) {
@@ -44,7 +44,7 @@ export default class ITADApi extends Api implements ApiHandlerInterface {
     }
 
     private async fetchSteamIds(gids: string[]): Promise<Map<string, string>> {
-        const url = this.getApiUrl("unstable/id-lookup/shop/61/v2");
+        const url = this.getUrl("unstable/id-lookup/shop/61/v2");
         let obj = await this.fetchJson<Record<string, string[]|null>>(url, {
             method: "POST",
             headers: {"content-type": "application/json"},
@@ -63,7 +63,7 @@ export default class ITADApi extends Api implements ApiHandlerInterface {
     }
 
     private async fetchGameIds(steamIds: string[]): Promise<Map<string, string>> {
-        const url = this.getApiUrl("unstable/id-lookup/itad/61/v2");
+        const url = this.getUrl("unstable/id-lookup/itad/61/v2");
         let obj = await this.fetchJson<Record<string, string|null>>(url, {
             method: "POST",
             headers: {"content-type": "application/json"},
@@ -85,7 +85,7 @@ export default class ITADApi extends Api implements ApiHandlerInterface {
             return null;
         }
 
-        const url = this.getApiUrl("/collection/games/v1");
+        const url = this.getUrl("/collection/games/v1");
         let collection = await this.fetchJson<{id: string}[]>(url, {
             headers: {"authorization": "Bearer " + accessToken}
         });
@@ -99,7 +99,7 @@ export default class ITADApi extends Api implements ApiHandlerInterface {
             return null;
         }
 
-        const url = this.getApiUrl("/waitlist/games/v1")
+        const url = this.getUrl("/waitlist/games/v1")
         let waitlist = await this.fetchJson<{id: string}[]>(url, {
             headers: {"authorization": "Bearer " + accessToken}
         });
@@ -156,7 +156,7 @@ export default class ITADApi extends Api implements ApiHandlerInterface {
         gids = gids.filter(value => value); // filter out undefined values
 
         if (gids.length > 0) {
-            const url = this.getApiUrl("waitlist/games/v1");
+            const url = this.getUrl("waitlist/games/v1");
             let response = await fetch(url, {
                 method: "DELETE",
                 headers: {"authorization": "Bearer " + accessToken},

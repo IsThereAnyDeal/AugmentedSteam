@@ -33,7 +33,7 @@ export default class SteamStoreApi extends Api implements ApiHandlerInterface {
     }
 
     private async fetchPackageApps(subid: TSubid): Promise<TAppid[]> {
-        const url = this.getApiUrl("/api/packagedetails/", {"packageids": subid});
+        const url = this.getUrl("/api/packagedetails/", {"packageids": subid});
         const data = await this.fetchJson<{
             [strSubid: string]: {
                 success: boolean,
@@ -85,7 +85,7 @@ export default class SteamStoreApi extends Api implements ApiHandlerInterface {
         const sessionid = await this.fetchSessionId();
 
         if (sessionid) {
-            const url = this.getApiUrl("/api/addtowishlist", {sessionid, appid});
+            const url = this.getUrl("/api/addtowishlist", {sessionid, appid});
             result = await this.fetchJson(url, {
                 method: "POST",
                 credentials: "include"
@@ -107,7 +107,7 @@ export default class SteamStoreApi extends Api implements ApiHandlerInterface {
         }
 
         if (sessionId) {
-            const url = this.getApiUrl("/api/removefromwishlist", {sessionid: sessionId, appid})
+            const url = this.getUrl("/api/removefromwishlist", {sessionid: sessionId, appid})
             result = await this.fetchJson(url, {
                 method: "POST",
                 credentials: "include"
@@ -122,7 +122,7 @@ export default class SteamStoreApi extends Api implements ApiHandlerInterface {
     }
 
     private async getCurrencyFromWallet(parser: DOMParser): Promise<string|null> {
-        const url = this.getApiUrl("/steamaccount/addfunds");
+        const url = this.getUrl("/steamaccount/addfunds");
         const html = await this.fetchPage(url);
         const doc = parser.parseFromString(html, "text/html");
 
@@ -130,7 +130,7 @@ export default class SteamStoreApi extends Api implements ApiHandlerInterface {
     }
 
     private async getCurrencyFromApp(parser: DOMParser): Promise<string|null> {
-        const url = this.getApiUrl("/app/220");
+        const url = this.getUrl("/app/220");
         const html = await this.fetchPage(url);
         const doc = parser.parseFromString(html, "text/html");
 
@@ -161,13 +161,13 @@ export default class SteamStoreApi extends Api implements ApiHandlerInterface {
     }
 
     private async fetchSessionId(): Promise<string|null> {
-        const url = this.getApiUrl("/about/");
+        const url = this.getUrl("/about/");
         const html = await this.fetchPage(url);
         return HTMLParser.getVariableFromText(html, "g_sessionID", "string");
     }
 
     private async fetchWishlistCount(path: string): Promise<TFetchWishlistResponse> {
-        const url = this.getApiUrl(`/wishlist${path}`);
+        const url = this.getUrl(`/wishlist${path}`);
         const html = await this.fetchPage(url);
         const data = <TWishlistGame[]|null>HTMLParser.getVariableFromText(html, "g_rgWishlistData", "array");
         return data?.length ?? null;
@@ -191,7 +191,7 @@ export default class SteamStoreApi extends Api implements ApiHandlerInterface {
         ];
         const purchaseDates = new Map();
 
-        const url = this.getApiUrl("/account/licenses/", {"l": lang});
+        const url = this.getUrl("/account/licenses/", {"l": lang});
         const html = await this.fetchPage(url);
 
         const dummyPage = HTML.toDom(html);
@@ -238,7 +238,7 @@ export default class SteamStoreApi extends Api implements ApiHandlerInterface {
             return;
         }
 
-        const url = this.getApiUrl("dynamicstore/userdata");
+        const url = this.getUrl("dynamicstore/userdata");
         const store = await this.fetchJson<{
             // note: incomplete
             rgOwnedApps: number[],
@@ -303,7 +303,7 @@ export default class SteamStoreApi extends Api implements ApiHandlerInterface {
     }
 
     private async fetchAppDetails(appid: number, filter: string|undefined=undefined): Promise<TAppDetail|null> {
-        const url = this.getApiUrl("api/appdetails/", {
+        const url = this.getUrl("api/appdetails/", {
             appids: appid,
             filter: filter
         });

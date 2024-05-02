@@ -26,14 +26,14 @@ export default class SteamCommunityApi extends Api implements ApiHandlerInterfac
         return await response.text();
     }
     private fetchBadgeInfo(steamid: string, appid: number): Promise<TFetchBadgeInfoResponse> {
-        const url = this.getApiUrl(`/profiles/${steamid}/ajaxgetbadgeinfo/${appid}`);
+        const url = this.getUrl(`/profiles/${steamid}/ajaxgetbadgeinfo/${appid}`);
         return this.fetchJson(url, {credentials: "include"});
     }
 
     private async fetchWorkshopFileSize(id: string): Promise<number> {
         const parser = new DOMParser();
 
-        const url = this.getApiUrl("/sharedfiles/filedetails/", {id});
+        const url = this.getUrl("/sharedfiles/filedetails/", {id});
         const html = await this.fetchText(url, {credentials: "include"});
         const doc = parser.parseFromString(html, "text/html");
 
@@ -75,7 +75,7 @@ export default class SteamCommunityApi extends Api implements ApiHandlerInterfac
         let defaultOrder = 0;
 
         for (let p = 1; p <= pages; p++) {
-            const url = this.getApiUrl(`${steamId}/recommended`, {p});
+            const url = this.getUrl(`${steamId}/recommended`, {p});
             const html = await this.fetchPage(url);
             const doc = parser.parseFromString(html, "text/html");
 
@@ -172,7 +172,7 @@ export default class SteamCommunityApi extends Api implements ApiHandlerInterfac
             return login;
         }
 
-        const url = this.getApiUrl(profilePath);
+        const url = this.getUrl(profilePath);
         const html = await this.fetchText(url);
         const profileData = HTMLParser.getVariableFromText(html, "g_rgProfileData", "object");
         const steamId = profileData.steamid;

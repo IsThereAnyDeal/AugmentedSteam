@@ -26,57 +26,57 @@ export default class AugmentedSteamApi extends Api implements ApiHandlerInterfac
     }
 
     private async fetchStorePageData(appid: number): Promise<TFetchStorePageDataResponse> {
-        const url = this.getApiUrl(`app/${appid}/v2`);
+        const url = this.getUrl(`app/${appid}/v2`);
         return this.fetchJson(url);
     }
 
     private async fetchRates(to: string[]): Promise<{[from: string]: {[to: string]: number}}> {
-        const url = this.getApiUrl(`rates/v1`, {to: to.join(",")});
+        const url = this.getUrl(`rates/v1`, {to: to.join(",")});
         return await this.fetchJson(url);
     }
 
     private async fetchEarlyAccess(): Promise<Array<number>> {
-        const url = this.getApiUrl("early-access/v1");
+        const url = this.getUrl("early-access/v1");
         return this.fetchJson(url);
     }
 
     private async fetchSteamPeek(appid: number): Promise<TSimilarResponse> {
-        const url = this.getApiUrl(`similar/${appid}/v2`, {count: 15});
+        const url = this.getUrl(`similar/${appid}/v2`, {count: 15});
         return await this.fetchJson(url);
     }
 
     private async fetchDlcInfo(appid: number): Promise<TFetchDlcInfoResponse> {
-        const url = this.getApiUrl(`dlc/${appid}/v2`);
+        const url = this.getUrl(`dlc/${appid}/v2`);
         return this.fetchJson<TFetchDlcInfoResponse>(url);
     }
 
     private async fetchProfile(steamId: string): Promise<TProfileData> {
-        const url = this.getApiUrl(`profile/${steamId}/v2`);
+        const url = this.getUrl(`profile/${steamId}/v2`);
         return await this.fetchJson(url);
     }
 
     private async fetchTwitch(twitchChannelId: string): Promise<TFetchTwitchStreamResponse> {
-        const url = this.getApiUrl(`twitch/${twitchChannelId}/stream/v2`);
+        const url = this.getUrl(`twitch/${twitchChannelId}/stream/v2`);
         return this.fetchJson<TFetchTwitchStreamResponse>(url);
     }
 
     private async fetchProfileBackgrounds(appid: number): Promise<TFetchProfileBackgroundsResponse> {
-        const url = this.getApiUrl("profile/background/list/v2", {appid});
+        const url = this.getUrl("profile/background/list/v2", {appid});
         return this.fetchJson<TFetchProfileBackgroundsResponse>(url);
     }
 
     private async fetchProfileBackgroundsGames(): Promise<TFetchProfileBackgroundsGamesResponse> {
-        const url = this.getApiUrl("profile/background/games/v1");
+        const url = this.getUrl("profile/background/games/v1");
         return this.fetchJson<TFetchProfileBackgroundsGamesResponse>(url);
     }
 
     private async fetchMarketCardPrices(currency: string, appid: number): Promise<TFetchMarketCardPricesResponse> {
-        const url = this.getApiUrl("market/cards/v2", {currency, appid});
+        const url = this.getUrl("market/cards/v2", {currency, appid});
         return this.fetchJson(url);
     }
 
     private async fetchMarketAverageCardPrices(currency: string, appids: number[]): Promise<TFetchMarketCardAveragePricesResponse> {
-        const url = this.getApiUrl("market/cards/average-prices/v2", {
+        const url = this.getUrl("market/cards/average-prices/v2", {
             currency,
             appids: appids.join(",")
         });
@@ -91,7 +91,7 @@ export default class AugmentedSteamApi extends Api implements ApiHandlerInterfac
         voucher: boolean,
         shops: number[]
     ): Promise<TFetchPricesResponse> {
-        const url = this.getApiUrl("prices/v2");
+        const url = this.getUrl("prices/v2");
 
         return await this.fetchJson<TFetchPricesResponse>(url, {
             method: "POST",
