@@ -13,7 +13,7 @@
 
             (new self_({
                 target,
-                anchor: target.firstElementChild,
+                anchor: target.firstElementChild ?? undefined,
             }));
         }
     }
@@ -37,7 +37,7 @@
         const type = item.querySelector("td.license_acquisition_col")?.textContent?.trim() || L(__thewordunknown);
 
         total[type] = (total[type] ?? 0) + 1;
-        (yearly[year] ??= {})[type] = (yearly[year][type] ?? 0) + 1;
+        (yearly[year] ??= {})[type] = (yearly[year]![type] ?? 0) + 1;
     }
 
     let isOpen: boolean = false;

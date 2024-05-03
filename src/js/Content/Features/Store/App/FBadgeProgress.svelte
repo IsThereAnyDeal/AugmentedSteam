@@ -1,18 +1,18 @@
 <script lang="ts" context="module">
     // @ts-ignore
     import self_ from "./FBadgeProgress.svelte";
-    import {SyncedStorage} from "../../../../modulesCore";
     import {Feature, User} from "../../../modulesContent";
     import type {CApp} from "./CApp";
-    import type {TFetchBadgeInfoResponse} from "../../../../Background/Modules/Community/_types";
+    import type {TFetchBadgeInfoResponse} from "@Background/Modules/Community/_types";
     import SteamCommunityApiFacade from "../../../Modules/Facades/SteamCommunityApiFacade";
+    import Settings from "@Options/Data/Settings";
 
     export class FBadgeProgress extends Feature<CApp> {
 
         override checkPrerequisites(): boolean {
             return !this.context.isDlcLike
                 && User.isSignedIn
-                && SyncedStorage.get("show_badge_progress");
+                && Settings.show_badge_progress;
         }
 
         override async apply(): Promise<void> {
@@ -35,7 +35,7 @@
 
             (new self_({
                 target,
-                anchor: target.querySelector("#category_block")?.nextElementSibling ?? null,
+                anchor: target.querySelector("#category_block")?.nextElementSibling ?? undefined,
                 props: {data}
             }));
         }
@@ -43,14 +43,14 @@
 </script>
 
 <script lang="ts">
-    import type {TBadgeData} from "../../../../Background/Modules/Community/_types";
-    import {L} from "../../../../Core/Localization/Localization";
+    import type {TBadgeData} from "@Background/Modules/Community/_types";
+    import {L} from "@Core/Localization/Localization";
     import {
         __badgeLevel,
         __badgeNotUnlocked,
         __badgeProgress,
         __cardsOwned, __viewBadge, __viewBadgeProgress
-    } from "../../../../../localization/compiled/_strings";
+    } from "@Strings/_strings";
 
     export let data: TBadgeData;
 

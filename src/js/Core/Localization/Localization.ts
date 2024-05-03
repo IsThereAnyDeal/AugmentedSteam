@@ -1,4 +1,5 @@
 import {BackgroundSimple, ExtensionResources, Language, SyncedStorage} from "../../modulesCore";
+import Settings from "@Options/Data/Settings";
 
 interface TLocale {
     stats: {
@@ -20,12 +21,12 @@ export default class Localization {
     static init() {
         if (!this._promise) {
             this._promise = (async () => {
-                const stored = SyncedStorage.get("language");
+                const stored = Settings.language;
                 let current = Language.getCurrentSteamLanguage();
                 if (current === null) {
                     current = stored;
                 } else if (current !== stored) {
-                    SyncedStorage.set("language", current);
+                    Settings.language = current;
                     BackgroundSimple.action("clearpurchases");
                 }
 

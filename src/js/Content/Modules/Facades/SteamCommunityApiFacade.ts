@@ -1,6 +1,6 @@
 import {BackgroundSender} from "@Core/BackgroundSimple";
 import type {TFetchBadgeInfoResponse} from "@Background/Modules/Community/_types";
-import {EAction} from "@Background/Modules/Community/EAction";
+import {EAction} from "@Background/EAction";
 
 export default class SteamCommunityApiFacade {
 

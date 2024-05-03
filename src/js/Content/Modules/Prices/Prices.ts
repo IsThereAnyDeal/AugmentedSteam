@@ -1,8 +1,9 @@
 import {SyncedStorage} from "../../../modulesCore";
 import {User} from "../User";
 import AugmentedSteamApiFacade from "../Facades/AugmentedSteamApiFacade";
-import type {TBundle, TPriceOverview} from "../../../Background/Modules/AugmentedSteam/_types";
+import type {TBundle, TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
 import ITADApiFacade from "../Facades/ITADApiFacade";
+import Settings from "@Options/Data/Settings";
 
 type TIdType = "app"|"sub"|"bundle";
 
@@ -18,8 +19,8 @@ interface TResponse {
 class Prices {
 
     async _getShops(): Promise<number[]> {
-        const excludedStores: number[] = SyncedStorage.get("excluded_stores");
-        if (!SyncedStorage.get("showallstores") && excludedStores.length > 0) {
+        const excludedStores: number[] = Settings.excluded_stores;
+        if (!Settings.showallstores && excludedStores.length > 0) {
             const storeList = await ITADApiFacade.getStoreList().catch(err => console.error(err));
             if (storeList) {
                 return storeList
@@ -36,7 +37,7 @@ class Prices {
             params.apps ?? [],
             params.subs ?? [],
             params.bundles ?? [],
-            SyncedStorage.get("showlowestpricecoupon") ?? false,
+            Settings.showlowestpricecoupon,
             await this._getShops()
         );
 

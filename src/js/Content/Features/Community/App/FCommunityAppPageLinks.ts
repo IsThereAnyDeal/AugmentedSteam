@@ -1,14 +1,14 @@
-import {SyncedStorage} from "../../../../modulesCore";
 import {Feature} from "../../../Modules/Feature/Feature";
 
 import CommunityAppPageLinks from "./CommunityAppPageLinks.svelte";
+import Settings from "@Options/Data/Settings";
 
 export default class FCommunityAppPageLinks extends Feature<{ appid: number }> {
 
     private node: HTMLElement | null = null;
 
     public override checkPrerequisites(): boolean {
-        return (SyncedStorage.get("showsteamdb") || SyncedStorage.get("showitadlinks") || SyncedStorage.get("showbartervg"))
+        return (Settings.showsteamdb || Settings.showitadlinks || Settings.showbartervg)
             && (this.node = document.querySelector(".apphub_OtherSiteInfo")) !== null;
     }
 

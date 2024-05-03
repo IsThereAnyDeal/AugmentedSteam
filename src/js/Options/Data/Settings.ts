@@ -276,11 +276,11 @@ export class SettingsStore {
         return this.data[key];
     }
 
-    static set<K extends SchemaKeys<SettingsSchema>>(key: K, value: SchemaValue<SettingsSchema, K>): void {
+    static async set<K extends SchemaKeys<SettingsSchema>>(key: K, value: SchemaValue<SettingsSchema, K>): Promise<void> {
         this.onSaveStart.invoke();
 
         this.data[key] = value;
-        this.storage.set(key, value);
+        await this.storage.set(key, value);
 
         this.onSaveEnd.invoke();
     }

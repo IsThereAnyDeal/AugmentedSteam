@@ -49,7 +49,7 @@
 
     export let reviewSection: HTMLElement;
 
-    let show: boolean = LocalStorage.get("show_review_section");
+    let show: boolean = false;
 
     function toggleReviews(event?: MouseEvent) {
         if (event) {
@@ -61,6 +61,10 @@
     }
 
     onMount(() => {
+        (async () => {
+            show = await LocalStorage.get("show_review_section") ?? true
+        })();
+
         toggleReviews();
     });
 </script>

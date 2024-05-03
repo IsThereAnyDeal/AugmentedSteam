@@ -1,9 +1,9 @@
 <script lang="ts" context="module">
     // @ts-ignore
     import self_ from "./FPlayers.svelte";
-    import {SyncedStorage} from "../../../../modulesCore";
     import {Feature} from "../../../modulesContent";
     import type {CApp} from "./CApp";
+    import Settings from "@Options/Data/Settings";
 
     export class FPlayers extends Feature<CApp> {
         private _data: any;
@@ -11,7 +11,7 @@
         override async checkPrerequisites(): Promise<boolean> {
             if (this.context.isDlcLike
                 || this.context.isVideoOrHardware
-                || !SyncedStorage.get("show_players_info")) {
+                || !Settings.show_players_info) {
                 return false;
             }
 
@@ -32,7 +32,7 @@
 
             (new self_({
                 target,
-                anchor: target.firstElementChild,
+                anchor: target.firstElementChild ?? undefined,
                 props: {
                     recent: Number(this._data.recent),
                     peakToday: Number(this._data.peak_today),

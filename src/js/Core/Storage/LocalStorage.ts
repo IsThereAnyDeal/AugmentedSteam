@@ -19,7 +19,8 @@ interface LocalStorageSchema extends StorageSchema {
         from: null|number,
         to: null|number
     },
-    db_cleanup: number
+    db_cleanup: number,
+    show_review_section: boolean
 }
 
 class LocalStorage<Schema extends StorageSchema> extends Storage<ns.LocalStorageArea, Schema>{

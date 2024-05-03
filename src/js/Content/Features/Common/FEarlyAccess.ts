@@ -1,7 +1,8 @@
-import {ExtensionResources, GameId, Language, SyncedStorage} from "../../../modulesCore";
+import {ExtensionResources, GameId, Language} from "../../../modulesCore";
 import {Background, Feature} from "../../modulesContent";
 
 import EarlyAccess from "./EarlyAccess.svelte";
+import Settings from "@Options/Data/Settings";
 
 // TODO support React-based sales pages, curator lists, etc.
 const storeSelectors = [
@@ -50,7 +51,7 @@ const selector = (window.location.hostname === "store.steampowered.com" ? storeS
 export default class FEarlyAccess extends Feature {
 
     public static async show(nodes?: NodeListOf<Element>): Promise<void> {
-        if (!SyncedStorage.get("show_early_access")) { return; }
+        if (!Settings.show_early_access) { return; }
 
         const _nodes = nodes ?? document.querySelectorAll(selector);
         if (_nodes.length === 0) { return; }
@@ -106,9 +107,7 @@ export default class FEarlyAccess extends Feature {
         await FEarlyAccess.show();
     }
 
-
-
-    static async getEaNodes(nodes: NodeList) {
+    static async getEaNodes(nodes: NodeListOf<Element>) {
 
         const appidsMap = new Map();
 

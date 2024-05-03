@@ -4,7 +4,7 @@
     import {Feature} from "../../../modulesContent";
     import type {CApp} from "./CApp";
     import SteamApi from "../../../Modules/SteamApi";
-    import {SyncedStorage} from "../../../../modulesCore";
+    import Settings from "@Options/Data/Settings";
 
     export class FAchievementBar extends Feature<CApp> {
 
@@ -14,7 +14,7 @@
              * just as if you own the game but have no achievements,
              * so it's important to check for ownership `this.context.isOwnedAndPlayed`.
              */
-            return SyncedStorage.get("showachinstore")
+            return Settings.showachinstore
                 && this.context.hasAchievements
                 && this.context.isOwnedAndPlayed;
         }
@@ -26,7 +26,7 @@
 
             (new self_({
                 target,
-                anchor: target.firstElementChild,
+                anchor: target.firstElementChild ?? undefined,
                 props: {
                     unlocked,
                     total,
@@ -38,8 +38,8 @@
 </script>
 
 <script lang="ts">
-    import {__achievements_summary} from "../../../../../localization/compiled/_strings";
-    import {L} from "../../../../Core/Localization/Localization";
+    import {__achievements_summary} from "@Strings/_strings";
+    import {L} from "@Core/Localization/Localization";
 
     export let unlocked: number;
     export let total: number;
