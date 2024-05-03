@@ -1,10 +1,11 @@
-import {Errors, HTML, HTMLParser, StringUtils, TimeUtils} from "../../../modulesCore";
+import {HTML, HTMLParser, StringUtils, TimeUtils} from "../../../modulesCore";
 import Api from "../Api";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import IndexedDB from "@Background/Db/IndexedDB";
 import type {TAppDetail, TFetchWishlistResponse, TPackageDetail, TWishlistGame} from "./_types";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import {EAction} from "@Background/EAction";
+import Errors from "@Core/Errors/Errors";
 
 // helper types for clarity
 type TAppid = number;

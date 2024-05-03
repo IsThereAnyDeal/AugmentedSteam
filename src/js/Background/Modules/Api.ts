@@ -1,4 +1,4 @@
-import {Errors} from "../../modulesCore";
+import Errors from "@Core/Errors/Errors";
 
 export default abstract class Api {
 

@@ -1,5 +1,5 @@
 import {ProgressBar} from "./Widgets/ProgressBar";
-import {Errors} from "../../Core/Errors/Errors";
+import Errors from "@Core/Errors/Errors";
 
 class RequestData {
 

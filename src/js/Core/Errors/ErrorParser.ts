@@ -6,18 +6,17 @@
  *  cut down to only send the message of the error},
  * losing information about the type.
  */
-class ErrorParser {
+export default class ErrorParser {
 
     /**
      * Takes an Error string and parses it by splitting it into name and message
      * @param {String} errStr a string created by Error.prototype.toString
      * @returns {{name: String, msg: String}} an object containing information about the error name and its message
      */
-    static parse(errStr) {
+    static parse(errStr: string): {name: string, msg: string} {
         const info = errStr.match(/(.*):\s(.+)/);
-
-        return {"name": info[1] || "", "msg": info[2] || ""};
+        return info
+            ? {name: info[1] ?? "", msg: info[2] ?? ""}
+            : {name: "", msg: ""};
     }
 }
-
-export {ErrorParser};

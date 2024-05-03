@@ -1,5 +1,3 @@
-export {ErrorParser} from "./Core/Errors/ErrorParser";
-export {Errors} from "./Core/Errors/Errors";
 export {HTML} from "./Core/Html/Html";
 export {HTMLParser} from "./Core/Html/HtmlParser";
 export {default as Language} from "./Core/Localization/Language";

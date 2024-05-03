@@ -1,4 +1,3 @@
-import {Errors, GameId, LocalStorage} from "../../../modulesCore";
 import type {TCoupon} from "@Background/Modules/Community/_types";
 import IndexedDB from "@Background/Db/IndexedDB";
 import Api from "@Background/Modules/Api";
@@ -11,6 +10,9 @@ import {
 } from "@Background/Modules/Inventory/_types";
 import SteamStoreApi from "@Background/Modules/Store/SteamStoreApi";
 import {EAction} from "@Background/EAction";
+import LocalStorage from "@Core/Storage/LocalStorage";
+import Errors from "@Core/Errors/Errors";
+import {GameId} from "@Core/GameId";
 
 
 export default class InventoryApi extends Api implements MessageHandlerInterface {

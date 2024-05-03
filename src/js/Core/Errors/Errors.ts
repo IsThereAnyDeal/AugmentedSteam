@@ -1,38 +1,39 @@
 
 class LoginError extends Error {
-    constructor(type) {
+    constructor(type: string) {
         super(type);
         this.name = "LoginError";
     }
 }
 
 class ServerOutageError extends Error {
-    constructor(msg) {
+    constructor(msg: string) {
         super(msg);
         this.name = "ServerOutageError";
     }
 }
 
 class HTTPError extends Error {
-    constructor(code, message) {
+    public code: number;
+
+    constructor(code: number, message: string) {
         super(message);
         this.code = code;
     }
 }
 
-
 class FeatureDependencyError extends Error {
-    constructor(msg, featureName) {
+    public featureName: string;
+
+    constructor(msg: string, featureName: string) {
         super(msg);
         this.featureName = featureName;
     }
 }
 
-const Errors = {
-    "LoginError": LoginError,
-    "ServerOutageError": ServerOutageError,
-    "HTTPError": HTTPError,
-    "FeatureDependencyError": FeatureDependencyError
-};
-
-export {Errors};
+export default Object.freeze({
+    LoginError,
+    ServerOutageError,
+    HTTPError,
+    FeatureDependencyError
+});

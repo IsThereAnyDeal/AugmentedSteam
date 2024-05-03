@@ -1,5 +1,5 @@
-import {BackgroundSimple} from "../../Core/BackgroundSimple";
-import {ErrorParser} from "../../Core/Errors/ErrorParser";
+import ErrorParser from "@Core/Errors/ErrorParser";
+import {BackgroundSimple} from "@Core/BackgroundSimple";
 import {ProgressBar} from "./Widgets/ProgressBar";
 
 class Background extends BackgroundSimple {

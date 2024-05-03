@@ -1,5 +1,5 @@
 import type {Feature} from "./Feature";
-import {Errors} from "../../../Core/Errors/Errors";
+import Errors from "@Core/Errors/Errors";
 
 class FeatureManager {
 
