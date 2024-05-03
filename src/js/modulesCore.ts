@@ -1,5 +1,4 @@
 export {HTML} from "./Core/Html/Html";
-export {HTMLParser} from "./Core/Html/HtmlParser";
 export {default as Language} from "./Core/Localization/Language";
 export {default as Localization} from "./Core/Localization/Localization";
 export {CookieStorage} from "./Core/Storage/CookieStorage";

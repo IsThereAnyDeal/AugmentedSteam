@@ -1,5 +1,5 @@
-import {HTMLParser} from "../../Core/Html/HtmlParser";
-import {StringUtils} from "../../Core/Utils/StringUtils";
+import HTMLParser from "@Core/Html/HtmlParser";
+import {StringUtils} from "@Core/Utils/StringUtils";
 import {Background} from "./Background";
 import {RequestData} from "./RequestData";
 
@@ -61,9 +61,9 @@ class User {
                     newCountry = JSON.parse(config.dataset.config).COUNTRY;
                 } else if (window.location.hostname === "steamcommunity.com") {
                     // This variable is present on market-related pages
-                    newCountry = HTMLParser.getVariableFromDom("g_strCountryCode", "string");
+                    newCountry = HTMLParser.getStringVariable("g_strCountryCode");
                 } else {
-                    newCountry = HTMLParser.getVariableFromDom(/GDynamicStore\.Init\(.+?,\s*'([A-Z]{2})'/, "string");
+                    newCountry = HTMLParser.getStringVariable(/GDynamicStore\.Init\(.+?,\s*'([A-Z]{2})'/);
                 }
 
                 if (!newCountry) {
@@ -89,7 +89,7 @@ class User {
 
     static get sessionId() {
         if (!User._sessionId) {
-            User._sessionId = HTMLParser.getVariableFromDom("g_sessionID", "string");
+            User._sessionId = HTMLParser.getStringVariable("g_sessionID");
         }
         return User._sessionId;
     }

@@ -1,4 +1,4 @@
-import {HTMLParser} from "../../../../modulesCore";
+import HTMLParser from "@Core/Html/HtmlParser";
 import {Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -16,7 +16,7 @@ export default class FHideReportedTags extends Feature {
          * The second argument passed to `InitAppTagModal()` is an array of user tags
          * https://github.com/SteamDatabase/SteamTracking/blob/590b40f75e2ed3a1a314f64448d466a812b6a686/store.steampowered.com/public/javascript/app_tagging.js#L63
          */
-        const userTags = HTMLParser.getVariableFromDom(/\[{"tagid".+}\],\s*(\[{"tagid".+}\])/);
+        const userTags = HTMLParser.getArrayVariable(/\[{"tagid".+}\],\s*(\[{"tagid".+}\])/);
         if (!userTags) { return; }
 
         const reportedTagNames = new Set();

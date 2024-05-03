@@ -1,4 +1,4 @@
-import {HTML, HTMLParser, StringUtils, TimeUtils} from "../../../modulesCore";
+import {StringUtils, TimeUtils} from "../../../modulesCore";
 import Api from "../Api";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import IndexedDB from "@Background/Db/IndexedDB";
@@ -6,6 +6,8 @@ import type {TAppDetail, TFetchWishlistResponse, TPackageDetail, TWishlistGame} 
 import LocalStorage from "@Core/Storage/LocalStorage";
 import {EAction} from "@Background/EAction";
 import Errors from "@Core/Errors/Errors";
+import HTMLParser from "@Core/Html/HtmlParser";
+import HTML from "@Core/Html/Html";
 
 // helper types for clarity
 type TAppid = number;
@@ -164,13 +166,13 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
     private async fetchSessionId(): Promise<string|null> {
         const url = this.getUrl("/about/");
         const html = await this.fetchPage(url);
-        return HTMLParser.getVariableFromText(html, "g_sessionID", "string");
+        return HTMLParser.getStringVariable("g_sessionID", html);
     }
 
     private async fetchWishlistCount(path: string): Promise<TFetchWishlistResponse> {
         const url = this.getUrl(`/wishlist${path}`);
         const html = await this.fetchPage(url);
-        const data = <TWishlistGame[]|null>HTMLParser.getVariableFromText(html, "g_rgWishlistData", "array");
+        const data = HTMLParser.getArrayVariable<TWishlistGame>("g_rgWishlistData", html);
         return data?.length ?? null;
     }
 

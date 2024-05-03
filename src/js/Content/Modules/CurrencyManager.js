@@ -1,4 +1,5 @@
-import {HTMLParser, StringUtils, SyncedStorage} from "../../modulesCore";
+import HTMLParser from "@Core/Html/HtmlParser";
+import {StringUtils, SyncedStorage} from "../../modulesCore";
 import {Background} from "../modulesContent";
 
 class SteamCurrency {
@@ -191,7 +192,7 @@ class CurrencyManager {
     }
 
     static _getCurrencyFromWallet() {
-        const walletInfo = HTMLParser.getVariableFromDom("g_rgWalletInfo", "object");
+        const walletInfo = HTMLParser.getObjectVariable("g_rgWalletInfo");
         if (walletInfo && walletInfo.wallet_currency) {
             return CurrencyManager.currencyNumberToType(walletInfo.wallet_currency);
         }

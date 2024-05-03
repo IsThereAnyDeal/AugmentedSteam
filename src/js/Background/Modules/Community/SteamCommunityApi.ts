@@ -1,11 +1,12 @@
 import { EAction } from "@Background/EAction";
-import {HTMLParser, LocalStorage, TimeUtils} from "../../../modulesCore";
+import {LocalStorage, TimeUtils} from "../../../modulesCore";
 import Api from "../Api";
 import IndexedDB from "@Background/Db/IndexedDB";
 import type {TFetchBadgeInfoResponse, TFetchReviewsResponse, TReview} from "./_types";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import DOMPurify from "dompurify";
 import Errors from "@Core/Errors/Errors";
+import HTMLParser from "@Core/Html/HtmlParser";
 
 export default class SteamCommunityApi extends Api implements MessageHandlerInterface {
 
@@ -175,7 +176,7 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
 
         const url = this.getUrl(profilePath);
         const html = await this.fetchText(url);
-        const profileData = HTMLParser.getVariableFromText(html, "g_rgProfileData", "object");
+        const profileData = HTMLParser.getObjectVariable("g_rgProfileData", html);
         const steamId = profileData.steamid;
 
         if (!steamId) { // this should never happen

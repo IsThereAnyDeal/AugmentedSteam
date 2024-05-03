@@ -1,4 +1,5 @@
-import {HTMLParser, TimeUtils} from "../../../../modulesCore";
+import HTMLParser from "@Core/Html/HtmlParser";
+import {TimeUtils} from "@Core/Utils/TimeUtils";
 import {ContextType, FeatureManager, User} from "../../../modulesContent";
 import {CStoreBase} from "../Common/CStoreBase";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
@@ -16,7 +17,7 @@ export class CWishlist extends CStoreBase {
 
     constructor() {
 
-        const wishlistData = HTMLParser.getVariableFromDom("g_rgWishlistData", "array");
+        const wishlistData = HTMLParser.getArrayVariable("g_rgWishlistData");
 
         // Don't apply features on empty or private wishlists
         if (!wishlistData || wishlistData.length === 0) {

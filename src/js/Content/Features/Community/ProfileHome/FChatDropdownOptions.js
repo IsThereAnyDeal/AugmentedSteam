@@ -1,6 +1,7 @@
-import {__steamClientChat, __webBrowserChat} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML, HTMLParser} from "../../../../modulesCore";
+import HTML from "@Core/Html/Html";
+import HTMLParser from "@Core/Html/HtmlParser";
+import {__steamClientChat, __webBrowserChat} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
 import {Feature, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -15,7 +16,7 @@ export default class FChatDropdownOptions extends Feature {
         const sendButton = document.querySelector("div.profile_header_actions > a[href*=OpenFriendChat]");
         if (!sendButton) { return; }
 
-        const {"steamid": friendSteamId} = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
+        const {"steamid": friendSteamId} = HTMLParser.getObjectVariable("g_rgProfileData");
 
         HTML.replace(sendButton,
             `<span class="btn_profile_action btn_medium" id="profile_chat_dropdown_link">

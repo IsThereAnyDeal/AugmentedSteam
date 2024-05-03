@@ -1,4 +1,4 @@
-import {HTML} from "../../../../Core/Html/Html";
+import {HTML} from "@Core/Html/Html";
 import {Feature} from "../../../Modules/Feature/Feature";
 
 export default class FFriendsCount extends Feature {

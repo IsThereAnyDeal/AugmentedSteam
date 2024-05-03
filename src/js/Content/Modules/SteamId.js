@@ -1,4 +1,4 @@
-import {HTMLParser} from "../../Core/Html/HtmlParser";
+import HTMLParser from "@Core/Html/HtmlParser";
 
 class SteamId {
 
@@ -8,11 +8,11 @@ class SteamId {
         if (document.querySelector("#reportAbuseModal")) {
             SteamId._steamId = document.querySelector("input[name=abuseID]").value;
         } else {
-            SteamId._steamId = HTMLParser.getVariableFromDom("g_steamID", "string");
+            SteamId._steamId = HTMLParser.getStringVariable("g_steamID");
         }
 
         if (!SteamId._steamId) {
-            const profileData = HTMLParser.getVariableFromDom("g_rgProfileData", "object");
+            const profileData = HTMLParser.getObjectVariable("g_rgProfileData");
             SteamId._steamId = profileData.steamid;
         }
 

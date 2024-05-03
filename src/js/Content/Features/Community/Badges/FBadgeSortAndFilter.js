@@ -1,3 +1,4 @@
+import HTMLParser from "@Core/Html/HtmlParser";
 import {
     __badgesAll,
     __badgesDrops,
@@ -8,9 +9,8 @@ import {
     __show,
     __theworddefault,
     __view,
-} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML, HTMLParser} from "../../../../modulesCore";
+} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
 import {Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 
@@ -210,7 +210,7 @@ export default class FBadgeSortAndFilter extends Feature {
         this._hasAllPagesLoaded = true;
 
         const sheetNode = document.querySelector(".badges_sheet");
-        let images = HTMLParser.getVariableFromDom("g_rgDelayedLoadImages", "object");
+        let images = HTMLParser.getObjectVariable("g_rgDelayedLoadImages");
 
         await this.context.eachBadgePage((dom, delayedLoadImages) => {
             sheetNode.append(...dom.querySelector(".badges_sheet").children);
