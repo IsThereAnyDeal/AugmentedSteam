@@ -1,8 +1,8 @@
+import SubId from "@Core/GameId/SubId";
 import ContextType from "../../../Modules/Context/ContextType";
-import {GameId} from "@Core/GameId";
 import {CStoreBase} from "../Common/CStoreBase";
-import FExtraLinks from "../Common/FExtraLinks";
 import FDRMWarnings from "../Common/FDRMWarnings";
+import FExtraLinks from "../Common/FExtraLinks";
 import FITADPrices from "../Common/FITADPrices";
 import FRegionalPricing from "../Common/FRegionalPricing";
 import FSavingsCheck from "./FSavingsCheck";
@@ -19,6 +19,6 @@ export class CSub extends CStoreBase {
             FSavingsCheck,
         ]);
 
-        this.subid = GameId.getSubid(window.location.host + window.location.pathname);
+        this.subid = SubId.fromUrl(window.location.host + window.location.pathname);
     }
 }

@@ -1,5 +1,5 @@
 import ContextType from "../../../Modules/Context/ContextType";
-import {GameId} from "@Core/GameId";
+import {GameId} from "@Core/GameId/GameId";
 import {CCommunityBase} from "../CCommunityBase";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 import FSkipAgecheck from "../../Common/FSkipAgecheck";

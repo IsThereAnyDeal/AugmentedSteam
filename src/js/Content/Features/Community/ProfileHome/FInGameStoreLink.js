@@ -1,6 +1,7 @@
+import AppId from "@Core/GameId/AppId";
 import {__viewInStore} from "../../../../../localization/compiled/_strings";
 import {L} from "../../../../Core/Localization/Localization";
-import {GameId, HTML} from "../../../../modulesCore";
+import {HTML} from "../../../../modulesCore";
 import {Feature, RequestData} from "../../../modulesContent";
 
 export default class FInGameStoreLink extends Feature {
@@ -20,7 +21,7 @@ export default class FInGameStoreLink extends Feature {
         if (!appid) {
             const html = await RequestData.getHttp(`https://steamcommunity.com/miniprofile/${this._avatarNode.dataset.miniprofile}`);
             const doc = HTML.toDom(html);
-            appid = GameId.getAppidImgSrc(doc.querySelector("img.game_logo"));
+            appid = AppId.fromImageElement(doc.querySelector("img.game_logo"));
             if (!appid) { return; }
         }
 

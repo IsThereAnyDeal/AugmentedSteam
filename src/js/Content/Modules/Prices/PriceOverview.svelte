@@ -1,7 +1,6 @@
 <svelte:options accessors immutable />
 
 <script lang="ts">
-    import {HTML} from "@Core/Html/Html";
     import PriceWithAlt from "./PriceWithAlt.svelte";
     import {afterUpdate} from "svelte";
     import type {TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
@@ -14,6 +13,7 @@
         __pricing_withVoucher
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
+    import HTML from "@Core/Html/Html";
 
     export let data: TPriceOverview;
     export let setBottom: boolean = false;

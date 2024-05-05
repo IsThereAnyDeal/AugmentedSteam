@@ -1,3 +1,4 @@
+import AppId from "@Core/GameId/AppId";
 import {GameId} from "../../../../modulesCore";
 import {Background, ContextType, FeatureManager} from "../../../modulesContent";
 import FMediaExpander from "../../Common/FMediaExpander";
@@ -52,7 +53,7 @@ export class CApp extends CStoreBase {
             super(ContextType.APP, [FExtraLinks]);
 
             this.isErrorPage = true;
-            this.appid = GameId.getAppid(window.location.host + window.location.pathname);
+            this.appid = AppId.fromUrl(window.location.host + window.location.pathname);
 
             return;
         }
@@ -100,11 +101,11 @@ export class CApp extends CStoreBase {
             FRemoveDupeScreenshots,
         ]);
 
-        this.appid = GameId.getAppid(window.location.host + window.location.pathname);
+        this.appid = AppId.fromUrl(window.location.host + window.location.pathname);
         this.storeid = `app/${this.appid}`;
 
         // Some games (e.g. 201270, 201271) have different appid in store page and community
-        this.communityAppid = GameId.getAppidImgSrc(
+        this.communityAppid = AppId.fromCDNUrl(
             document.querySelector(".apphub_AppIcon img")?.getAttribute("src")
         ) ?? this.appid;
 

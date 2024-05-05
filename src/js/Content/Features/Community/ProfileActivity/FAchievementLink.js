@@ -1,3 +1,4 @@
+import AppId from "@Core/GameId/AppId";
 import {GameId, HTML} from "../../../../modulesCore";
 import {CallbackFeature} from "../../../modulesContent";
 
@@ -15,7 +16,7 @@ export default class FAchievementLink extends CallbackFeature {
             if (!firstImg) { continue; }
 
             const linksNode = node.querySelector(":scope > span");
-            const appid = GameId.getAppid(linksNode && linksNode.querySelector("a:nth-of-type(2)"));
+            const appid = AppId.fromElement(linksNode && linksNode.querySelector("a:nth-of-type(2)"));
             if (!appid) { continue; }
 
             let profileUrl = linksNode.querySelector("a[data-miniprofile]").href;

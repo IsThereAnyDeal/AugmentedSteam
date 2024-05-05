@@ -1,9 +1,10 @@
-import {HTML, Language} from "../../../../modulesCore";
 import {Feature, RequestData, Sortbox} from "../../../modulesContent";
 import type {CProfileStats} from "./CProfileStats";
 import {DateTime, type DateTimeOptions} from "luxon";
 import {__dateUnlocked, __theworddefault} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
+import Language from "@Core/Localization/Language";
+import HTML from "@Core/Html/Html";
 
 interface DateFormatSettings {
     format: string,

@@ -1,3 +1,4 @@
+import AppId from "@Core/GameId/AppId";
 import {GameId, HTML, LocalStorage} from "../../../../modulesCore";
 import {Feature, RequestData} from "../../../modulesContent";
 import {Page} from "../../Page";
@@ -72,7 +73,7 @@ export default class FBrowseWorkshops extends Feature {
 
         // Restore onclick attribute
         for (const img of document.querySelectorAll(".appCover img")) {
-            const appid = GameId.getAppidImgSrc(img.src);
+            const appid = AppId.fromCDNUrl(img.src);
             img.closest(".app").addEventListener("click", () => {
                 top.location.href = `https://steamcommunity.com/app/${appid}/workshop/`;
             });

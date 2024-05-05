@@ -1,3 +1,4 @@
+import AppId from "@Core/GameId/AppId";
 import {GameId, HTML} from "../../../../modulesCore";
 import {Background, CallbackFeature, Price} from "../../../modulesContent";
 
@@ -13,7 +14,7 @@ export default class FAddPriceToGifts extends CallbackFeature {
         const viewStoreBtn = itemActions.querySelector("a");
         if (!viewStoreBtn || !viewStoreBtn.href.startsWith("https://store.steampowered.com/app/")) { return; }
 
-        const giftAppid = GameId.getAppid(viewStoreBtn.href);
+        const giftAppid = AppId.fromUrl(viewStoreBtn.href);
         if (!giftAppid) { return; }
 
         const result = await Background.action("appdetails", giftAppid, "price_overview");

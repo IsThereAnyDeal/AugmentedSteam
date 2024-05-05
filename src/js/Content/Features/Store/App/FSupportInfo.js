@@ -1,3 +1,4 @@
+import AppId from "@Core/GameId/AppId";
 import {L} from "@Core/Localization/Localization";
 import {__contact, __email, __support, __website} from "@Strings/_strings";
 import {GameId, HTML, LocalStorage, SyncedStorage} from "../../../../modulesCore";
@@ -19,7 +20,7 @@ export default class FSupportInfo extends Feature {
         }
 
         // Attempt to get appid of parent app first for DLCs and Soundtracks
-        const appid = GameId.getAppid(document.querySelector(".glance_details a")) || this.context.appid;
+        const appid = AppId.fromElement(document.querySelector(".glance_details a")) || this.context.appid;
         this._supportInfo = cache.data[appid];
 
         if (!this._supportInfo) {

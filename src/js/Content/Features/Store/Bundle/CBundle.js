@@ -1,8 +1,8 @@
+import BundleId from "@Core/GameId/BundleId";
 import ContextType from "../../../Modules/Context/ContextType";
-import {GameId} from "@Core/GameId";
 import {CStoreBase} from "../Common/CStoreBase";
-import FExtraLinks from "../Common/FExtraLinks";
 import FDRMWarnings from "../Common/FDRMWarnings";
+import FExtraLinks from "../Common/FExtraLinks";
 import FITADPrices from "../Common/FITADPrices";
 
 export class CBundle extends CStoreBase {
@@ -15,6 +15,6 @@ export class CBundle extends CStoreBase {
             FITADPrices,
         ]);
 
-        this.bundleid = GameId.getBundleid(window.location.host + window.location.pathname);
+        this.bundleid = BundleId.fromUrl(window.location.host + window.location.pathname);
     }
 }

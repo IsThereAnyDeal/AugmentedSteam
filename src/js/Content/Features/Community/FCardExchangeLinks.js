@@ -1,3 +1,4 @@
+import AppId from "@Core/GameId/AppId";
 import {ExtensionResources, GameId, HTML, SyncedStorage} from "../../../modulesCore";
 import {CallbackFeature} from "../../Modules/Feature/CallbackFeature";
 
@@ -16,7 +17,7 @@ export default class FCardExchangeLinks extends CallbackFeature {
         const ceImg = ExtensionResources.getURL("img/ico/steamcardexchange.png");
 
         for (const node of document.querySelectorAll(".badge_row:not(.es-has-ce-link")) {
-            const appid = this.context.appid || GameId.getAppidFromGameCard(node.querySelector(".badge_row_overlay").href);
+            const appid = this.context.appid || AppId.fromGameCardUrl(node.querySelector(".badge_row_overlay").href);
             if (!appid) { continue; }
 
             HTML.afterBegin(node,

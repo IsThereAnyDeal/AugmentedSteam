@@ -1,4 +1,4 @@
-import {GameId} from "../../../../modulesCore";
+import AppId from "@Core/GameId/AppId";
 import {CallbackFeature} from "../../../modulesContent";
 import FHighlightsTags from "../../Common/FHighlightsTags";
 
@@ -18,7 +18,7 @@ export default class FHighlightFriendsActivity extends CallbackFeature {
 
         // Exclude game logos from highlighting too
         const nodes = Array.from(parent.querySelectorAll(`.blotter_block :not(.gameLogo) > a[href]:not(${excluded})`))
-            .filter(link => (GameId.getAppid(link) !== null && link.childElementCount <= 1)
+            .filter(link => (AppId.fromElement(link) !== null && link.childElementCount <= 1)
 
                 // https://github.com/IsThereAnyDeal/AugmentedSteam/pull/470#pullrequestreview-284928257
                 && (link.childElementCount !== 1 || !link.closest(".vote_header")));

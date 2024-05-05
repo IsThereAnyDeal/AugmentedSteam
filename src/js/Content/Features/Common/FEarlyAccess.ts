@@ -1,8 +1,9 @@
-import {ExtensionResources, GameId, Language} from "../../../modulesCore";
+import {ExtensionResources, Language} from "../../../modulesCore";
 import {Background, Feature} from "../../modulesContent";
 
 import EarlyAccess from "./EarlyAccess.svelte";
 import Settings from "@Options/Data/Settings";
+import AppId from "@Core/GameId/AppId";
 
 // TODO support React-based sales pages, curator lists, etc.
 const storeSelectors = [
@@ -50,10 +51,10 @@ const selector = (window.location.hostname === "store.steampowered.com" ? storeS
 
 export default class FEarlyAccess extends Feature {
 
-    public static async show(nodes?: NodeListOf<Element>): Promise<void> {
+    public static async show(nodes?: NodeListOf<HTMLElement>): Promise<void> {
         if (!Settings.show_early_access) { return; }
 
-        const _nodes = nodes ?? document.querySelectorAll(selector);
+        const _nodes: NodeListOf<HTMLElement> = nodes ?? document.querySelectorAll(selector);
         if (_nodes.length === 0) { return; }
 
         // TODO add missing images for supported locales
@@ -107,7 +108,7 @@ export default class FEarlyAccess extends Feature {
         await FEarlyAccess.show();
     }
 
-    static async getEaNodes(nodes: NodeListOf<Element>) {
+    static async getEaNodes(nodes: NodeListOf<HTMLElement>) {
 
         const appidsMap = new Map();
 
@@ -121,12 +122,15 @@ export default class FEarlyAccess extends Feature {
                 continue;
             }
 
-            let appid = GameId.getAppid(node)
-                || GameId.getAppid(node.querySelector("a"))
-                || GameId.getAppidImgSrc(node.querySelector("img"));
+            let appid_ = AppId.fromElement(node)
+                || AppId.fromElement(node.querySelector<HTMLAnchorElement>("a"))
+                || AppId.fromElement(node.querySelector<HTMLImageElement>("img"));
 
-            if (appid) {
-                appid = String(appid);
+            // TODO check whether we need string here
+            let appid: string|null;
+
+            if (appid_) {
+                appid = String(appid_);
                 if (appidsMap.has(appid)) {
                     appidsMap.get(appid).push(node);
                 } else {

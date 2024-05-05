@@ -1,9 +1,10 @@
+import {GameId} from "@Core/GameId/GameId";
+import AppId from "@Core/GameId/AppId";
 import ContextType from "../../../Modules/Context/ContextType";
-import {GameId} from "@Core/GameId";
 import {CCommunityBase} from "../CCommunityBase";
 import FCardExchangeLinks from "../FCardExchangeLinks";
-import FCardMarketLinks from "./FCardMarketLinks";
 import FCardExtraLinks from "./FCardExtraLinks";
+import FCardMarketLinks from "./FCardMarketLinks";
 
 export class CGameCard extends CCommunityBase {
 
@@ -15,7 +16,7 @@ export class CGameCard extends CCommunityBase {
             FCardExtraLinks,
         ]);
 
-        this.appid = GameId.getAppidFromGameCard(window.location.pathname);
+        this.appid = AppId.fromGameCardUrl(window.location.pathname);
         this.isFoil = new URLSearchParams(window.location.search).get("border") === "1";
 
         /*

@@ -12,7 +12,7 @@ import SteamStoreApi from "@Background/Modules/Store/SteamStoreApi";
 import {EAction} from "@Background/EAction";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import Errors from "@Core/Errors/Errors";
-import {GameId} from "@Core/GameId";
+import AppId from "@Core/GameId/AppId";
 
 
 export default class InventoryApi extends Api implements MessageHandlerInterface {
@@ -155,7 +155,7 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
 
             const desc = description.descriptions?.find(d => d.type === "html");
             if (desc) {
-                const appids = GameId.getAppids(desc.value);
+                const appids = AppId.fromText(desc.value);
                 if (appids.length > 0) {
 
                     // Gift package with multiple apps
@@ -173,7 +173,7 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
 
             // Single app
             if (!isPackage && description.actions && description.actions.length > 1) {
-                const appid = GameId.getAppid(description.actions[0]!.link);
+                const appid = AppId.fromUrl(description.actions[0]!.link);
                 if (appid) {
                     if (description.type === "Gift") {
                         gifts.push(appid);

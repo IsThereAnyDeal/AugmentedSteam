@@ -1,3 +1,7 @@
+import BundleId from "@Core/GameId/BundleId";
+import AppId from "@Core/GameId/AppId";
+import SubId from "@Core/GameId/SubId";
+import GameId from "@Core/GameId/GameId";
 import {
     __tag_collection,
     __tag_coupon,
@@ -8,9 +12,9 @@ import {
     __tag_owned,
     __tag_waitlist,
     __tag_wishlist,
-} from "../../../../localization/compiled/_strings";
-import {L} from "../../../Core/Localization/Localization";
-import {GameId, HTML, SyncedStorage} from "../../../modulesCore";
+} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import {HTML, SyncedStorage} from "../../../modulesCore";
 import {DOMHelper, DynamicStore, Feature, Inventory, ITAD} from "../../modulesContent";
 
 export default class FHighlightsTags extends Feature {
@@ -75,9 +79,9 @@ export default class FHighlightsTags extends Feature {
 
             const aNode = node.querySelector("a");
 
-            const appid = GameId.getAppid(node) || GameId.getAppid(aNode);
-            const subid = GameId.getSubid(node) || GameId.getSubid(aNode);
-            const bundleid = GameId.getBundleid(node) || GameId.getBundleid(aNode);
+            const appid = AppId.fromElement(node) ?? AppId.fromElement(aNode);
+            const subid = SubId.fromElement(node) ?? SubId.fromElement(aNode);
+            const bundleid = BundleId.fromElement(node) ?? BundleId.fromElement(aNode);
 
             let storeId;
             if (appid) {

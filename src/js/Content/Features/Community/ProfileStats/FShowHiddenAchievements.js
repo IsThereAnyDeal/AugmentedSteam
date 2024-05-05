@@ -1,6 +1,7 @@
+import AppId from "@Core/GameId/AppId";
 import {__showAll} from "../../../../../localization/compiled/_strings";
 import {L} from "../../../../Core/Localization/Localization";
-import {GameId, HTML, Language} from "../../../../modulesCore";
+import {HTML, Language} from "../../../../modulesCore";
 import {Feature, RequestData, User} from "../../../modulesContent";
 
 export default class FShowHiddenAchievements extends Feature {
@@ -13,7 +14,7 @@ export default class FShowHiddenAchievements extends Feature {
 
     apply() {
 
-        const appid = GameId.getAppidImgSrc(
+        const appid = AppId.fromImageElement(
             document.querySelector(".gameLogo img")?.getAttribute("src")
         );
         if (!appid) { return; }

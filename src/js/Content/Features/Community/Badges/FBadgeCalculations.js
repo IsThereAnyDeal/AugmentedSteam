@@ -1,12 +1,15 @@
+import AppId from "@Core/GameId/AppId";
 import {
     __badgeCompletionAvg,
     __cardDropsRemaining,
     __dropCalc,
-    __dropsWorthAvg, __gamesWithBooster, __gamesWithDrops,
+    __dropsWorthAvg,
+    __gamesWithBooster,
+    __gamesWithDrops,
     __loading,
 } from "../../../../../localization/compiled/_strings";
 import {L} from "../../../../Core/Localization/Localization";
-import {GameId, HTML, Localization} from "../../../../modulesCore";
+import {HTML} from "../../../../modulesCore";
 import {Background, CurrencyManager, DOMHelper, Feature, Price, RequestData} from "../../../modulesContent";
 
 export default class FBadgeCalculations extends Feature {
@@ -81,7 +84,7 @@ export default class FBadgeCalculations extends Feature {
         for (const node of dom.querySelectorAll(".badge_row.is_link")) {
             const link = node.querySelector(".badge_row_overlay").href;
 
-            const appid = GameId.getAppidFromGameCard(link);
+            const appid = AppId.fromGameCardUrl(link);
             if (!appid) { continue; }
 
             const foil = new URL(link).searchParams.has("border");
