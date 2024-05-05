@@ -1,15 +1,21 @@
 import {Info} from "./Info";
 
-class Version {
+type VersionTypes = Version|string|Array<string|number>;
 
-    constructor(major, minor = 0, patch = 0) {
+export default class Version {
+
+    private readonly major: number;
+    private readonly minor: number;
+    private readonly patch:number;
+
+    constructor(major: number, minor: number = 0, patch: number = 0) {
         console.assert([major, minor, patch].filter(Number.isInteger).length === 3, `${major}.${minor}.${patch} must be integers`);
         this.major = major;
         this.minor = minor;
         this.patch = patch;
     }
 
-    static from(version) {
+    static from(version: VersionTypes) {
         if (version instanceof Version) {
             return new Version(version.major, version.minor, version.patch);
         }
@@ -22,45 +28,53 @@ class Version {
         throw new Error(`Could not construct a Version from ${version}`);
     }
 
-    static fromArray(version) {
-        return new Version(...version.map(v => parseInt(v)));
+    static fromArray(version: Array<string|number>): Version {
+        if (version.length === 0) {
+            throw new Error();
+        }
+
+        return new Version(
+            Number(version[0]),
+            Number(version[1] ?? 0),
+            Number(version[2] ?? 0)
+        );
     }
 
-    static fromString(version) {
+    static fromString(version: string): Version {
         return Version.fromArray(version.split("."));
     }
 
-    static coerce(version) {
+    static coerce(version: VersionTypes): Version {
         if (version instanceof Version) {
             return version;
         }
         return Version.from(version);
     }
 
-    toString() {
+    toString(): string {
         return `${this.major}.${this.minor}.${this.patch}`;
     }
 
-    toArray() {
+    toArray(): [number, number, number] {
         return [this.major, this.minor, this.patch];
     }
 
-    toJSON() {
+    toJSON(): string {
         return this.toString();
     }
 
-    isCurrent() {
+    isCurrent(): boolean {
         return this.isSameOrAfter(Info.version);
     }
 
-    isSame(version) {
+    isSame(version: VersionTypes): boolean {
         const _version = Version.coerce(version);
         return this.major === _version.major
             && this.minor === _version.minor
             && this.patch === _version.patch;
     }
 
-    isBefore(version) {
+    isBefore(version: VersionTypes): boolean {
         const _version = Version.coerce(version);
         if (this.major < _version.major) { return true; }
         if (this.major > _version.major) { return false; }
@@ -74,19 +88,17 @@ class Version {
         return false;
     }
 
-    isSameOrBefore(version) {
+    isSameOrBefore(version: VersionTypes): boolean {
         return this.isSame(version) || this.isBefore(version);
     }
 
-    isAfter(version) {
+    isAfter(version: VersionTypes): boolean {
         const _version = Version.coerce(version);
         return _version.isBefore(this);
     }
 
-    isSameOrAfter(version) {
+    isSameOrAfter(version: VersionTypes): boolean {
         const _version = Version.coerce(version);
         return _version.isSameOrBefore(this);
     }
 }
-
-export {Version};

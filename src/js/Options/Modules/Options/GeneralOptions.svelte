@@ -30,6 +30,7 @@
     import type {SettingsSchema} from "../../Data/_types";
     import LanguageWarningSetting from "./Settings/LanguageWarningSetting.svelte";
     import OptionGroup from "./Components/OptionGroup.svelte";
+    import ContextMenuOptions from "@Options/Modules/Options/Settings/ContextMenuOptions.svelte";
 
     let settings: Writable<SettingsSchema> = writable(Settings);
 </script>
@@ -67,12 +68,6 @@
     </Section>
 
     <Section title={L(__options_contextMenu)}>
-        <Toggle bind:value={$settings.context_steam_store}>{L(__options_contextSteamStore, {query: "..."})}</Toggle>
-        <Toggle bind:value={$settings.context_steam_market}>{L(__options_contextSteamMarket, {query: "..."})}</Toggle>
-        <Toggle bind:value={$settings.context_itad}>{L(__options_contextItad, {query: "..."})}</Toggle>
-        <Toggle bind:value={$settings.context_bartervg}>{L(__options_contextBartervg, {query: "..."})}</Toggle>
-        <Toggle bind:value={$settings.context_steamdb}>{L(__options_contextSteamdb, {query: "..."})}</Toggle>
-        <Toggle bind:value={$settings.context_steamdb_instant}>{L(__options_contextSteamdbInstant, {query: "..."})}</Toggle>
-        <Toggle bind:value={$settings.context_steam_keys}>{L(__options_contextSteamKeys)}</Toggle>
+        <ContextMenuOptions {settings} />
     </Section>
 </div>

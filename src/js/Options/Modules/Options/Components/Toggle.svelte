@@ -1,13 +1,20 @@
 <script lang="ts">
     import ToggleIcon from "../../Icons/ToggleIcon.svelte";
+    import {createEventDispatcher} from "svelte";
+
+    const dispatch = createEventDispatcher<{toggle: boolean}>();
 
     export let value: boolean;
+
+    function dispatchChange(): void {
+        dispatch("toggle", value);
+    }
 </script>
 
 
 <label>
     <span>
-        <input type="checkbox" bind:checked={value}>
+        <input type="checkbox" bind:checked={value} on:change={dispatchChange}>
         <ToggleIcon on={value} />
     </span>
 

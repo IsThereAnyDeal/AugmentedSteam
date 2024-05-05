@@ -7,33 +7,54 @@ import {
     __options_contextSteamMarket,
     __options_contextSteamStore,
 } from "@Strings/_strings";
-import {L} from "@Core/Localization/Localization";
-import {Localization, Permissions} from "../../../modulesCore";
-import {SettingsStore} from "@Options/Data/Settings";
+import Localization, {L} from "@Core/Localization/Localization";
+import Settings, {SettingsStore} from "@Options/Data/Settings";
 import browser, {type Menus} from "webextension-polyfill";
-import type {SettingsSchema} from "@Options/Data/_types";
-
+import Permissions from "@Core/Permissions";
 
 export default class ContextMenu {
 
-    private static readonly queryLinks: {[key in keyof SettingsSchema]?: [string, string]} = {
-        "context_steam_store": [__options_contextSteamStore, "https://store.steampowered.com/search/?term=__query__"],
-        "context_steam_market": [__options_contextSteamMarket, "https://steamcommunity.com/market/search?q=__query__"],
-        "context_itad": [__options_contextItad, "https://isthereanydeal.com/search/?q=__query__"],
-        "context_bartervg": [__options_contextBartervg, "https://barter.vg/search?q=__query__"],
-        "context_steamdb": [__options_contextSteamdb, "https://steamdb.info/search/?q=__query__"],
-        "context_steamdb_instant": [__options_contextSteamdbInstant, "https://steamdb.info/instantsearch/?query=__query__"],
-        "context_steam_keys": [__options_contextSteamKeys, "https://store.steampowered.com/account/registerkey?key=__query__"]
+    private static readonly queryLinks: Record<string, [string, string, () => boolean]> = {
+        "context_steam_store": [
+            __options_contextSteamStore, "https://store.steampowered.com/search/?term=__query__",
+            () => Settings.context_steam_store,
+        ],
+        "context_steam_market": [
+            __options_contextSteamMarket, "https://steamcommunity.com/market/search?q=__query__",
+            () => Settings.context_steam_market
+        ],
+        "context_itad": [
+            __options_contextItad, "https://isthereanydeal.com/search/?q=__query__",
+            () => Settings.context_itad
+        ],
+        "context_bartervg": [
+            __options_contextBartervg, "https://barter.vg/search?q=__query__",
+            () => Settings.context_bartervg
+        ],
+        "context_steamdb": [
+            __options_contextSteamdb, "https://steamdb.info/search/?q=__query__",
+            () => Settings.context_steamdb
+        ],
+        "context_steamdb_instant": [
+            __options_contextSteamdbInstant, "https://steamdb.info/instantsearch/?query=__query__",
+            () => Settings.context_steamdb_instant
+        ],
+        "context_steam_keys": [
+            __options_contextSteamKeys, "https://store.steampowered.com/account/registerkey?key=__query__",
+            () => Settings.context_steam_keys
+        ]
     };
 
     static register(): Promise<void> {
         browser.runtime.onStartup.addListener(ContextMenu.update);
         browser.runtime.onInstalled.addListener(ContextMenu.update);
 
+        // @ts-ignore
         return Permissions.when("contextMenus", () => {
             browser.contextMenus.onClicked.addListener(ContextMenu.onClick);
-        }, () => {
+        }, async () => {
             browser.contextMenus.onClicked.removeListener(ContextMenu.onClick);
+            await browser.contextMenus.removeAll();
         });
 
     }
@@ -67,13 +88,14 @@ export default class ContextMenu {
         await Localization;
 
         for (const [option, entry] of Object.entries(ContextMenu.queryLinks)) {
-            if (!SettingsStore.get(option as keyof SettingsSchema)) {
+            let [locale, query_, enabled] = entry;
+            if (!enabled()) {
                 continue
             }
 
             browser.contextMenus.create({
                 id: option,
-                title: L(entry[0], {"query": "%s"}),
+                title: L(locale, {"query": "%s"}),
                 contexts: ["selection"]
             },
 
@@ -88,6 +110,13 @@ export default class ContextMenu {
 
     private static async update(): Promise<void> {
         if (!await Permissions.contains(["contextMenus"])) {
+            Settings.context_steam_store = false;
+            Settings.context_steam_market = false
+            Settings.context_itad = false
+            Settings.context_bartervg = false
+            Settings.context_steamdb = false
+            Settings.context_steamdb_instant = false
+            Settings.context_steam_keys = false
             return;
         }
 

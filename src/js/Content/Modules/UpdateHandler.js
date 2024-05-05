@@ -1,6 +1,7 @@
 import {L} from "@Core/Localization/Localization";
+import Version from "@Core/Version";
 import {__update_changes, __update_updated} from "@Strings/_strings";
-import {ExtensionResources, Info, SyncedStorage, Version} from "../../modulesCore";
+import {ExtensionResources, Info, SyncedStorage} from "../../modulesCore";
 
 import {Page} from "../Features/Page";
 import {Background} from "../modulesContent";
