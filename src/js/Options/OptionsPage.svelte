@@ -1,10 +1,9 @@
 <script lang="ts">
     import {__thewordoptions} from "@Strings/_strings";
-    import {Localization} from "../modulesCore";
     import {onMount} from "svelte";
     import Header from "./Modules/Header.svelte";
     import Footer from "./Modules/Footer.svelte";
-    import {L} from "@Core/Localization/Localization";
+    import Localization, {L} from "@Core/Localization/Localization";
     import {SettingsStore} from "./Data/Settings";
     import "./options.css";
     import Changelog from "./Modules/Changelog/Changelog.svelte";

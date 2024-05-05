@@ -43,9 +43,8 @@
         __website,
     } from "@Strings/_strings";
     import Language from "@Core/Localization/Language";
-    import {Localization} from "../../../modulesCore";
     import LocaleCredits from "./LocaleCredits";
-    import {L} from "@Core/Localization/Localization";
+    import Localization, {L} from "@Core/Localization/Localization";
     import DOMPurify from "dompurify";
     import Config from "../../../config";
 

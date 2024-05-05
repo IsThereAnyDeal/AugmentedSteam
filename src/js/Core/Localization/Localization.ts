@@ -1,5 +1,7 @@
-import {BackgroundSimple, ExtensionResources, Language} from "../../modulesCore";
 import Settings from "@Options/Data/Settings";
+import ExtensionResources from "@Core/ExtensionResources";
+import Language from "@Core/Localization/Language";
+import {BackgroundSimple} from "@Core/BackgroundSimple";
 
 interface TLocale {
     stats: {

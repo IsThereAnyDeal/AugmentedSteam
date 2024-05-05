@@ -178,7 +178,7 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
         const url = this.getUrl(profilePath);
         const html = await this.fetchText(url);
         const profileData = HTMLParser.getObjectVariable("g_rgProfileData", html);
-        const steamId = profileData.steamid;
+        const steamId = profileData?.steamid;
 
         if (!steamId) { // this should never happen
             throw new Error("Failed to retrieve steamID from profile");

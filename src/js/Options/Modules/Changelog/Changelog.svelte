@@ -1,9 +1,9 @@
 <script lang="ts">
-    import {__loading, __options_changelog} from "@Strings/_strings";
-    import {ExtensionResources} from "../../../modulesCore";
+    import {__loading} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import DOMPurify from "dompurify";
     import {onMount} from "svelte";
+    import ExtensionResources from "@Core/ExtensionResources";
 
     let log: Array<[string, string]> = [];
     let promise: Promise<void> = Promise.reject();

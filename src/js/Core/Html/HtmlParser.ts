@@ -42,7 +42,7 @@ export default class HTMLParser {
         return v ? JSON.parse(v) : null;
     }
 
-    static getObjectVariable<T extends Object>(nameOrRegex: string|RegExp, source: string|Element|Document = document): T|null {
+    static getObjectVariable<T extends Record<string, any>>(nameOrRegex: string|RegExp, source: string|Element|Document = document): T|null {
         const regex = typeof nameOrRegex === "string"
             ? new RegExp(`${nameOrRegex}\\s*=\\s*(\\{.+?});`)
             : nameOrRegex;
