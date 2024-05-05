@@ -28,7 +28,7 @@ export default class UserNotesApi implements MessageHandlerInterface {
         return result;
     }
 
-    private async setAllNotes(notes: Record<number, string>): Promise<void> {
+    private async setAllNotes(notes: Record<number|string, string>): Promise<void> {
         await this.clearNotes();
 
         return IndexedDB.putMany("notes",
@@ -44,7 +44,7 @@ export default class UserNotesApi implements MessageHandlerInterface {
 
         switch(message.action) {
             case EAction.Notes_Get:
-                return await this.getNote(message.params.appid);
+                return await this.getNote(message.params.appids);
 
             case EAction.Notes_Set:
                 return await this.setNote(message.params.appid, message.params.note);

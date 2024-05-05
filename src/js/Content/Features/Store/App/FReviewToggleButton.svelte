@@ -42,10 +42,10 @@
 </script>
 
 <script lang="ts">
-    import {LocalStorage} from "../../../../modulesCore";
     import {onMount} from "svelte";
     import {L} from "@Core/Localization/Localization";
     import {__contractSlider, __expandSlider} from "@Strings/_strings";
+    import LocalStorage from "@Core/Storage/LocalStorage";
 
     export let reviewSection: HTMLElement;
 

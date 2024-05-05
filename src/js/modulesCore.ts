@@ -2,8 +2,6 @@ export {HTML} from "./Core/Html/Html";
 export {default as Language} from "./Core/Localization/Language";
 export {default as Localization} from "./Core/Localization/Localization";
 export {CookieStorage} from "./Core/Storage/CookieStorage";
-export {default as LocalStorage} from "./Core/Storage/LocalStorage";
-export {default as SyncedStorage} from "./Core/Storage/SyncedStorage";
 export {BackgroundSimple} from "./Core/BackgroundSimple";
 export {StringUtils} from "./Core/Utils/StringUtils";
 export {TimeUtils} from "./Core/Utils/TimeUtils";

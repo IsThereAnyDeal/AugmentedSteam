@@ -1,4 +1,4 @@
-import {BackgroundSimple, ExtensionResources, Language, SyncedStorage} from "../../modulesCore";
+import {BackgroundSimple, ExtensionResources, Language} from "../../modulesCore";
 import Settings from "@Options/Data/Settings";
 
 interface TLocale {

@@ -1,4 +1,3 @@
-import {SyncedStorage} from "../../../modulesCore";
 import {User} from "../User";
 import AugmentedSteamApiFacade from "../Facades/AugmentedSteamApiFacade";
 import type {TBundle, TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";

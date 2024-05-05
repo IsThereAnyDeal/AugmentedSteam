@@ -1,5 +1,5 @@
 import { EAction } from "@Background/EAction";
-import {LocalStorage, TimeUtils} from "../../../modulesCore";
+import {TimeUtils} from "../../../modulesCore";
 import Api from "../Api";
 import IndexedDB from "@Background/Db/IndexedDB";
 import type {TFetchBadgeInfoResponse, TFetchReviewsResponse, TReview} from "./_types";
@@ -7,6 +7,7 @@ import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import DOMPurify from "dompurify";
 import Errors from "@Core/Errors/Errors";
 import HTMLParser from "@Core/Html/HtmlParser";
+import LocalStorage from "@Core/Storage/LocalStorage";
 
 export default class SteamCommunityApi extends Api implements MessageHandlerInterface {
 

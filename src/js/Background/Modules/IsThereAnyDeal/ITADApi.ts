@@ -1,4 +1,3 @@
-import {LocalStorage, TimeUtils} from "../../../modulesCore";
 import Api from "../Api";
 import Config from "../../../config";
 import IndexedDB from "@Background/Db/IndexedDB";
@@ -15,6 +14,8 @@ import Settings from "@Options/Data/Settings";
 import AccessToken from "@Background/Modules/IsThereAnyDeal/AccessToken";
 import {EAction} from "@Background/EAction";
 import Errors from "@Core/Errors/Errors";
+import LocalStorage from "@Core/Storage/LocalStorage";
+import {TimeUtils} from "@Core/Utils/TimeUtils";
 
 const MaxItemsPerRequest = 1000;
 const RequiredScopes = [

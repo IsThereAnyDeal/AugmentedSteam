@@ -1,7 +1,15 @@
 import browser, {type Storage as ns} from "webextension-polyfill";
 import Storage, {type StorageSchema} from "./Storage";
 
-// FIXME browser.storage.sync is still restricted (in terms of quota limits) even if the user hasn't enabled sync
+// FIXME exports are confusing, figure out better export scheme
+
+/**
+ * NOTE: Settings are stored in synced storage, but are omitted from default schema,
+ * because they should not be accessed directly from storage
+ */
+interface SyncedStorageSchema extends StorageSchema {
+    user_notes: Record<string, string>
+}
 
 /*
  * browser.storage.sync limits
@@ -11,14 +19,15 @@ import Storage, {type StorageSchema} from "./Storage";
  * MAX_WRITE_OPERATIONS_PER_HOUR = 1800
  * MAX_WRITE_OPERATIONS_PER_MINUTE = 120
  */
-export default class SyncedStorage<Schema extends StorageSchema> extends Storage<ns.SyncStorageAreaSync, Schema> {
+export class SyncedStorage<Schema extends StorageSchema> extends Storage<ns.SyncStorageAreaSync, Schema> {
 
     constructor() {
         super(browser.storage.sync);
     }
 
-    get QUOTE_BYTES_PER_ITEM(): number {
+    get QUOTA_BYTES_PER_ITEM(): number {
         return browser.storage.sync.QUOTA_BYTES_PER_ITEM;
     }
 }
 
+export default new SyncedStorage<SyncedStorageSchema>();

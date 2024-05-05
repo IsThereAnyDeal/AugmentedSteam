@@ -2,6 +2,8 @@ import browser, {type Storage as ns} from "webextension-polyfill";
 import Storage, {type StorageSchema} from "./Storage";
 import type {TLogin} from "@Background/Modules/Community/_types";
 
+// FIXME exports are confusing, figure out better export scheme
+
 interface CacheEntry<V = unknown> {
     data: V,
     expiry: number

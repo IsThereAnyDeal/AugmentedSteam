@@ -1,7 +1,7 @@
 import {Info} from "@Core/Info";
 import type {SettingsSchema} from "./_types";
-import {SyncedStorage} from "../../modulesCore";
 import type {SchemaKeys, SchemaValue, StorageInterface} from "@Core/Storage/Storage";
+import {SyncedStorage} from "@Core/Storage/SyncedStorage";
 
 const DefaultSettings: SettingsSchema = Object.freeze({
     "language": "english",

@@ -1,3 +1,6 @@
+import CapacityInfo from "@Content/Modules/UserNotes/CapacityInfo";
+import OutOfCapacityError from "@Content/Modules/UserNotes/OutOfCapacityError";
+import UserNotesAdapter from "@Content/Modules/UserNotes/UserNotesAdapter";
 import {L} from "@Core/Localization/Localization";
 import {
     __cancel,
@@ -13,10 +16,9 @@ import {
     __userNote_saveSyncedStorage,
     __userNote_storageWarningDesc,
 } from "@Strings/_strings";
-import {Localization, SyncedStorage} from "../../../../modulesCore";
+import {SyncedStorage} from "../../../../modulesCore";
 import {Messenger} from "../../../modulesContent";
 import {Page} from "../../Page";
-import {CapacityInfo, OutOfCapacityError, UserNotesAdapter} from "../../../../Core/Storage/UserNotesAdapter";
 
 class UserNotes {
     constructor() {
