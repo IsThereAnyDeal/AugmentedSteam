@@ -1,5 +1,5 @@
 import LocalStorage from "@Core/Storage/LocalStorage";
-import {TimeUtils} from "@Core/Utils/TimeUtils";
+import TimeUtils from "@Core/Utils/TimeUtils";
 
 export default class AccessToken {
 

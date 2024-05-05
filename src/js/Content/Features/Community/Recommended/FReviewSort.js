@@ -1,3 +1,4 @@
+import TimeUtils from "@Core/Utils/TimeUtils";
 import {
     __awards,
     __date,
@@ -9,9 +10,8 @@ import {
     __rating,
     __visibility,
     __wait,
-} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML, SyncedStorage, TimeUtils} from "../../../../modulesCore";
+} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
 import {Background, Feature, Sortbox, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 

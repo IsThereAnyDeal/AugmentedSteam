@@ -3,8 +3,6 @@ export {default as Language} from "./Core/Localization/Language";
 export {default as Localization} from "./Core/Localization/Localization";
 export {CookieStorage} from "./Core/Storage/CookieStorage";
 export {BackgroundSimple} from "./Core/BackgroundSimple";
-export {StringUtils} from "./Core/Utils/StringUtils";
-export {TimeUtils} from "./Core/Utils/TimeUtils";
 export {Debug} from "./Core/Debug";
 export {Downloader} from "./Core/Downloader";
 export {Environment} from "./Core/Environment";

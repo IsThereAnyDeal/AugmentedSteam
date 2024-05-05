@@ -1,12 +1,19 @@
+
 class Timer {
 
-    constructor(duration) {
+    private _id: number|undefined;
+    private _promise: Promise<void>|null = null;
+
+    constructor(duration: number) {
         this._promise = new Promise(resolve => {
-            this._id = setTimeout(() => { resolve(); }, duration);
+            this._id = setTimeout(() => resolve(), duration);
         });
     }
 
-    then(onSuccess, onFail) {
+    then(
+        onSuccess: ((value: void) => PromiseLike<void>|void)|undefined|null,
+        onFail: (reason: any) => PromiseLike<never>
+    ) {
         if (this._promise) {
             return this._promise.then(onSuccess, onFail);
         }
@@ -22,16 +29,24 @@ class Timer {
 
 class ResettableTimer {
 
-    constructor(onDone, duration) {
+    private _id: number|undefined;
+    private _running: boolean = false;
+
+    private onDone: () => Promise<void>;
+    private duration: number;
+
+    constructor(onDone: () => Promise<void>, duration: number) {
         this.onDone = onDone;
         this.duration = duration;
 
         this.reset();
     }
 
-    get running() { return this._running; }
+    get running() {
+        return this._running;
+    }
 
-    reset() {
+    reset(): void {
         if (typeof this._id !== "undefined") {
             clearTimeout(this._id);
         }
@@ -53,27 +68,25 @@ class ResettableTimer {
     }
 }
 
-class TimeUtils {
+export default class TimeUtils {
 
-    static timer(duration) {
+    static timer(duration: number): Timer {
         return new Timer(duration);
     }
 
-    static resettableTimer(onDone, duration) {
+    static resettableTimer(onDone: () => Promise<void>, duration: number): ResettableTimer {
         return new ResettableTimer(onDone, duration);
     }
 
-    static now() {
+    static now(): number {
         return Math.trunc(Date.now() / 1000);
     }
 
-    static isInPast(timestamp) {
+    static isInPast(timestamp: number): boolean {
         return timestamp <= this.now();
     }
 
-    static isInFuture(timestamp) {
+    static isInFuture(timestamp: number): boolean {
         return timestamp > this.now();
     }
 }
-
-export {TimeUtils};

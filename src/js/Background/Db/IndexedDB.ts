@@ -1,5 +1,4 @@
 import {Info} from "@Core/Info";
-import {TimeUtils} from "@Core/Utils/TimeUtils";
 import {
     type IDBPDatabase,
     type IndexKey,
@@ -12,6 +11,7 @@ import {
 import Migration from "@Background/Db/Migration";
 import type {ADB5} from "@Background/Db/Schemas/ADB5";
 import LocalStorage from "@Core/Storage/LocalStorage";
+import TimeUtils from "@Core/Utils/TimeUtils";
 
 type Schema = ADB5;
 

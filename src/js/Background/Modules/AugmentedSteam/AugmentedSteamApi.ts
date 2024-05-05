@@ -1,4 +1,3 @@
-import {TimeUtils} from "../../../modulesCore";
 import IndexedDB from "@Background/Db/IndexedDB";
 import Config from "../../../config";
 import Api from "../Api";
@@ -18,6 +17,7 @@ import type {
 } from "@Background/Modules/AugmentedSteam/_types";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import {EAction} from "@Background/EAction";
+import TimeUtils from "@Core/Utils/TimeUtils";
 
 export default class AugmentedSteamApi extends Api implements MessageHandlerInterface{
 

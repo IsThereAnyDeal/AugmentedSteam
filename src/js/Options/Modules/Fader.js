@@ -1,4 +1,4 @@
-import {TimeUtils} from "../../Core/Utils/TimeUtils";
+import {TimeUtils} from "@Core/Utils/TimeUtils";
 
 class Fader {
 

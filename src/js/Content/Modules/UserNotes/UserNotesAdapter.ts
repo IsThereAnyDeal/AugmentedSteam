@@ -1,4 +1,4 @@
-import Settings, {SettingsStore} from "@Options/Data/Settings";
+import Settings from "@Options/Data/Settings";
 import type AdapterInterface from "@Content/Modules/UserNotes/Adapters/AdapterInterface";
 import SyncedStorageAdapter from "@Content/Modules/UserNotes/Adapters/SyncedStorageAdapter";
 import IdbAdapter from "@Content/Modules/UserNotes/Adapters/IdbAdapter";

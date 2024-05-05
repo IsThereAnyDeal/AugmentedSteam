@@ -1,6 +1,7 @@
+import HTML from "@Core/Html/Html";
 import {L} from "@Core/Localization/Localization";
+import StringUtils from "@Core/Utils/StringUtils";
 import {__communityHub, __viewOnWebsite, __wikiArticle, __youtubeGameplay, __youtubeReviews} from "@Strings/_strings";
-import {HTML, StringUtils, SyncedStorage} from "../../../../modulesCore";
 import {ContextType, Feature} from "../../../modulesContent";
 
 export default class FExtraLinks extends Feature {
@@ -37,9 +38,10 @@ export default class FExtraLinks extends Feature {
             this._type === "app"
 
             // Preferences for links shown on all pages
-            || (SyncedStorage.get("showbartervg")
-            || SyncedStorage.get("showsteamdb")
-            || SyncedStorage.get("showitadlinks"))
+            || (Settings.showbartervg
+                || Settings.showsteamdb
+                || Settings.showitadlinks
+            )
         );
     }
 

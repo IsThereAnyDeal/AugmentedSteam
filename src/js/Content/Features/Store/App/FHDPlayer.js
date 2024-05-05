@@ -1,4 +1,5 @@
-import {LocalStorage, TimeUtils} from "../../../../modulesCore";
+import LocalStorage from "@Core/Storage/LocalStorage";
+import TimeUtils from "@Core/Utils/TimeUtils";
 import {Feature} from "../../../Modules/Feature/Feature";
 
 export default class FHDPlayer extends Feature {

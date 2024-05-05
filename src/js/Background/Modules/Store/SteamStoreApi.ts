@@ -1,4 +1,3 @@
-import {StringUtils, TimeUtils} from "../../../modulesCore";
 import Api from "../Api";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import IndexedDB from "@Background/Db/IndexedDB";
@@ -8,6 +7,8 @@ import {EAction} from "@Background/EAction";
 import Errors from "@Core/Errors/Errors";
 import HTMLParser from "@Core/Html/HtmlParser";
 import HTML from "@Core/Html/Html";
+import TimeUtils from "@Core/Utils/TimeUtils";
+import StringUtils from "@Core/Utils/StringUtils";
 
 // helper types for clarity
 type TAppid = number;

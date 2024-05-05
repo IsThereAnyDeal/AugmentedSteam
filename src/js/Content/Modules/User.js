@@ -1,5 +1,5 @@
 import HTMLParser from "@Core/Html/HtmlParser";
-import {StringUtils} from "@Core/Utils/StringUtils";
+import StringUtils from "@Core/Utils/StringUtils";
 import {Background} from "./Background";
 import {RequestData} from "./RequestData";
 

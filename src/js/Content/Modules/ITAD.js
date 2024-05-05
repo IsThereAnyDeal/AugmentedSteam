@@ -1,5 +1,6 @@
+import TimeUtils from "@Core/Utils/TimeUtils";
 import {__itad_from, __itad_lastImport, __itad_syncNow, __itad_to, __never} from "@Strings/_strings";
-import {ExtensionResources, HTML, SyncedStorage, TimeUtils} from "../../modulesCore";
+import {ExtensionResources, HTML, SyncedStorage} from "../../modulesCore";
 import {Background, User} from "../modulesContent";
 
 class ITAD {

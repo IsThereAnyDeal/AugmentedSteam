@@ -1,5 +1,5 @@
 import HTMLParser from "@Core/Html/HtmlParser";
-import {StringUtils, SyncedStorage} from "../../modulesCore";
+import StringUtils from "@Core/Utils/StringUtils";
 import {Background} from "../modulesContent";
 
 class SteamCurrency {

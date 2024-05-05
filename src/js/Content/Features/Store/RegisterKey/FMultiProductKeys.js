@@ -1,4 +1,6 @@
+import HTML from "@Core/Html/Html";
 import {L} from "@Core/Localization/Localization";
+import TimeUtils from "@Core/Utils/TimeUtils";
 import {
     __activateMultiple,
     __activateMultipleHeader,
@@ -16,7 +18,7 @@ import {
     __register_toomany,
     __register_wallet,
 } from "@Strings/_strings";
-import {ExtensionResources, HTML, TimeUtils} from "../../../../modulesCore";
+import {ExtensionResources} from "../../../../modulesCore";
 import {Feature, RequestData, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 

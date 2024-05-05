@@ -1,3 +1,7 @@
+import HTML from "@Core/Html/Html";
+import {L} from "@Core/Localization/Localization";
+import TimeUtils from "@Core/Utils/TimeUtils";
+import Settings from "@Options/Data/Settings";
 import {
     __loading,
     __loadMarketStats,
@@ -7,9 +11,7 @@ import {
     __purchaseTotal,
     __salesTotal,
     __transactionStatus,
-} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML, LocalStorage, SyncedStorage, TimeUtils} from "../../../../modulesCore";
+} from "@Strings/_strings";
 import {Feature, Price, RequestData, User} from "../../../modulesContent";
 
 export default class FMarketStats extends Feature {
@@ -34,7 +36,7 @@ export default class FMarketStats extends Feature {
 
         document.getElementById("es_market_summary_button").addEventListener("click", () => { this._startLoading(); });
 
-        if (SyncedStorage.get("showmarkettotal")) {
+        if (Settings.showmarkettotal) {
             this._startLoading();
         }
     }

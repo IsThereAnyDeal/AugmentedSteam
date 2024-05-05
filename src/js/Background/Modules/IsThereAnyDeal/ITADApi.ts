@@ -15,7 +15,7 @@ import AccessToken from "@Background/Modules/IsThereAnyDeal/AccessToken";
 import {EAction} from "@Background/EAction";
 import Errors from "@Core/Errors/Errors";
 import LocalStorage from "@Core/Storage/LocalStorage";
-import {TimeUtils} from "@Core/Utils/TimeUtils";
+import TimeUtils from "@Core/Utils/TimeUtils";
 
 const MaxItemsPerRequest = 1000;
 const RequiredScopes = [

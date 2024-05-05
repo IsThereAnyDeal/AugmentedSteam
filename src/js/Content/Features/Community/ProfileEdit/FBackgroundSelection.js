@@ -1,3 +1,6 @@
+import HTML from "@Core/Html/Html";
+import StringUtils from "@Core/Utils/StringUtils";
+import TimeUtils from "@Core/Utils/TimeUtils";
 import {
     __customBackground,
     __customBackgroundHelp,
@@ -5,10 +8,9 @@ import {
     __loading,
     __save,
     __thewordclear,
-} from "../../../../../localization/compiled/_strings";
+} from "@Strings/_strings";
 import Config from "../../../../config";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML, StringUtils, TimeUtils} from "../../../../modulesCore";
+import {L} from "@Core/Localization/Localization";
 import {Background, Feature} from "../../../modulesContent";
 
 export default class FBackgroundSelection extends Feature {

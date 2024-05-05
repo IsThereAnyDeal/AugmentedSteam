@@ -1,6 +1,8 @@
-import {__loading, __lowest, __noData, __theworderror, __toomanyrequests} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {Errors, HTML, SyncedStorage, TimeUtils} from "../../../../modulesCore";
+import HTML from "@Core/Html/Html";
+import {L} from "@Core/Localization/Localization";
+import TimeUtils from "@Core/Utils/TimeUtils";
+import Settings from "@Options/Data/Settings";
+import {__loading, __lowest, __noData, __theworderror, __toomanyrequests} from "@Strings/_strings";
 import {CallbackFeature, CurrencyManager, Price, RequestData, User} from "../../../modulesContent";
 
 export default class FMarketLowestPrice extends CallbackFeature {
@@ -15,8 +17,8 @@ export default class FMarketLowestPrice extends CallbackFeature {
     }
 
     checkPrerequisites() {
-        return SyncedStorage.get("showlowestmarketprice")
-            && !SyncedStorage.get("hideactivelistings")
+        return Settings.showlowestmarketprice
+            && !Settings.hideactivelistings
             // Check if the user is signed in, and has active listings
             && document.getElementById("tabContentsMyActiveMarketListingsRows") !== null;
     }
