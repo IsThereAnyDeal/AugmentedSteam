@@ -1,7 +1,7 @@
 
-class Debug {
+export default class Debug {
 
-    static async executionTime(fn, label) {
+    static async executionTime(fn: () => Promise<any>, label: string): Promise<any> {
         const start = performance.now();
         const result = await fn();
         const end = performance.now();
@@ -9,5 +9,3 @@ class Debug {
         return result;
     }
 }
-
-export {Debug};

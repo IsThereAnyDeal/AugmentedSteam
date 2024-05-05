@@ -1,4 +1,4 @@
-import {GameId} from "../../../Core/GameId";
+import {GameId} from "@Core/GameId";
 import {Background} from "../Background";
 import {Messenger} from "../Messenger";
 import {Page} from "../../Features/Page";

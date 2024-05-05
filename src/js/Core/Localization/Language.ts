@@ -1,6 +1,6 @@
 import ApplicationConfig from "../../Content/Modules/ApplicationConfig";
 import {CookieStorage} from "../Storage/CookieStorage";
-import {Environment} from "../Environment";
+import Environment from "@Core/Environment";
 
 export default class Language {
 

@@ -1,7 +1,7 @@
 
-class Downloader {
+export default class Downloader {
 
-    static download(content, filename) {
+    static download(content: string|Blob|MediaSource, filename: string): void {
         const a = document.createElement("a");
         a.href = typeof content === "string" ? content : URL.createObjectURL(content);
         a.download = filename;
@@ -10,5 +10,3 @@ class Downloader {
         a.dispatchEvent(new MouseEvent("click"));
     }
 }
-
-export {Downloader};

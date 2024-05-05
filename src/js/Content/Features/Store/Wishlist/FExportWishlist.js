@@ -1,3 +1,4 @@
+import Downloader from "@Core/Downloader";
 import {L} from "@Core/Localization/Localization";
 import {
     __export_copyClipboard,
@@ -7,7 +8,7 @@ import {
     __export_type,
     __export_wishlist,
 } from "@Strings/_strings";
-import {Downloader, HTML, Localization, SyncedStorage} from "../../../../modulesCore";
+import {HTML, SyncedStorage} from "../../../../modulesCore";
 import {Clipboard, Feature} from "../../../modulesContent";
 import {Page} from "../../Page";
 

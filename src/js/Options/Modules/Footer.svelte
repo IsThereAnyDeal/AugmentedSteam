@@ -10,8 +10,9 @@
         __options_settingsMngmt_reset
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
-    import {Downloader, Info} from "../../modulesCore";
     import {SettingsStore} from "../Data/Settings";
+    import Downloader from "@Core/Downloader";
+    import {Info} from "@Core/Info";
 
 
     function importSettings(e: Event & {currentTarget: EventTarget & HTMLInputElement}) {

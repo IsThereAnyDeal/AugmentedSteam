@@ -1,5 +1,5 @@
 import ContextType from "../../../Modules/Context/ContextType";
-import {GameId} from "../../../../Core/GameId";
+import {GameId} from "@Core/GameId";
 import {CCommunityBase} from "../CCommunityBase";
 import FCardExchangeLinks from "../FCardExchangeLinks";
 import FCardMarketLinks from "./FCardMarketLinks";

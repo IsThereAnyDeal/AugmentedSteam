@@ -1,5 +1,5 @@
 import ContextType from "../../../Modules/Context/ContextType";
-import {GameId} from "../../../../Core/GameId";
+import {GameId} from "@Core/GameId";
 import {CStoreBase} from "../Common/CStoreBase";
 import FExtraLinks from "../Common/FExtraLinks";
 import FDRMWarnings from "../Common/FDRMWarnings";
