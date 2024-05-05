@@ -1,6 +1,6 @@
 import ApplicationConfig from "../../Content/Modules/ApplicationConfig";
-import {CookieStorage} from "../Storage/CookieStorage";
 import Environment from "@Core/Environment";
+import CookieReader from "@Core/Storage/CookieReader";
 
 export default class Language {
 
@@ -59,7 +59,7 @@ export default class Language {
 
         // In a Content Context, we can check for a cookie
         if (Environment.isContentScript()) {
-            Language._currentSteamLanguage = CookieStorage.get("Steam_Language") || null;
+            Language._currentSteamLanguage = CookieReader.get("Steam_Language", null);
         }
 
         return this._currentSteamLanguage;
