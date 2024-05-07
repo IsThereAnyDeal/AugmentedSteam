@@ -13,10 +13,10 @@ export default class ErrorParser {
      * @param {String} errStr a string created by Error.prototype.toString
      * @returns {{name: String, msg: String}} an object containing information about the error name and its message
      */
-    static parse(errStr: string): {name: string, msg: string} {
+    static parse(errStr: string): {name: string|null, msg: string|null} {
         const info = errStr.match(/(.*):\s(.+)/);
         return info
             ? {name: info[1] ?? "", msg: info[2] ?? ""}
-            : {name: "", msg: ""};
+            : {name: null, msg: null}
     }
 }

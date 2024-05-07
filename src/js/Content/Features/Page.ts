@@ -1,26 +1,32 @@
-import {Info, LocalStorage, Localization, SyncedStorage} from "../../modulesCore";
 import {
-    AugmentedSteam, Background,
+    AugmentedSteam,
     CurrencyManager,
     DOMHelper,
-    ITAD, Messenger, ProgressBar,
+    ITAD, Messenger,
     UpdateHandler,
     User
 } from "../modulesContent";
 import {SteamFacade} from "../Modules/SteamFacade";
 import setup from "../../bootstrapDomPurify";
 import config from "../../config";
+import {Info} from "@Core/Info";
+import Localization from "@Core/Localization/Localization";
+import {SettingsStore} from "@Options/Data/Settings";
+import BackgroundSender from "@Core/BackgroundSimple";
+import {ProgressBar} from "@Content/Modules/Widgets/ProgressBar.svelte";
 
 /**
  * Event handler for uncaught Background errors
  */
-function unhandledrejection(ev) {
-    const err = ev.reason;
-    if (!err || !err.error) { return; } // Not a background error
-    ev.preventDefault();
-    ev.stopPropagation();
+function unhandledrejection(e: PromiseRejectionEvent) {
+    const err = e.reason;
+    if (!err || !err.error) {
+        return;
+    } // Not a background error
+
+    e.preventDefault();
+    e.stopPropagation();
     console.group("An error occurred in the background context.");
-    console.error(err.localStack);
     console.error(err.stack);
     console.groupEnd();
 }
@@ -32,15 +38,15 @@ window.addEventListener("unhandledrejection", unhandledrejection);
 DOMHelper.insertScript({"content": `window.Messenger = ${Messenger.toString()}`});
 DOMHelper.insertScript({"content": `window.SteamFacade = ${SteamFacade.toString()}`});
 
-Background.registerErrorHandler(({name, msg}) => {
-    if (name !== "LoginError") { return false; }
+BackgroundSender.onError.subscribe((name, message) => {
+    if (name === "LoginError") {
+        AugmentedSteam.addLoginWarning(message);
+    }
+})
 
-    AugmentedSteam.addLoginWarning(msg);
-    ProgressBar.finishRequest();
-    return true;
-});
+export default class Page {
 
-class Page {
+    private static _msgCounter: number = 0;
 
     /*
      * NOTE: use cautiously!
@@ -70,13 +76,13 @@ class Page {
         try {
             // TODO What errors can be "suppressed" here?
             try {
-                await SyncedStorage;
+                await SettingsStore;
                 setup();
             } catch (err) {
                 console.error(err);
             }
 
-            await Promise.all([LocalStorage, Localization, User, CurrencyManager]);
+            await Promise.all([Localization, User, CurrencyManager]);
         } catch (err) {
             console.group("Augmented Steam initialization");
             console.error("Failed to initiliaze Augmented Steam");
@@ -93,7 +99,6 @@ class Page {
         );
 
         ProgressBar.create();
-        ProgressBar.loading();
         AugmentedSteam.init();
         UpdateHandler.checkVersion(AugmentedSteam.clearCache);
         ITAD.create();
@@ -107,6 +112,3 @@ class Page {
         // left for overrides
     }
 }
-Page._msgCounter = 0;
-
-export {Page};

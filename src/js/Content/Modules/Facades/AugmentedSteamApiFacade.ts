@@ -24,10 +24,7 @@ export default class AugmentedSteamApiFacade {
         voucher: boolean,
         shops: number[]
     ): Promise<TFetchPricesResponse> {
-        return BackgroundSender.send({
-            action: EAction.Prices,
-            params: {country, apps, subs, bundles, voucher, shops}
-        });
+        return BackgroundSender.send2(EAction.Prices, {country, apps, subs, bundles, voucher, shops});
     }
 
     static fetchDlcInfo(appid: number): Promise<TFetchDlcInfoResponse> {

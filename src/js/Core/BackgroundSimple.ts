@@ -1,28 +1,49 @@
 import browser from "webextension-polyfill";
+import ErrorParser from "@Core/Errors/ErrorParser";
 
-/** @deprecated */
-class BackgroundSimple {
+type EventListener = () => void;
+type ErrorEventListener = (name: string|null, message: string|null) => void;
 
-    /** @deprecated */
-    static message(message) {
-        return browser.runtime.sendMessage(message);
-    }
+class ListenerMap<T> {
+    private counter: number = 0;
+    protected readonly listeners: Map<number, T> = new Map();
 
-    /** @deprecated */
-    static action(requested, ...params) {
-        if (!params.length) { return this.message({"action": requested}); }
-        return this.message({"action": requested, "params": params});
+    subscribe(listener: T): () => void {
+        const id = this.counter++;
+        this.listeners.set(id, listener);
+        return () => this.listeners.delete(id);
     }
 }
 
-class BackgroundSender {
-    static send<Request, Response>(message: Request): Promise<Response> {
-        return browser.runtime.sendMessage(message);
+class EventListenerMap extends ListenerMap<EventListener> {
+    notify(): void {
+        this.listeners.forEach(listener => listener());
     }
+}
+
+class ErrorEventListenerMap extends ListenerMap<ErrorEventListener>{
+    notify(name: string|null, message: string|null): void {
+        this.listeners.forEach(listener => listener(name, message));
+    }
+}
+
+export default class BackgroundSender {
+
+    public static readonly onStart = new EventListenerMap();
+    public static readonly onDone = new EventListenerMap();
+    public static readonly onError = new ErrorEventListenerMap();
 
     static send2<Response>(action: string, params: Record<string, any>={}): Promise<Response> {
-        return browser.runtime.sendMessage({action, params});
+        this.onStart.notify();
+        try {
+            const result = browser.runtime.sendMessage({action, params});
+            this.onDone.notify();
+            return result;
+        } catch(e: any) {
+            const error = ErrorParser.parse(e.message ?? "");
+            const {name, msg} = error;
+            this.onError.notify(name, msg);
+            throw e;
+        }
     }
 }
-
-export {BackgroundSimple, BackgroundSender};
