@@ -1,6 +1,6 @@
 import GameId from "@Core/GameId/GameId";
 import {Background} from "../Background";
-import {Messenger} from "../Messenger";
+import {Messenger} from "../../../../scriplets/Messenger";
 import {Page} from "../../Features/Page";
 
 class DynamicStore {

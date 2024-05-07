@@ -57,7 +57,6 @@ export default function() {
         plugin: {
             name: "manifest",
             setup(build) {
-                // Load ".txt" files and return an array of words
                 build.onLoad({ filter: /[\\/]P.+?\.(js|ts)$/ }, async (args) => {
                     let contents = await fs.readFile(args.path, "utf8")
                     const doc = contents.match(/\/\*\*.+?@contentScript.+?\*\//s);

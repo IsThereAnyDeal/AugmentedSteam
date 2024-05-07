@@ -72,15 +72,12 @@ export default async function(options) {
     await fs.mkdir(distDir, {recursive: true});
 
     // TODO replace with imports?
-    for (let dir of ["html", "img", "localization"]) {
+    for (let dir of ["html", "img", "localization", "scriplets"]) {
         await fs.cp(`${srcDir}/${dir}`, `${distDir}/${dir}`, {recursive: true});
     }
     await fs.cp(`${rootDir}/LICENSE`, `${distDir}/LICENSE`);
 
     let manifestPlugin = manifestPreprocess();
-
-    await fs.cp(`${rootDir}/node_modules/webextension-polyfill/dist/browser-polyfill.min.js`, `${distDir}/js/browser-polyfill.js`);
-    await fs.cp(`${rootDir}/node_modules/dompurify/dist/purify.js`, `${distDir}/js/dompurify.js`);
 
     let result = await esbuild.build({
         entryPoints: [

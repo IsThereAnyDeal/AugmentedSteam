@@ -51,7 +51,7 @@ export default class FCustomStyle extends Feature {
 
         switch (style) {
             case "winter2019": {
-                DOMHelper.insertStylesheet("//community.cloudflare.steamstatic.com/public/css/promo/winter2019/goldenprofile.css");
+                DOMHelper.insertRemoteStylesheet("//community.cloudflare.steamstatic.com/public/css/promo/winter2019/goldenprofile.css");
 
                 const profilePageNode = document.querySelector(".no_header.profile_page");
                 profilePageNode.classList.add("golden_profile");
@@ -99,7 +99,7 @@ export default class FCustomStyle extends Feature {
                 break;
             }
             case "goldenprofile2020": {
-                DOMHelper.insertStylesheet("//community.cloudflare.steamstatic.com/public/css/promo/lny2020/goldenprofile.css");
+                DOMHelper.insertRemoteStylesheet("//community.cloudflare.steamstatic.com/public/css/promo/lny2020/goldenprofile.css");
 
                 const profilePageNode = document.querySelector(".no_header.profile_page");
                 profilePageNode.classList.add("golden_profile");
@@ -140,7 +140,7 @@ export default class FCustomStyle extends Feature {
                 break;
             }
             case "goldenprofile": {
-                DOMHelper.insertStylesheet("//community.cloudflare.steamstatic.com/public/css/promo/lny2019/goldenprofile.css");
+                DOMHelper.insertRemoteStylesheet("//community.cloudflare.steamstatic.com/public/css/promo/lny2019/goldenprofile.css");
 
                 const profilePageNode = document.querySelector(".no_header.profile_page");
                 profilePageNode.classList.add("golden_profile");
@@ -178,7 +178,7 @@ export default class FCustomStyle extends Feature {
                 break;
             }
             case "holiday2014":
-                DOMHelper.insertStylesheet("//community.cloudflare.steamstatic.com/public/css/skin_1/holidayprofile.css");
+                DOMHelper.insertRemoteStylesheet("//community.cloudflare.steamstatic.com/public/css/skin_1/holidayprofile.css");
 
                 HTML.beforeEnd(".profile_header_bg_texture", "<div class='holidayprofile_header_overlay'></div>");
                 document.querySelector(".no_header.profile_page").classList.add("holidayprofile");
@@ -190,7 +190,7 @@ export default class FCustomStyle extends Feature {
                 document.body.classList.add("es_style_clear");
                 break;
             default: {
-                DOMHelper.insertStylesheet(ExtensionResources.getURL(`img/profile_styles/${style}/style.css`));
+                DOMHelper.insertStylesheet(`img/profile_styles/${style}/style.css`);
 
                 const headerImg = ExtensionResources.getURL(`img/profile_styles/${style}/header.jpg`);
                 document.querySelector(".profile_header_bg_texture").style.backgroundImage = `url(${headerImg})`;

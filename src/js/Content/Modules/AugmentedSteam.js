@@ -1,3 +1,4 @@
+import BackgroundSender from "@Core/BackgroundSimple";
 import {L} from "@Core/Localization/Localization";
 import {
     __activate,
@@ -285,6 +286,12 @@ class AugmentedSteam {
     }
 
     static init() {
+        BackgroundSender.onError.subscribe((name, message) => {
+            if (name === "LoginError") {
+                AugmentedSteam.addLoginWarning(message);
+            }
+        });
+
         AugmentedSteam._addBackToTop();
         AugmentedSteam._addMenu();
         AugmentedSteam._addLanguageWarning();

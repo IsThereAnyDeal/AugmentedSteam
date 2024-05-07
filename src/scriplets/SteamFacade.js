@@ -255,4 +255,7 @@ class SteamFacade {
     }
 }
 
-export {SteamFacade};
+Messenger.listen("as_SteamFacade", function(data) {
+    const {action, params} = data;
+    SteamFacade[action](...params);
+});
