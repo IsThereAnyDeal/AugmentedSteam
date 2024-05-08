@@ -1,7 +1,7 @@
 import { EAction } from "@Background/EAction";
 import Api from "../Api";
 import IndexedDB from "@Background/Db/IndexedDB";
-import type {TFetchBadgeInfoResponse, TFetchReviewsResponse, TReview} from "./_types";
+import type {TFetchBadgeInfoResponse, TFetchReviewsResponse, TLogin, TReview} from "./_types";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import DOMPurify from "dompurify";
 import Errors from "@Core/Errors/Errors";
@@ -159,7 +159,7 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
      * Invoked when the content script thinks the user is logged in
      * If we don't know the user's steamId, fetch their community profile
      */
-    private async login(profilePath: string) {
+    private async login(profilePath: string): Promise<TLogin> {
 
         if (!profilePath) {
             await this.logout();
@@ -192,7 +192,7 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
         return value;
     }
 
-    private async logout(force: boolean|undefined=undefined) {
+    private async logout(force: boolean|undefined=undefined): Promise<void> {
         if (force === undefined) {
             force = (await LocalStorage.get("login") !== undefined)
         }
@@ -206,13 +206,12 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
     }
 
     // TODO This and (at least) the login calls don't seem appropriate in this class
-    private async storeCountry(newCountry: string|undefined=undefined): Promise<string|null> {
-        if (newCountry) {
-            await LocalStorage.set("storeCountry", newCountry);
-            return null;
-        } else {
-            return (await LocalStorage.get("storeCountry")) ?? null;
-        }
+    private async setStoreCountry(newCountry: string): Promise<void> {
+        await LocalStorage.set("storeCountry", newCountry);
+    }
+
+    private async getStoreCountry(): Promise<string|null> {
+        return (await LocalStorage.get("storeCountry")) ?? null;
     }
 
     async handle(message: any): Promise<any> {
@@ -232,10 +231,13 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
                 return await this.login(message.params.profilePath);
 
             case EAction.Logout:
-                return await this.login(message.params.force ?? undefined);
+                return await this.logout(message.params.force ?? undefined);
 
-            case EAction.StoreCountry:
-                return await this.storeCountry(message.params.country ?? undefined);
+            case EAction.StoreCountry_Set:
+                return await this.setStoreCountry(message.params.newCountry);
+
+            case EAction.StoreCountry_Get:
+                return await this.getStoreCountry();
         }
 
         return undefined;
