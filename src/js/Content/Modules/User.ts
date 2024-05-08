@@ -1,8 +1,8 @@
 import HTMLParser from "@Core/Html/HtmlParser";
 import StringUtils from "@Core/Utils/StringUtils";
-import {RequestData} from "./RequestData";
 import SteamCommunityApiFacade from "@Content/Modules/Facades/SteamCommunityApiFacade";
 import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+import RequestData from "@Content/Modules/RequestData";
 
 export default class User {
 
@@ -135,8 +135,13 @@ export default class User {
 
         // This endpoint works on both store and community
         return (async (): Promise<string> => {
-            const response = await RequestData.getJson(`${window.location.origin}/pointssummary/ajaxgetasyncconfig`);
-            if (!response || !response.success || !response.data.webapi_token) {
+            const response = await RequestData.getJson<{
+                success?: boolean,
+                data?: {
+                    webapi_token?: string
+                }
+            }>(`${window.location.origin}/pointssummary/ajaxgetasyncconfig`);
+            if (!response.success || !response.data?.webapi_token) {
                 throw new Error("Failed to get webapi token");
             }
 

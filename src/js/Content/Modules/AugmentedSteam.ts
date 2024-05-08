@@ -159,11 +159,16 @@ export default class AugmentedSteam {
     }
 
     static init() {
-        BackgroundSender.onError.subscribe((name, message) => {
+        document.addEventListener("asRequestError", e => {
+            // @ts-ignore
+            const name = e.detail.name ?? null;
+            // @ts-ignore
+            const message = e.detail.message ?? null;
+
             if (name === "LoginError" && message !== null) {
                 this.addLoginWarning(message);
             }
-        });
+        })
 
         this.addBackToTop();
         this.addMenu();

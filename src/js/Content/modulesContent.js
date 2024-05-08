@@ -19,6 +19,5 @@ export {CurrencyManager} from "./Modules/CurrencyManager";
 export {ITAD} from "./Modules/ITAD";
 export {Price} from "./Modules/Price";
 export {Prices} from "./Modules/Prices/Prices";
-export {RequestData} from "./Modules/RequestData";
 export {SteamId, SteamIdDetail} from "./Modules/SteamId";
 export {UpdateHandler} from "./Modules/UpdateHandler";

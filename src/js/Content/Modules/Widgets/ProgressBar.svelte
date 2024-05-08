@@ -62,31 +62,40 @@
     }
 
     onMount(() => {
-        const unsubStart = BackgroundSender.onStart.subscribe(() => {
+        function onStart(): void {
             started = started+1;
             update();
-        });
+        }
 
-        const unsubDone = BackgroundSender.onDone.subscribe(() => {
+        function onDone(): void {
             done = done + 1;
             update();
-        });
+        }
 
-        const unsubError = BackgroundSender.onError.subscribe((name) => {
+        function onError(e: Event) {
             failed = failed + 1;
             update();
+
+            // @ts-ignore
+            const name = e.detail.name ?? null;
 
             if (name === "ServerOutageError") {
                 hasWarning = true;
             } else {
                 hasError = true;
             }
-        });
+        }
+
+        document.addEventListener("asRequestStart", onStart);
+        document.addEventListener("asRequestDone", onDone);
+        // @ts-ignore
+        document.addEventListener("asRequestError", onError);
 
         return () => {
-            unsubStart();
-            unsubDone();
-            unsubError();
+            document.removeEventListener("asRequestStart", onStart);
+            document.removeEventListener("asRequestDone", onDone);
+            // @ts-ignore
+            document.removeEventListener("asRequestError", onError);
         }
     });
 </script>

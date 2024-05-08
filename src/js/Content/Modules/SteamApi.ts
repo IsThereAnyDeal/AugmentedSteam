@@ -1,5 +1,5 @@
-import {RequestData} from "./RequestData";
 import User from "@Content/Modules/User";
+import RequestData from "@Content/Modules/RequestData";
 
 interface TAchievementProgress {
     appid: number,
@@ -13,7 +13,7 @@ interface TAchievementProgress {
 export default class SteamApi {
 
     static async getAchievementsProgress(appid: number): Promise<TAchievementProgress> {
-        let response: {
+        let responseData: {
             response?: {
                 achievement_progress: Array<TAchievementProgress>
             }
@@ -23,16 +23,17 @@ export default class SteamApi {
             const token = await User.accessToken;
             const steamId = User.steamId;
 
-            response = await RequestData.post(
+            const response = await RequestData.post(
                 `https://api.steampowered.com/IPlayerService/GetAchievementsProgress/v1/?access_token=${token}`,
-                {"steamid": steamId, "appids[0]": appid},
+                {"steamid": steamId, "appids[0]": String(appid)},
                 {"credentials": "omit"}
             );
+            responseData = await response.json();
         } catch (err) {
             throw new Error("Failed to fetch achievements");
         }
 
-        let data = response?.response?.achievement_progress?.[0];
+        let data = responseData?.response?.achievement_progress?.[0];
 
         if (!data) {
             throw new Error("Failed to find achievements data");
