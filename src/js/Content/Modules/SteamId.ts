@@ -1,32 +1,43 @@
 import HTMLParser from "@Core/Html/HtmlParser";
 
-class SteamId {
+export class SteamId {
+
+    private static _steamId: string|null;
 
     static getSteamId() {
-        if (SteamId._steamId) { return SteamId._steamId; }
+        if (this._steamId) {
+            return this._steamId;
+        }
 
         if (document.querySelector("#reportAbuseModal")) {
-            SteamId._steamId = document.querySelector("input[name=abuseID]").value;
+            this._steamId = document.querySelector<HTMLInputElement>("input[name=abuseID]")?.value ?? null;
         } else {
-            SteamId._steamId = HTMLParser.getStringVariable("g_steamID");
+            this._steamId = HTMLParser.getStringVariable("g_steamID");
         }
 
-        if (!SteamId._steamId) {
+        if (!this._steamId) {
             const profileData = HTMLParser.getObjectVariable("g_rgProfileData");
-            SteamId._steamId = profileData.steamid;
+            this._steamId = profileData?.steamid ?? null;
         }
 
-        return SteamId._steamId;
+        return this._steamId;
     }
 }
 
-class SteamIdDetail {
+export class SteamIdDetail {
 
     /*
      * @see https://developer.valvesoftware.com/wiki/SteamID
      */
 
-    constructor(steam64str) {
+    private readonly _y: number;
+    private readonly _accountNumber: number;
+    private readonly _instance: number;
+    private readonly _type: number;
+    private readonly _universe: number;
+    private readonly _steamId64: string;
+
+    constructor(steam64str: string) {
         if (!steam64str) {
             throw new Error("Missing first parameter 'steam64str'.");
         }
@@ -41,7 +52,7 @@ class SteamIdDetail {
         this._steamId64 = steam64str;
     }
 
-    _divide(str) {
+    _divide(str: string|number[]): [number[], 1|0] {
         const length = str.length;
         const result = [];
         let num = 0;
@@ -59,12 +70,12 @@ class SteamIdDetail {
         return [result, num > 0 ? 1 : 0];
     }
 
-    _getBinary(str) {
+    _getBinary(str: string): [number, number] {
         let upper32 = 0;
         let lower32 = 0;
         let index = 0;
         let bit = 0;
-        let _str = str;
+        let _str: string|number[] = str;
         do {
             [_str, bit] = this._divide(_str);
 
@@ -82,11 +93,11 @@ class SteamIdDetail {
         return [upper32, lower32];
     }
 
-    get id2() {
+    get id2(): string {
         return `STEAM_${this._universe}:${this._y}:${this._accountNumber}`;
     }
 
-    get id3() {
+    get id3(): string|null {
         const map = new Map(
             [
                 [0, "I"], // invalid
@@ -114,13 +125,11 @@ class SteamIdDetail {
         return `[${type}:${this._universe}:${(this._accountNumber << 1) | this._y}]`;
     }
 
-    get id64() {
+    get id64(): string {
         return this._steamId64;
     }
 
-    get id64hex() {
+    get id64hex(): string {
         return `steam:${BigInt(this._steamId64).toString(16)}`;
     }
 }
-
-export {SteamId, SteamIdDetail};

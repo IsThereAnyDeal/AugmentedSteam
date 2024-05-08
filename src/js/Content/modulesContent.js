@@ -14,7 +14,6 @@ export {FeatureManager} from "./Modules/Feature/FeatureManager";
 export {ConfirmDialog} from "./Modules/Widgets/ConfirmDialog";
 export {Sortbox} from "./Modules/Widgets/SortBox";
 
-export {Clipboard} from "./Modules/Clipboard";
 export {CurrencyManager} from "./Modules/CurrencyManager";
 export {ITAD} from "./Modules/ITAD";
 export {Price} from "./Modules/Price";

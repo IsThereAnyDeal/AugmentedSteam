@@ -1,7 +1,7 @@
 
-class Clipboard {
+export default class Clipboard {
 
-    static async set(content) {
+    static async set(content: string): Promise<boolean> {
 
         try {
             await navigator.clipboard.writeText(content);
@@ -11,8 +11,8 @@ class Clipboard {
         }
 
         // Based on https://stackoverflow.com/a/12693636
-        function copyHandler(e) {
-            e.clipboardData.setData("text/plain", content);
+        function copyHandler(e: ClipboardEvent) {
+            e.clipboardData?.setData("text/plain", content);
             e.preventDefault();
         }
 
@@ -22,5 +22,3 @@ class Clipboard {
         return result;
     }
 }
-
-export {Clipboard};
