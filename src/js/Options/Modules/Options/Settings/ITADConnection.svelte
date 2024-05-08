@@ -8,7 +8,7 @@
         __loading,
         __status
     } from "@Strings/_strings";
-    import {BackgroundSimple} from "@Core/BackgroundSimple";
+    import BackgroundSimple from "@Core/BackgroundSimple";
     import {L} from "@Core/Localization/Localization";
     import {onMount} from "svelte";
 

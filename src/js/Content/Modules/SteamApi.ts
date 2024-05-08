@@ -1,5 +1,5 @@
-import {User} from "./User";
 import {RequestData} from "./RequestData";
+import User from "@Content/Modules/User";
 
 interface TAchievementProgress {
     appid: number,

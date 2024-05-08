@@ -1,8 +1,8 @@
-import {User} from "../User";
 import AugmentedSteamApiFacade from "../Facades/AugmentedSteamApiFacade";
 import type {TBundle, TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
 import ITADApiFacade from "../Facades/ITADApiFacade";
 import Settings from "@Options/Data/Settings";
+import User from "@Content/Modules/User";
 
 type TIdType = "app"|"sub"|"bundle";
 

@@ -1,4 +1,4 @@
-import {BackgroundSender} from "@Core/BackgroundSimple";
+import BackgroundSender from "@Core/BackgroundSimple";
 import type {
     TFetchDlcInfoResponse,
     TFetchMarketCardAveragePricesResponse,

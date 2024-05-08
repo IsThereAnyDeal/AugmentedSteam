@@ -1,5 +1,5 @@
 import type AdapterInterface from "@Content/Modules/UserNotes/Adapters/AdapterInterface";
-import {BackgroundSender} from "@Core/BackgroundSimple";
+import BackgroundSender from "@Core/BackgroundSimple";
 import {EAction} from "@Background/EAction";
 import CapacityInfo from "@Content/Modules/UserNotes/CapacityInfo";
 

@@ -17,7 +17,7 @@
     } from "@Strings/_strings";
     import Config from "../../../config";
     import {DynamicStore} from "@Content/Modules/Data/DynamicStore";
-    import {User} from "@Content/Modules/User";
+    import User from "@Content/Modules/User";
     import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
 
     const isSignedIn = User.isSignedIn;

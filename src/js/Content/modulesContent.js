@@ -22,4 +22,3 @@ export {Prices} from "./Modules/Prices/Prices";
 export {RequestData} from "./Modules/RequestData";
 export {SteamId, SteamIdDetail} from "./Modules/SteamId";
 export {UpdateHandler} from "./Modules/UpdateHandler";
-export {User} from "./Modules/User";

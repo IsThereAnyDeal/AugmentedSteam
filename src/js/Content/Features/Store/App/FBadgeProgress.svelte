@@ -1,11 +1,12 @@
 <script lang="ts" context="module">
     // @ts-ignore
     import self_ from "./FBadgeProgress.svelte";
-    import {Feature, User} from "../../../modulesContent";
+    import {Feature} from "../../../modulesContent";
     import type {CApp} from "./CApp";
     import type {TFetchBadgeInfoResponse} from "@Background/Modules/Community/_types";
     import SteamCommunityApiFacade from "../../../Modules/Facades/SteamCommunityApiFacade";
     import Settings from "@Options/Data/Settings";
+    import User from "@Content/Modules/User";
 
     export class FBadgeProgress extends Feature<CApp> {
 

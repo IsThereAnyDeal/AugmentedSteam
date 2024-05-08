@@ -89,6 +89,10 @@ export default class User {
         return this._signedIn;
     }
 
+    static get steamId(): string {
+        return this._steamId;
+    }
+
     static get storeCountry(): string {
         let country;
 

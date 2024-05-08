@@ -1,4 +1,4 @@
-import {Context, CurrencyManager, ITAD, UpdateHandler, User} from "../modulesContent";
+import {Context, CurrencyManager, ITAD, UpdateHandler} from "../modulesContent";
 import bootstrapDomPurify from "../../bootstrapDomPurify";
 import config from "../../config";
 import {Info} from "@Core/Info";
@@ -7,6 +7,7 @@ import {SettingsStore} from "@Options/Data/Settings";
 import {create as createProgressBar} from "@Content/Modules/Widgets/ProgressBar.svelte";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import AugmentedSteam from "@Content/Modules/AugmentedSteam";
+import User from "@Content/Modules/User";
 
 /**
  * Event handler for uncaught Background errors

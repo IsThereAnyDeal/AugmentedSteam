@@ -2,7 +2,6 @@ import BackgroundSender from "@Core/BackgroundSimple";
 import {L} from "@Core/Localization/Localization";
 import {__activate, __cart, __games, __reviews, __viewinclient, __wishlist,} from "@Strings/_strings";
 import {Language} from "../../modulesCore";
-import {User} from "../modulesContent";
 import {DynamicStore} from "./Data/DynamicStore";
 import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
@@ -10,6 +9,7 @@ import AugmentedSteamMenu from "@Content/Modules/Widgets/AugmentedSteamMenu.svel
 import CacheApiFacade from "@Content/Modules/Facades/CacheApiFacade";
 import AugmentedSteamWarnings from "@Content/Modules/Widgets/AugmentedSteamWarnings.svelte";
 import LocalStorage from "@Core/Storage/LocalStorage";
+import User from "@Content/Modules/User";
 
 export default class AugmentedSteam {
 
