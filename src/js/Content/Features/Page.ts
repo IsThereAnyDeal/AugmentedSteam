@@ -1,10 +1,12 @@
-import {AugmentedSteam, Context, CurrencyManager, DOMHelper, ITAD, UpdateHandler, User} from "../modulesContent";
-import setup from "../../bootstrapDomPurify";
+import {Context, CurrencyManager, ITAD, UpdateHandler, User} from "../modulesContent";
+import bootstrapDomPurify from "../../bootstrapDomPurify";
 import config from "../../config";
 import {Info} from "@Core/Info";
 import Localization from "@Core/Localization/Localization";
 import {SettingsStore} from "@Options/Data/Settings";
 import {create as createProgressBar} from "@Content/Modules/Widgets/ProgressBar.svelte";
+import DOMHelper from "@Content/Modules/DOMHelper";
+import AugmentedSteam from "@Content/Modules/AugmentedSteam";
 
 /**
  * Event handler for uncaught Background errors
@@ -27,8 +29,8 @@ window.addEventListener("unhandledrejection", unhandledrejection);
  *  Inject the Messenger, SteamFacade class into the DOM, providing the same interface for the page context side
  *  TODO insert directly via manifest with "world": "MAIN"?
  */
-DOMHelper.insertScript("scriplets/Messenger.js");
-DOMHelper.insertScript("scriplets/SteamFacade.js");
+DOMHelper.insertScript("scriptlets/MessengerScriptlet.js");
+DOMHelper.insertScript("scriptlets/SteamScriptlet.js");
 
 export default class Page {
 
@@ -39,7 +41,7 @@ export default class Page {
             // TODO What errors can be "suppressed" here?
             try {
                 await SettingsStore;
-                setup();
+                await bootstrapDomPurify();
             } catch (err) {
                 console.error(err);
             }

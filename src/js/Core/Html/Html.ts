@@ -113,19 +113,23 @@ export default class HTML {
         return node;
     }
 
-    static beforeBegin(nodeOrSelector: Element|string, html: string): void {
+    static beforeBegin(nodeOrSelector: Element|string|null, html: string): void {
+        if (!nodeOrSelector) { return; }
         HTML._adjacent(nodeOrSelector, "beforebegin", html);
     }
 
-    static afterBegin(nodeOrSelector: Element|string, html: string): void {
+    static afterBegin(nodeOrSelector: Element|string|null, html: string): void {
+        if (!nodeOrSelector) { return; }
         HTML._adjacent(nodeOrSelector, "afterbegin", html);
     }
 
-    static beforeEnd(nodeOrSelector: Element|string, html: string): void {
+    static beforeEnd(nodeOrSelector: Element|string|null, html: string): void {
+        if (!nodeOrSelector) { return; }
         HTML._adjacent(nodeOrSelector, "beforeend", html);
     }
 
-    static afterEnd(nodeOrSelector: Element|string, html: string): void {
+    static afterEnd(nodeOrSelector: Element|string|null, html: string): void {
+        if (!nodeOrSelector) { return; }
         HTML._adjacent(nodeOrSelector, "afterend", html);
     }
 }

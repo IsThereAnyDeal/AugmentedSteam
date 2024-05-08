@@ -14,12 +14,9 @@ export {FeatureManager} from "./Modules/Feature/FeatureManager";
 export {ConfirmDialog} from "./Modules/Widgets/ConfirmDialog";
 export {Sortbox} from "./Modules/Widgets/SortBox";
 
-export {AugmentedSteam} from "./Modules/AugmentedSteam";
 export {Clipboard} from "./Modules/Clipboard";
 export {CurrencyManager} from "./Modules/CurrencyManager";
-export {DOMHelper} from "./Modules/DOMHelper";
 export {ITAD} from "./Modules/ITAD";
-export {Messenger} from "../../scriplets/Messenger";
 export {Price} from "./Modules/Price";
 export {Prices} from "./Modules/Prices/Prices";
 export {RequestData} from "./Modules/RequestData";

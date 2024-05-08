@@ -72,7 +72,7 @@ export default async function(options) {
     await fs.mkdir(distDir, {recursive: true});
 
     // TODO replace with imports?
-    for (let dir of ["html", "img", "localization", "scriplets"]) {
+    for (let dir of ["html", "img", "localization", "scriptlets"]) {
         await fs.cp(`${srcDir}/${dir}`, `${distDir}/${dir}`, {recursive: true});
     }
     await fs.cp(`${rootDir}/LICENSE`, `${distDir}/LICENSE`);
@@ -151,7 +151,8 @@ export default async function(options) {
                 compilerOptions: {
                     hydratable: false,
                     css: "external",
-                    dev: options.dev
+                    dev: options.dev,
+                    immutable: true
                 }
             }),
             {

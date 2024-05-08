@@ -1,17 +1,16 @@
+import Messenger from "@Content/Modules/Messaging/Messenger";
+import {MessageHandler} from "@Content/Modules/Messaging/MessageHandler";
 
-/* eslint-disable camelcase,no-undef,new-cap */
-
-// noinspection JSUnresolvedFunction,JSUnresolvedVariable
-class SteamFacade {
+export default class SteamFacade {
 
     // variables
 
-    static global(name) {
-        return window[name];
+    static global<T=any>(name: string): Promise<T> {
+        return Messenger.get(MessageHandler.SteamFacade, "global", [name]);
     }
 
-    static globalSet(name, value) {
-        window[name] = value;
+    static globalSet(name: string, value: any): void {
+        Messenger.call(MessageHandler.SteamFacade, "globalSet", [name, value]);
     }
 
     // dialogs
@@ -20,8 +19,16 @@ class SteamFacade {
         ShowDialog(strTitle, strDescription, rgModalParams);
     }
 
-    static showConfirmDialog(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton) {
-        return ShowConfirmDialog(strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton);
+    static showConfirmDialog(
+        strTitle: string,
+        strDescription: string,
+        strOKButton: string|null=null,
+        strCancelButton: string|null=null,
+        strSecondaryActionButton: string|null=null
+    ): Promise<"OK"|"SECONDARY"|"CANCEL"> {
+        return Messenger.get(MessageHandler.SteamFacade, "showConfirmDialog", [
+            strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton
+        ]);
     }
 
     static showAlertDialog(strTitle, strDescription, strOKButton) {
@@ -42,16 +49,16 @@ class SteamFacade {
 
     // menu
 
-    static showMenu(elemLink, elemPopup, align, valign, bLinkHasBorder) {
-        return ShowMenu(elemLink, elemPopup, align, valign, bLinkHasBorder);
+    static showMenu(elemLink: string, elemPopup: string, align: string, valign: string, bLinkHasBorder: boolean): void {
+        Messenger.call(MessageHandler.SteamFacade, "showMenu", [elemLink, elemPopup, align, valign, bLinkHasBorder]);
     }
 
-    static hideMenu(elemLink, elemPopup) {
-        return HideMenu(elemLink, elemPopup);
+    static hideMenu(elemLink: string, elemPopup: string): void {
+        Messenger.call(MessageHandler.SteamFacade, "hideMenu", [elemLink, elemPopup]);
     }
 
-    static changeLanguage(strTargetLanguage, bStayOnPage) {
-        return ChangeLanguage(strTargetLanguage, bStayOnPage);
+    static changeLanguage(strTargetLanguage: string, bStayOnPage: boolean): void {
+        Messenger.call(MessageHandler.SteamFacade, "changeLanguage", [strTargetLanguage, bStayOnPage]);
     }
 
     // app pages
@@ -254,8 +261,3 @@ class SteamFacade {
         return $J(selector).trigger(eventName);
     }
 }
-
-Messenger.listen("as_SteamFacade", function(data) {
-    const {action, params} = data;
-    SteamFacade[action](...params);
-});

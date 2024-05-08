@@ -1,7 +1,7 @@
 
 class Messenger {
-    static postMessage(name, params=undefined) {
-        document.dispatchEvent(new CustomEvent(name, {detail: params}));
+    static send(name, data=undefined) {
+        document.dispatchEvent(new CustomEvent(name, {detail: data}));
     }
 
     // Used for setting up a listener that should be able to receive more than one callback

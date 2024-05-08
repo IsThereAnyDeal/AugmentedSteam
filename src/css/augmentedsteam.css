@@ -1121,52 +1121,6 @@ video.highlight_movie:hover + .html5_video_overlay {
 
 
 /***************************************
- * Store and Community
- * add_language_warning(),
- * add_fake_country_code_warning()
- **************************************/
-.es_warn {
-  font-size: 12px;
-  padding: 8px 0;
-  text-align: center;
-  background: linear-gradient(#9a2820 0%, #d63525 100%);
-  color: white;
-}
-
-.es_warn__cnt {
-  max-width: 940px;
-  display: flex;
-  justify-content: space-between;
-  margin: auto;
-  line-height: 20px;
-}
-.es_warn__cnt a {
-  text-decoration: underline;
-}
-
-.es_warn__control {
-  white-space: nowrap;
-}
-
-.es_warn__btn {
-  background: linear-gradient(135deg, #faa 0%,#d46a6a 100%);
-  padding: 0 10px;
-  color: black;
-  text-transform: uppercase;
-  font-size: 11px;
-  border-radius: 1px;
-  text-decoration: none !important;
-  display: inline-block;
-  line-height: 20px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.es_warn__btn:hover {
-  background: linear-gradient(135deg, #801515 0%,#500 100%);
-  color: white;
-}
-
-/***************************************
  * Wishlist
  * FWishlistProfileLink
  **************************************/
@@ -1629,30 +1583,8 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 
 /***************************************
- * Augmented Steam and ITAD menu
+ *ITAD menu
  **************************************/
-#es_pulldown {
-  display: inline-block;
-  padding-left: 4px;
-  line-height: 25px;
-}
-#es_pulldown.focus {
-  color: #ffffff;
-}
-#es_popup {
-  display: none;
-}
-#es_popup > .popup_body {
-  width: fit-content;
-  max-width: 250px;
-}
-#es_popup > .popup_body.popup_menu .popup_menu_item {
-  padding: 8px 18px;
-  font-size: 13px;
-}
-#es_popup > .popup_body.popup_menu .hr {
-  margin: 2px 12px;
-}
 
 #es_itad {
   display: inline-flex;
