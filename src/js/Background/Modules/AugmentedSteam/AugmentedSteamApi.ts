@@ -140,7 +140,6 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
 
     async getRates(to: string[]): Promise<TFetchRatesResponse> {
         const ttl = 60*60;
-
         const key = to.join(",");
 
         let rates = await IndexedDB.get("rates", key);

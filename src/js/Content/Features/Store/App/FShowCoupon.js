@@ -52,7 +52,7 @@ export default class FShowCoupon extends Feature {
         const priceNode = purchaseDiv.querySelector("[data-price-final]");
         if (!priceNode) { return; }
 
-        const currency = CurrencyManager.fromType(CurrencyManager.storeCurrency);
+        const currency = CurrencyManager.fromCode(CurrencyManager.storeCurrency);
         const scaleFactor = 10 ** currency.format.decimalPlaces;
 
         const originalPrice = Number(priceNode.dataset.priceFinal) / 100;

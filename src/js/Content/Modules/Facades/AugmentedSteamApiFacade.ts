@@ -39,7 +39,7 @@ export default class AugmentedSteamApiFacade {
         return BackgroundSender.send2(EAction.StorePageData_Expire, {appid});
     }
 
-    static fetchRates(to: string[]): Promise<TFetchRatesResponse> {
+    static getRates(to: string[]): Promise<TFetchRatesResponse> {
         return BackgroundSender.send2(EAction.Rates, {to});
     }
 

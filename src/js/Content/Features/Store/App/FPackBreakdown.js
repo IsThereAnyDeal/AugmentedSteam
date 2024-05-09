@@ -57,7 +57,7 @@ export default class FPackBreakdown extends Feature {
         const priceNode = node.querySelector("[data-price-final]");
         if (!priceNode) { return; }
 
-        const currency = CurrencyManager.fromType(CurrencyManager.storeCurrency);
+        const currency = CurrencyManager.fromCode(CurrencyManager.storeCurrency);
         const scaleFactor = 10 ** currency.format.decimalPlaces;
 
         let unitPrice = Number(priceNode.dataset.priceFinal) / 100 / ways;

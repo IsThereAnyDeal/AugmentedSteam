@@ -119,7 +119,7 @@ export default class FMarketLowestPrice extends CallbackFeature {
     async _getPriceOverview(node, appid, marketHashName) {
 
         const country = User.storeCountry;
-        const currencyNumber = CurrencyManager.currencyTypeToNumber(CurrencyManager.storeCurrency);
+        const currencyNumber = CurrencyManager.currencyCodeToId(CurrencyManager.storeCurrency);
 
         let data;
 

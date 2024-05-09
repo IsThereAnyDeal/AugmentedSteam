@@ -12,7 +12,7 @@ export default class FSoldAmountLastDay extends Feature {
     async apply() {
 
         const country = User.storeCountry;
-        const currencyNumber = CurrencyManager.currencyTypeToNumber(CurrencyManager.storeCurrency);
+        const currencyNumber = CurrencyManager.currencyCodeToId(CurrencyManager.storeCurrency);
 
         const data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?appid=${this.context.appid}&country=${country}&currency=${currencyNumber}&market_hash_name=${this.context.marketHashName}`);
         if (!data.success) { return; }

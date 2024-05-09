@@ -11,4 +11,8 @@ export default class SteamStoreApiFacade {
     static async getPurchaseDate(appName: string, lang: string): Promise<string|null> {
         return await BackgroundSender.send2(EAction.Purchases, {appName, lang});
     }
+
+    static async getCurrency(): Promise<string> {
+        return await BackgroundSender.send2(EAction.Currency);
+    }
 }

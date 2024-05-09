@@ -3,10 +3,10 @@
  * @see https://partner.steamgames.com/doc/store/pricing/currencies
  */
 
-export default Object.freeze(<Array<{
+export interface TCurrency {
     id: number,
     abbr: string,
-    symbol: string,
+    symbol: string|null,
     hint: string,
     multiplier: number,
     unit: number,
@@ -15,10 +15,13 @@ export default Object.freeze(<Array<{
         hidePlacesWhenZero: boolean,
         symbolFormat: string,
         thousand: string,
+        group?: number,
         decimal: string,
         right: boolean
     }
-}>>[
+}
+
+export default Object.freeze(<Array<TCurrency>>[
     { "id": 1, "abbr": "USD", "symbol": "$", "hint": "United States Dollars", "multiplier": 100, "unit": 1, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": "$", "thousand": ",", "decimal": ".", "right": false } },
     { "id": 2, "abbr": "GBP", "symbol": "£", "hint": "British Pound", "multiplier": 100, "unit": 1, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": "£", "thousand": ",", "decimal": ".", "right": false } },
     { "id": 3, "abbr": "EUR", "symbol": "€", "hint": "European Union Euro", "multiplier": 100, "unit": 1, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": "€", "thousand": " ", "decimal": ",", "right": true } },

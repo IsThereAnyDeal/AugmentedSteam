@@ -22,7 +22,7 @@ export default class FCustomGiftcardAndWallet extends Feature {
         const priceel = newel.querySelector(giftcard ? ".giftcard_text" : ".price");
         const price = priceel.textContent.trim();
 
-        const currency = CurrencyManager.fromType(CurrencyManager.storeCurrency);
+        const currency = CurrencyManager.fromCode(CurrencyManager.storeCurrency);
         const minValue = currency.valueOf(price);
 
         const submitel = newel.querySelector("a");

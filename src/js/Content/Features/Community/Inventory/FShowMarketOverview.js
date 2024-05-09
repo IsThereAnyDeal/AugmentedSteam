@@ -42,7 +42,7 @@ export default class FShowMarketOverview extends CallbackFeature {
             thisItem.dataset.cardsPrice = "nodata";
 
             try {
-                const currency = CurrencyManager.currencyNumberToType(walletCurrency);
+                const currency = CurrencyManager.currencyIdToCode(walletCurrency);
                 const result = await Background.action("market.averagecardprices",
                     {
                         currency,

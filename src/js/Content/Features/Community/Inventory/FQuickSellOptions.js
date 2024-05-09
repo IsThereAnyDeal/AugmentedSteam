@@ -96,7 +96,7 @@ export default class FQuickSellOptions extends CallbackFeature {
         const priceHighValue = Number(thisItem.dataset.priceHigh);
         const priceLowValue = Number(thisItem.dataset.priceLow);
 
-        const currencyType = CurrencyManager.currencyNumberToType(walletCurrency);
+        const currencyType = CurrencyManager.currencyIdToCode(walletCurrency);
 
         function enableButtons(enable) {
             for (const button of marketActions.querySelectorAll(".item_market_action_button, .btn_small")) {
