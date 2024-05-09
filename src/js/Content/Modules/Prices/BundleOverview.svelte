@@ -2,16 +2,16 @@
 
 <script lang="ts">
     import {onMount} from "svelte";
-    import {Price} from "../Price";
-    import {CurrencyManager} from "../CurrencyManager";
-    import type {TBundle, TPrice} from "../../../Background/Modules/AugmentedSteam/_types";
-    import {L} from "../../../Core/Localization/Localization";
+    import type {TBundle, TPrice} from "@Background/Modules/AugmentedSteam/_types";
+    import {L} from "@Core/Localization/Localization";
     import {
         __bundle_header, __bundle_includes, __bundle_info,
         __bundle_offerEnds, __bundle_tier,
         __bundle_tierIncludes, __buy,
         __buyPackage
-    } from "../../../../localization/compiled/_strings";
+    } from "@Strings/_strings";
+    import Price from "@Content/Modules/Currency/Price";
+    import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 
     export let data: TBundle[];
 

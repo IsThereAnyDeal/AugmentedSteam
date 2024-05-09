@@ -18,6 +18,10 @@ export default class CurrencyManager {
         return this.storeCurrencyCode;
     }
 
+    static get customCurrency(): string {
+        return this.customCurrencyCode;
+    }
+
     static getRate(from: string, to: string): number|null {
         if (from === to) {
             return 1;

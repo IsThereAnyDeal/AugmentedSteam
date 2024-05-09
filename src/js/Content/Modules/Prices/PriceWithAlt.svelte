@@ -1,9 +1,9 @@
 <svelte:options immutable />
 
 <script lang="ts">
-    import {Price} from "../Price";
-    import {CurrencyManager} from "../CurrencyManager";
-    import type {TPrice} from "../../../Background/Modules/AugmentedSteam/_types";
+    import type {TPrice} from "@Background/Modules/AugmentedSteam/_types";
+    import Price from "@Content/Modules/Currency/Price";
+    import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 
     export let price: TPrice;
 
