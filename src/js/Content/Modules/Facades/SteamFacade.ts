@@ -31,8 +31,14 @@ export default class SteamFacade {
         ]);
     }
 
-    static showAlertDialog(strTitle, strDescription, strOKButton) {
-        return ShowAlertDialog(strTitle, strDescription, strOKButton);
+    static showAlertDialog(
+        strTitle: string,
+        strDescription: string,
+        strOKButton: string|null=null
+    ): void {
+        Messenger.call(MessageHandler.SteamFacade, "showAlertDialog", [
+            strTitle, strDescription, strOKButton
+        ]);
     }
 
     static showBlockingWaitDialog(strTitle, strDescription) {

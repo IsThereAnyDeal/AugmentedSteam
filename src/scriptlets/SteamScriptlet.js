@@ -27,7 +27,7 @@
         }
 
         static showAlertDialog(strTitle, strDescription, strOKButton) {
-            return ShowAlertDialog(strTitle, strDescription, strOKButton);
+            ShowAlertDialog(strTitle, strDescription, strOKButton);
         }
 
         static showBlockingWaitDialog(strTitle, strDescription) {

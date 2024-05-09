@@ -17,4 +17,3 @@ export {Sortbox} from "./Modules/Widgets/SortBox";
 export {ITAD} from "./Modules/ITAD";
 export {Prices} from "./Modules/Prices/Prices";
 export {SteamId, SteamIdDetail} from "./Modules/SteamId";
-export {UpdateHandler} from "./Modules/UpdateHandler";
