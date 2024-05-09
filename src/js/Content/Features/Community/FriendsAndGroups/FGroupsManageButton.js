@@ -1,3 +1,4 @@
+import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import {
     __all,
     __groups_actionGroups,
@@ -11,8 +12,8 @@ import {
     __none,
 } from "../../../../../localization/compiled/_strings";
 import {L} from "../../../../Core/Localization/Localization";
-import {HTML, Localization} from "../../../../modulesCore";
-import {CallbackFeature, ConfirmDialog, RequestData, User} from "../../../modulesContent";
+import {HTML} from "../../../../modulesCore";
+import {CallbackFeature, RequestData, User} from "../../../modulesContent";
 import {Page} from "../../Page";
 
 export default class FGroupsManageButton extends CallbackFeature {
@@ -109,7 +110,7 @@ export default class FGroupsManageButton extends CallbackFeature {
                 const body = `${L(__groups_leaveAdminConfirm_currentlyAdmin, {
                     "name": `<a href="/gid/${id}" target="_blank">${name}</a>`
                 })}<br>${L(__groups_leaveAdminConfirm_wantToLeave)}`;
-                const result = await ConfirmDialog.open(L(__groups_leave), body);
+                const result = await SteamFacade.showConfirmDialog(L(__groups_leave), body);
                 if (result !== "OK") {
                     group.querySelector(".select_friend").click();
                     continue;
@@ -121,7 +122,7 @@ export default class FGroupsManageButton extends CallbackFeature {
 
         if (selected.length > 0) {
             const body = L(__groups_leaveGroupsConfirm, {"n": selected.length});
-            const result = await ConfirmDialog.open(L(__groups_leave), body);
+            const result = await SteamFacade.showConfirmDialog(L(__groups_leave), body);
 
             if (result === "OK") {
                 for (const [id, group] of selected) {

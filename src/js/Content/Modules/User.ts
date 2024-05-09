@@ -112,6 +112,14 @@ export default class User {
         return country;
     }
 
+    static get profileUrl(): string {
+        return this._profileUrl;
+    }
+
+    static get profilePath(): string {
+        return this._profilePath;
+    }
+
     static get sessionId(): string|null {
         if (!this._sessionId) {
             this._sessionId = HTMLParser.getStringVariable("g_sessionID");

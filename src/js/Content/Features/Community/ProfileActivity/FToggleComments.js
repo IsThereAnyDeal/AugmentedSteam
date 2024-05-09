@@ -1,4 +1,11 @@
-import {__hideComments, __options_hideannouncementcomments, __showComments} from "../../../../../localization/compiled/_strings";
+import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import {L} from "@Core/Localization/Localization";
+import {
+    __featureHint_desc, __featureHint_reminder,
+    __hideComments,
+    __options_hideannouncementcomments,
+    __showComments, __thewordno, __thewordyes,
+} from "../../../../../localization/compiled/_strings";
 import {HTML, Localization, SyncedStorage} from "../../../../modulesCore";
 import {CallbackFeature, ConfirmDialog} from "../../../modulesContent";
 
@@ -34,7 +41,24 @@ export default class FToggleComments extends CallbackFeature {
 
         if (!SyncedStorage.has("hideannouncementcomments")) {
 
-            ConfirmDialog.openFeatureHint(__options_hideannouncementcomments)
+            /* FIXME
+            static openFeatureHint(optionStr, strTitle, strDescription, strOKButton, strCancelButton, strSecondaryActionButton) {
+
+                const _strTitle = strTitle ? `Augmented Steam - ${strTitle}` : "Augmented Steam";
+
+                const _strDescription = `${strDescription ? `${strDescription}<br><br>` : ""}
+            ${L(__featureHint_desc)}<br><br>
+            <span class="as_feature_hint_option">${L(optionStr)}</span><br><br>
+            ${L(__featureHint_reminder)}`;
+
+                const _strOKButton = strOKButton || L(__thewordyes);
+                const _strCancelButton = strCancelButton || L(__thewordno);
+
+                return SteamFacade.showConfirmDialog(_strTitle, _strDescription, _strOKButton, _strCancelButton, strSecondaryActionButton);
+            }
+            */
+
+            openFeatureHint()
                 .then(result => {
                     const hide = result === "OK";
                     SyncedStorage.set("hideannouncementcomments", hide);

@@ -1,3 +1,4 @@
+import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import {
     __workshop_failed,
     __workshop_finished,
@@ -59,7 +60,9 @@ export default class FWorkshopSubscriberButtons extends Feature {
             "count": this._total
         });
 
-        if (await ConfirmDialog.open(this._statusTitle, statusString) !== "OK") { return; }
+        if (await SteamFacade.showConfirmDialog(this._statusTitle, statusString) !== "OK") {
+            return;
+        }
 
         this._updateWaitDialog();
 
