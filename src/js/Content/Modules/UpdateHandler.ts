@@ -1,11 +1,11 @@
 import {L} from "@Core/Localization/Localization";
 import Version from "@Core/Version";
 import {__update_changes, __update_updated} from "@Strings/_strings";
-import {ExtensionResources} from "../../modulesCore";
 import {SyncedStorage} from "@Core/Storage/SyncedStorage";
 import {Info} from "@Core/Info";
 import Settings, {SettingsStore} from "@Options/Data/Settings";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import ExtensionResources from "@Core/ExtensionResources";
 
 export default class UpdateHandler {
 

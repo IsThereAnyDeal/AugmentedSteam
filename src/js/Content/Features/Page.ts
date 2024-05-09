@@ -1,4 +1,4 @@
-import {Context, ITAD} from "../modulesContent";
+import {Context} from "../modulesContent";
 import bootstrapDomPurify from "../../bootstrapDomPurify";
 import config from "../../config";
 import {Info} from "@Core/Info";
@@ -10,6 +10,7 @@ import AugmentedSteam from "@Content/Modules/AugmentedSteam";
 import User from "@Content/Modules/User";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import UpdateHandler from "@Content/Modules/UpdateHandler";
+import ITAD from "@Content/Modules/ITAD";
 
 /**
  * Event handler for uncaught Background errors
@@ -68,7 +69,7 @@ export default class Page {
         createProgressBar();
         AugmentedSteam.init();
         await UpdateHandler.checkVersion(AugmentedSteam.clearCache);
-        ITAD.create();
+        ITAD.init();
 
         const context = new ContextClass();
         await context.applyFeatures();

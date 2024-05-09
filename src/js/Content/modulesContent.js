@@ -14,6 +14,5 @@ export {FeatureManager} from "./Modules/Feature/FeatureManager";
 export {ConfirmDialog} from "./Modules/Widgets/ConfirmDialog";
 export {Sortbox} from "./Modules/Widgets/SortBox";
 
-export {ITAD} from "./Modules/ITAD";
 export {Prices} from "./Modules/Prices/Prices";
 export {SteamId, SteamIdDetail} from "./Modules/SteamId";

@@ -110,12 +110,10 @@ export default class FHighlightsTags extends Feature {
 
         const includeDsInfo = opts.owned || opts.wishlisted || opts.ignored || opts.ignoredOwned;
 
-        const [dsStatus, itadStatus, invStatus] = await Promise.all([
+        const [dsStatus, inCollection, inWaitlist, invStatus] = await Promise.all([
             includeDsInfo ? DynamicStore.getAppStatus(storeIds) : Promise.resolve(),
-            ITAD.getAppStatus(storeIds, {
-                "waitlist": opts.waitlisted,
-                "collection": opts.collected,
-            }),
+            ITAD.getInCollection(storeIds),
+            ITAD.getInWaitlist(storeIds),
             Inventory.getAppStatus(trimmedStoreIds, {
                 "giftsAndPasses": opts.gift || opts.guestPass,
                 "coupons": opts.coupon,
@@ -142,17 +140,11 @@ export default class FHighlightsTags extends Feature {
                 }
             }
 
-            /*
-             * Don't need to check for the opts object for itad and inv, since the result
-             * contains `false` for every property if the highlight has been disabled
-             */
-            if (itadStatus) {
-                if (itadStatus[storeId].collected) {
-                    operations.push(this.highlightCollection);
-                }
-                if (itadStatus[storeId].waitlisted) {
-                    operations.push(this.highlightWaitlist);
-                }
+            if (inCollection.has(storeId)) {
+                operations.push(this.highlightCollection);
+            }
+            if (inWaitlist.has(storeId)) {
+                operations.push(this.highlightWaitlist);
             }
 
             if (invStatus) {
