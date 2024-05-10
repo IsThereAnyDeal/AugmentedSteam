@@ -28,8 +28,9 @@ export enum EAction {
     Cards = "community.cards",
 
     Inventory_GetCoupon = "inventory.coupon",
-    Inventory_HasCoupon = "inventory.hasCoupon",
-    Inventory_HasGiftsAndPasses = "inventory.hasGiftsAndPasses",
+    Inventory_GetCouponsAppids = "inventory.getCouponAppids",
+    Inventory_GetGiftsAppids = "inventory.getGiftsAppids",
+    Inventory_GetPassesAppids = "inventory.getPassesAppids",
     Inventory_HasItem = "inventory.hasItem",
 
     Wishlist_Add = "wishlist.add",

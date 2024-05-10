@@ -4,7 +4,7 @@ import Api from "@Background/Modules/Api";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import {
     ContextId,
-    type HasGiftsAndPassesResponse,
+    type HasGiftsAndPassesResponse, type HasItemResponse,
     type InventoryData,
     type InventoryResponse
 } from "@Background/Modules/Inventory/_types";
@@ -16,6 +16,9 @@ import AppId from "@Core/GameId/AppId";
 
 
 export default class InventoryApi extends Api implements MessageHandlerInterface {
+
+    private refreshCouponsPromise: Promise<void>|undefined;
+    private refreshGiftsPromise: Promise<void>|undefined;
 
     constructor() {
         super("https://steamcommunity.com/");
@@ -196,52 +199,104 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
         return data.descriptions.map(item => item.market_hash_name);
     }
 
-    private async getCoupon(appid: number): Promise<TCoupon|undefined> {
-        const isExpired = await IndexedDB.isStoreExpired("coupons");
-        if (isExpired) {
-            let coupons = await this.fetchCoupons();
-            if (coupons === null) {
-                await IndexedDB.clear("coupons");
-            } else {
-                await IndexedDB.replaceAll("coupons", [...coupons.entries()])
-                await IndexedDB.setStoreExpiry("coupons", 60*60);
-            }
-        }
 
+    private async refreshCoupons(): Promise<void> {
+        if (!this.refreshCouponsPromise) {
+            this.refreshCouponsPromise = (async() => {
+                const isExpired = await IndexedDB.isStoreExpired("coupons");
+                if (isExpired) {
+                    let coupons = await this.fetchCoupons();
+                    if (coupons === null) {
+                        await IndexedDB.clear("coupons");
+                    } else {
+                        await IndexedDB.replaceAll("coupons", [...coupons.entries()])
+                        await IndexedDB.setStoreExpiry("coupons", 60*60);
+                    }
+                }
+            })();
+        }
+        return this.refreshCouponsPromise;
+    }
+
+    private async getCoupon(appid: number): Promise<TCoupon|undefined> {
+        await this.refreshCoupons();
         return IndexedDB.getFromIndex("coupons", "idx_appid", appid);
     }
 
-    private async hasCoupon(appid: number): Promise<Boolean> {
-        const coupon = await this.getCoupon(appid);
-        return coupon !== undefined;
-    }
+    private async getCouponsAppids(appids: number[]): Promise<number[]> {
+        await this.refreshCoupons();
 
-    private async hasGiftsAndPasses(appids: number[]): Promise<HasGiftsAndPassesResponse> {
-        const isExpired = await IndexedDB.isStoreExpired("giftsAndPasses");
-        if (isExpired) {
-            let data = await this.fetchGiftsAndPasses();
-            if (data === null) {
-                await IndexedDB.clear("giftsAndPasses");
-            } else {
-                await IndexedDB.replaceAll("giftsAndPasses", [
-                    ["gifts", data.gifts],
-                    ["passes", data.passes]
-                ]);
-                await IndexedDB.setStoreExpiry("giftsAndPasses", 60*60);
+        const tx = IndexedDB.db.transaction("coupons");
+        const couponsSet = new Set(await tx.store.index("idx_appid").getAllKeys());
+
+        const result: number[] = [];
+        for (let appid of appids) {
+            if (couponsSet.has(appid)) {
+                result.push(appid);
             }
         }
 
-        const tx = IndexedDB.db.transaction("giftsAndPasses");
-        const index = tx.store.index("idx_appid");
-
-        const result = await Promise.all(appids.map(async (appid) => {
-            return [appid, await index.getAllKeys(appid)];
-        }));
-
-        return Object.fromEntries(result);
+        await tx.done;
+        return result;
     }
 
-    private async hasItem(hashes: string[]) {
+    private async refreshGiftsAndPasses(): Promise<void> {
+        if (!this.refreshGiftsPromise) {
+            this.refreshGiftsPromise = (async() => {
+                const isExpired = await IndexedDB.isStoreExpired("giftsAndPasses");
+                if (isExpired) {
+                    let data = await this.fetchGiftsAndPasses();
+                    if (data === null) {
+                        await IndexedDB.clear("giftsAndPasses");
+                    } else {
+                        await IndexedDB.replaceAll("giftsAndPasses", [
+                            ["gifts", data.gifts],
+                            ["passes", data.passes]
+                        ]);
+                        await IndexedDB.setStoreExpiry("giftsAndPasses", 60*60);
+                    }
+                }
+            })();
+        }
+        return this.refreshGiftsPromise;
+    }
+
+    private async getGiftsAppids(appids: number[]): Promise<number[]> {
+        await this.refreshGiftsAndPasses();
+
+        const tx = IndexedDB.db.transaction("giftsAndPasses");
+        const giftsSet = new Set((await tx.store.get("gifts")) ?? []);
+
+        const result: number[] = [];
+        for (let appid of appids) {
+            if (giftsSet.has(appid)) {
+                result.push(appid);
+            }
+        }
+
+        await tx.done;
+        return result;
+    }
+
+
+    private async getPassesAppids(appids: number[]): Promise<number[]> {
+        await this.refreshGiftsAndPasses();
+
+        const tx = IndexedDB.db.transaction("giftsAndPasses");
+        const passesSet = new Set((await tx.store.get("passes")) ?? []);
+
+        const result: number[] = [];
+        for (let appid of appids) {
+            if (passesSet.has(appid)) {
+                result.push(appid);
+            }
+        }
+
+        await tx.done;
+        return result;
+    }
+
+    private async hasItem(hashes: string[]): Promise<HasItemResponse> {
         const isExpired = await IndexedDB.isStoreExpired("items");
         if (isExpired) {
             let data = await this.fetchItems();
@@ -262,11 +317,14 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
             case EAction.Inventory_GetCoupon:
                 return await this.getCoupon(message.params.appid);
 
-            case EAction.Inventory_HasCoupon:
-                return await this.hasCoupon(message.params.appid);
+            case EAction.Inventory_GetCouponsAppids:
+                return await this.getCouponsAppids(message.params.appids);
 
-            case EAction.Inventory_HasGiftsAndPasses:
-                return await this.hasGiftsAndPasses(message.params.appids);
+            case EAction.Inventory_GetGiftsAppids:
+                return await this.getGiftsAppids(message.params.appids);
+
+            case EAction.Inventory_GetPassesAppids:
+                return await this.getPassesAppids(message.params.appids);
 
             case EAction.Inventory_HasItem:
                 return await this.hasItem(message.params.hashes);

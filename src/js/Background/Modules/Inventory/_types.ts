@@ -46,11 +46,6 @@ export interface InventoryData {
     descriptions: Description[]
 }
 
-
-export interface HasGiftsAndPassesResponse {
-    [appid: number]: Array<"gifts"|"passes">
-}
-
 export interface HasItemResponse {
     [hash: string]: boolean
 }
