@@ -1,27 +1,36 @@
-import type {Feature} from "./Feature";
+import Feature from "@Content/Modules/Context/Feature";
+import type {ContextType} from "@Content/Modules/Context/ContextType";
 import Errors from "@Core/Errors/Errors";
 
-class FeatureManager {
+export default class Context {
 
-    private static featureMap: Map<Function, Feature>;
-    private static promiseMap: Map<Function, Promise<boolean>>;
-    private static dependencies: Map<Function, Map<Function, boolean>> = new Map();
+    public readonly type: ContextType;
+    private readonly featureMap: Map<Function, Feature<this>> = new Map();
+    private readonly promiseMap: Map<Function, Promise<boolean>> = new Map();
+    private readonly dependencies: Map<Function, Map<Function, boolean>> = new Map();
 
-    private static stats = {
+    private stats = {
         "completed": 0,
         "failed": 0,
         "dependency": 0,
     };
 
-    static dependency(dependent: Function, ...dependencies: Array<[Function, boolean]>) {
+    constructor(type: ContextType, features: typeof Feature[]) {
+        this.type = type;
+
+        for (let ref of features) {
+            const feature = new ref(this);
+            this.featureMap.set(feature.constructor, feature)
+        }
+    }
+
+    dependency(dependent: Function, ...dependencies: Array<[Function, boolean]>) {
         this.dependencies.set(dependent, new Map(dependencies));
     }
 
-    static async apply(features: Feature[]) {
-        this.promiseMap = new Map();
-        this.featureMap = new Map(features.map(feature => [feature.constructor, feature]));
+    async applyFeatures() {
 
-        let promises = features.map(feature => this.getFeaturePromise(feature));
+        let promises = [...this.featureMap.values()].map(feature => this.getFeaturePromise(feature));
         await Promise.allSettled(promises);
 
         console.log(
@@ -32,7 +41,7 @@ class FeatureManager {
         );
     }
 
-    private static getFeaturePromise(feature: Feature): Promise<boolean> {
+    private getFeaturePromise(feature: Feature<this>): Promise<boolean> {
         const func = feature.constructor;
 
         let promise = this.promiseMap.get(func);
@@ -44,7 +53,7 @@ class FeatureManager {
         return promise;
     }
 
-    private static async applyInternal(feature: Feature): Promise<boolean> {
+    private async applyInternal(feature: Feature<this>): Promise<boolean> {
         const func = feature.constructor;
 
         const dependencies = this.dependencies.get(func);
@@ -94,5 +103,3 @@ class FeatureManager {
         return pass;
     }
 }
-
-export {FeatureManager};

@@ -1,4 +1,6 @@
-class Feature<C extends object = Record<string, never>> {
+import type Context from "@Content/Modules/Context/Context";
+
+export default class Feature<C extends Context> {
 
     public constructor(
         protected context: C,
@@ -19,5 +21,3 @@ class Feature<C extends object = Record<string, never>> {
         console.groupEnd();
     }
 }
-
-export {Feature};
