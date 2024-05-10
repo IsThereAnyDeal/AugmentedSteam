@@ -1,7 +1,13 @@
 import Api from "../Api";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import IndexedDB from "@Background/Db/IndexedDB";
-import type {TAppDetail, TFetchWishlistResponse, TPackageDetail, TWishlistGame} from "./_types";
+import type {
+    TAppDetail,
+    TDynamicStoreStatusResponse,
+    TFetchWishlistResponse,
+    TPackageDetail,
+    TWishlistGame
+} from "./_types";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import {EAction} from "@Background/EAction";
 import Errors from "@Core/Errors/Errors";
@@ -275,20 +281,41 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
         await IndexedDB.setStoreExpiry("dynamicStore", 15*60);
     }
 
-    private async getDynamicStoreStatus(ids: number[]): Promise<Record<number, string|null>> {
+    private async getDynamicStoreStatus(ids: string[]): Promise<TDynamicStoreStatusResponse> {
         await this.refreshDynamicStore();
-
-        let result: Record<number, string|null> = {};
 
         const db = IndexedDB.db;
         const tx = db.transaction("dynamicStore");
         const index = tx.store.index("idx_appid");
 
-        for (let id of ids) {
-            result[id] = await index.getKey(id) ?? null;
+        let ignored: string[] = [];
+        let ignoredOwned: string[] = [];
+        let ownedApps: string[] = [];
+        let ownedSubs: string[] = [];
+        let wishlisted: string[] = [];
+
+        for (const strId of ids) {
+            const parts = strId.split("/", 2);
+            if (parts.length != 2) {
+                continue;
+            }
+
+            const type = parts[0];
+            const id = Number(parts[1]);
+
+            const keys = await index.getAllKeys(id);
+            for (let key of keys) {
+                switch(key) {
+                    case "ignored": ignored.push(strId); break;
+                    case "ignoredOwnedElsewhere": ignoredOwned.push(strId); break;
+                    case "ownedApps": ownedApps.push(strId); break;
+                    case "ownedPackages": ownedSubs.push(strId); break;
+                    case "wishlisted": wishlisted.push(strId); break;
+                }
+            }
         }
 
-        return result;
+        return {ignored, ignoredOwned, ownedApps, ownedSubs, wishlisted};
     }
 
     private async dynamicStoreRandomApp(): Promise<number|null> {

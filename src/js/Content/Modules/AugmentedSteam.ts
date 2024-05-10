@@ -1,6 +1,5 @@
 import {L} from "@Core/Localization/Localization";
 import {__activate, __cart, __games, __reviews, __viewinclient, __wishlist,} from "@Strings/_strings";
-import {DynamicStore} from "./Data/DynamicStore";
 import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
 import AugmentedSteamMenu from "@Content/Modules/Widgets/AugmentedSteamMenu.svelte";
@@ -9,6 +8,7 @@ import AugmentedSteamWarnings from "@Content/Modules/Widgets/AugmentedSteamWarni
 import LocalStorage from "@Core/Storage/LocalStorage";
 import User from "@Content/Modules/User";
 import Language from "@Core/Localization/Language";
+import DynamicStore from "@Content/Modules/Data/DynamicStore";
 
 export default class AugmentedSteam {
 

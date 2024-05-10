@@ -33,9 +33,9 @@ export default class DOMHelper {
     /**
      * @see https://stackoverflow.com/a/9517879
      */
-    static insertScript(url: string, params: Record<string, any>|undefined=undefined): void {
+    static insertScript(path: string, params: Record<string, any>|undefined=undefined): void {
         let s = document.createElement("script");
-        s.src = browser.runtime.getURL(url);
+        s.src = browser.runtime.getURL(path);
         // @ts-ignore
         s.onload = function() { this.remove(); };
 

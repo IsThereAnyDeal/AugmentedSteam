@@ -111,7 +111,7 @@ export default class FHighlightsTags extends Feature {
         const includeDsInfo = opts.owned || opts.wishlisted || opts.ignored || opts.ignoredOwned;
 
         const [dsStatus, inCollection, inWaitlist, invStatus] = await Promise.all([
-            includeDsInfo ? DynamicStore.getAppStatus(storeIds) : Promise.resolve(),
+            includeDsInfo ? DynamicStore.getAppsStatus(storeIds) : Promise.resolve(),
             ITAD.getInCollection(storeIds),
             ITAD.getInWaitlist(storeIds),
             Inventory.getAppStatus(trimmedStoreIds, {
