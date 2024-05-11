@@ -1867,32 +1867,6 @@ label.es_dlc_label > input:checked::after {
   display: none;
 }
 
-/** Favorite emoticons */
-.es_emoticons.emoticon_popup {
-  max-width: 352px;
-}
-.es_emoticons .es_emoticons_content {
-  margin-bottom: 10px;
-  min-height: 32px;
-  line-height: 32px;
-  text-align: center;
-  max-height: none;
-  display: flex;
-}
-.es_emoticons_content .no-access {
-  cursor: help;
-  opacity: 0.4;
-}
-#es_fav_remove {
-  width: 10%;
-  background-image: url(https://community.cloudflare.steamstatic.com/economy/emoticon/remove);
-  background-repeat: no-repeat;
-  background-position: center;
-}
-#es_fav_emoticons {
-  width: 90%;
-}
-
 
 /* .game_details styles from https://github.com/SteamDatabase/SteamTracking/blob/8719637a11e9e707f0adb4d07987cd9423d0d828/steamcommunity.com/public/shared/css/store_game_shared.css#L389 */
 .es_hltb {

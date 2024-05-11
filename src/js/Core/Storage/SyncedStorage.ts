@@ -8,7 +8,8 @@ import Storage, {type StorageSchema} from "./Storage";
  * because they should not be accessed directly from storage
  */
 interface SyncedStorageSchema extends StorageSchema {
-    user_notes: Record<string, string>
+    user_notes: Record<string, string>,
+    fav_emoticons: string[]
 }
 
 /*
