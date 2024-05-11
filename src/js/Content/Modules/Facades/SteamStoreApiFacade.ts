@@ -4,6 +4,14 @@ import type {TAppDetail, TDynamicStoreStatusResponse} from "@Background/Modules/
 
 export default class SteamStoreApiFacade {
 
+    static async wishlistAdd(appid: number): Promise<void> {
+        return await BackgroundSender.send2(EAction.Wishlist_Add, {appid});
+    }
+
+    static async wishlistRemove(appid: number, sessionId: string|null=null): Promise<void> {
+        return await BackgroundSender.send2(EAction.Wishlist_Remove, {appid, sessionId});
+    }
+
     static async fetchAppDetails(appid: number, filter: string|undefined=undefined): Promise<TAppDetail|null> {
         return await BackgroundSender.send2(EAction.AppDetails, {appid, filter});
     }

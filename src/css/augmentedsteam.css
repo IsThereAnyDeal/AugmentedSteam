@@ -382,34 +382,6 @@ img.astats_icon {
 }
 
 /***************************************
- * Community app page
- * FCommunityAppPageWishlist
- **************************************/
-.es-loading-wl {
-  width: 16px;
-  /* Makes the image more consistent with others */
-  filter: brightness(350%);
-}
-#es_wishlist_success img,
-#es_wishlist_add img {
-  margin: 7px 0;
-  vertical-align: top;
-}
-#es_wishlist_fail {
-  display: none;
-  position: absolute;
-  right: 0px;
-  color: #c6d4df;
-}
-.as_btn_community_wishlist:not(.loading) a:hover img.es-remove-wl {
-  display: inline !important;
-}
-.as_btn_community_wishlist:not(.loading) img:not(.es-in-wl),
-.as_btn_community_wishlist.loading img:not(.es-loading-wl),
-.as_btn_community_wishlist:not(.loading) a:hover img:not(.es-remove-wl) {
-  display: none;
-}
-/***************************************
  * Wishlist and Games page stats
  **************************************/
 #esi-wishlist-stats-content,
