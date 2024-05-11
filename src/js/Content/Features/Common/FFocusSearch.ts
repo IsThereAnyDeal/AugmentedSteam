@@ -1,9 +1,11 @@
-import {Feature} from "../../Modules/Feature/Feature";
+import Feature from "@Content/Modules/Context/Feature";
+import type {CBase} from "@Content/Features/Common/CBase";
 
-export default class FFocusSearch extends Feature {
+export default class FFocusSearch extends Feature<CBase> {
 
-    checkPrerequisites() {
+    private _node: HTMLElement|null = null;
 
+    override checkPrerequisites(): boolean {
         this._node = document.querySelector([
             "#store_nav_search_term", // Store pages
             "input.discussionSearchText", // Community discussions
@@ -16,27 +18,27 @@ export default class FFocusSearch extends Feature {
         return this._node !== null;
     }
 
-    apply() {
+    override apply(): void {
 
         // Tags that receive text input and should NOT trigger this feature
         const editableTags = new Set(["input", "textarea"]);
 
-        function isContentEditable(el) {
+        function isContentEditable(el: Element|null) {
             if (!el) { return false; }
-            return editableTags.has(el.tagName.toLowerCase()) || el.isContentEditable;
+            return editableTags.has(el.tagName.toLowerCase()) || (el instanceof HTMLElement && el.isContentEditable);
         }
 
-        document.addEventListener("keydown", e => {
+        document.addEventListener("keydown", (e: KeyboardEvent) => {
             if (e.key !== "s" || e.ctrlKey || e.repeat) { return; }
 
             let el = document.activeElement;
             if (isContentEditable(el)) { return; }
             // Check if active element is within a shadow root, see #1623
-            el = el.shadowRoot?.activeElement;
+            el = el?.shadowRoot?.activeElement ?? null;
             if (isContentEditable(el)) { return; }
 
             e.preventDefault();
-            this._node.focus();
+            this._node?.focus();
         });
     }
 }

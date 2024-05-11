@@ -158,7 +158,7 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
         return IndexedDB.clear("rates");
     }
 
-    async isEA(appids: number[]): Promise<TIsEarlyAccessResponse> {
+    async isEarlyAccess(appids: number[]): Promise<TIsEarlyAccessResponse> {
         const ttl = 2*60*60;
         const isExpired = await IndexedDB.isStoreExpired("earlyAccessAppids");
 
@@ -201,7 +201,7 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
                 return await this.clearRates();
 
             case EAction.IsEA:
-                return await this.isEA(message.params.appids);
+                return await this.isEarlyAccess(message.params.appids);
 
             case EAction.ProfileBackground:
                 return await this.fetchProfileBackgrounds(message.params.appid);

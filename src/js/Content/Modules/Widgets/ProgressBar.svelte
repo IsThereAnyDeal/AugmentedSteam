@@ -8,7 +8,7 @@
 
     let instance: self_;
 
-    export function create() {
+    export function create(): void {
         if (!Settings.show_progressbar) {
             return;
         }
@@ -32,7 +32,6 @@
 
 <script lang="ts">
     import {onMount} from "svelte";
-    import BackgroundSender from "@Core/BackgroundSimple";
 
     let started: number = 0;
     let done: number = 0;

@@ -5,17 +5,17 @@ import Errors from "@Core/Errors/Errors";
 export default class Context {
 
     public readonly type: ContextType;
-    private readonly featureMap: Map<Function, Feature<this>> = new Map();
+    private readonly featureMap: Map<Function, Feature<Context>> = new Map();
     private readonly promiseMap: Map<Function, Promise<boolean>> = new Map();
     private readonly dependencies: Map<Function, Map<Function, boolean>> = new Map();
 
     private stats = {
-        "completed": 0,
-        "failed": 0,
-        "dependency": 0,
+        completed: 0,
+        failed: 0,
+        dependency: 0,
     };
 
-    constructor(type: ContextType, features: typeof Feature[]) {
+    constructor(type: ContextType, features: (typeof Feature<Context>)[]) {
         this.type = type;
 
         for (let ref of features) {
@@ -28,7 +28,7 @@ export default class Context {
         this.dependencies.set(dependent, new Map(dependencies));
     }
 
-    async applyFeatures() {
+    async applyFeatures(): Promise<void> {
 
         let promises = [...this.featureMap.values()].map(feature => this.getFeaturePromise(feature));
         await Promise.allSettled(promises);
@@ -41,7 +41,7 @@ export default class Context {
         );
     }
 
-    private getFeaturePromise(feature: Feature<this>): Promise<boolean> {
+    private getFeaturePromise(feature: Feature<Context>): Promise<boolean> {
         const func = feature.constructor;
 
         let promise = this.promiseMap.get(func);
@@ -53,7 +53,7 @@ export default class Context {
         return promise;
     }
 
-    private async applyInternal(feature: Feature<this>): Promise<boolean> {
+    private async applyInternal(feature: Feature<Context>): Promise<boolean> {
         const func = feature.constructor;
 
         const dependencies = this.dependencies.get(func);

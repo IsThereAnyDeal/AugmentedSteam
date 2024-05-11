@@ -1,4 +1,3 @@
-import {Context} from "../modulesContent";
 import bootstrapDomPurify from "../../bootstrapDomPurify";
 import config from "../../config";
 import {Info} from "@Core/Info";
@@ -11,6 +10,7 @@ import User from "@Content/Modules/User";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import UpdateHandler from "@Content/Modules/UpdateHandler";
 import ITAD from "@Content/Modules/ITAD";
+import type Context from "@Content/Modules/Context/Context";
 
 /**
  * Event handler for uncaught Background errors
@@ -38,7 +38,7 @@ DOMHelper.insertScript("scriptlets/SteamScriptlet.js");
 
 export default class Page {
 
-    async run(ContextClass: typeof Context) {
+    async run(context: () => Context): Promise<void> {
         if (!document.getElementById("global_header")) { return; }
 
         try {
@@ -69,9 +69,7 @@ export default class Page {
         createProgressBar();
         AugmentedSteam.init();
         await UpdateHandler.checkVersion(AugmentedSteam.clearCache);
-        ITAD.init();
-
-        const context = new ContextClass();
-        await context.applyFeatures();
+        await ITAD.init();
+        await context().applyFeatures();
     }
 }

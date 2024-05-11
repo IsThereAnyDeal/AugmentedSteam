@@ -1,13 +1,16 @@
-import {HTML, SyncedStorage} from "../../../modulesCore";
-import {ContextType, Feature} from "../../modulesContent";
+import {ContextType} from "@Content/Modules/Context/ContextType";
+import Feature from "@Content/Modules/Context/Feature";
+import HTML from "@Core/Html/Html";
+import type {CBase} from "@Content/Features/Common/CBase";
+import Settings from "@Options/Data/Settings";
 
-export default class FHideTrademarks extends Feature {
+export default class FHideTrademarks extends Feature<CBase> {
 
-    checkPrerequisites() {
-        return SyncedStorage.get("hidetmsymbols");
+    override checkPrerequisites(): boolean {
+        return Settings.hidetmsymbols;
     }
 
-    apply() {
+    override apply(): void {
 
         // TODO I would try to reduce number of selectors here
         let selectors = "title, .apphub_AppName, .breadcrumbs, h1, h4";
@@ -23,7 +26,7 @@ export default class FHideTrademarks extends Feature {
         }
 
         // Replaces "R", "C" and "TM" signs
-        function replaceSymbols(node) {
+        function replaceSymbols(node: Element) {
 
             // tfedor I don't trust this won't break any inline JS
             if (!node || !node.innerHTML) { return; }
@@ -37,7 +40,7 @@ export default class FHideTrademarks extends Feature {
         const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 mutation.addedNodes.forEach(node => {
-                    replaceSymbols(node);
+                    replaceSymbols(<Element>node);
                 });
             });
         });
