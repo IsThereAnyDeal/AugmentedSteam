@@ -1,7 +1,7 @@
 import Settings from "@Options/Data/Settings";
 import ExtensionResources from "@Core/ExtensionResources";
 import Language from "@Core/Localization/Language";
-import {BackgroundSimple} from "@Core/BackgroundSimple";
+import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
 
 interface TLocale {
     stats: {
@@ -20,7 +20,7 @@ export default class Localization {
         return ExtensionResources.getJSON(`/localization/compiled/${code}.json`);
     }
 
-    static init() {
+    static init(): Promise<void> {
         if (!this._promise) {
             this._promise = (async () => {
                 const stored = Settings.language;
@@ -29,7 +29,7 @@ export default class Localization {
                     current = stored;
                 } else if (current !== stored) {
                     Settings.language = current;
-                    BackgroundSimple.action("clearpurchases");
+                    SteamStoreApiFacade.clearPurchases();
                 }
 
                 const lang = Language.getLanguageCode(current);

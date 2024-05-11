@@ -15,9 +15,9 @@ export default class SteamFacade {
 
     // dialogs
 
-    static showDialog(strTitle, strDescription, rgModalParams) {
-        ShowDialog(strTitle, strDescription, rgModalParams);
-    }
+//    static showDialog(strTitle, strDescription, rgModalParams) {
+//        ShowDialog(strTitle, strDescription, rgModalParams);
+//    }
 
     static showConfirmDialog(
         strTitle: string,
@@ -41,17 +41,17 @@ export default class SteamFacade {
         ]);
     }
 
-    static showBlockingWaitDialog(strTitle, strDescription) {
-        return ShowBlockingWaitDialog(strTitle, strDescription);
-    }
+//    static showBlockingWaitDialog(strTitle, strDescription) {
+//        return ShowBlockingWaitDialog(strTitle, strDescription);
+//    }
 
-    static showNicknameModal() {
-        return ShowNicknameModal();
-    }
+//    static showNicknameModal() {
+//        return ShowNicknameModal();
+//    }
 
-    static dismissActiveModal() {
-        CModal.DismissActiveModal();
-    }
+//    static dismissActiveModal() {
+//        CModal.DismissActiveModal();
+//    }
 
     // menu
 
@@ -69,201 +69,201 @@ export default class SteamFacade {
 
     // app pages
 
-    static collapseLongStrings(selector) {
-        return CollapseLongStrings(selector);
-    }
+//    static collapseLongStrings(selector) {
+//        return CollapseLongStrings(selector);
+//    }
 
-    static adjustVisibleAppTags(selector) {
-        return AdjustVisibleAppTags($J(selector));
-    }
+//    static adjustVisibleAppTags(selector) {
+//        return AdjustVisibleAppTags($J(selector));
+//    }
 
-    static updatePlaytimeFilterValues(hourMin, hourMax) {
-        return UpdatePlaytimeFilterValues(hourMin, hourMax);
-    }
+//    static updatePlaytimeFilterValues(hourMin, hourMax) {
+//        return UpdatePlaytimeFilterValues(hourMin, hourMax);
+//    }
 
-    // @param appid required, rest is optional
-    static removeFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2) {
-        return RemoveFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2);
-    }
+//    // @param appid required, rest is optional
+//    static removeFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2) {
+//        return RemoveFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2);
+//    }
 
-    // @param subid can be number or array
-    static addItemToCart(subid, bundleid, navdata) {
-        return window.AddItemToCart(subid, bundleid, navdata);
-    }
+//    // @param subid can be number or array
+//    static addItemToCart(subid, bundleid, navdata) {
+//        return window.AddItemToCart(subid, bundleid, navdata);
+//    }
 
-    // events
+//    // events
 
-    static bindAutoFlyoutEvents() {
-        return BindAutoFlyoutEvents();
-    }
+//    static bindAutoFlyoutEvents() {
+//        return BindAutoFlyoutEvents();
+//    }
 
-    static sliderOnChange(value) {
-        return g_player.SliderOnChange(value);
-    }
+//    static sliderOnChange(value) {
+//        return g_player.SliderOnChange(value);
+//    }
 
-    // dynamic store
+//    // dynamic store
 
-    static dynamicStoreInvalidateCache() {
-        return GDynamicStore.InvalidateCache();
-    }
+//    static dynamicStoreInvalidateCache() {
+//        return GDynamicStore.InvalidateCache();
+//    }
 
-    static dynamicStoreDecorateItems(selector, bForceRecalculate) {
-        return GDynamicStore.DecorateDynamicItems($J(selector), bForceRecalculate);
-    }
+//    static dynamicStoreDecorateItems(selector, bForceRecalculate) {
+//        return GDynamicStore.DecorateDynamicItems($J(selector), bForceRecalculate);
+//    }
 
-    static storeItemDataBindHover(selector, unAppID, unPackageID, unBundleID, rgAdditionalParams) {
-        GStoreItemData.BindHoverEvents($J(selector), unAppID, unPackageID, unBundleID, rgAdditionalParams);
-    }
+//    static storeItemDataBindHover(selector, unAppID, unPackageID, unBundleID, rgAdditionalParams) {
+//        GStoreItemData.BindHoverEvents($J(selector), unAppID, unPackageID, unBundleID, rgAdditionalParams);
+//    }
 
-    // tooltips
+//    // tooltips
 
-    static vTooltip(selector, isHtml = false) {
-        const isStore = window.location.host === "store.steampowered.com";
+//    static vTooltip(selector, isHtml = false) {
+//        const isStore = window.location.host === "store.steampowered.com";
 
-        $J(selector).v_tooltip({
-            "tooltipClass": isStore ? "store_tooltip" : "community_tooltip",
-            "dataAttr": isHtml ? "data-tooltip-html" : "data-tooltip-text",
-            "defaultType": isHtml ? "html" : "text",
-            "replaceExisting": true
-        });
-    }
+//        $J(selector).v_tooltip({
+//            "tooltipClass": isStore ? "store_tooltip" : "community_tooltip",
+//            "dataAttr": isHtml ? "data-tooltip-html" : "data-tooltip-text",
+//            "defaultType": isHtml ? "html" : "text",
+//            "replaceExisting": true
+//        });
+//    }
 
-    // market
+//    // market
 
-    static calculateFeeAmount(amount, publisherFee) {
-        return CalculateFeeAmount(amount, publisherFee);
-    }
+//    static calculateFeeAmount(amount, publisherFee) {
+//        return CalculateFeeAmount(amount, publisherFee);
+//    }
 
-    static calculateAmountToSendForDesiredReceivedAmount(receivedAmount, publisherFee) {
-        return CalculateAmountToSendForDesiredReceivedAmount(receivedAmount, publisherFee);
-    }
+//    static calculateAmountToSendForDesiredReceivedAmount(receivedAmount, publisherFee) {
+//        return CalculateAmountToSendForDesiredReceivedAmount(receivedAmount, publisherFee);
+//    }
 
-    static vCurrencyFormat(amount, currencyCode) {
-        return v_currencyformat(amount, currencyCode);
-    }
+//    static vCurrencyFormat(amount, currencyCode) {
+//        return v_currencyformat(amount, currencyCode);
+//    }
 
-    // friends
+//    // friends
 
-    static toggleManageFriends() {
-        return ToggleManageFriends();
-    }
+//    static toggleManageFriends() {
+//        return ToggleManageFriends();
+//    }
 
-    static openFriendChatInWebChat(chatId) {
-        return OpenFriendChatInWebChat(chatId);
-    }
+//    static openFriendChatInWebChat(chatId) {
+//        return OpenFriendChatInWebChat(chatId);
+//    }
 
-    // community
+//    // community
 
-    static submitGuide() {
-        return SubmitGuide();
-    }
+//    static submitGuide() {
+//        return SubmitGuide();
+//    }
 
-    static initMiniprofileHovers() {
-        return InitMiniprofileHovers();
-    }
+//    static initMiniprofileHovers() {
+//        return InitMiniprofileHovers();
+//    }
 
-    static inviteUserToGroup(Modal, groupID, steamIDInvitee) {
-        return InviteUserToGroup(Modal, groupID, steamIDInvitee);
-    }
+//    static inviteUserToGroup(Modal, groupID, steamIDInvitee) {
+//        return InviteUserToGroup(Modal, groupID, steamIDInvitee);
+//    }
 
-    static getCheckedAccounts(selector) {
-        return GetCheckedAccounts(selector);
-    }
+//    static getCheckedAccounts(selector) {
+//        return GetCheckedAccounts(selector);
+//    }
 
-    static execFriendAction(action, navid) {
-        return ExecFriendAction(action, navid);
-    }
+//    static execFriendAction(action, navid) {
+//        return ExecFriendAction(action, navid);
+//    }
 
-    static loadImageGroupOnScroll(elTarget, strGroup) {
-        LoadImageGroupOnScroll(elTarget, strGroup);
-    }
+//    static loadImageGroupOnScroll(elTarget, strGroup) {
+//        LoadImageGroupOnScroll(elTarget, strGroup);
+//    }
 
-    static showModalContent(url, titleBarText, titleBarURL, sizeToFit) {
-        ShowModalContent(url, titleBarText, titleBarURL, sizeToFit);
-    }
+//    static showModalContent(url, titleBarText, titleBarURL, sizeToFit) {
+//        ShowModalContent(url, titleBarText, titleBarURL, sizeToFit);
+//    }
 
-    // inventory
+//    // inventory
 
-    static firstPage() {
-        return InventoryFirstPage();
-    }
+//    static firstPage() {
+//        return InventoryFirstPage();
+//    }
 
-    static lastPage() {
-        return InventoryLastPage();
-    }
+//    static lastPage() {
+//        return InventoryLastPage();
+//    }
 
-    static goToPage() {
-        return InventoryGoToPage();
-    }
+//    static goToPage() {
+//        return InventoryGoToPage();
+//    }
 
-    static reloadCommunityInventory() {
-        return ReloadCommunityInventory();
-    }
+//    static reloadCommunityInventory() {
+//        return ReloadCommunityInventory();
+//    }
 
-    static getMarketHashName(itemDesc) {
-        return GetMarketHashName(itemDesc);
-    }
+//    static getMarketHashName(itemDesc) {
+//        return GetMarketHashName(itemDesc);
+//    }
 
-    static zoomYear() {
-        pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
-    }
+//    static zoomYear() {
+//        pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
+//    }
 
-    static zoomYearForSellDialog() {
-        pricehistory_zoomDays(
-            SellItemDialog.m_plotPriceHistory,
-            SellItemDialog.m_timePriceHistoryEarliest,
-            SellItemDialog.m_timePriceHistoryLatest,
-            365
-        );
-    }
+//    static zoomYearForSellDialog() {
+//        pricehistory_zoomDays(
+//            SellItemDialog.m_plotPriceHistory,
+//            SellItemDialog.m_timePriceHistoryEarliest,
+//            SellItemDialog.m_timePriceHistoryLatest,
+//            365
+//        );
+//    }
 
-    // selections
+//    // selections
 
-    static updateSelection() {
-        return UpdateSelection();
-    }
+//    static updateSelection() {
+//        return UpdateSelection();
+//    }
 
-    static selectAll() {
-        return SelectAll();
-    }
+//    static selectAll() {
+//        return SelectAll();
+//    }
 
-    static selectNone() {
-        return SelectNone();
-    }
+//    static selectNone() {
+//        return SelectNone();
+//    }
 
-    static selectInverse() {
-        return SelectInverse();
-    }
+//    static selectInverse() {
+//        return SelectInverse();
+//    }
 
-    // Wishlist
+//    // Wishlist
 
-    static wishlistOnScroll() {
-        return g_Wishlist.OnScroll();
-    }
+//    static wishlistOnScroll() {
+//        return g_Wishlist.OnScroll();
+//    }
 
-    // jQuery functions
+//    // jQuery functions
 
-    static jq(selector) {
-        return $J(selector);
-    }
+//    static jq(selector) {
+//        return $J(selector);
+//    }
 
-    static jqOnClick(selector, callback) {
-        $J(selector).on("click", callback);
-    }
+//    static jqOnClick(selector, callback) {
+//        $J(selector).on("click", callback);
+//    }
 
-    static jqAjax(settings) {
-        return $J.ajax(settings);
-    }
+//    static jqAjax(settings) {
+//        return $J.ajax(settings);
+//    }
 
-    static jqGet(url, settings) {
-        return $J.get(url, settings);
-    }
+//    static jqGet(url, settings) {
+//        return $J.get(url, settings);
+//    }
 
-    static jqPost(url, settings) {
-        return $J.post(url, settings);
-    }
+//    static jqPost(url, settings) {
+//        return $J.post(url, settings);
+//    }
 
-    static jqTrigger(selector, eventName) {
-        return $J(selector).trigger(eventName);
-    }
+//    static jqTrigger(selector, eventName) {
+//        return $J(selector).trigger(eventName);
+//    }
 }

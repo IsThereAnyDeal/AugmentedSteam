@@ -4,7 +4,7 @@ import Api from "@Background/Modules/Api";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import {
     ContextId,
-    type HasGiftsAndPassesResponse, type HasItemResponse,
+    type HasItemResponse,
     type InventoryData,
     type InventoryResponse
 } from "@Background/Modules/Inventory/_types";

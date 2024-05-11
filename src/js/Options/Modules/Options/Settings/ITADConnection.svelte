@@ -11,25 +11,26 @@
     import BackgroundSimple from "@Core/BackgroundSimple";
     import {L} from "@Core/Localization/Localization";
     import {onMount} from "svelte";
+    import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
 
     let promise: Promise<boolean>;
 
     function handleAuthorize(): void {
         promise = (async () => {
-            await BackgroundSimple.action("itad.authorize");
+            await ITADApiFacade.authorize();
             return true;
         })();
     }
 
     function handleDisconnect(): void {
         promise = (async () => {
-            await BackgroundSimple.action("itad.disconnect");
+            await ITADApiFacade.disconnect();
             return false;
         })();
     }
 
     onMount(() => {
-        promise = BackgroundSimple.action("itad.isconnected");
+        promise = ITADApiFacade.isConnected();
     });
 </script>
 

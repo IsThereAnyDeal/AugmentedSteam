@@ -347,40 +347,40 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
 
         switch(message.action) {
             case EAction.StoreList:
-                return await this.getStoreList();
+                return this.getStoreList();
 
             case EAction.Authorize:
-                return await ((new Authorization()).authorize(RequiredScopes));
+                return ((new Authorization()).authorize(RequiredScopes));
 
             case EAction.Disconnect:
-                return await this.disconnect();
+                return this.disconnect();
 
             case EAction.IsConnected:
-                return await this.isConnected();
+                return this.isConnected();
 
             case EAction.Export:
-                return await this.exportToItad(message.params.force);
+                return this.exportToItad(message.params.force);
 
             case EAction.Sync:
-                return await this.sync();
+                return this.sync();
 
             case EAction.LastImport:
-                return await this.getLastImport();
+                return this.getLastImport();
 
             case EAction.InWaitlist:
-                return await this.inWaitlist(message.params.storeIds);
+                return this.inWaitlist(message.params.storeIds);
 
             case EAction.AddToWaitlist:
-                return await this.addToWaitlist(message.params.appids);
+                return this.addToWaitlist(message.params.appids);
 
             case EAction.RemoveFromWaitlist:
-                return await this.removeFromWaitlist(message.params.appids);
+                return this.removeFromWaitlist(message.params.appids);
 
             case EAction.InCollection:
-                return await this.inCollection(message.params.storeIds);
+                return this.inCollection(message.params.storeIds);
 
             case EAction.GetFromCollection:
-                return await this.getFromCollection(message.params.storeId);
+                return this.getFromCollection(message.params.storeId);
         }
 
         return undefined;

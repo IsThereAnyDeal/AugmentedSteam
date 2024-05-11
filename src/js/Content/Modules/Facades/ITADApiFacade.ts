@@ -12,6 +12,14 @@ export default class ITADApiFacade {
         return BackgroundSender.send2<TGetStoreListResponse>(EAction.StoreList);
     }
 
+    static authorize(): Promise<void> {
+        return BackgroundSender.send2(EAction.Authorize);
+    }
+
+    static disconnect(): Promise<void> {
+        return BackgroundSender.send2(EAction.Disconnect);
+    }
+
     static isConnected(): Promise<boolean> {
         return BackgroundSender.send2(EAction.IsConnected);
     }

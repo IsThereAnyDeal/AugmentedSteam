@@ -16,6 +16,10 @@ export default class SteamStoreApiFacade {
         return await BackgroundSender.send2(EAction.Currency);
     }
 
+    static async clearPurchases(): Promise<void> {
+        return BackgroundSender.send2(EAction.Purchases_Clear);
+    }
+
     static async clearDynamicStore(): Promise<void> {
         return BackgroundSender.send2(EAction.DynamicStore_Clear);
     }

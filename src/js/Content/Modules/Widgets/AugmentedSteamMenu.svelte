@@ -16,9 +16,9 @@
         __website
     } from "@Strings/_strings";
     import Config from "../../../config";
-    import {DynamicStore} from "@Content/Modules/Data/DynamicStore";
-    import User from "@Content/Modules/User";
     import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+    import User from "@Content/Modules/User";
+    import DynamicStore from "@Content/Modules/Data/DynamicStore";
 
     const isSignedIn = User.isSignedIn;
 

@@ -1,11 +1,11 @@
 <script lang="ts">
-    import {L} from "@Core/Localization/Localization";
+    import Localization, {L} from "@Core/Localization/Localization";
     import {__loginWarning, __usingLanguage, __usingLanguageReturn} from "@Strings/_strings";
     import Settings from "@Options/Data/Settings";
-    import {Language, Localization} from "../../../modulesCore";
     import Warning from "@Content/Modules/Widgets/Components/Warning.svelte";
     import LocalStorage from "@Core/Storage/LocalStorage";
     import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+    import Language from "@Core/Localization/Language";
 
     let showLanguage: boolean = false;
     let showLogin: boolean = false;
