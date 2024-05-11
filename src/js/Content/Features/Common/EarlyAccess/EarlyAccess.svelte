@@ -1,7 +1,7 @@
 <script lang="ts">
     import {onMount} from "svelte";
-    import {L} from "../../../Core/Localization/Localization";
-    import {__earlyAccess} from "../../../../localization/compiled/_strings";
+    import {L} from "@Core/Localization/Localization";
+    import {__earlyAccess} from "@Strings/_strings";
 
     export let imageUrl: string;
     export let imgHeader: HTMLImageElement;
