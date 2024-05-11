@@ -8,7 +8,7 @@ import {ContextType} from "@Content/Modules/Context/ContextType";
 import type Feature from "@Content/Modules/Context/Feature";
 import FEarlyAccess from "@Content/Features/Common/FEarlyAccess";
 
-export class CBase extends Context {
+export default class CBase extends Context {
 
     constructor(type: ContextType, features: (typeof Feature<Context>)[] = []) {
 

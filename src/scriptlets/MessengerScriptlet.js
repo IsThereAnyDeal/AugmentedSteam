@@ -5,7 +5,7 @@ class Messenger {
     }
 
     // Used for setting up a listener that should be able to receive more than one callback
-    static Listen(name, listener) {
+    static listen(name, listener) {
         window.addEventListener(name, e => listener(e.detail));
     }
 

@@ -1,6 +1,6 @@
 import type {CBase} from "@Content/Features/Common/CBase";
 import Feature from "@Content/Modules/Context/Feature";
-import EarlyAccessUtils from "@Content/Features/Common/EarlyAccess/EarlyAccessUtils";
+import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
 
 export default class FEarlyAccess extends Feature<CBase> {
 

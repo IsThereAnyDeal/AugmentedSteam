@@ -270,5 +270,7 @@
                 detail: await result
             }));
         }
-    })
+    });
+
+    window.SteamFacade = Steam;
 })();
