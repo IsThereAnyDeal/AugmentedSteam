@@ -1,7 +1,7 @@
 import {ContextType} from "@Content/Modules/Context/ContextType";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
-import type {CBase} from "@Content/Features/Common/CBase";
+import CBase from "@Content/Features/Common/CBase";
 import Settings from "@Options/Data/Settings";
 
 export default class FHideTrademarks extends Feature<CBase> {

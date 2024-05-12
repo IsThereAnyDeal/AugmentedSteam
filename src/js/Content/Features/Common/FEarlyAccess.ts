@@ -1,4 +1,4 @@
-import type {CBase} from "@Content/Features/Common/CBase";
+import CBase from "@Content/Features/Common/CBase";
 import Feature from "@Content/Modules/Context/Feature";
 import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
 

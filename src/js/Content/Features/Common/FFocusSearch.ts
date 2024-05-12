@@ -1,5 +1,5 @@
 import Feature from "@Content/Modules/Context/Feature";
-import type {CBase} from "@Content/Features/Common/CBase";
+import CBase from "@Content/Features/Common/CBase";
 
 export default class FFocusSearch extends Feature<CBase> {
 
