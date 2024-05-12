@@ -143,10 +143,6 @@
 
         // community
 
-        static submitGuide() {
-            return SubmitGuide();
-        }
-
         static initMiniprofileHovers() {
             return InitMiniprofileHovers();
         }

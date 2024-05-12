@@ -4,7 +4,7 @@
  * @match *://steamcommunity.com/workshop/editguide[/]?*
  */
 
-import {CommunityPage} from "../../CommunityPage";
-import {CEditGuide} from "./CEditGuide";
+import CommunityPage from "../../CommunityPage";
+import CEditGuide from "./CEditGuide";
 
-(new CommunityPage()).run(CEditGuide);
+(new CommunityPage()).run(() => new CEditGuide());
