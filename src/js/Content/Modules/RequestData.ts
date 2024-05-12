@@ -45,7 +45,7 @@ export default class RequestData {
         return response;
     }
 
-    static async getText(url: URL|string, settings: RequestInit): Promise<string> {
+    static async getText(url: URL|string, settings: RequestInit={}): Promise<string> {
         const response = await this.getHttp(url, settings);
         return response.text();
     }
@@ -55,7 +55,7 @@ export default class RequestData {
         return response.json();
     }
 
-    static async getBlob(url: URL|string, settings: RequestInit): Promise<Blob> {
+    static async getBlob(url: URL|string, settings: RequestInit={}): Promise<Blob> {
         const response = await this.getHttp(url, settings);
         return response.blob();
     }

@@ -7,18 +7,28 @@ import {
     __gamesWithBooster,
     __gamesWithDrops,
     __loading,
-} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML} from "../../../../modulesCore";
-import {Background, CurrencyManager, DOMHelper, Feature, Price, RequestData} from "../../../modulesContent";
+} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import Feature from "@Content/Modules/Context/Feature";
+import CBadges from "@Content/Features/Community/Badges/CBadges";
+import HTML from "@Core/Html/Html";
+import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
+import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+import Price from "@Content/Modules/Currency/Price";
+import DOMHelper from "@Content/Modules/DOMHelper";
+import RequestData from "@Content/Modules/RequestData";
 
-export default class FBadgeCalculations extends Feature {
+export default class FBadgeCalculations extends Feature<CBadges> {
 
-    checkPrerequisites() {
+    private _dropsCount: number = 0;
+    private _dropsGames: number = 0;
+    private _totalWorth: number = 0;
+
+    override checkPrerequisites(): boolean {
         return this.context.myProfile;
     }
 
-    apply() {
+    override apply(): void {
         this._dropsCount = 0;
         this._dropsGames = 0;
         this._totalWorth = 0;
@@ -30,13 +40,22 @@ export default class FBadgeCalculations extends Feature {
     _updateHead() {
 
         const xpBlockRight = document.querySelector(".profile_xp_block_right");
+        if (!xpBlockRight) {
+            return;
+        }
 
         // Move FAQ to the middle
-        HTML.beforeEnd(document.querySelector(".profile_xp_block_mid"), `<div class="es_faq_cards">${xpBlockRight.innerHTML}</div>`);
-        HTML.inner(xpBlockRight, '<div id="es_cards_worth"></div>');
+        HTML.beforeEnd(
+            document.querySelector(".profile_xp_block_mid"),
+            `<div class="es_faq_cards">${xpBlockRight.innerHTML}</div>`
+        );
+        HTML.inner(
+            xpBlockRight,
+            '<div id="es_cards_worth"></div>'
+        );
     }
 
-    async _addCalculations() {
+    async _addCalculations(): Promise<void> {
 
         if (this.context.hasMultiplePages) {
 
@@ -51,12 +70,14 @@ export default class FBadgeCalculations extends Feature {
 
             await this._countFromDOM();
 
-            document.querySelector("#es_calculations").addEventListener("click", async() => {
+            document.querySelector("#es_calculations")!.addEventListener("click", async() => {
                 if (completed) { return; }
 
-                document.querySelector("#es_calculations").textContent = L(__loading);
+                document.querySelector("#es_calculations")!.textContent = L(__loading);
 
-                await this.context.eachBadgePage(dom => this._countFromDOM(dom));
+                for await (let [dom, images_] of this.context.eachBadgePage()) {
+                    this._countFromDOM(dom);
+                }
 
                 this._addData();
                 completed = true;
@@ -70,19 +91,23 @@ export default class FBadgeCalculations extends Feature {
         }
     }
 
-    _countFromDOM(dom = document) {
+    _countFromDOM(dom: DocumentFragment|Document = document): void {
         this._countDropsFromDOM(dom);
-        return this._countWorthFromDOM(dom);
+        this._countWorthFromDOM(dom);
     }
 
-    async _countWorthFromDOM(dom) {
+    async _countWorthFromDOM(dom: DocumentFragment|Document): Promise<void> {
 
-        const appids = [];
-        const nodes = [];
-        const foilAppids = [];
+        const nodes: [number, HTMLElement, boolean][] = [];
+        const appids: number[] = [];
+        const foilAppids: number[] = [];
 
-        for (const node of dom.querySelectorAll(".badge_row.is_link")) {
-            const link = node.querySelector(".badge_row_overlay").href;
+        for (const node of dom.querySelectorAll<HTMLElement>(".badge_row.is_link")) {
+            const linkNode = node.querySelector<HTMLAnchorElement>(".badge_row_overlay")
+            if (!linkNode) {
+                continue;
+            }
+            const link = linkNode.href;
 
             const appid = AppId.fromGameCardUrl(link);
             if (!appid) { continue; }
@@ -103,29 +128,31 @@ export default class FBadgeCalculations extends Feature {
 
         let data;
         try {
-            data = await Background.action("market.averagecardprices", {
-                "currency": CurrencyManager.storeCurrency,
-                "appids": [...appids, ...foilAppids].join(",")
-            });
-        } catch (err) {
-            console.error("Failed to retrieve average card prices", err);
+            data = await AugmentedSteamApiFacade.fetchMarketCardAveragePrices(
+                CurrencyManager.storeCurrency,
+                [...appids, ...foilAppids]
+            );
+        } catch (e) {
+            console.error("Failed to retrieve average card prices", e);
             return;
         }
 
         for (const [appid, node, isFoil] of nodes) {
 
             let cost, worth;
-            const key = isFoil ? "foil" : "regular";
+            const averagePrice = isFoil
+                ? data[appid]?.foil
+                : data[appid]?.regular;
 
-            if (!data[appid] || !data[appid][key]) { continue; }
-
-            const averagePrice = data[appid][key];
+            if (averagePrice === undefined) {
+                continue;
+            }
 
             const progressInfoNode = node.querySelector(".badge_progress_info");
             if (progressInfoNode) {
-                const card = progressInfoNode.textContent.match(/(\d+)\D*(\d+)/);
+                const card = progressInfoNode.textContent!.match(/(\d+)\D*(\d+)/);
                 if (card) {
-                    const need = card[2] - card[1];
+                    const need = Number(card[2]) - Number(card[1]);
                     cost = new Price(averagePrice * need);
                 }
             }
@@ -136,7 +163,9 @@ export default class FBadgeCalculations extends Feature {
                 this._totalWorth += worth;
             }
 
-            if (dom !== document) { continue; }
+            if (dom !== document) {
+                continue;
+            }
 
             if (worth) {
                 HTML.afterEnd(node.querySelector(".progress_info_bold"),
@@ -159,11 +188,11 @@ export default class FBadgeCalculations extends Feature {
         }
     }
 
-    _countDropsFromDOM(dom) {
+    _countDropsFromDOM(dom: DocumentFragment|Document): void {
 
         // The selector must be more specific here to prevent matching other progress info like "x of y tasks completed"
         for (const node of dom.querySelectorAll(".badge_title_stats_drops .progress_info_bold")) {
-            const count = node.textContent.match(/\d+/);
+            const count = node.textContent!.match(/\d+/);
             if (!count) { continue; }
 
             this._dropsGames++;
@@ -180,11 +209,11 @@ export default class FBadgeCalculations extends Feature {
             ${L(__gamesWithDrops, {"dropsgames": this._dropsGames})}`
         );
 
-        document.querySelector("#es_cards_worth").textContent = `${L(__dropsWorthAvg)} ${new Price(this._totalWorth)}`;
+        document.querySelector("#es_cards_worth")!.textContent = `${L(__dropsWorthAvg)} ${new Price(this._totalWorth)}`;
 
         let response;
         try {
-            response = await RequestData.getHttp("https://steamcommunity.com/my/ajaxgetboostereligibility/");
+            response = await RequestData.getText("https://steamcommunity.com/my/ajaxgetboostereligibility/");
         } catch (err) {
             console.error("Failed to load booster eligibility", err);
             return;
@@ -196,16 +225,22 @@ export default class FBadgeCalculations extends Feature {
         HTML.beforeEnd("#es_calculations", `<br>${L(__gamesWithBooster, {"boostergames": boosterCount})}`);
     }
 
-    _getRemainingDropsWorth(node, averagePrice) {
+    _getRemainingDropsWorth(node: Element, averagePrice: number) {
 
         const progressBoldNode = node.querySelector(".progress_info_bold");
-        if (!progressBoldNode) { return 0; }
+        if (!progressBoldNode) {
+            return 0;
+        }
 
-        const drops = progressBoldNode.textContent.match(/\d+/);
-        if (!drops) { return 0; }
+        const drops = progressBoldNode.textContent!.match(/\d+/);
+        if (!drops) {
+            return 0;
+        }
 
-        const worth = drops[0] * averagePrice;
-        if (worth < 0) { return 0; }
+        const worth = Number(drops[0]) * averagePrice;
+        if (worth < 0) {
+            return 0;
+        }
 
         return worth;
     }

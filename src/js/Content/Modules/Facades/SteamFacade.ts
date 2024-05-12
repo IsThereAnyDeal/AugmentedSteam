@@ -93,9 +93,9 @@ export default class SteamFacade {
 
 //    // events
 
-//    static bindAutoFlyoutEvents() {
-//        return BindAutoFlyoutEvents();
-//    }
+    static bindAutoFlyoutEvents(): void {
+        Messenger.call(MessageHandler.SteamFacade, "bindAutoFlyoutEvents");
+    }
 
 //    static sliderOnChange(value) {
 //        return g_player.SliderOnChange(value);

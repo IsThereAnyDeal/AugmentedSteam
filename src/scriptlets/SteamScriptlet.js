@@ -83,7 +83,7 @@
         // events
 
         static bindAutoFlyoutEvents() {
-            return BindAutoFlyoutEvents();
+            BindAutoFlyoutEvents();
         }
 
         static sliderOnChange(value) {

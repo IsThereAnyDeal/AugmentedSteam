@@ -1,6 +1,6 @@
 import type Context from "@Content/Modules/Context/Context";
 
-export default class Feature<C extends Context> {
+export default abstract class Feature<C extends Context> {
 
     public constructor(
         protected context: C,
@@ -10,9 +10,7 @@ export default class Feature<C extends Context> {
         return true;
     }
 
-    public apply(): void|Promise<void> {
-        throw new Error("Stub");
-    }
+    public abstract apply(): void|Promise<void>;
 
     protected logError(err: unknown, msg: unknown, ...args: unknown[]): void {
         console.group(this.constructor.name);
