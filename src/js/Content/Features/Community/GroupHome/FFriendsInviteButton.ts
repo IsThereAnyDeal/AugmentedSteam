@@ -1,11 +1,13 @@
-import {__inviteFriends} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML} from "../../../../modulesCore";
-import {Feature, User} from "../../../modulesContent";
+import {__inviteFriends} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import Feature from "@Content/Modules/Context/Feature";
+import type {CGroupHome} from "@Content/Features/Community/GroupHome/CGroupHome";
+import User from "@Content/Modules/User";
+import HTML from "@Core/Html/Html";
 
-export default class FFriendsInviteButton extends Feature {
+export default class FFriendsInviteButton extends Feature<CGroupHome> {
 
-    checkPrerequisites() {
+    override checkPrerequisites(): boolean {
         return User.isSignedIn && document.querySelector(".grouppage_join_area") === null;
     }
 
