@@ -144,10 +144,6 @@ export default class SteamFacade {
 
 //    // friends
 
-//    static toggleManageFriends() {
-//        return ToggleManageFriends();
-//    }
-
 //    static openFriendChatInWebChat(chatId) {
 //        return OpenFriendChatInWebChat(chatId);
 //    }
@@ -156,14 +152,6 @@ export default class SteamFacade {
 
 //    static initMiniprofileHovers() {
 //        return InitMiniprofileHovers();
-//    }
-
-//    static inviteUserToGroup(Modal, groupID, steamIDInvitee) {
-//        return InviteUserToGroup(Modal, groupID, steamIDInvitee);
-//    }
-
-//    static getCheckedAccounts(selector) {
-//        return GetCheckedAccounts(selector);
 //    }
 
 //    static execFriendAction(action, navid) {

@@ -5,7 +5,7 @@
  * @match *://steamcommunity.com/(id|profiles)/*\/following[/*]
  */
 
-import {CommunityPage} from "../../CommunityPage";
-import {CFriendsAndGroups} from "./CFriendsAndGroups";
+import CommunityPage from "../../CommunityPage";
+import CFriendsAndGroups from "./CFriendsAndGroups";
 
-(new CommunityPage()).run(CFriendsAndGroups);
+(new CommunityPage()).run(() => new CFriendsAndGroups());

@@ -9,7 +9,9 @@ import Storage, {type StorageSchema} from "./Storage";
  */
 interface SyncedStorageSchema extends StorageSchema {
     user_notes: Record<string, string>,
-    fav_emoticons: string[]
+    fav_emoticons: string[],
+    sortfriendsby: string,
+    sortgroupsby: string,
 }
 
 /*

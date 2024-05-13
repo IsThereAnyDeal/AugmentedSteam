@@ -1,10 +1,20 @@
+<script lang="ts" context="module">
+    export type ChangeEvent = {
+        value: string,
+        key: string,
+        direction: number
+    };
+</script>
+
+
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__sortBy, __thewordunknown} from "@Strings/_strings";
     import {createEventDispatcher, onMount} from "svelte";
 
+
     const dispatch = createEventDispatcher<{
-        change: string
+        change: ChangeEvent
     }>();
 
     export let name: string;
@@ -40,13 +50,21 @@
         selected = key;
         selectedName = name;
         value = `${selected}_${direction < 0 ? "DESC" : "ASC"}`;
-        dispatch("change", value)
+        dispatch("change", {
+            value,
+            key: selected,
+            direction
+        });
     }
 
     function reverse(): void {
         direction = direction * -1;
         value = `${selected}_${direction < 0 ? "DESC" : "ASC"}`;
-        dispatch("change", value)
+        dispatch("change", {
+            value,
+            key: selected,
+            direction
+        })
     }
 
     onMount(() => {

@@ -8,22 +8,31 @@ import {
     __groups_leaveGroupsConfirm,
     __groups_manageGroups,
     __groups_select,
+    __groups_selected,
     __inverse,
     __none,
-} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML} from "../../../../modulesCore";
-import {CallbackFeature, RequestData, User} from "../../../modulesContent";
-import {Page} from "../../Page";
+} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import type CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
+import Feature from "@Content/Modules/Context/Feature";
+import HTML from "@Core/Html/Html";
+import User from "@Content/Modules/User";
+import RequestData from "@Content/Modules/RequestData";
+import Messenger from "@Content/Modules/Messaging/Messenger";
+import {MessageHandler} from "@Content/Modules/Messaging/MessageHandler";
+import DOMHelper from "@Content/Modules/DOMHelper";
 
-export default class FGroupsManageButton extends CallbackFeature {
+export default class FGroupsManageButton extends Feature<CFriendsAndGroups> {
 
-    checkPrerequisites() {
+    private _endpoint: URL|undefined;
+
+    override checkPrerequisites(): boolean {
         return this.context.myProfile;
     }
 
-    setup() {
-        this.callback();
+    override apply(): void {
+        DOMHelper.insertScript("scriptlets/Community/FriendsAndGroups/groupsManager.js");
+        document.addEventListener("as_subpageNav", () => this.callback());
     }
 
     callback() {
@@ -50,11 +59,11 @@ export default class FGroupsManageButton extends CallbackFeature {
                 <div class="row">
                     <div class="manage_friend_actions_ctn">
                         <span class="manage_action btnv6_lightblue_blue btn_small" id="es_leave_groups">
-                            <span>${groupsStr.leave}</span>
+                            <span>${L(__groups_leave)}</span>
                         </span>
                     </div>
                     <span id="selected_msg_err" class="selected_msg error hidden"></span>
-                    <span id="selected_msg" class="selected_msg hidden">${groupsStr.selected.replace("__n__", '<span id="selected_count"></span>')}</span>
+                    <span id="selected_msg" class="selected_msg hidden">${L(__groups_selected, {n: '<span id="selected_count"></span>'})}</span>
                 </div>
             </div>`);
 
@@ -65,46 +74,54 @@ export default class FGroupsManageButton extends CallbackFeature {
                     <input class="select_friend_checkbox" type="checkbox">
                 </div>`);
 
-            group.querySelector(".select_friend").addEventListener("click", () => {
+            group.querySelector(".select_friend")!.addEventListener("click", () => {
                 group.classList.toggle("selected");
-                group.querySelector(".select_friend_checkbox").checked = group.classList.contains("selected");
-                Page.runInPageContext(() => { window.SteamFacade.updateSelection(); });
+                group.querySelector<HTMLInputElement>(".select_friend_checkbox")!
+                    .checked = group.classList.contains("selected");
+
+                Messenger.call(MessageHandler.GroupsManager, "updateSelection");
             });
         }
 
-        document.querySelector("#manage_friends_control").addEventListener("click", () => {
-            Page.runInPageContext(() => { window.SteamFacade.toggleManageFriends(); });
+        document.querySelector("#manage_friends_control")!.addEventListener("click", () => {
+            Messenger.call(MessageHandler.GroupsManager, "toggleManageFriends");
         });
 
-        document.querySelector("#es_select_all").addEventListener("click", () => {
-            Page.runInPageContext(() => { window.SteamFacade.selectAll(); });
+        document.querySelector("#es_select_all")!.addEventListener("click", () => {
+            Messenger.call(MessageHandler.GroupsManager, "selectAll");
         });
 
-        document.querySelector("#es_select_none").addEventListener("click", () => {
-            Page.runInPageContext(() => { window.SteamFacade.selectNone(); });
+        document.querySelector("#es_select_none")!.addEventListener("click", () => {
+            Messenger.call(MessageHandler.GroupsManager, "selectNone");
         });
 
-        document.querySelector("#es_select_inverse").addEventListener("click", () => {
-            Page.runInPageContext(() => { window.SteamFacade.selectInverse(); });
+        document.querySelector("#es_select_inverse")!.addEventListener("click", () => {
+            Messenger.call(MessageHandler.GroupsManager, "selectInverse");
         });
 
-        document.querySelector("#es_leave_groups").addEventListener("click", () => { this._leaveGroups(); });
+        document.querySelector("#es_leave_groups")!
+            .addEventListener("click", () => this._leaveGroups());
     }
 
     async _leaveGroups() {
         this._endpoint = new URL("friends/action", User.profileUrl);
-        const selected = [];
+        const selected: [string, HTMLElement][] = [];
 
-        for (const group of document.querySelectorAll(".group_block.selected")) {
+        for (const group of document.querySelectorAll<HTMLElement>(".group_block.selected")) {
 
-            const actions = group.querySelector(".actions");
+            const actions = group.querySelector(".actions")!;
             const admin = actions.querySelector("[href*='/edit']");
-            const split = actions.querySelector("[onclick*=ConfirmLeaveGroup]")
-                .getAttribute("onclick")
+            const split = actions.querySelector("[onclick*=ConfirmLeaveGroup]")!
+                .getAttribute("onclick")!
                 .split(/'|"/);
+
+            if (!split[1]) {
+                continue;
+            }
+
             const id = split[1];
 
-            if (admin) {
+            if (admin && split[3]) {
                 const name = split[3];
 
                 const body = `${L(__groups_leaveAdminConfirm_currentlyAdmin, {
@@ -112,7 +129,7 @@ export default class FGroupsManageButton extends CallbackFeature {
                 })}<br>${L(__groups_leaveAdminConfirm_wantToLeave)}`;
                 const result = await SteamFacade.showConfirmDialog(L(__groups_leave), body);
                 if (result !== "OK") {
-                    group.querySelector(".select_friend").click();
+                    group.querySelector<HTMLElement>(".select_friend")!.click();
                     continue;
                 }
             }
@@ -127,10 +144,16 @@ export default class FGroupsManageButton extends CallbackFeature {
             if (result === "OK") {
                 for (const [id, group] of selected) {
 
-                    const res = await this._leaveGroup(id).catch(err => console.error(err));
+                    try {
+                        const response = await this._leaveGroup(id);
+                        const data = await response.json();
 
-                    if (!res || !res.success) {
-                        console.error(`Failed to leave group ${id}`);
+                        if (!data || !data.success) {
+                            console.error(`Failed to leave group ${id}`);
+                            continue;
+                        }
+                    } catch(e) {
+                        console.error(e);
                         continue;
                     }
 
@@ -141,15 +164,19 @@ export default class FGroupsManageButton extends CallbackFeature {
         }
     }
 
-    _leaveGroup(id) {
+    _leaveGroup(id: string) {
+        if (!User.sessionId) {
+            throw new Error("Unknown session id");
+        }
+
         const data = {
             "sessionid": User.sessionId,
             "steamid": User.steamId,
-            "ajax": 1,
+            "ajax": "1",
             "action": "leave_group",
             "steamids[]": id
         };
 
-        return RequestData.post(this._endpoint, data);
+        return RequestData.post(this._endpoint!, data);
     }
 }

@@ -133,10 +133,6 @@
 
         // friends
 
-        static toggleManageFriends() {
-            return ToggleManageFriends();
-        }
-
         static openFriendChatInWebChat(chatId) {
             return OpenFriendChatInWebChat(chatId);
         }
@@ -145,14 +141,6 @@
 
         static initMiniprofileHovers() {
             return InitMiniprofileHovers();
-        }
-
-        static inviteUserToGroup(Modal, groupID, steamIDInvitee) {
-            return InviteUserToGroup(Modal, groupID, steamIDInvitee);
-        }
-
-        static getCheckedAccounts(selector) {
-            return GetCheckedAccounts(selector);
         }
 
         static execFriendAction(action, navid) {
