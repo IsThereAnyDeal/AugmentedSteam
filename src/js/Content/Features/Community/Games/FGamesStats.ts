@@ -4,17 +4,24 @@ import {
     __coll_played,
     __coll_totalTime,
     __hoursShort,
-} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML, SyncedStorage} from "../../../../modulesCore";
-import {Feature} from "../../../Modules/Feature/Feature";
+} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import Feature from "@Content/Modules/Context/Feature";
+import type CGames from "@Content/Features/Community/Games/CGames";
+import Settings from "@Options/Data/Settings";
+import HTML from "@Core/Html/Html";
 
-export default class FGamesStats extends Feature {
 
-    checkPrerequisites() {
-        if (!SyncedStorage.get("showallstats")) { return false; }
+export default class FGamesStats extends Feature<CGames> {
 
-        const config = document.querySelector("#gameslist_config")?.dataset.profileGameslist;
+    private _games: Array<{
+        playtime_forever: number
+    }> = [];
+
+    override checkPrerequisites(): boolean {
+        if (!Settings.showallstats) { return false; }
+
+        const config = document.querySelector<HTMLElement>("#gameslist_config")?.dataset.profileGameslist;
         if (!config) { return false; }
 
         this._games = JSON.parse(config).rgGames;
