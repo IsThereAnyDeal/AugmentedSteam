@@ -1,12 +1,14 @@
-import {HTML} from "@Core/Html/Html";
-import {Feature} from "../../../Modules/Feature/Feature";
+import HTML from "@Core/Html/Html";
+import Feature from "@Content/Modules/Context/Feature";
+import CFriendsThatPlay from "@Content/Features/Community/FriendsThatPlay/CFriendsThatPlay";
 
-export default class FFriendsCount extends Feature {
+export default class FFriendsCount extends Feature<CFriendsThatPlay> {
 
-    apply() {
+    override apply(): void {
 
         for (const header of document.querySelectorAll(".friendListSectionHeader")) {
             const profileList = header.nextElementSibling;
+            if (!profileList) { continue; }
             const count = profileList.querySelectorAll(".persona").length;
             const html = `<span class="friendcount"> (${count}) </span>`;
             const underscore = header.querySelector(".underscoreColor");
