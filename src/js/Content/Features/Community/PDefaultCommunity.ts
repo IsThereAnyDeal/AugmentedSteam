@@ -16,10 +16,9 @@
  * @exclude *://steamcommunity.com/(sharedfiles|workshop)/filedetails[/*]
  * @exclude *://steamcommunity.com/(sharedfiles|workshop)/editguide[/]?*
  * @exclude *://steamcommunity.com/tradingcards/boostercreator
- * @exclude *://steamcommunity.com/stats/*\/achievements
  */
 
-import {CommunityPage} from "../CommunityPage";
-import {CCommunityBase} from "./CCommunityBase";
+import CommunityPage from "../CommunityPage";
+import CCommunityBase from "./CCommunityBase";
 
-(new CommunityPage()).run(CCommunityBase);
+(new CommunityPage()).run(() => new CCommunityBase());

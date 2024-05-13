@@ -95,7 +95,6 @@ export default async function(options) {
             {out: "community/friends_that_play", in: `${srcDir}/js/Content/Features/Community/FriendsThatPlay/PFriendsThatPlay.js`},
             {out: "community/gamecard", in: `${srcDir}/js/Content/Features/Community/GameCard/PGameCard.js`},
             {out: "community/games", in: `${srcDir}/js/Content/Features/Community/Games/PGames.js`},
-            {out: "community/global_stats", in: `${srcDir}/js/Content/Features/Community/GlobalStats/PGlobalStats.js`},
             {out: "community/group_home", in: `${srcDir}/js/Content/Features/Community/GroupHome/PGroupHome.js`},
             {out: "community/guides", in: `${srcDir}/js/Content/Features/Community/Guides/PGuides.js`},
             {out: "community/inventory", in: `${srcDir}/js/Content/Features/Community/Inventory/PInventory.js`},
