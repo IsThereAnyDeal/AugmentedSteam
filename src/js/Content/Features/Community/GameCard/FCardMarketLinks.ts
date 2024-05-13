@@ -1,24 +1,30 @@
-import {__badgeCompletionCost, __lowestPrice} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML} from "../../../../modulesCore";
-import {Background, CommunityUtils, CurrencyManager, DOMHelper, Feature, Price} from "../../../modulesContent";
+import {__badgeCompletionCost, __lowestPrice} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import type CGameCard from "@Content/Features/Community/GameCard/CGameCard";
+import Feature from "@Content/Modules/Context/Feature";
+import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
+import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+import Price from "@Content/Modules/Currency/Price";
+import HTML from "@Core/Html/Html";
+import {CommunityUtils} from "@Content/Modules/Community/CommunityUtils";
+import DOMHelper from "@Content/Modules/DOMHelper";
 
-export default class FCardMarketLinks extends Feature {
+export default class FCardMarketLinks extends Feature<CGameCard> {
 
-    checkPrerequisites() {
+    override checkPrerequisites(): boolean {
         return !this.context.saleAppids.includes(this.context.appid);
     }
 
-    async apply() {
+    override async apply(): Promise<void> {
 
         let cost = 0;
 
         let data;
         try {
-            data = await Background.action("market.cardprices", {
-                "appid": this.context.appid,
-                "currency": CurrencyManager.storeCurrency,
-            });
+            data = await AugmentedSteamApiFacade.fetchMarketCardPrices(
+                CurrencyManager.storeCurrency,
+                this.context.appid
+            );
         } catch (err) {
             console.error("Failed to load card prices", err);
             return;
@@ -26,7 +32,7 @@ export default class FCardMarketLinks extends Feature {
 
         for (const node of document.querySelectorAll(".badge_card_set_card")) {
             const cardName = node
-                .querySelector(".badge_card_set_text").textContent
+                .querySelector<HTMLElement>(".badge_card_set_text")!.textContent!
                 .replace(/&amp;/g, "&")
                 .replace(/\(\d+\)/g, "")
                 .trim();
@@ -51,13 +57,12 @@ export default class FCardMarketLinks extends Feature {
         }
 
         if (cost > 0 && CommunityUtils.currentUserIsOwner()) {
-            cost = new Price(cost);
             HTML.afterEnd(
                 DOMHelper.selectLastNode(document, ".badge_empty_name"),
-                `<div class="badge_empty_name badge_info_unlocked">${L(__badgeCompletionCost, {"cost": String(cost)})}</div>`
+                `<div class="badge_empty_name badge_info_unlocked">${L(__badgeCompletionCost, {"cost": (new Price(cost)).toString()})}</div>`
             );
 
-            document.querySelector(".badge_empty_right").classList.add("esi-badge");
+            document.querySelector(".badge_empty_right")!.classList.add("esi-badge");
         }
     }
 }

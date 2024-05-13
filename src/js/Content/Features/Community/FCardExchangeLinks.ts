@@ -3,9 +3,10 @@ import Settings from "@Options/Data/Settings";
 import ExtensionResources from "@Core/ExtensionResources";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
-import type {CBadges} from "@Content/Features/Community/Badges/CBadges";
+import CBadges from "@Content/Features/Community/Badges/CBadges";
+import type CGameCard from "@Content/Features/Community/GameCard/CGameCard";
 
-export default class FCardExchangeLinks<T extends CBadges & {appid?: number}> extends Feature<T> {
+export default class FCardExchangeLinks<T extends CBadges|CGameCard> extends Feature<T> {
 
     override checkPrerequisites(): boolean {
         return Settings.steamcardexchange;
@@ -20,7 +21,7 @@ export default class FCardExchangeLinks<T extends CBadges & {appid?: number}> ex
 
         for (const node of document.querySelectorAll<HTMLElement>(".badge_row:not(.es-has-ce-link)")) {
             let appid: number|undefined;
-            if ("appid" in this.context) {
+            if (this.context.appid) {
                 appid = this.context.appid;
             } else {
                 const overlay = node.querySelector<HTMLAnchorElement>("a.badge_row_overlay");

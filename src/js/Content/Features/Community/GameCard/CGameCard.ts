@@ -1,12 +1,15 @@
-import {GameId} from "@Core/GameId/GameId";
 import AppId from "@Core/GameId/AppId";
-import ContextType from "../../../Modules/Context/ContextType";
-import {CCommunityBase} from "../CCommunityBase";
+import {ContextType} from "../../../Modules/Context/ContextType";
+import CCommunityBase from "../CCommunityBase";
 import FCardExchangeLinks from "../FCardExchangeLinks";
 import FCardExtraLinks from "./FCardExtraLinks";
 import FCardMarketLinks from "./FCardMarketLinks";
 
-export class CGameCard extends CCommunityBase {
+export default class CGameCard extends CCommunityBase {
+
+    public readonly appid: number;
+    public readonly isFoil: boolean;
+    public readonly saleAppids: number[];
 
     constructor() {
 
@@ -16,7 +19,7 @@ export class CGameCard extends CCommunityBase {
             FCardExtraLinks,
         ]);
 
-        this.appid = AppId.fromGameCardUrl(window.location.pathname);
+        this.appid = AppId.fromGameCardUrl(window.location.pathname)!;
         this.isFoil = new URLSearchParams(window.location.search).get("border") === "1";
 
         /*

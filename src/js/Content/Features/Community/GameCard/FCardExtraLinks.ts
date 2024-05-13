@@ -1,11 +1,12 @@
-import {__viewFoilBadge, __viewNormalBadge, __visitStore, __visitTradeForum} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML} from "../../../../modulesCore";
-import {Feature} from "../../../Modules/Feature/Feature";
+import {__viewFoilBadge, __viewNormalBadge, __visitStore, __visitTradeForum} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import Feature from "@Content/Modules/Context/Feature";
+import type CGameCard from "@Content/Features/Community/GameCard/CGameCard";
+import HTML from "@Core/Html/Html";
 
-export default class FCardExtraLinks extends Feature {
+export default class FCardExtraLinks extends Feature<CGameCard> {
 
-    apply() {
+    override apply(): void {
 
         const url = new URL(window.location.href);
         let text;

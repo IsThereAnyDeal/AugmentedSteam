@@ -11,6 +11,7 @@ import RequestData from "@Content/Modules/RequestData";
 
 export default class CBadges extends CCommunityBase {
 
+    public readonly appid = null;
     public readonly myProfile: boolean;
     public readonly hasMultiplePages: boolean;
 
