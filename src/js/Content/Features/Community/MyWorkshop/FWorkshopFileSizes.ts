@@ -1,22 +1,33 @@
 import {
-    __calcWorkshopSize_calcFinished, __calcWorkshopSize_calcLoading,
+    __calcWorkshopSize_calcFinished,
+    __calcWorkshopSize_calcLoading,
     __calcWorkshopSize_calcSize,
-    __calcWorkshopSize_fileSize, __calcWorkshopSize_totalSize, __workshop_failed,
-} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML, Localization} from "../../../../modulesCore";
-import {Background, Feature, RequestData} from "../../../modulesContent";
-import {Page} from "../../Page";
+    __calcWorkshopSize_fileSize,
+    __calcWorkshopSize_totalSize,
+    __workshop_failed,
+} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import type CMyWorkshop from "@Content/Features/Community/MyWorkshop/CMyWorkshop";
+import Feature from "@Content/Modules/Context/Feature";
+import HTML from "@Core/Html/Html";
+import RequestData from "@Content/Modules/RequestData";
+import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamCommunityApiFacade from "@Content/Modules/Facades/SteamCommunityApiFacade";
 
-export default class FWorkshopFileSizes extends Feature {
+export default class FWorkshopFileSizes extends Feature<CMyWorkshop> {
 
-    checkPrerequisites() {
+    private _completed: number = 0;
+    private _failed: number = 0;
+    private _totalSize: number = 0;
+    private _total: number = 0;
+
+    override checkPrerequisites(): boolean {
         // Check if the user is signed in, viewing own profile, and has subscribed to at least one item
         return document.querySelector(".primary_panel") !== null
             && document.querySelector(".workshopBrowsePagingInfo") !== null;
     }
 
-    apply() {
+    override apply(): void {
 
         HTML.beforeEnd(".primary_panel",
             `<div class="menu_panel">
@@ -29,11 +40,13 @@ export default class FWorkshopFileSizes extends Feature {
                 </div>
             </div>`);
 
-        document.getElementById("es_calc_size").addEventListener("click", () => {
-            const pagingInfo = document.querySelector(".workshopBrowsePagingInfo").textContent;
-            this._total = Math.max(...pagingInfo.replace(/,/g, "").match(/\d+/g));
-
-            this._startCalculation();
+        document.getElementById("es_calc_size")!.addEventListener("click", () => {
+            const pagingInfo = document.querySelector(".workshopBrowsePagingInfo")!.textContent!;
+            const pages = pagingInfo.replace(/,/g, "").match(/\d+/g);
+            if (pages) {
+                this._total = Math.max(...[...pages.values()].map(Number));
+                this._startCalculation();
+            }
         });
 
         this._addFileSizes(); // Doesn't actually fetch any data unless total size has been calculated before
@@ -41,10 +54,10 @@ export default class FWorkshopFileSizes extends Feature {
 
     async _addFileSizes() {
 
-        for (const node of document.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
+        for (const node of document.querySelectorAll<HTMLElement>(".workshopItemSubscription[id*=Subscription]")) {
             if (node.classList.contains("as-has-filesize")) { continue; }
 
-            const size = await this._getFileSize(node, true).catch(err => console.error(err));
+            const size = await this._getFileSize(node, true).catch(e => console.error(e));
             if (!size) { continue; }
 
             const str = L(__calcWorkshopSize_fileSize, {"size": this._getFileSizeStr(size)});
@@ -64,21 +77,24 @@ export default class FWorkshopFileSizes extends Feature {
         const parser = new DOMParser();
         const url = new URL(window.location.origin + window.location.pathname);
         url.searchParams.set("browsefilter", "mysubscriptions");
-        url.searchParams.set("numperpage", 30);
+        url.searchParams.set("numperpage", "30");
 
         for (let p = 1; p <= Math.ceil(this._total / 30); p++) {
-            url.searchParams.set("p", p);
+            url.searchParams.set("p", String(p));
 
-            const result = await RequestData.getHttp(url).catch(err => console.error(err));
-            if (!result) {
+            let result: string|null = null;
+            try {
+                result = await RequestData.getText(url)
+            } catch (e) {
+                console.error(e);
                 console.error(`Failed to request ${url}`);
                 continue;
             }
 
             const doc = parser.parseFromString(result, "text/html");
-            for (const node of doc.querySelectorAll(".workshopItemSubscription[id*=Subscription]")) {
+            for (const node of doc.querySelectorAll<HTMLElement>(".workshopItemSubscription[id*=Subscription]")) {
                 try {
-                    const size = await this._getFileSize(node);
+                    const size = await this._getFileSize(node) ?? 0;
 
                     this._completed++;
                     this._totalSize += size;
@@ -102,15 +118,12 @@ export default class FWorkshopFileSizes extends Feature {
             "size": this._getFileSizeStr(this._totalSize)
         });
 
-        Page.runInPageContext((title, result) => {
-            window.SteamFacade.dismissActiveModal();
-            window.SteamFacade.showAlertDialog(title, result);
-        }, [L(__calcWorkshopSize_calcSize), resultString]);
-
+        SteamFacade.dismissActiveModal();
+        SteamFacade.showAlertDialog(L(__calcWorkshopSize_calcSize), resultString);
         this._addFileSizes(); // Add file sizes now that data has been fetched
     }
 
-    _updateWaitDialog() {
+    _updateWaitDialog(): void {
 
         let statusString = L(__calcWorkshopSize_calcLoading, {
             "i": this._completed,
@@ -126,21 +139,22 @@ export default class FWorkshopFileSizes extends Feature {
         if (container) {
             HTML.inner(container, statusString);
         } else {
-            Page.runInPageContext((title, progress) => {
-                window.SteamFacade.showBlockingWaitDialog(title, `<div id="as_loading_text_ctn">${progress}</div>`);
-            }, [L(__calcWorkshopSize_calcSize), statusString]);
+            SteamFacade.showBlockingWaitDialog(
+                L(__calcWorkshopSize_calcSize),
+                `<div id="as_loading_text_ctn">${statusString}</div>`
+            );
         }
     }
 
-    _getFileSizeStr(size) {
+    _getFileSizeStr(size: number): string {
         const units = ["TB", "GB", "MB", "KB"];
 
-        const index = units.findIndex((unit, i) => size / (1000 ** (units.length - (i + 1))) >= 1);
+        const index = units.findIndex((_unit, i) => size / (1000 ** (units.length - (i + 1))) >= 1);
         return `${(size / (1000 ** (units.length - (index + 1)))).toFixed(2)} ${units[index]}`;
     }
 
-    _getFileSize(node, preventFetch = false) {
+    async _getFileSize(node: HTMLElement, preventFetch = false): Promise<number|null> {
         const id = Number(node.id.replace("Subscription", ""));
-        return Background.action("workshopfilesize", id, preventFetch);
+        return await SteamCommunityApiFacade.getWorkshopFileSize(id, preventFetch)
     }
 }

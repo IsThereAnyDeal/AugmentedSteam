@@ -1,0 +1,9 @@
+/**
+ * @contentScript
+ * @match *://steamcommunity.com/market/search[/*]
+ */
+
+import CommunityPage from "../../CommunityPage";
+import CMarketSearch from "./CMarketSearch";
+
+(new CommunityPage()).run(() => new CMarketSearch());

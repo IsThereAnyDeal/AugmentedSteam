@@ -33,7 +33,7 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
         return this.fetchJson(url, {credentials: "include"});
     }
 
-    private async fetchWorkshopFileSize(id: string): Promise<number> {
+    private async fetchWorkshopFileSize(id: number): Promise<number> {
         const parser = new DOMParser();
 
         const url = this.getUrl("/sharedfiles/filedetails/", {id});
@@ -53,7 +53,7 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
         return size*1000;
     }
 
-    private async getWorkshopFileSize(id: string, preventFetch: boolean) {
+    private async getWorkshopFileSize(id: number, preventFetch: boolean): Promise<number|null> {
         let entry = await IndexedDB.get("workshopFileSizes", id)
 
         if (!entry || TimeUtils.isInPast(entry.expiry)) {

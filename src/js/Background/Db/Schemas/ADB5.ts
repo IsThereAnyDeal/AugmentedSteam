@@ -102,7 +102,7 @@ export interface ADB5 extends DBSchema {
         value: number[],
     },
     workshopFileSizes: {
-        key: string,
+        key: number,
         value: {
             size: number,
             expiry: number

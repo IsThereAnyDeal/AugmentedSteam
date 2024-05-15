@@ -8,6 +8,10 @@ export default class SteamCommunityApiFacade {
         return await BackgroundSender.send2(EAction.BadgeInfo, {steamId, appid});
     }
 
+    static async getWorkshopFileSize(id: number, preventFetch: boolean): Promise<number|null> {
+        return await BackgroundSender.send2(EAction.WorkshopFileSize, {id, preventFetch});
+    }
+
     static async login(profilePath: string): Promise<TLogin> {
         return await BackgroundSender.send2(EAction.Login, {profilePath});
     }

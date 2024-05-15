@@ -41,17 +41,19 @@ export default class SteamFacade {
         ]);
     }
 
-//    static showBlockingWaitDialog(strTitle, strDescription) {
-//        return ShowBlockingWaitDialog(strTitle, strDescription);
-//    }
+    static showBlockingWaitDialog(strTitle: string, strDescription: string): void {
+        Messenger.call(MessageHandler.SteamFacade, "showBlockingWaitDialog", [
+            strTitle, strDescription
+        ]);
+    }
 
 //    static showNicknameModal() {
 //        return ShowNicknameModal();
 //    }
 
-//    static dismissActiveModal() {
-//        CModal.DismissActiveModal();
-//    }
+    static dismissActiveModal() {
+        Messenger.call(MessageHandler.SteamFacade, "dismissActiveModal");
+    }
 
     // menu
 
