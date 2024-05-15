@@ -33,7 +33,8 @@ export default class HTML {
         return template.content;
     }
 
-    static toElement(html: string): Element|null {
+    static toElement<T extends Element>(html: string): T|null {
+        // @ts-ignore
         return HTML.toDom(html).firstElementChild;
     }
 
@@ -76,11 +77,11 @@ export default class HTML {
         return firstElement;
     }
 
-    static wrap(
+    static wrap<T extends Element>(
         wrapperHtml: string,
         startElementOrSelector: Element|string,
-        endElementOrSelector: Element|string = startElementOrSelector
-    ): Element|null {
+        endElementOrSelector: Element|string|null = startElementOrSelector
+    ): T|null {
         const startElement = HTML._getNode(startElementOrSelector);
         if (!startElement) {
             return null;
@@ -95,7 +96,7 @@ export default class HTML {
             wrappedNodes.push(cur.nextElementSibling);
         }
 
-        const wrapperElement = HTML.toElement(wrapperHtml);
+        const wrapperElement = HTML.toElement<T>(wrapperHtml);
         if (!wrapperElement) {
             return null;
         }

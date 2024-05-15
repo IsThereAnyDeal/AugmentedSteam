@@ -6,7 +6,7 @@
  * @match *://steamcommunity.com/(id|profiles)/*\/status/*
  */
 
-import {CommunityPage} from "../../CommunityPage";
-import {CProfileActivity} from "./CProfileActivity";
+import CommunityPage from "../../CommunityPage";
+import CProfileActivity from "./CProfileActivity";
 
-(new CommunityPage()).run(CProfileActivity);
+(new CommunityPage()).run(() => new CProfileActivity());
