@@ -1,15 +1,16 @@
-import {__viewBadge} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML} from "../../../../modulesCore";
-import {Feature} from "../../../Modules/Feature/Feature";
+import {__viewBadge} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import type CMarketListing from "@Content/Features/Community/MarketListing/CMarketListing";
+import Feature from "@Content/Modules/Context/Feature";
+import HTML from "@Core/Html/Html";
 
-export default class FBadgePageLink extends Feature {
+export default class FBadgePageLink extends Feature<CMarketListing> {
 
-    checkPrerequisites() {
+    override checkPrerequisites(): boolean {
         return this.context.appid === 753;
     }
 
-    apply() {
+    apply(): void {
 
         const gameAppId = parseInt(this.context.marketHashName);
         if (!gameAppId || gameAppId === 753) { return; }

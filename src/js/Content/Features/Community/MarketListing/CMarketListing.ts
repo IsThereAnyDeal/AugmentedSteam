@@ -1,11 +1,14 @@
-import ContextType from "../../../Modules/Context/ContextType";
-import {CCommunityBase} from "../CCommunityBase";
+import {ContextType} from "../../../Modules/Context/ContextType";
+import CCommunityBase from "../CCommunityBase";
 import FSoldAmountLastDay from "./FSoldAmountLastDay";
 import FBackgroundPreviewLink from "./FBackgroundPreviewLink";
 import FBadgePageLink from "./FBadgePageLink";
 import FPriceHistoryZoomYear from "../FPriceHistoryZoomYear";
 
-export class CMarketListing extends CCommunityBase {
+export default class CMarketListing extends CCommunityBase {
+
+    public readonly appid: number;
+    public readonly marketHashName: string;
 
     constructor() {
         super(ContextType.MARKET_LISTING, [
@@ -15,8 +18,8 @@ export class CMarketListing extends CCommunityBase {
             FPriceHistoryZoomYear,
         ]);
 
-        const m = window.location.pathname.match(/^\/market\/listings\/(\d+)\/([^/]+)/);
+        const m = window.location.pathname.match(/^\/market\/listings\/(\d+)\/([^/]+)/)!;
         this.appid = Number(m[1]);
-        this.marketHashName = m[2];
+        this.marketHashName = String(m[2]);
     }
 }
