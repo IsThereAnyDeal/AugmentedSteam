@@ -123,10 +123,6 @@
             return CalculateFeeAmount(amount, publisherFee);
         }
 
-        static calculateAmountToSendForDesiredReceivedAmount(receivedAmount, publisherFee) {
-            return CalculateAmountToSendForDesiredReceivedAmount(receivedAmount, publisherFee);
-        }
-
         static vCurrencyFormat(amount, currencyCode) {
             return v_currencyformat(amount, currencyCode);
         }
@@ -153,41 +149,6 @@
 
         static showModalContent(url, titleBarText, titleBarURL, sizeToFit) {
             ShowModalContent(url, titleBarText, titleBarURL, sizeToFit);
-        }
-
-        // inventory
-
-        static firstPage() {
-            return InventoryFirstPage();
-        }
-
-        static lastPage() {
-            return InventoryLastPage();
-        }
-
-        static goToPage() {
-            return InventoryGoToPage();
-        }
-
-        static reloadCommunityInventory() {
-            return ReloadCommunityInventory();
-        }
-
-        static getMarketHashName(itemDesc) {
-            return GetMarketHashName(itemDesc);
-        }
-
-        static zoomYear() {
-            pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
-        }
-
-        static zoomYearForSellDialog() {
-            pricehistory_zoomDays(
-                SellItemDialog.m_plotPriceHistory,
-                SellItemDialog.m_timePriceHistoryEarliest,
-                SellItemDialog.m_timePriceHistoryLatest,
-                365
-            );
         }
 
         // selections

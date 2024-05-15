@@ -117,30 +117,26 @@ export default class SteamFacade {
 
 //    // tooltips
 
-//    static vTooltip(selector, isHtml = false) {
-//        const isStore = window.location.host === "store.steampowered.com";
-
-//        $J(selector).v_tooltip({
-//            "tooltipClass": isStore ? "store_tooltip" : "community_tooltip",
-//            "dataAttr": isHtml ? "data-tooltip-html" : "data-tooltip-text",
-//            "defaultType": isHtml ? "html" : "text",
-//            "replaceExisting": true
-//        });
-//    }
+    static vTooltip(selector: string, isHtml: boolean = false): void {
+        Messenger.call(MessageHandler.SteamFacade, "vTooltip", [selector, isHtml]);
+    }
 
 //    // market
 
-//    static calculateFeeAmount(amount, publisherFee) {
-//        return CalculateFeeAmount(amount, publisherFee);
-//    }
+    static calculateFeeAmount(amount: number, publisherFee: number): Promise<{
+        amount: number,
+        fees: number
+    }> {
+        return Messenger.get(MessageHandler.SteamFacade, "calculateFeeAmount", [amount, publisherFee]);
+    }
 
 //    static calculateAmountToSendForDesiredReceivedAmount(receivedAmount, publisherFee) {
 //        return CalculateAmountToSendForDesiredReceivedAmount(receivedAmount, publisherFee);
 //    }
 
-//    static vCurrencyFormat(amount, currencyCode) {
-//        return v_currencyformat(amount, currencyCode);
-//    }
+    static vCurrencyFormat(amount: number, currencyCode: string): Promise<string> {
+        return Messenger.get(MessageHandler.SteamFacade, "vCurrencyFormat", [amount, currencyCode])
+    }
 
 //    // friends
 
@@ -164,41 +160,6 @@ export default class SteamFacade {
 
 //    static showModalContent(url, titleBarText, titleBarURL, sizeToFit) {
 //        ShowModalContent(url, titleBarText, titleBarURL, sizeToFit);
-//    }
-
-//    // inventory
-
-//    static firstPage() {
-//        return InventoryFirstPage();
-//    }
-
-//    static lastPage() {
-//        return InventoryLastPage();
-//    }
-
-//    static goToPage() {
-//        return InventoryGoToPage();
-//    }
-
-//    static reloadCommunityInventory() {
-//        return ReloadCommunityInventory();
-//    }
-
-//    static getMarketHashName(itemDesc) {
-//        return GetMarketHashName(itemDesc);
-//    }
-
-//    static zoomYear() {
-//        pricehistory_zoomDays(g_plotPriceHistory, g_timePriceHistoryEarliest, g_timePriceHistoryLatest, 365);
-//    }
-
-//    static zoomYearForSellDialog() {
-//        pricehistory_zoomDays(
-//            SellItemDialog.m_plotPriceHistory,
-//            SellItemDialog.m_timePriceHistoryEarliest,
-//            SellItemDialog.m_timePriceHistoryLatest,
-//            365
-//        );
 //    }
 
 //    // selections

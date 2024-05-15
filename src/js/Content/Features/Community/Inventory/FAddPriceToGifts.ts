@@ -1,14 +1,23 @@
+import Feature from "@Content/Modules/Context/Feature";
 import AppId from "@Core/GameId/AppId";
-import {GameId, HTML} from "../../../../modulesCore";
-import {Background, CallbackFeature, Price} from "../../../modulesContent";
+import CInventory, {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
+import Price from "@Content/Modules/Currency/Price";
+import HTML from "@Core/Html/Html";
+import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
 
-export default class FAddPriceToGifts extends CallbackFeature {
+export default class FAddPriceToGifts extends Feature<CInventory> {
 
-    async callback({view, contextId, globalId}) {
+    override apply(): void {
+        this.context.onMarketInfo.subscribe(e => this.callback(e.data));
+    }
+
+    private async callback(info: MarketInfo): Promise<void> {
+        const {view, contextId, globalId} = info;
 
         if (contextId !== 1 || globalId !== 753) { return; }
 
         const itemActions = document.getElementById(`iteminfo${view}_item_actions`);
+        if (!itemActions) { return; }
 
         // TODO: Add support for package(sub)
         const viewStoreBtn = itemActions.querySelector("a");
@@ -17,10 +26,11 @@ export default class FAddPriceToGifts extends CallbackFeature {
         const giftAppid = AppId.fromUrl(viewStoreBtn.href);
         if (!giftAppid) { return; }
 
-        const result = await Background.action("appdetails", giftAppid, "price_overview");
-        if (!result || !result.success) { return; }
 
-        const overview = result.data.price_overview;
+        const result = await SteamStoreApiFacade.fetchAppDetails(giftAppid, "price_overview")
+        if (!result) { return; }
+
+        const overview = result.price_overview;
         if (!overview) { return; }
 
         const discount = overview.discount_percent;

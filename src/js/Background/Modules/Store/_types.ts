@@ -35,7 +35,12 @@ export type TAppDetail = Record<string, any>; // TODO update type with actual da
 export interface TWishlistGame {
     appid: number,
     priority: number,
-    added: number
+    added: number,
+    price_overview?: {
+        discount_percent: number
+        final: number,
+        currency: string
+    }
 }
 
 export type TFetchWishlistResponse = number|null

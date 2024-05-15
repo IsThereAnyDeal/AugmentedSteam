@@ -4,11 +4,11 @@ export default class Messenger {
 
     private static id: number = 0;
 
-    static call(handler: MessageHandler, action: string, params: any=undefined): void {
+    static call(handler: MessageHandler, action: string, params: any[]=[]): void {
         document.dispatchEvent(new CustomEvent(handler, {detail: {action, params}}));
     }
 
-    static get<T>(handler: MessageHandler, action: string, params: any=undefined): Promise<T> {
+    static get<T>(handler: MessageHandler, action: string, params: any[]=[]): Promise<T> {
         return new Promise(resolve => {
             const id = `as_msg_${this.id++}`;
 

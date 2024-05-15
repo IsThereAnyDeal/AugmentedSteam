@@ -6,45 +6,61 @@ import {
     __quickSellDesc,
     __quickSellVerify,
     __selling,
-} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML, SyncedStorage} from "../../../../modulesCore";
-import {CallbackFeature, CurrencyManager, RequestData} from "../../../modulesContent";
-import {Page} from "../../Page";
+} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import CInventory, {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
+import Feature from "@Content/Modules/Context/Feature";
+import Settings from "@Options/Data/Settings";
+import HTML from "@Core/Html/Html";
+import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
+import {MessageHandler} from "@Content/Modules/Messaging/MessageHandler";
+import Messenger from "@Content/Modules/Messaging/Messenger";
+import RequestData from "@Content/Modules/RequestData";
 
-export default class FQuickSellOptions extends CallbackFeature {
+export default class FQuickSellOptions extends Feature<CInventory> {
 
-    constructor(context) {
+    private readonly _loadedMarketPrices: Record<string, {
+        priceLow: number,
+        priceHigh: number
+    }>;
+
+    constructor(context: CInventory) {
         super(context);
 
         this._loadedMarketPrices = {};
     }
 
-    checkPrerequisites() {
-        return this.context.myInventory && SyncedStorage.get("quickinv");
+    override checkPrerequisites(): boolean {
+        return this.context.myInventory && Settings.quickinv;
     }
 
-    async callback({
-        view,
-        sessionId,
-        marketAllowed,
-        country,
-        assetId,
-        contextId,
-        globalId,
-        walletCurrency,
-        marketable,
-        hashName,
-        publisherFee,
-        lowestListingPrice
-    }) {
+    override apply(): void | Promise<void> {
+        this.context.onMarketInfo.subscribe(e => this.callback(e.data));
+    }
+
+    private async callback(marketInfo: MarketInfo): Promise<void> {
+        const {
+            view,
+            sessionId,
+            marketAllowed,
+            country,
+            assetId,
+            contextId,
+            globalId,
+            walletCurrency,
+            marketable,
+            hashName,
+            publisherFee,
+            lowestListingPrice
+        } = marketInfo;
 
         // Additional checks for market eligibility, see https://github.com/SteamDatabase/SteamTracking/blob/13e4e0c8f8772ef316f73881af8c546218cf7117/steamcommunity.com/public/javascript/economy_v2.js#L3675
         if (!marketAllowed || (walletCurrency === 0) || !marketable) { return; }
 
-        const thisItem = document.getElementById(`${globalId}_${contextId}_${assetId}`);
-        const marketActions = document.getElementById(`iteminfo${view}_item_market_actions`);
-        const diff = SyncedStorage.get("quickinv_diff");
+        const thisItem = document.getElementById(`${globalId}_${contextId}_${assetId}`)!;
+        const marketActions = document.getElementById(`iteminfo${view}_item_market_actions`)!;
+        const diff = Settings.quickinv_diff;
 
         // marketActions' innerHTML is cleared on item selection, so the links HTML has to be re-inserted
         HTML.beforeEnd(marketActions,
@@ -62,9 +78,7 @@ export default class FQuickSellOptions extends CallbackFeature {
             </div>`);
 
         // Steam's mutation observer for tooltips is disabled on inventories, so add them manually
-        Page.runInPageContext(view => {
-            window.SteamFacade.vTooltip(`#es_quicksell${view}, #es_instantsell${view}`);
-        }, [view]);
+        SteamFacade.vTooltip(`#es_quicksell${view}, #es_instantsell${view}`);
 
         // Check if price is stored in data
         if (!thisItem.dataset.priceLow) {
@@ -76,12 +90,12 @@ export default class FQuickSellOptions extends CallbackFeature {
                 || {};
 
             if (priceHigh > 0) {
-                priceHigh = Math.max((priceHigh / 100) + parseFloat(diff), lowestListingPrice) || 0;
-                priceHigh = priceHigh.toFixed(2) * 100;
+                priceHigh = Math.max((priceHigh / 100) + Number(diff), lowestListingPrice) || 0;
+                priceHigh = Number(priceHigh.toFixed(2)) * 100;
             }
 
-            thisItem.dataset.priceLow = priceLow;
-            thisItem.dataset.priceHigh = priceHigh;
+            thisItem.dataset.priceLow = String(priceLow);
+            thisItem.dataset.priceHigh = String(priceHigh);
 
             thisItem.classList.remove("es_prices_loading");
         }
@@ -89,41 +103,40 @@ export default class FQuickSellOptions extends CallbackFeature {
         // Add data and bind actions to the button if selected item is active
         if (!thisItem.classList.contains("activeInfo")) { return; }
 
-        const quickSell = document.getElementById(`es_quicksell${view}`);
-        const instantSell = document.getElementById(`es_instantsell${view}`);
-        const loadingEl = marketActions.querySelector(".es_qsell_loading");
+        const quickSell = document.getElementById(`es_quicksell${view}`)!;
+        const instantSell = document.getElementById(`es_instantsell${view}`)!;
+        const loadingEl = marketActions.querySelector<HTMLElement>(".es_qsell_loading")!;
 
         const priceHighValue = Number(thisItem.dataset.priceHigh);
         const priceLowValue = Number(thisItem.dataset.priceLow);
 
         const currencyType = CurrencyManager.currencyIdToCode(walletCurrency);
 
-        function enableButtons(enable) {
+        function enableButtons(enable: boolean) {
             for (const button of marketActions.querySelectorAll(".item_market_action_button, .btn_small")) {
                 button.classList.toggle("btn_disabled", !enable);
             }
         }
 
-        async function clickHandler(e) {
+        async function clickHandler(e: MouseEvent): Promise<void> {
             e.preventDefault();
 
             enableButtons(false);
             loadingEl.style.display = "block";
 
-            const feeInfo = await Page.runInPageContext((price, fee) => {
-                return window.SteamFacade.calculateFeeAmount(price, fee);
-            }, [e.currentTarget.dataset.price, publisherFee], true);
+            const target = e.currentTarget as HTMLElement;
+            const feeInfo = await SteamFacade.calculateFeeAmount(Number(target.dataset.price), publisherFee);
 
             const sellPrice = feeInfo.amount - feeInfo.fees;
 
             // https://github.com/SteamDatabase/SteamTracking/blob/13e4e0c8f8772ef316f73881af8c546218cf7117/steamcommunity.com/public/javascript/economy_v2.js#L4268
             const data = {
-                "sessionid": sessionId,
-                "appid": globalId,
-                "contextid": contextId,
-                "assetid": assetId,
-                "amount": 1, // TODO support stacked items, e.g. sack of gems
-                "price": sellPrice
+                sessionid: sessionId,
+                appid: String(globalId),
+                contextid: String(contextId),
+                assetid: assetId,
+                amount: "1", // TODO support stacked items, e.g. sack of gems
+                price: String(sellPrice)
             };
 
             const result = await RequestData.post("https://steamcommunity.com/market/sellitem/", data).catch(err => err);
@@ -139,10 +152,10 @@ export default class FQuickSellOptions extends CallbackFeature {
             if (result.requires_confirmation) {
                 loadingEl.textContent = L(__quickSellVerify);
             } else {
-                marketActions.style.display = "none";
+                marketActions!.style.display = "none";
             }
 
-            document.getElementById(`iteminfo${view}_item_scrap_actions`).style.display = "none";
+            document.getElementById(`iteminfo${view}_item_scrap_actions`)!.style.display = "none";
 
             thisItem.classList.add("btn_disabled", "activeInfo");
         }
@@ -158,17 +171,26 @@ export default class FQuickSellOptions extends CallbackFeature {
         }
     }
 
-    _getMarketPrices(globalId, country, walletCurrency, hashName) {
+    _getMarketPrices(
+        globalId: number,
+        country: string,
+        walletCurrency: number,
+        hashName: string
+    ) {
 
         // Get item_nameid of selected item, which can only be found on the item's market listings page
-        return RequestData.getHttp(`https://steamcommunity.com/market/listings/${globalId}/${encodeURIComponent(hashName)}`).then(result => {
+        return RequestData.getText(`https://steamcommunity.com/market/listings/${globalId}/${encodeURIComponent(hashName)}`).then(result => {
             const m = result.match(/Market_LoadOrderSpread\( (\d+) \)/);
             if (!m) {
                 console.error("Failed to get nameId for item '%s'", hashName);
                 return null;
             }
 
-            return RequestData.getJson(`https://steamcommunity.com/market/itemordershistogram?country=${country}&language=english&currency=${walletCurrency}&item_nameid=${m[1]}`).then(data => {
+            return RequestData.getJson<{
+                    success?: boolean,
+                    highest_buy_order?: string,
+                    lowest_sell_order?: string
+                }>(`https://steamcommunity.com/market/itemordershistogram?country=${country}&language=english&currency=${walletCurrency}&item_nameid=${m[1]}`).then(data => {
                 if (!data || !data.success) {
                     console.error("Failed to get market prices for item '%s'", hashName);
                     return null;
@@ -185,13 +207,12 @@ export default class FQuickSellOptions extends CallbackFeature {
         });
     }
 
-    async _showSellButton(buttonEl, buttonStr, priceVal, currencyType, clickHandler) {
-        const formattedPrice = await Page.runInPageContext(
-            (price, type) => window.SteamFacade.vCurrencyFormat(price, type), [priceVal, currencyType], true
-        );
+    async _showSellButton(buttonEl: HTMLElement, buttonStr: string, priceVal: number, currencyType: string, clickHandler: (e: MouseEvent) => void) {
 
-        buttonEl.querySelector("span").textContent = buttonStr.replace("__amount__", formattedPrice);
-        buttonEl.dataset.price = priceVal;
+        const formattedPrice = await SteamFacade.vCurrencyFormat(priceVal, currencyType);
+
+        buttonEl.querySelector("span")!.textContent = buttonStr.replace("__amount__", formattedPrice);
+        buttonEl.dataset.price = String(priceVal);
         buttonEl.style.display = "block";
         buttonEl.addEventListener("click", clickHandler);
     }

@@ -1,15 +1,23 @@
-import {__equipOnProfile} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML} from "../../../../modulesCore";
-import {CallbackFeature, RequestData, User} from "../../../modulesContent";
+import {__equipOnProfile} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import Feature from "@Content/Modules/Context/Feature";
+import CInventory, {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
+import HTML from "@Core/Html/Html";
+import User from "@Content/Modules/User";
+import RequestData from "@Content/Modules/RequestData";
 
-export default class FEquipProfileItems extends CallbackFeature {
+export default class FEquipProfileItems extends Feature<CInventory> {
 
-    checkPrerequisites() {
+    override checkPrerequisites(): boolean {
         return this.context.myInventory;
     }
 
-    callback({view, assetId, appid, itemType}) {
+    override apply(): void{
+        this.context.onMarketInfo.subscribe(e => this.callback(e.data));
+    }
+
+    private callback(marketInfo: MarketInfo): void {
+        const {view, assetId, appid, itemType} = marketInfo;
 
         // Make sure the selected item is equippable (those returned by the /IPlayerService/GetProfileItemsEquipped/ endpoint)
         let apiPath;
@@ -36,16 +44,16 @@ export default class FEquipProfileItems extends CallbackFeature {
                 return;
         }
 
-        const btn = HTML.toElement(
+        const btn = <HTMLAnchorElement>HTML.toElement(
             `<a class="btn_small btn_darkblue_white_innerfade">
                 <span>${L(__equipOnProfile)}</span>
             </a>`
         );
 
         if (itemType === "profilebackground") {
-            document.getElementById(`iteminfo${view}_item_actions`).append(btn);
+            document.getElementById(`iteminfo${view}_item_actions`)?.append(btn);
         } else {
-            document.getElementById(`iteminfo${view}_item_owner_actions`).replaceChildren(btn);
+            document.getElementById(`iteminfo${view}_item_owner_actions`)?.replaceChildren(btn);
         }
 
         // TODO Add checkbox so users can set equip options for the background through /IPlayerService/SetEquippedProfileItemFlags/

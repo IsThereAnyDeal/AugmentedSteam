@@ -8,14 +8,11 @@ export default class CEditGuide extends Context {
     constructor() {
 
         // Don't apply features if there's an error message (e.g. not your guide thus can't edit)
-        if (document.getElementById("message")) {
-            super(ContextType.EDIT_GUIDE, []);
-            return;
-        }
+        const hasFeatures = !document.getElementById("message");
 
-        super(ContextType.EDIT_GUIDE, [
+        super(ContextType.EDIT_GUIDE, hasFeatures ? [
             FMultiLanguageGuide,
             FCustomTags,
-        ]);
+        ] : []);
     }
 }

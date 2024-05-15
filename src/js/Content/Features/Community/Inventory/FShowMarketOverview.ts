@@ -4,26 +4,40 @@ import {
     __startingAt,
     __viewInMarket,
     __volumeSoldLast_24,
-} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML} from "../../../../modulesCore";
-import {Background, CallbackFeature, CurrencyManager, RequestData} from "../../../modulesContent";
-import {Page} from "../../Page";
+} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import Feature from "@Content/Modules/Context/Feature";
+import CInventory, {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
+import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
+import HTML from "@Core/Html/Html";
+import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import RequestData from "@Content/Modules/RequestData";
+import DOMHelper from "@Content/Modules/DOMHelper";
 
-export default class FShowMarketOverview extends CallbackFeature {
+export default class FShowMarketOverview extends Feature<CInventory> {
 
-    async callback({
-        view,
-        assetId,
-        contextId,
-        globalId,
-        walletCurrency,
-        marketable,
-        hashName,
-        restriction,
-        appid,
-        itemType
-    }) {
+    // https://steamcommunity.com/groups/tradingcards/discussions/1/864969482042344380/#c864969482044786566
+    private readonly _foilChance = 0.01;
+
+
+    override apply(): void | Promise<void> {
+        this.context.onMarketInfo.subscribe(e => this.callback(e.data));
+    }
+
+    private async callback(marketInfo: MarketInfo): Promise<void> {
+        const {
+            view,
+            assetId,
+            contextId,
+            globalId,
+            walletCurrency,
+            marketable,
+            hashName,
+            restriction,
+            appid,
+            itemType
+        } = marketInfo;
 
         /*
          * If the item in user's inventory is not marketable due to market restrictions,
@@ -33,6 +47,9 @@ export default class FShowMarketOverview extends CallbackFeature {
 
         const thisItem = document.getElementById(`${globalId}_${contextId}_${assetId}`);
         const marketActions = document.getElementById(`iteminfo${view}_item_market_actions`);
+        if (!thisItem || !marketActions) {
+            return;
+        }
 
         // If is a booster pack get the average price of three cards
         if (itemType === "booster" && !thisItem.dataset.cardsPrice) {
@@ -43,22 +60,15 @@ export default class FShowMarketOverview extends CallbackFeature {
 
             try {
                 const currency = CurrencyManager.currencyIdToCode(walletCurrency);
-                const result = await Background.action("market.averagecardprices",
-                    {
-                        currency,
-                        "appids": appid,
-                        "foilappids": appid
-                    });
+                const result = await AugmentedSteamApiFacade.fetchMarketCardAveragePrices(currency, [appid]);
+                if (!result || !result[appid]) {
+                    throw new Error("Requested appid not in reesult");
+                }
 
                 const avgPrice
-                    = (
-                        (result[appid].foil * FShowMarketOverview._foilChance)
-                        + (result[appid].regular * (1 - FShowMarketOverview._foilChance))
-                    ).toFixed(2) * 100;
+                    = Number(((result[appid]!.foil * this._foilChance) + (result[appid]!.regular * (1 - this._foilChance))).toFixed(2)) * 100;
 
-                thisItem.dataset.cardsPrice = await Page.runInPageContext((price, type) => {
-                    return window.SteamFacade.vCurrencyFormat(price, type);
-                }, [avgPrice, currency], true);
+                thisItem.dataset.cardsPrice = await SteamFacade.vCurrencyFormat(avgPrice, currency);
             } catch (err) {
                 console.error("Failed to retrieve average card prices for appid", appid, err);
             } finally {
@@ -72,33 +82,22 @@ export default class FShowMarketOverview extends CallbackFeature {
             // In own inventory, only add the average price of three cards to booster packs
             if (thisItem.dataset.cardsPrice && thisItem.dataset.cardsPrice !== "nodata") {
 
-                const priceInfoDiv = firstDiv.querySelector("div:nth-child(2)");
+                const priceInfoDiv = firstDiv.querySelector("div:nth-child(2)")!;
 
                 /*
                  * Due to race conditions the lowest price might have already been fetched (e.g. when request is loaded from cache).
                  * Therefore the Ajax handler wouldn't get triggered.
                  * This comparison checks for the existence of the text node "Starting at: ..."
                  */
-                if (priceInfoDiv.firstChild.nodeType === Node.TEXT_NODE) {
+                if (priceInfoDiv.firstChild!.nodeType === Node.TEXT_NODE) {
                     priceInfoDiv.append(L(__avgPrice_3cards, {"price": thisItem.dataset.cardsPrice}));
                 } else {
+                    document.addEventListener("as_marketOverviewPopulation", () => {
+                        firstDiv!.querySelector("div:nth-child(2)")!
+                            .append(L(__avgPrice_3cards, {price: thisItem.dataset.cardsPrice!}));
+                    }, {once: true});
 
-                    // Wait for population of the div https://github.com/SteamDatabase/SteamTracking/blob/6c5145935aa0a9f9134e724d89569dfd1f2af014/steamcommunity.com/public/javascript/economy_v2.js#L3563
-                    Page.runInPageContext(hashName => new Promise(resolve => {
-                        function onComplete(response) {
-                            if (!response.url.startsWith("https://steamcommunity.com/market/priceoverview/") || response.parameters.market_hash_name !== hashName) {
-                                return;
-                            }
-
-                            resolve();
-                            window.Ajax.Responders.unregister(onComplete);
-                        }
-
-                        window.Ajax.Responders.register({onComplete});
-                    }), [hashName], true).then(() => {
-                        firstDiv.querySelector("div:nth-child(2)")
-                            .append(L(__avgPrice_3cards, {"price": thisItem.dataset.cardsPrice}));
-                    });
+                    DOMHelper.insertScript("scriptlets/Community/Inventory/marketOverviewPopulation.js");
                 }
             }
 
@@ -126,11 +125,15 @@ export default class FShowMarketOverview extends CallbackFeature {
             thisItem.dataset.soldVolume = "nodata";
 
             try {
-                const data = await RequestData.getJson(`https://steamcommunity.com/market/priceoverview/?currency=${walletCurrency}&appid=${globalId}&market_hash_name=${_hashName}`);
+                const data = await RequestData.getJson<{
+                    success?: boolean,
+                    lowest_price?: number,
+                    volume?: number
+                }>(`https://steamcommunity.com/market/priceoverview/?currency=${walletCurrency}&appid=${globalId}&market_hash_name=${_hashName}`);
 
                 if (data && data.success) {
-                    thisItem.dataset.lowestPrice = data.lowest_price || "nodata";
-                    thisItem.dataset.soldVolume = data.volume || "nodata";
+                    thisItem.dataset.lowestPrice = String(data.lowest_price ?? "nodata");
+                    thisItem.dataset.soldVolume = String(data.volume ?? "nodata");
                 }
             } catch (err) {
                 console.error("Couldn't load price overview from market", err);
@@ -145,7 +148,7 @@ export default class FShowMarketOverview extends CallbackFeature {
         HTML.inner(firstDiv, html);
     }
 
-    _getMarketOverviewHtml(node) {
+    _getMarketOverviewHtml(node: HTMLElement): string {
 
         let html = '<div style="min-height:3em;margin-left:1em;">';
 
@@ -170,6 +173,3 @@ export default class FShowMarketOverview extends CallbackFeature {
         return html;
     }
 }
-
-// https://steamcommunity.com/groups/tradingcards/discussions/1/864969482042344380/#c864969482044786566
-FShowMarketOverview._foilChance = 0.01;
