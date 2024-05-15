@@ -1,12 +1,15 @@
-import ContextType from "../../../Modules/Context/ContextType";
-import {CCommunityBase} from "../CCommunityBase";
+import {ContextType} from "../../../Modules/Context/ContextType";
+import CCommunityBase from "../CCommunityBase";
 import FMarketStats from "./FMarketStats";
 import FHideActiveListings from "./FHideActiveListings";
 import FMarketSort from "./FMarketSort";
 import FPopularRefreshToggle from "./FPopularRefreshToggle";
 import FMarketLowestPrice from "./FMarketLowestPrice";
+import ASEventHandler from "@Content/Modules/ASEventHandler";
 
-export class CMarketHome extends CCommunityBase {
+export default class CMarketHome extends CCommunityBase {
+
+    public onMarketListings: ASEventHandler<void> = new ASEventHandler<void>();
 
     constructor() {
 
@@ -21,8 +24,11 @@ export class CMarketHome extends CCommunityBase {
         // If there're page controls, observe the listings because Steam refreshes them after selecting a page size option
         if (document.getElementById("tabContentsMyActiveMarketListings_ctn") !== null) {
             new MutationObserver(() => {
-                this.triggerCallbacks();
-            }).observe(document.getElementById("tabContentsMyListings"), {"childList": true});
+                this.onMarketListings.dispatch();
+            }).observe(
+                document.getElementById("tabContentsMyListings")!,
+                {"childList": true}
+            );
         }
     }
 }

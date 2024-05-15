@@ -12,15 +12,20 @@ import {
     __salesTotal,
     __transactionStatus,
 } from "@Strings/_strings";
-import {Feature, Price, RequestData, User} from "../../../modulesContent";
+import Feature from "@Content/Modules/Context/Feature";
+import CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
+import User from "@Content/Modules/User";
+import LocalStorage from "@Core/Storage/LocalStorage";
+import RequestData from "@Content/Modules/RequestData";
+import Price from "@Content/Modules/Currency/Price";
 
-export default class FMarketStats extends Feature {
+export default class FMarketStats extends Feature<CMarketHome> {
 
-    checkPrerequisites() {
+    override checkPrerequisites(): boolean {
         return User.isSignedIn;
     }
 
-    apply() {
+    override apply(): void {
 
         HTML.beforeBegin("#findItems",
             `<div id="es_summary">
@@ -34,16 +39,17 @@ export default class FMarketStats extends Feature {
                 </div>
             </div>`);
 
-        document.getElementById("es_market_summary_button").addEventListener("click", () => { this._startLoading(); });
+        document.getElementById("es_market_summary_button")!
+            .addEventListener("click", () => this._startLoading());
 
         if (Settings.showmarkettotal) {
             this._startLoading();
         }
     }
 
-    async _startLoading() {
+    async _startLoading(): Promise<void> {
 
-        const statusNode = document.getElementById("es_market_summary_status");
+        const statusNode = document.getElementById("es_market_summary_status")!;
 
         HTML.inner(statusNode,
             `<img id="es_market_summary_throbber" src="//community.cloudflare.steamstatic.com/public/images/login/throbber.gif">
@@ -57,15 +63,21 @@ export default class FMarketStats extends Feature {
         if (await this._load()) {
             statusNode.remove();
         } else {
-            document.getElementById("es_market_summary_throbber").remove();
-            document.getElementById("esi_market_stats_progress_description").remove();
+            document.getElementById("es_market_summary_throbber")!.remove();
+            document.getElementById("esi_market_stats_progress_description")!.remove();
         }
     }
 
     async _load() {
 
-        let {startListing, purchaseTotal, saleTotal} = LocalStorage.get("market_stats");
-        let curStartListing = null;
+        const marketStats = (await LocalStorage.get("market_stats")) ?? {
+            startListing: null,
+            purchaseTotal: 0,
+            saleTotal: 0
+        };
+        let {startListing, purchaseTotal, saleTotal} = marketStats;
+
+        let curStartListing: string|null = null;
         const transactions = new Set();
         let stop = false;
 
@@ -75,7 +87,7 @@ export default class FMarketStats extends Feature {
             saleTotal = 0;
         }
 
-        function updatePrices(dom, start) {
+        function updatePrices(dom: DocumentFragment, start: number): void {
 
             const nodes = dom.querySelectorAll(".market_listing_row");
             for (const node of nodes) {
@@ -90,7 +102,12 @@ export default class FMarketStats extends Feature {
                 } else {
                     console.error("Could not find id of transaction", node); // TODO are there any implications?
                 }
-                const type = node.querySelector(".market_listing_gainorloss").textContent;
+
+                const type = node.querySelector(".market_listing_gainorloss")?.textContent;
+                if (!type) {
+                    continue;
+                }
+
                 let isPurchase;
                 if (type.includes("+")) {
                     isPurchase = true;
@@ -110,14 +127,16 @@ export default class FMarketStats extends Feature {
                 }
 
                 const priceNode = node.querySelector(".market_listing_price");
-                if (!priceNode) { continue; }
+                if (!priceNode || !priceNode.textContent) { continue; }
 
                 const price = Price.parseFromString(priceNode.textContent);
 
-                if (isPurchase) {
-                    purchaseTotal += price.value;
-                } else {
-                    saleTotal += price.value;
+                if (price) {
+                    if (isPurchase) {
+                        purchaseTotal += price.value;
+                    } else {
+                        saleTotal += price.value;
+                    }
                 }
             }
 
@@ -150,16 +169,24 @@ export default class FMarketStats extends Feature {
         let pages = -1;
         let currentPage = 0;
         let totalCount = null;
-        const pageRequests = [];
+        const pageRequests: Array<{
+            start: number,
+            attempt: number,
+            lastAttempt: number
+        }> = [];
         let failedRequests = 0;
 
-        const progressNode = document.querySelector("#esi_market_stats_progress");
+        const progressNode = document.querySelector<HTMLElement>("#esi_market_stats_progress")!;
         const url = new URL("/market/myhistory/render/", "https://steamcommunity.com/");
-        url.searchParams.set("count", pageSize);
+        url.searchParams.set("count", String(pageSize));
 
         async function nextRequest() {
             const request = pageRequests.shift();
-            url.searchParams.set("start", request.start);
+            if (!request) {
+                return null
+            }
+
+            url.searchParams.set("start", String(request.start));
             request.attempt += 1;
             request.lastAttempt = Date.now(); // TODO this field is set but never read
             if (request.attempt > 1) {
@@ -170,7 +197,10 @@ export default class FMarketStats extends Feature {
                 throw new Error(`Failed to load market history page ${url}`);
             }
 
-            const data = await RequestData.getJson(url.toString());
+            const data = await RequestData.getJson<{
+                results_html: string,
+                total_count: number
+            }>(url.toString());
             const dom = HTML.toDom(data.results_html); // TODO use DOMParser since there's no need to sanitize?
 
             /*
@@ -190,7 +220,11 @@ export default class FMarketStats extends Feature {
         }
 
         try {
-            pageRequests.push({"start": 0, "attempt": 0, "lastAttempt": 0});
+            pageRequests.push({
+                start: 0,
+                attempt: 0,
+                lastAttempt: 0
+            });
 
             /*
              * TODO this should be rewritten, this disable here is not necessary. Also functions should be split,
@@ -199,11 +233,15 @@ export default class FMarketStats extends Feature {
             // eslint-disable-next-line no-unmodified-loop-condition -- stop is modified in updatePrices, called by nextRequest
             while (pageRequests.length > 0 && !stop) {
                 const t = await nextRequest();
-                if (pages < 0 && t > 0) {
+                if (t !== null && pages < 0 && t > 0) {
                     totalCount = t;
                     pages = Math.ceil(totalCount / pageSize);
                     for (let start = pageSize; start < totalCount; start += pageSize) {
-                        pageRequests.push({"start": start, "attempt": 0, "lastAttempt": 0});
+                        pageRequests.push({
+                            start,
+                            attempt: 0,
+                            lastAttempt: 0
+                        });
                     }
                 }
 
@@ -216,7 +254,11 @@ export default class FMarketStats extends Feature {
 
         if (failedRequests === 0) {
             progressNode.textContent = "";
-            LocalStorage.set("market_stats", {"startListing": curStartListing, purchaseTotal, saleTotal});
+            LocalStorage.set("market_stats", {
+                startListing: curStartListing,
+                purchaseTotal,
+                saleTotal
+            });
             return true;
         }
 
@@ -227,9 +269,9 @@ export default class FMarketStats extends Feature {
          *  Add a "continue" button to allow continuing where we left off.
          */
         progressNode.textContent = L(__transactionStatus, {
-            "failed": failedRequests,
-            "size": transactions.size,
-            "total": totalCount
+            failed: failedRequests,
+            size: transactions.size,
+            total: String(totalCount)
         });
         return false;
     }

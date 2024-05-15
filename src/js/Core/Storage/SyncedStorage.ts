@@ -12,6 +12,7 @@ interface SyncedStorageSchema extends StorageSchema {
     fav_emoticons: string[],
     sortfriendsby: string,
     sortgroupsby: string,
+    sortmylistingsby: string,
 }
 
 /*

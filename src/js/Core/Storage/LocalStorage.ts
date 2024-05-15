@@ -25,7 +25,13 @@ interface LocalStorageSchema extends StorageSchema {
     show_review_section: boolean,
     hide_login_warn_store: boolean,
     hide_login_warn_community: boolean,
-    es_guide_tags: Record<string, string[]>
+    es_guide_tags: Record<string, string[]>,
+    market_stats: {
+        startListing: string|null,
+        purchaseTotal: number,
+        saleTotal: number
+    },
+    popular_refresh: boolean
 }
 
 class LocalStorage<Schema extends StorageSchema> extends Storage<ns.LocalStorageArea, Schema>{

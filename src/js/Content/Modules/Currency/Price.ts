@@ -2,7 +2,7 @@ import CurrencyManager from "./CurrencyManager";
 
 export default class Price {
 
-    private readonly value: number;
+    public readonly value: number;
     private readonly currency: string;
 
     static parseFromString(price: string, currency: string = CurrencyManager.storeCurrency): Price|null {
