@@ -1,6 +1,6 @@
 import HTML from "@Core/Html/Html";
 import StringUtils from "@Core/Utils/StringUtils";
-import TimeUtils from "@Core/Utils/TimeUtils";
+import TimeUtils, {ResettableTimer} from "@Core/Utils/TimeUtils";
 import {
     __customBackground,
     __customBackgroundHelp,
@@ -11,19 +11,34 @@ import {
 } from "@Strings/_strings";
 import Config from "../../../../config";
 import {L} from "@Core/Localization/Localization";
-import {Background, Feature} from "../../../modulesContent";
+import Feature from "@Content/Modules/Context/Feature";
+import type CProfileEdit from "@Content/Features/Community/ProfileEdit/CProfileEdit";
+import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 
-export default class FBackgroundSelection extends Feature {
+export default class FBackgroundSelection extends Feature<CProfileEdit> {
 
-    async checkPrerequisites() {
+    private _currentImage: string = "";
+    private _currentAppid: number = 0;
+    private _selectedImage: string = "";
+    private _selectedAppid: number = 0;
+    private _active: boolean = false;
+    private _root: HTMLElement|null = null;
+    private _games: Array<{
+        appid: number,
+        title: string,
+        safeTitle: string,
+        levenshtein: number
+    }>|undefined = undefined;
+
+    override async checkPrerequisites(): Promise<boolean> {
 
         const result = await this.context.data;
         if (!result) { return false; }
 
         const {img, appid} = result.bg || {};
 
-        this._currentImage = img || ""; // @type string
-        this._currentAppid = appid ? parseInt(appid) : 0; // @type number
+        this._currentImage = img || "";
+        this._currentAppid = appid ?? 0;
         this._selectedImage = this._currentImage;
         this._selectedAppid = this._currentAppid;
         return true;
@@ -32,12 +47,12 @@ export default class FBackgroundSelection extends Feature {
     apply() {
 
         this._active = false;
-        this._root = document.querySelector("#react_root");
+        this._root = document.querySelector<HTMLElement>("#react_root");
 
         this._checkPage();
 
         new MutationObserver(() => { this._checkPage(); })
-            .observe(this._root, {"childList": true, "subtree": true});
+            .observe(this._root!, {"childList": true, "subtree": true});
     }
 
     async _checkPage() {
@@ -71,46 +86,50 @@ export default class FBackgroundSelection extends Feature {
 
             if (this._active) { return; } // Happens because the below code will trigger the observer again
 
-            HTML.beforeEnd(this._root.querySelector(":scope > div:last-child > div:last-child"), html);
+            HTML.beforeEnd(this._root!.querySelector(":scope > div:last-child > div:last-child"), html);
             this._active = true;
 
-            const gameFilterNode = document.querySelector(".js-pd-game");
-            const listNode = document.querySelector(".js-pd-list");
-            const imagesNode = document.querySelector(".js-pd-imgs");
+            const gameFilterNode = document.querySelector<HTMLInputElement>(".js-pd-game");
+            const listNode = document.querySelector<HTMLElement>(".js-pd-list");
+            const imagesNode = document.querySelector<HTMLElement>(".js-pd-imgs");
+
+            if (!gameFilterNode || !listNode || !imagesNode) {
+                return;
+            }
 
             const games = await this._getGamesList(listNode);
 
             // Show current selection
             if (this._selectedAppid) {
-                const game = games.find(([appid]) => appid === this._selectedAppid);
+                const game = games.find(({appid}) => appid === this._selectedAppid);
                 if (game) {
-                    gameFilterNode.value = game[1];
+                    gameFilterNode.value = game.title;
                     this._selectGame(this._selectedAppid, imagesNode);
                 }
             }
 
             listNode.addEventListener("click", ({target}) => {
-                const appid = Number(target.dataset.appid ?? 0);
+                const appid = Number((<HTMLElement>target).dataset.appid ?? 0);
                 if (!appid || appid === this._selectedAppid) { return; }
 
                 this._selectedImage = ""; // Clear current selection so selected image and appid remain in sync
                 this._selectGame(appid, imagesNode);
 
                 document.querySelector(".js-pd-item.is-selected")?.classList.remove("is-selected");
-                target.classList.add("is-selected");
+                (<HTMLElement>target).classList.add("is-selected");
             });
 
             imagesNode.addEventListener("click", ({target}) => {
-                const node = target.closest(".js-pd-img");
+                const node = (<HTMLElement>target).closest<HTMLElement>(".js-pd-img");
                 if (!node || node.dataset.img === this._selectedImage) { return; }
 
-                this._selectedImage = node.dataset.img;
+                this._selectedImage = node.dataset.img ?? "";
 
                 document.querySelector(".js-pd-img.is-selected")?.classList.remove("is-selected");
                 node.classList.add("is-selected");
             });
 
-            let timer = null;
+            let timer: ResettableTimer|null = null;
 
             // Most of this logic is from https://github.com/SteamDatabase/SteamTracking/blob/6db3e47a120c5c938a0ab37186d39b02b14d27d9/steamcommunity.com/public/javascript/global.js#L2726
             gameFilterNode.addEventListener("keyup", () => {
@@ -128,7 +147,7 @@ export default class FBackgroundSelection extends Feature {
                         const regexes = terms.map(term => new RegExp(StringUtils.escapeRegExp(term), "i"));
 
                         let matchingGames = games.filter(game => {
-                            const [, title, safeTitle] = game;
+                            const {title, safeTitle} = game;
                             let match = true;
 
                             for (const regex of regexes) {
@@ -152,7 +171,7 @@ export default class FBackgroundSelection extends Feature {
 
                         matchingGames.sort((a, b) => {
                             if (a.levenshtein === b.levenshtein) {
-                                return a[1].localeCompare(b[1]);
+                                return a.title.localeCompare(b.title);
                             }
                             return a.levenshtein - b.levenshtein;
                         });
@@ -160,7 +179,7 @@ export default class FBackgroundSelection extends Feature {
                         matchingGames = matchingGames.slice(0, 20);
 
                         let list = "";
-                        for (const [appid, title] of matchingGames) {
+                        for (const {appid, title} of matchingGames) {
                             const selected = this._selectedAppid === appid ? " is-selected" : "";
 
                             list += `<div class="as-pd__item${selected} js-pd-item" data-appid="${appid}">${title}</div>`;
@@ -172,19 +191,19 @@ export default class FBackgroundSelection extends Feature {
                 timer.reset();
             });
 
-            document.querySelector(".js-pd-bg-clear").addEventListener("click", async() => {
+            document.querySelector(".js-pd-bg-clear")!.addEventListener("click", async() => {
                 if (!this._currentImage && !this._currentAppid) { return; }
 
-                await this.context.clearOwn();
+                await AugmentedSteamApiFacade.clearOwn(this.context.steamId);
 
                 window.location.href = `${Config.ApiServerHost}/profile/background/delete/v2`;
             });
 
-            document.querySelector(".js-pd-bg-save").addEventListener("click", async() => {
+            document.querySelector(".js-pd-bg-save")!.addEventListener("click", async() => {
                 if (!this._selectedImage || !this._selectedAppid) { return; }
                 if (this._selectedImage === this._currentImage && this._selectedAppid === this._currentAppid) { return; }
 
-                await this.context.clearOwn();
+                await AugmentedSteamApiFacade.clearOwn(this.context.steamId);
 
                 const appid = encodeURIComponent(this._selectedAppid);
                 const img = encodeURIComponent(this._selectedImage);
@@ -198,20 +217,16 @@ export default class FBackgroundSelection extends Feature {
     }
 
     // From https://github.com/SteamDatabase/SteamTracking/blob/6db3e47a120c5c938a0ab37186d39b02b14d27d9/steamcommunity.com/public/javascript/global.js#L2790
-    _getSafeString(value) {
+    _getSafeString(value: string): string {
         return value.toLowerCase().replace(/[\s.-:!?,']+/g, "");
     }
 
-    async _selectGame(appid, imagesNode) {
-
-        const result = await Background.action("profile.background", {
-            appid,
-            "profile": this.context.steamId,
-        });
+    async _selectGame(appid: number, imagesNode: HTMLElement): Promise<void> {
 
         this._selectedAppid = appid;
-
         let images = "";
+
+        const result = await AugmentedSteamApiFacade.fetchProfileBackground(appid);
         for (const [url, title] of result) {
             const selected = this._selectedImage === url ? " is-selected" : "";
 
@@ -225,13 +240,13 @@ export default class FBackgroundSelection extends Feature {
         HTML.inner(imagesNode, images);
     }
 
-    _getImageUrl(name) {
+    _getImageUrl(name: string): string {
         return `https://steamcommunity.com/economy/image/${name}/622x349`;
     }
 
-    async _getGamesList(listNode) {
+    async _getGamesList(listNode: HTMLElement) {
 
-        if (typeof this._games === "undefined") {
+        if (this._games === undefined) {
 
             HTML.inner(listNode,
                 `<div class="es_loading">
@@ -239,12 +254,19 @@ export default class FBackgroundSelection extends Feature {
                     <span>${L(__loading)}</span>
                 </div>`);
 
-            this._games = await Background.action("profile.background.games");
-            for (const game of this._games) {
-                game.push(this._getSafeString(game[1]));
+
+            const games = await AugmentedSteamApiFacade.fetchProfileBackgroundGames();
+            this._games = [];
+            for (const game of games) {
+                this._games.push({
+                    appid: game[0],
+                    title: game[1],
+                    safeTitle: this._getSafeString(game[1]),
+                    levenshtein: 0
+                });
             }
 
-            listNode.querySelector(".es_loading").remove();
+            listNode.querySelector(".es_loading")?.remove();
         }
 
         return this._games;

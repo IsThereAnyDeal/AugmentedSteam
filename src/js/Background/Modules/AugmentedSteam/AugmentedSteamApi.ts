@@ -115,7 +115,7 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
         return data.data;
     }
 
-    private clearOwn(steamId: string) {
+    private clearOwn(steamId: string): Promise<void> {
         return IndexedDB.delete("profiles", steamId);
     }
 

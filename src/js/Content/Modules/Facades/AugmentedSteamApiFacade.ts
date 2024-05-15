@@ -9,7 +9,7 @@ import type {
     TFetchRatesResponse,
     TFetchStorePageDataResponse,
     TFetchTwitchStreamResponse,
-    TIsEarlyAccessResponse,
+    TIsEarlyAccessResponse, TProfileData,
     TSimilarResponse
 } from "@Background/Modules/AugmentedSteam/_types";
 import {EAction} from "@Background/EAction";
@@ -73,5 +73,13 @@ export default class AugmentedSteamApiFacade {
 
     static fetchSimilar(appid: number): Promise<TSimilarResponse> {
         return BackgroundSender.send2(EAction.SteamPeek, {appid});
+    }
+
+    static async getProfileData(steamId: string): Promise<TProfileData> {
+        return BackgroundSender.send2(EAction.Profile, {steamId});
+    }
+
+    static clearOwn(steamId: string): Promise<void> {
+        return BackgroundSender.send2(EAction.Profile_Clear, {steamId});
     }
 }

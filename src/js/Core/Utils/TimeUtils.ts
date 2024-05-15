@@ -27,15 +27,15 @@ class Timer {
     }
 }
 
-class ResettableTimer {
+export class ResettableTimer {
 
     private _id: number|undefined;
     private _running: boolean = false;
 
-    private onDone: () => Promise<void>;
-    private duration: number;
+    private readonly onDone: () => void|Promise<void>;
+    private readonly duration: number;
 
-    constructor(onDone: () => Promise<void>, duration: number) {
+    constructor(onDone: () => void|Promise<void>, duration: number) {
         this.onDone = onDone;
         this.duration = duration;
 
@@ -68,13 +68,14 @@ class ResettableTimer {
     }
 }
 
+
 export default class TimeUtils {
 
     static timer(duration: number): Timer {
         return new Timer(duration);
     }
 
-    static resettableTimer(onDone: () => Promise<void>, duration: number): ResettableTimer {
+    static resettableTimer(onDone: () => void|Promise<void>, duration: number): ResettableTimer {
         return new ResettableTimer(onDone, duration);
     }
 
