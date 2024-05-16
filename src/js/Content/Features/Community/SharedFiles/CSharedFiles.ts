@@ -1,8 +1,8 @@
-import ContextType from "../../../Modules/Context/ContextType";
-import {CApp} from "../App/CApp";
+import {ContextType} from "../../../Modules/Context/ContextType";
+import CApp from "../App/CApp";
 import FMediaExpander from "../../Common/FMediaExpander";
 
-export class CSharedFiles extends CApp {
+export default class CSharedFiles extends CApp {
 
     constructor() {
 

@@ -13,6 +13,7 @@ interface SyncedStorageSchema extends StorageSchema {
     sortfriendsby: string,
     sortgroupsby: string,
     sortmylistingsby: string,
+    sortreviewsby: string
 }
 
 /*

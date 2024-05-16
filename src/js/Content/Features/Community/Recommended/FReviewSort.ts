@@ -12,25 +12,39 @@ import {
     __wait,
 } from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
-import {Background, Feature, Sortbox, User} from "../../../modulesContent";
-import {Page} from "../../Page";
+import Feature from "@Content/Modules/Context/Feature";
+import type CRecommended from "@Content/Features/Community/Recommended/CRecommended";
+import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
+import SyncedStorage from "@Core/Storage/SyncedStorage";
+import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import SteamCommunityApiFacade from "@Content/Modules/Facades/SteamCommunityApiFacade";
+import type {TReview} from "@Background/Modules/Community/_types";
+import User from "@Content/Modules/User";
+import HTML from "@Core/Html/Html";
 
-export default class FReviewSort extends Feature {
+export default class FReviewSort extends Feature<CRecommended> {
 
-    checkPrerequisites() {
+    private _reviewCount: number = 0;
+    private _path: string = "";
+    private _curPage: number = 0;
+    private _pageCount: number = 10;
+    private _pages: number = 0;
+    private _reviews: TReview[]|undefined = undefined;
+
+    override checkPrerequisites(): boolean {
         // Total number of reviews. Passed to background script for fetching reviews.
-        this._reviewCount = Number(document.querySelector("#rightContents .review_stat .giantNumber").textContent.trim());
+        this._reviewCount = Number(document.querySelector<HTMLElement>("#rightContents .review_stat .giantNumber")?.textContent?.trim());
 
         return this._reviewCount > 1;
     }
 
-    apply() {
+    override async apply(): Promise<void> {
 
         // Current profile path. Passed to background script for fetching reviews.
-        this._path = window.location.pathname.match(/\/((?:id|profiles)\/.+?)\//)[1];
+        this._path = window.location.pathname.match(/\/((?:id|profiles)\/.+?)\//)![1]!;
 
         // Current page. Used to calculate the portion of reviews to show after sorting.
-        this._curPage = new URLSearchParams(window.location.search).get("p") || 1;
+        this._curPage = Number(new URLSearchParams(window.location.search).get("p") ?? 1);
 
         // Max reviews displayed per page.
         this._pageCount = 10;
@@ -38,27 +52,38 @@ export default class FReviewSort extends Feature {
         // Number of pages. Passed to background script for fetching reviews.
         this._pages = Math.ceil(this._reviewCount / this._pageCount);
 
-        document.querySelector("#leftContents > h1").before(Sortbox.get(
-            "reviews",
-            [
-                ["default", L(__date)],
-                ["rating", L(__rating)],
-                ["helpful", L(__helpful)],
-                ["funny", L(__funny)],
-                ["length", L(__length)],
-                ["visibility", L(__visibility)],
-                ["playtime", L(__playtime)],
-                ["awards", L(__awards)],
-            ],
-            SyncedStorage.get("sortreviewsby"),
-            (sortBy, reversed) => { this._sortReviews(sortBy, reversed); },
-            "sortreviewsby"
-        ));
+        const anchor = document.querySelector<HTMLElement>("#leftContents > h1");
+        if (!anchor) {
+            return;
+        }
+
+        (new SortBox({
+            target: anchor.parentElement!,
+            anchor,
+            props: {
+                name: "reviews",
+                options: [
+                    ["default", L(__date)],
+                    ["rating", L(__rating)],
+                    ["helpful", L(__helpful)],
+                    ["funny", L(__funny)],
+                    ["length", L(__length)],
+                    ["visibility", L(__visibility)],
+                    ["playtime", L(__playtime)],
+                    ["awards", L(__awards)],
+                ],
+                value: (await SyncedStorage.get("sortreviewsby")) ?? "default_ASC"
+            }
+        })).$on("change", e => {
+            const {value, key, direction} = e.detail;
+            SyncedStorage.set("sortreviewsby", value);
+            this._sortReviews(key, direction < 0);
+        });
     }
 
-    async _sortReviews(sortBy, reversed) {
+    async _sortReviews(sortBy: string, reversed: boolean): Promise<void> {
 
-        if (typeof this._reviews === "undefined") {
+        if (this._reviews === undefined) {
             await this._getReviews();
         }
 
@@ -66,7 +91,7 @@ export default class FReviewSort extends Feature {
             node.remove();
         }
 
-        let displayedReviews = this._reviews.slice().sort((a, b) => {
+        let displayedReviews = this._reviews!.slice().sort((a, b) => {
             switch (sortBy) {
                 case "rating":
                 case "helpful":
@@ -106,12 +131,12 @@ export default class FReviewSort extends Feature {
         document.querySelectorAll(".review_box").forEach((node, i) => {
             const id = ids[i];
 
-            for (const award of node.querySelectorAll(".review_award")) {
+            for (const award of node.querySelectorAll<HTMLElement>(".review_award")) {
                 // More button shows up after 3 awards
                 if (award.classList.contains("more_btn")) {
                     award.setAttribute("onclick", "UserReview_ShowMoreAwards(this);");
                 } else {
-                    const selected = award.dataset.tooltipHtml.match(/animated\/(\d+)\.png/)[1];
+                    const selected = award.dataset.tooltipHtml!.match(/animated\/(\d+)\.png/)![1];
                     award.setAttribute("onclick", `UserReview_Award(${loggedIn}, "${loginURL}", "${id}", OnUserReviewAward, ${selected});`);
                 }
             }
@@ -123,8 +148,8 @@ export default class FReviewSort extends Feature {
                 for (const container of containers) {
                     const type = container.id.startsWith("ReviewVisibility") ? "Visibility" : "Language";
                     const arg = `Review${type}${id}`;
-                    const input = container.querySelector("input");
-                    const trigger = container.querySelector(".trigger");
+                    const input = container.querySelector<HTMLInputElement>("input")!;
+                    const trigger = container.querySelector<HTMLElement>(".trigger")!;
                     const selections = container.querySelectorAll(".dropcontainer a");
 
                     input.setAttribute("onchange", `OnReview${type}Change("${id}", "${arg}");`);
@@ -143,36 +168,30 @@ export default class FReviewSort extends Feature {
 
             // Otherwise you have buttons to vote for and award the review
             } else {
-                const [upvote, downvote, funny, award] = node.querySelectorAll(".control_block > .btn_small_thin");
+                const [upvote, downvote, funny, award] = node.querySelectorAll<HTMLElement>(".control_block > .btn_small_thin");
 
                 for (const btn of [upvote, downvote, funny]) {
-                    btn.setAttribute("href", "javascript:void(0)"); // eslint-disable-line no-script-url
+                    btn!.setAttribute("href", "javascript:void(0)"); // eslint-disable-line no-script-url
                 }
 
-                upvote.setAttribute("onclick", `UserReviewVoteUp(${loggedIn}, "${loginURL}", "${id}");`);
-                downvote.setAttribute("onclick", `UserReviewVoteDown(${loggedIn}, "${loginURL}", "${id}");`);
-                funny.setAttribute("onclick", `UserReviewVoteTag(${loggedIn}, "${loginURL}", "${id}");`);
-                award.setAttribute("onclick", `UserReview_Award(${loggedIn}, "${loginURL}", "${id}", OnUserReviewAward);`);
+                upvote!.setAttribute("onclick", `UserReviewVoteUp(${loggedIn}, "${loginURL}", "${id}");`);
+                downvote!.setAttribute("onclick", `UserReviewVoteDown(${loggedIn}, "${loginURL}", "${id}");`);
+                funny!.setAttribute("onclick", `UserReviewVoteTag(${loggedIn}, "${loginURL}", "${id}");`);
+                award!.setAttribute("onclick", `UserReview_Award(${loggedIn}, "${loginURL}", "${id}", OnUserReviewAward);`);
             }
         });
     }
 
-    async _getReviews() {
-
-        Page.runInPageContext((processing, wait) => {
-            window.SteamFacade.showBlockingWaitDialog(processing, wait);
-        }, [L(__processing), L(__wait)]);
+    async _getReviews(): Promise<void> {
+        SteamFacade.showBlockingWaitDialog(L(__processing), L(__wait));
 
         try {
-            this._reviews = await Background.action("reviews", this._path, this._pages);
+            this._reviews = await SteamCommunityApiFacade.getReviews(this._path, this._pages);
         } finally {
 
             // Delay half a second to avoid dialog flicker when grabbing cache
             await TimeUtils.timer(500);
-
-            Page.runInPageContext(() => {
-                window.SteamFacade.dismissActiveModal();
-            });
+            SteamFacade.dismissActiveModal();
         }
     }
 }

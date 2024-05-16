@@ -66,10 +66,6 @@
             return CollapseLongStrings(selector);
         }
 
-        static adjustVisibleAppTags(selector) {
-            return AdjustVisibleAppTags($J(selector));
-        }
-
         static updatePlaytimeFilterValues(hourMin, hourMax) {
             return UpdatePlaytimeFilterValues(hourMin, hourMax);
         }
@@ -88,10 +84,6 @@
 
         static bindAutoFlyoutEvents() {
             BindAutoFlyoutEvents();
-        }
-
-        static sliderOnChange(value) {
-            return g_player.SliderOnChange(value);
         }
 
         // dynamic store
@@ -199,10 +191,6 @@
 
         static jqPost(url, settings) {
             return $J.post(url, settings);
-        }
-
-        static jqTrigger(selector, eventName) {
-            return $J(selector).trigger(eventName);
         }
     }
 

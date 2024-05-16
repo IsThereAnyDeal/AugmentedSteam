@@ -1,5 +1,5 @@
 import BackgroundSender from "@Core/BackgroundSimple";
-import type {TFetchBadgeInfoResponse, TLogin} from "@Background/Modules/Community/_types";
+import type {TFetchBadgeInfoResponse, TFetchReviewsResponse, TLogin} from "@Background/Modules/Community/_types";
 import {EAction} from "@Background/EAction";
 
 export default class SteamCommunityApiFacade {
@@ -10,6 +10,10 @@ export default class SteamCommunityApiFacade {
 
     static async getWorkshopFileSize(id: number, preventFetch: boolean): Promise<number|null> {
         return await BackgroundSender.send2(EAction.WorkshopFileSize, {id, preventFetch});
+    }
+
+    static async getReviews(steamId: string, pages: number): Promise<TFetchReviewsResponse> {
+        return await BackgroundSender.send2(EAction.Reviews, {steamId, pages});
     }
 
     static async login(profilePath: string): Promise<TLogin> {

@@ -4,7 +4,7 @@
  * @match *://steamcommunity.com/workshop/filedetails[/*]
  */
 
-import {CommunityPage} from "../../CommunityPage";
-import {CSharedFiles} from "./CSharedFiles";
+import CommunityPage from "../../CommunityPage";
+import CSharedFiles from "./CSharedFiles";
 
-(new CommunityPage()).run(CSharedFiles);
+(new CommunityPage()).run(() => new CSharedFiles());
