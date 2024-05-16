@@ -87,7 +87,8 @@ interface TBundleGame {
 export interface TProfileData {
     badges: Array<{
         title: string,
-        img: string
+        img: string,
+        link?: string
     }>,
     steamrep: Array<string>
     style: string|null

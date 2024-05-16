@@ -2,21 +2,25 @@ import HTML from "@Core/Html/Html";
 import HTMLParser from "@Core/Html/HtmlParser";
 import {__steamClientChat, __webBrowserChat} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
-import {Feature, User} from "../../../modulesContent";
-import {Page} from "../../Page";
+import Feature from "@Content/Modules/Context/Feature";
+import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
+import User from "@Content/Modules/User";
+import DOMHelper from "@Content/Modules/DOMHelper";
 
-export default class FChatDropdownOptions extends Feature {
+export default class FChatDropdownOptions extends Feature<CProfileHome> {
 
-    checkPrerequisites() {
+    override checkPrerequisites(): boolean {
         return User.isSignedIn;
     }
 
-    apply() {
+    override apply(): void {
 
         const sendButton = document.querySelector("div.profile_header_actions > a[href*=OpenFriendChat]");
         if (!sendButton) { return; }
 
-        const {"steamid": friendSteamId} = HTMLParser.getObjectVariable("g_rgProfileData");
+        const data = HTMLParser.getObjectVariable<{steamid: string}>("g_rgProfileData");
+        const friendSteamId = data?.steamid;
+        if (!friendSteamId) { return; }
 
         HTML.replace(sendButton,
             `<span class="btn_profile_action btn_medium" id="profile_chat_dropdown_link">
@@ -35,22 +39,6 @@ export default class FChatDropdownOptions extends Feature {
                 </div>
             </div>`);
 
-        document.querySelector("#btnWebChat").addEventListener("click", () => {
-            Page.runInPageContext(steamId => {
-                window.SteamFacade.openFriendChatInWebChat(steamId);
-            }, [friendSteamId]);
-        });
-
-        document.querySelector("#profile_chat_dropdown_link").addEventListener("click", () => {
-            Page.runInPageContext(() => {
-                window.SteamFacade.showMenu("profile_chat_dropdown_link", "profile_chat_dropdown", "right");
-            });
-        });
-
-        document.querySelector("#profile_chat_dropdown").addEventListener("click", () => {
-            Page.runInPageContext(() => {
-                window.SteamFacade.hideMenu("profile_chat_dropdown_link", "profile_chat_dropdown");
-            });
-        });
+        DOMHelper.insertScript("scriptlets/Community/ProfileHome/chatDropdownOptions.js", {friendSteamId});
     }
 }

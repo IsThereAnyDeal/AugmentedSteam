@@ -35,8 +35,8 @@ export default class SteamFacade {
         strTitle: string,
         strDescription: string,
         strOKButton: string|null=null
-    ): void {
-        Messenger.call(MessageHandler.SteamFacade, "showAlertDialog", [
+    ): Promise<void> {
+        return Messenger.get(MessageHandler.SteamFacade, "showAlertDialog", [
             strTitle, strDescription, strOKButton
         ]);
     }
@@ -139,12 +139,6 @@ export default class SteamFacade {
     static vCurrencyFormat(amount: number, currencyCode: string): Promise<string> {
         return Messenger.get(MessageHandler.SteamFacade, "vCurrencyFormat", [amount, currencyCode])
     }
-
-//    // friends
-
-//    static openFriendChatInWebChat(chatId) {
-//        return OpenFriendChatInWebChat(chatId);
-//    }
 
 //    // community
 

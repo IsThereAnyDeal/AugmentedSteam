@@ -19,6 +19,7 @@ export default class Context {
         this.type = type;
 
         for (let ref of features) {
+            // @ts-ignore
             const feature = new ref(this);
             this.featureMap.set(feature.constructor, feature)
         }

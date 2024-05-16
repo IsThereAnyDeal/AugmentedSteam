@@ -1,16 +1,21 @@
-import {__close, __copied, __steamidOfUser, __viewSteamid} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
-import {Clipboard, Feature, SteamIdDetail} from "../../../modulesContent";
-import {Page} from "../../Page";
+import {__close, __copied, __steamidOfUser, __viewSteamid} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
+import Feature from "@Content/Modules/Context/Feature";
+import Settings from "@Options/Data/Settings";
+import HTML from "@Core/Html/Html";
+import ExtensionResources from "@Core/ExtensionResources";
+import {SteamIdDetail} from "@Content/Modules/SteamId";
+import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import Clipboard from "@Content/Modules/Clipboard";
 
-export default class FViewSteamId extends Feature {
+export default class FViewSteamId extends Feature<CProfileHome> {
 
-    checkPrerequisites() {
-        return SyncedStorage.get("profile_steamid");
+    override checkPrerequisites(): boolean {
+        return Settings.profile_steamid && this.context.steamId !== null;
     }
 
-    apply() {
+    override apply(): void {
 
         const dropdown = document.querySelector("#profile_action_dropdown .popup_body.popup_menu");
         if (dropdown) {
@@ -28,16 +33,17 @@ export default class FViewSteamId extends Feature {
             }
         }
 
-        document.querySelector("#es_steamid").addEventListener("click", () => { this._showSteamIdDialog(); });
+        document.querySelector("#es_steamid")!
+            .addEventListener("click", () => this._showSteamIdDialog());
     }
 
-    _showSteamIdDialog() {
+    private async _showSteamIdDialog(): Promise<void> {
 
-        async function copySteamId(e) {
-            const elem = e.target.closest(".es-copy");
+        async function copySteamId(e: MouseEvent) {
+            const elem = (<HTMLElement>(e.target)).closest(".es-copy");
             if (!elem) { return; }
 
-            const result = await Clipboard.set(elem.querySelector(".es-copy__id").textContent);
+            const result = await Clipboard.set(elem.querySelector<HTMLElement>(".es-copy__id")!.textContent!);
             if (!result) { return; }
 
             elem.addEventListener("transitionend", () => {
@@ -51,7 +57,7 @@ export default class FViewSteamId extends Feature {
 
         const imgUrl = ExtensionResources.getURL("img/clippy.svg");
 
-        const steamId = new SteamIdDetail(this.context.steamId);
+        const steamId = new SteamIdDetail(this.context.steamId!);
         const ids = [
             steamId.id2,
             steamId.id3,
@@ -72,26 +78,13 @@ export default class FViewSteamId extends Feature {
                     </p>`;
         }
 
-        Page.runInPageContext((steamidOfUser, html, close) => {
-            const f = window.SteamFacade;
-            f.hideMenu("profile_action_dropdown_link", "profile_action_dropdown");
 
-            const dialog = f.showAlertDialog(
-                steamidOfUser.replace("__user__", f.global("g_rgProfileData").personaname),
-                html,
-                close
-            );
-
-            return new Promise(resolve => {
-                dialog.done(() => { resolve(); });
-            });
-        },
-        [
-            L(__steamidOfUser),
+        SteamFacade.hideMenu("profile_action_dropdown_link", "profile_action_dropdown");
+        await SteamFacade.showAlertDialog(
+            L(__steamidOfUser).replace("__user__", (await SteamFacade.global("g_rgProfileData")).personaname),
             html,
-            L(__close),
-        ],
-        "closeDialog")
-            .then(() => { document.removeEventListener("click", copySteamId); });
+            L(__close)
+        );
+        document.removeEventListener("click", copySteamId);
     }
 }

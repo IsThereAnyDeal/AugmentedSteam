@@ -1,32 +1,34 @@
-import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
-import {DOMHelper, Feature} from "../../../modulesContent";
+import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
+import Feature from "@Content/Modules/Context/Feature";
+import Settings from "@Options/Data/Settings";
+import DOMHelper from "@Content/Modules/DOMHelper";
+import HTML from "@Core/Html/Html";
+import ExtensionResources from "@Core/ExtensionResources";
 
-export default class FCustomStyle extends Feature {
+export default class FCustomStyle extends Feature<CProfileHome> {
 
-    constructor(context) {
-        super(context);
+    // Synced with available options in CProfileEdit/FStyleSelection
+    private readonly _availableStyles = new Set([
+        "goldenprofile2020",
+        "winter2019",
+        "goldenprofile",
+        "holiday2014",
+        "blue",
+        "clear",
+        "green",
+        "orange",
+        "pink",
+        "purple",
+        "red",
+        "teal",
+        "yellow",
+        "grey",
+    ]);
 
-        // Synced with available options in CProfileEdit/FStyleSelection
-        this._availableStyles = new Set([
-            "goldenprofile2020",
-            "winter2019",
-            "goldenprofile",
-            "holiday2014",
-            "blue",
-            "clear",
-            "green",
-            "orange",
-            "pink",
-            "purple",
-            "red",
-            "teal",
-            "yellow",
-            "grey",
-        ]);
-    }
+    private style: string = "";
 
-    async checkPrerequisites() {
-        if (this.context.isPrivateProfile || !SyncedStorage.get("show_custom_themes")) {
+    override async checkPrerequisites(): Promise<boolean> {
+        if (this.context.isPrivateProfile || !Settings.show_custom_themes) {
             return false;
         }
 
@@ -39,21 +41,20 @@ export default class FCustomStyle extends Feature {
             return false;
         }
 
-        this._data = result.style;
+        this.style = result.style;
         return true;
     }
 
-    apply() {
-
-        const style = this._data;
+    override apply(): void {
+        const style = this.style;
 
         document.body.classList.add("es_profile_style");
 
         switch (style) {
             case "winter2019": {
-                DOMHelper.insertRemoteStylesheet("//community.cloudflare.steamstatic.com/public/css/promo/winter2019/goldenprofile.css");
+                DOMHelper.insertRemoteStylesheet("https://community.cloudflare.steamstatic.com/public/css/promo/winter2019/goldenprofile.css");
 
-                const profilePageNode = document.querySelector(".no_header.profile_page");
+                const profilePageNode = document.querySelector(".no_header.profile_page")!;
                 profilePageNode.classList.add("golden_profile");
                 HTML.wrap("<div class='profile_golden_wrapper'></div>", profilePageNode);
 
@@ -94,14 +95,14 @@ export default class FCustomStyle extends Feature {
 
                 HTML.afterBegin(".profile_header_bg_texture", "<div class='golden_profile_header'></div>");
 
-                document.querySelector(".playerAvatar.profile_header_size").classList.add("golden");
-
+                document.querySelector(".playerAvatar.profile_header_size")!.classList.add("golden");
                 break;
             }
+
             case "goldenprofile2020": {
                 DOMHelper.insertRemoteStylesheet("//community.cloudflare.steamstatic.com/public/css/promo/lny2020/goldenprofile.css");
 
-                const profilePageNode = document.querySelector(".no_header.profile_page");
+                const profilePageNode = document.querySelector(".no_header.profile_page")!;
                 profilePageNode.classList.add("golden_profile");
                 HTML.wrap("<div class='profile_golden_wrapper'></div>", profilePageNode);
 
@@ -117,7 +118,7 @@ export default class FCustomStyle extends Feature {
 
                 HTML.afterBegin(".profile_header_bg_texture", "<div class='golden_profile_header'></div>");
 
-                const avatarNode = document.querySelector(".playerAvatar.profile_header_size");
+                const avatarNode = document.querySelector(".playerAvatar.profile_header_size")!;
                 avatarNode.classList.add("golden");
                 HTML.afterBegin(avatarNode, "<div class='goldenAvatarOverlay'></div>");
 
@@ -132,17 +133,17 @@ export default class FCustomStyle extends Feature {
                             </video>
                         </div>`);
 
-                    for (const node of [document.body, profilePageNode, profilePageNode.querySelector(".profile_content")]) {
+                    for (const node of [document.body, profilePageNode, profilePageNode.querySelector(".profile_content")!]) {
                         node.classList.add("has_profile_background");
                     }
                 }
-
                 break;
             }
+
             case "goldenprofile": {
                 DOMHelper.insertRemoteStylesheet("//community.cloudflare.steamstatic.com/public/css/promo/lny2019/goldenprofile.css");
 
-                const profilePageNode = document.querySelector(".no_header.profile_page");
+                const profilePageNode = document.querySelector(".no_header.profile_page")!;
                 profilePageNode.classList.add("golden_profile");
                 HTML.wrap("<div class='profile_golden_wrapper'></div>", profilePageNode);
 
@@ -173,28 +174,28 @@ export default class FCustomStyle extends Feature {
                         <div class="lny_pig_center"></div>
                     </div>`);
 
-                document.querySelector(".playerAvatar.profile_header_size").classList.add("golden");
-
+                document.querySelector(".playerAvatar.profile_header_size")!.classList.add("golden");
                 break;
             }
+
             case "holiday2014":
                 DOMHelper.insertRemoteStylesheet("//community.cloudflare.steamstatic.com/public/css/skin_1/holidayprofile.css");
 
                 HTML.beforeEnd(".profile_header_bg_texture", "<div class='holidayprofile_header_overlay'></div>");
-                document.querySelector(".no_header.profile_page").classList.add("holidayprofile");
+                document.querySelector(".no_header.profile_page")!.classList.add("holidayprofile");
 
-                DOMHelper.insertScript({"src": ExtensionResources.getURL("js/extra/holidayprofile.js")});
-
+                DOMHelper.insertScript(ExtensionResources.getURL("js/extra/holidayprofile.js"));
                 break;
+
             case "clear":
                 document.body.classList.add("es_style_clear");
                 break;
+
             default: {
                 DOMHelper.insertStylesheet(`img/profile_styles/${style}/style.css`);
 
                 const headerImg = ExtensionResources.getURL(`img/profile_styles/${style}/header.jpg`);
-                document.querySelector(".profile_header_bg_texture").style.backgroundImage = `url(${headerImg})`;
-
+                document.querySelector<HTMLElement>(".profile_header_bg_texture")!.style.backgroundImage = `url(${headerImg})`;
                 break;
             }
         }

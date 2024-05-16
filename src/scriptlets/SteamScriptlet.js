@@ -27,7 +27,11 @@
         }
 
         static showAlertDialog(strTitle, strDescription, strOKButton) {
-            ShowAlertDialog(strTitle, strDescription, strOKButton);
+            return new Promise(resolve => {
+                ShowAlertDialog(strTitle, strDescription, strOKButton)
+                    .done(result => resolve())
+                    .fail(() => resolve());
+            })
         }
 
         static showBlockingWaitDialog(strTitle, strDescription) {

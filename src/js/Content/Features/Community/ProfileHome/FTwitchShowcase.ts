@@ -1,41 +1,49 @@
-import {__twitch_nowStreaming, __twitch_viewers} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML, SyncedStorage} from "../../../../modulesCore";
-import {Background, Feature, User} from "../../../modulesContent";
+import {__twitch_nowStreaming, __twitch_viewers} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import Feature from "@Content/Modules/Context/Feature";
+import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
+import Settings from "@Options/Data/Settings";
+import User from "@Content/Modules/User";
+import HTML from "@Core/Html/Html";
+import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 
-export default class FTwitchShowcase extends Feature {
+export default class FTwitchShowcase extends Feature<CProfileHome> {
 
-    checkPrerequisites() {
-        if (!SyncedStorage.get("profile_showcase_twitch")) { return false; }
+    override checkPrerequisites(): boolean {
+        if (!Settings.profile_showcase_twitch) {
+            return false;
+        }
 
         // Don't show our Twitch.tv showcase on our own profile
         return !User.isSignedIn
-            || SyncedStorage.get("profile_showcase_own_twitch")
+            || Settings.profile_showcase_own_twitch
             || window.location.pathname !== User.profilePath;
     }
 
-    async apply() {
+    override async apply(): Promise<void> {
 
         let selector = ".profile_summary a[href*='twitch.tv/']";
-        if (!SyncedStorage.get("profile_showcase_twitch_profileonly")) {
+        if (!Settings.profile_showcase_twitch_profileonly) {
             selector += ", .customtext_showcase a[href*='twitch.tv/']";
         }
-        const search = document.querySelector(selector);
+        const search = document.querySelector<HTMLAnchorElement>(selector);
         if (!search) { return; }
 
         const m = search.href.match(/twitch\.tv\/(.+)/);
         if (!m) { return; }
 
-        const twitchId = m[1].replace(/\//g, "");
+        const twitchId = m[1]!.replace(/\//g, "");
 
-        const data = await Background.action("twitch.stream", twitchId);
+        const data = await AugmentedSteamApiFacade.fetchTwitchStream(twitchId);
         if (Array.isArray(data)) { return; }
 
         const channelUsername = data.user_name;
         const channelUrl = search.href;
         const channelGame = data.game;
-        const channelViewers = data.viewer_count;
-        const previewUrl = `${data.thumbnail_url.replace("{width}", 636).replace("{height}", 358)}?${Math.random()}`;
+        const channelViewers = data.view_count;
+        const previewUrl = data.thumbnail_url
+            .replace("{width}", "636")
+            .replace("{height}", "358") + "?" + Math.random();
 
         HTML.afterBegin(".profile_leftcol",
             `<div class="profile_customization" id="es_twitch">
