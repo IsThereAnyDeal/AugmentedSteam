@@ -1,9 +1,9 @@
-import {ContextType} from "../../../modulesContent";
-import {CCommunityBase} from "../CCommunityBase";
+import { ContextType } from "@Content/Modules/Context/ContextType";
+import CCommunityBase from "../CCommunityBase";
 import FAchievementSort from "./FAchievementSort";
 import FShowHiddenAchievements from "./FShowHiddenAchievements";
 
-export class CProfileStats extends CCommunityBase {
+export default class CProfileStats extends CCommunityBase {
 
     constructor() {
 

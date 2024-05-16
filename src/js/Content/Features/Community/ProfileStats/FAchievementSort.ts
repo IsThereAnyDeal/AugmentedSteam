@@ -1,10 +1,12 @@
-import {Feature, RequestData, Sortbox} from "../../../modulesContent";
-import type {CProfileStats} from "./CProfileStats";
 import {DateTime, type DateTimeOptions} from "luxon";
 import {__dateUnlocked, __theworddefault} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Language from "@Core/Localization/Language";
 import HTML from "@Core/Html/Html";
+import Feature from "@Content/Modules/Context/Feature";
+import type CProfileStats from "@Content/Features/Community/ProfileStats/CProfileStats";
+import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
+import RequestData from "@Content/Modules/RequestData";
 
 interface DateFormatSettings {
     format: string,
@@ -33,24 +35,26 @@ export default class FAchievementSort extends Feature<CProfileStats> {
             throw new Error("Did not find #personalAchieve node");
         }
 
-        const sortbox = Sortbox.get(
-            "achievements",
-            [
-                ["default", L(__theworddefault)],
-                ["time", L(__dateUnlocked)],
-            ],
-            "default_ASC",
-            (sortBy: "time"|"default", reversed: boolean) => { this._sortRows(sortBy, reversed); },
-        );
-        if (sortbox === null) {
-            throw new Error("Failed to create Sortbox");
-        }
-
         const tabs = document.getElementById("tabs");
         if (tabs === null) {
             throw new Error("Did not find #tabs");
         }
-        tabs.insertAdjacentElement("beforebegin", sortbox);
+
+        (new SortBox({
+            target: tabs.parentElement!,
+            anchor: tabs,
+            props: {
+                name: "achievements",
+                options: [
+                    ["default", L(__theworddefault)],
+                    ["time", L(__dateUnlocked)],
+                ],
+                value: "default_ASC"
+            }
+        })).$on("change", e => {
+            const {key, direction} = e.detail;
+            this._sortRows(key, direction < 0);
+        })
     }
 
     private getDateFormat(language: string): DateFormatSettings|null {
@@ -115,7 +119,7 @@ export default class FAchievementSort extends Feature<CProfileStats> {
             const url = new URL(window.location.origin + window.location.pathname);
             url.searchParams.set("l", "english");
 
-            const data = await RequestData.getHttp(url.toString());
+            const data = await RequestData.getText(url.toString());
             const nodes = HTML.toDom(data).querySelectorAll(".achieveUnlockTime");
             if (nodes.length !== this.defaultSort.length) {
                 throw new Error("Achievement nodes mismatch");
@@ -140,7 +144,7 @@ export default class FAchievementSort extends Feature<CProfileStats> {
         }
     }
 
-    private async _sortRows(sortBy: "time"|"default", reversed: boolean) {
+    private async _sortRows(sortBy: string, reversed: boolean) {
         if (!this.bookmark) {
             await this.onFirstSort();
         }
