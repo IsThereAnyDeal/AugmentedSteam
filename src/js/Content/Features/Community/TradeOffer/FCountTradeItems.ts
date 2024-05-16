@@ -1,22 +1,23 @@
-import {__tradeoffer_numItem, __tradeoffer_numItems} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML} from "../../../../modulesCore";
-import {Feature} from "../../../Modules/Feature/Feature";
+import {__tradeoffer_numItem, __tradeoffer_numItems} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import type CTradeOffer from "@Content/Features/Community/TradeOffer/CTradeOffer";
+import Feature from "@Content/Modules/Context/Feature";
+import HTML from "@Core/Html/Html";
 
-export default class FCountTradeItems extends Feature {
+export default class FCountTradeItems extends Feature<CTradeOffer> {
 
-    checkPrerequisites() {
+    override checkPrerequisites(): boolean {
         return document.querySelector(".error_page_links") === null;
     }
 
-    apply() {
+    override apply(): void {
 
         HTML.afterEnd(
-            document.querySelector("#your_slots").parentNode,
+            document.querySelector("#your_slots")!.parentNode as HTMLElement,
             '<div id="your_slots_count" class="trade_item_box"><span id="your_items_count"></span></div>',
         );
         HTML.afterEnd(
-            document.querySelector("#their_slots").parentNode,
+            document.querySelector("#their_slots")!.parentNode as HTMLElement,
             "<div id='their_slots_count' class='trade_item_box'><span id='their_items_count'></span></div>",
         );
 
@@ -24,21 +25,21 @@ export default class FCountTradeItems extends Feature {
 
             for (const mutation of mutations) {
 
-                for (const node of mutation.addedNodes) {
+                for (const node of mutation.addedNodes as NodeListOf<HTMLElement>) {
 
                     if (!node.classList || !node.classList.contains("item")) { continue; }
 
-                    const yourItemsCountNode = document.querySelector("#your_items_count");
-                    const theirItemsCountNode = document.querySelector("#their_items_count");
+                    const yourItemsCountNode = document.querySelector("#your_items_count")!;
+                    const theirItemsCountNode = document.querySelector("#their_items_count")!;
 
                     const yourItems = document.querySelectorAll("#your_slots .has_item").length;
                     if (yourItems > 0) {
                         yourItemsCountNode.textContent = L(yourItems === 1 ? __tradeoffer_numItem : __tradeoffer_numItems, {
                             "num": yourItems
                         });
-                        document.querySelector("#your_slots_count").style.display = "block"; // TODO slideDown
+                        document.querySelector<HTMLElement>("#your_slots_count")!.style.display = "block"; // TODO slideDown
                     } else {
-                        document.querySelector("#your_slots_count").style.display = "none"; // TODO slideUp
+                        document.querySelector<HTMLElement>("#your_slots_count")!.style.display = "none"; // TODO slideUp
                     }
 
                     const theirItems = document.querySelectorAll("#their_slots .has_item").length;
@@ -46,9 +47,9 @@ export default class FCountTradeItems extends Feature {
                         theirItemsCountNode.textContent = L(theirItems === 1 ? __tradeoffer_numItem : __tradeoffer_numItems, {
                             "num": theirItems
                         });
-                        document.querySelector("#their_slots_count").style.display = "block"; // TODO slideDown
+                        document.querySelector<HTMLElement>("#their_slots_count")!.style.display = "block"; // TODO slideDown
                     } else {
-                        document.querySelector("#their_slots_count").style.display = "none"; // TODO slideUp
+                        document.querySelector<HTMLElement>("#their_slots_count")!.style.display = "none"; // TODO slideUp
                     }
 
                     yourItemsCountNode.className = "";

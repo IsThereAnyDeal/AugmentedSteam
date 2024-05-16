@@ -3,15 +3,13 @@
  * @match *://steamcommunity.com/tradeoffer/*
  */
 
-import {CTradeOffer} from "./CTradeOffer";
+import CTradeOffer from "./CTradeOffer";
 import "../../../../../css/community/tradeoffer.css"
-
-import {Localization, SyncedStorage} from "../../../../modulesCore";
+import Localization from "@Core/Localization/Localization";
 
 (async function() {
 
     try {
-        await SyncedStorage;
         await Localization;
     } catch (err) {
         console.group("Augmented Steam initialization");
@@ -22,5 +20,5 @@ import {Localization, SyncedStorage} from "../../../../modulesCore";
         return;
     }
 
-    new CTradeOffer().applyFeatures();
+    (new CTradeOffer()).applyFeatures();
 })();
