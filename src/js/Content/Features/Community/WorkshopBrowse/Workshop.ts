@@ -1,25 +1,33 @@
-import {RequestData, User} from "../../modulesContent";
+import User from "@Content/Modules/User";
+import RequestData from "@Content/Modules/RequestData";
 
 export default class Workshop {
 
-    static async changeSubscription(id, appid, method = "subscribe") {
+    static async changeSubscription(id: string, appid: number, method: string = "subscribe"): Promise<void>
+    {
+        if (!User.sessionId) {
+            throw new Error();
+        }
 
         const _method = method === "subscribe" ? method : "unsubscribe";
 
-        const data = {"sessionid": User.sessionId, appid, id};
+        const data = {
+            sessionid: User.sessionId,
+            appid: String(appid),
+            id
+        };
 
-        const res = await RequestData.post(`https://steamcommunity.com/sharedfiles/${_method}`, data);
+        const response = await RequestData.post(`https://steamcommunity.com/sharedfiles/${_method}`, data);
 
         if (method === "subscribe") {
+            const data = await response.json();
             // https://github.com/SteamDatabase/SteamTracking/blob/3ab40a4604426852de8a51c50d963978e9660de4/steamcommunity.com/public/javascript/sharedfiles_functions_logged_in.js#L533
-            switch (res.success) {
+            switch (data.success) {
                 case 1: break;
                 case 15: throw new Error("You do not have permission to subscribe to this item.");
                 case 25: throw new Error("You cannot subscribe to this item because you have reached the limit of 15,000 subscriptions across all products on Steam.");
                 default: throw new Error("There was a problem trying to subscribe to this item. Please try again later.");
             }
         }
-
-        return res;
     }
 }

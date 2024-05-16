@@ -32,7 +32,8 @@ interface LocalStorageSchema extends StorageSchema {
         saleTotal: number
     },
     popular_refresh: boolean,
-    expand_slider: boolean
+    expand_slider: boolean,
+    workshop_state: string
 }
 
 class LocalStorage<Schema extends StorageSchema> extends Storage<ns.LocalStorageArea, Schema>{

@@ -1,14 +1,20 @@
 import AppId from "@Core/GameId/AppId";
-import {GameId, HTML, LocalStorage} from "../../../../modulesCore";
-import {Feature, RequestData} from "../../../modulesContent";
-import {Page} from "../../Page";
+import type CWorkshop from "@Content/Features/Community/Workshop/CWorkshop";
+import Feature from "@Content/Modules/Context/Feature";
+import HTML from "@Core/Html/Html";
+import LocalStorage from "@Core/Storage/LocalStorage";
+import RequestData from "@Content/Modules/RequestData";
+import DOMHelper from "@Content/Modules/DOMHelper";
 
-export default class FBrowseWorkshops extends Feature {
+export default class FBrowseWorkshops extends Feature<CWorkshop> {
 
-    apply() {
+    override async apply(): Promise<void> {
 
         for (const tab of document.querySelectorAll(".browseOption")) {
             const a = tab.querySelector("a");
+            if (!a) {
+                continue;
+            }
             const href = a.href;
             a.removeAttribute("href");
 
@@ -21,14 +27,16 @@ export default class FBrowseWorkshops extends Feature {
                 HTML.wrap('<div style="position: relative;"></div>', tab);
             }
 
-            const newTab = HTML.replace(tab, tab.outerHTML); // Sanitize click listeners
+            const newTab = HTML.replace(tab, tab.outerHTML)!; // Sanitize click listeners
 
             newTab.addEventListener("click", () => {
                 const url = new URL(href, "https://steamcommunity.com/workshop/");
                 const query = url.searchParams.get("browsesort");
                 LocalStorage.set("workshop_state", url.search);
-                window.history.pushState(null, null, url.search);
-                this._changeTab(query);
+                window.history.pushState(null, "", url.search);
+                if (query) {
+                    this._changeTab(query);
+                }
             });
         }
 
@@ -37,27 +45,29 @@ export default class FBrowseWorkshops extends Feature {
         if (url.searchParams.has("browsesort")) {
             LocalStorage.set("workshop_state", url.search);
         } else {
-            const search = LocalStorage.get("workshop_state");
+            const search = await LocalStorage.get("workshop_state") ?? "";
             if (search) {
                 url = new URL(search, "https://steamcommunity.com/workshop/");
                 const query = url.searchParams.get("browsesort");
-                this._changeTab(query);
+                if (query) {
+                    this._changeTab(query);
+                }
             }
         }
     }
 
-    async _changeTab(query, start = 0, count = 8) {
+    private async _changeTab(query: string, start: number = 0, count: number = 8): Promise<void> {
         const tab = document.querySelector(`.${query}`);
-        if (tab.hasAttribute("disabled")) { return; }
+        if (!tab || tab.hasAttribute("disabled")) { return; }
 
         tab.setAttribute("disabled", "disabled");
 
-        tab.before(document.querySelector(".browseOptionImage"));
+        tab.before(document.querySelector(".browseOptionImage")!);
 
         document.querySelectorAll(".browseOption").forEach(tab => tab.classList.add("notSelected"));
         tab.classList.remove("notSelected");
 
-        const container = document.querySelector("#workshop_appsRows");
+        const container = document.querySelector("#workshop_appsRows")!;
         HTML.inner(container,
             `<div class="LoadingWrapper">
                 <div class="LoadingThrobber" style="margin: 170px auto;">
@@ -67,28 +77,33 @@ export default class FBrowseWorkshops extends Feature {
                 </div>
             </div>`);
 
-        const params = new URLSearchParams({query, start, count});
-        const result = await RequestData.getJson(`https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?${params}`);
+        const params = new URLSearchParams({
+            query,
+            start: String(start),
+            count: String(count)
+        });
+        const result = await RequestData.getJson<{
+            results_html: string,
+            total_count: number
+        }>(`https://steamcommunity.com/sharedfiles/ajaxgetworkshops/render/?${params}`);
         HTML.inner(container, result.results_html);
 
         // Restore onclick attribute
-        for (const img of document.querySelectorAll(".appCover img")) {
+        for (const img of document.querySelectorAll<HTMLImageElement>(".appCover img")) {
             const appid = AppId.fromCDNUrl(img.src);
-            img.closest(".app").addEventListener("click", () => {
-                top.location.href = `https://steamcommunity.com/app/${appid}/workshop/`;
+            img.closest(".app")!.addEventListener("click", () => {
+                if (window.top) {
+                    window.top.location.href = `https://steamcommunity.com/app/${appid}/workshop/`;
+                }
             });
         }
 
         tab.removeAttribute("disabled");
 
-        Page.runInPageContext((query, totalCount, count) => {
-            /* eslint-disable camelcase, no-undef, new-cap */
-            g_oSearchResults.m_iCurrentPage = 0;
-            g_oSearchResults.m_strQuery = query;
-            g_oSearchResults.m_cTotalCount = totalCount;
-            g_oSearchResults.m_cPageSize = count;
-            g_oSearchResults.UpdatePagingDisplay();
-            /* eslint-enable camelcase, no-undef, new-cap */
-        }, [query, result.total_count, count]);
+        DOMHelper.insertScript("scriptlets/Community/Workshop/changeTab.js", {
+            query,
+            totalCount: result.total_count,
+            count
+        });
     }
 }
