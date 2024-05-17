@@ -9,20 +9,20 @@ export default class InventoryApiFacade {
         return BackgroundSender.send2(EAction.Inventory_GetCoupon, {appid});
     }
 
-    static async getCouponsAppids(appids: number[]): Promise<Set<number>> {
-        return new Set<number>(
+    static async getCouponsAppids(appids: number[]): Promise<Set<string>> {
+        return new Set<string>(
             await BackgroundSender.send2(EAction.Inventory_GetCouponsAppids, {appids})
         );
     }
 
-    static async getGiftsAppids(appids: number[]): Promise<Set<number>> {
-        return new Set<number>(
+    static async getGiftsAppids(appids: number[]): Promise<Set<string>> {
+        return new Set<string>(
             await BackgroundSender.send2(EAction.Inventory_GetGiftsAppids, {appids})
         );
     }
 
-    static async getPassesAppids(appids: number[]): Promise<Set<number>> {
-        return new Set<number>(
+    static async getPassesAppids(appids: number[]): Promise<Set<string>> {
+        return new Set<string>(
             await BackgroundSender.send2(EAction.Inventory_GetPassesAppids, {appids})
         );
     }

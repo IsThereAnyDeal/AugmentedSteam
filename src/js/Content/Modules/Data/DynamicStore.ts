@@ -40,16 +40,14 @@ export default class DynamicStore {
     static async getAppsStatus(storeIds: string[]): Promise<{
         ignored: Set<string>,
         ignoredOwned: Set<string>,
-        ownedApps: Set<string>,
-        ownedSubs: Set<string>,
+        owned: Set<string>,
         wishlisted: Set<string>
     }> {
         const dsStatus = await SteamStoreApiFacade.getDynamicStoreStatus(storeIds);
         return {
             ignored: new Set(dsStatus.ignored),
             ignoredOwned: new Set(dsStatus.ignoredOwned),
-            ownedApps: new Set(dsStatus.ownedApps),
-            ownedSubs: new Set(dsStatus.ownedSubs),
+            owned: new Set(dsStatus.owned),
             wishlisted: new Set(dsStatus.wishlisted),
         }
     }
@@ -57,16 +55,14 @@ export default class DynamicStore {
     static async getAppStatus(storeId: string): Promise<{
         ignored: boolean,
         ignoredOwned: boolean,
-        ownedApps: boolean,
-        ownedSubs: boolean,
+        owned: boolean,
         wishlisted: boolean
     }> {
         const dsStatus = await SteamStoreApiFacade.getDynamicStoreStatus([storeId]);
         return {
             ignored: dsStatus.ignored.length > 0,
             ignoredOwned: dsStatus.ignoredOwned.length > 0,
-            ownedApps: dsStatus.ownedApps.length > 0,
-            ownedSubs: dsStatus.ownedSubs.length > 0,
+            owned: dsStatus.owned.length > 0,
             wishlisted: dsStatus.wishlisted.length > 0,
         }
     }

@@ -48,7 +48,6 @@ export type TFetchWishlistResponse = number|null
 export interface TDynamicStoreStatusResponse {
     ignored: string[],
     ignoredOwned: string[],
-    ownedApps: string[],
-    ownedSubs: string[],
+    owned: string[],
     wishlisted: string[],
 }

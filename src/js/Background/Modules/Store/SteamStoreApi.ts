@@ -290,8 +290,7 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
 
         let ignored: string[] = [];
         let ignoredOwned: string[] = [];
-        let ownedApps: string[] = [];
-        let ownedSubs: string[] = [];
+        let owned: string[] = [];
         let wishlisted: string[] = [];
 
         for (const strId of ids) {
@@ -308,14 +307,22 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
                 switch(key) {
                     case "ignored": ignored.push(strId); break;
                     case "ignoredOwnedElsewhere": ignoredOwned.push(strId); break;
-                    case "ownedApps": ownedApps.push(strId); break;
-                    case "ownedPackages": ownedSubs.push(strId); break;
                     case "wishlisted": wishlisted.push(strId); break;
+                    case "ownedApps":
+                        if (type === "app") {
+                            owned.push(strId);
+                        }
+                        break;
+                    case "ownedPackages":
+                        if (type === "sub") {
+                            owned.push(strId);
+                        }
+                        break;
                 }
             }
         }
 
-        return {ignored, ignoredOwned, ownedApps, ownedSubs, wishlisted};
+        return {ignored, ignoredOwned, owned, wishlisted};
     }
 
     private async dynamicStoreRandomApp(): Promise<number|null> {

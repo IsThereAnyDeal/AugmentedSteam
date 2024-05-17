@@ -223,16 +223,16 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
         return IndexedDB.getFromIndex("coupons", "idx_appid", appid);
     }
 
-    private async getCouponsAppids(appids: number[]): Promise<number[]> {
+    private async getCouponsAppids(appids: number[]): Promise<string[]> {
         await this.refreshCoupons();
 
         const tx = IndexedDB.db.transaction("coupons");
         const couponsSet = new Set(await tx.store.index("idx_appid").getAllKeys());
 
-        const result: number[] = [];
+        const result: string[] = [];
         for (let appid of appids) {
             if (couponsSet.has(appid)) {
-                result.push(appid);
+                result.push("app/"+appid);
             }
         }
 
@@ -261,16 +261,16 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
         return this.refreshGiftsPromise;
     }
 
-    private async getGiftsAppids(appids: number[]): Promise<number[]> {
+    private async getGiftsAppids(appids: number[]): Promise<string[]> {
         await this.refreshGiftsAndPasses();
 
         const tx = IndexedDB.db.transaction("giftsAndPasses");
         const giftsSet = new Set((await tx.store.get("gifts")) ?? []);
 
-        const result: number[] = [];
+        const result: string[] = [];
         for (let appid of appids) {
             if (giftsSet.has(appid)) {
-                result.push(appid);
+                result.push("app/"+appid);
             }
         }
 
@@ -279,16 +279,16 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
     }
 
 
-    private async getPassesAppids(appids: number[]): Promise<number[]> {
+    private async getPassesAppids(appids: number[]): Promise<string[]> {
         await this.refreshGiftsAndPasses();
 
         const tx = IndexedDB.db.transaction("giftsAndPasses");
         const passesSet = new Set((await tx.store.get("passes")) ?? []);
 
-        const result: number[] = [];
+        const result: string[] = [];
         for (let appid of appids) {
             if (passesSet.has(appid)) {
-                result.push(appid);
+                result.push("app/"+appid);
             }
         }
 

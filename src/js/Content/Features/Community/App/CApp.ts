@@ -7,6 +7,7 @@ import {ContextType} from "@Content/Modules/Context/ContextType";
 import AppId from "@Core/GameId/AppId";
 import type Feature from "@Content/Modules/Context/Feature";
 import type Context from "@Content/Modules/Context/Context";
+import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
 
 export default class CApp extends CCommunityBase {
 
@@ -32,7 +33,7 @@ export default class CApp extends CCommunityBase {
          */
         this.appid = AppId.fromElement(document.querySelector("a.apphub_sectionTab"));
         if (this.appid) {
-            FHighlightsTags.highlightTitle(this.appid);
+            HighlightsTagsUtils.highlightTitle(this.appid);
         }
     }
 }

@@ -3,6 +3,7 @@ import FHighlightsTags from "../../Common/FHighlightsTags";
 import Settings from "@Options/Data/Settings";
 import type CMarketSearch from "@Content/Features/Community/MarketSearch/CMarketSearch";
 import InventoryApiFacade from "@Content/Modules/Facades/InventoryApiFacade";
+import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
 
 export default class FHighlightMarketItems extends Feature<CMarketSearch> {
 
@@ -22,11 +23,11 @@ export default class FHighlightMarketItems extends Feature<CMarketSearch> {
     }
 
     private async callback(): Promise<void> {
-        const hashNamesMap = new Map();
+        const hashNamesMap: Map<string, HTMLElement> = new Map();
 
         for (const node of document.querySelectorAll<HTMLElement>(".market_listing_row")) {
             if (node.dataset.appid === "753") {
-                hashNamesMap.set(node.dataset.hashName, node);
+                hashNamesMap.set(node.dataset.hashName!, node);
             }
         }
 
@@ -35,9 +36,9 @@ export default class FHighlightMarketItems extends Feature<CMarketSearch> {
         const hashNames: string[] = Array.from(hashNamesMap.keys());
         const ownedStatus = await InventoryApiFacade.hasItem(hashNames);
 
-        for (const hashName of hashNames) {
+        for (const [hashName, node] of hashNamesMap.entries()) {
             if (ownedStatus[hashName]) {
-                FHighlightsTags.highlightOwned(hashNamesMap.get(hashName));
+                HighlightsTagsUtils.highlightOwned([node]);
             }
         }
     }
