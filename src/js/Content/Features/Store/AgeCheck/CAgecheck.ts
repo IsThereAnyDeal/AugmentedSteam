@@ -1,8 +1,9 @@
-import {Context, ContextType} from "../../../modulesContent";
 import FSkipAgecheck from "../../Common/FSkipAgecheck";
 import FFocusSearch from "../../Common/FFocusSearch";
+import Context from "@Content/Modules/Context/Context";
+import {ContextType} from "@Content/Modules/Context/ContextType";
 
-export class CAgeCheck extends Context {
+export default class CAgeCheck extends Context {
 
     constructor() {
 

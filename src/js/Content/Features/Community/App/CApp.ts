@@ -1,4 +1,3 @@
-import FHighlightsTags from "../../Common/FHighlightsTags";
 import FSkipAgecheck from "../../Common/FSkipAgecheck";
 import {FCommunityAppPageLinks} from "./FCommunityAppPageLinks.svelte";
 import {FCommunityAppPageWishlist} from "./FCommunityAppPageWishlist.svelte";
