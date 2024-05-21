@@ -51,10 +51,10 @@ export default class EarlyAccessUtils {
     private static readonly selector = (window.location.hostname === "store.steampowered.com" ? this.storeSelectors : this.communitySelectors)
         .join(",");
 
-    public static async show(nodes?: NodeListOf<HTMLElement>): Promise<void> {
+    public static async show(nodes?: NodeListOf<HTMLElement>|Array<HTMLElement>): Promise<void> {
         if (!Settings.show_early_access) { return; }
 
-        const _nodes: NodeListOf<HTMLElement> = nodes ?? document.querySelectorAll(this.selector);
+        const _nodes: NodeListOf<HTMLElement>|Array<HTMLElement> = nodes ?? document.querySelectorAll(this.selector);
         if (_nodes.length === 0) { return; }
 
         // TODO add missing images for supported locales
@@ -104,7 +104,7 @@ export default class EarlyAccessUtils {
         }
     }
 
-    static async getEaNodes(nodes: NodeListOf<HTMLElement>): Promise<HTMLElement[]> {
+    static async getEaNodes(nodes: Iterable<HTMLElement>): Promise<HTMLElement[]> {
 
         const appidsMap: Map<number, HTMLElement[]> = new Map();
 
