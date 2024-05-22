@@ -14,7 +14,7 @@ import {
     __homepageTabs,
     __homepageTopnewreleases,
 } from "@Strings/_strings";
-import type {CStoreFront} from "@Content/Features/Store/Storefront/CStoreFront";
+import CStoreFront from "@Content/Features/Store/Storefront/CStoreFront";
 import {ContextType} from "@Content/Modules/Context/ContextType";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import Customizer, {type CustomizerSetup} from "@Content/Features/Store/Common/Customizer.svelte";

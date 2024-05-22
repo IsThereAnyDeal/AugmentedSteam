@@ -1,9 +1,10 @@
-import {ContextType, User} from "../../../modulesContent";
-import {CStoreBase} from "../Common/CStoreBase";
 import FCustomizer from "../Common/FCustomizer";
 import FHomePageTab from "./FHomePageTab";
+import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
+import {ContextType} from "@Content/Modules/Context/ContextType";
+import User from "@Content/Modules/User";
 
-export class CStoreFront extends CStoreBase {
+export default class CStoreFront extends CStoreBase {
 
     constructor() {
 
@@ -17,7 +18,7 @@ export class CStoreFront extends CStoreBase {
         }
     }
 
-    monitorStoreFront() {
+    private monitorStoreFront(): void {
 
         /**
          * Lazy-loaded sections
@@ -27,8 +28,17 @@ export class CStoreFront extends CStoreBase {
         for (const node of nodes) {
             if (node.childElementCount === 0) {
                 new MutationObserver((mutations, observer) => {
-                    for (const {addedNodes} of mutations) {
-                        this.decorateStoreCapsules(addedNodes[0].children);
+                    for (const mutation of mutations) {
+                        const addedNodes = mutation.addedNodes as NodeListOf<HTMLElement>;
+
+                        let elements: HTMLElement[] = [];
+                        for (let child of addedNodes[0]!.children) {
+                            if (child instanceof HTMLElement) {
+                                elements.push(child);
+                            }
+                        }
+
+                        this.decorateStoreCapsules(elements);
                     }
                     observer.disconnect();
                 }).observe(node, {"childList": true});
@@ -44,13 +54,13 @@ export class CStoreFront extends CStoreBase {
         if (
             curatorsNode !== null
             && !curatorsNode.querySelector(".store_capsule")
-            && document.querySelector(".apps_recommended_by_curators_ctn").style.display === "none"
+            && document.querySelector<HTMLElement>(".apps_recommended_by_curators_ctn")!.style.display === "none"
         ) {
             new MutationObserver((mutations, observer) => {
                 for (const {addedNodes} of mutations) {
                     for (const node of addedNodes) {
                         if (!(node instanceof Element)) { continue; }
-                        const nodes = node.querySelectorAll(".store_capsule");
+                        const nodes = node.querySelectorAll<HTMLElement>(".store_capsule");
 
                         // This section goes through multiple rendering steps before apps show up, so don't disconnect immediately
                         if (nodes.length !== 0) {
@@ -69,7 +79,7 @@ export class CStoreFront extends CStoreBase {
                 for (const {addedNodes} of mutations) {
                     for (const node of addedNodes) {
                         if (!(node instanceof Element)) { continue; }
-                        const nodes = node.querySelectorAll(".home_content_item, .home_content.single > .gamelink");
+                        const nodes = node.querySelectorAll<HTMLElement>(".home_content_item, .home_content.single > .gamelink");
                         this.decorateStoreCapsules(nodes);
                     }
                 }
@@ -85,13 +95,14 @@ export class CStoreFront extends CStoreBase {
             new MutationObserver(mutations => {
                 for (const {addedNodes} of mutations) {
                     if (addedNodes.length > 1) {
-                        const nodes = Array.from(addedNodes)
-                            .filter(el => el instanceof Element && el.classList.contains("tab_item"));
+                        // @ts-ignore
+                        const nodes: HTMLElement[] = Array.from(addedNodes)
+                            .filter(el => el instanceof HTMLElement && el.classList.contains("tab_item"));
 
                         this.decorateStoreCapsules(nodes);
                     }
                 }
-            }).observe(topSellersTab.querySelector(".tab_content_items"), {"childList": true});
+            }).observe(topSellersTab.querySelector(".tab_content_items")!, {"childList": true});
         }
     }
 }
