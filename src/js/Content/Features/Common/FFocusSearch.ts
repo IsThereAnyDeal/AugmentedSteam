@@ -1,8 +1,9 @@
 import Feature from "@Content/Modules/Context/Feature";
 import CBase from "@Content/Features/Common/CBase";
 import CAgeCheck from "@Content/Features/Store/AgeCheck/CAgecheck";
+import type CRegisterKey from "@Content/Features/Store/RegisterKey/CRegisterKey";
 
-export default class FFocusSearch extends Feature<CBase|CAgeCheck> {
+export default class FFocusSearch extends Feature<CBase|CAgeCheck|CRegisterKey> {
 
     private _node: HTMLElement|null = null;
 

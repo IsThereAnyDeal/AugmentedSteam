@@ -15,9 +15,9 @@ export default class SteamFacade {
 
     // dialogs
 
-//    static showDialog(strTitle, strDescription, rgModalParams) {
-//        ShowDialog(strTitle, strDescription, rgModalParams);
-//    }
+    static showDialog(strTitle: string, strDescription: string, rgModalParams: any=undefined): void {
+        Messenger.call(MessageHandler.SteamFacade, "showDialog", [strTitle, strDescription, rgModalParams]);
+    }
 
     static showConfirmDialog(
         strTitle: string,

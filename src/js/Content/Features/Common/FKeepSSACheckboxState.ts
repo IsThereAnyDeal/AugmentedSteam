@@ -1,8 +1,9 @@
-import type {CBase} from "@Content/Features/Common/CBase";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
+import type CBase from "@Content/Features/Common/CBase";
+import type CRegisterKey from "@Content/Features/Store/RegisterKey/CRegisterKey";
 
-export default class FKeepSSACheckboxState extends Feature<CBase> {
+export default class FKeepSSACheckboxState extends Feature<CBase|CRegisterKey> {
 
     override apply(): void {
 

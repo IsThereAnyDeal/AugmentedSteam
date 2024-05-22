@@ -12,7 +12,7 @@ class Timer {
 
     then(
         onSuccess: ((value: void) => PromiseLike<void>|void)|undefined|null,
-        onFail: (reason: any) => PromiseLike<never>
+        onFail: ((reason: any) => PromiseLike<never>)|undefined = undefined
     ) {
         if (this._promise) {
             return this._promise.then(onSuccess, onFail);
