@@ -92,35 +92,8 @@ const DefaultSettings: SettingsSchema = Object.freeze({
         },
     ],
 
-    "customize_apppage": {
-        "recentupdates": true,
-        "reviews": true,
-        "about": true,
-        "contentwarning": true,
-        "sysreq": true,
-        "legal": true,
-        "morelikethis": true,
-        "recommendedbycurators": true,
-        "customerreviews": true
-    },
-
-    "customize_frontpage": {
-        "featuredrecommended": true,
-        "specialoffers": true,
-        "trendingamongfriends": true,
-        "discoveryqueue": true,
-        "browsesteam": true,
-        "curators": true,
-        "morecuratorrecommendations": true,
-        "recentlyupdated": true,
-        "fromdevelopersandpublishersthatyouknow": true,
-        "popularvrgames": true,
-        "homepagetabs": true,
-        "gamesstreamingnow": true,
-        "under": true,
-        "updatesandoffers": true,
-        "homepagesidebar": true
-    },
+    "customize_apppage": {},
+    "customize_frontpage": {},
 
     "show_package_info": false,
     "show_players_info": true,

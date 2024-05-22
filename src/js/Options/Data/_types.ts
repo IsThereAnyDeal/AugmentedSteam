@@ -90,35 +90,8 @@ export interface SettingsSchema {
     exfgls: boolean,
     app_custom_link: Array<TCustomLink>,
 
-    customize_apppage: {
-        recentupdates: boolean,
-        reviews: boolean,
-        about: boolean,
-        contentwarning: boolean,
-        sysreq: boolean,
-        legal: boolean,
-        morelikethis: boolean,
-        recommendedbycurators: boolean,
-        customerreviews: boolean
-    },
-
-    customize_frontpage: {
-        featuredrecommended: boolean,
-        specialoffers: boolean,
-        trendingamongfriends: boolean,
-        discoveryqueue: boolean,
-        browsesteam: boolean,
-        curators: boolean,
-        morecuratorrecommendations: boolean,
-        recentlyupdated: boolean,
-        fromdevelopersandpublishersthatyouknow: boolean,
-        popularvrgames: boolean,
-        homepagetabs: boolean,
-        gamesstreamingnow: boolean,
-        under: boolean,
-        updatesandoffers: boolean,
-        homepagesidebar: boolean
-    },
+    customize_apppage: Record<string, boolean>,
+    customize_frontpage: Record<string, boolean>,
 
     show_package_info: boolean,
     show_players_info: boolean,
