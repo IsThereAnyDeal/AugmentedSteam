@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
     import self_ from "./FLicensesSummary.svelte";
-    import {Feature} from "../../../modulesContent";
-    import type {CLicenses} from "./CLicenses";
+    import CLicenses from "@Content/Features/Store/Licenses/CLicenses";
+    import Feature from "@Content/Modules/Context/Feature";
 
     export class FLicensesSummary extends Feature<CLicenses> {
 
