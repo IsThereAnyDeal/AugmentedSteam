@@ -1,18 +1,24 @@
-import {SyncedStorage} from "../../../../modulesCore";
 import BundleOverview from "../../../Modules/Prices/BundleOverview.svelte";
 import PriceOverview from "../../../Modules/Prices/PriceOverview.svelte";
-import {Feature, Prices} from "../../../modulesContent";
+import type CBundle from "@Content/Features/Store/Bundle/CBundle";
+import Settings from "@Options/Data/Settings";
+import Feature from "@Content/Modules/Context/Feature";
+import Prices from "@Content/Modules/Prices/Prices";
+import type {TBundle, TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
+import type CSub from "@Content/Features/Store/Sub/CSub";
 
-export default class FITADPrices extends Feature {
-    checkPrerequisites() {
-        return SyncedStorage.get("showlowestprice");
+export default class FITADPrices extends Feature<CSub|CBundle> {
+
+    override checkPrerequisites(): boolean {
+        return Settings.showlowestprice;
     }
 
-    _insertPrices(type, id, data) {
-        let node;
+    _insertPrices(type: "app"|"sub"|"bundle", id: number, data: TPriceOverview) {
+        let node: HTMLElement|null = null;
         let placement = "beforebegin";
         if (type === "sub") {
-            node = document.querySelector(`input[name=subid][value="${id}"]`).closest(".game_area_purchase_game");
+            node = document.querySelector<HTMLElement>(`input[name=subid][value="${id}"]`)
+                ?.closest<HTMLElement>(".game_area_purchase_game") ?? null;
         } else if (type === "bundle") {
             node = document.querySelector(`.game_area_purchase_game_wrapper[data-ds-bundleid="${id}"]`);
             if (node) {
@@ -29,22 +35,27 @@ export default class FITADPrices extends Feature {
             }
         }
 
-        let target = node.parentElement;
-        let anchor = node;
+        if (!node) {
+            console.error("Node for adding prices not found");
+            return;
+        }
+
+        let target: Element = node.parentElement!;
+        let anchor: Element|undefined = node;
 
         if (placement === "afterbegin") {
             target = node;
-            anchor = node.firstElementChild ?? null;
+            anchor = node.firstElementChild ?? undefined;
         }
 
-        new PriceOverview({
+        (new PriceOverview({
             target,
             anchor,
             props: {data}
-        });
+        }));
     }
 
-    _insertBundles(data) {
+    _insertBundles(data: TBundle[]) {
         const target = document.querySelector("#game_area_purchase");
 
         if (target) {
@@ -52,7 +63,7 @@ export default class FITADPrices extends Feature {
 
             if (anchor) {
                 new BundleOverview({
-                    target: anchor.parentElement,
+                    target: anchor.parentElement!,
                     anchor,
                     props: {data}
                 });
@@ -60,12 +71,12 @@ export default class FITADPrices extends Feature {
         }
     }
 
-    apply() {
+    override async apply(): Promise<void> {
         const prices = new Prices();
 
-        let subs = this.context.getAllSubids().map(Number);
-        let bundles = [];
-        for (const node of document.querySelectorAll("[data-ds-bundleid]")) {
+        let subs: number[] = this.context.getAllSubids().map(Number);
+        let bundles: number[] = [];
+        for (const node of document.querySelectorAll<HTMLElement>("[data-ds-bundleid]")) {
             bundles.push(Number(node.dataset.dsBundleid));
         }
 

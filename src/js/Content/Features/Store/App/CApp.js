@@ -5,7 +5,7 @@ import FMediaExpander from "../../Common/FMediaExpander";
 import {CStoreBase} from "../Common/CStoreBase";
 import FCustomizer from "../Common/FCustomizer";
 import FDRMWarnings from "../Common/FDRMWarnings";
-import FExtraLinks from "../Common/FExtraLinks";
+import FExtraLinks from "../Common/FExtraLinksCommon";
 import FITADPrices from "../Common/FITADPrices";
 import FRegionalPricing from "../Common/FRegionalPricing";
 import {UserNotes} from "../Common/UserNotes";

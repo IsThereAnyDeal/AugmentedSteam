@@ -15,7 +15,7 @@ interface TResponse {
     bundles: TBundle[]
 }
 
-class Prices {
+export default class Prices {
 
     async _getShops(): Promise<number[]> {
         const excludedStores: number[] = Settings.excluded_stores;
@@ -52,5 +52,3 @@ class Prices {
         return result;
     }
 }
-
-export {Prices};

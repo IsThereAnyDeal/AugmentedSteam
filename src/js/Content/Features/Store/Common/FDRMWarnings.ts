@@ -1,71 +1,71 @@
+import Feature from "@Content/Modules/Context/Feature";
 import {L} from "@Core/Localization/Localization";
 import {__drmThirdParty, __drmThirdPartySub} from "@Strings/_strings";
-import {HTML, SyncedStorage} from "../../../../modulesCore";
-import {ContextType, Feature} from "../../../modulesContent";
+import type CBundle from "@Content/Features/Store/Bundle/CBundle";
+import Settings from "@Options/Data/Settings";
+import HTML from "@Core/Html/Html";
+import {ContextType} from "@Content/Modules/Context/ContextType";
+import type CSub from "@Content/Features/Store/Sub/CSub";
 
-export default class FDRMWarnings extends Feature {
+export default class FDRMWarnings extends Feature<CBundle|CSub> {
 
-    constructor(context) {
-        super(context);
+    // Exclude false-positives
+    private readonly _excludedAppids: number[] = [
+        21690 // Resident Evil 5, at Capcom's request
+    ];
 
-        // Exclude false-positives
-        this._excludedAppids = [
-            21690, // Resident Evil 5, at Capcom's request
-        ];
+    override checkPrerequisites(): boolean {
+        return Settings.showdrm && (!this.context.appid || !this._excludedAppids.includes(this.context.appid));
     }
 
-    checkPrerequisites() {
-        if (!SyncedStorage.get("showdrm")) { return false; }
-
-        return !this._excludedAppids.includes(this.context.appid);
+    private getTextFromDRMNotices(): string[] {
+        const value: string[] = [];
+        for (const node of document.querySelectorAll<HTMLElement>(".DRM_notice")) {
+            if (!node.querySelector("a[onclick^=ShowEULA]") && node.textContent) {
+                value.push(node.textContent);
+            }
+        }
+        return value;
     }
 
-    apply() {
+    getTextFromGameDetails(): string {
+        let value = "";
+        let node: Node|null = document.querySelector(".language_list");
+        if (!node) { return ""; }
+        node = node.nextSibling;
+        while (node !== null) {
+            value += node.textContent;
+            node = node.nextSibling;
+        }
+        return value;
+    }
+
+
+    override apply(): void {
 
         const isAppPage = this.context.type === ContextType.APP;
-
-        function getTextFromDRMNotices() {
-            if (!isAppPage) { return []; }
-
-            const value = [];
-            for (const node of document.querySelectorAll(".DRM_notice")) {
-                if (!node.querySelector("a[onclick^=ShowEULA]")) {
-                    value.push(node.textContent);
-                }
-            }
-            return value;
-        }
-
-        function getTextFromGameDetails() {
-            if (isAppPage) { return ""; } // Only bundle/sub pages have DRM info in game details
-
-            let value = "";
-            let node = document.querySelector(".language_list");
-            if (!node) { return ""; }
-            node = node.nextSibling;
-            while (node !== null) {
-                value += node.textContent;
-                node = node.nextSibling;
-            }
-            return value;
-        }
 
         let text = "";
         for (const node of document.querySelectorAll(".game_area_sys_req, #game_area_legal")) {
             text += node.textContent;
         }
 
-        const drmNotices = getTextFromDRMNotices();
-        text += drmNotices.join("");
+        // Only bundle/sub pages have DRM info in game details
+        let drmNotices: string[] = [];
+        let gameDetails: string = "";
+        if (!isAppPage) {
+            drmNotices = this.getTextFromDRMNotices();
+            text += drmNotices.join("");
 
-        const gameDetails = getTextFromGameDetails();
-        text += gameDetails;
+            gameDetails = this.getTextFromGameDetails();
+            text += gameDetails;
+        }
 
         text = text.toLowerCase();
 
         // Games for Windows Live detection
         const gfwl
-                = text.includes("games for windows live")
+             = text.includes("games for windows live")
             || text.includes("games for windows - live")
             || text.includes("online play requires log-in to games for windows")
             || text.includes("installation of the games for windows live software")
@@ -74,7 +74,7 @@ export default class FDRMWarnings extends Feature {
 
         // Ubisoft Connect detection
         const ubisoft
-                = text.includes("uplay")
+             = text.includes("uplay")
             || text.includes("ubisoft account");
 
         // Securom detection
@@ -82,7 +82,7 @@ export default class FDRMWarnings extends Feature {
 
         // Tages detection
         const tages
-                = text.match(/\b(tages|solidshield)\b/)
+              = text.match(/\b(tages|solidshield)\b/)
             && !text.match(/angebote des tages/);
 
         // Stardock account detection
@@ -90,7 +90,7 @@ export default class FDRMWarnings extends Feature {
 
         // Rockstar social club detection
         const rockstar
-                = text.includes("rockstar social club")
+             = text.includes("rockstar social club")
             || text.includes("rockstar games social club");
 
         // Kalypso Launcher detection
@@ -101,7 +101,7 @@ export default class FDRMWarnings extends Feature {
 
         // EA app (Origin) detection
         const eaApp
-                = text.includes("origin client")
+             = text.includes("origin client")
             || text.includes("ea account")
             || text.includes("ea app");
 

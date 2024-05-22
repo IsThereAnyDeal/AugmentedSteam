@@ -1,25 +1,45 @@
 import {__regionUnavailable} from "@Strings/_strings";
-import {HTML, SyncedStorage} from "../../../../modulesCore";
-import {CurrencyManager, Feature, Price, RequestData, User} from "../../../modulesContent";
+import type CSub from "@Content/Features/Store/Sub/CSub";
+import Feature from "@Content/Modules/Context/Feature";
+import User from "@Content/Modules/User";
+import RequestData from "@Content/Modules/RequestData";
+import Price from "@Content/Modules/Currency/Price";
+import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
+import HTML from "@Core/Html/Html";
+import {L} from "@Core/Localization/Localization";
+import Settings from "@Options/Data/Settings";
 
-export default class FRegionalPricing extends Feature {
+interface PackageDetailsPrice {
+    currency: string,
+    initial: number,
+    final: number,
+    discount_percent: number,
+    individual: number
+}
 
-    constructor(context) {
-        super(context);
+interface PackageDetails {
+    [K: string]: {
+        success: boolean,
+        data: {
+            price: PackageDetailsPrice
+        }
+    }
+}
 
-        // Store error messages to avoid duplicate console warnings
-        this._errors = new Set();
+export default class FRegionalPricing extends Feature<CSub> {
+
+    // Store error messages to avoid duplicate console warnings
+    private _errors: Set<string> = new Set();
+
+    override checkPrerequisites(): boolean {
+        const countries = Settings.regional_countries;
+        return countries && countries.length > 0 && Settings.showregionalprice !== "off";
     }
 
-    checkPrerequisites() {
-        const countries = SyncedStorage.get("regional_countries");
-        return countries && countries.length > 0 && SyncedStorage.get("showregionalprice") !== "off";
-    }
+    override async apply(): Promise<void> {
 
-    async apply() {
-
-        const showRegionalPrice = SyncedStorage.get("showregionalprice");
-        const countries = SyncedStorage.get("regional_countries");
+        const showRegionalPrice = Settings.showregionalprice;
+        const countries = Settings.regional_countries;
         const localCountry = User.storeCountry.toLowerCase();
 
         if (!countries.includes(localCountry)) {
@@ -27,17 +47,19 @@ export default class FRegionalPricing extends Feature {
         }
 
         for (const subid of this.context.getAllSubids()) {
-
-            const prices = {};
+            const prices: {[P: string]: PackageDetailsPrice} = {};
 
             await Promise.all(countries.map(async country => {
-                const result = await RequestData.getJson(
+                const result = await RequestData.getJson<PackageDetails>(
                     `https://store.steampowered.com/api/packagedetails/?packageids=${subid}&cc=${country}`,
                     {"credentials": "omit"}
                 );
 
-                if (!result || !result[subid] || !result[subid].success || !result[subid].data.price) { return; }
-                prices[country] = result[subid].data.price;
+                if (!result || !result[subid]) { return; }
+
+                const data = result[subid]!;
+                if (!data.success || !data.data.price) { return; }
+                prices[country] = data.data.price;
             }));
 
             const apiPrice = prices[User.storeCountry.toLowerCase()];
@@ -47,9 +69,10 @@ export default class FRegionalPricing extends Feature {
 
             let priceLocal;
             try {
-                priceLocal = new Price(apiPrice.final / 100, apiPrice.currency).inCurrency(CurrencyManager.customCurrency);
-            } catch (err) {
-                this._handleError(err);
+                priceLocal = (new Price(apiPrice.final / 100, apiPrice.currency))
+                    .inCurrency(CurrencyManager.customCurrency);
+            } catch (e) {
+                this._handleError(e);
             }
 
             const pricingDiv = document.createElement("div");
@@ -60,32 +83,35 @@ export default class FRegionalPricing extends Feature {
             }
 
             for (const country of countries) {
-                HTML.beforeEnd(pricingDiv, this._getCountryHTML(country, prices[country], priceLocal));
+                if (!prices[country] || !priceLocal) {
+                    continue;
+                }
+                HTML.beforeEnd(pricingDiv, this._getCountryHTML(country, prices[country]!, priceLocal));
             }
 
-            const node = document.querySelector(`input[name=subid][value="${subid}"]`)
-                .closest(".game_area_purchase_game_wrapper, #game_area_purchase")
-                .querySelector(".game_purchase_action");
+            const node = document.querySelector(`input[name=subid][value="${subid}"]`)!
+                .closest(".game_area_purchase_game_wrapper, #game_area_purchase")!
+                .querySelector(".game_purchase_action")!;
 
-            const purchaseArea = node.closest(".game_area_purchase_game");
+            const purchaseArea = node.closest(".game_area_purchase_game")!;
             purchaseArea.classList.add("es_regional_prices");
 
             if (showRegionalPrice === "always") {
                 node.insertAdjacentElement("beforebegin", pricingDiv);
                 purchaseArea.classList.add("es_regional_always");
             } else {
-                const priceNode = node.querySelector(".price, .discount_prices");
+                const priceNode = node.querySelector(".price, .discount_prices")!;
                 priceNode.insertAdjacentElement("beforeend", pricingDiv);
                 priceNode.classList.add("es_regional_onmouse");
 
-                if (!SyncedStorage.get("regional_hideworld")) {
+                if (!Settings.regional_hideworld) {
                     priceNode.classList.add("es_regional_icon");
                 }
             }
         }
     }
 
-    _getCountryHTML(country, apiPrice, priceLocal) {
+    private _getCountryHTML(country: string, apiPrice: PackageDetailsPrice, priceLocal: Price): string {
         let html = "";
 
         if (apiPrice) {
@@ -101,7 +127,7 @@ export default class FRegionalPricing extends Feature {
 
             if (priceLocal && priceUser) {
                 let percentageIndicator = "equal";
-                let percentage = (((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2);
+                let percentage = Number((((priceUser.value / priceLocal.value) * 100) - 100).toFixed(2));
 
                 if (percentage < 0) {
                     percentage = Math.abs(percentage);
@@ -122,7 +148,7 @@ export default class FRegionalPricing extends Feature {
         return html;
     }
 
-    _handleError(err, country) {
+    private _handleError(e: any, country: string|undefined=undefined): void {
         const message = country
             ? `Can't show converted price and relative price differences for country code ${country.toUpperCase()}`
             : "Can't show relative price differences to any other currencies";
@@ -131,7 +157,7 @@ export default class FRegionalPricing extends Feature {
             this._errors.add(message);
 
             console.group("Regional pricing");
-            console.error(err);
+            console.error(e);
             console.warn(message);
             console.groupEnd();
         }

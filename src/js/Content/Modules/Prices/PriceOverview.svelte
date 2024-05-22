@@ -17,7 +17,7 @@
 
     export let data: TPriceOverview;
     export let setBottom: boolean = false;
-    export let height: number|undefined;
+    export let height: number|undefined = undefined;
 
     let node: HTMLElement;
     let currentDrms: string[];

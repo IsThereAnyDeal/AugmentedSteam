@@ -3,8 +3,8 @@ import ExtensionResources from "@Core/ExtensionResources";
 
 export default class DOMHelper {
 
-    static selectLastNode(parent: HTMLElement|Document, selector: string): Element|null {
-        const nodes = parent.querySelectorAll(selector);
+    static selectLastNode<T extends Element=Element>(parent: HTMLElement|Document, selector: string): T|null {
+        const nodes = parent.querySelectorAll<T>(selector);
         return nodes[nodes.length - 1] ?? null;
     }
 
