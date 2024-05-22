@@ -1,19 +1,21 @@
 import {L} from "@Core/Localization/Localization";
 import {__previewBackground} from "@Strings/_strings";
-import {HTML} from "../../../../modulesCore";
-import {Feature, User} from "../../../modulesContent";
+import User from "@Content/Modules/User";
+import type CPointsShop from "@Content/Features/Store/PointsShop/CPointsShop";
+import Feature from "@Content/Modules/Context/Feature";
+import HTML from "@Core/Html/Html";
 
-export default class FBackgroundPreviewLink extends Feature {
+export default class FBackgroundPreviewLink extends Feature<CPointsShop> {
 
-    checkPrerequisites() {
+    override checkPrerequisites(): boolean {
         return User.isSignedIn;
     }
 
-    async apply() {
+    override async apply(): Promise<void> {
 
-        let modalEl = document.querySelector(".FullModalOverlay");
+        let modalEl = document.querySelector<HTMLElement>(".FullModalOverlay");
         if (!modalEl) {
-            await new Promise(resolve => {
+            await new Promise<void>(resolve => {
                 new MutationObserver((_, observer) => {
                     modalEl = document.querySelector(".FullModalOverlay");
                     if (modalEl) {
@@ -30,7 +32,8 @@ export default class FBackgroundPreviewLink extends Feature {
          */
         new MutationObserver(mutations => {
             let container;
-            outer: for (const {addedNodes} of mutations) {
+            outer: for (const mutation of mutations) {
+                const addedNodes = mutation.addedNodes as NodeListOf<HTMLElement>;
                 for (const node of addedNodes) {
                     if (node.classList.contains("ModalPosition")) {
                         container = node;
@@ -40,32 +43,31 @@ export default class FBackgroundPreviewLink extends Feature {
             }
             if (!container) { return; }
 
-            let previewEl;
+            let previewEl: HTMLElement|null = null;
             for (const node of container.querySelectorAll("div")) {
 
                 // https://store.cloudflare.steamstatic.com/public/images/applications/store/background_preview.png
                 const bg = getComputedStyle(node).backgroundImage;
                 if (/\/background_preview\.png/.test(bg)) {
-                    previewEl = node.nextElementSibling;
+                    previewEl = <HTMLElement|null>(node.nextElementSibling);
                     break;
                 }
             }
             if (!previewEl) { return; }
 
-            let bgLink = previewEl.tagName === "VIDEO"
-                ? previewEl.querySelector("source").src // Use the first source (usually webm format, should be well supported)
+            const bgLinkSource = previewEl.tagName === "VIDEO"
+                ? previewEl.querySelector("source")!.src // Use the first source (usually webm format, should be well supported)
                 : previewEl.style.backgroundImage;
 
-            bgLink = bgLink.match(/images\/items\/(\d+)\/([a-z0-9.]+)/i);
-
+            const bgLink = bgLinkSource.match(/images\/items\/(\d+)\/([a-z0-9.]+)/i);
             if (!bgLink) { return; }
 
-            HTML.beforeBegin(previewEl.parentNode,
+            HTML.beforeBegin(previewEl.parentNode as Element|null,
                 `<div class="as_preview_background_ctn">
                     <a class="as_preview_background" target="_blank" href="${User.profileUrl}#previewBackground/${bgLink[1]}/${bgLink[2]}">
                         ${L(__previewBackground)}
                     </a>
                 </div>`);
-        }).observe(modalEl, {"childList": true, "subtree": true});
+        }).observe(modalEl!, {"childList": true, "subtree": true});
     }
 }

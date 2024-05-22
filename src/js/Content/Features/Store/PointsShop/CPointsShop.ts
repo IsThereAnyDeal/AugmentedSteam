@@ -1,7 +1,8 @@
-import {Context, ContextType} from "../../../modulesContent";
 import FBackgroundPreviewLink from "./FBackgroundPreviewLink";
+import Context from "@Content/Modules/Context/Context";
+import {ContextType} from "@Content/Modules/Context/ContextType";
 
-export class CPointsShop extends Context {
+export default class CPointsShop extends Context {
 
     constructor() {
 
