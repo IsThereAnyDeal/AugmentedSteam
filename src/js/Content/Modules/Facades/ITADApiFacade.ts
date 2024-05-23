@@ -32,6 +32,14 @@ export default class ITADApiFacade {
         return BackgroundSender.send2(EAction.InWaitlist, {storeIds});
     }
 
+    static async addToWaitlist(...appids: number[]) {
+        return BackgroundSender.send2(EAction.AddToWaitlist, {appids});
+    }
+
+    static async removeFromWaitlist(...appids: number[]) {
+        return BackgroundSender.send2(EAction.RemoveFromWaitlist, {appids});
+    }
+
     static async inCollection(storeIds: string[]): Promise<TInCollectionResponse> {
         return BackgroundSender.send2(EAction.InCollection, {storeIds});
     }

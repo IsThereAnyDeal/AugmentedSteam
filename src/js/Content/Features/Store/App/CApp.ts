@@ -5,7 +5,6 @@ import FDRMWarnings from "../Common/FDRMWarnings";
 import FExtraLinks from "../Common/FExtraLinksCommon";
 import FITADPrices from "../Common/FITADPrices";
 import FRegionalPricing from "../Common/FRegionalPricing";
-import {UserNotes} from "../Common/UserNotes";
 import {FAchievementBar} from "./FAchievementBar.svelte";
 import FAStatsLink from "./FAStatsLink";
 import {FBadgeProgress} from "./FBadgeProgress.svelte";
@@ -38,13 +37,13 @@ import FSteamDeckCompatibility from "./FSteamDeckCompatibility";
 import FSteamPeek from "./FSteamPeek";
 import FSupportInfo from "./FSupportInfo";
 import FUserNotes from "./FUserNotes.js";
-import FWaitlistDropdown from "./FWaitlistDropdown";
 import FWidescreenCertification from "./FWidescreenCertification";
 import {ContextType} from "@Content/Modules/Context/ContextType";
 import FExtraLinksApp from "@Content/Features/Store/Common/FExtraLinksApp";
 import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
+import FWaitlistDropdown from "@Content/Features/Store/App/FWaitlistDropdown";
 
 export default class CApp extends CStoreBase {
 

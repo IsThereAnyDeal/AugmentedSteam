@@ -79,10 +79,19 @@ export default class SteamFacade {
 //        return UpdatePlaytimeFilterValues(hourMin, hourMax);
 //    }
 
-//    // @param appid required, rest is optional
-//    static removeFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2) {
-//        return RemoveFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2);
-//    }
+    // @param appid required, rest is optional
+    static removeFromWishlist(
+        appid: number,
+        divToHide: string|undefined = undefined,
+        divToShowSuccess: string|undefined = undefined,
+        divToShowError: string|undefined = undefined,
+        navref: string|undefined = undefined,
+        divToHide2: string|undefined = undefined,
+    ) {
+        Messenger.call(MessageHandler.SteamFacade, "removeFromWishlist", [
+            appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2
+        ]);
+    }
 
 //    // @param subid can be number or array
 //    static addItemToCart(subid, bundleid, navdata) {
