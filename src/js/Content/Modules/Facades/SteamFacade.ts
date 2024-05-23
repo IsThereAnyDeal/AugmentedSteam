@@ -71,9 +71,9 @@ export default class SteamFacade {
 
     // app pages
 
-//    static collapseLongStrings(selector) {
-//        return CollapseLongStrings(selector);
-//    }
+    static collapseLongStrings(selector: string): void {
+        Messenger.call(MessageHandler.SteamFacade, "collapseLongStrings", [selector]);
+    }
 
 //    static updatePlaytimeFilterValues(hourMin, hourMax) {
 //        return UpdatePlaytimeFilterValues(hourMin, hourMax);

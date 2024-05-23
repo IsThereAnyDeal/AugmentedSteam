@@ -7,7 +7,7 @@ import type {
     TFetchProfileBackgroundsGamesResponse,
     TFetchProfileBackgroundsResponse,
     TFetchRatesResponse,
-    TFetchStorePageDataResponse,
+    TStorePageData,
     TFetchTwitchStreamResponse,
     TIsEarlyAccessResponse, TProfileData,
     TSimilarResponse
@@ -31,7 +31,7 @@ export default class AugmentedSteamApiFacade {
         return BackgroundSender.send2(EAction.DlcInfo, {appid});
     }
 
-    static getStorePageData(appid: number): Promise<TFetchStorePageDataResponse> {
+    static getStorePageData(appid: number): Promise<TStorePageData> {
         return BackgroundSender.send2(EAction.DlcInfo, {appid});
     }
 

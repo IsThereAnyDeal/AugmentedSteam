@@ -104,7 +104,7 @@ export interface TFetchPricesResponse {
     bundles: TBundle[]
 }
 
-export interface TFetchStorePageDataResponse {
+export interface TStorePageData {
     family_sharing: boolean,
     players: {
         recent: number,

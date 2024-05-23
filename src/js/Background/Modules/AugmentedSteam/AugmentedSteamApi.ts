@@ -10,7 +10,7 @@ import type {
     TFetchProfileBackgroundsGamesResponse,
     TFetchProfileBackgroundsResponse,
     TFetchRatesResponse,
-    TFetchStorePageDataResponse,
+    TStorePageData,
     TFetchTwitchStreamResponse,
     TIsEarlyAccessResponse,
     TSimilarResponse
@@ -25,7 +25,7 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
         super(Config.ApiServerHost);
     }
 
-    private async fetchStorePageData(appid: number): Promise<TFetchStorePageDataResponse> {
+    private async fetchStorePageData(appid: number): Promise<TStorePageData> {
         const url = this.getUrl(`app/${appid}/v2`);
         return this.fetchJson(url);
     }
@@ -119,7 +119,7 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
         return IndexedDB.delete("profiles", steamId);
     }
 
-    async getStorePageData(appid: number): Promise<TFetchStorePageDataResponse> {
+    async getStorePageData(appid: number): Promise<TStorePageData> {
         const ttl = 60*60;
         let data = await IndexedDB.get("storePageData", appid);
 

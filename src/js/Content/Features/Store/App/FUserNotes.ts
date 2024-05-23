@@ -1,14 +1,19 @@
 import {__userNote_add, __userNote_update} from "@Strings/_strings";
-import {HTML, SyncedStorage} from "../../../../modulesCore";
-import {Feature, User} from "../../../modulesContent";
+import User from "@Content/Modules/User";
+import Settings from "@Options/Data/Settings";
+import type CApp from "@Content/Features/Store/App/CApp";
+import Feature from "@Content/Modules/Context/Feature";
+import HTML from "@Core/Html/Html";
+import {L} from "@Core/Localization/Localization";
+import UserNotes from "@Content/Features/Store/Common/UserNotes";
 
-export default class FUserNotes extends Feature {
+export default class FUserNotes extends Feature<CApp> {
 
-    checkPrerequisites() {
-        return User.isSignedIn && SyncedStorage.get("user_notes_app");
+    override checkPrerequisites(): boolean {
+        return User.isSignedIn && Settings.user_notes_app;
     }
 
-    async apply() {
+    override async apply(): Promise<void> {
 
         HTML.beforeBegin(".queue_actions_ctn > :last-child",
             `<div id="esi-user-note-button" class="queue_control_button">
@@ -23,10 +28,10 @@ export default class FUserNotes extends Feature {
         HTML.beforeEnd(".queue_actions_ctn",
             '<div id="esi-store-user-note" class="esi-note esi-note--store ellipsis"></div>');
 
-        const button = document.querySelector("#esi-user-note-button");
-        const noteEl = document.querySelector("#esi-store-user-note");
+        const button = document.querySelector("#esi-user-note-button")!;
+        const noteEl = document.querySelector<HTMLDivElement>("#esi-store-user-note")!;
 
-        const userNotes = this.context.userNotes;
+        const userNotes = new UserNotes();
         const note = await userNotes.get(this.context.appid);
 
         if (typeof note !== "undefined") {

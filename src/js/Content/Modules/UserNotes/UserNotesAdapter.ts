@@ -4,6 +4,8 @@ import SyncedStorageAdapter from "@Content/Modules/UserNotes/Adapters/SyncedStor
 import IdbAdapter from "@Content/Modules/UserNotes/Adapters/IdbAdapter";
 import type {SettingsSchema} from "@Options/Data/_types";
 
+// TODO merge with UserNotes class?
+
 export default class UserNotesAdapter {
 
     private static adapter: any|undefined = undefined;

@@ -1,16 +1,16 @@
 import LocalStorage from "@Core/Storage/LocalStorage";
-import TimeUtils from "@Core/Utils/TimeUtils";
-import {Feature} from "../../../Modules/Feature/Feature";
+import TimeUtils, {ResettableTimer} from "@Core/Utils/TimeUtils";
+import Feature from "@Content/Modules/Context/Feature";
+import type CApp from "@Content/Features/Store/App/CApp";
 
-export default class FHDPlayer extends Feature {
+export default class FHDPlayer extends Feature<CApp> {
 
-    checkPrerequisites() {
+    override checkPrerequisites(): boolean {
         return document.querySelector("div.highlight_movie") !== null;
     }
 
-    apply() {
-
-        for (const container of document.querySelectorAll("div.highlight_movie")) {
+    override apply(): void {
+        for (const container of document.querySelectorAll<HTMLDivElement>("div.highlight_movie")) {
 
             // Check if the video has already loaded
             if (container.children[0] instanceof HTMLVideoElement) {
@@ -32,38 +32,41 @@ export default class FHDPlayer extends Feature {
         }
     }
 
-    _clickHDControl() {
-        const playInHD = LocalStorage.get("playback_hd");
+    private async _clickHDControl(): Promise<void> {
+        const playInHD = await LocalStorage.get("playback_hd") ?? false;
 
         // When the "HD" button is clicked change the definition for all videos accordingly
-        for (const node of document.querySelectorAll("video.highlight_movie")) {
+        for (const node of document.querySelectorAll<HTMLVideoElement>("video.highlight_movie")) {
             this.context.toggleVideoDefinition(node, !playInHD);
         }
 
-        LocalStorage.set("playback_hd", !playInHD);
+        await LocalStorage.set("playback_hd", !playInHD);
     }
 
-    _addHDControl(container) {
-        const video = container.children[0];
+    private async _addHDControl(container: HTMLElement): Promise<void> {
+        const video = container.children[0] as HTMLVideoElement;
 
         const btn = document.createElement("div");
         btn.classList.add("es_hd_toggle");
         btn.textContent = "HD";
         btn.addEventListener("click", () => { this._clickHDControl(); });
-        container.querySelector(".time").after(btn);
+        container.querySelector(".time")!.after(btn);
 
         // Toggle fullscreen on double click
         video.addEventListener("dblclick", () => {
-            container.querySelector(".fullscreen_button").click();
+            container.querySelector<HTMLButtonElement>(".fullscreen_button")!.click();
         });
 
-        this.context.toggleVideoDefinition(video, LocalStorage.get("playback_hd"));
+        this.context.toggleVideoDefinition(video, (await LocalStorage.get("playback_hd")) ?? false);
     }
 
-    _addMouseMoveHandler(container) {
+    private _addMouseMoveHandler(container: HTMLElement): void {
         // There may be a 3rd element - the titlebar, but Steam hides it after playing the video for 5s
-        const [video, overlay] = container.children;
-        let timer;
+        const children = container.children;
+        const video: HTMLVideoElement = children[0] as HTMLVideoElement;
+        const overlay: HTMLElement = children[1] as HTMLElement;
+
+        let timer: ResettableTimer|null = null;
 
         video.addEventListener("mousemove", () => {
             if (timer) {

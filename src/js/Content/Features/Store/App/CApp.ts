@@ -1,8 +1,5 @@
 import AppId from "@Core/GameId/AppId";
-import {GameId} from "../../../../modulesCore";
-import {Background, ContextType, FeatureManager} from "../../../modulesContent";
 import FMediaExpander from "../../Common/FMediaExpander";
-import {CStoreBase} from "../Common/CStoreBase";
 import FCustomizer from "../Common/FCustomizer";
 import FDRMWarnings from "../Common/FDRMWarnings";
 import FExtraLinks from "../Common/FExtraLinksCommon";
@@ -40,21 +37,44 @@ import FShowCoupon from "./FShowCoupon";
 import FSteamDeckCompatibility from "./FSteamDeckCompatibility";
 import FSteamPeek from "./FSteamPeek";
 import FSupportInfo from "./FSupportInfo";
-import FUserNotes from "./FUserNotes";
+import FUserNotes from "./FUserNotes.js";
 import FWaitlistDropdown from "./FWaitlistDropdown";
 import FWidescreenCertification from "./FWidescreenCertification";
+import {ContextType} from "@Content/Modules/Context/ContextType";
+import FExtraLinksApp from "@Content/Features/Store/Common/FExtraLinksApp";
+import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
+import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
+import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
 
-export class CApp extends CStoreBase {
+export default class CApp extends CStoreBase {
+
+    public readonly isErrorPage: boolean = false;
+    public readonly storeid: string;
+    public readonly appid: number;
+    public readonly communityAppid: number;
+    public readonly appName: string;
+
+    public readonly metalink: string|null = null;
+    public readonly hasAchievements: boolean = false;
+
+    public readonly isOwned: boolean = false;
+    public readonly isOwnedAndPlayed: boolean = false;
+
+    public readonly isDlc: boolean = false;
+    public readonly isDlcLike: boolean = false;
+
+    public readonly isVideoOrHardware: boolean = false;
+
+    public readonly data: Promise<TStorePageData>;
 
     constructor() {
 
         // Only add extra links if there's an error message (e.g. region-locked, age-gated)
         if (document.getElementById("error_box") !== null) {
-            super(ContextType.APP, [FExtraLinks]);
+            super(ContextType.APP, [FExtraLinksApp]);
 
             this.isErrorPage = true;
-            this.appid = AppId.fromUrl(window.location.host + window.location.pathname);
-
+            this.appid = AppId.fromUrl(window.location.host + window.location.pathname)!;
             return;
         }
 
@@ -101,17 +121,17 @@ export class CApp extends CStoreBase {
             FRemoveDupeScreenshots,
         ]);
 
-        this.appid = AppId.fromUrl(window.location.host + window.location.pathname);
+        this.appid = AppId.fromUrl(window.location.host + window.location.pathname)!;
         this.storeid = `app/${this.appid}`;
 
         // Some games (e.g. 201270, 201271) have different appid in store page and community
         this.communityAppid = AppId.fromCDNUrl(
-            document.querySelector(".apphub_AppIcon img")?.getAttribute("src")
+            document.querySelector<HTMLImageElement>(".apphub_AppIcon img")?.src ?? ""
         ) ?? this.appid;
 
         this.appName = document.querySelector(".apphub_AppName")?.textContent ?? "";
 
-        this.metalink = document.querySelector("#game_area_metalink a")?.getAttribute("href") ?? null;
+        this.metalink = document.querySelector<HTMLAnchorElement>("#game_area_metalink a")?.href ?? null;
 
         // #achievement_block is also used for point shop items
         this.hasAchievements = document.querySelector(".communitylink_achievement_images") !== null;
@@ -122,7 +142,9 @@ export class CApp extends CStoreBase {
         this.isDlc = document.querySelector(".game_area_dlc_bubble") !== null;
         this.isDlcLike = this.isDlc || document.querySelector(".game_area_soundtrack_bubble") !== null;
 
-        const category = new URLSearchParams(document.querySelector(".breadcrumbs a")?.search).get("category1");
+        const category = new URLSearchParams(
+            document.querySelector<HTMLAnchorElement>(".breadcrumbs a")?.search
+        ).get("category1");
 
         /**
          * `true` for non-application items, or if system requirements section is missing (usually hardware)
@@ -131,18 +153,14 @@ export class CApp extends CStoreBase {
          */
         this.isVideoOrHardware = category === "992" || category === "993" || !document.querySelector(".sys_req");
 
-        this.userNotes = new UserNotes();
-        this.data = this.storePageDataPromise().catch(err => { console.error(err); });
+        this.data = AugmentedSteamApiFacade.getStorePageData(this.appid)
+            .catch(e => console.error(e));
 
         // FPackBreakdown skips purchase options with a package info button to avoid false positives
-        FeatureManager.dependency(FPackageInfoButton, [FPackBreakdown, true]);
+        this.dependency(FPackageInfoButton, [FPackBreakdown, true]);
 
         // FHDPlayer needs to wait for mp4 sources to be set
-        FeatureManager.dependency(FHDPlayer, [FForceMP4, true]);
-    }
-
-    storePageDataPromise() {
-        return Background.action("storepagedata", this.appid);
+        this.dependency(FHDPlayer, [FForceMP4, true]);
     }
 
     /**
@@ -150,15 +168,15 @@ export class CApp extends CStoreBase {
      * @param {boolean} setHD - set HD or SD source
      * @param {boolean} [force] - force set source, only current use is in FForceMP4, where we need to set mp4 source regardless of HD
      */
-    toggleVideoDefinition(videoEl, setHD, force = false) {
-        const container = videoEl.parentNode;
+    toggleVideoDefinition(videoEl: HTMLVideoElement, setHD: boolean, force: boolean = false): void {
+        const container = videoEl.parentNode as HTMLElement;
         container.classList.toggle("es_playback_hd", setHD);
 
         // Return early if there's nothing to do, i.e. setting HD while the video is already in HD, and vice versa
         const isHD = videoEl.src === videoEl.dataset.hdSrc;
         if (!force && (setHD === isHD)) { return; }
 
-        const useWebM = /\.webm/.test(videoEl.dataset.hdSrc); // `false` if browser doesn't support webm, or if "force mp4" feature is enabled
+        const useWebM = /\.webm/.test(videoEl.dataset.hdSrc!); // `false` if browser doesn't support webm, or if "force mp4" feature is enabled
         const isVisible = container.offsetHeight > 0 && container.offsetWidth > 0;
 
         // https://github.com/SteamDatabase/SteamTracking/blob/4da99e29581ba6628ad5ce24c50856703aea71a2/store.steampowered.com/public/javascript/gamehighlightplayer.js#L1055-L1067
@@ -175,9 +193,9 @@ export class CApp extends CStoreBase {
         }, {"once": true});
 
         if (setHD) {
-            videoEl.src = useWebM ? container.dataset.webmHdSource : container.dataset.mp4HdSource;
+            videoEl.src = useWebM ? container.dataset.webmHdSource! : container.dataset.mp4HdSource!;
         } else {
-            videoEl.src = useWebM ? container.dataset.webmSource : container.dataset.mp4Source;
+            videoEl.src = useWebM ? container.dataset.webmSource! : container.dataset.mp4Source!;
         }
 
         videoEl.load();

@@ -4,6 +4,7 @@ import {L} from "@Core/Localization/Localization";
 import StringUtils from "@Core/Utils/StringUtils";
 import {__communityHub} from "@Strings/_strings";
 import AppLinks from "@Content/Features/Store/Common/ExtraLinks/AppLinks.svelte";
+import type CApp from "@Content/Features/Store/App/CApp";
 
 export default class FExtraLinksApp extends Feature<CApp> {
 
