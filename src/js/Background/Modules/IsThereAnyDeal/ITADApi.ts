@@ -338,9 +338,9 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         return IndexedDB.contains("collection", storeIds);
     }
 
-    private async getFromCollection(storeId: string) {
+    private async getFromCollection(storeId: string): Promise<string|null> {
         await this.importCollection(false);
-        return IndexedDB.get("collection", storeId);
+        return (await IndexedDB.get("collection", storeId)) ?? null;
     }
 
     async handle(message: any) {

@@ -1,16 +1,18 @@
-import {__anotherStore, __coll_inCollection, __ownedElsewhere} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML} from "../../../../modulesCore";
-import {Background, Feature} from "../../../modulesContent";
+import type CApp from "@Content/Features/Store/App/CApp";
+import Feature from "@Content/Modules/Context/Feature";
+import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
+import HTML from "@Core/Html/Html";
+import {__anotherStore, __coll_inCollection, __ownedElsewhere} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
 
-export default class FOwnedElsewhere extends Feature {
+export default class FOwnedElsewhere extends Feature<CApp> {
 
-    checkPrerequisites() {
-        return !this.context.isOwned && Background.action("itad.isconnected");
+    override async checkPrerequisites(): Promise<boolean> {
+        return !this.context.isOwned && await ITADApiFacade.isConnected();
     }
 
-    async apply() {
-        const response = await Background.action("itad.getfromcollection", this.context.storeid);
+    override async apply(): Promise<void> {
+        const response = await ITADApiFacade.getFromCollection(this.context.storeid);
         if (!response) { return; }
 
         HTML.afterEnd(".queue_overflow_ctn",

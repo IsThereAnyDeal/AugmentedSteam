@@ -103,7 +103,7 @@ export default class CStoreBase extends CBase {
         }
     }
 
-    protected decorateStoreCapsules(nodes: NodeListOf<HTMLElement>|Array<HTMLElement>): void {
+    decorateStoreCapsules(nodes: NodeListOf<HTMLElement>|Array<HTMLElement>): void {
         HighlightsTagsUtils.highlightAndTag(nodes);
         EarlyAccessUtils.show(nodes);
     }

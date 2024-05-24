@@ -1,12 +1,17 @@
-import {__userScore} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML, SyncedStorage} from "../../../../modulesCore";
-import {Feature} from "../../../Modules/Feature/Feature";
+import type CApp from "@Content/Features/Store/App/CApp";
+import Feature from "@Content/Modules/Context/Feature";
+import Settings from "@Options/Data/Settings";
+import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
+import HTML from "@Core/Html/Html";
+import {__userScore} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
 
-export default class FMetacriticUserScore extends Feature {
+export default class FMetacriticUserScore extends Feature<CApp> {
 
-    async checkPrerequisites() {
-        if (!SyncedStorage.get("showmcus") || !document.querySelector("#game_area_metascore")) {
+    private _review: TStorePageData['reviews']['metauser']|null = null;
+
+    override async checkPrerequisites(): Promise<boolean> {
+        if (!Settings.showmcus || !document.querySelector("#game_area_metascore")) {
             return false;
         }
 
@@ -19,10 +24,15 @@ export default class FMetacriticUserScore extends Feature {
         return true;
     }
 
-    apply() {
+    override apply(): void {
+        if (!this._review) {
+            return;
+        }
 
         const metauserscore = this._review.score;
-        if (isNaN(metauserscore)) { return; }
+        if (metauserscore === null) {
+            return;
+        }
 
         let rating;
         if (metauserscore >= 75) {

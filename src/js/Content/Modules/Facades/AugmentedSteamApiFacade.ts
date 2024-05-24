@@ -1,6 +1,6 @@
 import BackgroundSender from "@Core/BackgroundSimple";
 import type {
-    TFetchDlcInfoResponse,
+    TDlcInfo,
     TFetchMarketCardAveragePricesResponse,
     TFetchMarketCardPricesResponse,
     TFetchPricesResponse,
@@ -27,7 +27,7 @@ export default class AugmentedSteamApiFacade {
         return BackgroundSender.send2(EAction.Prices, {country, apps, subs, bundles, voucher, shops});
     }
 
-    static fetchDlcInfo(appid: number): Promise<TFetchDlcInfoResponse> {
+    static fetchDlcInfo(appid: number): Promise<TDlcInfo> {
         return BackgroundSender.send2(EAction.DlcInfo, {appid});
     }
 
@@ -71,7 +71,7 @@ export default class AugmentedSteamApiFacade {
         return BackgroundSender.send2(EAction.Market_AverageCardPrices, {currency, appids});
     }
 
-    static fetchSimilar(appid: number): Promise<TSimilarResponse> {
+    static fetchSteamPeek(appid: number): Promise<TSimilarResponse> {
         return BackgroundSender.send2(EAction.SteamPeek, {appid});
     }
 

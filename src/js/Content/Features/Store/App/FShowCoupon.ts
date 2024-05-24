@@ -5,20 +5,29 @@ import {
     __couponLearnMore_fullText,
     __couponLearnMore_linkText,
 } from "@Strings/_strings";
-import {HTML, SyncedStorage} from "../../../../modulesCore";
-import {CurrencyManager, Feature, Inventory, Price} from "../../../modulesContent";
+import type CApp from "@Content/Features/Store/App/CApp";
+import Feature from "@Content/Modules/Context/Feature";
+import Settings from "@Options/Data/Settings";
+import HTML from "@Core/Html/Html";
+import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
+import Price from "@Content/Modules/Currency/Price";
+import InventoryApiFacade from "@Content/Modules/Facades/InventoryApiFacade";
 
-export default class FShowCoupon extends Feature {
+export default class FShowCoupon extends Feature<CApp> {
 
-    checkPrerequisites() {
-        return SyncedStorage.get("show_coupon");
+    override checkPrerequisites(): boolean {
+        return Settings.show_coupon;
     }
 
-    async apply() {
-        const coupon = await Inventory.getCoupon(this.context.appid);
+    async apply(): Promise<void> {
+        const coupon = await InventoryApiFacade.getCoupon(this.context.appid);
         if (!coupon) { return; }
 
-        const couponDate = coupon.valid && coupon.valid.replace(/\[date](.+)\[\/date]/, (m0, m1) => { return new Date(m1 * 1000).toLocaleString(); });
+        const couponDate = coupon.valid && coupon.valid.replace(
+            /\[date](.+)\[\/date]/,
+            (_m0, m1) => {
+                return new Date(m1 * 1000).toLocaleString();
+            });
 
         HTML.beforeBegin("#game_area_purchase",
             `<div class="early_access_header es_coupon_info">
@@ -49,11 +58,11 @@ export default class FShowCoupon extends Feature {
             return;
         }
 
-        const priceNode = purchaseDiv.querySelector("[data-price-final]");
+        const priceNode = purchaseDiv.querySelector<HTMLElement>("[data-price-final]");
         if (!priceNode) { return; }
 
-        const currency = CurrencyManager.fromCode(CurrencyManager.storeCurrency);
-        const scaleFactor = 10 ** currency.format.decimalPlaces;
+        const currency = CurrencyManager.getCurrencyInfo(CurrencyManager.storeCurrency);
+        const scaleFactor = 10 ** currency.format.places;
 
         const originalPrice = Number(priceNode.dataset.priceFinal) / 100;
         const discountPrice = Math.floor(originalPrice * (coupon.discount / 100) * scaleFactor) / scaleFactor;

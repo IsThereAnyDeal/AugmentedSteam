@@ -6,8 +6,9 @@ import Feature from "@Content/Modules/Context/Feature";
 import Prices from "@Content/Modules/Prices/Prices";
 import type {TBundle, TPriceOverview} from "@Background/Modules/AugmentedSteam/_types";
 import type CSub from "@Content/Features/Store/Sub/CSub";
+import type CApp from "@Content/Features/Store/App/CApp";
 
-export default class FITADPrices extends Feature<CSub|CBundle> {
+export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
 
     override checkPrerequisites(): boolean {
         return Settings.showlowestprice;

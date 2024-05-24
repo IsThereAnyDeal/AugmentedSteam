@@ -28,6 +28,10 @@ export default class ITADApiFacade {
         return BackgroundSender.send2(EAction.Sync);
     }
 
+    static getLastImport(): Promise<TLastImportResponse> {
+        return BackgroundSender.send2(EAction.LastImport);
+    }
+
     static async inWaitlist(storeIds: string[]): Promise<TInWaitlistResponse> {
         return BackgroundSender.send2(EAction.InWaitlist, {storeIds});
     }
@@ -44,7 +48,7 @@ export default class ITADApiFacade {
         return BackgroundSender.send2(EAction.InCollection, {storeIds});
     }
 
-    static getLastImport(): Promise<TLastImportResponse> {
-        return BackgroundSender.send2(EAction.LastImport);
+    static async getFromCollection(storeId: string) {
+        return BackgroundSender.send2(EAction.InCollection, {storeId});
     }
 }

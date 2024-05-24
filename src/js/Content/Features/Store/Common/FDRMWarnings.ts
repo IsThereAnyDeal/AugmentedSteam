@@ -6,8 +6,9 @@ import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";
 import {ContextType} from "@Content/Modules/Context/ContextType";
 import type CSub from "@Content/Features/Store/Sub/CSub";
+import type CApp from "@Content/Features/Store/App/CApp";
 
-export default class FDRMWarnings extends Feature<CBundle|CSub> {
+export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
 
     // Exclude false-positives
     private readonly _excludedAppids: number[] = [

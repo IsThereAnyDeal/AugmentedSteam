@@ -10,7 +10,7 @@ import FAStatsLink from "./FAStatsLink";
 import {FBadgeProgress} from "./FBadgeProgress.svelte";
 import FDemoAbovePurchase from "./FDemoAbovePurchase";
 import FDLCCheckboxes from "./FDLCCheckboxes";
-import FDLCInfo from "./FDLCInfo";
+import {FDLCInfo} from "./FDLCInfo.svelte";
 import FFamilySharingNotice from "./FFamilySharingNotice";
 import FForceMP4 from "./FForceMP4";
 import FFullscreenScreenshotView from "./FFullscreenScreenshotView";

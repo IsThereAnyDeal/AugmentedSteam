@@ -132,13 +132,13 @@ export interface TStorePageData {
         }|null,
         opencritic: {
             score: number|null,
-            verdict: number|null,
+            verdict: string|null,
             url: string
         }|null
     }
 }
 
-export type TFetchDlcInfoResponse = Array<{
+export type TDlcInfo = Array<{
     id: number,
     name: string,
     description: string,

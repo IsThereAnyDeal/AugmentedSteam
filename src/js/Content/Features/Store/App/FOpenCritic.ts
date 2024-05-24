@@ -1,12 +1,21 @@
-import {__readReviews} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
-import {Feature} from "../../../modulesContent";
+import Feature from "@Content/Modules/Context/Feature";
+import ExtensionResources from "@Core/ExtensionResources";
+import HTML from "@Core/Html/Html";
+import {L} from "@Core/Localization/Localization";
+import {__readReviews} from "@Strings/_strings";
+import type CApp from "@Content/Features/Store/App/CApp";
+import Settings from "@Options/Data/Settings";
+import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
 
-export default class FOpenCritic extends Feature {
 
-    async checkPrerequisites() {
-        if (!SyncedStorage.get("showoc")) { return false; }
+export default class FOpenCritic extends Feature<CApp> {
+
+    private _review: TStorePageData['reviews']['opencritic']|null = null;
+
+    override async checkPrerequisites(): Promise<boolean> {
+        if (!Settings.showoc) {
+            return false;
+        }
 
         const result = await this.context.data;
         if (!result || !result.reviews || !result.reviews.opencritic) {
@@ -17,15 +26,18 @@ export default class FOpenCritic extends Feature {
         return true;
     }
 
-    apply() {
+    override apply(): void {
+        if (!this._review) {
+            return;
+        }
 
         const review = this._review;
         const ocImg = ExtensionResources.getURL("img/opencritic.png");
-        const award = review.verdict || "NA";
+        const award = review.verdict ?? "NA";
 
-        let node = document.querySelector("#game_area_metascore");
+        let node = document.querySelector<HTMLElement>("#game_area_metascore");
         if (node) {
-            node = node.parentNode;
+            node = node.parentNode as HTMLElement;
         } else {
             node = document.querySelector(".game_details");
         }

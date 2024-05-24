@@ -1,17 +1,26 @@
 import {L} from "@Core/Localization/Localization";
 import {__moreOnSteampeek} from "@Strings/_strings";
-import {HTML, LocalStorage} from "../../../../modulesCore";
-import {Background, DynamicStore, Feature} from "../../../modulesContent";
-import {Page} from "../../Page";
+import type CApp from "@Content/Features/Store/App/CApp";
+import Feature from "@Content/Modules/Context/Feature";
+import HTML from "@Core/Html/Html";
+import DynamicStore from "@Content/Modules/Data/DynamicStore";
+import LocalStorage from "@Core/Storage/LocalStorage";
+import DOMHelper from "@Content/Modules/DOMHelper";
+import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 
-export default class FSteamPeek extends Feature {
+export default class FSteamPeek extends Feature<CApp> {
 
-    checkPrerequisites() {
+    private _moreLikeThis: HTMLElement|null = null;
+
+    override checkPrerequisites(): boolean {
         this._moreLikeThis = document.querySelector("#recommended_block");
-        return this._moreLikeThis;
+        return this._moreLikeThis !== null;
     }
 
-    async apply() {
+    async apply(): Promise<void> {
+        if (!this._moreLikeThis) {
+            return;
+        }
 
         HTML.afterEnd(this._moreLikeThis.querySelector(".block_header"),
             `<div class="es_tabs">
@@ -27,8 +36,10 @@ export default class FSteamPeek extends Feature {
 
         await DynamicStore.onReady();
 
-        const [steamTab, steamPeekTab, content] = this._moreLikeThis
-            .querySelectorAll("#es_tab_steamsimilar, #es_tab_steampeek, #recommended_block_content");
+
+        const steamTab = this._moreLikeThis.querySelector("#es_tab_steamsimilar")!;
+        const steamPeekTab = this._moreLikeThis.querySelector<HTMLElement>("#es_tab_steampeek")!;
+        const content = this._moreLikeThis.querySelector("#recommended_block_content")!;
 
         steamTab.addEventListener("click", () => {
             steamPeekTab.classList.remove("active");
@@ -57,7 +68,7 @@ export default class FSteamPeek extends Feature {
                     node.classList.add("es_steam_similar");
                 }
 
-                const data = await Background.action("steampeek", this.context.appid);
+                const data = await AugmentedSteamApiFacade.fetchSteamPeek(this.context.appid);
                 if (!data) { return; }
 
                 const lastChild = content.querySelector(":scope > :last-child");
@@ -69,16 +80,11 @@ export default class FSteamPeek extends Feature {
                             <h4>${title}</h4>
                         </a>`);
 
-                    Page.runInPageContext(appid => {
-                        window.SteamFacade.storeItemDataBindHover("#recommended_block_content > a:last-of-type", appid);
-                    }, [appid]);
+                    DOMHelper.insertScript("scriptlets/Store/App/SteamPeek/bindHover.js", {appid});
                 }
 
-                Page.runInPageContext(() => {
-                    window.SteamFacade.dynamicStoreDecorateItems("#recommended_block_content > a.es_sp_similar");
-                });
-
-                this.context.decorateStoreCapsules(content.querySelectorAll("a.es_sp_similar"));
+                DOMHelper.insertScript("scriptlets/Store/App/SteamPeek/decorateItems.js");
+                this.context.decorateStoreCapsules(content.querySelectorAll<HTMLAnchorElement>("a.es_sp_similar"));
 
                 HTML.beforeBegin(lastChild,
                     `<a class="small_cap es_sp_similar" href="http://steampeek.hu/?appid=${this.context.appid}" target="_blank">
@@ -89,14 +95,12 @@ export default class FSteamPeek extends Feature {
             this._adjustScroller();
         });
 
-        if (LocalStorage.get("steampeek")) {
+        if (await LocalStorage.get("steampeek")) {
             steamPeekTab.click();
         }
     }
 
-    _adjustScroller() {
-        Page.runInPageContext(() => {
-            window.SteamFacade.jq("#recommended_block_content").trigger("v_contentschanged");
-        });
+    private _adjustScroller() {
+        DOMHelper.insertScript("scriptlets/Store/App/SteamPeek/adjustScroller.js");
     }
 }

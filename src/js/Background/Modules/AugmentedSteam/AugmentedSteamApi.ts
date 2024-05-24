@@ -3,7 +3,7 @@ import Config from "../../../config";
 import Api from "../Api";
 import type {
     TProfileData,
-    TFetchDlcInfoResponse,
+    TDlcInfo,
     TFetchMarketCardAveragePricesResponse,
     TFetchMarketCardPricesResponse,
     TFetchPricesResponse,
@@ -45,9 +45,9 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
         return await this.fetchJson(url);
     }
 
-    private async fetchDlcInfo(appid: number): Promise<TFetchDlcInfoResponse> {
+    private async fetchDlcInfo(appid: number): Promise<TDlcInfo> {
         const url = this.getUrl(`dlc/${appid}/v2`);
-        return this.fetchJson<TFetchDlcInfoResponse>(url);
+        return this.fetchJson<TDlcInfo>(url);
     }
 
     private async fetchProfile(steamId: string): Promise<TProfileData> {
