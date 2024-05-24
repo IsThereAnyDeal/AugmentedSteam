@@ -35,7 +35,17 @@ interface LocalStorageSchema extends StorageSchema {
     expand_slider: boolean,
     workshop_state: string,
     playback_hd: boolean,
-    steampeek: boolean
+    steampeek: boolean,
+    support_info: {
+        data: any, // TODO fix type
+        expiry: number
+    },
+    review_filters: {
+        context: string,
+        language: string,
+        minPlaytime?: string,
+        maxPlaytime?: string
+    }
 }
 
 class LocalStorage<Schema extends StorageSchema> extends Storage<ns.LocalStorageArea, Schema>{

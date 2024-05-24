@@ -6,8 +6,9 @@ import HTML from "@Core/Html/Html";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import {ContextType} from "@Content/Modules/Context/ContextType";
 import DOMHelper from "@Content/Modules/DOMHelper";
+import type CApp from "@Content/Features/Store/App/CApp";
 
-export default class FMediaExpander extends Feature<CSharedFiles> {
+export default class FMediaExpander extends Feature<CApp|CSharedFiles> {
 
     private _details: HTMLElement|null = null;
     private _sliderToggle: HTMLElement|null = null;

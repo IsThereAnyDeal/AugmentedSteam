@@ -3,27 +3,32 @@ import {
     __dlcSelect_none,
     __dlcSelect_unownedDlc,
     __dlcSelect_wishlistedDlc,
-} from "../../../../../localization/compiled/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML} from "../../../../modulesCore";
-import {Feature, Price} from "../../../modulesContent";
-import {Page} from "../../Page";
+} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import Feature from "@Content/Modules/Context/Feature";
+import type CApp from "@Content/Features/Store/App/CApp";
+import HTML from "@Core/Html/Html";
+import Price from "@Content/Modules/Currency/Price";
+import DOMHelper from "@Content/Modules/DOMHelper";
 
-export default class FDLCCheckboxes extends Feature {
+export default class FDLCCheckboxes extends Feature<CApp> {
 
-    checkPrerequisites() {
+    override checkPrerequisites(): boolean {
         // check if the page has at least one purchasable DLC available
         return document.querySelector(".game_area_dlc_section .game_area_dlc_list input[name^=subid]") !== null;
     }
 
-    apply() {
+    override apply(): void {
 
         const dlcSection = document.querySelector(".game_area_dlc_section");
+        if (!dlcSection) {
+            return;
+        }
 
         for (const dlcRow of dlcSection.querySelectorAll(".game_area_dlc_row")) {
 
             // Only add checkboxes to purchasable dlcs
-            const subidNode = dlcRow.querySelector("input[name^=subid]");
+            const subidNode = dlcRow.querySelector<HTMLInputElement>("input[name^=subid]");
             if (!subidNode) { continue; }
 
             const label = document.createElement("label");
@@ -42,11 +47,11 @@ export default class FDLCCheckboxes extends Feature {
 
             // Must check ".discount_final_price" first to get the correct price
             const priceNode = dlcRow.querySelector(".discount_final_price")
-                || dlcRow.querySelector(".game_area_dlc_price");
+                ?? dlcRow.querySelector(".game_area_dlc_price");
 
-            const price = Price.parseFromString(priceNode.textContent);
+            const price = !priceNode ? null : Price.parseFromString(priceNode.textContent!);
             if (price !== null) {
-                checkbox.dataset.esDlcPrice = price.value;
+                checkbox.dataset.esDlcPrice = String(price.value);
             }
 
             label.append(checkbox);
@@ -55,7 +60,8 @@ export default class FDLCCheckboxes extends Feature {
 
         // Toggle dsinfo on label when adding/removing wishlist via ds_options dropdown
         new MutationObserver(mutations => {
-            for (const {target} of mutations) {
+            for (const mutation of mutations) {
+                const target = mutation.target as HTMLElement;
                 if (!target.classList.contains("game_area_dlc_row")) { continue; }
 
                 // Prevent errors when there're no labels, e.g. free dlcs
@@ -64,7 +70,10 @@ export default class FDLCCheckboxes extends Feature {
 
                 label.classList.toggle("es_dlc_wishlist", target.classList.contains("ds_wishlist"));
             }
-        }).observe(dlcSection.querySelector(".gameDlcBlocks"), {"subtree": true, "attributeFilter": ["class"]});
+        }).observe(
+            dlcSection.querySelector(".gameDlcBlocks")!,
+            {"subtree": true, "attributeFilter": ["class"]}
+        );
 
         const html = `<div class="game_purchase_action game_purchase_action_bg" id="es_selected_btn">
                 <div class="game_purchase_price price"></div>
@@ -84,11 +93,11 @@ export default class FDLCCheckboxes extends Feature {
         }
 
         const subids = new Set();
-        const cartBtn = dlcSection.querySelector("#es_selected_btn");
+        const cartBtn = dlcSection.querySelector<HTMLElement>("#es_selected_btn")!;
         cartBtn.addEventListener("click", () => {
-            Page.runInPageContext((subids) => {
-                window.SteamFacade.addItemToCart(subids.length === 1 ? subids[0] : subids);
-            }, [Array.from(subids)]);
+            DOMHelper.insertScript("scriptlets/Store/App/addItemToCart", {
+                subids: Array.from(subids)
+            });
         });
 
         HTML.afterEnd(dlcSection.querySelector(".gradientbg"),
@@ -98,24 +107,24 @@ export default class FDLCCheckboxes extends Feature {
                 <div class="es_dlc_option" id="no_dlc_check">${L(__dlcSelect_none)}</div>
             </div>`);
 
-        dlcSection.querySelector("#unowned_dlc_check").addEventListener("click", () => {
-            const nodes = dlcSection.querySelectorAll(".es_dlc_label:not(.es_dlc_owned) > input");
+        dlcSection.querySelector("#unowned_dlc_check")!.addEventListener("click", () => {
+            const nodes = dlcSection.querySelectorAll<HTMLInputElement>(".es_dlc_label:not(.es_dlc_owned) > input");
             for (const node of nodes) {
                 node.checked = true;
             }
             dlcSection.dispatchEvent(new Event("change"));
         });
 
-        dlcSection.querySelector("#wl_dlc_check").addEventListener("click", () => {
-            const nodes = dlcSection.querySelectorAll(".es_dlc_label.es_dlc_wishlist > input");
+        dlcSection.querySelector("#wl_dlc_check")!.addEventListener("click", () => {
+            const nodes = dlcSection.querySelectorAll<HTMLInputElement>(".es_dlc_label.es_dlc_wishlist > input");
             for (const node of nodes) {
                 node.checked = true;
             }
             dlcSection.dispatchEvent(new Event("change"));
         });
 
-        dlcSection.querySelector("#no_dlc_check").addEventListener("click", () => {
-            const nodes = dlcSection.querySelectorAll(".es_dlc_label > input:checked");
+        dlcSection.querySelector("#no_dlc_check")!.addEventListener("click", () => {
+            const nodes = dlcSection.querySelectorAll<HTMLInputElement>(".es_dlc_label > input:checked");
             for (const node of nodes) {
                 node.checked = false;
             }
@@ -127,7 +136,7 @@ export default class FDLCCheckboxes extends Feature {
             subids.clear();
 
             let total = 0;
-            for (const node of dlcSection.querySelectorAll(".es_dlc_label > input:checked")) {
+            for (const node of dlcSection.querySelectorAll<HTMLInputElement>(".es_dlc_label > input:checked")) {
 
                 subids.add(Number(node.dataset.esDlcSubid));
 
@@ -137,7 +146,7 @@ export default class FDLCCheckboxes extends Feature {
             }
 
             if (total > 0) {
-                cartBtn.querySelector(".game_purchase_price").textContent = new Price(total);
+                cartBtn.querySelector<HTMLElement>(".game_purchase_price")!.textContent = (new Price(total)).toString();
                 cartBtn.style.display = "block";
             } else {
                 cartBtn.style.display = "none";

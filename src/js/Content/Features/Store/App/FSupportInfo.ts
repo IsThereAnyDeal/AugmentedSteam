@@ -1,21 +1,27 @@
 import AppId from "@Core/GameId/AppId";
 import {L} from "@Core/Localization/Localization";
 import {__contact, __email, __support, __website} from "@Strings/_strings";
-import {GameId, HTML, LocalStorage, SyncedStorage} from "../../../../modulesCore";
-import {Background, Feature} from "../../../modulesContent";
+import type CApp from "@Content/Features/Store/App/CApp";
+import Settings from "@Options/Data/Settings";
+import Feature from "@Content/Modules/Context/Feature";
+import HTML from "@Core/Html/Html";
+import LocalStorage from "@Core/Storage/LocalStorage";
+import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
 
-export default class FSupportInfo extends Feature {
+export default class FSupportInfo extends Feature<CApp> {
 
-    async checkPrerequisites() {
-        if (!SyncedStorage.get("showsupportinfo")) { return false; }
+    private _supportInfo: any = null; // TODO fix type
 
-        let cache = LocalStorage.get("support_info");
+    override async checkPrerequisites(): Promise<boolean> {
+        if (!Settings.showsupportinfo) { return false; }
+
+        let cache = (await LocalStorage.get("support_info")) ?? null;
 
         // todo IDB
         if (!cache || !cache.expiry || cache.expiry < Date.now()) {
             cache = {
-                "data": {},
-                "expiry": Date.now() + (31 * 86400 * 1000) // 31 days
+                data: {},
+                expiry: Date.now() + (31 * 86400 * 1000) // 31 days
             };
         }
 
@@ -24,7 +30,7 @@ export default class FSupportInfo extends Feature {
         this._supportInfo = cache.data[appid];
 
         if (!this._supportInfo) {
-            const response = await Background.action("appdetails", appid, "support_info");
+            const response = await SteamStoreApiFacade.fetchAppDetails(appid, "support_info");;
             if (!response || !response.success) {
                 console.warn("Failed to retrieve support info");
                 return false;
@@ -39,7 +45,7 @@ export default class FSupportInfo extends Feature {
         return Boolean(this._supportInfo.url || this._supportInfo.email);
     }
 
-    apply() {
+    override apply(): void {
 
         let {url, email} = this._supportInfo;
         const links = [];

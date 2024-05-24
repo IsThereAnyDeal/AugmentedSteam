@@ -1,15 +1,17 @@
+import Feature from "@Content/Modules/Context/Feature";
 import {__packageInfo} from "@Strings/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML, SyncedStorage} from "../../../../modulesCore";
-import {Feature} from "../../../Modules/Feature/Feature";
+import type CApp from "@Content/Features/Store/App/CApp";
+import Settings from "@Options/Data/Settings";
+import HTML from "@Core/Html/Html";
+import {L} from "@Core/Localization/Localization";
 
-export default class FPackageInfoButton extends Feature {
+export default class FPackageInfoButton extends Feature<CApp> {
 
-    checkPrerequisites() {
-        return SyncedStorage.get("show_package_info");
+    override checkPrerequisites(): boolean {
+        return Settings.show_package_info;
     }
 
-    apply() {
+    override apply(): void {
         const excluded = [
             ".bundle_hidden_by_preferences", // Bundles that are filtered due to preferences (e.g. no nudity)
             ".game_purchase_sub_dropdown", // Subscriptions (no subid)
@@ -21,7 +23,7 @@ export default class FPackageInfoButton extends Feature {
             // Exclude entries that already have a "Package info" button
             if (node.querySelector(".btn_packageinfo")) { return; }
 
-            const subid = node.querySelector("input[name=subid]");
+            const subid = node.querySelector<HTMLInputElement>("input[name=subid]");
             if (!subid) { continue; } // This should never happen; non-applicable items should ideally be excluded by the selector
 
             HTML.afterBegin(node.querySelector(".game_purchase_action"),

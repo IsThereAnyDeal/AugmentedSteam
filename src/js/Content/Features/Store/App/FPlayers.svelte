@@ -1,9 +1,9 @@
 <script lang="ts" context="module">
     // @ts-ignore
     import self_ from "./FPlayers.svelte";
-    import {Feature} from "../../../modulesContent";
-    import type {CApp} from "./CApp";
     import Settings from "@Options/Data/Settings";
+    import Feature from "@Content/Modules/Context/Feature";
+    import type CApp from "@Content/Features/Store/App/CApp";
 
     export class FPlayers extends Feature<CApp> {
         private _data: any;

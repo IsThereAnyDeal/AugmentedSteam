@@ -4,8 +4,9 @@ import {ContextType} from "@Content/Modules/Context/ContextType";
 import Settings from "@Options/Data/Settings";
 import CommonLinks from "@Content/Features/Store/Common/ExtraLinks/CommonLinks.svelte";
 import type CSub from "@Content/Features/Store/Sub/CSub";
+import type CApp from "@Content/Features/Store/App/CApp";
 
-export default class FExtraLinksCommon extends Feature<CBundle|CSub> {
+export default class FExtraLinksCommon extends Feature<CApp|CSub|CBundle> {
 
     // @ts-ignore
     private _type: "sub"|"bundle";

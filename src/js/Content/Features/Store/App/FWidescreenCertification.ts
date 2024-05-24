@@ -8,25 +8,27 @@ import {
     __wsgf_silver,
     __wsgf_unsupported,
 } from "@Strings/_strings";
-import {ExtensionResources, HTML, SyncedStorage} from "../../../../modulesCore";
-import {Feature} from "../../../Modules/Feature/Feature";
+import type CApp from "@Content/Features/Store/App/CApp";
+import Feature from "@Content/Modules/Context/Feature";
+import Settings from "@Options/Data/Settings";
+import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
+import ExtensionResources from "@Core/ExtensionResources";
+import HTML from "@Core/Html/Html";
 
-export default class FWidescreenCertification extends Feature {
+export default class FWidescreenCertification extends Feature<CApp> {
 
-    constructor(context) {
-        super(context);
+    private readonly _levelMap = {
+        "A": ["gold", __wsgf_gold],
+        "B": ["silver", __wsgf_silver],
+        "C": ["limited", __wsgf_limited],
+        "Incomplete": ["incomplete", __wsgf_incomplete],
+        "Unsupported": ["unsupported", __wsgf_unsupported]
+    };
 
-        this._levelMap = {
-            "A": ["gold", __wsgf_gold],
-            "B": ["silver", __wsgf_silver],
-            "C": ["limited", __wsgf_limited],
-            "Incomplete": ["incomplete", __wsgf_incomplete],
-            "Unsupported": ["unsupported", __wsgf_unsupported]
-        };
-    }
+    private _wsgf: TStorePageData["wsgf"]|null=null;
 
-    async checkPrerequisites() {
-        if (!SyncedStorage.get("showwsgf")
+    override async checkPrerequisites(): Promise<boolean> {
+        if (!Settings.showwsgf
             || this.context.isDlcLike
             || this.context.isVideoOrHardware) {
             return false;
@@ -37,16 +39,17 @@ export default class FWidescreenCertification extends Feature {
             return false;
         }
 
-        this._data = result.wsgf;
+        this._wsgf = result.wsgf;
         return true;
     }
 
-    _getType(value, imgPrefix, typeName) {
+    _getType(value: string, imgPrefix: string, typeName: string): [string, string] {
 
         let icon = "";
         let text = "";
 
-        const [level, string] = this._levelMap[value];
+        // @ts-ignore
+        const [level, string] = this._levelMap[value] ?? [undefined, undefined];
         if (level) {
             icon = ExtensionResources.getURL(`img/wsgf/${imgPrefix}-${level}.png`);
             text = L(string, {"type": typeName});
@@ -54,7 +57,10 @@ export default class FWidescreenCertification extends Feature {
         return [icon, text];
     }
 
-    apply() {
+    override apply(): void {
+        if (!this._wsgf) {
+            return;
+        }
 
         const {
             "url": url,
@@ -62,7 +68,7 @@ export default class FWidescreenCertification extends Feature {
             "multi_monitor": mmg,
             "4k": fkg,
             "ultrawide": uws,
-        } = this._data;
+        } = this._wsgf;
 
         const [wsgIcon, wsgText] = this._getType(wsg, "ws", "Widescreen");
         const [mmgIcon, mmgText] = this._getType(mmg, "mm", "Multi-Monitor");
@@ -75,10 +81,10 @@ export default class FWidescreenCertification extends Feature {
                 <div class="block_content">
                     <div class="block_content_inner">
                         <div class="details_block">
-                            ${wsg ? `<img src="${HTML.escape(wsgIcon)}" title="${HTML.escape(wsgText)}">` : ""}
-                            ${mmg ? `<img src="${HTML.escape(mmgIcon)}" title="${HTML.escape(mmgText)}">` : ""}
-                            ${uws ? `<img src="${HTML.escape(uwsIcon)}" title="${HTML.escape(uwsText)}">` : ""}
-                            ${fkg ? `<img src="${HTML.escape(fkgIcon)}" title="${HTML.escape(fkgText)}">` : ""}
+                            ${wsg ? `<img src="${HTML.escape(wsgIcon)}" title="${HTML.escape(wsgText)}" alt="">` : ""}
+                            ${mmg ? `<img src="${HTML.escape(mmgIcon)}" title="${HTML.escape(mmgText)}" alt="">` : ""}
+                            ${uws ? `<img src="${HTML.escape(uwsIcon)}" title="${HTML.escape(uwsText)}" alt="">` : ""}
+                            ${fkg ? `<img src="${HTML.escape(fkgIcon)}" title="${HTML.escape(fkgText)}" alt="">` : ""}
                         </div>
                         <br>
                         <a class="linkbar es_external_icon" target="_blank" href="${HTML.escape(url)}">${L(__ratingDetails)}</a>

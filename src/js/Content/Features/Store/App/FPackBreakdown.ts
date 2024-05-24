@@ -1,23 +1,26 @@
 import {__each} from "@Strings/_strings";
-import {L} from "../../../../Core/Localization/Localization";
-import {HTML} from "../../../../modulesCore";
-import {CurrencyManager, Feature, Price} from "../../../modulesContent";
+import type CApp from "@Content/Features/Store/App/CApp";
+import Feature from "@Content/Modules/Context/Feature";
+import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
+import HTML from "@Core/Html/Html";
+import Price from "@Content/Modules/Currency/Price";
+import {L} from "@Core/Localization/Localization";
 
-export default class FPackBreakdown extends Feature {
+export default class FPackBreakdown extends Feature<CApp> {
 
-    apply() {
+    override apply(): void {
 
         for (const node of document.querySelectorAll(".game_area_purchase_game_wrapper:not(.bundle_hidden_by_preferences)")) {
 
             // prevent false positives on packages e.g. Doom 3
             if (node.querySelector(".btn_packageinfo")) { continue; }
 
-            let title = node.querySelector("h1").textContent;
+            let title = node.querySelector("h1")!.textContent!;
             title = title.toLowerCase().replace(/-/g, " ");
 
             let text = "";
             if (node.querySelector("p")) {
-                text = node.querySelector("p").textContent;
+                text = node.querySelector("p")!.textContent!;
             }
 
             if (title.includes("2 pack")
@@ -53,12 +56,12 @@ export default class FPackBreakdown extends Feature {
         }
     }
 
-    _splitPack(node, ways) {
-        const priceNode = node.querySelector("[data-price-final]");
+    private _splitPack(node: Element, ways: number): void {
+        const priceNode = node.querySelector<HTMLElement>("[data-price-final]");
         if (!priceNode) { return; }
 
-        const currency = CurrencyManager.fromCode(CurrencyManager.storeCurrency);
-        const scaleFactor = 10 ** currency.format.decimalPlaces;
+        const currency = CurrencyManager.getCurrencyInfo(CurrencyManager.storeCurrency);
+        const scaleFactor = 10 ** currency.format.places;
 
         let unitPrice = Number(priceNode.dataset.priceFinal) / 100 / ways;
         unitPrice = Math.ceil(unitPrice * scaleFactor) / scaleFactor;

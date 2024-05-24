@@ -6,13 +6,16 @@ import {
     __deckCompat_unsupported,
     __deckCompat_verified,
 } from "@Strings/_strings";
-import {HTML, SyncedStorage} from "../../../../modulesCore";
-import {Feature, RequestData} from "../../../modulesContent";
+import type CApp from "@Content/Features/Store/App/CApp";
+import Feature from "@Content/Modules/Context/Feature";
+import Settings from "@Options/Data/Settings";
+import RequestData from "@Content/Modules/RequestData";
+import HTML from "@Core/Html/Html";
 
-export default class FSteamDeckCompatibility extends Feature {
+export default class FSteamDeckCompatibility extends Feature<CApp> {
 
-    checkPrerequisites() {
-        return SyncedStorage.get("showdeckcompat") && !this.context.isDlcLike && !this.context.isVideoOrHardware;
+    override checkPrerequisites(): boolean {
+        return Settings.showdeckcompat && !this.context.isDlcLike && !this.context.isVideoOrHardware;
     }
 
     async apply() {
@@ -20,7 +23,7 @@ export default class FSteamDeckCompatibility extends Feature {
         const compatNode = document.querySelector("[data-featuretarget=deck-verified-results]");
         if (compatNode) {
             // Move the section to the features list
-            document.querySelector("#category_block").insertAdjacentElement("afterbegin", compatNode);
+            document.querySelector("#category_block")?.insertAdjacentElement("afterbegin", compatNode);
             return;
         }
 
@@ -28,7 +31,12 @@ export default class FSteamDeckCompatibility extends Feature {
          * This section is hidden in regions where Valve doesn't sell the Steam Deck,
          * or if the game is untested/under review (usually means the status is unknown).
          */
-        const data = await RequestData.getJson(`https://store.steampowered.com/saleaction/ajaxgetdeckappcompatibilityreport?nAppID=${this.context.appid}`);
+        const data = await RequestData.getJson<{
+            success: boolean,
+            results: {
+                resolved_category: number
+            }
+        }>(`https://store.steampowered.com/saleaction/ajaxgetdeckappcompatibilityreport?nAppID=${this.context.appid}`);
         if (!data || !data.success) { return; }
 
         let status, icon, locale;

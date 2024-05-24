@@ -18,8 +18,9 @@ import CStoreFront from "@Content/Features/Store/Storefront/CStoreFront";
 import {ContextType} from "@Content/Modules/Context/ContextType";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import Customizer, {type CustomizerSetup} from "@Content/Features/Store/Common/Customizer.svelte";
+import type CApp from "@Content/Features/Store/App/CApp";
 
-export default class FCustomizer extends Feature<CStoreFront> {
+export default class FCustomizer extends Feature<CApp|CStoreFront> {
 
     override apply(): void {
 

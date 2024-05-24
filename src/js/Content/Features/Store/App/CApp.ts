@@ -16,7 +16,7 @@ import FForceMP4 from "./FForceMP4";
 import FFullscreenScreenshotView from "./FFullscreenScreenshotView";
 import FHDPlayer from "./FHDPlayer";
 import FHideReportedTags from "./FHideReportedTags";
-import FHowLongToBeat from "./FHowLongToBeat";
+import {FHowLongToBeat} from "./FHowLongToBeat.svelte";
 import FMetacriticUserScore from "./FMetacriticUserScore";
 import FNewQueue from "./FNewQueue";
 import FOpenCritic from "./FOpenCritic";
@@ -50,8 +50,8 @@ export default class CApp extends CStoreBase {
     public readonly isErrorPage: boolean = false;
     public readonly storeid: string;
     public readonly appid: number;
-    public readonly communityAppid: number;
-    public readonly appName: string;
+    public readonly communityAppid: number = 0;
+    public readonly appName: string = "";
 
     public readonly metalink: string|null = null;
     public readonly hasAchievements: boolean = false;
@@ -64,64 +64,70 @@ export default class CApp extends CStoreBase {
 
     public readonly isVideoOrHardware: boolean = false;
 
-    public readonly data: Promise<TStorePageData>;
+    public readonly data: Promise<TStorePageData|null> = Promise.resolve(null);
 
     constructor() {
 
+        let isErrorPage = false;
+
         // Only add extra links if there's an error message (e.g. region-locked, age-gated)
         if (document.getElementById("error_box") !== null) {
-            super(ContextType.APP, [FExtraLinksApp]);
-
-            this.isErrorPage = true;
-            this.appid = AppId.fromUrl(window.location.host + window.location.pathname)!;
-            return;
+            isErrorPage = true;
         }
 
-        super(ContextType.APP, [
-            FReplaceDevPubLinks,
-            FForceMP4,
-            FHDPlayer,
-            FUserNotes,
-            FWaitlistDropdown,
-            FNewQueue,
-            FFullscreenScreenshotView,
-            FShowCoupon,
-            FITADPrices,
-            FDLCInfo,
-            FDRMWarnings,
-            FMetacriticUserScore,
-            FOpenCritic,
-            FOwnedElsewhere,
-            FPurchaseDate,
-            FSteamPeek,
-            FWidescreenCertification,
-            FHowLongToBeat,
-            FExtraLinks,
-            FFamilySharingNotice,
-            FPackBreakdown,
-            FPackageInfoButton,
-            FPlayers,
-            FCustomizer,
-            FDLCCheckboxes,
-            FBadgeProgress,
-            FAStatsLink,
-            FAchievementBar,
-            FRegionalPricing,
-            FReviewToggleButton,
-            FOwnedActionsButtons,
-            FSupportInfo,
-            FMediaExpander,
-            FRemoveBroadcasts,
-            FDemoAbovePurchase,
-            FSaveReviewFilters,
-            FHideReportedTags,
-            FPatchHighlightPlayer,
-            FSteamDeckCompatibility,
-            FRemoveDupeScreenshots,
-        ]);
+        super(ContextType.APP, isErrorPage
+            ? [
+                FExtraLinksApp
+            ] : [
+                FReplaceDevPubLinks,
+                FForceMP4,
+                FHDPlayer,
+                FUserNotes,
+                FWaitlistDropdown,
+                FNewQueue,
+                FFullscreenScreenshotView,
+                FShowCoupon,
+                FITADPrices,
+                FDLCInfo,
+                FDRMWarnings,
+                FMetacriticUserScore,
+                FOpenCritic,
+                FOwnedElsewhere,
+                FPurchaseDate,
+                FSteamPeek,
+                FWidescreenCertification,
+                FHowLongToBeat,
+                FExtraLinks,
+                FFamilySharingNotice,
+                FPackBreakdown,
+                FPackageInfoButton,
+                FPlayers,
+                FCustomizer,
+                FDLCCheckboxes,
+                FBadgeProgress,
+                FAStatsLink,
+                FAchievementBar,
+                FRegionalPricing,
+                FReviewToggleButton,
+                FOwnedActionsButtons,
+                FSupportInfo,
+                FMediaExpander,
+                FRemoveBroadcasts,
+                FDemoAbovePurchase,
+                FSaveReviewFilters,
+                FHideReportedTags,
+                FPatchHighlightPlayer,
+                FSteamDeckCompatibility,
+                FRemoveDupeScreenshots,
+            ]);
 
+        this.isErrorPage = isErrorPage;
         this.appid = AppId.fromUrl(window.location.host + window.location.pathname)!;
         this.storeid = `app/${this.appid}`;
+
+        if (this.isErrorPage) {
+            return;
+        }
 
         // Some games (e.g. 201270, 201271) have different appid in store page and community
         this.communityAppid = AppId.fromCDNUrl(
@@ -153,7 +159,10 @@ export default class CApp extends CStoreBase {
         this.isVideoOrHardware = category === "992" || category === "993" || !document.querySelector(".sys_req");
 
         this.data = AugmentedSteamApiFacade.getStorePageData(this.appid)
-            .catch(e => console.error(e));
+            .catch(e => {
+                console.error(e);
+                return null;
+            });
 
         // FPackBreakdown skips purchase options with a package info button to avoid false positives
         this.dependency(FPackageInfoButton, [FPackBreakdown, true]);

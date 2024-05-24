@@ -1,10 +1,10 @@
 <script lang="ts" context="module">
     // @ts-ignore
     import self_ from "./FAchievementBar.svelte";
-    import {Feature} from "../../../modulesContent";
-    import type {CApp} from "./CApp";
     import SteamApi from "../../../Modules/SteamApi";
     import Settings from "@Options/Data/Settings";
+    import Feature from "@Content/Modules/Context/Feature";
+    import type CApp from "@Content/Features/Store/App/CApp";
 
     export class FAchievementBar extends Feature<CApp> {
 

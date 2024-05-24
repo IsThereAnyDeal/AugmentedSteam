@@ -1,8 +1,8 @@
 <script lang="ts" context="module">
     // @ts-ignore
     import self_ from "./FReviewToggleButton.svelte";
-    import {Feature} from "../../../modulesContent";
-    import type {CApp} from "./CApp";
+    import type CApp from "@Content/Features/Store/App/CApp";
+    import Feature from "@Content/Modules/Context/Feature";
 
     /**
      * Adds button that shows/hides "Write a review" form on app pages,
