@@ -38,10 +38,6 @@
             return ShowBlockingWaitDialog(strTitle, strDescription);
         }
 
-        static showNicknameModal() {
-            return ShowNicknameModal();
-        }
-
         static dismissActiveModal() {
             CModal.DismissActiveModal();
         }
@@ -66,38 +62,15 @@
             return CollapseLongStrings(selector);
         }
 
-        static updatePlaytimeFilterValues(hourMin, hourMax) {
-            return UpdatePlaytimeFilterValues(hourMin, hourMax);
-        }
-
         // @param appid required, rest is optional
         static removeFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2) {
             return RemoveFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2);
-        }
-
-        // @param subid can be number or array
-        static addItemToCart(subid, bundleid, navdata) {
-            return window.AddItemToCart(subid, bundleid, navdata);
         }
 
         // events
 
         static bindAutoFlyoutEvents() {
             BindAutoFlyoutEvents();
-        }
-
-        // dynamic store
-
-        static dynamicStoreInvalidateCache() {
-            return GDynamicStore.InvalidateCache();
-        }
-
-        static dynamicStoreDecorateItems(selector, bForceRecalculate) {
-            return GDynamicStore.DecorateDynamicItems($J(selector), bForceRecalculate);
-        }
-
-        static storeItemDataBindHover(selector, unAppID, unPackageID, unBundleID, rgAdditionalParams) {
-            GStoreItemData.BindHoverEvents($J(selector), unAppID, unPackageID, unBundleID, rgAdditionalParams);
         }
 
         // tooltips
@@ -127,70 +100,6 @@
 
         static openFriendChatInWebChat(chatId) {
             return OpenFriendChatInWebChat(chatId);
-        }
-
-        // community
-
-        static initMiniprofileHovers() {
-            return InitMiniprofileHovers();
-        }
-
-        static execFriendAction(action, navid) {
-            return ExecFriendAction(action, navid);
-        }
-
-        static loadImageGroupOnScroll(elTarget, strGroup) {
-            LoadImageGroupOnScroll(elTarget, strGroup);
-        }
-
-        static showModalContent(url, titleBarText, titleBarURL, sizeToFit) {
-            ShowModalContent(url, titleBarText, titleBarURL, sizeToFit);
-        }
-
-        // selections
-
-        static updateSelection() {
-            return UpdateSelection();
-        }
-
-        static selectAll() {
-            return SelectAll();
-        }
-
-        static selectNone() {
-            return SelectNone();
-        }
-
-        static selectInverse() {
-            return SelectInverse();
-        }
-
-        // Wishlist
-
-        static wishlistOnScroll() {
-            return g_Wishlist.OnScroll();
-        }
-
-        // jQuery functions
-
-        static jq(selector) {
-            return $J(selector);
-        }
-
-        static jqOnClick(selector, callback) {
-            $J(selector).on("click", callback);
-        }
-
-        static jqAjax(settings) {
-            return $J.ajax(settings);
-        }
-
-        static jqGet(url, settings) {
-            return $J.get(url, settings);
-        }
-
-        static jqPost(url, settings) {
-            return $J.post(url, settings);
         }
     }
 

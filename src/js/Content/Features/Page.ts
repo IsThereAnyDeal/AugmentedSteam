@@ -30,10 +30,9 @@ function unhandledrejection(e: PromiseRejectionEvent) {
 window.addEventListener("unhandledrejection", unhandledrejection);
 
 /**
- *  Inject the Messenger, SteamFacade class into the DOM, providing the same interface for the page context side
+ *  Inject the SteamFacade class into the DOM, providing the same interface for the page context side
  *  TODO insert directly via manifest with "world": "MAIN"?
  */
-DOMHelper.insertScript("scriptlets/MessengerScriptlet.js");
 DOMHelper.insertScript("scriptlets/SteamScriptlet.js");
 
 export default class Page {

@@ -47,10 +47,6 @@ export default class SteamFacade {
         ]);
     }
 
-//    static showNicknameModal() {
-//        return ShowNicknameModal();
-//    }
-
     static dismissActiveModal() {
         Messenger.call(MessageHandler.SteamFacade, "dismissActiveModal");
     }
@@ -75,10 +71,6 @@ export default class SteamFacade {
         Messenger.call(MessageHandler.SteamFacade, "collapseLongStrings", [selector]);
     }
 
-//    static updatePlaytimeFilterValues(hourMin, hourMax) {
-//        return UpdatePlaytimeFilterValues(hourMin, hourMax);
-//    }
-
     // @param appid required, rest is optional
     static removeFromWishlist(
         appid: number,
@@ -93,38 +85,19 @@ export default class SteamFacade {
         ]);
     }
 
-//    // @param subid can be number or array
-//    static addItemToCart(subid, bundleid, navdata) {
-//        return window.AddItemToCart(subid, bundleid, navdata);
-//    }
-
-//    // events
+    // events
 
     static bindAutoFlyoutEvents(): void {
         Messenger.call(MessageHandler.SteamFacade, "bindAutoFlyoutEvents");
     }
 
-//    // dynamic store
-
-//    static dynamicStoreInvalidateCache() {
-//        return GDynamicStore.InvalidateCache();
-//    }
-
-//    static dynamicStoreDecorateItems(selector, bForceRecalculate) {
-//        return GDynamicStore.DecorateDynamicItems($J(selector), bForceRecalculate);
-//    }
-
-//    static storeItemDataBindHover(selector, unAppID, unPackageID, unBundleID, rgAdditionalParams) {
-//        GStoreItemData.BindHoverEvents($J(selector), unAppID, unPackageID, unBundleID, rgAdditionalParams);
-//    }
-
-//    // tooltips
+    // tooltips
 
     static vTooltip(selector: string, isHtml: boolean = false): void {
         Messenger.call(MessageHandler.SteamFacade, "vTooltip", [selector, isHtml]);
     }
 
-//    // market
+    // market
 
     static calculateFeeAmount(amount: number, publisherFee: number): Promise<{
         amount: number,
@@ -133,75 +106,7 @@ export default class SteamFacade {
         return Messenger.get(MessageHandler.SteamFacade, "calculateFeeAmount", [amount, publisherFee]);
     }
 
-//    static calculateAmountToSendForDesiredReceivedAmount(receivedAmount, publisherFee) {
-//        return CalculateAmountToSendForDesiredReceivedAmount(receivedAmount, publisherFee);
-//    }
-
     static vCurrencyFormat(amount: number, currencyCode: string): Promise<string> {
         return Messenger.get(MessageHandler.SteamFacade, "vCurrencyFormat", [amount, currencyCode])
     }
-
-//    // community
-
-//    static initMiniprofileHovers() {
-//        return InitMiniprofileHovers();
-//    }
-
-//    static execFriendAction(action, navid) {
-//        return ExecFriendAction(action, navid);
-//    }
-
-//    static loadImageGroupOnScroll(elTarget, strGroup) {
-//        LoadImageGroupOnScroll(elTarget, strGroup);
-//    }
-
-//    static showModalContent(url, titleBarText, titleBarURL, sizeToFit) {
-//        ShowModalContent(url, titleBarText, titleBarURL, sizeToFit);
-//    }
-
-//    // selections
-
-//    static updateSelection() {
-//        return UpdateSelection();
-//    }
-
-//    static selectAll() {
-//        return SelectAll();
-//    }
-
-//    static selectNone() {
-//        return SelectNone();
-//    }
-
-//    static selectInverse() {
-//        return SelectInverse();
-//    }
-
-//    // Wishlist
-
-//    static wishlistOnScroll() {
-//        return g_Wishlist.OnScroll();
-//    }
-
-//    // jQuery functions
-
-//    static jq(selector) {
-//        return $J(selector);
-//    }
-
-//    static jqOnClick(selector, callback) {
-//        $J(selector).on("click", callback);
-//    }
-
-//    static jqAjax(settings) {
-//        return $J.ajax(settings);
-//    }
-
-//    static jqGet(url, settings) {
-//        return $J.get(url, settings);
-//    }
-
-//    static jqPost(url, settings) {
-//        return $J.post(url, settings);
-//    }
 }

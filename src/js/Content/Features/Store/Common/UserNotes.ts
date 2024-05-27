@@ -72,13 +72,13 @@ export default class UserNotes {
         onNoteUpdate: (noteEl: HTMLElement, hasNote: boolean) => void
     ): Promise<void> {
 
-        let note: string = (await this.get(appid))?.get(appid) ?? "";
+        let note: string|null = (await this.get(appid))?.get(appid) ?? null;
 
         // Partly copied `ShowConfirmDialog` from shared_global.js
         DOMHelper.insertScript("scriptlets/Store/Common/userNotesModal.js", {
             title: L(__userNote_addForGame, {"gamename": appname}),
             template: this.noteModalTemplate.replace("__note__",
-                window.sessionStorage.getItem(`es_note_autosave_${appid}`) ?? note),
+                window.sessionStorage.getItem(`es_note_autosave_${appid}`) ?? note ?? ""),
             strSave: L(__save),
             strCancel: L(__cancel),
             appid: appid
@@ -86,7 +86,13 @@ export default class UserNotes {
 
         const oldNote = note;
 
-        note = await Messenger.onMessage("noteClosed");
+        note = await (new Promise<string|null>(resolve => {
+            // @ts-expect-error
+            document.addEventListener("noteClosed",
+                (e: CustomEvent<{note: string|null}>) => resolve(e.detail.note),
+                {once: true}
+            );
+        }));
         if (note === null || note === oldNote) { return; }
 
         if (note.length === 0) {

@@ -156,7 +156,13 @@ export default class FWaitlistDropdown extends Feature<CApp> {
             if (parent.classList.contains("loading")) { return; }
             parent.classList.add("loading");
 
-            if (await Messenger.onMessage("addRemoveWishlist")) {
+            const result = await (new Promise<boolean>(resolve => {
+                // @ts-expect-error
+                document.addEventListener("addRemoveWishlist",
+                    (e: CustomEvent<boolean>) => resolve(e.detail)),
+                    {once: true}
+            }));
+            if (result) {
                 wishlisted = !wishlisted;
                 updateDiv();
             } else {
