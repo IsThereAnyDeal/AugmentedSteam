@@ -1,31 +1,9 @@
 <svelte:options immutable />
 
-<script lang="ts" context="module">
-    import self_ from "./ProgressBar.svelte";
-    import {L} from "@Core/Localization/Localization";
-    import {__ready_failed, __ready_loading, __ready_ready, __ready_serverOutage} from "@Strings/_strings";
-    import Settings from "@Options/Data/Settings";
-
-    export function create(): void {
-        if (!Settings.show_progressbar) {
-            return;
-        }
-
-        const globalActions = document.querySelector("#global_actions");
-        if (!globalActions) {
-            return;
-        }
-
-        new self_({
-            target: globalActions,
-            anchor: globalActions.nextElementSibling ?? undefined
-        });
-    }
-</script>
-
-
 <script lang="ts">
     import {onMount} from "svelte";
+    import {__ready_failed, __ready_loading, __ready_ready, __ready_serverOutage} from "@Strings/_strings";
+    import {L} from "@Core/Localization/Localization";
 
     let started: number = 0;
     let done: number = 0;

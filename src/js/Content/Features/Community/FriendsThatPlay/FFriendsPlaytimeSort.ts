@@ -1,8 +1,9 @@
 import {__playtime, __theworddefault} from "@Strings/_strings";
 import Feature from "@Content/Modules/Context/Feature";
 import CFriendsThatPlay from "@Content/Features/Community/FriendsThatPlay/CFriendsThatPlay";
-import SortBox, {type ChangeEvent} from "@Content/Modules/Widgets/SortBox.svelte";
+import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import {L} from "@Core/Localization/Localization";
+import type {SortboxChangeEvent} from "@Content/Modules/Widgets/SortboxChangeEvent";
 
 export default class FFriendsPlaytimeSort extends Feature<CFriendsThatPlay> {
 
@@ -64,7 +65,7 @@ export default class FFriendsPlaytimeSort extends Feature<CFriendsThatPlay> {
                 value: "default_ASC"
             }
         });
-        sortbox.$on("change", (e: CustomEvent<ChangeEvent>) => {
+        sortbox.$on("change", (e: CustomEvent<SortboxChangeEvent>) => {
             const {key, direction} = e.detail;
             onChange(key, direction < 0);
         });

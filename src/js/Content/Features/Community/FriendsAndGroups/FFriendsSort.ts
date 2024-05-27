@@ -2,10 +2,11 @@ import {__lastonline, __theworddefault} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
 import CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
-import SortBox, {type ChangeEvent} from "@Content/Modules/Widgets/SortBox.svelte";
+import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import SyncedStorage from "@Core/Storage/SyncedStorage";
 import RequestData from "@Content/Modules/RequestData";
 import HTML from "@Core/Html/Html";
+import type {SortboxChangeEvent} from "@Content/Modules/Widgets/SortboxChangeEvent";
 
 export default class FFriendsSort extends Feature<CFriendsAndGroups> {
 
@@ -51,7 +52,7 @@ export default class FFriendsSort extends Feature<CFriendsAndGroups> {
                 value: (await SyncedStorage.get("sortfriendsby") ?? "default_ASC")
             }
         });
-        sortbox.$on("change", (e: CustomEvent<ChangeEvent>) => {
+        sortbox.$on("change", (e: CustomEvent<SortboxChangeEvent>) => {
             const {value, key, direction} = e.detail;
             this._sortFriends(key, direction < 0);
             SyncedStorage.set("sortfriendsby", value);

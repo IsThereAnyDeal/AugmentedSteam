@@ -2,9 +2,10 @@ import {__gameName} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
 import Feature from "@Content/Modules/Context/Feature";
-import SortBox, {type ChangeEvent} from "@Content/Modules/Widgets/SortBox.svelte";
+import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import SyncedStorage from "@Core/Storage/SyncedStorage";
 import Price from "@Content/Modules/Currency/Price";
+import type {SortboxChangeEvent} from "@Content/Modules/Widgets/SortboxChangeEvent";
 
 export default class FMarketSort extends Feature<CMarketHome> {
 
@@ -59,7 +60,7 @@ export default class FMarketSort extends Feature<CMarketHome> {
                 value: (await SyncedStorage.get("sortmylistingsby")) ?? "default_ASC",
             }
         });
-        this.sortbox.$on("change", (e: CustomEvent<ChangeEvent>) => {
+        this.sortbox.$on("change", (e: CustomEvent<SortboxChangeEvent>) => {
             const {value, key, direction} = e.detail;
             this._sortRows(key, direction < 0);
             SyncedStorage.set("sortmylistingsby", value);

@@ -1,20 +1,11 @@
-<script lang="ts" context="module">
-    export type ChangeEvent = {
-        value: string,
-        key: string,
-        direction: number
-    };
-</script>
-
-
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__sortBy, __thewordunknown} from "@Strings/_strings";
     import {createEventDispatcher, onMount} from "svelte";
-
+    import type {SortboxChangeEvent} from "@Content/Modules/Widgets/SortboxChangeEvent";
 
     const dispatch = createEventDispatcher<{
-        change: ChangeEvent
+        change: SortboxChangeEvent
     }>();
 
     export let name: string;

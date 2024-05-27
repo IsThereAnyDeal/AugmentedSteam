@@ -1,24 +1,3 @@
-<script lang="ts" context="module">
-    import self_ from "./FLicensesSummary.svelte";
-    import CLicenses from "@Content/Features/Store/Licenses/CLicenses";
-    import Feature from "@Content/Modules/Context/Feature";
-
-    export class FLicensesSummary extends Feature<CLicenses> {
-
-        override apply(): void {
-            let target = document.querySelector(".youraccount_page");
-            if (!target) {
-                throw new Error("Node not found");
-            }
-
-            (new self_({
-                target,
-                anchor: target.firstElementChild ?? undefined,
-            }));
-        }
-    }
-</script>
-
 <script lang="ts">
     import {slide} from "svelte/transition";
     import SmallSteamButton from "../../../Steam/SmallSteamButton.svelte";

@@ -1,24 +1,9 @@
-<script lang="ts" context="module">
-    export type CustomizerSetup = Array<[
-        string,                  // name
-        string|HTMLElement|null, // selector/targets
-    ]|[
-        string,                  // name
-        string|HTMLElement|null, // selector/targets
-        string|undefined,        // label
-    ]|[
-        string,                  // name
-        string|HTMLElement|null, // selector/targets
-        string|undefined,        // label
-        boolean|undefined        // forceShow
-    ]>;
-</script>
-
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__apppageSections, __customize,} from "@Strings/_strings";
     import {onMount} from "svelte";
     import Settings from "@Options/Data/Settings";
+    import type {CustomizerSetup} from "@Content/Features/Store/Common/Customizer/CustomizerSetup";
 
     export let type: "app"|"frontpage";
     export let setup: CustomizerSetup = [];

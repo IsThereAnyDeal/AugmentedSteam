@@ -1,7 +1,7 @@
 import {ContextType} from "../../../Modules/Context/ContextType";
 import CCommunityBase from "../CCommunityBase";
 import FFriendsInviteButton from "./FFriendsInviteButton";
-import {FGroupLinks} from "@Content/Features/Community/GroupHome/FGroupLinks.svelte";
+import FGroupLinks from "@Content/Features/Community/GroupHome/FGroupLinks";
 
 export default class CGroupHome extends CCommunityBase {
 

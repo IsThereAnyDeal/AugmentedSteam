@@ -7,7 +7,7 @@
     "locales": "npm run update-locales && npm run compile-locales",
     "release": "node scripts/make-release.mjs",
     "lint": "eslint .",
-    "check": "npx tsc --noEmit & svelte-check"
+    "check": "npx tsc --noEmit && svelte-check"
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.5",

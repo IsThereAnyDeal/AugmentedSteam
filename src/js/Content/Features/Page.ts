@@ -3,7 +3,7 @@ import config from "../../config";
 import {Info} from "@Core/Info";
 import Localization from "@Core/Localization/Localization";
 import {SettingsStore} from "@Options/Data/Settings";
-import {create as createProgressBar} from "@Content/Modules/Widgets/ProgressBar.svelte";
+import ProgressBar from "@Content/Modules/Widgets/ProgressBar";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import AugmentedSteam from "@Content/Modules/AugmentedSteam";
 import User from "@Content/Modules/User";
@@ -66,7 +66,7 @@ export default class Page {
             "",
         );
 
-        createProgressBar();
+        ProgressBar();
         AugmentedSteam.init();
         await UpdateHandler.checkVersion(AugmentedSteam.clearCache);
         await ITAD.init();

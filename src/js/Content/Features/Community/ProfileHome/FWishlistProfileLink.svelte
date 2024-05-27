@@ -1,32 +1,9 @@
-<script lang="ts" context="module">
-    import self_ from "./FWishlistProfileLink.svelte";
-    import {L} from "@Core/Localization/Localization";
-    import CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
-    import Feature from "@Content/Modules/Context/Feature";
-    import Settings from "@Options/Data/Settings";
-
-    export class FWishlistProfileLink extends Feature<CProfileHome> {
-
-        override checkPrerequisites(): boolean {
-            return !this.context.isPrivateProfile && Settings.show_wishlist_link;
-        }
-
-        override async apply(): Promise<void> {
-
-            const node = document.querySelector(".profile_item_links .profile_count_link")!;
-            new self_({
-                target: node.parentElement!,
-                anchor: node.nextElementSibling!
-            });
-        }
-    }
-</script>
-
-
 <script lang="ts">
     import {onMount} from "svelte";
     import {__wishlist} from "@Strings/_strings";
     import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+    import Settings from "@Options/Data/Settings";
+    import {L} from "@Core/Localization/Localization";
 
     let countPromise: Promise<number|null> = Promise.resolve(null);
 
@@ -46,8 +23,8 @@
 
 
 <div id="es_wishlist_link" class="profile_count_link ellipsis">
-    <a href="//store.steampowered.com/wishlist${window.location.pathname}">
-        <span class="count_link_label">${L(__wishlist)}</span>&nbsp;
+    <a href="//store.steampowered.com/wishlist{window.location.pathname}">
+        <span class="count_link_label">{L(__wishlist)}</span>&nbsp;
         <span class="profile_count_link_total">
             {#await countPromise then value}
                 {#if value !== null}{value}{/if}

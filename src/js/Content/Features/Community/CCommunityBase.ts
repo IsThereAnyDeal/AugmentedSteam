@@ -4,7 +4,7 @@ import type Feature from "@Content/Modules/Context/Feature";
 import type Context from "@Content/Modules/Context/Context";
 import CBase from "@Content/Features/Common/CBase";
 import {ContextType} from "@Content/Modules/Context/ContextType";
-import {FFavoriteEmoticons} from "./FFavoriteEmoticons.svelte";
+import FFavoriteEmoticons from "./FFavoriteEmoticons";
 
 export default class CCommunityBase extends CBase {
 

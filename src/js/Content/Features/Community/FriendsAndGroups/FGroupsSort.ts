@@ -1,9 +1,10 @@
 import {__members, __name, __theworddefault} from "@Strings/_strings";
 import type CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
 import Feature from "@Content/Modules/Context/Feature";
-import SortBox, {type ChangeEvent} from "@Content/Modules/Widgets/SortBox.svelte";
+import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import {L} from "@Core/Localization/Localization";
 import SyncedStorage from "@Core/Storage/SyncedStorage";
+import type {SortboxChangeEvent} from "@Content/Modules/Widgets/SortboxChangeEvent";
 
 export default class FGroupsSort extends Feature<CFriendsAndGroups> {
 
@@ -42,7 +43,7 @@ export default class FGroupsSort extends Feature<CFriendsAndGroups> {
                 value: (await SyncedStorage.get("sortgroupsby")) ?? "default_ASC"
             }
         });
-        sortbox.$on("change", (e: CustomEvent<ChangeEvent>) => {
+        sortbox.$on("change", (e: CustomEvent<SortboxChangeEvent>) => {
             const {value, key, direction} = e.detail;
             this._sortGroups(key, direction < 0);
             SyncedStorage.set("sortgroupsby", value);

@@ -1,46 +1,9 @@
-<script lang="ts" context="module">
-    import self_ from "./FSupporterBadges.svelte";
-    import {__esSupporter} from "@Strings/_strings";
-    import Config from "../../../../config";
-    import {L} from "@Core/Localization/Localization";
-    import Feature from "@Content/Modules/Context/Feature";
-    import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
-    import type {TProfileData} from "@Background/Modules/AugmentedSteam/_types";
-
-    export class FSupporterBadges extends Feature<CProfileHome> {
-
-        private _data: TProfileData["badges"]|undefined;
-
-        override async checkPrerequisites(): Promise<boolean> {
-            if (this.context.isPrivateProfile) {
-                return false;
-            }
-
-            const result = await this.context.data;
-            if (!result || !result.badges || !result.badges.length) {
-                return false;
-            }
-
-            this._data = result.badges;
-            return true;
-        }
-
-        override apply(): void {
-            const node = document.querySelector<HTMLElement>(".profile_badges")!;
-            (new self_({
-                target: node.parentElement!,
-                anchor: node.nextElementSibling!,
-                props: {
-                    badges: this._data!
-                }
-            }));
-        }
-    }
-</script>
-
-
 <script lang="ts">
     import ExtensionResources from "@Core/ExtensionResources";
+    import Config from "../../../../config";
+    import type {TProfileData} from "@Background/Modules/AugmentedSteam/_types";
+    import {L} from "@Core/Localization/Localization";
+    import {__esSupporter} from "@Strings/_strings";
 
     export let badges: TProfileData["badges"];
 </script>

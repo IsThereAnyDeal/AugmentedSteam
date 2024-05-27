@@ -1,49 +1,6 @@
-<script lang="ts" context="module">
-    import self_ from "./FSteamRep.svelte";
-    import Feature from "@Content/Modules/Context/Feature";
-    import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
-    import Settings from "@Options/Data/Settings";
-    import ExtensionResources from "@Core/ExtensionResources";
-
-    export class FSteamRep extends Feature<CProfileHome> {
-
-        override async checkPrerequisites(): Promise<boolean> {
-            if (!Settings.showsteamrepapi) {
-                return false;
-            }
-
-            const result = await this.context.data;
-            return result !== null && result.steamrep && result.steamrep.length > 0;
-        }
-
-        override async apply(): Promise<void> {
-
-            const steamrep = ((await this.context.data)?.steamrep ?? [])
-                .map(r => r.trim())
-                .filter(r => r !== "");
-
-            if (steamrep.length === 0) {
-                return;
-            }
-
-            const target = document.querySelector<HTMLElement>(".profile_rightcol");
-            if (target) {
-                (new self_({
-                    target,
-                    anchor: target.firstElementChild ?? undefined,
-                    props: {
-                        steamId: this.context.steamId!,
-                        steamrep
-                    }
-                }));
-            }
-        }
-    }
-</script>
-
-
 <script lang="ts">
     import type {TProfileData} from "@Background/Modules/AugmentedSteam/_types";
+    import ExtensionResources from "@Core/ExtensionResources";
 
     // Build reputation images regexp
     const repImgs: Array<[string, RegExp, string]> = [
