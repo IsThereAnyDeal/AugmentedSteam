@@ -12,7 +12,7 @@ export default function ProgressBar(): void {
     }
 
     new self_({
-        target: globalActions,
+        target: globalActions.parentElement!,
         anchor: globalActions.nextElementSibling ?? undefined
     });
 }
