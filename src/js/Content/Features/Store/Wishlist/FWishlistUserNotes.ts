@@ -1,24 +1,30 @@
 import {__userNote_add} from "@Strings/_strings";
-import {Localization, SyncedStorage} from "../../../../modulesCore";
-import {CallbackFeature} from "../../../modulesContent";
-import {Page} from "../../Page";
-import {UserNotes} from "../Common/UserNotes";
+import Feature from "@Content/Modules/Context/Feature";
+import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
+import Settings from "@Options/Data/Settings";
+import UserNotes from "@Content/Features/Store/Common/UserNotes";
+import {L} from "@Core/Localization/Localization";
+import DOMHelper from "@Content/Modules/DOMHelper";
 
-export default class FWishlistUserNotes extends CallbackFeature {
+export default class FWishlistUserNotes extends Feature<CWishlist> {
 
-    checkPrerequisites() {
-        return this.context.myWishlist && SyncedStorage.get("user_notes_wishlist");
+    // @ts-ignore
+    private _userNotes: UserNotes;
+
+    override checkPrerequisites(): boolean {
+        return this.context.myWishlist && Settings.user_notes_wishlist;
     }
 
-    setup() {
+    override apply(): void {
         this._userNotes = new UserNotes();
 
-        document.addEventListener("click", ({target}) => {
+        document.addEventListener("click", e => {
+            const target = e.target as HTMLElement;
             if (!target.classList.contains("esi-note")) { return; }
 
-            const row = target.closest(".wishlist_row");
+            const row = target.closest<HTMLElement>(".wishlist_row")!;
             this._userNotes.showModalDialog(
-                row.querySelector("a.title").textContent.trim(),
+                row.querySelector<HTMLAnchorElement>("a.title")!.textContent!.trim(),
                 Number(row.dataset.appId),
                 target,
                 (node, active) => {
@@ -46,44 +52,26 @@ export default class FWishlistUserNotes extends CallbackFeature {
          * This ensures that at load time all rows already have the desired row height and further modifications of AS won't
          * change the height.
          */
-        Page.runInPageContext(str => {
-            const f = window.SteamFacade;
-            const wl = f.global("g_Wishlist");
+        DOMHelper.insertScript("scriptlets/Store/Wishlist/addNotes.js", {
+            str: L(__userNote_add)
+        });
 
-            for (const elements of Object.values(wl.rgElements)) {
-                const el = elements[0];
+        this.context.onWishlistUpdate.subscribe(async (e) => {
+            const nodes = e.data;
 
-                const noteEl = document.createElement("div");
-                noteEl.classList.add("esi-note", "esi-note--wishlist", "ellipsis");
-                noteEl.innerText = str;
+            const appids = nodes.map(node => Number(node.dataset.appId));
+            const notes = await this._userNotes.get(...appids);
 
-                el.querySelector(".mid_container").after(noteEl);
+            for (let i = 0; i < nodes.length; i++) {
+                const appid: number = appids[i]!;
+                const note = notes.get(appid) ?? null;
+
+                if (note !== null) {
+                    const noteEl = nodes[i]!.querySelector<HTMLElement>(".esi-note")!;
+                    noteEl.textContent = `"${note}"`;
+                    noteEl.classList.add("esi-has-note");
+                }
             }
-
-            // Adjust the row height to account for the newly added note content
-            wl.nRowHeight = f.jq(".wishlist_row").outerHeight(true);
-
-            // Update initial container height
-            document.getElementById("wishlist_ctn").style.height = `${wl.nRowHeight * wl.rgVisibleApps.length}px`;
-
-            // The scroll handler loads the visible rows and adjusts their positions
-            f.wishlistOnScroll();
-        }, [L(__userNote_add)]);
-    }
-
-    async callback(nodes) {
-
-        const appids = nodes.map(node => Number(node.dataset.appId));
-        const notes = await this._userNotes.get(appids);
-
-        for (let i = 0; i < nodes.length; i++) {
-            const note = notes[appids[i]];
-
-            if (typeof note !== "undefined") {
-                const noteEl = nodes[i].querySelector(".esi-note");
-                noteEl.textContent = `"${note}"`;
-                noteEl.classList.add("esi-has-note");
-            }
-        }
+        });
     }
 }

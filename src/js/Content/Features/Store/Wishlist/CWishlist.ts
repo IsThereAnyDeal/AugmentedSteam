@@ -1,7 +1,5 @@
 import HTMLParser from "@Core/Html/HtmlParser";
 import TimeUtils from "@Core/Utils/TimeUtils";
-import {ContextType, FeatureManager, User} from "../../../modulesContent";
-import {CStoreBase} from "../Common/CStoreBase";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
 import FWishlistHighlights from "./FWishlistHighlights";
 import FWishlistITADPrices from "./FWishlistITADPrices";
@@ -12,31 +10,47 @@ import FExportWishlist from "./FExportWishlist";
 import FKeepEditableRanking from "./FKeepEditableRanking";
 import FOneClickRemoveFromWishlist from "./FOneClickRemoveFromWishlist";
 import FWishlistProfileLink from "./FWishlistProfileLink";
+import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
+import {ContextType} from "@Content/Modules/Context/ContextType";
+import User from "@Content/Modules/User";
+import ASEventHandler from "@Content/Modules/ASEventHandler";
 
-export class CWishlist extends CStoreBase {
+interface WishlistEntry {
+    appid: number,
+    priority: number,
+    added: number
+}
+
+export default class CWishlist extends CStoreBase {
+
+    public readonly onWishlistUpdate: ASEventHandler<HTMLElement[]> = new ASEventHandler<HTMLElement[]>();
+
+    public readonly wishlistData: WishlistEntry[] = [];
+    public readonly myWishlist: boolean = false;
 
     constructor() {
+        const wishlistData = HTMLParser.getArrayVariable<WishlistEntry>("g_rgWishlistData") ?? [];
 
-        const wishlistData = HTMLParser.getArrayVariable("g_rgWishlistData");
+        const hasWishlistData = wishlistData && wishlistData.length > 0;
 
-        // Don't apply features on empty or private wishlists
-        if (!wishlistData || wishlistData.length === 0) {
-            super(ContextType.WISHLIST);
+        super(ContextType.WISHLIST, hasWishlistData
+            ? [
+                FAlternativeLinuxIcon,
+                FWishlistHighlights,
+                FWishlistITADPrices,
+                FWishlistUserNotes,
+                FWishlistStats,
+                FEmptyWishlist,
+                FExportWishlist,
+                FKeepEditableRanking,
+                FOneClickRemoveFromWishlist,
+                FWishlistProfileLink,
+            ] : []
+        );
+
+        if (!hasWishlistData) {
             return;
         }
-
-        super(ContextType.WISHLIST, [
-            FAlternativeLinuxIcon,
-            FWishlistHighlights,
-            FWishlistITADPrices,
-            FWishlistUserNotes,
-            FWishlistStats,
-            FEmptyWishlist,
-            FExportWishlist,
-            FKeepEditableRanking,
-            FOneClickRemoveFromWishlist,
-            FWishlistProfileLink,
-        ]);
 
         this.wishlistData = wishlistData;
         this.myWishlist = false;
@@ -48,7 +62,7 @@ export class CWishlist extends CStoreBase {
         }
 
         // Maintain the order of the buttons
-        FeatureManager.dependency(FEmptyWishlist, [FExportWishlist, true]);
+        this.dependency(FEmptyWishlist, [FExportWishlist, true]);
     }
 
     async applyFeatures() {

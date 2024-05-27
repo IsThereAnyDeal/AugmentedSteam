@@ -1,22 +1,26 @@
-import {SyncedStorage} from "../../../../modulesCore";
-import PriceOverview from "../../../Modules/Prices/PriceOverview.svelte";
-import {CallbackFeature, Prices} from "../../../modulesContent";
+import type CWishlist from "@Content/Features/Store/Wishlist/CWishlist";
+import Feature from "@Content/Modules/Context/Feature";
+import Prices from "@Content/Modules/Prices/Prices";
+import PriceOverview from "@Content/Modules/Prices/PriceOverview.svelte";
+import Settings from "@Options/Data/Settings";
 
-export default class FWishlistITADPrices extends CallbackFeature {
+export default class FWishlistITADPrices extends Feature<CWishlist> {
 
-    checkPrerequisites() {
-        return SyncedStorage.get("showlowestprice_onwishlist");
+    private _cachedPrices: Record<string, Promise<PriceOverview|null>|null> = {};
+    private _activeEntry: [HTMLElement, PriceOverview|null]|null = null;
+
+    override checkPrerequisites(): boolean {
+        return Settings.showlowestprice_onwishlist;
     }
 
-    setup() {
-        this._cachedPrices = {};
-        this._activeEntry = null;
+    override apply(): void | Promise<void> {
+        window.addEventListener("scroll", () => this._scrollResizeHandler());
+        window.addEventListener("resize", () => this._scrollResizeHandler());
 
-        window.addEventListener("scroll", () => { this._scrollResizeHandler(); });
-        window.addEventListener("resize", () => { this._scrollResizeHandler(); });
+        this.context.onWishlistUpdate.subscribe(e => this.callback(e.data));
     }
 
-    _scrollResizeHandler() {
+    private _scrollResizeHandler(): void {
 
         /*
          * If the mouse is still inside an entry while scrolling or resizing, wishlist.js's
@@ -24,11 +28,11 @@ export default class FWishlistITADPrices extends CallbackFeature {
          */
         if (this._activeEntry) {
             let [node, price] = this._activeEntry;
-            this._updateNodesBelow(node, price.height);
+            this._updateNodesBelow(node, price?.height ?? 0);
         }
     }
 
-    callback(nodes) {
+    private callback(nodes: HTMLElement[]): void {
         const handler = new Prices();
         const cachedPrices = this._cachedPrices;
 
@@ -41,13 +45,13 @@ export default class FWishlistITADPrices extends CallbackFeature {
 
             node.addEventListener("mouseenter", () => {
                 if (cachedPrices[appId] === null) {
-                    cachedPrices[appId] = (async () => {
+                    cachedPrices[appId] = (async (): Promise<PriceOverview|null> => {
                         let {prices} = await handler.load({apps: [Number(appId)]});
                         if (prices.length === 0) {
                             return null;
                         }
 
-                        const {id, data} = prices[0];
+                        const {id, data} = prices[0]!;
                         return new PriceOverview({
                             target: node,
                             props: {
@@ -57,9 +61,9 @@ export default class FWishlistITADPrices extends CallbackFeature {
                         });
                     })();
                 }
-                cachedPrices[appId].then(price => {
+                cachedPrices[appId]!.then(price => {
                     if (!price) { return; }
-                    this._updateNodesBelow(node, price.height);
+                    this._updateNodesBelow(node, price.height ?? 0);
                     this._activeEntry = [node, price];
                 });
             });
@@ -68,9 +72,9 @@ export default class FWishlistITADPrices extends CallbackFeature {
 
                 // When scrolling really fast, sometimes only this event is called without the invocation of the mouseenter event
                 if (cachedPrices[appId]) {
-                    cachedPrices[appId].then(price => {
+                    cachedPrices[appId]!.then(price => {
                         if (!price) { return; }
-                        this._updateNodesBelow(node, -price.height);
+                        this._updateNodesBelow(node, -(price.height ?? 0));
                         this._activeEntry = null;
                     });
                 }
@@ -78,8 +82,8 @@ export default class FWishlistITADPrices extends CallbackFeature {
         }
     }
 
-    _updateNodesBelow(node, height) {
-        const nodes = Array.from(document.querySelectorAll(".wishlist_row"));
+    private _updateNodesBelow(node: HTMLElement, height: number): void {
+        const nodes = Array.from(document.querySelectorAll<HTMLElement>(".wishlist_row"));
 
         /*
          * Limit the selection to the rows that are positioned below the row

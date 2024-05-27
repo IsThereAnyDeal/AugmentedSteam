@@ -97,15 +97,18 @@ export default class HighlightsTagsUtils {
         options: Partial<Options> = {}): Promise<void> {
 
         const settings = {
-            owned:        options.owned        || Settings.highlight_owned         || Settings.tag_owned,
-            wishlisted:   options.wishlisted   || Settings.highlight_wishlist      || Settings.tag_wishlist,
-            ignored:      options.ignored      || Settings.highlight_notinterested || Settings.tag_notinterested,
-            ignoredOwned: options.ignoredOwned || Settings.highlight_ignored_owned || Settings.tag_ignored_owned,
-            collected:    options.collected    || Settings.highlight_collection    || Settings.tag_collection,
-            waitlisted:   options.waitlisted   || Settings.highlight_waitlist      || Settings.tag_waitlist,
-            gift:         options.gift         || Settings.highlight_inv_gift      || Settings.tag_inv_gift,
-            guestPass:    options.guestPass    || Settings.highlight_inv_guestpass || Settings.tag_inv_guestpass,
-            coupon:       options.coupon       || Settings.highlight_coupon        || Settings.tag_coupon,
+            owned:        Settings.highlight_owned         || Settings.tag_owned,
+            wishlisted:   Settings.highlight_wishlist      || Settings.tag_wishlist,
+            ignored:      Settings.highlight_notinterested || Settings.tag_notinterested,
+            ignoredOwned: Settings.highlight_ignored_owned || Settings.tag_ignored_owned,
+            collected:    Settings.highlight_collection    || Settings.tag_collection,
+            waitlisted:   Settings.highlight_waitlist      || Settings.tag_waitlist,
+            gift:         Settings.highlight_inv_gift      || Settings.tag_inv_gift,
+            guestPass:    Settings.highlight_inv_guestpass || Settings.tag_inv_guestpass,
+            coupon:       Settings.highlight_coupon        || Settings.tag_coupon,
+        }
+        for (let [key, value] of Object.entries(options) as Array<[keyof Options, boolean]>) {
+            settings[key] &&= value;
         }
 
         if (!Object.values(settings).some(x => x)) { return; }
