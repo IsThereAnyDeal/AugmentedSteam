@@ -1,9 +1,9 @@
 import browser from "webextension-polyfill";
 import ErrorParser from "@Core/Errors/ErrorParser";
 
-export default class BackgroundSender {
+export default class Background {
 
-    static send2<Response>(action: string, params: Record<string, any>={}): Promise<Response> {
+    static send<Response>(action: string, params: Record<string, any>={}): Promise<Response> {
         document.dispatchEvent(new CustomEvent("asRequestStart"));
         try {
             const result = browser.runtime.sendMessage({action, params});

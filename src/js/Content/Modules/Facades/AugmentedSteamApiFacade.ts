@@ -1,4 +1,4 @@
-import BackgroundSender from "@Core/BackgroundSimple";
+import Background from "@Core/Background";
 import type {
     TDlcInfo,
     TFetchMarketCardAveragePricesResponse,
@@ -24,62 +24,62 @@ export default class AugmentedSteamApiFacade {
         voucher: boolean,
         shops: number[]
     ): Promise<TFetchPricesResponse> {
-        return BackgroundSender.send2(EAction.Prices, {country, apps, subs, bundles, voucher, shops});
+        return Background.send(EAction.Prices, {country, apps, subs, bundles, voucher, shops});
     }
 
     static fetchDlcInfo(appid: number): Promise<TDlcInfo> {
-        return BackgroundSender.send2(EAction.DlcInfo, {appid});
+        return Background.send(EAction.DlcInfo, {appid});
     }
 
     static getStorePageData(appid: number): Promise<TStorePageData> {
-        return BackgroundSender.send2(EAction.DlcInfo, {appid});
+        return Background.send(EAction.DlcInfo, {appid});
     }
 
     static expireStorePageData(appid: number): Promise<void> {
-        return BackgroundSender.send2(EAction.StorePageData_Expire, {appid});
+        return Background.send(EAction.StorePageData_Expire, {appid});
     }
 
     static getRates(to: string[]): Promise<TFetchRatesResponse> {
-        return BackgroundSender.send2(EAction.Rates, {to});
+        return Background.send(EAction.Rates, {to});
     }
 
     static clearRates(): Promise<void> {
-        return BackgroundSender.send2(EAction.Rates_Clear);
+        return Background.send(EAction.Rates_Clear);
     }
 
     static isEarlyAccess(appids: number[]): Promise<TIsEarlyAccessResponse> {
-        return BackgroundSender.send2(EAction.IsEA, {appids});
+        return Background.send(EAction.IsEA, {appids});
     }
 
     static fetchProfileBackground(appid: number): Promise<TFetchProfileBackgroundsResponse> {
-        return BackgroundSender.send2(EAction.ProfileBackground, {appid});
+        return Background.send(EAction.ProfileBackground, {appid});
     }
 
     static fetchProfileBackgroundGames(): Promise<TFetchProfileBackgroundsGamesResponse> {
-        return BackgroundSender.send2(EAction.ProfileBackgroundGames);
+        return Background.send(EAction.ProfileBackgroundGames);
     }
 
     static fetchTwitchStream(channelId: string): Promise<TFetchTwitchStreamResponse> {
-        return BackgroundSender.send2(EAction.TwitchStream, {channelId});
+        return Background.send(EAction.TwitchStream, {channelId});
     }
 
     static fetchMarketCardPrices(currency: string, appid: number): Promise<TFetchMarketCardPricesResponse> {
-        return BackgroundSender.send2(EAction.Market_CardPrices, {currency, appid});
+        return Background.send(EAction.Market_CardPrices, {currency, appid});
     }
 
     static fetchMarketCardAveragePrices(currency: string, appids: number[]): Promise<TFetchMarketCardAveragePricesResponse> {
-        return BackgroundSender.send2(EAction.Market_AverageCardPrices, {currency, appids});
+        return Background.send(EAction.Market_AverageCardPrices, {currency, appids});
     }
 
     static fetchSteamPeek(appid: number): Promise<TSimilarResponse> {
-        return BackgroundSender.send2(EAction.SteamPeek, {appid});
+        return Background.send(EAction.SteamPeek, {appid});
     }
 
     static async getProfileData(steamId: string): Promise<TProfileData> {
-        return BackgroundSender.send2(EAction.Profile, {steamId});
+        return Background.send(EAction.Profile, {steamId});
     }
 
     static clearOwn(steamId: string): Promise<void> {
-        return BackgroundSender.send2(EAction.Profile_Clear, {steamId});
+        return Background.send(EAction.Profile_Clear, {steamId});
     }
 }

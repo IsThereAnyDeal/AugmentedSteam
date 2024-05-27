@@ -1,9 +1,9 @@
-import BackgroundSender from "@Core/BackgroundSimple";
+import Background from "@Core/Background";
 import {EAction} from "@Background/EAction";
 
 export default class CacheApiFacade {
 
     static clearCache(): Promise<void> {
-        return BackgroundSender.send2<void>(EAction.CacheClear);
+        return Background.send<void>(EAction.CacheClear);
     }
 }

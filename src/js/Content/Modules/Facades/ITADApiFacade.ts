@@ -3,52 +3,52 @@ import type {
     TInWaitlistResponse,
     TLastImportResponse
 } from "@Background/Modules/IsThereAnyDeal/_types";
-import BackgroundSender from "@Core/BackgroundSimple";
+import Background from "@Core/Background";
 import {EAction} from "@Background/EAction";
 
 export default class ITADApiFacade {
 
     static getStoreList(): Promise<TGetStoreListResponse> {
-        return BackgroundSender.send2<TGetStoreListResponse>(EAction.StoreList);
+        return Background.send<TGetStoreListResponse>(EAction.StoreList);
     }
 
     static authorize(): Promise<void> {
-        return BackgroundSender.send2(EAction.Authorize);
+        return Background.send(EAction.Authorize);
     }
 
     static disconnect(): Promise<void> {
-        return BackgroundSender.send2(EAction.Disconnect);
+        return Background.send(EAction.Disconnect);
     }
 
     static isConnected(): Promise<boolean> {
-        return BackgroundSender.send2(EAction.IsConnected);
+        return Background.send(EAction.IsConnected);
     }
 
     static sync(): Promise<void> {
-        return BackgroundSender.send2(EAction.Sync);
+        return Background.send(EAction.Sync);
     }
 
     static getLastImport(): Promise<TLastImportResponse> {
-        return BackgroundSender.send2(EAction.LastImport);
+        return Background.send(EAction.LastImport);
     }
 
     static async inWaitlist(storeIds: string[]): Promise<TInWaitlistResponse> {
-        return BackgroundSender.send2(EAction.InWaitlist, {storeIds});
+        return Background.send(EAction.InWaitlist, {storeIds});
     }
 
     static async addToWaitlist(...appids: number[]) {
-        return BackgroundSender.send2(EAction.AddToWaitlist, {appids});
+        return Background.send(EAction.AddToWaitlist, {appids});
     }
 
     static async removeFromWaitlist(...appids: number[]) {
-        return BackgroundSender.send2(EAction.RemoveFromWaitlist, {appids});
+        return Background.send(EAction.RemoveFromWaitlist, {appids});
     }
 
     static async inCollection(storeIds: string[]): Promise<TInCollectionResponse> {
-        return BackgroundSender.send2(EAction.InCollection, {storeIds});
+        return Background.send(EAction.InCollection, {storeIds});
     }
 
     static async getFromCollection(storeId: string) {
-        return BackgroundSender.send2(EAction.InCollection, {storeId});
+        return Background.send(EAction.InCollection, {storeId});
     }
 }
