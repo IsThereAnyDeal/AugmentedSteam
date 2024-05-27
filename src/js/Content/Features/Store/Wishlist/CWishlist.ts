@@ -1,5 +1,5 @@
 import HTMLParser from "@Core/Html/HtmlParser";
-import TimeUtils from "@Core/Utils/TimeUtils";
+import TimeUtils, {ResettableTimer} from "@Core/Utils/TimeUtils";
 import FAlternativeLinuxIcon from "../Common/FAlternativeLinuxIcon";
 import FWishlistHighlights from "./FWishlistHighlights";
 import FWishlistITADPrices from "./FWishlistITADPrices";
@@ -25,6 +25,7 @@ export default class CWishlist extends CStoreBase {
 
     public readonly onWishlistUpdate: ASEventHandler<HTMLElement[]> = new ASEventHandler<HTMLElement[]>();
 
+    private readonly hasWishlistData: boolean = false;
     public readonly wishlistData: WishlistEntry[] = [];
     public readonly myWishlist: boolean = false;
 
@@ -48,7 +49,8 @@ export default class CWishlist extends CStoreBase {
             ] : []
         );
 
-        if (!hasWishlistData) {
+        this.hasWishlistData = hasWishlistData;
+        if (!this.hasWishlistData) {
             return;
         }
 
@@ -65,12 +67,12 @@ export default class CWishlist extends CStoreBase {
         this.dependency(FEmptyWishlist, [FExportWishlist, true]);
     }
 
-    async applyFeatures() {
-        if (this.features.length === 0) { return; }
+    override async applyFeatures(): Promise<void> {
+        if (!this.hasWishlistData) { return; }
 
         const throbber = document.getElementById("throbber");
         if (throbber && throbber.style.display !== "none") {
-            await new Promise(resolve => {
+            await new Promise<void>(resolve => {
                 new MutationObserver((_, observer) => {
                     observer.disconnect();
                     resolve();
@@ -83,18 +85,19 @@ export default class CWishlist extends CStoreBase {
         // Internal property to track which nodes have already been processed
         const done = Symbol("done");
 
-        const alreadyLoaded = Array.from(document.querySelectorAll(".wishlist_row"));
+        const alreadyLoaded = Array.from(document.querySelectorAll<HTMLElement>(".wishlist_row"));
         if (alreadyLoaded.length !== 0) {
             await this.triggerCallbacks(alreadyLoaded, done);
         }
 
-        let timer = null;
-        const delayedWork = new Set();
+        let timer: ResettableTimer|null = null;
+        const delayedWork: Set<HTMLElement> = new Set();
 
         new MutationObserver(mutations => {
 
             for (const {addedNodes} of mutations) {
-                const node = addedNodes[0];
+                const node = addedNodes[0] as HTMLElement;
+                // @ts-expect-error
                 if (node && !node[done]) {
                     delayedWork.add(node);
                 }
@@ -105,7 +108,7 @@ export default class CWishlist extends CStoreBase {
                 timer = TimeUtils.resettableTimer(() => {
 
                     // Valve detaches wishlist entries that aren't visible
-                    const visibleRows = Array.from(delayedWork).filter(node => node.isConnected);
+                    const visibleRows: HTMLElement[] = Array.from(delayedWork).filter(node => node.isConnected);
                     delayedWork.clear();
 
                     if (visibleRows.length !== 0) {
@@ -115,11 +118,14 @@ export default class CWishlist extends CStoreBase {
             } else {
                 timer.reset();
             }
-        }).observe(document.getElementById("wishlist_ctn"), {"childList": true});
+        }).observe(document.getElementById("wishlist_ctn")!, {"childList": true});
     }
 
-    triggerCallbacks(nodes, done) {
-        nodes.forEach(node => { node[done] = true; });
-        return super.triggerCallbacks(nodes);
+    triggerCallbacks(nodes: HTMLElement[], done: Symbol) {
+        nodes.forEach(node => {
+            // @ts-expect-error
+            node[done] = true;
+        });
+        this.onWishlistUpdate.dispatch(nodes);
     }
 }
