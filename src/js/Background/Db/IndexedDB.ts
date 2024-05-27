@@ -87,9 +87,11 @@ export default class IndexedDB {
         const index = tx.store.index(indexName);
         let cursor = await index.openKeyCursor(IDBKeyRange.upperBound(TimeUtils.now()));
 
-        while (cursor) {
-            await cursor.delete();
-            cursor = await cursor.continue();
+        if (cursor) {
+            while (cursor) {
+                await cursor.delete();
+                cursor = await cursor.continue();
+            }
         }
     }
 
