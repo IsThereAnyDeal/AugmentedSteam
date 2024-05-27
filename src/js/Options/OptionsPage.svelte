@@ -16,11 +16,12 @@
     import ITADOptions from "./Modules/Options/ITADOptions.svelte";
     import AppPageOptions from "./Modules/Options/AppPageOptions.svelte";
 
-    let initialLoad: Promise<void> = Promise.reject();
+    let initialLoad: Promise<void>|null = null;
 
     onMount(() => {
         initialLoad = (async () => {
-            await Promise.all([SettingsStore, Localization]);
+            await SettingsStore
+            await Localization;
         })();
     });
 
@@ -31,41 +32,45 @@
 
 
 <svelte:head>
-    {#await initialLoad then _}
-        <title>Augmented Steam {L(__thewordoptions)}</title>
-    {/await}
+    {#if initialLoad}
+        {#await initialLoad then _}
+            <title>Augmented Steam {L(__thewordoptions)}</title>
+        {/await}
+    {/if}
 </svelte:head>
 
 
 <Header />
 
-{#await initialLoad then _}
-    <div class="page">
-        <Sidebar bind:selected={section} />
+{#if initialLoad}
+    {#await initialLoad then _}
+        <div class="page">
+            <Sidebar bind:selected={section} />
 
-        <div>
-            {#if section === "general"}
-                <GeneralOptions />
-            {:else if section === "itad"}
-                <ITADOptions />
-            {:else if section === "store"}
-                <StoreOptions />
-            {:else if section === "app"}
-                <AppPageOptions />
-            {:else if section === "price"}
-                <PriceOptions />
-            {:else if section === "community"}
-                <CommunityOptions />
-            {:else if section === "changelog"}
-                <Changelog />
-            {:else if section === "about"}
-                <About />
-            {/if}
+            <div>
+                {#if section === "general"}
+                    <GeneralOptions />
+                {:else if section === "itad"}
+                    <ITADOptions />
+                {:else if section === "store"}
+                    <StoreOptions />
+                {:else if section === "app"}
+                    <AppPageOptions />
+                {:else if section === "price"}
+                    <PriceOptions />
+                {:else if section === "community"}
+                    <CommunityOptions />
+                {:else if section === "changelog"}
+                    <Changelog />
+                {:else if section === "about"}
+                    <About />
+                {/if}
+            </div>
         </div>
-    </div>
 
-    <Footer />
-{/await}
+        <Footer />
+    {/await}
+{/if}
 
 
 <style>

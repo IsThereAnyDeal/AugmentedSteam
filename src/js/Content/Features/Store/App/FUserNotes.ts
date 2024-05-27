@@ -32,7 +32,7 @@ export default class FUserNotes extends Feature<CApp> {
         const noteEl = document.querySelector<HTMLDivElement>("#esi-store-user-note")!;
 
         const userNotes = new UserNotes();
-        const note = await userNotes.get(this.context.appid);
+        const note = (await userNotes.get(this.context.appid)).get(this.context.appid) ?? undefined;
 
         if (typeof note !== "undefined") {
             button.classList.add("esi-has-note");

@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__apppageSections, __customize,} from "@Strings/_strings";
@@ -73,12 +75,14 @@
                 element.classList.toggle("esi-shown", enabled);
                 element.classList.toggle("esi-hidden", !enabled);
                 element.dataset['as-customizer'] = name;
+                element.dataset['asCustomizer'] = name;
             }
 
             if (label) {
                 entries.set(name, [label, enabled]);
             }
         }
+        entries = entries;
     }
 
     onMount(() => {
