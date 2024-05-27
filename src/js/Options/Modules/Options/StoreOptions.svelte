@@ -44,6 +44,7 @@
     import Toggle from "./Components/Toggle.svelte";
     import Select from "./Components/Select.svelte";
     import type {SettingsSchema} from "../../Data/_types";
+    import UserNotesAdapter from "@Content/Modules/UserNotes/UserNotesAdapter";
 
     let settings: Writable<SettingsSchema> = writable(Settings);
 </script>
@@ -184,7 +185,7 @@
                 ["synced_storage", L(__options_userNotes_syncedStorage)],
                 ["idb", L(__options_userNotes_local)],
                 /* ["itad", "options.user_notes.itad"], */
-            ]} />
+            ]} on:change={() => UserNotesAdapter.changeAdapter($settings.user_notes_adapter)} />
         </OptionGroup>
     </Section>
 
