@@ -43,8 +43,6 @@ export default {
     background: {
         persistent: true,
         scripts: [
-            "js/browser-polyfill.js",
-            "js/dompurify.js",
             "js/background.js"
         ]
     }

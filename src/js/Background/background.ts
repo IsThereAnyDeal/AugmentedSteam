@@ -48,7 +48,7 @@ browser.runtime.onMessage.addListener((
             ];
 
             for (let handler of handlers) {
-                response = handler.handle(message);
+                response = await handler.handle(message);
                 if (response !== undefined) {
                     break;
                 }

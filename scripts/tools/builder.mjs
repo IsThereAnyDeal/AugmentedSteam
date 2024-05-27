@@ -35,7 +35,7 @@ function* contentScripts(srcDir, distDir, metafile, contentScriptsMap) {
         yield {
             matches,
             excludes,
-            js: ["js/dompurify.js", "js/browser-polyfill.js", ...js],
+            js: [...js],
             css: ["css/augmentedsteam.css", ...css]
         };
     }

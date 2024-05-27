@@ -1,11 +1,19 @@
 import type {MessageHandler} from "@Content/Modules/Messaging/MessageHandler";
+import DOMHelper from "@Content/Modules/DOMHelper";
 
 export default class Messenger {
 
     private static id: number = 0;
 
+    private static dispatchEvent(handler: MessageHandler, action: string, params: any[]=[], id: string|undefined=undefined): void {
+
+        DOMHelper.insertScript("scriptlets/event.js", {handler, detail: {
+            action, params, id
+        }});
+    }
+
     static call(handler: MessageHandler, action: string, params: any[]=[]): void {
-        document.dispatchEvent(new CustomEvent(handler, {detail: {action, params}}));
+        this.dispatchEvent(handler, action, params);
     }
 
     static get<T>(handler: MessageHandler, action: string, params: any[]=[]): Promise<T> {
@@ -14,7 +22,7 @@ export default class Messenger {
 
             // @ts-ignore
             window.addEventListener(id, (e) => resolve(e.detail), {once: true});
-            document.dispatchEvent(new CustomEvent(handler, {detail: {action, params, id}}));
+            this.dispatchEvent(handler, action, params, id);
         });
     }
 }
