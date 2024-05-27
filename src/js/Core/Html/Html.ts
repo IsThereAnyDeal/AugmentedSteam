@@ -38,12 +38,10 @@ export default class HTML {
         return HTML.toDom(html).firstElementChild;
     }
 
-    private static _getNode(nodeOrSelector: Element|string): Element|null {
-        let node: Element|null = null;
-
-        if (typeof nodeOrSelector === "string") {
-            node = document.querySelector(nodeOrSelector);
-        }
+    private static _getNode(nodeOrSelector: Element|string|null): Element|null {
+        let node: Element|null = typeof nodeOrSelector === "string"
+            ? document.querySelector(nodeOrSelector)
+            : nodeOrSelector;
 
         if (node instanceof Element) {
             return node;
