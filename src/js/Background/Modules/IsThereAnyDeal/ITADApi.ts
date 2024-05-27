@@ -16,6 +16,7 @@ import {EAction} from "@Background/EAction";
 import Errors from "@Core/Errors/Errors";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import TimeUtils from "@Core/Utils/TimeUtils";
+import {Unrecognized} from "@Background/background";
 
 const MaxItemsPerRequest = 1000;
 const RequiredScopes = [
@@ -383,6 +384,6 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
                 return this.getFromCollection(message.params.storeId);
         }
 
-        return undefined;
+        return Unrecognized;
     }
 }

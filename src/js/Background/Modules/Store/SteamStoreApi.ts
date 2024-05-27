@@ -15,6 +15,7 @@ import HTMLParser from "@Core/Html/HtmlParser";
 import HTML from "@Core/Html/Html";
 import TimeUtils from "@Core/Utils/TimeUtils";
 import StringUtils from "@Core/Utils/StringUtils";
+import {Unrecognized} from "@Background/background";
 
 // helper types for clarity
 type TAppid = number;
@@ -400,6 +401,6 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
                 return await this.dynamicStoreRandomApp();
         }
 
-        return undefined;
+        return Unrecognized;
     }
 }

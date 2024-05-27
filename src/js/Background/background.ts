@@ -19,6 +19,8 @@ type Message = {
     params: any
 };
 
+export const Unrecognized = Symbol("Unrecognized");
+
 browser.runtime.onMessage.addListener((
     message: Message,
     sender: MessageSender,
@@ -49,12 +51,12 @@ browser.runtime.onMessage.addListener((
 
             for (let handler of handlers) {
                 response = await handler.handle(message);
-                if (response !== undefined) {
+                if (response !== Unrecognized) {
                     break;
                 }
             }
 
-            if (response === undefined) {
+            if (response === Unrecognized) {
                 throw new Error(`Did not recognize message`);
             }
 

@@ -13,6 +13,7 @@ import {EAction} from "@Background/EAction";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import Errors from "@Core/Errors/Errors";
 import AppId from "@Core/GameId/AppId";
+import {Unrecognized} from "@Background/background";
 
 
 export default class InventoryApi extends Api implements MessageHandlerInterface {
@@ -330,6 +331,6 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
                 return await this.hasItem(message.params.hashes);
         }
 
-        return undefined;
+        return Unrecognized;
     }
 }

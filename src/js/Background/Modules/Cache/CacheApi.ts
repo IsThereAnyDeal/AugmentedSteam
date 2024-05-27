@@ -2,6 +2,7 @@ import IndexedDB from "@Background/Db/IndexedDB";
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import {EAction} from "@Background/EAction";
+import {Unrecognized} from "@Background/background";
 
 export default class CacheApi implements MessageHandlerInterface{
 
@@ -39,6 +40,6 @@ export default class CacheApi implements MessageHandlerInterface{
             }
         }
 
-        return undefined;
+        return Unrecognized;
     }
 }

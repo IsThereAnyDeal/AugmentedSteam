@@ -8,6 +8,7 @@ import Errors from "@Core/Errors/Errors";
 import HTMLParser from "@Core/Html/HtmlParser";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import TimeUtils from "@Core/Utils/TimeUtils";
+import {Unrecognized} from "@Background/background";
 
 export default class SteamCommunityApi extends Api implements MessageHandlerInterface {
 
@@ -240,6 +241,6 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
                 return await this.getStoreCountry();
         }
 
-        return undefined;
+        return Unrecognized;
     }
 }

@@ -1,6 +1,7 @@
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import IndexedDB from "@Background/Db/IndexedDB";
 import {EAction} from "@Background/EAction";
+import {Unrecognized} from "@Background/background";
 
 export default class UserNotesApi implements MessageHandlerInterface {
 
@@ -62,6 +63,6 @@ export default class UserNotesApi implements MessageHandlerInterface {
                 return await this.clearNotes();
         }
 
-        return undefined;
+        return Unrecognized;
     }
 }

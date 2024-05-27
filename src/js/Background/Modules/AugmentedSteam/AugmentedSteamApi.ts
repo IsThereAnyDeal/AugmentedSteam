@@ -18,6 +18,7 @@ import type {
 import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import {EAction} from "@Background/EAction";
 import TimeUtils from "@Core/Utils/TimeUtils";
+import {Unrecognized} from "@Background/background";
 
 export default class AugmentedSteamApi extends Api implements MessageHandlerInterface{
 
@@ -228,6 +229,6 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
                 return await this.clearOwn(message.params.steamId);
         }
 
-        return undefined;
+        return Unrecognized;
     }
 }
