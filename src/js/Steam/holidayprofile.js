@@ -149,7 +149,6 @@ function startAnimation() {
     animationForShowcase($J($Showcases[0]));
 
     $Showcases.click(function() {
-        // eslint-disable-next-line no-invalid-this -- this is the HTML element
         animationForShowcase($J(this));
     });
 
@@ -158,7 +157,6 @@ function startAnimation() {
             const nScrollY = window.scrollY;
             const nWindowHeight = $J(window).height();
             const $VisibleShowcases = $Showcases.filter(function() {
-                // eslint-disable-next-line no-invalid-this -- this is the HTML element
                 const $Showcase = $J(this);
                 const nShowcaseTop = $Showcase.offset().top;
                 return nShowcaseTop >= nScrollY + 100 && nShowcaseTop < (nScrollY + nWindowHeight);

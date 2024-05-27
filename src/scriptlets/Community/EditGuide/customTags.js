@@ -24,7 +24,7 @@
         elem.on("keydown paste input", e => {
             tag = elem.val();
             if (e.key === "Enter") {
-                modal.Dismiss(); // eslint-disable-line new-cap
+                modal.Dismiss();
                 done();
             }
         });

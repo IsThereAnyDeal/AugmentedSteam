@@ -154,13 +154,13 @@ export default class FReviewSort extends Feature<CRecommended> {
 
                     input.setAttribute("onchange", `OnReview${type}Change("${id}", "${arg}");`);
 
-                    trigger.setAttribute("href", "javascript:DSelectNoop();"); // eslint-disable-line no-script-url
+                    trigger.setAttribute("href", "javascript:DSelectNoop();");
                     trigger.setAttribute("onfocus", `DSelectOnFocus("${arg}");`);
                     trigger.setAttribute("onblur", `DSelectOnBlur("${arg}");`);
                     trigger.setAttribute("onclick", `DSelectOnTriggerClick("${arg}");`);
 
                     selections.forEach((selection, selIndex) => {
-                        selection.setAttribute("href", "javascript:DSelectNoop();"); // eslint-disable-line no-script-url
+                        selection.setAttribute("href", "javascript:DSelectNoop();");
                         selection.setAttribute("onmouseover", `DHighlightItem("${arg}", ${selIndex}, false);`);
                         selection.setAttribute("onclick", `DHighlightItem("${arg}", ${selIndex}, true);`);
                     });
@@ -171,7 +171,7 @@ export default class FReviewSort extends Feature<CRecommended> {
                 const [upvote, downvote, funny, award] = node.querySelectorAll<HTMLElement>(".control_block > .btn_small_thin");
 
                 for (const btn of [upvote, downvote, funny]) {
-                    btn!.setAttribute("href", "javascript:void(0)"); // eslint-disable-line no-script-url
+                    btn!.setAttribute("href", "javascript:void(0)");
                 }
 
                 upvote!.setAttribute("onclick", `UserReviewVoteUp(${loggedIn}, "${loginURL}", "${id}");`);

@@ -42,7 +42,6 @@ function copySource() {
         "scripts",
         "tsconfig.json",
         "src",
-        ".eslintrc.json",
         ".gitignore",
         "changelog.yml",
         "LICENSE",

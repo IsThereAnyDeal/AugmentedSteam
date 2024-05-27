@@ -230,7 +230,6 @@ export default class FMarketStats extends Feature<CMarketHome> {
              * TODO this should be rewritten, this disable here is not necessary. Also functions should be split,
              *  they are intervowen between regular code
              */
-            // eslint-disable-next-line no-unmodified-loop-condition -- stop is modified in updatePrices, called by nextRequest
             while (pageRequests.length > 0 && !stop) {
                 const t = await nextRequest();
                 if (t !== null && pages < 0 && t > 0) {

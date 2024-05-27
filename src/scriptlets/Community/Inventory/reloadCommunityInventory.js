@@ -16,7 +16,6 @@
     const profileUrl = f.global("g_strProfileURL");
 
     $J.get(`${profileUrl}/ajaxgetgoovalue/`, data).done(data => {
-        // eslint-disable-next-line camelcase
         data.goo_value_expected = data.goo_value;
 
         $J.post(`${profileUrl}/ajaxgrindintogoo/`, data)

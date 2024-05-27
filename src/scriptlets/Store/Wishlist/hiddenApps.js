@@ -39,7 +39,6 @@
                 window.RemoveFromWishlist(appidToRemove);
                 GDynamicStore.InvalidateCache();
 
-                // eslint-disable-next-line max-nested-callbacks
                 window.asHiddenApps = window.asHiddenApps.filter(appid => appid !== appidToRemove);
 
                 row.remove();
