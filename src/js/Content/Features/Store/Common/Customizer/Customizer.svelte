@@ -74,7 +74,6 @@
 
                 element.classList.toggle("esi-shown", enabled);
                 element.classList.toggle("esi-hidden", !enabled);
-                element.dataset['as-customizer'] = name;
                 element.dataset['asCustomizer'] = name;
             }
 
