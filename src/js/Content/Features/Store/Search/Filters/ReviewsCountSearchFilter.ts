@@ -1,20 +1,26 @@
 import {
     __searchFilters_reviewsCount_count, __searchFilters_reviewsCount_maxCount,
     __searchFilters_reviewsCount_minCount,
-} from "../../../../../../localization/compiled/_strings";
-import {L} from "../../../../../Core/Localization/Localization";
-import {SearchFilter} from "./SearchFilter";
+} from "@Strings/_strings";
+import {L} from "@Core/Localization/Localization";
+import SearchFilter from "./SearchFilter";
+import type FSearchFilters from "@Content/Features/Store/Search/FSearchFilters";
 
-export class ReviewsCountSearchFilter extends SearchFilter {
+export default class ReviewsCountSearchFilter extends SearchFilter {
 
-    constructor(feature) {
+    private _minCount: HTMLInputElement|null = null;
+    private _maxCount: HTMLInputElement|null = null;
+
+    constructor(feature: FSearchFilters) {
         super("as-reviews-count", feature);
-
-        this._val = null;
     }
 
-    get active() {
-        return this._minCount.value || this._maxCount.value;
+    override get active(): boolean {
+        if (!this._minCount || !this._maxCount) {
+            return false;
+        }
+
+        return Boolean(this._minCount.value) || Boolean(this._maxCount.value);
     }
 
     getHTML() {
@@ -30,18 +36,18 @@ export class ReviewsCountSearchFilter extends SearchFilter {
                 </div>`;
     }
 
-    setup(params) {
+    override setup(params: URLSearchParams): void {
 
-        this._minCount = document.querySelector(".js-reviews-count-lower");
-        this._maxCount = document.querySelector(".js-reviews-count-upper");
+        this._minCount = document.querySelector<HTMLInputElement>(".js-reviews-count-lower");
+        this._maxCount = document.querySelector<HTMLInputElement>(".js-reviews-count-upper");
 
         for (const input of document.querySelectorAll(".js-reviews-count-input")) {
 
             input.addEventListener("change", () => {
                 this._apply();
 
-                const minVal = this._minCount.value;
-                const maxVal = this._maxCount.value;
+                const minVal = this._minCount?.value ?? "";
+                const maxVal = this._maxCount?.value ?? "";
                 let val = null;
 
                 if ((minVal && Number(minVal) !== 0) || maxVal) {
@@ -51,7 +57,8 @@ export class ReviewsCountSearchFilter extends SearchFilter {
                 this.value = val;
             });
 
-            input.addEventListener("keydown", e => {
+            // @ts-ignore
+            input.addEventListener("keydown", (e: KeyboardEvent) => {
                 if (e.key === "Enter") {
 
                     // Prevents unnecessary submitting of the advanced search form
@@ -65,61 +72,60 @@ export class ReviewsCountSearchFilter extends SearchFilter {
         super.setup(params);
     }
 
-    _setState(params) {
+    override _setState(params: URLSearchParams): void {
 
         let lowerCountVal = "";
         let upperCountVal = "";
 
         if (params.has("as-reviews-count")) {
 
-            const val = params.get("as-reviews-count");
+            const val = params.get("as-reviews-count")!;
             const match = val.match(/(^\d*)-(\d*)/);
 
             this._value = val;
 
             if (match) {
-                let [, lower, upper] = match;
-                lower = parseInt(lower);
-                upper = parseInt(upper);
+                let lower = parseInt(match[1]!);
+                let upper = parseInt(match[2]!);
 
                 if (!isNaN(lower)) {
-                    lowerCountVal = lower;
+                    lowerCountVal = String(lower);
                 }
                 if (!isNaN(upper)) {
-                    upperCountVal = upper;
+                    upperCountVal = String(upper);
                 }
             }
         }
 
-        if (lowerCountVal !== this._minCount.value) {
-            this._minCount.value = lowerCountVal;
+        if (lowerCountVal !== this._minCount!.value) {
+            this._minCount!.value = lowerCountVal;
         }
-        if (upperCountVal !== this._maxCount.value) {
-            this._maxCount.value = upperCountVal;
+        if (upperCountVal !== this._maxCount!.value) {
+            this._maxCount!.value = upperCountVal;
         }
     }
 
-    _addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-count])")) {
+    override _addRowMetadata(rows = document.querySelectorAll<HTMLElement>(".search_result_row:not([data-as-review-count])")): void {
 
         for (const row of rows) {
             let reviewCount = 0;
 
-            const reviewsNode = row.querySelector(".search_review_summary");
+            const reviewsNode = row.querySelector<HTMLElement>(".search_review_summary");
             if (reviewsNode) {
-                const match = reviewsNode.dataset.tooltipHtml.match(/(?<!%\s*[\d,]*)\d[\d,]+(?![\d,]*\s*%)/);
+                const match = reviewsNode.dataset.tooltipHtml?.match(/(?<!%\s*[\d,]*)\d[\d,]+(?![\d,]*\s*%)/);
                 if (match) {
                     reviewCount = Number(match[0].replace(/,/g, ""));
                 }
             }
 
-            row.dataset.asReviewCount = reviewCount;
+            row.dataset.asReviewCount = String(reviewCount);
         }
     }
 
-    _apply(rows = document.querySelectorAll(".search_result_row")) {
+    override _apply(rows = document.querySelectorAll<HTMLElement>(".search_result_row")) {
 
-        const minCount = Number(this._minCount.value);
-        const maxCount = this._maxCount.value === "" ? Infinity : Number(this._maxCount.value);
+        const minCount = Number(this._minCount!.value);
+        const maxCount = this._maxCount!.value === "" ? Infinity : Number(this._maxCount!.value);
 
         for (const row of rows) {
             const rowCount = Number(row.dataset.asReviewCount);

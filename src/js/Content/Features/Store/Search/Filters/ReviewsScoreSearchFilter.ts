@@ -5,11 +5,22 @@ import {
     __searchFilters_reviewsScore_upTo,
 } from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
-import {SearchFilter} from "./SearchFilter";
+import SearchFilter from "./SearchFilter";
+import type FSearchFilters from "@Content/Features/Store/Search/FSearchFilters";
 
-export class ReviewsScoreSearchFilter extends SearchFilter {
+export default class ReviewsScoreSearchFilter extends SearchFilter {
 
-    constructor(feature) {
+    private readonly _stepSize: number;
+    private readonly _scoreValues: number[];
+    private readonly _maxStep: number;
+    private _active: boolean;
+
+    private _scoreFilter: HTMLElement|null = null;
+    private _minScore: HTMLInputElement|null = null;
+    private _maxScore: HTMLInputElement|null = null;
+    private _rangeDisplay: HTMLElement|null = null;
+
+    constructor(feature: FSearchFilters) {
         super("as-reviews-score", feature);
 
         this._stepSize = 5;
@@ -22,16 +33,16 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
         this._active = false;
     }
 
-    get active() {
+    override get active(): boolean {
         return this._active;
     }
 
-    set active(newActive) {
-        this._feature.results.classList.toggle("reviews-score", newActive);
+    override set active(newActive: boolean) {
+        this._feature.results?.classList.toggle("reviews-score", newActive);
         this._active = newActive;
     }
 
-    getHTML() {
+    getHTML(): string {
         return `<div><input type="hidden" name="as-hide"></div>
                 <div class="block_rule"></div>
                 <div class="range_container" style="margin-top: 8px;">
@@ -44,32 +55,32 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
                 </div>`;
     }
 
-    setup(params) {
+    override setup(params: URLSearchParams): void {
 
-        this._scoreFilter = document.querySelector(".js-reviews-score-filter");
-        this._minScore = this._scoreFilter.querySelector(".js-reviews-score-lower");
-        this._maxScore = this._scoreFilter.querySelector(".js-reviews-score-upper");
-        this._rangeDisplay = this._scoreFilter.nextElementSibling;
+        this._scoreFilter = document.querySelector<HTMLElement>(".js-reviews-score-filter")!;
+        this._minScore = this._scoreFilter.querySelector<HTMLInputElement>(".js-reviews-score-lower");
+        this._maxScore = this._scoreFilter.querySelector<HTMLInputElement>(".js-reviews-score-upper");
+        this._rangeDisplay = this._scoreFilter.nextElementSibling as HTMLElement;
 
         for (const input of document.querySelectorAll(".js-reviews-score-input")) {
 
-            let minVal = parseInt(this._minScore.value);
-            let maxVal = parseInt(this._maxScore.value);
+            let minVal = parseInt(this._minScore!.value);
+            let maxVal = parseInt(this._maxScore!.value);
 
             input.addEventListener("input", () => {
 
                 const maxStep = this._maxStep;
 
-                minVal = parseInt(this._minScore.value);
-                maxVal = parseInt(this._maxScore.value);
+                minVal = parseInt(this._minScore!.value);
+                maxVal = parseInt(this._maxScore!.value);
 
                 if (input === this._maxScore) {
                     if (minVal >= maxVal) {
                         if (minVal <= 0) {
-                            this._maxScore.value = 1;
+                            this._maxScore.value = "1";
                             maxVal = 1;
                         } else {
-                            this._minScore.value = maxVal - 1;
+                            this._minScore!.value = String(maxVal - 1);
                             minVal = maxVal - 1;
                         }
                     }
@@ -77,16 +88,16 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
 
                     // Happens when the user clicks to the highest step after the max thumb instead of dragging
                     if (minVal === maxStep) {
-                        this._minScore.value = maxStep - 1;
+                        this._minScore!.value = String(maxStep - 1);
                         minVal = maxStep - 1;
 
-                        this._maxScore.value = maxStep;
+                        this._maxScore!.value = String(maxStep);
                         maxVal = maxStep;
                     } else if (maxVal < maxStep) {
-                        this._maxScore.value = minVal + 1;
+                        this._maxScore!.value = String(minVal + 1);
                         maxVal = minVal + 1;
                     } else {
-                        this._minScore.value = maxVal - 1;
+                        this._minScore!.value = String(maxVal - 1);
                         minVal = maxVal - 1;
                     }
                 }
@@ -95,12 +106,12 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
             });
 
             input.addEventListener("change", () => {
-
                 const active = minVal !== 0 || maxVal !== this._maxStep;
-                const val = active ? `${minVal === 0 ? "" : this._scoreValues[minVal]}-${maxVal === this._maxStep ? "" : this._scoreValues[maxVal]}` : null;
 
-                this.value = val;
                 this.active = active;
+                this.value = active ?
+                    `${minVal === 0 ? "" : this._scoreValues[minVal]}-${maxVal === this._maxStep ? "" : this._scoreValues[maxVal]}`
+                    : null;
 
                 this._apply();
             });
@@ -109,21 +120,21 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
         super.setup(params);
     }
 
-    _setState(params) {
+    override _setState(params: URLSearchParams): void {
 
         let lowerScoreVal = 0;
         let upperScoreVal = this._maxStep;
 
         if (params.has("as-reviews-score")) {
 
-            const val = params.get("as-reviews-score");
+            const val = params.get("as-reviews-score")!;
             const match = val.match(/(^\d*)-(\d*)/);
 
             this._value = val;
 
             if (match) {
-                let lowerIndex = this._scoreValues.indexOf(parseInt(match[1]));
-                let upperIndex = this._scoreValues.indexOf(parseInt(match[2]));
+                let lowerIndex = this._scoreValues.indexOf(parseInt(match[1]!));
+                let upperIndex = this._scoreValues.indexOf(parseInt(match[2]!));
 
                 if (lowerIndex === -1) {
                     lowerIndex = lowerScoreVal;
@@ -141,35 +152,36 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
             }
         }
 
-        this._minScore.value = lowerScoreVal.toString();
-        this._maxScore.value = upperScoreVal.toString();
+        this._minScore!.value = lowerScoreVal.toString();
+        this._maxScore!.value = upperScoreVal.toString();
     }
 
-    _addRowMetadata(rows = document.querySelectorAll(".search_result_row:not([data-as-review-percentage])")) {
+    override _addRowMetadata(rows = document.querySelectorAll<HTMLElement>(".search_result_row:not([data-as-review-percentage])")): void {
 
         for (const row of rows) {
             let reviewPercentage = -1;
 
-            const reviewsNode = row.querySelector(".search_review_summary");
+            const reviewsNode = row.querySelector<HTMLElement>(".search_review_summary");
             if (reviewsNode) {
-                const match = reviewsNode.dataset.tooltipHtml.match(/(?<=%\s?)\d+|\d+(?=\s*%)/);
+                const match = reviewsNode.dataset.tooltipHtml?.match(/(?<=%\s?)\d+|\d+(?=\s*%)/);
                 if (match) {
                     reviewPercentage = Number(match[0]);
                 }
             }
 
-            row.dataset.asReviewPercentage = reviewPercentage;
+            row.dataset.asReviewPercentage = String(reviewPercentage);
         }
     }
 
-    _apply(rows = document.querySelectorAll(".search_result_row")) {
-
+    override _apply(rows = document.querySelectorAll<HTMLElement>(".search_result_row")) {
         if (!this.active) { return; }
 
-        const minScore = this._scoreValues[Number(this._minScore.value)];
+        const minScore = this._scoreValues[Number(this._minScore!.value)]!;
 
-        const maxVal = Number(this._maxScore.value);
-        const maxScore = maxVal === this._maxStep ? Infinity : this._scoreValues[maxVal];
+        const maxVal = Number(this._maxScore!.value);
+        const maxScore = maxVal === this._maxStep
+            ? Infinity
+            : this._scoreValues[maxVal]!;
 
         for (const row of rows) {
             const rowScore = Number(row.dataset.asReviewPercentage);
@@ -177,23 +189,27 @@ export class ReviewsScoreSearchFilter extends SearchFilter {
         }
     }
 
-    _setText(minVal, maxVal) {
+    _setText(minVal: number, maxVal: number): void {
         let text;
         if (minVal === 0) {
             if (maxVal === this._maxStep) {
                 text = L(__searchFilters_reviewsScore_any);
             } else {
-                text = L(__searchFilters_reviewsScore_upTo, {score: this._scoreValues[maxVal]});
+                text = L(__searchFilters_reviewsScore_upTo, {
+                    score: this._scoreValues[maxVal]!
+                });
             }
         } else if (maxVal === this._maxStep) {
-            text = L(__searchFilters_reviewsScore_from, {score: this._scoreValues[minVal]});
+            text = L(__searchFilters_reviewsScore_from, {
+                score: this._scoreValues[minVal]!
+            });
         } else {
             text = L(__searchFilters_reviewsScore_between, {
-                lower: this._scoreValues[minVal],
-                upper: this._scoreValues[maxVal]
+                lower: this._scoreValues[minVal]!,
+                upper: this._scoreValues[maxVal]!
             });
         }
 
-        this._rangeDisplay.textContent = text;
+        this._rangeDisplay!.textContent = text;
     }
 }
