@@ -11,7 +11,7 @@ export default class FFamilySharingNotice extends Feature<CApp> {
         if (!Settings.exfgls) { return false; }
 
         const result = await this.context.data;
-        return result && !result.family_sharing;
+        return result !== null && result.family_sharing;
     }
 
     override apply(): void {

@@ -6,8 +6,6 @@
     import {__ready_failed, __ready_loading, __ready_ready, __ready_serverOutage} from "@Strings/_strings";
     import Settings from "@Options/Data/Settings";
 
-    let instance: self_;
-
     export function create(): void {
         if (!Settings.show_progressbar) {
             return;
@@ -22,10 +20,6 @@
             target: globalActions,
             anchor: globalActions.nextElementSibling ?? undefined
         });
-    }
-
-    export function reset(): void {
-        instance?.reset();
     }
 </script>
 
@@ -51,7 +45,7 @@
         isLoading = started > 0 && (done + failed) < started;
     }
 
-    export function reset(): void {
+    function reset(): void {
         started = 0;
         done = 0;
         failed = 0;

@@ -1,8 +1,8 @@
 import AppId from "@Core/GameId/AppId";
-import FHighlightsTags from "../../Common/FHighlightsTags";
 import type CProfileActivity from "@Content/Features/Community/ProfileActivity/CProfileActivity";
 import Feature from "@Content/Modules/Context/Feature";
 import type {ASEvent} from "@Content/Modules/ASEventHandler";
+import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
 
 export default class FHighlightFriendsActivity extends Feature<CProfileActivity> {
 
@@ -31,6 +31,6 @@ export default class FHighlightFriendsActivity extends Feature<CProfileActivity>
             }
         }
 
-        FHighlightsTags.highlightAndTag(nodes);
+        HighlightsTagsUtils.highlightAndTag(nodes);
     }
 }

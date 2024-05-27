@@ -44,6 +44,7 @@ import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
 import FWaitlistDropdown from "@Content/Features/Store/App/FWaitlistDropdown";
+import FHighlightTitle from "@Content/Features/Store/App/FHighlightTitle";
 
 export default class CApp extends CStoreBase {
 
@@ -119,6 +120,7 @@ export default class CApp extends CStoreBase {
                 FPatchHighlightPlayer,
                 FSteamDeckCompatibility,
                 FRemoveDupeScreenshots,
+                FHighlightTitle
             ]);
 
         this.isErrorPage = isErrorPage;

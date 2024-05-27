@@ -1,12 +1,12 @@
 import Feature from "@Content/Modules/Context/Feature";
 import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
-import type CStoreBase from "@Content/Features/Store/Common/CStoreBase";
+import type CApp from "@Content/Features/Store/App/CApp";
 
-export default class FHighlightsTags extends Feature<CStoreBase> {
+export default class FHighlightTitle extends Feature<CApp> {
 
     async apply(): Promise<void> {
         await DynamicStore.onReady();
-        await HighlightsTagsUtils.highlightAndTag();
+        await HighlightsTagsUtils.highlightTitle(this.context.appid);
     }
 }

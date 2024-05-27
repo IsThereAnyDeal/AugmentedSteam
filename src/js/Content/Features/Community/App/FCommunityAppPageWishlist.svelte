@@ -20,8 +20,8 @@
                 return;
             }
 
-            const {ownedApps, wishlisted} = await DynamicStore.getAppStatus(`app/${appid}`);
-            if (ownedApps) { return; }
+            const {owned, wishlisted} = await DynamicStore.getAppStatus(`app/${appid}`);
+            if (owned) { return; }
 
             const target = document.querySelector(".apphub_OtherSiteInfo");
             if (!target) {

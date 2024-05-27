@@ -1,7 +1,7 @@
 import {__inviteFriends} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
-import type {CGroupHome} from "@Content/Features/Community/GroupHome/CGroupHome";
+import CGroupHome from "@Content/Features/Community/GroupHome/CGroupHome";
 import User from "@Content/Modules/User";
 import HTML from "@Core/Html/Html";
 
