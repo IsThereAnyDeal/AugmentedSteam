@@ -21,7 +21,7 @@ export default class Messenger {
             const id = `as_msg_${this.id++}`;
 
             // @ts-ignore
-            window.addEventListener(id, (e) => resolve(e.detail), {once: true});
+            document.addEventListener(id, (e) => resolve(e.detail), {once: true});
             this.dispatchEvent(handler, action, params, id);
         });
     }

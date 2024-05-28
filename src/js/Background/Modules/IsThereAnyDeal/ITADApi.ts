@@ -113,7 +113,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
 
     private async getStoreList(): Promise<TGetStoreListResponse> {
         if (await IndexedDB.isStoreExpired("storeList")) {
-            let result = await this.fetchStoreList()
+            let result = await this.fetchStoreList();
             await IndexedDB.replaceAll("storeList", result.map(store => [store.id, store]));
             await IndexedDB.setStoreExpiry("storeList", 7*86400);
             return result;

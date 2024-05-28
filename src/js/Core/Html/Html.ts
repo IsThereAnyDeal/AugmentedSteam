@@ -48,6 +48,7 @@ export default class HTML {
         }
 
         console.warn(`${node} is not an Element.`);
+        console.trace();
         return null;
     }
 

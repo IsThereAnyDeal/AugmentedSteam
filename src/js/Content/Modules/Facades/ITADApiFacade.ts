@@ -49,6 +49,6 @@ export default class ITADApiFacade {
     }
 
     static async getFromCollection(storeId: string) {
-        return Background.send(EAction.InCollection, {storeId});
+        return Background.send(EAction.GetFromCollection, {storeId});
     }
 }
