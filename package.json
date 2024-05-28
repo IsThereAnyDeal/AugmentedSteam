@@ -5,8 +5,8 @@
     "update-locales": "node scripts/locales.mjs download",
     "compile-locales": "node scripts/locales.mjs compile",
     "locales": "npm run update-locales && npm run compile-locales",
-    "release": "node scripts/make-release.mjs",
-    "check": "npx tsc --noEmit && svelte-check"
+    "check": "npx tsc --noEmit && svelte-check",
+    "release": "npm run check && node scripts/make-release.mjs"
   },
   "devDependencies": {
     "@types/dompurify": "^3.0.5",
