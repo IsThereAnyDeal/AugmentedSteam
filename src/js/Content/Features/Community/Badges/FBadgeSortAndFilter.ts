@@ -287,7 +287,7 @@ export default class FBadgeSortAndFilter extends Feature<CBadges> {
 
 
     private _recalcLazyLoaderOffset() {
-        DOMHelper.insertScript("scritplets/Community/Badges/recalcLazyLoaderOffset.js");
+        DOMHelper.insertScript("scriptlets/Community/Badges/recalcLazyLoaderOffset.js");
     }
 
     private _toggleBinderView(): void {

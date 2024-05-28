@@ -57,11 +57,11 @@ export default class CInventory extends CCommunityBase {
 
         this.myInventory = CommunityUtils.currentUserIsOwner();
 
-        DOMHelper.insertScript("scritplets/Community/Inventory/marketInfo.js");
-
         // @ts-ignore
         document.addEventListener("as_marketInfo", (e: CustomEvent<MarketInfo>) => {
             this.onMarketInfo.dispatch(e.detail);
         });
+
+        DOMHelper.insertScript("scriptlets/Community/Inventory/marketInfo.js");
     }
 }
