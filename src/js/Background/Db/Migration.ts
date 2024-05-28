@@ -20,6 +20,7 @@ async function upgrade(
 
     if (oldVersion >= 1) {
         db.deleteObjectStore("storePageData");
+        db.deleteObjectStore("profiles");
         db.deleteObjectStore("rates");
         db.deleteObjectStore("coupons");
         db.deleteObjectStore("giftsAndPasses");
@@ -41,6 +42,9 @@ async function upgrade(
     }
 
     db.createObjectStore("storePageData")
+        .createIndex("idx_expiry", "expiry");
+
+    db.createObjectStore("profiles")
         .createIndex("idx_expiry", "expiry");
 
     db.createObjectStore("rates")
