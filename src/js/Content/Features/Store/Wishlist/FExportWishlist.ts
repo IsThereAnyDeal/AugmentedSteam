@@ -14,6 +14,7 @@ import HTML from "@Core/Html/Html";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import UserNotes from "@Content/Features/Store/Common/UserNotes";
 import Clipboard from "@Content/Modules/Clipboard";
+import {ResettableTimer, Timer} from "@Core/Utils/TimeUtils";
 
 type Wishlist = Array<[string, {
     name: string,
@@ -138,7 +139,7 @@ export default class FExportWishlist extends Feature<CWishlist> {
      *
      * Final solution is to query the action buttons of the dialog and adding some extra click handlers on the content script side.
      */
-    _showDialog(wl: Array<[string, any]>): void {
+    async _showDialog(wl: Array<[string, any]>): Promise<void> {
 
         async function exportWishlist(method: ExportMethod): Promise<void> {
             const type = document.querySelector<HTMLInputElement>("input[name='es_wexport_type']:checked")!.value;
@@ -189,21 +190,29 @@ export default class FExportWishlist extends Feature<CWishlist> {
             L(__export_copyClipboard)
         );
 
-        const [dlBtn, copyBtn] = document.querySelectorAll(".newmodal_buttons > .btn_medium");
+        for (let i=0; i<10; i++) {
+            const [dlBtn, copyBtn] = document.querySelectorAll(".newmodal_buttons > .btn_medium");
 
-        // Update button to new style, remove when not needed
-        copyBtn!.classList.replace("btn_darkblue_white_innerfade", "btn_blue_steamui");
+            if (!dlBtn || !copyBtn) {
+                // wait for popup to show up to apply events
+                await new Timer(10);
+                continue;
+            }
 
-        // Capture this s.t. the CModal doesn't get destroyed before we can grab this information
-        dlBtn!.addEventListener("click", () => exportWishlist(ExportMethod.download), true);
-        copyBtn!.addEventListener("click", () => exportWishlist(ExportMethod.copyToClipboard), true);
+            // Update button to new style, remove when not needed
+            copyBtn!.classList.replace("btn_darkblue_white_innerfade", "btn_blue_steamui");
 
-        const format = document.querySelector<HTMLElement>(".es-wexport__format");
-        for (const el of document.getElementsByName("es_wexport_type")) {
-            el.addEventListener("click", e => {
-                const target = e.target as HTMLInputElement;
-                format!.classList.toggle("es-grayout", target.value === "json");
-            });
+            // Capture this s.t. the CModal doesn't get destroyed before we can grab this information
+            dlBtn!.addEventListener("click", () => exportWishlist(ExportMethod.download), true);
+            copyBtn!.addEventListener("click", () => exportWishlist(ExportMethod.copyToClipboard), true);
+
+            const format = document.querySelector<HTMLElement>(".es-wexport__format");
+            for (const el of document.getElementsByName("es_wexport_type")) {
+                el.addEventListener("click", e => {
+                    const target = e.target as HTMLInputElement;
+                    format!.classList.toggle("es-grayout", target.value === "json");
+                });
+            }
         }
     }
 }

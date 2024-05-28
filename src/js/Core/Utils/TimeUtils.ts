@@ -1,5 +1,5 @@
 
-class Timer {
+export class Timer {
 
     private _id: number|undefined;
     private _promise: Promise<void>|null = null;
