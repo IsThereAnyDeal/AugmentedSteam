@@ -12,7 +12,7 @@
 
     export let settings: Writable<SettingsSchema>;
 
-    let promise: Promise<TGetStoreListResponse> = Promise.reject();
+    let promise: Promise<TGetStoreListResponse>|null = null;
     let excludedStores: SettingsSchema['excluded_stores'] = [];
 
     onMount(() => {
@@ -34,20 +34,22 @@
 
 {#if !$settings.showallstores}
     <div class="box storelist" transition:slide={{axis: "y", duration: 200}}>
-        {#await promise}
-            {L(__loading)}
-        {:then storeList}
-            {#each storeList as {id, title} (id)}
-                <div class="store">
-                    <label>
-                        <input type="checkbox" checked={!excludedStores.includes(id)}>
-                        {title}
-                    </label>
-                </div>
-            {/each}
-        {:catch e}
-            {L(__error)}
-        {/await}
+        {#if promise}
+            {#await promise}
+                {L(__loading)}
+            {:then storeList}
+                {#each storeList as {id, title} (id)}
+                    <div class="store">
+                        <label>
+                            <input type="checkbox" checked={!excludedStores.includes(id)}>
+                            {title}
+                        </label>
+                    </div>
+                {/each}
+            {:catch e}
+                {L(__error)}
+            {/await}
+        {/if}
     </div>
 {/if}
 

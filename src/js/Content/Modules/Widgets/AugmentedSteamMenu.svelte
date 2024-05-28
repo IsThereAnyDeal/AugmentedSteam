@@ -74,7 +74,7 @@
         <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam">{L(__contribute)}</a>
         <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam/issues">{L(__bugFeature)}</a>
         <div class="hr"></div>
-        <a class="popup_menu_item" target="_blank" href="{Config.PublicHost}">${L(__website)}</a>
+        <a class="popup_menu_item" target="_blank" href="{Config.PublicHost}">{L(__website)}</a>
         <a class="popup_menu_item" target="_blank" href="https://isthereanydeal.com/">IsThereAnyDeal</a>
         <a class="popup_menu_item" target="_blank" href="{Config.ITADDiscord}">Discord</a>
 

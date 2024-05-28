@@ -6,7 +6,7 @@
     import ExtensionResources from "@Core/ExtensionResources";
 
     let log: Array<[string, string]> = [];
-    let promise: Promise<void> = Promise.reject();
+    let promise: Promise<void>|null = null;
 
     onMount(() => {
         promise = (async () => {
@@ -17,18 +17,20 @@
 
 
 <div>
-    {#await promise}
-        {L(__loading)}
-    {:then _}
-        <div>
-            {#each log as [version, data]}
-                <div class="release">
-                    <h2 class="version">{version}</h2>
-                    <div class="log">{@html DOMPurify.sanitize(data)}</div>
-                </div>
-            {/each}
-        </div>
-    {/await}
+    {#if promise}
+        {#await promise}
+            {L(__loading)}
+        {:then _}
+            <div>
+                {#each log as [version, data]}
+                    <div class="release">
+                        <h2 class="version">{version}</h2>
+                        <div class="log">{@html DOMPurify.sanitize(data)}</div>
+                    </div>
+                {/each}
+            </div>
+        {/await}
+    {/if}
 </div>
 
 

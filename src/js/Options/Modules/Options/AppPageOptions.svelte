@@ -45,7 +45,7 @@
 </script>
 
 
-<Section title={__options_apppage}>
+<Section title={L(__options_apppage)}>
     <OptionGroup>
         <Toggle bind:value={$settings.mp4video}>{L(__options_mp4video)}</Toggle>
     </OptionGroup>
