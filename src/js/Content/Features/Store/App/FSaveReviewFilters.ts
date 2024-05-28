@@ -27,6 +27,8 @@ export default class FSaveReviewFilters extends Feature<CApp> {
             LocalStorage.set("review_filters", value);
         });
 
-        DOMHelper.insertScript("scriptlets/Store/App/saveReviewFilters.js", await LocalStorage.get("review_filters"));
+        DOMHelper.insertScript("scriptlets/Store/App/saveReviewFilters.js",
+            (await LocalStorage.get("review_filters")) ?? {}
+        );
     }
 }
