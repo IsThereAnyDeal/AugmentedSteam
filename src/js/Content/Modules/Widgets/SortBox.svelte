@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__sortBy, __thewordunknown} from "@Strings/_strings";
@@ -17,11 +19,11 @@
     let selectedName: string;
     let direction: number;
 
-    let triggerNode: HTMLElement;
+    let containerNode: HTMLElement;
     let isOpen: boolean = false;
 
     function clickOutsideHandler(e: MouseEvent): void {
-        if (!triggerNode.contains(<HTMLElement>e.target)) {
+        if (!containerNode.contains(<HTMLElement>e.target)) {
             hide();
         }
     }
@@ -79,9 +81,8 @@
      class:as-sortbox--friends={name === "friends"}
 >
     <div class="as-sortbox__label">{L(__sortBy)}</div>
-    <div class="as-sortbox__container">
-        <button bind:this={triggerNode}
-                class="as-sortbox__trigger"
+    <div class="as-sortbox__container" bind:this={containerNode}>
+        <button class="as-sortbox__trigger"
                 class:is-open={isOpen}
                 on:click={show}>{selectedName}</button>
 
@@ -145,9 +146,11 @@
     }
     .as-sortbox__reverse {
         cursor: pointer;
+        color: white;
     }
     .as-sortbox__trigger {
         display: block;
+        width: 100%;
         color: #67c1f5;
         padding: 0 30px 0 8px;
         font-size: 12px;
@@ -180,6 +183,7 @@
     }
     .as-dropdown {
         position: relative;
+        display: none;
     }
     .as-dropdown.is-open {
         display: block;
@@ -202,6 +206,7 @@
     ul button {
         padding: 0 10px;
         display: block;
+        width: 100%;
         text-decoration: none;
         color: #e5e4dc;
         white-space: nowrap;
