@@ -3,7 +3,7 @@ import type {SettingsSchema} from "./_types";
 import type {SchemaKeys, SchemaValue, StorageInterface} from "@Core/Storage/Storage";
 import {SyncedStorage} from "@Core/Storage/SyncedStorage";
 
-const DefaultSettings: SettingsSchema = Object.freeze({
+export const DefaultSettings: SettingsSchema = Object.freeze({
     "language": "english",
 
     "version": Info.version,
@@ -268,10 +268,10 @@ export class SettingsStore {
         this.data = structuredClone(DefaultSettings);
     }
 
-    static import(data: SettingsSchema): void {
+    static async import(data: Partial<SettingsSchema>): Promise<void> {
         // TODO check data for valid keys and values
-        this.storage.setObject(data);
-        this.data = data;
+        await this.storage.setObject(data);
+        await this.load();
     }
 
     static asObject(): SettingsSchema {

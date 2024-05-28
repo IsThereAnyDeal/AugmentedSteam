@@ -10,9 +10,12 @@
         __options_settingsMngmt_reset
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
-    import {SettingsStore} from "../Data/Settings";
+    import {DefaultSettings, SettingsStore} from "../Data/Settings";
     import Downloader from "@Core/Downloader";
     import {Info} from "@Core/Info";
+    import UserNotes from "@Content/Features/Store/Common/UserNotes";
+    import type {SettingsSchema} from "@Options/Data/_types";
+    import UserNotesAdapter from "@Content/Modules/UserNotes/UserNotesAdapter";
 
 
     function importSettings(e: Event & {currentTarget: EventTarget & HTMLInputElement}) {
@@ -23,8 +26,17 @@
             const data = reader.result as string;
 
             let importedSettings;
+            let importedNotes;
             try {
-                importedSettings = JSON.parse(data);
+                const importedData = JSON.parse(data);
+
+                const knownKeys = new Set(Object.keys(DefaultSettings));
+                importedSettings = Object.fromEntries(
+                    Object.entries(importedData)
+                        .filter(([key, _value]) => knownKeys.has(key))
+                ) as Partial<SettingsSchema>;
+
+                importedNotes = importedData.user_notes ?? {};
             } catch (err) {
                 console.group("Import");
                 console.error("Failed to read settings file");
@@ -39,6 +51,7 @@
             try {
                 console.log(importedSettings);
                 SettingsStore.import(importedSettings);
+                UserNotesAdapter.getAdapter().import(importedNotes);
             } catch (err) {
                 console.group("Import");
                 console.error("Failed to write settings to storage");
@@ -61,10 +74,13 @@
         }
     }
 
-    function exportSettings() {
+    async function exportSettings() {
+        const result: Record<string, any> = SettingsStore.asObject();
+        result.user_notes = await (new UserNotes()).export();
+
         Downloader.download(
             new Blob([
-                JSON.stringify(SettingsStore.asObject(), null, "  ")
+                JSON.stringify(result, null, "  ")
             ]),
             `AugmentedSteam_v${Info.version}.json`
         );

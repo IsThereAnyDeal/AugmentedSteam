@@ -38,6 +38,10 @@ export default class UserNotes {
         return this._adapter.get(...appids);
     }
 
+    export(): Promise<Record<number, string>> {
+        return this._adapter.export();
+    }
+
     async set(appid: number, note: string): Promise<boolean> {
         let capInfo = null;
 
