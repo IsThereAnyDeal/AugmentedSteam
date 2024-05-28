@@ -4,6 +4,7 @@ import CInventory, {type MarketInfo} from "@Content/Features/Community/Inventory
 import Price from "@Content/Modules/Currency/Price";
 import HTML from "@Core/Html/Html";
 import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+import type {TAppDetail} from "@Background/Modules/Store/_types";
 
 export default class FAddPriceToGifts extends Feature<CInventory> {
 
@@ -27,7 +28,7 @@ export default class FAddPriceToGifts extends Feature<CInventory> {
         if (!giftAppid) { return; }
 
 
-        const result = await SteamStoreApiFacade.fetchAppDetails(giftAppid, "price_overview")
+        const result: TAppDetail|null = await SteamStoreApiFacade.fetchAppDetails(giftAppid, "price_overview")
         if (!result) { return; }
 
         const overview = result.price_overview;

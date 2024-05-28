@@ -1,4 +1,13 @@
 
+interface PriceOverview {
+    currency: string,
+    initial: number,
+    initial_formatted: string,
+    final: number,
+    discount_percent: number,
+    individual?: number
+}
+
 export interface TPackageDetail {
     name: string,
     page_content: string,
@@ -9,13 +18,7 @@ export interface TPackageDetail {
         id: number,
         name: string
     }>,
-    price: {
-        currency: string,
-        initial: number,
-        final: number,
-        discount_percent: number,
-        individual: number
-    },
+    price: PriceOverview,
     platforms: {
         windows: boolean,
         mac: boolean,
@@ -30,7 +33,19 @@ export interface TPackageDetail {
     }
 }
 
-export type TAppDetail = Record<string, any>; // TODO update type with actual data that we use
+export type TAppDetail = {
+    // NOTE incomplete, only data we use are typed
+    name: string,
+    fullgame?: {
+        appid: number,
+        name: string
+    },
+    price_overview: PriceOverview,
+    support_info: {
+        email: string,
+        url: string
+    }
+};
 
 export interface TWishlistGame {
     appid: number,

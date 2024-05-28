@@ -7,6 +7,7 @@ import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
+import type {TAppDetail} from "@Background/Modules/Store/_types";
 
 export default class FSupportInfo extends Feature<CApp> {
 
@@ -30,13 +31,13 @@ export default class FSupportInfo extends Feature<CApp> {
         this._supportInfo = cache.data[appid];
 
         if (!this._supportInfo) {
-            const response = await SteamStoreApiFacade.fetchAppDetails(appid, "support_info");;
-            if (!response || !response.success) {
+            const response: TAppDetail|null = await SteamStoreApiFacade.fetchAppDetails(appid, "support_info");
+            if (!response) {
                 console.warn("Failed to retrieve support info");
                 return false;
             }
 
-            this._supportInfo = response.data.support_info;
+            this._supportInfo = response.support_info;
 
             cache.data[appid] = this._supportInfo;
             LocalStorage.set("support_info", cache);

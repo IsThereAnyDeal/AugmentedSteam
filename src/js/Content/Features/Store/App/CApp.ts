@@ -2,7 +2,6 @@ import AppId from "@Core/GameId/AppId";
 import FMediaExpander from "../../Common/FMediaExpander";
 import FCustomizer from "../Common/FCustomizer";
 import FDRMWarnings from "../Common/FDRMWarnings";
-import FExtraLinks from "../Common/FExtraLinksCommon";
 import FITADPrices from "../Common/FITADPrices";
 import FRegionalPricing from "../Common/FRegionalPricing";
 import FAchievementBar from "./FAchievementBar";
@@ -98,7 +97,7 @@ export default class CApp extends CStoreBase {
                 FSteamPeek,
                 FWidescreenCertification,
                 FHowLongToBeat,
-                FExtraLinks,
+                FExtraLinksApp,
                 FFamilySharingNotice,
                 FPackBreakdown,
                 FPackageInfoButton,
