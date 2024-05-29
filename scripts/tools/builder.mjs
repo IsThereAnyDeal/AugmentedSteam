@@ -71,8 +71,7 @@ export default async function(options) {
 
     await fs.mkdir(distDir, {recursive: true});
 
-    // TODO replace with imports?
-    for (let dir of ["html", "img", "localization", "scriptlets"]) {
+    for (let dir of ["html", "img", "localization/compiled", "scriptlets"]) {
         await fs.cp(`${srcDir}/${dir}`, `${distDir}/${dir}`, {recursive: true});
     }
     await fs.cp(`${rootDir}/LICENSE`, `${distDir}/LICENSE`);
