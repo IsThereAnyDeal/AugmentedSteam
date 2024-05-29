@@ -85,7 +85,7 @@ export default class IndexedDB {
     >(storeName: StoreName, indexName: IndexName) {
         const tx = this.db.transaction(storeName, "readwrite");
         const index = tx.store.index(indexName);
-        let cursor = await index.openKeyCursor(IDBKeyRange.upperBound(TimeUtils.now()));
+        let cursor = await index.openCursor(IDBKeyRange.upperBound(TimeUtils.now()));
 
         if (cursor) {
             while (cursor) {
