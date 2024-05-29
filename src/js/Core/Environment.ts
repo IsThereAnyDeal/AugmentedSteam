@@ -1,33 +1,27 @@
-import browser from "webextension-polyfill";
-
-enum ContextType {
+export enum ContextType {
+    Unknown,
     Background,
     ContentScript,
     Options
 }
 
-let currentContext: ContextType;
-if (browser.extension.getBackgroundPage) {
-    const bgPage = browser.extension.getBackgroundPage();
-
-    currentContext = (bgPage === window)
-        ? ContextType.Background
-        : ContextType.Options;
-} else {
-    currentContext = ContextType.ContentScript;
-}
-
 export default class Environment {
 
+    private static currentContext: ContextType = ContextType.Unknown;
+
+    public static set CurrentContext(context: ContextType) {
+        this.currentContext = context;
+    }
+
     static isBackgroundScript(): boolean {
-        return currentContext === ContextType.Background;
+        return this.currentContext === ContextType.Background;
     }
 
     static isContentScript(): boolean {
-        return currentContext === ContextType.ContentScript;
+        return this.currentContext === ContextType.ContentScript;
     }
 
     static isOptions(): boolean {
-        return currentContext === ContextType.Options;
+        return this.currentContext === ContextType.Options;
     }
 }

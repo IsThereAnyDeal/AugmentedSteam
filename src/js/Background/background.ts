@@ -11,6 +11,9 @@ import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import InventoryApi from "@Background/Modules/Inventory/InventoryApi";
 import CacheApi from "@Background/Modules/Cache/CacheApi";
 import {SettingsStore} from "@Options/Data/Settings";
+import Environment, {ContextType} from "@Core/Environment";
+
+Environment.CurrentContext = ContextType.Background;
 
 type MessageSender = Runtime.MessageSender;
 
