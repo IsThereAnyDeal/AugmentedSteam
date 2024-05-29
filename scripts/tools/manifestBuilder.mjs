@@ -38,10 +38,6 @@ export default class ManifestBuilder {
     build(options) {
         let {dev, browser} = options;
 
-        if (dev) {
-            this._manifest.content_security_policy = "script-src 'self' 'unsafe-eval'; object-src 'self'";
-        }
-
         if (browser === "chrome") {
             this._manifest.key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgSsjOO0ecqqAz6LCjjIoiRUV3VyW4p7mmTg9bC9uUkj28OgVr5+NRJpyI8gJx7Nd43ZEQ8dfwOl8GLnc3+m90jPSUASlliWxG2LQt81IZhtFurCLUELGIfUSr5vPdthRbwgnPrmRc5nylstBORBwYtT0Dos9pBcikHn0QKo87ggWEAQEBGkLXQ8An01LnQopLX4VbZHTfvoTIjPZOiHUVhKhn4aKM70e/u61mGMSp9WDBYrV0/OFKsVC9jWd9s0DX/uOm3KpFhOj4Bx+ehzEklXNuTTQshIC7NSgh+tAJwSa1GpO9jcCWCnFRqjfxwOrdylqIvCy+87fpU7nJ6sHRQIDAQAB";
         }
