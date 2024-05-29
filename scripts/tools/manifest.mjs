@@ -43,9 +43,7 @@ export default {
     ],
     homepage_url: "https://augmentedsteam.com/",
     background: {
-        persistent: true,
-        scripts: [
-            "js/background.js"
-        ]
+        service_worker: "js/background.js" // TODO service_worker not supported in Firefox
+        // TODO, try code splitting and type: module
     }
 };

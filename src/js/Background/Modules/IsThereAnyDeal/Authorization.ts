@@ -7,7 +7,7 @@ export default class Authorization {
     private generateString(length: number): string {
         const source = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.~";
         let arr = new Uint8Array(length);
-        window.crypto.getRandomValues(arr)
+        crypto.getRandomValues(arr)
         return arr.reduce((result, value) => result + source.charAt(Math.floor(value % source.length)), "");
     }
 
@@ -15,7 +15,7 @@ export default class Authorization {
         const encoder = new TextEncoder();
         const data = encoder.encode(str);
 
-        let sha256Buffer = await window.crypto.subtle.digest("SHA-256", data);
+        let sha256Buffer = await crypto.subtle.digest("SHA-256", data);
         return String.fromCharCode(...new Uint8Array(sha256Buffer))
     }
 
