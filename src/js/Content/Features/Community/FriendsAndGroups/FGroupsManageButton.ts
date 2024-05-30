@@ -33,6 +33,7 @@ export default class FGroupsManageButton extends Feature<CFriendsAndGroups> {
     override apply(): void {
         DOMHelper.insertScript("scriptlets/Community/FriendsAndGroups/groupsManager.js");
         document.addEventListener("as_subpageNav", () => this.callback());
+        this.callback();
     }
 
     callback() {

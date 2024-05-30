@@ -10,7 +10,7 @@ export default class FShowGemsCost extends Feature<CBoosterCreator> {
         const boosterData = await (new Promise(resolve => {
             // @ts-ignore
             document.addEventListener("as_boosterData", (e: CustomEvent) => resolve(e.detail), {once: true});
-            DOMHelper.insertScript("scriptlet/Community/BoosterCreator/boosterData.js");
+            DOMHelper.insertScript("scriptlets/Community/BoosterCreator/boosterData.js");
         }));
 
         // Localized string of "(quantifier) + Gems"

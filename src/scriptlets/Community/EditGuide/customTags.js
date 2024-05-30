@@ -3,7 +3,7 @@
     const {customTags, enterTag} = params;
 
     $J("#es_add_tag").on("click", () => {
-        const modal = window.showConfirmDialog(customTags,
+        const modal = window.ShowConfirmDialog(customTags,
             `<div class="commentthread_entry_quotebox">
                 <textarea placeholder="${enterTag}" class="commentthread_textarea es_tag" rows="1"></textarea>
             </div>`

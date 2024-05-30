@@ -68,7 +68,7 @@ export default class FCustomTags extends Feature<CEditGuide> {
 
             LocalStorage.set("es_guide_tags", savedTags);
 
-            DOMHelper.insertScript("scriptlets/Community/EditGUide/submitGuide.js");
+            DOMHelper.insertScript("scriptlets/Community/EditGuide/submitGuide.js");
         });
     }
 
