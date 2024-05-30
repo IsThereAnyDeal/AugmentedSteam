@@ -1,8 +1,14 @@
 import Config from "../../../config";
-import browser, {type WebRequest} from "webextension-polyfill";
+import browser, {type Tabs, type WebRequest} from "webextension-polyfill";
 import AccessToken from "@Background/Modules/IsThereAnyDeal/AccessToken";
 
+type Tab = Tabs.Tab;
+type OnUpdatedChangeInfoType = Tabs.OnUpdatedChangeInfoType;
+type OnRemovedRemoveInfoType = Tabs.OnRemovedRemoveInfoType;
+
 export default class Authorization {
+
+    private readonly RedirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
 
     private generateString(length: number): string {
         const source = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.~";
@@ -26,57 +32,46 @@ export default class Authorization {
             .replace(/=+$/, '');
     }
 
-    private async getResponseUrl(redirectURI: string, listenedTabId: number) {
-
-        const url: string = await new Promise((resolve, reject) => {
-            function webRequestListener(details: WebRequest.OnBeforeRequestDetailsType): WebRequest.BlockingResponse {
-                resolve(details.url);
-
-                clearListeners();
-                browser.tabs.remove(listenedTabId);
-
-                return {"cancel": true};
-            }
-
-            function tabsListener(tabId: number) {
-                if (tabId === listenedTabId) {
-                    reject(new Error("Authorization tab closed"));
-                    clearListeners();
+    private async getResponseUrl(authTabId: number): Promise<URL> {
+        return new Promise<URL>((resolve, reject) => {
+            const updateListener = (tabId: number, changeInfo: OnUpdatedChangeInfoType, _tab: Tab): void => {
+                if (tabId !== authTabId) {
+                    return;
                 }
+
+                if (!changeInfo.url?.startsWith(this.RedirectURI)) {
+                    return;
+                }
+
+                browser.tabs.onUpdated.removeListener(updateListener);
+                browser.tabs.onRemoved.removeListener(removeListener);
+                browser.tabs.remove(tabId);
+                resolve(new URL(changeInfo.url!));
             }
 
-            function clearListeners() {
-                browser.webRequest.onBeforeRequest.removeListener(webRequestListener);
-                browser.tabs.onRemoved.removeListener(tabsListener);
+            const removeListener = (tabId: number, _removeInfo: OnRemovedRemoveInfoType): void => {
+                if (tabId !== authTabId) {
+                    return;
+                }
+
+                browser.tabs.onUpdated.removeListener(updateListener);
+                browser.tabs.onRemoved.removeListener(removeListener);
+                reject();
             }
 
-            browser.tabs.onRemoved.addListener(tabsListener);
-            browser.webRequest.onBeforeRequest.addListener(
-                webRequestListener,
-                {
-                    "urls": [
-                        redirectURI, // For Chrome, seems to not support match patterns (a problem with the Polyfill?)
-                        `${redirectURI}/?*` // For Firefox
-                    ],
-                    "tabId": listenedTabId
-                },
-                ["blocking"]
-            );
+            browser.tabs.onUpdated.addListener(updateListener);
+            browser.tabs.onRemoved.addListener(removeListener);
         });
-
-        return new URL(url);
     }
 
     async authorize(scope: string[]) {
-        const redirectURI = "https://isthereanydeal.com/connectaugmentedsteam";
-
         const verifier = this.generateString(64);
         const state = this.generateString(30);
 
         const authUrl = new URL(`${Config.ITADServer}/oauth/authorize/`);
         authUrl.searchParams.set("response_type", "code");
         authUrl.searchParams.set("client_id", Config.ITADClientId);
-        authUrl.searchParams.set("redirect_uri", redirectURI);
+        authUrl.searchParams.set("redirect_uri", this.RedirectURI);
         authUrl.searchParams.set("scope", scope.join(" "));
         authUrl.searchParams.set("state", state);
         authUrl.searchParams.set("code_challenge", this.base64url(await this.sha256(verifier)));
@@ -87,7 +82,7 @@ export default class Authorization {
             throw new Error("Missing tab id");
         }
 
-        const responseUrl = await this.getResponseUrl(redirectURI, tab.id);
+        const responseUrl = await this.getResponseUrl(tab.id);
 
         if (responseUrl.searchParams.get("state") !== state) {
             throw new Error("Failed to verify state parameter from URL fragment");
@@ -102,7 +97,7 @@ export default class Authorization {
         const params = new URLSearchParams();
         params.set("grant_type", "authorization_code");
         params.set("client_id", Config.ITADClientId);
-        params.set("redirect_uri", redirectURI);
+        params.set("redirect_uri", this.RedirectURI);
         params.set("code", code);
         params.set("code_verifier", verifier);
 
