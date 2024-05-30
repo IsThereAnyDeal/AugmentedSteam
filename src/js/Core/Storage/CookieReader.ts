@@ -1,3 +1,4 @@
+import Environment from "@Core/Environment";
 
 export default class CookieReader {
 
@@ -9,9 +10,14 @@ export default class CookieReader {
 
     static init() {
         this.cache = new Map<string, string>();
-        for (let [key, val] of <[string, string][]>document.cookie.split(";").map(kv => kv.split("=", 2))) {
-            key = key.trim();
-            CookieReader.cache.set(key, decodeURIComponent(val));
+
+        if (!Environment.isBackgroundScript()) {
+            if (document) {
+                for (let [key, val] of <[string, string][]>document.cookie.split(";").map(kv => kv.split("=", 2))) {
+                    key = key.trim();
+                    CookieReader.cache.set(key, decodeURIComponent(val));
+                }
+            }
         }
     }
 }
