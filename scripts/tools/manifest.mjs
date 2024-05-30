@@ -41,7 +41,5 @@ export default {
         }
     ],
     homepage_url: "https://augmentedsteam.com/",
-    background: {
-        // TODO, try code splitting and type: module
-    }
+    background: {}
 };
