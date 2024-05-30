@@ -19,6 +19,7 @@ export default class FFriendsSort extends Feature<CFriendsAndGroups> {
 
     apply(): void | Promise<void> {
         document.addEventListener("as_subpageNav", () => this.callback());
+        this.callback();
     }
 
     private async callback(): Promise<void> {
