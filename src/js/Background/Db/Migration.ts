@@ -11,6 +11,7 @@ async function upgrade(
 ) {
     if (oldVersion == 0) {
         db.createObjectStore("items");
+        db.createObjectStore("earlyAccessAppids");
         db.createObjectStore("collection");
         db.createObjectStore("waitlist");
         db.createObjectStore("itadImport");
