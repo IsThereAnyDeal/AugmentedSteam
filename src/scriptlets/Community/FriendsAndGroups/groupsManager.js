@@ -1,4 +1,4 @@
-document.addEventListener("as_groupsManager", async function(e) {
+document.addEventListener("as_GroupsManager", async function(e) {
     const {action} = e.detail;
 
     switch(action) {
