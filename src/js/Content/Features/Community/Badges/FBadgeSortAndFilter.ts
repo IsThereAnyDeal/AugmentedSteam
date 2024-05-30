@@ -39,7 +39,7 @@ export default class FBadgeSortAndFilter extends Feature<CBadges> {
 
     private _addSort() {
         const isOwnProfile = this.context.myProfile;
-        const sortOptions = this._header.querySelector<HTMLAnchorElement>("a.profile_badges_sortoptions");
+        const sortOptions = this._header.querySelector<HTMLElement>(".profile_badges_sortoptions");
         if (!sortOptions) {
             return;
         }
