@@ -20,7 +20,7 @@ export default async function() {
      * We are modifying default DOMPurify settings to allow other protocols in URLs
      * and to allow links to safely open in new tabs.
      *
-     * We took the original Regex and aded chrome-extension://, moz-extension:// and steam://
+     * We took the original Regex and added chrome-extension://, moz-extension:// and steam://
      * First two are needed for linking local resources from extension,
      * steam:// protocol is used by Steam store to open their own client (e.g. when you want to launch a game).
      *

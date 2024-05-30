@@ -2,7 +2,8 @@ export enum ContextType {
     Unknown,
     Background,
     ContentScript,
-    Options
+    Options,
+    Offscreen
 }
 
 export default class Environment {

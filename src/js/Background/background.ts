@@ -1,4 +1,3 @@
-import bootstrapDomPurify from "../bootstrapDomPurify";
 import ContextMenu from "./Modules/ContextMenu/ContextMenu";
 import IndexedDB from "@Background/Db/IndexedDB";
 import SteamCommunityApi from "./Modules/Community/SteamCommunityApi";
@@ -39,7 +38,7 @@ browser.runtime.onMessage.addListener((
 
     (async function(): Promise<void> {
         try {
-            await Promise.all([IndexedDB, SettingsStore, bootstrapDomPurify()]);
+            await Promise.all([IndexedDB, SettingsStore]);
 
             let response: any = undefined;
             let handlers: MessageHandlerInterface[] = [

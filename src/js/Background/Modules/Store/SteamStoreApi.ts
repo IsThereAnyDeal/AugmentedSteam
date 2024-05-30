@@ -16,6 +16,11 @@ import HTML from "@Core/Html/Html";
 import TimeUtils from "@Core/Utils/TimeUtils";
 import StringUtils from "@Core/Utils/StringUtils";
 import {Unrecognized} from "@Background/background";
+import browser from "webextension-polyfill";
+import type DomParserInterface from "@Background/Modules/Dom/DomParserInterface";
+import OffscreenDomParser from "@Background/Modules/Dom/OffscreenDomParser";
+import NativeDomParser from "@Background/Modules/Dom/NativeDomParser";
+import DomParserFactory from "@Background/Modules/Dom/DomParserFactory";
 
 // helper types for clarity
 type TAppid = number;
@@ -132,20 +137,16 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
         await this.clearDynamicStore();
     }
 
-    private async getCurrencyFromWallet(parser: DOMParser): Promise<string|null> {
+    private async getCurrencyFromWallet(parser: DomParserInterface): Promise<string|null> {
         const url = this.getUrl("/steamaccount/addfunds");
         const html = await this.fetchPage(url);
-        const doc = parser.parseFromString(html, "text/html");
-
-        return doc.querySelector<HTMLInputElement>("input[name=currency]")?.value ?? null;
+        return parser.parseCurrencyFromWallet(html);
     }
 
-    private async getCurrencyFromApp(parser: DOMParser): Promise<string|null> {
+    private async getCurrencyFromApp(parser: DomParserInterface): Promise<string|null> {
         const url = this.getUrl("/app/220");
         const html = await this.fetchPage(url);
-        const doc = parser.parseFromString(html, "text/html");
-
-        return doc.querySelector("meta[itemprop=priceCurrency][content]")?.getAttribute("content") ?? null;
+        return parser.parseCurrencyFromApp(html);
     }
 
     private async getCurrency(): Promise<string> {
@@ -154,7 +155,7 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
             return stored.data;
         }
 
-        const parser = new DOMParser();
+        const parser = DomParserFactory.getParser();
 
         let currency = await this.getCurrencyFromWallet(parser);
         if (!currency) {

@@ -15,8 +15,7 @@ export default {
     },
     permissions: [
         "storage",
-        "webRequest",
-        "webRequestBlocking"
+        "offscreen"
     ],
     host_permissions: [
         "*://*.steampowered.com/*",
