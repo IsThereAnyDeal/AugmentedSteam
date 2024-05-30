@@ -14,14 +14,14 @@ export default {
         open_in_tab: true
     },
     permissions: [
-        "storage",
-        "offscreen"
+        "storage"
     ],
     host_permissions: [
         "*://*.steampowered.com/*",
         "*://steamcommunity.com/*",
         "*://*.isthereanydeal.com/"
     ],
+    optional_permissions: [],
     web_accessible_resources: [
         {
             resources: [
@@ -42,7 +42,6 @@ export default {
     ],
     homepage_url: "https://augmentedsteam.com/",
     background: {
-        service_worker: "js/background.js" // TODO service_worker not supported in Firefox
         // TODO, try code splitting and type: module
     }
 };

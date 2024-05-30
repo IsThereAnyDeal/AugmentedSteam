@@ -9,7 +9,7 @@ export default class DomParserFactory {
     public static getParser(): DomParserInterface {
         if (!this.parser) {
             // @ts-expect-error
-            this.parser = __CHROME
+            this.parser = __CHROME || __EDGE
                 ? new OffscreenDomParser()
                 : new NativeDomParser();
         }

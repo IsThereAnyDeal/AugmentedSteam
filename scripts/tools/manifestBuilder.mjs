@@ -43,10 +43,9 @@ export default class ManifestBuilder {
         }
 
         if (browser === "chrome" || browser === "edge") {
-            if (!this._manifest.optional_permissions) {
-                this._manifest.optional_permissions = [];
-            }
+            this._manifest.permissions.push("offscreen");
             this._manifest.optional_permissions.push("contextMenus");
+            this._manifest.background.service_worker = "js/background.js";
         }
 
         if (browser === "firefox") {
@@ -58,6 +57,7 @@ export default class ManifestBuilder {
             };
 
             this._manifest.permissions.push("contextMenus");
+            this._manifest.background.scripts = ["js/background.js"];
         }
 
         return this._manifest;
