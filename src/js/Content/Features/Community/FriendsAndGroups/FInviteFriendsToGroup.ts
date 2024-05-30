@@ -12,21 +12,24 @@ export default class FInviteButton extends Feature<CFriendsAndGroups> {
     }
 
     override apply(): void {
-        document.addEventListener("as_subpageNav", () => {
-            if (!document.getElementById("friends_list")) { return; }
+        document.addEventListener("as_subpageNav", () => { this.callback(); });
+        this.callback();
+    }
 
-            HTML.beforeEnd(".manage_friend_actions_ctn",
-                `<span class="manage_action btnv6_lightblue_blue btn_small" id="es_invite_to_group">
-                    <span>${L(__inviteToGroup)}</span>
-                </span>`);
+    private async callback(): Promise<void> {
+        if (!document.getElementById("friends_list")) { return; }
 
-            const params = new URLSearchParams(window.location.search);
+        HTML.beforeEnd(".manage_friend_actions_ctn",
+            `<span class="manage_action btnv6_lightblue_blue btn_small" id="es_invite_to_group">
+                <span>${L(__inviteToGroup)}</span>
+            </span>`);
 
-            if (params.has("invitegid")) {
-                DOMHelper.insertScript("scriptlets/Community/FriendsAndGroups/inviteToGroup.js", {groupId: params.get("invitegid")})
-            } else {
-                DOMHelper.insertScript("scriptlets/Community/FriendsAndGroups/inviteToGroupListener.js");
-            }
-        });
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.has("invitegid")) {
+            DOMHelper.insertScript("scriptlets/Community/FriendsAndGroups/inviteToGroup.js", {groupId: params.get("invitegid")})
+        } else {
+            DOMHelper.insertScript("scriptlets/Community/FriendsAndGroups/inviteToGroupListener.js");
+        }
     }
 }
