@@ -2,24 +2,23 @@ import Environment from "@Core/Environment";
 
 export default class CookieReader {
 
-    private static cache: Map<string, string>
+    private static cache: Map<string, string>|null;
 
-    static get(name: string, defaultValue: string|null = null): string|null {
-        return this.cache.get(name.trim()) ?? defaultValue;
-    }
-
-    static init() {
+    private static load(): void {
         this.cache = new Map<string, string>();
 
-        if (!Environment.isBackgroundScript()) {
-            if (document) {
-                for (let [key, val] of <[string, string][]>document.cookie.split(";").map(kv => kv.split("=", 2))) {
-                    key = key.trim();
-                    CookieReader.cache.set(key, decodeURIComponent(val));
-                }
+        if (!Environment.isBackgroundScript() && typeof document !== "undefined") {
+            for (let [key, val] of <[string, string][]>document.cookie.split(";").map(kv => kv.split("=", 2))) {
+                key = key.trim();
+                this.cache.set(key, decodeURIComponent(val));
             }
         }
     }
-}
 
-CookieReader.init();
+    static get(name: string, defaultValue: string|null = null): string|null {
+        if (this.cache === null) {
+            this.load();
+        }
+        return this.cache!.get(name.trim()) ?? defaultValue;
+    }
+}
