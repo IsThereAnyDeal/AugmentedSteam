@@ -42,6 +42,8 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
         const doc = parser.parseFromString(html, "text/html");
 
         const details = doc.querySelector(".detailsStatRight")?.textContent;
+
+        // FIXME Can't handle other units like KB
         if (!details || !details.includes("MB")) {
             throw new Error(`Couldn't find details block for item id "${id}"`);
         }
