@@ -13,8 +13,8 @@ export default class FPopularRefreshToggle extends Feature<CMarketHome> {
         HTML.beforeEnd("#sellListings .market_tab_well_tabs",
             `<div id="es_popular_refresh_toggle" class="btn_grey_black btn_small" data-tooltip-text="${L(__marketPopularItemsToggle)}"></div>`);
 
-        document.querySelector("#es_popular_refresh_toggle")?.addEventListener("click", () => {
-            this._toggleRefresh(!LocalStorage.get("popular_refresh"));
+        document.querySelector("#es_popular_refresh_toggle")?.addEventListener("click", async () => {
+            this._toggleRefresh(!(await LocalStorage.get("popular_refresh")));
         });
 
         this._toggleRefresh(await LocalStorage.get("popular_refresh") ?? false);
