@@ -34,6 +34,9 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
         return this.fetchJson(url, {credentials: "include"});
     }
 
+    /**
+     * @return Promise<number>  result size in kB
+     */
     private async fetchWorkshopFileSize(id: number): Promise<number> {
         const parser = new DOMParser();
 
@@ -43,17 +46,26 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
 
         const details = doc.querySelector(".detailsStatRight")?.textContent;
 
-        // FIXME Can't handle other units like KB
-        if (!details || !details.includes("MB")) {
+        if (!details) {
             throw new Error(`Couldn't find details block for item id "${id}"`);
         }
 
-        const size = parseFloat(details.replace(/,/g, ""));
+        const m = details.match(/(\d+(?:[.,]\d+)?) (MB|KB|B)/);
+        if (!m) {
+            throw new Error(`Couldn't find details block for item id "${id}"`);
+        }
+
+        const size = parseFloat(m[1]!.replace(/,/g, ""));
         if (Number.isNaN(size)) {
             throw new Error(`Invalid file size for item id "${id}"`);
         }
 
-        return size*1000;
+        const unit = m[2]! as "MB"|"KB"|"B";
+        return size*({
+            "MB": 1000,
+            "KB": 1,
+            "B": 0.001
+        }[unit]);
     }
 
     private async getWorkshopFileSize(id: number, preventFetch: boolean): Promise<number|null> {
