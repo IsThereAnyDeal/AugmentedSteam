@@ -17,17 +17,16 @@ export default class ASEventHandler<T = void> {
     }
 
     private invoke(listener: ASEventListener<T>) {
-        if (this.data) {
-            listener({data: this.data});
-        }
+        listener({data: this.data!});
     }
 
     public dispatch(data: T): void {
-        if (data) {
-            this.data = data;
-        }
+        this.data = data;
+
         for (let listener of this.listeners) {
             this.invoke(listener);
         }
+
+        this.wasDispatched = true;
     }
 }

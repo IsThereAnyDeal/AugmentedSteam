@@ -13,12 +13,10 @@
         contextid: 6
     };
 
-    const profileUrl = f.global("g_strProfileURL");
-
-    $J.get(`${profileUrl}/ajaxgetgoovalue/`, data).done(data => {
+    $J.get(`${g_strProfileURL}/ajaxgetgoovalue/`, data).done(data => {
         data.goo_value_expected = data.goo_value;
 
-        $J.post(`${profileUrl}/ajaxgrindintogoo/`, data)
+        $J.post(`${g_strProfileURL}/ajaxgrindintogoo/`, data)
             .done(() => {
                 ReloadCommunityInventory();
             });

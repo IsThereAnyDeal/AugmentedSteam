@@ -13,7 +13,7 @@ import Localization from "@Core/Localization/Localization";
         await Localization;
     } catch (err) {
         console.group("Augmented Steam initialization");
-        console.error("Failed to initiliaze Augmented Steam");
+        console.error("Failed to initialize Augmented Steam");
         console.error(err);
         console.groupEnd();
 

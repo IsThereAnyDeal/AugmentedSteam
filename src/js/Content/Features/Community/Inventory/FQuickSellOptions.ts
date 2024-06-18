@@ -139,8 +139,14 @@ export default class FQuickSellOptions extends Feature<CInventory> {
                 price: String(sellPrice)
             };
 
-            const result = await RequestData.post("https://steamcommunity.com/market/sellitem/", data).catch(err => err);
+            let response: Response|null = null;
+            try {
+                response = await RequestData.post("https://steamcommunity.com/market/sellitem/", data);
+            } catch(err) {
+                console.error(err);
+            }
 
+            const result = await response?.json();
             if (!result?.success) {
                 loadingEl.textContent = result?.message ?? L(__error);
                 enableButtons(true);

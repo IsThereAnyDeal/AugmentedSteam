@@ -55,7 +55,7 @@ export default class Page {
             await Promise.all([Localization, User, CurrencyManager]);
         } catch (err) {
             console.group("Augmented Steam initialization");
-            console.error("Failed to initiliaze Augmented Steam");
+            console.error("Failed to initialize Augmented Steam");
             console.error(err);
             console.groupEnd();
             return;

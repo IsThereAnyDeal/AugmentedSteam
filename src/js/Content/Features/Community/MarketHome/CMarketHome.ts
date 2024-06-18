@@ -30,5 +30,7 @@ export default class CMarketHome extends CCommunityBase {
                 {"childList": true}
             );
         }
+
+        this.onMarketListings.dispatch();
     }
 }

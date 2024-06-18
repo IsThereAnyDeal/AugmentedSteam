@@ -35,6 +35,9 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
         return this.fetchJson(url, {credentials: "include"});
     }
 
+    /**
+     * @return Promise<number>  result size in kB
+     */
     private async fetchWorkshopFileSize(id: number): Promise<number> {
         const url = this.getUrl("/sharedfiles/filedetails/", {id});
         const html = await this.fetchText(url, {credentials: "include"});
@@ -50,7 +53,7 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
             throw new Error(`Invalid file size for item id "${id}"`);
         }
 
-        return size*1000;
+        return size;
     }
 
     private async getWorkshopFileSize(id: number, preventFetch: boolean): Promise<number|null> {

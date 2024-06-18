@@ -23,16 +23,26 @@ export default class NativeDomParser implements DomParserInterface {
 
     parseWorkshopFileSize(html: string): number {
         const details = this.dom(html).querySelector(".detailsStatRight")?.textContent;
-        if (!details || !details.includes("MB")) {
+        if (!details) {
             return -1;
         }
 
-        const size = parseFloat(details.replace(/,/g, ""));
+        const m = details.match(/(\d+(?:[.,]\d+)?) (MB|KB|B)/);
+        if (!m) {
+            return -2;
+        }
+
+        const size = parseFloat(m[1]!.replace(/,/g, ""));
         if (Number.isNaN(size)) {
             return -2;
         }
 
-        return size*1000;
+        const unit = m[2]! as "MB"|"KB"|"B";
+        return size*({
+            "MB": 1000,
+            "KB": 1,
+            "B": 0.001
+        }[unit]);
     }
 
     parseReviews(html: string): TReview[] {
