@@ -14,19 +14,20 @@ export default class FCardExchangeLinks<T extends CBadges|CGameCard> extends Fea
 
     public override apply(): void | Promise<void> {
         document.addEventListener("as_pageUpdated", () => this.onPageUpdated());
+        this.onPageUpdated();
     }
 
     private onPageUpdated() {
         const ceImg = ExtensionResources.getURL("img/ico/steamcardexchange.png");
 
         for (const node of document.querySelectorAll<HTMLElement>(".badge_row:not(.es-has-ce-link)")) {
-            let appid: number|undefined;
+            let appid: number|null = null;
             if (this.context.appid) {
                 appid = this.context.appid;
             } else {
                 const overlay = node.querySelector<HTMLAnchorElement>("a.badge_row_overlay");
                 if (overlay) {
-                    AppId.fromGameCardUrl(overlay.href);
+                    appid = AppId.fromGameCardUrl(overlay.href);
                 }
             }
             if (!appid) { continue; }
