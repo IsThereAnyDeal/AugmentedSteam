@@ -199,9 +199,6 @@ export default class FExportWishlist extends Feature<CWishlist> {
                 continue;
             }
 
-            // Update button to new style, remove when not needed
-            copyBtn!.classList.replace("btn_darkblue_white_innerfade", "btn_blue_steamui");
-
             // Capture this s.t. the CModal doesn't get destroyed before we can grab this information
             dlBtn!.addEventListener("click", () => exportWishlist(ExportMethod.download), true);
             copyBtn!.addEventListener("click", () => exportWishlist(ExportMethod.copyToClipboard), true);

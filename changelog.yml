@@ -1,6 +1,16 @@
 4.0.0: |
   - TODO
 
+3.1.1: |
+  - add highlight and tag support for ignored marked as owned elsewhere
+  - fix wishlist prices display
+  - fix achievement sorting when dates have no year
+  - fix player stats not respecting settings
+  - fix link filter disable feature
+  - fix detecting inventory gifts
+  - fix background preview links in point shop (until Steam breaks it again)
+  - reduced number of "you're not logged in to SteamCommunity" errors
+
 3.1.0: |
   - fix formatting of price overview on app pages
   - fix bundle header showing even when there are no bundles listed
