@@ -34,7 +34,7 @@
         entry[1] = enabled;
         entries.set(name, entry);
 
-        for (let element of document.querySelectorAll<HTMLElement>(`[as-customizer='${name}']`)) {
+        for (let element of document.querySelectorAll<HTMLElement>(`[data-as-customizer='${name}']`)) {
             element.classList.toggle("esi-shown", enabled);
             element.classList.toggle("esi-hidden", !enabled);
         }
@@ -87,12 +87,12 @@
     onMount(() => {
         init(setup);
 
-        // we need to run dynamic separately, because it checks whether [as-customizer] already exists in found nodes
+        // we need to run dynamic separately, because it checks whether [data-as-customizer] already exists in found nodes
         if (dynamicSelector) {
             let dynamic: CustomizerSetup = [];
             for (const node of document.querySelectorAll<HTMLElement>(dynamicSelector)) {
-                if (node.closest("[as-customizer]")
-                 || node.querySelector("[as-customizer]")
+                if (node.closest("[data-as-customizer]")
+                 || node.querySelector("[data-as-customizer]")
                  || node.style.display === "none"
                 ) {
                     continue;
