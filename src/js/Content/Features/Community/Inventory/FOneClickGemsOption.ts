@@ -35,7 +35,7 @@ export default class FOneClickGemsOption extends Feature<CInventory> {
 
         newScrapLink.addEventListener("click", e => {
             e.preventDefault();
-            DOMHelper.insertScript("scriptlets/Community/Inventory/reloadCommunityInventory.js", {sessionId, assetId, appid})
+            DOMHelper.insertScript("scriptlets/Community/Inventory/oneClickGems.js", {sessionId, assetId, appid})
         });
     }
 }
