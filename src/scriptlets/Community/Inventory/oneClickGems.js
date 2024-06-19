@@ -6,17 +6,17 @@
     const params = JSON.parse(document.currentScript.dataset.params);
     const {sessionId, assetId, appid} = params;
 
-    const data = {
+    const ajaxParams = {
         sessionid: sessionId,
         appid,
         assetid: assetId,
         contextid: 6
     };
 
-    $J.get(`${g_strProfileURL}/ajaxgetgoovalue/`, data).done(data => {
-        data.goo_value_expected = data.goo_value;
+    $J.get(`${g_strProfileURL}/ajaxgetgoovalue/`, ajaxParams).done(data => {
+        ajaxParams.goo_value_expected = data.goo_value;
 
-        $J.post(`${g_strProfileURL}/ajaxgrindintogoo/`, data)
+        $J.post(`${g_strProfileURL}/ajaxgrindintogoo/`, ajaxParams)
             .done(() => {
                 ReloadCommunityInventory();
             });
