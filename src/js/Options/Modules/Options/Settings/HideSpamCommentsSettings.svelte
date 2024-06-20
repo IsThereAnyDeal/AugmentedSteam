@@ -23,7 +23,7 @@
         <div>
             <label>
                 <span>{L(__options_spamcommentregex)}</span>
-                <input type="text" class="inpt" bind:value={$settings.spamcommentregex}>
+                <input type="text" class="input" bind:value={$settings.spamcommentregex}>
             </label>
             <button type="button" class="btn" on:click={handleDefault}>{L(__theworddefault)}</button>
         </div>

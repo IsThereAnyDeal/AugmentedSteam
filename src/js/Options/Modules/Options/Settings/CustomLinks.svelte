@@ -59,19 +59,19 @@
             <div>
                 <label>
                     <span>{L(__options_name)}</span>
-                    <input type="text" class="inpt" size="30" maxlength="30" placeholder="Name"
+                    <input type="text" class="input" size="30" maxlength="30" placeholder="Name"
                            bind:value={link.name}>
                 </label>
 
                 <label>
                     <span>URL</span>
-                    <input type="url" class="inpt" placeholder="URL"
+                    <input type="url" class="input" placeholder="URL"
                            bind:value={link.url}>
                 </label>
 
                 <label>
                     <span>{L(__options_icon)}</span>
-                    <input type="url" class="inpt" placeholder="Icon url"
+                    <input type="url" class="input" placeholder="Icon url"
                            bind:value={link.icon}>
                 </label>
             </div>
