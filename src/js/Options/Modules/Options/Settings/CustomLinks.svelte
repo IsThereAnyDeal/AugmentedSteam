@@ -3,7 +3,7 @@
     import {onMount} from "svelte";
     import {L} from "@Core/Localization/Localization";
     import type {TCustomLink} from "../../../Data/_types";
-    import Settings from "../../../Data/Settings";
+    import Settings, {DefaultSettings} from "../../../Data/Settings";
     import ToggleIcon from "../../Icons/ToggleIcon.svelte";
     import {slide} from "svelte/transition";
     import DeleteIcon from "../../Icons/DeleteIcon.svelte";
@@ -11,46 +11,43 @@
 
     export let type: "app"|"profile";
 
+    const key = type === "app" ? "app_custom_link" : "profile_custom_link";
     let customLinks: TCustomLink[] = [];
 
     function removeLink(index: number): void {
         customLinks.splice(index, 1);
-        customLinks = customLinks;
         save();
     }
 
     function addLink(): void {
-        customLinks.push({
-            enabled: true,
-            name: "",
-            url: "",
-            icon: ""
-        });
-        customLinks = customLinks;
+        customLinks.push({...DefaultSettings[key][0]});
+        save();
+    }
+
+    function toggleLink(index: number): void {
+        if (!customLinks[index]) {
+            return;
+        }
+        customLinks[index].enabled = !customLinks[index].enabled;
+        save();
     }
 
     function save(): void {
-        if (type === "app") {
-            Settings.app_custom_link = customLinks;
-        } else {
-            Settings.profile_custom_link = customLinks;
-        }
+        customLinks = [...customLinks];
+        Settings[key] = customLinks;
     }
 
     onMount(() => {
-        customLinks = (type === "app"
-            ? Settings.app_custom_link
-            : Settings.profile_custom_link
-        ) ?? [];
+        customLinks = Settings[key] ?? [];
     });
 </script>
 
 
 <div>
-    {#each customLinks as link, index (link)}
+    {#each customLinks as link, index}
         <div class="box" on:change={save} transition:slide={{axis: "y", duration: 200}}>
             <div class="controls">
-                <button type="button" class="toggle" on:click={() => link.enabled = !link.enabled}>
+                <button type="button" class="toggle" on:click={() => toggleLink(index)}>
                     <ToggleIcon on={link.enabled} />
                 </button>
 
