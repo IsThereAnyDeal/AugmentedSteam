@@ -69,7 +69,7 @@ a:hover {
   color: var(--link-hover-color);
 }
 
-.inpt {
+.input {
   outline: 0;
   background-color: var(--input-bg-color);
   color: var(--text-color);
@@ -78,8 +78,8 @@ a:hover {
   border-radius: 4px;
   box-sizing: border-box;
 }
-.inpt:hover,
-.inpt:focus {
+.input:hover,
+.input:focus {
   color: var(--text-bright);
   border-color: #3c404e;
 }

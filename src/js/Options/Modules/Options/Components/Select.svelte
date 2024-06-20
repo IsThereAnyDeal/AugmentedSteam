@@ -10,7 +10,7 @@
         <div class="label">{label}</div>
     {/if}
 
-    <select class="inpt" bind:value on:change>
+    <select class="input" bind:value on:change>
         {#each options as [option, label](option)}
             <option value={option}>{label}</option>
         {/each}
