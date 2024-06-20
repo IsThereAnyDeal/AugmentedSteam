@@ -20,7 +20,11 @@
             ? Math.min(100, 100 * (done / started))
             : 0;
 
-        isLoading = started > 0 && (done + failed) < started;
+        if (started > 0 && (done + failed) < started) {
+            isLoading = true;
+        } else {
+            setTimeout(() => isLoading = false, 1000);
+        }
     }
 
     function reset(): void {
@@ -74,12 +78,13 @@
 
 <div class="wrapper">
     <div class="progress"
-         class:is-complete="{!isLoading}"
-         class:is-warning="{hasWarning}"
-         class:is-error="{hasError}"
+         class:is-loading={isLoading}
+         class:is-complete={!isLoading}
+         class:is-warning={hasWarning}
+         class:is-error={hasError}
          title={L(isLoading ? __ready_loading : __ready_ready)}>
         <div class="bar">
-            <div class="value" style:width="{isLoading ? progress : 18}px"></div>
+            <div class="value"></div>
         </div>
     </div>
 
@@ -96,26 +101,53 @@
         float: right;
         position: relative;
         margin-top: 55px;
-        width: 100px;
         min-width: 16px;
         height: 16px;
         box-sizing: content-box;
         border-radius: 8px;
         overflow: hidden;
         border-bottom: 1px solid rgba(255, 255, 255, 0.20);
+        transition: width 500ms ease-in-out;
     }
-    .is-error,
-    .is-warning,
-    .is-complete {
+    .progress.is-loading {
+        width: 24px;
+    }
+    .progress.is-error,
+    .progress.is-warning,
+    .progress.is-complete {
         width: 16px;
     }
-    .progress,
-    .value {
-        transition: width 1s ease-in-out;
+
+    .bar {
+        background-color: black;
+        border-radius: 8px;
     }
+
     .value {
-        width: 18px;
+        width: 16px;
+        height: 16px;
+        margin-left: 0;
+        background-color: #51771d;
+        border-radius: 8px;
+        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 5%, rgba(255, 255, 255, 0) 95%);
+        transition: width ease-out 500ms,
+                    margin-left ease-out 500ms;
     }
+
+    .is-loading .value {
+        animation: infinite loading ease-in-out 300ms;
+        animation-direction: alternate;
+        transition: none;
+    }
+    @keyframes loading {
+        0% {
+            margin-left: 0;
+        }
+        100% {
+            margin-left: 8px;
+        }
+    }
+
     /* This prevents the black bleeding from "es_progress__bar" background
         around the edges of "es_progress__value" to make it look smoother */
     .is-error .value,
@@ -123,6 +155,7 @@
     .is-complete .value {
         width: calc(100% + 4px) !important;
     }
+
     .is-complete {
         animation: delayBoxShadowGreen linear 1s;
         animation-fill-mode: forwards;
@@ -157,17 +190,7 @@
     .is-warning::before {
         color: white;
     }
-    .progress .bar {
-        background-color: black;
-        border-radius: 8px;
-    }
-    .value {
-        height: 16px;
-        margin-left: -2px;
-        background-color: #51771d;
-        border-radius: 8px;
-        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 5%, rgba(255, 255, 255, 0) 95%);
-    }
+
     .is-error .value, .is-warning .value {
         transition: unset;
         border-radius: 8px;
@@ -193,6 +216,7 @@
             box-shadow: 0 0 8px 1px #51771d;
         }
     }
+
     .wrapper {
         position: relative;
         float: right;
