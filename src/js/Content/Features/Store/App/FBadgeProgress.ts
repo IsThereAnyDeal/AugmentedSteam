@@ -24,7 +24,7 @@ export default class FBadgeProgress extends Feature<CApp> {
 
         // No badge data if game doesn't have cards or not logged in
         if (!data) {
-            throw new Error("Failed to find badges data");
+            return;
         }
 
         let target = document.querySelector(".rightcol.game_meta_data");
