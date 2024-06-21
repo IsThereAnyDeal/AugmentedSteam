@@ -32,7 +32,7 @@ export default class AugmentedSteamApiFacade {
     }
 
     static getStorePageData(appid: number): Promise<TStorePageData> {
-        return Background.send(EAction.DlcInfo, {appid});
+        return Background.send(EAction.StorePageData, {appid});
     }
 
     static expireStorePageData(appid: number): Promise<void> {
