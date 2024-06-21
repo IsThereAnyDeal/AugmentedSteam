@@ -22,40 +22,29 @@
 
     let localizedCountries: [string, string][] = [];
     let selection: string[] = [];
-    let showregionalprice: string;
-
-    function onShowOptionChange() {
-        showregionalprice = $settings.showregionalprice;
-    }
+    $: selection = $settings.regional_countries;
 
     function add() {
         selection.push("us");
-        save();
+        selection = selection;
+        $settings.regional_countries = selection;
     }
 
     function reset() {
         SettingsStore.remove("regional_countries");
-        selection = $settings.regional_countries;
+        $settings = $settings;
     }
 
-    function save(clear?: boolean = false) {
-        selection = clear ? [] : [...selection];
+    function clear() {
+        $settings.regional_countries = [];
+    }
+
+    function handleRemove(index: number) {
+        selection.splice(index, 1);
         $settings.regional_countries = selection;
     }
 
-    function change(index: number, country: string) {
-        selection.splice(index, 1, country);
-        save();
-    }
-
-    function remove(index: number) {
-        selection.splice(index, 1);
-        save();
-    }
-
     onMount(() => {
-        onShowOptionChange();
-        selection = $settings.regional_countries;
         localizedCountries = LocalizedCountryList()
             .sort(([, a], [, b]) => a.localeCompare(b));
     });
@@ -63,14 +52,14 @@
 
 
 <OptionGroup>
-    <Select bind:value={$settings.showregionalprice} on:change={onShowOptionChange} label={L(__options_regionalPriceOn)} options={[
+    <Select bind:value={$settings.showregionalprice} label={L(__options_regionalPriceOn)} options={[
         ["mouse", L(__options_regionalPriceMouse)],
         ["always", L(__always)],
         ["off", L(__never)]
     ]} />
 </OptionGroup>
 
-{#if showregionalprice === "mouse"}
+{#if $settings.showregionalprice === "mouse"}
     <div class="group" transition:slide={{axis: "y", duration: 200}}>
         <OptionGroup>
             <Toggle bind:value={$settings.regional_hideworld}>{L(__options_regionalHideworld)}</Toggle>
@@ -78,15 +67,15 @@
     </div>
 {/if}
 
-{#if showregionalprice !== "off"}
+{#if $settings.showregionalprice !== "off"}
     <div class="group" transition:slide={{axis: "y", duration: 200}}>
         <OptionGroup>
             <div>
                 {#each selection as country, index}
                     <div class="option">
                         <span class="es-flag es-flag--{country}"></span>
-                        <Select bind:value={country} on:change={(e) => change(index, e.target.value)} options={localizedCountries} />
-                        <button type="button" on:click={() => remove(index)}>
+                        <Select bind:value={country} options={localizedCountries} />
+                        <button type="button" on:click={() => handleRemove(index)}>
                             <DeleteIcon />
                         </button>
                     </div>
@@ -96,7 +85,7 @@
             <div class="buttons">
                 <button type="button" class="btn" on:click={add}>{L(__options_addAnotherRegion)}</button>
                 <button type="button" class="btn" on:click={reset}>{L(__theworddefault)}</button>
-                <button type="button" class="btn" on:click={() => save(true)}>{L(__thewordclear)}</button>
+                <button type="button" class="btn" on:click={clear}>{L(__thewordclear)}</button>
             </div>
         </OptionGroup>
     </div>
