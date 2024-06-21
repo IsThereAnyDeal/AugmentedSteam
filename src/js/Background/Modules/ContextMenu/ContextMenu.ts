@@ -108,7 +108,7 @@ export default class ContextMenu {
         }
     }
 
-    private static async update(): Promise<void> {
+    public static async update(): Promise<void> {
         await SettingsStore;
         if (!await Permissions.contains(["contextMenus"])) {
             Settings.context_steam_store = false;

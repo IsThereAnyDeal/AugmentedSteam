@@ -72,7 +72,7 @@ async function upgrade(
     db.createObjectStore("expiries")
         .createIndex("idx_expiry", "");
 
-    db.createObjectStore("storeList", {keyPath: "id"});
+    db.createObjectStore("storeList");
 }
 
 export default {upgrade};

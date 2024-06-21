@@ -6,22 +6,20 @@
 
     export let reviewSection: HTMLElement;
 
-    let show: boolean = false;
+    let show: boolean = true;
 
-    function toggleReviews(event?: MouseEvent) {
+    async function toggleReviews(event?: MouseEvent) {
         if (event) {
             show = !show;
             LocalStorage.set("show_review_section", show);
+        } else {
+            show = await LocalStorage.get("show_review_section") ?? true;
         }
 
         reviewSection.style.maxHeight = show ? "" : "0";
     }
 
     onMount(() => {
-        (async () => {
-            show = await LocalStorage.get("show_review_section") ?? true
-        })();
-
         toggleReviews();
     });
 </script>

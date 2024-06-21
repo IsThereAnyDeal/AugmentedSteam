@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     import {__options_addCustomLink, __options_icon, __options_name} from "@Strings/_strings";
     import {onMount} from "svelte";
@@ -15,7 +17,6 @@
 
     function removeLink(index: number): void {
         customLinks.splice(index, 1);
-        customLinks = customLinks;
         save();
     }
 
@@ -26,10 +27,17 @@
             url: "",
             icon: ""
         });
-        customLinks = customLinks;
+        save();
+    }
+
+    function toggleLink(link: TCustomLink): void {
+        link.enabled = !link.enabled;
+        save();
     }
 
     function save(): void {
+        customLinks = customLinks;
+
         if (type === "app") {
             Settings.app_custom_link = customLinks;
         } else {
@@ -50,7 +58,7 @@
     {#each customLinks as link, index (link)}
         <div class="box" on:change={save} transition:slide={{axis: "y", duration: 200}}>
             <div class="controls">
-                <button type="button" class="toggle" on:click={() => link.enabled = !link.enabled}>
+                <button type="button" class="toggle" on:click={() => toggleLink(link)}>
                     <ToggleIcon on={link.enabled} />
                 </button>
 
