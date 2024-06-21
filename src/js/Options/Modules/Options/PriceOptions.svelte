@@ -12,7 +12,7 @@
     import Section from "./Components/Section.svelte";
     import Toggle from "./Components/Toggle.svelte";
     import RegionSelect from "./Settings/RegionSelect.svelte";
-    import StoreList from "./Settings/StoreListSetting.svelte";
+    import StoreListSetting from "./Settings/StoreListSetting.svelte";
     import type {SettingsSchema} from "../../Data/_types";
     import OverridePriceSetting from "./Settings/OverridePriceSetting.svelte";
     import OptionGroup from "./Components/OptionGroup.svelte";
@@ -32,7 +32,7 @@
     </OptionGroup>
 
     <OptionGroup>
-        <StoreList {settings} />
+        <StoreListSetting {settings} />
     </OptionGroup>
 
     <OptionGroup>
