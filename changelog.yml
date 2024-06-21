@@ -1,5 +1,12 @@
 4.0.0: |
-  - TODO
+  Major extension rewrite, that doesn't look like it. Google is forcing Manifest v3 on everyone,
+  and so if we want Augmented Steam to keep working in Chrome, we had to comply.
+  
+  We took that chance and also improved our code base, but besides Options being a little bit different,
+  you should not notice much other changes.
+  
+  There's a big chance we have broken something during rewrite or due to Manifest v3 working a little bit differently.
+  Please let us know about these.
 
 3.1.1: |
   - add highlight and tag support for ignored marked as owned elsewhere
