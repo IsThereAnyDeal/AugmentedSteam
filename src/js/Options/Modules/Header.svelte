@@ -6,7 +6,9 @@
 
 
 <div>
-    <img src={Logo} alt="Augmented Steam Logo" />
+    <a href="https://store.steampowered.com/">
+        <img src={Logo} alt="Augmented Steam Logo" />
+    </a>
 </div>
 
 
