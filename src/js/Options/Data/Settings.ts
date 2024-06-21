@@ -85,10 +85,10 @@ export const DefaultSettings: SettingsSchema = Object.freeze({
     "exfgls": true,
     "app_custom_link": [
         {
-            "enabled": false,
+            "enabled": true,
             "name": "Google",
-            "url": "google.com/search?q=[ID]+[NAME]",
-            "icon": "www.google.com/images/branding/product/ico/googleg_lodp.ico"
+            "url": "https://www.google.com/search?q=[ID]+[NAME]",
+            "icon": "https://www.google.com/images/branding/product/ico/googleg_lodp.ico"
         },
     ],
 
@@ -156,8 +156,8 @@ export const DefaultSettings: SettingsSchema = Object.freeze({
         {
             "enabled": true,
             "name": "Google",
-            "url": "google.com/search?q=[ID]",
-            "icon": "www.google.com/images/branding/product/ico/googleg_lodp.ico"
+            "url": "https://www.google.com/search?q=[ID]",
+            "icon": "https://www.google.com/images/branding/product/ico/googleg_lodp.ico"
         },
     ],
     "group_steamgifts": true,

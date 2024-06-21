@@ -23,7 +23,7 @@
         <div>
             <label>
                 <span>{L(__options_quickinvDiff)}</span>
-                <input type="number" class="inpt" step="0.01" bind:value={$settings.quickinv_diff}>
+                <input type="number" class="input" step="0.01" bind:value={$settings.quickinv_diff}>
             </label>
             <button type="button" class="btn" on:click={handleDefault}>{L(__theworddefault)}</button>
         </div>
