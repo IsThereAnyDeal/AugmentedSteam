@@ -5,7 +5,7 @@
     import {onMount} from "svelte";
     import {L} from "@Core/Localization/Localization";
     import type {TCustomLink} from "../../../Data/_types";
-    import Settings from "../../../Data/Settings";
+    import Settings, {DefaultSettings} from "../../../Data/Settings";
     import ToggleIcon from "../../Icons/ToggleIcon.svelte";
     import {slide} from "svelte/transition";
     import DeleteIcon from "../../Icons/DeleteIcon.svelte";
@@ -21,11 +21,15 @@
     }
 
     function addLink(): void {
+        const defaultLink: TCustomLink = type === "app"
+            ? DefaultSettings.app_custom_link[0]!
+            : DefaultSettings.profile_custom_link[0]!
+
         customLinks.push({
-            enabled: true,
-            name: "",
-            url: "",
-            icon: ""
+            enabled: defaultLink.enabled,
+            name: defaultLink.name,
+            url: defaultLink.url,
+            icon: defaultLink.icon
         });
         save();
     }
