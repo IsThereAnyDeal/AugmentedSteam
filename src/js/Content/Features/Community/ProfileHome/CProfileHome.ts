@@ -27,7 +27,7 @@ export default class CProfileHome extends CCommunityBase {
     constructor() {
 
         // Don't apply features if there's an error message (e.g. non-existent profile)
-        const hasFeatures = document.getElementById("message") !== null;
+        const hasFeatures = document.getElementById("message") === null;
 
         super(ContextType.PROFILE_HOME, hasFeatures ? [
             FCommunityProfileLinks,
