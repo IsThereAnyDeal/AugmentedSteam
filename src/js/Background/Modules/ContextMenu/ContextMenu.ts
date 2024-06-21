@@ -90,7 +90,7 @@ export default class ContextMenu {
         for (const [option, entry] of Object.entries(ContextMenu.queryLinks)) {
             let [locale, query_, enabled] = entry;
             if (!enabled()) {
-                continue;
+                continue
             }
 
             browser.contextMenus.create({
@@ -109,7 +109,15 @@ export default class ContextMenu {
     }
 
     private static async update(): Promise<void> {
+        await SettingsStore;
         if (!await Permissions.contains(["contextMenus"])) {
+            Settings.context_steam_store = false;
+            Settings.context_steam_market = false
+            Settings.context_itad = false
+            Settings.context_bartervg = false
+            Settings.context_steamdb = false
+            Settings.context_steamdb_instant = false
+            Settings.context_steam_keys = false
             return;
         }
 
