@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
     import {onMount} from "svelte";
@@ -14,6 +16,18 @@
 
     let promise: Promise<TGetStoreListResponse>|null = null;
     let excludedStores: SettingsSchema['excluded_stores'] = [];
+
+    function toggle(id: number) {
+        let set = new Set(excludedStores);
+        if (set.has(id)) {
+            set.delete(id);
+        } else {
+            set.add(id);
+        }
+        excludedStores = [...set];
+
+        $settings.excluded_stores = excludedStores;
+    }
 
     onMount(() => {
         promise = (async () => {
@@ -41,7 +55,9 @@
                 {#each storeList as {id, title} (id)}
                     <div class="store">
                         <label>
-                            <input type="checkbox" checked={!excludedStores.includes(id)}>
+                            <input type="checkbox"
+                                   checked={!excludedStores.includes(id)}
+                                   on:change={() => toggle(id)}>
                             {title}
                         </label>
                     </div>
