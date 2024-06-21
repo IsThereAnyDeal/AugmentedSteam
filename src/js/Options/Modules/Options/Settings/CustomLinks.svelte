@@ -1,9 +1,11 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     import {__options_addCustomLink, __options_icon, __options_name} from "@Strings/_strings";
     import {onMount} from "svelte";
     import {L} from "@Core/Localization/Localization";
     import type {TCustomLink} from "../../../Data/_types";
-    import Settings, {DefaultSettings} from "../../../Data/Settings";
+    import Settings from "../../../Data/Settings";
     import ToggleIcon from "../../Icons/ToggleIcon.svelte";
     import {slide} from "svelte/transition";
     import DeleteIcon from "../../Icons/DeleteIcon.svelte";
@@ -11,7 +13,6 @@
 
     export let type: "app"|"profile";
 
-    const key = type === "app" ? "app_custom_link" : "profile_custom_link";
     let customLinks: TCustomLink[] = [];
 
     function removeLink(index: number): void {
@@ -20,34 +21,44 @@
     }
 
     function addLink(): void {
-        customLinks.push({...DefaultSettings[key][0]});
+        customLinks.push({
+            enabled: true,
+            name: "",
+            url: "",
+            icon: ""
+        });
         save();
     }
 
-    function toggleLink(index: number): void {
-        if (!customLinks[index]) {
-            return;
-        }
-        customLinks[index].enabled = !customLinks[index].enabled;
+    function toggleLink(link: TCustomLink): void {
+        link.enabled = !link.enabled;
         save();
     }
 
     function save(): void {
-        customLinks = [...customLinks];
-        Settings[key] = customLinks;
+        customLinks = customLinks;
+
+        if (type === "app") {
+            Settings.app_custom_link = customLinks;
+        } else {
+            Settings.profile_custom_link = customLinks;
+        }
     }
 
     onMount(() => {
-        customLinks = Settings[key] ?? [];
+        customLinks = (type === "app"
+            ? Settings.app_custom_link
+            : Settings.profile_custom_link
+        ) ?? [];
     });
 </script>
 
 
 <div>
-    {#each customLinks as link, index}
+    {#each customLinks as link, index (link)}
         <div class="box" on:change={save} transition:slide={{axis: "y", duration: 200}}>
             <div class="controls">
-                <button type="button" class="toggle" on:click={() => toggleLink(index)}>
+                <button type="button" class="toggle" on:click={() => toggleLink(link)}>
                     <ToggleIcon on={link.enabled} />
                 </button>
 
