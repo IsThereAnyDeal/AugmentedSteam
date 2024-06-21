@@ -71,8 +71,7 @@ export default async function(options) {
 
     await fs.mkdir(distDir, {recursive: true});
 
-    // TODO replace with imports?
-    for (let dir of ["html", "img", "localization", "scriptlets"]) {
+    for (let dir of ["html", "img", "localization/compiled", "scriptlets"]) {
         await fs.cp(`${srcDir}/${dir}`, `${distDir}/${dir}`, {recursive: true});
     }
     await fs.cp(`${rootDir}/LICENSE`, `${distDir}/LICENSE`);
@@ -83,9 +82,12 @@ export default async function(options) {
         entryPoints: [
             // stylesheets - NOTE, in: main stylesheet added during build, based on browser
             {out: "augmentedsteam", in: `${srcDir}/css/augmentedsteam.css`},
-            // pages
-            {out: "background", in: `${srcDir}/js/Background/background.ts`},
+            // options
             {out: "options", in: `${srcDir}/js/Options/options.ts`},
+            // background
+            {out: "background", in: `${srcDir}/js/Background/background.ts`},
+            {out: "offscreen_domparser", in: `${srcDir}/js/Background/offscreen_domparser.ts`},
+            // content
             {out: "community/app", in: `${srcDir}/js/Content/Features/Community/App/PApp.ts`},
             {out: "community/badges", in: `${srcDir}/js/Content/Features/Community/Badges/PBadges.ts`},
             {out: "community/booster_creator", in: `${srcDir}/js/Content/Features/Community/BoosterCreator/PBoosterCreator.ts`},
@@ -169,7 +171,9 @@ export default async function(options) {
             manifestPlugin.plugin
         ],
         define: {
-            "__BROWSER__": JSON.stringify(options.browser)
+            "__FIREFOX": JSON.stringify(options.browser === "firefox"),
+            "__CHROME": JSON.stringify(options.browser === "chrome"),
+            "__EDGE": JSON.stringify(options.browser === "edge")
         },
         loader: {
             ".svg": "file",

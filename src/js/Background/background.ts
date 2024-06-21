@@ -1,4 +1,3 @@
-import bootstrapDomPurify from "../bootstrapDomPurify";
 import ContextMenu from "./Modules/ContextMenu/ContextMenu";
 import IndexedDB from "@Background/Db/IndexedDB";
 import SteamCommunityApi from "./Modules/Community/SteamCommunityApi";
@@ -11,6 +10,9 @@ import type MessageHandlerInterface from "@Background/MessageHandlerInterface";
 import InventoryApi from "@Background/Modules/Inventory/InventoryApi";
 import CacheApi from "@Background/Modules/Cache/CacheApi";
 import {SettingsStore} from "@Options/Data/Settings";
+import Environment, {ContextType} from "@Core/Environment";
+
+Environment.CurrentContext = ContextType.Background;
 
 type MessageSender = Runtime.MessageSender;
 
@@ -36,7 +38,7 @@ browser.runtime.onMessage.addListener((
 
     (async function(): Promise<void> {
         try {
-            await Promise.all([IndexedDB, SettingsStore, bootstrapDomPurify()]);
+            await Promise.all([IndexedDB, SettingsStore]);
 
             let response: any = undefined;
             let handlers: MessageHandlerInterface[] = [

@@ -8,42 +8,38 @@ export default {
         48: "img/logo/as48.png",
         32: "img/logo/as32.png"
     },
-    manifest_version: 2,
+    manifest_version: 3,
     options_ui: {
         page: "html/options.html",
         open_in_tab: true
     },
     permissions: [
-        "storage",
+        "storage"
+    ],
+    host_permissions: [
         "*://*.steampowered.com/*",
         "*://steamcommunity.com/*",
-        "*://*.isthereanydeal.com/",
-        "webRequest",
-        "webRequestBlocking"
+        "*://*.isthereanydeal.com/"
     ],
+    optional_permissions: [],
     web_accessible_resources: [
-        "img/*.png",
-        "img/*.gif",
-        "img/*.jpg",
-        "img/*.svg",
-        "css/*.css",
-        "html/options.html",
-        "img/*/*.png",
-        "img/profile_styles/*/header.jpg",
-        "img/profile_styles/*/showcase.png",
-        "img/profile_styles/*/style.css",
-        "img/profile_styles/*/preview.png",
-        "localization/*.json",
-        "js/extra/holidayprofile.js",
-        "changelog.json",
-        "*.map",
-        "scriptlets/*"
+        {
+            resources: [
+                "img/*",
+                "css/*",
+                "html/*",
+                "scriptlets/*",
+                "localization/*",
+                "js/extra/holidayprofile.js",
+                "changelog.json",
+                "*.map",
+            ],
+            matches: [
+                "*://*.steampowered.com/*",
+                "*://steamcommunity.com/*",
+            ]
+        }
     ],
     homepage_url: "https://augmentedsteam.com/",
-    background: {
-        persistent: true,
-        scripts: [
-            "js/background.js"
-        ]
-    }
+    background: {}
 };

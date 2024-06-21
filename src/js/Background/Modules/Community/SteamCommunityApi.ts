@@ -9,6 +9,7 @@ import HTMLParser from "@Core/Html/HtmlParser";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import TimeUtils from "@Core/Utils/TimeUtils";
 import {Unrecognized} from "@Background/background";
+import DomParserFactory from "@Background/Modules/Dom/DomParserFactory";
 
 export default class SteamCommunityApi extends Api implements MessageHandlerInterface {
 
@@ -38,34 +39,21 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
      * @return Promise<number>  result size in kB
      */
     private async fetchWorkshopFileSize(id: number): Promise<number> {
-        const parser = new DOMParser();
-
         const url = this.getUrl("/sharedfiles/filedetails/", {id});
         const html = await this.fetchText(url, {credentials: "include"});
-        const doc = parser.parseFromString(html, "text/html");
 
-        const details = doc.querySelector(".detailsStatRight")?.textContent;
+        const parser = DomParserFactory.getParser();
+        const size = await parser.parseWorkshopFileSize(html);
 
-        if (!details) {
+        if (size === -1) {
             throw new Error(`Couldn't find details block for item id "${id}"`);
         }
 
-        const m = details.match(/(\d+(?:[.,]\d+)?) (MB|KB|B)/);
-        if (!m) {
-            throw new Error(`Couldn't find details block for item id "${id}"`);
-        }
-
-        const size = parseFloat(m[1]!.replace(/,/g, ""));
-        if (Number.isNaN(size)) {
+        if (size === -2) {
             throw new Error(`Invalid file size for item id "${id}"`);
         }
 
-        const unit = m[2]! as "MB"|"KB"|"B";
-        return size*({
-            "MB": 1000,
-            "KB": 1,
-            "B": 0.001
-        }[unit]);
+        return size;
     }
 
     private async getWorkshopFileSize(id: number, preventFetch: boolean): Promise<number|null> {
@@ -88,68 +76,18 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
     }
 
     private async fetchReviews(steamId: string, pages: number): Promise<TFetchReviewsResponse> {
-        const parser = new DOMParser();
+        const parser = DomParserFactory.getParser();
         const reviews: TReview[] = [];
         let defaultOrder = 0;
 
         for (let p = 1; p <= pages; p++) {
             const url = this.getUrl(`${steamId}/recommended`, {p});
             const html = await this.fetchPage(url);
-            const doc = parser.parseFromString(html, "text/html");
 
-            for (const node of doc.querySelectorAll(".review_box")) {
-                defaultOrder++;
-
-                const rating = node.querySelector("[src*=thumbsUp]") ? 1 : 0;
-
-                const [helpful = 0, funny = 0] = Array.from(node.querySelector(".header")?.childNodes ?? [])
-                    .filter(node => node.nodeType === Node.TEXT_NODE)
-                    .map(node => {
-                        const text = node.textContent?.match(/(?:\d+,)?\d+/);
-                        return text ? Number(text[0].replace(/,/g, "")) : 0;
-                    });
-
-                const length = node.querySelector(".content")!.textContent!.trim().length;
-
-                // There are only two kinds of visibility, Public: 0; Friends-only: 1
-                const visibilityNode = node.querySelector<HTMLInputElement>("input[id^=ReviewVisibility]");
-                const visibility = visibilityNode ? Number(visibilityNode.value) : 0;
-
-                const reviewId = visibilityNode
-                    // Only exists when the requested profile is yours
-                    ? visibilityNode.id.replace("ReviewVisibility", "")
-                    // Otherwise you have buttons to vote for and award the review
-                    : node.querySelector(".control_block > a")!.id.replace("RecommendationVoteUpBtn", "");
-
-                // Total playtime comes first
-                const playtimeText = node.querySelector(".hours")!.textContent!.match(/(?:\d+,)?\d+\.\d+/);
-                const playtime = playtimeText ? parseFloat(playtimeText[0].replace(/,/g, "")) : 0.0;
-
-                // Count total awards received
-                const awards = Array.from(node.querySelectorAll(".review_award"))
-                    .reduce((acc, node) => {
-                        const count = node.classList.contains("more_btn")
-                            ? 0
-                            : Number(node.querySelector(".review_award_count")!.textContent!.trim());
-                        return acc + count;
-                    }, 0);
-
-                const devResponseNode = node.nextElementSibling?.classList.contains("review_developer_response_container")
-                    ? DOMPurify.sanitize(node.nextElementSibling.outerHTML)
-                    : "";
-
-                reviews.push({
-                    "default": defaultOrder,
-                    rating,
-                    helpful,
-                    funny,
-                    length,
-                    visibility,
-                    playtime,
-                    awards,
-                    "node": DOMPurify.sanitize(node.outerHTML) + devResponseNode,
-                    "id": reviewId
-                });
+            const parsedReviews = await parser.parseReviews(html);
+            for (let review of parsedReviews) {
+                review.default = defaultOrder++;
+                reviews.push(review);
             }
         }
 

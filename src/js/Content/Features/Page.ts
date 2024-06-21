@@ -11,6 +11,9 @@ import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import UpdateHandler from "@Content/Modules/UpdateHandler";
 import ITAD from "@Content/Modules/ITAD";
 import type Context from "@Content/Modules/Context/Context";
+import Environment, {ContextType} from "@Core/Environment";
+
+Environment.CurrentContext = ContextType.ContentScript;
 
 /**
  * Event handler for uncaught Background errors

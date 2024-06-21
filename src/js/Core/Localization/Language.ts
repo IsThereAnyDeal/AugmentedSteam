@@ -38,6 +38,10 @@ export default class Language {
     };
 
     static getCurrentSteamLanguage() {
+        if (!Environment.isContentScript()) {
+            return null;
+        }
+
         if (this._currentSteamLanguage !== null) {
             return this._currentSteamLanguage;
         }
@@ -52,15 +56,13 @@ export default class Language {
         for (const script of document.querySelectorAll<HTMLScriptElement>("script[src]")) {
             const language = new URL(script.src).searchParams.get("l");
             if (language) {
-                Language._currentSteamLanguage = language;
+                this._currentSteamLanguage = language;
                 return this._currentSteamLanguage;
             }
         }
 
         // In a Content Context, we can check for a cookie
-        if (Environment.isContentScript()) {
-            Language._currentSteamLanguage = CookieReader.get("Steam_Language", null);
-        }
+        this._currentSteamLanguage = CookieReader.get("Steam_Language", null);
 
         return this._currentSteamLanguage;
     }
