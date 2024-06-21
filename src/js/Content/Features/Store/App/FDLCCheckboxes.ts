@@ -95,7 +95,7 @@ export default class FDLCCheckboxes extends Feature<CApp> {
         const subids = new Set();
         const cartBtn = dlcSection.querySelector<HTMLElement>("#es_selected_btn")!;
         cartBtn.addEventListener("click", () => {
-            DOMHelper.insertScript("scriptlets/Store/App/addItemToCart", {
+            DOMHelper.insertScript("scriptlets/Store/App/addItemToCart.js", {
                 subids: Array.from(subids)
             });
         });
