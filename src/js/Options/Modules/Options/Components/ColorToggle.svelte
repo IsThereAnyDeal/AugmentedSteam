@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     import ColorPicker from "./ColorPicker.svelte";
     import Toggle from "./Toggle.svelte";

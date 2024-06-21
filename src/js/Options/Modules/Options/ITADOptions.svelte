@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__itad_import, __libraryMenu, __options_addToWaitlist, __wishlist,} from "@Strings/_strings";

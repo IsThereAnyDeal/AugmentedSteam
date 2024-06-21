@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     export let title: string|undefined = undefined;
 </script>

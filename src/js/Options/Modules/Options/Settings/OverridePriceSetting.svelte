@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__options_autoDetect, __options_viewInCurrency} from "@Strings/_strings";

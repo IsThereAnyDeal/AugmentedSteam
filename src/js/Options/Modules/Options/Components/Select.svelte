@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     export let label: string|undefined = undefined;
     export let options: Array<[string, string]>;

@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts" context="module">
     import "@melloware/coloris/dist/coloris.css";
     import Coloris from "@melloware/coloris";

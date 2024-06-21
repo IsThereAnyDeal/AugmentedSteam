@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     import ToggleIcon from "../../Icons/ToggleIcon.svelte";
     import {createEventDispatcher} from "svelte";

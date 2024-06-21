@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     import Logo from "@Assets/logo/logo.svg";
 </script>

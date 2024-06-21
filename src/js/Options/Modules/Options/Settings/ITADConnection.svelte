@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     import {
         __connected,
@@ -8,7 +10,6 @@
         __loading,
         __status
     } from "@Strings/_strings";
-    import BackgroundSimple from "@Core/Background";
     import {L} from "@Core/Localization/Localization";
     import {onMount} from "svelte";
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";
