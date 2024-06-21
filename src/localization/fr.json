@@ -446,7 +446,8 @@
         "owned": "Possédé",
         "notinterested": "Pas intéressé",
         "collection": "Collecté",
-        "waitlist": "Liste d'attente"
+        "waitlist": "Liste d'attente",
+        "ignored_owned": "Ignoré (possédé)"
     },
     "wallet": {
         "custom_amount": "Ajouter un montant personnalisé",
@@ -877,5 +878,8 @@
     },
     "using_language_return": "Cliquez ici pour naviguer sur Steam en __base__.",
     "using_language": "Vous naviguez sur Steam en __current__.",
-    "another_store": "Autre Magasin"
+    "another_store": "Autre Magasin",
+    "thewordunknown": "Inconnu",
+    "badge_level": "Niveau __level__",
+    "ignored_owned": "Jeux ignorés car joués sur d'autres plates-formes"
 }

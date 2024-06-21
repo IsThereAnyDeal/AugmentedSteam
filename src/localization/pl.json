@@ -216,7 +216,7 @@
     "bundle": {
         "offer_ends": "Koniec oferty:",
         "includes": "Zestaw __num__ produktów",
-        "tier_includes": "__tier__ (__price__) zawiera __num__ produkty(-ów)",
+        "tier_includes": "__tier__ (__price__) zawiera zbiór __num__ produktów",
         "tier": "Próg __num__",
         "header": "Zestawy zawierające tę grę",
         "info": "Informacje o zestawie"
@@ -443,7 +443,8 @@
         "owned": "Posiadane",
         "notinterested": "Ignorowane",
         "collection": "W kolekcji",
-        "waitlist": "Na liście oczekujących"
+        "waitlist": "Na liście oczekujących",
+        "ignored_owned": "Ignorowane (posiadane)"
     },
     "wallet": {
         "custom_amount": "Dodaj własną kwotę",
@@ -874,5 +875,8 @@
     },
     "using_language_return": "Kliknij tutaj, aby zmienić go na __base__.",
     "using_language": "Aktualnie przeglądasz Steam w języku __current__m.",
-    "another_store": "innym sklepie"
+    "another_store": "innym sklepie",
+    "thewordunknown": "Nieznane",
+    "badge_level": "Poziom __level__",
+    "ignored_owned": "Tytuły ignorowane oznaczone jako grane na innej platformie"
 }

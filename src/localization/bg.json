@@ -446,7 +446,8 @@
         "owned": "Притежавано",
         "notinterested": "Не се интересувам",
         "collection": "Събрани",
-        "waitlist": "В списъка за изчакване"
+        "waitlist": "В списъка за изчакване",
+        "ignored_owned": "Игнорирано (притежавано)"
     },
     "wallet": {
         "custom_amount": "Добавяне на персонализирана сума",
@@ -877,5 +878,8 @@
     },
     "using_language_return": "Кликнете тук, за да преглеждате Steam в __base__.",
     "using_language": "Преглеждате Steam в __current__.",
-    "another_store": "друг магазин"
+    "another_store": "друг магазин",
+    "thewordunknown": "Неизвестно",
+    "badge_level": "Ниво __level__",
+    "ignored_owned": "Игри, които сте игнорирали като пускани на различна платформа"
 }

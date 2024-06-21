@@ -44,7 +44,7 @@
     "clear_cache": "Daten im Cache löschen",
     "translation": "Übersetzung",
     "lowest": "niedrigste",
-    "lowest_price": "Derzeit niedrigster Preis:",
+    "lowest_price": "Aktuell niedrigster Preis:",
     "view_badge_progress": "Abzeichen-Fortschritt anzeigen",
     "badge_progress": "Abzeichen-Fortschritt",
     "sales_total": "Gesamterträge :",
@@ -56,9 +56,9 @@
     "loading": "Laden ...",
     "selling": "Verkaufen ...",
     "quick_sell": "Schnellverkauf für __amount__",
-    "quick_sell_desc": "Preisdifferenz von __modifier__ im Vergleich zum Preis des derzeit günstigsten Angebots auf dem Steam-Markt",
+    "quick_sell_desc": "Preisdifferenz von __modifier__ im Vergleich zum Preis des aktuell günstigsten Angebots auf dem Steam-Markt",
     "instant_sell": "Sofortverkauf für __amount__",
-    "instant_sell_desc": "Der Preis des derzeit höchsten Kaufauftrags auf dem Steam-Markt",
+    "instant_sell_desc": "Der Preis des aktuell höchsten Kaufauftrags auf dem Steam-Markt",
     "starting_at": "Ab: __price__",
     "homepage_tabs": "Startseiten-Tabs",
     "store": "Shop",
@@ -223,9 +223,9 @@
     },
     "charts": {
         "peakall": "Allzeithoch",
-        "current": "Spieler",
+        "current": "Spielerzahl",
         "playing_now": "aktuell online",
-        "peaktoday": "heutiges Hoch"
+        "peaktoday": "24h-Hoch"
     },
     "hltb": {
         "title": "Zeit zum Durchspielen",
@@ -446,7 +446,8 @@
         "owned": "Im Besitz",
         "notinterested": "Ignoriert",
         "collection": "Gesammelt",
-        "waitlist": "Auf Warteliste"
+        "waitlist": "Auf Warteliste",
+        "ignored_owned": "Ignoriert (im Besitz)"
     },
     "wallet": {
         "custom_amount": "Eigenen Betrag hinzufügen",
@@ -497,7 +498,7 @@
         "default": "Es ist ein unerwarteter Fehler aufgetreten. Ihr Produktschlüssel konnte nicht eingelöst werden. Bitte warten Sie 30 Minuten und versuchen Sie erneut, den Schlüssel einzulösen."
     },
     "wl": {
-        "total_price": "derzeitiger Wert",
+        "total_price": "aktueller Wert",
         "in_wishlist": "auf Wunschliste",
         "on_sale": "reduziert",
         "no_price": "ohne Preis",
@@ -877,5 +878,8 @@
     },
     "using_language_return": "Hier anklicken, um Steam in __base__ zu verwenden.",
     "using_language": "Sie verwenden Steam in __current__.",
-    "another_store": "anderer Shop"
+    "another_store": "anderer Shop",
+    "thewordunknown": "Unbekannt",
+    "badge_level": "Level __level__",
+    "ignored_owned": "Ignorierte, da auf anderer Plattform gespielte Spiele"
 }
