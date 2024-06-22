@@ -206,8 +206,10 @@ export default class IndexedDB {
     static async clear<StoreName extends StoreNames<Schema>>(
         ...storeName: StoreName[]
     ): Promise<void> {
+        const tx = this.db.transaction([...storeName, "expiries"], "readwrite");
         for (let store of storeName) {
-            await this.db.clear(store);
+            tx.objectStore("expiries").delete(store);
+            tx.objectStore(store).clear();
         }
     }
 
