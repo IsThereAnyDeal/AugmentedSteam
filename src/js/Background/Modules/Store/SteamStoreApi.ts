@@ -16,10 +16,7 @@ import HTML from "@Core/Html/Html";
 import TimeUtils from "@Core/Utils/TimeUtils";
 import StringUtils from "@Core/Utils/StringUtils";
 import {Unrecognized} from "@Background/background";
-import browser from "webextension-polyfill";
 import type DomParserInterface from "@Background/Modules/Dom/DomParserInterface";
-import OffscreenDomParser from "@Background/Modules/Dom/OffscreenDomParser";
-import NativeDomParser from "@Background/Modules/Dom/NativeDomParser";
 import DomParserFactory from "@Background/Modules/Dom/DomParserFactory";
 
 // helper types for clarity
@@ -105,7 +102,10 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
             result = await this.fetchJson(url, {
                 method: "POST",
                 credentials: "include",
-                body: new URLSearchParams({sessionid, appid})
+                body: new URLSearchParams({
+                    sessionid,
+                    appid: String(appid)
+                })
             });
         }
 
@@ -125,7 +125,10 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
             result = await this.fetchJson(url, {
                 method: "POST",
                 credentials: "include",
-                body: new URLSearchParams({sessionid, appid})
+                body: new URLSearchParams({
+                    sessionid,
+                    appid: String(appid)
+                })
             });
         }
 
