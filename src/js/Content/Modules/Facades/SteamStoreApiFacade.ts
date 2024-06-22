@@ -8,8 +8,8 @@ export default class SteamStoreApiFacade {
         return await Background.send(EAction.Wishlist_Add, {appid});
     }
 
-    static async wishlistRemove(appid: number, sessionId: string|null=null): Promise<void> {
-        return await Background.send(EAction.Wishlist_Remove, {appid, sessionId});
+    static async wishlistRemove(appid: number): Promise<void> {
+        return await Background.send(EAction.Wishlist_Remove, {appid});
     }
 
     static async fetchWishlistCount(path: string): Promise<TFetchWishlistResponse> {

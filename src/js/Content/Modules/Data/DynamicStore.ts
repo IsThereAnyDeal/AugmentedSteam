@@ -29,7 +29,7 @@ export default class DynamicStore {
 
     static invalidateCacheHandler(): void {
         this.register();
-        document.addEventListener("DSInvalidateCache", () => this.clear());
+        window.addEventListener("DSInvalidateCache", () => this.clear());
         Messenger.call(MessageHandler.DynamicStore, "invalidateCache");
     }
 
