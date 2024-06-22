@@ -2,6 +2,8 @@ name: Build Augmented Steam
 on:
   push:
     branches: [develop, master, wip-4.0, wip-4.0-mv3]
+  pull_request:
+    types: [opened]
 jobs:
   build-all:
     name: Build Augmented Steam

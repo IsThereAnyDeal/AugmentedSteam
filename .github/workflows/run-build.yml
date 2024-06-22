@@ -18,6 +18,8 @@ jobs:
           node-version: 21
       - name: Install
         run: npm install
+      - name: Check
+        run: npm run check
       - name: Build
         run: npm run build -- ${{ inputs.browser }} --production
       - name: Upload artifacts
