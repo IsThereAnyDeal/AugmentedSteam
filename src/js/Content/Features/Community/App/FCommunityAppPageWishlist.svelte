@@ -21,6 +21,7 @@
             } else {
                 await SteamStoreApiFacade.wishlistRemove(appid);
             }
+            wishlisted = add;
         } catch (e) {
             /**
              * We can't (easily) detect whether or not the user is logged in to the store,
@@ -35,8 +36,6 @@
 </script>
 
 
-<!-- Whitespace intended, separates buttons -->
-&nbsp;
 <span class="as_btn_community_wishlist" class:loading={isLoading}>
     {#if wishlisted}
         <!-- svelte-ignore a11y-click-events-have-key-events -->

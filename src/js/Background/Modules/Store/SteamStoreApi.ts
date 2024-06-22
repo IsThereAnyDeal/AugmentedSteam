@@ -101,10 +101,11 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
         const sessionid = await this.fetchSessionId();
 
         if (sessionid) {
-            const url = this.getUrl("/api/addtowishlist", {sessionid, appid});
+            const url = this.getUrl("/api/addtowishlist");
             result = await this.fetchJson(url, {
                 method: "POST",
-                credentials: "include"
+                credentials: "include",
+                body: new URLSearchParams({sessionid, appid})
             });
         }
 
@@ -115,18 +116,16 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
         await this.clearDynamicStore();
     }
 
-    private async wishlistRemove(appid: number, sessionId: string|null): Promise<void> {
+    private async wishlistRemove(appid: number): Promise<void> {
         let result: Record<string, any>|undefined;
+        const sessionid = await this.fetchSessionId();
 
-        if (!sessionId) {
-            sessionId = await this.fetchSessionId();
-        }
-
-        if (sessionId) {
-            const url = this.getUrl("/api/removefromwishlist", {sessionid: sessionId, appid})
+        if (sessionid) {
+            const url = this.getUrl("/api/removefromwishlist")
             result = await this.fetchJson(url, {
                 method: "POST",
-                credentials: "include"
+                credentials: "include",
+                body: new URLSearchParams({sessionid, appid})
             });
         }
 
@@ -372,7 +371,7 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
                 return await this.wishlistAdd(message.params.appid);
 
             case EAction.Wishlist_Remove:
-                return await this.wishlistRemove(message.params.appid, message.params.sessionId ?? null);
+                return await this.wishlistRemove(message.params.appid);
 
             case EAction.Wishlists:
                 return await this.fetchWishlistCount(message.params.path);
