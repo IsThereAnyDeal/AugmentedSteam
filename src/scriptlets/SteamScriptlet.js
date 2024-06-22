@@ -113,7 +113,8 @@
 
         if (id) {
             document.dispatchEvent(new CustomEvent(id, {
-                detail: await result
+                // Remove un-structuredClone-able properties, otherwise this will return `null`
+                detail: JSON.parse(JSON.stringify(await result))
             }));
         }
     });

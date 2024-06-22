@@ -65,7 +65,7 @@ export default class FToggleComments extends Feature<CProfileActivity> {
             const result = await SteamFacade.showConfirmDialog(_strTitle, _strDescription, _strOKButton, _strCancelButton);
 
             const hide = result === "OK";
-            SettingsStore.set("hideannouncementcomments", hide)
+            await SettingsStore.set("hideannouncementcomments", hide);
 
             if (hide) {
                 this.callback(); // Hide all currently visible comment areas

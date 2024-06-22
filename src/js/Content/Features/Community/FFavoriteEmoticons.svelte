@@ -1,3 +1,5 @@
+<svelte:options immutable={false} />
+
 <script lang="ts">
     import {__favEmoticonsDragging, __favEmoticonsNoAccess, __loading} from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
