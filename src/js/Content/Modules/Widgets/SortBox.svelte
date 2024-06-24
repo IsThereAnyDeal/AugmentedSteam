@@ -1,7 +1,7 @@
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__sortBy, __thewordunknown} from "@Strings/_strings";
-    import {createEventDispatcher, onMount} from "svelte";
+    import {createEventDispatcher, onMount, tick} from "svelte";
     import type {SortboxChangeEvent} from "@Content/Modules/Widgets/SortboxChangeEvent";
 
     const dispatch = createEventDispatcher<{
@@ -58,7 +58,7 @@
         })
     }
 
-    onMount(() => {
+    onMount(async () => {
         direction = value.endsWith("_DESC") ? -1 : 1;
         selected = value.replace(/(_ASC|_DESC)$/, "");
         highlighted = selected;
@@ -68,6 +68,16 @@
                 selectedName = name;
                 break;
             }
+        }
+
+        // Trigger change for initial option
+        if (value !== "default_ASC") {
+            await tick();
+            dispatch("change", {
+                value,
+                key: selected,
+                direction
+            });
         }
     });
 </script>
