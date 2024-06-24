@@ -184,7 +184,8 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
         const url = this.getUrl(`/wishlist${path}`);
         const html = await this.fetchPage(url);
         const data = HTMLParser.getArrayVariable<TWishlistGame>("g_rgWishlistData", html);
-        return data?.length ?? null;
+        // Just use Steam's formatting here
+        return data ? new Intl.NumberFormat("en-US").format(data.length) : null;
     }
 
     private async fetchPurchaseDates(lang: string): Promise<Map<string, string>> {

@@ -5,15 +5,16 @@
     import Settings from "@Options/Data/Settings";
     import {L} from "@Core/Localization/Localization";
 
-    let countPromise: Promise<number|null> = Promise.resolve(null);
+    let countPromise: Promise<string|null> = Promise.resolve(null);
 
     onMount(() => {
         countPromise = (async () => {
             if (Settings.show_wishlist_count) {
                 const wishlistNode = document.querySelector<HTMLAnchorElement>('.gamecollector_showcase .showcase_stat[href$="/wishlist/"]');
+                const value = wishlistNode?.textContent!.match(/\d+(?:,\d+)?/);
 
-                return wishlistNode
-                    ? Number(wishlistNode.textContent!.match(/\d+(?:,\d+)?/)![0])
+                return value
+                    ? value[0]
                     : SteamStoreApiFacade.fetchWishlistCount(window.location.pathname);
             }
             return null;
