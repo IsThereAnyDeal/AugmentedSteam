@@ -1,7 +1,7 @@
 <script lang="ts">
     import HTML from "@Core/Html/Html";
     import {L} from "@Core/Localization/Localization";
-    import {__viewOnWebsite, __wikiArticle, __youtubeGameplay} from "@Strings/_strings";
+    import {__viewOnWebsite, __wikiArticle, __youtubeGameplay, __youtubeReviews} from "@Strings/_strings";
     import Settings from "@Options/Data/Settings";
     import ExtraLink from "@Content/Features/Store/Common/ExtraLinks/ExtraLink.svelte";
     import CommonLinks from "@Content/Features/Store/Common/ExtraLinks/CommonLinks.svelte";
@@ -59,7 +59,7 @@
 
     {#if Settings.showyoutubereviews}
         <ExtraLink href="https://www.youtube.com/results?search_query={encodeURIComponent(`${appName} \"PC\" Review`)}" icon="as_youtube_btn">
-            {L(__youtubeGameplay)}
+            {L(__youtubeReviews)}
         </ExtraLink>
     {/if}
 {/if}
