@@ -12,7 +12,7 @@ export default class FGroupsSort extends Feature<CFriendsAndGroups> {
 
     apply(): void | Promise<void> {
         document.addEventListener("as_subpageNav", () => this.callback());
-        return undefined;
+        this.callback();
     }
 
     private async callback() {
