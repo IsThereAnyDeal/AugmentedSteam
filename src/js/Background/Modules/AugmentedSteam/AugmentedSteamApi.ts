@@ -107,7 +107,7 @@ export default class AugmentedSteamApi extends Api implements MessageHandlerInte
 
         if (!data || TimeUtils.isInPast(data.expiry)) {
             data = {
-                data: this.fetchProfile(steamId),
+                data: await this.fetchProfile(steamId),
                 expiry: TimeUtils.now() + ttl
             };
             await IndexedDB.put("profiles", data, steamId);
