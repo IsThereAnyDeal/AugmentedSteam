@@ -7,13 +7,15 @@
 
     let countPromise: Promise<number|null> = Promise.resolve(null);
 
+    const formatter = new Intl.NumberFormat("en-US"); // TODO this should be locale-aware
+
     onMount(() => {
         countPromise = (async () => {
             if (Settings.show_wishlist_count) {
                 const wishlistNode = document.querySelector<HTMLAnchorElement>('.gamecollector_showcase .showcase_stat[href$="/wishlist/"]');
 
                 return wishlistNode
-                    ? Number(wishlistNode.textContent!.match(/\d+(?:,\d+)?/)![0])
+                    ? Number(wishlistNode.textContent!.match(/\d+(?:,\d+)?/)![0].replace(",", ""))
                     : SteamStoreApiFacade.fetchWishlistCount(window.location.pathname);
             }
             return null;
@@ -27,7 +29,7 @@
         <span class="count_link_label">{L(__wishlist)}</span>&nbsp;
         <span class="profile_count_link_total">
             {#await countPromise then value}
-                {#if value !== null}{value}{/if}
+                {#if value !== null}{formatter.format(value)}{/if}
             {/await}
         </span>
     </a>
