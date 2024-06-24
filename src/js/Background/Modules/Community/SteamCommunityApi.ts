@@ -30,6 +30,7 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
 
         return await response.text();
     }
+
     private fetchBadgeInfo(steamid: string, appid: number): Promise<TFetchBadgeInfoResponse> {
         const url = this.getUrl(`/profiles/${steamid}/ajaxgetbadgeinfo/${appid}`);
         return this.fetchJson(url, {credentials: "include"});
@@ -167,30 +168,30 @@ export default class SteamCommunityApi extends Api implements MessageHandlerInte
         return (await LocalStorage.get("storeCountry")) ?? null;
     }
 
-    async handle(message: any): Promise<any> {
+    handle(message: any): typeof Unrecognized|Promise<any> {
 
         switch(message.action) {
 
             case EAction.BadgeInfo:
-                return await this.fetchBadgeInfo(message.params.steamId, message.params.appid);
+                return this.fetchBadgeInfo(message.params.steamId, message.params.appid);
 
             case EAction.WorkshopFileSize:
-                return await this.getWorkshopFileSize(message.params.id, message.params.preventFetch);
+                return this.getWorkshopFileSize(message.params.id, message.params.preventFetch);
 
             case EAction.Reviews:
-                return await this.getReviews(message.params.steamId, message.params.pages);
+                return this.getReviews(message.params.steamId, message.params.pages);
 
             case EAction.Login:
-                return await this.login(message.params.profilePath);
+                return this.login(message.params.profilePath);
 
             case EAction.Logout:
-                return await this.logout(message.params.force ?? undefined);
+                return this.logout(message.params.force ?? undefined);
 
             case EAction.StoreCountry_Set:
-                return await this.setStoreCountry(message.params.newCountry);
+                return this.setStoreCountry(message.params.newCountry);
 
             case EAction.StoreCountry_Get:
-                return await this.getStoreCountry();
+                return this.getStoreCountry();
         }
 
         return Unrecognized;

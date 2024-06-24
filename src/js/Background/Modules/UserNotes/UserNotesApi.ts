@@ -5,7 +5,7 @@ import {Unrecognized} from "@Background/background";
 
 export default class UserNotesApi implements MessageHandlerInterface {
 
-    private async getNote(appids: number[]): Promise<Record<number, string|undefined>> {
+    private getNote(appids: number[]): Promise<Record<number, string|undefined>> {
         return IndexedDB.getObject("notes", appids);
     }
 
@@ -41,26 +41,26 @@ export default class UserNotesApi implements MessageHandlerInterface {
         return IndexedDB.clear("notes");
     }
 
-    async handle(message: any): Promise<any> {
+    handle(message: any): typeof Unrecognized|Promise<any> {
 
         switch(message.action) {
             case EAction.Notes_Get:
-                return await this.getNote(message.params.appids);
+                return this.getNote(message.params.appids);
 
             case EAction.Notes_Set:
-                return await this.setNote(message.params.appid, message.params.note);
+                return this.setNote(message.params.appid, message.params.note);
 
             case EAction.Notes_Delete:
-                return await this.deleteNote(message.params.appid);
+                return this.deleteNote(message.params.appid);
 
             case EAction.Notes_GetAll:
-                return await this.getAllNotes();
+                return this.getAllNotes();
 
             case EAction.Notes_SetAll:
-                return await this.setAllNotes(message.params.notes);
+                return this.setAllNotes(message.params.notes);
 
             case EAction.Notes_Clear:
-                return await this.clearNotes();
+                return this.clearNotes();
         }
 
         return Unrecognized;

@@ -344,7 +344,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         return (await IndexedDB.get("collection", storeId)) ?? null;
     }
 
-    async handle(message: any) {
+    handle(message: any): typeof Unrecognized|Promise<any> {
 
         switch(message.action) {
             case EAction.StoreList:

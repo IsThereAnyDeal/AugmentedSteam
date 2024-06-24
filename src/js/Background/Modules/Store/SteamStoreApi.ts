@@ -367,41 +367,41 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
         return null;
     }
 
-    async handle(message: any): Promise<any> {
+    handle(message: any): typeof Unrecognized|Promise<any> {
 
         switch(message.action) {
             case EAction.Wishlist_Add:
-                return await this.wishlistAdd(message.params.appid);
+                return this.wishlistAdd(message.params.appid);
 
             case EAction.Wishlist_Remove:
-                return await this.wishlistRemove(message.params.appid);
+                return this.wishlistRemove(message.params.appid);
 
             case EAction.Wishlists:
-                return await this.fetchWishlistCount(message.params.path);
+                return this.fetchWishlistCount(message.params.path);
 
             case EAction.AppDetails:
-                return await this.fetchAppDetails(message.params.appid, message.params.filter ?? undefined);
+                return this.fetchAppDetails(message.params.appid, message.params.filter ?? undefined);
 
             case EAction.Currency:
-                return await this.getCurrency();
+                return this.getCurrency();
 
             case EAction.SessionId:
-                return await this.fetchSessionId();
+                return this.fetchSessionId();
 
             case EAction.Purchases:
-                return await this.getPurchaseDate(message.params.appName, message.params.lang);
+                return this.getPurchaseDate(message.params.appName, message.params.lang);
 
             case EAction.Purchases_Clear:
-                return await this.clearPurchases();
+                return this.clearPurchases();
 
             case EAction.DynamicStore_Clear:
-                return await this.clearDynamicStore();
+                return this.clearDynamicStore();
 
             case EAction.DynamicStore_Status:
-                return await this.getDynamicStoreStatus(message.params.ids);
+                return this.getDynamicStoreStatus(message.params.ids);
 
             case EAction.DynamicStore_RandomApp:
-                return await this.dynamicStoreRandomApp();
+                return this.dynamicStoreRandomApp();
         }
 
         return Unrecognized;
