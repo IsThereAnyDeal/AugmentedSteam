@@ -10,10 +10,7 @@ export default class FFamilySharingNotice extends Feature<CApp> {
 
         const result = await this.context.data;
         // Apply this feature if app is NOT family shareable
-        if (!result || result.family_sharing) {
-            return false;
-        }
-        return true;
+        return result !== null && !result.family_sharing;
     }
 
     override apply(): void {
