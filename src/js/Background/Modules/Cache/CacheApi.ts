@@ -32,11 +32,11 @@ export default class CacheApi implements MessageHandlerInterface{
         );
     }
 
-    async handle(message: any) {
+    handle(message: any): typeof Unrecognized|Promise<any> {
 
         switch (message.action) {
             case EAction.CacheClear: {
-                return await this.clearCache();
+                return this.clearCache();
             }
         }
 

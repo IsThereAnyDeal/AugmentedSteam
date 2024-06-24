@@ -1,4 +1,4 @@
 
 export default interface MessageHandlerInterface {
-    handle(message: any): Promise<any|undefined>;
+    handle(message: any): symbol|Promise<any>;
 }

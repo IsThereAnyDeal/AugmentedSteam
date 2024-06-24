@@ -312,23 +312,23 @@ export default class InventoryApi extends Api implements MessageHandlerInterface
         return await IndexedDB.contains("items", hashes);
     }
 
-    async handle(message: any): Promise<any> {
+    handle(message: any): typeof Unrecognized|Promise<any> {
 
         switch(message.action) {
             case EAction.Inventory_GetCoupon:
-                return await this.getCoupon(message.params.appid);
+                return this.getCoupon(message.params.appid);
 
             case EAction.Inventory_GetCouponsAppids:
-                return await this.getCouponsAppids(message.params.appids);
+                return this.getCouponsAppids(message.params.appids);
 
             case EAction.Inventory_GetGiftsAppids:
-                return await this.getGiftsAppids(message.params.appids);
+                return this.getGiftsAppids(message.params.appids);
 
             case EAction.Inventory_GetPassesAppids:
-                return await this.getPassesAppids(message.params.appids);
+                return this.getPassesAppids(message.params.appids);
 
             case EAction.Inventory_HasItem:
-                return await this.hasItem(message.params.hashes);
+                return this.hasItem(message.params.hashes);
         }
 
         return Unrecognized;
