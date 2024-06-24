@@ -58,7 +58,7 @@ export interface TWishlistGame {
     }
 }
 
-export type TFetchWishlistResponse = string|null
+export type TFetchWishlistResponse = number|null
 
 export interface TDynamicStoreStatusResponse {
     ignored: string[],
