@@ -36,11 +36,7 @@
         isOpen = false;
     }
 
-    function select(key: string, name: string): void {
-        hide();
-        selected = key;
-        selectedName = name;
-        value = `${selected}_${direction < 0 ? "DESC" : "ASC"}`;
+    function dispatchChange(): void {
         dispatch("change", {
             value,
             key: selected,
@@ -48,17 +44,21 @@
         });
     }
 
+    function select(key: string, name: string): void {
+        hide();
+        selected = key;
+        selectedName = name;
+        value = `${selected}_${direction < 0 ? "DESC" : "ASC"}`;
+        dispatchChange();
+    }
+
     function reverse(): void {
         direction = direction * -1;
         value = `${selected}_${direction < 0 ? "DESC" : "ASC"}`;
-        dispatch("change", {
-            value,
-            key: selected,
-            direction
-        })
+        dispatchChange();
     }
 
-    onMount(async () => {
+    onMount(() => {
         direction = value.endsWith("_DESC") ? -1 : 1;
         selected = value.replace(/(_ASC|_DESC)$/, "");
         highlighted = selected;
@@ -72,12 +72,7 @@
 
         // Trigger change for initial option
         if (value !== "default_ASC") {
-            await tick();
-            dispatch("change", {
-                value,
-                key: selected,
-                direction
-            });
+            tick().then(dispatchChange);
         }
     });
 </script>
