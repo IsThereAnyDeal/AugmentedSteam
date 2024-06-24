@@ -1,4 +1,5 @@
+import type {Unrecognized} from "@Background/background";
 
 export default interface MessageHandlerInterface {
-    handle(message: any): Promise<any|undefined>;
+    handle(message: any): typeof Unrecognized|Promise<any>;
 }
