@@ -1,3 +1,13 @@
+4.0.1: |
+  - fixed wishlist link in some cases not showing correct count on community profiles
+  - fixed group sort missing
+  - fixed sort not being applied on page load
+  - fixed YouTube Reviews link on app pages
+  - fixed family sharing notice not being displayed correctly
+  - fixed profile data not being loaded properly
+  
+  Big shoutout to candela97 for making these fixes so quickly
+
 4.0.0: |
   Major extension rewrite, that doesn't look like much.
   
