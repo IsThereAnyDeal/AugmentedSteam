@@ -1,6 +1,8 @@
 (function(){
     const params = JSON.parse(document.currentScript.dataset.params);
-    const {appid} = params;
+    const {appids} = params;
 
-    GStoreItemData.BindHoverEvents($J("#recommended_block_content > a:last-of-type"), appid);
+    for (const appid of appids) {
+        GStoreItemData.BindHoverEvents($J(`#recommended_block_content > a[data-ds-appid="${appid}"]`), appid);
+    }
 })();
