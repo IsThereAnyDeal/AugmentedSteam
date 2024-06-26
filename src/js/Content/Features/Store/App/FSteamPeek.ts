@@ -79,10 +79,9 @@ export default class FSteamPeek extends Feature<CApp> {
                             <img src="//cdn.cloudflare.steamstatic.com/steam/apps/${appid}/capsule_184x69.jpg" class="small_cap_img">
                             <h4>${title}</h4>
                         </a>`);
-
-                    DOMHelper.insertScript("scriptlets/Store/App/SteamPeek/bindHover.js", {appid});
                 }
 
+                DOMHelper.insertScript("scriptlets/Store/App/SteamPeek/bindHover.js", {appids: data.map(({appid}) => appid)});
                 DOMHelper.insertScript("scriptlets/Store/App/SteamPeek/decorateItems.js");
                 this.context.decorateStoreCapsules(content.querySelectorAll<HTMLAnchorElement>("a.es_sp_similar"));
 
