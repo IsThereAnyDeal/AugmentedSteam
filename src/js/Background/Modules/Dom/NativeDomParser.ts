@@ -1,5 +1,6 @@
 import type DomParserInterface from "@Background/Modules/Dom/DomParserInterface";
 import type {TReview} from "@Background/Modules/Community/_types";
+import StringUtils from "@Core/Utils/StringUtils";
 
 export default class NativeDomParser implements DomParserInterface {
 
@@ -102,6 +103,48 @@ export default class NativeDomParser implements DomParserInterface {
         }
 
         return reviews;
+    }
+
+    parsePurchaseDates(html: string): Array<[string, string]> {
+        const replaceRegex = [
+            /- Complete Pack/ig,
+            /Standard Edition/ig,
+            /Steam Store and Retail Key/ig,
+            /- Hardware Survey/ig,
+            /ComputerGamesRO -/ig,
+            /Founder Edition/ig,
+            /Retail( Key)?/ig,
+            /Complete$/ig,
+            /Launch$/ig,
+            /Free$/ig,
+            /(RoW)/ig,
+            /ROW/ig,
+            /:/ig,
+        ];
+
+        const purchaseDates: Array<[string, string]> = [];
+
+        const dummyPage = this.dom(html);
+        const nodes = dummyPage.querySelectorAll<HTMLTableCellElement>("#main_content td.license_date_col");
+
+        for (const node of nodes) {
+            const name = node.nextElementSibling;
+            if (!name) {
+                continue;
+            }
+
+            // "Remove" link if present
+            name.querySelector("div")?.remove();
+
+            let appName = StringUtils.clearSpecialSymbols(name.textContent!.trim());
+            for (const regex of replaceRegex) {
+                appName = appName.replace(regex, "");
+            }
+            appName = appName.trim();
+            purchaseDates.push([appName, node.textContent!]);
+        }
+
+        return purchaseDates;
     }
 }
 
