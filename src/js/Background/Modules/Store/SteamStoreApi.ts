@@ -12,9 +12,7 @@ import LocalStorage from "@Core/Storage/LocalStorage";
 import {EAction} from "@Background/EAction";
 import Errors from "@Core/Errors/Errors";
 import HTMLParser from "@Core/Html/HtmlParser";
-import HTML from "@Core/Html/Html";
 import TimeUtils from "@Core/Utils/TimeUtils";
-import StringUtils from "@Core/Utils/StringUtils";
 import {Unrecognized} from "@Background/background";
 import type DomParserInterface from "@Background/Modules/Dom/DomParserInterface";
 import DomParserFactory from "@Background/Modules/Dom/DomParserFactory";
@@ -187,55 +185,18 @@ export default class SteamStoreApi extends Api implements MessageHandlerInterfac
         return data?.length ?? null;
     }
 
-    private async fetchPurchaseDates(lang: string): Promise<Map<string, string>> {
-        const replaceRegex = [
-            /- Complete Pack/ig,
-            /Standard Edition/ig,
-            /Steam Store and Retail Key/ig,
-            /- Hardware Survey/ig,
-            /ComputerGamesRO -/ig,
-            /Founder Edition/ig,
-            /Retail( Key)?/ig,
-            /Complete$/ig,
-            /Launch$/ig,
-            /Free$/ig,
-            /(RoW)/ig,
-            /ROW/ig,
-            /:/ig,
-        ];
-        const purchaseDates = new Map();
-
+    private async fetchPurchaseDates(lang: string): Promise<Array<[string, string]>> {
         const url = this.getUrl("/account/licenses/", {"l": lang});
         const html = await this.fetchPage(url);
+        const parser = DomParserFactory.getParser();
 
-        const dummyPage = HTML.toDom(html);
-        const nodes = dummyPage.querySelectorAll<HTMLTableCellElement>("#main_content td.license_date_col");
-        for (const node of nodes) {
-            const name = node.nextElementSibling;
-            if (!name) {
-                continue;
-            }
-
-            const removeNode = name.querySelector("div");
-            if (removeNode) {
-                removeNode.remove();
-            }
-
-            let appName = StringUtils.clearSpecialSymbols(name.textContent!.trim());
-            for (const regex of replaceRegex) {
-                appName = appName.replace(regex, "");
-            }
-            appName = appName.trim();
-            purchaseDates.set(appName, node.textContent);
-        }
-
-        return purchaseDates;
+        return parser.parsePurchaseDates(html);
     }
 
     private async getPurchaseDate(appName: string, lang: string): Promise<string|null> {
         if (await IndexedDB.isStoreExpired("purchases")) {
             const purchaseDates = await this.fetchPurchaseDates(lang);
-            await IndexedDB.putMany("purchases", [...purchaseDates.entries()]);
+            await IndexedDB.putMany("purchases", purchaseDates);
             await IndexedDB.setStoreExpiry("purchases", 86400);
         }
 
