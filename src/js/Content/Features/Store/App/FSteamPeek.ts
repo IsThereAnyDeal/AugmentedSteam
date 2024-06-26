@@ -3,7 +3,6 @@ import {__moreOnSteampeek} from "@Strings/_strings";
 import type CApp from "@Content/Features/Store/App/CApp";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
-import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
@@ -33,9 +32,6 @@ export default class FSteamPeek extends Feature<CApp> {
                     </div>
                 </div>
             </div>`);
-
-        await DynamicStore.onReady();
-
 
         const steamTab = this._moreLikeThis.querySelector("#es_tab_steamsimilar")!;
         const steamPeekTab = this._moreLikeThis.querySelector<HTMLElement>("#es_tab_steampeek")!;
