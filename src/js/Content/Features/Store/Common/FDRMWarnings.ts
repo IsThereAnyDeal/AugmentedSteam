@@ -51,13 +51,13 @@ export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
             text += node.textContent;
         }
 
-        // Only bundle/sub pages have DRM info in game details
         let drmNotices: string[] = [];
         let gameDetails: string = "";
-        if (!isAppPage) {
+        if (isAppPage) {
             drmNotices = this.getTextFromDRMNotices();
             text += drmNotices.join("");
-
+        } else {
+            // Only bundle/sub pages have DRM info in game details
             gameDetails = this.getTextFromGameDetails();
             text += gameDetails;
         }
