@@ -14,61 +14,37 @@ export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
         return Settings.showlowestprice;
     }
 
-    _insertPrices(type: "app"|"sub"|"bundle", id: number, data: TPriceOverview) {
-        let node: HTMLElement|null = null;
-        let placement = "beforebegin";
+    private insertPrices(type: "app"|"sub"|"bundle", id: number, data: TPriceOverview) {
+        let anchor: HTMLElement|null = null;
+
         if (type === "sub") {
-            node = document.querySelector<HTMLElement>(`input[name=subid][value="${id}"]`)
-                ?.closest<HTMLElement>(".game_area_purchase_game") ?? null;
-        } else if (type === "bundle") {
-            node = document.querySelector(`.game_area_purchase_game_wrapper[data-ds-bundleid="${id}"]`);
-            if (node) {
-                placement = "afterbegin";
-
-                // Move any "Complete your Collection!" banner out of the way
-                const banner = node.querySelector(".ds_completetheset");
-                const newParent = node.querySelector(".game_area_purchase_game");
-                if (banner && newParent) {
-                    newParent.appendChild(banner);
-                }
-            } else {
-                node = document.querySelector(`.game_area_purchase_game[data-ds-bundleid="${id}"]`);
+            const inputEl = document.querySelector(`input[name=subid][value="${id}"]`);
+            if (inputEl) {
+                anchor = inputEl.closest(".game_area_purchase_game_wrapper") // Subs on app pages
+                    || inputEl.closest(".game_area_purchase_game"); // Subs on sub pages
             }
+        } else if (type === "bundle") {
+            anchor = document.querySelector(`.game_area_purchase_game_wrapper[data-ds-bundleid="${id}"]`) // Bundles on app pages
+                || document.querySelector(`.game_area_purchase_game[data-ds-bundleid="${id}"]`); // Bundles on bundle pages
         }
 
-        if (!node) {
-            console.error("Node for adding prices not found");
-            return;
+        if (anchor) {
+            new PriceOverview({
+                target: anchor.parentElement!,
+                anchor,
+                props: {data}
+            });
         }
-
-        let target: Element = node.parentElement!;
-        let anchor: Element|undefined = node;
-
-        if (placement === "afterbegin") {
-            target = node;
-            anchor = node.firstElementChild ?? undefined;
-        }
-
-        (new PriceOverview({
-            target,
-            anchor,
-            props: {data}
-        }));
     }
 
-    _insertBundles(data: TBundle[]) {
-        const target = document.querySelector("#game_area_purchase");
-
-        if (target) {
-            const anchor = target.nextElementSibling;
-
-            if (anchor) {
-                new BundleOverview({
-                    target: anchor.parentElement!,
-                    anchor,
-                    props: {data}
-                });
-            }
+    private insertBundles(data: TBundle[]) {
+        const anchor = document.querySelector("#game_area_purchase")?.nextElementSibling;
+        if (anchor) {
+            new BundleOverview({
+                target: anchor.parentElement!,
+                anchor,
+                props: {data}
+            });
         }
     }
 
@@ -95,9 +71,9 @@ export default class FITADPrices extends Feature<CApp|CSub|CBundle> {
                 bundles,
             }) => {
                 for (let {type, id, data} of prices) {
-                    this._insertPrices(type, id, data);
+                    this.insertPrices(type, id, data);
                 }
-                this._insertBundles(bundles);
+                this.insertBundles(bundles);
             });
     }
 }
