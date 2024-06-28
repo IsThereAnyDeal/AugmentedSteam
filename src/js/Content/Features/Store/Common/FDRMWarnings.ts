@@ -1,9 +1,9 @@
+import self_ from "./FDRMWarnings.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import {L} from "@Core/Localization/Localization";
 import {__drmThirdParty, __drmThirdPartySub} from "@Strings/_strings";
 import type CBundle from "@Content/Features/Store/Bundle/CBundle";
 import Settings from "@Options/Data/Settings";
-import HTML from "@Core/Html/Html";
 import {ContextType} from "@Content/Modules/Context/ContextType";
 import type CSub from "@Content/Features/Store/Sub/CSub";
 import type CApp from "@Content/Features/Store/App/CApp";
@@ -11,12 +11,12 @@ import type CApp from "@Content/Features/Store/App/CApp";
 export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
 
     // Exclude false-positives
-    private readonly _excludedAppids: number[] = [
+    private readonly excludedAppids: number[] = [
         21690 // Resident Evil 5, at Capcom's request
     ];
 
     override checkPrerequisites(): boolean {
-        return Settings.showdrm && (!this.context.appid || !this._excludedAppids.includes(this.context.appid));
+        return Settings.showdrm && (!this.context.appid || !this.excludedAppids.includes(this.context.appid));
     }
 
     private getTextFromDRMNotices(): string[] {
@@ -29,7 +29,7 @@ export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
         return value;
     }
 
-    getTextFromGameDetails(): string {
+    private getTextFromGameDetails(): string {
         let value = "";
         let node: Node|null = document.querySelector(".language_list");
         if (!node) { return ""; }
@@ -41,7 +41,6 @@ export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
         return value;
     }
 
-
     override apply(): void {
 
         const isAppPage = this.context.type === ContextType.APP;
@@ -51,13 +50,13 @@ export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
             text += node.textContent;
         }
 
-        // Only bundle/sub pages have DRM info in game details
         let drmNotices: string[] = [];
         let gameDetails: string = "";
-        if (!isAppPage) {
+        if (isAppPage) {
             drmNotices = this.getTextFromDRMNotices();
             text += drmNotices.join("");
-
+        } else {
+            // Only bundle/sub pages have DRM info in game details
             gameDetails = this.getTextFromGameDetails();
             text += gameDetails;
         }
@@ -139,10 +138,16 @@ export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
         }
 
         if (drmString) {
-            HTML.afterBegin(
-                "#game_area_purchase, #game_area_purchase_top",
-                `<div class="es_drm_warning"><span>${drmString}</span></div>`
-            );
+            const target = document.querySelector("#game_area_purchase, #game_area_purchase_top");
+            if (!target) {
+                throw new Error("Node not found");
+            }
+
+            (new self_({
+                target,
+                anchor: target.firstElementChild!,
+                props: {drmString}
+            }));
         }
     }
 }
