@@ -25,14 +25,14 @@ export default class FGroupsSort extends Feature<CFriendsAndGroups> {
             return;
         }
 
-        const anchor = document.querySelector("span.profile_groups.title")?.nextElementSibling;
+        const anchor = document.querySelector("span.profile_groups.title");
         if (!anchor) {
             return;
         }
 
         const sortbox = new SortBox({
             target: anchor.parentElement!,
-            anchor,
+            anchor: anchor.nextElementSibling ?? undefined, // `null` if not on own profile
             props: {
                 name: "groups",
                 options: [
