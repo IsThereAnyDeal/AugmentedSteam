@@ -17,9 +17,9 @@ export default class DynamicStore {
     }
 
     static onReady(): Promise<void> {
+        this.register();
         if (!this.readyPromise) {
             this.readyPromise = new Promise(resolve => {
-                this.register();
                 window.addEventListener("DSReady", () => resolve(), {once: true});
                 Messenger.call(MessageHandler.DynamicStore, "onReady");
             });
