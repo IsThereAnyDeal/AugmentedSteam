@@ -183,7 +183,7 @@ export default class FReviewSort extends Feature<CRecommended> {
     }
 
     async _getReviews(): Promise<void> {
-        SteamFacade.showBlockingWaitDialog(L(__processing), L(__wait));
+        await SteamFacade.showBlockingWaitDialog(L(__processing), L(__wait));
 
         try {
             this._reviews = await SteamCommunityApiFacade.getReviews(this._path, this._pages);

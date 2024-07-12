@@ -41,8 +41,8 @@ export default class SteamFacade {
         ]);
     }
 
-    static showBlockingWaitDialog(strTitle: string, strDescription: string): void {
-        Messenger.call(MessageHandler.SteamFacade, "showBlockingWaitDialog", [
+    static showBlockingWaitDialog(strTitle: string, strDescription: string): Promise<void> {
+        return Messenger.get(MessageHandler.SteamFacade, "showBlockingWaitDialog", [
             strTitle, strDescription
         ]);
     }

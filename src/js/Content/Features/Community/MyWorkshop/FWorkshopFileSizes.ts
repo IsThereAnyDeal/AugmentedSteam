@@ -20,6 +20,7 @@ export default class FWorkshopFileSizes extends Feature<CMyWorkshop> {
     private _failed: number = 0;
     private _totalSize: number = 0;
     private _total: number = 0;
+    private textCtn: HTMLElement|null = null;
 
     override checkPrerequisites(): boolean {
         // Check if the user is signed in, viewing own profile, and has subscribed to at least one item
@@ -72,7 +73,12 @@ export default class FWorkshopFileSizes extends Feature<CMyWorkshop> {
         this._failed = 0;
         this._totalSize = 0;
 
-        this._updateWaitDialog();
+        await SteamFacade.showBlockingWaitDialog(
+            L(__calcWorkshopSize_calcSize),
+            `<div id="as_loading_text_ctn">${this.getStatusString()}</div>`
+        );
+
+        this.textCtn = document.querySelector("#as_loading_text_ctn")!;
 
         const parser = new DOMParser();
         const url = new URL(window.location.origin + window.location.pathname);
@@ -102,7 +108,7 @@ export default class FWorkshopFileSizes extends Feature<CMyWorkshop> {
                     this._failed++;
                     console.error(err);
                 } finally {
-                    this._updateWaitDialog();
+                    HTML.inner(this.textCtn, this.getStatusString());
                 }
             }
         }
@@ -123,8 +129,7 @@ export default class FWorkshopFileSizes extends Feature<CMyWorkshop> {
         this._addFileSizes(); // Add file sizes now that data has been fetched
     }
 
-    _updateWaitDialog(): void {
-
+    private getStatusString(): string {
         let statusString = L(__calcWorkshopSize_calcLoading, {
             "i": this._completed,
             "count": this._total
@@ -135,15 +140,7 @@ export default class FWorkshopFileSizes extends Feature<CMyWorkshop> {
             statusString += L(__workshop_failed, {"n": this._failed});
         }
 
-        const container = document.querySelector("#as_loading_text_ctn");
-        if (container) {
-            HTML.inner(container, statusString);
-        } else {
-            SteamFacade.showBlockingWaitDialog(
-                L(__calcWorkshopSize_calcSize),
-                `<div id="as_loading_text_ctn">${statusString}</div>`
-            );
-        }
+        return statusString;
     }
 
     _getFileSizeStr(size: number): string {

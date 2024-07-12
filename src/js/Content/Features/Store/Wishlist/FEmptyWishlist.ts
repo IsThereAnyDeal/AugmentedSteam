@@ -11,6 +11,9 @@ import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 
 export default class FEmptyWishlist extends Feature<CWishlist> {
 
+    private cur: number = 1;
+    private textCtn: HTMLElement|null = null;
+
     override checkPrerequisites(): boolean {
         return this.context.myWishlist && Settings.showemptywishlist;
     }
@@ -21,35 +24,35 @@ export default class FEmptyWishlist extends Feature<CWishlist> {
         document.getElementById("es_empty_wishlist")!.addEventListener("click", async() => {
 
             const result = await SteamFacade.showConfirmDialog(L(__emptyWishlist_title), L(__emptyWishlist_confirm));
-            if (result === "OK") {
-                SteamFacade.showBlockingWaitDialog(
-                    L(__emptyWishlist_title),
-                    L(__emptyWishlist_removing, {
-                        "cur": 1,
-                        "total": (await SteamFacade.global<any[]>("g_rgWishlistData")).length
-                    })
-                );
-            }
+            if (result !== "OK") { return; }
 
-            const wishlistData = this.context.wishlistData;
-            let cur = 1;
-            const textNode = document.querySelector(".waiting_dialog_throbber")!.nextSibling!;
-            const url = "https://store.steampowered.com/api/removefromwishlist";
+            await SteamFacade.showBlockingWaitDialog(
+                L(__emptyWishlist_title),
+                `<div id="as_loading_text_ctn">${this.getStatusString()}</div>`
+            );
 
-            for (const {appid} of wishlistData) {
-                textNode.textContent = L(__emptyWishlist_removing, {
-                    "cur": cur++,
-                    "total": wishlistData.length
-                });
+            this.textCtn = document.querySelector("#as_loading_text_ctn")!;
 
-                await RequestData.post(url, {
+            for (const {appid} of this.context.wishlistData) {
+
+                await RequestData.post("https://store.steampowered.com/api/removefromwishlist", {
                     sessionid: User.sessionId!,
                     appid: String(appid)
                 });
+
+                this.cur++;
+                this.textCtn.textContent = this.getStatusString();
             }
 
             DynamicStore.clear();
             location.reload();
+        });
+    }
+
+    private getStatusString(): string {
+        return L(__emptyWishlist_removing, {
+            "cur": this.cur,
+            "total": this.context.wishlistData.length
         });
     }
 }

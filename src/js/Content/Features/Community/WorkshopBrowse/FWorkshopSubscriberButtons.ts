@@ -25,6 +25,7 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
     private _completed: number = 0;
     private _failed: number = 0;
     private _statusTitle: string = "";
+    private textCtn: HTMLElement|null = null;
 
     override checkPrerequisites(): boolean {
         return User.isSignedIn
@@ -74,7 +75,12 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
             return;
         }
 
-        this._updateWaitDialog();
+        await SteamFacade.showBlockingWaitDialog(
+            this._statusTitle,
+            `<div id="as_loading_text_ctn">${this.getStatusString()}</div>`
+        );
+
+        this.textCtn = document.querySelector("#as_loading_text_ctn")!;
 
         const parser = new DOMParser();
         const url = new URL(window.location.href);
@@ -103,7 +109,7 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
         }
 
         this._total = workshopItems.length;
-        this._updateWaitDialog();
+        HTML.inner(this.textCtn, this.getStatusString());
 
         const promises = workshopItems.map(
             id => Workshop.changeSubscription(id, this.context.appid!, this._method)
@@ -113,7 +119,7 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
                 })
                 .finally(() => {
                     this._completed++;
-                    this._updateWaitDialog();
+                    HTML.inner(this.textCtn!, this.getStatusString());
                 })
         );
 
@@ -147,7 +153,7 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
         return false;
     }
 
-    private _updateWaitDialog(): void {
+    private getStatusString(): string {
 
         let statusString = L(this._method === "subscribe" ? __workshop_subscribeLoading : __workshop_unsubscribeLoading, {
             "i": this._completed,
@@ -159,12 +165,6 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
             statusString += L(__workshop_failed, {"n": this._failed});
         }
 
-        const container = document.querySelector("#as_loading_text_ctn");
-        if (container) {
-            HTML.inner(container, statusString);
-        } else {
-            SteamFacade.dismissActiveModal();
-            SteamFacade.showBlockingWaitDialog(this._statusTitle, `<div id="as_loading_text_ctn">${statusString}</div>`);
-        }
+        return statusString;
     }
 }

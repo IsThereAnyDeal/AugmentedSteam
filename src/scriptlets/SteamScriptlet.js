@@ -35,7 +35,10 @@
         }
 
         static showBlockingWaitDialog(strTitle, strDescription) {
-            return ShowBlockingWaitDialog(strTitle, strDescription);
+            return new Promise(resolve => {
+                ShowBlockingWaitDialog(strTitle, strDescription);
+                resolve();
+            });
         }
 
         static dismissActiveModal() {
@@ -109,12 +112,21 @@
             return;
         }
 
-        const result = Steam[action](...params);
+        let result = Steam[action](...params);
 
         if (id) {
+
+            if (result instanceof Promise) {
+                result = await result;
+            }
+
+            if (typeof result === "object") {
+                // Remove un-structuredClone-able properties, otherwise `detail` will be `null`
+                result = JSON.parse(JSON.stringify(result));
+            }
+
             document.dispatchEvent(new CustomEvent(id, {
-                // Remove un-structuredClone-able properties, otherwise this will return `null`
-                detail: JSON.parse(JSON.stringify(await result))
+                detail: result
             }));
         }
     });
