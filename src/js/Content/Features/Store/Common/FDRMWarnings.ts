@@ -22,9 +22,17 @@ export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
     private getTextFromDRMNotices(): string[] {
         const value: string[] = [];
         for (const node of document.querySelectorAll<HTMLElement>(".DRM_notice")) {
-            if (!node.querySelector("a[onclick^=ShowEULA]") && node.textContent) {
-                value.push(node.textContent);
+            if (node.querySelector("a[onclick^=ShowEULA]")) { continue; }
+
+            let text = "";
+            for (const n of node.childNodes) {
+                if (n.nodeType === Node.TEXT_NODE) {
+                    text += n.textContent!.trim();
+                } else if (n.nodeName === "BR") {
+                    text += ", ";
+                }
             }
+            value.push(text);
         }
         return value;
     }
