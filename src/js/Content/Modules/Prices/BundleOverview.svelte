@@ -59,7 +59,7 @@
 
                 <p class="package_contents">
                     {#each bundle.tiers as tier, num}
-                        <b>
+                        <b class="es_bundle_tier_title">
                             {#if bundle.tiers.length > 1}
                                 {L(__bundle_tierIncludes, {
                                     "tier": L(__bundle_tier, {"num": num+1}),
