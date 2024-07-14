@@ -1357,6 +1357,15 @@ video.highlight_movie:hover + .html5_video_overlay {
 }
 
 /**
+ * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/1969
+/* Remove z-index from game_area_purchase_game_dropdown_subscription 
+/* in order to fix es_regional_container colliding with subscription dropdown 
+*/
+.game_area_purchase_game_dropdown_subscription {
+  z-index: auto !important; /* or you can completely remove the z-index property */
+}
+
+/**
  * https://github.com/IsThereAnyDeal/AugmentedSteam/issues/389
  * Fix unclickable dropdowns
  */
