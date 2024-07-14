@@ -83,7 +83,9 @@ export default class FDRMWarnings extends Feature<CApp|CSub|CBundle> {
             },
             {
                 name: "Ubisoft Connect",
-                enabled: text.includes("uplay") || text.includes("ubisoft account")
+                enabled: text.includes("uplay")
+                    || text.includes("ubisoft account")
+                    || text.includes("ubisoft connect")
             },
             {
                 name: "SecuROM",
