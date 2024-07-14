@@ -96,10 +96,14 @@
             return v_currencyformat(amount, currencyCode);
         }
 
-        // friends
+        // profile home
 
-        static openFriendChatInWebChat(chatId) {
-            return OpenFriendChatInWebChat(chatId);
+        static openFriendChatInWebChat(steamid, accountid) {
+            OpenFriendChatInWebChat(steamid, accountid);
+        }
+
+        static openFriendChat(steamid, accountid) {
+            OpenFriendChat(steamid, accountid);
         }
     }
 

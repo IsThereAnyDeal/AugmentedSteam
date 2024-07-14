@@ -53,7 +53,7 @@ export default class SteamFacade {
 
     // menu
 
-    static showMenu(elemLink: string, elemPopup: string, align: string, valign: string, bLinkHasBorder: boolean): void {
+    static showMenu(elemLink: string, elemPopup: string, align?: string, valign?: string, bLinkHasBorder?: boolean): void {
         Messenger.call(MessageHandler.SteamFacade, "showMenu", [elemLink, elemPopup, align, valign, bLinkHasBorder]);
     }
 
@@ -108,5 +108,15 @@ export default class SteamFacade {
 
     static vCurrencyFormat(amount: number, currencyCode: string): Promise<string> {
         return Messenger.get(MessageHandler.SteamFacade, "vCurrencyFormat", [amount, currencyCode])
+    }
+
+    // profile home
+
+    static openFriendChatInWebChat(steamid: string, accountid: number): void {
+        Messenger.call(MessageHandler.SteamFacade, "openFriendChatInWebChat", [steamid, accountid]);
+    }
+
+    static openFriendChat(steamid: string, accountid: number): void {
+        Messenger.call(MessageHandler.SteamFacade, "openFriendChat", [steamid, accountid]);
     }
 }
