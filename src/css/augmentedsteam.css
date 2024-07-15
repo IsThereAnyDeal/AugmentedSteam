@@ -382,10 +382,9 @@ img.astats_icon {
 }
 
 /***************************************
- * Wishlist and Games page stats
+ * Wishlist stats
  **************************************/
-#esi-wishlist-stats-content,
-#esi-games-stats-content {
+#esi-wishlist-stats-content {
   display: flex;
   padding: 25px;
   overflow: hidden;
