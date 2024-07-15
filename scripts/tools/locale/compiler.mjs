@@ -63,7 +63,7 @@ export default class Compiler {
 
         let result = "";
         for (let key of keys) {
-            result += `export const __${key} = "${key}";\n`
+            result += `export const __${key} = "${key}";\r\n`
         }
 
         await writeFile(`${this.compiledPath}/_strings.ts`, result);
