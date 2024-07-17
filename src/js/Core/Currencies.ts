@@ -21,7 +21,7 @@ export interface TCurrency {
     }
 }
 
-export default Object.freeze(<Array<TCurrency>>[
+export default <ReadonlyArray<TCurrency>>[
     { "id": 1, "abbr": "USD", "symbol": "$", "hint": "United States Dollars", "multiplier": 100, "unit": 1, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": "$", "thousand": ",", "decimal": ".", "right": false } },
     { "id": 2, "abbr": "GBP", "symbol": "£", "hint": "British Pound", "multiplier": 100, "unit": 1, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": "£", "thousand": ",", "decimal": ".", "right": false } },
     { "id": 3, "abbr": "EUR", "symbol": "€", "hint": "European Union Euro", "multiplier": 100, "unit": 1, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": "€", "thousand": " ", "decimal": ",", "right": true } },
@@ -61,4 +61,4 @@ export default Object.freeze(<Array<TCurrency>>[
     { "id": 39, "abbr": "QAR", "symbol": "QR", "hint": "Qatari Riyal", "multiplier": 100, "unit": 1, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": " QR", "thousand": ",", "decimal": ".", "right": true } },
     { "id": 40, "abbr": "CRC", "symbol": "₡", "hint": "Costa Rican Colón", "multiplier": 100, "unit": 500, "format": { "places": 2, "hidePlacesWhenZero": false, "symbolFormat": "₡", "thousand": ".", "decimal": ",", "right": false } },
     { "id": 41, "abbr": "UYU", "symbol": "$U", "hint": "Uruguayan Peso", "multiplier": 100, "unit": 100, "format": { "places": 0, "hidePlacesWhenZero": true, "symbolFormat": "$U", "thousand": ",", "decimal": ".", "right": false } }
-]);
+];

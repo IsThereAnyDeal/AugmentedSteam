@@ -31,9 +31,9 @@ class FeatureDependencyError extends Error {
     }
 }
 
-export default Object.freeze({
+export default {
     LoginError,
     ServerOutageError,
     HTTPError,
     FeatureDependencyError
-});
+};
