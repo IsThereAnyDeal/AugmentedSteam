@@ -79,7 +79,7 @@ export default class FShowHiddenAchievements extends Feature<CProfileStats> {
 
         const params = new URLSearchParams();
         params.set("format", "json");
-        params.set("access_token", await User.accessToken);
+        params.set("access_token", await User.getWebApiToken());
         params.set("appid", String(appid));
         params.set("language", Language.getCurrentSteamLanguage() ?? "en");
         params.set("x_requested_with", "AugmentedSteam");
