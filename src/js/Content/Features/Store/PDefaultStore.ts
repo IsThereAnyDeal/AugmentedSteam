@@ -16,7 +16,6 @@
  * @exclude *://store.steampowered.com/[?*]
  * @exclude *://*.steampowered.com/wishlist/id/*
  * @exclude *://*.steampowered.com/wishlist/profiles/*
- * @exclude *://*.steampowered.com/charts[/*]
  * @exclude *://*.steampowered.com/search[/*]
  * @exclude *://*.steampowered.com/steamaccount/addfunds
  * @exclude *://*.steampowered.com/digitalgiftcards/selectgiftcard

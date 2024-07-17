@@ -2,7 +2,6 @@ import FHideTrademarks from "./FHideTrademarks";
 import FDisableLinkFilter from "./FDisableLinkFilter";
 import FKeepSSACheckboxState from "./FKeepSSACheckboxState";
 import FDefaultCommunityTab from "./FDefaultCommunityTab";
-import FFocusSearch from "./FFocusSearch";
 import Context from "@Content/Modules/Context/Context";
 import {ContextType} from "@Content/Modules/Context/ContextType";
 import type Feature from "@Content/Modules/Context/Feature";
@@ -18,7 +17,6 @@ export default class CBase extends Context {
             FDisableLinkFilter,
             FKeepSSACheckboxState,
             FDefaultCommunityTab,
-            FFocusSearch,
         );
 
         super(type, features);
