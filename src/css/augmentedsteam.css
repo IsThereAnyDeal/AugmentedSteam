@@ -1658,7 +1658,7 @@ video.highlight_movie:hover + .html5_video_overlay {
   display: none; /* hide dlc flag due to checkboxes (if highlighting is disabled) */
 }
 
-.game_area_dlc_name {
+#es_dlc_option_panel + .game_area_dlc_list .game_area_dlc_name {
   margin-left: 23px; /* move title out of the way */
 }
 
