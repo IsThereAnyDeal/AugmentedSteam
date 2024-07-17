@@ -24,8 +24,14 @@ export default class CGameCard extends CCommunityBase {
 
         /*
          * Steam sale events that have cards but no store page or trading forum
-         * https://github.com/JustArchiNET/ArchiSteamFarm/blob/eeccc36fe4ecd863d1e655a68b420445940a2f33/ArchiSteamFarm/Steam/Cards/CardsFarmer.cs#L54
+         * https://github.com/JustArchiNET/ArchiSteamFarm/blob/ae8224b734199a203b7e09e9d7ce62115806ea01/ArchiSteamFarm/Steam/Cards/CardsFarmer.cs#L61
          */
-        this.saleAppids = [267420, 303700, 335590, 368020, 425280, 480730, 566020, 639900, 762800, 876740, 991980, 1195670, 1343890, 1465680, 1658760, 1797760];
+        this.saleAppids = [
+            267420, 303700, 335590, 368020, 425280,
+            480730, 566020, 639900, 762800, 876740,
+            991980, 1195670, 1343890, 1465680, 1658760,
+            1797760, 2021850, 2243720, 2459330, 2640280,
+            2861690
+        ];
     }
 }
