@@ -7,4 +7,4 @@ export default {
     ITADServer: "https://isthereanydeal.com",
     ITADClientId: "5fe78af07889f43a",
     ITADDiscord: "https://discord.gg/yn57q7f",
-};
+} as const;
