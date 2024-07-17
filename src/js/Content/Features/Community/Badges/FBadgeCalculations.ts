@@ -10,7 +10,7 @@ import {
 } from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
-import CBadges from "@Content/Features/Community/Badges/CBadges";
+import type CBadges from "@Content/Features/Community/Badges/CBadges";
 import HTML from "@Core/Html/Html";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";

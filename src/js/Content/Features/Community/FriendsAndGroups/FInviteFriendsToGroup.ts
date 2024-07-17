@@ -1,4 +1,4 @@
-import CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
+import type CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
 import Feature from "@Content/Modules/Context/Feature";
 import {__inviteToGroup} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";

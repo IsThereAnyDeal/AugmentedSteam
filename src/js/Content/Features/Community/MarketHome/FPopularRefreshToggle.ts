@@ -1,6 +1,6 @@
 import {__marketPopularItemsToggle} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
-import CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
+import type CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
 import LocalStorage from "@Core/Storage/LocalStorage";

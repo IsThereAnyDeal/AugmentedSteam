@@ -1,5 +1,5 @@
 import Feature from "@Content/Modules/Context/Feature";
-import CBase from "@Content/Features/Common/CBase";
+import type CBase from "@Content/Features/Common/CBase";
 import Settings from "@Options/Data/Settings";
 
 export default class FDefaultCommunityTab extends Feature<CBase> {

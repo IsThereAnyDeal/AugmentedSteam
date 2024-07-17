@@ -1,6 +1,6 @@
 import {__filters} from "@Strings/_strings";
 import Feature from "@Content/Modules/Context/Feature";
-import CSearch from "@Content/Features/Store/Search/CSearch";
+import type CSearch from "@Content/Features/Store/Search/CSearch";
 import type SearchFilter from "@Content/Features/Store/Search/Filters/SearchFilter";
 import HTML from "@Core/Html/Html";
 import {L} from "@Core/Localization/Localization";

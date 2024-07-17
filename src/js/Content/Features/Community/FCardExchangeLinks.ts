@@ -3,10 +3,10 @@ import Settings from "@Options/Data/Settings";
 import ExtensionResources from "@Core/ExtensionResources";
 import Feature from "@Content/Modules/Context/Feature";
 import HTML from "@Core/Html/Html";
-import CBadges from "@Content/Features/Community/Badges/CBadges";
+import type CBadges from "@Content/Features/Community/Badges/CBadges";
 import type CGameCard from "@Content/Features/Community/GameCard/CGameCard";
 
-export default class FCardExchangeLinks<T extends CBadges|CGameCard> extends Feature<T> {
+export default class FCardExchangeLinks extends Feature<CBadges|CGameCard> {
 
     override checkPrerequisites(): boolean {
         return Settings.steamcardexchange;

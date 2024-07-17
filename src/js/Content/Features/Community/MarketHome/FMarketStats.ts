@@ -13,7 +13,7 @@ import {
     __transactionStatus,
 } from "@Strings/_strings";
 import Feature from "@Content/Modules/Context/Feature";
-import CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
+import type CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
 import User from "@Content/Modules/User";
 import LocalStorage from "@Core/Storage/LocalStorage";
 import RequestData from "@Content/Modules/RequestData";

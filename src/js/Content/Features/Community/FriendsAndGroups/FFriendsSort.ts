@@ -1,7 +1,7 @@
 import {__lastonline, __theworddefault} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
-import CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
+import type CFriendsAndGroups from "@Content/Features/Community/FriendsAndGroups/CFriendsAndGroups";
 import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import SyncedStorage from "@Core/Storage/SyncedStorage";
 import RequestData from "@Content/Modules/RequestData";

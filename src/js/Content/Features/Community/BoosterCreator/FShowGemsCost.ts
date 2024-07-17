@@ -1,4 +1,4 @@
-import CBoosterCreator from "@Content/Features/Community/BoosterCreator/CBoosterCreator";
+import type CBoosterCreator from "@Content/Features/Community/BoosterCreator/CBoosterCreator";
 import Feature from "@Content/Modules/Context/Feature";
 import DOMHelper from "@Content/Modules/DOMHelper";
 

@@ -1,7 +1,7 @@
 import {__viewBadgeProgress} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
-import CInventory from "@Content/Features/Community/Inventory/CInventory";
+import type CInventory from "@Content/Features/Community/Inventory/CInventory";
 import HTML from "@Core/Html/Html";
 
 export default class FBadgeProgressLink extends Feature<CInventory> {
