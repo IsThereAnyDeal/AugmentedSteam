@@ -8,6 +8,7 @@
         __moreInformation
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
+    import external from "@Content/externalLink";
 
     function hrs(minutes: number): string {
         return L(__hoursShort, {"hours": (minutes / 60).toFixed(1).toString()});
@@ -37,7 +38,7 @@
                 </div>
                 <br>
             {/if}
-            <a class="linkbar es_external_icon" href={url} target="_blank">{L(__moreInformation)}</a>
+            <a class="linkbar es_external_icon" href={url} use:external>{L(__moreInformation)}</a>
         </div>
     </div>
 </div>

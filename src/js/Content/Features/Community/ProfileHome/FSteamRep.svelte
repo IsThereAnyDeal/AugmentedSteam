@@ -1,6 +1,7 @@
 <script lang="ts">
     import type {TProfileData} from "@Background/Modules/AugmentedSteam/_types";
     import ExtensionResources from "@Core/ExtensionResources";
+    import external from "@Content/externalLink";
 
     // Build reputation images regexp
     const repImgs: Array<[string, RegExp, string]> = [
@@ -16,7 +17,7 @@
 </script>
 
 
-<a id="es_steamrep" href="https://steamrep.com/profiles/{steamId}" target="_blank">
+<a id="es_steamrep" href="https://steamrep.com/profiles/{steamId}" use:external>
     {#each steamrep as value}
         {#each repImgs as [img, regex, status]}
             {#if regex.test(value)}
