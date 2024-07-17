@@ -1,4 +1,4 @@
-import Config from "../../../config";
+import {Config} from "config";
 import browser, {type Tabs, type WebRequest} from "webextension-polyfill";
 import AccessToken from "@Background/Modules/IsThereAnyDeal/AccessToken";
 

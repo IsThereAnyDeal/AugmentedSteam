@@ -1,5 +1,5 @@
 import Api from "../Api";
-import Config from "../../../config";
+import {Config} from "config";
 import IndexedDB from "@Background/Db/IndexedDB";
 import type {
     TGetStoreListResponse,

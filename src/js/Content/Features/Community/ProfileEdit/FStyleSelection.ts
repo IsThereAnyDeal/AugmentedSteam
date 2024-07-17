@@ -1,5 +1,5 @@
 import {__customStyle, __customStyleHelp, __noneselected, __save} from "@Strings/_strings";
-import Config from "../../../../config";
+import {Config} from "config";
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
 import type CProfileEdit from "@Content/Features/Community/ProfileEdit/CProfileEdit";
