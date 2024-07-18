@@ -39,6 +39,7 @@ import FUserNotes from "./FUserNotes.js";
 import FWidescreenCertification from "./FWidescreenCertification";
 import {ContextType} from "@Content/Modules/Context/ContextType";
 import FExtraLinksApp from "@Content/Features/Store/Common/FExtraLinksApp";
+import FExtraLinksAppError from "@Content/Features/Store/Common/FExtraLinksAppError";
 import CStoreBase from "@Content/Features/Store/Common/CStoreBase";
 import AugmentedSteamApiFacade from "@Content/Modules/Facades/AugmentedSteamApiFacade";
 import type {TStorePageData} from "@Background/Modules/AugmentedSteam/_types";
@@ -47,9 +48,8 @@ import FHighlightTitle from "@Content/Features/Store/App/FHighlightTitle";
 
 export default class CApp extends CStoreBase {
 
-    public readonly isErrorPage: boolean = false;
-    public readonly storeid: string;
     public readonly appid: number;
+    public readonly storeid: string;
     public readonly communityAppid: number = 0;
     public readonly appName: string = "";
 
@@ -68,16 +68,12 @@ export default class CApp extends CStoreBase {
 
     constructor() {
 
-        let isErrorPage = false;
-
-        // Only add extra links if there's an error message (e.g. region-locked, age-gated)
-        if (document.getElementById("error_box") !== null) {
-            isErrorPage = true;
-        }
+        // Check if there's an error message (e.g. region-locked, age-gated)
+        const isErrorPage = document.getElementById("error_box") !== null;
 
         super(ContextType.APP, isErrorPage
             ? [
-                FExtraLinksApp
+                FExtraLinksAppError
             ] : [
                 FReplaceDevPubLinks,
                 FForceMP4,
@@ -122,11 +118,10 @@ export default class CApp extends CStoreBase {
                 FHighlightTitle
             ]);
 
-        this.isErrorPage = isErrorPage;
         this.appid = AppId.fromUrl(window.location.host + window.location.pathname)!;
         this.storeid = `app/${this.appid}`;
 
-        if (this.isErrorPage) {
+        if (isErrorPage) {
             return;
         }
 
