@@ -1,4 +1,4 @@
-<svelte:options accessors immutable />
+<svelte:options accessors />
 
 <script lang="ts">
     import PriceWithAlt from "./PriceWithAlt.svelte";

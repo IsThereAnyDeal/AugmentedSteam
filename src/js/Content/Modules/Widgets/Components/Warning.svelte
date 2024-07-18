@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
     import {L} from "@Core/Localization/Localization";
     import {__hide, __update_dontShow} from "@Strings/_strings";

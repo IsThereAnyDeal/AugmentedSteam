@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
     import {onMount} from "svelte";
     import {__ready_failed, __ready_loading, __ready_ready, __ready_serverOutage} from "@Strings/_strings";
