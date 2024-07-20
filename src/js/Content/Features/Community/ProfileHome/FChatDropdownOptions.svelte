@@ -16,11 +16,6 @@
         SteamFacade.openFriendChatInWebChat(steamid, accountid);
     }
 
-    function openFriendChat() {
-        // Steam's default handler
-        SteamFacade.openFriendChat(steamid, accountid);
-    }
-
     function showMenu() {
         SteamFacade.showMenu("profile_chat_btn", "profile_chat_dropdown", "right");
     }
@@ -36,11 +31,12 @@
 <!--
  This feature largely relies on Steam styling, so certain a11y warnings have been disabled.
 -->
-<span class="btn_profile_action btn_medium" id="profile_chat_btn">
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span on:click={openFriendChat} tabindex="0" role="button">{sendButton.textContent}</span>
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <span on:click={showMenu} tabindex="0" role="button"><img src="//community.cloudflare.steamstatic.com/public/images/profile/profile_action_dropdown.png" alt="Arrow"></span>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<span class="btn_profile_action btn_medium" id="profile_chat_btn" on:click={showMenu} tabindex="0" role="button">
+    <span>
+        {sendButton.textContent}
+        <img src="//community.cloudflare.steamstatic.com/public/images/profile/profile_action_dropdown.png" alt="Arrow">
+    </span>
 </span>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="popup_block" id="profile_chat_dropdown" on:click={hideMenu} tabindex="0" role="button">
@@ -60,12 +56,6 @@
 
 
 <style>
-    #profile_chat_btn {
-        display: inline-flex;
-    }
-    #profile_chat_btn > span:first-child {
-        padding-right: 0px;
-    }
     #profile_chat_dropdown {
         display: none;
     }

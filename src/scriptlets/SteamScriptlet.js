@@ -101,10 +101,6 @@
         static openFriendChatInWebChat(steamid, accountid) {
             OpenFriendChatInWebChat(steamid, accountid);
         }
-
-        static openFriendChat(steamid, accountid) {
-            OpenFriendChat(steamid, accountid);
-        }
     }
 
     document.addEventListener("as_SteamFacade", async function(e) {

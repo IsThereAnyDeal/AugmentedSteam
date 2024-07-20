@@ -115,8 +115,4 @@ export default class SteamFacade {
     static openFriendChatInWebChat(steamid: string, accountid: number): void {
         Messenger.call(MessageHandler.SteamFacade, "openFriendChatInWebChat", [steamid, accountid]);
     }
-
-    static openFriendChat(steamid: string, accountid: number): void {
-        Messenger.call(MessageHandler.SteamFacade, "openFriendChat", [steamid, accountid]);
-    }
 }
