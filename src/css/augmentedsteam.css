@@ -1353,13 +1353,6 @@ video.highlight_movie:hover + .html5_video_overlay {
  * App pages
  * Common/FExtraLinks
  **************************************/
-.es_app_btn {
-  display: block !important;
-  margin-bottom: 6px;
-}
-.es_app_btn .ico16 {
-  margin-right: 12px !important;
-}
 .es_extralinks_ctn .es_app_btn:last-of-type {
   margin-bottom: 0px;
 }
@@ -2491,47 +2484,6 @@ label.es_dlc_label > input:checked::after {
   background-color: #b31414;
 }
 
-.steamdb_ico i {
-  background-image: url("extension://img/steamdb_store.png");
-}
-.steamdb_ico:hover i {
-  background-image: url("extension://img/steamdb_store_black.png");
-}
-
-.itad_ico i {
-  background-image: url("extension://img/itad_small.png");
-}
-.itad_ico:hover i {
-  background-image: url("extension://img/itad_small_black.png");
-}
-
-.bartervg_ico i {
-  background-image: url("extension://img/bartervg.png");
-}
-
-.as_youtube_btn i {
-  background-image: url("extension://img/icon-youtube.png");
-}
-
-.twitch_btn i {
-  background-image: url("extension://img/icon-twitch.png");
-}
-
-.pcgw_btn i {
-  background-image: url("extension://img/pcgw.png");
-}
-
-.completionistme_btn i {
-  background-image: url("extension://img/icon-completionistme.png");
-}
-
-.protondb_btn i {
-  background-image: url("extension://img/icon-protondb.png"); /* //www.protondb.com/images/protondb-logo.svg */
-}
-
-.cardexchange_btn i {
-  background-image: url("extension://img/steamcardexchange.png");
-}
 
 .es_slider_toggle i,
 .es_screenshot_fullscreen_toggle i {
