@@ -57,12 +57,15 @@ export default class FCardMarketLinks extends Feature<CGameCard> {
         }
 
         if (cost > 0 && CommunityUtils.currentUserIsOwner()) {
-            HTML.afterEnd(
-                DOMHelper.selectLastNode(document, ".badge_empty_name"),
-                `<div class="badge_empty_name badge_info_unlocked">${L(__badgeCompletionCost, {"cost": (new Price(cost)).toString()})}</div>`
-            );
+            const badgeRow = document.querySelector<HTMLElement>(".badge_row");
+            if (badgeRow) {
+                HTML.afterEnd(
+                    DOMHelper.selectLastNode(badgeRow, ".badge_empty_name"),
+                    `<div class="badge_info_unlocked">${L(__badgeCompletionCost, {"cost": (new Price(cost)).toString()})}</div>`
+                );
 
-            document.querySelector(".badge_empty_right")!.classList.add("esi-badge");
+                badgeRow.classList.add("esi-badge");
+            }
         }
     }
 }
