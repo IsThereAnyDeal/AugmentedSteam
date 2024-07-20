@@ -38,6 +38,10 @@ browser.runtime.onMessage.addListener((
         case "reviews":
             sendResponse(parser.parseReviews(html));
             return;
+
+        case "purchaseDates":
+            sendResponse(parser.parsePurchaseDates(html));
+            return;
     }
 
     throw new Error("Unknown operation");
