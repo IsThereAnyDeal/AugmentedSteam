@@ -41,8 +41,10 @@
 
         if (type === "app") {
             Settings.customize_apppage[name] = enabled;
+            Settings.customize_apppage = Settings.customize_apppage;
         } else if (type === "frontpage") {
             Settings.customize_frontpage[name] = enabled;
+            Settings.customize_frontpage = Settings.customize_frontpage;
         }
         entries = entries;
     }
