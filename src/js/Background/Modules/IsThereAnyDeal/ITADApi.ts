@@ -240,7 +240,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         } else {
             const lastImport = await this.getLastImport();
 
-            if (lastImport.to && TimeUtils.isInPast(lastImport.to + 12*60*60)) {
+            if (lastImport.to && TimeUtils.isInPast(lastImport.to + 15*60)) {
                 return;
             }
         }
@@ -323,10 +323,10 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
         }
     }
 
-    private async sync(): Promise<void> {
-        await this.exportToItad(false);
-        await this.importWaitlist(false);
-        await this.importCollection(false);
+    private async sync(force: boolean): Promise<void> {
+        await this.exportToItad(force);
+        await this.importWaitlist(force);
+        await this.importCollection(force);
     }
 
     private async inWaitlist(storeIds: string[]): Promise<TInWaitlistResponse> {
@@ -363,7 +363,7 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
                 return this.exportToItad(message.params.force);
 
             case EAction.Sync:
-                return this.sync();
+                return this.sync(message.params.force);
 
             case EAction.LastImport:
                 return this.getLastImport();

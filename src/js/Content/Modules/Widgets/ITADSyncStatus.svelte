@@ -29,7 +29,7 @@
         let timeout: number;
 
         try {
-            await ITADApiFacade.sync();
+            await ITADApiFacade.sync(true);
             syncSuccess = true;
             await updateLastImport();
 
