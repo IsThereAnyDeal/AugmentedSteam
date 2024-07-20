@@ -12,6 +12,7 @@
     } from "@Strings/_strings";
     import Price from "@Content/Modules/Currency/Price";
     import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
+    import external from "@Content/externalLink";
 
     export let data: TBundle[];
 
@@ -81,7 +82,7 @@
                 <div class="game_purchase_action">
                     <div class="game_purchase_action_bg">
                         <div class="btn_addtocart btn_packageinfo">
-                            <a class="btn_blue_steamui btn_medium" href={bundle.details} target="_blank">
+                            <a class="btn_blue_steamui btn_medium" href={bundle.details} use:external>
                                 <span>{L(__bundle_info)}</span>
                             </a>
                         </div>
@@ -95,7 +96,7 @@
                         {/if}
 
                         <div class="btn_addtocart">
-                            <a class="btn_green_steamui btn_medium" href={bundle.url} target="_blank">
+                            <a class="btn_green_steamui btn_medium" href={bundle.url} use:external>
                                 <span>{L(__buy)}</span>
                             </a>
                         </div>

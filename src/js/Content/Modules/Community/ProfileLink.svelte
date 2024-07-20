@@ -1,5 +1,6 @@
 <script lang="ts">
     import Settings from "@Options/Data/Settings";
+    import external from "@Content/externalLink";
 
     export let id: string;
     export let href: string;
@@ -11,7 +12,7 @@
 
 
 <div class="es_profile_link profile_count_link">
-    <a class="es_sites_icons es_{id}_icon es_{mainType}" {href} target="_blank">
+    <a class="es_sites_icons es_{id}_icon es_{mainType}" {href} use:external>
 
         {#if iconType !== "none" && iconUrl}
             <i class="es_sites_custom_icon es_{iconType}" style="background-image: url({iconUrl});"></i>

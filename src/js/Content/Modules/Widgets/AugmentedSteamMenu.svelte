@@ -19,6 +19,7 @@
     import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";
     import User from "@Content/Modules/User";
     import DynamicStore from "@Content/Modules/Data/DynamicStore";
+    import external from "@Content/externalLink";
 
     const isSignedIn = User.isSignedIn;
 
@@ -68,15 +69,15 @@
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 <div id="es_popup" class="popup_block_new" on:click={hideMenu}>
     <div class="popup_body popup_menu">
-        <a class="popup_menu_item" target="_blank" href={ExtensionResources.getURL("html/options.html")}>{L(__thewordoptions)}</a>
+        <a class="popup_menu_item" use:external href={ExtensionResources.getURL("html/options.html")}>{L(__thewordoptions)}</a>
         <a class="popup_menu_item" id="es_clear_cache" href="#clear_cache" on:click|preventDefault={clearCache}>{L(__clearCache)}</a>
         <div class="hr"></div>
-        <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam">{L(__contribute)}</a>
-        <a class="popup_menu_item" target="_blank" href="https://github.com/IsThereAnyDeal/AugmentedSteam/issues">{L(__bugFeature)}</a>
+        <a class="popup_menu_item" use:external href="https://github.com/IsThereAnyDeal/AugmentedSteam">{L(__contribute)}</a>
+        <a class="popup_menu_item" use:external href="https://github.com/IsThereAnyDeal/AugmentedSteam/issues">{L(__bugFeature)}</a>
         <div class="hr"></div>
-        <a class="popup_menu_item" target="_blank" href="{Config.PublicHost}">{L(__website)}</a>
-        <a class="popup_menu_item" target="_blank" href="https://isthereanydeal.com/">IsThereAnyDeal</a>
-        <a class="popup_menu_item" target="_blank" href="{Config.ITADDiscord}">Discord</a>
+        <a class="popup_menu_item" use:external href="{Config.PublicHost}">{L(__website)}</a>
+        <a class="popup_menu_item" use:external href="https://isthereanydeal.com/">IsThereAnyDeal</a>
+        <a class="popup_menu_item" use:external href="{Config.ITADDiscord}">Discord</a>
 
         {#if isSignedIn}
             <div class="hr">

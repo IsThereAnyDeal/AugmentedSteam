@@ -14,6 +14,7 @@
     } from "@Strings/_strings";
     import {L} from "@Core/Localization/Localization";
     import HTML from "@Core/Html/Html";
+    import external from "@Content/externalLink";
 
     export let data: TPriceOverview;
     export let setBottom: boolean = false;
@@ -40,13 +41,13 @@
 
 <div class="itad-pricing" bind:this={node}>
     {#if data.current}
-        <a href={data.urls.info} target="_blank">{L(__pricing_lowestPrice)}</a>
+        <a href={data.urls.info} use:external>{L(__pricing_lowestPrice)}</a>
 
         <span class="itad-pricing__price">
             <PriceWithAlt price={data.current.price} />
         </span>
 
-        <a href={data.current.url} class="itad-pricing__main" target="_blank">
+        <a href={data.current.url} class="itad-pricing__main" use:external>
             {#if data.current.cut > 0}
                 <span class="itad-pricing__cut">-{data.current.cut}%</span>
             {/if}
@@ -63,7 +64,7 @@
     {/if}
 
     {#if data.lowest}
-        <a href={data.urls.info} target="_blank">{L(__pricing_historicalLow)}</a>
+        <a href={data.urls.info} use:external>{L(__pricing_historicalLow)}</a>
 
         <span class="itad-pricing__price">
             <PriceWithAlt price={data.lowest.price} />
@@ -79,7 +80,7 @@
     {/if}
 
     {#if data.bundled}
-        <a href={data.urls.info} target="_blank">{L(__pricing_bundled)}</a>
+        <a href={data.urls.info} use:external>{L(__pricing_bundled)}</a>
         <div class="itad-pricing__bundled">{L(__pricing_bundleCount, {"count": data.bundled})}</div>
     {/if}
 </div>
