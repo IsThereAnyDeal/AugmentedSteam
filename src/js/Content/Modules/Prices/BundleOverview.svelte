@@ -1,5 +1,3 @@
-<svelte:options immutable={true} />
-
 <script lang="ts">
     import {onMount} from "svelte";
     import type {TBundle, TPrice} from "@Background/Modules/AugmentedSteam/_types";

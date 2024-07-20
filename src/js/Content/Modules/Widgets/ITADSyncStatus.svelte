@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
     import ExtensionResources from "@Core/ExtensionResources";
     import ITADApiFacade from "@Content/Modules/Facades/ITADApiFacade";

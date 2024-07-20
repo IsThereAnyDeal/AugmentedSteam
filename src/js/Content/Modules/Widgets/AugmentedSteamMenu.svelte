@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
     import SteamFacade from "@Content/Modules/Facades/SteamFacade";
     import AugmentedSteam from "@Content/Modules/AugmentedSteam";

@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script lang="ts">
     import type {TPrice} from "@Background/Modules/AugmentedSteam/_types";
     import Price from "@Content/Modules/Currency/Price";
