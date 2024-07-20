@@ -1,20 +1,11 @@
-import {
-    __coll_inCollection,
-    __coll_neverPlayed,
-    __coll_played,
-    __coll_totalTime,
-    __hoursShort,
-} from "@Strings/_strings";
-import {L} from "@Core/Localization/Localization";
+import self_ from "./FGamesStats.svelte";
 import Feature from "@Content/Modules/Context/Feature";
 import type CGames from "@Content/Features/Community/Games/CGames";
 import Settings from "@Options/Data/Settings";
-import HTML from "@Core/Html/Html";
-
 
 export default class FGamesStats extends Feature<CGames> {
 
-    private _games: Array<{
+    private games: Array<{
         playtime_forever: number
     }> = [];
 
@@ -24,18 +15,18 @@ export default class FGamesStats extends Feature<CGames> {
         const config = document.querySelector<HTMLElement>("#gameslist_config")?.dataset.profileGameslist;
         if (!config) { return false; }
 
-        this._games = JSON.parse(config).rgGames;
-        return this._games.length > 0;
+        this.games = JSON.parse(config).rgGames;
+        return this.games.length > 0;
     }
 
-    apply() {
+    override apply(): void {
 
-        const countTotal = this._games.length;
+        const countTotal = this.games.length;
         let countPlayed = 0;
         let countNeverPlayed = 0;
-
         let time = 0;
-        for (const game of this._games) {
+
+        for (const game of this.games) {
             if (!game.playtime_forever) {
                 countNeverPlayed++;
                 continue;
@@ -45,14 +36,20 @@ export default class FGamesStats extends Feature<CGames> {
             time += game.playtime_forever;
         }
 
-        const totalTime = L(__hoursShort, {"hours": (time / 60).toFixed(1)});
+        const target = document.querySelector('[data-featuretarget="gameslist-root"]');
+        if (!target) {
+            throw new Error("Node not found");
+        }
 
-        HTML.beforeBegin("#application_root",
-            `<div id="esi-games-stats-content">
-                <div class="esi-stat"><span>${totalTime}</span>${L(__coll_totalTime)}</div>
-                <div class="esi-stat"><span>${countTotal}</span>${L(__coll_inCollection)}</div>
-                <div class="esi-stat"><span>${countPlayed}</span>${L(__coll_played)}</div>
-                <div class="esi-stat"><span>${countNeverPlayed}</span>${L(__coll_neverPlayed)}</div>
-            </div>`);
+        (new self_({
+            target,
+            anchor: target.firstElementChild ?? undefined, // Potential race condition with React
+            props: {
+                countTotal: String(countTotal),
+                countPlayed: String(countPlayed),
+                countNeverPlayed: String(countNeverPlayed),
+                totalTime: String((time / 60).toFixed(1))
+            }
+        }));
     }
 }
