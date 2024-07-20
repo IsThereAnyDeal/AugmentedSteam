@@ -101,7 +101,7 @@ export default class FAchievementSort extends Feature<CProfileStats> {
             if (dateSetup) {
                 const dateString = node.firstChild.textContent.trim();
 
-                const {format, formatShort, options} = dateSetup as DateFormatSettings;
+                const {format, formatShort, options} = dateSetup;
                 const fmt = /\d{4}/.test(dateString) ? format : formatShort;
                 const unlockedTime = DateTime.fromFormat(dateString, fmt, options).toUnixInteger();
 
@@ -119,7 +119,7 @@ export default class FAchievementSort extends Feature<CProfileStats> {
 
         // fallback, load the same page in czech
         if (dateSetup === null) {
-            dateSetup = this.getDateFormat("czech");
+            dateSetup = this.getDateFormat("czech")!;
 
             const url = new URL(window.location.origin + window.location.pathname);
             url.searchParams.set("l", "czech");
@@ -139,7 +139,7 @@ export default class FAchievementSort extends Feature<CProfileStats> {
 
                 const dateString = node.firstChild.textContent.trim();
 
-                const {format, formatShort} = dateSetup as DateFormatSettings;
+                const {format, formatShort} = dateSetup;
                 const fmt = /\d{4}/.test(dateString) ? format : formatShort;
                 const unlockedTime = DateTime.fromFormat(dateString, fmt).toUnixInteger();
 
