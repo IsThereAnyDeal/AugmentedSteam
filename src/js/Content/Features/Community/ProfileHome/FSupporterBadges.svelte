@@ -1,6 +1,6 @@
 <script lang="ts">
     import ExtensionResources from "@Core/ExtensionResources";
-    import Config from "../../../../config";
+    import Config from "config";
     import type {TProfileData} from "@Background/Modules/AugmentedSteam/_types";
     import {L} from "@Core/Localization/Localization";
     import {__esSupporter} from "@Strings/_strings";

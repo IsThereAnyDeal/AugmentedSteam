@@ -46,7 +46,7 @@
     import LocaleCredits from "./LocaleCredits";
     import Localization, {L} from "@Core/Localization/Localization";
     import DOMPurify from "dompurify";
-    import Config from "../../../config";
+    import Config from "config";
 
     const localeMap: Record<string, string> = {
         "english": __options_lang_english,

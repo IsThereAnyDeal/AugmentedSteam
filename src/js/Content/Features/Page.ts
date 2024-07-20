@@ -1,6 +1,6 @@
 import bootstrapDomPurify from "../../bootstrapDomPurify";
-import config from "../../config";
-import {Info} from "@Core/Info";
+import Config from "config";
+import Info from "@Core/Info";
 import Localization from "@Core/Localization/Localization";
 import {SettingsStore} from "@Options/Data/Settings";
 import ProgressBar from "@Content/Modules/Widgets/ProgressBar";
@@ -62,7 +62,7 @@ export default class Page {
         }
 
         console.log(
-            `%c Augmented %cSteam v${Info.version} %c ${config.PublicHost}`,
+            `%c Augmented %cSteam v${Info.version} %c ${Config.PublicHost}`,
             "background: #000000; color: #046eb2",
             "background: #000000; color: #ffffff",
             "",

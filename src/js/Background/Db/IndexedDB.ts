@@ -1,4 +1,4 @@
-import {Info} from "@Core/Info";
+import Info from "@Core/Info";
 import {
     type IDBPDatabase,
     type IndexKey,

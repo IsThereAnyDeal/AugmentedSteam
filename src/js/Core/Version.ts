@@ -1,4 +1,4 @@
-import {Info} from "./Info";
+import Info from "@Core/Info";
 
 type VersionTypes = Version|string|Array<string|number>;
 

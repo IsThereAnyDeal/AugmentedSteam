@@ -1,5 +1,5 @@
 import IndexedDB from "@Background/Db/IndexedDB";
-import Config from "../../../config";
+import Config from "config";
 import Api from "../Api";
 import type {
     TProfileData,

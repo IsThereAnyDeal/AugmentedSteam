@@ -1,4 +1,4 @@
-import {Info} from "@Core/Info";
+import Info from "@Core/Info";
 import type {SettingsSchema} from "./_types";
 import type {SchemaKeys, SchemaValue, StorageInterface} from "@Core/Storage/Storage";
 import {SyncedStorage} from "@Core/Storage/SyncedStorage";
