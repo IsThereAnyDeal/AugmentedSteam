@@ -324,9 +324,9 @@ export default class ITADApi extends Api implements MessageHandlerInterface {
     }
 
     private async sync(): Promise<void> {
-        await this.exportToItad(true);
-        await this.importWaitlist(true);
-        await this.importCollection(true);
+        await this.exportToItad(false);
+        await this.importWaitlist(false);
+        await this.importCollection(false);
     }
 
     private async inWaitlist(storeIds: string[]): Promise<TInWaitlistResponse> {
