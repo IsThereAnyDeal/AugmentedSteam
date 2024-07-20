@@ -24,8 +24,8 @@ export default class ITADApiFacade {
         return Background.send(EAction.IsConnected);
     }
 
-    static sync(): Promise<void> {
-        return Background.send(EAction.Sync);
+    static sync(force: boolean=false): Promise<void> {
+        return Background.send(EAction.Sync, {force});
     }
 
     static getLastImport(): Promise<TLastImportResponse> {
