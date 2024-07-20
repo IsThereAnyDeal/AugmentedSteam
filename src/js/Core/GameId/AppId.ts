@@ -8,8 +8,10 @@ export default class AppId {
             : null;
     }
 
-    static fromCDNUrl(url: string) {
-        const m = url.match(/(?:cdn\.(?:akamai|cloudflare)\.steamstatic\.com\/steam|steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//);
+    static fromCDNUrl(url: string): number|null {
+        const CDNRegex_1 = /(?:cdn\.(?:akamai|cloudflare)\.steamstatic\.com\/steam|steamcdn-a\.akamaihd\.net\/steam|steamcommunity\/public\/images)\/apps\/(\d+)\//;
+        const CDNRegex_2 = /(?:shared\.(?:akamai|cloudflare).steamstatic\.com\/store_item_assets\/steam)\/apps\/(\d+)\//;
+        const m = url.match(CDNRegex_1) ?? url.match(CDNRegex_2);
         return m && m[1] !== undefined
             ? Number(m[1])
             : null;
@@ -17,12 +19,12 @@ export default class AppId {
 
     static fromGameCardUrl(url: string): number|null {
         const m = url.match(/\/gamecards\/(\d+)/);
-        return m
+        return m && m[1] !== undefined
             ? Number(m[1])
             : null;
     }
 
-    public static fromElement(element: HTMLElement|null): number|null {
+    static fromElement(element: HTMLElement|null): number|null {
         if (!element) {
             return null;
         }
@@ -34,7 +36,7 @@ export default class AppId {
 
         const href = element.getAttribute("href");
         if (!href) {
-            return null
+            return null;
         }
 
         return this.fromUrl(href);
