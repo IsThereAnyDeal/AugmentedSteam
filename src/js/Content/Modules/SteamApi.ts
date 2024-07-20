@@ -20,7 +20,7 @@ export default class SteamApi {
         };
 
         try {
-            const token = await User.accessToken;
+            const token = await User.getWebApiToken();
             const steamId = User.steamId;
 
             const response = await RequestData.post(

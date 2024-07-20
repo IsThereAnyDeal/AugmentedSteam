@@ -75,7 +75,7 @@ export default class FEquipProfileItems extends Feature<CInventory> {
             }
 
             try {
-                const token = await User.accessToken;
+                const token = await User.getWebApiToken();
                 await RequestData.post(`https://api.steampowered.com${apiPath}?access_token=${token}`, data, {"credentials": "omit"});
 
                 btn.classList.add("btn_disabled");

@@ -16,7 +16,7 @@ export default class User {
     private static _profilePath: string;
 
     private static _sessionId: string|null;
-    private static _accessToken: string;
+    private static _webApiToken: string;
 
     static async promise(): Promise<void> {
         if (!this._promise) {
@@ -133,29 +133,27 @@ export default class User {
     }
 
     /*
-     * Retrieve user access token to use in new style WebAPI calls (Services)
+     * Fetch the user's web api token to use in new style WebAPI calls (Services)
      * https://github.com/Revadike/UnofficialSteamWebAPI/wiki/Get-Points-Summary-Config
+     * Works on both store and community, but only returns the store token
      */
-    static get accessToken(): Promise<string> {
-        if (this._accessToken) {
-            return Promise.resolve(this._accessToken);
-        }
-
-        // This endpoint works on both store and community
-        return (async (): Promise<string> => {
+    static async getWebApiToken(): Promise<string> {
+        if (!this._webApiToken) {
             const response = await RequestData.getJson<{
                 success?: boolean,
                 data?: {
                     webapi_token?: string
                 }
             }>(`${window.location.origin}/pointssummary/ajaxgetasyncconfig`);
+
             if (!response.success || !response.data?.webapi_token) {
                 throw new Error("Failed to get webapi token");
             }
 
-            this._accessToken = response.data.webapi_token;
-            return this._accessToken;
-        })();
+            this._webApiToken = response.data.webapi_token;
+        }
+
+        return this._webApiToken;
     }
 }
 
