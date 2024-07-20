@@ -49,7 +49,6 @@
     import UserNotesAdapter from "@Content/Modules/UserNotes/UserNotesAdapter";
 
     let settings: Writable<SettingsSchema> = writable(Settings);
-    UserNotesAdapter.getAdapter(); // Set current adapter
 </script>
 
 
