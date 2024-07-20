@@ -98,6 +98,12 @@
         static vCurrencyFormat(amount, currencyCode) {
             return v_currencyformat(amount, currencyCode);
         }
+
+        // profile home
+
+        static openFriendChatInWebChat(steamid, accountid) {
+            OpenFriendChatInWebChat(steamid, accountid);
+        }
     }
 
     document.addEventListener("as_SteamFacade", async function(e) {

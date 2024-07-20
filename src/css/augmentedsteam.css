@@ -1898,21 +1898,6 @@ label.es_dlc_label > input:checked::after {
 
 /***************************************
  * User profiles
- * FChatDropdownOptions
- **************************************/
-#profile_chat_dropdown {
-  display: none;
-}
-#profile_chat_dropdown .shadow_content {
-  box-shadow: 0 0 12px #000;
-}
-#profile_chat_dropdown .popup_menu_item img {
-  position: relative;
-  top: 3px;
-}
-
-/***************************************
- * User profiles
  * FTwitchShowcase
  **************************************/
 .esi-stream {
