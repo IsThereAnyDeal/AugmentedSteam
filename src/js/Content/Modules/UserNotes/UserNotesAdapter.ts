@@ -3,7 +3,7 @@ import type AdapterInterface from "@Content/Modules/UserNotes/Adapters/AdapterIn
 import SyncedStorageAdapter from "@Content/Modules/UserNotes/Adapters/SyncedStorageAdapter";
 import IdbAdapter from "@Content/Modules/UserNotes/Adapters/IdbAdapter";
 import type {SettingsSchema} from "@Options/Data/_types";
-import assertNever from "@Core/AssertNever";
+import assertNever from "@Core/Asserts/AssertNever";
 
 // TODO merge with UserNotes class?
 
