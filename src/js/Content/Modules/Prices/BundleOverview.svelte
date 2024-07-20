@@ -58,7 +58,7 @@
 
                 <p class="package_contents">
                     {#each bundle.tiers as tier, num}
-                        <b class="es_bundle_tier_title">
+                        <b class="as_bundle_tier_title"> <!-- class added for compatibility with Steam Currency Converter -->
                             {#if bundle.tiers.length > 1}
                                 {L(__bundle_tierIncludes, {
                                     "tier": L(__bundle_tier, {"num": num+1}),
