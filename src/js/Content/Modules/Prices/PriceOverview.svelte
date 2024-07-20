@@ -64,7 +64,7 @@
     {/if}
 
     {#if data.lowest}
-        <a href={data.urls.info} use:external>{L(__pricing_historicalLow)}</a>
+        <a href={data.urls.history} use:external>{L(__pricing_historicalLow)}</a>
 
         <span class="itad-pricing__price">
             <PriceWithAlt price={data.lowest.price} />
