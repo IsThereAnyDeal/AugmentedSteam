@@ -33,10 +33,16 @@ export default class UserNotesAdapter {
 
     static async changeAdapter(newType: SettingsSchema["user_notes_adapter"]): Promise<AdapterInterface> {
         const currentAdapter = this.getAdapter();
+        if (newType === Settings.user_notes_adapter) {
+            return currentAdapter;
+        }
+
         const newAdapter = this.createAdapter(newType);
 
         await newAdapter.import(await currentAdapter.export());
         await currentAdapter.clear();
+
+        Settings.user_notes_adapter = newType;
 
         this.adapter = newAdapter;
         return this.adapter;
