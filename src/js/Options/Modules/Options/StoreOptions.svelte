@@ -49,6 +49,13 @@
     import UserNotesAdapter from "@Content/Modules/UserNotes/UserNotesAdapter";
 
     let settings: Writable<SettingsSchema> = writable(Settings);
+
+    function handleUserNotesAdapterChange(e_: Event) {
+        const e = e_ as (InputEvent & {target: HTMLSelectElement});
+        const newType = e.target.value;
+        // @ts-expect-error
+        UserNotesAdapter.changeAdapter(newType);
+    }
 </script>
 
 
@@ -183,11 +190,11 @@
             <Toggle bind:value={$settings.user_notes_wishlist}>{L(__options_userNotes_wishlist)}</Toggle>
         </OptionGroup>
         <OptionGroup>
-            <Select bind:value={$settings.user_notes_adapter} label={L(__options_userNotes_loc)} options={[
+            <Select value={$settings.user_notes_adapter} label={L(__options_userNotes_loc)} options={[
                 ["synced_storage", L(__options_userNotes_syncedStorage)],
                 ["idb", L(__options_userNotes_local)],
                 /* ["itad", "options.user_notes.itad"], */
-            ]} on:change={() => UserNotesAdapter.changeAdapter($settings.user_notes_adapter)} />
+            ]} on:change={handleUserNotesAdapterChange} />
         </OptionGroup>
     </Section>
 
