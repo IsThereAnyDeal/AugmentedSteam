@@ -35,7 +35,7 @@
         }
 
         static showBlockingWaitDialog(strTitle, strDescription) {
-            return ShowBlockingWaitDialog(strTitle, strDescription);
+            ShowBlockingWaitDialog(strTitle, strDescription);
         }
 
         static dismissActiveModal() {
@@ -45,11 +45,11 @@
         // menu
 
         static showMenu(elemLink, elemPopup, align, valign, bLinkHasBorder) {
-            return ShowMenu(elemLink, elemPopup, align, valign, bLinkHasBorder);
+            ShowMenu(elemLink, elemPopup, align, valign, bLinkHasBorder);
         }
 
         static hideMenu(elemLink, elemPopup) {
-            return HideMenu(elemLink, elemPopup);
+            HideMenu(elemLink, elemPopup);
         }
 
         static changeLanguage(strTargetLanguage, bStayOnPage) {
@@ -59,12 +59,12 @@
         // app pages
 
         static collapseLongStrings(selector) {
-            return CollapseLongStrings(selector);
+            CollapseLongStrings(selector);
         }
 
         // @param appid required, rest is optional
         static removeFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2) {
-            return RemoveFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2);
+            RemoveFromWishlist(appid, divToHide, divToShowSuccess, divToShowError, navref, divToHide2);
         }
 
         // events
@@ -94,12 +94,6 @@
 
         static vCurrencyFormat(amount, currencyCode) {
             return v_currencyformat(amount, currencyCode);
-        }
-
-        // friends
-
-        static openFriendChatInWebChat(chatId) {
-            return OpenFriendChatInWebChat(chatId);
         }
     }
 
