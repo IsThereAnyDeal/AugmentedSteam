@@ -1,4 +1,4 @@
-import CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
+import type CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 

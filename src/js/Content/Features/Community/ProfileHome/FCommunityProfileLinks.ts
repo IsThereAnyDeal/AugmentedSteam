@@ -1,6 +1,6 @@
 import self_ from "./FCommunityProfileLinks.svelte";
 import Feature from "@Content/Modules/Context/Feature";
-import CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
+import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
 import HTML from "@Core/Html/Html";
 
 export default class FCommunityProfileLinks extends Feature<CProfileHome> {

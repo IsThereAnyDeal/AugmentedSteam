@@ -12,7 +12,7 @@ import {
 } from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
-import CBadges from "@Content/Features/Community/Badges/CBadges";
+import type CBadges from "@Content/Features/Community/Badges/CBadges";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
 import DOMHelper from "@Content/Modules/DOMHelper";
 import HTML from "@Core/Html/Html";

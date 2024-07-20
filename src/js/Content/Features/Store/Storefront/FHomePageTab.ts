@@ -1,5 +1,5 @@
 import Feature from "@Content/Modules/Context/Feature";
-import CStoreFront from "@Content/Features/Store/Storefront/CStoreFront";
+import type CStoreFront from "@Content/Features/Store/Storefront/CStoreFront";
 import SyncedStorage from "@Core/Storage/SyncedStorage";
 import Settings from "@Options/Data/Settings";
 

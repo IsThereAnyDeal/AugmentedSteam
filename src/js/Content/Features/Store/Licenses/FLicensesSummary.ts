@@ -1,5 +1,5 @@
 import self_ from "./FLicensesSummary.svelte";
-import CLicenses from "@Content/Features/Store/Licenses/CLicenses";
+import type CLicenses from "@Content/Features/Store/Licenses/CLicenses";
 import Feature from "@Content/Modules/Context/Feature";
 
 export default class FLicensesSummary extends Feature<CLicenses> {

@@ -13,7 +13,7 @@ import {
 import {L} from "@Core/Localization/Localization";
 import Workshop from "./Workshop";
 import Feature from "@Content/Modules/Context/Feature";
-import CWorkshopBrowse from "@Content/Features/Community/WorkshopBrowse/CWorkshopBrowse";
+import type CWorkshopBrowse from "@Content/Features/Community/WorkshopBrowse/CWorkshopBrowse";
 import User from "@Content/Modules/User";
 import HTML from "@Core/Html/Html";
 import RequestData from "@Content/Modules/RequestData";

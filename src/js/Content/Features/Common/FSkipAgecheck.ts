@@ -1,9 +1,10 @@
 import Feature from "@Content/Modules/Context/Feature";
-import type Context from "@Content/Modules/Context/Context";
+import type CApp from "@Content/Features/Store/App/CApp";
+import type CAgeCheck from "@Content/Features/Store/AgeCheck/CAgecheck";
 import Settings from "@Options/Data/Settings";
 import {ContextType} from "@Content/Modules/Context/ContextType";
 
-export default class FSkipAgecheck extends Feature<Context> {
+export default class FSkipAgecheck extends Feature<CApp|CAgeCheck> {
 
     override checkPrerequisites(): boolean {
         return Settings.send_age_info;

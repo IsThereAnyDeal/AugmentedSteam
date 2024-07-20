@@ -1,6 +1,6 @@
 import {__playtime, __theworddefault} from "@Strings/_strings";
 import Feature from "@Content/Modules/Context/Feature";
-import CFriendsThatPlay from "@Content/Features/Community/FriendsThatPlay/CFriendsThatPlay";
+import type CFriendsThatPlay from "@Content/Features/Community/FriendsThatPlay/CFriendsThatPlay";
 import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import {L} from "@Core/Localization/Localization";
 import type {SortboxChangeEvent} from "@Content/Modules/Widgets/SortboxChangeEvent";

@@ -1,6 +1,7 @@
 import {__oneclickgoo} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
-import CInventory, {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
+import type CInventory from "@Content/Features/Community/Inventory/CInventory";
+import {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
 import Settings from "@Options/Data/Settings";
 import Feature from "@Content/Modules/Context/Feature";
 import DOMHelper from "@Content/Modules/DOMHelper";

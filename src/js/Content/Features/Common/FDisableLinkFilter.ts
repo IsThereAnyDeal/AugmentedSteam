@@ -1,4 +1,4 @@
-import CBase from "@Content/Features/Common/CBase";
+import type CBase from "@Content/Features/Common/CBase";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 

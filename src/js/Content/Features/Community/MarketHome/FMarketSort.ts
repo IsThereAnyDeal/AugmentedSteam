@@ -1,6 +1,6 @@
 import {__gameName} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
-import CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
+import type CMarketHome from "@Content/Features/Community/MarketHome/CMarketHome";
 import Feature from "@Content/Modules/Context/Feature";
 import SortBox from "@Content/Modules/Widgets/SortBox.svelte";
 import SyncedStorage from "@Core/Storage/SyncedStorage";

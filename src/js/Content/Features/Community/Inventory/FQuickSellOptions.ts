@@ -8,7 +8,8 @@ import {
     __selling,
 } from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
-import CInventory, {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
+import type CInventory from "@Content/Features/Community/Inventory/CInventory";
+import {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 import HTML from "@Core/Html/Html";

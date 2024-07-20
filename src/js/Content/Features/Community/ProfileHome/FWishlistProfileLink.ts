@@ -1,5 +1,5 @@
 import self_ from "./FWishlistProfileLink.svelte";
-import CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
+import type CProfileHome from "@Content/Features/Community/ProfileHome/CProfileHome";
 import Feature from "@Content/Modules/Context/Feature";
 import Settings from "@Options/Data/Settings";
 

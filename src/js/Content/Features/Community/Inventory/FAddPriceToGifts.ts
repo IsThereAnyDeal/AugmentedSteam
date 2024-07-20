@@ -1,6 +1,7 @@
 import Feature from "@Content/Modules/Context/Feature";
 import AppId from "@Core/GameId/AppId";
-import CInventory, {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
+import type CInventory from "@Content/Features/Community/Inventory/CInventory";
+import {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
 import Price from "@Content/Modules/Currency/Price";
 import HTML from "@Core/Html/Html";
 import SteamStoreApiFacade from "@Content/Modules/Facades/SteamStoreApiFacade";

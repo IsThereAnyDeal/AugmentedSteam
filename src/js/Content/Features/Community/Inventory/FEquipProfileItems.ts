@@ -1,7 +1,8 @@
 import {__equipOnProfile} from "@Strings/_strings";
 import {L} from "@Core/Localization/Localization";
 import Feature from "@Content/Modules/Context/Feature";
-import CInventory, {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
+import type CInventory from "@Content/Features/Community/Inventory/CInventory";
+import {type MarketInfo} from "@Content/Features/Community/Inventory/CInventory";
 import HTML from "@Core/Html/Html";
 import User from "@Content/Modules/User";
 import RequestData from "@Content/Modules/RequestData";

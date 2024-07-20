@@ -1,6 +1,6 @@
 import {L} from "@Core/Localization/Localization";
 import {__wallet_customAmount, __wallet_customAmountText, __wallet_customGiftcard} from "@Strings/_strings";
-import CFunds from "@Content/Features/Store/Funds/CFunds";
+import type CFunds from "@Content/Features/Store/Funds/CFunds";
 import Feature from "@Content/Modules/Context/Feature";
 import CurrencyManager from "@Content/Modules/Currency/CurrencyManager";
 import HTML from "@Core/Html/Html";

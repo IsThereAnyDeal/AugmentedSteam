@@ -7,7 +7,7 @@ import {ContextType} from "@Content/Modules/Context/ContextType";
 import HighlightsTagsUtils from "@Content/Modules/Highlights/HighlightsTagsUtils";
 import EarlyAccessUtils from "@Content/Modules/EarlyAccess/EarlyAccessUtils";
 import type Feature from "@Content/Modules/Context/Feature";
-import Context from "@Content/Modules/Context/Context";
+import type Context from "@Content/Modules/Context/Context";
 
 export default class CStoreBase extends CBase {
 

@@ -1,6 +1,6 @@
 import HTML from "@Core/Html/Html";
 import Feature from "@Content/Modules/Context/Feature";
-import CFriendsThatPlay from "@Content/Features/Community/FriendsThatPlay/CFriendsThatPlay";
+import type CFriendsThatPlay from "@Content/Features/Community/FriendsThatPlay/CFriendsThatPlay";
 
 export default class FFriendsCount extends Feature<CFriendsThatPlay> {
 
