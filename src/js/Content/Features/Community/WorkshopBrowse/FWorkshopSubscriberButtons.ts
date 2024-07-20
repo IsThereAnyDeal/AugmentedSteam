@@ -17,6 +17,7 @@ import type CWorkshopBrowse from "@Content/Features/Community/WorkshopBrowse/CWo
 import User from "@Content/Modules/User";
 import HTML from "@Core/Html/Html";
 import RequestData from "@Content/Modules/RequestData";
+import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
 
 export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse> {
 
@@ -56,11 +57,11 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
             const matches = pagingInfo.replace(/,/g, "").match(/\d+/g)?.map(Number) ?? [0];
             this._total = Math.max(...matches);
 
-            this._startSubscriber();
+            this.startSubscriber();
         });
     }
 
-    async _startSubscriber() {
+    private async startSubscriber() {
 
         this._completed = 0;
         this._failed = 0;
@@ -74,7 +75,12 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
             return;
         }
 
-        this._updateWaitDialog();
+        SteamFacade.dismissActiveModal();
+        const waitDialog = new BlockingWaitDialog(
+            this._statusTitle,
+            () => this.getStatus()
+        );
+        await waitDialog.update();
 
         const parser = new DOMParser();
         const url = new URL(window.location.href);
@@ -95,7 +101,7 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
             const doc = parser.parseFromString(result, "text/html");
             for (let node of doc.querySelectorAll(".workshopItem")) {
                 const subNode = node.querySelector<HTMLElement>(".user_action_history_icon.subscribed");
-                if (!subNode || this._canSkip(subNode)) { continue; }
+                if (!subNode || this.canSkip(subNode)) { continue; }
 
                 node = node.querySelector(".workshopItemPreviewHolder")!;
                 workshopItems.push(node.id.replace("sharedfile_", ""));
@@ -103,7 +109,7 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
         }
 
         this._total = workshopItems.length;
-        this._updateWaitDialog();
+        await waitDialog.update();
 
         const promises = workshopItems.map(
             id => Workshop.changeSubscription(id, this.context.appid!, this._method)
@@ -113,28 +119,30 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
                 })
                 .finally(() => {
                     this._completed++;
-                    this._updateWaitDialog();
+                    return waitDialog.update();
                 })
         );
 
-        Promise.all(promises).finally(() => this._showResults());
+        Promise.all(promises).finally(() => {
+            waitDialog.dismiss();
+            this.showResults();
+        });
     }
 
-    async _showResults(): Promise<void> {
+    private async showResults(): Promise<void> {
 
         const statusString = L(__workshop_finished, {
             "success": this._completed - this._failed,
             "fail": this._failed
         });
 
-        SteamFacade.dismissActiveModal();
         const result = await SteamFacade.showConfirmDialog(this._statusTitle, statusString);
         if (result === "OK") {
             window.location.reload();
         }
     }
 
-    private _canSkip(node: HTMLElement): boolean {
+    private canSkip(node: HTMLElement): boolean {
 
         if (this._method === "subscribe") {
             return node && node.style.display !== "none";
@@ -147,24 +155,17 @@ export default class FWorkshopSubscriberButtons extends Feature<CWorkshopBrowse>
         return false;
     }
 
-    private _updateWaitDialog(): void {
-
-        let statusString = L(this._method === "subscribe" ? __workshop_subscribeLoading : __workshop_unsubscribeLoading, {
+    private getStatus(): string {
+        let status = L(this._method === "subscribe" ? __workshop_subscribeLoading : __workshop_unsubscribeLoading, {
             "i": this._completed,
             "count": this._total
         });
 
         if (this._failed > 0) {
-            statusString += "<br>";
-            statusString += L(__workshop_failed, {"n": this._failed});
+            status += "<br>";
+            status += L(__workshop_failed, {"n": this._failed});
         }
 
-        const container = document.querySelector("#as_loading_text_ctn");
-        if (container) {
-            HTML.inner(container, statusString);
-        } else {
-            SteamFacade.dismissActiveModal();
-            SteamFacade.showBlockingWaitDialog(this._statusTitle, `<div id="as_loading_text_ctn">${statusString}</div>`);
-        }
+        return status;
     }
 }

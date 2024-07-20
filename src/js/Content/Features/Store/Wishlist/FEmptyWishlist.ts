@@ -8,6 +8,7 @@ import DynamicStore from "@Content/Modules/Data/DynamicStore";
 import RequestData from "@Content/Modules/RequestData";
 import User from "@Content/Modules/User";
 import SteamFacade from "@Content/Modules/Facades/SteamFacade";
+import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
 
 export default class FEmptyWishlist extends Feature<CWishlist> {
 
@@ -21,28 +22,23 @@ export default class FEmptyWishlist extends Feature<CWishlist> {
         document.getElementById("es_empty_wishlist")!.addEventListener("click", async() => {
 
             const result = await SteamFacade.showConfirmDialog(L(__emptyWishlist_title), L(__emptyWishlist_confirm));
-            if (result === "OK") {
-                SteamFacade.showBlockingWaitDialog(
-                    L(__emptyWishlist_title),
-                    L(__emptyWishlist_removing, {
-                        "cur": 1,
-                        "total": (await SteamFacade.global<any[]>("g_rgWishlistData")).length
-                    })
-                );
-            }
+            if (result !== "OK") { return; }
 
+            let cur = 0;
             const wishlistData = this.context.wishlistData;
-            let cur = 1;
-            const textNode = document.querySelector(".waiting_dialog_throbber")!.nextSibling!;
-            const url = "https://store.steampowered.com/api/removefromwishlist";
+
+            const waitDialog = new BlockingWaitDialog(
+                L(__emptyWishlist_title),
+                () => L(__emptyWishlist_removing, {
+                    cur,
+                    total: wishlistData.length
+                })
+            );
 
             for (const {appid} of wishlistData) {
-                textNode.textContent = L(__emptyWishlist_removing, {
-                    "cur": cur++,
-                    "total": wishlistData.length
-                });
-
-                await RequestData.post(url, {
+                ++cur;
+                await waitDialog.update();
+                await RequestData.post("https://store.steampowered.com/api/removefromwishlist", {
                     sessionid: User.sessionId!,
                     appid: String(appid)
                 });

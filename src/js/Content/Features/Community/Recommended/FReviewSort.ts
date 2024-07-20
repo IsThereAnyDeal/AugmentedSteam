@@ -21,6 +21,7 @@ import SteamCommunityApiFacade from "@Content/Modules/Facades/SteamCommunityApiF
 import type {TReview} from "@Background/Modules/Community/_types";
 import User from "@Content/Modules/User";
 import HTML from "@Core/Html/Html";
+import BlockingWaitDialog from "@Core/Modals/BlockingWaitDialog";
 
 export default class FReviewSort extends Feature<CRecommended> {
 
@@ -183,7 +184,8 @@ export default class FReviewSort extends Feature<CRecommended> {
     }
 
     async _getReviews(): Promise<void> {
-        SteamFacade.showBlockingWaitDialog(L(__processing), L(__wait));
+        const waitDialog = new BlockingWaitDialog(L(__processing), () => L(__wait));
+        await waitDialog.update();
 
         try {
             this._reviews = await SteamCommunityApiFacade.getReviews(this._path, this._pages);
@@ -191,7 +193,7 @@ export default class FReviewSort extends Feature<CRecommended> {
 
             // Delay half a second to avoid dialog flicker when grabbing cache
             await TimeUtils.timer(500);
-            SteamFacade.dismissActiveModal();
+            waitDialog.dismiss();
         }
     }
 }

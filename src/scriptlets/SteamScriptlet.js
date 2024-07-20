@@ -35,7 +35,10 @@
         }
 
         static showBlockingWaitDialog(strTitle, strDescription) {
-            ShowBlockingWaitDialog(strTitle, strDescription);
+            return new Promise(resolve => {
+                ShowBlockingWaitDialog(strTitle, strDescription);
+                resolve();
+            });
         }
 
         static dismissActiveModal() {
@@ -108,7 +111,7 @@
         if (id) {
             document.dispatchEvent(new CustomEvent(id, {
                 // Remove un-structuredClone-able properties, otherwise this will return `null`
-                detail: JSON.parse(JSON.stringify(await result))
+                detail: JSON.parse(JSON.stringify((await result) ?? null))
             }));
         }
     });

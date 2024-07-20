@@ -30,6 +30,7 @@ export default class CWishlist extends CStoreBase {
     public readonly myWishlist: boolean = false;
 
     constructor() {
+        // TODO use SteamFacade to get global variable?
         const wishlistData = HTMLParser.getArrayVariable<WishlistEntry>("g_rgWishlistData") ?? [];
 
         const hasWishlistData = wishlistData && wishlistData.length > 0;
